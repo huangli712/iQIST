@@ -1,0 +1,19 @@
+==========================================================================
+                    setup parameters for atomic problems
+==========================================================================
+ 3        ! nband : number of bands
+ 2        ! nspin : number of spins
+ 6        ! norbs : number of orbits
+ 2        ! ntots : number of total electrons
+ 64       ! ncfgs : number of configurations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 4.00     ! Uc    : intraorbital Coulomb interaction
+ 2.00     ! Uv    : interorbital Coulomb interaction
+ 1.00     ! Jz    : Hund coupling parameter
+ 1.00     ! Js    : spin flip parameter
+ 1.00     ! Jp    : pair hopping parameter
+-0.20     ! lamb  : spin-orbit coupling parameter
+ 0.50     ! thop  : hopping integral parameter
+ 0.00     ! mune  : chemical potential
+ 10.0     ! beta  : inverse temperture (pseudo temperture)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

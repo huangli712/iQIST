@@ -1,0 +1,18 @@
+--------------------------------------------------------------------------
+>>> entropy.in: config parameters for maximum entropy method code
+--------------------------------------------------------------------------
+1024   ! ntime : number of imaginary time slice
+200    ! nwmax : number of frequency point on half axis
+20     ! niter : number of cycles for maximum entropy method
+16     ! ntune : number of smooth runs for maximum entropy method
+3000   ! nstep : number of annealing steps per maximum entropy method cycle
+1      ! nband : number of bands
+2      ! norbs : number of orbitals
+1      ! ntype : type of default model, if ntype = 0, gaussion type, if ntype = 1, flat type
+--------------------------------------------------------------------------
+1200.  ! ainit : initial alpha parameter
+0.001  ! devia : it is the deviation from the green's function
+40.00  ! beta  : inversion of real temperature
+1.600  ! sigma : gauss broadening parameter
+0.025  ! wstep : frequency step, used to build the frequency mesh
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
