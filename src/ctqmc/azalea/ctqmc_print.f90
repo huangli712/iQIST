@@ -8,7 +8,7 @@
 !           ctqmc_print_exception
 ! source  : ctqmc_print.f90
 ! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 09/15/2009 by li huang
 !           09/20/2009 by li huang
 !           12/01/2009 by li huang
@@ -41,9 +41,9 @@
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'version: 2012.08.20T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & IOP'
-     write(mystd,'(2X,a)') 'support: huangli712@yahoo.com.cn'
+     write(mystd,'(2X,a)') 'version: 2014.01.13T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & UNIFR'
+     write(mystd,'(2X,a)') 'support: huangli712@gmail.com'
      write(mystd,'(2X,a)') 'license: GPL2 and later versions'
      write(mystd,*)
 

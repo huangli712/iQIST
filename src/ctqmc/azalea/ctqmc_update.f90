@@ -22,7 +22,7 @@
 !           cat_reflip_detrat <<<---
 ! source  : ctqmc_update.f90
 ! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 09/16/2009 by li huang
 !           09/18/2009 by li huang
 !           09/20/2009 by li huang

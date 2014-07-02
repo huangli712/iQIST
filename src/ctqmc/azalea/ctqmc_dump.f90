@@ -14,7 +14,7 @@
 !           ctqmc_dump_prob
 ! source  : ctqmc_dump.f90
 ! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 09/16/2009 by li huang
 !           09/17/2009 by li huang
 !           09/18/2009 by li huang
@@ -80,7 +80,7 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -117,7 +117,7 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), wtau(j,i,i), wtau(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), wtau(j,i+nband,i+nband)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -154,7 +154,7 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), htau(j,i,i), htau(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), htau(j,i+nband,i+nband)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -212,7 +212,7 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -415,7 +415,7 @@
      open(mytmp, file='solver.hub.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
                                     real(ghub(j,i)), &
@@ -425,7 +425,7 @@
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)

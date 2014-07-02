@@ -8,7 +8,7 @@
 !           ctqmc_impurity_tester
 ! source  : ctqmc_solver.f90
 ! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 09/16/2009 by li huang
 !           09/20/2009 by li huang
 !           09/24/2009 by li huang

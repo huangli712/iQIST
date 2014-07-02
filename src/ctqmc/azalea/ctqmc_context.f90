@@ -10,7 +10,7 @@
 !           context    module
 ! source  : ctqmc_context.f90
 ! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 09/16/2009 by li huang
 !           09/17/2009 by li huang
 !           09/19/2009 by li huang

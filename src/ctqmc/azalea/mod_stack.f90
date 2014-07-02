@@ -17,7 +17,7 @@
 !           stack@istack_isempty
 ! source  : mod_stack.f90
 ! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 09/14/2009 by li huang
 !           09/15/2009 by li huang
 !           09/20/2009 by li huang

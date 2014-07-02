@@ -7,7 +7,7 @@
 !           ctqmc_final_array
 ! source  : ctqmc_stream.f90
 ! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 09/16/2009 by li huang
 !           09/20/2009 by li huang
 !           09/24/2009 by li huang

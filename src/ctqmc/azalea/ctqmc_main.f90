@@ -3,11 +3,13 @@
 ! engine plus hybridization expansion version continuous time quantum    !
 ! Monte Carlo (CTQMC) quantum impurity solver                            !
 ! author  : li huang                                                     !
-! version : v2012.08.20T                                                 !
+! version : v2014.01.13T                                                 !
 ! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
 ! comment : this impurity solver is based on segment picture formalism   !
-!           any question, please contact with huangli712@yahoo.com.cn    !
+!           any question, please contact with huangli712@gmail.com       !
 !=========+=========+=========+=========+=========+=========+=========+>>>
+
+# if !defined (API)
 
   program ctqmc_main
      use constants
@@ -186,3 +188,241 @@
 # endif  /* MPI */
 
   end program ctqmc_main
+
+# endif  /* API */
+
+!>>> initialize the ctqmc quantum impurity solver
+  subroutine cat_init_ctqmc(I_mpi, I_solver)
+     use api
+     use control
+
+     implicit none
+
+! external arguments
+! type structure of mpi
+     type (T_mpi), intent(in) :: I_mpi
+
+! type structure of generic solver
+     type (T_segment_azalea), intent(in) :: I_solver
+
+! setup I_mpi
+     nprocs = I_mpi%nprocs
+     myid   = I_mpi%myid
+     master = I_mpi%master
+     cid    = I_mpi%cid
+     cx     = I_mpi%cx
+     cy     = I_mpi%cy
+
+! setup I_solver: integer parameters
+     isscf  = I_solver%isscf
+     issun  = I_solver%issun
+     isspn  = I_solver%isspn
+     isbin  = I_solver%isbin
+     nband  = I_solver%nband
+     nspin  = I_solver%nspin
+     norbs  = I_solver%norbs
+     ncfgs  = I_solver%ncfgs
+     niter  = I_solver%niter
+     mkink  = I_solver%mkink
+     mfreq  = I_solver%mfreq
+     nfreq  = I_solver%nfreq
+     ntime  = I_solver%ntime
+     nflip  = I_solver%nflip
+     ntherm = I_solver%ntherm
+     nsweep = I_solver%nsweep
+     nwrite = I_solver%nwrite
+     nclean = I_solver%nclean
+     nmonte = I_solver%nmonte
+     ncarlo = I_solver%ncarlo
+
+! setup I_solver: real parameters
+     U      = I_solver%U
+     Uc     = I_solver%Uc
+     Uv     = I_solver%Uv
+     Jz     = I_solver%Jz
+     Js     = I_solver%Js
+     Jp     = I_solver%Jp
+     mune   = I_solver%mune
+     beta   = I_solver%beta
+     part   = I_solver%part
+     alpha  = I_solver%alpha
+
+! print the running header for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_header()
+     endif
+
+! print out runtime parameters in summary, only for check
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_summary()
+     endif
+
+! allocate memory and initialize
+     call ctqmc_setup_array()
+
+! prepare initial hybridization function, init self-consistent iteration
+     call ctqmc_selfer_init()
+
+     return
+  end subroutine cat_init_ctqmc
+
+!>>> execute the ctqmc quantum impurity solver
+  subroutine cat_exec_ctqmc(iter)
+     use control
+
+     implicit none
+
+! external arguments
+! current iteration number
+     integer, intent(in) :: iter
+
+! call the continuous time quantum Monte Carlo quantum impurity solver, to
+! build the impurity green's function and self-energy function
+     call ctqmc_impurity_solver(iter)
+
+     return
+  end subroutine cat_exec_ctqmc
+
+!>>> stop the ctqmc quantum impurity solver
+  subroutine cat_stop_ctqmc()
+     use control
+
+     implicit none
+
+! deallocate memory and finalize
+     call ctqmc_final_array()
+
+! print the footer for continuous time quantum Monte Carlo quantum impurity
+! solver and dynamical mean field theory self-consistent engine
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_footer()
+     endif
+
+     return
+  end subroutine cat_stop_ctqmc
+
+!>>> setup the hybridization function
+  subroutine cat_set_hybf(size_t, hybf_t)
+     use control
+     use context
+
+     implicit none
+
+! external arguments
+! size of hybf
+     integer, intent(in) :: size_t
+
+! hybridization function
+     complex(dp), intent(in) :: hybf_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(hybf) ) then
+         call ctqmc_print_error('cat_set_hybf', 'wrong dimension size of hybf_t')
+     endif
+
+! copy data
+     hybf = reshape(hybf_t,(/mfreq,norbs,norbs/))
+
+     return
+  end subroutine cat_set_hybf
+
+!>>> setup the symmetry vector
+  subroutine cat_set_symm(size_t, symm_t)
+     use control
+     use context
+
+     implicit none
+
+! external arguments
+! size of symm
+     integer, intent(in) :: size_t
+
+! symmetry vector
+     integer, intent(in) :: symm_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(symm) ) then
+         call ctqmc_print_error('cat_set_symm', 'wrong dimension size of symm_t')
+     endif
+
+! copy data
+     symm = symm_t
+
+     return
+  end subroutine cat_set_symm
+
+!>>> setup the impurity level
+  subroutine cat_set_eimp(size_t, eimp_t)
+     use control
+     use context
+
+     implicit none
+
+! external arguments
+! size of eimp
+     integer, intent(in) :: size_t
+
+! impurity level
+     real(dp), intent(in) :: eimp_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(eimp) ) then
+         call ctqmc_print_error('cat_set_eimp', 'wrong dimension size of eimp_t')
+     endif
+
+! copy data
+     eimp = eimp_t
+
+     return
+  end subroutine cat_set_eimp
+
+!>>> extract the impurity green's function
+  subroutine cat_get_grnf(size_t, grnf_t)
+     use control
+     use context
+
+     implicit none
+
+! external arguments
+! size of grnf
+     integer, intent(in) :: size_t
+
+! impurity green's function
+     complex(dp), intent(out) :: grnf_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(grnf) ) then
+         call ctqmc_print_error('cat_get_grnf', 'wrong dimension size of grnf_t')
+     endif
+
+! copy data
+     grnf_t = reshape(grnf, (/mfreq*norbs*norbs/))
+
+     return
+  end subroutine cat_get_grnf
+
+!>>> extract the self-energy function
+  subroutine cat_get_sigf(size_t, sigf_t)
+     use control
+     use context
+
+     implicit none
+
+! external arguments
+! size of sigf
+     integer, intent(in) :: size_t
+
+! self-energy function
+     complex(dp), intent(out) :: sigf_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(sig2) ) then
+         call ctqmc_print_error('cat_get_sigf', 'wrong dimension size of sigf_t')
+     endif
+
+! copy data
+     sigf_t = reshape(sig2, (/mfreq*norbs*norbs/))
+
+     return
+  end subroutine cat_get_sigf

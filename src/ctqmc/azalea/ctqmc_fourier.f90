@@ -7,7 +7,7 @@
 !           ctqmc_fourier_backward
 ! source  : ctqmc_fourier.f90
 ! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 05/05/2008 by li huang
 !           01/18/2009 by li huang
 !           09/27/2009 by li huang

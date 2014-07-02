@@ -6,7 +6,7 @@
 !           ctqmc_make_splint
 ! source  : ctqmc_spline.f90
 ! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 05/05/2008 by li huang
 !           02/18/2009 by li huang
 !           09/23/2009 by li huang
