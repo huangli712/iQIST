@@ -21,7 +21,7 @@
 !           ctqmc_make_display <<<---
 ! source  : ctqmc_flavor.f90
 ! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 09/23/2009 by li huang
 !           09/26/2009 by li huang
 !           10/02/2009 by li huang

@@ -13,7 +13,7 @@
 !           spring@spring_sfmt_core
 ! source  : mod_spring.f90
 ! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 01/03/2008 by li huang
 !           01/04/2008 by li huang
 !           01/07/2008 by li huang

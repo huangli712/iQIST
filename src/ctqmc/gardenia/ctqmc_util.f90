@@ -14,7 +14,7 @@
 !           ctqmc_time_analyzer
 ! source  : ctqmc_util.f90
 ! type    : functions & subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
+! author  : li huang (email:huangli712@gmail.com)
 ! history : 10/01/2008 by li huang
 !           02/08/2009 by li huang
 !           09/23/2009 by li huang
