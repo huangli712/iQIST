@@ -1,0 +1,29 @@
+# fortran compiler and linker
+#-------------------------------------------------------------------------
+F90    = mpif90
+LINKER = $(F90)
+
+# fortran preprocessor options, common setting
+#-------------------------------------------------------------------------
+MPI    = -DMPI
+OMP    = #-openmp
+FPP    = -fpp
+CPP    = $(FPP) $(MPI) $(OMP)
+
+# machine tuning options, just for my laptop: iris system
+#-------------------------------------------------------------------------
+GPROF  = #-pg
+CHECK  = -warn all #-check all -traceback -g
+CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
+LEVEL  = -O3 -xHost -unroll-aggressive -align all -heap-arrays 8192
+MTUNE  = -mtune=core2
+
+# flags for compiler and linker
+#-------------------------------------------------------------------------
+FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MTUNE) $(GPROF)
+LFLAGS = -static $(OMP) $(GPROF)
+
+# linear algebra library, lapack and blas
+#-------------------------------------------------------------------------
+LIBS   = -L. -llapack -lblas #-lguide
+LIBS   = -L. -llapack -lgoto #-lguide
