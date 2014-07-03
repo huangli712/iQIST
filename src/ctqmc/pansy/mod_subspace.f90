@@ -7,9 +7,7 @@
 ! the fmat between any two subspaces, it is just a matrix
      type fmat
 ! the dimension 
-         integer :: n
-
-         integer :: m
+         integer :: n, m
 
 ! the items of the matrix
          real(dp), pointer :: item(:,:)
@@ -19,9 +17,6 @@
 ! a sector defines a superstate consists of all the eigenstates labeled by same quantum number
 ! for example: {N, Sz}, {N, Jz}
      type sector
-! the index 
-         integer :: indx
-
 ! the dimension
          integer :: ndim
 
@@ -31,6 +26,9 @@
 ! number of operators
          integer :: nops
 
+! the start index of this sector in the full space
+         integer :: istart
+ 
 ! the next sector it points to when a fermi operator acts on this sector 
 ! 0 for outside of the space, otherwise, it is the index of sector
 ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively

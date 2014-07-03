@@ -2434,551 +2434,126 @@
 !>>> service layer: utility subroutines to calculate trace             <<<
 !-------------------------------------------------------------------------
 
-!>>> core subroutine of begonia
-! used to evaluate the operator traces by direct matrix multiplication.
-! how to deal with the operator traces is the most important problem of
-! the general version hybridization expansion continuous time quantum
-! Monte Carlo impurity solver. since this subroutine should be called
-! for about one thousand millions times in one DMFT loop, so its execution
-! efficiency is our focus.
-!
-! in general, in each quantum Monte Carlo step, we need to multiply all f
-! matrices and related time evolution operators together, and then evaluate
-! the matrix trace. this method is very very inefficient for multiorbitals
-! systems, in which the dimension of f matrix increasing exponently, and
-! for low temperature (large \beta) and weak interaction (small U) systems,
-! in which the perturbation orders is so large, i.e, the number of matrix
-! we need to store and multiply is very large.
-!
-! in order to overcome this problem, we adopt a smart algorithm. we divide
-! the imaginary time axis [0, \beta] into npart parts, and then evaluate
-! operator traces in each part in advance. in each Monte Carlo step, only
-! those modified parts are picked up, and their operators multiplication
-! are performed again. the results are multiplied with the rest parts, and
-! then obtain the final operator traces. in the worst situation, only four
-! parts should be recalculated. in the best situation, only one part should
-! be recalculated.
-!
-! according to our benchmark, this algorithm can improve the efficiency
-! significantly.
-  subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
+!>>> core subroutine of pansy
+! use good quantum number algorithm
+  subroutine ctqmc_make_ztrace_sector(csize, trace)
      use constants
      use control
      use context
 
-     use sparse
-     use stack
-
      implicit none
 
 ! external arguments
-! control flag, possible calculation mode
-! if cmode = 1, partly-trial calculation, useful for ctqmc_insert_ztrace() etc
-! if cmode = 2, partly-normal calculation, not used by now
-! if cmode = 3, fully-trial calculation, useful for ctqmc_reflip_kink()
-! if cmode = 4, fully-normal calculation, useful for ctqmc_retrieve_status()
-     integer, intent(in)   :: cmode
+! the total number of operators for current diagram
+     integer,  intent(in)  :: csize
 
-! total number of operators
-     integer, intent(in)   :: csize
-
-! final trace for matrix multiplication
+! the calculated trace
      real(dp), intent(out) :: trace
 
-! imaginary time value of operator A, only valid in cmode = 1 or 2
-     real(dp), intent(in), optional :: tau_s
-
-! imaginary time value of operator B, only valid in cmode = 1 or 2
-     real(dp), intent(in), optional :: tau_e
-
 ! local variables
-! length in imaginary time axis for each part
-     real(dp) :: interval
+! a particular string begins at one sector
+     integer :: string(csize+1) 
+
+! whether a string can form 
+     logical :: is_string
+
+! current sector and next sector
+     integer :: curr_sect
+     integer :: next_sect
+
+! type of operator
+     integer :: vt
+
+! current operator
+     integer :: vf
+
+! temp matrices
+     real(dp) :: right_mat(max_dim_sect, max_dim_sect)
+     real(dp) :: tmp_mat(max_dim_sect, max_dim_sect)
 
 ! loop index
-     integer  :: i
-     integer  :: j
+     integer :: i, j, k, l
 
-! position of the operator A and operator B, index of part
-     integer  :: tis
-     integer  :: tie
-     integer  :: tip
+! dummy variables
+     integer :: dim1, dim2, dim3
+     integer :: indx
 
-! type for current operator
-     integer  :: vt
+! calculate trace for every subspace and sum them to get the final trace
+     trace = zero
+     do i=1,nsect
+! build the string from the beginning sector, that is:
+! S_a1(q1)-->q2, S_a2(q2)-->q3, ... S_ai(qi)-->qi+1, ..., Sak(qk)-->q1
+! if we find some qi==0, we cycle this sector immediately
 
-! flavor channel for current operator
-     integer  :: vf
-
-! number of operators for each part
-     integer  :: nop(npart)
-
-! start index of operators for each part
-     integer  :: ops(npart)
-
-! end index of operators for each part
-     integer  :: ope(npart)
-
-! dummy sparse matrix structure, in CSR style
-     integer  :: imm1(ncfgs+1)
-     integer  :: jmm1(nzero)
-     real(dp) :: smm1(nzero)
-
-! dummy sparse matrix structure, in CSR style
-     integer  :: imm2(ncfgs+1)
-     integer  :: jmm2(nzero)
-     real(dp) :: smm2(nzero)
-
-! evaluate interval at first
-     interval = beta / real(npart)
-
-! init key arrays
-     nop = 0
-     ops = 0
-     ope = 0
-
-! init global array
-     isave = 0
-
-! build identity sparse matrix as a start matrix
-     call sparse_uni_to_csr( ncfgs, nzero, smm1, jmm1, imm1 )
-
-!-------------------------------------------------------------------------
-! case A: partly-trial mode
-!-------------------------------------------------------------------------
-     if      ( cmode == 1 ) then
-
-! get the position of operator A and operator B
-         tis = ceiling( tau_s / interval )
-         tie = ceiling( tau_e / interval )
-
-! calculate number of operators for each part
-         do i=1,csize
-             j = ceiling( time_v( index_t(i) ) / interval )
-             nop(j) = nop(j) + 1
-         enddo ! over i={1,csize} loop
-
-! calculate the start and end index of operators for each part
-         do i=1,npart
-             if ( nop(i) > 0 ) then
-                 ops(i) = 1
-                 do j=1,i-1
-                     ops(i) = ops(i) + nop(j)
-                 enddo ! over j={1,i-1} loop
-                 ope(i) = ops(i) + nop(i) - 1
-             endif ! back if ( nop(i) > 0 ) block
-         enddo ! over i={1,npart} loop
-
-! determine the influence of operator A, which part should be recalculated
-         isave(tis) = 1
-! special attention: if operator A is on the left or right boundary, then
-! the neighbour part should be recalculated as well
-         if ( nop(tis) > 0 ) then
-             if ( tau_s >= time_v( index_t( ope(tis) ) ) ) then
-                 tip = tis + 1
-                 do while ( tip <= npart )
-                     if ( nop(tip) > 0 ) then
-                         isave(tip) = 1; EXIT
-                     endif
-                     tip = tip + 1
-                 enddo ! over do while loop
+         string = 0
+         is_string = .true.
+         curr_sect = i
+! loop over all the operatos
+         do j=1,csize
+             string(j) = curr_sect 
+             vt = type_v( index_t(j) )
+             vf = flvr_v( index_t(j) ) 
+             next_sect = sect(curr_sect)%next_sector(vf,vt)
+             if (next_sect == 0 ) then
+                 is_string = .false. 
+                 EXIT   ! finish check, exit
              endif
-         else
-             tip = tis + 1
-             do while ( tip <= npart )
-                 if ( nop(tip) > 0 ) then
-                     isave(tip) = 1; EXIT
-                 endif
-                 tip = tip + 1
-             enddo ! over do while loop
-         endif ! back if ( nop(tis) > 0 ) block
+             curr_sect = next_sect
+         enddo ! over j={1, csize} loop
 
-! determine the influence of operator B, which part should be recalculated
-         isave(tie) = 1
-! special attention: if operator B is on the left or right boundary, then
-! the neighbour part should be recalculated as well
-         if ( nop(tie) > 0 ) then
-             if ( tau_e >= time_v( index_t( ope(tie) ) ) ) then
-                 tip = tie + 1
-                 do while ( tip <= npart )
-                     if ( nop(tip) > 0 ) then
-                         isave(tip) = 1; EXIT
-                     endif
-                     tip = tip + 1
-                 enddo ! over do while loop
-             endif
-         else
-             tip = tie + 1
-             do while ( tip <= npart )
-                 if ( nop(tip) > 0 ) then
-                     isave(tip) = 1; EXIT
-                 endif
-                 tip = tip + 1
-             enddo ! over do while loop
-         endif ! back if ( nop(tie) > 0 ) block
+! if it doesn't form a string, we cycle it, go to the next sector
+         if (is_string .eqv. .false.) cycle        
 
-! main loop over all the parts
-         do i=1,npart
+! otherwise, we should do the multiplication
+! add the last sector to string, and check whether string(csize+1) == string(1)
+         string(csize+1) = curr_sect 
+         if ( string(csize+1) /= string(1) ) then
+             call ctqmc_print_error('ctqmc_make_ztrace','the first sector is not equal to the last sector')
+         endif
 
-! if current part need to be recalculated
-             if ( isave(i) == 1 ) then
+! now, we will do the multiplication, call dgemm 
+! build the right hand matrix, set it to unity
+         right_mat = zero
+         do j=1, sect( string(1) ) % ndim
+             right_mat(j,j) = one
+         enddo
 
-! build the identity sparse matrix sop_b as a start matrix
-                 call sparse_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
+! then, do the multiplication for all the operators
+         dim3 = sect(string(1))%ndim
+         do j=1, csize
+             indx = sect(string(j))%istart
+             dim1 = sect(string(j+1))%ndim
+             dim2 = sect(string(j  ))%ndim
+! first, the time evolution operator multiply a right neighbour matrix
+! the result matrix should be sect(string(j))%ndim * sect(string(1))%ndim
+             do k=1,dim2
+                 do l= 1,dim3
+                     right_mat(k,l) = right_mat(k,l) * expt_v(indx+k-1, index_t(j))
+                 enddo
+             enddo
 
-! loop over all the matrix in this part
-                 if ( nop(i) > 0 ) then
-                     operator_loop1: &
-                     do j=ops(i),ope(i)
-! get the type and flavor for current operator
-                         vt = type_v ( index_t(j) )
-                         vf = flvr_v ( index_t(j) )
+! second, the fmat multiply the above right_mat
+! the result matrix should be sect(string(j+1))%ndim * sect(string(1))%ndim
+             vt = type_v( index_t(j) )
+             vf = flvr_v( index_t(j) ) 
+             call ctqmc_dmat_gemm(dim1, dim2, dim3, sect(string(j))%myfmat(vf, vt)%item, right_mat(dim2, dim3), tmp_mat(dim1, dim3)) 
 
-! multiply sop_b matrix with time evolution operator at first, and then
-! multiply the result smm2 matrix with F matrix
-                         call sparse_dia_mm_csr(           ncfgs, nzero, &
-                                                expt_v( :, index_t(j) ), &
-                                   sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-                                         smm2,        jmm2,        imm2 )
-                         if ( vt == 1 ) then ! create  operator
-                             call sparse_csr_mm_csr(       ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_b(:,i),  sop_jb(:,i),  sop_ib(:,i) )
-                         else                ! destroy operator
-                             call sparse_csr_mm_csr(       ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_b(:,i),  sop_jb(:,i),  sop_ib(:,i) )
-                         endif ! back if ( vt == 1 ) block
-                     enddo operator_loop1 ! over j={ops(i),ope(i)} loop
-                 endif ! back if ( nop(i) > 0 ) block
+! copy tmp_mat(dim1, dim3) to right_mat(dim1, dim3)
+             right_mat(1:dim1, 1:dim3) = tmp_mat(1:dim1, 1:dim3) 
+         enddo  ! over j={1, csize} loop
 
-! multiply current part (sop_b) with the rest parts (smm1), and get smm2
-                 call sparse_csr_mm_csr(     ncfgs, ncfgs, ncfgs, nzero, &
-                                   sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-                                         smm1,        jmm1,        imm1, &
-                                         smm2,        jmm2,        imm2 )
+! special treatment of the last time evolution operator
+         indx = sect(string(1))%istart
+         do k=1,dim3
+             do l= 1,dim3
+                 right_mat(k,l) = right_mat(k,l) * expt_t(indx+k-1, 1)
+             enddo
+         enddo
 
-! if current part no need to be recalculated
-             else
-
-! multiply current part (sop_a) with the rest parts (smm1), and get smm2
-                 call sparse_csr_mm_csr(     ncfgs, ncfgs, ncfgs, nzero, &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
-                                         smm1,        jmm1,        imm1, &
-                                         smm2,        jmm2,        imm2 )
-
-
-             endif ! back if ( isave(i) == 1 ) block
-
-! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, smm1, jmm1, imm1 )
-
-         enddo ! over i={1,npart} loop
-
-! multiply the last time evolution operator with smm1, now smm2 is the
-! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,1), smm1, jmm1, imm1, smm2, jmm2, imm2 )
-
-!-------------------------------------------------------------------------
-! case B: partly-normal mode
-!-------------------------------------------------------------------------
-     else if ( cmode == 2 ) then
-
-! get the position of operator A and operator B
-         tis = ceiling( tau_s / interval )
-         tie = ceiling( tau_e / interval )
-
-! calculate number of operators for each part
-         do i=1,csize
-             j = ceiling( time_v( index_v(i) ) / interval )
-             nop(j) = nop(j) + 1
-         enddo ! over i={1,csize} loop
-
-! calculate the start and end index of operators for each part
-         do i=1,npart
-             if ( nop(i) > 0 ) then
-                 ops(i) = 1
-                 do j=1,i-1
-                     ops(i) = ops(i) + nop(j)
-                 enddo ! over j={1,i-1} loop
-                 ope(i) = ops(i) + nop(i) - 1
-             endif ! back if ( nop(i) > 0 ) block
-         enddo ! over i={1,npart} loop
-
-! determine the influence of operator A, which part should be recalculated
-         isave(tis) = 1
-! special attention: if operator A is on the left or right boundary, then
-! the neighbour part should be recalculated as well
-         if ( nop(tis) > 0 ) then
-             if ( tau_s >= time_v( index_v( ope(tis) ) ) ) then
-                 tip = tis + 1
-                 do while ( tip <= npart )
-                     if ( nop(tip) > 0 ) then
-                         isave(tip) = 1; EXIT
-                     endif
-                     tip = tip + 1
-                 enddo ! over do while loop
-             endif
-         else
-             tip = tis + 1
-             do while ( tip <= npart )
-                 if ( nop(tip) > 0 ) then
-                     isave(tip) = 1; EXIT
-                 endif
-                 tip = tip + 1
-             enddo ! over do while loop
-         endif ! back if ( nop(tis) > 0 ) block
-
-! determine the influence of operator B, which part should be recalculated
-         isave(tie) = 1
-! special attention: if operator B is on the left or right boundary, then
-! the neighbour part should be recalculated as well
-         if ( nop(tie) > 0 ) then
-             if ( tau_e >= time_v( index_v( ope(tie) ) ) ) then
-                 tip = tie + 1
-                 do while ( tip <= npart )
-                     if ( nop(tip) > 0 ) then
-                         isave(tip) = 1; EXIT
-                     endif
-                     tip = tip + 1
-                 enddo ! over do while loop
-             endif
-         else
-             tip = tie + 1
-             do while ( tip <= npart )
-                 if ( nop(tip) > 0 ) then
-                     isave(tip) = 1; EXIT
-                 endif
-                 tip = tip + 1
-             enddo ! over do while loop
-         endif ! back if ( nop(tie) > 0 ) block
-
-! main loop over all the parts
-         do i=1,npart
-
-! if current part need to be recalculated
-             if ( isave(i) == 1 ) then
-
-! build the identity sparse matrix sop_a as a start matrix
-                 call sparse_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
-
-! loop over all the matrix in this part
-                 if ( nop(i) > 0 ) then
-                     operator_loop2: &
-                     do j=ops(i),ope(i)
-! get the type and flavor for current operator
-                         vt = type_v ( index_v(j) )
-                         vf = flvr_v ( index_v(j) )
-
-! multiply sop_a matrix with time evolution operator at first, and then
-! multiply the result smm2 matrix with F matrix
-                         call sparse_dia_mm_csr(           ncfgs, nzero, &
-                                                expt_v( :, index_v(j) ), &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
-                                         smm2,        jmm2,        imm2 )
-                         if ( vt == 1 ) then ! create  operator
-                             call sparse_csr_mm_csr(       ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_a(:,i),  sop_ja(:,i),  sop_ia(:,i) )
-                         else                ! destroy operator
-                             call sparse_csr_mm_csr(       ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_a(:,i),  sop_ja(:,i),  sop_ia(:,i) )
-                         endif ! back if ( vt == 1 ) block
-                     enddo operator_loop2 ! over j={ops(i),ope(i)} loop
-                 endif ! back if ( nop(i) > 0 ) block
-
-             endif ! back if ( isave(i) == 1 ) block
-
-! multiply current part (sop_a) with the rest parts (smm1), and get smm2
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
-                                         smm1,        jmm1,        imm1, &
-                                         smm2,        jmm2,        imm2 )
-
-! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, smm1, jmm1, imm1 )
-
-         enddo ! over i={1,npart} loop
-
-! multiply the last time evolution operator with smm1, now smm2 is the
-! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), smm1, jmm1, imm1, smm2, jmm2, imm2 )
-
-! reset isave, since sop_a should not be overrode by sop_b in this case.
-         isave = 0
-
-!-------------------------------------------------------------------------
-! case C: fully-trial mode
-!-------------------------------------------------------------------------
-     else if ( cmode == 3 ) then
-
-! calculate number of operators for each part
-         do i=1,csize
-             j = ceiling( time_v( index_t(i) ) / interval )
-             nop(j) = nop(j) + 1
-         enddo ! over i={1,csize} loop
-
-! calculate the start and end index of operators for each part
-         do i=1,npart
-             if ( nop(i) > 0 ) then
-                 ops(i) = 1
-                 do j=1,i-1
-                     ops(i) = ops(i) + nop(j)
-                 enddo ! over j={1,i-1} loop
-                 ope(i) = ops(i) + nop(i) - 1
-             endif ! back if ( nop(i) > 0 ) block
-         enddo ! over i={1,npart} loop
-
-! now all the parts should be recalculated
-         isave = 1 ! be used in ctqmc_make_evolve()
-
-! main loop over all the parts
-         do i=1,npart
-
-! build the identity sparse matrix sop_b as a start matrix
-             call sparse_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
-
-! loop over all the matrix in this part
-             if ( nop(i) > 0 ) then
-                 operator_loop3: &
-                 do j=ops(i),ope(i)
-! get the type and flavor for current operator
-                     vt = type_v ( index_t(j) )
-                     vf = flvr_v ( index_t(j) )
-
-! multiply sop_b matrix with time evolution operator at first, and then
-! multiply the result smm2 matrix with F matrix
-                     call sparse_dia_mm_csr(               ncfgs, nzero, &
-                                                expt_v( :, index_t(j) ), &
-                                   sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-                                         smm2,        jmm2,        imm2 )
-                     if ( vt == 1 ) then ! create  operator
-                         call sparse_csr_mm_csr(           ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_b(:,i),  sop_jb(:,i),  sop_ib(:,i) )
-                     else                ! destroy operator
-                         call sparse_csr_mm_csr(           ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_b(:,i),  sop_jb(:,i),  sop_ib(:,i) )
-                     endif ! back if ( vt == 1 ) block
-                 enddo operator_loop3 ! over j={ops(i),ope(i)} loop
-             endif ! back if ( nop(i) > 0 ) block
-
-! multiply current part (sop_b) with the rest parts (smm1), and get smm2
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                                   sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-                                         smm1,        jmm1,        imm1, &
-                                         smm2,        jmm2,        imm2 )
-
-! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, smm1, jmm1, imm1 )
-
-         enddo ! over i={1,npart} loop
-
-! multiply the last time evolution operator with smm1, now smm2 is the
-! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), smm1, jmm1, imm1, smm2, jmm2, imm2 )
-
-!-------------------------------------------------------------------------
-! case D: fully-normal mode
-!-------------------------------------------------------------------------
-     else if ( cmode == 4 ) then
-
-! calculate number of operators for each part
-         do i=1,csize
-             j = ceiling( time_v( index_v(i) ) / interval )
-             nop(j) = nop(j) + 1
-         enddo ! over i={1,csize} loop
-
-! calculate the start and end index of operators for each part
-         do i=1,npart
-             if ( nop(i) > 0 ) then
-                 ops(i) = 1
-                 do j=1,i-1
-                     ops(i) = ops(i) + nop(j)
-                 enddo ! over j={1,i-1} loop
-                 ope(i) = ops(i) + nop(i) - 1
-             endif ! back if ( nop(i) > 0 ) block
-         enddo ! over i={1,npart} loop
-
-! now all the parts should be recalculated
-         isave = 0 ! be used in ctqmc_make_evolve()
-
-! main loop over all the parts
-         do i=1,npart
-
-! build the identity sparse matrix sop_a as a start matrix
-             call sparse_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
-
-! loop over all the matrix in this part
-             if ( nop(i) > 0 ) then
-                 operator_loop4: &
-                 do j=ops(i),ope(i)
-! get the type and flavor for current operator
-                     vt = type_v ( index_v(j) )
-                     vf = flvr_v ( index_v(j) )
-
-! multiply sop_a matrix with time evolution operator at first, and then
-! multiply the result smm2 matrix with F matrix
-                     call sparse_dia_mm_csr(               ncfgs, nzero, &
-                                                expt_v( :, index_v(j) ), &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
-                                         smm2,        jmm2,        imm2 )
-                     if ( vt == 1 ) then ! create  operator
-                         call sparse_csr_mm_csr(           ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_a(:,i),  sop_ja(:,i),  sop_ia(:,i) )
-                     else                ! destroy operator
-                         call sparse_csr_mm_csr(           ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_a(:,i),  sop_ja(:,i),  sop_ia(:,i) )
-                     endif ! back if ( vt == 1 ) block
-                 enddo operator_loop4 ! over j={ops(i),ope(i)} loop
-             endif ! back if ( nop(i) > 0 ) block
-
-! multiply current part (sop_a) with the rest parts (smm1), and get smm2
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
-                                         smm1,        jmm1,        imm1, &
-                                         smm2,        jmm2,        imm2 )
-
-! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, smm1, jmm1, imm1 )
-
-         enddo ! over i={1,npart} loop
-
-! multiply the last time evolution operator with smm1, now smm2 is the
-! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), smm1, jmm1, imm1, smm2, jmm2, imm2 )
-
-     endif ! back if ( cmode == 1 ) block
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! now smm2 is the final product, we can use it to evaluate the matrix trace
-     do j=1,ncfgs
-         ddmat(j,1) = sparse_csr_cp_elm( j, j, ncfgs, nzero, smm2, jmm2, imm2 )
-     enddo ! over j={1,ncfgs} loop
-     trace = sum( ddmat(:,1) )
-
-! save the final matrix product to op_s
-     call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, sop_s(:,1), sop_js(:,1), sop_is(:,1) )
+         do j=1, sect(string(1))%ndim
+             trace = trace + right_mat(j,j)
+         enddo
+     enddo ! over i={1, nsect} loop
 
      return
   end subroutine ctqmc_make_ztrace

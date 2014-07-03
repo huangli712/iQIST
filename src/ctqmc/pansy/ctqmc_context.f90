@@ -538,6 +538,9 @@
 ! the total number of sectors
      integer, public, save :: nsect
 
+! the max dimension of the sectors
+     integer, public, save :: max_dim_sect
+
 ! the array contains all the sectors
      type(sector), public, save, allocatable :: sect(:)
 
@@ -941,10 +944,10 @@
 
 ! initialize them
          do i=1, nsect
-             sect(i)%indx = i
              sect(i)%ndim = 0
              sect(i)%nelectron = 0
              sect(i)%nops = norbs
+             sect(i)%istart = 0
              call nullify_one_sector(sect(i))
          enddo 
 

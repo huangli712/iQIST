@@ -265,7 +265,7 @@
 
 ! local variables
 ! loop index
-     integer  :: i
+     integer  :: i, ii
      integer  :: j
      integer  :: k
 
@@ -279,6 +279,8 @@
      real(dp) :: rtmp
      real(dp) :: r1, r2
      real(dp) :: i1, i2
+     real(dp) :: real_tmp1, real_tmp2
+     integer :: int_tmp
 
 ! build identity: unity
      unity = czero
@@ -398,11 +400,6 @@
 ! setup initial eigs, naux, and saux
      eigs = zero
      naux = zero
-     saux = zero
-
-! setup initial op_c and op_d matrix
-     op_c = zero
-     op_d = zero
 
 ! read in initial F matrix if available
 !-------------------------------------------------------------------------
@@ -428,7 +425,6 @@
 
 ! read the data for each sector
              do i=1, nsect
-                 sect(i)%indx = i
                  sect(i)%nops = norbs
                  read(mytmp,*) ! skip the header
 ! read the dimension, total number of electrons of this sector
@@ -479,39 +475,52 @@
 ! close data file
              close(mytmp)
 
+! find the maximum dimension of all the sectors
+             max_dim_sect = sect(1)%ndim
+             do i=2, nsect
+                 if (max_dim_sect < sect(i)%ndim) then
+                     max_dim_sect =  sect(i)%ndim
+                 endif 
+             enddo
+
+! build the istart index for each sector
+             j1 = 0
+             do i=1, nsect
+                 sect(i)%istart = j1 + 1
+                 j1 = j1 + sect(i)%ndim 
+             enddo
+
 ! add the contribution from chemical potential to eigenvalues
+             j1 = 0
              do i=1,nsect
-                 sect(i)%eigenvalue = sect(i)%eigenvalue - mune * sect(i)%nelectron
+                 do j=1, sect(i)%ndim
+                     j1 = j1 + 1
+                     eigs(j1) = sect(i)%eigenvalue(j)  
+                     naux(j1) = sect(i)%nelectron
+                 enddo
              enddo ! over i={1,nsect} loop
+
+! add the contribution from chemical potential to eigenvalues
+             do i=1,ncfgs
+                 eigs(i) = eigs(i) - mune * naux(i)
+             enddo ! over i={1,ncfgs} loop
 
 ! substract the eigenvalues zero point, here we store the eigen energy
 ! zero point in U
-             r1 = minval(sect(i)%eigenvalue)
-             r2 = maxval(sect(i)%eigenvalue)
-             do i=2, nsect
-                 real_tmp1 = minval(sect(i)%eigenvalue)
-                 real_tmp2 = maxval(sect(i)%eigenvalue)
-                 if (real_tmp1 < r1) then 
-                     r1 = real_tmp1
-                 endif
-                 if (real_tmp2 > r2) then
-                     r2 = real_tmp2
-                 endif
-             enddo
+             r1 = minval(eigs)
+             r2 = maxval(eigs)
              U  = r1 + one ! here we choose the minimum as zero point
-             do i=1,nsect
-                 sect(i)%eigenvalue = sect(i)%eigenvalue - U
-             enddo ! over i={1,nsect} loop
+             do i=1,ncfgs
+                 eigs(i) = eigs(i) - U
+             enddo ! over i={1,ncfgs} loop
 
 ! check eigs
 ! note: \infity - \infity is undefined, which return NaN
-             do i=1,nsect
-                 do j=1, sect(i)%ndim
-                     if ( isnan( exp( - beta * sect(i)%eigenvalue(j) ) - exp( - beta * sect(i)%eigenvalue(j) ) ) ) then
-                         call ctqmc_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
-                     endif
-                 enddo
-             enddo ! over i={1,nsect} loop
+             do i=1,ncfgs
+                 if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
+                     call ctqmc_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
+                 endif
+             enddo ! over i={1,ncfgs} loop
 
          else
              call ctqmc_print_error('ctqmc_selfer_init','file atom.cix does not exist')
