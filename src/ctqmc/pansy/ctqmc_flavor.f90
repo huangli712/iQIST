@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : begonia
+! project : pansy
 ! program : cat_insert_ztrace
 !           cat_remove_ztrace
 !           cat_lshift_ztrace
@@ -21,6 +21,7 @@
 !           cat_lshift_flavor
 !           cat_rshift_flavor <<<---
 !           ctqmc_make_ztrace
+!           ctqmc_make_ztrace_sector
 !           ctqmc_make_evolve <<<---
 !           ctqmc_make_equate
 !           ctqmc_make_search <<<---
@@ -30,6 +31,7 @@
 ! source  : ctqmc_flavor.f90
 ! type    : subroutines
 ! author  : li huang (email:huangli712@yahoo.com.cn)
+!           yilin wang (email: wangyilin2015@gmail.com)
 ! history : 09/23/2009 by li huang
 !           09/26/2009 by li huang
 !           10/02/2009 by li huang
@@ -258,7 +260,8 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace(1, nsize+1, matrix_ntrace, tau_start, tau_end)
+!>>>     call ctqmc_make_ztrace(1, nsize+1, matrix_ntrace, tau_start, tau_end)
+     call ctqmc_make_ztrace_sector(1, nsize+1, matrix_ntrace)
 
 ! evaluate trace_ratio
      trace_ratio = matrix_ntrace / matrix_ptrace
@@ -433,7 +436,9 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace(1, nsize-1, matrix_ntrace, tau_start, tau_end)
+!>>>     call ctqmc_make_ztrace(1, nsize-1, matrix_ntrace, tau_start, tau_end)
+
+     call ctqmc_make_ztrace_sector(1, nsize-1, matrix_ntrace)
 
 ! evaluate trace_ratio
      trace_ratio = matrix_ntrace / matrix_ptrace
@@ -576,7 +581,9 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace(1, nsize, matrix_ntrace, tau_start1, tau_start2)
+!>>>     call ctqmc_make_ztrace(1, nsize, matrix_ntrace, tau_start1, tau_start2)
+
+     call ctqmc_make_ztrace_sector(1, nsize, matrix_ntrace)
 
 ! evaluate trace_ratio
      trace_ratio = matrix_ntrace / matrix_ptrace
@@ -719,7 +726,9 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace(1, nsize, matrix_ntrace, tau_end1, tau_end2)
+!>>>     call ctqmc_make_ztrace(1, nsize, matrix_ntrace, tau_end1, tau_end2)
+
+     call ctqmc_make_ztrace_sector(1, nsize, matrix_ntrace)
 
 ! evaluate trace_ratio
      trace_ratio = matrix_ntrace / matrix_ptrace
@@ -2436,7 +2445,7 @@
 
 !>>> core subroutine of pansy
 ! use good quantum number algorithm
-  subroutine ctqmc_make_ztrace_sector(csize, trace)
+  subroutine ctqmc_make_ztrace_sector(cmode, csize, trace)
      use constants
      use control
      use context
@@ -2444,6 +2453,9 @@
      implicit none
 
 ! external arguments
+! the mode of how to calculating trace
+     integer,  intent(in)  :: cmode
+
 ! the total number of operators for current diagram
      integer,  intent(in)  :: csize
 
@@ -2451,6 +2463,12 @@
      real(dp), intent(out) :: trace
 
 ! local variables
+! local version of index_t
+     integer :: index_t_loc(mkink)
+
+! local version of expt_t
+     integer :: expt_t_loc(ncfgs)
+
 ! a particular string begins at one sector
      integer :: string(csize+1) 
 
@@ -2478,6 +2496,23 @@
      integer :: dim1, dim2, dim3
      integer :: indx
 
+! copy data from index_t or index_v to index_t_loc
+! copy data from expt_t to expt_t_loc
+     select case(cmode)
+         case(1)
+             index_t_loc = index_t
+             expt_t_loc = expt_t(:,1)
+         case(2)
+             index_t_loc = index_v
+             expt_t_loc = expt_t(:,2)
+         case(3)
+             index_t_loc = index_t
+             expt_t_loc = expt_t(:,2)
+         case(4)
+             index_t_loc = index_v
+             expt_t_loc = expt_t(:,2)
+     end select
+ 
 ! calculate trace for every subspace and sum them to get the final trace
      trace = zero
      do i=1,nsect
@@ -2491,8 +2526,8 @@
 ! loop over all the operatos
          do j=1,csize
              string(j) = curr_sect 
-             vt = type_v( index_t(j) )
-             vf = flvr_v( index_t(j) ) 
+             vt = type_v( index_t_loc(j) )
+             vf = flvr_v( index_t_loc(j) ) 
              next_sect = sect(curr_sect)%next_sector(vf,vt)
              if (next_sect == 0 ) then
                  is_string = .false. 
@@ -2528,14 +2563,14 @@
 ! the result matrix should be sect(string(j))%ndim * sect(string(1))%ndim
              do k=1,dim2
                  do l= 1,dim3
-                     right_mat(k,l) = right_mat(k,l) * expt_v(indx+k-1, index_t(j))
+                     right_mat(k,l) = right_mat(k,l) * expt_v(indx+k-1, index_t_loc(j))
                  enddo
              enddo
 
 ! second, the fmat multiply the above right_mat
 ! the result matrix should be sect(string(j+1))%ndim * sect(string(1))%ndim
-             vt = type_v( index_t(j) )
-             vf = flvr_v( index_t(j) ) 
+             vt = type_v( index_t_loc(j) )
+             vf = flvr_v( index_t_loc(j) ) 
              call ctqmc_dmat_gemm(dim1, dim2, dim3, sect(string(j))%myfmat(vf, vt)%item, right_mat(dim2, dim3), tmp_mat(dim1, dim3)) 
 
 ! copy tmp_mat(dim1, dim3) to right_mat(dim1, dim3)
@@ -2546,7 +2581,7 @@
          indx = sect(string(1))%istart
          do k=1,dim3
              do l= 1,dim3
-                 right_mat(k,l) = right_mat(k,l) * expt_t(indx+k-1, 1)
+                 right_mat(k,l) = right_mat(k,l) * expt_t_loc(indx+k-1)
              enddo
          enddo
 
@@ -2556,7 +2591,7 @@
      enddo ! over i={1, nsect} loop
 
      return
-  end subroutine ctqmc_make_ztrace
+  end subroutine ctqmc_make_ztrace_sector
 
 !>>> used to update the operator traces of the modified part
   subroutine ctqmc_make_evolve()
