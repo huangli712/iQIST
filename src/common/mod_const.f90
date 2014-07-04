@@ -1,16 +1,11 @@
 !-------------------------------------------------------------------------
-! project : azalea
+! project : fantasy
 ! program : constants  module
-! source  : ctqmc_constants.f90
+! source  : mod_const.f90
 ! type    : module
 ! author  : li huang (email:huangli712@gmail.com)
 ! history : 09/15/2009 by li huang
-! purpose : define the numerical and physical constants for hybridization
-!           expansion version continuous time quantum Monte Carlo (CTQMC)
-!           quantum impurity solver and dynamical mean field theory (DMFT)
-!           self-consistent engine
-! input   :
-! output  :
+! purpose : define the numerical and physical constants
 ! status  : unstable
 ! comment :
 !-------------------------------------------------------------------------
