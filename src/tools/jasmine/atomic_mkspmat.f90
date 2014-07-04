@@ -90,6 +90,87 @@
      return 
   end subroutine atomic_make_soc
 
+!>>> make spin-orbital coupling matrix for 3 band
+   subroutine atomic_make_soc_3band()
+      use constants
+      use control
+      use m_sp_mat
+
+      implicit none
+
+! we use the same default orbital order as in WANNIER90 package 
+! the t2g orbital order of d(l=2) is 
+! |dxz,up>, |dxz,dn>, |dyz,up>, |dyz,dn>, |dxy,up>, |dxy,dn>
+! the coressponding p(l=1) orbital order is
+! |py,up>,  |py,dn>,  |px,up>,  |px,dn>,  |pz,up>,  |pz,dn>
+      sp_soc_mat = czero
+      sp_soc_mat(1,3) =  czi;     sp_soc_mat(1,6) =  -czi
+      sp_soc_mat(2,4) = -czi;     sp_soc_mat(2,5) =  -czi
+      sp_soc_mat(3,1) = -czi;     sp_soc_mat(3,6) =  cone
+      sp_soc_mat(4,2) =  czi;     sp_soc_mat(4,5) = -cone
+      sp_soc_mat(5,2) =  czi;     sp_soc_mat(5,4) = -cone
+      sp_soc_mat(6,1) =  czi;     sp_soc_mat(6,3) =  cone
+! please note: minus sign for spin-orbital coupling strength         
+      sp_soc_mat = -sp_soc_mat * lambda / two 
+
+   end subroutine atomic_make_soc_3band
+
+!>>> make spin-orbital coupling matrix for 5 band
+   subroutine atomic_make_soc_5band()
+      use constants
+      use control
+      use m_sp_mat
+
+      implicit none
+
+! local variables
+! sqrt(3)
+      real(dp) :: sqrt3
+
+      sqrt3 = sqrt(3.0_dp)
+
+! we use the same default orbital order as in WANNIER90 package 
+! the orbital order is: 
+! |dz2,up>, |dz2,dn>, |dxz,up>, |dxz,dn>, |dyz,up>, |dyz,dn>, |dx2-y2,up>, |dx2-y2,dn>, |dxy,up>, |dxy,dn>
+      sp_soc_mat = czero
+      sp_soc_mat(1, 4) = -sqrt3*cone;      sp_soc_mat(1, 6) = sqrt3*czi
+      sp_soc_mat(2, 3) =  sqrt3*cone;      sp_soc_mat(2, 5) = sqrt3*czi
+      sp_soc_mat(3, 2) =  sqrt3*cone;      sp_soc_mat(3, 5) = -czi
+      sp_soc_mat(3, 8) =       -cone;      sp_soc_mat(3, 10)= czi
+      sp_soc_mat(4, 1) = -sqrt3*cone;      sp_soc_mat(4, 6) = czi
+      sp_soc_mat(4, 7) =        cone;      sp_soc_mat(4, 9) = czi
+      sp_soc_mat(5, 2) =  -sqrt3*czi;      sp_soc_mat(5, 3) = czi
+      sp_soc_mat(5, 8) =        -czi;      sp_soc_mat(5, 10)=-cone
+      sp_soc_mat(6, 1) =  -sqrt3*czi;      sp_soc_mat(6, 4) = -czi
+      sp_soc_mat(6, 7) =        -czi;      sp_soc_mat(6, 9) = cone
+      sp_soc_mat(7, 4) =        cone;      sp_soc_mat(7, 6) = czi
+      sp_soc_mat(7, 9) =     -two*czi
+      sp_soc_mat(8, 3) =       -cone;      sp_soc_mat(8, 5) = czi
+      sp_soc_mat(8,10) =      two*czi
+      sp_soc_mat(9, 4) =        -czi;      sp_soc_mat(9, 6) = cone
+      sp_soc_mat(9, 7) =     two*czi;    
+      sp_soc_mat(10,3) =        -czi;      sp_soc_mat(10,5) = -cone
+      sp_soc_mat(10,8) =    -two*czi; 
+  
+! scale the SOC strength lambda
+      sp_soc_mat = sp_soc_mat * lambda / two
+
+      return 
+   end subroutine atomic_make_soc_5band
+
+!>>> make spin-orbital coupling matrix for 7 band
+   subroutine atomic_make_soc_7band()
+      use constants
+      use control
+      use m_sp_mat
+
+      implicit none
+      
+      write(mystd,*) "not implemented now!"
+
+      return
+   end subroutine atomic_make_soc_7band
+
 !>>> make Coulomb interaction U, this subroutine is taken from 
 !>>> duliang's atomic software
 !>>>  $U_{\alpha\betta\delta\gamma}$ coefficent matrix for Uij  <<<!
