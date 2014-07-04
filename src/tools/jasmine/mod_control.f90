@@ -1,6 +1,6 @@
 !=========================================================================!
-! project : clematis
-! program : atomic_control.f90
+! project : jasmne
+! program : mod_control.f90
 ! history : 09/28/2011
 ! authors : xidai and duliang (email:duleung@gmail.com)
 ! purpose : some impartant common control variables
@@ -14,6 +14,20 @@
 !-------------------------------------------------------------------------!
 !>>> atomic Hamiltonian parameters
 !-------------------------------------------------------------------------!
+! the type of task
+     integer, public, save :: itask
+
+! whether crystal field exists or not
+     logical, public, save :: icf
+
+! whether spin-orbital coupling exists or not
+     logical, public, save :: isoc
+
+! the type of Coulomb interaction U
+! 1 for Kanamori (Uc, Uv, Jz, Js, Jp)
+! 2 for Slater Intergral (F0, F2, F4, F6)
+     integer, public, save :: icu
+
 ! number of bands
      integer, public, save :: nband
 
@@ -45,7 +59,7 @@
      real(dp), public, save :: Jp
 
 ! spin-orbit coupling interaction
-     real(dp), public, save :: lamb
+     real(dp), public, save :: lambda
 
 ! the minimal occupancy number
      integer, public, save :: nmin

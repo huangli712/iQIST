@@ -1,76 +1,51 @@
-!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!
-! project : clematis
-! program : atomic_main.f90
-! history : 04/20/2012
-! authors : xidai and duliang (email:duleung@gmail.com)
-! purpose : solve atomic Hamiltonian with spin-orbit coupling (SOC) 
-! comment : These programs are distributed in the hope that they will be 
-!           useful, but WITHOUT ANY WARRANTY; without even the implied 
-!           warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
-!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!
-program atomic_main
-    use constants
-    use control
-    use mod_global
+!=====================================================================
+! atomic main program
+!=====================================================================
 
-    use mod_subspace
-    
-    implicit none
+  program main
+     use control, only itask
 
-    integer :: iorb
-    integer :: ibas, jbas
-    integer :: i, j
+     implicit none
 
-    ! print the running header for atomic problems
-    call atomic_print_header()
+! print the running header for atomic problems
+     call atomic_print_header()
 
-    ! setup important parameters for atomic problems
-    call atomic_config()
+! setup important parameters for atomic problems
+     call atomic_config()
 
-    ! print the running summary for atomic problems
-    call atomic_print_summary()
+! print the running summary for atomic problems
+     call atomic_print_summary()
 
-    ! allocate memory for global arrays and initialize them
-    call atomic_setup_array()
+! make Single Particle related MATrix
+! cystal field, spin-orbital coupling, Coulomb interaction U
+     call atomic_make_spmat()
 
-    ! setup key matrix in atomic problems
-    call atomic_jovian(nstat, cemat, somat, cumat)
+! make Fock BASIS for the FULL many particle Hiblert  space
+     call atomic_make_basis_full()
 
-    ! construct Fock basis sheet (just follow nhtong's note)
-    call atomic_make_basis(norbs, ncfgs, ntots, nstat, basis, invcd, invsn)
+! call the driver
+     select case(itask)
+! itask 1: diagonalize the full Hilbert space
+         case(1) call atomic_driver_fullspace()
+ 
+! itask 2: use good quantum numbers
+! total number of electrons: N
+! for the case of crystal field (CF) plus spin-orbital coupling (SOC)
+         case(2) call atomic_driver_n()
 
-    call atomic_make_good()
-    call atomic_make_subspaces()
-    call atomic_make_towhich()
-    call atomic_trunk_space()
+! itask 3: use good quantum numbers
+! total number of electrons: N 
+! spin: Sz
+! PS number
+! for the case without SOC
+         case(3) call atomic_driver_nszps()
 
-    ! setup transformation matrix from real orbitals to |j2,jz> single particle basis
-    call atomic_make_amtrx(norbs, amtrx)
+! itask 4: use good quantum numbers
+! total number of electrons: N
+! Jz
+! for the case with SOC, and no CF
+         case(4) call atomic_driver_njz() 
+ 
+     end select 
 
-    ! construct atomic Hamiltonian matrix in natural many body basis
-    call atomic_tran_cumat(norbs, amtrx, cumat, cumat_t)
-    cumat = cumat_t
-
-    ! build Hamiltonian matrix for each subspace
-    call atomic_make_hmtrx()
-
-    ! diagonalize each subspace
-    call atomic_diag_hmtrx()
-
-    ! build fmat
-    call atomic_build_cfmat()
-
-    call atomic_write_eigval()
-    call atomic_write_eigvec()
-    call atomic_write_fmat()
-    call atomic_write_ctqmc()
-
-    ! deallocate memory and finalize them
-    call atomic_final_array()
-
-    ! print the ending information for atomic problems
-    call atomic_print_footer()
-
-    stop
-end program atomic_main
-
+  end program main
