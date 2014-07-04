@@ -58,6 +58,12 @@
 ! pair-hopping interaction
      real(dp), public, save :: Jp
 
+! Slater-Cordon parameters
+     real(dp), public, save :: F0
+     real(dp), public, save :: F2
+     real(dp), public, save :: F4
+     real(dp), public, save :: F6
+
 ! spin-orbit coupling interaction
      real(dp), public, save :: lambda
 
