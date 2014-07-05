@@ -20,6 +20,7 @@
 ! cystal field, spin-orbital coupling, Coulomb interaction U
      call atomic_make_spmat()
 
+! make natural basis if ne
 ! make Fock BASIS for the FULL many particle Hiblert  space
      call atomic_make_basis_full()
 

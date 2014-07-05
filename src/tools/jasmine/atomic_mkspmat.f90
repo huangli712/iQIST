@@ -8,26 +8,35 @@
 ! first, allocate memory for these single particle matrices
      call alloc_m_sp_mat()
 
-! second, make crystal field 
-     if (icf .eqv. .true.) then
-         call atomic_make_cf()
-     else
-         sp_cf_mat = czero
+! second, make crystal field and spin-orbital coupling 
+     if (itask == 1) then ! model calculation
+         if (icf > 0) then
+             call atomic_read_cf()
+         else
+             sp_cf_mat = czero
+         endif
+
+         if (isoc > 0) then
+             call atomic_make_soc()
+         else
+             sp_soc_mat = czero
+         endif
+     else ! material calculation
+         ! read the eimp (CF+SOC) matrices on natural basis
+         ! this matrix should be a diagonal matrix, and we just
+         ! need its diagonal elements
+         call atomic_read_eimp()
+         ! read the transformation matrices used to transfer eimp 
+         ! from the standard real orbitals basis to natural basis 
+         call atomic_read_umat()
      endif
 
-! third, make spin-orbital coupling 
-     if (isoc .eqv. .true.) then
-         call atomic_make_soc()
-     else
-         sp_soc_mat = czero
-     endif
-
-! fourth, make Coulomb interaction U
+! third, make Coulomb interaction U
      if (icu == 1) then
-! Kanamori type
+! Kanamori parameters type
          call atomic_make_cumat_kanamori()
      else
-! Slater Integral type
+! Slater-Cordon parameters type
          call atomic_make_cumat_slater()
      endif
 
@@ -35,13 +44,85 @@
   end subroutine atomic_make_spmat 
 
 !>>> make crystal field
-  subroutine atomic_make_cf()
+  subroutine atomic_read_cf()
      use constants
      use m_sp_mat
 
      implicit none
 
 ! local variables
+     logical :: exists
+
+! iostat
+     integer :: ierr
+
+! dummy variables
+     integer :: i, j
+     real(dp) :: real1, real2
+
+! we read crystal field from file "atomic.cf.in"
+! inquire file
+     inquire(file='atomic.cf.in', exist=exists)
+
+     if (exists .eqv. .true.) then
+         open(mytmp, file='atomic.cf.in')
+         do while(.true.)
+             read(mytmp, iostat=ierr) i, j, real1, real2
+             sp_cf_mat(i,j) = dcmplx(real1, real2)
+             if (ierr /= 0) exit
+         enddo
+     else
+         call atomic_print_error('atomic_read_cf', 'no file atomic.cf.in !')
+     endif 
+
+     return
+  end subroutine atomic_read_cf
+
+!>>> read eimp from file 'atomic.eimp.in'
+  subroutine atomic_read_eimp()
+     use constants
+     use control
+     use m_sp_mat
+
+     implicit none
+
+! local variables
+! file status
+     logical :: exists
+
+! loop index
+     integer :: i
+
+! dummy variables
+     integer :: int1, int2
+     real(dp) :: real1, real2
+
+! we read eimp from file 'atomic.eimp.in'
+     inquire(file='atomic.eimp.in', exist=exists)
+
+     if (exists .eqv. .true.) then
+         open(mytmp, file='atomic.eimp.in')
+         do i=1, norbs
+             read(mytmp, *) int1, int2, real1, real2
+             sp_eimp_mat(i,i) = dcmplx(real1, real2)
+         enddo 
+     else
+         call atomic_print_error('atomic_read_eimp', 'no file atomic.eimp.in !')
+     endif
+
+     return
+  end subroutine atomic_read_eimp
+
+!>>> read sp_tran_umat from file 'atomic.umat.in'
+  subroutine atomic_read_umat()
+     use constants
+     use control
+     use m_sp_mat
+
+     implicit none
+
+! local variables
+! file status
      logical :: exists
 
 ! loop index
@@ -51,24 +132,23 @@
      integer :: int1, int2
      real(dp) :: real1, real2
 
-! we read crystal field from file "atomic.cf.in"
-! inquire file
-     inquire(file='atomic.cf.in', exist=exists)
+! we read sp_tran_umat from file 'atomic.umat.in'
+     inquire(file='atomic.umat.in', exist=exists)
 
      if (exists .eqv. .true.) then
-         open(mytmp, file='atomic.cf.in')
+         open(mytmp, file='atomic.umat.in')
          do i=1, norbs
              do j=1, norbs
                  read(mytmp, *) int1, int2, real1, real2
-                 sp_cf_mat(j,i) = dcmplx(real1, real2)
+                 sp_tran_umat(j,i) = dcmplx(real1, real2)
              enddo
-         enddo 
+         enddo
      else
-         call atomic_print_error('atomic_make_cf', 'no file atomic.cf.in !')
-     endif 
+         call atomic_print_error('atomic_read_umat', 'no file atomic.umat.in')
+     endif
 
      return
-  end subroutine atomic_make_cf
+  end subroutine atomic_read_umat
 
 !>>> make spin-orbital coupling 
   subroutine atomic_make_soc()
@@ -322,7 +402,7 @@
          slater_cordon(2) = F2
          slater_cordon(4) = F4
          allocate(gaunt(-l:l, -l:l, 0:2*l)
-         call get_gaunt_5band(gaunt) 
+         call atomic_gaunt_5band(gaunt) 
      elseif(nband == 7) then
          l = 3
          allocate(slater_cordon(0:2*l))     
@@ -332,7 +412,7 @@
          slater_cordon(4) = F4
          slater_cordon(6) = F6
          allocate(gaunt(-l:l, -l:l, 0:2*l)
-         call get_gaunt_7band(gaunt)
+         call atomic_gaunt_7band(gaunt)
      else
          call atomic_print_error('atomic_make_cumat_slater', 'nband is wrong!')
      endif

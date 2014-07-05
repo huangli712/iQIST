@@ -60,7 +60,7 @@
 
   end module m_basis_fullspace
 
-!>>> Single Particle MATrix
+!>>> Single Particle related MATrix
   module m_sp_mat
      use constants, only dp
      use control
@@ -72,8 +72,15 @@
 ! Single Particle Spin-Orbital Coupling MATrix
      complex(dp), public, allocatable, save :: sp_soc_mat(:,:)
 
+! Single Particle Energy of IMPurity MATrix (CF+SOC)
+     complex(dp), public, allocatable, save :: sp_eimp_mat(:,:)
+
 ! Single Particle Coulomb U MATrix
      complex(dp), public, allocatable, save :: sp_cu_mat(:,:,:,:)
+
+! the transformation matrix from the standard real orbitals basis 
+! to natural basis 
+     complex(dp), public, allocatable, save :: sp_tran_umat(:,:)
 
      contains
 
@@ -83,13 +90,17 @@
 
 ! allocate them
         allocate(sp_cf_mat(norbs, norbs))
-        allocate(sp_soc_mat(norbs, norbs)
+        allocate(sp_soc_mat(norbs, norbs))
+        allocate(sp_eimp_mat(norbs, norbs))
         allocate(sp_cu_mat(norbs, norbs, norbs, norbs))
+        allocate(sp_tran_umat(norbs, norbs))
 
 ! init them
         sp_cf_mat  = czero
         sp_soc_mat = czero
+        sp_eimp_mat = czero
         sp_cu_mat  = czero
+        sp_tran_umat = zero
 
         return
      end subroutine alloc_m_sp_mat
@@ -101,7 +112,9 @@
 ! allocate them
         if (allocated(sp_cf_mat))  deallocate(sp_cf_mat)
         if (allocated(sp_soc_mat)) deallocate(sp_soc_mat)
+        if (allocated(sp_eimp_mat)) deallocate(sp_eimp_mat)
         if (allocated(sp_cu_mat))  deallocate(sp_cu_mat)
+        if (allocated(sp_tran_umat))  deallocate(sp_tran_umat)
 
         return
      end subroutine alloc_m_sp_mat
