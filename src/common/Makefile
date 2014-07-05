@@ -4,7 +4,7 @@ include ../build/make.sys
 
 default: all
 
-mod = mod_const.o mod_mpi.o mod_parser.o mod_skynet.o mod_sparse.o mod_spring.o mod_stack.o
+mod = m_const.o m_mpi.o m_parser.o m_skynet.o m_sparse.o m_spring.o m_stack.o
 src =
 objects = $(mod) $(src)
 
