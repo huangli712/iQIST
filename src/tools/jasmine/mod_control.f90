@@ -14,19 +14,38 @@
 !-------------------------------------------------------------------------!
 !>>> atomic Hamiltonian parameters
 !-------------------------------------------------------------------------!
-! the type of task
+! type of task
+! 1: model calculation, 2: material calculation
      integer, public, save :: itask
 
-! whether crystal field exists or not
-     logical, public, save :: icf
+! type of CTQMC algorithm
+! 1: general matrices multiplication
+! 2: good quantum number: N
+! 3: good quantum number: N, Sz, PS
+! 4: good quantum number: N, Jz 
+     integer, public, save :: ictqmc
 
-! whether spin-orbital coupling exists or not
-     logical, public, save :: isoc
+! type of crystal field
+! 0: no crystal field
+! 1: diagonal crystal field
+! 2: non-diagonal crystal field 
+     integer, public, save :: icf
+
+! type of spin-orbital coupling (SOC) 
+! 0: no spin-orbital coupling
+! 1: on-site atomic spin-orbital coupling (SOC), H_soc = \lambda * L*S
+     integer, public, save :: isoc
 
 ! the type of Coulomb interaction U
-! 1 for Kanamori (Uc, Uv, Jz, Js, Jp)
-! 2 for Slater Intergral (F0, F2, F4, F6)
+! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp)
+! 2: Slater-Cordon parameters (F0, F2, F4, F6)
      integer, public, save :: icu
+
+! whether to truncate the Hilbert space for CTQMC's good quantum number algorithm
+! at present, we just support truncate the total number of electrons N
+! 0: don't truncate it
+! 1: truncate it, should set variables min_N and max_N
+     integer, public, save :: itrunc
 
 ! number of bands
      integer, public, save :: nband
@@ -44,6 +63,7 @@
      integer, public, save :: ncfgs
 
 ! intraorbital Coulomb interaction
+! useful when icu = 1
      real(dp), public, save :: Uc  
 
 ! interorbital Coulomb interaction
@@ -59,19 +79,20 @@
      real(dp), public, save :: Jp
 
 ! Slater-Cordon parameters
+! useful when icu = 2
      real(dp), public, save :: F0
      real(dp), public, save :: F2
      real(dp), public, save :: F4
      real(dp), public, save :: F6
 
 ! spin-orbit coupling interaction
+! 
      real(dp), public, save :: lambda
 
-! the minimal occupancy number
-     integer, public, save :: nmin
-
-! the maximal occupancy number 
-     integer, public, save :: nmax
+! the minimal and maximal occupancy number N
+! useful when itrunc = 1
+     integer, public, save :: min_N
+     integer, public, save :: max_N
 
 !-------------------------------------------------------------------------!
 !>>> MPI related common variables

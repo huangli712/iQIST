@@ -24,7 +24,7 @@
      call atomic_make_basis_full()
 
 ! call the driver
-     select case(itask)
+     select case(ictqmc)
 ! itask 1: diagonalize the full Hilbert space
          case(1) call atomic_driver_fullspace()
  
