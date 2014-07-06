@@ -152,3 +152,64 @@
 
      return
   end subroutine atomic_tran_represent
+
+!>>> transform Coulomb interaction U tensor 
+  subroutine atomic_tran_cumat(amtrx, cumat, cumat_t)
+     use constants
+     use control
+
+     implicit none
+
+! transformation matrix from orginal basis to natural basis
+     complex(dp), intent(in) :: amtrx(norbs, norbs)
+
+! coefficents matrix for generalized interaction U in orginal basis
+     complex(dp), intent(in) :: cumat(norbs, norbs, norbs, norbs)
+ 
+! coefficents matrix for generalized interaction U in natural basis
+     complex(dp), intent(out) :: cumat_t(norbs, norbs, norbs, norbs)
+
+! local varoables
+! loop index over orbits in orginal single particle basis
+     integer :: alpha1, alpha2
+     integer :: alpha3, alpha4
+
+! loop index over orbits in natural single particle basis
+     integer :: sigma1, sigma2
+     integer :: sigma3, sigma4
+
+! auxiliary complex(dp) variables
+     complex(dp) :: ctmp
+
+! initialize cumat_t to be zero
+     cumat_t = czero 
+
+     sigma1loop: do sigma1=1,norbs
+     sigma2loop: do sigma2=1,norbs
+     sigma3loop: do sigma3=1,norbs
+     sigma4loop: do sigma4=1,norbs
+         ctmp = czero
+
+         alpha1loop: do alpha1=1,norbs
+         alpha2loop: do alpha2=1,norbs
+         alpha3loop: do alpha3=1,norbs
+         alpha4loop: do alpha4=1,norbs
+             if (abs(cumat(alpha1, alpha2, alpha3, alpha4)) .lt. eps6) cycle
+             ctmp = ctmp + cumat(alpha1, alpha2, alpha3, alpha4)          &
+                  * conjg(amtrx(alpha1, sigma1)) * amtrx(alpha3, sigma3)  &
+                  * conjg(amtrx(alpha2, sigma2)) * amtrx(alpha4, sigma4)
+         enddo alpha4loop ! over alpha4={1,norbs} loop
+         enddo alpha3loop ! over alpha3={1,norbs} loop
+         enddo alpha2loop ! over alpha2={1,norbs} loop
+         enddo alpha1loop ! over alpha1={1,norbs} loop
+
+         cumat_t(sigma1, sigma2, sigma3, sigma4) = ctmp
+     enddo sigma4loop ! over sigma4={1,norbs} loop
+     enddo sigma3loop ! over sigma3={1,norbs} loop
+     enddo sigma2loop ! over sigma2={1,norbs} loop
+     enddo sigma1loop ! over sigma1={1,norbs} loop
+
+     return
+  end subroutine atomic_tran_cumat
+
+

@@ -15,7 +15,8 @@
 !>>> atomic Hamiltonian parameters
 !-------------------------------------------------------------------------!
 ! type of task
-! 1: model calculation, 2: material calculation
+! 1: model calculation
+! 2: material calculation
      integer, public, save :: itask
 
 ! type of CTQMC algorithm
