@@ -1,116 +1,50 @@
-!========================================================================!
-! project : clematis
-! program : atomic_build_basis
-! history : Apr 29, 2011
-! authors : duliang (emial:duleung@gmail.com)
-! purpose : build basis in "ntots" subspace or global space
-! comment : 
-!=========================================================================!
-  subroutine atomic_make_basis(norbs, ncfgs, ntots, nstat, basis, invcd, invsn)
+  subroutine atomic_make_basis_full()
      use constants
+     use control
+     use m_basis_fullspace
 
      implicit none
 
-! external variables
-! number of orbits
-     integer, intent(in) :: norbs
-
-! number of Fock basis
-     integer, intent(in) :: ncfgs
-
-! number of total electrons
-     integer, intent(in) :: ntots
-
-! number of configuration
-     integer, intent(in) :: nstat(0:norbs)
-
-! decimal representation of Fock basis
-     integer, intent(out) :: basis(ncfgs)
-
-! serial number of decimal represented Fock basis
-     integer, intent(out) :: invsn(0:2**norbs-1)
-
-! binary representation of Fock basis
-     integer, intent(out) :: invcd(norbs, ncfgs)
-
 ! local variables
-! loop index over decimal number
-     integer :: inum
+! loop index
+     integer :: i, j
 
-! loop index over fock basis
-     integer :: ibas
+! basis counter
+     integer :: basis_count
 
-! loop index over orbits
-     integer :: ipos
+! number of electrons for Fock state
+     integer :: nelec
 
-! basis counter in global space
-     integer :: icnt
-     integer :: jcnt
+! first, allocate memory for basis related matrices
+     call alloc_m_basis_fullspace()
 
-! number of total electrons
-     integer :: itot
+     do i=0,norbs
+         dim_sub_N(i) = state_pick(i, norbs)
+     enddo 
 
-! number of total electrons denoted by a decical number
-     integer :: nbit
-
-! auxiliary integer variables
-     integer :: casea, caseb
-     integer :: ntiny, nlarg
-
-! initialize some variables
-     icnt = 0; basis = 0
-     jcnt = 0; invsn = 0; invcd = 0
-
-! casea => construct basis sheet in only itot subspace (default)
-! caseb => construct basis sheet in global state space (special)
-     casea = nstat(ntots); caseb = sum(nstat(0:norbs))
-
-     ! case I : many body basis of a subspace
-     if (ncfgs .eq. casea) then
-         ntiny = ntots; nlarg = ntots
-     endif ! back if (ncfgs .eq. casea) block
-
-     ! case II: many body basis of global space
-     if (ncfgs .eq. caseb) then
-         ntiny = 0    ; nlarg = norbs
-     endif ! back if (ncfgs .eq. caseb) block
-
-     ! case III: severe error case
-     if ((ncfgs.ne.casea) .and. (ncfgs.ne.caseb)) then
-         stop "number of configurations ncfgs is wrong, modify dft.atom.in first"
-     endif ! back if ((ncfgs.ne.casea) .and. (ncfgs.eq.caseb)) block
-
-! construct basis(decimal) and "serial number(sn)" in Fock space
-     itotloop: do itot=ntiny,nlarg
-
-         do inum=0,2**norbs-1
-             call verif( inum, norbs, nbit )
-             if ( nbit .eq. itot ) then
-                 icnt = icnt + 1; jcnt = jcnt + 1
-                 basis(icnt) = inum; invsn(inum) = icnt
-             endif ! back if ( nbit .eq. itot ) block
-         enddo ! over inum={0,2**norbs-1} loop
-
-!# very important, check number of configurations in itot subspace
-         if (jcnt .ne. nstat(itot)) then
-             stop "error happened in subroutine atomic_build_basis"
-         endif ! back if ( icnt .ne. nstat(itot) ) block
-         jcnt = 0 ! reinitialize the counter for next subspace
-        
-     enddo itotloop ! over itot={ntiny,nlarg} loop
+     do i=0, norbs
+         do j=0, 2**norbs-1
+             call verif( j, norbs, nelec )
+             if ( nelec .eq. i ) then
+                 basis_count = basis_count + 1
+                 dec_basis(basis_count) = j
+                 index_basis(j) = basis_count
+             endif 
+         enddo 
+     enddo 
 
 ! construct inverse binary code from a decimal number 
-     do ibas=1,ncfgs
-         do ipos=1,norbs
-             if( btest(basis(ibas), ipos-1) ) invcd(ipos, ibas) = 1
-         enddo ! over ipos={1,norbs} loop
-     enddo ! over ibas={1,ncfgs} loop
+     do i=1,ncfgs
+         do j=1,norbs
+             if( btest(dec_basis(i), j-1) ) bin_basis(j, i) = 1
+         enddo 
+     enddo 
 
 ! dump atomic configurations to file "atom.basis.in"
-     call atomic_dump_basis(norbs, ncfgs, basis, invsn, invcd)
+     call atomic_dump_basis()
 
      return
-  end subroutine atomic_make_basis
+  end subroutine atomic_make_basis_fullspace
 
 !>>> electron number denoted by a decimal number
   subroutine verif( inum, norbs, nbits )
@@ -138,3 +72,49 @@
 
      return
   end subroutine verif
+
+!>>> calculate combination algebra 
+  function state_pick(ntiny, nlarg) result(value)
+     implicit none
+
+! external variables
+     integer, intent(in) :: ntiny
+     integer, intent(in) :: nlarg
+
+! local variables
+     integer :: i
+
+! auxiliary integer variable
+     integer :: nlow
+
+! numberator of the combination algebra
+     real(8) :: numer
+
+! denominator of the combination algebra
+     real(8) :: denom
+
+! result value of the combination algebra
+     integer :: value
+
+! transform the combination algebra
+     nlow = min(ntiny, nlarg-ntiny)
+
+! numerator in combination algebra
+     numer = 1.0D0
+     do i=nlarg-nlow+1,nlarg
+        numer = numer * dble(i)
+     enddo ! over i={nlarg-nlow+1,nlarg} loop
+
+! denominator in combination algebra
+     denom = 1.0D0
+     do i=1,nlow
+        denom = denom * dble(i)
+     enddo ! over i={1,nlow} loop
+
+! result value
+     value = nint(numer / denom)
+
+     return
+  end function state_pick
+
+

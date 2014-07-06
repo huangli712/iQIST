@@ -34,7 +34,7 @@
         allocate(dim_sub_N(0:norbs))
         allocate(bin_basis(norbs, ncfgs))
         allocate(dec_basis(ncfgs))
-        allocate(index_basis(ncfgs))
+        allocate(index_basis(0:ncfgs-1))
 
 ! init them
         dim_sub_N = 0
