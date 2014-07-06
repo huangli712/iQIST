@@ -61,7 +61,7 @@
   end module m_basis_fullspace
 
 !>>> Single Particle related MATrix
-  module m_sp_mat
+  module m_spmat
      use constants, only dp
      use control
      implicit none
@@ -85,7 +85,7 @@
      contains
 
 ! allocate memory for these matrix
-     subroutine alloc_m_sp_mat()
+     subroutine alloc_m_spmat()
         implicit none
 
 ! allocate them
@@ -103,10 +103,10 @@
         sp_tran_umat = zero
 
         return
-     end subroutine alloc_m_sp_mat
+     end subroutine alloc_m_spmat
 
 ! deallocate memory for these matrix
-     subroutine dealloc_m_sp_mat()
+     subroutine dealloc_m_spmat()
         implicit none
 
 ! allocate them
@@ -117,13 +117,15 @@
         if (allocated(sp_tran_umat))  deallocate(sp_tran_umat)
 
         return
-     end subroutine alloc_m_sp_mat
+     end subroutine alloc_m_spmat
  
-  end module m_sp_mat
+  end module m_spmat
 
-!>>> atomic Hamiltonian martix related variables
-module m_hmat_fullspace
-    use constants, only: dp
+!>>> many particle matrices for fullspace
+module m_mpmat_fullspace
+    use constants
+    use control
+
     implicit none
 
     ! Many Particle Hamiltonian MATrix (CF + SOC + CU)
@@ -133,9 +135,49 @@ module m_hmat_fullspace
     real(dp),    public, allocatable, save :: mp_hmat_eigval(:)
 
     ! Many Particle Hamiltonian MATrix's EIGen VECtors
-    complex(dp), public, allocatable, save :: mp_hmat_eigvec(:, :)
+    real(dp), public, allocatable, save :: mp_hmat_eigvec(:, :)
 
-end module m_hmat_fullspace
+    ! fmat for annihilation fermion operator
+    real(dp), public, allocatable, save :: mp_anni_fmat(:,:,:)
+
+    ! occupany number for atomic eigenstates
+    real(dp), public, allocatable, save :: mp_occu_mat(:,:)
+
+    contains
+
+    subroutine alloc_m_mpmat_fullspace()
+       implicit none
+
+       allocate(mp_hmat(ncfgs, ncfgs))
+       allocate(mp_hmat_eigval(ncfgs))
+       allocate(mp_hmat_eigvec(ncfgs, ncfgs))
+       allocate(mp_anni_fmat(ncfgs, ncfgs, norbs))
+       allocate(mp_occu_mat(ncfgs, ncfgs))
+
+! init them
+       mp_hmat = czero
+       mp_hmat_eigval = zero
+       mp_hmat_eigvec = zero
+       mp_anni_fmat = zero
+       mp_occu_mat = zero
+
+       return
+    end subroutine alloc_m_mpmat_fullspace
+
+    subroutine dealloc_m_mpmat_fullspace()
+       implicit none
+
+       if(allocated(mp_hmat))        deallocate(mp_hmat)
+       if(allocated(mp_hmat_eigval)) deallocate(mp_hmat_eigval)
+       if(allocated(mp_hmat_eigvec)) deallocate(mp_hmat_eigvec)
+       if(allocated(mp_anni_fmat))   deallocate(mp_anni_fmat)
+       if(allocated(mp_occu_mat))    deallocate(mp_occu_mat)
+
+       return
+    end subroutine dealloc_m_mpmat_fullspace
+
+end module m_mpmat_fullspace
+
 
 module m_subspaces
     use control, only: norbs

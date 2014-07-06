@@ -7,9 +7,54 @@
   subroutine atomic_driver_fullspace()
      use constants
      use control
+     use m_sp_mat
+     use m_basis_fullspace
+     use m_mat_fullspace 
 
      implicit none
-  
+
+! local variables
+     complex(dp) :: tmp_mat(ncfgs, ncfgs)
+     real(dp) :: tmp_mat_real(ncfgs, ncfgs)
+
+! allocate memory 
+     call alloc_m_mat_fullspace()
+
+! build many particle Hamiltonian matrix
+     mp_hmat = czero 
+! first, two fermion operators part
+     tmp_mat = czero 
+     call atomic_make_two_fermion(norbs, ncfgs, sp_eimp_mat, dec_basis, bin_basis, index_basis, tmp_mat)
+     mp_hmat = mp_hmat + tmp_mat 
+! second, four fermion operators part
+     tmp_mat = czero
+     call atomic_make_four_fermion(norbs, ncfgs, sp_cu_mat, dec_basis, bin_basis, index_basis, tmp_mat)
+     mp_hmat = mp_hmat + tmp_mat
+
+! check whether the many particle Hamiltonian is real 
+     call atomic_check_hmat_real(mp_hmat)
+
+! diagonalize mp_hmat
+     tmp_mat_real = real(mp_hmat)
+     call dmat_dsyev(ncfgs, ncfgs, tmp_mat_real, mp_hmat_eigval, mp_hmat_eigvec)
+
+! build fmat
+! first, build fmat in Fock basis
+! then, transform it to the eigen basis
+     call atomic_make_annifmat_fullspace()
+
+! build occupancy number
+     call atomic_make_occumat_fullspace()    
+
+! dump eigenvalue of hmat, occupany number of eigenstates and 
+! annihilation fermion operator to file "atom.cix"
+! for begonian, lavender package
+     call atomic_make_atomcix_fullspace()
+
+! deallocate memory
+     call dealloc_m_mpmat_fullspace()
+
+     return
   end subroutine atomic_driver_fullspace
   
   subroutine atomic_driver_n()

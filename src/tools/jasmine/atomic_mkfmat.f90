@@ -1,3 +1,41 @@
+!>>> build fmat for full space
+  subroutine atomic_make_annifmat_fullspace()
+     use constants
+     use control
+     use m_mpmat_fullspace
+     use m_basis_fullspace
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i,j,k
+
+! left Fock state
+     integer :: left
+
+! right Fock state
+     integer :: right
+
+     do i=1,norbs
+         do j=1,ncfgs
+             right = dec_basis(j)
+             if (btest(right, i-1) .eqv. .true.) then
+                call atomic_eliminate(i, right, left, isgn)
+                k = index_basis(left)
+                mp_anni_mat(k, j, i) = dble(isgn)
+             endif
+         enddo 
+     enddo 
+
+! rotate it to the atomic eigenvector basis
+     do i=1, norbs
+         call atomic_tran_represent_real(ncfgs, mp_anni_mat(:,:,i), mp_hmat_eigvec)
+     enddo
+
+     return
+  end subroutine atomic_make_annifmat_fullspace
+
 !>>> create one electron on ipos of |jold) to deduce |jnew)
 subroutine atomic_construct(ipos, jold, jnew, isgn)
     implicit none
@@ -70,7 +108,7 @@ end subroutine atomic_eliminate
 
 
 !>>> build matrix for construct operator on Fock basis
-subroutine build_cfmat_fock()
+subroutine build_cfmat_fock_njz()
      use constants
      use control
      use mod_fmat
@@ -122,9 +160,9 @@ subroutine build_cfmat_fock()
      enddo ! over iorb={1,norbs} loop
 
      return
-end subroutine build_cfmat_fock
+end subroutine build_cfmat_fock_njz
 
-subroutine cfmat_fock2eigen_basis()
+subroutine cfmat_fock2eigen_basis_njz()
      use constants
      use control
      use mod_fmat
@@ -154,7 +192,7 @@ subroutine cfmat_fock2eigen_basis()
      enddo
 
      return
-end subroutine cfmat_fock2eigen_basis
+end subroutine cfmat_fock2eigen_basis_njz
 
 ! calculate A^T * B * C
 subroutine rotate_fmat(ndimx, ndimy, amat, bmat, cmat)
@@ -180,7 +218,7 @@ subroutine rotate_fmat(ndimx, ndimy, amat, bmat, cmat)
     return
 end subroutine rotate_fmat
 
-subroutine atomic_build_cfmat()
+subroutine atomic_build_cfmat_njz()
     use mod_global 
     implicit none
 
@@ -188,13 +226,13 @@ subroutine atomic_build_cfmat()
     call alloc_glob_fmat()
 
     ! then, build fmat on fock basis
-    call build_cfmat_fock()
+    call build_cfmat_fock_njz()
 
     ! finally, rotate it to eigenvalue basis
-    call cfmat_fock2eigen_basis()
+    call cfmat_fock2eigen_basis_njz()
 
     return
-end subroutine atomic_build_cfmat
+end subroutine atomic_build_cfmat_njz
 
 subroutine atomic_dump_fmtrx(norbs, ncfgs, eval, nval, fmat)
      use constants
