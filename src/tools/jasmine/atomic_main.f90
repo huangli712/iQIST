@@ -20,7 +20,11 @@
 ! cystal field, spin-orbital coupling, Coulomb interaction U
      call atomic_make_spmat()
 
-! make natural basis if ne
+! make natural basis
+! natural basis is the basis on which the on-site impurity 
+! energy matrix is diagonal 
+     call atomic_make_natural()
+ 
 ! make Fock BASIS for the FULL many particle Hiblert  space
      call atomic_make_basis_full()
 
