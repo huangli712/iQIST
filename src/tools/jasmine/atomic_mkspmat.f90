@@ -450,6 +450,8 @@
      enddo ! over betta={1,norbs} loop
      enddo ! over alpha={1,norbs} loop
 
+     sp_cu_mat = half * sp_cu_mat
+
 ! deallocate memory
      if (allocated(slater_cordon)) deallocate(slater_cordon) 
      if (allocated(gaunt))         deallocate(gaunt)
