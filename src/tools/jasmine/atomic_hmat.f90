@@ -1,32 +1,28 @@
-!=========================================================================!
-! project : strawberry
-! program : atomic_build_Hmtrx
-! history : 09/29/2011
-! author  : xidai and duliang (email:duleung@gmail.com)
-! purpose : construct atomic hamiltonian matrix
-! comment : 
-!=========================================================================!
-subroutine atomic_make_hmtrx()
+!>>> make atomic Hamiltonian for the full space
+subroutine atomic_mkhmat_fullspace()
     use constants
     use control
-    use mod_global 
+    use m_basis_fullspace
+    use m_spmat
+    use m_glob_fullspace
+
     implicit none
 
     ! local variables
     ! loop index
-    integer :: isub
+    integer :: i,j
+
+    ! loop index over orbits
     integer :: iorb
-    integer :: jorb
-    integer :: i, j
 
     ! sign change due to fermion anti-commute relation
-    integer :: isgn
-
-    ! loop index over Fock basis
-    integer :: ibas, jbas
+    integer :: sgn
 
     ! new basis state after four fermion operation
     integer :: knew
+
+    ! loop index over Fock basis
+    integer :: ibas, jbas
 
     ! index for general interaction matrix
     integer :: alpha, betta
@@ -35,58 +31,190 @@ subroutine atomic_make_hmtrx()
     ! binary code representation of a state
     integer :: code(norbs)
 
-    ! auxiliary complex(dp) variables
-    complex(dp) :: ztmpa
+    ! start to make Hamiltonian
+    ! initialize hmat
+    hmat = czero
 
-    ! whether in this subspace
-    logical :: insub
+    ! first, two fermion operator terms 
+    do jbas=1, ncfgs
+        alploop: do alpha=1,norbs
+        betloop: do betta=1,norbs
+
+            sgn = 0
+            knew = dec_basis(jbas)
+            code(1:norbs) = bin_basis(1:norbs, jbas)
+          
+            if ( abs(eimpmat(alpha, betta)) .lt. epst ) cycle
+
+            ! simulate one annihilation operator
+            if (code(betta) == 1) then
+                do i=1,betta-1
+                    if (code(i) == 1) sgn = sgn + 1
+                enddo 
+                code(betta) = 0
+
+                ! simulate one creation operator
+                if (code(alpha) == 0) then
+                    do i=1,alpha-1
+                        if (code(i) == 1) sgn = sgn + 1
+                    enddo
+                    code(alpha) = 1
+
+                    ! determine the row number and hamiltonian matrix elememt
+                    knew = knew - 2**(betta-1)
+                    knew = knew + 2**(alpha-1)
+                    sgn  = mod(sgn, 2)
+                    ibas = index_basis(knew)
+                    if (ibas == 0) stop "error while determining row1"
+
+                    hmat(ibas,jbas) = hmat(ibas,jbas) + eimpmat(alpha,betta) * (-1.0d0)**sgn 
+
+                endif ! back if (code(alpha) == 0) block
+            endif ! back if (code(betta) == 1) block
+
+        enddo betloop ! over betta={1,norbs} loop
+        enddo alploop ! over alpha={1,norbs} loop
+    enddo ! over jbas={1,ncfgs} loop
+
+    ! four fermion operator terms (coulomb interaction)
+    do jbas=1, ncfgs
+        alphaloop : do alpha=1,norbs
+        bettaloop : do betta=1,norbs
+        deltaloop : do delta=1,norbs
+        gammaloop : do gamma=1,norbs
+
+            sgn  = 0
+            knew = dec_basis(jbas)
+            code(1:norbs) = bin_basis(1:norbs, jbas)
+
+            if ((alpha .eq. betta) .or. (delta .eq. gamma)) cycle
+            if ( abs(cumat(alpha,betta,delta,gamma)) .lt. epst ) cycle
+
+            ! simulate two annihilation operators
+            if ((code(delta) == 1) .and. (code(gamma) == 1)) then
+                do i=1,gamma-1
+                    if(code(i) == 1) sgn = sgn + 1
+                enddo 
+                code(gamma) = 0
+
+                do i=1,delta-1
+                    if(code(i) == 1) sgn = sgn + 1
+                enddo 
+                code(delta) = 0
+
+                ! simulate two creation operator
+                if ((code(alpha) == 0) .and. (code(betta) == 0)) then
+                    do i=1,betta-1
+                        if(code(i) == 1) sgn = sgn + 1
+                    enddo 
+                    code(betta) = 1
+
+                    do i=1,alpha-1
+                        if(code(i) == 1) sgn = sgn + 1
+                    enddo 
+                    code(alpha) = 1
+
+                    ! determine the row number and hamiltonian matrix elememt
+                    knew = knew - 2**(gamma-1) - 2**(delta-1)
+                    knew = knew + 2**(betta-1) + 2**(alpha-1)
+                    sgn  = mod(sgn, 2)
+                    ibas = index_basis(knew)
+                    if (ibas == 0) stop "error while determining row3"
+
+                    hmat(ibas,jbas) = hmat(ibas,jbas) + cumat(alpha,betta,delta,gamma) * (-1.0d0)**sgn
+
+                endif ! back if ((code(delta) == 1) .and. (code(gamma) == 1)) block
+            endif ! back if ((code(alpha) == 0) .and. (code(betta) == 0)) block
+
+        enddo gammaloop ! over gamma={1,norbs-1} loop
+        enddo deltaloop ! over delta={gamma+1,norbs} loop
+        enddo bettaloop ! over betta={alpha+1,norbs} loop
+        enddo alphaloop ! over alpha={1,norbs-1} loop
+    enddo  
+
+    return
+end subroutine atomic_mkhmat_fullspace
+
+subroutine atomic_mkhmat_sectors(nsect, sectors)
+    use constants
+    use control
+    use m_basis_fullspace
+    use m_spmat
+    use m_sector
+
+    implicit none
+
+    ! external variables
+    ! number of sectors
+    integer, intent(in) :: nsect
+    ! all sectors
+    type(t_sector), intent(inout) :: sectors(nsect)
+
+    ! local variables
+    ! loop index
+    integer :: i, j
+    integer :: isect
+    integer :: iorb, jorb
+    integer :: ibas, jbas
+    integer :: alpha, betta
+    integer :: delta, gamma
+    ! sign change due to fermion anti-commute relation
+    integer :: isgn
+    ! new basis state after four fermion operation
+    integer :: knew
+    ! binary form of a Fock state
+    integer :: code(norbs)
+    ! whether in some sector
+    logical :: insect
      
-    do isub=1, nsubs
-        !=========================================================================!
-        ! two fermion operator terms (crystalline electric field)
-        !=========================================================================!
-        subspaces(isub)%myham = czero
+    do isect=1, nsect
+        sectors(isect)%myham = czero
 
-        do jbas=1,subspaces(isub)%ndim
+        !---------------------------------------------------------------------------------------!
+        ! two fermion operators
+        do jbas=1,sectors(isect)%ndim
+
             alploop: do alpha=1,norbs
             betloop: do betta=1,norbs
 
                 isgn = 0
-                knew = basis(subspaces(isub)%mybasis(jbas))
-                code(1:norbs) = invcd(1:norbs, subspaces(isub)%mybasis(jbas))
-                if ( abs(cemat(alpha, betta)) .lt. eps6 ) cycle
+                knew = dec_basis(sectors(isect)%mybasis(jbas))
+                code(1:norbs) = bin_basis(1:norbs, sectors(isect)%mybasis(jbas))
 
-                ! simulate one eliminate operator
+                if ( abs(eimpmat(alpha, betta)) .lt. epst ) cycle
+
+                ! simulate one annihilation operator
                 if (code(betta) == 1) then
                     do i=1,betta-1
                         if (code(i) == 1) isgn = isgn + 1
                     enddo 
                     code(betta) = 0
 
-                    ! simulate one construct operator
+                    ! simulate one creation operator
                     if (code(alpha) == 0) then
                         do i=1,alpha-1
                             if (code(i) == 1) isgn = isgn + 1
                         enddo
                         code(alpha) = 1
 
-                        ! determine the column number and hamiltonian matrix elememt
+                        ! determine the row number and hamiltonian matrix elememt
                         knew = knew - 2**(betta-1)
                         knew = knew + 2**(alpha-1)
- 
                         isgn  = mod(isgn, 2)
-                        ibas = invsn(knew)
-                        insub = .false.
-                        do i=1, subspaces(isub)%ndim 
-                            if (subspaces(isub)%mybasis(i) == ibas) then
+                        ibas = index_basis(knew)
+                        if (ibas == 0) stop "error while determining row1"
+
+                        insect = .false.
+                        do i=1, sectors(isect)%ndim 
+                            if (sectors(isect)%mybasis(i) == ibas) then
                                 ibas = i
-                                insub = .true.
+                                insect = .true.
                             endif
                         enddo
-                        if (ibas == 0) stop "error while determining row1"
-                        if (insub) then
-                            subspaces(isub)%myham(ibas,jbas) = subspaces(isub)%myham(ibas,jbas) + &
-                                                           cemat(alpha,betta) * (-1.0d0)**isgn 
+
+                        if (insect) then
+                            sectors(isect)%myham(ibas,jbas) = sectors(isect)%myham(ibas,jbas) + &
+                                                           eimpmat(alpha, betta) * (-1.0d0)**isgn 
                         endif
 
                     endif ! back if (code(alpha) == 0) block
@@ -94,112 +222,108 @@ subroutine atomic_make_hmtrx()
 
             enddo betloop ! over betta={1,norbs} loop
             enddo alploop ! over alpha={1,norbs} loop
-        enddo ! over jbas={1,nbas} loop
+        enddo ! over jbas={1,sectors(isect)%ndim} loop
+        !---------------------------------------------------------------------------------------!
 
-        ! four fermion terms in local Hamiltonian
-        do jbas=1,subspaces(isub)%ndim
-           alphaloop : do alpha=1,norbs
-           bettaloop : do betta=1,norbs
-           gammaloop : do gamma=1,norbs
-           deltaloop : do delta=1,norbs
+        !---------------------------------------------------------------------------------------!
+        ! four fermion operators
+        do jbas=1,sectors(isect)%ndim
+            alphaloop : do alpha=1,norbs
+            bettaloop : do betta=1,norbs
+            gammaloop : do gamma=1,norbs
+            deltaloop : do delta=1,norbs
 
-               isgn = 0
-               knew = basis(subspaces(isub)%mybasis(jbas))
-               code(1:norbs) = invcd(1:norbs, subspaces(isub)%mybasis(jbas))
-               !# very important if single particle basis rotated
-               if ((alpha .eq. betta) .or. (delta .eq. gamma)) cycle
-               if ( abs(cumat(alpha,betta,delta,gamma)) .lt. eps6 ) cycle
+                isgn = 0
+                knew = dec_basis(sectors(isect)%mybasis(jbas))
+                code(1:norbs) = bin_basis(1:norbs, sectors(isect)%mybasis(jbas))
 
-               ! simulate two eliminate operator
-               if ((code(delta) == 1) .and. (code(gamma) == 1)) then
-                   do i=1,gamma-1
-                       if(code(i) == 1) isgn = isgn + 1
-                   enddo ! over i={1,gamma-1} loop
-                   code(gamma) = 0
+                ! very important if single particle basis has been rotated
+                if ((alpha .eq. betta) .or. (delta .eq. gamma)) cycle
+                if ( abs(cumat(alpha,betta,delta,gamma)) .lt. epst ) cycle
 
-                   do i=1,delta-1
-                       if(code(i) == 1) isgn = isgn + 1
-                   enddo ! over i={1,delta-1} loop
-                   code(delta) = 0
+                ! simulate two annihilation operators
+                if ((code(delta) == 1) .and. (code(gamma) == 1)) then
+                    do i=1,gamma-1
+                        if(code(i) == 1) isgn = isgn + 1
+                    enddo 
+                    code(gamma) = 0
 
-                   ! simulate two construct operator
-                   if ((code(alpha) == 0) .and. (code(betta) == 0)) then
-                       do i=1,betta-1
-                           if(code(i) == 1) isgn = isgn + 1
-                       enddo ! over i={1,betta-1} loop
-                       code(betta) = 1
+                    do i=1,delta-1
+                        if(code(i) == 1) isgn = isgn + 1
+                    enddo 
+                    code(delta) = 0
 
-                       do i=1,alpha-1
-                           if(code(i) == 1) isgn = isgn + 1
-                       enddo ! over i={1,alpha-1} loop
-                       code(alpha) = 1
+                    ! simulate two creation operators
+                    if ((code(alpha) == 0) .and. (code(betta) == 0)) then
+                        do i=1,betta-1
+                            if(code(i) == 1) isgn = isgn + 1
+                        enddo 
+                        code(betta) = 1
 
-                       ! determine the column number and hamiltonian matrix elememt
-                       knew = knew - 2**(gamma-1) - 2**(delta-1)
-                       knew = knew + 2**(betta-1) + 2**(alpha-1)
+                        do i=1,alpha-1
+                            if(code(i) == 1) isgn = isgn + 1
+                        enddo
+                        code(alpha) = 1
 
-                       ibas = invsn(knew)
-                       isgn = mod(isgn, 2)
-                       insub = .false.
-                       do i=1, subspaces(isub)%ndim 
-                           if (subspaces(isub)%mybasis(i) == ibas) then
-                               ibas = i
-                               insub = .true.
-                           endif
-                       enddo
-                       if (insub) then
-                           subspaces(isub)%myham(ibas,jbas) = subspaces(isub)%myham(ibas,jbas) + &
-                                                cumat(alpha,betta,delta,gamma) * (-1.0d0)**isgn
-                       endif
+                        ! determine the row number and hamiltonian matrix elememt
+                        knew = knew - 2**(gamma-1) - 2**(delta-1)
+                        knew = knew + 2**(betta-1) + 2**(alpha-1)
+                        ibas = index_basis(knew)
+                        isgn = mod(isgn, 2)
 
-                       ! simplly check the fermion anti-commute relation
-                       if ( isgn /= 0 ) then
-                       !$  stop "something wrong in atomic_make_hmat, pls check carefull"
-                       endif ! back if ( sgn /= 0 ) block
+                        insect = .false.
+                        do i=1, sectors(isect)%ndim 
+                            if (sectors(isect)%mybasis(i) == ibas) then
+                                ibas = i
+                                insub = .true.
+                            endif
+                        enddo
 
-                   endif ! back if ((code(delta) == 1) .and. (code(gamma) == 1)) block
-               endif ! back if ((code(alpha) == 0) .and. (code(betta) == 0)) block
+                        if (insect) then
+                            sectors(isect)%myham(ibas,jbas) = sectors(isect)%myham(ibas,jbas) + &
+                                                 cumat(alpha,betta,delta,gamma) * (-1.0d0)**isgn
+                        endif
 
-           enddo deltaloop ! over delta={gamma+1,norbs} loop
-           enddo gammaloop ! over gamma={1,norbs-1} loop
-           enddo bettaloop ! over betta={alpha+1,norbs} loop
-           enddo alphaloop ! over alpha={1,norbs-1} loop
-        enddo ! over jbas={1,ncfgs} loop
+                    endif ! back if ((code(delta) == 1) .and. (code(gamma) == 1)) block
+                endif ! back if ((code(alpha) == 0) .and. (code(betta) == 0)) block
 
-    enddo ! over i={1, nusbs}
+            enddo deltaloop ! over delta={gamma+1,norbs} loop
+            enddo gammaloop ! over gamma={1,norbs-1} loop
+            enddo bettaloop ! over betta={alpha+1,norbs} loop
+            enddo alphaloop ! over alpha={1,norbs-1} loop
+        enddo ! over jbas={1,sectors(isect)%ndim} loop
+        !---------------------------------------------------------------------------------------!
 
-    open(mytst, file='test-ham.dat', status='unknown')
-    do isub=1, nsubs
-        do jbas=1,subspaces(isub)%ndim
-            do ibas=1,subspaces(isub)%ndim
-                if (abs(subspaces(isub)%myham(ibas, jbas)) .lt. eps6) cycle
-                    write(mytst, '(3i8, 2f17.10)') isub, subspaces(isub)%mybasis(ibas), &
-                         subspaces(isub)%mybasis(jbas), subspaces(isub)%myham(ibas, jbas)
-            enddo ! over ibas={1,ncfgs} loop
-        enddo ! over jbas={1,ncfgs} loop
-    enddo
-    close(mytst)
+    enddo ! over i={1, nsect}
+
     return
-end subroutine atomic_make_hmtrx
+end subroutine atomic_mkhmat_sectors
 
-subroutine atomic_diag_hmtrx()
+subroutine atomic_diag_hmat_sectors(nsect, sectors)
     use constants
     use control
-    use mod_global 
+    use m_sector
+
     implicit none
 
+    ! external variables
+    integer, intent(in) :: nsect
+
+    ! sectors
+    type(t_sector), intent(inout) :: sectors(nsect)
+ 
     ! local variables
-    integer :: isub
+    integer :: i
    
-    do isub=1, nsubs
-        call diag_one_subspace(subspaces(isub)%ndim, subspaces(isub)%myham, &
-                               subspaces(isub)%myeigval, subspaces(isub)%myeigvec)
+    do i=1, nsect
+        call diag_one_sector(sectors(i)%ndim, sectors(i)%myham, &
+                               sectors(i)%myeigval, sectors(i)%myeigvec)
     enddo
 
     return
-end subroutine atomic_diag_hmtrx
+end subroutine atomic_diag_hmat_sectors
 
-subroutine diag_one_subspace(ndim, amat, eval, evec)
+subroutine diag_one_sector(ndim, amat, eval, evec)
      use constants
      implicit none
 
@@ -229,6 +353,4 @@ subroutine diag_one_subspace(ndim, amat, eval, evec)
      call dmat_dsyev(ndim, ndim, hmat, eval, evec)
 
      return
-end subroutine diag_one_subspace 
-
-
+end subroutine diag_one_sector 

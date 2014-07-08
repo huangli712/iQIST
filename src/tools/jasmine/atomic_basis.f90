@@ -40,8 +40,8 @@
          enddo 
      enddo 
 
-! dump atomic configurations to file "atom.basis.in"
-     call atomic_dump_basis()
+! dump atomic configurations to file "atom.basis.dat"
+     call atomic_write_basis()
 
      return
   end subroutine atomic_make_basis_fullspace

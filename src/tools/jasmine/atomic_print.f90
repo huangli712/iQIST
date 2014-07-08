@@ -1,86 +1,138 @@
-!-------------------------------------------------------------------------!
-! project : strawberry
-! program : rtgw_print_header
-!           rtgw_print_footer
-!           rtgw_print_summary
-! history : Dec 21, 2010
-! author  : xidai and duliang (email: duleung@gmail.com)
-! purpose :
-! comment :
-!-------------------------------------------------------------------------!
-!>>> print the heading information
-  subroutine atomic_print_header()
-     use constants
-     use control
+!>>> print header
+subroutine atomic_print_header()
+    use constants
+    use control
 
-     implicit none
+    ! string for current date and time
+    character (len = 20) :: date_time_string
 
-     write(mystd,'(2X,A)') ''
-     write(mystd,'(2X,A)') '>>> atomic solver for rotational invariant gutzwiller method'
-     write(mystd,*)
+    ! obtain current date and time
+    call atomic_time_builder(date_time_string)
 
-     write(mystd,'(2X,A)') 'version: '
-     write(mystd,'(2X,A)') 'develop: '
-     write(mystd,'(2X,A)') 'support: '
-     write(mystd,*)
+    write(mystd,'(2X,a)') 'JASMINE'
+    write(mystd,'(2X,a)') '>>> AN ATOMIC PROGRAM FOR CTQMC'
+    
+    write(mystd,*)
 
-     write(mystd,'(2X,A)') 'strawberry >>> running'
+    write(mystd,'(2X,a)') 'version: 2014.07.08T '//'(built at '//__TIME__//" "//__DATE__//')'
+    write(mystd,'(2X,a)') 'develop: by yilin wang @IOP'
+    write(mystd,'(2X,a)') 'support: qhwyl2006@126.com'
+    write(mystd,'(2X,a)') 'license: GPL2 and later versions'
+    write(mystd,*)
+
+    write(mystd,'(2X,a)') 'JASMINE >>> start running at '//date_time_string
 
 # if defined (MPI)
-
-     write(mystd,'(2X,A,I3)') 'strawberry >>> parallel: Y >>> nprocs:', nprocs
-
+    write(mystd,'(2X,a,i4)') 'JASMINE >>> parallelism: Yes >>> processors:', nprocs
 # else   /* MPI */
-
-     write(mystd,'(2X,A,I3)') 'strawberry >>> parallel: N >>> nprocs:', 1
-
+    write(mystd,'(2X,a,i4)') 'JASMINE >>> parallelism: No  >>> processors:', 1
 # endif  /* MPI */
 
-     write(mystd,*)
+    write(mystd,*)
 
-     return
-  end subroutine atomic_print_header
+    return
+end subroutine atomic_print_header
 
-!>>> print the ending information
-  subroutine atomic_print_footer()
-     use constants
-     use control
+!>>> print footer
+subroutine atomic_print_footer()
+    use constants
 
-     implicit none
+    implicit none
 
-! used to record the time information
-     real(dp) :: time
+    ! string for current date and time
+    character (len = 20) :: date_time_string
 
-! obtain time information
-     call cpu_time(time)
+    ! used to record the time usage information
+    real(dp) :: tot_time
 
-     write(mystd,'(2X,A,F10.2,A)') 'strawberry >>> total time spent:', time, 's'
-     write(mystd,*)
+    ! obtain time usage information
+    call cpu_time(tot_time)
 
-     write(mystd,'(2X,A)') 'strawberry >>> hope you good luck. Bye!'
-     write(mystd,'(2X,A)') 'strawberry >>> ending'
+    ! obtain current date and time
+    call atomic_time_builder(date_time_string)
 
-     return
-  end subroutine atomic_print_footer
+    write(mystd,'(2X,a,f10.2,a)') 'JASMINE >>> total time spent:', tot_time, 's'
+    write(mystd,*)
 
-!>>> print the running parameters
-  subroutine atomic_print_summary()
-     use constants
-     use control
+    write(mystd,'(2X,a)') 'JASMINE >>> I am tired and want to go to bed. Bye!'
+    write(mystd,'(2X,a)') 'JASMINE >>> happy ending at '//date_time_string
 
-     implicit none
+    return
+end subroutine atomic_print_footer
 
-     write(mystd, '(2X, A)') 'clemalis >>> parameters list:'
+!>>> print summary
+subroutine atomic_print_summary()
+    use constants
 
-     write(mystd, '(2(4X, A, I10))')   'nband :', nband , 'nspin :', nspin
-     write(mystd, '(2(4X, A, I10))')   'norbs :', norbs , 'ntots :', ntots
-     write(mystd, '(2(4X, A, I10))')   'ncfgs :', ncfgs , 'ncfgs :', ncfgs
+    implicit none
 
-     write(mystd, '(2(4X, A, F10.5))') 'Uc    :', Uc    , 'Uv    :', Uv
-     write(mystd, '(2(4X, A, F10.5))') 'Jz    :', Jz    , 'Js    :', Js
-     write(mystd, '(2(4X, A, F10.5))') 'Jp    :', Jp    , 'J     :', Jz
+    write(mystd,'(2X,a)') 'JASMINE >>> parameters list:'
 
-     write(mystd, *)
+    write(mystd,'(2(4X,a,i10))')   'itask :', itask  , 'ictqmc :', ictqmc
+    write(mystd,'(2(4X,a,i10))')   'icf   :', icf  ,   'isoc   :', isoc
+    write(mystd,'(1(4X,a,i10))')   'icu   :', icu  
 
-     return
-  end subroutine atomic_print_summary
+    write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin  :', nspin
+    write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs  :', ncfgs
+
+    write(mystd,'(2(4X,a,f10.5))') 'Uc    :', Uc     , 'Uv     :', Uv
+    write(mystd,'(2(4X,a,f10.5))') 'Jz    :', Jz     , 'Js     :', Js
+    write(mystd,'(1(4X,a,f10.5))') 'Jp    :', Jp     
+
+    write(mystd,'(2(4X,a,f10.5))') 'F0    :', F0   ,   'F2     :', F2
+    write(mystd,'(2(4X,a,f10.5))') 'F4    :', F4   ,   'F6     :', F6
+
+    write(mystd,'(1(4X,a,f10.5))') 'lambda:', lambda
+
+    write(mystd,*)
+
+    return
+end subroutine atomic_print_summary
+
+!>>> print warning
+subroutine atomic_print_exception(sub, msg)
+    use constants
+
+    implicit none
+
+    ! external arguments
+    ! subroutine name
+    character(len=*), intent(in) :: sub
+
+    ! exception message
+    character(len=*), intent(in) :: msg
+
+    ! print error information
+    write(mystd,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
+
+    ! CONTINUE/PAUSE THE PROGRAM
+    !-------------------------------------------------------------------------
+         CONTINUE ! OR PAUSE
+    !-------------------------------------------------------------------------
+
+    return
+end subroutine atomic_print_exception
+
+!>>> print error
+subroutine atomic_print_error(sub, msg)
+    use constants
+
+    implicit none
+
+    ! external arguments
+    ! subroutine name
+    character(len=*), intent(in) :: sub
+
+    ! error message
+    character(len=*), intent(in) :: msg
+
+    ! print error information
+    write(mystd,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
+
+    ! TERMINATE THE PROGRAM
+    !-------------------------------------------------------------------------
+         STOP
+    !-------------------------------------------------------------------------
+
+    return
+end subroutine atomic_print_error

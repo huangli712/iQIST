@@ -464,7 +464,7 @@
                              read(mytmp,*) ! skip the header
                              do col=1, sect(i)%ndim
                                  do row=1, sect(ii)%ndim
-                                     read(mytmp, *) j1, j2, sect(i)%myfmat(j,0)%item(row, col)
+                                     read(mytmp, *) j1, j2, sect(i)%myfmat(j,k)%item(row, col)
                                  enddo
                              enddo
                          endif ! back to if ( ii/= 0 ) then block

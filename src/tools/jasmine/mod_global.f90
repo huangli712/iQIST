@@ -1,380 +1,224 @@
-!=========================================================================!
-! project : jasmine
-! program : context module
-! history : Apr 26, 2011
-! authors : xidai and duliang {duleung@gmail.com}
-! purpose : important arrays defined for main program 
-! comment :
-!=========================================================================!
+!>>> Fock basis of fullspace
+module m_basis_fullspace
+    use control
+    implicit none
 
-!>>> Fock basis related matrix, fullspace case
-  module m_basis_fullspace
-     use control
-     implicit none
+    ! dimension of total electron N's subspace 
+    integer, public, allocatable, save :: dim_sub_n(:)
 
-! DIMension of each SUBspace labeled by total electron number N
-     integer, public, allocatable, save :: dim_sub_N(:)
+    ! binary form of Fock basis
+    integer, public, allocatable, save :: bin_basis(:,:)
 
-! BINary form of a BASIS
-     integer, public, allocatable, save :: bin_basis(:,:)
+    ! decimal form of Fock basis
+    integer, public, allocatable, save :: dec_basis(:)
 
-! DECimal form of BASIS
-     integer, public, allocatable, save :: dec_basis(:)
+    ! index of Fock basis, given their decimal number
+    integer, public, allocatable, save :: index_basis(:)
 
-! INDEX of BASIS, given their decimal number
-     integer, public, allocatable, save :: index_basis(:)
+    contains
 
-     contains
+    !>>> allocate memory for these matrices
+    subroutine alloc_m_basis_fullspace()
+       implicit none
 
-! allocate memory for these matrices
-     subroutine alloc_m_basis_fullspace()
+       ! allocate them
+       allocate(dim_sub_n(0:norbs))
+       allocate(bin_basis(norbs, ncfgs))
+       allocate(dec_basis(ncfgs))
+       allocate(index_basis(0:ncfgs-1))
+
+       ! init them
+       dim_sub_n = 0
+       bin_basis = 0
+       dec_bsis = 0
+       index_basis = 0
+
+       return
+    end subroutine alloc_m_basis_fullspace
+
+    ! deallocate memory for these matrices
+    subroutine dealloc_m_basis_fullspace()
+       implicit none
+
+       ! deallocate them
+       if (allocated(dim_sub_n))   deallocate(dim_sub_n)
+       if (allocated(bin_basis))   deallocate(bin_basis)
+       if (allocated(dec_basis))   deallocate(dec_basis) 
+       if (allocated(index_basis)) deallocate(index_basis) 
+
+       return
+    end subroutine dealloc_m_basis_fullspace
+
+end module m_basis_fullspace
+
+!>>> single particle related matrices
+! crystal field, spin-orbital coupling, Coulomb interaction U tensor
+module m_spmat
+    use constants, only dp
+    use control
+    implicit none
+
+    ! crystal filed (CF)
+    complex(dp), public, allocatable, save :: cfmat(:,:) 
+
+    ! spin-orbital coupling (SOC)
+    complex(dp), public, allocatable, save :: socmat(:,:)
+
+    ! on-site energy (CF+SOC) of impurity
+    complex(dp), public, allocatable, save :: eimpmat(:,:)
+
+    ! Coulomb interaction U tensor, it should be real
+    complex(dp), public, allocatable, save :: cumat(:,:,:,:)
+
+    ! the transformation matrix from origional basis to natural basis 
+    ! we keep them real
+    complex(dp), public, allocatable, save :: tran_umat(:,:)
+
+    contains
+
+    !>>> allocate memory for these matrix
+    subroutine alloc_m_spmat()
         implicit none
 
-! allocate them
-        allocate(dim_sub_N(0:norbs))
-        allocate(bin_basis(norbs, ncfgs))
-        allocate(dec_basis(ncfgs))
-        allocate(index_basis(0:ncfgs-1))
+        ! allocate them
+        allocate(cfmat(norbs, norbs))
+        allocate(socmat(norbs, norbs))
+        allocate(eimpmat(norbs, norbs))
+        allocate(cumat(norbs, norbs, norbs, norbs))
+        allocate(tran_umat(norbs, norbs))
 
-! init them
-        dim_sub_N = 0
-        bin_basis = 0
-        dec_bsis = 0
-        index_basis = 0
+        ! init them
+        cfmat    = czero
+        socmat   = czero
+        eimpmat  = czero
+        cumat    = czero
+        tran_umat= czero
 
         return
-     end subroutine alloc_m_basis_fullspace
+    end subroutine alloc_m_spmat
 
-! deallocate memory for these matrices
-     subroutine dealloc_m_basis_fullspace()
+    !>>> deallocate memory for these matrix
+    subroutine dealloc_m_spmat()
         implicit none
 
-! deallocate them
-        if (allocated(dim_sub_N))   deallocate(dim_sub_N)
-        if (allocated(bin_basis))   deallocate(bin_basis)
-        if (allocated(dec_basis))   deallocate(dec_basis) 
-        if (allocated(index_basis)) deallocate(index_basis) 
+        ! deallocate them
+        if (allocated(cfmat))      deallocate(cfmat)
+        if (allocated(socmat))     deallocate(socmat)
+        if (allocated(eimpmat))    deallocate(eimpmat)
+        if (allocated(cumat))      deallocate(cumat)
+        if (allocated(tran_umat))  deallocate(tran_umat)
 
         return
-     end subroutine dealloc_m_basis_fullspace
+    end subroutine alloc_m_spmat
 
-  end module m_basis_fullspace
+end module m_spmat
 
-!>>> Single Particle related MATrix
-  module m_spmat
-     use constants, only dp
-     use control
-     implicit none
-
-! Single Particle Crystal Field MATrix
-     complex(dp), public, allocatable, save :: sp_cf_mat(:,:) 
-
-! Single Particle Spin-Orbital Coupling MATrix
-     complex(dp), public, allocatable, save :: sp_soc_mat(:,:)
-
-! Single Particle Energy of IMPurity MATrix (CF+SOC)
-     complex(dp), public, allocatable, save :: sp_eimp_mat(:,:)
-
-! Single Particle Coulomb U MATrix
-     complex(dp), public, allocatable, save :: sp_cu_mat(:,:,:,:)
-
-! the transformation matrix from the standard real orbitals basis 
-! to natural basis 
-     complex(dp), public, allocatable, save :: sp_tran_umat(:,:)
-
-     contains
-
-! allocate memory for these matrix
-     subroutine alloc_m_spmat()
-        implicit none
-
-! allocate them
-        allocate(sp_cf_mat(norbs, norbs))
-        allocate(sp_soc_mat(norbs, norbs))
-        allocate(sp_eimp_mat(norbs, norbs))
-        allocate(sp_cu_mat(norbs, norbs, norbs, norbs))
-        allocate(sp_tran_umat(norbs, norbs))
-
-! init them
-        sp_cf_mat  = czero
-        sp_soc_mat = czero
-        sp_eimp_mat = czero
-        sp_cu_mat  = czero
-        sp_tran_umat = zero
-
-        return
-     end subroutine alloc_m_spmat
-
-! deallocate memory for these matrix
-     subroutine dealloc_m_spmat()
-        implicit none
-
-! allocate them
-        if (allocated(sp_cf_mat))  deallocate(sp_cf_mat)
-        if (allocated(sp_soc_mat)) deallocate(sp_soc_mat)
-        if (allocated(sp_eimp_mat)) deallocate(sp_eimp_mat)
-        if (allocated(sp_cu_mat))  deallocate(sp_cu_mat)
-        if (allocated(sp_tran_umat))  deallocate(sp_tran_umat)
-
-        return
-     end subroutine alloc_m_spmat
- 
-  end module m_spmat
-
-!>>> many particle matrices for fullspace
-module m_mpmat_fullspace
+!>>> global variables for fullspace case
+module m_glob_fullspace
     use constants
     use control
 
     implicit none
 
-    ! Many Particle Hamiltonian MATrix (CF + SOC + CU)
-    complex(dp), public, allocatable, save :: mp_hmat(:, :)
+    ! atomic Hamiltonian (CF + SOC + CU)
+    complex(dp), public, allocatable, save :: hmat(:, :)
 
-    ! Many Particle Hamiltonian MATrix's EIGen VALues
-    real(dp),    public, allocatable, save :: mp_hmat_eigval(:)
+    ! eigen value of hmat
+    real(dp), public, allocatable, save :: hmat_eigval(:)
 
-    ! Many Particle Hamiltonian MATrix's EIGen VECtors
-    real(dp), public, allocatable, save :: mp_hmat_eigvec(:, :)
+    ! eigen vector of hmat
+    real(dp), public, allocatable, save :: hmat_eigvec(:, :)
 
     ! fmat for annihilation fermion operator
-    real(dp), public, allocatable, save :: mp_anni_fmat(:,:,:)
+    real(dp), public, allocatable, save :: anni_fmat(:,:,:)
 
     ! occupany number for atomic eigenstates
-    real(dp), public, allocatable, save :: mp_occu_mat(:,:)
+    real(dp), public, allocatable, save :: occu_mat(:,:)
 
     contains
 
-    subroutine alloc_m_mpmat_fullspace()
-       implicit none
+    subroutine alloc_m_glob_fullspace()
+        implicit none
 
-       allocate(mp_hmat(ncfgs, ncfgs))
-       allocate(mp_hmat_eigval(ncfgs))
-       allocate(mp_hmat_eigvec(ncfgs, ncfgs))
-       allocate(mp_anni_fmat(ncfgs, ncfgs, norbs))
-       allocate(mp_occu_mat(ncfgs, ncfgs))
+        allocate(hmat(ncfgs, ncfgs))
+        allocate(hmat_eigval(ncfgs))
+        allocate(hmat_eigvec(ncfgs, ncfgs))
+        allocate(anni_fmat(ncfgs, ncfgs, norbs))
+        allocate(occu_mat(ncfgs, ncfgs))
 
-! init them
-       mp_hmat = czero
-       mp_hmat_eigval = zero
-       mp_hmat_eigvec = zero
-       mp_anni_fmat = zero
-       mp_occu_mat = zero
+        ! init them
+        hmat = czero
+        hmat_eigval = zero
+        hmat_eigvec = zero
+        anni_fmat = zero
+        occu_mat = zero
 
-       return
-    end subroutine alloc_m_mpmat_fullspace
+        return
+    end subroutine alloc_m_glob_fullspace
 
-    subroutine dealloc_m_mpmat_fullspace()
-       implicit none
+    subroutine dealloc_m_glob_fullspace()
+        implicit none
 
-       if(allocated(mp_hmat))        deallocate(mp_hmat)
-       if(allocated(mp_hmat_eigval)) deallocate(mp_hmat_eigval)
-       if(allocated(mp_hmat_eigvec)) deallocate(mp_hmat_eigvec)
-       if(allocated(mp_anni_fmat))   deallocate(mp_anni_fmat)
-       if(allocated(mp_occu_mat))    deallocate(mp_occu_mat)
+        if(allocated(hmat))        deallocate(hmat)
+        if(allocated(hmat_eigval)) deallocate(hmat_eigval)
+        if(allocated(hmat_eigvec)) deallocate(hmat_eigvec)
+        if(allocated(anni_fmat))   deallocate(anni_fmat)
+        if(allocated(occu_mat))    deallocate(occu_mat)
 
-       return
-    end subroutine dealloc_m_mpmat_fullspace
+        return
+    end subroutine dealloc_m_glob_fullspace
 
 end module m_mpmat_fullspace
 
-
-module m_subspaces
-    use control, only: norbs
-    use mod_subspace
+!>>> global variables for sectors
+module m_sectors_njz
+    use control
+    use m_sector
     implicit none
 
-    ! number of subspaces of $H_{\text{loc}}$
-    integer, public, save :: nsubs
-    ! data structure for all of the subspaces
-    type(type_subspace), public, allocatable, save :: subspaces(:)
-    ! the index from one subspace to another subspace 
-    ! for create operator $d_{j^2,j_z}^{\dagger}\Ket{N,J_z} = \Ket{N+1,J_z+j_z}$
-    integer, public, allocatable, save :: c_towhich(:,:)
-    ! if truncated by $N$
-    integer, public, allocatable, save :: c_towhich_trunk(:,:)
-    ! for destory operator $d_{j^2,j_z}\Ket{N,J_z} = \Ket{N-1,J_z-j_z}$
-    integer, public, allocatable, save :: d_towhich(:,:)
-    ! if truncated by $N$
-    integer, public, allocatable, save :: d_towhich_trunk(:,:)
+    ! number of sectors
+    integer, public, save :: nsectors
+
+    ! all the sectors
+    type(t_sector), public, allocatable, save :: sectors(:)
+
+    ! the good quantum numbers for each sector
+    type(t_good_njz), public, allocatable, save :: good_njz(:) 
 
     contains
 
-    subroutine alloc_glob_subspaces()
+    subroutine alloc_m_sectors_njz()
         implicit none
 
-        allocate(subspaces(nsubs)) 
-        allocate(c_towhich(nsubs, norbs)) 
-        allocate(c_towhich_trunk(nsubs, norbs)) 
-        allocate(d_towhich(nsubs, norbs)) 
-        allocate(d_towhich_trunk(nsubs, norbs)) 
+        ! local variables
+        integer :: i
+
+        allocate(sectors(nsectors)) 
+        allocate(good_njz(nsectors))
+
+        ! nullify each sector
+        do i=1, nsectors
+            call nullify_one_sector(sectors(i))
+        enddo          
 
         return
-    end subroutine alloc_glob_subspaces
+    end subroutine alloc_m_sectors_njz
 
-    subroutine dealloc_glob_subspaces()
+    subroutine dealloc_m_sectors_njz()
         implicit none
         
         integer :: i
         ! we will deallocate memory for pointers in type_subsapce 
         ! before deallocating subspaces to avoid memory leak 
    
-        do i=1, nsubs
-            call dealloc_one_subspace(subspaces(i)) 
+        do i=1, nsectors
+            call dealloc_one_sector(sectors(i)) 
         enddo 
 
-        if (allocated(subspaces))  deallocate(subspaces) 
-        if (allocated(c_towhich))  deallocate(c_towhich) 
-        if (allocated(c_towhich_trunk))  deallocate(c_towhich_trunk) 
-        if (allocated(d_towhich))  deallocate(d_towhich) 
-        if (allocated(d_towhich_trunk))  deallocate(d_towhich_trunk) 
+        if (allocated(sectors))  deallocate(sectors) 
+        if (allocated(good_njz)) deallocate(good_njz)
        
         return
-    end subroutine dealloc_glob_subspaces
+    end subroutine dealloc_m_sectors_njz
 
-end module mod_glob_subspaces
-
-module mod_glob_fmat
-    use constants, only: dp
-    use control, only: norbs
-    use mod_glob_subspaces
-    use mod_fmat
-    implicit none
-
-    type(type_fmat), public, save, allocatable :: c_fmat(:,:)
-
-    contains
-
-    subroutine alloc_glob_fmat()
-        implicit none
-
-        allocate(c_fmat(nsubs,norbs))
-
-        return
-    end subroutine alloc_glob_fmat
-
-    subroutine dealloc_glob_fmat()
-        implicit none
-
-        ! local variables
-        ! loop index
-        integer :: i,j 
-        
-        ! first, deallocate the memory of each c_fmat(i,j)
-        do i=1, norbs
-            do j=1, nsubs
-                call dealloc_one_fmat(c_fmat(j, i))
-            enddo
-        enddo
-
-        ! then, deallocate c_fmat
-        if (allocated(c_fmat)) deallocate(c_fmat)
-
-        return
-    end subroutine dealloc_glob_fmat
-
-end module mod_glob_fmat
-
-!-------------------------------------------------------------------------!
-!>>> memory managment subroutines (allocate and deallocate memory)
-!-------------------------------------------------------------------------!
-module mod_global
-    use constants
-    use control
-    use mod_glob_basis
-    use mod_glob_hmtrx
-    use mod_glob_subspaces
-    use mod_glob_fmat
-    implicit none
-
-    ! status flag
-    integer, private :: istat
-
-    contains
-
-    !>>> allocate memory atomic_basis
-    subroutine atomic_allocate_memory_basis()
-
-        implicit none
-
-        allocate(nstat(0:norbs), stat=istat); nstat = 0
-        allocate(basis(1:ncfgs), stat=istat); basis = 0
-        allocate(good(1:norbs), stat=istat); good = 0
-        allocate(invsn(0:2**norbs-1), stat=istat); invsn = 0
-        allocate(invcd(1:norbs, 1:ncfgs), stat=istat); invcd = 0
-
-        if (istat /= 0) then
-            stop "error happened in atomic_allocate_memory_basis"
-        endif ! back if (istat /= 0) block
-
-        return
-    end subroutine atomic_allocate_memory_basis
-
-    !>>> allocate memory atomic_Hmtrx
-    subroutine atomic_allocate_memory_hmtrx()
-        implicit none
-
-        allocate(eloc(norbs), stat=istat); eloc = 0.0D0
-        allocate(eigs(ncfgs), stat=istat); eigs = 0.0D0
-        allocate(eigv(ncfgs, ncfgs), stat=istat); eigv = dcmplx(0.0D0, 0.0D0)
-        allocate(amtrx(norbs, norbs), stat=istat); amtrx = dcmplx(0.0D0, 0.0D0)
-        allocate(somat(norbs, norbs), stat=istat); somat = dcmplx(0.0D0, 0.0D0)
-        allocate(cemat(norbs, norbs), stat=istat); cemat = dcmplx(0.0D0, 0.0D0)
-        allocate(hmat(ncfgs, ncfgs), stat=istat); hmat = dcmplx(0.0D0, 0.0D0)
-        allocate(cumat(norbs, norbs, norbs, norbs), stat=istat); cumat = dcmplx(0.0D0, 0.0D0)
-        allocate(cumat_t(norbs, norbs, norbs, norbs), stat=istat); cumat_t = dcmplx(0.0D0, 0.0D0)
-
-        if (istat /= 0) then
-            stop "error happened in atomic_allocate_memory_hmtrx"
-        endif ! back if (istat /= 0) block
-
-        return
-    end subroutine atomic_allocate_memory_hmtrx
-
-    !>>> deallocate memory atomic_basis
-    subroutine atomic_deallocate_memory_basis()
-        implicit none
-
-        if (allocated(nstat)) deallocate(nstat)
-        if (allocated(invsn)) deallocate(invsn)
-        if (allocated(invcd)) deallocate(invcd)
-        if (allocated(basis)) deallocate(basis)
-        if (allocated(good))  deallocate(good)
-
-        return
-    end subroutine atomic_deallocate_memory_basis
-
-    !>>> deallocate memory atomic_hmtrx
-    subroutine atomic_deallocate_memory_hmtrx()
-        implicit none
-
-        if (allocated(cemat)) deallocate(cemat)
-        if (allocated(hmat)) deallocate(hmat)
-
-        if (allocated(eigs)) deallocate(eigs)
-        if (allocated(eigv)) deallocate(eigv)
-
-        if (allocated(cumat)) deallocate(cumat)
-        if (allocated(somat)) deallocate(somat)
-        if (allocated(cumat_t)) deallocate(cumat_t)
-        
-        return
-    end subroutine atomic_deallocate_memory_hmtrx
-
-    subroutine atomic_make_good()
-        use mod_mkgood
-        implicit none
-        
-        select case(norbs)
-        case(6)
-            call make_good_3band(good)
-        case(10)
-            call make_good_5band(good)
-        case(14)
-            call make_good_7band(good)           
-        end select
-         
-        return
-    end subroutine atomic_make_good
-
-end module mod_global
+end module m_sectors_njz
