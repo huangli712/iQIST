@@ -78,52 +78,86 @@ subroutine atomic_make_umat_c2j( umat_c2j )
     use control
 
     implicit none
-
-    ! external variables
-    ! external variables
-    ! symmetry index
-    ! case 1: if isym == 5, then t2g+eg orbitals will be included, the order is 
-    !         dz2up, dz2dn, dxzup, dxzdn, dyzup, dyzdn, dx2-y2up, dx2-y2dn, dxyup, dxydn 
-    ! case 2: if isym == 3, then t2g orbitals will be included, the order is
-    !         dxzup, dxzdn, dyzup, dyzdn, dxyup, dxydn
     
     ! the transformation matrix from complex orbitals |lz,sz> to |j2,jz>
     complex(dp), intent(out) :: umat_c2j( norbs, norbs )
-     
-    if ( nband == 5 ) then
-    !---------------------------------------------------------------------------
-    ! |j2,jz> order is:
-    !---------------------------------------------------------------------------
-    ! |3/2,-3/2>, |3/2,-1/2>, |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, 
-    ! |3/2, 3/2>, |3/2, 1/2>, |5/2, 5/2>, |5/2, 3/2>, |5/2, 1/2>
-    !---------------------------------------------------------------------------
-        umat_c2j(1,1) = dcmplx(-sqrt(four/five), zero)
-        umat_c2j(4,1) = dcmplx( sqrt(one /five), zero)
+    
+    umat_c2j = czero
 
-        umat_c2j(3,2) = dcmplx(-sqrt(three/five), zero)
-        umat_c2j(6,2) = dcmplx( sqrt(two/five), zero)
+    if (nband == 3) then
+    ! the |lz,sz> order is:
+    ! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>
+    ! the |j2,jz> order is:
+    ! |1/2,-1/2>, |1/2,1/2>, |3/2,-3/2>, |3/2, -1/2>, |3/2, 1/2>, |3/2,3/2>
+        umat_c2j(1,1) = -sqrt(2.0/3.0) 
+        umat_c2j(4,1) =  sqrt(1.0/3.0) 
+        umat_c2j(3,2) = -sqrt(1.0/3.0) 
+        umat_c2j(6,2) =  sqrt(2.0/3.0) 
+        umat_c2j(2,3) =  1.0_dp
+        umat_c2j(1,4) =  sqrt(1.0/3.0) 
+        umat_c2j(4,4) =  sqrt(2.0/3.0) 
+        umat_c2j(3,5) =  sqrt(2.0/3.0) 
+        umat_c2j(6,5) =  sqrt(1.0/3.0) 
+        umat_c2j(5,6) =  1.0_dp
+    elseif ( nband == 5 ) then
+    ! the |lz,sz> order is:
+    ! |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>
+    ! the |j2,jz> order is:
+    ! |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2>, |3/2,3/2>
+    ! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
+        umat_c2j(1,1) = -sqrt(4.0/5.0) 
+        umat_c2j(4,1) =  sqrt(1.0/5.0) 
+        umat_c2j(3,2) = -sqrt(3.0/5.0) 
+        umat_c2j(6,2) =  sqrt(2.0/5.0) 
+        umat_c2j(5,3) = -sqrt(2.0/5.0) 
+        umat_c2j(8,3) =  sqrt(3.0/5.0) 
+        umat_c2j(7,4) = -sqrt(1.0/5.0) 
+        umat_c2j(10,4)=  sqrt(4.0/5.0) 
+        umat_c2j(2,5) = 1.0_dp 
+        umat_c2j(1,6) = sqrt(1.0/5.0)
+        umat_c2j(4,6) = sqrt(4.0/5.0)
+        umat_c2j(3,7) = sqrt(2.0/5.0)
+        umat_c2j(6,7) = sqrt(3.0/5.0)
+        umat_c2j(5,8) = sqrt(3.0/5.0)
+        umat_c2j(8,8) = sqrt(2.0/5.0)
+        umat_c2j(7,9) = sqrt(4.0/5.0)
+        umat_c2j(10,9)= sqrt(1.0/5.0)
+        umat_c2j(9,10)= 1.0_dp
+    elseif ( nband == 7 ) then
+    ! the |lz,sz> order is:
+    ! |-3,up>, |-3,dn>, |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>, |3,up>, |3,dn>
+    ! the |j2,jz> order is:
+    ! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
+    ! |7/2,-7/2>, |7/2,-5/2>, |7/2,-3/2>, |7/2,-1/2>, |7/2,1/2>, |7/2,3/2>, |7/2,5/2>, |7/2, 7/2>
+        umat_c2j(1, 1) = -sqrt(6.0/7.0)
+        umat_c2j(4, 1) =  sqrt(1.0/7.0)
+        umat_c2j(3, 2) = -sqrt(5.0/7.0)
+        umat_c2j(6, 2) =  sqrt(2.0/7.0)
+        umat_c2j(5, 3) = -sqrt(4.0/7.0)
+        umat_c2j(8, 3) =  sqrt(3.0/7.0)
+        umat_c2j(7, 4) = -sqrt(3.0/7.0)
+        umat_c2j(10,4) =  sqrt(4.0/7.0)
+        umat_c2j(9, 5) = -sqrt(2.0/7.0)
+        umat_c2j(12,5) =  sqrt(5.0/7.0)
+        umat_c2j(11,6) = -sqrt(1.0/7.0)
+        umat_c2j(14,6) =  sqrt(6.0/7.0)
 
-        umat_c2j(2,3) = cone
-
-        umat_c2j(1,4) = dcmplx(sqrt(one/five), zero)
-        umat_c2j(4,4) = dcmplx(sqrt(four/five), zero)
-
-        umat_c2j(3,5) = dcmplx(sqrt(two/five), zero)
-        umat_c2j(6,5) = dcmplx(sqrt(three/five), zero)
-
-        umat_c2j(7,6) = dcmplx(-sqrt(one/five), zero)
-        umat_c2j(10,6) = dcmplx(sqrt(four/five), zero)
-
-        umat_c2j(5,7) = dcmplx(-sqrt(two/five), zero)
-        umat_c2j(8,7) = dcmplx( sqrt(three/five), zero)
-
-        umat_c2j(9,8) = cone
-
-        umat_c2j(7,9) = dcmplx(sqrt(four/five), zero)
-        umat_c2j(10,9) = dcmplx(sqrt(one/five), zero)
-
-        umat_c2j(5,10) = dcmplx(sqrt(three/five), zero)
-        umat_c2j(8,10) = dcmplx(sqrt(two/five), zero)
+        umat_c2j(2, 7)  = 1.0_dp
+        umat_c2j(1, 8) =  sqrt(1.0/7.0)
+        umat_c2j(4, 8) =  sqrt(6.0/7.0)
+        umat_c2j(3, 9) =  sqrt(2.0/7.0)
+        umat_c2j(6, 9) =  sqrt(5.0/7.0)
+        umat_c2j(5,10) =  sqrt(3.0/7.0)
+        umat_c2j(8,10) =  sqrt(4.0/7.0)
+        umat_c2j(7,11) =  sqrt(4.0/7.0)
+        umat_c2j(10,11)=  sqrt(3.0/7.0)
+        umat_c2j(9,12) =  sqrt(5.0/7.0)
+        umat_c2j(12,12)=  sqrt(2.0/7.0)
+        umat_c2j(11,13)=  sqrt(6.0/7.0)
+        umat_c2j(14,13)=  sqrt(1.0/7.0)
+        umat_c2j(13,14)=  1.0_dp
+    else
+        call atomic_print_error('atomic_make_umat_c2j','not implemented !')
     endif
 
     return

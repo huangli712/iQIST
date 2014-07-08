@@ -45,17 +45,21 @@ end subroutine atomic_make_spmat
 
 !>>> make spin-orbital coupling 
 subroutine atomic_make_soc()
+    use constants
     use control
     use m_spmat
 
     implicit none
 
     if (nband == 3) then
-        call atomic_make_soc_3band()
+        call atomic_make_soc_3band(socmat)
+        socmat = -socmat * lambda / two
     elseif(nband == 5) then
-        call atomic_make_soc_5band()
+        call atomic_make_soc_5band(socmat)
+        socmat = socmat * lambda / two
     elseif(nband == 7) then
-        call atomic_make_soc_7band()
+        call atomic_make_soc_7band(socmat)
+        socmat = socmat * lambda / two
     else
         call atomic_print_error('atomic_make_soc', 'not implementd!')
     endif
@@ -64,82 +68,117 @@ subroutine atomic_make_soc()
 end subroutine atomic_make_soc
 
 !>>> make spin-orbital coupling matrix for 3 band
-subroutine atomic_make_soc_3band()
-    use constants
-    use control
-    use m_spmat
-
+subroutine atomic_make_soc_3band(socmat)
     implicit none
 
-    ! we use the same default orbital order as in WANNIER90 package 
-    ! the t2g orbital order of d(l=2) is 
-    ! |dxz,up>, |dxz,dn>, |dyz,up>, |dyz,dn>, |dxy,up>, |dxy,dn>
-    ! the coressponding p(l=1) orbital order is
-    ! |py,up>,  |py,dn>,  |px,up>,  |px,dn>,  |pz,up>,  |pz,dn>
-    socmat = czero
-    socmat(1,3) =  czi;     socmat(1,6) =  -czi
-    socmat(2,4) = -czi;     socmat(2,5) =  -czi
-    socmat(3,1) = -czi;     socmat(3,6) =  cone
-    socmat(4,2) =  czi;     socmat(4,5) = -cone
-    socmat(5,2) =  czi;     socmat(5,4) = -cone
-    socmat(6,1) =  czi;     socmat(6,3) =  cone
-    ! please note: minus sign for spin-orbital coupling strength         
-    socmat = -socmat * lambda / two 
+    ! external variables
+    integer, parameter :: dp = kind(0.0d0)
+    complex(dp), intent(out) :: socmat(6,6)
 
+    ! local variables
+    real(dp) :: sqrt2
+
+    sqrt2 = sqrt(2.0_dp)
+   
+    ! make SOC on complex orbital basis
+    ! the orbital order is:
+    ! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>      
+    socmat = dcmplx(0.0_dp, 0.0_dp)
+
+    socmat(1,1) = -1.0_dp
+    socmat(4,1) = sqrt2 
+    socmat(2,2) =  1.0_dp
+    socmat(6,3) = sqrt2
+    socmat(1,4) = sqrt2
+    socmat(5,5) = 1.0_dp
+    socmat(3,6) = sqrt2
+    socmat(6,6) = -1.0_dp
+
+    return
 end subroutine atomic_make_soc_3band
 
 !>>> make spin-orbital coupling matrix for 5 band
-subroutine atomic_make_soc_5band()
-    use constants
-    use control
-    use m_sp_mat
-
+subroutine atomic_make_soc_5band(socmat)
     implicit none
 
+    ! external variables
+    integer, parameter :: dp = kind(0.0d0)
+    complex(dp), intent(out) :: socmat(10,10)
+
     ! local variables
-    ! sqrt(3)
-    real(dp) :: sqrt3
+    ! sqrt(6)
+    real(dp) :: sqrt6
 
-    sqrt3 = sqrt(3.0_dp)
+    sqrt6 = sqrt(6.0_dp)
+    ! make SOC on complex orbital basis
+    ! the orbital order is:
+    ! |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>      
 
-    ! we use the same default orbital order as in WANNIER90 package 
-    ! the orbital order is: 
-    ! |dz2,up>, |dz2,dn>, |dxz,up>, |dxz,dn>, |dyz,up>, |dyz,dn>, |dx2-y2,up>, |dx2-y2,dn>, |dxy,up>, |dxy,dn>
-    socmat = czero
-    socmat(1, 4) = -sqrt3*cone;      socmat(1, 6) = sqrt3*czi
-    socmat(2, 3) =  sqrt3*cone;      socmat(2, 5) = sqrt3*czi
-    socmat(3, 2) =  sqrt3*cone;      socmat(3, 5) = -czi
-    socmat(3, 8) =       -cone;      socmat(3, 10)= czi
-    socmat(4, 1) = -sqrt3*cone;      socmat(4, 6) = czi
-    socmat(4, 7) =        cone;      socmat(4, 9) = czi
-    socmat(5, 2) =  -sqrt3*czi;      socmat(5, 3) = czi
-    socmat(5, 8) =        -czi;      socmat(5, 10)=-cone
-    socmat(6, 1) =  -sqrt3*czi;      socmat(6, 4) = -czi
-    socmat(6, 7) =        -czi;      socmat(6, 9) = cone
-    socmat(7, 4) =        cone;      socmat(7, 6) = czi
-    socmat(7, 9) =     -two*czi
-    socmat(8, 3) =       -cone;      socmat(8, 5) = czi
-    socmat(8,10) =      two*czi
-    socmat(9, 4) =        -czi;      socmat(9, 6) = cone
-    socmat(9, 7) =     two*czi;    
-    socmat(10,3) =        -czi;      socmat(10,5) = -cone
-    socmat(10,8) =    -two*czi; 
-
-    ! scale the SOC strength lambda
-    socmat = socmat * lambda / two
+    socmat = dcmplx(0.0_dp, 0.0_dp)
+    socmat(1,1) = -2.0_dp 
+    socmat(4,1) =  2.0_dp
+    socmat(2,2) =  2.0_dp
+    socmat(3,3) = -1.0_dp
+    socmat(6,3) =  sqrt6
+    socmat(1,4) =  2.0_dp
+    socmat(4,4) =  1.0_dp
+    socmat(8,5) =  sqrt6
+    socmat(3,6) =  sqrt6
+    socmat(7,7) =  1.0_dp
+    socmat(10,7)=  2.0_dp
+    socmat(5,8) =  sqrt6  
+    socmat(8,8) = -1.0_dp
+    socmat(9,9) =  2.0_dp
+    socmat(7,10)=  2.0_dp 
+    socmat(10,10)= -2.0_dp
 
     return 
 end subroutine atomic_make_soc_5band
 
 !>>> make spin-orbital coupling matrix for 7 band
-subroutine atomic_make_soc_7band()
-    use constants
-    use control
-    use m_sp_mat
-
+subroutine atomic_make_soc_7band(socmat)
     implicit none
+
+    ! external variables
+    complex(dp), intent(out) :: socmat(14,14)    
+
+    ! local variables
+    integer, parameter :: dp = kind(0.0d0)
+    real(dp) :: sqrt6
+    real(dp) :: sqrt10
+    real(dp) :: sqrt12
+
     
-    write(mystd,*) "not implemented now!"
+    sqrt6  = sqrt(6.0_dp)
+    sqrt10 = sqrt(10.0_dp)
+    sqrt12 = sqrt(12.0_dp)
+
+    socmat = dcmplx(0.0_dp, 0.0_dp)
+
+    socmat(1,1) = -3.0_dp
+    socmat(4,1) = sqrt6
+    socmat(2,2) = 3.0_dp
+    socmat(3,3) = -2.0_dp
+    socmat(6,3) = sqrt10 
+    socmat(1,4) = sqrt6
+    socmat(4,4) = 2.0_dp
+    socmat(5,5) = -1.0_dp
+    socmat(8,5) = sqrt12
+    socmat(3,6) = sqrt10 
+    socmat(6,6) = 1.0_dp
+    socmat(10,7) = sqrt12
+    socmat(5,8) = sqrt12
+    socmat(9,9) = 1.0_dp
+    socmat(12,9) = sqrt10
+    socmat(7,10) = sqrt12
+    socmat(10,10) = -1.0_dp
+    socmat(11,11) =  2.0_dp
+    socmat(14,11) =  sqrt6
+    socmat(9,12) = sqrt10
+    socmat(12,12) =  -2.0_dp
+    socmat(13,13) =  3.0_dp
+    socmat(11,14) =  sqrt6
+    socmat(14,14) =  -3.0_dp
 
     return
 end subroutine atomic_make_soc_7band
