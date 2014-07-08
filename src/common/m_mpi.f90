@@ -1,68 +1,46 @@
-!-------------------------------------------------------------------------
-! project : fantasy
-! program : mmpi
-! source  : mod_mpi.f90
-! type    : module
-! author  : li huang (email:huangli712@gmail.com)
-! history : 08/09/2006 by li huang
-!           08/14/2006 by li huang
-!           08/18/2006 by li huang
-!           08/21/2006 by li huang
-!           08/25/2006 by li huang
-!           08/29/2006 by li huang
-!           09/11/2006 by li huang
-!           09/13/2006 by li huang
-!           09/26/2006 by li huang
-!           10/31/2006 by li huang
-!           11/15/2006 by li huang
-!           11/26/2006 by li huang
-!           12/10/2006 by li huang
-!           02/20/2007 by li huang
-!           02/28/2007 by li huang
-!           03/02/2007 by li huang
-!           03/14/2007 by li huang
-!           04/17/2007 by li huang
-!           04/19/2007 by li huang
-!           01/11/2008 by li huang
-!           10/24/2008 by li huang
-!           12/15/2008 by li huang
-!           04/27/2009 by li huang
-!           07/29/2009 by li huang
-!           08/22/2009 by li huang
-!           12/18/2009 by li huang
-!           02/27/2010 by li huang
-! purpose : to define my own mpi calls, inspired by quantum-espresso code.
-!           note that the original mpi subroutines are rather complicated
-!           for newbies. thus we try to wrap the most important and useful
-!           (not all) mpi subroutines, including
-!               MPI_INIT(),
-!               MPI_FINALIZE(),
-!               MPI_WTIME(),
-!               MPI_WTICK(),
-!               MPI_BARRIER(),
-!               MPI_DIMS_CREATE(),
-!               MPI_CART_CREATE(),
-!               MPI_CART_COORDS(),
-!               MPI_COMM_SPLIT(),
-!               MPI_COMM_RANK(),
-!               MPI_COMM_SIZE(),
-!               MPI_GET_PROCESSOR_NAME(),
-!               MPI_BCAST(),
-!               MPI_GATHER(),
-!               MPI_GATHERV(),
-!               MPI_ALLGATHER(),
-!               MPI_ALLGATHERV(),
-!               MPI_REDUCE(),
-!               MPI_ALLREDUCE(),
-!           etc, to facilite the usage of mpi. in the module, we also
-!           implement a new light-weight error handler. enjoy it!
-! status  : unstable
-! comment : this module has been tested under the following environment:
-!               mpich1    1.2.7p1
-!               mpich2    1.2.1p1
-!               mvapich2  1.2.0p1
-!               intel mpi 3.2.0
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : CSML (Common Service Modules Library)
+!!! program : mmpi
+!!! source  : mod_mpi.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 08/09/2006 by li huang
+!!!           02/27/2010 by li huang
+!!!           07/09/2014 by li huang
+!!! purpose : define my own mpi calls, inspired by famous quantum espresso
+!!!           code. we note that the original mpi interfaces/subroutines 
+!!!           are rather complicated for newbies, thus we try to wrap the
+!!!           most important and useful (not all) mpi subroutines (in our
+!!!           opinion) in this module to facilite the usage of mpi. these
+!!!           subroutines are
+!!!               MPI_INIT(),
+!!!               MPI_FINALIZE(),
+!!!               MPI_WTIME(),
+!!!               MPI_WTICK(),
+!!!               MPI_BARRIER(),
+!!!               MPI_DIMS_CREATE(),
+!!!               MPI_CART_CREATE(),
+!!!               MPI_CART_COORDS(),
+!!!               MPI_COMM_SPLIT(),
+!!!               MPI_COMM_RANK(),
+!!!               MPI_COMM_SIZE(),
+!!!               MPI_GET_PROCESSOR_NAME(),
+!!!               MPI_BCAST(),
+!!!               MPI_GATHER(),
+!!!               MPI_GATHERV(),
+!!!               MPI_ALLGATHER(),
+!!!               MPI_ALLGATHERV(),
+!!!               MPI_REDUCE(),
+!!!               MPI_ALLREDUCE(),
+!!!           etc. in the module, we also try to implement a light-weight
+!!!           error handler. enjoy it!
+!!! status  : unstable
+!!! comment : this module has been tested under the following environment:
+!!!               mpich1    1.2.7p1
+!!!               mpich2    1.2.1p1
+!!!               mvapich2  1.2.0p1
+!!!               intel mpi 3.2.0
+!!!-----------------------------------------------------------------------
 
 ! whether the compiler support mpi environment, i.e, mpif90
 # if defined (MPI)
@@ -72,9 +50,9 @@
 
      implicit none
 
-!-------------------------------------------------------------------------
-!::: declare global constants                                          :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global constants                                         <<<
+!!========================================================================
 
 ! dp: number precision, double precision for reals
      integer, private, parameter :: dp = kind(1.0d0)
@@ -82,9 +60,9 @@
 ! mystd: device descriptor, console output
      integer, private, parameter :: mystd = 6
 
-!-------------------------------------------------------------------------
-!::: declare mpi constants (datatypes)                                 :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare mpi constants (datatypes)                                <<<
+!!========================================================================
 
 ! mpi_log: datatype, boolean
      integer, private, parameter :: mpi_log    = MPI_LOGICAL
@@ -98,9 +76,9 @@
 ! mpi_dcmplx: datatype, double precision complex
      integer, private, parameter :: mpi_dcmplx = MPI_DOUBLE_COMPLEX
 
-!-------------------------------------------------------------------------
-!::: declare common constants                                          :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare common constants                                         <<<
+!!========================================================================
 
 ! ndims: number of cartesian dimensions, and we need a 2D grid
      integer, private, parameter :: ndims = 2
@@ -111,9 +89,9 @@
 ! periods: specifying whether the grid is periodic or not in each dimens
      logical, private, parameter :: periods(ndims) = .false.
 
-!-------------------------------------------------------------------------
-!::: declare common variables                                          :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare common variables                                         <<<
+!!========================================================================
 
 ! ierror: error code for mpi subroutines
      integer, private :: ierror
@@ -138,14 +116,14 @@
 ! mpi_comm_col: columnwise-striped communicator for cartesian topology
      integer, public, save :: mpi_comm_col
 
-!-------------------------------------------------------------------------
-!::: declare accessibility for module routines                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare accessibility for module routines                        :::
+!!========================================================================
 
-!>>> mpi information operation
+!!>>> mpi information operation
      public :: mp_info
 
-!>>> mpi environment operation
+!!>>> mpi environment operation
 
 ! initialize mpi environment
      public :: mp_init
@@ -162,7 +140,7 @@
 ! query machine name
      public :: mp_processor
 
-!>>> mpi cartesian topology operation
+!!>>> mpi cartesian topology operation
 
 ! creates a division of processors in a cartesian grid
      public :: mp_dims_create
@@ -179,12 +157,12 @@
 ! creates new communicators based on colors and keys for columnwise grid
      public :: mp_comm_split_col
 
-!>>> synchronics operations
+!!>>> synchronics operations
 
 ! manually block until all processes reach
      public :: mp_barrier
 
-!>>> time handler
+!!>>> time handler
 
 ! obtain time consuming by parallelized program
      public :: mp_wtime
@@ -192,7 +170,7 @@
 ! obtain time precision of mp_wtime
      public :: mp_wtick
 
-!>>> broadcasting operations
+!!>>> broadcasting operations
 
 ! broadcasting bool
      private :: mp_bcast_bool
@@ -257,7 +235,7 @@
 ! broadcasting complex(:,:,:,:,:)
      private :: mp_bcast_cdp5
 
-!>>> gathering operations
+!!>>> gathering operations
 
 ! gathering int(:)
      private :: mp_gather_int1
@@ -304,7 +282,7 @@
 ! gathering complex(:,:,:,:,:)
      private :: mp_gather_cdp5
 
-!>>> gatherving operations
+!!>>> gatherving operations
 
 ! gatherving int(:)
      private :: mp_gatherv_int1
@@ -351,7 +329,7 @@
 ! gatherving complex(:,:,:,:,:)
      private :: mp_gatherv_cdp5
 
-!>>> allgathering operations
+!!>>> allgathering operations
 
 ! allgathering int(:)
      private :: mp_allgather_int1
@@ -398,7 +376,7 @@
 ! allgathering complex(:,:,:,:,:)
      private :: mp_allgather_cdp5
 
-!>>> allgatherving operations
+!!>>> allgatherving operations
 
 ! allgatherving int(:)
      private :: mp_allgatherv_int1
@@ -445,7 +423,7 @@
 ! allgatherving complex(:,:,:,:,:)
      private :: mp_allgatherv_cdp5
 
-!>>> reducing operations
+!!>>> reducing operations
 
 ! readucing int
      private :: mp_reduce_int
@@ -501,7 +479,7 @@
 ! reducing complex(:,:,:,:,:)
      private :: mp_reduce_cdp5
 
-!>>> allreducing operations
+!!>>> allreducing operations
 
 ! allreducing int
      private :: mp_allreduce_int
@@ -557,19 +535,19 @@
 ! allreducing complex(:,:,:,:,:)
      private :: mp_allreduce_cdp5
 
-!>>> error handler
+!!>>> error handler
 
 ! echo the error information
      private :: mp_error
 
-!-------------------------------------------------------------------------
-!::: declare interface and module procedure                            :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare interface and module procedure                           <<<
+!!========================================================================
 
 ! we define these interfaces to implement the so called "generic" software
 ! engineering technique
 
-! mpi_bcast subroutines
+!!>>> mpi_bcast subroutines
      public :: mp_bcast
      interface mp_bcast
          module procedure mp_bcast_bool
@@ -598,7 +576,7 @@
          module procedure mp_bcast_cdp5
      end interface mp_bcast
 
-! mpi_gather subroutines
+!!>>> mpi_gather subroutines
      public :: mp_gather
      interface mp_gather
          module procedure mp_gather_int1
@@ -620,7 +598,7 @@
          module procedure mp_gather_cdp5
      end interface mp_gather
 
-! mpi_gatherv subroutines
+!!>>> mpi_gatherv subroutines
      public :: mp_gatherv
      interface mp_gatherv
          module procedure mp_gatherv_int1
@@ -642,7 +620,7 @@
          module procedure mp_gatherv_cdp5
      end interface mp_gatherv
 
-! mpi_allgather subroutines
+!!>>> mpi_allgather subroutines
      public :: mp_allgather
      interface mp_allgather
          module procedure mp_allgather_int1
@@ -664,7 +642,7 @@
          module procedure mp_allgather_cdp5
      end interface mp_allgather
 
-! mpi_allgatherv subroutines
+!!>>> mpi_allgatherv subroutines
      public :: mp_allgatherv
      interface mp_allgatherv
          module procedure mp_allgatherv_int1
@@ -686,7 +664,7 @@
          module procedure mp_allgatherv_cdp5
      end interface mp_allgatherv
 
-! mpi_reduce subroutines
+!!>>> mpi_reduce subroutines
      public :: mp_reduce
      interface mp_reduce
          module procedure mp_reduce_int
@@ -711,7 +689,7 @@
          module procedure mp_reduce_cdp5
      end interface mp_reduce
 
-! mpi_allreduce subroutines
+!!>>> mpi_allreduce subroutines
      public :: mp_allreduce
      interface mp_allreduce
          module procedure mp_allreduce_int
@@ -738,11 +716,11 @@
 
   contains
 
-!-------------------------------------------------------------------------
-!::: MPI information operations                                        :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI information operations                                       <<<
+!!========================================================================
 
-! mp_info: return the current information about mpi environment
+!!>>> mp_info: return the current information about mpi environment
      subroutine mp_info()
          implicit none
 
@@ -761,11 +739,11 @@
          return
      end subroutine mp_info
 
-!-------------------------------------------------------------------------
-!::: MPI initialize and finalize operations                            :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI initialize and finalize operations                           <<<
+!!========================================================================
 
-! mp_init: initialize mpi environment
+!!>>> mp_init: initialize mpi environment
      subroutine mp_init()
          implicit none
 
@@ -778,7 +756,7 @@
          return
      end subroutine mp_init
 
-! mp_finalize: finalize mpi environment
+!!>>> mp_finalize: finalize mpi environment
      subroutine mp_finalize()
          implicit none
 
