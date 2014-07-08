@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : azalea@fantasy
+! project : fantasy
 ! program : mmpi
 ! source  : mod_mpi.f90
 ! type    : module
