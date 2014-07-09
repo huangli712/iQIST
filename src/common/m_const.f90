@@ -6,7 +6,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/15/2009 by li huang
 !!!           07/08/2014 by li huang
-!!! purpose : define the numerical and physical constants
+!!! purpose : provide the definition of numerical and physical constants
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
