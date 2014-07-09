@@ -117,7 +117,7 @@
      integer, public, save :: mpi_comm_col
 
 !!========================================================================
-!!>>> declare accessibility for module routines                        :::
+!!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
 !!>>> mpi information operation
