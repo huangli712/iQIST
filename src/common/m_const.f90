@@ -1,7 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : constants
-!!! source  : mod_const.f90
+!!! source  : m_const.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/15/2009 by li huang
