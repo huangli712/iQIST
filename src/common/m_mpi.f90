@@ -769,11 +769,11 @@
          return
      end subroutine mp_finalize
 
-!-------------------------------------------------------------------------
-!::: MPI setup operations                                              :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI setup operations                                             <<<
+!!========================================================================
 
-! mp_comm_rank: determine the rank of the current process
+!!>>> mp_comm_rank: determine the rank of the current process
      subroutine mp_comm_rank(myid, gid)
          implicit none
 
@@ -797,7 +797,7 @@
          return
      end subroutine mp_comm_rank
 
-! mp_comm_size: evaluate the number of processes in current communicator
+!!>>> mp_comm_size: evaluate the number of processes in current communicator
      subroutine mp_comm_size(nprocs, gid)
          implicit none
 
@@ -821,7 +821,7 @@
          return
      end subroutine mp_comm_size
 
-! mp_processor: determine the current workstation's name
+!!>>> mp_processor: determine the current workstation's name
      subroutine mp_processor(workstation)
          implicit none
 
@@ -837,11 +837,11 @@
          return
      end subroutine mp_processor
 
-!-------------------------------------------------------------------------
-!::: MPI cartesian topology operations                                 :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI cartesian topology operations                                <<<
+!!========================================================================
 
-! mp_dims_create: creates a division of processors in a cartesian grid
+!!>>> mp_dims_create: creates a division of processors in a cartesian grid
      subroutine mp_dims_create(nprocs, dims)
          implicit none
 
@@ -858,7 +858,7 @@
          return
      end subroutine mp_dims_create
 
-! mp_cart_create: makes a new communicator to which topology is cartesian
+!!>>> mp_cart_create: makes a new communicator to which topology is cartesian
      subroutine mp_cart_create(dims)
          implicit none
 
