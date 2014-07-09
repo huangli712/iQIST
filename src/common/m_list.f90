@@ -133,16 +133,16 @@ end function list_next
   subroutine list_insert( elem, data )
      implicit none
 
-    type(LINKED_LIST), pointer  :: elem
-    type(LIST_DATA), intent(in) :: data
+     type(T_node), pointer  :: elem
+     type(T_data), intent(in) :: data
 
-    type(LINKED_LIST), pointer :: next
+     type(T_node), pointer :: next
 
-    allocate(next)
+     allocate(next)
 
-    next%next => elem%next
-    elem%next => next
-    next%data =  data
+     next%next => elem%next
+     elem%next => next
+     next%data =  data
 
     return
   end subroutine list_insert
