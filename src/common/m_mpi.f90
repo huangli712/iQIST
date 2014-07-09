@@ -875,7 +875,7 @@
          return
      end subroutine mp_cart_create
 
-! mp_cart_coords: determines process coords in cartesian topology
+!!>>> mp_cart_coords: determines process coords in cartesian topology
      subroutine mp_cart_coords(myid, cx, cy)
          implicit none
 
@@ -901,7 +901,7 @@
          return
      end subroutine mp_cart_coords
 
-! mp_comm_split_row: creates new communicators based on colors and keys
+!!>>> mp_comm_split_row: creates new communicators based on colors and keys
      subroutine mp_comm_split_row(color, key)
          implicit none
 
@@ -919,7 +919,7 @@
          return
      end subroutine mp_comm_split_row
 
-! mp_comm_split_col: creates new communicators based on colors and keys
+!!>>> mp_comm_split_col: creates new communicators based on colors and keys
      subroutine mp_comm_split_col(color, key)
          implicit none
 
@@ -937,11 +937,11 @@
          return
      end subroutine mp_comm_split_col
 
-!-------------------------------------------------------------------------
-!::: MPI barrier operations                                            :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI barrier operations                                           <<<
+!!========================================================================
 
-! mp_barrier: blocks until all process have reached this routine
+!!>>> mp_barrier: blocks until all process have reached this routine
      subroutine mp_barrier(gid)
          implicit none
 
@@ -964,11 +964,11 @@
          return
      end subroutine mp_barrier
 
-!-------------------------------------------------------------------------
-!::: MPI time operations                                               :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI time operations                                              <<<
+!!========================================================================
 
-! mp_wtime: returns an elapsed time on the calling processor
+!!>>> mp_wtime: returns an elapsed time on the calling processor
      subroutine mp_wtime(time)
          implicit none
 
@@ -981,7 +981,7 @@
          return
      end subroutine mp_wtime
 
-! mp_wtick: returns the resolution of MPI_Wtime
+!!>>> mp_wtick: returns the resolution of MPI_Wtime
      subroutine mp_wtick(tick)
          implicit none
 
@@ -994,11 +994,11 @@
          return
      end subroutine mp_wtick
 
-!-------------------------------------------------------------------------
-!::: MPI collective operations: broadcasting                           :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI collective operations: broadcasting                          <<<
+!!========================================================================
 
-! mp_bcast_bool: broadcasts bool from the process with rank "root"
+!!>>> mp_bcast_bool: broadcasts bool from the process with rank "root"
      subroutine mp_bcast_bool(data, root, gid)
          implicit none
 
@@ -1026,7 +1026,7 @@
          return
      end subroutine mp_bcast_bool
 
-! mp_bcast_bool1: broadcasts bool(:) from the process with rank "root"
+!!>>> mp_bcast_bool1: broadcasts bool(:) from the process with rank "root"
      subroutine mp_bcast_bool1(data, root, gid)
          implicit none
 
