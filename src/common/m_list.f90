@@ -115,13 +115,16 @@ end function list_count
 !     elem       Element in the linked list
 ! Result:
 !
-function list_next( elem ) result(next)
-    type(LINKED_LIST), pointer :: elem
-    type(LINKED_LIST), pointer :: next
+  function list_next( elem ) result(next)
+     implicit none
 
-    next => elem%next
+     type(T_node), pointer :: elem
+     type(T_node), pointer :: next
 
-end function list_next
+     next => elem%next
+
+     return
+  end function list_next
 
 ! list_insert
 !     Insert a new element
