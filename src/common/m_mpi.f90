@@ -1057,7 +1057,7 @@
          return
      end subroutine mp_bcast_bool1
 
-! mp_bcast_bool2: broadcasts bool(:,:) from the process with rank "root"
+!!>>> mp_bcast_bool2: broadcasts bool(:,:) from the process with rank "root"
      subroutine mp_bcast_bool2(data, root, gid)
          implicit none
 
@@ -1088,7 +1088,7 @@
          return
      end subroutine mp_bcast_bool2
 
-! mp_bcast_int: broadcasts int from the process with rank "root"
+!!>>> mp_bcast_int: broadcasts int from the process with rank "root"
      subroutine mp_bcast_int(data, root, gid)
          implicit none
 
@@ -1116,7 +1116,7 @@
          return
      end subroutine mp_bcast_int
 
-! mp_bcast_int1: broadcasts int(:) from the process with rank "root"
+!!>>> mp_bcast_int1: broadcasts int(:) from the process with rank "root"
      subroutine mp_bcast_int1(data, root, gid)
          implicit none
 
@@ -1147,7 +1147,7 @@
          return
      end subroutine mp_bcast_int1
 
-! mp_bcast_int2: broadcasts int(:,:) from the process with rank "root"
+!!>>> mp_bcast_int2: broadcasts int(:,:) from the process with rank "root"
      subroutine mp_bcast_int2(data, root, gid)
          implicit none
 
@@ -1178,7 +1178,7 @@
          return
      end subroutine mp_bcast_int2
 
-! mp_bcast_int3: broadcasts int(:,:,:) from the process with rank "root"
+!!>>> mp_bcast_int3: broadcasts int(:,:,:) from the process with rank "root"
      subroutine mp_bcast_int3(data, root, gid)
          implicit none
 
@@ -1209,7 +1209,7 @@
          return
      end subroutine mp_bcast_int3
 
-! mp_bcast_int4: broadcasts int4 from the process with rank "root"
+!!>>> mp_bcast_int4: broadcasts int4 from the process with rank "root"
      subroutine mp_bcast_int4(data, root, gid)
          implicit none
 
@@ -1240,7 +1240,7 @@
          return
      end subroutine mp_bcast_int4
 
-! mp_bcast_int5: broadcasts int5 from the process with rank "root"
+!!>>> mp_bcast_int5: broadcasts int5 from the process with rank "root"
      subroutine mp_bcast_int5(data, root, gid)
          implicit none
 
@@ -1271,7 +1271,7 @@
          return
      end subroutine mp_bcast_int5
 
-! mp_bcast_rdp: broadcasts real from the process with rank "root"
+!!>>> mp_bcast_rdp: broadcasts real from the process with rank "root"
      subroutine mp_bcast_rdp(data, root, gid)
          implicit none
 
@@ -1299,7 +1299,7 @@
          return
      end subroutine mp_bcast_rdp
 
-! mp_bcast_rdp1: broadcasts real(:) from the process with rank "root"
+!!>>> mp_bcast_rdp1: broadcasts real(:) from the process with rank "root"
      subroutine mp_bcast_rdp1(data, root, gid)
          implicit none
 
@@ -1330,7 +1330,7 @@
          return
      end subroutine mp_bcast_rdp1
 
-! mp_bcast_rdp2: broadcasts real(:,:) from the process with rank "root"
+!!>>> mp_bcast_rdp2: broadcasts real(:,:) from the process with rank "root"
      subroutine mp_bcast_rdp2(data, root, gid)
          implicit none
 
@@ -1361,7 +1361,7 @@
          return
      end subroutine mp_bcast_rdp2
 
-! mp_bcast_rdp3: broadcasts real(:,:,:) from the process with rank "root"
+!!>>> mp_bcast_rdp3: broadcasts real(:,:,:) from the process with rank "root"
      subroutine mp_bcast_rdp3(data, root, gid)
          implicit none
 
@@ -1392,7 +1392,7 @@
          return
      end subroutine mp_bcast_rdp3
 
-! mp_bcast_rdp4: broadcasts real4 from the process with rank "root"
+!!>>> mp_bcast_rdp4: broadcasts real4 from the process with rank "root"
      subroutine mp_bcast_rdp4(data, root, gid)
          implicit none
 
@@ -1423,7 +1423,7 @@
          return
      end subroutine mp_bcast_rdp4
 
-! mp_bcast_rdp5: broadcasts real5 from the process with rank "root"
+!!>>> mp_bcast_rdp5: broadcasts real5 from the process with rank "root"
      subroutine mp_bcast_rdp5(data, root, gid)
          implicit none
 
@@ -1454,7 +1454,7 @@
          return
      end subroutine mp_bcast_rdp5
 
-! mp_bcast_cdp: broadcasts complex from the process with rank "root"
+!!>>> mp_bcast_cdp: broadcasts complex from the process with rank "root"
      subroutine mp_bcast_cdp(data, root, gid)
          implicit none
 
@@ -1482,7 +1482,7 @@
          return
      end subroutine mp_bcast_cdp
 
-! mp_bcast_cdp1: broadcasts complex(:) from the process with rank "root"
+!!>>> mp_bcast_cdp1: broadcasts complex(:) from the process with rank "root"
      subroutine mp_bcast_cdp1(data, root, gid)
          implicit none
 
@@ -1513,7 +1513,7 @@
          return
      end subroutine mp_bcast_cdp1
 
-! mp_bcast_cdp2: broadcasts complex2 from the process with rank "root"
+!!>>> mp_bcast_cdp2: broadcasts complex2 from the process with rank "root"
      subroutine mp_bcast_cdp2(data, root, gid)
          implicit none
 
@@ -1544,7 +1544,7 @@
          return
      end subroutine mp_bcast_cdp2
 
-! mp_bcast_cdp3: broadcasts complex3 from the process with rank "root"
+!!>>> mp_bcast_cdp3: broadcasts complex3 from the process with rank "root"
      subroutine mp_bcast_cdp3(data, root, gid)
          implicit none
 
@@ -1575,7 +1575,7 @@
          return
      end subroutine mp_bcast_cdp3
 
-! mp_bcast_cdp4: broadcasts complex4 from the process with rank "root"
+!!>>> mp_bcast_cdp4: broadcasts complex4 from the process with rank "root"
      subroutine mp_bcast_cdp4(data, root, gid)
          implicit none
 
@@ -1606,7 +1606,7 @@
          return
      end subroutine mp_bcast_cdp4
 
-! mp_bcast_cdp5: broadcasts complex5 from the process with rank "root"
+!!>>> mp_bcast_cdp5: broadcasts complex5 from the process with rank "root"
      subroutine mp_bcast_cdp5(data, root, gid)
          implicit none
 
@@ -1637,11 +1637,11 @@
          return
      end subroutine mp_bcast_cdp5
 
-!-------------------------------------------------------------------------
-!::: MPI collective operations : gathering                             :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI collective operations : gathering                            <<<
+!!========================================================================
 
-! mp_gather_int1: gather integer data from every processes to rank 0
+!!>>> mp_gather_int1: gather integer data from every processes to rank 0
      subroutine mp_gather_int1(send, data, root, gid)
          implicit none
 
