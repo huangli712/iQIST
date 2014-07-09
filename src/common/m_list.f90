@@ -91,23 +91,27 @@ end subroutine list_destroy
 ! Arguments:
 !     list       Pointer to the list
 !
-integer function list_count( list )
-    type(LINKED_LIST), pointer  :: list
+  integer function list_count( list )
+     implicit none
 
-    type(LINKED_LIST), pointer  :: current
-    type(LINKED_LIST), pointer  :: next
+     type(T_node), pointer :: list
 
-    if ( associated(list) ) then
-        list_count = 1
-        current => list
-        do while ( associated(current%next) )
-            current => current%next
-            list_count = list_count + 1
-        enddo
-    else
-        list_count = 0
-    endif
-end function list_count
+     type(T_node), pointer :: current
+     type(T_node), pointer :: next
+
+     if ( associated(list) ) then
+         list_count = 1
+         current => list
+         do while ( associated(current%next) )
+             current => current%next
+             list_count = list_count + 1
+         enddo
+     else
+         list_count = 0
+     endif
+
+     return
+  end function list_count
 
 ! list_next
 !     Return the next element (if any)
