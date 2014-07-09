@@ -76,9 +76,11 @@
   subroutine list_destroy( list )
      implicit none
 
+! external arguments
 ! pointer to the list to be destroyed
      type(T_node), pointer  :: list
 
+! local variables
      type(T_node), pointer  :: current
      type(T_node), pointer  :: next
 
@@ -89,16 +91,19 @@
          current => next
      enddo
 
-    return
+     return
   end subroutine list_destroy
 
 !!>>> list_count: count the number of items in the list
-  integer function list_count( list )
+  integer &
+  function list_count( list )
      implicit none
 
+! external arguments
 ! pointer to the list
      type(T_node), pointer :: list
 
+! local variables
      type(T_node), pointer :: current
 
      if ( associated(list) ) then
