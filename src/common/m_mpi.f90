@@ -1674,7 +1674,7 @@
          return
      end subroutine mp_gather_int1
 
-! mp_gather_int2: gather integer data from every processes to rank 0
+!!>>> mp_gather_int2: gather integer data from every processes to rank 0
      subroutine mp_gather_int2(send, data, root, gid)
          implicit none
 
@@ -1707,7 +1707,7 @@
          return
      end subroutine mp_gather_int2
 
-! mp_gather_int3: gather integer data from every processes to rank 0
+!!>>> mp_gather_int3: gather integer data from every processes to rank 0
      subroutine mp_gather_int3(send, data, root, gid)
          implicit none
 
@@ -1740,7 +1740,7 @@
          return
      end subroutine mp_gather_int3
 
-! mp_gather_int4: gather integer data from every processes to rank 0
+!!>>> mp_gather_int4: gather integer data from every processes to rank 0
      subroutine mp_gather_int4(send, data, root, gid)
          implicit none
 
@@ -1773,7 +1773,7 @@
          return
      end subroutine mp_gather_int4
 
-! mp_gather_int5: gather integer data from every processes to rank 0
+!!>>> mp_gather_int5: gather integer data from every processes to rank 0
      subroutine mp_gather_int5(send, data, root, gid)
          implicit none
 
@@ -1806,7 +1806,7 @@
          return
      end subroutine mp_gather_int5
 
-! mp_gather_rdp1: gather real(dp) data from every processes to rank 0
+!!>>> mp_gather_rdp1: gather real(dp) data from every processes to rank 0
      subroutine mp_gather_rdp1(send, data, root, gid)
          implicit none
 
@@ -1839,7 +1839,7 @@
          return
      end subroutine mp_gather_rdp1
 
-! mp_gather_rdp2: gather real(dp) data from every processes to rank 0
+!!>>> mp_gather_rdp2: gather real(dp) data from every processes to rank 0
      subroutine mp_gather_rdp2(send, data, root, gid)
          implicit none
 
@@ -1872,7 +1872,7 @@
          return
      end subroutine mp_gather_rdp2
 
-! mp_gather_rdp3: gather real(dp) data from every processes to rank 0
+!!>>> mp_gather_rdp3: gather real(dp) data from every processes to rank 0
      subroutine mp_gather_rdp3(send, data, root, gid)
          implicit none
 
@@ -1905,7 +1905,7 @@
          return
      end subroutine mp_gather_rdp3
 
-! mp_gather_rdp4: gather real(dp) data from every processes to rank 0
+!!>>> mp_gather_rdp4: gather real(dp) data from every processes to rank 0
      subroutine mp_gather_rdp4(send, data, root, gid)
          implicit none
 
@@ -1938,7 +1938,7 @@
          return
      end subroutine mp_gather_rdp4
 
-! mp_gather_rdp5: gather real(dp) data from every processes to rank 0
+!!>>> mp_gather_rdp5: gather real(dp) data from every processes to rank 0
      subroutine mp_gather_rdp5(send, data, root, gid)
          implicit none
 
@@ -1971,7 +1971,7 @@
          return
      end subroutine mp_gather_rdp5
 
-! mp_gather_cdp1: gather complex(dp) data from every processes to rank 0
+!!>>> mp_gather_cdp1: gather complex(dp) data from every processes to rank 0
      subroutine mp_gather_cdp1(send, data, root, gid)
          implicit none
 
@@ -2004,7 +2004,7 @@
          return
      end subroutine mp_gather_cdp1
 
-! mp_gather_cdp2: gather complex(dp) data from every processes to rank 0
+!!>>> mp_gather_cdp2: gather complex(dp) data from every processes to rank 0
      subroutine mp_gather_cdp2(send, data, root, gid)
          implicit none
 
@@ -2037,7 +2037,7 @@
          return
      end subroutine mp_gather_cdp2
 
-! mp_gather_cdp3: gather complex(dp) data from every processes to rank 0
+!!>>> mp_gather_cdp3: gather complex(dp) data from every processes to rank 0
      subroutine mp_gather_cdp3(send, data, root, gid)
          implicit none
 
@@ -2070,7 +2070,7 @@
          return
      end subroutine mp_gather_cdp3
 
-! mp_gather_cdp4: gather complex(dp) data from every processes to rank 0
+!!>>> mp_gather_cdp4: gather complex(dp) data from every processes to rank 0
      subroutine mp_gather_cdp4(send, data, root, gid)
          implicit none
 
@@ -2103,7 +2103,7 @@
          return
      end subroutine mp_gather_cdp4
 
-! mp_gather_cdp5: gather complex(dp) data from every processes to rank 0
+!!>>> mp_gather_cdp5: gather complex(dp) data from every processes to rank 0
      subroutine mp_gather_cdp5(send, data, root, gid)
          implicit none
 
@@ -2136,11 +2136,11 @@
          return
      end subroutine mp_gather_cdp5
 
-!-------------------------------------------------------------------------
-!::: MPI collective operations : gatherving                            :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI collective operations : gatherving                           <<<
+!!========================================================================
 
-! mp_gatherv_int1: gather integer data from every processes to rank 0
+!!>>> mp_gatherv_int1: gather integer data from every processes to rank 0
      subroutine mp_gatherv_int1(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2176,7 +2176,7 @@
          return
      end subroutine mp_gatherv_int1
 
-! mp_gatherv_int2: gather integer data from every processes to rank 0
+!!>>> mp_gatherv_int2: gather integer data from every processes to rank 0
      subroutine mp_gatherv_int2(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2212,7 +2212,7 @@
          return
      end subroutine mp_gatherv_int2
 
-! mp_gatherv_int3: gather integer data from every processes to rank 0
+!!>>> mp_gatherv_int3: gather integer data from every processes to rank 0
      subroutine mp_gatherv_int3(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2248,7 +2248,7 @@
          return
      end subroutine mp_gatherv_int3
 
-! mp_gatherv_int4: gather integer data from every processes to rank 0
+!!>>> mp_gatherv_int4: gather integer data from every processes to rank 0
      subroutine mp_gatherv_int4(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2284,7 +2284,7 @@
          return
      end subroutine mp_gatherv_int4
 
-! mp_gatherv_int5: gather integer data from every processes to rank 0
+!!>>> mp_gatherv_int5: gather integer data from every processes to rank 0
      subroutine mp_gatherv_int5(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2320,7 +2320,7 @@
          return
      end subroutine mp_gatherv_int5
 
-! mp_gatherv_rdp1: gather real data from every processes to rank 0
+!!>>> mp_gatherv_rdp1: gather real data from every processes to rank 0
      subroutine mp_gatherv_rdp1(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2356,7 +2356,7 @@
          return
      end subroutine mp_gatherv_rdp1
 
-! mp_gatherv_rdp2: gather real data from every processes to rank 0
+!!>>> mp_gatherv_rdp2: gather real data from every processes to rank 0
      subroutine mp_gatherv_rdp2(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2392,7 +2392,7 @@
          return
      end subroutine mp_gatherv_rdp2
 
-! mp_gatherv_rdp3: gather real data from every processes to rank 0
+!!>>> mp_gatherv_rdp3: gather real data from every processes to rank 0
      subroutine mp_gatherv_rdp3(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2428,7 +2428,7 @@
          return
      end subroutine mp_gatherv_rdp3
 
-! mp_gatherv_rdp4: gather real data from every processes to rank 0
+!!>>> mp_gatherv_rdp4: gather real data from every processes to rank 0
      subroutine mp_gatherv_rdp4(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2464,7 +2464,7 @@
          return
      end subroutine mp_gatherv_rdp4
 
-! mp_gatherv_rdp5: gather real data from every processes to rank 0
+!!>>> mp_gatherv_rdp5: gather real data from every processes to rank 0
      subroutine mp_gatherv_rdp5(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2500,7 +2500,7 @@
          return
      end subroutine mp_gatherv_rdp5
 
-! mp_gatherv_cdp1: gather complex data from every processes to rank 0
+!!>>> mp_gatherv_cdp1: gather complex data from every processes to rank 0
      subroutine mp_gatherv_cdp1(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2536,7 +2536,7 @@
          return
      end subroutine mp_gatherv_cdp1
 
-! mp_gatherv_cdp2: gather complex data from every processes to rank 0
+!!>>> mp_gatherv_cdp2: gather complex data from every processes to rank 0
      subroutine mp_gatherv_cdp2(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2572,7 +2572,7 @@
          return
      end subroutine mp_gatherv_cdp2
 
-! mp_gatherv_cdp3: gather complex data from every processes to rank 0
+!!>>> mp_gatherv_cdp3: gather complex data from every processes to rank 0
      subroutine mp_gatherv_cdp3(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2608,7 +2608,7 @@
          return
      end subroutine mp_gatherv_cdp3
 
-! mp_gatherv_cdp4: gather complex data from every processes to rank 0
+!!>>> mp_gatherv_cdp4: gather complex data from every processes to rank 0
      subroutine mp_gatherv_cdp4(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2644,7 +2644,7 @@
          return
      end subroutine mp_gatherv_cdp4
 
-! mp_gatherv_cdp5: gather complex data from every processes to rank 0
+!!>>> mp_gatherv_cdp5: gather complex data from every processes to rank 0
      subroutine mp_gatherv_cdp5(send, data, recv, disp, root, gid)
          implicit none
 
@@ -2680,11 +2680,11 @@
          return
      end subroutine mp_gatherv_cdp5
 
-!-------------------------------------------------------------------------
-!::: MPI collective operations: allgathering                           :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI collective operations: allgathering                          <<<
+!!========================================================================
 
-! mp_allgather_int1: gather integer data from all processes and then
+!!>>> mp_allgather_int1: gather integer data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_int1(send, data, gid)
          implicit none
@@ -2717,7 +2717,7 @@
          return
      end subroutine mp_allgather_int1
 
-! mp_allgather_int2: gather integer data from all processes and then
+!!>>> mp_allgather_int2: gather integer data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_int2(send, data, gid)
          implicit none
@@ -2750,7 +2750,7 @@
          return
      end subroutine mp_allgather_int2
 
-! mp_allgather_int3: gather integer data from all processes and then
+!!>>> mp_allgather_int3: gather integer data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_int3(send, data, gid)
          implicit none
@@ -2783,7 +2783,7 @@
          return
      end subroutine mp_allgather_int3
 
-! mp_allgather_int4: gather integer data from all processes and then
+!!>>> mp_allgather_int4: gather integer data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_int4(send, data, gid)
          implicit none
@@ -2816,7 +2816,7 @@
          return
      end subroutine mp_allgather_int4
 
-! mp_allgather_int5: gather integer data from all processes and then
+!!>>> mp_allgather_int5: gather integer data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_int5(send, data, gid)
          implicit none
@@ -2849,7 +2849,7 @@
          return
      end subroutine mp_allgather_int5
 
-! mp_allgather_rdp1: gather real data from all processes and then
+!!>>> mp_allgather_rdp1: gather real data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_rdp1(send, data, gid)
          implicit none
@@ -2882,7 +2882,7 @@
          return
      end subroutine mp_allgather_rdp1
 
-! mp_allgather_rdp2: gather real data from all processes and then
+!!>>> mp_allgather_rdp2: gather real data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_rdp2(send, data, gid)
          implicit none
@@ -2915,7 +2915,7 @@
          return
      end subroutine mp_allgather_rdp2
 
-! mp_allgather_rdp3: gather real data from all processes and then
+!!>>> mp_allgather_rdp3: gather real data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_rdp3(send, data, gid)
          implicit none
@@ -2948,7 +2948,7 @@
          return
      end subroutine mp_allgather_rdp3
 
-! mp_allgather_rdp4: gather real data from all processes and then
+!!>>> mp_allgather_rdp4: gather real data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_rdp4(send, data, gid)
          implicit none
@@ -2981,7 +2981,7 @@
          return
      end subroutine mp_allgather_rdp4
 
-! mp_allgather_rdp5: gather real data from all processes and then
+!!>>> mp_allgather_rdp5: gather real data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_rdp5(send, data, gid)
          implicit none
@@ -3014,7 +3014,7 @@
          return
      end subroutine mp_allgather_rdp5
 
-! mp_allgather_cdp1: gather complex data from all processes and then
+!!>>> mp_allgather_cdp1: gather complex data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_cdp1(send, data, gid)
          implicit none
@@ -3047,7 +3047,7 @@
          return
      end subroutine mp_allgather_cdp1
 
-! mp_allgather_cdp2: gather complex data from all processes and then
+!!>>> mp_allgather_cdp2: gather complex data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_cdp2(send, data, gid)
          implicit none
@@ -3080,7 +3080,7 @@
          return
      end subroutine mp_allgather_cdp2
 
-! mp_allgather_cdp3: gather complex data from all processes and then
+!!>>> mp_allgather_cdp3: gather complex data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_cdp3(send, data, gid)
          implicit none
@@ -3113,7 +3113,7 @@
          return
      end subroutine mp_allgather_cdp3
 
-! mp_allgather_cdp4: gather complex data from all processes and then
+!!>>> mp_allgather_cdp4: gather complex data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_cdp4(send, data, gid)
          implicit none
@@ -3146,7 +3146,7 @@
          return
      end subroutine mp_allgather_cdp4
 
-! mp_allgather_cdp5: gather complex data from all processes and then
+!!>>> mp_allgather_cdp5: gather complex data from all processes and then
 ! redistribute it to all processes
      subroutine mp_allgather_cdp5(send, data, gid)
          implicit none
