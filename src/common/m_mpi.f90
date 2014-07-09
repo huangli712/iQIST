@@ -1,7 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : mmpi
-!!! source  : mod_mpi.f90
+!!! source  : m_mpi.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 08/09/2006 by li huang

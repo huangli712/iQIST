@@ -1,43 +1,42 @@
-!-------------------------------------------------------------------------
-! project : begonia@fantasy
-! program : skynet     module
-!           skynet@sunu_to_sunu
-!           skynet@sunu_to_real
-!           skynet@real_to_sunu
-!           skynet@sunu_add_sunu
-!           skynet@sunu_add_real
-!           skynet@real_add_sunu
-!           skynet@sunu_sub_sunu
-!           skynet@sunu_sub_real
-!           skynet@real_sub_sunu
-!           skynet@sunu_mul_sunu
-!           skynet@sunu_mul_real
-!           skynet@real_mul_sunu
-!           skynet@sunu_div_sunu
-!           skynet@sunu_div_real
-!           skynet@real_div_sunu
-!           skynet@skynet_make_sunu
-!           skynet@skynet_done_sunu
-!           skynet@skynet_test_sunu
-!           skynet@skynet_zero_sunu
-! source  : mod_skynet.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 04/30/2010 by li huang
-!           05/01/2010 by li huang
-!           05/07/2010 by li huang
-! purpose : the purpose of this module is to overload the basic arithmetic
-!           operations for very large exponent numbers
-! status  : unstable
-! comment : this module is not actived until now
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : CSML (Common Service Modules Library)
+!!! program : skynet
+!!!           skynet@sunu_to_sunu
+!!!           skynet@sunu_to_real
+!!!           skynet@real_to_sunu
+!!!           skynet@sunu_add_sunu
+!!!           skynet@sunu_add_real
+!!!           skynet@real_add_sunu
+!!!           skynet@sunu_sub_sunu
+!!!           skynet@sunu_sub_real
+!!!           skynet@real_sub_sunu
+!!!           skynet@sunu_mul_sunu
+!!!           skynet@sunu_mul_real
+!!!           skynet@real_mul_sunu
+!!!           skynet@sunu_div_sunu
+!!!           skynet@sunu_div_real
+!!!           skynet@real_div_sunu
+!!!           skynet@skynet_make_sunu
+!!!           skynet@skynet_done_sunu
+!!!           skynet@skynet_test_sunu
+!!!           skynet@skynet_zero_sunu
+!!! source  : m_skynet.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 04/30/2010 by li huang
+!!!           07/09/2014 by li huang
+!!! purpose : this module is used to overload/define the basic arithmetic
+!!!           operations for very large exponent numbers
+!!! status  : unstable
+!!! comment : this module is not actived until now
+!!!-----------------------------------------------------------------------
 
   module skynet
      implicit none
 
-!-------------------------------------------------------------------------
-!::: declare global parameters                                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global parameters                                        <<<
+!!========================================================================
 
 ! dp: number precision, double precision for reals
      integer, private, parameter :: dp = kind(1.0d0)
@@ -45,9 +44,9 @@
 ! mystd: device descriptor, console output
      integer, private, parameter :: mystd = 6
 
-!-------------------------------------------------------------------------
-!::: declare data structure                                            :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare data structure                                           <<<
+!!========================================================================
 
 ! SUper-large-NUmber structure
      type sunu
@@ -55,9 +54,9 @@
          real(dp) :: expt ! exponent
      end type sunu
 
-!-------------------------------------------------------------------------
-!::: declare accessibility for module routines                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
 ! simulate assignment operations for sunu structure
      private :: sunu_to_sunu
@@ -90,9 +89,9 @@
      public :: skynet_test_sunu
      public :: skynet_zero_sunu
 
-!-------------------------------------------------------------------------
-!::: declare interface and module procedure                            :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare interface and module procedure                           <<<
+!!========================================================================
 
      interface assignment (=)
          module procedure sunu_to_sunu
@@ -126,7 +125,7 @@
 
   contains ! encapsulated functionality
 
-!>>> assign sunu structure to sunu structure
+!!>>> assign sunu structure to sunu structure
   subroutine sunu_to_sunu(s1, s2)
      implicit none
 
@@ -143,7 +142,7 @@
      return
   end subroutine sunu_to_sunu
 
-!>>> assign sunu structure to real number
+!!>>> assign sunu structure to real number
   subroutine sunu_to_real(r1, s1)
      implicit none
 
@@ -165,7 +164,7 @@
      return
   end subroutine sunu_to_real
 
-!>>> assign real number to sunu structure
+!!>>> assign real number to sunu structure
   subroutine real_to_sunu(s1, r1)
      implicit none
 
@@ -182,7 +181,7 @@
      return
   end subroutine real_to_sunu
 
-!>>> add sunu structure to sunu structure
+!!>>> add sunu structure to sunu structure
   type (sunu) &
   function sunu_add_sunu(s1, s2) result(s)
      implicit none
@@ -205,7 +204,7 @@
      return
   end function sunu_add_sunu
 
-!>>> add sunu structure to real number
+!!>>> add sunu structure to real number
   type (sunu) &
   function sunu_add_real(s1, r2) result(s)
      implicit none
@@ -229,7 +228,7 @@
      return
   end function sunu_add_real
 
-!>>> add real number to sunu structure
+!!>>> add real number to sunu structure
   type (sunu) &
   function real_add_sunu(r1, s2) result(s)
      implicit none
@@ -253,7 +252,7 @@
      return
   end function real_add_sunu
 
-!>>> substract sunu structure from sunu structure
+!!>>> substract sunu structure from sunu structure
   type (sunu) &
   function sunu_sub_sunu(s1, s2) result(s)
      implicit none
@@ -276,7 +275,7 @@
      return
   end function sunu_sub_sunu
 
-!>>> substract real number from sunu structure
+!!>>> substract real number from sunu structure
   type (sunu) &
   function sunu_sub_real(s1, r2) result(s)
      implicit none
@@ -300,7 +299,7 @@
      return
   end function sunu_sub_real
 
-!>>> substract sunu structure from real number
+!!>>> substract sunu structure from real number
   type (sunu) &
   function real_sub_sunu(r1, s2) result(s)
      implicit none
@@ -324,7 +323,7 @@
      return
   end function real_sub_sunu
 
-!>>> multiply sunu structure with sunu structure
+!!>>> multiply sunu structure with sunu structure
   type (sunu) &
   function sunu_mul_sunu(s1, s2) result(s)
      implicit none
@@ -342,7 +341,7 @@
      return
   end function sunu_mul_sunu
 
-!>>> multiply sunu structure with real number
+!!>>> multiply sunu structure with real number
   type (sunu) &
   function sunu_mul_real(s1, r2) result(s)
      implicit none
@@ -360,7 +359,7 @@
      return
   end function sunu_mul_real
 
-!>>> multiply real number with sunu structure
+!!>>> multiply real number with sunu structure
   type (sunu) &
   function real_mul_sunu(r1, s2) result(s)
      implicit none
@@ -378,7 +377,7 @@
      return
   end function real_mul_sunu
 
-!>>> divide sunu structure by sunu structure
+!!>>> divide sunu structure by sunu structure
   type (sunu) &
   function sunu_div_sunu(s1, s2) result(s)
      implicit none
@@ -396,7 +395,7 @@
      return
   end function sunu_div_sunu
 
-!>>> divide sunu structure by real number
+!!>>> divide sunu structure by real number
   type (sunu) &
   function sunu_div_real(s1, r2) result(s)
      implicit none
@@ -414,7 +413,7 @@
      return
   end function sunu_div_real
 
-!>>> divide real number by sunu structure
+!!>>> divide real number by sunu structure
   type (sunu) &
   function real_div_sunu(r1, s2) result(s)
      implicit none
@@ -432,7 +431,7 @@
      return
   end function real_div_sunu
 
-!>>> build sunu structure from a pair real number
+!!>>> build sunu structure from a pair real number
   subroutine skynet_make_sunu(mant, expt, s)
      implicit none
 
@@ -452,7 +451,7 @@
      return
   end subroutine skynet_make_sunu
 
-!>>> make balance for the sunu structure
+!!>>> make balance for the sunu structure
   subroutine skynet_done_sunu(s)
      implicit none
 
@@ -474,7 +473,7 @@
      return
   end subroutine skynet_done_sunu
 
-!>>> check the status of sunu structure
+!!>>> check the status of sunu structure
   subroutine skynet_test_sunu(s)
      implicit none
 
@@ -495,7 +494,7 @@
      return
   end subroutine skynet_test_sunu
 
-!>>> test if sunu structure is zero in real form
+!!>>> test if sunu structure is zero in real form
   logical &
   function skynet_zero_sunu(s) result(z)
      implicit none
