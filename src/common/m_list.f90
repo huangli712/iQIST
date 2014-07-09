@@ -11,6 +11,13 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!! VERY IMPORTANT:
+!! to use the linked list (mlist) data structure, the user should define
+!! his/her own data type at first, namely, type T_data. Note that there
+!! are no pointers within it.
+!!
+
   module mlist
      implicit none
 
@@ -51,10 +58,11 @@
   subroutine list_create( list, data )
      implicit none
 
+! external arguments
 ! pointer to new linked list
-     type(T_node), pointer  :: list
+     type(T_node), pointer    :: list
 
-! The data for the first element
+! the data for the first element
      type(T_data), intent(in) :: data
 
      allocate( list )
@@ -64,40 +72,34 @@
      return
   end subroutine list_create
 
-! list_destroy --
-!     Destroy an entire list
-! Arguments:
-!     list       Pointer to the list to be destroyed
-! Note:
-!     This version assumes that there are no
-!     pointers within the data that need deallocation
-!
-subroutine list_destroy( list )
-    type(LINKED_LIST), pointer  :: list
+!!>>> list_destroy: destroy an entire list
+  subroutine list_destroy( list )
+     implicit none
 
-    type(LINKED_LIST), pointer  :: current
-    type(LINKED_LIST), pointer  :: next
+! pointer to the list to be destroyed
+     type(T_node), pointer  :: list
 
-    current => list
-    do while ( associated(current%next) )
-        next => current%next
-        deallocate( current )
-        current => next
-    enddo
-end subroutine list_destroy
+     type(T_node), pointer  :: current
+     type(T_node), pointer  :: next
 
-! list_count --
-!     Count the number of items in the list
-! Arguments:
-!     list       Pointer to the list
-!
+     current => list
+     do while ( associated(current%next) )
+         next => current%next
+         deallocate( current )
+         current => next
+     enddo
+
+    return
+  end subroutine list_destroy
+
+!!>>> list_count: count the number of items in the list
   integer function list_count( list )
      implicit none
 
+! pointer to the list
      type(T_node), pointer :: list
 
      type(T_node), pointer :: current
-     type(T_node), pointer :: next
 
      if ( associated(list) ) then
          list_count = 1
@@ -113,15 +115,11 @@ end subroutine list_destroy
      return
   end function list_count
 
-! list_next
-!     Return the next element (if any)
-! Arguments:
-!     elem       Element in the linked list
-! Result:
-!
+!!>>> list_next: return the next element (if any)
   function list_next( elem ) result(next)
      implicit none
 
+! element in the linked list
      type(T_node), pointer :: elem
      type(T_node), pointer :: next
 
@@ -130,17 +128,13 @@ end subroutine list_destroy
      return
   end function list_next
 
-! list_insert
-!     Insert a new element
-! Arguments:
-!     elem       Element in the linked list after
-!                which to insert the new element
-!     data       The data for the new element
-!
+!!>>> list_insert: insert a new element
   subroutine list_insert( elem, data )
      implicit none
 
+! element in the linked list after which to insert the new element
      type(T_node), pointer  :: elem
+! the data for the new element
      type(T_data), intent(in) :: data
 
      type(T_node), pointer :: next
@@ -154,16 +148,13 @@ end subroutine list_destroy
     return
   end subroutine list_insert
 
-! list_insert_head
-!     Insert a new element before the first element
-! Arguments:
-!     list       Start of the list
-!     data       The data for the new element
-!
+!!>>> list_insert_head: insert a new element before the first element
   subroutine list_insert_head( list, data )
      implicit none
 
+! start of the list
      type(T_node), pointer    :: list
+! the data for the new element
      type(T_data), intent(in) :: data
 
      type(T_node), pointer :: elem
@@ -177,17 +168,13 @@ end subroutine list_destroy
      return
   end subroutine list_insert_head
 
-! list_delete_element
-!     Delete an element from the list
-! Arguments:
-!     list       Header of the list
-!     elem       Element in the linked list to be
-!                removed
-!
+!!>>> list_delete_element: delete an element from the list
   subroutine list_delete_element( list, elem )
      implicit none
 
+! header of the list
      type(T_node), pointer  :: list
+! element in the linked list to be removed
      type(T_node), pointer  :: elem
 
      type(T_node), pointer  :: current
@@ -213,14 +200,11 @@ end subroutine list_destroy
      return
   end subroutine list_delete_element
 
-! list_get_data
-!     Get the data stored with a list element
-! Arguments:
-!     elem       Element in the linked list
-!
+!!>>> list_get_data: get the data stored with a list element
   function list_get_data( elem ) result(data)
      implicit none
 
+! element in the linked list
      type(T_node), pointer :: elem
      type(T_data)          :: data
 
@@ -229,15 +213,12 @@ end subroutine list_destroy
      return
   end function list_get_data
 
-! list_put_data
-!     Store new data with a list element
-! Arguments:
-!     elem       Element in the linked list
-!     data       The data to be stored
-!
+!!>>> list_put_data: store new data with a list element
   subroutine list_set_data( elem, data )
      implicit none
 
+! element in the linked list
+! the data to be stored
      type(T_node), pointer    :: elem
      type(T_data), intent(in) :: data
 
