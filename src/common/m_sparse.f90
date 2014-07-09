@@ -2,23 +2,23 @@
 !!! project : CSML (Common Service Modules Library)
 !!! program : sparse
 !!!           sparse@sparse_format_csrdns
-!!!           sparse@sparse_format_csrdns_
+!!!           sparse@sparse_format_csrdns_z
 !!!           sparse@sparse_format_dnscsr
-!!!           sparse@sparse_format_dnscsr_
+!!!           sparse@sparse_format_dnscsr_z
 !!!           sparse@sparse_format_unicsr
-!!!           sparse@sparse_format_unicsr_
+!!!           sparse@sparse_format_unicsr_z
 !!!           sparse@sparse_matrix_copyer
-!!!           sparse@sparse_matrix_copyer_
+!!!           sparse@sparse_matrix_copyer_z
 !!!           sparse@sparse_matrix_getter
-!!!           sparse@sparse_matrix_getter_
+!!!           sparse@sparse_matrix_getter_z
 !!!           sparse@sparse_matmul_amuvec
-!!!           sparse@sparse_matmul_amuvec_
+!!!           sparse@sparse_matmul_amuvec_z
 !!!           sparse@sparse_matmul_amumat
-!!!           sparse@sparse_matmul_amumat_
+!!!           sparse@sparse_matmul_amumat_z
 !!!           sparse@sparse_matmul_amudia
-!!!           sparse@sparse_matmul_amudia_
+!!!           sparse@sparse_matmul_amudia_z
 !!!           sparse@sparse_matmul_diamua
-!!!           sparse@sparse_matmul_diamua_
+!!!           sparse@sparse_matmul_diamua_z
 !!! source  : m_sparse.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -35,9 +35,9 @@
   module sparse
      implicit none
 
-!-------------------------------------------------------------------------
-!::: declare global parameters                                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global parameters                                        <<<
+!!========================================================================
 
 ! dp: number precision, double precision for real and complex number
      integer, private, parameter :: dp = kind(1.0d0)
@@ -45,49 +45,49 @@
 ! mystd: device descriptor, console output
      integer, private, parameter :: mystd = 6
 
-!-------------------------------------------------------------------------
-!::: declare accessibility for module routines                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
 ! CSR -> DNS
-     private :: sparse_format_csrdns  ! real(dp) version
-     private :: sparse_format_csrdns_ ! complex(dp) version
+     private :: sparse_format_csrdns   ! real(dp) version
+     private :: sparse_format_csrdns_z ! complex(dp) version
 
 ! DNS -> CSR
-     private :: sparse_format_dnscsr  ! real(dp) version
-     private :: sparse_format_dnscsr_ ! complex(dp) version
+     private :: sparse_format_dnscsr   ! real(dp) version
+     private :: sparse_format_dnscsr_z ! complex(dp) version
 
 ! UNI -> CSR
-     private :: sparse_format_unicsr  ! real(dp) version
-     private :: sparse_format_unicsr_ ! complex(dp) version
+     private :: sparse_format_unicsr   ! real(dp) version
+     private :: sparse_format_unicsr_z ! complex(dp) version
 
 ! CSR -> CSR
-     private :: sparse_matrix_copyer  ! real(dp) version
-     private :: sparse_matrix_copyer_ ! complex(dp) version
+     private :: sparse_matrix_copyer   ! real(dp) version
+     private :: sparse_matrix_copyer_z ! complex(dp) version
 
 ! CSR -> extractor
-     private :: sparse_matrix_getter  ! real(dp) version
-     private :: sparse_matrix_getter_ ! complex(dp) version
+     private :: sparse_matrix_getter   ! real(dp) version
+     private :: sparse_matrix_getter_z ! complex(dp) version
 
 ! CSR X VEC
-     private :: sparse_matmul_amuvec  ! real(dp) version
-     private :: sparse_matmul_amuvec_ ! complex(dp) version
+     private :: sparse_matmul_amuvec   ! real(dp) version
+     private :: sparse_matmul_amuvec_z ! complex(dp) version
 
 ! CSR X CSR
-     private :: sparse_matmul_amumat  ! real(dp) version
-     private :: sparse_matmul_amumat_ ! complex(dp) version
+     private :: sparse_matmul_amumat   ! real(dp) version
+     private :: sparse_matmul_amumat_z ! complex(dp) version
 
 ! CSR X DIA
-     private :: sparse_matmul_amudia  ! real(dp) version
-     private :: sparse_matmul_amudia_ ! complex(dp) version
+     private :: sparse_matmul_amudia   ! real(dp) version
+     private :: sparse_matmul_amudia_z ! complex(dp) version
 
 ! DIA X CSR
-     private :: sparse_matmul_diamua  ! real(dp) version
-     private :: sparse_matmul_diamua_ ! complex(dp) version
+     private :: sparse_matmul_diamua   ! real(dp) version
+     private :: sparse_matmul_diamua_z ! complex(dp) version
 
-!-------------------------------------------------------------------------
-!::: declare interface and module procedure                            :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare interface and module procedure                           <<<
+!!========================================================================
 
      public :: sparse_csr_to_dns
      interface sparse_csr_to_dns
@@ -145,7 +145,7 @@
 
   contains ! encapsulated functionality
 
-!>>> converts a row-stored sparse matrix into a densely stored one
+!!>>> converts a row-stored sparse matrix into a densely stored one
   subroutine sparse_format_csrdns(nrow, ncol, nmax, a, ja, ia, dns)
      implicit none
 
@@ -192,7 +192,7 @@
      return
   end subroutine sparse_format_csrdns
 
-!>>> converts a row-stored sparse matrix into a densely stored one
+!!>>> converts a row-stored sparse matrix into a densely stored one
   subroutine sparse_format_csrdns_(nrow, ncol, nmax, sa, ja, ia, dns)
      implicit none
 
@@ -239,7 +239,7 @@
      return
   end subroutine sparse_format_csrdns_
 
-!>>> converts a densely stored matrix into a row orientied compactly sparse matrix
+!!>>> converts a densely stored matrix into a row orientied compactly sparse matrix
   subroutine sparse_format_dnscsr(nrow, ncol, nmax, dns, a, ja, ia)
      implicit none
 
@@ -292,7 +292,7 @@
      return
   end subroutine sparse_format_dnscsr
 
-!>>> converts a densely stored matrix into a row orientied compactly sparse matrix
+!!>>> converts a densely stored matrix into a row orientied compactly sparse matrix
   subroutine sparse_format_dnscsr_(nrow, ncol, nmax, dns, sa, ja, ia)
      implicit none
 
@@ -345,7 +345,7 @@
      return
   end subroutine sparse_format_dnscsr_
 
-!>>> converts a densely stored identity matrix into a row orientied compactly sparse matrix
+!!>>> converts a densely stored identity matrix into a row orientied compactly sparse matrix
   subroutine sparse_format_unicsr(nrow, nmax, a, ja, ia)
      implicit none
 
@@ -384,7 +384,7 @@
      return
   end subroutine sparse_format_unicsr
 
-!>>> converts a densely stored identity matrix into a row orientied compactly sparse matrix
+!!>>> converts a densely stored identity matrix into a row orientied compactly sparse matrix
   subroutine sparse_format_unicsr_(nrow, nmax, sa, ja, ia)
      implicit none
 
@@ -425,7 +425,7 @@
      return
   end subroutine sparse_format_unicsr_
 
-!>>> copy data between two row orientied compactly sparse matrices
+!!>>> copy data between two row orientied compactly sparse matrices
   subroutine sparse_matrix_copyer(nrow, nmax, a, ja, ia, b, jb, ib)
      implicit none
 
@@ -466,7 +466,7 @@
      return
   end subroutine sparse_matrix_copyer
 
-!>>> copy data between two row orientied compactly sparse matrices
+!!>>> copy data between two row orientied compactly sparse matrices
   subroutine sparse_matrix_copyer_(nrow, nmax, sa, ja, ia, sb, jb, ib)
      implicit none
 
@@ -507,7 +507,7 @@
      return
   end subroutine sparse_matrix_copyer_
 
-!>>> this function returns the element a(i,j) of matrix a
+!!>>> this function returns the element a(i,j) of matrix a
   real(dp) &
   function sparse_matrix_getter(i, j, nrow, nmax, a, ja, ia) result(elm)
      implicit none
@@ -558,7 +558,7 @@
      return
   end function sparse_matrix_getter
 
-!>>> this function returns the element sa(i,j) of matrix sa
+!!>>> this function returns the element sa(i,j) of matrix sa
   complex(dp) &
   function sparse_matrix_getter_(i, j, nrow, nmax, sa, ja, ia) result(elm)
      implicit none
@@ -609,7 +609,7 @@
      return
   end function sparse_matrix_getter_
 
-!>>> multiplies a matrix by a vector using the dot product form
+!!>>> multiplies a matrix by a vector using the dot product form
   subroutine sparse_matmul_amuvec(nrow, ncol, nmax, a, ja, ia, x, y)
      implicit none
 
@@ -653,7 +653,7 @@
      return
   end subroutine sparse_matmul_amuvec
 
-!>>> multiplies a matrix by a vector using the dot product form
+!!>>> multiplies a matrix by a vector using the dot product form
   subroutine sparse_matmul_amuvec_(nrow, ncol, nmax, sa, ja, ia, sx, sy)
      implicit none
 
@@ -697,7 +697,7 @@
      return
   end subroutine sparse_matmul_amuvec_
 
-!>>> performs the matrix by matrix product C = A * B
+!!>>> performs the matrix by matrix product C = A * B
   subroutine sparse_matmul_amumat(nrow, ndim, ncol, nmax, a, ja, ia, b, jb, ib, c, jc, ic)
      implicit none
 
@@ -793,7 +793,7 @@
      return
   end subroutine sparse_matmul_amumat
 
-!>>> performs the matrix by matrix product C = A * B
+!!>>> performs the matrix by matrix product C = A * B
   subroutine sparse_matmul_amumat_(nrow, ndim, ncol, nmax, sa, ja, ia, sb, jb, ib, sc, jc, ic)
      implicit none
 
@@ -889,7 +889,7 @@
      return
   end subroutine sparse_matmul_amumat_
 
-!>>> performs the matrix by matrix product B = A * Diag
+!!>>> performs the matrix by matrix product B = A * Diag
   subroutine sparse_matmul_amudia(nrow, nmax, a, ja, ia, diag, b, jb, ib)
      implicit none
 
@@ -948,7 +948,7 @@
      return
   end subroutine sparse_matmul_amudia
 
-!>>> performs the matrix by matrix product B = A * Diag
+!!>>> performs the matrix by matrix product B = A * Diag
   subroutine sparse_matmul_amudia_(nrow, nmax, sa, ja, ia, diag, sb, jb, ib)
      implicit none
 
@@ -1007,7 +1007,7 @@
      return
   end subroutine sparse_matmul_amudia_
 
-!>>> performs the matrix by matrix product B = Diag * A
+!!>>> performs the matrix by matrix product B = Diag * A
   subroutine sparse_matmul_diamua(nrow, nmax, diag, a, ja, ia, b, jb, ib)
      implicit none
 
@@ -1066,7 +1066,7 @@
      return
   end subroutine sparse_matmul_diamua
 
-!>>> performs the matrix by matrix product B = Diag * A
+!!>>> performs the matrix by matrix product B = Diag * A
   subroutine sparse_matmul_diamua_(nrow, nmax, diag, sa, ja, ia, sb, jb, ib)
      implicit none
 
