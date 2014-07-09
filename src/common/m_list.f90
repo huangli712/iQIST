@@ -89,7 +89,7 @@
          next => current%next
          deallocate( current )
          current => next
-     enddo
+     enddo ! over do while loop
 
      return
   end subroutine list_destroy
@@ -112,10 +112,10 @@
          do while ( associated(current%next) )
              current => current%next
              list_count = list_count + 1
-         enddo
+         enddo ! over do while loop
      else
          list_count = 0
-     endif
+     endif ! back if block
 
      return
   end function list_count
@@ -124,6 +124,7 @@
   function list_next( elem ) result(next)
      implicit none
 
+! external arguments
 ! element in the linked list
      type(T_node), pointer :: elem
      type(T_node), pointer :: next
@@ -137,36 +138,40 @@
   subroutine list_insert( elem, data )
      implicit none
 
-! element in the linked list after which to insert the new element
-     type(T_node), pointer  :: elem
+! external arguments
+! element in the linked list after which the new element should be inserted
+     type(T_node), pointer    :: elem
+
 ! the data for the new element
      type(T_data), intent(in) :: data
 
+! local variables
      type(T_node), pointer :: next
 
      allocate(next)
-
+     next%data =  data
      next%next => elem%next
      elem%next => next
-     next%data =  data
 
-    return
+     return
   end subroutine list_insert
 
 !!>>> list_insert_head: insert a new element before the first element
   subroutine list_insert_head( list, data )
      implicit none
 
+! external arguments
 ! start of the list
      type(T_node), pointer    :: list
+
 ! the data for the new element
      type(T_data), intent(in) :: data
 
+! local variables
      type(T_node), pointer :: elem
 
      allocate(elem)
      elem%data =  data
-
      elem%next => list
      list      => elem
 
@@ -177,11 +182,14 @@
   subroutine list_delete_element( list, elem )
      implicit none
 
+! external arguments
 ! header of the list
      type(T_node), pointer  :: list
+
 ! element in the linked list to be removed
      type(T_node), pointer  :: elem
 
+! local variables
      type(T_node), pointer  :: current
      type(T_node), pointer  :: prev
 
@@ -195,12 +203,12 @@
              if ( associated(current,elem) ) then
                  prev%next => current%next
                  deallocate( current ) ! Is also "elem"
-                 exit
+                 EXIT
              endif
              prev    => current
              current => current%next
-         enddo
-     endif
+         enddo ! over do while loop
+     endif ! back if block
 
      return
   end subroutine list_delete_element
@@ -209,8 +217,11 @@
   function list_get_data( elem ) result(data)
      implicit none
 
+! external arguments
 ! element in the linked list
      type(T_node), pointer :: elem
+
+! return value
      type(T_data)          :: data
 
      data = elem%data
@@ -222,9 +233,11 @@
   subroutine list_set_data( elem, data )
      implicit none
 
+! external arguments
 ! element in the linked list
-! the data to be stored
      type(T_node), pointer    :: elem
+
+! the data to be stored
      type(T_data), intent(in) :: data
 
      elem%data = data
