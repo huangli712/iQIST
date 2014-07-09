@@ -1,11 +1,17 @@
-!=========================================================================!
-! project : jasmne
-! program : mod_control.f90
-! history : 09/28/2011
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : control
+! source  : mod_control.f90
+! type    : modules 
 ! authors : yilin wang (email: qhwyl2006@126.com)
-! purpose : control variables
-! comment : 
-!=========================================================================!
+! history : 07/09/2014
+! purpose : control parameters
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
 module control
     use constants, only: dp
 
@@ -16,7 +22,7 @@ module control
     ! 2: material calculation
     integer, public, save :: itask
 
-    ! type of CTQMC algorithm
+    ! type of CTQMC trace algorithm
     ! 1: general matrices multiplication
     ! 2: good quantum number: N
     ! 3: good quantum number: N, Sz, PS
@@ -34,7 +40,7 @@ module control
     ! 1: on-site atomic spin-orbital coupling (SOC), H_soc = \lambda * L*S
     integer, public, save :: isoc
 
-    ! the type of Coulomb interaction U
+    ! type of Coulomb interaction U
     ! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp)
     ! 2: Slater-Cordon parameters (F0, F2, F4, F6)
     integer, public, save :: icu
@@ -45,14 +51,15 @@ module control
     ! number of spins
     integer, public, save :: nspin
 
-    ! number of orbits 
+    ! number of orbitals
     integer, public, save :: norbs
 
     ! number of many-body configurations
     integer, public, save :: ncfgs
 
+    ! the following are useful when icu = 1
+    !--------------------------------------
     ! intraorbital Coulomb interaction
-    ! useful when icu = 1
     real(dp), public, save :: Uc  
 
     ! interorbital Coulomb interaction
@@ -66,14 +73,17 @@ module control
 
     ! pair-hopping interaction
     real(dp), public, save :: Jp
+    !--------------------------------------
 
+    ! the following are useful when icu = 2
+    !--------------------------------------
     ! Slater-Cordon parameters
-    ! useful when icu = 2
     real(dp), public, save :: F0
     real(dp), public, save :: F2
     real(dp), public, save :: F4
     real(dp), public, save :: F6
-
+    !--------------------------------------
+    
     ! spin-orbit coupling interaction
     real(dp), public, save :: lambda
 

@@ -1,6 +1,20 @@
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : atomic_check_hmat_real
+! source  : atomic_check.f90
+! type    : subroutines
+! author  : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014 by yilin wang
+! purpose : do some check
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
 !>>> check whether Hamiltonian is real
 subroutine atomic_check_hmat_real(ndim, hmat, lreal)
-    use constants
+    use constants, only: dp, eps6
 
     implicit none
 

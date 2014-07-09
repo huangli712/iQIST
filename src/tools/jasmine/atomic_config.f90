@@ -2,9 +2,9 @@
 ! project : jasmine
 ! program : atomic_config
 ! source  : atomic_config.f90
-! type    : subroutine
+! type    : subroutines
 ! author  : yilin wang (email: qhwyl2006@126.com)
-! history : 07/06/2014 by yilin wang
+! history : 07/09/2014 by yilin wang
 ! purpose : set config parameters 
 ! input   :
 ! output  :

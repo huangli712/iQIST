@@ -4,63 +4,75 @@
 ! source  : atomic_main.f90
 ! type    : program
 ! author  : yilin wang (email: qhwyl2006@126.com)
-! history : 07/06/2014 by yilin wang
-! purpose : the main program of atomic problem
+! history : 07/09/2014 by yilin wang
+! purpose : the main program of jasmine
 ! input   :
 ! output  :
 ! status  : unstable
 ! comment :
 !-------------------------------------------------------------------------
 program main
-    use control, only ictqmc
+    use control, only: ictqmc
     use m_basis_fullspace
     use m_spmat
 
     implicit none
 
-    ! print the running header for atomic problems
+    ! print the running header 
     call atomic_print_header()
 
-    ! setup important parameters for atomic problems
+    ! set control parameters and check their validity 
     call atomic_config()
 
-    ! print the running summary for atomic problems
+    ! print the summary of control parameters 
     call atomic_print_summary()
 
     ! make Single Particle related MATrix
-    ! cystal field, spin-orbital coupling, Coulomb interaction U
+    ! including crystal field (CF), spin-orbital coupling (SOC), Coulomb interaction U
+    ! when writing these matrices, we should define a single particle 
+    ! orbital basis, there are four basis we will use
+    ! (1) real orbital basis
+    !     for example, dz2, dxz, dyz, dx2-y2, dxy
+    ! (2) complex orbital (the spherical functions) basis
+    !     for example, |2,-2>, |2,-1>, |2,0>, |2,1>, |2,2>
+    ! (3) |j2,jz> (eigenstates of j^2, jz) orbital basis
+    !     for example, |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2>, |3/2,3/2>, 
+    !                  |5/2,-5/2>, |5/2,-3/2>,|5/2,-1/2>,|5/2,1/2>,|5/2,3/2>,|5/2,5/2>
+    ! (4) so-called natural basis, on which the on-site energy of impurity is diagonal
+    !     we diagonalize CF + SOC to obtain natural basis
     call atomic_make_spmat()
 
     ! make natural basis
-    ! natural basis is the basis on which the on-site impurity 
-    ! energy matrix is diagonal 
     call atomic_make_natural()
 
-    ! make Fock BASIS for the FULL many particle Hiblert  space
-    call atomic_make_basis_full()
+    ! make Fock basis for the full many particle Hiblert space
+    call atomic_make_basis_fullspace()
 
     ! call the driver
     select case(ictqmc)
         ! itask 1: diagonalize the full Hilbert space
-        case(1) call atomic_driver_fullspace()
-
+        case(1) 
+            call atomic_driver_fullspace()
         ! itask 2: use good quantum numbers
         ! total number of electrons: N
         ! for the case of crystal field (CF) plus spin-orbital coupling (SOC)
-        case(2) call atomic_driver_n()
+        case(2) 
+             call atomic_driver_n()
 
         ! itask 3: use good quantum numbers
         ! total number of electrons: N 
         ! spin: Sz
         ! PS number
         ! for the case without SOC
-        case(3) call atomic_driver_nszps()
+        case(3) 
+            call atomic_driver_nszps()
 
         ! itask 4: use good quantum numbers
         ! total number of electrons: N
         ! Jz
         ! for the case with SOC, and no CF
-        case(4) call atomic_driver_njz() 
+        case(4) 
+            call atomic_driver_njz() 
 
     end select 
 

@@ -1,184 +1,270 @@
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : atomic_mksectors_n
+!         : atomic_mksectors_nszps
+!         : atomic_mksectors_njz
+! source  : atomic_mksector.f90
+! type    : subroutines
+! author  : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014 by yilin wang
+! purpose : make sectors by using good quantum numbers
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
+!>>> determine all the sectors for good quantum N case
+! a sector consists of some many particle Fock states labeled by 
+! good quantum number N 
+subroutine atomic_mksectors_n()
+    implicit none
+
+    print *, "not implemented!"
+
+    return
+end subroutine atomic_mksectors_n
+
+!>>> determine all the sectors for good quantum N, Sz, PS case
+! a sector consists of some many particle Fock states labeled by 
+! good quantum number N, Sz, PS
+subroutine atomic_mksectors_nszps()
+    implicit none
+
+    print *, "not implemented!"
+
+    return
+end subroutine atomic_mksectors_nszps
+
 !>>> determine all the sectors for good quantum N, Jz case
-subroutine atomic_mksectors_njz(good_jz)
-    use constants
-    use control
-    use m_basis_fullspace
-    use m_good_quantum
+! a sector consists of some many particle Fock states labeled by 
+! good quantum number N, Jz 
+subroutine atomic_mksectors_njz()
+    use control, only: norbs, ncfgs
+    use m_basis_fullspace, only: dim_sub_n, bin_basis
     use m_sector
-    use m_sectors_njz
+    use m_glob_sectors
 
     implicit none
 
-    ! external variables
-    integer, intent(in) :: good_jz(norbs)
-
     ! local variables
-    type(t_njz) :: subs(ncfgs) 
-    type(t_njz) :: tmp
-    integer :: ndims(ncfgs)
-    integer :: sub_basis(ncfgs, ncfgs)
-    integer :: nsubs
-    integer :: ntot
-    integer :: myjz 
-    integer :: ibasis
-    integer :: isubs
-    logical :: eql
-    integer :: i,j,k 
+    ! the maximum number of sectors
+    integer :: max_nsect
+    ! the maximum dimension of each sector
+    integer :: max_ndim
+    ! the jz value for each |j2,jz> single particle orbital
+    integer :: orb_good_jz(norbs)
+    ! good quantum number N, Jz for each Fock state
+    integer :: fock_good_ntot(ncfgs)
+    integer :: fock_good_jz(ncfgs)
+    ! good quantum number N, Jz for each sector
+    integer, allocatable :: sect_good_ntot(:)
+    integer, allocatable :: sect_good_jz(:)
+    ! dimension of each sector
+    integer, allocatable :: ndims(:)
+    ! sector basis index
+    integer, allocatable :: sector_basis(:,:)
+    ! number of sectors
+    integer :: nsect
+    ! which sector point to
+    integer :: which_sect
+    ! tmp variables
+    integer :: myntot
+    integer :: myjz
     integer :: counter
-     
-    ! loop over all of the configurations to determine subspaces
-    ibasis = 0
-    nsubs = 0
-    ndims = 0
-    sub_basis = 0
+    integer :: ibasis
+    integer :: i,j,k,l
+    logical :: can  
 
-    ! loop over subspaces by good quantum number $N$
+
+    max_nsect = ncfgs
+    max_ndim = ncfgs
+    ! allocate memory
+    allocate(sect_good_ntot(max_nsect))
+    allocate(sect_good_jz(max_nsect))
+    allocate(ndims(max_nsect))
+    allocate(sector_basis(max_ndim, max_nsect))
+
+    ! make good_jz
+    call make_good_jz(orb_good_jz)
+
+    ! build good quantum numbers for each Fock state
+    counter = 0
     do i=0, norbs
-        ntot = i
-        ! nstat(ntot): the dimension of ntot subspace 
-        do j=1, dim_sub_n(ntot) 
-            ibasis = ibasis + 1
+        do j=1, dim_sub_n(i)
+            counter = counter + 1
             myjz = 0
-            ! determine the jz
             do k=1, norbs
-                myjz = myjz + good_jz(k) * bin_basis(k, ibasis) 
-            enddo  
-            tmp = t_good_njz(ntot, myjz)
-            if (nsubs==0) then
-                subs(1) = tmp
-                nsubs = nsubs + 1
-                ndims(1) = ndims(1) + 1 
-                sub_basis(ndims(1),1) = ibasis
-            else
-                ! loop over the exists subspace
-                isubs = -1
-                SUBLOOP: do k=1, nsubs
+                myjz = myjz + orb_good_jz(k) * bin_basis(k, counter) 
+            enddo
+            fock_good_ntot(counter) = i
+            fock_good_jz(counter) = myjz
+        enddo  
+    enddo
+
+    !----------------------------------------------------------------
+    ! loop over all the Fock states to determine sectors
+    nsect = 0
+    ndims = 0
+    sector_basis = 0
+    do i=1, ncfgs    
+        myntot = fock_good_ntot(i)
+        myjz   = fock_good_jz(i)
+        if (nsect==0) then
+            sect_good_ntot(1) = myntot
+            sect_good_jz(1)   = myjz
+            nsect = nsect + 1
+            ndims(1) = ndims(1) + 1 
+            sector_basis(ndims(1),1) = i
+        else
+            ! loop over the exists sectors
+            which_sect = -1
+            do j=1, nsect
                 ! compare two subspaces
-                    eql = .false.
-                    call compare_good_njz(subs(k), tmp, eql)   
-                    if (eql) then
-                        isubs = k
-                        EXIT SUBLOOP 
-                    endif
-                enddo SUBLOOP 
-                ! new subsapce
-                if( isubs == -1 ) then
-                    nsubs = nsubs + 1
-                    subs(nsubs) = tmp 
-                    ndims(nsubs) = ndims(nsubs) + 1
-                    sub_basis(ndims(nsubs), nsubs) = ibasis
-                ! old subspace
-                else
-                    ndims(isubs) = ndims(isubs) + 1 
-                    sub_basis(ndims(isubs), isubs) = ibasis
+                if ( sect_good_ntot(j) == myntot .and. sect_good_jz(j) == myjz) then
+                    which_sect = j
+                    EXIT
                 endif
-            endif ! back to {if (nsubs==0) then}
-        enddo ! back to {do j=1, nstat(ntot)} 
-    enddo ! back to {do i=0, norbs}
+            enddo 
+            ! new sector
+            if( which_sect == -1 ) then
+                nsect = nsect + 1
+                sect_good_ntot(nsect) = myntot
+                sect_good_jz(nsect)   = myjz
+                ndims(nsect) = ndims(nsect) + 1
+                sector_basis(ndims(nsect), nsect) = i
+            ! old sector
+            else
+                ndims(which_sect) = ndims(which_sect) + 1 
+                sector_basis(ndims(which_sect), which_sect) = i
+            endif
+        endif ! back to if (nsect == 0) then block 
+    enddo 
 
-    ! after we know how many subspaces and the dimension of each subspace,
-    ! we can allocate memory for global variables subspaces
-    nsectors = nsubs
-    call alloc_m_sectors_njz()
-
-    ! now we will build each subspace 
+    !----------------------------------------------------------------
+    ! after we know how many sectors and the dimension of each sector,
+    ! we can allocate memory for global variables for sectors
+    nsectors = nsect
+    call alloc_m_glob_sectors()
+    ! now we will build each sector
     counter = 1
-    do i=1, nsubs
+    do i=1, nsect
         sectors(i)%ndim = ndims(i)
-        sectors(i)%ndim = subs(i)%ntot
+        sectors(i)%nelectron = sect_good_ntot(i)
         sectors(i)%nops = norbs
         sectors(i)%istart = counter 
         counter = counter + ndims(i)
         ! allocate memory for pointers in each subspace
-        ! WARNING: these memory should be deallocated before deallocating subspaces
+        ! WARNING: these memory should be deallocated before deallocating sectors
         call alloc_one_sector( sectors(i) )  
-        ! set basis for each subspace
+        ! set basis for each sector
         do j=1, ndims(i)
-            sectors(i)%mybasis(j) = sub_basis(j,i) 
+            sectors(i)%mybasis(j) = sector_basis(j,i) 
         enddo
     enddo
+
+    !----------------------------------------------------------------
+    ! make next_sector index
+    ! for create operators
+    do i=1, nsectors
+        do j=1, norbs 
+            do k=0,1 
+                which_sect = -1
+            ! we should lookup each basis in this subspace 
+                can = .false.
+                do l=1, sectors(i)%ndim
+                    ibasis = sectors(j)%mybasis(l)
+                    if (k==1 .and. bin_basis(j,ibasis) == 0 ) then
+                        can = .true.
+                        exit
+                    elseif (k==0 .and. bin_basis(j, ibasis) == 1) then
+                        can = .true. 
+                        exit
+                    endif 
+                enddo 
+                if (can == .true.) then
+                    if (k==1) then
+                        myntot = sect_good_ntot(i) + 1
+                        myjz   = sect_good_jz(i) + orb_good_jz(j)
+                    else
+                        myntot = sect_good_ntot(i) - 1
+                        myjz   = sect_good_jz(i) - orb_good_jz(j)
+                    endif
+                    ! loop over all sectors to see which sector it will point to 
+                    do l=1, nsectors
+                        if (sect_good_ntot(l) == myntot .and. sect_good_jz(l) == myjz) then
+                            which_sect = l
+                            exit 
+                        endif 
+                    enddo 
+                endif  ! back to if (can == .true.) block
+                ! set next_sector index
+                sectors(i)%next_sector(j,k) = which_sect 
+            enddo ! over k={0,1} loop
+        enddo ! over j={1,norbs} loop
+    enddo ! over i={1, nsectors} loop
+
+    ! free memeory
+    if (allocated(sect_good_ntot)) deallocate(sect_good_ntot)
+    if (allocated(sect_good_jz))   deallocate(sect_good_jz)
+    if (allocated(ndims))          deallocate(ndims)
+    if (allocated(sector_basis))   deallocate(sector_basis)
 
     return
 end subroutine atomic_mksectors_njz
 
-subroutine atomic_mknextsector_njz(good_jz)
-    use m_basis_fullspace
-    use m_good_quantum
-    use m_sector
-    use m_sectors_njz
+subroutine make_good_jz(good_jz)
+    use control, only: norbs
 
     implicit none
 
     ! external variables
-    integer, intent(in) :: good_jz(norbs)
+    integer, intent(out) :: good_jz(norbs)
 
-    integer :: i, j, k, m
-    integer :: isub, ibasis
-    integer :: ntot_tmp, jz_tmp
-    type(t_good_njz) :: good_tmp
-    logical :: eql
-    logical :: eql2
-   
-    ! for create operators
-    do i=1, norbs
-        do j=1, nsectors
-            isub = -1
-            ! we should lookup each basis in this subspace 
-            eql2 = .false.
-            do m=1, sectors(j)%ndim
-                ibasis = sectors(j)%mybasis(m)
-                if ( bin_basis(i,ibasis) == 0 ) then
-                    eql2 = .true.
-                    exit
-                endif 
-            enddo 
-            if (eql2 == .true.) then
-                ntot_tmp = good_njz(j)%ntot + 1
-                jz_tmp   = good_njz(j)%jz + good_jz(i)
-                good_njz_tmp = t_good_njz(ntot_tmp, jz_tmp)
-
-                ! loop over all subspaces to see which subspace it will be 
-                do k=1, nsectors
-                    call compare_good_njz(good_njz_tmp, good_njz(k), eql) 
-                    if (eql) then
-                        isub = k
-                        exit 
-                    endif 
-                enddo 
-            endif
-            sectors(j)%next_sector(i,1) = isub 
-        enddo
-    enddo
-
-    ! for destroy operators
-    do i=1, norbs
-        do j=1, nsectors
-            isub = -1
-            ! we should lookup each basis in this subspace 
-            eql2 = .false.
-            do m=1, sectors(j)%ndim
-                ibasis = sectors(j)%mybasis(m)
-                if (bin_basis(i,ibasis)==1) then
-                    eql2 = .true.
-                    exit
-                endif 
-            enddo 
-            if (eql2 == .true.) then
-                ntot_tmp = good_njz(j)%ntot - 1
-                jz_tmp   = good_njz(j)%jz - good_jz(i)
-                good_njz_tmp = t_good_njz(ntot_tmp, jz_tmp)
-                ! loop over all subspaces to see which subspace it will be 
-                do k=1, nsectors
-                    call compare_gqn(good_njz_tmp, good_njz(k), eql) 
-                    if (eql) then
-                        isub = k
-                        exit 
-                    endif 
-                enddo 
-            endif
-            sectors(j)%next_sector(i,0) = isub 
-        enddo
-    enddo
+    if (norbs == 6) then
+        ! j=1/2
+        good_jz(1) = -1
+        good_jz(2) =  1
+        ! j=3/2
+        good_jz(3) = -3
+        good_jz(4) = -1
+        good_jz(5) =  1
+        good_jz(6) =  3
+    elseif (norbs == 10) then
+        ! j=3/2
+        good_jz(1) = -3
+        good_jz(2) = -1
+        good_jz(3) =  1
+        good_jz(4) =  3
+        ! j=5/2
+        good_jz(5) = -5
+        good_jz(6) = -3
+        good_jz(7) = -1
+        good_jz(8) =  1
+        good_jz(9) =  3
+        good_jz(10)=  5
+    elseif (norbs == 14) then
+        ! j=5/2
+        good_jz(1) = -5
+        good_jz(2) = -3
+        good_jz(3) = -1
+        good_jz(4) =  1
+        good_jz(5) =  3
+        good_jz(6) =  5
+        ! j=7/2
+        good_jz(7) = -7
+        good_jz(8) = -5
+        good_jz(9) = -3
+        good_jz(10)= -1
+        good_jz(11)=  1
+        good_jz(12)=  3
+        good_jz(13)=  5
+        good_jz(14)=  7
+    else
+        call atomic_print_error('make_good_jz', 'not implemented for this norbs value !')
+    endif
 
     return
-end subroutine atomic_mknextsector_njz
+end subroutine make_good_jz
+
+

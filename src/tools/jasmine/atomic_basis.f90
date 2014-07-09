@@ -1,120 +1,109 @@
-  subroutine atomic_make_basis_full()
-     use constants
-     use control
-     use m_basis_fullspace
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : atomic_make_basis_fullspace
+!           state_pick
+! source  : atomic_basis.f90
+! type    : subroutines
+! author  : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014 by yilin wang
+! purpose : make Fock basis 
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
 
-     implicit none
+!>>> make Fock basis for full Hilbert space, this subroutine is taken from
+! Dr. LiangDu's (duleung@gmail.com) atomic program
+subroutine atomic_make_basis_fullspace()
+    use control, only: norbs, ncfgs
+    use m_basis_fullspace  
 
-! local variables
-! loop index
-     integer :: i, j
+    implicit none
 
-! basis counter
-     integer :: basis_count
+    ! external variables
+    integer, external :: state_pick
 
-! number of electrons for Fock state
-     integer :: nelec
+    ! local variables
+    ! loop index
+    integer :: i, j, k
+    ! basis counter
+    integer :: basis_count
+    ! number of electrons for Fock state
+    integer :: nelec
 
-! first, allocate memory for basis related matrices
-     call alloc_m_basis_fullspace()
+    ! first, allocate memory for basis related matrices
+    call alloc_m_basis_fullspace()
 
-     do i=0,norbs
-         dim_sub_N(i) = state_pick(i, norbs)
-     enddo 
+    do i=0,norbs
+        dim_sub_n(i) = state_pick(i, norbs)
+    enddo 
 
-     do i=0, norbs
-         do j=0, 2**norbs-1
-             call verif( j, norbs, nelec )
-             if ( nelec .eq. i ) then
-                 basis_count = basis_count + 1
-                 dec_basis(basis_count) = j
-                 index_basis(j) = basis_count
-             endif 
-         enddo 
-     enddo 
+    do i=0, norbs
+        do j=0, 2**norbs-1
+            nelec = 0
+            do k=1,norbs
+                if( btest(j, k-1) ) nelec = nelec + 1
+            enddo 
+            if ( nelec .eq. i ) then
+                basis_count = basis_count + 1
+                dec_basis(basis_count) = j
+                index_basis(j) = basis_count
+            endif 
+        enddo 
+    enddo 
 
-! construct inverse binary code from a decimal number 
-     do i=1,ncfgs
-         do j=1,norbs
-             if( btest(dec_basis(i), j-1) ) bin_basis(j, i) = 1
-         enddo 
-     enddo 
+    ! construct binary from of Fock basis
+    do i=1,ncfgs
+        do j=1,norbs
+            if( btest(dec_basis(i), j-1) ) bin_basis(j, i) = 1
+        enddo 
+    enddo 
 
-! dump atomic configurations to file "atom.basis.dat"
-     call atomic_write_basis()
+    ! dump atomic configurations to file "atom.basis.dat"
+    call atomic_write_basis()
 
-     return
-  end subroutine atomic_make_basis_fullspace
-
-!>>> electron number denoted by a decimal number
-  subroutine verif( inum, norbs, nbits )
-     implicit none
-
-! external arguments
-! decimal number
-     integer, intent(in)  :: inum
-
-! number of orbits
-     integer, intent(in)  :: norbs
-
-! number of total electrons
-     integer, intent(out) :: nbits
-
-! local variables
-! local index over orbits
-     integer :: ipos
-
-! number of total electrons
-     nbits = 0
-     do ipos=1,norbs
-         if( btest(inum, ipos-1) ) nbits = nbits + 1
-     enddo ! over ipos={1,norbs} loop
-
-     return
-  end subroutine verif
+    return
+end subroutine atomic_make_basis_fullspace
 
 !>>> calculate combination algebra 
-  function state_pick(ntiny, nlarg) result(value)
-     implicit none
+function state_pick(ntiny, nlarg) result(value)
+    implicit none
 
-! external variables
-     integer, intent(in) :: ntiny
-     integer, intent(in) :: nlarg
+    ! external variables
+    integer, intent(in) :: ntiny
+    integer, intent(in) :: nlarg
 
-! local variables
-     integer :: i
+    ! local variables
+    integer :: i
+    ! auxiliary integer variable
+    integer :: nlow
+    ! numberator of the combination algebra
+    real(8) :: numer
+    ! denominator of the combination algebra
+    real(8) :: denom
+    ! result value of the combination algebra
+    integer :: value
 
-! auxiliary integer variable
-     integer :: nlow
+    ! transform the combination algebra
+    nlow = min(ntiny, nlarg-ntiny)
 
-! numberator of the combination algebra
-     real(8) :: numer
+    ! numerator in combination algebra
+    numer = 1.0D0
+    do i=nlarg-nlow+1,nlarg
+       numer = numer * dble(i)
+    enddo ! over i={nlarg-nlow+1,nlarg} loop
 
-! denominator of the combination algebra
-     real(8) :: denom
+    ! denominator in combination algebra
+    denom = 1.0D0
+    do i=1,nlow
+       denom = denom * dble(i)
+    enddo ! over i={1,nlow} loop
 
-! result value of the combination algebra
-     integer :: value
+    ! result value
+    value = nint(numer / denom)
 
-! transform the combination algebra
-     nlow = min(ntiny, nlarg-ntiny)
-
-! numerator in combination algebra
-     numer = 1.0D0
-     do i=nlarg-nlow+1,nlarg
-        numer = numer * dble(i)
-     enddo ! over i={nlarg-nlow+1,nlarg} loop
-
-! denominator in combination algebra
-     denom = 1.0D0
-     do i=1,nlow
-        denom = denom * dble(i)
-     enddo ! over i={1,nlow} loop
-
-! result value
-     value = nint(numer / denom)
-
-     return
-  end function state_pick
+    return
+end function state_pick
 
 

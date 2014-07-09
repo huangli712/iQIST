@@ -1,6 +1,25 @@
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : atomic_make_umat_r2c
+!         : atomic_make_umat_c2j
+!         : atomic_tran_represent
+!         : atomic_tran_represent_real
+!         : atomic_tran_cumat
+! source  : atomic_natural.f90
+! type    : subroutines
+! author  : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014 by yilin wang
+! purpose : make transformation from one space to another space 
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
+
 subroutine atomic_make_umat_r2c( umat_r2c )
-    use constants
-    use control
+    use constants, only: dp, czero, cone, czi
+    use control,   only: nband, norbs
 
     implicit none
 
@@ -74,8 +93,8 @@ end subroutine atomic_make_umat_r2c
 
 !>>> make CG coefficients
 subroutine atomic_make_umat_c2j( umat_c2j ) 
-    use constants
-    use control
+    use constants,  only: dp, czero
+    use control,    only: nband, norbs
 
     implicit none
     
@@ -165,7 +184,7 @@ end subroutine atomic_make_umat_c2j
 
 !>>> transformation from one representation to another representation
 subroutine atomic_tran_represent( ndim, amat, umat )
-    use constant
+    use constants, only: dp
 
     implicit none
 
@@ -183,10 +202,31 @@ subroutine atomic_tran_represent( ndim, amat, umat )
     return
 end subroutine atomic_tran_represent
 
+!>>> transformation from one representation to another representation, real version
+subroutine atomic_tran_represent_real( ndim, amat, umat )
+    use constants, only: dp
+
+    implicit none
+
+    ! external variables
+    integer, intent(in) :: ndim
+    real(dp), intent(inout) :: amat(ndim, ndim)
+    real(dp), intent(in) :: umat(ndim, ndim)
+
+    ! local variables
+    real(dp) :: tmp_mat(ndim, ndim)
+
+    call dmat_dgemm0( ndim, amat, umat, tmp_mat )
+    call dmat_dgemm1( ndim, umat, tmp_mat, amat )      
+
+    return
+end subroutine atomic_tran_represent_real
+
+
 !>>> transform Coulomb interaction U tensor 
 subroutine atomic_tran_cumat(amtrx, cumat, cumat_t)
-    use constants
-    use control
+    use constants, only: dp, czero, epst
+    use control,   only: norbs
 
     implicit none
 
@@ -219,7 +259,7 @@ subroutine atomic_tran_cumat(amtrx, cumat, cumat_t)
         alpha2loop: do alpha2=1,norbs
         alpha3loop: do alpha3=1,norbs
         alpha4loop: do alpha4=1,norbs
-            if (abs(cumat(alpha1, alpha2, alpha3, alpha4)) .lt. eps6) cycle
+            if (abs(cumat(alpha1, alpha2, alpha3, alpha4)) .lt. epst) cycle
             ctmp = ctmp + cumat(alpha1, alpha2, alpha3, alpha4)          &
                  * conjg(amtrx(alpha1, sigma1)) * amtrx(alpha3, sigma3)  &
                  * conjg(amtrx(alpha2, sigma2)) * amtrx(alpha4, sigma4)

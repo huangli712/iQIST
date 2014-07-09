@@ -1,7 +1,25 @@
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : atomic_print_header
+!         : atomic_print_footer
+!         : atomic_print_summary
+!         : atomic_print_error
+!         : atomic_print_exception
+! source  : atomic_natural.f90
+! type    : subroutines
+! author  : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014 by yilin wang
+! purpose : print information
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
 !>>> print header
 subroutine atomic_print_header()
-    use constants
-    use control
+    use constants,  only: mystd
+    use control,    only: nprocs
 
     ! string for current date and time
     character (len = 20) :: date_time_string
@@ -35,7 +53,7 @@ end subroutine atomic_print_header
 
 !>>> print footer
 subroutine atomic_print_footer()
-    use constants
+    use constants, only: dp, mystd
 
     implicit none
 
@@ -62,7 +80,8 @@ end subroutine atomic_print_footer
 
 !>>> print summary
 subroutine atomic_print_summary()
-    use constants
+    use constants, only: mystd
+    use control
 
     implicit none
 
@@ -91,7 +110,7 @@ end subroutine atomic_print_summary
 
 !>>> print warning
 subroutine atomic_print_exception(sub, msg)
-    use constants
+    use constants,  only: mystd
 
     implicit none
 
@@ -115,7 +134,7 @@ end subroutine atomic_print_exception
 
 !>>> print error
 subroutine atomic_print_error(sub, msg)
-    use constants
+    use constants, only: mystd
 
     implicit none
 

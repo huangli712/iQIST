@@ -1,8 +1,29 @@
-!>>> make natural basis
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : atomic_make_natural
+!           atomic_2natural_case1
+!           atomic_2natural_case2
+!           atomic_2natural_case3
+!           atomic_2natural_case4
+!           atomic_mat_2nospin
+!           atomic_mat_2spin
+! source  : atomic_natural.f90
+! type    : subroutines
+! author  : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014 by yilin wang
+! purpose : make natural basis 
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
+!>>> make natural basis, the natural basis is the basis on which the 
+! impurity energy matrix is diagonal
 subroutine atomic_make_natural()
-    use constants
-    use control
-    use m_spmat
+    use constants, only: dp, czero
+    use control,   only: norbs, itask, icf, isoc, icu
+    use m_spmat,   only: cumat, tran_umat
 
     implicit none
 
@@ -64,9 +85,9 @@ end subroutine atomic_make_natural
 
 !>>> make natural basis for no crystal or diagonal crystal without spin-orbital coupling
 subroutine atomic_2natural_case1()
-    use constants
-    use control
-    use m_spmat
+    use constants, only: zero, cone
+    use control,   only: norbs
+    use m_spmat,   only: tran_umat
 
     implicit none
 
@@ -85,9 +106,9 @@ end subroutine atomic_2natural_case1
 
 !>>> make natural basis for non-diagonal crystal field without spin-orbital coupling
 subroutine atomic_2natural_case2()
-    use constants
-    use control
-    use m_spmat
+    use constants, only: dp, czero
+    use control,   only: norbs, nband
+    use m_spmat,   only: cfmat, eimpmat, tran_umat
 
     implicit none
 
@@ -121,7 +142,7 @@ subroutine atomic_2natural_case2()
     umat_nospin = eigvec
 
     call atomic_mat_2spin(nband, eimp_nospin, eimpmat) 
-    call atomic_mat_2spin(nband, umat_nospin, tran_mat)
+    call atomic_mat_2spin(nband, umat_nospin, tran_umat)
 
     return
 end subroutine atomic_2natural_case2
@@ -129,9 +150,9 @@ end subroutine atomic_2natural_case2
 !>>> make natural basis for the case without crystal field and with spin-orbital coupling
 ! for this special case, the natural basis is |J^2,Jz>
 subroutine atomic_2natural_case3()
-    use constants
-    use control
-    use m_spmat
+    use constants, only: dp
+    use control,   only: norbs
+    use m_spmat,   only: eimpmat, socmat, tran_umat
 
     implicit none
 
@@ -155,9 +176,9 @@ end subroutine atomic_2natural_case3
 
 !>>> make natural basis for the case with crystal field and with spin-orbital coupling
 subroutine atomic_2natural_case4()
-    use constants
-    use control
-    use m_sp_mat
+    use constants, only: dp
+    use control,   only: norbs 
+    use m_spmat,  only: cfmat, socmat, eimpmat, tran_umat
 
     implicit none
 
@@ -187,7 +208,7 @@ subroutine atomic_2natural_case4()
     call dmat_dsyev(norbs, norbs, tmp_mat, eigval, eigvec)
 
     umat_c2n = eigvec
-    trun_umat = umat_c2n
+    tran_umat = umat_c2n
 
   !  transform eimpmat to natural basis
     call atomic_tran_represent(norbs, eimpmat, umat_c2n)   
@@ -197,7 +218,7 @@ end subroutine atomic_2natural_case4
 
 !>>> utility subroutines 
 subroutine atomic_mat_2nospin(norbs, amat, bmat)
-    use constants
+    use constants, only: dp
     
     implicit none
 
@@ -223,7 +244,7 @@ subroutine atomic_mat_2nospin(norbs, amat, bmat)
 end subroutine atomic_mat_2nospin 
 
 subroutine atomic_mat_2spin(nband, amat, bmat)
-    use constants
+    use constants, only: dp
     
     implicit none
 
@@ -247,4 +268,4 @@ subroutine atomic_mat_2spin(nband, amat, bmat)
     enddo
 
     return
-end subroutine atomic_mat_2nospin 
+end subroutine atomic_mat_2spin 

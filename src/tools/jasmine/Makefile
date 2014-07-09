@@ -4,14 +4,13 @@ include ./make.sys
 
 default: all
 
-modn = mod_constants.o mod_control.o mod_subspace.o mod_mkgood.o mod_fmat.o mod_global.o
-lev1 = atomic_util.o atomic_mksubs.o
-lev2 = atomic_stream.o atomic_basis.o atomic_hmat.o
-lev3 = atomic_mkfmat.o
-dump = atomic_dumper.o atomic_print.o atomic_write.o
+modn = mod_constants.o mod_control.o mod_sector.o mod_global.o
+lev1 = atomic_util.o atomic_tran.o atomic_print.o atomic_config.o atomic_check.o atomic_gaunt.o atomic_read.o atomic_write.o atomic_basis.o
+lev2 = atomic_mksector.o atomic_mkspmat.o atomic_natural.o 
+lev3 = atomic_hmat.o atomic_fmat.o atomic_occu.o atomic_driver.o
 main = atomic_main.o
 
-objects = $(modn) $(lev1) $(lev2) $(lev3) $(dump) $(main)
+objects = $(modn) $(lev1) $(lev2) $(lev3) $(main)
 
 all: atomic
 
@@ -25,7 +24,7 @@ clean:
 	rm -f *.mod
 	rm -f *.o
 	rm -f atomic
-	rm -rf *genmod*
+	rm -f *genmod*
 clean-dat:
 	rm -f *.dat
 	rm -f *.bin

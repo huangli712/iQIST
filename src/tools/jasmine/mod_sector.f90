@@ -1,92 +1,24 @@
-!>>> module for defining good quantum numbers
-module m_good_quantum
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : m_sector
+! source  : mod_control.f90
+! type    : modules
+! authors : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014
+! purpose : define data structure for good quantum number algorithm
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
 
-    ! good quantum number for N
-    type :: t_good_n
-        ! total number of electrons
-        integer :: ntot  
-    end type t_good_n
-
-    ! good quantum number for N, Sz, PS
-    type :: t_good_nszps
-        ! total number of electrons
-        integer :: ntot
-        ! total Sz
-        integer :: sz
-        ! PS number
-        integer :: ps
-    end type t_good_nszps
-
-    ! good quantum numbers for N, Jz
-    type :: t_good_njz
-        ! the total number of electrons
-        integer :: ntot
-        ! the total jz 
-        integer :: jz  
-    end type t_good_njz
-
-    contains
-
-    subroutine make_good_jz(good_jz)
-        use control
-
-        implicit none
-
-        ! external variables
-        integer, intent(out) :: good_jz(norbs)
-
-        if (nband == 3) then
-            ! j=1/2
-            good_jz(1) = -1
-            good_jz(2) =  1
-            ! j=3/2
-            good_jz(3) = -3
-            good_jz(4) = -1
-            good_jz(5) =  1
-            good_jz(6) =  3
-        elseif (nband == 5) then
-            ! j=3/2
-            good_jz(1) = -3
-            good_jz(2) = -1
-            good_jz(3) =  1
-            good_jz(4) =  3
-            ! j=5/2
-            good_jz(5) = -5
-            good_jz(6) = -3
-            good_jz(7) = -1
-            good_jz(8) =  1
-            good_jz(9) =  3
-            good_jz(10)=  5
-        elseif (nband == 7) then
-            ! j=5/2
-            good_jz(1) = -5
-            good_jz(2) = -3
-            good_jz(3) = -1
-            good_jz(4) =  1
-            good_jz(5) =  3
-            good_jz(6) =  5
-            ! j=7/2
-            good_jz(7) = -7
-            good_jz(8) = -5
-            good_jz(9) = -3
-            good_jz(10)= -1
-            good_jz(11)=  1
-            good_jz(12)=  3
-            good_jz(13)=  5
-            good_jz(14)=  7
-        endif
-
-        return
-    end subroutine make_good_jz
-
-end module m_good_quantum
-
-!>>> data structure of sector
+!>>> data structure for good quantum number algorithm
 module m_sector
-    use constants, only: dp
+    use constants,  only: dp, zero, czero
+
     implicit none
 
-    ! the fmat between any two subspaces, it is just a matrix
+    ! the fmat between any two sectors, it is just a matrix
     type t_fmat
         ! the dimension
         integer :: n, m
@@ -94,26 +26,26 @@ module m_sector
         real(dp), pointer :: item(:,:)
     end type t_fmat
 
-    ! one subspace
+    ! one sector
     type :: t_sector 
-        ! the dimension of this subspace
+        ! the dimension of this sector
         integer :: ndim
         ! total number of electrons n
         integer :: nelectron 
-        ! number of operators
+        ! number of fermion operators
         integer :: nops
         ! the start index of this sector
         integer :: istart
-        ! the Fock basis index of this subspace
+        ! the Fock basis index of this sector
         integer, pointer :: mybasis(:)
-        ! the Hamiltonian of this subspace
+        ! the Hamiltonian of this sector
         complex(dp), pointer :: myham(:,:)
         ! the eigenvalues
         real(dp), pointer :: myeigval(:) 
-        ! the eigenvectors, Hamiltonian should be real
+        ! the eigenvectors, Hamiltonian must be real
         real(dp), pointer :: myeigvec(:,:) 
-        ! the next sector it points to when a fermi operator acts on this sector
-        ! 0 for outside of the space, otherwise, it is the index of sector
+        ! the next sector it points to when a fermion operator acts on this sector
+        ! -1: outside of the Hilbert space, otherwise, it is the index of next sector
         ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
         integer, pointer :: next_sector(:,:)
         ! the fmat between this sector and all other sectors
@@ -158,7 +90,7 @@ module m_sector
         ! external variables
         type(t_fmat), intent(inout) :: one_fmat
 
-        if (associated(one_fmat%item)) deallocate(one_fmat%item)
+        if ( associated(one_fmat%item) ) deallocate(one_fmat%item)
 
         return
     end subroutine dealloc_one_fmat
@@ -173,9 +105,9 @@ module m_sector
         nullify( one_sector%mybasis )
         nullify( one_sector%myham )
         nullify( one_sector%myeigval )
-        nullify( one_sectore%myeigvec )
-        nullify( one_sectore%next_sector )
-        nullify( one_sectore%myfmat )
+        nullify( one_sector%myeigvec )
+        nullify( one_sector%next_sector )
+        nullify( one_sector%myfmat )
 
         return
     end subroutine nullify_one_sector
@@ -205,7 +137,7 @@ module m_sector
         one_sector%next_sector = 0
 
         ! init myfmat one by one
-        do i=1, nops 
+        do i=1, one_sector%nops 
            do j=0, 1
                one_sector%myfmat(i,j)%n = 0
                one_sector%myfmat(i,j)%m = 0
@@ -233,7 +165,7 @@ module m_sector
         if (associated(one_sector%next_sector))  deallocate(one_sector%next_sector)
 
         ! deallocate myfmat one by one
-        do i=1, nops
+        do i=1, one_sector%nops
             do j=0,1
                 call dealloc_one_fmat(one_sector%myfmat(i,j))
             enddo

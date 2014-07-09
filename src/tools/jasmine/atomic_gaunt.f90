@@ -1,9 +1,24 @@
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : atomic_gaunt_5band
+!         : atomic_gaunt_7band
+! source  : atomic_gaunt.f90
+! type    : subroutines
+! author  : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014 by yilin wang
+! purpose : make gaunt coefficients
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
 !>>> build gaunt coefficients for 5 band case
 subroutine atomic_gaunt_5band(gaunt)
-    use constants
+    use constants, only: dp, one
     
     ! external variables
-    real(dp), intent(out) :: gaunt(-2:2，-2:2, 0:4)
+    real(dp), intent(out) :: gaunt(-2:2, -2:2, 0:4)
 
     gaunt = zero
 
@@ -46,15 +61,15 @@ subroutine atomic_gaunt_5band(gaunt)
     return
 end subroutine atomic_gaunt_5band
 
-!>>> build gaunt coefficients for 5 band case
+!>>> build gaunt coefficients for 7 band case
 subroutine atomic_gaunt_7band(gaunt)
-    use constants
+    use constants, only: dp, zero
  
     implicit none
 
     ! external variables
-    real(dp), intent(out) :: gaunt(-3:3，-3:3, 0:6)
-
+    real(dp), intent(out) :: gaunt(-3:3, -3:3, 0:6)
+    gaunt = zero
     call atomic_print_error('get_gaunt_7band', 'not implemented')
 
     return

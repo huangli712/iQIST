@@ -1,34 +1,40 @@
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : atomic_mkhmat_fullspace
+!         : atomic_mkhmat_sectors
+! source  : atomic_hmat.f90
+! type    : subroutines
+! author  : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014 by yilin wang
+! purpose : make Hamltonian matrices
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
 !>>> make atomic Hamiltonian for the full space
 subroutine atomic_mkhmat_fullspace()
-    use constants
-    use control
-    use m_basis_fullspace
-    use m_spmat
-    use m_glob_fullspace
+    use constants,         only: czero, epst
+    use control,           only: norbs, ncfgs
+    use m_basis_fullspace, only: dec_basis, index_basis, bin_basis
+    use m_spmat,           only: eimpmat, cumat
+    use m_glob_fullspace,  only: hmat
 
     implicit none
 
     ! local variables
     ! loop index
     integer :: i,j
-
-    ! loop index over orbits
     integer :: iorb
-
-    ! sign change due to fermion anti-commute relation
-    integer :: sgn
-
-    ! new basis state after four fermion operation
-    integer :: knew
-
-    ! loop index over Fock basis
     integer :: ibas, jbas
-
-    ! index for general interaction matrix
     integer :: alpha, betta
     integer :: delta, gamma
-
-    ! binary code representation of a state
+    ! sign change due to fermion anti-commute relation
+    integer :: sgn
+    ! new basis state after fermion operators act
+    integer :: knew
+    ! binary code form of a state
     integer :: code(norbs)
 
     ! start to make Hamiltonian
@@ -135,24 +141,18 @@ subroutine atomic_mkhmat_fullspace()
     return
 end subroutine atomic_mkhmat_fullspace
 
-subroutine atomic_mkhmat_sectors(nsect, sectors)
-    use constants
-    use control
-    use m_basis_fullspace
-    use m_spmat
-    use m_sector
+subroutine atomic_mkhmat_sectors()
+    use constants,         only: dp, czero, epst
+    use control,           only: norbs, ncfgs
+    use m_basis_fullspace, only: dec_basis, index_basis, bin_basis
+    use m_spmat,           only: eimpmat, cumat
+    use m_glob_sectors,    only: nsectors, sectors
 
     implicit none
 
-    ! external variables
-    ! number of sectors
-    integer, intent(in) :: nsect
-    ! all sectors
-    type(t_sector), intent(inout) :: sectors(nsect)
-
     ! local variables
     ! loop index
-    integer :: i, j
+    integer :: i,j
     integer :: isect
     integer :: iorb, jorb
     integer :: ibas, jbas
@@ -167,7 +167,7 @@ subroutine atomic_mkhmat_sectors(nsect, sectors)
     ! whether in some sector
     logical :: insect
      
-    do isect=1, nsect
+    do isect=1, nsectors
         sectors(isect)%myham = czero
 
         !---------------------------------------------------------------------------------------!
@@ -275,7 +275,7 @@ subroutine atomic_mkhmat_sectors(nsect, sectors)
                         do i=1, sectors(isect)%ndim 
                             if (sectors(isect)%mybasis(i) == ibas) then
                                 ibas = i
-                                insub = .true.
+                                insect = .true.
                             endif
                         enddo
 
@@ -294,28 +294,20 @@ subroutine atomic_mkhmat_sectors(nsect, sectors)
         enddo ! over jbas={1,sectors(isect)%ndim} loop
         !---------------------------------------------------------------------------------------!
 
-    enddo ! over i={1, nsect}
+    enddo ! over i={1, nsectors}
 
     return
 end subroutine atomic_mkhmat_sectors
 
-subroutine atomic_diag_hmat_sectors(nsect, sectors)
-    use constants
-    use control
-    use m_sector
+subroutine atomic_diag_hmat_sectors()
+    use m_glob_sectors
 
     implicit none
 
-    ! external variables
-    integer, intent(in) :: nsect
-
-    ! sectors
-    type(t_sector), intent(inout) :: sectors(nsect)
- 
     ! local variables
     integer :: i
    
-    do i=1, nsect
+    do i=1, nsectors
         call diag_one_sector(sectors(i)%ndim, sectors(i)%myham, &
                                sectors(i)%myeigval, sectors(i)%myeigvec)
     enddo
@@ -324,7 +316,7 @@ subroutine atomic_diag_hmat_sectors(nsect, sectors)
 end subroutine atomic_diag_hmat_sectors
 
 subroutine diag_one_sector(ndim, amat, eval, evec)
-     use constants
+     use constants, only: dp
      implicit none
 
      ! external variables
