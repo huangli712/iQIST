@@ -1,8 +1,28 @@
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : atomic_write_basis
+!         : atomic_write_eigval_fullspace
+!         : atomic_write_eigvec_fullspace
+!         : atomic_write_atomcix_fullspace
+!         : atomic_write_eigval_sectors
+!         : atomic_write_eigvec_sectors
+!         : atomic_write_atomcix_sectors
+! source  : atomic_write.f90
+! type    : subroutines
+! author  : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014 by yilin wang
+! purpose : write output files
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
 !>>> write basis of fullspace to file 'atom.basis.dat'
 subroutine atomic_write_basis()
-    use constants
-    use control
-    use m_basis_fullspace
+    use constants,         only: mytmp
+    use control,           only: ncfgs
+    use m_basis_fullspace, only: dec_basis, index_basis, bin_basis
 
     implicit none
 
@@ -13,7 +33,7 @@ subroutine atomic_write_basis()
     open(mytmp, file='atom.basis.dat')
     ! write the header
     do i=1, ncfgs
-        write(mytmp, "(3I5,3X,14I2)") i, dec_basis(i), index_basis(i), bin_basis(:,i)   
+        write(mytmp, "(3I5,3X,14I2)") i, dec_basis(i), index_basis(dec_basis(i)), bin_basis(:,i)   
     enddo 
 
     close(mytmp)
@@ -23,9 +43,9 @@ end subroutine atomic_write_basis
 
 !>>> write eigenvalue of fullspace to file 'atom.eigval.dat'
 subroutine atomic_write_eigval_fullspace()
-    use constants
-    use control
-    use m_glob_fullspace
+    use constants,         only: mytmp
+    use control,           only: ncfgs
+    use m_glob_fullspace,  only: hmat_eigval
 
     implicit none
 
@@ -45,10 +65,10 @@ end subroutine atomic_write_eigval_fullspace
 
 !>>> write eigenvector of fullspace to file 'atom.eigvec.dat'
 subroutine atomic_write_eigvec_fullspace()
-    use constants
-    use control
-    use m_basis_fullspace
-    use m_glob_fullspace
+    use constants,         only: mytmp, eps6
+    use control,           only: ncfgs
+    use m_basis_fullspace, only: bin_basis
+    use m_glob_fullspace,  only: hmat_eigvec
 
     implicit none
 
@@ -60,7 +80,7 @@ subroutine atomic_write_eigvec_fullspace()
     do i=1, ncfgs
         do j=1, ncfgs
             if ( abs(hmat_eigvec(j,i)) < eps6 ) cycle
-            write(mytmp, "(2I5, F20.14, 4X, 14I1") j, i, hmat_eigvec(j,i), bin_basis(:,j) 
+            write(mytmp, "(2I5, F20.14, 4X, 14I1)") j, i, hmat_eigvec(j,i), bin_basis(:,j) 
         enddo
     enddo 
 
@@ -71,9 +91,9 @@ end subroutine atomic_write_eigvec_fullspace
 
 !>>> write atom.cix for CTQMC input
 subroutine atomic_write_atomcix_fullspace()
-    use constants
-    use control
-    use m_glob_fullspace
+    use constants,        only: mytmp, zero
+    use control,          only: nband, norbs, ncfgs, isoc
+    use m_glob_fullspace, only: hmat_eigval, occu_mat, anni_fmat
 
     implicit none
 
@@ -116,19 +136,14 @@ subroutine atomic_write_atomcix_fullspace()
     close(mytmp)
 
     return
-end subroutine atomic_write_atomicx_fullspace
+end subroutine atomic_write_atomcix_fullspace
 
 !>>> write eigenvalue of sectors to file 'atom.eigval.dat'
-subroutine atomic_write_eigval_sectors(nsect, sectors)
-    use constants
-    use control
-    use m_sector
+subroutine atomic_write_eigval_sectors()
+    use constants,      only: mytmp
+    use m_glob_sectors
 
     implicit none
-
-    ! external variables
-    integer, intent(in) :: nsect
-    type(t_sector), intent(in) :: sectors(nsect)
 
     ! local variables
     integer :: i, j
@@ -137,7 +152,7 @@ subroutine atomic_write_eigval_sectors(nsect, sectors)
     ! open file 'atom.eigval.dat' to write
     open(mytmp, file='atom.eigval.dat')
     counter = 0
-    do i=1, nsect
+    do i=1, nsectors
         do j=1, sectors(i)%ndim
             counter = counter + 1
             write(mytmp, "(3I5, F20.14)") counter, i, j, sectors(i)%myeigval(j)
@@ -149,24 +164,20 @@ subroutine atomic_write_eigval_sectors(nsect, sectors)
 end subroutine atomic_write_eigval_sectors
 
 !>>> write eigenvector of sectors to file 'atom.eigval.dat'
-subroutine atomic_write_eigvec_sectors(nsect, sectors)
-    use constants
-    use control
-    use m_sector
+subroutine atomic_write_eigvec_sectors()
+    use constants, only: mytmp, eps6
+    use m_basis_fullspace, only: bin_basis
+    use m_glob_sectors
 
     implicit none
 
-    ! external variables
-    integer, intent(in) :: nsect
-    type(t_sector), intent(in) :: sectors(nsect)
-
     ! local variables
-    integer :: i, j
+    integer :: i, j, k
     integer :: counter
 
     open(mytmp, file="atom.eigvec.dat")
     counter = 0
-    do i=1, nsect
+    do i=1, nsectors
         do j=1, sectors(i)%ndim
             do k=1, sectors(i)%ndim
                 if ( abs(sectors(i)%myeigvec(k,j)) < eps6 ) cycle
@@ -182,16 +193,11 @@ subroutine atomic_write_eigvec_sectors(nsect, sectors)
 end subroutine atomic_write_eigvec_sectors
 
 !>>> write atom.cix for CTQMC input, good quantum number algorithm
-subroutine atomic_write_atomcix_sectors(nsect, sectors)
-    use constants
-    use control
-    use m_sector
+subroutine atomic_write_atomcix_sectors()
+    use constants, only: mytmp
+    use m_glob_sectors
 
     implicit none
-
-    ! external variables
-    integer, intent(in) :: nsect
-    type(t_sector), intent(in) :: sectors(nsect)
 
     ! local variables
     integer :: i, j, k, ii, row, col
@@ -200,12 +206,12 @@ subroutine atomic_write_atomcix_sectors(nsect, sectors)
     open(mytmp, file='atom.cix')
     ! write number of sectors
     write(mytmp, "(a)") "#NUMBER OF SECTORS"
-    write(mytmp, "(I5)") nsect
+    write(mytmp, "(I5)") nsectors
 
     ! write dimension, total electrons, next_sector, eigenvalue of each sector
-    do i=1, nsect
+    do i=1, nsectors
         write(mytmp, "(a, I5)") "#SECT_INFO: ", i 
-        write(mytmp, "(2I5, F20.14)") i, sectors(i)%ndim, sectors(i)%nelectrons
+        write(mytmp, "(3I5)") i, sectors(i)%ndim, sectors(i)%nelectron
 
         ! write next_sector
         write(mytmp, "(2X,a)") "#NEXT_SECTOR"
@@ -215,20 +221,21 @@ subroutine atomic_write_atomcix_sectors(nsect, sectors)
 
         ! write eigeanvalue
         write(mytmp, "(2X,a)") "#EIGENVALUE"
-        do j=1, sectors(i)%nops
+        do j=1, sectors(i)%ndim
             write(mytmp, "(2X,I5, F20.14)") j, sectors(i)%myeigval(j) 
         enddo
     enddo
 
     ! write fmat
     write(mytmp, "(a)") "#BEGIN_WRITE_FMAT"
-    do i=1, nsect
+    do i=1, nsectors
         write(mytmp, "(2X,a, I5)") "#SECT_FMAT: ", i
         do j=1, sectors(i)%nops
             write(mytmp, "(4X,a, I5)") "#ORBIT: ", j
             do k=0,1
-                write(mytmp, "(6X,a, I5)") "#SPIN: ", k
-                ii = sectors(i)%myfmat(j,k)
+                write(mytmp, "(6X,a, I5)") "#FERMI_OPERATOR: ", k
+                ii = sectors(i)%next_sector(j,k)
+                if (ii == -1) cycle 
                 do col=1, sectors(i)%ndim
                     do row=1, sectors(ii)%ndim
                         write(mytmp, "(6X,2I5,F20.14)") row, col, sectors(i)%myfmat(j,k)%item(row, col)

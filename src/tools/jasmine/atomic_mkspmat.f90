@@ -1,61 +1,102 @@
-! make single particle related matrices, including:
-! crystal field, spin-orbital coupling, Coulomb inteartion U
+!-------------------------------------------------------------------------
+! project : jasmine
+! program : atomic_make_spmat
+!           atomic_make_soc
+!           atomic_make_soc_3band
+!           atomic_make_soc_5band
+!           atomic_make_soc_7band
+!           atomic_make_cumat_kanamori
+!           atomic_make_cumat_slater
+! source  : atomic_mkspmat.f90
+! type    : subroutines
+! author  : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014 by yilin wang
+! purpose : make single particle related matrices, including crystal field,
+!           spin-orbital coupling, and Coulomb interaction U tensor
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
+!>>> make single particle related matrices, including
+! crystal field (CF), spin-orbital coupling (SOC),  and Coulomb inteartion U tensor
 subroutine atomic_make_spmat()
-    use m_spmat
+    use constants, only: czero
+    use control, only: itask, icf, isoc, icu
+    use m_spmat, only: cfmat, socmat, alloc_m_spmat
 
     implicit none
 
-    ! first, allocate memory for these single particle matrices
+    ! first, we allocate memory for these single particle matrices here
+    ! and they will be deallocated in program main
     call alloc_m_spmat()
 
     ! second, make crystal field and spin-orbital coupling 
     if (itask == 1) then ! model calculation
+        ! CF
         if (icf > 0) then
+            ! for model calculation, we read the non-zero elements of 
+            ! crystal field from a file "atom.cf.in".
+            ! the crystal field is defined on real orbital basis
+            ! at present, we only support real crystal field, 
+            ! so, the elements in this file provided by user must be real
             call atomic_read_cf()
         else
             cfmat = czero
         endif
-
+        ! SOC
         if (isoc > 0) then
+            ! make an atomic on-site SOC, $\lambda * L * S$
+            ! it is defined on the complex orbital basis
             call atomic_make_soc()
         else
             socmat = czero
         endif
     else ! material calculation
         ! read the eimp (CF+SOC) matrices on natural basis
-        ! this matrix should be a diagonal matrix, and we just
-        ! need its diagonal elements
+        ! this matrix should be a diagonal matrix, and the elements must be real
         call atomic_read_eimp()
         ! read the transformation matrices used to transfer eimp 
-        ! from the standard real orbitals basis to natural basis 
+        ! from original basis to natural basis 
+        ! without SOC, the original basis is the real orbital basis
+        ! with SOC, the original basis is the complex orbital basis
+        ! at present, we just only support real numbers of this umat
         call atomic_read_umat()
     endif
 
     ! third, make Coulomb interaction U
     if (icu == 1) then
         ! Kanamori parameters type
+        ! it is defined on real orbital basis 
         call atomic_make_cumat_kanamori()
     else
         ! Slater-Cordon parameters type
+        ! it is defined on complex orbital basis
         call atomic_make_cumat_slater()
     endif
 
     return
 end subroutine atomic_make_spmat 
 
-!>>> make spin-orbital coupling 
+!>>> make spin-orbital coupling (SOC)
 subroutine atomic_make_soc()
-    use control
-    use m_spmat
+    use constants, only: two
+    use control,   only: nband, lambda
+    use m_spmat,   only: socmat
 
     implicit none
 
     if (nband == 3) then
-        call atomic_make_soc_3band()
+        call atomic_make_soc_3band(socmat)
+        ! for 3 bands system, there is a minus sign
+        socmat = -socmat * lambda / two
     elseif(nband == 5) then
-        call atomic_make_soc_5band()
+        call atomic_make_soc_5band(socmat)
+        socmat = socmat * lambda / two
     elseif(nband == 7) then
-        call atomic_make_soc_7band()
+        call atomic_make_soc_7band(socmat)
+        socmat = socmat * lambda / two
     else
         call atomic_print_error('atomic_make_soc', 'not implementd!')
     endif
@@ -63,98 +104,130 @@ subroutine atomic_make_soc()
     return 
 end subroutine atomic_make_soc
 
-!>>> make spin-orbital coupling matrix for 3 band
-subroutine atomic_make_soc_3band()
-    use constants
-    use control
-    use m_spmat
-
+!>>> make spin-orbital coupling matrix for 3 bands
+subroutine atomic_make_soc_3band(socmat)
     implicit none
 
-    ! we use the same default orbital order as in WANNIER90 package 
-    ! the t2g orbital order of d(l=2) is 
-    ! |dxz,up>, |dxz,dn>, |dyz,up>, |dyz,dn>, |dxy,up>, |dxy,dn>
-    ! the coressponding p(l=1) orbital order is
-    ! |py,up>,  |py,dn>,  |px,up>,  |px,dn>,  |pz,up>,  |pz,dn>
-    socmat = czero
-    socmat(1,3) =  czi;     socmat(1,6) =  -czi
-    socmat(2,4) = -czi;     socmat(2,5) =  -czi
-    socmat(3,1) = -czi;     socmat(3,6) =  cone
-    socmat(4,2) =  czi;     socmat(4,5) = -cone
-    socmat(5,2) =  czi;     socmat(5,4) = -cone
-    socmat(6,1) =  czi;     socmat(6,3) =  cone
-    ! please note: minus sign for spin-orbital coupling strength         
-    socmat = -socmat * lambda / two 
-
-end subroutine atomic_make_soc_3band
-
-!>>> make spin-orbital coupling matrix for 5 band
-subroutine atomic_make_soc_5band()
-    use constants
-    use control
-    use m_sp_mat
-
-    implicit none
+    ! external variables
+    integer, parameter :: dp = kind(0.0d0)
+    complex(dp), intent(out) :: socmat(6,6)
 
     ! local variables
-    ! sqrt(3)
-    real(dp) :: sqrt3
+    real(dp) :: sqrt2
 
-    sqrt3 = sqrt(3.0_dp)
+    sqrt2 = sqrt(2.0_dp)
+   
+    ! make SOC on complex orbital basis, the orbital order is:
+    ! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>      
+    socmat = dcmplx(0.0_dp, 0.0_dp)
 
-    ! we use the same default orbital order as in WANNIER90 package 
-    ! the orbital order is: 
-    ! |dz2,up>, |dz2,dn>, |dxz,up>, |dxz,dn>, |dyz,up>, |dyz,dn>, |dx2-y2,up>, |dx2-y2,dn>, |dxy,up>, |dxy,dn>
-    socmat = czero
-    socmat(1, 4) = -sqrt3*cone;      socmat(1, 6) = sqrt3*czi
-    socmat(2, 3) =  sqrt3*cone;      socmat(2, 5) = sqrt3*czi
-    socmat(3, 2) =  sqrt3*cone;      socmat(3, 5) = -czi
-    socmat(3, 8) =       -cone;      socmat(3, 10)= czi
-    socmat(4, 1) = -sqrt3*cone;      socmat(4, 6) = czi
-    socmat(4, 7) =        cone;      socmat(4, 9) = czi
-    socmat(5, 2) =  -sqrt3*czi;      socmat(5, 3) = czi
-    socmat(5, 8) =        -czi;      socmat(5, 10)=-cone
-    socmat(6, 1) =  -sqrt3*czi;      socmat(6, 4) = -czi
-    socmat(6, 7) =        -czi;      socmat(6, 9) = cone
-    socmat(7, 4) =        cone;      socmat(7, 6) = czi
-    socmat(7, 9) =     -two*czi
-    socmat(8, 3) =       -cone;      socmat(8, 5) = czi
-    socmat(8,10) =      two*czi
-    socmat(9, 4) =        -czi;      socmat(9, 6) = cone
-    socmat(9, 7) =     two*czi;    
-    socmat(10,3) =        -czi;      socmat(10,5) = -cone
-    socmat(10,8) =    -two*czi; 
+    socmat(1,1) = -1.0_dp
+    socmat(4,1) = sqrt2 
+    socmat(2,2) =  1.0_dp
+    socmat(6,3) = sqrt2
+    socmat(1,4) = sqrt2
+    socmat(5,5) = 1.0_dp
+    socmat(3,6) = sqrt2
+    socmat(6,6) = -1.0_dp
 
-    ! scale the SOC strength lambda
-    socmat = socmat * lambda / two
+    return
+end subroutine atomic_make_soc_3band
+
+!>>> make spin-orbital coupling matrix for 5 bands
+subroutine atomic_make_soc_5band(socmat)
+    implicit none
+
+    ! external variables
+    integer, parameter :: dp = kind(0.0d0)
+    complex(dp), intent(out) :: socmat(10,10)
+
+    ! local variables
+    real(dp) :: sqrt6
+
+    sqrt6 = sqrt(6.0_dp)
+    ! make SOC on complex orbital basis, the orbital order is:
+    ! |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>      
+
+    socmat = dcmplx(0.0_dp, 0.0_dp)
+
+    socmat(1,1) = -2.0_dp 
+    socmat(4,1) =  2.0_dp
+    socmat(2,2) =  2.0_dp
+    socmat(3,3) = -1.0_dp
+    socmat(6,3) =  sqrt6
+    socmat(1,4) =  2.0_dp
+    socmat(4,4) =  1.0_dp
+    socmat(8,5) =  sqrt6
+    socmat(3,6) =  sqrt6
+    socmat(7,7) =  1.0_dp
+    socmat(10,7)=  2.0_dp
+    socmat(5,8) =  sqrt6  
+    socmat(8,8) = -1.0_dp
+    socmat(9,9) =  2.0_dp
+    socmat(7,10)=  2.0_dp 
+    socmat(10,10)= -2.0_dp
 
     return 
 end subroutine atomic_make_soc_5band
 
-!>>> make spin-orbital coupling matrix for 7 band
-subroutine atomic_make_soc_7band()
-    use constants
-    use control
-    use m_sp_mat
-
+!>>> make spin-orbital coupling matrix for 7 bands
+subroutine atomic_make_soc_7band(socmat)
     implicit none
-    
-    write(mystd,*) "not implemented now!"
+
+    ! local variables
+    integer, parameter :: dp = kind(0.0d0)
+    real(dp) :: sqrt6
+    real(dp) :: sqrt10
+    real(dp) :: sqrt12
+
+    ! external variables
+    complex(dp), intent(out) :: socmat(14,14)    
+
+    sqrt6  = sqrt(6.0_dp)
+    sqrt10 = sqrt(10.0_dp)
+    sqrt12 = sqrt(12.0_dp)
+
+    socmat = dcmplx(0.0_dp, 0.0_dp)
+
+    socmat(1,1) = -3.0_dp
+    socmat(4,1) = sqrt6
+    socmat(2,2) = 3.0_dp
+    socmat(3,3) = -2.0_dp
+    socmat(6,3) = sqrt10 
+    socmat(1,4) = sqrt6
+    socmat(4,4) = 2.0_dp
+    socmat(5,5) = -1.0_dp
+    socmat(8,5) = sqrt12
+    socmat(3,6) = sqrt10 
+    socmat(6,6) = 1.0_dp
+    socmat(10,7) = sqrt12
+    socmat(5,8) = sqrt12
+    socmat(9,9) = 1.0_dp
+    socmat(12,9) = sqrt10
+    socmat(7,10) = sqrt12
+    socmat(10,10) = -1.0_dp
+    socmat(11,11) =  2.0_dp
+    socmat(14,11) =  sqrt6
+    socmat(9,12) = sqrt10
+    socmat(12,12) =  -2.0_dp
+    socmat(13,13) =  3.0_dp
+    socmat(11,14) =  sqrt6
+    socmat(14,14) =  -3.0_dp
 
     return
 end subroutine atomic_make_soc_7band
 
 !>>> make Coulomb interaction U, this subroutine is taken from 
-!>>> duliang's atomic software
+! Dr. LiangDu's (duleung@gmail.com) atomic program
 subroutine atomic_make_cumat_kanamori()
-    use constants
-    use control
-    use m_spmat
+    use constants, only: dp, czero, zero
+    use control,   only: norbs, Uc, Uv, Jz, Js, Jp
+    use m_spmat,   only: cumat
 
     implicit none
 
     ! local varibales
-    ! loop index over orbits
+    ! orbital index
     integer :: alpha, betta
     integer :: delta, gamma
     ! band index and spin index
@@ -162,7 +235,7 @@ subroutine atomic_make_cumat_kanamori()
     integer :: dband, gband 
     integer :: aspin, bspin 
     integer :: dspin, gspin 
-    ! auxiliary variables
+    ! dummy variables
     real(dp) :: dtmp
 
     ! initialize cumat to zero
@@ -180,7 +253,6 @@ subroutine atomic_make_cumat_kanamori()
            gband = (gamma+1)/2; gspin = mod(gamma,2)
            dband = (delta+1)/2; dspin = mod(delta,2)
 
-           ! here we use "res" due to overlap between "Uv and Jz"
            dtmp = zero
 
            ! intraorbital Coulomb interaction
@@ -228,11 +300,12 @@ subroutine atomic_make_cumat_kanamori()
     return
 end subroutine atomic_make_cumat_kanamori
 
-!>>> make Coulomb interation U, Slater Integral version
+!>>> make Coulomb interation U, Slater-Cordon parameters type
+! this subroutine is modified from Dr. LiangDu's (duleung@gmail.com) atomic program
 subroutine atomic_make_cumat_slater()
-    use constants
-    use control
-    use m_spmat
+    use constants, only: dp, zero, half
+    use control,   only: nband, norbs, F0, F2, F4, F6
+    use m_spmat,   only: cumat
 
     implicit none
 
@@ -245,14 +318,14 @@ subroutine atomic_make_cumat_slater()
     ! orbital momentum quantum number
     integer :: l
     ! loop index
-    integer :: k
+    integer :: i
     integer :: alpha, betta
     integer :: delta, gamma
     integer :: aband, aspin
     integer :: bband, bspin
     integer :: dband, dspin
     integer :: gband, gspin
-    ! real(dp) auxiliary variables
+    ! dummy variables
     real(dp) :: res
 
 
@@ -264,7 +337,7 @@ subroutine atomic_make_cumat_slater()
         slater_cordon(0) = F0
         slater_cordon(2) = F2
         slater_cordon(4) = F4
-        allocate(gaunt(-l:l, -l:l, 0:2*l)
+        allocate(gaunt(-l:l, -l:l, 0:2*l))
         call atomic_gaunt_5band(gaunt) 
     elseif(nband == 7) then
         l = 3
@@ -274,10 +347,10 @@ subroutine atomic_make_cumat_slater()
         slater_cordon(2) = F2
         slater_cordon(4) = F4
         slater_cordon(6) = F6
-        allocate(gaunt(-l:l, -l:l, 0:2*l)
+        allocate(gaunt(-l:l, -l:l, 0:2*l))
         call atomic_gaunt_7band(gaunt)
     else
-        call atomic_print_error('atomic_make_cumat_slater', 'nband is wrong!')
+        call atomic_print_error('atomic_make_cumat_slater', 'not implemented for this nband!')
     endif
 
     ! make Coulomb interaction U matrix
@@ -300,11 +373,9 @@ subroutine atomic_make_cumat_slater()
             if ((aband + bband) .ne. (dband + gband)) cycle
             if ((aspin .ne. gspin) .or. (bspin .ne. dspin)) cycle
 
-            ! fixme  wrong in rpp 69, 2061 (2006), ref: prb 75, 155113 (2007)
-            ! exchange of dband and bband
             res = zero
-            do k=0, 2*l, 2
-                res = res + gaunt(aband, gband, k) * gaunt(dband, bband, k) * slater_cordon(k)
+            do i=0, 2*l, 2
+                res = res + gaunt(aband, gband, i) * gaunt(dband, bband, i) * slater_cordon(i)
             enddo
             cumat(alpha, betta, delta, gamma) = res
         enddo ! over gamma={1,norbs} loop
