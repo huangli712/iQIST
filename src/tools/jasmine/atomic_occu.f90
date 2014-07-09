@@ -17,7 +17,7 @@ subroutine atomic_make_occumat_fullspace()
     use constants,         only: zero, one
     use control,           only: ncfgs, norbs
     use m_basis_fullspace, only: bin_basis
-    use m_glob_fullspace,  only: occu_mat
+    use m_glob_fullspace,  only: occu_mat, hmat_eigvec
 
     implicit none
 
@@ -36,6 +36,8 @@ subroutine atomic_make_occumat_fullspace()
             endif
         enddo 
     enddo 
+
+    call atomic_tran_represent_real(ncfgs, occu_mat, hmat_eigvec)
 
     return
 end subroutine atomic_make_occumat_fullspace

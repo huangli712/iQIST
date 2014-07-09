@@ -87,13 +87,15 @@ end subroutine atomic_make_natural
 subroutine atomic_2natural_case1()
     use constants, only: zero, cone
     use control,   only: norbs
-    use m_spmat,   only: tran_umat
+    use m_spmat,   only: cfmat, eimpmat, tran_umat
 
     implicit none
 
     ! local variables
     integer :: i
 
+    ! set eimpmat
+    eimpmat = cfmat
     ! for this case, the natural basis is the real orbital basis
     ! so, the tran_umat is a unity matrix
     tran_umat = zero

@@ -96,10 +96,11 @@ subroutine atomic_make_fmat_sectors()
                      do i=1, sectors(jsect)%ndim 
                          if (ibas == sectors(jsect)%mybasis(i)) then
                              ibas = i
+                             sectors(isect)%myfmat(iorb, ifermi)%item(ibas, jbas) = dble(isgn)
                              exit
                          endif
                      enddo
-                     sectors(isect)%myfmat(iorb, ifermi)%item(ibas, jbas) = dble(isgn)
+
                  enddo 
                  call rotate_fmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%myeigvec, &
                      sectors(isect)%myfmat(iorb, ifermi)%item, sectors(isect)%myeigvec)

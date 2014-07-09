@@ -12,7 +12,8 @@
 ! comment :
 !-------------------------------------------------------------------------
 program main
-    use control, only: ictqmc
+    use constants, only: mystd
+    use control,   only: ictqmc
     use m_basis_fullspace
     use m_spmat
 
@@ -22,6 +23,8 @@ program main
     call atomic_print_header()
 
     ! set control parameters and check their validity 
+    write(mystd, "(2X,a)") "jasmine >>> set control parameters ..."
+    write(mystd,*)
     call atomic_config()
 
     ! print the summary of control parameters 
@@ -40,18 +43,25 @@ program main
     !                  |5/2,-5/2>, |5/2,-3/2>,|5/2,-1/2>,|5/2,1/2>,|5/2,3/2>,|5/2,5/2>
     ! (4) so-called natural basis, on which the on-site energy of impurity is diagonal
     !     we diagonalize CF + SOC to obtain natural basis
+    write(mystd, "(2X,a)") "jasmine >>> make crystal field, spin-orbital coupling, and Coulomb interaction U ..."
+    write(mystd,*)
     call atomic_make_spmat()
 
     ! make natural basis
+    write(mystd, "(2X,a)") "jasmine >>> make natural ..."
+    write(mystd,*)
     call atomic_make_natural()
 
     ! make Fock basis for the full many particle Hiblert space
+    write(mystd, "(2X,a)") "jasmine >>> make Fock basis ..."
+    write(mystd,*)
     call atomic_make_basis_fullspace()
 
     ! call the driver
     select case(ictqmc)
         ! itask 1: diagonalize the full Hilbert space
         case(1) 
+            write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: full space matrices multiplication"
             call atomic_driver_fullspace()
         ! itask 2: use good quantum numbers
         ! total number of electrons: N

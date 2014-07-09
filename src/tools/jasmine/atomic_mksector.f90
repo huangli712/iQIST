@@ -173,7 +173,7 @@ subroutine atomic_mksectors_njz()
             ! we should lookup each basis in this subspace 
                 can = .false.
                 do l=1, sectors(i)%ndim
-                    ibasis = sectors(j)%mybasis(l)
+                    ibasis = sectors(i)%mybasis(l)
                     if (k==1 .and. bin_basis(j,ibasis) == 0 ) then
                         can = .true.
                         exit

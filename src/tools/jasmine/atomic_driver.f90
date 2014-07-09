@@ -18,8 +18,8 @@
 
 !>>> for CTQMC trace algorithm, use full local Hilbert space 
 subroutine atomic_driver_fullspace()
-    use constants, only: dp
-    use control, only: ncfgs
+    use constants,        only: dp, mystd
+    use control,          only: ncfgs
     use m_glob_fullspace, only: hmat, hmat_eigval, hmat_eigvec, &
                                 alloc_m_glob_fullspace, dealloc_m_glob_fullspace
                        
@@ -31,29 +31,46 @@ subroutine atomic_driver_fullspace()
     logical :: lreal 
 
     ! allocate memory 
+    write(mystd, "(2X,a)") "jasmine >>> allocate global memory ..."
+    write(mystd,*)
     call alloc_m_glob_fullspace()
 
     ! build atomic many particle Hamiltonian matrix
+    write(mystd, "(2X,a)") "jasmine >>> make atomic many particle Hamiltonian ..."
+    write(mystd,*)
     call atomic_mkhmat_fullspace()
 
     ! check whether the many particle Hamiltonian is real 
+    write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ??? "
+    write(mystd,*)
     call atomic_check_hmat_real(hmat, lreal)
     if (lreal .eqv. .false.) then
         call atomic_print_error('atomic_driver_fullspace', 'hmat is not real !')
+    else
+        write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real ! "
+        write(mystd,*)
     endif
 
-    ! diagonalize mp_hmat
+    ! diagonalize hmat
+    write(mystd, "(2X,a)") "jasmine >>> diagonalize Hamiltonian ..."
+    write(mystd,*)
     tmp_mat = real(hmat)
     call dmat_dsyev(ncfgs, ncfgs, tmp_mat, hmat_eigval, hmat_eigvec)
 
     ! build fmat
     ! first, build fmat of annihilation operators in Fock basis
     ! then, transform them to the eigen basis
+    write(mystd, "(2X,a)") "jasmine >>> make fmat for annihilation fermion operators ... "
+    write(mystd,*)
     call atomic_make_annifmat_fullspace()
 
+    write(mystd, "(2X,a)") "jasmine >>> make occupancy number of atomic eigenstates ... "
+    write(mystd,*)
     ! build occupancy number
     call atomic_make_occumat_fullspace()    
 
+    write(mystd, "(2X,a)") "jasmine >>> write eigenvalue, eigenvector, and atom.cix to files ..."
+    write(mystd,*)
     ! write eigenvalue of hmat to file 'atom.eigval.dat'
     call atomic_write_eigval_fullspace()
 

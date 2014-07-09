@@ -39,6 +39,7 @@ subroutine atomic_make_basis_fullspace()
         dim_sub_n(i) = state_pick(i, norbs)
     enddo 
 
+    basis_count = 0
     do i=0, norbs
         do j=0, 2**norbs-1
             nelec = 0

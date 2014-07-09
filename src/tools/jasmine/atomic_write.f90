@@ -33,7 +33,7 @@ subroutine atomic_write_basis()
     open(mytmp, file='atom.basis.dat')
     ! write the header
     do i=1, ncfgs
-        write(mytmp, "(3I5,3X,14I2)") i, dec_basis(i), index_basis(i), bin_basis(:,i)   
+        write(mytmp, "(3I5,3X,14I2)") i, dec_basis(i), index_basis(dec_basis(i)), bin_basis(:,i)   
     enddo 
 
     close(mytmp)
@@ -211,7 +211,7 @@ subroutine atomic_write_atomcix_sectors()
     ! write dimension, total electrons, next_sector, eigenvalue of each sector
     do i=1, nsectors
         write(mytmp, "(a, I5)") "#SECT_INFO: ", i 
-        write(mytmp, "(2I5, F20.14)") i, sectors(i)%ndim, sectors(i)%nelectron
+        write(mytmp, "(3I5)") i, sectors(i)%ndim, sectors(i)%nelectron
 
         ! write next_sector
         write(mytmp, "(2X,a)") "#NEXT_SECTOR"
@@ -221,7 +221,7 @@ subroutine atomic_write_atomcix_sectors()
 
         ! write eigeanvalue
         write(mytmp, "(2X,a)") "#EIGENVALUE"
-        do j=1, sectors(i)%nops
+        do j=1, sectors(i)%ndim
             write(mytmp, "(2X,I5, F20.14)") j, sectors(i)%myeigval(j) 
         enddo
     enddo
@@ -233,8 +233,9 @@ subroutine atomic_write_atomcix_sectors()
         do j=1, sectors(i)%nops
             write(mytmp, "(4X,a, I5)") "#ORBIT: ", j
             do k=0,1
-                write(mytmp, "(6X,a, I5)") "#SPIN: ", k
+                write(mytmp, "(6X,a, I5)") "#FERMI_OPERATOR: ", k
                 ii = sectors(i)%next_sector(j,k)
+                if (ii == -1) cycle 
                 do col=1, sectors(i)%ndim
                     do row=1, sectors(ii)%ndim
                         write(mytmp, "(6X,2I5,F20.14)") row, col, sectors(i)%myfmat(j,k)%item(row, col)

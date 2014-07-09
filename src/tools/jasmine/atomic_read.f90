@@ -37,7 +37,7 @@ subroutine atomic_read_cf()
     if (exists .eqv. .true.) then
         open(mytmp, file='atom.cf.in')
         do while(.true.)
-            read(mytmp, iostat=ierr) i, j, r1
+            read(mytmp, *, iostat=ierr) i, j, r1
             ! crystal field is actually real
             cfmat(i,j) = dcmplx(r1, zero)
             if (ierr /= 0) exit
