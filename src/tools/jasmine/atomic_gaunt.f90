@@ -15,7 +15,7 @@
 
 !>>> build gaunt coefficients for 5 band case
 subroutine atomic_gaunt_5band(gaunt)
-    use constants, only: dp, one
+    use constants, only: dp, zero, one
     
     ! external variables
     real(dp), intent(out) :: gaunt(-2:2, -2:2, 0:4)

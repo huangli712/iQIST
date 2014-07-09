@@ -25,8 +25,7 @@ subroutine atomic_mkhmat_fullspace()
 
     ! local variables
     ! loop index
-    integer :: i,j
-    integer :: iorb
+    integer :: i
     integer :: ibas, jbas
     integer :: alpha, betta
     integer :: delta, gamma
@@ -152,9 +151,8 @@ subroutine atomic_mkhmat_sectors()
 
     ! local variables
     ! loop index
-    integer :: i,j
+    integer :: i
     integer :: isect
-    integer :: iorb, jorb
     integer :: ibas, jbas
     integer :: alpha, betta
     integer :: delta, gamma

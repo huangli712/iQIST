@@ -40,11 +40,7 @@ subroutine atomic_print_header()
 
     write(mystd,'(2X,a)') 'JASMINE >>> start running at '//date_time_string
 
-# if defined (MPI)
-    write(mystd,'(2X,a,i4)') 'JASMINE >>> parallelism: Yes >>> processors:', nprocs
-# else   /* MPI */
     write(mystd,'(2X,a,i4)') 'JASMINE >>> parallelism: No  >>> processors:', 1
-# endif  /* MPI */
 
     write(mystd,*)
 

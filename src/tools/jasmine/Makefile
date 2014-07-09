@@ -25,6 +25,7 @@ clean:
 	rm -f *.o
 	rm -f atomic
 	rm -f *genmod*
+	rm -f *.i90
 clean-dat:
 	rm -f *.dat
 	rm -f *.bin
