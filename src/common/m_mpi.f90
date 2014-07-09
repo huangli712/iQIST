@@ -42,7 +42,7 @@
 !!!               intel mpi 3.2.0
 !!!-----------------------------------------------------------------------
 
-! whether the compiler support mpi environment, i.e, mpif90
+!!>>> whether the compiler support mpi environment, i.e, mpif90
 # if defined (MPI)
 
   module mmpi
@@ -4294,11 +4294,11 @@
          return
      end subroutine mp_reduce_cdp5
 
-!-------------------------------------------------------------------------
-!::: MPI collective operations: allreducing                            :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI collective operations: allreducing                           <<<
+!!========================================================================
 
-! mp_allreduce_int: reduce 1 integer from all processes
+!!>>> mp_allreduce_int: reduce 1 integer from all processes
      subroutine mp_allreduce_int(source, data, gid)
          implicit none
 
@@ -4326,7 +4326,7 @@
          return
      end subroutine mp_allreduce_int
 
-! mp_allreduce_int1: reduce integer vector from all processes
+!!>>> mp_allreduce_int1: reduce integer vector from all processes
      subroutine mp_allreduce_int1(source, data, gid)
          implicit none
 
@@ -4357,7 +4357,7 @@
          return
      end subroutine mp_allreduce_int1
 
-! mp_allreduce_int2: reduce integer matrix from all processes
+!!>>> mp_allreduce_int2: reduce integer matrix from all processes
      subroutine mp_allreduce_int2(source, data, gid)
          implicit none
 
@@ -4388,7 +4388,7 @@
          return
      end subroutine mp_allreduce_int2
 
-! mp_allreduce_int3: reduce integer matrix from all processes
+!!>>> mp_allreduce_int3: reduce integer matrix from all processes
      subroutine mp_allreduce_int3(source, data, gid)
          implicit none
 
@@ -4419,7 +4419,7 @@
          return
      end subroutine mp_allreduce_int3
 
-! mp_allreduce_int4: reduce integer matrix from all processes
+!!>>> mp_allreduce_int4: reduce integer matrix from all processes
      subroutine mp_allreduce_int4(source, data, gid)
          implicit none
 
@@ -4450,7 +4450,7 @@
          return
      end subroutine mp_allreduce_int4
 
-! mp_allreduce_int5: reduce integer matrix from all processes
+!!>>> mp_allreduce_int5: reduce integer matrix from all processes
      subroutine mp_allreduce_int5(source, data, gid)
          implicit none
 
@@ -4481,7 +4481,7 @@
          return
      end subroutine mp_allreduce_int5
 
-! mp_allreduce_rdp: reduce 1 real from all processes
+!!>>> mp_allreduce_rdp: reduce 1 real from all processes
      subroutine mp_allreduce_rdp(source, data, gid)
          implicit none
 
@@ -4509,7 +4509,7 @@
          return
      end subroutine mp_allreduce_rdp
 
-! mp_allreduce_rdp1: reduce real vector from all processes
+!!>>> mp_allreduce_rdp1: reduce real vector from all processes
      subroutine mp_allreduce_rdp1(source, data, gid)
          implicit none
 
@@ -4540,7 +4540,7 @@
          return
      end subroutine mp_allreduce_rdp1
 
-! mp_allreduce_rdp2: reduce real matrix from all processes
+!!>>> mp_allreduce_rdp2: reduce real matrix from all processes
      subroutine mp_allreduce_rdp2(source, data, gid)
          implicit none
 
@@ -4571,7 +4571,7 @@
          return
      end subroutine mp_allreduce_rdp2
 
-! mp_allreduce_rdp3: reduce real matrix from all processes
+!!>>> mp_allreduce_rdp3: reduce real matrix from all processes
      subroutine mp_allreduce_rdp3(source, data, gid)
          implicit none
 
@@ -4602,7 +4602,7 @@
          return
      end subroutine mp_allreduce_rdp3
 
-! mp_allreduce_rdp4: reduce real matrix from all processes
+!!>>> mp_allreduce_rdp4: reduce real matrix from all processes
      subroutine mp_allreduce_rdp4(source, data, gid)
          implicit none
 
@@ -4633,7 +4633,7 @@
          return
      end subroutine mp_allreduce_rdp4
 
-! mp_allreduce_rdp5: reduce real matrix from all processes
+!!>>> mp_allreduce_rdp5: reduce real matrix from all processes
      subroutine mp_allreduce_rdp5(source, data, gid)
          implicit none
 
@@ -4664,7 +4664,7 @@
          return
      end subroutine mp_allreduce_rdp5
 
-! mp_allreduce_cdp: reduce 1 complex from all processes
+!!>>> mp_allreduce_cdp: reduce 1 complex from all processes
      subroutine mp_allreduce_cdp(source, data, gid)
          implicit none
 
@@ -4692,7 +4692,7 @@
          return
      end subroutine mp_allreduce_cdp
 
-! mp_allreduce_cdp1: reduce complex vector from all processes
+!!>>> mp_allreduce_cdp1: reduce complex vector from all processes
      subroutine mp_allreduce_cdp1(source, data, gid)
          implicit none
 
@@ -4723,7 +4723,7 @@
          return
      end subroutine mp_allreduce_cdp1
 
-! mp_allreduce_cdp2: reduce complex matrix from all processes
+!!>>> mp_allreduce_cdp2: reduce complex matrix from all processes
      subroutine mp_allreduce_cdp2(source, data, gid)
          implicit none
 
@@ -4754,7 +4754,7 @@
          return
      end subroutine mp_allreduce_cdp2
 
-! mp_allreduce_cdp3: reduce complex matrix from all processes
+!!>>> mp_allreduce_cdp3: reduce complex matrix from all processes
      subroutine mp_allreduce_cdp3(source, data, gid)
          implicit none
 
@@ -4785,7 +4785,7 @@
          return
      end subroutine mp_allreduce_cdp3
 
-! mp_allreduce_cdp4: reduce complex matrix from all processes
+!!>>> mp_allreduce_cdp4: reduce complex matrix from all processes
      subroutine mp_allreduce_cdp4(source, data, gid)
          implicit none
 
@@ -4816,7 +4816,7 @@
          return
      end subroutine mp_allreduce_cdp4
 
-! mp_allreduce_cdp5: reduce complex matrix from all processes
+!!>>> mp_allreduce_cdp5: reduce complex matrix from all processes
      subroutine mp_allreduce_cdp5(source, data, gid)
          implicit none
 
@@ -4847,11 +4847,31 @@
          return
      end subroutine mp_allreduce_cdp5
 
-!-------------------------------------------------------------------------
-!::: MPI handler for return code                                       :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI handler for return code                                      <<<
+!!========================================================================
 
-! mp_error: deal with the return code of MPI subroutine
+!!>>> mp_error: deal with the return code of MPI subroutine
+# define STR_ERR_COMM      'invalid communicator in mpi call.'
+# define STR_ERR_COUNT     'invalid count in mpi call.'
+# define STR_ERR_TYPE      'invalid datatype in mpi call.'
+# define STR_ERR_BUFFER    'invalid buffer in mpi call.'
+# define STR_ERR_ROOT      'invalid root in mpi call.'
+# define STR_ERR_ARG       'invalid argument in mpi call.'
+# define STR_ERR_TAG       'invalid tag in mpi call.'
+# define STR_ERR_RANK      'invalid rank in mpi call.'
+# define STR_ERR_GROUP     'null group passed to mpi call.'
+# define STR_ERR_OP        'invalid operation in mpi call.'
+# define STR_ERR_TOPOLOGY  'invalid topology in mpi call.'
+# define STR_ERR_DIMS      'illegal dimension argument in mpi call.'
+# define STR_ERR_UNKNOWN   'unknown error in mpi call.'
+# define STR_ERR_TRUNCATE  'message truncated on receive in mpi call.'
+# define STR_ERR_OTHER     'other error in mpi call.'
+# define STR_ERR_INTERN    'internal error code in mpi call.'
+# define STR_ERR_IN_STATUS 'look in status for error value.'
+# define STR_ERR_PENDING   'pending request in mpi call.'
+# define STR_ERR_REQUEST   'illegal mpi_request handle in mpi call.'
+# define STR_ERR_LASTCODE  'last error code in mpi call.'
      subroutine mp_error(sub, err)
          implicit none
 
@@ -4859,7 +4879,7 @@
 ! subroutine name
          character(len=*), intent(in) :: sub
 
-! error no
+! error no.
          integer, intent(in) :: err
 
          select case (err)
@@ -4868,83 +4888,63 @@
                  return
 
              case (MPI_ERR_COMM)
-# define STR_ERR_COMM      'invalid communicator in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_COMM
 
              case (MPI_ERR_COUNT)
-# define STR_ERR_COUNT     'invalid count in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_COUNT
 
              case (MPI_ERR_TYPE)
-# define STR_ERR_TYPE      'invalid datatype in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_TYPE
 
              case (MPI_ERR_BUFFER)
-# define STR_ERR_BUFFER    'invalid buffer in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_BUFFER
 
              case (MPI_ERR_ROOT)
-# define STR_ERR_ROOT      'invalid root in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_ROOT
 
              case (MPI_ERR_ARG)
-# define STR_ERR_ARG       'invalid argument in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_ARG
 
              case (MPI_ERR_TAG)
-# define STR_ERR_TAG       'invalid tag in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_TAG
 
              case (MPI_ERR_RANK)
-# define STR_ERR_RANK      'invalid rank in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_RANK
 
              case (MPI_ERR_GROUP)
-# define STR_ERR_GROUP     'null group passed to mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_GROUP
 
              case (MPI_ERR_OP)
-# define STR_ERR_OP        'invalid operation in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_OP
 
              case (MPI_ERR_TOPOLOGY)
-# define STR_ERR_TOPOLOGY  'invalid topology in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_TOPOLOGY
 
              case (MPI_ERR_DIMS)
-# define STR_ERR_DIMS      'illegal dimension argument in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_DIMS
 
              case (MPI_ERR_UNKNOWN)
-# define STR_ERR_UNKNOWN   'unknown error in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_UNKNOWN
 
              case (MPI_ERR_TRUNCATE)
-# define STR_ERR_TRUNCATE  'message truncated on receive in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_TRUNCATE
 
              case (MPI_ERR_OTHER)
-# define STR_ERR_OTHER     'other error in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_OTHER
 
              case (MPI_ERR_INTERN)
-# define STR_ERR_INTERN    'internal error code in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_INTERN
 
              case (MPI_ERR_IN_STATUS)
-# define STR_ERR_IN_STATUS 'look in status for error value.'
                  write(mystd,'(2a)') sub, STR_ERR_IN_STATUS
 
              case (MPI_ERR_PENDING)
-# define STR_ERR_PENDING   'pending request in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_PENDING
 
              case (MPI_ERR_REQUEST)
-# define STR_ERR_REQUEST   'illegal mpi_request handle in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_REQUEST
 
              case (MPI_ERR_LASTCODE)
-# define STR_ERR_LASTCODE  'last error code in mpi call.'
                  write(mystd,'(2a)') sub, STR_ERR_LASTCODE
 
              case default
@@ -4957,15 +4957,15 @@
 
   end module mmpi
 
-!>>> current used compiler is not mpif90
+!!>>> current used compiler is not mpif90
 # else   /* MPI */
 
   module mmpi
      implicit none
 
-!-------------------------------------------------------------------------
-!::: declare global constants                                          :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global constants                                         <<<
+!!========================================================================
 
 ! dp: number precision, double precision for reals
      integer, private, parameter :: dp = kind(1.0d0)
@@ -4973,20 +4973,20 @@
 ! mystd: device descriptor, console output
      integer, private, parameter :: mystd = 6
 
-!-------------------------------------------------------------------------
-!::: declare accessibility for module routines                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
-!>>> mpi information operation
+!!>>> mpi information operation
      public :: mp_info
 
   contains
 
-!-------------------------------------------------------------------------
-!::: MPI information operations                                        :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MPI information operations                                       <<<
+!!========================================================================
 
-! mp_info: return the current information about mpi environment
+!!>>> mp_info: return the current information about mpi environment
      subroutine mp_info()
          implicit none
 
