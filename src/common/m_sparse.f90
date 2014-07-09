@@ -1,41 +1,36 @@
-!-------------------------------------------------------------------------
-! project : begonia@fantasy
-! program : sparse     module
-!           sparse@sparse_format_csrdns
-!           sparse@sparse_format_csrdns_
-!           sparse@sparse_format_dnscsr
-!           sparse@sparse_format_dnscsr_
-!           sparse@sparse_format_unicsr
-!           sparse@sparse_format_unicsr_
-!           sparse@sparse_matrix_copyer
-!           sparse@sparse_matrix_copyer_
-!           sparse@sparse_matrix_getter
-!           sparse@sparse_matrix_getter_
-!           sparse@sparse_matmul_amuvec
-!           sparse@sparse_matmul_amuvec_
-!           sparse@sparse_matmul_amumat
-!           sparse@sparse_matmul_amumat_
-!           sparse@sparse_matmul_amudia
-!           sparse@sparse_matmul_amudia_
-!           sparse@sparse_matmul_diamua
-!           sparse@sparse_matmul_diamua_
-! source  : mod_sparse.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 02/01/2010 by li huang
-!           02/11/2010 by li huang
-!           03/30/2010 by li huang
-!           04/19/2010 by li huang
-!           05/02/2010 by li huang
-!           05/07/2010 by li huang
-!           05/04/2011 by li huang
-! purpose : the purpose of this module is to implement basic sparse matrix
-!           operations, including matrix multiplication, format convertion.
-!           the internal format of sparse matrix used in this module is
-!           CSR (compressed sparse row) format
-! status  : unstable
-! comment : only support real(dp) and complex(dp) data types
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : begonia@fantasy
+!!! program : sparse     module
+!!!           sparse@sparse_format_csrdns
+!!!           sparse@sparse_format_csrdns_
+!!!           sparse@sparse_format_dnscsr
+!!!           sparse@sparse_format_dnscsr_
+!!!           sparse@sparse_format_unicsr
+!!!           sparse@sparse_format_unicsr_
+!!!           sparse@sparse_matrix_copyer
+!!!           sparse@sparse_matrix_copyer_
+!!!           sparse@sparse_matrix_getter
+!!!           sparse@sparse_matrix_getter_
+!!!           sparse@sparse_matmul_amuvec
+!!!           sparse@sparse_matmul_amuvec_
+!!!           sparse@sparse_matmul_amumat
+!!!           sparse@sparse_matmul_amumat_
+!!!           sparse@sparse_matmul_amudia
+!!!           sparse@sparse_matmul_amudia_
+!!!           sparse@sparse_matmul_diamua
+!!!           sparse@sparse_matmul_diamua_
+!!! source  : mod_sparse.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! history : 02/01/2010 by li huang
+!!!           02/11/2010 by li huang
+!!! purpose : the purpose of this module is to implement basic sparse matrix
+!!!           operations, including matrix multiplication, format convertion.
+!!!           the internal format of sparse matrix used in this module is
+!!!           CSR (compressed sparse row) format
+!!! status  : unstable
+!!! comment : only support real(dp) and complex(dp) data types
+!!!-------------------------------------------------------------------------
 
   module sparse
      implicit none
