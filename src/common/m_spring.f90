@@ -11,7 +11,7 @@
 !!!           spring@spring_sfmt_source
 !!!           spring@spring_sfmt_kernel
 !!!           spring@spring_sfmt_core
-!!! source  : mod_spring.f90
+!!! source  : m_spring.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 01/03/2008 by li huang
