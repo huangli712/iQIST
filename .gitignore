@@ -1,0 +1,7 @@
+*~
+*.swp
+*.mod
+*.o
+*.a
+*.i90
+.DS_Store

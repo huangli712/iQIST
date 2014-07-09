@@ -1,76 +1,70 @@
-!-------------------------------------------------------------------------
-! project : azalea@fantasy
-! program : spring     module
-!           spring@spring_mt_init
-!           spring@spring_mt_stream
-!           spring@spring_mt_string
-!           spring@spring_mt_source
-!           spring@spring_sfmt_init
-!           spring@spring_sfmt_stream
-!           spring@spring_sfmt_string
-!           spring@spring_sfmt_source
-!           spring@spring_sfmt_kernel
-!           spring@spring_sfmt_core
-! source  : mod_spring.f90
-! type    : module
-! author  : li huang (email:huangli712@gmail.com)
-! history : 01/03/2008 by li huang
-!           01/04/2008 by li huang
-!           01/07/2008 by li huang
-!           01/08/2008 by li huang
-!           10/24/2008 by li huang
-!           12/21/2008 by li huang
-!           08/08/2009 by li huang
-!           08/09/2009 by li huang
-!           08/22/2009 by li huang
-!           02/27/2010 by li huang
-! purpose : the purpose of this module is to define several modern, highly
-!           reliable, fast, ease-to-use, and state-of-the-art pseudorandom
-!           number generators, which are essential in massively parallel
-!           quantum Monte Carlo simulations.
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : CSML (Common Service Modules Library)
+!!! program : spring
+!!!           spring@spring_mt_init
+!!!           spring@spring_mt_stream
+!!!           spring@spring_mt_string
+!!!           spring@spring_mt_source
+!!!           spring@spring_sfmt_init
+!!!           spring@spring_sfmt_stream
+!!!           spring@spring_sfmt_string
+!!!           spring@spring_sfmt_source
+!!!           spring@spring_sfmt_kernel
+!!!           spring@spring_sfmt_core
+!!! source  : mod_spring.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/03/2008 by li huang
+!!!           12/21/2008 by li huang
+!!! purpose : the purpose of this module is to define several modern, fast
+!!!           highly reliable, ease-to-use, and state-of-the-art pseudo-
+!!!           random number generators, which are essential in massively
+!!!           parallel quantum Monte Carlo simulations.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> introduction
-!
-! the following two random number generators (generates a random number
-! between 0 and 1, real double precision) are supported by now.
-!
-! (A) MT19937
-! Mersenne Twister pseudorandom number generator
-! by Makoto Matsumoto and Takuji Nishimura
-! << Mersenne Twister: A 623-dimensionally equidistributed uniform pseudorandom number generator >>
-! ACM Trans. on Modeling and Computer Simulation Vol. 8, No. 1, January pp.3-30 (1998)
-!
-! (B) SFMT
-! SIMD-oriented Fast Mersenne Twister
-! by Mutsuo Saito and Makoto Matsumoto
-! << SIMD-oriented Fast Mersenne Twister: a 128-bit Pseudorandom Number Generator >>
-! Monte Carlo and Quasi-Monte Carlo Methods 2006, Springer, 2008, pp. 607-622
-!
-!>>> usage
-! use spring
-! call spring_mt_init(seed)
-! r = spring_mt_stream()
-! r = spring_mt_string()
-!
-! use spring
-! call spring_sfmt_init(seed)
-! r = spring_sfmt_stream()
-! r = spring_sfmt_string()
-!
-!>>> note
-! since SFMT has a better performance, it is preferable
-!-------------------------------------------------------------------------
+!!
+!!
+!!>>> introduction
+!!
+!! the following two random number generators (generates a random number
+!! between 0 and 1, real double precision) are supported by now.
+!!
+!! (A) MT19937
+!! Mersenne Twister pseudorandom number generator
+!! by Makoto Matsumoto and Takuji Nishimura
+!! << Mersenne Twister: A 623-dimensionally equidistributed uniform pseudorandom number generator >>
+!! ACM Trans. on Modeling and Computer Simulation Vol. 8, No. 1, January pp.3-30 (1998)
+!!
+!! (B) SFMT
+!! SIMD-oriented Fast Mersenne Twister
+!! by Mutsuo Saito and Makoto Matsumoto
+!! << SIMD-oriented Fast Mersenne Twister: a 128-bit Pseudorandom Number Generator >>
+!! Monte Carlo and Quasi-Monte Carlo Methods 2006, Springer, 2008, pp. 607-622
+!!
+!!>>> usage
+!! use spring
+!! call spring_mt_init(seed)
+!! r = spring_mt_stream()
+!! r = spring_mt_string()
+!!
+!! use spring
+!! call spring_sfmt_init(seed)
+!! r = spring_sfmt_stream()
+!! r = spring_sfmt_string()
+!!
+!!>>> note
+!! since SFMT has a better performance, it is preferable
+!!
+!!
 
   module spring
      implicit none
 
-!-------------------------------------------------------------------------
-!::: declare global parameters                                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global parameters                                        <<<
+!!========================================================================
 
 ! kind types for 32-bit signed integers
      integer, private, parameter :: int32  = selected_int_kind( 9)
@@ -84,9 +78,9 @@
 ! kind types for ieee 754/IEC 60559 double precision reals
      integer, private, parameter :: ieee64 = selected_real_kind(15, 307)
 
-!-------------------------------------------------------------------------
-!::: declare common parameters for MT19937 generator                   :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare common parameters for MT19937 generator                  <<<
+!!========================================================================
 
 ! period parameters
      integer(int32), private, parameter :: N = 624_int32
@@ -94,9 +88,9 @@
 ! period parameters
      integer(int32), private, parameter :: M = 397_int32
 
-!-------------------------------------------------------------------------
-!::: declare common parameters for SFMT generator                      :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare common parameters for SFMT generator                     <<<
+!!========================================================================
 
 ! Mersenne Exponent. the period of the sequence is a multiple of 2^{ME}-1
      integer(int32), private, parameter :: ME  = 19937
@@ -113,9 +107,9 @@
 ! a parity check vector which certificate the period of 2^{ME}
      integer(int32), private, parameter :: parity(0:3) = (/1, 0, 0, 331998852/)
 
-!-------------------------------------------------------------------------
-!::: declare common variables for MT19937 generator                    :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare common variables for MT19937 generator                   <<<
+!!========================================================================
 
 ! states pointer, if mti == -1, itialization is necessary
      integer(int32), private, save :: mti = -1
@@ -123,9 +117,9 @@
 ! states array for twist generator
      integer(int64), private, save :: mt(0:N-1)
 
-!-------------------------------------------------------------------------
-!::: declare common variables for SFMT generator                       :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare common variables for SFMT generator                      <<<
+!!========================================================================
 
 ! index counter to the 32-bit internal state array
      integer(int32), private, save :: idx = -1
@@ -136,11 +130,10 @@
 ! the 64-bit integer pointer to the 128-bit internal state array
      integer(int64), private, save :: pt64(0:N64-1)
 
-!-------------------------------------------------------------------------
-!::: declare accessibility for module routines                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
-!-------------------------------------------------------------------------
      public  :: spring_mt_init     ! MT19937 generator public  subroutines
      public  :: spring_mt_stream   !
      public  :: spring_mt_string   !
@@ -154,15 +147,14 @@
      private :: spring_sfmt_source ! SFMT    generator private subroutines
      private :: spring_sfmt_kernel !
      private :: spring_sfmt_core   !
-!-------------------------------------------------------------------------
 
   contains
 
-!-------------------------------------------------------------------------
-!::: MT19937 random number generator subroutines                       :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> MT19937 random number generator subroutines                      <<<
+!!========================================================================
 
-!>>> initializes the MT19937 generator with "seed"
+!!>>> initializes the MT19937 generator with "seed"
   subroutine spring_mt_init(seed)
      implicit none
 
@@ -188,7 +180,7 @@
      return
   end subroutine spring_mt_init
 
-!>>> obtain a psuedo random real number in the range (0,1), i.e., a
+!!>>> obtain a psuedo random real number in the range (0,1), i.e., a
 ! number greater than 0 and less than 1
   function spring_mt_stream() result(r)
      implicit none
@@ -206,7 +198,7 @@
      return
   end function spring_mt_stream
 
-!>>> obtain a psuedo random real number in the range [0,1], i.e., a number
+!!>>> obtain a psuedo random real number in the range [0,1], i.e., a number
 ! greater than or equal to 0 and less than or equal to 1
   function spring_mt_string() result(r)
      implicit none
@@ -224,7 +216,7 @@
      return
   end function spring_mt_string
 
-!>>> obtain the next 32-bit integer in the psuedo random sequence
+!!>>> obtain the next 32-bit integer in the psuedo random sequence
   function spring_mt_source() result(r)
      implicit none
 
@@ -281,11 +273,11 @@
      return
   end function spring_mt_source
 
-!-------------------------------------------------------------------------
-!::: SFMT random number generator subroutines                          :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> SFMT random number generator subroutines                         <<<
+!!========================================================================
 
-!>>> this function initializes the internal state array with a 32-bit integer seed
+!!>>> this function initializes the internal state array with a 32-bit integer seed
   subroutine spring_sfmt_init(seed)
      implicit none
 
@@ -350,7 +342,7 @@
      return
   end subroutine spring_sfmt_init
 
-!>>> generates a pseudo random number on (0,1)
+!!>>> generates a pseudo random number on (0,1)
   function spring_sfmt_stream() result(r)
      implicit none
 
@@ -367,7 +359,7 @@
      return
   end function spring_sfmt_stream
 
-!>>> generates a pseudo random number on [0,1]
+!!>>> generates a pseudo random number on [0,1]
   function spring_sfmt_string() result(r)
      implicit none
 
@@ -384,7 +376,7 @@
      return
   end function spring_sfmt_string
 
-!>>> this function generates and returns 32-bit pseudo random number
+!!>>> this function generates and returns 32-bit pseudo random number
   function spring_sfmt_source() result(r)
      implicit none
 
@@ -407,7 +399,7 @@
      return
   end function spring_sfmt_source
 
-!>>> this function fills the internal state array with pseudo random integers
+!!>>> this function fills the internal state array with pseudo random integers
   subroutine spring_sfmt_kernel()
      implicit none
 
@@ -453,7 +445,7 @@
      return
   end subroutine spring_sfmt_kernel
 
-!>>> this function represents the recursion formula
+!!>>> this function represents the recursion formula
   subroutine spring_sfmt_core(rTop, rBtm, aTop, aBtm, bTop, bBtm, cTop, cBtm, dTop, dBtm)
      implicit none
 
