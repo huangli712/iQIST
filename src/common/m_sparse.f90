@@ -92,55 +92,55 @@
      public :: sparse_csr_to_dns
      interface sparse_csr_to_dns
          module procedure sparse_format_csrdns
-         module procedure sparse_format_csrdns_
+         module procedure sparse_format_csrdns_z
      end interface sparse_csr_to_dns
 
      public :: sparse_dns_to_csr
      interface sparse_dns_to_csr
          module procedure sparse_format_dnscsr
-         module procedure sparse_format_dnscsr_
+         module procedure sparse_format_dnscsr_z
      end interface sparse_dns_to_csr
 
      public :: sparse_uni_to_csr
      interface sparse_uni_to_csr
          module procedure sparse_format_unicsr
-         module procedure sparse_format_unicsr_
+         module procedure sparse_format_unicsr_z
      end interface sparse_uni_to_csr
 
      public :: sparse_csr_cp_csr
      interface sparse_csr_cp_csr
          module procedure sparse_matrix_copyer
-         module procedure sparse_matrix_copyer_
+         module procedure sparse_matrix_copyer_z
      end interface sparse_csr_cp_csr
 
      public :: sparse_csr_cp_elm
      interface sparse_csr_cp_elm
          module procedure sparse_matrix_getter
-         module procedure sparse_matrix_getter_
+         module procedure sparse_matrix_getter_z
      end interface sparse_csr_cp_elm
 
      public :: sparse_csr_mv_vec
      interface sparse_csr_mv_vec
          module procedure sparse_matmul_amuvec
-         module procedure sparse_matmul_amuvec_
+         module procedure sparse_matmul_amuvec_z
      end interface sparse_csr_mv_vec
 
      public :: sparse_csr_mm_csr
      interface sparse_csr_mm_csr
          module procedure sparse_matmul_amumat
-         module procedure sparse_matmul_amumat_
+         module procedure sparse_matmul_amumat_z
      end interface sparse_csr_mm_csr
 
      public :: sparse_csr_mm_dia
      interface sparse_csr_mm_dia
          module procedure sparse_matmul_amudia
-         module procedure sparse_matmul_amudia_
+         module procedure sparse_matmul_amudia_z
      end interface sparse_csr_mm_dia
 
      public :: sparse_dia_mm_csr
      interface sparse_dia_mm_csr
          module procedure sparse_matmul_diamua
-         module procedure sparse_matmul_diamua_
+         module procedure sparse_matmul_diamua_z
      end interface sparse_dia_mm_csr
 
   contains ! encapsulated functionality
@@ -193,7 +193,7 @@
   end subroutine sparse_format_csrdns
 
 !!>>> converts a row-stored sparse matrix into a densely stored one
-  subroutine sparse_format_csrdns_(nrow, ncol, nmax, sa, ja, ia, dns)
+  subroutine sparse_format_csrdns_z(nrow, ncol, nmax, sa, ja, ia, dns)
      implicit none
 
 ! external arguments
@@ -229,7 +229,7 @@
          do k=ia(i),ia(i+1)-1
              j = ja(k)
              if ( j > ncol ) then
-                 write(mystd,'(a)') 'sparse: error in sparse_format_csrdns_'
+                 write(mystd,'(a)') 'sparse: error in sparse_format_csrdns_z'
                  STOP
              endif ! back if ( j > ncol ) block
              dns(i,j) = sa(k)
@@ -237,7 +237,7 @@
      enddo ! over i={1,nrow} loop
 
      return
-  end subroutine sparse_format_csrdns_
+  end subroutine sparse_format_csrdns_z
 
 !!>>> converts a densely stored matrix into a row orientied compactly sparse matrix
   subroutine sparse_format_dnscsr(nrow, ncol, nmax, dns, a, ja, ia)
@@ -293,7 +293,7 @@
   end subroutine sparse_format_dnscsr
 
 !!>>> converts a densely stored matrix into a row orientied compactly sparse matrix
-  subroutine sparse_format_dnscsr_(nrow, ncol, nmax, dns, sa, ja, ia)
+  subroutine sparse_format_dnscsr_z(nrow, ncol, nmax, dns, sa, ja, ia)
      implicit none
 
 ! external arguments
@@ -335,7 +335,7 @@
              sa(k) = dns(i,j)
              k = k + 1
              if ( k > nmax ) then
-                 write(mystd,'(a)') 'sparse: error in sparse_format_dnscsr_'
+                 write(mystd,'(a)') 'sparse: error in sparse_format_dnscsr_z'
                  STOP
              endif ! back if ( k > nmax ) block
          enddo ! over j={1,ncol} loop
@@ -343,7 +343,7 @@
      enddo ! over i={1,nrow} loop
 
      return
-  end subroutine sparse_format_dnscsr_
+  end subroutine sparse_format_dnscsr_z
 
 !!>>> converts a densely stored identity matrix into a row orientied compactly sparse matrix
   subroutine sparse_format_unicsr(nrow, nmax, a, ja, ia)
@@ -385,7 +385,7 @@
   end subroutine sparse_format_unicsr
 
 !!>>> converts a densely stored identity matrix into a row orientied compactly sparse matrix
-  subroutine sparse_format_unicsr_(nrow, nmax, sa, ja, ia)
+  subroutine sparse_format_unicsr_z(nrow, nmax, sa, ja, ia)
      implicit none
 
 ! external arguments
@@ -406,7 +406,7 @@
      integer :: i
 
      if ( nrow > nmax ) then
-         write(mystd,'(a)') 'sparse: error in sparse_format_unicsr_'
+         write(mystd,'(a)') 'sparse: error in sparse_format_unicsr_z'
          STOP
      endif ! back if ( nrow > nmax ) block
 
@@ -423,7 +423,7 @@
      enddo ! over i={nrow+1,nmax} loop
 
      return
-  end subroutine sparse_format_unicsr_
+  end subroutine sparse_format_unicsr_z
 
 !!>>> copy data between two row orientied compactly sparse matrices
   subroutine sparse_matrix_copyer(nrow, nmax, a, ja, ia, b, jb, ib)
@@ -467,7 +467,7 @@
   end subroutine sparse_matrix_copyer
 
 !!>>> copy data between two row orientied compactly sparse matrices
-  subroutine sparse_matrix_copyer_(nrow, nmax, sa, ja, ia, sb, jb, ib)
+  subroutine sparse_matrix_copyer_z(nrow, nmax, sa, ja, ia, sb, jb, ib)
      implicit none
 
 ! external arguments
@@ -505,7 +505,7 @@
      enddo ! over i={ia(1),ia(nrow+1)-1} loop
 
      return
-  end subroutine sparse_matrix_copyer_
+  end subroutine sparse_matrix_copyer_z
 
 !!>>> this function returns the element a(i,j) of matrix a
   real(dp) &
@@ -560,7 +560,7 @@
 
 !!>>> this function returns the element sa(i,j) of matrix sa
   complex(dp) &
-  function sparse_matrix_getter_(i, j, nrow, nmax, sa, ja, ia) result(elm)
+  function sparse_matrix_getter_z(i, j, nrow, nmax, sa, ja, ia) result(elm)
      implicit none
 
 ! external arguments
@@ -607,7 +607,7 @@
      endif ! back if ( addr /= 0 ) block
 
      return
-  end function sparse_matrix_getter_
+  end function sparse_matrix_getter_z
 
 !!>>> multiplies a matrix by a vector using the dot product form
   subroutine sparse_matmul_amuvec(nrow, ncol, nmax, a, ja, ia, x, y)
@@ -654,7 +654,7 @@
   end subroutine sparse_matmul_amuvec
 
 !!>>> multiplies a matrix by a vector using the dot product form
-  subroutine sparse_matmul_amuvec_(nrow, ncol, nmax, sa, ja, ia, sx, sy)
+  subroutine sparse_matmul_amuvec_z(nrow, ncol, nmax, sa, ja, ia, sx, sy)
      implicit none
 
 ! external arguments
@@ -695,7 +695,7 @@
      enddo ! over i={1,nrow} loop
 
      return
-  end subroutine sparse_matmul_amuvec_
+  end subroutine sparse_matmul_amuvec_z
 
 !!>>> performs the matrix by matrix product C = A * B
   subroutine sparse_matmul_amumat(nrow, ndim, ncol, nmax, a, ja, ia, b, jb, ib, c, jc, ic)
@@ -794,7 +794,7 @@
   end subroutine sparse_matmul_amumat
 
 !!>>> performs the matrix by matrix product C = A * B
-  subroutine sparse_matmul_amumat_(nrow, ndim, ncol, nmax, sa, ja, ia, sb, jb, ib, sc, jc, ic)
+  subroutine sparse_matmul_amumat_z(nrow, ndim, ncol, nmax, sa, ja, ia, sb, jb, ib, sc, jc, ic)
      implicit none
 
 ! external arguments
@@ -882,12 +882,12 @@
 
 ! check the number of nonzero elements
      if ( q > nmax ) then
-         write(mystd,'(a)') 'sparse: error in sparse_format_amumat_'
+         write(mystd,'(a)') 'sparse: error in sparse_format_amumat_z'
          STOP
      endif ! back if ( q > nmax ) block
 
      return
-  end subroutine sparse_matmul_amumat_
+  end subroutine sparse_matmul_amumat_z
 
 !!>>> performs the matrix by matrix product B = A * Diag
   subroutine sparse_matmul_amudia(nrow, nmax, a, ja, ia, diag, b, jb, ib)
@@ -949,7 +949,7 @@
   end subroutine sparse_matmul_amudia
 
 !!>>> performs the matrix by matrix product B = A * Diag
-  subroutine sparse_matmul_amudia_(nrow, nmax, sa, ja, ia, diag, sb, jb, ib)
+  subroutine sparse_matmul_amudia_z(nrow, nmax, sa, ja, ia, diag, sb, jb, ib)
      implicit none
 
 ! external arguments
@@ -1005,7 +1005,7 @@
      enddo ! over k={ia(1),ia(nrow+1)-1} loop
 
      return
-  end subroutine sparse_matmul_amudia_
+  end subroutine sparse_matmul_amudia_z
 
 !!>>> performs the matrix by matrix product B = Diag * A
   subroutine sparse_matmul_diamua(nrow, nmax, diag, a, ja, ia, b, jb, ib)
@@ -1067,7 +1067,7 @@
   end subroutine sparse_matmul_diamua
 
 !!>>> performs the matrix by matrix product B = Diag * A
-  subroutine sparse_matmul_diamua_(nrow, nmax, diag, sa, ja, ia, sb, jb, ib)
+  subroutine sparse_matmul_diamua_z(nrow, nmax, diag, sa, ja, ia, sb, jb, ib)
      implicit none
 
 ! external arguments
@@ -1123,6 +1123,6 @@
      enddo ! over k={ia(1),ia(nrow+1)-1} loop
 
      return
-  end subroutine sparse_matmul_diamua_
+  end subroutine sparse_matmul_diamua_z
 
   end module sparse
