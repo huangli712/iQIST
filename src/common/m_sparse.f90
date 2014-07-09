@@ -1,6 +1,6 @@
-!!!-------------------------------------------------------------------------
-!!! project : begonia@fantasy
-!!! program : sparse     module
+!!!-----------------------------------------------------------------------
+!!! project : CSML (Common Service Modules Library)
+!!! program : sparse
 !!!           sparse@sparse_format_csrdns
 !!!           sparse@sparse_format_csrdns_
 !!!           sparse@sparse_format_dnscsr
@@ -19,18 +19,18 @@
 !!!           sparse@sparse_matmul_amudia_
 !!!           sparse@sparse_matmul_diamua
 !!!           sparse@sparse_matmul_diamua_
-!!! source  : mod_sparse.f90
+!!! source  : m_sparse.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 02/01/2010 by li huang
-!!!           02/11/2010 by li huang
-!!! purpose : the purpose of this module is to implement basic sparse matrix
-!!!           operations, including matrix multiplication, format convertion.
-!!!           the internal format of sparse matrix used in this module is
-!!!           CSR (compressed sparse row) format
+!!!           07/09/2014 by li huang
+!!! purpose : the purpose of this module is to implement important sparse
+!!!           matrix/vector operations, including matrix multiplication,
+!!!           format convertion, etc. the internal format of sparse matrix
+!!!           used in this module is CSR (compressed sparse row) format.
 !!! status  : unstable
 !!! comment : only support real(dp) and complex(dp) data types
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
   module sparse
      implicit none
