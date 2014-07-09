@@ -48,9 +48,7 @@
 
   contains ! encapsulated functionality
 
-! list_create --
-!     Create and initialise a list
-! Arguments:
+!     ! Arguments:
 !     list       Pointer to new linked list
 !     data       The data for the first element
 ! Note:
@@ -61,14 +59,19 @@
 !     refer to a list. Use list_destroy first to
 !     destroy up an old list.
 !
-subroutine list_create( list, data )
-    type(LINKED_LIST), pointer  :: list
-    type(LIST_DATA), intent(in) :: data
+!!>>> list_create: create and initialise a list
+  subroutine list_create( list, data )
+     implicit none
 
-    allocate( list )
-    list%next => null()
-    list%data =  data
-end subroutine list_create
+     type(LINKED_LIST), pointer  :: list
+     type(LIST_DATA), intent(in) :: data
+
+     allocate( list )
+     list%next => null()
+     list%data =  data
+
+     return
+  end subroutine list_create
 
 ! list_destroy --
 !     Destroy an entire list
