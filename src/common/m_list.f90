@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
-!!! program : list
+!!! program : mlist
 !!! source  : m_list.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -11,7 +11,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-  module list
+  module mlist
      implicit none
 
 !!========================================================================
@@ -32,39 +32,30 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     private :: T_node
+     public :: T_node
+     public :: T_data
 
-     public  :: T_data
-
-     public  :: list_create
-     public  :: list_destroy
-     public  :: list_count
-     public  :: list_next
-     public  :: list_insert
-     public  :: list_insert_head
-     public  :: list_delete_element
-     public  :: list_get_data
-     public  :: list_set_data
+     public :: list_create
+     public :: list_destroy
+     public :: list_count
+     public :: list_next
+     public :: list_insert
+     public :: list_insert_head
+     public :: list_delete_element
+     public :: list_get_data
+     public :: list_set_data
 
   contains ! encapsulated functionality
 
-!     ! Arguments:
-!     list       Pointer to new linked list
-!     data       The data for the first element
-! Note:
-!     This version assumes a shallow copy is enough
-!     (that is, there are no pointers within the data
-!     to be stored)
-!     It also assumes the argument list does not already
-!     refer to a list. Use list_destroy first to
-!     destroy up an old list.
-!
 !!>>> list_create: create and initialise a list
   subroutine list_create( list, data )
      implicit none
 
-     type(LINKED_LIST), pointer  :: list
-     type(LIST_DATA), intent(in) :: data
+! pointer to new linked list
+     type(T_node), pointer  :: list
+
+! The data for the first element
+     type(T_data), intent(in) :: data
 
      allocate( list )
      list%next => null()
@@ -139,7 +130,9 @@ end function list_next
 !                which to insert the new element
 !     data       The data for the new element
 !
-subroutine list_insert( elem, data )
+  subroutine list_insert( elem, data )
+     implicit none
+
     type(LINKED_LIST), pointer  :: elem
     type(LIST_DATA), intent(in) :: data
 
@@ -150,7 +143,9 @@ subroutine list_insert( elem, data )
     next%next => elem%next
     elem%next => next
     next%data =  data
-end subroutine list_insert
+
+    return
+  end subroutine list_insert
 
 ! list_insert_head
 !     Insert a new element before the first element
@@ -158,18 +153,22 @@ end subroutine list_insert
 !     list       Start of the list
 !     data       The data for the new element
 !
-subroutine list_insert_head( list, data )
-    type(LINKED_LIST), pointer  :: list
-    type(LIST_DATA), intent(in) :: data
+  subroutine list_insert_head( list, data )
+     implicit none
 
-    type(LINKED_LIST), pointer :: elem
+     type(T_node), pointer    :: list
+     type(T_data), intent(in) :: data
 
-    allocate(elem)
-    elem%data =  data
+     type(T_node), pointer :: elem
 
-    elem%next => list
-    list      => elem
-end subroutine list_insert_head
+     allocate(elem)
+     elem%data =  data
+
+     elem%next => list
+     list      => elem
+
+     return
+  end subroutine list_insert_head
 
 ! list_delete_element
 !     Delete an element from the list
@@ -178,48 +177,50 @@ end subroutine list_insert_head
 !     elem       Element in the linked list to be
 !                removed
 !
-subroutine list_delete_element( list, elem )
-    type(LINKED_LIST), pointer  :: list
-    type(LINKED_LIST), pointer  :: elem
+  subroutine list_delete_element( list, elem )
+     implicit none
 
-    type(LINKED_LIST), pointer  :: current
-    type(LINKED_LIST), pointer  :: prev
+     type(T_node), pointer  :: list
+     type(T_node), pointer  :: elem
 
-    if ( associated(list,elem) ) then
-        list => elem%next
-        deallocate( elem )
-    else
-        current => list
-        prev    => list
-        do while ( associated(current) )
-            if ( associated(current,elem) ) then
-                prev%next => current%next
-                deallocate( current ) ! Is also "elem"
-                exit
-            endif
-            prev    => current
-            current => current%next
-        enddo
-    endif
-!    allocate(next)
-!
-!    next%next => elem%next
-!    elem%next => next
-!    next%data =  data
-end subroutine list_delete_element
+     type(T_node), pointer  :: current
+     type(T_node), pointer  :: prev
+
+     if ( associated(list,elem) ) then
+         list => elem%next
+         deallocate( elem )
+     else
+         current => list
+         prev    => list
+         do while ( associated(current) )
+             if ( associated(current,elem) ) then
+                 prev%next => current%next
+                 deallocate( current ) ! Is also "elem"
+                 exit
+             endif
+             prev    => current
+             current => current%next
+         enddo
+     endif
+
+     return
+  end subroutine list_delete_element
 
 ! list_get_data
 !     Get the data stored with a list element
 ! Arguments:
 !     elem       Element in the linked list
 !
-function list_get_data( elem ) result(data)
-    type(LINKED_LIST), pointer :: elem
+  function list_get_data( elem ) result(data)
+     implicit none
 
-    type(LIST_DATA)            :: data
+     type(T_node), pointer :: elem
+     type(T_data)          :: data
 
-    data = elem%data
-end function list_get_data
+     data = elem%data
+
+     return
+  end function list_get_data
 
 ! list_put_data
 !     Store new data with a list element
@@ -227,11 +228,15 @@ end function list_get_data
 !     elem       Element in the linked list
 !     data       The data to be stored
 !
-subroutine list_put_data( elem, data )
-    type(LINKED_LIST), pointer  :: elem
-    type(LIST_DATA), intent(in) :: data
+  subroutine list_set_data( elem, data )
+     implicit none
 
-    elem%data = data
-end subroutine list_put_data
+     type(T_node), pointer    :: elem
+     type(T_data), intent(in) :: data
 
-  end module list
+     elem%data = data
+
+     return
+  end subroutine list_set_data
+
+  end module mlist
