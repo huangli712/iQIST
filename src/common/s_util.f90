@@ -5,11 +5,14 @@
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
-!!!           07/10/2014 by li huang
 !!! purpose : these subroutines are used to
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!========================================================================
+!!>>>
+!!========================================================================
 
 !!>>> s_assert: fortran version of assert
   subroutine s_assert(condition)
@@ -27,8 +30,45 @@
   end subroutine s_assert
 
 !!========================================================================
-!!>>>
+!!>>> string manipulation                                              <<<
 !!========================================================================
+
+!!>>> s_str_upcase: returns string 's' in uppercase
+  function s_str_upcase(s) result(t)
+     implicit none
+
+! external arguments
+     character(*), intent(in) :: s
+     character(len(s)) :: t
+
+! local variables
+     integer :: i, diff
+
+     t = s; diff = ichar('A')-ichar('a')
+
+! if lowercase, make uppercase
+     do i = 1, len(t)
+         if (ichar(t(i:i)) >= ichar('a') .and. ichar(t(i:i)) <= ichar('z')) then
+             t(i:i) = char(ichar(t(i:i)) + diff)
+         endif
+     enddo
+
+     return
+  end function s_str_upcase
+
+!!>>> returns string 's' in lowercase
+function lowcase(s) result(t)
+character(*), intent(in) :: s
+character(len(s)) :: t
+integer :: i, diff
+t = s; diff = ichar('A')-ichar('a')
+do i = 1, len(t)
+    if (ichar(t(i:i)) >= ichar('A') .and. ichar(t(i:i)) <= ichar('Z')) then
+        ! if uppercase, make lowercase
+        t(i:i) = char(ichar(t(i:i)) - diff)
+    end if
+end do
+end function
 
 ! string_count_substring --
 !     Return the number of times a substring occurs
@@ -86,30 +126,4 @@ function int2str(num) result(str)
   str = trim(adjustl(base_str))
 end function int2str
 
-function upcase(s) result(t)
-! Returns string 's' in uppercase
-character(*), intent(in) :: s
-character(len(s)) :: t
-integer :: i, diff
-t = s; diff = ichar('A')-ichar('a')
-do i = 1, len(t)
-    if (ichar(t(i:i)) >= ichar('a') .and. ichar(t(i:i)) <= ichar('z')) then
-        ! if lowercase, make uppercase
-        t(i:i) = char(ichar(t(i:i)) + diff)
-    end if
-end do
-end function
 
-function lowcase(s) result(t)
-! Returns string 's' in lowercase
-character(*), intent(in) :: s
-character(len(s)) :: t
-integer :: i, diff
-t = s; diff = ichar('A')-ichar('a')
-do i = 1, len(t)
-    if (ichar(t(i:i)) >= ichar('A') .and. ichar(t(i:i)) <= ichar('Z')) then
-        ! if uppercase, make lowercase
-        t(i:i) = char(ichar(t(i:i)) - diff)
-    end if
-end do
-end function
