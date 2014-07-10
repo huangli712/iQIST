@@ -1,6 +1,18 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : mlist
+!!!           T_node
+!!!           T_data
+!!!           list_create
+!!!           list_destroy
+!!!           list_insert
+!!!           list_insert_head
+!!!           list_delete
+!!!           list_delete_head
+!!!           list_get_data
+!!!           list_set_data
+!!!           list_next
+!!!           list_count
 !!! source  : m_list.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -173,6 +185,30 @@
 
      return
   end subroutine list_delete
+
+!!>>> list_delete_head: delete an element from the list
+  subroutine list_delete_head( list )
+     implicit none
+
+! external arguments
+! header of the list
+     type(T_node), pointer  :: list
+
+! local variables
+     type(T_node), pointer  :: current
+
+! more than 1 node
+     if ( associated(list%next) ) then
+         current => list
+         list => list%next
+         deallocate( current )
+! only 1 node
+     else
+         deallocate( list )
+     endif ! back if block
+
+     return
+  end subroutine list_delete_head
 
 !!>>> list_get_data: get the data stored with a list element
   function list_get_data( elem ) result(data)
