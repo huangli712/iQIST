@@ -1,6 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
 !!! program : s_assert
+!!!           s_str_upcase
+!!!           s_str_lowcase
 !!! source  : s_util.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -38,37 +40,60 @@
      implicit none
 
 ! external arguments
+! input string
      character(*), intent(in) :: s
+
+! output string
      character(len(s)) :: t
 
 ! local variables
-     integer :: i, diff
+! loop index
+     integer :: i
+
+! difference between 'A' and 'a'
+     integer :: diff
 
      t = s; diff = ichar('A')-ichar('a')
 
 ! if lowercase, make uppercase
-     do i = 1, len(t)
-         if (ichar(t(i:i)) >= ichar('a') .and. ichar(t(i:i)) <= ichar('z')) then
+     do i=1,len(t)
+         if ( ichar(t(i:i)) >= ichar('a') .and. ichar(t(i:i)) <= ichar('z') ) then
              t(i:i) = char(ichar(t(i:i)) + diff)
-         endif
-     enddo
+         endif ! back if block
+     enddo ! over i={1, len(t)} loop
 
      return
   end function s_str_upcase
 
-!!>>> returns string 's' in lowercase
-function lowcase(s) result(t)
-character(*), intent(in) :: s
-character(len(s)) :: t
-integer :: i, diff
-t = s; diff = ichar('A')-ichar('a')
-do i = 1, len(t)
-    if (ichar(t(i:i)) >= ichar('A') .and. ichar(t(i:i)) <= ichar('Z')) then
-        ! if uppercase, make lowercase
-        t(i:i) = char(ichar(t(i:i)) - diff)
-    end if
-end do
-end function
+!!>>> s_str_lowcase: returns string 's' in lowercase
+  function s_str_lowcase(s) result(t)
+     implicit none
+
+! external arguments
+! input string
+     character(*), intent(in) :: s
+
+! output string
+     character(len(s)) :: t
+
+! local variables
+! loop index
+     integer :: i
+
+! difference between 'A' and 'a'
+     integer :: diff
+
+     t = s; diff = ichar('A')-ichar('a')
+
+! if uppercase, make lowercase
+     do i=1,len(t)
+         if ( ichar(t(i:i)) >= ichar('A') .and. ichar(t(i:i)) <= ichar('Z') ) then
+             t(i:i) = char(ichar(t(i:i)) - diff)
+         endif ! back if block
+     enddo ! over i={1,len(t)} loop
+
+     return
+  end function s_str_lowcase
 
 ! string_count_substring --
 !     Return the number of times a substring occurs
