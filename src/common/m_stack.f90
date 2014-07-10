@@ -1,43 +1,37 @@
-!-------------------------------------------------------------------------
-! project : azalea@fantasy
-! program : stack      module
-!           stack@istack_create
-!           stack@istack_clean
-!           stack@istack_destroy
-!           stack@istack_copyer
-!           stack@istack_setter
-!           stack@istack_getter
-!           stack@istack_push
-!           stack@istack_pop
-!           stack@istack_display
-!           stack@istack_gettop
-!           stack@istack_getrest
-!           stack@istack_getsize
-!           stack@istack_isfull
-!           stack@istack_isempty
-! source  : mod_stack.f90
-! type    : module
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/14/2009 by li huang
-!           09/15/2009 by li huang
-!           09/20/2009 by li huang
-!           09/23/2009 by li huang
-!           11/01/2009 by li huang
-!           12/18/2009 by li huang
-!           02/01/2010 by li huang
-!           02/23/2010 by li huang
-! purpose : the purpose of this module is to define a stack-type (LIFO)
-!           data structure in fortran version
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : CSML (Common Service Modules Library)
+!!! program : stack
+!!!           stack@istack_create
+!!!           stack@istack_clean
+!!!           stack@istack_destroy
+!!!           stack@istack_copyer
+!!!           stack@istack_setter
+!!!           stack@istack_getter
+!!!           stack@istack_push
+!!!           stack@istack_pop
+!!!           stack@istack_display
+!!!           stack@istack_gettop
+!!!           stack@istack_getrest
+!!!           stack@istack_getsize
+!!!           stack@istack_isfull
+!!!           stack@istack_isempty
+!!! source  : m_stack.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/14/2009 by li huang
+!!!           07/09/2014 by li huang
+!!! purpose : the purpose of this module is to define a stack-type (LIFO)
+!!!           data structure in fortran version
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
   module stack
      implicit none
 
-!-------------------------------------------------------------------------
-!::: declare global parameters                                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global parameters                                        <<<
+!!========================================================================
 
 ! stack size limit, default value
      integer, private, parameter :: limit = 1024
@@ -45,9 +39,9 @@
 ! mystd: device descriptor, console output
      integer, private, parameter :: mystd = 6
 
-!-------------------------------------------------------------------------
-!::: declare global data structure                                     :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global data structure                                    <<<
+!!========================================================================
 
 ! define integer type stack
      type istack
@@ -63,9 +57,9 @@
 
      end type istack
 
-!-------------------------------------------------------------------------
-!::: declare accessibility for module routines                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
      public :: istack_create
      public :: istack_clean
@@ -89,7 +83,7 @@
 
   contains ! encapsulated functionality
 
-!>>> create and initialize a integer type stack
+!!>>> create and initialize a integer type stack
   type (istack) &
   function istack_create(n) result (s)
      implicit none
@@ -118,7 +112,7 @@
      return
   end function istack_create
 
-!>>> reset the integer type stack, clean all its elements
+!!>>> reset the integer type stack, clean all its elements
   subroutine istack_clean(s)
      implicit none
 
@@ -132,7 +126,7 @@
      return
   end subroutine istack_clean
 
-!>>> destroy and finalize a integer type stack
+!!>>> destroy and finalize a integer type stack
   subroutine istack_destroy(s)
      implicit none
 
@@ -149,7 +143,7 @@
      return
   end subroutine istack_destroy
 
-!>>> copy an istack object to another
+!!>>> copy an istack object to another
   subroutine istack_copyer(sa, sb)
      implicit none
 
@@ -173,7 +167,7 @@
      return
   end subroutine istack_copyer
 
-!>>> update the item's value of istack at special position
+!!>>> update the item's value of istack at special position
   subroutine istack_setter(s, item, pos)
      implicit none
 
@@ -197,7 +191,7 @@
      return
   end subroutine istack_setter
 
-!>>> return the item's value of istack at special position
+!!>>> return the item's value of istack at special position
   integer &
   function istack_getter(s, pos) result (item)
      implicit none
@@ -219,7 +213,7 @@
      return
   end function istack_getter
 
-!>>> push item on top of stack
+!!>>> push item on top of stack
   subroutine istack_push(s, item)
      implicit none
 
@@ -241,7 +235,7 @@
      return
   end subroutine istack_push
 
-!>>> pop off item from the top of stack
+!!>>> pop off item from the top of stack
   integer &
   function istack_pop(s) result (item)
      implicit none
@@ -261,7 +255,7 @@
      return
   end function istack_pop
 
-!>>> display the top item in the stack without pop it off
+!!>>> display the top item in the stack without pop it off
   integer &
   function istack_display(s) result (item)
      implicit none
@@ -280,7 +274,7 @@
      return
   end function istack_display
 
-!>>> return the top position of the stack, i.e, the number of items stored
+!!>>> return the top position of the stack, i.e, the number of items stored
 ! in the stack currently
   integer &
   function istack_gettop(s) result (t)
@@ -295,7 +289,7 @@
      return
   end function istack_gettop
 
-!>>> return the number of empty sites of the stack
+!!>>> return the number of empty sites of the stack
   integer &
   function istack_getrest(s) result (r)
      implicit none
@@ -309,7 +303,7 @@
      return
   end function istack_getrest
 
-!>>> return the actual capacity of the stack
+!!>>> return the actual capacity of the stack
   integer &
   function istack_getsize(s) result (n)
      implicit none
@@ -323,7 +317,7 @@
      return
   end function istack_getsize
 
-!>>> check whether the stack is empty
+!!>>> check whether the stack is empty
   logical &
   function istack_isempty(s) result (b)
      implicit none
@@ -337,7 +331,7 @@
      return
   end function istack_isempty
 
-!>>> check whether the stack is full of items
+!!>>> check whether the stack is full of items
   logical &
   function istack_isfull(s) result (b)
      implicit none
