@@ -9,7 +9,9 @@
 !!! history : 09/15/2009 by li huang
 !!!           07/08/2014 by li huang
 !!!           07/10/2014 by li huang
-!!! purpose :
+!!! purpose : these subroutines are used to display the (error/exception/
+!!!           normal) messages in the console, and then STOP orCONTINUE
+!!!           the code according to the error level.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
