@@ -1,6 +1,18 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : mlist
+!!!           T_node
+!!!           T_data
+!!!           list_create
+!!!           list_destroy
+!!!           list_insert
+!!!           list_insert_head
+!!!           list_delete
+!!!           list_delete_head
+!!!           list_get_data
+!!!           list_set_data
+!!!           list_next
+!!!           list_count
 !!! source  : m_list.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -44,13 +56,14 @@
 
      public :: list_create
      public :: list_destroy
-     public :: list_count
-     public :: list_next
      public :: list_insert
      public :: list_insert_head
-     public :: list_delete_element
+     public :: list_delete
+     public :: list_delete_head
      public :: list_get_data
      public :: list_set_data
+     public :: list_next
+     public :: list_count
 
   contains ! encapsulated functionality
 
@@ -93,46 +106,6 @@
 
      return
   end subroutine list_destroy
-
-!!>>> list_count: count the number of items in the list
-  integer &
-  function list_count( list )
-     implicit none
-
-! external arguments
-! pointer to the list
-     type(T_node), pointer :: list
-
-! local variables
-     type(T_node), pointer :: current
-
-     if ( associated(list) ) then
-         list_count = 1
-         current => list
-         do while ( associated(current%next) )
-             current => current%next
-             list_count = list_count + 1
-         enddo ! over do while loop
-     else
-         list_count = 0
-     endif ! back if block
-
-     return
-  end function list_count
-
-!!>>> list_next: return the next element (if any)
-  function list_next( elem ) result(next)
-     implicit none
-
-! external arguments
-! element in the linked list
-     type(T_node), pointer :: elem
-     type(T_node), pointer :: next
-
-     next => elem%next
-
-     return
-  end function list_next
 
 !!>>> list_insert: insert a new element
   subroutine list_insert( elem, data )
@@ -178,8 +151,8 @@
      return
   end subroutine list_insert_head
 
-!!>>> list_delete_element: delete an element from the list
-  subroutine list_delete_element( list, elem )
+!!>>> list_delete: delete an element from the list
+  subroutine list_delete( list, elem )
      implicit none
 
 ! external arguments
@@ -211,7 +184,31 @@
      endif ! back if block
 
      return
-  end subroutine list_delete_element
+  end subroutine list_delete
+
+!!>>> list_delete_head: delete an element from the list
+  subroutine list_delete_head( list )
+     implicit none
+
+! external arguments
+! header of the list
+     type(T_node), pointer  :: list
+
+! local variables
+     type(T_node), pointer  :: current
+
+! more than 1 node
+     if ( associated(list%next) ) then
+         current => list
+         list => list%next
+         deallocate( current )
+! only 1 node
+     else
+         deallocate( list )
+     endif ! back if block
+
+     return
+  end subroutine list_delete_head
 
 !!>>> list_get_data: get the data stored with a list element
   function list_get_data( elem ) result(data)
@@ -244,5 +241,45 @@
 
      return
   end subroutine list_set_data
+
+!!>>> list_next: return the next element (if any)
+  function list_next( elem ) result(next)
+     implicit none
+
+! external arguments
+! element in the linked list
+     type(T_node), pointer :: elem
+     type(T_node), pointer :: next
+
+     next => elem%next
+
+     return
+  end function list_next
+
+!!>>> list_count: count the number of items in the list
+  integer &
+  function list_count( list )
+     implicit none
+
+! external arguments
+! pointer to the list
+     type(T_node), pointer :: list
+
+! local variables
+     type(T_node), pointer :: current
+
+     if ( associated(list) ) then
+         list_count = 1
+         current => list
+         do while ( associated(current%next) )
+             current => current%next
+             list_count = list_count + 1
+         enddo ! over do while loop
+     else
+         list_count = 0
+     endif ! back if block
+
+     return
+  end function list_count
 
   end module mlist
