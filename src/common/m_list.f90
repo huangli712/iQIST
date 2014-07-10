@@ -44,13 +44,14 @@
 
      public :: list_create
      public :: list_destroy
-     public :: list_count
-     public :: list_next
      public :: list_insert
      public :: list_insert_head
-     public :: list_delete_element
+     public :: list_delete
+     public :: list_delete_head
      public :: list_get_data
      public :: list_set_data
+     public :: list_next
+     public :: list_count
 
   contains ! encapsulated functionality
 
