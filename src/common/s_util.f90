@@ -127,6 +127,7 @@
      return
   end function s_str_count
 
+!!>>> s_str_double: convert a real number to a string
   function s_str_double(num) result(str)
      implicit none
 
@@ -147,6 +148,7 @@
      return
   end function s_str_double
 
+!!>>> s_str_integer: convert a integer number to a string
   function s_str_integer(num) result(str)
      implicit none
 
