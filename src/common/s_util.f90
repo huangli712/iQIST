@@ -41,3 +41,29 @@ pure function count_chars(str,chars) result(n)
 end function count_chars
 
 
+function real2str(num) result(str)
+  integer, parameter, private :: max_real_len = 16
+  real, intent(in) :: num
+  character(len=:) ,allocatable :: str
+  character(len=max_real_len) :: base_str
+  write(base_str,*) num
+  str = trim(adjustl(base_str))
+end function real2str
+
+function dble2str(num) result(str)
+  integer, parameter, private :: max_dble_len = 28
+  double precision, intent(in) :: num
+  character(len=:) ,allocatable :: str
+  character(len=max_dble_len) :: base_str
+  write(base_str,*) num
+  str = trim(adjustl(base_str))
+end function dble2str
+
+function int2str(num) result(str)
+  integer, parameter, private :: max_int_len = 12
+  integer, intent(in) :: num
+  character(len=:) ,allocatable :: str
+  character(len=max_int_len) :: base_str
+  write(base_str,*) num
+  str = trim(adjustl(base_str))
+end function int2str
