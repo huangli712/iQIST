@@ -50,6 +50,7 @@ subroutine atomic_config()
 
     !----------------------------------------------------------------
     lambda = 0.00_dp     ! spin-orbit coupling parameter
+    mune   = 0.00_dp     ! chemical potential
 
     ! read from input file if it exists
     exists = .false.
@@ -94,6 +95,7 @@ subroutine atomic_config()
         !----------------------------------------------------------------
         read(mytmp, *) ! skip header
         read(mytmp, *)  lambda
+        read(mytmp, *)  mune
  
         close(mytmp)
     else

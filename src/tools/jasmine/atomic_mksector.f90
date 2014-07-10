@@ -40,6 +40,7 @@ end subroutine atomic_mksectors_nszps
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Jz 
 subroutine atomic_mksectors_njz()
+    use constants, only: mytmp
     use control, only: norbs, ncfgs
     use m_basis_fullspace, only: dim_sub_n, bin_basis
     use m_sector
@@ -203,6 +204,16 @@ subroutine atomic_mksectors_njz()
             enddo ! over k={0,1} loop
         enddo ! over j={1,norbs} loop
     enddo ! over i={1, nsectors} loop
+
+    ! dump sector information for reference
+    open(mytmp, file='atom.sector.dat')
+    write(mytmp, '(a)') '#isect | N | Jz | ndim_sect | istate | Fock_basis  '
+    do i=1, nsectors
+        do j=1, sectors(i)%ndim
+            write(mytmp,'(5I5,4X, 14I1)') i, sect_good_ntot(i), sect_good_jz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+        enddo
+    enddo
+    close(mytmp)
 
     ! free memeory
     if (allocated(sect_good_ntot)) deallocate(sect_good_ntot)

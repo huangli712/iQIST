@@ -18,8 +18,8 @@ module control
     implicit none
 
     ! type of task
-    ! 1: model calculation
-    ! 2: material calculation
+    ! 1: make natural basis inside of the program
+    ! 2: make natural basis outside of the program
     integer, public, save :: itask
 
     ! type of CTQMC trace algorithm
@@ -86,6 +86,9 @@ module control
     
     ! spin-orbit coupling interaction
     real(dp), public, save :: lambda
+
+    ! chemical potential
+    real(dp), public, save :: mune
 
     !>>> MPI related common variables
     ! number of processors
