@@ -95,46 +95,6 @@
      return
   end subroutine list_destroy
 
-!!>>> list_count: count the number of items in the list
-  integer &
-  function list_count( list )
-     implicit none
-
-! external arguments
-! pointer to the list
-     type(T_node), pointer :: list
-
-! local variables
-     type(T_node), pointer :: current
-
-     if ( associated(list) ) then
-         list_count = 1
-         current => list
-         do while ( associated(current%next) )
-             current => current%next
-             list_count = list_count + 1
-         enddo ! over do while loop
-     else
-         list_count = 0
-     endif ! back if block
-
-     return
-  end function list_count
-
-!!>>> list_next: return the next element (if any)
-  function list_next( elem ) result(next)
-     implicit none
-
-! external arguments
-! element in the linked list
-     type(T_node), pointer :: elem
-     type(T_node), pointer :: next
-
-     next => elem%next
-
-     return
-  end function list_next
-
 !!>>> list_insert: insert a new element
   subroutine list_insert( elem, data )
      implicit none
@@ -179,8 +139,8 @@
      return
   end subroutine list_insert_head
 
-!!>>> list_delete_element: delete an element from the list
-  subroutine list_delete_element( list, elem )
+!!>>> list_delete: delete an element from the list
+  subroutine list_delete( list, elem )
      implicit none
 
 ! external arguments
@@ -212,7 +172,7 @@
      endif ! back if block
 
      return
-  end subroutine list_delete_element
+  end subroutine list_delete
 
 !!>>> list_get_data: get the data stored with a list element
   function list_get_data( elem ) result(data)
@@ -245,5 +205,45 @@
 
      return
   end subroutine list_set_data
+
+!!>>> list_next: return the next element (if any)
+  function list_next( elem ) result(next)
+     implicit none
+
+! external arguments
+! element in the linked list
+     type(T_node), pointer :: elem
+     type(T_node), pointer :: next
+
+     next => elem%next
+
+     return
+  end function list_next
+
+!!>>> list_count: count the number of items in the list
+  integer &
+  function list_count( list )
+     implicit none
+
+! external arguments
+! pointer to the list
+     type(T_node), pointer :: list
+
+! local variables
+     type(T_node), pointer :: current
+
+     if ( associated(list) ) then
+         list_count = 1
+         current => list
+         do while ( associated(current%next) )
+             current => current%next
+             list_count = list_count + 1
+         enddo ! over do while loop
+     else
+         list_count = 0
+     endif ! back if block
+
+     return
+  end function list_count
 
   end module mlist
