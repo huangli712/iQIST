@@ -95,34 +95,34 @@
      return
   end function s_str_lowcase
 
-! string_count_substring --
-!     Return the number of times a substring occurs
-! Arguments:
-!     string     String to be examined
-!     substr     Substring in question
-! Result:
-!     Number of occurrences
-! Note:
-!     Trailing blanks _are_ taken into account.
-!     Possible overlaps are ignored:
-!     string = 'ababab' and substr = 'abab'
-!     will give the answer 1, not 2
-!
-function string_count_substring( string, substr ) result( count )
-    character(len=*)           :: string
-    character(len=*)           :: substr
+!!>>> s_str_count: return the number of times a substring occurs
+  function s_str_count( string, substr ) result( count )
+     implicit none
 
-    integer                    :: start
-    integer                    :: count
+! external arguments
+! string to be examined
+     character(len=*), intent(in) :: string
 
-    count  = 0
-    start  = 0
-    do
-        start = index( string(start+1:), substr )
-        count = count + 1
-        if ( start == 0 ) exit
-    enddo
-end function string_count_substring
+! substring in question
+     character(len=*), intent(in) :: substr
+
+! return value, number of occurrences
+     integer :: count
+
+! local variables
+! position to start the match
+     integer :: start
+
+     count = 0
+     start = 0
+     do
+         start = index( string(start+1:), substr )
+         count = count + 1
+         if ( start == 0 ) EXIT
+     enddo ! over do loop
+
+     return
+  end function s_str_count
 
 function real2str(num) result(str)
   integer, parameter :: max_real_len = 16
