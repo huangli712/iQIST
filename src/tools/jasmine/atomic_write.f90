@@ -152,10 +152,11 @@ subroutine atomic_write_eigval_sectors()
     ! open file 'atom.eigval.dat' to write
     open(mytmp, file='atom.eigval.dat')
     counter = 0
+    write(mytmp, '(a)') "#ieig | isect | nelectron | ieig_sect | eigenvalue"
     do i=1, nsectors
         do j=1, sectors(i)%ndim
             counter = counter + 1
-            write(mytmp, "(3I5, F20.14)") counter, i, j, sectors(i)%myeigval(j)
+            write(mytmp, "(4I5, F20.14)") counter, i, sectors(i)%nelectron, j, sectors(i)%myeigval(j)
         enddo
     enddo
     close(mytmp)
@@ -249,3 +250,27 @@ subroutine atomic_write_atomcix_sectors()
  
     return
 end subroutine atomic_write_atomcix_sectors
+
+!>>> write the transformation matrix from the original basis to natural basis
+subroutine atomic_write_natural(info)
+    use constants, only: dp, mytmp
+    use control,   only: norbs
+    use m_spmat,   only: tran_umat
+
+    ! external variables
+    character(len=*), intent(in) :: info
+
+    ! local variables
+    integer :: i,j
+
+    open(mytmp, file='atom.natural.dat')
+    write(mytmp,'(a)') info
+    do i=1, norbs
+        do j=1, norbs
+            write(mytmp, '(2I5,2F20.14)') j, i, tran_umat(j,i)
+        enddo
+    enddo 
+    close(mytmp)
+
+    return
+end subroutine atomic_write_natural

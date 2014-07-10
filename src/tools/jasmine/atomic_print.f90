@@ -27,8 +27,8 @@ subroutine atomic_print_header()
     ! obtain current date and time
     call atomic_time_builder(date_time_string)
 
-    write(mystd,'(2X,a)') 'JASMINE'
-    write(mystd,'(2X,a)') '>>> AN ATOMIC PROGRAM FOR CTQMC'
+    write(mystd,'(2X,a)') 'jasmine'
+    write(mystd,'(2X,a)') '>>> An Atomic Program For CTQMC'
     
     write(mystd,*)
 
@@ -38,9 +38,9 @@ subroutine atomic_print_header()
     write(mystd,'(2X,a)') 'license: GPL2 and later versions'
     write(mystd,*)
 
-    write(mystd,'(2X,a)') 'JASMINE >>> start running at '//date_time_string
+    write(mystd,'(2X,a)') 'jasmine >>> start running at '//date_time_string
 
-    write(mystd,'(2X,a,i4)') 'JASMINE >>> parallelism: No  >>> processors:', 1
+    write(mystd,'(2X,a,i4)') 'jasmine >>> parallelism: No  >>> processors:', 1
 
     write(mystd,*)
 
@@ -65,11 +65,11 @@ subroutine atomic_print_footer()
     ! obtain current date and time
     call atomic_time_builder(date_time_string)
 
-    write(mystd,'(2X,a,f10.2,a)') 'JASMINE >>> total time spent:', tot_time, 's'
+    write(mystd,'(2X,a,f10.2,a)') 'jasmine >>> total time spent:', tot_time, 's'
     write(mystd,*)
 
-    write(mystd,'(2X,a)') 'JASMINE >>> I am tired and want to go to bed. Bye!'
-    write(mystd,'(2X,a)') 'JASMINE >>> happy ending at '//date_time_string
+    write(mystd,'(2X,a)') 'jasmine >>> I am tired and want to go to bed. Bye!'
+    write(mystd,'(2X,a)') 'jasmine >>> happy ending at '//date_time_string
 
     return
 end subroutine atomic_print_footer
@@ -81,7 +81,8 @@ subroutine atomic_print_summary()
 
     implicit none
 
-    write(mystd,'(2X,a)') 'JASMINE >>> parameters list:'
+    write(mystd,*)
+    write(mystd,'(2X,a)') 'jasmine >>> parameters list:'
 
     write(mystd,'(2(4X,a,i10))')   'itask :', itask  , 'ictqmc :', ictqmc
     write(mystd,'(2(4X,a,i10))')   'icf   :', icf  ,   'isoc   :', isoc
@@ -97,7 +98,7 @@ subroutine atomic_print_summary()
     write(mystd,'(2(4X,a,f10.5))') 'F0    :', F0   ,   'F2     :', F2
     write(mystd,'(2(4X,a,f10.5))') 'F4    :', F4   ,   'F6     :', F6
 
-    write(mystd,'(1(4X,a,f10.5))') 'lambda:', lambda
+    write(mystd,'(2(4X,a,f10.5))') 'lambda:', lambda,  'mune   :', mune
 
     write(mystd,*)
 
