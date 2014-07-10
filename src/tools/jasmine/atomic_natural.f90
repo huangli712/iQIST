@@ -107,7 +107,7 @@ subroutine atomic_2natural_case1()
         tran_umat(i,i) = cone
     enddo
 
-    write(mystd,'(2X,a)') 'jasmine >>> natural basis is: real orbital basis'
+    write(mystd,'(10X,a)') '>>> natural basis is: real orbital basis'
     write(mystd, *)
 
     call atomic_write_natural('#natural basis is real orbital, umat: real to natural')
@@ -160,7 +160,7 @@ subroutine atomic_2natural_case2()
         eimpmat(i,i) = eimpmat(i,i) + mune
     enddo
 
-    write(mystd, '(2X,a)') 'jasmine >>> natural basis is: linear combination of real orbitals '
+    write(mystd, '(10X,a)') '>>> natural basis is: linear combination of real orbitals '
     write(mystd, *)
 
     call atomic_write_natural('#natural basis is linear combination of real orbitals, umat: real to natural')
@@ -199,7 +199,7 @@ subroutine atomic_2natural_case3()
         eimpmat(i,i) = eimpmat(i,i) + mune
     enddo
 
-    write(mystd, '(2X,a)') 'jasmine >>> natural basis is: |j2,jz> '
+    write(mystd, '(10X,a)') '>>> natural basis is: |j2,jz> '
     write(mystd, *)
 
     call atomic_write_natural('#natural basis is |j2,jz>, umat: complex to natural')
@@ -253,7 +253,7 @@ subroutine atomic_2natural_case4()
         eimpmat(i,i) = eimpmat(i,i) + mune
     enddo
 
-    write(mystd, '(2X,a)') 'jasmine >>> natural basis is: linear combination of complex orbitals '
+    write(mystd, '(10X,a)') '>>> natural basis is: linear combination of complex orbitals '
     write(mystd, *)
 
     call atomic_write_natural('#natural basis is linear combination of complex orbitals, umat: complex to natural')

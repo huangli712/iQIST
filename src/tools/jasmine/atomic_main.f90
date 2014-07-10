@@ -48,7 +48,7 @@ program main
     call atomic_make_spmat()
 
     ! make natural basis
-    write(mystd, "(2X,a)") "jasmine >>> make natural ..."
+    write(mystd, "(2X,a)") "jasmine >>> make natural basis ..."
     write(mystd,*)
     call atomic_make_natural()
 
@@ -62,26 +62,42 @@ program main
         ! itask 1: diagonalize the full Hilbert space
         case(1) 
             write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: full space matrices multiplication"
+            write(mystd, *)
             call atomic_driver_fullspace()
         ! itask 2: use good quantum numbers
         ! total number of electrons: N
         ! for the case of crystal field (CF) plus spin-orbital coupling (SOC)
         case(2) 
-             call atomic_driver_n()
+            write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: good quantum numbers N"
+            write(mystd, *)
+            call atomic_driver_n()
 
         ! itask 3: use good quantum numbers
         ! total number of electrons: N 
         ! spin: Sz
-        ! PS number
         ! for the case without SOC
         case(3) 
-            call atomic_driver_nszps()
+            write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: good quantum numbers N, Sz"
+            write(mystd, *)
+            call atomic_driver_nsz()
 
         ! itask 4: use good quantum numbers
+        ! total number of electrons: N 
+        ! spin: Sz
+        ! PS number
+        ! for the case without SOC
+        case(4) 
+            write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: good quantum numbers N, Sz, PS"
+            write(mystd, *)
+            call atomic_driver_nszps()
+
+        ! itask 5: use good quantum numbers
         ! total number of electrons: N
         ! Jz
         ! for the case with SOC, and no CF
-        case(4) 
+        case(5) 
+            write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: good quantum numbers N, Jz"
+            write(mystd, *)
             call atomic_driver_njz() 
 
     end select 
