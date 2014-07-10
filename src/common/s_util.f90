@@ -3,6 +3,9 @@
 !!! program : s_assert
 !!!           s_str_upcase
 !!!           s_str_lowcase
+!!!           s_str_count
+!!!           s_str_double
+!!!           s_str_integer
 !!! source  : s_util.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -96,7 +99,7 @@
   end function s_str_lowcase
 
 !!>>> s_str_count: return the number of times a substring occurs
-  function s_str_count( string, substr ) result( count )
+  function s_str_count(string, substr) result( count )
      implicit none
 
 ! external arguments
@@ -124,31 +127,42 @@
      return
   end function s_str_count
 
-function real2str(num) result(str)
-  integer, parameter :: max_real_len = 16
-  real, intent(in) :: num
-  character(len=:) ,allocatable :: str
-  character(len=max_real_len) :: base_str
-  write(base_str,*) num
-  str = trim(adjustl(base_str))
-end function real2str
+  function s_str_double(num) result(str)
+     implicit none
 
-function dble2str(num) result(str)
-  integer, parameter :: max_dble_len = 28
-  double precision, intent(in) :: num
-  character(len=:) ,allocatable :: str
-  character(len=max_dble_len) :: base_str
-  write(base_str,*) num
-  str = trim(adjustl(base_str))
-end function dble2str
+! external arguments
+! input double precision real number
+     double precision, intent(in) :: num
 
-function int2str(num) result(str)
-  integer, parameter :: max_int_len = 12
-  integer, intent(in) :: num
-  character(len=:) ,allocatable :: str
-  character(len=max_int_len) :: base_str
-  write(base_str,*) num
-  str = trim(adjustl(base_str))
-end function int2str
+! return value: a string
+     character(len=:) ,allocatable :: str
 
+! local variables
+! auxiliary string
+     character(len=28) :: base_str
 
+     write(base_str,*) num
+     str = trim( adjustl(base_str) )
+
+     return
+  end function s_str_double
+
+  function s_str_integer(num) result(str)
+     implicit none
+
+! external arguments
+! input integer number
+     integer, intent(in) :: num
+
+! return value: a string
+     character(len=:) ,allocatable :: str
+
+! local variables
+! auxiliary string
+     character(len=12) :: base_str
+
+     write(base_str,*) num
+     str = trim( adjustl(base_str) )
+
+     return
+  end function s_str_integer
