@@ -33,7 +33,7 @@ subroutine atomic_write_basis()
     open(mytmp, file='atom.basis.dat')
     ! write the header
     do i=1, ncfgs
-        write(mytmp, "(3I5,3X,14I2)") i, dec_basis(i), index_basis(dec_basis(i)), bin_basis(:,i)   
+        write(mytmp, "(3I10,4X,14I2)") i, dec_basis(i), index_basis(dec_basis(i)), bin_basis(:,i)   
     enddo 
 
     close(mytmp)
@@ -55,7 +55,7 @@ subroutine atomic_write_eigval_fullspace()
     ! open file 'atom.eigval.dat' to write
     open(mytmp, file='atom.eigval.dat')
     do i=1, ncfgs
-        write(mytmp, "(I5, F20.14)") i, hmat_eigval(i)
+        write(mytmp, "(I10, F20.10)") i, hmat_eigval(i)
     enddo
 
     close(mytmp)
@@ -80,7 +80,7 @@ subroutine atomic_write_eigvec_fullspace()
     do i=1, ncfgs
         do j=1, ncfgs
             if ( abs(hmat_eigvec(j,i)) < eps6 ) cycle
-            write(mytmp, "(2I5, F20.14, 4X, 14I1)") j, i, hmat_eigvec(j,i), bin_basis(:,j) 
+            write(mytmp, "(2I10, F20.10, 4X, 14I1)") j, i, hmat_eigvec(j,i), bin_basis(:,j) 
         enddo
     enddo 
 
@@ -107,7 +107,7 @@ subroutine atomic_write_atomcix_fullspace()
     ! write eigenvalues
     write(mytmp,'(a)') '# eigenvalues: index | energy | occupy | spin'
     do i=1,ncfgs
-        write(mytmp,'(I5,3F20.14)') i, hmat_eigval(i), occu_mat(i,i), zero
+        write(mytmp,'(I10,3F20.10)') i, hmat_eigval(i), occu_mat(i,i), zero
     enddo 
 
     ! write fmat
@@ -129,7 +129,7 @@ subroutine atomic_write_atomcix_fullspace()
 
         do j=1,ncfgs
             do k=1,ncfgs
-                write(mytmp,'(3I5, F20.14)') k, j, i, anni_fmat(k, j, s_order)
+                write(mytmp,'(3I10, F20.10)') k, j, i, anni_fmat(k, j, s_order)
             enddo 
         enddo 
     enddo 
@@ -152,11 +152,11 @@ subroutine atomic_write_eigval_sectors()
     ! open file 'atom.eigval.dat' to write
     open(mytmp, file='atom.eigval.dat')
     counter = 0
-    write(mytmp, '(a)') "#ieig | isect | nelectron | ieig_sect | eigenvalue"
+    write(mytmp, '(a)') "#istate | isect | nelectron | istate_sect | eigenvalue"
     do i=1, nsectors
         do j=1, sectors(i)%ndim
             counter = counter + 1
-            write(mytmp, "(4I5, F20.14)") counter, i, sectors(i)%nelectron, j, sectors(i)%myeigval(j)
+            write(mytmp, "(4I10, F20.10)") counter, i, sectors(i)%nelectron, j, sectors(i)%myeigval(j)
         enddo
     enddo
     close(mytmp)
@@ -182,7 +182,7 @@ subroutine atomic_write_eigvec_sectors()
         do j=1, sectors(i)%ndim
             do k=1, sectors(i)%ndim
                 if ( abs(sectors(i)%myeigvec(k,j)) < eps6 ) cycle
-                    write(mytmp, "(3I5, F20.14, 4X, 14I1)") i, k+counter, j+counter, &
+                    write(mytmp, "(3I10, F20.10, 4X, 14I1)") i, k+counter, j+counter, &
                     sectors(i)%myeigvec(k,j), bin_basis(:,sectors(i)%mybasis(k))
             enddo
         enddo
@@ -204,48 +204,41 @@ subroutine atomic_write_atomcix_sectors()
     integer :: i, j, k, ii, row, col
 
     ! open 'atom.cix' to write
-    open(mytmp, file='atom.cix')
+    open(mytmp, file='atom.sector.in')
     ! write number of sectors
     write(mytmp, "(a)") "#NUMBER OF SECTORS"
-    write(mytmp, "(I5)") nsectors
+    write(mytmp, "(I10)") nsectors
 
     ! write dimension, total electrons, next_sector, eigenvalue of each sector
     do i=1, nsectors
-        write(mytmp, "(a, I5)") "#SECT_INFO: ", i 
-        write(mytmp, "(3I5)") i, sectors(i)%ndim, sectors(i)%nelectron
+        write(mytmp, "(a, I10)") "#SECT_INFO: ", i 
+        write(mytmp, "(4X,5I10)") i, sectors(i)%ndim, sectors(i)%nelectron, sectors(i)%nops, sectors(i)%istart
 
         ! write next_sector
-        write(mytmp, "(2X,a)") "#NEXT_SECTOR"
+        write(mytmp, "(4X,a)") "#NEXT_SECTOR"
         do j=1, sectors(i)%nops
-            write(mytmp, "(2X, 3I5)") j, sectors(i)%next_sector(j,0), sectors(i)%next_sector(j,1)  
+            write(mytmp, "(2X, 3I10)") j, sectors(i)%next_sector(j,0), sectors(i)%next_sector(j,1)  
         enddo
 
         ! write eigeanvalue
-        write(mytmp, "(2X,a)") "#EIGENVALUE"
+        write(mytmp, "(4X,a)") "#EIGENVALUE"
         do j=1, sectors(i)%ndim
-            write(mytmp, "(2X,I5, F20.14)") j, sectors(i)%myeigval(j) 
+            write(mytmp, "(2X,I10, F20.10)") j, sectors(i)%myeigval(j) 
         enddo
     enddo
+    close(mytmp)
 
     ! write fmat
-    write(mytmp, "(a)") "#BEGIN_WRITE_FMAT"
+    open(mytmp, file='atom.fmat.in', form='unformatted')
     do i=1, nsectors
-        write(mytmp, "(2X,a, I5)") "#SECT_FMAT: ", i
         do j=1, sectors(i)%nops
-            write(mytmp, "(4X,a, I5)") "#ORBIT: ", j
             do k=0,1
-                write(mytmp, "(6X,a, I5)") "#FERMI_OPERATOR: ", k
                 ii = sectors(i)%next_sector(j,k)
                 if (ii == -1) cycle 
-                do col=1, sectors(i)%ndim
-                    do row=1, sectors(ii)%ndim
-                        write(mytmp, "(6X,2I5,F20.14)") row, col, sectors(i)%myfmat(j,k)%item(row, col)
-                    enddo
-                enddo
+                write(mytmp)  sectors(i)%myfmat(j,k)%item(:,:)
             enddo  ! over k={0,1} loop
         enddo ! over j={1, sectors(i)%nops} loop
     enddo  ! over i={1, nsect} loop
-
     close(mytmp)
  
     return
@@ -267,7 +260,7 @@ subroutine atomic_write_natural(info)
     write(mytmp,'(a)') info
     do i=1, norbs
         do j=1, norbs
-            write(mytmp, '(2I5,2F20.14)') j, i, tran_umat(j,i)
+            write(mytmp, '(2I10,2F16.8)') j, i, tran_umat(j,i)
         enddo
     enddo 
     close(mytmp)

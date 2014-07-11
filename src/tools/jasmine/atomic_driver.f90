@@ -200,5 +200,8 @@ subroutine atomic_solve_sectors()
     ! write information of sectors to file 'atom.cix'
     call atomic_write_atomcix_sectors()
 
+    ! test atom.sector.in atom.fmat.in
+    ! call test_read_sector_fmat()
+
     return
 end subroutine atomic_solve_sectors
