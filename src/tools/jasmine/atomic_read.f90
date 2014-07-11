@@ -117,3 +117,78 @@ subroutine atomic_read_umat()
 
     return
 end subroutine atomic_read_umat
+
+!>>> read 'atom.sector.in' and 'atom.fmat.in', test purpose
+subroutine test_read_sector_fmat()
+    use constants
+    use control
+    use m_sector
+    use m_glob_sectors
+    implicit none
+
+    ! local variables
+    integer :: nsect
+    type(t_sector), allocatable :: my_sectors(:)
+    integer :: i,j,k,ii, row, col
+    integer :: i1
+
+    open(mytmp, file='atom.sector.in')
+    read(mytmp,*) ! skip header
+    read(mytmp,*) nsect
+    ! allocate memory for my_sectors
+    allocate(my_sectors(nsect))
+    ! nullify each sector one by one
+    do i=1, nsect
+        call nullify_one_sector(my_sectors(i))
+    enddo
+    ! read information of each sector
+    do i=1, nsect
+        read(mytmp,*) ! skip header
+        read(mytmp,*) i1, my_sectors(i)%ndim, my_sectors(i)%nelectron, my_sectors(i)%nops, my_sectors(i)%istart 
+        call alloc_one_sector(my_sectors(i))
+        ! read next_sector
+        read(mytmp,*) ! skip header
+        do j=1, my_sectors(i)%nops
+            read(mytmp,*) i1, my_sectors(i)%next_sector(j,0), my_sectors(i)%next_sector(j,1) 
+        enddo
+        ! read eigenvalue
+        read(mytmp,*) ! skip header
+        do j=1, my_sectors(i)%ndim
+            read(mytmp,*) i1, my_sectors(i)%myeigval(j)
+        enddo
+    enddo
+    close(mytmp)
+    ! read fmat
+    open(mytmp, file='atom.fmat.in', form='unformatted')
+    do i=1, nsect
+        do j=1, my_sectors(i)%nops
+            do k=0,1
+                ii = my_sectors(i)%next_sector(j,k)
+                if (ii == -1) cycle 
+                my_sectors(i)%myfmat(j,k)%n = my_sectors(ii)%ndim
+                my_sectors(i)%myfmat(j,k)%m = my_sectors(i)%ndim
+                call alloc_one_fmat(my_sectors(i)%myfmat(j,k))
+                read(mytmp)  my_sectors(i)%myfmat(j,k)%item(:,:)
+            enddo  ! over k={0,1} loop
+        enddo ! over j={1, sectors(i)%nops} loop
+    enddo  ! over i={1, nsect} loop
+    close(mytmp)
+
+    ! check the result
+    open(mytmp, file='test_fmat.dat')
+    do i=1, nsect
+        do j=1, my_sectors(i)%nops
+        do k=0,1
+            do row=1, my_sectors(i)%myfmat(j,k)%n 
+            do col=1, my_sectors(i)%myfmat(j,k)%m 
+                if( abs( my_sectors(i)%myfmat(j,k)%item(row,col) - sectors(i)%myfmat(j,k)%item(row,col) ) > 1e-10 )then
+                    write(mytmp,'(5I5, 2F20.14)') i, j, k, row, col, my_sectors(i)%myfmat(j,k)%item(row,col), sectors(i)%myfmat(j,k)%item(row,col)
+                endif 
+            enddo
+            enddo
+        enddo 
+        enddo
+    enddo
+
+    close(mytmp) 
+end subroutine test_read_sector_fmat

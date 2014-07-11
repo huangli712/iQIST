@@ -1,8 +1,11 @@
 !-------------------------------------------------------------------------
 ! project : jasmine
 ! program : atomic_mksectors_n
+!         : atomic_mksectors_nsz
 !         : atomic_mksectors_nszps
 !         : atomic_mksectors_njz
+!         : make_good_sz
+!         : make_good_jz
 ! source  : atomic_mksector.f90
 ! type    : subroutines
 ! author  : yilin wang (email: qhwyl2006@126.com)
@@ -18,8 +21,8 @@
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N 
 subroutine atomic_mksectors_n()
-    use constants, only: mytmp
-    use control, only: norbs, ncfgs
+    use constants,         only: dp, mytmp
+    use control,           only: norbs, ncfgs
     use m_basis_fullspace, only: dim_sub_n, bin_basis
     use m_sector
     use m_glob_sectors
@@ -33,6 +36,8 @@ subroutine atomic_mksectors_n()
     integer :: counter
     integer :: myntot
     integer :: i,j,k,l
+    integer :: max_dim_sectors
+    real(dp) :: ave_dim_sectors
     logical :: can  
 
     !----------------------------------------------------------------
@@ -93,11 +98,22 @@ subroutine atomic_mksectors_n()
     enddo ! over i={1, nsectors} loop
 
     ! dump sector information for reference
+    ! calculate the maximum and average dimensions of sectors
+    max_dim_sectors = 0
+    counter = 0 
+    do i=1, nsectors
+        if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
+        counter = counter + sectors(i)%ndim
+    enddo
+    ave_dim_sectors = counter / real(nsectors)
+
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a)') '#isect | N | ndim_sect | istate | Fock_basis  '
+    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
+    write(mytmp, '(a,F16.8)') '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a)') '#isect | N | ndim | index | Fock_basis  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
-            write(mytmp,'(4I5,4X, 14I1)') i, sectors(i)%nelectron, sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+            write(mytmp,'(4I10,4X, 14I1)') i, sectors(i)%nelectron, sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
         enddo
     enddo
     close(mytmp)
@@ -144,6 +160,8 @@ subroutine atomic_mksectors_nsz()
     integer :: counter
     integer :: ibasis
     integer :: i,j,k,l
+    integer :: max_dim_sectors
+    real(dp) :: ave_dim_sectors
     logical :: can  
 
 
@@ -275,11 +293,22 @@ subroutine atomic_mksectors_nsz()
     enddo ! over i={1, nsectors} loop
 
     ! dump sector information for reference
+    ! calculate the maximum and average dimensions of sectors
+    max_dim_sectors = 0
+    counter = 0 
+    do i=1, nsectors
+        if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
+        counter = counter + sectors(i)%ndim
+    enddo
+    ave_dim_sectors = counter / real(nsectors)
+
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a)') '#isect | N | Sz | ndim_sect | istate | Fock_basis  '
+    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
+    write(mytmp, '(a,F16.8)') '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a)') '#isect | N | Sz | ndim | index | Fock_basis  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
-            write(mytmp,'(5I5,4X, 14I1)') i, sect_good_ntot(i), sect_good_sz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+            write(mytmp,'(5I10,4X, 14I1)') i, sect_good_ntot(i), sect_good_sz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
         enddo
     enddo
     close(mytmp)
@@ -336,6 +365,8 @@ subroutine atomic_mksectors_nszps()
     integer :: counter
     integer :: ibasis
     integer :: i,j,k,l
+    integer :: max_dim_sectors
+    real(dp) :: ave_dim_sectors
     logical :: can  
 
 
@@ -485,11 +516,22 @@ subroutine atomic_mksectors_nszps()
     enddo ! over i={1, nsectors} loop
 
     ! dump sector information for reference
+    ! calculate the maximum and average dimensions of sectors
+    max_dim_sectors = 0
+    counter = 0 
+    do i=1, nsectors
+        if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
+        counter = counter + sectors(i)%ndim
+    enddo
+    ave_dim_sectors = counter / real(nsectors)
+
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a)') '#isect | N | Sz | PS | ndim_sect | istate | Fock_basis  '
+    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
+    write(mytmp, '(a,F16.8)') '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a)') '#isect | N | Sz | PS | ndim | index | Fock_basis  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
-            write(mytmp,'(6I5,4X, 14I1)') i, sect_good_ntot(i), sect_good_sz(i), sect_good_ps(i), &
+            write(mytmp,'(6I10,4X, 14I1)') i, sect_good_ntot(i), sect_good_sz(i), sect_good_ps(i), &
                                          sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
         enddo
     enddo
@@ -543,6 +585,8 @@ subroutine atomic_mksectors_njz()
     integer :: counter
     integer :: ibasis
     integer :: i,j,k,l
+    integer :: max_dim_sectors
+    real(dp) :: ave_dim_sectors
     logical :: can  
 
 
@@ -557,6 +601,7 @@ subroutine atomic_mksectors_njz()
     ! make good_jz
     call make_good_jz(orb_good_jz)
 
+    !----------------------------------------------------------------
     ! build good quantum numbers for each Fock state
     counter = 0
     do i=0, norbs
@@ -570,6 +615,8 @@ subroutine atomic_mksectors_njz()
             fock_good_jz(counter) = myjz
         enddo  
     enddo
+    !----------------------------------------------------------------
+
 
     !----------------------------------------------------------------
     ! loop over all the Fock states to determine sectors
@@ -609,6 +656,8 @@ subroutine atomic_mksectors_njz()
             endif
         endif ! back to if (nsect == 0) then block 
     enddo 
+    !----------------------------------------------------------------
+
 
     !----------------------------------------------------------------
     ! after we know how many sectors and the dimension of each sector,
@@ -631,6 +680,8 @@ subroutine atomic_mksectors_njz()
             sectors(i)%mybasis(j) = sector_basis(j,i) 
         enddo
     enddo
+    !----------------------------------------------------------------
+
 
     !----------------------------------------------------------------
     ! make next_sector index
@@ -672,16 +723,32 @@ subroutine atomic_mksectors_njz()
             enddo ! over k={0,1} loop
         enddo ! over j={1,norbs} loop
     enddo ! over i={1, nsectors} loop
+    !----------------------------------------------------------------
 
+
+    !----------------------------------------------------------------
     ! dump sector information for reference
+    ! calculate the maximum and average dimensions of sectors
+    max_dim_sectors = 0
+    counter = 0 
+    do i=1, nsectors
+        if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
+        counter = counter + sectors(i)%ndim
+    enddo
+    ave_dim_sectors = counter / real(nsectors)
+
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a)') '#isect | N | Jz | ndim_sect | istate | Fock_basis  '
+    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
+    write(mytmp, '(a,F16.8)') '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a)') '#isect | N | Jz | ndim | index | Fock_basis  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
-            write(mytmp,'(5I5,4X, 14I1)') i, sect_good_ntot(i), sect_good_jz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+            write(mytmp,'(5I10,4X, 14I1)') i, sect_good_ntot(i), sect_good_jz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
         enddo
     enddo
     close(mytmp)
+    !----------------------------------------------------------------
+
 
     ! free memeory
     if (allocated(sect_good_ntot)) deallocate(sect_good_ntot)
