@@ -83,23 +83,23 @@ subroutine atomic_print_summary()
 
     write(mystd,*)
     write(mystd,'(2X,a)') 'jasmine >>> parameters list:'
+    write(mystd,'(2X,a)') '-------------------------------------------'
 
     write(mystd,'(2(4X,a,i10))')   'itask :', itask  , 'ictqmc :', ictqmc
     write(mystd,'(2(4X,a,i10))')   'icf   :', icf  ,   'isoc   :', isoc
-    write(mystd,'(1(4X,a,i10))')   'icu   :', icu  
-
-    write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin  :', nspin
-    write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs  :', ncfgs
+    write(mystd,'(2(4X,a,i10))')   'icu   :', icu ,    'nband  :', nband 
+    write(mystd,'(2(4X,a,i10))')   'norbs :', norbs ,  'ncfgs  :', ncfgs
 
     write(mystd,'(2(4X,a,f10.5))') 'Uc    :', Uc     , 'Uv     :', Uv
     write(mystd,'(2(4X,a,f10.5))') 'Jz    :', Jz     , 'Js     :', Js
-    write(mystd,'(1(4X,a,f10.5))') 'Jp    :', Jp     
-
-    write(mystd,'(2(4X,a,f10.5))') 'F0    :', F0   ,   'F2     :', F2
-    write(mystd,'(2(4X,a,f10.5))') 'F4    :', F4   ,   'F6     :', F6
+    write(mystd,'(2(4X,a,f10.5))') 'Jp    :', Jp     , 'Ud     :', Ud
+    write(mystd,'(2(4X,a,f10.5))') 'JH    :', JH     , 'F0     :', F0
+    write(mystd,'(2(4X,a,f10.5))') 'F2    :', F2     , 'F4     :', F4
+    write(mystd,'(1(4X,a,f10.5))') 'F6    :', F6 
 
     write(mystd,'(2(4X,a,f10.5))') 'lambda:', lambda,  'mune   :', mune
 
+    write(mystd,'(2X,a)') '-------------------------------------------'
     write(mystd,*)
 
     return

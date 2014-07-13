@@ -77,6 +77,12 @@ module control
 
     ! the following are useful when icu = 2
     !--------------------------------------
+    ! Coulomb parameters 
+    real(dp), public, save :: Ud
+
+    ! Hund's exchange parameters
+    real(dp), public, save :: JH
+
     ! Slater-Cordon parameters
     real(dp), public, save :: F0
     real(dp), public, save :: F2
