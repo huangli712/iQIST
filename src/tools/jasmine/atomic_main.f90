@@ -12,8 +12,8 @@
 ! comment :
 !-------------------------------------------------------------------------
 program main
-    use constants, only: mystd
-    use control,   only: ictqmc
+    use constants,        only: mystd
+    use control,          only: ictqmc
     use m_basis_fullspace
     use m_spmat
 

@@ -69,7 +69,7 @@ subroutine atomic_make_natural()
     else
         ! for Kanamori parameters Coulomb interaction U
         ! we first need to transfrom cumat from real orbital basis to complex orbital basis
-        if ( icu == 2 ) then
+        if ( icu == 1 ) then
             call atomic_make_umat_r2c( umat_r2c )
             call atomic_tran_cumat( umat_r2c, cumat, tmp_mat )
             cumat = tmp_mat

@@ -45,7 +45,7 @@ end subroutine atomic_write_basis
 subroutine atomic_write_eigval_fullspace()
     use constants,         only: mytmp
     use control,           only: ncfgs
-    use m_glob_fullspace,  only: hmat_eigval
+    use m_glob_fullspace,  only: hmat_eigval, occu_mat
 
     implicit none
 
@@ -55,7 +55,7 @@ subroutine atomic_write_eigval_fullspace()
     ! open file 'atom.eigval.dat' to write
     open(mytmp, file='atom.eigval.dat')
     do i=1, ncfgs
-        write(mytmp, "(I10, F20.10)") i, hmat_eigval(i)
+        write(mytmp, "(I10, 2F20.10)") i, hmat_eigval(i), occu_mat(i,i)
     enddo
 
     close(mytmp)
@@ -178,6 +178,7 @@ subroutine atomic_write_eigvec_sectors()
 
     open(mytmp, file="atom.eigvec.dat")
     counter = 0
+    write(mytmp, '(a)') '#isect | ibasis | ieigenstate | eigvenvector | bin_basis'
     do i=1, nsectors
         do j=1, sectors(i)%ndim
             do k=1, sectors(i)%ndim
@@ -201,7 +202,7 @@ subroutine atomic_write_atomcix_sectors()
     implicit none
 
     ! local variables
-    integer :: i, j, k, ii, row, col
+    integer :: i, j, k, ii
 
     ! open 'atom.cix' to write
     open(mytmp, file='atom.sector.in')
@@ -240,7 +241,7 @@ subroutine atomic_write_atomcix_sectors()
         enddo ! over j={1, sectors(i)%nops} loop
     enddo  ! over i={1, nsect} loop
     close(mytmp)
- 
+
     return
 end subroutine atomic_write_atomcix_sectors
 
@@ -260,7 +261,7 @@ subroutine atomic_write_natural(info)
     write(mytmp,'(a)') info
     do i=1, norbs
         do j=1, norbs
-            write(mytmp, '(2I10,2F16.8)') j, i, tran_umat(j,i)
+            write(mytmp, '(2I10,2F20.10)') j, i, tran_umat(j,i)
         enddo
     enddo 
     close(mytmp)
