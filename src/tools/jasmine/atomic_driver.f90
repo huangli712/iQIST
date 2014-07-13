@@ -40,13 +40,13 @@ subroutine atomic_driver_fullspace()
     call atomic_mkhmat_fullspace()
 
     ! check whether the many particle Hamiltonian is real 
-    write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ??? "
+    write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
     write(mystd,*)
-    call atomic_check_hmat_real(hmat, lreal)
+    call atomic_check_hmat_real(ncfgs, hmat, lreal)
     if (lreal .eqv. .false.) then
         call atomic_print_error('atomic_driver_fullspace', 'hmat is not real !')
     else
-        write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real ! "
+        write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real"
         write(mystd,*)
     endif
 
@@ -171,13 +171,29 @@ end subroutine atomic_driver_njz
 
 subroutine atomic_solve_sectors()
     use constants, only: mystd
+    use m_glob_sectors
 
     implicit none
+    ! local variables
+    integer :: i
+    logical :: lreal
 
     ! make atomic Hamiltonian
     write(mystd, "(2X,a)") "jasmine >>> make atomic Hamiltonian for each sector ... "
     write(mystd,*)
     call atomic_mkhmat_sectors()
+
+    ! check whether the many particle Hamiltonian is real 
+    write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
+    write(mystd,*)
+    do i=1, nsectors 
+        call atomic_check_hmat_real(sectors(i)%ndim, sectors(i)%myham, lreal)
+        if (lreal .eqv. .false.) then
+            call atomic_print_error('atomic_driver_fullspace', 'hmat is not real !')
+        endif
+    enddo
+    write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real"
+    write(mystd,*)
 
     ! diagonalize sector one by one
     write(mystd, "(2X,a)") "jasmine >>> diagonalize atomic Hamiltonian for each sector ... "
@@ -199,9 +215,6 @@ subroutine atomic_solve_sectors()
 
     ! write information of sectors to file 'atom.cix'
     call atomic_write_atomcix_sectors()
-
-    ! test atom.sector.in atom.fmat.in
-    ! call test_read_sector_fmat()
 
     return
 end subroutine atomic_solve_sectors

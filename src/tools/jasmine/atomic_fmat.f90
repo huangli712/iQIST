@@ -55,10 +55,12 @@ end subroutine atomic_make_annifmat_fullspace
 
 !>>> build fmat for good quantum algorithm
 subroutine atomic_make_fmat_sectors()
+     use constants, only: zero
      use control, only: norbs
      use m_basis_fullspace, only: dec_basis, index_basis
      use m_glob_sectors 
      use m_sector
+
      implicit none
 
      ! local variables
@@ -82,7 +84,7 @@ subroutine atomic_make_fmat_sectors()
                  sectors(isect)%myfmat(iorb, ifermi)%n = sectors(jsect)%ndim
                  sectors(isect)%myfmat(iorb, ifermi)%m = sectors(isect)%ndim
                  call alloc_one_fmat(sectors(isect)%myfmat(iorb, ifermi))
-
+                 sectors(isect)%myfmat(iorb,ifermi)%item = zero
                  ! build fmat
                  do jbas=1, sectors(isect)%ndim
                      jold = dec_basis(sectors(isect)%mybasis(jbas))
@@ -90,6 +92,8 @@ subroutine atomic_make_fmat_sectors()
                          call atomic_construct(iorb, jold, jnew, isgn)
                      elseif (ifermi == 0 .and. ( btest(jold, iorb-1) .eqv. .true. )) then
                          call atomic_eliminate(iorb, jold, jnew, isgn)
+                     else
+                         cycle
                      endif
 
                      ibas = index_basis(jnew)
