@@ -32,6 +32,7 @@ subroutine atomic_write_basis()
     ! open file 'atom.basis.dat' to write
     open(mytmp, file='atom.basis.dat')
     ! write the header
+    write(mytmp, '(a)') '# index  |  decimal form | index | binary form'
     do i=1, ncfgs
         write(mytmp, "(3I10,4X,14I2)") i, dec_basis(i), index_basis(dec_basis(i)), bin_basis(:,i)   
     enddo 
@@ -54,6 +55,7 @@ subroutine atomic_write_eigval_fullspace()
     
     ! open file 'atom.eigval.dat' to write
     open(mytmp, file='atom.eigval.dat')
+    write(mytmp, '(a)') '#      index  |    eigenvalue   |    occupancy '
     do i=1, ncfgs
         write(mytmp, "(I10, 2F20.10)") i, hmat_eigval(i), occu_mat(i,i)
     enddo
@@ -77,6 +79,7 @@ subroutine atomic_write_eigvec_fullspace()
  
     ! open file 'atom.eigvec.dat' to write
     open(mytmp, file='atom.eigvec.dat')
+    write(mytmp, '(a)') '#    i   |   j    | eigenvec(i,j)    |   Fock_basis(i)'
     do i=1, ncfgs
         do j=1, ncfgs
             if ( abs(hmat_eigvec(j,i)) < eps6 ) cycle
@@ -178,7 +181,7 @@ subroutine atomic_write_eigvec_sectors()
 
     open(mytmp, file="atom.eigvec.dat")
     counter = 0
-    write(mytmp, '(a)') '#isect | ibasis | ieigenstate | eigvenvector | bin_basis'
+    write(mytmp, '(a)') '#isect |   i   |   j   | eigvec(i,j)    |    Fock_basis(i)'
     do i=1, nsectors
         do j=1, sectors(i)%ndim
             do k=1, sectors(i)%ndim
