@@ -21,7 +21,7 @@
 !>>> make natural basis, the natural basis is the basis on which the 
 ! impurity energy matrix is diagonal
 subroutine atomic_make_natural()
-    use constants, only: dp, czero
+    use constants, only: dp, czero, mystd
     use control,   only: norbs, itask, icf, isoc, icu
     use m_spmat,   only: cumat, tran_umat
 
@@ -52,6 +52,9 @@ subroutine atomic_make_natural()
         elseif ( isoc==1 .and. icf>0 ) then
             call atomic_2natural_case4()
         endif
+    else
+        write(mystd, '(2X,a)') 'jasmine >>> natural basis is made outside !'
+        write(mystd, *)
     endif
 
     ! we need transform Coulomb interaction U
