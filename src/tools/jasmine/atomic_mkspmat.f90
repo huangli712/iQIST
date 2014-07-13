@@ -33,10 +33,10 @@ subroutine atomic_make_spmat()
     call alloc_m_spmat()
 
     ! second, make crystal field and spin-orbital coupling 
-    if (itask == 1) then ! model calculation
+    if (itask == 1) then ! make natural basis inside
         ! CF
         if (icf > 0) then
-            ! for model calculation, we read the non-zero elements of 
+            ! we read the non-zero elements of 
             ! crystal field from a file "atom.cf.in".
             ! the crystal field is defined on real orbital basis
             ! at present, we only support real crystal field, 
@@ -53,7 +53,7 @@ subroutine atomic_make_spmat()
         else
             socmat = czero
         endif
-    else ! material calculation
+    else ! make natural basis outside
         ! read the eimp (CF+SOC) matrices on natural basis
         ! this matrix should be a diagonal matrix, and the elements must be real
         call atomic_read_eimp()

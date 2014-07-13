@@ -22,7 +22,6 @@ subroutine atomic_driver_fullspace()
     use control,          only: ncfgs
     use m_glob_fullspace, only: hmat, hmat_eigval, hmat_eigvec, &
                                 alloc_m_glob_fullspace, dealloc_m_glob_fullspace
-                       
 
     implicit none
 
@@ -41,18 +40,18 @@ subroutine atomic_driver_fullspace()
     call atomic_mkhmat_fullspace()
 
     ! check whether the many particle Hamiltonian is real 
-    write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ??? "
+    write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
     write(mystd,*)
-    call atomic_check_hmat_real(hmat, lreal)
+    call atomic_check_hmat_real(ncfgs, hmat, lreal)
     if (lreal .eqv. .false.) then
         call atomic_print_error('atomic_driver_fullspace', 'hmat is not real !')
     else
-        write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real ! "
+        write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real"
         write(mystd,*)
     endif
 
     ! diagonalize hmat
-    write(mystd, "(2X,a)") "jasmine >>> diagonalize Hamiltonian ..."
+    write(mystd, "(2X,a)") "jasmine >>> diagonalize atomic Hamiltonian ..."
     write(mystd,*)
     tmp_mat = real(hmat)
     call dmat_dsyev(ncfgs, ncfgs, tmp_mat, hmat_eigval, hmat_eigvec)
@@ -90,11 +89,14 @@ end subroutine atomic_driver_fullspace
   
 !>>> for CTQMC trace algorithm: use good quantum number, total electrons N
 subroutine atomic_driver_n()
+    use constants, only: mystd
     use m_glob_sectors, only: dealloc_m_glob_sectors
 
     implicit none
 
     ! make all the sectors, allocate m_glob_sectors memory inside
+    write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers N ... "
+    write(mystd,*)
     call atomic_mksectors_n()
 
     ! solve the atomic problem for good quantum numbers algorithm
@@ -105,6 +107,28 @@ subroutine atomic_driver_n()
 
     return
 end subroutine atomic_driver_n
+
+!>>> for CTQMC trace algorithm: use good quantum number, total electrons N
+subroutine atomic_driver_nsz()
+    use constants, only: mystd
+    use m_glob_sectors, only: dealloc_m_glob_sectors
+
+    implicit none
+
+    ! make all the sectors, allocate m_glob_sectors memory inside
+    write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers N ... "
+    write(mystd,*)
+    call atomic_mksectors_nsz()
+
+    ! solve the atomic problem for good quantum numbers algorithm
+    call atomic_solve_sectors()
+
+    ! free memory
+    call dealloc_m_glob_sectors()
+
+    return
+end subroutine atomic_driver_nsz
+
 
 !>>> for CTQMC trace algorithm: use good quantum number, total electrons N, Sz, PS
 subroutine atomic_driver_nszps()
@@ -126,11 +150,14 @@ end subroutine atomic_driver_nszps
 
 !>>> for CTQMC trace algorithm: use good quantum number, total electrons N, Jz
 subroutine atomic_driver_njz()
+    use constants, only: mystd
     use m_glob_sectors, only: dealloc_m_glob_sectors
 
     implicit none
 
     ! make all the sectors, allocate m_glob_sectors memory inside
+    write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers N, Jz ... "
+    write(mystd,*)
     call atomic_mksectors_njz()
 
     ! solve the atomic problem for good quantum numbers algorithm
@@ -143,17 +170,43 @@ subroutine atomic_driver_njz()
 end subroutine atomic_driver_njz
 
 subroutine atomic_solve_sectors()
+    use constants, only: mystd
+    use m_glob_sectors
+
     implicit none
+    ! local variables
+    integer :: i
+    logical :: lreal
 
     ! make atomic Hamiltonian
+    write(mystd, "(2X,a)") "jasmine >>> make atomic Hamiltonian for each sector ... "
+    write(mystd,*)
     call atomic_mkhmat_sectors()
 
+    ! check whether the many particle Hamiltonian is real 
+    write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
+    write(mystd,*)
+    do i=1, nsectors 
+        call atomic_check_hmat_real(sectors(i)%ndim, sectors(i)%myham, lreal)
+        if (lreal .eqv. .false.) then
+            call atomic_print_error('atomic_driver_fullspace', 'hmat is not real !')
+        endif
+    enddo
+    write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real"
+    write(mystd,*)
+
     ! diagonalize sector one by one
+    write(mystd, "(2X,a)") "jasmine >>> diagonalize atomic Hamiltonian for each sector ... "
+    write(mystd,*)
     call atomic_diag_hmat_sectors()
 
     ! make fmat of both creation and annihilation operators
+    write(mystd, "(2X,a)") "jasmine >>> make fmat for each sector ..."
+    write(mystd,*)
     call atomic_make_fmat_sectors()
 
+    write(mystd, "(2X,a)") "jasmine >>> write eigenvalue, eigenvector, and atom.cix to files ... "
+    write(mystd,*)
     ! write eigenvalue to file 'atom.eigval.dat'
     call atomic_write_eigval_sectors()
 

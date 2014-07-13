@@ -32,8 +32,8 @@ subroutine atomic_config()
     !---------------------------------------------------------------- 
     nband = 1            ! number of bands
     nspin = 2            ! number of spins
-    norbs = 2            ! number of orbits
-    ncfgs = 4            ! number of many-body configurations
+    norbs = nband*nspin  ! number of orbits
+    ncfgs = 2**norbs     ! number of many-body configurations
  
     !----------------------------------------------------------------
     Uc = 4.00_dp         ! intraorbital Coulomb interaction
@@ -44,12 +44,13 @@ subroutine atomic_config()
 
     !----------------------------------------------------------------
     F0 = 4.00_dp         ! F0
-    F2 = 0.00_dp         ! F2
-    F4 = 0.00_dp         ! F4
+    F2 = 6.00_dp         ! F2
+    F4 = 3.75_dp         ! F4
     F6 = 0.00_dp         ! F6
 
     !----------------------------------------------------------------
     lambda = 0.00_dp     ! spin-orbit coupling parameter
+    mune   = 0.00_dp     ! chemical potential
 
     ! read from input file if it exists
     exists = .false.
@@ -63,19 +64,15 @@ subroutine atomic_config()
         read(mytmp, *) ! skip header
         !----------------------------------------------------------------
         read(mytmp, *) ! skip header
+        read(mytmp, *)  nband
+        norbs = nband * nspin
+        ncfgs = 2 ** norbs 
+
         read(mytmp, *)  itask
         read(mytmp, *)  ictqmc
         read(mytmp, *)  icf
         read(mytmp, *)  isoc
         read(mytmp, *)  icu
-
-        !----------------------------------------------------------------
-        read(mytmp, *) ! skip header
-        read(mytmp, *)  nband
-        read(mytmp, *)  nspin
-        read(mytmp, *)  norbs
-        read(mytmp, *)  ncfgs
- 
         !----------------------------------------------------------------
         read(mytmp, *) ! skip header
         read(mytmp, *)  Uc
@@ -83,17 +80,24 @@ subroutine atomic_config()
         read(mytmp, *)  Jz
         read(mytmp, *)  Js
         read(mytmp, *)  Jp
-
         !----------------------------------------------------------------
         read(mytmp, *) ! skip header
-        read(mytmp, *)  F0
-        read(mytmp, *)  F2
-        read(mytmp, *)  F4
-        read(mytmp, *)  F6
+        read(mytmp, *)  Ud
+        read(mytmp, *)  JH
 
+        F0 = Ud
+        if (nband == 5) then
+            F2 = JH * 14.0_dp / 1.625_dp 
+            F4 = 0.625_dp * F2
+        elseif(nband == 7) then
+            F2 = JH * 6435.0_dp / (286.0_dp + (195.0_dp * 451.0_dp / 675.0_dp) + (250.0_dp * 1001.0_dp / 2025.0_dp))
+            F4 = 451.0_dp / 675.0_dp * F2
+            F6 = 1001.0_dp / 2025.0_dp * F2
+        endif
         !----------------------------------------------------------------
         read(mytmp, *) ! skip header
         read(mytmp, *)  lambda
+        read(mytmp, *)  mune
  
         close(mytmp)
     else
