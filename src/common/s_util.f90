@@ -169,63 +169,56 @@
      return
   end function s_str_integer
 
-!
-!       String:         Character string to be compressed.
-!
-!       Result:         Input string with all whitespace removed before the
-!                       first non-whitespace character, and from in-between 
-!                       non-whitespace characters.
-!
-!       Definitions of a space and a tab character are made for the
-!       ASCII collating sequence. Each single character of the input
-!       string is checked against these definitions using the IACHAR()
-!       intrinsic. If the input string character DOES NOT correspond 
-!       to a space or tab, it is not copied to the output string.
-!
-!       Note that for input that ONLY has spaces or tabs BEFORE the first
-!       useful character, the output of this function is the same as the
-!       ADJUSTL() instrinsic.
-
 !!>>> s_str_compress: return a copy of an input string with all whitespace
 !!>>> (spaces and tabs) removed.
-  function s_str_compress( Input_String ) RESULT ( Output_String )
+  function s_str_compress(input_string) result (output_string)
      implicit none
 
 ! external arguments
-     character( * ), intent(in) :: Input_String
+! character string to be compressed.
+     character( * ), intent(in) :: input_string
 
 ! return values
-     character( len( Input_String ) ) :: Output_String
+! input string with all whitespace removed before the first non-whitespace
+! character, and from in-between non-whitespace characters.
+     character( len( input_string ) ) :: output_string
 
 ! local parameters
-     integer, PARAMETER :: IACHAR_SPACE = 32
-     integer, PARAMETER :: IACHAR_TAB   = 9
+     integer, parameter :: IACHAR_SPACE = 32
+     integer, parameter :: IACHAR_TAB   = 9
 
 ! local variables
-     integer :: i, j
-     integer :: IACHAR_Character
+     integer :: i
+     integer :: j
+     integer :: curr_char
+
+!
+! Definitions of a space and a tab character are made for the ASCII collating
+! sequence. Each single character of the input string is checked against
+! these definitions using the IACHAR() intrinsic. If the input string
+! character DOESNOT correspond to a space or tab, it is not copied to
+! the output string.
+!
+! Note that for input that ONLY has spaces or tabs BEFORE the first useful
+! character, the output of this function is the same as the ADJUSTL() instrinsic.
+!
 
 ! Initialise output string
-     Output_String = ' '
+     output_string = ' '
 
-! Initialise output string "useful" length counter
+! initialise output string "useful" length counter
      j = 0
 
-    ! -- Loop over string elements
-     do i = 1, LEN( Input_String )
-
-      ! -- Convert the current character to its position
-      ! -- in the ASCII collating sequence
-         IACHAR_Character = IACHAR( Input_String( i:i ) )
-
-      ! -- If the character is NOT a space ' ' or a tab '->|'
-      ! -- copy it to the output string.
-         IF ( IACHAR_Character /= IACHAR_SPACE .AND. &
-           IACHAR_Character /= IACHAR_TAB         ) THEN
+! loop over string elements
+     do i=1,len(input_string)
+! convert the current character to its position in the ASCII collating sequence
+         curr_char = iachar( input_string(i:i) )
+! if the character is NOT a space ' ' or a tab '->|', copy it to the output string.
+         if ( curr_char /= IACHAR_SPACE .and. curr_char /= IACHAR_TAB ) then
              j = j + 1
-             Output_String( j:j ) = Input_String( i:i )
-         ENDIF
-     enddo
+             output_string(j:j) = input_string(i:i)
+         endif ! back if block
+     enddo ! over i={1,len(input_string)} loop
 
      return
   end function s_str_compress
