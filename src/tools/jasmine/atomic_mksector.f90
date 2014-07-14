@@ -22,37 +22,42 @@
 ! good quantum number N 
 subroutine atomic_mksectors_n()
     use constants,         only: dp, mytmp
-    use control,           only: norbs, ncfgs
+    use control,           only: norbs
     use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector
-    use m_glob_sectors
+    use m_sector,          only: alloc_one_sector, alloc_one_fmat
+    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors
 
     implicit none
 
-    ! which sector point to
+    ! which sector points to
     integer :: which_sect
-    ! tmp variables
+    ! fock basis index
     integer :: ibasis
+    ! a counter 
     integer :: counter
+    ! total electrons
     integer :: myntot
-    integer :: i,j,k,l
+    ! maximum dimension of sectors
     integer :: max_dim_sectors
+    ! average dimension of sectors
     real(dp) :: ave_dim_sectors
+    ! can point to next sector 
     logical :: can  
+    ! loop index
+    integer :: i,j,k,l
 
     !----------------------------------------------------------------
-    ! we can allocate memory for global variables for sectors
+    ! allocate memory for global variables of sectors
     nsectors = norbs+1
     call alloc_m_glob_sectors()
-    ! now we will build each sector
+    ! now, build each sector
     counter = 1
     do i=1, nsectors
         sectors(i)%ndim = dim_sub_n(i-1)
         sectors(i)%nelectron = i-1
         sectors(i)%nops = norbs
         sectors(i)%istart = counter 
-        ! allocate memory for pointers in each subspace
-        ! WARNING: these memory should be deallocated before deallocating sectors
+        ! allocate memory for each sector
         call alloc_one_sector( sectors(i) )  
         ! set basis for each sector
         do j=1, sectors(i)%ndim
@@ -60,26 +65,32 @@ subroutine atomic_mksectors_n()
         enddo
         counter = counter + dim_sub_n(i-1)
     enddo
+    !----------------------------------------------------------------
 
     !----------------------------------------------------------------
     ! make next_sector index
-    ! for create operators
-    do i=1, nsectors
-        do j=1, norbs 
-            do k=0,1 
+    ! loop for all the sectors
+    do i=1, nsectors   
+        ! loop for all the orbitals
+        do j=1, norbs              
+            ! loop for creation and annihilation fermion operators
+            do k=0,1                   
                 which_sect = -1
-                ! we should lookup each basis in this subspace 
+                ! we should lookup each basis in this sector
                 can = .false.
                 do l=1, sectors(i)%ndim
                     ibasis = sectors(i)%mybasis(l)
-                    if (k==1 .and. bin_basis(j,ibasis) == 0 ) then
+                    ! for creation fermion operator
+                    if (k==1 .and. bin_basis(j,ibasis) == 0) then
                         can = .true.
                         exit
+                    ! for annihilation fermion operator
                     elseif (k==0 .and. bin_basis(j, ibasis) == 1) then
                         can = .true. 
                         exit
                     endif 
                 enddo 
+
                 if (can == .true.) then
                     if (k==1) then
                         myntot = sectors(i)%nelectron + 1
@@ -91,12 +102,13 @@ subroutine atomic_mksectors_n()
                         which_sect = myntot + 1
                     endif 
                 endif  ! back to if (can == .true.) block
-                ! set next_sector index
                 sectors(i)%next_sector(j,k) = which_sect 
             enddo ! over k={0,1} loop
         enddo ! over j={1,norbs} loop
     enddo ! over i={1, nsectors} loop
+    !----------------------------------------------------------------
 
+    !----------------------------------------------------------------
     ! dump sector information for reference
     ! calculate the maximum and average dimensions of sectors
     max_dim_sectors = 0
@@ -105,31 +117,33 @@ subroutine atomic_mksectors_n()
         if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
         counter = counter + sectors(i)%ndim
     enddo
-    ave_dim_sectors = counter / real(nsectors)
+    ave_dim_sectors = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
-    write(mytmp, '(a,F16.8)') '#ave_dim_sectors: ', ave_dim_sectors
-    write(mytmp, '(a)') '#isect | N | ndim | index | Fock_basis  '
+    write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a)') '#      i | electron(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
-            write(mytmp,'(4I10,4X, 14I1)') i, sectors(i)%nelectron, sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+            write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,8X, 14I1)') i, sectors(i)%nelectron, &
+                                  sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
         enddo
     enddo
     close(mytmp)
+    !----------------------------------------------------------------
 
     return
 end subroutine atomic_mksectors_n
 
-!>>> determine all the sectors for good quantum N, Jz case
+!>>> determine all the sectors for good quantum N, Sz case
 ! a sector consists of some many particle Fock states labeled by 
-! good quantum number N, Jz 
+! good quantum number N, Sz 
 subroutine atomic_mksectors_nsz()
-    use constants, only: mytmp
-    use control, only: norbs, ncfgs
+    use constants,         only: dp, mytmp
+    use control,           only: norbs, ncfgs
     use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector
-    use m_glob_sectors
+    use m_sector,          only: alloc_one_sector, alloc_one_fmat
+    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors
 
     implicit none
 
@@ -138,12 +152,12 @@ subroutine atomic_mksectors_nsz()
     integer :: max_nsect
     ! the maximum dimension of each sector
     integer :: max_ndim
-    ! the jz value for each |j2,jz> single particle orbital
+    ! the sz value for each single particle orbital
     integer :: orb_good_sz(norbs)
-    ! good quantum number N, Jz for each Fock state
+    ! good quantum number N, Sz for each Fock state
     integer :: fock_good_ntot(ncfgs)
     integer :: fock_good_sz(ncfgs)
-    ! good quantum number N, Jz for each sector
+    ! good quantum number N, Sz for each sector
     integer, allocatable :: sect_good_ntot(:)
     integer, allocatable :: sect_good_sz(:)
     ! dimension of each sector
@@ -152,32 +166,39 @@ subroutine atomic_mksectors_nsz()
     integer, allocatable :: sector_basis(:,:)
     ! number of sectors
     integer :: nsect
-    ! which sector point to
+    ! which sector points to
     integer :: which_sect
-    ! tmp variables
+    ! total electrons
     integer :: myntot
+    ! Sz value
     integer :: mysz
+    ! a counter
     integer :: counter
+    ! fock basis
     integer :: ibasis
+    ! loop index
     integer :: i,j,k,l
+    ! maximum dimension of sectors
     integer :: max_dim_sectors
+    ! average dimension of sectors
     real(dp) :: ave_dim_sectors
+    ! can point to next sector 
     logical :: can  
 
-
     max_nsect = ncfgs
-    max_ndim = ncfgs
+    max_ndim  = ncfgs
     ! allocate memory
     allocate(sect_good_ntot(max_nsect))
     allocate(sect_good_sz(max_nsect))
     allocate(ndims(max_nsect))
     allocate(sector_basis(max_ndim, max_nsect))
 
-    ! make good_jz
+    !----------------------------------------------------------------
+    ! make good_sz
     call make_good_sz(orb_good_sz)
-
     ! build good quantum numbers for each Fock state
     counter = 0
+    ! loop over all number of total electrons
     do i=0, norbs
         do j=1, dim_sub_n(i)
             counter = counter + 1
@@ -186,9 +207,10 @@ subroutine atomic_mksectors_nsz()
                 mysz = mysz + orb_good_sz(k) * bin_basis(k, counter) 
             enddo
             fock_good_ntot(counter) = i
-            fock_good_sz(counter) = mysz
+            fock_good_sz(counter)   = mysz
         enddo  
     enddo
+    !----------------------------------------------------------------
 
     !----------------------------------------------------------------
     ! loop over all the Fock states to determine sectors
@@ -208,8 +230,8 @@ subroutine atomic_mksectors_nsz()
             ! loop over the exists sectors
             which_sect = -1
             do j=1, nsect
-                ! compare two subspaces
-                if ( sect_good_ntot(j) == myntot .and. sect_good_sz(j) == mysz) then
+                ! compare two sectors
+                if (sect_good_ntot(j) == myntot .and. sect_good_sz(j) == mysz) then
                     which_sect = j
                     EXIT
                 endif
@@ -227,7 +249,8 @@ subroutine atomic_mksectors_nsz()
                 sector_basis(ndims(which_sect), which_sect) = i
             endif
         endif ! back to if (nsect == 0) then block 
-    enddo 
+    enddo  ! over i={1,ncfgs} loop 
+    !----------------------------------------------------------------
 
     !----------------------------------------------------------------
     ! after we know how many sectors and the dimension of each sector,
@@ -242,34 +265,39 @@ subroutine atomic_mksectors_nsz()
         sectors(i)%nops = norbs
         sectors(i)%istart = counter 
         counter = counter + ndims(i)
-        ! allocate memory for pointers in each subspace
-        ! WARNING: these memory should be deallocated before deallocating sectors
+        ! allocate memory for each sector
         call alloc_one_sector( sectors(i) )  
-        ! set basis for each sector
+        ! set Fock basis for each sector
         do j=1, ndims(i)
             sectors(i)%mybasis(j) = sector_basis(j,i) 
         enddo
     enddo
+    !----------------------------------------------------------------
 
     !----------------------------------------------------------------
     ! make next_sector index
-    ! for create operators
+    ! loop over all sectors
     do i=1, nsectors
+        ! loop over all the orbitals
         do j=1, norbs 
+            ! loop over creation and annihilation fermion operators
             do k=0,1 
                 which_sect = -1
-            ! we should lookup each basis in this subspace 
+                ! we should check each state in this sector
                 can = .false.
                 do l=1, sectors(i)%ndim
                     ibasis = sectors(i)%mybasis(l)
-                    if (k==1 .and. bin_basis(j,ibasis) == 0 ) then
+                    ! for creation fermion operator
+                    if (k==1 .and. bin_basis(j,ibasis) == 0) then
                         can = .true.
                         exit
+                    ! for annihilation fermion operator
                     elseif (k==0 .and. bin_basis(j, ibasis) == 1) then
                         can = .true. 
                         exit
                     endif 
                 enddo 
+
                 if (can == .true.) then
                     if (k==1) then
                         myntot = sect_good_ntot(i) + 1
@@ -278,7 +306,7 @@ subroutine atomic_mksectors_nsz()
                         myntot = sect_good_ntot(i) - 1
                         mysz   = sect_good_sz(i) - orb_good_sz(j)
                     endif
-                    ! loop over all sectors to see which sector it will point to 
+                    ! loop over all sectors to see which sector it will points to 
                     do l=1, nsectors
                         if (sect_good_ntot(l) == myntot .and. sect_good_sz(l) == mysz) then
                             which_sect = l
@@ -286,12 +314,13 @@ subroutine atomic_mksectors_nsz()
                         endif 
                     enddo 
                 endif  ! back to if (can == .true.) block
-                ! set next_sector index
                 sectors(i)%next_sector(j,k) = which_sect 
             enddo ! over k={0,1} loop
         enddo ! over j={1,norbs} loop
     enddo ! over i={1, nsectors} loop
+    !----------------------------------------------------------------
 
+    !----------------------------------------------------------------
     ! dump sector information for reference
     ! calculate the maximum and average dimensions of sectors
     max_dim_sectors = 0
@@ -300,18 +329,20 @@ subroutine atomic_mksectors_nsz()
         if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
         counter = counter + sectors(i)%ndim
     enddo
-    ave_dim_sectors = counter / real(nsectors)
+    ave_dim_sectors = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
     write(mytmp, '(a,F16.8)') '#ave_dim_sectors: ', ave_dim_sectors
-    write(mytmp, '(a)') '#isect | N | Sz | ndim | index | Fock_basis  '
+    write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
-            write(mytmp,'(5I10,4X, 14I1)') i, sect_good_ntot(i), sect_good_sz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+            write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i),&
+                 sect_good_sz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
         enddo
     enddo
     close(mytmp)
+    !----------------------------------------------------------------
 
     ! free memeory
     if (allocated(sect_good_ntot)) deallocate(sect_good_ntot)
@@ -322,16 +353,15 @@ subroutine atomic_mksectors_nsz()
     return
 end subroutine atomic_mksectors_nsz
 
-
 !>>> determine all the sectors for good quantum N, Sz, PS case
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Sz, PS
 subroutine atomic_mksectors_nszps()
-    use constants, only: mytmp
-    use control, only: nband, norbs, ncfgs
+    use constants,         only: dp, mytmp
+    use control,           only: nband, norbs, ncfgs
     use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector
-    use m_glob_sectors
+    use m_sector,          only: alloc_one_sector, alloc_one_fmat         
+    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors
 
     implicit none
 
@@ -341,11 +371,11 @@ subroutine atomic_mksectors_nszps()
     ! the maximum dimension of each sector
     integer :: max_ndim
     integer :: orb_good_sz(norbs)
-    ! good quantum number N, Jz for each Fock state
+    ! good quantum number N, Sz, PS for each Fock state
     integer :: fock_good_ntot(ncfgs)
     integer :: fock_good_sz(ncfgs)
     integer :: fock_good_ps(ncfgs)
-    ! good quantum number N, Jz for each sector
+    ! good quantum number N, Sz, PS for each sector
     integer, allocatable :: sect_good_ntot(:)
     integer, allocatable :: sect_good_sz(:)
     integer, allocatable :: sect_good_ps(:)
@@ -357,18 +387,26 @@ subroutine atomic_mksectors_nszps()
     integer :: nsect
     ! which sector point to
     integer :: which_sect
-    ! tmp variables
+    ! a temp binary form of Fock basis
     integer :: tmp_basis(norbs)
+    ! total electrons
     integer :: myntot
+    ! Sz value
     integer :: mysz
+    ! PS value
     integer :: myps
+    ! a counter
     integer :: counter
+    ! index of Fock basis
     integer :: ibasis
+    ! loop index
     integer :: i,j,k,l
+    ! maximum dimension of sectors
     integer :: max_dim_sectors
+    ! average dimension of sectors
     real(dp) :: ave_dim_sectors
+    ! can point to next sector
     logical :: can  
-
 
     max_nsect = ncfgs
     max_ndim = ncfgs
@@ -379,13 +417,15 @@ subroutine atomic_mksectors_nszps()
     allocate(ndims(max_nsect))
     allocate(sector_basis(max_ndim, max_nsect))
 
-    ! make good_jz
+    !----------------------------------------------------------------
+    ! make good_sz
     call make_good_sz(orb_good_sz)
-
     ! build good quantum numbers for each Fock state
     counter = 0
     fock_good_ps = 0
+    ! loop over all number of total electrons
     do i=0, norbs
+        ! loop over each state 
         do j=1, dim_sub_n(i)
             counter = counter + 1
             mysz = 0
@@ -394,12 +434,14 @@ subroutine atomic_mksectors_nszps()
             enddo
             fock_good_ntot(counter) = i
             fock_good_sz(counter) = mysz
+            ! build PS number
             do k=1, nband
                 fock_good_ps(counter) = fock_good_ps(counter) + &
                 2**k * (bin_basis(2*k-1,counter) - bin_basis(2*k,counter))**2
             enddo
         enddo  
     enddo
+    !----------------------------------------------------------------
 
     !----------------------------------------------------------------
     ! loop over all the Fock states to determine sectors
@@ -421,8 +463,9 @@ subroutine atomic_mksectors_nszps()
             ! loop over the exists sectors
             which_sect = -1
             do j=1, nsect
-                ! compare two subspaces
-                if ( sect_good_ntot(j) == myntot .and. sect_good_sz(j) == mysz .and. sect_good_ps(j) == myps) then
+                ! compare two sector
+                if ( sect_good_ntot(j) == myntot .and. sect_good_sz(j) == mysz &
+                    .and. sect_good_ps(j) == myps) then
                     which_sect = j
                     EXIT
                 endif
@@ -441,7 +484,8 @@ subroutine atomic_mksectors_nszps()
                 sector_basis(ndims(which_sect), which_sect) = i
             endif
         endif ! back to if (nsect == 0) then block 
-    enddo 
+    enddo ! over i={1,ncfgs} loop
+    !----------------------------------------------------------------
 
     !----------------------------------------------------------------
     ! after we know how many sectors and the dimension of each sector,
@@ -456,36 +500,41 @@ subroutine atomic_mksectors_nszps()
         sectors(i)%nops = norbs
         sectors(i)%istart = counter 
         counter = counter + ndims(i)
-        ! allocate memory for pointers in each subspace
-        ! WARNING: these memory should be deallocated before deallocating sectors
+        ! allocate memory for each sector 
         call alloc_one_sector( sectors(i) )  
         ! set basis for each sector
         do j=1, ndims(i)
             sectors(i)%mybasis(j) = sector_basis(j,i) 
         enddo
     enddo
+    !----------------------------------------------------------------
 
     !----------------------------------------------------------------
     ! make next_sector index
-    ! for create operators
+    ! loop over all the sectors
     do i=1, nsectors
+        ! loop over all the orbtials
         do j=1, norbs 
+            ! loop over creation and annihilation fermion operators
             do k=0,1 
                 which_sect = -1
-            ! we should lookup each basis in this subspace 
+                ! we should check each state in this sector
                 can = .false.
                 do l=1, sectors(i)%ndim
                     ibasis = sectors(i)%mybasis(l)
-                    if (k==1 .and. bin_basis(j,ibasis) == 0 ) then
+                    ! for creation fermion operator
+                    if (k==1 .and. bin_basis(j,ibasis) == 0) then
                         tmp_basis = bin_basis(:, ibasis)
                         can = .true.
                         exit
+                    ! for annihilation fermion operator
                     elseif (k==0 .and. bin_basis(j, ibasis) == 1) then
                         tmp_basis = bin_basis(:, ibasis)
                         can = .true. 
                         exit
                     endif 
                 enddo 
+
                 if (can == .true.) then
                     if (k==1) then
                         myntot = sect_good_ntot(i) + 1
@@ -503,18 +552,20 @@ subroutine atomic_mksectors_nszps()
                     enddo
                     ! loop over all sectors to see which sector it will point to 
                     do l=1, nsectors
-                        if (sect_good_ntot(l) == myntot .and. sect_good_sz(l) == mysz .and. sect_good_ps(l) == myps) then
+                        if (sect_good_ntot(l) == myntot .and. sect_good_sz(l) == mysz &
+                            .and. sect_good_ps(l) == myps) then
                             which_sect = l
                             exit 
                         endif 
                     enddo 
                 endif  ! back to if (can == .true.) block
-                ! set next_sector index
                 sectors(i)%next_sector(j,k) = which_sect 
             enddo ! over k={0,1} loop
         enddo ! over j={1,norbs} loop
     enddo ! over i={1, nsectors} loop
+    !----------------------------------------------------------------
 
+    !----------------------------------------------------------------
     ! dump sector information for reference
     ! calculate the maximum and average dimensions of sectors
     max_dim_sectors = 0
@@ -523,19 +574,21 @@ subroutine atomic_mksectors_nszps()
         if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
         counter = counter + sectors(i)%ndim
     enddo
-    ave_dim_sectors = counter / real(nsectors)
+    ave_dim_sectors = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
-    write(mytmp, '(a,F16.8)') '#ave_dim_sectors: ', ave_dim_sectors
-    write(mytmp, '(a)') '#isect | N | Sz | PS | ndim | index | Fock_basis  '
+    write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |       PS(i) |     nd&
+                        im(i) |           j |    fock_basis(j,i) |  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
-            write(mytmp,'(6I10,4X, 14I1)') i, sect_good_ntot(i), sect_good_sz(i), sect_good_ps(i), &
-                                         sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+            write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i), &
+          sect_good_sz(i), sect_good_ps(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
         enddo
     enddo
     close(mytmp)
+    !----------------------------------------------------------------
 
     ! free memeory
     if (allocated(sect_good_ntot)) deallocate(sect_good_ntot)
@@ -550,11 +603,11 @@ end subroutine atomic_mksectors_nszps
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Jz 
 subroutine atomic_mksectors_njz()
-    use constants, only: mytmp
-    use control, only: norbs, ncfgs
+    use constants,         only: dp, mytmp
+    use control,           only: norbs, ncfgs
     use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector
-    use m_glob_sectors
+    use m_sector,          only: alloc_one_sector, alloc_one_fmat         
+    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors
 
     implicit none
 
@@ -579,14 +632,21 @@ subroutine atomic_mksectors_njz()
     integer :: nsect
     ! which sector point to
     integer :: which_sect
-    ! tmp variables
+    ! total electrons
     integer :: myntot
+    ! Jz value
     integer :: myjz
+    ! a counter
     integer :: counter
+    ! index of Fock basis
     integer :: ibasis
+    ! loop index
     integer :: i,j,k,l
+    ! maximum dimension of sectors
     integer :: max_dim_sectors
+    ! average dimension of sectors
     real(dp) :: ave_dim_sectors
+    ! can point to next sector
     logical :: can  
 
 
@@ -598,12 +658,12 @@ subroutine atomic_mksectors_njz()
     allocate(ndims(max_nsect))
     allocate(sector_basis(max_ndim, max_nsect))
 
+    !----------------------------------------------------------------
     ! make good_jz
     call make_good_jz(orb_good_jz)
-
-    !----------------------------------------------------------------
     ! build good quantum numbers for each Fock state
     counter = 0
+    ! loop over all the number of total electrons
     do i=0, norbs
         do j=1, dim_sub_n(i)
             counter = counter + 1
@@ -616,7 +676,6 @@ subroutine atomic_mksectors_njz()
         enddo  
     enddo
     !----------------------------------------------------------------
-
 
     !----------------------------------------------------------------
     ! loop over all the Fock states to determine sectors
@@ -636,7 +695,7 @@ subroutine atomic_mksectors_njz()
             ! loop over the exists sectors
             which_sect = -1
             do j=1, nsect
-                ! compare two subspaces
+                ! compare two sectors
                 if ( sect_good_ntot(j) == myntot .and. sect_good_jz(j) == myjz) then
                     which_sect = j
                     EXIT
@@ -655,9 +714,8 @@ subroutine atomic_mksectors_njz()
                 sector_basis(ndims(which_sect), which_sect) = i
             endif
         endif ! back to if (nsect == 0) then block 
-    enddo 
+    enddo ! over i={1,ncfgs} loop
     !----------------------------------------------------------------
-
 
     !----------------------------------------------------------------
     ! after we know how many sectors and the dimension of each sector,
@@ -672,8 +730,7 @@ subroutine atomic_mksectors_njz()
         sectors(i)%nops = norbs
         sectors(i)%istart = counter 
         counter = counter + ndims(i)
-        ! allocate memory for pointers in each subspace
-        ! WARNING: these memory should be deallocated before deallocating sectors
+        ! allocate memory for each sector
         call alloc_one_sector( sectors(i) )  
         ! set basis for each sector
         do j=1, ndims(i)
@@ -682,26 +739,30 @@ subroutine atomic_mksectors_njz()
     enddo
     !----------------------------------------------------------------
 
-
     !----------------------------------------------------------------
     ! make next_sector index
-    ! for create operators
+    ! loop over all the sectors
     do i=1, nsectors
+        ! loop over all the orbitals
         do j=1, norbs 
+            ! loop over creation and annihilation fermion operators
             do k=0,1 
                 which_sect = -1
-            ! we should lookup each basis in this subspace 
+                ! we should check each state in this sector
                 can = .false.
                 do l=1, sectors(i)%ndim
                     ibasis = sectors(i)%mybasis(l)
+                    ! for creation fermion operator
                     if (k==1 .and. bin_basis(j,ibasis) == 0 ) then
                         can = .true.
                         exit
+                    ! for annihilation fermion operator
                     elseif (k==0 .and. bin_basis(j, ibasis) == 1) then
                         can = .true. 
                         exit
                     endif 
                 enddo 
+
                 if (can == .true.) then
                     if (k==1) then
                         myntot = sect_good_ntot(i) + 1
@@ -718,13 +779,11 @@ subroutine atomic_mksectors_njz()
                         endif 
                     enddo 
                 endif  ! back to if (can == .true.) block
-                ! set next_sector index
                 sectors(i)%next_sector(j,k) = which_sect 
             enddo ! over k={0,1} loop
         enddo ! over j={1,norbs} loop
     enddo ! over i={1, nsectors} loop
     !----------------------------------------------------------------
-
 
     !----------------------------------------------------------------
     ! dump sector information for reference
@@ -739,16 +798,16 @@ subroutine atomic_mksectors_njz()
 
     open(mytmp, file='atom.sector.dat')
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
-    write(mytmp, '(a,F16.8)') '#ave_dim_sectors: ', ave_dim_sectors
-    write(mytmp, '(a)') '#isect | N | Jz | ndim | index | Fock_basis  '
+    write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a)') '#      i | electron(i) |       Jz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
-            write(mytmp,'(5I10,4X, 14I1)') i, sect_good_ntot(i), sect_good_jz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+            write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i),&
+                 sect_good_jz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
         enddo
     enddo
     close(mytmp)
     !----------------------------------------------------------------
-
 
     ! free memeory
     if (allocated(sect_good_ntot)) deallocate(sect_good_ntot)
@@ -759,6 +818,7 @@ subroutine atomic_mksectors_njz()
     return
 end subroutine atomic_mksectors_njz
 
+!>>> make sz for each orbital
 subroutine make_good_sz(good_sz)
     use control, only: norbs
 
@@ -780,15 +840,16 @@ subroutine make_good_sz(good_sz)
     return
 end subroutine make_good_sz
 
+!>>> make jz for each orbital
 subroutine make_good_jz(good_jz)
-    use control, only: norbs
+    use control, only: nband, norbs
 
     implicit none
 
     ! external variables
     integer, intent(out) :: good_jz(norbs)
 
-    if (norbs == 6) then
+    if (nband == 3) then
         ! j=1/2
         good_jz(1) = -1
         good_jz(2) =  1
@@ -797,7 +858,7 @@ subroutine make_good_jz(good_jz)
         good_jz(4) = -1
         good_jz(5) =  1
         good_jz(6) =  3
-    elseif (norbs == 10) then
+    elseif (nband == 5) then
         ! j=3/2
         good_jz(1) = -3
         good_jz(2) = -1
@@ -810,7 +871,7 @@ subroutine make_good_jz(good_jz)
         good_jz(8) =  1
         good_jz(9) =  3
         good_jz(10)=  5
-    elseif (norbs == 14) then
+    elseif (nband == 7) then
         ! j=5/2
         good_jz(1) = -5
         good_jz(2) = -3
@@ -833,4 +894,3 @@ subroutine make_good_jz(good_jz)
 
     return
 end subroutine make_good_jz
-
