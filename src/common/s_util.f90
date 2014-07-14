@@ -168,3 +168,65 @@
 
      return
   end function s_str_integer
+
+!
+!       String:         Character string to be compressed.
+!
+!       Result:         Input string with all whitespace removed before the
+!                       first non-whitespace character, and from in-between 
+!                       non-whitespace characters.
+!
+!       Definitions of a space and a tab character are made for the
+!       ASCII collating sequence. Each single character of the input
+!       string is checked against these definitions using the IACHAR()
+!       intrinsic. If the input string character DOES NOT correspond 
+!       to a space or tab, it is not copied to the output string.
+!
+!       Note that for input that ONLY has spaces or tabs BEFORE the first
+!       useful character, the output of this function is the same as the
+!       ADJUSTL() instrinsic.
+
+!!>>> s_str_compress: return a copy of an input string with all whitespace
+!!>>> (spaces and tabs) removed.
+  function s_str_compress( Input_String ) RESULT ( Output_String )
+     implicit none
+
+! external arguments
+     CHARACTER( * ),    INTENT( IN )  :: Input_String
+
+    ! -- Function result
+     CHARACTER( LEN( Input_String ) ) :: Output_String
+
+! local parameters
+     INTEGER, PARAMETER :: IACHAR_SPACE = 32
+     INTEGER, PARAMETER :: IACHAR_TAB   = 9
+
+! local variables
+     INTEGER :: i, j
+     INTEGER :: IACHAR_Character
+
+! Initialise output string
+     Output_String = ' '
+
+! Initialise output string "useful" length counter
+     j = 0
+
+    ! -- Loop over string elements
+    DO i = 1, LEN( Input_String )
+
+      ! -- Convert the current character to its position
+      ! -- in the ASCII collating sequence
+      IACHAR_Character = IACHAR( Input_String( i:i ) )
+
+      ! -- If the character is NOT a space ' ' or a tab '->|'
+      ! -- copy it to the output string.
+      IF ( IACHAR_Character /= IACHAR_SPACE .AND. &
+           IACHAR_Character /= IACHAR_TAB         ) THEN
+        j = j + 1
+        Output_String( j:j ) = Input_String( i:i )
+      END IF
+
+    END DO
+
+     return
+  end function s_str_compress
