@@ -12,6 +12,9 @@
 !!!-----------------------------------------------------------------------
 
   module parser
+     use constants
+     use mlist 
+
      implicit none
 
   contains
