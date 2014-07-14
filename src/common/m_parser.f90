@@ -27,24 +27,45 @@
   contains
 
   subroutine p_create()
+     implicit none
+
+     return
   end subroutine p_create
 
   subroutine p_destroy()
+     implicit none
+
+     return
   end subroutine p_destroy
 
   subroutine p_parse()
+     implicit none
+
+     return
   end subroutine p_parse
 
   subroutine p_get_integer()
+     implicit none
+
+     return
   end subroutine p_get_integer
 
   subroutine p_get_real()
+     implicit none
+
+     return
   end subroutine p_get_real
 
   subroutine p_get_logical()
+     implicit none
+
+     return
   end subroutine p_get_logical
 
   subroutine p_get_character()
+     implicit none
+
+     return
   subroutine p_get_character()
 
   end module parser
