@@ -14,8 +14,8 @@
 program main
     use constants,         only: mystd
     use control,           only: ictqmc
-    use m_basis_fullspace, only: dealloc_m_basis_fullspace
-    use m_spmat,           only: dealloc_m_spmat
+    use m_basis_fullspace, only: alloc_m_basis_fullspace, dealloc_m_basis_fullspace
+    use m_spmat,           only: alloc_m_spmat, dealloc_m_spmat
 
     implicit none
 
@@ -34,6 +34,13 @@ program main
 
     ! print the summary of control parameters 
     call atomic_print_summary()
+
+    ! allocate some global memory
+    ! allocate memory for basis related matrices
+    call alloc_m_basis_fullspace()
+    ! allocate memory for single particle matrices
+    call alloc_m_spmat()
+
 
     ! make Single Particle related MATrix
     ! including crystal field (CF), spin-orbital coupling (SOC), Coulomb interaction U

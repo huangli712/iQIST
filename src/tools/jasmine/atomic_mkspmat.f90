@@ -23,16 +23,12 @@
 ! crystal field (CF), spin-orbital coupling (SOC),  and Coulomb inteartion U tensor
 subroutine atomic_make_spmat()
     use constants, only: czero
-    use control, only: itask, icf, isoc, icu
-    use m_spmat, only: cfmat, socmat, alloc_m_spmat
+    use control,   only: itask, icf, isoc, icu
+    use m_spmat,   only: cfmat, socmat
 
     implicit none
 
-    ! first, we allocate memory for these single particle matrices here
-    ! and they will be deallocated in program main
-    call alloc_m_spmat()
-
-    ! second, make crystal field and spin-orbital coupling 
+    ! make crystal field and spin-orbital coupling 
     if (itask == 1) then ! make natural basis inside
         ! CF
         if (icf > 0) then
@@ -65,7 +61,7 @@ subroutine atomic_make_spmat()
         call atomic_read_umat()
     endif
 
-    ! third, make Coulomb interaction U
+    ! make Coulomb interaction U
     if (icu == 1) then
         ! Kanamori parameters type
         ! it is defined on real orbital basis 
