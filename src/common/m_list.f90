@@ -39,6 +39,8 @@
 
 ! self-defined data structure which will be stored in the linked list
      type T_data
+         character(len = 32) : str_key
+         character(len = 32) : str_value
      end type T_data
 
 ! node for the linked list, it contains a self-pointer
