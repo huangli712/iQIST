@@ -24,6 +24,20 @@
 
      implicit none
 
+     type (T_data) :: m_data
+     type (T_node), pointer :: m_list 
+
+     private :: m_data
+     private :: m_list
+
+     public :: p_create
+     public :: p_destroy
+     public :: p_parse
+     public :: p_get_integer
+     public :: p_get_real
+     public :: p_get_bool
+     public :: p_get_character
+
   contains
 
   subroutine p_create()
