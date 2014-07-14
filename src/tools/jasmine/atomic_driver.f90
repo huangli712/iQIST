@@ -203,7 +203,7 @@ subroutine atomic_solve_sectors()
     do i=1, nsectors 
         call atomic_check_mat_real(sectors(i)%ndim, sectors(i)%myham, lreal)
         if (lreal .eqv. .false.) then
-            call atomic_print_error('atomic_driver_fullspace', 'hmat is not real !')
+            call atomic_print_error('atomic_solve_sectors', 'hmat is not real !')
         endif
     enddo
     write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real"
