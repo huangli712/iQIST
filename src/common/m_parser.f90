@@ -26,9 +26,11 @@
 
      type (T_data) :: m_data
      type (T_node), pointer :: m_list 
+     character(len = 36) :: m_file
 
      private :: m_data
      private :: m_list
+     private :: m_file
 
      public :: p_create
      public :: p_destroy
@@ -42,7 +44,9 @@
 
   subroutine p_create()
      implicit none
-  
+ 
+     m_list => null()
+ 
      return
   end subroutine p_create
 
