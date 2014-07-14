@@ -203,7 +203,7 @@ subroutine atomic_write_atomcix_sectors()
 
     ! local variables
     integer :: i, j, k, ii
-
+ 
     ! open 'atom.cix' to write
     open(mytmp, file='atom.sector.in')
     ! write number of sectors
