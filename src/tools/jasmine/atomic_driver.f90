@@ -2,6 +2,7 @@
 ! project : jasmine
 ! program : atomic_driver_fullspace
 !         : atomic_driver_n
+!         : atomic_driver_nsz
 !         : atomic_driver_nszps
 !         : atomic_driver_njz
 !         : atomic_solve_sectors
@@ -30,7 +31,7 @@ subroutine atomic_driver_fullspace()
     logical :: lreal 
 
     ! allocate memory 
-    write(mystd, "(2X,a)") "jasmine >>> allocate global memory ..."
+    write(mystd, "(2X,a)") "jasmine >>> allocate global memory for fullspace case ..."
     write(mystd,*)
     call alloc_m_glob_fullspace()
 
@@ -42,16 +43,16 @@ subroutine atomic_driver_fullspace()
     ! check whether the many particle Hamiltonian is real 
     write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
     write(mystd,*)
-    call atomic_check_hmat_real(ncfgs, hmat, lreal)
+    call atomic_check_mat_real(ncfgs, hmat, lreal)
     if (lreal .eqv. .false.) then
         call atomic_print_error('atomic_driver_fullspace', 'hmat is not real !')
     else
-        write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real"
+        write(mystd, "(2X,a)") "jasmine >>> the atomic Hamiltonian is real"
         write(mystd,*)
     endif
 
     ! diagonalize hmat
-    write(mystd, "(2X,a)") "jasmine >>> diagonalize atomic Hamiltonian ..."
+    write(mystd, "(2X,a)") "jasmine >>> diagonalize the atomic Hamiltonian ..."
     write(mystd,*)
     tmp_mat = real(hmat)
     call dmat_dsyev(ncfgs, ncfgs, tmp_mat, hmat_eigval, hmat_eigvec)
@@ -81,6 +82,8 @@ subroutine atomic_driver_fullspace()
     ! for begonia, lavender package
     call atomic_write_atomcix_fullspace()
 
+    write(mystd, "(2X,a)") "jasmine >>> free memory for fullspace case ... "
+    write(mystd,*)
     ! deallocate memory
     call dealloc_m_glob_fullspace()
 
@@ -89,7 +92,7 @@ end subroutine atomic_driver_fullspace
   
 !>>> for CTQMC trace algorithm: use good quantum number, total electrons N
 subroutine atomic_driver_n()
-    use constants, only: mystd
+    use constants,      only: mystd
     use m_glob_sectors, only: dealloc_m_glob_sectors
 
     implicit none
@@ -102,27 +105,31 @@ subroutine atomic_driver_n()
     ! solve the atomic problem for good quantum numbers algorithm
     call atomic_solve_sectors()
 
+    write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
+    write(mystd,*)
     ! free memory
     call dealloc_m_glob_sectors()
 
     return
 end subroutine atomic_driver_n
 
-!>>> for CTQMC trace algorithm: use good quantum number, total electrons N
+!>>> for CTQMC trace algorithm: use good quantum number, total electrons N, Sz
 subroutine atomic_driver_nsz()
-    use constants, only: mystd
+    use constants,      only: mystd
     use m_glob_sectors, only: dealloc_m_glob_sectors
 
     implicit none
 
     ! make all the sectors, allocate m_glob_sectors memory inside
-    write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers N ... "
+    write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers N, Sz ... "
     write(mystd,*)
     call atomic_mksectors_nsz()
 
     ! solve the atomic problem for good quantum numbers algorithm
     call atomic_solve_sectors()
 
+    write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
+    write(mystd,*)
     ! free memory
     call dealloc_m_glob_sectors()
 
@@ -132,16 +139,21 @@ end subroutine atomic_driver_nsz
 
 !>>> for CTQMC trace algorithm: use good quantum number, total electrons N, Sz, PS
 subroutine atomic_driver_nszps()
+    use constants,      only: mystd
     use m_glob_sectors, only: dealloc_m_glob_sectors
 
     implicit none
 
     ! make all the sectors, allocate m_glob_sectors memory inside
+    write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers N, Sz, PS ... "
+    write(mystd,*)
     call atomic_mksectors_nszps()
 
     ! solve the atomic problem for good quantum numbers algorithm
     call atomic_solve_sectors()
 
+    write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
+    write(mystd,*)
     ! free memory
     call dealloc_m_glob_sectors()
 
@@ -163,6 +175,8 @@ subroutine atomic_driver_njz()
     ! solve the atomic problem for good quantum numbers algorithm
     call atomic_solve_sectors()
 
+    write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
+    write(mystd,*)
     ! free memory
     call dealloc_m_glob_sectors()
 
@@ -170,8 +184,8 @@ subroutine atomic_driver_njz()
 end subroutine atomic_driver_njz
 
 subroutine atomic_solve_sectors()
-    use constants, only: mystd
-    use m_glob_sectors
+    use constants,      only: mystd
+    use m_glob_sectors, only: nsectors, sectors
 
     implicit none
     ! local variables
@@ -187,7 +201,7 @@ subroutine atomic_solve_sectors()
     write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
     write(mystd,*)
     do i=1, nsectors 
-        call atomic_check_hmat_real(sectors(i)%ndim, sectors(i)%myham, lreal)
+        call atomic_check_mat_real(sectors(i)%ndim, sectors(i)%myham, lreal)
         if (lreal .eqv. .false.) then
             call atomic_print_error('atomic_driver_fullspace', 'hmat is not real !')
         endif

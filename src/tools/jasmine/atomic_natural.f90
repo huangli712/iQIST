@@ -63,8 +63,7 @@ subroutine atomic_make_natural()
         ! for Slater-Cordon parameters Coulomb interaction U
         ! we first need to transfrom cumat from complex orbital basis to real orbital basis
         if ( icu == 2 ) then
-            call atomic_make_umat_r2c( umat_r2c )
-            umat_c2r = transpose( dconjg(umat_r2c) )
+            call atomic_make_umat_c2r( umat_c2r )
             call atomic_tran_cumat( umat_c2r, cumat, tmp_mat )
             cumat = tmp_mat
         endif
@@ -153,7 +152,7 @@ subroutine atomic_2natural_case2()
     do i=1, nband
         eimp_nospin(i,i) = eigval(i) 
     enddo
-    umat_nospin = eigvec
+    umat_nospin = dcmplx(eigvec)
 
     call atomic_mat_2spin(nband, eimp_nospin, eimpmat) 
     call atomic_mat_2spin(nband, umat_nospin, tran_umat)
@@ -231,12 +230,21 @@ subroutine atomic_2natural_case4()
     real(dp) :: eigvec(norbs, norbs)
     ! loop index
     integer :: i
+    ! whether cfmat is real on complex orbital basis
+    logical :: lreal
 
     ! get umat_r2c
     call atomic_make_umat_r2c(umat_r2c)
 
-    ! transfrom cfmat and to complex orbital basis
+    ! transfrom cfmat to complex orbital basis
     call atomic_tran_represent(norbs, cfmat, umat_r2c)
+
+    ! check whether cfmat is real, if not, we cann't make natural basis
+    call atomic_check_mat_real(norbs, cfmat, lreal)
+    if (lreal .eqv. .false.) then
+        call atomic_print_error('atomic_2natural_case4', 'crystal field on &
+            complex orbital basis is not real, cannot make natural basis !')
+    endif
 
     ! set eimpmat
     eimpmat = socmat + cfmat   

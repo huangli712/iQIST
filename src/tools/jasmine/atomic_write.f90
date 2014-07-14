@@ -32,11 +32,10 @@ subroutine atomic_write_basis()
     ! open file 'atom.basis.dat' to write
     open(mytmp, file='atom.basis.dat')
     ! write the header
-    write(mytmp, '(a)') '# index  |  decimal form | index | binary form'
+    write(mytmp, '(a)') '#      i |  decimal(i) |    index(i) |      binary(i) |'
     do i=1, ncfgs
-        write(mytmp, "(3I10,4X,14I2)") i, dec_basis(i), index_basis(dec_basis(i)), bin_basis(:,i)   
+        write(mytmp, "(I10,4X,I10,4X,I10,8X,14I1)") i, dec_basis(i), index_basis(dec_basis(i)), bin_basis(:,i)   
     enddo 
-
     close(mytmp)
 
     return
@@ -55,11 +54,10 @@ subroutine atomic_write_eigval_fullspace()
     
     ! open file 'atom.eigval.dat' to write
     open(mytmp, file='atom.eigval.dat')
-    write(mytmp, '(a)') '#      index  |    eigenvalue   |    occupancy '
+    write(mytmp, '(a)') '#       i |     eigenvalue(i) |      occupancy(i) |'
     do i=1, ncfgs
         write(mytmp, "(I10, 2F20.10)") i, hmat_eigval(i), occu_mat(i,i)
     enddo
-
     close(mytmp)
 
     return
@@ -79,14 +77,13 @@ subroutine atomic_write_eigvec_fullspace()
  
     ! open file 'atom.eigvec.dat' to write
     open(mytmp, file='atom.eigvec.dat')
-    write(mytmp, '(a)') '#    i   |   j    | eigenvec(i,j)    |   Fock_basis(i)'
+    write(mytmp, '(a)') '#      i |       j |  eigenvector(i,j) |       fock_basis(i) |'
     do i=1, ncfgs
         do j=1, ncfgs
             if ( abs(hmat_eigvec(j,i)) < eps6 ) cycle
-            write(mytmp, "(2I10, F20.10, 4X, 14I1)") j, i, hmat_eigvec(j,i), bin_basis(:,j) 
+            write(mytmp, "(2I10, F20.10, 8X, 14I1)") j, i, hmat_eigvec(j,i), bin_basis(:,j) 
         enddo
     enddo 
-
     close(mytmp)
 
     return
@@ -144,7 +141,7 @@ end subroutine atomic_write_atomcix_fullspace
 !>>> write eigenvalue of sectors to file 'atom.eigval.dat'
 subroutine atomic_write_eigval_sectors()
     use constants,      only: mytmp
-    use m_glob_sectors
+    use m_glob_sectors, only: nsectors, sectors
 
     implicit none
 
@@ -155,11 +152,11 @@ subroutine atomic_write_eigval_sectors()
     ! open file 'atom.eigval.dat' to write
     open(mytmp, file='atom.eigval.dat')
     counter = 0
-    write(mytmp, '(a)') "#istate | isect | nelectron | istate_sect | eigenvalue"
+    write(mytmp, '(a)') "#      i |     sect(i) | electron(i) |           j |   eigenvalue(i,j) |"
     do i=1, nsectors
         do j=1, sectors(i)%ndim
             counter = counter + 1
-            write(mytmp, "(4I10, F20.10)") counter, i, sectors(i)%nelectron, j, sectors(i)%myeigval(j)
+            write(mytmp, "(I10,4X,I10,4X,I10,4X,I10, F20.10)") counter, i, sectors(i)%nelectron, j, sectors(i)%myeigval(j)
         enddo
     enddo
     close(mytmp)
@@ -169,9 +166,9 @@ end subroutine atomic_write_eigval_sectors
 
 !>>> write eigenvector of sectors to file 'atom.eigval.dat'
 subroutine atomic_write_eigvec_sectors()
-    use constants, only: mytmp, eps6
+    use constants,         only: mytmp, eps6
     use m_basis_fullspace, only: bin_basis
-    use m_glob_sectors
+    use m_glob_sectors,    only: nsectors, sectors
 
     implicit none
 
@@ -181,12 +178,12 @@ subroutine atomic_write_eigvec_sectors()
 
     open(mytmp, file="atom.eigvec.dat")
     counter = 0
-    write(mytmp, '(a)') '#isect |   i   |   j   | eigvec(i,j)    |    Fock_basis(i)'
+    write(mytmp, '(a)') '#      i |       j |       k |       eigvec(j,k) |       fock_basis(j) |'
     do i=1, nsectors
         do j=1, sectors(i)%ndim
             do k=1, sectors(i)%ndim
                 if ( abs(sectors(i)%myeigvec(k,j)) < eps6 ) cycle
-                    write(mytmp, "(3I10, F20.10, 4X, 14I1)") i, k+counter, j+counter, &
+                    write(mytmp, "(3I10, F20.10, 8X, 14I1)") i, k+counter, j+counter, &
                     sectors(i)%myeigvec(k,j), bin_basis(:,sectors(i)%mybasis(k))
             enddo
         enddo
@@ -199,8 +196,8 @@ end subroutine atomic_write_eigvec_sectors
 
 !>>> write atom.cix for CTQMC input, good quantum number algorithm
 subroutine atomic_write_atomcix_sectors()
-    use constants, only: mytmp
-    use m_glob_sectors
+    use constants,      only: mytmp
+    use m_glob_sectors, only: nsectors, sectors
 
     implicit none
 
@@ -262,6 +259,7 @@ subroutine atomic_write_natural(info)
 
     open(mytmp, file='atom.natural.dat')
     write(mytmp,'(a)') info
+    write(mytmp,'(a)') '#      i |       j |    umat_real(i,j) |    umat_imag(i,j) |'
     do i=1, norbs
         do j=1, norbs
             write(mytmp, '(2I10,2F20.10)') j, i, tran_umat(j,i)

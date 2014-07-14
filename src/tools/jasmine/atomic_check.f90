@@ -1,7 +1,7 @@
 !-------------------------------------------------------------------------
 ! project : jasmine
 ! program : atomic_check_config
-!         : atomic_check_hmat_real
+!         : atomic_check_mat_real
 ! source  : atomic_check.f90
 ! type    : subroutines
 ! author  : yilin wang (email: qhwyl2006@126.com)
@@ -122,8 +122,8 @@ subroutine atomic_check_config()
     return
 end subroutine atomic_check_config
 
-!>>> check whether Hamiltonian is real
-subroutine atomic_check_hmat_real(ndim, hmat, lreal)
+!>>> check whether a matrix is real
+subroutine atomic_check_mat_real(ndim, mat, lreal)
     use constants, only: dp, eps6
 
     implicit none
@@ -132,7 +132,7 @@ subroutine atomic_check_hmat_real(ndim, hmat, lreal)
     ! dimension of the Hamiltonian
     integer, intent(in) :: ndim
     ! the Hamiltonian matrix
-    complex(dp), intent(in) :: hmat(ndim, ndim)
+    complex(dp), intent(in) :: mat(ndim, ndim)
     ! whether Hamiltonian is real
     logical, intent(out) :: lreal
 
@@ -141,7 +141,7 @@ subroutine atomic_check_hmat_real(ndim, hmat, lreal)
 
     do i=1, ndim
         do j=1, ndim
-            if ( aimag(hmat(j,i)) > eps6 ) then
+            if ( aimag(mat(j,i)) > eps6 ) then
                 lreal = .false. 
                 return
             endif
@@ -151,4 +151,4 @@ subroutine atomic_check_hmat_real(ndim, hmat, lreal)
     lreal = .true.
 
     return
-end subroutine atomic_check_hmat_real
+end subroutine atomic_check_mat_real
