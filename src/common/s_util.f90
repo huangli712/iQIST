@@ -192,18 +192,18 @@
      implicit none
 
 ! external arguments
-     CHARACTER( * ),    INTENT( IN )  :: Input_String
+     character( * ), intent(in) :: Input_String
 
-    ! -- Function result
-     CHARACTER( LEN( Input_String ) ) :: Output_String
+! return values
+     character( len( Input_String ) ) :: Output_String
 
 ! local parameters
-     INTEGER, PARAMETER :: IACHAR_SPACE = 32
-     INTEGER, PARAMETER :: IACHAR_TAB   = 9
+     integer, PARAMETER :: IACHAR_SPACE = 32
+     integer, PARAMETER :: IACHAR_TAB   = 9
 
 ! local variables
-     INTEGER :: i, j
-     INTEGER :: IACHAR_Character
+     integer :: i, j
+     integer :: IACHAR_Character
 
 ! Initialise output string
      Output_String = ' '
@@ -212,21 +212,20 @@
      j = 0
 
     ! -- Loop over string elements
-    DO i = 1, LEN( Input_String )
+     do i = 1, LEN( Input_String )
 
       ! -- Convert the current character to its position
       ! -- in the ASCII collating sequence
-      IACHAR_Character = IACHAR( Input_String( i:i ) )
+         IACHAR_Character = IACHAR( Input_String( i:i ) )
 
       ! -- If the character is NOT a space ' ' or a tab '->|'
       ! -- copy it to the output string.
-      IF ( IACHAR_Character /= IACHAR_SPACE .AND. &
+         IF ( IACHAR_Character /= IACHAR_SPACE .AND. &
            IACHAR_Character /= IACHAR_TAB         ) THEN
-        j = j + 1
-        Output_String( j:j ) = Input_String( i:i )
-      END IF
-
-    END DO
+             j = j + 1
+             Output_String( j:j ) = Input_String( i:i )
+         ENDIF
+     enddo
 
      return
   end function s_str_compress
