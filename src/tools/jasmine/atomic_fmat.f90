@@ -18,8 +18,8 @@
 
 !>>> make fmat for annihilation operators for full space
 subroutine atomic_make_annifmat_fullspace()
-    use control, only: norbs, ncfgs
-    use m_glob_fullspace, only: anni_fmat, hmat_eigvec
+    use control,           only: norbs, ncfgs
+    use m_glob_fullspace,  only: anni_fmat, hmat_eigvec
     use m_basis_fullspace, only: dec_basis, index_basis
 
     implicit none
@@ -55,11 +55,11 @@ end subroutine atomic_make_annifmat_fullspace
 
 !>>> build fmat for good quantum algorithm
 subroutine atomic_make_fmat_sectors()
-     use constants, only: zero
-     use control, only: norbs
+     use constants,         only: zero
+     use control,           only: norbs
      use m_basis_fullspace, only: dec_basis, index_basis
-     use m_glob_sectors 
-     use m_sector
+     use m_glob_sectors,    only: nsectors, sectors
+     use m_sector,          only: alloc_one_fmat
 
      implicit none
 
@@ -75,8 +75,11 @@ subroutine atomic_make_fmat_sectors()
      ! auxiliary integer variables
      integer :: jold, jnew
 
+     ! loop over all the sectors
      do isect=1, nsectors
+         ! loop over all the orbitals
          do iorb=1,norbs
+             ! loop over the creation and annihilation fermion operators
              do ifermi=0, 1 
                  jsect = sectors(isect)%next_sector(iorb, ifermi) 
                  if (jsect == -1) cycle
@@ -88,8 +91,10 @@ subroutine atomic_make_fmat_sectors()
                  ! build fmat
                  do jbas=1, sectors(isect)%ndim
                      jold = dec_basis(sectors(isect)%mybasis(jbas))
+                     ! for creation fermion operator
                      if (ifermi == 1 .and. ( btest(jold, iorb-1) .eqv. .false. )) then
                          call atomic_construct(iorb, jold, jnew, isgn)
+                     ! for annihilation fermion operator
                      elseif (ifermi == 0 .and. ( btest(jold, iorb-1) .eqv. .true. )) then
                          call atomic_eliminate(iorb, jold, jnew, isgn)
                      else
@@ -105,7 +110,8 @@ subroutine atomic_make_fmat_sectors()
                          endif
                      enddo
 
-                 enddo 
+                 enddo  ! over jbas={1, sectors(isect)%ndim} loop
+                 ! roate fmat to atomic eigenstates basis
                  call rotate_fmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%myeigvec, &
                      sectors(isect)%myfmat(iorb, ifermi)%item, sectors(isect)%myeigvec)
 

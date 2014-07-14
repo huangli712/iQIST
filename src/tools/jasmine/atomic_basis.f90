@@ -10,14 +10,14 @@
 ! input   :
 ! output  :
 ! status  : unstable
-! comment :
+! comment : 
 !-------------------------------------------------------------------------
 
 !>>> make Fock basis for full Hilbert space, this subroutine is taken from
 ! Dr. LiangDu's (duleung@gmail.com) atomic program
 subroutine atomic_make_basis_fullspace()
-    use control, only: norbs, ncfgs
-    use m_basis_fullspace  
+    use control,            only: norbs, ncfgs
+    use m_basis_fullspace,  only: dim_sub_n, dec_basis, bin_basis, index_basis  
 
     implicit none
 
@@ -32,8 +32,11 @@ subroutine atomic_make_basis_fullspace()
     ! number of electrons for Fock state
     integer :: nelec
 
-    ! first, allocate memory for basis related matrices
-    call alloc_m_basis_fullspace()
+    ! initialize them
+    dim_sub_n = 0
+    dec_basis = 0
+    bin_basis = 0
+    index_basis = 0
 
     do i=0,norbs
         dim_sub_n(i) = state_pick(i, norbs)
@@ -76,13 +79,15 @@ function state_pick(ntiny, nlarg) result(value)
     integer, intent(in) :: nlarg
 
     ! local variables
+    integer, parameter :: dp=kind(0.0d0)
+    ! loop index
     integer :: i
     ! auxiliary integer variable
     integer :: nlow
     ! numberator of the combination algebra
-    real(8) :: numer
+    real(dp) :: numer
     ! denominator of the combination algebra
-    real(8) :: denom
+    real(dp) :: denom
     ! result value of the combination algebra
     integer :: value
 
@@ -90,13 +95,13 @@ function state_pick(ntiny, nlarg) result(value)
     nlow = min(ntiny, nlarg-ntiny)
 
     ! numerator in combination algebra
-    numer = 1.0D0
+    numer = 1.0_dp
     do i=nlarg-nlow+1,nlarg
        numer = numer * dble(i)
     enddo ! over i={nlarg-nlow+1,nlarg} loop
 
     ! denominator in combination algebra
-    denom = 1.0D0
+    denom = 1.0_dp
     do i=1,nlow
        denom = denom * dble(i)
     enddo ! over i={1,nlow} loop

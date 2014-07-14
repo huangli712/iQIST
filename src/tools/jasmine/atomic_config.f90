@@ -14,7 +14,7 @@
 
 !>>> read config parameters from file 'atom.config.in'
 subroutine atomic_config()
-    use constants
+    use constants,  only: dp, mytmp
     use control
 
     implicit none
@@ -106,5 +106,3 @@ subroutine atomic_config()
 
     return
 end subroutine atomic_config
-
-

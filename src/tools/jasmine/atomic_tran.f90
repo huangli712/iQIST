@@ -16,7 +16,7 @@
 ! comment :
 !-------------------------------------------------------------------------
 
-
+!>>> make transformation matrix from real orbital basis to complex orbital basis
 subroutine atomic_make_umat_r2c( umat_r2c )
     use constants, only: dp, czero, cone, czi
     use control,   only: nband, norbs
@@ -39,6 +39,26 @@ subroutine atomic_make_umat_r2c( umat_r2c )
     !         dz2up, dz2dn, dxzup, dxzdn, dyzup, dyzdn, dx2-y2up, dx2-y2dn, dxyup, dxydn 
     ! case 2: if nband == 3, then t2g orbitals will be included, the order is
     !         dxzup, dxzdn, dyzup, dyzdn, dxyup, dxydn
+
+    if ( nband == 3) then
+    ! the complex orbital |Lz,Sz> order is
+    ! -1up, -1dn, 0up, 0dn, 1up, 1dn 
+        umat_r2c = czero
+        umat_c2r = czero
+
+        umat_c2r(1,1) =  czi/sqrt2
+        umat_c2r(5,1) =  czi/sqrt2
+        umat_c2r(2,2) =  czi/sqrt2
+        umat_c2r(6,2) =  czi/sqrt2
+        umat_c2r(1,3) =  cone/sqrt2
+        umat_c2r(5,3) =  -cone/sqrt2
+        umat_c2r(2,4) =  cone/sqrt2
+        umat_c2r(6,4) =  -cone/sqrt2
+        umat_c2r(3,5) =  cone
+        umat_c2r(4,6) =  cone
+
+        umat_r2c = transpose(dconjg(umat_c2r))  
+    endif
 
     if ( nband == 5 ) then
     ! the complex orbital |Lz,Sz> order is:
@@ -64,26 +84,6 @@ subroutine atomic_make_umat_r2c( umat_r2c )
         umat_c2r(9,9) =   -czi/sqrt2
         umat_c2r(2,10) =    czi/sqrt2
         umat_c2r(10,10) =  -czi/sqrt2
-
-        umat_r2c = transpose(dconjg(umat_c2r))  
-    endif
-
-    if ( nband == 3) then
-    ! the complex orbital |Lz,Sz> order is
-    ! -1up, -1dn, 0up, 0dn, 1up, 1dn 
-        umat_r2c = czero
-        umat_c2r = czero
-
-        umat_c2r(1,1) =  czi/sqrt2
-        umat_c2r(5,1) =  czi/sqrt2
-        umat_c2r(2,2) =  czi/sqrt2
-        umat_c2r(6,2) =  czi/sqrt2
-        umat_c2r(1,3) =  cone/sqrt2
-        umat_c2r(5,3) =  -cone/sqrt2
-        umat_c2r(2,4) =  cone/sqrt2
-        umat_c2r(6,4) =  -cone/sqrt2
-        umat_c2r(3,5) =  cone
-        umat_c2r(4,6) =  cone
 
         umat_r2c = transpose(dconjg(umat_c2r))  
     endif
@@ -222,7 +222,6 @@ subroutine atomic_tran_represent_real( ndim, amat, umat )
     return
 end subroutine atomic_tran_represent_real
 
-
 !>>> transform Coulomb interaction U tensor 
 subroutine atomic_tran_cumat(amtrx, cumat, cumat_t)
     use constants, only: dp, czero, epst
@@ -276,5 +275,3 @@ subroutine atomic_tran_cumat(amtrx, cumat, cumat_t)
 
     return
 end subroutine atomic_tran_cumat
-
-
