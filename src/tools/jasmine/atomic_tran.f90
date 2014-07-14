@@ -35,8 +35,10 @@ subroutine atomic_make_umat_c2r( umat_c2r )
     umat_c2r = czero
 
     if ( nband == 3) then
-    ! the real orbital order is:  
+    ! the real orbital order (t2g) is:  
     ! dxzup, dxzdn, dyzup, dyzdn, dxyup, dxydn
+    ! the corresponding p orbital order is:
+    ! pyup, pydn, pxup, pxdn, pzup, pzdn
     ! the complex orbital |Lz,Sz> order is
     ! -1up, -1dn, 0up, 0dn, 1up, 1dn 
         umat_c2r(1,1) =  czi/sqrt2
@@ -114,7 +116,7 @@ end subroutine atomic_make_umat_c2r
 
 !>>> make umat from real orbital basis to complex orbital basis
 subroutine atomic_make_umat_r2c(umat_r2c)
-    use constants, only: czero
+    use constants, only: dp, czero
     use control,   only: norbs
 
     ! external variables
@@ -148,15 +150,15 @@ subroutine atomic_make_umat_c2j( umat_c2j )
     ! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>
     ! the |j2,jz> order is:
     ! |1/2,-1/2>, |1/2,1/2>, |3/2,-3/2>, |3/2, -1/2>, |3/2, 1/2>, |3/2,3/2>
-        umat_c2j(1,1) = -sqrt(2.0/3.0) 
-        umat_c2j(4,1) =  sqrt(1.0/3.0) 
-        umat_c2j(3,2) = -sqrt(1.0/3.0) 
-        umat_c2j(6,2) =  sqrt(2.0/3.0) 
+        umat_c2j(1,1) = -sqrt(2.0_dp/3.0_dp) 
+        umat_c2j(4,1) =  sqrt(1.0_dp/3.0_dp) 
+        umat_c2j(3,2) = -sqrt(1.0_dp/3.0_dp) 
+        umat_c2j(6,2) =  sqrt(2.0_dp/3.0_dp) 
         umat_c2j(2,3) =  1.0_dp
-        umat_c2j(1,4) =  sqrt(1.0/3.0) 
-        umat_c2j(4,4) =  sqrt(2.0/3.0) 
-        umat_c2j(3,5) =  sqrt(2.0/3.0) 
-        umat_c2j(6,5) =  sqrt(1.0/3.0) 
+        umat_c2j(1,4) =  sqrt(1.0_dp/3.0_dp) 
+        umat_c2j(4,4) =  sqrt(2.0_dp/3.0_dp) 
+        umat_c2j(3,5) =  sqrt(2.0_dp/3.0_dp) 
+        umat_c2j(6,5) =  sqrt(1.0_dp/3.0_dp) 
         umat_c2j(5,6) =  1.0_dp
     elseif ( nband == 5 ) then
     ! the |lz,sz> order is:
@@ -164,23 +166,23 @@ subroutine atomic_make_umat_c2j( umat_c2j )
     ! the |j2,jz> order is:
     ! |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2>, |3/2,3/2>
     ! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
-        umat_c2j(1,1) = -sqrt(4.0/5.0) 
-        umat_c2j(4,1) =  sqrt(1.0/5.0) 
-        umat_c2j(3,2) = -sqrt(3.0/5.0) 
-        umat_c2j(6,2) =  sqrt(2.0/5.0) 
-        umat_c2j(5,3) = -sqrt(2.0/5.0) 
-        umat_c2j(8,3) =  sqrt(3.0/5.0) 
-        umat_c2j(7,4) = -sqrt(1.0/5.0) 
-        umat_c2j(10,4)=  sqrt(4.0/5.0) 
+        umat_c2j(1,1) = -sqrt(4.0_dp/5.0_dp) 
+        umat_c2j(4,1) =  sqrt(1.0_dp/5.0_dp) 
+        umat_c2j(3,2) = -sqrt(3.0_dp/5.0_dp) 
+        umat_c2j(6,2) =  sqrt(2.0_dp/5.0_dp) 
+        umat_c2j(5,3) = -sqrt(2.0_dp/5.0_dp) 
+        umat_c2j(8,3) =  sqrt(3.0_dp/5.0_dp) 
+        umat_c2j(7,4) = -sqrt(1.0_dp/5.0_dp) 
+        umat_c2j(10,4)=  sqrt(4.0_dp/5.0_dp) 
         umat_c2j(2,5) = 1.0_dp 
-        umat_c2j(1,6) = sqrt(1.0/5.0)
-        umat_c2j(4,6) = sqrt(4.0/5.0)
-        umat_c2j(3,7) = sqrt(2.0/5.0)
-        umat_c2j(6,7) = sqrt(3.0/5.0)
-        umat_c2j(5,8) = sqrt(3.0/5.0)
-        umat_c2j(8,8) = sqrt(2.0/5.0)
-        umat_c2j(7,9) = sqrt(4.0/5.0)
-        umat_c2j(10,9)= sqrt(1.0/5.0)
+        umat_c2j(1,6) =  sqrt(1.0_dp/5.0_dp)
+        umat_c2j(4,6) =  sqrt(4.0_dp/5.0_dp)
+        umat_c2j(3,7) =  sqrt(2.0_dp/5.0_dp)
+        umat_c2j(6,7) =  sqrt(3.0_dp/5.0_dp)
+        umat_c2j(5,8) =  sqrt(3.0_dp/5.0_dp)
+        umat_c2j(8,8) =  sqrt(2.0_dp/5.0_dp)
+        umat_c2j(7,9) =  sqrt(4.0_dp/5.0_dp)
+        umat_c2j(10,9)=  sqrt(1.0_dp/5.0_dp)
         umat_c2j(9,10)= 1.0_dp
     elseif ( nband == 7 ) then
     ! the |lz,sz> order is:
@@ -188,32 +190,32 @@ subroutine atomic_make_umat_c2j( umat_c2j )
     ! the |j2,jz> order is:
     ! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
     ! |7/2,-7/2>, |7/2,-5/2>, |7/2,-3/2>, |7/2,-1/2>, |7/2,1/2>, |7/2,3/2>, |7/2,5/2>, |7/2, 7/2>
-        umat_c2j(1, 1) = -sqrt(6.0/7.0)
-        umat_c2j(4, 1) =  sqrt(1.0/7.0)
-        umat_c2j(3, 2) = -sqrt(5.0/7.0)
-        umat_c2j(6, 2) =  sqrt(2.0/7.0)
-        umat_c2j(5, 3) = -sqrt(4.0/7.0)
-        umat_c2j(8, 3) =  sqrt(3.0/7.0)
-        umat_c2j(7, 4) = -sqrt(3.0/7.0)
-        umat_c2j(10,4) =  sqrt(4.0/7.0)
-        umat_c2j(9, 5) = -sqrt(2.0/7.0)
-        umat_c2j(12,5) =  sqrt(5.0/7.0)
-        umat_c2j(11,6) = -sqrt(1.0/7.0)
-        umat_c2j(14,6) =  sqrt(6.0/7.0)
+        umat_c2j(1, 1) = -sqrt(6.0_dp/7.0_dp)
+        umat_c2j(4, 1) =  sqrt(1.0_dp/7.0_dp)
+        umat_c2j(3, 2) = -sqrt(5.0_dp/7.0_dp)
+        umat_c2j(6, 2) =  sqrt(2.0_dp/7.0_dp)
+        umat_c2j(5, 3) = -sqrt(4.0_dp/7.0_dp)
+        umat_c2j(8, 3) =  sqrt(3.0_dp/7.0_dp)
+        umat_c2j(7, 4) = -sqrt(3.0_dp/7.0_dp)
+        umat_c2j(10,4) =  sqrt(4.0_dp/7.0_dp)
+        umat_c2j(9, 5) = -sqrt(2.0_dp/7.0_dp)
+        umat_c2j(12,5) =  sqrt(5.0_dp/7.0_dp)
+        umat_c2j(11,6) = -sqrt(1.0_dp/7.0_dp)
+        umat_c2j(14,6) =  sqrt(6.0_dp/7.0_dp)
 
         umat_c2j(2, 7)  = 1.0_dp
-        umat_c2j(1, 8) =  sqrt(1.0/7.0)
-        umat_c2j(4, 8) =  sqrt(6.0/7.0)
-        umat_c2j(3, 9) =  sqrt(2.0/7.0)
-        umat_c2j(6, 9) =  sqrt(5.0/7.0)
-        umat_c2j(5,10) =  sqrt(3.0/7.0)
-        umat_c2j(8,10) =  sqrt(4.0/7.0)
-        umat_c2j(7,11) =  sqrt(4.0/7.0)
-        umat_c2j(10,11)=  sqrt(3.0/7.0)
-        umat_c2j(9,12) =  sqrt(5.0/7.0)
-        umat_c2j(12,12)=  sqrt(2.0/7.0)
-        umat_c2j(11,13)=  sqrt(6.0/7.0)
-        umat_c2j(14,13)=  sqrt(1.0/7.0)
+        umat_c2j(1, 8) =  sqrt(1.0_dp/7.0_dp)
+        umat_c2j(4, 8) =  sqrt(6.0_dp/7.0_dp)
+        umat_c2j(3, 9) =  sqrt(2.0_dp/7.0_dp)
+        umat_c2j(6, 9) =  sqrt(5.0_dp/7.0_dp)
+        umat_c2j(5,10) =  sqrt(3.0_dp/7.0_dp)
+        umat_c2j(8,10) =  sqrt(4.0_dp/7.0_dp)
+        umat_c2j(7,11) =  sqrt(4.0_dp/7.0_dp)
+        umat_c2j(10,11)=  sqrt(3.0_dp/7.0_dp)
+        umat_c2j(9,12) =  sqrt(5.0_dp/7.0_dp)
+        umat_c2j(12,12)=  sqrt(2.0_dp/7.0_dp)
+        umat_c2j(11,13)=  sqrt(6.0_dp/7.0_dp)
+        umat_c2j(14,13)=  sqrt(1.0_dp/7.0_dp)
         umat_c2j(13,14)=  1.0_dp
     else
         call atomic_print_error('atomic_make_umat_c2j','not implemented !')
