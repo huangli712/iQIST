@@ -152,7 +152,7 @@ subroutine atomic_write_eigval_sectors()
     ! open file 'atom.eigval.dat' to write
     open(mytmp, file='atom.eigval.dat')
     counter = 0
-    write(mytmp, '(a)') "#      i |     sect(i) | electron(i) |           j |   eigenvalue(i,j) |"
+    write(mytmp, '(a)') "#      i |     sect(i) | electron(i) |           j |   eigenvalue(j,i) |"
     do i=1, nsectors
         do j=1, sectors(i)%ndim
             counter = counter + 1
@@ -203,7 +203,7 @@ subroutine atomic_write_atomcix_sectors()
 
     ! local variables
     integer :: i, j, k, ii
-
+ 
     ! open 'atom.cix' to write
     open(mytmp, file='atom.sector.in')
     ! write number of sectors
