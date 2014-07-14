@@ -6,6 +6,7 @@
 !!!           s_str_count
 !!!           s_str_double
 !!!           s_str_integer
+!!!           s_str_compress
 !!! source  : s_util.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
