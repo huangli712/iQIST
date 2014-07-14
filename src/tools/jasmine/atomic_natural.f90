@@ -63,8 +63,7 @@ subroutine atomic_make_natural()
         ! for Slater-Cordon parameters Coulomb interaction U
         ! we first need to transfrom cumat from complex orbital basis to real orbital basis
         if ( icu == 2 ) then
-            call atomic_make_umat_r2c( umat_r2c )
-            umat_c2r = transpose( dconjg(umat_r2c) )
+            call atomic_make_umat_c2r( umat_c2r )
             call atomic_tran_cumat( umat_c2r, cumat, tmp_mat )
             cumat = tmp_mat
         endif
