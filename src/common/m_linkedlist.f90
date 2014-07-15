@@ -23,12 +23,14 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!
-! VERY IMPORTANT:
-! in order to use the linked list (linkedlist) data structure, the user
-! should define his/her own data type at first, namely, type T_data. Note
-! that there are no pointers within it.
-!
+!!
+!!
+!!>>> VERY IMPORTANT
+!! in order to use the linked list (linkedlist) data structure, the user
+!! should define his/her own data type at first, namely, type T_data. Note
+!! that there are no pointers within it.
+!!
+!!
 
   module linkedlist
      implicit none
