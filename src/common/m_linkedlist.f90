@@ -1,19 +1,19 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
-!!! program : mlist
-!!!           T_node
-!!!           T_data
-!!!           list_create
-!!!           list_destroy
-!!!           list_insert
-!!!           list_insert_head
-!!!           list_delete
-!!!           list_delete_head
-!!!           list_get_data
-!!!           list_set_data
-!!!           list_next
-!!!           list_count
-!!! source  : m_list.f90
+!!! program : linkedlist
+!!!           linkedlist@T_node
+!!!           linkedlist@T_data
+!!!           linkedlist@list_create
+!!!           linkedlist@list_destroy
+!!!           linkedlist@list_insert
+!!!           linkedlist@list_insert_head
+!!!           linkedlist@list_delete
+!!!           linkedlist@list_delete_head
+!!!           linkedlist@list_get_data
+!!!           linkedlist@list_set_data
+!!!           linkedlist@list_next
+!!!           linkedlist@list_count
+!!! source  : m_linkedlist.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
@@ -23,14 +23,14 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!
-!! VERY IMPORTANT:
-!! to use the linked list (mlist) data structure, the user should define
-!! his/her own data type at first, namely, type T_data. Note that there
-!! are no pointers within it.
-!!
+!
+! VERY IMPORTANT:
+! in order to use the linked list (linkedlist) data structure, the user
+! should define his/her own data type at first, namely, type T_data. Note
+! that there are no pointers within it.
+!
 
-  module mlist
+  module linkedlist
      implicit none
 
 !!========================================================================
@@ -284,4 +284,4 @@
      return
   end function list_count
 
-  end module mlist
+  end module linkedlist
