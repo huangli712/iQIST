@@ -421,7 +421,6 @@
      use ctqmc_flvr
 
      use ctqmc_umat
-     use ctqmc_fmat
      use ctqmc_mmat
 
      use ctqmc_gmat
@@ -438,7 +437,6 @@
      public :: ctqmc_allocate_memory_clur
      public :: ctqmc_allocate_memory_flvr
      public :: ctqmc_allocate_memory_umat
-     public :: ctqmc_allocate_memory_fmat
      public :: ctqmc_allocate_memory_mmat
      public :: ctqmc_allocate_memory_gmat
      public :: ctqmc_allocate_memory_wmat
@@ -449,7 +447,6 @@
      public :: ctqmc_deallocate_memory_clur
      public :: ctqmc_deallocate_memory_flvr
      public :: ctqmc_deallocate_memory_umat
-     public :: ctqmc_deallocate_memory_fmat
      public :: ctqmc_deallocate_memory_mmat
      public :: ctqmc_deallocate_memory_gmat
      public :: ctqmc_deallocate_memory_wmat
@@ -604,86 +601,6 @@
 
          return
      end subroutine ctqmc_allocate_memory_umat
-
-!>>> allocate memory for fmat-related variables
-     subroutine ctqmc_allocate_memory_fmat()
-         implicit none
-
-! allocate memory
-         allocate(isave(npart),            stat=istat)
-
-         allocate(sop_ia(ncfgs+1,npart),   stat=istat)
-         allocate(sop_ja(nzero,npart),     stat=istat)
-         allocate(sop_a(nzero,npart),      stat=istat)
-
-         allocate(sop_ib(ncfgs+1,npart),   stat=istat)
-         allocate(sop_jb(nzero,npart),     stat=istat)
-         allocate(sop_b(nzero,npart),      stat=istat)
-
-         allocate(sop_ic(ncfgs+1,norbs),   stat=istat)
-         allocate(sop_jc(nzero,norbs),     stat=istat)
-         allocate(sop_c(nzero,norbs),      stat=istat)
-
-         allocate(sop_id(ncfgs+1,norbs),   stat=istat)
-         allocate(sop_jd(nzero,norbs),     stat=istat)
-         allocate(sop_d(nzero,norbs),      stat=istat)
-
-         allocate(sop_is(ncfgs+1,2),       stat=istat)
-         allocate(sop_js(nzero,2),         stat=istat)
-         allocate(sop_s(nzero,2),          stat=istat)
-
-         allocate(sop_in(ncfgs+1,norbs),   stat=istat)
-         allocate(sop_jn(nzero,norbs),     stat=istat)
-         allocate(sop_n(nzero,norbs),      stat=istat)
-
-         allocate(sop_im(ncfgs+1,norbs,norbs), stat=istat)
-         allocate(sop_jm(nzero,norbs,norbs),   stat=istat)
-         allocate(sop_m(nzero,norbs,norbs),    stat=istat)
-
-         allocate(op_c(ncfgs,ncfgs,norbs), stat=istat)
-         allocate(op_d(ncfgs,ncfgs,norbs), stat=istat)
-
-! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_fmat','can not allocate enough memory')
-         endif
-
-! initialize them
-         isave  = 0
-
-         sop_ia = 0
-         sop_ja = 0
-         sop_a  = zero
-
-         sop_ib = 0
-         sop_jb = 0
-         sop_b  = zero
-
-         sop_ic = 0
-         sop_jc = 0
-         sop_c  = zero
-
-         sop_id = 0
-         sop_jd = 0
-         sop_d  = zero
-
-         sop_is = 0
-         sop_js = 0
-         sop_s  = zero
-
-         sop_in = 0
-         sop_jn = 0
-         sop_n  = zero
-
-         sop_im = 0
-         sop_jm = 0
-         sop_m  = zero
-
-         op_c   = zero
-         op_d   = zero
-
-         return
-     end subroutine ctqmc_allocate_memory_fmat
 
 !>>> allocate memory for mmat-related variables
      subroutine ctqmc_allocate_memory_mmat()
@@ -898,45 +815,6 @@
          return
      end subroutine ctqmc_deallocate_memory_umat
 
-!>>> deallocate memory for fmat-related variables
-     subroutine ctqmc_deallocate_memory_fmat()
-         implicit none
-
-         if ( allocated(isave)  )  deallocate(isave )
-
-         if ( allocated(sop_ia) )  deallocate(sop_ia)
-         if ( allocated(sop_ja) )  deallocate(sop_ja)
-         if ( allocated(sop_a)  )  deallocate(sop_a )
-
-         if ( allocated(sop_ib) )  deallocate(sop_ib)
-         if ( allocated(sop_jb) )  deallocate(sop_jb)
-         if ( allocated(sop_b)  )  deallocate(sop_b )
-
-         if ( allocated(sop_ic) )  deallocate(sop_ic)
-         if ( allocated(sop_jc) )  deallocate(sop_jc)
-         if ( allocated(sop_c)  )  deallocate(sop_c )
-
-         if ( allocated(sop_id) )  deallocate(sop_id)
-         if ( allocated(sop_jd) )  deallocate(sop_jd)
-         if ( allocated(sop_d)  )  deallocate(sop_d )
-
-         if ( allocated(sop_is) )  deallocate(sop_is)
-         if ( allocated(sop_js) )  deallocate(sop_js)
-         if ( allocated(sop_s)  )  deallocate(sop_s )
-
-         if ( allocated(sop_in) )  deallocate(sop_in)
-         if ( allocated(sop_jn) )  deallocate(sop_jn)
-         if ( allocated(sop_n)  )  deallocate(sop_n )
-
-         if ( allocated(sop_im) )  deallocate(sop_im)
-         if ( allocated(sop_jm) )  deallocate(sop_jm)
-         if ( allocated(sop_m)  )  deallocate(sop_m )
-
-         if ( allocated(op_c)   )  deallocate(op_c  )
-         if ( allocated(op_d)   )  deallocate(op_d  )
-
-         return
-     end subroutine ctqmc_deallocate_memory_fmat
 
 !>>> deallocate memory for mmat-related variables
      subroutine ctqmc_deallocate_memory_mmat()
