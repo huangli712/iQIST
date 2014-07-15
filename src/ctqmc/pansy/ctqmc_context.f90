@@ -531,18 +531,22 @@
 !=========================================================================
 !>>> containing the sector information for good quantum number algorithm
   module ctqmc_sect
-     use subspace  
+     use constants, only: dp
+     use m_sector
  
      implicit none
 
 ! the total number of sectors
-     integer, public, save :: nsect
+     integer, public, save :: nsectors
 
 ! the max dimension of the sectors
      integer, public, save :: max_dim_sect
 
+! the average dimension of the sectors
+     real(dp), public, save :: ave_dim_sect
+
 ! the array contains all the sectors
-     type(sector), public, save, allocatable :: sect(:)
+     type(t_sector), public, save, allocatable :: sectors(:)
 
   end module ctqmc_sect
 
@@ -935,7 +939,7 @@
          integer :: i
 
 ! allocate memory
-         allocate(sect(nsect), stat=istat)
+         allocate(sectors(nsectors), stat=istat)
 
 ! check the status
          if ( istat /= 0 ) then
@@ -943,12 +947,12 @@
          endif
 
 ! initialize them
-         do i=1, nsect
-             sect(i)%ndim = 0
-             sect(i)%nelectron = 0
-             sect(i)%nops = norbs
-             sect(i)%istart = 0
-             call nullify_one_sector(sect(i))
+         do i=1, nsectors
+             sectors(i)%ndim = 0
+             sectors(i)%nelectron = 0
+             sectors(i)%nops = norbs
+             sectors(i)%istart = 0
+             call nullify_one_sector(sectors(i))
          enddo 
 
          return
@@ -1135,13 +1139,13 @@
 ! local variables
          integer :: i
 
-         if ( allocated(sect) ) then
+         if ( allocated(sectors) ) then
 ! first, loop over all the sectors and deallocate their memory
-             do i=1, nsect
-                 call dealloc_one_sector(sect(i))
+             do i=1, nsectors
+                 call dealloc_one_sector(sectors(i))
              enddo
 ! then, deallocate memory of sect
-             deallocate(sect)
+             deallocate(sectors)
          endif
         
          return

@@ -197,7 +197,7 @@ end subroutine atomic_write_eigvec_sectors
 !>>> write atom.cix for CTQMC input, good quantum number algorithm
 subroutine atomic_write_atomcix_sectors()
     use constants,      only: mytmp
-    use m_glob_sectors, only: nsectors, sectors
+    use m_glob_sectors, only: nsectors, sectors, max_dim_sect, ave_dim_sect
 
     implicit none
 
@@ -207,8 +207,8 @@ subroutine atomic_write_atomcix_sectors()
     ! open 'atom.cix' to write
     open(mytmp, file='atom.sector.in')
     ! write number of sectors
-    write(mytmp, "(a)") "#NUMBER OF SECTORS"
-    write(mytmp, "(I10)") nsectors
+    write(mytmp, "(a)") "#NUMBER OF SECTORS | MAXIMUM DIMENSION OF SECTORS | AVERAGE DIMENSION OF SECTORS"
+    write(mytmp, "(2I10, 8X, F20.10)") nsectors, max_dim_sect, ave_dim_sect 
 
     ! write dimension, total electrons, next_sector, eigenvalue of each sector
     do i=1, nsectors

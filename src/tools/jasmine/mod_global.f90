@@ -189,12 +189,19 @@ end module m_glob_fullspace
 
 !>>> global variables for sectors algorithm case
 module m_glob_sectors
+    use constants, only: dp
     use m_sector,  only: t_sector, nullify_one_sector, dealloc_one_sector
 
     implicit none
 
     ! number of sectors
     integer, public, save :: nsectors
+
+    ! maximum dimension of sectors
+    integer, public, save :: max_dim_sect
+
+    ! average dimension of sectors
+    real(dp), public, save :: ave_dim_sect
 
     ! all the sectors
     type(t_sector), public, allocatable, save :: sectors(:)
