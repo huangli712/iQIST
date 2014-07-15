@@ -13,6 +13,8 @@
 !!!           linkedlist@list_set_data
 !!!           linkedlist@list_next
 !!!           linkedlist@list_count
+!!!           linkedlist@list_navigator
+!!!           linkedlist@list_display
 !!! source  : m_linkedlist.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -68,6 +70,7 @@
      public :: list_set_data
      public :: list_next
      public :: list_count
+     public :: list_display
 
   contains ! encapsulated functionality
 
@@ -276,8 +279,8 @@
          list_count = 1
          current => list
          do while ( associated(current%next) )
-             current => current%next
              list_count = list_count + 1
+             current => current%next
          enddo ! over do while loop
      else
          list_count = 0
@@ -285,5 +288,55 @@
 
      return
   end function list_count
+
+!!>>> list_display: display all of the nodes in the list one by one
+  subroutine list_navigator( list )
+     implicit none
+
+! external arguments
+! pointer to the list
+     type(T_node), pointer :: list
+
+! local variables
+! pointer to the current node
+     type(T_node), pointer  :: current
+
+! node counter
+     integer :: counter
+
+     if ( associated(list) ) then
+         counter = 1
+         current => list
+         call list_display(counter, current)
+         do while ( associated(current%next) )
+             counter = counter + 1
+             current => current%next
+             call list_display(counter, current)
+         enddo ! over do while loop
+     endif ! back if block
+
+     return
+  end subroutine list_navigator
+
+!!>>> list_display: display the data contained in the node
+  subroutine list_display(counter, current)
+     implicit none
+
+! external arguments
+! pointer to the current node
+     type(T_node), pointer  :: current
+
+! node counter
+     integer, intent(in) :: counter
+
+! local variables
+! data stored in the current node
+     type(T_data) :: data
+
+     data = list_get_data(current)
+     write(*,*) counter, data%str_key, data%str_value
+
+     return
+  end subroutine list_display
 
   end module linkedlist

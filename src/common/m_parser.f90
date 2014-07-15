@@ -1,13 +1,13 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : parser
-!!!           p_create
-!!!           p_destroy
-!!!           p_parse
-!!!           p_get_integer
-!!!           p_get_real
-!!!           p_get_logical
-!!!           p_get_character
+!!!           parser@p_create
+!!!           parser@p_destroy
+!!!           parser@p_parse
+!!!           parser@p_get_integer
+!!!           parser@p_get_real
+!!!           parser@p_get_logical
+!!!           parser@p_get_character
 !!! source  : m_parser.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -20,32 +20,45 @@
 
   module parser
      use constants
-     use mlist 
+     use linkedlist 
 
      implicit none
 
-     type (T_data) :: m_data
-     type (T_node), pointer :: m_list 
-     character(len = 36) :: m_file
+     type (T_data) :: v_data
+     type (T_node), pointer :: v_list 
+     character(len = 32) :: v_file
 
-     private :: m_data
-     private :: m_list
-     private :: m_file
+     private :: v_data
+     private :: v_list
+     private :: v_file
 
-     public :: p_create
-     public :: p_destroy
-     public :: p_parse
-     public :: p_get_integer
-     public :: p_get_real
-     public :: p_get_logical
-     public :: p_get_character
+     public  :: p_create
+     public  :: p_destroy
+     public  :: p_parse
+     public  :: p_get_integer
+     public  :: p_get_real
+     public  :: p_get_logical
+     public  :: p_get_character
 
   contains
 
-  subroutine p_create()
+  subroutine p_create(in_file)
      implicit none
- 
-     m_list => null()
+
+! external arguments
+     character(len=*), intent(in) :: in_file
+
+     v_file = in_file
+     v_data%str_key = "i_am_key"
+     v_data%str_value = "i_am_value"
+     call list_create(v_list, v_data)
+
+     !! test the linkedlist
+     !call list_navigator(v_list)
+     !call list_insert_head(v_list, v_data)
+     !call list_navigator(v_list)
+     !call list_destroy(v_list)
+     !call list_navigator(v_list)
  
      return
   end subroutine p_create
@@ -58,7 +71,17 @@
 
   subroutine p_parse()
      implicit none
-  
+
+     character(len=100) :: before_string
+     character(len=100) :: after_string
+     character(len=100), external :: s_str_compress
+     open(mytmp, file = v_file, form = 'formatted', status = 'unknown')
+     read(mytmp, '(a100)') before_string
+     print *, before_string
+     after_string = s_str_compress(before_string)
+     print *, after_string
+     close(mytmp)
+
      return
   end subroutine p_parse
 
