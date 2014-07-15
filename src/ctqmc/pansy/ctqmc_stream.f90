@@ -256,10 +256,9 @@
      use constants
      use control
      use context
-
      use sparse
-
      use mmpi
+     use m_sector
 
      implicit none
 
@@ -270,7 +269,7 @@
      integer  :: k
 
 ! dummy integer variables
-     integer  :: j1, j2, j3
+     integer  :: j1
 
 ! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
      logical  :: exists
@@ -279,8 +278,6 @@
      real(dp) :: rtmp
      real(dp) :: r1, r2
      real(dp) :: i1, i2
-     real(dp) :: real_tmp1, real_tmp2
-     integer :: int_tmp
 
 ! build identity: unity
      unity = czero
@@ -401,102 +398,55 @@
      eigs = zero
      naux = zero
 
-! read in initial F matrix if available
 !-------------------------------------------------------------------------
 !     if ( myid == master ) then ! only master node can do it
+! first, read the information of sectors
          exists = .false.
 
-! inquire about file's existence
-         inquire (file = 'atom.cix', exist = exists)
+! inquire about file's existence, 'atom.sector.in'
+         inquire (file = 'atom.sector.in', exist = exists)
 
-! find input file: atom.cix, read it
-! file atom.cix is necessary, the code can not run without it
+! find input file: atom.sector.in, read it
+! file atom.sector.in is necessary, the code can not run without it
          if ( exists .eqv. .true. ) then
 
 ! open data file
-             open(mytmp, file='atom.cix', form='formatted', status='unknown')
+             open(mytmp, file='atom.sector.in', form='formatted', status='unknown')
 
-! read in eigenvalues for local hamiltonian matrix from atom.cix
-             read(mytmp,*) ! skip one line
-! read the total number of sectors
-             read(mytmp,*) nsect
+             read(mytmp,*) ! skip the header
+! read the total number of sectors, maximum dimension of sectors, and average dimension of sectors
+             read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
 ! after we know the total number of sectors, we can allocate memory for array sect
              call ctqmc_allocate_memory_sect()
 
 ! read the data for each sector
-             do i=1, nsect
-                 sect(i)%nops = norbs
+             do i=1, nsectors
                  read(mytmp,*) ! skip the header
-! read the dimension, total number of electrons of this sector
-                 read(mytmp,*) j1, sect(i)%ndim, sect(i)%nelectron 
+! read the dimension, total number of electrons, number of fermion operators, 
+! and start index of this sector
+                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelectron, sectors(i)%nops, sectors(i)%istart
 ! here, we allocate the memory for sect(i)
-                 call alloc_one_sector(sect(i))
-! read the next_sector 
+                 call alloc_one_sector(sectors(i))
+! read the next_sector index
                  read(mytmp,*) ! skip the header
-                 do j=1, sect(i)%nops
-                     read(mytmp,*) j1, sect(i)%next_sector(j,0), sect(i)%next_sector(j,1)  
+                 do j=1, sectors(i)%nops
+                     read(mytmp,*) j1, sectors(i)%next_sector(j,0), sectors(i)%next_sector(j,1)  
                  enddo
 ! read the eigenvalue of this sector
                  read(mytmp,*) ! skip the header
-                 do j=1, sect(i)%ndim
-                     read(mytmp,*) j1, sect(i)%eigenvalue(j)
+                 do j=1, sectors(i)%ndim
+                     read(mytmp,*) j1, sectors(i)%myeigval(j)
                  enddo
              enddo
-
-! read the fmat for each sector
-             read(mytmp, *) ! skip the header
-             do i=1, nsect
-                 read(mytmp,*) ! skip the header
-! for each sector, loop over all the operators
-                 do j=1, sect(i)%nops 
-                     read(mytmp,*) ! skip the header  
-! for each operator, read the fmat
-                     do k=0, 1
-! first, for the annihilation operator
-                         ii = sect(i)%next_sector(j,k)
-                         if ( ii /= 0 ) then
-                             sect(i)%myfmat(j,k)%n = sect(ii)%ndim
-                             sect(i)%myfmat(j,k)%m = sect(i)%ndim
-! here, we should first allocate the fmat, and nullify it
-                             call alloc_one_fmat(myfmat(j,k))
-                             call nullify_one_fmat(myfmat(j,k))
-! now, we read the fmat item
-                             read(mytmp,*) ! skip the header
-                             do col=1, sect(i)%ndim
-                                 do row=1, sect(ii)%ndim
-                                     read(mytmp, *) j1, j2, sect(i)%myfmat(j,k)%item(row, col)
-                                 enddo
-                             enddo
-                         endif ! back to if ( ii/= 0 ) then block
-                     enddo ! back to k=0,1 block
-                 enddo  ! back to j=1, sect(i)%nops block
-             enddo ! back to i=1, nsect block
-
-! close data file
              close(mytmp)
-
-! find the maximum dimension of all the sectors
-             max_dim_sect = sect(1)%ndim
-             do i=2, nsect
-                 if (max_dim_sect < sect(i)%ndim) then
-                     max_dim_sect =  sect(i)%ndim
-                 endif 
-             enddo
-
-! build the istart index for each sector
-             j1 = 0
-             do i=1, nsect
-                 sect(i)%istart = j1 + 1
-                 j1 = j1 + sect(i)%ndim 
-             enddo
 
 ! add the contribution from chemical potential to eigenvalues
              j1 = 0
-             do i=1,nsect
-                 do j=1, sect(i)%ndim
+             do i=1,nsectors
+                 do j=1, sectors(i)%ndim
                      j1 = j1 + 1
-                     eigs(j1) = sect(i)%eigenvalue(j)  
-                     naux(j1) = sect(i)%nelectron
+                     eigs(j1) = sectors(i)%myeigval(j)  
+                     naux(j1) = sectors(i)%nelectron
                  enddo
              enddo ! over i={1,nsect} loop
 
@@ -523,8 +473,34 @@
              enddo ! over i={1,ncfgs} loop
 
          else
-             call ctqmc_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+             call ctqmc_print_error('ctqmc_selfer_init','file atom.sector.in does not exist')
          endif ! back if ( exists .eqv. .true. ) block
+!-------------------------------------------------------------------------
+
+!-------------------------------------------------------------------------
+! read fmat 
+         exists = .false.
+         inquire(file='atom.fmat.in', exist=exists)
+         if (exists .eqv. .true.) then
+             open(mytmp, file='atom.fmat.in', form='unformatted')
+             do i=1, nsectors
+                 do j=1, sectors(i)%nops
+                     do k=0,1
+                         ii = sectors(i)%next_sector(j,k)
+                         if (ii == -1) cycle
+                         sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
+                         sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
+                         call alloc_one_fmat(sectors(i)%myfmat(j,k))
+                         read(mytmp)  sectors(i)%myfmat(j,k)%item(:,:)
+                     enddo  ! over k={0,1} loop
+                 enddo ! over j={1, sectors(i)%nops} loop
+             enddo  ! over i={1, nsect} loop
+             close(mytmp) 
+         else
+             call ctqmc_print_error('ctqmc_selfer_init','file atom.fmat.in does not exist')
+         endif  ! back if (exists .eqv. .true.) block
+!-------------------------------------------------------------------------
+
 !>>>     endif ! back if ( myid == master ) block
 
 # if defined (MPI)

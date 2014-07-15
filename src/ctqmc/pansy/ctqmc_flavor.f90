@@ -2515,7 +2515,7 @@
  
 ! calculate trace for every subspace and sum them to get the final trace
      trace = zero
-     do i=1,nsect
+     do i=1,nsectors
 ! build the string from the beginning sector, that is:
 ! S_a1(q1)-->q2, S_a2(q2)-->q3, ... S_ai(qi)-->qi+1, ..., Sak(qk)-->q1
 ! if we find some qi==0, we cycle this sector immediately
@@ -2528,8 +2528,8 @@
              string(j) = curr_sect 
              vt = type_v( index_t_loc(j) )
              vf = flvr_v( index_t_loc(j) ) 
-             next_sect = sect(curr_sect)%next_sector(vf,vt)
-             if (next_sect == 0 ) then
+             next_sect = sectors(curr_sect)%next_sector(vf,vt)
+             if (next_sect == -1 ) then
                  is_string = .false. 
                  EXIT   ! finish check, exit
              endif
@@ -2549,16 +2549,16 @@
 ! now, we will do the multiplication, call dgemm 
 ! build the right hand matrix, set it to unity
          right_mat = zero
-         do j=1, sect( string(1) ) % ndim
+         do j=1, sectors( string(1) )%ndim
              right_mat(j,j) = one
          enddo
 
 ! then, do the multiplication for all the operators
-         dim3 = sect(string(1))%ndim
+         dim3 = sectors(string(1))%ndim
          do j=1, csize
-             indx = sect(string(j))%istart
-             dim1 = sect(string(j+1))%ndim
-             dim2 = sect(string(j  ))%ndim
+             indx = sectors(string(j  ))%istart
+             dim1 = sectors(string(j+1))%ndim
+             dim2 = sectors(string(j  ))%ndim
 ! first, the time evolution operator multiply a right neighbour matrix
 ! the result matrix should be sect(string(j))%ndim * sect(string(1))%ndim
              do k=1,dim2
@@ -2571,21 +2571,21 @@
 ! the result matrix should be sect(string(j+1))%ndim * sect(string(1))%ndim
              vt = type_v( index_t_loc(j) )
              vf = flvr_v( index_t_loc(j) ) 
-             call ctqmc_dmat_gemm(dim1, dim2, dim3, sect(string(j))%myfmat(vf, vt)%item, right_mat(dim2, dim3), tmp_mat(dim1, dim3)) 
+             call ctqmc_dmat_gemm(dim1, dim2, dim3, sectors(string(j))%myfmat(vf, vt)%item, right_mat(1:dim2, 1:dim3), tmp_mat(1:dim1, 1:dim3)) 
 
 ! copy tmp_mat(dim1, dim3) to right_mat(dim1, dim3)
              right_mat(1:dim1, 1:dim3) = tmp_mat(1:dim1, 1:dim3) 
          enddo  ! over j={1, csize} loop
 
 ! special treatment of the last time evolution operator
-         indx = sect(string(1))%istart
+         indx = sectors(string(1))%istart
          do k=1,dim3
              do l= 1,dim3
                  right_mat(k,l) = right_mat(k,l) * expt_t_loc(indx+k-1)
              enddo
          enddo
 
-         do j=1, sect(string(1))%ndim
+         do j=1, sectors(string(1))%ndim
              trace = trace + right_mat(j,j)
          enddo
      enddo ! over i={1, nsect} loop
