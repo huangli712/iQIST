@@ -2467,7 +2467,7 @@
      integer :: index_t_loc(mkink)
 
 ! local version of expt_t
-     integer :: expt_t_loc(ncfgs)
+     real(dp) :: expt_t_loc(ncfgs)
 
 ! a particular string begins at one sector
      integer :: string(csize+1) 
@@ -2495,7 +2495,6 @@
 ! dummy variables
      integer :: dim1, dim2, dim3
      integer :: indx
-
 ! copy data from index_t or index_v to index_t_loc
 ! copy data from expt_t to expt_t_loc
      select case(cmode)
@@ -2512,7 +2511,6 @@
              index_t_loc = index_v
              expt_t_loc = expt_t(:,2)
      end select
- 
 ! calculate trace for every subspace and sum them to get the final trace
      trace = zero
      do i=1,nsectors

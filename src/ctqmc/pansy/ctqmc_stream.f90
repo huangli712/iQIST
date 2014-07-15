@@ -440,6 +440,11 @@
              enddo
              close(mytmp)
 
+! make next_sector_trunk
+             do i=1, nsectors
+                 sectors(i)%next_sector_trunk = sectors(i)%next_sector
+             enddo 
+
 ! add the contribution from chemical potential to eigenvalues
              j1 = 0
              do i=1,nsectors
@@ -454,7 +459,6 @@
              do i=1,ncfgs
                  eigs(i) = eigs(i) - mune * naux(i)
              enddo ! over i={1,ncfgs} loop
-
 ! substract the eigenvalues zero point, here we store the eigen energy
 ! zero point in U
              r1 = minval(eigs)

@@ -144,10 +144,9 @@
 
 ! calculate the transition probability for insert new create and destroy operators
      p = deter_ratio * trace_ratio * ( beta / real( ckink + 1 ) ) ** 2
-
+    
 ! determine pass, using important sampling algorithm (metropolis algorithm)
      pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
-
 ! if the update action is accepted
      if ( pass .eqv. .true. ) then
 

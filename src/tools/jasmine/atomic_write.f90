@@ -129,7 +129,7 @@ subroutine atomic_write_atomcix_fullspace()
 
         do j=1,ncfgs
             do k=1,ncfgs
-                write(mytmp,'(3I10, F20.10)') k, j, i, anni_fmat(k, j, s_order)
+                write(mytmp,'(3I10, F30.20)') k, j, i, anni_fmat(k, j, s_order)
             enddo 
         enddo 
     enddo 
@@ -197,12 +197,14 @@ end subroutine atomic_write_eigvec_sectors
 !>>> write atom.cix for CTQMC input, good quantum number algorithm
 subroutine atomic_write_atomcix_sectors()
     use constants,      only: mytmp
+    use control,        only: isoc
     use m_glob_sectors, only: nsectors, sectors, max_dim_sect, ave_dim_sect
 
     implicit none
 
     ! local variables
     integer :: i, j, k, ii
+    integer :: s_order
  
     ! open 'atom.cix' to write
     open(mytmp, file='atom.sector.in')
@@ -218,7 +220,17 @@ subroutine atomic_write_atomcix_sectors()
         ! write next_sector
         write(mytmp, "(4X,a)") "#NEXT_SECTOR"
         do j=1, sectors(i)%nops
-            write(mytmp, "(2X, 3I10)") j, sectors(i)%next_sector(j,0), sectors(i)%next_sector(j,1)  
+            ! adjust the orbital order for CTQMC, up, up, up, dn, dn, dn
+            if (isoc==0) then
+                if (j <= sectors(i)%nops / 2) then
+                    s_order = 2*j-1  
+                else
+                    s_order = 2*(j - sectors(i)%nops / 2)
+                endif
+            else 
+                s_order = j
+            endif 
+            write(mytmp, "(2X, 3I10)") j, sectors(i)%next_sector(s_order,0), sectors(i)%next_sector(s_order,1)  
         enddo
 
         ! write eigeanvalue
@@ -233,10 +245,19 @@ subroutine atomic_write_atomcix_sectors()
     open(mytmp, file='atom.fmat.in', form='unformatted')
     do i=1, nsectors
         do j=1, sectors(i)%nops
+            if (isoc==0) then
+                if (j <= sectors(i)%nops / 2) then
+                    s_order = 2*j-1  
+                else
+                    s_order = 2*(j-sectors(i)%nops / 2)
+                endif
+            else 
+                s_order = j
+            endif 
             do k=0,1
-                ii = sectors(i)%next_sector(j,k)
+                ii = sectors(i)%next_sector(s_order,k)
                 if (ii == -1) cycle 
-                write(mytmp)  sectors(i)%myfmat(j,k)%item(:,:)
+                write(mytmp)  sectors(i)%myfmat(s_order,k)%item(:,:)
             enddo  ! over k={0,1} loop
         enddo ! over j={1, sectors(i)%nops} loop
     enddo  ! over i={1, nsect} loop
