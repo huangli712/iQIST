@@ -834,7 +834,12 @@
      integer  :: i
      integer  :: j
      integer  :: k
+     integer  :: l
      integer  :: m
+
+! start index of sectors
+     integer  :: indx1
+     integer  :: indx2
 
 ! dummy integer variables
      integer  :: start
@@ -851,13 +856,6 @@
      complex(dp) :: sinf
      complex(dp) :: caux
 
-! F matrix, < alpha | f_{n} | beta >
-     integer  :: fcounter(norbs)
-     integer  :: fa(nzero,norbs)
-     integer  :: fb(nzero,norbs)
-
-     real(dp) :: fv(nzero,norbs)
-
 ! dummy imurity green's function: G^{-1}
      complex(dp) :: gaux(norbs,norbs)
 
@@ -865,41 +863,26 @@
      complex(dp) :: ghub(mfreq,norbs)
      complex(dp) :: shub(mfreq,norbs)
 
-! build F matrix < alpha | f_{n} | beta >
-! note 1: to save the memory and accelerate the computation, we only store
-! the non-zero element of F matrix
-! note 2: it is crucial to check whether the number of non-zero elements
-! exceed limit (nzero)
-     fcounter = 0
-     alpha_loop: do i=1,ncfgs
-         beta_loop: do j=1,ncfgs
-             orbital_loop: do m=1,norbs
-                 value = op_d(i,j,m)
-                 if ( abs(value - zero) > eps6 ) then
-                     fcounter(m) = fcounter(m) + 1
-                     if ( fcounter(m) > nzero ) then
-                         call ctqmc_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
-                     endif
-                     fa(fcounter(m),m) = i
-                     fb(fcounter(m),m) = j
-                     fv(fcounter(m),m) = value
-                 endif ! back if ( abs(value - zero) > eps6 ) block
-             enddo orbital_loop ! over m={1,norbs} loop
-         enddo beta_loop ! over j={1,ncfgs} loop
-     enddo alpha_loop ! over i={1,ncfgs} loop
-
 ! calculate atomic green's function using Hubbard-I approximation
      do i=1,norbs
-         do k=1,mfreq
+         do j=1, mfreq
              caux = czero
-             do m=1,fcounter(i)
-                 ob = fv(m,i) * fv(m,i) * ( prob(fa(m,i)) + prob(fb(m,i)) )
-                 cb = cmesh(k) + eigs(fa(m,i)) - eigs(fb(m,i))
-                 caux = caux +  ob / cb
-             enddo ! over m={1,fcounter(i)} loop
-             ghub(k,i) = caux
-         enddo ! over k={1,mfreq} loop
-     enddo ! over i={1,norbs} loop
+             do k=1, nsectors
+                 kk = sectors(k)%next_sector(i,0)
+                 if (kk == -1) cycle
+                 indx1 = sectors(k)%istart
+                 indx2 = sectors(kk)%istart
+                 do l=1, sectors(k)%ndim
+                     do m=1, sectors(kk)%ndim
+                         ob = sectors(k)%myfmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))    
+                         cb = cmesh(k) + eigs(indx2+m-1) - eigs(indx1+l-1)
+                         caux = caux + ob / cb
+                     enddo 
+                 enddo
+             enddo ! over k={1,nsectors}
+             ghub(j,i) = caux
+         enddo ! over j={1,mfreq}
+     enddo ! over i={1,norbs}
 
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs
