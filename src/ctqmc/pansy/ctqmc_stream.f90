@@ -255,7 +255,6 @@
      use constants
      use control
      use context
-     use sparse
      use mmpi
      use m_sector
 
@@ -521,7 +520,6 @@
      use context
 
      use stack
-     use sparse
      use spring
 
      implicit none
