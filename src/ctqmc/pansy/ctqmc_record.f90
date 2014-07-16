@@ -182,6 +182,7 @@
 ! loop index
      integer  :: i
      integer  :: j
+     integer  :: k
 
 ! start index of a sector
      integer  :: indx
@@ -225,18 +226,6 @@
 ! evaluate occupation matrix: < n_i >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
-     do flvr=1,norbs
-         call sparse_csr_mm_csr(             ncfgs, ncfgs, ncfgs, nzero, &
-                             sop_s(:,2),    sop_js(:,2),    sop_is(:,2), &
-                          sop_n(:,flvr), sop_jn(:,flvr), sop_in(:,flvr), &
-                                  sop_t,         sop_jt,         sop_it )
-         raux1 = zero
-         do i=1,ncfgs
-             raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
-         enddo ! over i={1,ncfgs} loop
-         nvec(flvr) = raux1 / raux2
-     enddo ! over flvr={1,norbs} loop
-
      tmp_mat = zero
      do flvr=1, norbs
          raux1 = zero
@@ -836,6 +825,7 @@
      integer  :: k
      integer  :: l
      integer  :: m
+     integer  :: kk
 
 ! start index of sectors
      integer  :: indx1

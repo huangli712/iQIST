@@ -126,17 +126,17 @@ module m_sector
         allocate(one_sector%next_sector(one_sector%nops,0:1))
         allocate(one_sector%next_sector_trunk(one_sector%nops,0:1))
         allocate(one_sector%myfmat(one_sector%nops,0:1))
-        allocate(final_product(one_sector%ndim, one_sector%ndim, 2))
-        allocate(occu(one_sector%ndim, one_sector%ndim, one_sector%nops))
-        allocate(double_occu(one_sector%ndim, one_sector%ndim, one_sector%nops, one_sector%nops))
+        allocate(one_sector%final_product(one_sector%ndim, one_sector%ndim, 2))
+        allocate(one_sector%occu(one_sector%ndim, one_sector%ndim, one_sector%nops))
+        allocate(one_sector%double_occu(one_sector%ndim, one_sector%ndim, one_sector%nops, one_sector%nops))
 
         ! init them
         one_sector%myeigval = zero
         one_sector%next_sector = 0
         one_sector%next_sector_trunk = 0
-        final_product = zero
-        occu = zero
-        double_occu = zero
+        one_sector%final_product = zero
+        one_sector%occu = zero
+        one_sector%double_occu = zero
 
         ! init myfmat one by one
         do i=1, one_sector%nops 
