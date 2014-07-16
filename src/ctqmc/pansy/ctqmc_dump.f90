@@ -613,3 +613,41 @@
 
      return
   end subroutine ctqmc_dump_prob
+
+!>>> dump the probability of sectors
+  subroutine ctqmc_dump_psect()
+     use constants
+     use control
+     use context
+
+     implicit none
+
+! local variables
+! probability of sectors
+     real(dp) :: psect(nsectors)
+
+! loop index 
+     integer :: i,j
+
+! start index of sectors
+     integer :: indx
+
+     psect = zero
+  
+     do i=1, nsectors
+         indx = sectors(i)%istart
+         do j=1, sectors(i)%ndim
+             psect(i) = psect(i) + prob(indx+j-1)
+         enddo
+     enddo      
+
+! open file solver.psect.dat to write 
+     open(mytmp, file='solver.psect.dat', form='unformatted', status='unknown')
+     write(mytmp, '(a)') '#sector | probability | nelectron |'
+     do i=1, nsectors
+         write(mytmp, '(I10, F20.10, I10)') i, psect(i), sectors(i)%nelectron
+     enddo
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_psect
