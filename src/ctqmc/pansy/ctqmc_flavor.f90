@@ -2526,7 +2526,7 @@
              string(j) = curr_sect 
              vt = type_v( index_t_loc(j) )
              vf = flvr_v( index_t_loc(j) ) 
-             next_sect = sectors(curr_sect)%next_sector(vf,vt)
+             next_sect = sectors(curr_sect)%next_sector_trunk(vf,vt)
              if (next_sect == -1 ) then
                  is_string = .false. 
                  EXIT   ! finish check, exit
@@ -2535,7 +2535,10 @@
          enddo ! over j={1, csize} loop
 
 ! if it doesn't form a string, we cycle it, go to the next sector
-         if (is_string .eqv. .false.) cycle        
+         if (is_string .eqv. .false.) then
+! store final product az zero
+             sectors(i)%final_product(:,:,1) = zero
+         endif
 
 ! otherwise, we should do the multiplication
 ! add the last sector to string, and check whether string(csize+1) == string(1)
@@ -2583,10 +2586,21 @@
              enddo
          enddo
 
+! store final product
+         sectors(i)%final_product(:,:,1) = right_mat(1:dim3, 1:dim3)
+
          do j=1, sectors(string(1))%ndim
              trace = trace + right_mat(j,j)
          enddo
-     enddo ! over i={1, nsect} loop
+     enddo ! over i={1, nsectors} loop
+
+! store the diagonal elements of final product in ddmat(:,1)
+     do i=1, nsectors
+         indx = sectors(i)%istart
+         do j=1, sectors(i)%ndim
+             ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
+         enddo
+     enddo
 
      return
   end subroutine ctqmc_make_ztrace_sector
@@ -2596,22 +2610,11 @@
      use control
      use context
 
-     use sparse
-
      implicit none
 
 ! local variables
 ! loop index
      integer :: i
-
-! transfer sop_b into sop_a if needed (cmode == 1 or cmode == 3)
-     do i=1,npart
-         if ( isave(i) == 1 ) then
-             call sparse_csr_cp_csr(                       ncfgs, nzero, &
-                                   sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
-         endif ! back if ( isave(i) == 1 ) block
-     enddo ! over i={1,npart} loop
 
 ! update the operator traces
      matrix_ptrace = matrix_ntrace
@@ -2619,11 +2622,11 @@
 ! update ddmat for the calculation of atomic state probability
      ddmat(:,2) = ddmat(:,1)
 
-! transfer the final matrix product from op_s(:,1) to op_s(:,2), the
-! latter can be used to calculate nmat and nnmat
-     call sparse_csr_cp_csr(                               ncfgs, nzero, &
-                                   sop_s(:,1), sop_js(:,1), sop_is(:,1), &
-                                   sop_s(:,2), sop_js(:,2), sop_is(:,2) )
+! transfer the final matrix product from final_product(:,:,1) to final_product(:,:,2)
+! the latter can be used to calculate nmat and nnmat
+     do i=1, nsectors
+         sectors(i)%final_product(:,:,2) = sectors(i)%final_product(:,:,1)
+     enddo
 
      return
   end subroutine ctqmc_make_evolve

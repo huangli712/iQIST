@@ -49,7 +49,7 @@ module m_sector
         ! mymfat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
         type(t_fmat), pointer :: myfmat(:,:)
         ! the final product matrices, which will be used to calculate the nmat
-        real(dp), pointer :: final_product(:,:)
+        real(dp), pointer :: final_product(:,:,:)
         ! matrices of occupancy operator c^{\dagger}c 
         real(dp), pointer :: occu(:,:,:)
         ! matrices of double occupancy operator c^{\dagger}cc^{\dagger}c
@@ -126,7 +126,7 @@ module m_sector
         allocate(one_sector%next_sector(one_sector%nops,0:1))
         allocate(one_sector%next_sector_trunk(one_sector%nops,0:1))
         allocate(one_sector%myfmat(one_sector%nops,0:1))
-        allocate(final_product(one_sector%ndim, one_sector%ndim))
+        allocate(final_product(one_sector%ndim, one_sector%ndim, 2))
         allocate(occu(one_sector%ndim, one_sector%ndim, one_sector%nops))
         allocate(double_occu(one_sector%ndim, one_sector%ndim, one_sector%nops, one_sector%nops))
 

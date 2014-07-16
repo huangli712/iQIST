@@ -176,14 +176,15 @@
      use control
      use context
 
-     use sparse
-
      implicit none
 
 ! local variables
 ! loop index
      integer  :: i
      integer  :: j
+
+! start index of a sector
+     integer  :: indx
 
 ! loop index for flavor channel
      integer  :: flvr
@@ -199,9 +200,7 @@
      real(dp) :: cprob(ncfgs)
 
 ! dummy sparse matrix, used to calculate nmat and nnmat
-     integer  :: sop_it(ncfgs+1)
-     integer  :: sop_jt(nzero)
-     real(dp) :: sop_t(nzero)
+     real(dp) :: tmp_mat(max_dim_sect, max_dim_sect)
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
@@ -211,9 +210,12 @@
 ! evaluate raux2, it is Tr ( e^{- \beta H} )
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
-     do i=1,ncfgs
-         raux2 = raux2 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_s(:,2), sop_js(:,2), sop_is(:,2) )
-     enddo ! over i={1,ncfgs} loop
+     do i=1, nsectors
+         indx = sectors(i)%istart
+         do j=1, sectors(i)%ndim
+             raux2 = raux2 + sectors(i)%final_product(indx+j-1, indx+j-1, 2)
+         enddo
+     enddo
 
 ! check validity of raux2
 !<     if ( abs(raux2) < epss ) then
@@ -235,6 +237,20 @@
          nvec(flvr) = raux1 / raux2
      enddo ! over flvr={1,norbs} loop
 
+     tmp_mat = zero
+     do flvr=1, norbs
+         raux1 = zero
+         do i=1, nsectors
+             call ctqmc_dmat_gemm( sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
+                          sectors(i)%final_product(:,:,2), sectors(i)%occu(:,:,flvr),& 
+                          tmp_mat(1:sectors(i)%ndim, 1:sectors(i)%ndim) )
+             do j=1, sectors(i)%ndim
+                 raux1 = raux1 + tmp_mat(j,j)    
+             enddo
+         enddo 
+         nvec(flvr) = raux1 / raux2
+     enddo
+
 ! update nmat
      nmat = nmat + nvec
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -242,31 +258,31 @@
 ! evaluate double occupation matrix: < n_i n_j >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
-     do flvr=1,norbs-1
-         do j=flvr+1,norbs
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                         sop_s(:,2),      sop_js(:,2),      sop_is(:,2), &
-                    sop_m(:,flvr,j), sop_jm(:,flvr,j), sop_im(:,flvr,j), &
-                              sop_t,           sop_jt,           sop_it )
+     do flvr=1, norbs-1
+         do i=flvr+1, norbs
+             raux1 = zero
+             do j=1, nsectors
+                 call ctqmc_dmat_gemm( sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
+                              sectors(j)%final_product(:,:,2), sectors(j)%double_occu(:,:,flvr,i),& 
+                              tmp_mat(1:sectors(j)%ndim, 1:sectors(j)%ndim) )
+                 do k=1, sectors(j)%ndim
+                     raux1 = raux1 + tmp_mat(k,k)    
+                 enddo
+             enddo 
+             nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
 
              raux1 = zero
-             do i=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
-             enddo ! over i={1,ncfgs} loop
-             nnmat(flvr,j) = nnmat(flvr,j) + raux1 / raux2
-
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                         sop_s(:,2),      sop_js(:,2),      sop_is(:,2), &
-                    sop_m(:,j,flvr), sop_jm(:,j,flvr), sop_im(:,j,flvr), &
-                              sop_t,           sop_jt,           sop_it )
-
-             raux1 = zero
-             do i=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
-             enddo ! over i={1,ncfgs} loop
-             nnmat(j,flvr) = nnmat(j,flvr) + raux1 / raux2
-         enddo ! over j={flvr+1,norbs} loop
-     enddo ! over flvr={1,norbs-1} loop
+             do j=1, nsectors
+                 call ctqmc_dmat_gemm( sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
+                              sectors(j)%final_product(:,:,2), sectors(j)%double_occu(:,:,i,flvr),& 
+                              tmp_mat(1:sectors(j)%ndim, 1:sectors(j)%ndim) )
+                 do k=1, sectors(j)%ndim
+                     raux1 = raux1 + tmp_mat(k,k)    
+                 enddo
+             enddo 
+             nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
+         enddo
+     enddo
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
