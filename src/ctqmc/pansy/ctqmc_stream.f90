@@ -704,6 +704,7 @@
                  ii = sectors(k)%next_sector(i,0)
                  if (ii == -1 .or. jj == -1) then
                      sectors(k)%double_occu(:,:,i,j) = zero
+                     cycle
                  endif
                  call ctqmc_dmat_gemm( sectors(k)%ndim, sectors(jj)%ndim, sectors(k)%ndim, &
                                        sectors(jj)%myfmat(j,1)%item, sectors(k)%myfmat(j,0)%item,& 

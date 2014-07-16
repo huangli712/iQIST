@@ -13,15 +13,16 @@ CPP    = $(FPP) $(MPI) $(OMP)
 # machine tuning options, just for my laptop: iris system
 #-------------------------------------------------------------------------
 GPROF  = #-pg
-CHECK  =  -warn all# -check  noarg_temp_created# -traceback -g
+CHECK  =  -warn all -check all  -traceback -g  #noarg_temp_created
 CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
 LEVEL  = -O3 -xHost -unroll-aggressive -align all
 MTUNE  = -mtune=core2
+STACK  = -Wl,-stack_size,0x10000000
 
 # flags for compiler and linker
 #-------------------------------------------------------------------------
 FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MTUNE) $(GPROF)
-LFLAGS = $(OMP) $(GPROF)
+LFLAGS = $(OMP) $(GPROF) $(STACK)
 
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------

@@ -21,7 +21,6 @@
 !           cat_lshift_flavor
 !           cat_rshift_flavor <<<---
 !           ctqmc_make_ztrace
-!           ctqmc_make_ztrace_sector
 !           ctqmc_make_evolve <<<---
 !           ctqmc_make_equate
 !           ctqmc_make_search <<<---
@@ -261,7 +260,7 @@
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
 !>>>     call ctqmc_make_ztrace(1, nsize+1, matrix_ntrace, tau_start, tau_end)
-     call ctqmc_make_ztrace_sector(1, nsize+1, matrix_ntrace)
+     call ctqmc_make_ztrace(1, nsize+1, matrix_ntrace)
 
 ! evaluate trace_ratio
      trace_ratio = matrix_ntrace / matrix_ptrace
@@ -438,7 +437,7 @@
 ! calculate new matrix trace for the flavor part
 !>>>     call ctqmc_make_ztrace(1, nsize-1, matrix_ntrace, tau_start, tau_end)
 
-     call ctqmc_make_ztrace_sector(1, nsize-1, matrix_ntrace)
+     call ctqmc_make_ztrace(1, nsize-1, matrix_ntrace)
 
 ! evaluate trace_ratio
      trace_ratio = matrix_ntrace / matrix_ptrace
@@ -583,7 +582,7 @@
 ! calculate new matrix trace for the flavor part
 !>>>     call ctqmc_make_ztrace(1, nsize, matrix_ntrace, tau_start1, tau_start2)
 
-     call ctqmc_make_ztrace_sector(1, nsize, matrix_ntrace)
+     call ctqmc_make_ztrace(1, nsize, matrix_ntrace)
 
 ! evaluate trace_ratio
      trace_ratio = matrix_ntrace / matrix_ptrace
@@ -728,7 +727,7 @@
 ! calculate new matrix trace for the flavor part
 !>>>     call ctqmc_make_ztrace(1, nsize, matrix_ntrace, tau_end1, tau_end2)
 
-     call ctqmc_make_ztrace_sector(1, nsize, matrix_ntrace)
+     call ctqmc_make_ztrace(1, nsize, matrix_ntrace)
 
 ! evaluate trace_ratio
      trace_ratio = matrix_ntrace / matrix_ptrace
@@ -2445,7 +2444,7 @@
 
 !>>> core subroutine of pansy
 ! use good quantum number algorithm
-  subroutine ctqmc_make_ztrace_sector(cmode, csize, trace)
+  subroutine ctqmc_make_ztrace(cmode, csize, trace)
      use constants
      use control
      use context
@@ -2538,6 +2537,7 @@
          if (is_string .eqv. .false.) then
 ! store final product az zero
              sectors(i)%final_product(:,:,1) = zero
+             cycle
          endif
 
 ! otherwise, we should do the multiplication
@@ -2572,7 +2572,8 @@
 ! the result matrix should be sect(string(j+1))%ndim * sect(string(1))%ndim
              vt = type_v( index_t_loc(j) )
              vf = flvr_v( index_t_loc(j) ) 
-             call ctqmc_dmat_gemm(dim1, dim2, dim3, sectors(string(j))%myfmat(vf, vt)%item, right_mat(1:dim2, 1:dim3), tmp_mat(1:dim1, 1:dim3)) 
+             call ctqmc_dmat_gemm(dim1, dim2, dim3, sectors(string(j))%myfmat(vf, vt)%item,&
+                                  right_mat(1:dim2, 1:dim3), tmp_mat(1:dim1, 1:dim3)) 
 
 ! copy tmp_mat(dim1, dim3) to right_mat(dim1, dim3)
              right_mat(1:dim1, 1:dim3) = tmp_mat(1:dim1, 1:dim3) 
@@ -2587,7 +2588,7 @@
          enddo
 
 ! store final product
-         sectors(i)%final_product(:,:,1) = right_mat(1:dim3, 1:dim3)
+         sectors((string(1)))%final_product(:,:,1) = right_mat(1:dim3, 1:dim3)
 
          do j=1, sectors(string(1))%ndim
              trace = trace + right_mat(j,j)
@@ -2603,7 +2604,7 @@
      enddo
 
      return
-  end subroutine ctqmc_make_ztrace_sector
+  end subroutine ctqmc_make_ztrace
 
 !>>> used to update the operator traces of the modified part
   subroutine ctqmc_make_evolve()

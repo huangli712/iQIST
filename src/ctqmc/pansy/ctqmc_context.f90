@@ -62,7 +62,6 @@
 
 ! averaged sign values, used to measure the sign problem
      integer, public, save  :: caves = 0
-
 !-------------------------------------------------------------------------
 !::: core variables: real, matrix trace                                :::
 !-------------------------------------------------------------------------

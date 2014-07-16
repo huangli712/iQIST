@@ -184,9 +184,6 @@
      integer  :: j
      integer  :: k
 
-! start index of a sector
-     integer  :: indx
-
 ! loop index for flavor channel
      integer  :: flvr
 
@@ -212,9 +209,8 @@
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
      do i=1, nsectors
-         indx = sectors(i)%istart
          do j=1, sectors(i)%ndim
-             raux2 = raux2 + sectors(i)%final_product(indx+j-1, indx+j-1, 2)
+             raux2 = raux2 + sectors(i)%final_product(j, j, 2)
          enddo
      enddo
 
@@ -834,9 +830,6 @@
 ! dummy integer variables
      integer  :: start
 
-! dummy real variables used to build F matrix
-     real(dp) :: value
-
 ! dummy real variables, used to interpolate self-energy function
      real(dp) :: ob, oe
      real(dp) :: d0, d1
@@ -865,7 +858,7 @@
                  do l=1, sectors(k)%ndim
                      do m=1, sectors(kk)%ndim
                          ob = sectors(k)%myfmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))    
-                         cb = cmesh(k) + eigs(indx2+m-1) - eigs(indx1+l-1)
+                         cb = cmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
                          caux = caux + ob / cb
                      enddo 
                  enddo

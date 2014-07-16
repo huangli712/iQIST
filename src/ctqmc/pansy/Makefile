@@ -28,7 +28,7 @@ clean:
 	rm -f *.mod
 	rm -f *.o
 	rm -f ctqmc
-
+	rm -f *.i90
 clean-dat:
 	rm -f *.dat
 	rm -f *.bin.*
