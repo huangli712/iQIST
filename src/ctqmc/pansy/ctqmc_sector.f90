@@ -48,6 +48,12 @@ module m_sector
         ! if this sector doesn't point to some other sectors, the pointer is null
         ! mymfat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
         type(t_fmat), pointer :: myfmat(:,:)
+        ! the final product matrices, which will be used to calculate the nmat
+        real(dp), pointer :: final_product(:,:)
+        ! matrices of occupancy operator c^{\dagger}c 
+        real(dp), pointer :: occu(:,:,:)
+        ! matrices of double occupancy operator c^{\dagger}cc^{\dagger}c
+        real(dp), pointer :: double_occu(:,:,:,:)
     end type t_sector
     
     contains
@@ -120,11 +126,17 @@ module m_sector
         allocate(one_sector%next_sector(one_sector%nops,0:1))
         allocate(one_sector%next_sector_trunk(one_sector%nops,0:1))
         allocate(one_sector%myfmat(one_sector%nops,0:1))
+        allocate(final_product(one_sector%ndim, one_sector%ndim))
+        allocate(occu(one_sector%ndim, one_sector%ndim, one_sector%nops))
+        allocate(double_occu(one_sector%ndim, one_sector%ndim, one_sector%nops, one_sector%nops))
 
         ! init them
         one_sector%myeigval = zero
         one_sector%next_sector = 0
         one_sector%next_sector_trunk = 0
+        final_product = zero
+        occu = zero
+        double_occu = zero
 
         ! init myfmat one by one
         do i=1, one_sector%nops 
@@ -151,6 +163,9 @@ module m_sector
         if (associated(one_sector%myeigval))           deallocate(one_sector%myeigval)
         if (associated(one_sector%next_sector))        deallocate(one_sector%next_sector)
         if (associated(one_sector%next_sector_trunk))  deallocate(one_sector%next_sector_trunk)
+        if (associated(one_sector%final_product))      deallocate(one_sector%final_product)
+        if (associated(one_sector%occu))               deallocate(one_sector%occu)
+        if (associated(one_sector%double_occu))        deallocate(one_sector%double_occu)
 
         ! deallocate myfmat one by one
         do i=1, one_sector%nops
