@@ -240,7 +240,6 @@
      call ctqmc_allocate_memory_flvr()
 
      call ctqmc_allocate_memory_umat()
-     call ctqmc_allocate_memory_fmat()
      call ctqmc_allocate_memory_mmat()
 
      call ctqmc_allocate_memory_gmat()
@@ -529,8 +528,9 @@
 
 ! local variables
 ! loop index
-     integer  :: i
-     integer  :: j
+     integer  :: i, ii
+     integer  :: j, jj
+     integer  :: k
 
 ! system time since 1970, Jan 1, used to generate the random number seed
      integer  :: system_time
@@ -538,10 +538,9 @@
 ! random number seed for twist generator
      integer  :: stream_seed
 
-! dummy sparse matrix in CSR format
-     integer  :: sop_it(ncfgs+1)
-     integer  :: sop_jt(nzero)
-     real(dp) :: sop_t(nzero)
+! dummy matrices
+     real(dp) :: tmp_mat1(max_dim_sect, max_dim_sect)
+     real(dp) :: tmp_mat2(max_dim_sect, max_dim_sect)
 
 ! init random number generator
      call system_clock(system_time)
@@ -683,50 +682,45 @@
 
 ! init op_n, < c^{\dag} c >,
 ! which are used to calculate occupation number
-     do i=1,norbs
-         call sparse_csr_mm_csr(   ncfgs, ncfgs, ncfgs, nzero,           &
-                                   sop_c(:,i), sop_jc(:,i), sop_ic(:,i), &
-                                   sop_d(:,i), sop_jd(:,i), sop_id(:,i), &
-                                   sop_t     , sop_jt     , sop_it      )
-
-         call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, sop_n(:,i), sop_jn(:,i), sop_in(:,i) )
+     do i=1, norbs
+         do j=1, nsectors
+             k=sectors(j)%next_sector(i,0)
+             if (k == -1) then
+                 sectors(j)%occu(:,:,i) = zero
+                 cycle
+             endif
+             call ctqmc_dmat_gemm( sectors(j)%ndim, sectors(k)%ndim, sectors(j)%ndim, &
+                                   sectors(k)%myfmat(i,1)%item, sectors(j)%myfmat(i,0)%item,& 
+                                   sectors(j)%occu(:,:,i) ) 
+         enddo
      enddo ! over i={1,norbs} loop
 
 ! init op_m, < c^{\dag} c c^{\dag} c >,
 ! which are used to calculate double occupation number
-! note: here we use op_a and op_b as dummy matrix temporarily
-     do i=1,norbs-1
-         do j=i+1,norbs
-             call sparse_csr_mm_csr(   ncfgs, ncfgs, ncfgs, nzero,       &
-                                   sop_c(:,i), sop_jc(:,i), sop_ic(:,i), &
-                                   sop_d(:,i), sop_jd(:,i), sop_id(:,i), &
-                                   sop_a(:,1), sop_ja(:,1), sop_ia(:,1) )
-             call sparse_csr_mm_csr(   ncfgs, ncfgs, ncfgs, nzero,       &
-                                   sop_c(:,j), sop_jc(:,j), sop_ic(:,j), &
-                                   sop_d(:,j), sop_jd(:,j), sop_id(:,j), &
-                                   sop_b(:,1), sop_jb(:,1), sop_ib(:,1) )
+     do i=1, norbs
+         do j=1, norbs
+             do k=1, nsectors
+                 jj = sectors(k)%next_sector(j,0) 
+                 ii = sectors(k)%next_sector(i,0)
+                 if (ii == -1 .or. jj == -1) then
+                     sectors(k)%double_occu(:,:,i,j) = zero
+                 endif
+                 call ctqmc_dmat_gemm( sectors(k)%ndim, sectors(jj)%ndim, sectors(k)%ndim, &
+                                       sectors(jj)%myfmat(j,1)%item, sectors(k)%myfmat(j,0)%item,& 
+                                       tmp_mat1(1:sectors(k)%ndim, 1:sectors(k)%ndim) ) 
 
-             call sparse_csr_mm_csr(   ncfgs, ncfgs, ncfgs, nzero,       &
-                                   sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
-                                   sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
-                                   sop_t     , sop_jt     , sop_it      )
-             call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, sop_m(:,i,j), sop_jm(:,i,j), sop_im(:,i,j) )
+                 call ctqmc_dmat_gemm( sectors(k)%ndim, sectors(ii)%ndim, sectors(k)%ndim, &
+                                       sectors(ii)%myfmat(i,1)%item, sectors(k)%myfmat(i,0)%item,& 
+                                       tmp_mat2(1:sectors(k)%ndim, 1:sectors(k)%ndim) ) 
 
-             call sparse_csr_mm_csr(   ncfgs, ncfgs, ncfgs, nzero,       &
-                                   sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
-                                   sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
-                                   sop_t     , sop_jt     , sop_it      )
-             call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, sop_m(:,j,i), sop_jm(:,j,i), sop_im(:,j,i) )
-         enddo ! over j={i+1,norbs} loop
-     enddo ! over i={1,norbs-1} loop
+                 call ctqmc_dmat_gemm( sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, &
+                                       tmp_mat2(1:sectors(k)%ndim, 1:sectors(k)%ndim), & 
+                                       tmp_mat1(1:sectors(k)%ndim, 1:sectors(k)%ndim), & 
+                                       sectors(k)%double_occu(:,:,i,j) )
 
-! reinit sparse matrix op_a (sop_a, sop_ja, sop_ia)
-! reinit sparse matrix op_b (sop_b, sop_jb, sop_ib)
-! the related dense matrix should be an identity matrix
-     do i=1,npart
-         call sparse_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
-         call sparse_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
-     enddo ! over i={1,norbs} loop
+             enddo
+         enddo
+     enddo
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
@@ -765,7 +759,6 @@
      call ctqmc_deallocate_memory_flvr()
 
      call ctqmc_deallocate_memory_umat()
-     call ctqmc_deallocate_memory_fmat()
      call ctqmc_deallocate_memory_mmat()
 
      call ctqmc_deallocate_memory_gmat()
