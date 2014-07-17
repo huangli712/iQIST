@@ -74,26 +74,54 @@
 
      implicit none
 
-     character(len=100) :: before_string
-     character(len=100) :: after_string
+     character(len=100) :: string
+     character(len=100) :: str_key
+     character(len=100) :: str_value
      character(len=100), external :: s_str_compress
      integer :: istat
+     integer :: p, q
 
      open(mytmp, file = v_file, form = 'formatted', status = 'unknown')
 
      do
-         read(mytmp, '(a100)', iostat = istat) before_string
+         read(mytmp, '(a100)', iostat = istat) string
          if ( istat == iostat_end ) then
              EXIT
          else
-             after_string = s_str_compress(before_string)
-             print *, after_string
-             if ( index(after_string, '#') == 1 ) print *, 'comment'
-             if ( index(after_string, '!') == 1 ) print *, 'comment'
+             string = s_str_compress(string)
+             if ( len_trim(string) == 0   ) CYCLE
+             if ( index(string, '#') == 1 ) CYCLE
+             if ( index(string, '!') == 1 ) CYCLE
+             p = index(string, '#')
+             if ( p > 0 ) then
+                 string = string(0:p-1)
+             endif
+             p = index(string, '!')
+             if ( p > 0 ) then
+                 string = string(0:p-1)
+             endif
+
+             p = index(string, ':')
+             q = index(string, '=')
+             if ( p == 0 .and. q == 0 ) STOP
+             if ( p >  0 .and. q >  0 ) STOP
+             if ( p > 0 ) then
+                 str_key = string(0:p-1)
+                 str_value = string(p+1:len(string))
+             endif
+             if ( q > 0 ) then
+                 str_key = string(0:q-1)
+                 str_value = string(q+1:len(string))
+             endif
+             v_data%str_key = trim(str_key)
+             v_data%str_value = trim(str_value)
+             call list_insert_head(v_list, v_data)
          endif
      enddo
 
      close(mytmp)
+
+     call list_navigator(v_list)
 
      return
   end subroutine p_parse
