@@ -70,16 +70,29 @@
   end subroutine p_destroy
 
   subroutine p_parse()
+     use, intrinsic :: iso_fortran_env
+
      implicit none
 
      character(len=100) :: before_string
      character(len=100) :: after_string
      character(len=100), external :: s_str_compress
+     integer :: istat
+
      open(mytmp, file = v_file, form = 'formatted', status = 'unknown')
-     read(mytmp, '(a100)') before_string
-     print *, before_string
-     after_string = s_str_compress(before_string)
-     print *, after_string
+
+     do
+         read(mytmp, '(a100)', iostat = istat) before_string
+         if ( istat == iostat_end ) then
+             EXIT
+         else
+             after_string = s_str_compress(before_string)
+             print *, after_string
+             if ( index(after_string, '#') == 1 ) print *, 'comment'
+             if ( index(after_string, '!') == 1 ) print *, 'comment'
+         endif
+     enddo
+
      close(mytmp)
 
      return
