@@ -43,11 +43,13 @@
 
 ! self-defined data structure which will be stored in the linked list
      type T_data
-         character(len = 32) :: str_key
-         character(len = 32) :: str_value
+         logical             :: is_valid  ! used to judge whether it is fine
+         character(len = 32) :: str_key   ! string for key
+         character(len = 32) :: str_value ! string for value
      end type T_data
 
-! node for the linked list, it contains a self-pointer
+! node for the linked list, it contains a pointer pointing to next node,
+! and a T_data structure which is used to store data
      type T_node
          type (T_node), pointer :: next
          type (T_data)          :: data
