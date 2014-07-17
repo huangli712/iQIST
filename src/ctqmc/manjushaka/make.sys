@@ -13,7 +13,8 @@ CPP    = $(FPP) $(MPI) $(OMP)
 # machine tuning options, just for my laptop: iris system
 #-------------------------------------------------------------------------
 GPROF  = #-pg
-CHECK  =  -warn all #-check all  -traceback -g  #noarg_temp_created
+#CHECK  =  -warn all -check all  -traceback -g 
+CHECK  =  -warn all # -check noarg_temp_created  -traceback -g  
 CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
 LEVEL  = -O3 -xHost -unroll-aggressive -align all
 MTUNE  = -mtune=core2
@@ -27,4 +28,4 @@ LFLAGS = $(OMP) $(GPROF) $(STACK)
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------
 LIBS   = -llapack -lblas
-#LIBS   = -L. -llapack -lgoto #-lguide
+#LIBS = -L/opt/intel/mkl/lib -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -liomp5

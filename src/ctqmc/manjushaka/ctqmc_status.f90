@@ -254,7 +254,7 @@
      i = 2 * sum(rank) ! get total number of operators
 !>>>     call ctqmc_make_ztrace(4, i, matrix_ntrace)
 
-     call ctqmc_make_ztrace(4, i, matrix_ntrace)
+     call ctqmc_make_ztrace_retrieve(i, matrix_ntrace)
 
 ! update the operators trace
      call ctqmc_make_evolve()
