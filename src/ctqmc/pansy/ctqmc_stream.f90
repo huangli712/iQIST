@@ -438,9 +438,17 @@
              enddo
              close(mytmp)
 
+! make next_sector2, index from left to right
+             do i=1, nsectors
+                 do j=1, sectors(i)%nops
+                     sectors(i)%next_sector2(j,0) = sectors(i)%next_sector(j,1)
+                     sectors(i)%next_sector2(j,1) = sectors(i)%next_sector(j,0)
+                 enddo
+             enddo
 ! make next_sector_trunk
              do i=1, nsectors
                  sectors(i)%next_sector_trunk = sectors(i)%next_sector
+                 sectors(i)%next_sector_trunk2 = sectors(i)%next_sector2
              enddo 
 
 ! add the contribution from chemical potential to eigenvalues
