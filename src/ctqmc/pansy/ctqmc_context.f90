@@ -405,6 +405,16 @@
 ! the array contains all the sectors
      type(t_sector), public, save, allocatable :: sectors(:)
 
+! whether this sector forming a string
+     logical, public, save, allocatable :: is_string(:,:)
+
+! saved parts of matrices 
+     real(dp), public, save, allocatable :: saved_a(:,:,:,:)
+     integer,  public, save, allocatable :: saved_a_nm(:,:,:)
+
+     real(dp), public, save, allocatable :: saved_b(:,:,:,:)
+     integer,  public, save, allocatable :: saved_b_nm(:,:,:)
+
   end module ctqmc_sect
 
 !=========================================================================
@@ -713,7 +723,12 @@
          integer :: i
 
 ! allocate memory
-         allocate(sectors(nsectors), stat=istat)
+         allocate(sectors(nsectors),     stat=istat)
+         allocate(is_string(nsectors,2), stat=istat)
+         allocate(saved_a(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
+         allocate(saved_a_nm(2, npart, nsectors), stat=istat)
+         allocate(saved_b(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
+         allocate(saved_b_nm(2, npart, nsectors), stat=istat)
 
 ! check the status
          if ( istat /= 0 ) then
@@ -728,6 +743,12 @@
              sectors(i)%istart = 0
              call nullify_one_sector(sectors(i))
          enddo 
+
+         is_string = -1
+         saved_a = zero
+         saved_a_nm = 0
+         saved_b = zero
+         saved_b_nm = 0
 
          return
      end subroutine ctqmc_allocate_memory_sect
@@ -882,6 +903,12 @@
 ! then, deallocate memory of sect
              deallocate(sectors)
          endif
+
+         if ( allocated(is_string) )    deallocate(is_string)
+         if ( allocated(saved_a) )      deallocate(saved_a)
+         if ( allocated(saved_a_nm) )   deallocate(saved_a_nm)
+         if ( allocated(saved_b) )      deallocate(saved_b)
+         if ( allocated(saved_b_nm) )   deallocate(saved_b_nm)
         
          return
      end subroutine ctqmc_deallocate_memory_sect
