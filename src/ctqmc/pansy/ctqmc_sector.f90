@@ -41,9 +41,13 @@ module m_sector
         ! the next sector it points to when a fermion operator acts on this sector
         ! -1: outside of the Hilbert space, otherwise, it is the index of next sector
         ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
+        ! F|i> --> |j>
         integer, pointer :: next_sector(:,:)
         ! for trunk of Hilbert space
         integer, pointer :: next_sector_trunk(:,:)
+        ! <i|F --> <j| corresponds to F^{\dagger}|i> --> |j>
+        integer, pointer :: next_sector2(:,:)
+        integer, pointer :: next_sector_trunk2(:,:)
         ! the fmat between this sector and all other sectors
         ! if this sector doesn't point to some other sectors, the pointer is null
         ! mymfat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
@@ -106,7 +110,9 @@ module m_sector
 
         nullify( one_sector%myeigval )
         nullify( one_sector%next_sector )
+        nullify( one_sector%next_sector2 )
         nullify( one_sector%next_sector_trunk )
+        nullify( one_sector%next_sector_trunk2 )
         nullify( one_sector%myfmat )
 
         return
@@ -124,7 +130,9 @@ module m_sector
 
         allocate(one_sector%myeigval(one_sector%ndim))
         allocate(one_sector%next_sector(one_sector%nops,0:1))
+        allocate(one_sector%next_sector2(one_sector%nops,0:1))
         allocate(one_sector%next_sector_trunk(one_sector%nops,0:1))
+        allocate(one_sector%next_sector_trunk2(one_sector%nops,0:1))
         allocate(one_sector%myfmat(one_sector%nops,0:1))
         allocate(one_sector%final_product(one_sector%ndim, one_sector%ndim, 2))
         allocate(one_sector%occu(one_sector%ndim, one_sector%ndim, one_sector%nops))
@@ -133,7 +141,9 @@ module m_sector
         ! init them
         one_sector%myeigval = zero
         one_sector%next_sector = 0
+        one_sector%next_sector2 = 0
         one_sector%next_sector_trunk = 0
+        one_sector%next_sector_trunk2 = 0
         one_sector%final_product = zero
         one_sector%occu = zero
         one_sector%double_occu = zero
@@ -160,12 +170,14 @@ module m_sector
         ! local variables  
         integer :: i, j
 
-        if (associated(one_sector%myeigval))           deallocate(one_sector%myeigval)
-        if (associated(one_sector%next_sector))        deallocate(one_sector%next_sector)
-        if (associated(one_sector%next_sector_trunk))  deallocate(one_sector%next_sector_trunk)
-        if (associated(one_sector%final_product))      deallocate(one_sector%final_product)
-        if (associated(one_sector%occu))               deallocate(one_sector%occu)
-        if (associated(one_sector%double_occu))        deallocate(one_sector%double_occu)
+        if (associated(one_sector%myeigval))            deallocate(one_sector%myeigval)
+        if (associated(one_sector%next_sector))         deallocate(one_sector%next_sector)
+        if (associated(one_sector%next_sector2))        deallocate(one_sector%next_sector2)
+        if (associated(one_sector%next_sector_trunk))   deallocate(one_sector%next_sector_trunk)
+        if (associated(one_sector%next_sector_trunk2))  deallocate(one_sector%next_sector_trunk2)
+        if (associated(one_sector%final_product))       deallocate(one_sector%final_product)
+        if (associated(one_sector%occu))                deallocate(one_sector%occu)
+        if (associated(one_sector%double_occu))         deallocate(one_sector%double_occu)
 
         ! deallocate myfmat one by one
         do i=1, one_sector%nops
