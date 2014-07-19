@@ -408,6 +408,9 @@
 ! whether this sector forming a string
      logical, public, save, allocatable :: is_string(:,:)
 
+! whether this part should be recalculated
+     integer, public, save, allocatable :: is_save(:,:)
+
 ! saved parts of matrices 
      real(dp), public, save, allocatable :: saved_a(:,:,:,:)
      integer,  public, save, allocatable :: saved_a_nm(:,:,:)
@@ -725,6 +728,7 @@
 ! allocate memory
          allocate(sectors(nsectors),     stat=istat)
          allocate(is_string(nsectors,2), stat=istat)
+         allocate(is_save(npart, nsectors), stat=istat)
          allocate(saved_a(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
          allocate(saved_a_nm(2, npart, nsectors), stat=istat)
          allocate(saved_b(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
@@ -744,7 +748,8 @@
              call nullify_one_sector(sectors(i))
          enddo 
 
-         is_string = -1
+         is_string = .false.
+         is_save = 1
          saved_a = zero
          saved_a_nm = 0
          saved_b = zero
@@ -905,6 +910,7 @@
          endif
 
          if ( allocated(is_string) )    deallocate(is_string)
+         if ( allocated(is_save) )      deallocate(is_save)
          if ( allocated(saved_a) )      deallocate(saved_a)
          if ( allocated(saved_a_nm) )   deallocate(saved_a_nm)
          if ( allocated(saved_b) )      deallocate(saved_b)
