@@ -2473,8 +2473,8 @@
 ! the trace for each sector
      real(dp) :: trace_sector(nsectors)
 
-! direction for the string
-     integer :: idirection
+! the part index for using the saved matrices
+     integer :: part_indx(npart, nsectors)
 
 ! local variables
 ! length in imaginary time axis for each part
@@ -2494,7 +2494,7 @@
 ! end index of operators for each part
      integer  :: ope(npart)
 
-! left and right distance
+! distance 
      integer :: left_dis
      integer :: left_dis_a
      integer :: left_dis_b
@@ -2503,10 +2503,13 @@
      integer :: right_dis_b
 
 ! loop index
-     integer :: i, j
+     integer :: i, j, k
 
 ! start index of a sector
      integer :: indx
+
+! whether find a part
+     logical :: found
 
 ! copy data from index_t or index_v to index_t_loc
 ! copy data from expt_t to expt_t_loc
@@ -2525,12 +2528,14 @@
              expt_t_loc = expt_t(:,2)
      end select
 
+! build string for all the sectors
+     call ctqmc_make_string(csize, index_t_loc, string)
+
 ! init key arrays
      nop = 0
      ops = 0
      ope = 0
-     is_save = 1
-     idirection = 1
+     is_save = 0
 
 !--------------------------------------------------------------------
 ! when npart > 1, we use npart alogithm
@@ -2539,7 +2544,7 @@
          nop(1) = csize
          ops(1) = 1
          ope(1) = csize
-
+         is_save = 1     
      elseif ( npart > 1) then
 
          interval = beta / real(npart)
@@ -2576,9 +2581,9 @@
              tis = ceiling( tau_s / interval )
              tie = ceiling( tau_e / interval )
 
+             is_save(tis,:) = 1
              left_dis_a = npart - tis
-             right_dis_a = tis - 1
-
+             right_dis_a= tis - 1
 ! special attention: if operator A is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
              if ( nop(tis) > 0 ) then
@@ -2587,7 +2592,7 @@
                      do while ( tip <= npart )
                          left_dis_a = npart - tip
                          if ( nop(tip) > 0 ) then
-                             EXIT
+                             is_save(tip,:) = 1;  EXIT
                          endif
                          tip = tip + 1
                      enddo ! over do while loop
@@ -2597,14 +2602,15 @@
                  do while ( tip <= npart )
                      left_dis_a = npart - tip
                      if ( nop(tip) > 0 ) then
-                          EXIT
+                         is_save(tip,:) = 1; EXIT
                      endif
                      tip = tip + 1
                  enddo ! over do while loop
              endif ! back if ( nop(tis) > 0 ) block
 
+             is_save(tie,:) = 1
              left_dis_b = npart - tie
-             right_dis_b = tie - 1
+             right_dis_b = tie - 1 
 ! special attention: if operator B is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
              if ( nop(tie) > 0 ) then
@@ -2613,7 +2619,7 @@
                      do while ( tip <= npart )
                          left_dis_b = npart - tip
                          if ( nop(tip) > 0 ) then
-                             EXIT
+                             is_save(tip,:) = 1; EXIT
                          endif
                          tip = tip + 1
                      enddo ! over do while loop
@@ -2623,36 +2629,54 @@
                  do while ( tip <= npart )
                      left_dis_b = npart - tip
                      if ( nop(tip) > 0 ) then
-                         EXIT
+                         is_save(tip,:) = 1; EXIT
                      endif
                      tip = tip + 1
                  enddo ! over do while loop
              endif ! back if ( nop(tie) > 0 ) block
 
-! determine the direction and is_save
-             left_dis = min(left_dis_a, left_dis_b) 
+             left_dis = min(left_dis_a, left_dis_b)
              right_dis = min(right_dis_a, right_dis_b)
 
-             if (left_dis <= right_dis) then
-                 idirection = 1
-                 do i=1, nsectors
-                     do j=1, right_dis
-                         if ( (is_string(i,2) .eqv. .true.) .and. (nop(j)>0) ) then
+             do i=1, nsectors
+                 if (is_string(i,1) .eqv. .false.) cycle
+                 do j=1, npart
+                     if ( is_save(j,i) /= 0 ) cycle
+                     ! leftmost and rightmost parts
+                     if (j<=right_dis .or. j>=npart-left_dis+1) then 
+                         if (is_string(i, 2) .eqv. .true.) then
                              is_save(j,i) = 0
+                             part_indx(j,i) = i
+                         else
+                             is_save(j,i) = 1
                          endif
-                     enddo
-                 enddo
-             else
-                 idirection = 2
-                 do i=1, nsectors
-                     do j=npart-left_dis+1, npart
-                         if ( (is_string(i,2) .eqv. .true.) .and. (nop(j)>0) ) then
-                             is_save(j,i) = 0
+                     ! middle part
+                     else
+                         found = .false.
+                         do k=1, nsectors
+                             if(is_string(k,2) .eqv. .false.) cycle
+                             if(string(ops(j),i) == saved_a_nm(2,j,k)) then
+                                 is_save(j,i) = 0
+                                 part_indx(j,i) = k 
+                                 found = .true.
+                                 EXIT
+                             endif
+                         enddo
+                         if (found .eqv. .false.) then
+                             is_save(j,i) = 1
                          endif
-                     enddo
+                     endif
                  enddo
-             endif 
-
+             enddo
+        
+         elseif (cmode == 3 .or. cmode == 4) then
+             do i=1, nsectors
+                 do j=1, npart
+                     if (is_save(j,i) == 0) then
+                         is_save(j,i) = 1
+                     endif  
+                 enddo
+             enddo
          endif ! back if (cmode == 1 .or. cmode == 2) block
 
 ! npart should be larger than zero
@@ -2663,9 +2687,6 @@
 !--------------------------------------------------------------------
 
 !--------------------------------------------------------------------
-! build string for all the sectors
-     call ctqmc_make_string(idirection, csize, index_t_loc, string)
-
 ! begin to calculate the trace of each sector one by one
      trace_sector = zero
      trace = zero
@@ -2674,8 +2695,8 @@
              trace_sector(i) = zero
              sectors(i)%final_product(:,:,1) = zero
          else
-             call cat_sector_ztrace(idirection, csize, string(:,i), index_t_loc, &
-                                    expt_t_loc, nop, ops, ope, trace_sector(i))
+             call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, &
+                                   nop, ops, ope, part_indx(:,i), trace_sector(i))
          endif
          trace = trace + trace_sector(i)
      enddo 
@@ -2693,7 +2714,7 @@
   end subroutine ctqmc_make_ztrace
 
 !>>> subroutine used to build a string
-  subroutine ctqmc_make_string(idirection, csize, index_t_loc, string)
+  subroutine ctqmc_make_string(csize, index_t_loc, string)
      use constants
      use control
      use context
@@ -2701,9 +2722,6 @@
      implicit none
 
 ! external variables
-! the string direction, 1: right ---> left, 2: left  ---> right
-     integer, intent(in) :: idirection
-  
 ! the number of fermion operators
      integer, intent(in) :: csize
 
@@ -2728,77 +2746,42 @@
 !--------------------------------------------------------------------
      is_string(:,1) = .true.
      string = -1
-! from right to left, 0 ----> beta
-     if (idirection == 1) then
-         do i=1,nsectors
+! from right to left, beta <------- 0
+     do i=1,nsectors
 ! build the string from the beginning sector, that is:
 ! S_a1(q1)-->q2, S_a2(q2)-->q3, ... S_ai(qi)-->qi+1, ..., Sak(qk)-->q1
 ! if we find some qi==0, we cycle this sector immediately
-             curr_sect = i
+         curr_sect = i
 ! loop over all the operators, from imaginary time 0 ---> beta
-             do j=1,csize
-                 string(j,i) = curr_sect 
-                 vt = type_v( index_t_loc(j) )
-                 vf = flvr_v( index_t_loc(j) ) 
-                 next_sect = sectors(curr_sect)%next_sector_trunk(vf,vt)
-                 if (next_sect == -1 ) then
-                     is_string(i,1) = .false. 
-                     EXIT   ! finish check, exit
-                 endif
-                 curr_sect = next_sect
-             enddo ! over j={1, csize} loop
-! if it doesn't form a string, we cycle it, go to the next sector
-             if (is_string(i,1) .eqv. .false.) then
-                 cycle
+         do j=1,csize
+             string(j,i) = curr_sect 
+             vt = type_v( index_t_loc(j) )
+             vf = flvr_v( index_t_loc(j) ) 
+             next_sect = sectors(curr_sect)%next_sector_trunk(vf,vt)
+             if (next_sect == -1 ) then
+                 is_string(i,1) = .false. 
+                 EXIT   ! finish check, exit
              endif
+             curr_sect = next_sect
+         enddo ! over j={1, csize} loop
+! if it doesn't form a string, we cycle it, go to the next sector
+         if (is_string(i,1) .eqv. .false.) then
+             cycle
+         endif
 ! add the last sector to string, and check whether string(csize+1,i) == string(1,i)
 ! important for csize = 0
-             string(csize+1,i) = curr_sect 
-             if ( string(csize+1,i) /= string(1,i) ) then
-                 call ctqmc_print_error('ctqmc_make_ztrace','the first sector &
-                                             is not equal to the last sector')
-             endif
-         enddo ! over i={1,nsectors} loop
-
-! from left to right, beta ---> 0
-     else
-
-         do i=1,nsectors
-! build the string from the beginning sector, that is:
-! S_ak(q1)-->q2, S_ak-1(q2)-->q3, ... S_ai(qi)-->qi+1, ..., Sa1(qk)-->q1
-! if we find some qi==0, we cycle this sector immediately
-             curr_sect = i
-! loop over all the operatos, from beta ---> 0
-             do j=csize, 1, -1
-                 string(csize-j+1,i) = curr_sect 
-                 vt = type_v( index_t_loc(j) )
-                 vf = flvr_v( index_t_loc(j) ) 
-                 next_sect = sectors(curr_sect)%next_sector_trunk2(vf,vt)
-                 if (next_sect == -1 ) then
-                     is_string(i,1) = .false. 
-                     EXIT   ! finish check, exit
-                 endif
-                 curr_sect = next_sect
-             enddo ! over j={csize, 1, -1} loop
-! if it doesn't form a string, we cycle it, go to the next sector
-             if (is_string(i,1) .eqv. .false.) then
-                 cycle
-             endif
-! add the last sector to string, and check whether string(csize+1,i) == string(1,i)
-             string(csize+1,i) = curr_sect 
-             if ( string(csize+1,i) /= string(1,i) ) then
-                 call ctqmc_print_error('ctqmc_make_ztrace','the first sector &
+         string(csize+1,i) = curr_sect 
+         if ( string(csize+1,i) /= string(1,i) ) then
+             call ctqmc_print_error('ctqmc_make_ztrace','the first sector &
                                          is not equal to the last sector')
-             endif
-         enddo ! over i={1,nsectors} loop
-
-     endif ! back if (idirection == 1) block
+         endif
+     enddo ! over i={1,nsectors} loop
 
      return
   end subroutine ctqmc_make_string
 
 !>>> calculate the trace for one sector
-  subroutine cat_sector_ztrace(idirection, csize, string, index_t_loc, expt_t_loc, nop, ops, ope, trace)
+  subroutine cat_sector_ztrace(csize, string, index_t_loc, expt_t_loc, nop, ops, ope, part_indx, trace)
      use constants
      use control
      use context
@@ -2806,9 +2789,6 @@
      implicit none
 
 ! external variables
-! the direction for time-evolution
-     integer, intent(in) :: idirection
-
 ! the number of total fermion operators
      integer, intent(in) :: csize
 
@@ -2830,12 +2810,16 @@
 ! end index of fermion operators for each part
      integer, intent(in) :: ope(npart)
 
+! part index of saved matrices
+     integer, intent(in) :: part_indx(npart)
+
 ! the calculated trace of this sector
      real(dp), intent(out) :: trace
 
 ! local variables
-! this sector index
+! sector index
      integer :: isect
+     integer :: jsect
 
 ! loop index
      integer :: i,j,k,l
@@ -2847,6 +2831,7 @@
 
 ! temp index
      integer :: dim1, dim2, dim3, dim4
+     integer :: sect1, sect2
      integer :: indx
      integer :: vt, vf
 
@@ -2855,172 +2840,90 @@
 
 !--------------------------------------------------------------------
 ! from right to left: beta <------ 0
-     if (idirection == 1) then
-         right_mat = zero
-         dim1 = sectors(string(1))%ndim
-         do i=1, max_dim_sect
-             right_mat(i,i) = one
-         enddo
+     right_mat = zero
+     dim1 = sectors(string(1))%ndim
+     do i=1, max_dim_sect
+         right_mat(i,i) = one
+     enddo
 
 ! loop over all the parts
-         do i=1, npart
+     do i=1, npart
 
 ! if no fermion operators, cycle it
-             if (nop(i) <= 0 ) cycle
+         if (nop(i) <= 0 ) cycle
 
 ! this part has been calculated previously, just use its results
-             if (is_save(i,isect) == 0) then
-                 dim2 = saved_a_nm(1,i,isect)
-                 dim3 = saved_a_nm(2,i,isect)
-
-                 call ctqmc_dmat_gemm( dim2, dim3, dim1, saved_a(1:dim2, 1:dim3, i, isect), &
-                                       right_mat(1:dim3, 1:dim1), tmp_mat(1:dim2, 1:dim1) )
-                 right_mat(1:dim2, 1:dim1) = tmp_mat(1:dim2, 1:dim1)
+         if (is_save(i,isect) == 0) then
+             jsect = part_indx(i)
+             sect1 = saved_a_nm(1,i,jsect)
+             sect2 = saved_a_nm(2,i,jsect)
+             dim2 = sectors(sect1)%ndim
+             dim3 = sectors(sect2)%ndim
+             if (isect /= jsect) then
+                 saved_b_nm(1,i,isect) = sect1
+                 saved_b_nm(2,i,isect) = sect2
+                 saved_b(1:dim2, 1:dim3, i, isect) = saved_a(1:dim2, 1:dim3, i, jsect)
+                 is_save(i,isect) = 1
+             endif
+             call ctqmc_dmat_gemm( dim2, dim3, dim1, saved_a(1:dim2, 1:dim3, i, jsect), &
+                                   right_mat(1:dim3, 1:dim1), tmp_mat(1:dim2, 1:dim1) )
+             right_mat(1:dim2, 1:dim1) = tmp_mat(1:dim2, 1:dim1)
 ! this part should be recalcuated 
-             elseif (is_save(i,isect) == 1) then 
+         elseif (is_save(i,isect) == 1) then 
 
-                 saved_b(:,:,i,isect) = zero
-                 do j=1, max_dim_sect
-                     saved_b(j,j, i,isect) = one
-                 enddo
-                 dim4 = sectors( string(ops(i)) )%ndim
+             saved_b(:,:,i,isect) = zero
+             do j=1, max_dim_sect
+                 saved_b(j,j, i,isect) = one
+             enddo
+             dim4 = sectors(string(ops(i)))%ndim
 
 ! loop over all the fermion operators in this part
-                 do j=ops(i), ope(i)
-                     indx = sectors(string(j  ))%istart
-                     dim2 = sectors(string(j+1))%ndim
-                     dim3 = sectors(string(j  ))%ndim
+             do j=ops(i), ope(i)
+                 indx = sectors(string(j  ))%istart
+                 dim2 = sectors(string(j+1))%ndim
+                 dim3 = sectors(string(j  ))%ndim
 
-                     do k=1,dim3
-                         do l= 1,dim4
-                             tmp_mat(k,l) = saved_b(k,l, i,isect) * expt_v(indx+k-1, index_t_loc(j))
-                         enddo
+                 do k=1,dim3
+                     do l= 1,dim4
+                         tmp_mat(k,l) = saved_b(k,l, i,isect) * expt_v(indx+k-1, index_t_loc(j))
                      enddo
+                 enddo
 
-                     vt = type_v( index_t_loc(j) )
-                     vf = flvr_v( index_t_loc(j) ) 
-                     call ctqmc_dmat_gemm(dim2, dim3, dim4, sectors(string(j))%myfmat(vf, vt)%item,&
-                                          tmp_mat(1:dim3, 1:dim4), saved_b(1:dim2, 1:dim4, i, isect) ) 
+                 vt = type_v( index_t_loc(j) )
+                 vf = flvr_v( index_t_loc(j) ) 
+                 call ctqmc_dmat_gemm(dim2, dim3, dim4, sectors(string(j))%myfmat(vf, vt)%item,&
+                                      tmp_mat(1:dim3, 1:dim4), saved_b(1:dim2, 1:dim4, i, isect) ) 
 
-                 enddo  ! over j={ops(i), ope(i)} loop
+             enddo  ! over j={ops(i), ope(i)} loop
 ! multiply this part with the rest parts
-                 call ctqmc_dmat_gemm(dim2, dim4, dim1, saved_b(1:dim2, 1:dim4, i, isect), &
-                                        right_mat(1:dim4, 1:dim1), tmp_mat(1:dim2, 1:dim1) ) 
-                 right_mat(1:dim2, 1:dim1) = tmp_mat(1:dim2, 1:dim1)
+             call ctqmc_dmat_gemm(dim2, dim4, dim1, saved_b(1:dim2, 1:dim4, i, isect), &
+                                    right_mat(1:dim4, 1:dim1), tmp_mat(1:dim2, 1:dim1) ) 
+             right_mat(1:dim2, 1:dim1) = tmp_mat(1:dim2, 1:dim1)
 
 ! save current part dimension to saved_b_nm
-                 saved_b_nm(1,i,isect) = dim2
-                 saved_b_nm(2,i,isect) = dim4
+             saved_b_nm(1,i,isect) = string(ope(i)+1)
+             saved_b_nm(2,i,isect) = string(ops(i))
 
-             endif ! back if ( is_save(i,isect) ==0 )  block
+         endif ! back if ( is_save(i,isect) ==0 )  block
 
-         enddo  ! over i={1, npart} loop   
+     enddo  ! over i={1, npart} loop   
 
 ! special treatment of the last time-evolution operator
-         indx = sectors(string(1))%istart
-         do k=1,dim1
-             do l=1,dim1
-                 right_mat(k,l) = right_mat(k,l) * expt_t_loc(indx+k-1)
-             enddo
+     indx = sectors(string(1))%istart
+     do k=1,dim1
+         do l=1,dim1
+             right_mat(k,l) = right_mat(k,l) * expt_t_loc(indx+k-1)
          enddo
+     enddo
 
 ! store final product
-         sectors((string(1)))%final_product(:,:,1) = right_mat(1:dim1, 1:dim1)
+     sectors((string(1)))%final_product(:,:,1) = right_mat(1:dim1, 1:dim1)
 
 ! calculate the trace
-         trace  = zero
-         do j=1, sectors(string(1))%ndim
-             trace = trace + right_mat(j,j)
-         enddo
-! Done 
-!--------------------------------------------------------------------
-
-!--------------------------------------------------------------------
-! from left to right: beta ------> 0
-     else
-
-         left_mat = zero
-         dim1 = sectors(string(1))%ndim
-         do i=1, max_dim_sect
-             left_mat(i,i) = one
-         enddo
-
-! loop over all the parts
-         do i=npart, 1, -1
-
-! when no fermion operators in this part, just cycle it
-             if (nop(i) <= 0 ) cycle
-
-! this part has been calculated previously, use the results
-             if (is_save(i,isect) == 0) then
-
-                 dim2 = saved_a_nm(1,i,isect)
-                 dim3 = saved_a_nm(2,i,isect)
-
-                 call ctqmc_dmat_gemm( dim1, dim2, dim3, left_mat(1:dim1, 1:dim2), &
-                        saved_a(1:dim2, 1:dim3, i, isect), tmp_mat(1:dim1, 1:dim3) )
-                 left_mat(1:dim1, 1:dim3) = tmp_mat(1:dim1, 1:dim3)
-
-! this part should be recalculated 
-             elseif (is_save(i,isect) == 1) then
-              
-                 saved_b(:,:, i, isect) = zero
-                 do j=1, max_dim_sect
-                     saved_b(j,j, i,isect) = one
-                 enddo
-                 dim4 = sectors( string(csize-ope(i)+1) )%ndim
-
-! loop over all the fermion operators in this part
-                 do j=ope(i), ops(i), -1
-                     indx = sectors( string(csize-j+2) )%istart
-                     dim2 = sectors( string(csize-j+1) )%ndim
-                     dim3 = sectors( string(csize-j+2) )%ndim
-
-                     vt = type_v( index_t_loc(j) )
-                     vf = flvr_v( index_t_loc(j) ) 
-                     call ctqmc_dmat_gemm( dim4, dim2, dim3, saved_b(1:dim4,1:dim2, i, isect), &
-                       sectors(string(csize-j+2))%myfmat(vf, vt)%item, tmp_mat(1:dim4, 1:dim3) ) 
-
-                     do k=1,dim3
-                         do l=1,dim4
-                             saved_b(l,k, i, isect) = tmp_mat(l,k) * expt_v(indx+k-1, index_t_loc(j))
-                         enddo
-                     enddo
-
-                 enddo ! over j={ope(i), ops(i), -1} loop
-
-! multiply the current part with the rest parts
-                 call ctqmc_dmat_gemm(dim1, dim4, dim3, left_mat(1:dim1, 1:dim4), &
-                         saved_b(1:dim4, 1:dim3, i, isect), tmp_mat(1:dim1, 1:dim3)) 
-                 left_mat(1:dim1, 1:dim3) = tmp_mat(1:dim1, 1:dim3)
-
-! save the dimension of currrent part to saved_b_nm
-                 saved_b_nm(1,i,isect) = dim4
-                 saved_b_nm(2,i,isect) = dim3
-
-             endif ! back if ( is_save(i,isect) == 0 ) block
-
-         enddo  ! over i={1, npart} loop   
-
-! special treatment of the last time evolution operator
-         indx = sectors(string(1))%istart
-         do k=1,dim1
-             do l=1,dim1
-                 left_mat(k,l) = left_mat(k,l) * expt_t_loc(indx+k-1)
-             enddo
-         enddo
-
-! store final product
-         sectors((string(1)))%final_product(:,:,1) = left_mat(1:dim1, 1:dim1)
-
-! calculate the trace
-         trace  = zero
-         do j=1, sectors(string(1))%ndim
-             trace = trace + left_mat(j,j)
-         enddo
-     endif ! back if ( idirection == 1) block
-! Done
-!--------------------------------------------------------------------
+     trace  = zero
+     do j=1, sectors(string(1))%ndim
+         trace = trace + right_mat(j,j)
+     enddo
 
      return
   end subroutine cat_sector_ztrace
@@ -3035,6 +2938,7 @@
 ! local variables
 ! loop index
      integer :: i, j
+     integer :: sect1, sect2
      integer :: dim1, dim2
 
 ! update the operator traces
@@ -3058,10 +2962,12 @@
 ! store each part
              do j=1, npart
                  if ( is_save(j,i) == 1 ) then
-                     dim1 = saved_b_nm(1, j, i)
-                     dim2 = saved_b_nm(2, j, i)
-                     saved_a_nm(1, j, i) = dim1
-                     saved_a_nm(2, j, i) = dim2
+                     sect1 = saved_b_nm(1, j, i)
+                     sect2 = saved_b_nm(2, j, i)
+                     saved_a_nm(1, j, i) = sect1
+                     saved_a_nm(2, j, i) = sect2
+                     dim1 = sectors(sect1)%ndim
+                     dim2 = sectors(sect2)%ndim
                      saved_a(1:dim1, 1:dim2, j, i) = saved_b(1:dim1, 1:dim2, j, i) 
                  endif
              enddo

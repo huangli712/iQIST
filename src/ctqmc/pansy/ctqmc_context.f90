@@ -411,11 +411,16 @@
 ! whether this part should be recalculated
      integer, public, save, allocatable :: is_save(:,:)
 
-! saved parts of matrices 
+! saved parts of matrices, previous configuration 
      real(dp), public, save, allocatable :: saved_a(:,:,:,:)
+
+! start and end sector index, previous configuration
      integer,  public, save, allocatable :: saved_a_nm(:,:,:)
 
+! saved parts of matrices, current configuration
      real(dp), public, save, allocatable :: saved_b(:,:,:,:)
+
+! start and end sector index, current configuration
      integer,  public, save, allocatable :: saved_b_nm(:,:,:)
 
   end module ctqmc_sect

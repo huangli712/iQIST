@@ -694,14 +694,9 @@
 !-------------------------------------------------------------------------
      integer :: i
 
-     do i=1, 10
-         call ctqmc_insert_kink()
-         call ctqmc_remove_kink()
-     enddo
-
-     !call ctqmc_make_display(1)
-     !call ctqmc_make_display(2)
-     !call ctqmc_print_error('ctqmc_impurity_tester','in debug mode')
+     call ctqmc_make_display(1)
+     call ctqmc_make_display(2)
+     call ctqmc_print_error('ctqmc_impurity_tester','in debug mode')
 
      return
   end subroutine ctqmc_impurity_tester
