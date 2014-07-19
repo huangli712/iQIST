@@ -1,14 +1,16 @@
 !-------------------------------------------------------------------------
-! project : begonia
+! project : pansy
 ! program : control    module
 ! source  : ctqmc_control.f90
 ! type    : module
 ! author  : li huang (email:huangli712@yahoo.com.cn)
+!           yilin wang (qhwyl2006@126.com)
 ! history : 09/15/2009 by li huang
 !           09/20/2009 by li huang
 !           11/01/2009 by li huang
 !           12/01/2009 by li huang
 !           02/23/2010 by li huang
+!           07/19/2014 by yilin wang
 ! purpose : define global control parameters for hybridization expansion
 !           version continuous time quantum Monte Carlo (CTQMC) quantum
 !           impurity solver and dynamical mean field theory (DMFT) self-
@@ -63,9 +65,6 @@
 
 ! number of atomic states (= 2**norbs)
      integer, public, save :: ncfgs  = 4
-
-! maximum allowed number of non-zero elements in F-matrix
-     integer, public, save :: nzero  = 128
 
 ! maximum number of continuous time quantum Monte Carlo quantum impurity
 ! solver plus dynamical mean field theory self-consistent iterations
