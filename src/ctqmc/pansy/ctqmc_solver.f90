@@ -154,7 +154,7 @@
 
 ! print the header of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'BEGONIA >>> CTQMC quantum impurity solver running'
+         write(mystd,'(2X,a)') 'PANSY >>> CTQMC quantum impurity solver running'
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nband :', nband, 'Uc    :', Uc
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nspin :', nspin, 'Jz    :', Jz
          write(mystd,*)
@@ -503,7 +503,7 @@
 
 ! print the footer of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'BEGONIA >>> CTQMC quantum impurity solver shutdown'
+         write(mystd,'(2X,a)') 'PANSY >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
      endif
 

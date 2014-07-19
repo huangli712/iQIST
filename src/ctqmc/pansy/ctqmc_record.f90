@@ -18,6 +18,7 @@
 ! source  : ctqmc_record.f90
 ! type    : subroutine
 ! author  : li huang (email:huangli712@yahoo.com.cn)
+!           yilin wang (email: qhwyl2006@126.com)
 ! history : 09/16/2009 by li huang
 !           09/18/2009 by li huang
 !           09/20/2009 by li huang
@@ -40,6 +41,7 @@
 !           02/24/2010 by li huang
 !           02/27/2010 by li huang
 !           09/29/2010 by li huang
+!           07/19/2014 by yilin wang
 ! purpose : measure, record, and postprocess the key observables produced
 !           by the hybridization expansion version continuous time quantum
 !           Monte Carlo (CTQMC) quantum impurity solver

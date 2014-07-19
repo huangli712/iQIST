@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : pansy
+! project : manjushaka
 ! program : ctqmc_insert_kink
 !           ctqmc_remove_kink
 !           ctqmc_lshift_kink

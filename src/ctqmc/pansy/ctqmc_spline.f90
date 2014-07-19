@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : begonia
+! project : pansy
 ! program : ctqmc_make_htau
 !           ctqmc_make_hsed
 !           ctqmc_make_spline

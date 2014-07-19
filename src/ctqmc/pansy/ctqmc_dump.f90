@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : begonia
+! project : pansy
 ! program : ctqmc_dump_gtau
 !           ctqmc_dump_wtau
 !           ctqmc_dump_htau
@@ -12,9 +12,11 @@
 !           ctqmc_dump_hist
 !           ctqmc_dump_nmat
 !           ctqmc_dump_prob
+!           ctqmc_dump_psect
 ! source  : ctqmc_dump.f90
 ! type    : subroutine
 ! author  : li huang (email:huangli712@yahoo.com.cn)
+!           yilin wang (qhwyl2006@126.com)
 ! history : 09/16/2009 by li huang
 !           09/17/2009 by li huang
 !           09/18/2009 by li huang
@@ -31,6 +33,7 @@
 !           02/28/2010 by li huang
 !           03/04/2010 by li huang
 !           08/23/2010 by li huang
+!           07/19/2014 by yilin wang
 ! purpose : dump key observables produced by the hybridization expansion
 !           version continuous time quantum Monte Carlo (CTQMC) quantum
 !           impurity solver and dynamical mean field theory (DMFT) self

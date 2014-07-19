@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : pansy
+! project : manjushaka
 ! program : m_sector
 ! source  : mod_control.f90
 ! type    : modules

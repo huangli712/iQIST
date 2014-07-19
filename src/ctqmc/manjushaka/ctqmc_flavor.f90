@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : pansy
+! project : manjushaka
 ! program : cat_insert_ztrace
 !           cat_remove_ztrace
 !           cat_lshift_ztrace
@@ -2462,7 +2462,7 @@
 !>>> service layer: utility subroutines to calculate trace             <<<
 !-------------------------------------------------------------------------
 
-!>>> core subroutine of pansy
+!>>> core subroutine of manjushaka
 ! use good quantum number algorithm
   subroutine ctqmc_make_ztrace_lazy(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass)
      use constants

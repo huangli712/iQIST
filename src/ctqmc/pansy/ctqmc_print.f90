@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : begonia
+! project : pansy
 ! program : ctqmc_print_header
 !           ctqmc_print_footer
 !           ctqmc_print_summary
@@ -37,25 +37,25 @@
 ! obtain current date and time
      call ctqmc_time_builder(date_time_string)
 
-     write(mystd,'(2X,a)') 'BEGONIA'
+     write(mystd,'(2X,a)') 'PANSY'
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'version: 2012.08.20T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & IOP'
-     write(mystd,'(2X,a)') 'support: huangli712@yahoo.com.cn'
+     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & IOP and yilin wang, IOP'
+     write(mystd,'(2X,a)') 'support: huangli712@yahoo.com.cn, qhwyl2006@126.com'
      write(mystd,'(2X,a)') 'license: GPL2 and later versions'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'BEGONIA >>> start running at '//date_time_string
+     write(mystd,'(2X,a)') 'PANSY >>> start running at '//date_time_string
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') 'BEGONIA >>> parallelism: Yes >>> processors:', nprocs
+     write(mystd,'(2X,a,i4)') 'PANSY >>> parallelism: Yes >>> processors:', nprocs
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') 'BEGONIA >>> parallelism: No  >>> processors:', 1
+     write(mystd,'(2X,a,i4)') 'PANSY >>> parallelism: No  >>> processors:', 1
 
 # endif  /* MPI */
 
@@ -84,11 +84,11 @@
 ! obtain current date and time
      call ctqmc_time_builder(date_time_string)
 
-     write(mystd,'(2X,a,f10.2,a)') 'BEGONIA >>> total time spent:', tot_time, 's'
+     write(mystd,'(2X,a,f10.2,a)') 'PANSY >>> total time spent:', tot_time, 's'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'BEGONIA >>> I am tired and want to go to bed. Bye!'
-     write(mystd,'(2X,a)') 'BEGONIA >>> happy ending at '//date_time_string
+     write(mystd,'(2X,a)') 'PANSY >>> I am tired and want to go to bed. Bye!'
+     write(mystd,'(2X,a)') 'PANSY >>> happy ending at '//date_time_string
 
      return
   end subroutine ctqmc_print_footer
@@ -100,7 +100,7 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') 'BEGONIA >>> parameters list:'
+     write(mystd,'(2X,a)') 'PANSY >>> parameters list:'
 
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
@@ -108,9 +108,9 @@
      write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
      write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin :', nspin
      write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs :', ncfgs
-     write(mystd,'(2(4X,a,i10))')   'nzero :', nzero  , 'niter :', niter
      write(mystd,'(2(4X,a,i10))')   'nfreq :', nfreq  , 'ntime :', ntime
      write(mystd,'(2(4X,a,i10))')   'npart :', npart  , 'nflip :', nflip
+     write(mystd,'(1(4X,a,i10))')   'niter :', niter
 
      write(mystd,'(2(4X,a,i10))')   'ntherm:', ntherm , 'nsweep:', nsweep
      write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite
@@ -147,7 +147,7 @@
      integer :: istat
 
 ! about iteration number
-     write(mystd,'(2X,a,i3,2(a,i10))') 'BEGONIA >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
+     write(mystd,'(2X,a,i3,2(a,i10))') 'PANSY >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
 
 ! about auxiliary physical observables
      istat = cstep / nmonte

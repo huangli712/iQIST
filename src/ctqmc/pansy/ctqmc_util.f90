@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : begonia
+! project : pansy
 ! program : ctqmc_dmat_inv
 !           ctqmc_zmat_inv
 !           ctqmc_dmat_det

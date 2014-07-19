@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : begonia
+! project : pansy
 ! program : ctqmc_config
 !           ctqmc_setup_array
 !           ctqmc_selfer_init
@@ -8,6 +8,7 @@
 ! source  : ctqmc_stream.f90
 ! type    : subroutine
 ! author  : li huang (email:huangli712@yahoo.com.cn)
+!         : yilin wang (email: qhwyl2006@126.com)
 ! history : 09/16/2009 by li huang
 !           09/20/2009 by li huang
 !           09/24/2009 by li huang
@@ -21,6 +22,7 @@
 !           12/05/2009 by li huang
 !           02/27/2010 by li huang
 !           06/08/2010 by li huang
+!           07/19/2014 by yilin wang
 ! purpose : initialize and finalize the hybridization expansion version
 !           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !           solver and dynamical mean field theory (DMFT) self-consistent
@@ -57,7 +59,6 @@
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
      ncfgs  = 2**norbs     ! number of atomic states
-     nzero  = 128          ! maximum number of non-zero elements in sparse matrix style
      niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp      ! U : average Coulomb interaction
@@ -118,7 +119,6 @@
              read(mytmp,*) nspin                                         !
              read(mytmp,*) norbs                                         !
              read(mytmp,*) ncfgs                                         !
-             read(mytmp,*) nzero                                         !
              read(mytmp,*) niter                                         !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
 
@@ -181,7 +181,6 @@
      call mp_bcast( nspin , master )                                     !
      call mp_bcast( norbs , master )                                     !
      call mp_bcast( ncfgs , master )                                     !
-     call mp_bcast( nzero , master )                                     !
      call mp_bcast( niter , master )                                     !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
      call mp_barrier()
@@ -438,17 +437,9 @@
              enddo
              close(mytmp)
 
-! make next_sector2, index from left to right
-             do i=1, nsectors
-                 do j=1, sectors(i)%nops
-                     sectors(i)%next_sector2(j,0) = sectors(i)%next_sector(j,1)
-                     sectors(i)%next_sector2(j,1) = sectors(i)%next_sector(j,0)
-                 enddo
-             enddo
 ! make next_sector_trunk
              do i=1, nsectors
                  sectors(i)%next_sector_trunk = sectors(i)%next_sector
-                 sectors(i)%next_sector_trunk2 = sectors(i)%next_sector2
              enddo 
 
 ! add the contribution from chemical potential to eigenvalues

@@ -99,7 +99,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'BEGONIA >>> DMFT iter:', iter, ' <<< SELFING'
+             write(mystd,'(2X,a,i3,a)') 'MANJUSHAKA >>> DMFT iter:', iter, ' <<< SELFING'
          endif
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
@@ -121,7 +121,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'BEGONIA >>> DMFT iter:', iter, ' <<< SELFING'
+             write(mystd,'(2X,a,i3,a)') 'MANJUSHAKA >>> DMFT iter:', iter, ' <<< SELFING'
          endif
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
@@ -153,7 +153,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'BEGONIA >>> DMFT iter:', iter, ' <<< BINNING'
+             write(mystd,'(2X,a,i3,a)') 'MANJUSHAKA >>> DMFT iter:', iter, ' <<< BINNING'
          endif
 
 ! accumulate the quantum Monte Carlo data

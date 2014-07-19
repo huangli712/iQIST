@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : begonia
+! project : manjushaka
 ! program : ctqmc_print_header
 !           ctqmc_print_footer
 !           ctqmc_print_summary
@@ -37,7 +37,7 @@
 ! obtain current date and time
      call ctqmc_time_builder(date_time_string)
 
-     write(mystd,'(2X,a)') 'BEGONIA'
+     write(mystd,'(2X,a)') 'MANJUSHAKA'
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
@@ -47,15 +47,15 @@
      write(mystd,'(2X,a)') 'license: GPL2 and later versions'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'BEGONIA >>> start running at '//date_time_string
+     write(mystd,'(2X,a)') 'MANJUSHAKA >>> start running at '//date_time_string
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') 'BEGONIA >>> parallelism: Yes >>> processors:', nprocs
+     write(mystd,'(2X,a,i4)') 'MANJUSHAKA >>> parallelism: Yes >>> processors:', nprocs
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') 'BEGONIA >>> parallelism: No  >>> processors:', 1
+     write(mystd,'(2X,a,i4)') 'MANJUSHAKA >>> parallelism: No  >>> processors:', 1
 
 # endif  /* MPI */
 
@@ -84,11 +84,11 @@
 ! obtain current date and time
      call ctqmc_time_builder(date_time_string)
 
-     write(mystd,'(2X,a,f10.2,a)') 'BEGONIA >>> total time spent:', tot_time, 's'
+     write(mystd,'(2X,a,f10.2,a)') 'MANJUSHAKA >>> total time spent:', tot_time, 's'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'BEGONIA >>> I am tired and want to go to bed. Bye!'
-     write(mystd,'(2X,a)') 'BEGONIA >>> happy ending at '//date_time_string
+     write(mystd,'(2X,a)') 'MANJUSHAKA >>> I am tired and want to go to bed. Bye!'
+     write(mystd,'(2X,a)') 'MANJUSHAKA >>> happy ending at '//date_time_string
 
      return
   end subroutine ctqmc_print_footer
@@ -100,15 +100,19 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') 'BEGONIA >>> parameters list:'
+     write(mystd,'(2X,a)') 'MANJUSHAKA >>> parameters list:'
 
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
+     write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'isvrt :', isvrt
 
+     write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
+     write(mystd,'(2(4X,a,i10))')   'chmax :', chmax  , 'chgrd :', chgrd
      write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
      write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin :', nspin
      write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs :', ncfgs
      write(mystd,'(2(4X,a,i10))')   'nzero :', nzero  , 'niter :', niter
+     write(mystd,'(2(4X,a,i10))')   'nffrq :', nffrq  , 'nbfrq :', nbfrq
      write(mystd,'(2(4X,a,i10))')   'nfreq :', nfreq  , 'ntime :', ntime
      write(mystd,'(2(4X,a,i10))')   'npart :', npart  , 'nflip :', nflip
 
@@ -147,7 +151,7 @@
      integer :: istat
 
 ! about iteration number
-     write(mystd,'(2X,a,i3,2(a,i10))') 'BEGONIA >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
+     write(mystd,'(2X,a,i3,2(a,i10))') 'MANJUSHAKA >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
 
 ! about auxiliary physical observables
      istat = cstep / nmonte
