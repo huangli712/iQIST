@@ -30,7 +30,8 @@
 !           02/21/2010 by li huang
 !           02/23/2010 by li huang
 !           06/08/2010 by li huang
-!           16/07/2014 by yilin wang
+!           07/16/2014 by yilin wang
+!           07/19/2014 by yilin wang
 ! purpose : define the key data structure and global arrays/variables for
 !           hybridization expansion version continuous time quantum Monte
 !           Carlo (CTQMC) quantum impurity solver and dynamical mean field
@@ -408,19 +409,21 @@
 ! whether this sector forming a string
      logical, public, save, allocatable :: is_string(:,:)
 
-! whether this part should be recalculated
+! how to treat each part when calculate trace
      integer, public, save, allocatable :: is_save(:,:)
 
-! saved parts of matrices, previous configuration 
+! saved parts of matrices product, previous configuration 
      real(dp), public, save, allocatable :: saved_a(:,:,:,:)
 
-! start and end sector index, previous configuration
+! start and end index of sectors for saved parts of matrices product, 
+! previous configuration
      integer,  public, save, allocatable :: saved_a_nm(:,:,:)
 
-! saved parts of matrices, current configuration
+! saved parts of matrices product, current configuration
      real(dp), public, save, allocatable :: saved_b(:,:,:,:)
 
-! start and end sector index, current configuration
+! start and end index of sectors for saved parts of matrices product, 
+! current configuration
      integer,  public, save, allocatable :: saved_b_nm(:,:,:)
 
   end module ctqmc_sect
@@ -731,13 +734,13 @@
          integer :: i
 
 ! allocate memory
-         allocate(sectors(nsectors),     stat=istat)
-         allocate(is_string(nsectors,2), stat=istat)
-         allocate(is_save(npart, nsectors), stat=istat)
-         allocate(saved_a(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
+         allocate(sectors(nsectors),              stat=istat)
+         allocate(is_string(nsectors,2),          stat=istat)
+         allocate(is_save(npart, nsectors),       stat=istat)
          allocate(saved_a_nm(2, npart, nsectors), stat=istat)
-         allocate(saved_b(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
          allocate(saved_b_nm(2, npart, nsectors), stat=istat)
+         allocate(saved_a(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
+         allocate(saved_b(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
 
 ! check the status
          if ( istat /= 0 ) then
@@ -756,8 +759,8 @@
          is_string = .false.
          is_save = 1
          saved_a = zero
-         saved_a_nm = 0
          saved_b = zero
+         saved_a_nm = 0
          saved_b_nm = 0
 
          return

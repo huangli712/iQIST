@@ -21,6 +21,8 @@
 !           cat_lshift_flavor
 !           cat_rshift_flavor <<<---
 !           ctqmc_make_ztrace
+!           ctqmc_make_string
+!           cat_sector_ztrace
 !           ctqmc_make_evolve <<<---
 !           ctqmc_make_equate
 !           ctqmc_make_search <<<---
@@ -30,7 +32,7 @@
 ! source  : ctqmc_flavor.f90
 ! type    : subroutines
 ! author  : li huang (email:huangli712@yahoo.com.cn)
-!           yilin wang (email: wangyilin2015@gmail.com)
+!           yilin wang (email: qhwyl2006@126.com)
 ! history : 09/23/2009 by li huang
 !           09/26/2009 by li huang
 !           10/02/2009 by li huang
@@ -53,6 +55,8 @@
 !           04/01/2010 by li huang
 !           04/12/2010 by li huang
 !           10/20/2010 by li huang
+!           07/16/2014 by yilin wang
+!           07/19/2014 by yilin wang
 ! purpose : provide basic infrastructure (elementary updating subroutines)
 !           for hybridization expansion version continuous time quantum
 !           Monte Carlo (CTQMC) quantum impurity solver.
@@ -2467,7 +2471,7 @@
 ! local version of expt_t
      real(dp) :: expt_t_loc(ncfgs)
 
-! a particular string begins at one sector
+! a string begins at one sector and ends at this sector
      integer :: string(csize+1,nsectors) 
 
 ! the trace for each sector
@@ -2476,7 +2480,6 @@
 ! the part index for using the saved matrices
      integer :: part_indx(npart, nsectors)
 
-! local variables
 ! length in imaginary time axis for each part
      real(dp) :: interval
 
@@ -2494,7 +2497,7 @@
 ! end index of operators for each part
      integer  :: ope(npart)
 
-! distance 
+! the distance from operator A,B to leftmost and rightmost part  
      integer :: left_dis
      integer :: left_dis_a
      integer :: left_dis_b
@@ -2502,14 +2505,14 @@
      integer :: right_dis_a
      integer :: right_dis_b
 
-! loop index
-     integer :: i, j, k
-
 ! start index of a sector
      integer :: indx
 
 ! whether find a part
      logical :: found
+
+! loop index
+     integer :: i, j, k
 
 ! copy data from index_t or index_v to index_t_loc
 ! copy data from expt_t to expt_t_loc
