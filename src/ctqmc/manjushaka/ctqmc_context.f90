@@ -859,8 +859,8 @@
          ope = 0
          saved_a = zero
          saved_b = zero
-         saved_a_nm = 0
-         saved_b_nm = 0
+         saved_a_nm = -2
+         saved_b_nm = -2
 
          return
      end subroutine ctqmc_allocate_memory_sect

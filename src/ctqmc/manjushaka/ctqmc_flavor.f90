@@ -2493,10 +2493,10 @@
      logical, intent(out) :: pass
 
 ! imaginary time value of operator A, only valid in cmode = 1 or 2
-     real(dp), intent(in), optional :: tau_s
+     real(dp), intent(in) :: tau_s
 
 ! imaginary time value of operator B, only valid in cmode = 1 or 2
-     real(dp), intent(in), optional :: tau_e
+     real(dp), intent(in) :: tau_e
      
 ! local variables
 ! local version of index_t
@@ -2575,11 +2575,7 @@
      call ctqmc_make_string(csize, index_t_loc, string)
 
 ! make npart
-     if (present(tau_s) .and. present(tau_e)) then
-         call ctqmc_make_npart(cmode, csize, string, index_t_loc, tau_s, tau_e)
-     else
-         call ctqmc_make_npart(cmode, csize, string, index_t_loc)
-     endif
+     call ctqmc_make_npart(cmode, csize, string, index_t_loc, tau_s, tau_e)
 
 ! determin the minimal dimension of all the sectors
      min_dim = 0
@@ -2719,7 +2715,7 @@
      call ctqmc_make_string(csize, index_t_loc, string)
 
 ! make npart
-     call ctqmc_make_npart(4, csize, string, index_t_loc)
+     call ctqmc_make_npart(4, csize, string, index_t_loc, -1.0_dp, -1.0_dp)
 
      do i=1, nsectors
          if (is_string(i,1) .eqv. .false.) then
@@ -2836,10 +2832,10 @@
      integer, intent(in) :: index_t_loc(mkink)
 
 ! imaginary time value of operator A, only valid in cmode = 1 or 2
-     real(dp), intent(in), optional :: tau_s
+     real(dp), intent(in) :: tau_s
 
 ! imaginary time value of operator B, only valid in cmode = 1 or 2
-     real(dp), intent(in), optional :: tau_e
+     real(dp), intent(in) :: tau_e
      
 ! local variables
 ! length in imaginary time axis for each part
@@ -2864,12 +2860,22 @@
 ! loop index
      integer :: i, j, k
 
-     print *, 'called npart'
 ! init key arrays
      nop = 0
      ops = 0
      ope = 0
+
+! is_save: how to process each part for each success string
+! is_save = 0: the matrices product for this part has been calculated
+!              previoulsy, another part_indx is needed to label which
+!              part we can fetch and use it directly.
+! is_save = 1: this part should be recalculated, and the result must be
+!              stored in saved_a, and saved_a_nm arrays if this Monte Caro
+!              move has been accepted.
+! is_save = 2: this part is empty, we don't need to do anything with them.
+! first, set it to be 0
      is_save = 0
+
 !--------------------------------------------------------------------
 ! when npart > 1, we use npart alogithm
 ! otherwise, recalculate all the matrices products
@@ -2877,44 +2883,46 @@
          nop(1) = csize
          ops(1) = 1
          ope(1) = csize
-         is_save = 1     
+         if (nop(1) <= 0) then
+             is_save = 2
+         else
+             is_save = 1
+         endif
      elseif ( npart > 1) then
 
          interval = beta / real(npart)
-
 ! calculate number of operators for each part
          do i=1,csize
              j = ceiling( time_v( index_t_loc(i) ) / interval )
              nop(j) = nop(j) + 1
-         enddo ! over i={1,csize} loop
-
-         ! if no operators in this part, ignore them
+         enddo 
+! if no operators in this part, ignore them
          do i=1, npart
              if (nop(i) <= 0) then
                  is_save(i,:) = 2 
              endif
          enddo
-
 ! calculate the start and end index of operators for each part
          do i=1,npart
              if ( nop(i) > 0 ) then
                  ops(i) = 1
                  do j=1,i-1
                      ops(i) = ops(i) + nop(j)
-                 enddo ! over j={1,i-1} loop
+                 enddo 
                  ope(i) = ops(i) + nop(i) - 1
-             endif ! back if ( nop(i) > 0 ) block
-         enddo ! over i={1,npart} loop
+             endif 
+         enddo 
 
-! when cmode == 1 or comde == 2, we use npart algorithm
-! when cmode == 3 or cmode == 4, recalculate all the matrices products 
+! when cmode == 1 or comde == 2, we can use some saved matrices products 
+! by previous accepted Monte Carlo move
          if (cmode == 1 .or. cmode == 2) then
-
 ! get the position of operator A and operator B
              tis = ceiling( tau_s / interval )
              tie = ceiling( tau_e / interval )
-
-             is_save(tis,:) = 1
+! operator A:
+             if (nop(tis)>0) then
+                 is_save(tis,:) = 1
+             endif
              left_dis_a = npart - tis
              right_dis_a= tis - 1
 ! special attention: if operator A is on the left or right boundary, then
@@ -2930,6 +2938,7 @@
                          tip = tip + 1
                      enddo ! over do while loop
                  endif
+! for remove an operator, nop(tis) may be zero
              else
                  tip = tis + 1
                  do while ( tip <= npart )
@@ -2941,7 +2950,10 @@
                  enddo ! over do while loop
              endif ! back if ( nop(tis) > 0 ) block
 
-             is_save(tie,:) = 1
+! operator B:
+             if (nop(tie)>0) then
+                 is_save(tie,:) = 1
+             endif
              left_dis_b = npart - tie
              right_dis_b = tie - 1 
 ! special attention: if operator B is on the left or right boundary, then
@@ -2957,6 +2969,7 @@
                          tip = tip + 1
                      enddo ! over do while loop
                  endif
+! for remove an operator, nop(tie) may be zero
              else
                  tip = tie + 1
                  do while ( tip <= npart )
@@ -2968,26 +2981,34 @@
                  enddo ! over do while loop
              endif ! back if ( nop(tie) > 0 ) block
 
+! check which part doesn't need to be recalculated, and make the part index, 
+! using this index, we know which saved matrices product to be used.
              left_dis = min(left_dis_a, left_dis_b)
              right_dis = min(right_dis_a, right_dis_b)
 
              do i=1, nsectors
+! this sector doesn't form a string, we won't calculate it
                  if (is_string(i,1) .eqv. .false.) cycle
                  do j=1, npart
+! only check is_save(j,i) == 0 
                      if ( is_save(j,i) /= 0 ) cycle
-                     ! leftmost and rightmost parts
+! leftmost and rightmost parts, these parts don't need to be recalcuated obviously,
+! if its result has been calculated by previous accpeted Monte Carlo move, 
+! and the part index is this sector itself.
                      if (j<=right_dis .or. j>=npart-left_dis+1) then 
                          if (is_string(i, 2) .eqv. .true.) then
                              is_save(j,i) = 0
                              part_indx(j,i) = i
+! no saved result, recalculate it
                          else
                              is_save(j,i) = 1
                          endif
-                     ! middle part
+! middle part, we should check all the saved results previously
                      else
                          found = .false.
                          do k=1, nsectors
                              if(is_string(k,2) .eqv. .false.) cycle
+! if the sector index matches, we find the saved result
                              if(string(ops(j),i) == saved_a_nm(2,j,k)) then
                                  is_save(j,i) = 0
                                  part_indx(j,i) = k 
@@ -2998,10 +3019,11 @@
                          if (found .eqv. .false.) then
                              is_save(j,i) = 1
                          endif
-                     endif
-                 enddo
-             enddo
-        
+                     endif ! back if (j<=right_dis .or. j>=npart-left_dis+1) block
+                 enddo ! over j={1,npart} loop
+             enddo ! over i={1,nsectors} loop
+
+! when cmode == 3 or cmode == 4, recalculate all the matrices products 
          elseif (cmode == 3 .or. cmode == 4) then
              do i=1, nsectors
                  do j=1, npart
@@ -3193,6 +3215,9 @@
                  if ( is_save(j,i) == 1 ) then
                      sect1 = saved_b_nm(1, j, i)
                      sect2 = saved_b_nm(2, j, i)
+                     if (sect1 == -2 .or. sect2 == -2) then
+                         print *, 'evolve:', sect1, sect2
+                     endif
                      saved_a_nm(1, j, i) = sect1
                      saved_a_nm(2, j, i) = sect2
                      dim1 = sectors(sect1)%ndim

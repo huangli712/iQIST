@@ -662,7 +662,7 @@
          rand_num = spring_sfmt_stream()
 
 ! calculate operators trace
-         call ctqmc_make_ztrace_lazy(5, 3, nsize, deter_ratio, rand_num, p, pass)
+         call ctqmc_make_ztrace_lazy(5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp)
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
@@ -746,7 +746,7 @@
              rand_num = spring_sfmt_stream()
 
 ! calculate operators trace
-             call ctqmc_make_ztrace_lazy(5, 3, nsize, deter_ratio, rand_num, p, pass)
+             call ctqmc_make_ztrace_lazy(5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp)
 
 ! if update action is accepted
              if ( pass .eqv. .true. ) then
@@ -829,7 +829,7 @@
          rand_num = spring_sfmt_stream()
 
 ! calculate operators trace
-         call ctqmc_make_ztrace_lazy(5, 3, nsize, deter_ratio, rand_num, p, pass)
+         call ctqmc_make_ztrace_lazy(5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp)
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then
