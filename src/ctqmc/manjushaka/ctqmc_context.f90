@@ -453,6 +453,34 @@
 ! the array contains all the sectors
      type(t_sector), public, save, allocatable :: sectors(:)
 
+! whether this sector forming a string
+     logical, public, save, allocatable :: is_string(:,:)
+
+! how to treat each part when calculate trace
+     integer, public, save, allocatable :: is_save(:,:)
+
+! part index
+     integer, public, save, allocatable :: part_indx(:,:)
+
+! nop, ops, ope
+     integer, public, save, allocatable :: nop(:)
+     integer, public, save, allocatable :: ops(:)
+     integer, public, save, allocatable :: ope(:)
+
+! saved parts of matrices product, previous configuration 
+     real(dp), public, save, allocatable :: saved_a(:,:,:,:)
+
+! start and end index of sectors for saved parts of matrices product, 
+! previous configuration
+     integer,  public, save, allocatable :: saved_a_nm(:,:,:)
+
+! saved parts of matrices product, current configuration
+     real(dp), public, save, allocatable :: saved_b(:,:,:,:)
+
+! start and end index of sectors for saved parts of matrices product, 
+! current configuration
+     integer,  public, save, allocatable :: saved_b_nm(:,:,:)
+
   end module ctqmc_sect
 
 
@@ -797,7 +825,17 @@
          integer :: i
 
 ! allocate memory
-         allocate(sectors(nsectors), stat=istat)
+         allocate(sectors(nsectors),              stat=istat)
+         allocate(is_string(nsectors,2),          stat=istat)
+         allocate(is_save(npart, nsectors),       stat=istat)
+         allocate(part_indx(npart, nsectors),     stat=istat)
+         allocate(nop(npart),                     stat=istat)
+         allocate(ops(npart),                     stat=istat)
+         allocate(ope(npart),                     stat=istat)
+         allocate(saved_a_nm(2, npart, nsectors), stat=istat)
+         allocate(saved_b_nm(2, npart, nsectors), stat=istat)
+         allocate(saved_a(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
+         allocate(saved_b(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
 
 ! check the status
          if ( istat /= 0 ) then
@@ -812,6 +850,17 @@
              sectors(i)%istart = 0
              call nullify_one_sector(sectors(i))
          enddo 
+
+         is_string = .false.
+         is_save = 1
+         part_indx = -1
+         nop = 0
+         ops = 0
+         ope = 0
+         saved_a = zero
+         saved_b = zero
+         saved_a_nm = 0
+         saved_b_nm = 0
 
          return
      end subroutine ctqmc_allocate_memory_sect
@@ -984,6 +1033,17 @@
 ! then, deallocate memory of sect
              deallocate(sectors)
          endif
+
+         if ( allocated(is_string) )    deallocate(is_string)
+         if ( allocated(is_save) )      deallocate(is_save)
+         if ( allocated(nop) )          deallocate(nop)
+         if ( allocated(ops) )          deallocate(ops)
+         if ( allocated(ope) )          deallocate(ope)
+         if ( allocated(part_indx) )    deallocate(part_indx)
+         if ( allocated(saved_a) )      deallocate(saved_a)
+         if ( allocated(saved_a_nm) )   deallocate(saved_a_nm)
+         if ( allocated(saved_b) )      deallocate(saved_b)
+         if ( allocated(saved_b_nm) )   deallocate(saved_b_nm)
         
          return
      end subroutine ctqmc_deallocate_memory_sect
