@@ -2438,9 +2438,12 @@
 !-------------------------------------------------------------------------
 !>>> service layer: utility subroutines to calculate trace             <<<
 !-------------------------------------------------------------------------
-
 !>>> core subroutine of pansy
-! use good quantum number algorithm
+! (1) use good quantum number algorithm, split the total Hibert space to
+!     small subspace, the dimension of F mat will be smaller.
+! (2) split the imaginary time axis into many parts, save the matrices 
+!     product of that part, which may be used by next Monte Caro move.
+! NOTE: you should carefully choose npart in order to obtain the best speedup.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants
      use control
@@ -2471,7 +2474,7 @@
 ! local version of expt_t
      real(dp) :: expt_t_loc(ncfgs)
 
-! a string begins at one sector and ends at this sector
+! a string represents the evolution of sectors
      integer :: string(csize+1,nsectors) 
 
 ! the trace for each sector
@@ -2540,6 +2543,10 @@
      ope = 0
      is_save = 0
 
+
+!--------------------------------------------------------------------
+! split the imaginary time axis into npart parts, determine some 
+! important index
 !--------------------------------------------------------------------
 ! when npart > 1, we use npart alogithm
 ! otherwise, recalculate all the matrices products
@@ -2551,14 +2558,13 @@
      elseif ( npart > 1) then
 
          interval = beta / real(npart)
-
 ! calculate number of operators for each part
          do i=1,csize
              j = ceiling( time_v( index_t_loc(i) ) / interval )
              nop(j) = nop(j) + 1
-         enddo ! over i={1,csize} loop
+         enddo 
 
-         ! if no operators in this part, ignore them
+! if no operators in this part, ignore them
          do i=1, npart
              if (nop(i) <= 0) then
                  is_save(i,:) = 2 
@@ -2571,10 +2577,10 @@
                  ops(i) = 1
                  do j=1,i-1
                      ops(i) = ops(i) + nop(j)
-                 enddo ! over j={1,i-1} loop
+                 enddo 
                  ope(i) = ops(i) + nop(i) - 1
-             endif ! back if ( nop(i) > 0 ) block
-         enddo ! over i={1,npart} loop
+             endif 
+         enddo 
 
 ! when cmode == 1 or comde == 2, we use npart algorithm
 ! when cmode == 3 or cmode == 4, recalculate all the matrices products 
@@ -2584,9 +2590,12 @@
              tis = ceiling( tau_s / interval )
              tie = ceiling( tau_e / interval )
 
-             is_save(tis,:) = 1
-             left_dis_a = npart - tis
-             right_dis_a= tis - 1
+! operator A
+             if ( nop(tis)>0 ) then
+                 is_save(tis,:) = 1
+             endif
+             left_dis_a  = npart - tis
+             right_dis_a = tis - 1
 ! special attention: if operator A is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
              if ( nop(tis) > 0 ) then
@@ -2598,8 +2607,9 @@
                              is_save(tip,:) = 1;  EXIT
                          endif
                          tip = tip + 1
-                     enddo ! over do while loop
+                     enddo 
                  endif
+! for remove an operator, nop(tis) may be zero
              else
                  tip = tis + 1
                  do while ( tip <= npart )
@@ -2611,7 +2621,10 @@
                  enddo ! over do while loop
              endif ! back if ( nop(tis) > 0 ) block
 
-             is_save(tie,:) = 1
+! operator B:
+             if ( nop(tie)>0 ) then
+                 is_save(tie,:) = 1
+             endif
              left_dis_b = npart - tie
              right_dis_b = tie - 1 
 ! special attention: if operator B is on the left or right boundary, then
@@ -2627,6 +2640,7 @@
                          tip = tip + 1
                      enddo ! over do while loop
                  endif
+! for remove an operator, nop(tie) may be zero
              else
                  tip = tie + 1
                  do while ( tip <= npart )
@@ -2638,26 +2652,33 @@
                  enddo ! over do while loop
              endif ! back if ( nop(tie) > 0 ) block
 
+! check which part doesn't need to be recalculated, and make the part index, 
+! using this index, we know which saved matrices product to be used.
              left_dis = min(left_dis_a, left_dis_b)
              right_dis = min(right_dis_a, right_dis_b)
-
              do i=1, nsectors
+! this sector doesn't form a string, we won't calculate it
                  if (is_string(i,1) .eqv. .false.) cycle
                  do j=1, npart
+! only check is_save(j,i) == 0 
                      if ( is_save(j,i) /= 0 ) cycle
-                     ! leftmost and rightmost parts
+! leftmost and rightmost parts, these parts don't need to be recalcuated obviously,
+! if its result has been calculated by previous accpeted Monte Carlo move, 
+! and the part index is this sector itself.
                      if (j<=right_dis .or. j>=npart-left_dis+1) then 
                          if (is_string(i, 2) .eqv. .true.) then
                              is_save(j,i) = 0
                              part_indx(j,i) = i
+! no saved result, recalculate it
                          else
                              is_save(j,i) = 1
                          endif
-                     ! middle part
+! middle part, we should check all the saved results previously
                      else
                          found = .false.
                          do k=1, nsectors
                              if(is_string(k,2) .eqv. .false.) cycle
+! if the sector index matches, we find the saved result
                              if(string(ops(j),i) == saved_a_nm(2,j,k)) then
                                  is_save(j,i) = 0
                                  part_indx(j,i) = k 
@@ -2668,10 +2689,11 @@
                          if (found .eqv. .false.) then
                              is_save(j,i) = 1
                          endif
-                     endif
-                 enddo
-             enddo
-        
+                     endif ! back if(j<=right_dis .or. j>=npart-left_dis+1) block
+                 enddo ! over j={1,npart} loop
+             enddo ! over i={1,nsectors} loop
+
+! for these modes, recalculate all of them 
          elseif (cmode == 3 .or. cmode == 4) then
              do i=1, nsectors
                  do j=1, npart
@@ -2731,7 +2753,7 @@
 ! the address index of fermion operators
      integer, intent(in) :: index_t_loc(mkink)
 
-! the build string
+! the string
      integer, intent(out) :: string(csize+1, nsectors)
 
 ! local variables
@@ -2749,13 +2771,14 @@
 !--------------------------------------------------------------------
      is_string(:,1) = .true.
      string = -1
-! from right to left, beta <------- 0
-     do i=1,nsectors
+
+! we build a string from right to left, that is,  beta <------- 0
 ! build the string from the beginning sector, that is:
 ! S_a1(q1)-->q2, S_a2(q2)-->q3, ... S_ai(qi)-->qi+1, ..., Sak(qk)-->q1
 ! if we find some qi==0, we cycle this sector immediately
+     do i=1,nsectors
          curr_sect = i
-! loop over all the operators, from imaginary time 0 ---> beta
+! loop over all the operators
          do j=1,csize
              string(j,i) = curr_sect 
              vt = type_v( index_t_loc(j) )
@@ -2766,7 +2789,7 @@
                  EXIT   ! finish check, exit
              endif
              curr_sect = next_sect
-         enddo ! over j={1, csize} loop
+         enddo 
 ! if it doesn't form a string, we cycle it, go to the next sector
          if (is_string(i,1) .eqv. .false.) then
              cycle
@@ -2829,16 +2852,15 @@
 
 ! temp matrices
      real(dp) :: right_mat(max_dim_sect, max_dim_sect)
-     real(dp) :: left_mat(max_dim_sect, max_dim_sect)
      real(dp) :: tmp_mat(max_dim_sect, max_dim_sect)
 
-! temp index
+! temporary index
      integer :: dim1, dim2, dim3, dim4
      integer :: sect1, sect2
      integer :: indx
      integer :: vt, vf
 
-! init isect
+! init the sector index which we are calculating its trace
      isect = string(1)
 
 !--------------------------------------------------------------------
