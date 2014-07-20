@@ -639,6 +639,11 @@
          call ctqmc_dump_prob(prob, naux, saux)
      endif
 
+! write out the final probability data of sectors
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_psect()
+     endif
+
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_gtau(tmesh, gtau)
