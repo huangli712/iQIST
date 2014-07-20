@@ -252,7 +252,7 @@
 
 ! update the matrix trace for product of F matrix and time evolution operators
      i = 2 * sum(rank) ! get total number of operators
-     call ctqmc_make_ztrace(4, i, matrix_ntrace)
+     call ctqmc_make_ztrace(4, i, matrix_ntrace, -1.0_dp, -1.0_dp)
 
 ! update the operators trace
      call ctqmc_make_evolve()

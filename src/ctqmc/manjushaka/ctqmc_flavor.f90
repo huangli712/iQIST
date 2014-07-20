@@ -3215,9 +3215,6 @@
                  if ( is_save(j,i) == 1 ) then
                      sect1 = saved_b_nm(1, j, i)
                      sect2 = saved_b_nm(2, j, i)
-                     if (sect1 == -2 .or. sect2 == -2) then
-                         print *, 'evolve:', sect1, sect2
-                     endif
                      saved_a_nm(1, j, i) = sect1
                      saved_a_nm(2, j, i) = sect2
                      dim1 = sectors(sect1)%ndim
