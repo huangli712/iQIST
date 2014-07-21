@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : pansy
+! project : manjushaka
 ! program : cat_insert_ztrace
 !           cat_remove_ztrace
 !           cat_lshift_ztrace
@@ -33,7 +33,7 @@
 ! source  : ctqmc_flavor.f90
 ! type    : subroutines
 ! author  : li huang (email:huangli712@yahoo.com.cn)
-!           yilin wang (email: qhwyl2006@126.com)
+!           yilin wang (email: wangyilin2015@gmail.com)
 ! history : 09/23/2009 by li huang
 !           09/26/2009 by li huang
 !           10/02/2009 by li huang
@@ -56,8 +56,6 @@
 !           04/01/2010 by li huang
 !           04/12/2010 by li huang
 !           10/20/2010 by li huang
-!           07/16/2014 by yilin wang
-!           07/19/2014 by yilin wang
 ! purpose : provide basic infrastructure (elementary updating subroutines)
 !           for hybridization expansion version continuous time quantum
 !           Monte Carlo (CTQMC) quantum impurity solver.
@@ -74,7 +72,7 @@
 
 !>>> calculate the trace ratio for insert new create and destroy operators
 ! on perturbation expansion series
-  subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
+  subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
      use constants
      use control
      use context
@@ -98,8 +96,17 @@
 ! imaginary time point of the new destroy operator
      real(dp), intent(in)  :: tau_end
 
-! ratio between old and new configurations, the local trace part
-     real(dp), intent(out) :: trace_ratio
+! ratio between old and new configurations, the determinant part
+     real(dp), intent(in) :: deter_ratio
+
+! a rand_num number
+     real(dp), intent(in) :: rand_num
+
+! transition probability p
+     real(dp), intent(out) :: accept_p
+
+! whether accept the move
+     logical, intent(out) :: pass
 
 ! local variables
 ! loop index over operators
@@ -264,17 +271,15 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace(1, nsize+1, matrix_ntrace, tau_start, tau_end)
-
-! evaluate trace_ratio
-     trace_ratio = matrix_ntrace / matrix_ptrace
+!>>>     call ctqmc_make_ztrace(1, nsize+1, matrix_ntrace, tau_start, tau_end)
+     call ctqmc_make_ztrace_lazy(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
 
      return
   end subroutine cat_insert_ztrace
 
 !>>> calculate the trace ratio for remove old create and destroy operators
 ! on perturbation expansion series
-  subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
+  subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
      use constants
      use control
      use context
@@ -295,8 +300,17 @@
 ! imaginary time point of the old destroy operator
      real(dp), intent(in)  :: tau_end
 
-! ratio between old and new configurations, the local trace part
-     real(dp), intent(out) :: trace_ratio
+! ratio between old and new configurations, the determinant part
+     real(dp), intent(in) :: deter_ratio
+
+! a random number
+     real(dp), intent(in) :: rand_num
+
+! the acceptance ratio
+     real(dp), intent(out) :: accept_p
+
+! whether pass
+     logical, intent(out) :: pass
 
 ! local variables
 ! loop index over operators
@@ -439,17 +453,14 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace(1, nsize-1, matrix_ntrace, tau_start, tau_end)
-
-! evaluate trace_ratio
-     trace_ratio = matrix_ntrace / matrix_ptrace
+     call ctqmc_make_ztrace_lazy(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
 
      return
   end subroutine cat_remove_ztrace
 
 !>>> calculate the trace ratio for shift old create operators
 ! on perturbation expansion series
-  subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, trace_ratio)
+  subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, deter_ratio, rand_num, accept_p, pass)
      use constants
      use control
      use context
@@ -473,8 +484,18 @@
 ! imaginary time point of the new create operator
      real(dp), intent(in)  :: tau_start2
 
-! ratio between old and new configurations, the local trace part
-     real(dp), intent(out) :: trace_ratio
+! ratio between old and new configurations, the determinant part
+     real(dp), intent(in) :: deter_ratio
+
+! a random number
+     real(dp), intent(in) :: rand_num
+
+! the acceptance ratio
+     real(dp), intent(out) :: accept_p
+
+! whether pass
+     logical, intent(out) :: pass
+
 
 ! local variables
 ! loop index over operators
@@ -582,17 +603,14 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace(1, nsize, matrix_ntrace, tau_start1, tau_start2)
-
-! evaluate trace_ratio
-     trace_ratio = matrix_ntrace / matrix_ptrace
+     call ctqmc_make_ztrace_lazy(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2)
 
      return
   end subroutine cat_lshift_ztrace
 
 !>>> calculate the trace ratio for shift old destroy operators
 ! on perturbation expansion series
-  subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, trace_ratio)
+  subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio, rand_num, accept_p, pass)
      use constants
      use control
      use context
@@ -616,8 +634,18 @@
 ! imaginary time point of the new destroy operator
      real(dp), intent(in)  :: tau_end2
 
-! ratio between old and new configurations, the local trace part
-     real(dp), intent(out) :: trace_ratio
+! ratio between old and new configurations, the determinant part
+     real(dp), intent(in) :: deter_ratio
+
+! a random number
+     real(dp), intent(in) :: rand_num
+
+! the acceptance ratio
+     real(dp), intent(out) :: accept_p
+
+! whether pass
+     logical, intent(out) :: pass
+
 
 ! local variables
 ! loop index over operators
@@ -725,10 +753,7 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace(1, nsize, matrix_ntrace, tau_end1, tau_end2)
-
-! evaluate trace_ratio
-     trace_ratio = matrix_ntrace / matrix_ptrace
+     call ctqmc_make_ztrace_lazy(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2)
 
      return
   end subroutine cat_rshift_ztrace
@@ -2439,13 +2464,9 @@
 !-------------------------------------------------------------------------
 !>>> service layer: utility subroutines to calculate trace             <<<
 !-------------------------------------------------------------------------
-!>>> core subroutine of pansy
-! (1) use good quantum number algorithm, split the total Hibert space to
-!     small subspace, the dimension of F mat will be smaller.
-! (2) split the imaginary time axis into many parts, save the matrices 
-!     product of that part, which may be used by next Monte Caro move.
-! NOTE: you should carefully choose npart in order to obtain the best speedup.
-  subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
+!>>> core subroutine of manjushaka
+! use good quantum number algorithm
+  subroutine ctqmc_make_ztrace_lazy(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
      use constants
      use control
      use context
@@ -2453,21 +2474,33 @@
      implicit none
 
 ! external arguments
+! the type of Monte Carlo moves
+     integer,  intent(in)  :: imove
+
 ! the mode of how to calculating trace
      integer,  intent(in)  :: cmode
 
 ! the total number of operators for current diagram
      integer,  intent(in)  :: csize
 
-! the calculated trace
-     real(dp), intent(out) :: trace
+! the calculated determinant ratio
+     real(dp), intent(in) :: deter_ratio
+
+! a random number
+     real(dp), intent(in) :: rand_num
+
+! the acceptance ratio
+     real(dp), intent(out) :: accept_p
+
+! whether accept this move
+     logical, intent(out) :: pass
 
 ! imaginary time value of operator A, only valid in cmode = 1 or 2
      real(dp), intent(in) :: tau_s
 
 ! imaginary time value of operator B, only valid in cmode = 1 or 2
      real(dp), intent(in) :: tau_e
-
+     
 ! local variables
 ! local version of index_t
      integer :: index_t_loc(mkink)
@@ -2475,20 +2508,40 @@
 ! local version of expt_t
      real(dp) :: expt_t_loc(ncfgs)
 
-! a string represents the evolution of sectors
-     integer :: string(csize+1,nsectors) 
+! a particular string begins at one sector
+     integer :: string(csize+1, nsectors) 
 
-! the trace for each sector
+! min dimension of the sectors
+     integer :: min_dim(nsectors)
+
+! the trace boundary
+     real(dp) :: trace_bound(nsectors)
+
+! index for sectors after sorting trace_bound
+     integer :: indx_sector(nsectors)
+
+! the trace of each sector
      real(dp) :: trace_sector(nsectors)
 
-! length in imaginary time axis for each part
-     real(dp) :: interval
+! the max and min of acceptance ratio
+     real(dp) :: pmax
+     real(dp) :: pmin
+     real(dp) :: ptmp
 
-! start index of a sector
+! the propose 
+     real(dp) :: propose
+
+! sum of trace_bound
+     real(dp) :: sum_bound
+
+! sum of absolute value of trace
+     real(dp) :: sum_abs_trace
+
+! start index of sectors
      integer :: indx
 
 ! loop index
-     integer :: i, j, k
+     integer :: i, j
 
 ! copy data from index_t or index_v to index_t_loc
 ! copy data from expt_t to expt_t_loc
@@ -2507,25 +2560,108 @@
              expt_t_loc = expt_t(:,2)
      end select
 
+! make propose ratio for different type of moves
+     select case(imove)
+         case(1)
+             propose = ( beta / real( ckink + 1 ) ) ** 2 
+         case(2)
+             propose = ( real( ckink ) / beta ) ** 2
+         case(3)
+             propose = one
+         case(4)
+             propose = one
+         case(5)
+             propose = one
+     end select
+
 ! build string for all the sectors
      call ctqmc_make_string(csize, index_t_loc, string)
 
 ! make npart
      call ctqmc_make_nparts(cmode, csize, string, index_t_loc, tau_s, tau_e)
 
-!--------------------------------------------------------------------
-! begin to calculate the trace of each sector one by one
-     trace_sector = zero
-     trace = zero
+! determin the minimal dimension of all the sectors
+     min_dim = 0
      do i=1, nsectors
+         if (is_string(i,1) .eqv. .false.) cycle
+         min_dim(i) = sectors(i)%ndim
+         do j=1, csize
+             if ( min_dim(i) > sectors(string(j,i))%ndim ) then
+                 min_dim(i) = sectors(string(j,i))%ndim
+             endif
+         enddo
+     enddo
+
+! calculate the trace bounds for each sector
+     do i=1, nsectors
+         indx_sector(i) = i
          if (is_string(i,1) .eqv. .false.) then
-             trace_sector(i) = zero
-             sectors(i)%final_product(:,:,1) = zero
+             trace_bound(i) = zero
          else
-             call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sector(i))
+! calculate the trace bounds
+             trace_bound(i) = one
+             do j=1, csize
+                 indx = sectors(string(j,i))%istart
+                 trace_bound(i) = trace_bound(i) * expt_v(indx, index_t_loc(j)) 
+             enddo 
+! specially treatment for the last time-evolution operator
+             indx = sectors(string(1,i))%istart
+             trace_bound(i) = trace_bound(i) * expt_t_loc(indx)
+             trace_bound(i) = min_dim(i) * trace_bound(i)
          endif
-         trace = trace + trace_sector(i)
-     enddo 
+     enddo
+
+! sort trace_bound
+!     call ctqmc_trace_sorter(nsectors, trace_bound, indx_sector)
+!     call ctqmc_trace_qsorter(nsectors, trace_bound, indx_sector)
+! calculate the max bound of acceptance ratio
+     sum_bound = sum(trace_bound)
+     ptmp = propose  *  abs(deter_ratio / matrix_ptrace)
+     pmax = ptmp * sum_bound
+
+! check whether pmax < rand_num
+     if (pmax < rand_num) then
+         pass = .false.
+         accept_p = zero 
+         return
+     endif
+
+     pass = .false.
+! otherwise, we need to refine the trace bounds
+     sum_abs_trace = zero
+     do i=1, nsectors
+! first, calculate the trace of this sector
+         if (is_string(indx_sector(i),1) .eqv. .false.) then
+             trace_sector(indx_sector(i)) = zero
+             sectors(indx_sector(i))%final_product(:,:,1) = zero
+         else
+             call cat_sector_ztrace( csize, string(:,indx_sector(i)), index_t_loc,&
+                                 expt_t_loc, trace_sector(indx_sector(i)) )
+         endif
+         if (pass .eqv. .false.) then
+             sum_abs_trace = sum_abs_trace + abs( trace_sector(indx_sector(i)) )
+             sum_bound = sum_bound - trace_bound(indx_sector(i))
+! calculate pmax and pmin
+             pmax = ptmp * (sum_abs_trace + sum_bound)
+             pmin = ptmp * (sum_abs_trace - sum_bound)
+! check whether pmax < rand_num
+             if (pmax < rand_num) then
+                 pass = .false.
+                 accept_p = zero 
+                 return
+             endif
+
+             if (pmin > rand_num) then
+                 pass = .true.
+             endif
+         endif 
+     enddo
+! if we arrive here, two case
+! case 1: pass == .false., we haven't determined the pass
+! case 2: pass == .true. we have determined the pass
+     matrix_ntrace = sum(trace_sector) 
+     accept_p = propose  *  deter_ratio * matrix_ntrace / matrix_ptrace
+     pass = ( min(one, abs(accept_p)) > rand_num)
 
 ! store the diagonal elements of final product in ddmat(:,1)
      do i=1, nsectors
@@ -2534,10 +2670,80 @@
              ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
          enddo
      enddo
-!--------------------------------------------------------------------
 
      return
-  end subroutine ctqmc_make_ztrace
+  end subroutine ctqmc_make_ztrace_lazy
+
+!>>> calculate the trace for retieve status
+  subroutine ctqmc_make_ztrace_retrieve(csize, trace)
+     use constants
+     use control
+     use context
+
+     implicit none
+
+! external arguments
+! the total number of operators for current diagram
+     integer,  intent(in)  :: csize
+
+! the calculated trace
+     real(dp), intent(out) :: trace
+
+! local variables
+! local version of index_t
+     integer :: index_t_loc(mkink)
+
+! local version of expt_t
+     real(dp) :: expt_t_loc(ncfgs)
+
+! a particular string begins at one sector
+     integer :: string(csize+1, nsectors) 
+
+! trace for each sector
+     real(dp) :: trace_sector(nsectors)
+
+! loop index
+     integer :: i, j
+
+! dummy variables
+     integer :: indx
+
+! copy data from index_t or index_v to index_t_loc
+! copy data from expt_t to expt_t_loc
+
+     index_t_loc = index_v
+     expt_t_loc = expt_t(:,2)
+
+! build string for all the sectors
+     call ctqmc_make_string(csize, index_t_loc, string)
+
+! make npart
+     call ctqmc_make_nparts(4, csize, string, index_t_loc, -1.0_dp, -1.0_dp)
+
+     do i=1, nsectors
+         if (is_string(i,1) .eqv. .false.) then
+             trace_sector(i) = zero
+             sectors(i)%final_product(:,:,1) = zero
+         else
+             call cat_sector_ztrace( csize, string(:,i), index_t_loc, expt_t_loc, trace_sector(i) )
+         endif
+     enddo
+
+     trace = zero
+     do i=1, nsectors
+         trace = trace + trace_sector(i)
+     enddo
+
+! store the diagonal elements of final product in ddmat(:,1)
+     do i=1, nsectors
+         indx = sectors(i)%istart
+         do j=1, sectors(i)%ndim
+             ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
+         enddo
+     enddo
+
+     return
+  end subroutine ctqmc_make_ztrace_retrieve
 
 !>>> subroutine used to build a string
   subroutine ctqmc_make_string(csize, index_t_loc, string)
@@ -2554,7 +2760,7 @@
 ! the address index of fermion operators
      integer, intent(in) :: index_t_loc(mkink)
 
-! the string
+! the build string
      integer, intent(out) :: string(csize+1, nsectors)
 
 ! local variables
@@ -2572,14 +2778,13 @@
 !--------------------------------------------------------------------
      is_string(:,1) = .true.
      string = -1
-
-! we build a string from right to left, that is,  beta <------- 0
+! from right to left, beta <------- 0
+     do i=1,nsectors
 ! build the string from the beginning sector, that is:
 ! S_a1(q1)-->q2, S_a2(q2)-->q3, ... S_ai(qi)-->qi+1, ..., Sak(qk)-->q1
 ! if we find some qi==0, we cycle this sector immediately
-     do i=1,nsectors
          curr_sect = i
-! loop over all the operators
+! loop over all the operators, from imaginary time 0 ---> beta
          do j=1,csize
              string(j,i) = curr_sect 
              vt = type_v( index_t_loc(j) )
@@ -2590,7 +2795,7 @@
                  EXIT   ! finish check, exit
              endif
              curr_sect = next_sect
-         enddo 
+         enddo ! over j={1, csize} loop
 ! if it doesn't form a string, we cycle it, go to the next sector
          if (is_string(i,1) .eqv. .false.) then
              cycle
@@ -2606,6 +2811,7 @@
 
      return
   end subroutine ctqmc_make_string
+
 
 !>>> subroutine used to determin is_save and part_indx
   subroutine ctqmc_make_nparts(cmode, csize, string, index_t_loc, tau_s, tau_e)
