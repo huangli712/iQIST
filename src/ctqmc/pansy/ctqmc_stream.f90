@@ -764,5 +764,7 @@
      call ctqmc_deallocate_memory_wmat()
      call ctqmc_deallocate_memory_smat()
 
+     call ctqmc_deallocate_memory_sect()
+
      return
   end subroutine ctqmc_final_array

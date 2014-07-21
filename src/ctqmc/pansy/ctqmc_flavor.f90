@@ -22,6 +22,7 @@
 !           cat_rshift_flavor <<<---
 !           ctqmc_make_ztrace
 !           ctqmc_make_string
+!           ctqmc_make_nparts
 !           cat_sector_ztrace
 !           ctqmc_make_evolve <<<---
 !           ctqmc_make_equate
@@ -2510,7 +2511,7 @@
      call ctqmc_make_string(csize, index_t_loc, string)
 
 ! make npart
-     call ctqmc_make_npart(cmode, csize, string, index_t_loc, tau_s, tau_e)
+     call ctqmc_make_nparts(cmode, csize, string, index_t_loc, tau_s, tau_e)
 
 !--------------------------------------------------------------------
 ! begin to calculate the trace of each sector one by one
@@ -2607,7 +2608,7 @@
   end subroutine ctqmc_make_string
 
 !>>> subroutine used to determin is_save and part_indx
-  subroutine ctqmc_make_npart(cmode, csize, string, index_t_loc, tau_s, tau_e)
+  subroutine ctqmc_make_nparts(cmode, csize, string, index_t_loc, tau_s, tau_e)
      use constants 
      use control
      use context
@@ -2838,7 +2839,7 @@
 !--------------------------------------------------------------------
 
      return
-  end subroutine ctqmc_make_npart
+  end subroutine ctqmc_make_nparts
 
 !>>> calculate the trace for one sector
   subroutine cat_sector_ztrace(csize, string, index_t_loc, expt_t_loc, trace)
