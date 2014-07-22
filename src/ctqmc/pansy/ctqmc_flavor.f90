@@ -2527,6 +2527,8 @@
          trace = trace + trace_sector(i)
      enddo 
 
+     write(1234, '(F20.10)') trace
+
 ! store the diagonal elements of final product in ddmat(:,1)
      do i=1, nsectors
          indx = sectors(i)%istart
