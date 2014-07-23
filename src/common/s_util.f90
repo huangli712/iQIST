@@ -73,7 +73,7 @@
 
 ! external arguments
 ! input/output string
-     character(*), intent(in) :: s
+     character(*), intent(inout) :: s
 
 ! local variables
 ! loop index
@@ -95,7 +95,7 @@
   end subroutine s_str_lowcase
 
 !!>>> s_str_count: return the number of times a substring occurs
-  function s_str_count(string, substr) result( count )
+  subroutine s_str_count(string, substr, count)
      implicit none
 
 ! external arguments
@@ -106,7 +106,7 @@
      character(len=*), intent(in) :: substr
 
 ! return value, number of occurrences
-     integer :: count
+     integer, intent(out) :: count
 
 ! local variables
 ! position to start the match
@@ -121,7 +121,7 @@
      enddo ! over do loop
 
      return
-  end function s_str_count
+  end subroutine s_str_count
 
 !!>>> s_str_double: convert a real number to a string
   function s_str_double(num) result(str)
