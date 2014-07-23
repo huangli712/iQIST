@@ -41,15 +41,12 @@
 !!========================================================================
 
 !!>>> s_str_upcase: returns string 's' in uppercase
-  function s_str_upcase(s) result(t)
+  subroutine s_str_upcase(s)
      implicit none
 
 ! external arguments
-! input string
-     character(*), intent(in) :: s
-
-! output string
-     character(len(s)) :: t
+! input/output string
+     character(*), intent(inout) :: s
 
 ! local variables
 ! loop index
@@ -58,20 +55,20 @@
 ! difference between 'A' and 'a'
      integer :: diff
 
-     t = s; diff = ichar('A')-ichar('a')
+     diff = ichar('A')-ichar('a')
 
 ! if lowercase, make uppercase
-     do i=1,len(t)
-         if ( ichar(t(i:i)) >= ichar('a') .and. ichar(t(i:i)) <= ichar('z') ) then
-             t(i:i) = char(ichar(t(i:i)) + diff)
+     do i=1,len(s)
+         if ( ichar(s(i:i)) >= ichar('a') .and. ichar(s(i:i)) <= ichar('z') ) then
+             s(i:i) = char(ichar(s(i:i)) + diff)
          endif ! back if block
-     enddo ! over i={1, len(t)} loop
+     enddo ! over i={1,len(s)} loop
 
      return
-  end function s_str_upcase
+  end subroutine s_str_upcase
 
 !!>>> s_str_lowcase: returns string 's' in lowercase
-  function s_str_lowcase(s) result(t)
+  subroutine s_str_lowcase(s) result(t)
      implicit none
 
 ! external arguments
@@ -98,7 +95,7 @@
      enddo ! over i={1,len(t)} loop
 
      return
-  end function s_str_lowcase
+  end subroutine s_str_lowcase
 
 !!>>> s_str_count: return the number of times a substring occurs
   function s_str_count(string, substr) result( count )
