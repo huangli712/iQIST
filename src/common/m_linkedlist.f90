@@ -55,18 +55,23 @@
 
 !!>>> list_init: initialize a head node SELF and optionally store the provided DATA.
   subroutine list_init(self, data)
+     implicit none
+
+! external arguments
      type(list_t), pointer :: self
      integer, dimension(:), intent(in), optional :: data
 
      allocate(self)
      nullify(self%next)
 
-     if (present(data)) then
-         allocate(self%data(size(data)))
+     if ( present(data) ) then
+         allocate( self%data( size(data) ) )
          self%data = data
      else
          nullify(self%data)
-     end if
+     endif
+
+     return
   end subroutine list_init
 
 !!>>> list_free: free the entire list and all data, beginning at SELF
