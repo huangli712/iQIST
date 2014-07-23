@@ -72,12 +72,12 @@
      type(list_t), pointer :: next
 
      current => self
-     do while (associated(current))
+     do while ( associated(current) )
          next => current%next
-         if (associated(current%data)) then
+         if ( associated(current%data) ) then
              deallocate(current%data)
              nullify(current%data)
-         end if
+         endif
          deallocate(current)
          nullify(current)
          current => next
@@ -88,94 +88,69 @@
 
 !!>>> list_insert: insert a list node after SELF containing DATA (optional)
   subroutine list_insert(self, data)
+     implicit none
+
+! external arguments
      type(list_t), pointer :: self
      integer, dimension(:), intent(in), optional :: data
+
+! local variables
      type(list_t), pointer :: next
 
      allocate(next)
 
-     if (present(data)) then
-         allocate(next%data(size(data)))
+     if ( present(data) ) then
+         allocate( next%data( size(data) ) )
          next%data = data
      else
          nullify(next%data)
-     end if
+     endif
 
      next%next => self%next
      self%next => next
+
+     return
   end subroutine list_insert
 
 !!>>> list_put: store the encoded DATA in list node SELF
   subroutine list_put(self, data)
+     implicit none
+
+! external arguments
      type(list_t), pointer :: self
      integer, dimension(:), intent(in) :: data
 
-     if (associated(self%data)) then
+     if ( associated(self%data) ) then
          deallocate(self%data)
          nullify(self%data)
-     end if
+     endif
      self%data = data
+
+     return
   end subroutine list_put
 
 !!>>> list_get: return the DATA stored in the node SELF
   function list_get(self) result(data)
+     implicit none
+
+! external arguments
      type(list_t), pointer :: self
      integer, dimension(:), pointer :: data
      data => self%data
+
+     return
   end function list_get
 
 !!>>> list_next: return the next node after SELF
   function list_next(self)
+     implicit none
+
+! external arguments
      type(list_t), pointer :: self
      type(list_t), pointer :: list_next
      list_next => self%next
+
+     return
   end function list_next
 
-end module linkedlist
-
-program test_list
-  use linkedlist
-  implicit none
-
-  ! Data is stored in data_t
-  type :: data_t
-     real :: x
-  end type data_t
-
-  ! A container for storing data_t pointers
-  type :: data_ptr
-     type(data_t), pointer :: p
-  end type data_ptr
-
-  type(list_t), pointer :: list => null()
-  type(data_ptr) :: ptr
-
-  ! Allocate a new data element
-  allocate(ptr%p)
-  ptr%p%x = 2.7183
-
-  ! Initialize the list with the first data element
-  call list_init(list, transfer(ptr, list_d))
-  print *, 'Initializing list with data:', ptr%p
-
-  ! Allocate a second data element
-  allocate(ptr%p)
-  ptr%p%x = 0.5772
-
-  ! Insert the second into the list
-  call list_insert(list, transfer(ptr, list_d))
-  print *, 'Inserting node with data:', ptr%p
-
-  ! Retrieve data from the second node and free memory
-  ptr = transfer(list_get(list_next(list)), ptr)
-  print *, 'Second node data:', ptr%p
-  deallocate(ptr%p)
-
-  ! Retrieve data from the head node and free memory
-  ptr = transfer(list_get(list), ptr)
-  print *, 'Head node data:', ptr%p
-  deallocate(ptr%p)
-
-  ! Free the list
-  call list_free(list)
-end program test_list
+  end module linkedlist
