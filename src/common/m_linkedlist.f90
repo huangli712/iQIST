@@ -1,13 +1,23 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : linkedlist
+!!!           linkedlist@list_d
+!!!           linkedlist@list_t
+!!!           linkedlist@list_init
+!!!           linkedlist@list_free
+!!!           linkedlist@list_insert
+!!!           linkedlist@list_put
+!!!           linkedlist@list_get
+!!!           linkedlist@list_next
+!!!           linkedlist@list_count
 !!! source  : m_linkedlist.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/23/2014 by li huang
 !!! purpose : this purpose of this module is to implement a typical and
-!!!           useful data structure --- linked list.
+!!!           useful data structure --- linked list. it is a generic
+!!!           linked list, capable of storing arbitrary data.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -89,6 +99,7 @@
 ! pointer to the next node
      type(list_t), pointer :: next
 
+! go through the whole linked list
      curr => self
      do while ( associated(curr) )
          next => curr%next
@@ -154,7 +165,7 @@
      if ( associated(self%data) ) then
          deallocate(self%data)
          nullify(self%data)
-     endif
+     endif ! back if block
 
 ! allocate new memory
      allocate( self%data( size(data) ) )
