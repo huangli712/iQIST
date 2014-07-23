@@ -55,7 +55,7 @@
 ! difference between 'A' and 'a'
      integer :: diff
 
-     diff = ichar('A')-ichar('a')
+     diff = ichar('A') - ichar('a')
 
 ! if lowercase, make uppercase
      do i=1,len(s)
@@ -68,15 +68,12 @@
   end subroutine s_str_upcase
 
 !!>>> s_str_lowcase: returns string 's' in lowercase
-  subroutine s_str_lowcase(s) result(t)
+  subroutine s_str_lowcase(s)
      implicit none
 
 ! external arguments
-! input string
+! input/output string
      character(*), intent(in) :: s
-
-! output string
-     character(len(s)) :: t
 
 ! local variables
 ! loop index
@@ -85,14 +82,14 @@
 ! difference between 'A' and 'a'
      integer :: diff
 
-     t = s; diff = ichar('A')-ichar('a')
+     diff = ichar('A') - ichar('a')
 
 ! if uppercase, make lowercase
-     do i=1,len(t)
-         if ( ichar(t(i:i)) >= ichar('A') .and. ichar(t(i:i)) <= ichar('Z') ) then
-             t(i:i) = char(ichar(t(i:i)) - diff)
+     do i=1,len(s)
+         if ( ichar(s(i:i)) >= ichar('A') .and. ichar(s(i:i)) <= ichar('Z') ) then
+             s(i:i) = char(ichar(s(i:i)) - diff)
          endif ! back if block
-     enddo ! over i={1,len(t)} loop
+     enddo ! over i={1,len(s)} loop
 
      return
   end subroutine s_str_lowcase
