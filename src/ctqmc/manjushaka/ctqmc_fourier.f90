@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : pansy
+! project : begonia
 ! program : ctqmc_fourier_htau
 !           ctqmc_fourier_hybf
 !           ctqmc_fourier_tails

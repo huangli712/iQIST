@@ -1,24 +1,36 @@
 !-------------------------------------------------------------------------
-! project : begonia
+! project : lavender
 ! program : ctqmc_record_gtau
+!           ctqmc_record_ftau
 !           ctqmc_record_grnf
 !           ctqmc_record_hist
 !           ctqmc_record_nmat
+!           ctqmc_record_schi
+!           ctqmc_record_ochi
+!           ctqmc_record_twop
+!           ctqmc_record_vrtx
 !           ctqmc_record_prob <<<---
 !           ctqmc_reduce_gtau
+!           ctqmc_reduce_ftau
 !           ctqmc_reduce_grnf
 !           ctqmc_reduce_hist
 !           ctqmc_reduce_nmat
+!           ctqmc_reduce_schi
+!           ctqmc_reduce_ochi
+!           ctqmc_reduce_twop
+!           ctqmc_reduce_vrtx
 !           ctqmc_reduce_prob <<<---
 !           ctqmc_symm_nmat
 !           ctqmc_symm_gtau
 !           ctqmc_symm_grnf
 !           ctqmc_smth_sigf   <<<---
-!           ctqmc_make_hub1   <<<---
+!           ctqmc_make_gtau
+!           ctqmc_make_ftau   <<<---
+!           ctqmc_make_hub1
+!           ctqmc_make_hub2   <<<---
 ! source  : ctqmc_record.f90
 ! type    : subroutine
 ! author  : li huang (email:huangli712@yahoo.com.cn)
-!           yilin wang (email: qhwyl2006@126.com)
 ! history : 09/16/2009 by li huang
 !           09/18/2009 by li huang
 !           09/20/2009 by li huang
@@ -41,7 +53,6 @@
 !           02/24/2010 by li huang
 !           02/27/2010 by li huang
 !           09/29/2010 by li huang
-!           07/19/2014 by yilin wang
 ! purpose : measure, record, and postprocess the key observables produced
 !           by the hybridization expansion version continuous time quantum
 !           Monte Carlo (CTQMC) quantum impurity solver
@@ -67,6 +78,12 @@
 ! loop index for flavor channel
      integer  :: flvr
 
+! loop index for legendre polynomial
+     integer  :: fleg
+
+! loop index for chebyshev polynomial
+     integer  :: fche
+
 ! index for imaginary time \tau
      integer  :: curr
 
@@ -79,9 +96,32 @@
 
 ! length betweem taus and taue
      real(dp) :: dtau
+     real(dp) :: daux
 
 ! interval for imaginary time slice
      real(dp) :: step
+
+! select measurement method
+     select case ( isort )
+
+         case (1, 4)
+             call cat_record_gtau1()
+
+         case (2, 5)
+             call cat_record_gtau2()
+
+         case (3, 6)
+             call cat_record_gtau3()
+
+     end select
+
+     return
+
+  contains
+
+!>>> record impurity green's function using normal representation
+  subroutine cat_record_gtau1()
+     implicit none
 
 ! evaluate step at first
      step = real(ntime - 1) / beta
@@ -114,7 +154,7 @@
                      maux = two * maux
                  endif
 
-! record gtau, we normalize gtau in ctqmc_dump_gtau() subroutine
+! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
                  gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
 
              enddo ! over ie={1,rank(flvr)} loop
@@ -123,7 +163,115 @@
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
      return
+  end subroutine cat_record_gtau1
+
+!>>> record impurity green's function using legendre polynomial representation
+  subroutine cat_record_gtau2()
+     implicit none
+
+! evaluate step at first
+     step = real(legrd - 1) / two
+
+     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+
+! get imaginary time value for create and destroy operators
+         do is=1,rank(flvr)
+             taus = time_s( index_s(is, flvr), flvr )
+
+             do ie=1,rank(flvr)
+                 taue = time_e( index_e(ie, flvr), flvr )
+
+! evaluate dtau
+                 dtau = taue - taus
+
+! get matrix element from mmat, pay special attention to the sign of dtau
+                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+
+! adjust dtau, keep it stay in (zero, beta)
+                 if ( dtau < zero ) then
+                     dtau = dtau + beta
+                 endif
+
+! convert dtau in [0,\beta] to daux in [0,2]
+                 daux = two * dtau / beta
+
+! determine index for legendre polynomial interval
+                 curr = nint( daux * step ) + 1
+
+! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
+                 CTQMC_FLALEG_LOOP: do fleg=1,lemax
+                     dtau = sqrt(two * fleg - 1) * ppleg(curr,fleg)
+                     gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
+                 enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+
+     return
+  end subroutine cat_record_gtau2
+
+!>>> record impurity green's function using chebyshev polynomial representation
+  subroutine cat_record_gtau3()
+     implicit none
+
+! evaluate step at first
+     step = real(chgrd - 1) / two
+
+     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+
+! get imaginary time value for create and destroy operators
+         do is=1,rank(flvr)
+             taus = time_s( index_s(is, flvr), flvr )
+
+             do ie=1,rank(flvr)
+                 taue = time_e( index_e(ie, flvr), flvr )
+
+! evaluate dtau
+                 dtau = taue - taus
+
+! get matrix element from mmat, pay special attention to the sign of dtau
+                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+
+! adjust dtau, keep it stay in (zero, beta)
+                 if ( dtau < zero ) then
+                     dtau = dtau + beta
+                 endif
+
+! convert dtau in [0,\beta] to daux in [0,2]
+                 daux = two * dtau / beta
+
+! determine index for chebyshev polynomial interval
+                 curr = nint( daux * step ) + 1
+
+! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
+                 CTQMC_FLACHE_LOOP: do fche=1,chmax
+                     dtau = (two / pi) * sqrt(one - (daux - one)**2) * qqche(curr,fche)
+                     gtau(fche, flvr, flvr) = gtau(fche, flvr, flvr) - maux * dtau
+                 enddo CTQMC_FLACHE_LOOP ! over fche={1,chmax} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+
+     return
+  end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
+
+!>>> record the auxiliary correlation function in imaginary time axis
+  subroutine ctqmc_record_ftau()
+     use constants
+     use control
+     use context
+
+     implicit none
+
+     call ctqmc_print_error('ctqmc_record_ftau', 'this subroutine is not implemented')
+
+     return
+  end subroutine ctqmc_record_ftau
 
 !>>> record the impurity green's function in matsubara frequency space
   subroutine ctqmc_record_grnf()
@@ -304,6 +452,161 @@
      return
   end subroutine ctqmc_record_nmat
 
+
+!>>> record the spin-spin correlation function
+  subroutine ctqmc_record_schi()
+     use constants
+     use control
+     use context
+
+     implicit none
+
+     call ctqmc_print_error('ctqmc_record_schi', 'this subroutine is not implemented')
+
+     return
+  end subroutine ctqmc_record_schi
+
+!>>> record the orbital-orbital correlation function
+  subroutine ctqmc_record_ochi()
+     use constants
+     use control
+     use context
+
+     implicit none
+
+     call ctqmc_print_error('ctqmc_record_ochi', 'this subroutine is not implemented')
+
+     return
+  end subroutine ctqmc_record_ochi
+
+!>>> record the two-particle green's function
+  subroutine ctqmc_record_twop()
+     use constants
+     use control
+     use context
+
+     implicit none
+
+! local variables
+! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+     integer  :: flvr
+
+! loop index for frequency
+     integer  :: nfaux
+     integer  :: wbn
+     integer  :: w1n
+     integer  :: w2n
+     integer  :: w3n
+     integer  :: w4n
+
+! used to store the element of mmat matrix
+     real(dp) :: maux
+
+! imaginary time for start and end points
+     real(dp) :: taus
+     real(dp) :: taue
+
+! dummy complex(dp) variables, used to calculate the exponential function
+     complex(dp) :: cmeas
+     complex(dp) :: dexp1
+     complex(dp) :: dexp2
+     complex(dp) :: iexp1
+     complex(dp) :: iexp2
+     complex(dp) :: cexp1
+     complex(dp) :: cexp2
+
+! dummy complex(dp) arrays, used to store the intermediate results
+     complex(dp), allocatable :: g2aux(:,:,:)
+
+! evaluate nfaux, determine the size of g2aux
+     nfaux = nffrq + nbfrq - 1
+
+! allocate memory for g2aux and then initialize it
+     allocate( g2aux(norbs, nfaux, nfaux) ); g2aux = czero
+
+     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+
+! get imaginary time value for segments
+         do is=1,rank(flvr)
+             taus = time_s( index_s(is, flvr), flvr )
+
+             do ie=1,rank(flvr)
+                 taue = time_e( index_e(ie, flvr), flvr )
+
+! get matrix element from mmat
+                 maux = mmat(ie, is, flvr)
+
+! calculate g2aux
+                 dexp1 = exp(+    two     * czi * pi * taue / beta)
+                 dexp2 = exp(-    two     * czi * pi * taus / beta)
+                 iexp1 = exp(-(nffrq + 1) * czi * pi * taue / beta)
+                 iexp2 = exp(+(nffrq + 1) * czi * pi * taus / beta)
+
+                 cexp1 = iexp1
+                 do w1n=1,nfaux
+                     cexp1 = cexp1 * dexp1
+
+                     cexp2 = iexp2
+                     do w2n=1,nfaux
+                         cexp2 = cexp2 * dexp2
+
+                         g2aux(flvr, w1n, w2n) = g2aux(flvr, w1n, w2n) + maux * cexp1 * cexp2
+                     enddo ! over w2n={1,nfaux} loop
+                 enddo ! over w1n={1,nfaux} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+
+! calculate g2_re and g2_im
+     CTQMC_ORBIT1_LOOP: do f1=1,norbs
+         CTQMC_ORBIT2_LOOP: do f2=1,norbs
+
+             CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                 CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+
+                     CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+                         w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
+                         cmeas = g2aux(f1,w1n,w2n) * g2aux(f2,w3n,w4n)
+                         if ( f1 == f2 ) then
+                             cmeas = cmeas - g2aux(f1,w1n,w4n) * g2aux(f1,w3n,w2n)
+                         endif ! back if ( f1 == f2 ) block
+                         g2_re(f1,f2,w2n,w3n,wbn) = g2_re(f1,f2,w2n,w3n,wbn) +  real(cmeas) / beta
+                         g2_im(f1,f2,w2n,w3n,wbn) = g2_im(f1,f2,w2n,w3n,wbn) + aimag(cmeas) / beta
+                     enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+
+                 enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+             enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+
+         enddo CTQMC_ORBIT2_LOOP ! over f2={1,norbs} loop
+     enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
+
+! deallocate memory
+     deallocate( g2aux )
+
+     return
+  end subroutine ctqmc_record_twop
+
+!>>> record the vertex function
+  subroutine ctqmc_record_vrtx()
+     use constants
+     use control
+     use context
+
+     implicit none
+
+     call ctqmc_print_error('ctqmc_record_vrtx', 'this subroutine is not implemented')
+
+     return
+  end subroutine ctqmc_record_vrtx
+
 !>>> record the probability of atomic states
   subroutine ctqmc_record_prob()
      use constants
@@ -359,6 +662,43 @@
 
      return
   end subroutine ctqmc_reduce_gtau
+
+!>>> reduce the ftau from all children processes
+  subroutine ctqmc_reduce_ftau(ftau_mpi)
+     use constants
+     use context
+
+     use mmpi
+
+     implicit none
+
+! external arguments
+! auxiliary correlation function
+     real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
+
+! initialize ftau_mpi
+     ftau_mpi = zero
+
+! build ftau_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(ftau, ftau_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     ftau_mpi = ftau
+
+# endif /* MPI */
+
+! calculate the average
+     ftau_mpi = ftau_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_ftau
 
 !>>> reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi)
@@ -479,6 +819,182 @@
 
      return
   end subroutine ctqmc_reduce_nmat
+
+!>>> reduce the schi and sschi from all children processes
+  subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
+     use constants
+     use context
+
+     use mmpi
+
+     implicit none
+
+! external arguments
+! spin-spin correlation function, totally-averaged
+     real(dp), intent(out) :: schi_mpi(ntime)
+
+! spin-spin correlation function, orbital-resolved
+     real(dp), intent(out) :: sschi_mpi(ntime,nband)
+
+! initialize schi_mpi and sschi_mpi
+     schi_mpi = zero
+     sschi_mpi = zero
+
+! build schi_mpi and sschi_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(schi, schi_mpi)
+     call mp_allreduce(sschi, sschi_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     schi_mpi = schi
+     sschi_mpi = sschi
+
+# endif /* MPI */
+
+! calculate the average
+     schi_mpi = schi_mpi / real(nprocs)
+     sschi_mpi = sschi_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_schi
+
+!>>> reduce the ochi and oochi from all children processes
+  subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
+     use constants
+     use context
+
+     use mmpi
+
+     implicit none
+
+! external arguments
+! orbital-orbital correlation function, totally-averaged
+     real(dp), intent(out) :: ochi_mpi(ntime)
+
+! orbital-orbital correlation function, orbital-resolved
+     real(dp), intent(out) :: oochi_mpi(ntime,norbs)
+
+! initialize ochi_mpi and oochi_mpi
+     ochi_mpi = zero
+     oochi_mpi = zero
+
+! build ochi_mpi and oochi_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(ochi, ochi_mpi)
+     call mp_allreduce(oochi, oochi_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     ochi_mpi = ochi
+     oochi_mpi = oochi
+
+# endif /* MPI */
+
+! calculate the average
+     ochi_mpi = ochi_mpi / real(nprocs)
+     oochi_mpi = oochi_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_ochi
+
+!>>> reduce the g2_re_mpi and g2_im_mpi from all children processes
+  subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
+     use constants
+     use context
+
+     use mmpi
+
+     implicit none
+
+! external arguments
+! two-particle green's function, real part
+     real(dp), intent(out) :: g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+
+! two-particle green's function, imaginary part
+     real(dp), intent(out) :: g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+
+! initialize g2_re_mpi and g2_im_mpi
+     g2_re_mpi = zero
+     g2_im_mpi = zero
+
+! build g2_re_mpi and g2_im_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(g2_re, g2_re_mpi)
+     call mp_allreduce(g2_im, g2_im_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     g2_re_mpi = g2_re
+     g2_im_mpi = g2_im
+
+# endif /* MPI */
+
+! calculate the average
+     g2_re_mpi = g2_re_mpi / real(nprocs)
+     g2_im_mpi = g2_im_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_twop
+
+!>>> reduce the h2_re_mpi and h2_im_mpi from all children processes
+  subroutine ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
+     use constants
+     use context
+
+     use mmpi
+
+     implicit none
+
+! external arguments
+! vertex function, real part
+     real(dp), intent(out) :: h2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+
+! vertex function, imaginary part
+     real(dp), intent(out) :: h2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+
+! initialize h2_re_mpi and h2_im_mpi
+     h2_re_mpi = zero
+     h2_im_mpi = zero
+
+! build h2_re_mpi and h2_im_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(h2_re, h2_re_mpi)
+     call mp_allreduce(h2_im, h2_im_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     h2_re_mpi = h2_re
+     h2_im_mpi = h2_im
+
+# endif /* MPI */
+
+! calculate the average
+     h2_re_mpi = h2_re_mpi / real(nprocs)
+     h2_im_mpi = h2_im_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_vrtx
 
 !>>> reduce the prob from all children processes
   subroutine ctqmc_reduce_prob(prob_mpi)
@@ -804,6 +1320,314 @@
      return
   end subroutine ctqmc_smth_sigf
 
+!>>> build imaginary green's function using orthogonal polynomial representation
+  subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
+     use constants
+     use control
+     use context, only : ppleg, qqche
+
+     implicit none
+
+! external arguments
+! imaginary time mesh
+     real(dp), intent(in)  :: tmesh(ntime)
+
+! impurity green's function/orthogonal polynomial coefficients
+     real(dp), intent(in)  :: gtau(ntime,norbs,norbs)
+
+! calculated impurity green's function
+     real(dp), intent(out) :: gaux(ntime,norbs,norbs)
+
+! local parameters
+! scheme of integral kernel used to damp the Gibbs oscillation
+! damp = 0, Dirichlet   mode
+! damp = 1, Jackson     mode, preferred
+! damp = 2, Lorentz     mode
+! damp = 3, Fejer       mode
+! damp = 4, Wang-Zunger mode
+     integer, parameter :: damp = 0
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! loop index for legendre polynomial
+     integer  :: fleg
+
+! loop index for chebyshev polynomial
+     integer  :: fche
+
+! index for imaginary time \tau
+     integer  :: curr
+
+! interval for imaginary time slice
+     real(dp) :: step
+
+! dummy variables
+     real(dp) :: raux
+
+! initialize gaux
+     gaux = zero
+
+! select calculation method
+     select case ( isort )
+
+         case (1, 4)
+             call cat_make_gtau1()
+
+         case (2, 5)
+             call cat_make_gtau2()
+
+         case (3, 6)
+             call cat_make_gtau3()
+
+     end select
+
+     return
+
+  contains
+
+!>>> build the integral kernel function
+  subroutine cat_make_kernel(kdim, kern)
+     implicit none
+
+! external arguments
+! dimension of integral kernel function
+     integer, intent(in)   :: kdim
+
+! integral kernel function
+     real(dp), intent(out) :: kern(kdim)
+
+! local variables
+! loop index
+     integer :: kcur
+
+     kern = zero
+     do kcur=1,kdim
+         select case ( damp )
+
+! Dirichlet mode
+             case (0)
+                 kern(kcur) = one
+
+! Jackson mode
+             case (1)
+                 i = kcur - 1
+                 curr = kdim + 1
+                 raux = pi * i / curr
+                 kern(kcur) = ( (curr-i) * cos(raux) + sin(raux) * cotan(pi/curr) ) / curr
+
+! Lorentz mode
+             case (2)
+                 kern(kcur) = sinh( one - (kcur - one) / real( kdim ) ) / sinh(one)
+
+! Fejer mode
+             case (3)
+                 kern(kcur) = one - ( kcur - one ) / real( kdim )
+
+! Wang-Zunger mode
+             case (4)
+                 kern(kcur) = exp( - ( (kcur - one) / real( kdim ) )**4 )
+
+         end select
+     enddo ! over kcur={1,kdim} loop
+
+     return
+  end subroutine cat_make_kernel
+
+!>>> build impurity green's function using normal representation
+  subroutine cat_make_gtau1()
+     implicit none
+
+     raux = real(ntime) / (beta * beta)
+     do i=1,norbs
+         do j=1,ntime
+             gaux(j,i,i) = gtau(j,i,i) * raux
+         enddo ! over j={1,ntime} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine cat_make_gtau1
+
+!>>> build impurity green's function using legendre polynomial representation
+  subroutine cat_make_gtau2()
+     implicit none
+
+! integral kernel
+     real(dp) :: ker1(lemax)
+
+! build kernel function at first
+     ker1 = one; call cat_make_kernel(lemax, ker1)
+
+! reconstruct green's function
+     step = real(legrd - 1) / two
+     do i=1,norbs
+         do j=1,ntime
+             raux = two * tmesh(j) / beta
+             curr = nint(raux * step) + 1
+             do fleg=1,lemax
+                 raux = sqrt(two * fleg - 1) / (beta * beta) * ker1(fleg)
+                 gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fleg,i,i) * ppleg(curr,fleg)
+             enddo ! over fleg={1,lemax} loop
+         enddo ! over j={1,ntime} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine cat_make_gtau2
+
+!>>> build impurity green's function using chebyshev polynomial representation
+  subroutine cat_make_gtau3()
+     implicit none
+
+! integral kernel
+     real(dp) :: ker2(chmax)
+
+! build kernel function at first
+     ker2 = one; call cat_make_kernel(chmax, ker2)
+
+! reconstruct green's function
+     step = real(chgrd - 1) / two
+     do i=1,norbs
+         do j=1,ntime
+             raux = two * tmesh(j) / beta
+             curr = nint(raux * step) + 1
+             do fche=1,chmax
+                 raux = two / (beta * beta) * ker2(fche)
+                 gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fche,i,i) * qqche(curr,fche)
+             enddo ! over fche={1,chmax} loop
+         enddo ! over j={1,ntime} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine cat_make_gtau3
+  end subroutine ctqmc_make_gtau
+
+!>>> build auxiliary correlation function using orthogonal polynomial representation
+  subroutine ctqmc_make_ftau(tmesh, ftau, faux)
+     use constants
+     use control
+     use context, only : ppleg, qqche
+
+     implicit none
+
+! external arguments
+! imaginary time mesh
+     real(dp), intent(in)  :: tmesh(ntime)
+
+! auxiliary correlation function/orthogonal polynomial coefficients
+     real(dp), intent(in)  :: ftau(ntime,norbs,norbs)
+
+! calculated auxiliary correlation function
+     real(dp), intent(out) :: faux(ntime,norbs,norbs)
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+
+! loop index for legendre polynomial
+     integer  :: fleg
+
+! loop index for chebyshev polynomial
+     integer  :: fche
+
+! index for imaginary time \tau
+     integer  :: curr
+
+! interval for imaginary time slice
+     real(dp) :: step
+
+! dummy variables
+     real(dp) :: raux
+
+! initialize faux
+     faux = zero
+
+! select calculation method
+     select case ( isort )
+
+         case (4)
+             call cat_make_ftau1()
+
+         case (5)
+             call cat_make_ftau2()
+
+         case (6)
+             call cat_make_ftau3()
+
+     end select
+
+     return
+
+  contains
+
+!>>> build auxiliary correlation function using normal representation
+  subroutine cat_make_ftau1()
+     implicit none
+
+     raux = real(ntime) / (beta * beta)
+     do i=1,norbs
+         do j=1,norbs
+             if ( i == j ) CYCLE
+
+             do k=1,ntime
+                 faux(k,j,i) = ftau(k,j,i) * raux
+             enddo ! over k={1,ntime} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine cat_make_ftau1
+
+!>>> build auxiliary correlation function using legendre polynomial representation
+  subroutine cat_make_ftau2()
+     implicit none
+
+     step = real(legrd - 1) / two
+     do i=1,norbs
+         do j=1,norbs
+             if ( i == j ) CYCLE
+
+             do k=1,ntime
+                 raux = two * tmesh(k) / beta
+                 curr = nint(raux * step) + 1
+                 do fleg=1,lemax
+                     raux = sqrt(two * fleg - 1) / (beta * beta)
+                     faux(k,j,i) = faux(k,j,i) + raux * ftau(fleg,j,i) * ppleg(curr,fleg)
+                 enddo ! over fleg={1,lemax} loop
+             enddo ! over k={1,ntime} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine cat_make_ftau2
+
+!>>> build auxiliary correlation function using chebyshev polynomial representation
+  subroutine cat_make_ftau3()
+     implicit none
+
+     step = real(chgrd - 1) / two
+     do i=1,norbs
+         do j=1,norbs
+             if ( i == j ) CYCLE
+
+             do k=1,ntime
+                 raux = two * tmesh(k) / beta
+                 curr = nint(raux * step) + 1
+                 raux = two / (beta * beta)
+                 do fche=1,chmax
+                     faux(k,j,i) = faux(k,j,i) + raux * ftau(fche,j,i) * qqche(curr,fche)
+                 enddo ! over fche={1,chmax} loop
+             enddo ! over k={1,ntime} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine cat_make_ftau3
+  end subroutine ctqmc_make_ftau
+
 !>>> build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
 ! function between low frequency QMC data and high frequency Hubbard-I
@@ -969,3 +1793,19 @@
 
      return
   end subroutine ctqmc_make_hub1
+
+!>>> build atomic green's function and self-energy function using improved
+! Hubbard-I approximation, and then make forward fourier transformation
+! for impurity green's function and auxiliary correlation function. then
+! the final self-energy function is obtained by analytical formula.
+  subroutine ctqmc_make_hub2()
+     use constants
+     use control
+     use context
+
+     implicit none
+
+     call ctqmc_print_error('ctqmc_make_hub2', 'this subroutine is not implemented')
+
+     return
+  end subroutine ctqmc_make_hub2

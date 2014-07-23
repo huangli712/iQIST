@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : pansy
+! project : begonia
 ! program : ctqmc_dmat_inv
 !           ctqmc_zmat_inv
 !           ctqmc_dmat_det
@@ -293,6 +293,158 @@
 
      return
   end subroutine ctqmc_dmat_gemm
+
+!>>> using bubble sort algorithm to sort a real dataset, the slowest algorithm
+  subroutine ctqmc_trace_sorter(nsize, list, indx_list)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! grab the number of values from the calling code
+     integer, intent(in) :: nsize
+
+! dataset to be sorted
+     real(dp), intent(inout) :: list(nsize)
+     integer, intent(inout) :: indx_list(nsize)
+
+! local variables
+! dataset index
+     integer  :: i = 0
+     integer  :: j = 0
+
+! dummy variables
+     real(dp) :: swap1
+     integer  :: swap2
+
+! basically we just loop through every element to compare it against
+! every other element
+! this loop increments i which is our starting point for the comparison
+     sort_loop1: do i=nsize,1,-1
+! this loop increments j which is the ending point for the comparison
+         sort_loop2: do j=1,i-1
+! swap the two elements here
+             exchange: if ( list(j) < list(j+1) ) then
+                 swap1 = list(j)
+                 list(j) = list(j+1)
+                 list(j+1) = swap1
+
+                 swap2 = indx_list(j)
+                 indx_list(j) = indx_list(j+1)
+                 indx_list(j+1) = swap2
+             endif exchange
+         enddo sort_loop2 ! over j={1,i-1} loop
+     enddo sort_loop1 ! over i={nsize,1,-1} loop
+
+     return
+  end subroutine ctqmc_trace_sorter
+
+!>>> sets up for the quick sort recursive method
+  subroutine ctqmc_trace_qsorter(nsize, list, indx_list)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! grab the number of values from the calling code
+     integer, intent(in) :: nsize
+     
+! dataset to be sorted
+     real(dp), intent(inout) :: list(nsize)
+     integer, intent(inout) :: indx_list(nsize)
+
+! kicks off the recursive process
+     call ctqmc_time_qscorer(1, nsize, nsize, list, indx_list)
+
+     return
+  end subroutine ctqmc_trace_qsorter
+
+!>>> this is the actually recursive portion of the quicksort algorithm
+  recursive &
+  subroutine ctqmc_trace_qscorer(pstart, pend, nsize, list, indx_list)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! start point
+     integer, intent(in) :: pstart
+
+! end point
+     integer, intent(in) :: pend
+
+! size of array
+     integer, intent(in) :: nsize
+
+! dataset to be sorted
+     real(dp), intent(inout) :: list(nsize)
+     integer, intent(inout) :: indx_list(nsize)
+
+! local variables
+! used to find out list(left) > kaux and list(right) < kaux
+     integer  :: left, right
+
+! used to record list(pstart)
+     real(dp) :: kaux
+     integer :: kaux_indx
+! used to swap data
+     real(dp) :: taux
+     integer :: taux_indx
+
+! setup left and right
+     left = pstart
+     right = pend + 1
+
+! only in right > left, the data is to be sorted
+     if ( right > left ) then
+
+! record list(pstart) at first
+         kaux = list(pstart)
+         kaux_indx = indx_list(pstart) 
+
+         do while ( .true. )
+
+! find out where list(left) < kaux
+             do while ( .true. )
+                 left = left + 1
+                 if ( list(left)  < kaux .or. left  >= pend   ) EXIT
+             enddo ! over do while loop
+
+! find out where list(right) > kaux
+             do while ( .true. )
+                 right = right - 1
+                 if ( list(right) > kaux .or. right <= pstart ) EXIT
+             enddo ! over do while loop
+
+! we should ensure right is larger than left
+             if ( right <= left ) EXIT
+
+! exchange data between list(left) and list(right)
+             taux = list(left)
+             list(left) = list(right)
+             list(right) = taux
+
+             taux_indx = indx_list(left)
+             indx_list(left) = indx_list(right)
+             indx_list(right) = taux_indx
+         enddo ! over do while loop
+
+! exchange data between list(pstart) and list(right)
+        list(pstart) = list(right)
+        list(right) = kaux
+        indx_list(pstart) = indx_list(right)
+        indx_list(right) = kaux_indx
+ 
+! sort data from pstart to right-1
+        call ctqmc_time_qscorer(pstart, right-1, nsize, list, indx_list)
+
+! sort data from right+1 to pend
+        call ctqmc_time_qscorer(right+1, pend, nsize, list, indx_list)
+
+     endif ! back if ( right > left ) block
+
+     return
+  end subroutine ctqmc_trace_qscorer
 
 !>>> using bubble sort algorithm to sort a real dataset, the slowest algorithm
   subroutine ctqmc_time_sorter(nsize, list)

@@ -1,16 +1,14 @@
 !-------------------------------------------------------------------------
-! project : pansy
+! project : manjushaka
 ! program : control    module
 ! source  : ctqmc_control.f90
 ! type    : module
 ! author  : li huang (email:huangli712@yahoo.com.cn)
-!           yilin wang (qhwyl2006@126.com)
 ! history : 09/15/2009 by li huang
 !           09/20/2009 by li huang
 !           11/01/2009 by li huang
 !           12/01/2009 by li huang
 !           02/23/2010 by li huang
-!           07/19/2014 by yilin wang
 ! purpose : define global control parameters for hybridization expansion
 !           version continuous time quantum Monte Carlo (CTQMC) quantum
 !           impurity solver and dynamical mean field theory (DMFT) self-
@@ -52,6 +50,38 @@
 ! if isbin == 2, with binning mode
      integer, public, save :: isbin  = 1
 
+! control flag: apply orthogonal polynomial representation to perform measurement
+! if isort == 1, use normal representation to measure G(\tau)
+! if isort == 2, use legendre polynomial to measure G(\tau)
+! if isort == 3, use chebyshev polynomial (the second kind) to measure G(\tau)
+! if isort == 4, use normal representation to measure G(\tau) and F(\tau)
+! if isort == 5, use legendre polynomial to measure G(\tau) and F(\tau)
+! if isort == 6, use chebyshev polynomial (the second kind) to measure G(\tau) and F(\tau)
+! note: if isort \in [1,3], we use ctqmc_make_hub1() to calculate the self
+! energy function, or else we use ctqmc_make_hub2().
+! note: as for the kernel polynomial representation, the default dirichlet
+! kernel is applied automatically. if you want to choose the other kernel,
+! please check the ctqmc_make_gtau() subroutine.
+! note: isort == 4, 5, and 6 are not implemeted so far.
+     integer, public, save :: isort  = 1
+
+! control flag: whether we measure the high order correlation function
+! if isvrt == 1, do nothing
+! if isvrt == 2, calculate spin-spin correlation function
+! if isvrt == 3, calculate orbital-orbital correlation function
+! if isvrt == 4, calculate both two-particle green's function and vertex function
+! if isvrt == 5, calculate both two-particle green's function and vertex function
+! note: when isvrt == 4 and isvrt == 5, both the two-particle green's and
+! vertex functions are computed by using two different algorithms.
+! note: when isvrt == 4, both the solver.twop.dat and solver.vrtx.dat files
+! are written, but the data contained in solver.vrtx.dat file is not right.
+! note: when isvrt == 5, both the solver.twop.dat and solver.vrtx.dat files
+! are written, the data contained in solver.twop.dat are less accurate than
+! those in solver.vrtx.dat, more specifically, the irreducible part of two-
+! particle green's function and vertex function.
+! note: isvrt == 2, 3, and 5 are not implemented so far.
+     integer, public, save :: isvrt  = 1
+
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! number of correlated bands
@@ -66,9 +96,26 @@
 ! number of atomic states (= 2**norbs)
      integer, public, save :: ncfgs  = 4
 
+! maximum allowed number of non-zero elements in F-matrix
+     integer, public, save :: nzero  = 128
+
 ! maximum number of continuous time quantum Monte Carlo quantum impurity
 ! solver plus dynamical mean field theory self-consistent iterations
      integer, public, save :: niter  = 20
+
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! maximum order for legendre polynomial
+     integer, public, save :: lemax  = 32
+
+! number of mesh points for legendre polynomial in [-1,1] range
+     integer, public, save :: legrd  = 20001
+
+! maximum order for chebyshev polynomial
+     integer, public, save :: chmax  = 32
+
+! number of mesh points for chebyshev polynomial in [-1,1] range
+     integer, public, save :: chgrd  = 20001
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -79,6 +126,12 @@
      integer, public, save :: mfreq  = 8193
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! number of matsubara frequency for the two-particle green's function
+     integer, public, save :: nffrq  = 32
+
+! number of bosonic frequncy for the two-particle green's function
+     integer, public, save :: nbfrq  = 8
 
 ! number of matsubara frequency sampling by continuous time quantum Monte
 ! Carlo quantum impurity solver
@@ -130,9 +183,12 @@
      integer, public, save :: nclean = 100000
 
 ! how often to sampling the gmat and paux (nmat and nnmat)
+! note: the measure periods for schi, sschi, ochi, oochi, g2_re, g2_im,
+! h2_re, and h2_im are also controlled by nmonte parameter.
      integer, public, save :: nmonte = 10
 
 ! how often to sampling the gtau and prob
+! note: the measure period for ftau is also controlled by ncarlo parameter.
      integer, public, save :: ncarlo = 10
 
 !=========================================================================
