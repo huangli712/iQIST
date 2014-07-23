@@ -10,7 +10,8 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/14/2014 by li huang
-!!! purpose : these subroutines are used to
+!!! purpose : these subroutines are used to provide some useful facilities
+!!!           including string manipulation, date time information, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
