@@ -31,7 +31,7 @@
 
      private
      public :: list_t
-     public :: list_data
+     public :: list_d
      public :: list_init
      public :: list_free
      public :: list_insert
@@ -40,7 +40,7 @@
      public :: list_next
 
   ! A public variable used as a MOLD for transfer()
-     integer, dimension(:), allocatable :: list_data
+     integer, dimension(:), allocatable :: list_d
 
   ! Linked list node
      type :: list_t
@@ -147,7 +147,6 @@ program test_list
      type(data_t), pointer :: p
   end type data_ptr
 
-
   type(list_t), pointer :: list => null()
   type(data_ptr) :: ptr
 
@@ -156,7 +155,7 @@ program test_list
   ptr%p%x = 2.7183
 
   ! Initialize the list with the first data element
-  call list_init(list, transfer(ptr, list_data))
+  call list_init(list, transfer(ptr, list_d))
   print *, 'Initializing list with data:', ptr%p
 
   ! Allocate a second data element
@@ -164,7 +163,7 @@ program test_list
   ptr%p%x = 0.5772
 
   ! Insert the second into the list
-  call list_insert(list, transfer(ptr, list_data))
+  call list_insert(list, transfer(ptr, list_d))
   print *, 'Inserting node with data:', ptr%p
 
   ! Retrieve data from the second node and free memory
