@@ -30,7 +30,7 @@
      implicit none
 
      private
-     public :: list_node_t
+     public :: list_t
      public :: list_data
      public :: list_init
      public :: list_free
@@ -43,17 +43,17 @@
      integer, dimension(:), allocatable :: list_data
 
   ! Linked list node
-     type :: list_node_t
+     type :: list_t
          private
          integer, dimension(:), pointer :: data => null()
-         type(list_node_t), pointer :: next => null()
-     end type list_node_t
+         type(list_t), pointer :: next => null()
+     end type list_t
 
   contains
 
 !!>>> Initialize a head node SELF and optionally store the provided DATA.
   subroutine list_init(self, data)
-     type(list_node_t), pointer :: self
+     type(list_t), pointer :: self
      integer, dimension(:), intent(in), optional :: data
 
      allocate(self)
@@ -69,9 +69,9 @@
 
 !!>>> Free the entire list and all data, beginning at SELF
   subroutine list_free(self)
-     type(list_node_t), pointer :: self
-     type(list_node_t), pointer :: current
-     type(list_node_t), pointer :: next
+     type(list_t), pointer :: self
+     type(list_t), pointer :: current
+     type(list_t), pointer :: next
 
      current => self
      do while (associated(current))
@@ -88,9 +88,9 @@
 
 !!>>> Insert a list node after SELF containing DATA (optional)
   subroutine list_insert(self, data)
-     type(list_node_t), pointer :: self
+     type(list_t), pointer :: self
      integer, dimension(:), intent(in), optional :: data
-     type(list_node_t), pointer :: next
+     type(list_t), pointer :: next
 
      allocate(next)
 
@@ -107,7 +107,7 @@
 
 !!>>> Store the encoded DATA in list node SELF
   subroutine list_put(self, data)
-     type(list_node_t), pointer :: self
+     type(list_t), pointer :: self
      integer, dimension(:), intent(in) :: data
 
      if (associated(self%data)) then
@@ -119,15 +119,15 @@
 
 !!>>> Return the DATA stored in the node SELF
   function list_get(self) result(data)
-     type(list_node_t), pointer :: self
+     type(list_t), pointer :: self
      integer, dimension(:), pointer :: data
      data => self%data
   end function list_get
 
 !!>>> Return the next node after SELF
   function list_next(self)
-     type(list_node_t), pointer :: self
-     type(list_node_t), pointer :: list_next
+     type(list_t), pointer :: self
+     type(list_t), pointer :: list_next
      list_next => self%next
   end function list_next
 
@@ -148,7 +148,7 @@ program test_list
   end type data_ptr
 
 
-  type(list_node_t), pointer :: list => null()
+  type(list_t), pointer :: list => null()
   type(data_ptr) :: ptr
 
   ! Allocate a new data element
