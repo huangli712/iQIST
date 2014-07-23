@@ -145,4 +145,40 @@
      !!    !!p = transfer( list_get(curr), p )
      !!    !!print *, p%str_key
      !!enddo
+
+     !!character(len = 10) :: aa = 'as1a4da3Gd'
+     !!integer :: c
+     !!print *, aa
+     !!call s_str_upcase(aa)
+     !!print *, aa
+     !!call s_str_lowcase(aa)
+     !!print *, aa
+     !!call s_str_count(aa,'x', c)
+     !!print *, c
+
+     !!character(len = 100) :: aa = 'ss   sdf  dfd 	sssv sfdf'
+     !!call s_str_compress(aa)
+     !!print *, aa
+
+     call poly(11)
+     call poly(.true.)
   end program test
+
+  subroutine poly(num)
+     class(*), target :: num
+     class(*), pointer :: p
+
+     p => num
+
+     select type (p)
+         !!type is (integer)
+         !!    do i = 1, 10
+         !!    enddo
+         !!    !!print *,'integer'
+         class is (integer)
+             print *, 'sss'
+         class default
+             print *, 'sdfa'
+     end select
+     print *,'sdf'
+  end subroutine poly
