@@ -111,13 +111,15 @@
 ! local variables
 ! position to start the match
      integer :: start
+     integer :: offset
 
      count = 0
      start = 0
      do
-         start = index( string(start+1:), substr )
+         offset = index( string(start+1:), substr )
+         if ( offset == 0 ) EXIT
+         start = start + offset
          count = count + 1
-         if ( start == 0 ) EXIT
      enddo ! over do loop
 
      return
