@@ -143,13 +143,17 @@
   end function list_get
 
 !!>>> list_next: return the next node after SELF
-  function list_next(self)
+  function list_next(self) result(next)
      implicit none
 
 ! external arguments
+! pointer to the list
      type(list_t), pointer :: self
-     type(list_t), pointer :: list_next
-     list_next => self%next
+
+! function value
+     type(list_t), pointer :: next
+
+     next => self%next
 
      return
   end function list_next
@@ -161,10 +165,11 @@
 
 ! external arguments
 ! pointer to the list
-     type(T_node), pointer :: self
+     type(list_t), pointer :: self
 
 ! local variables
-     type(T_node), pointer :: curr
+! pointer to current node
+     type(list_t), pointer :: curr
 
      if ( associated(self) ) then
          list_count = 1
