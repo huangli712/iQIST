@@ -45,18 +45,23 @@
      implicit none
 
 ! external arguments
+! pointer to new linked list
      type(list_t), pointer :: self
+
+! the data for the first element
      integer, dimension(:), intent(in), optional :: data
 
+! allocate memory for linked list
      allocate(self)
      nullify(self%next)
 
+! check whether we should make an empty node
      if ( present(data) ) then
          allocate( self%data( size(data) ) )
          self%data = data
      else
          nullify(self%data)
-     endif
+     endif ! back if block
 
      return
   end subroutine list_init
