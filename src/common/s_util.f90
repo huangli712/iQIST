@@ -4,8 +4,6 @@
 !!!           s_str_upcase
 !!!           s_str_lowcase
 !!!           s_str_count
-!!!           s_str_double
-!!!           s_str_integer
 !!!           s_str_compress
 !!! source  : s_util.f90
 !!! type    : subroutines
@@ -127,29 +125,33 @@
 
 !!>>> s_str_compress: return a copy of an input string with all whitespace
 !!>>> (spaces and tabs) removed.
-  function s_str_compress(input_string) result (output_string)
+  subroutine s_str_compress(string)
      implicit none
 
 ! external arguments
 ! character string to be compressed.
-     character( * ), intent(in) :: input_string
+     character( * ), intent(inout) :: string
+
+! local parameters
+! ASCII number for tab space ' ' and tab 
+     integer, parameter :: SPACE = 32
+     integer, parameter :: TAB   = 9
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! ASCII number for current character
+     integer :: curr_char
 
 ! return values
 ! input string with all whitespace removed before the first non-whitespace
 ! character, and from in-between non-whitespace characters.
-     character( len( input_string ) ) :: output_string
-
-! local parameters
-     integer, parameter :: IACHAR_SPACE = 32
-     integer, parameter :: IACHAR_TAB   = 9
-
-! local variables
-     integer :: i
-     integer :: j
-     integer :: curr_char
+     character( len( string ) ) :: output
 
 !
-! Definitions of a space and a tab character are made for the ASCII collating
+! definitions of a space and a tab character are made for the ASCII collating
 ! sequence. Each single character of the input string is checked against
 ! these definitions using the IACHAR() intrinsic. If the input string
 ! character DOESNOT correspond to a space or tab, it is not copied to
@@ -160,21 +162,24 @@
 !
 
 ! Initialise output string
-     output_string = ' '
+     output = ' '
 
 ! initialise output string "useful" length counter
      j = 0
 
 ! loop over string elements
-     do i=1,len(input_string)
+     do i=1,len(string)
 ! convert the current character to its position in the ASCII collating sequence
-         curr_char = iachar( input_string(i:i) )
+         curr_char = iachar( string(i:i) )
 ! if the character is NOT a space ' ' or a tab '->|', copy it to the output string.
-         if ( curr_char /= IACHAR_SPACE .and. curr_char /= IACHAR_TAB ) then
+         if ( curr_char /= SPACE .and. curr_char /= TAB ) then
              j = j + 1
-             output_string(j:j) = input_string(i:i)
+             output(j:j) = string(i:i)
          endif ! back if block
      enddo ! over i={1,len(input_string)} loop
 
+! copy output string to input string
+     string = output
+
      return
-  end function s_str_compress
+  end subroutine s_str_compress
