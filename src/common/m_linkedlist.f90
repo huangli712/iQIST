@@ -66,22 +66,26 @@
      implicit none
 
 ! external arguments
+! pointer to the list to be destroyed
      type(list_t), pointer :: self
 
 ! local variables
-     type(list_t), pointer :: current
+! pointer to the current node
+     type(list_t), pointer :: curr
+
+! pointer to the next node
      type(list_t), pointer :: next
 
-     current => self
-     do while ( associated(current) )
-         next => current%next
-         if ( associated(current%data) ) then
-             deallocate(current%data)
-             nullify(current%data)
+     curr => self
+     do while ( associated(curr) )
+         next => curr%next
+         if ( associated(curr%data) ) then
+             deallocate(curr%data)
+             nullify(curr%data)
          endif
-         deallocate(current)
-         nullify(current)
-         current => next
+         deallocate(curr)
+         nullify(curr)
+         curr => next
      enddo
 
      return
@@ -92,14 +96,20 @@
      implicit none
 
 ! external arguments
+! element in the linked list after which the new element should be inserted
      type(list_t), pointer :: self
+
+! the data for the new element
      integer, dimension(:), intent(in), optional :: data
 
 ! local variables
+! new node
      type(list_t), pointer :: next
 
+! allocate memory for new node
      allocate(next)
 
+! whether we should build an empty node
      if ( present(data) ) then
          allocate( next%data( size(data) ) )
          next%data = data
@@ -107,6 +117,7 @@
          nullify(next%data)
      endif
 
+! update the linked list
      next%next => self%next
      self%next => next
 
@@ -118,13 +129,22 @@
      implicit none
 
 ! external arguments
+! element in the linked list
      type(list_t), pointer :: self
+
+! the data to be stored
      integer, dimension(:), intent(in) :: data
 
+! release old memory at first
      if ( associated(self%data) ) then
          deallocate(self%data)
          nullify(self%data)
      endif
+
+! allocate new memory
+     allocate( self%data( size(data) ) )
+
+! save the data
      self%data = data
 
      return
@@ -135,8 +155,12 @@
      implicit none
 
 ! external arguments
+! element in the linked list
      type(list_t), pointer :: self
+
+! function value
      integer, dimension(:), pointer :: data
+
      data => self%data
 
      return
