@@ -1,20 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : linkedlist
-!!!           linkedlist@T_node
-!!!           linkedlist@T_data
-!!!           linkedlist@list_create
-!!!           linkedlist@list_destroy
-!!!           linkedlist@list_insert
-!!!           linkedlist@list_insert_head
-!!!           linkedlist@list_delete
-!!!           linkedlist@list_delete_head
-!!!           linkedlist@list_get
-!!!           linkedlist@list_set
-!!!           linkedlist@list_next
-!!!           linkedlist@list_count
-!!!           linkedlist@list_navigator
-!!!           linkedlist@list_display
 !!! source  : m_linkedlist.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -76,7 +62,12 @@
 
 !!>>> list_free: free the entire list and all data, beginning at SELF
   subroutine list_free(self)
+     implicit none
+
+! external arguments
      type(list_t), pointer :: self
+
+! local variables
      type(list_t), pointer :: current
      type(list_t), pointer :: next
 
@@ -90,7 +81,9 @@
          deallocate(current)
          nullify(current)
          current => next
-     end do
+     enddo
+
+     return
   end subroutine list_free
 
 !!>>> list_insert: insert a list node after SELF containing DATA (optional)
