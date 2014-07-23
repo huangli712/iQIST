@@ -26,6 +26,7 @@
      public :: list_put
      public :: list_get
      public :: list_next
+     public :: list_count
 
 ! a public variable used as a MOLD for transfer()
      integer, dimension(:), allocatable :: list_d
@@ -152,5 +153,31 @@
 
      return
   end function list_next
+
+!!>>> list_count: count the number of items in the list
+  integer &
+  function list_count(self)
+     implicit none
+
+! external arguments
+! pointer to the list
+     type(T_node), pointer :: self
+
+! local variables
+     type(T_node), pointer :: curr
+
+     if ( associated(self) ) then
+         list_count = 1
+         curr => self
+         do while ( associated(curr%next) )
+             list_count = list_count + 1
+             curr => curr%next
+         enddo ! over do while loop
+     else
+         list_count = 0
+     endif ! back if block
+
+     return
+  end function list_count
 
   end module linkedlist
