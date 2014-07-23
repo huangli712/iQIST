@@ -125,48 +125,6 @@
      return
   end subroutine s_str_count
 
-!!>>> s_str_double: convert a real number to a string
-  function s_str_double(num) result(str)
-     implicit none
-
-! external arguments
-! input double precision real number
-     double precision, intent(in) :: num
-
-! return value: a string
-     character(len=:) ,allocatable :: str
-
-! local variables
-! auxiliary string
-     character(len=28) :: base_str
-
-     write(base_str,*) num
-     str = trim( adjustl(base_str) )
-
-     return
-  end function s_str_double
-
-!!>>> s_str_integer: convert a integer number to a string
-  function s_str_integer(num) result(str)
-     implicit none
-
-! external arguments
-! input integer number
-     integer, intent(in) :: num
-
-! return value: a string
-     character(len=:) ,allocatable :: str
-
-! local variables
-! auxiliary string
-     character(len=12) :: base_str
-
-     write(base_str,*) num
-     str = trim( adjustl(base_str) )
-
-     return
-  end function s_str_integer
-
 !!>>> s_str_compress: return a copy of an input string with all whitespace
 !!>>> (spaces and tabs) removed.
   function s_str_compress(input_string) result (output_string)
