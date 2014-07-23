@@ -2527,8 +2527,6 @@
          trace = trace + trace_sector(i)
      enddo 
 
-     write(1234, '(F20.10)') trace
-
 ! store the diagonal elements of final product in ddmat(:,1)
      do i=1, nsectors
          indx = sectors(i)%istart
@@ -2918,6 +2916,9 @@
              call ctqmc_dmat_gemm( dim2, dim3, dim1, saved_a(1:dim2, 1:dim3, i, jsect), &
                                    right_mat(1:dim3, 1:dim1), tmp_mat(1:dim2, 1:dim1) )
              right_mat(1:dim2, 1:dim1) = tmp_mat(1:dim2, 1:dim1)
+
+             num_prod = num_prod + one
+
 ! this part should be recalcuated 
          elseif (is_save(i,isect) == 1) then 
 
@@ -2943,13 +2944,14 @@
                  vf = flvr_v( index_t_loc(j) ) 
                  call ctqmc_dmat_gemm(dim2, dim3, dim4, sectors(string(j))%myfmat(vf, vt)%item,&
                                       tmp_mat(1:dim3, 1:dim4), saved_b(1:dim2, 1:dim4, i, isect) ) 
-
+                 num_prod = num_prod + two
              enddo  ! over j={ops(i), ope(i)} loop
+
 ! multiply this part with the rest parts
              call ctqmc_dmat_gemm(dim2, dim4, dim1, saved_b(1:dim2, 1:dim4, i, isect), &
                                     right_mat(1:dim4, 1:dim1), tmp_mat(1:dim2, 1:dim1) ) 
              right_mat(1:dim2, 1:dim1) = tmp_mat(1:dim2, 1:dim1)
-
+             num_prod = num_prod + one
 ! save current part dimension to saved_b_nm
              saved_b_nm(1,i,isect) = string(ope(i)+1)
              saved_b_nm(2,i,isect) = string(ops(i))
@@ -2965,6 +2967,7 @@
              right_mat(k,l) = right_mat(k,l) * expt_t_loc(indx+k-1)
          enddo
      enddo
+     num_prod = num_prod + one
 
 ! store final product
      sectors((string(1)))%final_product(:,:,1) = right_mat(1:dim1, 1:dim1)

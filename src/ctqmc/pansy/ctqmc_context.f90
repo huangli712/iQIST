@@ -403,6 +403,9 @@
 ! the average dimension of the sectors
      real(dp), public, save :: ave_dim_sect
 
+! number of total matrices multiplication
+     real(dp), public, save :: num_prod
+
 ! the array contains all the sectors
      type(t_sector), public, save, allocatable :: sectors(:)
 
@@ -778,6 +781,7 @@
          saved_b = zero
          saved_a_nm = 0
          saved_b_nm = 0
+         num_prod = zero
 
          return
      end subroutine ctqmc_allocate_memory_sect
