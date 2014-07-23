@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : pansy
+! project : manjushaka
 ! program : ctqmc_dmft_selfer
 !           ctqmc_dmft_conver
 !           ctqmc_dmft_mixer
@@ -105,7 +105,7 @@
 
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'PANSY >>> DMFT hybridization function is updated'
+         write(mystd,'(2X,a)') 'MANJUSHAKA >>> DMFT hybridization function is updated'
          write(mystd,*)
      endif
 
@@ -167,9 +167,9 @@
 
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(3(2X,a,i3))') 'PANSY >>> cur_iter:', iter, 'min_iter:', minit, 'max_iter:', niter
-         write(mystd,'(2(2X,a,E10.4))') 'PANSY >>> sig_curr:', seps, 'eps_curr:', eps8
-         write(mystd,'( (2X,a,L1))') 'PANSY >>> self-consistent iteration convergence is ', convergence
+         write(mystd,'(3(2X,a,i3))') 'MANJUSHAKA >>> cur_iter:', iter, 'min_iter:', minit, 'max_iter:', niter
+         write(mystd,'(2(2X,a,E10.4))') 'MANJUSHAKA >>> sig_curr:', seps, 'eps_curr:', eps8
+         write(mystd,'( (2X,a,L1))') 'MANJUSHAKA >>> self-consistent iteration convergence is ', convergence
          write(mystd,*)
      endif
 

@@ -1,10 +1,9 @@
 !-------------------------------------------------------------------------
-! project : pansy
+! project : manjushaka
 ! program : ctqmc_core module
 !           ctqmc_clur module
 !           ctqmc_flvr module
 !           ctqmc_umat module
-!           ctqmc_fmat module
 !           ctqmc_mmat module
 !           ctqmc_gmat module
 !           ctqmc_wmat module
@@ -14,7 +13,7 @@
 ! source  : ctqmc_context.f90
 ! type    : module
 ! author  : li huang (email:huangli712@yahoo.com.cn)
-!         : yilin wang (qhwyl2006@126.com)
+!         : yilin wang (email:qhwyl2006@126.com)
 ! history : 09/16/2009 by li huang
 !           09/17/2009 by li huang
 !           09/19/2009 by li huang
@@ -30,7 +29,6 @@
 !           02/21/2010 by li huang
 !           02/23/2010 by li huang
 !           06/08/2010 by li huang
-!           07/16/2014 by yilin wang
 !           07/19/2014 by yilin wang
 ! purpose : define the key data structure and global arrays/variables for
 !           hybridization expansion version continuous time quantum Monte
@@ -63,6 +61,7 @@
 
 ! averaged sign values, used to measure the sign problem
      integer, public, save  :: caves = 0
+
 !-------------------------------------------------------------------------
 !::: core variables: real, matrix trace                                :::
 !-------------------------------------------------------------------------
@@ -262,8 +261,20 @@
 ! paux(4) : magnetic moment, < Sz >
      real(dp), public, save, allocatable :: paux(:)
 
+! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, totally-averaged
+     real(dp), public, save, allocatable :: schi(:)
+
+! orbital-orbital correlation function: < N(0) N(\tau) >, totally-averaged
+     real(dp), public, save, allocatable :: ochi(:)
+
 ! impurity occupation number, < n_i >
      real(dp), public, save, allocatable :: nmat(:)
+
+! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, orbital-resolved
+     real(dp), public, save, allocatable :: sschi(:,:)
+
+! orbital-orbital correlation function: < N(0) N(\tau) >, orbital-resolved
+     real(dp), public, save, allocatable :: oochi(:,:)
 
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
@@ -271,11 +282,39 @@
 ! diagonal elements of current matrix product of flavor part
 ! it is used to calculate the probability of eigenstates
      real(dp), public, save, allocatable :: ddmat(:,:)
+
+! used to calculate two-particle green's function, real part
+     real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
+
+! used to calculate two-particle green's function, imaginary part
+     real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
+
+! used to calculate vertex function, real part
+     real(dp), public, save, allocatable :: h2_re(:,:,:,:,:)
+
+! used to calculate vertex function, imaginary part
+     real(dp), public, save, allocatable :: h2_im(:,:,:,:,:)
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!-------------------------------------------------------------------------
+!::: orthogonal polynomial variables                                   :::
+!-------------------------------------------------------------------------
+! legendre polynomial defined on [-1,1]
+     real(dp), public, save, allocatable :: ppleg(:,:)
+
+! chebyshev polynomial defined on [-1,1]
+     real(dp), public, save, allocatable :: qqche(:,:)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
 !::: mesh data variables                                               :::
 !-------------------------------------------------------------------------
+! interval [-1,1] on which legendre polynomial is defined
+     real(dp), public, save, allocatable :: pmesh(:)
+
+! interval [-1,1] on which chebyshev polynomial is defined
+     real(dp), public, save, allocatable :: qmesh(:)
+
 ! imaginary time mesh
      real(dp), public, save, allocatable :: tmesh(:)
 
@@ -334,8 +373,16 @@
 ! impurity green's function, in imaginary time axis, matrix form
      real(dp), public, save, allocatable    :: gtau(:,:,:)
 
+! auxiliary correlation function, in imaginary time axis, matrix form
+! used to measure self-energy function
+     real(dp), public, save, allocatable    :: ftau(:,:,:)
+
 ! impurity green's function, in matsubara frequency axis, matrix form
      complex(dp), public, save, allocatable :: grnf(:,:,:)
+
+! auxiliary correlation function, in matsubara frequency axis, matrix form
+! used to measure self-energy function
+     complex(dp), public, save, allocatable :: frnf(:,:,:)
 
   end module ctqmc_gmat
 
@@ -389,7 +436,7 @@
 !=========================================================================
 !>>> containing the sector information for good quantum number algorithm
   module ctqmc_sect
-     use constants, only: dp
+     use constants
      use m_sector
  
      implicit none
@@ -436,6 +483,7 @@
 
   end module ctqmc_sect
 
+
 !=========================================================================
 !>>> module context                                                    <<<
 !=========================================================================
@@ -456,6 +504,7 @@
      use ctqmc_smat
 
      use ctqmc_sect
+
      implicit none
 
 ! status flag
@@ -585,10 +634,25 @@
 
          allocate(prob(ncfgs),        stat=istat)
          allocate(paux(  4  ),        stat=istat)
+         allocate(schi(ntime),        stat=istat)
+         allocate(ochi(ntime),        stat=istat)
          allocate(nmat(norbs),        stat=istat)
 
+         allocate(sschi(ntime,nband), stat=istat)
+         allocate(oochi(ntime,norbs), stat=istat)
          allocate(nnmat(norbs,norbs), stat=istat)
          allocate(ddmat(ncfgs,  2  ), stat=istat)
+
+         allocate(g2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+         allocate(g2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+         allocate(h2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+         allocate(h2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+
+         allocate(ppleg(legrd,lemax), stat=istat)
+         allocate(qqche(chgrd,chmax), stat=istat)
+
+         allocate(pmesh(legrd),       stat=istat)
+         allocate(qmesh(chgrd),       stat=istat)
 
          allocate(tmesh(ntime),       stat=istat)
          allocate(rmesh(mfreq),       stat=istat)
@@ -615,10 +679,25 @@
 
          prob  = zero
          paux  = zero
+         schi  = zero
+         ochi  = zero
          nmat  = zero
 
+         sschi = zero
+         oochi = zero
          nnmat = zero
          ddmat = zero
+
+         g2_re = zero
+         g2_im = zero
+         h2_re = zero
+         h2_im = zero
+
+         ppleg = zero
+         qqche = zero
+
+         pmesh = zero
+         qmesh = zero
 
          tmesh = zero
          rmesh = zero
@@ -670,8 +749,10 @@
 
 ! allocate memory
          allocate(gtau(ntime,norbs,norbs), stat=istat)
+         allocate(ftau(ntime,norbs,norbs), stat=istat)
 
          allocate(grnf(mfreq,norbs,norbs), stat=istat)
+         allocate(frnf(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
          if ( istat /= 0 ) then
@@ -680,8 +761,10 @@
 
 ! initialize them
          gtau = zero
+         ftau = zero
 
          grnf = czero
+         frnf = czero
 
          return
      end subroutine ctqmc_allocate_memory_gmat
@@ -776,11 +859,12 @@
          ope = 0
          saved_a = zero
          saved_b = zero
-         saved_a_nm = 0
-         saved_b_nm = 0
+         saved_a_nm = -2
+         saved_b_nm = -2
 
          return
      end subroutine ctqmc_allocate_memory_sect
+
 
 !=========================================================================
 !>>> deallocate memory subroutines                                     <<<
@@ -849,10 +933,25 @@
 
          if ( allocated(prob)  )   deallocate(prob )
          if ( allocated(paux)  )   deallocate(paux )
+         if ( allocated(schi)  )   deallocate(schi )
+         if ( allocated(ochi)  )   deallocate(ochi )
          if ( allocated(nmat)  )   deallocate(nmat )
 
+         if ( allocated(sschi) )   deallocate(sschi)
+         if ( allocated(oochi) )   deallocate(oochi)
          if ( allocated(nnmat) )   deallocate(nnmat)
          if ( allocated(ddmat) )   deallocate(ddmat)
+
+         if ( allocated(g2_re) )   deallocate(g2_re)
+         if ( allocated(g2_im) )   deallocate(g2_im)
+         if ( allocated(h2_re) )   deallocate(h2_re)
+         if ( allocated(h2_im) )   deallocate(h2_im)
+
+         if ( allocated(ppleg) )   deallocate(ppleg)
+         if ( allocated(qqche) )   deallocate(qqche)
+
+         if ( allocated(pmesh) )   deallocate(pmesh)
+         if ( allocated(qmesh) )   deallocate(qmesh)
 
          if ( allocated(tmesh) )   deallocate(tmesh)
          if ( allocated(rmesh) )   deallocate(rmesh)
@@ -887,8 +986,10 @@
          implicit none
 
          if ( allocated(gtau) )    deallocate(gtau)
+         if ( allocated(ftau) )    deallocate(ftau)
 
          if ( allocated(grnf) )    deallocate(grnf)
+         if ( allocated(frnf) )    deallocate(frnf)
 
          return
      end subroutine ctqmc_deallocate_memory_gmat

@@ -21,11 +21,11 @@
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N 
 subroutine atomic_mksectors_n()
-    use constants,         only: dp, mytmp
+    use constants,         only: dp, mytmp, zero
     use control,           only: norbs
     use m_basis_fullspace, only: dim_sub_n, bin_basis
     use m_sector,          only: alloc_one_sector, alloc_one_fmat
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors
+    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
 
     implicit none
 
@@ -37,10 +37,6 @@ subroutine atomic_mksectors_n()
     integer :: counter
     ! total electrons
     integer :: myntot
-    ! maximum dimension of sectors
-    integer :: max_dim_sectors
-    ! average dimension of sectors
-    real(dp) :: ave_dim_sectors
     ! can point to next sector 
     logical :: can  
     ! loop index
@@ -49,6 +45,8 @@ subroutine atomic_mksectors_n()
     !----------------------------------------------------------------
     ! allocate memory for global variables of sectors
     nsectors = norbs+1
+    max_dim_sect = 0
+    ave_dim_sect = zero
     call alloc_m_glob_sectors()
     ! now, build each sector
     counter = 1
@@ -111,17 +109,17 @@ subroutine atomic_mksectors_n()
     !----------------------------------------------------------------
     ! dump sector information for reference
     ! calculate the maximum and average dimensions of sectors
-    max_dim_sectors = 0
+    max_dim_sect = 0
     counter = 0 
     do i=1, nsectors
-        if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
+        if (sectors(i)%ndim > max_dim_sect) max_dim_sect = sectors(i)%ndim
         counter = counter + sectors(i)%ndim
     enddo
-    ave_dim_sectors = real(counter) / real(nsectors)
+    ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
-    write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
+    write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
@@ -139,11 +137,11 @@ end subroutine atomic_mksectors_n
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Sz 
 subroutine atomic_mksectors_nsz()
-    use constants,         only: dp, mytmp
+    use constants,         only: dp, mytmp, zero
     use control,           only: norbs, ncfgs
     use m_basis_fullspace, only: dim_sub_n, bin_basis
     use m_sector,          only: alloc_one_sector, alloc_one_fmat
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors
+    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
 
     implicit none
 
@@ -178,10 +176,6 @@ subroutine atomic_mksectors_nsz()
     integer :: ibasis
     ! loop index
     integer :: i,j,k,l
-    ! maximum dimension of sectors
-    integer :: max_dim_sectors
-    ! average dimension of sectors
-    real(dp) :: ave_dim_sectors
     ! can point to next sector 
     logical :: can  
 
@@ -255,6 +249,8 @@ subroutine atomic_mksectors_nsz()
     !----------------------------------------------------------------
     ! after we know how many sectors and the dimension of each sector,
     ! we can allocate memory for global variables for sectors
+    max_dim_sect = 0
+    ave_dim_sect = zero
     nsectors = nsect
     call alloc_m_glob_sectors()
     ! now we will build each sector
@@ -323,17 +319,17 @@ subroutine atomic_mksectors_nsz()
     !----------------------------------------------------------------
     ! dump sector information for reference
     ! calculate the maximum and average dimensions of sectors
-    max_dim_sectors = 0
+    max_dim_sect = 0
     counter = 0 
     do i=1, nsectors
-        if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
+        if (sectors(i)%ndim > max_dim_sect) max_dim_sect = sectors(i)%ndim
         counter = counter + sectors(i)%ndim
     enddo
-    ave_dim_sectors = real(counter) / real(nsectors)
+    ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
-    write(mytmp, '(a,F16.8)') '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
+    write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
@@ -357,11 +353,11 @@ end subroutine atomic_mksectors_nsz
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Sz, PS
 subroutine atomic_mksectors_nszps()
-    use constants,         only: dp, mytmp
+    use constants,         only: dp, mytmp, zero
     use control,           only: nband, norbs, ncfgs
     use m_basis_fullspace, only: dim_sub_n, bin_basis
     use m_sector,          only: alloc_one_sector, alloc_one_fmat         
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors
+    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
 
     implicit none
 
@@ -401,10 +397,6 @@ subroutine atomic_mksectors_nszps()
     integer :: ibasis
     ! loop index
     integer :: i,j,k,l
-    ! maximum dimension of sectors
-    integer :: max_dim_sectors
-    ! average dimension of sectors
-    real(dp) :: ave_dim_sectors
     ! can point to next sector
     logical :: can  
 
@@ -490,6 +482,8 @@ subroutine atomic_mksectors_nszps()
     !----------------------------------------------------------------
     ! after we know how many sectors and the dimension of each sector,
     ! we can allocate memory for global variables for sectors
+    max_dim_sect = 0
+    ave_dim_sect = zero
     nsectors = nsect
     call alloc_m_glob_sectors()
     ! now we will build each sector
@@ -568,17 +562,17 @@ subroutine atomic_mksectors_nszps()
     !----------------------------------------------------------------
     ! dump sector information for reference
     ! calculate the maximum and average dimensions of sectors
-    max_dim_sectors = 0
+    max_dim_sect = 0
     counter = 0 
     do i=1, nsectors
-        if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
+        if (sectors(i)%ndim > max_dim_sect) max_dim_sect = sectors(i)%ndim
         counter = counter + sectors(i)%ndim
     enddo
-    ave_dim_sectors = real(counter) / real(nsectors)
+    ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
-    write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
+    write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |       PS(i) |     nd&
                         im(i) |           j |    fock_basis(j,i) |  '
     do i=1, nsectors
@@ -603,11 +597,11 @@ end subroutine atomic_mksectors_nszps
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Jz 
 subroutine atomic_mksectors_njz()
-    use constants,         only: dp, mytmp
+    use constants,         only: dp, mytmp, zero
     use control,           only: norbs, ncfgs
     use m_basis_fullspace, only: dim_sub_n, bin_basis
     use m_sector,          only: alloc_one_sector, alloc_one_fmat         
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors
+    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
 
     implicit none
 
@@ -642,10 +636,6 @@ subroutine atomic_mksectors_njz()
     integer :: ibasis
     ! loop index
     integer :: i,j,k,l
-    ! maximum dimension of sectors
-    integer :: max_dim_sectors
-    ! average dimension of sectors
-    real(dp) :: ave_dim_sectors
     ! can point to next sector
     logical :: can  
 
@@ -720,6 +710,8 @@ subroutine atomic_mksectors_njz()
     !----------------------------------------------------------------
     ! after we know how many sectors and the dimension of each sector,
     ! we can allocate memory for global variables for sectors
+    max_dim_sect = 0
+    ave_dim_sect = zero
     nsectors = nsect
     call alloc_m_glob_sectors()
     ! now we will build each sector
@@ -788,17 +780,17 @@ subroutine atomic_mksectors_njz()
     !----------------------------------------------------------------
     ! dump sector information for reference
     ! calculate the maximum and average dimensions of sectors
-    max_dim_sectors = 0
+    max_dim_sect = 0
     counter = 0 
     do i=1, nsectors
-        if (sectors(i)%ndim > max_dim_sectors) max_dim_sectors = sectors(i)%ndim
+        if (sectors(i)%ndim > max_dim_sect) max_dim_sect = sectors(i)%ndim
         counter = counter + sectors(i)%ndim
     enddo
-    ave_dim_sectors = counter / real(nsectors)
+    ave_dim_sect = counter / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sectors
-    write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sectors
+    write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
+    write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Jz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
     do i=1, nsectors
         do j=1, sectors(i)%ndim
