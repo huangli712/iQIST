@@ -79,42 +79,70 @@
 ! free the list
      !!call list_free(list)
 
-     use linkedlist
-
-     implicit none
-
-     type data_t
-         character(len=32) :: str_key
-         character(len=32) :: str_value
-     end type data_t
-
-     type(data_t), pointer :: p
-     type(list_t), pointer :: list => null()
-     type(list_t), pointer :: curr => null()
-     integer :: i
-
-     allocate(p)
-     p%str_key = "key0"
-     p%str_value = "value0"
-     call list_init(list, transfer(p, list_d))
-     print *, list_count(list)
-
-     allocate(p)
-     p%str_key = "key1"
-     p%str_value = "value1"
-     call list_insert(list, transfer(p, list_d))
-     print *, list_count(list)
-
-     allocate(p)
-     p%str_key = "key2"
-     p%str_value = "value2"
-     call list_insert(list, transfer(p, list_d))
-     print *, list_count(list)
-
-     curr => list
-     do i=1,list_count(list)-1
-         curr => list_next(curr)
-         p = transfer( list_get(curr), p )
-         print *, p%str_key
-     enddo
+     !!use linkedlist
+     !!
+     !!implicit none
+     !!
+     !!type data_t
+     !!    character(len=32) :: str_key
+     !!    character(len=32) :: str_value
+     !!end type data_t
+     !!
+     !!type(data_t), pointer :: p
+     !!type(list_t), pointer :: list => null()
+     !!type(list_t), pointer :: curr => null()
+     !!integer :: i
+     !!
+     !!allocate(p)
+     !!p%str_key = "key0"
+     !!p%str_value = "value0"
+     !!call list_init(list, transfer(p, list_d))
+     !!print *, list_count(list)
+     !!
+     !!allocate(p)
+     !!p%str_key = "key1"
+     !!p%str_value = "value1"
+     !!call list_insert(list, transfer(p, list_d))
+     !!print *, list_count(list)
+     !!
+     !!allocate(p)
+     !!p%str_key = "key2"
+     !!p%str_value = "value2"
+     !!call list_insert(list, transfer(p, list_d))
+     !!print *, list_count(list)
+     !!
+     !!allocate(p)
+     !!p%str_key = "key3"
+     !!p%str_value = "value3"
+     !!call list_insert(list, transfer(p, list_d))
+     !!print *, list_count(list)
+     !!
+     !!curr => list
+     !!do i=1,list_count(list)-1
+     !!    curr => list_next(curr)
+     !!    p = transfer( list_get(curr), p )
+     !!    print *, p%str_key
+     !!enddo
+     !!
+     !!allocate(p)
+     !!p%str_key = "keyX"
+     !!p%str_value = "valueX"
+     !!call list_put(list_next(list_next(list_next(list))), transfer(p, list_d))
+     !!print *, list_count(list)
+     !!
+     !!curr => list
+     !!do i=1,list_count(list)-1
+     !!    curr => list_next(curr)
+     !!    p = transfer( list_get(curr), p )
+     !!    print *, p%str_key
+     !!enddo
+     !!
+     !!call list_free(list)
+     !!print *, associated(list%next%next), associated(list%data)
+     !!curr => list
+     !!do i=1,list_count(list)-1
+     !!    curr => list_next(curr)
+     !!    !!p = transfer( list_get(curr), p )
+     !!    !!print *, p%str_key
+     !!enddo
   end program test
