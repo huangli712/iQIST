@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
-!!!           07/18/2014 by li huang
+!!!           07/23/2014 by li huang
 !!! purpose : this purpose of this module is to implement a typical and
 !!!           useful data structure --- linked list.
 !!! status  : unstable
@@ -15,9 +15,27 @@
   module linkedlist
      implicit none
 
-     private
-     public :: list_t
+!!========================================================================
+!!>>> declare global data types                                        <<<
+!!========================================================================
+
+! a public variable used as a mold for transfer() subroutine
+     integer, dimension(:), allocatable :: list_d
+
+! node for the linked list, it contains a pointer pointing to next node,
+! and the integer pointer array is used to store data
+     type list_t
+         private
+         integer, dimension(:), pointer :: data => null()
+         type(list_t), pointer :: next => null()
+     end type list_t
+
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
+
      public :: list_d
+     public :: list_t
 
      public :: list_init
      public :: list_free
@@ -28,19 +46,9 @@
      public :: list_next
      public :: list_count
 
-! a public variable used as a MOLD for transfer()
-     integer, dimension(:), allocatable :: list_d
+  contains ! encapsulated functionality
 
-! linked list node
-     type list_t
-         private
-         integer, dimension(:), pointer :: data => null()
-         type(list_t), pointer :: next => null()
-     end type list_t
-
-  contains
-
-!!>>> list_init: initialize a head node SELF and optionally store the provided DATA.
+!!>>> list_init: initialize a head node self and optionally store the provided data
   subroutine list_init(self, data)
      implicit none
 
@@ -66,7 +74,7 @@
      return
   end subroutine list_init
 
-!!>>> list_free: free the entire list and all data, beginning at SELF
+!!>>> list_free: free the entire list and all data, beginning at self
   subroutine list_free(self)
      implicit none
 
@@ -84,19 +92,21 @@
      curr => self
      do while ( associated(curr) )
          next => curr%next
+! release memory for the internal data
          if ( associated(curr%data) ) then
              deallocate(curr%data)
              nullify(curr%data)
          endif
+! release memory for the node itself
          deallocate(curr)
          nullify(curr)
          curr => next
-     enddo
+     enddo ! over do while loop
 
      return
   end subroutine list_free
 
-!!>>> list_insert: insert a list node after SELF containing DATA (optional)
+!!>>> list_insert: insert a node after self containing data (optional)
   subroutine list_insert(self, data)
      implicit none
 
@@ -108,7 +118,7 @@
      integer, dimension(:), intent(in), optional :: data
 
 ! local variables
-! new node
+! pointer to new node
      type(list_t), pointer :: next
 
 ! allocate memory for new node
@@ -120,7 +130,7 @@
          next%data = data
      else
          nullify(next%data)
-     endif
+     endif ! back if block
 
 ! update the linked list
      next%next => self%next
@@ -129,7 +139,7 @@
      return
   end subroutine list_insert
 
-!!>>> list_put: store the encoded DATA in list node SELF
+!!>>> list_put: store the encoded data in list node self
   subroutine list_put(self, data)
      implicit none
 
@@ -155,7 +165,7 @@
      return
   end subroutine list_put
 
-!!>>> list_get: return the DATA stored in the node SELF
+!!>>> list_get: return the data stored in the node self
   function list_get(self) result(data)
      implicit none
 
@@ -171,7 +181,7 @@
      return
   end function list_get
 
-!!>>> list_next: return the next node after SELF
+!!>>> list_next: return the next node after self
   function list_next(self) result(next)
      implicit none
 
@@ -188,27 +198,29 @@
   end function list_next
 
 !!>>> list_count: count the number of items in the list
-  integer &
-  function list_count(self)
+  function list_count(self) result(counter)
      implicit none
 
 ! external arguments
 ! pointer to the list
      type(list_t), pointer :: self
 
+! function value
+     integer :: counter
+
 ! local variables
 ! pointer to current node
      type(list_t), pointer :: curr
 
      if ( associated(self) ) then
-         list_count = 1
+         counter = 1
          curr => self
          do while ( associated(curr%next) )
-             list_count = list_count + 1
+             counter = counter + 1
              curr => curr%next
          enddo ! over do while loop
      else
-         list_count = 0
+         counter = 0
      endif ! back if block
 
      return
