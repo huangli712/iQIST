@@ -26,321 +26,157 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!
-!!
-!!>>> VERY IMPORTANT
-!! in order to use the linked list (linkedlist) data structure, the user
-!! should define his/her own data type at first, namely, type T_data. Note
-!! that there are no pointers within it.
-!!
-!!
-
   module linkedlist
      implicit none
 
-!!========================================================================
-!!>>> declare global data types                                        <<<
-!!========================================================================
-
-! self-defined data structure which will be stored in the linked list
-     type T_data
-         logical             :: is_valid  ! used to judge whether it is fine
-         character(len = 32) :: str_key   ! string for key
-         character(len = 32) :: str_value ! string for value
-     end type T_data
-
-! node for the linked list, it contains a pointer pointing to next node,
-! and a T_data structure which is used to store data
-     type T_node
-         type (T_node), pointer :: next
-         type (T_data)          :: data
-     end type T_node
-
-!!========================================================================
-!!>>> declare accessibility for module routines                        <<<
-!!========================================================================
-
-     public :: T_node
-     public :: T_data
-
-     public :: list_create
-     public :: list_destroy
+     private
+     public :: list_node_t
+     public :: list_data
+     public :: list_init
+     public :: list_free
      public :: list_insert
-     public :: list_insert_head
-     public :: list_delete
-     public :: list_delete_head
+     public :: list_put
      public :: list_get
-     public :: list_set
      public :: list_next
-     public :: list_count
-     public :: list_display
 
-  contains ! encapsulated functionality
+  ! A public variable used as a MOLD for transfer()
+     integer, dimension(:), allocatable :: list_data
 
-!!>>> list_create: create and initialise a list
-  subroutine list_create(self, data)
-     implicit none
+  ! Linked list node
+     type :: list_node_t
+         private
+         integer, dimension(:), pointer :: data => null()
+         type(list_node_t), pointer :: next => null()
+     end type list_node_t
 
-! external arguments
-! pointer to new linked list
-     type(T_node), pointer    :: self
+  contains
 
-! the data for the first element
-     type(T_data), intent(in) :: data
+!!>>> Initialize a head node SELF and optionally store the provided DATA.
+  subroutine list_init(self, data)
+     type(list_node_t), pointer :: self
+     integer, dimension(:), intent(in), optional :: data
 
      allocate(self)
-     self%next => null()
-     self%data =  data
+     nullify(self%next)
 
-     return
-  end subroutine list_create
+     if (present(data)) then
+         allocate(self%data(size(data)))
+         self%data = data
+     else
+         nullify(self%data)
+     end if
+  end subroutine list_init
 
-!!>>> list_destroy: destroy an entire list
-  subroutine list_destroy(self)
-     implicit none
+!!>>> Free the entire list and all data, beginning at SELF
+  subroutine list_free(self)
+     type(list_node_t), pointer :: self
+     type(list_node_t), pointer :: current
+     type(list_node_t), pointer :: next
 
-! external arguments
-! pointer to the list to be destroyed
-     type(T_node), pointer :: self
+     current => self
+     do while (associated(current))
+         next => current%next
+         if (associated(current%data)) then
+             deallocate(current%data)
+             nullify(current%data)
+         end if
+         deallocate(current)
+         nullify(current)
+         current => next
+     end do
+  end subroutine list_free
 
-! local variables
-     type(T_node), pointer :: curr
-     type(T_node), pointer :: next
-
-     curr => self
-     do while ( associated(curr%next) )
-         next => curr%next
-         deallocate(curr)
-         nullify(curr)
-         curr => next
-     enddo ! over do while loop
-
-     return
-  end subroutine list_destroy
-
-!!>>> list_insert: insert a new element
+!!>>> Insert a list node after SELF containing DATA (optional)
   subroutine list_insert(self, data)
-     implicit none
-
-! external arguments
-! element in the linked list after which the new element should be inserted
-     type(T_node), pointer    :: self
-
-! the data for the new element
-     type(T_data), intent(in) :: data
-
-! local variables
-     type(T_node), pointer :: next
+     type(list_node_t), pointer :: self
+     integer, dimension(:), intent(in), optional :: data
+     type(list_node_t), pointer :: next
 
      allocate(next)
-     next%data =  data
+
+     if (present(data)) then
+         allocate(next%data(size(data)))
+         next%data = data
+     else
+         nullify(next%data)
+     end if
+
      next%next => self%next
      self%next => next
-
-     return
   end subroutine list_insert
 
-!!>>> list_insert_head: insert a new element before the first element
-  subroutine list_insert_head(self, data)
-     implicit none
+!!>>> Store the encoded DATA in list node SELF
+  subroutine list_put(self, data)
+     type(list_node_t), pointer :: self
+     integer, dimension(:), intent(in) :: data
 
-! external arguments
-! start of the list
-     type(T_node), pointer    :: self
+     if (associated(self%data)) then
+         deallocate(self%data)
+         nullify(self%data)
+     end if
+     self%data = data
+  end subroutine list_put
 
-! the data for the new element
-     type(T_data), intent(in) :: data
-
-! local variables
-     type(T_node), pointer :: elem
-
-     allocate(elem)
-     elem%data =  data
-     elem%next => self
-     self      => elem
-
-     return
-  end subroutine list_insert_head
-
-!!>>> list_delete: delete an element from the list
-  subroutine list_delete(self, elem)
-     implicit none
-
-! external arguments
-! header of the list
-     type(T_node), pointer :: self
-
-! element in the linked list to be removed
-     type(T_node), pointer :: elem
-
-! local variables
-     type(T_node), pointer :: curr
-     type(T_node), pointer :: prev
-
-     if ( associated(self,elem) ) then
-         self => elem%next
-         deallocate(elem)
-     else
-         curr => self
-         prev => self
-         do while ( associated(curr) )
-             if ( associated(curr,elem) ) then
-                 prev%next => curr%next
-                 deallocate(curr) ! Is also "elem"
-                 EXIT
-             endif
-             prev => curr
-             curr => curr%next
-         enddo ! over do while loop
-     endif ! back if block
-
-     return
-  end subroutine list_delete
-
-!!>>> list_delete_head: delete an element from the list
-  subroutine list_delete_head(self)
-     implicit none
-
-! external arguments
-! header of the list
-     type(T_node), pointer :: self
-
-! local variables
-     type(T_node), pointer :: curr
-
-! more than 1 node
-     if ( associated(self%next) ) then
-         curr => self
-         self => self%next
-         deallocate(curr)
-! only 1 node
-     else
-         deallocate(self)
-     endif ! back if block
-
-     return
-  end subroutine list_delete_head
-
-!!>>> list_get_data: get the data stored with a list element
-  function list_get(elem) result(data)
-     implicit none
-
-! external arguments
-! element in the linked list
-     type(T_node), pointer :: elem
-
-! return value
-     type(T_data)          :: data
-
-     data = elem%data
-
-     return
+!!>>> Return the DATA stored in the node SELF
+  function list_get(self) result(data)
+     type(list_node_t), pointer :: self
+     integer, dimension(:), pointer :: data
+     data => self%data
   end function list_get
 
-!!>>> list_put_data: store new data with a list element
-  subroutine list_set(elem, data)
-     implicit none
-
-! external arguments
-! element in the linked list
-     type(T_node), pointer    :: elem
-
-! the data to be stored
-     type(T_data), intent(in) :: data
-
-     elem%data = data
-
-     return
-  end subroutine list_set
-
-!!>>> list_next: return the next element (if any)
-  function list_next(elem) result(next)
-     implicit none
-
-! external arguments
-! element in the linked list
-     type(T_node), pointer :: elem
-     type(T_node), pointer :: next
-
-     next => elem%next
-
-     return
+!!>>> Return the next node after SELF
+  function list_next(self)
+     type(list_node_t), pointer :: self
+     type(list_node_t), pointer :: list_next
+     list_next => self%next
   end function list_next
 
-!!>>> list_count: count the number of items in the list
-  integer &
-  function list_count(self)
-     implicit none
+end module linkedlist
 
-! external arguments
-! pointer to the list
-     type(T_node), pointer :: self
+program test_list
+  use linkedlist
+  implicit none
 
-! local variables
-     type(T_node), pointer :: curr
+  ! Data is stored in data_t
+  type :: data_t
+     real :: x
+  end type data_t
 
-     if ( associated(self) ) then
-         list_count = 1
-         curr => self
-         do while ( associated(curr%next) )
-             list_count = list_count + 1
-             curr => curr%next
-         enddo ! over do while loop
-     else
-         list_count = 0
-     endif ! back if block
+  ! A container for storing data_t pointers
+  type :: data_ptr
+     type(data_t), pointer :: p
+  end type data_ptr
 
-     return
-  end function list_count
 
-!!>>> list_display: display all of the nodes in the list one by one
-  subroutine list_navigator(self)
-     implicit none
+  type(list_node_t), pointer :: list => null()
+  type(data_ptr) :: ptr
 
-! external arguments
-! pointer to the list
-     type(T_node), pointer :: self
+  ! Allocate a new data element
+  allocate(ptr%p)
+  ptr%p%x = 2.7183
 
-! local variables
-! pointer to the current node
-     type(T_node), pointer :: curr
+  ! Initialize the list with the first data element
+  call list_init(list, transfer(ptr, list_data))
+  print *, 'Initializing list with data:', ptr%p
 
-! node counter
-     integer :: cntr
+  ! Allocate a second data element
+  allocate(ptr%p)
+  ptr%p%x = 0.5772
 
-     if ( associated(self) ) then
-         cntr = 1
-         curr => self
-         call list_display(cntr, curr)
-         do while ( associated(curr%next) )
-             cntr = cntr + 1
-             curr => curr%next
-             call list_display(cntr, curr)
-         enddo ! over do while loop
-     endif ! back if block
+  ! Insert the second into the list
+  call list_insert(list, transfer(ptr, list_data))
+  print *, 'Inserting node with data:', ptr%p
 
-     return
-  end subroutine list_navigator
+  ! Retrieve data from the second node and free memory
+  ptr = transfer(list_get(list_next(list)), ptr)
+  print *, 'Second node data:', ptr%p
+  deallocate(ptr%p)
 
-!!>>> list_display: display the data contained in the node
-  subroutine list_display(cntr, curr)
-     implicit none
+  ! Retrieve data from the head node and free memory
+  ptr = transfer(list_get(list), ptr)
+  print *, 'Head node data:', ptr%p
+  deallocate(ptr%p)
 
-! external arguments
-! pointer to the current node
-     type(T_node), pointer  :: curr
-
-! node counter
-     integer, intent(in)    :: cntr
-
-! local variables
-! data stored in the current node
-     type(T_data) :: data
-
-     data = list_get(curr)
-     write(*,*) cntr, data%is_valid, data%str_key, data%str_value
-
-     return
-  end subroutine list_display
-
-  end module linkedlist
+  ! Free the list
+  call list_free(list)
+end program test_list
