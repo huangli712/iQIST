@@ -49,6 +49,7 @@
 
   contains
 
+!!>>> p_create:
   subroutine p_create()
      implicit none
 
@@ -61,6 +62,7 @@
      return
   end subroutine p_create
 
+!!>>> p_destroy:
   subroutine p_destroy()
      implicit none
 
@@ -69,6 +71,7 @@
      return
   end subroutine p_destroy
 
+!!>>> p_parse:
   subroutine p_parse(in_file)
      use, intrinsic :: iso_fortran_env
 
@@ -160,8 +163,8 @@
      curr => list_ptr
      do p=1,list_count(list_ptr)-1
          curr => list_next(curr)
-         p = transfer(list_get(curr), list_d)
-         print *, p%is_valid, p%str_key, p%str_value
+         data_ptr = transfer(list_get(curr), data_ptr)
+         print *, data_ptr%is_valid, data_ptr%str_key, data_ptr%str_value
      enddo
 
      return
