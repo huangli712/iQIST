@@ -167,4 +167,10 @@
      !!call s_linspace_z((0.01_dp,1.0_dp),(100.0_dp, 0.0_dp),100,x)
      !!print *, x
 
+     use parser
+
+     implicit none
+
+     call p_create() 
+     call p_parse('solver.ctqmc.in')
   end program test
