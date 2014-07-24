@@ -160,25 +160,11 @@
      !!call s_str_compress(aa)
      !!print *, aa
 
-     call poly(11)
-     call poly(.true.)
+     !!use constants, only : dp
+     !!implicit none
+
+     !!complex(dp) :: x(100)
+     !!call s_linspace_z((0.01_dp,1.0_dp),(100.0_dp, 0.0_dp),100,x)
+     !!print *, x
+
   end program test
-
-  subroutine poly(num)
-     class(*), target :: num
-     class(*), pointer :: p
-
-     p => num
-
-     select type (p)
-         !!type is (integer)
-         !!    do i = 1, 10
-         !!    enddo
-         !!    !!print *,'integer'
-         class is (integer)
-             print *, 'sss'
-         class default
-             print *, 'sdfa'
-     end select
-     print *,'sdf'
-  end subroutine poly
