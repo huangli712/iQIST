@@ -13,24 +13,36 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-  subroutine s_linspace_d(xmin,xmax,x)
-    implicit none
-    real(dp),intent(in) :: xmin,xmax
-    real(dp),intent(out) :: x(:)
-    integer :: i,n
-    n = size(x)
-    if (n == 1) then
-       if(xmin /= xmax) then
-          write(0,'("ERROR: Cannot call linspace with n=1 and xmin /= xmax")')
-          stop
-       else
-          x = xmin
-       end if
-    else
-       do i=1,n
-          x(i) = (xmax-xmin) * real(i-1,dp) / real(n-1,dp) + xmin
-       end do
-    end if
+  subroutine s_linspace_d(xmin, xmax, x)
+     use const, only : dp
+
+     implicit none
+
+! external arguments
+! left boundary
+     real(dp), intent(in)  :: xmin
+
+! right boundary
+     real(dp), intent(in)  :: xmax
+
+! output array, containing the linear mesh
+     real(dp), intent(out) :: x(:)
+
+! local variables
+! loop index
+     integer :: i
+
+! size of array x
+     integer :: n
+
+! get size of array x
+     n = size(x)
+
+     do i=1,n
+         x(i) = ( xmax - xmin ) * real(i-1,dp) / real(n-1,dp) + xmin
+     enddo ! over i={1,n} loop
+
+     return
   end subroutine s_linspace_d
 
   subroutine s_logspace_d(xmin,xmax,x)
