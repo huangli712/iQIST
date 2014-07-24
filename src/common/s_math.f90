@@ -13,8 +13,9 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-  subroutine s_linspace_d(xmin, xmax, x)
-     use const, only : dp
+!!>>> s_linspace_d: create a linear mesh x in interval [xmin, xmax]
+  subroutine s_linspace_d(xmin, xmax, n, x)
+     use constants, only : dp
 
      implicit none
 
@@ -25,34 +26,35 @@
 ! right boundary
      real(dp), intent(in)  :: xmax
 
+! size of array x
+     integer,  intent(in)  :: n
+
 ! output array, containing the linear mesh
-     real(dp), intent(out) :: x(:)
+     real(dp), intent(out) :: x(n)
 
 ! local variables
 ! loop index
      integer :: i
 
-! size of array x
-     integer :: n
-
-! get size of array x
-     n = size(x)
-
      do i=1,n
-         x(i) = ( xmax - xmin ) * real(i-1,dp) / real(n-1,dp) + xmin
+         x(i) = ( xmax - xmin ) * real(i - 1, dp) / real(n - 1, dp) + xmin
      enddo ! over i={1,n} loop
 
      return
   end subroutine s_linspace_d
 
   subroutine s_logspace_d(xmin,xmax,x)
-    implicit none
-    real(dp),intent(in) :: xmin,xmax
-    real(dp),intent(out) :: x(:)
-    if (size(x) == 1 .and. xmin /= xmax) then
-       write(0,'("ERROR: Cannot call logspace with n=1 and xmin /= xmax")')
-       stop
-    end if
-    call linspace(log10(xmin),log10(xmax),x)
-    x = 10._dp**x
+     use constants, only : dp
+
+     implicit none
+
+! external argumenst
+     real(dp), intent(in)  :: xmin
+     real(dp), intent(in)  :: xmax
+     real(dp), intent(out) :: x(:)
+
+     call s_linspace_d(log10(xmin),log10(xmax),x)
+     x = 10.0_dp**x
+
+     return
   end subroutine s_logspace_d
