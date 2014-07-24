@@ -13,7 +13,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> s_linspace_d: create a linear mesh x in interval [xmin, xmax]
+!!>>> s_linspace_d: create a linear mesh x in interval [xmin, xmax], real(dp) version
   subroutine s_linspace_d(xmin, xmax, n, x)
      use constants, only : dp
 
@@ -43,17 +43,27 @@
      return
   end subroutine s_linspace_d
 
-  subroutine s_logspace_d(xmin,xmax,x)
+!!>>> s_logspace_d: create a log mesh x in interval [xmin, xmax], real(dp) version
+  subroutine s_logspace_d(xmin, xmax, n, x)
      use constants, only : dp
 
      implicit none
 
-! external argumenst
+! external arguments
+! left boundary
      real(dp), intent(in)  :: xmin
-     real(dp), intent(in)  :: xmax
-     real(dp), intent(out) :: x(:)
 
-     call s_linspace_d(log10(xmin),log10(xmax),x)
+! right boundary
+     real(dp), intent(in)  :: xmax
+
+! size of array x
+     integer,  intent(in)  :: n
+
+! output array, containing the linear mesh
+     real(dp), intent(out) :: x(n)
+
+! we can use the s_linspace_d() subroutine
+     call s_linspace_d(log10(xmin), log10(xmax), x)
      x = 10.0_dp**x
 
      return
