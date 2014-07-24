@@ -84,6 +84,8 @@
      integer :: istat
      integer :: p, q
 
+     type(list_t), pointer :: curr => null()
+
      open(mytmp, file = trim(in_file), form = 'formatted', status = 'unknown')
 
      do
@@ -154,6 +156,13 @@
      enddo ! over do loop
 
      close(mytmp)
+
+     curr => list_ptr
+     do p=1,list_count(list_ptr)-1
+         curr => list_next(curr)
+         p = transfer(list_get(curr), list_d)
+         print *, p%is_valid, p%str_key, p%str_value
+     enddo
 
      return
   end subroutine p_parse
