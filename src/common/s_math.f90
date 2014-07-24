@@ -63,8 +63,38 @@
      real(dp), intent(out) :: x(n)
 
 ! we can use the s_linspace_d() subroutine
-     call s_linspace_d(log10(xmin), log10(xmax), x)
+     call s_linspace_d(log10(xmin), log10(xmax), n, x)
      x = 10.0_dp**x
 
      return
   end subroutine s_logspace_d
+
+!!>>> s_linspace_z: create a linear mesh x in interval [xmin, xmax], complex(dp) version
+  subroutine s_linspace_z(xmin, xmax, n, x)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! left boundary
+     complex(dp), intent(in)  :: xmin
+
+! right boundary
+     complex(dp), intent(in)  :: xmax
+
+! size of array x
+     integer,  intent(in)     :: n
+
+! output array, containing the linear mesh
+     complex(dp), intent(out) :: x(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     do i=1,n
+         x(i) = ( xmax - xmin ) * real(i - 1, dp) / real(n - 1, dp) + xmin
+     enddo ! over i={1,n} loop
+
+     return
+  end subroutine s_linspace_z
