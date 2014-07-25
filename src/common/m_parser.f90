@@ -82,30 +82,43 @@
      return
   end subroutine p_destroy
 
-!!>>> p_parse:
+!!>>> p_parse: parse the input/config file, and store the key-value pairs
+!!>>> to the linked list data structure
   subroutine p_parse(in_file)
-     use, intrinsic :: iso_fortran_env
+     use, intrinsic :: iso_fortran_env, only : iostat_end
 
      implicit none
 
 ! external arguments
+! filename for the input/config file
      character(len = *), intent(in) :: in_file
 
 ! local variables
-     character(len=100) :: string
-     character(len=100) :: str_key
-     character(len=100) :: str_value
-     integer :: istat
-     integer :: p, q
+! loop index
+     integer :: p
+     integer :: q
 
+! file status flag
+     integer :: istat
+
+! original string for line reading
+     character(len=100) :: string
+
+! string representation for key of key-value pair
+     character(len=100) :: str_key
+
+! string representation for value of key-value pair
+     character(len=100) :: str_value
+
+! pointer for the linked list structure, used to access it
      type(list_t), pointer :: curr => null()
 
+! open input/config file, here we do not judge whether the file exists
      open(mytmp, file = trim(in_file), form = 'formatted', status = 'unknown')
 
-     do
-! read one line from the input file
+     FILE_READING: do
+! read one line from the input file until we meet the end-of-file (EOF)
          read(mytmp, '(a100)', iostat = istat) string
-! meet the end-of-file, exit main loop
          if ( istat == iostat_end ) then
              EXIT
          else
@@ -173,7 +186,7 @@
              data_ptr%str_value = trim(str_value)
              call list_insert(list_ptr, transfer(data_ptr, list_d))
          endif
-     enddo ! over do loop
+     enddo FILE_READING ! over do loop
 
      close(mytmp)
 
