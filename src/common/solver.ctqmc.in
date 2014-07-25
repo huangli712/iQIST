@@ -5,7 +5,9 @@ NorbS : 24 ! sfdsf
 ! asdad
 # dddd
 
+    isscf : .false.
   nspIn : 2 #sdffddd
 ntime = 12 # sdffd ! sdddd
 
+mune : 10.45  ! chemical potential
 nparT            : 1 ! sdfsf # ssss $ fff

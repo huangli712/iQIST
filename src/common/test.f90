@@ -172,10 +172,18 @@
      implicit none
 
      integer :: norbs
+     real(dp) :: mune
+     logical :: isscf
 
+     norbs = 1
+     mune = 10.0_dp
+     isscf = .true.
+
+     print *, norbs, mune, isscf
      call p_create() 
      call p_parse('solver.ctqmc.in')
-     norbs = 1
      call p_get('norbs', norbs)
-     !!print *, norbs
+     call p_get('isscf', isscf)
+     call p_get('mune', mune)
+     print *, norbs, mune, isscf
   end program test

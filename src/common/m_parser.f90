@@ -151,7 +151,9 @@
 
 ! convert str_key and str_value to lowercase
              call s_str_lowcase(str_key)
+             call s_str_compress(str_key)
              call s_str_lowcase(str_value)
+             call s_str_compress(str_value)
 
 ! store the key-value pair in the linked list structure
              allocate(data_ptr)
@@ -164,12 +166,12 @@
 
      close(mytmp)
 
-!!     curr => list_ptr
-!!     do p=1,list_count(list_ptr)-1
-!!         curr => list_next(curr)
-!!         data_ptr = transfer(list_get(curr), data_ptr)
-!!         print *, data_ptr%is_valid, data_ptr%str_key, data_ptr%str_value
-!!     enddo
+     !!curr => list_ptr
+     !!do p=1,list_count(list_ptr)-1
+     !!    curr => list_next(curr)
+     !!    data_ptr = transfer(list_get(curr), data_ptr)
+     !!    print *, data_ptr%is_valid, data_ptr%str_key(1:3), data_ptr%str_value(1:3)
+     !!enddo
 
      return
   end subroutine p_parse
@@ -182,7 +184,6 @@
 
      character(len = 32) :: str_key
      character(len = 32) :: str_value
-     character(len = 32) :: str_key_cmp
      type(list_t), pointer :: curr => null()
 
      integer :: p, q
@@ -190,16 +191,14 @@
      str_key = in_key
      call s_str_compress(str_key)
      call s_str_lowcase(str_key)
-     !!print *, str_key
 
      curr => list_ptr
      do p=1,list_count(list_ptr)-1
          curr => list_next(curr)
          data_ptr  = transfer(list_get(curr), data_ptr)
-         str_key_cmp = data_ptr%str_key
-         call s_str_compress(str_key_cmp)
-         if ( trim(str_key) .eq. trim(str_key_cmp) ) then
+         if ( trim(str_key) .eq. trim(data_ptr%str_key) ) then
              str_value = data_ptr%str_value
+             call s_str_lowcase(str_value)
              call s_str_compress(str_value)
              EXIT
          endif
@@ -207,13 +206,14 @@
 
      select type (out_value)
          type is (integer)
-             print *, 'integer'
-             !!read(out_value, *) dsdf
-             print *, out_value
+             !!print *, 'integer', str_value
+             read (str_value,'(I10)') out_value
          type is (real(dp))
-             print *, 'real(dp)'
+             !!print *, 'real(dp)', str_value
+             read (str_value,'(F16.8)') out_value
          type is (logical)
-             print *, 'logical'
+             !!print *, 'logical', str_value
+             read (str_value,'(L4)') out_value
      end select
 
      return
