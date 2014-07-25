@@ -5,15 +5,16 @@
 !!!           parser@p_destroy
 !!!           parser@p_parse
 !!!           parser@p_get
+!!!           parser@p_get_vec
 !!! source  : m_parser.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
-!!!           07/24/2014 by li huang
+!!!           07/26/2014 by li huang
 !!! purpose : this purpose of this module is to implement a generic and
 !!!           flexible config/input file reader and analyzer.
 !!! status  : unstable
-!!! comment :
+!!! comment : this module depends on constants and linkedlist modules
 !!!-----------------------------------------------------------------------
 
   module parser
@@ -26,13 +27,17 @@
 !!>>> declare global data types                                        <<<
 !!========================================================================
 
+! data structure for the items in config/input files: key-value pair
      type data_t
          logical             :: is_valid
          character(len = 32) :: str_key
          character(len = 32) :: str_value
      end type data_t
 
+! pointer for the data_t structure
      type (data_t), pointer  :: data_ptr => null()
+
+! pointer for the list_t structure
      type (list_t), pointer  :: list_ptr => null()
 
 !!========================================================================
@@ -48,22 +53,27 @@
      public  :: p_get
      public  :: p_get_vec
 
-  contains
+  contains ! encapsulated functionality
 
-!!>>> p_create:
+!!>>> p_create: init the linked list structure and insert a fake element
   subroutine p_create()
      implicit none
 
+! allocate memory for data_ptr
      allocate(data_ptr)
+
+! setup a fake element
      data_ptr%is_valid = .false.
      data_ptr%str_key = "i_am_key"
      data_ptr%str_value = "i_am_value"
+
+! init the linked list structure and then insert the fake element
      call list_init(list_ptr, transfer(data_ptr, list_d))
 
      return
   end subroutine p_create
 
-!!>>> p_destroy:
+!!>>> p_destroy: free the linked list data structure
   subroutine p_destroy()
      implicit none
 
