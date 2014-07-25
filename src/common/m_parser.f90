@@ -240,20 +240,17 @@
      enddo ! over do loop
      curr => null()
 
-! convert str_value to out_value
+! convert str_value to out_value, here we only support the following
+! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
      select type (out_value)
-         type is (character(len=*))
-             print *, 'character', str_value
-             STOP
-         type is (integer)
-             !!print *, 'integer', str_value
-             read (str_value,'(I10)') out_value
-         type is (real(dp))
-             !!print *, 'real(dp)', str_value
+         type is (integer)          ! for integer
+             read (str_value,'(I10)')   out_value
+         type is (logical)          ! for logical
+             read (str_value,'(L4)')    out_value
+         type is (real(dp))         ! for double precision number
              read (str_value,'(F16.8)') out_value
-         type is (logical)
-             !!print *, 'logical', str_value
-             read (str_value,'(L4)') out_value
+         type is (character(len=*)) ! for character
+             out_value = str_value
          class default
              call s_print_error('p_get', 'unrecognize data type')
      end select
