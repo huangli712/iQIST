@@ -110,47 +110,46 @@
 ! string representation for value of key-value pair
      character(len=100) :: str_value
 
-! pointer for the linked list structure, used to access it
-     type(list_t), pointer :: curr => null()
-
 ! open input/config file, here we do not judge whether the file exists
      open(mytmp, file = trim(in_file), form = 'formatted', status = 'unknown')
 
-     FILE_READING: do
+     FILE_READING: do ! start reading the file
+
 ! read one line from the input file until we meet the end-of-file (EOF)
+! the line content is stored in string
          read(mytmp, '(a100)', iostat = istat) string
          if ( istat == iostat_end ) then
              EXIT
-         else
-! get rid of the empty and tab in the string
+         else ! it is not the end
+! get rid of the empty, tab, and null in the string
              call s_str_compress(string)
 
-! is it an empty string?
+! is it an empty string? if yes, then we turn to the next line
              if ( len_trim(string) == 0   ) then
                  CYCLE
-             endif
+             endif ! back if ( len_trim(string) == 0   ) block
 
-! is it a comment line starting with '#'?
+! is it a comment line starting with '#'? if yes, then we skip it
              if ( index(string, '#') == 1 ) then
                  CYCLE
-             endif
+             endif ! back if ( index(string, '#') == 1 ) block
 
-! is it a comment line starting with '!'?
+! is it a comment line starting with '!'? if yes, then we skip it
              if ( index(string, '!') == 1 ) then
                  CYCLE
-             endif
+             endif ! back if ( index(string, '!') == 1 ) block
 
 ! get rid of the comment part starting with '#'
              p = index(string, '#')
              if ( p > 0 ) then
                  string = string(0:p-1)
-             endif
+             endif ! back if ( p > 0 ) block
 
 ! get rid of the comment part starting with '!'
              p = index(string, '!')
              if ( p > 0 ) then
                  string = string(0:p-1)
-             endif
+             endif ! back if ( p > 0 ) block
 
 ! extract the key and value pair from the input string
 ! note that the user can use both ':' and '=' symbols to separate the key
@@ -160,18 +159,18 @@
              q = index(string, '=')
              if ( p == 0 .and. q == 0 ) then
                  call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
-             endif
+             endif ! back if ( p == 0 .and. q == 0 ) block
              if ( p >  0 .and. q >  0 ) then
                  call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
-             endif
+             endif ! back if ( p >  0 .and. q >  0 ) block
              if ( p > 0 ) then
                  str_key = string(0:p-1)
                  str_value = string(p+1:len(string))
-             endif
+             endif ! back if ( p > 0 ) block
              if ( q > 0 ) then
                  str_key = string(0:q-1)
                  str_value = string(q+1:len(string))
-             endif
+             endif ! back if ( q > 0 ) block
 
 ! convert str_key and str_value to lowercase
              call s_str_lowcase(str_key)
@@ -185,17 +184,12 @@
              data_ptr%str_key = trim(str_key)
              data_ptr%str_value = trim(str_value)
              call list_insert(list_ptr, transfer(data_ptr, list_d))
-         endif
+         endif ! back if ( istat == iostat_end ) block
+
      enddo FILE_READING ! over do loop
 
+! close the input/config file
      close(mytmp)
-
-     !!curr => list_ptr
-     !!do p=1,list_count(list_ptr)-1
-     !!    curr => list_next(curr)
-     !!    data_ptr = transfer(list_get(curr), data_ptr)
-     !!    print *, data_ptr%is_valid, data_ptr%str_key(1:3), data_ptr%str_value(1:3)
-     !!enddo
 
      return
   end subroutine p_parse
