@@ -1,11 +1,11 @@
 
 nband = 12 # sdsf
-norbs : 24 ! sfdsf
+NorbS : 24 ! sfdsf
 
 ! asdad
 # dddd
 
-  nspin : 2 #sdffddd
+  nspIn : 2 #sdffddd
 ntime = 12 # sdffd ! sdddd
 
-npart            : 1 ! sdfsf # ssss $ fff
+nparT            : 1 ! sdfsf # ssss $ fff

@@ -137,6 +137,7 @@
 ! ASCII number for tab space ' ' and tab 
      integer, parameter :: SPACE = 32
      integer, parameter :: TAB   = 9
+     integer, parameter :: NUL   = 0
 
 ! local variables
 ! loop index
@@ -173,7 +174,7 @@
 ! convert the current character to its position in the ASCII collating sequence
          curr_char = iachar( string(i:i) )
 ! if the character is NOT a space ' ' or a tab '->|', copy it to the output string.
-         if ( curr_char /= SPACE .and. curr_char /= TAB ) then
+         if ( curr_char /= SPACE .and. curr_char /= TAB .and. curr_char /= NUL ) then
              j = j + 1
              output(j:j) = string(i:i)
          endif ! back if block

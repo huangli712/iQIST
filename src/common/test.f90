@@ -171,6 +171,11 @@
 
      implicit none
 
+     integer :: norbs
+
      call p_create() 
      call p_parse('solver.ctqmc.in')
+     norbs = 1
+     call p_get('norbs', norbs)
+     !!print *, norbs
   end program test
