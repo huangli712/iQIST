@@ -194,35 +194,57 @@
      return
   end subroutine p_parse
 
+!!>>> p_get> retrieve the key-value pair from the linked list data structure
   subroutine p_get(in_key, out_value)
      implicit none
 
+! external arguments
+! string representation for the key of key-value pair
      character(len = *), intent(in) :: in_key
-     class(*), intent(inout) :: out_value
 
+! polymorphic object for the value of key-value pair
+     class(*), intent(inout)        :: out_value
+
+! local variables
+! loop index
+     integer :: p
+
+! string representation for the key
      character(len = 32) :: str_key
+
+! string representation for the value
      character(len = 32) :: str_value
+
+! pointer for the linked list data structure
      type(list_t), pointer :: curr => null()
 
-     integer :: p, q
-
+! copy in_key to str_key and the postprocess it
      str_key = in_key
      call s_str_compress(str_key)
      call s_str_lowcase(str_key)
 
+! visit the linked list and try to find out the required key-value pair
+! whose key is the same with str_key
      curr => list_ptr
      do p=1,list_count(list_ptr)-1
+! note that we skip the first element since it is invalid
          curr => list_next(curr)
          data_ptr  = transfer(list_get(curr), data_ptr)
+! the required key-value pair is found, extract the value to str_value
          if ( trim(str_key) .eq. trim(data_ptr%str_key) ) then
              str_value = data_ptr%str_value
              call s_str_lowcase(str_value)
              call s_str_compress(str_value)
              EXIT
-         endif
-     enddo
+         endif ! back if block
+     enddo ! over do loop
+     curr => null()
 
+! convert str_value to out_value
      select type (out_value)
+         type is (character(len=*))
+             print *, 'character', str_value
+             STOP
          type is (integer)
              !!print *, 'integer', str_value
              read (str_value,'(I10)') out_value
