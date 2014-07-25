@@ -1,13 +1,18 @@
-
+#########
+#### sdfsdf
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 nband = 12 # sdsf
 NorbS : 24 ! sfdsf
 
+symm = 1, 2, 4, 5
 ! asdad
 # dddd
 
-    isscf : .false.
+eimp : 0.0,-10.0, 0.353
+    isscf : F
   nspIn : 2 #sdffddd
 ntime = 12 # sdffd ! sdddd
 
+flip : .true., false, T
 mune : 10.45  ! chemical potential
 nparT            : 1 ! sdfsf # ssss $ fff

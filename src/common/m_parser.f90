@@ -46,6 +46,7 @@
      public  :: p_destroy
      public  :: p_parse
      public  :: p_get
+     public  :: p_get_vec
 
   contains
 
@@ -214,9 +215,83 @@
          type is (logical)
              !!print *, 'logical', str_value
              read (str_value,'(L4)') out_value
+         class default
+             call s_print_error('p_get', 'unrecognize data type')
      end select
 
      return
   end subroutine p_get
+
+  subroutine p_get_vec(in_key, out_value, nsize)
+     implicit none
+
+     integer, intent(in) :: nsize
+     character(len = *), intent(in) :: in_key
+     class(*), intent(inout) :: out_value(nsize)
+
+     character(len = 32) :: str_key
+     character(len = 32) :: str_value
+     type(list_t), pointer :: curr => null()
+
+     integer :: p, q, offset, int_aux
+     real(dp) :: real_aux
+     logical  :: bool_aux
+
+     str_key = in_key
+     call s_str_compress(str_key)
+     call s_str_lowcase(str_key)
+
+     curr => list_ptr
+     do p=1,list_count(list_ptr)-1
+         curr => list_next(curr)
+         data_ptr  = transfer(list_get(curr), data_ptr)
+         if ( trim(str_key) .eq. trim(data_ptr%str_key) ) then
+             str_value = data_ptr%str_value
+             call s_str_lowcase(str_value)
+             call s_str_compress(str_value)
+             EXIT
+         endif
+     enddo
+
+     select type (out_value)
+         type is (integer)
+             print *, 'integer', str_value
+             q=0
+             do p=1,nsize-1
+                 offset = index(str_value(q+1:), ',')
+                 read (str_value(q+1:q+offset-1), '(I10)') int_aux
+                 out_value(p) = int_aux
+                 q = q + offset
+             enddo
+             read(str_value(q+1:), '(I10)') int_aux
+             out_value(p) = int_aux
+         type is (real(dp))
+             print *, 'real(dp)', str_value
+             q=0
+             do p=1,nsize-1
+                 offset = index(str_value(q+1:), ',')
+                 read (str_value(q+1:q+offset-1), '(F16.8)') real_aux
+                 out_value(p) = real_aux
+                 q = q + offset
+             enddo
+             read(str_value(q+1:), '(F16.8)') real_aux
+             out_value(p) = real_aux
+         type is (logical)
+             print *, 'logical', str_value
+             q=0
+             do p=1,nsize-1
+                 offset = index(str_value(q+1:), ',')
+                 read (str_value(q+1:q+offset-1), '(L4)') bool_aux
+                 out_value(p) = bool_aux
+                 q = q + offset
+             enddo
+             read(str_value(q+1:), '(L4)') bool_aux
+             out_value(p) = bool_aux
+         class default
+             call s_print_error('p_get', 'unrecognize data type')
+     end select
+
+     return
+  end subroutine p_get_vec
 
   end module parser

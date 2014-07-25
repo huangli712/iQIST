@@ -173,11 +173,19 @@
 
      integer :: norbs
      real(dp) :: mune
+     real    :: mune0
      logical :: isscf
+     integer :: symm(4)
+     real(dp) :: eimp(3)
+     logical :: flip(3)
 
      norbs = 1
      mune = 10.0_dp
+     mune0 = 10.0
      isscf = .true.
+     symm = 1
+     eimp = 0.0_dp
+     flip = .false.
 
      print *, norbs, mune, isscf
      call p_create() 
@@ -186,4 +194,12 @@
      call p_get('isscf', isscf)
      call p_get('mune', mune)
      print *, norbs, mune, isscf
+     !!call p_get('mune0', mune0)
+     !!print *, mune0
+     call p_get_vec('symm', symm, 4)
+     call p_get_vec('eimp', eimp, 3)
+     call p_get_vec('flip', flip, 3)
+     print *, symm
+     print *, eimp
+     print *, flip
   end program test
