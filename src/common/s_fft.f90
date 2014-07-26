@@ -126,7 +126,7 @@
   end subroutine s_fft_forward
 
 !>>> fourier from matsubara frequency space backward to imaginary time space
-  subroutine ctqmc_fourier_backward(mfreq, fmat, ntime, ftau)
+  subroutine s_fft_backward(mfreq, fmat, ntime, ftau)
      use constants
      use control, only : beta
      use context, only : rmesh, tmesh
@@ -178,4 +178,4 @@
      ftau(ntime) = 3.0_dp * ftau(ntime-1) - 3.0_dp * ftau(ntime-2) + ftau(ntime-3)
 
      return
-  end subroutine ctqmc_fourier_backward
+  end subroutine s_fft_backward
