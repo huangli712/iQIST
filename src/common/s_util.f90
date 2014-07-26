@@ -419,45 +419,23 @@
      nmin = nsec / 60
      nsec = nsec - 60 * nmin
 
-# define prefix '>>> used time: '
-
-# define iolst1 prefix , mday, ' d ', mhou, ' h ', mmin, ' m in this iteration.'
-# define iolst2 prefix , mhou, ' h ', mmin, ' m in this iteration.'
-# define iolst3 prefix , mmin, ' m ', msec, ' s in this iteration.'
-# define iolst4 prefix , msec, ' s in this iteration.'
-
-# define iolst5 prefix , nday, ' d ', nhou, ' h ', nmin, ' m in total iteration.'
-# define iolst6 prefix , nhou, ' h ', nmin, ' m in total iteration.'
-# define iolst7 prefix , nmin, ' m ', nsec, ' s in total iteration.'
-# define iolst8 prefix , nsec, ' s in total iteration.'
-
-     if      ( mday > 0 ) then
-         write(mystd,'(4X,3(a,i2),a)')     iolst1
-
-     else if ( mhou > 0 ) then
-         write(mystd,'(4X,2(a,i2),a)')     iolst2
-
-     else if ( mmin > 0 ) then
-         write(mystd,'(4X,a,i2,a,f5.2,a)') iolst3
-
-     else
-         write(mystd,'(4X,a,f5.2,a)')      iolst4
-
+     write(mystd, '(4X, ">>> used time: ")', advance = 'no')
+     if ( mday > 0 ) then
+         write(mystd, '(i2, " d ")', advance = 'no') mday
      endif ! back if ( mday > 0 ) block
 
-     if      ( nday > 0 ) then
-         write(mystd,'(4X,3(a,i2),a)')     iolst5
+     if ( mhou > 0 ) then
+         write(mystd, '(i2, " h ")', advance = 'no') mhou
+     endif ! back if ( mhou > 0 ) block
 
-     else if ( nhou > 0 ) then
-         write(mystd,'(4X,2(a,i2),a)')     iolst6
+     if ( mmin > 0 ) then
+         write(mystd, '(i2, " m ")', advance = 'no') mmin
+     endif ! back if ( mmin > 0 ) block
 
-     else if ( nmin > 0 ) then
-         write(mystd,'(4X,a,i2,a,f5.2,a)') iolst7
-
-     else
-         write(mystd,'(4X,a,f5.2,a)')      iolst8
-
-     endif ! back if ( nday > 0 ) block
+     if ( msec > 0 ) then
+         write(mystd, '(f5.2, " s ")', advance = 'no') msec
+     endif ! back if ( msec > 0 ) block
+     write(mystd, '("in this iteration.")')
 
      return
   end subroutine s_time_analyzer
