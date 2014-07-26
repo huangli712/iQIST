@@ -133,22 +133,22 @@
 
 ! external arguments
 ! number of matsubara frequency points
-     integer, intent(in)     :: mfreq
+     integer, intent(in)   :: mfreq
 
 ! number of imaginary time points
-     integer, intent(in)     :: ntime
+     integer, intent(in)   :: ntime
 
 ! inverse temperature
-     real(dp), intent(in)    :: beta
+     real(dp), intent(in)  :: beta
 
 ! matsubara frequency mesh
-     real(dp), intent(in)    :: rmesh(mfreq)
+     real(dp), intent(in)  :: rmesh(mfreq)
 
 ! imaginary time mesh
-     real(dp), intent(in)    :: tmesh(ntime)
+     real(dp), intent(in)  :: tmesh(ntime)
 
 ! function on imaginary time axis
-     real(dp), intent(out)   :: ftau(ntime)
+     real(dp), intent(out) :: ftau(ntime)
 
 ! function on matsubara frequency axis
      complex(dp), intent(in) :: fmat(mfreq)
