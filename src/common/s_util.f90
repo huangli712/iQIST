@@ -338,7 +338,8 @@
 !!>>> date and time manipulation                                       <<<
 !!========================================================================
 
-!!>>> s_time_builder: returns a string containing date and time in human-readable format
+!!>>> s_time_builder: returns a string containing date and time in human
+!!>>> readable format
   subroutine s_time_builder(date_time_string)
      implicit none
 
@@ -378,8 +379,8 @@
      return
   end subroutine s_time_builder
 
-!>>> used to print the iteration timing information about continuous time
-! quantum Monte Carlo quantum impurity solver.
+!!>>> s_time_analyzer: used to print the iteration timing information about
+!!>>> continuous time quantum Monte Carlo quantum impurity solver.
   subroutine s_time_analyzer(time_iter, time_niter)
      use constants
 
@@ -405,6 +406,7 @@
 ! number of seconds
      real(dp) :: msec, nsec
 
+! run time for current iteration
      mday = time_iter / 86400
      msec = time_iter - 86400 * mday
      mhou = msec / 3600
@@ -430,6 +432,7 @@
      endif ! back if ( msec > 0 ) block
      write(mystd, '("in current iteration.")')
 
+! run time for total iteration
      nday = time_niter / 86400
      nsec = time_niter - 86400 * nday
      nhou = nsec / 3600
