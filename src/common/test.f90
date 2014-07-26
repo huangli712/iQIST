@@ -173,33 +173,37 @@
 
      integer :: norbs
      real(dp) :: mune
-     real    :: mune0
      logical :: isscf
+     character(len=100) :: solver
+
      integer :: symm(4)
      real(dp) :: eimp(3)
      logical :: flip(3)
+     character(len=12) :: model(3)
 
      norbs = 1
      mune = 10.0_dp
-     mune0 = 10.0
      isscf = .true.
+     solver = 'my_solver'
+
      symm = 1
      eimp = 0.0_dp
      flip = .false.
 
-     print *, norbs, mune, isscf
      call p_create() 
      call p_parse('solver.ctqmc.in')
      call p_get('norbs', norbs)
      call p_get('isscf', isscf)
      call p_get('mune', mune)
-     print *, norbs, mune, isscf
-     !!call p_get('mune0', mune0)
-     !!print *, mune0
+     call p_get('solver',solver)
+     print *, norbs, mune, isscf, trim(solver)
+
      call p_get_vec('symm', symm, 4)
      call p_get_vec('eimp', eimp, 3)
      call p_get_vec('flip', flip, 3)
+     call p_get_vec('model', model, 3)
      print *, symm
      print *, eimp
      print *, flip
+     print *, model
   end program test
