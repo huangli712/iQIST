@@ -93,8 +93,8 @@
      return
   end subroutine s_inv_zmat
 
-!>>> calculate the determinant of a real(dp) matrix
-  subroutine ctqmc_dmat_det(ndim, dmat, ddet)
+!!>>> s_det_dmat: calculate the determinant of a real(dp) matrix
+  subroutine s_det_dmat(ndim, dmat, ddet)
      use constants, only : dp, one, cone
 
      implicit none
@@ -151,9 +151,9 @@
 !-------------------------------------------------------------------------
 ! computes the LU factorization of a general m-by-n matrix, need lapack
 ! package, dgetrf subroutine
-     call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
+     call DGETRF(ndim, ndim, dmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
-         call ctqmc_print_exception('ctqmc_dmat_det','error in lapack subroutine dgetrf')
+         call s_print_exception('s_det_dmat','error in lapack subroutine dgetrf')
      endif
 
 ! calculate determinant
@@ -173,9 +173,9 @@
 ! method B: as a backup
 !-------------------------------------------------------------------------
 ! diagonalize amat to obtain its eigenvalues: wr and wi
-     call dgeev('N', 'N', ndim, amat, ndim, wr, wi, vl, ndim, vr, ndim, work, lwork, ierror)
+     call DGEEV('N', 'N', ndim, amat, ndim, wr, wi, vl, ndim, vr, ndim, work, lwork, ierror)
      if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmat_det','error in lapack subroutine dgeev')
+         call s_print_error('s_det_dmat','error in lapack subroutine dgeev')
      endif
 
 ! evaluate the final determinant
@@ -186,7 +186,7 @@
      ddet = cres
 
      return
-  end subroutine ctqmc_dmat_det
+  end subroutine s_det_dmat
 
 !>>> calculate the determinant of a complex(dp) matrix
   subroutine ctqmc_zmat_det(ndim, zmat, zdet)
