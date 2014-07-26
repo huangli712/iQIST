@@ -1,6 +1,22 @@
+!!!-----------------------------------------------------------------------
+!!! project : CSSL (Common Service Subroutines Library)
+!!! program : s_inv_dmat
+!!!           s_inv_zmat
+!!!           s_det_dmat
+!!!           s_det_zmat
+!!! source  : s_matrix.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 07/10/2014 by li huang
+!!!           07/26/2014 by li huang
+!!! purpose : these subroutines are used to encapsulate some important and
+!!!           frequently used linear algebra operations.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> invert real(dp) matrix using lapack subroutines
-  subroutine ctqmc_dmat_inv(ndim, dmat)
+!!>>> s_inv_dmat: invert real(dp) matrix using lapack subroutines
+  subroutine s_inv_dmat(ndim, dmat)
      use constants, only : dp
 
      implicit none
@@ -25,18 +41,18 @@
 ! package, dgetrf subroutine
      call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmat_inv','error in lapack subroutine dgetrf')
+         call s_print_error('s_inv_dmat','error in lapack subroutine dgetrf')
      endif
 
 ! computes the inverse of an LU-factored general matrix, need lapack
 ! package, dgetri subroutine
      call dgetri(ndim, dmat, ndim, ipiv, work, ndim, ierror)
      if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmat_inv','error in lapack subroutine dgetri')
+         call s_print_error('s_inv_dmat','error in lapack subroutine dgetri')
      endif
 
      return
-  end subroutine ctqmc_dmat_inv
+  end subroutine s_inv_dmat
 
 !>>> invert complex(dp) matrix using lapack subroutines
   subroutine ctqmc_zmat_inv(ndim, zmat)
