@@ -194,7 +194,7 @@
      return
   end subroutine p_parse
 
-!!>>> p_get> retrieve the key-value pair from the linked list data structure
+!!>>> p_get: retrieve the key-value pair from the linked list data structure
   subroutine p_get(in_key, out_value)
      implicit none
 
@@ -218,7 +218,7 @@
 ! pointer for the linked list data structure
      type(list_t), pointer :: curr => null()
 
-! copy in_key to str_key and the postprocess it
+! copy in_key to str_key and then postprocess it
      str_key = in_key
      call s_str_compress(str_key)
      call s_str_lowcase(str_key)
@@ -258,37 +258,66 @@
      return
   end subroutine p_get
 
+!!>>> p_get_vec: retrieve the key-value pair from the linked list data structure
+!!>>> here value is a array instead of single object
   subroutine p_get_vec(in_key, out_value, nsize)
      implicit none
 
-     integer, intent(in) :: nsize
-     character(len = *), intent(in) :: in_key
-     class(*), intent(inout) :: out_value(nsize)
+! external arguments
+! size of out_value
+     integer, intent(in)            :: nsize
 
+! string representation for the key of key-value pair
+     character(len = *), intent(in) :: in_key
+
+! polymorphic object for the value of key-value pair
+     class(*), intent(inout)        :: out_value(nsize)
+
+! local variables
+! loop index, and used to tokenize the string
+     integer  :: p
+     integer  :: q
+     integer  :: offset
+
+! auxiliary variables used in the converting process 
+     integer  :: int_aux
+     logical  :: bool_aux
+     real(dp) :: real_aux
+     character(len = 32) :: str_aux
+
+! string representation for the key
      character(len = 32) :: str_key
+
+! string representation for the value
      character(len = 32) :: str_value
+
+! pointer for the linked list data structure
      type(list_t), pointer :: curr => null()
 
-     integer :: p, q, offset, int_aux
-     real(dp) :: real_aux
-     logical  :: bool_aux
-
+! copy in_key to str_key and then postprocess it
      str_key = in_key
      call s_str_compress(str_key)
      call s_str_lowcase(str_key)
 
+! visit the linked list and try to find out the required key-value pair
+! whose key is the same with str_key
      curr => list_ptr
      do p=1,list_count(list_ptr)-1
+! note that we skip the first element since it is invalid
          curr => list_next(curr)
          data_ptr  = transfer(list_get(curr), data_ptr)
+! the required key-value pair is found, extract the value to str_value
          if ( trim(str_key) .eq. trim(data_ptr%str_key) ) then
              str_value = data_ptr%str_value
              call s_str_lowcase(str_value)
              call s_str_compress(str_value)
              EXIT
-         endif
-     enddo
+         endif ! back if block
+     enddo ! over do loop
+     curr => null()
 
+! convert str_value to out_value, here we only support the following
+! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
      select type (out_value)
          type is (integer)
              print *, 'integer', str_value
@@ -301,17 +330,6 @@
              enddo
              read(str_value(q+1:), '(I10)') int_aux
              out_value(p) = int_aux
-         type is (real(dp))
-             print *, 'real(dp)', str_value
-             q=0
-             do p=1,nsize-1
-                 offset = index(str_value(q+1:), ',')
-                 read (str_value(q+1:q+offset-1), '(F16.8)') real_aux
-                 out_value(p) = real_aux
-                 q = q + offset
-             enddo
-             read(str_value(q+1:), '(F16.8)') real_aux
-             out_value(p) = real_aux
          type is (logical)
              print *, 'logical', str_value
              q=0
@@ -323,8 +341,28 @@
              enddo
              read(str_value(q+1:), '(L4)') bool_aux
              out_value(p) = bool_aux
+         type is (real(dp))
+             print *, 'real(dp)', str_value
+             q=0
+             do p=1,nsize-1
+                 offset = index(str_value(q+1:), ',')
+                 read (str_value(q+1:q+offset-1), '(F16.8)') real_aux
+                 out_value(p) = real_aux
+                 q = q + offset
+             enddo
+             read(str_value(q+1:), '(F16.8)') real_aux
+             out_value(p) = real_aux
+         type is (character(len=*))
+             print *, 'character', str_value
+             q=0
+             do p=1,nsize-1
+                 offset = index(str_value(q+1:), ',')
+                 out_value(p) = str_value(q+1:q+offset-1)
+                 q = q + offset
+             enddo
+             out_value(p) = str_value(q+1:)
          class default
-             call s_print_error('p_get', 'unrecognize data type')
+             call s_print_error('p_get_vec', 'unrecognize data type')
      end select
 
      return
