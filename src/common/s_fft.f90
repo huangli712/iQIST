@@ -15,21 +15,27 @@
 !!!-----------------------------------------------------------------------
 
 !>>> s_fft_tails: calculate high frequency tails using K. Haule's trick
-  subroutine ctqmc_fourier_tails(tail, rmesh, fmat)
-     use constants
-     use control
+  subroutine s_fft_tails(rtail, mfreq, rmesh, green)
+     use constants, only : dp, zero, one
 
      implicit none
 
 ! external arguments
-! high frequency tail
-     real(dp), intent(out) :: tail
+! number of matsubara frequency points
+     integer, intent(in)     :: mfreq
+
+! the desired high frequency tail
+     real(dp), intent(out)   :: rtail
 
 ! matsubara frequency grid
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! function on matsubara frequency space
-     complex(dp), intent(in) :: fmat(mfreq)
+     complex(dp), intent(in) :: green(mfreq)
+
+! local parameters
+! number of matsubara frequency points used to calculate high frequency tail
+     integer, parameter :: ntail = 128
 
 ! local variables
 ! loop index
@@ -46,18 +52,18 @@
      Sxx = zero
      Sxy = zero
 
-     do j=mfreq - nfreq, mfreq
+     do j=mfreq - ntail, mfreq
          Sn = Sn + one
          Sx = Sx + one / rmesh(j)**2
-         Sy = Sy + aimag(fmat(j)) * rmesh(j)
+         Sy = Sy + aimag(green(j)) * rmesh(j)
          Sxx = Sxx + one / rmesh(j)**4
-         Sxy = Sxy + aimag(fmat(j)) * rmesh(j) / rmesh(j)**2
+         Sxy = Sxy + aimag(green(j)) * rmesh(j) / rmesh(j)**2
      enddo ! over j={mfreq - nfreq, mfreq} loop
 
-     tail = (Sx * Sxy - Sxx * Sy) / (Sn * Sxx - Sx * Sx)
+     rtail = (Sx * Sxy - Sxx * Sy) / (Sn * Sxx - Sx * Sx)
 
      return
-  end subroutine ctqmc_fourier_tails
+  end subroutine s_fft_tails
 
 !>>> fourier from imaginary time space forward to matsubara frequency space
 ! using linear fourier algorithm
