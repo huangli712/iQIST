@@ -126,22 +126,29 @@
   end subroutine s_fft_forward
 
 !>>> fourier from matsubara frequency space backward to imaginary time space
-  subroutine s_fft_backward(mfreq, fmat, ntime, ftau)
-     use constants
-     use control, only : beta
-     use context, only : rmesh, tmesh
+  subroutine s_fft_backward(beta, mfreq, rmesh, fmat, ntime, tmesh, ftau)
+     use constants, only : dp, zero
 
      implicit none
 
 ! external arguments
 ! number of matsubara frequency points
-     integer, intent(in) :: mfreq
+     integer, intent(in)     :: mfreq
 
 ! number of imaginary time points
-     integer, intent(in) :: ntime
+     integer, intent(in)     :: ntime
+
+! inverse temperature
+     real(dp), intent(in)    :: beta
+
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(mfreq)
+
+! imaginary time mesh
+     real(dp), intent(in)    :: tmesh(ntime)
 
 ! function on imaginary time axis
-     real(dp), intent(out) :: ftau(ntime)
+     real(dp), intent(out)   :: ftau(ntime)
 
 ! function on matsubara frequency axis
      complex(dp), intent(in) :: fmat(mfreq)
