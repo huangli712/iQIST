@@ -167,43 +167,57 @@
      !!call s_linspace_z((0.01_dp,1.0_dp),(100.0_dp, 0.0_dp),100,x)
      !!print *, x
 
-     use parser
+     !!use parser
+
+     !!implicit none
+
+     !!integer :: norbs
+     !!real(dp) :: mune
+     !!logical :: isscf
+     !!character(len=100) :: solver
+
+     !!integer :: symm(4)
+     !!real(dp) :: eimp(3)
+     !!logical :: flip(3)
+     !!character(len=12) :: model(3)
+
+     !!norbs = 1
+     !!mune = 10.0_dp
+     !!isscf = .true.
+     !!solver = 'my_solver'
+
+     !!symm = 1
+     !!eimp = 0.0_dp
+     !!flip = .false.
+
+     !!call p_create() 
+     !!call p_parse('solver.ctqmc.in')
+     !!call p_get('norbs', norbs)
+     !!call p_get('isscf', isscf)
+     !!call p_get('mune', mune)
+     !!call p_get('solver',solver)
+     !!print *, norbs, mune, isscf, trim(solver)
+
+     !!call p_get_vec('symm', symm, 4)
+     !!call p_get_vec('eimp', eimp, 3)
+     !!call p_get_vec('flip', flip, 3)
+     !!call p_get_vec('model', model, 3)
+     !!print *, symm
+     !!print *, eimp
+     !!print *, flip
+     !!print *, model
+
+     use constants
 
      implicit none
 
-     integer :: norbs
-     real(dp) :: mune
-     logical :: isscf
-     character(len=100) :: solver
+     real(dp) :: aa(5)
+     aa(1) = 1.0
+     aa(2) = 3.0
+     aa(3) = 2.0
+     aa(4) = -1.0
+     aa(5) = 0.0
 
-     integer :: symm(4)
-     real(dp) :: eimp(3)
-     logical :: flip(3)
-     character(len=12) :: model(3)
-
-     norbs = 1
-     mune = 10.0_dp
-     isscf = .true.
-     solver = 'my_solver'
-
-     symm = 1
-     eimp = 0.0_dp
-     flip = .false.
-
-     call p_create() 
-     call p_parse('solver.ctqmc.in')
-     call p_get('norbs', norbs)
-     call p_get('isscf', isscf)
-     call p_get('mune', mune)
-     call p_get('solver',solver)
-     print *, norbs, mune, isscf, trim(solver)
-
-     call p_get_vec('symm', symm, 4)
-     call p_get_vec('eimp', eimp, 3)
-     call p_get_vec('flip', flip, 3)
-     call p_get_vec('model', model, 3)
-     print *, symm
-     print *, eimp
-     print *, flip
-     print *, model
+     call s_qsorter(5, aa)
+     print *, aa
   end program test
