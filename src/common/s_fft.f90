@@ -68,7 +68,7 @@
 !>>> fourier from imaginary time space forward to matsubara frequency space
 ! using linear fourier algorithm
   subroutine s_fft_forward(ntime, tmesh, ftau, mfreq, rmesh, fmat)
-     use constants, only : dp
+     use constants, only : dp, zero
 
      implicit none
 
