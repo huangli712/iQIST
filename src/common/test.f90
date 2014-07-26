@@ -207,17 +207,22 @@
      !!print *, flip
      !!print *, model
 
-     use constants
+     !!use constants
 
-     implicit none
+     !!implicit none
 
-     real(dp) :: aa(5)
-     aa(1) = 1.0
-     aa(2) = 3.0
-     aa(3) = 2.0
-     aa(4) = -1.0
-     aa(5) = 0.0
+     !!real(dp) :: aa(5)
+     !!aa(1) = 1.0
+     !!aa(2) = 3.0
+     !!aa(3) = 2.0
+     !!aa(4) = -1.0
+     !!aa(5) = 0.0
 
-     call s_qsorter(5, aa)
-     print *, aa
+     !!call s_qsorter(5, aa)
+     !!print *, aa
+
+     !!use constants
+
+     !!implicit none
+     !!call s_time_analyzer(20.0_dp, 1000030.0_dp)
   end program test
