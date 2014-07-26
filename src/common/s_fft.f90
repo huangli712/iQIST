@@ -68,16 +68,25 @@
 !>>> fourier from imaginary time space forward to matsubara frequency space
 ! using linear fourier algorithm
   subroutine s_fft_forward(beta, ntime, tmesh, ftau, mfreq, rmesh, fmat)
-     use constants
+     use constants, only : dp
 
      implicit none
 
 ! external arguments
-! number of matsubara frequency points
-     integer, intent(in) :: mfreq
-
 ! number of imaginary time points
-     integer, intent(in) :: ntime
+     integer, intent(in)  :: ntime
+
+! number of matsubara frequency points
+     integer, intent(in)  :: mfreq
+
+! inverse temperature
+     real(dp), intent(in) :: beta
+
+! imaginary time mesh
+     real(dp), intent(in) :: tmesh(ntime)
+
+! matsubara frequency mesh
+     real(dp), intent(in) :: rmesh(mfreq)
 
 ! function on imaginary time axis
      real(dp), intent(in) :: ftau(ntime)
