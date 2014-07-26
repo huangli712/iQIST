@@ -4,10 +4,12 @@
 nband = 12 # sdsf
 NorbS : 24 ! sfdsf
 
+solver : ctqmc
 symm = 1, 2, 4, 5
 ! asdad
 # dddd
 
+model = anderson, hubbard, my
 eimp : 0.0,-10.0, 0.353
     isscf : F
   nspIn : 2 #sdffddd
