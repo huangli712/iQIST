@@ -1,6 +1,9 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
 !!! program : s_assert
+!!!           s_sorter
+!!!           s_qsorter
+!!!           s_qscorer
 !!!           s_str_upcase
 !!!           s_str_lowcase
 !!!           s_str_count
@@ -10,6 +13,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/14/2014 by li huang
+!!!           07/26/2014 by li huang
 !!! purpose : these subroutines are used to provide some useful facilities
 !!!           including string manipulation, date time information, etc.
 !!! status  : unstable
@@ -36,7 +40,7 @@
   end subroutine s_assert
 
 !!========================================================================
-!!>>> assertion checker                                                <<<
+!!>>> sort algorithm                                                   <<<
 !!========================================================================
 
 !!>>> s_sorter: using bubble sort algorithm to sort a real dataset, the slowest algorithm
