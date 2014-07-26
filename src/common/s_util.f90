@@ -36,6 +36,148 @@
   end subroutine s_assert
 
 !!========================================================================
+!!>>> assertion checker                                                <<<
+!!========================================================================
+
+!!>>> s_sorter: using bubble sort algorithm to sort a real dataset, the slowest algorithm
+  subroutine s_sorter(nsize, list)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! grab the number of values from the calling code
+     integer, intent(in) :: nsize
+
+! dataset to be sorted
+     real(dp), intent(inout) :: list(nsize)
+
+! local variables
+! dataset index
+     integer  :: i = 0
+     integer  :: j = 0
+
+! dummy variables
+     real(dp) :: swap
+
+! basically we just loop through every element to compare it against
+! every other element
+! this loop increments i which is our starting point for the comparison
+     sort_loop1: do i=nsize,1,-1
+! this loop increments j which is the ending point for the comparison
+         sort_loop2: do j=1,i-1
+! swap the two elements here
+             exchange: if ( list(j) > list(j+1) ) then
+                 swap = list(j)
+                 list(j) = list(j+1)
+                 list(j+1) = swap
+             endif exchange
+         enddo sort_loop2 ! over j={1,i-1} loop
+     enddo sort_loop1 ! over i={nsize,1,-1} loop
+
+     return
+  end subroutine s_sorter
+
+!!>>> s_qsorter: sets up for the quick sort recursive method
+  subroutine s_qsorter(nsize, list)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! grab the number of values from the calling code
+     integer, intent(in) :: nsize
+
+! dataset to be sorted
+     real(dp), intent(inout) :: list(nsize)
+
+! kicks off the recursive process
+     call s_qscorer(1, nsize, nsize, list)
+
+     return
+  end subroutine s_qsorter
+
+!!>>> s_qscorer: this is the actually recursive portion of the quicksort algorithm
+!!>>> note: do not call it directly, please use s_qsorter() insteadly
+  recursive &
+  subroutine s_qscorer(pstart, pend, nsize, list)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! start point
+     integer, intent(in) :: pstart
+
+! end point
+     integer, intent(in) :: pend
+
+! size of array
+     integer, intent(in) :: nsize
+
+! dataset to be sorted
+     real(dp), intent(inout) :: list(nsize)
+
+! local variables
+! used to find out list(left) > kaux and list(right) < kaux
+     integer  :: left, right
+
+! used to record list(pstart)
+     real(dp) :: kaux
+
+! used to swap data
+     real(dp) :: taux
+
+! setup left and right
+     left = pstart
+     right = pend + 1
+
+! only in right > left, the data is to be sorted
+     if ( right > left ) then
+
+! record list(pstart) at first
+         kaux = list(pstart)
+
+         do while ( .true. )
+
+! find out where list(left) < kaux
+             do while ( .true. )
+                 left = left + 1
+                 if ( list(left)  > kaux .or. left  >= pend   ) EXIT
+             enddo ! over do while loop
+
+! find out where list(right) > kaux
+             do while ( .true. )
+                 right = right - 1
+                 if ( list(right) < kaux .or. right <= pstart ) EXIT
+             enddo ! over do while loop
+
+! we should ensure right is larger than left
+             if ( right <= left ) EXIT
+
+! exchange data between list(left) and list(right)
+             taux = list(left)
+             list(left) = list(right)
+             list(right) = taux
+
+         enddo ! over do while loop
+
+! exchange data between list(pstart) and list(right)
+        list(pstart) = list(right)
+        list(right) = kaux
+
+! sort data from pstart to right-1
+        call s_qscorer(pstart, right-1, nsize, list)
+
+! sort data from right+1 to pend
+        call s_qscorer(right+1, pend, nsize, list)
+
+     endif ! back if ( right > left ) block
+
+     return
+  end subroutine s_qscorer
+
+!!========================================================================
 !!>>> string manipulation                                              <<<
 !!========================================================================
 
