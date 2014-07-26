@@ -283,7 +283,6 @@
      integer  :: int_aux
      logical  :: bool_aux
      real(dp) :: real_aux
-     character(len = 32) :: str_aux
 
 ! string representation for the key
      character(len = 32) :: str_key
@@ -319,48 +318,44 @@
 ! convert str_value to out_value, here we only support the following
 ! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
      select type (out_value)
-         type is (integer)
-             print *, 'integer', str_value
-             q=0
+         type is (integer)          ! for integer
+             q = 0
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
                  read (str_value(q+1:q+offset-1), '(I10)') int_aux
                  out_value(p) = int_aux
                  q = q + offset
-             enddo
+             enddo ! over p={1,nsize-1} loop
              read(str_value(q+1:), '(I10)') int_aux
-             out_value(p) = int_aux
-         type is (logical)
-             print *, 'logical', str_value
-             q=0
+             out_value(nsize) = int_aux
+         type is (logical)          ! for logical
+             q = 0
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
                  read (str_value(q+1:q+offset-1), '(L4)') bool_aux
                  out_value(p) = bool_aux
                  q = q + offset
-             enddo
+             enddo ! over p={1,nsize-1} loop
              read(str_value(q+1:), '(L4)') bool_aux
-             out_value(p) = bool_aux
-         type is (real(dp))
-             print *, 'real(dp)', str_value
-             q=0
+             out_value(nsize) = bool_aux
+         type is (real(dp))         ! for double precision number
+             q = 0
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
                  read (str_value(q+1:q+offset-1), '(F16.8)') real_aux
                  out_value(p) = real_aux
                  q = q + offset
-             enddo
+             enddo ! over p={1,nsize-1} loop
              read(str_value(q+1:), '(F16.8)') real_aux
-             out_value(p) = real_aux
-         type is (character(len=*))
-             print *, 'character', str_value
-             q=0
+             out_value(nsize) = real_aux
+         type is (character(len=*)) ! for character
+             q = 0
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
                  out_value(p) = str_value(q+1:q+offset-1)
                  q = q + offset
-             enddo
-             out_value(p) = str_value(q+1:)
+             enddo ! over p={1,nsize-1} loop
+             out_value(nsize) = str_value(q+1:)
          class default
              call s_print_error('p_get_vec', 'unrecognize data type')
      end select
