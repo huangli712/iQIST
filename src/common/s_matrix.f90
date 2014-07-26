@@ -39,14 +39,14 @@
 
 ! computes the LU factorization of a general m-by-n matrix, need lapack
 ! package, dgetrf subroutine
-     call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
+     call DGETRF(ndim, ndim, dmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
          call s_print_error('s_inv_dmat','error in lapack subroutine dgetrf')
      endif
 
 ! computes the inverse of an LU-factored general matrix, need lapack
 ! package, dgetri subroutine
-     call dgetri(ndim, dmat, ndim, ipiv, work, ndim, ierror)
+     call DGETRI(ndim, dmat, ndim, ipiv, work, ndim, ierror)
      if ( ierror /= 0 ) then
          call s_print_error('s_inv_dmat','error in lapack subroutine dgetri')
      endif
@@ -78,14 +78,14 @@
 
 ! computes the LU factorization of a general m-by-n matrix, need lapack
 ! package, zgetrf subroutine
-     call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
+     call ZGETRF(ndim, ndim, zmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
          call s_print_error('s_inv_zmat','error in lapack subroutine zgetrf')
      endif
 
 ! computes the inverse of an LU-factored general matrix, need lapack
 ! package, zgetri subroutine
-     call zgetri(ndim, zmat, ndim, ipiv, work, ndim, ierror)
+     call ZGETRI(ndim, zmat, ndim, ipiv, work, ndim, ierror)
      if ( ierror /= 0 ) then
          call s_print_error('s_inv_zmat','error in lapack subroutine zgetri')
      endif
