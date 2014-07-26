@@ -412,13 +412,6 @@
      mmin = msec / 60
      msec = msec - 60 * mmin
 
-     nday = time_niter / 86400
-     nsec = time_niter - 86400 * nday
-     nhou = nsec / 3600
-     nsec = nsec - 3600 * nhou
-     nmin = nsec / 60
-     nsec = nsec - 60 * nmin
-
      write(mystd, '(4X, ">>> used time: ")', advance = 'no')
      if ( mday > 0 ) then
          write(mystd, '(i2, " d ")', advance = 'no') mday
@@ -435,7 +428,32 @@
      if ( msec > 0 ) then
          write(mystd, '(f5.2, " s ")', advance = 'no') msec
      endif ! back if ( msec > 0 ) block
-     write(mystd, '("in this iteration.")')
+     write(mystd, '("in current iteration.")')
+
+     nday = time_niter / 86400
+     nsec = time_niter - 86400 * nday
+     nhou = nsec / 3600
+     nsec = nsec - 3600 * nhou
+     nmin = nsec / 60
+     nsec = nsec - 60 * nmin
+
+     write(mystd, '(4X, ">>> used time: ")', advance = 'no')
+     if ( nday > 0 ) then
+         write(mystd, '(i2, " d ")', advance = 'no') nday
+     endif ! back if ( nday > 0 ) block
+
+     if ( nhou > 0 ) then
+         write(mystd, '(i2, " h ")', advance = 'no') nhou
+     endif ! back if ( nhou > 0 ) block
+
+     if ( nmin > 0 ) then
+         write(mystd, '(i2, " m ")', advance = 'no') nmin
+     endif ! back if ( nmin > 0 ) block
+
+     if ( nsec > 0 ) then
+         write(mystd, '(f5.2, " s ")', advance = 'no') nsec
+     endif ! back if ( nsec > 0 ) block
+     write(mystd, '("in total iteration.")')
 
      return
   end subroutine s_time_analyzer
