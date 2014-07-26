@@ -127,7 +127,7 @@
 
 !>>> fourier from matsubara frequency space backward to imaginary time space
   subroutine s_fft_backward(beta, mfreq, rmesh, fmat, ntime, tmesh, ftau)
-     use constants, only : dp, zero
+     use constants, only : dp, zero, two, half, pi
 
      implicit none
 
@@ -163,7 +163,7 @@
      real(dp) :: tail
 
 ! calculate high frequency tails need to be subtracted
-     call ctqmc_fourier_tails(tail, rmesh, fmat)
+     call s_fft_tails(tail, mfreq, rmesh, fmat)
 
 ! perform infourier transformation
      do i=1,ntime
