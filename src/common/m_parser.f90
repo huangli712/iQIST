@@ -17,6 +17,12 @@
 !!! comment : this module depends on constants and linkedlist modules
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! USAGE:
+!!
+!!
+
   module parser
      use constants
      use linkedlist 
@@ -317,6 +323,11 @@
 
 ! convert str_value to out_value, here we only support the following
 ! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
+!
+! note: the delimiter is ','
+!
+! note: it is very strange that we can not use read command to make
+! an assignment for out_value directly.
      select type (out_value)
          type is (integer)          ! for integer
              q = 0
