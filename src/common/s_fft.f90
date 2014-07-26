@@ -67,10 +67,8 @@
 
 !>>> fourier from imaginary time space forward to matsubara frequency space
 ! using linear fourier algorithm
-  subroutine ctqmc_fourier_forward(ntime, ftau, mfreq, fmat)
+  subroutine s_fft_forward(beta, ntime, tmesh, ftau, mfreq, rmesh, fmat)
      use constants
-     use control, only : beta
-     use context, only : rmesh, tmesh
 
      implicit none
 
@@ -119,7 +117,7 @@
      enddo ! over i={1,mfreq} loop
 
      return
-  end subroutine ctqmc_fourier_forward
+  end subroutine s_fft_forward
 
 !>>> fourier from matsubara frequency space backward to imaginary time space
   subroutine ctqmc_fourier_backward(mfreq, fmat, ntime, ftau)
