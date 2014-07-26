@@ -188,8 +188,8 @@
      return
   end subroutine s_det_dmat
 
-!>>> calculate the determinant of a complex(dp) matrix
-  subroutine ctqmc_zmat_det(ndim, zmat, zdet)
+!!>>> s_det_zmat: calculate the determinant of a complex(dp) matrix
+  subroutine s_det_zmat(ndim, zmat, zdet)
      use constants, only : dp, cone
 
      implicit none
@@ -217,9 +217,9 @@
 
 ! computes the LU factorization of a general m-by-n matrix, need lapack
 ! package, zgetrf subroutine
-     call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
+     call ZGETRF(ndim, ndim, zmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_zmat_det','error in lapack subroutine zgetrf')
+         call s_print_error('s_det_zmat','error in lapack subroutine zgetrf')
      endif
 
 ! calculate determinant
@@ -233,4 +233,4 @@
      enddo ! over i={1,ndim} loop
 
      return
-  end subroutine ctqmc_zmat_det
+  end subroutine s_det_zmat
