@@ -1,10 +1,20 @@
+#########
+#### sdfsdf
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 nband = 12 # sdsf
-norbs : 24 ! sfdsf
+NorbS : 24 ! sfdsf
 
+solver : ctqmc
+symm = 1, 2, 4, 5
 ! asdad
 # dddd
 
-  nspin : 2 #sdffddd
+model = anderson, hubbard, my
+eimp : 0.0,-10.0, 0.353
+    isscf : F
+  nspIn : 2 #sdffddd
 ntime = 12 # sdffd ! sdddd
 
-npart            : 1 ! sdfsf # ssss $ fff
+flip : .true., false, T
+mune : 10.45  ! chemical potential
+nparT            : 1 ! sdfsf # ssss $ fff
