@@ -54,8 +54,8 @@
      return
   end subroutine s_inv_dmat
 
-!>>> invert complex(dp) matrix using lapack subroutines
-  subroutine ctqmc_zmat_inv(ndim, zmat)
+!!>>> s_inv_zmat: invert complex(dp) matrix using lapack subroutines
+  subroutine s_inv_zmat(ndim, zmat)
      use constants, only : dp
 
      implicit none
@@ -80,18 +80,18 @@
 ! package, zgetrf subroutine
      call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_zmat_inv','error in lapack subroutine zgetrf')
+         call s_print_error('s_inv_zmat','error in lapack subroutine zgetrf')
      endif
 
 ! computes the inverse of an LU-factored general matrix, need lapack
 ! package, zgetri subroutine
      call zgetri(ndim, zmat, ndim, ipiv, work, ndim, ierror)
      if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_zmat_inv','error in lapack subroutine zgetri')
+         call s_print_error('s_inv_zmat','error in lapack subroutine zgetri')
      endif
 
      return
-  end subroutine ctqmc_zmat_inv
+  end subroutine s_inv_zmat
 
 !>>> calculate the determinant of a real(dp) matrix
   subroutine ctqmc_dmat_det(ndim, dmat, ddet)
