@@ -14,7 +14,7 @@
 
 !>>> s_spl_splder: evaluate the 2-order derivates of yval
   subroutine s_spl_splder(ydim, xval, yval, startu, startd, d2y)
-     use constants, only : dp
+     use constants, only : dp, zero, one, two, half
 
      implicit none
 
@@ -90,8 +90,8 @@
      return
   end subroutine s_spl_splder
 
-!>>> ctqmc_make_splint: evaluate the spline value at x point
-  function ctqmc_make_splint(xdim, xval, yval, d2y, x) result(val)
+!>>> s_spl_splint: evaluate the spline value at x point
+  function s_spl_splint(xdim, xval, yval, d2y, x) result(val)
      use constants
 
      implicit none
@@ -152,4 +152,4 @@
                ( h*h ) / 6.0_dp
 
      return
-  end function ctqmc_make_splint
+  end function s_spl_splint
