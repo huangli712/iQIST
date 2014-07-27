@@ -1386,6 +1386,9 @@
          ie = ie + 1
      endif
 
+     ladd = .true.
+     return
+
 !-------------------------------------------------------------------------
 ! stage 2: determine ladd, whether we can get them ?
 !-------------------------------------------------------------------------
@@ -1527,6 +1530,9 @@
          ie = ie - 1
      endif
 
+     lrmv = .true.
+     return
+
 !-------------------------------------------------------------------------
 ! stage 2: determine lrmv, whether we can kick off them ?
 !-------------------------------------------------------------------------
@@ -1664,6 +1670,9 @@
      if ( tau_start1 < tau_start2 ) then
          isn = isn - 1
      endif
+
+     lshf = .true.
+     return
 
 !-------------------------------------------------------------------------
 ! stage 2: determine lshf, whether we can shift it ?
@@ -1817,6 +1826,9 @@
      if ( tau_end1 < tau_end2 ) then
          ien = ien - 1
      endif
+
+     rshf = .true.
+     return
 
 !-------------------------------------------------------------------------
 ! stage 2: determine rshf, whether we can shift it ?
