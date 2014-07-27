@@ -92,7 +92,7 @@
 
 !>>> s_spl_splint: evaluate the spline value at x point
   function s_spl_splint(xdim, xval, yval, d2y, x) result(val)
-     use constants
+     use constants, only : dp
 
      implicit none
 
