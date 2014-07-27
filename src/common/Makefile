@@ -4,8 +4,8 @@ include ../build/make.sys
 
 default: all
 
-mod = m_const.o m_linkedlist.o m_mpi.o m_parser.o m_skynet.o m_sparse.o m_spring.o m_stack.o
-src = s_error.o s_fft.o s_math.o s_spline.o s_util.o
+mod = m_constants.o m_linkedlist.o m_mpi.o m_parser.o m_skynet.o m_sparse.o m_spring.o m_stack.o
+src = s_error.o s_fft.o s_math.o s_matrix.o s_spline.o s_util.o
 objects = $(mod) $(src)
 
 all: build_mod build_src build_lib
