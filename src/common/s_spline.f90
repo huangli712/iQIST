@@ -59,7 +59,7 @@
          p = xval(2) - xval(1)
          d2y(1) = -half
          u(1) = ( 3.0_dp / p ) * ( ( yval(2) - yval(1) ) / p - startu )
-     endif
+     endif ! back if ( startu > .99E30 ) block
 
      do i=2,ydim-1
          sig    = ( xval(i) - xval(i-1) ) / ( xval(i+1) - xval(i-1) )
@@ -79,7 +79,7 @@
          p = xval(ydim) - xval(ydim-1)
          qn = half
          un = ( 3.0_dp / p ) * ( startd - ( yval(ydim) - yval(ydim-1) ) / p )
-     endif
+     endif ! back if ( startd > .99E30 ) block
 
      d2y(ydim) = ( un - qn * u(ydim-1) ) / ( qn * d2y(ydim-1) + one )
 
