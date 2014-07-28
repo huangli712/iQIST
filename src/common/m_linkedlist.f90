@@ -22,6 +22,12 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! USAGE:
+!!
+!!
+
   module linkedlist
      implicit none
 
@@ -58,7 +64,8 @@
 
   contains ! encapsulated functionality
 
-!!>>> list_init: initialize a head node self and optionally store the provided data
+!!>>> list_init: initialize a head node [self] for a list and optionally
+!!>>> store the provided data
   subroutine list_init(self, data)
      implicit none
 
@@ -84,7 +91,7 @@
      return
   end subroutine list_init
 
-!!>>> list_free: free the entire list and all data, beginning at self
+!!>>> list_free: free the entire list and all data, beginning at node [self]
   subroutine list_free(self)
      implicit none
 
