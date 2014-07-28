@@ -12,6 +12,27 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! Usage
+!! =====
+!!
+!! 1. completely import
+!! --------------------
+!!
+!! use constants
+!! real(dp) :: A 
+!! A = one
+!!
+!! 2. partly import
+!! ----------------
+!!
+!! use constants, only : dp, one
+!! real(dp) :: A
+!! A = one
+!!
+!!
+
   module constants
      implicit none
 
