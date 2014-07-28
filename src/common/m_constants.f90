@@ -1,12 +1,13 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : constants
-!!! source  : m_const.f90
+!!! source  : m_constants.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/15/2009 by li huang
 !!!           07/08/2014 by li huang
-!!! purpose : provide the definition of numerical and physical constants
+!!! purpose : this module is to provide the definition of some (selected)
+!!!           numerical and physical constants.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
