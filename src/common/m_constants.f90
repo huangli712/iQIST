@@ -14,6 +14,12 @@
 
 !!
 !!
+!! Introduction
+!! ============
+!!
+!! It is a common module which defines some common used numerical/physical
+!! constants. We always need it.
+!!
 !! Usage
 !! =====
 !!
