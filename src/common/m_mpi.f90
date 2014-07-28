@@ -42,6 +42,59 @@
 !!!               intel mpi 3.2.0
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! This module wraps the most useful mpi calls by using generic programming
+!! techniques. It supports most of the collective operations (such as BCAST,
+!! GATHER, REDUCE, etc.). However, none of the point-to-point operations is
+!! supported.
+!!
+!! Usage
+!! =====
+!!
+!! 1. include mpi support 
+!! ----------------------
+!!
+!! use mmpi
+!!
+!! pay attention to the module name. it is mmpi, instead of mpi.
+!!
+!! 2. init mpi environment
+!! -----------------------
+!!
+!! call mp_init() ! init mpi environment
+!! call mp_comm_rank(myid) ! get current process it
+!! call mp_comm_size(nprocs) ! get number of processes
+!!
+!! 3. broadcast data
+!! -----------------
+!!
+!! real(dp) :: real_data(:,:,:)
+!! integer :: int_data(:)
+!! complex(dp) :: cmplx_data(:,:,:,:)
+!!
+!! call mp_bcast(real_data, master)
+!! call mp_bcast(int_data, master)
+!! call mp_bcast(cmplx_data, master)
+!!
+!! here master == 0 which means the master node/root process.
+!!
+!! 4. setup barrier
+!! ----------------
+!!
+!! call mp_barrier()
+!!
+!! 5. finialize mpi environment
+!! ----------------------------
+!!
+!! call mp_finalize()
+!!
+!!
+
+
 !!>>> whether the compiler support mpi environment, i.e, mpif90
 # if defined (MPI)
 
