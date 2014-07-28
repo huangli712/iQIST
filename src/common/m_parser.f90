@@ -19,7 +19,14 @@
 
 !!
 !!
-!! USAGE:
+!! Introduction
+!! ============
+!!
+!! The original input file format
+!!
+!! 
+!! Usage
+!! =====
 !!
 !!
 
