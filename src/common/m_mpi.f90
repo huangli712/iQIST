@@ -94,7 +94,6 @@
 !!
 !!
 
-
 !!>>> whether the compiler support mpi environment, i.e, mpif90
 # if defined (MPI)
 
