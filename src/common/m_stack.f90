@@ -346,3 +346,6 @@
   end function istack_isfull
 
   end module stack
+
+  program test
+  end program test
