@@ -27,7 +27,8 @@
 
 !!
 !!
-!!>>> introduction
+!! Introduction
+!! ============
 !!
 !! the following two random number generators (generates a random number
 !! between 0 and 1, real double precision) are supported by now.
@@ -44,19 +45,26 @@
 !! << SIMD-oriented Fast Mersenne Twister: a 128-bit Pseudorandom Number Generator >>
 !! Monte Carlo and Quasi-Monte Carlo Methods 2006, Springer, 2008, pp. 607-622
 !!
-!!>>> usage
+!! Usage
+!! =====
+!!
+!! 1. use MT19937
+!! --------------
+!!
 !! use spring
 !! call spring_mt_init(seed)
 !! r = spring_mt_stream()
 !! r = spring_mt_string()
+!!
+!! 2. use SFMT
+!! -----------
 !!
 !! use spring
 !! call spring_sfmt_init(seed)
 !! r = spring_sfmt_stream()
 !! r = spring_sfmt_string()
 !!
-!!>>> note
-!! since SFMT has a better performance, it is preferable
+!! note: since SFMT has a better performance, it is preferable
 !!
 !!
 
