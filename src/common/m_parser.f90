@@ -94,6 +94,46 @@
 !! Usage
 !! =====
 !!
+!! 1. import parser support
+!! ------------------------
+!!
+!! use parser
+!!
+!! 2. create instance for parser
+!! -----------------------------
+!!
+!! call p_create()
+!!
+!! 3. parse the input file
+!! -----------------------
+!!
+!! call p_parse(file_name)
+!!
+!! note: in the mpi environment, only the master node can execute this
+!! command.
+!!
+!! 4. extract parameters
+!! ---------------------
+!!
+!! integer :: nband = 2       ! default value
+!! real(dp) :: mune = 10.0_dp ! default value
+!! logical :: symm(2)         ! default value
+!! symm(1) = .true.
+!! symm(2) = .false.
+!! call p_get('nband', nband)   ! get single value
+!! call p_get('mune', mune)     ! get single value
+!! call p_get_vec('symm', symm) ! get array
+!!
+!! note: that if the desired parameter is not contained in the config file,
+!! then the default value will not be changed.
+!!
+!! note: in the mpi environment, only the master node can execute these
+!! commands.
+!!
+!! 5. destroy parser
+!!
+!! call p_destroy()
+!!
 !!
 
   module parser
