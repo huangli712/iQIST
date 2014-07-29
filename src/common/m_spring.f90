@@ -157,13 +157,13 @@
      private :: spring_sfmt_kernel !
      private :: spring_sfmt_core   !
 
-  contains
+  contains ! encapsulated functionality
 
 !!========================================================================
 !!>>> MT19937 random number generator subroutines                      <<<
 !!========================================================================
 
-!!>>> initializes the MT19937 generator with "seed"
+!!>>> spring_mt_init: initializes the MT19937 generator with "seed"
   subroutine spring_mt_init(seed)
      implicit none
 
@@ -189,8 +189,8 @@
      return
   end subroutine spring_mt_init
 
-!!>>> obtain a psuedo random real number in the range (0,1), i.e., a
-! number greater than 0 and less than 1
+!!>>> spring_mt_stream: obtain a psuedo random real number in the range
+!!>>> (0,1), i.e., a number greater than 0 and less than 1
   function spring_mt_stream() result(r)
      implicit none
 
@@ -207,8 +207,9 @@
      return
   end function spring_mt_stream
 
-!!>>> obtain a psuedo random real number in the range [0,1], i.e., a number
-! greater than or equal to 0 and less than or equal to 1
+!!>>> spring_mt_string: obtain a psuedo random real number in the range
+!!>>> [0,1], i.e., a number greater than or equal to 0 and less than or
+!!>>> equal to 1
   function spring_mt_string() result(r)
      implicit none
 
@@ -225,7 +226,8 @@
      return
   end function spring_mt_string
 
-!!>>> obtain the next 32-bit integer in the psuedo random sequence
+!!>>> spring_mt_source: obtain the next 32-bit integer in the psuedo
+!!>>> random sequence
   function spring_mt_source() result(r)
      implicit none
 
@@ -286,7 +288,8 @@
 !!>>> SFMT random number generator subroutines                         <<<
 !!========================================================================
 
-!!>>> this function initializes the internal state array with a 32-bit integer seed
+!!>>> spring_sfmt_init: this function initializes the internal state array
+!!>>> with a 32-bit integer seed
   subroutine spring_sfmt_init(seed)
      implicit none
 
@@ -351,7 +354,7 @@
      return
   end subroutine spring_sfmt_init
 
-!!>>> generates a pseudo random number on (0,1)
+!!>>> spring_sfmt_stream: generates a pseudo random number on (0,1)
   function spring_sfmt_stream() result(r)
      implicit none
 
@@ -368,7 +371,7 @@
      return
   end function spring_sfmt_stream
 
-!!>>> generates a pseudo random number on [0,1]
+!!>>> spring_sfmt_string: generates a pseudo random number on [0,1]
   function spring_sfmt_string() result(r)
      implicit none
 
@@ -385,7 +388,8 @@
      return
   end function spring_sfmt_string
 
-!!>>> this function generates and returns 32-bit pseudo random number
+!!>>> spring_sfmt_source: this function generates and returns 32-bit
+!!>>> pseudo random number
   function spring_sfmt_source() result(r)
      implicit none
 
@@ -408,7 +412,8 @@
      return
   end function spring_sfmt_source
 
-!!>>> this function fills the internal state array with pseudo random integers
+!!>>> spring_sfmt_kernel: this function fills the internal state array with
+!!>>> pseudo random integers
   subroutine spring_sfmt_kernel()
      implicit none
 
@@ -454,7 +459,7 @@
      return
   end subroutine spring_sfmt_kernel
 
-!!>>> this function represents the recursion formula
+!!>>> spring_sfmt_core: this function represents the recursion formula
   subroutine spring_sfmt_core(rTop, rBtm, aTop, aBtm, bTop, bBtm, cTop, cBtm, dTop, dBtm)
      implicit none
 
