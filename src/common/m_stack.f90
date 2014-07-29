@@ -347,14 +347,7 @@
 
   end module stack
 
-  module AAA
-     type AAA
-         integer :: a
-     end type AAA
-  end module AAA
-
   program test
-     use AAA
      use stack
 
      implicit none
