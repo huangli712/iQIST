@@ -26,6 +26,23 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+
   module stack
      implicit none
 
@@ -347,10 +364,54 @@
 
   end module stack
 
+  module AAA
+     type nstack
+         class(*), allocatable :: item(:)
+     end type nstack
+
+  contains
+
+  subroutine nstack_init(s, n)
+     implicit none
+
+     type (nstack) :: s
+     integer :: n, i
+
+     allocate(s%item(n), source=0)
+     select type (v => s%item)
+         type is (integer)
+             do i = 1,n
+                 v(i) = i
+             enddo
+             print *, v
+     end select
+  end subroutine nstack_init
+
+  subroutine nstack_pop(s, n, item)
+     type (nstack) :: s
+     integer :: n
+     class(*), intent(out) :: item
+
+     select type (item)
+         type is (integer)
+             select type (p => s%item)
+                 type is (integer)
+                     item = p(n)
+             end select
+     end select
+  end subroutine nstack_pop
+
+  end module AAA
+
   program test
+     use AAA
      use stack
 
      implicit none
 
-     print *, 'aa'
+     type (nstack) :: s
+     integer :: i = 2
+     call nstack_init(s, 10)
+     call nstack_pop(s, 5, i)
+     print *, i 
   end program test
