@@ -192,7 +192,8 @@
 
   contains ! encapsulated functionality
 
-!!>>> converts a row-stored sparse matrix into a densely stored one
+!!>>> sparse_format_csrdns: converts a row-stored sparse matrix into a
+!!>>> densely stored one
   subroutine sparse_format_csrdns(nrow, ncol, nmax, a, ja, ia, dns)
      implicit none
 
@@ -239,7 +240,8 @@
      return
   end subroutine sparse_format_csrdns
 
-!!>>> converts a row-stored sparse matrix into a densely stored one
+!!>>> sparse_format_csrdns_z: converts a row-stored sparse matrix into a
+!!>>> densely stored one
   subroutine sparse_format_csrdns_z(nrow, ncol, nmax, sa, ja, ia, dns)
      implicit none
 
@@ -286,7 +288,8 @@
      return
   end subroutine sparse_format_csrdns_z
 
-!!>>> converts a densely stored matrix into a row orientied compactly sparse matrix
+!!>>> sparse_format_dnscsr: converts a densely stored matrix into a row
+!!>>> orientied compactly sparse matrix
   subroutine sparse_format_dnscsr(nrow, ncol, nmax, dns, a, ja, ia)
      implicit none
 
@@ -339,7 +342,8 @@
      return
   end subroutine sparse_format_dnscsr
 
-!!>>> converts a densely stored matrix into a row orientied compactly sparse matrix
+!!>>> sparse_format_dnscsr_z: converts a densely stored matrix into a row
+!!>>> orientied compactly sparse matrix
   subroutine sparse_format_dnscsr_z(nrow, ncol, nmax, dns, sa, ja, ia)
      implicit none
 
@@ -392,7 +396,8 @@
      return
   end subroutine sparse_format_dnscsr_z
 
-!!>>> converts a densely stored identity matrix into a row orientied compactly sparse matrix
+!!>>> sparse_format_unicsr: converts a densely stored identity matrix into
+!!>>> a row orientied compactly sparse matrix
   subroutine sparse_format_unicsr(nrow, nmax, a, ja, ia)
      implicit none
 
@@ -431,7 +436,8 @@
      return
   end subroutine sparse_format_unicsr
 
-!!>>> converts a densely stored identity matrix into a row orientied compactly sparse matrix
+!!>>> sparse_format_unicsr_z: converts a densely stored identity matrix
+!!>>> into a row orientied compactly sparse matrix
   subroutine sparse_format_unicsr_z(nrow, nmax, sa, ja, ia)
      implicit none
 
@@ -472,7 +478,8 @@
      return
   end subroutine sparse_format_unicsr_z
 
-!!>>> copy data between two row orientied compactly sparse matrices
+!!>>> sparse_matrix_copyer: copy data between two row orientied compactly
+!!>>> sparse matrices
   subroutine sparse_matrix_copyer(nrow, nmax, a, ja, ia, b, jb, ib)
      implicit none
 
@@ -513,7 +520,8 @@
      return
   end subroutine sparse_matrix_copyer
 
-!!>>> copy data between two row orientied compactly sparse matrices
+!!>>> sparse_matrix_copyer_z: copy data between two row orientied compactly
+!!>>> sparse matrices
   subroutine sparse_matrix_copyer_z(nrow, nmax, sa, ja, ia, sb, jb, ib)
      implicit none
 
@@ -554,7 +562,8 @@
      return
   end subroutine sparse_matrix_copyer_z
 
-!!>>> this function returns the element a(i,j) of matrix a
+!!>>> sparse_matrix_getter: this function returns the element a(i,j) of
+!!>>> matrix a
   real(dp) &
   function sparse_matrix_getter(i, j, nrow, nmax, a, ja, ia) result(elm)
      implicit none
@@ -605,7 +614,8 @@
      return
   end function sparse_matrix_getter
 
-!!>>> this function returns the element sa(i,j) of matrix sa
+!!>>> sparse_matrix_getter_z: this function returns the element sa(i,j) of
+!!>>> matrix sa
   complex(dp) &
   function sparse_matrix_getter_z(i, j, nrow, nmax, sa, ja, ia) result(elm)
      implicit none
@@ -656,7 +666,8 @@
      return
   end function sparse_matrix_getter_z
 
-!!>>> multiplies a matrix by a vector using the dot product form
+!!>>> sparse_matmul_amuvec: multiplies a matrix by a vector using the dot
+!!>>> product form
   subroutine sparse_matmul_amuvec(nrow, ncol, nmax, a, ja, ia, x, y)
      implicit none
 
@@ -700,7 +711,8 @@
      return
   end subroutine sparse_matmul_amuvec
 
-!!>>> multiplies a matrix by a vector using the dot product form
+!!>>> sparse_matmul_amuvec_z: multiplies a matrix by a vector using the
+!!>>> dot product form
   subroutine sparse_matmul_amuvec_z(nrow, ncol, nmax, sa, ja, ia, sx, sy)
      implicit none
 
@@ -744,7 +756,7 @@
      return
   end subroutine sparse_matmul_amuvec_z
 
-!!>>> performs the matrix by matrix product C = A * B
+!!>>> sparse_matmul_amumat: performs the matrix by matrix product C = A * B
   subroutine sparse_matmul_amumat(nrow, ndim, ncol, nmax, a, ja, ia, b, jb, ib, c, jc, ic)
      implicit none
 
@@ -840,7 +852,7 @@
      return
   end subroutine sparse_matmul_amumat
 
-!!>>> performs the matrix by matrix product C = A * B
+!!>>> sparse_matmul_amumat_z: performs the matrix by matrix product C = A * B
   subroutine sparse_matmul_amumat_z(nrow, ndim, ncol, nmax, sa, ja, ia, sb, jb, ib, sc, jc, ic)
      implicit none
 
@@ -936,7 +948,7 @@
      return
   end subroutine sparse_matmul_amumat_z
 
-!!>>> performs the matrix by matrix product B = A * Diag
+!!>>> sparse_matmul_amudia: performs the matrix by matrix product B = A * Diag
   subroutine sparse_matmul_amudia(nrow, nmax, a, ja, ia, diag, b, jb, ib)
      implicit none
 
@@ -995,7 +1007,7 @@
      return
   end subroutine sparse_matmul_amudia
 
-!!>>> performs the matrix by matrix product B = A * Diag
+!!>>> sparse_matmul_amudia_z: performs the matrix by matrix product B = A * Diag
   subroutine sparse_matmul_amudia_z(nrow, nmax, sa, ja, ia, diag, sb, jb, ib)
      implicit none
 
@@ -1054,7 +1066,7 @@
      return
   end subroutine sparse_matmul_amudia_z
 
-!!>>> performs the matrix by matrix product B = Diag * A
+!!>>> sparse_matmul_diamua: performs the matrix by matrix product B = Diag * A
   subroutine sparse_matmul_diamua(nrow, nmax, diag, a, ja, ia, b, jb, ib)
      implicit none
 
@@ -1113,7 +1125,7 @@
      return
   end subroutine sparse_matmul_diamua
 
-!!>>> performs the matrix by matrix product B = Diag * A
+!!>>> sparse_matmul_diamua_z: performs the matrix by matrix product B = Diag * A
   subroutine sparse_matmul_diamua_z(nrow, nmax, diag, sa, ja, ia, sb, jb, ib)
      implicit none
 
