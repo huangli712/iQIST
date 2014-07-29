@@ -68,6 +68,7 @@
 !! D = A
 !!
 !! 4. basic arithmetic operations for sunu structure
+!! -------------------------------------------------
 !!
 !! type (sunu) :: A
 !! type (sunu) :: B
