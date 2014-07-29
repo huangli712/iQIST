@@ -22,9 +22,75 @@
 !! Introduction
 !! ============
 !!
-!! The original input file format
+!! The original input file format for iQIST is not very well. We need a
+!! flexible, convenient, and powerful input file format, and corresponding
+!! file reader and parser. Thus, we redesign the input file format and
+!! implement this file parser.
 !!
+!! Input File Format
+!! =================
+!!
+!! 1. anything after "#" and "!" character can be treated as comments and
+!!    will be ignored completely.
+!!
+!!    example:
+!!    
+!!    # this is a comment line
+!!    ! this is a comment line
+!!
+!!    nband = 4 # this is in line comment
+!!    norbs = 8 ! this in line comment
+!!
+!! 2. it is not case sensitive.
+!!
+!!    example:
+!!
+!!    Nband = 4
+!!    NORBS = 8
+!!    NspiN = 2
+!!
+!! 3. the key and value pair is separated by "=" or ":" character.
+!!
+!!    example:
+!!
+!!    nband = 4 ! you can use nband : 4
+!!    norbs : 8 ! you can use norbs = 8
 !! 
+!! 4. any space will be ignored. any blank lines will be skipped as well.
+!!
+!!    example:
+!!
+!!    n b a n d = 4 ! it is valid
+!!    no   rb s = 8 ! it is valid
+!!
+!! 5. you can only use one line to define one key-value pair.
+!!
+!!    example
+!!
+!!    nband = 4 norbs = 8 ! it is not valid
+!!    nband =
+!!    4                   ! it is not valid
+!!
+!! 6. in the value part, now only integer, real(dp), logical, and character
+!!    data type are support. 
+!!
+!!    example:
+!!
+!!    nband = 4        ! integer type
+!!    mune  = 4.0      ! real(dp) type
+!!    isscf = .true.   ! logical type, you can also use .false., T, F
+!!    model = anderson ! character type, do not use "" or '' characters
+!!
+!! 7. in the value part, a vector is also support. the items in the vector
+!!    should be separated by "," character.
+!!
+!!    example:
+!!
+!!    nband = 1, 2, 3, 4                   ! 4 items
+!!    mune = 0.0, -1.0, 2.0                ! 3 items
+!!    isscf = .true., .true., F, T, .true. ! 5 items
+!!    model = anderson, hubbard            ! 2 items
+!!
 !! Usage
 !! =====
 !!
