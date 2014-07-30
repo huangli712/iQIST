@@ -139,7 +139,7 @@
 
   contains ! encapsulated functionality
 
-!!>>> istack_create: create and initialize a integer type stack
+!!>>> istack_create: create and initialize an integer type stack
   subroutine istack_create(s, n)
      implicit none
 
@@ -165,6 +165,33 @@
 
      return
   end subroutine istack_create
+
+!!>>> gstack_create: create and initialize a generic type stack
+  subroutine gstack_create(s, n)
+     implicit none
+
+! external arguments
+! size of stack
+     integer, optional, intent(in) :: n
+
+! generic type stack
+     type (gstack), intent(out)    :: s
+
+! determine the capacity of stack
+     if ( present (n) ) then
+         s%nsize = n
+     else
+         s%nsize = limit
+     endif
+
+! setup the top position
+     s%top = 0
+
+! allocate memory for item array
+     allocate(s%item(s%nsize))
+
+     return
+  end subroutine gstack_create
 
 !!>>> istack_clean: reset the integer type stack, clean all its elements
   subroutine istack_clean(s)
