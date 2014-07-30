@@ -4,7 +4,6 @@
 !           ctqmc_zmat_inv
 !           ctqmc_dmat_det
 !           ctqmc_zmat_det
-!           ctqmc_dmat_gemm
 !           ctqmc_time_sorter
 !           ctqmc_time_qsorter
 !           ctqmc_time_qscorer
@@ -266,36 +265,6 @@
 
      return
   end subroutine ctqmc_zmat_det
-
-!>>> perform real matrix-matrix multiply operation
-  subroutine ctqmc_dmat_gemm( ndim1, ndim2, ndim3, amat, lda_a, bmat, lda_b, cmat, lda_c)
-     implicit none
-
-! dimension of the input square matrix 'amat and bmat'
-     integer, intent(in)  :: ndim1
-     integer, intent(in)  :: ndim2
-     integer, intent(in)  :: ndim3
-     integer, intent(in)  :: lda_a
-     integer, intent(in)  :: lda_b
-     integer, intent(in)  :: lda_c
-
-! input square matrix 'amat and bmat'
-     real(8), intent(in)  :: amat(lda_a, *)
-     real(8), intent(in)  :: bmat(lda_b, *)
-
-! output square matrix, cmat = amat * bmat
-     real(8), intent(out) :: cmat(lda_c, *)
-
-! local variables
-     real(8) :: alpha
-     real(8) :: betta
-
-     alpha = 1.0d0; betta = 0.0d0
-     call dgemm('N', 'N', ndim1, ndim3, ndim2, alpha, amat, lda_a, &
-                                bmat, lda_b, betta, cmat, lda_c )
-
-     return
-  end subroutine ctqmc_dmat_gemm
 
 !>>> using bubble sort algorithm to sort a real dataset, the slowest algorithm
   subroutine ctqmc_time_sorter(nsize, list)
