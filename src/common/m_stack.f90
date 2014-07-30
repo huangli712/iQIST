@@ -98,21 +98,41 @@
      public :: istack_clean
      public :: istack_destroy
 
+     public :: gstack_create
+     public :: gstack_clean
+     public :: gstack_destroy
+
      public :: istack_copyer
      public :: istack_setter
      public :: istack_getter
 
+     public :: gstack_copyer
+     public :: gstack_setter
+     public :: gstack_getter
+
      public :: istack_push
      public :: istack_pop
 
+     public :: gstack_push
+     public :: gstack_pop
+
      public :: istack_display
+
+     public :: gstack_display
 
      public :: istack_gettop
      public :: istack_getrest
      public :: istack_getsize
 
+     public :: gstack_gettop
+     public :: gstack_getrest
+     public :: gstack_getsize
+
      public :: istack_isfull
      public :: istack_isempty
+
+     public :: gstack_isfull
+     public :: gstack_isempty
 
   contains ! encapsulated functionality
 
