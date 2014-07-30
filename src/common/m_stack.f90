@@ -329,6 +329,27 @@
      return
   end subroutine istack_display
 
+!!>>> gstack_display: display the top item in the stack without pop it off
+  subroutine gstack_display(s, item)
+     implicit none
+
+! external arguments
+! generic type stack
+     type (istack), intent(in) :: s
+
+! the top item in the stack
+     class(*), intent(out)     :: item
+
+     if ( s%top == 0 ) then
+         write(mystd,'(a)') 'gstack: the stack is empty, can not return the top item of it'
+         STOP
+     else
+         item = s%item(s%top)
+     endif
+
+     return
+  end subroutine gstack_display
+
 !!>>> istack_gettop: return the top position of the stack, i.e, the number
 !!>>> of items stored in the stack currently
   integer &
