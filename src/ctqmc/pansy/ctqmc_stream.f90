@@ -690,9 +690,10 @@
                  sectors(j)%occu(:,:,i) = zero
                  cycle
              endif
-             call ctqmc_dmat_gemm( sectors(j)%ndim, sectors(k)%ndim, sectors(j)%ndim, &
-                                   sectors(k)%myfmat(i,1)%item, sectors(j)%myfmat(i,0)%item,& 
-                                   sectors(j)%occu(:,:,i) ) 
+             call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, one, &
+                         sectors(k)%myfmat(i,1)%item,                     sectors(j)%ndim, &
+                         sectors(j)%myfmat(i,0)%item,                     sectors(k)%ndim, & 
+                         zero, sectors(j)%occu(:,:,i),                    sectors(j)%ndim   ) 
          enddo
      enddo ! over i={1,norbs} loop
 
@@ -707,18 +708,20 @@
                      sectors(k)%double_occu(:,:,i,j) = zero
                      cycle
                  endif
-                 call ctqmc_dmat_gemm( sectors(k)%ndim, sectors(jj)%ndim, sectors(k)%ndim, &
-                                       sectors(jj)%myfmat(j,1)%item, sectors(k)%myfmat(j,0)%item,& 
-                                       tmp_mat1(1:sectors(k)%ndim, 1:sectors(k)%ndim) ) 
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
+                             sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  & 
+                             sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, & 
+                             zero, tmp_mat1,                                  max_dim_sect       ) 
 
-                 call ctqmc_dmat_gemm( sectors(k)%ndim, sectors(ii)%ndim, sectors(k)%ndim, &
-                                       sectors(ii)%myfmat(i,1)%item, sectors(k)%myfmat(i,0)%item,& 
-                                       tmp_mat2(1:sectors(k)%ndim, 1:sectors(k)%ndim) ) 
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
+                             sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
+                             sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, & 
+                             zero, tmp_mat2,                                  max_dim_sect       ) 
 
-                 call ctqmc_dmat_gemm( sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, &
-                                       tmp_mat2(1:sectors(k)%ndim, 1:sectors(k)%ndim), & 
-                                       tmp_mat1(1:sectors(k)%ndim, 1:sectors(k)%ndim), & 
-                                       sectors(k)%double_occu(:,:,i,j) )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one, &
+                             tmp_mat2,                                        max_dim_sect,    & 
+                             tmp_mat1,                                        max_dim_sect,    & 
+                             zero, sectors(k)%double_occu(:,:,i,j),           sectors(k)%ndim   )
 
              enddo
          enddo
