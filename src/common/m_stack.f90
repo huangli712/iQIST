@@ -199,13 +199,13 @@
      return
   end subroutine istack_destroy
 
-!!>>> copy an istack object to another
+!!>>> istack_copyer: copy an istack object to another
   subroutine istack_copyer(sa, sb)
      implicit none
 
 ! external arguments
 ! integer type stack, input
-     type (istack), intent(in) :: sa
+     type (istack), intent(in)    :: sa
 
 ! integer type stack, output
      type (istack), intent(inout) :: sb
@@ -222,6 +222,30 @@
 
      return
   end subroutine istack_copyer
+
+!!>>> gstack_copyer: copy an gstack object to another
+  subroutine gstack_copyer(sa, sb)
+     implicit none
+
+! external arguments
+! generic type stack, input
+     type (gstack), intent(in)    :: sa
+
+! generic type stack, output
+     type (gstack), intent(inout) :: sb
+
+! check nsize at first
+     if ( sa%nsize /= sb%nsize ) then
+         write(mystd,'(a)') 'gstack: the sizes of two stacks are not equal'
+         STOP
+     endif
+
+! sync the data
+     sb%top = sa%top
+     sb%item = sa%item
+
+     return
+  end subroutine gstack_copyer
 
 !!>>> istack_setter: update the item's value of stack at specified position
   subroutine istack_setter(s, pos, item)
