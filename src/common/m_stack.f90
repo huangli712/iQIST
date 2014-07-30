@@ -356,7 +356,7 @@
      return
   end function istack_getrest
 
-!!>>> return the actual capacity of the stack
+!!>>> istack_getsize: return the actual capacity of the stack
   integer &
   function istack_getsize(s) result (n)
      implicit none
@@ -369,6 +369,20 @@
 
      return
   end function istack_getsize
+
+!!>>> gstack_getsize: return the actual capacity of the stack
+  integer &
+  function gstack_getsize(s) result (n)
+     implicit none
+
+! external arguments
+! generic type stack
+     type (gstack), intent(in) :: s
+
+     n = s%nsize
+
+     return
+  end function gstack_getsize
 
 !!>>> istack_isfull: check whether the stack is full of items
   logical &
