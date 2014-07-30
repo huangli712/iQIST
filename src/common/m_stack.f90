@@ -51,6 +51,9 @@
 !!>>> declare global parameters                                        <<<
 !!========================================================================
 
+! dp: number precision, double precision for reals
+     integer, private, parameter :: dp = kind(1.0d0)
+
 ! stack size limit, default value
      integer, private, parameter :: limit = 1024
 
@@ -335,7 +338,7 @@
 
 ! external arguments
 ! generic type stack
-     type (istack), intent(in) :: s
+     type (gstack), intent(in) :: s
 
 ! the top item in the stack
      class(*), intent(out)     :: item
@@ -346,9 +349,20 @@
      else
          select type (v => s%item)
              type is (integer)
-         !item = s%item(s%top)
+                 select type (item)
+                     type is (integer)
+                         item = v(s%top)
+                 end select
              type is (logical)
+                 select type (item)
+                     type is (logical)
+                         item = v(s%top)
+                 end select
              type is (real(dp))
+                 select type (item)
+                     type is (real(dp))
+                         item = v(s%top)
+                 end select
              type is (complex(dp))
              type is (character(len = *))
          end select
