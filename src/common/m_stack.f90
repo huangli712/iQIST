@@ -223,7 +223,7 @@
      return
   end subroutine istack_copyer
 
-!!>>> update the item's value of istack at special position
+!!>>> update the item's value of stack at specified position
   subroutine istack_setter(s, item, pos)
      implicit none
 
@@ -247,27 +247,29 @@
      return
   end subroutine istack_setter
 
-!!>>> return the item's value of istack at special position
-  integer &
-  function istack_getter(s, pos) result (item)
+!!>>> istack_getter: return the item's value of stack at specified position
+  subroutine istack_getter(s, pos, item)
      implicit none
 
 ! external arguments
 ! integer type stack
      type (istack), intent(in) :: s
 
-! position of the element
-     integer, intent(in) :: pos
+! position of the item
+     integer, intent(in)       :: pos
+
+! the item's value
+     integer, intent(out)      :: item
 
      if ( pos < 1 .or. pos > s%nsize ) then
          write(mystd,'(a)') 'istack: the position is not correct'
          STOP
      else
          item = s%item(pos)
-     endif
+     endif ! back if ( pos < 1 .or. pos > s%nsize ) block
 
      return
-  end function istack_getter
+  end subroutine istack_getter
 
 !!>>> istack_push: push item on top of stack
   subroutine istack_push(s, item)
