@@ -168,7 +168,7 @@
      return
   end function istack_create
 
-!!>>> reset the integer type stack, clean all its elements
+!!>>> istack_clean: reset the integer type stack, clean all its elements
   subroutine istack_clean(s)
      implicit none
 
@@ -181,6 +181,20 @@
 
      return
   end subroutine istack_clean
+
+!!>>> gstack_clean: reset the generic type stack, clean all its elements
+  subroutine gstack_clean(s)
+     implicit none
+
+! external arguments
+! generic type stack
+     type (gstack), intent(inout) :: s
+
+! reset top position
+     s%top = 0
+
+     return
+  end subroutine gstack_clean
 
 !!>>> istack_destroy: destroy and finalize an integer type stack
   subroutine istack_destroy(s)
