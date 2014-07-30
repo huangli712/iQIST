@@ -198,6 +198,10 @@
              allocate(s%item(s%nsize), source = .true.)
          type is (real(dp))
              allocate(s%item(s%nsize), source = 0.0_dp)
+         type is (complex(dp))
+             allocate(s%item(s%nsize), source = dcmplx(0.0_dp, 0.0_dp))
+         type is (character(len = *))
+             allocate(s%item(s%nsize), source = '')
      end select
 
      return
