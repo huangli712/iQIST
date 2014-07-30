@@ -364,6 +364,10 @@
                          item = v(s%top)
                  end select
              type is (complex(dp))
+                 select type (item)
+                     type is (complex(dp))
+                         item = v(s%top)
+                 end select
              type is (character(len = *))
          end select
      endif ! back if ( s%top == 0 ) block
