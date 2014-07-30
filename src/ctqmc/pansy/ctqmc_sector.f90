@@ -73,6 +73,18 @@
 
      end type t_sector
      
+! the total number of sectors
+     integer, public, save :: nsectors
+
+! the max dimension of the sectors
+     integer, public, save :: max_dim_sect
+
+! the average dimension of the sectors
+     real(dp), public, save :: ave_dim_sect
+
+! the array contains all the sectors
+     type(t_sector), public, save, allocatable :: sectors(:)
+
      contains
   
 !>>> nullify one fmat
@@ -193,4 +205,54 @@
   
         return
      end subroutine dealloc_one_sector
+
+!>>> allocate memory for sect-related variables
+     subroutine ctqmc_allocate_memory_sect()
+         use control
+
+         implicit none
+
+! local variables
+         integer :: i
+         integer :: istat
+
+! allocate memory
+         allocate(sectors(nsectors),              stat=istat)
+
+! check the status
+         if ( istat /= 0 ) then
+             call ctqmc_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
+         endif
+
+! initialize them
+         do i=1, nsectors
+             sectors(i)%ndim = 0
+             sectors(i)%nelectron = 0
+             sectors(i)%nops = norbs
+             sectors(i)%istart = 0
+             call nullify_one_sector(sectors(i))
+         enddo 
+
+         return
+     end subroutine ctqmc_allocate_memory_sect
+
+!>>> deallocate memory for sect-related variables
+     subroutine ctqmc_deallocate_memory_sect()
+         implicit none
+
+! local variables
+         integer :: i
+
+         if ( allocated(sectors) ) then
+! first, loop over all the sectors and deallocate their memory
+             do i=1, nsectors
+                 call dealloc_one_sector(sectors(i))
+             enddo
+! then, deallocate memory of sect
+             deallocate(sectors)
+         endif
+
+         return
+     end subroutine ctqmc_deallocate_memory_sect
+
   end module m_sector

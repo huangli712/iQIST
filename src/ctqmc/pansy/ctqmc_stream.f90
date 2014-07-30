@@ -415,6 +415,7 @@
              read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
 ! after we know the total number of sectors, we can allocate memory for array sect
              call ctqmc_allocate_memory_sect()
+             call ctqmc_allocate_memory_part()
 
 ! read the data for each sector
              do i=1, nsectors
@@ -521,6 +522,8 @@
      use stack
      use spring
 
+     use m_sector
+
      implicit none
 
 ! local variables
@@ -541,8 +544,8 @@
 
 ! init random number generator
      call system_clock(system_time)
-     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     !stream_seed = 123456
+     !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
+     stream_seed = 123456
      call spring_sfmt_init(stream_seed)
 
 ! init empty_s and empty_e stack structure
@@ -750,6 +753,7 @@
 !>>> garbage collection for this program, please refer to ctqmc_setup_array
   subroutine ctqmc_final_array()
      use context
+     use m_sector
 
      implicit none
 
@@ -763,6 +767,8 @@
      call ctqmc_deallocate_memory_gmat()
      call ctqmc_deallocate_memory_wmat()
      call ctqmc_deallocate_memory_smat()
+
+     call ctqmc_deallocate_memory_part()
 
      call ctqmc_deallocate_memory_sect()
 
