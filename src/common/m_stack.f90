@@ -291,14 +291,16 @@
      return
   end subroutine istack_push
 
-!!>>> pop off item from the top of stack
-  integer &
-  function istack_pop(s) result (item)
+!!>>> istack_pop: pop off item from the top of stack
+  subroutine istack_pop(s)
      implicit none
 
 ! external arguments
 ! integer type stack
      type (istack), intent(inout) :: s
+
+! the top item in the stack
+     integer, intent(out)         :: item
 
      if ( s%top == 0 ) then
          write(mystd,'(a)') 'istack: the stack is empty, can not pop off any item from it'
@@ -306,10 +308,10 @@
      else
          item = s%item(s%top)
          s%top = s%top - 1
-     endif
+     endif ! back if ( s%top == 0 ) block
 
      return
-  end function istack_pop
+  end subroutine istack_pop
 
 !!>>> istack_display: display the top item in the stack without pop it off
   subroutine istack_display(s, item)
