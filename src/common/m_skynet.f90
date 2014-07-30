@@ -31,6 +31,67 @@
 !!! comment : this module is not actived until now
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! In this module, we define such a data structure (sunu) which is used to
+!! represent very large float number. We reload basic arithmetic operations
+!! such +/-/*// for it. Due to the performance issue, we do not use it now.
+!! But it may be useful in the other fields.
+!!
+!! Usage
+!! =====
+!!
+!! 1. import skynet support
+!! ------------------------
+!!
+!! use skynet
+!!
+!! 2. declare sunu data type
+!! -------------------------
+!!
+!! type (sunu) :: A
+!!
+!! 3. assignment operations for sunu structure
+!! -------------------------------------------
+!!
+!! type (sunu) :: A
+!! real(dp) :: B
+!! real(dp) :: C
+!! type (sunu) :: D
+!!
+!! B = 1.0_dp
+!! A = 2.0_dp * B
+!! C = A
+!! D = A
+!!
+!! 4. basic arithmetic operations for sunu structure
+!! -------------------------------------------------
+!!
+!! type (sunu) :: A
+!! type (sunu) :: B
+!! type (sunu) :: C
+!! real(dp) :: d
+!!
+!! A = 1.0_dp
+!! B = 3.0_dp
+!!
+!! C = A + B
+!! d = C
+!! print *, d
+!!
+!! C = A / B
+!! d = C
+!! print *, d
+!!
+!! C = A * B
+!! d = C
+!! print *, d
+!!
+!!
+
   module skynet
      implicit none
 
@@ -125,7 +186,7 @@
 
   contains ! encapsulated functionality
 
-!!>>> assign sunu structure to sunu structure
+!!>>> sunu_to_sunu: assign sunu structure to sunu structure
   subroutine sunu_to_sunu(s1, s2)
      implicit none
 
@@ -142,7 +203,7 @@
      return
   end subroutine sunu_to_sunu
 
-!!>>> assign sunu structure to real number
+!!>>> sunu_to_real: assign sunu structure to real number
   subroutine sunu_to_real(r1, s1)
      implicit none
 
@@ -164,7 +225,7 @@
      return
   end subroutine sunu_to_real
 
-!!>>> assign real number to sunu structure
+!!>>> real_to_sunu: assign real number to sunu structure
   subroutine real_to_sunu(s1, r1)
      implicit none
 
@@ -181,7 +242,7 @@
      return
   end subroutine real_to_sunu
 
-!!>>> add sunu structure to sunu structure
+!!>>> sunu_add_sunu: add sunu structure to sunu structure
   type (sunu) &
   function sunu_add_sunu(s1, s2) result(s)
      implicit none
@@ -204,7 +265,7 @@
      return
   end function sunu_add_sunu
 
-!!>>> add sunu structure to real number
+!!>>> sunu_add_real: add sunu structure to real number
   type (sunu) &
   function sunu_add_real(s1, r2) result(s)
      implicit none
@@ -228,7 +289,7 @@
      return
   end function sunu_add_real
 
-!!>>> add real number to sunu structure
+!!>>> real_add_sunu: add real number to sunu structure
   type (sunu) &
   function real_add_sunu(r1, s2) result(s)
      implicit none
@@ -252,7 +313,7 @@
      return
   end function real_add_sunu
 
-!!>>> substract sunu structure from sunu structure
+!!>>> sunu_sub_sunu: substract sunu structure from sunu structure
   type (sunu) &
   function sunu_sub_sunu(s1, s2) result(s)
      implicit none
@@ -275,7 +336,7 @@
      return
   end function sunu_sub_sunu
 
-!!>>> substract real number from sunu structure
+!!>>> sunu_sub_real: substract real number from sunu structure
   type (sunu) &
   function sunu_sub_real(s1, r2) result(s)
      implicit none
@@ -299,7 +360,7 @@
      return
   end function sunu_sub_real
 
-!!>>> substract sunu structure from real number
+!!>>> real_sub_sunu: substract sunu structure from real number
   type (sunu) &
   function real_sub_sunu(r1, s2) result(s)
      implicit none
@@ -323,7 +384,7 @@
      return
   end function real_sub_sunu
 
-!!>>> multiply sunu structure with sunu structure
+!!>>> sunu_mul_sunu: multiply sunu structure with sunu structure
   type (sunu) &
   function sunu_mul_sunu(s1, s2) result(s)
      implicit none
@@ -341,7 +402,7 @@
      return
   end function sunu_mul_sunu
 
-!!>>> multiply sunu structure with real number
+!!>>> sunu_mul_real: multiply sunu structure with real number
   type (sunu) &
   function sunu_mul_real(s1, r2) result(s)
      implicit none
@@ -359,7 +420,7 @@
      return
   end function sunu_mul_real
 
-!!>>> multiply real number with sunu structure
+!!>>> real_mul_sunu: multiply real number with sunu structure
   type (sunu) &
   function real_mul_sunu(r1, s2) result(s)
      implicit none
@@ -377,7 +438,7 @@
      return
   end function real_mul_sunu
 
-!!>>> divide sunu structure by sunu structure
+!!>>> sunu_div_sunu: divide sunu structure by sunu structure
   type (sunu) &
   function sunu_div_sunu(s1, s2) result(s)
      implicit none
@@ -395,7 +456,7 @@
      return
   end function sunu_div_sunu
 
-!!>>> divide sunu structure by real number
+!!>>> sunu_div_real: divide sunu structure by real number
   type (sunu) &
   function sunu_div_real(s1, r2) result(s)
      implicit none
@@ -413,7 +474,7 @@
      return
   end function sunu_div_real
 
-!!>>> divide real number by sunu structure
+!!>>> real_div_sunu: divide real number by sunu structure
   type (sunu) &
   function real_div_sunu(r1, s2) result(s)
      implicit none
@@ -431,7 +492,7 @@
      return
   end function real_div_sunu
 
-!!>>> build sunu structure from a pair real number
+!!>>> skynet_make_sunu: build sunu structure from a pair real number
   subroutine skynet_make_sunu(mant, expt, s)
      implicit none
 
@@ -451,7 +512,7 @@
      return
   end subroutine skynet_make_sunu
 
-!!>>> make balance for the sunu structure
+!!>>> skynet_done_sunu: make balance for the sunu structure
   subroutine skynet_done_sunu(s)
      implicit none
 
@@ -473,7 +534,7 @@
      return
   end subroutine skynet_done_sunu
 
-!!>>> check the status of sunu structure
+!!>>> skynet_test_sunu: check the status of sunu structure
   subroutine skynet_test_sunu(s)
      implicit none
 
@@ -494,7 +555,7 @@
      return
   end subroutine skynet_test_sunu
 
-!!>>> test if sunu structure is zero in real form
+!!>>> skynet_zero_sunu: test if sunu structure is zero in real form
   logical &
   function skynet_zero_sunu(s) result(z)
      implicit none
