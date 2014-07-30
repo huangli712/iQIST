@@ -54,6 +54,7 @@
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
+     iskip  = 0            ! npart               (1) or skip lists           (2)
 !-------------------------------------------------------------------------
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
@@ -91,6 +92,7 @@
      nfreq  = 128          ! maximum number of matsubara frequency sampling by quantum impurity solver
      ntime  = 1024         ! number of time slice
      npart  = 16           ! number of parts that the imaginary time axis is split
+     max_level = 8         ! maximum level of skip lists
      nflip  = 20000        ! flip period for spin up and spin down states
      ntherm = 200000       ! maximum number of thermalization steps
      nsweep = 20000000     ! maximum number of quantum Monte Carlo sampling steps
@@ -121,6 +123,7 @@
              read(mytmp,*) isbin                                         !
              read(mytmp,*) isort                                         !
              read(mytmp,*) isvrt                                         !
+             read(mytmp,*) iskip                                         !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
 
              read(mytmp,*)
@@ -172,6 +175,7 @@
              read(mytmp,*) nfreq                                         !
              read(mytmp,*) ntime                                         !
              read(mytmp,*) npart                                         !
+             read(mytmp,*) mlevl                                         !
              read(mytmp,*) nflip                                         !
              read(mytmp,*) ntherm                                        !
              read(mytmp,*) nsweep                                        !
@@ -196,6 +200,7 @@
      call mp_bcast( isbin , master )                                     !
      call mp_bcast( isort , master )                                     !
      call mp_bcast( isvrt , master )                                     !
+     call mp_bcast( iskip , master )                                     !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
      call mp_barrier()
 
@@ -247,6 +252,7 @@
      call mp_bcast( nfreq , master )                                     !
      call mp_bcast( ntime , master )                                     !
      call mp_bcast( npart , master )                                     !
+     call mp_bcast( mlevl , master )                                     !
      call mp_bcast( nflip , master )                                     !
      call mp_bcast( ntherm, master )                                     !
      call mp_bcast( nsweep, master )                                     !

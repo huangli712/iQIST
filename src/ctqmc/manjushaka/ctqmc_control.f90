@@ -82,6 +82,11 @@
 ! note: isvrt == 2, 3, and 5 are not implemented so far.
      integer, public, save :: isvrt  = 1
 
+! control flag: which trace algorithm to be used
+! if iskip == 0, use npart algorithm
+! if iskip == 1, use skip lists algorithm
+     integer, public, save :: iskip
+
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! number of correlated bands
@@ -150,6 +155,9 @@
 ! note: 2\sqrt{3 <k> nband} ~ 4\sqrt{3 <k> nband} may be the optimal value
 ! for npart to achieve maximum performance
      integer, public, save :: npart  = 16
+
+! maximum level for skip lists
+     integer, public, save :: mlevl  = 8
 
 ! flip period for spin up and spin down states
 ! note: care must be taken to prevent the system from being trapped in a
