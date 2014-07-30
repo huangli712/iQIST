@@ -324,7 +324,7 @@
          STOP
      else
          item = s%item(s%top)
-     endif
+     endif ! back if ( s%top == 0 ) block
 
      return
   end subroutine istack_display
@@ -344,8 +344,15 @@
          write(mystd,'(a)') 'gstack: the stack is empty, can not return the top item of it'
          STOP
      else
-         item = s%item(s%top)
-     endif
+         select type (v => s%item)
+             type is (integer)
+         !item = s%item(s%top)
+             type is (logical)
+             type is (real(dp))
+             type is (complex(dp))
+             type is (character(len = *))
+         end select
+     endif ! back if ( s%top == 0 ) block
 
      return
   end subroutine gstack_display
