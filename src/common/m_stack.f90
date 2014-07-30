@@ -308,14 +308,16 @@
      return
   end function istack_pop
 
-!!>>> display the top item in the stack without pop it off
-  integer &
-  function istack_display(s) result (item)
+!!>>> istack_display: display the top item in the stack without pop it off
+  subroutine istack_display(s, item)
      implicit none
 
 ! external arguments
 ! integer type stack
      type (istack), intent(in) :: s
+
+! the top item in the stack
+     integer, intent(out)      :: item
 
      if ( s%top == 0 ) then
          write(mystd,'(a)') 'istack: the stack is empty, can not return the top item of it'
@@ -325,7 +327,7 @@
      endif
 
      return
-  end function istack_display
+  end subroutine istack_display
 
 !!>>> istack_gettop: return the top position of the stack, i.e, the number
 !!>>> of items stored in the stack currently
