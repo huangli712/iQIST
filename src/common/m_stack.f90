@@ -242,7 +242,33 @@
 
 ! sync the data
      sb%top = sa%top
-     sb%item = sa%item
+     select type (v => sb%item)
+         type is (integer)
+             select type (u => sa%item)
+                 type is (integer)
+                     v = u
+             end select
+         type is (logical)
+             select type (u => sa%item)
+                 type is (logical)
+                     v = u
+             end select
+         type is (real(dp))
+             select type (u => sa%item)
+                 type is (real(dp))
+                     v = u
+             end select
+         type is (complex(dp))
+             select type (u => sa%item)
+                 type is (complex(dp))
+                     v = u
+             end select
+         type is (character(len = *))
+             select type (u => sa%item)
+                 type is (character(len = *))
+                     v = u
+             end select
+     end select
 
      return
   end subroutine gstack_copyer
