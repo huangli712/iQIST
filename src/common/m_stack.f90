@@ -271,6 +271,56 @@
      return
   end subroutine istack_getter
 
+!!>>> gstack_getter: return the item's value of stack at specified position
+  subroutine gstack_getter(s, pos, item)
+     implicit none
+
+! external arguments
+! generic type stack
+     type (gstack), intent(in) :: s
+
+! position of the item
+     integer, intent(in)       :: pos
+
+! the item's value
+     class(*), intent(out)     :: item
+
+     if ( pos < 1 .or. pos > s%nsize ) then
+         write(mystd,'(a)') 'gstack: the position is not correct'
+         STOP
+     else
+         select type (v => s%item)
+             type is (integer)
+                 select type (item)
+                     type is (integer)
+                         item = v(pos)
+                 end select
+             type is (logical)
+                 select type (item)
+                     type is (logical)
+                         item = v(pos)
+                 end select
+             type is (real(dp))
+                 select type (item)
+                     type is (real(dp))
+                         item = v(pos)
+                 end select
+             type is (complex(dp))
+                 select type (item)
+                     type is (complex(dp))
+                         item = v(pos)
+                 end select
+             type is (character(len = *))
+                 select type (item)
+                     type is (character(len = *))
+                         item = v(pos)
+                 end select
+         end select
+     endif ! back if ( pos < 1 .or. pos > s%nsize ) block
+
+     return
+  end subroutine istack_getter
+
 !!>>> istack_push: push item on top of stack
   subroutine istack_push(s, item)
      implicit none
