@@ -2862,10 +2862,12 @@
              sect2 = saved_a_nm(2,i,isect)
              dim2 = sectors(sect1)%ndim
              dim3 = sectors(sect2)%ndim
-             call ctqmc_dmat_gemm( dim2, dim3, dim1, saved_a(1:dim2, 1:dim3, i, isect), &
-                                   right_mat(1:dim3, 1:dim1), tmp_mat(1:dim2, 1:dim1) )
-             right_mat(1:dim2, 1:dim1) = tmp_mat(1:dim2, 1:dim1)
+             call dgemm( 'N', 'N', dim2, dim1, dim3,  one,    &
+                          saved_a(:,:,i,isect), max_dim_sect, &
+                          right_mat,            max_dim_sect, &
+                          zero, tmp_mat,        max_dim_sect   )
 
+             right_mat = tmp_mat
              num_prod = num_prod + one
 
 ! this part should be recalcuated 
@@ -2892,15 +2894,21 @@
 
                  vt = type_v( index_t_loc(j) )
                  vf = flvr_v( index_t_loc(j) ) 
-                 call ctqmc_dmat_gemm(dim2, dim3, dim4, sectors(string(j))%myfmat(vf, vt)%item,&
-                                      tmp_mat(1:dim3, 1:dim4), saved_b(1:dim2, 1:dim4, i, isect) ) 
+                 call dgemm( 'N', 'N', dim2, dim4, dim3, one,              &
+                             sectors(string(j))%myfmat(vf, vt)%item, dim2, &
+                             tmp_mat,                        max_dim_sect, &
+                             zero, saved_b(:,:,i,isect),     max_dim_sect   ) 
+
                  num_prod = num_prod + two
-             enddo  ! over j={ops(i), ope(i)} loop
+             enddo  
 
 ! multiply this part with the rest parts
-             call ctqmc_dmat_gemm(dim2, dim4, dim1, saved_b(1:dim2, 1:dim4, i, isect), &
-                                    right_mat(1:dim4, 1:dim1), tmp_mat(1:dim2, 1:dim1) ) 
-             right_mat(1:dim2, 1:dim1) = tmp_mat(1:dim2, 1:dim1)
+             call dgemm( 'N', 'N', dim2, dim1, dim4, one,    &
+                         saved_b(:,:,i,isect), max_dim_sect, &
+                         right_mat,            max_dim_sect, &
+                         zero, tmp_mat,        max_dim_sect   ) 
+
+             right_mat = tmp_mat
              num_prod = num_prod + one
 ! save current part dimension to saved_b_nm
              saved_b_nm(1,i,isect) = sect1
@@ -2952,7 +2960,6 @@
 ! loop index
      integer :: i, j
      integer :: sect1, sect2
-     integer :: dim1, dim2
 
 ! update the operator traces
      matrix_ptrace = matrix_ntrace
@@ -2977,9 +2984,7 @@
                      sect2 = saved_b_nm(2, j, i)
                      saved_a_nm(1, j, i) = sect1
                      saved_a_nm(2, j, i) = sect2
-                     dim1 = sectors(sect1)%ndim
-                     dim2 = sectors(sect2)%ndim
-                     saved_a(1:dim1, 1:dim2, j, i) = saved_b(1:dim1, 1:dim2, j, i) 
+                     saved_a(:,:,j,i) = saved_b(:,:, j, i) 
                  endif
              enddo
          enddo
