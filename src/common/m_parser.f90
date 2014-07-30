@@ -1,6 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : parser
+!!!           parser@data_ptr
+!!!           parser@list_ptr
 !!!           parser@p_create
 !!!           parser@p_destroy
 !!!           parser@p_parse
@@ -19,7 +21,132 @@
 
 !!
 !!
-!! USAGE:
+!! Introduction
+!! ============
+!!
+!! The original input file format for iQIST is not very well. We need a
+!! flexible, convenient, and powerful input file format, and corresponding
+!! file reader and parser. Thus, we redesign the input file format and
+!! implement this file parser.
+!!
+!! Input File Format
+!! =================
+!!
+!! 1. anything after "#" and "!" character can be treated as comments and
+!!    will be ignored completely.
+!!
+!!    example:
+!!    
+!!    # this is a comment line
+!!    ! this is a comment line
+!!
+!!    nband = 4 # this is in line comment
+!!    norbs = 8 ! this in line comment
+!!
+!! 2. it is not case sensitive.
+!!
+!!    example:
+!!
+!!    Nband = 4
+!!    NORBS = 8
+!!    NspiN = 2
+!!
+!! 3. the key and value pair is separated by "=" or ":" character.
+!!
+!!    example:
+!!
+!!    nband = 4 ! you can use nband : 4
+!!    norbs : 8 ! you can use norbs = 8
+!! 
+!! 4. any space will be ignored. any blank lines will be skipped as well.
+!!
+!!    example:
+!!
+!!    n b a n d = 4 ! it is valid
+!!    no   rb s = 8 ! it is valid
+!!
+!! 5. you can only use one line to define one key-value pair.
+!!
+!!    example
+!!
+!!    nband = 4 norbs = 8 ! it is not valid
+!!    nband =
+!!    4                   ! it is not valid
+!!
+!! 6. in the value part, now only integer, real(dp), logical, and character
+!!    data type are support. 
+!!
+!!    example:
+!!
+!!    nband = 4        ! integer type
+!!    mune  = 4.0      ! real(dp) type
+!!    isscf = .true.   ! logical type, you can also use .false., T, F
+!!    model = anderson ! character type, do not use "" or '' characters
+!!
+!! 7. in the value part, a vector is also support. the items in the vector
+!!    should be separated by "," character.
+!!
+!!    example:
+!!
+!!    nband = 1, 2, 3, 4                   ! 4 items
+!!    mune = 0.0, -1.0, 2.0                ! 3 items
+!!    isscf = .true., .true., F, T, .true. ! 5 items
+!!    model = anderson, hubbard            ! 2 items
+!!
+!! 8. an empty input file is acceptable.
+!!
+!! 9. if one key occurs in the input file for more than 1 times, only the
+!!    first occurrence is recognized.
+!! 
+!! Usage
+!! =====
+!!
+!! 1. import parser support
+!! ------------------------
+!!
+!! use parser
+!!
+!! 2. create instance for parser
+!! -----------------------------
+!!
+!! call p_create()
+!!
+!! 3. parse the input file
+!! -----------------------
+!!
+!! call p_parse(file_name)
+!!
+!! note: in the mpi environment, only the master node can execute this
+!! command.
+!!
+!! 4. extract parameters
+!! ---------------------
+!!
+!! integer :: nband = 2         ! default value
+!! real(dp) :: mune = 10.0_dp   ! default value
+!! logical :: symm(2)           ! default value
+!! symm(1) = .true.
+!! symm(2) = .false.
+!! call p_get('nband', nband)   ! get single value
+!! call p_get('mune', mune)     ! get single value
+!! call p_get_vec('symm', symm) ! get array
+!!
+!! note: that if the desired parameter is not contained in the config file,
+!! then the default value will not be changed.
+!!
+!! note: in the mpi environment, only the master node can execute these
+!! commands.
+!!
+!! 5. destroy parser
+!! -----------------
+!!
+!! call p_destroy()
+!!
+!! 6. broadcast the parameters read from input file
+!! ------------------------------------------------
+!!
+!! do not forget to broadcast all of the parameters from master node to
+!! children nodes.
 !!
 !!
 
@@ -119,10 +246,10 @@
 ! open input/config file, here we do not judge whether the file exists
      open(mytmp, file = trim(in_file), form = 'formatted', status = 'unknown')
 
-     FILE_READING: do ! start reading the file
+     FILE_PARSING: do ! start reading the file
 
 ! read one line from the input file until we meet the end-of-file (EOF)
-! the line content is stored in string
+! flag, the line content is stored in string
          read(mytmp, '(a100)', iostat = istat) string
          if ( istat == iostat_end ) then
              EXIT
@@ -163,16 +290,20 @@
 ! same time for the same string.
              p = index(string, ':')
              q = index(string, '=')
+! case 1: we do not find any ":" or "=" character
              if ( p == 0 .and. q == 0 ) then
                  call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
              endif ! back if ( p == 0 .and. q == 0 ) block
+! case 2: we find both ":" and "=" characters
              if ( p >  0 .and. q >  0 ) then
                  call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
              endif ! back if ( p >  0 .and. q >  0 ) block
+! case 3: we find only ":" character
              if ( p > 0 ) then
                  str_key = string(0:p-1)
                  str_value = string(p+1:len(string))
              endif ! back if ( p > 0 ) block
+! case 4: we find only "=" character
              if ( q > 0 ) then
                  str_key = string(0:q-1)
                  str_value = string(q+1:len(string))
@@ -184,6 +315,14 @@
              call s_str_lowcase(str_value)
              call s_str_compress(str_value)
 
+! check the length of str_key and str_value
+             if ( len_trim(str_key) == 0   ) then
+                 call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
+             endif ! back if ( len_trim(str_key) == 0   ) block
+             if ( len_trim(str_value) == 0 ) then
+                 call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
+             endif ! back if ( len_trim(str_value) == 0 ) block
+
 ! store the key-value pair in the linked list structure
              allocate(data_ptr)
              data_ptr%is_valid = .true.
@@ -192,7 +331,7 @@
              call list_insert(list_ptr, transfer(data_ptr, list_d))
          endif ! back if ( istat == iostat_end ) block
 
-     enddo FILE_READING ! over do loop
+     enddo FILE_PARSING ! over do loop
 
 ! close the input/config file
      close(mytmp)
@@ -201,6 +340,7 @@
   end subroutine p_parse
 
 !!>>> p_get: retrieve the key-value pair from the linked list data structure
+!!>>> here value is a single object
   subroutine p_get(in_key, out_value)
      implicit none
 
@@ -235,7 +375,7 @@
      do p=1,list_count(list_ptr)-1
 ! note that we skip the first element since it is invalid
          curr => list_next(curr)
-         data_ptr  = transfer(list_get(curr), data_ptr)
+         data_ptr = transfer(list_get(curr), data_ptr)
 ! the required key-value pair is found, extract the value to str_value
          if ( trim(str_key) .eq. trim(data_ptr%str_key) ) then
              str_value = data_ptr%str_value
@@ -310,7 +450,7 @@
      do p=1,list_count(list_ptr)-1
 ! note that we skip the first element since it is invalid
          curr => list_next(curr)
-         data_ptr  = transfer(list_get(curr), data_ptr)
+         data_ptr = transfer(list_get(curr), data_ptr)
 ! the required key-value pair is found, extract the value to str_value
          if ( trim(str_key) .eq. trim(data_ptr%str_key) ) then
              str_value = data_ptr%str_value
@@ -324,7 +464,7 @@
 ! convert str_value to out_value, here we only support the following
 ! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
 !
-! note: the delimiter is ','
+! note: the delimiter must be ','
 !
 ! note: it is very strange that we can not use read command to make
 ! an assignment for out_value directly.
