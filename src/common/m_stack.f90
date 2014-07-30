@@ -164,7 +164,7 @@
      allocate(s%item(s%nsize))
 
      return
-  end function istack_create
+  end subroutine istack_create
 
 !!>>> istack_clean: reset the integer type stack, clean all its elements
   subroutine istack_clean(s)
