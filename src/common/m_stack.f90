@@ -269,7 +269,7 @@
      return
   end function istack_getter
 
-!!>>> push item on top of stack
+!!>>> istack_push: push item on top of stack
   subroutine istack_push(s, item)
      implicit none
 
@@ -290,6 +290,28 @@
 
      return
   end subroutine istack_push
+
+!!>>> gstack_push: push item on top of stack
+  subroutine gstack_push(s, item)
+     implicit none
+
+! external arguments
+! integer type stack
+     type (istack), intent(inout) :: s
+
+! elements to be pushed in the stack
+     integer, intent(in) :: item
+
+     if ( s%top == s%nsize ) then
+         write(mystd,'(a)') 'gstack: the stack is full, can not push any item on it'
+         STOP
+     else
+         s%top = s%top + 1
+         s%item(s%top) = item
+     endif
+
+     return
+  end subroutine gstack_push
 
 !!>>> istack_pop: pop off item from the top of stack
   subroutine istack_pop(s, item)
