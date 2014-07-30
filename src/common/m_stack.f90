@@ -20,6 +20,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/14/2009 by li huang
 !!!           07/09/2014 by li huang
+!!!           07/30/2014 by li huang
 !!! purpose : the purpose of this module is to define a stack-type (LIFO)
 !!!           data structure in fortran version
 !!! status  : unstable
@@ -73,6 +74,21 @@
          integer, allocatable :: item(:)
 
      end type istack
+
+! define generic type stack
+     type gstack
+
+! top position of stack
+         integer :: top
+
+! size of allocatable array
+         integer :: nsize
+
+! allocatable array, which is used to store elements in stack
+! note: it is an unlimited polymorphic object
+         class(*), allocatable :: item(:)
+
+     end type gstack
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
