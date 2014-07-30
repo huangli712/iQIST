@@ -319,7 +319,7 @@
      endif ! back if ( pos < 1 .or. pos > s%nsize ) block
 
      return
-  end subroutine istack_getter
+  end subroutine gstack_getter
 
 !!>>> istack_push: push item on top of stack
   subroutine istack_push(s, item)
