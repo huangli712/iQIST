@@ -182,7 +182,7 @@
      return
   end subroutine istack_clean
 
-!!>>> destroy and finalize a integer type stack
+!!>>> istack_destroy: destroy and finalize an integer type stack
   subroutine istack_destroy(s)
      implicit none
 
@@ -198,6 +198,23 @@
 
      return
   end subroutine istack_destroy
+
+!!>>> gstack_destroy: destroy and finalize a generic type stack
+  subroutine gstack_destroy(s)
+     implicit none
+
+! external arguments
+! generic type stack
+     type (gstack), intent(inout) :: s
+
+! deallocate memory
+     if ( allocated(s%item) ) deallocate(s%item)
+
+! reset top position
+     s%top = 0
+
+     return
+  end subroutine gstack_destroy
 
 !!>>> istack_copyer: copy an istack object to another
   subroutine istack_copyer(sa, sb)
