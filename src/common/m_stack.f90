@@ -327,8 +327,8 @@
      return
   end function istack_display
 
-!!>>> return the top position of the stack, i.e, the number of items stored
-! in the stack currently
+!!>>> istack_gettop: return the top position of the stack, i.e, the number
+!!>>> of items stored in the stack currently
   integer &
   function istack_gettop(s) result (t)
      implicit none
@@ -341,6 +341,21 @@
 
      return
   end function istack_gettop
+
+!!>>> gstack_gettop: return the top position of the stack, i.e, the number
+!!>>> of items stored in the stack currently
+  integer &
+  function gstack_gettop(s) result (t)
+     implicit none
+
+! external arguments
+! generic type stack
+     type (gstack), intent(in) :: s
+
+     t = s%top
+
+     return
+  end function gstack_gettop
 
 !!>>> istack_getrest: return the number of empty sites of the stack
   integer &
