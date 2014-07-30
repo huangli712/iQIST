@@ -328,7 +328,33 @@
          write(mystd,'(a)') 'gstack: the stack is empty, can not pop off any item from it'
          STOP
      else
-         item = s%item(s%top)
+         select type (v => s%item)
+             type is (integer)
+                 select type (item)
+                     type is (integer)
+                         item = v(s%top)
+                 end select
+             type is (logical)
+                 select type (item)
+                     type is (logical)
+                         item = v(s%top)
+                 end select
+             type is (real(dp))
+                 select type (item)
+                     type is (real(dp))
+                         item = v(s%top)
+                 end select
+             type is (complex(dp))
+                 select type (item)
+                     type is (complex(dp))
+                         item = v(s%top)
+                 end select
+             type is (character(len = *))
+                 select type (item)
+                     type is (character(len = *))
+                         item = v(s%top)
+                 end select
+         end select
          s%top = s%top - 1
      endif ! back if ( s%top == 0 ) block
 
