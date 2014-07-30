@@ -398,7 +398,19 @@
      return
   end function istack_isempty
 
+!!>>> gstack_isempty: check whether the stack is empty
+  logical &
+  function gstack_isempty(s) result (b)
+     implicit none
 
+! external arguments
+! generic type stack
+     type (gstack), intent(in) :: s
+
+     b = ( s%top == 0 )
+
+     return
+  end function gstack_isempty
 
   end module stack
 
