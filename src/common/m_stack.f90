@@ -223,26 +223,26 @@
      return
   end subroutine istack_copyer
 
-!!>>> update the item's value of stack at specified position
-  subroutine istack_setter(s, item, pos)
+!!>>> istack_setter: update the item's value of stack at specified position
+  subroutine istack_setter(s, pos, item)
      implicit none
 
 ! external arguments
 ! integer type stack
      type (istack), intent(inout) :: s
 
-! elements to be setted
-     integer, intent(in) :: item
-
 ! position of the element to be updated
-     integer, intent(in) :: pos
+     integer, intent(in)          :: pos
+
+! elements to be setted
+     integer, intent(in)          :: item
 
      if ( pos < 1 .or. pos > s%nsize ) then
          write(mystd,'(a)') 'istack: the position is not correct'
          STOP
      else
          s%item(pos) = item
-     endif
+     endif ! back if ( pos < 1 .or. pos > s%nsize ) block
 
      return
   end subroutine istack_setter
