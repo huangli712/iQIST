@@ -342,7 +342,7 @@
      return
   end function istack_gettop
 
-!!>>> return the number of empty sites of the stack
+!!>>> istack_getrest: return the number of empty sites of the stack
   integer &
   function istack_getrest(s) result (r)
      implicit none
@@ -355,6 +355,20 @@
 
      return
   end function istack_getrest
+
+!!>>> gstack_getrest: return the number of empty sites of the stack
+  integer &
+  function gstack_getrest(s) result (r)
+     implicit none
+
+! external arguments
+! generic type stack
+     type (gstack), intent(in) :: s
+
+     r = s%nsize - s%top
+
+     return
+  end function gstack_getrest
 
 !!>>> istack_getsize: return the actual capacity of the stack
   integer &
