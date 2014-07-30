@@ -623,6 +623,8 @@
      use control
      use context
 
+     use m_sector
+
      implicit none
 
 ! local variables

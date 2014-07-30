@@ -20,7 +20,8 @@
 !           cat_remove_flavor
 !           cat_lshift_flavor
 !           cat_rshift_flavor <<<---
-!           ctqmc_make_ztrace
+!           ctqmc_make_ztrace_lazy
+!           ctqmc_make_ztrace_retrieve
 !           ctqmc_make_string
 !           ctqmc_make_nparts
 !           cat_sector_ztrace
@@ -33,7 +34,7 @@
 ! source  : ctqmc_flavor.f90
 ! type    : subroutines
 ! author  : li huang (email:huangli712@yahoo.com.cn)
-!           yilin wang (email: wangyilin2015@gmail.com)
+!           yilin wang (email: qhwyl2006@126.com)
 ! history : 09/23/2009 by li huang
 !           09/26/2009 by li huang
 !           10/02/2009 by li huang
@@ -271,7 +272,6 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-!>>>     call ctqmc_make_ztrace(1, nsize+1, matrix_ntrace, tau_start, tau_end)
      call ctqmc_make_ztrace_lazy(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
 
      return
@@ -1411,6 +1411,9 @@
          ie = ie + 1
      endif
 
+     ladd = .true.
+     return
+
 !-------------------------------------------------------------------------
 ! stage 2: determine ladd, whether we can get them ?
 !-------------------------------------------------------------------------
@@ -1552,6 +1555,9 @@
          ie = ie - 1
      endif
 
+     lrmv = .true.
+     return
+
 !-------------------------------------------------------------------------
 ! stage 2: determine lrmv, whether we can kick off them ?
 !-------------------------------------------------------------------------
@@ -1689,6 +1695,9 @@
      if ( tau_start1 < tau_start2 ) then
          isn = isn - 1
      endif
+
+     lshf = .true.
+     return
 
 !-------------------------------------------------------------------------
 ! stage 2: determine lshf, whether we can shift it ?
@@ -1842,6 +1851,9 @@
      if ( tau_end1 < tau_end2 ) then
          ien = ien - 1
      endif
+
+     rshf = .true.
+     return
 
 !-------------------------------------------------------------------------
 ! stage 2: determine rshf, whether we can shift it ?
@@ -2577,6 +2589,19 @@
 ! build string for all the sectors
      call ctqmc_make_string(csize, index_t_loc, string)
 
+! we can check is_string here to see whether this diagram can survive ?
+     pass = .false.
+     do i=1, nsectors
+         if (is_string(i,1) .eqv. .true.) then
+             pass = .true.
+             EXIT
+         endif
+     enddo
+     if (pass .eqv. .false.) then
+         accept_p = zero
+         RETURN
+     endif
+
 ! make npart
      call ctqmc_make_nparts(cmode, csize, string, index_t_loc, tau_s, tau_e)
 
@@ -3122,6 +3147,8 @@
              call ctqmc_dmat_gemm( dim2, dim3, dim1, saved_a(1:dim2, 1:dim3, i, jsect), &
                                    right_mat(1:dim3, 1:dim1), tmp_mat(1:dim2, 1:dim1) )
              right_mat(1:dim2, 1:dim1) = tmp_mat(1:dim2, 1:dim1)
+             num_prod = num_prod + one
+
 ! this part should be recalcuated 
          elseif (is_save(i,isect) == 1) then 
 
@@ -3147,12 +3174,14 @@
                  vf = flvr_v( index_t_loc(j) ) 
                  call ctqmc_dmat_gemm(dim2, dim3, dim4, sectors(string(j))%myfmat(vf, vt)%item,&
                                       tmp_mat(1:dim3, 1:dim4), saved_b(1:dim2, 1:dim4, i, isect) ) 
+                 num_prod = num_prod + two
 
              enddo  ! over j={ops(i), ope(i)} loop
 ! multiply this part with the rest parts
              call ctqmc_dmat_gemm(dim2, dim4, dim1, saved_b(1:dim2, 1:dim4, i, isect), &
                                     right_mat(1:dim4, 1:dim1), tmp_mat(1:dim2, 1:dim1) ) 
              right_mat(1:dim2, 1:dim1) = tmp_mat(1:dim2, 1:dim1)
+             num_prod = num_prod + one
 
 ! save current part dimension to saved_b_nm
              saved_b_nm(1,i,isect) = string(ope(i)+1)
@@ -3169,6 +3198,7 @@
              right_mat(k,l) = right_mat(k,l) * expt_t_loc(indx+k-1)
          enddo
      enddo
+     num_prod = num_prod + one
 
 ! store final product
      sectors((string(1)))%final_product(:,:,1) = right_mat(1:dim1, 1:dim1)

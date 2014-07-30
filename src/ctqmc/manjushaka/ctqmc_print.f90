@@ -193,6 +193,8 @@
      write(mystd,'(4X,a,i10)')    'negative sign counter:', cnegs
      write(mystd,'(4X,a,f10.5)')  'averaged sign sampler:', caves / real(cstep)
 
+     write(mystd,'(4X,a,f12.1)')  'averaged matrices multiplication:', num_prod / real(cstep)
+
      return
   end subroutine ctqmc_print_runtime
 

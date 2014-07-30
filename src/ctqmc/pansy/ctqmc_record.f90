@@ -178,6 +178,8 @@
      use control
      use context
 
+     use m_sector
+
      implicit none
 
 ! local variables
@@ -813,6 +815,8 @@
      use constants
      use control
      use context
+
+     use m_sector
 
      implicit none
 
