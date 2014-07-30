@@ -384,6 +384,20 @@
      return
   end function istack_isfull
 
+!!>>> gstack_isfull: check whether the stack is full of items
+  logical &
+  function gstack_isfull(s) result (b)
+     implicit none
+
+! external arguments
+! generic type stack
+     type (gstack), intent(in) :: s
+
+     b = ( s%top == s%nsize )
+
+     return
+  end function gstack_isfull
+
 !!>>> istack_isempty: check whether the stack is empty
   logical &
   function istack_isempty(s) result (b)
