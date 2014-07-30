@@ -369,6 +369,10 @@
                          item = v(s%top)
                  end select
              type is (character(len = *))
+                 select type (item)
+                     type is (character(len = *))
+                         item = v(s%top)
+                 end select
          end select
      endif ! back if ( s%top == 0 ) block
 
