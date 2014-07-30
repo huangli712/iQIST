@@ -167,12 +167,15 @@
   end subroutine istack_create
 
 !!>>> gstack_create: create and initialize a generic type stack
-  subroutine gstack_create(s, n)
+  subroutine gstack_create(s, t, n)
      implicit none
 
 ! external arguments
 ! size of stack
      integer, optional, intent(in) :: n
+
+! mold for the elements in the stack
+     class(*), intent(in)          :: t
 
 ! generic type stack
      type (gstack), intent(out)    :: s
@@ -188,7 +191,14 @@
      s%top = 0
 
 ! allocate memory for item array
-     allocate(s%item(s%nsize))
+     select type (t)
+         type is (integer)
+             allocate(s%item(s%nsize), source = 0)
+         type is (logical)
+             allocate(s%item(s%nsize), source = .true.)
+         type is (real(dp))
+             allocate(s%item(s%nsize), source = 0.0_dp)
+     end select
 
      return
   end subroutine gstack_create
