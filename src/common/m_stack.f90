@@ -139,18 +139,16 @@
 
   contains ! encapsulated functionality
 
-!!>>> create and initialize a integer type stack
-  type (istack) &
-  function istack_create(n) result (s)
+!!>>> istack_create: create and initialize a integer type stack
+  subroutine istack_create(s, n)
      implicit none
 
 ! external arguments
 ! size of stack
      integer, optional, intent(in) :: n
 
-! local variables
-! status flag
-     integer :: istat
+! integer type stack
+     type (istack), intent(out)    :: s
 
 ! determine the capacity of stack
      if ( present (n) ) then
@@ -163,7 +161,7 @@
      s%top = 0
 
 ! allocate memory for item array
-     allocate(s%item(s%nsize), stat=istat)
+     allocate(s%item(s%nsize))
 
      return
   end function istack_create
