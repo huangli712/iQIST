@@ -247,6 +247,56 @@
      return
   end subroutine istack_setter
 
+!!>>> gstack_setter: update the item's value of stack at specified position
+  subroutine gstack_setter(s, pos, item)
+     implicit none
+
+! external arguments
+! generic type stack
+     type (gstack), intent(inout) :: s
+
+! position of the element to be updated
+     integer, intent(in)          :: pos
+
+! elements to be setted
+     class(*), intent(in)         :: item
+
+     if ( pos < 1 .or. pos > s%nsize ) then
+         write(mystd,'(a)') 'gstack: the position is not correct'
+         STOP
+     else
+         select type (v => s%item)
+             type is (integer)
+                 select type (item)
+                     type is (integer)
+                         v(pos) = item
+                 end select
+             type is (logical)
+                 select type (item)
+                     type is (logical)
+                         v(pos) = item
+                 end select
+             type is (real(dp))
+                 select type (item)
+                     type is (real(dp))
+                         v(pos) = item
+                 end select
+             type is (complex(dp))
+                 select type (item)
+                     type is (complex(dp))
+                         v(pos) = item
+                 end select
+             type is (character(len = *))
+                 select type (item)
+                     type is (character(len = *))
+                         v(pos) = item
+                 end select
+         end select
+     endif ! back if ( pos < 1 .or. pos > s%nsize ) block
+
+     return
+  end subroutine gstack_setter
+
 !!>>> istack_getter: return the item's value of stack at specified position
   subroutine istack_getter(s, pos, item)
      implicit none
