@@ -370,20 +370,6 @@
      return
   end function istack_getsize
 
-!!>>> check whether the stack is empty
-  logical &
-  function istack_isempty(s) result (b)
-     implicit none
-
-! external arguments
-! integer type stack
-     type (istack), intent(in) :: s
-
-     b = ( s%top == 0 )
-
-     return
-  end function istack_isempty
-
 !!>>> check whether the stack is full of items
   logical &
   function istack_isfull(s) result (b)
@@ -398,7 +384,26 @@
      return
   end function istack_isfull
 
+!!>>> check whether the stack is empty
+  logical &
+  function istack_isempty(s) result (b)
+     implicit none
+
+! external arguments
+! integer type stack
+     type (istack), intent(in) :: s
+
+     b = ( s%top == 0 )
+
+     return
+  end function istack_isempty
+
   end module stack
+
+
+
+
+
 
   module AAA
      type nstack
@@ -441,7 +446,6 @@
 
   program test
      use AAA
-     use stack
 
      implicit none
 
