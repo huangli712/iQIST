@@ -278,7 +278,7 @@
      type (istack), intent(inout) :: s
 
 ! elements to be pushed in the stack
-     integer, intent(in) :: item
+     integer, intent(in)          :: item
 
      if ( s%top == s%nsize ) then
          write(mystd,'(a)') 'istack: the stack is full, can not push any item on it'
@@ -296,18 +296,44 @@
      implicit none
 
 ! external arguments
-! integer type stack
-     type (istack), intent(inout) :: s
+! generic type stack
+     type (gstack), intent(inout) :: s
 
 ! elements to be pushed in the stack
-     integer, intent(in) :: item
+     class(*), intent(in)         :: item
 
      if ( s%top == s%nsize ) then
          write(mystd,'(a)') 'gstack: the stack is full, can not push any item on it'
          STOP
      else
          s%top = s%top + 1
-         s%item(s%top) = item
+         select type (v => s%item)
+             type is (integer)
+                 select type (item)
+                     type is (integer)
+                         v(s%top) = item
+                 end select
+             type is (logical)
+                 select type (item)
+                     type is (logical)
+                         v(s%top) = item
+                 end select
+             type is (real(dp))
+                 select type (item)
+                     type is (real(dp))
+                         v(s%top) = item
+                 end select
+             type is (complex(dp))
+                 select type (item)
+                     type is (complex(dp))
+                         v(s%top) = item
+                 end select
+             type is (character(len = *))
+                 select type (item)
+                     type is (character(len = *))
+                         v(s%top) = item
+                 end select
+         end select
      endif
 
      return
