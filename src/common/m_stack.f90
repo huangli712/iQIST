@@ -848,6 +848,79 @@
 
      implicit none
 
-     type (istack) :: s
-     call istack_create(s, 10)
+     integer, parameter :: dp = kind(1.0d0)
+
+     !type (istack) :: s, t
+     !integer :: i, j, k
+
+     !call istack_create(s, 10)
+     !call istack_create(t, 10)
+     !print *, 'full:', istack_isfull(s), &
+     !         'empty:', istack_isempty(s), &
+     !         'size:', istack_getsize(s), &
+     !         'rest:', istack_getrest(s), &
+     !         'top:', istack_gettop(s)
+
+     !call istack_push(s, 10)
+     !call istack_push(s, 8)
+     !call istack_push(s, 6)
+     !call istack_push(s, 2)
+     !call istack_push(s, 5)
+     !call istack_push(s, 4)
+     !print *, 'full:', istack_isfull(s), &
+     !         'empty:', istack_isempty(s), &
+     !         'size:', istack_getsize(s), &
+     !         'rest:', istack_getrest(s), &
+     !         'top:', istack_gettop(s)
+     !
+     !call istack_pop(s, i)
+     !print *, 'pop:', i
+     !print *, 'full:', istack_isfull(s), &
+     !         'empty:', istack_isempty(s), &
+     !         'size:', istack_getsize(s), &
+     !         'rest:', istack_getrest(s), &
+     !         'top:', istack_gettop(s)
+     !
+     !call istack_pop(s, j)
+     !print *, 'pop:', j
+     !print *, 'full:', istack_isfull(s), &
+     !         'empty:', istack_isempty(s), &
+     !         'size:', istack_getsize(s), &
+     !         'rest:', istack_getrest(s), &
+     !         'top:', istack_gettop(s)
+     !
+     !call istack_display(s, k)
+     !print *, 'display:', k
+     !print *, 'full:', istack_isfull(s), &
+     !         'empty:', istack_isempty(s), &
+     !         'size:', istack_getsize(s), &
+     !         'rest:', istack_getrest(s), &
+     !         'top:', istack_gettop(s)
+     !
+     !do i=1,istack_getsize(s)
+     !    call istack_getter(s, i, j)
+     !    print *, i, j
+     !enddo
+     !call istack_setter(s, 10, 3)
+     !do i=1,istack_getsize(s)
+     !    call istack_getter(s, i, j)
+     !    print *, i, j
+     !enddo
+     !
+     !print *, 'full:', istack_isfull(t), &
+     !         'empty:', istack_isempty(t), &
+     !         'size:', istack_getsize(t), &
+     !         'rest:', istack_getrest(t), &
+     !         'top:', istack_gettop(t)
+     !call istack_copyer(s, t)
+     !print *, 'full:', istack_isfull(t), &
+     !         'empty:', istack_isempty(t), &
+     !         'size:', istack_getsize(t), &
+     !         'rest:', istack_getrest(t), &
+     !         'top:', istack_gettop(t)
+     !do i=1,istack_getsize(t)
+     !    call istack_getter(t, i, j)
+     !    print *, i, j
+     !enddo
+
   end program test
