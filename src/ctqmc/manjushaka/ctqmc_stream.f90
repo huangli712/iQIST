@@ -54,7 +54,7 @@
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
-     iskip  = 0            ! npart               (1) or skip lists           (2)
+     iskip  = 1            ! npart               (1) or skip lists           (2)
 !-------------------------------------------------------------------------
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
@@ -92,7 +92,7 @@
      nfreq  = 128          ! maximum number of matsubara frequency sampling by quantum impurity solver
      ntime  = 1024         ! number of time slice
      npart  = 16           ! number of parts that the imaginary time axis is split
-     max_level = 8         ! maximum level of skip lists
+     mlevl = 8         ! maximum level of skip lists
      nflip  = 20000        ! flip period for spin up and spin down states
      ntherm = 200000       ! maximum number of thermalization steps
      nsweep = 20000000     ! maximum number of quantum Monte Carlo sampling steps
@@ -494,7 +494,10 @@
              read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
 ! after we know the total number of sectors, we can allocate memory for array sect
              call ctqmc_allocate_memory_sect()
-             call ctqmc_allocate_memory_part()
+
+             if (iskip == 1) then
+                 call ctqmc_allocate_memory_part()
+             endif
 
 ! read the data for each sector
              do i=1, nsectors

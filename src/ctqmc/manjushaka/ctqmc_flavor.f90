@@ -272,7 +272,9 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     if ( iskip == 1 ) then
+         call ctqmc_make_ztrace_lazy(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     endif
 
      return
   end subroutine cat_insert_ztrace
@@ -453,7 +455,9 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     if (iskip == 1) then
+         call ctqmc_make_ztrace_lazy(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     endif
 
      return
   end subroutine cat_remove_ztrace
@@ -603,7 +607,9 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2)
+     if (iskip == 1) then
+         call ctqmc_make_ztrace_lazy(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2)
+     endif
 
      return
   end subroutine cat_lshift_ztrace
@@ -753,7 +759,9 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2)
+     if ( iskip == 1 ) then
+         call ctqmc_make_ztrace_lazy(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2)
+     endif
 
      return
   end subroutine cat_rshift_ztrace
@@ -2751,7 +2759,7 @@
      expt_t_loc = expt_t(:,2)
 
 ! build string for all the sectors
-     call ctqmc_make_string(csize, index_t_loc, string)
+     call ctqmc_make_string(csize, index_t_loc, is_string, string)
 
 ! make npart
      call ctqmc_make_nparts(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
@@ -3201,21 +3209,21 @@
          sectors(i)%final_product(:,:,2) = sectors(i)%final_product(:,:,1)
      enddo
   
-     is_save(:,:,2) = is_save(:,:,1)
-
 ! when npart > 1, we used the npart algorithm, store the results when moves are accepted
-     if ( npart > 1) then
-         do i=1, nsectors
-             do j=1, npart
-                 if ( is_copy(j,i) ) then
+     if ( iskip == 1 ) then
+         is_save(:,:,2) = is_save(:,:,1)
+         if ( npart > 1) then
+             do i=1, nsectors
+                 do j=1, npart
+                     if (.not. is_copy(j,i) ) cycle
                      sect1 = saved_b_nm(1, j, i)
                      sect2 = saved_b_nm(2, j, i)
                      saved_a_nm(1, j, i) = sect1
                      saved_a_nm(2, j, i) = sect2
                      saved_a(:,:,j,i) = saved_b(:,:, j, i) 
-                 endif
+                 enddo
              enddo
-         enddo
+         endif
      endif
 
      return

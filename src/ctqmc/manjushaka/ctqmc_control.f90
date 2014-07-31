@@ -83,8 +83,8 @@
      integer, public, save :: isvrt  = 1
 
 ! control flag: which trace algorithm to be used
-! if iskip == 0, use npart algorithm
-! if iskip == 1, use skip lists algorithm
+! if iskip == 1, use npart algorithm
+! if iskip == 2, use skip lists algorithm
      integer, public, save :: iskip
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
