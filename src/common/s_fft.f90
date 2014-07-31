@@ -14,7 +14,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> s_fft_tails: calculate high frequency tails using K. Haule's trick
+!!>>> s_fft_tails: calculate high frequency tails using K. Haule's trick
   subroutine s_fft_tails(rtail, mfreq, rmesh, green)
      use constants, only : dp, zero, one
 
@@ -65,7 +65,7 @@
      return
   end subroutine s_fft_tails
 
-!>>> fourier from imaginary time space forward to matsubara frequency space
+!!>>> fourier from imaginary time space forward to matsubara frequency space
 ! using linear fourier algorithm
   subroutine s_fft_forward(ntime, tmesh, ftau, mfreq, rmesh, fmat)
      use constants, only : dp, zero
@@ -126,7 +126,7 @@
   end subroutine s_fft_forward
 
 !>>> fourier from matsubara frequency space backward to imaginary time space
-  subroutine s_fft_backward(beta, mfreq, rmesh, fmat, ntime, tmesh, ftau)
+  subroutine s_fft_backward(mfreq, rmesh, fmat, ntime, tmesh, ftau, beta)
      use constants, only : dp, zero, two, half, pi
 
      implicit none
