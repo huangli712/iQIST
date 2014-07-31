@@ -35,7 +35,7 @@
          write(file_unit,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
      else
          write(*,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
-     endif
+     endif ! back if ( present(file_unit) ) block
 
 ! TERMINATE THE PROGRAM
 !-------------------------------------------------------------------------
@@ -46,18 +46,25 @@
   end subroutine s_print_error
 
 !!>>> s_print_exception: print normal runtime exceptional information, and continue
-  subroutine s_print_exception(sub, msg)
+  subroutine s_print_exception(sub, msg, file_unit)
      implicit none
 
 ! external arguments
 ! subroutine name
-     character(len=*), intent(in) :: sub
+     character(len=*), intent(in)  :: sub
 
 ! exception message
-     character(len=*), intent(in) :: msg
+     character(len=*), intent(in)  :: msg
+
+! file handler
+     integer, intent(in), optional :: file_unit
 
 ! print error information
-     write(*,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
+     if ( present(file_unit) ) then
+         write(file_unit,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
+     else
+         write(*,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
+     endif ! back if ( present(file_unit) ) block
 
 ! CONTINUE/PAUSE THE PROGRAM
 !-------------------------------------------------------------------------
@@ -68,18 +75,25 @@
   end subroutine s_print_exception
 
 !!>>> s_print_message: print normal runtime message to the console
-  subroutine s_print_message(sub, msg)
+  subroutine s_print_message(sub, msg, file_unit)
      implicit none
 
 ! external arguments
 ! subroutine name
-     character(len=*), intent(in) :: sub
+     character(len=*), intent(in)  :: sub
 
 ! runtime message
-     character(len=*), intent(in) :: msg
+     character(len=*), intent(in)  :: msg
+
+! file handler
+     integer, intent(in), optional :: file_unit
 
 ! print error information
-     write(*,'(2X,4a)') 'instant message from ', sub, ': ', msg
+     if ( present(file_unit) ) then
+         write(file_unit,'(2X,4a)') 'instant message from ', sub, ': ', msg
+     else
+         write(*,'(2X,4a)') 'instant message from ', sub, ': ', msg
+     endif ! back if ( present(file_unit) ) block
 
      return
   end subroutine s_print_message
