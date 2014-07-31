@@ -200,8 +200,6 @@
              allocate(s%item(s%nsize), source = 0.0_dp)
          type is (complex(dp))
              allocate(s%item(s%nsize), source = (0.0_dp, 0.0_dp))
-         type is (character(len = *))
-             allocate(s%item(s%nsize), source = '')
      end select
 
      return
@@ -333,11 +331,6 @@
                  type is (complex(dp))
                      v = u
              end select
-         type is (character(len = *))
-             select type (u => sa%item)
-                 type is (character(len = *))
-                     v = u
-             end select
      end select
 
      return
@@ -404,11 +397,6 @@
              type is (complex(dp))
                  select type (item)
                      type is (complex(dp))
-                         v(pos) = item
-                 end select
-             type is (character(len = *))
-                 select type (item)
-                     type is (character(len = *))
                          v(pos) = item
                  end select
          end select
@@ -480,11 +468,6 @@
                      type is (complex(dp))
                          item = v(pos)
                  end select
-             type is (character(len = *))
-                 select type (item)
-                     type is (character(len = *))
-                         item = v(pos)
-                 end select
          end select
      endif ! back if ( pos < 1 .or. pos > s%nsize ) block
 
@@ -548,11 +531,6 @@
              type is (complex(dp))
                  select type (item)
                      type is (complex(dp))
-                         v(s%top) = item
-                 end select
-             type is (character(len = *))
-                 select type (item)
-                     type is (character(len = *))
                          v(s%top) = item
                  end select
          end select
@@ -619,11 +597,6 @@
                      type is (complex(dp))
                          item = v(s%top)
                  end select
-             type is (character(len = *))
-                 select type (item)
-                     type is (character(len = *))
-                         item = v(s%top)
-                 end select
          end select
          s%top = s%top - 1
      endif ! back if ( s%top == 0 ) block
@@ -686,11 +659,6 @@
              type is (complex(dp))
                  select type (item)
                      type is (complex(dp))
-                         item = v(s%top)
-                 end select
-             type is (character(len = *))
-                 select type (item)
-                     type is (character(len = *))
                          item = v(s%top)
                  end select
          end select
@@ -842,86 +810,3 @@
   end function gstack_isempty
 
   end module stack
-
-  program test
-     use stack
-
-     implicit none
-
-     integer, parameter :: dp = kind(1.0d0)
-
-     type (gstack) :: s, t
-     complex(dp) :: i, j, k
-     integer :: m
-
-     call gstack_create(s, (10.0_dp, 0.1_dp), 10)
-     call gstack_create(t, (10.0_dp, 0.1_dp), 10)
-     print *, 'full:', gstack_isfull(s), &
-              'empty:', gstack_isempty(s), &
-              'size:', gstack_getsize(s), &
-              'rest:', gstack_getrest(s), &
-              'top:', gstack_gettop(s)
-
-     call gstack_push(s, (10.0_dp,0.1_dp))
-     call gstack_push(s, (8.0_dp,1.0_dp))
-     call gstack_push(s, (6.0_dp,1.0_dp))
-     call gstack_push(s, (2.0_dp,1.0_dp))
-     call gstack_push(s, (5.0_dp,1.0_dp))
-     call gstack_push(s, (4.0_dp,1.0_dp))
-     print *, 'full:', gstack_isfull(s), &
-              'empty:', gstack_isempty(s), &
-              'size:', gstack_getsize(s), &
-              'rest:', gstack_getrest(s), &
-              'top:', gstack_gettop(s)
-     
-     call gstack_pop(s, i)
-     print *, 'pop:', i
-     print *, 'full:', gstack_isfull(s), &
-              'empty:', gstack_isempty(s), &
-              'size:', gstack_getsize(s), &
-              'rest:', gstack_getrest(s), &
-              'top:', gstack_gettop(s)
-     
-     call gstack_pop(s, j)
-     print *, 'pop:', j
-     print *, 'full:', gstack_isfull(s), &
-              'empty:', gstack_isempty(s), &
-              'size:', gstack_getsize(s), &
-              'rest:', gstack_getrest(s), &
-              'top:', gstack_gettop(s)
-     
-     call gstack_display(s, k)
-     print *, 'display:', k
-     print *, 'full:', gstack_isfull(s), &
-              'empty:', gstack_isempty(s), &
-              'size:', gstack_getsize(s), &
-              'rest:', gstack_getrest(s), &
-              'top:', gstack_gettop(s)
-     
-     do m=1,gstack_getsize(s)
-         call gstack_getter(s, m, j)
-         print *, m, j
-     enddo
-     call gstack_setter(s, 10, (4.0_dp,0.0_dp))
-     do m=1,gstack_getsize(s)
-         call gstack_getter(s, m, j)
-         print *, m, j
-     enddo
-     
-     print *, 'full:', gstack_isfull(t), &
-              'empty:', gstack_isempty(t), &
-              'size:', gstack_getsize(t), &
-              'rest:', gstack_getrest(t), &
-              'top:', gstack_gettop(t)
-     call gstack_copyer(s, t)
-     print *, 'full:', gstack_isfull(t), &
-              'empty:', gstack_isempty(t), &
-              'size:', gstack_getsize(t), &
-              'rest:', gstack_getrest(t), &
-              'top:', gstack_gettop(t)
-     do m=1,gstack_getsize(t)
-         call gstack_getter(t, m, j)
-         print *, m, j
-     enddo
-
-  end program test
