@@ -52,7 +52,7 @@
 !!========================================================================
 
 ! dp: number precision, double precision for reals
-     integer, private, parameter :: dp = kind(1.0d0)
+     integer, private, parameter :: dp    = kind(1.0d0)
 
 ! stack size limit, default value
      integer, private, parameter :: limit = 1024
@@ -155,7 +155,7 @@
          s%nsize = n
      else
          s%nsize = limit
-     endif
+     endif ! back if ( present (n) ) block
 
 ! setup the top position
      s%top = 0
@@ -185,7 +185,7 @@
          s%nsize = n
      else
          s%nsize = limit
-     endif
+     endif ! back if ( present (n) ) block
 
 ! setup the top position
      s%top = 0
@@ -284,7 +284,7 @@
      if ( sa%nsize /= sb%nsize ) then
          write(mystd,'(a)') 'istack: the sizes of two stacks are not equal'
          STOP
-     endif
+     endif ! back if ( sa%nsize /= sb%nsize ) block
 
 ! sync the data
      sb%top = sa%top
@@ -308,7 +308,7 @@
      if ( sa%nsize /= sb%nsize ) then
          write(mystd,'(a)') 'gstack: the sizes of two stacks are not equal'
          STOP
-     endif
+     endif ! back if ( sa%nsize /= sb%nsize ) block
 
 ! sync the data
      sb%top = sa%top
@@ -508,7 +508,7 @@
      else
          s%top = s%top + 1
          s%item(s%top) = item
-     endif
+     endif ! back if ( s%top == s%nsize ) block
 
      return
   end subroutine istack_push
@@ -556,7 +556,7 @@
                          v(s%top) = item
                  end select
          end select
-     endif
+     endif ! back if ( s%top == s%nsize ) block
 
      return
   end subroutine gstack_push
@@ -845,6 +845,9 @@
 
   program test
      use stack
+
      implicit none
 
+     type (istack) :: s
+     call istack_create(s, 10)
   end program test
