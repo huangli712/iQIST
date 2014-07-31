@@ -850,77 +850,78 @@
 
      integer, parameter :: dp = kind(1.0d0)
 
-     !type (istack) :: s, t
-     !integer :: i, j, k
+     type (gstack) :: s, t
+     complex(dp) :: i, j, k
+     integer :: m
 
-     !call istack_create(s, 10)
-     !call istack_create(t, 10)
-     !print *, 'full:', istack_isfull(s), &
-     !         'empty:', istack_isempty(s), &
-     !         'size:', istack_getsize(s), &
-     !         'rest:', istack_getrest(s), &
-     !         'top:', istack_gettop(s)
+     call gstack_create(s, (10.0_dp, 0.1_dp), 10)
+     call gstack_create(t, (10.0_dp, 0.1_dp), 10)
+     print *, 'full:', gstack_isfull(s), &
+              'empty:', gstack_isempty(s), &
+              'size:', gstack_getsize(s), &
+              'rest:', gstack_getrest(s), &
+              'top:', gstack_gettop(s)
 
-     !call istack_push(s, 10)
-     !call istack_push(s, 8)
-     !call istack_push(s, 6)
-     !call istack_push(s, 2)
-     !call istack_push(s, 5)
-     !call istack_push(s, 4)
-     !print *, 'full:', istack_isfull(s), &
-     !         'empty:', istack_isempty(s), &
-     !         'size:', istack_getsize(s), &
-     !         'rest:', istack_getrest(s), &
-     !         'top:', istack_gettop(s)
-     !
-     !call istack_pop(s, i)
-     !print *, 'pop:', i
-     !print *, 'full:', istack_isfull(s), &
-     !         'empty:', istack_isempty(s), &
-     !         'size:', istack_getsize(s), &
-     !         'rest:', istack_getrest(s), &
-     !         'top:', istack_gettop(s)
-     !
-     !call istack_pop(s, j)
-     !print *, 'pop:', j
-     !print *, 'full:', istack_isfull(s), &
-     !         'empty:', istack_isempty(s), &
-     !         'size:', istack_getsize(s), &
-     !         'rest:', istack_getrest(s), &
-     !         'top:', istack_gettop(s)
-     !
-     !call istack_display(s, k)
-     !print *, 'display:', k
-     !print *, 'full:', istack_isfull(s), &
-     !         'empty:', istack_isempty(s), &
-     !         'size:', istack_getsize(s), &
-     !         'rest:', istack_getrest(s), &
-     !         'top:', istack_gettop(s)
-     !
-     !do i=1,istack_getsize(s)
-     !    call istack_getter(s, i, j)
-     !    print *, i, j
-     !enddo
-     !call istack_setter(s, 10, 3)
-     !do i=1,istack_getsize(s)
-     !    call istack_getter(s, i, j)
-     !    print *, i, j
-     !enddo
-     !
-     !print *, 'full:', istack_isfull(t), &
-     !         'empty:', istack_isempty(t), &
-     !         'size:', istack_getsize(t), &
-     !         'rest:', istack_getrest(t), &
-     !         'top:', istack_gettop(t)
-     !call istack_copyer(s, t)
-     !print *, 'full:', istack_isfull(t), &
-     !         'empty:', istack_isempty(t), &
-     !         'size:', istack_getsize(t), &
-     !         'rest:', istack_getrest(t), &
-     !         'top:', istack_gettop(t)
-     !do i=1,istack_getsize(t)
-     !    call istack_getter(t, i, j)
-     !    print *, i, j
-     !enddo
+     call gstack_push(s, (10.0_dp,0.1_dp))
+     call gstack_push(s, (8.0_dp,1.0_dp))
+     call gstack_push(s, (6.0_dp,1.0_dp))
+     call gstack_push(s, (2.0_dp,1.0_dp))
+     call gstack_push(s, (5.0_dp,1.0_dp))
+     call gstack_push(s, (4.0_dp,1.0_dp))
+     print *, 'full:', gstack_isfull(s), &
+              'empty:', gstack_isempty(s), &
+              'size:', gstack_getsize(s), &
+              'rest:', gstack_getrest(s), &
+              'top:', gstack_gettop(s)
+     
+     call gstack_pop(s, i)
+     print *, 'pop:', i
+     print *, 'full:', gstack_isfull(s), &
+              'empty:', gstack_isempty(s), &
+              'size:', gstack_getsize(s), &
+              'rest:', gstack_getrest(s), &
+              'top:', gstack_gettop(s)
+     
+     call gstack_pop(s, j)
+     print *, 'pop:', j
+     print *, 'full:', gstack_isfull(s), &
+              'empty:', gstack_isempty(s), &
+              'size:', gstack_getsize(s), &
+              'rest:', gstack_getrest(s), &
+              'top:', gstack_gettop(s)
+     
+     call gstack_display(s, k)
+     print *, 'display:', k
+     print *, 'full:', gstack_isfull(s), &
+              'empty:', gstack_isempty(s), &
+              'size:', gstack_getsize(s), &
+              'rest:', gstack_getrest(s), &
+              'top:', gstack_gettop(s)
+     
+     do m=1,gstack_getsize(s)
+         call gstack_getter(s, m, j)
+         print *, m, j
+     enddo
+     call gstack_setter(s, 10, (4.0_dp,0.0_dp))
+     do m=1,gstack_getsize(s)
+         call gstack_getter(s, m, j)
+         print *, m, j
+     enddo
+     
+     print *, 'full:', gstack_isfull(t), &
+              'empty:', gstack_isempty(t), &
+              'size:', gstack_getsize(t), &
+              'rest:', gstack_getrest(t), &
+              'top:', gstack_gettop(t)
+     call gstack_copyer(s, t)
+     print *, 'full:', gstack_isfull(t), &
+              'empty:', gstack_isempty(t), &
+              'size:', gstack_getsize(t), &
+              'rest:', gstack_getrest(t), &
+              'top:', gstack_gettop(t)
+     do m=1,gstack_getsize(t)
+         call gstack_getter(t, m, j)
+         print *, m, j
+     enddo
 
   end program test
