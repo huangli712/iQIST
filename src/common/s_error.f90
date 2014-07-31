@@ -10,25 +10,32 @@
 !!!           07/08/2014 by li huang
 !!!           07/23/2014 by li huang
 !!! purpose : these subroutines are used to display the (error/exception/
-!!!           normal) messages in the console, and then STOP orCONTINUE
+!!!           normal) messages in the console, and then STOP or CONTINUE
 !!!           the code according to the error level.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
 !!>>> s_print_error: print the error information and STOP the program
-  subroutine s_print_error(sub, msg)
+  subroutine s_print_error(sub, msg, file_unit)
      implicit none
 
 ! external arguments
 ! subroutine name
-     character(len=*), intent(in) :: sub
+     character(len=*), intent(in)  :: sub
 
 ! error message
-     character(len=*), intent(in) :: msg
+     character(len=*), intent(in)  :: msg
+
+! file handler
+     integer, intent(in), optional :: file_unit
 
 ! print error information
-     write(*,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
+     if ( present(file_unit) ) then
+         write(file_unit,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
+     else
+         write(*,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
+     endif
 
 ! TERMINATE THE PROGRAM
 !-------------------------------------------------------------------------
