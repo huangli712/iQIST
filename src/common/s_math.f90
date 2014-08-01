@@ -102,7 +102,12 @@
      return
   end subroutine s_linspace_z
 
-  subroutine s_legendre()
+!!>>> s_legendre:
+  subroutine s_legendre(lemax, legrd, pmesh, ppleg)
+     use constants, only : dp, one
+
+     implicit none
+
      if ( lemax <= 2 ) then
          call ctqmc_print_error('ctqmc_selfer_init','lemax must be larger than 2')
      endif
@@ -117,6 +122,18 @@
      enddo ! over i={1,legrd} loop
   end subroutine s_legendre
 
+!!>>> s_chebyshev:
   subroutine s_chebyshev()
+     if ( lemax <= 2 ) then
+         call ctqmc_print_error('ctqmc_selfer_init','lemax must be larger than 2')
+     endif
 
+     do i=1,legrd
+         ppleg(i,1) = one
+         ppleg(i,2) = pmesh(i)
+         do j=3,lemax
+             k = j - 1
+             ppleg(i,j) = ( real(2*k-1) * pmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
+         enddo ! over j={3,lemax} loop
+     enddo ! over i={1,legrd} loop
   end subroutine s_chebyshev
