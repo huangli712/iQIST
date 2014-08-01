@@ -236,16 +236,25 @@
 ! loop index
      integer :: i
 
-     print *, A
+     A = 0
+     do i=1,n
+         if ( i - k <= 0 .or. i - k >= n ) CYCLE
+         A(i,k) = 1
+     enddo ! over i={1,n} loop
+
      return
   end subroutine s_eye_i
 
   program test
      implicit none
 
-     integer :: A(4,4)
-     A = 1
+     integer :: A(4,4), i, j
      call s_eye_i(4, 0, A)
+     do i=1,4
+         do j=1,4
+             print *, i, j, A(i,j)
+         enddo
+     enddo
 
   end program test
 
