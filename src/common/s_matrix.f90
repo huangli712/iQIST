@@ -134,8 +134,8 @@
      return
   end subroutine s_ones_z
 
-!!>>> s_ones_i: build an integer matrix with all elements are one
-  subroutine s_ones_i(A)
+!!>>> s_any_i: build an integer matrix with all elements are arbitrary
+  subroutine s_any_i(A)
      implicit none
 
 ! external arguments
@@ -145,7 +145,7 @@
      A = 1
 
      return
-  end subroutine s_ones_i
+  end subroutine s_any_i
 
 !!>>> s_ones_d: build a real(dp) matrix with all elements are one
   subroutine s_ones_d(A)
