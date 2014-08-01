@@ -254,12 +254,15 @@
      implicit none
 
 ! external arguments
-! input/output matrix
-     real(dp), intent(out) :: A(:,:)
+! size of matrix
+     integer, intent(in)   :: n
 
 ! index of the diagonal: 0 refers to the main diagonal, a positive value
 ! refers to an upper diagonal, and a negative value to a lower diagonal.
      integer, intent(in)   :: k
+
+! input/output matrix
+     real(dp), intent(out) :: A(n,n)
 
 ! local variables
 ! loop index
@@ -271,18 +274,21 @@
   end subroutine s_eye_d
 
 !!>>> s_eye_z: build complex(dp) matrix with ones on the diagonal and zeros elsewhere.
-  subroutine s_eye_z(A, k)
+  subroutine s_eye_z(n, k, A)
      use constants, only : dp, czero, cone
 
      implicit none
 
 ! external arguments
-! input/output matrix
-     complex(dp), intent(out) :: A(:,:)
+! size of matrix
+     integer, intent(in)      :: n
 
 ! index of the diagonal: 0 refers to the main diagonal, a positive value
 ! refers to an upper diagonal, and a negative value to a lower diagonal.
      integer, intent(in)      :: k
+
+! input/output matrix
+     complex(dp), intent(out) :: A(n,n)
 
 ! local variables
 ! loop index
