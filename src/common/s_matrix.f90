@@ -134,20 +134,23 @@
      return
   end subroutine s_ones_z
 
-!!>>> s_any_i: build an integer matrix with all elements are arbitrary
-  subroutine s_any_i(A)
+!!>>> s_any_i: build an integer matrix with all elements are given by i
+  subroutine s_any_i(A, i)
      implicit none
 
 ! external arguments
 ! input/output matrix
      integer, intent(out) :: A(:,:)
 
-     A = 1
+! value of matrix element
+     integer, intent(in)  :: i
+
+     A = i
 
      return
   end subroutine s_any_i
 
-!!>>> s_ones_d: build a real(dp) matrix with all elements are one
+!!>>> s_any_d: build a real(dp) matrix with all elements are one
   subroutine s_ones_d(A)
      use constants, only : dp, one
 
