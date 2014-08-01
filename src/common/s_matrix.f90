@@ -330,6 +330,8 @@
 
 !!>>> s_identity_d:
   subroutine s_identity_d(n, A)
+     use constants. only : dp, zero, one
+
      implicit none
 
 ! external arguments
@@ -353,6 +355,8 @@
 
 !!>>> s_identity_i:
   subroutine s_identity_z(n, A)
+     use constants. only : dp, czero, cone
+
      implicit none
 
 ! external arguments
