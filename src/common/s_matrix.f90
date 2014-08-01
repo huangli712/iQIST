@@ -328,10 +328,25 @@
      return
   end subroutine s_identity_i
 
-
 !!>>> s_identity_d:
   subroutine s_identity_d(n, A)
      implicit none
+
+! external arguments
+! size of matrix
+     integer, intent(in)   :: n
+
+! input/output matrix
+     real(dp), intent(out) :: A(n,n)
+
+! local variables
+! loop index
+     integer :: i
+
+     A = zero
+     do i=1,n
+         A(i,i) = one
+     enddo ! over i={1,n} loop
 
      return
   end subroutine s_identity_d
@@ -339,6 +354,22 @@
 !!>>> s_identity_i:
   subroutine s_identity_z(n, A)
      implicit none
+
+! external arguments
+! size of matrix
+     integer, intent(in)      :: n
+
+! input/output matrix
+     complex(dp), intent(out) :: A(n,n)
+
+! local variables
+! loop index
+     integer :: i
+
+     A = czero
+     do i=1,n
+         A(i,i) = cone
+     enddo ! over i={1,n} loop
 
      return
   end subroutine s_identity_z
