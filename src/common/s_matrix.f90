@@ -190,11 +190,13 @@
 !!>>> matrix manipulation: build diagonal matrix                       <<<
 !!------------------------------------------------------------------------
 
-!!>>> s_eye_i:
+!!>>> s_eye_i: build integer matrix with ones on the diagonal and zeros elsewhere.
   subroutine s_eye_i(A, k)
      implicit none
 
 ! external arguments
+! index of the diagonal: 0 refers to the main diagonal, a positive value
+! refers to an upper diagonal, and a negative value to a lower diagonal.
      integer, intent(in) :: k
 
 ! local variables
@@ -208,6 +210,11 @@
 
      implicit none
 
+! external arguments
+! index of the diagonal: 0 refers to the main diagonal, a positive value
+! refers to an upper diagonal, and a negative value to a lower diagonal.
+     integer, intent(in) :: k
+
      return
   end subroutine s_eye_d
 
@@ -217,6 +224,10 @@
 
      implicit none
 
+! external arguments
+! index of the diagonal: 0 refers to the main diagonal, a positive value
+! refers to an upper diagonal, and a negative value to a lower diagonal.
+     integer, intent(in) :: k
      return
   end subroutine s_eye_z
 
