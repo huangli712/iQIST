@@ -42,7 +42,7 @@
 !!!-----------------------------------------------------------------------
 
 !!------------------------------------------------------------------------
-!!>>> matrix manipulation                                              <<<
+!!>>> matrix manipulation: build zeros matrix                          <<<
 !!------------------------------------------------------------------------
 
   subroutine s_zeros_i()
@@ -67,6 +67,12 @@
 
      return
   end subroutine s_zeros_z
+
+!!------------------------------------------------------------------------
+!!>>> matrix manipulation: build ones matrix                           <<<
+!!------------------------------------------------------------------------
+
+
 
 !!>>> s_inv_dmat: invert real(dp) matrix using lapack subroutines
   subroutine s_inv_dmat(ndim, dmat)
