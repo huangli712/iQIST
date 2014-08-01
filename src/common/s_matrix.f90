@@ -168,9 +168,9 @@
      return
   end subroutine s_any_d
 
-!!>>> s_ones_z: build a complex(dp) matrix with all elements are one
-  subroutine s_ones_z(A)
-     use constants, only : dp, cone
+!!>>> s_any_z: build a complex(dp) matrix with all elements are given by z
+  subroutine s_any_z(A, z)
+     use constants, only : dp
 
      implicit none
 
@@ -178,10 +178,13 @@
 ! input/output matrix
      complex(dp), intent(out) :: A(:,:)
 
-     A = cone
+! value of matrix element
+     complex(dp), intent(in)  :: z
+
+     A = z
 
      return
-  end subroutine s_ones_z
+  end subroutine s_any_z
 !!------------------------------------------------------------------------
 !!>>> matrix manipulation: build diagonal matrix                       <<<
 !!------------------------------------------------------------------------
