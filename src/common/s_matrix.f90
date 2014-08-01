@@ -194,16 +194,37 @@
   subroutine s_eye_i(A, k)
      implicit none
 
+! external arguments
+     integer, intent(in) :: k
+
+! local variables
+
      return
   end subroutine s_eye_i
 
 !!>>> s_eye_d:
   subroutine s_eye_d(A, k)
+     use constants, only : dp, zero, one
+
+     implicit none
+
+     return
   end subroutine s_eye_d
 
 !!>>> s_eye_z:
   subroutine s_eye_z(A, k)
+     use constants, only : dp, czero, cone
+
+     implicit none
+
+     return
   end subroutine s_eye_z
+
+
+
+
+
+
 
 
 !!>>> s_inv_dmat: invert real(dp) matrix using lapack subroutines
