@@ -101,12 +101,15 @@
   end subroutine s_zeros_z
 
 !!>>> s_ones_i: build an integer matrix with all elements are one
-  subroutine s_ones_i(A)
+  subroutine s_ones_i(n, A)
      implicit none
 
 ! external arguments
+! size of matrix
+     integer, intent(in)  :: n
+
 ! input/output matrix
-     integer, intent(out) :: A(:,:)
+     integer, intent(out) :: A(n,n)
 
      A = 1
 
@@ -114,14 +117,17 @@
   end subroutine s_ones_i
 
 !!>>> s_ones_d: build a real(dp) matrix with all elements are one
-  subroutine s_ones_d(A)
+  subroutine s_ones_d(n, A)
      use constants, only : dp, one
 
      implicit none
 
 ! external arguments
+! size of matrix
+     integer, intent(in)   :: n
+
 ! input/output matrix
-     real(dp), intent(out) :: A(:,:)
+     real(dp), intent(out) :: A(n,n)
 
      A = one
 
@@ -129,14 +135,17 @@
   end subroutine s_ones_d
 
 !!>>> s_ones_z: build a complex(dp) matrix with all elements are one
-  subroutine s_ones_z(A)
+  subroutine s_ones_z(n, A)
      use constants, only : dp, cone
 
      implicit none
 
 ! external arguments
+! size of matrix
+     integer, intent(in)      :: n
+
 ! input/output matrix
-     complex(dp), intent(out) :: A(:,:)
+     complex(dp), intent(out) :: A(n,n)
 
      A = cone
 
