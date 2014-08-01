@@ -5,11 +5,15 @@
 !!!           s_linspace_z
 !!!           s_legendre
 !!!           s_chebyshev
+!!!           s_swap_i
+!!!           s_swap_d
+!!!           s_swap_z
 !!! source  : s_math.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/24/2014 by li huang
+!!!           08/01/2014 by li huang
 !!! purpose : these subroutines are used to manipulate grid and mesh, to
 !!!           generate Legendre polynomial and Chebyshev polynomial, etc.
 !!! status  : unstable
@@ -194,3 +198,5 @@
 
      return
   end subroutine s_chebyshev
+
+
