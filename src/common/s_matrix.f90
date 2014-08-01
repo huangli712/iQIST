@@ -6,6 +6,9 @@
 !!!           s_ones_i
 !!!           s_ones_d
 !!!           s_ones_z
+!!!           s_any_i
+!!!           s_any_d
+!!!           s_any_z
 !!!           s_eye_i
 !!!           s_eye_d
 !!!           s_eye_z
@@ -42,7 +45,7 @@
 !!!-----------------------------------------------------------------------
 
 !!------------------------------------------------------------------------
-!!>>> matrix manipulation: build zeros matrix                          <<<
+!!>>> matrix manipulation: build zeros/ones/any matrix                 <<<
 !!------------------------------------------------------------------------
 
 !!>>> s_zeros_i: build an integer matrix with all elements are zero
@@ -89,7 +92,7 @@
   end subroutine s_zeros_z
 
 !!------------------------------------------------------------------------
-!!>>> matrix manipulation: build ones matrix                           <<<
+!!>>> matrix manipulation: build diagonal matrix                       <<<
 !!------------------------------------------------------------------------
 
 
