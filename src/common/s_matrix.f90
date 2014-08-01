@@ -91,6 +91,48 @@
      return
   end subroutine s_zeros_z
 
+!!>>> s_zeros_i: build an integer matrix with all elements are zero
+  subroutine s_zeros_i(A)
+     implicit none
+
+! external arguments
+! input/output matrix
+     integer, intent(out) :: A(:,:)
+
+     A = 0
+
+     return
+  end subroutine s_zeros_i
+
+!!>>> s_zeros_d: build a real(dp) matrix with all elements are zero
+  subroutine s_zeros_d(A)
+     use constants, only : dp, zero
+
+     implicit none
+
+! external arguments
+! input/output matrix
+     real(dp), intent(out) :: A(:,:)
+
+     A = zero
+
+     return
+  end subroutine s_zeros_d
+
+!!>>> s_zeros_z: build a complex(dp) matrix with all elements are zero
+  subroutine s_zeros_z(A)
+     use constants, only : dp, czero
+
+     implicit none
+
+! external arguments
+! input/output matrix
+     complex(dp), intent(out) :: A(:,:)
+
+     A = czero
+
+     return
+  end subroutine s_zeros_z
 !!------------------------------------------------------------------------
 !!>>> matrix manipulation: build diagonal matrix                       <<<
 !!------------------------------------------------------------------------
