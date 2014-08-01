@@ -209,7 +209,7 @@
      return
   end subroutine s_eye_i
 
-!!>>> s_eye_d:
+!!>>> s_eye_d: build real(dp) matrix with ones on the diagonal and zeros elsewhere.
   subroutine s_eye_d(A, k)
      use constants, only : dp, zero, one
 
@@ -230,7 +230,7 @@
      return
   end subroutine s_eye_d
 
-!!>>> s_eye_z:
+!!>>> s_eye_z: build complex(dp) matrix with ones on the diagonal and zeros elsewhere.
   subroutine s_eye_z(A, k)
      use constants, only : dp, czero, cone
 
