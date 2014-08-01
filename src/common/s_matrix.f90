@@ -238,28 +238,17 @@
 
      A = 0
      do i=1,n
-         if ( i - k <= 0 .or. i - k >= n ) CYCLE
-         A(i,k) = 1
+         if ( i - k < 1 .or. i - k > n ) CYCLE
+         A(i,i-k) = 1
      enddo ! over i={1,n} loop
 
      return
   end subroutine s_eye_i
 
-  program test
-     implicit none
-
-     integer :: A(4,4), i, j
-     call s_eye_i(4, 0, A)
-     do i=1,4
-         do j=1,4
-             print *, i, j, A(i,j)
-         enddo
-     enddo
-
   end program test
 
 !!>>> s_eye_d: build real(dp) matrix with ones on the diagonal and zeros elsewhere.
-  subroutine s_eye_d(A, k)
+  subroutine s_eye_d(n, k, A)
      use constants, only : dp, zero, one
 
      implicit none
@@ -276,8 +265,6 @@
 ! loop index
      integer :: i
 
-! size of matrix
-     integer :: N
      A = zero
 
      return
@@ -300,9 +287,6 @@
 ! local variables
 ! loop index
      integer :: i
-
-! size of matrix
-     integer :: N
 
      A = czero
 
