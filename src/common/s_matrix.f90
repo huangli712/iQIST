@@ -305,7 +305,7 @@
      return
   end subroutine s_eye_z
 
-!!>>> s_identity_i:
+!!>>> s_identity_i: build integer identity matrix
   subroutine s_identity_i(n, A)
      implicit none
 
@@ -328,7 +328,7 @@
      return
   end subroutine s_identity_i
 
-!!>>> s_identity_d:
+!!>>> s_identity_d: build real(dp) identity matrix
   subroutine s_identity_d(n, A)
      use constants, only : dp, zero, one
 
@@ -353,7 +353,7 @@
      return
   end subroutine s_identity_d
 
-!!>>> s_identity_i:
+!!>>> s_identity_i: build complex(dp) identity matrix
   subroutine s_identity_z(n, A)
      use constants, only : dp, czero, cone
 
