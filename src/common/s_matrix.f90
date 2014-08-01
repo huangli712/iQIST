@@ -153,15 +153,18 @@
   end subroutine s_ones_z
 
 !!>>> s_any_i: build an integer matrix with all elements are given by i
-  subroutine s_any_i(A, i)
+  subroutine s_any_i(n, i, A)
      implicit none
 
 ! external arguments
-! input/output matrix
-     integer, intent(out) :: A(:,:)
+! size of matrix
+     integer, intent(in)  :: n
 
 ! value of matrix element
      integer, intent(in)  :: i
+
+! input/output matrix
+     integer, intent(out) :: A(n,n)
 
      A = i
 
@@ -169,17 +172,20 @@
   end subroutine s_any_i
 
 !!>>> s_any_d: build a real(dp) matrix with all elements are given by d
-  subroutine s_any_d(A, d)
+  subroutine s_any_d(n, d, A)
      use constants, only : dp
 
      implicit none
 
 ! external arguments
-! input/output matrix
-     real(dp), intent(out) :: A(:,:)
+! size of matrix
+     integer, intent(in)   :: n
 
 ! value of matrix element
      real(dp), intent(in)  :: d
+
+! input/output matrix
+     real(dp), intent(out) :: A(n,n)
 
      A = d
 
@@ -187,17 +193,20 @@
   end subroutine s_any_d
 
 !!>>> s_any_z: build a complex(dp) matrix with all elements are given by z
-  subroutine s_any_z(A, z)
+  subroutine s_any_z(n, z, A)
      use constants, only : dp
 
      implicit none
 
 ! external arguments
-! input/output matrix
-     complex(dp), intent(out) :: A(:,:)
+! size of matrix
+     integer, intent(in)      :: n
 
 ! value of matrix element
      complex(dp), intent(in)  :: z
+
+! input/output matrix
+     complex(dp), intent(out) :: A(n,n)
 
      A = z
 
