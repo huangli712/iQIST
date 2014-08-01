@@ -150,9 +150,9 @@
      return
   end subroutine s_any_i
 
-!!>>> s_any_d: build a real(dp) matrix with all elements are one
-  subroutine s_ones_d(A)
-     use constants, only : dp, one
+!!>>> s_any_d: build a real(dp) matrix with all elements are given by d
+  subroutine s_any_d(A, d)
+     use constants, only : dp
 
      implicit none
 
@@ -160,10 +160,13 @@
 ! input/output matrix
      real(dp), intent(out) :: A(:,:)
 
-     A = one
+! value of matrix element
+     real(dp), intent(in)  :: d
+
+     A = d
 
      return
-  end subroutine s_ones_d
+  end subroutine s_any_d
 
 !!>>> s_ones_z: build a complex(dp) matrix with all elements are one
   subroutine s_ones_z(A)
