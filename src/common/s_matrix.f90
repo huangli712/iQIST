@@ -218,29 +218,25 @@
 !!------------------------------------------------------------------------
 
 !!>>> s_eye_i: build integer matrix with ones on the diagonal and zeros elsewhere.
-  subroutine s_eye_i(A, k)
+  subroutine s_eye_i(n, k, A)
      implicit none
 
 ! external arguments
-! input/output matrix
-     integer, intent(out) :: A(:,:)
+! size of matrix
+     integer, intent(in)  :: n
 
 ! index of the diagonal: 0 refers to the main diagonal, a positive value
 ! refers to an upper diagonal, and a negative value to a lower diagonal.
      integer, intent(in)  :: k
 
+! input/output matrix
+     integer, intent(out) :: A(n,n)
+
 ! local variables
 ! loop index
      integer :: i
 
-! size of matrix
-     integer :: N
-
-! get size of matrix, we assume it is a square matrix
-     N = size(A, dim = 1)
-     print *, N
-
-     print *, A(1:4,1:4)
+     print *, A
      return
   end subroutine s_eye_i
 
@@ -248,7 +244,8 @@
      implicit none
 
      integer :: A(4,4)
-     call s_eye_i(A, 0)
+     A = 1
+     call s_eye_i(4, 0, A)
 
   end program test
 
