@@ -330,7 +330,7 @@
 
 !!>>> s_identity_d:
   subroutine s_identity_d(n, A)
-     use constants. only : dp, zero, one
+     use constants, only : dp, zero, one
 
      implicit none
 
