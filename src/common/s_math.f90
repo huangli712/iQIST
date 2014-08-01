@@ -231,7 +231,7 @@
      implicit none
 
 ! external arguments
-! dimension of integer vector
+! dimension of real(dp) vector
      integer, intent(in)     :: n
 
 ! real(dp) vector X
@@ -250,3 +250,30 @@
 
      return
   end subroutine s_swap_d
+
+!!>>> s_swap_z: exchange two complex(dp) vectors
+  subroutine s_swap_z(n, zx, zy)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of complex(dp) vector
+     integer, intent(in)        :: n
+
+! complex(dp) vector X
+     complex(dp), intent(inout) :: zx(n)
+
+! complex(dp) vector Y
+     complex(dp), intent(inout) :: zy(n)
+
+! local variables
+! dummy complex(dp) vector
+     complex(dp) :: zt(n)
+
+     zt = zx
+     zx = zy
+     zy = zt
+
+     return
+  end subroutine s_swap_z
