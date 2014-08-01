@@ -199,4 +199,27 @@
      return
   end subroutine s_chebyshev
 
+!!>>> s_swap_i: exchange two integer vectors
+  subroutine s_swap_i(n, ix, iy)
+     implicit none
 
+! external arguments
+! dimension of integer vector
+     integer, intent(in)    :: n
+
+! integer vector X
+     integer, intent(inout) :: ix(n)
+
+! integer vector Y
+     integer, intent(inout) :: iy(n)
+
+! local variables
+! dummy integer vector
+     integer :: it(n)
+
+     it = ix
+     ix = iy
+     iy = it
+
+     return
+  end subroutine s_swap_i
