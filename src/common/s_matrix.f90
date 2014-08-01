@@ -46,6 +46,9 @@
 !!------------------------------------------------------------------------
 
   subroutine s_zeros_i()
+     implicit none
+
+     return
   end subroutine s_zeros_i
 
 !!>>> s_inv_dmat: invert real(dp) matrix using lapack subroutines
