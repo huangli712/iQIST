@@ -91,18 +91,18 @@
      return
   end subroutine s_zeros_z
 
-!!>>> s_zeros_i: build an integer matrix with all elements are zero
-  subroutine s_zeros_i(A)
+!!>>> s_ones_i: build an integer matrix with all elements are one
+  subroutine s_ones_i(A)
      implicit none
 
 ! external arguments
 ! input/output matrix
      integer, intent(out) :: A(:,:)
 
-     A = 0
+     A = 1
 
      return
-  end subroutine s_zeros_i
+  end subroutine s_ones_i
 
 !!>>> s_zeros_d: build a real(dp) matrix with all elements are zero
   subroutine s_zeros_d(A)
