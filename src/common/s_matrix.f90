@@ -119,9 +119,9 @@
      return
   end subroutine s_ones_d
 
-!!>>> s_zeros_z: build a complex(dp) matrix with all elements are zero
-  subroutine s_zeros_z(A)
-     use constants, only : dp, czero
+!!>>> s_ones_z: build a complex(dp) matrix with all elements are one
+  subroutine s_ones_z(A)
+     use constants, only : dp, cone
 
      implicit none
 
@@ -129,10 +129,10 @@
 ! input/output matrix
      complex(dp), intent(out) :: A(:,:)
 
-     A = czero
+     A = cone
 
      return
-  end subroutine s_zeros_z
+  end subroutine s_ones_z
 !!------------------------------------------------------------------------
 !!>>> matrix manipulation: build diagonal matrix                       <<<
 !!------------------------------------------------------------------------
