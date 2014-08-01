@@ -53,6 +53,8 @@
 ! input/output matrix
      integer, intent(out) :: A(:,:)
 
+     A = 0
+
      return
   end subroutine s_zeros_i
 
@@ -66,6 +68,8 @@
 ! input/output matrix
      real(dp), intent(out) :: A(:,:)
 
+     A = zero
+
      return
   end subroutine s_zeros_d
 
@@ -78,6 +82,8 @@
 ! external arguments
 ! input/output matrix
      complex(dp), intent(out) :: A(:,:)
+
+     A = czero
 
      return
   end subroutine s_zeros_z
