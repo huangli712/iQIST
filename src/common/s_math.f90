@@ -3,12 +3,15 @@
 !!! program : s_linspace_d
 !!!           s_logspace_d
 !!!           s_linspace_z
+!!!           s_legendre
+!!!           s_chebyshev
 !!! source  : s_math.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/24/2014 by li huang
-!!! purpose : these subroutines are used to
+!!! purpose : these subroutines are used to manipulate grid and mesh, to
+!!!           generate Legendre polynomial and Chebyshev polynomial, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -98,3 +101,22 @@
 
      return
   end subroutine s_linspace_z
+
+  subroutine s_legendre()
+     if ( lemax <= 2 ) then
+         call ctqmc_print_error('ctqmc_selfer_init','lemax must be larger than 2')
+     endif
+
+     do i=1,legrd
+         ppleg(i,1) = one
+         ppleg(i,2) = pmesh(i)
+         do j=3,lemax
+             k = j - 1
+             ppleg(i,j) = ( real(2*k-1) * pmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
+         enddo ! over j={3,lemax} loop
+     enddo ! over i={1,legrd} loop
+  end subroutine s_legendre
+
+  subroutine s_chebyshev()
+
+  end subroutine s_chebyshev
