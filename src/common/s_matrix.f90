@@ -18,12 +18,12 @@
 !!!           s_diag_i
 !!!           s_diag_d
 !!!           s_diag_z
-!!!           s_inv_d
-!!!           s_inv_z
-!!!           s_det_d
-!!!           s_det_z
 !!!           s_trace_d
 !!!           s_trace_z
+!!!           s_det_d
+!!!           s_det_z
+!!!           s_inv_d
+!!!           s_inv_z
 !!!           s_eig_dg
 !!!           s_eig_zg
 !!!           s_eigvals_dg
@@ -190,6 +190,20 @@
 !!>>> matrix manipulation: build diagonal matrix                       <<<
 !!------------------------------------------------------------------------
 
+!!>>> s_eye_i:
+  subroutine s_eye_i(A, k)
+     implicit none
+
+     return
+  end subroutine s_eye_i
+
+!!>>> s_eye_d:
+  subroutine s_eye_d(A, k)
+  end subroutine s_eye_d
+
+!!>>> s_eye_z:
+  subroutine s_eye_z(A, k)
+  end subroutine s_eye_z
 
 
 !!>>> s_inv_dmat: invert real(dp) matrix using lapack subroutines
