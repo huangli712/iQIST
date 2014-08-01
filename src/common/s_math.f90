@@ -108,9 +108,21 @@
 
      implicit none
 
+! external arguments
+     integer, intent(in)   :: lemax
+     integer, intent(in)   :: legrd
+     real(dp), intent(in)  :: pmesh(legrd)
+     real(dp), intent(out) :: ppleg(legrd,lemax)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
      if ( lemax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','lemax must be larger than 2')
-     endif
+         call s_print_error('s_legendre','lemax must be larger than 2')
+     endif ! back if ( lemax <= 2 ) block
 
      do i=1,legrd
          ppleg(i,1) = one
@@ -120,6 +132,8 @@
              ppleg(i,j) = ( real(2*k-1) * pmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
          enddo ! over j={3,lemax} loop
      enddo ! over i={1,legrd} loop
+
+     return
   end subroutine s_legendre
 
 !!>>> s_chebyshev:
