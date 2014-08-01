@@ -305,7 +305,27 @@
      return
   end subroutine s_eye_z
 
+!!>>> s_identity_i:
+  subroutine s_identity_i(n, A)
+     implicit none
 
+     return
+  end subroutine s_identity_i
+
+
+!!>>> s_identity_d:
+  subroutine s_identity_d(n, A)
+     implicit none
+
+     return
+  end subroutine s_identity_d
+
+!!>>> s_identity_i:
+  subroutine s_identity_z(n, A)
+     implicit none
+
+     return
+  end subroutine s_identity_z
 
 
 
