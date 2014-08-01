@@ -223,3 +223,30 @@
 
      return
   end subroutine s_swap_i
+
+!!>>> s_swap_d: exchange two real(dp) vectors
+  subroutine s_swap_d(n, dx, dy)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of integer vector
+     integer, intent(in)     :: n
+
+! real(dp) vector X
+     real(dp), intent(inout) :: dx(n)
+
+! real(dp) vector Y
+     real(dp), intent(inout) :: dy(n)
+
+! local variables
+! dummy real(dp) vector
+     real(dp) :: dt(n)
+
+     dt = dx
+     dx = dy
+     dy = dt
+
+     return
+  end subroutine s_swap_d
