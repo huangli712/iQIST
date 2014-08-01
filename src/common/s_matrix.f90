@@ -51,6 +51,23 @@
      return
   end subroutine s_zeros_i
 
+  subroutine s_zeros_d()
+     use constants, only : dp, zero
+
+     implicit none
+
+     return
+  end subroutine s_zeros_d
+
+
+  subroutine s_zeros_z()
+     use constants, only : dp, czero
+
+     implicit none
+
+     return
+  end subroutine s_zeros_z
+
 !!>>> s_inv_dmat: invert real(dp) matrix using lapack subroutines
   subroutine s_inv_dmat(ndim, dmat)
      use constants, only : dp
