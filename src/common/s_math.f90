@@ -102,16 +102,23 @@
      return
   end subroutine s_linspace_z
 
-!!>>> s_legendre:
+!!>>> s_legendre: build legendre polynomial in [-1,1]
   subroutine s_legendre(lemax, legrd, pmesh, ppleg)
      use constants, only : dp, one
 
      implicit none
 
 ! external arguments
+! maximum order for legendre polynomial
      integer, intent(in)   :: lemax
+
+! number of mesh points for legendre polynomial
      integer, intent(in)   :: legrd
+
+! mesh for legendre polynomial in [-1,1]
      real(dp), intent(in)  :: pmesh(legrd)
+
+! legendre polynomial defined on [-1,1]
      real(dp), intent(out) :: ppleg(legrd,lemax)
 
 ! local variables
@@ -120,10 +127,16 @@
      integer :: j
      integer :: k
 
+! check lemax
      if ( lemax <= 2 ) then
          call s_print_error('s_legendre','lemax must be larger than 2')
      endif ! back if ( lemax <= 2 ) block
 
+! the legendre polynomials obey the three term recurrence relation known
+! as Bonnet’s recursion formula:
+!     $P_0(x) = 1$
+!     P_1(x) = x$
+!     $(n+1) P_{n+1}(x) = (2n+1) x P_n(x) - n P_{n-1}(x)$
      do i=1,legrd
          ppleg(i,1) = one
          ppleg(i,2) = pmesh(i)
@@ -136,16 +149,24 @@
      return
   end subroutine s_legendre
 
-!!>>> s_chebyshev:
+!!>>> s_chebyshev: build chebyshev polynomial in [-1,1]
+!!>>> note: it is second kind chebyshev polynomial
   subroutine s_chebyshev(chmax, chgrd, qmesh, qqche)
      use constants, only : dp, one, two
 
      implicit none
 
 ! external arguments
+! maximum order for chebyshev polynomial
      integer, intent(in)   :: chmax
+
+! number of mesh points for chebyshev polynomial
      integer, intent(in)   :: chgrd
+
+! mesh for chebyshev polynomial in [-1,1]
      real(dp), intent(in)  :: qmesh(chgrd)
+
+! chebyshev polynomial defined on [-1,1]
      real(dp), intent(out) :: qqche(chgrd, chmax)
 
 ! local variables
@@ -153,10 +174,16 @@
      integer :: i
      integer :: j
 
+! check chmax
      if ( chmax <= 2 ) then
          call s_print_error('s_chebyshev','chmax must be larger than 2')
      endif ! back if ( chmax <= 2 ) block
 
+! the chebyshev polynomials of the second kind can be defined by the
+! following recurrence relation
+!     $U_0(x) = 1$
+!     $U_1(x) = 2x$
+!     $U_{n+1}(x) = 2xU_n(x) - U_{n-1}(x)$
      do i=1,chgrd
          qqche(i,1) = one
          qqche(i,2) = two * qmesh(i)
