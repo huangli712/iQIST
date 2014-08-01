@@ -203,6 +203,8 @@
      integer, intent(in)  :: k
 
 ! local variables
+! loop index
+     integer :: i
 
      return
   end subroutine s_eye_i
@@ -221,6 +223,10 @@
 ! refers to an upper diagonal, and a negative value to a lower diagonal.
      integer, intent(in)   :: k
 
+! local variables
+! loop index
+     integer :: i
+
      return
   end subroutine s_eye_d
 
@@ -237,6 +243,10 @@
 ! index of the diagonal: 0 refers to the main diagonal, a positive value
 ! refers to an upper diagonal, and a negative value to a lower diagonal.
      integer, intent(in)      :: k
+
+! local variables
+! loop index
+     integer :: i
 
      return
   end subroutine s_eye_z
