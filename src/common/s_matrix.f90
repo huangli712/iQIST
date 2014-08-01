@@ -195,9 +195,12 @@
      implicit none
 
 ! external arguments
+! input/output matrix
+     integer, intent(out) :: A(:,:)
+
 ! index of the diagonal: 0 refers to the main diagonal, a positive value
 ! refers to an upper diagonal, and a negative value to a lower diagonal.
-     integer, intent(in) :: k
+     integer, intent(in)  :: k
 
 ! local variables
 
@@ -211,9 +214,12 @@
      implicit none
 
 ! external arguments
+! input/output matrix
+     real(dp), intent(out) :: A(:,:)
+
 ! index of the diagonal: 0 refers to the main diagonal, a positive value
 ! refers to an upper diagonal, and a negative value to a lower diagonal.
-     integer, intent(in) :: k
+     integer, intent(in)   :: k
 
      return
   end subroutine s_eye_d
@@ -225,9 +231,13 @@
      implicit none
 
 ! external arguments
+! input/output matrix
+     complex(dp), intent(out) :: A(:,:)
+
 ! index of the diagonal: 0 refers to the main diagonal, a positive value
 ! refers to an upper diagonal, and a negative value to a lower diagonal.
-     integer, intent(in) :: k
+     integer, intent(in)      :: k
+
      return
   end subroutine s_eye_z
 
