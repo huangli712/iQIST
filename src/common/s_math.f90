@@ -138,16 +138,15 @@
 
 !!>>> s_chebyshev:
   subroutine s_chebyshev()
-     if ( lemax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','lemax must be larger than 2')
+     if ( chmax <= 2 ) then
+         call ctqmc_print_error('ctqmc_selfer_init','chmax must be larger than 2')
      endif
 
-     do i=1,legrd
-         ppleg(i,1) = one
-         ppleg(i,2) = pmesh(i)
-         do j=3,lemax
-             k = j - 1
-             ppleg(i,j) = ( real(2*k-1) * pmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
-         enddo ! over j={3,lemax} loop
-     enddo ! over i={1,legrd} loop
+     do i=1,chgrd
+         qqche(i,1) = one
+         qqche(i,2) = two * qmesh(i)
+         do j=3,chmax
+             qqche(i,j) = two * qmesh(i) * qqche(i,j-1) - qqche(i,j-2)
+         enddo ! over j={3,chmax} loop
+     enddo ! over i={1,chgrd} loop
   end subroutine s_chebyshev
