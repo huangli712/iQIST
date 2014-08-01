@@ -50,6 +50,8 @@
      implicit none
 
 ! external arguments
+! input/output matrix
+     integer, intent(out) :: A(:,:)
 
      return
   end subroutine s_zeros_i
@@ -61,6 +63,9 @@
      implicit none
 
 ! external arguments
+! input/output matrix
+     real(dp), intent(out) :: A(:,:)
+
      return
   end subroutine s_zeros_d
 
@@ -71,6 +76,9 @@
      implicit none
 
 ! external arguments
+! input/output matrix
+     complex(dp), intent(out) :: A(:,:)
+
      return
   end subroutine s_zeros_z
 
