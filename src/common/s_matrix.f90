@@ -309,6 +309,22 @@
   subroutine s_identity_i(n, A)
      implicit none
 
+! external arguments
+! size of matrix
+     integer, intent(in)  :: n
+
+! input/output matrix
+     integer, intent(out) :: A(n,n)
+
+! local variables
+! loop index
+     integer :: i
+
+     A = 0
+     do i=1,n
+         A(i,i) = 1
+     enddo ! over i={1,n} loop
+
      return
   end subroutine s_identity_i
 
