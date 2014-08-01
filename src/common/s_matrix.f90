@@ -1,44 +1,52 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
-!!! program : s_ones_imat
-!!!           s_ones_dmat
-!!!           s_ones_zmat
-!!!           s_zeros_imat
-!!!           s_zeros_dmat
-!!!           s_zeros_zmat
-!!!           s_eye_imat
-!!!           s_eye_dmat
-!!!           s_eye_zmat
-!!!           s_identity_imat
-!!!           s_identity_dmat
-!!!           s_identity_zmat
-!!!           s_diag_imat
-!!!           s_diag_dmat
-!!!           s_diag_zmat
-!!!           s_inv_dmat
-!!!           s_inv_zmat
-!!!           s_det_dmat
-!!!           s_det_zmat
-!!!           s_trace_dmat
-!!!           s_trace_zmat
-!!!           s_eig_dmat
-!!!           s_eig_zmat
-!!!           s_eigvals_dmat
-!!!           s_eigvals_zmat
-!!!           s_eig_symat
-!!!           s_eig_hemat
-!!!           s_eigvals_symat
-!!!           s_eigvals_hemat
+!!! program : s_zeros_i
+!!!           s_zeros_d
+!!!           s_zeros_z
+!!!           s_ones_i
+!!!           s_ones_d
+!!!           s_ones_z
+!!!           s_eye_i
+!!!           s_eye_d
+!!!           s_eye_z
+!!!           s_identity_i
+!!!           s_identity_d
+!!!           s_identity_z
+!!!           s_diag_i
+!!!           s_diag_d
+!!!           s_diag_z
+!!!           s_inv_d
+!!!           s_inv_z
+!!!           s_det_d
+!!!           s_det_z
+!!!           s_trace_d
+!!!           s_trace_z
+!!!           s_eig_dg
+!!!           s_eig_zg
+!!!           s_eigvals_dg
+!!!           s_eigvals_zg
+!!!           s_eig_sy
+!!!           s_eig_he
+!!!           s_eigvals_sy
+!!!           s_eigvals_he
 !!! source  : s_matrix.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/26/2014 by li huang
+!!!           08/01/2014 by li huang
 !!! purpose : these subroutines are used to encapsulate some important and
 !!!           frequently used linear algebra operations.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!------------------------------------------------------------------------
+!!>>> matrix manipulation                                              <<<
+!!------------------------------------------------------------------------
+
+  subroutine s_zeros_i()
+  end subroutine s_zeros_i
 
 !!>>> s_inv_dmat: invert real(dp) matrix using lapack subroutines
   subroutine s_inv_dmat(ndim, dmat)
