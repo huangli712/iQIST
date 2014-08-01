@@ -245,8 +245,6 @@
      return
   end subroutine s_eye_i
 
-  end program test
-
 !!>>> s_eye_d: build real(dp) matrix with ones on the diagonal and zeros elsewhere.
   subroutine s_eye_d(n, k, A)
      use constants, only : dp, zero, one
@@ -269,6 +267,10 @@
      integer :: i
 
      A = zero
+     do i=1,n
+         if ( i - k < 1 .or. i - k > n ) CYCLE
+         A(i,i-k) = one
+     enddo ! over i={1,n} loop
 
      return
   end subroutine s_eye_d
@@ -295,6 +297,10 @@
      integer :: i
 
      A = czero
+     do i=1,n
+         if ( i - k < 1 .or. i - k > n ) CYCLE
+         A(i,i-k) = cone
+     enddo ! over i={1,n} loop
 
      return
   end subroutine s_eye_z
