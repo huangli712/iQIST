@@ -49,12 +49,15 @@
 !!------------------------------------------------------------------------
 
 !!>>> s_zeros_i: build an integer matrix with all elements are zero
-  subroutine s_zeros_i(A)
+  subroutine s_zeros_i(n, A)
      implicit none
 
 ! external arguments
+! size of matrix
+     integer, intent(in)  :: n
+
 ! input/output matrix
-     integer, intent(out) :: A(:,:)
+     integer, intent(out) :: A(n,n)
 
      A = 0
 
@@ -62,14 +65,17 @@
   end subroutine s_zeros_i
 
 !!>>> s_zeros_d: build a real(dp) matrix with all elements are zero
-  subroutine s_zeros_d(A)
+  subroutine s_zeros_d(n, A)
      use constants, only : dp, zero
 
      implicit none
 
 ! external arguments
+! size of matrix
+     integer, intent(in)   :: n
+
 ! input/output matrix
-     real(dp), intent(out) :: A(:,:)
+     real(dp), intent(out) :: A(n,n)
 
      A = zero
 
@@ -77,14 +83,17 @@
   end subroutine s_zeros_d
 
 !!>>> s_zeros_z: build a complex(dp) matrix with all elements are zero
-  subroutine s_zeros_z(A)
+  subroutine s_zeros_z(n, A)
      use constants, only : dp, czero
 
      implicit none
 
 ! external arguments
+! size of matrix
+     integer, intent(in)      :: n
+
 ! input/output matrix
-     complex(dp), intent(out) :: A(:,:)
+     complex(dp), intent(out) :: A(n,n)
 
      A = czero
 
@@ -206,8 +215,24 @@
 ! loop index
      integer :: i
 
+! size of matrix
+     integer :: N
+
+! get size of matrix, we assume it is a square matrix
+     N = size(A, dim = 1)
+     print *, N
+
+     print *, A(1:4,1:4)
      return
   end subroutine s_eye_i
+
+  program test
+     implicit none
+
+     integer :: A(4,4)
+     call s_eye_i(A, 0)
+
+  end program test
 
 !!>>> s_eye_d: build real(dp) matrix with ones on the diagonal and zeros elsewhere.
   subroutine s_eye_d(A, k)
@@ -226,6 +251,10 @@
 ! local variables
 ! loop index
      integer :: i
+
+! size of matrix
+     integer :: N
+     A = zero
 
      return
   end subroutine s_eye_d
@@ -247,6 +276,11 @@
 ! local variables
 ! loop index
      integer :: i
+
+! size of matrix
+     integer :: N
+
+     A = czero
 
      return
   end subroutine s_eye_z
