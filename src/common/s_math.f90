@@ -137,20 +137,25 @@
   end subroutine s_legendre
 
 !!>>> s_chebyshev:
-  subroutine s_chebyshev()
+  subroutine s_chebyshev(chmax, chgrd, qmesh, qqche)
      use constants, only : dp, one, two
 
      implicit none
 
 ! external arguments
+     integer, intent(in)   :: chmax
+     integer, intent(in)   :: chgrd
+     real(dp), intent(in)  :: qmesh(chgrd)
+     real(dp), intent(out) :: qqche(chgrd, chmax)
+
 ! local variables
 ! loop index
      integer :: i
      integer :: j
 
      if ( chmax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','chmax must be larger than 2')
-     endif
+         call s_print_error('s_chebyshev','chmax must be larger than 2')
+     endif ! back if ( chmax <= 2 ) block
 
      do i=1,chgrd
          qqche(i,1) = one
