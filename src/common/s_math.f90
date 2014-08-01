@@ -138,6 +138,16 @@
 
 !!>>> s_chebyshev:
   subroutine s_chebyshev()
+     use constants, only : dp, one, two
+
+     implicit none
+
+! external arguments
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
      if ( chmax <= 2 ) then
          call ctqmc_print_error('ctqmc_selfer_init','chmax must be larger than 2')
      endif
@@ -149,4 +159,6 @@
              qqche(i,j) = two * qmesh(i) * qqche(i,j-1) - qqche(i,j-2)
          enddo ! over j={3,chmax} loop
      enddo ! over i={1,chgrd} loop
+
+     return
   end subroutine s_chebyshev
