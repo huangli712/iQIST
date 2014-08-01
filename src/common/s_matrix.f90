@@ -1,9 +1,34 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
-!!! program : s_inv_dmat
+!!! program : s_ones_imat
+!!!           s_ones_dmat
+!!!           s_ones_zmat
+!!!           s_zeros_imat
+!!!           s_zeros_dmat
+!!!           s_zeros_zmat
+!!!           s_eye_imat
+!!!           s_eye_dmat
+!!!           s_eye_zmat
+!!!           s_identity_imat
+!!!           s_identity_dmat
+!!!           s_identity_zmat
+!!!           s_diag_imat
+!!!           s_diag_dmat
+!!!           s_diag_zmat
+!!!           s_inv_dmat
 !!!           s_inv_zmat
 !!!           s_det_dmat
 !!!           s_det_zmat
+!!!           s_trace_dmat
+!!!           s_trace_zmat
+!!!           s_eig_dmat
+!!!           s_eig_zmat
+!!!           s_eigvals_dmat
+!!!           s_eigvals_zmat
+!!!           s_eig_symat
+!!!           s_eig_hemat
+!!!           s_eigvals_symat
+!!!           s_eigvals_hemat
 !!! source  : s_matrix.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
