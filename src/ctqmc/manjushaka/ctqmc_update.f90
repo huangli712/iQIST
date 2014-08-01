@@ -664,6 +664,8 @@
 ! calculate operators trace
          if ( iskip == 1 ) then
              call ctqmc_make_ztrace_lazy(5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp)
+         else
+             call ctqmc_ztrace_skiplists(5, 3, nsize, deter_ratio, rand_num, p, pass, -1, -1)
          endif
 
 ! calculate the transition ratio between old and new configurations,
@@ -750,6 +752,8 @@
 ! calculate operators trace
              if ( iskip == 1 ) then
                  call ctqmc_make_ztrace_lazy(5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp)
+             else
+                 call ctqmc_ztrace_skiplists(5, 3, nsize, deter_ratio, rand_num, p, pass, -1, -1)
              endif
 
 ! if update action is accepted
@@ -835,6 +839,8 @@
 ! calculate operators trace
          if ( iskip == 1 ) then
              call ctqmc_make_ztrace_lazy(5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp)
+         else
+             call ctqmc_ztrace_skiplists(5, 3, nsize, deter_ratio, rand_num, p, pass, -1, -1)
          endif
 
 ! if update action is accepted

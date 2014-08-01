@@ -9,19 +9,20 @@
 
 !>>> data structure of skip lists 
      type :: t_skiplists
-         integer :: list_level
-         integer :: num_node
+         integer :: list_level(2)
+         integer :: num_node(2)
          type(t_node), pointer :: head
          type(t_node), pointer :: tail
      end type t_skiplists
 
 !>>> data structure of a node
      type :: t_node
-         integer :: node_level
-         integer :: indx
-         type(t_pnode), dimension(:), pointer     :: forward => null()
-         logical, dimension(:,:), pointer         :: lsave => null() 
-         type(t_subprod), dimension(:,:), pointer :: subprod => null()
+         integer :: node_level(2)
+         integer :: indx(2)
+         type(t_pnode), dimension(:,:), pointer     :: forward => null()
+         logical, dimension(:,:,:), pointer         :: lsave   => null() 
+         logical, dimension(:,:), pointer           :: lcopy => null()
+         type(t_subprod), dimension(:,:), pointer   :: subprod => null()
      end type t_node
 
 !>>> data structure of a pointer to node
@@ -31,15 +32,16 @@
 
 !>>> data structure of a subprod
      type :: t_subprod
-         real(dp), dimension(:,:), pointer :: item => null()
+         real(dp), dimension(:,:,:), pointer :: submat => null()
      end type t_subprod
 
 !>>> a very large integer
      integer, private, parameter :: max_int = 100000000
 
 !>>> global variables, we use two skip lists
-     type(t_skiplists), public, save, pointer :: skiplists_a 
-     type(t_skiplists), public, save, pointer :: skiplists_b 
+     type(t_skiplists), public, save, pointer :: skip_lists
+     type(t_node), public, save, pointer :: node_a
+     type(t_node), public, save, pointer :: node_b
 
      contains
 
@@ -50,7 +52,7 @@
         type(t_skiplists), pointer :: skiplists
   
         type(t_node), pointer :: head, tail
-        integer :: i,j
+        integer :: i
 
 ! allocate memory for skiplists
         allocate(skiplists)
@@ -61,14 +63,17 @@
 
 ! set head node
         head%indx = 0
-        do i=1, mlevel
-            head%forward(i)%p => tail
+        do i=1, mlevl
+            head%forward(i,1)%p => tail
+            head%forward(i,2)%p => tail
         enddo
         head%lsave = .false. 
+        head%lcopy = .false.
 
 ! set tail node
         tail%indx = max_int
-        tail%forward(1)%p => null()
+        tail%forward(1,1)%p => null()
+        tail%forward(1,2)%p => null()
  
 ! set skiplists
         skiplists%list_level = 2
@@ -86,12 +91,11 @@
         type(t_skiplists), pointer :: skiplists
  
         type(t_pnode) :: curr, next
-        integer :: i
 
         if (associated(skiplists)) then
             curr%p => skiplists%head
             do while(associated(curr%p))
-                next%p => curr%p%forward(1)%p
+                next%p => curr%p%forward(1,2)%p
                 call destroy_node(curr%p)
                 curr%p => next%p
             enddo
@@ -107,14 +111,21 @@
         
         integer, intent(in) :: level 
         type(t_node), pointer :: node
+        integer :: i,j
 
         allocate(node)
 
         node%node_level = level
         if (level >= 1) then
-            allocate( forward(level) )
-            allocate( lsave(nsectors, level) )
-            allocate( subprod(nsectors, level) ) 
+            allocate( node%forward(level, 2) )
+            allocate( node%lsave(nsectors, level, 2) )
+            allocate( node%lcopy(nsectors, level) )
+            allocate( node%subprod(nsectors, level) ) 
+            do i=1, level
+                do j=1, nsectors
+                    call new_subprod_item(node%subprod(j,i))
+                enddo
+            enddo
         endif
      
         return
@@ -131,8 +142,9 @@
         if (associated(node)) then
             if (associated(node%forward))   deallocate(node%forward) 
             if (associated(node%lsave))     deallocate(node%lsave)
+            if (associated(node%lcopy))     deallocate(node%lcopy)
             if (associated(node%subprod)) then
-                do i=1, node%node_level
+                do i=1, node%node_level(1)
                     do j=1, nsectors
                         call destroy_subprod_item(node%subprod(j,i))
                     enddo
@@ -150,12 +162,10 @@
      subroutine new_subprod_item(subprod)
         implicit none
 
-        type(t_subprod), pointer :: subprod
+        type(t_subprod), intent(inout) :: subprod
 
-        if (.not. associated(subprod%item)) then
-            allocate(subprod%item(max_dim_sect, max_dim_sect))
-            subprod%item = zero
-        endif 
+        allocate( subprod%submat(max_dim_sect, max_dim_sect, 2) )
+        subprod%submat = zero
 
         return
      end subroutine new_subprod_item
@@ -164,113 +174,122 @@
      subroutine destroy_subprod_item(subprod)
         implicit none
 
-        type(t_subprod), pointer :: subprod
+        type(t_subprod), intent(inout) :: subprod
 
-        if (associated(subprod%item)) then
-            deallocate(subprod%item)
+        if (associated(subprod%submat)) then
+            deallocate(subprod%submat)
         endif
 
         return
      end subroutine destroy_subprod_item
 
 !>>> insert a node 
-     subroutine insert_node(skiplists, level, indx)
+     subroutine insert_node(skiplists, level, indx, node)
         implicit none
 
         type(t_skiplists), pointer :: skiplists
-        integer, intent(in) :: level
+        integer, intent(inout) :: level
         integer, intent(in) :: indx
+        type(t_node), pointer :: node
 
         type(t_pnode) :: update(mlevl), x
-        type(t_node), pointer :: node
         integer :: i
 
         x%p => skiplists%head
-        do i=skiplists%list_level, 1, -1
-            do while (x%p%forward(i)%p%indx <= indx)
-                x%p => x%p%forward(i)%p
+        do i=skiplists%list_level(1), 1, -1
+            do while (x%p%forward(i,1)%p%indx(1) <= indx)
+                x%p => x%p%forward(i,1)%p
             enddo 
 ! destroy unused subprod
-            do j=1, nsectors
-                if (associated(x%p%subprod(j,i)%item) then
-                    call destroy_subprod_item(x%p%subprod(j,i)%item)
-                endif
-            enddo
-            x%p%lsave(:,i) = .false.
+            !do j=1, nsectors
+            !    if (associated(x%p%subprod(j,i)%item)) then
+            !        call destroy_subprod_item(x%p%subprod(j,i))
+            !    endif
+            !enddo
+            x%p%lsave(:,i,1) = .false.
             update(i)%p => x%p
         enddo 
 
-        if (level > skiplists%list_level - 1) then
-            do i=skiplists%list_level,level
-                update(i)%p => skiplists%head
-                skiplists%head%lsave(:,i) = .false.
-            enddo
-            skiplists%list_level = level + 1
-            skiplists%head%forward(skiplists%list_level)%p => skiplists%tail
-            skiplists%head%lsave(:, skiplists%list_level) = .false.
+        if (level > skiplists%list_level(1) - 1) then
+            level = skiplists%list_level(1)
+            update(level)%p => skiplists%head
+            skiplists%head%lsave(:,level,1) = .false.
+
+            skiplists%list_level(1) = skiplists%list_level(1) + 1
+            skiplists%head%forward(skiplists%list_level(1),1)%p => skiplists%tail
+            skiplists%head%lsave(:, skiplists%list_level(1),1) = .false.
         endif 
 
         call new_node(level, node)
-        node%indx = indx+1
+        node%indx(1) = indx+1
         
         do i=level, 1, -1
-            node%lsave(:,i) = .false.
+            node%lsave(:,i,1) = .false.
             x = update(i)
-            node%forward(i)%p => x%p%forward(i)%p
-            x%p%forward(i)%p => node
+            node%forward(i,1)%p => x%p%forward(i,1)%p
+            x%p%forward(i,1)%p => node
         enddo
 
-        x%p => node%forward(1)%p
+        x%p => node%forward(1,1)%p
         do while( .not. associated(x%p, skiplists%tail) )
-            x%p%indx = x%p%indx + 1
-            x%p => x%p%forward(1)%p
+            x%p%indx(1) = x%p%indx(1) + 1
+            x%p => x%p%forward(1,1)%p
         enddo
 
-        skiplists%num_node = skiplists%num_node + 1
+        skiplists%num_node(1) = skiplists%num_node(1) + 1
   
         return
      end subroutine insert_node
 
 !>>> remove a node
-     subroutine remove_node(skiplists, indx)
+     subroutine remove_node(skiplists, indx, node)
         implicit none
 
         type(t_skiplists), pointer :: skiplists
         integer, intent(in) :: indx
-
-        type(t_pnode) :: update(max_level), x
         type(t_node), pointer :: node
-        integer :: i,j
+
+        type(t_pnode) :: update(mlevl), x
+        integer :: level
+        integer :: i
 
         x%p => skiplists%head
-        do i=skiplists%list_level, 1, -1
-            do while (x%p%forward(i)%p%indx < indx)
-                x%p => x%p%forward(i)%p
+        do i=skiplists%list_level(1), 1, -1
+            do while (x%p%forward(i,1)%p%indx(1) < indx)
+                x%p => x%p%forward(i,1)%p
             enddo 
-            do j=1, nsectors
-                if (associated(x%p%subprod(j,i)%item) then
-                    call destroy_subprod_item(x%p%subprod(j,i)%item)
-                endif
-            enddo
-            x%p%lsave(:,i) = .false.
+            !do j=1, nsectors
+            !    if (associated(x%p%subprod(j,i)%item)) then
+            !        call destroy_subprod_item(x%p%subprod(j,i))
+            !    endif
+            !enddo
+            x%p%lsave(:,i,1) = .false.
             update(i)%p => x%p
         enddo 
 
-        node => x%p%forward(1)%p
+        node => x%p%forward(1,1)%p
 
-        x%p => node%forward(1)%p
+        x%p => node%forward(1,1)%p
         do while(.not. associated(x%p, skiplists%tail))
-            x%p%indx = x%p%indx - 1
-            x%p => x%p%forward(1)%p
+            x%p%indx(1) = x%p%indx(1) - 1
+            x%p => x%p%forward(1,1)%p
         enddo
 
-        do i=1, node%node_level
-            update(i)%p%forward(i)%p => node%forward(i)%p 
+        do i=1, node%node_level(1)
+            update(i)%p%forward(i,1)%p => node%forward(i,1)%p 
         enddo
 
-        call destroy_node(node)
+        do while (skiplists%list_level(1)>2) 
+            level = skiplists%list_level(1) - 1
+            x%p => skiplists%head%forward(level, 1)%p
+            if ( associated( x%p, skiplists%tail ) ) then
+                skiplists%list_level(1) = level
+            else
+                EXIT 
+            endif
+        enddo
 
-        skiplists%num_node = skiplists%num_node - 1
+        skiplists%num_node(1) = skiplists%num_node(1) - 1
 
         return
      end subroutine remove_node
@@ -283,19 +302,19 @@
         integer, intent(in) :: indx
 
         type(t_pnode) :: x
-        integer :: i,j
+        integer :: i
 
         x%p => skiplists%head
-        do i=skiplists%list_level, 1, -1
-            do while (x%p%forward(i)%p%indx <= indx)
-                x%p => x%p%forward(i)%p
+        do i=skiplists%list_level(1), 1, -1
+            do while (x%p%forward(i,1)%p%indx(1) <= indx)
+                x%p => x%p%forward(i,1)%p
             enddo 
-            do j=1, nsectors
-                if (associated(x%p%subprod(j,i)%item) then
-                    call destroy_subprod_item(x%p%subprod(j,i)%item)
-                endif
-            enddo
-            x%p%lsave(:,i) = .false.
+            !do j=1, nsectors
+            !    if (associated(x%p%subprod(j,i)%item)) then
+            !        call destroy_subprod_item(x%p%subprod(j,i))
+            !    endif
+            !enddo
+            x%p%lsave(:,i,1) = .false.
         enddo 
 
         return
@@ -308,18 +327,18 @@
         type(t_skiplists), pointer :: skiplists
 
         type(t_pnode) :: x
-        integer :: i,j
+        integer :: i
  
-        do i=1, skiplists%list_level
+        do i=1, skiplists%list_level(1)
             x%p => skiplists%head
-            do while(associated(x%p))
-                do j=1, nsectors
-                    if (associated(x%p%subprod(j,i)%item) then
-                        call destroy_subprod_item(x%p%subprod(j,i)%item)
-                    endif
-                enddo
-                x%p%lsave(:,i) = .false.
-                x%p => x%p%forward(i)%p
+            do while(.not. associated(x%p, skiplists%tail))
+                !do j=1, nsectors
+                !    if (associated(x%p%subprod(j,i)%item)) then
+                !        call destroy_subprod_item(x%p%subprod(j,i))
+                !    endif
+                !enddo
+                x%p%lsave(:,i,1) = .false.
+                x%p => x%p%forward(i,1)%p
             enddo
         enddo
 
@@ -327,49 +346,130 @@
      end subroutine change_all_node 
 
 !>>> deep copy a skip lists
-     subroutine deep_copy_skiplists(this, other)
+     subroutine deep_copy_skiplists(skiplists, copy_mode)
         implicit none
 
-        type(t_skiplists), pointer :: this
-        type(t_skiplists), pointer :: other
+        type(t_skiplists), pointer :: skiplists
+        integer, intent(in) :: copy_mode
 
-        type(t_pnode) :: x1,x2
-        integer :: level
-        integer :: counter
+        type(t_pnode) :: x
         integer :: i,j
 
-        ! step 1: build a new skiplists
-        call new_skiplists(this)
-        
-        ! step 2: insert the same node of other to this one 
-        x1%p => other%head%forward(1)%p
-        counter = 0
-        do while(.not. associated(x1%p, other%tail))
-            level = x1%p%node_level
-            call insert_node(this, level, counter)               
-            counter = counter + 1
-            x1%p => x1%p%forward(1)%p
-        enddo
- 
-        ! step 3: copy data from other to this one
-        do i=1, this%list_level 
-            x1%p => this%head
-            x2%p => other%head
-            do while(.not. associated(x1%p, this%tail))
-                do j=1, nsectors
-                    if (x2%p%lsave(j,i)) then
-                        x1%p%lsave(j,i) = x2%p%lsave(j,i)
-                        call new_subprod_item(x1%p%subprod(j,i))                     
-                        x1%p%subprod(j,i)%item = x2%p%subprod(j,i)%item
-                    endif                 
+        if (copy_mode == 1) then
+            skiplists%list_level(2) = skiplists%list_level(1)
+            skiplists%num_node(2)   = skiplists%num_node(1)
+            x%p => skiplists%head
+            do while(.not. associated(x%p, skiplists%tail))
+                x%p%node_level(2) = x%p%node_level(1)
+                x%p%indx(2) = x%p%indx(1)
+                x%p%forward(:,2) = x%p%forward(:,1)
+                x%p%lsave(:,:,2) = x%p%lsave(:,:,1)
+                do i=1, x%p%node_level(1)
+                    do j=1, nsectors
+                        if (x%p%lcopy(j,i)) then
+                            x%p%subprod(j,i)%submat(:,:,2) = x%p%subprod(j,i)%submat(:,:,1)
+                        endif                 
+                    enddo
                 enddo
-                x1%p => x1%p%forward(i)%p
-                x2%p => x2%p%forward(i)%p
+                x%p => x%p%forward(1,1)%p
             enddo
-        enddo
+        else
+            skiplists%list_level(1) = skiplists%list_level(2)
+            skiplists%num_node(1)   = skiplists%num_node(2)
+            x%p => skiplists%head
+            do while(.not. associated(x%p, skiplists%tail))
+                x%p%node_level(1) = x%p%node_level(2)
+                x%p%indx(1) = x%p%indx(2)
+                x%p%forward(:,1) = x%p%forward(:,2)
+                x%p%lsave(:,:,1) = x%p%lsave(:,:,2)
+                x%p%lcopy(:,:) = .false.
+                x%p => x%p%forward(1,1)%p
+            enddo
+        endif
 
         return
      end subroutine deep_copy_skiplists
+
+     subroutine trial_update_skiplists(skiplists, csize, imove, ia, ib)
+        implicit none
+
+        type(t_skiplists), pointer :: skiplists
+        integer, intent(in) :: csize
+        integer, intent(in) :: imove
+        integer, intent(in) :: ia
+        integer, intent(in) :: ib
+
+        integer :: level
+
+! first, copy 2 to 1
+        call deep_copy_skiplists(skiplists, 2)
+
+        if (imove == 1) then
+            call random_level(level)
+            call insert_node(skiplists, level, ia-1, node_a) 
+            if (ia < csize-1) then
+                call change_one_node(skiplists,ia+1)
+            endif
+            call random_level(level)
+            call insert_node(skiplists, level, ib-1, node_b) 
+            if (ib < csize) then
+                call change_one_node(skiplists,ib+1)
+            endif
+! remove two operators
+        elseif (imove == 2) then
+            call remove_node(skiplists, ia, node_a) 
+            if (ia < csize+2) then
+                call change_one_node(skiplists,ia)
+            endif
+            call remove_node(skiplists, ib, node_b) 
+            if (ib < csize+1) then
+                call change_one_node(skiplists,ib)
+            endif
+! remove one, then insert one
+        elseif (imove == 3 .or. imove == 4) then
+            call remove_node(skiplists, ia, node_a) 
+            if (ia < csize) then
+                call change_one_node(skiplists,ia)
+            endif
+            call random_level(level)
+            call insert_node(skiplists, level, ib-1, node_b) 
+            if (ib < csize) then
+                call change_one_node(skiplists,ib+1)
+            endif
+! change all the node
+        elseif (imove == 5) then
+            call change_all_node(skiplists)
+        endif
+
+        return
+     end subroutine trial_update_skiplists
+
+     subroutine real_update_skiplists(skiplists, imove, accept)
+        implicit none
+
+        type(t_skiplists), pointer :: skiplists
+        integer, intent(in) :: imove
+        logical, intent(in) :: accept
+
+        if (accept) then
+            if (imove == 2) then
+                call destroy_node(node_a)
+                call destroy_node(node_b)
+            elseif(imove == 3 .or. imove == 4) then
+                call destroy_node(node_a)
+            endif
+            call deep_copy_skiplists(skiplists, 1)
+        else
+            if (imove == 1) then
+                call destroy_node(node_a)
+                call destroy_node(node_b)
+            elseif (imove == 3 .or. imove == 4) then
+                call destroy_node(node_b)
+            endif
+        endif
+        
+        return
+     end subroutine real_update_skiplists
 
      subroutine ctqmc_sector_ztrace(skiplists, csize, string, index_t_loc, expt_t_loc, trace)
         implicit none
@@ -390,7 +490,7 @@
         integer :: dim1
         integer :: i,j
      
-        level = skiplists%list_level
+        level = skiplists%list_level(1)
         head => skiplists%head
         tail => skiplists%tail
      
@@ -398,15 +498,18 @@
         dim1 = sectors(isect)%ndim
 
 ! if we don't save its result, allocate memory and calculate it
-        if (.not. head%lsave(isect, level)) then
-            call new_subprod_item(head%subprod(isect, level)) 
-            call cat_subprod(level, head, tail, csize, string, index_t_loc, head%subprod(isect,level)%item)
-            head%lsave(isect, level) = .true.
+        if (.not. head%lsave(isect, level, 1)) then
+            !call new_subprod_item(head%subprod(isect, level)) 
+            call cat_subprod(skiplists, level, head, tail, csize, string, index_t_loc, right_mat, head%subprod(isect,level)%submat(:,:,1))
+            head%lsave(isect, level, 1) = .true.
+            head%lcopy(isect, level) = .true.
+            right_mat = head%subprod(isect, level)%submat(:,:,1)
+        else
+            right_mat = head%subprod(isect, level)%submat(:,:,2)
         endif
-        right_mat = head%subprod(isect, level)%item
 
 ! special treatment of the last time-evolution operator
-        indx = sectors(string(1))%istart
+        indx = sectors(isect)%istart
         do i=1, dim1
             do j=1, dim1
                 right_mat(i,j) = right_mat(i,j) * expt_t_loc(indx+i-1)
@@ -427,132 +530,188 @@
      end subroutine ctqmc_sector_ztrace
      
      recursive &
-     subroutine cat_subprod(level, head, tail, csize, string, index_t_loc, total_prod)
+     subroutine cat_subprod(skiplists, level, head, tail, csize, string, index_t_loc, tmp_mat, total_prod)
         implicit none
      
+        type(t_skiplists), pointer :: skiplists
         integer, intent(in)   :: level
         type(t_node), pointer :: head
         type(t_node), pointer :: tail
         integer, intent(in)   :: csize
         integer, intent(in)   :: string(csize+1)
         integer, intent(in)   :: index_t_loc(mkink)
-        real(dp), intent(in)  :: expt_t_loc(ncfgs)
         real(dp), intent(inout) :: total_prod(max_dim_sect, max_dim_sect)
+        real(dp), intent(out) :: tmp_mat(max_dim_sect, max_dim_sect)
 
         type(t_pnode) :: x1, x2
-        real(dp) :: tmp_mat(max_dim_sect, max_dim_sect)
         integer :: this_level
         integer :: counter
         integer :: isect, jsect
         integer :: dim1, dim2, dim3
         integer :: istart
         integer :: vt, vf
+        integer :: i,j
      
         this_level = level - 1
         total_prod = zero
 
-        if (head%indx == 0) then
+        if (head%indx(1) == 0) then
             dim1 = sectors(string(1))%ndim
         else
-            dim1 = sectors(string(head%indx))%ndim
+            dim1 = sectors(string(head%indx(1)))%ndim
         endif
  
         counter = 0 
         x1%p => head
-        x2%p => head%forward(this_level)%p
+        x2%p => head%forward(this_level,1)%p
 
         if (this_level == 1) then
             do while(.not. associated(x1%p, tail))
                 counter = counter + 1
-                if (x1%p%indx == 0) then
+                if (x1%p%indx(1) == 0) then
                     isect = string(1) 
                     jsect = string(1) 
                 else
-                    isect = string(x1%p%indx)
-                    jsect = string(x1%p%indx+1)
+                    isect = string(x1%p%indx(1))
+                    jsect = string(x1%p%indx(1)+1)
                 endif
 
                 dim2 = sectors(isect)%ndim
                 dim3 = sectors(jsect)%ndim
 
-                if (.not. x1%p%lsave(isect,1)) then
-                    call new_subprod_item(x1%p%subprod(isect,1))
-                    x1%p%subprod(isect,1)%item = zero
-
-                    if (x1%p%indx == 0) then
+                if (.not. x1%p%lsave(isect,1,1)) then
+                    !call new_subprod_item(x1%p%subprod(isect,1))
+                    x1%p%subprod(isect,1)%submat(:,:,1) = zero
+                    if (x1%p%indx(1) == 0) then
                         do i=1, dim2
-                            x1%p%subprod(isect,1)%item(i,i) = one 
+                            x1%p%subprod(isect,1)%submat(i,i,1) = one 
                         enddo
                     else
                         istart = sectors(isect)%istart
-                        vt = type_v( index_t_loc(x1%p%indx) )
-                        vf = flvr_v( index_t_loc(x1%p%indx) ) 
+                        vt = type_v( index_t_loc(x1%p%indx(1)) )
+                        vf = flvr_v( index_t_loc(x1%p%indx(1)) ) 
                         do i=1, dim2
                             do j=1, dim3
-                                x1%p%subprod(isect,1)%item(j,i) = sectors(i)%myfmat(vf,vt)%item(j,i) &
-                                                    * expt_t_loc(istart+i-1, index_t_loc(x1%p%indx))
+                                x1%p%subprod(isect,1)%submat(j,i,1) = sectors(isect)%myfmat(vf,vt)%item(j,i) * &
+                                expt_v( istart+i-1, index_t_loc(x1%p%indx(1)) )
                             enddo 
                         enddo
                         num_prod = num_prod + 1
                     endif
-                    x1%p%lsave(isect,1) = .true.
-                endif
+                    x1%p%lsave(isect,1,1) = .true.
+                    x1%p%lcopy(isect,1) = .true.
 
-                if (counter == 1) then
-                    total_prod = x1%p%subprod(isect,1)%item
+                    if (counter == 1) then
+                        total_prod = x1%p%subprod(isect,1)%submat(:,:,1)
+                    else
+                        call dgemm( 'N','N', dim3, dim1, dim2, one,                    &
+                                    x1%p%subprod(isect,1)%submat(:,:,1), max_dim_sect, &
+                                    total_prod,                          max_dim_sect, &
+                                    zero, tmp_mat,                       max_dim_sect   )
+                        total_prod = tmp_mat
+                        num_prod = num_prod + 1
+                    endif
+
                 else
-                    call dgemm( 'N','N', dim3, dim1, dim2, one,           &
-                                x1%p%subprod(isect,1)%item, max_dim_sect, &
-                                total_prod,                 max_dim_sect, &
-                                zero, tmp_mat,              max_dim_sect   )
-                    total_prod = tmp_mat
-                    num_prod = num_prod + 1
+                    if (counter == 1) then
+                        total_prod = x1%p%subprod(isect,1)%submat(:,:,2)
+                    else
+                        call dgemm( 'N','N', dim3, dim1, dim2, one,                  &
+                                    x1%p%subprod(isect,1)%submat(:,:,2), max_dim_sect, &
+                                    total_prod,                        max_dim_sect, &
+                                    zero, tmp_mat,                     max_dim_sect   )
+                        total_prod = tmp_mat
+                        num_prod = num_prod + 1
+                    endif
                 endif
 
-                x1%p => x1%p%forward(1)%p
+                x1%p => x1%p%forward(1,1)%p
             enddo
 
         else
             do while(.not. associated(x1%p, tail) )
                 counter =  counter + 1
-                if (x1%p%indx == 0) then
+                if (x1%p%indx(1) == 0) then
                     isect = string(1) 
-                    jsect = string(x2%p%indx) 
+                    if (associated(x2%p, skiplists%tail)) then
+                        jsect = string(1)
+                    else
+                        jsect = string(x2%p%indx(1)) 
+                    endif
                 else
-                    isect = string(x1%p%indx)
-                    jsect = string(x2%p%indx)
+                    isect = string(x1%p%indx(1))
+                    if (associated(x2%p, skiplists%tail)) then
+                        jsect = string(1)
+                    else
+                        jsect = string(x2%p%indx(1)) 
+                    endif
                 endif
 
                 dim2 = sectors(isect)%ndim
                 dim3 = sectors(jsect)%ndim
 
-                if ( .not. x1%p%lsave(isect,this_level) ) then
-                    call new_subprod_item( x1%p%subprod(isect, this_level) ) 
-                    call cat_subprod( this_level, x1%p, x2%p, csize, string, &
-                              index_t_loc, x1%p%subprod(isect,this_level)%item)
-                    x1%p%lsave(isect, this_level) = .true.
-                endif
+                if ( .not. x1%p%lsave(isect,this_level,1) ) then
+                    !call new_subprod_item( x1%p%subprod(isect, this_level) ) 
+                    call cat_subprod(skiplists,this_level, x1%p, x2%p, csize, string, &
+                              index_t_loc, tmp_mat, x1%p%subprod(isect,this_level)%submat(:,:,1))
+                    x1%p%lsave(isect, this_level,1) = .true.
+                    x1%p%lcopy(isect, this_level) = .true.
 
-                if (counter == 1) then
-                    total_prod = x1%p%subprod(isect,this_level)%item
+                    if (counter == 1) then
+                        total_prod = x1%p%subprod(isect,this_level)%submat(:,:,1)
+                    else
+                        call dgemm( 'N','N', dim3, dim1, dim2, one,                             &
+                                    x1%p%subprod(isect,this_level)%submat(:,:,1), max_dim_sect, &
+                                    total_prod,                                   max_dim_sect, &
+                                    zero, tmp_mat,                                max_dim_sect   )
+                        total_prod = tmp_mat
+                        num_prod = num_prod + 1
+                    endif
+
                 else
-                    call dgemm( 'N','N', dim3, dim1, dim2, one,           &
-                                x1%p%subprod(isect,1)%item, max_dim_sect, &
-                                total_prod,                 max_dim_sect, &
-                                zero, tmp_mat,              max_dim_sect   )
-                    total_prod = tmp_mat
-                    num_prod = num_prod + 1
+
+                    if (counter == 1) then
+                        total_prod = x1%p%subprod(isect,this_level)%submat(:,:,2)
+                    else
+                        call dgemm( 'N','N', dim3, dim1, dim2, one,                             &
+                                    x1%p%subprod(isect,this_level)%submat(:,:,2), max_dim_sect, &
+                                    total_prod,                                   max_dim_sect, &
+                                    zero, tmp_mat,                                max_dim_sect   )
+                        total_prod = tmp_mat
+                        num_prod = num_prod + 1
+                    endif
+
                 endif
 
                 if (associated(x2%p, tail)) EXIT
 
                 x1%p => x2%p
-                x2%p => x2%p%forward(this_level)%p
+                x2%p => x2%p%forward(this_level,1)%p
 
             enddo  
         endif
      
         return
      end subroutine cat_subprod
+
+     subroutine random_level(level)
+        implicit none
+ 
+        integer, intent(out) :: level
+        real(dp) :: x
+
+        call random_number(x)
+
+        x = 2.0_dp + (2**mlevl-2.0_dp) * x 
+        
+        level = floor(log(x)/log(2.0_dp))
+ 
+        if ( level <=1 ) level = 1
+        if ( level > mlevl-1) level = mlevl-1 
+
+        level = mlevl - level 
+
+        return
+     end subroutine random_level
 
   end module m_skiplists

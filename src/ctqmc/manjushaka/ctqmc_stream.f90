@@ -605,6 +605,7 @@
      use spring
 
      use m_sector
+     use m_skiplists
 
      implicit none
 
@@ -629,6 +630,9 @@
      !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      stream_seed = 123456
      call spring_sfmt_init(stream_seed)
+     call random_seed()
+
+     call new_skiplists(skip_lists)
 
 ! init empty_s and empty_e stack structure
      do i=1,norbs
