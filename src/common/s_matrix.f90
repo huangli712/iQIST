@@ -134,6 +134,48 @@
      return
   end subroutine s_ones_z
 
+!!>>> s_ones_i: build an integer matrix with all elements are one
+  subroutine s_ones_i(A)
+     implicit none
+
+! external arguments
+! input/output matrix
+     integer, intent(out) :: A(:,:)
+
+     A = 1
+
+     return
+  end subroutine s_ones_i
+
+!!>>> s_ones_d: build a real(dp) matrix with all elements are one
+  subroutine s_ones_d(A)
+     use constants, only : dp, one
+
+     implicit none
+
+! external arguments
+! input/output matrix
+     real(dp), intent(out) :: A(:,:)
+
+     A = one
+
+     return
+  end subroutine s_ones_d
+
+!!>>> s_ones_z: build a complex(dp) matrix with all elements are one
+  subroutine s_ones_z(A)
+     use constants, only : dp, cone
+
+     implicit none
+
+! external arguments
+! input/output matrix
+     complex(dp), intent(out) :: A(:,:)
+
+     A = cone
+
+     return
+  end subroutine s_ones_z
 !!------------------------------------------------------------------------
 !!>>> matrix manipulation: build diagonal matrix                       <<<
 !!------------------------------------------------------------------------
