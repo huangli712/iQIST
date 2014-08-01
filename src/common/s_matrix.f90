@@ -104,9 +104,9 @@
      return
   end subroutine s_ones_i
 
-!!>>> s_zeros_d: build a real(dp) matrix with all elements are zero
-  subroutine s_zeros_d(A)
-     use constants, only : dp, zero
+!!>>> s_ones_d: build a real(dp) matrix with all elements are one
+  subroutine s_ones_d(A)
+     use constants, only : dp, one
 
      implicit none
 
@@ -114,10 +114,10 @@
 ! input/output matrix
      real(dp), intent(out) :: A(:,:)
 
-     A = zero
+     A = one
 
      return
-  end subroutine s_zeros_d
+  end subroutine s_ones_d
 
 !!>>> s_zeros_z: build a complex(dp) matrix with all elements are zero
   subroutine s_zeros_z(A)
