@@ -863,6 +863,9 @@
 ! the length of the array work, lwork >= max(1,4*ndim)
      integer :: lwork
 
+! workspace array, used to store amat
+     real(dp), allocatable :: evec(:,:)
+
 ! workspace array
      real(dp), allocatable :: work(:)
 
@@ -877,11 +880,12 @@
 ! initialize lwork and allocate memory fo array work
      lwork = 4*ndim
 
-     allocate(work(lwork),    stat=istat)
-     allocate(wr(ndim),       stat=istat)
-     allocate(wi(ndim),       stat=istat)
-     allocate(vr(ndim, ndim), stat=istat)
-     allocate(vl(ndim, ndim), stat=istat)
+     allocate(evec(ldim,ndim), stat=istat)
+     allocate(work(lwork),     stat=istat)
+     allocate(wr(ndim),        stat=istat)
+     allocate(wi(ndim),        stat=istat)
+     allocate(vr(ndim, ndim),  stat=istat)
+     allocate(vl(ndim, ndim),  stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('s_eigvals_dg', 'can not allocate enough memory')
@@ -889,6 +893,7 @@
 
 ! initialize output arrays
      eval = zero
+     evec = amat
 
 ! call the computational subroutine: dgeev
      call DGEEV('N', 'N', ndim, evec, ldim, wr, wi, vl, ndim, vr, ndim, work, lwork, info)
@@ -902,6 +907,7 @@
      eval(1:ndim) = wr(1:ndim)
 
 ! dealloate memory for workspace array
+     if (allocated(evec)) deallocate(evec)
      if (allocated(work)) deallocate(work)
      if (allocated(wr  )) deallocate(wr  )
      if (allocated(wi  )) deallocate(wi  )
