@@ -847,7 +847,7 @@
 ! original general complex(dp) matrix to compute eigenvals and eigenvectors
      complex(dp), intent(in)  :: zmat(ldim,ndim)
 
-! if info = 0, the eigenvalues in ascending order.
+! if info = 0, the eigenvalues in ascending order
      complex(dp), intent(out) :: zeig(ndim)
 
 ! if info = 0, orthonormal eigenvectors of the matrix
@@ -1006,7 +1006,7 @@
 ! original general complex(dp) matrix to compute eigenvals
      complex(dp), intent(in)  :: zmat(ldim,ndim)
 
-! if info = 0, the eigenvalues in ascending order.
+! if info = 0, the eigenvalues in ascending order
      complex(dp), intent(out) :: zeig(ndim)
 
 ! local variables
@@ -1082,7 +1082,7 @@
 ! original real symmetric matrix to compute eigenvals and eigenvectors
      real(dp), intent(in)  :: amat(ldim,ndim)
 
-! if info = 0, the eigenvalues in ascending order.
+! if info = 0, the eigenvalues in ascending order
      real(dp), intent(out) :: eval(ndim)
 
 ! if info = 0, orthonormal eigenvectors of the matrix
@@ -1127,7 +1127,65 @@
      return
   end subroutine s_eig_sy
 
-  subroutine s_eig_he()
+!!>>> s_eig_he: computes all eigenvalues and eigenvectors of complex Hermitian matrix
+  subroutine s_eig_he(ldim, ndim, amat, eval, evec)
+     use constants, only : dp, czero
+
+     implicit none
+
+! external arguments
+! leading dimension of matrix amat
+     integer, intent(in)      :: ldim
+
+! the order of the matrix amat
+     integer, intent(in)      :: ndim
+
+! original complex Hermitian matrix to compute eigenvals and eigenvectors
+     complex(dp), intent(in)  :: amat(ldim,ndim)
+
+! if info = 0, the eigenvalues in ascending order
+     real(dp), intent(out)    :: eval(ndim)
+
+! if info = 0, orthonormal eigenvectors of the matrix
+     complex(dp), intent(out) :: evec(ldim,ndim)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine dysev
+     integer :: info
+
+! the length of the array work, lwork >= max(1,2*ndim-1)
+     integer :: lwork
+     integer :: lrwork
+
+! workspace array
+     complex(8), allocatable :: work(:)
+     real(8)   , allocatable :: rwork(:)
+
+! initialize lwork (lrwork) and allocate memory for array work (rwork)
+     lwork = 2*ndim-1
+     lrwork = 3*ndim-2
+     
+     allocate(work(lwork), stat=istat)
+     allocate(rwork(lrwork), stat=istat)
+     if ( istat /= 0 ) then
+         stop "allocate memory error in dmat_dsyev"
+     endif ! back if ( istat /= 0 ) block
+
+! initialize output arrays
+     eval = 0.d0
+     evec = amat
+
+     call ZHEEV('V', 'L', ndim, evec, ldim, eval, work, lwork, rwork, info)
+     if (info /= 0) stop "Failure in subroutine zmat_zheev"
+
+! dealloate memory for workspace array
+     if (allocated(work )) deallocate(work)
+     if (allocated(rwork)) deallocate(rwork)
+
+     return
   end subroutine s_eig_he
 
 !!>>> s_eigvals_sy: computes all eigenvalues of real symmetric matrix
@@ -1146,7 +1204,7 @@
 ! original real symmetric matrix to compute eigenvals
      real(dp), intent(in)  :: amat(ldim,ndim)
 
-! if info = 0, the eigenvalues in ascending order.
+! if info = 0, the eigenvalues in ascending order
      real(dp), intent(out) :: eval(ndim)
 
 ! local variables
