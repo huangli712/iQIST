@@ -754,3 +754,8 @@
   subroutine s_eig_zg()
   end subroutine s_eig_zg
 
+  subroutine s_eigvals_dg()
+  end subroutine s_eigvals_dg
+
+  subroutine s_eigvals_zg()
+  end subroutine s_eigvals_zg
