@@ -983,7 +983,7 @@
   end subroutine s_eig_he
 
 !!>>> s_eigvals_sy: computes all eigenvalues of real symmetric matrix
-  subroutine s_eigvals_sy(ldim, ndim, amat, eval, evec)
+  subroutine s_eigvals_sy(ldim, ndim, amat, eval)
      use constants, only : dp, zero
 
      implicit none
@@ -995,14 +995,11 @@
 ! the order of the matrix amat
      integer, intent(in)   :: ndim
 
-! original real symmetric matrix to compute eigenvals and eigenvectors
+! original real symmetric matrix to compute eigenvals
      real(dp), intent(in)  :: amat(ldim,ndim)
 
 ! if info = 0, the eigenvalues in ascending order.
      real(dp), intent(out) :: eval(ndim)
-
-! if info = 0, orthonormal eigenvectors of the matrix
-     real(dp), intent(out) :: evec(ldim,ndim)
 
 ! local variables
 ! status flag
@@ -1017,12 +1014,16 @@
 ! workspace array
      real(dp), allocatable :: work(:)
 
+! workspace array, used to store amat
+     real(dp), allocatable :: evec(:,:)
+
 ! initialize lwork and allocate memory fo array work
      lwork = 3*ndim-1
 
-     allocate(work(lwork), stat=istat)
+     allocate(work(lwork),     stat=istat)
+     allocate(evec(ldim,ndim), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_eig_sy', 'can not allocate enough memory')
+         call s_print_error('s_eigvals_sy', 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
@@ -1030,15 +1031,16 @@
      evec = amat
 
 ! call the computational subroutine: dsyev
-     call DSYEV('V', 'U', ndim, evec, ldim, eval, work, lwork, info)
+     call DSYEV('N', 'U', ndim, evec, ldim, eval, work, lwork, info)
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_eig_sy', 'error in lapack subroutine dsyev')
+         call s_print_error('s_eigvals_sy', 'error in lapack subroutine dsyev')
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
      if (allocated(work)) deallocate(work)
+     if (allocated(evec)) deallocate(evec)
 
      return
   end subroutine s_eigvals_sy
