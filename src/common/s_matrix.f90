@@ -830,7 +830,72 @@
      return
   end subroutine s_eig_dg
 
-  subroutine s_eig_zg()
+!!>>> s_eig_zg: diagonalize a general complex(dp) matrix and return eigenvalues
+!!>>> and eigenvectors
+  subroutine s_eig_zg(ldim, ndim, zmat, zeig, zvec)
+     implicit none
+
+! external variables
+! leading dimension of matrix amat
+     integer, intent(in) :: ldim
+
+! the order of the matrix amat
+     integer, intent(in) :: ndim
+
+! original real symmetric matrix to compute eigenval and eigenvector
+     complex(8), intent(in) :: zmat(ldim, ndim)
+
+! if info = 0, the eigenvalues in ascending order.
+     complex(8), intent(out) :: zeig(ndim)
+
+! if info = 0, orthonormal eigenvectors of the matrix A
+     complex(8), intent(out) :: zvec(ldim, ndim)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine dysev
+     integer :: info
+
+! the length of the array work, lwork >= max(1,4*ndim)
+     integer :: lwork
+
+! workspace array
+     complex(8), allocatable :: work(:)
+
+! auxiliary real(dp) matrix
+     complex(8), allocatable :: rwork(:)
+
+     complex(8), allocatable :: vr(:, :)
+     complex(8), allocatable :: vl(:, :)
+
+! initialize lwork and allocate memory fo array work
+     lwork = 2*ndim
+     allocate( work(lwork), stat=istat)
+     allocate(rwork(lwork), stat=istat)
+     allocate(vr(ndim, ndim), stat=istat)
+     allocate(vl(ndim, ndim), stat=istat)
+     if ( istat /= 0 ) then
+         stop "allocate memory error in dmat_dsyev"
+     endif ! back if ( istat /= 0 ) block
+
+! initialize output arrays
+     zeig = 0.d0
+     zvec = zmat
+
+     call ZGEEV('N', 'V', ndim, zvec, ldim, zeig, &
+                vl, ndim, vr, ndim, work, lwork, rwork, info)
+     if (info /= 0) stop "Failure in subroutine zmat_zgeev"
+     zvec = vr
+
+! dealloate memory for workspace array
+     if (allocated(vr  )) deallocate(vr  )
+     if (allocated(vl  )) deallocate(vl  )
+     if (allocated(work)) deallocate(work)
+     if (allocated(rwork)) deallocate(rwork)
+
+     return
   end subroutine s_eig_zg
 
 !!>>> s_eigvals_dg: diagonalize a general real(dp) matrix and return eigenvalues only
