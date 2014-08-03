@@ -45,7 +45,7 @@
 !!!-----------------------------------------------------------------------
 
 !!------------------------------------------------------------------------
-!!>>> matrix manipulation: build zeros/ones/any matrix                 <<<
+!!>>> matrix construction: build zeros/ones/any matrix                 <<<
 !!------------------------------------------------------------------------
 
 !!>>> s_zeros_i: build an integer matrix with all elements are zero
@@ -214,7 +214,7 @@
   end subroutine s_any_z
 
 !!------------------------------------------------------------------------
-!!>>> matrix manipulation: build diagonal matrix                       <<<
+!!>>> matrix construction: build diagonal matrix                       <<<
 !!------------------------------------------------------------------------
 
 !!>>> s_eye_i: build integer matrix with ones on the diagonal and zeros elsewhere.
@@ -460,92 +460,9 @@
      return
   end subroutine s_diag_z
 
-
-
-
-
-
-
-
-
-
-!!>>> s_inv_dmat: invert real(dp) matrix using lapack subroutines
-  subroutine s_inv_dmat(ndim, dmat)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of dmat matrix
-     integer, intent(in) :: ndim
-
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the inversed matrix
-     real(dp), intent(inout) :: dmat(ndim,ndim)
-
-! local variables
-! error flag
-     integer  :: ierror
-
-! working arrays for lapack subroutines
-     integer  :: ipiv(ndim)
-     real(dp) :: work(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, dgetrf subroutine
-     call DGETRF(ndim, ndim, dmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call s_print_error('s_inv_dmat','error in lapack subroutine dgetrf')
-     endif
-
-! computes the inverse of an LU-factored general matrix, need lapack
-! package, dgetri subroutine
-     call DGETRI(ndim, dmat, ndim, ipiv, work, ndim, ierror)
-     if ( ierror /= 0 ) then
-         call s_print_error('s_inv_dmat','error in lapack subroutine dgetri')
-     endif
-
-     return
-  end subroutine s_inv_dmat
-
-!!>>> s_inv_zmat: invert complex(dp) matrix using lapack subroutines
-  subroutine s_inv_zmat(ndim, zmat)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of zmat matrix
-     integer, intent(in) :: ndim
-
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the inversed matrix
-     complex(dp), intent(inout) :: zmat(ndim,ndim)
-
-! local variables
-! error flag
-     integer     :: ierror
-
-! working arrays for lapack subroutines
-     integer     :: ipiv(ndim)
-     complex(dp) :: work(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, zgetrf subroutine
-     call ZGETRF(ndim, ndim, zmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call s_print_error('s_inv_zmat','error in lapack subroutine zgetrf')
-     endif
-
-! computes the inverse of an LU-factored general matrix, need lapack
-! package, zgetri subroutine
-     call ZGETRI(ndim, zmat, ndim, ipiv, work, ndim, ierror)
-     if ( ierror /= 0 ) then
-         call s_print_error('s_inv_zmat','error in lapack subroutine zgetri')
-     endif
-
-     return
-  end subroutine s_inv_zmat
+!!------------------------------------------------------------------------
+!!>>> matrix query: return matrix's trace or determinant               <<<
+!!------------------------------------------------------------------------
 
 !!>>> s_det_dmat: calculate the determinant of a real(dp) matrix
   subroutine s_det_dmat(ndim, dmat, ddet)
@@ -688,3 +605,90 @@
 
      return
   end subroutine s_det_zmat
+
+!!------------------------------------------------------------------------
+!!>>> matrix manipulation: calculate matrix's inversion                <<<
+!!------------------------------------------------------------------------
+
+!!>>> s_inv_dmat: invert real(dp) matrix using lapack subroutines
+  subroutine s_inv_dmat(ndim, dmat)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of dmat matrix
+     integer, intent(in) :: ndim
+
+! object matrix, on entry, it contains the original matrix, on exit,
+! it is destroyed and replaced with the inversed matrix
+     real(dp), intent(inout) :: dmat(ndim,ndim)
+
+! local variables
+! error flag
+     integer  :: ierror
+
+! working arrays for lapack subroutines
+     integer  :: ipiv(ndim)
+     real(dp) :: work(ndim)
+
+! computes the LU factorization of a general m-by-n matrix, need lapack
+! package, dgetrf subroutine
+     call DGETRF(ndim, ndim, dmat, ndim, ipiv, ierror)
+     if ( ierror /= 0 ) then
+         call s_print_error('s_inv_dmat','error in lapack subroutine dgetrf')
+     endif
+
+! computes the inverse of an LU-factored general matrix, need lapack
+! package, dgetri subroutine
+     call DGETRI(ndim, dmat, ndim, ipiv, work, ndim, ierror)
+     if ( ierror /= 0 ) then
+         call s_print_error('s_inv_dmat','error in lapack subroutine dgetri')
+     endif
+
+     return
+  end subroutine s_inv_dmat
+
+!!>>> s_inv_zmat: invert complex(dp) matrix using lapack subroutines
+  subroutine s_inv_zmat(ndim, zmat)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of zmat matrix
+     integer, intent(in) :: ndim
+
+! object matrix, on entry, it contains the original matrix, on exit,
+! it is destroyed and replaced with the inversed matrix
+     complex(dp), intent(inout) :: zmat(ndim,ndim)
+
+! local variables
+! error flag
+     integer     :: ierror
+
+! working arrays for lapack subroutines
+     integer     :: ipiv(ndim)
+     complex(dp) :: work(ndim)
+
+! computes the LU factorization of a general m-by-n matrix, need lapack
+! package, zgetrf subroutine
+     call ZGETRF(ndim, ndim, zmat, ndim, ipiv, ierror)
+     if ( ierror /= 0 ) then
+         call s_print_error('s_inv_zmat','error in lapack subroutine zgetrf')
+     endif
+
+! computes the inverse of an LU-factored general matrix, need lapack
+! package, zgetri subroutine
+     call ZGETRI(ndim, zmat, ndim, ipiv, work, ndim, ierror)
+     if ( ierror /= 0 ) then
+         call s_print_error('s_inv_zmat','error in lapack subroutine zgetri')
+     endif
+
+     return
+  end subroutine s_inv_zmat
+
+!!------------------------------------------------------------------------
+!!>>> matrix manipulation: solve eigenvalues and eigenvectors problem  <<<
+!!------------------------------------------------------------------------
+
