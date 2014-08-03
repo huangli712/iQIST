@@ -520,8 +520,8 @@
      return
   end subroutine s_trace_z
 
-!!>>> s_det_dmat: calculate the determinant of a real(dp) matrix
-  subroutine s_det_dmat(ndim, dmat, ddet)
+!!>>> s_det_d: calculate the determinant of a real(dp) matrix
+  subroutine s_det_d(ndim, dmat, ddet)
      use constants, only : dp, one, cone
 
      implicit none
@@ -580,7 +580,7 @@
 ! package, dgetrf subroutine
      call DGETRF(ndim, ndim, dmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
-         call s_print_exception('s_det_dmat','error in lapack subroutine dgetrf')
+         call s_print_exception('s_det_d','error in lapack subroutine dgetrf')
      endif
 
 ! calculate determinant
@@ -602,7 +602,7 @@
 ! diagonalize amat to obtain its eigenvalues: wr and wi
      call DGEEV('N', 'N', ndim, amat, ndim, wr, wi, vl, ndim, vr, ndim, work, lwork, ierror)
      if ( ierror /= 0 ) then
-         call s_print_error('s_det_dmat','error in lapack subroutine dgeev')
+         call s_print_error('s_det_d','error in lapack subroutine dgeev')
      endif
 
 ! evaluate the final determinant
@@ -613,7 +613,7 @@
      ddet = cres
 
      return
-  end subroutine s_det_dmat
+  end subroutine s_det_d
 
 !!>>> s_det_zmat: calculate the determinant of a complex(dp) matrix
   subroutine s_det_zmat(ndim, zmat, zdet)
