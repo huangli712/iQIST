@@ -748,12 +748,80 @@
 !!>>> matrix manipulation: solve eigenvalues and eigenvectors problem  <<<
 !!------------------------------------------------------------------------
 
-  subroutine s_eig_dg()
+!!>>> s_eig_dg:
+  subroutine s_eig_dg(ldim, ndim, amat, eval, evec)
+     implicit none
+
+! external variables
+! leading dimension of matrix amat
+     integer, intent(in) :: ldim
+
+! the order of the matrix amat
+     integer, intent(in) :: ndim
+
+! original real symmetric matrix to compute eigenval and eigenvector
+     real(8), intent(in) :: amat(ldim, ndim)
+
+! if info = 0, the eigenvalues in ascending order.
+     real(8), intent(out) :: eval(ndim)
+
+! if info = 0, orthonormal eigenvectors of the matrix A
+     real(8), intent(out) :: evec(ldim, ndim)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine dysev
+     integer :: info
+
+! the length of the array work, lwork >= max(1,4*ndim)
+     integer :: lwork
+
+! workspace array
+     real(8), allocatable :: work(:)
+
+! auxiliary real(dp) matrix
+     real(8), allocatable :: wr(:)
+     real(8), allocatable :: wi(:)
+
+     real(8), allocatable :: vr(:, :)
+     real(8), allocatable :: vl(:, :)
+
+! initialize lwork and allocate memory fo array work
+     lwork = 4*ndim
+     allocate(work(lwork), stat=istat)
+     allocate(wr(ndim), stat=istat)
+     allocate(wi(ndim), stat=istat)
+     allocate(vr(ndim, ndim), stat=istat)
+     allocate(vl(ndim, ndim), stat=istat)
+     if ( istat /= 0 ) then
+         stop "allocate memory error in dmat_dsyev"
+     endif ! back if ( istat /= 0 ) block
+
+! initialize output arrays
+     eval = 0.d0
+     evec = amat
+
+     call DGEEV('N', 'V', ndim, evec, ldim, wr, wi, &
+                vl, ndim, vr, ndim, work, lwork, info)
+     if (info /= 0) stop "Failure in subroutine dmat_dgeev"
+     eval(1:ndim) = wr(1:ndim)
+     evec(1:ndim, 1:ndim) = vr(1:ndim, 1:ndim)
+
+! dealloate memory for workspace array
+     if (allocated(work)) deallocate(work)
+     if (allocated(wr  )) deallocate(wr  )
+     if (allocated(wi  )) deallocate(wi  )
+     if (allocated(vr  )) deallocate(vr  )
+     if (allocated(vl  )) deallocate(vl  )
+     return
   end subroutine s_eig_dg
 
   subroutine s_eig_zg()
   end subroutine s_eig_zg
 
+!!>>> s_eigvals_dg:
   subroutine s_eigvals_dg()
   end subroutine s_eigvals_dg
 
