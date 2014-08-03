@@ -800,7 +800,6 @@
      allocate(wi(ndim),      stat=istat)
      allocate(vr(ndim,ndim), stat=istat)
      allocate(vl(ndim,ndim), stat=istat)
-
      if ( istat /= 0 ) then
          call s_print_error('s_eig_dg', 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -815,7 +814,7 @@
 ! check the status
      if ( info /= 0 ) then
          call s_print_error('s_eig_dg', 'error in lapack subroutine dgeev')
-     endif
+     endif ! back if ( info /= 0 ) block
 
 ! copy eigenvalues and eigenvectors
      eval(1:ndim) = wr(1:ndim)
@@ -847,7 +846,7 @@
 ! the order of the matrix amat
      integer, intent(in)   :: ndim
 
-! original general real(dp) matrix to compute eigenvals and eigenvectors
+! original general real(dp) matrix to compute eigenvals
      real(dp), intent(in)  :: amat(ldim,ndim)
 
 ! if info = 0, the eigenvalues in ascending order
@@ -884,9 +883,8 @@
      allocate(work(lwork),     stat=istat)
      allocate(wr(ndim),        stat=istat)
      allocate(wi(ndim),        stat=istat)
-     allocate(vr(ndim, ndim),  stat=istat)
-     allocate(vl(ndim, ndim),  stat=istat)
-
+     allocate(vr(ndim,ndim),   stat=istat)
+     allocate(vl(ndim,ndim),   stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('s_eigvals_dg', 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -901,7 +899,7 @@
 ! check the status
      if ( info /= 0 ) then
          call s_print_error('s_eigvals_dg', 'error in lapack subroutine dgeev')
-     endif
+     endif ! back if ( info /= 0 ) block
 
 ! copy eigenvalues
      eval(1:ndim) = wr(1:ndim)
@@ -920,7 +918,65 @@
   subroutine s_eigvals_zg()
   end subroutine s_eigvals_zg
 
-  subroutine s_eig_sy()
+!!>>> s_eig_sy: computes all eigenvalues and eigenvectors of real symmetric matrix
+  subroutine s_eig_sy(ldim, ndim, amat, eval, evec)
+     use constants, only : dp, zero
+
+     implicit none
+
+! external arguments
+! leading dimension of matrix amat
+     integer, intent(in)   :: ldim
+
+! the order of the matrix amat
+     integer, intent(in)   :: ndim
+
+! original real symmetric matrix to compute eigenvals and eigenvectors
+     real(dp), intent(in)  :: amat(ldim,ndim)
+
+! if info = 0, the eigenvalues in ascending order.
+     real(dp), intent(out) :: eval(ndim)
+
+! if info = 0, orthonormal eigenvectors of the matrix
+     real(dp), intent(out) :: evec(ldim,ndim)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine dysev
+     integer :: info
+
+! the length of the array work, lwork >= max(1,3*ndim-1)
+     integer :: lwork
+
+! workspace array
+     real(dp), allocatable :: work(:)
+
+! initialize lwork and allocate memory fo array work
+     lwork = 3*ndim-1
+
+     allocate(work(lwork), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('s_eig_sy', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize output arrays
+     eval = zero
+     evec = amat
+
+! call the computational subroutine: dsyev
+     call DSYEV('V', 'U', ndim, evec, ldim, eval, work, lwork, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_eig_sy', 'error in lapack subroutine dsyev')
+     endif ! back if ( info /= 0 ) block
+
+! dealloate memory for workspace array
+     if (allocated(work)) deallocate(work)
+
+     return
   end subroutine s_eig_sy
 
   subroutine s_eig_he()
