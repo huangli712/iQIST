@@ -471,7 +471,23 @@
      implicit none
 
 ! external arguments
+! size of matrix
+     integer, intent(in)   :: n
+
+! output matrix's trace
+     real(dp), intent(out) :: tr
+
+! input real(dp) matrix
+     real(dp), intent(in)  :: A(n,n)
+
 ! local variables
+! loop index
+     integer :: i
+
+     tr = zero
+     do i=1,n
+         tr = tr + A(i,i)
+     enddo ! over i={1,n} loop
 
      return
   end subroutine s_trace_d
