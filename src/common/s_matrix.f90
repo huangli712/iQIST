@@ -763,13 +763,13 @@
      integer, intent(in)   :: ndim
 
 ! original general real(dp) matrix to compute eigenvals and eigenvectors
-     real(dp), intent(in)  :: amat(ldim, ndim)
+     real(dp), intent(in)  :: amat(ldim,ndim)
 
 ! if info = 0, the eigenvalues in ascending order
      real(dp), intent(out) :: eval(ndim)
 
 ! if info = 0, orthonormal eigenvectors of the matrix
-     real(dp), intent(out) :: evec(ldim, ndim)
+     real(dp), intent(out) :: evec(ldim,ndim)
 
 ! local variables
 ! status flag
@@ -784,21 +784,22 @@
 ! workspace array
      real(dp), allocatable :: work(:)
 
-! auxiliary real(dp) matrix
+! auxiliary real(dp) matrix: real and imaginary parts of eigenvalues
      real(dp), allocatable :: wr(:)
      real(dp), allocatable :: wi(:)
 
-     real(dp), allocatable :: vr(:, :)
-     real(dp), allocatable :: vl(:, :)
+! auxiliary real(dp) matrix: left and right eigenvectors
+     real(dp), allocatable :: vr(:,:)
+     real(dp), allocatable :: vl(:,:)
 
 ! initialize lwork and allocate memory fo array work
      lwork = 4*ndim
 
-     allocate(work(lwork),    stat=istat)
-     allocate(wr(ndim),       stat=istat)
-     allocate(wi(ndim),       stat=istat)
-     allocate(vr(ndim, ndim), stat=istat)
-     allocate(vl(ndim, ndim), stat=istat)
+     allocate(work(lwork),   stat=istat)
+     allocate(wr(ndim),      stat=istat)
+     allocate(wi(ndim),      stat=istat)
+     allocate(vr(ndim,ndim), stat=istat)
+     allocate(vl(ndim,ndim), stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('s_eig_dg', 'can not allocate enough memory')
@@ -816,8 +817,9 @@
          call s_print_error('s_eig_dg', 'error in lapack subroutine dgeev')
      endif
 
+! copy eigenvalues and eigenvectors
      eval(1:ndim) = wr(1:ndim)
-     evec(1:ndim, 1:ndim) = vr(1:ndim, 1:ndim)
+     evec(1:ndim,1:ndim) = vr(1:ndim,1:ndim)
 
 ! dealloate memory for workspace array
      if (allocated(work)) deallocate(work)
@@ -832,8 +834,81 @@
   subroutine s_eig_zg()
   end subroutine s_eig_zg
 
-!!>>> s_eigvals_dg:
-  subroutine s_eigvals_dg()
+!!>>> s_eigvals_dg: diagonalize a general real(dp) matrix and return eigenvalues only
+  subroutine s_eigvals_dg(ldim, ndim, amat, eval)
+     use constants, only : dp, zero
+
+     implicit none
+
+! external arguments
+! leading dimension of matrix amat
+     integer, intent(in)   :: ldim
+
+! the order of the matrix amat
+     integer, intent(in)   :: ndim
+
+! original general real(dp) matrix to compute eigenvals and eigenvectors
+     real(dp), intent(in)  :: amat(ldim,ndim)
+
+! if info = 0, the eigenvalues in ascending order
+     real(dp), intent(out) :: eval(ndim)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine dysev
+     integer :: info
+
+! the length of the array work, lwork >= max(1,4*ndim)
+     integer :: lwork
+
+! workspace array
+     real(dp), allocatable :: work(:)
+
+! auxiliary real(dp) matrix: real and imaginary parts of eigenvalues
+     real(dp), allocatable :: wr(:)
+     real(dp), allocatable :: wi(:)
+
+! auxiliary real(dp) matrix: left and right eigenvectors
+     real(dp), allocatable :: vr(:,:)
+     real(dp), allocatable :: vl(:,:)
+
+! initialize lwork and allocate memory fo array work
+     lwork = 4*ndim
+
+     allocate(work(lwork),    stat=istat)
+     allocate(wr(ndim),       stat=istat)
+     allocate(wi(ndim),       stat=istat)
+     allocate(vr(ndim, ndim), stat=istat)
+     allocate(vl(ndim, ndim), stat=istat)
+
+     if ( istat /= 0 ) then
+         call s_print_error('s_eigvals_dg', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize output arrays
+     eval = zero
+
+! call the computational subroutine: dgeev
+     call DGEEV('N', 'N', ndim, evec, ldim, wr, wi, vl, ndim, vr, ndim, work, lwork, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_eigvals_dg', 'error in lapack subroutine dgeev')
+     endif
+
+! copy eigenvalues
+     eval(1:ndim) = wr(1:ndim)
+
+! dealloate memory for workspace array
+     if (allocated(work)) deallocate(work)
+     if (allocated(wr  )) deallocate(wr  )
+     if (allocated(wi  )) deallocate(wi  )
+     if (allocated(vr  )) deallocate(vr  )
+     if (allocated(vl  )) deallocate(vl  )
+
+     return
   end subroutine s_eigvals_dg
 
   subroutine s_eigvals_zg()
