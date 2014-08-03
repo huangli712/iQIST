@@ -750,3 +750,7 @@
 
   subroutine s_eig_dg()
   end subroutine s_eig_dg
+
+  subroutine s_eig_zg()
+  end subroutine s_eig_zg
+
