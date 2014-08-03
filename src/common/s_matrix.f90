@@ -383,9 +383,23 @@
      implicit none
 
 ! external arguments
+! size of matrix
+     integer, intent(in)  :: n
+
+! input integer vector
+     integer, intent(in)  :: V(n)
+
+! output diagonal matrix
+     integer, intent(out) :: A(n,n)
+
 ! local variables
 ! loop index
      integer :: i
+
+     A = 0
+     do i=1,n
+         A(i,i) = V(i)
+     enddo ! over i={1,n} loop
 
      return
   end subroutine s_diag_i
