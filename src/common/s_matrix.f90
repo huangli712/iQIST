@@ -919,3 +919,15 @@
 
   subroutine s_eigvals_zg()
   end subroutine s_eigvals_zg
+
+  subroutine s_eig_sy()
+  end subroutine s_eig_sv
+
+  subroutine s_eig_he()
+  end subroutine s_eig_he
+
+  subroutine s_eigvals_sy()
+  end subroutine s_eigvals_sy
+
+  subroutine s_eigvals_he()
+  end subroutine s_eigvals_he
