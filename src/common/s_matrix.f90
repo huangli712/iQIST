@@ -666,7 +666,7 @@
 !!>>> matrix manipulation: calculate matrix's inversion                <<<
 !!------------------------------------------------------------------------
 
-!!>>> s_inv_dmat: invert real(dp) matrix using lapack subroutines
+!!>>> s_inv_d: invert real(dp) matrix using lapack subroutines
   subroutine s_inv_dmat(ndim, dmat)
      use constants, only : dp
 
@@ -692,14 +692,14 @@
 ! package, dgetrf subroutine
      call DGETRF(ndim, ndim, dmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
-         call s_print_error('s_inv_dmat','error in lapack subroutine dgetrf')
+         call s_print_error('s_inv_d','error in lapack subroutine dgetrf')
      endif
 
 ! computes the inverse of an LU-factored general matrix, need lapack
 ! package, dgetri subroutine
      call DGETRI(ndim, dmat, ndim, ipiv, work, ndim, ierror)
      if ( ierror /= 0 ) then
-         call s_print_error('s_inv_dmat','error in lapack subroutine dgetri')
+         call s_print_error('s_inv_d','error in lapack subroutine dgetri')
      endif
 
      return
