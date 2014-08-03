@@ -492,6 +492,34 @@
      return
   end subroutine s_trace_d
 
+!!>>> s_trace_z: return trace for a complex(dp) array
+  subroutine s_trace_z(n, A, tr)
+     use constants, only : dp, czero
+
+     implicit none
+
+! external arguments
+! size of matrix
+     integer, intent(in)      :: n
+
+! output matrix's trace
+     complex(dp), intent(out) :: tr
+
+! input complex(dp) matrix
+     complex(dp), intent(in)  :: A(n,n)
+
+! local variables
+! loop index
+     integer :: i
+
+     tr = czero
+     do i=1,n
+         tr = tr + A(i,i)
+     enddo ! over i={1,n} loop
+
+     return
+  end subroutine s_trace_z
+
 !!>>> s_det_dmat: calculate the determinant of a real(dp) matrix
   subroutine s_det_dmat(ndim, dmat, ddet)
      use constants, only : dp, one, cone
