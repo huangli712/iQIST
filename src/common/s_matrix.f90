@@ -921,7 +921,7 @@
   end subroutine s_eigvals_zg
 
   subroutine s_eig_sy()
-  end subroutine s_eig_sv
+  end subroutine s_eig_sy
 
   subroutine s_eig_he()
   end subroutine s_eig_he
