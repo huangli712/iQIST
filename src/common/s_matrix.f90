@@ -378,6 +378,24 @@
      return
   end subroutine s_identity_z
 
+!!>>> s_diag_i: build integer diagonal matrix from a vector
+  subroutine s_diag_i(n, V, A)
+     implicit none
+
+! external arguments
+! local variables
+! loop index
+     integer :: i
+
+     return
+  end subroutine s_diag_i
+
+
+
+
+
+
+
 
 
 
