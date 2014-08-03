@@ -615,8 +615,8 @@
      return
   end subroutine s_det_d
 
-!!>>> s_det_zmat: calculate the determinant of a complex(dp) matrix
-  subroutine s_det_zmat(ndim, zmat, zdet)
+!!>>> s_det_z: calculate the determinant of a complex(dp) matrix
+  subroutine s_det_z(ndim, zmat, zdet)
      use constants, only : dp, cone
 
      implicit none
@@ -626,11 +626,11 @@
      integer, intent(in) :: ndim
 
 ! determinant of zmat matrix
-     real(dp), intent(out) :: zdet
+     complex(dp), intent(out) :: zdet
 
 ! object matrix, on entry, it contains the original matrix, on exit,
 ! it is destroyed and replaced with the L and U matrix
-     real(dp), intent(inout) :: zmat(ndim,ndim)
+     complex(dp), intent(inout) :: zmat(ndim,ndim)
 
 ! local variables
 ! loop index
@@ -646,7 +646,7 @@
 ! package, zgetrf subroutine
      call ZGETRF(ndim, ndim, zmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
-         call s_print_error('s_det_zmat','error in lapack subroutine zgetrf')
+         call s_print_error('s_det_z','error in lapack subroutine zgetrf')
      endif
 
 ! calculate determinant
@@ -660,7 +660,7 @@
      enddo ! over i={1,ndim} loop
 
      return
-  end subroutine s_det_zmat
+  end subroutine s_det_z
 
 !!------------------------------------------------------------------------
 !!>>> matrix manipulation: calculate matrix's inversion                <<<
