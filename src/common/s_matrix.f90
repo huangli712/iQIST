@@ -404,6 +404,33 @@
      return
   end subroutine s_diag_i
 
+!!>>> s_diag_d: build real(dp) diagonal matrix from a vector
+  subroutine s_diag_d(n, V, A)
+     use constants, only : dp, zero
+
+     implicit none
+
+! external arguments
+! size of matrix
+     integer, intent(in)   :: n
+
+! input real(dp) vector
+     real(dp), intent(in)  :: V(n)
+
+! output diagonal matrix
+     real(dp), intent(out) :: A(n,n)
+
+! local variables
+! loop index
+     integer :: i
+
+     A = zero
+     do i=1,n
+         A(i,i) = V(i)
+     enddo ! over i={1,n} loop
+
+     return
+  end subroutine s_diag_d
 
 
 
