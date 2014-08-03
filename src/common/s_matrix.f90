@@ -748,3 +748,5 @@
 !!>>> matrix manipulation: solve eigenvalues and eigenvectors problem  <<<
 !!------------------------------------------------------------------------
 
+  subroutine s_eig_dg()
+  end subroutine s_eig_dg
