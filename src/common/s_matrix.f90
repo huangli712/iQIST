@@ -775,7 +775,7 @@
 ! status flag
      integer :: istat
 
-! return information from subroutine dysev
+! return information from subroutine dgeev
      integer :: info
 
 ! the length of the array work, lwork >= max(1,4*ndim)
@@ -833,67 +833,77 @@
 !!>>> s_eig_zg: diagonalize a general complex(dp) matrix and return eigenvalues
 !!>>> and eigenvectors
   subroutine s_eig_zg(ldim, ndim, zmat, zeig, zvec)
+     use constants, only : dp, czero
+
      implicit none
 
-! external variables
+! external arguments
 ! leading dimension of matrix amat
-     integer, intent(in) :: ldim
+     integer, intent(in)      :: ldim
 
 ! the order of the matrix amat
-     integer, intent(in) :: ndim
+     integer, intent(in)      :: ndim
 
-! original real symmetric matrix to compute eigenval and eigenvector
-     complex(8), intent(in) :: zmat(ldim, ndim)
+! original general complex(dp) matrix to compute eigenvals and eigenvectors
+     complex(dp), intent(in)  :: zmat(ldim,ndim)
 
 ! if info = 0, the eigenvalues in ascending order.
-     complex(8), intent(out) :: zeig(ndim)
+     complex(dp), intent(out) :: zeig(ndim)
 
-! if info = 0, orthonormal eigenvectors of the matrix A
-     complex(8), intent(out) :: zvec(ldim, ndim)
+! if info = 0, orthonormal eigenvectors of the matrix
+     complex(dp), intent(out) :: zvec(ldim,ndim)
 
 ! local variables
 ! status flag
      integer :: istat
 
-! return information from subroutine dysev
+! return information from subroutine zgeev
      integer :: info
 
-! the length of the array work, lwork >= max(1,4*ndim)
+! the length of the array work, lwork >= max(1,2*ndim)
      integer :: lwork
 
 ! workspace array
-     complex(8), allocatable :: work(:)
+     complex(dp), allocatable :: work(:)
 
 ! auxiliary real(dp) matrix
-     complex(8), allocatable :: rwork(:)
+     complex(dp), allocatable :: rwork(:)
 
-     complex(8), allocatable :: vr(:, :)
-     complex(8), allocatable :: vl(:, :)
+! auxiliary complex(dp) matrix: left and right eigenvectors
+     complex(dp), allocatable :: vr(:,:)
+     complex(dp), allocatable :: vl(:,:)
 
 ! initialize lwork and allocate memory fo array work
      lwork = 2*ndim
-     allocate( work(lwork), stat=istat)
-     allocate(rwork(lwork), stat=istat)
-     allocate(vr(ndim, ndim), stat=istat)
-     allocate(vl(ndim, ndim), stat=istat)
+
+     allocate(work(lwork),   stat=istat)
+     allocate(rwork(lwork),  stat=istat)
+     allocate(vr(ndim,ndim), stat=istat)
+     allocate(vl(ndim,ndim), stat=istat)
      if ( istat /= 0 ) then
-         stop "allocate memory error in dmat_dsyev"
+         call s_print_error('s_eig_zg', 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
-     zeig = 0.d0
+     zeig = czero
      zvec = zmat
 
-     call ZGEEV('N', 'V', ndim, zvec, ldim, zeig, &
-                vl, ndim, vr, ndim, work, lwork, rwork, info)
-     if (info /= 0) stop "Failure in subroutine zmat_zgeev"
+! call the computational subroutine: zgeev
+     call ZGEEV('N', 'V', ndim, zvec, ldim, zeig, vl, ndim, vr, ndim, work, lwork, rwork, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_eig_zg', 'error in lapack subroutine zgeev')
+     endif ! back if ( info /= 0 ) block
+
+! copy eigenvectors
      zvec = vr
 
 ! dealloate memory for workspace array
-     if (allocated(vr  )) deallocate(vr  )
-     if (allocated(vl  )) deallocate(vl  )
-     if (allocated(work)) deallocate(work)
-     if (allocated(rwork)) deallocate(rwork)
+     if (allocated(work ))  deallocate(work )
+     if (allocated(rwork))  deallocate(rwork)
+     if (allocated(vr   ))  deallocate(vr   )
+     if (allocated(vl   ))  deallocate(vl   )
 
      return
   end subroutine s_eig_zg
@@ -921,7 +931,7 @@
 ! status flag
      integer :: istat
 
-! return information from subroutine dysev
+! return information from subroutine dgeev
      integer :: info
 
 ! the length of the array work, lwork >= max(1,4*ndim)
