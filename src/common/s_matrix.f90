@@ -389,7 +389,7 @@
 ! input integer vector
      integer, intent(in)  :: V(n)
 
-! output diagonal matrix
+! output integer diagonal matrix
      integer, intent(out) :: A(n,n)
 
 ! local variables
@@ -417,7 +417,7 @@
 ! input real(dp) vector
      real(dp), intent(in)  :: V(n)
 
-! output diagonal matrix
+! output real(dp) diagonal matrix
      real(dp), intent(out) :: A(n,n)
 
 ! local variables
@@ -432,6 +432,33 @@
      return
   end subroutine s_diag_d
 
+!!>>> s_diag_z: build complex(dp) diagonal matrix from a vector
+  subroutine s_diag_z(n, V, A)
+     use constants, only : dp, czero
+
+     implicit none
+
+! external arguments
+! size of matrix
+     integer, intent(in)      :: n
+
+! input complex(dp) vector
+     complex(dp), intent(in)  :: V(n)
+
+! output complex(dp) diagonal matrix
+     complex(dp), intent(out) :: A(n,n)
+
+! local variables
+! loop index
+     integer :: i
+
+     A = czero
+     do i=1,n
+         A(i,i) = V(i)
+     enddo ! over i={1,n} loop
+
+     return
+  end subroutine s_diag_z
 
 
 
