@@ -1180,7 +1180,7 @@
      evec = amat
 
 ! call the computational subroutine: zheev
-     call ZHEEV('V', 'L', ndim, evec, ldim, eval, work, lwork, rwork, info)
+     call ZHEEV('V', 'U', ndim, evec, ldim, eval, work, lwork, rwork, info)
 
 ! check the status
      if ( info /= 0 ) then
@@ -1257,5 +1257,71 @@
      return
   end subroutine s_eigvals_sy
 
-  subroutine s_eigvals_he()
+!!>>> s_eigvals_he: computes all eigenvalues of complex Hermitian matrix
+  subroutine s_eigvals_he(ldim, ndim, amat, eval)
+     use constants, only : dp, zero
+
+     implicit none
+
+! external arguments
+! leading dimension of matrix amat
+     integer, intent(in)     :: ldim
+
+! the order of the matrix amat
+     integer, intent(in)     :: ndim
+
+! original complex Hermitian matrix to compute eigenvals and eigenvectors
+     complex(dp), intent(in) :: amat(ldim,ndim)
+
+! if info = 0, the eigenvalues in ascending order
+     real(dp), intent(out)   :: eval(ndim)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine zheev
+     integer :: info
+
+! the length of the array work and rwork
+! lwork >= max(1,2*ndim-1), lrwork >= max(1,3*ndim-2)
+     integer :: lwork
+     integer :: lrwork
+
+! workspace array
+     real(dp), allocatable    :: rwork(:)
+     complex(dp), allocatable :: work(:)
+
+! workspace array, used to store amat
+     complex(dp), allocatable :: evec(:,:)
+
+! initialize lwork (lrwork) and allocate memory for array work (rwork)
+     lwork = 2*ndim-1
+     lrwork = 3*ndim-2
+     
+     allocate(work(lwork),     stat=istat)
+     allocate(rwork(lrwork),   stat=istat)
+     allocate(evec(ldim,ndim), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('s_eigvals_he', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize output arrays
+     eval = zero
+     evec = amat
+
+! call the computational subroutine: zheev
+     call ZHEEV('N', 'U', ndim, evec, ldim, eval, work, lwork, rwork, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_eigvals_he', 'error in lapack subroutine zheev')
+     endif ! back if ( info /= 0 ) block
+
+! dealloate memory for workspace array
+     if (allocated(work )) deallocate(work )
+     if (allocated(rwork)) deallocate(rwork)
+     if (allocated(evec )) deallocate(evec )
+
+     return
   end subroutine s_eigvals_he
