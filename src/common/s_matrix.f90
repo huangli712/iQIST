@@ -667,7 +667,7 @@
 !!------------------------------------------------------------------------
 
 !!>>> s_inv_d: invert real(dp) matrix using lapack subroutines
-  subroutine s_inv_dmat(ndim, dmat)
+  subroutine s_inv_d(ndim, dmat)
      use constants, only : dp
 
      implicit none
@@ -703,10 +703,10 @@
      endif
 
      return
-  end subroutine s_inv_dmat
+  end subroutine s_inv_d
 
-!!>>> s_inv_zmat: invert complex(dp) matrix using lapack subroutines
-  subroutine s_inv_zmat(ndim, zmat)
+!!>>> s_inv_z: invert complex(dp) matrix using lapack subroutines
+  subroutine s_inv_z(ndim, zmat)
      use constants, only : dp
 
      implicit none
@@ -731,18 +731,18 @@
 ! package, zgetrf subroutine
      call ZGETRF(ndim, ndim, zmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
-         call s_print_error('s_inv_zmat','error in lapack subroutine zgetrf')
+         call s_print_error('s_inv_z','error in lapack subroutine zgetrf')
      endif
 
 ! computes the inverse of an LU-factored general matrix, need lapack
 ! package, zgetri subroutine
      call ZGETRI(ndim, zmat, ndim, ipiv, work, ndim, ierror)
      if ( ierror /= 0 ) then
-         call s_print_error('s_inv_zmat','error in lapack subroutine zgetri')
+         call s_print_error('s_inv_z','error in lapack subroutine zgetri')
      endif
 
      return
-  end subroutine s_inv_zmat
+  end subroutine s_inv_z
 
 !!------------------------------------------------------------------------
 !!>>> matrix manipulation: solve eigenvalues and eigenvectors problem  <<<
