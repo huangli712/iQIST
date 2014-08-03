@@ -1129,7 +1129,7 @@
 
 !!>>> s_eig_he: computes all eigenvalues and eigenvectors of complex Hermitian matrix
   subroutine s_eig_he(ldim, ndim, amat, eval, evec)
-     use constants, only : dp, czero
+     use constants, only : dp, zero
 
      implicit none
 
@@ -1153,36 +1153,42 @@
 ! status flag
      integer :: istat
 
-! return information from subroutine dysev
+! return information from subroutine zheev
      integer :: info
 
-! the length of the array work, lwork >= max(1,2*ndim-1)
+! the length of the array work and rwork
+! lwork >= max(1,2*ndim-1), lrwork >= max(1,3*ndim-2)
      integer :: lwork
      integer :: lrwork
 
 ! workspace array
-     complex(8), allocatable :: work(:)
-     real(8)   , allocatable :: rwork(:)
+     real(dp), allocatable    :: rwork(:)
+     complex(dp), allocatable :: work(:)
 
 ! initialize lwork (lrwork) and allocate memory for array work (rwork)
      lwork = 2*ndim-1
      lrwork = 3*ndim-2
      
-     allocate(work(lwork), stat=istat)
+     allocate(work(lwork),   stat=istat)
      allocate(rwork(lrwork), stat=istat)
      if ( istat /= 0 ) then
-         stop "allocate memory error in dmat_dsyev"
+         call s_print_error('s_eig_he', 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
-     eval = 0.d0
+     eval = zero
      evec = amat
 
+! call the computational subroutine: zheev
      call ZHEEV('V', 'L', ndim, evec, ldim, eval, work, lwork, rwork, info)
-     if (info /= 0) stop "Failure in subroutine zmat_zheev"
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_eig_he', 'error in lapack subroutine zheev')
+     endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
-     if (allocated(work )) deallocate(work)
+     if (allocated(work )) deallocate(work )
      if (allocated(rwork)) deallocate(rwork)
 
      return
