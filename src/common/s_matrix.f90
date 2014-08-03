@@ -464,6 +464,18 @@
 !!>>> matrix query: return matrix's trace or determinant               <<<
 !!------------------------------------------------------------------------
 
+!!>>> s_trace_d: return trace for a real(dp) array
+  subroutine s_trace_d(n, A, tr)
+     use constants, only : dp, zero
+
+     implicit none
+
+! external arguments
+! local variables
+
+     return
+  end subroutine s_trace_d
+
 !!>>> s_det_dmat: calculate the determinant of a real(dp) matrix
   subroutine s_det_dmat(ndim, dmat, ddet)
      use constants, only : dp, one, cone
