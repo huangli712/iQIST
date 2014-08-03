@@ -272,7 +272,11 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     if ( iskip == 1 ) then
+         call ctqmc_make_ztrace_lazy(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     else
+         call ctqmc_ztrace_skiplists(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, is, ie)
+     endif
 
      return
   end subroutine cat_insert_ztrace
@@ -453,7 +457,11 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     if (iskip == 1) then
+         call ctqmc_make_ztrace_lazy(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     else
+         call ctqmc_ztrace_skiplists(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, is, ie)
+     endif
 
      return
   end subroutine cat_remove_ztrace
@@ -603,7 +611,11 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2)
+     if (iskip == 1) then
+         call ctqmc_make_ztrace_lazy(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2)
+     else
+         call ctqmc_ztrace_skiplists(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, iso, isn)
+     endif
 
      return
   end subroutine cat_lshift_ztrace
@@ -753,7 +765,11 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2)
+     if ( iskip == 1 ) then
+         call ctqmc_make_ztrace_lazy(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2)
+     else
+         call ctqmc_ztrace_skiplists(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, ieo, ien)
+     endif
 
      return
   end subroutine cat_rshift_ztrace
@@ -2476,6 +2492,234 @@
 !-------------------------------------------------------------------------
 !>>> service layer: utility subroutines to calculate trace             <<<
 !-------------------------------------------------------------------------
+  subroutine ctqmc_ztrace_skiplists(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, ia, ib)
+     use constants
+     use control
+     use context
+
+     use m_sector
+     use m_skiplists
+
+! external arguments
+! the type of Monte Carlo moves
+     integer,  intent(in)  :: imove
+
+! the mode of how to calculating trace
+     integer,  intent(in)  :: cmode
+
+! the total number of operators for current diagram
+     integer,  intent(in)  :: csize
+
+! the calculated determinant ratio
+     real(dp), intent(in) :: deter_ratio
+
+! a random number
+     real(dp), intent(in) :: rand_num
+
+! the acceptance ratio
+     real(dp), intent(out) :: accept_p
+
+! whether accept this move
+     logical, intent(out) :: pass
+
+! the position of first operator  
+     integer, intent(in) :: ia
+
+! the position of second operator
+     integer, intent(in) :: ib
+
+! local variables
+! local version of index_t
+     integer :: index_t_loc(mkink)
+
+! local version of expt_t
+     real(dp) :: expt_t_loc(ncfgs)
+
+! a particular string begins at one sector
+     integer :: string(csize+1, nsectors) 
+
+! whether it is a string
+     logical :: is_string(nsectors)
+
+! min dimension of the sectors
+     integer :: min_dim(nsectors)
+
+! the trace boundary
+     real(dp) :: trace_bound(nsectors)
+
+! index for sectors after sorting trace_bound
+     integer :: indx_sector(nsectors)
+
+! the trace of each sector
+     real(dp) :: trace_sector(nsectors)
+
+! the max and min of acceptance ratio
+     real(dp) :: pmax
+     real(dp) :: pmin
+     real(dp) :: ptmp
+
+! the propose 
+     real(dp) :: propose
+
+! sum of trace_bound
+     real(dp) :: sum_bound
+
+! sum of absolute value of trace
+     real(dp) :: sum_abs_trace
+
+! start index of sectors
+     integer :: indx
+
+! loop index
+     integer :: i, j
+
+! copy data from index_t or index_v to index_t_loc
+! copy data from expt_t to expt_t_loc
+     select case(cmode)
+         case(1)
+             index_t_loc = index_t
+             expt_t_loc = expt_t(:,1)
+         case(2)
+             index_t_loc = index_v
+             expt_t_loc = expt_t(:,2)
+         case(3)
+             index_t_loc = index_t
+             expt_t_loc = expt_t(:,2)
+         case(4)
+             index_t_loc = index_v
+             expt_t_loc = expt_t(:,2)
+     end select
+
+! make propose ratio for different type of moves
+     select case(imove)
+         case(1)
+             propose = ( beta / real( ckink + 1 ) ) ** 2 
+         case(2)
+             propose = ( real( ckink ) / beta ) ** 2
+         case(3)
+             propose = one
+         case(4)
+             propose = one
+         case(5)
+             propose = one
+     end select
+
+! build string for all the sectors
+     call ctqmc_make_string(csize, index_t_loc, is_string, string)
+
+! we can check is_string here to see whether this diagram can survive ?
+     pass = .false.
+     do i=1, nsectors
+         if (is_string(i) .eqv. .true.) then
+             pass = .true.
+             EXIT
+         endif
+     enddo
+     if (pass .eqv. .false.) then
+         accept_p = zero
+         RETURN
+     endif
+
+! determin the minimal dimension of all the sectors
+     min_dim = 0
+     do i=1, nsectors
+         if (is_string(i) .eqv. .false.) cycle
+         min_dim(i) = sectors(i)%ndim
+         do j=1, csize
+             if ( min_dim(i) > sectors(string(j,i))%ndim ) then
+                 min_dim(i) = sectors(string(j,i))%ndim
+             endif
+         enddo
+     enddo
+
+! calculate the trace bounds for each sector
+     do i=1, nsectors
+         indx_sector(i) = i
+         if (is_string(i) .eqv. .false.) then
+             trace_bound(i) = zero
+         else
+! calculate the trace bounds
+             trace_bound(i) = one
+             do j=1, csize
+                 indx = sectors(string(j,i))%istart
+                 trace_bound(i) = trace_bound(i) * expt_v(indx, index_t_loc(j)) 
+             enddo 
+! specially treatment for the last time-evolution operator
+             indx = sectors(string(1,i))%istart
+             trace_bound(i) = trace_bound(i) * expt_t_loc(indx)
+             trace_bound(i) = min_dim(i) * trace_bound(i)
+         endif
+     enddo
+
+! sort trace_bound
+!     call ctqmc_trace_sorter(nsectors, trace_bound, indx_sector)
+!     call ctqmc_trace_qsorter(nsectors, trace_bound, indx_sector)
+! calculate the max bound of acceptance ratio
+     sum_bound = sum(trace_bound)
+     ptmp = propose  *  abs(deter_ratio / matrix_ptrace)
+     pmax = ptmp * sum_bound
+
+! check whether pmax < rand_num
+     if (pmax < rand_num) then
+         pass = .false.
+         accept_p = zero 
+         return
+     endif
+
+! make npart
+     call trial_update_skiplists(skip_lists, csize, imove, ia, ib) 
+
+     pass = .false.
+! otherwise, we need to refine the trace bounds
+     sum_abs_trace = zero
+     do i=1, nsectors
+! first, calculate the trace of this sector
+         if (is_string(indx_sector(i)) .eqv. .false.) then
+             trace_sector(indx_sector(i)) = zero
+             sectors(indx_sector(i))%final_product(:,:,1) = zero
+         else
+
+             call ctqmc_sector_ztrace(skip_lists, csize, string(:, indx_sector(i)), &
+                                 index_t_loc, expt_t_loc, trace_sector(indx_sector(i)))
+         endif
+         if (pass .eqv. .false.) then
+             sum_abs_trace = sum_abs_trace + abs( trace_sector(indx_sector(i)) )
+             sum_bound = sum_bound - trace_bound(indx_sector(i))
+! calculate pmax and pmin
+             pmax = ptmp * (sum_abs_trace + sum_bound)
+             pmin = ptmp * (sum_abs_trace - sum_bound)
+! check whether pmax < rand_num
+             if (pmax < rand_num) then
+                 pass = .false.
+                 accept_p = zero 
+                 call real_update_skiplists(skip_lists, imove, pass) 
+                 return
+             endif
+
+             if (pmin > rand_num) then
+                 pass = .true.
+             endif
+         endif 
+     enddo
+! if we arrive here, two case
+! case 1: pass == .false., we haven't determined the pass
+! case 2: pass == .true. we have determined the pass
+     matrix_ntrace = sum(trace_sector) 
+     accept_p = propose  *  deter_ratio * matrix_ntrace / matrix_ptrace
+     pass = ( min(one, abs(accept_p)) > rand_num)
+     call real_update_skiplists(skip_lists, imove, pass) 
+
+! store the diagonal elements of final product in ddmat(:,1)
+     do i=1, nsectors
+         indx = sectors(i)%istart
+         do j=1, sectors(i)%ndim
+             ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
+         enddo
+     enddo
+
+     return
+  end subroutine ctqmc_ztrace_skiplists
+ 
 !>>> core subroutine of manjushaka
 ! use good quantum number algorithm
   subroutine ctqmc_make_ztrace_lazy(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
@@ -2751,7 +2995,7 @@
      expt_t_loc = expt_t(:,2)
 
 ! build string for all the sectors
-     call ctqmc_make_string(csize, index_t_loc, string)
+     call ctqmc_make_string(csize, index_t_loc, is_string, string)
 
 ! make npart
      call ctqmc_make_nparts(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
@@ -3181,6 +3425,7 @@
      use context
 
      use m_sector
+     use m_skiplists
 
      implicit none
 
@@ -3201,21 +3446,21 @@
          sectors(i)%final_product(:,:,2) = sectors(i)%final_product(:,:,1)
      enddo
   
-     is_save(:,:,2) = is_save(:,:,1)
-
 ! when npart > 1, we used the npart algorithm, store the results when moves are accepted
-     if ( npart > 1) then
-         do i=1, nsectors
-             do j=1, npart
-                 if ( is_copy(j,i) ) then
+     if ( iskip == 1 ) then
+         is_save(:,:,2) = is_save(:,:,1)
+         if ( npart > 1) then
+             do i=1, nsectors
+                 do j=1, npart
+                     if (.not. is_copy(j,i) ) cycle
                      sect1 = saved_b_nm(1, j, i)
                      sect2 = saved_b_nm(2, j, i)
                      saved_a_nm(1, j, i) = sect1
                      saved_a_nm(2, j, i) = sect2
                      saved_a(:,:,j,i) = saved_b(:,:, j, i) 
-                 endif
+                 enddo
              enddo
-         enddo
+         endif
      endif
 
      return
