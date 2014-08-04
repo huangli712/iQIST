@@ -3,19 +3,32 @@
 !!! program : s_linspace_d
 !!!           s_logspace_d
 !!!           s_linspace_z
-!!!           s_legendre
-!!!           s_chebyshev
+!!!           s_sum_i
+!!!           s_sum_d
+!!1           s_sum_z
+!!!           s_cumsum_i
+!!!           s_cumsum_d
+!!!           s_cumsum_z
+!!!           s_prod_i
+!!!           s_prod_d
+!!!           s_prod_z
+!!!           s_cumprod_i
+!!!           s_cumprod_d
+!!!           s_cumprod_z
 !!!           s_swap_i
 !!!           s_swap_d
 !!!           s_swap_z
+!!!           s_legendre
+!!!           s_chebyshev
 !!! source  : s_math.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/24/2014 by li huang
 !!!           08/01/2014 by li huang
-!!! purpose : these subroutines are used to manipulate grid and mesh, to
-!!!           generate Legendre polynomial and Chebyshev polynomial, etc.
+!!! purpose : these subroutines are designed for vectors or arrays. They
+!!!           can be used to manipulate grid and mesh, to generate the
+!!!           Legendre polynomial and Chebyshev polynomial, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -105,6 +118,89 @@
 
      return
   end subroutine s_linspace_z
+
+
+
+
+
+!!>>> s_swap_i: exchange two integer vectors
+  subroutine s_swap_i(n, ix, iy)
+     implicit none
+
+! external arguments
+! dimension of integer vector
+     integer, intent(in)    :: n
+
+! integer vector X
+     integer, intent(inout) :: ix(n)
+
+! integer vector Y
+     integer, intent(inout) :: iy(n)
+
+! local variables
+! dummy integer vector
+     integer :: it(n)
+
+     it = ix
+     ix = iy
+     iy = it
+
+     return
+  end subroutine s_swap_i
+
+!!>>> s_swap_d: exchange two real(dp) vectors
+  subroutine s_swap_d(n, dx, dy)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of real(dp) vector
+     integer, intent(in)     :: n
+
+! real(dp) vector X
+     real(dp), intent(inout) :: dx(n)
+
+! real(dp) vector Y
+     real(dp), intent(inout) :: dy(n)
+
+! local variables
+! dummy real(dp) vector
+     real(dp) :: dt(n)
+
+     dt = dx
+     dx = dy
+     dy = dt
+
+     return
+  end subroutine s_swap_d
+
+!!>>> s_swap_z: exchange two complex(dp) vectors
+  subroutine s_swap_z(n, zx, zy)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of complex(dp) vector
+     integer, intent(in)        :: n
+
+! complex(dp) vector X
+     complex(dp), intent(inout) :: zx(n)
+
+! complex(dp) vector Y
+     complex(dp), intent(inout) :: zy(n)
+
+! local variables
+! dummy complex(dp) vector
+     complex(dp) :: zt(n)
+
+     zt = zx
+     zx = zy
+     zy = zt
+
+     return
+  end subroutine s_swap_z
 
 !!>>> s_legendre: build legendre polynomial in [-1,1]
   subroutine s_legendre(lemax, legrd, pmesh, ppleg)
@@ -198,82 +294,3 @@
 
      return
   end subroutine s_chebyshev
-
-!!>>> s_swap_i: exchange two integer vectors
-  subroutine s_swap_i(n, ix, iy)
-     implicit none
-
-! external arguments
-! dimension of integer vector
-     integer, intent(in)    :: n
-
-! integer vector X
-     integer, intent(inout) :: ix(n)
-
-! integer vector Y
-     integer, intent(inout) :: iy(n)
-
-! local variables
-! dummy integer vector
-     integer :: it(n)
-
-     it = ix
-     ix = iy
-     iy = it
-
-     return
-  end subroutine s_swap_i
-
-!!>>> s_swap_d: exchange two real(dp) vectors
-  subroutine s_swap_d(n, dx, dy)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of real(dp) vector
-     integer, intent(in)     :: n
-
-! real(dp) vector X
-     real(dp), intent(inout) :: dx(n)
-
-! real(dp) vector Y
-     real(dp), intent(inout) :: dy(n)
-
-! local variables
-! dummy real(dp) vector
-     real(dp) :: dt(n)
-
-     dt = dx
-     dx = dy
-     dy = dt
-
-     return
-  end subroutine s_swap_d
-
-!!>>> s_swap_z: exchange two complex(dp) vectors
-  subroutine s_swap_z(n, zx, zy)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of complex(dp) vector
-     integer, intent(in)        :: n
-
-! complex(dp) vector X
-     complex(dp), intent(inout) :: zx(n)
-
-! complex(dp) vector Y
-     complex(dp), intent(inout) :: zy(n)
-
-! local variables
-! dummy complex(dp) vector
-     complex(dp) :: zt(n)
-
-     zt = zx
-     zx = zy
-     zy = zt
-
-     return
-  end subroutine s_swap_z
