@@ -1,22 +1,84 @@
 ##
 ##
+## Introduction
+## ============
+##
+## This is the top Makefile for the iqist software package. You can use
+## it to build all of the executable programs and libraries. Please do
+## not modify it by yourself.
+##
+## Usage
+## =====
+##
+## 1. get help
+## -----------
+##
+## 'make help' or 'make help-more'
+##
+## 2. quick build
+## --------------
+##
+## 'make all'
+##
+## 3. build impurity solver
+## ------------------------
+##
+## 'make solver'
+##
+## 4. build auxiliary tools
+## ------------------------
+##
+## 'make tool'
+##
+## 5. build documents and libraries
+## --------------------------------
+##
+## 'make other'
+##
+## 6. build specified code
+## -----------------------
+##
+## 'make xxx'
+##
+## 7. clean the directories
+## ------------------------
+##
+## 'make clean'
+##
+## here xxx is the code name, please input 'make help-more' to obtain more
+## information about the possible values of xxx
+##
+## Author
+## ======
+##
+## This building system is designed, created, implemented, and maintained
+## by Li Huang (email: huangli712@gmail.com).
+##
+## Department of Physics, University of Fribourg, Fribourg CH-1700, Switzerland
+##
+## History
+## =======
+##
+## 04/08/2014 by li huang
+##
 ##
 
+# targets for help
 help:
 	@echo '  Interacting Quantum Impurity Solver Toolkit Building System'
 	@echo
 	@echo
 	@echo '  targets:'
-	@echo '     help           print short usage information                      '
-	@echo '     help-more      print full usage information                       '
-	@echo '     all            build all components, libraries, and documents, etc'
-	@echo '     clean          clean all directories                              '
-	@echo '     solver         build all ctqmc and hfqmc impurity solvers         '
-	@echo '     clean-solver   clean objects for impurity solvers                 '
-	@echo '     tool           build auxiliary tools                              '
-	@echo '     clean-tool     clean objects for auxiliary tools                  '
-	@echo '     other          build api and documents                            '
-	@echo '     clean-other    clean api and doc directories                      '
+	@echo '     help              print short usage information                      '
+	@echo '     help-more         print full usage information                       '
+	@echo '     all               build all components, libraries, and documents, etc'
+	@echo '     clean             clean all directories                              '
+	@echo '     solver            build all ctqmc and hfqmc impurity solvers         '
+	@echo '     clean-solver      clean objects for impurity solvers                 '
+	@echo '     tool              build auxiliary tools                              '
+	@echo '     clean-tool        clean objects for auxiliary tools                  '
+	@echo '     other             build api and documents                            '
+	@echo '     clean-other       clean api and doc directories                      '
 
 help-more:
 	@echo '  Interacting Quantum Impurity Solver Toolkit Building System'
@@ -50,7 +112,7 @@ help-more:
 	@echo '     doc               generate document                    '
 	@echo '     clean-doc         clean doc directory                  '
 
-
+# all-in-one target
 all: build-all
 build-all: common solver tool other
 
