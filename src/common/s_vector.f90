@@ -127,6 +127,25 @@
 !!>>> sum operations                                                   <<<
 !!========================================================================
 
+!!>>> s_sum_i: return the sum of an integer array
+  subroutine s_sum_i(n, v, vsum)
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)  :: n
+
+! sum of array v
+     integer, intent(out) :: vsum
+
+! input integer array
+     integer, intent(in)  :: v(n)
+
+     vsum = sum(v)
+
+     return
+  end subroutine s_sum_i
+
 !!========================================================================
 !!>>> prod operations                                                  <<<
 !!========================================================================
