@@ -36,8 +36,10 @@ clean-azalea:
 
 gardenia: build-gardenia
 build-gardenia:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/gardenia/; pwd; make
+
 clean-gardenia:
+	cd ../ctqmc/gardenia/; pwd; make clean
 
 narcissus: build-narcissus
 build-narcissus:
@@ -87,4 +89,5 @@ clean-api:
 doc: build-doc
 build-doc:
 	cd ../ctqmc/azalea/; pwd; make
+
 clean-doc:
