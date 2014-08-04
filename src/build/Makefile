@@ -57,41 +57,56 @@ clean-begonia:
 
 lavender: build-lavender
 build-lavender:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/lavender/; pwd; make
+
 clean-lavender:
+	cd ../ctqmc/lavender/; pwd; make clean
 
 pansy: build-pansy
 build-pansy:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/pansy/; pwd; make
+
 clean-pansy:
+	cd ../ctqmc/pansy/; pwd; make clean
 
 manjushaka: build-manjushaka
 build-manjushaka:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/manjushaka/; pwd; make
+
 clean-manjushaka:
+	cd ../ctqmc/manjushaka/; pwd; make clean
 
 daisy: build-daisy
 build-daisy:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/daisy/; pwd; make
+
 clean-daisy:
+	cd ../ctqmc/daisy/; pwd; make clean
 
 jasmine: build-jasmine
 build-jasmine:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/jasmine/; pwd; make
+
 clean-jasmine:
+	cd ../ctqmc/jasmine/; pwd; make clean
 
 hibiscus: build-hibiscus
 build-hibiscus:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/hibiscus/; pwd; make
+
 clean-hibiscus:
+	cd ../ctqmc/hibiscus/; pwd; make clean
 
 api: build-api
 build-api:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/api/; pwd; make
+
 clean-api:
+	cd ../ctqmc/api/; pwd; make clean
 
 doc: build-doc
 build-doc:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/doc/; pwd; make
 
 clean-doc:
+	cd ../ctqmc/doc/; pwd; make clean
