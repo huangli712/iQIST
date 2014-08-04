@@ -418,9 +418,9 @@
   end subroutine s_cumprod_z
 
   program test
-     real(8) :: a(4), b(4)
+     complex(8) :: a(4), b(4)
      a = 2.0_8
-     call s_cumprod_d(4, a, b)
+     call s_cumprod_z(4, a, b)
      print *, a
      print *, b
      
