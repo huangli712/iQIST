@@ -335,7 +335,7 @@
      return
   end subroutine s_prod_z
 
-!!>>> s_cumprod_i: return the product of an integer array
+!!>>> s_cumprod_i: return the cumproduct of an integer array
   subroutine s_cumprod_i(n, v, vprod)
      implicit none
 
@@ -343,18 +343,25 @@
 ! size of array v
      integer, intent(in)  :: n
 
-! product of array v
-     integer, intent(out) :: vprod
-
 ! input integer array
      integer, intent(in)  :: v(n)
 
-     vprod = product(v)
+! cumproduct of array v
+     integer, intent(out) :: vprod(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     vprod(1) = v(1)
+     do i=2,n
+         vprod(i) = vprod(i-1) * v(i)
+     enddo ! over i={2,n} loop
 
      return
   end subroutine s_cumprod_i
 
-!!>>> s_cumprod_d: return the product of a real(dp) array
+!!>>> s_cumprod_d: return the cumproduct of a real(dp) array
   subroutine s_cumprod_d(n, v, vprod)
      use constants, only : dp
 
@@ -364,18 +371,16 @@
 ! size of array v
      integer, intent(in)   :: n
 
-! product of array v
-     real(dp), intent(out) :: vprod
-
 ! input real(dp) array
      real(dp), intent(in)  :: v(n)
 
-     vprod = product(v)
+! cumproduct of array v
+     real(dp), intent(out) :: vprod(n)
 
      return
   end subroutine s_cumprod_d
 
-!!>>> s_cumprod_z: return the product of a complex(dp) array
+!!>>> s_cumprod_z: return the cumproduct of a complex(dp) array
   subroutine s_cumprod_z(n, v, vprod)
      use constants, only : dp
 
@@ -385,21 +390,19 @@
 ! size of array v
      integer, intent(in)      :: n
 
-! product of array v
-     complex(dp), intent(out) :: vprod
-
 ! input complex(dp) array
      complex(dp), intent(in)  :: v(n)
 
-     vprod = product(v)
+! cumproduct of array v
+     complex(dp), intent(out) :: vprod(n)
 
      return
   end subroutine s_cumprod_z
 
   program test
      complex(8) :: a(4), b(4)
-     a = 2.0_8
-     call s_cumsum_z(4, a, b)
+     a = 2
+     call s_cumprod_i(4, a, b)
      print *, a
      print *, b
      
