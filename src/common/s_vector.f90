@@ -377,6 +377,15 @@
 ! cumproduct of array v
      real(dp), intent(out) :: vprod(n)
 
+! local variables
+! loop index
+     integer :: i
+
+     vprod(1) = v(1)
+     do i=2,n
+         vprod(i) = vprod(i-1) * v(i)
+     enddo ! over i={2,n} loop
+
      return
   end subroutine s_cumprod_d
 
@@ -396,13 +405,22 @@
 ! cumproduct of array v
      complex(dp), intent(out) :: vprod(n)
 
+! local variables
+! loop index
+     integer :: i
+
+     vprod(1) = v(1)
+     do i=2,n
+         vprod(i) = vprod(i-1) * v(i)
+     enddo ! over i={2,n} loop
+
      return
   end subroutine s_cumprod_z
 
   program test
-     complex(8) :: a(4), b(4)
-     a = 2
-     call s_cumprod_i(4, a, b)
+     real(8) :: a(4), b(4)
+     a = 2.0_8
+     call s_cumprod_d(4, a, b)
      print *, a
      print *, b
      
