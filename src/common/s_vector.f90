@@ -188,16 +188,7 @@
      return
   end subroutine s_sum_z
 
-  program test
-     complex(8) :: a(4), b(4)
-     a = 2.0_8
-     call s_cumsum_z(4, a, b)
-     print *, a
-     print *, b
-     
-  end program test
-
-!!>>> s_cumsum_i: return the sum of an integer array
+!!>>> s_cumsum_i: return the cumsum of an integer array
   subroutine s_cumsum_i(n, v, vsum)
      implicit none
 
@@ -223,7 +214,7 @@
      return
   end subroutine s_cumsum_i
 
-!!>>> s_cumsum_d: return the sum of a real(dp) array
+!!>>> s_cumsum_d: return the cumsum of a real(dp) array
   subroutine s_cumsum_d(n, v, vsum)
      use constants, only : dp
 
@@ -251,7 +242,7 @@
      return
   end subroutine s_cumsum_d
 
-!!>>> s_cumsum_z: return the sum of a complex(dp) array
+!!>>> s_cumsum_z: return the cumsum of a complex(dp) array
   subroutine s_cumsum_z(n, v, vsum)
      use constants, only : dp
 
@@ -343,6 +334,76 @@
 
      return
   end subroutine s_prod_z
+
+!!>>> s_cumprod_i: return the product of an integer array
+  subroutine s_cumprod_i(n, v, vprod)
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)  :: n
+
+! product of array v
+     integer, intent(out) :: vprod
+
+! input integer array
+     integer, intent(in)  :: v(n)
+
+     vprod = product(v)
+
+     return
+  end subroutine s_cumprod_i
+
+!!>>> s_cumprod_d: return the product of a real(dp) array
+  subroutine s_cumprod_d(n, v, vprod)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)   :: n
+
+! product of array v
+     real(dp), intent(out) :: vprod
+
+! input real(dp) array
+     real(dp), intent(in)  :: v(n)
+
+     vprod = product(v)
+
+     return
+  end subroutine s_cumprod_d
+
+!!>>> s_cumprod_z: return the product of a complex(dp) array
+  subroutine s_cumprod_z(n, v, vprod)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)      :: n
+
+! product of array v
+     complex(dp), intent(out) :: vprod
+
+! input complex(dp) array
+     complex(dp), intent(in)  :: v(n)
+
+     vprod = product(v)
+
+     return
+  end subroutine s_cumprod_z
+
+  program test
+     complex(8) :: a(4), b(4)
+     a = 2.0_8
+     call s_cumsum_z(4, a, b)
+     print *, a
+     print *, b
+     
+  end program test
 
 !!========================================================================
 !!>>> swap operations                                                  <<<
