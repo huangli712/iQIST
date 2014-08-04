@@ -188,6 +188,97 @@
      return
   end subroutine s_sum_z
 
+  program test
+     complex(8) :: a(4), b(4)
+     a = 2.0_8
+     call s_cumsum_z(4, a, b)
+     print *, a
+     print *, b
+     
+  end program test
+
+!!>>> s_cumsum_i: return the sum of an integer array
+  subroutine s_cumsum_i(n, v, vsum)
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)  :: n
+
+! input integer array
+     integer, intent(in)  :: v(n)
+
+! cumsum of array v
+     integer, intent(out) :: vsum(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     vsum(1) = v(1)
+     do i=2,n
+         vsum(i) = vsum(i-1) + v(i)
+     enddo ! over i={2,n} loop
+
+     return
+  end subroutine s_cumsum_i
+
+!!>>> s_cumsum_d: return the sum of a real(dp) array
+  subroutine s_cumsum_d(n, v, vsum)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)   :: n
+
+! input real(dp) array
+     real(dp), intent(in)  :: v(n)
+
+! cumsum of array v
+     real(dp), intent(out) :: vsum(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     vsum(1) = v(1)
+     do i=2,n
+         vsum(i) = vsum(i-1) + v(i)
+     enddo ! over i={2,n} loop
+
+     return
+  end subroutine s_cumsum_d
+
+!!>>> s_cumsum_z: return the sum of a complex(dp) array
+  subroutine s_cumsum_z(n, v, vsum)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)      :: n
+
+! input complex(dp) array
+     complex(dp), intent(in)  :: v(n)
+
+! cumsum of array v
+     complex(dp), intent(out) :: vsum(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     vsum(1) = v(1)
+     do i=2,n
+         vsum(i) = vsum(i-1) + v(i)
+     enddo ! over i={2,n} loop
+
+     return
+  end subroutine s_cumsum_z
+
 !!========================================================================
 !!>>> prod operations                                                  <<<
 !!========================================================================
