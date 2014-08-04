@@ -167,24 +167,27 @@
      return
   end subroutine s_sum_d
 
-!!>>> s_sum_z: return the sum of an integer array
-  subroutine s_sum_i(n, v, vsum)
+!!>>> s_sum_z: return the sum of a complex(dp) array
+  subroutine s_sum_z(n, v, vsum)
+     use constants, only : dp
+
      implicit none
 
 ! external arguments
 ! size of array v
-     integer, intent(in)  :: n
+     integer, intent(in)      :: n
 
 ! sum of array v
-     integer, intent(out) :: vsum
+     complex(dp), intent(out) :: vsum
 
-! input integer array
-     integer, intent(in)  :: v(n)
+! input complex(dp) array
+     complex(dp), intent(in)  :: v(n)
 
      vsum = sum(v)
 
      return
-  end subroutine s_sum_i
+  end subroutine s_sum_z
+
 !!========================================================================
 !!>>> prod operations                                                  <<<
 !!========================================================================
