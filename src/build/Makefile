@@ -7,28 +7,55 @@ help:
 	@echo
 	@echo
 	@echo '  targets:'
-	@echo '     help           print short usage information'
-	@echo '     help-more      print full usage information'
-	@echo '     all            build all components, library, and documents, etc'
-	@echo '     clean          clean all directories'
-	@echo '     solver         build all ctqmc and hfqmc impurity solvers'
-	@echo '     clean-solver   clean objects for impurity solvers'
-	@echo '     tool           build auxiliary tools'
-	@echo '     clean-tool     clean objects for auxiliary tools'
-	@echo '     other          build api and documents'
-	@echo '     clean-other    clean api and doc directories'
+	@echo '     help           print short usage information                      '
+	@echo '     help-more      print full usage information                       '
+	@echo '     all            build all components, libraries, and documents, etc'
+	@echo '     clean          clean all directories                              '
+	@echo '     solver         build all ctqmc and hfqmc impurity solvers         '
+	@echo '     clean-solver   clean objects for impurity solvers                 '
+	@echo '     tool           build auxiliary tools                              '
+	@echo '     clean-tool     clean objects for auxiliary tools                  '
+	@echo '     other          build api and documents                            '
+	@echo '     clean-other    clean api and doc directories                      '
 
 help-more:
 	@echo '  Interacting Quantum Impurity Solver Toolkit Building System'
 	@echo
 	@echo
 	@echo '  targets:'
-	@echo '     help           print short usage information'
-	@echo '     help-more      print full usage information'
+	@echo '     help              print short usage information        '
+	@echo '     help-more         print full usage information         '
+	@echo '     common            build common modules and util library'
+	@echo '     clean-common      clean common directory               '
+	@echo '     azalea            build azalea code                    '
+	@echo '     clean-azalea      clean azalea directory               '
+	@echo '     gardenia          build gardenia code                  '
+	@echo '     clean-gardenia    clean gardenia directory             '
+	@echo '     narcissus         build narcissus code                 '
+	@echo '     clean-narcissus   clean narcissus directory            '
+	@echo '     begonia           build begonia code                   '
+	@echo '     clean-begonia     clean begonia directory              '
+	@echo '     lavender          build lavender code                  '
+	@echo '     clean-lavender    clean lavender directory             '
+	@echo '     pansy             build pansy code                     '
+	@echo '     clean-pansy       clean pansy directory                '
+	@echo '     manjushaka        build manjushaka code                '
+	@echo '     clean-manjushaka  clean manjushaka directory           '
+	@echo '     jasmine           build jasmine code                   '
+	@echo '     clean-jasmine     clean jasmine directory              '
+	@echo '     hibiscus          build hibiscus code                  '
+	@echo '     clean-hibiscus    clean hibiscus directory             '
+	@echo '     api               generate api library                 '
+	@echo '     clean-api         clean api directory                  '
+	@echo '     doc               generate document                    '
+	@echo '     clean-doc         clean doc directory                  '
 
 
-all: common solver tool other
-clean: clean-common clean-solver clean-tool clean-other
+all: build-all
+build-all: common solver tool other
+
+clean: clean-all
+clean-all: clean-common clean-solver clean-tool clean-other
 
 # targets for common
 common: build-common
