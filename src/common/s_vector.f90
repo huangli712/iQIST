@@ -211,8 +211,8 @@
      return
   end subroutine s_prod_i
 
-!!>>> s_sum_d: return the sum of a real(dp) array
-  subroutine s_sum_d(n, v, vsum)
+!!>>> s_prod_d: return the product of a real(dp) array
+  subroutine s_prod_d(n, v, vprod)
      use constants, only : dp
 
      implicit none
@@ -221,16 +221,16 @@
 ! size of array v
      integer, intent(in)   :: n
 
-! sum of array v
-     real(dp), intent(out) :: vsum
+! product of array v
+     real(dp), intent(out) :: vprod
 
 ! input real(dp) array
      real(dp), intent(in)  :: v(n)
 
-     vsum = sum(v)
+     vprod = product(v)
 
      return
-  end subroutine s_sum_d
+  end subroutine s_prod_d
 
 !!>>> s_sum_z: return the sum of a complex(dp) array
   subroutine s_sum_z(n, v, vsum)
