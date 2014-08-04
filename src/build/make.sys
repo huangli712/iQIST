@@ -1,3 +1,146 @@
+##
+##
+## Introduction
+## ============
+##
+## This is the official configuration file for the building system. You
+## should modify it to fulfill your requirements. The original file is
+## designed for the Intel Fortran Compiler only, please keep it in mind.
+##
+## Warning
+## =======
+##
+## Be careful! This file may be not suitable for your situation. It is
+## designed for my own hardware and software environment only. Please
+## check it and improve it before starting to compile your iqist code.
+##
+## Explanations
+## ============
+##
+## F90
+## ---
+##
+## Fortran compiler. It can be 'mpif90' or 'ifort'
+##
+## LINKER
+## ------
+##
+## Linker. Here it is the same with compiler. Do not change it.
+##
+## ARCHIVER
+## --------
+##
+## Archiver. It is used to pack the objects into a library. Do not modify
+## it for ever.
+##           
+## MPI
+## ---
+##
+## Specify whether MPI is enable. If you want to compile a sequential code,
+## please comment it out with '#' symbol and then setup F90 to 'ifort'.
+##
+## OMP
+## ---
+##
+## Specify whether OpenMP is enable. If you want to disable it, please
+## comment it out. In default it is disabled.
+##
+## API
+## ---
+##
+## Specify whether we want to obtain a library version of iqist. If it is
+## enabled, what you can obtain is a library and you can write python or
+## fortran codes to use it, instead of a standard executable program. In
+## default it is disabled.
+##
+## FPP
+## ---
+##
+## Speify whether the fortran preprocessor (FPP) is used. It must be enabled
+## or else the iqist can not be compiled correctly.
+##
+## CPP
+## ---
+##
+## Collection of preprocessor directives. Do not modify it unless you are
+## an expert of iqist.
+##
+## GPROF
+## -----
+##
+## Speify whether the code profiling should be done. If it is enabled, then
+## when the code is finished, a gmon.out file will be generated. You can
+## use the gprof tool to analyze the runtime information and find out the
+## hotspot of the code. It is not wise to enable it to build a production
+## code, because it will decrease the efficiency greatly.
+##
+## CHECK
+## -----
+##
+## Used to specify what types of check should be done. '-warn all' means
+## the check is done in compiling. '-check all' means the check will be
+## done in running. '-traceback' enable us to track the exact position 
+## (line number and file name) where the error occurs. '-g' enable the
+## compiler to generate debug information and embed them into the final
+## program. Note that '-check all', '-traceback', and '-g' opinions will
+## decrease the efficiency greatly.
+##
+## CDUMP
+## -----
+##
+## Specify whether the compiler will output useful optimization information
+## in compiling.
+##
+## LEVEL
+## -----
+##
+## Collection of optimization opinions. '-O3' means the highest optimization.
+## '-xHost' enables the compiler to generate the most suitable code for the
+## current computer architecture. '-unroll-aggressive' means using aggressive
+## method to unroll the loop structures. '-align all' means to align the
+## arrays, structures, etc. Please modify them only if you are an expert of
+## Intel Fortran Compiler and you know what you are doing.
+##
+## MARCH
+## -----
+##
+## Used to specify the instruction sets that the current system can support.
+## 'core2' is the safest choice and it works always. But it may be not the
+## best. Please modify it only when you understand what you are doing.
+##
+## FFLAGS
+## ------
+##
+## Collection of Fortran compiler opinions. Do not modify them.
+##
+## LFLAGS
+## ------
+##
+## Collection of linker opinions. Do not modify them.
+##
+## LIB
+## ---
+##
+## Specify the external libraries. Now the iqist software package depends
+## on LAPACK and BLAS heavily. To achieve good performance, the highly
+## optimized LAPACK and BLAS implementations are essential. Here we want 
+## to recommend the OpenBLAS and Intel MKL.
+##
+## Author
+## ======
+##
+## This building system is designed, created, implemented, and maintained
+## by Li Huang (email: huangli712@gmail.com).
+##
+## Department of Physics, University of Fribourg, Fribourg CH-1700, Switzerland
+##
+## History
+## =======
+##
+## 04/08/2014 by li huang
+##
+##
+
 # fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
 F90    = mpif90
