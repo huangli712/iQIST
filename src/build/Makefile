@@ -3,7 +3,21 @@
 ##
 
 help:
-	@echo 'hello world!'
+	@echo '  Interacting Quantum Impurity Solver Toolkit Building System'
+	@echo
+	@echo
+	@echo '  targets:'
+	@echo '     help           print this usage information'
+	@echo '     all            build all components, library, and documents, etc'
+	@echo '     clean          clean all directories'
+	@echo '     solver         build all ctqmc and hfqmc impurity solvers'
+	@echo '     clean-solver   clean objects for impurity solvers'
+	@echo '     tool           build auxiliary tools'
+	@echo '     clean-tool     clean objects for auxiliary tools'
+	@echo '     other          build api and documents'
+	@echo '     clean-other    clean api and doc directories'
+
+
 
 all: common solver tool other
 clean: clean-common clean-solver clean-tool clean-other
