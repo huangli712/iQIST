@@ -43,13 +43,17 @@ clean-gardenia:
 
 narcissus: build-narcissus
 build-narcissus:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/narcissus/; pwd; make
+
 clean-narcissus:
+	cd ../ctqmc/narcissus/; pwd; make clean
 
 begonia: build-begonia
 build-begonia:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../ctqmc/begonia/; pwd; make
+
 clean-begonia:
+	cd ../ctqmc/begonia/; pwd; make clean
 
 lavender: build-lavender
 build-lavender:
