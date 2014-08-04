@@ -192,24 +192,24 @@
 !!>>> prod operations                                                  <<<
 !!========================================================================
 
-!!>>> s_sum_i: return the sum of an integer array
-  subroutine s_sum_i(n, v, vsum)
+!!>>> s_prod_i: return the product of an integer array
+  subroutine s_prod_i(n, v, vprod)
      implicit none
 
 ! external arguments
 ! size of array v
      integer, intent(in)  :: n
 
-! sum of array v
-     integer, intent(out) :: vsum
+! product of array v
+     integer, intent(out) :: vprod
 
 ! input integer array
      integer, intent(in)  :: v(n)
 
-     vsum = sum(v)
+     vprod = product(v)
 
      return
-  end subroutine s_sum_i
+  end subroutine s_prod_i
 
 !!>>> s_sum_d: return the sum of a real(dp) array
   subroutine s_sum_d(n, v, vsum)
