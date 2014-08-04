@@ -154,7 +154,7 @@
 
 ! external arguments
 ! size of array v
-     real(dp), intent(in)  :: n
+     integer, intent(in)   :: n
 
 ! sum of array v
      real(dp), intent(out) :: vsum
