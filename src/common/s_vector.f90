@@ -417,15 +417,6 @@
      return
   end subroutine s_cumprod_z
 
-  program test
-     complex(8) :: a(4), b(4)
-     a = 2.0_8
-     call s_cumprod_z(4, a, b)
-     print *, a
-     print *, b
-     
-  end program test
-
 !!========================================================================
 !!>>> swap operations                                                  <<<
 !!========================================================================
