@@ -8,6 +8,7 @@ help:
 	@echo
 	@echo '  targets:'
 	@echo '     help           print this usage information'
+	@echo '     help-more      print more detailed information'
 	@echo '     all            build all components, library, and documents, etc'
 	@echo '     clean          clean all directories'
 	@echo '     solver         build all ctqmc and hfqmc impurity solvers'
@@ -16,8 +17,6 @@ help:
 	@echo '     clean-tool     clean objects for auxiliary tools'
 	@echo '     other          build api and documents'
 	@echo '     clean-other    clean api and doc directories'
-
-
 
 all: common solver tool other
 clean: clean-common clean-solver clean-tool clean-other
