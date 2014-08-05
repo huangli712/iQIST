@@ -1430,9 +1430,35 @@
 !!------------------------------------------------------------------------
 
 !!>>> s_solve_dg: solve linear system AX = B, real(dp) general version
-  subroutine s_solve_dg()
+  subroutine s_solve_dg(n, nrhs, A, B)
+     use constants, only : dp
+
      implicit none
 
+! external arguments
+! the number of linear equations
+     integer, intent(in)     :: n
+
+! the number of right-hand sides
+     integer, intent(in)     :: nrhs
+
+! on entry, it is a n-by-n coefficient matrix A; on exit, it is overwritten
+! by the factors L and U from the factorization of A = PLU.
+     real(dp), intent(inout) :: A(n,n)
+
+! on entry, it is a n-by-nrhs matrix of right hand side matrix B; on exit,
+! it is overwritten by the solution matrix X.
+     real(dp), intent(inout) :: B(n,nrhs)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine dgesv
+     integer :: info
+
+! workspace array, its dimension is at least max(1,n)
+     integer, allocatable :: ipiv(:)
      
      return
   end subroutine s_solve_dg
