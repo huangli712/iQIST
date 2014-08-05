@@ -32,17 +32,52 @@
 !!!           s_eig_he
 !!!           s_eigvals_sy
 !!!           s_eigvals_he
+!!!           s_solve_dg
+!!!           s_solve_zg
+!!!           s_solve_sy
+!!!           s_solve_he
 !!! source  : s_matrix.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/26/2014 by li huang
-!!!           08/01/2014 by li huang
+!!!           08/06/2014 by li huang
 !!! purpose : these subroutines are used to encapsulate some important and
 !!!           frequently used linear algebra operations.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! 1. build constants (0) matrix
+!! -----------------------------
+!!
+!! subroutine s_zeros_i(...)
+!! subroutine s_zeros_d(...)
+!! subroutine s_zeros_z(...)
+!!
+!! 2. build constants (1) matrix
+!! -----------------------------
+!!
+!! subroutine s_ones_i(...)
+!! subroutine s_ones_d(...)
+!! subroutine s_ones_z(...)
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
 
 !!------------------------------------------------------------------------
 !!>>> matrix construction: build zeros/ones/any matrix                 <<<
