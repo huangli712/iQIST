@@ -122,14 +122,14 @@
 !! 4. extract parameters
 !! ---------------------
 !!
-!! integer :: nband = 2         ! default value
-!! real(dp) :: mune = 10.0_dp   ! default value
-!! logical :: symm(2)           ! default value
+!! integer :: nband = 2            ! default value
+!! real(dp) :: mune = 10.0_dp      ! default value
+!! logical :: symm(2)              ! default value
 !! symm(1) = .true.
 !! symm(2) = .false.
-!! call p_get('nband', nband)   ! get single value
-!! call p_get('mune', mune)     ! get single value
-!! call p_get_vec('symm', symm) ! get array
+!! call p_get('nband', nband)      ! get single value
+!! call p_get('mune', mune)        ! get single value
+!! call p_get_vec('symm', symm, 2) ! get array
 !!
 !! note: that if the desired parameter is not contained in the config file,
 !! then the default value will not be changed.
