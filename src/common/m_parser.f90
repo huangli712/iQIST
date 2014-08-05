@@ -163,6 +163,9 @@
      integer, private, parameter :: dp = kind(1.0d0)
 
 ! mystd: device descriptor, console output
+     integer, private, parameter :: mystd = 6
+
+! mytmp: file unit for common file output
      integer, private, parameter :: mytmp = 100
 
 !!========================================================================
