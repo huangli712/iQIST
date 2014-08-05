@@ -336,9 +336,9 @@
 ! add the last sector to string, and check whether string(csize+1,i) == string(1,i)
 ! important for csize = 0
             string(csize+1,i) = i
+! this case will generate a non-diagonal block, it will not contribute to trace 
             if ( next_sect_right /= next_sect_left ) then
-                call ctqmc_print_error('ctqmc_make_ztrace','the first sector &
-                                            is not equal to the last sector')
+                is_string(i) = .false.
             endif
         enddo ! over i={1,nsectors} loop
 
