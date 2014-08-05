@@ -88,9 +88,12 @@
 !! subroutine s_identity_d(...)
 !! subroutine s_identity_z(...)
 !!
+!! 6. build diagonal matrix from vector
+!! ------------------------------------
 !!
-!!
-!!
+!! subroutine s_diag_i(...)
+!! subroutine s_diag_d(...)
+!! subroutine s_diag_z(...)
 !!
 !!
 !!
