@@ -304,11 +304,13 @@
              q = index(string, '=')
 ! case 1: we do not find any ":" or "=" character
              if ( p == 0 .and. q == 0 ) then
-                 call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
+                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 STOP
              endif ! back if ( p == 0 .and. q == 0 ) block
 ! case 2: we find both ":" and "=" characters
              if ( p >  0 .and. q >  0 ) then
-                 call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
+                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 STOP
              endif ! back if ( p >  0 .and. q >  0 ) block
 ! case 3: we find only ":" character
              if ( p > 0 ) then
