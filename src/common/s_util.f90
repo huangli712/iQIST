@@ -22,6 +22,42 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! 1. assert
+!! ---------
+!!
+!! subroutine s_assert(...)
+!!
+!! 2. sort algorithm
+!! -----------------
+!!
+!! subroutine s_sorter(...)
+!! subroutine s_qsorter(...)
+!! subroutine s_qscorer(...)
+!!
+!! Note: s_sorter() implements the bubble algorithm, and s_qsorter() implement
+!! the quick sort algorithm. s_qscorer() is called by s_qsorter() internally.
+!!
+!! 3. string manipulation
+!! ----------------------
+!!
+!! subroutine s_str_upcase(...)
+!! subroutine s_str_lowcase(...)
+!! subroutine s_str_count(...)
+!! subroutine s_str_compress(...)
+!!
+!! 4. date time manipulation
+!! -------------------------
+!!
+!! subroutine s_time_builder(...)
+!! subroutine s_time_analyzer(...)
+!!
+!!
+
 !!========================================================================
 !!>>> assertion checker                                                <<<
 !!========================================================================
