@@ -5,7 +5,7 @@ include ./make.sys
 default: all
 
 modm = mod_mpi.o  mod_spring.o mod_stack.o 
-modn = ctqmc_constants.o ctqmc_control.o  ctqmc_sector.o ctqmc_context.o ctqmc_skiplists.o
+modn = ctqmc_constants.o ctqmc_control.o  ctqmc_context.o ctqmc_sector.o ctqmc_npart.o 
 dmft = ctqmc_dmft.o
 core = ctqmc_solver.o
 lev1 = ctqmc_flavor.o ctqmc_update.o
