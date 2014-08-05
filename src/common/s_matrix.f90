@@ -67,10 +67,26 @@
 !! subroutine s_ones_d(...)
 !! subroutine s_ones_z(...)
 !!
+!! 3. build constants (any values) matrix
+!! --------------------------------------
 !!
+!! subroutine s_any_i(...)
+!! subroutine s_any_d(...)
+!! subroutine s_any_z(...)
 !!
+!! 4. build diagonal matrix
+!! ------------------------
 !!
+!! subroutine s_eye_i(...)
+!! subroutine s_eye_d(...)
+!! subroutine s_eye_z(...)
 !!
+!! 5. build identity matrix
+!! ------------------------
+!!
+!! subroutine s_identity_i(...)
+!! subroutine s_identity_d(...)
+!! subroutine s_identity_z(...)
 !!
 !!
 !!
