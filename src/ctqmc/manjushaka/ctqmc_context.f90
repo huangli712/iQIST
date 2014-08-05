@@ -8,7 +8,6 @@
 !           ctqmc_gmat module
 !           ctqmc_wmat module
 !           ctqmc_smat module
-!           ctqmc_sect module
 !           context    module
 ! source  : ctqmc_context.f90
 ! type    : module
@@ -65,7 +64,6 @@
 !-------------------------------------------------------------------------
 !::: core variables: real, matrix trace                                :::
 !-------------------------------------------------------------------------
-
 ! matrix trace of flavor part, current value
      real(dp), public, save :: matrix_ptrace = zero
 
@@ -432,62 +430,6 @@
   end module ctqmc_smat
 
 !=========================================================================
-!>>> module ctqmc_sect                                                 <<<
-!=========================================================================
-!>>> containing the sector information for good quantum number algorithm
-  module ctqmc_sect
-     use constants
-     use m_sector
- 
-     implicit none
-
-! the total number of sectors
-     integer, public, save :: nsectors
-
-! the max dimension of the sectors
-     integer, public, save :: max_dim_sect
-
-! the average dimension of the sectors
-     real(dp), public, save :: ave_dim_sect
-
-! number of total matrices multiplication
-     real(dp), public, save :: num_prod
-
-! the array contains all the sectors
-     type(t_sector), public, save, allocatable :: sectors(:)
-
-! whether this sector forming a string
-     logical, public, save, allocatable :: is_string(:,:)
-
-! how to treat each part when calculate trace
-     integer, public, save, allocatable :: is_save(:,:)
-
-! part index
-     integer, public, save, allocatable :: part_indx(:,:)
-
-! nop, ops, ope
-     integer, public, save, allocatable :: nop(:)
-     integer, public, save, allocatable :: ops(:)
-     integer, public, save, allocatable :: ope(:)
-
-! saved parts of matrices product, previous configuration 
-     real(dp), public, save, allocatable :: saved_a(:,:,:,:)
-
-! start and end index of sectors for saved parts of matrices product, 
-! previous configuration
-     integer,  public, save, allocatable :: saved_a_nm(:,:,:)
-
-! saved parts of matrices product, current configuration
-     real(dp), public, save, allocatable :: saved_b(:,:,:,:)
-
-! start and end index of sectors for saved parts of matrices product, 
-! current configuration
-     integer,  public, save, allocatable :: saved_b_nm(:,:,:)
-
-  end module ctqmc_sect
-
-
-!=========================================================================
 !>>> module context                                                    <<<
 !=========================================================================
 !>>> containing memory management subroutines and define global variables
@@ -506,8 +448,6 @@
      use ctqmc_wmat
      use ctqmc_smat
 
-     use ctqmc_sect
-
      implicit none
 
 ! status flag
@@ -521,7 +461,6 @@
      public :: ctqmc_allocate_memory_gmat
      public :: ctqmc_allocate_memory_wmat
      public :: ctqmc_allocate_memory_smat
-     public :: ctqmc_allocate_memory_sect
 
 ! declaration of module procedures: deallocate memory
      public :: ctqmc_deallocate_memory_clur
@@ -531,7 +470,6 @@
      public :: ctqmc_deallocate_memory_gmat
      public :: ctqmc_deallocate_memory_wmat
      public :: ctqmc_deallocate_memory_smat
-     public :: ctqmc_deallocate_memory_sect
 
      contains
 
@@ -820,56 +758,6 @@
          return
      end subroutine ctqmc_allocate_memory_smat
 
-!>>> allocate memory for sect-related variables
-     subroutine ctqmc_allocate_memory_sect()
-         implicit none
-
-! local variables
-         integer :: i
-
-! allocate memory
-         allocate(sectors(nsectors),              stat=istat)
-         allocate(is_string(nsectors,2),          stat=istat)
-         allocate(is_save(npart, nsectors),       stat=istat)
-         allocate(part_indx(npart, nsectors),     stat=istat)
-         allocate(nop(npart),                     stat=istat)
-         allocate(ops(npart),                     stat=istat)
-         allocate(ope(npart),                     stat=istat)
-         allocate(saved_a_nm(2, npart, nsectors), stat=istat)
-         allocate(saved_b_nm(2, npart, nsectors), stat=istat)
-         allocate(saved_a(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
-         allocate(saved_b(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
-
-! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
-         endif
-
-! initialize them
-         do i=1, nsectors
-             sectors(i)%ndim = 0
-             sectors(i)%nelectron = 0
-             sectors(i)%nops = norbs
-             sectors(i)%istart = 0
-             call nullify_one_sector(sectors(i))
-         enddo 
-
-         is_string = .false.
-         is_save = 1
-         part_indx = -1
-         nop = 0
-         ops = 0
-         ope = 0
-         saved_a = zero
-         saved_b = zero
-         saved_a_nm = -2
-         saved_b_nm = -2
-         num_prod = zero
-
-         return
-     end subroutine ctqmc_allocate_memory_sect
-
-
 !=========================================================================
 !>>> deallocate memory subroutines                                     <<<
 !=========================================================================
@@ -1021,35 +909,5 @@
 
          return
      end subroutine ctqmc_deallocate_memory_smat
-
-!>>> deallocate memory for sect-related variables
-     subroutine ctqmc_deallocate_memory_sect()
-         implicit none
-
-! local variables
-         integer :: i
-
-         if ( allocated(sectors) ) then
-! first, loop over all the sectors and deallocate their memory
-             do i=1, nsectors
-                 call dealloc_one_sector(sectors(i))
-             enddo
-! then, deallocate memory of sect
-             deallocate(sectors)
-         endif
-
-         if ( allocated(is_string) )    deallocate(is_string)
-         if ( allocated(is_save) )      deallocate(is_save)
-         if ( allocated(nop) )          deallocate(nop)
-         if ( allocated(ops) )          deallocate(ops)
-         if ( allocated(ope) )          deallocate(ope)
-         if ( allocated(part_indx) )    deallocate(part_indx)
-         if ( allocated(saved_a) )      deallocate(saved_a)
-         if ( allocated(saved_a_nm) )   deallocate(saved_a_nm)
-         if ( allocated(saved_b) )      deallocate(saved_b)
-         if ( allocated(saved_b_nm) )   deallocate(saved_b_nm)
-        
-         return
-     end subroutine ctqmc_deallocate_memory_sect
 
   end module context

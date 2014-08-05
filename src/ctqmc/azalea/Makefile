@@ -1,6 +1,6 @@
 .SUFFIXES: .f90
 
-include ./make.sys
+include ../../build/make.sys
 
 default: all
 
@@ -18,6 +18,14 @@ main = ctqmc_main.o
 objects = $(modm) $(modc) $(modi) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(dump) $(main)
 
 all: ctqmc_exe
+
+cssl:
+
+csml:
+	cp ../../common/constants.mod
+	cp ../../common/mmpi.mod
+	cp ../../common/spring.mod
+	cp ../../common/stack.mod
 
 ctqmc_exe: $(objects)
 	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)

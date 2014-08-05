@@ -291,19 +291,23 @@
 
      use mmpi
 
+     use m_sector
+     use m_npart
+
      implicit none
 
 ! local variables
 ! loop index
-     integer  :: i, ii
-     integer  :: j
-     integer  :: k
+     integer  :: i,j,k,n,m,ii
 
 ! dummy integer variables
      integer  :: j1
 
 ! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
      logical  :: exists
+
+! iostat
+     integer :: ierr
 
 ! dummy real variables
      real(dp) :: rtmp
@@ -470,22 +474,24 @@
 !     if ( myid == master ) then ! only master node can do it
 ! first, read the information of sectors
          exists = .false.
-
 ! inquire about file's existence, 'atom.sector.in'
-         inquire (file = 'atom.sector.in', exist = exists)
+         inquire (file = 'atom.cix', exist = exists)
 
 ! find input file: atom.sector.in, read it
 ! file atom.sector.in is necessary, the code can not run without it
          if ( exists .eqv. .true. ) then
 
 ! open data file
-             open(mytmp, file='atom.sector.in', form='formatted', status='unknown')
+             open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
-             read(mytmp,*) ! skip the header
+             read(mytmp,*) 
+             read(mytmp,*) 
+             read(mytmp,*) 
 ! read the total number of sectors, maximum dimension of sectors, and average dimension of sectors
              read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
 ! after we know the total number of sectors, we can allocate memory for array sect
              call ctqmc_allocate_memory_sect()
+             call ctqmc_allocate_memory_part()
 
 ! read the data for each sector
              do i=1, nsectors
@@ -506,12 +512,29 @@
                      read(mytmp,*) j1, sectors(i)%myeigval(j)
                  enddo
              enddo
-             close(mytmp)
-
-! make next_sector_trunk
+!-------------------------------------------------------------------------
              do i=1, nsectors
-                 sectors(i)%next_sector_trunk = sectors(i)%next_sector
+                 do j=1, sectors(i)%nops
+                     do k=0,1
+                         ii = sectors(i)%next_sector(j,k)
+                         if (ii == -1) cycle
+                         sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
+                         sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
+                         call alloc_one_fmat(sectors(i)%myfmat(j,k))
+                         sectors(i)%myfmat(j,k)%item = zero
+                     enddo 
+                 enddo 
              enddo 
+
+! read fmat 
+             read(mytmp, *)
+             do while( .true. )
+                 read(mytmp, *, iostat=ierr) n, m, k, j, i, r1
+                 if (ierr /=0 ) EXIT
+                 sectors(i)%myfmat(j,k)%item(n,m) = r1
+             enddo 
+             close(mytmp) 
+!-------------------------------------------------------------------------
 
 ! add the contribution from chemical potential to eigenvalues
              j1 = 0
@@ -545,32 +568,8 @@
              enddo ! over i={1,ncfgs} loop
 
          else
-             call ctqmc_print_error('ctqmc_selfer_init','file atom.sector.in does not exist')
+             call ctqmc_print_error('ctqmc_selfer_init','file atom.cix does not exist')
          endif ! back if ( exists .eqv. .true. ) block
-!-------------------------------------------------------------------------
-
-!-------------------------------------------------------------------------
-! read fmat 
-         exists = .false.
-         inquire(file='atom.fmat.in', exist=exists)
-         if (exists .eqv. .true.) then
-             open(mytmp, file='atom.fmat.in', form='unformatted')
-             do i=1, nsectors
-                 do j=1, sectors(i)%nops
-                     do k=0,1
-                         ii = sectors(i)%next_sector(j,k)
-                         if (ii == -1) cycle
-                         sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
-                         sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
-                         call alloc_one_fmat(sectors(i)%myfmat(j,k))
-                         read(mytmp)  sectors(i)%myfmat(j,k)%item(:,:)
-                     enddo  ! over k={0,1} loop
-                 enddo ! over j={1, sectors(i)%nops} loop
-             enddo  ! over i={1, nsect} loop
-             close(mytmp) 
-         else
-             call ctqmc_print_error('ctqmc_selfer_init','file atom.fmat.in does not exist')
-         endif  ! back if (exists .eqv. .true.) block
 !-------------------------------------------------------------------------
 
 !>>>     endif ! back if ( myid == master ) block
@@ -592,6 +591,9 @@
      use stack
      use spring
 
+     use m_sector
+     use m_npart
+
      implicit none
 
 ! local variables
@@ -612,9 +614,10 @@
 
 ! init random number generator
      call system_clock(system_time)
-     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     !stream_seed = 123456
+     !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
+     stream_seed = 123456
      call spring_sfmt_init(stream_seed)
+     call random_seed()
 
 ! init empty_s and empty_e stack structure
      do i=1,norbs
@@ -767,6 +770,16 @@
 !<     sig1    = czero
      sig2    = czero
 
+! init npart
+     num_prod = zero
+     is_save = 1
+     is_copy = .false.
+     col_copy = 0
+     ops = 0
+     ope = 0
+     saved_a = zero
+     saved_b = zero
+
 ! init op_n, < c^{\dag} c >,
 ! which are used to calculate occupation number
      do i=1, norbs
@@ -776,9 +789,10 @@
                  sectors(j)%occu(:,:,i) = zero
                  cycle
              endif
-             call ctqmc_dmat_gemm( sectors(j)%ndim, sectors(k)%ndim, sectors(j)%ndim, &
-                                   sectors(k)%myfmat(i,1)%item, sectors(j)%myfmat(i,0)%item,& 
-                                   sectors(j)%occu(:,:,i) ) 
+             call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, one, &
+                         sectors(k)%myfmat(i,1)%item,                     sectors(j)%ndim, &
+                         sectors(j)%myfmat(i,0)%item,                     sectors(k)%ndim, & 
+                         zero, sectors(j)%occu(:,:,i),                    sectors(j)%ndim   ) 
          enddo
      enddo ! over i={1,norbs} loop
 
@@ -793,18 +807,20 @@
                      sectors(k)%double_occu(:,:,i,j) = zero
                      cycle
                  endif
-                 call ctqmc_dmat_gemm( sectors(k)%ndim, sectors(jj)%ndim, sectors(k)%ndim, &
-                                       sectors(jj)%myfmat(j,1)%item, sectors(k)%myfmat(j,0)%item,& 
-                                       tmp_mat1(1:sectors(k)%ndim, 1:sectors(k)%ndim) ) 
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
+                             sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  & 
+                             sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, & 
+                             zero, tmp_mat1,                                  max_dim_sect       ) 
 
-                 call ctqmc_dmat_gemm( sectors(k)%ndim, sectors(ii)%ndim, sectors(k)%ndim, &
-                                       sectors(ii)%myfmat(i,1)%item, sectors(k)%myfmat(i,0)%item,& 
-                                       tmp_mat2(1:sectors(k)%ndim, 1:sectors(k)%ndim) ) 
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
+                             sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
+                             sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, & 
+                             zero, tmp_mat2,                                  max_dim_sect       ) 
 
-                 call ctqmc_dmat_gemm( sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, &
-                                       tmp_mat2(1:sectors(k)%ndim, 1:sectors(k)%ndim), & 
-                                       tmp_mat1(1:sectors(k)%ndim, 1:sectors(k)%ndim), & 
-                                       sectors(k)%double_occu(:,:,i,j) )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one, &
+                             tmp_mat2,                                        max_dim_sect,    & 
+                             tmp_mat1,                                        max_dim_sect,    & 
+                             zero, sectors(k)%double_occu(:,:,i,j),           sectors(k)%ndim   )
 
              enddo
          enddo
@@ -840,6 +856,9 @@
   subroutine ctqmc_final_array()
      use context
 
+     use m_sector
+     use m_npart
+
      implicit none
 
 ! deallocate memory for context module
@@ -853,6 +872,7 @@
      call ctqmc_deallocate_memory_wmat()
      call ctqmc_deallocate_memory_smat()
 
+     call ctqmc_deallocate_memory_part()
      call ctqmc_deallocate_memory_sect()
 
      return

@@ -326,6 +326,8 @@
      use control
      use context
 
+     use m_sector
+
      implicit none
 
 ! local variables
@@ -376,9 +378,11 @@
      do flvr=1, norbs
          raux1 = zero
          do i=1, nsectors
-             call ctqmc_dmat_gemm( sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
-                          sectors(i)%final_product(:,:,2), sectors(i)%occu(:,:,flvr),& 
-                          tmp_mat(1:sectors(i)%ndim, 1:sectors(i)%ndim) )
+             call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, one, &
+                         sectors(i)%final_product(:,:,2),                 sectors(i)%ndim, &
+                         sectors(i)%occu(:,:,flvr),                       sectors(i)%ndim, & 
+                         zero, tmp_mat,                                   max_dim_sect      )
+
              do j=1, sectors(i)%ndim
                  raux1 = raux1 + tmp_mat(j,j)    
              enddo
@@ -397,9 +401,11 @@
          do i=flvr+1, norbs
              raux1 = zero
              do j=1, nsectors
-                 call ctqmc_dmat_gemm( sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                              sectors(j)%final_product(:,:,2), sectors(j)%double_occu(:,:,flvr,i),& 
-                              tmp_mat(1:sectors(j)%ndim, 1:sectors(j)%ndim) )
+                 call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, one, &
+                              sectors(j)%final_product(:,:,2),                sectors(j)%ndim, &
+                              sectors(j)%double_occu(:,:,flvr,i),             sectors(j)%ndim, & 
+                              zero, tmp_mat,                                  max_dim_sect      )
+
                  do k=1, sectors(j)%ndim
                      raux1 = raux1 + tmp_mat(k,k)    
                  enddo
@@ -408,9 +414,11 @@
 
              raux1 = zero
              do j=1, nsectors
-                 call ctqmc_dmat_gemm( sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                              sectors(j)%final_product(:,:,2), sectors(j)%double_occu(:,:,i,flvr),& 
-                              tmp_mat(1:sectors(j)%ndim, 1:sectors(j)%ndim) )
+                 call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, one, &
+                             sectors(j)%final_product(:,:,2),                 sectors(j)%ndim, &
+                             sectors(j)%double_occu(:,:,i,flvr),              sectors(j)%ndim, & 
+                             zero, tmp_mat,                                   max_dim_sect      )
+
                  do k=1, sectors(j)%ndim
                      raux1 = raux1 + tmp_mat(k,k)    
                  enddo
@@ -418,6 +426,7 @@
              nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
          enddo
      enddo
+
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
@@ -451,7 +460,6 @@
 
      return
   end subroutine ctqmc_record_nmat
-
 
 !>>> record the spin-spin correlation function
   subroutine ctqmc_record_schi()
@@ -1637,6 +1645,8 @@
      use constants
      use control
      use context
+
+     use m_sector
 
      implicit none
 

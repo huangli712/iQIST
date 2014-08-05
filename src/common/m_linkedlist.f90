@@ -22,6 +22,83 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! This implementation of generic linked list in fortran 90 was taken from
+!! Jason R. Blevins's code (journal: ACM Fortran Forum 28(3), 2-7, 2009;
+!! website: http://jblevins.org/research/generic-list). Of course, we have
+!! adapted the original code to fulfill our requirement. This linked list
+!! is capable of storing data of an any type by using the generic programming
+!! techniques. To access the data stored in the nodes, we have to use the
+!! instrinic transfer() subrouitne.
+!!
+!! Usage
+!! =====
+!!
+!! 1. include linked list support
+!! ------------------------------
+!! 
+!! use linkedlist
+!!
+!! 2. define user own data type
+!! ----------------------------
+!! 
+!! type data_t
+!!     place your definition here
+!! end type data_t
+!!
+!! 3. define pointer to data
+!! -------------------------
+!!
+!! type (data_t), pointer  :: data_ptr => null()
+!!
+!! 4. define pointer to list
+!! -------------------------
+!!
+!! type (list_t), pointer  :: list_ptr => null()
+!!
+!! 5. prepare data
+!! ---------------
+!!
+!! allocate(data_ptr)
+!! data_ptr%something = something
+!!
+!! 6. create a linked list
+!! -----------------------
+!!
+!! call list_init(list_ptr, transfer(data_ptr, list_d))
+!!
+!! here list_d is a public variable in linkedlist module.
+!!
+!! 7. insert new node
+!! ------------------
+!!
+!! call list_insert(list_ptr, transfer(data_ptr, list_d))
+!!
+!! 8. visit next node
+!! ------------------
+!!
+!! curr => list_next(curr)
+!!
+!! here curr is a list_t type pointer.
+!!
+!! 9. retrieve data stored in the node
+!! -----------------------------------
+!!
+!! data_ptr  = transfer(list_get(curr), data_ptr)
+!!
+!! here curr is a list_t type pointer, it points to the current node.
+!!
+!! 10. free memory for this linked list
+!! ------------------------------------
+!!
+!! call list_free(list_ptr)
+!!
+!!
+
   module linkedlist
      implicit none
 
@@ -58,7 +135,8 @@
 
   contains ! encapsulated functionality
 
-!!>>> list_init: initialize a head node self and optionally store the provided data
+!!>>> list_init: initialize a head node [self] for a list and optionally
+!!>>> store the provided data
   subroutine list_init(self, data)
      implicit none
 
@@ -79,12 +157,12 @@
          self%data = data
      else
          nullify(self%data)
-     endif ! back if block
+     endif ! back if ( present(data) ) block
 
      return
   end subroutine list_init
 
-!!>>> list_free: free the entire list and all data, beginning at self
+!!>>> list_free: free the entire list and all data, beginning at node [self]
   subroutine list_free(self)
      implicit none
 
@@ -102,6 +180,7 @@
 ! go through the whole linked list
      curr => self
      do while ( associated(curr) )
+! get next node
          next => curr%next
 ! release memory for the internal data
          if ( associated(curr%data) ) then
@@ -111,13 +190,14 @@
 ! release memory for the node itself
          deallocate(curr)
          nullify(curr)
+! point to next node
          curr => next
      enddo ! over do while loop
 
      return
   end subroutine list_free
 
-!!>>> list_insert: insert a node after self containing data (optional)
+!!>>> list_insert: insert a node containing data (optional) after node [self]
   subroutine list_insert(self, data)
      implicit none
 
@@ -141,7 +221,7 @@
          next%data = data
      else
          nullify(next%data)
-     endif ! back if block
+     endif ! back if ( present(data) ) block
 
 ! update the linked list
      next%next => self%next
@@ -150,7 +230,7 @@
      return
   end subroutine list_insert
 
-!!>>> list_put: store the encoded data in list node self
+!!>>> list_put: store the encoded data in list node [self]
   subroutine list_put(self, data)
      implicit none
 
@@ -176,15 +256,15 @@
      return
   end subroutine list_put
 
-!!>>> list_get: return the data stored in the node self
+!!>>> list_get: return the data stored in the node [self]
   function list_get(self) result(data)
      implicit none
 
 ! external arguments
-! element in the linked list
+! node in the linked list
      type(list_t), pointer :: self
 
-! function value
+! function value, the node's data
      integer, dimension(:), pointer :: data
 
      data => self%data
@@ -192,7 +272,7 @@
      return
   end function list_get
 
-!!>>> list_next: return the next node after self
+!!>>> list_next: return the next node after node [self]
   function list_next(self) result(next)
      implicit none
 
@@ -200,7 +280,7 @@
 ! pointer to the list
      type(list_t), pointer :: self
 
-! function value
+! function value, pointer to the next node
      type(list_t), pointer :: next
 
      next => self%next
@@ -208,7 +288,9 @@
      return
   end function list_next
 
-!!>>> list_count: count the number of items in the list
+!!>>> list_count: count the number of nodes in the list [self]
+!!>>> In fact, this function can be used to return the number of nodes
+!!>>> after a given node
   function list_count(self) result(counter)
      implicit none
 
@@ -232,7 +314,7 @@
          enddo ! over do while loop
      else
          counter = 0
-     endif ! back if block
+     endif ! back if ( associated(self) ) block
 
      return
   end function list_count

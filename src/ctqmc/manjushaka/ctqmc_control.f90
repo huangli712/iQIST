@@ -151,6 +151,9 @@
 ! for npart to achieve maximum performance
      integer, public, save :: npart  = 16
 
+! maximum level for skip lists
+     integer, public, save :: mlevl  = 8
+
 ! flip period for spin up and spin down states
 ! note: care must be taken to prevent the system from being trapped in a
 ! state which breaks a symmetry of local hamiltonian when it should not
