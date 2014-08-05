@@ -137,6 +137,10 @@
 !! subroutine s_solve_sy(...)
 !! subroutine s_solve_he(...)
 !!
+!! Note: _i means integer version, _d real(dp) version, and _z complex(dp)
+!! version. _dg means real(dp) general version, _zg complex(dp) general
+!! version, _sy real(dp) symmetric version, _he complex(dp) Hermitian version.
+!!
 !!
 
 !!------------------------------------------------------------------------
@@ -1420,3 +1424,27 @@
 
      return
   end subroutine s_eigvals_he
+
+!!------------------------------------------------------------------------
+!!>>> matrix manipulation: solve linear equations                      <<<
+!!------------------------------------------------------------------------
+
+!!>>> s_solve_dg: solve linear system AX = B, real(dp) general version
+  subroutine s_solve_dg()
+     implicit none
+
+     
+     return
+  end subroutine s_solve_dg
+
+!!>>> s_solve_zg: solve linear system AX = B, complex(dp) general version
+  subroutine s_solve_zg()
+  end subroutine s_solve_zg
+
+!!>>> s_solve_sy: solve linear system AX = B, real(dp) symmetric version
+  subroutine s_solve_sy()
+  end subroutine s_solve_sy
+
+!!>>> s_solve_he: solve linear system AX = B, complex(dp) Hermitian version
+  subroutine s_solve_he()
+  end subroutine s_solve_he
