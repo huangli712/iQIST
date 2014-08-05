@@ -1,3 +1,17 @@
+##
+##
+## Introduction
+## ============
+##
+## Makefile for iqist/src/common
+##
+## Usage
+## =====
+##
+## 'make' or 'make clean'
+##
+##
+
 .SUFFIXES: .f90
 
 include ../build/make.sys
