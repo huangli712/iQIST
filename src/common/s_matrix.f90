@@ -95,6 +95,47 @@
 !! subroutine s_diag_d(...)
 !! subroutine s_diag_z(...)
 !!
+!! 7. calculate trace for matrix
+!! -----------------------------
+!!
+!! subroutine s_trace_d(...)
+!! subroutine s_trace_z(...)
+!!
+!! 8. calculate determinant for matrix
+!! -----------------------------------
+!!
+!! subroutine s_det_d(...)
+!! subroutine s_det_z(...)
+!!
+!! 9. calculate matrix inversion
+!! -----------------------------
+!!
+!! subroutine s_inv_d(...)
+!! subroutine s_inv_z(...)
+!!
+!! 10. general eigensystem problem
+!! -------------------------------
+!!
+!! subroutine s_eig_dg(...)
+!! subroutine s_eig_zg(...)
+!! subroutine s_eigvals_dg(...)
+!! subroutine s_eigvals_zg(...)
+!!
+!! 11. symmetric eigensystem problem
+!! ---------------------------------
+!!
+!! subroutine s_eig_sy(...)
+!! subroutine s_eig_he(...)
+!! subroutine s_eigvals_sy(...)
+!! subroutine s_eigvals_he(...)
+!!
+!! 12. linear equation solver
+!! --------------------------
+!!
+!! subroutine s_solve_dg(...)
+!! subroutine s_solve_zg(...)
+!! subroutine s_solve_sy(...)
+!! subroutine s_solve_he(...)
 !!
 !!
 
