@@ -59,7 +59,6 @@
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
      ncfgs  = 2**norbs     ! number of atomic states
-     nzero  = 128          ! maximum number of non-zero elements in sparse matrix style
      niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp      ! U : average Coulomb interaction
@@ -129,7 +128,6 @@
              read(mytmp,*) nspin                                         !
              read(mytmp,*) norbs                                         !
              read(mytmp,*) ncfgs                                         !
-             read(mytmp,*) nzero                                         !
              read(mytmp,*) niter                                         !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
 
@@ -204,7 +202,6 @@
      call mp_bcast( nspin , master )                                     !
      call mp_bcast( norbs , master )                                     !
      call mp_bcast( ncfgs , master )                                     !
-     call mp_bcast( nzero , master )                                     !
      call mp_bcast( niter , master )                                     !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
      call mp_barrier()

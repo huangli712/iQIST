@@ -111,7 +111,7 @@
      write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
      write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin :', nspin
      write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs :', ncfgs
-     write(mystd,'(2(4X,a,i10))')   'nzero :', nzero  , 'niter :', niter
+     write(mystd,'(1(4X,a,i10))')   'niter :', niter
      write(mystd,'(2(4X,a,i10))')   'nffrq :', nffrq  , 'nbfrq :', nbfrq
      write(mystd,'(2(4X,a,i10))')   'nfreq :', nfreq  , 'ntime :', ntime
      write(mystd,'(2(4X,a,i10))')   'npart :', npart  , 'nflip :', nflip
