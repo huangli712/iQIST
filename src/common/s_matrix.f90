@@ -1588,5 +1588,57 @@
   end subroutine s_solve_sy
 
 !!>>> s_solve_he: solve linear system AX = B, complex(dp) Hermitian version
-  subroutine s_solve_he()
+  subroutine s_solve_he(n, nrhs, A, B)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! the number of linear equations
+     integer, intent(in)        :: n
+
+! the number of right-hand sides
+     integer, intent(in)        :: nrhs
+
+! on entry, it is a n-by-n coefficient matrix A; on exit, it is overwritten
+! by the factors L and U from the factorization of A = PLU.
+     complex(dp), intent(inout) :: A(n,n)
+
+! on entry, it is a n-by-nrhs matrix of right hand side matrix B; on exit,
+! it is overwritten by the solution matrix X.
+     complex(dp), intent(inout) :: B(n,nrhs)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine zhesv
+     integer :: info
+
+! workspace array, its dimension is at least max(1,n)
+     integer, allocatable     :: ipiv(:)
+
+! workspace array, its dimension is at least max(1, lwork) and lwork >= 1
+     complex(dp), allocatable :: work(:)
+
+! allocate memory
+     allocate(ipiv(n), stat = istat)
+     allocate(work(n), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('s_solve_he', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! call the computational subroutine: zhesv
+     call ZHESV('U', n, nrhs, A, n, ipiv, B, n, work, n, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_solve_he', 'error in lapack subroutine zhesv')
+     endif ! back if ( info /= 0 ) block
+
+! deallocate memory
+     if (allocated(ipiv)) deallocate(ipiv)
+     if (allocated(work)) deallocate(work)
+
+     return
   end subroutine s_solve_he
