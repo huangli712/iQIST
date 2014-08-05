@@ -26,7 +26,7 @@
 !!!           07/09/2014 by li huang
 !!! purpose : the purpose of this module is to implement important sparse
 !!!           matrix/vector operations, including matrix multiplication,
-!!!           format convertion, etc. the internal format of sparse matrix
+!!!           format conversion, etc. the internal format of sparse matrix
 !!!           used in this module is CSR (compressed sparse row) format.
 !!! status  : unstable
 !!! comment : only support real(dp) and complex(dp) data types
@@ -867,7 +867,7 @@
      integer, intent(in)      :: ncol
 
 ! the length of the arrays sc and jc
-! sparse_matmul_amumat() will stop if the result matrix C has a number of
+! sparse_matmul_amumat_z() will stop if the result matrix C has a number of
 ! elements that exceeds nmax
      integer, intent(in)      :: nmax
 
