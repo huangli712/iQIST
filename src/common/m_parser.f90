@@ -151,10 +151,19 @@
 !!
 
   module parser
-     use constants
      use linkedlist 
 
      implicit none
+
+!!========================================================================
+!!>>> declare global constants                                         <<<
+!!========================================================================
+
+! dp: number precision, double precision for reals
+     integer, private, parameter :: dp = kind(1.0d0)
+
+! mystd: device descriptor, console output
+     integer, private, parameter :: mytmp = 100
 
 !!========================================================================
 !!>>> declare global data types                                        <<<
