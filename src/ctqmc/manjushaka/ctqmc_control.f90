@@ -82,11 +82,6 @@
 ! note: isvrt == 2, 3, and 5 are not implemented so far.
      integer, public, save :: isvrt  = 1
 
-! control flag: which trace algorithm to be used
-! if iskip == 1, use npart algorithm
-! if iskip == 2, use skip lists algorithm
-     integer, public, save :: iskip
-
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! number of correlated bands
