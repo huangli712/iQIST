@@ -9,7 +9,6 @@
 !           ctqmc_gmat module
 !           ctqmc_wmat module
 !           ctqmc_smat module
-!           ctqmc_part module
 !           context    module
 ! source  : ctqmc_context.f90
 ! type    : module
@@ -67,9 +66,6 @@
 !-------------------------------------------------------------------------
 !::: core variables: real, matrix trace                                :::
 !-------------------------------------------------------------------------
-
-! number of total matrices multiplication
-     real(dp), public, save :: num_prod = zero
 
 ! matrix trace of flavor part, current value
      real(dp), public, save :: matrix_ptrace = zero
@@ -389,41 +385,6 @@
   end module ctqmc_smat
 
 !=========================================================================
-!>>> module ctqmc_part                                                 <<<
-!=========================================================================
-!>>> containing the information for npart trace algorithm
-  module ctqmc_part
-     use constants, only: dp
- 
-     implicit none
-
-! how to treat each part when calculate trace
-     integer, public, save, allocatable :: is_save(:,:,:)
-
-! whether to copy this part
-     logical, public, save, allocatable :: is_copy(:,:)
-
-! ops, ope
-     integer, public, save, allocatable :: ops(:)
-     integer, public, save, allocatable :: ope(:)
-
-! saved parts of matrices product, previous configuration 
-     real(dp), public, save, allocatable :: saved_a(:,:,:,:)
-
-! start and end index of sectors for saved parts of matrices product, 
-! previous configuration
-     integer,  public, save, allocatable :: saved_a_nm(:,:,:)
-
-! saved parts of matrices product, current configuration
-     real(dp), public, save, allocatable :: saved_b(:,:,:,:)
-
-! start and end index of sectors for saved parts of matrices product, 
-! current configuration
-     integer,  public, save, allocatable :: saved_b_nm(:,:,:)
-
-  end module ctqmc_part
-
-!=========================================================================
 !>>> module context                                                    <<<
 !=========================================================================
 !>>> containing memory management subroutines and define global variables
@@ -442,7 +403,6 @@
      use ctqmc_wmat
      use ctqmc_smat
 
-     use ctqmc_part
      implicit none
 
 ! status flag
@@ -456,7 +416,6 @@
      public :: ctqmc_allocate_memory_gmat
      public :: ctqmc_allocate_memory_wmat
      public :: ctqmc_allocate_memory_smat
-     public :: ctqmc_allocate_memory_part
 
 ! declaration of module procedures: deallocate memory
      public :: ctqmc_deallocate_memory_clur
@@ -466,7 +425,6 @@
      public :: ctqmc_deallocate_memory_gmat
      public :: ctqmc_deallocate_memory_wmat
      public :: ctqmc_deallocate_memory_smat
-     public :: ctqmc_deallocate_memory_part
 
      contains
 
@@ -721,39 +679,6 @@
          return
      end subroutine ctqmc_allocate_memory_smat
 
-!>>> allocate memory for sect-related variables
-     subroutine ctqmc_allocate_memory_part()
-         use m_sector
-
-         implicit none
-
-! allocate memory
-         allocate(is_save(npart, nsectors, 2),       stat=istat)
-         allocate(is_copy(npart, nsectors),       stat=istat)
-         allocate(ops(npart),                     stat=istat)
-         allocate(ope(npart),                     stat=istat)
-         allocate(saved_a_nm(2, npart, nsectors), stat=istat)
-         allocate(saved_b_nm(2, npart, nsectors), stat=istat)
-         allocate(saved_a(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
-         allocate(saved_b(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
-
-! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
-         endif
-
-         is_save = 1
-         is_copy = .false.
-         ops = 0
-         ope = 0
-         saved_a = zero
-         saved_b = zero
-         saved_a_nm = 0
-         saved_b_nm = 0
-
-         return
-     end subroutine ctqmc_allocate_memory_part
-
 !=========================================================================
 !>>> deallocate memory subroutines                                     <<<
 !=========================================================================
@@ -888,21 +813,5 @@
 
          return
      end subroutine ctqmc_deallocate_memory_smat
-
-!>>> deallocate memory for sect-related variables
-     subroutine ctqmc_deallocate_memory_part()
-         implicit none
-
-         if ( allocated(is_save) )      deallocate(is_save)
-         if ( allocated(is_copy) )      deallocate(is_copy)
-         if ( allocated(ops) )          deallocate(ops)
-         if ( allocated(ope) )          deallocate(ope)
-         if ( allocated(saved_a) )      deallocate(saved_a)
-         if ( allocated(saved_a_nm) )   deallocate(saved_a_nm)
-         if ( allocated(saved_b) )      deallocate(saved_b)
-         if ( allocated(saved_b_nm) )   deallocate(saved_b_nm)
-        
-         return
-     end subroutine ctqmc_deallocate_memory_part
 
   end module context

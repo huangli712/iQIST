@@ -2537,6 +2537,7 @@
 
 ! a particular string begins at one sector
      integer :: string(csize+1, nsectors) 
+     integer :: string2(0:csize+1, nsectors) 
 
 ! whether it is a string
      logical :: is_string(nsectors)
@@ -2606,6 +2607,8 @@
 
 ! build string for all the sectors
      call ctqmc_make_string(csize, index_t_loc, is_string, string)
+     string2(1:csize+1,:) = string(1:csize+1,:)
+     string2(0,:) = string2(1,:)
 
 ! we can check is_string here to see whether this diagram can survive ?
      pass = .false.
@@ -2679,7 +2682,7 @@
              sectors(indx_sector(i))%final_product(:,:,1) = zero
          else
 
-             call ctqmc_sector_ztrace(skip_lists, csize, string(:, indx_sector(i)), &
+             call ctqmc_sector_ztrace(skip_lists, csize, string2(:, indx_sector(i)), &
                                  index_t_loc, expt_t_loc, trace_sector(indx_sector(i)))
          endif
          if (pass .eqv. .false.) then
