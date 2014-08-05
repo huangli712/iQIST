@@ -1109,7 +1109,7 @@
          return
      end subroutine mp_bcast_bool1
 
-!!>>> mp_bcast_bool2: broadcasts bool(:,:) from the process with rank "root"
+!!>>> mp_bcast_bool2: broadcasts bool2 from the process with rank "root"
      subroutine mp_bcast_bool2(data, root, gid)
          implicit none
 
@@ -1199,7 +1199,7 @@
          return
      end subroutine mp_bcast_int1
 
-!!>>> mp_bcast_int2: broadcasts int(:,:) from the process with rank "root"
+!!>>> mp_bcast_int2: broadcasts int2 from the process with rank "root"
      subroutine mp_bcast_int2(data, root, gid)
          implicit none
 
@@ -1230,7 +1230,7 @@
          return
      end subroutine mp_bcast_int2
 
-!!>>> mp_bcast_int3: broadcasts int(:,:,:) from the process with rank "root"
+!!>>> mp_bcast_int3: broadcasts int3 from the process with rank "root"
      subroutine mp_bcast_int3(data, root, gid)
          implicit none
 
@@ -1382,7 +1382,7 @@
          return
      end subroutine mp_bcast_rdp1
 
-!!>>> mp_bcast_rdp2: broadcasts real(:,:) from the process with rank "root"
+!!>>> mp_bcast_rdp2: broadcasts real2 from the process with rank "root"
      subroutine mp_bcast_rdp2(data, root, gid)
          implicit none
 
@@ -1413,7 +1413,7 @@
          return
      end subroutine mp_bcast_rdp2
 
-!!>>> mp_bcast_rdp3: broadcasts real(:,:,:) from the process with rank "root"
+!!>>> mp_bcast_rdp3: broadcasts real3 from the process with rank "root"
      subroutine mp_bcast_rdp3(data, root, gid)
          implicit none
 
