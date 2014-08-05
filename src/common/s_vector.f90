@@ -33,6 +33,55 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! 1. mesh generation
+!! ------------------
+!!
+!! subroutine s_linspace_d(...)
+!! subroutine s_logspace_d(...)
+!! subroutine s_linspace_z(...)
+!!
+!! 2. sum of vector
+!! ----------------
+!!
+!! subroutine s_sum_i(...)
+!! subroutine s_sum_d(...)
+!! subroutine s_sum_z(...)
+!!
+!! subroutine s_cumsum_i(...)
+!! subroutine s_cumsum_d(...)
+!! subroutine s_cumsum_z(...)
+!!
+!! 3. product of vector
+!! --------------------
+!!
+!! subroutine s_prod_i(...)
+!! subroutine s_prod_d(...)
+!! subroutine s_prod_z(...)
+!!
+!! subroutine s_cumprod_i(...)
+!! subroutine s_cumprod_d(...)
+!! subroutine s_cumprod_z(...)
+!!
+!! 4. swap vector
+!! -----------------
+!!
+!! subroutine s_swap_i(...)
+!! subroutine s_swap_d(...)
+!! subroutine s_swap_z(...)
+!!
+!! 5. orthogonal polynomial
+!! ------------------------
+!!
+!! subroutine s_legendre(...)
+!! subroutine s_chebyshev(...)
+!!
+!!
+
 !!========================================================================
 !!>>> mesh generation                                                  <<<
 !!========================================================================
