@@ -28,7 +28,7 @@
 !!! purpose : this module is used to overload/define the basic arithmetic
 !!!           operations for very large exponent numbers
 !!! status  : unstable
-!!! comment : this module is not actived until now
+!!! comment : this module is not activated until now
 !!!-----------------------------------------------------------------------
 
 !!
@@ -220,7 +220,7 @@
      if ( isnan( r1 * r1 ) ) then
          write(mystd,'(a)') 'skynet: sunu_to_real, NaN error'
          STOP
-     endif
+     endif ! back if ( isnan( r1 * r1 ) ) block
 
      return
   end subroutine sunu_to_real
@@ -260,7 +260,7 @@
      else
          s%mant = s2%mant + s1%mant * exp( s1%expt - s2%expt )
          s%expt = s2%expt
-     endif
+     endif ! back if ( s1%expt > s2%expt ) block
 
      return
   end function sunu_add_sunu
@@ -331,7 +331,7 @@
      else
          s%mant =-s2%mant + s1%mant * exp( s1%expt - s2%expt )
          s%expt = s2%expt
-     endif
+     endif ! back if ( s1%expt > s2%expt ) block
 
      return
   end function sunu_sub_sunu
@@ -522,14 +522,14 @@
 
      if ( s%mant == 0.0_dp ) then
          s%expt = 0.0_dp
-     endif
+     endif ! back if ( s%mant == 0.0_dp ) block
 
      s%expt = s%expt + log( abs( s%mant ) )
      if ( s%mant > 0.0_dp ) then
          s%mant = 1.0_dp
      else
          s%mant =-1.0_dp
-     endif
+     endif ! back if ( s%mant > 0.0_dp ) block
 
      return
   end subroutine skynet_done_sunu
@@ -545,12 +545,12 @@
      if ( isnan( s%mant * s%mant ) ) then
          write(mystd,'(a)') 'skynet: skynet_test_sunu, mantisa part is infinity'
          STOP
-     endif
+     endif ! back if ( isnan( s%mant * s%mant ) ) block
 
      if ( isnan( s%expt * s%expt ) ) then
          write(mystd,'(a)') 'skynet: skynet_test_sunu, exponent part is infinity'
          STOP
-     endif
+     endif ! back if ( isnan( s%expt * s%expt ) ) block
 
      return
   end subroutine skynet_test_sunu
@@ -568,7 +568,7 @@
          z = .true.
      else
          z = .false.
-     endif
+     endif ! back if ( s%mant == 0.0_dp ) block
 
      return
   end function skynet_zero_sunu
