@@ -1488,24 +1488,24 @@
 
 ! external arguments
 ! the number of linear equations
-     integer, intent(in)     :: n
+     integer, intent(in)        :: n
 
 ! the number of right-hand sides
-     integer, intent(in)     :: nrhs
+     integer, intent(in)        :: nrhs
 
 ! on entry, it is a n-by-n coefficient matrix A; on exit, it is overwritten
 ! by the factors L and U from the factorization of A = PLU.
-     real(dp), intent(inout) :: A(n,n)
+     complex(dp), intent(inout) :: A(n,n)
 
 ! on entry, it is a n-by-nrhs matrix of right hand side matrix B; on exit,
 ! it is overwritten by the solution matrix X.
-     real(dp), intent(inout) :: B(n,nrhs)
+     complex(dp), intent(inout) :: B(n,nrhs)
 
 ! local variables
 ! status flag
      integer :: istat
 
-! return information from subroutine dgesv
+! return information from subroutine zgesv
      integer :: info
 
 ! workspace array, its dimension is at least max(1,n)
@@ -1514,15 +1514,15 @@
 ! allocate memory
      allocate(ipiv(n), stat = istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_solve_dg', 'can not allocate enough memory')
+         call s_print_error('s_solve_zg', 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! call the computational subroutine: dgesv
-     call DGESV(n, nrhs, A, n, ipiv, B, n, info)
+! call the computational subroutine: zgesv
+     call ZGESV(n, nrhs, A, n, ipiv, B, n, info)
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_solve_dg', 'error in lapack subroutine dgesv')
+         call s_print_error('s_solve_zg', 'error in lapack subroutine zgesv')
      endif ! back if ( info /= 0 ) block
 
 ! deallocate memory
