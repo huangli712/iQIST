@@ -16,7 +16,7 @@
 !!! purpose : this purpose of this module is to implement a generic and
 !!!           flexible config/input file reader and analyzer.
 !!! status  : unstable
-!!! comment : this module depends on constants and linkedlist modules
+!!! comment : this module depends on linkedlist module
 !!!-----------------------------------------------------------------------
 
 !!
@@ -81,7 +81,7 @@
 !!    nband = 4        ! integer type
 !!    mune  = 4.0      ! real(dp) type
 !!    isscf = .true.   ! logical type, you can also use .false., T, F
-!!    model = anderson ! character type, do not use "" or '' characters
+!!    model = anderson ! character type, do not use "" or '' characters to quote it
 !!
 !! 7. in the value part, a vector is also support. the items in the vector
 !!    should be separated by "," character.
@@ -364,6 +364,9 @@
 ! loop index
      integer :: p
 
+! flag for the search results
+     logical :: found
+
 ! string representation for the key
      character(len = 32) :: str_key
 
@@ -380,6 +383,7 @@
 
 ! visit the linked list and try to find out the required key-value pair
 ! whose key is the same with str_key
+     found = .false.
      curr => list_ptr
      do p=1,list_count(list_ptr)-1
 ! note that we skip the first element since it is invalid
@@ -387,6 +391,7 @@
          data_ptr = transfer(list_get(curr), data_ptr)
 ! the required key-value pair is found, extract the value to str_value
          if ( trim(str_key) .eq. trim(data_ptr%str_key) ) then
+             found = .true.
              str_value = data_ptr%str_value
              call s_str_lowcase(str_value)
              call s_str_compress(str_value)
@@ -394,6 +399,9 @@
          endif ! back if block
      enddo ! over do loop
      curr => null()
+
+! we can not find matched key, so return directly
+     if ( found .eqv. .false. ) return
 
 ! convert str_value to out_value, here we only support the following
 ! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
@@ -439,6 +447,9 @@
      logical  :: bool_aux
      real(dp) :: real_aux
 
+! flag for the search results
+     logical  :: found
+
 ! string representation for the key
      character(len = 32) :: str_key
 
@@ -455,6 +466,7 @@
 
 ! visit the linked list and try to find out the required key-value pair
 ! whose key is the same with str_key
+     found = .false.
      curr => list_ptr
      do p=1,list_count(list_ptr)-1
 ! note that we skip the first element since it is invalid
@@ -462,6 +474,7 @@
          data_ptr = transfer(list_get(curr), data_ptr)
 ! the required key-value pair is found, extract the value to str_value
          if ( trim(str_key) .eq. trim(data_ptr%str_key) ) then
+             found = .true.
              str_value = data_ptr%str_value
              call s_str_lowcase(str_value)
              call s_str_compress(str_value)
@@ -469,6 +482,9 @@
          endif ! back if block
      enddo ! over do loop
      curr => null()
+
+! we can not find matched key, so return directly
+     if ( found .eqv. .false. ) return
 
 ! convert str_value to out_value, here we only support the following
 ! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
