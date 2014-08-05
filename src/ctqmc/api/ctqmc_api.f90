@@ -15,9 +15,11 @@
 !-------------------------------------------------------------------------
 
   module api
-     use constants, only : dp
+!!     use constants, only : dp
 
      implicit none
+
+     integer, private, parameter :: dp = kind(1.0d0)
 
 !-------------------------------------------------------------------------
 !::: declare global data structure                                     :::

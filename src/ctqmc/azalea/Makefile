@@ -28,8 +28,8 @@ csml:
 	cp ../../common/spring.mod .
 	cp ../../common/stack.mod .
 
-ctqmc_exe: csml $(objects)
-	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
+ctqmc_exe: api csml $(objects)
+	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS) -L../../common/ -lMM
 
 ctqmc_lib: $(objects)
 	$(ARCHIVER) libctqmc.a $(objects)
