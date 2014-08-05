@@ -331,10 +331,12 @@
 
 ! check the length of str_key and str_value
              if ( len_trim(str_key) == 0   ) then
-                 call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
+                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 STOP
              endif ! back if ( len_trim(str_key) == 0   ) block
              if ( len_trim(str_value) == 0 ) then
-                 call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
+                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 STOP
              endif ! back if ( len_trim(str_value) == 0 ) block
 
 ! store the key-value pair in the linked list structure
@@ -420,7 +422,8 @@
          type is (character(len=*)) ! for character
              out_value = str_value
          class default
-             call s_print_error('p_get', 'unrecognize data type')
+             write(mystd, '(a)') 'parser: p_get, unrecognize data type'
+             STOP
      end select
 
      return
@@ -538,7 +541,8 @@
              enddo ! over p={1,nsize-1} loop
              out_value(nsize) = str_value(q+1:)
          class default
-             call s_print_error('p_get_vec', 'unrecognize data type')
+             write(mystd, '(a)') 'parser: p_get_vec, unrecognize data type'
+             STOP
      end select
 
      return
