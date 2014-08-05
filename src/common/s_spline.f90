@@ -12,7 +12,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> s_spl_splder: evaluate the 2-order derivates of yval
+!!>>> s_spl_splder: evaluate the 2-order derivates of yval
   subroutine s_spl_splder(ydim, xval, yval, startu, startd, d2y)
      use constants, only : dp, zero, one, two, half
 
@@ -90,7 +90,7 @@
      return
   end subroutine s_spl_splder
 
-!>>> s_spl_splint: evaluate the spline value at x point
+!!>>> s_spl_splint: evaluate the spline value at x point
   function s_spl_splint(xdim, xval, yval, d2y, x) result(val)
      use constants, only : dp
 
