@@ -1459,7 +1459,24 @@
 
 ! workspace array, its dimension is at least max(1,n)
      integer, allocatable :: ipiv(:)
-     
+
+! allocate memory
+     allocate(ipiv(n), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('s_solve_dg', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! call the computational subroutine: dgesv
+     call DGESV(n, nrhs, A, n, ipiv, B, n, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_solve_dg', 'error in lapack subroutine dgesv')
+     endif ! back if ( info /= 0 ) block
+
+! deallocate memory
+     if (allocated(ipiv)) deallocate(ipiv)
+
      return
   end subroutine s_solve_dg
 
