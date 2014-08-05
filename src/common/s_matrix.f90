@@ -1556,28 +1556,33 @@
 ! status flag
      integer :: istat
 
-! return information from subroutine dgesv
+! return information from subroutine dsysv
      integer :: info
 
 ! workspace array, its dimension is at least max(1,n)
-     integer, allocatable :: ipiv(:)
+     integer, allocatable  :: ipiv(:)
+
+! workspace array, its dimension is at least max(1, lwork) and lwork >= 1
+     real(dp), allocatable :: work(:)
 
 ! allocate memory
      allocate(ipiv(n), stat = istat)
+     allocate(work(n), stat = istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_solve_dg', 'can not allocate enough memory')
+         call s_print_error('s_solve_sy', 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! call the computational subroutine: dgesv
-     call DGESV(n, nrhs, A, n, ipiv, B, n, info)
+! call the computational subroutine: dsysv
+     call DSYSV('U', n, nrhs, A, n, ipiv, B, n, work, n, info)
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_solve_dg', 'error in lapack subroutine dgesv')
+         call s_print_error('s_solve_sy', 'error in lapack subroutine dsysv')
      endif ! back if ( info /= 0 ) block
 
 ! deallocate memory
      if (allocated(ipiv)) deallocate(ipiv)
+     if (allocated(work)) deallocate(work)
 
      return
   end subroutine s_solve_sy
