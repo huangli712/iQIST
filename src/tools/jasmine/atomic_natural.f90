@@ -57,6 +57,9 @@ subroutine atomic_make_natural()
         write(mystd, *)
     endif
 
+    ! dump eimpmat for reference
+    call atomic_write_eimpmat()
+
     ! we need transform Coulomb interaction U
     ! for non-soc case, the tran_umat is defined as from real orbital basis to natural basis
     if (isoc==0) then
