@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/common
+## Makefile for iqist/src/common directory
 ##
 ## Usage
 ## =====
