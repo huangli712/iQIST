@@ -111,7 +111,7 @@
      type, extends (T_segment_solver) :: T_segment_azalea
          character(len=10) :: solver_name = 'AZALEA'
          integer :: solver_id = 101
-         integer :: solver_ready = 1
+         integer :: solver_is_ready = 1
      end type T_segment_azalea
 
 ! define type T_segment_gardenia, which is used to describe the ctqmc
@@ -119,7 +119,7 @@
      type, extends (T_segment_solver) :: T_segment_gardenia
          character(len=10) :: solver_name = 'GARDENIA'
          integer :: solver_id = 102
-         integer :: solver_ready = 1
+         integer :: solver_is_ready = 1
 
          integer :: isort
          integer :: isvrt
@@ -136,7 +136,7 @@
      type, extends (T_segment_solver) :: T_segment_narcissus
          character(len=10) :: solver_name = 'NARCISSUS'
          integer :: solver_id = 103
-         integer :: solver_ready = 1
+         integer :: solver_is_ready = 1
 
          integer :: isort
          integer :: isvrt
@@ -157,7 +157,7 @@
      type, extends (T_general_solver) :: T_general_begonia
          character(len=10) :: solver_name = 'BEGONIA'
          integer :: solver_id = 201
-         integer :: solver_ready = 1
+         integer :: solver_is_ready = 1
 
          integer :: nzero
          integer :: npart
@@ -168,7 +168,7 @@
      type, extends (T_general_solver) :: T_general_lavender
          character(len=10) :: solver_name = 'LAVENDER'
          integer :: solver_id = 202
-         integer :: solver_ready = 1
+         integer :: solver_is_ready = 1
 
          integer :: isort
          integer :: isvrt
@@ -188,7 +188,7 @@
      type, extends (T_general_solver) :: T_general_pansy
          character(len=10) :: solver_name = 'PANSY'
          integer :: solver_id = 301
-         integer :: solver_ready = 1
+         integer :: solver_is_ready = 1
      end type T_general_pansy
 
 ! define type T_general_manjushaka, which is used to describe the ctqmc
@@ -197,7 +197,7 @@
      type, extends (T_general_solver) :: T_general_manjushaka
          character(len=10) :: solver_name = 'MANJUSHAKA'
          integer :: solver_id = 302
-         integer :: solver_ready = 1
+         integer :: solver_is_ready = 1
      end type T_general_manjushaka
 
 !-------------------------------------------------------------------------
