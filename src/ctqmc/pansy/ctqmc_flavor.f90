@@ -2567,7 +2567,7 @@
 
 ! local variables
 ! loop index
-     integer :: i, j
+     integer :: i
 
 ! update the operator traces
      matrix_ptrace = matrix_ntrace
@@ -2581,20 +2581,8 @@
          sectors(i)%final_product(:,:,2) = sectors(i)%final_product(:,:,1)
      enddo
   
-! copy save-state for all the parts 
-     is_save(:,:,2) = is_save(:,:,1)
-
-! when npart > 1, we used the npart algorithm, save the changed 
-! matrices products when moves are accepted
-     if ( npart > 1) then
-         do i=1, nsectors
-             do j=1, npart
-                 if ( is_copy(j,i) ) then
-                     saved_a(:, 1:col_copy(j,i), j, i) = saved_b(:, 1:col_copy(j,i), j, i) 
-                 endif
-             enddo
-         enddo
-     endif
+! save the data of each part
+     call ctqmc_save_parts()
 
      return
   end subroutine ctqmc_make_evolve

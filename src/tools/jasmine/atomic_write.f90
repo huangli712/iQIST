@@ -1,6 +1,7 @@
 !-------------------------------------------------------------------------
 ! project : jasmine
 ! program : atomic_write_basis
+!         : atomic_write_eimpmat
 !         : atomic_write_eigval_fullspace
 !         : atomic_write_eigvec_fullspace
 !         : atomic_write_atomcix_fullspace
@@ -40,6 +41,28 @@ subroutine atomic_write_basis()
 
     return
 end subroutine atomic_write_basis
+
+!>>> write eimpmat on natural basis 
+subroutine atomic_write_eimpmat()
+    use constants,  only: mytmp
+    use control,    only: norbs
+    use m_spmat,    only: eimpmat
+
+    implicit none
+
+    ! local variables
+    integer :: i
+
+    open(mytmp, file='atom.eimp.dat') 
+    write(mytmp, '(a)') '# impurity energy on natural basis, it may be useful for ctqmc input: solver.eimp.in'
+    write(mytmp, '(a)') '#        i |      eimp(i)'
+    do i=1, norbs
+        write(mytmp, '(I10,F20.10)') i, real(eimpmat(i,i))
+    enddo
+    close(mytmp)
+
+    return
+end subroutine atomic_write_eimpmat
 
 !>>> write eigenvalue of fullspace to file 'atom.eigval.dat'
 subroutine atomic_write_eigval_fullspace()

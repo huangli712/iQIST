@@ -21,11 +21,11 @@
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N 
 subroutine atomic_mksectors_n()
-    use constants,         only: dp, mytmp, zero
-    use control,           only: norbs
-    use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector,          only: alloc_one_sector, alloc_one_fmat
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
+    use constants
+    use control
+    use m_basis_fullspace
+    use m_sector
+    use m_glob_sectors
 
     implicit none
 
@@ -37,6 +37,8 @@ subroutine atomic_mksectors_n()
     integer :: counter
     ! total electrons
     integer :: myntot
+    ! number of fock states after truncated
+    integer :: nfock_trunc
     ! can point to next sector 
     logical :: can  
     ! loop index
@@ -44,15 +46,20 @@ subroutine atomic_mksectors_n()
 
     !----------------------------------------------------------------
     ! allocate memory for global variables of sectors
-    nsectors = norbs+1
+    nsectors = (nmax - nmin) + 1
     max_dim_sect = 0
     ave_dim_sect = zero
     call alloc_m_glob_sectors()
     ! now, build each sector
     counter = 1
+    do i=1, nmin
+        counter = counter + dim_sub_n(i-1) 
+    enddo
+
+    nfock_trunc = 0
     do i=1, nsectors
-        sectors(i)%ndim = dim_sub_n(i-1)
-        sectors(i)%nelectron = i-1
+        sectors(i)%ndim = dim_sub_n(nmin+i-1)
+        sectors(i)%nelectron = nmin+i-1
         sectors(i)%nops = norbs
         sectors(i)%istart = counter 
         ! allocate memory for each sector
@@ -61,7 +68,8 @@ subroutine atomic_mksectors_n()
         do j=1, sectors(i)%ndim
             sectors(i)%mybasis(j) = counter + j - 1 
         enddo
-        counter = counter + dim_sub_n(i-1)
+        counter = counter + dim_sub_n(nmin+i-1)
+        nfock_trunc = nfock_trunc + sectors(i)%ndim
     enddo
     !----------------------------------------------------------------
 
@@ -96,8 +104,8 @@ subroutine atomic_mksectors_n()
                         myntot = sectors(i)%nelectron - 1
                     endif
                     ! loop over all sectors to see which sector it will point to 
-                    if (myntot >=0 .and. myntot <= norbs) then
-                        which_sect = myntot + 1
+                    if (myntot >=nmin .and. myntot <= nmax) then
+                        which_sect = myntot - nmin + 1
                     endif 
                 endif  ! back to if (can == .true.) block
                 sectors(i)%next_sector(j,k) = which_sect 
@@ -118,6 +126,7 @@ subroutine atomic_mksectors_n()
     ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
+    write(mytmp, '(a,I10)')    '#nfock_truncated: ', nfock_trunc
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
@@ -137,11 +146,11 @@ end subroutine atomic_mksectors_n
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Sz 
 subroutine atomic_mksectors_nsz()
-    use constants,         only: dp, mytmp, zero
-    use control,           only: norbs, ncfgs
-    use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector,          only: alloc_one_sector, alloc_one_fmat
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
+    use constants
+    use control
+    use m_basis_fullspace
+    use m_sector
+    use m_glob_sectors
 
     implicit none
 
@@ -176,6 +185,8 @@ subroutine atomic_mksectors_nsz()
     integer :: ibasis
     ! loop index
     integer :: i,j,k,l
+    ! number fock state after truncated
+    integer :: nfock_trunc
     ! can point to next sector 
     logical :: can  
 
@@ -213,8 +224,10 @@ subroutine atomic_mksectors_nsz()
     sector_basis = 0
     do i=1, ncfgs    
         myntot = fock_good_ntot(i)
+        if (myntot < nmin .or. myntot > nmax) cycle
         mysz   = fock_good_sz(i)
-        if (nsect==0) then
+
+        if (nsect==0 ) then
             sect_good_ntot(1) = myntot
             sect_good_sz(1)   = mysz
             nsect = nsect + 1
@@ -255,6 +268,7 @@ subroutine atomic_mksectors_nsz()
     call alloc_m_glob_sectors()
     ! now we will build each sector
     counter = 1
+    nfock_trunc = 0
     do i=1, nsect
         sectors(i)%ndim = ndims(i)
         sectors(i)%nelectron = sect_good_ntot(i)
@@ -267,6 +281,7 @@ subroutine atomic_mksectors_nsz()
         do j=1, ndims(i)
             sectors(i)%mybasis(j) = sector_basis(j,i) 
         enddo
+        nfock_trunc = nfock_trunc + sectors(i)%ndim
     enddo
     !----------------------------------------------------------------
 
@@ -328,6 +343,7 @@ subroutine atomic_mksectors_nsz()
     ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
+    write(mytmp, '(a,I10)')    '#nfock_truncated: ', nfock_trunc
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
@@ -353,11 +369,11 @@ end subroutine atomic_mksectors_nsz
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Sz, PS
 subroutine atomic_mksectors_nszps()
-    use constants,         only: dp, mytmp, zero
-    use control,           only: nband, norbs, ncfgs
-    use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector,          only: alloc_one_sector, alloc_one_fmat         
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
+    use constants
+    use control
+    use m_basis_fullspace
+    use m_sector
+    use m_glob_sectors
 
     implicit none
 
@@ -397,6 +413,8 @@ subroutine atomic_mksectors_nszps()
     integer :: ibasis
     ! loop index
     integer :: i,j,k,l
+    ! number of fock states after truncated
+    integer :: nfock_trunc
     ! can point to next sector
     logical :: can  
 
@@ -442,6 +460,7 @@ subroutine atomic_mksectors_nszps()
     sector_basis = 0
     do i=1, ncfgs    
         myntot = fock_good_ntot(i)
+        if (myntot < nmin .or. myntot > nmax) cycle
         mysz   = fock_good_sz(i)
         myps   = fock_good_ps(i)
         if (nsect==0) then
@@ -487,6 +506,7 @@ subroutine atomic_mksectors_nszps()
     nsectors = nsect
     call alloc_m_glob_sectors()
     ! now we will build each sector
+    nfock_trunc = 0
     counter = 1
     do i=1, nsect
         sectors(i)%ndim = ndims(i)
@@ -500,6 +520,7 @@ subroutine atomic_mksectors_nszps()
         do j=1, ndims(i)
             sectors(i)%mybasis(j) = sector_basis(j,i) 
         enddo
+        nfock_trunc = nfock_trunc + sectors(i)%ndim
     enddo
     !----------------------------------------------------------------
 
@@ -571,6 +592,7 @@ subroutine atomic_mksectors_nszps()
     ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
+    write(mytmp, '(a,I10)')    '#nfock_truncated: ', nfock_trunc
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |       PS(i) |     nd&
@@ -597,11 +619,11 @@ end subroutine atomic_mksectors_nszps
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Jz 
 subroutine atomic_mksectors_njz()
-    use constants,         only: dp, mytmp, zero
-    use control,           only: norbs, ncfgs
-    use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector,          only: alloc_one_sector, alloc_one_fmat         
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
+    use constants
+    use control
+    use m_basis_fullspace
+    use m_sector
+    use m_glob_sectors
 
     implicit none
 
@@ -636,6 +658,8 @@ subroutine atomic_mksectors_njz()
     integer :: ibasis
     ! loop index
     integer :: i,j,k,l
+    ! number of fock states after truncated
+    integer :: nfock_trunc
     ! can point to next sector
     logical :: can  
 
@@ -674,6 +698,7 @@ subroutine atomic_mksectors_njz()
     sector_basis = 0
     do i=1, ncfgs    
         myntot = fock_good_ntot(i)
+        if (myntot < nmin .or. myntot > nmax) cycle
         myjz   = fock_good_jz(i)
         if (nsect==0) then
             sect_good_ntot(1) = myntot
@@ -715,6 +740,7 @@ subroutine atomic_mksectors_njz()
     nsectors = nsect
     call alloc_m_glob_sectors()
     ! now we will build each sector
+    nfock_trunc = 0
     counter = 1
     do i=1, nsect
         sectors(i)%ndim = ndims(i)
@@ -728,6 +754,7 @@ subroutine atomic_mksectors_njz()
         do j=1, ndims(i)
             sectors(i)%mybasis(j) = sector_basis(j,i) 
         enddo
+        nfock_trunc = nfock_trunc + sectors(i)%ndim
     enddo
     !----------------------------------------------------------------
 
@@ -789,6 +816,7 @@ subroutine atomic_mksectors_njz()
     ave_dim_sect = counter / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
+    write(mytmp, '(a,I10)')    '#nfock_truncated: ', nfock_trunc
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Jz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '

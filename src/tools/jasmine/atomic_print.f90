@@ -89,6 +89,7 @@ subroutine atomic_print_summary()
     write(mystd,'(2(4X,a,i10))')   'icf   :', icf  ,   'isoc   :', isoc
     write(mystd,'(2(4X,a,i10))')   'icu   :', icu ,    'nband  :', nband 
     write(mystd,'(2(4X,a,i10))')   'norbs :', norbs ,  'ncfgs  :', ncfgs
+    write(mystd,'(2(4X,a,i10))')   'nmin  :', nmin ,   'nmax   :', nmax
 
     write(mystd,'(2(4X,a,f10.5))') 'Uc    :', Uc     , 'Uv     :', Uv
     write(mystd,'(2(4X,a,f10.5))') 'Jz    :', Jz     , 'Js     :', Js

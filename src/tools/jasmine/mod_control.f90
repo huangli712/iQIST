@@ -57,6 +57,12 @@ module control
     ! number of many-body configurations
     integer, public, save :: ncfgs
 
+    ! the minimum number of electrons
+    integer, public, save :: nmin
+
+    ! the maximum number of electrons
+    integer, public, save :: nmax
+
     ! the following are useful when icu = 1
     !--------------------------------------
     ! intraorbital Coulomb interaction
