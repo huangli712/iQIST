@@ -16,8 +16,6 @@
 
 include ../../build/make.sys
 
-default: all
-
 modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
 core = ctqmc_solver.o
@@ -26,15 +24,20 @@ lev2 = ctqmc_record.o ctqmc_status.o ctqmc_stream.o
 lev3 = ctqmc_fourier.o ctqmc_spline.o ctqmc_util.o
 dump = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
+MAPI = ctqmc_api.o libMM.a
 
-objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(dump) $(main)
+objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(dump) $(main) $(MAPI)
 
-all: ctqmc_exe
+default: all
+
+all: exe
 
 api:
 	cp ../api/api.mod .
+	cp ../api/ctqmc_api.o .
 
 cssl:
+	cp ../../common/libMM.a .
 
 csml:
 	cp ../../common/constants.mod .
@@ -42,10 +45,12 @@ csml:
 	cp ../../common/spring.mod .
 	cp ../../common/stack.mod .
 
-ctqmc_exe: api csml $(objects)
-	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS) -L../../common/ -lMM
+exe: ctqmc_exe
+ctqmc_exe: api cssl csml $(objects)
+	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
 
-ctqmc_lib: $(objects)
+lib: ctqmc_lib
+ctqmc_lib: api cssl csml $(objects)
 	$(ARCHIVER) libctqmc.a $(objects)
 
 .f90.o:
@@ -56,6 +61,7 @@ clean:
 	rm -f *.o
 	rm -f ctqmc
 	rm -f libctqmc.a
+	rm -f libMM.a
 
 clean-dat:
 	rm -f *.dat
