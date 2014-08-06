@@ -1,3 +1,16 @@
+##
+##
+## Introduction
+## ============
+##
+## Makefile for iqist/src/ctqmc/api directory
+##
+## Usage
+## =====
+##
+## 'make' or 'make clean'
+##
+##
 
 .SUFFIXES: .f90
 
@@ -9,7 +22,7 @@ default: all
 
 all: build_mod
 
-build_mod : $(mod)
+build_mod: $(mod)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
