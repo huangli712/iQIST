@@ -403,7 +403,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
          endif
 
 ! initialize them
