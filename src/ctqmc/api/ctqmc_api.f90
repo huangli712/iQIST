@@ -1,6 +1,25 @@
 !!!-----------------------------------------------------------------------
 !!! project : lilac
 !!! program : api
+!!!           api@T_solver
+!!!           api@T_segment_solver
+!!!           api@T_general_solver
+!!!           api@T_segment_azalea
+!!!           api@T_segment_gardenia
+!!!           api@T_segment_narcissus
+!!!           api@T_general_begonia
+!!!           api@T_general_lavender
+!!!           api@T_general_pansy
+!!!           api@T_general_manjushaka
+!!!           api@T_mpi
+!!!           api@init_ctqmc
+!!!           api@exec_ctqmc
+!!!           api@stop_ctqmc
+!!!           api@set_hybf
+!!!           api@set_symm
+!!!           api@set_eimp
+!!!           api@get_grnf
+!!!           api@get_sigf
 !!! source  : ctqmc_api.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -200,9 +219,9 @@
          integer :: solver_is_ready = 1
      end type T_general_manjushaka
 
-!-------------------------------------------------------------------------
-!::: declare accessibility for module routines                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
      private :: T_solver
      private :: T_segment_solver
@@ -233,7 +252,7 @@
 
   contains ! encapsulated functionality
 
-!>>> initialize the ctqmc quantum impurity solver
+!!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
   subroutine init_ctqmc(I_mpi, I_solver)
      implicit none
 
