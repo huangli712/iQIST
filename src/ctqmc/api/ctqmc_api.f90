@@ -344,10 +344,10 @@
 
 ! external arguments
 ! size of grnf
-     integer :: size_t
+     integer, intent(in)      :: size_t
 
 ! impurity green's function
-     complex(dp) :: grnf_t(size_t)
+     complex(dp), intent(out) :: grnf_t(size_t)
 
      call cat_get_grnf(size_t, grnf_t)
 
