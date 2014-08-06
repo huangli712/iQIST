@@ -1,2 +1,2 @@
-# it is an empty Makefile
-# TO DO IT
+
+.SUFFIXES: .f90
