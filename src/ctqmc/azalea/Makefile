@@ -1,4 +1,16 @@
-
+##
+##
+## Introduction
+## ============
+##
+## Makefile for iqist/src/ctqmc/azalea directory
+##
+## Usage
+## =====
+##
+## 'make', 'make lib', 'make clean', 'make clean-dat' or 'make clean-all'
+##
+##
 
 .SUFFIXES: .f90
 
