@@ -256,52 +256,55 @@
   subroutine init_ctqmc(I_mpi, I_solver)
      implicit none
 
+! external arguments
 ! type structure of mpi
-     class(*) :: I_mpi
+     class(*), intent(in) :: I_mpi
 
 ! type structure of generic solver
-     class(*) :: I_solver
+     class(*), intent(in) :: I_solver
 
      call cat_init_ctqmc(I_mpi, I_solver)
 
      return
   end subroutine init_ctqmc
 
-!>>> execute the ctqmc quantum impurity solver
-     subroutine exec_ctqmc(iter)
-         implicit none
+!!>>> exec_ctqmc: execute the ctqmc quantum impurity solver
+  subroutine exec_ctqmc(iter)
+     implicit none
 
+! external arguments
 ! current iteration number
-         integer :: iter
+     integer, intent(in) :: iter
 
-         call cat_exec_ctqmc(iter)
+     call cat_exec_ctqmc(iter)
 
-         return
-     end subroutine exec_ctqmc
+     return
+  end subroutine exec_ctqmc
 
-!>>> stop the ctqmc quantum impurity solver
-     subroutine stop_ctqmc()
-         implicit none
+!!>>> stop_ctqmc: stop the ctqmc quantum impurity solver
+  subroutine stop_ctqmc()
+     implicit none
 
-         call cat_stop_ctqmc()
+     call cat_stop_ctqmc()
 
-         return
-     end subroutine stop_ctqmc
+     return
+  end subroutine stop_ctqmc
 
-!>>> setup the hybridization function
-     subroutine set_hybf(size_t, hybf_t)
-         implicit none
+!!>>> set_hybf: setup the impurity hybridization function
+  subroutine set_hybf(size_t, hybf_t)
+     implicit none
 
+! external arguments
 ! size of hybf
-         integer :: size_t
+     integer, intent(in)     :: size_t
 
 ! hybridization function
-         complex(dp) :: hybf_t(size_t)
+     complex(dp), intent(in) :: hybf_t(size_t)
 
-         call cat_set_hybf(size_t, hybf_t)
+     call cat_set_hybf(size_t, hybf_t)
 
-         return
-     end subroutine set_hybf
+     return
+  end subroutine set_hybf
 
 !>>> setup the symmetry vector
      subroutine set_symm(size_t, symm_t)
