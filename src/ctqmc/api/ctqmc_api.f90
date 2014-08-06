@@ -306,64 +306,68 @@
      return
   end subroutine set_hybf
 
-!>>> setup the symmetry vector
-     subroutine set_symm(size_t, symm_t)
-         implicit none
+!!>>> set_symm: setup the symmetry vector
+  subroutine set_symm(size_t, symm_t)
+     implicit none
 
+! external arguments
 ! size of symm
-         integer :: size_t
+     integer, intent(in) :: size_t
 
 ! symmetry vector
-         integer :: symm_t(size_t)
+     integer, intent(in) :: symm_t(size_t)
 
-         call cat_set_symm(size_t, symm_t)
+     call cat_set_symm(size_t, symm_t)
 
-         return
-     end subroutine set_symm
+     return
+  end subroutine set_symm
 
-!>>> setup the impurity level
-     subroutine set_eimp(size_t, eimp_t)
-         implicit none
+!!>>> set_eimp: setup the impurity energy level
+  subroutine set_eimp(size_t, eimp_t)
+     implicit none
 
+! external arguments
 ! size of eimp
-         integer :: size_t
+     integer :: size_t
 
-! impurity level
-         real(dp) :: eimp_t(size_t)
+! impurity energy level
+     real(dp) :: eimp_t(size_t)
 
-         call cat_set_eimp(size_t, eimp_t)
+     call cat_set_eimp(size_t, eimp_t)
 
-         return
-     end subroutine set_eimp
+     return
+  end subroutine set_eimp
 
-!>>> extract the impurity green's function
-     subroutine get_grnf(size_t, grnf_t)
-         implicit none
+!!>>> get_grnf: extract the impurity green's function
+  subroutine get_grnf(size_t, grnf_t)
+     implicit none
 
+! external arguments
 ! size of grnf
-         integer :: size_t
+     integer :: size_t
 
 ! impurity green's function
-         complex(dp) :: grnf_t(size_t)
+     complex(dp) :: grnf_t(size_t)
 
-         call cat_get_grnf(size_t, grnf_t)
+     call cat_get_grnf(size_t, grnf_t)
 
-         return
-     end subroutine get_grnf
+     return
+  end subroutine get_grnf
 
-!>>> extract the self-energy function
-     subroutine get_sigf(size_t, sigf_t)
-         implicit none
+!!>>> get_sigf: extract the self-energy function
+  subroutine get_sigf(size_t, sigf_t)
+     implicit none
 
+! external arguments
 ! size of sigf
-         integer :: size_t
+     integer, intent(in)      :: size_t
 
 ! self-energy function
-         complex(dp) :: sigf_t(size_t)
+     complex(dp), intent(out) :: sigf_t(size_t)
 
-         call cat_get_sigf(size_t, sigf_t)
+     call cat_get_sigf(size_t, sigf_t)
 
-         return
-     end subroutine get_sigf
+     return
+  end subroutine get_sigf
 
   end module api
