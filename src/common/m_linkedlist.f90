@@ -40,12 +40,12 @@
 !!
 !! 1. include linked list support
 !! ------------------------------
-!! 
+!!
 !! use linkedlist
 !!
 !! 2. define user own data type
 !! ----------------------------
-!! 
+!!
 !! type data_t
 !!     ! place your definition here
 !! end type data_t

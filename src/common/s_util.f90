@@ -318,7 +318,7 @@
      character( * ), intent(inout) :: string
 
 ! local parameters
-! ASCII number for tab space ' ' and tab 
+! ASCII number for tab space ' ' and tab
      integer, parameter :: SPACE = 32
      integer, parameter :: TAB   = 9
      integer, parameter :: NUL   = 0

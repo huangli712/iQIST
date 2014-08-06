@@ -1267,7 +1267,7 @@
 ! initialize lwork (lrwork) and allocate memory for array work (rwork)
      lwork = 2*ndim-1
      lrwork = 3*ndim-2
-     
+
      allocate(work(lwork),   stat=istat)
      allocate(rwork(lrwork), stat=istat)
      if ( istat /= 0 ) then
@@ -1397,7 +1397,7 @@
 ! initialize lwork (lrwork) and allocate memory for array work (rwork)
      lwork = 2*ndim-1
      lrwork = 3*ndim-2
-     
+
      allocate(work(lwork),     stat=istat)
      allocate(rwork(lrwork),   stat=istat)
      allocate(evec(ldim,ndim), stat=istat)

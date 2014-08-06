@@ -27,7 +27,7 @@
 !! --------------------
 !!
 !! use constants
-!! real(dp) :: A 
+!! real(dp) :: A
 !! A = one
 !!
 !! 2. partly import

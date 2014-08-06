@@ -36,7 +36,7 @@
 !!    will be ignored completely.
 !!
 !!    example:
-!!    
+!!
 !!    # this is a comment line
 !!    ! this is a comment line
 !!
@@ -57,7 +57,7 @@
 !!
 !!    nband = 4 ! you can use nband : 4
 !!    norbs : 8 ! you can use norbs = 8
-!! 
+!!
 !! 4. any space will be ignored. any blank lines will be skipped as well.
 !!
 !!    example:
@@ -74,7 +74,7 @@
 !!    4                   ! it is not valid
 !!
 !! 6. in the value part, now only integer, real(dp), logical, and character
-!!    data type are support. 
+!!    data type are support.
 !!
 !!    example:
 !!
@@ -97,7 +97,7 @@
 !!
 !! 9. if one key occurs in the input file for more than 1 times, only the
 !!    first occurrence is recognized.
-!! 
+!!
 !! Usage
 !! =====
 !!
@@ -137,7 +137,7 @@
 !! note: in the mpi environment, only the master node can execute these
 !! commands.
 !!
-!! note: the parser DO NOT check the correctness (including number of 
+!! note: the parser DO NOT check the correctness (including number of
 !! values, key's name, and datatype of value) of the input file. So, please
 !! always monitor the output of ctqmc code which use this parser to parse
 !! the input file.
@@ -156,7 +156,7 @@
 !!
 
   module parser
-     use linkedlist 
+     use linkedlist
 
      implicit none
 
@@ -455,7 +455,7 @@
      integer  :: q
      integer  :: offset
 
-! auxiliary variables used in the converting process 
+! auxiliary variables used in the converting process
      integer  :: int_aux
      logical  :: bool_aux
      real(dp) :: real_aux

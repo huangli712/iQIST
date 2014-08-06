@@ -8,10 +8,10 @@
 !!!           02/27/2010 by li huang
 !!!           07/09/2014 by li huang
 !!! purpose : define my own mpi calls, inspired by famous quantum espresso
-!!!           code. we note that the original mpi interfaces/subroutines 
+!!!           code. we note that the original mpi interfaces/subroutines
 !!!           are rather complicated for newbies, thus we try to wrap the
 !!!           most important and useful (not all) mpi subroutines (in our
-!!!           opinion) in this module to facilite the usage of mpi. 
+!!!           opinion) in this module to facilite the usage of mpi.
 !!! status  : unstable
 !!! comment : this module has been tested under the following environment:
 !!!               mpich1    1.2.7p1
@@ -53,7 +53,7 @@
 !! Usage
 !! =====
 !!
-!! 1. include mpi support 
+!! 1. include mpi support
 !! ----------------------
 !!
 !! use mmpi
