@@ -32,7 +32,7 @@
 ##
 ## Archiver. It is used to pack the objects into a library. Do not modify
 ## it for ever.
-##           
+##
 ## MPI
 ## ---
 ##
@@ -79,7 +79,7 @@
 ##
 ## Used to specify what types of check should be done. '-warn all' means
 ## the check is done in compiling. '-check all' means the check will be
-## done in running. '-traceback' enable us to track the exact position 
+## done in running. '-traceback' enable us to track the exact position
 ## (line number and file name) where the error occurs. '-g' enable the
 ## compiler to generate debug information and embed them into the final
 ## program. Note that '-check all', '-traceback', and '-g' opinions will
@@ -123,7 +123,7 @@
 ##
 ## Specify the external libraries. Now the iqist software package depends
 ## on LAPACK and BLAS heavily. To achieve good performance, the highly
-## optimized LAPACK and BLAS implementations are essential. Here we want 
+## optimized LAPACK and BLAS implementations are essential. Here we want
 ## to recommend the OpenBLAS and Intel MKL.
 ##
 ## Author
