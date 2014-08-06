@@ -215,6 +215,9 @@
      public  :: T_general_begonia
      public  :: T_general_lavender
 
+     public  :: T_general_pansy
+     public  :: T_general_manjushaka
+
      public  :: T_mpi
 
      public  :: init_ctqmc
@@ -231,19 +234,19 @@
   contains ! encapsulated functionality
 
 !>>> initialize the ctqmc quantum impurity solver
-     subroutine init_ctqmc(I_mpi, I_solver)
-         implicit none
+  subroutine init_ctqmc(I_mpi, I_solver)
+     implicit none
 
 ! type structure of mpi
-         class(*) :: I_mpi
+     class(*) :: I_mpi
 
 ! type structure of generic solver
-         class(*) :: I_solver
+     class(*) :: I_solver
 
-         call cat_init_ctqmc(I_mpi, I_solver)
+     call cat_init_ctqmc(I_mpi, I_solver)
 
-         return
-     end subroutine init_ctqmc
+     return
+  end subroutine init_ctqmc
 
 !>>> execute the ctqmc quantum impurity solver
      subroutine exec_ctqmc(iter)
