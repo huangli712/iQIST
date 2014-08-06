@@ -232,7 +232,7 @@
      end type T_segment_solver
 
 ! define type T_general_solver, which is used to describe the ctqmc
-! impurity solver which based on general matrix formulation 
+! impurity solver which based on general matrix formulation
 ! note: it can not be used directly
      type, extends (T_solver) :: T_general_solver
          character(len=10) :: solver_type = 'GENERAL'
@@ -315,7 +315,7 @@
      end type T_general_lavender
 
 ! define type T_general_pansy, which is used to describe the ctqmc
-! impurity solver code pansy 
+! impurity solver code pansy
 ! TODO
      type, extends (T_general_solver) :: T_general_pansy
          character(len=10) :: solver_name = 'PANSY'
