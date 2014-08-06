@@ -41,9 +41,9 @@
 ! dp: number precision, double precision for reals
      integer, private, parameter :: dp = kind(1.0d0)
 
-!-------------------------------------------------------------------------
-!::: declare global data structure                                     :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global data structure                                    <<<
+!!========================================================================
 
 ! define type T_mpi, which is used to describe the mpi environment
      type :: T_mpi
@@ -55,7 +55,8 @@
          integer :: cy
      end type T_mpi
 
-! define type T_solver, which is used to describe the ctqmc impurity solver
+! define type T_solver, which is used to describe the generic abstract
+! ctqmc impurity solver
 ! note: it can not be used directly
      type :: T_solver
          integer :: isscf
@@ -91,26 +92,30 @@
          real(dp) :: alpha
      end type T_solver
 
-! define type T_segment_solver, which is used to describe the ctqmc impurity solver
+! define type T_segment_solver, which is used to describe the ctqmc
+! impurity solver which based on segment representation
 ! note: it can not be used directly
      type, extends (T_solver) :: T_segment_solver
          character(len=10) :: solver_type = 'SEGMENT'
      end type T_segment_solver
 
-! define type T_general_solver, which is used to describe the ctqmc impurity solver
+! define type T_general_solver, which is used to describe the ctqmc
+! impurity solver which based on general matrix formulation 
 ! note: it can not be used directly
      type, extends (T_solver) :: T_general_solver
          character(len=10) :: solver_type = 'GENERAL'
      end type T_general_solver
 
-! define type T_segment_azalea, which is used to describe the ctqmc impurity solver
+! define type T_segment_azalea, which is used to describe the ctqmc
+! impurity solver code azalea
      type, extends (T_segment_solver) :: T_segment_azalea
          character(len=10) :: solver_name = 'AZALEA'
          integer :: solver_id = 101
          integer :: solver_ready = 1
      end type T_segment_azalea
 
-! define type T_segment_gardenia, which is used to describe the ctqmc impurity solver
+! define type T_segment_gardenia, which is used to describe the ctqmc
+! impurity solver code gardenia
      type, extends (T_segment_solver) :: T_segment_gardenia
          character(len=10) :: solver_name = 'GARDENIA'
          integer :: solver_id = 102
@@ -126,7 +131,8 @@
          integer :: nbfrq
      end type T_segment_gardenia
 
-! define type T_segment_narcissus, which is used to describe the ctqmc impurity solver
+! define type T_segment_narcissus, which is used to describe the ctqmc
+! impurity solver code narcissus
      type, extends (T_segment_solver) :: T_segment_narcissus
          character(len=10) :: solver_name = 'NARCISSUS'
          integer :: solver_id = 103
@@ -146,21 +152,23 @@
          real(dp) :: wc
      end type T_segment_narcissus
 
-! define type T_general_begonia, which is used to describe the ctqmc impurity solver
+! define type T_general_begonia, which is used to describe the ctqmc
+! impurity solver code begonia
      type, extends (T_general_solver) :: T_general_begonia
          character(len=10) :: solver_name = 'BEGONIA'
          integer :: solver_id = 201
-         integer :: solver_ready = 0
+         integer :: solver_ready = 1
 
          integer :: nzero
          integer :: npart
      end type T_general_begonia
 
-! define type T_general_lavender, which is used to describe the ctqmc impurity solver
+! define type T_general_lavender, which is used to describe the ctqmc
+! impurity solver code lavender
      type, extends (T_general_solver) :: T_general_lavender
          character(len=10) :: solver_name = 'LAVENDER'
          integer :: solver_id = 202
-         integer :: solver_ready = 0
+         integer :: solver_ready = 1
 
          integer :: isort
          integer :: isvrt
@@ -173,6 +181,24 @@
          integer :: nbfrq
          integer :: npart
      end type T_general_lavender
+
+! define type T_general_pansy, which is used to describe the ctqmc
+! impurity solver code pansy 
+! TODO
+     type, extends (T_general_solver) :: T_general_pansy
+         character(len=10) :: solver_name = 'PANSY'
+         integer :: solver_id = 301
+         integer :: solver_ready = 1
+     end type T_general_pansy
+
+! define type T_general_manjushaka, which is used to describe the ctqmc
+! impurity solver code manjushaka
+! TODO
+     type, extends (T_general_solver) :: T_general_manjushaka
+         character(len=10) :: solver_name = 'MANJUSHAKA'
+         integer :: solver_id = 302
+         integer :: solver_ready = 1
+     end type T_general_manjushaka
 
 !-------------------------------------------------------------------------
 !::: declare accessibility for module routines                         :::
