@@ -45,12 +45,12 @@ csml:
 	cp ../../common/spring.mod .
 	cp ../../common/stack.mod .
 
-exe: ctqmc_exe
-ctqmc_exe: api cssl csml $(objects)
+exe: api cssl csml ctqmc_exe
+ctqmc_exe: $(objects)
 	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
 
-lib: ctqmc_lib
-ctqmc_lib: api cssl csml $(objects)
+lib: api cssl csml ctqmc_lib
+ctqmc_lib: $(objects)
 	$(ARCHIVER) libctqmc.a $(objects)
 
 .f90.o:
