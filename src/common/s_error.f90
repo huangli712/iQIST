@@ -170,3 +170,8 @@
 
      return
   end subroutine s_write_message
+
+  program test
+      call s_print_error('this', 'a test')
+      print *, 'hehe'
+  end program test
