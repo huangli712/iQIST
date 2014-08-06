@@ -137,6 +137,11 @@
 !! note: in the mpi environment, only the master node can execute these
 !! commands.
 !!
+!! note: the parser DO NOT check the correctness (including number of 
+!! values, key's name, and datatype of value) of the input file. So, please
+!! always monitor the output of ctqmc code which use this parser to parse
+!! the input file.
+!!
 !! 5. destroy parser
 !! -----------------
 !!
