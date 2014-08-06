@@ -100,7 +100,7 @@
 !!========================================================================
 
 ! dp: number precision, double precision for reals
-     integer, private, parameter :: dp = kind(1.0d0)
+     integer, private, parameter :: dp    = kind(1.0d0)
 
 ! mystd: device descriptor, console output
      integer, private, parameter :: mystd = 6
