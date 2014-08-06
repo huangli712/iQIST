@@ -1,24 +1,44 @@
-!-------------------------------------------------------------------------
-! project : azalea
-! program : api        module
-! source  : ctqmc_api.f90
-! type    : module
-! author  : li huang (email:huangli712@gmail.com)
-! history : 01/07/2014 by li huang
-!           01/11/2014 by li huang
-!           01/13/2014 by li huang
-! purpose : the purpose of this module is to define an common application
-!           programming interface (CAPI) for continuous-time quantum Monte
-!           Carlo impurity solver
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : lilac
+!!! program : api
+!!! source  : ctqmc_api.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/07/2014 by li huang
+!!!           01/11/2014 by li huang
+!!!           01/13/2014 by li huang
+!!! purpose : the purpose of this module is to define a generic and robust
+!!!           application programming interface (CAPI) for continuous-time
+!!!           quantum Monte Carlo impurity solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
+!!
 
   module api
-!!     use constants, only : dp
-
      implicit none
 
+!!========================================================================
+!!>>> declare global parameters                                        <<<
+!!========================================================================
+
+! dp: number precision, double precision for reals
      integer, private, parameter :: dp = kind(1.0d0)
 
 !-------------------------------------------------------------------------
