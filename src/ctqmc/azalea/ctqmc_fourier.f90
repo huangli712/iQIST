@@ -30,6 +30,7 @@
   subroutine ctqmc_fourier_htau(htau, hybf)
      use constants
      use control
+     use context, only : tmesh, rmesh
 
      implicit none
 
@@ -60,7 +61,7 @@
              raux = htau(:,j,i)
 
 ! call the service layer
-             call ctqmc_fourier_forward(ntime, raux, mfreq, caux)
+             call s_fft_forward(ntime, tmesh, raux, mfreq, rmesh, caux)
 
 ! copy the matsubara frequency data to hybf
              hybf(:,j,i) = caux
@@ -75,6 +76,7 @@
   subroutine ctqmc_fourier_hybf(hybf, htau)
      use constants
      use control
+     use context, only : tmesh, rmesh
 
      implicit none
 
@@ -109,7 +111,7 @@
              caux = hybf(:,j,i)
 
 ! call the service layer
-             call ctqmc_fourier_backward(mfreq, caux, ntime, raux)
+             call s_fft_backward(mfreq, rmesh, caux, ntime, tmesh, raux, beta)
 
 ! copy imaginary time data to htau
              htau(:,j,i) = raux
