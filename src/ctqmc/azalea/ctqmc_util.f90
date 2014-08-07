@@ -188,8 +188,8 @@
 !!>>> ctqmc_four_hybf: fourier hybf to htau, from matsubara frequency to
 !!>>> imaginary time
   subroutine ctqmc_four_hybf(hybf, htau)
-     use constants, only : dp
-     use control, only : ntime, norbs, mfreq
+     use constants, only : dp, zero, czero, eps6
+     use control, only : ntime, norbs, mfreq, beta
      use context, only : tmesh, rmesh
 
      implicit none
@@ -287,8 +287,8 @@
 !!>>> ctqmc_make_uumat: to build general U interaction matrix: uumat, using
 !!>>> my own style
   subroutine ctqmc_make_uumat(uumat)
-     use constants
-     use control
+     use constants, only : dp, zero
+     use control, only : norbs, nband, Uc, Jz
 
      implicit none
 
@@ -300,7 +300,6 @@
 ! loop index
      integer  :: i
      integer  :: j
-
      integer  :: k
      integer  :: m
 
@@ -324,7 +323,7 @@
                  endif
              else
                  ut(k) = Uc - 3.0_dp * Jz
-             endif
+             endif ! back if ( i <= nband .and. j > nband ) block
 
              uumat(i,j) = ut(k)
              uumat(j,i) = ut(k)
