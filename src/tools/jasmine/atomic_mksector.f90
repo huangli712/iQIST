@@ -21,11 +21,11 @@
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N 
 subroutine atomic_mksectors_n()
-    use constants,         only: dp, mytmp, zero
-    use control,           only: norbs
-    use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector,          only: alloc_one_sector, alloc_one_fmat
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
+    use constants
+    use control
+    use m_basis_fullspace
+    use m_sector
+    use m_glob_sectors
 
     implicit none
 
@@ -44,7 +44,7 @@ subroutine atomic_mksectors_n()
 
     !----------------------------------------------------------------
     ! allocate memory for global variables of sectors
-    nsectors = norbs+1
+    nsectors = norbs + 1
     max_dim_sect = 0
     ave_dim_sect = zero
     call alloc_m_glob_sectors()
@@ -118,6 +118,7 @@ subroutine atomic_mksectors_n()
     ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
+    write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
@@ -137,11 +138,11 @@ end subroutine atomic_mksectors_n
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Sz 
 subroutine atomic_mksectors_nsz()
-    use constants,         only: dp, mytmp, zero
-    use control,           only: norbs, ncfgs
-    use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector,          only: alloc_one_sector, alloc_one_fmat
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
+    use constants
+    use control
+    use m_basis_fullspace
+    use m_sector
+    use m_glob_sectors
 
     implicit none
 
@@ -214,7 +215,7 @@ subroutine atomic_mksectors_nsz()
     do i=1, ncfgs    
         myntot = fock_good_ntot(i)
         mysz   = fock_good_sz(i)
-        if (nsect==0) then
+        if (nsect==0 ) then
             sect_good_ntot(1) = myntot
             sect_good_sz(1)   = mysz
             nsect = nsect + 1
@@ -328,6 +329,7 @@ subroutine atomic_mksectors_nsz()
     ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
+    write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
@@ -353,11 +355,11 @@ end subroutine atomic_mksectors_nsz
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Sz, PS
 subroutine atomic_mksectors_nszps()
-    use constants,         only: dp, mytmp, zero
-    use control,           only: nband, norbs, ncfgs
-    use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector,          only: alloc_one_sector, alloc_one_fmat         
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
+    use constants
+    use control
+    use m_basis_fullspace
+    use m_sector
+    use m_glob_sectors
 
     implicit none
 
@@ -571,6 +573,7 @@ subroutine atomic_mksectors_nszps()
     ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
+    write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |       PS(i) |     nd&
@@ -597,11 +600,11 @@ end subroutine atomic_mksectors_nszps
 ! a sector consists of some many particle Fock states labeled by 
 ! good quantum number N, Jz 
 subroutine atomic_mksectors_njz()
-    use constants,         only: dp, mytmp, zero
-    use control,           only: norbs, ncfgs
-    use m_basis_fullspace, only: dim_sub_n, bin_basis
-    use m_sector,          only: alloc_one_sector, alloc_one_fmat         
-    use m_glob_sectors,    only: alloc_m_glob_sectors, nsectors, sectors, max_dim_sect, ave_dim_sect
+    use constants
+    use control
+    use m_basis_fullspace
+    use m_sector
+    use m_glob_sectors
 
     implicit none
 
@@ -789,6 +792,7 @@ subroutine atomic_mksectors_njz()
     ave_dim_sect = counter / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
+    write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Jz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '

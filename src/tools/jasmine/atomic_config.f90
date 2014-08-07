@@ -34,7 +34,6 @@ subroutine atomic_config()
     nspin = 2            ! number of spins
     norbs = nband*nspin  ! number of orbits
     ncfgs = 2**norbs     ! number of many-body configurations
- 
     !----------------------------------------------------------------
     Uc = 4.00_dp         ! intraorbital Coulomb interaction
     Uv = 2.00_dp         ! interorbital Coulomb interaction

@@ -44,8 +44,6 @@
      use control
      use context
 
-     use m_skiplists
-
      implicit none
 
 ! external arguments
@@ -679,8 +677,6 @@
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
      endif
-
-     call destroy_skiplists(skip_lists)
 
 !=========================================================================
 !>>> finishing quantum impurity solver                                 <<<

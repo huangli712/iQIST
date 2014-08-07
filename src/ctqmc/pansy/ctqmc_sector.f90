@@ -16,7 +16,9 @@
 !>>> data structure for good quantum number algorithm
   module m_sector
      use constants
-  
+     use control
+     use context
+ 
      implicit none
   
 ! the fmat between any two sectors, it is just a matrix
@@ -53,9 +55,6 @@
 ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
 ! F|i> --> |j>
          integer, pointer :: next_sector(:,:)
-
-! for trunk of Hilbert space
-         integer, pointer :: next_sector_trunk(:,:)
 
 ! the fmat between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
@@ -135,7 +134,6 @@
   
         nullify( one_sector%myeigval )
         nullify( one_sector%next_sector )
-        nullify( one_sector%next_sector_trunk )
         nullify( one_sector%myfmat )
   
         return
@@ -153,7 +151,6 @@
   
         allocate(one_sector%myeigval(one_sector%ndim))
         allocate(one_sector%next_sector(one_sector%nops,0:1))
-        allocate(one_sector%next_sector_trunk(one_sector%nops,0:1))
         allocate(one_sector%myfmat(one_sector%nops,0:1))
         allocate(one_sector%final_product(one_sector%ndim, one_sector%ndim, 2))
         allocate(one_sector%occu(one_sector%ndim, one_sector%ndim, one_sector%nops))
@@ -162,7 +159,6 @@
 ! init them
         one_sector%myeigval = zero
         one_sector%next_sector = 0
-        one_sector%next_sector_trunk = 0
         one_sector%final_product = zero
         one_sector%occu = zero
         one_sector%double_occu = zero
@@ -191,7 +187,6 @@
   
         if (associated(one_sector%myeigval))            deallocate(one_sector%myeigval)
         if (associated(one_sector%next_sector))         deallocate(one_sector%next_sector)
-        if (associated(one_sector%next_sector_trunk))   deallocate(one_sector%next_sector_trunk)
         if (associated(one_sector%final_product))       deallocate(one_sector%final_product)
         if (associated(one_sector%occu))                deallocate(one_sector%occu)
         if (associated(one_sector%double_occu))         deallocate(one_sector%double_occu)
@@ -255,4 +250,99 @@
          return
      end subroutine ctqmc_deallocate_memory_sect
 
+!>>> subroutine used to build a string
+     subroutine ctqmc_make_string(csize, index_t_loc, is_string, string)
+        use constants
+        use control
+        use context
+
+        implicit none
+
+! external variables
+! the number of fermion operators
+        integer, intent(in) :: csize
+
+! the address index of fermion operators
+        integer, intent(in) :: index_t_loc(mkink)
+
+! whether it is a string
+        logical, intent(out) :: is_string(nsectors)
+
+! the string
+        integer, intent(out) :: string(csize+1, nsectors)
+
+! local variables
+! sector index
+        integer :: curr_sect_left
+        integer :: next_sect_left
+        integer :: curr_sect_right
+        integer :: next_sect_right
+        integer :: left
+        integer :: right
+
+! flvr and type of fermion operators
+        integer :: vf
+        integer :: vt
+
+! loop index
+        integer :: i,j
+
+!--------------------------------------------------------------------
+        is_string = .true.
+        string = -1
+
+! we build a string from right to left, that is,  beta <------- 0
+! build the string from the beginning sector, that is:
+! S_a1(q1)-->q2, S_a2(q2)-->q3, ... S_ai(qi)-->qi+1, ..., Sak(qk)-->q1
+! if we find some qi==0, we cycle this sector immediately
+        do i=1,nsectors
+            curr_sect_left = i
+            curr_sect_right = i
+            next_sect_left = i
+            next_sect_right = i
+            left = 0
+            right = csize + 1
+            do j=1,csize
+                if ( mod(j,2) == 1) then
+                    left = left + 1
+                    string(left,i) = curr_sect_left 
+                    vt = type_v( index_t_loc(left) )
+                    vf = flvr_v( index_t_loc(left) ) 
+                    next_sect_left = sectors(curr_sect_left)%next_sector(vf,vt)
+                    if (next_sect_left == -1 ) then
+                        is_string(i) = .false. 
+                        EXIT   ! finish check, exit
+                    endif
+                    curr_sect_left = next_sect_left
+                else
+                    right = right - 1
+                    vt = type_v( index_t_loc(right) )
+                    vf = flvr_v( index_t_loc(right) ) 
+                    vt = mod(vt+1,2)
+                    next_sect_right = sectors(curr_sect_right)%next_sector(vf,vt)
+                    if (next_sect_right == -1 ) then
+                        is_string(i) = .false. 
+                        EXIT   ! finish check, exit
+                    endif
+                    string(right,i) = next_sect_right
+                    curr_sect_right = next_sect_right
+                endif
+            enddo 
+
+! if it doesn't form a string, we cycle it, go to the next sector
+            if (is_string(i) .eqv. .false.) then
+                cycle
+            endif
+! add the last sector to string, and check whether string(csize+1,i) == string(1,i)
+! important for csize = 0
+            string(csize+1,i) = i
+! this case will generate a non-diagonal block, it will not contribute to trace 
+            if ( next_sect_right /= next_sect_left ) then
+                is_string(i) = .false.
+            endif
+        enddo ! over i={1,nsectors} loop
+
+        return
+     end subroutine ctqmc_make_string
+ 
   end module m_sector

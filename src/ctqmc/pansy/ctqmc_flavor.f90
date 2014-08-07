@@ -21,9 +21,6 @@
 !           cat_lshift_flavor
 !           cat_rshift_flavor <<<---
 !           ctqmc_make_ztrace
-!           ctqmc_make_string
-!           ctqmc_make_nparts
-!           cat_sector_ztrace
 !           ctqmc_make_evolve <<<---
 !           ctqmc_make_equate
 !           ctqmc_make_search <<<---
@@ -2455,7 +2452,7 @@
 ! (1) use good quantum number algorithm, split the total Hibert space to
 !     small subspace, the dimension of F mat will be smaller.
 ! (2) split the imaginary time axis into many parts, save the matrices 
-!     product of that part, which may be used by next Monte Caro move.
+!     products of that part, which may be used by next Monte Carlo move.
 ! NOTE: you should carefully choose npart in order to obtain the best speedup.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants
@@ -2463,37 +2460,38 @@
      use context
 
      use m_sector
+     use m_npart
 
      implicit none
 
 ! external arguments
-! the mode of how to calculating trace
+! different type of Monte Carlo moves
      integer,  intent(in)  :: cmode
 
-! the total number of operators for current diagram
+! total number of operators for current diagram
      integer,  intent(in)  :: csize
 
-! the calculated trace
+! calculated trace
      real(dp), intent(out) :: trace
 
-! imaginary time value of operator A, only valid in cmode = 1 or 2
+! imaginary time value of operator A, only needed in cmode = 1 or 2
      real(dp), intent(in) :: tau_s
 
-! imaginary time value of operator B, only valid in cmode = 1 or 2
+! imaginary time value of operator B, only needed in cmode = 1 or 2
      real(dp), intent(in) :: tau_e
 
 ! local variables
+! whether it forms a string
+     logical :: is_string(nsectors)
+
+! sector index in a string
+     integer :: string(csize+1, nsectors)
+
 ! local version of index_t
      integer :: index_t_loc(mkink)
 
 ! local version of expt_t
      real(dp) :: expt_t_loc(ncfgs)
-
-! whether it is a string
-     logical :: is_string(nsectors)
-
-! a string represents the evolution of sectors
-     integer :: string(csize+1,nsectors) 
 
 ! the trace for each sector
      real(dp) :: trace_sector(nsectors)
@@ -2522,13 +2520,15 @@
      end select
 
 ! build string for all the sectors
+! it will return is_string and string
      call ctqmc_make_string(csize, index_t_loc, is_string, string)
 
-! make npart
+! determine which part should be recalculated
+! it will modify is_save internal
      call ctqmc_make_nparts(cmode, csize, index_t_loc, tau_s, tau_e)
 
-!--------------------------------------------------------------------
-! begin to calculate the trace of each sector one by one
+!------------------------------------------------------------------------
+! calculate the trace of each sector one by one
      is_copy = .false.
      trace_sector = zero
      trace = zero
@@ -2537,7 +2537,8 @@
              trace_sector(i) = zero
              sectors(i)%final_product(:,:,1) = zero
          else
-             call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sector(i))
+             call cat_sector_ztrace(csize, string(:,i), index_t_loc, &
+                                           expt_t_loc, trace_sector(i))
          endif
          trace = trace + trace_sector(i)
      enddo 
@@ -2549,403 +2550,10 @@
              ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
          enddo
      enddo
-!--------------------------------------------------------------------
+!------------------------------------------------------------------------
 
      return
   end subroutine ctqmc_make_ztrace
-
-!>>> subroutine used to build a string
-  subroutine ctqmc_make_string(csize, index_t_loc, is_string, string)
-     use constants
-     use control
-     use context
-
-     use m_sector
-
-     implicit none
-
-! external variables
-! the number of fermion operators
-     integer, intent(in) :: csize
-
-! the address index of fermion operators
-     integer, intent(in) :: index_t_loc(mkink)
-
-! whether it is a string
-     logical, intent(out) :: is_string(nsectors)
-
-! the string
-     integer, intent(out) :: string(csize+1, nsectors)
-
-! local variables
-! sector index
-     integer :: curr_sect
-     integer :: next_sect
-
-! flvr and type of fermion operators
-     integer :: vf
-     integer :: vt
-
-! loop index
-     integer :: i,j
-
-!--------------------------------------------------------------------
-     is_string(:) = .true.
-     string = -1
-
-! we build a string from right to left, that is,  beta <------- 0
-! build the string from the beginning sector, that is:
-! S_a1(q1)-->q2, S_a2(q2)-->q3, ... S_ai(qi)-->qi+1, ..., Sak(qk)-->q1
-! if we find some qi==0, we cycle this sector immediately
-     do i=1,nsectors
-         curr_sect = i
-! loop over all the operators
-         do j=1,csize
-             string(j,i) = curr_sect 
-             vt = type_v( index_t_loc(j) )
-             vf = flvr_v( index_t_loc(j) ) 
-             next_sect = sectors(curr_sect)%next_sector_trunk(vf,vt)
-             if (next_sect == -1 ) then
-                 is_string(i) = .false. 
-                 EXIT   ! finish check, exit
-             endif
-             curr_sect = next_sect
-         enddo 
-! if it doesn't form a string, we cycle it, go to the next sector
-         if (is_string(i) .eqv. .false.) then
-             cycle
-         endif
-! add the last sector to string, and check whether string(csize+1,i) == string(1,i)
-! important for csize = 0
-         string(csize+1,i) = curr_sect 
-         if ( string(csize+1,i) /= string(1,i) ) then
-             call ctqmc_print_error('ctqmc_make_ztrace','the first sector &
-                                         is not equal to the last sector')
-         endif
-     enddo ! over i={1,nsectors} loop
-
-     return
-  end subroutine ctqmc_make_string
-
-!>>> subroutine used to determin is_save and part_indx
-  subroutine ctqmc_make_nparts(cmode, csize, index_t_loc, tau_s, tau_e)
-     use constants 
-     use control
-     use context
- 
-     use m_sector
-
-     implicit none
-
-! external arguments
-! the mode of how to calculating trace
-     integer,  intent(in)  :: cmode
-
-! the total number of operators for current diagram
-     integer,  intent(in)  :: csize
-
-! local version of index_t
-     integer, intent(in) :: index_t_loc(mkink)
-
-! imaginary time value of operator A, only valid in cmode = 1 or 2
-     real(dp), intent(in) :: tau_s
-
-! imaginary time value of operator B, only valid in cmode = 1 or 2
-     real(dp), intent(in) :: tau_e
-     
-! local variables
-! length in imaginary time axis for each part
-     real(dp) :: interval
-
-! number of fermion operators for each part
-     integer :: nop(npart)
-
-! position of the operator A and operator B, index of part
-     integer  :: tis
-     integer  :: tie
-     integer  :: tip
-
-! loop index
-     integer :: i, j
-
-! init key arrays
-     nop = 0
-     ops = 0
-     ope = 0
-
-! is_save: how to process each part for each success string
-! is_save = 0: the matrices product for this part has been calculated
-!              previoulsy, another part_indx is needed to label which
-!              part we can fetch and use it directly.
-! is_save = 1: this part should be recalculated, and the result must be
-!              stored in saved_a, and saved_a_nm arrays if this Monte Caro
-!              move has been accepted.
-! is_save = 2: this part is empty, we don't need to do anything with them.
-! first, set it to be 0
-    is_save(:,:,1) = is_save(:,:,2)
-
-!--------------------------------------------------------------------
-! when npart > 1, we use npart alogithm
-! otherwise, recalculate all the matrices products
-     if ( npart == 1 ) then
-         nop(1) = csize
-         ops(1) = 1
-         ope(1) = csize
-         if (nop(1) <= 0) then
-             is_save(1,:,1) = 2
-         else
-             is_save(1,:,1) = 1
-         endif
-     elseif ( npart > 1) then
-
-         interval = beta / real(npart)
-! calculate number of operators for each part
-         do i=1,csize
-             j = ceiling( time_v( index_t_loc(i) ) / interval )
-             nop(j) = nop(j) + 1
-         enddo 
-! if no operators in this part, ignore them
-         do i=1, npart
-             if (nop(i) <= 0) then
-                 is_save(i,:,1) = 2 
-             endif
-         enddo
-! calculate the start and end index of operators for each part
-         do i=1,npart
-             if ( nop(i) > 0 ) then
-                 ops(i) = 1
-                 do j=1,i-1
-                     ops(i) = ops(i) + nop(j)
-                 enddo 
-                 ope(i) = ops(i) + nop(i) - 1
-             endif 
-         enddo 
-
-! when cmode == 1 or comde == 2, we can use some saved matrices products 
-! by previous accepted Monte Carlo move
-         if (cmode == 1 .or. cmode == 2) then
-! get the position of operator A and operator B
-             tis = ceiling( tau_s / interval )
-             tie = ceiling( tau_e / interval )
-! operator A:
-             if (nop(tis)>0) then
-                 is_save(tis,:,1) = 1
-             endif
-! special attention: if operator A is on the left or right boundary, then
-! the neighbour part should be recalculated as well
-             if ( nop(tis) > 0 ) then
-                 if ( tau_s >= time_v( index_t_loc( ope(tis) ) ) ) then
-                     tip = tis + 1
-                     do while ( tip <= npart )
-                         if ( nop(tip) > 0 ) then
-                             is_save(tip,:,1) = 1;  EXIT
-                         endif
-                         tip = tip + 1
-                     enddo ! over do while loop
-                 endif
-! for remove an operator, nop(tis) may be zero
-             else
-                 tip = tis + 1
-                 do while ( tip <= npart )
-                     if ( nop(tip) > 0 ) then
-                         is_save(tip,:,1) = 1; EXIT
-                     endif
-                     tip = tip + 1
-                 enddo ! over do while loop
-             endif ! back if ( nop(tis) > 0 ) block
-
-! operator B:
-             if (nop(tie)>0) then
-                 is_save(tie,:,1) = 1
-             endif
-! special attention: if operator B is on the left or right boundary, then
-! the neighbour part should be recalculated as well
-             if ( nop(tie) > 0 ) then
-                 if ( tau_e >= time_v( index_t_loc( ope(tie) ) ) ) then
-                     tip = tie + 1
-                     do while ( tip <= npart )
-                         if ( nop(tip) > 0 ) then
-                             is_save(tip,:,1) = 1; EXIT
-                         endif
-                         tip = tip + 1
-                     enddo ! over do while loop
-                 endif
-! for remove an operator, nop(tie) may be zero
-             else
-                 tip = tie + 1
-                 do while ( tip <= npart )
-                     if ( nop(tip) > 0 ) then
-                         is_save(tip,:,1) = 1; EXIT
-                     endif
-                     tip = tip + 1
-                 enddo ! over do while loop
-             endif ! back if ( nop(tie) > 0 ) block
-
-! when cmode == 3 or cmode == 4, recalculate all the matrices products 
-         elseif (cmode == 3 .or. cmode == 4) then
-             do i=1, nsectors
-                 do j=1, npart
-                     if (is_save(j,i,1) == 0) then
-                         is_save(j,i,1) = 1
-                     endif  
-                 enddo
-             enddo
-         endif ! back if (cmode == 1 .or. cmode == 2) block
-
-! npart should be larger than zero
-     else
-         call ctqmc_print_error('ctqmc_make_ztrace', 'npart is small than 1, &
-                                 it should be larger than zero')
-     endif ! back if (npart == 1) block
-!--------------------------------------------------------------------
-
-     return
-  end subroutine ctqmc_make_nparts
-
-!>>> calculate the trace for one sector
-  subroutine cat_sector_ztrace(csize, string, index_t_loc, expt_t_loc, trace)
-     use constants
-     use control
-     use context
-
-     use m_sector
-
-     implicit none
-
-! external variables
-! the number of total fermion operators
-     integer, intent(in) :: csize
-
-! the string for this sector
-     integer, intent(in) :: string(csize+1)
-
-! the address index of fermion operators
-     integer, intent(in) :: index_t_loc(mkink)
-
-! the diagonal elements of last time-evolution matrices
-     real(dp), intent(in) :: expt_t_loc(ncfgs)
-
-! the calculated trace of this sector
-     real(dp), intent(out) :: trace
-
-! local variables
-! temp matrices
-     real(dp) :: right_mat(max_dim_sect, max_dim_sect)
-     real(dp) :: tmp_mat(max_dim_sect, max_dim_sect)
-
-! temp index
-     integer :: dim1, dim2, dim3, dim4
-     integer :: isect, sect1, sect2
-     integer :: indx
-     integer :: vt, vf
-
-! loop index
-     integer :: i,j,k,l
-
-! init isect
-     isect = string(1)
-
-!--------------------------------------------------------------------
-! from right to left: beta <------ 0
-     right_mat = zero
-     dim1 = sectors(string(1))%ndim
-     do i=1, max_dim_sect
-         right_mat(i,i) = one
-     enddo
-
-! loop over all the parts
-     do i=1, npart
-
-! this part has been calculated previously, just use its results
-         if (is_save(i,isect,1) == 0) then
-             sect1 = saved_a_nm(1,i,isect)
-             sect2 = saved_a_nm(2,i,isect)
-             dim2 = sectors(sect1)%ndim
-             dim3 = sectors(sect2)%ndim
-             call dgemm( 'N', 'N', dim2, dim1, dim3,  one,    &
-                          saved_a(:,:,i,isect), max_dim_sect, &
-                          right_mat,            max_dim_sect, &
-                          zero, tmp_mat,        max_dim_sect   )
-
-             right_mat = tmp_mat
-             num_prod = num_prod + one
-
-! this part should be recalcuated 
-         elseif (is_save(i,isect,1) == 1) then 
-             sect1 = string(ope(i)+1)
-             sect2 = string(ops(i))
-             saved_b(:,:,i,isect) = zero
-             do j=1, max_dim_sect
-                 saved_b(j,j, i,isect) = one
-             enddo
-             dim4 = sectors(sect2)%ndim
-
-! loop over all the fermion operators in this part
-             do j=ops(i), ope(i)
-                 indx = sectors(string(j  ))%istart
-                 dim2 = sectors(string(j+1))%ndim
-                 dim3 = sectors(string(j  ))%ndim
-
-                 do k=1,dim3
-                     do l= 1,dim4
-                         tmp_mat(k,l) = saved_b(k,l, i,isect) * expt_v(indx+k-1, index_t_loc(j))
-                     enddo
-                 enddo
-
-                 vt = type_v( index_t_loc(j) )
-                 vf = flvr_v( index_t_loc(j) ) 
-                 call dgemm( 'N', 'N', dim2, dim4, dim3, one,              &
-                             sectors(string(j))%myfmat(vf, vt)%item, dim2, &
-                             tmp_mat,                        max_dim_sect, &
-                             zero, saved_b(:,:,i,isect),     max_dim_sect   ) 
-
-                 num_prod = num_prod + two
-             enddo  
-
-! multiply this part with the rest parts
-             call dgemm( 'N', 'N', dim2, dim1, dim4, one,    &
-                         saved_b(:,:,i,isect), max_dim_sect, &
-                         right_mat,            max_dim_sect, &
-                         zero, tmp_mat,        max_dim_sect   ) 
-
-             right_mat = tmp_mat
-             num_prod = num_prod + one
-! save current part dimension to saved_b_nm
-             saved_b_nm(1,i,isect) = sect1
-             saved_b_nm(2,i,isect) = sect2
-
-             is_save(i, isect, 1) = 0
-             is_copy(i, isect) = .true.
-
-         elseif (is_save(i,isect,1) == 2) then
-             cycle
-         endif ! back if ( is_save(i,isect) ==0 )  block
-
-! the start sector for next part
-         isect = sect1
-
-     enddo  ! over i={1, npart} loop   
-
-! special treatment of the last time-evolution operator
-     indx = sectors(string(1))%istart
-     do k=1,dim1
-         do l=1,dim1
-             right_mat(k,l) = right_mat(k,l) * expt_t_loc(indx+k-1)
-         enddo
-     enddo
-     num_prod = num_prod + one
-
-! store final product
-     sectors((string(1)))%final_product(:,:,1) = right_mat(1:dim1, 1:dim1)
-
-! calculate the trace
-     trace  = zero
-     do j=1, sectors(string(1))%ndim
-         trace = trace + right_mat(j,j)
-     enddo
-
-     return
-  end subroutine cat_sector_ztrace
 
 !>>> used to update the operator traces of the modified part
   subroutine ctqmc_make_evolve()
@@ -2953,13 +2561,13 @@
      use context
 
      use m_sector
+     use m_npart
 
      implicit none
 
 ! local variables
 ! loop index
-     integer :: i, j
-     integer :: sect1, sect2
+     integer :: i
 
 ! update the operator traces
      matrix_ptrace = matrix_ntrace
@@ -2967,28 +2575,14 @@
 ! update ddmat for the calculation of atomic state probability
      ddmat(:,2) = ddmat(:,1)
 
-! transfer the final matrix product from final_product(:,:,1) to final_product(:,:,2)
-! the latter can be used to calculate nmat and nnmat
+! transfer the final matrix product from final_product(:,:,1) to 
+! final_product(:,:,2) the latter can be used to calculate nmat and nnmat
      do i=1, nsectors
          sectors(i)%final_product(:,:,2) = sectors(i)%final_product(:,:,1)
      enddo
   
-     is_save(:,:,2) = is_save(:,:,1)
-
-! when npart > 1, we used the npart algorithm, store the results when moves are accepted
-     if ( npart > 1) then
-         do i=1, nsectors
-             do j=1, npart
-                 if ( is_copy(j,i) ) then
-                     sect1 = saved_b_nm(1, j, i)
-                     sect2 = saved_b_nm(2, j, i)
-                     saved_a_nm(1, j, i) = sect1
-                     saved_a_nm(2, j, i) = sect2
-                     saved_a(:,:,j,i) = saved_b(:,:, j, i) 
-                 endif
-             enddo
-         enddo
-     endif
+! save the data of each part
+     call ctqmc_save_parts()
 
      return
   end subroutine ctqmc_make_evolve
