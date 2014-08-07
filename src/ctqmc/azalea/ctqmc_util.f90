@@ -526,72 +526,72 @@
 
 !>>> used to print the iteration timing information about continuous time
 ! quantum Monte Carlo quantum impurity solver.
-  subroutine ctqmc_time_analyzer(time_iter, time_niter)
-     use constants
+!  subroutine ctqmc_time_analyzer(time_iter, time_niter)
+!     use constants
 
-     implicit none
+!     implicit none
 
 ! external arguments
 ! time used in this iteration
-     real(dp), intent(in) :: time_iter
+!     real(dp), intent(in) :: time_iter
 
 ! time used in total iteration
-     real(dp), intent(in) :: time_niter
+!     real(dp), intent(in) :: time_niter
 
 ! local variables
 ! number of days
-     integer  :: mday, nday
+!     integer  :: mday, nday
 
 ! number of hours
-     integer  :: mhou, nhou
+!     integer  :: mhou, nhou
 
 ! number of minutes
-     integer  :: mmin, nmin
+!     integer  :: mmin, nmin
 
 ! number of seconds
-     real(dp) :: msec, nsec
+!     real(dp) :: msec, nsec
 
-     mday = time_iter / 86400
-     msec = time_iter - 86400 * mday
-     mhou = msec / 3600
-     msec = msec - 3600 * mhou
-     mmin = msec / 60
-     msec = msec - 60 * mmin
+!     mday = time_iter / 86400
+!     msec = time_iter - 86400 * mday
+!     mhou = msec / 3600
+!     msec = msec - 3600 * mhou
+!     mmin = msec / 60
+!     msec = msec - 60 * mmin
 
-     nday = time_niter / 86400
-     nsec = time_niter - 86400 * nday
-     nhou = nsec / 3600
-     nsec = nsec - 3600 * nhou
-     nmin = nsec / 60
-     nsec = nsec - 60 * nmin
+!     nday = time_niter / 86400
+!     nsec = time_niter - 86400 * nday
+!     nhou = nsec / 3600
+!     nsec = nsec - 3600 * nhou
+!     nmin = nsec / 60
+!     nsec = nsec - 60 * nmin
 
-     if      ( mday > 0 ) then
-         write(mystd,'(4X,3(a,i2),a)')     iolst1
+!     if      ( mday > 0 ) then
+!         write(mystd,'(4X,3(a,i2),a)')     iolst1
+!
+!     else if ( mhou > 0 ) then
+!         write(mystd,'(4X,2(a,i2),a)')     iolst2
+!
+!     else if ( mmin > 0 ) then
+!         write(mystd,'(4X,a,i2,a,f5.2,a)') iolst3
 
-     else if ( mhou > 0 ) then
-         write(mystd,'(4X,2(a,i2),a)')     iolst2
+!     else
+!         write(mystd,'(4X,a,f5.2,a)')      iolst4
+!
+!     endif ! back if ( mday > 0 ) block
 
-     else if ( mmin > 0 ) then
-         write(mystd,'(4X,a,i2,a,f5.2,a)') iolst3
+!     if      ( nday > 0 ) then
+!         write(mystd,'(4X,3(a,i2),a)')     iolst5
 
-     else
-         write(mystd,'(4X,a,f5.2,a)')      iolst4
+!     else if ( nhou > 0 ) then
+!         write(mystd,'(4X,2(a,i2),a)')     iolst6
 
-     endif ! back if ( mday > 0 ) block
+!     else if ( nmin > 0 ) then
+!         write(mystd,'(4X,a,i2,a,f5.2,a)') iolst7
 
-     if      ( nday > 0 ) then
-         write(mystd,'(4X,3(a,i2),a)')     iolst5
+!     else
+!         write(mystd,'(4X,a,f5.2,a)')      iolst8
 
-     else if ( nhou > 0 ) then
-         write(mystd,'(4X,2(a,i2),a)')     iolst6
+!     endif ! back if ( nday > 0 ) block
 
-     else if ( nmin > 0 ) then
-         write(mystd,'(4X,a,i2,a,f5.2,a)') iolst7
-
-     else
-         write(mystd,'(4X,a,f5.2,a)')      iolst8
-
-     endif ! back if ( nday > 0 ) block
-
-     return
-  end subroutine ctqmc_time_analyzer
+!     return
+!  end subroutine ctqmc_time_analyzer
