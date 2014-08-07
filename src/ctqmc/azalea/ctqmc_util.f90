@@ -30,8 +30,6 @@
 ! purpose : to provide utility functions and subroutines for hybridization
 !           expansion version continuous time quantum Monte Carlo (CTQMC)
 !           quantum impurity solver
-! input   :
-! output  :
 ! status  : unstable
 ! comment :
 !-------------------------------------------------------------------------
