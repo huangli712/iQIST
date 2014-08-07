@@ -29,9 +29,9 @@
 !!>>> ctqmc_make_htau: evaluate the matrix elements for mmat matrix using
 !!>>> cubic spline interpolation
   function ctqmc_make_htau(flvr, dtau) result(val)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : ntime
+     use context, only : tmesh, htau, hsed
 
      implicit none
 
