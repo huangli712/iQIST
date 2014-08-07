@@ -220,51 +220,51 @@
 !  end subroutine ctqmc_dmat_det
 
 !>>> calculate the determinant of a complex(dp) matrix
-  subroutine ctqmc_zmat_det(ndim, zmat, zdet)
-     use constants, only : dp, cone
-
-     implicit none
-
+!  subroutine ctqmc_zmat_det(ndim, zmat, zdet)
+!     use constants, only : dp, cone
+!
+!     implicit none
+!
 ! external arguments
 ! dimension of zmat matrix
-     integer, intent(in) :: ndim
-
+!     integer, intent(in) :: ndim
+!
 ! determinant of zmat matrix
-     real(dp), intent(out) :: zdet
-
+!     real(dp), intent(out) :: zdet
+!
 ! object matrix, on entry, it contains the original matrix, on exit,
 ! it is destroyed and replaced with the L and U matrix
-     real(dp), intent(inout) :: zmat(ndim,ndim)
-
+!     real(dp), intent(inout) :: zmat(ndim,ndim)
+!
 ! local variables
 ! loop index
-     integer :: i
-
+!     integer :: i
+!
 ! error flag
-     integer :: ierror
-
+!     integer :: ierror
+!
 ! working arrays for lapack subroutines
-     integer :: ipiv(ndim)
+!     integer :: ipiv(ndim)
 
 ! computes the LU factorization of a general m-by-n matrix, need lapack
 ! package, zgetrf subroutine
-     call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_zmat_det','error in lapack subroutine zgetrf')
-     endif
-
+!     call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
+!     if ( ierror /= 0 ) then
+!         call ctqmc_print_error('ctqmc_zmat_det','error in lapack subroutine zgetrf')
+!     endif
+!
 ! calculate determinant
-     zdet = cone
-     do i=1,ndim
-         if ( ipiv(i) == i ) then
-             zdet = zdet * ( +zmat(i,i) )
-         else
-             zdet = zdet * ( -zmat(i,i) )
-         endif
-     enddo ! over i={1,ndim} loop
-
-     return
-  end subroutine ctqmc_zmat_det
+!     zdet = cone
+!     do i=1,ndim
+!         if ( ipiv(i) == i ) then
+!             zdet = zdet * ( +zmat(i,i) )
+!         else
+!             zdet = zdet * ( -zmat(i,i) )
+!         endif
+!     enddo ! over i={1,ndim} loop
+!
+!     return
+!  end subroutine ctqmc_zmat_det
 
 !>>> to build general U interaction matrix: uumat, using my own style
 ! note: do not support spin-flip and pair-hopping term so far
@@ -348,43 +348,43 @@
   end subroutine ctqmc_make_state
 
 !>>> using bubble sort algorithm to sort a real dataset, the slowest algorithm
-  subroutine ctqmc_time_sorter(nsize, list)
-     use constants, only : dp
-
-     implicit none
-
+!  subroutine ctqmc_time_sorter(nsize, list)
+!     use constants, only : dp
+!
+!     implicit none
+!
 ! external arguments
 ! grab the number of values from the calling code
-     integer, intent(in) :: nsize
+!     integer, intent(in) :: nsize
 
 ! dataset to be sorted
-     real(dp), intent(inout) :: list(nsize)
+!     real(dp), intent(inout) :: list(nsize)
 
 ! local variables
 ! dataset index
-     integer  :: i = 0
-     integer  :: j = 0
+!     integer  :: i = 0
+!     integer  :: j = 0
 
 ! dummy variables
-     real(dp) :: swap
+!     real(dp) :: swap
 
 ! basically we just loop through every element to compare it against
 ! every other element
 ! this loop increments i which is our starting point for the comparison
-     sort_loop1: do i=nsize,1,-1
+!     sort_loop1: do i=nsize,1,-1
 ! this loop increments j which is the ending point for the comparison
-         sort_loop2: do j=1,i-1
+!         sort_loop2: do j=1,i-1
 ! swap the two elements here
-             exchange: if ( list(j) > list(j+1) ) then
-                 swap = list(j)
-                 list(j) = list(j+1)
-                 list(j+1) = swap
-             endif exchange
-         enddo sort_loop2 ! over j={1,i-1} loop
-     enddo sort_loop1 ! over i={nsize,1,-1} loop
+!             exchange: if ( list(j) > list(j+1) ) then
+!                 swap = list(j)
+!                 list(j) = list(j+1)
+!                 list(j+1) = swap
+!             endif exchange
+!         enddo sort_loop2 ! over j={1,i-1} loop
+!     enddo sort_loop1 ! over i={nsize,1,-1} loop
 
-     return
-  end subroutine ctqmc_time_sorter
+!     return
+!  end subroutine ctqmc_time_sorter
 
 !>>> sets up for the quick sort recursive method
   subroutine ctqmc_time_qsorter(nsize, list)
