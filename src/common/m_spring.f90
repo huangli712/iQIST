@@ -198,7 +198,7 @@
      real(ieee64) :: r
 
 ! local parameters
-! precalculated to avoid division below
+! pre-calculated to avoid division below
      real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967296.0_ieee64
 
 ! compute it
@@ -217,7 +217,7 @@
      real(ieee64) :: r
 
 ! local parameters
-! precalculated to avoid division below
+! pre-calculated to avoid division below
      real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967295.0_ieee64
 
 ! compute it
@@ -362,7 +362,7 @@
      real(ieee64) :: r
 
 ! local parameters
-! precalculated to avoid division below
+! pre-calculated to avoid division below
      real(8), parameter :: factor = 1.0_ieee64 / 4294967296.0_ieee64
 
 ! compute it
@@ -379,7 +379,7 @@
      real(ieee64) :: r
 
 ! local parameters
-! precalculated to avoid division below
+! pre-calculated to avoid division below
      real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967295.0_ieee64
 
 ! compute it

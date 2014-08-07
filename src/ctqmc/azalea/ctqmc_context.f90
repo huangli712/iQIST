@@ -403,7 +403,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
          endif
 
 ! initialize them
@@ -417,8 +417,8 @@
          exp_e   = czero
 
          do i=1,norbs
-             empty_s(i) = istack_create(mkink)
-             empty_e(i) = istack_create(mkink)
+             call istack_create(empty_s(i), mkink)
+             call istack_create(empty_e(i), mkink)
          enddo ! over i={1,norbs} loop
 
          return

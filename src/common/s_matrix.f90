@@ -32,17 +32,116 @@
 !!!           s_eig_he
 !!!           s_eigvals_sy
 !!!           s_eigvals_he
+!!!           s_solve_dg
+!!!           s_solve_zg
+!!!           s_solve_sy
+!!!           s_solve_he
 !!! source  : s_matrix.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/26/2014 by li huang
-!!!           08/01/2014 by li huang
+!!!           08/06/2014 by li huang
 !!! purpose : these subroutines are used to encapsulate some important and
 !!!           frequently used linear algebra operations.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! 1. build constants (0) matrix
+!! -----------------------------
+!!
+!! subroutine s_zeros_i(...)
+!! subroutine s_zeros_d(...)
+!! subroutine s_zeros_z(...)
+!!
+!! 2. build constants (1) matrix
+!! -----------------------------
+!!
+!! subroutine s_ones_i(...)
+!! subroutine s_ones_d(...)
+!! subroutine s_ones_z(...)
+!!
+!! 3. build constants (any values) matrix
+!! --------------------------------------
+!!
+!! subroutine s_any_i(...)
+!! subroutine s_any_d(...)
+!! subroutine s_any_z(...)
+!!
+!! 4. build diagonal matrix
+!! ------------------------
+!!
+!! subroutine s_eye_i(...)
+!! subroutine s_eye_d(...)
+!! subroutine s_eye_z(...)
+!!
+!! 5. build identity matrix
+!! ------------------------
+!!
+!! subroutine s_identity_i(...)
+!! subroutine s_identity_d(...)
+!! subroutine s_identity_z(...)
+!!
+!! 6. build diagonal matrix from vector
+!! ------------------------------------
+!!
+!! subroutine s_diag_i(...)
+!! subroutine s_diag_d(...)
+!! subroutine s_diag_z(...)
+!!
+!! 7. calculate trace for matrix
+!! -----------------------------
+!!
+!! subroutine s_trace_d(...)
+!! subroutine s_trace_z(...)
+!!
+!! 8. calculate determinant for matrix
+!! -----------------------------------
+!!
+!! subroutine s_det_d(...)
+!! subroutine s_det_z(...)
+!!
+!! 9. calculate matrix inversion
+!! -----------------------------
+!!
+!! subroutine s_inv_d(...)
+!! subroutine s_inv_z(...)
+!!
+!! 10. general eigensystem problem
+!! -------------------------------
+!!
+!! subroutine s_eig_dg(...)
+!! subroutine s_eig_zg(...)
+!! subroutine s_eigvals_dg(...)
+!! subroutine s_eigvals_zg(...)
+!!
+!! 11. symmetric eigensystem problem
+!! ---------------------------------
+!!
+!! subroutine s_eig_sy(...)
+!! subroutine s_eig_he(...)
+!! subroutine s_eigvals_sy(...)
+!! subroutine s_eigvals_he(...)
+!!
+!! 12. linear equation solver
+!! --------------------------
+!!
+!! subroutine s_solve_dg(...)
+!! subroutine s_solve_zg(...)
+!! subroutine s_solve_sy(...)
+!! subroutine s_solve_he(...)
+!!
+!! Note: _i means integer version, _d real(dp) version, and _z complex(dp)
+!! version. _dg means real(dp) general version, _zg complex(dp) general
+!! version, _sy real(dp) symmetric version, _he complex(dp) Hermitian version.
+!!
+!!
 
 !!------------------------------------------------------------------------
 !!>>> matrix construction: build zeros/ones/any matrix                 <<<
@@ -1168,7 +1267,7 @@
 ! initialize lwork (lrwork) and allocate memory for array work (rwork)
      lwork = 2*ndim-1
      lrwork = 3*ndim-2
-     
+
      allocate(work(lwork),   stat=istat)
      allocate(rwork(lrwork), stat=istat)
      if ( istat /= 0 ) then
@@ -1298,7 +1397,7 @@
 ! initialize lwork (lrwork) and allocate memory for array work (rwork)
      lwork = 2*ndim-1
      lrwork = 3*ndim-2
-     
+
      allocate(work(lwork),     stat=istat)
      allocate(rwork(lrwork),   stat=istat)
      allocate(evec(ldim,ndim), stat=istat)
@@ -1325,3 +1424,221 @@
 
      return
   end subroutine s_eigvals_he
+
+!!------------------------------------------------------------------------
+!!>>> matrix manipulation: solve linear equations                      <<<
+!!------------------------------------------------------------------------
+
+!!>>> s_solve_dg: solve linear system AX = B, real(dp) general version
+  subroutine s_solve_dg(n, nrhs, A, B)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! the number of linear equations
+     integer, intent(in)     :: n
+
+! the number of right-hand sides
+     integer, intent(in)     :: nrhs
+
+! on entry, it is a n-by-n coefficient matrix A; on exit, it is overwritten
+! by the factors L and U from the factorization of A = PLU.
+     real(dp), intent(inout) :: A(n,n)
+
+! on entry, it is a n-by-nrhs matrix of right hand side matrix B; on exit,
+! it is overwritten by the solution matrix X.
+     real(dp), intent(inout) :: B(n,nrhs)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine dgesv
+     integer :: info
+
+! workspace array, its dimension is at least max(1,n)
+     integer, allocatable :: ipiv(:)
+
+! allocate memory
+     allocate(ipiv(n), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('s_solve_dg', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! call the computational subroutine: dgesv
+     call DGESV(n, nrhs, A, n, ipiv, B, n, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_solve_dg', 'error in lapack subroutine dgesv')
+     endif ! back if ( info /= 0 ) block
+
+! deallocate memory
+     if (allocated(ipiv)) deallocate(ipiv)
+
+     return
+  end subroutine s_solve_dg
+
+!!>>> s_solve_zg: solve linear system AX = B, complex(dp) general version
+  subroutine s_solve_zg(n, nrhs, A, B)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! the number of linear equations
+     integer, intent(in)        :: n
+
+! the number of right-hand sides
+     integer, intent(in)        :: nrhs
+
+! on entry, it is a n-by-n coefficient matrix A; on exit, it is overwritten
+! by the factors L and U from the factorization of A = PLU.
+     complex(dp), intent(inout) :: A(n,n)
+
+! on entry, it is a n-by-nrhs matrix of right hand side matrix B; on exit,
+! it is overwritten by the solution matrix X.
+     complex(dp), intent(inout) :: B(n,nrhs)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine zgesv
+     integer :: info
+
+! workspace array, its dimension is at least max(1,n)
+     integer, allocatable :: ipiv(:)
+
+! allocate memory
+     allocate(ipiv(n), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('s_solve_zg', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! call the computational subroutine: zgesv
+     call ZGESV(n, nrhs, A, n, ipiv, B, n, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_solve_zg', 'error in lapack subroutine zgesv')
+     endif ! back if ( info /= 0 ) block
+
+! deallocate memory
+     if (allocated(ipiv)) deallocate(ipiv)
+
+     return
+  end subroutine s_solve_zg
+
+!!>>> s_solve_sy: solve linear system AX = B, real(dp) symmetric version
+  subroutine s_solve_sy(n, nrhs, A, B)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! the number of linear equations
+     integer, intent(in)     :: n
+
+! the number of right-hand sides
+     integer, intent(in)     :: nrhs
+
+! on entry, it is a n-by-n coefficient matrix A; on exit, it is overwritten
+! by the factors L and U from the factorization of A = PLU.
+     real(dp), intent(inout) :: A(n,n)
+
+! on entry, it is a n-by-nrhs matrix of right hand side matrix B; on exit,
+! it is overwritten by the solution matrix X.
+     real(dp), intent(inout) :: B(n,nrhs)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine dsysv
+     integer :: info
+
+! workspace array, its dimension is at least max(1,n)
+     integer, allocatable  :: ipiv(:)
+
+! workspace array, its dimension is at least max(1, lwork) and lwork >= 1
+     real(dp), allocatable :: work(:)
+
+! allocate memory
+     allocate(ipiv(n), stat = istat)
+     allocate(work(n), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('s_solve_sy', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! call the computational subroutine: dsysv
+     call DSYSV('U', n, nrhs, A, n, ipiv, B, n, work, n, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_solve_sy', 'error in lapack subroutine dsysv')
+     endif ! back if ( info /= 0 ) block
+
+! deallocate memory
+     if (allocated(ipiv)) deallocate(ipiv)
+     if (allocated(work)) deallocate(work)
+
+     return
+  end subroutine s_solve_sy
+
+!!>>> s_solve_he: solve linear system AX = B, complex(dp) Hermitian version
+  subroutine s_solve_he(n, nrhs, A, B)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! the number of linear equations
+     integer, intent(in)        :: n
+
+! the number of right-hand sides
+     integer, intent(in)        :: nrhs
+
+! on entry, it is a n-by-n coefficient matrix A; on exit, it is overwritten
+! by the factors L and U from the factorization of A = PLU.
+     complex(dp), intent(inout) :: A(n,n)
+
+! on entry, it is a n-by-nrhs matrix of right hand side matrix B; on exit,
+! it is overwritten by the solution matrix X.
+     complex(dp), intent(inout) :: B(n,nrhs)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from subroutine zhesv
+     integer :: info
+
+! workspace array, its dimension is at least max(1,n)
+     integer, allocatable     :: ipiv(:)
+
+! workspace array, its dimension is at least max(1, lwork) and lwork >= 1
+     complex(dp), allocatable :: work(:)
+
+! allocate memory
+     allocate(ipiv(n), stat = istat)
+     allocate(work(n), stat = istat)
+     if ( istat /= 0 ) then
+         call s_print_error('s_solve_he', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! call the computational subroutine: zhesv
+     call ZHESV('U', n, nrhs, A, n, ipiv, B, n, work, n, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_solve_he', 'error in lapack subroutine zhesv')
+     endif ! back if ( info /= 0 ) block
+
+! deallocate memory
+     if (allocated(ipiv)) deallocate(ipiv)
+     if (allocated(work)) deallocate(work)
+
+     return
+  end subroutine s_solve_he

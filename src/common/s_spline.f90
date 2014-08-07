@@ -12,6 +12,23 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! 1. calculate 2-order derivates for a given function
+!! ---------------------------------------------------
+!!
+!! subroutine s_spl_splder(...)
+!!
+!! 2. evaluate function value at a given point
+!! -------------------------------------------
+!!
+!! function   s_spl_splint(...)
+!!
+!!
+
 !!>>> s_spl_splder: evaluate the 2-order derivates of yval
   subroutine s_spl_splder(ydim, xval, yval, startu, startd, d2y)
      use constants, only : dp, zero, one, two, half

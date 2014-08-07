@@ -33,21 +33,21 @@
 !! adapted the original code to fulfill our requirement. This linked list
 !! is capable of storing data of an any type by using the generic programming
 !! techniques. To access the data stored in the nodes, we have to use the
-!! instrinic transfer() subrouitne.
+!! intrinsic transfer() subroutine.
 !!
 !! Usage
 !! =====
 !!
 !! 1. include linked list support
 !! ------------------------------
-!! 
+!!
 !! use linkedlist
 !!
 !! 2. define user own data type
 !! ----------------------------
-!! 
+!!
 !! type data_t
-!!     place your definition here
+!!     ! place your definition here
 !! end type data_t
 !!
 !! 3. define pointer to data
@@ -89,6 +89,7 @@
 !! -----------------------------------
 !!
 !! data_ptr  = transfer(list_get(curr), data_ptr)
+!! something = data_ptr%something
 !!
 !! here curr is a list_t type pointer, it points to the current node.
 !!
