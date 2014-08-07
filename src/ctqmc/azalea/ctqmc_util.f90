@@ -58,8 +58,8 @@
 !!>>> ctqmc_make_hsed: calculate the second order derivates of hybridization
 !!>>> function on imaginary time space
   subroutine ctqmc_make_hsed(tmesh, htau, hsed)
-     use constants
-     use control
+     use constants, only : dp, zero
+     use control, only : ntime, norbs, beta
 
      implicit none
 
@@ -141,8 +141,8 @@
 !!>>> ctqmc_four_htau: fourier htau to hybf, from imaginary time to
 !!>>> matsubara frequency
   subroutine ctqmc_four_htau(htau, hybf)
-     use constants
-     use control
+     use constants, only : dp, zero, czero
+     use control, only : ntime, norbs, mfreq
      use context, only : tmesh, rmesh
 
      implicit none
