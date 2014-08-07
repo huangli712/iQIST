@@ -46,44 +46,44 @@
 # define iolst7 prefix , nmin, ' m ', nsec, ' s in total iteration.'
 # define iolst8 prefix , nsec, ' s in total iteration.'
 
-!>>> invert real(dp) matrix using lapack subroutines
-  subroutine ctqmc_dmat_inv(ndim, dmat)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of dmat matrix
-     integer, intent(in) :: ndim
-
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the inversed matrix
-     real(dp), intent(inout) :: dmat(ndim,ndim)
-
-! local variables
-! error flag
-     integer  :: ierror
-
-! working arrays for lapack subroutines
-     integer  :: ipiv(ndim)
-     real(dp) :: work(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, dgetrf subroutine
-     call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmat_inv','error in lapack subroutine dgetrf')
-     endif
-
-! computes the inverse of an LU-factored general matrix, need lapack
-! package, dgetri subroutine
-     call dgetri(ndim, dmat, ndim, ipiv, work, ndim, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmat_inv','error in lapack subroutine dgetri')
-     endif
-
-     return
-  end subroutine ctqmc_dmat_inv
+!!>>> invert real(dp) matrix using lapack subroutines
+!!  subroutine ctqmc_dmat_inv(ndim, dmat)
+!!     use constants, only : dp
+!!
+!     implicit none
+!
+!! external arguments
+!! dimension of dmat matrix
+!     integer, intent(in) :: ndim
+!
+!! object matrix, on entry, it contains the original matrix, on exit,
+!! it is destroyed and replaced with the inversed matrix
+!     real(dp), intent(inout) :: dmat(ndim,ndim)
+!
+!! local variables
+!! error flag
+!     integer  :: ierror
+!
+!! working arrays for lapack subroutines
+!     integer  :: ipiv(ndim)
+!     real(dp) :: work(ndim)
+!
+!! computes the LU factorization of a general m-by-n matrix, need lapack
+!! package, dgetrf subroutine
+!     call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
+!     if ( ierror /= 0 ) then
+!         call ctqmc_print_error('ctqmc_dmat_inv','error in lapack subroutine dgetrf')
+!     endif
+!
+!! computes the inverse of an LU-factored general matrix, need lapack
+!! package, dgetri subroutine
+!     call dgetri(ndim, dmat, ndim, ipiv, work, ndim, ierror)
+!     if ( ierror /= 0 ) then
+!         call ctqmc_print_error('ctqmc_dmat_inv','error in lapack subroutine dgetri')
+!     endif
+!
+!     return
+!  end subroutine ctqmc_dmat_inv
 
 !>>> invert complex(dp) matrix using lapack subroutines
   subroutine ctqmc_zmat_inv(ndim, zmat)

@@ -1581,7 +1581,7 @@
      enddo ! over j={1,kaux} loop
 
 ! now we obtain dmat matrix, while what we need is its inversion
-     call ctqmc_dmat_inv(kaux, mmat(1:kaux, 1:kaux, flvr))
+     call s_inv_d(kaux, mmat(1:kaux, 1:kaux, flvr))
 
 ! reset gmat matrix
      gmat(:, flvr, flvr) = czero
