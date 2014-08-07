@@ -2,9 +2,6 @@
 ! project : azalea
 ! program : ctqmc_fourier_htau
 !           ctqmc_fourier_hybf
-!           ctqmc_fourier_tails
-!           ctqmc_fourier_forward
-!           ctqmc_fourier_backward
 ! source  : ctqmc_fourier.f90
 ! type    : subroutines
 ! author  : li huang (email:huangli712@gmail.com)
