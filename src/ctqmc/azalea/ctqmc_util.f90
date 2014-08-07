@@ -387,102 +387,102 @@
 !  end subroutine ctqmc_time_sorter
 
 !>>> sets up for the quick sort recursive method
-  subroutine ctqmc_time_qsorter(nsize, list)
-     use constants, only : dp
+!  subroutine ctqmc_time_qsorter(nsize, list)
+!     use constants, only : dp
 
-     implicit none
+!     implicit none
 
 ! external arguments
 ! grab the number of values from the calling code
-     integer, intent(in) :: nsize
+!     integer, intent(in) :: nsize
 
 ! dataset to be sorted
-     real(dp), intent(inout) :: list(nsize)
+!     real(dp), intent(inout) :: list(nsize)
 
 ! kicks off the recursive process
-     call ctqmc_time_qscorer(1, nsize, nsize, list)
+!     call ctqmc_time_qscorer(1, nsize, nsize, list)
 
-     return
-  end subroutine ctqmc_time_qsorter
+!     return
+!  end subroutine ctqmc_time_qsorter
 
 !>>> this is the actually recursive portion of the quicksort algorithm
-  recursive &
-  subroutine ctqmc_time_qscorer(pstart, pend, nsize, list)
-     use constants, only : dp
+!  recursive &
+!  subroutine ctqmc_time_qscorer(pstart, pend, nsize, list)
+!     use constants, only : dp
 
-     implicit none
+!     implicit none
 
 ! external arguments
 ! start point
-     integer, intent(in) :: pstart
+!     integer, intent(in) :: pstart
 
 ! end point
-     integer, intent(in) :: pend
+!     integer, intent(in) :: pend
 
 ! size of array
-     integer, intent(in) :: nsize
+!     integer, intent(in) :: nsize
 
 ! dataset to be sorted
-     real(dp), intent(inout) :: list(nsize)
+!     real(dp), intent(inout) :: list(nsize)
 
 ! local variables
 ! used to find out list(left) > kaux and list(right) < kaux
-     integer  :: left, right
+!     integer  :: left, right
 
 ! used to record list(pstart)
-     real(dp) :: kaux
+!     real(dp) :: kaux
 
 ! used to swap data
-     real(dp) :: taux
+!     real(dp) :: taux
 
 ! setup left and right
-     left = pstart
-     right = pend + 1
+!     left = pstart
+!     right = pend + 1
 
 ! only in right > left, the data is to be sorted
-     if ( right > left ) then
+!     if ( right > left ) then
 
 ! record list(pstart) at first
-         kaux = list(pstart)
+!         kaux = list(pstart)
 
-         do while ( .true. )
+!         do while ( .true. )
 
 ! find out where list(left) < kaux
-             do while ( .true. )
-                 left = left + 1
-                 if ( list(left)  > kaux .or. left  >= pend   ) EXIT
-             enddo ! over do while loop
+!             do while ( .true. )
+!                 left = left + 1
+!                 if ( list(left)  > kaux .or. left  >= pend   ) EXIT
+!             enddo ! over do while loop
 
 ! find out where list(right) > kaux
-             do while ( .true. )
-                 right = right - 1
-                 if ( list(right) < kaux .or. right <= pstart ) EXIT
-             enddo ! over do while loop
+!             do while ( .true. )
+!                 right = right - 1
+!                 if ( list(right) < kaux .or. right <= pstart ) EXIT
+!             enddo ! over do while loop
 
 ! we should ensure right is larger than left
-             if ( right <= left ) EXIT
+!             if ( right <= left ) EXIT
 
 ! exchange data between list(left) and list(right)
-             taux = list(left)
-             list(left) = list(right)
-             list(right) = taux
+!             taux = list(left)
+!             list(left) = list(right)
+!             list(right) = taux
 
-         enddo ! over do while loop
+!         enddo ! over do while loop
 
 ! exchange data between list(pstart) and list(right)
-        list(pstart) = list(right)
-        list(right) = kaux
+!        list(pstart) = list(right)
+!        list(right) = kaux
 
 ! sort data from pstart to right-1
-        call ctqmc_time_qscorer(pstart, right-1, nsize, list)
+!        call ctqmc_time_qscorer(pstart, right-1, nsize, list)
 
 ! sort data from right+1 to pend
-        call ctqmc_time_qscorer(right+1, pend, nsize, list)
+!        call ctqmc_time_qscorer(right+1, pend, nsize, list)
 
-     endif ! back if ( right > left ) block
+!     endif ! back if ( right > left ) block
 
-     return
-  end subroutine ctqmc_time_qscorer
+!     return
+!  end subroutine ctqmc_time_qscorer
 
 !>>> returns a string containing date and time in human-readable format
   subroutine ctqmc_time_builder(date_time_string)
