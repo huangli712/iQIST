@@ -85,7 +85,7 @@
 
 ! fourier transformation bath weiss's function from matsubara frequency
 ! space to imaginary time space
-     call ctqmc_fourier_hybf(wssf, wtau)
+     call ctqmc_four_hybf(wssf, wtau)
 
 ! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
