@@ -1928,7 +1928,7 @@
 
 ! calculate the determinant of Tmm, it is the desired ratio
 ! note: in fact, here the ratio is -1 exactly!
-     call ctqmc_dmat_det(kaux, Tmm, ratio)
+     call s_det_d(kaux, Tmm, ratio)
 
 ! deallocate memory
      deallocate(Dmm)
@@ -2016,7 +2016,7 @@
      call dgemm('N', 'N', kaux, kaux, kaux, one, Dmm, kaux, mmat(1:kaux, 1:kaux, up), kaux, zero, Tmm, kaux)
 
 ! calculate the determinant of Tmm, it is the desired ratio
-     call ctqmc_dmat_det(kaux, Tmm, ratio)
+     call s_det_d(kaux, Tmm, ratio)
 
 ! deallocate memory
      deallocate(Dmm)
