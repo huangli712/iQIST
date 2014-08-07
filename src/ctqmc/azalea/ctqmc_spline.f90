@@ -2,8 +2,6 @@
 ! project : azalea
 ! program : ctqmc_make_htau
 !           ctqmc_make_hsed
-!           ctqmc_make_spline
-!           ctqmc_make_splint
 ! source  : ctqmc_spline.f90
 ! type    : subroutines
 ! author  : li huang (email:huangli712@gmail.com)
