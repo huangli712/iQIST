@@ -2,6 +2,10 @@
 ! project : azalea
 ! program : ctqmc_make_uumat
 !           ctqmc_make_state
+! program : ctqmc_make_htau
+!           ctqmc_make_hsed
+! program : ctqmc_fourier_htau
+!           ctqmc_fourier_hybf
 ! source  : ctqmc_util.f90
 ! type    : functions & subroutines
 ! author  : li huang (email:huangli712@gmail.com)
@@ -105,27 +109,9 @@
 
      return
   end subroutine ctqmc_make_state
-!-------------------------------------------------------------------------
-! project : azalea
-! program : ctqmc_make_htau
-!           ctqmc_make_hsed
-! source  : ctqmc_spline.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@gmail.com)
-! history : 05/05/2008 by li huang
-!           02/18/2009 by li huang
-!           09/23/2009 by li huang
-!           09/26/2009 by li huang
-!           10/03/2009 by li huang
-!           11/10/2009 by li huang
-!           12/18/2009 by li huang
+
 ! purpose : to provide cubic spline subroutines and wrapper functions to
 !           interpolate the hybridization function in imaginary-time axis
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
 
 !>>> evaluate the matrix elements for mmat matrix using cubic spline interpolation
   function ctqmc_make_htau(flvr, dtau) result(val)
@@ -228,26 +214,9 @@
 
      return
   end subroutine ctqmc_make_hsed
-!-------------------------------------------------------------------------
-! project : azalea
-! program : ctqmc_fourier_htau
-!           ctqmc_fourier_hybf
-! source  : ctqmc_fourier.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@gmail.com)
-! history : 05/05/2008 by li huang
-!           01/18/2009 by li huang
-!           09/27/2009 by li huang
-!           10/20/2009 by li huang
-!           11/01/2009 by li huang
-!           12/01/2009 by li huang
-!           02/28/2010 by li huang
-!           03/07/2010 by li huang
+
 ! purpose : forward and backward fourier transformation subroutines for
 !           hybridization function
-! input   :
-! output  :
-! status  : unstable
 ! comment : nominally, the following subroutines are only suitable for the
 !           hybridization functions, but in principle, we can also apply
 !           them to the impurity green's function and bath weiss's function
