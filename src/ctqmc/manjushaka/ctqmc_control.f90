@@ -82,6 +82,11 @@
 ! note: isvrt == 2, 3, and 5 are not implemented so far.
      integer, public, save :: isvrt  = 1
 
+! the mode how to truncate the Hilbert space
+! if itrun == 1, don't truncate it
+! if itrun == 2, only truncate the occupancy number
+! if itrun == 3, truncate both occupancy number and energy
+     integer, public, save :: itrun  = 1
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! number of correlated bands
@@ -100,6 +105,11 @@
 ! solver plus dynamical mean field theory self-consistent iterations
      integer, public, save :: niter  = 20
 
+! the minimum number of occupancy for itrun = 2,3
+     integer, public, save :: nmini = 0
+
+! the maximum number of occupancy for itrun = 2,3
+     integer, public, save :: nmaxi = 2
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! maximum order for legendre polynomial

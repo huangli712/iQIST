@@ -54,12 +54,15 @@
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
+     itrun  = 1            ! how to truncate the Hilbert space
 !-------------------------------------------------------------------------
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
      ncfgs  = 2**norbs     ! number of atomic states
      niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
+     nmini  = 0            ! minimum of occupancy number 
+     nmaxi  = norbs        ! maximum of occupancy number 
 !-------------------------------------------------------------------------
      U      = 4.00_dp      ! U : average Coulomb interaction
      Uc     = 4.00_dp      ! Uc: intraorbital Coulomb interaction
@@ -120,6 +123,7 @@
              read(mytmp,*) isbin                                         !
              read(mytmp,*) isort                                         !
              read(mytmp,*) isvrt                                         !
+             read(mytmp,*) itrun                                         !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
 
              read(mytmp,*)
@@ -129,6 +133,8 @@
              read(mytmp,*) norbs                                         !
              read(mytmp,*) ncfgs                                         !
              read(mytmp,*) niter                                         !
+             read(mytmp,*) nmini                                         !
+             read(mytmp,*) nmaxi                                         !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
 
              read(mytmp,*)
@@ -194,6 +200,7 @@
      call mp_bcast( isbin , master )                                     !
      call mp_bcast( isort , master )                                     !
      call mp_bcast( isvrt , master )                                     !
+     call mp_bcast( itrun , master )                                     !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
      call mp_barrier()
 
@@ -203,6 +210,8 @@
      call mp_bcast( norbs , master )                                     !
      call mp_bcast( ncfgs , master )                                     !
      call mp_bcast( niter , master )                                     !
+     call mp_bcast( nmini , master )                                     !
+     call mp_bcast( nmaxi , master )                                     !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
      call mp_barrier()
 
@@ -295,16 +304,13 @@
 
 ! local variables
 ! loop index
-     integer  :: i,j,k,n,m,ii
+     integer  :: i,j,k,ii
 
 ! dummy integer variables
      integer  :: j1
 
 ! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
      logical  :: exists
-
-! iostat
-     integer :: ierr
 
 ! dummy real variables
      real(dp) :: rtmp
@@ -509,29 +515,11 @@
                      read(mytmp,*) j1, sectors(i)%myeigval(j)
                  enddo
              enddo
-!-------------------------------------------------------------------------
-             do i=1, nsectors
-                 do j=1, sectors(i)%nops
-                     do k=0,1
-                         ii = sectors(i)%next_sector(j,k)
-                         if (ii == -1) cycle
-                         sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
-                         sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
-                         call alloc_one_fmat(sectors(i)%myfmat(j,k))
-                         sectors(i)%myfmat(j,k)%item = zero
-                     enddo 
-                 enddo 
-             enddo 
 
-! read fmat 
-             read(mytmp, *)
-             do while( .true. )
-                 read(mytmp, *, iostat=ierr) n, m, k, j, i, r1
-                 if (ierr /=0 ) EXIT
-                 sectors(i)%myfmat(j,k)%item(n,m) = r1
-             enddo 
-             close(mytmp) 
+             close(mytmp)
 !-------------------------------------------------------------------------
+! truncate the Hilbert space
+             call ctqmc_make_trun()
 
 ! add the contribution from chemical potential to eigenvalues
              j1 = 0
@@ -568,7 +556,28 @@
              call ctqmc_print_error('ctqmc_selfer_init','file atom.cix does not exist')
          endif ! back if ( exists .eqv. .true. ) block
 !-------------------------------------------------------------------------
-
+! read the fmat
+         exists = .false.
+         inquire (file = 'atom.fmat', exist = exists)
+! find input file: atom.fmat, read it
+! file atom.sector.in is necessary, the code can not run without it
+         if ( exists .eqv. .true. ) then
+             open(mytmp, file='atom.fmat', form='unformatted', status='unknown')
+             do i=1, nsectors
+                 do j=1, sectors(i)%nops
+                     do k=0,1
+                         ii = sectors(i)%next_sector(j,k)
+                         if (ii == -1) cycle
+                         sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
+                         sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
+                         call alloc_one_fmat(sectors(i)%myfmat(j,k))
+                         read(mytmp) sectors(i)%myfmat(j,k)%item
+                     enddo 
+                 enddo 
+             enddo 
+         else
+             call ctqmc_print_error('ctqmc_selfer_init','file atom.fmat does not exist')
+         endif
 !>>>     endif ! back if ( myid == master ) block
 
 # if defined (MPI)

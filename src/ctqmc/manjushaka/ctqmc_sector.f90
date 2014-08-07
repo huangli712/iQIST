@@ -55,6 +55,7 @@
 ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
 ! F|i> --> |j>
          integer, pointer :: next_sector(:,:)
+         integer, pointer :: next_sector_trunc(:,:)
 
 ! the fmat between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
@@ -83,6 +84,8 @@
 
 ! the array contains all the sectors
      type(t_sector), public, save, allocatable :: sectors(:)
+
+     logical, public, save, allocatable :: is_trunc(:)
 
      contains
   
@@ -134,6 +137,7 @@
   
         nullify( one_sector%myeigval )
         nullify( one_sector%next_sector )
+        nullify( one_sector%next_sector_trunc )
         nullify( one_sector%myfmat )
   
         return
@@ -151,6 +155,7 @@
   
         allocate(one_sector%myeigval(one_sector%ndim))
         allocate(one_sector%next_sector(one_sector%nops,0:1))
+        allocate(one_sector%next_sector_trunc(one_sector%nops,0:1))
         allocate(one_sector%myfmat(one_sector%nops,0:1))
         allocate(one_sector%final_product(one_sector%ndim, one_sector%ndim, 2))
         allocate(one_sector%occu(one_sector%ndim, one_sector%ndim, one_sector%nops))
@@ -159,6 +164,7 @@
 ! init them
         one_sector%myeigval = zero
         one_sector%next_sector = 0
+        one_sector%next_sector_trunc = 0
         one_sector%final_product = zero
         one_sector%occu = zero
         one_sector%double_occu = zero
@@ -187,6 +193,7 @@
   
         if (associated(one_sector%myeigval))            deallocate(one_sector%myeigval)
         if (associated(one_sector%next_sector))         deallocate(one_sector%next_sector)
+        if (associated(one_sector%next_sector_trunc))   deallocate(one_sector%next_sector_trunc)
         if (associated(one_sector%final_product))       deallocate(one_sector%final_product)
         if (associated(one_sector%occu))                deallocate(one_sector%occu)
         if (associated(one_sector%double_occu))         deallocate(one_sector%double_occu)
@@ -213,7 +220,7 @@
 
 ! allocate memory
          allocate(sectors(nsectors),              stat=istat)
-
+         allocate(is_trunc(nsectors),             stat=istat)
 ! check the status
          if ( istat /= 0 ) then
              call ctqmc_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
@@ -227,6 +234,7 @@
              sectors(i)%istart = 0
              call nullify_one_sector(sectors(i))
          enddo 
+         is_trunc = .false.
 
          return
      end subroutine ctqmc_allocate_memory_sect
@@ -247,15 +255,55 @@
              deallocate(sectors)
          endif
 
+         if ( allocated(is_trunc) ) deallocate(is_trunc)
+
          return
      end subroutine ctqmc_deallocate_memory_sect
 
+!>>> subroutine used to truncate the Hilbert space
+     subroutine ctqmc_make_trun()
+        implicit none
+
+! local variables
+! loop index
+        integer :: i,j,k, ii
+
+! don't truncate the Hilbert space at all
+        if (itrun == 1) then
+            do i=1, nsectors
+                sectors(i)%next_sector_trunc = sectors(i)%next_sector
+            enddo
+
+! truncate the Hilbert space according to the total occupancy number
+        elseif (itrun == 2) then
+            is_trunc = .false.
+            do i=1, nsectors
+                if (sectors(i)%nelectron < nmini .or. sectors(i)%nelectron > nmaxi) then
+                    is_trunc(i) = .true.
+                endif
+            enddo
+            do i=1, nsectors
+                sectors(i)%next_sector_trunc = -1
+                if (is_trunc(i)) then
+                    cycle
+                endif
+                do j=1, sectors(i)%nops
+                    do k=0,1
+                        ii = sectors(i)%next_sector(j,k) 
+                        if (ii == -1) cycle
+                        if (.not. is_trunc(ii)) then
+                            sectors(i)%next_sector_trunc(j,k) = ii
+                        endif
+                    enddo
+                enddo
+            enddo
+        endif
+
+        return
+     end subroutine ctqmc_make_trun
+
 !>>> subroutine used to build a string
      subroutine ctqmc_make_string(csize, index_t_loc, is_string, string)
-        use constants
-        use control
-        use context
-
         implicit none
 
 ! external variables
@@ -308,7 +356,7 @@
                     string(left,i) = curr_sect_left 
                     vt = type_v( index_t_loc(left) )
                     vf = flvr_v( index_t_loc(left) ) 
-                    next_sect_left = sectors(curr_sect_left)%next_sector(vf,vt)
+                    next_sect_left = sectors(curr_sect_left)%next_sector_trunc(vf,vt)
                     if (next_sect_left == -1 ) then
                         is_string(i) = .false. 
                         EXIT   ! finish check, exit
@@ -319,7 +367,7 @@
                     vt = type_v( index_t_loc(right) )
                     vf = flvr_v( index_t_loc(right) ) 
                     vt = mod(vt+1,2)
-                    next_sect_right = sectors(curr_sect_right)%next_sector(vf,vt)
+                    next_sect_right = sectors(curr_sect_right)%next_sector_trunc(vf,vt)
                     if (next_sect_right == -1 ) then
                         is_string(i) = .false. 
                         EXIT   ! finish check, exit

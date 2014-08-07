@@ -34,8 +34,6 @@ subroutine atomic_config()
     nspin = 2            ! number of spins
     norbs = nband*nspin  ! number of orbits
     ncfgs = 2**norbs     ! number of many-body configurations
-    nmin = 0             ! minimum number of electrons
-    nmax = norbs         ! maximum number of electrons 
     !----------------------------------------------------------------
     Uc = 4.00_dp         ! intraorbital Coulomb interaction
     Uv = 2.00_dp         ! interorbital Coulomb interaction
@@ -66,8 +64,6 @@ subroutine atomic_config()
         !----------------------------------------------------------------
         read(mytmp, *) ! skip header
         read(mytmp, *)  nband
-        read(mytmp, *)  nmin
-        read(mytmp, *)  nmax
         norbs = nband * nspin
         ncfgs = 2 ** norbs 
 

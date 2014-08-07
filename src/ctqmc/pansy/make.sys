@@ -13,7 +13,7 @@ CPP    = $(FPP) $(MPI) $(OMP)
 # machine tuning options, just for my laptop: iris system
 #-------------------------------------------------------------------------
 GPROF  = #-pg
-CHECK  =  -warn all #-check all  -traceback -g  
+CHECK  =  -warn all -check all  -traceback -g  
 CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
 LEVEL  = -O3 -xHost -unroll-aggressive -align all
 MTUNE  = -mtune=core2

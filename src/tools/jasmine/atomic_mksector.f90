@@ -37,8 +37,6 @@ subroutine atomic_mksectors_n()
     integer :: counter
     ! total electrons
     integer :: myntot
-    ! number of fock states after truncated
-    integer :: nfock_trunc
     ! can point to next sector 
     logical :: can  
     ! loop index
@@ -46,20 +44,15 @@ subroutine atomic_mksectors_n()
 
     !----------------------------------------------------------------
     ! allocate memory for global variables of sectors
-    nsectors = (nmax - nmin) + 1
+    nsectors = norbs + 1
     max_dim_sect = 0
     ave_dim_sect = zero
     call alloc_m_glob_sectors()
     ! now, build each sector
     counter = 1
-    do i=1, nmin
-        counter = counter + dim_sub_n(i-1) 
-    enddo
-
-    nfock_trunc = 0
     do i=1, nsectors
-        sectors(i)%ndim = dim_sub_n(nmin+i-1)
-        sectors(i)%nelectron = nmin+i-1
+        sectors(i)%ndim = dim_sub_n(i-1)
+        sectors(i)%nelectron = i-1
         sectors(i)%nops = norbs
         sectors(i)%istart = counter 
         ! allocate memory for each sector
@@ -68,8 +61,7 @@ subroutine atomic_mksectors_n()
         do j=1, sectors(i)%ndim
             sectors(i)%mybasis(j) = counter + j - 1 
         enddo
-        counter = counter + dim_sub_n(nmin+i-1)
-        nfock_trunc = nfock_trunc + sectors(i)%ndim
+        counter = counter + dim_sub_n(i-1)
     enddo
     !----------------------------------------------------------------
 
@@ -104,8 +96,8 @@ subroutine atomic_mksectors_n()
                         myntot = sectors(i)%nelectron - 1
                     endif
                     ! loop over all sectors to see which sector it will point to 
-                    if (myntot >=nmin .and. myntot <= nmax) then
-                        which_sect = myntot - nmin + 1
+                    if (myntot >=0 .and. myntot <= norbs) then
+                        which_sect = myntot + 1
                     endif 
                 endif  ! back to if (can == .true.) block
                 sectors(i)%next_sector(j,k) = which_sect 
@@ -126,7 +118,7 @@ subroutine atomic_mksectors_n()
     ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a,I10)')    '#nfock_truncated: ', nfock_trunc
+    write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
@@ -185,8 +177,6 @@ subroutine atomic_mksectors_nsz()
     integer :: ibasis
     ! loop index
     integer :: i,j,k,l
-    ! number fock state after truncated
-    integer :: nfock_trunc
     ! can point to next sector 
     logical :: can  
 
@@ -224,9 +214,7 @@ subroutine atomic_mksectors_nsz()
     sector_basis = 0
     do i=1, ncfgs    
         myntot = fock_good_ntot(i)
-        if (myntot < nmin .or. myntot > nmax) cycle
         mysz   = fock_good_sz(i)
-
         if (nsect==0 ) then
             sect_good_ntot(1) = myntot
             sect_good_sz(1)   = mysz
@@ -268,7 +256,6 @@ subroutine atomic_mksectors_nsz()
     call alloc_m_glob_sectors()
     ! now we will build each sector
     counter = 1
-    nfock_trunc = 0
     do i=1, nsect
         sectors(i)%ndim = ndims(i)
         sectors(i)%nelectron = sect_good_ntot(i)
@@ -281,7 +268,6 @@ subroutine atomic_mksectors_nsz()
         do j=1, ndims(i)
             sectors(i)%mybasis(j) = sector_basis(j,i) 
         enddo
-        nfock_trunc = nfock_trunc + sectors(i)%ndim
     enddo
     !----------------------------------------------------------------
 
@@ -343,7 +329,7 @@ subroutine atomic_mksectors_nsz()
     ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a,I10)')    '#nfock_truncated: ', nfock_trunc
+    write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
@@ -413,8 +399,6 @@ subroutine atomic_mksectors_nszps()
     integer :: ibasis
     ! loop index
     integer :: i,j,k,l
-    ! number of fock states after truncated
-    integer :: nfock_trunc
     ! can point to next sector
     logical :: can  
 
@@ -460,7 +444,6 @@ subroutine atomic_mksectors_nszps()
     sector_basis = 0
     do i=1, ncfgs    
         myntot = fock_good_ntot(i)
-        if (myntot < nmin .or. myntot > nmax) cycle
         mysz   = fock_good_sz(i)
         myps   = fock_good_ps(i)
         if (nsect==0) then
@@ -506,7 +489,6 @@ subroutine atomic_mksectors_nszps()
     nsectors = nsect
     call alloc_m_glob_sectors()
     ! now we will build each sector
-    nfock_trunc = 0
     counter = 1
     do i=1, nsect
         sectors(i)%ndim = ndims(i)
@@ -520,7 +502,6 @@ subroutine atomic_mksectors_nszps()
         do j=1, ndims(i)
             sectors(i)%mybasis(j) = sector_basis(j,i) 
         enddo
-        nfock_trunc = nfock_trunc + sectors(i)%ndim
     enddo
     !----------------------------------------------------------------
 
@@ -592,7 +573,7 @@ subroutine atomic_mksectors_nszps()
     ave_dim_sect = real(counter) / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a,I10)')    '#nfock_truncated: ', nfock_trunc
+    write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |       PS(i) |     nd&
@@ -658,8 +639,6 @@ subroutine atomic_mksectors_njz()
     integer :: ibasis
     ! loop index
     integer :: i,j,k,l
-    ! number of fock states after truncated
-    integer :: nfock_trunc
     ! can point to next sector
     logical :: can  
 
@@ -698,7 +677,6 @@ subroutine atomic_mksectors_njz()
     sector_basis = 0
     do i=1, ncfgs    
         myntot = fock_good_ntot(i)
-        if (myntot < nmin .or. myntot > nmax) cycle
         myjz   = fock_good_jz(i)
         if (nsect==0) then
             sect_good_ntot(1) = myntot
@@ -740,7 +718,6 @@ subroutine atomic_mksectors_njz()
     nsectors = nsect
     call alloc_m_glob_sectors()
     ! now we will build each sector
-    nfock_trunc = 0
     counter = 1
     do i=1, nsect
         sectors(i)%ndim = ndims(i)
@@ -754,7 +731,6 @@ subroutine atomic_mksectors_njz()
         do j=1, ndims(i)
             sectors(i)%mybasis(j) = sector_basis(j,i) 
         enddo
-        nfock_trunc = nfock_trunc + sectors(i)%ndim
     enddo
     !----------------------------------------------------------------
 
@@ -816,7 +792,7 @@ subroutine atomic_mksectors_njz()
     ave_dim_sect = counter / real(nsectors)
 
     open(mytmp, file='atom.sector.dat')
-    write(mytmp, '(a,I10)')    '#nfock_truncated: ', nfock_trunc
+    write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
     write(mytmp, '(a)') '#      i | electron(i) |       Jz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
