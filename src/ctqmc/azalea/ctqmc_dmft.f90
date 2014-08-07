@@ -21,8 +21,6 @@
 !           simulation. it is only suitable for hybridization expansion
 !           version continuous time quantum Monte Carlo (CTQMC) quantum
 !           impurity solver plus bethe lattice model.
-! input   :
-! output  :
 ! status  : unstable
 ! comment :
 !-------------------------------------------------------------------------
