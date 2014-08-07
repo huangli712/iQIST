@@ -226,7 +226,7 @@ subroutine atomic_write_atomcix_sectors()
     implicit none
 
     ! local variables
-    integer :: i, j, k, m, n, ii
+    integer :: i, j, k, ii
     integer :: s_order
  
     ! open 'atom.cix' to write
@@ -244,7 +244,7 @@ subroutine atomic_write_atomcix_sectors()
         write(mytmp, "(4X,5I10)") i, sectors(i)%ndim, sectors(i)%nelectron, sectors(i)%nops, sectors(i)%istart
 
         ! write next_sector
-        write(mytmp, "(4X,a)") "#NEXT_SECTOR   ANNIH     CREAT"
+        write(mytmp, "(4X,a)") "#NEXT_SECTOR    F     F^{\dagger}"
         do j=1, sectors(i)%nops
             ! adjust the orbital order for CTQMC, up, up, up, dn, dn, dn
             if (isoc==0) then
@@ -265,10 +265,10 @@ subroutine atomic_write_atomcix_sectors()
             write(mytmp, "(2X,I10, F20.10)") j, sectors(i)%myeigval(j) 
         enddo
     enddo
+    close(mytmp)
 
     ! write fmat
-    ! write header
-    write(mytmp, '(a)') '# BEGIN FMAT '
+    open(mytmp, file='atom.fmat', form='unformatted')
     do i=1, nsectors
         do j=1, sectors(i)%nops
             if (isoc==0) then
@@ -283,13 +283,7 @@ subroutine atomic_write_atomcix_sectors()
             do k=0,1
                 ii = sectors(i)%next_sector(s_order,k)
                 if (ii == -1) cycle 
-                !write(mytmp)  sectors(i)%myfmat(s_order,k)%item(:,:)
-                do m=1, sectors(i)%myfmat(s_order,k)%m
-                do n=1, sectors(i)%myfmat(s_order,k)%n
-                    if ( abs(sectors(i)%myfmat(s_order,k)%item(n,m)) < 1e-10 ) cycle
-                    write(mytmp, '(5I6, F16.10)') n, m, k, j, i, sectors(i)%myfmat(s_order,k)%item(n,m)
-                enddo
-                enddo
+                write(mytmp)  sectors(i)%myfmat(s_order,k)%item(:,:)
             enddo  ! over k={0,1} loop
         enddo ! over j={1, sectors(i)%nops} loop
     enddo  ! over i={1, nsect} loop

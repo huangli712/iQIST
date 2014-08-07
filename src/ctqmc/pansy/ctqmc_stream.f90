@@ -262,16 +262,13 @@
 
 ! local variables
 ! loop index
-     integer  :: i, j, k, m, n, ii
+     integer  :: i, j, k, ii
 
 ! dummy integer variables
      integer  :: j1
 
 ! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
      logical  :: exists
-
-! iostat
-     integer :: ierr
 
 ! dummy real variables
      real(dp) :: rtmp
@@ -440,27 +437,6 @@
                      read(mytmp,*) j1, sectors(i)%myeigval(j)
                  enddo
              enddo
-!-------------------------------------------------------------------------
-             do i=1, nsectors
-                 do j=1, sectors(i)%nops
-                     do k=0,1
-                         ii = sectors(i)%next_sector(j,k)
-                         if (ii == -1) cycle
-                         sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
-                         sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
-                         call alloc_one_fmat(sectors(i)%myfmat(j,k))
-                         sectors(i)%myfmat(j,k)%item = zero
-                     enddo 
-                 enddo 
-             enddo 
-
-! read fmat 
-             read(mytmp, *)
-             do while( .true. )
-                 read(mytmp, *, iostat=ierr) n, m, k, j, i, r1
-                 if (ierr /=0 ) EXIT
-                 sectors(i)%myfmat(j,k)%item(n,m) = r1
-             enddo 
              close(mytmp) 
 !-------------------------------------------------------------------------
 
@@ -498,6 +474,29 @@
          else
              call ctqmc_print_error('ctqmc_selfer_init','file atom.cix does not exist')
          endif ! back if ( exists .eqv. .true. ) block
+!-------------------------------------------------------------------------
+! read the fmat
+         exists = .false.
+         inquire (file = 'atom.fmat', exist = exists)
+! find input file: atom.fmat, read it
+! file atom.sector.in is necessary, the code can not run without it
+         if ( exists .eqv. .true. ) then
+             open(mytmp, file='atom.fmat', form='unformatted', status='unknown')
+             do i=1, nsectors
+                 do j=1, sectors(i)%nops
+                     do k=0,1
+                         ii = sectors(i)%next_sector(j,k)
+                         if (ii == -1) cycle
+                         sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
+                         sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
+                         call alloc_one_fmat(sectors(i)%myfmat(j,k))
+                         read(mytmp) sectors(i)%myfmat(j,k)%item
+                     enddo 
+                 enddo 
+             enddo 
+         else
+             call ctqmc_print_error('ctqmc_selfer_init','file atom.fmat does not exist')
+         endif
 !-------------------------------------------------------------------------
 !>>>     endif ! back if ( myid == master ) block
 
