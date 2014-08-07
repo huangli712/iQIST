@@ -1,33 +1,40 @@
-!-------------------------------------------------------------------------
-! project : azalea
-! program : ctqmc_make_uumat
-!           ctqmc_make_state
-! program : ctqmc_make_htau
-!           ctqmc_make_hsed
-! program : ctqmc_fourier_htau
-!           ctqmc_fourier_hybf
-! source  : ctqmc_util.f90
-! type    : functions & subroutines
-! author  : li huang (email:huangli712@gmail.com)
-! history : 10/01/2008 by li huang
-!           02/08/2009 by li huang
-!           09/23/2009 by li huang
-!           09/26/2009 by li huang
-!           11/17/2009 by li huang
-!           11/21/2009 by li huang
-!           12/18/2009 by li huang
-!           12/22/2009 by li huang
-!           12/29/2009 by li huang
-!           01/12/2010 by li huang
-!           02/27/2010 by li huang
-!           06/08/2010 by li huang
-!           06/22/2010 by li huang
-! purpose : to provide utility functions and subroutines for hybridization
-!           expansion version continuous time quantum Monte Carlo (CTQMC)
-!           quantum impurity solver
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : ctqmc_make_uumat
+!!!           ctqmc_make_state
+!!!           ctqmc_make_htau
+!!!           ctqmc_make_hsed
+!!!           ctqmc_fourier_htau
+!!!           ctqmc_fourier_hybf
+!!! source  : ctqmc_util.f90
+!!! type    : functions & subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 10/01/2008 by li huang
+!!!           02/08/2009 by li huang
+!!!           09/23/2009 by li huang
+!!!           09/26/2009 by li huang
+!!!           11/17/2009 by li huang
+!!!           11/21/2009 by li huang
+!!!           12/18/2009 by li huang
+!!!           12/22/2009 by li huang
+!!!           12/29/2009 by li huang
+!!!           01/12/2010 by li huang
+!!!           02/27/2010 by li huang
+!!!           06/08/2010 by li huang
+!!!           06/22/2010 by li huang
+!!! purpose : to provide utility functions and subroutines for hybridization
+!!!           expansion version continuous time quantum Monte Carlo (CTQMC)
+!!!           quantum impurity solver
+!!! purpose : to provide cubic spline subroutines and wrapper functions to
+!!!           interpolate the hybridization function in imaginary-time axis
+!!! purpose : forward and backward fourier transformation subroutines for
+!!!           hybridization function
+!!! comment : nominally, the following subroutines are only suitable for the
+!!!           hybridization functions, but in principle, we can also apply
+!!!           them to the impurity green's function and bath weiss's function
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> to build general U interaction matrix: uumat, using my own style
 ! note: do not support spin-flip and pair-hopping term so far
@@ -109,9 +116,6 @@
 
      return
   end subroutine ctqmc_make_state
-
-! purpose : to provide cubic spline subroutines and wrapper functions to
-!           interpolate the hybridization function in imaginary-time axis
 
 !>>> evaluate the matrix elements for mmat matrix using cubic spline interpolation
   function ctqmc_make_htau(flvr, dtau) result(val)
@@ -214,13 +218,6 @@
 
      return
   end subroutine ctqmc_make_hsed
-
-! purpose : forward and backward fourier transformation subroutines for
-!           hybridization function
-! comment : nominally, the following subroutines are only suitable for the
-!           hybridization functions, but in principle, we can also apply
-!           them to the impurity green's function and bath weiss's function
-!-------------------------------------------------------------------------
 
 !>>> fourier htau to hybf, from imaginary time to matsubara frequency
   subroutine ctqmc_fourier_htau(htau, hybf)
