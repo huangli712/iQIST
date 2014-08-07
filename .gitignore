@@ -11,4 +11,5 @@
 test.f90
 test.x
 fort.*
+ctqmc
 .DS_Store
