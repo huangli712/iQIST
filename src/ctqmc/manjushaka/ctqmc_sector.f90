@@ -55,6 +55,8 @@
 ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
 ! F|i> --> |j>
          integer, pointer :: next_sector(:,:)
+
+! this is for truncating the Hilbert space
          integer, pointer :: next_sector_trunc(:,:)
 
 ! the fmat between this sector and all other sectors
@@ -85,6 +87,7 @@
 ! the array contains all the sectors
      type(t_sector), public, save, allocatable :: sectors(:)
 
+! which sectors should be truncated ?
      logical, public, save, allocatable :: is_trunc(:)
 
      contains
@@ -261,12 +264,12 @@
      end subroutine ctqmc_deallocate_memory_sect
 
 !>>> subroutine used to truncate the Hilbert space
-     subroutine ctqmc_make_trun()
+     subroutine ctqmc_make_trunc()
         implicit none
 
 ! local variables
 ! loop index
-        integer :: i,j,k, ii
+        integer :: i,j,k,ii
 
 ! don't truncate the Hilbert space at all
         if (itrun == 1) then
@@ -300,7 +303,7 @@
         endif
 
         return
-     end subroutine ctqmc_make_trun
+     end subroutine ctqmc_make_trunc
 
 !>>> subroutine used to build a string
      subroutine ctqmc_make_string(csize, index_t_loc, is_string, string)
