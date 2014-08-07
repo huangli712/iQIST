@@ -49,7 +49,7 @@
      character (len = 20) :: date_time_string
 
 ! obtain current date and time
-     call ctqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
 ! open status file: solver.status.dat
      open(mytmp, file='solver.status.dat', form='formatted', status='unknown')
