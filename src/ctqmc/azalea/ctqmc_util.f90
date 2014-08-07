@@ -86,43 +86,43 @@
 !  end subroutine ctqmc_dmat_inv
 
 !>>> invert complex(dp) matrix using lapack subroutines
-  subroutine ctqmc_zmat_inv(ndim, zmat)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of zmat matrix
-     integer, intent(in) :: ndim
-
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the inversed matrix
-     complex(dp), intent(inout) :: zmat(ndim,ndim)
-
-! local variables
-! error flag
-     integer     :: ierror
-
-! working arrays for lapack subroutines
-     integer     :: ipiv(ndim)
-     complex(dp) :: work(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, zgetrf subroutine
-     call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_zmat_inv','error in lapack subroutine zgetrf')
-     endif
-
-! computes the inverse of an LU-factored general matrix, need lapack
-! package, zgetri subroutine
-     call zgetri(ndim, zmat, ndim, ipiv, work, ndim, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_zmat_inv','error in lapack subroutine zgetri')
-     endif
-
-     return
-  end subroutine ctqmc_zmat_inv
+!  subroutine ctqmc_zmat_inv(ndim, zmat)
+!     use constants, only : dp
+!
+!     implicit none
+!
+!! external arguments
+!! dimension of zmat matrix
+!     integer, intent(in) :: ndim
+!
+!! object matrix, on entry, it contains the original matrix, on exit,
+!! it is destroyed and replaced with the inversed matrix
+!     complex(dp), intent(inout) :: zmat(ndim,ndim)
+!
+!! local variables
+!! error flag
+!     integer     :: ierror
+!
+!! working arrays for lapack subroutines
+!     integer     :: ipiv(ndim)
+!     complex(dp) :: work(ndim)
+!
+!! computes the LU factorization of a general m-by-n matrix, need lapack
+!! package, zgetrf subroutine
+!     call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
+!     if ( ierror /= 0 ) then
+!         call ctqmc_print_error('ctqmc_zmat_inv','error in lapack subroutine zgetrf')
+!     endif
+!
+!! computes the inverse of an LU-factored general matrix, need lapack
+!! package, zgetri subroutine
+!     call zgetri(ndim, zmat, ndim, ipiv, work, ndim, ierror)
+!     if ( ierror /= 0 ) then
+!         call ctqmc_print_error('ctqmc_zmat_inv','error in lapack subroutine zgetri')
+!     endif
+!
+!     return
+!  end subroutine ctqmc_zmat_inv
 
 !>>> calculate the determinant of a real(dp) matrix
   subroutine ctqmc_dmat_det(ndim, dmat, ddet)

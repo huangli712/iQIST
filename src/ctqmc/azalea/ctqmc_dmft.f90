@@ -80,7 +80,7 @@
      enddo ! over i={1,norbs} loop
 
      do k=1,mfreq
-         call ctqmc_zmat_inv(norbs, wssf(k,:,:))
+         call s_inv_z(norbs, wssf(k,:,:))
      enddo ! over k={1,mfreq} loop
 
 ! fourier transformation bath weiss's function from matsubara frequency
@@ -349,7 +349,7 @@
 
 ! calculate G^{-1}, now grnf contains G^{-1}
      do k=1,mfreq
-         call ctqmc_zmat_inv(norbs, grnf(k,:,:))
+         call s_inv_z(norbs, grnf(k,:,:))
      enddo ! over k={1,mfreq} loop
 
 ! calculate final hybridization function using dyson's equation
