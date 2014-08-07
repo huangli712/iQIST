@@ -16,7 +16,7 @@
 !!! purpose : this purpose of this module is to implement a generic and
 !!!           flexible config/input file reader and analyzer.
 !!! status  : unstable
-!!! comment : this module depends on constants and linkedlist modules
+!!! comment : this module depends on linkedlist module
 !!!-----------------------------------------------------------------------
 
 !!
@@ -36,7 +36,7 @@
 !!    will be ignored completely.
 !!
 !!    example:
-!!    
+!!
 !!    # this is a comment line
 !!    ! this is a comment line
 !!
@@ -57,7 +57,7 @@
 !!
 !!    nband = 4 ! you can use nband : 4
 !!    norbs : 8 ! you can use norbs = 8
-!! 
+!!
 !! 4. any space will be ignored. any blank lines will be skipped as well.
 !!
 !!    example:
@@ -74,14 +74,14 @@
 !!    4                   ! it is not valid
 !!
 !! 6. in the value part, now only integer, real(dp), logical, and character
-!!    data type are support. 
+!!    data type are support.
 !!
 !!    example:
 !!
 !!    nband = 4        ! integer type
 !!    mune  = 4.0      ! real(dp) type
 !!    isscf = .true.   ! logical type, you can also use .false., T, F
-!!    model = anderson ! character type, do not use "" or '' characters
+!!    model = anderson ! character type, do not use "" or '' characters to quote it
 !!
 !! 7. in the value part, a vector is also support. the items in the vector
 !!    should be separated by "," character.
@@ -97,7 +97,7 @@
 !!
 !! 9. if one key occurs in the input file for more than 1 times, only the
 !!    first occurrence is recognized.
-!! 
+!!
 !! Usage
 !! =====
 !!
@@ -122,20 +122,25 @@
 !! 4. extract parameters
 !! ---------------------
 !!
-!! integer :: nband = 2         ! default value
-!! real(dp) :: mune = 10.0_dp   ! default value
-!! logical :: symm(2)           ! default value
+!! integer :: nband = 2            ! default value
+!! real(dp) :: mune = 10.0_dp      ! default value
+!! logical :: symm(2)              ! default value
 !! symm(1) = .true.
 !! symm(2) = .false.
-!! call p_get('nband', nband)   ! get single value
-!! call p_get('mune', mune)     ! get single value
-!! call p_get_vec('symm', symm) ! get array
+!! call p_get('nband', nband)      ! get single value
+!! call p_get('mune', mune)        ! get single value
+!! call p_get_vec('symm', symm, 2) ! get array
 !!
 !! note: that if the desired parameter is not contained in the config file,
 !! then the default value will not be changed.
 !!
 !! note: in the mpi environment, only the master node can execute these
 !! commands.
+!!
+!! note: the parser DO NOT check the correctness (including number of
+!! values, key's name, and datatype of value) of the input file. So, please
+!! always monitor the output of ctqmc code which use this parser to parse
+!! the input file.
 !!
 !! 5. destroy parser
 !! -----------------
@@ -151,10 +156,22 @@
 !!
 
   module parser
-     use constants
-     use linkedlist 
+     use linkedlist
 
      implicit none
+
+!!========================================================================
+!!>>> declare global constants                                         <<<
+!!========================================================================
+
+! dp: number precision, double precision for reals
+     integer, private, parameter :: dp    = kind(1.0d0)
+
+! mystd: device descriptor, console output
+     integer, private, parameter :: mystd = 6
+
+! mytmp: file unit for common file output
+     integer, private, parameter :: mytmp = 100
 
 !!========================================================================
 !!>>> declare global data types                                        <<<
@@ -292,11 +309,13 @@
              q = index(string, '=')
 ! case 1: we do not find any ":" or "=" character
              if ( p == 0 .and. q == 0 ) then
-                 call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
+                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 STOP
              endif ! back if ( p == 0 .and. q == 0 ) block
 ! case 2: we find both ":" and "=" characters
              if ( p >  0 .and. q >  0 ) then
-                 call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
+                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 STOP
              endif ! back if ( p >  0 .and. q >  0 ) block
 ! case 3: we find only ":" character
              if ( p > 0 ) then
@@ -317,10 +336,12 @@
 
 ! check the length of str_key and str_value
              if ( len_trim(str_key) == 0   ) then
-                 call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
+                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 STOP
              endif ! back if ( len_trim(str_key) == 0   ) block
              if ( len_trim(str_value) == 0 ) then
-                 call s_print_error('p_parse', 'wrong file format for '//trim(in_file))
+                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 STOP
              endif ! back if ( len_trim(str_value) == 0 ) block
 
 ! store the key-value pair in the linked list structure
@@ -355,6 +376,9 @@
 ! loop index
      integer :: p
 
+! flag for the search results
+     logical :: found
+
 ! string representation for the key
      character(len = 32) :: str_key
 
@@ -371,6 +395,7 @@
 
 ! visit the linked list and try to find out the required key-value pair
 ! whose key is the same with str_key
+     found = .false.
      curr => list_ptr
      do p=1,list_count(list_ptr)-1
 ! note that we skip the first element since it is invalid
@@ -378,6 +403,7 @@
          data_ptr = transfer(list_get(curr), data_ptr)
 ! the required key-value pair is found, extract the value to str_value
          if ( trim(str_key) .eq. trim(data_ptr%str_key) ) then
+             found = .true.
              str_value = data_ptr%str_value
              call s_str_lowcase(str_value)
              call s_str_compress(str_value)
@@ -385,6 +411,9 @@
          endif ! back if block
      enddo ! over do loop
      curr => null()
+
+! we can not find matched key, so return directly
+     if ( found .eqv. .false. ) return
 
 ! convert str_value to out_value, here we only support the following
 ! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
@@ -398,7 +427,8 @@
          type is (character(len=*)) ! for character
              out_value = str_value
          class default
-             call s_print_error('p_get', 'unrecognize data type')
+             write(mystd, '(a)') 'parser: p_get, unrecognize data type'
+             STOP
      end select
 
      return
@@ -425,10 +455,13 @@
      integer  :: q
      integer  :: offset
 
-! auxiliary variables used in the converting process 
+! auxiliary variables used in the converting process
      integer  :: int_aux
      logical  :: bool_aux
      real(dp) :: real_aux
+
+! flag for the search results
+     logical  :: found
 
 ! string representation for the key
      character(len = 32) :: str_key
@@ -446,6 +479,7 @@
 
 ! visit the linked list and try to find out the required key-value pair
 ! whose key is the same with str_key
+     found = .false.
      curr => list_ptr
      do p=1,list_count(list_ptr)-1
 ! note that we skip the first element since it is invalid
@@ -453,6 +487,7 @@
          data_ptr = transfer(list_get(curr), data_ptr)
 ! the required key-value pair is found, extract the value to str_value
          if ( trim(str_key) .eq. trim(data_ptr%str_key) ) then
+             found = .true.
              str_value = data_ptr%str_value
              call s_str_lowcase(str_value)
              call s_str_compress(str_value)
@@ -460,6 +495,9 @@
          endif ! back if block
      enddo ! over do loop
      curr => null()
+
+! we can not find matched key, so return directly
+     if ( found .eqv. .false. ) return
 
 ! convert str_value to out_value, here we only support the following
 ! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
@@ -508,7 +546,8 @@
              enddo ! over p={1,nsize-1} loop
              out_value(nsize) = str_value(q+1:)
          class default
-             call s_print_error('p_get_vec', 'unrecognize data type')
+             write(mystd, '(a)') 'parser: p_get_vec, unrecognize data type'
+             STOP
      end select
 
      return

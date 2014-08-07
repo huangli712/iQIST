@@ -1,12 +1,22 @@
+##
+##
+## Introduction
+## ============
+##
+## Makefile for iqist/src/ctqmc/azalea directory
+##
+## Usage
+## =====
+##
+## 'make', 'make lib', 'make clean', 'make clean-dat' or 'make clean-all'
+##
+##
+
 .SUFFIXES: .f90
 
 include ../../build/make.sys
 
-default: all
-
-modm = mod_mpi.o mod_spring.o mod_stack.o
-modc = ctqmc_constants.o ctqmc_control.o ctqmc_context.o
-modi = ctqmc_api.o
+modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
 core = ctqmc_solver.o
 lev1 = ctqmc_flavor.o ctqmc_update.o
@@ -14,22 +24,32 @@ lev2 = ctqmc_record.o ctqmc_status.o ctqmc_stream.o
 lev3 = ctqmc_fourier.o ctqmc_spline.o ctqmc_util.o
 dump = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
+MAPI = ctqmc_api.o libMM.a
 
-objects = $(modm) $(modc) $(modi) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(dump) $(main)
+objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(dump) $(main) $(MAPI)
 
-all: ctqmc_exe
+default: all
+
+all: exe
+
+api:
+	cp ../api/api.mod .
+	cp ../api/ctqmc_api.o .
 
 cssl:
+	cp ../../common/libMM.a .
 
 csml:
-	cp ../../common/constants.mod
-	cp ../../common/mmpi.mod
-	cp ../../common/spring.mod
-	cp ../../common/stack.mod
+	cp ../../common/constants.mod .
+	cp ../../common/mmpi.mod .
+	cp ../../common/spring.mod .
+	cp ../../common/stack.mod .
 
+exe: api cssl csml ctqmc_exe
 ctqmc_exe: $(objects)
 	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
 
+lib: api cssl csml ctqmc_lib
 ctqmc_lib: $(objects)
 	$(ARCHIVER) libctqmc.a $(objects)
 
@@ -41,6 +61,7 @@ clean:
 	rm -f *.o
 	rm -f ctqmc
 	rm -f libctqmc.a
+	rm -f libMM.a
 
 clean-dat:
 	rm -f *.dat

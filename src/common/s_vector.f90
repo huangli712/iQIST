@@ -3,22 +3,88 @@
 !!! program : s_linspace_d
 !!!           s_logspace_d
 !!!           s_linspace_z
-!!!           s_legendre
-!!!           s_chebyshev
+!!!           s_sum_i
+!!!           s_sum_d
+!!1           s_sum_z
+!!!           s_cumsum_i
+!!!           s_cumsum_d
+!!!           s_cumsum_z
+!!!           s_prod_i
+!!!           s_prod_d
+!!!           s_prod_z
+!!!           s_cumprod_i
+!!!           s_cumprod_d
+!!!           s_cumprod_z
 !!!           s_swap_i
 !!!           s_swap_d
 !!!           s_swap_z
+!!!           s_legendre
+!!!           s_chebyshev
 !!! source  : s_math.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/24/2014 by li huang
 !!!           08/01/2014 by li huang
-!!! purpose : these subroutines are used to manipulate grid and mesh, to
-!!!           generate Legendre polynomial and Chebyshev polynomial, etc.
+!!! purpose : these subroutines are designed for vectors or arrays. They
+!!!           can be used to manipulate grid and mesh, to generate the
+!!!           Legendre polynomial and Chebyshev polynomial, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! 1. mesh generation
+!! ------------------
+!!
+!! subroutine s_linspace_d(...)
+!! subroutine s_logspace_d(...)
+!! subroutine s_linspace_z(...)
+!!
+!! 2. sum of vector
+!! ----------------
+!!
+!! subroutine s_sum_i(...)
+!! subroutine s_sum_d(...)
+!! subroutine s_sum_z(...)
+!!
+!! subroutine s_cumsum_i(...)
+!! subroutine s_cumsum_d(...)
+!! subroutine s_cumsum_z(...)
+!!
+!! 3. product of vector
+!! --------------------
+!!
+!! subroutine s_prod_i(...)
+!! subroutine s_prod_d(...)
+!! subroutine s_prod_z(...)
+!!
+!! subroutine s_cumprod_i(...)
+!! subroutine s_cumprod_d(...)
+!! subroutine s_cumprod_z(...)
+!!
+!! 4. swap vector
+!! -----------------
+!!
+!! subroutine s_swap_i(...)
+!! subroutine s_swap_d(...)
+!! subroutine s_swap_z(...)
+!!
+!! 5. orthogonal polynomial
+!! ------------------------
+!!
+!! subroutine s_legendre(...)
+!! subroutine s_chebyshev(...)
+!!
+!!
+
+!!========================================================================
+!!>>> mesh generation                                                  <<<
+!!========================================================================
 
 !!>>> s_linspace_d: create a linear mesh x in interval [xmin, xmax], real(dp) version
   subroutine s_linspace_d(xmin, xmax, n, x)
@@ -105,6 +171,387 @@
 
      return
   end subroutine s_linspace_z
+
+!!========================================================================
+!!>>> sum operations                                                   <<<
+!!========================================================================
+
+!!>>> s_sum_i: return the sum of an integer array
+  subroutine s_sum_i(n, v, vsum)
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)  :: n
+
+! sum of array v
+     integer, intent(out) :: vsum
+
+! input integer array
+     integer, intent(in)  :: v(n)
+
+     vsum = sum(v)
+
+     return
+  end subroutine s_sum_i
+
+!!>>> s_sum_d: return the sum of a real(dp) array
+  subroutine s_sum_d(n, v, vsum)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)   :: n
+
+! sum of array v
+     real(dp), intent(out) :: vsum
+
+! input real(dp) array
+     real(dp), intent(in)  :: v(n)
+
+     vsum = sum(v)
+
+     return
+  end subroutine s_sum_d
+
+!!>>> s_sum_z: return the sum of a complex(dp) array
+  subroutine s_sum_z(n, v, vsum)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)      :: n
+
+! sum of array v
+     complex(dp), intent(out) :: vsum
+
+! input complex(dp) array
+     complex(dp), intent(in)  :: v(n)
+
+     vsum = sum(v)
+
+     return
+  end subroutine s_sum_z
+
+!!>>> s_cumsum_i: return the cumsum of an integer array
+  subroutine s_cumsum_i(n, v, vsum)
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)  :: n
+
+! input integer array
+     integer, intent(in)  :: v(n)
+
+! cumsum of array v
+     integer, intent(out) :: vsum(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     vsum(1) = v(1)
+     do i=2,n
+         vsum(i) = vsum(i-1) + v(i)
+     enddo ! over i={2,n} loop
+
+     return
+  end subroutine s_cumsum_i
+
+!!>>> s_cumsum_d: return the cumsum of a real(dp) array
+  subroutine s_cumsum_d(n, v, vsum)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)   :: n
+
+! input real(dp) array
+     real(dp), intent(in)  :: v(n)
+
+! cumsum of array v
+     real(dp), intent(out) :: vsum(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     vsum(1) = v(1)
+     do i=2,n
+         vsum(i) = vsum(i-1) + v(i)
+     enddo ! over i={2,n} loop
+
+     return
+  end subroutine s_cumsum_d
+
+!!>>> s_cumsum_z: return the cumsum of a complex(dp) array
+  subroutine s_cumsum_z(n, v, vsum)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)      :: n
+
+! input complex(dp) array
+     complex(dp), intent(in)  :: v(n)
+
+! cumsum of array v
+     complex(dp), intent(out) :: vsum(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     vsum(1) = v(1)
+     do i=2,n
+         vsum(i) = vsum(i-1) + v(i)
+     enddo ! over i={2,n} loop
+
+     return
+  end subroutine s_cumsum_z
+
+!!========================================================================
+!!>>> prod operations                                                  <<<
+!!========================================================================
+
+!!>>> s_prod_i: return the product of an integer array
+  subroutine s_prod_i(n, v, vprod)
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)  :: n
+
+! product of array v
+     integer, intent(out) :: vprod
+
+! input integer array
+     integer, intent(in)  :: v(n)
+
+     vprod = product(v)
+
+     return
+  end subroutine s_prod_i
+
+!!>>> s_prod_d: return the product of a real(dp) array
+  subroutine s_prod_d(n, v, vprod)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)   :: n
+
+! product of array v
+     real(dp), intent(out) :: vprod
+
+! input real(dp) array
+     real(dp), intent(in)  :: v(n)
+
+     vprod = product(v)
+
+     return
+  end subroutine s_prod_d
+
+!!>>> s_prod_z: return the product of a complex(dp) array
+  subroutine s_prod_z(n, v, vprod)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)      :: n
+
+! product of array v
+     complex(dp), intent(out) :: vprod
+
+! input complex(dp) array
+     complex(dp), intent(in)  :: v(n)
+
+     vprod = product(v)
+
+     return
+  end subroutine s_prod_z
+
+!!>>> s_cumprod_i: return the cumproduct of an integer array
+  subroutine s_cumprod_i(n, v, vprod)
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)  :: n
+
+! input integer array
+     integer, intent(in)  :: v(n)
+
+! cumproduct of array v
+     integer, intent(out) :: vprod(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     vprod(1) = v(1)
+     do i=2,n
+         vprod(i) = vprod(i-1) * v(i)
+     enddo ! over i={2,n} loop
+
+     return
+  end subroutine s_cumprod_i
+
+!!>>> s_cumprod_d: return the cumproduct of a real(dp) array
+  subroutine s_cumprod_d(n, v, vprod)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)   :: n
+
+! input real(dp) array
+     real(dp), intent(in)  :: v(n)
+
+! cumproduct of array v
+     real(dp), intent(out) :: vprod(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     vprod(1) = v(1)
+     do i=2,n
+         vprod(i) = vprod(i-1) * v(i)
+     enddo ! over i={2,n} loop
+
+     return
+  end subroutine s_cumprod_d
+
+!!>>> s_cumprod_z: return the cumproduct of a complex(dp) array
+  subroutine s_cumprod_z(n, v, vprod)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of array v
+     integer, intent(in)      :: n
+
+! input complex(dp) array
+     complex(dp), intent(in)  :: v(n)
+
+! cumproduct of array v
+     complex(dp), intent(out) :: vprod(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     vprod(1) = v(1)
+     do i=2,n
+         vprod(i) = vprod(i-1) * v(i)
+     enddo ! over i={2,n} loop
+
+     return
+  end subroutine s_cumprod_z
+
+!!========================================================================
+!!>>> swap operations                                                  <<<
+!!========================================================================
+
+!!>>> s_swap_i: exchange two integer vectors
+  subroutine s_swap_i(n, ix, iy)
+     implicit none
+
+! external arguments
+! dimension of integer vector
+     integer, intent(in)    :: n
+
+! integer vector X
+     integer, intent(inout) :: ix(n)
+
+! integer vector Y
+     integer, intent(inout) :: iy(n)
+
+! local variables
+! dummy integer vector
+     integer :: it(n)
+
+     it = ix
+     ix = iy
+     iy = it
+
+     return
+  end subroutine s_swap_i
+
+!!>>> s_swap_d: exchange two real(dp) vectors
+  subroutine s_swap_d(n, dx, dy)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of real(dp) vector
+     integer, intent(in)     :: n
+
+! real(dp) vector X
+     real(dp), intent(inout) :: dx(n)
+
+! real(dp) vector Y
+     real(dp), intent(inout) :: dy(n)
+
+! local variables
+! dummy real(dp) vector
+     real(dp) :: dt(n)
+
+     dt = dx
+     dx = dy
+     dy = dt
+
+     return
+  end subroutine s_swap_d
+
+!!>>> s_swap_z: exchange two complex(dp) vectors
+  subroutine s_swap_z(n, zx, zy)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of complex(dp) vector
+     integer, intent(in)        :: n
+
+! complex(dp) vector X
+     complex(dp), intent(inout) :: zx(n)
+
+! complex(dp) vector Y
+     complex(dp), intent(inout) :: zy(n)
+
+! local variables
+! dummy complex(dp) vector
+     complex(dp) :: zt(n)
+
+     zt = zx
+     zx = zy
+     zy = zt
+
+     return
+  end subroutine s_swap_z
+
+!!========================================================================
+!!>>> Legendre and Chebyshev polynomials                               <<<
+!!========================================================================
 
 !!>>> s_legendre: build legendre polynomial in [-1,1]
   subroutine s_legendre(lemax, legrd, pmesh, ppleg)
@@ -198,82 +645,3 @@
 
      return
   end subroutine s_chebyshev
-
-!!>>> s_swap_i: exchange two integer vectors
-  subroutine s_swap_i(n, ix, iy)
-     implicit none
-
-! external arguments
-! dimension of integer vector
-     integer, intent(in)    :: n
-
-! integer vector X
-     integer, intent(inout) :: ix(n)
-
-! integer vector Y
-     integer, intent(inout) :: iy(n)
-
-! local variables
-! dummy integer vector
-     integer :: it(n)
-
-     it = ix
-     ix = iy
-     iy = it
-
-     return
-  end subroutine s_swap_i
-
-!!>>> s_swap_d: exchange two real(dp) vectors
-  subroutine s_swap_d(n, dx, dy)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of real(dp) vector
-     integer, intent(in)     :: n
-
-! real(dp) vector X
-     real(dp), intent(inout) :: dx(n)
-
-! real(dp) vector Y
-     real(dp), intent(inout) :: dy(n)
-
-! local variables
-! dummy real(dp) vector
-     real(dp) :: dt(n)
-
-     dt = dx
-     dx = dy
-     dy = dt
-
-     return
-  end subroutine s_swap_d
-
-!!>>> s_swap_z: exchange two complex(dp) vectors
-  subroutine s_swap_z(n, zx, zy)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of complex(dp) vector
-     integer, intent(in)        :: n
-
-! complex(dp) vector X
-     complex(dp), intent(inout) :: zx(n)
-
-! complex(dp) vector Y
-     complex(dp), intent(inout) :: zy(n)
-
-! local variables
-! dummy complex(dp) vector
-     complex(dp) :: zt(n)
-
-     zt = zx
-     zx = zy
-     zy = zt
-
-     return
-  end subroutine s_swap_z

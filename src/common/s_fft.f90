@@ -14,6 +14,26 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! 1. forward FFT, from \tau -> i\omega
+!! ------------------------------------
+!!
+!! subroutine s_fft_forward(...)
+!!
+!! 2. backward FFT, from i\omega -> \tau
+!! -------------------------------------
+!!
+!! subroutine s_fft_backward(...)
+!! subroutine s_fft_tails(...)
+!!
+!! Note: the s_fft_tails() subroutine is called by s_fft_backward() internally.
+!!
+!!
+
 !!>>> s_fft_tails: calculate high frequency tails using K. Haule's trick
   subroutine s_fft_tails(rtail, mfreq, rmesh, green)
      use constants, only : dp, zero, one

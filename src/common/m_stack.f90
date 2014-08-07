@@ -147,11 +147,11 @@
 ! dp: number precision, double precision for reals
      integer, private, parameter :: dp    = kind(1.0d0)
 
-! stack size limit, default value
-     integer, private, parameter :: limit = 1024
-
 ! mystd: device descriptor, console output
      integer, private, parameter :: mystd = 6
+
+! stack size limit, default value
+     integer, private, parameter :: limit = 1024
 
 !!========================================================================
 !!>>> declare global data structure                                    <<<
