@@ -188,8 +188,8 @@
 !!>>> ctqmc_four_hybf: fourier hybf to htau, from matsubara frequency to
 !!>>> imaginary time
   subroutine ctqmc_four_hybf(hybf, htau)
-     use constants
-     use control
+     use constants, only : dp
+     use control, only : ntime, norbs, mfreq
      use context, only : tmesh, rmesh
 
      implicit none
