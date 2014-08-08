@@ -3,12 +3,13 @@
 *.mod
 *.o
 *.a
+*.x
+*.exe
 *.i90
 *.dat
 *.data
 *.log
 *.out
 test.f90
-test.x
 fort.*
 .DS_Store
