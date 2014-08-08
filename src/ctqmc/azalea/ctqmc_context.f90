@@ -188,7 +188,7 @@
 
 !!>>> containing physical observables related arrays used by continuous
 !!>>> time quantum Monte Carlo quantum impurity solver
-  module ctqmc_meat
+  module ctqmc_meat !!>>> To tell you a truth, meat means MEAsuremenT
      use constants, only : dp
 
      implicit none
@@ -196,15 +196,19 @@
 ! histogram for perturbation expansion series
      integer,  public, save, allocatable :: hist(:)
 
-! probability of eigenstates of local hamiltonian matrix
-     real(dp), public, save, allocatable :: prob(:)
-
 ! auxiliary physical observables
 ! paux(1) : total energy, Etot
 ! paux(2) : potential engrgy, Epot
 ! paux(3) : kinetic energy, Ekin
 ! paux(4) : magnetic moment, < Sz >
+! paux(5) : average of occupation, < N > = < N1 >
+! paux(6) : average of occupation square, < N2 >
+! paux(7) : reserved
+! paux(8) : reserved
      real(dp), public, save, allocatable :: paux(:)
+
+! probability of eigenstates of local hamiltonian matrix
+     real(dp), public, save, allocatable :: prob(:)
 
 ! impurity occupation number, < n_i >
      real(dp), public, save, allocatable :: nmat(:)
@@ -369,6 +373,10 @@
 
      implicit none
 
+!!========================================================================
+!!>>> declare global variables                                         <<<
+!!========================================================================
+
 ! status flag
      integer, private :: istat
 
@@ -425,7 +433,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      index_s = 0
@@ -456,7 +464,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_mesh','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      tmesh = zero
@@ -472,15 +480,15 @@
 ! allocate memory
      allocate(hist(mkink),        stat=istat)
 
+     allocate(paux(  8  ),        stat=istat)
      allocate(prob(ncfgs),        stat=istat)
-     allocate(paux(  4  ),        stat=istat)
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_meat','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      hist  = 0
@@ -509,7 +517,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      rank  = 0
@@ -541,7 +549,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      lspace = zero
@@ -569,7 +577,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      gtau = zero
@@ -594,7 +602,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      wtau = zero
@@ -618,7 +626,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      sig1 = czero
@@ -674,8 +682,8 @@
 
      if ( allocated(hist)  )   deallocate(hist )
 
-     if ( allocated(prob)  )   deallocate(prob )
      if ( allocated(paux)  )   deallocate(paux )
+     if ( allocated(prob)  )   deallocate(prob )
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
 
