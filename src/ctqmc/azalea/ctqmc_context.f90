@@ -178,7 +178,7 @@
      real(dp), public, save, allocatable :: rmesh(:)
 
 ! complex matsubara frequency mesh
-     complex(dp), public, save, allocatable :: cmesh(:)
+!!     complex(dp), public, save, allocatable :: cmesh(:)
 
 ! identity matrix
      complex(dp), public, save, allocatable :: unity(:,:)
@@ -451,7 +451,7 @@
          allocate(tmesh(ntime),       stat=istat)
          allocate(rmesh(mfreq),       stat=istat)
 
-         allocate(cmesh(mfreq),       stat=istat)
+         !!allocate(cmesh(mfreq),       stat=istat)
 
          allocate(unity(norbs,norbs), stat=istat)
 
@@ -479,7 +479,7 @@
          tmesh = zero
          rmesh = zero
 
-         cmesh = czero
+         !!cmesh = czero
 
          unity = czero
 
@@ -643,7 +643,7 @@
          if ( allocated(tmesh) )   deallocate(tmesh)
          if ( allocated(rmesh) )   deallocate(rmesh)
 
-         if ( allocated(cmesh) )   deallocate(cmesh)
+         !!if ( allocated(cmesh) )   deallocate(cmesh)
 
          if ( allocated(unity) )   deallocate(unity)
 

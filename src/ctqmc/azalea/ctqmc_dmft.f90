@@ -75,7 +75,7 @@
 ! calculate new bath weiss's function
      do i=1,norbs
          do k=1,mfreq
-             wssf(k,i,i) = cmesh(k) + qmune - eimp(i) - hybf(k,i,i)
+             wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
@@ -229,7 +229,7 @@
   subroutine ctqmc_dmft_anydos(hybf, grnf, sigf)
      use constants
      use control
-     use context, only: cmesh, eimp
+     use context, only: rmesh, eimp
 
      use mmpi
 
@@ -334,7 +334,7 @@
          do k=1,mfreq
 
 ! caux = i\omega + \mune - E_{imp} - Sigma(i\omega)
-             caux = cmesh(k) + mune - eimp(j) - sigf(k,j,j)
+             caux = czi * rmesh(k) + mune - eimp(j) - sigf(k,j,j)
 
 ! perform numerical integration
              do i=1,ngrid
@@ -355,7 +355,7 @@
 ! calculate final hybridization function using dyson's equation
      do k=1,mfreq
          do i=1,norbs
-             hybf(k,i,i) = cmesh(k) + mune - eimp(i) - sigf(k,i,i) - grnf(k,i,i)
+             hybf(k,i,i) = czi * rmesh(k) + mune - eimp(i) - sigf(k,i,i) - grnf(k,i,i)
          enddo ! over i={1,norbs} loop
      enddo ! over k={1,mfreq} loop
 

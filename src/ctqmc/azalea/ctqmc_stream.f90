@@ -284,9 +284,9 @@
      enddo ! over j={1,mfreq} loop
 
 ! build matsubara frequency mesh: cmesh
-     do k=1,mfreq
-         cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
-     enddo ! over k={1,mfreq} loop
+     !!do k=1,mfreq
+     !!    cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
+     !!enddo ! over k={1,mfreq} loop
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
