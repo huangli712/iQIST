@@ -347,6 +347,9 @@
 ! S_a1(q1)-->q2, S_a2(q2)-->q3, ... S_ai(qi)-->qi+1, ..., Sak(qk)-->q1
 ! if we find some qi==0, we cycle this sector immediately
         do i=1,nsectors
+            if (is_trunc(i)) then
+                is_string(i) = .false.
+            endif
             curr_sect_left = i
             curr_sect_right = i
             next_sect_left = i
