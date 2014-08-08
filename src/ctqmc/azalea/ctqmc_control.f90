@@ -13,8 +13,6 @@
 !           version continuous time quantum Monte Carlo (CTQMC) quantum
 !           impurity solver and dynamical mean field theory (DMFT) self-
 !           consistent engine
-! input   :
-! output  :
 ! status  : unstable
 ! comment :
 !-------------------------------------------------------------------------
