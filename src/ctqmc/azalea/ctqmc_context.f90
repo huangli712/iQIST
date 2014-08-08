@@ -557,27 +557,27 @@
      return
   end subroutine ctqmc_allocate_memory_mmat
 
-!>>> allocate memory for gmat-related variables
-     subroutine ctqmc_allocate_memory_gmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_gmat: allocate memory for gmat-related variables
+  subroutine ctqmc_allocate_memory_gmat()
+     implicit none
 
 ! allocate memory
-         allocate(gtau(ntime,norbs,norbs), stat=istat)
+     allocate(gtau(ntime,norbs,norbs), stat=istat)
 
-         allocate(grnf(mfreq,norbs,norbs), stat=istat)
+     allocate(grnf(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
+     endif
 
 ! initialize them
-         gtau = zero
+     gtau = zero
 
-         grnf = czero
+     grnf = czero
 
-         return
-     end subroutine ctqmc_allocate_memory_gmat
+     return
+  end subroutine ctqmc_allocate_memory_gmat
 
 !>>> allocate memory for wmat-related variables
      subroutine ctqmc_allocate_memory_wmat()
