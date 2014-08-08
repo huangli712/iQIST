@@ -143,6 +143,8 @@
 ! pair-hopping term
      real(dp), public, save :: Jp    = 0.00_dp
 
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! chemical potential or fermi level
 ! note: it should/can be replaced with eimp
      real(dp), public, save :: mune  = 2.00_dp
