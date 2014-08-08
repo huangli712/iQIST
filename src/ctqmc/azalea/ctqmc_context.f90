@@ -217,12 +217,17 @@
 !!========================================================================
 !!>>> module ctqmc_umat                                                <<<
 !!========================================================================
-!!>>> containing util-matrix related arrays used by continuous time quantum
-!!>>> Monte Carlo quantum impurity solver
+
+!!>>> containing auxiliary arrays used by continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
   module ctqmc_umat
      use constants, only : dp
 
      implicit none
+
+!-------------------------------------------------------------------------
+!::: ctqmc status variables                                            :::
+!-------------------------------------------------------------------------
 
 ! current perturbation expansion order for different flavor channel
      integer,  public, save, allocatable :: rank(:)
@@ -233,24 +238,24 @@
 !-------------------------------------------------------------------------
 !::: input data variables                                              :::
 !-------------------------------------------------------------------------
+
 ! symmetry properties for correlated orbitals
      integer,  public, save, allocatable :: symm(:)
 
 ! impurity level for correlated orbitals
      real(dp), public, save, allocatable :: eimp(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! reduced Coulomb interaction matrix, two-index version
      real(dp), public, save, allocatable :: uumat(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
   end module ctqmc_umat
 
-!=========================================================================
-!>>> module ctqmc_mmat                                                 <<<
-!=========================================================================
-!>>> containing M-matrix and G-matrix related arrays used by continuous
-! time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_mmat                                                <<<
+!!========================================================================
+
+!!>>> containing M-matrix and G-matrix related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
   module ctqmc_mmat
      use constants, only : dp
 
