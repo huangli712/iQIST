@@ -627,65 +627,109 @@
      return
   end subroutine ctqmc_allocate_memory_smat
 
-!=========================================================================
-!>>> deallocate memory subroutines                                     <<<
-!=========================================================================
+!!========================================================================
+!!>>> deallocate memory subroutines                                    <<<
+!!========================================================================
 
-!>>> deallocate memory for clur-related variables
-     subroutine ctqmc_deallocate_memory_clur()
-         implicit none
+!!>>> ctqmc_deallocate_memory_clur: deallocate memory for clur-related variables
+  subroutine ctqmc_deallocate_memory_clur()
+     implicit none
 
 ! loop index
-         integer :: i
+     integer :: i
 
-         do i=1,norbs
-             call istack_destroy(empty_s(i))
-             call istack_destroy(empty_e(i))
-         enddo ! over i={1,norbs} loop
+     do i=1,norbs
+         call istack_destroy(empty_s(i))
+         call istack_destroy(empty_e(i))
+     enddo ! over i={1,norbs} loop
 
-         if ( allocated(index_s) ) deallocate(index_s)
-         if ( allocated(index_e) ) deallocate(index_e)
+     if ( allocated(index_s) ) deallocate(index_s)
+     if ( allocated(index_e) ) deallocate(index_e)
 
-         if ( allocated(time_s)  ) deallocate(time_s )
-         if ( allocated(time_e)  ) deallocate(time_e )
+     if ( allocated(time_s)  ) deallocate(time_s )
+     if ( allocated(time_e)  ) deallocate(time_e )
 
-         if ( allocated(exp_s)   ) deallocate(exp_s  )
-         if ( allocated(exp_e)   ) deallocate(exp_e  )
+     if ( allocated(exp_s)   ) deallocate(exp_s  )
+     if ( allocated(exp_e)   ) deallocate(exp_e  )
 
-         if ( allocated(empty_s) ) deallocate(empty_s)
-         if ( allocated(empty_e) ) deallocate(empty_e)
+     if ( allocated(empty_s) ) deallocate(empty_s)
+     if ( allocated(empty_e) ) deallocate(empty_e)
 
-         return
-     end subroutine ctqmc_deallocate_memory_clur
+     return
+  end subroutine ctqmc_deallocate_memory_clur
 
-!>>> deallocate memory for umat-related variables
-     subroutine ctqmc_deallocate_memory_umat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_umat: deallocate memory for umat-related variables
+  subroutine ctqmc_deallocate_memory_umat()
+     implicit none
 
-         if ( allocated(hist)  )   deallocate(hist )
-         if ( allocated(rank)  )   deallocate(rank )
-         if ( allocated(stts)  )   deallocate(stts )
+     if ( allocated(hist)  )   deallocate(hist )
+     if ( allocated(rank)  )   deallocate(rank )
+     if ( allocated(stts)  )   deallocate(stts )
 
-         if ( allocated(symm)  )   deallocate(symm )
+     if ( allocated(symm)  )   deallocate(symm )
 
-         if ( allocated(eimp)  )   deallocate(eimp )
+     if ( allocated(eimp)  )   deallocate(eimp )
 
-         if ( allocated(prob)  )   deallocate(prob )
-         if ( allocated(paux)  )   deallocate(paux )
-         if ( allocated(nmat)  )   deallocate(nmat )
+     if ( allocated(prob)  )   deallocate(prob )
+     if ( allocated(paux)  )   deallocate(paux )
+     if ( allocated(nmat)  )   deallocate(nmat )
 
-         if ( allocated(nnmat) )   deallocate(nnmat)
-         if ( allocated(uumat) )   deallocate(uumat)
+     if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(uumat) )   deallocate(uumat)
 
-         if ( allocated(tmesh) )   deallocate(tmesh)
-         if ( allocated(rmesh) )   deallocate(rmesh)
+     if ( allocated(tmesh) )   deallocate(tmesh)
+     if ( allocated(rmesh) )   deallocate(rmesh)
 
-         !!if ( allocated(cmesh) )   deallocate(cmesh)
+     return
+  end subroutine ctqmc_deallocate_memory_umat
+!!>>> ctqmc_deallocate_memory_umat: deallocate memory for umat-related variables
+  subroutine ctqmc_deallocate_memory_umat()
+     implicit none
 
-         !!if ( allocated(unity) )   deallocate(unity)
+     if ( allocated(hist)  )   deallocate(hist )
+     if ( allocated(rank)  )   deallocate(rank )
+     if ( allocated(stts)  )   deallocate(stts )
 
-         return
-     end subroutine ctqmc_deallocate_memory_umat
+     if ( allocated(symm)  )   deallocate(symm )
+
+     if ( allocated(eimp)  )   deallocate(eimp )
+
+     if ( allocated(prob)  )   deallocate(prob )
+     if ( allocated(paux)  )   deallocate(paux )
+     if ( allocated(nmat)  )   deallocate(nmat )
+
+     if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(uumat) )   deallocate(uumat)
+
+     if ( allocated(tmesh) )   deallocate(tmesh)
+     if ( allocated(rmesh) )   deallocate(rmesh)
+
+     return
+  end subroutine ctqmc_deallocate_memory_umat
+!!>>> ctqmc_deallocate_memory_umat: deallocate memory for umat-related variables
+  subroutine ctqmc_deallocate_memory_umat()
+     implicit none
+
+     if ( allocated(hist)  )   deallocate(hist )
+     if ( allocated(rank)  )   deallocate(rank )
+     if ( allocated(stts)  )   deallocate(stts )
+
+     if ( allocated(symm)  )   deallocate(symm )
+
+     if ( allocated(eimp)  )   deallocate(eimp )
+
+     if ( allocated(prob)  )   deallocate(prob )
+     if ( allocated(paux)  )   deallocate(paux )
+     if ( allocated(nmat)  )   deallocate(nmat )
+
+     if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(uumat) )   deallocate(uumat)
+
+     if ( allocated(tmesh) )   deallocate(tmesh)
+     if ( allocated(rmesh) )   deallocate(rmesh)
+
+     return
+  end subroutine ctqmc_deallocate_memory_umat
 
 !>>> deallocate memory for mmat-related variables
      subroutine ctqmc_deallocate_memory_mmat()
