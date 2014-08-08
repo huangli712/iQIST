@@ -186,6 +186,8 @@
 !!>>> module ctqmc_meat                                                <<<
 !!========================================================================
 
+!!>>> containing physical observables related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
   module ctqmc_meat
      use constants, only : dp
 
@@ -194,9 +196,6 @@
 ! histogram for perturbation expansion series
      integer,  public, save, allocatable :: hist(:)
 
-!-------------------------------------------------------------------------
-!::: physical observables                                              :::
-!-------------------------------------------------------------------------
 ! probability of eigenstates of local hamiltonian matrix
      real(dp), public, save, allocatable :: prob(:)
 
