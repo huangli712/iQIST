@@ -182,7 +182,11 @@
 
   end module ctqmc_mesh
 
-  module ctqmc_phys
+!!========================================================================
+!!>>> module ctqmc_meat                                                <<<
+!!========================================================================
+
+  module ctqmc_meat
      use constants, only : dp
 
      implicit none
@@ -209,7 +213,7 @@
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
 
-  end module ctqmc_phys
+  end module ctqmc_meat
 
 !!========================================================================
 !!>>> module ctqmc_umat                                                <<<
@@ -348,7 +352,7 @@
      use ctqmc_clur
 
      use ctqmc_mesh
-     use ctqmc_phys
+     use ctqmc_meat
      use ctqmc_umat
      use ctqmc_mmat
 
