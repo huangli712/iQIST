@@ -445,63 +445,55 @@
      return
   end subroutine ctqmc_allocate_memory_clur
 
-!>>> allocate memory for umat-related variables
-     subroutine ctqmc_allocate_memory_umat()
-         implicit none
+!!>>> ctqmc_allocate_memory_umat: allocate memory for umat-related variables
+  subroutine ctqmc_allocate_memory_umat()
+     implicit none
 
 ! allocate memory
-         allocate(hist(mkink),        stat=istat)
-         allocate(rank(norbs),        stat=istat)
-         allocate(stts(norbs),        stat=istat)
+     allocate(hist(mkink),        stat=istat)
+     allocate(rank(norbs),        stat=istat)
+     allocate(stts(norbs),        stat=istat)
 
-         allocate(symm(norbs),        stat=istat)
+     allocate(symm(norbs),        stat=istat)
 
-         allocate(eimp(norbs),        stat=istat)
+     allocate(eimp(norbs),        stat=istat)
 
-         allocate(prob(ncfgs),        stat=istat)
-         allocate(paux(  4  ),        stat=istat)
-         allocate(nmat(norbs),        stat=istat)
+     allocate(prob(ncfgs),        stat=istat)
+     allocate(paux(  4  ),        stat=istat)
+     allocate(nmat(norbs),        stat=istat)
 
-         allocate(nnmat(norbs,norbs), stat=istat)
-         allocate(uumat(norbs,norbs), stat=istat)
+     allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(uumat(norbs,norbs), stat=istat)
 
-         allocate(tmesh(ntime),       stat=istat)
-         allocate(rmesh(mfreq),       stat=istat)
-
-         !!allocate(cmesh(mfreq),       stat=istat)
-
-         !!allocate(unity(norbs,norbs), stat=istat)
+     allocate(tmesh(ntime),       stat=istat)
+     allocate(rmesh(mfreq),       stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
+     endif
 
 ! initialize them
-         hist  = 0
-         rank  = 0
-         stts  = 0
+     hist  = 0
+     rank  = 0
+     stts  = 0
 
-         symm  = 0
+     symm  = 0
 
-         eimp  = zero
+     eimp  = zero
 
-         prob  = zero
-         paux  = zero
-         nmat  = zero
+     prob  = zero
+     paux  = zero
+     nmat  = zero
 
-         nnmat = zero
-         uumat = zero
+     nnmat = zero
+     uumat = zero
 
-         tmesh = zero
-         rmesh = zero
+     tmesh = zero
+     rmesh = zero
 
-         !!cmesh = czero
-
-         !!unity = czero
-
-         return
-     end subroutine ctqmc_allocate_memory_umat
+     return
+  end subroutine ctqmc_allocate_memory_umat
 
 !>>> allocate memory for mmat-related variables
      subroutine ctqmc_allocate_memory_mmat()
