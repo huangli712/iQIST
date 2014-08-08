@@ -1916,7 +1916,7 @@
      time = time * beta
 
 ! sort time series
-     call ctqmc_time_sorter(2*kink, time)
+     call s_sorter(2*kink, time)
 
 ! build segments or anti-segments
      if ( anti .eqv. .false. ) then
