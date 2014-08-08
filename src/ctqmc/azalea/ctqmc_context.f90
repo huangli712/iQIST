@@ -1,38 +1,26 @@
-!-------------------------------------------------------------------------
-! project : azalea
-! program : ctqmc_core module
-!           ctqmc_clur module
-!           ctqmc_umat module
-!           ctqmc_mmat module
-!           ctqmc_gmat module
-!           ctqmc_wmat module
-!           ctqmc_smat module
-!           context    module
-! source  : ctqmc_context.f90
-! type    : module
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/16/2009 by li huang
-!           09/17/2009 by li huang
-!           09/19/2009 by li huang
-!           09/20/2009 by li huang
-!           09/21/2009 by li huang
-!           09/22/2009 by li huang
-!           09/27/2009 by li huang
-!           11/01/2009 by li huang
-!           11/10/2009 by li huang
-!           11/18/2009 by li huang
-!           12/01/2009 by li huang
-!           12/05/2009 by li huang
-!           02/21/2010 by li huang
-!           02/23/2010 by li huang
-!           06/08/2010 by li huang
-! purpose : define the key data structure and global arrays/variables for
-!           hybridization expansion version continuous time quantum Monte
-!           Carlo (CTQMC) quantum impurity solver and dynamical mean field
-!           theory (DMFT) self-consistent engine
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : ctqmc_core module
+!!!           ctqmc_clur module
+!!!           ctqmc_umat module
+!!!           ctqmc_mmat module
+!!!           ctqmc_gmat module
+!!!           ctqmc_wmat module
+!!!           ctqmc_smat module
+!!!           context    module
+!!! source  : ctqmc_context.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           06/08/2010 by li huang
+!!!           08/07/2014 by li huang
+!!! purpose : To define the key data structure and global arrays/variables
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
+!!!           mean field theory (DMFT) self-consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !=========================================================================
 !>>> module ctqmc_core                                                 <<<
