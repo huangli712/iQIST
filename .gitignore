@@ -12,4 +12,5 @@
 *.out
 test.f90
 fort.*
+src/ctqmc/*/ctqmc
 .DS_Store
