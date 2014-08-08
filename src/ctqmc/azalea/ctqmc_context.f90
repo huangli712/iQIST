@@ -2,6 +2,8 @@
 !!! project : azalea
 !!! program : ctqmc_core module
 !!!           ctqmc_clur module
+!!!           ctqmc_mesh module
+!!!           ctqmc_meat module
 !!!           ctqmc_umat module
 !!!           ctqmc_mmat module
 !!!           ctqmc_gmat module
@@ -13,7 +15,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/08/2010 by li huang
-!!!           08/07/2014 by li huang
+!!!           08/08/2014 by li huang
 !!! purpose : To define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -25,6 +27,7 @@
 !!========================================================================
 !!>>> module ctqmc_core                                                <<<
 !!========================================================================
+
 !!>>> containing core (internal) variables used by continuous time quantum
 !!>>> Monte Carlo quantum impurity solver
   module ctqmc_core
@@ -125,6 +128,7 @@
 !!========================================================================
 !!>>> module ctqmc_clur                                                <<<
 !!========================================================================
+
 !!>>> containing perturbation expansion series related arrays (colour part)
 !!>>> used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_clur
@@ -175,7 +179,6 @@
 
 ! complex matsubara frequency mesh
      complex(dp), public, save, allocatable :: cmesh(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! identity matrix
      complex(dp), public, save, allocatable :: unity(:,:)
@@ -346,6 +349,8 @@
      use ctqmc_core
      use ctqmc_clur
 
+     use ctqmc_mesh
+     use ctqmc_phys
      use ctqmc_umat
      use ctqmc_mmat
 
