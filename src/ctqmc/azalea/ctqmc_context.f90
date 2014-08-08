@@ -22,11 +22,11 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!=========================================================================
-!>>> module ctqmc_core                                                 <<<
-!=========================================================================
-!>>> containing core (internal) variables used by continuous time quantum
-! Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_core                                                <<<
+!!========================================================================
+!!>>> containing core (internal) variables used by continuous time quantum
+!!>>> Monte Carlo quantum impurity solver
   module ctqmc_core
      use constants, only : dp, zero
 
@@ -122,14 +122,14 @@
 
   end module ctqmc_core
 
-!=========================================================================
-!>>> module ctqmc_clur                                                 <<<
-!=========================================================================
-!>>> containing perturbation expansion series related arrays (colour part)
-! used by continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_clur                                                <<<
+!!========================================================================
+!!>>> containing perturbation expansion series related arrays (colour part)
+!!>>> used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_clur
      use constants, only : dp
-     use stack
+     use stack, only : istack, istack_create, istack_destroy
 
      implicit none
 
@@ -159,34 +159,35 @@
 
   end module ctqmc_clur
 
-!=========================================================================
-!>>> module ctqmc_umat                                                 <<<
-!=========================================================================
-!>>> containing util-matrix related arrays used by continuous time quantum
-! Monte Carlo quantum impurity solver
-  module ctqmc_umat
+  module ctqmc_mesh
+     use constants, only : dp
+
+     implicit none
+
+!-------------------------------------------------------------------------
+!::: mesh data variables                                               :::
+!-------------------------------------------------------------------------
+! imaginary time mesh
+     real(dp), public, save, allocatable :: tmesh(:)
+
+! real matsubara frequency mesh
+     real(dp), public, save, allocatable :: rmesh(:)
+
+! complex matsubara frequency mesh
+     complex(dp), public, save, allocatable :: cmesh(:)
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! identity matrix
+     complex(dp), public, save, allocatable :: unity(:,:)
+  end module ctqmc_mesh
+
+  module ctqmc_phys
      use constants, only : dp
 
      implicit none
 
 ! histogram for perturbation expansion series
      integer,  public, save, allocatable :: hist(:)
-
-! current perturbation expansion order for different flavor channel
-     integer,  public, save, allocatable :: rank(:)
-
-! current occupation status for different flavor channel
-     integer,  public, save, allocatable :: stts(:)
-
-!-------------------------------------------------------------------------
-!::: input data variables                                              :::
-!-------------------------------------------------------------------------
-! symmetry properties for correlated orbitals
-     integer,  public, save, allocatable :: symm(:)
-
-! impurity level for correlated orbitals
-     real(dp), public, save, allocatable :: eimp(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
 !::: physical observables                                              :::
@@ -207,25 +208,37 @@
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
 
+  end module ctqmc_phys
+
+!!========================================================================
+!!>>> module ctqmc_umat                                                <<<
+!!========================================================================
+!!>>> containing util-matrix related arrays used by continuous time quantum
+!!>>> Monte Carlo quantum impurity solver
+  module ctqmc_umat
+     use constants, only : dp
+
+     implicit none
+
+! current perturbation expansion order for different flavor channel
+     integer,  public, save, allocatable :: rank(:)
+
+! current occupation status for different flavor channel
+     integer,  public, save, allocatable :: stts(:)
+
+!-------------------------------------------------------------------------
+!::: input data variables                                              :::
+!-------------------------------------------------------------------------
+! symmetry properties for correlated orbitals
+     integer,  public, save, allocatable :: symm(:)
+
+! impurity level for correlated orbitals
+     real(dp), public, save, allocatable :: eimp(:)
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! reduced Coulomb interaction matrix, two-index version
      real(dp), public, save, allocatable :: uumat(:,:)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-!-------------------------------------------------------------------------
-!::: mesh data variables                                               :::
-!-------------------------------------------------------------------------
-! imaginary time mesh
-     real(dp), public, save, allocatable :: tmesh(:)
-
-! real matsubara frequency mesh
-     real(dp), public, save, allocatable :: rmesh(:)
-
-! complex matsubara frequency mesh
-     complex(dp), public, save, allocatable :: cmesh(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! identity matrix
-     complex(dp), public, save, allocatable :: unity(:,:)
 
   end module ctqmc_umat
 
