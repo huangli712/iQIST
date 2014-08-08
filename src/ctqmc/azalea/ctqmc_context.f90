@@ -181,7 +181,8 @@
 !!     complex(dp), public, save, allocatable :: cmesh(:)
 
 ! identity matrix
-     complex(dp), public, save, allocatable :: unity(:,:)
+!!     complex(dp), public, save, allocatable :: unity(:,:)
+
   end module ctqmc_mesh
 
   module ctqmc_phys
@@ -453,7 +454,7 @@
 
          !!allocate(cmesh(mfreq),       stat=istat)
 
-         allocate(unity(norbs,norbs), stat=istat)
+         !!allocate(unity(norbs,norbs), stat=istat)
 
 ! check the status
          if ( istat /= 0 ) then
@@ -481,7 +482,7 @@
 
          !!cmesh = czero
 
-         unity = czero
+         !!unity = czero
 
          return
      end subroutine ctqmc_allocate_memory_umat
@@ -645,7 +646,7 @@
 
          !!if ( allocated(cmesh) )   deallocate(cmesh)
 
-         if ( allocated(unity) )   deallocate(unity)
+         !!if ( allocated(unity) )   deallocate(unity)
 
          return
      end subroutine ctqmc_deallocate_memory_umat

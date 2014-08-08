@@ -268,10 +268,10 @@
      real(dp) :: i1, i2
 
 ! build identity: unity
-     unity = czero
-     do i=1,norbs
-         unity(i,i) = cone
-     enddo ! over i={1,norbs} loop
+     !!unity = czero
+     !!do i=1,norbs
+     !!    unity(i,i) = cone
+     !!enddo ! over i={1,norbs} loop
 
 ! build imaginary time tau mesh: tmesh
      do i=1,ntime
@@ -292,7 +292,8 @@
 ! using the analytical equation at non-interaction limit, and then
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
-         hybf(i,:,:) = unity * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         call s_identity_z( norbs, hybf(i,:,:) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
