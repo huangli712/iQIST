@@ -232,6 +232,8 @@
 ! allocate memory for context module
      call ctqmc_allocate_memory_clur()
 
+     call ctqmc_allocate_memory_mesh()
+     call ctqmc_allocate_memory_meat()
      call ctqmc_allocate_memory_umat()
      call ctqmc_allocate_memory_mmat()
 
@@ -556,6 +558,8 @@
 ! deallocate memory for context module
      call ctqmc_deallocate_memory_clur()
 
+     call ctqmc_deallocate_memory_mesh()
+     call ctqmc_deallocate_memory_meat()
      call ctqmc_deallocate_memory_umat()
      call ctqmc_deallocate_memory_mmat()
 
