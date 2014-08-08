@@ -163,25 +163,22 @@
 
   end module ctqmc_clur
 
+!!========================================================================
+!!>>> module ctqmc_mesh                                                <<<
+!!========================================================================
+
+!!>>> containing mesh related arrays used by continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
   module ctqmc_mesh
      use constants, only : dp
 
      implicit none
 
-!-------------------------------------------------------------------------
-!::: mesh data variables                                               :::
-!-------------------------------------------------------------------------
 ! imaginary time mesh
      real(dp), public, save, allocatable :: tmesh(:)
 
 ! real matsubara frequency mesh
      real(dp), public, save, allocatable :: rmesh(:)
-
-! complex matsubara frequency mesh
-!!     complex(dp), public, save, allocatable :: cmesh(:)
-
-! identity matrix
-!!     complex(dp), public, save, allocatable :: unity(:,:)
 
   end module ctqmc_mesh
 
