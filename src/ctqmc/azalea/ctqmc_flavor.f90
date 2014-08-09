@@ -676,10 +676,12 @@
      return
   end subroutine cat_remove_segment
 
-!>>> update the perturbation expansion series for left shift old segment or anti-segment
+!!>>> cat_lshift_segment: update the perturbation expansion series for
+!!>>> left shift old segment or anti-segment
   subroutine cat_lshift_segment(flvr, iso, isn, tau_start)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
+     use context, only : ckink, index_s, time_s, exp_s, rmesh
 
      implicit none
 
