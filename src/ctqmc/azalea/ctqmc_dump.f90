@@ -1,4 +1,4 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : azalea
 !!! program : ctqmc_dump_gtau
 !!!           ctqmc_dump_wtau
@@ -10,10 +10,10 @@
 !!!           ctqmc_dump_sigf
 !!!           ctqmc_dump_hub1
 !!!           ctqmc_dump_hist
-!!!           ctqmc_dump_nmat
 !!!           ctqmc_dump_prob
+!!!           ctqmc_dump_nmat
 !!! source  : ctqmc_dump.f90
-!!! type    : subroutine
+!!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
@@ -24,7 +24,7 @@
 !!!           -consistent engine to disk files
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
 !>>> write out impurity green's function in imaginary time space
   subroutine ctqmc_dump_gtau(tmesh, gtau)
