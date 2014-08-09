@@ -470,54 +470,11 @@
      return
   end subroutine ctqmc_dump_hist
 
-!!>>> write out the occupation matrix and double occupation matrix
-  subroutine ctqmc_dump_nmat(nmat, nnmat)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! occupation matrix data
-     real(dp), intent(in) :: nmat(norbs)
-
-! double occupation matrix data
-     real(dp), intent(in) :: nnmat(norbs,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.nmat.dat
-     open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
-
-! write it
-     write(mytmp,'(a)') '  < n_i >   data:'
-     do i=1,norbs
-         write(mytmp,'(i5,f12.6)') i, nmat(i)
-     enddo ! over i={1,norbs} loop
-     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
-
-     write(mytmp,'(a)') '< n_i n_j > data:'
-     do i=1,norbs
-         do j=1,norbs
-             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_nmat
-
-!!>>> write out the probability of eigenstates of local hamiltonian matrix
+!!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
+!!>>> hamiltonian matrix
   subroutine ctqmc_dump_prob(prob)
-     use constants
-     use control
+     use constants, only : dp, zero, half, mytmp
+     use control, only : ncfgs, norbs, nband
 
      implicit none
 
@@ -607,3 +564,47 @@
 
      return
   end subroutine ctqmc_dump_prob
+
+!!>>> write out the occupation matrix and double occupation matrix
+  subroutine ctqmc_dump_nmat(nmat, nnmat)
+     use constants
+     use control
+
+     implicit none
+
+! external arguments
+! occupation matrix data
+     real(dp), intent(in) :: nmat(norbs)
+
+! double occupation matrix data
+     real(dp), intent(in) :: nnmat(norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.nmat.dat
+     open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
+
+! write it
+     write(mytmp,'(a)') '  < n_i >   data:'
+     do i=1,norbs
+         write(mytmp,'(i5,f12.6)') i, nmat(i)
+     enddo ! over i={1,norbs} loop
+     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
+     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
+     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
+
+     write(mytmp,'(a)') '< n_i n_j > data:'
+     do i=1,norbs
+         do j=1,norbs
+             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_nmat
