@@ -732,10 +732,12 @@
      return
   end subroutine cat_lshift_segment
 
-!>>> update the perturbation expansion series for right shift old segment or anti-segment
+!!>>> cat_rshift_segment: update the perturbation expansion series for
+!!>>> right shift old segment or anti-segment
   subroutine cat_rshift_segment(flvr, ieo, ien, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
+     use context, only : ckink, index_e, time_e, exp_e, rmesh
 
      implicit none
 
