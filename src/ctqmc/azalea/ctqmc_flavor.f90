@@ -562,10 +562,11 @@
 !!>>> cat_insert_segment: update the perturbation expansion series for
 !!>>> insert new segment or anti-segment
   subroutine cat_insert_segment(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
+     use context, only : ckink, empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e, rmesh
 
-     use stack
+     use stack, only : istack_pop
 
      implicit none
 
@@ -628,12 +629,12 @@
      return
   end subroutine cat_insert_segment
 
-!>>> update the perturbation expansion series for remove old segment or anti-segment
+!!>>> cat_remove_segment: update the perturbation expansion series for
+!!>>> remove old segment or anti-segment
   subroutine cat_remove_segment(flvr, is, ie)
-     use constants
-     use context
+     use context, only : ckink, empty_s, empty_e, index_s, index_e
 
-     use stack
+     use stack, only : istack_push
 
      implicit none
 
