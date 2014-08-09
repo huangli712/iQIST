@@ -171,8 +171,8 @@
 !!>>> semicircular density of states, force a paramagnetic order, equal
 !!>>> band width
   subroutine ctqmc_dmft_bethe(hybf, grnf)
-     use constants
-     use control
+     use constants, only : dp
+     use control, only : norbs, mfreq, part
 
      implicit none
 
@@ -201,8 +201,8 @@
 !!>>> of states, calculate the new hybridization function by using hilbert
 !!>>> transformation and numerical integration
   subroutine ctqmc_dmft_anydos(hybf, grnf, sigf)
-     use constants
-     use control
+     use constants, only : dp, zero, czi, czero, mytmp
+     use control, only : norbs, mfreq, mune, myid, master
      use context, only: rmesh, eimp
 
      use mmpi
