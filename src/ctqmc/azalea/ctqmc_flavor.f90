@@ -437,7 +437,7 @@
   subroutine cat_reswap_ztrace(flvr, trace_ratio)
      use constants, only : dp, zero, one
      use control, only : beta
-     use context, only : cstat, ckink, stts, rank, time_s, time_e, index_s, index_e
+     use context, only : cstat, ckink, stts, rank, index_s, index_e, time_s, time_e 
 
      implicit none
 
@@ -828,15 +828,16 @@
      return
   end subroutine cat_reswap_segment
 
-!-------------------------------------------------------------------------
-!>>> service layer: make segments from perturbation expansion series   <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: make segments from perturbation expansion series  <<<
+!!========================================================================
 
-!>>> determine \tau_s, \tau_e and \tau_max for insert new segment or anti-segment
+!!>>> ctqmc_make_flavor1: determine \tau_s, \tau_e and \tau_max for insert
+!!>>> new segment or anti-segment
   subroutine ctqmc_make_flavor1(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, half
+     use control, only : beta
+     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
 
      use spring
 
