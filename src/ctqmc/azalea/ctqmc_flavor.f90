@@ -1200,13 +1200,14 @@
      return
   end subroutine ctqmc_make_flavor1
 
-!>>> determine \tau_s, \tau_e and \tau_max for remove old segment or anti-segment
+!!>>> ctqmc_make_flavor2: determine \tau_s, \tau_e and \tau_max for remove
+!!>>> old segment or anti-segment
   subroutine ctqmc_make_flavor2(flvr, is, ie, anti, tau_start, tau_end, tau_max)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, half
+     use control, only : beta
+     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
