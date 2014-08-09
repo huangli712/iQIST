@@ -1410,9 +1410,9 @@
 !!>>> ctqmc_make_flavor3: determine \tau_s1 and \tau_s2 for lshift old
 !!>>> segment or anti-segment
   subroutine ctqmc_make_flavor3(flvr, iso, isn, ring, tau_start1, tau_start2)
-     use constants, only : dp
+     use constants, only : dp, zero
      use control, only : beta
-     use context, only : ckink
+     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
 
      use spring, only : spring_sfmt_stream
 
