@@ -265,7 +265,7 @@
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! bath weiss's function
      complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
@@ -297,16 +297,17 @@
      return
   end subroutine ctqmc_dump_wssf
 
-!!>>> write out hybridization function in matsubara frequency space
+!!>>> ctqmc_dump_hybf: write out hybridization function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_hybf(rmesh, hybf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mfreq, norbs, nband
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! hybridization function
      complex(dp), intent(in) :: hybf(mfreq,norbs,norbs)
