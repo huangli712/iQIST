@@ -1,12 +1,13 @@
 !-------------------------------------------------------------------------
 ! project : manjushaka
 ! program : m_sector
-! source  : mod_control.f90
+! source  : ctqmc_sector.f90
 ! type    : modules
 ! authors : yilin wang (email: qhwyl2006@126.com)
 ! history : 07/09/2014
 !           07/19/2014
-! purpose : define data structure for good quantum number algorithm
+!           08/09/2014
+! purpose : define data structure for good quantum numbers (GQNs) algorithm
 ! input   :
 ! output  :
 ! status  : unstable
@@ -21,13 +22,13 @@
  
      implicit none
   
-! the fmat between any two sectors, it is just a matrix
+! the fmat between two sectors, it is a rectangle matrix
      type :: t_fmat
 
 ! the dimension
          integer :: n, m
 
-! the items of the matrix
+! the items 
          real(dp), dimension(:,:), pointer :: item => null()
 
      end type t_fmat
@@ -38,7 +39,7 @@
 ! the dimension
          integer :: n
 
-! the items of the matrix
+! the items 
          real(dp), dimension(:,:), pointer :: item => null()
 
      end type t_sqrmat
@@ -49,7 +50,7 @@
 ! the dimension of this sector
          integer :: ndim
 
-! total number of electrons n
+! total number of electrons
          integer :: nelectron 
 
 ! number of fermion operators
@@ -77,28 +78,33 @@
 
      end type t_sector
      
-! the total number of sectors
+! some private variables
+! allocate status flag 
+     integer, private :: istat
+ 
+! some public and save variables
+! total number of sectors
      integer, public, save :: nsectors
 
 ! total number of sectors after truncated
      integer, public, save :: nsectors_trunc 
 
-! the max dimension of the sectors
+! max dimension of sectors
      integer, public, save :: max_dim_sect
 
-! max dimension of the sectors after truncated
+! max dimension of sectors after truncated
      integer, public, save :: max_dim_sect_trunc
 
-! the average dimension of the sectors
+! average dimension of sectors
      real(dp), public, save :: ave_dim_sect
 
-! average dimension of the sectors after truncated
+! average dimension of sectors after truncated
      real(dp), public, save :: ave_dim_sect_trunc
 
 ! the array contains all the sectors
      type(t_sector), public, save, allocatable :: sectors(:)
 
-! the probability of each sector
+! the probability of each sector, used to truncate high energy states
      real(dp), public, save, allocatable :: prob_sect(:)
 
 ! which sectors should be truncated ?
@@ -122,8 +128,12 @@
 ! external variables
         type(t_fmat), intent(inout) :: one_fmat
   
-        allocate(one_fmat%item(one_fmat%n, one_fmat%m))
-  
+        allocate( one_fmat%item(one_fmat%n, one_fmat%m),  stat=istat)
+
+        if ( istat /= 0 ) then
+            call ctqmc_print_error('alloc_one_fmat','can not allocate enough memory')
+        endif
+
 ! initialize it
         one_fmat%item = zero
   
@@ -149,8 +159,12 @@
 ! external variables
         type(t_sqrmat), intent(inout) :: one_sqrmat
   
-        allocate(one_sqrmat%item(one_sqrmat%n, one_sqrmat%n))
-  
+        allocate( one_sqrmat%item(one_sqrmat%n, one_sqrmat%n),  stat=istat )
+
+        if ( istat /= 0 ) then
+            call ctqmc_print_error('alloc_one_sqrmat','can not allocate enough memory')
+        endif
+ 
 ! initialize it
         one_sqrmat%item = zero
   
@@ -179,10 +193,14 @@
 ! local variables
         integer :: i, j
   
-        allocate(one_sector%myeigval(one_sector%ndim))
-        allocate(one_sector%next_sector(one_sector%nops,0:1))
-        allocate(one_sector%next_sector_trunc(one_sector%nops,0:1))
-        allocate(one_sector%myfmat(one_sector%nops,0:1))
+        allocate( one_sector%myeigval(one_sector%ndim),              stat=istat )
+        allocate( one_sector%next_sector(one_sector%nops,0:1),       stat=istat )
+        allocate( one_sector%next_sector_trunc(one_sector%nops,0:1), stat=istat )
+        allocate( one_sector%myfmat(one_sector%nops,0:1),            stat=istat )
+
+        if ( istat /= 0 ) then
+            call ctqmc_print_error('alloc_one_sector','can not allocate enough memory')
+        endif
   
 ! init them
         one_sector%myeigval = zero
@@ -228,13 +246,12 @@
         return
      end subroutine dealloc_one_sector
 
-!>>> allocate memory for sect-related variables
+!>>> allocate memory for sectors-related variables
      subroutine ctqmc_allocate_memory_sect()
          implicit none
 
 ! local variables
          integer :: i
-         integer :: istat
 
 ! allocate memory
          allocate(sectors(nsectors),    stat=istat)
@@ -291,8 +308,11 @@
 
         integer :: i,j,k
 
-        allocate(final_product(nsectors,2))
-        allocate(occu(norbs, nsectors))
+        allocate(final_product(nsectors,2),  stat=istat)
+        allocate(occu(norbs, nsectors),      stat=istat)
+        if ( istat /= 0 ) then
+            call ctqmc_print_error('ctqmc_allocate_memory_occu','can not allocate enough memory')
+        endif
 
         do i=1, nsectors
             if (is_trunc(i)) cycle
@@ -310,7 +330,11 @@
         enddo
  
         if (idoub == 2) then
-            allocate(double_occu(norbs, norbs, nsectors))
+            allocate(double_occu(norbs, norbs, nsectors),  stat=istat)
+            if ( istat /= 0 ) then
+                call ctqmc_print_error('ctqmc_allocate_memory_occu','can not allocate enough memory')
+            endif
+
             do i=1, nsectors
                 if (is_trunc(i)) cycle
                 do j=1, norbs
@@ -372,7 +396,10 @@
 
 ! local variables
 ! loop index
-        integer :: i,int1
+        integer :: i
+
+! temp integer
+        integer :: int1
 
 ! file status
         logical :: exists
@@ -411,7 +438,6 @@
                 write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors
                 write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect
                 write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect
-                write(mystd,*)
                 write(mystd,'(4X,a)') 'after truncated:'
                 write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors_trunc 
                 write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect_trunc
@@ -456,20 +482,18 @@
                 write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors
                 write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect
                 write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect
-                write(mystd,*)
                 write(mystd,'(4X,a)') 'after truncated:'
                 write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors_trunc 
                 write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect_trunc
                 write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect_trunc
                 write(mystd,*)
             endif
-
-
         endif
 
         return
      end subroutine ctqmc_make_trunc
 
+!>>> recalculate the sectors information after truncated
      subroutine truncate_sectors()
         implicit none
 
@@ -503,7 +527,6 @@
 
         return
      end subroutine truncate_sectors
-
 
 !>>> calculate < c^{\dag} c>, < c^{\dag} c c^{\dag} c >
      subroutine ctqmc_make_occu()

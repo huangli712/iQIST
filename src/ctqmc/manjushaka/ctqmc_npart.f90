@@ -1,3 +1,18 @@
+!-------------------------------------------------------------------------
+! project : manjushaka
+! program : m_npart
+! source  : ctqmc_npart.f90
+! type    : modules
+! authors : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014
+!           07/19/2014
+!           08/09/2014
+! purpose : define data structure for divide conquer (npart) algorithm
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
 !>>> containing the information for npart trace algorithm
   module m_npart
      use constants
@@ -8,6 +23,10 @@
  
      implicit none
 
+! private variables
+     integer, private :: istat
+
+! some public, save variables
 ! number of total matrices multiplication
      real(dp), public, save :: num_prod = zero
 
@@ -37,44 +56,39 @@
 
 !>>> allocate memory for sect-related variables
      subroutine ctqmc_allocate_memory_part()
+        implicit none
 
-         implicit none
-
-         integer :: istat
-         integer :: i,j
+        integer :: i,j
 
 ! allocate memory
-         
-         allocate(is_save(npart, nsectors, 2),    stat=istat)
-         allocate(is_copy(npart, nsectors),       stat=istat)
-         allocate(col_copy(npart, nsectors),      stat=istat)
-         allocate(ops(npart),                     stat=istat)
-         allocate(ope(npart),                     stat=istat)
-         allocate(saved_a(npart, nsectors),       stat=istat)
-         allocate(saved_b(npart, nsectors),       stat=istat)
+        allocate(is_save(npart, nsectors, 2),    stat=istat)
+        allocate(is_copy(npart, nsectors),       stat=istat)
+        allocate(col_copy(npart, nsectors),      stat=istat)
+        allocate(ops(npart),                     stat=istat)
+        allocate(ope(npart),                     stat=istat)
+        allocate(saved_a(npart, nsectors),       stat=istat)
+        allocate(saved_b(npart, nsectors),       stat=istat)
+        if ( istat /= 0 ) then
+            call ctqmc_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
+        endif
 
-         do i=1, nsectors
-             if (is_trunc(i)) cycle
-             do j=1, npart
-                 saved_a(j,i)%n = max_dim_sect_trunc
-                 saved_b(j,i)%n = max_dim_sect_trunc
-                 call alloc_one_sqrmat( saved_a(j,i) )
-                 call alloc_one_sqrmat( saved_b(j,i) )
-             enddo
-         enddo    
+        do i=1, nsectors
+            if (is_trunc(i)) cycle
+            do j=1, npart
+                saved_a(j,i)%n = max_dim_sect_trunc
+                saved_b(j,i)%n = max_dim_sect_trunc
+                call alloc_one_sqrmat( saved_a(j,i) )
+                call alloc_one_sqrmat( saved_b(j,i) )
+            enddo
+        enddo    
 
-! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
-         endif
+        is_save = 1
+        is_copy = .false.
+        col_copy = 0
+        ops = 0
+        ope = 0
 
-         is_save = 1
-         is_copy = .false.
-         col_copy = 0
-         ops = 0
-         ope = 0
-
-         return
+        return
      end subroutine ctqmc_allocate_memory_part
 
 !>>> deallocate memory for sect-related variables
