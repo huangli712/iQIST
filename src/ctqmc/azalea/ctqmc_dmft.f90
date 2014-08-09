@@ -19,8 +19,9 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> the self-consistent engine for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory simulation
+!!>>> ctqmc_dmft_selfer: the self-consistent engine for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
+!!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
      use constants
      use control
@@ -108,7 +109,7 @@
      return
   end subroutine ctqmc_dmft_selfer
 
-!>>> check the convergence of self-energy function
+!!>>> ctqmc_dmft_conver: check the convergence of self-energy function
   subroutine ctqmc_dmft_conver(iter, convergence)
      use constants
      use control
@@ -169,7 +170,8 @@
      return
   end subroutine ctqmc_dmft_conver
 
-!>>> complex(dp) version, mixing two vectors using linear mixing algorithm
+!!>>> ctqmc_dmft_mixer: complex(dp) version, mixing two vectors using
+!!>>> linear mixing algorithm
   subroutine ctqmc_dmft_mixer(vec1, vec2)
      use constants
      use control
@@ -189,8 +191,9 @@
      return
   end subroutine ctqmc_dmft_mixer
 
-!>>> self-consistent conditions, bethe lattice, semicircular density of
-! states, force a paramagnetic order, equal bandwidth
+!!>>> ctqmc_dmft_bethe: dmft self-consistent conditions, bethe lattice,
+!!>>> semicircular density of states, force a paramagnetic order, equal
+!!>>> band width
   subroutine ctqmc_dmft_bethe(hybf, grnf)
      use constants
      use control
@@ -218,8 +221,9 @@
      return
   end subroutine ctqmc_dmft_bethe
 
-!>>> self-consistent conditions, general density of states, calculate the
-! new hybridization function by using hilbert transformation
+!!>>> ctqmc_dmft_anydos: dmft self-consistent conditions, general density
+!!>>> of states, calculate the new hybridization function by using hilbert
+!!>>> transformation and numerical integration
   subroutine ctqmc_dmft_anydos(hybf, grnf, sigf)
      use constants
      use control
