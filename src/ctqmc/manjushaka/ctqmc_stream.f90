@@ -492,7 +492,6 @@
 
 ! after we know the total number of sectors, we can allocate memory for array sectors and parts
          call ctqmc_allocate_memory_sect()
-         call ctqmc_allocate_memory_part()
 
 ! read each sector's information
          do i=1, nsectors
@@ -517,9 +516,6 @@
              enddo
          enddo
          close(mytmp) 
-!-------------------------------------------------------------------------
-! truncate the Hilbert space
-         call ctqmc_make_trunc()
 
 ! add the contribution from chemical potential to eigenvalues
          j1 = 0
@@ -606,9 +602,8 @@
 
 ! local variables
 ! loop index
-     integer  :: i, ii
-     integer  :: j, jj
-     integer  :: k
+     integer  :: i
+     integer  :: j
 
 ! system time since 1970, Jan 1, used to generate the random number seed
      integer  :: system_time
@@ -616,14 +611,10 @@
 ! random number seed for twist generator
      integer  :: stream_seed
 
-! dummy matrices
-     real(dp) :: tmp_mat1(max_dim_sect, max_dim_sect)
-     real(dp) :: tmp_mat2(max_dim_sect, max_dim_sect)
-
 ! init random number generator
      call system_clock(system_time)
-     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     !stream_seed = 123456
+     !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
+     stream_seed = 123456
      call spring_sfmt_init(stream_seed)
      call random_seed()
 
@@ -778,61 +769,24 @@
 !<     sig1    = czero
      sig2    = czero
 
-! init npart
+! truncate the Hilbert space here
+     call ctqmc_make_trunc()
+
+! allocate final_product, occu, double_occu for un-truncated sectors 
+     call ctqmc_allocate_memory_occu()
+   
+! build occu, double_occu for un-truncated sectors
+     call ctqmc_make_occu()
+
+! allocate memory for npart
+     call ctqmc_allocate_memory_part()
+
      num_prod = zero
      is_save = 1
      is_copy = .false.
      col_copy = 0
      ops = 0
      ope = 0
-     saved_a = zero
-     saved_b = zero
-
-! init op_n, < c^{\dag} c >,
-! which are used to calculate occupation number
-     do i=1, norbs
-         do j=1, nsectors
-             k=sectors(j)%next_sector(i,0)
-             if (k == -1) then
-                 sectors(j)%occu(:,:,i) = zero
-                 cycle
-             endif
-             call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, one, &
-                         sectors(k)%myfmat(i,1)%item,                     sectors(j)%ndim, &
-                         sectors(j)%myfmat(i,0)%item,                     sectors(k)%ndim, & 
-                         zero, sectors(j)%occu(:,:,i),                    sectors(j)%ndim   ) 
-         enddo
-     enddo ! over i={1,norbs} loop
-
-! init op_m, < c^{\dag} c c^{\dag} c >,
-! which are used to calculate double occupation number
-     do i=1, norbs
-         do j=1, norbs
-             do k=1, nsectors
-                 jj = sectors(k)%next_sector(j,0) 
-                 ii = sectors(k)%next_sector(i,0)
-                 if (ii == -1 .or. jj == -1) then
-                     sectors(k)%double_occu(:,:,i,j) = zero
-                     cycle
-                 endif
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
-                             sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  & 
-                             sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, & 
-                             zero, tmp_mat1,                                  max_dim_sect       ) 
-
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
-                             sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
-                             sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, & 
-                             zero, tmp_mat2,                                  max_dim_sect       ) 
-
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one, &
-                             tmp_mat2,                                        max_dim_sect,    & 
-                             tmp_mat1,                                        max_dim_sect,    & 
-                             zero, sectors(k)%double_occu(:,:,i,j),           sectors(k)%ndim   )
-
-             enddo
-         enddo
-     enddo
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space

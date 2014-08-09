@@ -2532,9 +2532,6 @@
 ! the trace boundary
      real(dp) :: trace_bound(nsectors)
 
-! index for sectors after sorting trace_bound
-     integer :: indx_sector(nsectors)
-
 ! the trace of each sector
      real(dp) :: trace_sector(nsectors)
 
@@ -2618,27 +2615,21 @@
      enddo
 
 ! calculate the trace bounds for each sector
+     trace_bound = zero
      do i=1, nsectors
-         indx_sector(i) = i
-         if (is_string(i) .eqv. .false.) then
-             trace_bound(i) = zero
-         else
+         if (is_string(i) .eqv. .false.)  cycle
 ! calculate the trace bounds
-             trace_bound(i) = one
-             do j=1, csize
-                 indx = sectors(string(j,i))%istart
-                 trace_bound(i) = trace_bound(i) * expt_v(indx, index_t_loc(j)) 
-             enddo 
+         trace_bound(i) = one
+         do j=1, csize
+             indx = sectors(string(j,i))%istart
+             trace_bound(i) = trace_bound(i) * expt_v(indx, index_t_loc(j)) 
+         enddo 
 ! specially treatment for the last time-evolution operator
-             indx = sectors(string(1,i))%istart
-             trace_bound(i) = trace_bound(i) * expt_t_loc(indx)
-             trace_bound(i) = min_dim(i) * trace_bound(i)
-         endif
+         indx = sectors(string(1,i))%istart
+         trace_bound(i) = trace_bound(i) * expt_t_loc(indx)
+         trace_bound(i) = min_dim(i) * trace_bound(i)
      enddo
 
-! sort trace_bound
-!     call ctqmc_trace_sorter(nsectors, trace_bound, indx_sector)
-!     call ctqmc_trace_qsorter(nsectors, trace_bound, indx_sector)
 ! calculate the max bound of acceptance ratio
      sum_bound = sum(trace_bound)
      ptmp = propose  *  abs(deter_ratio / matrix_ptrace)
@@ -2654,22 +2645,25 @@
 ! make npart
      call ctqmc_make_nparts(cmode, csize, index_t_loc, tau_s, tau_e)
 
-     pass = .false.
 ! otherwise, we need to refine the trace bounds
+     pass = .false.
      is_copy = .false.
      sum_abs_trace = zero
+     trace_sector = zero
+
      do i=1, nsectors
-! first, calculate the trace of this sector
-         if (is_string(indx_sector(i)) .eqv. .false.) then
-             trace_sector(indx_sector(i)) = zero
-             sectors(indx_sector(i))%final_product(:,:,1) = zero
+         if (is_trunc(i)) cycle
+
+         if (is_string(i) .eqv. .false.) then
+             trace_sector(i) = zero
+             final_product(i,1)%item = zero
          else
-             call cat_sector_ztrace( csize, string(:,indx_sector(i)), index_t_loc,&
-                                 expt_t_loc, trace_sector(indx_sector(i)) )
+             call cat_sector_ztrace( csize, string(:,i), index_t_loc,&
+                                 expt_t_loc, trace_sector(i) )
          endif
          if (pass .eqv. .false.) then
-             sum_abs_trace = sum_abs_trace + abs( trace_sector(indx_sector(i)) )
-             sum_bound = sum_bound - trace_bound(indx_sector(i))
+             sum_abs_trace = sum_abs_trace + abs( trace_sector(i) )
+             sum_bound = sum_bound - trace_bound(i)
 ! calculate pmax and pmin
              pmax = ptmp * (sum_abs_trace + sum_bound)
              pmin = ptmp * (sum_abs_trace - sum_bound)
@@ -2693,10 +2687,12 @@
      pass = ( min(one, abs(accept_p)) > rand_num)
 
 ! store the diagonal elements of final product in ddmat(:,1)
+     ddmat(:,1) = zero
      do i=1, nsectors
+         if(is_trunc(i)) cycle
          indx = sectors(i)%istart
          do j=1, sectors(i)%ndim
-             ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
+             ddmat(indx+j-1,1) = final_product(i,1)%item(j,j) 
          enddo
      enddo
 
@@ -2756,10 +2752,13 @@
      call ctqmc_make_nparts(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
 
      is_copy = .false.
+     trace_sector = zero
      do i=1, nsectors
+         if (is_trunc(i)) cycle
+
          if (is_string(i) .eqv. .false.) then
              trace_sector(i) = zero
-             sectors(i)%final_product(:,:,1) = zero
+             final_product(i,1)%item = zero
          else
              call cat_sector_ztrace( csize, string(:,i), index_t_loc, expt_t_loc, trace_sector(i) )
          endif
@@ -2771,10 +2770,12 @@
      enddo
 
 ! store the diagonal elements of final product in ddmat(:,1)
+     ddmat(:,1) = zero
      do i=1, nsectors
+         if(is_trunc(i)) cycle
          indx = sectors(i)%istart
          do j=1, sectors(i)%ndim
-             ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
+             ddmat(indx+j-1,1) = final_product(i,1)%item(j,j) 
          enddo
      enddo
 
@@ -2804,7 +2805,8 @@
 ! transfer the final matrix product from final_product(:,:,1) to 
 ! final_product(:,:,2) the latter can be used to calculate nmat and nnmat
      do i=1, nsectors
-         sectors(i)%final_product(:,:,2) = sectors(i)%final_product(:,:,1)
+         if (is_trunc(i)) cycle
+         final_product(i,2)%item = final_product(i,1)%item
      enddo
   
  ! save the data of each part

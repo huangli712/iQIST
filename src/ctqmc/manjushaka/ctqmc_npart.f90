@@ -28,10 +28,10 @@
      integer, public, save, allocatable :: ope(:)
 
 ! saved parts of matrices product, previous configuration 
-     real(dp), public, save, allocatable :: saved_a(:,:,:,:)
+     type(t_sqrmat), public, save, allocatable :: saved_a(:,:)
 
 ! saved parts of matrices product, current configuration
-     real(dp), public, save, allocatable :: saved_b(:,:,:,:)
+     type(t_sqrmat), public, save, allocatable :: saved_b(:,:)
 
      contains
 
@@ -41,15 +41,27 @@
          implicit none
 
          integer :: istat
+         integer :: i,j
 
 ! allocate memory
-         allocate(is_save(npart, nsectors, 2),       stat=istat)
+         
+         allocate(is_save(npart, nsectors, 2),    stat=istat)
          allocate(is_copy(npart, nsectors),       stat=istat)
-         allocate(col_copy(npart, nsectors),       stat=istat)
+         allocate(col_copy(npart, nsectors),      stat=istat)
          allocate(ops(npart),                     stat=istat)
          allocate(ope(npart),                     stat=istat)
-         allocate(saved_a(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
-         allocate(saved_b(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
+         allocate(saved_a(npart, nsectors),       stat=istat)
+         allocate(saved_b(npart, nsectors),       stat=istat)
+
+         do i=1, nsectors
+             if (is_trunc(i)) cycle
+             do j=1, npart
+                 saved_a(j,i)%n = max_dim_sect_trunc
+                 saved_b(j,i)%n = max_dim_sect_trunc
+                 call alloc_one_sqrmat( saved_a(j,i) )
+                 call alloc_one_sqrmat( saved_b(j,i) )
+             enddo
+         enddo    
 
 ! check the status
          if ( istat /= 0 ) then
@@ -61,8 +73,6 @@
          col_copy = 0
          ops = 0
          ope = 0
-         saved_a = zero
-         saved_b = zero
 
          return
      end subroutine ctqmc_allocate_memory_part
@@ -70,14 +80,34 @@
 !>>> deallocate memory for sect-related variables
      subroutine ctqmc_deallocate_memory_part()
          implicit none
+         
+         integer :: i,j
 
          if ( allocated(is_save) )      deallocate(is_save)
          if ( allocated(is_copy) )      deallocate(is_copy)
          if ( allocated(col_copy) )     deallocate(col_copy)
          if ( allocated(ops) )          deallocate(ops)
          if ( allocated(ope) )          deallocate(ope)
-         if ( allocated(saved_a) )      deallocate(saved_a)
-         if ( allocated(saved_b) )      deallocate(saved_b)
+
+         if ( allocated(saved_a) ) then
+             do i=1, nsectors
+                 if (is_trunc(i)) cycle
+                 do j=1, npart
+                     call dealloc_one_sqrmat(saved_a(j,i)) 
+                 enddo
+             enddo
+             deallocate(saved_a)
+         endif
+
+         if ( allocated(saved_b) ) then
+             do i=1, nsectors
+                 if (is_trunc(i)) cycle
+                 do j=1, npart
+                     call dealloc_one_sqrmat(saved_b(j,i)) 
+                 enddo
+             enddo
+             deallocate(saved_b)
+         endif
         
          return
      end subroutine ctqmc_deallocate_memory_part
@@ -290,8 +320,8 @@
    
 ! local variables
 ! temp matrices
-        real(dp) :: right_mat(max_dim_sect, max_dim_sect)
-        real(dp) :: tmp_mat(max_dim_sect, max_dim_sect)
+        real(dp) :: right_mat(max_dim_sect_trunc, max_dim_sect_trunc)
+        real(dp) :: tmp_mat(max_dim_sect_trunc, max_dim_sect_trunc)
    
 ! temp index
         integer :: dim1, dim2, dim3, dim4
@@ -321,13 +351,13 @@
                 dim3 = sectors(sect2)%ndim
                 if (i > first_fpart) then
                     call dgemm( 'N', 'N', dim2, dim1, dim3,  one,    &
-                                 saved_a(:,:,i,isect), max_dim_sect, &
-                                 right_mat,            max_dim_sect, &
-                                 zero, tmp_mat,        max_dim_sect   )
+                                 saved_a(i,isect)%item, max_dim_sect_trunc, &
+                                 right_mat,             max_dim_sect_trunc, &
+                                 zero, tmp_mat,         max_dim_sect_trunc   )
                     right_mat(:, 1:dim1) = tmp_mat(:, 1:dim1)
                     num_prod = num_prod + one
                 else
-                    right_mat(:, 1:dim1) = saved_a(:, 1:dim1, i, isect)
+                    right_mat(:, 1:dim1) = saved_a(i, isect)%item(:,1:dim1)
                 endif
   
 ! this part should be recalcuated 
@@ -335,7 +365,7 @@
                 sect1 = string(ope(i)+1)
                 sect2 = string(ops(i))
                 dim4 = sectors(sect2)%ndim
-                saved_b(:,:,i,isect) = zero
+                saved_b(i,isect)%item = zero
    
 ! loop over all the fermion operators in this part
                 counter = 0
@@ -348,7 +378,7 @@
                     if (counter > 1) then
                         do l=1,dim4
                             do k=1,dim3
-                                tmp_mat(k,l) = saved_b(k,l, i,isect) * expt_v(indx+k-1, index_t_loc(j))
+                                tmp_mat(k,l) = saved_b(i,isect)%item(k,l) * expt_v(indx+k-1, index_t_loc(j))
                             enddo
                         enddo
                         num_prod = num_prod + one
@@ -363,8 +393,8 @@
                     vf = flvr_v( index_t_loc(j) ) 
                     call dgemm( 'N', 'N', dim2, dim4, dim3, one,              &
                                 sectors(string(j))%myfmat(vf, vt)%item, dim2, &
-                                tmp_mat,                        max_dim_sect, &
-                                zero, saved_b(:,:,i,isect),     max_dim_sect   ) 
+                                tmp_mat,                         max_dim_sect_trunc, &
+                                zero, saved_b(i,isect)%item,     max_dim_sect_trunc   ) 
    
                     num_prod = num_prod + one
                 enddo  
@@ -376,13 +406,13 @@
 ! multiply this part with the rest parts
                 if (i > first_fpart) then
                     call dgemm( 'N', 'N', dim2, dim1, dim4, one,    &
-                                saved_b(:,:,i,isect), max_dim_sect, &
-                                right_mat,            max_dim_sect, &
-                                zero, tmp_mat,        max_dim_sect   ) 
+                                saved_b(i,isect)%item, max_dim_sect_trunc, &
+                                right_mat,            max_dim_sect_trunc, &
+                                zero, tmp_mat,        max_dim_sect_trunc   ) 
                     right_mat(:,1:dim1) = tmp_mat(:,1:dim1)
                     num_prod = num_prod + one
                 else
-                    right_mat(:,1:dim1) = saved_b(:, 1:dim1, i, isect)
+                    right_mat(:,1:dim1) = saved_b(i, isect)%item(:,1:dim1)
                 endif
 
             elseif (is_save(i,isect,1) == 2) then
@@ -410,7 +440,7 @@
         endif
    
 ! store final product
-        sectors((string(1)))%final_product(:,:,1) = right_mat(1:dim1, 1:dim1)
+        final_product(string(1),1)%item = right_mat(1:dim1, 1:dim1)
    
 ! calculate the trace
         trace  = zero
@@ -435,9 +465,10 @@
 ! matrices products when moves are accepted
         if ( npart > 1) then
             do i=1, nsectors
+                if (is_trunc(i)) cycle
                 do j=1, npart
                     if ( is_copy(j,i) ) then
-                        saved_a(:, 1:col_copy(j,i), j, i) = saved_b(:, 1:col_copy(j,i), j, i) 
+                        saved_a(j, i)%item(:,1:col_copy(j,i)) = saved_b(j, i)%item(:,1:col_copy(j,i)) 
                     endif
                 enddo
             enddo

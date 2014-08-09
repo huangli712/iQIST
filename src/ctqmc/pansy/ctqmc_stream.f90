@@ -539,8 +539,8 @@
 
 ! init random number generator
      call system_clock(system_time)
-     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     !stream_seed = 123456
+     !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
+     stream_seed = 123456
      call spring_sfmt_init(stream_seed)
 
 ! init empty_s and empty_e stack structure
