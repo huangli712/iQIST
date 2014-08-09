@@ -18,6 +18,9 @@
 !!!           s_swap_i
 !!!           s_swap_d
 !!!           s_swap_z
+!!!           s_mix_i
+!!!           s_mix_d
+!!!           s_mix_z
 !!!           s_legendre
 !!!           s_chebyshev
 !!! source  : s_math.f90
