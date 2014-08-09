@@ -77,8 +77,8 @@
 !! subroutine s_swap_d(...)
 !! subroutine s_swap_z(...)
 !!
-!! 5. linear mixing vectors
-!! ------------------------
+!! 5. linear mixing for vectors
+!! ----------------------------
 !!
 !! subroutine s_mix_i(...)
 !! subroutine s_mix_d(...)
