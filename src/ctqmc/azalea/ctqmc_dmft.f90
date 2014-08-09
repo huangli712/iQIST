@@ -2,7 +2,6 @@
 !!! project : azalea
 !!! program : ctqmc_dmft_selfer
 !!!           ctqmc_dmft_conver
-!!!           ctqmc_dmft_mixer
 !!!           ctqmc_dmft_bethe
 !!!           ctqmc_dmft_anydos
 !!! source  : ctqmc_dmft.f90
@@ -23,8 +22,8 @@
 !!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
 !!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
-     use constants, only : dp, one, half, czi, czero, mystd
-     use control, only : norbs, nband, mfreq, Uc, Jz, mune, myid, master
+     use constants, only : dp, one, half, czi, mystd
+     use control, only : norbs, nband, mfreq, Uc, Jz, mune, alpha, myid, master
      use context, only : tmesh, rmesh, eimp, hybf, grnf, wssf, wtau
 
      implicit none
@@ -52,16 +51,13 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize htmp
-     htmp = czero
+     htmp = hybf
 
 ! calculate new hybridization function using self-consistent condition
-     call ctqmc_dmft_bethe(htmp, grnf)
+     call ctqmc_dmft_bethe(hybf, grnf)
 
 ! mixing new and old hybridization function: htmp and hybf
-     call ctqmc_dmft_mixer(hybf, htmp)
-
-! update original hybridization function
-     hybf = htmp
+     call s_mix_z(size(hybf), htmp, hybf, alpha)
 
 ! \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
      qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
@@ -170,27 +166,6 @@
 
      return
   end subroutine ctqmc_dmft_conver
-
-!!>>> ctqmc_dmft_mixer: complex(dp) version, mixing two vectors using
-!!>>> linear mixing algorithm
-  subroutine ctqmc_dmft_mixer(vec1, vec2)
-     use constants, only : dp, one
-     use control, only : norbs, mfreq, alpha
-
-     implicit none
-
-! external arguments
-! older green/weiss/sigma function in input
-     complex(dp), intent(inout) :: vec1(mfreq,norbs,norbs)
-
-! newer green/weiss/sigma function in input, newest in output
-     complex(dp), intent(inout) :: vec2(mfreq,norbs,norbs)
-
-! linear mixing scheme
-     vec2 = vec1 * (one - alpha) + vec2 * alpha
-
-     return
-  end subroutine ctqmc_dmft_mixer
 
 !!>>> ctqmc_dmft_bethe: dmft self-consistent conditions, bethe lattice,
 !!>>> semicircular density of states, force a paramagnetic order, equal
