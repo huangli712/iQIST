@@ -255,10 +255,11 @@
      return
   end subroutine ctqmc_dump_grnf
 
-!!>>> write out bath weiss's function in matsubara frequency space
+!!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_wssf(rmesh, wssf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mfreq, norbs, nband
 
      implicit none
 
