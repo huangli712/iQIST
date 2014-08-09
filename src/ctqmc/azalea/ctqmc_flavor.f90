@@ -1941,11 +1941,12 @@
      return
   end subroutine ctqmc_make_segment
 
-!>>> display segment information on the screen, only used to debug the code
+!!>>> ctqmc_make_display: display segment information on the screen, only
+!!>>> used to debug the code
   subroutine ctqmc_make_display(show_type)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : norbs
+     use context, only : stts, rank
 
      implicit none
 
