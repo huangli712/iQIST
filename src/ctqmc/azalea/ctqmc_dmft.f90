@@ -278,7 +278,7 @@
              close(mytmp)
 
          else
-             call ctqmc_print_error('ctqmc_dmft_anydos','file solver.anydos.in does not exist')
+             call s_print_error('ctqmc_dmft_anydos','file solver.anydos.in does not exist')
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
