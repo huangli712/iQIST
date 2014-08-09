@@ -427,10 +427,11 @@
      return
   end subroutine ctqmc_dump_hub1
 
-!!>>> write out the Monte Carlo sampling histogram for perturbation expansion series
+!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
+!!>>> perturbation expansion series
   subroutine ctqmc_dump_hist(hist)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mkink
 
      implicit none
 
