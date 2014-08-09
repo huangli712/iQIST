@@ -52,6 +52,10 @@
 ! if isbin == 2, with binning mode
      integer, public, save :: isbin  = 1
 
+! whether to measure the double occupancy number
+! if idoub == 1, don't measure the double occupancy number
+! if idoub == 2, measure the double occupancy number
+     integer, public, save :: idoub  = 1
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! number of correlated bands

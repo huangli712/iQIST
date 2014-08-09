@@ -54,6 +54,7 @@
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
+     idoub  = 1            ! whether to measure the double occupancy number
 !-------------------------------------------------------------------------
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
@@ -111,6 +112,7 @@
              read(mytmp,*) issun                                         !
              read(mytmp,*) isspn                                         !
              read(mytmp,*) isbin                                         !
+             read(mytmp,*) idoub                                         !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
 
              read(mytmp,*)
@@ -173,6 +175,7 @@
      call mp_bcast( issun , master )                                     !
      call mp_bcast( isspn , master )                                     !
      call mp_bcast( isbin , master )                                     !
+     call mp_bcast( idoub , master )                                     !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
      call mp_barrier()
 
@@ -704,33 +707,35 @@
 
 ! init op_m, < c^{\dag} c c^{\dag} c >,
 ! which are used to calculate double occupation number
-     do i=1, norbs
-         do j=1, norbs
-             do k=1, nsectors
-                 jj = sectors(k)%next_sector(j,0) 
-                 ii = sectors(k)%next_sector(i,0)
-                 if (ii == -1 .or. jj == -1) then
-                     sectors(k)%double_occu(:,:,i,j) = zero
-                     cycle
-                 endif
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
-                             sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  & 
-                             sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, & 
-                             zero, tmp_mat1,                                  max_dim_sect       ) 
+     if (idoub == 2) then
+         do i=1, norbs
+             do j=1, norbs
+                 do k=1, nsectors
+                     jj = sectors(k)%next_sector(j,0) 
+                     ii = sectors(k)%next_sector(i,0)
+                     if (ii == -1 .or. jj == -1) then
+                         sectors(k)%double_occu(:,:,i,j) = zero
+                         cycle
+                     endif
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
+                                 sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  & 
+                                 sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, & 
+                                 zero, tmp_mat1,                                  max_dim_sect       ) 
 
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
-                             sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
-                             sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, & 
-                             zero, tmp_mat2,                                  max_dim_sect       ) 
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
+                                 sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
+                                 sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, & 
+                                 zero, tmp_mat2,                                  max_dim_sect       ) 
 
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one, &
-                             tmp_mat2,                                        max_dim_sect,    & 
-                             tmp_mat1,                                        max_dim_sect,    & 
-                             zero, sectors(k)%double_occu(:,:,i,j),           sectors(k)%ndim   )
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one, &
+                                 tmp_mat2,                                        max_dim_sect,    & 
+                                 tmp_mat1,                                        max_dim_sect,    & 
+                                 zero, sectors(k)%double_occu(:,:,i,j),           sectors(k)%ndim   )
 
+                 enddo
              enddo
          enddo
-     enddo
+     endif
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
