@@ -26,10 +26,11 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> write out impurity green's function in imaginary time space
+!!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
+!!>>> time space
   subroutine ctqmc_dump_gtau(tmesh, gtau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : ntime, norbs, nband, beta
 
      implicit none
 
@@ -77,7 +78,7 @@
      return
   end subroutine ctqmc_dump_gtau
 
-!>>> write out bath weiss's function in imaginary time space
+!!>>> write out bath weiss's function in imaginary time space
   subroutine ctqmc_dump_wtau(tmesh, wtau)
      use constants
      use control
@@ -114,7 +115,7 @@
      return
   end subroutine ctqmc_dump_wtau
 
-!>>> write out hybridization function in imaginary time space
+!!>>> write out hybridization function in imaginary time space
   subroutine ctqmc_dump_htau(tmesh, htau)
      use constants
      use control
@@ -151,7 +152,7 @@
      return
   end subroutine ctqmc_dump_htau
 
-!>>> write out impurity green's function in imaginary time space (binning mode)
+!!>>> write out impurity green's function in imaginary time space (binning mode)
   subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
      use constants
      use control
@@ -209,7 +210,7 @@
      return
   end subroutine ctqmc_dump_gbin
 
-!>>> write out impurity green's function in matsubara frequency space
+!!>>> write out impurity green's function in matsubara frequency space
   subroutine ctqmc_dump_grnf(rmesh, grnf)
      use constants
      use control
@@ -250,7 +251,7 @@
      return
   end subroutine ctqmc_dump_grnf
 
-!>>> write out bath weiss's function in matsubara frequency space
+!!>>> write out bath weiss's function in matsubara frequency space
   subroutine ctqmc_dump_wssf(rmesh, wssf)
      use constants
      use control
@@ -291,7 +292,7 @@
      return
   end subroutine ctqmc_dump_wssf
 
-!>>> write out hybridization function in matsubara frequency space
+!!>>> write out hybridization function in matsubara frequency space
   subroutine ctqmc_dump_hybf(rmesh, hybf)
      use constants
      use control
@@ -332,7 +333,7 @@
      return
   end subroutine ctqmc_dump_hybf
 
-!>>> write out self-energy function in matsubara frequency space
+!!>>> write out self-energy function in matsubara frequency space
   subroutine ctqmc_dump_sigf(rmesh, sigf)
      use constants
      use control
@@ -373,7 +374,7 @@
      return
   end subroutine ctqmc_dump_sigf
 
-!>>> write out impurity green's function and self-energy function obtained
+!!>>> write out impurity green's function and self-energy function obtained
 ! by hubbard-I approximation in matsubara frequency space
   subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
      use constants
@@ -418,7 +419,7 @@
      return
   end subroutine ctqmc_dump_hub1
 
-!>>> write out the Monte Carlo sampling histogram for perturbation expansion series
+!!>>> write out the Monte Carlo sampling histogram for perturbation expansion series
   subroutine ctqmc_dump_hist(hist)
      use constants
      use control
@@ -460,7 +461,7 @@
      return
   end subroutine ctqmc_dump_hist
 
-!>>> write out the occupation matrix and double occupation matrix
+!!>>> write out the occupation matrix and double occupation matrix
   subroutine ctqmc_dump_nmat(nmat, nnmat)
      use constants
      use control
@@ -504,7 +505,7 @@
      return
   end subroutine ctqmc_dump_nmat
 
-!>>> write out the probability of eigenstates of local hamiltonian matrix
+!!>>> write out the probability of eigenstates of local hamiltonian matrix
   subroutine ctqmc_dump_prob(prob)
      use constants
      use control
