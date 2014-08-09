@@ -1,45 +1,30 @@
-!-------------------------------------------------------------------------
-! project : azalea
-! program : ctqmc_dump_gtau
-!           ctqmc_dump_wtau
-!           ctqmc_dump_htau
-!           ctqmc_dump_gbin
-!           ctqmc_dump_grnf
-!           ctqmc_dump_wssf
-!           ctqmc_dump_hybf
-!           ctqmc_dump_sigf
-!           ctqmc_dump_hub1
-!           ctqmc_dump_hist
-!           ctqmc_dump_nmat
-!           ctqmc_dump_prob
-! source  : ctqmc_dump.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/16/2009 by li huang
-!           09/17/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/22/2009 by li huang
-!           10/25/2009 by li huang
-!           11/01/2009 by li huang
-!           11/30/2009 by li huang
-!           12/01/2009 by li huang
-!           12/04/2009 by li huang
-!           12/09/2009 by li huang
-!           12/26/2009 by li huang
-!           12/30/2009 by li huang
-!           02/28/2010 by li huang
-!           03/04/2010 by li huang
-!           08/23/2010 by li huang
-! purpose : dump key observables produced by the hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver and dynamical mean field theory (DMFT) self
-!           -consistent engine to disk files
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : azalea
+!!! program : ctqmc_dump_gtau
+!!!           ctqmc_dump_wtau
+!!!           ctqmc_dump_htau
+!!!           ctqmc_dump_gbin
+!!!           ctqmc_dump_grnf
+!!!           ctqmc_dump_wssf
+!!!           ctqmc_dump_hybf
+!!!           ctqmc_dump_sigf
+!!!           ctqmc_dump_hub1
+!!!           ctqmc_dump_hist
+!!!           ctqmc_dump_nmat
+!!!           ctqmc_dump_prob
+!!! source  : ctqmc_dump.f90
+!!! type    : subroutine
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           08/23/2010 by li huang
+!!!           08/09/2014 by li huang
+!!! purpose : dump key observables produced by the hybridization expansion
+!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
+!!!           impurity solver and dynamical mean field theory (DMFT) self
+!!!           -consistent engine to disk files
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
 !>>> write out impurity green's function in imaginary time space
   subroutine ctqmc_dump_gtau(tmesh, gtau)
