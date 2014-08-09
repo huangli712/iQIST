@@ -339,16 +339,17 @@
      return
   end subroutine ctqmc_dump_hybf
 
-!!>>> write out self-energy function in matsubara frequency space
+!!>>> ctqmc_dump_sigf: write out self-energy function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_sigf(rmesh, sigf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mfreq, norbs, nband
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! self-energy function
      complex(dp), intent(in) :: sigf(mfreq,norbs,norbs)
@@ -380,11 +381,12 @@
      return
   end subroutine ctqmc_dump_sigf
 
-!!>>> write out impurity green's function and self-energy function obtained
-! by hubbard-I approximation in matsubara frequency space
+!!>>> ctqmc_dump_hub1: write out impurity green's function and self-energy
+!!>>> function obtained by hubbard-I approximation in matsubara frequency
+!!>>> space
   subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mfreq, norbs
 
      implicit none
 
