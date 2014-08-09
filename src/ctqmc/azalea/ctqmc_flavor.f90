@@ -1731,16 +1731,16 @@
      return
   end subroutine ctqmc_make_flavor4
 
-!-------------------------------------------------------------------------
-!>>> service layer: calculate overlap between segments                 <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: calculate overlap between segments                <<<
+!!========================================================================
 
-!>>> calculate the delta segment overlaps between current flavor channel
-! and other flavor channels
+!!>>> ctqmc_make_overlap: calculate the delta segment overlaps between
+!!>>> current flavor channel and other flavor channels
   subroutine ctqmc_make_overlap(flvr, tau_start, tau_end, ovlp)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : norbs, beta
+     use context, only : stts, rank, index_s, index_e, time_s, time_e
 
      implicit none
 
