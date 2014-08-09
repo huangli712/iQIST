@@ -788,10 +788,12 @@
      return
   end subroutine cat_rshift_segment
 
-!>>> update the perturbation expansion series for swap segment and anti-segment
+!!>>> cat_reswap_segment: update the perturbation expansion series for
+!!>>> swap segment and anti-segment
   subroutine cat_reswap_segment(flvr)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
+     use context, only : ckink, index_s, index_e, time_s, time_e, exp_s, exp_e
 
      implicit none
 
