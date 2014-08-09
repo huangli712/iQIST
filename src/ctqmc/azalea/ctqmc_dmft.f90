@@ -112,9 +112,9 @@
 
 !!>>> ctqmc_dmft_conver: check the convergence of self-energy function
   subroutine ctqmc_dmft_conver(iter, convergence)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, two, zero, eps8, mystd
+     use control, only : norbs, mfreq, niter, alpha, myid, master
+     use context, only : sig1, sig2
 
      implicit none
 
@@ -166,7 +166,7 @@
          write(mystd,'(2(2X,a,E12.4))') 'AZALEA >>> sig_curr:', seps, 'eps_curr:', eps8
          write(mystd,'( (2X,a,L1))') 'AZALEA >>> self-consistent iteration convergence is ', convergence
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine ctqmc_dmft_conver
