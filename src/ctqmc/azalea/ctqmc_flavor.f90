@@ -839,7 +839,7 @@
      use control, only : beta
      use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
