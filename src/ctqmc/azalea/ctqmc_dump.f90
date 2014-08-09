@@ -154,10 +154,11 @@
      return
   end subroutine ctqmc_dump_htau
 
-!!>>> write out impurity green's function in imaginary time space (binning mode)
+!!>>> ctqmc_dump_gbin: write out impurity green's function in imaginary
+!!>>> time space (generated in binning mode)
   subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : ntime, norbs, nband, beta
 
      implicit none
 
