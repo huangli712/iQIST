@@ -1829,9 +1829,9 @@
      return
   end subroutine ctqmc_make_overlap
 
-!>>> compare two segments, and calculate their overlap
+!!>>> ctqmc_make_compare: compare two segments, and calculate their overlap
   subroutine ctqmc_make_compare(ts0, te0, ts1, te1, cover)
-     use constants
+     use constants, only : dp, zero
 
      implicit none
 
@@ -1879,18 +1879,18 @@
      return
   end subroutine ctqmc_make_compare
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to test segment algorithm      <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to test segment algorithm     <<<
+!!========================================================================
 
-!>>> generate segments or anti-segments for the specified flavor channel
-! randomly, only used to debug the code
+!!>>> ctqmc_make_segment: generate segments or anti-segments for the
+!!>>> specified flavor channel randomly, only used to debug the code
   subroutine ctqmc_make_segment(flvr, kink, anti)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : beta
+     use context, only : ckink, stts, rank
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
 ! external arguments
 ! current flavor channel
