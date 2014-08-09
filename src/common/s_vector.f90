@@ -28,7 +28,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/24/2014 by li huang
-!!!           08/01/2014 by li huang
+!!!           08/09/2014 by li huang
 !!! purpose : these subroutines are designed for vectors or arrays. They
 !!!           can be used to manipulate grid and mesh, to generate the
 !!!           Legendre polynomial and Chebyshev polynomial, etc.
@@ -70,14 +70,21 @@
 !! subroutine s_cumprod_d(...)
 !! subroutine s_cumprod_z(...)
 !!
-!! 4. swap vector
-!! -----------------
+!! 4. swap two vectors
+!! -------------------
 !!
 !! subroutine s_swap_i(...)
 !! subroutine s_swap_d(...)
 !! subroutine s_swap_z(...)
 !!
-!! 5. orthogonal polynomial
+!! 5. linear mixing vectors
+!! ------------------------
+!!
+!! subroutine s_mix_i(...)
+!! subroutine s_mix_d(...)
+!! subroutine s_mix_z(...)
+!!
+!! 6. orthogonal polynomial
 !! ------------------------
 !!
 !! subroutine s_legendre(...)
@@ -551,6 +558,82 @@
 
      return
   end subroutine s_swap_z
+
+!!========================================================================
+!!>>> mix operations                                                   <<<
+!!========================================================================
+
+!!>>> s_mix_i: linear mixing for two integer vectors
+  subroutine s_mix_i(n, ix, iy, alpha)
+     use constants, only : dp, one
+
+     implicit none
+
+! external arguments
+! dimension of integer vector
+     integer, intent(in)    :: n
+
+! mixing parameter
+     real(dp), intent(in)   :: alpha
+
+! integer vector X
+     integer, intent(in)    :: ix(n)
+
+! integer vector Y
+     integer, intent(inout) :: iy(n)
+
+     iy = ix * (one - alpha) + iy * alpha
+ 
+     return
+  end subroutine s_mix_i
+
+!!>>> s_mix_d: linear mixing for two real(dp) vectors
+  subroutine s_mix_d(n, dx, dy, alpha)
+     use constants, only : dp, one
+
+     implicit none
+
+! external arguments
+! dimension of real(dp) vector
+     integer, intent(in)     :: n
+
+! mixing parameter
+     real(dp), intent(in)    :: alpha
+
+! real(dp) vector X
+     real(dp), intent(in)    :: dx(n)
+
+! real(dp) vector Y
+     real(dp), intent(inout) :: dy(n)
+
+     dy = dx * (one - alpha) + dy * alpha
+
+     return
+  end subroutine s_mix_d
+
+!!>>> s_mix_z: linear mixing for two complex(dp) vectors
+  subroutine s_mix_z(n, zx, zy, alpha)
+     use constants, only : dp, one
+
+     implicit none
+
+! external arguments
+! dimension of complex(dp) vector
+     integer, intent(in)        :: n
+
+! mixing parameter
+     real(dp), intent(in)       :: alpha
+
+! complex(dp) vector X
+     complex(dp), intent(in)    :: zx(n)
+
+! complex(dp) vector Y
+     complex(dp), intent(inout) :: zy(n)
+
+     zy = zx * (one - alpha) + zy * alpha
+
+     return
+  end subroutine s_mix_z
 
 !!========================================================================
 !!>>> Legendre and Chebyshev polynomials                               <<<
