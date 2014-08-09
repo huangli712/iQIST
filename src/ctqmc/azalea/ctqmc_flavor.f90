@@ -1569,13 +1569,14 @@
      return
   end subroutine ctqmc_make_flavor3
 
-!>>> determine \tau_e1 and \tau_e2 for rshift old segment or anti-segment
+!!>>> ctqmc_make_flavor4: determine \tau_e1 and \tau_e2 for rshift old
+!!>>> segment or anti-segment
   subroutine ctqmc_make_flavor4(flvr, ieo, ien, ring, tau_end1, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta
+     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
