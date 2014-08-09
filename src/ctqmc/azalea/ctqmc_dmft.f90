@@ -174,8 +174,8 @@
 !!>>> ctqmc_dmft_mixer: complex(dp) version, mixing two vectors using
 !!>>> linear mixing algorithm
   subroutine ctqmc_dmft_mixer(vec1, vec2)
-     use constants
-     use control
+     use constants, only : dp, one
+     use control, only : norbs, mfreq, alpha
 
      implicit none
 
