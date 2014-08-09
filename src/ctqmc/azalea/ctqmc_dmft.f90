@@ -23,9 +23,9 @@
 !!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
 !!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, half, czi, czero, mystd
+     use control, only : norbs, nband, mfreq, Uc, Jz, mune, myid, master
+     use context, only : tmesh, rmesh, eimp, hybf, grnf, wssf, wtau
 
      implicit none
 
