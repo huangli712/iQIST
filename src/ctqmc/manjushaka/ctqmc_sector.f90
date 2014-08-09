@@ -293,7 +293,6 @@
 
         allocate(final_product(nsectors,2))
         allocate(occu(norbs, nsectors))
-        allocate(double_occu(norbs, norbs, nsectors))
 
         do i=1, nsectors
             if (is_trunc(i)) cycle
@@ -308,14 +307,21 @@
                 call alloc_one_sqrmat( occu(j,i) )
             enddo
 
-            do j=1, norbs
-                do k=1, norbs
-                    double_occu(k,j,i)%n = sectors(i)%ndim
-                    call alloc_one_sqrmat( double_occu(k,j,i) )
+        enddo
+ 
+        if (idoub == 2) then
+            allocate(double_occu(norbs, norbs, nsectors))
+            do i=1, nsectors
+                if (is_trunc(i)) cycle
+                do j=1, norbs
+                    do k=1, norbs
+                        double_occu(k,j,i)%n = sectors(i)%ndim
+                        call alloc_one_sqrmat( double_occu(k,j,i) )
+                    enddo
                 enddo
             enddo
-        enddo
-    
+        endif
+   
         return
      end subroutine ctqmc_allocate_memory_occu
 
@@ -522,34 +528,36 @@
             enddo
         enddo 
 
-        do i=1, norbs
-            do j=1, norbs
-                do k=1, nsectors
-                    if ( is_trunc(k) ) cycle 
-                    jj = sectors(k)%next_sector(j,0) 
-                    ii = sectors(k)%next_sector(i,0)
-                    if (ii == -1 .or. jj == -1) then
-                        double_occu(i,j,k)%item = zero
-                        cycle
-                    endif
-                    call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
-                                sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  & 
-                                sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, & 
-                                zero, tmp_mat1,                                  max_dim_sect_trunc ) 
+        if (idoub == 2) then
+            do i=1, norbs
+                do j=1, norbs
+                    do k=1, nsectors
+                        if ( is_trunc(k) ) cycle 
+                        jj = sectors(k)%next_sector(j,0) 
+                        ii = sectors(k)%next_sector(i,0)
+                        if (ii == -1 .or. jj == -1) then
+                            double_occu(i,j,k)%item = zero
+                            cycle
+                        endif
+                        call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
+                                    sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  & 
+                                    sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, & 
+                                    zero, tmp_mat1,                                  max_dim_sect_trunc ) 
 
-                    call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
-                                sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
-                                sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, & 
-                                zero, tmp_mat2,                                  max_dim_sect_trunc ) 
+                        call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
+                                    sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
+                                    sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, & 
+                                    zero, tmp_mat2,                                  max_dim_sect_trunc ) 
 
-                    call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one,   &
-                                tmp_mat2,                                        max_dim_sect_trunc,& 
-                                tmp_mat1,                                        max_dim_sect_trunc,& 
-                                zero, double_occu(i,j,k)%item,          sectors(k)%ndim     )
+                        call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one,   &
+                                    tmp_mat2,                                        max_dim_sect_trunc,& 
+                                    tmp_mat1,                                        max_dim_sect_trunc,& 
+                                    zero, double_occu(i,j,k)%item,          sectors(k)%ndim     )
 
+                    enddo
                 enddo
             enddo
-        enddo
+        endif
 
         return
      end subroutine ctqmc_make_occu

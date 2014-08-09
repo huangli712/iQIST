@@ -399,38 +399,41 @@
 ! evaluate double occupation matrix: < n_i n_j >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
-     do flvr=1, norbs-1
-         do i=flvr+1, norbs
-             raux1 = zero
-             do j=1, nsectors
-                 if (is_trunc(j)) cycle
-                 call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, one, &
-                              final_product(j,2)%item,                        sectors(j)%ndim, &
-                              double_occu(flvr,i,j)%item,                     sectors(j)%ndim, & 
-                              zero, tmp_mat,                                 max_dim_sect_trunc )
+     if (idoub == 2) then
+         do flvr=1, norbs-1
+             do i=flvr+1, norbs
+                 raux1 = zero
+                 do j=1, nsectors
+                     if (is_trunc(j)) cycle
+                     call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, one, &
+                                  final_product(j,2)%item,                        sectors(j)%ndim, &
+                                  double_occu(flvr,i,j)%item,                     sectors(j)%ndim, & 
+                                  zero, tmp_mat,                                 max_dim_sect_trunc )
 
-                 do k=1, sectors(j)%ndim
-                     raux1 = raux1 + tmp_mat(k,k)    
-                 enddo
-             enddo 
-             nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
+                     do k=1, sectors(j)%ndim
+                         raux1 = raux1 + tmp_mat(k,k)    
+                     enddo
+                 enddo 
+                 nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
 
-             raux1 = zero
-             do j=1, nsectors
-                 if (is_trunc(j)) cycle
-                 call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, one, &
-                             final_product(j,2)%item,                    sectors(j)%ndim, &
-                             double_occu(i,flvr,j)%item,                 sectors(j)%ndim, & 
-                             zero, tmp_mat,                              max_dim_sect_trunc      )
+                 raux1 = zero
+                 do j=1, nsectors
+                     if (is_trunc(j)) cycle
+                     call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, one, &
+                                 final_product(j,2)%item,                    sectors(j)%ndim, &
+                                 double_occu(i,flvr,j)%item,                 sectors(j)%ndim, & 
+                                 zero, tmp_mat,                              max_dim_sect_trunc      )
 
-                 do k=1, sectors(j)%ndim
-                     raux1 = raux1 + tmp_mat(k,k)    
-                 enddo
-             enddo 
-             nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
+                     do k=1, sectors(j)%ndim
+                         raux1 = raux1 + tmp_mat(k,k)    
+                     enddo
+                 enddo 
+                 nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
+             enddo
          enddo
-     enddo
-
+     else
+         nnmat = zero
+     endif
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >

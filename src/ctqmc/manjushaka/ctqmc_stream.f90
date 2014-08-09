@@ -55,6 +55,7 @@
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
      itrun  = 1            ! how to truncate the Hilbert space
+     idoub  = 1            ! whether to measure the double occupancy number
 !-------------------------------------------------------------------------
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
@@ -124,6 +125,7 @@
              read(mytmp,*) isort                                         !
              read(mytmp,*) isvrt                                         !
              read(mytmp,*) itrun                                         !
+             read(mytmp,*) idoub                                         !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
 
              read(mytmp,*)
@@ -201,6 +203,7 @@
      call mp_bcast( isort , master )                                     !
      call mp_bcast( isvrt , master )                                     !
      call mp_bcast( itrun , master )                                     !
+     call mp_bcast( idoub , master )                                     !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
      call mp_barrier()
 
@@ -613,8 +616,8 @@
 
 ! init random number generator
      call system_clock(system_time)
-     !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     stream_seed = 123456
+     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
+     !stream_seed = 123456
      call spring_sfmt_init(stream_seed)
      call random_seed()
 
