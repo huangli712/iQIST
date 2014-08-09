@@ -48,8 +48,8 @@
 ! allocate memory
      allocate(htmp(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize htmp
      htmp = czero
@@ -68,6 +68,7 @@
      qmune = mune - qmune
 
 ! calculate new bath weiss's function
+! G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
      do i=1,norbs
          do k=1,mfreq
              wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
@@ -85,23 +86,23 @@
 ! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wssf(rmesh, wssf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the new bath weiss's function in imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wtau(tmesh, wtau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the new hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'AZALEA >>> DMFT hybridization function is updated'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(htmp)
