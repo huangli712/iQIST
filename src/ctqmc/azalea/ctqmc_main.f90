@@ -1,13 +1,74 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! A test program for dynamical mean field theory (DMFT) self-consistent  !
-! engine plus hybridization expansion version continuous time quantum    !
-! Monte Carlo (CTQMC) quantum impurity solver                            !
-! author  : li huang                                                     !
-! version : v2014.01.13T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : this impurity solver is based on segment picture formalism   !
-!           any question, please contact with huangli712@gmail.com       !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! AZALEA @ iQIST                                                       !
+!!!                                                                      !
+!!! A test program for dynamical mean field theory (DMFT) self-consistent!
+!!! engine plus hybridization expansion version continuous time quantum  !
+!!! Monte Carlo (CTQMC) quantum impurity solver                          !
+!!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
+!!! version : v2014.08.10T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : this impurity solver is based on segment picture formalism !
+!!!           any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! WARNING
+!! =======
+!!
+!! If you want to obtain an executable program, please go to src/build/,
+!! open make.sys and comment out the API flag. On the other hand, if you
+!! want to compile azalea as a library, please activate the API flag.
+!!
+!! Introduction
+!! ============
+!!
+!! The azalea code is a hybridization expansion version continuous time
+!! quantum Monte Carlo quantum impurity solver. It adopts the segment
+!! picuture, and only implements very limited features. So it is highly
+!! efficient, and can be used as a standard to benchmark the other ctqmc
+!! impurity solvers. In fact, it is the prototype for the other more
+!! advanced ctqmc impurity solver. The azalea code also includes a mini
+!! dynamical mean field theory engine which implements the self-consistent
+!! equation for Bethe lattice in paramagnetic state. So you can use it
+!! to perform dynamical mean field theory calculations quickly. Enjoy it.
+!!
+!! Usage
+!! =====
+!!
+!! # ./ctqmc or bin/azalea.x
+!!
+!! Input
+!! =====
+!!
+!! solver.ctqmc.in (optional)
+!! solver.eimp.in (optional)
+!! solver.hyb.in (optional)
+!!
+!! Output
+!! ======
+!!
+!! terminal output
+!! solver.green.bin.*
+!! solver.green.dat
+!! solver.grn.dat
+!! solver.hybri.dat
+!! solver.hyb.dat
+!! solver.wss.dat
+!! solver.sgm.dat
+!! solver.hub.dat
+!! solver.hist.dat
+!! solver.prob.dat
+!! solver.nmat.dat
+!! solver.status.dat
+!! etc.
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/guide directory.
+!!
+!!
 
 # if !defined (API)
 
