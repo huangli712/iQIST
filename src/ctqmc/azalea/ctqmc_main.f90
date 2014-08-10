@@ -410,7 +410,7 @@
 ! check whether size_t is correct
      if ( size_t /= size(symm) ) then
          call s_print_error('cat_set_symm', 'wrong dimension size of symm_t')
-     endif
+     endif ! back if ( size_t /= size(symm) ) block
 
 ! copy data
      symm = symm_t
@@ -418,10 +418,10 @@
      return
   end subroutine cat_set_symm
 
-!>>> setup the impurity level
+!!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
-     use control
-     use context
+     use constants, only : dp
+     use context, only : eimp
 
      implicit none
 
@@ -434,8 +434,8 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
-         call ctqmc_print_error('cat_set_eimp', 'wrong dimension size of eimp_t')
-     endif
+         call s_print_error('cat_set_eimp', 'wrong dimension size of eimp_t')
+     endif ! back if ( size_t /= size(eimp) ) block
 
 ! copy data
      eimp = eimp_t
