@@ -469,10 +469,11 @@
      return
   end subroutine cat_get_grnf
 
-!>>> extract the self-energy function
+!!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
-     use control
-     use context
+     use constants, only : dp
+     use control, only : mfreq, norbs
+     use context, only : sig2
 
      implicit none
 
@@ -485,8 +486,8 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(sig2) ) then
-         call ctqmc_print_error('cat_get_sigf', 'wrong dimension size of sigf_t')
-     endif
+         call s_print_error('cat_get_sigf', 'wrong dimension size of sigf_t')
+     endif ! back if ( size_t /= size(sig2) ) block
 
 ! copy data
      sigf_t = reshape(sig2, (/mfreq*norbs*norbs/))
