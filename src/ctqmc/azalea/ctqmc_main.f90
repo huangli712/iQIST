@@ -394,10 +394,9 @@
      return
   end subroutine cat_set_hybf
 
-!>>> setup the symmetry vector
+!!>>> cat_set_symm: setup the symmetry vector
   subroutine cat_set_symm(size_t, symm_t)
-     use control
-     use context
+     use context, only : symm
 
      implicit none
 
@@ -410,7 +409,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(symm) ) then
-         call ctqmc_print_error('cat_set_symm', 'wrong dimension size of symm_t')
+         call s_print_error('cat_set_symm', 'wrong dimension size of symm_t')
      endif
 
 ! copy data
