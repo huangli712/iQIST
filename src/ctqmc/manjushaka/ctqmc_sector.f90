@@ -19,7 +19,8 @@
      use constants
      use control
      use context
- 
+     use mmpi
+
      implicit none
   
 ! the fmat between two sectors, it is a rectangle matrix
@@ -412,13 +413,10 @@
             nsectors_trunc     = nsectors
             max_dim_sect_trunc = max_dim_sect
             ave_dim_sect_trunc = ave_dim_sect
+
             if (myid == master) then
                 write(mystd,*)
                 write(mystd,'(4X,a)') 'use full Hilbert space' 
-                write(mystd,'(4X,a,i5)')    'number of sectors:', nsectors_trunc 
-                write(mystd,'(4X,a,i5)')    'maximum dimension of sectors:', max_dim_sect_trunc
-                write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors:', ave_dim_sect_trunc
-                write(mystd,*)
             endif
 
 ! truncate the Hilbert space according to the total occupancy number
@@ -434,15 +432,6 @@
                 write(mystd, *)
                 write(mystd,'(4X,a,i2,a,i2)') 'truncate occupancy number, just keep ', &
                                                   nmini,' ~ ',  nmaxi 
-                write(mystd,'(4X,a)') 'before truncated:'
-                write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors
-                write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect
-                write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect
-                write(mystd,'(4X,a)') 'after truncated:'
-                write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors_trunc 
-                write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect_trunc
-                write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect_trunc
-                write(mystd,*)
             endif
 
 ! truncate the Hilbert space according to the total occupancy number and energy level
@@ -451,42 +440,64 @@
                 write(mystd,*)
                 write(mystd,'(4X,a,i2,a,i2)') 'truncate occupancy number, just keep ', &
                                                   nmini, ' ~ ',  nmaxi
-
-            endif
-            is_trunc = .false.
-            inquire(file = 'solver.psect.dat', exist = exists)
-            if (exists) then
-                if (myid == master) then
+                is_trunc = .false.
+                prob_sect = zero
+                inquire(file = 'solver.psect.dat', exist = exists)
+                if (exists) then
                     write(mystd,'(4X,a)') 'truncate high energy states'
-                endif
-                open(mytmp, file='solver.psect.dat', form='formatted', status='unknown')
-                read(mytmp, *) ! skip header
-                do i=1, nsectors
-                    read(mytmp, *) int1, prob_sect(i) 
-                enddo
-                do i=1, nsectors
-                    if (sectors(i)%nelectron < nmini .or. sectors(i)%nelectron > nmaxi .or. prob_sect(i) < 1e-4) then
-                        is_trunc(i) = .true.
-                    endif
-                enddo
-            else
-                do i=1, nsectors
-                    if (sectors(i)%nelectron < nmini .or. sectors(i)%nelectron > nmaxi ) then
-                        is_trunc(i) = .true.
-                    endif
-                enddo
-            endif
+                    open(mytmp, file='solver.psect.dat', form='formatted', status='unknown')
+                    read(mytmp, *) ! skip header
+                    do i=1, nsectors
+                        read(mytmp, *) int1, prob_sect(i) 
+                    enddo
+                    close(mytmp)
+
+                    do i=1, nsectors
+                        if (sectors(i)%nelectron < nmini .or. sectors(i)%nelectron > nmaxi .or. prob_sect(i) < 1e-4) then
+                            is_trunc(i) = .true.
+                        endif
+                    enddo
+                else
+                    do i=1, nsectors
+                        if (sectors(i)%nelectron < nmini .or. sectors(i)%nelectron > nmaxi ) then
+                            is_trunc(i) = .true.
+                        endif
+                    enddo
+                endif ! back if (exists) block
+            endif ! back if (myid == master) block
+
+# if defined (MPI)
+! block until all processes have reached here
+     call mp_barrier()
+
+     call mp_bcast(prob_sect, master)
+
+     call mp_bcast(is_trunc, master)
+
+     call mp_barrier()
+# endif  /* MPI */
+
             call truncate_sectors()
-            if (myid == master) then
-                write(mystd,'(4X,a)') 'before truncated:'
-                write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors
-                write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect
-                write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect
-                write(mystd,'(4X,a)') 'after truncated:'
-                write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors_trunc 
-                write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect_trunc
-                write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect_trunc
+
+        endif ! back if (itrun == 1) block
+
+! print summary of sectors after truncated
+        if (myid == master) then
+            if ( itrun == 1) then 
+                write(mystd,'(4X,a,i5)')    'number of sectors:', nsectors_trunc 
+                write(mystd,'(4X,a,i5)')    'maximum dimension of sectors:', max_dim_sect_trunc
+                write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors:', ave_dim_sect_trunc
                 write(mystd,*)
+            elseif ( itrun == 2 .or. itrun == 3) then
+                 write(mystd,'(4X,a)') 'before truncated:'
+                 write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors
+                 write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect
+                 write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect
+                 write(mystd,'(4X,a)') 'after truncated:'
+                 write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors_trunc 
+                 write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect_trunc
+                 write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect_trunc
+                 write(mystd,*)
             endif
         endif
 

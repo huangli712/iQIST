@@ -20,8 +20,8 @@
 !           cat_remove_flavor
 !           cat_lshift_flavor
 !           cat_rshift_flavor <<<---
-!           ctqmc_make_ztrace_lazy
-!           ctqmc_make_ztrace_retrieve
+!           ctqmc_lazy_ztrace
+!           ctqmc_retrieve_ztrace
 !           ctqmc_make_evolve <<<---
 !           ctqmc_make_equate
 !           ctqmc_make_search <<<---
@@ -269,7 +269,7 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     call ctqmc_lazy_ztrace(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
 
      return
   end subroutine cat_insert_ztrace
@@ -450,7 +450,7 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     call ctqmc_lazy_ztrace(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
 
      return
   end subroutine cat_remove_ztrace
@@ -600,7 +600,7 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2)
+     call ctqmc_lazy_ztrace(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2)
 
      return
   end subroutine cat_lshift_ztrace
@@ -750,7 +750,7 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2)
+     call ctqmc_lazy_ztrace(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2)
 
      return
   end subroutine cat_rshift_ztrace
@@ -2475,7 +2475,7 @@
 !-------------------------------------------------------------------------
 !>>> core subroutine of manjushaka
 ! use good quantum number algorithm
-  subroutine ctqmc_make_ztrace_lazy(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
+  subroutine ctqmc_lazy_ztrace(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
      use constants
      use control
      use context
@@ -2697,10 +2697,10 @@
      enddo
 
      return
-  end subroutine ctqmc_make_ztrace_lazy
+  end subroutine ctqmc_lazy_ztrace
 
 !>>> calculate the trace for retieve status
-  subroutine ctqmc_make_ztrace_retrieve(csize, trace)
+  subroutine ctqmc_retrieve_ztrace(csize, trace)
      use constants
      use control
      use context
@@ -2780,7 +2780,7 @@
      enddo
 
      return
-  end subroutine ctqmc_make_ztrace_retrieve
+  end subroutine ctqmc_retrieve_ztrace
 
 !>>> used to update the operator traces of the modified part
   subroutine ctqmc_make_evolve()
