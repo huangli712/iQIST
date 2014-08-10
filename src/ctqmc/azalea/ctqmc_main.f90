@@ -63,6 +63,37 @@
 !! solver.status.dat
 !! etc.
 !!
+!! Running mode
+!! ============
+!! 
+!! case 1: isscf == 1 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, normal mode
+!!
+!! case 2: isscf == 1 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, binner mode
+!!
+!! case 3: isscf == 2 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!!
+!! case 4: isscf == 2 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!! plus
+!! call ctqmc_impurity_solver, binner mode
+!!
 !! Documents
 !! =========
 !!
@@ -73,10 +104,10 @@
 # if !defined (API)
 
   program ctqmc_main
-     use constants
-     use control
+     use constants, only : mystd
+     use control, only : isscf, isbin, niter, myid, master, nprocs
 
-     use mmpi
+     use mmpi, only : mp_init, mp_comm_rank, mp_comm_size, mp_barrier, mp_finalize
 
      implicit none
 
@@ -122,30 +153,6 @@
 
 ! prepare initial hybridization function, init self-consistent iteration
      call ctqmc_selfer_init()
-
-!-------------------------------------------------------------------------
-! note: running mode                                                     !
-!-------------------------------------------------------------------------
-!    if isscf == 1 .and. isbin == 1                                      !
-!        call ctqmc_impurity_solver only, normal mode                    !
-!                                                                        !
-!    if isscf == 1 .and. isbin == 2                                      !
-!        call ctqmc_impurity_solver only, binner mode                    !
-!                                                                        !
-!    if isscf == 2 .and. isbin == 1                                      !
-!        call ctqmc_impurity_solver, normal mode                         !
-!        plus                                                            !
-!        call ctqmc_dmft_selfer                                          !
-!        until convergence                                               !
-!                                                                        !
-!    if isscf == 2 .and. isbin == 2                                      !
-!        call ctqmc_impurity_solver, normal mode                         !
-!        plus                                                            !
-!        call ctqmc_dmft_selfer                                          !
-!        until convergence                                               !
-!        plus                                                            !
-!        call ctqmc_impurity_solver, binner mode                         !
-!-------------------------------------------------------------------------
 
 !=========================================================================
 !>>> DMFT ITERATION BEGIN                                              <<<
