@@ -443,10 +443,11 @@
      return
   end subroutine cat_set_eimp
 
-!>>> extract the impurity green's function
+!!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
-     use control
-     use context
+     use constants, only : dp
+     use control, only : mfreq, norbs
+     use context, only : grnf
 
      implicit none
 
@@ -459,8 +460,8 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(grnf) ) then
-         call ctqmc_print_error('cat_get_grnf', 'wrong dimension size of grnf_t')
-     endif
+         call s_print_error('cat_get_grnf', 'wrong dimension size of grnf_t')
+     endif ! back if ( size_t /= size(grnf) ) block
 
 ! copy data
      grnf_t = reshape(grnf, (/mfreq*norbs*norbs/))
