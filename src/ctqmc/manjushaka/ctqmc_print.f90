@@ -105,6 +105,7 @@
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
      write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'isvrt :', isvrt
+     write(mystd,'(2(4X,a,i10))')   'itrun :', itrun  , 'idoub :', idoub 
 
      write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
      write(mystd,'(2(4X,a,i10))')   'chmax :', chmax  , 'chgrd :', chgrd
@@ -115,6 +116,7 @@
      write(mystd,'(2(4X,a,i10))')   'nffrq :', nffrq  , 'nbfrq :', nbfrq
      write(mystd,'(2(4X,a,i10))')   'nfreq :', nfreq  , 'ntime :', ntime
      write(mystd,'(2(4X,a,i10))')   'npart :', npart  , 'nflip :', nflip
+     write(mystd,'(2(4X,a,i10))')   'nmini :', nmini  , 'nmaxi :', nmaxi
 
      write(mystd,'(2(4X,a,i10))')   'ntherm:', ntherm , 'nsweep:', nsweep
      write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite

@@ -154,14 +154,16 @@
         allocate(one_sector%myfmat(one_sector%nops,0:1))
         allocate(one_sector%final_product(one_sector%ndim, one_sector%ndim, 2))
         allocate(one_sector%occu(one_sector%ndim, one_sector%ndim, one_sector%nops))
-        allocate(one_sector%double_occu(one_sector%ndim, one_sector%ndim, one_sector%nops, one_sector%nops))
+        if (idoub == 2) then
+            allocate(one_sector%double_occu(one_sector%ndim, one_sector%ndim, one_sector%nops, one_sector%nops))
+            one_sector%double_occu = zero
+        endif
   
 ! init them
         one_sector%myeigval = zero
         one_sector%next_sector = 0
         one_sector%final_product = zero
         one_sector%occu = zero
-        one_sector%double_occu = zero
   
 ! init myfmat one by one
         do i=1, one_sector%nops 
