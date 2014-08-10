@@ -136,7 +136,7 @@
 ! impurity solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! setup the important parameters for continuous time quantum Monte Carlo
 ! quantum impurity solver and dynamical mean field theory self-consistent
@@ -146,7 +146,7 @@
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call ctqmc_setup_array()
@@ -187,12 +187,12 @@
 ! check the running mode
          if ( isscf == 1 ) then
              EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( isscf == 1 ) block
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'AZALEA >>> DMFT iter:', iter, ' <<< SELFING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
@@ -209,7 +209,7 @@
 ! now convergence is achieved
          if ( convergence .eqv. .true. ) then
              EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( convergence .eqv. .true. ) block
 
      enddo DMFT_CTQMC_ITERATION ! over iter={1,niter} loop
 
@@ -224,7 +224,7 @@
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'AZALEA >>> DMFT iter:', iter, ' <<< BINNING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! accumulate the quantum Monte Carlo data
          call ctqmc_impurity_solver(iter)
@@ -242,7 +242,7 @@
 ! solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_footer()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! finalize mpi envirnoment
 # if defined (MPI)
@@ -259,7 +259,7 @@
 
 # endif  /* API */
 
-!>>> initialize the ctqmc quantum impurity solver
+!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
   subroutine cat_init_ctqmc(I_mpi, I_solver)
      use api
      use control
@@ -319,12 +319,12 @@
 ! impurity solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call ctqmc_setup_array()
@@ -335,10 +335,8 @@
      return
   end subroutine cat_init_ctqmc
 
-!>>> execute the ctqmc quantum impurity solver
+!!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
-     use control
-
      implicit none
 
 ! external arguments
@@ -352,9 +350,9 @@
      return
   end subroutine cat_exec_ctqmc
 
-!>>> stop the ctqmc quantum impurity solver
+!!>>> cat_stop_ctqmc: stop the ctqmc quantum impurity solver
   subroutine cat_stop_ctqmc()
-     use control
+     use control, only : myid, master
 
      implicit none
 
@@ -365,7 +363,7 @@
 ! solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_footer()
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine cat_stop_ctqmc
