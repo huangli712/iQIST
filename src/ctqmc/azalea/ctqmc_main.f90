@@ -368,10 +368,11 @@
      return
   end subroutine cat_stop_ctqmc
 
-!>>> setup the hybridization function
+!!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
-     use control
-     use context
+     use constants, only : dp
+     use control, only : mfreq, norbs
+     use context, only : hybf
 
      implicit none
 
@@ -384,8 +385,8 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
-         call ctqmc_print_error('cat_set_hybf', 'wrong dimension size of hybf_t')
-     endif
+         call s_print_error('cat_set_hybf', 'wrong dimension size of hybf_t')
+     endif ! back if ( size_t /= size(hybf) ) block
 
 ! copy data
      hybf = reshape(hybf_t,(/mfreq,norbs,norbs/))
