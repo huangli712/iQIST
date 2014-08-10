@@ -406,7 +406,7 @@
      open(mytmp, file='solver.hub.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
                                     real(ghub(j,i)), &

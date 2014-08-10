@@ -44,6 +44,9 @@
      use control
      use context
 
+     use m_sector
+     use m_npart
+
      implicit none
 
 ! external arguments
@@ -263,7 +266,11 @@
      endif
 
      call cpu_time(time_begin) ! record starting time
-     call ctqmc_retrieve_status()
+! for dynamically truncate high energy states, the trace of saved diagramm 
+! may be zero, so we don't retrieve it for itrun == 3
+     if (itrun == 1 .or. itrun == 2) then
+         call ctqmc_retrieve_status()
+     endif
      call cpu_time(time_end)   ! record ending   time
 
 ! print the time information
@@ -687,6 +694,10 @@
          write(mystd,'(2X,a)') 'MANJUSHAKA >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
      endif
+
+! deallocate memory for occu and npart
+     call ctqmc_deallocate_memory_occu()
+     call ctqmc_deallocate_memory_part()
 
 ! deallocate memory
      deallocate(hist_mpi)

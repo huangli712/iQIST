@@ -54,6 +54,7 @@
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
+     idoub  = 1            ! whether to measure the double occupancy number
 !-------------------------------------------------------------------------
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
@@ -111,6 +112,7 @@
              read(mytmp,*) issun                                         !
              read(mytmp,*) isspn                                         !
              read(mytmp,*) isbin                                         !
+             read(mytmp,*) idoub                                         !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
 
              read(mytmp,*)
@@ -173,6 +175,7 @@
      call mp_bcast( issun , master )                                     !
      call mp_bcast( isspn , master )                                     !
      call mp_bcast( isbin , master )                                     !
+     call mp_bcast( idoub , master )                                     !
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
      call mp_barrier()
 
@@ -390,47 +393,45 @@
 
 # endif  /* MPI */
 
-! setup initial eigs, naux, and saux
+!-------------------------------------------------------------------------
+! first, read the information of sectors
      eigs = zero
      naux = zero
 
-!-------------------------------------------------------------------------
-!     if ( myid == master ) then ! only master node can do it
-! first, read the information of sectors
+     if (myid == master) then ! only master node can do it
          exists = .false.
-
-! inquire about file's existence, 'atom.sector.in'
+! inquire about file 'atom.cix', this file is necessary, the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
 
-! find input file: atom.sector.in, read it
-! file atom.sector.in is necessary, the code can not run without it
+! find 'atom.cix', read it 
          if ( exists .eqv. .true. ) then
-
-! open data file
              open(mytmp, file='atom.cix', form='formatted', status='unknown')
-
+! skip three header lines
              read(mytmp,*) 
              read(mytmp,*) 
              read(mytmp,*) 
 ! read the total number of sectors, maximum dimension of sectors, and average dimension of sectors
              read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
-! after we know the total number of sectors, we can allocate memory for array sect
-             call ctqmc_allocate_memory_sect()
-             call ctqmc_allocate_memory_part()
 
-! read the data for each sector
+! after we know the total number of sectors, we can allocate memory for array sectors and parts
+             call ctqmc_allocate_memory_sect()
+
+! read each sector's information
              do i=1, nsectors
                  read(mytmp,*) ! skip the header
-! read the dimension, total number of electrons, number of fermion operators, 
-! and start index of this sector
+
+! read the dimension, total number of electrons, number of fermion operators, and start index of this sector
                  read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelectron, sectors(i)%nops, sectors(i)%istart
-! here, we allocate the memory for sect(i)
+
+! allocate the memory for sectors(i)
                  call alloc_one_sector(sectors(i))
+
 ! read the next_sector index
                  read(mytmp,*) ! skip the header
                  do j=1, sectors(i)%nops
                      read(mytmp,*) j1, sectors(i)%next_sector(j,0), sectors(i)%next_sector(j,1)  
                  enddo
+
 ! read the eigenvalue of this sector
                  read(mytmp,*) ! skip the header
                  do j=1, sectors(i)%ndim
@@ -438,48 +439,16 @@
                  enddo
              enddo
              close(mytmp) 
-!-------------------------------------------------------------------------
-
-! add the contribution from chemical potential to eigenvalues
-             j1 = 0
-             do i=1,nsectors
-                 do j=1, sectors(i)%ndim
-                     j1 = j1 + 1
-                     eigs(j1) = sectors(i)%myeigval(j)  
-                     naux(j1) = sectors(i)%nelectron
-                 enddo
-             enddo ! over i={1,nsect} loop
-
-! add the contribution from chemical potential to eigenvalues
-             do i=1,ncfgs
-                 eigs(i) = eigs(i) - mune * naux(i)
-             enddo ! over i={1,ncfgs} loop
-! substract the eigenvalues zero point, here we store the eigen energy
-! zero point in U
-             r1 = minval(eigs)
-             r2 = maxval(eigs)
-             U  = r1 + one ! here we choose the minimum as zero point
-             do i=1,ncfgs
-                 eigs(i) = eigs(i) - U
-             enddo ! over i={1,ncfgs} loop
-
-! check eigs
-! note: \infity - \infity is undefined, which return NaN
-             do i=1,ncfgs
-                 if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
-                     call ctqmc_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
-                 endif
-             enddo ! over i={1,ncfgs} loop
-
          else
              call ctqmc_print_error('ctqmc_selfer_init','file atom.cix does not exist')
          endif ! back if ( exists .eqv. .true. ) block
+
 !-------------------------------------------------------------------------
 ! read the fmat
          exists = .false.
+! file 'atom.fmat' is necessary, the code can not run without it
          inquire (file = 'atom.fmat', exist = exists)
-! find input file: atom.fmat, read it
-! file atom.sector.in is necessary, the code can not run without it
+! find file 'atom.fmat', read it
          if ( exists .eqv. .true. ) then
              open(mytmp, file='atom.fmat', form='unformatted', status='unknown')
              do i=1, nsectors
@@ -494,16 +463,90 @@
                      enddo 
                  enddo 
              enddo 
+             close(mytmp)
          else
              call ctqmc_print_error('ctqmc_selfer_init','file atom.fmat does not exist')
          endif
-!-------------------------------------------------------------------------
-!>>>     endif ! back if ( myid == master ) block
+     endif ! back if ( myid == master ) block
 
 # if defined (MPI)
 ! block until all processes have reached here
      call mp_barrier()
+
+     call mp_bcast(nsectors,     master) 
+     call mp_bcast(max_dim_sect, master) 
+     call mp_bcast(ave_dim_sect, master) 
+
+     if (myid /= master ) then
+         call ctqmc_allocate_memory_sect()
+     endif
+
+     do i=1, nsectors
+         call mp_barrier()
+         call mp_bcast(sectors(i)%ndim,        master) 
+         call mp_bcast(sectors(i)%nelectron,   master) 
+         call mp_bcast(sectors(i)%nops,        master) 
+         call mp_bcast(sectors(i)%istart,      master) 
+         if ( myid /= master) then
+             call alloc_one_sector(sectors(i))
+         endif
+         call mp_bcast(sectors(i)%next_sector, master) 
+         call mp_bcast(sectors(i)%myeigval,    master) 
+     enddo
+     call mp_barrier()
+
+     do i=1, nsectors
+         do j=1, sectors(i)%nops
+             do k=0,1
+                 ii = sectors(i)%next_sector(j,k)
+                 if (ii == -1) cycle
+                 if ( myid /= master) then
+                     sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
+                     sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
+                     call alloc_one_fmat(sectors(i)%myfmat(j,k))
+                 endif
+                 call mp_barrier()
+                 call mp_bcast(sectors(i)%myfmat(j,k)%item, master) 
+             enddo 
+         enddo 
+     enddo 
+     call mp_barrier()
+
 # endif  /* MPI */
+
+! allocate memory for npart algorithm
+     call ctqmc_allocate_memory_part()
+
+! add the contribution from chemical potential to eigenvalues
+     j1 = 0
+     do i=1,nsectors
+         do j=1, sectors(i)%ndim
+             j1 = j1 + 1
+             eigs(j1) = sectors(i)%myeigval(j)  
+             naux(j1) = sectors(i)%nelectron
+         enddo
+     enddo 
+     do i=1,ncfgs
+         eigs(i) = eigs(i) - mune * naux(i)
+     enddo 
+
+! substract the eigenvalues zero point, here we store the eigen energy zero point in U
+     r1 = minval(eigs)
+     r2 = maxval(eigs)
+! here we choose the minimum as zero point
+     U  = r1 + one              
+     do i=1,ncfgs
+         eigs(i) = eigs(i) - U
+     enddo 
+
+! check eigs
+! note: \infity - \infity is undefined, which return NaN
+     do i=1,ncfgs
+         if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
+             call ctqmc_print_error('ctqmc_selfer_init','NaN error, please &
+                                               adjust the zero base of eigs')
+         endif
+     enddo 
 
      return
   end subroutine ctqmc_selfer_init
@@ -540,8 +583,8 @@
 
 ! init random number generator
      call system_clock(system_time)
-     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     !stream_seed = 123456
+     !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
+     stream_seed = 123456
      call spring_sfmt_init(stream_seed)
 
 ! init empty_s and empty_e stack structure
@@ -705,33 +748,35 @@
 
 ! init op_m, < c^{\dag} c c^{\dag} c >,
 ! which are used to calculate double occupation number
-     do i=1, norbs
-         do j=1, norbs
-             do k=1, nsectors
-                 jj = sectors(k)%next_sector(j,0) 
-                 ii = sectors(k)%next_sector(i,0)
-                 if (ii == -1 .or. jj == -1) then
-                     sectors(k)%double_occu(:,:,i,j) = zero
-                     cycle
-                 endif
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
-                             sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  & 
-                             sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, & 
-                             zero, tmp_mat1,                                  max_dim_sect       ) 
+     if (idoub == 2) then
+         do i=1, norbs
+             do j=1, norbs
+                 do k=1, nsectors
+                     jj = sectors(k)%next_sector(j,0) 
+                     ii = sectors(k)%next_sector(i,0)
+                     if (ii == -1 .or. jj == -1) then
+                         sectors(k)%double_occu(:,:,i,j) = zero
+                         cycle
+                     endif
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
+                                 sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  & 
+                                 sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, & 
+                                 zero, tmp_mat1,                                  max_dim_sect       ) 
 
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
-                             sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
-                             sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, & 
-                             zero, tmp_mat2,                                  max_dim_sect       ) 
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
+                                 sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
+                                 sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, & 
+                                 zero, tmp_mat2,                                  max_dim_sect       ) 
 
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one, &
-                             tmp_mat2,                                        max_dim_sect,    & 
-                             tmp_mat1,                                        max_dim_sect,    & 
-                             zero, sectors(k)%double_occu(:,:,i,j),           sectors(k)%ndim   )
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one, &
+                                 tmp_mat2,                                        max_dim_sect,    & 
+                                 tmp_mat1,                                        max_dim_sect,    & 
+                                 zero, sectors(k)%double_occu(:,:,i,j),           sectors(k)%ndim   )
 
+                 enddo
              enddo
          enddo
-     enddo
+     endif
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space

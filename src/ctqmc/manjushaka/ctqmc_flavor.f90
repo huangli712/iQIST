@@ -20,8 +20,8 @@
 !           cat_remove_flavor
 !           cat_lshift_flavor
 !           cat_rshift_flavor <<<---
-!           ctqmc_make_ztrace_lazy
-!           ctqmc_make_ztrace_retrieve
+!           ctqmc_lazy_ztrace
+!           ctqmc_retrieve_ztrace
 !           ctqmc_make_evolve <<<---
 !           ctqmc_make_equate
 !           ctqmc_make_search <<<---
@@ -269,7 +269,7 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     call ctqmc_lazy_ztrace(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
 
      return
   end subroutine cat_insert_ztrace
@@ -450,7 +450,7 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     call ctqmc_lazy_ztrace(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
 
      return
   end subroutine cat_remove_ztrace
@@ -600,7 +600,7 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2)
+     call ctqmc_lazy_ztrace(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2)
 
      return
   end subroutine cat_lshift_ztrace
@@ -750,7 +750,7 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_make_ztrace_lazy(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2)
+     call ctqmc_lazy_ztrace(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2)
 
      return
   end subroutine cat_rshift_ztrace
@@ -2475,7 +2475,7 @@
 !-------------------------------------------------------------------------
 !>>> core subroutine of manjushaka
 ! use good quantum number algorithm
-  subroutine ctqmc_make_ztrace_lazy(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
+  subroutine ctqmc_lazy_ztrace(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
      use constants
      use control
      use context
@@ -2531,9 +2531,6 @@
 
 ! the trace boundary
      real(dp) :: trace_bound(nsectors)
-
-! index for sectors after sorting trace_bound
-     integer :: indx_sector(nsectors)
 
 ! the trace of each sector
      real(dp) :: trace_sector(nsectors)
@@ -2618,27 +2615,21 @@
      enddo
 
 ! calculate the trace bounds for each sector
+     trace_bound = zero
      do i=1, nsectors
-         indx_sector(i) = i
-         if (is_string(i) .eqv. .false.) then
-             trace_bound(i) = zero
-         else
+         if (is_string(i) .eqv. .false.)  cycle
 ! calculate the trace bounds
-             trace_bound(i) = one
-             do j=1, csize
-                 indx = sectors(string(j,i))%istart
-                 trace_bound(i) = trace_bound(i) * expt_v(indx, index_t_loc(j)) 
-             enddo 
+         trace_bound(i) = one
+         do j=1, csize
+             indx = sectors(string(j,i))%istart
+             trace_bound(i) = trace_bound(i) * expt_v(indx, index_t_loc(j)) 
+         enddo 
 ! specially treatment for the last time-evolution operator
-             indx = sectors(string(1,i))%istart
-             trace_bound(i) = trace_bound(i) * expt_t_loc(indx)
-             trace_bound(i) = min_dim(i) * trace_bound(i)
-         endif
+         indx = sectors(string(1,i))%istart
+         trace_bound(i) = trace_bound(i) * expt_t_loc(indx)
+         trace_bound(i) = min_dim(i) * trace_bound(i)
      enddo
 
-! sort trace_bound
-!     call ctqmc_trace_sorter(nsectors, trace_bound, indx_sector)
-!     call ctqmc_trace_qsorter(nsectors, trace_bound, indx_sector)
 ! calculate the max bound of acceptance ratio
      sum_bound = sum(trace_bound)
      ptmp = propose  *  abs(deter_ratio / matrix_ptrace)
@@ -2654,22 +2645,25 @@
 ! make npart
      call ctqmc_make_nparts(cmode, csize, index_t_loc, tau_s, tau_e)
 
-     pass = .false.
 ! otherwise, we need to refine the trace bounds
+     pass = .false.
      is_copy = .false.
      sum_abs_trace = zero
+     trace_sector = zero
+
      do i=1, nsectors
-! first, calculate the trace of this sector
-         if (is_string(indx_sector(i)) .eqv. .false.) then
-             trace_sector(indx_sector(i)) = zero
-             sectors(indx_sector(i))%final_product(:,:,1) = zero
+         if (is_trunc(i)) cycle
+
+         if (is_string(i) .eqv. .false.) then
+             trace_sector(i) = zero
+             final_product(i,1)%item = zero
          else
-             call cat_sector_ztrace( csize, string(:,indx_sector(i)), index_t_loc,&
-                                 expt_t_loc, trace_sector(indx_sector(i)) )
+             call cat_sector_ztrace( csize, string(:,i), index_t_loc,&
+                                 expt_t_loc, trace_sector(i) )
          endif
          if (pass .eqv. .false.) then
-             sum_abs_trace = sum_abs_trace + abs( trace_sector(indx_sector(i)) )
-             sum_bound = sum_bound - trace_bound(indx_sector(i))
+             sum_abs_trace = sum_abs_trace + abs( trace_sector(i) )
+             sum_bound = sum_bound - trace_bound(i)
 ! calculate pmax and pmin
              pmax = ptmp * (sum_abs_trace + sum_bound)
              pmin = ptmp * (sum_abs_trace - sum_bound)
@@ -2693,18 +2687,20 @@
      pass = ( min(one, abs(accept_p)) > rand_num)
 
 ! store the diagonal elements of final product in ddmat(:,1)
+     ddmat(:,1) = zero
      do i=1, nsectors
+         if(is_trunc(i)) cycle
          indx = sectors(i)%istart
          do j=1, sectors(i)%ndim
-             ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
+             ddmat(indx+j-1,1) = final_product(i,1)%item(j,j) 
          enddo
      enddo
 
      return
-  end subroutine ctqmc_make_ztrace_lazy
+  end subroutine ctqmc_lazy_ztrace
 
 !>>> calculate the trace for retieve status
-  subroutine ctqmc_make_ztrace_retrieve(csize, trace)
+  subroutine ctqmc_retrieve_ztrace(csize, trace)
      use constants
      use control
      use context
@@ -2756,10 +2752,13 @@
      call ctqmc_make_nparts(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
 
      is_copy = .false.
+     trace_sector = zero
      do i=1, nsectors
+         if (is_trunc(i)) cycle
+
          if (is_string(i) .eqv. .false.) then
              trace_sector(i) = zero
-             sectors(i)%final_product(:,:,1) = zero
+             final_product(i,1)%item = zero
          else
              call cat_sector_ztrace( csize, string(:,i), index_t_loc, expt_t_loc, trace_sector(i) )
          endif
@@ -2771,15 +2770,17 @@
      enddo
 
 ! store the diagonal elements of final product in ddmat(:,1)
+     ddmat(:,1) = zero
      do i=1, nsectors
+         if(is_trunc(i)) cycle
          indx = sectors(i)%istart
          do j=1, sectors(i)%ndim
-             ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
+             ddmat(indx+j-1,1) = final_product(i,1)%item(j,j) 
          enddo
      enddo
 
      return
-  end subroutine ctqmc_make_ztrace_retrieve
+  end subroutine ctqmc_retrieve_ztrace
 
 !>>> used to update the operator traces of the modified part
   subroutine ctqmc_make_evolve()
@@ -2804,7 +2805,8 @@
 ! transfer the final matrix product from final_product(:,:,1) to 
 ! final_product(:,:,2) the latter can be used to calculate nmat and nnmat
      do i=1, nsectors
-         sectors(i)%final_product(:,:,2) = sectors(i)%final_product(:,:,1)
+         if (is_trunc(i)) cycle
+         final_product(i,2)%item = final_product(i,1)%item
      enddo
   
  ! save the data of each part
