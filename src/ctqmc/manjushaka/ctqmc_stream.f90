@@ -600,13 +600,20 @@
      do i=1,nsectors
          do j=1, sectors(i)%ndim
              j1 = j1 + 1
+             sectors(i)%myeigval(j) = sectors(i)%myeigval(j) - mune * sectors(i)%nelectron
              eigs(j1) = sectors(i)%myeigval(j)  
              naux(j1) = sectors(i)%nelectron
          enddo
      enddo 
-     do i=1,ncfgs
-         eigs(i) = eigs(i) - mune * naux(i)
-     enddo 
+
+! dump eigs for reference
+     if (myid == master) then
+         open(mytmp, file='solver.eigs.dat')
+         do i=1, nsectors
+             write(mytmp, '(2i5,F20.10)') i, sectors(i)%nelectron, minval(sectors(i)%myeigval)
+         enddo
+         close(mytmp)
+     endif
 
 ! substract the eigenvalues zero point, here we store the eigen energy zero point in U
      r1 = minval(eigs)
