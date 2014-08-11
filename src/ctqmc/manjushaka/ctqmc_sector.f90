@@ -434,7 +434,7 @@
                                                   nmini,' ~ ',  nmaxi 
             endif
 
-! truncate the Hilbert space according to the total occupancy number and energy level
+! truncate the Hilbert space according to the total occupancy number and probatility of atomic states
         elseif (itrun == 3) then
             if (myid == master) then
                 write(mystd,*)
@@ -444,7 +444,7 @@
                 prob_sect = zero
                 inquire(file = 'solver.psect.dat', exist = exists)
                 if (exists) then
-                    write(mystd,'(4X,a)') 'truncate high energy states'
+                    write(mystd,'(4X,a)') 'truncate high energy atomic states according to their probability'
                     open(mytmp, file='solver.psect.dat', form='formatted', status='unknown')
                     read(mytmp, *) ! skip header
                     do i=1, nsectors
@@ -488,7 +488,7 @@
                 write(mystd,'(4X,a,i5)')    'maximum dimension of sectors:', max_dim_sect_trunc
                 write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors:', ave_dim_sect_trunc
                 write(mystd,*)
-            elseif ( itrun == 2 .or. itrun == 3) then
+            elseif ( itrun == 2 .or. itrun == 3 ) then
                  write(mystd,'(4X,a)') 'before truncated:'
                  write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors
                  write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect
