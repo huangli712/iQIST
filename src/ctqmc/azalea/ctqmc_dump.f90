@@ -1,50 +1,36 @@
-!-------------------------------------------------------------------------
-! project : azalea
-! program : ctqmc_dump_gtau
-!           ctqmc_dump_wtau
-!           ctqmc_dump_htau
-!           ctqmc_dump_gbin
-!           ctqmc_dump_grnf
-!           ctqmc_dump_wssf
-!           ctqmc_dump_hybf
-!           ctqmc_dump_sigf
-!           ctqmc_dump_hub1
-!           ctqmc_dump_hist
-!           ctqmc_dump_nmat
-!           ctqmc_dump_prob
-! source  : ctqmc_dump.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/16/2009 by li huang
-!           09/17/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/22/2009 by li huang
-!           10/25/2009 by li huang
-!           11/01/2009 by li huang
-!           11/30/2009 by li huang
-!           12/01/2009 by li huang
-!           12/04/2009 by li huang
-!           12/09/2009 by li huang
-!           12/26/2009 by li huang
-!           12/30/2009 by li huang
-!           02/28/2010 by li huang
-!           03/04/2010 by li huang
-!           08/23/2010 by li huang
-! purpose : dump key observables produced by the hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver and dynamical mean field theory (DMFT) self
-!           -consistent engine to disk files
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : ctqmc_dump_gtau
+!!!           ctqmc_dump_wtau
+!!!           ctqmc_dump_htau
+!!!           ctqmc_dump_gbin
+!!!           ctqmc_dump_grnf
+!!!           ctqmc_dump_wssf
+!!!           ctqmc_dump_hybf
+!!!           ctqmc_dump_sigf
+!!!           ctqmc_dump_hub1
+!!!           ctqmc_dump_hist
+!!!           ctqmc_dump_prob
+!!!           ctqmc_dump_nmat
+!!! source  : ctqmc_dump.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           08/23/2010 by li huang
+!!!           08/09/2014 by li huang
+!!! purpose : dump key observables produced by the hybridization expansion
+!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
+!!!           impurity solver and dynamical mean field theory (DMFT) self
+!!!           -consistent engine to disk files
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> write out impurity green's function in imaginary time space
+!!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
+!!>>> time space
   subroutine ctqmc_dump_gtau(tmesh, gtau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : ntime, norbs, nband, beta
 
      implicit none
 
@@ -92,10 +78,11 @@
      return
   end subroutine ctqmc_dump_gtau
 
-!>>> write out bath weiss's function in imaginary time space
+!!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
+!!>>> time space
   subroutine ctqmc_dump_wtau(tmesh, wtau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : ntime, norbs, nband
 
      implicit none
 
@@ -129,10 +116,11 @@
      return
   end subroutine ctqmc_dump_wtau
 
-!>>> write out hybridization function in imaginary time space
+!!>>> ctqmc_dump_htau: write out hybridization function in imaginary
+!!>>> time space
   subroutine ctqmc_dump_htau(tmesh, htau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : ntime, norbs, nband
 
      implicit none
 
@@ -166,10 +154,11 @@
      return
   end subroutine ctqmc_dump_htau
 
-!>>> write out impurity green's function in imaginary time space (binning mode)
+!!>>> ctqmc_dump_gbin: write out impurity green's function in imaginary
+!!>>> time space (generated in binning mode)
   subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : ntime, norbs, nband, beta
 
      implicit none
 
@@ -224,16 +213,17 @@
      return
   end subroutine ctqmc_dump_gbin
 
-!>>> write out impurity green's function in matsubara frequency space
+!!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_grnf(rmesh, grnf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mfreq, norbs, nband
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! impurity green's function
      complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
@@ -265,16 +255,17 @@
      return
   end subroutine ctqmc_dump_grnf
 
-!>>> write out bath weiss's function in matsubara frequency space
+!!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_wssf(rmesh, wssf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mfreq, norbs, nband
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! bath weiss's function
      complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
@@ -306,16 +297,17 @@
      return
   end subroutine ctqmc_dump_wssf
 
-!>>> write out hybridization function in matsubara frequency space
+!!>>> ctqmc_dump_hybf: write out hybridization function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_hybf(rmesh, hybf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mfreq, norbs, nband
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! hybridization function
      complex(dp), intent(in) :: hybf(mfreq,norbs,norbs)
@@ -347,16 +339,17 @@
      return
   end subroutine ctqmc_dump_hybf
 
-!>>> write out self-energy function in matsubara frequency space
+!!>>> ctqmc_dump_sigf: write out self-energy function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_sigf(rmesh, sigf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mfreq, norbs, nband
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! self-energy function
      complex(dp), intent(in) :: sigf(mfreq,norbs,norbs)
@@ -388,11 +381,12 @@
      return
   end subroutine ctqmc_dump_sigf
 
-!>>> write out impurity green's function and self-energy function obtained
-! by hubbard-I approximation in matsubara frequency space
+!!>>> ctqmc_dump_hub1: write out impurity green's function and self-energy
+!!>>> function obtained by hubbard-I approximation in matsubara frequency
+!!>>> space
   subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mfreq, norbs
 
      implicit none
 
@@ -433,10 +427,11 @@
      return
   end subroutine ctqmc_dump_hub1
 
-!>>> write out the Monte Carlo sampling histogram for perturbation expansion series
+!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
+!!>>> perturbation expansion series
   subroutine ctqmc_dump_hist(hist)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+     use control, only : mkink
 
      implicit none
 
@@ -475,54 +470,11 @@
      return
   end subroutine ctqmc_dump_hist
 
-!>>> write out the occupation matrix and double occupation matrix
-  subroutine ctqmc_dump_nmat(nmat, nnmat)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! occupation matrix data
-     real(dp), intent(in) :: nmat(norbs)
-
-! double occupation matrix data
-     real(dp), intent(in) :: nnmat(norbs,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.nmat.dat
-     open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
-
-! write it
-     write(mytmp,'(a)') '  < n_i >   data:'
-     do i=1,norbs
-         write(mytmp,'(i5,f12.6)') i, nmat(i)
-     enddo ! over i={1,norbs} loop
-     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
-
-     write(mytmp,'(a)') '< n_i n_j > data:'
-     do i=1,norbs
-         do j=1,norbs
-             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_nmat
-
-!>>> write out the probability of eigenstates of local hamiltonian matrix
+!!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
+!!>>> hamiltonian matrix
   subroutine ctqmc_dump_prob(prob)
-     use constants
-     use control
+     use constants, only : dp, zero, half, mytmp
+     use control, only : ncfgs, norbs, nband
 
      implicit none
 
@@ -612,3 +564,48 @@
 
      return
   end subroutine ctqmc_dump_prob
+
+!!>>> ctqmc_dump_nmat: write out the occupation matrix and double
+!!>>> occupation matrix
+  subroutine ctqmc_dump_nmat(nmat, nnmat)
+     use constants, only : dp, mytmp
+     use control, only : norbs, nband
+
+     implicit none
+
+! external arguments
+! occupation matrix data
+     real(dp), intent(in) :: nmat(norbs)
+
+! double occupation matrix data
+     real(dp), intent(in) :: nnmat(norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.nmat.dat
+     open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
+
+! write it
+     write(mytmp,'(a)') '#   < n_i >   data:'
+     do i=1,norbs
+         write(mytmp,'(i5,f12.6)') i, nmat(i)
+     enddo ! over i={1,norbs} loop
+     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
+     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
+     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
+
+     write(mytmp,'(a)') '# < n_i n_j > data:'
+     do i=1,norbs
+         do j=1,norbs
+             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_nmat
