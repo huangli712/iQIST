@@ -69,7 +69,7 @@
         allocate(saved_a(npart, nsectors),       stat=istat)
         allocate(saved_b(npart, nsectors),       stat=istat)
         if ( istat /= 0 ) then
-            call ctqmc_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
+            call s_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
         endif
 
         do i=1, nsectors
@@ -298,7 +298,7 @@
    
 ! npart should be larger than zero
         else
-            call ctqmc_print_error('ctqmc_make_ztrace', 'npart is small than 1, &
+            call s_print_error('ctqmc_make_ztrace', 'npart is small than 1, &
                                     it should be larger than zero')
         endif ! back if (npart == 1) block
 !--------------------------------------------------------------------

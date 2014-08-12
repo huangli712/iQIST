@@ -4,8 +4,6 @@
 !           ctqmc_print_footer
 !           ctqmc_print_summary
 !           ctqmc_print_runtime
-!           ctqmc_print_error
-!           ctqmc_print_exception
 ! source  : ctqmc_print.f90
 ! type    : subroutines
 ! author  : li huang (email:huangli712@yahoo.com.cn)
@@ -35,7 +33,7 @@
      character (len = 20) :: date_time_string
 
 ! obtain current date and time
-     call ctqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a)') 'MANJUSHAKA'
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
@@ -82,7 +80,7 @@
      call cpu_time(tot_time)
 
 ! obtain current date and time
-     call ctqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a,f10.2,a)') 'MANJUSHAKA >>> total time spent:', tot_time, 's'
      write(mystd,*)
@@ -201,51 +199,3 @@
 
      return
   end subroutine ctqmc_print_runtime
-
-!>>> print the error information and STOP the program
-  subroutine ctqmc_print_error(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! error message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
-
-! TERMINATE THE PROGRAM
-!-------------------------------------------------------------------------
-     STOP
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine ctqmc_print_error
-
-!>>> print normal runtime exceptional information, and continue
-  subroutine ctqmc_print_exception(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! exception message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
-
-! CONTINUE/PAUSE THE PROGRAM
-!-------------------------------------------------------------------------
-     CONTINUE ! OR PAUSE
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine ctqmc_print_exception
