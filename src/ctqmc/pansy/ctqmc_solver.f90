@@ -349,7 +349,7 @@
 
 ! print out the result
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_time_analyzer(time_iter, time_niter)
+             call s_time_analyzer(time_iter, time_niter)
              write(mystd,*)
          endif
 
