@@ -4,9 +4,9 @@
 Interacting Quantum Impurity Solver Toolkit
 ===========================================
 
-KNOWING ISSUES
-==============
+FAQ AND HOWTO
+=============
 
 
 
-# issue 1
+1.
