@@ -824,7 +824,7 @@
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
-         call ctqmc_print_error('try_insert_colour','tau_start is equal to tau_end')
+         call s_print_error('try_insert_colour','tau_start is equal to tau_end')
      endif
 
      return
@@ -869,7 +869,7 @@
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
-         call ctqmc_print_error('try_remove_colour','tau_start is equal to tau_end')
+         call s_print_error('try_remove_colour','tau_start is equal to tau_end')
      endif
 
      return

@@ -320,7 +320,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
-         call ctqmc_print_error('cat_set_hybf', 'wrong dimension size of hybf_t')
+         call s_print_error('cat_set_hybf', 'wrong dimension size of hybf_t')
      endif
 
 ! copy data
@@ -345,7 +345,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(symm) ) then
-         call ctqmc_print_error('cat_set_symm', 'wrong dimension size of symm_t')
+         call s_print_error('cat_set_symm', 'wrong dimension size of symm_t')
      endif
 
 ! copy data
@@ -370,7 +370,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
-         call ctqmc_print_error('cat_set_eimp', 'wrong dimension size of eimp_t')
+         call s_print_error('cat_set_eimp', 'wrong dimension size of eimp_t')
      endif
 
 ! copy data
@@ -395,7 +395,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(grnf) ) then
-         call ctqmc_print_error('cat_get_grnf', 'wrong dimension size of grnf_t')
+         call s_print_error('cat_get_grnf', 'wrong dimension size of grnf_t')
      endif
 
 ! copy data
@@ -420,7 +420,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(sig2) ) then
-         call ctqmc_print_error('cat_get_sigf', 'wrong dimension size of sigf_t')
+         call s_print_error('cat_get_sigf', 'wrong dimension size of sigf_t')
      endif
 
 ! copy data

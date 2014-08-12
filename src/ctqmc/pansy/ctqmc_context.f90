@@ -454,7 +454,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
          endif
 
 ! initialize them
@@ -493,7 +493,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_flvr','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_flvr','can not allocate enough memory')
          endif
 
 ! initialize them
@@ -544,7 +544,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
          endif
 
 ! initialize them
@@ -592,7 +592,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
          endif
 
 ! initialize them
@@ -620,7 +620,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
          endif
 
 ! initialize them
@@ -645,7 +645,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
          endif
 
 ! initialize them
@@ -669,7 +669,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
          endif
 
 ! initialize them

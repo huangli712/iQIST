@@ -54,7 +54,7 @@
 ! allocate memory
      allocate(htmp(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
+         call s_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
      endif
 
 ! initialize htmp
