@@ -131,7 +131,7 @@
 ! stage 1: insert a create operator, trial step
 !-------------------------------------------------------------------------
 ! get memory address for create operator
-     as = istack_getter( empty_v, istack_gettop( empty_v ) - 0 )
+     call istack_getter( empty_v, istack_gettop( empty_v ) - 0, as )
 
 ! store basic data for new create operator
      time_v(as) = tau_start
@@ -167,7 +167,7 @@
          ilast = 1
 ! the closest operator need to be modified as well
      else
-         ilast = istack_getter( empty_v, istack_gettop( empty_v ) - 1 )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ilast )
          time_v( ilast ) = time_v( index_t(is+1) )
          flvr_v( ilast ) = flvr_v( index_t(is+1) )
          type_v( ilast ) = type_v( index_t(is+1) )
@@ -199,7 +199,7 @@
 ! stage 2: insert a destroy operator, trial step
 !-------------------------------------------------------------------------
 ! get memory address for destroy operator
-     ae = istack_getter( empty_v, istack_gettop( empty_v ) - 2 )
+     call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
 
 ! store basic data for new destroy operator
      time_v(ae) = tau_end
@@ -235,7 +235,7 @@
          ilast = 1
 ! the closest operator need to be modified as well
      else
-         ilast = istack_getter( empty_v, istack_gettop( empty_v ) - 3 )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 3, ilast )
          time_v( ilast ) = time_v( index_t(ie+1) )
          flvr_v( ilast ) = flvr_v( index_t(ie+1) )
          type_v( ilast ) = type_v( index_t(ie+1) )
@@ -357,7 +357,7 @@
          ilast = 1
 ! the closest operator need to be modified as well
      else
-         ilast = istack_getter( empty_v, istack_gettop( empty_v ) - 0 )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 0, ilast )
          time_v( ilast ) = time_v( index_t(is) )
          flvr_v( ilast ) = flvr_v( index_t(is) )
          type_v( ilast ) = type_v( index_t(is) )
@@ -414,7 +414,7 @@
          ilast = 1
 ! the closest operator need to be modified as well
      else
-         ilast = istack_getter( empty_v, istack_gettop( empty_v ) - 1 )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ilast )
          time_v( ilast ) = time_v( index_t(ie) )
          flvr_v( ilast ) = flvr_v( index_t(ie) )
          type_v( ilast ) = type_v( index_t(ie) )
@@ -502,7 +502,7 @@
 ! stage 1: shift old create operator, trial step
 !-------------------------------------------------------------------------
 ! get memory address for create operator
-     as = istack_getter( empty_v, istack_gettop( empty_v ) - 0 )
+     call istack_getter( empty_v, istack_gettop( empty_v ) - 0, as )
 
 ! store basic data for new create operator
      time_v(as) = tau_start2
@@ -542,7 +542,7 @@
 ! makes a copy of time and type, and changes time evolution operator
      if ( isn < nsize ) then
          t_next = time_v( index_t(isn+1) ) - time_v( index_t(isn) )
-         as = istack_getter( empty_v, istack_gettop( empty_v ) - 1 )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 1, as )
          time_v(as) = time_v( index_t(isn+1) )
          flvr_v(as) = flvr_v( index_t(isn+1) )
          type_v(as) = type_v( index_t(isn+1) )
@@ -559,7 +559,7 @@
          else
              t_prev = time_v( index_t(iso) ) - time_v( index_t(iso-1) )
          endif ! back if ( iso == 1 ) block
-         as = istack_getter( empty_v, istack_gettop( empty_v ) - 2 )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 2, as )
          time_v(as) = time_v( index_t(iso) )
          flvr_v(as) = flvr_v( index_t(iso) )
          type_v(as) = type_v( index_t(iso) )
@@ -645,7 +645,7 @@
 ! stage 1: shift old destroy operator, trial step
 !-------------------------------------------------------------------------
 ! get memory address for destroy operator
-     ae = istack_getter( empty_v, istack_gettop( empty_v ) - 0 )
+     call istack_getter( empty_v, istack_gettop( empty_v ) - 0, ae )
 
 ! store basic data for new destroy operator
      time_v(ae) = tau_end2
@@ -685,7 +685,7 @@
 ! makes a copy of time and type, and changes time evolution operator
      if ( ien < nsize ) then
          t_next = time_v( index_t(ien+1) ) - time_v( index_t(ien) )
-         ae = istack_getter( empty_v, istack_gettop( empty_v ) - 1 )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ae )
          time_v(ae) = time_v( index_t(ien+1) )
          flvr_v(ae) = flvr_v( index_t(ien+1) )
          type_v(ae) = type_v( index_t(ien+1) )
@@ -702,7 +702,7 @@
          else
              t_prev = time_v( index_t(ieo) ) - time_v( index_t(ieo-1) )
          endif ! back if ( ieo == 1 ) block
-         ae = istack_getter( empty_v, istack_gettop( empty_v ) - 2 )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
          time_v(ae) = time_v( index_t(ieo) )
          flvr_v(ae) = flvr_v( index_t(ieo) )
          type_v(ae) = type_v( index_t(ieo) )
@@ -824,7 +824,7 @@
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
-         call ctqmc_print_error('try_insert_colour','tau_start is equal to tau_end')
+         call s_print_error('try_insert_colour','tau_start is equal to tau_end')
      endif
 
      return
@@ -869,7 +869,7 @@
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
-         call ctqmc_print_error('try_remove_colour','tau_start is equal to tau_end')
+         call s_print_error('try_remove_colour','tau_start is equal to tau_end')
      endif
 
      return
@@ -1086,8 +1086,8 @@
      real(dp) :: xe
 
 ! get memory address for is and ie
-     as = istack_pop( empty_s(flvr) )
-     ae = istack_pop( empty_e(flvr) )
+     call istack_pop( empty_s(flvr), as )
+     call istack_pop( empty_e(flvr), ae )
 
 ! shift index_s and index_e to create two empty rooms for as and ae
      do i=ckink,is,-1
@@ -1940,7 +1940,7 @@
      nsize = istack_getrest( empty_v )
 
 ! get memory address for create operator
-     as = istack_pop( empty_v )
+     call istack_pop( empty_v, as )
 
 ! store basic data for new create operator
      time_v(as) = tau_start
@@ -1996,7 +1996,7 @@
      nsize = istack_getrest( empty_v )
 
 ! get memory address for destroy operator
-     ae = istack_pop( empty_v )
+     call istack_pop( empty_v, ae )
 
 ! store basic data for new destroy operator
      time_v(ae) = tau_end
@@ -2726,7 +2726,7 @@
      time = time * beta
 
 ! sort time series
-     call ctqmc_time_sorter(2*kink, time)
+     call s_sorter(2*kink, time)
 
 ! insert new operators into the colour part
      do i=1,kink

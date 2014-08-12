@@ -596,16 +596,15 @@
 
 !-------------------------------------------------------------------------
 ! add the contribution from chemical potential to eigenvalues
+! and determine the minimum eigenvalue
      j1 = 0
      do i=1,nsectors
          do j=1, sectors(i)%ndim
              j1 = j1 + 1
+             sectors(i)%myeigval(j) = sectors(i)%myeigval(j) - mune * sectors(i)%nelectron
              eigs(j1) = sectors(i)%myeigval(j)  
              naux(j1) = sectors(i)%nelectron
          enddo
-     enddo 
-     do i=1,ncfgs
-         eigs(i) = eigs(i) - mune * naux(i)
      enddo 
 
 ! substract the eigenvalues zero point, here we store the eigen energy zero point in U

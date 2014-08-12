@@ -316,20 +316,35 @@
 
 ! define type T_general_pansy, which is used to describe the ctqmc
 ! impurity solver code pansy
-! TODO
      type, extends (T_general_solver) :: T_general_pansy
          character(len=10) :: solver_name = 'PANSY'
          integer :: solver_id = 301
          integer :: solver_is_ready = 1
+
+         integer :: idoub
+         integer :: npart
      end type T_general_pansy
 
 ! define type T_general_manjushaka, which is used to describe the ctqmc
 ! impurity solver code manjushaka
-! TODO
      type, extends (T_general_solver) :: T_general_manjushaka
          character(len=10) :: solver_name = 'MANJUSHAKA'
          integer :: solver_id = 302
          integer :: solver_is_ready = 1
+
+         integer :: isort
+         integer :: isvrt
+         integer :: itrun
+         integer :: idoub
+         integer :: nmini
+         integer :: nmaxi
+         integer :: lemax
+         integer :: legrd
+         integer :: chmax
+         integer :: chgrd
+         integer :: nffrq
+         integer :: nbfrq
+         integer :: npart
      end type T_general_manjushaka
 
 !!========================================================================
