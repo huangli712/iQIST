@@ -45,7 +45,7 @@ subroutine atomic_driver_fullspace()
     write(mystd,*)
     call atomic_check_mat_real(ncfgs, hmat, lreal)
     if (lreal .eqv. .false.) then
-        call atomic_print_error('atomic_driver_fullspace', 'hmat is not real !')
+        call s_print_error('atomic_driver_fullspace', 'hmat is not real !')
     else
         write(mystd, "(2X,a)") "jasmine >>> the atomic Hamiltonian is real"
         write(mystd,*)
@@ -55,7 +55,7 @@ subroutine atomic_driver_fullspace()
     write(mystd, "(2X,a)") "jasmine >>> diagonalize the atomic Hamiltonian ..."
     write(mystd,*)
     tmp_mat = real(hmat)
-    call dmat_dsyev(ncfgs, ncfgs, tmp_mat, hmat_eigval, hmat_eigvec)
+    call s_eig_sy(ncfgs, ncfgs, tmp_mat, hmat_eigval, hmat_eigvec)
 
     ! build fmat
     ! first, build fmat of annihilation operators in Fock basis
@@ -203,7 +203,7 @@ subroutine atomic_solve_sectors()
     do i=1, nsectors 
         call atomic_check_mat_real(sectors(i)%ndim, sectors(i)%myham, lreal)
         if (lreal .eqv. .false.) then
-            call atomic_print_error('atomic_solve_sectors', 'hmat is not real !')
+            call s_print_error('atomic_solve_sectors', 'hmat is not real !')
         endif
     enddo
     write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real"

@@ -43,7 +43,7 @@ subroutine atomic_read_cf()
             if (ierr /= 0) exit
         enddo
     else
-        call atomic_print_error('atomic_read_cf', 'no file atomic.cf.in !')
+        call s_print_error('atomic_read_cf', 'no file atomic.cf.in !')
     endif 
 
     return
@@ -77,7 +77,7 @@ subroutine atomic_read_eimp()
             eimpmat(i,i) = dcmplx(r1, zero)
         enddo 
     else
-        call atomic_print_error('atomic_read_eimp', 'no file atomic.eimp.in !')
+        call s_print_error('atomic_read_eimp', 'no file atomic.eimp.in !')
     endif
 
     return
@@ -112,7 +112,7 @@ subroutine atomic_read_umat()
             enddo
         enddo
     else
-        call atomic_print_error('atomic_read_umat', 'no file atomic.umat.in')
+        call s_print_error('atomic_read_umat', 'no file atomic.umat.in')
     endif
 
     return

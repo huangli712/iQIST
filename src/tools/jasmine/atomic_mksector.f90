@@ -885,7 +885,7 @@ subroutine make_good_jz(good_jz)
         good_jz(13)=  5
         good_jz(14)=  7
     else
-        call atomic_print_error('make_good_jz', 'not implemented for this norbs value !')
+        call s_print_error('make_good_jz', 'not implemented for this norbs value !')
     endif
 
     return

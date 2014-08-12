@@ -3,8 +3,6 @@
 ! program : atomic_print_header
 !         : atomic_print_footer
 !         : atomic_print_summary
-!         : atomic_print_error
-!         : atomic_print_exception
 ! source  : atomic_natural.f90
 ! type    : subroutines
 ! author  : yilin wang (email: qhwyl2006@126.com)
@@ -25,7 +23,7 @@ subroutine atomic_print_header()
     character (len = 20) :: date_time_string
 
     ! obtain current date and time
-    call atomic_time_builder(date_time_string)
+    call s_time_builder(date_time_string)
 
     write(mystd,'(2X,a)') 'jasmine'
     write(mystd,'(2X,a)') '>>> An Atomic Program For CTQMC'
@@ -63,7 +61,7 @@ subroutine atomic_print_footer()
     call cpu_time(tot_time)
 
     ! obtain current date and time
-    call atomic_time_builder(date_time_string)
+    call s_time_builder(date_time_string)
 
     write(mystd,'(2X,a,f10.2,a)') 'jasmine >>> total time spent:', tot_time, 's'
     write(mystd,*)
@@ -104,51 +102,3 @@ subroutine atomic_print_summary()
 
     return
 end subroutine atomic_print_summary
-
-!>>> print warning
-subroutine atomic_print_exception(sub, msg)
-    use constants,  only: mystd
-
-    implicit none
-
-    ! external arguments
-    ! subroutine name
-    character(len=*), intent(in) :: sub
-
-    ! exception message
-    character(len=*), intent(in) :: msg
-
-    ! print error information
-    write(mystd,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
-
-    ! CONTINUE/PAUSE THE PROGRAM
-    !-------------------------------------------------------------------------
-         CONTINUE ! OR PAUSE
-    !-------------------------------------------------------------------------
-
-    return
-end subroutine atomic_print_exception
-
-!>>> print error
-subroutine atomic_print_error(sub, msg)
-    use constants, only: mystd
-
-    implicit none
-
-    ! external arguments
-    ! subroutine name
-    character(len=*), intent(in) :: sub
-
-    ! error message
-    character(len=*), intent(in) :: msg
-
-    ! print error information
-    write(mystd,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
-
-    ! TERMINATE THE PROGRAM
-    !-------------------------------------------------------------------------
-         STOP
-    !-------------------------------------------------------------------------
-
-    return
-end subroutine atomic_print_error
