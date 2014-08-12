@@ -133,77 +133,77 @@
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(schi_mpi(ntime),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(ochi_mpi(ntime),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(nmat_mpi(norbs),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(prob_mpi(ncfgs),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(sschi_mpi(ntime,nband),      stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(oochi_mpi(ntime,norbs),      stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(ftau_mpi(ntime,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(h2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(h2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
 ! setup cstep
@@ -460,7 +460,7 @@
 
 ! print out the result
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_time_analyzer(time_iter, time_niter)
+             call s_time_analyzer(time_iter, time_niter)
              write(mystd,*)
          endif
 
@@ -871,7 +871,7 @@
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: error?'
                  write(mystd,'(4X,a)') '>>> please check the status file: solver.status.dat'
                  call ctqmc_save_status()
-                 call ctqmc_print_error('ctqmc_diagram_checking','unknown fatal error occur')
+                 call s_print_error('ctqmc_diagram_checking','unknown fatal error occur')
              else
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: normal'
              endif
@@ -896,7 +896,7 @@
 
      call ctqmc_make_display(1)
      call ctqmc_make_display(2)
-     call ctqmc_print_error('ctqmc_impurity_tester','in debug mode')
+     call s_print_error('ctqmc_impurity_tester','in debug mode')
 
      return
   end subroutine ctqmc_impurity_tester

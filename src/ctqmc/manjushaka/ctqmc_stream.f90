@@ -353,7 +353,7 @@
 
 ! build legendre polynomial in [-1,1]
      if ( lemax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','lemax must be larger than 2')
+         call s_print_error('ctqmc_selfer_init','lemax must be larger than 2')
      endif
 
      do i=1,legrd
@@ -368,7 +368,7 @@
 ! build chebyshev polynomial in [-1,1]
 ! note: it is second kind chebyshev polynomial
      if ( chmax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','chmax must be larger than 2')
+         call s_print_error('ctqmc_selfer_init','chmax must be larger than 2')
      endif
 
      do i=1,chgrd
@@ -520,7 +520,7 @@
              enddo
              close(mytmp) 
          else
-             call ctqmc_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
          endif ! back if ( exists .eqv. .true. ) block
 
 !-------------------------------------------------------------------------
@@ -545,7 +545,7 @@
              enddo 
              close(mytmp)
          else
-             call ctqmc_print_error('ctqmc_selfer_init','file atom.fmat does not exist')
+             call s_print_error('ctqmc_selfer_init','file atom.fmat does not exist')
          endif
      endif ! back if ( myid == master ) block
 
@@ -620,7 +620,7 @@
 ! note: \infity - \infity is undefined, which return NaN
      do i=1,ncfgs
          if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
-             call ctqmc_print_error('ctqmc_selfer_init','NaN error, please &
+             call s_print_error('ctqmc_selfer_init','NaN error, please &
                                                adjust the zero base of eigs')
          endif
      enddo 
@@ -655,8 +655,8 @@
 
 ! init random number generator
      call system_clock(system_time)
-     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     !stream_seed = 123456
+     !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
+     stream_seed = 123456
      call spring_sfmt_init(stream_seed)
      call random_seed()
 
@@ -832,7 +832,7 @@
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
-     call ctqmc_fourier_hybf(hybf, htau)
+     call ctqmc_four_hybf(hybf, htau)
 
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then

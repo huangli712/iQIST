@@ -54,7 +54,7 @@
      character (len = 20) :: date_time_string
 
 ! obtain current date and time
-     call ctqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
 ! evaluate nsize at first
      nsize = istack_getrest( empty_v )
@@ -225,12 +225,12 @@
 
 ! check the validity of tau_s
      if ( maxval(tau_s) > beta ) then
-         call ctqmc_print_error('ctqmc_retrieve_status','the retrieved tau_s data are not correct')
+         call s_print_error('ctqmc_retrieve_status','the retrieved tau_s data are not correct')
      endif
 
 ! check the validity of tau_e
      if ( maxval(tau_e) > beta ) then
-         call ctqmc_print_error('ctqmc_retrieve_status','the retrieved tau_e data are not correct')
+         call s_print_error('ctqmc_retrieve_status','the retrieved tau_e data are not correct')
      endif
 
 ! restore all the operators for colour part
@@ -265,7 +265,7 @@
 
 ! finally, it is essential to check the validity of matrix_ntrace
      if ( abs( matrix_ntrace - zero ) < epss ) then
-         call ctqmc_print_exception('ctqmc_retrieve_status','very dangerous! ztrace maybe too small')
+         call s_print_exception('ctqmc_retrieve_status','very dangerous! ztrace maybe too small')
      endif
 
      return

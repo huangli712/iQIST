@@ -132,7 +132,7 @@
         allocate( one_fmat%item(one_fmat%n, one_fmat%m),  stat=istat)
 
         if ( istat /= 0 ) then
-            call ctqmc_print_error('alloc_one_fmat','can not allocate enough memory')
+            call s_print_error('alloc_one_fmat','can not allocate enough memory')
         endif
 
 ! initialize it
@@ -163,7 +163,7 @@
         allocate( one_sqrmat%item(one_sqrmat%n, one_sqrmat%n),  stat=istat )
 
         if ( istat /= 0 ) then
-            call ctqmc_print_error('alloc_one_sqrmat','can not allocate enough memory')
+            call s_print_error('alloc_one_sqrmat','can not allocate enough memory')
         endif
  
 ! initialize it
@@ -200,7 +200,7 @@
         allocate( one_sector%myfmat(one_sector%nops,0:1),            stat=istat )
 
         if ( istat /= 0 ) then
-            call ctqmc_print_error('alloc_one_sector','can not allocate enough memory')
+            call s_print_error('alloc_one_sector','can not allocate enough memory')
         endif
   
 ! init them
@@ -261,7 +261,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
          endif
 
 ! initialize them
@@ -312,7 +312,7 @@
         allocate(final_product(nsectors,2),  stat=istat)
         allocate(occu(norbs, nsectors),      stat=istat)
         if ( istat /= 0 ) then
-            call ctqmc_print_error('ctqmc_allocate_memory_occu','can not allocate enough memory')
+            call s_print_error('ctqmc_allocate_memory_occu','can not allocate enough memory')
         endif
 
         do i=1, nsectors
@@ -333,7 +333,7 @@
         if (idoub == 2) then
             allocate(double_occu(norbs, norbs, nsectors),  stat=istat)
             if ( istat /= 0 ) then
-                call ctqmc_print_error('ctqmc_allocate_memory_occu','can not allocate enough memory')
+                call s_print_error('ctqmc_allocate_memory_occu','can not allocate enough memory')
             endif
 
             do i=1, nsectors

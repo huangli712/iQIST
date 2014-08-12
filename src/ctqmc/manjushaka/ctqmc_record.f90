@@ -268,7 +268,7 @@
 
      implicit none
 
-     call ctqmc_print_error('ctqmc_record_ftau', 'this subroutine is not implemented')
+     call s_print_error('ctqmc_record_ftau', 'this subroutine is not implemented')
 
      return
   end subroutine ctqmc_record_ftau
@@ -476,7 +476,7 @@
 
      implicit none
 
-     call ctqmc_print_error('ctqmc_record_schi', 'this subroutine is not implemented')
+     call s_print_error('ctqmc_record_schi', 'this subroutine is not implemented')
 
      return
   end subroutine ctqmc_record_schi
@@ -489,7 +489,7 @@
 
      implicit none
 
-     call ctqmc_print_error('ctqmc_record_ochi', 'this subroutine is not implemented')
+     call s_print_error('ctqmc_record_ochi', 'this subroutine is not implemented')
 
      return
   end subroutine ctqmc_record_ochi
@@ -617,7 +617,7 @@
 
      implicit none
 
-     call ctqmc_print_error('ctqmc_record_vrtx', 'this subroutine is not implemented')
+     call s_print_error('ctqmc_record_vrtx', 'this subroutine is not implemented')
 
      return
   end subroutine ctqmc_record_vrtx
@@ -1737,7 +1737,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      do k=1,nfreq
          gaux = grnf(k,:,:)
-         call ctqmc_zmat_inv(norbs, gaux)
+         call s_inv_z(norbs, gaux)
          do i=1,norbs
              sig2(k,i,i) = cmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
@@ -1805,7 +1805,7 @@
          do i=1,norbs
              gaux(i,i) = cmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
-         call ctqmc_zmat_inv(norbs, gaux)
+         call s_inv_z(norbs, gaux)
          grnf(k,:,:) = gaux
      enddo ! over k={1,mfreq} loop
 
@@ -1823,7 +1823,7 @@
 
      implicit none
 
-     call ctqmc_print_error('ctqmc_make_hub2', 'this subroutine is not implemented')
+     call s_print_error('ctqmc_make_hub2', 'this subroutine is not implemented')
 
      return
   end subroutine ctqmc_make_hub2
