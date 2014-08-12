@@ -94,7 +94,7 @@ subroutine atomic_make_soc()
         call atomic_make_soc_7band(socmat)
         socmat = socmat * lambda / two
     else
-        call atomic_print_error('atomic_make_soc', 'not implementd!')
+        call s_print_error('atomic_make_soc', 'not implementd!')
     endif
 
     return 
@@ -346,7 +346,7 @@ subroutine atomic_make_cumat_slater()
         allocate(gaunt(-l:l, -l:l, 0:2*l))
         call atomic_gaunt_7band(gaunt)
     else
-        call atomic_print_error('atomic_make_cumat_slater', 'not implemented for this nband!')
+        call s_print_error('atomic_make_cumat_slater', 'not implemented for this nband!')
     endif
 
     ! make Coulomb interaction U matrix

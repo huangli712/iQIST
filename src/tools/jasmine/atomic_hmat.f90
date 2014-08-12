@@ -340,7 +340,7 @@ subroutine diag_one_sector(ndim, amat, eval, evec)
          enddo
      enddo
 
-     call dmat_dsyev(ndim, ndim, hmat, eval, evec)
+     call s_eig_sy(ndim, ndim, hmat, eval, evec)
 
      return
 end subroutine diag_one_sector 

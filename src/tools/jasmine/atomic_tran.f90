@@ -108,7 +108,7 @@ subroutine atomic_make_umat_c2r( umat_c2r )
         umat_c2r( 2,14) = czi/sqrt2
         umat_c2r(14,14) = czi/sqrt2
     else
-        call atomic_print_error('atomic_make_umat_c2r', 'not implemented for this nband!')
+        call s_print_error('atomic_make_umat_c2r', 'not implemented for this nband!')
     endif
 
     return
@@ -218,7 +218,7 @@ subroutine atomic_make_umat_c2j( umat_c2j )
         umat_c2j(14,13)=  sqrt(1.0_dp/7.0_dp)
         umat_c2j(13,14)=  1.0_dp
     else
-        call atomic_print_error('atomic_make_umat_c2j','not implemented !')
+        call s_print_error('atomic_make_umat_c2j','not implemented !')
     endif
 
     return
@@ -226,7 +226,7 @@ end subroutine atomic_make_umat_c2j
 
 !>>> transformation from one representation to another representation
 subroutine atomic_tran_represent( ndim, amat, umat )
-    use constants, only: dp
+    use constants, only: dp, cone, czero
 
     implicit none
 
@@ -237,16 +237,28 @@ subroutine atomic_tran_represent( ndim, amat, umat )
 
     ! local variables
     complex(dp) :: tmp_mat(ndim, ndim)
+    complex(dp) :: alpha
+    complex(dp) :: betta
 
-    call zmat_zgemm0( ndim, amat, umat, tmp_mat )
-    call zmat_zgemm2( ndim, umat, tmp_mat, amat )      
+    alpha = cone; betta = czero
+    call zgemm('N', 'N', ndim, ndim, ndim, & 
+                        alpha, amat, ndim, &
+                               umat, ndim, &
+                     betta, tmp_mat, ndim  )
+
+    alpha = cone; betta = czero
+    call zgemm('C', 'N', ndim, ndim, ndim, &
+                        alpha, umat, ndim, &
+                            tmp_mat, ndim, &
+                        betta, amat, ndim  )
+
 
     return
 end subroutine atomic_tran_represent
 
 !>>> transformation from one representation to another representation, real version
 subroutine atomic_tran_represent_real( ndim, amat, umat )
-    use constants, only: dp
+    use constants, only: dp, zero, one
 
     implicit none
 
@@ -257,9 +269,20 @@ subroutine atomic_tran_represent_real( ndim, amat, umat )
 
     ! local variables
     real(dp) :: tmp_mat(ndim, ndim)
+    real(dp) :: alpha
+    real(dp) :: betta
 
-    call dmat_dgemm0( ndim, amat, umat, tmp_mat )
-    call dmat_dgemm1( ndim, umat, tmp_mat, amat )      
+    alpha = one; betta = zero
+    call dgemm('N', 'N', ndim, ndim, ndim, &
+                        alpha, amat, ndim, &
+                               umat, ndim, &
+                     betta, tmp_mat, ndim  )
+
+    alpha = one; betta = zero 
+    call dgemm('T', 'N', ndim, ndim, ndim, &
+                        alpha, umat, ndim, &
+                            tmp_mat, ndim, &
+                        betta, amat, ndim  )
 
     return
 end subroutine atomic_tran_represent_real
