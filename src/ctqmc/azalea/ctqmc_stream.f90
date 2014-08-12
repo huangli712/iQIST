@@ -232,6 +232,8 @@
 ! allocate memory for context module
      call ctqmc_allocate_memory_clur()
 
+     call ctqmc_allocate_memory_mesh()
+     call ctqmc_allocate_memory_meat()
      call ctqmc_allocate_memory_umat()
      call ctqmc_allocate_memory_mmat()
 
@@ -268,10 +270,10 @@
      real(dp) :: i1, i2
 
 ! build identity: unity
-     unity = czero
-     do i=1,norbs
-         unity(i,i) = cone
-     enddo ! over i={1,norbs} loop
+     !!unity = czero
+     !!do i=1,norbs
+     !!    unity(i,i) = cone
+     !!enddo ! over i={1,norbs} loop
 
 ! build imaginary time tau mesh: tmesh
      do i=1,ntime
@@ -284,15 +286,16 @@
      enddo ! over j={1,mfreq} loop
 
 ! build matsubara frequency mesh: cmesh
-     do k=1,mfreq
-         cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
-     enddo ! over k={1,mfreq} loop
+     !!do k=1,mfreq
+     !!    cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
+     !!enddo ! over k={1,mfreq} loop
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
-         hybf(i,:,:) = unity * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         call s_identity_z( norbs, hybf(i,:,:) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
@@ -522,7 +525,7 @@
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
-     call ctqmc_fourier_hybf(hybf, htau)
+     call ctqmc_four_hybf(hybf, htau)
 
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then
@@ -555,6 +558,8 @@
 ! deallocate memory for context module
      call ctqmc_deallocate_memory_clur()
 
+     call ctqmc_deallocate_memory_mesh()
+     call ctqmc_deallocate_memory_meat()
      call ctqmc_deallocate_memory_umat()
      call ctqmc_deallocate_memory_mmat()
 

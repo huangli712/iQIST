@@ -1,57 +1,46 @@
-!-------------------------------------------------------------------------
-! project : azalea
-! program : cat_insert_ztrace
-!           cat_remove_ztrace
-!           cat_lshift_ztrace
-!           cat_rshift_ztrace
-!           cat_reswap_ztrace  <<<---
-!           cat_insert_segment
-!           cat_remove_segment
-!           cat_lshift_segment
-!           cat_rshift_segment
-!           cat_reswap_segment <<<---
-!           ctqmc_make_flavor1
-!           ctqmc_make_flavor2
-!           ctqmc_make_flavor3
-!           ctqmc_make_flavor4 <<<---
-!           ctqmc_make_overlap
-!           ctqmc_make_compare <<<---
-!           ctqmc_make_segment
-!           ctqmc_make_display <<<---
-! source  : ctqmc_flavor.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/23/2009 by li huang
-!           09/26/2009 by li huang
-!           10/02/2009 by li huang
-!           11/01/2009 by li huang
-!           11/06/2009 by li huang
-!           11/19/2009 by li huang
-!           11/24/2009 by li huang
-!           11/28/2009 by li huang
-!           12/08/2009 by li huang
-!           12/29/2009 by li huang
-!           01/13/2010 by li huang
-!           02/27/2010 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver.
-!           the following subroutines deal with the operators traces only.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : cat_insert_ztrace
+!!!           cat_remove_ztrace
+!!!           cat_lshift_ztrace
+!!!           cat_rshift_ztrace
+!!!           cat_reswap_ztrace  <<<---
+!!!           cat_insert_segment
+!!!           cat_remove_segment
+!!!           cat_lshift_segment
+!!!           cat_rshift_segment
+!!!           cat_reswap_segment <<<---
+!!!           ctqmc_make_flavor1
+!!!           ctqmc_make_flavor2
+!!!           ctqmc_make_flavor3
+!!!           ctqmc_make_flavor4 <<<---
+!!!           ctqmc_make_overlap
+!!!           ctqmc_make_compare <<<---
+!!!           ctqmc_make_segment
+!!!           ctqmc_make_display <<<---
+!!! source  : ctqmc_flavor.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/23/2009 by li huang
+!!!           02/27/2010 by li huang
+!!!           08/09/2014 by li huang
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
+!!!           the following subroutines deal with the operators traces only.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> service layer: evaluate ztrace ratio                              <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: evaluate ztrace ratio                             <<<
+!!========================================================================
 
-!>>> calculate the trace ratio for insert new segment or anti-segment
-! on perturbation expansion series
+!!>>> cat_insert_ztrace: calculate the trace ratio for insert new segment
+!!>>> or anti-segment on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
-     use constants
-     use control
+     use constants, only : dp, zero
+     use control, only : norbs, beta, mune
      use context, only : uumat, eimp
 
      implicit none
@@ -141,11 +130,11 @@
      return
   end subroutine cat_insert_ztrace
 
-!>>> calculate the trace ratio for remove old segment or anti-segment
-! on perturbation expansion series
+!!>>> cat_remove_ztrace: calculate the trace ratio for remove old segment
+!!>>> or anti-segment on perturbation expansion series
   subroutine cat_remove_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
-     use constants
-     use control
+     use constants, only : dp, zero
+     use control, only : norbs, beta, mune
      use context, only : uumat, eimp
 
      implicit none
@@ -235,11 +224,11 @@
      return
   end subroutine cat_remove_ztrace
 
-!>>> calculate the trace ratio for left shift old segment or anti-segment
-! on perturbation expansion series
+!!>>> cat_lshift_ztrace: calculate the trace ratio for left shift old
+!!>>> segment or anti-segment on perturbation expansion series
   subroutine cat_lshift_ztrace(flvr, ring, tau_start1, tau_start2, trace_ratio)
-     use constants
-     use control
+     use constants, only : dp, zero
+     use control, only : norbs, beta, mune
      use context, only : uumat, eimp
 
      implicit none
@@ -339,11 +328,11 @@
      return
   end subroutine cat_lshift_ztrace
 
-!>>> calculate the trace ratio for right shift old segment or anti-segment
-! on perturbation expansion series
+!!>>> cat_rshift_ztrace: calculate the trace ratio for right shift old
+!!>>> segment or anti-segment on perturbation expansion series
   subroutine cat_rshift_ztrace(flvr, ring, tau_end1, tau_end2, trace_ratio)
-     use constants
-     use control
+     use constants, only : dp, zero
+     use control, only : norbs, beta, mune
      use context, only : uumat, eimp
 
      implicit none
@@ -443,11 +432,12 @@
      return
   end subroutine cat_rshift_ztrace
 
-!>>> calculate the trace ratio for swap between segment and anti-segment
-! on perturbation expansion series
+!!>>> cat_reswap_ztrace: calculate the trace ratio for swap between
+!!>>> segment and anti-segment on perturbation expansion series
   subroutine cat_reswap_ztrace(flvr, trace_ratio)
-     use constants
-     use context
+     use constants, only : dp, zero, one
+     use control, only : beta
+     use context, only : cstat, ckink, stts, rank, index_s, index_e, time_s, time_e 
 
      implicit none
 
@@ -565,16 +555,18 @@
      return
   end subroutine cat_reswap_ztrace
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series               <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series              <<<
+!!========================================================================
 
-!>>> update the perturbation expansion series for insert new segment or anti-segment
+!!>>> cat_insert_segment: update the perturbation expansion series for
+!!>>> insert new segment or anti-segment
   subroutine cat_insert_segment(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
+     use context, only : ckink, empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e, rmesh
 
-     use stack
+     use stack, only : istack_pop
 
      implicit none
 
@@ -637,12 +629,12 @@
      return
   end subroutine cat_insert_segment
 
-!>>> update the perturbation expansion series for remove old segment or anti-segment
+!!>>> cat_remove_segment: update the perturbation expansion series for
+!!>>> remove old segment or anti-segment
   subroutine cat_remove_segment(flvr, is, ie)
-     use constants
-     use context
+     use context, only : ckink, empty_s, empty_e, index_s, index_e
 
-     use stack
+     use stack, only : istack_push
 
      implicit none
 
@@ -684,10 +676,12 @@
      return
   end subroutine cat_remove_segment
 
-!>>> update the perturbation expansion series for left shift old segment or anti-segment
+!!>>> cat_lshift_segment: update the perturbation expansion series for
+!!>>> left shift old segment or anti-segment
   subroutine cat_lshift_segment(flvr, iso, isn, tau_start)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
+     use context, only : ckink, index_s, time_s, exp_s, rmesh
 
      implicit none
 
@@ -738,10 +732,12 @@
      return
   end subroutine cat_lshift_segment
 
-!>>> update the perturbation expansion series for right shift old segment or anti-segment
+!!>>> cat_rshift_segment: update the perturbation expansion series for
+!!>>> right shift old segment or anti-segment
   subroutine cat_rshift_segment(flvr, ieo, ien, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
+     use context, only : ckink, index_e, time_e, exp_e, rmesh
 
      implicit none
 
@@ -792,10 +788,12 @@
      return
   end subroutine cat_rshift_segment
 
-!>>> update the perturbation expansion series for swap segment and anti-segment
+!!>>> cat_reswap_segment: update the perturbation expansion series for
+!!>>> swap segment and anti-segment
   subroutine cat_reswap_segment(flvr)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
+     use context, only : ckink, index_s, index_e, time_s, time_e, exp_s, exp_e
 
      implicit none
 
@@ -830,17 +828,18 @@
      return
   end subroutine cat_reswap_segment
 
-!-------------------------------------------------------------------------
-!>>> service layer: make segments from perturbation expansion series   <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: make segments from perturbation expansion series  <<<
+!!========================================================================
 
-!>>> determine \tau_s, \tau_e and \tau_max for insert new segment or anti-segment
+!!>>> ctqmc_make_flavor1: determine \tau_s, \tau_e and \tau_max for insert
+!!>>> new segment or anti-segment
   subroutine ctqmc_make_flavor1(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, half
+     use control, only : beta
+     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -1201,13 +1200,14 @@
      return
   end subroutine ctqmc_make_flavor1
 
-!>>> determine \tau_s, \tau_e and \tau_max for remove old segment or anti-segment
+!!>>> ctqmc_make_flavor2: determine \tau_s, \tau_e and \tau_max for remove
+!!>>> old segment or anti-segment
   subroutine ctqmc_make_flavor2(flvr, is, ie, anti, tau_start, tau_end, tau_max)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, half
+     use control, only : beta
+     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -1407,13 +1407,14 @@
      return
   end subroutine ctqmc_make_flavor2
 
-!>>> determine \tau_s1 and \tau_s2 for lshift old segment or anti-segment
+!!>>> ctqmc_make_flavor3: determine \tau_s1 and \tau_s2 for lshift old
+!!>>> segment or anti-segment
   subroutine ctqmc_make_flavor3(flvr, iso, isn, ring, tau_start1, tau_start2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta
+     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -1568,13 +1569,14 @@
      return
   end subroutine ctqmc_make_flavor3
 
-!>>> determine \tau_e1 and \tau_e2 for rshift old segment or anti-segment
+!!>>> ctqmc_make_flavor4: determine \tau_e1 and \tau_e2 for rshift old
+!!>>> segment or anti-segment
   subroutine ctqmc_make_flavor4(flvr, ieo, ien, ring, tau_end1, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta
+     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -1729,16 +1731,16 @@
      return
   end subroutine ctqmc_make_flavor4
 
-!-------------------------------------------------------------------------
-!>>> service layer: calculate overlap between segments                 <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: calculate overlap between segments                <<<
+!!========================================================================
 
-!>>> calculate the delta segment overlaps between current flavor channel
-! and other flavor channels
+!!>>> ctqmc_make_overlap: calculate the delta segment overlaps between
+!!>>> current flavor channel and other flavor channels
   subroutine ctqmc_make_overlap(flvr, tau_start, tau_end, ovlp)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : norbs, beta
+     use context, only : stts, rank, index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -1827,9 +1829,9 @@
      return
   end subroutine ctqmc_make_overlap
 
-!>>> compare two segments, and calculate their overlap
+!!>>> ctqmc_make_compare: compare two segments, and calculate their overlap
   subroutine ctqmc_make_compare(ts0, te0, ts1, te1, cover)
-     use constants
+     use constants, only : dp, zero
 
      implicit none
 
@@ -1877,18 +1879,18 @@
      return
   end subroutine ctqmc_make_compare
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to test segment algorithm      <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to test segment algorithm     <<<
+!!========================================================================
 
-!>>> generate segments or anti-segments for the specified flavor channel
-! randomly, only used to debug the code
+!!>>> ctqmc_make_segment: generate segments or anti-segments for the
+!!>>> specified flavor channel randomly, only used to debug the code
   subroutine ctqmc_make_segment(flvr, kink, anti)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : beta
+     use context, only : ckink, stts, rank
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
 ! external arguments
 ! current flavor channel
@@ -1939,11 +1941,12 @@
      return
   end subroutine ctqmc_make_segment
 
-!>>> display segment information on the screen, only used to debug the code
+!!>>> ctqmc_make_display: display segment information on the screen, only
+!!>>> used to debug the code
   subroutine ctqmc_make_display(show_type)
-     use constants
-     use control
-     use context
+     use constants, only : dp, mystd
+     use control, only : norbs
+     use context, only : stts, rank, index_s, index_e, time_s, time_e
 
      implicit none
 
