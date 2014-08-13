@@ -1,5 +1,5 @@
 !-------------------------------------------------------------------------
-! project : lavender
+! project : manjushaka
 ! program : ctqmc_config
 !           ctqmc_setup_array
 !           ctqmc_selfer_init
@@ -36,7 +36,7 @@
   subroutine ctqmc_config()
      use constants
      use control
-
+     use parser
      use mmpi
 
      implicit none
@@ -51,7 +51,7 @@
      isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
-     isbin  = 2            ! without binning     (1) or with binning    mode (2)
+     isbin  = 1            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
      itrun  = 1            ! how to truncate the Hilbert space
@@ -65,9 +65,9 @@
      nmini  = 0            ! minimum of occupancy number 
      nmaxi  = norbs        ! maximum of occupancy number 
 !-------------------------------------------------------------------------
-     U      = 4.00_dp      ! U : average Coulomb interaction
-     Uc     = 4.00_dp      ! Uc: intraorbital Coulomb interaction
-     Uv     = 4.00_dp      ! Uv: interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
+     U      = 0.00_dp      ! U : average Coulomb interaction
+     Uc     = 0.00_dp      ! Uc: intraorbital Coulomb interaction
+     Uv     = 0.00_dp      ! Uv: interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
      Jz     = 0.00_dp      ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
      Js     = 0.00_dp      ! Js: spin-flip term
      Jp     = 0.00_dp      ! Jp: pair-hopping term
@@ -112,82 +112,56 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='solver.ctqmc.in', form='formatted', status='unknown')
-
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*)
 !------------------------------------------------------------------------+
-             read(mytmp,*) isscf                                         !
-             read(mytmp,*) issun                                         !
-             read(mytmp,*) isspn                                         !
-             read(mytmp,*) isbin                                         !
-             read(mytmp,*) isort                                         !
-             read(mytmp,*) isvrt                                         !
-             read(mytmp,*) itrun                                         !
-             read(mytmp,*) idoub                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_create()
+             call p_parse('solver.ctqmc.in')
 !------------------------------------------------------------------------+
-             read(mytmp,*) nband                                         !
-             read(mytmp,*) nspin                                         !
-             read(mytmp,*) norbs                                         !
-             read(mytmp,*) ncfgs                                         !
-             read(mytmp,*) niter                                         !
-             read(mytmp,*) nmini                                         !
-             read(mytmp,*) nmaxi                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_get('isscf', isscf)
+             call p_get('issun', issun)
+             call p_get('isspn', isspn)
+             call p_get('isbin', isbin)
+             call p_get('isort', isort)
+             call p_get('isvrt', isvrt)
+             call p_get('itrun', itrun)
+             call p_get('idoub', idoub)
 !------------------------------------------------------------------------+
-             read(mytmp,*) U                                             !
-             read(mytmp,*) Uc                                            !
-             read(mytmp,*) Uv                                            !
-             read(mytmp,*) Jz                                            !
-             read(mytmp,*) Js                                            !
-             read(mytmp,*) Jp                                            !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_get('nband', nband)
+             norbs = nband * nspin
+             ncfgs = 2**norbs
+             nmini = 0
+             nmaxi = norbs
+             call p_get('niter', niter)
+             call p_get('nmini', nmini)
+             call p_get('nmaxi', nmaxi)
 !------------------------------------------------------------------------+
-             read(mytmp,*) mune                                          !
-             read(mytmp,*) beta                                          !
-             read(mytmp,*) part                                          !
-             read(mytmp,*) alpha                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_get('mune',  mune)
+             call p_get('beta',  beta)
+             call p_get('part',  part)
+             call p_get('alpha', alpha)
 !------------------------------------------------------------------------+
-             read(mytmp,*) lemax                                         !
-             read(mytmp,*) legrd                                         !
-             read(mytmp,*) chmax                                         !
-             read(mytmp,*) chgrd                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_get('lemax', lemax)
+             call p_get('legrd', legrd)
+             call p_get('chamx', chmax)
+             call p_get('chgrd', chgrd)
 !------------------------------------------------------------------------+
-             read(mytmp,*) mkink                                         !
-             read(mytmp,*) mfreq                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_get('mkink', mkink)
+             call p_get('mfreq', mfreq)
 !------------------------------------------------------------------------+
-             read(mytmp,*) nffrq                                         !
-             read(mytmp,*) nbfrq                                         !
-             read(mytmp,*) nfreq                                         !
-             read(mytmp,*) ntime                                         !
-             read(mytmp,*) npart                                         !
-             read(mytmp,*) nflip                                         !
-             read(mytmp,*) ntherm                                        !
-             read(mytmp,*) nsweep                                        !
-             read(mytmp,*) nwrite                                        !
-             read(mytmp,*) nclean                                        !
-             read(mytmp,*) nmonte                                        !
-             read(mytmp,*) ncarlo                                        !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('nffrq', nffrq)
+             call p_get('nbfrq', nbfrq)
+             call p_get('nfreq', nfreq)
+             call p_get('ntime', ntime)
+             call p_get('npart', npart)
+             call p_get('nflip', nflip)
+             call p_get('ntherm', ntherm)
+             call p_get('nsweep', nsweep)
+             call p_get('nwrite', nwrite)
+             call p_get('nclean', nclean)
+             call p_get('nmonte', nmonte)
+             call p_get('ncarlo', ncarlo)
+!------------------------------------------------------------------------+
+             call p_destroy()
 
-             close(mytmp)
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
