@@ -187,12 +187,12 @@
      return
   end subroutine ctqmc_record_prob
 
-!>>> record the occupation matrix, double occupation matrix, and auxiliary
-! physical observables simulataneously
+!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
+!!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : norbs
+     use context, only : stts
 
      implicit none
 
