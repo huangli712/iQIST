@@ -494,10 +494,11 @@
      return
   end subroutine ctqmc_reduce_prob
 
-!>>> reduce the nmat and nnmat from all children processes
+!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use control, only : norbs
+     use context, only : nmat, nnmat
 
      use mmpi
 
