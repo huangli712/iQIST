@@ -541,8 +541,8 @@
 
 !>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
-     use constants, only : dp
-     use control, only : norbs
+     use constants, only : dp, zero, two
+     use control, only : nband, norbs, issun, isspn
 
      implicit none
 
