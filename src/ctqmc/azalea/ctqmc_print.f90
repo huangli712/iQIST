@@ -22,7 +22,7 @@
 !!>>> time quantum Monte Carlo quantum impurity solver plus dynamical
 !!>>> mean field theory self-consistent engine
   subroutine ctqmc_print_header()
-     use constants
+     use constants, only : mystd
      use control, only : nprocs
 
      implicit none
@@ -37,10 +37,10 @@
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'version: 2014.01.13T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & UNIFR'
-     write(mystd,'(2X,a)') 'support: huangli712@gmail.com'
-     write(mystd,'(2X,a)') 'license: GPL2 and later versions'
+     write(mystd,'(2X,a)') 'Version: 2014.08.14T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GPL2 and later versions'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'AZALEA >>> start running at '//date_time_string
