@@ -30,11 +30,12 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> record the impurity green's function in imaginary time axis
+!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
+!!>>> time axis
   subroutine ctqmc_record_gtau()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two
+     use control, only : norbs, ntime, beta
+     use context, only : rank, index_s, index_e, time_s, time_e, mmat, gtau
 
      implicit none
 
