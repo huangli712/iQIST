@@ -341,10 +341,10 @@
      return
   end subroutine ctqmc_record_nmat
 
-!>>> reduce the gtau from all children processes
+!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
-     use constants
-     use context
+     use constants, only : dp
+     use context, only : gtau
 
      use mmpi
 
