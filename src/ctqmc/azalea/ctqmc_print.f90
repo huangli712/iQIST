@@ -1,28 +1,26 @@
-!-------------------------------------------------------------------------
-! project : azalea
-! program : ctqmc_print_header
-!           ctqmc_print_footer
-!           ctqmc_print_summary
-!           ctqmc_print_runtime
-! source  : ctqmc_print.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/15/2009 by li huang
-!           09/20/2009 by li huang
-!           12/01/2009 by li huang
-!           02/21/2010 by li huang
-! purpose : provide printing infrastructure for hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver
-! input   :
-! output  :
-! status  : very unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : ctqmc_print_header
+!!!           ctqmc_print_footer
+!!!           ctqmc_print_summary
+!!!           ctqmc_print_runtime
+!!! source  : ctqmc_print.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/15/2009 by li huang
+!!!           02/21/2010 by li huang
+!!!           08/13/2014 by li huang
+!!! purpose : provide printing infrastructure for hybridization expansion
+!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
+!!!           impurity solver and dynamical mean field theory (DMFT) self
+!!!           -consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> print the startup information for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> ctqmc_print_header: print the startup information for continuous
+!!>>> time quantum Monte Carlo quantum impurity solver plus dynamical
+!!>>> mean field theory self-consistent engine
   subroutine ctqmc_print_header()
      use constants
      use control, only : nprocs
@@ -62,9 +60,9 @@
      return
   end subroutine ctqmc_print_header
 
-!>>> print the ending information for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> ctqmc_print_footer: print the ending information for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
+!!>>> theory self-consistent engine
   subroutine ctqmc_print_footer()
      use constants
 
@@ -91,7 +89,7 @@
      return
   end subroutine ctqmc_print_footer
 
-!>>> print the running parameters, only for reference
+!!>>> ctqmc_print_summary: print the running parameters, only for reference
   subroutine ctqmc_print_summary()
      use constants
      use control
@@ -124,8 +122,8 @@
      return
   end subroutine ctqmc_print_summary
 
-!>>> print the runtime information, including physical observables and
-! statistic data, only for reference
+!!>>> ctqmc_print_runtime: print the runtime information, including physical
+!!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants
      use context
