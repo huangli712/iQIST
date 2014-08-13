@@ -834,9 +834,9 @@
 !!>>> impurity green's function can be obtained by using dyson's equation
 !!>>> finally
   subroutine ctqmc_make_hub1()
-     use constants, only : dp
-     use control, only : norbs
-     use context, only : eimp
+     use constants, only : dp, zero, one, czi, czero
+     use control, only : norbs, ncfgs, mfreq, nfreq, myid, master, mune
+     use context, only : eimp, uumat, rmesh, prob, hybf, grnf, sig2
 
      implicit none
 
