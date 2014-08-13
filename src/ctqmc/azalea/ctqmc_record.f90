@@ -539,10 +539,10 @@
      return
   end subroutine ctqmc_reduce_nmat
 
-!>>> symmetrize the nmat according to symm vector
+!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
-     use constants
-     use control
+     use constants, only : dp
+     use control, only : norbs
 
      implicit none
 
