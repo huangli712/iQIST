@@ -104,32 +104,32 @@
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(nmat_mpi(norbs),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(prob_mpi(ncfgs),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif
 
 ! setup cstep
@@ -741,7 +741,7 @@
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: error?'
                  write(mystd,'(4X,a)') '>>> please check the status file: solver.status.dat'
                  call ctqmc_save_status()
-                 call ctqmc_print_error('ctqmc_diagram_checking','unknown fatal error occur')
+                 call s_print_error('ctqmc_diagram_checking','unknown fatal error occur')
              else
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: normal'
              endif
@@ -765,7 +765,7 @@
 !-------------------------------------------------------------------------
 
      call ctqmc_make_display(2)
-     call ctqmc_print_error('ctqmc_impurity_tester','in debug mode')
+     call s_print_error('ctqmc_impurity_tester','in debug mode')
 
      return
   end subroutine ctqmc_impurity_tester
