@@ -1,21 +1,113 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! A test program for dynamical mean field theory (DMFT) self-consistent  !
-! engine plus hybridization expansion version continuous time quantum    !
-! Monte Carlo (CTQMC) quantum impurity solver                            !
-! author  : li huang                                                     !
-! version : v2014.01.13T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : this impurity solver is based on segment picture formalism   !
-!           any question, please contact with huangli712@gmail.com       !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! AZALEA @ iQIST                                                       !
+!!!                                                                      !
+!!! A test program for dynamical mean field theory (DMFT) self-consistent!
+!!! engine plus hybridization expansion version continuous time quantum  !
+!!! Monte Carlo (CTQMC) quantum impurity solver                          !
+!!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
+!!! version : v2014.08.10T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : this impurity solver is based on segment picture formalism !
+!!!           any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! WARNING
+!! =======
+!!
+!! If you want to obtain an executable program, please go to src/build/,
+!! open make.sys and comment out the API flag. On the other hand, if you
+!! want to compile azalea as a library, please activate the API flag.
+!!
+!! Introduction
+!! ============
+!!
+!! The azalea code is a hybridization expansion version continuous time
+!! quantum Monte Carlo quantum impurity solver. It adopts the segment
+!! picuture, and only implements very limited features. So it is highly
+!! efficient, and can be used as a standard to benchmark the other ctqmc
+!! impurity solvers. In fact, it is the prototype for the other more
+!! advanced ctqmc impurity solver. The azalea code also includes a mini
+!! dynamical mean field theory engine which implements the self-consistent
+!! equation for Bethe lattice in paramagnetic state. So you can use it
+!! to perform dynamical mean field theory calculations quickly. Enjoy it.
+!!
+!! Usage
+!! =====
+!!
+!! # ./ctqmc or bin/azalea.x
+!!
+!! Input
+!! =====
+!!
+!! solver.ctqmc.in (optional)
+!! solver.eimp.in (optional)
+!! solver.hyb.in (optional)
+!!
+!! Output
+!! ======
+!!
+!! terminal output
+!! solver.green.bin.*
+!! solver.green.dat
+!! solver.grn.dat
+!! solver.hybri.dat
+!! solver.hyb.dat
+!! solver.wss.dat
+!! solver.sgm.dat
+!! solver.hub.dat
+!! solver.hist.dat
+!! solver.prob.dat
+!! solver.nmat.dat
+!! solver.status.dat
+!! etc.
+!!
+!! Running mode
+!! ============
+!! 
+!! case 1: isscf == 1 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, normal mode
+!!
+!! case 2: isscf == 1 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, binner mode
+!!
+!! case 3: isscf == 2 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!!
+!! case 4: isscf == 2 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!! plus
+!! call ctqmc_impurity_solver, binner mode
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/guide directory.
+!!
+!!
 
 # if !defined (API)
 
   program ctqmc_main
-     use constants
-     use control
+     use constants, only : mystd
+     use control, only : isscf, isbin, niter, myid, master, nprocs
 
-     use mmpi
+     use mmpi, only : mp_init, mp_comm_rank, mp_comm_size, mp_barrier, mp_finalize
 
      implicit none
 
@@ -44,7 +136,7 @@
 ! impurity solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! setup the important parameters for continuous time quantum Monte Carlo
 ! quantum impurity solver and dynamical mean field theory self-consistent
@@ -54,37 +146,13 @@
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call ctqmc_setup_array()
 
 ! prepare initial hybridization function, init self-consistent iteration
      call ctqmc_selfer_init()
-
-!-------------------------------------------------------------------------
-! note: running mode                                                     !
-!-------------------------------------------------------------------------
-!    if isscf == 1 .and. isbin == 1                                      !
-!        call ctqmc_impurity_solver only, normal mode                    !
-!                                                                        !
-!    if isscf == 1 .and. isbin == 2                                      !
-!        call ctqmc_impurity_solver only, binner mode                    !
-!                                                                        !
-!    if isscf == 2 .and. isbin == 1                                      !
-!        call ctqmc_impurity_solver, normal mode                         !
-!        plus                                                            !
-!        call ctqmc_dmft_selfer                                          !
-!        until convergence                                               !
-!                                                                        !
-!    if isscf == 2 .and. isbin == 2                                      !
-!        call ctqmc_impurity_solver, normal mode                         !
-!        plus                                                            !
-!        call ctqmc_dmft_selfer                                          !
-!        until convergence                                               !
-!        plus                                                            !
-!        call ctqmc_impurity_solver, binner mode                         !
-!-------------------------------------------------------------------------
 
 !=========================================================================
 !>>> DMFT ITERATION BEGIN                                              <<<
@@ -119,12 +187,12 @@
 ! check the running mode
          if ( isscf == 1 ) then
              EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( isscf == 1 ) block
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'AZALEA >>> DMFT iter:', iter, ' <<< SELFING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
@@ -141,7 +209,7 @@
 ! now convergence is achieved
          if ( convergence .eqv. .true. ) then
              EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( convergence .eqv. .true. ) block
 
      enddo DMFT_CTQMC_ITERATION ! over iter={1,niter} loop
 
@@ -156,7 +224,7 @@
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'AZALEA >>> DMFT iter:', iter, ' <<< BINNING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! accumulate the quantum Monte Carlo data
          call ctqmc_impurity_solver(iter)
@@ -174,7 +242,7 @@
 ! solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_footer()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! finalize mpi envirnoment
 # if defined (MPI)
@@ -191,7 +259,7 @@
 
 # endif  /* API */
 
-!>>> initialize the ctqmc quantum impurity solver
+!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
   subroutine cat_init_ctqmc(I_mpi, I_solver)
      use api
      use control
@@ -251,12 +319,12 @@
 ! impurity solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call ctqmc_setup_array()
@@ -267,10 +335,8 @@
      return
   end subroutine cat_init_ctqmc
 
-!>>> execute the ctqmc quantum impurity solver
+!!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
-     use control
-
      implicit none
 
 ! external arguments
@@ -284,9 +350,9 @@
      return
   end subroutine cat_exec_ctqmc
 
-!>>> stop the ctqmc quantum impurity solver
+!!>>> cat_stop_ctqmc: stop the ctqmc quantum impurity solver
   subroutine cat_stop_ctqmc()
-     use control
+     use control, only : myid, master
 
      implicit none
 
@@ -297,15 +363,16 @@
 ! solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_footer()
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine cat_stop_ctqmc
 
-!>>> setup the hybridization function
+!!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
-     use control
-     use context
+     use constants, only : dp
+     use control, only : mfreq, norbs
+     use context, only : hybf
 
      implicit none
 
@@ -318,8 +385,8 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
-         call ctqmc_print_error('cat_set_hybf', 'wrong dimension size of hybf_t')
-     endif
+         call s_print_error('cat_set_hybf', 'wrong dimension size of hybf_t')
+     endif ! back if ( size_t /= size(hybf) ) block
 
 ! copy data
      hybf = reshape(hybf_t,(/mfreq,norbs,norbs/))
@@ -327,10 +394,9 @@
      return
   end subroutine cat_set_hybf
 
-!>>> setup the symmetry vector
+!!>>> cat_set_symm: setup the symmetry vector
   subroutine cat_set_symm(size_t, symm_t)
-     use control
-     use context
+     use context, only : symm
 
      implicit none
 
@@ -343,8 +409,8 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(symm) ) then
-         call ctqmc_print_error('cat_set_symm', 'wrong dimension size of symm_t')
-     endif
+         call s_print_error('cat_set_symm', 'wrong dimension size of symm_t')
+     endif ! back if ( size_t /= size(symm) ) block
 
 ! copy data
      symm = symm_t
@@ -352,10 +418,10 @@
      return
   end subroutine cat_set_symm
 
-!>>> setup the impurity level
+!!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
-     use control
-     use context
+     use constants, only : dp
+     use context, only : eimp
 
      implicit none
 
@@ -368,8 +434,8 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
-         call ctqmc_print_error('cat_set_eimp', 'wrong dimension size of eimp_t')
-     endif
+         call s_print_error('cat_set_eimp', 'wrong dimension size of eimp_t')
+     endif ! back if ( size_t /= size(eimp) ) block
 
 ! copy data
      eimp = eimp_t
@@ -377,10 +443,11 @@
      return
   end subroutine cat_set_eimp
 
-!>>> extract the impurity green's function
+!!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
-     use control
-     use context
+     use constants, only : dp
+     use control, only : mfreq, norbs
+     use context, only : grnf
 
      implicit none
 
@@ -393,8 +460,8 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(grnf) ) then
-         call ctqmc_print_error('cat_get_grnf', 'wrong dimension size of grnf_t')
-     endif
+         call s_print_error('cat_get_grnf', 'wrong dimension size of grnf_t')
+     endif ! back if ( size_t /= size(grnf) ) block
 
 ! copy data
      grnf_t = reshape(grnf, (/mfreq*norbs*norbs/))
@@ -402,10 +469,11 @@
      return
   end subroutine cat_get_grnf
 
-!>>> extract the self-energy function
+!!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
-     use control
-     use context
+     use constants, only : dp
+     use control, only : mfreq, norbs
+     use context, only : sig2
 
      implicit none
 
@@ -418,8 +486,8 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(sig2) ) then
-         call ctqmc_print_error('cat_get_sigf', 'wrong dimension size of sigf_t')
-     endif
+         call s_print_error('cat_get_sigf', 'wrong dimension size of sigf_t')
+     endif ! back if ( size_t /= size(sig2) ) block
 
 ! copy data
      sigf_t = reshape(sig2, (/mfreq*norbs*norbs/))
