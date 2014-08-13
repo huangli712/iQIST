@@ -132,7 +132,8 @@
 
 !!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
-     use context, only : hist
+     use control, only : mkink
+     use context, only : ckink, hist
 
      implicit none
 
