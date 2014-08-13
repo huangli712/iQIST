@@ -38,7 +38,7 @@
   subroutine ctqmc_config()
      use constants
      use control
-
+     use parser
      use mmpi
 
      implicit none
@@ -53,7 +53,7 @@
      isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
-     isbin  = 2            ! without binning     (1) or with binning    mode (2)
+     isbin  = 1            ! without binning     (1) or with binning    mode (2)
      idoub  = 1            ! whether to measure the double occupancy number
 !-------------------------------------------------------------------------
      nband  = 1            ! number of correlated bands
@@ -62,9 +62,9 @@
      ncfgs  = 2**norbs     ! number of atomic states
      niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
-     U      = 4.00_dp      ! U : average Coulomb interaction
-     Uc     = 4.00_dp      ! Uc: intraorbital Coulomb interaction
-     Uv     = 4.00_dp      ! Uv: interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
+     U      = 0.00_dp      ! U : average Coulomb interaction
+     Uc     = 0.00_dp      ! Uc: intraorbital Coulomb interaction
+     Uv     = 0.00_dp      ! Uv: interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
      Jz     = 0.00_dp      ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
      Js     = 0.00_dp      ! Js: spin-flip term
      Jp     = 0.00_dp      ! Jp: pair-hopping term
@@ -102,67 +102,41 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='solver.ctqmc.in', form='formatted', status='unknown')
-
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*)
 !------------------------------------------------------------------------+
-             read(mytmp,*) isscf                                         !
-             read(mytmp,*) issun                                         !
-             read(mytmp,*) isspn                                         !
-             read(mytmp,*) isbin                                         !
-             read(mytmp,*) idoub                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_create()
+             call p_parse('solver.ctqmc.in')
 !------------------------------------------------------------------------+
-             read(mytmp,*) nband                                         !
-             read(mytmp,*) nspin                                         !
-             read(mytmp,*) norbs                                         !
-             read(mytmp,*) ncfgs                                         !
-             read(mytmp,*) niter                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_get('isscf', isscf)
+             call p_get('issun', issun)
+             call p_get('isspn', isspn)
+             call p_get('isbin', isbin)
+             call p_get('idoub', idoub)
 !------------------------------------------------------------------------+
-             read(mytmp,*) U                                             !
-             read(mytmp,*) Uc                                            !
-             read(mytmp,*) Uv                                            !
-             read(mytmp,*) Jz                                            !
-             read(mytmp,*) Js                                            !
-             read(mytmp,*) Jp                                            !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_get('nband', nband)
+             norbs = nband * nspin
+             ncfgs = 2**norbs
+             call p_get('niter', niter)
 !------------------------------------------------------------------------+
-             read(mytmp,*) mune                                          !
-             read(mytmp,*) beta                                          !
-             read(mytmp,*) part                                          !
-             read(mytmp,*) alpha                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_get('mune',  mune)
+             call p_get('beta',  beta)
+             call p_get('part',  part)
+             call p_get('alpha', alpha)
 !------------------------------------------------------------------------+
-             read(mytmp,*) mkink                                         !
-             read(mytmp,*) mfreq                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
+             call p_get('mkink', mkink)
+             call p_get('mfreq', mfreq)
 !------------------------------------------------------------------------+
-             read(mytmp,*) nfreq                                         !
-             read(mytmp,*) ntime                                         !
-             read(mytmp,*) npart                                         !
-             read(mytmp,*) nflip                                         !
-             read(mytmp,*) ntherm                                        !
-             read(mytmp,*) nsweep                                        !
-             read(mytmp,*) nwrite                                        !
-             read(mytmp,*) nclean                                        !
-             read(mytmp,*) nmonte                                        !
-             read(mytmp,*) ncarlo                                        !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             close(mytmp)
+             call p_get('nfreq', nfreq)
+             call p_get('ntime', ntime)
+             call p_get('npart', npart)
+             call p_get('nflip', nflip)
+             call p_get('ntherm', ntherm)
+             call p_get('nsweep', nsweep)
+             call p_get('nwrite', nwrite)
+             call p_get('nclean', nclean)
+             call p_get('nmonte', nmonte)
+             call p_get('ncarlo', ncarlo)
+!------------------------------------------------------------------------+
+             call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 

@@ -1,20 +1,35 @@
-!-------------------------------------------------------------------------
-! project : manjushaka
-! program : m_sector
-! source  : ctqmc_sector.f90
-! type    : modules
-! authors : yilin wang (email: qhwyl2006@126.com)
-! history : 07/09/2014
-!           07/19/2014
-!           08/09/2014
-! purpose : define data structure for good quantum numbers (GQNs) algorithm
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : manjushaka
+!!! program : m_sector
+!!!           m_sector@alloc_one_fmat
+!!!           m_sector@dealloc_one_fmat
+!!!           m_sector@alloc_one_sqrmat
+!!!           m_sector@dealloc_one_sqrmat
+!!!           m_sector@alloc_one_sector
+!!!           m_sector@dealloc_one_sector
+!!!           m_sector@ctqmc_allocate_memory_sect
+!!!           m_sector@ctqmc_deallocate_memory_sect
+!!!           m_sector@ctqmc_allocate_memory_occu
+!!!           m_sector@ctqmc_deallocate_memory_occu
+!!!           m_sector@ctqmc_make_trunc
+!!!           m_sector@cat_truncate_sectors
+!!!           m_sector@ctqmc_make_occu
+!!!           m_sector@ctqmc_make_string
+!!! source  : ctqmc_sector.f90
+!!! type    : module
+!!! authors : yilin wang (email: qhwyl2006@126.com)
+!!! history : 07/09/2014
+!!!           07/19/2014
+!!!           08/09/2014
+!!!           08/13/2014
+!!! purpose : define data structure for good quantum numbers (GQNs) algorithm
+!!! input   :
+!!! output  :
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
-!>>> data structure for good quantum number algorithm
+!!>>> data structure for good quantum number algorithm
   module m_sector
      use constants
      use control
@@ -122,7 +137,7 @@
 
      contains
   
-!>>> allocate one fmat
+!!>>> allocate one fmat
      subroutine alloc_one_fmat(one_fmat)
         implicit none
   
@@ -141,7 +156,7 @@
         return
      end subroutine alloc_one_fmat
   
-!>>> deallocate one fmat
+!!>>> deallocate one fmat
      subroutine dealloc_one_fmat(one_fmat)
         implicit none
   
@@ -153,7 +168,7 @@
         return
      end subroutine dealloc_one_fmat
 
-!>>> allocate one fmat
+!!>>> allocate one fmat
      subroutine alloc_one_sqrmat(one_sqrmat)
         implicit none
   
@@ -172,7 +187,7 @@
         return
      end subroutine alloc_one_sqrmat
   
-!>>> deallocate one fmat
+!!>>> deallocate one fmat
      subroutine dealloc_one_sqrmat(one_sqrmat)
         implicit none
   
@@ -184,7 +199,7 @@
         return
      end subroutine dealloc_one_sqrmat
  
-!>>> allocate memory for one sector
+!!>>> allocate memory for one sector
      subroutine alloc_one_sector(one_sector)
         implicit none
   
@@ -220,7 +235,7 @@
         return
      end subroutine alloc_one_sector
   
-!>>> deallocate memory for onespace
+!!>>> deallocate memory for one sector
      subroutine dealloc_one_sector(one_sector)
         implicit none
   
@@ -247,7 +262,7 @@
         return
      end subroutine dealloc_one_sector
 
-!>>> allocate memory for sectors-related variables
+!!>>> allocate memory for sectors-related variables
      subroutine ctqmc_allocate_memory_sect()
          implicit none
 
@@ -281,7 +296,7 @@
          return
      end subroutine ctqmc_allocate_memory_sect
 
-!>>> deallocate memory for sect-related variables
+!!>>> deallocate memory for sect-related variables
      subroutine ctqmc_deallocate_memory_sect()
         implicit none
 
@@ -303,7 +318,7 @@
         return
      end subroutine ctqmc_deallocate_memory_sect
 
-!>>> allocate memory for occu
+!!>>> allocate memory for occu
      subroutine ctqmc_allocate_memory_occu()
         implicit none
 
@@ -350,7 +365,7 @@
         return
      end subroutine ctqmc_allocate_memory_occu
 
-!>>> deallocate memory for occu
+!!>>> deallocate memory for occu
      subroutine ctqmc_deallocate_memory_occu()
         implicit none
 
@@ -391,7 +406,7 @@
         return
      end subroutine ctqmc_deallocate_memory_occu
 
-!>>> subroutine used to truncate the Hilbert space
+!!>>> subroutine used to truncate the Hilbert space
      subroutine ctqmc_make_trunc()
         implicit none
 
@@ -427,7 +442,7 @@
                     is_trunc(i) = .true.
                 endif
             enddo
-            call truncate_sectors()
+            call cat_truncate_sectors()
             if (myid == master) then
                 write(mystd, *)
                 write(mystd,'(4X,a,i2,a,i2)') 'truncate occupancy number, just keep ', &
@@ -477,7 +492,7 @@
      call mp_barrier()
 # endif  /* MPI */
 
-            call truncate_sectors()
+            call cat_truncate_sectors()
 
         endif ! back if (itrun == 1) block
 
@@ -504,8 +519,8 @@
         return
      end subroutine ctqmc_make_trunc
 
-!>>> recalculate the sectors information after truncated
-     subroutine truncate_sectors()
+!!>>> recalculate the sectors information after truncated
+     subroutine cat_truncate_sectors()
         implicit none
 
         integer :: i,j,k,ii
@@ -537,9 +552,9 @@
         ave_dim_sect_trunc = real(sum_dim) / real(nsectors_trunc)
 
         return
-     end subroutine truncate_sectors
+     end subroutine cat_truncate_sectors
 
-!>>> calculate < c^{\dag} c>, < c^{\dag} c c^{\dag} c >
+!!>>> calculate < c^{\dag} c>, < c^{\dag} c c^{\dag} c >
      subroutine ctqmc_make_occu()
         implicit none
 
@@ -596,7 +611,7 @@
         return
      end subroutine ctqmc_make_occu
 
-!>>> subroutine used to build a string
+!!>>> subroutine used to build a string
      subroutine ctqmc_make_string(csize, index_t_loc, is_string, string)
         implicit none
 

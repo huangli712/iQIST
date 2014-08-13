@@ -38,6 +38,8 @@ cssl:
 
 csml:
 	cp ../../common/constants.mod .
+	cp ../../common/parser.mod .
+	cp ../../common/linkedlist.mod .
 
 exe: cssl csml atomic_exe
 atomic_exe: $(objects)

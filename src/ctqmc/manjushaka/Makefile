@@ -43,6 +43,8 @@ csml:
 	cp ../../common/mmpi.mod .
 	cp ../../common/spring.mod .
 	cp ../../common/stack.mod .
+	cp ../../common/parser.mod .
+	cp ../../common/linkedlist.mod .
 
 exe: api cssl csml ctqmc_exe
 ctqmc_exe: $(objects)

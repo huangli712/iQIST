@@ -1,19 +1,26 @@
-!-------------------------------------------------------------------------
-! project : manjushaka
-! program : m_npart
-! source  : ctqmc_npart.f90
-! type    : modules
-! authors : yilin wang (email: qhwyl2006@126.com)
-! history : 07/09/2014
-!           07/19/2014
-!           08/09/2014
-! purpose : define data structure for divide conquer (npart) algorithm
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
-!>>> containing the information for npart trace algorithm
+!!!-------------------------------------------------------------------------
+!!! project : manjushaka
+!!! program : m_npart
+!!!           m_npart@ctqmc_allocate_memory_part
+!!!           m_npart@ctqmc_deallocate_memory_part
+!!!           m_npart@ctqmc_make_nparts
+!!!           m_npart@cat_sector_ztrace
+!!!           m_npart@ctqmc_save_parts
+!!! source  : ctqmc_npart.f90
+!!! type    : module
+!!! authors : yilin wang (email: qhwyl2006@126.com)
+!!! history : 07/09/2014
+!!!           07/19/2014
+!!!           08/09/2014
+!!!           08/13/2014
+!!! purpose : define data structure for divide conquer (npart) algorithm
+!!! input   :
+!!! output  :
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
+
+!!>>> containing the information for npart trace algorithm
   module m_npart
      use constants
      use control
@@ -54,7 +61,7 @@
 
      contains
 
-!>>> allocate memory for sect-related variables
+!!>>> allocate memory for sect-related variables
      subroutine ctqmc_allocate_memory_part()
         implicit none
 
@@ -91,7 +98,7 @@
         return
      end subroutine ctqmc_allocate_memory_part
 
-!>>> deallocate memory for sect-related variables
+!!>>> deallocate memory for sect-related variables
      subroutine ctqmc_deallocate_memory_part()
          implicit none
          
@@ -126,7 +133,7 @@
          return
      end subroutine ctqmc_deallocate_memory_part
 
-!>>> subroutine used to determine is_save 
+!!>>> subroutine used to determine is_save 
      subroutine ctqmc_make_nparts(cmode, csize, index_t_loc, tau_s, tau_e)
         use constants 
         use control
@@ -306,7 +313,7 @@
         return
      end subroutine ctqmc_make_nparts
    
-!>>> calculate the trace for one sector
+!!>>> calculate the trace for one sector
      subroutine cat_sector_ztrace(csize, string, index_t_loc, expt_t_loc, trace)
         use constants
         use control
@@ -465,7 +472,7 @@
         return
      end subroutine cat_sector_ztrace
 
-!>>> copy data when propose has been accepted
+!!>>> copy data when propose has been accepted
      subroutine ctqmc_save_parts()
         implicit none
 
