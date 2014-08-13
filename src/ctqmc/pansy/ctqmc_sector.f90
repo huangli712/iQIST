@@ -1,19 +1,19 @@
-!-------------------------------------------------------------------------
-! project : pansy
-! program : m_sector
-! source  : mod_control.f90
-! type    : modules
-! authors : yilin wang (email: qhwyl2006@126.com)
-! history : 07/09/2014
-!           07/19/2014
-! purpose : define data structure for good quantum number algorithm
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : pansy
+!!! program : m_sector
+!!! source  : mod_control.f90
+!!! type    : modules
+!!! authors : yilin wang (email: qhwyl2006@126.com)
+!!! history : 07/09/2014
+!!!           07/19/2014
+!!! purpose : define data structure for good quantum number algorithm
+!!! input   :
+!!! output  :
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
-!>>> data structure for good quantum number algorithm
+!!>>> data structure for good quantum number algorithm
   module m_sector
      use constants
      use control
@@ -86,7 +86,7 @@
 
      contains
   
-!>>> nullify one fmat
+!!>>> nullify one fmat
      subroutine nullify_one_fmat(one_fmat)
         implicit none
   
@@ -98,7 +98,7 @@
         return
      end subroutine nullify_one_fmat
   
-!>>> allocate one fmat
+!!>>> allocate one fmat
      subroutine alloc_one_fmat(one_fmat)
         implicit none
   
@@ -113,7 +113,7 @@
         return
      end subroutine alloc_one_fmat
   
-!>>> deallocate one fmat
+!!>>> deallocate one fmat
      subroutine dealloc_one_fmat(one_fmat)
         implicit none
   
@@ -125,7 +125,7 @@
         return
      end subroutine dealloc_one_fmat
   
-!>>> nullify one sector
+!!>>> nullify one sector
      subroutine nullify_one_sector(one_sector)
         implicit none
   
@@ -139,7 +139,7 @@
         return
      end subroutine nullify_one_sector
   
-!>>> allocate memory for one sector
+!!>>> allocate memory for one sector
      subroutine alloc_one_sector(one_sector)
         implicit none
   
