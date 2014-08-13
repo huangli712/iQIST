@@ -191,8 +191,8 @@
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
      use constants, only : dp
-     use control, only : norbs
-     use context, only : stts
+     use control, only : nband, norbs
+     use context, only : stts, paux, index_s, index_e, time_s, time_e
 
      implicit none
 
