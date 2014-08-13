@@ -156,6 +156,7 @@
      write(mystd,'(4X,a)')        'auxiliary system observables:'
      write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / istat, 'epot :', paux(2) / istat
      write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / istat, '<Sz> :', paux(4) / istat
+     write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / istat, '<N2> :', paux(6) / istat
 
 ! about insert action
      if ( insert_tcount <= half ) insert_tcount = -one ! if insert is disable
