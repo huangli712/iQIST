@@ -1903,7 +1903,7 @@
      allocate(Dmm(kaux,kaux), stat=istat)
      allocate(Tmm(kaux,kaux), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('cat_reswap_detrat','can not allocate enough memory')
+         call s_print_error('cat_reswap_detrat','can not allocate enough memory')
      endif
 
 ! init Dmm and Tmm matrix
@@ -1992,7 +1992,7 @@
      allocate(Dmm(kaux,kaux), stat=istat)
      allocate(Tmm(kaux,kaux), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('cat_reflip_detrat','can not allocate enough memory')
+         call s_print_error('cat_reflip_detrat','can not allocate enough memory')
      endif
 
 ! init Dmm and Tmm matrix

@@ -948,7 +948,7 @@
                  if ( value /= 0 ) then
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
-                         call ctqmc_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
+                         call s_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
                      endif
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j

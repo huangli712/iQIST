@@ -205,12 +205,12 @@
 
 ! check the validity of tau_s
      if ( maxval(tau_s) > beta ) then
-         call ctqmc_print_error('ctqmc_retrieve_status','the retrieved tau_s data are not correct')
+         call s_print_error('ctqmc_retrieve_status','the retrieved tau_s data are not correct')
      endif
 
 ! check the validity of tau_e
      if ( maxval(tau_e) > beta ) then
-         call ctqmc_print_error('ctqmc_retrieve_status','the retrieved tau_e data are not correct')
+         call s_print_error('ctqmc_retrieve_status','the retrieved tau_e data are not correct')
      endif
 
 ! restore all the segments or anti-segments
