@@ -493,8 +493,8 @@
 ! initialize them
      hist  = 0
 
-     prob  = zero
      paux  = zero
+     prob  = zero
      nmat  = zero
      nnmat = zero
 
