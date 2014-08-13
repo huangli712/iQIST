@@ -91,7 +91,7 @@
 
 !!>>> ctqmc_print_summary: print the running parameters, only for reference
   subroutine ctqmc_print_summary()
-     use constants
+     use constants, only : mystd, ev2k
      use control
 
      implicit none
@@ -125,8 +125,13 @@
 !!>>> ctqmc_print_runtime: print the runtime information, including physical
 !!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
-     use constants
-     use context
+     use constants, only : one, half, mystd
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : reswap_tcount, reswap_accept, reswap_reject
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
 
      implicit none
 
