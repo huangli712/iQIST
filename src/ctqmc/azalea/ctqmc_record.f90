@@ -609,8 +609,8 @@
 !!>>> ctqmc_symm_gtau: symmetrize the gtau according to symm vector
 !!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_gtau(symm, gtau)
-     use constants, only : dp
-     use control, only : norbs, ntime
+     use constants, only : dp, zero, two
+     use control, only : nband, norbs, ntime, issun, isspn
 
      implicit none
 
