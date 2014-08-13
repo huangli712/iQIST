@@ -4,8 +4,6 @@
 !           ctqmc_print_footer
 !           ctqmc_print_summary
 !           ctqmc_print_runtime
-!           ctqmc_print_error
-!           ctqmc_print_exception
 ! source  : ctqmc_print.f90
 ! type    : subroutines
 ! author  : li huang (email:huangli712@gmail.com)
