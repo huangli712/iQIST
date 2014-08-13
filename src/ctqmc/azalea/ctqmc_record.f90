@@ -681,11 +681,11 @@
      return
   end subroutine ctqmc_symm_gtau
 
-!>>> symmetrize the grnf according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_grnf: symmetrize the grnf according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_grnf(symm, grnf)
-     use constants
-     use control
+     use constants, only : dp, two, czero
+     use control, only : mfreq, nband, norbs, issun, isspn
 
      implicit none
 
