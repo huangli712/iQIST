@@ -417,12 +417,12 @@
      return
   end subroutine ctqmc_reduce_grnf
 
-!>>> reduce the hist from all children processes
-! note: since hist_mpi and hist are integer (kind=4) type, it is important
-! to avoid data overflow in them
+!!>>> ctqmc_reduce_hist: reduce the hist from all children processes
+!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is
+!!>>> important to avoid data overflow in them
   subroutine ctqmc_reduce_hist(hist_mpi)
-     use constants
-     use context
+     use control, only : mkink, nprocs
+     use context, only : hist
 
      use mmpi
 
