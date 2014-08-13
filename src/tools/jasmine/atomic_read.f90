@@ -1,8 +1,8 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_read_cf
-!!!         : atomic_read_eimp
-!!!         : atomic_read_umat
+!!!           atomic_read_eimp
+!!!           atomic_read_umat
 !!! source  : atomic_natural.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)

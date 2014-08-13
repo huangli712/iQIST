@@ -1,10 +1,10 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_make_annifmat_fullspace
-!!!         : atomic_make_fmat_sectors
-!!!         : rotate_fmat
-!!!         : atomic_construct
-!!!         : atomic_eliminate 
+!!! program : atomic_make_fmat_fullspace
+!!!           atomic_make_fmat_sectors
+!!!           atomic_rotate_fmat
+!!!           atomic_construct
+!!!           atomic_eliminate 
 !!! source  : atomic_fmat.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
@@ -16,8 +16,8 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> make fmat for annihilation operators for full space
-  subroutine atomic_make_annifmat_fullspace()
+!!>>> make fmat for annihilation operators for full space case
+  subroutine atomic_make_fmat_fullspace()
      use control,           only: norbs, ncfgs
      use m_glob_fullspace,  only: anni_fmat, hmat_eigvec
      use m_basis_fullspace, only: dec_basis, index_basis
@@ -54,9 +54,9 @@
      enddo
   
      return
-  end subroutine atomic_make_annifmat_fullspace
+  end subroutine atomic_make_fmat_fullspace
 
-!!>>> build fmat for good quantum algorithm
+!!>>> build fmat for good quantum numbers (GQNs) algorithm
   subroutine atomic_make_fmat_sectors()
      use constants,         only: zero
      use control,           only: norbs
@@ -67,7 +67,7 @@
      implicit none
   
 ! local variables
-! loop index ober orbits
+! loop index 
      integer :: iorb
      integer :: ifermi
      integer :: isect, jsect
@@ -105,7 +105,6 @@
                      else
                          cycle
                      endif
-  
                      ibas = index_basis(jnew)
                      do i=1, sectors(jsect)%ndim 
                          if (ibas == sectors(jsect)%mybasis(i)) then
@@ -114,12 +113,10 @@
                              exit
                          endif
                      enddo
-  
                  enddo  ! over jbas={1, sectors(isect)%ndim} loop
 ! roate fmat to atomic eigenstates basis
-                 call rotate_fmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%myeigvec, &
+                 call atomic_rotate_fmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%myeigvec, &
                      sectors(isect)%myfmat(iorb, ifermi)%item, sectors(isect)%myeigvec)
-  
              enddo ! over ifermi={0,1} loop
          enddo ! over iorb={1, norbs} loop
      enddo ! over isect={1,nsectors} loop
@@ -128,7 +125,7 @@
   end subroutine atomic_make_fmat_sectors
 
 !!>>> calculate A^T * B * C
-  subroutine rotate_fmat(ndimx, ndimy, amat, bmat, cmat)
+  subroutine atomic_rotate_fmat(ndimx, ndimy, amat, bmat, cmat)
      use constants, only: dp, zero, one
      implicit none
      
@@ -162,7 +159,7 @@
   
   
      return
-  end subroutine rotate_fmat
+  end subroutine atomic_rotate_fmat
 
 !!>>> create one electron on ipos of |jold) to deduce |jnew)
   subroutine atomic_construct(ipos, jold, jnew, isgn)
@@ -185,12 +182,12 @@
   
      if (btest(jold, ipos-1) .eqv. .true.) then
          call s_print_error("atomic_construct", "severe error happened")
-     endif ! back if (btest(jold, ipos-1) .eqv. .true.) block
+     endif
   
      isgn = 0
      do iorb=1,ipos-1
         if (btest(jold, iorb-1)) isgn = isgn + 1
-     enddo ! over i={1,ipos-1} loop
+     enddo
      isgn = mod(isgn, 2)
   
      isgn = (-1)**isgn
@@ -215,17 +212,17 @@
       integer, intent(out) :: isgn
   
 ! local variables
-! loop index over orbit
+! loop index
       integer :: iorb
   
       if (btest(jold, ipos-1) .eqv. .false.) then
-          stop "severe error happened in atomic_eliminate"
-      endif ! back if (btest(jold, ipos-1) .eqv. .false.) block
+          call s_print_error("atomic_eliminate", "severe error happened")
+      endif 
   
       isgn = 0
       do iorb=1,ipos-1
           if (btest(jold, iorb-1)) isgn = isgn + 1
-      enddo ! over i={1,ipos-1} loop
+      enddo
       isgn = mod(isgn, 2)
   
       isgn = (-1)**isgn

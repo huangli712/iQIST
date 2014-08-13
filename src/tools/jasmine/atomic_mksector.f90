@@ -1,8 +1,8 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_mksectors
-!!!         : make_good_sz
-!!!         : make_good_jz
+!!!           atomic_make_good_sz
+!!!           atomic_make_good_jz
 !!! source  : atomic_mksector.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
@@ -114,8 +114,8 @@
 
 !----------------------------------------------------------------
 ! make good_sz and good_jz
-     call make_good_sz(orb_good_sz)
-     call make_good_jz(orb_good_jz)
+     call atomic_make_good_sz(orb_good_sz)
+     call atomic_make_good_jz(orb_good_jz)
 
 ! build good quantum numbers for each Fock state
      counter = 0
@@ -441,7 +441,7 @@
   end subroutine atomic_mksectors
  
 !!>>> make sz for each orbital
-  subroutine make_good_sz(good_sz)
+  subroutine atomic_make_good_sz(good_sz)
      use control, only: norbs
   
      implicit none
@@ -461,10 +461,10 @@
      enddo
   
      return
-  end subroutine make_good_sz
+  end subroutine atomic_make_good_sz
   
 !>>> make jz for each orbital
-  subroutine make_good_jz(good_jz)
+  subroutine atomic_make_good_jz(good_jz)
      use control, only: nband, norbs
   
      implicit none
@@ -512,8 +512,8 @@
          good_jz(13)=  5
          good_jz(14)=  7
      else
-         call s_print_error('make_good_jz', 'not implemented for this norbs value !')
+         call s_print_error('atomic_make_good_jz', 'not implemented for this norbs value !')
      endif
   
      return
-  end subroutine make_good_jz
+  end subroutine atomic_make_good_jz

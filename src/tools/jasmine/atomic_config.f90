@@ -20,6 +20,7 @@
      implicit none
   
 ! local variables
+! file status
      logical :: exists
      
 !----------------------------------------------------------------
@@ -52,6 +53,7 @@
      lambda = 0.00_dp     ! spin-orbit coupling parameter
      mune   = 0.00_dp     ! chemical potential
   
+!----------------------------------------------------------------
 ! file status
      exists = .false.
   

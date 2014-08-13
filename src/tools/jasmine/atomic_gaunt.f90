@@ -1,7 +1,7 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_gaunt_5band
-!!!         : atomic_gaunt_7band
+!!!           atomic_gaunt_7band
 !!! source  : atomic_gaunt.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)

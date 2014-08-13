@@ -1,7 +1,7 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_check_config
-!!!         : atomic_check_mat_real
+!!!           atomic_check_mat_real
 !!! source  : atomic_check.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)

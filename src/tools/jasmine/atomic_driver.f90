@@ -1,19 +1,20 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_driver_fullspace
-!!!         : atomic_driver_sectors
+!!!           atomic_driver_sectors
 !!! source  : atomic_driver.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
-!!! purpose : this driver solve atomic problem for different CTQMC trace algorithm
+!!!           08/13/2014 by yilin wang
+!!! purpose : solve atomic problem for different CTQMC trace algorithms
 !!! input   :
 !!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> for CTQMC trace algorithm, use full local Hilbert space 
+!!>>> CTQMC direct matrices multiplications trace algorithm, use full Hilbert space 
   subroutine atomic_driver_fullspace()
      use constants,        only: dp, mystd
      use control,          only: ncfgs
@@ -23,11 +24,14 @@
      implicit none
   
 ! local variables
+! a temp matrix
      real(dp) :: tmp_mat(ncfgs, ncfgs)
+
+! whether the Hamiltonian is real ? 
      logical :: lreal 
   
 ! allocate memory 
-     write(mystd, "(2X,a)") "jasmine >>> allocate global memory for fullspace case ..."
+     write(mystd, "(2X,a)") "jasmine >>> allocate memory of global variables for fullspace case ..."
      write(mystd,*)
      call alloc_m_glob_fullspace()
   
@@ -58,48 +62,50 @@
 ! then, transform them to the eigen basis
      write(mystd, "(2X,a)") "jasmine >>> make fmat for annihilation fermion operators ... "
      write(mystd,*)
-     call atomic_make_annifmat_fullspace()
+     call atomic_make_fmat_fullspace()
 
 ! build occupancy number
      write(mystd, "(2X,a)") "jasmine >>> make occupancy number of atomic eigenstates ... "
      write(mystd,*)
      call atomic_make_occumat_fullspace()    
 
-! write eigenvalue of hmat to file 'atom.eigval.dat'
+! write eigenvalues of hmat to file 'atom.eigval.dat'
      write(mystd, "(2X,a)") "jasmine >>> write eigenvalue, eigenvector, and atom.cix to files ..."
      write(mystd,*)
      call atomic_write_eigval_fullspace()
   
-! write eigenvector of hmat to file 'atom.eigvec.dat'
+! write eigenvectors of hmat to file 'atom.eigvec.dat'
      call atomic_write_eigvec_fullspace()
    
 ! write eigenvalue of hmat, occupany number of eigenstates and 
 ! fmat of annihilation fermion operators to file "atom.cix"
-! for begonia, lavender package
+! this is for begonia, lavender codes of iQIST package
      call atomic_write_atomcix_fullspace()
   
 ! deallocate memory
-     write(mystd, "(2X,a)") "jasmine >>> free memory for fullspace case ... "
+     write(mystd, "(2X,a)") "jasmine >>> free memory of global variables for fullspace case ... "
      write(mystd,*)
      call dealloc_m_glob_fullspace()
   
      return
   end subroutine atomic_driver_fullspace
   
-!!>>> for CTQMC trace algorithm: use good quantum numbers
-!!>>> make Hamiltonian, diagonalize it, and build F-mat 
+!!>>> CTQMC trace algorithm: use good quantum numbers (GQNs)
   subroutine atomic_driver_sectors()
-     use constants
-     use m_glob_sectors
+     use constants,         only: mystd
+     use m_glob_sectors,    only: nsectors, sectors, dealloc_m_glob_sectors
   
      implicit none
 
 ! local variables
+! loop index
      integer :: i
+
+! whether the Hamiltonian is real ?
      logical :: lreal
 
 ! make all the sectors, allocate m_glob_sectors memory inside
-     write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers... "
+     write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers (GQNs)... "
      write(mystd,*)
      call atomic_mksectors()
  
@@ -120,22 +126,22 @@
      write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real"
      write(mystd,*)
   
-! diagonalize sector one by one
+! diagonalize Hamiltonian of each sector one by one
      write(mystd, "(2X,a)") "jasmine >>> diagonalize atomic Hamiltonian for each sector ... "
      write(mystd,*)
      call atomic_diag_hmat_sectors()
   
-! make fmat of both creation and annihilation operators
+! make fmat of both creation and annihilation operators for each sector
      write(mystd, "(2X,a)") "jasmine >>> make fmat for each sector ..."
      write(mystd,*)
      call atomic_make_fmat_sectors()
   
-! write eigenvalue to file 'atom.eigval.dat'
      write(mystd, "(2X,a)") "jasmine >>> write eigenvalue, eigenvector, and atom.cix to files ... "
      write(mystd,*)
+! write eigenvalues to file 'atom.eigval.dat'
      call atomic_write_eigval_sectors()
   
-! write eigenvector to file 'atom.eigvec.dat'
+! write eigenvectors to file 'atom.eigvec.dat'
      call atomic_write_eigvec_sectors()
   
 ! write information of sectors to file 'atom.cix'

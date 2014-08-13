@@ -1,7 +1,8 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_mkhmat_fullspace
-!!!         : atomic_mkhmat_sectors
+!!!           atomic_mkhmat_sectors
+!!!           atomic_diag_one_sector 
 !!! source  : atomic_hmat.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
@@ -213,7 +214,7 @@
                          isgn  = mod(isgn, 2)
                          ibas = index_basis(knew)
                          if (ibas == 0) then
-                             call s_print_error('atomic_mkhmat_fullspace', 'error while determining row1')
+                             call s_print_error('atomic_mkhmat_sectors', 'error while determining row1')
                          endif
   
                          insect = .false.
@@ -283,7 +284,7 @@
                          ibas = index_basis(knew)
                          isgn = mod(isgn, 2)
                          if (ibas == 0) then
-                             call s_print_error('atomic_mkhmat_fullspace', 'error while determining row3')
+                             call s_print_error('atomic_mkhmat_sectors', 'error while determining row3')
                          endif
   
                          insect = .false.
@@ -324,7 +325,7 @@
      integer :: i
      
      do i=1, nsectors
-         call diag_one_sector(sectors(i)%ndim, sectors(i)%myham, &
+         call atomic_diag_one_sector(sectors(i)%ndim, sectors(i)%myham, &
                                 sectors(i)%myeigval, sectors(i)%myeigvec)
      enddo
   
@@ -332,7 +333,7 @@
   end subroutine atomic_diag_hmat_sectors
 
 !!>>> diagonalize one sector
-  subroutine diag_one_sector(ndim, amat, eval, evec)
+  subroutine atomic_diag_one_sector(ndim, amat, eval, evec)
      use constants, only: dp
      implicit none
   
@@ -362,4 +363,4 @@
      call s_eig_sy(ndim, ndim, hmat, eval, evec)
   
      return
-  end subroutine diag_one_sector 
+  end subroutine atomic_diag_one_sector 

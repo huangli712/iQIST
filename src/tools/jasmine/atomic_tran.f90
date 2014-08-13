@@ -1,11 +1,11 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_make_umat_c2r
-!!!         : atomic_make_umat_r2c
-!!!         : atomic_make_umat_c2j
-!!!         : atomic_tran_represent
-!!!         : atomic_tran_represent_real
-!!!         : atomic_tran_cumat
+!!!           atomic_make_umat_r2c
+!!!           atomic_make_umat_c2j
+!!!           atomic_tran_represent
+!!!           atomic_tran_represent_real
+!!!           atomic_tran_cumat
 !!! source  : atomic_natural.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)

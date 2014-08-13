@@ -1,7 +1,7 @@
 !!!------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_make_basis_fullspace
-!!!           state_pick
+!!!           atomic_combination
 !!! source  : atomic_basis.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
@@ -13,7 +13,7 @@
 !!! comment : 
 !!!-------------------------------------------------------------------------
 
-!!>>> make Fock basis for full Hilbert space, this subroutine is taken from
+!!>>> make Fock basis for full Hilbert space, this subroutine is modified based on
 ! Dr. LiangDu's (duleung@gmail.com) atomic program
   subroutine atomic_make_basis_fullspace()
      use control,            only: norbs, ncfgs
@@ -22,7 +22,7 @@
      implicit none
   
 ! external variables
-     integer, external :: state_pick
+     integer, external :: atomic_combination
   
 ! local variables
 ! loop index
@@ -42,7 +42,7 @@
   
 ! it is a number of combination C_{norbs}^{i}
      do i=0,norbs
-         dim_sub_n(i) = state_pick(i, norbs)
+         dim_sub_n(i) = atomic_combination(i, norbs)
      enddo 
   
 ! construct decimal form and index of Fock basis
@@ -75,17 +75,22 @@
   end subroutine atomic_make_basis_fullspace
 
 !!>>> calculate combination algebra 
-  function state_pick(ntiny, nlarg) result(value)
+  function atomic_combination(ntiny, nlarg) result(value)
+     use constants, only: dp
+
      implicit none
   
 ! external variables
+! the small number
      integer, intent(in) :: ntiny
+
+! the large number
      integer, intent(in) :: nlarg
+ 
+! result value of the combination algebra
+     integer :: value
   
 ! local variables
-! double precison
-     integer, parameter :: dp=kind(0.0d0)
-
 ! loop index
      integer :: i
 
@@ -98,9 +103,7 @@
 ! denominator of the combination algebra
      real(dp) :: denom
 
-! result value of the combination algebra
-     integer :: value
-  
+ 
 ! find the minimum number 
      nlow = min(ntiny, nlarg-ntiny)
   
@@ -120,4 +123,4 @@
      value = nint(numer / denom)
   
      return
-  end function state_pick
+  end function atomic_combination

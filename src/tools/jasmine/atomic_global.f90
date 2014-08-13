@@ -1,9 +1,17 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : m_basis_fullspace
-!!!         : m_spmat 
-!!!         : m_glob_fullspace
-!!!         : m_glob_sectors
+!!!           m_basis_fullspace@alloc_m_basis_fullspace
+!!!           m_basis_fullspace@dealloc_m_basis_fullspace
+!!!           m_spmat 
+!!!           m_spmat@alloc_m_spmat
+!!!           m_spmat@dealloc_m_spmat
+!!!           m_glob_fullspace
+!!!           m_glob_fullspace@alloc_m_glob_fullspace
+!!!           m_glob_fullspace@dealloc_m_glob_fullspace
+!!!           m_glob_sectors
+!!!           m_glob_sectors@alloc_m_glob_sectors
+!!!           m_glob_sectors@dealloc_m_glob_sectors
 !!! source  : mod_global.f90
 !!! type    : modules 
 !!! authors : yilin wang (email: qhwyl2006@126.com)

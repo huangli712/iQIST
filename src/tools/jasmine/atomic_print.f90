@@ -1,8 +1,8 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_print_header
-!!!         : atomic_print_footer
-!!!         : atomic_print_summary
+!!!           atomic_print_footer
+!!!           atomic_print_summary
 !!! source  : atomic_natural.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)

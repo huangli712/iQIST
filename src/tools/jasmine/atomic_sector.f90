@@ -1,6 +1,12 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : m_sector
+!!!           m_sector@nullify_one_fmat
+!!!           m_sector@alloc_one_fmat
+!!!           m_sector@dealloc_one_fmat
+!!!           m_sector@nullify_one_sector
+!!!           m_sector@alloc_one_sector
+!!!           m_sector@dealloc_one_sector
 !!! source  : mod_control.f90
 !!! type    : modules
 !!! authors : yilin wang (email: qhwyl2006@126.com)
@@ -195,4 +201,5 @@
   
         return
      end subroutine dealloc_one_sector
+
   end module m_sector
