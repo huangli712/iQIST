@@ -192,7 +192,10 @@
   subroutine ctqmc_record_nmat()
      use constants, only : dp, zero
      use control, only : nband, norbs, beta
-     use context, only : ckink, rank, stts, uumat, paux, nmat, nnmat, index_s, index_e, time_s, time_e
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts, uumat
+     use context, only : paux, nmat, nnmat
 
      implicit none
 
@@ -298,6 +301,16 @@
      enddo ! over flvr={1,norbs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+! evaluate <N^2>
+!-------------------------------------------------------------------------
+     paux(6) = paux(6) + ( sum(sgmt) / beta )**2
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^1>
+!-------------------------------------------------------------------------
+     paux(5) = paux(5) + sum(sgmt) / beta
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! evaluate spin magnetization: < Sz >
 !-------------------------------------------------------------------------
      do flvr=1,nband
@@ -327,7 +340,6 @@
 
      return
   end subroutine ctqmc_record_nmat
-
 
 !>>> reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
