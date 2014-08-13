@@ -149,7 +149,7 @@ subroutine atomic_2natural_case2()
 
     ! diagonalize eimp_nospin to get natural basis
     eimp_nospin_real = real(eimp_nospin)
-    call dmat_dsyev(nband, nband, eimp_nospin_real, eigval, eigvec)
+    call s_eig_sy(nband, nband, eimp_nospin_real, eigval, eigvec)
 
     eimp_nospin = czero
     do i=1, nband
@@ -245,7 +245,7 @@ subroutine atomic_2natural_case4()
     ! check whether cfmat is real, if not, we cann't make natural basis
     call atomic_check_mat_real(norbs, cfmat, lreal)
     if (lreal .eqv. .false.) then
-        call atomic_print_error('atomic_2natural_case4', 'crystal field on &
+        call s_print_error('atomic_2natural_case4', 'crystal field on &
             complex orbital basis is not real, cannot make natural basis !')
     endif
 
@@ -254,7 +254,7 @@ subroutine atomic_2natural_case4()
 
     tmp_mat = real(eimpmat)
 
-    call dmat_dsyev(norbs, norbs, tmp_mat, eigval, eigvec)
+    call s_eig_sy(norbs, norbs, tmp_mat, eigval, eigvec)
 
     umat_c2n = eigvec
     tran_umat = umat_c2n

@@ -1,3 +1,19 @@
+!-------------------------------------------------------------------------
+! project : pansy
+! program : m_npart
+! source  : ctqmc_npart.f90
+! type    : modules
+! authors : yilin wang (email: qhwyl2006@126.com)
+! history : 07/09/2014
+!           07/19/2014
+!           08/09/2014
+! purpose : define data structure for divide conquer (npart) algorithm
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
+
 !>>> containing the information for npart trace algorithm
   module m_npart
      use constants
@@ -53,7 +69,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
+             call s_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
          endif
 
          is_save = 1
@@ -254,7 +270,7 @@
    
 ! npart should be larger than zero
         else
-            call ctqmc_print_error('ctqmc_make_ztrace', 'npart is small than 1, &
+            call s_print_error('ctqmc_make_ztrace', 'npart is small than 1, &
                                     it should be larger than zero')
         endif ! back if (npart == 1) block
 !--------------------------------------------------------------------

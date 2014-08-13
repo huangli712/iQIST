@@ -100,7 +100,7 @@ subroutine atomic_config()
  
         close(mytmp)
     else
-        call atomic_print_error('atomic_config', 'no file atom.config.in !')
+        call s_print_error('atomic_config', 'no file atom.config.in !')
     endif
 
     return

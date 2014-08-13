@@ -124,7 +124,7 @@ end subroutine atomic_make_fmat_sectors
 
 ! calculate A^T * B * C
 subroutine rotate_fmat(ndimx, ndimy, amat, bmat, cmat)
-    use constants, only: dp, zero
+    use constants, only: dp, zero, one
     implicit none
     
     ! external variables
@@ -137,11 +137,24 @@ subroutine rotate_fmat(ndimx, ndimy, amat, bmat, cmat)
     ! local variables
     real(dp) :: tmp_mat(ndimx, ndimy)
     real(dp) :: amat_t(ndimx, ndimx)
+    real(dp) :: alpha
+    real(dp) :: betta
 
     amat_t = transpose(amat)
     tmp_mat = zero
-    call dmat_dgemm(ndimx, ndimy, ndimy, bmat, cmat,  tmp_mat)
-    call dmat_dgemm(ndimx, ndimx, ndimy, amat_t,  tmp_mat, bmat)
+
+    alpha = one; betta = zero
+    call dgemm('N', 'N', ndimx, ndimy, ndimy, &
+                          alpha, bmat, ndimx, &
+                                 cmat, ndimy, &
+                       betta, tmp_mat, ndimx  )
+
+    alpha = one; betta = zero
+    call dgemm('N', 'N', ndimx, ndimy, ndimx, &
+                        alpha, amat_t, ndimx, &
+                              tmp_mat, ndimx, &
+                          betta, bmat, ndimx  )
+
 
     return
 end subroutine rotate_fmat
@@ -166,7 +179,7 @@ subroutine atomic_construct(ipos, jold, jnew, isgn)
     integer :: iorb
 
     if (btest(jold, ipos-1) .eqv. .true.) then
-        stop "severe error happened in atomic_construct"
+        call s_print_error("atomic_construct", "severe error happened")
     endif ! back if (btest(jold, ipos-1) .eqv. .true.) block
 
     isgn = 0

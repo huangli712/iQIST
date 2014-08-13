@@ -1,4 +1,4 @@
-!-------------------------------------------------------------------------
+!------------------------------------------------------------------------
 ! project : jasmine
 ! program : atomic_make_basis_fullspace
 !           state_pick
@@ -111,5 +111,3 @@ function state_pick(ntiny, nlarg) result(value)
 
     return
 end function state_pick
-
-

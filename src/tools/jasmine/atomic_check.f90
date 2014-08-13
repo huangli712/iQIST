@@ -116,7 +116,7 @@ subroutine atomic_check_config()
     if (lpass == .true.) then
         write(mystd, '(2X,a)') 'jasmine >>> Good News: all control parameters are OK !'
     else
-        call atomic_print_error('atomic_check_config', 'Found some wrong setting of parameters, please check the "atom.config.in" file !')
+        call s_print_error('atomic_check_config', 'Found some wrong setting of parameters, please check the "atom.config.in" file !')
     endif
 
     return

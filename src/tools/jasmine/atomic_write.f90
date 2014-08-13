@@ -219,9 +219,9 @@ end subroutine atomic_write_eigvec_sectors
 
 !>>> write atom.cix for CTQMC input, good quantum number algorithm
 subroutine atomic_write_atomcix_sectors()
-    use constants,      only: mytmp
-    use control,        only: isoc
-    use m_glob_sectors, only: nsectors, sectors, max_dim_sect, ave_dim_sect
+    use constants
+    use control
+    use m_glob_sectors
 
     implicit none
 

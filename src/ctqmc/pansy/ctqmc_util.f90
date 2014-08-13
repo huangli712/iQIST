@@ -1,520 +1,274 @@
-!-------------------------------------------------------------------------
-! project : pansy
-! program : ctqmc_dmat_inv
-!           ctqmc_zmat_inv
-!           ctqmc_dmat_det
-!           ctqmc_zmat_det
-!           ctqmc_time_sorter
-!           ctqmc_time_qsorter
-!           ctqmc_time_qscorer
-!           ctqmc_time_builder
-!           ctqmc_time_analyzer
-! source  : ctqmc_util.f90
-! type    : functions & subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 10/01/2008 by li huang
-!           02/08/2009 by li huang
-!           09/23/2009 by li huang
-!           09/26/2009 by li huang
-!           11/17/2009 by li huang
-!           11/21/2009 by li huang
-!           12/18/2009 by li huang
-!           12/22/2009 by li huang
-!           12/29/2009 by li huang
-!           01/12/2010 by li huang
-!           02/27/2010 by li huang
-!           06/08/2010 by li huang
-!           06/22/2010 by li huang
-! purpose : to provide utility functions and subroutines for hybridization
-!           expansion version continuous time quantum Monte Carlo (CTQMC)
-!           quantum impurity solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : pansy
+!!! program : ctqmc_make_htau
+!!!           ctqmc_make_hsed
+!!!           ctqmc_four_htau
+!!!           ctqmc_four_hybf
+!!! source  : ctqmc_util.f90
+!!! type    : functions & subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 10/01/2008 by li huang
+!!!           06/22/2010 by li huang
+!!!           08/07/2014 by li huang
+!!! purpose : to provide utility functions and subroutines for hybridization
+!!!           expansion version continuous time quantum Monte Carlo (CTQMC)
+!!!           quantum impurity solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-# define prefix '>>> used time: '
+!!========================================================================
+!!>>> cubic spline interpolation                                       <<<
+!!========================================================================
 
-# define iolst1 prefix , mday, ' d ', mhou, ' h ', mmin, ' m in this iteration.'
-# define iolst2 prefix , mhou, ' h ', mmin, ' m in this iteration.'
-# define iolst3 prefix , mmin, ' m ', msec, ' s in this iteration.'
-# define iolst4 prefix , msec, ' s in this iteration.'
+!! To provide cubic spline subroutines and wrapper functions to interpolate
+!! the hybridization function in imaginary-time axis.
 
-# define iolst5 prefix , nday, ' d ', nhou, ' h ', nmin, ' m in total iteration.'
-# define iolst6 prefix , nhou, ' h ', nmin, ' m in total iteration.'
-# define iolst7 prefix , nmin, ' m ', nsec, ' s in total iteration.'
-# define iolst8 prefix , nsec, ' s in total iteration.'
-
-!>>> invert real(dp) matrix using lapack subroutines
-  subroutine ctqmc_dmat_inv(ndim, dmat)
+!!>>> ctqmc_make_htau: evaluate the matrix elements for mmat matrix using
+!!>>> cubic spline interpolation
+  function ctqmc_make_htau(flvr, dtau) result(val)
      use constants, only : dp
+     use control, only : ntime
+     use context, only : tmesh, htau, hsed
 
      implicit none
 
 ! external arguments
-! dimension of dmat matrix
-     integer, intent(in) :: ndim
+! current flavor channel
+     integer, intent(in)  :: flvr
 
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the inversed matrix
-     real(dp), intent(inout) :: dmat(ndim,ndim)
+! delta imaginary time
+     real(dp), intent(in) :: dtau
+
+! external functions
+! internal interpolation engine
+     procedure(real(dp))  :: s_spl_splint
 
 ! local variables
-! error flag
-     integer  :: ierror
+! return value
+     real(dp) :: val
 
-! working arrays for lapack subroutines
-     integer  :: ipiv(ndim)
-     real(dp) :: work(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, dgetrf subroutine
-     call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmat_inv','error in lapack subroutine dgetrf')
-     endif
-
-! computes the inverse of an LU-factored general matrix, need lapack
-! package, dgetri subroutine
-     call dgetri(ndim, dmat, ndim, ipiv, work, ndim, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmat_inv','error in lapack subroutine dgetri')
-     endif
+     val = s_spl_splint(ntime, tmesh, htau(:, flvr, flvr), hsed(:, flvr, flvr), dtau)
 
      return
-  end subroutine ctqmc_dmat_inv
+  end function ctqmc_make_htau
 
-!>>> invert complex(dp) matrix using lapack subroutines
-  subroutine ctqmc_zmat_inv(ndim, zmat)
-     use constants, only : dp
+!!>>> ctqmc_make_hsed: calculate the second order derivates of hybridization
+!!>>> function on imaginary time space
+  subroutine ctqmc_make_hsed(tmesh, htau, hsed)
+     use constants, only : dp, zero
+     use control, only : ntime, norbs, beta
 
      implicit none
 
 ! external arguments
-! dimension of zmat matrix
-     integer, intent(in) :: ndim
+! imaginary time axis
+     real(dp), intent(in)  :: tmesh(ntime)
 
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the inversed matrix
-     complex(dp), intent(inout) :: zmat(ndim,ndim)
+! hybridization function on imaginary time axis
+     real(dp), intent(in)  :: htau(ntime,norbs,norbs)
 
-! local variables
-! error flag
-     integer     :: ierror
-
-! working arrays for lapack subroutines
-     integer     :: ipiv(ndim)
-     complex(dp) :: work(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, zgetrf subroutine
-     call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_zmat_inv','error in lapack subroutine zgetrf')
-     endif
-
-! computes the inverse of an LU-factored general matrix, need lapack
-! package, zgetri subroutine
-     call zgetri(ndim, zmat, ndim, ipiv, work, ndim, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_zmat_inv','error in lapack subroutine zgetri')
-     endif
-
-     return
-  end subroutine ctqmc_zmat_inv
-
-!>>> calculate the determinant of a real(dp) matrix
-  subroutine ctqmc_dmat_det(ndim, dmat, ddet)
-     use constants, only : dp, one, cone
-
-     implicit none
-
-! external arguments
-! dimension of dmat matrix
-     integer, intent(in) :: ndim
-
-! determinant of dmat matrix
-     real(dp), intent(out) :: ddet
-
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the L and U matrix
-     real(dp), intent(inout) :: dmat(ndim,ndim)
+! second order derivates of hybridization function
+     real(dp), intent(out) :: hsed(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
      integer  :: i
+     integer  :: j
 
-! error flag
-     integer  :: ierror
+! first derivate at start point
+     real(dp) :: startu
 
-! size of working array work
-     integer  :: lwork
+! first derivate at end   point
+     real(dp) :: startd
 
-! working arrays for lapack subroutines: dgetrf
-     integer  :: ipiv(ndim)
+! \delta \tau
+     real(dp) :: deltau
 
-! working arrays for lapack subroutines: dgeev
-     real(dp) :: work(4*ndim)
+! second-order derivates
+     real(dp) :: d2y(ntime)
 
-! real and imaginary parts of the computed eigenvalues
-     real(dp) :: wi(ndim)
-     real(dp) :: wr(ndim)
+! calculate deltau
+     deltau = beta / real(ntime - 1)
 
-! left and right eigenvectors
-     real(dp) :: vl(ndim,ndim)
-     real(dp) :: vr(ndim,ndim)
+! initialize hsed
+     hsed = zero
 
-! dummy arrays, used to save dmat
-     real(dp) :: amat(ndim,ndim)
+! calculate it
+     do j=1,norbs
+         do i=1,norbs
 
-! used to calculate determinant
-     complex(dp) :: cres
+! calculate first-order derivate of \Delta(0): startu
+             startu = (-25.0_dp*htau(1,       i, j) +                    &
+                        48.0_dp*htau(2,       i, j) -                    &
+                        36.0_dp*htau(3,       i, j) +                    &
+                        16.0_dp*htau(4,       i, j) -                    &
+                         3.0_dp*htau(5,       i, j)) / 12.0_dp / deltau
 
-! setup lwork
-     lwork = 4 * ndim
+! calculate first-order derivate of \Delta(\beta): startd
+             startd = ( 25.0_dp*htau(ntime-0, i, j) -                    &
+                        48.0_dp*htau(ntime-1, i, j) +                    &
+                        36.0_dp*htau(ntime-2, i, j) -                    &
+                        16.0_dp*htau(ntime-3, i, j) +                    &
+                         3.0_dp*htau(ntime-4, i, j)) / 12.0_dp / deltau
 
-! copy dmat to amat at first
-     amat = dmat
+! reinitialize d2y to zero
+             d2y = zero
+
+! call the service layer
+             call s_spl_splder(ntime, tmesh, htau(:,i,j), startu, startd, d2y)
+
+! copy the results to hsed
+             hsed(:,i,j) = d2y
+
+         enddo ! over i={1,norbs} loop
+     enddo ! over j={1,norbs} loop
+
+     return
+  end subroutine ctqmc_make_hsed
+
+!!========================================================================
+!!>>> fast fourier transformation                                      <<<
+!!========================================================================
+
+!! Here are forward and backward fourier transformation subroutines for
+!! hybridization function. Nominally, the following subroutines are only
+!! suitable for the hybridization functions, but in principle, we can also
+!! apply them to the impurity green's function and bath weiss's function.
+
+!!>>> ctqmc_four_htau: fourier htau to hybf, from imaginary time to
+!!>>> matsubara frequency
+  subroutine ctqmc_four_htau(htau, hybf)
+     use constants, only : dp, zero, czero
+     use control, only : ntime, norbs, mfreq
+     use context, only : tmesh, rmesh
+
+     implicit none
+
+! external arguments
+! hybridization function on imaginary time axis
+     real(dp), intent(in) :: htau(ntime,norbs,norbs)
+
+! hybridization function on matsubara frequency axis
+     complex(dp), intent(out) :: hybf(mfreq,norbs,norbs)
+
+! local variables
+! loop index over orbitals
+     integer  :: i
+     integer  :: j
+
+! dummy arrays
+     real(dp) :: raux(ntime)
+     complex(dp) :: caux(mfreq)
+
+! initialize them
+     raux = zero
+     caux = czero
+
+     do i=1,norbs
+         do j=1,norbs
+
+! copy the imaginary-time data to raux
+             raux = htau(:,j,i)
+
+! call the service layer
+             call s_fft_forward(ntime, tmesh, raux, mfreq, rmesh, caux)
+
+! copy the matsubara frequency data to hybf
+             hybf(:,j,i) = caux
+
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine ctqmc_four_htau
+
+!!>>> ctqmc_four_hybf: fourier hybf to htau, from matsubara frequency to
+!!>>> imaginary time
+  subroutine ctqmc_four_hybf(hybf, htau)
+     use constants, only : dp, zero, czero, eps6
+     use control, only : ntime, norbs, mfreq, beta
+     use context, only : tmesh, rmesh
+
+     implicit none
+
+! external arguments
+! hybridization function on imaginary time axis
+     real(dp), intent(out) :: htau(ntime,norbs,norbs)
+
+! hybridization function on matsubara frequency axis
+     complex(dp), intent(in) :: hybf(mfreq,norbs,norbs)
+
+! local variables
+! loop index over orbitals
+     integer  :: i
+     integer  :: j
+
+! used to determine the bottom region of hybridiaztion function
+     integer  :: start
+     integer  :: last
+
+! dummy arrays
+     real(dp) :: raux(ntime)
+     complex(dp) :: caux(mfreq)
+
+! initialize them
+     raux = zero
+     caux = czero
+
+     do i=1,norbs
+         do j=1,norbs
+
+! copy matsubara frequency data to caux
+             caux = hybf(:,j,i)
+
+! call the service layer
+             call s_fft_backward(mfreq, rmesh, caux, ntime, tmesh, raux, beta)
+
+! copy imaginary time data to htau
+             htau(:,j,i) = raux
+
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+! checks for diagonal htau to be causal. htau should be concave. hence,
+! if it becomes very small at two points, it should remain zero in all
+! points between the two points. this is very important in insulators,
+! because htau can overshoot to positive values multiple times and kinks
+! can be trapped in the range between the two crossing points, where htau
+! is causal, but should be zero.
+     start = 1
+     last = 1
+     do i=1,norbs
+         do j=1,ntime    ! search forward
+             if ( htau(j,i,i) > -eps6 ) then
+                 start = j
+                 EXIT
+             endif
+         enddo ! over j={1,ntime} loop
+
+         do j=ntime,1,-1 ! search backward
+             if ( htau(j,i,i) > -eps6 ) then
+                 last = j
+                 EXIT
+             endif
+         enddo ! over j={ntime,1,-1} loop
 
 !-------------------------------------------------------------------------
-! method A: preferred method
+!<         if ( start > 1 .and. last > 1 ) then
+!<             do j=start,last
+!<                 htau(j,i,i) = -eps6
+!<             enddo ! over j={start,last} loop
+!<         endif
 !-------------------------------------------------------------------------
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, dgetrf subroutine
-     call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_exception('ctqmc_dmat_det','error in lapack subroutine dgetrf')
-     endif
+     enddo ! over i={1,norbs} loop
 
-! calculate determinant
-     ddet = one
-     do i=1,ndim
-         if ( ipiv(i) == i ) then
-             ddet = ddet * ( +dmat(i,i) )
-         else
-             ddet = ddet * ( -dmat(i,i) )
-         endif
-     enddo ! over i={1,ndim} loop
-
-! everything is ok!
-     if ( ierror == 0 ) RETURN
-
-!-------------------------------------------------------------------------
-! method B: as a backup
-!-------------------------------------------------------------------------
-! diagonalize amat to obtain its eigenvalues: wr and wi
-     call dgeev('N', 'N', ndim, amat, ndim, wr, wi, vl, ndim, vr, ndim, work, lwork, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmat_det','error in lapack subroutine dgeev')
-     endif
-
-! evaluate the final determinant
-     cres = cone
-     do i=1,ndim
-         cres = cres * dcmplx( wr(i), wi(i) )
-     enddo ! over i={1,ndim} loop
-     ddet = cres
+! enforce hybridization function less than zero to ensure the causality
+     do i=1,norbs
+         do j=1,ntime
+             if ( htau(j,i,i) > zero ) htau(j,i,i) = -eps6
+         enddo ! over j={1,ntime} loop
+     enddo ! over i={1,norbs} loop
 
      return
-  end subroutine ctqmc_dmat_det
-
-!>>> calculate the determinant of a complex(dp) matrix
-  subroutine ctqmc_zmat_det(ndim, zmat, zdet)
-     use constants, only : dp, cone
-
-     implicit none
-
-! external arguments
-! dimension of zmat matrix
-     integer, intent(in) :: ndim
-
-! determinant of zmat matrix
-     real(dp), intent(out) :: zdet
-
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the L and U matrix
-     real(dp), intent(inout) :: zmat(ndim,ndim)
-
-! local variables
-! loop index
-     integer :: i
-
-! error flag
-     integer :: ierror
-
-! working arrays for lapack subroutines
-     integer :: ipiv(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, zgetrf subroutine
-     call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call ctqmc_print_error('ctqmc_zmat_det','error in lapack subroutine zgetrf')
-     endif
-
-! calculate determinant
-     zdet = cone
-     do i=1,ndim
-         if ( ipiv(i) == i ) then
-             zdet = zdet * ( +zmat(i,i) )
-         else
-             zdet = zdet * ( -zmat(i,i) )
-         endif
-     enddo ! over i={1,ndim} loop
-
-     return
-  end subroutine ctqmc_zmat_det
-
-!>>> using bubble sort algorithm to sort a real dataset, the slowest algorithm
-  subroutine ctqmc_time_sorter(nsize, list)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! grab the number of values from the calling code
-     integer, intent(in) :: nsize
-
-! dataset to be sorted
-     real(dp), intent(inout) :: list(nsize)
-
-! local variables
-! dataset index
-     integer  :: i = 0
-     integer  :: j = 0
-
-! dummy variables
-     real(dp) :: swap
-
-! basically we just loop through every element to compare it against
-! every other element
-! this loop increments i which is our starting point for the comparison
-     sort_loop1: do i=nsize,1,-1
-! this loop increments j which is the ending point for the comparison
-         sort_loop2: do j=1,i-1
-! swap the two elements here
-             exchange: if ( list(j) > list(j+1) ) then
-                 swap = list(j)
-                 list(j) = list(j+1)
-                 list(j+1) = swap
-             endif exchange
-         enddo sort_loop2 ! over j={1,i-1} loop
-     enddo sort_loop1 ! over i={nsize,1,-1} loop
-
-     return
-  end subroutine ctqmc_time_sorter
-
-!>>> sets up for the quick sort recursive method
-  subroutine ctqmc_time_qsorter(nsize, list)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! grab the number of values from the calling code
-     integer, intent(in) :: nsize
-
-! dataset to be sorted
-     real(dp), intent(inout) :: list(nsize)
-
-! kicks off the recursive process
-     call ctqmc_time_qscorer(1, nsize, nsize, list)
-
-     return
-  end subroutine ctqmc_time_qsorter
-
-!>>> this is the actually recursive portion of the quicksort algorithm
-  recursive &
-  subroutine ctqmc_time_qscorer(pstart, pend, nsize, list)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! start point
-     integer, intent(in) :: pstart
-
-! end point
-     integer, intent(in) :: pend
-
-! size of array
-     integer, intent(in) :: nsize
-
-! dataset to be sorted
-     real(dp), intent(inout) :: list(nsize)
-
-! local variables
-! used to find out list(left) > kaux and list(right) < kaux
-     integer  :: left, right
-
-! used to record list(pstart)
-     real(dp) :: kaux
-
-! used to swap data
-     real(dp) :: taux
-
-     if (pstart == pend) then
-         return
-     endif
-
-! setup left and right
-     left = pstart
-     right = pend + 1
-
-! only in right > left, the data is to be sorted
-     if ( right > left ) then
-
-! record list(pstart) at first
-         kaux = list(pstart)
-
-         do while ( .true. )
-
-! find out where list(left) < kaux
-             do while ( .true. )
-                 left = left + 1
-                 if ( list(left)  > kaux .or. left  >= pend   ) EXIT
-             enddo ! over do while loop
-
-! find out where list(right) > kaux
-             do while ( .true. )
-                 right = right - 1
-                 if ( list(right) < kaux .or. right <= pstart ) EXIT
-             enddo ! over do while loop
-
-! we should ensure right is larger than left
-             if ( right <= left ) EXIT
-
-! exchange data between list(left) and list(right)
-             taux = list(left)
-             list(left) = list(right)
-             list(right) = taux
-
-         enddo ! over do while loop
-
-! exchange data between list(pstart) and list(right)
-        list(pstart) = list(right)
-        list(right) = kaux
-
-! sort data from pstart to right-1
-        call ctqmc_time_qscorer(pstart, right-1, nsize, list)
-
-! sort data from right+1 to pend
-        call ctqmc_time_qscorer(right+1, pend, nsize, list)
-
-     endif ! back if ( right > left ) block
-
-     return
-  end subroutine ctqmc_time_qscorer
-
-!>>> returns a string containing date and time in human-readable format
-  subroutine ctqmc_time_builder(date_time_string)
-     implicit none
-
-! external arguments
-! output date and time
-     character (len = 20), intent(out) :: date_time_string
-
-! local variables
-! used to extract data from a standard fortran call: date_and_time()
-     integer :: date_time(8)
-
-! string for current date
-     character (len = 12) :: cdate
-
-! string for current time
-     character (len = 08) :: ctime
-
-! month array
-     character (len = 03) :: months(12)
-
-! init the month array
-     months( 1) = 'Jan'; months( 2) = 'Feb'; months( 3) = 'Mar'
-     months( 4) = 'Apr'; months( 5) = 'May'; months( 6) = 'Jun'
-     months( 7) = 'Jul'; months( 8) = 'Aug'; months( 9) = 'Sep'
-     months(10) = 'Oct'; months(11) = 'Nov'; months(12) = 'Dec'
-
-! obtain current date and time
-     call date_and_time(values = date_time)
-
-! convert date and time from integer to string
-     write (cdate,'(1X,a3,1X,i2,1X,i4)') months(date_time(2)), date_time(3), date_time(1)
-     write (ctime, '(i2,":",i2,":",i2)') date_time(5), date_time(6), date_time(7)
-
-! build final output string by concating them
-     date_time_string = ctime // cdate
-
-     return
-  end subroutine ctqmc_time_builder
-
-!>>> used to print the iteration timing information about continuous time
-! quantum Monte Carlo quantum impurity solver.
-  subroutine ctqmc_time_analyzer(time_iter, time_niter)
-     use constants
-
-     implicit none
-
-! external arguments
-! time used in this iteration
-     real(dp), intent(in) :: time_iter
-
-! time used in total iteration
-     real(dp), intent(in) :: time_niter
-
-! local variables
-! number of days
-     integer  :: mday, nday
-
-! number of hours
-     integer  :: mhou, nhou
-
-! number of minutes
-     integer  :: mmin, nmin
-
-! number of seconds
-     real(dp) :: msec, nsec
-
-     mday = time_iter / 86400
-     msec = time_iter - 86400 * mday
-     mhou = msec / 3600
-     msec = msec - 3600 * mhou
-     mmin = msec / 60
-     msec = msec - 60 * mmin
-
-     nday = time_niter / 86400
-     nsec = time_niter - 86400 * nday
-     nhou = nsec / 3600
-     nsec = nsec - 3600 * nhou
-     nmin = nsec / 60
-     nsec = nsec - 60 * nmin
-
-     if      ( mday > 0 ) then
-         write(mystd,'(4X,3(a,i2),a)')     iolst1
-
-     else if ( mhou > 0 ) then
-         write(mystd,'(4X,2(a,i2),a)')     iolst2
-
-     else if ( mmin > 0 ) then
-         write(mystd,'(4X,a,i2,a,f5.2,a)') iolst3
-
-     else
-         write(mystd,'(4X,a,f5.2,a)')      iolst4
-
-     endif ! back if ( mday > 0 ) block
-
-     if      ( nday > 0 ) then
-         write(mystd,'(4X,3(a,i2),a)')     iolst5
-
-     else if ( nhou > 0 ) then
-         write(mystd,'(4X,2(a,i2),a)')     iolst6
-
-     else if ( nmin > 0 ) then
-         write(mystd,'(4X,a,i2,a,f5.2,a)') iolst7
-
-     else
-         write(mystd,'(4X,a,f5.2,a)')      iolst8
-
-     endif ! back if ( nday > 0 ) block
-
-     return
-  end subroutine ctqmc_time_analyzer
+  end subroutine ctqmc_four_hybf
