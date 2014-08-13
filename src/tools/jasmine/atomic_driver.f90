@@ -1,11 +1,7 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_driver_fullspace
-!!!         : atomic_driver_n
-!!!         : atomic_driver_nsz
-!!!         : atomic_driver_nszps
-!!!         : atomic_driver_njz
-!!!         : atomic_solve_sectors
+!!!         : atomic_driver_sectors
 !!! source  : atomic_driver.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
@@ -90,110 +86,23 @@
      return
   end subroutine atomic_driver_fullspace
   
-!!>>> for CTQMC trace algorithm: use good quantum number, total electrons N
-  subroutine atomic_driver_n()
-     use constants,      only: mystd
-     use m_glob_sectors, only: dealloc_m_glob_sectors
-  
-     implicit none
-  
-! make all the sectors, allocate m_glob_sectors memory inside
-     write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers N ... "
-     write(mystd,*)
-     call atomic_mksectors_n()
-  
-! solve the atomic problem for good quantum numbers algorithm
-     call atomic_solve_sectors()
-  
-! free memory
-     write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
-     write(mystd,*)
-     call dealloc_m_glob_sectors()
-  
-     return
-  end subroutine atomic_driver_n
-
-!!>>> for CTQMC trace algorithm: use good quantum number, total electrons N, Sz
-  subroutine atomic_driver_nsz()
-     use constants,      only: mystd
-     use m_glob_sectors, only: dealloc_m_glob_sectors
-  
-     implicit none
-  
-! make all the sectors, allocate m_glob_sectors memory inside
-     write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers N, Sz ... "
-     write(mystd,*)
-     call atomic_mksectors_nsz()
-  
-! solve the atomic problem for good quantum numbers algorithm
-     call atomic_solve_sectors()
-  
-! free memory
-     write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
-     write(mystd,*)
-     call dealloc_m_glob_sectors()
-  
-     return
-  end subroutine atomic_driver_nsz
-
-
-!!>>> for CTQMC trace algorithm: use good quantum number, total electrons N, Sz, PS
-  subroutine atomic_driver_nszps()
-     use constants,      only: mystd
-     use m_glob_sectors, only: dealloc_m_glob_sectors
-  
-     implicit none
-  
-! make all the sectors, allocate m_glob_sectors memory inside
-     write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers N, Sz, PS ... "
-     write(mystd,*)
-     call atomic_mksectors_nszps()
-  
-! solve the atomic problem for good quantum numbers algorithm
-     call atomic_solve_sectors()
-  
-! free memory
-     write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
-     write(mystd,*)
-     call dealloc_m_glob_sectors()
-  
-     return
-  end subroutine atomic_driver_nszps
-
-!!>>> for CTQMC trace algorithm: use good quantum number, total electrons N, Jz
-  subroutine atomic_driver_njz()
-     use constants, only: mystd
-     use m_glob_sectors, only: dealloc_m_glob_sectors
-  
-     implicit none
-  
-! make all the sectors, allocate m_glob_sectors memory inside
-     write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers N, Jz ... "
-     write(mystd,*)
-     call atomic_mksectors_njz()
-  
-! solve the atomic problem for good quantum numbers algorithm
-     call atomic_solve_sectors()
-  
-! free memory
-     write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
-     write(mystd,*)
-     call dealloc_m_glob_sectors()
-  
-     return
-  end subroutine atomic_driver_njz
-
+!!>>> for CTQMC trace algorithm: use good quantum numbers
 !!>>> make Hamiltonian, diagonalize it, and build F-mat 
-  subroutine atomic_solve_sectors()
-     use constants,      only: mystd
-     use m_glob_sectors, only: nsectors, sectors
+  subroutine atomic_driver_sectors()
+     use constants
+     use m_glob_sectors
   
      implicit none
 
 ! local variables
      integer :: i
      logical :: lreal
-  
+
+! make all the sectors, allocate m_glob_sectors memory inside
+     write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers... "
+     write(mystd,*)
+     call atomic_mksectors()
+ 
 ! make atomic Hamiltonian
      write(mystd, "(2X,a)") "jasmine >>> make atomic Hamiltonian for each sector ... "
      write(mystd,*)
@@ -231,6 +140,11 @@
   
 ! write information of sectors to file 'atom.cix'
      call atomic_write_atomcix_sectors()
-  
+
+! free memory
+     write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
+     write(mystd,*)
+     call dealloc_m_glob_sectors()
+ 
      return
-  end subroutine atomic_solve_sectors
+  end subroutine atomic_driver_sectors

@@ -85,7 +85,7 @@
          case(2) 
              write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: use good quantum number N."
              write(mystd, *)
-             call atomic_driver_n()
+             call atomic_driver_sectors()
   
 ! itask 3: use good quantum numbers
 ! total number of electrons: N 
@@ -94,7 +94,7 @@
          case(3) 
              write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: use good quantum numbers N, Sz."
              write(mystd, *)
-             call atomic_driver_nsz()
+             call atomic_driver_sectors()
   
 ! itask 4: use good quantum numbers
 ! total number of electrons: N 
@@ -104,7 +104,7 @@
          case(4) 
              write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: use good quantum numbers N, Sz, PS."
              write(mystd, *)
-             call atomic_driver_nszps()
+             call atomic_driver_sectors()
   
 ! itask 5: use good quantum numbers
 ! total number of electrons: N
@@ -113,7 +113,7 @@
          case(5) 
              write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: use good quantum numbers N, Jz."
              write(mystd, *)
-             call atomic_driver_njz() 
+             call atomic_driver_sectors()
   
      end select 
   
