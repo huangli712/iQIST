@@ -105,11 +105,11 @@
      return
   end subroutine ctqmc_record_gtau
 
-!>>> record the impurity green's function in matsubara frequency space
+!!>>> ctqmc_record_grnf: record the impurity green's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_record_grnf()
-     use constants
-     use control
-     use context
+     use control, only : norbs, nfreq
+     use context, only : grnf, gmat
 
      implicit none
 
