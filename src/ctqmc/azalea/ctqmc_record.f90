@@ -759,7 +759,7 @@
 !!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
 !!>>> frequency region
   subroutine ctqmc_smth_sigf(sigf)
-     use constants, only : dp
+     use constants, only : dp, czero
      use control, only : nfreq
 
      implicit none
