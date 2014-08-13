@@ -126,6 +126,8 @@
 !!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : one, half, mystd
+     use control, only : nsweep, nmonte
+     use context, only : paux
      use context, only : insert_tcount, insert_accept, insert_reject
      use context, only : remove_tcount, remove_accept, remove_reject
      use context, only : lshift_tcount, lshift_accept, lshift_reject
