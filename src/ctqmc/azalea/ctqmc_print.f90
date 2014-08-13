@@ -64,7 +64,7 @@
 !!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
 !!>>> theory self-consistent engine
   subroutine ctqmc_print_footer()
-     use constants
+     use constants, only : dp, mystd
 
      implicit none
 
