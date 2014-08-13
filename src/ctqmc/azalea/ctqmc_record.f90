@@ -130,9 +130,9 @@
      return
   end subroutine ctqmc_record_grnf
 
-!>>> record the histogram of perturbation expansion series
+!!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
-     use context
+     use context, only : hist
 
      implicit none
 
