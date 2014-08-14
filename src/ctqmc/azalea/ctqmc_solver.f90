@@ -556,7 +556,8 @@
      return
   end subroutine ctqmc_diagram_warmming
 
-!>>> visit the perturbation expansion diagrams randomly
+!!>>> ctqmc_diagram_sampling: visit the perturbation expansion diagrams
+!!>>> randomly
   subroutine ctqmc_diagram_sampling(cstep)
      use constants, only : dp
      use control, only : nflip, nclean
@@ -575,14 +576,14 @@
              call ctqmc_insert_kink()  ! insert one new kink
          else
              call ctqmc_remove_kink()  ! remove one old kink
-         endif
+         endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
 ! do not change the order of perturbation expansion series
      else
          if ( spring_sfmt_stream() > 0.5_dp ) then
              call ctqmc_lshift_kink()  ! shift the left  endpoints
          else
              call ctqmc_rshift_kink()  ! shift the right endpoints
-         endif
+         endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
      endif ! back if ( spring_sfmt_stream() < 0.9_dp ) block
 
 ! numerical trick: perform global spin flip periodically
@@ -591,21 +592,21 @@
              call ctqmc_reflip_kink(2) ! flip intra-orbital spins one by one
          else
              call ctqmc_reflip_kink(3) ! flip intra-orbital spins globally
-         endif
-     endif
+         endif if ( spring_sfmt_stream() < 0.8_dp )
+     endif ! back if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) block
 
      if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) then
          if ( spring_sfmt_stream() < 0.8_dp ) then
              call ctqmc_reflip_kink(1) ! flip inter-orbital spins randomly
          else
              call ctqmc_reflip_kink(3) ! flip intra-orbital spins globally
-         endif
-     endif
+         endif ! back if ( spring_sfmt_stream() < 0.8_dp ) block
+     endif ! back if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) block
 
 ! numerical trick: perform global update periodically
      if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) then
          call ctqmc_reload_kink()
-     endif
+     endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
 
      return
   end subroutine ctqmc_diagram_sampling
