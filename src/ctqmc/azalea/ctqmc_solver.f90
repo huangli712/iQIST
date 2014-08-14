@@ -749,7 +749,8 @@
      return
   end subroutine ctqmc_diagram_checking
 
-!>>> testing subroutine, please active it on ctqmc_diagram_sampling()
+!!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
+!!>>> on ctqmc_diagram_sampling() subroutine
   subroutine ctqmc_impurity_tester()
      use constants
      use control
@@ -758,7 +759,7 @@
      implicit none
 
 !-------------------------------------------------------------------------
-! insert your debug code here
+! please insert your debug code here
 !-------------------------------------------------------------------------
 
      call ctqmc_make_display(2)
