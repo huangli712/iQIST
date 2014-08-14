@@ -592,7 +592,7 @@
              call ctqmc_reflip_kink(2) ! flip intra-orbital spins one by one
          else
              call ctqmc_reflip_kink(3) ! flip intra-orbital spins globally
-         endif if ( spring_sfmt_stream() < 0.8_dp )
+         endif ! back if ( spring_sfmt_stream() < 0.8_dp ) block
      endif ! back if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) block
 
      if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) then
@@ -669,9 +669,9 @@
 !!>>> ctqmc_diagram_checking: checking whether the quantum impurity solver
 !!>>> is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
-     use constants
-     use control
-     use context
+     use constants, only : mystd 
+     use control, only : norbs, myid, master
+     use context, only : stts, rank, index_s, index_e, time_s, time_e
 
      implicit none
 
