@@ -24,9 +24,14 @@
 !!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
-     use constants, only : dp
-     use control, only : mkink
-     use context, only : hist
+     use constants, only : dp, zero, one, mystd
+     use control, only : issun, isspn
+     use control, only : mkink, mfreq
+     use control, only : ncfgs, norbs, nband, nspin
+     use control, only : ntime, nfreq, nsweep, nwrite, nmonte, ncarlo
+     use control, only : Uc, Jz, beta
+     use control, only : myid, master
+     use context, only : tmesh, rmesh, symm, hist, prob, nmat, nnmat, gtau, grnf, sig2
 
      implicit none
 
@@ -88,32 +93,32 @@
      allocate(hist_mpi(mkink),             stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
      allocate(prob_mpi(ncfgs),             stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
      allocate(nmat_mpi(norbs),             stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! setup cstep
      cstep = 0
