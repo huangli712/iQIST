@@ -1,21 +1,118 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! A test program for dynamical mean field theory (DMFT) self-consistent  !
-! engine plus hybridization expansion version continuous time quantum    !
-! Monte Carlo (CTQMC) quantum impurity solver                            !
-! author  : li huang                                                     !
-! version : v2012.08.20T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : this impurity solver is based on general matrix formalism    !
-!           any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! PANSY @ iQIST                                                   !
+!!!                                                                      !
+!!! A test program for dynamical mean field theory (DMFT) self-consistent!
+!!! engine plus hybridization expansion version continuous time quantum  !
+!!! Monte Carlo (CTQMC) quantum impurity solver                          !
+!!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
+!!! version : v2014.08.10T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : this impurity solver is based on general matrix formalism  !
+!!!           any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! WARNING
+!! =======
+!!
+!! If you want to obtain an executable program, please go to src/build/,
+!! open make.sys and comment out the API flag. On the other hand, if you
+!! want to compile azalea as a library, please activate the API flag.
+!!
+!! Introduction
+!! ============
+!!
+!! The pansy code is a hybridization expansion version continuous time
+!! quantum Monte Carlo quantum impurity solver. It adopts the general matrix
+!! formalism, and implements the basic good quantum numbers (GQNs) algorithm.
+!! This algorithm doesn't depend on any information of GQNs, so, it can 
+!! deal with any GQNs scheme. It implements the divide and conquer algorithm 
+!! to accelerate the trace evaluation. You can use it to solve 1~5 orbitals
+!! systems with general interaction. The pansy code also includes a mini
+!! dynamical mean field theory engine which implements the self-consistent
+!! equation for Bethe lattice in paramagnetic state. So you can use it
+!! to perform dynamical mean field theory calculations quickly. Enjoy it.
+!!
+!! Usage
+!! =====
+!!
+!! # ./ctqmc or bin/pansy.x
+!!
+!! Input
+!! =====
+!!
+!! solver.ctqmc.in (optional)
+!! solver.eimp.in (optional)
+!! solver.hyb.in (optional)
+!! atom.cix (necessary)
+!! atom.fmat (necessary)
+
+!! Output
+!! ======
+!!
+!! terminal output
+!! solver.green.bin.*
+!! solver.green.dat
+!! solver.grn.dat
+!! solver.hybri.dat
+!! solver.hyb.dat
+!! solver.wss.dat
+!! solver.sgm.dat
+!! solver.hub.dat
+!! solver.hist.dat
+!! solver.prob.dat
+!! solver.psect.dat
+!! solver.nmat.dat
+!! solver.status.dat
+!! etc.
+!!
+!! Running mode
+!! ============
+!! 
+!! case 1: isscf == 1 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, normal mode
+!!
+!! case 2: isscf == 1 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, binner mode
+!!
+!! case 3: isscf == 2 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!!
+!! case 4: isscf == 2 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!! plus
+!! call ctqmc_impurity_solver, binner mode
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/guide directory.
+!!
+!!
+
 
 # if !defined (API)
 
   program ctqmc_main
-     use constants
-     use control
+     use constants, only : mystd
+     use control, only : isscf, isbin, niter, myid, master, nprocs
 
-     use mmpi
+     use mmpi, only : mp_init, mp_comm_rank, mp_comm_size, mp_barrier, mp_finalize
 
      implicit none
 
@@ -271,8 +368,6 @@
 
 !>>> execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
-     use control
-
      implicit none
 
 ! external arguments
@@ -288,7 +383,7 @@
 
 !>>> stop the ctqmc quantum impurity solver
   subroutine cat_stop_ctqmc()
-     use control
+     use control, only: myid, master
 
      implicit none
 
@@ -306,8 +401,9 @@
 
 !>>> setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
-     use control
-     use context
+     use constants, only : dp
+     use control, only: mfreq, norbs
+     use context, only: hybf
 
      implicit none
 
@@ -331,8 +427,7 @@
 
 !>>> setup the symmetry vector
   subroutine cat_set_symm(size_t, symm_t)
-     use control
-     use context
+     use context, only : symm
 
      implicit none
 
@@ -356,8 +451,8 @@
 
 !>>> setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
-     use control
-     use context
+     use constants, only : dp
+     use context, only : eimp
 
      implicit none
 
@@ -381,8 +476,9 @@
 
 !>>> extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
-     use control
-     use context
+     use constants, only : dp
+     use control, only : mfreq, norbs
+     use context, only : grnf
 
      implicit none
 
@@ -406,8 +502,9 @@
 
 !>>> extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
-     use control
-     use context
+     use constants, only : dp
+     use control, only : mfreq, norbs
+     use context, only : sig2
 
      implicit none
 
