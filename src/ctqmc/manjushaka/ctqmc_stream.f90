@@ -89,8 +89,8 @@
      mkink  = 1024         ! maximum perturbation expansions order
      mfreq  = 8193         ! maximum number of matsubara frequency
 !-------------------------------------------------------------------------
-     nffrq  = 32           ! number of matsubara frequency for the two-particle green's function
-     nbfrq  = 8            ! number of bosonic frequncy for the two-particle green's function
+     nffrq  = 1            ! number of matsubara frequency for the two-particle green's function
+     nbfrq  = 1            ! number of bosonic frequncy for the two-particle green's function
      nfreq  = 128          ! maximum number of matsubara frequency sampling by quantum impurity solver
      ntime  = 1024         ! number of time slice
      npart  = 16           ! number of parts that the imaginary time axis is split
