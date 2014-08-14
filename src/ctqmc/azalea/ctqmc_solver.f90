@@ -690,19 +690,19 @@
          do i=1,norbs
              if ( stts(i) == 0 ) then
                  if ( rank(i) /= 0 ) cflag = 99
-             endif
+             endif ! back if ( stts(i) == 0 ) block
 
              if ( stts(i) == 1 ) then
                  if ( rank(i) == 0 ) cflag = 99
-             endif
+             endif ! back if ( stts(i) == 1 ) block
 
              if ( stts(i) == 2 ) then
                  if ( rank(i) == 0 ) cflag = 99
-             endif
+             endif ! back if ( stts(i) == 2 ) block
 
              if ( stts(i) == 3 ) then
                  if ( rank(i) /= 0 ) cflag = 99
-             endif
+             endif ! back if ( stts(i) == 3 ) block
          enddo ! over i={1,norbs} loop
 
 ! check time order of operators
@@ -710,10 +710,10 @@
              do j=1,rank(i)-1
                  if ( time_s( index_s(j, i), i ) > time_s( index_s(j+1, i), i ) ) then
                      cflag = 99
-                 endif
+                 endif ! back if ( time_s( index_s(j, i), i ) > time_s( index_s(j+1, i), i ) ) block
                  if ( time_e( index_e(j, i), i ) > time_e( index_e(j+1, i), i ) ) then
                      cflag = 99
-                 endif
+                 endif ! back if ( time_e( index_e(j, i), i ) > time_e( index_e(j+1, i), i ) ) block
              enddo ! over j={1,rank(i)-1} loop
          enddo ! over i={1,norbs} loop
 
@@ -722,13 +722,13 @@
              if ( stts(i) == 1 ) then
                  if ( time_s( index_s(1, i), i ) > time_e( index_e(1, i), i ) ) then
                      cflag = 99
-                 endif
+                 endif ! back if ( time_s( index_s(1, i), i ) > time_e( index_e(1, i), i ) ) block
              endif ! back if ( stts(i) == 1 ) block
 
              if ( stts(i) == 2 ) then
                  if ( time_s( index_s(1, i), i ) < time_e( index_e(1, i), i ) ) then
                      cflag = 99
-                 endif
+                 endif ! back if ( time_s( index_s(1, i), i ) < time_e( index_e(1, i), i ) ) block
              endif ! back if ( stts(i) == 2 ) block
          enddo ! over i={1,norbs} loop
 
@@ -741,7 +741,7 @@
                  call s_print_error('ctqmc_diagram_checking','unknown fatal error occur')
              else
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: normal'
-             endif
+             endif ! back if ( cflag == 99 ) block
          endif ! back if ( myid == master ) block
 
      endif ! back if ( cflag == 1 ) block
