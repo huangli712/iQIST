@@ -81,9 +81,9 @@
 !!>>> information to initialize the continuous time quantum Monte Carlo
 !!>>> quantum impurity solver
   subroutine ctqmc_retrieve_status()
-     use constants, only : dp
-     use control, only : mkink, norbs
-     use context, only : ckink, cstat
+     use constants, only : dp, zero, mytmp
+     use control, only : mkink, norbs, beta, myid, master
+     use context, only : ckink, cstat, stts, rank
 
      use mmpi
 
