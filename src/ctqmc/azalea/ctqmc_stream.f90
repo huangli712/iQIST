@@ -239,18 +239,9 @@
 
 ! build imaginary time tau mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
-     print *, tmesh
-     STOP
 
 ! build matsubara frequency mesh: rmesh
-     do j=1,mfreq
-         rmesh(j) = ( two * real(j - 1) + one ) * ( pi / beta )
-     enddo ! over j={1,mfreq} loop
-
-! build matsubara frequency mesh: cmesh
-     !!do k=1,mfreq
-     !!    cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
-     !!enddo ! over k={1,mfreq} loop
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
@@ -292,7 +283,7 @@
 ! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
