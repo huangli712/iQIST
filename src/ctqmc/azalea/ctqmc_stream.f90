@@ -189,7 +189,8 @@
      return
   end subroutine ctqmc_config
 
-!>>> allocate memory for global variables and then initialize them
+!!>>> ctqmc_setup_array: allocate memory for global variables and then
+!!>>> initialize them
   subroutine ctqmc_setup_array()
      use context
 
