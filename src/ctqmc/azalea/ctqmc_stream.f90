@@ -91,47 +91,50 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-
+! create the file parser
              call p_create()
+! parse the config file
              call p_parse('solver.ctqmc.in')
-             call p_get('isscf', isscf)
-             call p_get('issun', issun)
-             call p_get('isspn', isspn)
-             call p_get('isbin', isbin)
 
-             call p_get('nband', nband)
-             call p_get('nspin', nspin)
-             call p_get('norbs', norbs)
-             call p_get('ncfgs', ncfgs)
-             call p_get('niter', niter)
+! extract parameters
+             call p_get('isscf' , isscf )
+             call p_get('issun' , issun )
+             call p_get('isspn' , isspn )
+             call p_get('isbin' , isbin )
 
-             call p_get('U'    , U    )
-             call p_get('Uc'   , Uc   )
-             call p_get('Uv'   , Uv   )
-             call p_get('Jz'   , Jz   )
-             call p_get('Js'   , Js   )
-             call p_get('Jp'   , Jp   )
+             call p_get('nband' , nband )
+             call p_get('nspin' , nspin )
+             call p_get('norbs' , norbs )
+             call p_get('ncfgs' , ncfgs )
+             call p_get('niter' , niter )
 
-             call p_get('mune' , mune )
-             call p_get('beta' , beta )
-             call p_get('part' , part )
-             call p_get('alpha', alpha)
+             call p_get('U'     , U     )
+             call p_get('Uc'    , Uc    )
+             call p_get('Uv'    , Uv    )
+             call p_get('Jz'    , Jz    )
+             call p_get('Js'    , Js    )
+             call p_get('Jp'    , Jp    )
 
-             call p_get('mkink', mkink)
-             call p_get('mfreq', mfreq)
-             
-             read(mytmp,*) nfreq                                         !
-             read(mytmp,*) ntime                                         !
-             read(mytmp,*) nflip                                         !
-             read(mytmp,*) ntherm                                        !
-             read(mytmp,*) nsweep                                        !
-             read(mytmp,*) nwrite                                        !
-             read(mytmp,*) nclean                                        !
-             read(mytmp,*) nmonte                                        !
-             read(mytmp,*) ncarlo                                        !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('mune'  , mune  )
+             call p_get('beta'  , beta  )
+             call p_get('part'  , part  )
+             call p_get('alpha' , alpha )
 
-             close(mytmp)
+             call p_get('mkink' , mkink )
+             call p_get('mfreq' , mfreq )
+
+             call p_get('nfreq' , nfreq )
+             call p_get('ntime' , ntime )
+             call p_get('nflip' , nflip )
+             call p_get('ntherm', ntherm)
+             call p_get('nsweep', nsweep)
+             call p_get('nwrite', nwrite)
+             call p_get('nclean', nclean)
+             call p_get('nmonte', nmonte)
+             call p_get('ncarlo', ncarlo)
+
+! destroy the parser
+             call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
