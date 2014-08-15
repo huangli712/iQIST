@@ -111,30 +111,15 @@
              call p_get('Jz'   , Jz   )
              call p_get('Js'   , Js   )
              call p_get('Jp'   , Jp   )
-             read(mytmp,*) U                                             !
-             read(mytmp,*) Uc                                            !
-             read(mytmp,*) Uv                                            !
-             read(mytmp,*) Jz                                            !
-             read(mytmp,*) Js                                            !
-             read(mytmp,*) Jp                                            !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) mune                                          !
-             read(mytmp,*) beta                                          !
-             read(mytmp,*) part                                          !
-             read(mytmp,*) alpha                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('mune' , mune )
+             call p_get('beta' , beta )
+             call p_get('part' , part )
+             call p_get('alpha', alpha)
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) mkink                                         !
-             read(mytmp,*) mfreq                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
-!------------------------------------------------------------------------+
+             call p_get('mkink', mkink)
+             call p_get('mfreq', mfreq)
+             
              read(mytmp,*) nfreq                                         !
              read(mytmp,*) ntime                                         !
              read(mytmp,*) nflip                                         !
