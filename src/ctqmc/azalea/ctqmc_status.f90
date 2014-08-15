@@ -18,12 +18,13 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> save the current perturbation expansion series information for the
-! continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_save_status: save the current perturbation expansion series
+!!>>> information for the continuous time quantum Monte Carlo quantum
+!!>>> impurity solver
   subroutine ctqmc_save_status()
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : norbs
+     use context, only : stts
 
      implicit none
 
