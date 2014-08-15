@@ -77,12 +77,13 @@
      return
   end subroutine ctqmc_save_status
 
-!>>> retrieve the perturbation expansion series information to initialize
-! the continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_retrieve_status: retrieve the perturbation expansion series
+!!>>> information to initialize the continuous time quantum Monte Carlo
+!!>>> quantum impurity solver
   subroutine ctqmc_retrieve_status()
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : mkink, norbs
+     use context, only : ckink, cstat
 
      use mmpi
 
