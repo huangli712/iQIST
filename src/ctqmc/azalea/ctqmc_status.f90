@@ -120,7 +120,7 @@
 ! inquire file status: solver.status.dat, only master node can do it
      if ( myid == master ) then
          inquire (file = 'solver.status.dat', exist = exists)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! broadcast exists from master node to all children nodes
 # if defined (MPI)
@@ -197,12 +197,12 @@
 ! check the validity of tau_s
      if ( maxval(tau_s) > beta ) then
          call s_print_error('ctqmc_retrieve_status','the retrieved tau_s data are not correct')
-     endif
+     endif ! back if ( maxval(tau_s) > beta ) block
 
 ! check the validity of tau_e
      if ( maxval(tau_e) > beta ) then
          call s_print_error('ctqmc_retrieve_status','the retrieved tau_e data are not correct')
-     endif
+     endif ! back if ( maxval(tau_e) > beta ) block
 
 ! restore all the segments or anti-segments
      do i=1,norbs
