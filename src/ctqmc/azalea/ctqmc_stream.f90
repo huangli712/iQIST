@@ -211,12 +211,13 @@
      return
   end subroutine ctqmc_setup_array
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity
-! solver plus dynamical mean field theory self-consistent engine
+!!>>> ctqmc_selfer_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver plus dynamical mean field theory
+!!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : beta
+     use context, only : tmesh
 
      use mmpi
 
