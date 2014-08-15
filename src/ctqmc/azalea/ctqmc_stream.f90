@@ -215,9 +215,9 @@
 !!>>> Carlo quantum impurity solver plus dynamical mean field theory
 !!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
-     use constants, only : dp
-     use control, only : beta
-     use context, only : tmesh
+     use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
+     use control, only : nband, norbs, ntime, mfreq, beta, myid, master
+     use context, only : tmesh, rmesh, symm, eimp, hybf
 
      use mmpi
 
