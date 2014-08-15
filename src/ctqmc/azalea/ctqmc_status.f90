@@ -1,4 +1,4 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : azalea
 !!! program : ctqmc_save_status
 !!!           ctqmc_retrieve_status
@@ -8,15 +8,15 @@
 !!! history : 09/23/2009 by li huang
 !!!           02/21/2010 by li huang
 !!!           08/15/2014 by li huang
-!!! purpose : save or retrieve the perturbation expansion series information
-!!!           to or from the status file for hybridization expansion version
-!!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!!!           solver, respectively.
+!!! purpose : save or retrieve the data structures of the perturbation
+!!!           expansion series to or from the well-formatted status file
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver, respectively.
 !!!           it can be used to save the computational time to achieve the
 !!!           equilibrium state
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
 !>>> save the current perturbation expansion series information for the
 ! continuous time quantum Monte Carlo quantum impurity solver
