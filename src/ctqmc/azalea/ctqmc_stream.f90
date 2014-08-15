@@ -26,6 +26,7 @@
      use control
 
      use mmpi
+     use parser
 
      implicit none
 
@@ -90,29 +91,26 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='solver.ctqmc.in', form='formatted', status='unknown')
 
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) isscf                                         !
-             read(mytmp,*) issun                                         !
-             read(mytmp,*) isspn                                         !
-             read(mytmp,*) isbin                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_create()
+             call p_parse('solver.ctqmc.in')
+             call p_get('isscf', isscf)
+             call p_get('issun', issun)
+             call p_get('isspn', isspn)
+             call p_get('isbin', isbin)
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) nband                                         !
-             read(mytmp,*) nspin                                         !
-             read(mytmp,*) norbs                                         !
-             read(mytmp,*) ncfgs                                         !
-             read(mytmp,*) niter                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('nband', nband)
+             call p_get('nspin', nspin)
+             call p_get('norbs', norbs)
+             call p_get('ncfgs', ncfgs)
+             call p_get('niter', niter)
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
+             call p_get('U'    , U    )
+             call p_get('Uc'   , Uc   )
+             call p_get('Uv'   , Uv   )
+             call p_get('Jz'   , Jz   )
+             call p_get('Js'   , Js   )
+             call p_get('Jp'   , Jp   )
              read(mytmp,*) U                                             !
              read(mytmp,*) Uc                                            !
              read(mytmp,*) Uv                                            !
