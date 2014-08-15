@@ -519,7 +519,8 @@
      return
   end subroutine ctqmc_solver_init
 
-!>>> garbage collection for this program, please refer to ctqmc_setup_array
+!!>>> ctqmc_final_array: garbage collection for this program, please refer
+!!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
      use context
 
