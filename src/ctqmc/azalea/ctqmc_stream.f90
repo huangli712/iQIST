@@ -216,7 +216,7 @@
 !!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
      use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
-     use control, only : nband, norbs, ntime, mfreq, beta, myid, master
+     use control, only : nband, norbs, ntime, mfreq, beta, part, myid, master
      use context, only : tmesh, rmesh, symm, eimp, hybf
 
      use mmpi
@@ -237,16 +237,10 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build identity: unity
-     !!unity = czero
-     !!do i=1,norbs
-     !!    unity(i,i) = cone
-     !!enddo ! over i={1,norbs} loop
-
 ! build imaginary time tau mesh: tmesh
-     do i=1,ntime
-         tmesh(i) = zero + ( beta - zero ) / real(ntime - 1) * real(i - 1)
-     enddo ! over i={1,ntime} loop
+     call s_linspace_d(zero, beta, ntime, tmesh)
+     print *, tmesh
+     STOP
 
 ! build matsubara frequency mesh: rmesh
      do j=1,mfreq
