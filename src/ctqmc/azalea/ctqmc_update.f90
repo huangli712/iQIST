@@ -279,9 +279,10 @@
 !!>>> ctqmc_lshift_kink: left shift old segment or anti-segment in the
 !!>>> perturbation expansion series
   subroutine ctqmc_lshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use control, only : norbs
+     use context, only : ckink, cstat, stts, rank
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
 
      use spring
 
@@ -379,9 +380,10 @@
 !!>>> ctqmc_rshift_kink: right shift old segment or anti-segment in the
 !!>>> perturbation expansion series
   subroutine ctqmc_rshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use control, only : norbs
+     use context, only : ckink, cstat, stts, rank
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
 
      use spring
 
