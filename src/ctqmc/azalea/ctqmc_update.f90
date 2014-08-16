@@ -42,9 +42,10 @@
 !!>>> ctqmc_insert_kink: insert new segment or anti-segment in the
 !!>>> perturbation expansion series
   subroutine ctqmc_insert_kink()
-     use constants, only : dp
-     use control, only : norbs
-     use context, only : ckink
+     use constants, only : dp, one, zero
+     use control, only : norbs, mkink, beta
+     use context, only : ckink, cstat, rank, stts
+     use context, only : insert_tcount, insert_accept, insert_reject
 
      use spring
 
@@ -166,9 +167,10 @@
 !!>>> ctqmc_remove_kink: remove old segment or anti-segment in the
 !!>>> perturbation expansion series
   subroutine ctqmc_remove_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use control, only : norbs, beta
+     use context, only : ckink, cstat, rank, stts
+     use context, only : remove_tcount, remove_accept, remove_reject
 
      use spring
 
