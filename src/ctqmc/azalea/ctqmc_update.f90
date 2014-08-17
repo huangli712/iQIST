@@ -1691,9 +1691,10 @@
 !!>>> cat_lshift_detrat: calculate the determinant ratio for left shift
 !!>>> old segment or anti-segment
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use control, only : mkink, beta
+     use context, only : ckink, index_e, time_e
+     use context, only : mmat
 
      implicit none
 
