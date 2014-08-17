@@ -1176,7 +1176,7 @@
      use constants, only : dp, zero, czero
      use control, only : mkink, nfreq, beta
      use context, only : rmesh
-     use context, only : index_s, index_e, time_e, exp_s, exp_e
+     use context, only : index_s, index_e, time_s, exp_s, exp_e
      use context, only : ckink, lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
@@ -1362,9 +1362,7 @@
 !!>>> and then update mmat and gmat matrix. it is used to overcome the low
 !!>>> acceptance ratio at high temperature region
   subroutine cat_reswap_matrix(flvr)
-     use constants
-     use control
-     use context
+     use context, only : cstat, ckink, stts
 
      implicit none
 
