@@ -1493,9 +1493,11 @@
 !!>>> cat_reload_matrix: global update the mmat matrix and gmat matrix
 !!>>> from scratch
   subroutine cat_reload_matrix(flvr)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+     use control, only : nfreq, beta
+     use context, only : rank
+     use context, only : mmat, gmat
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
 
      implicit none
 
