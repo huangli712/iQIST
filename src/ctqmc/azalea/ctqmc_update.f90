@@ -1173,9 +1173,11 @@
 !!>>> cat_rshift_matrix: update the mmat matrix and gmat matrix for right
 !!>>> shift old segment or anti-segment
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+     use control, only : mkink, nfreq, beta
+     use context, only : rmesh
+     use context, only : index_s, index_e, time_e, exp_s, exp_e
+     use context, only : ckink, lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
