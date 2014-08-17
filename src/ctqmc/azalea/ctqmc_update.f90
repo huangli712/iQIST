@@ -894,9 +894,10 @@
 !!>>> cat_remove_matrix: update the mmat matrix and gmat matrix for remove
 !!>>> old segment or anti-segment
   subroutine cat_remove_matrix(flvr, is, ie)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, czero
+     use control, only : nfreq, beta
+     use context, only : ckink, lsaves, rsaves, mmat, gmat
+     use context, only : index_s, index_e, exp_s, exp_e
 
      implicit none
 
