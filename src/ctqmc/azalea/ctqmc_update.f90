@@ -1833,9 +1833,11 @@
 !!>>> cat_reswap_detrat: calculate the determinant ratio for global
 !!>>> segment swap
   subroutine cat_reswap_detrat(flvr, ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use control, only : beta
+     use context, only : rank
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : mmat
 
      implicit none
 
