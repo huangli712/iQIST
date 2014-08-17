@@ -1,40 +1,30 @@
-!-------------------------------------------------------------------------
-! project : azalea
-! program : ctqmc_save_status
-!           ctqmc_retrieve_status
-! source  : ctqmc_status.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/23/2009 by li huang
-!           09/26/2009 by li huang
-!           10/10/2009 by li huang
-!           10/20/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/10/2009 by li huang
-!           11/29/2009 by li huang
-!           12/01/2009 by li huang
-!           12/02/2009 by li huang
-!           12/26/2009 by li huang
-!           02/21/2010 by li huang
-! purpose : save or retrieve the perturbation expansion series information
-!           to or from the status file for hybridization expansion version
-!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!           solver, respectively.
-!           it can be used to save the computational time to achieve the
-!           equilibrium state
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : azalea
+!!! program : ctqmc_save_status
+!!!           ctqmc_retrieve_status
+!!! source  : ctqmc_status.f90
+!!! type    : subroutine
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/23/2009 by li huang
+!!!           02/21/2010 by li huang
+!!!           08/15/2014 by li huang
+!!! purpose : save or retrieve the data structures of the perturbation
+!!!           expansion series to or from the well-formatted status file
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver, respectively.
+!!!           it can be used to save the computational time to achieve the
+!!!           equilibrium state
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> save the current perturbation expansion series information for the
-! continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_save_status: save the current perturbation expansion series
+!!>>> information for the continuous time quantum Monte Carlo quantum
+!!>>> impurity solver
   subroutine ctqmc_save_status()
-     use constants
-     use control
-     use context
+     use constants, only : dp, mytmp
+     use control, only : norbs
+     use context, only : stts, rank, index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -87,12 +77,13 @@
      return
   end subroutine ctqmc_save_status
 
-!>>> retrieve the perturbation expansion series information to initialize
-! the continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_retrieve_status: retrieve the perturbation expansion series
+!!>>> information to initialize the continuous time quantum Monte Carlo
+!!>>> quantum impurity solver
   subroutine ctqmc_retrieve_status()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, mytmp
+     use control, only : mkink, norbs, beta, myid, master
+     use context, only : ckink, cstat, stts, rank
 
      use mmpi
 
@@ -129,7 +120,7 @@
 ! inquire file status: solver.status.dat, only master node can do it
      if ( myid == master ) then
          inquire (file = 'solver.status.dat', exist = exists)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! broadcast exists from master node to all children nodes
 # if defined (MPI)
@@ -206,12 +197,12 @@
 ! check the validity of tau_s
      if ( maxval(tau_s) > beta ) then
          call s_print_error('ctqmc_retrieve_status','the retrieved tau_s data are not correct')
-     endif
+     endif ! back if ( maxval(tau_s) > beta ) block
 
 ! check the validity of tau_e
      if ( maxval(tau_e) > beta ) then
          call s_print_error('ctqmc_retrieve_status','the retrieved tau_e data are not correct')
-     endif
+     endif ! back if ( maxval(tau_e) > beta ) block
 
 ! restore all the segments or anti-segments
      do i=1,norbs
