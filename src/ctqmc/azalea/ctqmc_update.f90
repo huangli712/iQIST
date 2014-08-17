@@ -1666,6 +1666,7 @@
 !!>>> cat_remove_detrat: calculate the determinant ratio for remove old
 !!>>> segment or anti-segment
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
+     use constants, only : dp
      use context, only : mmat
 
      implicit none
