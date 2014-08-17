@@ -1922,9 +1922,9 @@
 !!>>> cat_reflip_detrat: calculate the determinant ratio for global
 !!>>> spin flip
   subroutine cat_reflip_detrat(up, dn, ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -1940,7 +1940,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over segments
