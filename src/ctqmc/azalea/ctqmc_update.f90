@@ -1402,8 +1402,10 @@
 !!>>> matrix, and other related global variables between spin up and spin
 !!>>> down states. it is used to avoid trapped by unphysical phase
   subroutine cat_reflip_matrix(fup, fdn, kmax)
-     use control, only : mkink
+     use control, only : mkink, nfreq
      use context, only : stts, rank
+     use context, only : gmat
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
 
      use stack
 
