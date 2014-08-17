@@ -768,9 +768,9 @@
 !!>>> cat_insert_matrix: update the mmat matrix and gmat matrix for insert
 !!>>> new segment or anti-segment
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : beta
+     use context, only : lspace
 
      implicit none
 
