@@ -1578,9 +1578,11 @@
 !!>>> cat_insert_detrat: calculate the determinant ratio for insert new
 !!>>> segment or anti-segment
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : mkink, beta
+     use context, only : ckink
+     use context, only : lspace, rspace, mmat
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
