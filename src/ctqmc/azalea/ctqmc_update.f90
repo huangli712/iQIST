@@ -738,8 +738,8 @@
 !!>>> ctqmc_reload_kink: global update all segments or anti-segments in
 !!>>> the perturbation expansion series
   subroutine ctqmc_reload_kink()
-     use control
-     use context
+     use control, only : norbs
+     use context, only : rank
 
      implicit none
 
