@@ -481,9 +481,9 @@
 !!>>> ctqmc_reswap_kink: perform a global update, exchange the segments
 !!>>> and anti-segments
   subroutine ctqmc_reswap_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : norbs
+     use context, only : ckink
 
      use spring
 
