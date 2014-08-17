@@ -558,9 +558,10 @@
 !!>>> ctqmc_reflip_kink: perform a global update, exchange the states
 !!>>> between spin up and spin down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
-     use constants, only : dp
-     use control, only : norbs
-     use context, only : symm
+     use constants, only : dp, one
+     use control, only : norbs, nband
+     use context, only : symm, rank
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
 
      use spring
 
