@@ -1,0 +1,39 @@
+==========================================================================
+AZALEA: continuous time quantum Monte Carlo quantum impurity solver
+==========================================================================
+2            ! non-self-consistent (1) or self-consistent mode (2)
+2            ! without symmetry    (1) or with symmetry   mode (2)
+1            ! spin projection, PM (1) or AFM             mode (2)
+2            ! without binning     (1) or with binning    mode (2)
+--------------------------------------------------------------------------
+3            ! number of bands
+2            ! number of spin projection
+6            ! number of orbitals (= nband * nspin)
+64           ! number of atomic states
+20           ! maximum number of DMFT + CTQMC self-consistent iterations
+--------------------------------------------------------------------------
+6.00         ! U : average Coulomb interaction
+6.00         ! Uc: intraorbital Coulomb interaction
+4.00         ! Uv: interorbital Coulomb interaction, Uv = Uc-2*Jz for t2g system
+1.00         ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
+0.00         ! Js: spin-flip term
+0.00         ! Jp: pair-hopping term
+--------------------------------------------------------------------------
+10.0         ! chemical potential or fermi level
+8.00         ! inversion of temperature
+0.50         ! coupling parameter t for Hubbard model
+0.70         ! mixing parameter for self-consistent engine
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1024         ! maximum perturbation expansions order
+8193         ! maximum number of matsubara frequency
+--------------------------------------------------------------------------
+128          ! maximum number of matsubara frequency sampling by quantum impurity solver
+1024         ! number of time slice
+20000        ! flip period for spin up and spin down states
+200000       ! maximum number of thermalization steps
+200000000    ! maximum number of quantum Monte Carlo sampling steps
+20000000     ! output period
+100000       ! clean update period
+100          ! how often to sampling the gmat and nmat
+100          ! how often to sampling the gtau and prob
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
