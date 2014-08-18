@@ -99,7 +99,7 @@
 !!>>> time space
   subroutine ctqmc_dump_wtau(tmesh, wtau)
      use constants, only : dp, mytmp
-     use control, only: ntime, norbs, nband
+     use control, only : ntime, norbs, nband
 
      implicit none
 
@@ -633,7 +633,6 @@
   subroutine ctqmc_dump_psect()
      use constants, only : dp, zero, mytmp
      use context, only : prob
-
      use m_sector, only : nsectors, sectors
 
      implicit none

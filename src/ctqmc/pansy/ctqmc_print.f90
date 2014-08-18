@@ -130,12 +130,12 @@
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : one, half, mystd
      use control, only : nsweep, nmonte
-     use context, only : insert_tcount, insert_accept, insert_reject, &
-                         remove_tcount, remove_accept, remove_reject, &
-                         lshift_tcount, lshift_accept, lshift_reject, &
-                         rshift_tcount, rshift_accept, rshift_reject, &
-                         reflip_tcount, reflip_accept, reflip_reject, &
-                         paux, cnegs, caves
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : paux, cnegs, caves
      
      use m_npart, only : num_prod
 

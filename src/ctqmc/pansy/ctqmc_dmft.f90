@@ -30,9 +30,9 @@
 !!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
 !!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
-     use constants, only: dp, mystd
-     use control, only: norbs, nband, mfreq, mune, alpha, myid, master
-     use context, only: tmesh, rmesh, cmesh, eimp, hybf, grnf, wssf, wtau
+     use constants, only : dp, mystd
+     use control, only : norbs, nband, mfreq, mune, alpha, myid, master
+     use context, only : tmesh, rmesh, cmesh, eimp, hybf, grnf, wssf, wtau
 
      implicit none
 
@@ -117,9 +117,9 @@
 
 !!>>> ctqmc_dmft_conver: check the convergence of self-energy function
   subroutine ctqmc_dmft_conver(iter, convergence)
-     use constants, only: dp, zero, one, two, eps8, mystd
-     use control, only: norbs, mfreq, niter, alpha, myid, master
-     use context, only: sig1, sig2
+     use constants, only : dp, zero, one, two, eps8, mystd
+     use control, only : norbs, mfreq, niter, alpha, myid, master
+     use context, only : sig1, sig2
 
      implicit none
 
@@ -180,8 +180,8 @@
 !!>>> semicircular density of states, force a paramagnetic order, equal 
 !!>>> bandwidth
   subroutine ctqmc_dmft_bethe(hybf, grnf)
-     use constants, only: dp
-     use control, only: norbs, mfreq, part
+     use constants, only : dp
+     use control, only : norbs, mfreq, part
 
      implicit none
 
@@ -212,7 +212,7 @@
   subroutine ctqmc_dmft_anydos(hybf, grnf, sigf)
      use constants, only : dp, zero, czi, czero, mytmp
      use control, only : norbs, mfreq, mune, myid, master
-     use context, only: rmesh, eimp
+     use context, only : rmesh, eimp
 
      use mmpi
 

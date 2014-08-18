@@ -65,7 +65,6 @@
      use control, only : norbs, mkink, beta
      use context, only : ckink, rank, cnegs, csign
      use context, only : insert_tcount, insert_accept, insert_reject
-
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -198,7 +197,6 @@
      use control, only : norbs, beta
      use context, only : ckink, rank, cnegs, csign
      use context, only : remove_tcount, remove_accept, remove_reject
-
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -332,7 +330,6 @@
      use control, only : norbs
      use context, only : ckink, rank, cnegs, csign
      use context, only : lshift_tcount, lshift_accept, lshift_reject
-
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -460,7 +457,6 @@
      use control, only : norbs
      use context, only : ckink, rank, cnegs, csign
      use context, only : rshift_tcount, rshift_accept, rshift_reject
-
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -589,7 +585,6 @@
      use context, only : empty_v, symm, index_v, index_t, flvr_v
      use context, only : matrix_ntrace, matrix_ptrace, rank
      use context, only : reflip_tcount, reflip_accept, reflip_reject
-
      use stack, only : istack_getrest
      use spring, only : spring_sfmt_stream
 
@@ -1539,7 +1534,6 @@
      use control, only : mkink, nfreq
      use context, only : gmat, index_s, index_e, empty_s, empty_e
      use context, only : exp_s, exp_e, time_s, time_e, rank
-
      use stack, only : istack, istack_create, istack_copyer, istack_destroy
 
      implicit none

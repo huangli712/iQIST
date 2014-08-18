@@ -73,12 +73,11 @@
 !!>>> calculate the trace ratio for insert new create and destroy operators
 !!>>> on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
-     use constants, only: dp, zero
-     use control,   only: beta, ncfgs
-     use context,   only: index_t, index_v, empty_v, time_v, type_v, flvr_v, &
-                          expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
-
-     use stack, only: istack_getrest, istack_getter, istack_gettop
+     use constants, only : dp, zero
+     use control, only : beta, ncfgs
+     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
+     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
+     use stack, only : istack_getrest, istack_getter, istack_gettop
 
      implicit none
 
@@ -274,12 +273,11 @@
 !!>>> calculate the trace ratio for remove old create and destroy operators
 !!>>> on perturbation expansion series
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
-     use constants, only: dp, zero
-     use control, only: beta, ncfgs
-     use context, only: index_t, index_v, empty_v, time_v, type_v, flvr_v, &
-                          expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
-
-     use stack, only: istack_getrest, istack_getter, istack_gettop
+     use constants, only : dp, zero
+     use control, only : beta, ncfgs
+     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
+     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
+     use stack, only : istack_getrest, istack_getter, istack_gettop
 
      implicit none
 
@@ -450,12 +448,11 @@
 !!>>> calculate the trace ratio for shift old create operators
 !!>>> on perturbation expansion series
   subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, trace_ratio)
-     use constants, only: dp, zero
-     use control, only: ncfgs, beta
-     use context, only: index_t, index_v, empty_v, time_v, type_v, flvr_v
-     use context, only: expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
-
-     use stack, only: istack_getrest, istack_getter, istack_gettop
+     use constants, only : dp, zero
+     use control, only : ncfgs, beta
+     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
+     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
+     use stack, only : istack_getrest, istack_getter, istack_gettop
 
      implicit none
 
@@ -598,7 +595,6 @@
      use control, only : ncfgs, beta
      use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
      use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
-
      use stack, only : istack_getrest, istack_getter, istack_gettop
 
      implicit none
@@ -746,7 +742,6 @@
      use constants, only : dp, epss
      use control, only : beta
      use context, only : ckink, time_s, time_e, index_s, index_e
-
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -841,7 +836,6 @@
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, epss
      use context, only : ckink, time_s, time_e, index_s, index_e
-
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -886,7 +880,6 @@
      use constants, only : dp, zero
      use control, only : beta
      use context, only : ckink, time_s, index_s
-
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -971,7 +964,6 @@
      use constants, only : dp, zero
      use control, only : beta
      use context, only : ckink, time_e, index_e
-
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -1058,9 +1050,8 @@
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
      use control, only : nfreq
-     use context, only : ckink, rmesh, empty_s, empty_e, index_s, index_e
-     use context, only : time_s, time_e, exp_s, exp_e
-
+     use context, only : ckink, rmesh, empty_s, empty_e, index_s
+     use context, only : index_e, time_s, time_e, exp_s, exp_e
      use stack, only : istack_pop
 
      implicit none
@@ -1128,7 +1119,6 @@
 !!>>> old create and destroy operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
      use context, only : ckink, empty_s, empty_e, index_s, index_e
-
      use stack, only : istack_push
 
      implicit none
@@ -1294,7 +1284,6 @@
      use constants, only : dp
      use control, only : nband
      use context, only : empty_v, time_v, index_v, flvr_v, type_v
-
      use stack, only : istack_getrest
 
      implicit none
@@ -1461,7 +1450,6 @@
      use constants, only : dp
      use control, only : nband
      use context, only : empty_v, flvr_v, type_v, index_v
-
      use stack, only : istack_getrest
 
      implicit none
@@ -1592,7 +1580,6 @@
      use constants, only : dp
      use control, only : nband
      use context, only : empty_v, time_v, index_v, flvr_v, type_v
-
      use stack, only : istack_getrest
 
      implicit none
@@ -1751,7 +1738,6 @@
      use constants, only : dp
      use control, only : nband
      use context, only : empty_v, time_v, index_v, flvr_v, type_v
-
      use stack, only : istack_getrest
 
      implicit none
@@ -1911,9 +1897,8 @@
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, zero
      use control, only : beta, ncfgs
-     use context, only : empty_v, time_v, index_v, flvr_v, type_v, &
-                         expt_v, expt_t, eigs, csign
-
+     use context, only : empty_v, time_v, index_v, flvr_v, type_v
+     use context, only : expt_v, expt_t, eigs, csign
      use stack, only : istack_getrest, istack_pop
 
      implicit none
@@ -2075,7 +2060,6 @@
      use constants, only : dp, zero
      use control, only : beta, ncfgs
      use context, only : empty_v, time_v, index_v, expt_v, expt_t, eigs, csign
-
      use stack, only : istack_getrest, istack_push
 
      implicit none
@@ -2476,7 +2460,6 @@
      use constants, only : dp, zero
      use control, only : mkink, ncfgs
      use context, only : expt_t, index_v, index_t, ddmat
-
      use m_sector, only : nsectors, sectors, ctqmc_make_string
      use m_npart, only : is_copy, ctqmc_make_nparts, cat_sector_ztrace
 
@@ -2576,7 +2559,6 @@
 !!>>> ctqmc_make_evolve: used to update the operator traces of the modified part
   subroutine ctqmc_make_evolve()
      use context, only : matrix_ptrace, matrix_ntrace, ddmat
-
      use m_sector, only : nsectors, sectors
      use m_npart, only : ctqmc_save_parts
 
@@ -2713,7 +2695,6 @@
      use constants, only : dp
      use control, only : beta
      use context, only : ckink, rank
-
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -2808,9 +2789,8 @@
   subroutine ctqmc_make_display(show_type)
      use constants, only : mystd
      use control, only: norbs, ncfgs
-     use context, only : rank, time_s, time_e, time_v, index_s, index_e, &
-                         index_v, flvr_v, type_v, expt_v, expt_t, empty_v
-
+     use context, only : rank, time_s, time_e, time_v, index_s, index_e
+     use context, only : index_v, flvr_v, type_v, expt_v, expt_t, empty_v
      use stack, only : istack_getrest
 
      implicit none

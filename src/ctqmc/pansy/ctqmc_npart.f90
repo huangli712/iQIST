@@ -19,7 +19,6 @@
      use constants, only : dp, zero, one
      use control, only : npart, mkink, beta, ncfgs
      use context, only : time_v, expt_v, type_v, flvr_v
-  
      use m_sector, only : nsectors, sectors, max_dim_sect
  
      implicit none
