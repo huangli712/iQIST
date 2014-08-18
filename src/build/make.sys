@@ -158,7 +158,7 @@ CPP    = $(FPP) $(MPI) $(OMP) $(API)
 # machine tuning options, just for my laptop: iris system
 #-------------------------------------------------------------------------
 GPROF  = #-pg
-CHECK  = -warn all #-check all -traceback -g
+CHECK  = -warn all -check all,noarg_temp_created -traceback -g
 CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
 LEVEL  = -O3 -xHost -unroll-aggressive -align all
 MARCH  = -march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2

@@ -1,42 +1,43 @@
-!-------------------------------------------------------------------------
-! project : begonia
-! program : ctqmc_save_status
-!           ctqmc_retrieve_status
-! source  : ctqmc_status.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/23/2009 by li huang
-!           09/26/2009 by li huang
-!           10/10/2009 by li huang
-!           10/20/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/10/2009 by li huang
-!           11/29/2009 by li huang
-!           12/01/2009 by li huang
-!           12/02/2009 by li huang
-!           12/26/2009 by li huang
-!           02/21/2010 by li huang
-! purpose : save or retrieve the perturbation expansion series information
-!           to or from the status file for hybridization expansion version
-!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!           solver, respectively.
-!           it can be used to save the computational time to achieve the
-!           equilibrium state
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : pansy
+!!! program : ctqmc_save_status
+!!!           ctqmc_retrieve_status
+!!! source  : ctqmc_status.f90
+!!! type    : subroutine
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!!           yilin wang (email:qhwyl2006@126.com)
+!!! history : 09/23/2009 by li huang
+!!!           09/26/2009 by li huang
+!!!           10/10/2009 by li huang
+!!!           10/20/2009 by li huang
+!!!           10/29/2009 by li huang
+!!!           11/01/2009 by li huang
+!!!           11/10/2009 by li huang
+!!!           11/29/2009 by li huang
+!!!           12/01/2009 by li huang
+!!!           12/02/2009 by li huang
+!!!           12/26/2009 by li huang
+!!!           02/21/2010 by li huang
+!!!           08/18/2014 by yilin wang
+!!! purpose : save or retrieve the perturbation expansion series information
+!!!           to or from the status file for hybridization expansion version
+!!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
+!!!           solver, respectively.
+!!!           it can be used to save the computational time to achieve the
+!!!           equilibrium state
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
-!>>> save the current perturbation expansion series information for the
-! continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_save_status: save the current perturbation expansion series
+!!>>> information for the continuous time quantum Monte Carlo quantum
+!!>>> impurity solver
   subroutine ctqmc_save_status()
-     use constants
-     use control
-     use context
-
-     use stack
+     use constants, only : mytmp
+     use control, only : norbs
+     use context, only : rank, time_s, time_e, index_s, index_e
+     use context, only : empty_v, time_v, flvr_v, type_v, index_v
+     use stack, only : istack_getrest
 
      implicit none
 
@@ -103,12 +104,13 @@
      return
   end subroutine ctqmc_save_status
 
-!>>> retrieve the perturbation expansion series information to initialize
-! the continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_retrieve_status: retrieve the perturbation expansion series
+!!>>> information to initialize the continuous time quantum Monte Carlo
+!!>>> quantum impurity solver
   subroutine ctqmc_retrieve_status()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, epss, mytmp
+     use control, only : mkink, myid, master, norbs, beta
+     use context, only : ckink, rank, matrix_ntrace, csign, cnegs
 
      use mmpi
 
