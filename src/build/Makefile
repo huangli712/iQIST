@@ -123,6 +123,9 @@ help-more:
 	@echo '     manjushaka-lib    build manjushaka library             '
 	@echo '     clean-manjushaka  clean manjushaka directory           '
 	@echo
+	@echo '     daisy             build daisy code                     '
+	@echo '     clean-daisy       clean daisy directory                '
+	@echo
 	@echo '     jasmine           build jasmine code                   '
 	@echo '     clean-jasmine     clean jasmine directory              '
 	@echo
@@ -280,7 +283,7 @@ clean-api:
 # tagets for doc: doc
 doc: build-doc
 build-doc:
-	cd ../../doc/; pwd; make
+	cd ../../doc/guide/; pwd; make
 
 clean-doc:
-	cd ../../doc/; pwd; make clean
+	cd ../../doc/guide/; pwd; make clean
