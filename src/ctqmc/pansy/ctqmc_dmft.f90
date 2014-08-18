@@ -30,8 +30,8 @@
 !!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
 !!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
-     use constants, only: dp, one, half, mystd
-     use control, only: norbs, nband, mfreq, Uc, Jz, mune, alpha, myid, master
+     use constants, only: dp, mystd
+     use control, only: norbs, nband, mfreq, mune, alpha, myid, master
      use context, only: tmesh, rmesh, cmesh, eimp, hybf, grnf, wssf, wtau
 
      implicit none
@@ -68,8 +68,9 @@
      call s_mix_z(size(hybf), htmp, hybf, alpha)
 
 ! \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
-     qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
-     qmune = mune - qmune
+!>>     qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
+!>>     qmune = mune - qmune
+      qmune = mune
 
 ! calculate new bath weiss's function
 ! G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
@@ -114,9 +115,9 @@
      return
   end subroutine ctqmc_dmft_selfer
 
-!!>>> check the convergence of self-energy function
+!!>>> ctqmc_dmft_conver: check the convergence of self-energy function
   subroutine ctqmc_dmft_conver(iter, convergence)
-     use constants, only: dp, one, two, zero, eps8, mystd
+     use constants, only: dp, zero, one, two, eps8, mystd
      use control, only: norbs, mfreq, niter, alpha, myid, master
      use context, only: sig1, sig2
 
