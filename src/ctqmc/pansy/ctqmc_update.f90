@@ -1,70 +1,71 @@
-!-------------------------------------------------------------------------
-! project : pansy
-! program : ctqmc_insert_kink
-!           ctqmc_remove_kink
-!           ctqmc_lshift_kink
-!           ctqmc_rshift_kink
-!           ctqmc_reflip_kink
-!           ctqmc_reload_kink <<<---
-!           cat_insert_matrix
-!           cat_remove_matrix
-!           cat_lshift_matrix
-!           cat_rshift_matrix
-!           cat_reflip_matrix
-!           cat_reload_matrix <<<---
-!           cat_insert_detrat
-!           cat_remove_detrat
-!           cat_lshift_detrat
-!           cat_rshift_detrat
-!           cat_reflip_detrat <<<---
-! source  : ctqmc_update.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/26/2009 by li huang
-!           09/30/2009 by li huang
-!           10/02/2009 by li huang
-!           10/25/2009 by li huang
-!           10/29/2009 by li huang
-!           11/02/2009 by li huang
-!           11/08/2009 by li huang
-!           11/17/2009 by li huang
-!           11/20/2009 by li huang
-!           11/24/2009 by li huang
-!           11/27/2009 by li huang
-!           11/30/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/26/2009 by li huang
-!           01/05/2010 by li huang
-!           02/27/2010 by li huang
-!           03/22/2010 by li huang
-!           06/09/2010 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver.
-!           the following subroutines mainly deal with the \mathscr{M}
-!           matrix: mmat, and \mathscr{G} matrix: gmat.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : pansy
+!!! program : ctqmc_insert_kink
+!!!           ctqmc_remove_kink
+!!!           ctqmc_lshift_kink
+!!!           ctqmc_rshift_kink
+!!!           ctqmc_reflip_kink
+!!!           ctqmc_reload_kink <<<---
+!!!           cat_insert_matrix
+!!!           cat_remove_matrix
+!!!           cat_lshift_matrix
+!!!           cat_rshift_matrix
+!!!           cat_reflip_matrix
+!!!           cat_reload_matrix <<<---
+!!!           cat_insert_detrat
+!!!           cat_remove_detrat
+!!!           cat_lshift_detrat
+!!!           cat_rshift_detrat
+!!!           cat_reflip_detrat <<<---
+!!! source  : ctqmc_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!!           yilin wang (email:qhwyl2006@126.com)
+!!! history : 09/16/2009 by li huang
+!!!           09/18/2009 by li huang
+!!!           09/20/2009 by li huang
+!!!           09/24/2009 by li huang
+!!!           09/26/2009 by li huang
+!!!           09/30/2009 by li huang
+!!!           10/02/2009 by li huang
+!!!           10/25/2009 by li huang
+!!!           10/29/2009 by li huang
+!!!           11/02/2009 by li huang
+!!!           11/08/2009 by li huang
+!!!           11/17/2009 by li huang
+!!!           11/20/2009 by li huang
+!!!           11/24/2009 by li huang
+!!!           11/27/2009 by li huang
+!!!           11/30/2009 by li huang
+!!!           12/09/2009 by li huang
+!!!           12/18/2009 by li huang
+!!!           12/26/2009 by li huang
+!!!           01/05/2010 by li huang
+!!!           02/27/2010 by li huang
+!!!           03/22/2010 by li huang
+!!!           06/09/2010 by li huang
+!!!           08/18/2014 by li huang
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
+!!!           the following subroutines mainly deal with the \mathscr{M}
+!!!           matrix: mmat, and \mathscr{G} matrix: gmat.
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> driver layer: updating perturbation expansion series              <<<
-!-------------------------------------------------------------------------
+!!-------------------------------------------------------------------------
+!!>>> driver layer: updating perturbation expansion series              <<<
+!!-------------------------------------------------------------------------
 
-!>>> insert new create and destroy operators in the perturbation expansion series
+!!>>> ctqmc_insert_kink: insert new create and destroy operators 
+!!>>> in the perturbation expansion series
   subroutine ctqmc_insert_kink()
-     use constants
-     use control
-     use context
-
-     use spring
+     use constants, only : dp, zero, one
+     use control, only : norbs, mkink, beta
+     use context, only : ckink, rank, cnegs, csign
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -189,13 +190,14 @@
      return
   end subroutine ctqmc_insert_kink
 
-!>>> remove old create and destroy operators in the perturbation expansion series
+!!>>> ctqmc_remove_kink: remove old create and destroy operators 
+!!>>> in the perturbation expansion series
   subroutine ctqmc_remove_kink()
-     use constants
-     use control
-     use context
-
-     use spring
+     use constants, only : dp, zero, one
+     use control, only : norbs, beta
+     use context, only : ckink, rank, cnegs, csign
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -321,13 +323,14 @@
      return
   end subroutine ctqmc_remove_kink
 
-!>>> shift old create operators in the perturbation expansion series
+!!>>> ctqmc_lshift_kink: shift old create operators in the perturbation 
+!!>>> expansion series
   subroutine ctqmc_lshift_kink()
-     use constants
-     use control
-     use context
-
-     use spring
+     use constants, only : dp, zero, one
+     use control, only : norbs
+     use context, only : ckink, rank, cnegs, csign
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -447,13 +450,14 @@
      return
   end subroutine ctqmc_lshift_kink
 
-!>>> shift old destroy operators in the perturbation expansion series
+!!>>> ctqmc_rshift_kink: shift old destroy operators in the perturbation 
+!!>>> expansion series
   subroutine ctqmc_rshift_kink()
-     use constants
-     use control
-     use context
-
-     use spring
+     use constants, only : dp, zero, one
+     use control, only : norbs
+     use context, only : ckink, rank, cnegs, csign
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -573,15 +577,16 @@
      return
   end subroutine ctqmc_rshift_kink
 
-!>>> perform a global update, exchange the states between spin up and spin
-! down, it maybe useful for magnetic systems
+!!>>> ctqmc_reflip_kink: perform a global update, exchange the states 
+!!>>> between spin up and spin down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
-     use constants
-     use control
-     use context
-
-     use stack
-     use spring
+     use constants, only : dp, one
+     use control, only : norbs, nband
+     use context, only : empty_v, symm, index_v, index_t, flvr_v
+     use context, only : matrix_ntrace, matrix_ptrace, rank
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use stack, only : istack_getrest
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -900,10 +905,11 @@
      return
   end subroutine ctqmc_reflip_kink
 
-!>>> global update all operators in the perturbation expansion series
+!!>>> ctqmc_reload_kink: global update all operators in the perturbation 
+!!>>> expansion series
   subroutine ctqmc_reload_kink()
-     use control
-     use context
+     use control, only : norbs
+     use context, only : rank
 
      implicit none
 
@@ -925,16 +931,17 @@
      return
   end subroutine ctqmc_reload_kink
 
-!-------------------------------------------------------------------------
-!>>> service layer: update M and G matrices                            <<<
-!-------------------------------------------------------------------------
+!!-------------------------------------------------------------------------
+!!>>> service layer: update M and G matrices                            <<<
+!!-------------------------------------------------------------------------
 
-!>>> update the mmat matrix and gmat matrix for insert new create and
-! destroy operators
+!>>> cat_insert_matrix: update the mmat matrix and gmat matrix for insert 
+!!>>> new create and destroy operators
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, zero, czero
+     use control, only : nfreq, beta
+     use context, only : ckink, lspace, rspace, lsaves, rsaves, mmat, gmat
+     use context, only : index_s, index_e, exp_s, exp_e 
 
      implicit none
 
@@ -1054,12 +1061,13 @@
      return
   end subroutine cat_insert_matrix
 
-!>>> update the mmat matrix and gmat matrix for remove old create and
-! destroy operators
+!!>>> cat_remove_matrix: update the mmat matrix and gmat matrix 
+!!>>> for remove old create and destroy operators
   subroutine cat_remove_matrix(flvr, is, ie)
-     use constants
-     use control
-     use context
+     use constants, only : dp, czero, one
+     use control, only : nfreq, beta
+     use context, only : ckink, lsaves, rsaves, mmat, gmat
+     use context, only : index_s, index_e, exp_s, exp_e
 
      implicit none
 
@@ -1144,11 +1152,13 @@
      return
   end subroutine cat_remove_matrix
 
-!>>> update the mmat matrix and gmat matrix for shift old create operators
+!!>>> cat_lshift_matrix: update the mmat matrix and gmat matrix for shift old 
+!!>>> create operators
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, czero, zero
+     use control, only : mkink, nfreq, beta
+     use context, only : mmat, gmat, rmesh, lspace, rspace, lsaves, rsaves
+     use context, only : ckink, index_s, index_e, exp_s, exp_e, time_e
 
      implicit none
 
@@ -1329,11 +1339,13 @@
      return
   end subroutine cat_lshift_matrix
 
-!>>> update the mmat matrix and gmat matrix for shift old destroy operators
+!!>>> cat_rshift_matrix: update the mmat matrix and gmat matrix for shift old 
+!!>>> destroy operators
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, czero, zero
+     use control, only : mkink, nfreq, beta
+     use context, only : ckink, mmat, gmat, rmesh, lspace, rspace, lsaves, rsaves
+     use context, only : index_s, index_e, exp_s, exp_e, time_s
 
      implicit none
 
@@ -1514,15 +1526,15 @@
      return
   end subroutine cat_rshift_matrix
 
-!>>> global flip the time_s, time_e, mmat matrix, gmat matrix, and other
-! related global variables between spin up and spin down states. it is
-! used to avoid trapped by unphysical phase
+!!>>> cat_reflip_matrix: global flip the time_s, time_e, 
+!!>>> mmat matrix, gmat matrix, and other related global 
+!!>>> variables between spin up and spin down states. it 
+!!>>> is used to avoid trapped by unphysical phase
   subroutine cat_reflip_matrix(fup, fdn, kmax)
-     use constants
-     use control
-     use context
-
-     use stack
+     use control, only : mkink, nfreq
+     use context, only : gmat, index_s, index_e, empty_s, empty_e
+     use context, only : exp_s, exp_e, time_s, time_e, rank
+     use stack, only : istack, istack_create, istack_copyer, istack_destroy
 
      implicit none
 
@@ -1627,11 +1639,13 @@
 
   end subroutine cat_reflip_matrix
 
-!>>> global update the mmat matrix and gmat matrix from scratch
+!!>>> cat_reload_matrix: global update the mmat matrix 
+!!>>> and gmat matrix from scratch
   subroutine cat_reload_matrix(flvr)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+     use control, only : beta, nfreq
+     use context, only : rank, mmat, gmat, index_s, index_e 
+     use context, only : time_s, time_e, exp_s, exp_e
 
      implicit none
 
@@ -1705,15 +1719,17 @@
      return
   end subroutine cat_reload_matrix
 
-!-------------------------------------------------------------------------
-!>>> service layer: evaluate the determinant ratio                     <<<
-!-------------------------------------------------------------------------
+!!-------------------------------------------------------------------------
+!!>>> service layer: evaluate the determinant ratio                     <<<
+!!-------------------------------------------------------------------------
 
-!>>> calculate the determinant ratio for insert new create and destroy operators
+!!>>> cat_insert_detrat: calculate the determinant ratio for insert new 
+!!>>> create and destroy operators
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : mkink, beta
+     use context, only : ckink, time_s, time_e, index_s, index_e
+     use context, only : mmat, lspace, rspace
 
      implicit none
 
@@ -1794,9 +1810,11 @@
      return
   end subroutine cat_insert_detrat
 
-!>>> calculate the determinant ratio for remove old create and destroy operators
+!!>>> cat_remove_detrat: calculate the determinant ratio for 
+!!>>> remove old create and destroy operators
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
-     use context
+     use constants, only : dp
+     use context, only : mmat
 
      implicit none
 
@@ -1817,11 +1835,11 @@
      return
   end subroutine cat_remove_detrat
 
-!>>> calculate the determinant ratio for shift old create operators
+!!>>> cat_lshift_detrat: calculate the determinant ratio for shift old create operators
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use control, only : mkink, beta
+     use context, only : ckink, time_e, index_e, mmat
 
      implicit none
 
@@ -1886,11 +1904,11 @@
      return
   end subroutine cat_lshift_detrat
 
-!>>> calculate the determinant ratio for shift old destroy operators
+!!>>> cat_rshift_detrat: calculate the determinant ratio for shift old destroy operators
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use control, only : mkink, beta
+     use context, only : ckink, time_s, index_s, mmat
 
      implicit none
 
@@ -1955,11 +1973,11 @@
      return
   end subroutine cat_rshift_detrat
 
-!>>> calculate the determinant ratio for global spin flip
+!!>>> cat_reflip_detrat: calculate the determinant ratio for global spin flip
   subroutine cat_reflip_detrat(up, dn, ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, zero
+     use control, only : beta
+     use context, only : mmat, rank, time_s, time_e, index_s, index_e
 
      implicit none
 
