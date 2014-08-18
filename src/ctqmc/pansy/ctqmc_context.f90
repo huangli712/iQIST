@@ -1,51 +1,53 @@
-!-------------------------------------------------------------------------
-! project : pansy
-! program : ctqmc_core module
-!           ctqmc_clur module
-!           ctqmc_flvr module
-!           ctqmc_umat module
-!           ctqmc_fmat module
-!           ctqmc_mmat module
-!           ctqmc_gmat module
-!           ctqmc_wmat module
-!           ctqmc_smat module
-!           context    module
-! source  : ctqmc_context.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-!         : yilin wang (qhwyl2006@126.com)
-! history : 09/16/2009 by li huang
-!           09/17/2009 by li huang
-!           09/19/2009 by li huang
-!           09/20/2009 by li huang
-!           09/21/2009 by li huang
-!           09/22/2009 by li huang
-!           09/27/2009 by li huang
-!           11/01/2009 by li huang
-!           11/10/2009 by li huang
-!           11/18/2009 by li huang
-!           12/01/2009 by li huang
-!           12/05/2009 by li huang
-!           02/21/2010 by li huang
-!           02/23/2010 by li huang
-!           06/08/2010 by li huang
-!           07/16/2014 by yilin wang
-!           07/19/2014 by yilin wang
-! purpose : define the key data structure and global arrays/variables for
-!           hybridization expansion version continuous time quantum Monte
-!           Carlo (CTQMC) quantum impurity solver and dynamical mean field
-!           theory (DMFT) self-consistent engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : pansy
+!!! program : ctqmc_core module
+!!!           ctqmc_clur module
+!!!           ctqmc_flvr module
+!!!           ctqmc_mesh module
+!!!           ctqmc_meat module
+!!!           ctqmc_umat module
+!!!           ctqmc_fmat module
+!!!           ctqmc_mmat module
+!!!           ctqmc_gmat module
+!!!           ctqmc_wmat module
+!!!           ctqmc_smat module
+!!!           context    module
+!!! source  : ctqmc_context.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!!           yilin wang (email:qhwyl2006@126.com)
+!!! history : 09/16/2009 by li huang
+!!!           09/17/2009 by li huang
+!!!           09/19/2009 by li huang
+!!!           09/20/2009 by li huang
+!!!           09/21/2009 by li huang
+!!!           09/22/2009 by li huang
+!!!           09/27/2009 by li huang
+!!!           11/01/2009 by li huang
+!!!           11/10/2009 by li huang
+!!!           11/18/2009 by li huang
+!!!           12/01/2009 by li huang
+!!!           12/05/2009 by li huang
+!!!           02/21/2010 by li huang
+!!!           02/23/2010 by li huang
+!!!           06/08/2010 by li huang
+!!!           08/18/2014 by yilin wang
+!!! purpose : define the key data structure and global arrays/variables for
+!!!           hybridization expansion version continuous time quantum Monte
+!!!           Carlo (CTQMC) quantum impurity solver and dynamical mean field
+!!!           theory (DMFT) self-consistent engine
+!!! input   :
+!!! output  :
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
-!=========================================================================
-!>>> module ctqmc_core                                                 <<<
-!=========================================================================
-!>>> containing core (internal) variables used by continuous time quantum
-! Monte Carlo quantum impurity solver
+!!=========================================================================
+!!>>> module ctqmc_core                                                 <<<
+!!=========================================================================
+
+!!>>> containing core (internal) variables used by continuous time quantum
+!! Monte Carlo quantum impurity solver
   module ctqmc_core
      use constants, only : dp, zero
 
@@ -140,14 +142,15 @@
 
   end module ctqmc_core
 
-!=========================================================================
-!>>> module ctqmc_clur                                                 <<<
-!=========================================================================
-!>>> containing perturbation expansion series related arrays (colour part)
-! used by continuous time quantum Monte Carlo quantum impurity solver
+!!=========================================================================
+!!>>> module ctqmc_clur                                                 <<<
+!!=========================================================================
+
+!!>>> containing perturbation expansion series related arrays (colour part)
+!! used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_clur
      use constants, only : dp
-     use stack
+     use stack, only: istack, istack_create, istack_destroy
 
      implicit none
 
@@ -177,14 +180,15 @@
 
   end module ctqmc_clur
 
-!=========================================================================
-!>>> module ctqmc_flvr                                                 <<<
-!=========================================================================
-!>>> containing perturbation expansion series related arrays (flavor part)
-! used by continuous time quantum Monte Carlo quantum impurity solver
+!!=========================================================================
+!!>>> module ctqmc_flvr                                                 <<<
+!!=========================================================================
+
+!!>>> containing perturbation expansion series related arrays (flavor part)
+!! used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_flvr
      use constants, only : dp
-     use stack
+     use stack, only: istack, istack_create, istack_destroy
 
      implicit none
 
@@ -214,18 +218,82 @@
 
   end module ctqmc_flvr
 
-!=========================================================================
-!>>> module ctqmc_umat                                                 <<<
-!=========================================================================
-!>>> containing util-matrix related arrays used by continuous time quantum
-! Monte Carlo quantum impurity solver
-  module ctqmc_umat
+!!========================================================================
+!!>>> module ctqmc_mesh                                                <<<
+!!========================================================================
+
+!!>>> containing mesh related arrays used by continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
+  module ctqmc_mesh
+     use constants, only : dp
+
+     implicit none
+
+! imaginary time mesh
+     real(dp), public, save, allocatable :: tmesh(:)
+
+! real matsubara frequency mesh
+     real(dp), public, save, allocatable :: rmesh(:)
+
+! complex matsubara frequency mesh
+     complex(dp), public, save, allocatable :: cmesh(:)
+
+  end module ctqmc_mesh
+
+!!========================================================================
+!!>>> module ctqmc_meat                                                <<<
+!!========================================================================
+
+!!>>> containing physical observables related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
+  module ctqmc_meat !!>>> To tell you a truth, meat means MEAsuremenT
      use constants, only : dp
 
      implicit none
 
 ! histogram for perturbation expansion series
      integer,  public, save, allocatable :: hist(:)
+
+! auxiliary physical observables
+! paux(1) : total energy, Etot
+! paux(2) : potential engrgy, Epot
+! paux(3) : kinetic energy, Ekin
+! paux(4) : magnetic moment, < Sz >
+! paux(5) : average of occupation, < N > = < N1 >
+! paux(6) : average of occupation square, < N2 >
+! paux(7) : reserved
+! paux(8) : reserved
+     real(dp), public, save, allocatable :: paux(:)
+
+! probability of eigenstates of local hamiltonian matrix
+     real(dp), public, save, allocatable :: prob(:)
+
+! impurity occupation number, < n_i >
+     real(dp), public, save, allocatable :: nmat(:)
+
+! impurity double occupation number matrix, < n_i n_j >
+     real(dp), public, save, allocatable :: nnmat(:,:)
+
+! diagonal elements of current matrix product of flavor part
+! it is used to calculate the probability of eigenstates
+     real(dp), public, save, allocatable :: ddmat(:,:)
+
+  end module ctqmc_meat
+
+!!=========================================================================
+!!>>> module ctqmc_umat                                                 <<<
+!!=========================================================================
+
+!!>>> containing util-matrix related arrays used by continuous time quantum
+!! Monte Carlo quantum impurity solver
+  module ctqmc_umat
+     use constants, only : dp
+
+     implicit none
+
+!-------------------------------------------------------------------------
+!::: ctqmc status variables                                            :::
+!-------------------------------------------------------------------------
 
 ! current perturbation expansion order for different flavor channel
      integer,  public, save, allocatable :: rank(:)
@@ -247,55 +315,18 @@
 
 ! total spin for the eigenstates of local hamiltonian matrix
      real(dp), public, save, allocatable :: saux(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-!-------------------------------------------------------------------------
-!::: physical observables                                              :::
-!-------------------------------------------------------------------------
-! probability of eigenstates of local hamiltonian matrix
-     real(dp), public, save, allocatable :: prob(:)
-
-! auxiliary physical observables
-! paux(1) : total energy, Etot
-! paux(2) : potential engrgy, Epot
-! paux(3) : kinetic energy, Ekin
-! paux(4) : magnetic moment, < Sz >
-     real(dp), public, save, allocatable :: paux(:)
-
-! impurity occupation number, < n_i >
-     real(dp), public, save, allocatable :: nmat(:)
-
-! impurity double occupation number matrix, < n_i n_j >
-     real(dp), public, save, allocatable :: nnmat(:,:)
-
-! diagonal elements of current matrix product of flavor part
-! it is used to calculate the probability of eigenstates
-     real(dp), public, save, allocatable :: ddmat(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-!-------------------------------------------------------------------------
-!::: mesh data variables                                               :::
-!-------------------------------------------------------------------------
-! imaginary time mesh
-     real(dp), public, save, allocatable :: tmesh(:)
-
-! real matsubara frequency mesh
-     real(dp), public, save, allocatable :: rmesh(:)
-
-! complex matsubara frequency mesh
-     complex(dp), public, save, allocatable :: cmesh(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! identity matrix
      complex(dp), public, save, allocatable :: unity(:,:)
 
   end module ctqmc_umat
 
-!=========================================================================
-!>>> module ctqmc_mmat                                                 <<<
-!=========================================================================
-!>>> containing M-matrix and G-matrix related arrays used by continuous
-! time quantum Monte Carlo quantum impurity solver
+!!=========================================================================
+!!>>> module ctqmc_mmat                                                 <<<
+!!=========================================================================
+
+!!>>> containing M-matrix and G-matrix related arrays used by continuous
+!! time quantum Monte Carlo quantum impurity solver
   module ctqmc_mmat
      use constants, only : dp
 
@@ -321,11 +352,12 @@
 
   end module ctqmc_mmat
 
-!=========================================================================
-!>>> module ctqmc_gmat                                                 <<<
-!=========================================================================
-!>>> containing green's function matrix related arrays used by continuous
-! time quantum Monte Carlo quantum impurity solver
+!!=========================================================================
+!!>>> module ctqmc_gmat                                                 <<<
+!!=========================================================================
+
+!!>>> containing green's function matrix related arrays used by continuous
+!! time quantum Monte Carlo quantum impurity solver
   module ctqmc_gmat
      use constants, only : dp
 
@@ -339,11 +371,12 @@
 
   end module ctqmc_gmat
 
-!=========================================================================
-!>>> module ctqmc_wmat                                                 <<<
-!=========================================================================
-!>>> containing weiss's function and hybridization function matrix related
-! arrays used by continuous time quantum Monte Carlo quantum impurity solver
+!!=========================================================================
+!!>>> module ctqmc_wmat                                                 <<<
+!!=========================================================================
+
+!!>>> containing weiss's function and hybridization function matrix related
+!! arrays used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_wmat
      use constants, only : dp
 
@@ -366,11 +399,12 @@
 
   end module ctqmc_wmat
 
-!=========================================================================
-!>>> module ctqmc_smat                                                 <<<
-!=========================================================================
-!>>> containing self-energy function matrix related arrays used by
-! continuous time quantum Monte Carlo quantum impurity solver
+!!=========================================================================
+!!>>> module ctqmc_smat                                                 <<<
+!!=========================================================================
+
+!!>>> containing self-energy function matrix related arrays used by
+!! continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_smat
      use constants, only : dp
 
@@ -384,10 +418,11 @@
 
   end module ctqmc_smat
 
-!=========================================================================
-!>>> module context                                                    <<<
-!=========================================================================
-!>>> containing memory management subroutines and define global variables
+!!=========================================================================
+!!>>> module context                                                    <<<
+!!=========================================================================
+
+!!>>> containing memory management subroutines and define global variables
   module context
      use constants
      use control
@@ -395,22 +430,32 @@
      use ctqmc_core
      use ctqmc_clur
      use ctqmc_flvr
-
+     use ctqmc_mesh
+     use ctqmc_meat
      use ctqmc_umat
      use ctqmc_mmat
-
      use ctqmc_gmat
      use ctqmc_wmat
      use ctqmc_smat
 
      implicit none
 
+!!========================================================================
+!!>>> declare global variables                                         <<<
+!!========================================================================
+
 ! status flag
      integer, private :: istat
+
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
 ! declaration of module procedures: allocate memory
      public :: ctqmc_allocate_memory_clur
      public :: ctqmc_allocate_memory_flvr
+     public :: ctqmc_allocate_memory_mesh
+     public :: ctqmc_allocate_memory_meat
      public :: ctqmc_allocate_memory_umat
      public :: ctqmc_allocate_memory_mmat
      public :: ctqmc_allocate_memory_gmat
@@ -420,6 +465,8 @@
 ! declaration of module procedures: deallocate memory
      public :: ctqmc_deallocate_memory_clur
      public :: ctqmc_deallocate_memory_flvr
+     public :: ctqmc_deallocate_memory_mesh
+     public :: ctqmc_deallocate_memory_meat
      public :: ctqmc_deallocate_memory_umat
      public :: ctqmc_deallocate_memory_mmat
      public :: ctqmc_deallocate_memory_gmat
@@ -428,11 +475,11 @@
 
      contains
 
-!=========================================================================
-!>>> allocate memory subroutines                                       <<<
-!=========================================================================
+!!=========================================================================
+!!>>> allocate memory subroutines                                       <<<
+!!=========================================================================
 
-!>>> allocate memory for clur-related variables
+!!>>> allocate memory for clur-related variables
      subroutine ctqmc_allocate_memory_clur()
          implicit none
 
@@ -475,7 +522,7 @@
          return
      end subroutine ctqmc_allocate_memory_clur
 
-!>>> allocate memory for flvr-related variables
+!!>>> allocate memory for flvr-related variables
      subroutine ctqmc_allocate_memory_flvr()
          implicit none
 
@@ -513,12 +560,64 @@
          return
      end subroutine ctqmc_allocate_memory_flvr
 
+!!>>> ctqmc_allocate_memory_mesh: allocate memory for mesh-related variables
+  subroutine ctqmc_allocate_memory_mesh()
+     implicit none
+
+! allocate memory
+     allocate(tmesh(ntime), stat=istat)
+     allocate(rmesh(mfreq), stat=istat)
+     allocate(cmesh(mfreq), stat=istat)
+
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_mesh','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize them
+     tmesh = zero
+     rmesh = zero
+     cmesh = czero
+
+     return
+  end subroutine ctqmc_allocate_memory_mesh
+
+!!>>> ctqmc_allocate_memory_meat: allocate memory for meat-related variables
+  subroutine ctqmc_allocate_memory_meat()
+     implicit none
+
+! allocate memory
+     allocate(hist(mkink),        stat=istat)
+
+     allocate(paux(  8  ),        stat=istat)
+     allocate(prob(ncfgs),        stat=istat)
+     allocate(nmat(norbs),        stat=istat)
+     allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(ddmat(ncfgs,  2  ), stat=istat)
+
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_meat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize them
+     hist  = 0
+
+     paux  = zero
+     prob  = zero
+     nmat  = zero
+     nnmat = zero
+     ddmat = zero
+
+     return
+  end subroutine ctqmc_allocate_memory_meat
+
+
 !>>> allocate memory for umat-related variables
      subroutine ctqmc_allocate_memory_umat()
          implicit none
 
 ! allocate memory
-         allocate(hist(mkink),        stat=istat)
          allocate(rank(norbs),        stat=istat)
 
          allocate(symm(norbs),        stat=istat)
@@ -528,18 +627,6 @@
          allocate(naux(ncfgs),        stat=istat)
          allocate(saux(ncfgs),        stat=istat)
 
-         allocate(prob(ncfgs),        stat=istat)
-         allocate(paux(  4  ),        stat=istat)
-         allocate(nmat(norbs),        stat=istat)
-
-         allocate(nnmat(norbs,norbs), stat=istat)
-         allocate(ddmat(ncfgs,  2  ), stat=istat)
-
-         allocate(tmesh(ntime),       stat=istat)
-         allocate(rmesh(mfreq),       stat=istat)
-
-         allocate(cmesh(mfreq),       stat=istat)
-
          allocate(unity(norbs,norbs), stat=istat)
 
 ! check the status
@@ -548,7 +635,6 @@
          endif
 
 ! initialize them
-         hist  = 0
          rank  = 0
 
          symm  = 0
@@ -558,24 +644,12 @@
          naux  = zero
          saux  = zero
 
-         prob  = zero
-         paux  = zero
-         nmat  = zero
-
-         nnmat = zero
-         ddmat = zero
-
-         tmesh = zero
-         rmesh = zero
-
-         cmesh = czero
-
          unity = czero
 
          return
      end subroutine ctqmc_allocate_memory_umat
 
-!>>> allocate memory for mmat-related variables
+!!>>> allocate memory for mmat-related variables
      subroutine ctqmc_allocate_memory_mmat()
          implicit none
 
@@ -609,7 +683,7 @@
          return
      end subroutine ctqmc_allocate_memory_mmat
 
-!>>> allocate memory for gmat-related variables
+!!>>> allocate memory for gmat-related variables
      subroutine ctqmc_allocate_memory_gmat()
          implicit none
 
@@ -631,7 +705,7 @@
          return
      end subroutine ctqmc_allocate_memory_gmat
 
-!>>> allocate memory for wmat-related variables
+!!>>> allocate memory for wmat-related variables
      subroutine ctqmc_allocate_memory_wmat()
          implicit none
 
@@ -659,7 +733,7 @@
          return
      end subroutine ctqmc_allocate_memory_wmat
 
-!>>> allocate memory for smat-related variables
+!!>>> allocate memory for smat-related variables
      subroutine ctqmc_allocate_memory_smat()
          implicit none
 
@@ -679,11 +753,11 @@
          return
      end subroutine ctqmc_allocate_memory_smat
 
-!=========================================================================
-!>>> deallocate memory subroutines                                     <<<
-!=========================================================================
+!!=========================================================================
+!!>>> deallocate memory subroutines                                     <<<
+!!=========================================================================
 
-!>>> deallocate memory for clur-related variables
+!!>>> deallocate memory for clur-related variables
      subroutine ctqmc_deallocate_memory_clur()
          implicit none
 
@@ -710,7 +784,7 @@
          return
      end subroutine ctqmc_deallocate_memory_clur
 
-!>>> deallocate memory for flvr-related variables
+!!>>> deallocate memory for flvr-related variables
      subroutine ctqmc_deallocate_memory_flvr()
          implicit none
 
@@ -730,11 +804,37 @@
          return
      end subroutine ctqmc_deallocate_memory_flvr
 
-!>>> deallocate memory for umat-related variables
+!!>>> ctqmc_deallocate_memory_mesh: deallocate memory for mesh-related variables
+  subroutine ctqmc_deallocate_memory_mesh()
+     implicit none
+
+     if ( allocated(tmesh) )   deallocate(tmesh)
+     if ( allocated(rmesh) )   deallocate(rmesh)
+     if ( allocated(cmesh) )   deallocate(cmesh)
+
+     return
+  end subroutine ctqmc_deallocate_memory_mesh
+
+!!>>> ctqmc_deallocate_memory_meat: deallocate memory for meat-related variables
+  subroutine ctqmc_deallocate_memory_meat()
+     implicit none
+
+     if ( allocated(hist)  )   deallocate(hist )
+
+     if ( allocated(paux)  )   deallocate(paux )
+     if ( allocated(prob)  )   deallocate(prob )
+     if ( allocated(nmat)  )   deallocate(nmat )
+     if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(ddmat) )   deallocate(ddmat)
+
+     return
+  end subroutine ctqmc_deallocate_memory_meat
+
+
+!!>>> deallocate memory for umat-related variables
      subroutine ctqmc_deallocate_memory_umat()
          implicit none
 
-         if ( allocated(hist)  )   deallocate(hist )
          if ( allocated(rank)  )   deallocate(rank )
 
          if ( allocated(symm)  )   deallocate(symm )
@@ -744,25 +844,13 @@
          if ( allocated(naux)  )   deallocate(naux )
          if ( allocated(saux)  )   deallocate(saux )
 
-         if ( allocated(prob)  )   deallocate(prob )
-         if ( allocated(paux)  )   deallocate(paux )
-         if ( allocated(nmat)  )   deallocate(nmat )
-
-         if ( allocated(nnmat) )   deallocate(nnmat)
-         if ( allocated(ddmat) )   deallocate(ddmat)
-
-         if ( allocated(tmesh) )   deallocate(tmesh)
-         if ( allocated(rmesh) )   deallocate(rmesh)
-
-         if ( allocated(cmesh) )   deallocate(cmesh)
-
          if ( allocated(unity) )   deallocate(unity)
 
          return
      end subroutine ctqmc_deallocate_memory_umat
 
 
-!>>> deallocate memory for mmat-related variables
+!!>>> deallocate memory for mmat-related variables
      subroutine ctqmc_deallocate_memory_mmat()
          implicit none
 
@@ -779,7 +867,7 @@
          return
      end subroutine ctqmc_deallocate_memory_mmat
 
-!>>> deallocate memory for gmat-related variables
+!!>>> deallocate memory for gmat-related variables
      subroutine ctqmc_deallocate_memory_gmat()
          implicit none
 
@@ -790,7 +878,7 @@
          return
      end subroutine ctqmc_deallocate_memory_gmat
 
-!>>> deallocate memory for wmat-related variables
+!!>>> deallocate memory for wmat-related variables
      subroutine ctqmc_deallocate_memory_wmat()
          implicit none
 
@@ -804,7 +892,7 @@
          return
      end subroutine ctqmc_deallocate_memory_wmat
 
-!>>> deallocate memory for smat-related variables
+!!>>> deallocate memory for smat-related variables
      subroutine ctqmc_deallocate_memory_smat()
          implicit none
 
