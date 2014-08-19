@@ -2553,7 +2553,6 @@
 ! it will modify is_save internal
      call ctqmc_make_nparts(cmode, csize, index_t_loc, tau_s, tau_e)
 
-!------------------------------------------------------------------------
 ! calculate the trace of each sector one by one
 ! reset copy status to false, it is very important ! 
      is_copy = .false.
@@ -2577,14 +2576,15 @@
              ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
          enddo
      enddo
-!------------------------------------------------------------------------
 
      return
   end subroutine ctqmc_make_ztrace
 
-!!>>> ctqmc_make_evolve: used to update the operator traces of the modified part
+!!>>> ctqmc_make_evolve: used to update the operator traces of the 
+!!>>> modified part
   subroutine ctqmc_make_evolve()
      use context, only : matrix_ptrace, matrix_ntrace, ddmat
+
      use m_sector, only : nsectors, sectors
      use m_npart, only : ctqmc_save_parts
 
@@ -2721,6 +2721,7 @@
      use constants, only : dp
      use control, only : beta
      use context, only : ckink, rank
+
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -2815,8 +2816,10 @@
   subroutine ctqmc_make_display(show_type)
      use constants, only : mystd
      use control, only: norbs, ncfgs
+
      use context, only : rank, time_s, time_e, time_v, index_s, index_e
      use context, only : index_v, flvr_v, type_v, expt_v, expt_t, empty_v
+
      use stack, only : istack_getrest
 
      implicit none

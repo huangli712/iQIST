@@ -1,6 +1,6 @@
 !!!-------------------------------------------------------------------------
 !!! project : pansy
-!!! program : m_sector
+!!! program : m_sector module
 !!! source  : mod_control.f90
 !!! type    : module
 !!! authors : yilin wang (email: qhwyl2006@126.com)
@@ -22,18 +22,15 @@
   
 ! the fmat between any two sectors, it is just a matrix
      type :: t_fmat
-
 ! the dimension
          integer :: n, m
 
 ! the items of the matrix
          real(dp), pointer :: item(:,:)
-
      end type t_fmat
   
 ! one sector
      type :: t_sector 
-
 ! the dimension of this sector
          integer :: ndim
 
@@ -71,7 +68,7 @@
 
      end type t_sector
      
-
+! some global variables
 ! status flag
      integer, private :: istat
 
@@ -161,7 +158,7 @@
      return
   end subroutine nullify_one_sector
   
-!!>>> allocate memory for one sector
+!!>>> alloc_one_sector: allocate memory for one sector
   subroutine alloc_one_sector(one_sector)
      implicit none
   
@@ -196,13 +193,13 @@
          call s_print_error('alloc_one_sector', 'can not allocate enough memory')
      endif
  
-! init them
+! initialize them
      one_sector%myeigval = zero
      one_sector%next_sector = 0
      one_sector%final_product = zero
      one_sector%occu = zero
   
-! init myfmat one by one
+! initialize myfmat one by one
      do i=1, one_sector%nops 
          do j=0, 1
              one_sector%myfmat(i,j)%n = 0

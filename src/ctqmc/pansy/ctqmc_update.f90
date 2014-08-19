@@ -63,8 +63,10 @@
   subroutine ctqmc_insert_kink()
      use constants, only : dp, zero, one
      use control, only : norbs, mkink, beta
+
      use context, only : ckink, rank, cnegs, csign
      use context, only : insert_tcount, insert_accept, insert_reject
+
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -195,8 +197,10 @@
   subroutine ctqmc_remove_kink()
      use constants, only : dp, zero, one
      use control, only : norbs, beta
+
      use context, only : ckink, rank, cnegs, csign
      use context, only : remove_tcount, remove_accept, remove_reject
+
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -328,8 +332,10 @@
   subroutine ctqmc_lshift_kink()
      use constants, only : dp, zero, one
      use control, only : norbs
+
      use context, only : ckink, rank, cnegs, csign
      use context, only : lshift_tcount, lshift_accept, lshift_reject
+
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -455,8 +461,10 @@
   subroutine ctqmc_rshift_kink()
      use constants, only : dp, zero, one
      use control, only : norbs
+
      use context, only : ckink, rank, cnegs, csign
      use context, only : rshift_tcount, rshift_accept, rshift_reject
+
      use spring, only : spring_sfmt_stream
 
      implicit none
@@ -582,9 +590,11 @@
   subroutine ctqmc_reflip_kink(cflip)
      use constants, only : dp, one
      use control, only : norbs, nband
+
      use context, only : empty_v, symm, index_v, index_t, flvr_v
      use context, only : matrix_ntrace, matrix_ptrace, rank
      use context, only : reflip_tcount, reflip_accept, reflip_reject
+
      use stack, only : istack_getrest
      use spring, only : spring_sfmt_stream
 
@@ -940,6 +950,7 @@
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
      use constants, only : dp, one, zero, czero
      use control, only : nfreq, beta
+
      use context, only : ckink, lspace, rspace, lsaves, rsaves, mmat, gmat
      use context, only : index_s, index_e, exp_s, exp_e 
 
@@ -1066,6 +1077,7 @@
   subroutine cat_remove_matrix(flvr, is, ie)
      use constants, only : dp, czero, one
      use control, only : nfreq, beta
+
      use context, only : ckink, lsaves, rsaves, mmat, gmat
      use context, only : index_s, index_e, exp_s, exp_e
 
@@ -1157,6 +1169,7 @@
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, czero, zero
      use control, only : mkink, nfreq, beta
+
      use context, only : mmat, gmat, rmesh, lspace, rspace, lsaves, rsaves
      use context, only : ckink, index_s, index_e, exp_s, exp_e, time_e
 
@@ -1344,6 +1357,7 @@
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp, czero, zero
      use control, only : mkink, nfreq, beta
+
      use context, only : ckink, mmat, gmat, rmesh, lspace, rspace, lsaves, rsaves
      use context, only : index_s, index_e, exp_s, exp_e, time_s
 
@@ -1532,8 +1546,10 @@
 !!>>> is used to avoid trapped by unphysical phase
   subroutine cat_reflip_matrix(fup, fdn, kmax)
      use control, only : mkink, nfreq
+
      use context, only : gmat, index_s, index_e, empty_s, empty_e
      use context, only : exp_s, exp_e, time_s, time_e, rank
+
      use stack, only : istack, istack_create, istack_copyer, istack_destroy
 
      implicit none
@@ -1644,6 +1660,7 @@
   subroutine cat_reload_matrix(flvr)
      use constants, only : dp, zero, czero
      use control, only : beta, nfreq
+
      use context, only : rank, mmat, gmat, index_s, index_e 
      use context, only : time_s, time_e, exp_s, exp_e
 
@@ -1728,6 +1745,7 @@
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero
      use control, only : mkink, beta
+
      use context, only : ckink, time_s, time_e, index_s, index_e
      use context, only : mmat, lspace, rspace
 
