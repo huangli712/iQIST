@@ -14,7 +14,7 @@
 !!!           ctqmc_dump_prob
 !!!           ctqmc_dump_psect
 !!! source  : ctqmc_dump.f90
-!!! type    : subroutine
+!!! type    : subroutines
 !!! author  : li huang (email:huangli712@yahoo.com.cn)
 !!!           yilin wang (qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang

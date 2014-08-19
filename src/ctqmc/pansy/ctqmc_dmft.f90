@@ -31,7 +31,7 @@
 !!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
      use constants, only : dp, mystd
-     use control, only : norbs, nband, mfreq, mune, alpha, myid, master
+     use control, only : norbs, mfreq, mune, alpha, myid, master
      use context, only : tmesh, rmesh, cmesh, eimp, hybf, grnf, wssf, wtau
 
      implicit none
@@ -62,7 +62,7 @@
      htmp = hybf
 
 ! calculate new hybridization function using self-consistent condition
-     call ctqmc_dmft_bethe(htmp, grnf)
+     call ctqmc_dmft_bethe(hybf, grnf)
 
 ! mixing new and old hybridization function: htmp and hybf
      call s_mix_z(size(hybf), htmp, hybf, alpha)
