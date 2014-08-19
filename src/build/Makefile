@@ -59,7 +59,7 @@
 ## History
 ## =======
 ##
-## 08/06/2014 by li huang
+## 08/19/2014 by li huang
 ##
 ##
 
@@ -71,12 +71,16 @@ help:
 	@echo '  targets:'
 	@echo '     help              print short usage information                  '
 	@echo '     help-more         print full usage information                   '
+	@echo
 	@echo '     all               build all components, apis, and documents, etc '
 	@echo '     clean             clean all directories                          '
+	@echo
 	@echo '     solver            build all ctqmc and hfqmc impurity solvers     '
 	@echo '     clean-solver      clean objects for impurity solvers             '
+	@echo
 	@echo '     tool              build auxiliary tools                          '
 	@echo '     clean-tool        clean objects for auxiliary tools              '
+	@echo
 	@echo '     other             build api and documents                        '
 	@echo '     clean-other       clean api and doc directories                  '
 
@@ -87,35 +91,50 @@ help-more:
 	@echo '  targets:'
 	@echo '     help              print short usage information        '
 	@echo '     help-more         print full usage information         '
+	@echo
 	@echo '     common            build common modules and util library'
 	@echo '     clean-common      clean common directory               '
+	@echo
 	@echo '     azalea            build azalea code                    '
 	@echo '     azalea-lib        build azalea library                 '
 	@echo '     clean-azalea      clean azalea directory               '
+	@echo
 	@echo '     gardenia          build gardenia code                  '
 	@echo '     gardenia-lib      build gardenia library               '
 	@echo '     clean-gardenia    clean gardenia directory             '
+	@echo
 	@echo '     narcissus         build narcissus code                 '
 	@echo '     narcissus-lib     build narcissus library              '
 	@echo '     clean-narcissus   clean narcissus directory            '
+	@echo
 	@echo '     begonia           build begonia code                   '
 	@echo '     begonia-lib       build begonia library                '
 	@echo '     clean-begonia     clean begonia directory              '
+	@echo
 	@echo '     lavender          build lavender code                  '
 	@echo '     lavender-lib      build lavender library               '
 	@echo '     clean-lavender    clean lavender directory             '
+	@echo
 	@echo '     pansy             build pansy code                     '
 	@echo '     pansy-lib         build pansy library                  '
 	@echo '     clean-pansy       clean pansy directory                '
+	@echo
 	@echo '     manjushaka        build manjushaka code                '
 	@echo '     manjushaka-lib    build manjushaka library             '
 	@echo '     clean-manjushaka  clean manjushaka directory           '
+	@echo
+	@echo '     daisy             build daisy code                     '
+	@echo '     clean-daisy       clean daisy directory                '
+	@echo
 	@echo '     jasmine           build jasmine code                   '
 	@echo '     clean-jasmine     clean jasmine directory              '
+	@echo
 	@echo '     hibiscus          build hibiscus code                  '
 	@echo '     clean-hibiscus    clean hibiscus directory             '
+	@echo
 	@echo '     api               generate api library                 '
 	@echo '     clean-api         clean api directory                  '
+	@echo
 	@echo '     doc               generate document                    '
 	@echo '     clean-doc         clean doc directory                  '
 
@@ -264,7 +283,7 @@ clean-api:
 # tagets for doc: doc
 doc: build-doc
 build-doc:
-	cd ../../doc/; pwd; make
+	cd ../../doc/guide/; pwd; make
 
 clean-doc:
-	cd ../../doc/; pwd; make clean
+	cd ../../doc/guide/; pwd; make clean
