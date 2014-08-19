@@ -1,6 +1,6 @@
 !!!-------------------------------------------------------------------------
 !!! project : pansy
-!!! program : m_npart
+!!! program : m_npart module
 !!! source  : ctqmc_npart.f90
 !!! type    : module
 !!! authors : yilin wang (email: qhwyl2006@126.com)
@@ -19,14 +19,15 @@
      use constants, only : dp, zero, one
      use control, only : npart, mkink, beta, ncfgs
      use context, only : time_v, expt_v, type_v, flvr_v
+
      use m_sector, only : nsectors, sectors, max_dim_sect
  
      implicit none
 
-! the status flag
+! the status flag, used for allocating memory
      integer, private :: istat
 
-! number of total matrices multiplications
+! number of total matrices products
      real(dp), public, save :: num_prod = zero
 
 ! the first filled part 
@@ -38,11 +39,13 @@
 ! whether to copy this part ?
      logical, public, save, allocatable :: is_copy(:,:)
 
-! the number of columns to copied 
+! the number of columns to be copied, in order to save copy time 
      integer, public, save, allocatable :: col_copy(:,:)
  
-! the start and end positions of fermion operators for each part
+! the start positions of fermion operators for each part
      integer, public, save, allocatable :: ops(:)
+
+! the end positions of fermion operators for each part
      integer, public, save, allocatable :: ope(:)
 
 ! saved parts of matrices product, for previous accepted configuration 
@@ -63,18 +66,27 @@
 
   contains ! encapsulated functionality
 
-!!>>> ctqmc_allocate_memory_part: allocate memory for sect-related variables
+!!>>> ctqmc_allocate_memory_part: allocate memory for 
+!!>>> npart-related variables
   subroutine ctqmc_allocate_memory_part()
      implicit none
 
 ! allocate memory
-     allocate(is_save(npart, nsectors, 2),       stat=istat)
-     allocate(is_copy(npart, nsectors),          stat=istat)
-     allocate(col_copy(npart, nsectors),         stat=istat)
-     allocate(ops(npart),                        stat=istat)
-     allocate(ope(npart),                        stat=istat)
-     allocate(saved_a(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
-     allocate(saved_b(max_dim_sect, max_dim_sect, npart, nsectors), stat=istat)
+     allocate( is_save(npart, nsectors, 2),       stat=istat)
+     allocate( is_copy(npart, nsectors),          stat=istat)
+     allocate( col_copy(npart, nsectors),         stat=istat)
+     allocate( ops(npart),                        stat=istat)
+     allocate( ope(npart),                        stat=istat)
+
+     allocate( saved_a( max_dim_sect, &
+                        max_dim_sect, &
+                        npart,        &
+                        nsectors      ),          stat=istat)
+
+     allocate( saved_b( max_dim_sect, &
+                        max_dim_sect, &
+                        npart,        &
+                        nsectors      ),          stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -82,6 +94,7 @@
                             'can not allocate enough memory')
      endif
 
+! initialize them
      is_save = 1
      is_copy = .false.
      col_copy = 0
@@ -93,7 +106,8 @@
      return
   end subroutine ctqmc_allocate_memory_part
 
-!!>>> ctqmc_deallocate_memory_part: deallocate memory for sect-related variables
+!!>>> ctqmc_deallocate_memory_part: deallocate memory for 
+!!>>> npart-related variables
   subroutine ctqmc_deallocate_memory_part()
      implicit none
 
@@ -113,7 +127,7 @@
      implicit none
    
 ! external arguments
-! the mode for how to calculating trace
+! the mode for different Monte Carlo moves
      integer,  intent(in)  :: cmode
    
 ! the total number of operators for current diagram
@@ -151,18 +165,15 @@
  
 ! is_save: how to process each part for each success string
 ! is_save = 0: the matrices product for this part has been calculated
-!              previoulsy, another part_indx is needed to label which
-!              part we can fetch and use it directly.
+!              previoulsy
 ! is_save = 1: this part should be recalculated, and the result must be
-!              stored in saved_a, and saved_a_nm arrays if this Monte Caro
-!              move has been accepted.
+!              stored in saved_a, if this Monte Caro move has been accepted.
 ! is_save = 2: this part is empty, we don't need to do anything with them.
 
-! first, set it to be 0
+! first, copy is_save 
      is_save(:,:,1) = is_save(:,:,2)
    
-! when npart > 1, we use npart alogithm
-! otherwise, recalculate all the matrices products
+! npart == 1, recalculate all the matrices products
      if ( npart == 1 ) then
          nop(1) = csize
          ops(1) = 1
@@ -173,8 +184,8 @@
          else
              is_save(1,:,1) = 1
          endif
+! when npart > 1, we use npart alogithm
      elseif ( npart > 1) then
-   
          interval = beta / real(npart)
 ! calculate number of operators for each part
          do i=1,csize
@@ -359,6 +370,7 @@
                  dim2 = sectors(string(j+1))%ndim
                  dim3 = sectors(string(j  ))%ndim
    
+! multiply the diagonal matrix of time evolution operator 
                  if (counter > 1) then
                      do l=1,dim4
                          do k=1,dim3
@@ -373,6 +385,7 @@
                      enddo
                  endif
    
+! multiply the matrix of fermion operator
                  vt = type_v( index_t_loc(j) )
                  vf = flvr_v( index_t_loc(j) ) 
                  call dgemm( 'N', 'N', dim2, dim4, dim3, one,              &
@@ -383,6 +396,7 @@
                  num_prod = num_prod + one
              enddo  
 
+! set its save status and copy status
              is_save(i, isect, 1) = 0
              is_copy(i, isect) = .true.
              col_copy(i,isect) = dim4
@@ -399,6 +413,7 @@
                  right_mat(:,1:dim1) = saved_b(:, 1:dim1, i, isect)
              endif
 
+! no operators in this part, do nothing
          elseif (is_save(i,isect,1) == 2) then
              cycle
          endif ! back if ( is_save(i,isect) ==0 )  block
@@ -410,10 +425,13 @@
    
 ! special treatment of the last time-evolution operator
      indx = sectors(string(1))%istart
+
+! no fermion operators
      if (csize == 0) then
          do k=1, dim1
              right_mat(k,k) = expt_t_loc(indx+k-1)
          enddo
+! multiply the last time-evolution operator
      else
          do l=1,dim1
              do k=1,dim1
@@ -424,7 +442,7 @@
      endif
    
 ! store final product
-     sectors((string(1)))%final_product(:,:,1) = right_mat(1:dim1, 1:dim1)
+     sectors( string(1) )%final_product(:,:,1) = right_mat(1:dim1, 1:dim1)
    
 ! calculate the trace
      trace  = zero

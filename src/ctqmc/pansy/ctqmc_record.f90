@@ -179,6 +179,7 @@
      use constants, only : dp, zero, one
      use control, only : nband, norbs, ncfgs, beta, mune, U, idoub
      use context, only : ddmat, matrix_ptrace, nmat, nnmat, paux, ckink, eigs
+
      use m_sector, only : max_dim_sect, nsectors, sectors
 
      implicit none
@@ -831,6 +832,7 @@
      use constants, only : dp, zero, czero, one
      use control, only : norbs, mfreq, nfreq, mune, myid, master
      use context, only : prob, eigs, rmesh, cmesh, eimp, sig2, grnf, hybf
+
      use m_sector, only : nsectors, sectors
 
      implicit none

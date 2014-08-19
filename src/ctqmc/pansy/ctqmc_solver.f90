@@ -41,12 +41,11 @@
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, one, mystd
-     use control, only : issun, isspn
-     use control, only : mkink, mfreq
-     use control, only : ncfgs, norbs, nband, nspin
-     use control, only : ntime, nfreq, nsweep, nwrite, nmonte, ncarlo
-     use control, only : Uc, Jz, beta
-     use control, only : myid, master
+
+     use control, only : issun, isspn, mkink, mfreq, nfreq, ntime
+     use control, only : ncfgs, norbs, nband, nspin, myid, master
+     use control, only : nsweep, nwrite, nmonte, ncarlo, Uc, Jz, beta
+
      use context, only : tmesh, rmesh, symm, hist, prob, naux, saux
      use context, only : nmat, nnmat, gtau, grnf, sig2, caves, cnegs
 
@@ -528,6 +527,7 @@
   subroutine ctqmc_diagram_warmming()
      use constants, only : zero
      use control, only : ntherm
+
      use context, only : insert_tcount, insert_accept, insert_reject
      use context, only : remove_tcount, remove_accept, remove_reject
      use context, only : lshift_tcount, lshift_accept, lshift_reject
@@ -582,7 +582,7 @@
      use constants, only : dp
      use control, only : nflip, nclean
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -636,6 +636,7 @@
   subroutine ctqmc_diagram_checking(cflag)
      use constants, only : mystd 
      use control, only : norbs, myid, master
+
      use context, only : rank, index_s, index_e, time_s, time_e
      use context, only : index_v, time_v
 

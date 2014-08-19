@@ -37,6 +37,7 @@
   subroutine ctqmc_config()
      use control
      use parser, only : p_create, p_parse, p_get, p_destroy
+
      use mmpi
 
      implicit none
@@ -233,8 +234,10 @@
   subroutine ctqmc_selfer_init()
      use constants, only : dp, czero, cone, zero, one
      use constants, only : two, pi, czi, mytmp
+
      use control, only : norbs, nband, ncfgs, ntime, mfreq
-     use control, only : beta, mune, part, U,  myid, master
+     use control, only : beta, mune, part, U, myid, master
+
      use context, only : unity, tmesh, rmesh, cmesh, hybf
      use context, only : symm, eimp, eigs, naux
 
@@ -381,7 +384,8 @@
 
      if (myid == master) then ! only master node can do it
          exists = .false.
-! inquire about file 'atom.cix', this file is necessary, the code can not run without it
+! inquire about file 'atom.cix', this file is necessary, 
+! the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
 
 ! find 'atom.cix', read it 
@@ -391,18 +395,22 @@
              read(mytmp,*) 
              read(mytmp,*) 
              read(mytmp,*) 
-! read the total number of sectors, maximum dimension of sectors, and average dimension of sectors
+! read the total number of sectors, maximum dimension of sectors, 
+! and average dimension of sectors
              read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
 
-! after we know the total number of sectors, we can allocate memory for array sectors and parts
+! after we know the total number of sectors, we can allocate memory 
+! for array sectors and parts
              call ctqmc_allocate_memory_sect()
 
 ! read each sector's information
              do i=1, nsectors
                  read(mytmp,*) ! skip the header
 
-! read the dimension, total number of electrons, number of fermion operators, and start index of this sector
-                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelectron, sectors(i)%nops, sectors(i)%istart
+! read the dimension, total number of electrons, number of fermion operators, 
+! and start index of this sector
+                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelectron, &
+                                   sectors(i)%nops, sectors(i)%istart
 
 ! allocate the memory for sectors(i)
                  call alloc_one_sector(sectors(i))
@@ -410,7 +418,8 @@
 ! read the next_sector index
                  read(mytmp,*) ! skip the header
                  do j=1, sectors(i)%nops
-                     read(mytmp,*) j1, sectors(i)%next_sector(j,0), sectors(i)%next_sector(j,1)  
+                     read(mytmp,*) j1, sectors(i)%next_sector(j,0), &
+                                       sectors(i)%next_sector(j,1)  
                  enddo
 
 ! read the eigenvalue of this sector
