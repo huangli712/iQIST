@@ -571,20 +571,3 @@
   end subroutine p_get_vec
 
   end module parser
-
-  program test
-     use parser
-
-     implicit none
-  
-     integer :: norbs
-     integer :: nband
-     integer :: symm(6)
-     call p_create()
-     call p_parse('solver.ctqmc.in')
-     call p_get('norbs', norbs)
-     call p_get('nband', nband)
-     call p_get_vec('symm', symm, 6)
-     print *, symm
-     print *, norbs
-  end program test
