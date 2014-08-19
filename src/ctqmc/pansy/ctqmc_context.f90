@@ -36,8 +36,6 @@
 !!!           hybridization expansion version continuous time quantum Monte
 !!!           Carlo (CTQMC) quantum impurity solver and dynamical mean field
 !!!           theory (DMFT) self-consistent engine
-!!! input   :
-!!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
@@ -150,6 +148,7 @@
 !!>>> used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_clur
      use constants, only : dp
+
      use stack, only: istack, istack_create, istack_destroy
 
      implicit none
@@ -188,6 +187,7 @@
 !!>>> used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_flvr
      use constants, only : dp
+
      use stack, only: istack, istack_create, istack_destroy
 
      implicit none
@@ -285,7 +285,7 @@
 !!=========================================================================
 
 !!>>> containing util-matrix related arrays used by continuous time quantum
-!! Monte Carlo quantum impurity solver
+!!>>> Monte Carlo quantum impurity solver
   module ctqmc_umat
      use constants, only : dp
 
@@ -326,7 +326,7 @@
 !!=========================================================================
 
 !!>>> containing M-matrix and G-matrix related arrays used by continuous
-!! time quantum Monte Carlo quantum impurity solver
+!!>>> time quantum Monte Carlo quantum impurity solver
   module ctqmc_mmat
      use constants, only : dp
 
@@ -357,7 +357,7 @@
 !!=========================================================================
 
 !!>>> containing green's function matrix related arrays used by continuous
-!! time quantum Monte Carlo quantum impurity solver
+!!>>> time quantum Monte Carlo quantum impurity solver
   module ctqmc_gmat
      use constants, only : dp
 
@@ -376,7 +376,7 @@
 !!=========================================================================
 
 !!>>> containing weiss's function and hybridization function matrix related
-!! arrays used by continuous time quantum Monte Carlo quantum impurity solver
+!!>>> arrays used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_wmat
      use constants, only : dp
 
@@ -404,7 +404,7 @@
 !!=========================================================================
 
 !!>>> containing self-energy function matrix related arrays used by
-!! continuous time quantum Monte Carlo quantum impurity solver
+!!>>> continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_smat
      use constants, only : dp
 
@@ -501,7 +501,8 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_clur', &
+                            'can not allocate enough memory')
      endif
 
 ! initialize them
@@ -522,7 +523,8 @@
      return
   end subroutine ctqmc_allocate_memory_clur
 
-!!>>> ctqmc_allocate_memory_flvr: allocate memory for flvr-related variables
+!!>>> ctqmc_allocate_memory_flvr: allocate memory for 
+!!>>> flvr-related variables
   subroutine ctqmc_allocate_memory_flvr()
      implicit none
 
@@ -540,7 +542,8 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_flvr','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_flvr', &
+                            'can not allocate enough memory')
      endif
 
 ! initialize them
@@ -560,7 +563,8 @@
      return
   end subroutine ctqmc_allocate_memory_flvr
 
-!!>>> ctqmc_allocate_memory_mesh: allocate memory for mesh-related variables
+!!>>> ctqmc_allocate_memory_mesh: allocate memory for 
+!!>>> mesh-related variables
   subroutine ctqmc_allocate_memory_mesh()
      implicit none
 
@@ -571,7 +575,8 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_mesh','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_mesh', &
+                            'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -582,7 +587,8 @@
      return
   end subroutine ctqmc_allocate_memory_mesh
 
-!!>>> ctqmc_allocate_memory_meat: allocate memory for meat-related variables
+!!>>> ctqmc_allocate_memory_meat: allocate memory for 
+!!>>> meat-related variables
   subroutine ctqmc_allocate_memory_meat()
      implicit none
 
@@ -597,7 +603,8 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_meat','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_meat', &
+                            'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -613,7 +620,8 @@
   end subroutine ctqmc_allocate_memory_meat
 
 
-!!>>> ctqmc_allocate_memory_umat: allocate memory for umat-related variables
+!!>>> ctqmc_allocate_memory_umat: allocate memory for 
+!!>>> umat-related variables
   subroutine ctqmc_allocate_memory_umat()
      implicit none
 
@@ -630,7 +638,8 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_umat', &
+                            'can not allocate enough memory')
      endif
 
 ! initialize them
@@ -647,7 +656,8 @@
      return
   end subroutine ctqmc_allocate_memory_umat
 
-!!>>> ctqmc_allocate_memory_mmat: allocate memory for mmat-related variables
+!!>>> ctqmc_allocate_memory_mmat: allocate memory for 
+!!>>> mmat-related variables
   subroutine ctqmc_allocate_memory_mmat()
      implicit none
 
@@ -664,7 +674,8 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_mmat', &
+                            'can not allocate enough memory')
      endif
 
 ! initialize them
@@ -681,7 +692,8 @@
      return
   end subroutine ctqmc_allocate_memory_mmat
 
-!!>>> ctqmc_allocate_memory_gmat: allocate memory for gmat-related variables
+!!>>> ctqmc_allocate_memory_gmat: allocate memory for 
+!!>>> gmat-related variables
   subroutine ctqmc_allocate_memory_gmat()
      implicit none
 
@@ -691,7 +703,8 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_gmat', &
+                            'can not allocate enough memory')
      endif
 
 ! initialize them
@@ -702,7 +715,8 @@
      return
   end subroutine ctqmc_allocate_memory_gmat
 
-!!>>> ctqmc_allocate_memory_wmat: allocate memory for wmat-related variables
+!!>>> ctqmc_allocate_memory_wmat: allocate memory for 
+!!>>> wmat-related variables
   subroutine ctqmc_allocate_memory_wmat()
      implicit none
 
@@ -716,7 +730,8 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_wmat', &
+                            'can not allocate enough memory')
      endif
 
 ! initialize them
@@ -730,7 +745,8 @@
      return
   end subroutine ctqmc_allocate_memory_wmat
 
-!!>>> ctqmc_allocate_memory_smat: allocate memory for smat-related variables
+!!>>> ctqmc_allocate_memory_smat: allocate memory for 
+!!>>> smat-related variables
   subroutine ctqmc_allocate_memory_smat()
      implicit none
 
@@ -740,7 +756,8 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_smat', &
+                            'can not allocate enough memory')
      endif
 
 ! initialize them
@@ -754,7 +771,8 @@
 !!>>> deallocate memory subroutines                                     <<<
 !!=========================================================================
 
-!!>>> ctqmc_deallocate_memory_clur: deallocate memory for clur-related variables
+!!>>> ctqmc_deallocate_memory_clur: deallocate memory for 
+!!>>> clur-related variables
   subroutine ctqmc_deallocate_memory_clur()
      implicit none
 
@@ -781,7 +799,8 @@
      return
   end subroutine ctqmc_deallocate_memory_clur
 
-!!>>> ctqmc_deallocate_memory_flvr: deallocate memory for flvr-related variables
+!!>>> ctqmc_deallocate_memory_flvr: deallocate memory for 
+!!>>> flvr-related variables
   subroutine ctqmc_deallocate_memory_flvr()
      implicit none
 
@@ -801,7 +820,8 @@
      return
   end subroutine ctqmc_deallocate_memory_flvr
 
-!!>>> ctqmc_deallocate_memory_mesh: deallocate memory for mesh-related variables
+!!>>> ctqmc_deallocate_memory_mesh: deallocate memory for 
+!!>>> mesh-related variables
   subroutine ctqmc_deallocate_memory_mesh()
      implicit none
 
@@ -812,7 +832,8 @@
      return
   end subroutine ctqmc_deallocate_memory_mesh
 
-!!>>> ctqmc_deallocate_memory_meat: deallocate memory for meat-related variables
+!!>>> ctqmc_deallocate_memory_meat: deallocate memory for 
+!!>>> meat-related variables
   subroutine ctqmc_deallocate_memory_meat()
      implicit none
 
