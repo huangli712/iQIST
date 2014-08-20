@@ -1,81 +1,82 @@
-!-------------------------------------------------------------------------
-! project : manjushaka
-! program : cat_insert_ztrace
-!           cat_remove_ztrace
-!           cat_lshift_ztrace
-!           cat_rshift_ztrace <<<---
-!           try_insert_colour
-!           try_remove_colour
-!           try_lshift_colour
-!           try_rshift_colour <<<---
-!           cat_insert_colour
-!           cat_remove_colour
-!           cat_lshift_colour
-!           cat_rshift_colour <<<---
-!           try_insert_flavor
-!           try_remove_flavor
-!           try_lshift_flavor
-!           try_rshift_flavor <<<---
-!           cat_insert_flavor
-!           cat_remove_flavor
-!           cat_lshift_flavor
-!           cat_rshift_flavor <<<---
-!           ctqmc_lazy_ztrace
-!           ctqmc_retrieve_ztrace
-!           ctqmc_make_evolve <<<---
-!           ctqmc_make_equate
-!           ctqmc_make_search <<<---
-!           ctqmc_make_colour
-!           ctqmc_make_flavor <<<---
-!           ctqmc_make_display<<<---
-! source  : ctqmc_flavor.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-!           yilin wang (email: qhwyl2006@126.com)
-! history : 09/23/2009 by li huang
-!           09/26/2009 by li huang
-!           10/02/2009 by li huang
-!           11/01/2009 by li huang
-!           11/06/2009 by li huang
-!           11/19/2009 by li huang
-!           11/24/2009 by li huang
-!           11/28/2009 by li huang
-!           12/08/2009 by li huang
-!           12/29/2009 by li huang
-!           01/05/2010 by li huang
-!           01/09/2010 by li huang
-!           01/20/2010 by li huang
-!           01/22/2010 by li huang
-!           01/25/2010 by li huang
-!           02/01/2010 by li huang
-!           02/07/2010 by li huang
-!           02/15/2010 by li huang
-!           03/01/2010 by li huang
-!           04/01/2010 by li huang
-!           04/12/2010 by li huang
-!           10/20/2010 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver.
-!           the following subroutines deal with the operators traces only.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : manjushaka
+!!! program : cat_insert_ztrace
+!!!           cat_remove_ztrace
+!!!           cat_lshift_ztrace
+!!!           cat_rshift_ztrace <<<---
+!!!           try_insert_colour
+!!!           try_remove_colour
+!!!           try_lshift_colour
+!!!           try_rshift_colour <<<---
+!!!           cat_insert_colour
+!!!           cat_remove_colour
+!!!           cat_lshift_colour
+!!!           cat_rshift_colour <<<---
+!!!           try_insert_flavor
+!!!           try_remove_flavor
+!!!           try_lshift_flavor
+!!!           try_rshift_flavor <<<---
+!!!           cat_insert_flavor
+!!!           cat_remove_flavor
+!!!           cat_lshift_flavor
+!!!           cat_rshift_flavor <<<---
+!!!           ctqmc_lazy_ztrace
+!!!           ctqmc_retrieve_ztrace
+!!!           ctqmc_make_evolve <<<---
+!!!           ctqmc_make_equate
+!!!           ctqmc_make_search <<<---
+!!!           ctqmc_make_colour
+!!!           ctqmc_make_flavor <<<---
+!!!           ctqmc_make_display<<<---
+!!! source  : ctqmc_flavor.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!!           yilin wang (email: qhwyl2006@126.com)
+!!! history : 09/23/2009 by li huang
+!!!           09/26/2009 by li huang
+!!!           10/02/2009 by li huang
+!!!           11/01/2009 by li huang
+!!!           11/06/2009 by li huang
+!!!           11/19/2009 by li huang
+!!!           11/24/2009 by li huang
+!!!           11/28/2009 by li huang
+!!!           12/08/2009 by li huang
+!!!           12/29/2009 by li huang
+!!!           01/05/2010 by li huang
+!!!           01/09/2010 by li huang
+!!!           01/20/2010 by li huang
+!!!           01/22/2010 by li huang
+!!!           01/25/2010 by li huang
+!!!           02/01/2010 by li huang
+!!!           02/07/2010 by li huang
+!!!           02/15/2010 by li huang
+!!!           03/01/2010 by li huang
+!!!           04/01/2010 by li huang
+!!!           04/12/2010 by li huang
+!!!           10/20/2010 by li huang
+!!!           08/20/2014 by li huang
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
+!!!           the following subroutines deal with the operators traces only.
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> service layer: evaluate ztrace ratio                              <<<
-!-------------------------------------------------------------------------
+!!-------------------------------------------------------------------------
+!!>>> service layer: evaluate ztrace ratio                              <<<
+!!-------------------------------------------------------------------------
 
-!>>> calculate the trace ratio for insert new create and destroy operators
-! on perturbation expansion series
+!!>>> cat_insert_ztrace: calculate the trace ratio for insert new create and 
+!!>>> destroy operators on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta, ncfgs
 
-     use stack
+     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
+     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
+
+     use stack, only : istack_getrest, istack_getter, istack_gettop
 
      implicit none
 
@@ -274,14 +275,16 @@
      return
   end subroutine cat_insert_ztrace
 
-!>>> calculate the trace ratio for remove old create and destroy operators
-! on perturbation expansion series
+!!>>> cat_remove_ztrace: calculate the trace ratio for remove old create 
+!!>>> and destroy operators on perturbation expansion series
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta, ncfgs
 
-     use stack
+     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
+     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
+
+     use stack, only : istack_getrest, istack_getter, istack_gettop
 
      implicit none
 
@@ -455,14 +458,16 @@
      return
   end subroutine cat_remove_ztrace
 
-!>>> calculate the trace ratio for shift old create operators
-! on perturbation expansion series
+!!>>> cat_lshift_ztrace: calculate the trace ratio for shift old create operators
+!!>>> on perturbation expansion series
   subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, deter_ratio, rand_num, accept_p, pass)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : ncfgs, beta
 
-     use stack
+     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
+     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
+
+     use stack, only : istack_getrest, istack_getter, istack_gettop
 
      implicit none
 
@@ -605,14 +610,16 @@
      return
   end subroutine cat_lshift_ztrace
 
-!>>> calculate the trace ratio for shift old destroy operators
-! on perturbation expansion series
+!!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy operators
+!!>>> on perturbation expansion series
   subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio, rand_num, accept_p, pass)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : ncfgs, beta
 
-     use stack
+     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
+     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
+
+     use stack, only : istack_getrest, istack_getter, istack_gettop
 
      implicit none
 
@@ -755,19 +762,19 @@
      return
   end subroutine cat_rshift_ztrace
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series A             <<<
-!-------------------------------------------------------------------------
+!!-------------------------------------------------------------------------
+!!>>> service layer: update perturbation expansion series A             <<<
+!!-------------------------------------------------------------------------
 
-!>>> generate create and destroy operators for selected flavor channel
-! randomly, and then determinte their index address for the colour
-! (determinant) part
+!!>>> try_insert_colour: generate create and destroy operators for selected 
+!!>>> flavor channel randomly, and then determinte their index address for 
+!!>>> the colour (determinant) part
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+     use control, only : beta
+     use context, only : ckink, time_s, time_e, index_s, index_e
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -855,15 +862,14 @@
      return
   end subroutine try_insert_colour
 
-!>>> select index address is and ie for selected flavor channel randomly,
-! and then determine their imaginary time points for the colour
-! (determinant) part
+!!>>> try_remove_colour: select index address is and ie for selected flavor 
+!!>>> channel randomly, and then determine their imaginary time points for 
+!!>>> the colour (determinant) part
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+     use context, only : ckink, time_s, time_e, index_s, index_e
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -900,15 +906,15 @@
      return
   end subroutine try_remove_colour
 
-!>>> select index address isn for selected flavor channel randomly, and
-! then determine its imaginary time points, shift it randomly, and then
-! evaluate its final index address for the colour (determinant) part
+!!>>> try_lshift_colour: select index address isn for selected flavor channel 
+!!>>> randomly, and then determine its imaginary time points, shift it randomly, 
+!!>>> and then evaluate its final index address for the colour (determinant) part
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta
+     use context, only : ckink, time_s, index_s
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -985,15 +991,15 @@
      return
   end subroutine try_lshift_colour
 
-!>>> select index address ien for selected flavor channel randomly, and
-! then determine its imaginary time points, shift it randomly, and then
-! evaluate its final index address for the colour (determinant) part
+!!>>> try_rshift_colour: select index address ien for selected flavor channel 
+!!>>> randomly, and then determine its imaginary time points, shift it randomly, 
+!!>>> and then evaluate its final index address for the colour (determinant) part
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta
+     use context, only : ckink, time_e, index_e
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -1070,17 +1076,20 @@
      return
   end subroutine try_rshift_colour
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series B             <<<
-!-------------------------------------------------------------------------
+!!-------------------------------------------------------------------------
+!!>>> service layer: update perturbation expansion series B             <<<
+!!-------------------------------------------------------------------------
 
-!>>> update the perturbation expansion series for insert new create and
-! destroy operators in the colour part actually
+!!>>> cat_insert_colour: update the perturbation expansion series for insert 
+!!>>> new create and destroy operators in the colour part actually
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
 
-     use stack
+     use context, only : ckink, rmesh, empty_s, empty_e, index_s
+     use context, only : index_e, time_s, time_e, exp_s, exp_e
+
+     use stack, only : istack_pop
 
      implicit none
 
@@ -1143,13 +1152,12 @@
      return
   end subroutine cat_insert_colour
 
-!>>> update the perturbation expansion series for remove old create and
-! destroy operators in the colour part actually
+!!>>> cat_remove_colour: update the perturbation expansion series for remove 
+!!>>> old create and destroy operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
-     use constants
-     use context
+     use context, only : ckink, empty_s, empty_e, index_s, index_e
 
-     use stack
+     use stack, only : istack_push
 
      implicit none
 
@@ -1191,11 +1199,12 @@
      return
   end subroutine cat_remove_colour
 
-!>>> update the perturbation expansion series for lshift an old create
-! operators in the colour part actually
+!!>>> cat_lshift_colour: update the perturbation expansion series for lshift 
+!!>>> an old create operators in the colour part actually
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
+     use context, only : ckink, rmesh, index_s, time_s, exp_s
 
      implicit none
 
@@ -1246,11 +1255,12 @@
      return
   end subroutine cat_lshift_colour
 
-!>>> update the perturbation expansion series for rshift an old destroy
-! operators in the colour part actually
+!!>>> cat_rshift_colour: update the perturbation expansion series for rshift 
+!!>>> an old destroy operators in the colour part actually
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use control, only : nfreq
+     use context, only : ckink, rmesh, index_e, time_e, exp_e
 
      implicit none
 
@@ -1301,18 +1311,19 @@
      return
   end subroutine cat_rshift_colour
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series C             <<<
-!-------------------------------------------------------------------------
+!!-------------------------------------------------------------------------
+!!>>> service layer: update perturbation expansion series C             <<<
+!!-------------------------------------------------------------------------
 
-!>>> determine index addresses for the new create and destroy operators in
-! the flavor part, and then determine whether they can be inserted diagrammatically
+!!>>> try_insert_flavor: determine index addresses for the new create and 
+!!>>> destroy operators in the flavor part, and then determine whether they 
+!!>>> can be inserted diagrammatically
   subroutine try_insert_flavor(flvr, is, ie, tau_start, tau_end, ladd)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : nband
+     use context, only : empty_v, time_v, index_v, flvr_v, type_v
 
-     use stack
+     use stack, only : istack_getrest
 
      implicit none
 
@@ -1471,14 +1482,15 @@
      return
   end subroutine try_insert_flavor
 
-!>>> determine index addresses for the new create and destroy operators in
-! the flavor part, and then determine whether they can be inserted diagrammatically
+!!>>> try_remove_flavor: determine index addresses for the new create and 
+!!>>> destroy operators in the flavor part, and then determine whether they 
+!!>>> can be inserted diagrammatically
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : nband
+     use context, only : empty_v, flvr_v, type_v, index_v
 
-     use stack
+     use stack, only : istack_getrest
 
      implicit none
 
@@ -1601,12 +1613,15 @@
      return
   end subroutine try_remove_flavor
 
-!>>> determine index addresses for the old and new create operators in the
-! flavor part, and then determine whether it can be shifted diagrammatically
+!!>>> try_lshift_flavor: determine index addresses for the old and new create 
+!!>>> operators in the flavor part, and then determine whether it can be shifted 
+!!>>> diagrammatically
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : nband
+     use context, only : empty_v, time_v, index_v, flvr_v, type_v
+
+     use stack, only : istack_getrest
 
      implicit none
 
@@ -1757,12 +1772,15 @@
      return
   end subroutine try_lshift_flavor
 
-!>>> determine index addresses for the old and new destroy operators in the
-! flavor part, and then determine whether it can be shifted diagrammatically
+!!>>> try_rshift_flavor: determine index addresses for the old and new destroy 
+!!>>> operators in the flavor part, and then determine whether it can be shifted 
+!!>>> diagrammatically
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : nband
+     use context, only : empty_v, time_v, index_v, flvr_v, type_v
+
+     use stack, only : istack_getrest
 
      implicit none
 
@@ -1913,17 +1931,19 @@
      return
   end subroutine try_rshift_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series D             <<<
-!-------------------------------------------------------------------------
+!!-------------------------------------------------------------------------
+!!>>> service layer: update perturbation expansion series D             <<<
+!!-------------------------------------------------------------------------
 
-!>>> insert new create and destroy operators in the flavor part
+!!>>> cat_insert_flavor: insert new create and destroy operators in the flavor part
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta, ncfgs
 
-     use stack
+     use context, only : empty_v, time_v, index_v, flvr_v, type_v
+     use context, only : expt_v, expt_t, eigs, csign
+
+     use stack, only : istack_getrest, istack_pop
 
      implicit none
 
@@ -2079,13 +2099,13 @@
      return
   end subroutine cat_insert_flavor
 
-!>>> remove old create and destroy operators in the flavor part
+!!>>> cat_remove_flavor: remove old create and destroy operators in the flavor part
   subroutine cat_remove_flavor(is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta, ncfgs
+     use context, only : empty_v, time_v, index_v, expt_v, expt_t, eigs, csign
 
-     use stack
+     use stack, only : istack_getrest, istack_push
 
      implicit none
 
@@ -2236,13 +2256,15 @@
      return
   end subroutine cat_remove_flavor
 
-!>>> shift the old create operator in the flavor part
+!!>>> cat_lshift_flavor: shift the old create operator in the flavor part
   subroutine cat_lshift_flavor(flvr, iso, isn, tau_start2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta, ncfgs
 
-     use stack
+     use context, only : empty_v, time_v, index_v, expt_v, expt_t
+     use context, only : flvr_v, type_v, eigs, csign
+
+     use stack, only : istack_getrest
 
      implicit none
 
@@ -2353,13 +2375,15 @@
      return
   end subroutine cat_lshift_flavor
 
-!>>> shift the old destroy operator in the flavor part
+!!>>> cat_rshift_flavor: shift the old destroy operator in the flavor part
   subroutine cat_rshift_flavor(flvr, ieo, ien, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : beta, ncfgs
 
-     use stack
+     use context, only : empty_v, time_v, index_v, expt_v, expt_t
+     use context, only : flvr_v, type_v, eigs, csign
+
+     use stack, only : istack_getrest
 
      implicit none
 
@@ -2470,18 +2494,32 @@
      return
   end subroutine cat_rshift_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to calculate trace             <<<
-!-------------------------------------------------------------------------
-!>>> core subroutine of manjushaka
-! use good quantum number algorithm
-  subroutine ctqmc_lazy_ztrace(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
-     use constants
-     use control
-     use context
+!!-------------------------------------------------------------------------
+!!>>> service layer: utility subroutines to calculate trace             <<<
+!!-------------------------------------------------------------------------
 
-     use m_sector
-     use m_npart
+!!>>> ctqmc_lazy_ztrace: core subroutine of manjushaka
+!! (1) use good quantum numbers (GQNs) algorithm, split the total Hibert space 
+!!     to small subspace, the dimension of F mat will be smaller.
+!!
+!! (2) use divide and conqure algorithm, split the imaginary time axis into 
+!!     many parts, save the matrices products of that part, which may be used 
+!!     by next Monte Carlo move.
+!! NOTE: you should carefully choose npart in order to obtain the best speedup.
+!!
+!! (3) use lazy trace algorithm to reject some proposed moves immediately.
+!!
+!! (4) truncate the Hilbert space according to the total occupancy and the 
+!!     probability of atomic eigenstates.
+  subroutine ctqmc_lazy_ztrace(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
+     use constants, only : dp, zero, one
+     use control, only : mkink, ncfgs, beta
+
+     use context, only : expt_t, expt_v, index_t, index_v, ckink
+     use context, only : matrix_ptrace, matrix_ntrace, ddmat
+
+     use m_sector, only : nsectors, sectors, is_trunc, final_product, ctqmc_make_string
+     use m_npart, only : is_copy, cat_sector_ztrace, ctqmc_make_nparts
 
      implicit none
 
@@ -2699,14 +2737,14 @@
      return
   end subroutine ctqmc_lazy_ztrace
 
-!>>> calculate the trace for retieve status
+!!>>> ctqmc_retrieve_ztrace: calculate the trace for retieve status
   subroutine ctqmc_retrieve_ztrace(csize, trace)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use control, only : mkink, ncfgs
+     use context, only : expt_t, expt_v, index_t, index_v, ddmat
 
-     use m_sector
-     use m_npart
+     use m_sector, only : nsectors, sectors, is_trunc, final_product, ctqmc_make_string
+     use m_npart, only : is_copy, cat_sector_ztrace, ctqmc_make_nparts
 
      implicit none
 
@@ -2782,13 +2820,13 @@
      return
   end subroutine ctqmc_retrieve_ztrace
 
-!>>> used to update the operator traces of the modified part
+!!>>> ctqmc_make_evolve: used to update the operator traces of the 
+!!>>> modified part
   subroutine ctqmc_make_evolve()
-     use control
-     use context
+     use context, only : matrix_ptrace, matrix_ntrace, ddmat
 
-     use m_sector
-     use m_npart
+     use m_sector, only : nsectors, sectors, is_trunc, final_product
+     use m_npart, only : ctqmc_save_parts
 
      implicit none
 
@@ -2815,15 +2853,15 @@
      return
   end subroutine ctqmc_make_evolve
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to look up in the flavor       <<<
-!-------------------------------------------------------------------------
-!>>> to determine whether there exists an operator whose imaginary time is
-! equal to time
+!!-------------------------------------------------------------------------
+!!>>> service layer: utility subroutines to look up in the flavor       <<<
+!!-------------------------------------------------------------------------
+
+!!>>> ctqmc_make_equate: to determine whether there exists an operator whose 
+!!>>> imaginary time is equal to time
   subroutine ctqmc_make_equate(flvr, time, have)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+     use context, only : ckink, time_s, time_e, index_s, index_e
 
      implicit none
 
@@ -2862,12 +2900,11 @@
      return
   end subroutine ctqmc_make_equate
 
-!>>> determine index address of operators in the flavor part using
-! bisection algorithm
+!!>>> ctqmc_make_search: determine index address of operators in the 
+!!>>> flavor part using bisection algorithm
   subroutine ctqmc_make_search(addr, ndim, time)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use context, only : time_v, index_v
 
      implicit none
 
@@ -2915,18 +2952,18 @@
      return
   end subroutine ctqmc_make_search
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to build colour and flavor     <<<
-!-------------------------------------------------------------------------
+!!-------------------------------------------------------------------------
+!!>>> service layer: utility subroutines to build colour and flavor     <<<
+!!-------------------------------------------------------------------------
 
-!>>> generate perturbation expansion series for the colour (determinant)
-! part, it should be synchronized with the flavor part
+!!>>> ctqmc_make_colour: generate perturbation expansion series for the colour 
+!!>>> (determinant) part, it should be synchronized with the flavor part
   subroutine ctqmc_make_colour(flvr, kink)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use control, only : beta
+     use context, only : ckink, rank
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -2967,13 +3004,12 @@
      return
   end subroutine ctqmc_make_colour
 
-!>>> generate perturbation expansion series for the flavor (operator trace)
-! part, it should be synchronized with the colour part.
-! note: ctqmc_make_colour() must be called beforehand
+!!>>> ctqmc_make_flavor: generate perturbation expansion series for the flavor
+!!>>> (operator trace) part, it should be synchronized with the colour part.
+!!>>> note: ctqmc_make_colour() must be called beforehand
   subroutine ctqmc_make_flavor(flvr, kink)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use context, only : time_s, time_e, index_s, index_e
 
      implicit none
 
@@ -3012,18 +3048,20 @@
      return
   end subroutine ctqmc_make_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to show the colour and flavor  <<<
-!-------------------------------------------------------------------------
+!!-------------------------------------------------------------------------
+!!>>> service layer: utility subroutines to show the colour and flavor  <<<
+!!-------------------------------------------------------------------------
 
-!>>> display operators information (include colour and flavor parts) on
-! the screen, only used to debug the code
+!!>>> ctqmc_make_display: display operators information (include colour and 
+!!>>> flavor parts) on the screen, only used to debug the code
   subroutine ctqmc_make_display(show_type)
-     use constants
-     use control
-     use context
+     use constants, only : mystd
+     use control, only: norbs, ncfgs
 
-     use stack
+     use context, only : rank, time_s, time_e, time_v, index_s, index_e
+     use context, only : index_v, flvr_v, type_v, expt_v, expt_t, empty_v
+
+     use stack, only : istack_getrest
 
      implicit none
 

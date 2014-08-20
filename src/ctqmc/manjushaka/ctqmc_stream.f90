@@ -1,42 +1,42 @@
-!-------------------------------------------------------------------------
-! project : manjushaka
-! program : ctqmc_config
-!           ctqmc_setup_array
-!           ctqmc_selfer_init
-!           ctqmc_solver_init
-!           ctqmc_final_array
-! source  : ctqmc_stream.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/27/2009 by li huang
-!           10/24/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/10/2009 by li huang
-!           11/18/2009 by li huang
-!           12/01/2009 by li huang
-!           12/05/2009 by li huang
-!           02/27/2010 by li huang
-!           06/08/2010 by li huang
-! purpose : initialize and finalize the hybridization expansion version
-!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!           solver and dynamical mean field theory (DMFT) self-consistent
-!           engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : manjushaka
+!!! program : ctqmc_config
+!!!           ctqmc_setup_array
+!!!           ctqmc_selfer_init
+!!!           ctqmc_solver_init
+!!!           ctqmc_final_array
+!!! source  : ctqmc_stream.f90
+!!! type    : subroutine
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!!           yilin wang (email:qhwyl2006@126.com)
+!!! history : 09/16/2009 by li huang
+!!!           09/20/2009 by li huang
+!!!           09/24/2009 by li huang
+!!!           09/27/2009 by li huang
+!!!           10/24/2009 by li huang
+!!!           10/29/2009 by li huang
+!!!           11/01/2009 by li huang
+!!!           11/10/2009 by li huang
+!!!           11/18/2009 by li huang
+!!!           12/01/2009 by li huang
+!!!           12/05/2009 by li huang
+!!!           02/27/2010 by li huang
+!!!           06/08/2010 by li huang
+!!!           08/29/2014 by yilin wang
+!!! purpose : initialize and finalize the hybridization expansion version
+!!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
+!!!           solver and dynamical mean field theory (DMFT) self-consistent
+!!!           engine
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
-!>>> setup key parameters for continuous time quantum Monte Carlo quantum
-! impurity solver and dynamical mean field theory kernel
+!!>>> ctqmc_config: setup key parameters for continuous time quantum Monte
+!!>>> Carlo quantum impurity solver and dynamical mean field theory kernel
   subroutine ctqmc_config()
-     use constants
      use control
-     use parser
+     use parser, only : p_create, p_parse, p_get, p_destroy
+
      use mmpi
 
      implicit none
@@ -245,7 +245,8 @@
      return
   end subroutine ctqmc_config
 
-!>>> allocate memory for global variables and then initialize them
+!!>>> ctqmc_setup_array: allocate memory for global variables and then
+!!>>> initialize them
   subroutine ctqmc_setup_array()
      use context
 
@@ -265,15 +266,22 @@
      return
   end subroutine ctqmc_setup_array
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity
-! solver plus dynamical mean field theory self-consistent engine
+!!>>> ctqmc_selfer_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver plus dynamical mean field theory
+!!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
-     use constants
-     use control
-     use context
+     use constants, only : dp, czero, cone, zero, one
+     use constants, only : two, pi, czi, mytmp
+
+     use control, only : norbs, nband, ncfgs, ntime, mfreq
+     use control, only : beta, mune, part, U, myid, master
+     use control, only : legrd, chgrd, lemax, chmax
+
+     use context, only : unity, tmesh, rmesh, cmesh, hybf
+     use context, only : pmesh, qmesh, ppleg, qqche
+     use context, only : symm, eimp, eigs, naux
 
      use mmpi
-
      use m_sector
      use m_npart
 
@@ -602,7 +610,8 @@
      return
   end subroutine ctqmc_selfer_init
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
      use constants
      use control
@@ -629,8 +638,8 @@
 
 ! init random number generator
      call system_clock(system_time)
-     !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     stream_seed = 123456
+     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
+     !stream_seed = 123456
      call spring_sfmt_init(stream_seed)
      call random_seed()
 
@@ -830,7 +839,8 @@
      return
   end subroutine ctqmc_solver_init
 
-!>>> garbage collection for this program, please refer to ctqmc_setup_array
+!!>>> ctqmc_final_array: garbage collection for this program, please refer
+!!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
      use context
 

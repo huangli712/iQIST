@@ -1,30 +1,32 @@
-!-------------------------------------------------------------------------
-! project : manjushaka
-! program : ctqmc_print_header
-!           ctqmc_print_footer
-!           ctqmc_print_summary
-!           ctqmc_print_runtime
-! source  : ctqmc_print.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/15/2009 by li huang
-!           09/20/2009 by li huang
-!           12/01/2009 by li huang
-!           02/21/2010 by li huang
-! purpose : provide printing infrastructure for hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver
-! input   :
-! output  :
-! status  : very unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : manjushaka
+!!! program : ctqmc_print_header
+!!!           ctqmc_print_footer
+!!!           ctqmc_print_summary
+!!!           ctqmc_print_runtime
+!!! source  : ctqmc_print.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!!           yilin wang (eamil:qhwyl2006@126.com) 
+!!! history : 09/15/2009 by li huang
+!!!           09/20/2009 by li huang
+!!!           12/01/2009 by li huang
+!!!           02/21/2010 by li huang
+!!!           08/20/2014 by yilin wang
+!!! purpose : provide printing infrastructure for hybridization expansion
+!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
+!!!           impurity solver
+!!! input   :
+!!! output  :
+!!! status  : very unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
-!>>> print the startup information for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> ctqmc_print_header: print the startup information for continuous time 
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field 
+!!>>> theory self-consistent engine
   subroutine ctqmc_print_header()
-     use constants
+     use constants, only : mystd
      use control, only : nprocs
 
      implicit none
@@ -62,11 +64,11 @@
      return
   end subroutine ctqmc_print_header
 
-!>>> print the ending information for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> ctqmc_print_footer: print the ending information for continuous time 
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field 
+!!>>> theory self-consistent engine
   subroutine ctqmc_print_footer()
-     use constants
+     use constants, only : dp, mystd
 
      implicit none
 
@@ -91,9 +93,9 @@
      return
   end subroutine ctqmc_print_footer
 
-!>>> print the running parameters, only for reference
+!!>>> ctqmc_print_summary: print the running parameters, only for reference
   subroutine ctqmc_print_summary()
-     use constants
+     use constants, only : ev2k, mystd
      use control
 
      implicit none
@@ -131,13 +133,20 @@
      return
   end subroutine ctqmc_print_summary
 
-!>>> print the runtime information, including physical observables and
-! statistic data, only for reference
+!!>>> ctqmc_print_runtime: print the runtime information, including physical 
+!!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
-     use constants
-     use context
+     use constants, only : one, half, mystd
+     use control, only : nsweep, nmonte
+
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : paux, cnegs, caves
      
-     use m_npart
+     use m_npart, only : num_prod
 
      implicit none
 
