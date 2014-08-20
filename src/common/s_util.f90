@@ -15,7 +15,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/14/2014 by li huang
-!!!           07/26/2014 by li huang
+!!!           08/21/2014 by li huang
 !!! purpose : these subroutines are used to provide some useful facilities
 !!!           including string manipulation, date time information, etc.
 !!! status  : unstable
@@ -182,16 +182,20 @@
 
          do while ( .true. )
 
-! find out where list(left) < kaux
+! find out where list(left) > kaux
              do while ( .true. )
                  left = left + 1
-                 if ( list(left)  > kaux .or. left  >= pend   ) EXIT
+                 if ( left > nsize       ) EXIT
+                 if ( left >= pend       ) EXIT
+                 if ( list(left) > kaux  ) EXIT
              enddo ! over do while loop
 
-! find out where list(right) > kaux
+! find out where list(right) < kaux
              do while ( .true. )
                  right = right - 1
-                 if ( list(right) < kaux .or. right <= pstart ) EXIT
+                 if ( right < 0          ) EXIT
+                 if ( right <= pstart    ) EXIT
+                 if ( list(right) < kaux ) EXIT
              enddo ! over do while loop
 
 ! we should ensure right is larger than left
