@@ -292,7 +292,7 @@
 
 # endif  /* API */
 
-!>>> initialize the ctqmc quantum impurity solver
+!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
   subroutine cat_init_ctqmc(I_mpi, I_solver)
      use api
      use control
@@ -373,7 +373,7 @@
      return
   end subroutine cat_init_ctqmc
 
-!>>> execute the ctqmc quantum impurity solver
+!!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
      implicit none
 
@@ -388,7 +388,7 @@
      return
   end subroutine cat_exec_ctqmc
 
-!>>> stop the ctqmc quantum impurity solver
+!!>>> cat_stop_ctqmc: stop the ctqmc quantum impurity solver
   subroutine cat_stop_ctqmc()
      use control, only: myid, master
 
@@ -406,7 +406,7 @@
      return
   end subroutine cat_stop_ctqmc
 
-!>>> setup the hybridization function
+!!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
      use constants, only : dp
      use control, only : mfreq, norbs
@@ -432,7 +432,7 @@
      return
   end subroutine cat_set_hybf
 
-!>>> setup the symmetry vector
+!!>>> cat_set_symm: setup the symmetry vector
   subroutine cat_set_symm(size_t, symm_t)
      use context, only : symm
 
@@ -456,7 +456,7 @@
      return
   end subroutine cat_set_symm
 
-!>>> setup the impurity level
+!!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
      use constants, only : dp
      use context, only : eimp
@@ -481,7 +481,7 @@
      return
   end subroutine cat_set_eimp
 
-!>>> extract the impurity green's function
+!!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
      use control, only : mfreq, norbs
@@ -507,7 +507,7 @@
      return
   end subroutine cat_get_grnf
 
-!>>> extract the self-energy function
+!!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
      use constants, only : dp
      use control, only : mfreq, norbs
