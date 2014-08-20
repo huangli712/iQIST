@@ -1,51 +1,59 @@
-!-------------------------------------------------------------------------
-! project : lavender
-! program : ctqmc_impurity_solver
-!           ctqmc_diagram_warmming
-!           ctqmc_diagram_sampling
-!           ctqmc_diagram_checking
-!           ctqmc_impurity_tester
-! source  : ctqmc_solver.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/26/2009 by li huang
-!           10/20/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/17/2009 by li huang
-!           11/22/2009 by li huang
-!           12/02/2009 by li huang
-!           12/04/2009 by li huang
-!           12/06/2009 by li huang
-!           12/17/2009 by li huang
-!           12/22/2009 by li huang
-!           12/26/2009 by li huang
-!           12/30/2009 by li huang
-!           01/13/2010 by li huang
-!           02/27/2010 by li huang
-!           06/09/2010 by li huang
-!           06/21/2010 by li huang
-! purpose : the main subroutine for the hybridization expansion version
-!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!           solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : manjushaka
+!!! program : ctqmc_impurity_solver
+!!!           ctqmc_diagram_warmming
+!!!           ctqmc_diagram_sampling
+!!!           ctqmc_diagram_checking
+!!!           ctqmc_impurity_tester
+!!! source  : ctqmc_solver.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!!           yilin wang (email:qhwyl2006@126.com)
+!!! history : 09/16/2009 by li huang
+!!!           09/20/2009 by li huang
+!!!           09/24/2009 by li huang
+!!!           09/26/2009 by li huang
+!!!           10/20/2009 by li huang
+!!!           10/29/2009 by li huang
+!!!           11/01/2009 by li huang
+!!!           11/17/2009 by li huang
+!!!           11/22/2009 by li huang
+!!!           12/02/2009 by li huang
+!!!           12/04/2009 by li huang
+!!!           12/06/2009 by li huang
+!!!           12/17/2009 by li huang
+!!!           12/22/2009 by li huang
+!!!           12/26/2009 by li huang
+!!!           12/30/2009 by li huang
+!!!           01/13/2010 by li huang
+!!!           02/27/2010 by li huang
+!!!           06/09/2010 by li huang
+!!!           06/21/2010 by li huang
+!!!           08/20/2014 by yilin wang
+!!! purpose : the main subroutine for the hybridization expansion version
+!!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
+!!!           solver
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
-!>>> core engine for hybridization expansion version continuous time
-! quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_impurity_solver: core engine for hybridization expansion version 
+!!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, mystd
 
-     use m_sector
-     use m_npart
+     use control, only : issun, isspn, itrun, isvrt, isort 
+     use control, only : ncfgs, norbs, nband, nspin, myid, master
+     use control, only : nsweep, nwrite, nmonte, ncarlo, Uc, Jz, beta
+     use control, only : nffrq, nbfrq, mkink, mfreq, nfreq, ntime
+
+     use context, only : tmesh, rmesh, symm, hist, prob, naux, saux
+     use context, only : nmat, nnmat, gtau, grnf, sig2, caves, cnegs
+     use context, only : schi, sschi, ochi, oochi, ftau, g2_re, g2_im
+     use context, only : h2_re, h2_im
+
+     use m_sector, only : ctqmc_deallocate_memory_occu
+     use m_npart, only : ctqmc_deallocate_memory_part
 
      implicit none
 
@@ -719,12 +727,19 @@
      return
   end subroutine ctqmc_impurity_solver
 
-!>>> perform thermalization on perturbation expansion series to achieve
-! thermodynamics equilibrium state
+!!>>> ctqmc_diagram_warmming: perform thermalization or warmup on the
+!!>>> perturbation expansion series to achieve thermodynamics stable
+!!>>> equilibrium state
   subroutine ctqmc_diagram_warmming()
      use constants, only : zero
      use control, only : ntherm
-     use context
+
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : cnegs, caves
 
      implicit none
 
@@ -767,12 +782,13 @@
      return
   end subroutine ctqmc_diagram_warmming
 
-!>>> visit the perturbation expansion diagrams randomly
+!!>>> ctqmc_diagram_sampling: visit the perturbation expansion diagrams
+!!>>> randomly
   subroutine ctqmc_diagram_sampling(cstep)
      use constants, only : dp
      use control, only : nflip, nclean
 
-     use spring
+     use spring, only : spring_sfmt_stream
 
      implicit none
 
@@ -821,11 +837,14 @@
      return
   end subroutine ctqmc_diagram_sampling
 
-!>>> checking whether the quantum impurity solver is consistent internally
+!!>>> ctqmc_diagram_checking: checking whether the quantum impurity solver
+!!>>> is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
-     use constants
-     use control
-     use context
+     use constants, only : mystd 
+     use control, only : norbs, myid, master
+
+     use context, only : rank, index_s, index_e, time_s, time_e
+     use context, only : index_v, time_v
 
      implicit none
 
@@ -882,7 +901,8 @@
      return
   end subroutine ctqmc_diagram_checking
 
-!>>> testing subroutine, please active it on ctqmc_diagram_sampling()
+!!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
+!!>>> on ctqmc_diagram_sampling() subroutine
   subroutine ctqmc_impurity_tester()
      use constants
      use control

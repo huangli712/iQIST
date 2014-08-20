@@ -1,32 +1,32 @@
-!-------------------------------------------------------------------------
-! project : manjushaka
-! program : control    module
-! source  : ctqmc_control.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/15/2009 by li huang
-!           09/20/2009 by li huang
-!           11/01/2009 by li huang
-!           12/01/2009 by li huang
-!           02/23/2010 by li huang
-! purpose : define global control parameters for hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver and dynamical mean field theory (DMFT) self-
-!           consistent engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : manjushaka
+!!! program : control    module
+!!! source  : ctqmc_control.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!!           yilin wang (email:qhwyl2006@126.com)
+!!! history : 09/15/2009 by li huang
+!!!           09/20/2009 by li huang
+!!!           11/01/2009 by li huang
+!!!           12/01/2009 by li huang
+!!!           02/23/2010 by li huang
+!!!           08/20/2014 by yilin wang
+!!! purpose : define global control parameters for hybridization expansion
+!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
+!!!           impurity solver and dynamical mean field theory (DMFT) self-
+!!!           consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
   module control
      use constants, only : dp
 
      implicit none
 
-!=========================================================================
-!>>> integer variables                                                 <<<
-!=========================================================================
+!!=========================================================================
+!!>>> integer variables                                                 <<<
+!!=========================================================================
 
 ! control flag: running mode
 ! if isscf == 1, one-shot non-self-consistent scheme, used in local density
@@ -162,9 +162,6 @@
 ! note: 2\sqrt{3 <k> nband} ~ 4\sqrt{3 <k> nband} may be the optimal value
 ! for npart to achieve maximum performance
      integer, public, save :: npart  = 16
-
-! maximum level for skip lists
-     integer, public, save :: mlevl  = 8
 
 ! flip period for spin up and spin down states
 ! note: care must be taken to prevent the system from being trapped in a

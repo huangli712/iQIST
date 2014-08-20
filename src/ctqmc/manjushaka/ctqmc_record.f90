@@ -1,72 +1,73 @@
-!-------------------------------------------------------------------------
-! project : lavender
-! program : ctqmc_record_gtau
-!           ctqmc_record_ftau
-!           ctqmc_record_grnf
-!           ctqmc_record_hist
-!           ctqmc_record_nmat
-!           ctqmc_record_schi
-!           ctqmc_record_ochi
-!           ctqmc_record_twop
-!           ctqmc_record_vrtx
-!           ctqmc_record_prob <<<---
-!           ctqmc_reduce_gtau
-!           ctqmc_reduce_ftau
-!           ctqmc_reduce_grnf
-!           ctqmc_reduce_hist
-!           ctqmc_reduce_nmat
-!           ctqmc_reduce_schi
-!           ctqmc_reduce_ochi
-!           ctqmc_reduce_twop
-!           ctqmc_reduce_vrtx
-!           ctqmc_reduce_prob <<<---
-!           ctqmc_symm_nmat
-!           ctqmc_symm_gtau
-!           ctqmc_symm_grnf
-!           ctqmc_smth_sigf   <<<---
-!           ctqmc_make_gtau
-!           ctqmc_make_ftau   <<<---
-!           ctqmc_make_hub1
-!           ctqmc_make_hub2   <<<---
-! source  : ctqmc_record.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/25/2009 by li huang
-!           09/27/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/03/2009 by li huang
-!           11/10/2009 by li huang
-!           11/19/2009 by li huang
-!           11/30/2009 by li huang
-!           12/06/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/22/2009 by li huang
-!           12/26/2009 by li huang
-!           12/29/2009 by li huang
-!           01/14/2010 by li huang
-!           02/01/2010 by li huang
-!           02/24/2010 by li huang
-!           02/27/2010 by li huang
-!           09/29/2010 by li huang
-! purpose : measure, record, and postprocess the key observables produced
-!           by the hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-------------------------------------------------------------------------
+!!! project : manjushaka
+!!! program : ctqmc_record_gtau
+!!!           ctqmc_record_ftau
+!!!           ctqmc_record_grnf
+!!!           ctqmc_record_hist
+!!!           ctqmc_record_nmat
+!!!           ctqmc_record_schi
+!!!           ctqmc_record_ochi
+!!!           ctqmc_record_twop
+!!!           ctqmc_record_vrtx
+!!!           ctqmc_record_prob <<<---
+!!!           ctqmc_reduce_gtau
+!!!           ctqmc_reduce_ftau
+!!!           ctqmc_reduce_grnf
+!!!           ctqmc_reduce_hist
+!!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_schi
+!!!           ctqmc_reduce_ochi
+!!!           ctqmc_reduce_twop
+!!!           ctqmc_reduce_vrtx
+!!!           ctqmc_reduce_prob <<<---
+!!!           ctqmc_symm_nmat
+!!!           ctqmc_symm_gtau
+!!!           ctqmc_symm_grnf
+!!!           ctqmc_smth_sigf   <<<---
+!!!           ctqmc_make_gtau
+!!!           ctqmc_make_ftau   <<<---
+!!!           ctqmc_make_hub1
+!!!           ctqmc_make_hub2   <<<---
+!!! source  : ctqmc_record.f90
+!!! type    : subroutine
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!!           yilin wang (email:qhwyl2006@126.com)
+!!! history : 09/16/2009 by li huang
+!!!           09/18/2009 by li huang
+!!!           09/20/2009 by li huang
+!!!           09/25/2009 by li huang
+!!!           09/27/2009 by li huang
+!!!           10/29/2009 by li huang
+!!!           11/01/2009 by li huang
+!!!           11/03/2009 by li huang
+!!!           11/10/2009 by li huang
+!!!           11/19/2009 by li huang
+!!!           11/30/2009 by li huang
+!!!           12/06/2009 by li huang
+!!!           12/09/2009 by li huang
+!!!           12/18/2009 by li huang
+!!!           12/22/2009 by li huang
+!!!           12/26/2009 by li huang
+!!!           12/29/2009 by li huang
+!!!           01/14/2010 by li huang
+!!!           02/01/2010 by li huang
+!!!           02/24/2010 by li huang
+!!!           02/27/2010 by li huang
+!!!           09/29/2010 by li huang
+!!!           08/20/2014 by yilin wang
+!!! purpose : measure, record, and postprocess the key observables produced
+!!!           by the hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
 
-!>>> record the impurity green's function in imaginary time axis
+!!>>> ctqmc_record_gtau: record the impurity green's function in 
+!!>>> imaginary time axis
   subroutine ctqmc_record_gtau()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, pi
+     use control, only : isort, ntime, beta, norbs, legrd, lemax, chgrd, chmax
+     use context, only : gtau, rank, time_s, time_e, index_s, index_e, mmat, ppleg, qqche
 
      implicit none
 
@@ -260,7 +261,8 @@
   end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
-!>>> record the auxiliary correlation function in imaginary time axis
+!!>>> ctqmc_record_ftau: record the auxiliary correlation 
+!!>>> function in imaginary time axis
   subroutine ctqmc_record_ftau()
      use constants
      use control
@@ -268,16 +270,17 @@
 
      implicit none
 
-     call s_print_error('ctqmc_record_ftau', 'this subroutine is not implemented')
+     call s_print_error('ctqmc_record_ftau', &
+                        'this subroutine is not implemented')
 
      return
   end subroutine ctqmc_record_ftau
 
-!>>> record the impurity green's function in matsubara frequency space
+!!>>> ctqmc_record_grnf: record the impurity green's 
+!!>>> function in matsubara frequency space
   subroutine ctqmc_record_grnf()
-     use constants
-     use control
-     use context
+     use control, only : norbs, nfreq
+     use context, only : grnf, csign, gmat
 
      implicit none
 
@@ -300,9 +303,11 @@
      return
   end subroutine ctqmc_record_grnf
 
-!>>> record the histogram of perturbation expansion series
+!!>>> ctqmc_record_hist: record the histogram of 
+!!>>> perturbation expansion series
   subroutine ctqmc_record_hist()
-     use context
+     use control, only : mkink
+     use context, only : caves, csign, ckink, hist
 
      implicit none
 
@@ -319,14 +324,18 @@
      return
   end subroutine ctqmc_record_hist
 
-!>>> record the occupation matrix, double occupation matrix, and auxiliary
-! physical observables simulataneously
+!!>>> ctqmc_record_nmat: record the occupation matrix, 
+!!>>> double occupation matrix, and auxiliary physical 
+!!>>> observables simulataneously
   subroutine ctqmc_record_nmat()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use control, only : norbs, nband, ncfgs, idoub, beta, mune, U
 
-     use m_sector
+     use context, only : ddmat, matrix_ptrace, nmat, nnmat
+     use context, only : ckink, eigs, paux
+
+     use m_sector, only : nsectors, sectors, is_trunc, final_product
+     use m_sector, only : max_dim_sect_trunc, occu, double_occu
 
      implicit none
 
@@ -468,7 +477,7 @@
      return
   end subroutine ctqmc_record_nmat
 
-!>>> record the spin-spin correlation function
+!!>>> ctqmc_record_schi: record the spin-spin correlation function
   subroutine ctqmc_record_schi()
      use constants
      use control
@@ -476,12 +485,13 @@
 
      implicit none
 
-     call s_print_error('ctqmc_record_schi', 'this subroutine is not implemented')
+     call s_print_error('ctqmc_record_schi', &
+                        'this subroutine is not implemented')
 
      return
   end subroutine ctqmc_record_schi
 
-!>>> record the orbital-orbital correlation function
+!!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
   subroutine ctqmc_record_ochi()
      use constants
      use control
@@ -489,16 +499,19 @@
 
      implicit none
 
-     call s_print_error('ctqmc_record_ochi', 'this subroutine is not implemented')
+     call s_print_error('ctqmc_record_ochi', &
+                        'this subroutine is not implemented')
 
      return
   end subroutine ctqmc_record_ochi
 
-!>>> record the two-particle green's function
+!!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
-     use constants
-     use control
-     use context
+     use constants, only : dp, czero, two, czi, pi
+     use control, only : nffrq, nbfrq, norbs, beta
+
+     use context, only : rank, time_s, time_e, index_s, index_e
+     use context, only : g2_re, g2_im, mmat
 
      implicit none
 
@@ -609,7 +622,7 @@
      return
   end subroutine ctqmc_record_twop
 
-!>>> record the vertex function
+!!>>> ctqmc_record_vrtx: record the vertex function
   subroutine ctqmc_record_vrtx()
      use constants
      use control
@@ -617,16 +630,16 @@
 
      implicit none
 
-     call s_print_error('ctqmc_record_vrtx', 'this subroutine is not implemented')
+     call s_print_error('ctqmc_record_vrtx', &
+                        'this subroutine is not implemented')
 
      return
   end subroutine ctqmc_record_vrtx
 
-!>>> record the probability of atomic states
+!!>>> ctqmc_record_prob: record the probability of atomic states
   subroutine ctqmc_record_prob()
-     use constants
-     use control
-     use context
+     use control, only : ncfgs
+     use context, only : prob, csign, ddmat, matrix_ptrace
 
      implicit none
 
@@ -641,10 +654,11 @@
      return
   end subroutine ctqmc_record_prob
 
-!>>> reduce the gtau from all children processes
+!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use control, only : ntime, norbs, nprocs
+     use context, only : gtau
 
      use mmpi
 
@@ -678,10 +692,11 @@
      return
   end subroutine ctqmc_reduce_gtau
 
-!>>> reduce the ftau from all children processes
+!!>>> ctqmc_reduce_ftau: reduce the ftau from all children processes
   subroutine ctqmc_reduce_ftau(ftau_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use control, only : ntime, norbs, nprocs
+     use context, only : ftau
 
      use mmpi
 
@@ -715,10 +730,11 @@
      return
   end subroutine ctqmc_reduce_ftau
 
-!>>> reduce the grnf from all children processes
+!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use control, only : mfreq, norbs, nprocs
+     use context, only : grnf
 
      use mmpi
 
@@ -752,12 +768,12 @@
      return
   end subroutine ctqmc_reduce_grnf
 
-!>>> reduce the hist from all children processes
-! note: since hist_mpi and hist are integer (kind=4) type, it is important
-! to avoid data overflow in them
+!!>>> ctqmc_reduce_hist: reduce the hist from all children processes
+!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is 
+!!>>> important to avoid data overflow in them
   subroutine ctqmc_reduce_hist(hist_mpi)
-     use constants
-     use context
+     use control, only : mkink, nprocs
+     use context, only : hist
 
      use mmpi
 
@@ -791,10 +807,12 @@
      return
   end subroutine ctqmc_reduce_hist
 
-!>>> reduce the nmat and nnmat from all children processes
+!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from 
+!!>>> all children processes
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use control, only : norbs, nprocs
+     use context, only : nmat, nnmat
 
      use mmpi
 
@@ -835,10 +853,12 @@
      return
   end subroutine ctqmc_reduce_nmat
 
-!>>> reduce the schi and sschi from all children processes
+!!>>> ctqmc_reduce_schi: reduce the schi and sschi from 
+!!>>> all children processes
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use control, only : ntime, nband, nprocs
+     use context, only : schi, sschi
 
      use mmpi
 
@@ -879,10 +899,12 @@
      return
   end subroutine ctqmc_reduce_schi
 
-!>>> reduce the ochi and oochi from all children processes
+!!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from 
+!!>>> all children processes
   subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use control, only : ntime, norbs, nprocs
+     use context, only : ochi, oochi
 
      use mmpi
 
@@ -923,10 +945,12 @@
      return
   end subroutine ctqmc_reduce_ochi
 
-!>>> reduce the g2_re_mpi and g2_im_mpi from all children processes
+!!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from 
+!!>>> all children processes
   subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use control, only : norbs, nffrq, nbfrq, nprocs
+     use context, only : g2_re, g2_im
 
      use mmpi
 
@@ -967,10 +991,12 @@
      return
   end subroutine ctqmc_reduce_twop
 
-!>>> reduce the h2_re_mpi and h2_im_mpi from all children processes
+!!>>> ctqmc_reduce_vrtx: reduce the h2_re_mpi and h2_im_mpi from 
+!!>>> all children processes
   subroutine ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use control, only : norbs, nffrq, nbfrq, nprocs
+     use context, only : h2_re, h2_im
 
      use mmpi
 
@@ -1011,10 +1037,12 @@
      return
   end subroutine ctqmc_reduce_vrtx
 
-!>>> reduce the prob from all children processes
+!!>>> ctqmc_reduce_prob: reduce the prob from 
+!!>>> all children processes
   subroutine ctqmc_reduce_prob(prob_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use control, only : ncfgs, nprocs
+     use context, only : prob
 
      use mmpi
 
@@ -1048,10 +1076,10 @@
      return
   end subroutine ctqmc_reduce_prob
 
-!>>> symmetrize the nmat according to symm vector
+!!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+     use control, only : norbs, nband, issun, isspn
 
      implicit none
 
@@ -1115,11 +1143,11 @@
      return
   end subroutine ctqmc_symm_nmat
 
-!>>> symmetrize the gtau according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_gtau: symmetrize the gtau according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_gtau(symm, gtau)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+     use control, only : ntime, norbs, nband, issun, isspn
 
      implicit none
 
@@ -1190,11 +1218,11 @@
      return
   end subroutine ctqmc_symm_gtau
 
-!>>> symmetrize the grnf according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_grnf: symmetrize the grnf according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_grnf(symm, grnf)
-     use constants
-     use control
+     use constants, only : dp, zero, two, czero
+     use control, only : mfreq, norbs, nband, issun, isspn
 
      implicit none
 
@@ -1265,10 +1293,11 @@
      return
   end subroutine ctqmc_symm_grnf
 
-!>>> smooth impurity self-energy function in low frequency region
+!!>>> ctqmc_smth_sigf: smooth impurity self-energy 
+!!>>> function in low frequency region
   subroutine ctqmc_smth_sigf(sigf)
-     use constants
-     use control
+     use constants, only : dp, czero
+     use control, only : nfreq
 
      implicit none
 
@@ -1335,10 +1364,11 @@
      return
   end subroutine ctqmc_smth_sigf
 
-!>>> build imaginary green's function using orthogonal polynomial representation
+!!>>> ctqmc_make_gtau: build imaginary green's function using 
+!!>>> orthogonal polynomial representation
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, pi
+     use control, only : ntime, norbs, isort, beta, legrd, lemax, chgrd, chmax
      use context, only : ppleg, qqche
 
      implicit none
@@ -1518,10 +1548,14 @@
   end subroutine cat_make_gtau3
   end subroutine ctqmc_make_gtau
 
-!>>> build auxiliary correlation function using orthogonal polynomial representation
+!!>>> ctqmc_make_ftau: build auxiliary correlation function using 
+!!>>> orthogonal polynomial representation
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+
+     use control, only : ntime, norbs, isort, beta
+     use control, only : legrd, lemax, chgrd, chmax
+
      use context, only : ppleg, qqche
 
      implicit none
@@ -1643,17 +1677,17 @@
   end subroutine cat_make_ftau3
   end subroutine ctqmc_make_ftau
 
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make interpolation for self-energy
-! function between low frequency QMC data and high frequency Hubbard-I
-! approximation data, the full impurity green's function can be obtained by
-! using dyson's equation finally
+!!>>> ctqmc_make_hub1: build atomic green's function and self-energy function 
+!!>>> using improved Hubbard-I approximation, and then make interpolation for 
+!!>>> self-energy function between low frequency QMC data and high frequency 
+!!>>> Hubbard-I approximation data, the full impurity green's function can be 
+!!>>> obtained by using dyson's equation finally
   subroutine ctqmc_make_hub1()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero, one
+     use control, only : norbs, mfreq, nfreq, mune, myid, master
+     use context, only : prob, eigs, rmesh, cmesh, eimp, sig2, grnf, hybf
 
-     use m_sector
+     use m_sector, only : nsectors, sectors, is_trunc
 
      implicit none
 
@@ -1812,10 +1846,10 @@
      return
   end subroutine ctqmc_make_hub1
 
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make forward fourier transformation
-! for impurity green's function and auxiliary correlation function. then
-! the final self-energy function is obtained by analytical formula.
+!!>>> ctqmc_make_hub2: build atomic green's function and self-energy function 
+!!>>> using improved Hubbard-I approximation, and then make forward fourier 
+!!>>> transformation for impurity green's function and auxiliary correlation 
+!!>>> function. then the final self-energy function is obtained by analytical formula.
   subroutine ctqmc_make_hub2()
      use constants
      use control
@@ -1823,7 +1857,8 @@
 
      implicit none
 
-     call s_print_error('ctqmc_make_hub2', 'this subroutine is not implemented')
+     call s_print_error('ctqmc_make_hub2', &
+                        'this subroutine is not implemented')
 
      return
   end subroutine ctqmc_make_hub2
