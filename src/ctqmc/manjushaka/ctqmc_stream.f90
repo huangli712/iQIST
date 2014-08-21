@@ -282,6 +282,7 @@
      use context, only : symm, eimp, eigs, naux
 
      use mmpi
+
      use m_sector
      use m_npart
 
@@ -462,7 +463,8 @@
 
      if (myid == master) then ! only master node can do it
          exists = .false.
-! inquire about file 'atom.cix', this file is necessary, the code can not run without it
+! inquire about file 'atom.cix', this file is necessary, 
+! the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
 
 ! find 'atom.cix', read it 
@@ -472,18 +474,22 @@
              read(mytmp,*) 
              read(mytmp,*) 
              read(mytmp,*) 
-! read the total number of sectors, maximum dimension of sectors, and average dimension of sectors
+! read the total number of sectors, maximum dimension of sectors, 
+! and average dimension of sectors
              read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
 
-! after we know the total number of sectors, we can allocate memory for array sectors and parts
+! after we know the total number of sectors, we can allocate 
+! memory for array sectors and parts
              call ctqmc_allocate_memory_sect()
 
 ! read each sector's information
              do i=1, nsectors
                  read(mytmp,*) ! skip the header
 
-! read the dimension, total number of electrons, number of fermion operators, and start index of this sector
-                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelectron, sectors(i)%nops, sectors(i)%istart
+! read the dimension, total number of electrons, number of 
+! fermion operators, and start index of this sector
+                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelectron, &
+                                   sectors(i)%nops, sectors(i)%istart
 
 ! allocate the memory for sectors(i)
                  call alloc_one_sector(sectors(i))
@@ -491,7 +497,8 @@
 ! read the next_sector index
                  read(mytmp,*) ! skip the header
                  do j=1, sectors(i)%nops
-                     read(mytmp,*) j1, sectors(i)%next_sector(j,0), sectors(i)%next_sector(j,1)  
+                     read(mytmp,*) j1, sectors(i)%next_sector(j,0), &
+                                       sectors(i)%next_sector(j,1)  
                  enddo
 
 ! read the eigenvalue of this sector
@@ -502,7 +509,8 @@
              enddo
              close(mytmp) 
          else
-             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+             call s_print_error('ctqmc_selfer_init', &
+                                'file atom.cix does not exist')
          endif ! back if ( exists .eqv. .true. ) block
 
 !-------------------------------------------------------------------------
@@ -527,7 +535,8 @@
              enddo 
              close(mytmp)
          else
-             call s_print_error('ctqmc_selfer_init','file atom.fmat does not exist')
+             call s_print_error('ctqmc_selfer_init', &
+                                'file atom.fmat does not exist')
          endif
      endif ! back if ( myid == master ) block
 
@@ -583,13 +592,15 @@
      do i=1,nsectors
          do j=1, sectors(i)%ndim
              j1 = j1 + 1
-             sectors(i)%myeigval(j) = sectors(i)%myeigval(j) - mune * sectors(i)%nelectron
+             sectors(i)%myeigval(j) = sectors(i)%myeigval(j) & 
+                                      - mune * sectors(i)%nelectron
              eigs(j1) = sectors(i)%myeigval(j)  
              naux(j1) = sectors(i)%nelectron
          enddo
      enddo 
 
-! substract the eigenvalues zero point, here we store the eigen energy zero point in U
+! substract the eigenvalues zero point, here we store the eigen energy 
+! zero point in U
      r1 = minval(eigs)
      r2 = maxval(eigs)
 ! here we choose the minimum as zero point
@@ -602,8 +613,8 @@
 ! note: \infity - \infity is undefined, which return NaN
      do i=1,ncfgs
          if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
-             call s_print_error('ctqmc_selfer_init','NaN error, please &
-                                               adjust the zero base of eigs')
+             call s_print_error('ctqmc_selfer_init', &
+                                'NaN error, please adjust the zero base of eigs')
          endif
      enddo 
 

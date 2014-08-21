@@ -270,7 +270,8 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace(1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     call ctqmc_lazy_ztrace( 1, 1, nsize+1, deter_ratio, rand_num, &
+                                 accept_p, pass, tau_start, tau_end )
 
      return
   end subroutine cat_insert_ztrace
@@ -453,7 +454,8 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace(2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end)
+     call ctqmc_lazy_ztrace( 2, 1, nsize-1, deter_ratio, rand_num, &
+                                 accept_p, pass, tau_start, tau_end )
 
      return
   end subroutine cat_remove_ztrace
@@ -605,7 +607,8 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace(3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2)
+     call ctqmc_lazy_ztrace( 3, 1, nsize, deter_ratio, rand_num, &
+                             accept_p, pass, tau_start1, tau_start2 )
 
      return
   end subroutine cat_lshift_ztrace
@@ -757,7 +760,8 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace(4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2)
+     call ctqmc_lazy_ztrace( 4, 1, nsize, deter_ratio, rand_num, &
+                               accept_p, pass, tau_end1, tau_end2 )
 
      return
   end subroutine cat_rshift_ztrace
@@ -2527,7 +2531,7 @@
 ! the type of Monte Carlo moves
      integer,  intent(in)  :: imove
 
-! the mode of how to calculating trace
+! the mode how to calculate trace
      integer,  intent(in)  :: cmode
 
 ! the total number of operators for current diagram
@@ -2564,7 +2568,7 @@
 ! whether it is a string
      logical :: is_string(nsectors)
 
-! min dimension of the sectors
+! minimum dimension of the sectors
      integer :: min_dim(nsectors)
 
 ! the trace boundary
@@ -2573,12 +2577,12 @@
 ! the trace of each sector
      real(dp) :: trace_sector(nsectors)
 
-! the max and min of acceptance ratio
+! the maximum and minimum bounds of acceptance ratio
      real(dp) :: pmax
      real(dp) :: pmin
      real(dp) :: ptmp
 
-! the propose 
+! the propose ratio
      real(dp) :: propose
 
 ! sum of trace_bound
@@ -2674,10 +2678,11 @@
      pmax = ptmp * sum_bound
 
 ! check whether pmax < rand_num
+! if it is true, reject this move immediately
      if (pmax < rand_num) then
          pass = .false.
          accept_p = zero 
-         return
+         RETURN
      endif
 
 ! make npart
@@ -2777,9 +2782,8 @@
 ! dummy variables
      integer :: indx
 
-! copy data from index_t or index_v to index_t_loc
+! copy data from index_v to index_t_loc
 ! copy data from expt_t to expt_t_loc
-
      index_t_loc = index_v
      expt_t_loc = expt_t(:,2)
 

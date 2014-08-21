@@ -3,8 +3,6 @@
 !!! program : ctqmc_core module
 !!!           ctqmc_clur module
 !!!           ctqmc_flvr module
-!!!           ctqmc_mesh module
-!!!           ctqmc_meat module
 !!!           ctqmc_umat module
 !!!           ctqmc_mmat module
 !!!           ctqmc_gmat module
@@ -704,7 +702,8 @@
      return
   end subroutine ctqmc_allocate_memory_mmat
 
-!>>> allocate memory for gmat-related variables
+!!>>> ctqmc_allocate_memory_gmat: allocate memory for 
+!!>>> gmat-related variables
   subroutine ctqmc_allocate_memory_gmat()
      implicit none
 

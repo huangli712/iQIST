@@ -1,6 +1,6 @@
 !!!-------------------------------------------------------------------------
 !!! project : manjushaka
-!!! program : m_npart
+!!! program : m_npart  module
 !!!           m_npart@ctqmc_allocate_memory_part
 !!!           m_npart@ctqmc_deallocate_memory_part
 !!!           m_npart@ctqmc_make_nparts
@@ -13,6 +13,7 @@
 !!!           07/19/2014
 !!!           08/09/2014
 !!!           08/13/2014
+!!!           08/20/2014
 !!! purpose : define data structure for divide conquer (npart) algorithm
 !!! status  : unstable
 !!! comment :
@@ -192,11 +193,9 @@
  
 ! is_save: how to process each part for each success string
 ! is_save = 0: the matrices product for this part has been calculated
-!              previoulsy, another part_indx is needed to label which
-!              part we can fetch and use it directly.
+!              previoulsy, we can use it directly.
 ! is_save = 1: this part should be recalculated, and the result must be
-!              stored in saved_a, and saved_a_nm arrays if this Monte Caro
-!              move has been accepted.
+!              stored in saved_a, if this Monte Caro move has been accepted.
 ! is_save = 2: this part is empty, we don't need to do anything with them.
 ! first, set it to be 0
      is_save(:,:,1) = is_save(:,:,2)
@@ -365,9 +364,9 @@
      dim1 = sectors(string(1))%ndim
      right_mat = zero 
      tmp_mat = zero
+
 ! loop over all the parts
      do i=1, npart
-   
 ! this part has been calculated previously, just use its results
          if (is_save(i,isect,1) == 0) then
              sect1 = string(ope(i)+1)
