@@ -85,7 +85,7 @@
 ! the mode how to truncate the Hilbert space
 ! if itrun == 1, don't truncate it
 ! if itrun == 2, only truncate the occupancy number
-! if itrun == 3, truncate both occupancy number and energy
+! if itrun == 3, truncate both occupancy number and high energy states
      integer, public, save :: itrun  = 1
 
 ! whether to measure the double occupancy number

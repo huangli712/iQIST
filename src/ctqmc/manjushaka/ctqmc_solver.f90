@@ -498,14 +498,6 @@
 ! collect the histogram data from hist to hist_mpi
      call ctqmc_reduce_hist(hist_mpi)
 
-! collect the spin-spin correlation function data from schi to schi_mpi,
-! from sschi to sschi_mpi
-     call ctqmc_reduce_schi(schi_mpi, sschi_mpi)
-
-! collect the orbital-orbital correlation function data from ochi to
-! ochi_mpi, from oochi to oochi_mpi
-     call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
-
 ! collect the (double) occupation matrix data from nmat to nmat_mpi, from
 ! nnmat to nnmat_mpi
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
@@ -520,33 +512,66 @@
      call ctqmc_reduce_grnf(grnf_mpi)
 
 ! collect the auxiliary correlation function from ftau to ftau_mpi
-     call ctqmc_reduce_ftau(ftau_mpi)
+     if ( isort >= 4 ) then
+         call ctqmc_reduce_ftau(ftau_mpi)
+         do m=1,norbs
+             do n=1,ntime
+                 ftau(n,m,:) = ftau_mpi(n,m,:) * real(ncarlo) / real(nsweep)
+             enddo ! over n={1,ntime} loop
+         enddo ! over m={1,norbs} loop
+     endif
+
+! collect the spin-spin correlation function data from schi to schi_mpi,
+! from sschi to sschi_mpi
+     if ( isvrt == 2 ) then
+         call ctqmc_reduce_schi(schi_mpi, sschi_mpi)
+         schi  = schi_mpi  * real(nmonte) / real(nsweep)
+         do m=1,nband
+             do n=1,ntime
+                 sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
+             enddo ! over n={1,ntime} loop
+         enddo ! over m={1,nband} loop
+     endif
+
+! collect the orbital-orbital correlation function data from ochi to
+! ochi_mpi, from oochi to oochi_mpi
+     if ( isvrt == 3 ) then
+         call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
+         ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
+         do m=1,norbs
+             do n=1,ntime
+                 oochi(n,m) = oochi_mpi(n,m)   * real(nmonte) / real(nsweep)
+             enddo ! over n={1,ntime} loop
+         enddo ! over m={1,norbs} loop
+     endif
 
 ! collect the two-particle green's function from g2_re to g2_re_mpi, etc.
-     call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
+     if ( isvrt == 4 ) then
+         call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
+         do m=1,norbs
+             do n=1,norbs
+                 g2_re(n,m,:,:,:) = g2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+                 g2_im(n,m,:,:,:) = g2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+             enddo ! over n={1,norbs} loop
+         enddo ! over m={1,norbs} loop
+     endif
 
 ! collect the vertex function from h2_re to h2_re_mpi, etc.
-     call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
+     if ( isvrt == 5 ) then
+         call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
+         do m=1,norbs
+             do n=1,norbs
+                 h2_re(n,m,:,:,:) = h2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+                 h2_im(n,m,:,:,:) = h2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+             enddo ! over n={1,norbs} loop
+         enddo ! over m={1,norbs} loop
+     endif
 
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
 
-     schi  = schi_mpi  * real(nmonte) / real(nsweep)
-     ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      prob  = prob_mpi  * real(ncarlo)
-
-     do m=1,nband
-         do n=1,ntime
-             sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,nband} loop
-
-     do m=1,norbs
-         do n=1,ntime
-             oochi(n,m) = oochi_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,norbs} loop
 
      do m=1,norbs
          do n=1,norbs
@@ -566,25 +591,6 @@
          enddo ! over n={1,nfreq} loop
      enddo ! over m={1,norbs} loop
 
-     do m=1,norbs
-         do n=1,ntime
-             ftau(n,m,:) = ftau_mpi(n,m,:) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             g2_re(n,m,:,:,:) = g2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-             g2_im(n,m,:,:,:) = g2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             h2_re(n,m,:,:,:) = h2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-             h2_im(n,m,:,:,:) = h2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
@@ -634,16 +640,6 @@
          call ctqmc_dump_hist(hist)
      endif
 
-! write out the final spin-spin correlation function data, schi and sschi
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_schi(schi, sschi)
-     endif
-
-! write out the final orbital-orbital correlation function data, ochi and oochi
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_ochi(ochi, oochi)
-     endif
-
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_nmat(nmat, nnmat)
@@ -674,13 +670,20 @@
          call ctqmc_dump_sigf(rmesh, sig2)
      endif
 
-! write out the final two-particle green's function data, g2_re and g2_im
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_twop(g2_re, g2_im)
+! write out the final spin-spin correlation function data, schi and sschi
+     if ( myid == master .and. isvrt == 2 ) then ! only master node can do it
+         call ctqmc_dump_schi(schi, sschi)
      endif
 
+! write out the final orbital-orbital correlation function data, ochi and oochi
+     if ( myid == master .and. isvrt == 3 ) then ! only master node can do it
+         call ctqmc_dump_ochi(ochi, oochi)
+     endif
+
+! write out the final two-particle green's function data, g2_re and g2_im
 ! write out the final vertex function data, h2_re and h2_im
-     if ( myid == master ) then ! only master node can do it
+     if ( myid == master .and. (isvrt == 4 .or. isvrt == 5) ) then ! only master node can do it
+         call ctqmc_dump_twop(g2_re, g2_im)
          call ctqmc_dump_vrtx(h2_re, h2_im)
      endif
 

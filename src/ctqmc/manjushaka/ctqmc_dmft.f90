@@ -182,7 +182,6 @@
      use constants, only : dp
      use control, only : norbs, mfreq, part
 
-
      implicit none
 
 ! external arguments

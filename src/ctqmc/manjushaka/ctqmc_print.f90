@@ -41,10 +41,10 @@
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'version: 2012.08.20T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & IOP'
-     write(mystd,'(2X,a)') 'support: huangli712@yahoo.com.cn'
-     write(mystd,'(2X,a)') 'license: GPL2 and later versions'
+     write(mystd,'(2X,a)') 'version: 2014.08.14T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (CAEP & UNIFR) and yilin wang (IOP)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com and qhwyl2006@126.com'
+     write(mystd,'(2X,a)') 'License: GPL2 and later versions'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'MANJUSHAKA >>> start running at '//date_time_string

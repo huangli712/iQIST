@@ -143,7 +143,8 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-         call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, deter_ratio, rand_num, p, pass)
+         call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, &
+                                       deter_ratio, rand_num, p, pass)
      endif
 
 ! if the update action is accepted
@@ -273,7 +274,8 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-         call cat_remove_ztrace(fis, fie, tau_start, tau_end, deter_ratio, rand_num, p, pass)
+         call cat_remove_ztrace(fis, fie, tau_start, tau_end, &
+                                 deter_ratio, rand_num, p, pass)
      endif
 
 ! if update action is accepted
@@ -403,7 +405,8 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-         call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, deter_ratio, rand_num, p, pass)
+         call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, &
+                                             deter_ratio, rand_num, p, pass)
      endif
 
 ! if update action is accepted
@@ -527,7 +530,8 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-         call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, deter_ratio, rand_num, p, pass)
+         call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, &
+                                         deter_ratio, rand_num, p, pass)
      endif
 
 ! if update action is accepted
@@ -631,7 +635,6 @@
 
 ! not need to perform global flip if there are no operators at all
      if ( nsize == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_reflip_kink','can not reflip any operators')
          reflip_tcount = reflip_tcount + one
          reflip_reject = reflip_reject + one
          RETURN
@@ -677,7 +680,8 @@
          rand_num = spring_sfmt_stream()
 
 ! calculate operators trace
-         call ctqmc_lazy_ztrace(5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp)
+         call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, rand_num, &
+                                            p, pass, -1.0_dp, -1.0_dp )
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
@@ -708,9 +712,6 @@
                      CYCLE
                  endif
              enddo ! over i={1,nsize} loop
-
-! print exception information
-!<             call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
          endif ! back if ( pass .eqv. .true. ) block
 
@@ -761,7 +762,8 @@
              rand_num = spring_sfmt_stream()
 
 ! calculate operators trace
-             call ctqmc_lazy_ztrace(5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp)
+             call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, rand_num, &
+                                                p, pass, -1.0_dp, -1.0_dp )
 
 ! if update action is accepted
              if ( pass .eqv. .true. ) then
@@ -789,9 +791,6 @@
                          CYCLE
                      endif
                  enddo ! over i={1,nsize} loop
-
-! print exception information
-!<                 call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
              endif ! back if ( pass .eqv. .true. ) block
 
@@ -844,7 +843,8 @@
          rand_num = spring_sfmt_stream()
 
 ! calculate operators trace
-         call ctqmc_lazy_ztrace(5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp)
+         call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, rand_num, &
+                                            p, pass, -1.0_dp, -1.0_dp )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then
@@ -877,9 +877,6 @@
                      flvr_v ( index_v(i) ) = flvr - nband
                  endif
              enddo ! over i={1,nsize} loop
-
-! print exception information
-!<             call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
          endif ! back if ( pass .eqv. .true. ) block
 
