@@ -470,12 +470,16 @@
 ! find 'atom.cix', read it 
          if ( exists .eqv. .true. ) then
              open(mytmp, file='atom.cix', form='formatted', status='unknown')
-! skip three header lines
+! skip five header lines
              read(mytmp,*) 
              read(mytmp,*) 
              read(mytmp,*) 
+             read(mytmp,*) 
+             read(mytmp,*) 
+
 ! read the total number of sectors, maximum dimension of sectors, 
 ! and average dimension of sectors
+             read(mytmp,*) 
              read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
 
 ! after we know the total number of sectors, we can allocate 
