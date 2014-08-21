@@ -1,6 +1,6 @@
 !!!-------------------------------------------------------------------------
 !!! project : manjushaka
-!!! program : m_sector
+!!! program : m_sector  module
 !!!           m_sector@alloc_one_fmat
 !!!           m_sector@dealloc_one_fmat
 !!!           m_sector@alloc_one_sqrmat
@@ -30,7 +30,7 @@
 
 !!>>> data structure for good quantum numbers (GQNs) algorithm
   module m_sector
-     use constants, only : dp, zero, one,  mystd, mytmp
+     use constants, only : dp, zero, one, mystd, mytmp
      use control, only : mkink, norbs, idoub, itrun, myid, master, nmini, nmaxi
      use context, only : type_v, flvr_v
 
@@ -158,7 +158,7 @@
      type(t_fmat), intent(inout) :: one_fmat
   
 ! allocate it
-     allocate( one_fmat%item(one_fmat%n, one_fmat%m),  stat=istat)
+     allocate( one_fmat%item(one_fmat%n, one_fmat%m),  stat=istat )
 
 ! check the status
      if ( istat /= 0 ) then
@@ -184,7 +184,7 @@
      return
   end subroutine dealloc_one_fmat
 
-!!>>> allocate one fmat
+!!>>> alloc_one_sqrmat: allocate one sqrmat
   subroutine alloc_one_sqrmat(one_sqrmat)
      implicit none
   
@@ -206,7 +206,7 @@
      return
   end subroutine alloc_one_sqrmat
   
-!!>>> dealloc_one_sqrmat: deallocate one fmat
+!!>>> dealloc_one_sqrmat: deallocate one sqrmat
   subroutine dealloc_one_sqrmat(one_sqrmat)
      implicit none
   
@@ -518,17 +518,13 @@
 
 # if defined (MPI)
 ! block until all processes have reached here
-     call mp_barrier()
-
-     call mp_bcast(prob_sect, master)
-
-     call mp_bcast(is_trunc, master)
-
-     call mp_barrier()
+         call mp_barrier()
+         call mp_bcast(prob_sect, master)
+         call mp_bcast(is_trunc, master)
+         call mp_barrier()
 # endif  /* MPI */
 
          call cat_truncate_sectors()
-
      endif ! back if (itrun == 1) block
 
 ! print summary of sectors after truncated

@@ -5,6 +5,7 @@
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
 !!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
+!!!           Yilin Wang (IOP)
 !!! version : v2014.08.10T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on general matrix formalism  !
@@ -18,7 +19,7 @@
 !!
 !! If you want to obtain an executable program, please go to src/build/,
 !! open make.sys and comment out the API flag. On the other hand, if you
-!! want to compile azalea as a library, please activate the API flag.
+!! want to compile manjushaka as a library, please activate the API flag.
 !!
 !! Introduction
 !! ============
