@@ -85,8 +85,8 @@
      return
   end subroutine s_fft_tails
 
-!!>>> fourier from imaginary time space forward to matsubara frequency space
-! using linear fourier algorithm
+!!>>> s_fft_forward: fourier from imaginary time space forward to
+!!>>> matsubara frequency space using linear fourier algorithm
   subroutine s_fft_forward(ntime, tmesh, ftau, mfreq, rmesh, fmat)
      use constants, only : dp, zero
 
@@ -145,7 +145,8 @@
      return
   end subroutine s_fft_forward
 
-!>>> fourier from matsubara frequency space backward to imaginary time space
+!!>>> s_fft_backward: fourier from matsubara frequency space backward to
+!!>>> imaginary time space
   subroutine s_fft_backward(mfreq, rmesh, fmat, ntime, tmesh, ftau, beta)
      use constants, only : dp, zero, two, half, pi
 

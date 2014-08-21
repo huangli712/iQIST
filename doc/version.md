@@ -15,6 +15,7 @@ v0.2.0 // Aug
 * add bin/clean.sh
 * add doc/guide support in src/build/Makefile
 
+
 v0.1.9 // Aug 18, 2014
 ----------------------
 
