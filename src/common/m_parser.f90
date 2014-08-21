@@ -13,6 +13,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/26/2014 by li huang
+!!!           08/19/2014 by li huang
 !!! purpose : this purpose of this module is to implement a generic and
 !!!           flexible config/input file reader and analyzer.
 !!! status  : unstable
@@ -292,13 +293,13 @@
 ! get rid of the comment part starting with '#'
              p = index(string, '#')
              if ( p > 0 ) then
-                 string = string(0:p-1)
+                 string = string(1:p-1)
              endif ! back if ( p > 0 ) block
 
 ! get rid of the comment part starting with '!'
              p = index(string, '!')
              if ( p > 0 ) then
-                 string = string(0:p-1)
+                 string = string(1:p-1)
              endif ! back if ( p > 0 ) block
 
 ! extract the key and value pair from the input string
@@ -319,12 +320,12 @@
              endif ! back if ( p >  0 .and. q >  0 ) block
 ! case 3: we find only ":" character
              if ( p > 0 ) then
-                 str_key = string(0:p-1)
+                 str_key = string(1:p-1)
                  str_value = string(p+1:len(string))
              endif ! back if ( p > 0 ) block
 ! case 4: we find only "=" character
              if ( q > 0 ) then
-                 str_key = string(0:q-1)
+                 str_key = string(1:q-1)
                  str_value = string(q+1:len(string))
              endif ! back if ( q > 0 ) block
 
@@ -511,6 +512,10 @@
              q = 0
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
+                 if ( offset == 0 ) then
+                     write(mystd, '(a)') 'parser: p_get_vec, wrong number of vector'
+                     STOP
+                 endif ! back if ( offset == 0 ) block
                  read (str_value(q+1:q+offset-1), '(I10)') int_aux
                  out_value(p) = int_aux
                  q = q + offset
@@ -521,6 +526,10 @@
              q = 0
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
+                 if ( offset == 0 ) then
+                     write(mystd, '(a)') 'parser: p_get_vec, wrong number of vector'
+                     STOP
+                 endif ! back if ( offset == 0 ) block
                  read (str_value(q+1:q+offset-1), '(L4)') bool_aux
                  out_value(p) = bool_aux
                  q = q + offset
@@ -531,6 +540,10 @@
              q = 0
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
+                 if ( offset == 0 ) then
+                     write(mystd, '(a)') 'parser: p_get_vec, wrong number of vector'
+                     STOP
+                 endif ! back if ( offset == 0 ) block
                  read (str_value(q+1:q+offset-1), '(F16.8)') real_aux
                  out_value(p) = real_aux
                  q = q + offset
@@ -541,6 +554,10 @@
              q = 0
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
+                 if ( offset == 0 ) then
+                     write(mystd, '(a)') 'parser: p_get_vec, wrong number of vector'
+                     STOP
+                 endif ! back if ( offset == 0 ) block
                  out_value(p) = str_value(q+1:q+offset-1)
                  q = q + offset
              enddo ! over p={1,nsize-1} loop
