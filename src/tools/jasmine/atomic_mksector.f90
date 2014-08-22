@@ -1,28 +1,29 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_mksectors
-!!!           atomic_make_good_sz
-!!!           atomic_make_good_jz
+!!!           atomic_mkgood_sz
+!!!           atomic_mkgood_jz
 !!! source  : atomic_mksector.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
-!!! purpose : make sectors by using good quantum numbers
-!!! input   :
-!!! output  :
+!!!           08/22/2014 by yilin wang
+!!! purpose : make sectors by using good quantum numbers (GQNs)
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> determine all the sectors for good quantum numbers
-!! a sector consists of some many particle Fock states labeled by 
-!! good quantum numbers
+!!>>> atomic_mksectors: determine all the sectors for good quantum numbers
+!!>>> a sector consists of some many particle Fock states labeled by 
+!!>>> good quantum numbers
   subroutine atomic_mksectors()
-     use constants
-     use control
-     use m_basis_fullspace
-     use m_sector
-     use m_glob_sectors
+     use constants, only : mytmp, zero
+     use control, only : nband, norbs, ncfgs, ictqmc
+
+     use m_basis_fullspace, only : dim_sub_n, bin_basis
+     use m_sector, only : alloc_one_sector
+     use m_glob_sectors, only : nsectors, sectors, alloc_m_glob_sectors
+     use m_glob_sectors, only : max_dim_sect, ave_dim_sect
   
      implicit none
   
@@ -93,6 +94,7 @@
 
      max_nsect = ncfgs
      max_ndim = ncfgs
+
 ! allocate memory
      allocate( fock_good_ntot(ncfgs),             stat=istat )
      allocate( fock_good_sz(ncfgs),               stat=istat )
@@ -114,8 +116,8 @@
 
 !----------------------------------------------------------------
 ! make good_sz and good_jz
-     call atomic_make_good_sz(orb_good_sz)
-     call atomic_make_good_jz(orb_good_jz)
+     call atomic_mkgood_sz(orb_good_sz)
+     call atomic_mkgood_jz(orb_good_jz)
 
 ! build good quantum numbers for each Fock state
      counter = 0
@@ -440,9 +442,9 @@
      return
   end subroutine atomic_mksectors
  
-!!>>> make sz for each orbital
-  subroutine atomic_make_good_sz(good_sz)
-     use control, only: norbs
+!!>>> atomic_mkgood_sz: make sz for each orbital
+  subroutine atomic_mkgood_sz(good_sz)
+     use control, only : norbs
   
      implicit none
   
@@ -461,11 +463,11 @@
      enddo
   
      return
-  end subroutine atomic_make_good_sz
+  end subroutine atomic_mkgood_sz
   
-!>>> make jz for each orbital
-  subroutine atomic_make_good_jz(good_jz)
-     use control, only: nband, norbs
+!>>> atomic_mkgood_jz: make jz for each orbital
+  subroutine atomic_mkgood_jz(good_jz)
+     use control, only : nband, norbs
   
      implicit none
   
@@ -512,8 +514,9 @@
          good_jz(13)=  5
          good_jz(14)=  7
      else
-         call s_print_error('atomic_make_good_jz', 'not implemented for this norbs value !')
+         call s_print_error('atomic_make_good_jz', &
+            'not implemented for this norbs value !')
      endif
   
      return
-  end subroutine atomic_make_good_jz
+  end subroutine atomic_mkgood_jz

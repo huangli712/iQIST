@@ -5,19 +5,18 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
-!!! purpose : set config parameters 
-!!! input   :
-!!! output  :
+!!!           08/22/2014 by yilin wang
+!!! purpose : set control parameters 
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> read config parameters from file 'atom.config.in'
+!!>>> atomic_config: read config parameters from file 'atom.config.in'
   subroutine atomic_config()
-     use constants,  only: dp, mytmp
+     use constants, only : dp, mytmp
      use control
 
-     use parser
+     use parser, only : p_create, p_destroy, p_parse, p_get
   
      implicit none
   
@@ -39,14 +38,14 @@
      ncfgs = 2**norbs     ! number of many-body configurations
 
 !----------------------------------------------------------------
-     Uc = 4.00_dp         ! intraorbital Coulomb interaction
+     Uc = 2.00_dp         ! intraorbital Coulomb interaction
      Uv = 2.00_dp         ! interorbital Coulomb interaction
-     Jz = 1.00_dp         ! Hund's exchange interaction
-     Js = 1.00_dp         ! spin-flip interaction
-     Jp = 1.00_dp         ! pair-hopping interaction
+     Jz = 0.00_dp         ! Hund's exchange interaction
+     Js = 0.00_dp         ! spin-flip interaction
+     Jp = 0.00_dp         ! pair-hopping interaction
   
 !----------------------------------------------------------------
-     Ud = 4.00_dp         ! Ud
+     Ud = 2.00_dp         ! Ud
      JH = 0.00_dp         ! JH
      F0 = 0.00_dp         ! F0
      F2 = 0.00_dp         ! F2

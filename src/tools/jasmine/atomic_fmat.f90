@@ -1,26 +1,26 @@
-!!!-------------------------------------------------------------------------
+!!!----------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_make_fmat_fullspace
-!!!           atomic_make_fmat_sectors
+!!! program : atomic_mkfmat_fullspace
+!!!           atomic_mkfmat_sectors
 !!!           atomic_rotate_fmat
-!!!           atomic_construct
-!!!           atomic_eliminate 
+!!!           atomic_make_construct
+!!!           atomic_make_eliminate 
 !!! source  : atomic_fmat.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!! purpose : make fmat
-!!! input   :
-!!! output  :
 !!! status  : unstable
-!!! comment :
-!!!-------------------------------------------------------------------------
+!!! comment : these subroutines are based on Dr. LiangDu's (duleung@gmail.com) 
+!!!           atomic program
+!!!----------------------------------------------------------------------------
 
-!!>>> make fmat for annihilation operators for full space case
-  subroutine atomic_make_fmat_fullspace()
-     use control,           only: norbs, ncfgs
-     use m_glob_fullspace,  only: anni_fmat, hmat_eigvec
-     use m_basis_fullspace, only: dec_basis, index_basis
+!!>>> atomic_mkfmat_fullspace: make fmat for annihilation operators 
+!!>>> for full space case
+  subroutine atomic_mkfmat_fullspace()
+     use control, only : norbs, ncfgs
+     use m_glob_fullspace, only : anni_fmat, hmat_eigvec
+     use m_basis_fullspace, only : dec_basis, index_basis
   
      implicit none
   
@@ -41,7 +41,7 @@
          do j=1,ncfgs
              right = dec_basis(j)
              if (btest(right, i-1) .eqv. .true.) then
-                call atomic_eliminate(i, right, left, isgn)
+                call atomic_make_eliminate(i, right, left, isgn)
                 k = index_basis(left)
                 anni_fmat(k, j, i) = dble(isgn)
              endif
@@ -50,19 +50,20 @@
   
 ! rotate it to the atomic eigenvector basis
      do i=1, norbs
-         call atomic_tran_represent_real(ncfgs, anni_fmat(:,:,i), hmat_eigvec)
+         call atomic_tran_repr_real(ncfgs, anni_fmat(:,:,i), hmat_eigvec)
      enddo
   
      return
-  end subroutine atomic_make_fmat_fullspace
+  end subroutine atomic_mkfmat_fullspace
 
-!!>>> build fmat for good quantum numbers (GQNs) algorithm
-  subroutine atomic_make_fmat_sectors()
-     use constants,         only: zero
-     use control,           only: norbs
-     use m_basis_fullspace, only: dec_basis, index_basis
-     use m_glob_sectors,    only: nsectors, sectors
-     use m_sector,          only: alloc_one_fmat
+!!>>> atomic_mkfmat_sectors: build fmat for good quantum numbers (GQNs) algorithm
+  subroutine atomic_mkfmat_sectors()
+     use constants, only : zero
+     use control, only : norbs
+
+     use m_basis_fullspace, only : dec_basis, index_basis
+     use m_glob_sectors, only : nsectors, sectors
+     use m_sector, only : alloc_one_fmat
   
      implicit none
   
@@ -98,10 +99,10 @@
                      jold = dec_basis(sectors(isect)%mybasis(jbas))
 ! for creation fermion operator
                      if (ifermi == 1 .and. ( btest(jold, iorb-1) .eqv. .false. )) then
-                         call atomic_construct(iorb, jold, jnew, isgn)
+                         call atomic_make_construct(iorb, jold, jnew, isgn)
 ! for annihilation fermion operator
                      elseif (ifermi == 0 .and. ( btest(jold, iorb-1) .eqv. .true. )) then
-                         call atomic_eliminate(iorb, jold, jnew, isgn)
+                         call atomic_make_eliminate(iorb, jold, jnew, isgn)
                      else
                          cycle
                      endif
@@ -122,9 +123,9 @@
      enddo ! over isect={1,nsectors} loop
   
      return
-  end subroutine atomic_make_fmat_sectors
+  end subroutine atomic_mkfmat_sectors
 
-!!>>> calculate A^T * B * C
+!!>>> atomic_rotate_fmat: rotate fmat from Fock basis to eigenstates basis
   subroutine atomic_rotate_fmat(ndimx, ndimy, amat, bmat, cmat)
      use constants, only: dp, zero, one
      implicit none
@@ -161,8 +162,9 @@
      return
   end subroutine atomic_rotate_fmat
 
-!!>>> create one electron on ipos of |jold) to deduce |jnew)
-  subroutine atomic_construct(ipos, jold, jnew, isgn)
+!!>>> atomic_make_construct: create one electron on ipos 
+!!>>> of |jold> to deduce |jnew>
+  subroutine atomic_make_construct(ipos, jold, jnew, isgn)
      implicit none
   
 ! external argument
@@ -194,10 +196,11 @@
      jnew = jold + 2**(ipos-1)
   
      return
-  end subroutine atomic_construct
+  end subroutine atomic_make_construct
 
-!!>>> destroy one electron on ipos of |jold) to deduce |jnew)
-  subroutine atomic_eliminate(ipos, jold, jnew, isgn)
+!!>>> atomic_make_eliminate: destroy one electron on ipos 
+!!>>> of |jold> to deduce |jnew>
+  subroutine atomic_make_eliminate(ipos, jold, jnew, isgn)
       implicit none
   
 ! external argument
@@ -229,5 +232,5 @@
       jnew = jold - 2**(ipos-1)
   
       return
-  end subroutine atomic_eliminate
+  end subroutine atomic_make_eliminate
 

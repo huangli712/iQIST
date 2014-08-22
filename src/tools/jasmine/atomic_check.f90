@@ -1,21 +1,20 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_check_config
-!!!           atomic_check_mat_real
+!!!           atomic_check_realmat
 !!! source  : atomic_check.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
+!!!           08/22/2014 by yilin wang
 !!! purpose : do some checks
-!!! input   :
-!!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> check the validity of input config parameters
+!!>>> atomic_check_config: check the validity of input config parameters
   subroutine atomic_check_config()
-     use constants, only: mystd, zero
+     use constants, only : mystd, zero
      use control
   
 ! local variables
@@ -128,9 +127,9 @@
      return
   end subroutine atomic_check_config
 
-!!>>> check whether a matrix is real
-  subroutine atomic_check_mat_real(ndim, mat, lreal)
-     use constants, only: dp, eps6
+!!>>> atomic_check_realmat: check whether a matrix is real
+  subroutine atomic_check_realmat(ndim, mat, lreal)
+     use constants, only : dp, eps6
   
      implicit none
   
@@ -159,4 +158,4 @@
      lreal = .true.
   
      return
-  end subroutine atomic_check_mat_real
+  end subroutine atomic_check_realmat

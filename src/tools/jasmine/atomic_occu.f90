@@ -1,23 +1,23 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_make_occumat_fullspace
+!!! program : atomic_mkoccu_fullspace
 !!! source  : atomic_occu.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
+!!!           08/22/2014 by yilin wang
 !!! purpose : make occupancy of eigensates of atomic Hamiltonian 
-!!! input   :
-!!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> make occupancy for atomic eigenstates, fullspace case
-  subroutine atomic_make_occumat_fullspace()
-     use constants,         only: zero, one
-     use control,           only: ncfgs, norbs
+!!>>> atomic_mkoccu_fullspace: make occupancy for atomic eigenstates, fullspace case
+  subroutine atomic_mkoccu_fullspace()
+     use constants, only: zero, one
+     use control, only: ncfgs, norbs
+
      use m_basis_fullspace, only: bin_basis
-     use m_glob_fullspace,  only: occu_mat, hmat_eigvec
+     use m_glob_fullspace, only: occu_mat, hmat_eigvec
   
      implicit none
   
@@ -37,7 +37,7 @@
          enddo 
      enddo 
   
-     call atomic_tran_represent_real(ncfgs, occu_mat, hmat_eigvec)
+     call atomic_tran_repr_real(ncfgs, occu_mat, hmat_eigvec)
   
      return
-  end subroutine atomic_make_occumat_fullspace
+  end subroutine atomic_mkoccu_fullspace
