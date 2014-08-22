@@ -420,11 +420,11 @@
 ! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
      select type (out_value)
          type is (integer)          ! for integer
-             read (str_value,'(I10)')   out_value
+             read (str_value,*)   out_value
          type is (logical)          ! for logical
-             read (str_value,'(L4)')    out_value
+             read (str_value,*)   out_value
          type is (real(dp))         ! for double precision number
-             read (str_value,'(F16.8)') out_value
+             read (str_value,*)   out_value
          type is (character(len=*)) ! for character
              out_value = str_value
          class default
