@@ -7,17 +7,16 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
-!!! purpose : print information
-!!! input   :
-!!! output  :
+!!!           08/22/2014 by yilin wang
+!!! purpose : read data from files
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> real crystal field from file 'atomic.cf.in'
+!!>>> atomic_read_cf: read crystal field from file 'atomic.cf.in'
   subroutine atomic_read_cf()
-     use constants, only: mytmp, dp, zero
-     use m_spmat,   only: cfmat
+     use constants, only : mytmp, dp, zero
+     use m_spmat, only : cfmat
   
      implicit none
   
@@ -51,47 +50,51 @@
      return
   end subroutine atomic_read_cf
 
-!!>>> read eimp from file 'atomic.eimp.in'
+!!>>> atomic_read_eimp: read on-site impurity energy 
+!!>>> from file 'atomic.eimp.in'
   subroutine atomic_read_eimp()
-      use constants,  only: mytmp, dp, zero
-      use control,    only: norbs
-      use m_spmat,    only: eimpmat
+     use constants, only : mytmp, dp, zero
+     use control, only : norbs
+
+     use m_spmat, only : eimpmat
   
-      implicit none
+     implicit none
   
 ! local variables
 ! file status
-      logical :: exists
+     logical :: exists
 
 ! loop index
-      integer :: i
+     integer :: i
 
 ! dummy variables
-      integer :: i1, i2
-      real(dp) :: r1
+     integer :: i1, i2
+     real(dp) :: r1
   
 ! we read eimp from file 'atomic.eimp.in'
-      inquire(file='atom.eimp.in', exist=exists)
+     inquire(file='atom.eimp.in', exist=exists)
   
-      if (exists .eqv. .true.) then
-          open(mytmp, file='atom.eimp.in')
-          do i=1, norbs
-              read(mytmp, *) i1, i2, r1
-              ! eimpmat is actually real in natural basis
-              eimpmat(i,i) = dcmplx(r1, zero)
-          enddo 
-      else
-          call s_print_error('atomic_read_eimp', 'no file atomic.eimp.in !')
-      endif
+     if (exists .eqv. .true.) then
+         open(mytmp, file='atom.eimp.in')
+         do i=1, norbs
+             read(mytmp, *) i1, i2, r1
+             ! eimpmat is actually real in natural basis
+             eimpmat(i,i) = dcmplx(r1, zero)
+         enddo 
+     else
+         call s_print_error('atomic_read_eimp', 'no file atomic.eimp.in !')
+     endif
   
-      return
+     return
   end subroutine atomic_read_eimp
   
-!!>>> read tran_umat from file 'atomic.umat.in'
+!!>>> atomic_read_umat: read the transformation matrix 
+!!>>> tran_umat from file 'atomic.umat.in'
   subroutine atomic_read_umat()
-     use constants, only: mytmp, dp, zero
-     use control,   only: norbs
-     use m_spmat,   only: tran_umat
+     use constants, only : mytmp, dp, zero
+     use control, only : norbs
+
+     use m_spmat, only : tran_umat
   
      implicit none
   

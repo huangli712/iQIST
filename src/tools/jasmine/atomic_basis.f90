@@ -1,28 +1,28 @@
 !!!------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_make_basis_fullspace
-!!!           atomic_combination
+!!! program : atomic_mkbasis_fullspace
+!!!           atomic_make_combination
 !!! source  : atomic_basis.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
+!!!           08/22/2014 by yilin wang
 !!! purpose : make Fock basis 
-!!! input   :
-!!! output  :
 !!! status  : unstable
-!!! comment : 
+!!! comment : these subroutines are modified from Dr. LiangDu's 
+!!!           (duleung@gmail.com) atomic program
 !!!-------------------------------------------------------------------------
 
-!!>>> make Fock basis for full Hilbert space, this subroutine is modified based on
-! Dr. LiangDu's (duleung@gmail.com) atomic program
-  subroutine atomic_make_basis_fullspace()
-     use control,            only: norbs, ncfgs
-     use m_basis_fullspace,  only: dim_sub_n, dec_basis, bin_basis, index_basis  
+!!>>> atomic_mkbasis_fullspace: make Fock basis for full Hilbert space
+  subroutine atomic_mkbasis_fullspace()
+     use control, only : norbs, ncfgs
+     use m_basis_fullspace, only : dim_sub_n, dec_basis, bin_basis, index_basis  
   
      implicit none
   
 ! external variables
-     integer, external :: atomic_combination
+! function used to calculate combination number
+     integer, external :: atomic_make_combination
   
 ! local variables
 ! loop index
@@ -42,7 +42,7 @@
   
 ! it is a number of combination C_{norbs}^{i}
      do i=0,norbs
-         dim_sub_n(i) = atomic_combination(i, norbs)
+         dim_sub_n(i) = atomic_make_combination(i, norbs)
      enddo 
   
 ! construct decimal form and index of Fock basis
@@ -72,11 +72,11 @@
      call atomic_write_basis()
   
      return
-  end subroutine atomic_make_basis_fullspace
+  end subroutine atomic_mkbasis_fullspace
 
-!!>>> calculate combination algebra 
-  function atomic_combination(ntiny, nlarg) result(value)
-     use constants, only: dp
+!!>>> atomic_make_combination: calculate combination algebra 
+  function atomic_make_combination(ntiny, nlarg) result(value)
+     use constants, only : dp
 
      implicit none
   
@@ -123,4 +123,4 @@
      value = nint(numer / denom)
   
      return
-  end function atomic_combination
+  end function atomic_make_combination

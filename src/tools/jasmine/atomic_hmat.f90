@@ -1,26 +1,28 @@
-!!!-------------------------------------------------------------------------
+!!!----------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_mkhmat_fullspace
 !!!           atomic_mkhmat_sectors
+!!!           atomic_diaghmat_sectors
 !!!           atomic_diag_one_sector 
 !!! source  : atomic_hmat.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
+!!!           08/22/2014 by yilin wang
 !!! purpose : make Hamltonian matrices
-!!! input   :
-!!! output  :
 !!! status  : unstable
-!!! comment :
-!!!-------------------------------------------------------------------------
+!!! comment : subroutine atomic_mkhmat_fullspace and atomic_mkhmat_sectors are 
+!!!           modified from Dr. LiangDu's (duleung@gmail.com) atomic program
+!!!----------------------------------------------------------------------------
 
-!!>>> make atomic Hamiltonian for the full space
+!!>>> atomic_mkhmat_fullspace: make atomic Hamiltonian for the full space
   subroutine atomic_mkhmat_fullspace()
-     use constants,         only: czero, epst
-     use control,           only: norbs, ncfgs
-     use m_basis_fullspace, only: dec_basis, index_basis, bin_basis
-     use m_spmat,           only: eimpmat, cumat
-     use m_glob_fullspace,  only: hmat
+     use constants, only : czero, epst
+     use control, only : norbs, ncfgs
+
+     use m_basis_fullspace, only : dec_basis, index_basis, bin_basis
+     use m_spmat, only : eimpmat, cumat
+     use m_glob_fullspace, only : hmat
   
      implicit none
   
@@ -75,7 +77,8 @@
                      sgn  = mod(sgn, 2)
                      ibas = index_basis(knew)
                      if (ibas == 0) then
-                         call s_print_error('atomic_mkhmat_fullspace', 'error while determining row1')
+                         call s_print_error('atomic_mkhmat_fullspace', &
+                                            'error while determining row1')
                      endif
   
                      hmat(ibas,jbas) = hmat(ibas,jbas) + eimpmat(alpha,betta) * (-1.0d0)**sgn 
@@ -148,13 +151,14 @@
      return
   end subroutine atomic_mkhmat_fullspace
 
-!!>>> make Hamiltonian for each sector one by one
+!!>>> atomic_mkhmat_sectors: make Hamiltonian for each sector one by one
   subroutine atomic_mkhmat_sectors()
-     use constants,         only: dp, czero, epst
-     use control,           only: norbs, ncfgs
-     use m_basis_fullspace, only: dec_basis, index_basis, bin_basis
-     use m_spmat,           only: eimpmat, cumat
-     use m_glob_sectors,    only: nsectors, sectors
+     use constants, only : dp, czero, epst
+     use control, only : norbs, ncfgs
+
+     use m_basis_fullspace, only : dec_basis, index_basis, bin_basis
+     use m_spmat, only : eimpmat, cumat
+     use m_glob_sectors, only : nsectors, sectors
   
      implicit none
   
@@ -214,7 +218,8 @@
                          isgn  = mod(isgn, 2)
                          ibas = index_basis(knew)
                          if (ibas == 0) then
-                             call s_print_error('atomic_mkhmat_sectors', 'error while determining row1')
+                             call s_print_error('atomic_mkhmat_sectors', &
+                                                'error while determining row1')
                          endif
   
                          insect = .false.
@@ -284,7 +289,8 @@
                          ibas = index_basis(knew)
                          isgn = mod(isgn, 2)
                          if (ibas == 0) then
-                             call s_print_error('atomic_mkhmat_sectors', 'error while determining row3')
+                             call s_print_error('atomic_mkhmat_sectors', &
+                                                'error while determining row3')
                          endif
   
                          insect = .false.
@@ -315,9 +321,9 @@
      return
   end subroutine atomic_mkhmat_sectors
 
-!!>>> diagonalize the Hamiltonian for each sector one by one
-  subroutine atomic_diag_hmat_sectors()
-     use m_glob_sectors
+!!>>> atomic_diaghmat_sectors: diagonalize the Hamiltonian for each sector one by one
+  subroutine atomic_diaghmat_sectors()
+     use m_glob_sectors, only : nsectors, sectors
   
      implicit none
   
@@ -330,11 +336,11 @@
      enddo
   
      return
-  end subroutine atomic_diag_hmat_sectors
+  end subroutine atomic_diaghmat_sectors
 
-!!>>> diagonalize one sector
+!!>>> atomic_diag_one_sector: diagonalize one sector
   subroutine atomic_diag_one_sector(ndim, amat, eval, evec)
-     use constants, only: dp
+     use constants, only : dp
      implicit none
   
 ! external variables

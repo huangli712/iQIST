@@ -11,19 +11,18 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
+!!!           08/22/2014 by yilin wang
 !!! purpose : make natural basis 
-!!! input   :
-!!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
 !!>>> make natural basis, the natural basis is the basis on which the 
-!! impurity energy matrix is diagonal
+!!>>> impurity energy matrix is diagonal
   subroutine atomic_make_natural()
-     use constants, only: dp, czero, mystd
-     use control,   only: norbs, itask, icf, isoc, icu
-     use m_spmat,   only: cumat, tran_umat
+     use constants, only : dp, czero, mystd
+     use control, only : norbs, itask, icf, isoc, icu
+     use m_spmat, only : cumat, tran_umat
   
      implicit none
   
@@ -68,7 +67,7 @@
 ! for Slater-Cordon parameters Coulomb interaction U
 ! we first need to transfrom cumat from complex orbital basis to real orbital basis
          if ( icu == 2 ) then
-             call atomic_make_umat_c2r( umat_c2r )
+             call atomic_mkumat_c2r( umat_c2r )
              call atomic_tran_cumat( umat_c2r, cumat, tmp_mat )
              cumat = tmp_mat
          endif
@@ -77,7 +76,7 @@
 ! for Kanamori parameters Coulomb interaction U
 ! we first need to transfrom cumat from real orbital basis to complex orbital basis
          if ( icu == 1 ) then
-             call atomic_make_umat_r2c( umat_r2c )
+             call atomic_mkumat_r2c( umat_r2c )
              call atomic_tran_cumat( umat_r2c, cumat, tmp_mat )
              cumat = tmp_mat
          endif
@@ -90,11 +89,12 @@
      return
   end subroutine atomic_make_natural
 
-!!>>> make natural basis for no crystal or diagonal crystal without spin-orbital coupling
+!!>>> atomic_2natural_case1: make natural basis for no crystal or 
+!!>>> diagonal crystal without spin-orbital coupling
   subroutine atomic_2natural_case1()
-     use constants, only: mystd, zero, cone
-     use control,   only: norbs, mune
-     use m_spmat,   only: cfmat, eimpmat, tran_umat
+     use constants, only : mystd, zero, cone
+     use control, only : norbs, mune
+     use m_spmat, only : cfmat, eimpmat, tran_umat
   
      implicit none
   
@@ -123,11 +123,12 @@
      return
   end subroutine atomic_2natural_case1
 
-!!>>> make natural basis for non-diagonal crystal field without spin-orbital coupling
+!!>>> atomic_2natural_case2: make natural basis for non-diagonal 
+!!>>> crystal field without spin-orbital coupling
   subroutine atomic_2natural_case2()
-     use constants, only: mystd, dp, czero
-     use control,   only: norbs, nband, mune
-     use m_spmat,   only: cfmat, eimpmat, tran_umat
+     use constants, only : mystd, dp, czero
+     use control, only : norbs, nband, mune
+     use m_spmat, only : cfmat, eimpmat, tran_umat
   
      implicit none
   
@@ -180,12 +181,13 @@
      return
   end subroutine atomic_2natural_case2
 
-!!>>> make natural basis for the case without crystal field and with spin-orbital coupling
-!! for this special case, the natural basis is |J^2,Jz>
+!!>>> atomic_2natural_case3: make natural basis for the case without 
+!!>>> crystal field and with spin-orbital coupling
+!!>>> for this special case, the natural basis is |J^2,Jz>
   subroutine atomic_2natural_case3()
-     use constants, only: dp, mystd
-     use control,   only: norbs, mune
-     use m_spmat,   only: eimpmat, socmat, tran_umat
+     use constants, only : dp, mystd
+     use control, only : norbs, mune
+     use m_spmat, only : eimpmat, socmat, tran_umat
   
      implicit none
   
@@ -199,13 +201,13 @@
 ! set eimpmat
      eimpmat = socmat   
   
-     call atomic_make_umat_c2j(umat_c2j)
+     call atomic_mkumat_c2j(umat_c2j)
   
 ! for soc case, the tran_umat is from complex orbital basis to natural basis
      tran_umat = umat_c2j
   
 ! transform sp_eimp_mat to natural basis
-     call atomic_tran_represent(norbs, eimpmat, tran_umat)   
+     call atomic_tran_repr_cmpl(norbs, eimpmat, tran_umat)   
   
 ! add chemical potential to eimpmat
      do i=1, norbs
@@ -220,11 +222,13 @@
      return
   end subroutine atomic_2natural_case3
 
-!!>>> make natural basis for the case with crystal field and with spin-orbital coupling
+!!>>> atomic_2natural_case4: make natural basis for the case with 
+!!>>> crystal field and with spin-orbital coupling
   subroutine atomic_2natural_case4()
-     use constants, only: dp, mystd
-     use control,   only: norbs, mune
-     use m_spmat,  only: cfmat, socmat, eimpmat, tran_umat
+     use constants, only : dp, mystd
+     use control, only : norbs, mune
+
+     use m_spmat, only : cfmat, socmat, eimpmat, tran_umat
   
      implicit none
   
@@ -251,13 +255,13 @@
      logical :: lreal
   
 ! get umat_r2c
-     call atomic_make_umat_r2c(umat_r2c)
+     call atomic_mkumat_r2c(umat_r2c)
   
 ! transfrom cfmat to complex orbital basis
-     call atomic_tran_represent(norbs, cfmat, umat_r2c)
+     call atomic_tran_repr_cmpl(norbs, cfmat, umat_r2c)
   
 ! check whether cfmat is real, if not, we cann't make natural basis
-     call atomic_check_mat_real(norbs, cfmat, lreal)
+     call atomic_check_realmat(norbs, cfmat, lreal)
      if (lreal .eqv. .false.) then
          call s_print_error('atomic_2natural_case4', 'crystal field on &
              complex orbital basis is not real, cannot make natural basis !')
@@ -274,7 +278,7 @@
      tran_umat = umat_c2n
   
 ! transform eimpmat to natural basis
-     call atomic_tran_represent(norbs, eimpmat, umat_c2n)   
+     call atomic_tran_repr_cmpl(norbs, eimpmat, umat_c2n)   
   
 ! add chemical poential to eimpmat
      do i=1, norbs
@@ -289,9 +293,9 @@
      return
   end subroutine atomic_2natural_case4
 
-!!>>> utility subroutines 
+!!>>> atomic_mat_2nospin: convert matrix with spin to no-spin
   subroutine atomic_mat_2nospin(norbs, amat, bmat)
-     use constants, only: dp
+     use constants, only : dp
      
      implicit none
   
@@ -318,8 +322,9 @@
      return
   end subroutine atomic_mat_2nospin 
   
+!!>>> atomic_mat_2spin: convert matrix without spin to with spin
   subroutine atomic_mat_2spin(nband, amat, bmat)
-      use constants, only: dp
+      use constants, only : dp
       
       implicit none
   

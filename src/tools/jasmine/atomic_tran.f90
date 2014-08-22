@@ -1,26 +1,27 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_make_umat_c2r
-!!!           atomic_make_umat_r2c
-!!!           atomic_make_umat_c2j
-!!!           atomic_tran_represent
-!!!           atomic_tran_represent_real
+!!! program : atomic_mkumat_c2r
+!!!           atomic_mkumat_r2c
+!!!           atomic_mkumat_c2j
 !!!           atomic_tran_cumat
+!!!           atomic_tran_repr_cmpl
+!!!           atomic_tran_repr_real
 !!! source  : atomic_natural.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
-!!! purpose : make transformation from one space to another space 
-!!! input   :
-!!! output  :
+!!!           08/22/2014 by yilin wang
+!!! purpose : make transformation from one representation to another 
+!!!           representation 
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> make transformation matrix from complex orbital basis to real orbital 
-  subroutine atomic_make_umat_c2r( umat_c2r )
-     use constants, only: dp, czero, cone, czi
-     use control,   only: nband, norbs
+!!>>> atomic_mkumat_c2r: make transformation matrix from 
+!!>>> complex orbital basis to real orbital 
+  subroutine atomic_mkumat_c2r( umat_c2r )
+     use constants, only : dp, czero, cone, czi
+     use control, only : nband, norbs
   
      implicit none
   
@@ -34,7 +35,7 @@
      sqrt2 = sqrt(2.0_dp)
      umat_c2r = czero
   
-     if ( nband == 3) then
+     if ( nband == 3 ) then
 ! the real orbital order (t2g) is:  
 ! dxzup, dxzdn, dyzup, dyzdn, dxyup, dxydn
 ! the corresponding p orbital order is:
@@ -75,7 +76,7 @@
          umat_c2r(9,9) =   -czi/sqrt2
          umat_c2r(2,10) =    czi/sqrt2
          umat_c2r(10,10) =  -czi/sqrt2
-     elseif (nband == 7) then
+     elseif ( nband == 7 ) then
 ! the real orbital order is:
 ! fz3up, fz3dn, fxz2up, fxz2dn, fyz2up, fyz2dn, fz(x2-y2)up, fz(x2-y2)dn, fxyzup, fxyzdn,
 ! fx(x2-3y2)up, fx(x2-3y2)dn, fy(3x2-y2)up, fy(3x2-y2)dn
@@ -108,16 +109,18 @@
          umat_c2r( 2,14) = czi/sqrt2
          umat_c2r(14,14) = czi/sqrt2
      else
-         call s_print_error('atomic_make_umat_c2r', 'not implemented for this nband!')
+         call s_print_error('atomic_make_umat_c2r', &
+                    'not implemented for this nband!')
      endif
   
      return
-  end subroutine atomic_make_umat_c2r
+  end subroutine atomic_mkumat_c2r
 
-!!>>> make umat from real orbital basis to complex orbital basis
-  subroutine atomic_make_umat_r2c(umat_r2c)
-     use constants, only: dp, czero
-     use control,   only: norbs
+!!>>> atomic_mkumat_r2c: make umat from real orbital 
+!!>>> basis to complex orbital basis
+  subroutine atomic_mkumat_r2c(umat_r2c)
+     use constants, only : dp, czero
+     use control, only : norbs
   
 ! external variables
      complex(dp), intent(out) :: umat_r2c(norbs, norbs)
@@ -126,17 +129,17 @@
      complex(dp) :: umat_c2r(norbs, norbs)
   
      umat_c2r = czero
-     call atomic_make_umat_c2r(umat_c2r)
+     call atomic_mkumat_c2r(umat_c2r)
   
      umat_r2c = transpose(dconjg(umat_c2r))
   
      return
-  end subroutine atomic_make_umat_r2c
+  end subroutine atomic_mkumat_r2c
 
-!!>>> make CG coefficients
-  subroutine atomic_make_umat_c2j( umat_c2j ) 
-     use constants,  only: dp, czero
-     use control,    only: nband, norbs
+!!>>> atomic_mkumat_c2j: make CG coefficients
+  subroutine atomic_mkumat_c2j( umat_c2j ) 
+     use constants, only : dp, czero
+     use control, only : nband, norbs
   
      implicit none
      
@@ -186,10 +189,12 @@
          umat_c2j(9,10)= 1.0_dp
      elseif ( nband == 7 ) then
 ! the |lz,sz> order is:
-! |-3,up>, |-3,dn>, |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>, |3,up>, |3,dn>
+! |-3,up>, |-3,dn>, |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, 
+! | 0,dn>, | 1,up>, | 1,dn>, | 2,up>, | 2,dn>, | 3,up>, |3,dn>
 ! the |j2,jz> order is:
 ! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
-! |7/2,-7/2>, |7/2,-5/2>, |7/2,-3/2>, |7/2,-1/2>, |7/2,1/2>, |7/2,3/2>, |7/2,5/2>, |7/2, 7/2>
+! |7/2,-7/2>, |7/2,-5/2>, |7/2,-3/2>, |7/2,-1/2>, |7/2,1/2>, |7/2,3/2>, 
+! |7/2,5/2>, |7/2, 7/2>
          umat_c2j(1, 1) = -sqrt(6.0_dp/7.0_dp)
          umat_c2j(4, 1) =  sqrt(1.0_dp/7.0_dp)
          umat_c2j(3, 2) = -sqrt(5.0_dp/7.0_dp)
@@ -222,75 +227,13 @@
      endif
   
      return
-  end subroutine atomic_make_umat_c2j
-
-!!>>> transformation from one representation to another representation
-  subroutine atomic_tran_represent( ndim, amat, umat )
-     use constants, only: dp, cone, czero
-  
-     implicit none
-  
-! external variables
-     integer, intent(in) :: ndim
-     complex(dp), intent(inout) :: amat(ndim, ndim)
-     complex(dp), intent(in) :: umat(ndim, ndim)
-  
-! local variables
-     complex(dp) :: tmp_mat(ndim, ndim)
-     complex(dp) :: alpha
-     complex(dp) :: betta
-  
-     alpha = cone; betta = czero
-     call zgemm('N', 'N', ndim, ndim, ndim, & 
-                         alpha, amat, ndim, &
-                                umat, ndim, &
-                      betta, tmp_mat, ndim  )
-  
-     alpha = cone; betta = czero
-     call zgemm('C', 'N', ndim, ndim, ndim, &
-                         alpha, umat, ndim, &
-                             tmp_mat, ndim, &
-                         betta, amat, ndim  )
-  
-  
-     return
-  end subroutine atomic_tran_represent
-
-!>>> transformation from one representation to another representation, real version
-  subroutine atomic_tran_represent_real( ndim, amat, umat )
-     use constants, only: dp, zero, one
-  
-     implicit none
-  
-! external variables
-     integer, intent(in) :: ndim
-     real(dp), intent(inout) :: amat(ndim, ndim)
-     real(dp), intent(in) :: umat(ndim, ndim)
-  
-! local variables
-     real(dp) :: tmp_mat(ndim, ndim)
-     real(dp) :: alpha
-     real(dp) :: betta
-  
-     alpha = one; betta = zero
-     call dgemm('N', 'N', ndim, ndim, ndim, &
-                         alpha, amat, ndim, &
-                                umat, ndim, &
-                      betta, tmp_mat, ndim  )
-  
-     alpha = one; betta = zero 
-     call dgemm('T', 'N', ndim, ndim, ndim, &
-                         alpha, umat, ndim, &
-                             tmp_mat, ndim, &
-                         betta, amat, ndim  )
-  
-     return
-  end subroutine atomic_tran_represent_real
-  
-!!>>> transform Coulomb interaction U tensor 
+  end subroutine atomic_mkumat_c2j
+ 
+!!>>> atomic_tran_cumat: transform Coulomb interaction U tensor 
+!!>>> from one representation to another representation
   subroutine atomic_tran_cumat(amtrx, cumat, cumat_t)
-     use constants, only: dp, czero, epst
-     use control,   only: norbs
+     use constants, only : dp, czero, epst
+     use control, only : norbs
   
      implicit none
   
@@ -343,3 +286,69 @@
   
      return
   end subroutine atomic_tran_cumat
+
+!!>>> atomic_tran_repr_cmpl: transformation from one representation 
+!!>>> to another representation, complex version
+  subroutine atomic_tran_repr_cmpl( ndim, amat, umat )
+     use constants, only : dp, cone, czero
+  
+     implicit none
+  
+! external variables
+     integer, intent(in) :: ndim
+     complex(dp), intent(inout) :: amat(ndim, ndim)
+     complex(dp), intent(in) :: umat(ndim, ndim)
+  
+! local variables
+     complex(dp) :: tmp_mat(ndim, ndim)
+     complex(dp) :: alpha
+     complex(dp) :: betta
+  
+     alpha = cone; betta = czero
+     call zgemm('N', 'N', ndim, ndim, ndim, & 
+                         alpha, amat, ndim, &
+                                umat, ndim, &
+                      betta, tmp_mat, ndim  )
+  
+     alpha = cone; betta = czero
+     call zgemm('C', 'N', ndim, ndim, ndim, &
+                         alpha, umat, ndim, &
+                             tmp_mat, ndim, &
+                         betta, amat, ndim  )
+  
+  
+     return
+  end subroutine atomic_tran_repr_cmpl
+
+!>>> atomic_tran_repr_real: transformation from one representation to 
+!!>>> another representation, real version
+  subroutine atomic_tran_repr_real( ndim, amat, umat )
+     use constants, only : dp, zero, one
+  
+     implicit none
+  
+! external variables
+     integer, intent(in) :: ndim
+     real(dp), intent(inout) :: amat(ndim, ndim)
+     real(dp), intent(in) :: umat(ndim, ndim)
+  
+! local variables
+     real(dp) :: tmp_mat(ndim, ndim)
+     real(dp) :: alpha
+     real(dp) :: betta
+  
+     alpha = one; betta = zero
+     call dgemm('N', 'N', ndim, ndim, ndim, &
+                         alpha, amat, ndim, &
+                                umat, ndim, &
+                      betta, tmp_mat, ndim  )
+  
+     alpha = one; betta = zero 
+     call dgemm('T', 'N', ndim, ndim, ndim, &
+                         alpha, umat, ndim, &
+                             tmp_mat, ndim, &
+                         betta, amat, ndim  )
+  
+     return
+  end subroutine atomic_tran_repr_real
+ 

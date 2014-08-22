@@ -13,10 +13,11 @@
 !!!-------------------------------------------------------------------------
 
   program main
-     use constants,         only: mystd
-     use control,           only: ictqmc
-     use m_basis_fullspace, only: alloc_m_basis_fullspace, dealloc_m_basis_fullspace
-     use m_spmat,           only: alloc_m_spmat, dealloc_m_spmat
+     use constants,         only : mystd
+     use control,           only : ictqmc
+
+     use m_basis_fullspace, only : alloc_m_basis_fullspace, dealloc_m_basis_fullspace
+     use m_spmat,           only : alloc_m_spmat, dealloc_m_spmat
   
      implicit none
   
@@ -27,15 +28,16 @@
      write(mystd, "(2X,a)") "jasmine >>> setting control parameters ..."
      write(mystd,*)
      call atomic_config()
-  
+
+! print the summary of control parameters 
+     call atomic_print_summary()
+
 ! check validity of control parameters 
      write(mystd, "(2X,a)") "jasmine >>> checking validity of control parameters ..."
      write(mystd,*)
      call atomic_check_config()
-  
-! print the summary of control parameters 
-     call atomic_print_summary()
-  
+     write(mystd,*)
+
 ! allocate memory for basis-related matrices
      call alloc_m_basis_fullspace()
 
@@ -70,7 +72,7 @@
 ! make Fock basis for the full many particle Hiblert space
      write(mystd, "(2X,a)") "jasmine >>> make Fock basis ..."
      write(mystd,*)
-     call atomic_make_basis_fullspace()
+     call atomic_mkbasis_fullspace()
   
 ! call the drivers for different CTQMC algorithm
      select case(ictqmc)
