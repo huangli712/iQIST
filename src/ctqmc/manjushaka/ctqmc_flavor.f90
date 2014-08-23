@@ -2644,7 +2644,7 @@
          RETURN
      endif
 
-! determin the minimal dimension of all the sectors
+! determine the minimal dimension of all the sectors
      min_dim = 0
      do i=1, nsectors
          if (is_string(i) .eqv. .false.) cycle
@@ -2700,10 +2700,12 @@
          if (is_string(i) .eqv. .false.) then
              trace_sector(i) = zero
              final_product(i,1)%item = zero
+             cycle
          else
              call cat_sector_ztrace( csize, string(:,i), index_t_loc,&
                                  expt_t_loc, trace_sector(i) )
          endif
+
          if (pass .eqv. .false.) then
              sum_abs_trace = sum_abs_trace + abs( trace_sector(i) )
              sum_bound = sum_bound - trace_bound(i)
