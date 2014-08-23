@@ -272,3 +272,44 @@
 
      return
   end subroutine ctqmc_four_hybf
+
+!!>> ctqmc_sort_list: sort the list and and its index according to the
+!!>> descending order of the list, just use simple bubble sort.
+  subroutine ctqmc_sort_list(nsize, list, indx)
+     use constants, only : dp
+
+     implicit none
+
+! external variables
+! the size of the list
+     integer, intent(in) :: nsize
+
+! the list to be sorted
+     real(dp), intent(inout) :: list(nsize)
+
+! the index of the list
+     integer, intent(inout) :: indx(nsize)
+
+! local variables
+! loop index
+     integer :: i,j
+
+! temp variables
+     real(dp) :: real_tmp
+     integer  :: int_tmp
+
+     do i=1, nsize-1
+         do j=1, nsize-i
+             if ( list(j) < list(j+1) ) then
+                 real_tmp = list(j)
+                 list(j) = list(j+1)
+                 list(j+1) = real_tmp
+                 int_tmp = indx(j)
+                 indx(j) = indx(j+1)
+                 indx(j+1) = int_tmp 
+             endif
+         enddo
+     enddo
+
+     return
+  end subroutine ctqmc_sort_list

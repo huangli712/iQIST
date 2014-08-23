@@ -743,7 +743,7 @@
      use context, only : rshift_tcount, rshift_accept, rshift_reject
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : cnegs, caves
-
+  
      implicit none
 
 ! local variables
