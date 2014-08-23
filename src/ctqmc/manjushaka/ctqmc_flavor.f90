@@ -2574,8 +2574,14 @@
 ! the trace boundary
      real(dp) :: trace_bound(nsectors)
 
+! the index to original sector
+     integer :: orig_sect(nsectors)
+
 ! the trace of each sector
      real(dp) :: trace_sector(nsectors)
+
+! the number of alive sector
+     integer :: nalive_sect
 
 ! the maximum and minimum bounds of acceptance ratio
      real(dp) :: pmax
@@ -2591,9 +2597,12 @@
 ! sum of absolute value of trace
      real(dp) :: sum_abs_trace
 
+! temp trace bound value
+     real(dp) :: tmp_trb
+
 ! start index of sectors
      integer :: indx
-
+     
 ! loop index
      integer :: i, j
 
@@ -2644,7 +2653,7 @@
          RETURN
      endif
 
-! determin the minimal dimension of all the sectors
+! determine the minimal dimension of all the sectors
      min_dim = 0
      do i=1, nsectors
          if (is_string(i) .eqv. .false.) cycle
@@ -2658,22 +2667,48 @@
 
 ! calculate the trace bounds for each sector
      trace_bound = zero
+     nalive_sect = 0
+     orig_sect = -1
      do i=1, nsectors
-         if (is_string(i) .eqv. .false.)  cycle
+         if (is_trunc(i)) cycle
+
+         if (is_string(i) .eqv. .false.) then
+             final_product(i,1)%item = zero
+             cycle
+         endif
+
 ! calculate the trace bounds
-         trace_bound(i) = one
+         nalive_sect = nalive_sect + 1
+         tmp_trb = one
+
          do j=1, csize
              indx = sectors(string(j,i))%istart
-             trace_bound(i) = trace_bound(i) * expt_v(indx, index_t_loc(j)) 
+             tmp_trb = tmp_trb * expt_v(indx, index_t_loc(j)) 
          enddo 
 ! specially treatment for the last time-evolution operator
          indx = sectors(string(1,i))%istart
-         trace_bound(i) = trace_bound(i) * expt_t_loc(indx)
-         trace_bound(i) = min_dim(i) * trace_bound(i)
+         tmp_trb = tmp_trb * expt_t_loc(indx)
+! this trace bound is too small, so it will contribute very small
+! to the total trace
+         if (tmp_trb < 1.0e-6) then
+             is_string(i) = .false. 
+             final_product(i,1)%item = zero
+             nalive_sect = nalive_sect - 1
+             cycle
+         endif
+         trace_bound(nalive_sect) = min_dim(i) * tmp_trb
+         orig_sect(nalive_sect) = i
      enddo
 
+     if ( nalive_sect == 0 ) then
+         pass = .false.
+         accept_p = zero 
+         RETURN
+     else
+         sum_bound = sum( trace_bound(1:nalive_sect) )
+     endif
+
 ! calculate the max bound of acceptance ratio
-     sum_bound = sum(trace_bound)
      ptmp = propose  *  abs(deter_ratio / matrix_ptrace)
      pmax = ptmp * sum_bound
 
@@ -2688,24 +2723,21 @@
 ! make npart
      call ctqmc_make_nparts(cmode, csize, index_t_loc, tau_s, tau_e)
 
+! sort the trace_bound
+     call ctqmc_sort_list( nalive_sect, trace_bound(1:nalive_sect), orig_sect(1:nalive_sect) )
+
 ! otherwise, we need to refine the trace bounds
      pass = .false.
      is_copy = .false.
      sum_abs_trace = zero
      trace_sector = zero
 
-     do i=1, nsectors
-         if (is_trunc(i)) cycle
+     do i=1, nalive_sect
+         call cat_sector_ztrace( csize, string(:,orig_sect(i)), index_t_loc, &
+                                      expt_t_loc, trace_sector(orig_sect(i)) )
 
-         if (is_string(i) .eqv. .false.) then
-             trace_sector(i) = zero
-             final_product(i,1)%item = zero
-         else
-             call cat_sector_ztrace( csize, string(:,i), index_t_loc,&
-                                 expt_t_loc, trace_sector(i) )
-         endif
          if (pass .eqv. .false.) then
-             sum_abs_trace = sum_abs_trace + abs( trace_sector(i) )
+             sum_abs_trace = sum_abs_trace + abs( trace_sector(orig_sect(i)) )
              sum_bound = sum_bound - trace_bound(i)
 ! calculate pmax and pmin
              pmax = ptmp * (sum_abs_trace + sum_bound)
@@ -2721,6 +2753,7 @@
                  pass = .true.
              endif
          endif 
+
      enddo
 ! if we arrive here, two case
 ! case 1: pass == .false., we haven't determined the pass
@@ -2728,6 +2761,9 @@
      matrix_ntrace = sum(trace_sector) 
      accept_p = propose  *  deter_ratio * matrix_ntrace / matrix_ptrace
      pass = ( min(one, abs(accept_p)) > rand_num)
+     if ( pass .eqv. .false.) then
+        return
+     endif
 
 ! store the diagonal elements of final product in ddmat(:,1)
      ddmat(:,1) = zero
