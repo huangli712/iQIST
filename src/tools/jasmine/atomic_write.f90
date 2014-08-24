@@ -12,18 +12,17 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
+!!!           08/22/2014 by yilin wang
 !!! purpose : write output files
-!!! input   :
-!!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> write basis of fullspace to file 'atom.basis.dat'
+!!>>> atomic_write_basis: write basis of fullspace to file 'atom.basis.dat'
   subroutine atomic_write_basis()
-     use constants,         only: mytmp
-     use control,           only: ncfgs
-     use m_basis_fullspace, only: dec_basis, index_basis, bin_basis
+     use constants, only : mytmp
+     use control, only : ncfgs
+     use m_basis_fullspace, only : dec_basis, index_basis, bin_basis
   
      implicit none
   
@@ -35,18 +34,20 @@
 ! write the header
      write(mytmp, '(a)') '#      i |  decimal(i) |    index(i) |      binary(i) |'
      do i=1, ncfgs
-         write(mytmp, "(I10,4X,I10,4X,I10,8X,14I1)") i, dec_basis(i), index_basis(dec_basis(i)), bin_basis(:,i)   
+         write(mytmp, "(I10,4X,I10,4X,I10,8X,14I1)") i, dec_basis(i), &
+                               index_basis(dec_basis(i)), bin_basis(:,i)   
      enddo 
      close(mytmp)
   
      return
   end subroutine atomic_write_basis
 
-!!>>> write eimpmat on natural basis 
+!!>>> atomic_write_eimpmat: write on-site impurity energy on natural basis 
   subroutine atomic_write_eimpmat()
-     use constants,  only: mytmp
-     use control,    only: norbs
-     use m_spmat,    only: eimpmat
+     use constants, only : mytmp
+     use control, only : norbs
+
+     use m_spmat, only : eimpmat
   
      implicit none
   
@@ -54,8 +55,6 @@
      integer :: i
   
      open(mytmp, file='atom.eimp.dat') 
-     write(mytmp, '(a)') '# impurity energy on natural basis, it may be useful for ctqmc input: solver.eimp.in'
-     write(mytmp, '(a)') '#        i |      eimp(i)'
      do i=1, norbs
          write(mytmp, '(I10,F20.10)') i, real(eimpmat(i,i))
      enddo
@@ -64,11 +63,12 @@
      return
   end subroutine atomic_write_eimpmat
 
-!!>>> write eigenvalue of fullspace to file 'atom.eigval.dat'
+!!>>> atomic_write_eigval_fullspace: write eigenvalue of fullspace 
+!!>>> to file 'atom.eigval.dat'
   subroutine atomic_write_eigval_fullspace()
-     use constants,         only: mytmp
-     use control,           only: ncfgs
-     use m_glob_fullspace,  only: hmat_eigval, occu_mat
+     use constants, only : mytmp
+     use control, only : ncfgs
+     use m_glob_fullspace, only : hmat_eigval, occu_mat
   
      implicit none
   
@@ -86,12 +86,14 @@
      return
   end subroutine atomic_write_eigval_fullspace
 
-!!>>> write eigenvector of fullspace to file 'atom.eigvec.dat'
+!!>>> atomic_write_eigvec_fullspace: write eigenvector of 
+!!>>> fullspace to file 'atom.eigvec.dat'
   subroutine atomic_write_eigvec_fullspace()
-     use constants,         only: mytmp, eps6
-     use control,           only: ncfgs
-     use m_basis_fullspace, only: bin_basis
-     use m_glob_fullspace,  only: hmat_eigvec
+     use constants, only : mytmp, eps6
+     use control, only : ncfgs
+
+     use m_basis_fullspace, only : bin_basis
+     use m_glob_fullspace, only : hmat_eigvec
   
      implicit none
   
@@ -112,11 +114,13 @@
      return
   end subroutine atomic_write_eigvec_fullspace
 
-!!>>> write atom.cix for CTQMC input
+!!>>> atomic_write_atomcix_fullspace: write atom.cix for CTQMC input
+!!>>> for ictqmc == 1 case.
   subroutine atomic_write_atomcix_fullspace()
-     use constants,        only: mytmp, zero
-     use control,          only: nband, norbs, ncfgs, isoc
-     use m_glob_fullspace, only: hmat_eigval, occu_mat, anni_fmat
+     use constants, only : mytmp, zero
+     use control, only : nband, norbs, ncfgs, isoc
+
+     use m_glob_fullspace, only : hmat_eigval, occu_mat, anni_fmat
   
      implicit none
   
@@ -161,10 +165,12 @@
      return
   end subroutine atomic_write_atomcix_fullspace
 
-!!>>> write eigenvalue of sectors to file 'atom.eigval.dat'
+!!>>> atomic_write_eigval_sectors: write eigenvalue of sectors 
+!!>>> to file 'atom.eigval.dat'
   subroutine atomic_write_eigval_sectors()
-     use constants,      only: mytmp
-     use m_glob_sectors, only: nsectors, sectors
+     use constants, only : mytmp
+
+     use m_glob_sectors, only : nsectors, sectors
   
      implicit none
   
@@ -179,7 +185,8 @@
      do i=1, nsectors
          do j=1, sectors(i)%ndim
              counter = counter + 1
-             write(mytmp, "(I10,4X,I10,4X,I10,4X,I10, F20.10)") counter, i, sectors(i)%nelectron, j, sectors(i)%myeigval(j)
+             write(mytmp, "(I10,4X,I10,4X,I10,4X,I10, F20.10)") counter, i, &
+                               sectors(i)%nelectron, j, sectors(i)%myeigval(j)
          enddo
      enddo
      close(mytmp)
@@ -187,11 +194,13 @@
      return
   end subroutine atomic_write_eigval_sectors
 
-!!>>> write eigenvector of sectors to file 'atom.eigval.dat'
+!!>>> atomic_write_eigvec_sectors: write eigenvector of sectors 
+!!>>> to file 'atom.eigval.dat'
   subroutine atomic_write_eigvec_sectors()
-     use constants,         only: mytmp, eps6
-     use m_basis_fullspace, only: bin_basis
-     use m_glob_sectors,    only: nsectors, sectors
+     use constants, only : mytmp, eps6
+
+     use m_basis_fullspace, only : bin_basis
+     use m_glob_sectors, only : nsectors, sectors
   
      implicit none
   
@@ -217,11 +226,13 @@
      return
   end subroutine atomic_write_eigvec_sectors
 
-!!>>> write atom.cix for CTQMC input, good quantum number algorithm
+!!>>> atomic_write_atomcix_sectors: write atom.cix for CTQMC input, 
+!!>>> for good quantum numbers (GQNs) algorithm
   subroutine atomic_write_atomcix_sectors()
-     use constants
-     use control
-     use m_glob_sectors
+     use constants, only : mytmp
+     use control, only : Uc, Uv, Jz, Js, Jp, Ud, JH, F0, F2, F4, F6, icu, isoc
+
+     use m_glob_sectors, only : nsectors, sectors, max_dim_sect, ave_dim_sect
   
      implicit none
   
@@ -232,17 +243,17 @@
 ! open 'atom.cix' to write
      open(mytmp, file='atom.cix')
 ! write header
-     write(mytmp, "(a)") "# This file is generated by JASMINE code, can be &
+     write(mytmp, "(a)") "# This file is generated by JASMINE, can be &
                              ONLY used by PANSY and MANJUSHAKA CTQMC codes."
      write(mytmp, "(a)") "# WARNING: please DON'T change this file manually !"
      if (icu==1) then
-         write(mytmp, "(a)") "# Kanamori parameterized Coulomb interaction "
-         write(mytmp, "(5(a,F12.6,2X))") "# Uc:", Uc, "Uv:", Uv, "Jz:", Jz, "Js:", Js, "Jp:", Jp
+         write(mytmp, "(a)") "# Kanamori-parameterized Coulomb interaction: "
+         write(mytmp, "(5(a,F9.5,2X))") "# Uc:", Uc, "Uv:", Uv, "Jz:", Jz, "Js:", Js, "Jp:", Jp
      else
-         write(mytmp, "(a)") "# Slater parameterized Coulomb interaction "
-         write(mytmp, "(6(a,F12.6,2X))") "# Ud:", Ud, "JH:", JH, "F0:", F0, "F2:", F2, "F4:", F4, "F6:", F6
+         write(mytmp, "(a)") "# Slater-parameterized Coulomb interaction: "
+         write(mytmp, "(6(a,F9.5,2X))") "# Ud:", Ud, "JH:", JH, "F0:", F0, "F2:", F2, "F4:", F4, "F6:", F6
      endif
-     write(mytmp, "(a)") "#====================================================================================================="
+     write(mytmp, "(a)") "#================================================================================"
 
 ! write number of sectors
      write(mytmp, "(a)") "# NUMBER OF SECTORS | MAXIMUM DIMENSION OF SECTORS | AVERAGE DIMENSION OF SECTORS"
@@ -302,11 +313,12 @@
      return
   end subroutine atomic_write_atomcix_sectors
 
-!!>>> write the transformation matrix from the original basis to natural basis
+!!>>> atomic_write_natural: write the transformation matrix 
+!!>>> from the original basis to natural basis
   subroutine atomic_write_natural(info)
-     use constants, only: dp, mytmp
-     use control,   only: norbs
-     use m_spmat,   only: tran_umat
+     use constants, only : dp, mytmp
+     use control, only : norbs
+     use m_spmat, only : tran_umat
   
 ! external variables
      character(len=*), intent(in) :: info

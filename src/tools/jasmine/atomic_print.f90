@@ -7,17 +7,15 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
+!!!           08/22/2014 by yilin wang
 !!! purpose : print information
-!!! input   :
-!!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> print header
+!!>>> atomic_print_header: print the running header
   subroutine atomic_print_header()
-     use constants,  only: mystd
-     use control,    only: nprocs
+     use constants, only : mystd
   
 ! string for current date and time
      character (len = 20) :: date_time_string
@@ -38,16 +36,14 @@
   
      write(mystd,'(2X,a)') 'jasmine >>> start running at '//date_time_string
   
-     write(mystd,'(2X,a,i4)') 'jasmine >>> parallelism: No  >>> processors:', 1
-  
      write(mystd,*)
   
      return
   end subroutine atomic_print_header
   
-!!>>> print footer
+!!>>> atomic_print_footer: print running footer
   subroutine atomic_print_footer()
-     use constants, only: dp, mystd
+     use constants, only : dp, mystd
   
      implicit none
   
@@ -72,9 +68,9 @@
      return
   end subroutine atomic_print_footer
   
-!!>>> print summary
+!!>>> atomic_print_summary: print summary of parameters list
   subroutine atomic_print_summary()
-     use constants, only: mystd
+     use constants, only : mystd
      use control
   
      implicit none

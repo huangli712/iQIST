@@ -158,7 +158,7 @@ CPP    = $(FPP) $(MPI) $(OMP) $(API)
 # machine tuning options, just for my laptop: iris system
 #-------------------------------------------------------------------------
 GPROF  = #-pg
-CHECK  = -warn all -check all,noarg_temp_created -traceback -g
+CHECK  = -warn all #-check all,noarg_temp_created -traceback -g
 CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
 LEVEL  = -O3 -xHost -unroll-aggressive -align all
 MARCH  = -march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2
@@ -166,7 +166,7 @@ MARCH  = -march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2
 # flags for compiler and linker
 #-------------------------------------------------------------------------
 FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MARCH) $(GPROF)
-LFLAGS = -static $(OMP) $(GPROF)
+LFLAGS = -static $(OMP) $(GPROF) -Wl,-no_pie
 
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------

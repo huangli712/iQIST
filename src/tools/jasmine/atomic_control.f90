@@ -5,29 +5,29 @@
 !!! type    : modules 
 !!! authors : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014
+!!!           08/22/2014
 !!! purpose : control parameters
-!!! input   :
-!!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
 !!>>> control parameters
   module control
-     use constants, only: dp
+     use constants, only : dp
   
      implicit none
   
 ! type of task
-! 1: make natural basis inside of the program
-! 2: make natural basis outside of the program
+! 1: make natural basis inside of this program
+! 2: make natural basis outside of this program
      integer, public, save :: itask
   
 ! type of CTQMC trace algorithm
 ! 1: general matrices multiplication
 ! 2: good quantum numbers: N
-! 3: good quantum numbers: N, Sz, PS
-! 4: good quantum numbers: N, Jz 
+! 3: good quantum numbers: N, Sz
+! 4: good quantum numbers: N, Sz, PS
+! 5: good quantum numbers: N, Jz 
      integer, public, save :: ictqmc
   
 ! type of crystal field
@@ -36,9 +36,9 @@
 ! 2: non-diagonal crystal field 
      integer, public, save :: icf
   
-! type of spin-orbital coupling (SOC) 
-! 0: no spin-orbital coupling
-! 1: on-site atomic spin-orbital coupling (SOC), H_soc = \lambda * L*S
+! type of spin-orbit coupling (SOC) 
+! 0: no SOC
+! 1: on-site atomic SOC, H_soc = \lambda * L*S
      integer, public, save :: isoc
   
 ! type of Coulomb interaction U
@@ -91,21 +91,12 @@
      real(dp), public, save :: F6
 !--------------------------------------
      
-! spin-orbit coupling interaction
+! SOC strength
      real(dp), public, save :: lambda
   
-! chemical potential
+! chemical potential, used to shift energy level
+! only useful for model calculation
      real(dp), public, save :: mune
-  
-! MPI related common variables
-! number of processors
-     integer, public, save :: nprocs
-  
-! the rank of the controller process
-     integer, public, save :: master
-  
-! the rank of the current process
-     integer, public, save :: myrank
-  
+ 
   end module control
  

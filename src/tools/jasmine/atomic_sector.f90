@@ -1,6 +1,6 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : m_sector
+!!! program : m_sector  module
 !!!           m_sector@nullify_one_fmat
 !!!           m_sector@alloc_one_fmat
 !!!           m_sector@dealloc_one_fmat
@@ -8,19 +8,18 @@
 !!!           m_sector@alloc_one_sector
 !!!           m_sector@dealloc_one_sector
 !!! source  : mod_control.f90
-!!! type    : modules
+!!! type    : module
 !!! authors : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014
-!!! purpose : define data structure for good quantum number algorithm
-!!! input   :
-!!! output  :
+!!! history : 07/09/2014 by yilin wang
+!!!           08/22/2014 by yilin wang
+!!! purpose : define data structure for good quantum numbers (GQNs) algorithm
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> data structure for good quantum number algorithm
+!!>>> data structure for good quantum numbers (GQNs) algorithm
   module m_sector
-     use constants,  only: dp, zero, czero
+     use constants, only : dp, zero, czero
   
      implicit none
   
@@ -73,133 +72,144 @@
 ! status of allocating memory
      integer, private :: istat
 
-     contains
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
+
+     public :: nullify_one_fmat
+     public :: alloc_one_fmat
+     public :: dealloc_one_fmat
+     public :: nullify_one_sector
+     public :: alloc_one_sector
+     public :: dealloc_one_sector
+
+  contains
   
-!!>>> nullify one fmat
-     subroutine nullify_one_fmat(one_fmat)
-        implicit none
+!!>>> nullify_one_fmat: nullify one fmat
+  subroutine nullify_one_fmat(one_fmat)
+     implicit none
   
 ! external variables
-        type(t_fmat), intent(inout) :: one_fmat
+     type(t_fmat), intent(inout) :: one_fmat
   
-        nullify(one_fmat%item)
+     nullify(one_fmat%item)
   
-        return
-     end subroutine nullify_one_fmat
+     return
+  end subroutine nullify_one_fmat
   
-!!>>> allocate one fmat
-     subroutine alloc_one_fmat(one_fmat)
-        implicit none
+!!>>> alloc_one_fmat: allocate one fmat
+  subroutine alloc_one_fmat(one_fmat)
+     implicit none
   
 ! external variables
-        type(t_fmat), intent(inout) :: one_fmat
+     type(t_fmat), intent(inout) :: one_fmat
   
-        allocate( one_fmat%item(one_fmat%n, one_fmat%m),  stat=istat )
+     allocate( one_fmat%item(one_fmat%n, one_fmat%m),  stat=istat )
   
 ! check status
-        if ( istat /= 0 ) then
-            call s_print_error('alloc_one_fmat', 'can not allocate enough memory')
-        endif
+     if ( istat /= 0 ) then
+         call s_print_error('alloc_one_fmat', 'can not allocate enough memory')
+     endif
 ! initialize it
-        one_fmat%item = zero
+     one_fmat%item = zero
   
-        return
-     end subroutine alloc_one_fmat
+     return
+  end subroutine alloc_one_fmat
   
-     !>>> deallocate one fmat
-     subroutine dealloc_one_fmat(one_fmat)
-        implicit none
-  
-! external variables
-        type(t_fmat), intent(inout) :: one_fmat
-  
-        if ( associated(one_fmat%item) ) deallocate(one_fmat%item)
-  
-        return
-     end subroutine dealloc_one_fmat
-  
-!!>>> nullify one sector
-     subroutine nullify_one_sector(one_sector)
-        implicit none
+!>>> dealloc_one_fmat: deallocate one fmat
+  subroutine dealloc_one_fmat(one_fmat)
+     implicit none
   
 ! external variables
-        type(t_sector), intent(inout) :: one_sector
+     type(t_fmat), intent(inout) :: one_fmat
   
-        nullify( one_sector%mybasis )
-        nullify( one_sector%myham )
-        nullify( one_sector%myeigval )
-        nullify( one_sector%myeigvec )
-        nullify( one_sector%next_sector )
-        nullify( one_sector%myfmat )
+     if ( associated(one_fmat%item) ) deallocate(one_fmat%item)
   
-        return
-     end subroutine nullify_one_sector
+     return
+  end subroutine dealloc_one_fmat
   
-!>>> allocate memory for one sector
-     subroutine alloc_one_sector(one_sector)
-        implicit none
+!!>>> nullify_one_sector: nullify one sector
+  subroutine nullify_one_sector(one_sector)
+     implicit none
   
 ! external variables
-        type(t_sector), intent(inout) :: one_sector
+     type(t_sector), intent(inout) :: one_sector
+  
+     nullify( one_sector%mybasis )
+     nullify( one_sector%myham )
+     nullify( one_sector%myeigval )
+     nullify( one_sector%myeigvec )
+     nullify( one_sector%next_sector )
+     nullify( one_sector%myfmat )
+  
+     return
+  end subroutine nullify_one_sector
+  
+!>>> alloc_one_sector: allocate memory for one sector
+  subroutine alloc_one_sector(one_sector)
+     implicit none
+  
+! external variables
+     type(t_sector), intent(inout) :: one_sector
   
 ! local variables
-        integer :: i, j
+     integer :: i, j
   
-        allocate( one_sector%mybasis(one_sector%ndim),                   stat=istat ) 
-        allocate( one_sector%myham(one_sector%ndim, one_sector%ndim),    stat=istat ) 
-        allocate( one_sector%myeigval(one_sector%ndim),                  stat=istat )
-        allocate( one_sector%myeigvec(one_sector%ndim, one_sector%ndim), stat=istat ) 
-        allocate( one_sector%next_sector(one_sector%nops,0:1),           stat=istat )
-        allocate( one_sector%myfmat(one_sector%nops,0:1),                stat=istat )
+     allocate( one_sector%mybasis(one_sector%ndim),                   stat=istat ) 
+     allocate( one_sector%myham(one_sector%ndim, one_sector%ndim),    stat=istat ) 
+     allocate( one_sector%myeigval(one_sector%ndim),                  stat=istat )
+     allocate( one_sector%myeigvec(one_sector%ndim, one_sector%ndim), stat=istat ) 
+     allocate( one_sector%next_sector(one_sector%nops,0:1),           stat=istat )
+     allocate( one_sector%myfmat(one_sector%nops,0:1),                stat=istat )
   
 ! check status
-        if ( istat /= 0 ) then
-            call s_print_error('alloc_one_sector', 'can not allocate enough memory')
-        endif
+     if ( istat /= 0 ) then
+         call s_print_error('alloc_one_sector', 'can not allocate enough memory')
+     endif
 
-! init them
-        one_sector%mybasis = 0
-        one_sector%myham = czero
-        one_sector%myeigval = zero
-        one_sector%myeigvec = zero
-        one_sector%next_sector = 0
+! initialize them
+     one_sector%mybasis = 0
+     one_sector%myham = czero
+     one_sector%myeigval = zero
+     one_sector%myeigvec = zero
+     one_sector%next_sector = 0
   
-! init myfmat one by one
-        do i=1, one_sector%nops 
-           do j=0, 1
-               one_sector%myfmat(i,j)%n = 0
-               one_sector%myfmat(i,j)%m = 0
-               call nullify_one_fmat(one_sector%myfmat(i,j))
-           enddo
+! initialize myfmat one by one
+     do i=1, one_sector%nops 
+        do j=0, 1
+            one_sector%myfmat(i,j)%n = 0
+            one_sector%myfmat(i,j)%m = 0
+            call nullify_one_fmat(one_sector%myfmat(i,j))
         enddo
+     enddo
   
-        return
-     end subroutine alloc_one_sector
+     return
+  end subroutine alloc_one_sector
   
-!!>>> deallocate memory for onespace
-     subroutine dealloc_one_sector(one_sector)
-        implicit none
+!!>>> dealloc_one_sector: deallocate memory for one sector
+  subroutine dealloc_one_sector(one_sector)
+     implicit none
   
 ! external variables
-        type(t_sector), intent(inout) :: one_sector 
+     type(t_sector), intent(inout) :: one_sector 
   
 ! local variables  
-        integer :: i, j
+     integer :: i, j
   
-        if (associated(one_sector%mybasis))      deallocate(one_sector%mybasis)
-        if (associated(one_sector%myham))        deallocate(one_sector%myham)
-        if (associated(one_sector%myeigval))     deallocate(one_sector%myeigval)
-        if (associated(one_sector%myeigvec))     deallocate(one_sector%myeigvec)
-        if (associated(one_sector%next_sector))  deallocate(one_sector%next_sector)
+     if (associated(one_sector%mybasis))      deallocate(one_sector%mybasis)
+     if (associated(one_sector%myham))        deallocate(one_sector%myham)
+     if (associated(one_sector%myeigval))     deallocate(one_sector%myeigval)
+     if (associated(one_sector%myeigvec))     deallocate(one_sector%myeigvec)
+     if (associated(one_sector%next_sector))  deallocate(one_sector%next_sector)
   
 ! deallocate myfmat one by one
-        do i=1, one_sector%nops
-            do j=0,1
-                call dealloc_one_fmat(one_sector%myfmat(i,j))
-            enddo
-        enddo 
+     do i=1, one_sector%nops
+         do j=0,1
+             call dealloc_one_fmat(one_sector%myfmat(i,j))
+         enddo
+     enddo 
   
-        return
-     end subroutine dealloc_one_sector
+     return
+  end subroutine dealloc_one_sector
 
   end module m_sector

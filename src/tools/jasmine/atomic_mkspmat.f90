@@ -2,29 +2,31 @@
 !!! project : jasmine
 !!! program : atomic_make_spmat
 !!!           atomic_make_soc
-!!!           atomic_make_soc_3band
-!!!           atomic_make_soc_5band
-!!!           atomic_make_soc_7band
-!!!           atomic_make_cumat_kanamori
-!!!           atomic_make_cumat_slater
+!!!           atomic_mksoc_3band
+!!!           atomic_mksoc_5band
+!!!           atomic_mksoc_7band
+!!!           atomic_mkcumat_kanamori
+!!!           atomic_mkcumat_slater
 !!! source  : atomic_mkspmat.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
+!!!           08/22/2014 by yilin wang
 !!! purpose : make single particle related matrices, including crystal field,
 !!!           spin-orbital coupling, and Coulomb interaction U tensor
-!!! input   :
-!!! output  :
 !!! status  : unstable
-!!! comment :
+!!! comment : subroutine atomic_mkcumat_kanamori and atomic_mkcumat_slater are 
+!!!           modified from Dr. LiangDu's (duleung@gmail.com) atomic program
 !!!-------------------------------------------------------------------------
 
-!!>>> make single particle related matrices, including
-!! crystal field (CF), spin-orbital coupling (SOC),  and Coulomb inteartion U tensor
+!!>>> atomic_make_spmat: make single particle related matrices, including
+!!>>> crystal field (CF), spin-orbit coupling (SOC), and Coulomb interaction
+!!>>> U tensor
   subroutine atomic_make_spmat()
-     use constants, only: czero
-     use control,   only: itask, icf, isoc, icu
-     use m_spmat,   only: cfmat, socmat
+     use constants, only : czero
+     use control, only : itask, icf, isoc, icu
+
+     use m_spmat, only : cfmat, socmat
   
      implicit none
   
@@ -67,33 +69,33 @@
      if (icu == 1) then
 ! Kanamori parameters type
 ! it is defined on real orbital basis 
-         call atomic_make_cumat_kanamori()
+         call atomic_mkcumat_kanamori()
      else
 ! Slater-Cordon parameters type
 ! it is defined on complex orbital basis
-         call atomic_make_cumat_slater()
+         call atomic_mkcumat_slater()
      endif
   
      return
   end subroutine atomic_make_spmat 
 
-!!>>> make spin-orbital coupling (SOC)
+!!>>> atomic_make_soc: make spin-orbital coupling (SOC)
   subroutine atomic_make_soc()
-     use constants, only: two
-     use control,   only: nband, lambda
-     use m_spmat,   only: socmat
+     use constants, only : two
+     use control, only : nband, lambda
+     use m_spmat, only : socmat
   
      implicit none
   
      if (nband == 3) then
-         call atomic_make_soc_3band(socmat)
+         call atomic_mksoc_3band(socmat)
 ! for 3 bands system, there is a minus sign
          socmat = -socmat * lambda / two
      elseif(nband == 5) then
-         call atomic_make_soc_5band(socmat)
+         call atomic_mksoc_5band(socmat)
          socmat = socmat * lambda / two
      elseif(nband == 7) then
-         call atomic_make_soc_7band(socmat)
+         call atomic_mksoc_7band(socmat)
          socmat = socmat * lambda / two
      else
          call s_print_error('atomic_make_soc', 'not implementd!')
@@ -102,12 +104,13 @@
      return 
   end subroutine atomic_make_soc
 
-!>>> make spin-orbital coupling matrix for 3 bands
-  subroutine atomic_make_soc_3band(socmat)
+!>>> atomic_mksoc_3band: make spin-orbit coupling matrix for 3 bands
+  subroutine atomic_mksoc_3band(socmat)
+     use constants, only : dp
+
      implicit none
   
 ! external variables
-     integer, parameter :: dp = kind(0.0d0)
      complex(dp), intent(out) :: socmat(6,6)
   
 ! local variables
@@ -129,14 +132,15 @@
      socmat(6,6) = -1.0_dp
   
      return
-  end subroutine atomic_make_soc_3band
+  end subroutine atomic_mksoc_3band
 
-!!>>> make spin-orbital coupling matrix for 5 bands
-  subroutine atomic_make_soc_5band(socmat)
+!!>>> atomic_mksoc_5band: make spin-orbit coupling matrix for 5 bands
+  subroutine atomic_mksoc_5band(socmat)
+     use constants, only : dp
+
      implicit none
   
 ! external variables
-     integer, parameter :: dp = kind(0.0d0)
      complex(dp), intent(out) :: socmat(10,10)
   
 ! local variables
@@ -166,61 +170,63 @@
      socmat(10,10)= -2.0_dp
   
      return 
-  end subroutine atomic_make_soc_5band
+  end subroutine atomic_mksoc_5band
 
-!!>>> make spin-orbital coupling matrix for 7 bands
-  subroutine atomic_make_soc_7band(socmat)
-      implicit none
+!!>>> atomic_mksoc_7band: make spin-orbit coupling matrix for 7 bands
+  subroutine atomic_mksoc_7band(socmat)
+     use constants, only : dp
+
+     implicit none
   
 ! local variables
-      integer, parameter :: dp = kind(0.0d0)
-      real(dp) :: sqrt6
-      real(dp) :: sqrt10
-      real(dp) :: sqrt12
+     real(dp) :: sqrt6
+     real(dp) :: sqrt10
+     real(dp) :: sqrt12
   
 ! external variables
-      complex(dp), intent(out) :: socmat(14,14)    
+     complex(dp), intent(out) :: socmat(14,14)    
   
-      sqrt6  = sqrt(6.0_dp)
-      sqrt10 = sqrt(10.0_dp)
-      sqrt12 = sqrt(12.0_dp)
+     sqrt6  = sqrt(6.0_dp)
+     sqrt10 = sqrt(10.0_dp)
+     sqrt12 = sqrt(12.0_dp)
   
-      socmat = dcmplx(0.0_dp, 0.0_dp)
+     socmat = dcmplx(0.0_dp, 0.0_dp)
   
-      socmat(1,1) = -3.0_dp
-      socmat(4,1) = sqrt6
-      socmat(2,2) = 3.0_dp
-      socmat(3,3) = -2.0_dp
-      socmat(6,3) = sqrt10 
-      socmat(1,4) = sqrt6
-      socmat(4,4) = 2.0_dp
-      socmat(5,5) = -1.0_dp
-      socmat(8,5) = sqrt12
-      socmat(3,6) = sqrt10 
-      socmat(6,6) = 1.0_dp
-      socmat(10,7) = sqrt12
-      socmat(5,8) = sqrt12
-      socmat(9,9) = 1.0_dp
-      socmat(12,9) = sqrt10
-      socmat(7,10) = sqrt12
-      socmat(10,10) = -1.0_dp
-      socmat(11,11) =  2.0_dp
-      socmat(14,11) =  sqrt6
-      socmat(9,12) = sqrt10
-      socmat(12,12) =  -2.0_dp
-      socmat(13,13) =  3.0_dp
-      socmat(11,14) =  sqrt6
-      socmat(14,14) =  -3.0_dp
+     socmat(1,1) = -3.0_dp
+     socmat(4,1) = sqrt6
+     socmat(2,2) = 3.0_dp
+     socmat(3,3) = -2.0_dp
+     socmat(6,3) = sqrt10 
+     socmat(1,4) = sqrt6
+     socmat(4,4) = 2.0_dp
+     socmat(5,5) = -1.0_dp
+     socmat(8,5) = sqrt12
+     socmat(3,6) = sqrt10 
+     socmat(6,6) = 1.0_dp
+     socmat(10,7) = sqrt12
+     socmat(5,8) = sqrt12
+     socmat(9,9) = 1.0_dp
+     socmat(12,9) = sqrt10
+     socmat(7,10) = sqrt12
+     socmat(10,10) = -1.0_dp
+     socmat(11,11) =  2.0_dp
+     socmat(14,11) =  sqrt6
+     socmat(9,12) = sqrt10
+     socmat(12,12) =  -2.0_dp
+     socmat(13,13) =  3.0_dp
+     socmat(11,14) =  sqrt6
+     socmat(14,14) =  -3.0_dp
   
-      return
-  end subroutine atomic_make_soc_7band
+     return
+  end subroutine atomic_mksoc_7band
 
-!!>>> make Coulomb interaction U, this subroutine is taken from 
-!! Dr. LiangDu's (duleung@gmail.com) atomic program
-  subroutine atomic_make_cumat_kanamori()
-     use constants, only: dp, czero, zero
-     use control,   only: norbs, Uc, Uv, Jz, Js, Jp
-     use m_spmat,   only: cumat
+!!>>> atomic_mkcumat_kanamori: make Coulomb interaction U according to
+!!>>> Kanamori parameterized Hamiltonian
+  subroutine atomic_mkcumat_kanamori()
+     use constants, only : dp, czero, zero
+     use control, only : norbs, Uc, Uv, Jz, Js, Jp
+
+     use m_spmat, only : cumat
   
      implicit none
   
@@ -298,14 +304,14 @@
      enddo alphaloop ! over alpha={1,norbs-1} loop
   
      return
-  end subroutine atomic_make_cumat_kanamori
+  end subroutine atomic_mkcumat_kanamori
 
-!!>>> make Coulomb interation U, Slater-Cordon parameters type
-!! this subroutine is modified from Dr. LiangDu's (duleung@gmail.com) atomic program
-  subroutine atomic_make_cumat_slater()
-     use constants, only: dp, zero, half
-     use control,   only: nband, norbs, F0, F2, F4, F6
-     use m_spmat,   only: cumat
+!!>>> atomic_mkcumat_slater: make Coulomb interation U, according to 
+!!>>> Slater-Cordon parameterized Hamiltonian
+  subroutine atomic_mkcumat_slater()
+     use constants, only : dp, zero, half
+     use control, only : nband, norbs, F0, F2, F4, F6
+     use m_spmat, only : cumat
   
      implicit none
   
@@ -394,4 +400,4 @@
      if (allocated(gaunt))         deallocate(gaunt)
   
      return
-  end subroutine atomic_make_cumat_slater
+  end subroutine atomic_mkcumat_slater
