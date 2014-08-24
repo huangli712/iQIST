@@ -2522,7 +2522,9 @@
      use context, only : expt_t, expt_v, index_t, index_v, ckink
      use context, only : matrix_ptrace, matrix_ntrace, ddmat
 
-     use m_sector, only : nsectors, sectors, is_trunc, final_product, ctqmc_make_string
+     use m_sector, only : nsectors, sectors, final_product
+     use m_sector, only : is_string, ctqmc_make_string
+
      use m_npart, only : is_copy, cat_sector_ztrace, ctqmc_make_nparts
 
      implicit none
@@ -2564,9 +2566,6 @@
 
 ! a particular string begins at one sector
      integer :: string(csize+1, nsectors) 
-
-! whether it is a string
-     logical :: is_string(nsectors)
 
 ! minimum dimension of the sectors
      integer :: min_dim(nsectors)
@@ -2638,17 +2637,17 @@
      end select
 
 ! build string for all the sectors
-     call ctqmc_make_string(csize,index_t_loc, is_string, string)
+     call ctqmc_make_string(csize, index_t_loc, string)
 
 ! we can check is_string here to see whether this diagram can survive ?
      pass = .false.
      do i=1, nsectors
-         if (is_string(i) .eqv. .true.) then
+         if ( is_string(i,1) ) then
              pass = .true.
              EXIT
          endif
      enddo
-     if (pass .eqv. .false.) then
+     if ( .not. pass ) then
          accept_p = zero
          RETURN
      endif
@@ -2656,7 +2655,7 @@
 ! determine the minimal dimension of all the sectors
      min_dim = 0
      do i=1, nsectors
-         if (is_string(i) .eqv. .false.) cycle
+         if ( .not. is_string(i,1) ) cycle
          min_dim(i) = sectors(i)%ndim
          do j=1, csize
              if ( min_dim(i) > sectors(string(j,i))%ndim ) then
@@ -2670,17 +2669,11 @@
      nalive_sect = 0
      orig_sect = -1
      do i=1, nsectors
-         if (is_trunc(i)) cycle
-
-         if (is_string(i) .eqv. .false.) then
-             final_product(i,1)%item = zero
-             cycle
-         endif
+         if ( .not. is_string(i,1) ) cycle
 
 ! calculate the trace bounds
          nalive_sect = nalive_sect + 1
          tmp_trb = one
-
          do j=1, csize
              indx = sectors(string(j,i))%istart
              tmp_trb = tmp_trb * expt_v(indx, index_t_loc(j)) 
@@ -2691,7 +2684,7 @@
 ! this trace bound is too small, so it will contribute very small
 ! to the total trace
          if (tmp_trb < 1.0e-6) then
-             is_string(i) = .false. 
+             is_string(i,1) = .false. 
              final_product(i,1)%item = zero
              nalive_sect = nalive_sect - 1
              cycle
@@ -2734,10 +2727,10 @@
 
      do i=1, nalive_sect
          call cat_sector_ztrace( csize, string(:,orig_sect(i)), index_t_loc, &
-                                      expt_t_loc, trace_sector(orig_sect(i)) )
+                                      expt_t_loc, trace_sector(i) )
 
-         if (pass .eqv. .false.) then
-             sum_abs_trace = sum_abs_trace + abs( trace_sector(orig_sect(i)) )
+         if ( .not. pass ) then
+             sum_abs_trace = sum_abs_trace + abs( trace_sector(i) )
              sum_bound = sum_bound - trace_bound(i)
 ! calculate pmax and pmin
              pmax = ptmp * (sum_abs_trace + sum_bound)
@@ -2758,20 +2751,19 @@
 ! if we arrive here, two case
 ! case 1: pass == .false., we haven't determined the pass
 ! case 2: pass == .true. we have determined the pass
-     matrix_ntrace = sum(trace_sector) 
+     matrix_ntrace = sum(trace_sector(1:nalive_sect)) 
      accept_p = propose  *  deter_ratio * matrix_ntrace / matrix_ptrace
      pass = ( min(one, abs(accept_p)) > rand_num)
-     if ( pass .eqv. .false.) then
+     if ( .not. pass ) then
         return
      endif
 
 ! store the diagonal elements of final product in ddmat(:,1)
      ddmat(:,1) = zero
-     do i=1, nsectors
-         if(is_trunc(i)) cycle
-         indx = sectors(i)%istart
-         do j=1, sectors(i)%ndim
-             ddmat(indx+j-1,1) = final_product(i,1)%item(j,j) 
+     do i=1, nalive_sect
+         indx = sectors( orig_sect(i) )%istart
+         do j=1, sectors( orig_sect(i) )%ndim
+             ddmat(indx+j-1,1) = final_product(orig_sect(i),1)%item(j,j) 
          enddo
      enddo
 
@@ -2784,7 +2776,9 @@
      use control, only : mkink, ncfgs
      use context, only : expt_t, expt_v, index_t, index_v, ddmat
 
-     use m_sector, only : nsectors, sectors, is_trunc, final_product, ctqmc_make_string
+     use m_sector, only : nsectors, sectors, final_product
+     use m_sector, only : is_string, ctqmc_make_string
+
      use m_npart, only : is_copy, cat_sector_ztrace, ctqmc_make_nparts
 
      implicit none
@@ -2806,9 +2800,6 @@
 ! a particular string begins at one sector
      integer :: string(csize+1, nsectors) 
 
-! is it a string?
-     logical :: is_string(nsectors)
-
 ! trace for each sector
      real(dp) :: trace_sector(nsectors)
 
@@ -2824,7 +2815,7 @@
      expt_t_loc = expt_t(:,2)
 
 ! build string for all the sectors
-     call ctqmc_make_string(csize,index_t_loc, is_string, string)
+     call ctqmc_make_string(csize, index_t_loc, string)
 
 ! make npart
      call ctqmc_make_nparts(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
@@ -2832,25 +2823,16 @@
      is_copy = .false.
      trace_sector = zero
      do i=1, nsectors
-         if (is_trunc(i)) cycle
-
-         if (is_string(i) .eqv. .false.) then
-             trace_sector(i) = zero
-             final_product(i,1)%item = zero
-         else
-             call cat_sector_ztrace( csize, string(:,i), index_t_loc, expt_t_loc, trace_sector(i) )
-         endif
+         if ( .not. is_string(i,1) ) cycle
+         call cat_sector_ztrace( csize, string(:,i), index_t_loc, expt_t_loc, trace_sector(i) )
      enddo
 
-     trace = zero
-     do i=1, nsectors
-         trace = trace + trace_sector(i)
-     enddo
+     trace = sum(trace_sector)
 
 ! store the diagonal elements of final product in ddmat(:,1)
      ddmat(:,1) = zero
      do i=1, nsectors
-         if(is_trunc(i)) cycle
+         if( .not. is_string(i,1) ) cycle
          indx = sectors(i)%istart
          do j=1, sectors(i)%ndim
              ddmat(indx+j-1,1) = final_product(i,1)%item(j,j) 
@@ -2865,7 +2847,7 @@
   subroutine ctqmc_make_evolve()
      use context, only : matrix_ptrace, matrix_ntrace, ddmat
 
-     use m_sector, only : nsectors, sectors, is_trunc, final_product
+     use m_sector, only : nsectors, sectors, is_string, final_product
      use m_npart, only : ctqmc_save_parts
 
      implicit none
@@ -2879,11 +2861,12 @@
 
 ! update ddmat for the calculation of atomic state probability
      ddmat(:,2) = ddmat(:,1)
+     is_string(:,2) = is_string(:,1)
 
 ! transfer the final matrix product from final_product(:,:,1) to 
 ! final_product(:,:,2) the latter can be used to calculate nmat and nnmat
      do i=1, nsectors
-         if (is_trunc(i)) cycle
+         if ( .not. is_string(i,1) ) cycle
          final_product(i,2)%item = final_product(i,1)%item
      enddo
   

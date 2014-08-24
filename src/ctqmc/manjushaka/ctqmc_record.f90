@@ -334,7 +334,7 @@
      use context, only : ddmat, matrix_ptrace, nmat, nnmat
      use context, only : ckink, eigs, paux
 
-     use m_sector, only : nsectors, sectors, is_trunc, final_product
+     use m_sector, only : nsectors, sectors, is_string, final_product
      use m_sector, only : max_dim_sect_trunc, occu, double_occu
 
      implicit none
@@ -370,7 +370,7 @@
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
      do i=1, nsectors
-         if (is_trunc(i)) cycle
+         if ( .not. is_string(i,2) ) cycle
          do j=1, sectors(i)%ndim
              raux2 = raux2 + final_product(i, 2)%item(j,j)
          enddo
@@ -388,7 +388,7 @@
      do flvr=1, norbs
          raux1 = zero
          do i=1, nsectors
-             if ( is_trunc(i) ) cycle
+             if ( .not. is_string(i,2) ) cycle
              call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, one, &
                          final_product(i,2)%item,                         sectors(i)%ndim, &
                          occu(flvr,i)%item,                               sectors(i)%ndim, & 
@@ -413,7 +413,7 @@
              do i=flvr+1, norbs
                  raux1 = zero
                  do j=1, nsectors
-                     if (is_trunc(j)) cycle
+                     if ( .not. is_string(j,2) ) cycle
                      call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, one, &
                                   final_product(j,2)%item,                        sectors(j)%ndim, &
                                   double_occu(flvr,i,j)%item,                     sectors(j)%ndim, & 
@@ -427,7 +427,7 @@
 
                  raux1 = zero
                  do j=1, nsectors
-                     if (is_trunc(j)) cycle
+                     if ( .not. is_string(j,2) ) cycle
                      call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, one, &
                                  final_product(j,2)%item,                    sectors(j)%ndim, &
                                  double_occu(i,flvr,j)%item,                 sectors(j)%ndim, & 
