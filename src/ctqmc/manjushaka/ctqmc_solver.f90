@@ -81,11 +81,17 @@
 ! cflag = 100, the quantum impurity solver has reached convergence
      integer  :: cflag
 
-! starting time
-     real(dp) :: time_begin
+! timer, clock start
+     integer :: clock_start
 
-! ending time
-     real(dp) :: time_end
+! timer, clock end
+     integer :: clock_end
+
+! timer, clock rate
+     integer :: clock_rate
+
+! elapsed time
+     real(dp) :: elapsed_time
 
 ! time consuming by current iteration
      real(dp) :: time_iter
@@ -253,13 +259,14 @@
          write(mystd,'(4X,a)') 'quantum impurity solver initializing'
      endif
 
-     call cpu_time(time_begin) ! record starting time
+     call system_clock(clock_start, clock_rate) 
      call ctqmc_solver_init()
-     call cpu_time(time_end)   ! record ending   time
-
+     call system_clock(clock_end,   clock_rate) 
+     elapsed_time = real(clock_end-clock_start)/real(clock_rate)   
+    
 ! print the time information
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,'(4X,a,f10.3,a)') 'time:', elapsed_time, 's'
          write(mystd,*)
      endif
 
@@ -273,17 +280,18 @@
          write(mystd,'(4X,a)') 'quantum impurity solver retrieving'
      endif
 
-     call cpu_time(time_begin) ! record starting time
+     call system_clock(clock_start, clock_rate) 
 ! for dynamically truncate high energy states, the trace of saved diagramm 
 ! may be zero, so we don't retrieve it for itrun == 3
      if (itrun == 1 .or. itrun == 2) then
          call ctqmc_retrieve_status()
      endif
-     call cpu_time(time_end)   ! record ending   time
-
+     call system_clock(clock_end,   clock_rate) 
+     elapsed_time = real(clock_end-clock_start)/real(clock_rate)   
+ 
 ! print the time information
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,'(4X,a,f10.3,a)') 'time:', elapsed_time, 's'
          write(mystd,*)
      endif
 
@@ -297,13 +305,14 @@
          write(mystd,'(4X,a)') 'quantum impurity solver warmming'
      endif
 
-     call cpu_time(time_begin) ! record starting time
+     call system_clock(clock_start, clock_rate) 
      call ctqmc_diagram_warmming()
-     call cpu_time(time_end)   ! record ending   time
+     call system_clock(clock_end,   clock_rate) 
+     elapsed_time = real(clock_end-clock_start)/real(clock_rate)   
 
 ! print the time information
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,'(4X,a,f10.3,a)') 'time:', elapsed_time, 's'
          write(mystd,*)
      endif
 
@@ -320,7 +329,7 @@
      CTQMC_MAIN_ITERATION: do i=1, nsweep, nwrite
 
 ! record start time
-         call cpu_time(time_begin)
+         call system_clock(clock_start, clock_rate) 
 
          CTQMC_DUMP_ITERATION: do j=1, nwrite
 
@@ -459,12 +468,12 @@
 !=========================================================================
 
 ! record ending time for this iteration
-         call cpu_time(time_end)
+         call system_clock(clock_end,   clock_rate) 
+         elapsed_time = real(clock_end-clock_start)/real(clock_rate)   
 
 ! calculate timing information
-         time_iter = time_end - time_begin
+         time_iter = elapsed_time
          time_niter = time_niter + time_iter
-         time_begin = time_end
 
 ! print out the result
          if ( myid == master ) then ! only master node can do it
@@ -597,15 +606,15 @@
 ! function between low frequency QMC data and high frequency Hubbard-I
 ! approximation data, the impurity green's function can be obtained by
 ! using dyson's equation finally
-     if ( isort <= 3 ) then
-         call ctqmc_make_hub1()
+     !if ( isort <= 3 ) then
+     !    call ctqmc_make_hub1()
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make forward fourier transformation
 ! for impurity green's function and auxiliary correlation function. then
 ! the final self-energy function is obtained by analytical formula
-     else
-         call ctqmc_make_hub1() ! call ctqmc_make_hub2() ! not implemented
-     endif ! back if ( isort <= 3 ) block
+     !else
+     !    call ctqmc_make_hub1() ! call ctqmc_make_hub2() ! not implemented
+     !endif ! back if ( isort <= 3 ) block
 
 !=========================================================================
 !>>> symmetrizing final results                                        <<<

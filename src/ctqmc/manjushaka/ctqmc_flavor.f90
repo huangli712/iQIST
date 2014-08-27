@@ -2636,10 +2636,12 @@
              propose = one
      end select
 
-! build string for all the sectors
+! build string for all the sectors, is_string(:,1) will be 
+! modified internally
      call ctqmc_make_string(csize, index_t_loc, string)
 
 ! we can check is_string here to see whether this diagram can survive ?
+! if not, return immediately.
      pass = .false.
      do i=1, nsectors
          if ( is_string(i,1) ) then
@@ -2652,7 +2654,7 @@
          RETURN
      endif
 
-! determine the minimal dimension of all the sectors
+! determine the minimal dimension for each alive string
      min_dim = 0
      do i=1, nsectors
          if ( .not. is_string(i,1) ) cycle
@@ -2664,15 +2666,16 @@
          enddo
      enddo
 
-! calculate the trace bounds for each sector
+! calculate the trace bounds for each sector and determine the 
+! number sectors which actually contribute to the total trace
      trace_bound = zero
      nalive_sect = 0
      orig_sect = -1
      do i=1, nsectors
          if ( .not. is_string(i,1) ) cycle
-
-! calculate the trace bounds
+! find one sector which may contribute to the total trace
          nalive_sect = nalive_sect + 1
+! calculate its trace bound
          tmp_trb = one
          do j=1, csize
              indx = sectors(string(j,i))%istart
@@ -2680,28 +2683,29 @@
          enddo 
 ! specially treatment for the last time-evolution operator
          indx = sectors(string(1,i))%istart
-         tmp_trb = tmp_trb * expt_t_loc(indx)
-! this trace bound is too small, so it will contribute very small
-! to the total trace
+         tmp_trb = tmp_trb * expt_t_loc(indx) * min_dim(i)
+! if this trace bound is too small, it will contribute very small
+! to the total trace, so we ignore this sector to save time.
          if (tmp_trb < 1.0e-6) then
              is_string(i,1) = .false. 
-             final_product(i,1)%item = zero
              nalive_sect = nalive_sect - 1
              cycle
          endif
-         trace_bound(nalive_sect) = min_dim(i) * tmp_trb
+         trace_bound(nalive_sect) = tmp_trb
          orig_sect(nalive_sect) = i
      enddo
 
+! don't find any alive string, return immediately
      if ( nalive_sect == 0 ) then
          pass = .false.
          accept_p = zero 
          RETURN
+! otherwise, calculate the summmation of trace bounds
      else
          sum_bound = sum( trace_bound(1:nalive_sect) )
      endif
 
-! calculate the max bound of acceptance ratio
+! calculate the maximum bound of the acceptance ratio
      ptmp = propose  *  abs(deter_ratio / matrix_ptrace)
      pmax = ptmp * sum_bound
 
@@ -2713,22 +2717,28 @@
          RETURN
      endif
 
-! make npart
+! determine which part has been changed due to local change of diagram
+! it will set is_save internally
      call ctqmc_make_nparts(cmode, csize, index_t_loc, tau_s, tau_e)
 
-! sort the trace_bound
+! sort the trace_bound to speed up the refining process
+! here, we use simple bubble sort algorithm, because nalive_sect is usually small
      call ctqmc_sort_list( nalive_sect, trace_bound(1:nalive_sect), orig_sect(1:nalive_sect) )
 
-! otherwise, we need to refine the trace bounds
+! begin to refine the trace bounds
      pass = .false.
      is_copy = .false.
      sum_abs_trace = zero
      trace_sector = zero
-
      do i=1, nalive_sect
+! calculate the trace for one sector, this call will consume a lot of time
+! if the dimension of fmat and expansion order is large, so we should carefully 
+! optimize it.
          call cat_sector_ztrace( csize, string(:,orig_sect(i)), index_t_loc, &
                                       expt_t_loc, trace_sector(i) )
 
+! if this move is not accepted, refine the trace bound to see whether we can
+! reject it before calculating the trace of all of the sectors
          if ( .not. pass ) then
              sum_abs_trace = sum_abs_trace + abs( trace_sector(i) )
              sum_bound = sum_bound - trace_bound(i)
@@ -2741,14 +2751,16 @@
                  accept_p = zero 
                  return
              endif
-
+! this move is accepted, stop refining process, calculate the trace of 
+! remaining sectors to get the final result of trace.
              if (pmin > rand_num) then
                  pass = .true.
              endif
          endif 
 
      enddo
-! if we arrive here, two case
+
+! if we arrive here, two cases
 ! case 1: pass == .false., we haven't determined the pass
 ! case 2: pass == .true. we have determined the pass
      matrix_ntrace = sum(trace_sector(1:nalive_sect)) 
@@ -2814,12 +2826,15 @@
      index_t_loc = index_v
      expt_t_loc = expt_t(:,2)
 
-! build string for all the sectors
+! build string for all the sectors, is_string(:,1) will be 
+! modified internally
      call ctqmc_make_string(csize, index_t_loc, string)
 
-! make npart
+! determine is_save, all parts with some fermion operators should be 
+! recalculated in this case.
      call ctqmc_make_nparts(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
 
+! calculate the trace for all the alive sectors
      is_copy = .false.
      trace_sector = zero
      do i=1, nsectors
@@ -2861,6 +2876,8 @@
 
 ! update ddmat for the calculation of atomic state probability
      ddmat(:,2) = ddmat(:,1)
+
+! update is_string for calculating nmat and nnmat
      is_string(:,2) = is_string(:,1)
 
 ! transfer the final matrix product from final_product(:,:,1) to 
