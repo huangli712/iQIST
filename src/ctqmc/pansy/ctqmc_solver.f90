@@ -218,11 +218,13 @@
      call cpu_time(time_begin) ! record starting time
      call ctqmc_diagram_warmming()
      call cpu_time(time_end)   ! record ending   time
+
 ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
      endif
+
 !=========================================================================
 !>>> beginning main iteration                                          <<<
 !=========================================================================
