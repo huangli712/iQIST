@@ -75,17 +75,11 @@
 ! cflag = 100, the quantum impurity solver has reached convergence
      integer  :: cflag
 
-! timer, clock start
-     integer(dp) :: clock_start
+! starting time
+     real(dp) :: time_begin
 
-! timer, clock end
-     integer(dp) :: clock_end
-
-! timer, clock rate
-     integer(dp) :: clock_rate
-
-! elapsed time
-     real(dp) :: elapsed_time
+! ending time
+     real(dp) :: time_end
 
 ! time consuming by current iteration
      real(dp) :: time_iter
@@ -181,14 +175,13 @@
          write(mystd,'(4X,a)') 'quantum impurity solver initializing'
      endif
 
-     call system_clock(clock_start, clock_rate) 
+     call cpu_time(time_begin) ! record starting time
      call ctqmc_solver_init()
-     call system_clock(clock_end,   clock_rate) 
-     elapsed_time = real(clock_end-clock_start)/real(clock_rate)   
-    
+     call cpu_time(time_end)   ! record ending   time
+
 ! print the time information
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(4X,a,f10.3,a)') 'time:', elapsed_time, 's'
+         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
      endif
 
@@ -202,14 +195,13 @@
          write(mystd,'(4X,a)') 'quantum impurity solver retrieving'
      endif
 
-     call system_clock(clock_start, clock_rate) 
+     call cpu_time(time_begin) ! record starting time
      call ctqmc_retrieve_status()
-     call system_clock(clock_end,   clock_rate) 
-     elapsed_time = real(clock_end-clock_start)/real(clock_rate)   
-    
+     call cpu_time(time_end)   ! record ending   time
+
 ! print the time information
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(4X,a,f10.3,a)') 'time:', elapsed_time, 's'
+         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
      endif
 
@@ -223,14 +215,13 @@
          write(mystd,'(4X,a)') 'quantum impurity solver warmming'
      endif
 
-     call system_clock(clock_start, clock_rate) 
+     call cpu_time(time_begin) ! record starting time
      call ctqmc_diagram_warmming()
-     call system_clock(clock_end,   clock_rate) 
-     elapsed_time = real(clock_end-clock_start)/real(clock_rate)   
+     call cpu_time(time_end)   ! record ending   time
 
 ! print the time information
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(4X,a,f10.3,a)') 'time:', elapsed_time, 's'
+         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
      endif
 
@@ -247,7 +238,7 @@
      CTQMC_MAIN_ITERATION: do i=1, nsweep, nwrite
 
 ! record start time
-         call system_clock(clock_start, clock_rate) 
+         call cpu_time(time_begin)
 
          CTQMC_DUMP_ITERATION: do j=1, nwrite
 
@@ -356,12 +347,12 @@
 !=========================================================================
 
 ! record ending time for this iteration
-         call system_clock(clock_end,   clock_rate) 
-         elapsed_time = real(clock_end-clock_start)/real(clock_rate)   
+         call cpu_time(time_end)
 
 ! calculate timing information
-         time_iter = elapsed_time
+         time_iter = time_end - time_begin
          time_niter = time_niter + time_iter
+         time_begin = time_end
 
 ! print out the result
          if ( myid == master ) then ! only master node can do it

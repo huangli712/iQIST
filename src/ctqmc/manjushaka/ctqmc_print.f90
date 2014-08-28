@@ -29,15 +29,10 @@
      use constants, only : mystd
      use control, only : nprocs
 
-     use context, only : time_start
-
      implicit none
 
 ! string for current date and time
      character (len = 20) :: date_time_string
-
-! obtain the clock start
-     call system_clock(time_start)
 
 ! obtain current date and time
      call s_time_builder(date_time_string)
@@ -74,7 +69,6 @@
 !!>>> theory self-consistent engine
   subroutine ctqmc_print_footer()
      use constants, only : dp, mystd
-     use context, only : time_start, time_end
 
      implicit none
 
@@ -84,12 +78,8 @@
 ! used to record the time usage information
      real(dp) :: tot_time
 
-! clock rate
-     integer(dp) :: time_rate
-
 ! obtain time usage information
-     call system_clock(time_end, time_rate)
-     tot_time = real(time_end-time_start)/real(time_rate)
+     call cpu_time(tot_time)
 
 ! obtain current date and time
      call s_time_builder(date_time_string)
