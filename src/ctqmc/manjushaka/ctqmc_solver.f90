@@ -82,13 +82,13 @@
      integer  :: cflag
 
 ! timer, clock start
-     integer :: clock_start
+     integer(dp) :: clock_start
 
 ! timer, clock end
-     integer :: clock_end
+     integer(dp) :: clock_end
 
 ! timer, clock rate
-     integer :: clock_rate
+     integer(dp) :: clock_rate
 
 ! elapsed time
      real(dp) :: elapsed_time
@@ -606,15 +606,15 @@
 ! function between low frequency QMC data and high frequency Hubbard-I
 ! approximation data, the impurity green's function can be obtained by
 ! using dyson's equation finally
-     !if ( isort <= 3 ) then
-     !    call ctqmc_make_hub1()
+     if ( isort <= 3 ) then
+         call ctqmc_make_hub1()
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make forward fourier transformation
 ! for impurity green's function and auxiliary correlation function. then
 ! the final self-energy function is obtained by analytical formula
-     !else
-     !    call ctqmc_make_hub1() ! call ctqmc_make_hub2() ! not implemented
-     !endif ! back if ( isort <= 3 ) block
+     else
+         call ctqmc_make_hub1() ! call ctqmc_make_hub2() ! not implemented
+     endif ! back if ( isort <= 3 ) block
 
 !=========================================================================
 !>>> symmetrizing final results                                        <<<

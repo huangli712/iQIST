@@ -64,10 +64,10 @@
      integer, public, save  :: caves = 0
 
 ! time start, for call system_clock
-     integer, public, save :: time_start
+     integer(dp), public, save :: time_start
 
 ! time end, for call system_clock
-     integer, public, save :: time_end
+     integer(dp), public, save :: time_end
  
 !-------------------------------------------------------------------------
 !::: core variables: real, matrix trace                                :::

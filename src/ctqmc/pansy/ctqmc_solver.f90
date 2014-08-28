@@ -76,13 +76,13 @@
      integer  :: cflag
 
 ! timer, clock start
-     integer :: clock_start
+     integer(dp) :: clock_start
 
 ! timer, clock end
-     integer :: clock_end
+     integer(dp) :: clock_end
 
 ! timer, clock rate
-     integer :: clock_rate
+     integer(dp) :: clock_rate
 
 ! elapsed time
      real(dp) :: elapsed_time

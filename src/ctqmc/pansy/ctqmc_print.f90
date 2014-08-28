@@ -82,7 +82,7 @@
      real(dp) :: tot_time
 
 ! clock rate
-     integer :: time_rate
+     integer(dp) :: time_rate
 
 ! obtain time usage information
      call system_clock(time_end, time_rate)
