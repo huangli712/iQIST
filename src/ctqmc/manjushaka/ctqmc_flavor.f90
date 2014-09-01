@@ -2516,7 +2516,7 @@
 !! (4) truncate the Hilbert space according to the total occupancy and the 
 !!     probability of atomic eigenstates.
   subroutine ctqmc_lazy_ztrace(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
-     use constants, only : dp, zero, one
+     use constants, only : dp, zero, one, eps6
      use control, only : mkink, ncfgs, beta
 
      use context, only : expt_t, expt_v, index_t, index_v, ckink
@@ -2686,7 +2686,7 @@
          tmp_trb = tmp_trb * expt_t_loc(indx) * min_dim(i)
 ! if this trace bound is too small, it will contribute very small
 ! to the total trace, so we ignore this sector to save time.
-         if (tmp_trb < 1.0e-6) then
+         if (tmp_trb < eps6) then
              is_string(i,1) = .false. 
              nalive_sect = nalive_sect - 1
              cycle
