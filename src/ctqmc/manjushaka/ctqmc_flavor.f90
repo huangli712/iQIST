@@ -2706,8 +2706,8 @@
      endif
 
 ! calculate the maximum bound of the acceptance ratio
-     ptmp = propose  *  abs(deter_ratio / matrix_ptrace)
-     pmax = ptmp * sum_bound
+     ptmp = propose  *  abs(deter_ratio) 
+     pmax = ptmp * abs(sum_bound/matrix_ptrace)
 
 ! check whether pmax < rand_num
 ! if it is true, reject this move immediately
@@ -2735,16 +2735,15 @@
 ! if the dimension of fmat and expansion order is large, so we should carefully 
 ! optimize it.
          call cat_sector_ztrace( csize, string(:,orig_sect(i)), index_t_loc, &
-                                      expt_t_loc, trace_sector(i) )
-
+                                                  expt_t_loc, trace_sector(i) )
 ! if this move is not accepted, refine the trace bound to see whether we can
 ! reject it before calculating the trace of all of the sectors
          if ( .not. pass ) then
              sum_abs_trace = sum_abs_trace + abs( trace_sector(i) )
              sum_bound = sum_bound - trace_bound(i)
 ! calculate pmax and pmin
-             pmax = ptmp * (sum_abs_trace + sum_bound)
-             pmin = ptmp * (sum_abs_trace - sum_bound)
+             pmax = ptmp * abs( (sum_abs_trace + sum_bound) / matrix_ptrace )
+             pmin = ptmp * abs( (sum_abs_trace - sum_bound) / matrix_ptrace )
 ! check whether pmax < rand_num
              if (pmax < rand_num) then
                  pass = .false.
@@ -2757,14 +2756,13 @@
                  pass = .true.
              endif
          endif 
-
-     enddo
+     enddo  ! over i={1, nalive_sect} loop
 
 ! if we arrive here, two cases
 ! case 1: pass == .false., we haven't determined the pass
 ! case 2: pass == .true. we have determined the pass
      matrix_ntrace = sum(trace_sector(1:nalive_sect)) 
-     accept_p = propose  *  deter_ratio * matrix_ntrace / matrix_ptrace
+     accept_p = propose  *  deter_ratio * (matrix_ntrace / matrix_ptrace)
      pass = ( min(one, abs(accept_p)) > rand_num)
      if ( .not. pass ) then
         return
