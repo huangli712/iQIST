@@ -1714,7 +1714,6 @@
 ! dummy complex variables, used to interpolate self-energy function
      complex(dp) :: cb, ce
      complex(dp) :: sinf
-     complex(dp) :: caux
 
 ! dummy imurity green's function: G^{-1}
      complex(dp) :: gaux(norbs,norbs)
@@ -1741,9 +1740,9 @@
                          ghub(j,i) = ghub(j,i) + ob / cb
                      enddo 
                  enddo
-             enddo ! over k={1,nsectors}
-         enddo ! over j={1,mfreq}
-     enddo ! over i={1,norbs}
+             enddo 
+         enddo ! over i={1,norbs}
+     enddo ! over k={1,nsectors}
 
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs
