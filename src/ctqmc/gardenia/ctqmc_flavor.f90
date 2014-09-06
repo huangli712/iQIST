@@ -606,8 +606,8 @@
      real(dp) :: xe
 
 ! get memory address for is and ie
-     as = istack_pop( empty_s(flvr) )
-     ae = istack_pop( empty_e(flvr) )
+     call istack_pop( empty_s(flvr), as )
+     call istack_pop( empty_e(flvr), ae )
 
 ! shift index_s and index_e to create two empty rooms for as and ae
      do i=ckink,is,-1

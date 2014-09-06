@@ -465,8 +465,8 @@
          exp_e   = czero
 
          do i=1,norbs
-             empty_s(i) = istack_create(mkink)
-             empty_e(i) = istack_create(mkink)
+             call istack_create(empty_s(i), mkink)
+             call istack_create(empty_e(i), mkink)
          enddo ! over i={1,norbs} loop
 
          return
