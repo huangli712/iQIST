@@ -97,7 +97,7 @@
 !! 8. an empty input file is acceptable.
 !!
 !! 9. if one key occurs in the input file for more than 1 times, only the
-!!    first occurrence is recognized.
+!!    last occurrence is recognized.
 !!
 !! Usage
 !! =====
