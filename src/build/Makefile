@@ -154,17 +154,17 @@ clean-common:
 	cd ../common/; pwd; make clean
 
 # targets for solver
-solver: build-solver
+solver: common build-solver
 build-solver: azalea gardenia narcissus begonia lavender pansy manjushaka daisy
 clean-solver: clean-azalea clean-gardenia clean-narcissus clean-begonia clean-lavender clean-pansy clean-manjushaka clean-daisy
 
 # targets for tool
-tool: build-tool
+tool: common build-tool
 build-tool: jasmine hibiscus
 clean-tool: clean-jasmine clean-hibiscus
 
 # targets for other
-other: build-other
+other: common build-other
 build-other: api doc
 clean-other: clean-api clean-doc
 
