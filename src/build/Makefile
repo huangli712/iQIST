@@ -5,7 +5,7 @@
 ##
 ## This is the top Makefile for the iqist software package. You can use
 ## it to build all of the executable programs and libraries. Please do
-## not modify it by yourself.
+## not modify it by yourself even you are very familiar with iqist.
 ##
 ## Usage
 ## =====
@@ -30,8 +30,8 @@
 ##
 ## 'make tool'
 ##
-## 5. build documents and api
-## --------------------------------
+## 5. build documents
+## ------------------
 ##
 ## 'make other'
 ##
@@ -60,6 +60,7 @@
 ## =======
 ##
 ## 08/19/2014 by li huang
+## 09/06/2014 by li huang
 ##
 ##
 
@@ -81,8 +82,8 @@ help:
 	@echo '     tool              build auxiliary tools                          '
 	@echo '     clean-tool        clean objects for auxiliary tools              '
 	@echo
-	@echo '     other             build api and documents                        '
-	@echo '     clean-other       clean api and doc directories                  '
+	@echo '     other             build documents                                '
+	@echo '     clean-other       clean doc directories                          '
 
 help-more:
 	@echo '  Interacting Quantum Impurity Solver Toolkit Building System'
@@ -140,10 +141,10 @@ help-more:
 
 # all-in-one target
 all: build-all
-build-all: common solver tool other
+build-all: common api solver tool other
 
 clean: clean-all
-clean-all: clean-common clean-solver clean-tool clean-other
+clean-all: clean-common clean-api clean-solver clean-tool clean-other
 
 # targets for common
 common: build-common
@@ -154,7 +155,7 @@ clean-common:
 	cd ../common/; pwd; make clean
 
 # targets for solver
-solver: common build-solver
+solver: common api build-solver
 build-solver: azalea gardenia narcissus begonia lavender pansy manjushaka daisy
 clean-solver: clean-azalea clean-gardenia clean-narcissus clean-begonia clean-lavender clean-pansy clean-manjushaka clean-daisy
 
@@ -164,9 +165,9 @@ build-tool: jasmine hibiscus
 clean-tool: clean-jasmine clean-hibiscus
 
 # targets for other
-other: common build-other
-build-other: api doc
-clean-other: clean-api clean-doc
+other: build-other
+build-other: doc
+clean-other: clean-doc
 
 # tagets for ctqmc codes: segment version (azalea, gardenia, narcissus)
 azalea: build-azalea
