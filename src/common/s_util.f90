@@ -72,7 +72,7 @@
 ! if condition == .false., it aborts the program.
      if ( .not. condition ) then
          call s_print_error("s_assert", "assert failed.")
-     endif
+     endif ! back if ( .not. condition ) block
 
      return
   end subroutine s_assert
@@ -422,7 +422,7 @@
 !!>>> s_time_analyzer: used to print the iteration timing information about
 !!>>> continuous time quantum Monte Carlo quantum impurity solver.
   subroutine s_time_analyzer(time_iter, time_niter)
-     use constants
+     use constants, only : dp, mystd
 
      implicit none
 
