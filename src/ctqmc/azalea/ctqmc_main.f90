@@ -5,7 +5,7 @@
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
 !!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
-!!! version : v2014.08.10T                                               !
+!!! version : v2014.09.08T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on segment picture formalism !
 !!!           any question, please contact with huangli712@gmail.com     !
@@ -105,9 +105,11 @@
 
   program ctqmc_main
      use constants, only : mystd
-     use control, only : isscf, isbin, niter, myid, master, nprocs
+     use mmpi
 
-     use mmpi, only : mp_init, mp_comm_rank, mp_comm_size, mp_barrier, mp_finalize
+     use control, only : isscf, isbin
+     use control, only : niter
+     use control, only : myid, master, nprocs
 
      implicit none
 
@@ -262,6 +264,7 @@
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
   subroutine cat_init_ctqmc(I_mpi, I_solver)
      use api
+
      use control
 
      implicit none
@@ -371,7 +374,8 @@
 !!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
      use constants, only : dp
-     use control, only : mfreq, norbs
+
+     use control, only : norbs, mfreq
      use context, only : hybf
 
      implicit none
@@ -421,6 +425,7 @@
 !!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
      use constants, only : dp
+
      use context, only : eimp
 
      implicit none
@@ -446,7 +451,8 @@
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
-     use control, only : mfreq, norbs
+
+     use control, only : norbs, mfreq
      use context, only : grnf
 
      implicit none
@@ -472,7 +478,8 @@
 !!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
      use constants, only : dp
-     use control, only : mfreq, norbs
+
+     use control, only : norbs, mfreq
      use context, only : sig2
 
      implicit none
