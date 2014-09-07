@@ -113,7 +113,7 @@
 
 !!>>> ctqmc_dmft_conver: check the convergence of self-energy function
   subroutine ctqmc_dmft_conver(iter, convergence)
-     use constants, only : dp, one, two, zero, eps8, mystd
+     use constants, only : dp, zero, one, two, eps8, mystd
 
      use control, only : norbs, niter, mfreq
      use control, only : alpha
