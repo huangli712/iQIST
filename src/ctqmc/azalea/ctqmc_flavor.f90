@@ -40,8 +40,10 @@
 !!>>> or anti-segment on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
-     use control, only : norbs, beta, mune
-     use context, only : uumat, eimp
+
+     use control, only : norbs
+     use control, only : beta, mune
+     use context, only : eimp, uumat
 
      implicit none
 
@@ -134,8 +136,10 @@
 !!>>> or anti-segment on perturbation expansion series
   subroutine cat_remove_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
-     use control, only : norbs, beta, mune
-     use context, only : uumat, eimp
+
+     use control, only : norbs
+     use control, only : beta, mune
+     use context, only : eimp, uumat
 
      implicit none
 
@@ -228,8 +232,10 @@
 !!>>> segment or anti-segment on perturbation expansion series
   subroutine cat_lshift_ztrace(flvr, ring, tau_start1, tau_start2, trace_ratio)
      use constants, only : dp, zero
-     use control, only : norbs, beta, mune
-     use context, only : uumat, eimp
+
+     use control, only : norbs
+     use control, only : beta, mune
+     use context, only : eimp, uumat
 
      implicit none
 
@@ -332,8 +338,10 @@
 !!>>> segment or anti-segment on perturbation expansion series
   subroutine cat_rshift_ztrace(flvr, ring, tau_end1, tau_end2, trace_ratio)
      use constants, only : dp, zero
-     use control, only : norbs, beta, mune
-     use context, only : uumat, eimp
+
+     use control, only : norbs
+     use control, only : beta, mune
+     use context, only : eimp, uumat
 
      implicit none
 
@@ -436,8 +444,11 @@
 !!>>> segment and anti-segment on perturbation expansion series
   subroutine cat_reswap_ztrace(flvr, trace_ratio)
      use constants, only : dp, zero, one
+
      use control, only : beta
-     use context, only : cstat, ckink, stts, rank, index_s, index_e, time_s, time_e 
+     use context, only : ckink, cstat
+     use context, only : rank, stts
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -563,10 +574,12 @@
 !!>>> insert new segment or anti-segment
   subroutine cat_insert_segment(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
-     use control, only : nfreq
-     use context, only : ckink, empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e, rmesh
-
      use stack, only : istack_pop
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rmesh
 
      implicit none
 
@@ -632,9 +645,10 @@
 !!>>> cat_remove_segment: update the perturbation expansion series for
 !!>>> remove old segment or anti-segment
   subroutine cat_remove_segment(flvr, is, ie)
-     use context, only : ckink, empty_s, empty_e, index_s, index_e
-
      use stack, only : istack_push
+
+     use context, only : ckink
+     use context, only : empty_s, empty_e, index_s, index_e
 
      implicit none
 
@@ -680,8 +694,11 @@
 !!>>> left shift old segment or anti-segment
   subroutine cat_lshift_segment(flvr, iso, isn, tau_start)
      use constants, only : dp
+
      use control, only : nfreq
-     use context, only : ckink, index_s, time_s, exp_s, rmesh
+     use context, only : ckink
+     use context, only : index_s, time_s, exp_s
+     use context, only : rmesh
 
      implicit none
 
@@ -736,8 +753,11 @@
 !!>>> right shift old segment or anti-segment
   subroutine cat_rshift_segment(flvr, ieo, ien, tau_end)
      use constants, only : dp
+
      use control, only : nfreq
-     use context, only : ckink, index_e, time_e, exp_e, rmesh
+     use context, only : ckink
+     use context, only : index_e, time_e, exp_e
+     use context, only : rmesh
 
      implicit none
 
@@ -792,8 +812,10 @@
 !!>>> swap segment and anti-segment
   subroutine cat_reswap_segment(flvr)
      use constants, only : dp
+
      use control, only : nfreq
-     use context, only : ckink, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
 
      implicit none
 
@@ -836,10 +858,12 @@
 !!>>> new segment or anti-segment
   subroutine ctqmc_make_flavor1(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
      use constants, only : dp, zero, half
-     use control, only : beta
-     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
-
      use spring, only : spring_sfmt_stream
+
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : stts
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -1204,10 +1228,12 @@
 !!>>> old segment or anti-segment
   subroutine ctqmc_make_flavor2(flvr, is, ie, anti, tau_start, tau_end, tau_max)
      use constants, only : dp, zero, half
-     use control, only : beta
-     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
-
      use spring, only : spring_sfmt_stream
+
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : stts
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -1411,10 +1437,12 @@
 !!>>> segment or anti-segment
   subroutine ctqmc_make_flavor3(flvr, iso, isn, ring, tau_start1, tau_start2)
      use constants, only : dp, zero
-     use control, only : beta
-     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
-
      use spring, only : spring_sfmt_stream
+
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : stts
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -1573,10 +1601,12 @@
 !!>>> segment or anti-segment
   subroutine ctqmc_make_flavor4(flvr, ieo, ien, ring, tau_end1, tau_end2)
      use constants, only : dp, zero
-     use control, only : beta
-     use context, only : cstat, ckink, stts, index_s, index_e, time_s, time_e
-
      use spring, only : spring_sfmt_stream
+
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : stts
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -1739,8 +1769,11 @@
 !!>>> current flavor channel and other flavor channels
   subroutine ctqmc_make_overlap(flvr, tau_start, tau_end, ovlp)
      use constants, only : dp, zero
-     use control, only : norbs, beta
-     use context, only : stts, rank, index_s, index_e, time_s, time_e
+
+     use control, only : norbs
+     use control, only : beta
+     use context, only : rank, stts
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -1887,10 +1920,13 @@
 !!>>> specified flavor channel randomly, only used to debug the code
   subroutine ctqmc_make_segment(flvr, kink, anti)
      use constants, only : dp
-     use control, only : beta
-     use context, only : ckink, stts, rank
-
      use spring, only : spring_sfmt_stream
+
+     use control, only : beta
+     use context, only : ckink
+     use context, only : rank, stts
+
+     implicit none
 
 ! external arguments
 ! current flavor channel
@@ -1945,8 +1981,10 @@
 !!>>> used to debug the code
   subroutine ctqmc_make_display(show_type)
      use constants, only : dp, mystd
+
      use control, only : norbs
-     use context, only : stts, rank, index_s, index_e, time_s, time_e
+     use context, only : rank, stts
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
