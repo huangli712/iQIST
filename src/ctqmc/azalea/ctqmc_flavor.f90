@@ -447,8 +447,8 @@
 
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : rank, stts
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
@@ -862,8 +862,8 @@
 
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : stts
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : stts
 
      implicit none
 
@@ -1232,8 +1232,8 @@
 
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : stts
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : stts
 
      implicit none
 
@@ -1441,8 +1441,8 @@
 
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : stts
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : stts
 
      implicit none
 
@@ -1605,8 +1605,8 @@
 
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : stts
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : stts
 
      implicit none
 
@@ -1772,8 +1772,8 @@
 
      use control, only : norbs
      use control, only : beta
-     use context, only : rank, stts
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
@@ -1983,8 +1983,8 @@
      use constants, only : dp, mystd
 
      use control, only : norbs
-     use context, only : rank, stts
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
