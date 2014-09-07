@@ -452,7 +452,7 @@
      return
   end subroutine s_identity_d
 
-!!>>> s_identity_i: build complex(dp) identity matrix
+!!>>> s_identity_z: build complex(dp) identity matrix
   subroutine s_identity_z(n, A)
      use constants, only : dp, czero, cone
 
@@ -680,7 +680,7 @@
      call DGETRF(ndim, ndim, dmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
          call s_print_exception('s_det_d','error in lapack subroutine dgetrf')
-     endif
+     endif ! back if ( ierror /= 0 ) block
 
 ! calculate determinant
      ddet = one
@@ -702,7 +702,7 @@
      call DGEEV('N', 'N', ndim, amat, ndim, wr, wi, vl, ndim, vr, ndim, work, lwork, ierror)
      if ( ierror /= 0 ) then
          call s_print_error('s_det_d','error in lapack subroutine dgeev')
-     endif
+     endif ! back if ( ierror /= 0 ) block
 
 ! evaluate the final determinant
      cres = cone
@@ -746,7 +746,7 @@
      call ZGETRF(ndim, ndim, zmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
          call s_print_error('s_det_z','error in lapack subroutine zgetrf')
-     endif
+     endif ! back if ( ierror /= 0 ) block
 
 ! calculate determinant
      zdet = cone
@@ -792,14 +792,14 @@
      call DGETRF(ndim, ndim, dmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
          call s_print_error('s_inv_d','error in lapack subroutine dgetrf')
-     endif
+     endif ! back if ( ierror /= 0 ) block
 
 ! computes the inverse of an LU-factored general matrix, need lapack
 ! package, dgetri subroutine
      call DGETRI(ndim, dmat, ndim, ipiv, work, ndim, ierror)
      if ( ierror /= 0 ) then
          call s_print_error('s_inv_d','error in lapack subroutine dgetri')
-     endif
+     endif ! back if ( ierror /= 0 ) block
 
      return
   end subroutine s_inv_d
@@ -831,14 +831,14 @@
      call ZGETRF(ndim, ndim, zmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
          call s_print_error('s_inv_z','error in lapack subroutine zgetrf')
-     endif
+     endif ! back if ( ierror /= 0 ) block
 
 ! computes the inverse of an LU-factored general matrix, need lapack
 ! package, zgetri subroutine
      call ZGETRI(ndim, zmat, ndim, ipiv, work, ndim, ierror)
      if ( ierror /= 0 ) then
          call s_print_error('s_inv_z','error in lapack subroutine zgetri')
-     endif
+     endif ! back if ( ierror /= 0 ) block
 
      return
   end subroutine s_inv_z
@@ -891,9 +891,10 @@
      real(dp), allocatable :: vr(:,:)
      real(dp), allocatable :: vl(:,:)
 
-! initialize lwork and allocate memory fo array work
+! initialize lwork
      lwork = 4*ndim
 
+! allocate memory
      allocate(work(lwork),   stat=istat)
      allocate(wr(ndim),      stat=istat)
      allocate(wi(ndim),      stat=istat)
@@ -972,9 +973,10 @@
      complex(dp), allocatable :: vr(:,:)
      complex(dp), allocatable :: vl(:,:)
 
-! initialize lwork and allocate memory fo array work
+! initialize lwork
      lwork = 2*ndim
 
+! allocate memory
      allocate(work(lwork),   stat=istat)
      allocate(rwork(lwork),  stat=istat)
      allocate(vr(ndim,ndim), stat=istat)
@@ -1050,9 +1052,10 @@
      real(dp), allocatable :: vr(:,:)
      real(dp), allocatable :: vl(:,:)
 
-! initialize lwork and allocate memory fo array work
+! initialize lwork
      lwork = 4*ndim
 
+! allocate memory
      allocate(evec(ldim,ndim), stat=istat)
      allocate(work(lwork),     stat=istat)
      allocate(wr(ndim),        stat=istat)
@@ -1131,9 +1134,10 @@
      complex(dp), allocatable :: vr(:,:)
      complex(dp), allocatable :: vl(:,:)
 
-! initialize lwork and allocate memory fo array work
+! initialize lwork
      lwork = 2*ndim
 
+! allocate memory
      allocate(zvec(ldim,ndim), stat=istat)
      allocate(work(lwork),     stat=istat)
      allocate(rwork(lwork),    stat=istat)
@@ -1200,9 +1204,10 @@
 ! workspace array
      real(dp), allocatable :: work(:)
 
-! initialize lwork and allocate memory fo array work
+! initialize lwork
      lwork = 3*ndim-1
 
+! allocate memory
      allocate(work(lwork), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('s_eig_sy', 'can not allocate enough memory')
@@ -1264,10 +1269,11 @@
      real(dp), allocatable    :: rwork(:)
      complex(dp), allocatable :: work(:)
 
-! initialize lwork (lrwork) and allocate memory for array work (rwork)
+! initialize lwork (lrwork)
      lwork = 2*ndim-1
      lrwork = 3*ndim-2
 
+! allocate memory
      allocate(work(lwork),   stat=istat)
      allocate(rwork(lrwork), stat=istat)
      if ( istat /= 0 ) then
@@ -1328,9 +1334,10 @@
 ! workspace array, used to store amat
      real(dp), allocatable :: evec(:,:)
 
-! initialize lwork and allocate memory fo array work
+! initialize lwork
      lwork = 3*ndim-1
 
+! allocate memory
      allocate(work(lwork),     stat=istat)
      allocate(evec(ldim,ndim), stat=istat)
      if ( istat /= 0 ) then
@@ -1394,10 +1401,11 @@
 ! workspace array, used to store amat
      complex(dp), allocatable :: evec(:,:)
 
-! initialize lwork (lrwork) and allocate memory for array work (rwork)
+! initialize lwork (lrwork)
      lwork = 2*ndim-1
      lrwork = 3*ndim-2
 
+! allocate memory
      allocate(work(lwork),     stat=istat)
      allocate(rwork(lrwork),   stat=istat)
      allocate(evec(ldim,ndim), stat=istat)
