@@ -105,11 +105,13 @@
 
   program ctqmc_main
      use constants, only : mystd
-     use mmpi
+     use mmpi, only : mp_init, mp_finalize
+     use mmpi, only : mp_comm_rank, mp_comm_size
+     use mmpi, only : mp_barrier
 
      use control, only : isscf, isbin
      use control, only : niter
-     use control, only : myid, master, nprocs
+     use control, only : nprocs, myid, master
 
      implicit none
 
