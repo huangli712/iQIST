@@ -68,6 +68,27 @@ Standard Test Cases
 2. 2 band model
 ---------------
 
+* 2a // U = 1.0, J = 0.0, beta = 8.00, mune = 1.50
+
+* 2b // U = 1.0, J = 0.0, beta = 80.0, mune = 1.50
+
+* 2c // U = 2.0, J = 0.0, beta = 8.00, mune = 3.00
+
+* 2d // U = 2.0, J = 0.0, beta = 80.0, mune = 3.00
+
+* 2e // U = 3.0, J = 0.0, beta = 8.00, mune = 4.50
+
+* 2f // U = 3.0, J = 0.0, beta = 80.0, mune = 4.50
+
+* 2g // U = 4.0, J = 0.0, beta = 8.00, mune = 6.00
+
+* 2h // U = 4.0, J = 0.0, beta = 80.0, mune = 6.00
+
+* 2i // U = 6.0, J = 0.0, beta = 8.00, mune = 9.00
+
+* 2j // U = 6.0, J = 0.0, beta = 80.0, mune = 9.00
+
+
 3. 2 band model
 ---------------
 
