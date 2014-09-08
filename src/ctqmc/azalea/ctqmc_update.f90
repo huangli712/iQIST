@@ -42,12 +42,14 @@
 !!>>> ctqmc_insert_kink: insert new segment or anti-segment in the
 !!>>> perturbation expansion series
   subroutine ctqmc_insert_kink()
-     use constants, only : dp, one, zero
-     use control, only : norbs, mkink, beta
-     use context, only : ckink, cstat, rank, stts
-     use context, only : insert_tcount, insert_accept, insert_reject
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs, mkink
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : rank, stts
 
      implicit none
 
@@ -168,11 +170,13 @@
 !!>>> perturbation expansion series
   subroutine ctqmc_remove_kink()
      use constants, only : dp, one
-     use control, only : norbs, beta
-     use context, only : ckink, cstat, rank, stts
-     use context, only : remove_tcount, remove_accept, remove_reject
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : rank, stts
 
      implicit none
 
@@ -280,11 +284,12 @@
 !!>>> perturbation expansion series
   subroutine ctqmc_lshift_kink()
      use constants, only : dp, one
-     use control, only : norbs
-     use context, only : ckink, cstat, stts, rank
-     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, cstat
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rank, stts
 
      implicit none
 
@@ -381,11 +386,12 @@
 !!>>> perturbation expansion series
   subroutine ctqmc_rshift_kink()
      use constants, only : dp, one
-     use control, only : norbs
-     use context, only : ckink, cstat, stts, rank
-     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, cstat
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : rank, stts
 
      implicit none
 
@@ -482,11 +488,12 @@
 !!>>> and anti-segments
   subroutine ctqmc_reswap_kink()
      use constants, only : dp, one
-     use control, only : norbs
-     use context, only : ckink, cstat, rank, stts
-     use context, only : reswap_tcount, reswap_accept, reswap_reject
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, cstat
+     use context, only : reswap_tcount, reswap_accept, reswap_reject
+     use context, only : rank, stts
 
      implicit none
 
@@ -559,11 +566,11 @@
 !!>>> between spin up and spin down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
      use constants, only : dp, one
-     use control, only : norbs, nband
-     use context, only : symm, rank
-     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs, nband
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : rank, symm
 
      implicit none
 
@@ -769,9 +776,12 @@
 !!>>> new segment or anti-segment
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero, one, czero
-     use control, only : nfreq, beta
-     use context, only : ckink, lspace, rspace, lsaves, rsaves, mmat, gmat
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
      use context, only : index_s, index_e, exp_s, exp_e
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -895,9 +905,12 @@
 !!>>> old segment or anti-segment
   subroutine cat_remove_matrix(flvr, is, ie)
      use constants, only : dp, one, czero
-     use control, only : nfreq, beta
-     use context, only : ckink, lsaves, rsaves, mmat, gmat
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
      use context, only : index_s, index_e, exp_s, exp_e
+     use context, only : lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -986,10 +999,13 @@
 !!>>> shift old segment or anti-segment
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, zero, czero
-     use control, only : mkink, nfreq, beta
-     use context, only : rmesh
+
+     use control, only : mkink, nfreq
+     use control, only : beta
+     use context, only : ckink
      use context, only : index_s, index_e, time_e, exp_s, exp_e
-     use context, only : ckink, lspace, rspace, lsaves, rsaves, mmat, gmat
+     use context, only : rmesh
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -1174,10 +1190,13 @@
 !!>>> shift old segment or anti-segment
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp, zero, czero
-     use control, only : mkink, nfreq, beta
-     use context, only : rmesh
+
+     use control, only : mkink, nfreq
+     use control, only : beta
+     use context, only : ckink
      use context, only : index_s, index_e, time_s, exp_s, exp_e
-     use context, only : ckink, lspace, rspace, lsaves, rsaves, mmat, gmat
+     use context, only : rmesh
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -1362,7 +1381,8 @@
 !!>>> and then update mmat and gmat matrix. it is used to overcome the low
 !!>>> acceptance ratio at high temperature region
   subroutine cat_reswap_matrix(flvr)
-     use context, only : cstat, ckink, stts
+     use context, only : ckink, cstat
+     use context, only : stts
 
      implicit none
 
@@ -1402,12 +1422,12 @@
 !!>>> matrix, and other related global variables between spin up and spin
 !!>>> down states. it is used to avoid trapped by unphysical phase
   subroutine cat_reflip_matrix(fup, fdn, kmax)
-     use control, only : mkink, nfreq
-     use context, only : stts, rank
-     use context, only : gmat
-     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use stack, only : istack, istack_create, istack_copyer, istack_destroy
 
-     use stack
+     use control, only : mkink, nfreq
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rank, stts
+     use context, only : gmat
 
      implicit none
 
@@ -1461,7 +1481,7 @@
      stts(fdn) = Tstts
 
 ! swap gmat matrix when needed
-     call zswap(nfreq, gmat(1:nfreq, fup, fup), 1, gmat(1:nfreq, fdn, fdn), 1)
+     call s_swap_z(nfreq, gmat(1:nfreq, fup, fup), gmat(1:nfreq, fdn, fdn))
 
      if ( kmax > 0 ) then
 
@@ -1494,10 +1514,12 @@
 !!>>> from scratch
   subroutine cat_reload_matrix(flvr)
      use constants, only : dp, zero, czero
-     use control, only : nfreq, beta
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
      use context, only : rank
      use context, only : mmat, gmat
-     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
 
      implicit none
 
@@ -1579,10 +1601,12 @@
 !!>>> segment or anti-segment
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero
-     use control, only : mkink, beta
+
+     use control, only : mkink
+     use control, only : beta
      use context, only : ckink
-     use context, only : lspace, rspace, mmat
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : lspace, rspace, mmat
 
      implicit none
 
@@ -1667,6 +1691,7 @@
 !!>>> segment or anti-segment
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
      use constants, only : dp
+
      use context, only : mmat
 
      implicit none
@@ -1692,8 +1717,11 @@
 !!>>> old segment or anti-segment
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, one
-     use control, only : mkink, beta
-     use context, only : ckink, index_e, time_e
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_e, time_e
      use context, only : mmat
 
      implicit none
@@ -1763,8 +1791,11 @@
 !!>>> old segment or anti-segment
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp, one
-     use control, only : mkink, beta
-     use context, only : ckink, index_s, time_s
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
      use context, only : mmat
 
      implicit none
@@ -1834,9 +1865,10 @@
 !!>>> segment swap
   subroutine cat_reswap_detrat(flvr, ratio)
      use constants, only : dp, zero, one
+
      use control, only : beta
-     use context, only : rank
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
      use context, only : mmat
 
      implicit none
@@ -1923,9 +1955,10 @@
 !!>>> spin flip
   subroutine cat_reflip_detrat(up, dn, ratio)
      use constants, only : dp, zero, one
+
      use control, only : beta
-     use context, only : rank
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
      use context, only : mmat
 
      implicit none

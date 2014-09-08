@@ -25,6 +25,7 @@
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, one, mystd
+
      use control, only : issun, isspn
      use control, only : mkink, mfreq
      use control, only : ncfgs, norbs, nband, nspin

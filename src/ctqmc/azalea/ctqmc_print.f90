@@ -23,6 +23,7 @@
 !!>>> mean field theory self-consistent engine
   subroutine ctqmc_print_header()
      use constants, only : mystd
+
      use control, only : nprocs
 
      implicit none
@@ -37,7 +38,7 @@
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2014.08.14T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2014.09.08T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
      write(mystd,'(2X,a)') 'License: GPL2 and later versions'
@@ -92,6 +93,7 @@
 !!>>> ctqmc_print_summary: print the running parameters, only for reference
   subroutine ctqmc_print_summary()
      use constants, only : mystd, ev2k
+
      use control
 
      implicit none
@@ -126,14 +128,15 @@
 !!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : one, half, mystd
+
      use control, only : nsweep, nmonte
-     use context, only : paux
      use context, only : insert_tcount, insert_accept, insert_reject
      use context, only : remove_tcount, remove_accept, remove_reject
      use context, only : lshift_tcount, lshift_accept, lshift_reject
      use context, only : rshift_tcount, rshift_accept, rshift_reject
      use context, only : reswap_tcount, reswap_accept, reswap_reject
      use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : paux
 
      implicit none
 
