@@ -24,12 +24,14 @@
   subroutine ctqmc_dmft_selfer()
      use constants, only : dp, one, half, czi, mystd
 
-     use control, only : norbs, nband, mfreq
+     use control, only : nband, notbs
+     use control, only : mfreq
      use control, only : Uc, Jz, mune, alpha
      use control, only : myid, master
      use context, only : tmesh, rmesh
      use context, only : eimp
-     use context, only : grnf, hybf, wssf, wtau
+     use context, only : grnf
+     use context, only : wtau, wssf, hybf
 
      implicit none
 
