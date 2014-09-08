@@ -34,8 +34,14 @@
 !!>>> time axis
   subroutine ctqmc_record_gtau()
      use constants, only : dp, zero, one, two
-     use control, only : norbs, ntime, beta
-     use context, only : rank, index_s, index_e, time_s, time_e, mmat, gtau
+
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
+     use context, only : mmat
+     use context, only : gtau
 
      implicit none
 
@@ -108,7 +114,8 @@
 !!>>> ctqmc_record_grnf: record the impurity green's function in matsubara
 !!>>> frequency space
   subroutine ctqmc_record_grnf()
-     use control, only : norbs, nfreq
+     use control, only : norbs
+     use control, only : nfreq
      use context, only : grnf, gmat
 
      implicit none
@@ -133,7 +140,8 @@
 !!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
      use control, only : mkink
-     use context, only : ckink, hist
+     use context, only : ckink
+     use context, only : hist
 
      implicit none
 
@@ -150,8 +158,10 @@
 !!>>> ctqmc_record_prob: record the probability of atomic states
   subroutine ctqmc_record_prob()
      use constants, only : one
+
      use control, only : norbs
-     use context, only : stts, prob
+     use context, only : prob
+     use context, only : stts
 
      implicit none
 
@@ -191,7 +201,9 @@
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
      use constants, only : dp, zero
-     use control, only : nband, norbs, beta
+
+     use control, only : nband, norbs
+     use control, only : beta
      use context, only : ckink
      use context, only : index_s, index_e, time_s, time_e
      use context, only : rank, stts, uumat
@@ -344,10 +356,12 @@
 !!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
      use constants, only : dp, zero
-     use control, only : ntime, norbs, nprocs
-     use context, only : gtau
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : gtau
 
      implicit none
 
@@ -382,10 +396,12 @@
 !!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi)
      use constants, only : dp, czero
-     use control, only : mfreq, norbs, nprocs
-     use context, only : grnf
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nprocs
+     use context, only : grnf
 
      implicit none
 
@@ -421,10 +437,11 @@
 !!>>> note: since hist_mpi and hist are integer (kind=4) type, it is
 !!>>> important to avoid data overflow in them
   subroutine ctqmc_reduce_hist(hist_mpi)
-     use control, only : mkink, nprocs
-     use context, only : hist
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : mkink
+     use control, only : nprocs
+     use context, only : hist
 
      implicit none
 
@@ -459,10 +476,11 @@
 !!>>> ctqmc_reduce_prob: reduce the prob from all children processes
   subroutine ctqmc_reduce_prob(prob_mpi)
      use constants, only : dp, zero
-     use control, only : ncfgs, nprocs
-     use context, only : prob
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : ncfgs
+     use control, only : nprocs
+     use context, only : prob
 
      implicit none
 
@@ -497,10 +515,11 @@
 !!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
      use constants, only : dp, zero
-     use control, only : norbs, nprocs
-     use context, only : nmat, nnmat
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : nmat, nnmat
 
      implicit none
 
@@ -542,7 +561,9 @@
 !!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
      use constants, only : dp, zero, two
-     use control, only : nband, norbs, issun, isspn
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
 
      implicit none
 
@@ -610,7 +631,10 @@
 !!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_gtau(symm, gtau)
      use constants, only : dp, zero, two
-     use control, only : nband, norbs, ntime, issun, isspn
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -685,7 +709,10 @@
 !!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_grnf(symm, grnf)
      use constants, only : dp, two, czero
-     use control, only : mfreq, nband, norbs, issun, isspn
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -760,6 +787,7 @@
 !!>>> frequency region
   subroutine ctqmc_smth_sigf(sigf)
      use constants, only : dp, czero
+
      use control, only : nfreq
 
      implicit none
@@ -835,8 +863,18 @@
 !!>>> finally
   subroutine ctqmc_make_hub1()
      use constants, only : dp, zero, one, czi, czero
-     use control, only : norbs, ncfgs, mfreq, nfreq, myid, master, mune
-     use context, only : eimp, uumat, rmesh, prob, hybf, grnf, sig2
+
+     use control, only : norbs, ncfgs
+     use control, only : mfreq
+     use control, only : nfreq
+     use control, only : mune
+     use control, only : myid, master
+     use context, only : rmesh
+     use context, only : prob
+     use context, only : eimp, uumat
+     use context, only : grnf
+     use context, only : hybf
+     use context, only : sig2
 
      implicit none
 
