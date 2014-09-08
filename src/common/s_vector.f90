@@ -583,7 +583,7 @@
      integer, intent(inout) :: iy(n)
 
      iy = ix * (one - alpha) + iy * alpha
- 
+
      return
   end subroutine s_mix_i
 
