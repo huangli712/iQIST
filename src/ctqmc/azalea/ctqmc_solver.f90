@@ -27,12 +27,16 @@
      use constants, only : dp, zero, one, mystd
 
      use control, only : issun, isspn
+     use control, only : norbs, nband, nspin, ncfgs
      use control, only : mkink, mfreq
-     use control, only : ncfgs, norbs, nband, nspin
-     use control, only : ntime, nfreq, nsweep, nwrite, nmonte, ncarlo
+     use control, only : nfreq, ntime, nsweep, nwrite, nmonte, ncarlo
      use control, only : Uc, Jz, beta
      use control, only : myid, master
-     use context, only : tmesh, rmesh, symm, hist, prob, nmat, nnmat, gtau, grnf, sig2
+     use context, only : tmesh, rmesh
+     use context, only : symm
+     use context, only : hist, prob, nmat, nnmat
+     use context, only : gtau, grnf
+     use context, only : sig2
 
      implicit none
 
@@ -510,6 +514,7 @@
 !!>>> equilibrium state
   subroutine ctqmc_diagram_warmming()
      use constants, only : zero
+
      use control, only : ntherm
      use context, only : insert_tcount, insert_accept, insert_reject
      use context, only : remove_tcount, remove_accept, remove_reject
@@ -561,9 +566,9 @@
 !!>>> randomly
   subroutine ctqmc_diagram_sampling(cstep)
      use constants, only : dp
-     use control, only : nflip, nclean
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : nflip, nclean
 
      implicit none
 
