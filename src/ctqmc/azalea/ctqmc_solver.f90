@@ -675,9 +675,12 @@
 !!>>> ctqmc_diagram_checking: checking whether the quantum impurity solver
 !!>>> is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
-     use constants, only : mystd 
-     use control, only : norbs, myid, master
-     use context, only : stts, rank, index_s, index_e, time_s, time_e
+     use constants, only : mystd
+
+     use control, only : norbs
+     use control, only : myid, master
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
