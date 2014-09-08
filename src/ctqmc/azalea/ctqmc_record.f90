@@ -24,11 +24,13 @@
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
-!!! input   :
-!!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!========================================================================
+!!>>> measure physical observables                                     <<<
+!!========================================================================
 
 !!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
 !!>>> time axis
@@ -116,7 +118,8 @@
   subroutine ctqmc_record_grnf()
      use control, only : norbs
      use control, only : nfreq
-     use context, only : grnf, gmat
+     use context, only : gmat
+     use context, only : grnf
 
      implicit none
 
@@ -353,6 +356,10 @@
      return
   end subroutine ctqmc_record_nmat
 
+!!========================================================================
+!!>>> reduce physical observables                                      <<<
+!!========================================================================
+
 !!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
      use constants, only : dp, zero
@@ -557,6 +564,10 @@
 
      return
   end subroutine ctqmc_reduce_nmat
+
+!!========================================================================
+!!>>> symmetrize physical observables                                  <<<
+!!========================================================================
 
 !!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
@@ -855,6 +866,10 @@
      return
   end subroutine ctqmc_smth_sigf
 
+!!========================================================================
+!!>>> build self-energy function                                       <<<
+!!========================================================================
+
 !!>>> ctqmc_make_hub1: build atomic green's function and self-energy
 !!>>> function using improved Hubbard-I approximation, and then make
 !!>>> interpolation for self-energy function between low frequency QMC
@@ -983,7 +998,7 @@
                      value = value * permute
                  else
                      value = 0
-                 endif
+                 endif ! back if ( sc(m) == 1 ) block
 
                  if ( value /= 0 ) then
                      fcounter(m) = fcounter(m) + 1
