@@ -377,7 +377,8 @@
   subroutine cat_set_hybf(size_t, hybf_t)
      use constants, only : dp
 
-     use control, only : norbs, mfreq
+     use control, only : norbs
+     use control, only : mfreq
      use context, only : hybf
 
      implicit none
@@ -454,7 +455,8 @@
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
 
-     use control, only : norbs, mfreq
+     use control, only : norbs
+     use control, only : mfreq
      use context, only : grnf
 
      implicit none
@@ -481,7 +483,8 @@
   subroutine cat_get_sigf(size_t, sigf_t)
      use constants, only : dp
 
-     use control, only : norbs, mfreq
+     use control, only : norbs
+     use control, only : mfreq
      use context, only : sig2
 
      implicit none
