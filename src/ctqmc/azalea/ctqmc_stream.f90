@@ -25,7 +25,7 @@
      use parser, only : p_create, p_parse, p_get, p_destroy
      use mmpi, only : mp_bcast, mp_barrier
 
-     use control
+     use control ! ALL
 
      implicit none
 
@@ -191,7 +191,7 @@
 !!>>> ctqmc_setup_array: allocate memory for global variables and then
 !!>>> initialize them
   subroutine ctqmc_setup_array()
-     use context
+     use context ! ALL
 
      implicit none
 
@@ -353,8 +353,8 @@
      use stack, only : istack_clean, istack_push
      use spring, only : spring_sfmt_init
 
-     use control
-     use context
+     use control ! ALL
+     use context ! ALL
 
      implicit none
 
@@ -527,7 +527,7 @@
 !!>>> ctqmc_final_array: garbage collection for this program, please refer
 !!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
-     use context
+     use context ! ALL
 
      implicit none
 
