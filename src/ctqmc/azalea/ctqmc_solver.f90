@@ -27,14 +27,15 @@
      use constants, only : dp, zero, one, mystd
 
      use control, only : issun, isspn
-     use control, only : norbs, nband, nspin, ncfgs
+     use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
      use control, only : nfreq, ntime, nsweep, nwrite, nmonte, ncarlo
-     use control, only : Uc, Jz, beta
+     use control, only : Uc, Jz
+     use control, only : beta
      use control, only : myid, master
      use context, only : tmesh, rmesh
-     use context, only : symm
      use context, only : hist, prob, nmat, nnmat
+     use context, only : symm
      use context, only : gtau, grnf
      use context, only : sig2
 
@@ -761,9 +762,9 @@
 !!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
 !!>>> on ctqmc_diagram_sampling() subroutine
   subroutine ctqmc_impurity_tester()
-     use constants
-     use control
-     use context
+     use constants ! ALL
+     use control   ! ALL
+     use context   ! ALL
 
      implicit none
 
