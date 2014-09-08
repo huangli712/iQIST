@@ -89,11 +89,73 @@ Standard Test Cases
 * 2j // U = 6.0, J = 0.0, beta = 80.0, mune = 9.00
 
 
-3. 2 band model
+3. 3 band model
 ---------------
 
-4. 3 band model
+* 3a // U = 1.0, J = 0.0, beta = 8.00, mune = 2.50
+
+* 3b // U = 1.0, J = 0.0, beta = 80.0, mune = 2.50
+
+* 3c // U = 2.0, J = 0.0, beta = 8.00, mune = 5.00
+
+* 3d // U = 2.0, J = 0.0, beta = 80.0, mune = 5.00
+
+* 3e // U = 3.0, J = 0.0, beta = 8.00, mune = 7.50
+
+* 3f // U = 3.0, J = 0.0, beta = 80.0, mune = 7.50
+
+* 3g // U = 4.0, J = 0.0, beta = 8.00, mune = 10.0
+
+* 3h // U = 4.0, J = 0.0, beta = 80.0, mune = 10.0
+
+* 3i // U = 6.0, J = 0.0, beta = 8.00, mune = 15.0
+
+* 3j // U = 6.0, J = 0.0, beta = 80.0, mune = 15.0
+
+
+4. 2 band model
 ---------------
+
+* 4a
+
+* 4b
+
+* 4c
+
+* 4d
+
+* 4e
+
+* 4f
+
+* 4g
+
+* 4h
+
+* 4i
+
+* 4j
+
 
 5. 3 band model
 ---------------
+
+* 4a
+
+* 4b
+
+* 4c
+
+* 4d
+
+* 4e
+
+* 4f
+
+* 4g
+
+* 4h
+
+* 4i
+
+* 4j
