@@ -265,9 +265,9 @@
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use api
+     use api, only : T_mpi, T_segment_azalea
 
-     use control
+     use control ! ALL
 
      implicit none
 
