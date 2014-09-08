@@ -15,8 +15,6 @@
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
-!!! input   :
-!!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
