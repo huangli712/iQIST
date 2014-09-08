@@ -62,7 +62,8 @@
   subroutine ctqmc_make_hsed(tmesh, htau, hsed)
      use constants, only : dp, zero
 
-     use control, only : norbs, ntime
+     use control, only : norbs
+     use control, only : ntime
      use control, only : beta
 
      implicit none
@@ -147,7 +148,9 @@
   subroutine ctqmc_four_htau(htau, hybf)
      use constants, only : dp, zero, czero
 
-     use control, only : norbs, ntime, mfreq
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : ntime
      use context, only : tmesh, rmesh
 
      implicit none
@@ -195,7 +198,9 @@
   subroutine ctqmc_four_hybf(hybf, htau)
      use constants, only : dp, zero, czero, eps6
 
-     use control, only : norbs, ntime, mfreq
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : ntime
      use control, only : beta
      use context, only : tmesh, rmesh
 
@@ -296,7 +301,7 @@
   subroutine ctqmc_make_uumat(uumat)
      use constants, only : dp, zero
 
-     use control, only : norbs, nband
+     use control, only : nband, norbs
      use control, only : Uc, Jz
 
      implicit none
