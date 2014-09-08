@@ -26,7 +26,8 @@
 
      use control, only : nband, norbs
      use control, only : mfreq
-     use control, only : Uc, Jz, mune, alpha
+     use control, only : Uc, Jz
+     use control, only : mune, alpha
      use control, only : myid, master
      use context, only : tmesh, rmesh
      use context, only : eimp
