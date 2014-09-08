@@ -30,8 +30,10 @@
 !!>>> cubic spline interpolation
   function ctqmc_make_htau(flvr, dtau) result(val)
      use constants, only : dp
+
      use control, only : ntime
-     use context, only : tmesh, htau, hsed
+     use context, only : tmesh
+     use context, only : htau, hsed
 
      implicit none
 
@@ -59,7 +61,9 @@
 !!>>> function on imaginary time space
   subroutine ctqmc_make_hsed(tmesh, htau, hsed)
      use constants, only : dp, zero
-     use control, only : ntime, norbs, beta
+
+     use control, only : norbs, ntime
+     use control, only : beta
 
      implicit none
 
@@ -142,7 +146,8 @@
 !!>>> matsubara frequency
   subroutine ctqmc_four_htau(htau, hybf)
      use constants, only : dp, zero, czero
-     use control, only : ntime, norbs, mfreq
+
+     use control, only : norbs, ntime, mfreq
      use context, only : tmesh, rmesh
 
      implicit none
@@ -189,7 +194,9 @@
 !!>>> imaginary time
   subroutine ctqmc_four_hybf(hybf, htau)
      use constants, only : dp, zero, czero, eps6
-     use control, only : ntime, norbs, mfreq, beta
+
+     use control, only : norbs, ntime, mfreq
+     use control, only : beta
      use context, only : tmesh, rmesh
 
      implicit none
@@ -288,7 +295,9 @@
 !!>>> my own style
   subroutine ctqmc_make_uumat(uumat)
      use constants, only : dp, zero
-     use control, only : norbs, nband, Uc, Jz
+
+     use control, only : norbs, nband
+     use control, only : Uc, Jz
 
      implicit none
 

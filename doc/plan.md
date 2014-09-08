@@ -46,6 +46,7 @@ B. Optimization
 
 * try to apply OpenMP to implement fine-grain parallelism.
 
+
 C. Others
 ---------
 
