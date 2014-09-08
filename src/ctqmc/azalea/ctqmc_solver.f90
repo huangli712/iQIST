@@ -621,9 +621,9 @@
 !!>>> randomly at very high temperature
   subroutine ctqmc_diagram_templing(cstep)
      use constants, only : dp
-     use control, only : nflip, nclean
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : nflip, nclean
 
      implicit none
 
