@@ -44,25 +44,25 @@ Standard Test Cases
 
 * 1p // U = 4.0, J = 0.0, beta = 100.
 
-* 1q
+* 1q // U = 6.0, J = 0.0, beta = 8.00
 
-* 1r
+* 1r // U = 6.0, J = 0.0, beta = 10.0
 
-* 1s
+* 1s // U = 6.0, J = 0.0, beta = 50.0
 
-* 1t
+* 1t // U = 6.0, J = 0.0, beta = 100.
 
-* 1u
+* 1u // U = 4.0, J = 0.0, beta = 10.0, mune = 0.00
 
-* 1v
+* 1v // U = 4.0, J = 0.0, beta = 10.0, mune = 1.00
 
-* 1w
+* 1w // U = 4.0, J = 0.0, beta = 10.0, mune = 2.00
 
-* 1x
+* 1x // U = 4.0, J = 0.0, beta = 10.0, mune = 3.00
 
-* 1y
+* 1y // U = 4.0, J = 0.0, beta = 10.0, mune = 4.00
 
-* 1z
+* 1z // U = 4.0, J = 0.0, beta = 10.0, mune = 5.00
 
 
 2. 2 band model
