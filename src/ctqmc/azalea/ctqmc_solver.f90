@@ -15,8 +15,6 @@
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
-!!! input   :
-!!! output  :
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
@@ -27,12 +25,17 @@
      use constants, only : dp, zero, one, mystd
 
      use control, only : issun, isspn
+     use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
-     use control, only : ncfgs, norbs, nband, nspin
-     use control, only : ntime, nfreq, nsweep, nwrite, nmonte, ncarlo
-     use control, only : Uc, Jz, beta
+     use control, only : nfreq, ntime, nsweep, nwrite, nmonte, ncarlo
+     use control, only : Uc, Jz
+     use control, only : beta
      use control, only : myid, master
-     use context, only : tmesh, rmesh, symm, hist, prob, nmat, nnmat, gtau, grnf, sig2
+     use context, only : tmesh, rmesh
+     use context, only : hist, prob, nmat, nnmat
+     use context, only : symm
+     use context, only : gtau, grnf
+     use context, only : sig2
 
      implicit none
 
@@ -510,6 +513,7 @@
 !!>>> equilibrium state
   subroutine ctqmc_diagram_warmming()
      use constants, only : zero
+
      use control, only : ntherm
      use context, only : insert_tcount, insert_accept, insert_reject
      use context, only : remove_tcount, remove_accept, remove_reject
@@ -561,9 +565,9 @@
 !!>>> randomly
   subroutine ctqmc_diagram_sampling(cstep)
      use constants, only : dp
-     use control, only : nflip, nclean
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : nflip, nclean
 
      implicit none
 
@@ -616,9 +620,9 @@
 !!>>> randomly at very high temperature
   subroutine ctqmc_diagram_templing(cstep)
      use constants, only : dp
-     use control, only : nflip, nclean
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : nflip, nclean
 
      implicit none
 
@@ -670,9 +674,12 @@
 !!>>> ctqmc_diagram_checking: checking whether the quantum impurity solver
 !!>>> is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
-     use constants, only : mystd 
-     use control, only : norbs, myid, master
-     use context, only : stts, rank, index_s, index_e, time_s, time_e
+     use constants, only : mystd
+
+     use control, only : norbs
+     use control, only : myid, master
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
@@ -753,9 +760,9 @@
 !!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
 !!>>> on ctqmc_diagram_sampling() subroutine
   subroutine ctqmc_impurity_tester()
-     use constants
-     use control
-     use context
+     use constants ! ALL
+     use control   ! ALL
+     use context   ! ALL
 
      implicit none
 

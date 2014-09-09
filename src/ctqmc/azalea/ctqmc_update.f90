@@ -45,7 +45,8 @@
      use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
 
-     use control, only : norbs, mkink
+     use control, only : norbs
+     use control, only : mkink
      use control, only : beta
      use context, only : ckink, cstat
      use context, only : insert_tcount, insert_accept, insert_reject
@@ -568,7 +569,7 @@
      use constants, only : dp, one
      use spring, only : spring_sfmt_stream
 
-     use control, only : norbs, nband
+     use control, only : nband, norbs
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : rank, symm
 
@@ -1000,7 +1001,8 @@
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, zero, czero
 
-     use control, only : mkink, nfreq
+     use control, only : mkink
+     use control, only : nfreq
      use control, only : beta
      use context, only : ckink
      use context, only : index_s, index_e, time_e, exp_s, exp_e
@@ -1191,7 +1193,8 @@
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp, zero, czero
 
-     use control, only : mkink, nfreq
+     use control, only : mkink
+     use control, only : nfreq
      use control, only : beta
      use context, only : ckink
      use context, only : index_s, index_e, time_s, exp_s, exp_e
@@ -1424,7 +1427,8 @@
   subroutine cat_reflip_matrix(fup, fdn, kmax)
      use stack, only : istack, istack_create, istack_copyer, istack_destroy
 
-     use control, only : mkink, nfreq
+     use control, only : mkink
+     use control, only : nfreq
      use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
      use context, only : rank, stts
      use context, only : gmat

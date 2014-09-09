@@ -27,7 +27,7 @@
 !!!-----------------------------------------------------------------------
 
 !!========================================================================
-!!>>> dump data on imaginary time                                      <<<
+!!>>> dump data on imaginary time axis                                 <<<
 !!========================================================================
 
 !!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
@@ -35,7 +35,8 @@
   subroutine ctqmc_dump_gtau(tmesh, gtau)
      use constants, only : dp, mytmp
 
-     use control, only : norbs, nband, ntime
+     use control, only : nband, norbs
+     use control, only : ntime
      use control, only : beta
 
      implicit none
@@ -89,7 +90,8 @@
   subroutine ctqmc_dump_wtau(tmesh, wtau)
      use constants, only : dp, mytmp
 
-     use control, only : norbs, nband, ntime
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -128,7 +130,8 @@
   subroutine ctqmc_dump_htau(tmesh, htau)
      use constants, only : dp, mytmp
 
-     use control, only : norbs, nband, ntime
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -167,7 +170,8 @@
   subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
      use constants, only : dp, mytmp
 
-     use control, only : norbs, nband, ntime
+     use control, only : nband, norbs
+     use control, only : ntime
      use control, only : beta
 
      implicit none
@@ -232,7 +236,8 @@
   subroutine ctqmc_dump_grnf(rmesh, grnf)
      use constants, only : dp, mytmp
 
-     use control, only : norbs, nband, mfreq
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -275,7 +280,8 @@
   subroutine ctqmc_dump_wssf(rmesh, wssf)
      use constants, only : dp, mytmp
 
-     use control, only : norbs, nband, mfreq
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -318,7 +324,8 @@
   subroutine ctqmc_dump_hybf(rmesh, hybf)
      use constants, only : dp, mytmp
 
-     use control, only : norbs, nband, mfreq
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -361,7 +368,8 @@
   subroutine ctqmc_dump_sigf(rmesh, sigf)
      use constants, only : dp, mytmp
 
-     use control, only : norbs, nband, mfreq
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -405,7 +413,8 @@
   subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
      use constants, only : dp, mytmp
 
-     use control, only : norbs, mfreq
+     use control, only : norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -499,7 +508,7 @@
   subroutine ctqmc_dump_prob(prob)
      use constants, only : dp, zero, half, mytmp
 
-     use control, only : norbs, nband, ncfgs
+     use control, only : nband, norbs, ncfgs
 
      implicit none
 
@@ -595,7 +604,7 @@
   subroutine ctqmc_dump_nmat(nmat, nnmat)
      use constants, only : dp, mytmp
 
-     use control, only : norbs, nband
+     use control, only : nband, norbs
 
      implicit none
 
