@@ -65,7 +65,7 @@
 !!
 !! Running mode
 !! ============
-!! 
+!!
 !! case 1: isscf == 1 .and. isbin == 1
 !! -----------------------------------
 !!
@@ -105,11 +105,13 @@
 
   program ctqmc_main
      use constants, only : mystd
-     use mmpi
+     use mmpi, only : mp_init, mp_finalize
+     use mmpi, only : mp_comm_rank, mp_comm_size
+     use mmpi, only : mp_barrier
 
      use control, only : isscf, isbin
      use control, only : niter
-     use control, only : myid, master, nprocs
+     use control, only : nprocs, myid, master
 
      implicit none
 
@@ -263,9 +265,9 @@
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use api
+     use api, only : T_mpi, T_segment_azalea
 
-     use control
+     use control ! ALL
 
      implicit none
 
@@ -375,7 +377,8 @@
   subroutine cat_set_hybf(size_t, hybf_t)
      use constants, only : dp
 
-     use control, only : norbs, mfreq
+     use control, only : norbs
+     use control, only : mfreq
      use context, only : hybf
 
      implicit none
@@ -452,7 +455,8 @@
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
 
-     use control, only : norbs, mfreq
+     use control, only : norbs
+     use control, only : mfreq
      use context, only : grnf
 
      implicit none
@@ -479,7 +483,8 @@
   subroutine cat_get_sigf(size_t, sigf_t)
      use constants, only : dp
 
-     use control, only : norbs, mfreq
+     use control, only : norbs
+     use control, only : mfreq
      use context, only : sig2
 
      implicit none

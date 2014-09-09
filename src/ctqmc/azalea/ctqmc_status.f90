@@ -84,9 +84,10 @@
 !!>>> quantum impurity solver
   subroutine ctqmc_retrieve_status()
      use constants, only : dp, zero, mytmp
-     use mmpi
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use control, only : norbs, mkink
+     use control, only : norbs
+     use control, only : mkink
      use control, only : beta
      use control, only : myid, master
      use context, only : ckink, cstat

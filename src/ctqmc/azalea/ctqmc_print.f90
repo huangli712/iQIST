@@ -94,7 +94,7 @@
   subroutine ctqmc_print_summary()
      use constants, only : mystd, ev2k
 
-     use control
+     use control ! ALL
 
      implicit none
 
