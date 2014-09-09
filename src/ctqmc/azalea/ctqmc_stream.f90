@@ -6,7 +6,7 @@
 !!!           ctqmc_solver_init
 !!!           ctqmc_final_array
 !!! source  : ctqmc_stream.f90
-!!! type    : subroutine
+!!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/08/2010 by li huang
