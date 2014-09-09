@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! source  : solver.ctqmc.in
+!!! source  : 3j/solver.ctqmc.in
 !!! solver  : ALL
 !!! purpose : to test ctqmc impurity solver
 !!! author  : li huang (email:huangli712@gmail.com)
