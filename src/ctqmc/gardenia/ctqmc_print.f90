@@ -35,7 +35,7 @@
      character (len = 20) :: date_time_string
 
 ! obtain current date and time
-     call ctqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a)') 'GARDENIA'
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
@@ -82,7 +82,7 @@
      call cpu_time(tot_time)
 
 ! obtain current date and time
-     call ctqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a,f10.2,a)') 'GARDENIA >>> total time spent:', tot_time, 's'
      write(mystd,*)
