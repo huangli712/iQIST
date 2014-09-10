@@ -104,44 +104,54 @@
 ! parse the config file
              call p_parse('solver.ctqmc.in')
 
-             read(mytmp,*) isscf                                         !
-             read(mytmp,*) issun                                         !
-             read(mytmp,*) isspn                                         !
-             read(mytmp,*) isbin                                         !
-             read(mytmp,*) isort                                         !
-             read(mytmp,*) isvrt                                         !
-             read(mytmp,*) nband                                         !
-             read(mytmp,*) nspin                                         !
-             read(mytmp,*) norbs                                         !
-             read(mytmp,*) ncfgs                                         !
-             read(mytmp,*) niter                                         !
-             read(mytmp,*) U                                             !
-             read(mytmp,*) Uc                                            !
-             read(mytmp,*) Uv                                            !
-             read(mytmp,*) Jz                                            !
-             read(mytmp,*) Js                                            !
-             read(mytmp,*) Jp                                            !
-             read(mytmp,*) mune                                          !
-             read(mytmp,*) beta                                          !
-             read(mytmp,*) part                                          !
-             read(mytmp,*) alpha                                         !
-             read(mytmp,*) lemax                                         !
-             read(mytmp,*) legrd                                         !
-             read(mytmp,*) chmax                                         !
-             read(mytmp,*) chgrd                                         !
-             read(mytmp,*) mkink                                         !
-             read(mytmp,*) mfreq                                         !
-             read(mytmp,*) nffrq                                         !
-             read(mytmp,*) nbfrq                                         !
-             read(mytmp,*) nfreq                                         !
-             read(mytmp,*) ntime                                         !
-             read(mytmp,*) nflip                                         !
-             read(mytmp,*) ntherm                                        !
-             read(mytmp,*) nsweep                                        !
-             read(mytmp,*) nwrite                                        !
-             read(mytmp,*) nclean                                        !
-             read(mytmp,*) nmonte                                        !
-             read(mytmp,*) ncarlo                                        !
+! extract parameters
+             call p_get('isscf' , isscf )
+             call p_get('issun' , issun )
+             call p_get('isspn' , isspn )
+             call p_get('isbin' , isbin )
+             call p_get('isort' , isort )
+             call p_get('isvrt' , isvrt )
+
+             call p_get('nband' , nband )
+             call p_get('nspin' , nspin )
+             call p_get('norbs' , norbs )
+             call p_get('ncfgs' , ncfgs )
+             call p_get('niter' , niter )
+
+             call p_get('U'     , U     )
+             call p_get('Uc'    , Uc    )
+             call p_get('Uv'    , Uv    )
+             call p_get('Jz'    , Jz    )
+             call p_get('Js'    , Js    )
+             call p_get('Jp'    , Jp    )
+
+             call p_get('mune'  , mune  )
+             call p_get('beta'  , beta  )
+             call p_get('part'  , part  )
+             call p_get('alpha' , alpha )
+
+             call p_get('lemax' , lemax )
+             call p_get('legrd' , legrd )
+             call p_get('chmax' , chmax )
+             call p_get('chgrd' , chgrd )
+
+             call p_get('mkink' , mkink )
+             call p_get('mfreq' , mfreq )
+
+             call p_get('nffrq' , nffrq )
+             call p_get('nbfrq' , nbfrq )
+             call p_get('nfreq' , nfreq )
+             call p_get('ntime' , ntime )
+             call p_get('nflip' , nflip )
+             call p_get('ntherm', ntherm)
+             call p_get('nsweep', nsweep)
+             call p_get('nwrite', nwrite)
+             call p_get('nclean', nclean)
+             call p_get('nmonte', nmonte)
+             call p_get('ncarlo', ncarlo)
+
+! destroy the parser
+             call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
@@ -149,70 +159,56 @@
 ! to broadcast config parameters from root to all children processes
 # if defined (MPI)
 
-!------------------------------------------------------------------------+
-     call mp_bcast( isscf , master )                                     !
-     call mp_bcast( issun , master )                                     !
-     call mp_bcast( isspn , master )                                     !
-     call mp_bcast( isbin , master )                                     !
-     call mp_bcast( isort , master )                                     !
-     call mp_bcast( isvrt , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( isscf , master )
+     call mp_bcast( issun , master )
+     call mp_bcast( isspn , master )
+     call mp_bcast( isbin , master )
+     call mp_bcast( isort , master )
+     call mp_bcast( isvrt , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( nband , master )                                     !
-     call mp_bcast( nspin , master )                                     !
-     call mp_bcast( norbs , master )                                     !
-     call mp_bcast( ncfgs , master )                                     !
-     call mp_bcast( niter , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( nband , master )
+     call mp_bcast( nspin , master )
+     call mp_bcast( norbs , master )
+     call mp_bcast( ncfgs , master )
+     call mp_bcast( niter , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( U     , master )                                     !
-     call mp_bcast( Uc    , master )                                     !
-     call mp_bcast( Uv    , master )                                     !
-     call mp_bcast( Jz    , master )                                     !
-     call mp_bcast( Js    , master )                                     !
-     call mp_bcast( Jp    , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( U     , master )
+     call mp_bcast( Uc    , master )
+     call mp_bcast( Uv    , master )
+     call mp_bcast( Jz    , master )
+     call mp_bcast( Js    , master )
+     call mp_bcast( Jp    , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( mune  , master )                                     !
-     call mp_bcast( beta  , master )                                     !
-     call mp_bcast( part  , master )                                     !
-     call mp_bcast( alpha , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( mune  , master )
+     call mp_bcast( beta  , master )
+     call mp_bcast( part  , master )
+     call mp_bcast( alpha , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( lemax , master )                                     !
-     call mp_bcast( legrd , master )                                     !
-     call mp_bcast( chmax , master )                                     !
-     call mp_bcast( chgrd , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( lemax , master )
+     call mp_bcast( legrd , master )
+     call mp_bcast( chmax , master )
+     call mp_bcast( chgrd , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( mkink , master )                                     !
-     call mp_bcast( mfreq , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( mkink , master )
+     call mp_bcast( mfreq , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( nffrq , master )                                     !
-     call mp_bcast( nbfrq , master )                                     !
-     call mp_bcast( nfreq , master )                                     !
-     call mp_bcast( ntime , master )                                     !
-     call mp_bcast( nflip , master )                                     !
-     call mp_bcast( ntherm, master )                                     !
-     call mp_bcast( nsweep, master )                                     !
-     call mp_bcast( nwrite, master )                                     !
-     call mp_bcast( nclean, master )                                     !
-     call mp_bcast( nmonte, master )                                     !
-     call mp_bcast( ncarlo, master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( nffrq , master )
+     call mp_bcast( nbfrq , master )
+     call mp_bcast( nfreq , master )
+     call mp_bcast( ntime , master )
+     call mp_bcast( nflip , master )
+     call mp_bcast( ntherm, master )
+     call mp_bcast( nsweep, master )
+     call mp_bcast( nwrite, master )
+     call mp_bcast( nclean, master )
+     call mp_bcast( nmonte, master )
+     call mp_bcast( ncarlo, master )
      call mp_barrier()
 
 # endif  /* MPI */
@@ -220,9 +216,10 @@
      return
   end subroutine ctqmc_config
 
-!>>> allocate memory for global variables and then initialize them
+!!>>> ctqmc_setup_array: allocate memory for global variables and then
+!!>>> initialize them
   subroutine ctqmc_setup_array()
-     use context
+     use context ! ALL
 
      implicit none
 
