@@ -1318,12 +1318,14 @@
      return
   end subroutine ctqmc_reduce_prob
 
-!>>> reduce the nmat and nnmat from all children processes
+!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : nmat, nnmat
 
      implicit none
 
@@ -1538,10 +1540,16 @@
      return
   end subroutine ctqmc_reduce_vrtx
 
-!>>> symmetrize the nmat according to symm vector
+!!========================================================================
+!!>>> symmetrize physical observables                                  <<<
+!!========================================================================
+
+!!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
 
      implicit none
 
@@ -1605,11 +1613,14 @@
      return
   end subroutine ctqmc_symm_nmat
 
-!>>> symmetrize the gtau according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_gtau: symmetrize the gtau according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_gtau(symm, gtau)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -1680,11 +1691,14 @@
      return
   end subroutine ctqmc_symm_gtau
 
-!>>> symmetrize the grnf according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_grnf: symmetrize the grnf according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_grnf(symm, grnf)
-     use constants
-     use control
+     use constants, only : dp, two, czero
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -1755,10 +1769,12 @@
      return
   end subroutine ctqmc_symm_grnf
 
-!>>> smooth impurity self-energy function in low frequency region
+!!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
+!!>>> frequency region
   subroutine ctqmc_smth_sigf(sigf)
-     use constants
-     use control
+     use constants, only : dp, czero
+
+     use control, only : nfreq
 
      implicit none
 
@@ -2133,15 +2149,29 @@
   end subroutine cat_make_ftau3
   end subroutine ctqmc_make_ftau
 
+!!========================================================================
+!!>>> build self-energy function                                       <<<
+!!========================================================================
+
 !>>> build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
 ! function between low frequency QMC data and high frequency Hubbard-I
 ! approximation data, the full impurity green's function can be obtained by
 ! using dyson's equation finally
   subroutine ctqmc_make_hub1()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, czi, czero
+
+     use control, only : norbs, ncfgs
+     use control, only : mfreq
+     use control, only : nfreq
+     use control, only : mune
+     use control, only : myid, master
+     use context, only : rmesh
+     use context, only : prob
+     use context, only : eimp, uumat
+     use context, only : grnf
+     use context, only : hybf
+     use context, only : sig2
 
      implicit none
 
@@ -2250,12 +2280,12 @@
                      value = value * permute
                  else
                      value = 0
-                 endif
+                 endif ! back if ( sc(m) == 1 ) block
 
                  if ( value /= 0 ) then
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
-                         call ctqmc_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
+                         call s_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
                      endif
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
@@ -2506,7 +2536,7 @@
                  if ( value /= 0 ) then
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
-                         call ctqmc_print_error('ctqmc_make_hub2','non-zero elements exceed limit')
+                         call s_print_error('ctqmc_make_hub2','non-zero elements exceed limit')
                      endif
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
