@@ -226,6 +226,8 @@
 ! allocate memory for context module
      call ctqmc_allocate_memory_clur()
 
+     call ctqmc_allocate_memory_mesh()
+     call ctqmc_allocate_memory_meat()
      call ctqmc_allocate_memory_umat()
      call ctqmc_allocate_memory_mmat()
 
@@ -236,14 +238,21 @@
      return
   end subroutine ctqmc_setup_array
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity
-! solver plus dynamical mean field theory self-consistent engine
+!!>>> ctqmc_selfer_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver plus dynamical mean field theory
+!!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : nband, norbs
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : beta, part
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : symm, eimp
+     use context, only : hybf
 
      implicit none
 
@@ -262,24 +271,16 @@
      real(dp) :: i1, i2
 
 ! build mesh for legendre polynomial in [-1,1]
-     do i=1,legrd
-         pmesh(i) = real(i - 1) * two / real(legrd - 1) - one
-     enddo ! over i={1,legrd} loop
+     call s_linspace_d(-one, one, legrd, pmesh)
 
 ! build mesh for chebyshev polynomial in [-1,1]
-     do i=1,chgrd
-         qmesh(i) = real(i - 1) * two / real(chgrd - 1) - one
-     enddo ! over i={1,chgrd} loop
+     call s_linspace_d(-one, one, chgrd, qmesh)
 
 ! build imaginary time tau mesh: tmesh
-     do i=1,ntime
-         tmesh(i) = zero + ( beta - zero ) / real(ntime - 1) * real(i - 1)
-     enddo ! over i={1,ntime} loop
+     call s_linspace_d(zero, beta, ntime, tmesh)
 
 ! build matsubara frequency mesh: rmesh
-     do j=1,mfreq
-         rmesh(j) = ( two * real(j - 1) + one ) * ( pi / beta )
-     enddo ! over j={1,mfreq} loop
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build legendre polynomial in [-1,1]
      if ( lemax <= 2 ) then
@@ -348,7 +349,7 @@
 ! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
