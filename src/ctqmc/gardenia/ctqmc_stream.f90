@@ -99,63 +99,38 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='solver.ctqmc.in', form='formatted', status='unknown')
+! create the file parser
+             call p_create()
+! parse the config file
+             call p_parse('solver.ctqmc.in')
 
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*)
-!------------------------------------------------------------------------+
              read(mytmp,*) isscf                                         !
              read(mytmp,*) issun                                         !
              read(mytmp,*) isspn                                         !
              read(mytmp,*) isbin                                         !
              read(mytmp,*) isort                                         !
              read(mytmp,*) isvrt                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
-!------------------------------------------------------------------------+
              read(mytmp,*) nband                                         !
              read(mytmp,*) nspin                                         !
              read(mytmp,*) norbs                                         !
              read(mytmp,*) ncfgs                                         !
              read(mytmp,*) niter                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
-!------------------------------------------------------------------------+
              read(mytmp,*) U                                             !
              read(mytmp,*) Uc                                            !
              read(mytmp,*) Uv                                            !
              read(mytmp,*) Jz                                            !
              read(mytmp,*) Js                                            !
              read(mytmp,*) Jp                                            !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
-!------------------------------------------------------------------------+
              read(mytmp,*) mune                                          !
              read(mytmp,*) beta                                          !
              read(mytmp,*) part                                          !
              read(mytmp,*) alpha                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
-!------------------------------------------------------------------------+
              read(mytmp,*) lemax                                         !
              read(mytmp,*) legrd                                         !
              read(mytmp,*) chmax                                         !
              read(mytmp,*) chgrd                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
-!------------------------------------------------------------------------+
              read(mytmp,*) mkink                                         !
              read(mytmp,*) mfreq                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             read(mytmp,*)
-!------------------------------------------------------------------------+
              read(mytmp,*) nffrq                                         !
              read(mytmp,*) nbfrq                                         !
              read(mytmp,*) nfreq                                         !
@@ -167,9 +142,6 @@
              read(mytmp,*) nclean                                        !
              read(mytmp,*) nmonte                                        !
              read(mytmp,*) ncarlo                                        !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
-
-             close(mytmp)
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
