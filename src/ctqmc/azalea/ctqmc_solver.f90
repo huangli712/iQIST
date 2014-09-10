@@ -1,4 +1,4 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : azalea
 !!! program : ctqmc_impurity_solver
 !!!           ctqmc_diagram_warmming
@@ -17,7 +17,7 @@
 !!!           solver
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
 !!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
