@@ -303,9 +303,9 @@
 
          CTQMC_DUMP_ITERATION: do j=1, nwrite
 
-!=========================================================================
-!>>> sampling perturbation expansion series                            <<<
-!=========================================================================
+!!========================================================================
+!!>>> sampling perturbation expansion series                           <<<
+!!========================================================================
 
 ! increase cstep by 1
              cstep = cstep + 1
@@ -319,9 +319,9 @@
                  call ctqmc_diagram_templing(cstep)
              endif ! back if ( beta > one ) block
 
-!=========================================================================
-!>>> sampling the physical observables                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> sampling the physical observables                                <<<
+!!========================================================================
 
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
@@ -379,18 +379,18 @@
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
-!=========================================================================
-!>>> reporting quantum impurity solver                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> reporting quantum impurity solver                                <<<
+!!========================================================================
 
 ! it is time to write out the statistics results
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_runtime(iter, cstep)
          endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> reducing immediate results                                        <<<
-!=========================================================================
+!!========================================================================
+!!>>> reducing immediate results                                       <<<
+!!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
          call ctqmc_reduce_hist(hist_mpi)
@@ -405,23 +405,23 @@
              enddo ! over n={1,ntime} loop
          enddo ! over m={1,norbs} loop
 
-!=========================================================================
-!>>> symmetrizing immediate results                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> symmetrizing immediate results                                   <<<
+!!========================================================================
 
 ! symmetrize the impurity green's function over spin or over bands
          if ( issun == 2 .or. isspn == 1 ) then
              call ctqmc_symm_gtau(symm, gtau_mpi)
-         endif
+         endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
-!=========================================================================
-!>>> writing immediate results                                         <<<
-!=========================================================================
+!!========================================================================
+!!>>> writing immediate results                                        <<<
+!!========================================================================
 
 ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
              call ctqmc_dump_hist(hist_mpi)
-         endif
+         endif ! back if ( myid == master ) block
 
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
@@ -433,15 +433,15 @@
              endif ! back if ( iter /= 999 ) block
          endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> checking quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> checking quantum impurity solver                                 <<<
+!!========================================================================
 
          call ctqmc_diagram_checking(cflag)
 
-!=========================================================================
-!>>> timing quantum impurity solver                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> timing quantum impurity solver                                   <<<
+!!========================================================================
 
 ! record ending time for this iteration
          call cpu_time(time_end)
@@ -455,29 +455,36 @@
          if ( myid == master ) then ! only master node can do it
              call s_time_analyzer(time_iter, time_niter)
              write(mystd,*)
-         endif
+         endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> escaping quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> escaping quantum impurity solver                                 <<<
+!!========================================================================
 
 ! if the quantum impurity solver is out of control or reaches convergence
          if ( cflag == 99 .or. cflag == 100 ) then
              EXIT CTQMC_MAIN_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( cflag == 99 .or. cflag == 100 ) block
 
      enddo CTQMC_MAIN_ITERATION ! over i={1,nsweep} loop
 
-!=========================================================================
-!>>> ending main iteration                                             <<<
-!=========================================================================
+!!========================================================================
+!!>>> ending main iteration                                            <<<
+!!========================================================================
 
-!=========================================================================
-!>>> reducing final results                                            <<<
-!=========================================================================
+!!========================================================================
+!!>>> reducing final results                                           <<<
+!!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
      call ctqmc_reduce_hist(hist_mpi)
+
+! collect the probability data from prob to prob_mpi
+     call ctqmc_reduce_prob(prob_mpi)
+
+! collect the (double) occupation matrix data from nmat to nmat_mpi, and
+! from nnmat to nnmat_mpi
+     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
 ! collect the spin-spin correlation function data from schi to schi_mpi,
 ! from sschi to sschi_mpi
@@ -487,35 +494,28 @@
 ! ochi_mpi, from oochi to oochi_mpi
      call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
 
-! collect the (double) occupation matrix data from nmat to nmat_mpi, from
-! nnmat to nnmat_mpi
-     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
-
-! collect the probability data from prob to prob_mpi
-     call ctqmc_reduce_prob(prob_mpi)
-
-! collect the impurity green's function data from gtau to gtau_mpi
-     call ctqmc_reduce_gtau(gtau_mpi)
-
-! collect the impurity green's function data from grnf to grnf_mpi
-     call ctqmc_reduce_grnf(grnf_mpi)
-
-! collect the auxiliary correlation function from ftau to ftau_mpi
-     call ctqmc_reduce_ftau(ftau_mpi)
-
 ! collect the two-particle green's function from g2_re to g2_re_mpi, etc.
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
 ! collect the vertex function from h2_re to h2_re_mpi, etc.
      call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
 
+! collect the impurity green's function data from gtau to gtau_mpi
+     call ctqmc_reduce_gtau(gtau_mpi)
+
+! collect the auxiliary correlation function from ftau to ftau_mpi
+     call ctqmc_reduce_ftau(ftau_mpi)
+
+! collect the impurity green's function data from grnf to grnf_mpi
+     call ctqmc_reduce_grnf(grnf_mpi)
+
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
 
+     prob  = prob_mpi  * real(ncarlo) / real(nsweep)
+     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      schi  = schi_mpi  * real(nmonte) / real(nsweep)
      ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
-     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
-     prob  = prob_mpi  * real(ncarlo) / real(nsweep)
 
      do m=1,nband
          do n=1,ntime
@@ -582,9 +582,9 @@
          call ctqmc_make_hub2()
      endif ! back if ( isort <= 3 ) block
 
-!=========================================================================
-!>>> symmetrizing final results                                        <<<
-!=========================================================================
+!!========================================================================
+!!>>> symmetrizing final results                                       <<<
+!!========================================================================
 
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
@@ -853,11 +853,15 @@
      return
   end subroutine ctqmc_diagram_templing
 
-!>>> checking whether the quantum impurity solver is consistent internally
+!!>>> ctqmc_diagram_checking: checking whether the quantum impurity solver
+!!>>> is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
-     use constants
-     use control
-     use context
+     use constants, only : mystd
+
+     use control, only : norbs
+     use control, only : myid, master
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
@@ -876,19 +880,19 @@
          do i=1,norbs
              if ( stts(i) == 0 ) then
                  if ( rank(i) /= 0 ) cflag = 99
-             endif
+             endif ! back if ( stts(i) == 0 ) block
 
              if ( stts(i) == 1 ) then
                  if ( rank(i) == 0 ) cflag = 99
-             endif
+             endif ! back if ( stts(i) == 1 ) block
 
              if ( stts(i) == 2 ) then
                  if ( rank(i) == 0 ) cflag = 99
-             endif
+             endif ! back if ( stts(i) == 2 ) block
 
              if ( stts(i) == 3 ) then
                  if ( rank(i) /= 0 ) cflag = 99
-             endif
+             endif ! back if ( stts(i) == 3 ) block
          enddo ! over i={1,norbs} loop
 
 ! check time order of operators
@@ -896,10 +900,10 @@
              do j=1,rank(i)-1
                  if ( time_s( index_s(j, i), i ) > time_s( index_s(j+1, i), i ) ) then
                      cflag = 99
-                 endif
+                 endif ! back if ( time_s( index_s(j, i), i ) > time_s( index_s(j+1, i), i ) ) block
                  if ( time_e( index_e(j, i), i ) > time_e( index_e(j+1, i), i ) ) then
                      cflag = 99
-                 endif
+                 endif ! back if ( time_e( index_e(j, i), i ) > time_e( index_e(j+1, i), i ) ) block
              enddo ! over j={1,rank(i)-1} loop
          enddo ! over i={1,norbs} loop
 
@@ -908,13 +912,13 @@
              if ( stts(i) == 1 ) then
                  if ( time_s( index_s(1, i), i ) > time_e( index_e(1, i), i ) ) then
                      cflag = 99
-                 endif
+                 endif ! back if ( time_s( index_s(1, i), i ) > time_e( index_e(1, i), i ) ) block
              endif ! back if ( stts(i) == 1 ) block
 
              if ( stts(i) == 2 ) then
                  if ( time_s( index_s(1, i), i ) < time_e( index_e(1, i), i ) ) then
                      cflag = 99
-                 endif
+                 endif ! back if ( time_s( index_s(1, i), i ) < time_e( index_e(1, i), i ) ) block
              endif ! back if ( stts(i) == 2 ) block
          enddo ! over i={1,norbs} loop
 
@@ -924,10 +928,10 @@
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: error?'
                  write(mystd,'(4X,a)') '>>> please check the status file: solver.status.dat'
                  call ctqmc_save_status()
-                 call ctqmc_print_error('ctqmc_diagram_checking','unknown fatal error occur')
+                 call s_print_error('ctqmc_diagram_checking','unknown fatal error occur')
              else
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: normal'
-             endif
+             endif ! back if ( cflag == 99 ) block
          endif ! back if ( myid == master ) block
 
      endif ! back if ( cflag == 1 ) block
@@ -935,20 +939,21 @@
      return
   end subroutine ctqmc_diagram_checking
 
-!>>> testing subroutine, please active it on ctqmc_diagram_sampling()
+!!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
+!!>>> on ctqmc_diagram_sampling() subroutine
   subroutine ctqmc_impurity_tester()
-     use constants
-     use control
-     use context
+     use constants ! ALL
+     use control   ! ALL
+     use context   ! ALL
 
      implicit none
 
 !-------------------------------------------------------------------------
-! insert your debug code here
+! please insert your debug code here
 !-------------------------------------------------------------------------
 
      call ctqmc_make_display(2)
-     call ctqmc_print_error('ctqmc_impurity_tester','in debug mode')
+     call s_print_error('ctqmc_impurity_tester','in debug mode')
 
      return
   end subroutine ctqmc_impurity_tester
