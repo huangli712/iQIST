@@ -217,6 +217,7 @@
 !!>>> transformation and numerical integration
   subroutine ctqmc_dmft_anydos(hybf, grnf, sigf)
      use constants, only : dp, zero, czi, czero, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
      use control, only : norbs
      use control, only : mfreq
@@ -224,8 +225,6 @@
      use control, only : myid, master
      use context, only : rmesh
      use context, only : eimp
-
-     use mmpi
 
      implicit none
 
