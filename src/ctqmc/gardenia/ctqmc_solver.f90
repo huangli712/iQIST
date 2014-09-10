@@ -35,7 +35,7 @@
      use context, only : hist, prob, nmat, nnmat
      use context, only : schi, ochi, sschi, oochi, g2_re, g2_im, h2_re, h2_im
      use context, only : symm
-     use context, only : gtau, grnf
+     use context, only : gtau, ftau, grnf
      use context, only : sig2
 
      implicit none
