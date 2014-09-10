@@ -12,8 +12,9 @@
 !!!           09/10/2014 by li huang
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!!!           impurity solver
-!!! status  : very unstable
+!!!           impurity solver and dynamical mean field theory (DMFT) self
+!!!           -consistent engine
+!!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
@@ -60,11 +61,11 @@
      return
   end subroutine ctqmc_print_header
 
-!>>> print the ending information for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> ctqmc_print_footer: print the ending information for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
+!!>>> theory self-consistent engine
   subroutine ctqmc_print_footer()
-     use constants
+     use constants, only : dp, mystd
 
      implicit none
 
@@ -89,10 +90,11 @@
      return
   end subroutine ctqmc_print_footer
 
-!>>> print the running parameters, only for reference
+!!>>> ctqmc_print_summary: print the running parameters, only for reference
   subroutine ctqmc_print_summary()
-     use constants
-     use control
+     use constants, only : mystd, ev2k
+
+     use control ! ALL
 
      implicit none
 
@@ -126,11 +128,19 @@
      return
   end subroutine ctqmc_print_summary
 
-!>>> print the runtime information, including physical observables and
-! statistic data, only for reference
+!!>>> ctqmc_print_runtime: print the runtime information, including physical
+!!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
-     use constants
-     use context
+     use constants, only : one, half, mystd
+
+     use control, only : nsweep, nmonte
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : reswap_tcount, reswap_accept, reswap_reject
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : paux
 
      implicit none
 
