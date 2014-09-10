@@ -689,6 +689,16 @@
      enddo ! over flvr={1,norbs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+! evaluate <N^2>
+!-------------------------------------------------------------------------
+     paux(6) = paux(6) + ( sum(sgmt) / beta )**2
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^1>
+!-------------------------------------------------------------------------
+     paux(5) = paux(5) + sum(sgmt) / beta
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! evaluate spin magnetization: < Sz >
 !-------------------------------------------------------------------------
      do flvr=1,nband
@@ -1108,12 +1118,19 @@
      return
   end subroutine ctqmc_record_vrtx
 
-!>>> reduce the gtau from all children processes
-  subroutine ctqmc_reduce_gtau(gtau_mpi)
-     use constants
-     use context
+!!========================================================================
+!!>>> reduce physical observables                                      <<<
+!!========================================================================
 
-     use mmpi
+!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
+  subroutine ctqmc_reduce_gtau(gtau_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : gtau
 
      implicit none
 
@@ -1182,12 +1199,15 @@
      return
   end subroutine ctqmc_reduce_ftau
 
-!>>> reduce the grnf from all children processes
+!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi)
-     use constants
-     use context
+     use constants, only : dp, czero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nprocs
+     use context, only : grnf
 
      implicit none
 
@@ -1196,7 +1216,7 @@
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
 
 ! initialize grnf_mpi
-     grnf_mpi = zero
+     grnf_mpi = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1219,14 +1239,15 @@
      return
   end subroutine ctqmc_reduce_grnf
 
-!>>> reduce the hist from all children processes
-! note: since hist_mpi and hist are integer (kind=4) type, it is important
-! to avoid data overflow in them
+!!>>> ctqmc_reduce_hist: reduce the hist from all children processes
+!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is
+!!>>> important to avoid data overflow in them
   subroutine ctqmc_reduce_hist(hist_mpi)
-     use constants
-     use context
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : mkink
+     use control, only : nprocs
+     use context, only : hist
 
      implicit none
 
@@ -1257,6 +1278,45 @@
 
      return
   end subroutine ctqmc_reduce_hist
+
+!!>>> ctqmc_reduce_prob: reduce the prob from all children processes
+  subroutine ctqmc_reduce_prob(prob_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : ncfgs
+     use control, only : nprocs
+     use context, only : prob
+
+     implicit none
+
+! external arguments
+! probability of atomic states
+     real(dp), intent(out) :: prob_mpi(ncfgs)
+
+! initialize prob_mpi
+     prob_mpi = zero
+
+! build prob_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(prob, prob_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     prob_mpi = prob
+
+# endif /* MPI */
+
+! calculate the average
+     prob_mpi = prob_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_prob
 
 !>>> reduce the nmat and nnmat from all children processes
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
@@ -1477,43 +1537,6 @@
 
      return
   end subroutine ctqmc_reduce_vrtx
-
-!>>> reduce the prob from all children processes
-  subroutine ctqmc_reduce_prob(prob_mpi)
-     use constants
-     use context
-
-     use mmpi
-
-     implicit none
-
-! external arguments
-! probability of atomic states
-     real(dp), intent(out) :: prob_mpi(ncfgs)
-
-! initialize prob_mpi
-     prob_mpi = zero
-
-! build prob_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     call mp_allreduce(prob, prob_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     prob_mpi = prob
-
-# endif /* MPI */
-
-! calculate the average
-     prob_mpi = prob_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_prob
 
 !>>> symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
