@@ -9,6 +9,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/15/2009 by li huang
 !!!           02/21/2010 by li huang
+!!!           09/10/2014 by li huang
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver
@@ -16,11 +17,12 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> print the startup information for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> ctqmc_print_header: print the startup information for continuous
+!!>>> time quantum Monte Carlo quantum impurity solver plus dynamical
+!!>>> mean field theory self-consistent engine
   subroutine ctqmc_print_header()
-     use constants
+     use constants, only : mystd
+
      use control, only : nprocs
 
      implicit none
@@ -35,10 +37,10 @@
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'version: 2014.01.13T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & UNIFR'
-     write(mystd,'(2X,a)') 'support: huangli712@gmail.com'
-     write(mystd,'(2X,a)') 'license: GPL2 and later versions'
+     write(mystd,'(2X,a)') 'Version: 2014.09.10T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang, CAEP & UNIFR'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GPL2 and later versions'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'GARDENIA >>> start running at '//date_time_string
@@ -190,51 +192,3 @@
 
      return
   end subroutine ctqmc_print_runtime
-
-!>>> print the error information and STOP the program
-  subroutine ctqmc_print_error(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! error message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
-
-! TERMINATE THE PROGRAM
-!-------------------------------------------------------------------------
-     STOP
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine ctqmc_print_error
-
-!>>> print normal runtime exceptional information, and continue
-  subroutine ctqmc_print_exception(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! exception message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
-
-! CONTINUE/PAUSE THE PROGRAM
-!-------------------------------------------------------------------------
-     CONTINUE ! OR PAUSE
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine ctqmc_print_exception
