@@ -1,26 +1,20 @@
-!-------------------------------------------------------------------------
-! project : gardenia
-! program : ctqmc_print_header
-!           ctqmc_print_footer
-!           ctqmc_print_summary
-!           ctqmc_print_runtime
-!           ctqmc_print_error
-!           ctqmc_print_exception
-! source  : ctqmc_print.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/15/2009 by li huang
-!           09/20/2009 by li huang
-!           12/01/2009 by li huang
-!           02/21/2010 by li huang
-! purpose : provide printing infrastructure for hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver
-! input   :
-! output  :
-! status  : very unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : gardenia
+!!! program : ctqmc_print_header
+!!!           ctqmc_print_footer
+!!!           ctqmc_print_summary
+!!!           ctqmc_print_runtime
+!!! source  : ctqmc_print.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/15/2009 by li huang
+!!!           02/21/2010 by li huang
+!!! purpose : provide printing infrastructure for hybridization expansion
+!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
+!!!           impurity solver
+!!! status  : very unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> print the startup information for continuous time quantum Monte Carlo
 ! quantum impurity solver plus dynamical mean field theory self-consistent
