@@ -191,7 +191,7 @@
 ! check the running mode
          if ( isscf == 1 ) then
              EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( isscf == 1 ) block
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
@@ -213,7 +213,7 @@
 ! now convergence is achieved
          if ( convergence .eqv. .true. ) then
              EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( convergence .eqv. .true. ) block
 
      enddo DMFT_CTQMC_ITERATION ! over iter={1,niter} loop
 
@@ -263,10 +263,11 @@
 
 # endif  /* API */
 
-!>>> initialize the ctqmc quantum impurity solver
+!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use api
-     use control
+     use api, only : T_mpi, T_segment_gardenia
+
+     use control ! ALL
 
      implicit none
 
@@ -331,12 +332,12 @@
 ! impurity solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call ctqmc_setup_array()
@@ -347,10 +348,8 @@
      return
   end subroutine cat_init_ctqmc
 
-!>>> execute the ctqmc quantum impurity solver
+!!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
-     use control
-
      implicit none
 
 ! external arguments
@@ -364,9 +363,9 @@
      return
   end subroutine cat_exec_ctqmc
 
-!>>> stop the ctqmc quantum impurity solver
+!!>>> cat_stop_ctqmc: stop the ctqmc quantum impurity solver
   subroutine cat_stop_ctqmc()
-     use control
+     use control, only : myid, master
 
      implicit none
 
@@ -377,15 +376,18 @@
 ! solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_footer()
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine cat_stop_ctqmc
 
-!>>> setup the hybridization function
+!!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
-     use control
-     use context
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : mfreq
+     use context, only : hybf
 
      implicit none
 
@@ -399,7 +401,7 @@
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
          call ctqmc_print_error('cat_set_hybf', 'wrong dimension size of hybf_t')
-     endif
+     endif ! back if ( size_t /= size(hybf) ) block
 
 ! copy data
      hybf = reshape(hybf_t,(/mfreq,norbs,norbs/))
@@ -407,10 +409,9 @@
      return
   end subroutine cat_set_hybf
 
-!>>> setup the symmetry vector
+!!>>> cat_set_symm: setup the symmetry vector
   subroutine cat_set_symm(size_t, symm_t)
-     use control
-     use context
+     use context, only : symm
 
      implicit none
 
@@ -424,7 +425,7 @@
 ! check whether size_t is correct
      if ( size_t /= size(symm) ) then
          call ctqmc_print_error('cat_set_symm', 'wrong dimension size of symm_t')
-     endif
+     endif ! back if ( size_t /= size(symm) ) block
 
 ! copy data
      symm = symm_t
@@ -432,10 +433,11 @@
      return
   end subroutine cat_set_symm
 
-!>>> setup the impurity level
+!!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
-     use control
-     use context
+     use constants, only : dp
+
+     use context, only : eimp
 
      implicit none
 
@@ -449,7 +451,7 @@
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
          call ctqmc_print_error('cat_set_eimp', 'wrong dimension size of eimp_t')
-     endif
+     endif ! back if ( size_t /= size(eimp) ) block
 
 ! copy data
      eimp = eimp_t
@@ -457,10 +459,13 @@
      return
   end subroutine cat_set_eimp
 
-!>>> extract the impurity green's function
+!!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
-     use control
-     use context
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : mfreq
+     use context, only : grnf
 
      implicit none
 
@@ -474,7 +479,7 @@
 ! check whether size_t is correct
      if ( size_t /= size(grnf) ) then
          call ctqmc_print_error('cat_get_grnf', 'wrong dimension size of grnf_t')
-     endif
+     endif ! back if ( size_t /= size(grnf) ) block
 
 ! copy data
      grnf_t = reshape(grnf, (/mfreq*norbs*norbs/))
@@ -482,10 +487,13 @@
      return
   end subroutine cat_get_grnf
 
-!>>> extract the self-energy function
+!!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
-     use control
-     use context
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : mfreq
+     use context, only : sig2
 
      implicit none
 
@@ -499,7 +507,7 @@
 ! check whether size_t is correct
      if ( size_t /= size(sig2) ) then
          call ctqmc_print_error('cat_get_sigf', 'wrong dimension size of sigf_t')
-     endif
+     endif ! back if ( size_t /= size(sig2) ) block
 
 ! copy data
      sigf_t = reshape(sig2, (/mfreq*norbs*norbs/))
