@@ -631,10 +631,13 @@
      return
   end subroutine ctqmc_dump_nmat
 
-!>>> write out the spin-spin correlation function
+!!>>> ctqmc_dump_schi: write out the spin-spin correlation function
   subroutine ctqmc_dump_schi(schi, sschi)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : isvrt
+     use control, only : nband
+     use control, only : ntime
      use context, only : tmesh
 
      implicit none
