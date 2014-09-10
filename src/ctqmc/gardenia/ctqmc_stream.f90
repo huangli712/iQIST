@@ -251,7 +251,7 @@
      use control, only : ntime
      use control, only : beta, part
      use control, only : myid, master
-     use context, only : tmesh, rmesh, pmesh, qmesh
+     use context, only : tmesh, rmesh, pmesh, qmesh, ppleg, qqche
      use context, only : symm, eimp
      use context, only : hybf
 
