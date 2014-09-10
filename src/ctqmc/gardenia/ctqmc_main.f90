@@ -18,20 +18,21 @@
 !!
 !! If you want to obtain an executable program, please go to src/build/,
 !! open make.sys and comment out the API flag. On the other hand, if you
-!! want to compile azalea as a library, please activate the API flag.
+!! want to compile gardenia as a library, please activate the API flag.
 !!
 !! Introduction
 !! ============
 !!
 !! The gardenia code is a hybridization expansion version continuous time
 !! quantum Monte Carlo quantum impurity solver. It adopts the segment
-!! picuture, and only implements very limited features. So it is highly
-!! efficient, and can be used as a standard to benchmark the other ctqmc
-!! impurity solvers. In fact, it is the prototype for the other more
-!! advanced ctqmc impurity solver. The gardenia code also includes a mini
-!! dynamical mean field theory engine which implements the self-consistent
-!! equation for Bethe lattice in paramagnetic state. So you can use it
-!! to perform dynamical mean field theory calculations quickly. Enjoy it.
+!! picuture, and implements many useful features, such as the orthogonal
+!! polynomial representation and the measurement of two-particle Green's
+!! function, etc. So it is a bit less efficient than the azalea code. And
+!! it can be used as a standard to benchmark the other ctqmc impurity
+!! solvers. The gardenia code also includes a mini dynamical mean field
+!! theory engine which implements the self-consistent equation for Bethe
+!! lattice in paramagnetic state. So you can use it to perform dynamical
+!! mean field theory calculations quickly. Enjoy it.
 !!
 !! Usage
 !! =====
@@ -60,6 +61,10 @@
 !! solver.hist.dat
 !! solver.prob.dat
 !! solver.nmat.dat
+!! solver.schi.dat
+!! solver.ochi.dat
+!! solver.twop.dat
+!! solver.vrtx.dat
 !! solver.status.dat
 !! etc.
 !!
