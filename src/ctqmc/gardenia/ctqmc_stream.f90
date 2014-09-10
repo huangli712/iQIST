@@ -246,11 +246,12 @@
      use mmpi, only : mp_bcast, mp_barrier
 
      use control, only : nband, norbs
+     use control, only : lemax, legrd, chmax, chgrd
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta, part
      use control, only : myid, master
-     use context, only : tmesh, rmesh
+     use context, only : tmesh, rmesh, pmesh, qmesh
      use context, only : symm, eimp
      use context, only : hybf
 
