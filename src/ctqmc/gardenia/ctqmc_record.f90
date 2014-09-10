@@ -1,66 +1,45 @@
-!-------------------------------------------------------------------------
-! project : gardenia
-! program : ctqmc_record_gtau
-!           ctqmc_record_ftau
-!           ctqmc_record_grnf
-!           ctqmc_record_hist
-!           ctqmc_record_nmat
-!           ctqmc_record_schi
-!           ctqmc_record_ochi
-!           ctqmc_record_twop
-!           ctqmc_record_vrtx
-!           ctqmc_record_prob <<<---
-!           ctqmc_reduce_gtau
-!           ctqmc_reduce_ftau
-!           ctqmc_reduce_grnf
-!           ctqmc_reduce_hist
-!           ctqmc_reduce_nmat
-!           ctqmc_reduce_schi
-!           ctqmc_reduce_ochi
-!           ctqmc_reduce_twop
-!           ctqmc_reduce_vrtx
-!           ctqmc_reduce_prob <<<---
-!           ctqmc_symm_nmat
-!           ctqmc_symm_gtau
-!           ctqmc_symm_grnf
-!           ctqmc_smth_sigf   <<<---
-!           ctqmc_make_gtau
-!           ctqmc_make_ftau   <<<---
-!           ctqmc_make_hub1
-!           ctqmc_make_hub2   <<<---
-! source  : ctqmc_record.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/25/2009 by li huang
-!           09/27/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/03/2009 by li huang
-!           11/10/2009 by li huang
-!           11/19/2009 by li huang
-!           11/30/2009 by li huang
-!           12/06/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/22/2009 by li huang
-!           12/26/2009 by li huang
-!           12/29/2009 by li huang
-!           01/14/2010 by li huang
-!           02/01/2010 by li huang
-!           02/24/2010 by li huang
-!           02/27/2010 by li huang
-!           09/29/2010 by li huang
-! purpose : measure, record, and postprocess the key observables produced
-!           by the hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : gardenia
+!!! program : ctqmc_record_gtau
+!!!           ctqmc_record_ftau
+!!!           ctqmc_record_grnf
+!!!           ctqmc_record_hist
+!!!           ctqmc_record_nmat
+!!!           ctqmc_record_schi
+!!!           ctqmc_record_ochi
+!!!           ctqmc_record_twop
+!!!           ctqmc_record_vrtx
+!!!           ctqmc_record_prob <<<---
+!!!           ctqmc_reduce_gtau
+!!!           ctqmc_reduce_ftau
+!!!           ctqmc_reduce_grnf
+!!!           ctqmc_reduce_hist
+!!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_schi
+!!!           ctqmc_reduce_ochi
+!!!           ctqmc_reduce_twop
+!!!           ctqmc_reduce_vrtx
+!!!           ctqmc_reduce_prob <<<---
+!!!           ctqmc_symm_nmat
+!!!           ctqmc_symm_gtau
+!!!           ctqmc_symm_grnf
+!!!           ctqmc_smth_sigf   <<<---
+!!!           ctqmc_make_gtau
+!!!           ctqmc_make_ftau   <<<---
+!!!           ctqmc_make_hub1
+!!!           ctqmc_make_hub2   <<<---
+!!! source  : ctqmc_record.f90
+!!! type    : subroutine
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           09/29/2010 by li huang
+!!!           09/10/2014 by li huang
+!!! purpose : measure, record, and postprocess the key observables produced
+!!!           by the hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> record the impurity green's function in imaginary time axis
   subroutine ctqmc_record_gtau()
