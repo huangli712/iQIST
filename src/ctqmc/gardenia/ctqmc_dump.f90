@@ -749,10 +749,15 @@
      return
   end subroutine ctqmc_dump_ochi
 
-!>>> write out the two-particle green's function and vertex function
+!!>>> ctqmc_dump_twop: write out the two-particle green's function and
+!!>>> vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
-     use constants
-     use control
+     use constants, only : dp, czero, mytmp
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
      use context, only : grnf
 
      implicit none
