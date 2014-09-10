@@ -4,22 +4,22 @@
 !!!           ctqmc_record_ftau
 !!!           ctqmc_record_grnf
 !!!           ctqmc_record_hist
+!!!           ctqmc_record_prob
 !!!           ctqmc_record_nmat
 !!!           ctqmc_record_schi
 !!!           ctqmc_record_ochi
 !!!           ctqmc_record_twop
-!!!           ctqmc_record_vrtx
-!!!           ctqmc_record_prob <<<---
+!!!           ctqmc_record_vrtx <<<---
 !!!           ctqmc_reduce_gtau
 !!!           ctqmc_reduce_ftau
 !!!           ctqmc_reduce_grnf
 !!!           ctqmc_reduce_hist
+!!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_nmat
 !!!           ctqmc_reduce_schi
 !!!           ctqmc_reduce_ochi
 !!!           ctqmc_reduce_twop
-!!!           ctqmc_reduce_vrtx
-!!!           ctqmc_reduce_prob <<<---
+!!!           ctqmc_reduce_vrtx <<<---
 !!!           ctqmc_symm_nmat
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf
@@ -29,23 +29,34 @@
 !!!           ctqmc_make_hub1
 !!!           ctqmc_make_hub2   <<<---
 !!! source  : ctqmc_record.f90
-!!! type    : subroutine
+!!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
 !!!           09/10/2014 by li huang
-!!! purpose : measure, record, and postprocess the key observables produced
-!!!           by the hybridization expansion version continuous time quantum
-!!!           Monte Carlo (CTQMC) quantum impurity solver
+!!! purpose : measure, record, and postprocess the important observables
+!!!           produced by the hybridization expansion version continuous
+!!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> record the impurity green's function in imaginary time axis
+!!========================================================================
+!!>>> measure physical observables                                     <<<
+!!========================================================================
+
+!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
+!!>>> time axis
   subroutine ctqmc_record_gtau()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two
+
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
+     use context, only : mmat
+     use context, only : gtau
 
      implicit none
 
