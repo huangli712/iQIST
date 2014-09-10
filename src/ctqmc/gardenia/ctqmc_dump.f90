@@ -690,10 +690,13 @@
      return
   end subroutine ctqmc_dump_schi
 
-!>>> write out the orbital-orbital correlation function
+!!>>> ctqmc_dump_ochi: write out the orbital-orbital correlation function
   subroutine ctqmc_dump_ochi(ochi, oochi)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : isvrt
+     use control, only : ntime
+     use control, only : norbs
      use context, only : tmesh
 
      implicit none
