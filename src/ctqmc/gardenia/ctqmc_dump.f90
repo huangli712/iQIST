@@ -877,11 +877,19 @@
      return
   end subroutine ctqmc_dump_twop
 
-!>>> write out the vertex function and two-particle green's function
+!!>>> ctqmc_dump_vrtx: write out the vertex function and two-particle
+!!>>> green's function
   subroutine ctqmc_dump_vrtx(h2_re, h2_im)
-     use constants
-     use control
-     use context, only : grnf, frnf, sig2, g2_re, g2_im
+     use constants, only : dp, czero, mytmp
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : g2_re, g2_im
+     use context, only : grnf, frnf
+     use context, only : sig2
 
      implicit none
 
