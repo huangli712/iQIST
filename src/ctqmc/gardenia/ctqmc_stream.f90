@@ -284,39 +284,19 @@
      call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build legendre polynomial in [-1,1]
-     if ( lemax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','lemax must be larger than 2')
-     endif
-
-     do i=1,legrd
-         ppleg(i,1) = one
-         ppleg(i,2) = pmesh(i)
-         do j=3,lemax
-             k = j - 1
-             ppleg(i,j) = ( real(2*k-1) * pmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
-         enddo ! over j={3,lemax} loop
-     enddo ! over i={1,legrd} loop
+     call s_legendre(lemax, legrd, pmesh, ppleg)
 
 ! build chebyshev polynomial in [-1,1]
 ! note: it is second kind chebyshev polynomial
-     if ( chmax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','chmax must be larger than 2')
-     endif
-
-     do i=1,chgrd
-         qqche(i,1) = one
-         qqche(i,2) = two * qmesh(i)
-         do j=3,chmax
-             qqche(i,j) = two * qmesh(i) * qqche(i,j-1) - qqche(i,j-2)
-         enddo ! over j={3,chmax} loop
-     enddo ! over i={1,chgrd} loop
+     call s_chebyshev(chmax, chgrd, qmesh, qqche)
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
 ! build initial hybridization function using self-consistent condition
-     !do i=1,mfreq
-     !    hybf(i,:,:) = unity * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
-     !enddo ! over i={1,mfreq} loop
+     do i=1,mfreq
+         call s_identity_z( norbs, hybf(i,:,:) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+     enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
 !-------------------------------------------------------------------------
@@ -408,14 +388,15 @@
      return
   end subroutine ctqmc_selfer_init
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
-     use constants
-     use control
-     use context
+     use constants, only : zero, czero
+     use stack, only : istack_clean, istack_push
+     use spring, only : spring_sfmt_init
 
-     use stack
-     use spring
+     use control ! ALL
+     use context ! ALL
 
      implicit none
 
@@ -435,6 +416,8 @@
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
+! for stack data structure
+!-------------------------------------------------------------------------
 ! init empty_s and empty_e stack structure
      do i=1,norbs
          call istack_clean( empty_s(i) )
@@ -448,6 +431,8 @@
          enddo ! over j={mkink,1} loop
      enddo ! over i={1,norbs} loop
 
+! for real variables
+!-------------------------------------------------------------------------
 ! init statistics variables
      insert_tcount = zero
      insert_accept = zero
@@ -473,10 +458,14 @@
      reflip_accept = zero
      reflip_reject = zero
 
+! for integer variables
+!-------------------------------------------------------------------------
 ! init global variables
      ckink   = 0
      cstat   = 0
 
+! for integer arrays
+!-------------------------------------------------------------------------
 ! init hist  array
      hist    = 0
 
@@ -494,15 +483,21 @@
      index_s = 0
      index_e = 0
 
+! for real arrays
+!-------------------------------------------------------------------------
 ! init time  array
      time_s  = zero
      time_e  = zero
 
+! init auxiliary physical observables
+     paux    = zero
+
 ! init probability for atomic states
      prob    = zero
 
-! init auxiliary physical observables
-     paux    = zero
+! init occupation number array
+     nmat    = zero
+     nnmat   = zero
 
 ! init spin-spin correlation function
      schi    = zero
@@ -520,10 +515,6 @@
      h2_re   = zero
      h2_im   = zero
 
-! init occupation number array
-     nmat    = zero
-     nnmat   = zero
-
 ! init M-matrix related array
      mmat    = zero
      lspace  = zero
@@ -536,6 +527,8 @@
 ! init imaginary time bath weiss's function array
      wtau    = zero
 
+! for complex arrays
+!-------------------------------------------------------------------------
 ! init exponent array exp_s and exp_e
      exp_s   = czero
      exp_e   = czero
@@ -558,6 +551,8 @@
 !<     sig1    = czero
      sig2    = czero
 
+! for the other variables/arrays
+!-------------------------------------------------------------------------
 ! calculate two-index pair interaction, uumat
      call ctqmc_make_uumat(uumat)
 
@@ -565,10 +560,12 @@
 ! space to imaginary time space
      call ctqmc_four_hybf(hybf, htau)
 
+! dump the necessary files
+!-------------------------------------------------------------------------
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, htau)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
      call ctqmc_make_hsed(tmesh, htau, hsed)
@@ -576,20 +573,21 @@
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the seed for random number stream, it is useful to reproduce
 ! the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine ctqmc_solver_init
 
-!>>> garbage collection for this program, please refer to ctqmc_setup_array
+!!>>> ctqmc_final_array: garbage collection for this program, please refer
+!!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
-     use context
+     use context ! ALL
 
      implicit none
 
