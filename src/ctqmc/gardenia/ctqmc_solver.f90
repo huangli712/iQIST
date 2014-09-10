@@ -589,95 +589,95 @@
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_nmat(symm, nmat)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (gtau) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, gtau)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (grnf) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, grnf)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity self-energy function (sig2) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, sig2)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
-!=========================================================================
-!>>> writing final results                                             <<<
-!=========================================================================
+!!========================================================================
+!!>>> writing final results                                            <<<
+!!========================================================================
 
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final spin-spin correlation function data, schi and sschi
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_schi(schi, sschi)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final orbital-orbital correlation function data, ochi and oochi
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_ochi(ochi, oochi)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_nmat(nmat, nnmat)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final probability data, prob
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_prob(prob)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_gtau(tmesh, gtau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, grnf
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_grnf(rmesh, grnf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final self-energy function data, sig2
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_sigf(rmesh, sig2)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, g2_re and g2_im
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_twop(g2_re, g2_im)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final vertex function data, h2_re and h2_im
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_vrtx(h2_re, h2_im)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> saving quantum impurity solver                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> saving quantum impurity solver                                   <<<
+!!========================================================================
 
 ! save the perturbation expansion series information to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> finishing quantum impurity solver                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> finishing quantum impurity solver                                <<<
+!!========================================================================
 
 ! print the footer of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'GARDENIA >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(hist_mpi)
@@ -699,12 +699,19 @@
      return
   end subroutine ctqmc_impurity_solver
 
-!>>> perform thermalization on perturbation expansion series to achieve
-! thermodynamics equilibrium state
+!!>>> ctqmc_diagram_warmming: perform thermalization or warmup on the
+!!>>> perturbation expansion series to achieve thermodynamics stable
+!!>>> equilibrium state
   subroutine ctqmc_diagram_warmming()
      use constants, only : zero
+
      use control, only : ntherm
-     use context
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : reswap_tcount, reswap_accept, reswap_reject
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
 
      implicit none
 
@@ -745,12 +752,13 @@
      return
   end subroutine ctqmc_diagram_warmming
 
-!>>> visit the perturbation expansion diagrams randomly
+!!>>> ctqmc_diagram_sampling: visit the perturbation expansion diagrams
+!!>>> randomly
   subroutine ctqmc_diagram_sampling(cstep)
      use constants, only : dp
-     use control, only : nflip, nclean
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : nflip, nclean
 
      implicit none
 
@@ -764,14 +772,14 @@
              call ctqmc_insert_kink()  ! insert one new kink
          else
              call ctqmc_remove_kink()  ! remove one old kink
-         endif
+         endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
 ! do not change the order of perturbation expansion series
      else
          if ( spring_sfmt_stream() > 0.5_dp ) then
              call ctqmc_lshift_kink()  ! shift the left  endpoints
          else
              call ctqmc_rshift_kink()  ! shift the right endpoints
-         endif
+         endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
      endif ! back if ( spring_sfmt_stream() < 0.9_dp ) block
 
 ! numerical trick: perform global spin flip periodically
@@ -780,31 +788,32 @@
              call ctqmc_reflip_kink(2) ! flip intra-orbital spins one by one
          else
              call ctqmc_reflip_kink(3) ! flip intra-orbital spins globally
-         endif
-     endif
+         endif ! back if ( spring_sfmt_stream() < 0.8_dp ) block
+     endif ! back if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) block
 
      if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) then
          if ( spring_sfmt_stream() < 0.8_dp ) then
              call ctqmc_reflip_kink(1) ! flip inter-orbital spins randomly
          else
              call ctqmc_reflip_kink(3) ! flip intra-orbital spins globally
-         endif
-     endif
+         endif ! back if ( spring_sfmt_stream() < 0.8_dp ) block
+     endif ! back if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) block
 
 ! numerical trick: perform global update periodically
      if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) then
          call ctqmc_reload_kink()
-     endif
+     endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
 
      return
   end subroutine ctqmc_diagram_sampling
 
-!>>> visit the perturbation expansion diagrams randomly at very high temperature
+!!>>> ctqmc_diagram_templing: visit the perturbation expansion diagrams
+!!>>> randomly at very high temperature
   subroutine ctqmc_diagram_templing(cstep)
      use constants, only : dp
-     use control, only : nflip, nclean
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : nflip, nclean
 
      implicit none
 
@@ -818,14 +827,14 @@
              call ctqmc_insert_kink()  ! insert one new kink
          else
              call ctqmc_remove_kink()  ! remove one old kink
-         endif
+         endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
 ! do not change the order of perturbation expansion series
      else
          if ( spring_sfmt_stream() > 0.5_dp ) then
              call ctqmc_lshift_kink()  ! shift the left  endpoints
          else
              call ctqmc_reswap_kink()  ! swap creator and destroyer
-         endif
+         endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
      endif ! back if ( spring_sfmt_stream() < 0.1_dp ) block
 
 ! numerical trick: perform global spin flip periodically
@@ -834,21 +843,21 @@
              call ctqmc_reflip_kink(2) ! flip intra-orbital spins one by one
          else
              call ctqmc_reflip_kink(3) ! flip intra-orbital spins globally
-         endif
-     endif
+         endif ! back if ( spring_sfmt_stream() < 0.8_dp ) block
+     endif ! back if ( nflip > 0  .and. mod(cstep, +nflip) == 0 ) block
 
      if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) then
          if ( spring_sfmt_stream() < 0.8_dp ) then
              call ctqmc_reflip_kink(1) ! flip inter-orbital spins randomly
          else
              call ctqmc_reflip_kink(3) ! flip intra-orbital spins globally
-         endif
-     endif
+         endif ! back if ( spring_sfmt_stream() < 0.8_dp ) block
+     endif ! back if ( nflip < 0  .and. mod(cstep, -nflip) == 0 ) block
 
 ! numerical trick: perform global update periodically
      if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) then
          call ctqmc_reload_kink()
-     endif
+     endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
 
      return
   end subroutine ctqmc_diagram_templing
