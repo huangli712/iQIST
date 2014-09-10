@@ -214,9 +214,9 @@
          nwrite = nwrite * 10
      endif
 
-!=========================================================================
-!>>> starting quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> starting quantum impurity solver                                 <<<
+!!========================================================================
 
 ! print the header of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
@@ -224,17 +224,17 @@
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nband :', nband, 'Uc    :', Uc
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nspin :', nspin, 'Jz    :', Jz
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> initializing quantum impurity solver                              <<<
-!=========================================================================
+!!========================================================================
+!!>>> initializing quantum impurity solver                             <<<
+!!========================================================================
 
 ! init the continuous time quantum Monte Carlo quantum impurity solver
 ! setup the key variables
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver initializing'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_solver_init()
@@ -244,17 +244,17 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> retrieving quantum impurity solver                                <<<
-!=========================================================================
+!!========================================================================
+!!>>> retrieving quantum impurity solver                               <<<
+!!========================================================================
 
 ! init the continuous time quantum Monte Carlo quantum impurity solver further
 ! retrieving the time series information produced by previous running
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver retrieving'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_retrieve_status()
@@ -264,17 +264,17 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> warmming quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> warmming quantum impurity solver                                 <<<
+!!========================================================================
 
 ! warmup the continuous time quantum Monte Carlo quantum impurity solver,
 ! in order to achieve equilibrium state
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver warmming'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_diagram_warmming()
@@ -284,17 +284,17 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> beginning main iteration                                          <<<
-!=========================================================================
+!!========================================================================
+!!>>> beginning main iteration                                         <<<
+!!========================================================================
 
 ! start simulation
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver sampling'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      CTQMC_MAIN_ITERATION: do i=1, nsweep, nwrite
 
