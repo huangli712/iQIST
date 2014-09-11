@@ -2241,7 +2241,7 @@
              caux = czero
              do m=1,fcounter(i)
                  ob = fv(m,i) * fv(m,i) * ( prob(fa(m,i)) + prob(fb(m,i)) )
-                 cb = cmesh(k) + eaux(fa(m,i)) - eaux(fb(m,i))
+                 cb = czi * rmesh(k) + eaux(fa(m,i)) - eaux(fb(m,i))
                  caux = caux +  ob / cb
              enddo ! over m={1,fcounter(i)} loop
              ghub(k,i) = caux
@@ -2251,7 +2251,7 @@
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs
          do k=1,mfreq
-             shub(k,i) = cmesh(k) + mune - eimp(i) - one / ghub(k,i)
+             shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
@@ -2276,7 +2276,7 @@
          gaux = grnf(k,:,:)
          call ctqmc_zmat_inv(norbs, gaux)
          do i=1,norbs
-             sig2(k,i,i) = cmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
+             sig2(k,i,i) = czi * rmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
      enddo ! over k={1,nfreq} loop
 !-------------------------------------------------------------------------
@@ -2340,7 +2340,7 @@
      do k=1,mfreq
          gaux = czero
          do i=1,norbs
-             gaux(i,i) = cmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
+             gaux(i,i) = czi * rmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
          call ctqmc_zmat_inv(norbs, gaux)
          grnf(k,:,:) = gaux
@@ -2492,7 +2492,7 @@
              ghub(k,i) = czero
              do m=1,fcounter(i)
                  ob = fv(m,i) * fv(m,i) * ( prob(fa(m,i)) + prob(fb(m,i)) )
-                 cb = cmesh(k) + eaux(fa(m,i)) - eaux(fb(m,i))
+                 cb = czi * rmesh(k) + eaux(fa(m,i)) - eaux(fb(m,i))
                  ghub(k,i) = ghub(k,i) +  ob / cb
              enddo ! over m={1,fcounter(i)} loop
          enddo ! over k={1,mfreq} loop
@@ -2501,7 +2501,7 @@
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs
          do k=1,mfreq
-             shub(k,i) = cmesh(k) + mune - eimp(i) - one / ghub(k,i)
+             shub(k,i) = czi * mesh(k) + mune - eimp(i) - one / ghub(k,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
