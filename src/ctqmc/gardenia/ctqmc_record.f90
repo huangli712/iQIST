@@ -267,8 +267,10 @@
      use control, only : chmax, chgrd, lemax, legrd
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : ppleg, qqche
      use context, only : rank
      use context, only : mmat
+     use context, only : ftau
 
      implicit none
 
