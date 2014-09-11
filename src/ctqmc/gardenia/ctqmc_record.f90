@@ -880,7 +880,7 @@
      return
   end subroutine ctqmc_record_ochi
 
-!>>> record the two-particle green's function
+!!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
      use constants
      use control
