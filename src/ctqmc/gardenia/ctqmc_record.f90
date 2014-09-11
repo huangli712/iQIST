@@ -329,7 +329,8 @@
 
   contains
 
-!>>> record auxiliary correlation function using normal representation
+!!>>> cat_record_ftau1: record auxiliary correlation function using normal
+!!>>> representation
   subroutine cat_record_ftau1()
      implicit none
 
@@ -384,7 +385,8 @@
      return
   end subroutine cat_record_ftau1
 
-!>>> record auxiliary correlation function using legendre polynomial representation
+!!>>> cat_record_ftau2: record auxiliary correlation function using
+!!>>> legendre polynomial representation
   subroutine cat_record_ftau2()
      implicit none
 
@@ -439,7 +441,8 @@
      return
   end subroutine cat_record_ftau2
 
-!>>> record auxiliary correlation function using chebyshev polynomial representation
+!!>>> cat_record_ftau3: record auxiliary correlation function using
+!!>>> chebyshev polynomial representation
   subroutine cat_record_ftau3()
      implicit none
 
@@ -535,7 +538,7 @@
          hist(ckink) = hist(ckink) + 1
      else
          hist(mkink) = hist(mkink) + 1
-     endif
+     endif ! back if ( ckink > 0 ) block
 
      return
   end subroutine ctqmc_record_hist
@@ -738,7 +741,7 @@
      return
   end subroutine ctqmc_record_nmat
 
-!>>> record the spin-spin correlation function
+!!>>> ctqmc_record_schi: record the spin-spin correlation function
   subroutine ctqmc_record_schi()
      use constants
      use control
