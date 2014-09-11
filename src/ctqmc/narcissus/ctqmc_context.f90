@@ -800,58 +800,58 @@
      return
   end subroutine ctqmc_deallocate_memory_umat
 
-!>>> deallocate memory for mmat-related variables
-     subroutine ctqmc_deallocate_memory_mmat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_mmat: deallocate memory for mmat-related variables
+  subroutine ctqmc_deallocate_memory_mmat()
+     implicit none
 
-         if ( allocated(lspace) )  deallocate(lspace)
-         if ( allocated(rspace) )  deallocate(rspace)
+     if ( allocated(lspace) )  deallocate(lspace)
+     if ( allocated(rspace) )  deallocate(rspace)
 
-         if ( allocated(mmat)   )  deallocate(mmat  )
+     if ( allocated(mmat)   )  deallocate(mmat  )
 
-         if ( allocated(lsaves) )  deallocate(lsaves)
-         if ( allocated(rsaves) )  deallocate(rsaves)
+     if ( allocated(lsaves) )  deallocate(lsaves)
+     if ( allocated(rsaves) )  deallocate(rsaves)
 
-         if ( allocated(gmat)   )  deallocate(gmat  )
+     if ( allocated(gmat)   )  deallocate(gmat  )
 
-         return
-     end subroutine ctqmc_deallocate_memory_mmat
+     return
+  end subroutine ctqmc_deallocate_memory_mmat
 
-!>>> deallocate memory for gmat-related variables
-     subroutine ctqmc_deallocate_memory_gmat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_gmat: deallocate memory for gmat-related variables
+  subroutine ctqmc_deallocate_memory_gmat()
+     implicit none
 
-         if ( allocated(gtau) )    deallocate(gtau)
-         if ( allocated(ftau) )    deallocate(ftau)
+     if ( allocated(gtau) )    deallocate(gtau)
+     if ( allocated(ftau) )    deallocate(ftau)
 
-         if ( allocated(grnf) )    deallocate(grnf)
-         if ( allocated(frnf) )    deallocate(frnf)
+     if ( allocated(grnf) )    deallocate(grnf)
+     if ( allocated(frnf) )    deallocate(frnf)
 
-         return
-     end subroutine ctqmc_deallocate_memory_gmat
+     return
+  end subroutine ctqmc_deallocate_memory_gmat
 
-!>>> deallocate memory for wmat-related variables
-     subroutine ctqmc_deallocate_memory_wmat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_wmat: deallocate memory for wmat-related variables
+  subroutine ctqmc_deallocate_memory_wmat()
+     implicit none
 
-         if ( allocated(wtau) )    deallocate(wtau)
-         if ( allocated(htau) )    deallocate(htau)
-         if ( allocated(hsed) )    deallocate(hsed)
+     if ( allocated(wtau) )    deallocate(wtau)
+     if ( allocated(htau) )    deallocate(htau)
+     if ( allocated(hsed) )    deallocate(hsed)
 
-         if ( allocated(wssf) )    deallocate(wssf)
-         if ( allocated(hybf) )    deallocate(hybf)
+     if ( allocated(wssf) )    deallocate(wssf)
+     if ( allocated(hybf) )    deallocate(hybf)
 
-         return
-     end subroutine ctqmc_deallocate_memory_wmat
+     return
+  end subroutine ctqmc_deallocate_memory_wmat
 
-!>>> deallocate memory for smat-related variables
-     subroutine ctqmc_deallocate_memory_smat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_smat: deallocate memory for smat-related variables
+  subroutine ctqmc_deallocate_memory_smat()
+     implicit none
 
-         if ( allocated(sig1) )    deallocate(sig1)
-         if ( allocated(sig2) )    deallocate(sig2)
+     if ( allocated(sig1) )    deallocate(sig1)
+     if ( allocated(sig2) )    deallocate(sig2)
 
-         return
-     end subroutine ctqmc_deallocate_memory_smat
+     return
+  end subroutine ctqmc_deallocate_memory_smat
 
   end module context
