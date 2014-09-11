@@ -2219,11 +2219,12 @@
 !!>>> build self-energy function                                       <<<
 !!========================================================================
 
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make interpolation for self-energy
-! function between low frequency QMC data and high frequency Hubbard-I
-! approximation data, the full impurity green's function can be obtained by
-! using dyson's equation finally
+!!>>> ctqmc_make_hub1: build atomic green's function and self-energy
+!!>>> function using improved Hubbard-I approximation, and then make
+!!>>> interpolation for self-energy function between low frequency QMC
+!!>>> data and high frequency Hubbard-I approximation data, the full
+!!>>> impurity green's function can be obtained by using dyson's equation
+!!>>> finally
   subroutine ctqmc_make_hub1()
      use constants, only : dp, zero, one, czi, czero
 
@@ -2385,7 +2386,7 @@
 ! dump the ghub and shub, only for reference, only the master node can do it
      if ( myid == master ) then
          call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! build self-energy function at low frequency region
 !-------------------------------------------------------------------------
@@ -2476,14 +2477,16 @@
      return
   end subroutine ctqmc_make_hub1
 
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make forward fourier transformation
-! for impurity green's function and auxiliary correlation function. then
-! the final self-energy function is obtained by analytical formula.
+!!>>> ctqmc_make_hub2: build atomic green's function and self-energy
+!!>>> function using improved Hubbard-I approximation, and then make
+!!>>> forward fourier transformation for impurity green's function and
+!!>>> auxiliary correlation function. then the final self-energy function
+!!>>> is obtained by analytical formula.
   subroutine ctqmc_make_hub2()
-     use constants
-     use control
-     use context
+     use constants, only : dp
+
+     use control, only : norbs
+     use context, only : uumat
 
      implicit none
 
