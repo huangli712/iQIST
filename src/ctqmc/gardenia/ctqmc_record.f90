@@ -2483,10 +2483,20 @@
 !!>>> auxiliary correlation function. then the final self-energy function
 !!>>> is obtained by analytical formula.
   subroutine ctqmc_make_hub2()
-     use constants, only : dp
+     use constants, only : dp, zero, one, two, half, pi, czi, czero
 
-     use control, only : norbs
-     use context, only : uumat
+     use control, only : isort
+     use control, only : norbs, ncfgs
+     use control, only : lemax
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : mune, beta
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : prob
+     use context, only : eimp, uumat
+     use context, only : gtau, ftau, grnf, frnf
+     use context, only : sig2
 
      implicit none
 
@@ -2600,7 +2610,7 @@
                      value = value * permute
                  else
                      value = 0
-                 endif
+                 endif ! back if ( sc(m) == 1 ) block
 
                  if ( value /= 0 ) then
                      fcounter(m) = fcounter(m) + 1
@@ -2638,7 +2648,7 @@
 ! dump the ghub and shub, only for reference, only the master node can do it
      if ( myid == master ) then
          call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! build final impurity green's function and then transform them into
 ! matsubara frequency axis
@@ -2664,7 +2674,7 @@
          jaux = zero
          do k=1,mfreq
              ob = (two * k - one) * pi / two
-             call ctqmc_make_sbess(lemax-1, ob, jaux(k,:))
+             call s_sbess_jn(lemax-1, ob, jaux(k,:))
          enddo ! over k={1,mfreq} loop
 
 ! build unitary transformation matrix: taux
