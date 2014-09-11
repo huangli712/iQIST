@@ -441,148 +441,168 @@
      public :: ctqmc_deallocate_memory_wmat
      public :: ctqmc_deallocate_memory_smat
 
-     contains ! encapsulated functionality
+  contains ! encapsulated functionality
 
-!=========================================================================
-!>>> allocate memory subroutines                                       <<<
-!=========================================================================
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
 
-!>>> allocate memory for clur-related variables
-     subroutine ctqmc_allocate_memory_clur()
-         implicit none
+!!>>> ctqmc_allocate_memory_clur: allocate memory for clur-related variables
+  subroutine ctqmc_allocate_memory_clur()
+     implicit none
 
 ! loop index
-         integer :: i
+     integer :: i
 
 ! allocate memory
-         allocate(index_s(mkink,norbs),     stat=istat)
-         allocate(index_e(mkink,norbs),     stat=istat)
+     allocate(index_s(mkink,norbs),     stat=istat)
+     allocate(index_e(mkink,norbs),     stat=istat)
 
-         allocate(time_s(mkink,norbs),      stat=istat)
-         allocate(time_e(mkink,norbs),      stat=istat)
+     allocate(time_s(mkink,norbs),      stat=istat)
+     allocate(time_e(mkink,norbs),      stat=istat)
 
-         allocate(exp_s(nfreq,mkink,norbs), stat=istat)
-         allocate(exp_e(nfreq,mkink,norbs), stat=istat)
+     allocate(exp_s(nfreq,mkink,norbs), stat=istat)
+     allocate(exp_e(nfreq,mkink,norbs), stat=istat)
 
-         allocate(empty_s(norbs),           stat=istat)
-         allocate(empty_e(norbs),           stat=istat)
+     allocate(empty_s(norbs),           stat=istat)
+     allocate(empty_e(norbs),           stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         index_s = 0
-         index_e = 0
+     index_s = 0
+     index_e = 0
 
-         time_s  = zero
-         time_e  = zero
+     time_s  = zero
+     time_e  = zero
 
-         exp_s   = czero
-         exp_e   = czero
+     exp_s   = czero
+     exp_e   = czero
 
-         do i=1,norbs
-             empty_s(i) = istack_create(mkink)
-             empty_e(i) = istack_create(mkink)
-         enddo ! over i={1,norbs} loop
+     do i=1,norbs
+         call istack_create(empty_s(i), mkink)
+         call istack_create(empty_e(i), mkink)
+     enddo ! over i={1,norbs} loop
 
-         return
-     end subroutine ctqmc_allocate_memory_clur
+     return
+  end subroutine ctqmc_allocate_memory_clur
 
-!>>> allocate memory for umat-related variables
-     subroutine ctqmc_allocate_memory_umat()
-         implicit none
+!!>>> ctqmc_allocate_memory_mesh: allocate memory for mesh-related variables
+  subroutine ctqmc_allocate_memory_mesh()
+     implicit none
 
 ! allocate memory
-         allocate(hist(mkink),        stat=istat)
-         allocate(rank(norbs),        stat=istat)
-         allocate(stts(norbs),        stat=istat)
+     allocate(tmesh(ntime),       stat=istat)
+     allocate(rmesh(mfreq),       stat=istat)
 
-         allocate(symm(norbs),        stat=istat)
+     allocate(pmesh(legrd),       stat=istat)
+     allocate(qmesh(chgrd),       stat=istat)
 
-         allocate(eimp(norbs),        stat=istat)
-
-         allocate(ktau(ntime),        stat=istat)
-         allocate(ksed(ntime),        stat=istat)
-
-         allocate(prob(ncfgs),        stat=istat)
-         allocate(paux(  4  ),        stat=istat)
-         allocate(schi(ntime),        stat=istat)
-         allocate(ochi(ntime),        stat=istat)
-         allocate(nmat(norbs),        stat=istat)
-
-         allocate(sschi(ntime,nband), stat=istat)
-         allocate(oochi(ntime,norbs), stat=istat)
-         allocate(nnmat(norbs,norbs), stat=istat)
-         allocate(uumat(norbs,norbs), stat=istat)
-
-         allocate(g2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-         allocate(g2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-         allocate(h2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-         allocate(h2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-
-         allocate(ppleg(legrd,lemax), stat=istat)
-         allocate(qqche(chgrd,chmax), stat=istat)
-
-         allocate(pmesh(legrd),       stat=istat)
-         allocate(qmesh(chgrd),       stat=istat)
-
-         allocate(tmesh(ntime),       stat=istat)
-         allocate(rmesh(mfreq),       stat=istat)
-
-         allocate(cmesh(mfreq),       stat=istat)
-
-         allocate(unity(norbs,norbs), stat=istat)
+     allocate(ppleg(legrd,lemax), stat=istat)
+     allocate(qqche(chgrd,chmax), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_mesh','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         hist  = 0
-         rank  = 0
-         stts  = 0
+     tmesh = zero
+     rmesh = zero
 
-         symm  = 0
+     pmesh = zero
+     qmesh = zero
 
-         eimp  = zero
+     ppleg = zero
+     qqche = zero
 
-         ktau  = zero
-         ksed  = zero
+     return
+  end subroutine ctqmc_allocate_memory_mesh
 
-         prob  = zero
-         paux  = zero
-         schi  = zero
-         ochi  = zero
-         nmat  = zero
+!!>>> ctqmc_allocate_memory_meat: allocate memory for meat-related variables
+  subroutine ctqmc_allocate_memory_meat()
+     implicit none
 
-         sschi = zero
-         oochi = zero
-         nnmat = zero
-         uumat = zero
+! allocate memory
+     allocate(hist(mkink),        stat=istat)
 
-         g2_re = zero
-         g2_im = zero
-         h2_re = zero
-         h2_im = zero
+     allocate(paux(  8  ),        stat=istat)
+     allocate(prob(ncfgs),        stat=istat)
 
-         ppleg = zero
-         qqche = zero
+     allocate(nmat(norbs),        stat=istat)
+     allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(schi(ntime),        stat=istat)
+     allocate(sschi(ntime,nband), stat=istat)
+     allocate(ochi(ntime),        stat=istat)
+     allocate(oochi(ntime,norbs), stat=istat)
 
-         pmesh = zero
-         qmesh = zero
+     allocate(g2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(g2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(h2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(h2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
 
-         tmesh = zero
-         rmesh = zero
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_meat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
-         cmesh = czero
+! initialize them
+     hist  = 0
 
-         unity = czero
+     paux  = zero
+     prob  = zero
 
-         return
-     end subroutine ctqmc_allocate_memory_umat
+     nmat  = zero
+     nnmat = zero
+     schi  = zero
+     sschi = zero
+     ochi  = zero
+     oochi = zero
+
+     g2_re = zero
+     g2_im = zero
+     h2_re = zero
+     h2_im = zero
+
+     return
+  end subroutine ctqmc_allocate_memory_meat
+
+!!>>> ctqmc_allocate_memory_umat: allocate memory for umat-related variables
+  subroutine ctqmc_allocate_memory_umat()
+     implicit none
+
+! allocate memory
+     allocate(rank(norbs),        stat=istat)
+     allocate(stts(norbs),        stat=istat)
+
+     allocate(symm(norbs),        stat=istat)
+
+     allocate(eimp(norbs),        stat=istat)
+     allocate(ktau(ntime),        stat=istat)
+     allocate(ksed(ntime),        stat=istat)
+     allocate(uumat(norbs,norbs), stat=istat)
+
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize them
+     rank  = 0
+     stts  = 0
+
+     symm  = 0
+
+     eimp  = zero
+     ktau  = zero
+     ksed  = zero
+     uumat = zero
+
+     return
+  end subroutine ctqmc_allocate_memory_umat
 
 !>>> allocate memory for mmat-related variables
      subroutine ctqmc_allocate_memory_mmat()
