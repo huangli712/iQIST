@@ -814,10 +814,12 @@
 
 !!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
   subroutine ctqmc_record_ochi()
-     use constants, only : dp
+     use constants, only : dp, zero
 
      use control, only : norbs
+     use control, only : ntime
      use context, only : tmesh
+     use context, only : ochi, oochi
 
      implicit none
 
