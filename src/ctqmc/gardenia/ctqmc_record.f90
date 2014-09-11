@@ -2084,10 +2084,13 @@
   end subroutine cat_make_gtau3
   end subroutine ctqmc_make_gtau
 
-!>>> build auxiliary correlation function using orthogonal polynomial representation
+!!>>> ctqmc_make_ftau: build auxiliary correlation function using
+!!>>> orthogonal polynomial representation
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : ntime
      use context, only : ppleg, qqche
 
      implicit none
