@@ -2501,7 +2501,7 @@
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs
          do k=1,mfreq
-             shub(k,i) = czi * mesh(k) + mune - eimp(i) - one / ghub(k,i)
+             shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
