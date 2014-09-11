@@ -23,7 +23,7 @@
 !!!           s_mix_z
 !!!           s_legendre
 !!!           s_chebyshev
-!!! source  : s_math.f90
+!!! source  : s_vector.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
