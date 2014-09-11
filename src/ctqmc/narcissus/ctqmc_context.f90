@@ -604,113 +604,113 @@
      return
   end subroutine ctqmc_allocate_memory_umat
 
-!>>> allocate memory for mmat-related variables
-     subroutine ctqmc_allocate_memory_mmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_mmat: allocate memory for mmat-related variables
+  subroutine ctqmc_allocate_memory_mmat()
+     implicit none
 
 ! allocate memory
-         allocate(lspace(mkink,norbs),     stat=istat)
-         allocate(rspace(mkink,norbs),     stat=istat)
+     allocate(lspace(mkink,norbs),     stat=istat)
+     allocate(rspace(mkink,norbs),     stat=istat)
 
-         allocate(mmat(mkink,mkink,norbs), stat=istat)
+     allocate(mmat(mkink,mkink,norbs), stat=istat)
 
-         allocate(lsaves(nfreq,norbs),     stat=istat)
-         allocate(rsaves(nfreq,norbs),     stat=istat)
+     allocate(lsaves(nfreq,norbs),     stat=istat)
+     allocate(rsaves(nfreq,norbs),     stat=istat)
 
-         allocate(gmat(nfreq,norbs,norbs), stat=istat)
+     allocate(gmat(nfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         lspace = zero
-         rspace = zero
+     lspace = zero
+     rspace = zero
 
-         mmat   = zero
+     mmat   = zero
 
-         lsaves = czero
-         rsaves = czero
+     lsaves = czero
+     rsaves = czero
 
-         gmat   = czero
+     gmat   = czero
 
-         return
-     end subroutine ctqmc_allocate_memory_mmat
+     return
+  end subroutine ctqmc_allocate_memory_mmat
 
-!>>> allocate memory for gmat-related variables
-     subroutine ctqmc_allocate_memory_gmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_gmat: allocate memory for gmat-related variables
+  subroutine ctqmc_allocate_memory_gmat()
+     implicit none
 
 ! allocate memory
-         allocate(gtau(ntime,norbs,norbs), stat=istat)
-         allocate(ftau(ntime,norbs,norbs), stat=istat)
+     allocate(gtau(ntime,norbs,norbs), stat=istat)
+     allocate(ftau(ntime,norbs,norbs), stat=istat)
 
-         allocate(grnf(mfreq,norbs,norbs), stat=istat)
-         allocate(frnf(mfreq,norbs,norbs), stat=istat)
+     allocate(grnf(mfreq,norbs,norbs), stat=istat)
+     allocate(frnf(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         gtau = zero
-         ftau = zero
+     gtau = zero
+     ftau = zero
 
-         grnf = czero
-         frnf = czero
+     grnf = czero
+     frnf = czero
 
-         return
-     end subroutine ctqmc_allocate_memory_gmat
+     return
+  end subroutine ctqmc_allocate_memory_gmat
 
-!>>> allocate memory for wmat-related variables
-     subroutine ctqmc_allocate_memory_wmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_wmat: allocate memory for wmat-related variables
+  subroutine ctqmc_allocate_memory_wmat()
+     implicit none
 
 ! allocate memory
-         allocate(wtau(ntime,norbs,norbs), stat=istat)
-         allocate(htau(ntime,norbs,norbs), stat=istat)
-         allocate(hsed(ntime,norbs,norbs), stat=istat)
+     allocate(wtau(ntime,norbs,norbs), stat=istat)
+     allocate(htau(ntime,norbs,norbs), stat=istat)
+     allocate(hsed(ntime,norbs,norbs), stat=istat)
 
-         allocate(wssf(mfreq,norbs,norbs), stat=istat)
-         allocate(hybf(mfreq,norbs,norbs), stat=istat)
+     allocate(wssf(mfreq,norbs,norbs), stat=istat)
+     allocate(hybf(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         wtau = zero
-         htau = zero
-         hsed = zero
+     wtau = zero
+     htau = zero
+     hsed = zero
 
-         wssf = czero
-         hybf = czero
+     wssf = czero
+     hybf = czero
 
-         return
-     end subroutine ctqmc_allocate_memory_wmat
+     return
+  end subroutine ctqmc_allocate_memory_wmat
 
-!>>> allocate memory for smat-related variables
-     subroutine ctqmc_allocate_memory_smat()
-         implicit none
+!!>>> ctqmc_allocate_memory_smat: allocate memory for smat-related variables
+  subroutine ctqmc_allocate_memory_smat()
+     implicit none
 
 ! allocate memory
-         allocate(sig1(mfreq,norbs,norbs), stat=istat)
-         allocate(sig2(mfreq,norbs,norbs), stat=istat)
+     allocate(sig1(mfreq,norbs,norbs), stat=istat)
+     allocate(sig2(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         sig1 = czero
-         sig2 = czero
+     sig1 = czero
+     sig2 = czero
 
-         return
-     end subroutine ctqmc_allocate_memory_smat
+     return
+  end subroutine ctqmc_allocate_memory_smat
 
 !=========================================================================
 !>>> deallocate memory subroutines                                     <<<
