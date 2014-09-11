@@ -1966,7 +1966,7 @@
 
   contains
 
-!>>> build the integral kernel function
+!!>>> cat_make_kernel: build the integral kernel function
   subroutine cat_make_kernel(kdim, kern)
      implicit none
 
@@ -2014,7 +2014,8 @@
      return
   end subroutine cat_make_kernel
 
-!>>> build impurity green's function using normal representation
+!!>>> cat_make_gtau1: build impurity green's function using normal
+!!>>> representation
   subroutine cat_make_gtau1()
      implicit none
 
@@ -2028,7 +2029,8 @@
      return
   end subroutine cat_make_gtau1
 
-!>>> build impurity green's function using legendre polynomial representation
+!!>>> cat_make_gtau2: build impurity green's function using legendre
+!!>>> polynomial representation
   subroutine cat_make_gtau2()
      implicit none
 
@@ -2054,7 +2056,8 @@
      return
   end subroutine cat_make_gtau2
 
-!>>> build impurity green's function using chebyshev polynomial representation
+!!>>> cat_make_gtau3: build impurity green's function using chebyshev
+!!>>> polynomial representation
   subroutine cat_make_gtau3()
      implicit none
 
