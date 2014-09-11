@@ -1,32 +1,28 @@
-!-------------------------------------------------------------------------
-! project : narcissus
-! program : control    module
-! source  : ctqmc_control.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/15/2009 by li huang
-!           09/20/2009 by li huang
-!           11/01/2009 by li huang
-!           12/01/2009 by li huang
-!           02/23/2010 by li huang
-! purpose : define global control parameters for hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver and dynamical mean field theory (DMFT) self-
-!           consistent engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : narcissus
+!!! program : control    module
+!!! source  : ctqmc_control.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/15/2009 by li huang
+!!!           02/23/2010 by li huang
+!!!           09/11/2014 by li huang
+!!! purpose : define global control parameters for hybridization expansion
+!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
+!!!           impurity solver and dynamical mean field theory (DMFT) self-
+!!!           consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
   module control
      use constants, only : dp
 
      implicit none
 
-!=========================================================================
-!>>> integer variables                                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> integer variables                                                <<<
+!!========================================================================
 
 ! control flag: running mode
 ! if isscf == 1, one-shot non-self-consistent scheme, used in local density
@@ -187,9 +183,9 @@
 ! note: the measure period for ftau is also controlled by ncarlo parameter.
      integer, public, save :: ncarlo = 10
 
-!=========================================================================
-!>>> real variables                                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> real variables                                                   <<<
+!!========================================================================
 
 ! average Coulomb interaction
      real(dp), public, save :: U     = 4.00_dp
@@ -215,8 +211,10 @@
 ! screening frequency ( or frequency for einstein phonons )
      real(dp), public, save :: wc    = 3.00_dp
 
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! chemical potential or fermi level
-! note: it should be replaced with eimp
+! note: it should/can be replaced with eimp
      real(dp), public, save :: mune  = 2.00_dp
 
 ! inversion of temperature
@@ -228,9 +226,9 @@
 ! mixing parameter for dynamical mean field theory self-consistent engine
      real(dp), public, save :: alpha = 0.70_dp
 
-!=========================================================================
-!>>> MPI related common variables                                      <<<
-!=========================================================================
+!!========================================================================
+!!>>> MPI related common variables                                     <<<
+!!========================================================================
 
 ! number of processors: default value 1
      integer, public, save :: nprocs = 1
