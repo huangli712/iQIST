@@ -1,4 +1,4 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : azalea
 !!! program : ctqmc_impurity_solver
 !!!           ctqmc_diagram_warmming
@@ -17,7 +17,7 @@
 !!!           solver
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
 !!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
@@ -391,10 +391,9 @@
 
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
-
      prob  = prob_mpi  * real(ncarlo) / real(nsweep)
-     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
 
+     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,norbs
              nnmat(n,m) = nnmat_mpi(n,m)   * real(nmonte) / real(nsweep)

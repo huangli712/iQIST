@@ -1,72 +1,65 @@
-!-------------------------------------------------------------------------
-! project : gardenia
-! program : ctqmc_record_gtau
-!           ctqmc_record_ftau
-!           ctqmc_record_grnf
-!           ctqmc_record_hist
-!           ctqmc_record_nmat
-!           ctqmc_record_schi
-!           ctqmc_record_ochi
-!           ctqmc_record_twop
-!           ctqmc_record_vrtx
-!           ctqmc_record_prob <<<---
-!           ctqmc_reduce_gtau
-!           ctqmc_reduce_ftau
-!           ctqmc_reduce_grnf
-!           ctqmc_reduce_hist
-!           ctqmc_reduce_nmat
-!           ctqmc_reduce_schi
-!           ctqmc_reduce_ochi
-!           ctqmc_reduce_twop
-!           ctqmc_reduce_vrtx
-!           ctqmc_reduce_prob <<<---
-!           ctqmc_symm_nmat
-!           ctqmc_symm_gtau
-!           ctqmc_symm_grnf
-!           ctqmc_smth_sigf   <<<---
-!           ctqmc_make_gtau
-!           ctqmc_make_ftau   <<<---
-!           ctqmc_make_hub1
-!           ctqmc_make_hub2   <<<---
-! source  : ctqmc_record.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/25/2009 by li huang
-!           09/27/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/03/2009 by li huang
-!           11/10/2009 by li huang
-!           11/19/2009 by li huang
-!           11/30/2009 by li huang
-!           12/06/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/22/2009 by li huang
-!           12/26/2009 by li huang
-!           12/29/2009 by li huang
-!           01/14/2010 by li huang
-!           02/01/2010 by li huang
-!           02/24/2010 by li huang
-!           02/27/2010 by li huang
-!           09/29/2010 by li huang
-! purpose : measure, record, and postprocess the key observables produced
-!           by the hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : gardenia
+!!! program : ctqmc_record_gtau
+!!!           ctqmc_record_ftau
+!!!           ctqmc_record_grnf
+!!!           ctqmc_record_hist
+!!!           ctqmc_record_prob
+!!!           ctqmc_record_nmat
+!!!           ctqmc_record_schi
+!!!           ctqmc_record_ochi
+!!!           ctqmc_record_twop
+!!!           ctqmc_record_vrtx <<<---
+!!!           ctqmc_reduce_gtau
+!!!           ctqmc_reduce_ftau
+!!!           ctqmc_reduce_grnf
+!!!           ctqmc_reduce_hist
+!!!           ctqmc_reduce_prob
+!!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_schi
+!!!           ctqmc_reduce_ochi
+!!!           ctqmc_reduce_twop
+!!!           ctqmc_reduce_vrtx <<<---
+!!!           ctqmc_symm_nmat
+!!!           ctqmc_symm_gtau
+!!!           ctqmc_symm_grnf
+!!!           ctqmc_smth_sigf   <<<---
+!!!           ctqmc_make_gtau
+!!!           ctqmc_make_ftau   <<<---
+!!!           ctqmc_make_hub1
+!!!           ctqmc_make_hub2   <<<---
+!!! source  : ctqmc_record.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           09/29/2010 by li huang
+!!!           09/10/2014 by li huang
+!!! purpose : measure, record, and postprocess the important observables
+!!!           produced by the hybridization expansion version continuous
+!!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> record the impurity green's function in imaginary time axis
+!!========================================================================
+!!>>> measure physical observables                                     <<<
+!!========================================================================
+
+!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
+!!>>> time axis
   subroutine ctqmc_record_gtau()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, pi
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : ppleg, qqche
+     use context, only : rank
+     use context, only : mmat
+     use context, only : gtau
 
      implicit none
 
@@ -119,7 +112,8 @@
 
   contains
 
-!>>> record impurity green's function using normal representation
+!!>>> cat_record_gtau1: record impurity green's function using normal
+!!>>> representation
   subroutine cat_record_gtau1()
      implicit none
 
@@ -165,7 +159,8 @@
      return
   end subroutine cat_record_gtau1
 
-!>>> record impurity green's function using legendre polynomial representation
+!!>>> cat_record_gtau2: record impurity green's function using legendre
+!!>>> polynomial representation
   subroutine cat_record_gtau2()
      implicit none
 
@@ -212,7 +207,8 @@
      return
   end subroutine cat_record_gtau2
 
-!>>> record impurity green's function using chebyshev polynomial representation
+!!>>> cat_record_gtau3: record impurity green's function using chebyshev
+!!>>> polynomial representation
   subroutine cat_record_gtau3()
      implicit none
 
@@ -260,7 +256,8 @@
   end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
-!>>> record the auxiliary correlation function in imaginary time axis
+!!>>> ctqmc_record_ftau: record the auxiliary correlation function in
+!!>>> imaginary time axis
   subroutine ctqmc_record_ftau()
      use constants
      use control
@@ -489,11 +486,13 @@
   end subroutine cat_record_ftau3
   end subroutine ctqmc_record_ftau
 
-!>>> record the impurity green's function in matsubara frequency space
+!!>>> ctqmc_record_grnf: record the impurity green's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_record_grnf()
-     use constants
-     use control
-     use context
+     use control, only : norbs
+     use control, only : nfreq
+     use context, only : gmat
+     use context, only : grnf
 
      implicit none
 
@@ -514,9 +513,11 @@
      return
   end subroutine ctqmc_record_grnf
 
-!>>> record the histogram of perturbation expansion series
+!!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
-     use context
+     use control, only : mkink
+     use context, only : ckink
+     use context, only : hist
 
      implicit none
 
@@ -530,12 +531,59 @@
      return
   end subroutine ctqmc_record_hist
 
-!>>> record the occupation matrix, double occupation matrix, and auxiliary
-! physical observables simulataneously
+!!>>> ctqmc_record_prob: record the probability of atomic states
+  subroutine ctqmc_record_prob()
+     use constants, only : one
+
+     use control, only : norbs
+     use context, only : prob
+     use context, only : stts
+
+     implicit none
+
+! local variables
+! current flavor channel
+     integer :: flvr
+
+! atomic state index
+     integer :: pstat
+
+! current atomic state for segment representation
+     integer :: state(norbs)
+
+! generate current atomic state
+     do flvr=1,norbs
+         select case ( stts(flvr) )
+
+             case (0:1)
+                 state(flvr) = 0
+
+             case (2:3)
+                 state(flvr) = 1
+
+         end select
+     enddo ! over flvr={1,norbs} loop
+
+! convert atomic state array to index
+     call ctqmc_make_state(norbs, pstat, state)
+
+! accumulate the data
+     prob(pstat) = prob(pstat) + one
+
+     return
+  end subroutine ctqmc_record_prob
+
+!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
+!!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : nband, norbs
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : paux, nmat, nnmat
+     use context, only : rank, stts, uumat
 
      implicit none
 
@@ -639,6 +687,16 @@
 
          nnmat(flvr,:) = nnmat(flvr,:) + ovlp(flvr,:) / beta
      enddo ! over flvr={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^2>
+!-------------------------------------------------------------------------
+     paux(6) = paux(6) + ( sum(sgmt) / beta )**2
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^1>
+!-------------------------------------------------------------------------
+     paux(5) = paux(5) + sum(sgmt) / beta
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
@@ -1060,52 +1118,19 @@
      return
   end subroutine ctqmc_record_vrtx
 
-!>>> record the probability of atomic states
-  subroutine ctqmc_record_prob()
-     use constants
-     use control
-     use context
+!!========================================================================
+!!>>> reduce physical observables                                      <<<
+!!========================================================================
 
-     implicit none
-
-! local variables
-! current flavor channel
-     integer :: flvr
-
-! atomic state index
-     integer :: pstat
-
-! current atomic state for segment representation
-     integer :: state(norbs)
-
-! generate current atomic state
-     do flvr=1,norbs
-         select case ( stts(flvr) )
-
-             case (0:1)
-                 state(flvr) = 0
-
-             case (2:3)
-                 state(flvr) = 1
-
-         end select
-     enddo ! over flvr={1,norbs} loop
-
-! convert atomic state array to index
-     call ctqmc_make_state(norbs, pstat, state)
-
-! accumulate the data
-     prob(pstat) = prob(pstat) + one
-
-     return
-  end subroutine ctqmc_record_prob
-
-!>>> reduce the gtau from all children processes
+!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : gtau
 
      implicit none
 
@@ -1174,12 +1199,15 @@
      return
   end subroutine ctqmc_reduce_ftau
 
-!>>> reduce the grnf from all children processes
+!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi)
-     use constants
-     use context
+     use constants, only : dp, czero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nprocs
+     use context, only : grnf
 
      implicit none
 
@@ -1188,7 +1216,7 @@
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
 
 ! initialize grnf_mpi
-     grnf_mpi = zero
+     grnf_mpi = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1211,14 +1239,15 @@
      return
   end subroutine ctqmc_reduce_grnf
 
-!>>> reduce the hist from all children processes
-! note: since hist_mpi and hist are integer (kind=4) type, it is important
-! to avoid data overflow in them
+!!>>> ctqmc_reduce_hist: reduce the hist from all children processes
+!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is
+!!>>> important to avoid data overflow in them
   subroutine ctqmc_reduce_hist(hist_mpi)
-     use constants
-     use context
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : mkink
+     use control, only : nprocs
+     use context, only : hist
 
      implicit none
 
@@ -1250,12 +1279,53 @@
      return
   end subroutine ctqmc_reduce_hist
 
-!>>> reduce the nmat and nnmat from all children processes
-  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
-     use constants
-     use context
+!!>>> ctqmc_reduce_prob: reduce the prob from all children processes
+  subroutine ctqmc_reduce_prob(prob_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : ncfgs
+     use control, only : nprocs
+     use context, only : prob
+
+     implicit none
+
+! external arguments
+! probability of atomic states
+     real(dp), intent(out) :: prob_mpi(ncfgs)
+
+! initialize prob_mpi
+     prob_mpi = zero
+
+! build prob_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(prob, prob_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     prob_mpi = prob
+
+# endif /* MPI */
+
+! calculate the average
+     prob_mpi = prob_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_prob
+
+!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
+  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : nmat, nnmat
 
      implicit none
 
@@ -1470,47 +1540,16 @@
      return
   end subroutine ctqmc_reduce_vrtx
 
-!>>> reduce the prob from all children processes
-  subroutine ctqmc_reduce_prob(prob_mpi)
-     use constants
-     use context
+!!========================================================================
+!!>>> symmetrize physical observables                                  <<<
+!!========================================================================
 
-     use mmpi
-
-     implicit none
-
-! external arguments
-! probability of atomic states
-     real(dp), intent(out) :: prob_mpi(ncfgs)
-
-! initialize prob_mpi
-     prob_mpi = zero
-
-! build prob_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     call mp_allreduce(prob, prob_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     prob_mpi = prob
-
-# endif /* MPI */
-
-! calculate the average
-     prob_mpi = prob_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_prob
-
-!>>> symmetrize the nmat according to symm vector
+!!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
 
      implicit none
 
@@ -1574,11 +1613,14 @@
      return
   end subroutine ctqmc_symm_nmat
 
-!>>> symmetrize the gtau according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_gtau: symmetrize the gtau according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_gtau(symm, gtau)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -1649,11 +1691,14 @@
      return
   end subroutine ctqmc_symm_gtau
 
-!>>> symmetrize the grnf according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_grnf: symmetrize the grnf according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_grnf(symm, grnf)
-     use constants
-     use control
+     use constants, only : dp, two, czero
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -1724,10 +1769,12 @@
      return
   end subroutine ctqmc_symm_grnf
 
-!>>> smooth impurity self-energy function in low frequency region
+!!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
+!!>>> frequency region
   subroutine ctqmc_smth_sigf(sigf)
-     use constants
-     use control
+     use constants, only : dp, czero
+
+     use control, only : nfreq
 
      implicit none
 
@@ -2102,15 +2149,29 @@
   end subroutine cat_make_ftau3
   end subroutine ctqmc_make_ftau
 
+!!========================================================================
+!!>>> build self-energy function                                       <<<
+!!========================================================================
+
 !>>> build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
 ! function between low frequency QMC data and high frequency Hubbard-I
 ! approximation data, the full impurity green's function can be obtained by
 ! using dyson's equation finally
   subroutine ctqmc_make_hub1()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, czi, czero
+
+     use control, only : norbs, ncfgs
+     use control, only : mfreq
+     use control, only : nfreq
+     use control, only : mune
+     use control, only : myid, master
+     use context, only : rmesh
+     use context, only : prob
+     use context, only : eimp, uumat
+     use context, only : grnf
+     use context, only : hybf
+     use context, only : sig2
 
      implicit none
 
@@ -2219,12 +2280,12 @@
                      value = value * permute
                  else
                      value = 0
-                 endif
+                 endif ! back if ( sc(m) == 1 ) block
 
                  if ( value /= 0 ) then
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
-                         call ctqmc_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
+                         call s_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
                      endif
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
@@ -2475,7 +2536,7 @@
                  if ( value /= 0 ) then
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
-                         call ctqmc_print_error('ctqmc_make_hub2','non-zero elements exceed limit')
+                         call s_print_error('ctqmc_make_hub2','non-zero elements exceed limit')
                      endif
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
