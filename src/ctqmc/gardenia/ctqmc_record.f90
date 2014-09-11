@@ -1001,11 +1001,17 @@
      return
   end subroutine ctqmc_record_twop
 
-!>>> record the vertex function
+!!>>> ctqmc_record_vrtx: record the fake vertex function
   subroutine ctqmc_record_vrtx()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, half, pi, czi, czero
+
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : g2_re, g2_im, h2_re, h2_im
+     use context, only : rank, uumat
+     use context, only : mmat
 
      implicit none
 
