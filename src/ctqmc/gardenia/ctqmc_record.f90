@@ -1888,7 +1888,12 @@
      return
   end subroutine ctqmc_smth_sigf
 
-!>>> build imaginary green's function using orthogonal polynomial representation
+!!========================================================================
+!!>>> postprocess physical observables                                 <<<
+!!========================================================================
+
+!!>>> ctqmc_make_gtau: build imaginary green's function using orthogonal
+!!>>> polynomial representation
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
      use constants
      use control
