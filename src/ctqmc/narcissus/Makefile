@@ -31,8 +31,28 @@ default: all
 
 all: exe
 
-ctqmc: $(objects)
+api:
+	cp ../api/api.mod .
+	cp ../api/ctqmc_api.o .
+
+cssl:
+	cp ../../common/libMM.a .
+
+csml:
+	cp ../../common/constants.mod .
+	cp ../../common/mmpi.mod .
+	cp ../../common/spring.mod .
+	cp ../../common/stack.mod .
+	cp ../../common/parser.mod .
+	cp ../../common/linkedlist.mod .
+
+exe: api cssl csml ctqmc_exe
+ctqmc_exe: $(objects)
 	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
+
+lib: api cssl csml ctqmc_lib
+ctqmc_lib: $(objects)
+	$(ARCHIVER) libctqmc.a $(objects)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -41,6 +61,8 @@ clean:
 	rm -f *.mod
 	rm -f *.o
 	rm -f ctqmc
+	rm -f libctqmc.a
+	rm -f libMM.a
 
 clean-dat:
 	rm -f *.dat
