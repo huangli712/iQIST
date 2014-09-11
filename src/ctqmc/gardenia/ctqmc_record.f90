@@ -743,9 +743,12 @@
 
 !!>>> ctqmc_record_schi: record the spin-spin correlation function
   subroutine ctqmc_record_schi()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : nband, norbs
+     use control, only : ntime
+     use context, only : tmesh
+     use context, only : schi, sschi
 
      implicit none
 
