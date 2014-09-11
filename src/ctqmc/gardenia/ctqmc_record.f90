@@ -1491,12 +1491,16 @@
      return
   end subroutine ctqmc_reduce_ochi
 
-!>>> reduce the g2_re_mpi and g2_im_mpi from all children processes
+!!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from all
+!!>>> children processes
   subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : g2_re, g2_im
 
      implicit none
 
@@ -1535,12 +1539,16 @@
      return
   end subroutine ctqmc_reduce_twop
 
-!>>> reduce the h2_re_mpi and h2_im_mpi from all children processes
+!!>>> ctqmc_reduce_vrtx: reduce the h2_re_mpi and h2_im_mpi from all
+!!>>> children processes
   subroutine ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : h2_re, h2_im
 
      implicit none
 
