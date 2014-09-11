@@ -1399,10 +1399,13 @@
 
 !>>> reduce the schi and sschi from all children processes
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : nband
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : schi, sschi
 
      implicit none
 
