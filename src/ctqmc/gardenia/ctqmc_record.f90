@@ -2087,10 +2087,13 @@
 !!>>> ctqmc_make_ftau: build auxiliary correlation function using
 !!>>> orthogonal polynomial representation
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
-     use constants, only : dp
+     use constants, only : dp, zero, two
 
+     use control, only : isort
      use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
      use control, only : ntime
+     use control, only : beta
      use context, only : ppleg, qqche
 
      implicit none
