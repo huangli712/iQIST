@@ -259,9 +259,15 @@
 !!>>> ctqmc_record_ftau: record the auxiliary correlation function in
 !!>>> imaginary time axis
   subroutine ctqmc_record_ftau()
-     use constants, only : dp
+     use constants, only : dp, zero, two, pi
 
+     use control, only : isort
      use control, only : norbs
+     use control, only : ntime
+     use control, only : chmax, chgrd
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
      use context, only : mmat
 
      implicit none
