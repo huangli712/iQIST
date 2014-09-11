@@ -1895,8 +1895,10 @@
 !!>>> ctqmc_make_gtau: build imaginary green's function using orthogonal
 !!>>> polynomial representation
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : ntime
      use context, only : ppleg, qqche
 
      implicit none
