@@ -2674,7 +2674,7 @@
          jaux = zero
          do k=1,mfreq
              ob = (two * k - one) * pi / two
-             call s_sbess_jn(lemax-1, ob, jaux(k,:))
+             call s_sbessel(lemax-1, ob, jaux(k,:))
          enddo ! over k={1,mfreq} loop
 
 ! build unitary transformation matrix: taux
