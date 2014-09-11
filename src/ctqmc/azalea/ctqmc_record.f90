@@ -153,7 +153,7 @@
          hist(ckink) = hist(ckink) + 1
      else
          hist(mkink) = hist(mkink) + 1
-     endif
+     endif ! back if ( ckink > 0 ) block
 
      return
   end subroutine ctqmc_record_hist
