@@ -263,15 +263,15 @@
 
      use control, only : isort
      use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
      use control, only : ntime
-     use control, only : chmax, chgrd, lemax, legrd
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
      use context, only : ppleg, qqche
      use context, only : rank
      use context, only : mmat
      use context, only : ftau
-
+     
      implicit none
 
 ! local variables
