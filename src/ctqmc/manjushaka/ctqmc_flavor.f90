@@ -2765,7 +2765,6 @@
      if ( .not. pass ) then
         return
      endif
-
 ! store the diagonal elements of final product in ddmat(:,1)
      ddmat(:,1) = zero
      do i=1, nalive_sect
