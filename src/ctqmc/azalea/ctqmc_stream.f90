@@ -36,10 +36,10 @@
 !!========================================================================
 !!>>> setup general control flags                                      <<<
 !!========================================================================
-     isscf  = 1            ! non-self-consistent (1) or self-consistent mode (2)
+     isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
-     isbin  = 1            ! without binning     (1) or with binning    mode (2)
+     isbin  = 2            ! without binning     (1) or with binning    mode (2)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
