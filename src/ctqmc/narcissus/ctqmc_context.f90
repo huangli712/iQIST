@@ -783,52 +783,22 @@
      return
   end subroutine ctqmc_deallocate_memory_meat
 
-!>>> deallocate memory for umat-related variables
-     subroutine ctqmc_deallocate_memory_umat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_umat: deallocate memory for umat-related variables
+  subroutine ctqmc_deallocate_memory_umat()
+     implicit none
 
-         if ( allocated(hist)  )   deallocate(hist )
-         if ( allocated(rank)  )   deallocate(rank )
-         if ( allocated(stts)  )   deallocate(stts )
+     if ( allocated(rank)  )   deallocate(rank )
+     if ( allocated(stts)  )   deallocate(stts )
 
-         if ( allocated(symm)  )   deallocate(symm )
+     if ( allocated(symm)  )   deallocate(symm )
 
-         if ( allocated(eimp)  )   deallocate(eimp )
+     if ( allocated(eimp)  )   deallocate(eimp )
+     if ( allocated(ktau)  )   deallocate(ktau )
+     if ( allocated(ksed)  )   deallocate(ksed )
+     if ( allocated(uumat) )   deallocate(uumat)
 
-         if ( allocated(ktau)  )   deallocate(ktau )
-         if ( allocated(ksed)  )   deallocate(ksed )
-
-         if ( allocated(prob)  )   deallocate(prob )
-         if ( allocated(paux)  )   deallocate(paux )
-         if ( allocated(schi)  )   deallocate(schi )
-         if ( allocated(ochi)  )   deallocate(ochi )
-         if ( allocated(nmat)  )   deallocate(nmat )
-
-         if ( allocated(sschi) )   deallocate(sschi)
-         if ( allocated(oochi) )   deallocate(oochi)
-         if ( allocated(nnmat) )   deallocate(nnmat)
-         if ( allocated(uumat) )   deallocate(uumat)
-
-         if ( allocated(g2_re) )   deallocate(g2_re)
-         if ( allocated(g2_im) )   deallocate(g2_im)
-         if ( allocated(h2_re) )   deallocate(h2_re)
-         if ( allocated(h2_im) )   deallocate(h2_im)
-
-         if ( allocated(ppleg) )   deallocate(ppleg)
-         if ( allocated(qqche) )   deallocate(qqche)
-
-         if ( allocated(pmesh) )   deallocate(pmesh)
-         if ( allocated(qmesh) )   deallocate(qmesh)
-
-         if ( allocated(tmesh) )   deallocate(tmesh)
-         if ( allocated(rmesh) )   deallocate(rmesh)
-
-         if ( allocated(cmesh) )   deallocate(cmesh)
-
-         if ( allocated(unity) )   deallocate(unity)
-
-         return
-     end subroutine ctqmc_deallocate_memory_umat
+     return
+  end subroutine ctqmc_deallocate_memory_umat
 
 !>>> deallocate memory for mmat-related variables
      subroutine ctqmc_deallocate_memory_mmat()
