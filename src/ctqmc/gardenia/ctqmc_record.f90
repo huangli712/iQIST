@@ -882,9 +882,15 @@
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
-     use constants
-     use control
-     use context
+     use constants, only : dp, two, pi, czi, czero
+
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : g2_re, g2_im
+     use context, only : rank
+     use context, only : mmat
 
      implicit none
 
