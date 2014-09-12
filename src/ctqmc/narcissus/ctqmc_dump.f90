@@ -782,66 +782,15 @@
      return
   end subroutine ctqmc_dump_ochi
 
-!>>> write out the spin-spin correlation function
-  subroutine ctqmc_dump_schi(schi, sschi)
-     use constants
-     use control
-     use context, only : tmesh
-
-     implicit none
-
-! external arguments
-! spin-spin correlation function data, < Sz(0) Sz(\tau) >, totally-averaged
-     real(dp), intent(in) :: schi(ntime)
-
-! spin-spin correlation function data, < Sz(0) Sz(\tau) >, orbital-resolved
-     real(dp), intent(in) :: sschi(ntime,nband)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! check if we need to dump spin-spin correlation function data
-     if ( isvrt /= 2 ) RETURN
-
-! open data file: solver.schi.dat
-     open(mytmp, file='solver.schi.dat', form='formatted', status='unknown')
-
-! write it
-     do j=1,nband
-         write(mytmp,'(a,i5)') '# flvr:', j
-         do i=1,ntime
-             write(mytmp,'(2f12.6)') tmesh(i), sschi(i,j)
-         enddo ! over i={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over j={1,nband} loop
-
-     write(mytmp,'(a,i5)') '# flvr:', 8888
-     do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), schi(i) / real(nband)
-     enddo ! over i={1,ntime} loop
-     write(mytmp,*) ! write empty lines
-     write(mytmp,*)
-
-     write(mytmp,'(a,i5)') '# flvr:', 9999
-     do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), sum( sschi(i,:) ) / real(nband)
-     enddo ! over i={1,ntime} loop
-     write(mytmp,*) ! write empty lines
-     write(mytmp,*)
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_schi
-
-!>>> write out the two-particle green's function and vertex function
+!!>>> ctqmc_dump_twop: write out the two-particle green's function and
+!!>>> vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
-     use constants
-     use control
+     use constants, only : dp, czero, mytmp
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
      use context, only : grnf
 
      implicit none
@@ -961,11 +910,19 @@
      return
   end subroutine ctqmc_dump_twop
 
-!>>> write out the vertex function and two-particle green's function
+!!>>> ctqmc_dump_vrtx: write out the vertex function and two-particle
+!!>>> green's function
   subroutine ctqmc_dump_vrtx(h2_re, h2_im)
-     use constants
-     use control
-     use context, only : grnf, frnf, sig2, g2_re, g2_im
+     use constants, only : dp, czero, mytmp
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : g2_re, g2_im
+     use context, only : grnf, frnf
+     use context, only : sig2
 
      implicit none
 
@@ -1103,97 +1060,3 @@
 
      return
   end subroutine ctqmc_dump_vrtx
-
-!>>> write out the probability of eigenstates of local hamiltonian matrix
-  subroutine ctqmc_dump_prob(prob)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! probability data of eigenstates
-     real(dp), intent(in) :: prob(ncfgs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! occupation number of eigenstates
-     integer  :: noccs(ncfgs)
-
-! net spin of eigenstates
-     integer  :: soccs(ncfgs)
-
-! atomic basis sets
-     integer  :: basis(ncfgs,norbs)
-
-! probability of occupation number distribution
-     real(dp) :: oprob(0:norbs)
-
-! probability of net spin distribution
-     real(dp) :: sprob(-nband:nband)
-
-! build atomic basis set, we do not order them according to their
-! occupation numbers
-     do i=1,ncfgs
-         do j=1,norbs
-             if ( btest(i-1,j-1) .eqv. .true. ) then
-                 basis(i,j) = 1
-             else
-                 basis(i,j) = 0
-             endif
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,ncfgs} loop
-
-! build occupation numbers for atomic basis set
-     do i=1,ncfgs
-         noccs(i) = sum( basis(i,:) )
-     enddo ! over i={1,ncfgs} loop
-
-! build net spin for eigenstates
-     do i=1,ncfgs
-         soccs(i) = ( sum( basis(i,1:nband) ) - sum( basis(i,nband+1:norbs) ) )
-     enddo ! over i={1,ncfgs} loop
-
-! evaluate oprob
-     oprob = zero
-     do i=1,ncfgs
-         j = noccs(i)
-         oprob(j) = oprob(j) + prob(i)
-     enddo ! over i={1,ncfgs} loop
-
-! evaluate sprob
-     sprob = zero
-     do i=1,ncfgs
-         j = soccs(i)
-         sprob(j) = sprob(j) + prob(i)
-     enddo ! over i={1,ncfgs} loop
-
-! open data file: solver.prob.dat
-     open(mytmp, file='solver.prob.dat', form='formatted', status='unknown')
-
-! write it
-     write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
-     do i=1,ncfgs
-         write(mytmp,'(i5,3f12.6)') i, prob(i), real(noccs(i)), real(soccs(i)) * half
-     enddo ! over i={1,ncfgs} loop
-
-     write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
-     do i=0,norbs
-         write(mytmp,'(i5,2f12.6)') i+1, real(i), oprob(i)
-     enddo ! over i={0,norbs} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(oprob)
-
-     write(mytmp,'(a)') '# spin probability: index | spin | prob'
-     do i=-nband,nband
-         write(mytmp,'(i5,2f12.6)') i+nband+1, i*half, sprob(i)
-     enddo ! over i={-nband,nband} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(sprob)
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_prob
