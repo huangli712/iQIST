@@ -161,10 +161,11 @@
      return
   end subroutine ctqmc_dump_htau
 
-!>>> write out kernel function in imaginary time space
+!!>>> ctqmc_dump_ktau: write out kernel function in imaginary time space
   subroutine ctqmc_dump_ktau(tmesh, ktau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : ntime
 
      implicit none
 
@@ -184,7 +185,7 @@
 
 ! write it
      do i=1,ntime
-         write(mytmp,'(i5,2f12.6)') i, tmesh(i), ktau(i)
+         write(mytmp,'(i6,2f12.6)') i, tmesh(i), ktau(i)
      enddo ! over i={1,ntime} loop
 
 ! close data file
