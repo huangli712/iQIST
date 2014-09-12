@@ -259,10 +259,19 @@
 !!>>> ctqmc_record_ftau: record the auxiliary correlation function in
 !!>>> imaginary time axis
   subroutine ctqmc_record_ftau()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, pi
 
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : ppleg, qqche
+     use context, only : rank
+     use context, only : mmat
+     use context, only : ftau
+     
      implicit none
 
 ! local variables
@@ -320,7 +329,8 @@
 
   contains
 
-!>>> record auxiliary correlation function using normal representation
+!!>>> cat_record_ftau1: record auxiliary correlation function using normal
+!!>>> representation
   subroutine cat_record_ftau1()
      implicit none
 
@@ -375,7 +385,8 @@
      return
   end subroutine cat_record_ftau1
 
-!>>> record auxiliary correlation function using legendre polynomial representation
+!!>>> cat_record_ftau2: record auxiliary correlation function using
+!!>>> legendre polynomial representation
   subroutine cat_record_ftau2()
      implicit none
 
@@ -430,7 +441,8 @@
      return
   end subroutine cat_record_ftau2
 
-!>>> record auxiliary correlation function using chebyshev polynomial representation
+!!>>> cat_record_ftau3: record auxiliary correlation function using
+!!>>> chebyshev polynomial representation
   subroutine cat_record_ftau3()
      implicit none
 
@@ -526,7 +538,7 @@
          hist(ckink) = hist(ckink) + 1
      else
          hist(mkink) = hist(mkink) + 1
-     endif
+     endif ! back if ( ckink > 0 ) block
 
      return
   end subroutine ctqmc_record_hist
@@ -729,11 +741,14 @@
      return
   end subroutine ctqmc_record_nmat
 
-!>>> record the spin-spin correlation function
+!!>>> ctqmc_record_schi: record the spin-spin correlation function
   subroutine ctqmc_record_schi()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : nband, norbs
+     use control, only : ntime
+     use context, only : tmesh
+     use context, only : schi, sschi
 
      implicit none
 
@@ -797,11 +812,14 @@
      return
   end subroutine ctqmc_record_schi
 
-!>>> record the orbital-orbital correlation function
+!!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
   subroutine ctqmc_record_ochi()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : norbs
+     use control, only : ntime
+     use context, only : tmesh
+     use context, only : ochi, oochi
 
      implicit none
 
@@ -862,11 +880,17 @@
      return
   end subroutine ctqmc_record_ochi
 
-!>>> record the two-particle green's function
+!!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
-     use constants
-     use control
-     use context
+     use constants, only : dp, two, pi, czi, czero
+
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : g2_re, g2_im
+     use context, only : rank
+     use context, only : mmat
 
      implicit none
 
@@ -977,11 +1001,17 @@
      return
   end subroutine ctqmc_record_twop
 
-!>>> record the vertex function
+!!>>> ctqmc_record_vrtx: record the fake vertex function
   subroutine ctqmc_record_vrtx()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, half, pi, czi, czero
+
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : g2_re, g2_im, h2_re, h2_im
+     use context, only : rank, uumat
+     use context, only : mmat
 
      implicit none
 
@@ -1162,12 +1192,15 @@
      return
   end subroutine ctqmc_reduce_gtau
 
-!>>> reduce the ftau from all children processes
+!!>>> ctqmc_reduce_ftau: reduce the ftau from all children processes
   subroutine ctqmc_reduce_ftau(ftau_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : ftau
 
      implicit none
 
@@ -1364,12 +1397,15 @@
      return
   end subroutine ctqmc_reduce_nmat
 
-!>>> reduce the schi and sschi from all children processes
+!!>>> ctqmc_reduce_schi: reduce the schi and sschi from all children processes
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : nband
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : schi, sschi
 
      implicit none
 
@@ -1408,12 +1444,15 @@
      return
   end subroutine ctqmc_reduce_schi
 
-!>>> reduce the ochi and oochi from all children processes
+!!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from all children processes
   subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : ochi, oochi
 
      implicit none
 
@@ -1452,12 +1491,16 @@
      return
   end subroutine ctqmc_reduce_ochi
 
-!>>> reduce the g2_re_mpi and g2_im_mpi from all children processes
+!!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from all
+!!>>> children processes
   subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : g2_re, g2_im
 
      implicit none
 
@@ -1496,12 +1539,16 @@
      return
   end subroutine ctqmc_reduce_twop
 
-!>>> reduce the h2_re_mpi and h2_im_mpi from all children processes
+!!>>> ctqmc_reduce_vrtx: reduce the h2_re_mpi and h2_im_mpi from all
+!!>>> children processes
   subroutine ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : h2_re, h2_im
 
      implicit none
 
@@ -1841,10 +1888,20 @@
      return
   end subroutine ctqmc_smth_sigf
 
-!>>> build imaginary green's function using orthogonal polynomial representation
+!!========================================================================
+!!>>> postprocess physical observables                                 <<<
+!!========================================================================
+
+!!>>> ctqmc_make_gtau: build imaginary green's function using orthogonal
+!!>>> polynomial representation
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, pi
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
      use context, only : ppleg, qqche
 
      implicit none
@@ -1909,7 +1966,7 @@
 
   contains
 
-!>>> build the integral kernel function
+!!>>> cat_make_kernel: build the integral kernel function
   subroutine cat_make_kernel(kdim, kern)
      implicit none
 
@@ -1957,7 +2014,8 @@
      return
   end subroutine cat_make_kernel
 
-!>>> build impurity green's function using normal representation
+!!>>> cat_make_gtau1: build impurity green's function using normal
+!!>>> representation
   subroutine cat_make_gtau1()
      implicit none
 
@@ -1971,7 +2029,8 @@
      return
   end subroutine cat_make_gtau1
 
-!>>> build impurity green's function using legendre polynomial representation
+!!>>> cat_make_gtau2: build impurity green's function using legendre
+!!>>> polynomial representation
   subroutine cat_make_gtau2()
      implicit none
 
@@ -1997,7 +2056,8 @@
      return
   end subroutine cat_make_gtau2
 
-!>>> build impurity green's function using chebyshev polynomial representation
+!!>>> cat_make_gtau3: build impurity green's function using chebyshev
+!!>>> polynomial representation
   subroutine cat_make_gtau3()
      implicit none
 
@@ -2024,10 +2084,16 @@
   end subroutine cat_make_gtau3
   end subroutine ctqmc_make_gtau
 
-!>>> build auxiliary correlation function using orthogonal polynomial representation
+!!>>> ctqmc_make_ftau: build auxiliary correlation function using
+!!>>> orthogonal polynomial representation
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
      use context, only : ppleg, qqche
 
      implicit none
@@ -2153,11 +2219,12 @@
 !!>>> build self-energy function                                       <<<
 !!========================================================================
 
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make interpolation for self-energy
-! function between low frequency QMC data and high frequency Hubbard-I
-! approximation data, the full impurity green's function can be obtained by
-! using dyson's equation finally
+!!>>> ctqmc_make_hub1: build atomic green's function and self-energy
+!!>>> function using improved Hubbard-I approximation, and then make
+!!>>> interpolation for self-energy function between low frequency QMC
+!!>>> data and high frequency Hubbard-I approximation data, the full
+!!>>> impurity green's function can be obtained by using dyson's equation
+!!>>> finally
   subroutine ctqmc_make_hub1()
      use constants, only : dp, zero, one, czi, czero
 
@@ -2319,7 +2386,7 @@
 ! dump the ghub and shub, only for reference, only the master node can do it
      if ( myid == master ) then
          call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! build self-energy function at low frequency region
 !-------------------------------------------------------------------------
@@ -2410,14 +2477,26 @@
      return
   end subroutine ctqmc_make_hub1
 
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make forward fourier transformation
-! for impurity green's function and auxiliary correlation function. then
-! the final self-energy function is obtained by analytical formula.
+!!>>> ctqmc_make_hub2: build atomic green's function and self-energy
+!!>>> function using improved Hubbard-I approximation, and then make
+!!>>> forward fourier transformation for impurity green's function and
+!!>>> auxiliary correlation function. then the final self-energy function
+!!>>> is obtained by analytical formula.
   subroutine ctqmc_make_hub2()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, half, pi, czi, czero
+
+     use control, only : isort
+     use control, only : norbs, ncfgs
+     use control, only : lemax
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : mune, beta
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : prob
+     use context, only : eimp, uumat
+     use context, only : gtau, ftau, grnf, frnf
+     use context, only : sig2
 
      implicit none
 
@@ -2531,7 +2610,7 @@
                      value = value * permute
                  else
                      value = 0
-                 endif
+                 endif ! back if ( sc(m) == 1 ) block
 
                  if ( value /= 0 ) then
                      fcounter(m) = fcounter(m) + 1
@@ -2569,7 +2648,7 @@
 ! dump the ghub and shub, only for reference, only the master node can do it
      if ( myid == master ) then
          call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! build final impurity green's function and then transform them into
 ! matsubara frequency axis
@@ -2595,7 +2674,7 @@
          jaux = zero
          do k=1,mfreq
              ob = (two * k - one) * pi / two
-             call ctqmc_make_sbess(lemax-1, ob, jaux(k,:))
+             call s_sbessel(lemax-1, ob, jaux(k,:))
          enddo ! over k={1,mfreq} loop
 
 ! build unitary transformation matrix: taux
