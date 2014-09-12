@@ -299,10 +299,12 @@
 !!>>> ctqmc_make_uumat: to build general U interaction matrix: uumat, using
 !!>>> my own style
   subroutine ctqmc_make_uumat(uumat)
-     use constants, only : dp, zero
+     use constants, only : dp, zero, two
 
+     use control, only : isscr
      use control, only : nband, norbs
-     use control, only : Uc, Jz
+     use control, only : Uc, Jz, lc, wc
+     use control, only : mune
 
      implicit none
 
