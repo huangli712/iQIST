@@ -695,8 +695,8 @@
      use constants, only : dp, mytmp
 
      use control, only : isvrt
-     use control, only : ntime
      use control, only : norbs
+     use control, only : ntime
      use context, only : tmesh
 
      implicit none

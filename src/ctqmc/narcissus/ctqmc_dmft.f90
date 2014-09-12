@@ -1,38 +1,38 @@
-!-------------------------------------------------------------------------
-! project : narcissus
-! program : ctqmc_dmft_selfer
-!           ctqmc_dmft_conver
-!           ctqmc_dmft_mixer
-!           ctqmc_dmft_bethe
-!           ctqmc_dmft_anydos
-! source  : ctqmc_dmft.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/21/2009 by li huang
-!           09/22/2009 by li huang
-!           10/28/2009 by li huang
-!           12/01/2009 by li huang
-!           12/06/2009 by li huang
-!           12/24/2009 by li huang
-!           01/13/2010 by li huang
-! purpose : self-consistent engine for dynamical mean field theory (DMFT)
-!           simulation. it is only suitable for hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver plus bethe lattice model.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : narcissus
+!!! program : ctqmc_dmft_selfer
+!!!           ctqmc_dmft_conver
+!!!           ctqmc_dmft_bethe
+!!!           ctqmc_dmft_anydos
+!!! source  : ctqmc_dmft.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           01/13/2010 by li huang
+!!!           09/12/2014 by li huang
+!!! purpose : the self-consistent engine for dynamical mean field theory
+!!!           (DMFT) simulation. it is only suitable for hybridization
+!!!           expansion version continuous time quantum Monte Carlo (CTQMC)
+!!!           quantum impurity solver plus bethe lattice model.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> the self-consistent engine for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory simulation
+!!>>> ctqmc_dmft_selfer: the self-consistent engine for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
+!!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, half, czi, mystd
+
+     use control, only : nband, norbs
+     use control, only : mfreq
+     use control, only : Uc, Jz
+     use control, only : mune, alpha
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : eimp
+     use context, only : grnf
+     use context, only : wtau, wssf, hybf
 
      implicit none
 
@@ -55,60 +55,58 @@
 ! allocate memory
      allocate(htmp(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize htmp
-     htmp = czero
+     htmp = hybf
 
 ! calculate new hybridization function using self-consistent condition
-     call ctqmc_dmft_bethe(htmp, grnf)
+     call ctqmc_dmft_bethe(hybf, grnf)
 
 ! mixing new and old hybridization function: htmp and hybf
-     call ctqmc_dmft_mixer(hybf, htmp)
-
-! update original hybridization function
-     hybf = htmp
+     call s_mix_z(size(hybf), htmp, hybf, alpha)
 
 ! \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
      qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
      qmune = mune - qmune
 
 ! calculate new bath weiss's function
+! G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
      do i=1,norbs
          do k=1,mfreq
-             wssf(k,i,i) = cmesh(k) + qmune - eimp(i) - hybf(k,i,i)
+             wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
      do k=1,mfreq
-         call ctqmc_zmat_inv(norbs, wssf(k,:,:))
+         call s_inv_z(norbs, wssf(k,:,:))
      enddo ! over k={1,mfreq} loop
 
 ! fourier transformation bath weiss's function from matsubara frequency
 ! space to imaginary time space
-     call ctqmc_fourier_hybf(wssf, wtau)
+     call ctqmc_four_hybf(wssf, wtau)
 
 ! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wssf(rmesh, wssf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the new bath weiss's function in imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wtau(tmesh, wtau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the new hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'NARCISSUS >>> DMFT hybridization function is updated'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(htmp)
@@ -116,11 +114,15 @@
      return
   end subroutine ctqmc_dmft_selfer
 
-!>>> check the convergence of self-energy function
+!!>>> ctqmc_dmft_conver: check the convergence of self-energy function
   subroutine ctqmc_dmft_conver(iter, convergence)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, eps8, mystd
+
+     use control, only : norbs, niter
+     use control, only : mfreq
+     use control, only : alpha
+     use control, only : myid, master
+     use context, only : sig1, sig2
 
      implicit none
 
@@ -172,36 +174,20 @@
          write(mystd,'(2(2X,a,E10.4))') 'NARCISSUS >>> sig_curr:', seps, 'eps_curr:', eps8
          write(mystd,'( (2X,a,L1))') 'NARCISSUS >>> self-consistent iteration convergence is ', convergence
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine ctqmc_dmft_conver
 
-!>>> complex(dp) version, mixing two vectors using linear mixing algorithm
-  subroutine ctqmc_dmft_mixer(vec1, vec2)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! older green/weiss/sigma function in input
-     complex(dp), intent(inout) :: vec1(mfreq,norbs,norbs)
-
-! newer green/weiss/sigma function in input, newest in output
-     complex(dp), intent(inout) :: vec2(mfreq,norbs,norbs)
-
-! linear mixing scheme
-     vec2 = vec1 * (one - alpha) + vec2 * alpha
-
-     return
-  end subroutine ctqmc_dmft_mixer
-
-!>>> self-consistent conditions, bethe lattice, semicircular density of
-! states, force a paramagnetic order, equal bandwidth
+!!>>> ctqmc_dmft_bethe: dmft self-consistent conditions, bethe lattice,
+!!>>> semicircular density of states, force a paramagnetic order, equal
+!!>>> band width
   subroutine ctqmc_dmft_bethe(hybf, grnf)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : part
 
      implicit none
 
@@ -226,14 +212,19 @@
      return
   end subroutine ctqmc_dmft_bethe
 
-!>>> self-consistent conditions, general density of states, calculate the
-! new hybridization function by using hilbert transformation
+!!>>> ctqmc_dmft_anydos: dmft self-consistent conditions, general density
+!!>>> of states, calculate the new hybridization function by using hilbert
+!!>>> transformation and numerical integration
   subroutine ctqmc_dmft_anydos(hybf, grnf, sigf)
-     use constants
-     use control
-     use context, only: cmesh, eimp
+     use constants, only : dp, zero, czi, czero, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : mune
+     use control, only : myid, master
+     use context, only : rmesh
+     use context, only : eimp
 
      implicit none
 
@@ -306,7 +297,7 @@
              close(mytmp)
 
          else
-             call ctqmc_print_error('ctqmc_dmft_anydos','file solver.anydos.in does not exist')
+             call s_print_error('ctqmc_dmft_anydos','file solver.anydos.in does not exist')
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
@@ -336,7 +327,7 @@
          do k=1,mfreq
 
 ! caux = i\omega + \mune - E_{imp} - Sigma(i\omega)
-             caux = cmesh(k) + mune - eimp(j) - sigf(k,j,j)
+             caux = czi * rmesh(k) + mune - eimp(j) - sigf(k,j,j)
 
 ! perform numerical integration
              do i=1,ngrid
@@ -351,13 +342,13 @@
 
 ! calculate G^{-1}, now grnf contains G^{-1}
      do k=1,mfreq
-         call ctqmc_zmat_inv(norbs, grnf(k,:,:))
+         call s_inv_z(norbs, grnf(k,:,:))
      enddo ! over k={1,mfreq} loop
 
 ! calculate final hybridization function using dyson's equation
      do k=1,mfreq
          do i=1,norbs
-             hybf(k,i,i) = cmesh(k) + mune - eimp(i) - sigf(k,i,i) - grnf(k,i,i)
+             hybf(k,i,i) = czi * rmesh(k) + mune - eimp(i) - sigf(k,i,i) - grnf(k,i,i)
          enddo ! over i={1,norbs} loop
      enddo ! over k={1,mfreq} loop
 

@@ -153,7 +153,7 @@
          hist(ckink) = hist(ckink) + 1
      else
          hist(mkink) = hist(mkink) + 1
-     endif
+     endif ! back if ( ckink > 0 ) block
 
      return
   end subroutine ctqmc_record_hist
@@ -1037,7 +1037,7 @@
 ! dump the ghub and shub, only for reference, only the master node can do it
      if ( myid == master ) then
          call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! build self-energy function at low frequency region
 !-------------------------------------------------------------------------
