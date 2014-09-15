@@ -2051,7 +2051,7 @@
 
 ! external functions
 ! used to interpolate kernel function
-     real(dp), external :: ctqmc_make_ktau
+     procedure( real(dp) ) :: ctqmc_make_ktau
 
      SCREENING_SWITCHER: select case ( isscr )
 
