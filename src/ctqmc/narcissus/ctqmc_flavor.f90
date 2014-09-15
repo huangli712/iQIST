@@ -431,7 +431,7 @@
 ! additional weight factor (phonon part)
      if ( isscr == 2 ) then
          scr = scr * ( lc / wc ) * ( lc / wc ) / ( one - exp( beta * wc ) )
-     endif
+     endif ! back if ( isscr == 2 ) block
 
 ! evaluate the final exponent factor
      trace_ratio = trace_ratio * exp(+scr)
@@ -439,12 +439,16 @@
      return
   end subroutine cat_lshift_ztrace
 
-!>>> calculate the trace ratio for right shift old segment or anti-segment
-! on perturbation expansion series
+!!>>> cat_rshift_ztrace: calculate the trace ratio for right shift old
+!!>>> segment or anti-segment on perturbation expansion series
   subroutine cat_rshift_ztrace(flvr, ring, tau_end1, tau_end2, trace_ratio)
-     use constants
-     use control
-     use context, only : uumat, eimp
+     use constants, only : dp, zero, one
+
+     use control, only : isscr
+     use control, only : norbs
+     use control, only : lc, wc
+     use control, only : mune, beta
+     use context, only : eimp, uumat
 
      implicit none
 
