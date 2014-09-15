@@ -1968,9 +1968,11 @@
 !!>>> ctqmc_make_wscreen: used to calculate the extra weight factor given
 !!>>> by an exponential of correlators of noninteracting boson operators
   subroutine ctqmc_make_wscreen(tau, scr)
-     use constants, only : dp
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : norbs
+     use context, only : rank
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
