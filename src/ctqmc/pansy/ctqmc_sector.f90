@@ -154,6 +154,9 @@
      nullify( one_sector%myeigval )
      nullify( one_sector%next_sector )
      nullify( one_sector%myfmat )
+     nullify( one_sector%final_product )
+     nullify( one_sector%occu )
+     nullify( one_sector%double_occu )
   
      return
   end subroutine nullify_one_sector
