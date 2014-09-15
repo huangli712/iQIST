@@ -1961,14 +1961,14 @@
      return
   end subroutine ctqmc_make_compare
 
-!-------------------------------------------------------------------------
-!>>> service layer: calculate extra weight facot for screening effect  <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: calculate extra weight facot for screening effect <<<
+!!========================================================================
 
-!>>> used to calculate the extra weight factor given by an exponential of
-! correlators of noninteracting boson operators
+!!>>> ctqmc_make_wscreen: used to calculate the extra weight factor given
+!!>>> by an exponential of correlators of noninteracting boson operators
   subroutine ctqmc_make_wscreen(tau, scr)
-     use constants
+     use constants, only : dp
      use control
      use context
 
@@ -2139,11 +2139,14 @@
      return
   end subroutine ctqmc_make_segment
 
-!>>> display segment information on the screen, only used to debug the code
+!!>>> ctqmc_make_display: display segment information on the screen, only
+!!>>> used to debug the code
   subroutine ctqmc_make_display(show_type)
-     use constants
-     use control
-     use context
+     use constants, only : dp, mystd
+
+     use control, only : norbs
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
