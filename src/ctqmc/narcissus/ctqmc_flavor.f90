@@ -1404,13 +1404,16 @@
      return
   end subroutine ctqmc_make_flavor2
 
-!>>> determine \tau_s1 and \tau_s2 for lshift old segment or anti-segment
+!!>>> ctqmc_make_flavor3: determine \tau_s1 and \tau_s2 for lshift old
+!!>>> segment or anti-segment
   subroutine ctqmc_make_flavor3(flvr, iso, isn, ring, tau_start1, tau_start2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : stts
 
      implicit none
 
@@ -1565,13 +1568,16 @@
      return
   end subroutine ctqmc_make_flavor3
 
-!>>> determine \tau_e1 and \tau_e2 for rshift old segment or anti-segment
+!!>>> ctqmc_make_flavor4: determine \tau_e1 and \tau_e2 for rshift old
+!!>>> segment or anti-segment
   subroutine ctqmc_make_flavor4(flvr, ieo, ien, ring, tau_end1, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : stts
 
      implicit none
 
@@ -1726,16 +1732,18 @@
      return
   end subroutine ctqmc_make_flavor4
 
-!-------------------------------------------------------------------------
-!>>> service layer: calculate occupation status for current flavor     <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: calculate occupation status for current flavor    <<<
+!!========================================================================
 
-!>>> evaluate the occupation status for current flavor channel and time,
-! which can be used to calculate spin-spin correlation function
+!!>>> ctqmc_spin_counter: evaluate the occupation status for current
+!!>>> flavor channel and time, ! which can be used to calculate spin-spin
+!!>>> correlation function
   subroutine ctqmc_spin_counter(flvr, curr, occu)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
@@ -1802,16 +1810,19 @@
      return
   end subroutine ctqmc_spin_counter
 
-!-------------------------------------------------------------------------
-!>>> service layer: calculate overlap between segments                 <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: calculate overlap between segments                <<<
+!!========================================================================
 
-!>>> calculate the delta segment overlaps between current flavor channel
-! and other flavor channels
+!!>>> ctqmc_make_overlap: calculate the delta segment overlaps between
+!!>>> current flavor channel and other flavor channels
   subroutine ctqmc_make_overlap(flvr, tau_start, tau_end, ovlp)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : norbs
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
@@ -1900,9 +1911,9 @@
      return
   end subroutine ctqmc_make_overlap
 
-!>>> compare two segments, and calculate their overlap
+!!>>> ctqmc_make_compare: compare two segments, and calculate their overlap
   subroutine ctqmc_make_compare(ts0, te0, ts1, te1, cover)
-     use constants
+     use constants, only : dp, zero
 
      implicit none
 
@@ -2063,18 +2074,21 @@
      return
   end subroutine ctqmc_make_wkernel
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to test segment algorithm      <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to test segment algorithm     <<<
+!!========================================================================
 
-!>>> generate segments or anti-segments for the specified flavor channel
-! randomly, only used to debug the code
+!!>>> ctqmc_make_segment: generate segments or anti-segments for the
+!!>>> specified flavor channel randomly, only used to debug the code
   subroutine ctqmc_make_segment(flvr, kink, anti)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : rank, stts
+
+     implicit none
 
 ! external arguments
 ! current flavor channel
@@ -2102,7 +2116,7 @@
      time = time * beta
 
 ! sort time series
-     call ctqmc_time_sorter(2*kink, time)
+     call s_sorter(2*kink, time)
 
 ! build segments or anti-segments
      if ( anti .eqv. .false. ) then
