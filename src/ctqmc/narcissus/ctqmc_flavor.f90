@@ -2031,10 +2031,14 @@
      return
   end subroutine ctqmc_make_wscreen
 
-!>>> used to calculate K(\tau), the kernel function for extra weight factor
+!!>>> ctqmc_make_wkernel: used to calculate K(\tau), the kernel function
+!!>>> for extra weight factor
   subroutine ctqmc_make_wkernel(tau, cur)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, pi
+
+     use control, only : isscr
+     use control, only : lc, wc
+     use control, only : beta
 
      implicit none
 
