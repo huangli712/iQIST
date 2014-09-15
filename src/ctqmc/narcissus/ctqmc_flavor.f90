@@ -821,17 +821,20 @@
      return
   end subroutine cat_rshift_segment
 
-!-------------------------------------------------------------------------
-!>>> service layer: make segments from perturbation expansion series   <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: make segments from perturbation expansion series  <<<
+!!========================================================================
 
-!>>> determine \tau_s, \tau_e and \tau_max for insert new segment or anti-segment
+!!>>> ctqmc_make_flavor1: determine \tau_s, \tau_e and \tau_max for insert
+!!>>> new segment or anti-segment
   subroutine ctqmc_make_flavor1(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, half
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : stts
 
      implicit none
 
@@ -1192,13 +1195,16 @@
      return
   end subroutine ctqmc_make_flavor1
 
-!>>> determine \tau_s, \tau_e and \tau_max for remove old segment or anti-segment
+!!>>> ctqmc_make_flavor2: determine \tau_s, \tau_e and \tau_max for remove
+!!>>> old segment or anti-segment
   subroutine ctqmc_make_flavor2(flvr, is, ie, anti, tau_start, tau_end, tau_max)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, half
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : stts
 
      implicit none
 
