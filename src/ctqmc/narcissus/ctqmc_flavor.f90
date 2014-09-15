@@ -571,7 +571,7 @@
 ! additional weight factor (phonon part)
      if ( isscr == 2 ) then
          scr = scr * ( lc / wc ) * ( lc / wc ) / ( one - exp( beta * wc ) )
-     endif
+     endif ! back if ( isscr == 2 ) block
 
 ! evaluate the final exponent factor
      trace_ratio = trace_ratio * exp(+scr)
@@ -579,16 +579,20 @@
      return
   end subroutine cat_rshift_ztrace
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series               <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series              <<<
+!!========================================================================
 
-!>>> update the perturbation expansion series for insert new segment or anti-segment
+!!>>> cat_insert_segment: update the perturbation expansion series for
+!!>>> insert new segment or anti-segment
   subroutine cat_insert_segment(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use stack, only : istack_pop
 
-     use stack
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rmesh
 
      implicit none
 
@@ -651,12 +655,13 @@
      return
   end subroutine cat_insert_segment
 
-!>>> update the perturbation expansion series for remove old segment or anti-segment
+!!>>> cat_remove_segment: update the perturbation expansion series for
+!!>>> remove old segment or anti-segment
   subroutine cat_remove_segment(flvr, is, ie)
-     use constants
-     use context
+     use stack, only : istack_push
 
-     use stack
+     use context, only : ckink
+     use context, only : empty_s, empty_e, index_s, index_e
 
      implicit none
 
@@ -698,10 +703,15 @@
      return
   end subroutine cat_remove_segment
 
-!>>> update the perturbation expansion series for left shift old segment or anti-segment
+!!>>> cat_lshift_segment: update the perturbation expansion series for
+!!>>> left shift old segment or anti-segment
   subroutine cat_lshift_segment(flvr, iso, isn, tau_start)
-     use constants
-     use context
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, time_s, exp_s
+     use context, only : rmesh
 
      implicit none
 
@@ -752,10 +762,15 @@
      return
   end subroutine cat_lshift_segment
 
-!>>> update the perturbation expansion series for right shift old segment or anti-segment
+!!>>> cat_rshift_segment: update the perturbation expansion series for
+!!>>> right shift old segment or anti-segment
   subroutine cat_rshift_segment(flvr, ieo, ien, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_e, time_e, exp_e
+     use context, only : rmesh
 
      implicit none
 
