@@ -12,11 +12,112 @@
 !!!           any question, please contact with huangli712@gmail.com     !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
-  program ctqmc_main
-     use constants
-     use control
+!!
+!!
+!! WARNING
+!! =======
+!!
+!! If you want to obtain an executable program, please go to src/build/,
+!! open make.sys and comment out the API flag. On the other hand, if you
+!! want to compile gardenia as a library, please activate the API flag.
+!!
+!! Introduction
+!! ============
+!!
+!! The gardenia code is a hybridization expansion version continuous time
+!! quantum Monte Carlo quantum impurity solver. It adopts the segment
+!! picuture, and implements many useful features, such as the orthogonal
+!! polynomial representation and the measurement of two-particle Green's
+!! function, etc. So it is a bit less efficient than the azalea code. And
+!! it can be used as a standard to benchmark the other ctqmc impurity
+!! solvers. The gardenia code also includes a mini dynamical mean field
+!! theory engine which implements the self-consistent equation for Bethe
+!! lattice in paramagnetic state. So you can use it to perform dynamical
+!! mean field theory calculations quickly. Enjoy it.
+!!
+!! Usage
+!! =====
+!!
+!! # ./ctqmc or bin/gardenia.x
+!!
+!! Input
+!! =====
+!!
+!! solver.ctqmc.in (optional)
+!! solver.eimp.in (optional)
+!! solver.hyb.in (optional)
+!!
+!! Output
+!! ======
+!!
+!! terminal output
+!! solver.green.bin.*
+!! solver.green.dat
+!! solver.grn.dat
+!! solver.hybri.dat
+!! solver.hyb.dat
+!! solver.wss.dat
+!! solver.sgm.dat
+!! solver.hub.dat
+!! solver.hist.dat
+!! solver.prob.dat
+!! solver.nmat.dat
+!! solver.schi.dat
+!! solver.ochi.dat
+!! solver.twop.dat
+!! solver.vrtx.dat
+!! solver.status.dat
+!! etc.
+!!
+!! Running mode
+!! ============
+!!
+!! case 1: isscf == 1 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, normal mode
+!!
+!! case 2: isscf == 1 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, binner mode
+!!
+!! case 3: isscf == 2 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!!
+!! case 4: isscf == 2 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!! plus
+!! call ctqmc_impurity_solver, binner mode
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/guide directory.
+!!
+!!
 
-     use mmpi
+# if !defined (API)
+
+  program ctqmc_main
+     use constants, only : mystd
+     use mmpi, only : mp_init, mp_finalize
+     use mmpi, only : mp_comm_rank, mp_comm_size
+     use mmpi, only : mp_barrier
+
+     use control, only : isscf, isbin
+     use control, only : niter
+     use control, only : nprocs, myid, master
 
      implicit none
 
@@ -45,7 +146,7 @@
 ! impurity solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! setup the important parameters for continuous time quantum Monte Carlo
 ! quantum impurity solver and dynamical mean field theory self-consistent
@@ -55,37 +156,13 @@
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call ctqmc_setup_array()
 
 ! prepare initial hybridization function, init self-consistent iteration
      call ctqmc_selfer_init()
-
-!-------------------------------------------------------------------------
-! note: running mode                                                     !
-!-------------------------------------------------------------------------
-!    if isscf == 1 .and. isbin == 1                                      !
-!        call ctqmc_impurity_solver only, normal mode                    !
-!                                                                        !
-!    if isscf == 1 .and. isbin == 2                                      !
-!        call ctqmc_impurity_solver only, binner mode                    !
-!                                                                        !
-!    if isscf == 2 .and. isbin == 1                                      !
-!        call ctqmc_impurity_solver, normal mode                         !
-!        plus                                                            !
-!        call ctqmc_dmft_selfer                                          !
-!        until convergence                                               !
-!                                                                        !
-!    if isscf == 2 .and. isbin == 2                                      !
-!        call ctqmc_impurity_solver, normal mode                         !
-!        plus                                                            !
-!        call ctqmc_dmft_selfer                                          !
-!        until convergence                                               !
-!        plus                                                            !
-!        call ctqmc_impurity_solver, binner mode                         !
-!-------------------------------------------------------------------------
 
 !=========================================================================
 !>>> DMFT ITERATION BEGIN                                              <<<
