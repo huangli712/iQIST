@@ -271,7 +271,7 @@
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use api, only : T_mpi, T_segment_gardenia
+     use api, only : T_mpi, T_segment_narcissus
 
      use control ! ALL
 
@@ -282,7 +282,7 @@
      type (T_mpi), intent(in) :: I_mpi
 
 ! type structure of generic solver
-     type (T_segment_gardenia), intent(in) :: I_solver
+     type (T_segment_narcissus), intent(in) :: I_solver
 
 ! setup I_mpi
      nprocs = I_mpi%nprocs
@@ -299,6 +299,7 @@
      isbin  = I_solver%isbin
      isort  = I_solver%isort
      isvrt  = I_solver%isvrt
+     isscr  = I_solver%isscr
      nband  = I_solver%nband
      nspin  = I_solver%nspin
      norbs  = I_solver%norbs
@@ -329,6 +330,8 @@
      Jz     = I_solver%Jz
      Js     = I_solver%Js
      Jp     = I_solver%Jp
+     lc     = I_solver%lc
+     wc     = I_solver%wc
      mune   = I_solver%mune
      beta   = I_solver%beta
      part   = I_solver%part
