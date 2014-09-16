@@ -1,14 +1,16 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! A test program for dynamical mean field theory (DMFT) self-consistent  !
-! engine plus hybridization expansion version continuous time quantum    !
-! Monte Carlo (CTQMC) quantum impurity solver                            !
-! author  : li huang                                                     !
-! version : v2012.08.20T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : this impurity solver is based on segment picture formalism   !
-!           dynamical screening effect is included                       !
-!           any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! NARCISSUS @ iQIST                                                    !
+!!!                                                                      !
+!!! A test program for dynamical mean field theory (DMFT) self-consistent!
+!!! engine plus hybridization expansion version continuous time quantum  !
+!!! Monte Carlo (CTQMC) quantum impurity solver                          !
+!!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
+!!! version : v2014.09.16T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : this impurity solver is based on segment picture formalism !
+!!!           dynamical screening effect is included                     !
+!!!           any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
 
   program ctqmc_main
      use constants
