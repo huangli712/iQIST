@@ -179,7 +179,7 @@
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'GARDENIA >>> DMFT iter:', iter, ' <<< SELFING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
