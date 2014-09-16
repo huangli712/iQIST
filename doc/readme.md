@@ -1,19 +1,57 @@
 
 
-
 Interacting Quantum Impurity Solver Toolkit
 ===========================================
+
 
 README
 ======
 
 
 
-Interacting Quantum Impurity Solver Toolkit
-===========================================
+Introduction
+------------
 
-Version History
-===============
+Licence
+-------
+
+Versions
+--------
+
+Features
+--------
+
+Obtain
+------
+
+Prerequisite
+------------
+
+Installation
+------------
+
+Usage
+-----
+
+Documents
+---------
+
+Support
+-------
+
+Developers
+----------
+
+Contributors
+------------
+
+
+
+
+
+
+HISTORY
+=======
 
 
 
