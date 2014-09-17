@@ -2477,14 +2477,26 @@
      return
   end subroutine ctqmc_make_hub1
 
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make forward fourier transformation
-! for impurity green's function and auxiliary correlation function. then
-! the final self-energy function is obtained by analytical formula.
+!!>>> ctqmc_make_hub2: build atomic green's function and self-energy
+!!>>> function using improved Hubbard-I approximation, and then make
+!!>>> forward fourier transformation for impurity green's function and
+!!>>> auxiliary correlation function. then the final self-energy function
+!!>>> is obtained by analytical formula.
   subroutine ctqmc_make_hub2()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, half, pi, czi, czero
+
+     use control, only : isort
+     use control, only : norbs, ncfgs
+     use control, only : lemax
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : mune, beta
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : prob
+     use context, only : eimp, uumat
+     use context, only : gtau, ftau, grnf, frnf
+     use context, only : sig2
 
      implicit none
 
@@ -2598,12 +2610,12 @@
                      value = value * permute
                  else
                      value = 0
-                 endif
+                 endif ! back if ( sc(m) == 1 ) block
 
                  if ( value /= 0 ) then
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
-                         call ctqmc_print_error('ctqmc_make_hub2','non-zero elements exceed limit')
+                         call s_print_error('ctqmc_make_hub2','non-zero elements exceed limit')
                      endif
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
@@ -2636,14 +2648,14 @@
 ! dump the ghub and shub, only for reference, only the master node can do it
      if ( myid == master ) then
          call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! build final impurity green's function and then transform them into
 ! matsubara frequency axis
 ! note: only for isort == 4 .or. isort == 6 cases
      if ( isort /= 5 ) then
          call ctqmc_make_gtau(tmesh, gtau, gaux)
-         call ctqmc_fourier_htau(gaux, grnf)
+         call ctqmc_four_htau(gaux, grnf)
      endif ! back if ( isort /= 5 ) block
 
 ! build final auxiliary correlation function and then transform them into
@@ -2651,7 +2663,7 @@
 ! note: only for isort == 4 .or. isort == 6 cases
      if ( isort /= 5 ) then
          call ctqmc_make_ftau(tmesh, ftau, faux)
-         call ctqmc_fourier_htau(faux, frnf)
+         call ctqmc_four_htau(faux, frnf)
      endif ! back if ( isort /= 5 ) block
 
 ! special consideration must be taken for legendre representation, we can
@@ -2662,7 +2674,7 @@
          jaux = zero
          do k=1,mfreq
              ob = (two * k - one) * pi / two
-             call ctqmc_make_sbess(lemax-1, ob, jaux(k,:))
+             call s_sbessel(lemax-1, ob, jaux(k,:))
          enddo ! over k={1,mfreq} loop
 
 ! build unitary transformation matrix: taux
