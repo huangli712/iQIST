@@ -162,16 +162,18 @@
 ! return value
      real(dp) :: val
 
-     val = ctqmc_make_splint(ntime, tmesh, ktau, ksed, dtau)
+     val = s_spl_splint(ntime, tmesh, ktau, ksed, dtau)
 
      return
   end function ctqmc_make_ktau
 
-!>>> calculate the second order derivates of kernel function on imaginary
-! time space
+!!>>> ctqmc_make_ksed: calculate the second order derivates of kernel
+!!>>> function on imaginary time space
   subroutine ctqmc_make_ksed(tmesh, ktau, ksed)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : ntime
+     use control, only : beta
 
      implicit none
 
