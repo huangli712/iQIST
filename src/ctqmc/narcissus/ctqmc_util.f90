@@ -2,6 +2,8 @@
 !!! project : narcissus
 !!! program : ctqmc_make_htau
 !!!           ctqmc_make_hsed
+!!!           ctqmc_make_ktau
+!!!           ctqmc_make_hsed
 !!!           ctqmc_four_htau
 !!!           ctqmc_four_hybf
 !!!           ctqmc_make_uumat
@@ -11,7 +13,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 10/01/2008 by li huang
 !!!           06/22/2010 by li huang
-!!!           09/12/2014 by li huang
+!!!           09/18/2014 by li huang
 !!! purpose : to provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -133,6 +135,86 @@
 
      return
   end subroutine ctqmc_make_hsed
+
+!>>> evaluate the intermediate elements for ktau using cubic spline interpolation
+  function ctqmc_make_ktau(dtau) result(val)
+     use constants
+     use control
+     use context
+
+     implicit none
+
+! external arguments
+! current imaginary time
+     real(dp), intent(in) :: dtau
+
+! external functions
+! internal interpolation engine
+     real(dp), external :: ctqmc_make_splint
+
+! local variables
+! return value
+     real(dp) :: val
+
+     val = ctqmc_make_splint(ntime, tmesh, ktau, ksed, dtau)
+
+     return
+  end function ctqmc_make_ktau
+
+!>>> calculate the second order derivates of kernel function on imaginary
+! time space
+  subroutine ctqmc_make_ksed(tmesh, ktau, ksed)
+     use constants
+     use control
+
+     implicit none
+
+! external arguments
+! imaginary time axis
+     real(dp), intent(in)  :: tmesh(ntime)
+
+! kernel function on imaginary time axis
+     real(dp), intent(in)  :: ktau(ntime)
+
+! second order derivates of kernel function
+     real(dp), intent(out) :: ksed(ntime)
+
+! local variables
+! first derivate at start point
+     real(dp) :: startu
+
+! first derivate at end   point
+     real(dp) :: startd
+
+! \delta \tau
+     real(dp) :: deltau
+
+! calculate deltau
+     deltau = beta / real(ntime - 1)
+
+! initialize ksed
+     ksed = zero
+
+! calculate it
+! calculate first-order derivate of K(0): startu
+     startu = (-25.0_dp*ktau(1      ) + &
+                48.0_dp*ktau(2      ) - &
+                36.0_dp*ktau(3      ) + &
+                16.0_dp*ktau(4      ) - &
+                 3.0_dp*ktau(5      )) / 12.0_dp / deltau
+
+! calculate first-order derivate of K(\beta): startd
+     startd = ( 25.0_dp*ktau(ntime-0) - &
+                48.0_dp*ktau(ntime-1) + &
+                36.0_dp*ktau(ntime-2) - &
+                16.0_dp*ktau(ntime-3) + &
+                 3.0_dp*ktau(ntime-4)) / 12.0_dp / deltau
+
+! call the service layer
+     call ctqmc_make_spline(ntime, tmesh, ktau, startu, startd, ksed)
+
+     return
+  end subroutine ctqmc_make_ksed
 
 !!========================================================================
 !!>>> fast fourier transformation                                      <<<
