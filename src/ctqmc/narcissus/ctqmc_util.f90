@@ -142,7 +142,8 @@
 !!>>> ctqmc_make_ktau: evaluate the intermediate elements for ktau using
 !!>>> cubic spline interpolation
   function ctqmc_make_ktau(dtau) result(val)
-     use constants
+     use constants, only : dp
+
      use control
      use context
 
