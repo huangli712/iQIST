@@ -1106,12 +1106,18 @@
      return
   end subroutine cat_lshift_matrix
 
-!>>> update the mmat matrix and gmat matrix for right shift old segment
-! or anti-segment
+!!>>> cat_rshift_matrix: update the mmat matrix and gmat matrix for right
+!!>>> shift old segment or anti-segment
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : mkink
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, exp_s, exp_e
+     use context, only : rmesh
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -1135,7 +1141,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over segments
@@ -1292,15 +1298,17 @@
      return
   end subroutine cat_rshift_matrix
 
-!>>> global flip the time_s, time_e, mmat matrix, gmat matrix, and other
-! related global variables between spin up and spin down states. it is
-! used to avoid trapped by unphysical phase
+!!>>> cat_reflip_matrix: global flip the time_s, time_e, mmat matrix, gmat
+!!>>> matrix, and other related global variables between spin up and spin
+!!>>> down states. it is used to avoid trapped by unphysical phase
   subroutine cat_reflip_matrix(fup, fdn, kmax)
-     use constants
-     use control
-     use context
+     use stack, only : istack, istack_create, istack_copyer, istack_destroy
 
-     use stack
+     use control, only : mkink
+     use control, only : nfreq
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rank, stts
+     use context, only : gmat
 
      implicit none
 
@@ -1354,7 +1362,7 @@
      stts(fdn) = Tstts
 
 ! swap gmat matrix when needed
-     call zswap(nfreq, gmat(1:nfreq, fup, fup), 1, gmat(1:nfreq, fdn, fdn), 1)
+     call s_swap_z(nfreq, gmat(1:nfreq, fup, fup), gmat(1:nfreq, fdn, fdn))
 
      if ( kmax > 0 ) then
 
@@ -1363,16 +1371,16 @@
          iemax = max( maxval( index_e(1:kmax, fup) ), maxval( index_e(1:kmax, fdn) ) )
 
 ! swap index_s and index_e
-         call iswap(kmax, index_s(1:kmax, fup), index_s(1:kmax, fdn))
-         call iswap(kmax, index_e(1:kmax, fup), index_e(1:kmax, fdn))
+         call s_swap_i(kmax, index_s(1:kmax, fup), index_s(1:kmax, fdn))
+         call s_swap_i(kmax, index_e(1:kmax, fup), index_e(1:kmax, fdn))
 
 ! swap time_s and time_e
-         call dswap(ismax, time_s(1:ismax, fup), 1, time_s(1:ismax, fdn), 1)
-         call dswap(iemax, time_e(1:iemax, fup), 1, time_e(1:iemax, fdn), 1)
+         call s_swap_d(ismax, time_s(1:ismax, fup), time_s(1:ismax, fdn))
+         call s_swap_d(iemax, time_e(1:iemax, fup), time_e(1:iemax, fdn))
 
 ! swap exp_s and exp_e
-         call zswap(nfreq*ismax, exp_s(1:nfreq, 1:ismax, fup), 1, exp_s(1:nfreq, 1:ismax, fdn), 1)
-         call zswap(nfreq*iemax, exp_e(1:nfreq, 1:iemax, fup), 1, exp_e(1:nfreq, 1:iemax, fdn), 1)
+         call s_swap_z(nfreq*ismax, exp_s(1:nfreq, 1:ismax, fup), exp_s(1:nfreq, 1:ismax, fdn))
+         call s_swap_z(nfreq*iemax, exp_e(1:nfreq, 1:iemax, fup), exp_e(1:nfreq, 1:iemax, fdn))
 
 ! update mmat and gmat matrix when needed
          if ( rank(fup) > 0 ) call cat_reload_matrix(fup)
@@ -1381,34 +1389,6 @@
      endif ! back if ( kmax > 0 ) block
 
      return
-
-  contains
-
-!>>> extended BLAS subroutines, exchange two integer vectors
-  pure subroutine iswap(n, ix, iy)
-     implicit none
-
-! external arguments
-! dimension of integer vector
-     integer, intent(in) :: n
-
-! integer vector X
-     integer, intent(inout) :: ix(n)
-
-! integer vector Y
-     integer, intent(inout) :: iy(n)
-
-! local variables
-! dummy integer vector
-     integer :: it(n)
-
-     it = ix
-     ix = iy
-     iy = it
-
-     return
-  end subroutine iswap
-
   end subroutine cat_reflip_matrix
 
 !>>> global update the mmat matrix and gmat matrix from scratch
