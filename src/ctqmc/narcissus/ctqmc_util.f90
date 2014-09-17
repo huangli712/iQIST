@@ -219,7 +219,7 @@
                  3.0_dp*ktau(ntime-4)) / 12.0_dp / deltau
 
 ! call the service layer
-     call ctqmc_make_spline(ntime, tmesh, ktau, startu, startd, ksed)
+     call s_spl_splder(ntime, tmesh, ktau, startu, startd, ksed)
 
      return
   end subroutine ctqmc_make_ksed
