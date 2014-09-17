@@ -7,9 +7,10 @@
 !!!           ctqmc_impurity_tester
 !!! source  : ctqmc_solver.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/21/2010 by li huang
+!!!           09/18/2014 by li huang
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
@@ -17,12 +18,25 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> core engine for hybridization expansion version continuous time
-! quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
+!!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, mystd
+
+     use control, only : issun, isspn, isort, isvrt
+     use control, only : nband, nspin, norbs, ncfgs
+     use control, only : mkink, mfreq
+     use control, only : nffrq, nbfrq, nfreq, ntime, nsweep, nwrite, nmonte, ncarlo
+     use control, only : Uc, Jz
+     use control, only : beta
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : hist, prob
+     use context, only : nmat, nnmat, schi, sschi, ochi, oochi
+     use context, only : g2_re, g2_im, h2_re, h2_im
+     use context, only : symm
+     use context, only : gtau, ftau, grnf
+     use context, only : sig2
 
      implicit none
 
