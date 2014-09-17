@@ -79,26 +79,34 @@
 ! histogram for perturbation expansion series, for mpi case
      integer, allocatable  :: hist_mpi(:)
 
-! spin-spin correlation function, totally-averaged, for mpi case
-     real(dp), allocatable :: schi_mpi(:)
-
-! orbital-orbital correlation function, totally-averaged, for mpi case
-     real(dp), allocatable :: ochi_mpi(:)
+! probability of atomic states, for mpi case
+     real(dp), allocatable :: prob_mpi(:)
 
 ! impurity occupation number matrix, for mpi case
      real(dp), allocatable :: nmat_mpi(:)
 
-! probability of atomic states, for mpi case
-     real(dp), allocatable :: prob_mpi(:)
+! impurity double occupation number matrix, for mpi case
+     real(dp), allocatable :: nnmat_mpi(:,:)
+
+! spin-spin correlation function, totally-averaged, for mpi case
+     real(dp), allocatable :: schi_mpi(:)
 
 ! spin-spin correlation function, orbital-resolved, for mpi case
      real(dp), allocatable :: sschi_mpi(:,:)
 
+! orbital-orbital correlation function, totally-averaged, for mpi case
+     real(dp), allocatable :: ochi_mpi(:)
+
+
+
+
+
+
+
 ! orbital-orbital correlation function, orbital-resolved, for mpi case
      real(dp), allocatable :: oochi_mpi(:,:)
 
-! impurity double occupation number matrix, for mpi case
-     real(dp), allocatable :: nnmat_mpi(:,:)
+
 
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
