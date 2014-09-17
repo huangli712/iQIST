@@ -302,9 +302,10 @@
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
 ! build initial hybridization function using self-consistent condition
-     !do i=1,mfreq
-     !    hybf(i,:,:) = unity * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
-     !enddo ! over i={1,mfreq} loop
+     do i=1,mfreq
+         call s_identity_z( norbs, hybf(i,:,:) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+     enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
 !-------------------------------------------------------------------------
@@ -338,7 +339,7 @@
 ! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
@@ -375,7 +376,7 @@
 
          else
              if ( isscr == 99 ) then
-                 call ctqmc_print_error('ctqmc_selfer_init', 'solver.ktau.in does not exist')
+                 call s_print_error('ctqmc_selfer_init', 'solver.ktau.in does not exist')
              endif ! back if ( isscr == 99 ) block
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
@@ -383,7 +384,7 @@
 ! write out the kernel function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_ktau(tmesh, ktau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! since the kernel function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
