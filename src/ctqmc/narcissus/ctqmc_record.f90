@@ -1660,11 +1660,14 @@
      return
   end subroutine ctqmc_symm_nmat
 
-!>>> symmetrize the gtau according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_gtau: symmetrize the gtau according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_gtau(symm, gtau)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -1735,11 +1738,14 @@
      return
   end subroutine ctqmc_symm_gtau
 
-!>>> symmetrize the grnf according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_grnf: symmetrize the grnf according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_grnf(symm, grnf)
-     use constants
-     use control
+     use constants, only : dp, two, czero
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -1810,10 +1816,12 @@
      return
   end subroutine ctqmc_symm_grnf
 
-!>>> smooth impurity self-energy function in low frequency region
+!!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
+!!>>> frequency region
   subroutine ctqmc_smth_sigf(sigf)
-     use constants
-     use control
+     use constants, only : dp, czero
+
+     use control, only : nfreq
 
      implicit none
 
@@ -1879,6 +1887,10 @@
 
      return
   end subroutine ctqmc_smth_sigf
+
+!!========================================================================
+!!>>> postprocess physical observables                                 <<<
+!!========================================================================
 
 !>>> build imaginary green's function using orthogonal polynomial representation
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
