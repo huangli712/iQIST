@@ -1,41 +1,21 @@
-!-------------------------------------------------------------------------
-! project : narcissus
-! program : ctqmc_impurity_solver
-!           ctqmc_diagram_warmming
-!           ctqmc_diagram_sampling
-!           ctqmc_diagram_checking
-!           ctqmc_impurity_tester
-! source  : ctqmc_solver.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/26/2009 by li huang
-!           10/20/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/17/2009 by li huang
-!           11/22/2009 by li huang
-!           12/02/2009 by li huang
-!           12/04/2009 by li huang
-!           12/06/2009 by li huang
-!           12/17/2009 by li huang
-!           12/22/2009 by li huang
-!           12/26/2009 by li huang
-!           12/30/2009 by li huang
-!           01/13/2010 by li huang
-!           02/27/2010 by li huang
-!           06/09/2010 by li huang
-!           06/21/2010 by li huang
-! purpose : the main subroutine for the hybridization expansion version
-!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!           solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : narcissus
+!!! program : ctqmc_impurity_solver
+!!!           ctqmc_diagram_warmming
+!!!           ctqmc_diagram_sampling
+!!!           ctqmc_diagram_checking
+!!!           ctqmc_impurity_tester
+!!! source  : ctqmc_solver.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! history : 09/16/2009 by li huang
+!!!           06/21/2010 by li huang
+!!! purpose : the main subroutine for the hybridization expansion version
+!!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
+!!!           solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> core engine for hybridization expansion version continuous time
 ! quantum Monte Carlo quantum impurity solver
