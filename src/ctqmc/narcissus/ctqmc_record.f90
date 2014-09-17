@@ -2084,10 +2084,16 @@
   end subroutine cat_make_gtau3
   end subroutine ctqmc_make_gtau
 
-!>>> build auxiliary correlation function using orthogonal polynomial representation
+!!>>> ctqmc_make_ftau: build auxiliary correlation function using
+!!>>> orthogonal polynomial representation
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
      use context, only : ppleg, qqche
 
      implicit none
@@ -2209,15 +2215,30 @@
   end subroutine cat_make_ftau3
   end subroutine ctqmc_make_ftau
 
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make interpolation for self-energy
-! function between low frequency QMC data and high frequency Hubbard-I
-! approximation data, the full impurity green's function can be obtained by
-! using dyson's equation finally
+!!========================================================================
+!!>>> build self-energy function                                       <<<
+!!========================================================================
+
+!!>>> ctqmc_make_hub1: build atomic green's function and self-energy
+!!>>> function using improved Hubbard-I approximation, and then make
+!!>>> interpolation for self-energy function between low frequency QMC
+!!>>> data and high frequency Hubbard-I approximation data, the full
+!!>>> impurity green's function can be obtained by using dyson's equation
+!!>>> finally
   subroutine ctqmc_make_hub1()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, czi, czero
+
+     use control, only : norbs, ncfgs
+     use control, only : mfreq
+     use control, only : nfreq
+     use control, only : mune
+     use control, only : myid, master
+     use context, only : rmesh
+     use context, only : prob
+     use context, only : eimp, uumat
+     use context, only : grnf
+     use context, only : hybf
+     use context, only : sig2
 
      implicit none
 
@@ -2326,12 +2347,12 @@
                      value = value * permute
                  else
                      value = 0
-                 endif
+                 endif ! back if ( sc(m) == 1 ) block
 
                  if ( value /= 0 ) then
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
-                         call ctqmc_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
+                         call s_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
                      endif
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
@@ -2365,7 +2386,7 @@
 ! dump the ghub and shub, only for reference, only the master node can do it
      if ( myid == master ) then
          call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! build self-energy function at low frequency region
 !-------------------------------------------------------------------------
@@ -2381,7 +2402,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      do k=1,nfreq
          gaux = grnf(k,:,:)
-         call ctqmc_zmat_inv(norbs, gaux)
+         call s_inv_z(norbs, gaux)
          do i=1,norbs
              sig2(k,i,i) = czi * rmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
@@ -2449,7 +2470,7 @@
          do i=1,norbs
              gaux(i,i) = czi * rmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
-         call ctqmc_zmat_inv(norbs, gaux)
+         call s_inv_z(norbs, gaux)
          grnf(k,:,:) = gaux
      enddo ! over k={1,mfreq} loop
 
