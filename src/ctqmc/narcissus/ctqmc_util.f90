@@ -48,7 +48,7 @@
 
 ! external functions
 ! internal interpolation engine
-     procedure(real(dp))  :: s_spl_splint
+     procedure( real(dp) ) :: s_spl_splint
 
 ! local variables
 ! return value
@@ -144,8 +144,9 @@
   function ctqmc_make_ktau(dtau) result(val)
      use constants, only : dp
 
-     use control
-     use context
+     use control, only : ntime
+     use context, only : tmesh
+     use context, only : ktau, ksed
 
      implicit none
 
