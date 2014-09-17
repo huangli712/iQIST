@@ -505,45 +505,26 @@
 
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
-
-     schi  = schi_mpi  * real(nmonte) / real(nsweep)
-     ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
-     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      prob  = prob_mpi  * real(ncarlo) / real(nsweep)
 
-     do m=1,nband
-         do n=1,ntime
-             sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,nband} loop
-
-     do m=1,norbs
-         do n=1,ntime
-             oochi(n,m) = oochi_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,norbs} loop
-
+     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,norbs
              nnmat(n,m) = nnmat_mpi(n,m)   * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
-     do m=1,norbs
+     schi  = schi_mpi  * real(nmonte) / real(nsweep)
+     do m=1,nband
          do n=1,ntime
-             gtau(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(nsweep)
+             sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
          enddo ! over n={1,ntime} loop
-     enddo ! over m={1,norbs} loop
+     enddo ! over m={1,nband} loop
 
-     do m=1,norbs
-         do n=1,nfreq
-             grnf(n,m,m) = grnf_mpi(n,m,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,nfreq} loop
-     enddo ! over m={1,norbs} loop
-
+     ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,ntime
-             ftau(n,m,:) = ftau_mpi(n,m,:) * real(ncarlo) / real(nsweep)
+             oochi(n,m) = oochi_mpi(n,m)   * real(nmonte) / real(nsweep)
          enddo ! over n={1,ntime} loop
      enddo ! over m={1,norbs} loop
 
@@ -561,6 +542,24 @@
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
+     do m=1,norbs
+         do n=1,ntime
+             gtau(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(nsweep)
+         enddo ! over n={1,ntime} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,ntime
+             ftau(n,m,:) = ftau_mpi(n,m,:) * real(ncarlo) / real(nsweep)
+         enddo ! over n={1,ntime} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,nfreq
+             grnf(n,m,m) = grnf_mpi(n,m,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,nfreq} loop
+     enddo ! over m={1,norbs} loop
+
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
 ! function between low frequency QMC data and high frequency Hubbard-I
@@ -576,37 +575,47 @@
          call ctqmc_make_hub2()
      endif ! back if ( isort <= 3 ) block
 
-!=========================================================================
-!>>> symmetrizing final results                                        <<<
-!=========================================================================
+!!========================================================================
+!!>>> symmetrizing final results                                       <<<
+!!========================================================================
 
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_nmat(symm, nmat)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (gtau) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, gtau)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (grnf) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, grnf)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity self-energy function (sig2) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, sig2)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
-!=========================================================================
-!>>> writing final results                                             <<<
-!=========================================================================
+!!========================================================================
+!!>>> writing final results                                            <<<
+!!========================================================================
 
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist)
+     endif ! back if ( myid == master ) block
+
+! write out the final probability data, prob
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_prob(prob)
+     endif ! back if ( myid == master ) block
+
+! write out the final (double) occupation matrix data, nmat and nnmat
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_nmat(nmat, nnmat)
      endif ! back if ( myid == master ) block
 
 ! write out the final spin-spin correlation function data, schi and sschi
@@ -619,14 +628,14 @@
          call ctqmc_dump_ochi(ochi, oochi)
      endif ! back if ( myid == master ) block
 
-! write out the final (double) occupation matrix data, nmat and nnmat
+! write out the final two-particle green's function data, g2_re and g2_im
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_nmat(nmat, nnmat)
+         call ctqmc_dump_twop(g2_re, g2_im)
      endif ! back if ( myid == master ) block
 
-! write out the final probability data, prob
+! write out the final vertex function data, h2_re and h2_im
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_prob(prob)
+         call ctqmc_dump_vrtx(h2_re, h2_im)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
@@ -642,16 +651,6 @@
 ! write out the final self-energy function data, sig2
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_sigf(rmesh, sig2)
-     endif ! back if ( myid == master ) block
-
-! write out the final two-particle green's function data, g2_re and g2_im
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_twop(g2_re, g2_im)
-     endif ! back if ( myid == master ) block
-
-! write out the final vertex function data, h2_re and h2_im
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_vrtx(h2_re, h2_im)
      endif ! back if ( myid == master ) block
 
 !=========================================================================
