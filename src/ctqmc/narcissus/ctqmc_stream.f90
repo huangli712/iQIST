@@ -638,6 +638,8 @@
      return
   end subroutine ctqmc_solver_init
 
+!!>>> ctqmc_final_array: garbage collection for this program, please refer
+!!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
      use context ! ALL
 
@@ -646,6 +648,8 @@
 ! deallocate memory for context module
      call ctqmc_deallocate_memory_clur()
 
+     call ctqmc_deallocate_memory_mesh()
+     call ctqmc_deallocate_memory_meat()
      call ctqmc_deallocate_memory_umat()
      call ctqmc_deallocate_memory_mmat()
 
