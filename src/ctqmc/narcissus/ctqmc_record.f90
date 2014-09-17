@@ -525,9 +525,11 @@
      return
   end subroutine ctqmc_record_grnf
 
-!>>> record the histogram of perturbation expansion series
+!!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
-     use context
+     use control, only : mkink
+     use context, only : ckink
+     use context, only : hist
 
      implicit none
 
@@ -536,17 +538,64 @@
          hist(ckink) = hist(ckink) + 1
      else
          hist(mkink) = hist(mkink) + 1
-     endif
+     endif ! back if ( ckink > 0 ) block
 
      return
   end subroutine ctqmc_record_hist
 
-!>>> record the occupation matrix, double occupation matrix, and auxiliary
-! physical observables simulataneously
+!!>>> ctqmc_record_prob: record the probability of atomic states
+  subroutine ctqmc_record_prob()
+     use constants, only : one
+
+     use control, only : norbs
+     use context, only : prob
+     use context, only : stts
+
+     implicit none
+
+! local variables
+! current flavor channel
+     integer :: flvr
+
+! atomic state index
+     integer :: pstat
+
+! current atomic state for segment representation
+     integer :: state(norbs)
+
+! generate current atomic state
+     do flvr=1,norbs
+         select case ( stts(flvr) )
+
+             case (0:1)
+                 state(flvr) = 0
+
+             case (2:3)
+                 state(flvr) = 1
+
+         end select
+     enddo ! over flvr={1,norbs} loop
+
+! convert atomic state array to index
+     call ctqmc_make_state(norbs, pstat, state)
+
+! accumulate the data
+     prob(pstat) = prob(pstat) + one
+
+     return
+  end subroutine ctqmc_record_prob
+
+!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
+!!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : nband, norbs
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : paux, nmat, nnmat
+     use context, only : rank, stts, uumat
 
      implicit none
 
@@ -652,6 +701,16 @@
      enddo ! over flvr={1,norbs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+! evaluate <N^2>
+!-------------------------------------------------------------------------
+     paux(6) = paux(6) + ( sum(sgmt) / beta )**2
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^1>
+!-------------------------------------------------------------------------
+     paux(5) = paux(5) + sum(sgmt) / beta
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! evaluate spin magnetization: < Sz >
 !-------------------------------------------------------------------------
      do flvr=1,nband
@@ -682,11 +741,14 @@
      return
   end subroutine ctqmc_record_nmat
 
-!>>> record the spin-spin correlation function
+!!>>> ctqmc_record_schi: record the spin-spin correlation function
   subroutine ctqmc_record_schi()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : nband, norbs
+     use control, only : ntime
+     use context, only : tmesh
+     use context, only : schi, sschi
 
      implicit none
 
@@ -750,11 +812,14 @@
      return
   end subroutine ctqmc_record_schi
 
-!>>> record the orbital-orbital correlation function
+!!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
   subroutine ctqmc_record_ochi()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : norbs
+     use control, only : ntime
+     use context, only : tmesh
+     use context, only : ochi, oochi
 
      implicit none
 
@@ -815,7 +880,7 @@
      return
   end subroutine ctqmc_record_ochi
 
-!>>> record the two-particle green's function
+!!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
      use constants
      use control
@@ -1070,46 +1135,6 @@
 
      return
   end subroutine ctqmc_record_vrtx
-
-!>>> record the probability of atomic states
-  subroutine ctqmc_record_prob()
-     use constants
-     use control
-     use context
-
-     implicit none
-
-! local variables
-! current flavor channel
-     integer :: flvr
-
-! atomic state index
-     integer :: pstat
-
-! current atomic state for segment representation
-     integer :: state(norbs)
-
-! generate current atomic state
-     do flvr=1,norbs
-         select case ( stts(flvr) )
-
-             case (0:1)
-                 state(flvr) = 0
-
-             case (2:3)
-                 state(flvr) = 1
-
-         end select
-     enddo ! over flvr={1,norbs} loop
-
-! convert atomic state array to index
-     call ctqmc_make_state(norbs, pstat, state)
-
-! accumulate the data
-     prob(pstat) = prob(pstat) + one
-
-     return
-  end subroutine ctqmc_record_prob
 
 !>>> reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
