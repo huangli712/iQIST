@@ -136,7 +136,11 @@
      return
   end subroutine ctqmc_make_hsed
 
-!>>> evaluate the intermediate elements for ktau using cubic spline interpolation
+!! To provide cubic spline subroutines and wrapper functions to interpolate
+!! the retarded interaction integrated function in imaginary-time axis.
+
+!!>>> ctqmc_make_ktau: evaluate the intermediate elements for ktau using
+!!>>> cubic spline interpolation
   function ctqmc_make_ktau(dtau) result(val)
      use constants
      use control
