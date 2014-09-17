@@ -1,35 +1,23 @@
-!-------------------------------------------------------------------------
-! project : narcissus
-! program : ctqmc_config
-!           ctqmc_setup_array
-!           ctqmc_selfer_init
-!           ctqmc_solver_init
-!           ctqmc_final_array
-! source  : ctqmc_stream.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/27/2009 by li huang
-!           10/24/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/10/2009 by li huang
-!           11/18/2009 by li huang
-!           12/01/2009 by li huang
-!           12/05/2009 by li huang
-!           02/27/2010 by li huang
-!           06/08/2010 by li huang
-! purpose : initialize and finalize the hybridization expansion version
-!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!           solver and dynamical mean field theory (DMFT) self-consistent
-!           engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : narcissus
+!!! program : ctqmc_config
+!!!           ctqmc_setup_array
+!!!           ctqmc_selfer_init
+!!!           ctqmc_solver_init
+!!!           ctqmc_final_array
+!!! source  : ctqmc_stream.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           06/08/2010 by li huang
+!!!           09/17/2014 by li huang
+!!! purpose : initialize and finalize the hybridization expansion version
+!!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
+!!!           solver and dynamical mean field theory (DMFT) self-consistent
+!!!           engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> setup key parameters for continuous time quantum Monte Carlo quantum
 ! impurity solver and dynamical mean field theory kernel
