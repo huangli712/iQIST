@@ -1397,12 +1397,15 @@
      return
   end subroutine ctqmc_reduce_nmat
 
-!>>> reduce the schi and sschi from all children processes
+!!>>> ctqmc_reduce_schi: reduce the schi and sschi from all children processes
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : nband
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : schi, sschi
 
      implicit none
 
@@ -1441,12 +1444,15 @@
      return
   end subroutine ctqmc_reduce_schi
 
-!>>> reduce the ochi and oochi from all children processes
+!!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from all children processes
   subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : ochi, oochi
 
      implicit none
 
@@ -1485,12 +1491,16 @@
      return
   end subroutine ctqmc_reduce_ochi
 
-!>>> reduce the g2_re_mpi and g2_im_mpi from all children processes
+!!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from all
+!!>>> children processes
   subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : g2_re, g2_im
 
      implicit none
 
