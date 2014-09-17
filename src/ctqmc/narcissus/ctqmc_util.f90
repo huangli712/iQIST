@@ -156,7 +156,7 @@
 
 ! external functions
 ! internal interpolation engine
-     real(dp), external :: ctqmc_make_splint
+     real(dp), external :: s_spl_splint
 
 ! local variables
 ! return value
