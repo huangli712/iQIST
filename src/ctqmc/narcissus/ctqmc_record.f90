@@ -1192,12 +1192,15 @@
      return
   end subroutine ctqmc_reduce_gtau
 
-!>>> reduce the ftau from all children processes
+!!>>> ctqmc_reduce_ftau: reduce the ftau from all children processes
   subroutine ctqmc_reduce_ftau(ftau_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : ftau
 
      implicit none
 
@@ -1229,12 +1232,15 @@
      return
   end subroutine ctqmc_reduce_ftau
 
-!>>> reduce the grnf from all children processes
+!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi)
-     use constants
-     use context
+     use constants, only : dp, czero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nprocs
+     use context, only : grnf
 
      implicit none
 
@@ -1243,7 +1249,7 @@
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
 
 ! initialize grnf_mpi
-     grnf_mpi = zero
+     grnf_mpi = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
