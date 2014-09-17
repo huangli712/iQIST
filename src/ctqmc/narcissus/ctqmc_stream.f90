@@ -19,13 +19,13 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> setup key parameters for continuous time quantum Monte Carlo quantum
-! impurity solver and dynamical mean field theory kernel
+!!>>> ctqmc_config: setup key parameters for continuous time quantum Monte
+!!>>> Carlo quantum impurity solver and dynamical mean field theory kernel
   subroutine ctqmc_config()
-     use constants
-     use control
+     use parser, only : p_create, p_parse, p_get, p_destroy
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control ! ALL
 
      implicit none
 
@@ -33,9 +33,9 @@
 ! used to check whether the input file (solver.ctqmc.in) exists
      logical :: exists
 
-!=========================================================================
-! setup dynamical mean field theory self-consistent engine related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup general control flags                                      <<<
+!!========================================================================
      isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
@@ -43,7 +43,11 @@
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
      isscr  = 1            ! normal (1) or holstein-hubbard (2) or plasmon pole (3) or ohmic model (4)
-!-------------------------------------------------------------------------
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!!========================================================================
+!!>>> setup common variables for quantum impurity model                <<<
+!!========================================================================
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
