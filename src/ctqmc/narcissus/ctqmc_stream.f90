@@ -280,64 +280,24 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build identity: unity
-     !unity = czero
-     !do i=1,norbs
-     !    unity(i,i) = cone
-     !enddo ! over i={1,norbs} loop
-
 ! build mesh for legendre polynomial in [-1,1]
-     do i=1,legrd
-         pmesh(i) = real(i - 1) * two / real(legrd - 1) - one
-     enddo ! over i={1,legrd} loop
+     call s_linspace_d(-one, one, legrd, pmesh)
 
 ! build mesh for chebyshev polynomial in [-1,1]
-     do i=1,chgrd
-         qmesh(i) = real(i - 1) * two / real(chgrd - 1) - one
-     enddo ! over i={1,chgrd} loop
+     call s_linspace_d(-one, one, chgrd, qmesh)
 
 ! build imaginary time tau mesh: tmesh
-     do i=1,ntime
-         tmesh(i) = zero + ( beta - zero ) / real(ntime - 1) * real(i - 1)
-     enddo ! over i={1,ntime} loop
+     call s_linspace_d(zero, beta, ntime, tmesh)
 
 ! build matsubara frequency mesh: rmesh
-     do j=1,mfreq
-         rmesh(j) = ( two * real(j - 1) + one ) * ( pi / beta )
-     enddo ! over j={1,mfreq} loop
-
-! build matsubara frequency mesh: cmesh
-     !do k=1,mfreq
-     !    cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
-     !enddo ! over k={1,mfreq} loop
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build legendre polynomial in [-1,1]
-     if ( lemax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','lemax must be larger than 2')
-     endif
-
-     do i=1,legrd
-         ppleg(i,1) = one
-         ppleg(i,2) = pmesh(i)
-         do j=3,lemax
-             k = j - 1
-             ppleg(i,j) = ( real(2*k-1) * pmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
-         enddo ! over j={3,lemax} loop
-     enddo ! over i={1,legrd} loop
+     call s_legendre(lemax, legrd, pmesh, ppleg)
 
 ! build chebyshev polynomial in [-1,1]
 ! note: it is second kind chebyshev polynomial
-     if ( chmax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','chmax must be larger than 2')
-     endif
-
-     do i=1,chgrd
-         qqche(i,1) = one
-         qqche(i,2) = two * qmesh(i)
-         do j=3,chmax
-             qqche(i,j) = two * qmesh(i) * qqche(i,j-1) - qqche(i,j-2)
-         enddo ! over j={3,chmax} loop
-     enddo ! over i={1,chgrd} loop
+     call s_chebyshev(chmax, chgrd, qmesh, qqche)
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
