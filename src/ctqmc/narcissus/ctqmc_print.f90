@@ -61,11 +61,11 @@
      return
   end subroutine ctqmc_print_header
 
-!>>> print the ending information for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> ctqmc_print_footer: print the ending information for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
+!!>>> theory self-consistent engine
   subroutine ctqmc_print_footer()
-     use constants
+     use constants, only : dp, mystd
 
      implicit none
 
@@ -79,7 +79,7 @@
      call cpu_time(tot_time)
 
 ! obtain current date and time
-     call ctqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a,f10.2,a)') 'NARCISSUS >>> total time spent:', tot_time, 's'
      write(mystd,*)
@@ -90,10 +90,11 @@
      return
   end subroutine ctqmc_print_footer
 
-!>>> print the running parameters, only for reference
+!!>>> ctqmc_print_summary: print the running parameters, only for reference
   subroutine ctqmc_print_summary()
-     use constants
-     use control
+     use constants, only : mystd, ev2k
+
+     use control ! ALL
 
      implicit none
 
@@ -128,11 +129,18 @@
      return
   end subroutine ctqmc_print_summary
 
-!>>> print the runtime information, including physical observables and
-! statistic data, only for reference
+!!>>> ctqmc_print_runtime: print the runtime information, including physical
+!!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
-     use constants
-     use context
+     use constants, only : one, half, mystd
+
+     use control, only : nsweep, nmonte
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : paux
 
      implicit none
 
@@ -155,6 +163,7 @@
      write(mystd,'(4X,a)')        'auxiliary system observables:'
      write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / istat, 'epot :', paux(2) / istat
      write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / istat, '<Sz> :', paux(4) / istat
+     write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / istat, '<N2> :', paux(6) / istat
 
 ! about insert action
      if ( insert_tcount <= half ) insert_tcount = -one ! if insert is disable
