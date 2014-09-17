@@ -443,14 +443,15 @@
      return
   end subroutine ctqmc_selfer_init
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
-     use constants
-     use control
-     use context
+     use constants, only : zero, czero
+     use stack, only : istack_clean, istack_push
+     use spring, only : spring_sfmt_init
 
-     use stack
-     use spring
+     use control ! ALL
+     use context ! ALL
 
      implicit none
 
@@ -470,6 +471,8 @@
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
+! for stack data structure
+!-------------------------------------------------------------------------
 ! init empty_s and empty_e stack structure
      do i=1,norbs
          call istack_clean( empty_s(i) )
@@ -483,6 +486,8 @@
          enddo ! over j={mkink,1} loop
      enddo ! over i={1,norbs} loop
 
+! for real variables
+!-------------------------------------------------------------------------
 ! init statistics variables
      insert_tcount = zero
      insert_accept = zero
@@ -504,10 +509,14 @@
      reflip_accept = zero
      reflip_reject = zero
 
+! for integer variables
+!-------------------------------------------------------------------------
 ! init global variables
      ckink   = 0
      cstat   = 0
 
+! for integer arrays
+!-------------------------------------------------------------------------
 ! init hist  array
      hist    = 0
 
@@ -525,15 +534,21 @@
      index_s = 0
      index_e = 0
 
+! for real arrays
+!-------------------------------------------------------------------------
 ! init time  array
      time_s  = zero
      time_e  = zero
 
+! init auxiliary physical observables
+     paux    = zero
+
 ! init probability for atomic states
      prob    = zero
 
-! init auxiliary physical observables
-     paux    = zero
+! init occupation number array
+     nmat    = zero
+     nnmat   = zero
 
 ! init spin-spin correlation function
      schi    = zero
@@ -551,10 +566,6 @@
      h2_re   = zero
      h2_im   = zero
 
-! init occupation number array
-     nmat    = zero
-     nnmat   = zero
-
 ! init M-matrix related array
      mmat    = zero
      lspace  = zero
@@ -567,6 +578,8 @@
 ! init imaginary time bath weiss's function array
      wtau    = zero
 
+! for complex arrays
+!-------------------------------------------------------------------------
 ! init exponent array exp_s and exp_e
      exp_s   = czero
      exp_e   = czero
@@ -589,13 +602,17 @@
 !<     sig1    = czero
      sig2    = czero
 
+! for the other variables/arrays
+!-------------------------------------------------------------------------
 ! calculate two-index pair interaction, uumat
      call ctqmc_make_uumat(uumat)
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
-     call ctqmc_fourier_hybf(hybf, htau)
+     call ctqmc_four_hybf(hybf, htau)
 
+! dump the necessary files
+!-------------------------------------------------------------------------
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, htau)
