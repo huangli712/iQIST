@@ -1,32 +1,29 @@
-!-------------------------------------------------------------------------
-! project : gardenia
-! program : ctqmc_print_header
-!           ctqmc_print_footer
-!           ctqmc_print_summary
-!           ctqmc_print_runtime
-!           ctqmc_print_error
-!           ctqmc_print_exception
-! source  : ctqmc_print.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@gmail.com)
-! history : 09/15/2009 by li huang
-!           09/20/2009 by li huang
-!           12/01/2009 by li huang
-!           02/21/2010 by li huang
-! purpose : provide printing infrastructure for hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver
-! input   :
-! output  :
-! status  : very unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : gardenia
+!!! program : ctqmc_print_header
+!!!           ctqmc_print_footer
+!!!           ctqmc_print_summary
+!!!           ctqmc_print_runtime
+!!! source  : ctqmc_print.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/15/2009 by li huang
+!!!           02/21/2010 by li huang
+!!!           09/10/2014 by li huang
+!!! purpose : provide printing infrastructure for hybridization expansion
+!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
+!!!           impurity solver and dynamical mean field theory (DMFT) self
+!!!           -consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> print the startup information for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> ctqmc_print_header: print the startup information for continuous
+!!>>> time quantum Monte Carlo quantum impurity solver plus dynamical
+!!>>> mean field theory self-consistent engine
   subroutine ctqmc_print_header()
-     use constants
+     use constants, only : mystd
+
      use control, only : nprocs
 
      implicit none
@@ -35,16 +32,16 @@
      character (len = 20) :: date_time_string
 
 ! obtain current date and time
-     call ctqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a)') 'GARDENIA'
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'version: 2014.01.13T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & UNIFR'
-     write(mystd,'(2X,a)') 'support: huangli712@gmail.com'
-     write(mystd,'(2X,a)') 'license: GPL2 and later versions'
+     write(mystd,'(2X,a)') 'Version: 2014.09.10T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang, CAEP & UNIFR'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GPL2 and later versions'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'GARDENIA >>> start running at '//date_time_string
@@ -64,11 +61,11 @@
      return
   end subroutine ctqmc_print_header
 
-!>>> print the ending information for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> ctqmc_print_footer: print the ending information for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
+!!>>> theory self-consistent engine
   subroutine ctqmc_print_footer()
-     use constants
+     use constants, only : dp, mystd
 
      implicit none
 
@@ -82,7 +79,7 @@
      call cpu_time(tot_time)
 
 ! obtain current date and time
-     call ctqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a,f10.2,a)') 'GARDENIA >>> total time spent:', tot_time, 's'
      write(mystd,*)
@@ -93,10 +90,11 @@
      return
   end subroutine ctqmc_print_footer
 
-!>>> print the running parameters, only for reference
+!!>>> ctqmc_print_summary: print the running parameters, only for reference
   subroutine ctqmc_print_summary()
-     use constants
-     use control
+     use constants, only : mystd, ev2k
+
+     use control ! ALL
 
      implicit none
 
@@ -130,11 +128,19 @@
      return
   end subroutine ctqmc_print_summary
 
-!>>> print the runtime information, including physical observables and
-! statistic data, only for reference
+!!>>> ctqmc_print_runtime: print the runtime information, including physical
+!!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
-     use constants
-     use context
+     use constants, only : one, half, mystd
+
+     use control, only : nsweep, nmonte
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : reswap_tcount, reswap_accept, reswap_reject
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : paux
 
      implicit none
 
@@ -157,6 +163,7 @@
      write(mystd,'(4X,a)')        'auxiliary system observables:'
      write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / istat, 'epot :', paux(2) / istat
      write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / istat, '<Sz> :', paux(4) / istat
+     write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / istat, '<N2> :', paux(6) / istat
 
 ! about insert action
      if ( insert_tcount <= half ) insert_tcount = -one ! if insert is disable
@@ -196,51 +203,3 @@
 
      return
   end subroutine ctqmc_print_runtime
-
-!>>> print the error information and STOP the program
-  subroutine ctqmc_print_error(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! error message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
-
-! TERMINATE THE PROGRAM
-!-------------------------------------------------------------------------
-     STOP
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine ctqmc_print_error
-
-!>>> print normal runtime exceptional information, and continue
-  subroutine ctqmc_print_exception(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! exception message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
-
-! CONTINUE/PAUSE THE PROGRAM
-!-------------------------------------------------------------------------
-     CONTINUE ! OR PAUSE
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine ctqmc_print_exception

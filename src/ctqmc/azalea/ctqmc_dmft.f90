@@ -23,8 +23,16 @@
 !!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
      use constants, only : dp, one, half, czi, mystd
-     use control, only : norbs, nband, mfreq, Uc, Jz, mune, alpha, myid, master
-     use context, only : tmesh, rmesh, eimp, hybf, grnf, wssf, wtau
+
+     use control, only : nband, norbs
+     use control, only : mfreq
+     use control, only : Uc, Jz
+     use control, only : mune, alpha
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : eimp
+     use context, only : grnf
+     use context, only : wtau, wssf, hybf
 
      implicit none
 
@@ -108,8 +116,12 @@
 
 !!>>> ctqmc_dmft_conver: check the convergence of self-energy function
   subroutine ctqmc_dmft_conver(iter, convergence)
-     use constants, only : dp, one, two, zero, eps8, mystd
-     use control, only : norbs, mfreq, niter, alpha, myid, master
+     use constants, only : dp, zero, one, two, eps8, mystd
+
+     use control, only : norbs, niter
+     use control, only : mfreq
+     use control, only : alpha
+     use control, only : myid, master
      use context, only : sig1, sig2
 
      implicit none
@@ -172,7 +184,10 @@
 !!>>> band width
   subroutine ctqmc_dmft_bethe(hybf, grnf)
      use constants, only : dp
-     use control, only : norbs, mfreq, part
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : part
 
      implicit none
 
@@ -202,10 +217,14 @@
 !!>>> transformation and numerical integration
   subroutine ctqmc_dmft_anydos(hybf, grnf, sigf)
      use constants, only : dp, zero, czi, czero, mytmp
-     use control, only : norbs, mfreq, mune, myid, master
-     use context, only: rmesh, eimp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : mune
+     use control, only : myid, master
+     use context, only : rmesh
+     use context, only : eimp
 
      implicit none
 

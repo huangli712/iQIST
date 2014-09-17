@@ -26,11 +26,18 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> dump data on imaginary time axis                                 <<<
+!!========================================================================
+
 !!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_gtau(tmesh, gtau)
      use constants, only : dp, mytmp
-     use control, only : ntime, norbs, nband, beta
+
+     use control, only : nband, norbs
+     use control, only : ntime
+     use control, only : beta
 
      implicit none
 
@@ -82,7 +89,9 @@
 !!>>> time space
   subroutine ctqmc_dump_wtau(tmesh, wtau)
      use constants, only : dp, mytmp
-     use control, only : ntime, norbs, nband
+
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -120,7 +129,9 @@
 !!>>> time space
   subroutine ctqmc_dump_htau(tmesh, htau)
      use constants, only : dp, mytmp
-     use control, only : ntime, norbs, nband
+
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -158,7 +169,10 @@
 !!>>> time space (generated in binning mode)
   subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
      use constants, only : dp, mytmp
-     use control, only : ntime, norbs, nband, beta
+
+     use control, only : nband, norbs
+     use control, only : ntime
+     use control, only : beta
 
      implicit none
 
@@ -213,11 +227,17 @@
      return
   end subroutine ctqmc_dump_gbin
 
+!!========================================================================
+!!>>> dump data on matsubara frequency axis                            <<<
+!!========================================================================
+
 !!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
 !!>>> frequency space
   subroutine ctqmc_dump_grnf(rmesh, grnf)
      use constants, only : dp, mytmp
-     use control, only : mfreq, norbs, nband
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -259,7 +279,9 @@
 !!>>> frequency space
   subroutine ctqmc_dump_wssf(rmesh, wssf)
      use constants, only : dp, mytmp
-     use control, only : mfreq, norbs, nband
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -301,7 +323,9 @@
 !!>>> frequency space
   subroutine ctqmc_dump_hybf(rmesh, hybf)
      use constants, only : dp, mytmp
-     use control, only : mfreq, norbs, nband
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -343,7 +367,9 @@
 !!>>> frequency space
   subroutine ctqmc_dump_sigf(rmesh, sigf)
      use constants, only : dp, mytmp
-     use control, only : mfreq, norbs, nband
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -386,7 +412,9 @@
 !!>>> space
   subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
      use constants, only : dp, mytmp
-     use control, only : mfreq, norbs
+
+     use control, only : norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -427,10 +455,15 @@
      return
   end subroutine ctqmc_dump_hub1
 
+!!========================================================================
+!!>>> dump data of physical observables                                <<<
+!!========================================================================
+
 !!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
 !!>>> perturbation expansion series
   subroutine ctqmc_dump_hist(hist)
      use constants, only : dp, mytmp
+
      use control, only : mkink
 
      implicit none
@@ -474,7 +507,8 @@
 !!>>> hamiltonian matrix
   subroutine ctqmc_dump_prob(prob)
      use constants, only : dp, zero, half, mytmp
-     use control, only : ncfgs, norbs, nband
+
+     use control, only : nband, norbs, ncfgs
 
      implicit none
 
@@ -569,7 +603,8 @@
 !!>>> occupation matrix
   subroutine ctqmc_dump_nmat(nmat, nnmat)
      use constants, only : dp, mytmp
-     use control, only : norbs, nband
+
+     use control, only : nband, norbs
 
      implicit none
 

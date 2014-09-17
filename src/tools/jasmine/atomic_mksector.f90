@@ -116,8 +116,14 @@
 
 !----------------------------------------------------------------
 ! make good_sz and good_jz
+     orb_good_sz = 0
+     orb_good_jz = 0
      call atomic_mkgood_sz(orb_good_sz)
-     call atomic_mkgood_jz(orb_good_jz)
+     
+! jz only valid for nband==3, 5, 7
+     if (nband == 3 .or. nband == 5 .or. nband == 7 ) then
+         call atomic_mkgood_jz(orb_good_jz)
+     endif
 
 ! build good quantum numbers for each Fock state
      counter = 0

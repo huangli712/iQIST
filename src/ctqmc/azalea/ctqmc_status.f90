@@ -3,7 +3,7 @@
 !!! program : ctqmc_save_status
 !!!           ctqmc_retrieve_status
 !!! source  : ctqmc_status.f90
-!!! type    : subroutine
+!!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/23/2009 by li huang
 !!!           02/21/2010 by li huang
@@ -23,8 +23,10 @@
 !!>>> impurity solver
   subroutine ctqmc_save_status()
      use constants, only : dp, mytmp
+
      use control, only : norbs
-     use context, only : stts, rank, index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
 
      implicit none
 
@@ -82,10 +84,14 @@
 !!>>> quantum impurity solver
   subroutine ctqmc_retrieve_status()
      use constants, only : dp, zero, mytmp
-     use control, only : mkink, norbs, beta, myid, master
-     use context, only : ckink, cstat, stts, rank
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mkink
+     use control, only : beta
+     use control, only : myid, master
+     use context, only : ckink, cstat
+     use context, only : rank, stts
 
      implicit none
 
