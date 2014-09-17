@@ -79,14 +79,19 @@
      return
   end subroutine ctqmc_save_status
 
-!>>> retrieve the perturbation expansion series information to initialize
-! the continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_retrieve_status: retrieve the perturbation expansion series
+!!>>> information to initialize the continuous time quantum Monte Carlo
+!!>>> quantum impurity solver
   subroutine ctqmc_retrieve_status()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mkink
+     use control, only : beta
+     use control, only : myid, master
+     use context, only : ckink, cstat
+     use context, only : rank, stts
 
      implicit none
 
@@ -121,7 +126,7 @@
 ! inquire file status: solver.status.dat, only master node can do it
      if ( myid == master ) then
          inquire (file = 'solver.status.dat', exist = exists)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! broadcast exists from master node to all children nodes
 # if defined (MPI)
@@ -197,13 +202,13 @@
 
 ! check the validity of tau_s
      if ( maxval(tau_s) > beta ) then
-         call ctqmc_print_error('ctqmc_retrieve_status','the retrieved tau_s data are not correct')
-     endif
+         call s_print_error('ctqmc_retrieve_status','the retrieved tau_s data are not correct')
+     endif ! back if ( maxval(tau_s) > beta ) block
 
 ! check the validity of tau_e
      if ( maxval(tau_e) > beta ) then
-         call ctqmc_print_error('ctqmc_retrieve_status','the retrieved tau_e data are not correct')
-     endif
+         call s_print_error('ctqmc_retrieve_status','the retrieved tau_e data are not correct')
+     endif ! back if ( maxval(tau_e) > beta ) block
 
 ! restore all the segments or anti-segments
      do i=1,norbs
