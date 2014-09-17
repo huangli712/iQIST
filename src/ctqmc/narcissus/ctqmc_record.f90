@@ -1892,10 +1892,16 @@
 !!>>> postprocess physical observables                                 <<<
 !!========================================================================
 
-!>>> build imaginary green's function using orthogonal polynomial representation
+!!>>> ctqmc_make_gtau: build imaginary green's function using orthogonal
+!!>>> polynomial representation
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, pi
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
      use context, only : ppleg, qqche
 
      implicit none
@@ -1960,7 +1966,7 @@
 
   contains
 
-!>>> build the integral kernel function
+!!>>> cat_make_kernel: build the integral kernel function
   subroutine cat_make_kernel(kdim, kern)
      implicit none
 
@@ -2008,7 +2014,8 @@
      return
   end subroutine cat_make_kernel
 
-!>>> build impurity green's function using normal representation
+!!>>> cat_make_gtau1: build impurity green's function using normal
+!!>>> representation
   subroutine cat_make_gtau1()
      implicit none
 
@@ -2022,7 +2029,8 @@
      return
   end subroutine cat_make_gtau1
 
-!>>> build impurity green's function using legendre polynomial representation
+!!>>> cat_make_gtau2: build impurity green's function using legendre
+!!>>> polynomial representation
   subroutine cat_make_gtau2()
      implicit none
 
@@ -2048,7 +2056,8 @@
      return
   end subroutine cat_make_gtau2
 
-!>>> build impurity green's function using chebyshev polynomial representation
+!!>>> cat_make_gtau3: build impurity green's function using chebyshev
+!!>>> polynomial representation
   subroutine cat_make_gtau3()
      implicit none
 
