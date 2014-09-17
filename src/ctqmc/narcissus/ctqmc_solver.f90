@@ -653,51 +653,57 @@
          call ctqmc_dump_sigf(rmesh, sig2)
      endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> saving quantum impurity solver                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> saving quantum impurity solver                                   <<<
+!!========================================================================
 
 ! save the perturbation expansion series information to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
      endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> finishing quantum impurity solver                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> finishing quantum impurity solver                                <<<
+!!========================================================================
 
 ! print the footer of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'NARCISSUS >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
-     deallocate(hist_mpi)
-     deallocate(schi_mpi)
-     deallocate(ochi_mpi)
-     deallocate(nmat_mpi)
-     deallocate(prob_mpi)
-     deallocate(gtau_mpi)
-     deallocate(ftau_mpi)
-     deallocate(grnf_mpi)
-     deallocate(sschi_mpi)
-     deallocate(oochi_mpi)
+     deallocate(hist_mpi )
+     deallocate(prob_mpi )
+     deallocate(nmat_mpi )
      deallocate(nnmat_mpi)
+     deallocate(schi_mpi )
+     deallocate(sschi_mpi)
+     deallocate(ochi_mpi )
+     deallocate(oochi_mpi)
      deallocate(g2_re_mpi)
      deallocate(g2_im_mpi)
      deallocate(h2_re_mpi)
      deallocate(h2_im_mpi)
+     deallocate(gtau_mpi )
+     deallocate(ftau_mpi )
+     deallocate(grnf_mpi )
 
      return
   end subroutine ctqmc_impurity_solver
 
-!>>> perform thermalization on perturbation expansion series to achieve
-! thermodynamics equilibrium state
+!!>>> ctqmc_diagram_warmming: perform thermalization or warmup on the
+!!>>> perturbation expansion series to achieve thermodynamics stable
+!!>>> equilibrium state
   subroutine ctqmc_diagram_warmming()
      use constants, only : zero
+
      use control, only : ntherm
-     use context
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
 
      implicit none
 
