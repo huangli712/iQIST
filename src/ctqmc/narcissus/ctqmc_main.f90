@@ -49,6 +49,7 @@
 !! solver.ctqmc.in (optional)
 !! solver.eimp.in (optional)
 !! solver.hyb.in (optional)
+!! solver.ktau.in (optional)
 !!
 !! Output
 !! ======
