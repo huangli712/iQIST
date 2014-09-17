@@ -329,7 +329,8 @@
 
   contains
 
-!>>> record auxiliary correlation function using normal representation
+!!>>> cat_record_ftau1: record auxiliary correlation function using normal
+!!>>> representation
   subroutine cat_record_ftau1()
      implicit none
 
@@ -384,7 +385,8 @@
      return
   end subroutine cat_record_ftau1
 
-!>>> record auxiliary correlation function using legendre polynomial representation
+!!>>> cat_record_ftau2: record auxiliary correlation function using
+!!>>> legendre polynomial representation
   subroutine cat_record_ftau2()
      implicit none
 
@@ -439,7 +441,8 @@
      return
   end subroutine cat_record_ftau2
 
-!>>> record auxiliary correlation function using chebyshev polynomial representation
+!!>>> cat_record_ftau3: record auxiliary correlation function using
+!!>>> chebyshev polynomial representation
   subroutine cat_record_ftau3()
      implicit none
 
@@ -495,11 +498,13 @@
   end subroutine cat_record_ftau3
   end subroutine ctqmc_record_ftau
 
-!>>> record the impurity green's function in matsubara frequency space
+!!>>> ctqmc_record_grnf: record the impurity green's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_record_grnf()
-     use constants
-     use control
-     use context
+     use control, only : norbs
+     use control, only : nfreq
+     use context, only : gmat
+     use context, only : grnf
 
      implicit none
 
