@@ -31,17 +31,22 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> driver layer: updating perturbation expansion series              <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> driver layer: updating perturbation expansion series             <<<
+!!========================================================================
 
-!>>> insert new segment or anti-segment in the perturbation expansion series
+!!>>> ctqmc_insert_kink: insert new segment or anti-segment in the
+!!>>> perturbation expansion series
   subroutine ctqmc_insert_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : rank, stts
 
      implicit none
 
@@ -94,11 +99,11 @@
 ! anti-segments ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == mkink ) then
-!<         call ctqmc_print_exception('ctqmc_insert_kink','can not insert any segments')
+!<         call s_print_exception('ctqmc_insert_kink','can not insert any segments')
          insert_tcount = insert_tcount + one
          insert_reject = insert_reject + one
          RETURN
-     endif
+     endif ! back if ( ckink == mkink ) block
 
 ! randomly choose anti and tau_start, and then check whether tau_start is
 ! valid, if tau_start is valid, then determine tau_end, tau_max, is, and
@@ -112,7 +117,7 @@
          call cat_insert_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -120,7 +125,7 @@
          call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! calculate the transition probability for insert new segment or anti-segment
      p = deter_ratio * trace_ratio * ( beta * tau_max / real( ckink + 1 ) )
@@ -158,13 +163,17 @@
      return
   end subroutine ctqmc_insert_kink
 
-!>>> remove old segment or anti-segment in the perturbation expansion series
+!!>>> ctqmc_remove_kink: remove old segment or anti-segment in the
+!!>>> perturbation expansion series
   subroutine ctqmc_remove_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use control, only : beta
+     use context, only : ckink, cstat
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : rank, stts
 
      implicit none
 
@@ -213,11 +222,11 @@
 ! anti-segments ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_remove_kink','can not remove any segments')
+!<         call s_print_exception('ctqmc_remove_kink','can not remove any segments')
          remove_tcount = remove_tcount + one
          remove_reject = remove_reject + one
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first determine anti and is randomly, then tau_start is obtained by
 ! is. and then ie, tau_end, and tau_max are evaluated carefully according
@@ -268,13 +277,16 @@
      return
   end subroutine ctqmc_remove_kink
 
-!>>> left shift old segment or anti-segment in the perturbation expansion series
+!!>>> ctqmc_lshift_kink: left shift old segment or anti-segment in the
+!!>>> perturbation expansion series
   subroutine ctqmc_lshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, cstat
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rank, stts
 
      implicit none
 
@@ -318,11 +330,11 @@
 ! anti-segments ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_lshift_kink','can not lshift any segments')
+!<         call s_print_exception('ctqmc_lshift_kink','can not lshift any segments')
          lshift_tcount = lshift_tcount + one
          lshift_reject = lshift_reject + one
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first, we select iso randomly, and then obtain tau_start1. according
 ! to the existing segments, we determine tau_start2 and related index isn,
@@ -367,13 +379,16 @@
      return
   end subroutine ctqmc_lshift_kink
 
-!>>> right shift old segment or anti-segment in the perturbation expansion series
+!!>>> ctqmc_rshift_kink: right shift old segment or anti-segment in the
+!!>>> perturbation expansion series
   subroutine ctqmc_rshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, cstat
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : rank, stts
 
      implicit none
 
@@ -417,11 +432,11 @@
 ! anti-segments ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_rshift_kink','can not rshift any segments')
+!<         call s_print_exception('ctqmc_rshift_kink','can not rshift any segments')
          rshift_tcount = rshift_tcount + one
          rshift_reject = rshift_reject + one
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first, we select ieo randomly, and then obtain tau_end1. according
 ! to the existing segments, we determine tau_end2 and related index ien,
@@ -466,14 +481,15 @@
      return
   end subroutine ctqmc_rshift_kink
 
-!>>> perform a global update, exchange the states between spin up and spin
-! down, it maybe useful for magnetic systems
+!!>>> ctqmc_reflip_kink: perform a global update, exchange the states
+!!>>> between spin up and spin down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : nband, norbs
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : rank, symm
 
      implicit none
 
@@ -645,10 +661,11 @@
      return
   end subroutine ctqmc_reflip_kink
 
-!>>> global update all segments or anti-segments in the perturbation expansion series
+!!>>> ctqmc_reload_kink: global update all segments or anti-segments in
+!!>>> the perturbation expansion series
   subroutine ctqmc_reload_kink()
-     use control
-     use context
+     use control, only : norbs
+     use context, only : rank
 
      implicit none
 
@@ -670,16 +687,20 @@
      return
   end subroutine ctqmc_reload_kink
 
-!-------------------------------------------------------------------------
-!>>> service layer: update M and G matrices                            <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update M and G matrices                           <<<
+!!========================================================================
 
-!>>> update the mmat matrix and gmat matrix for insert new segment
-! or anti-segment
+!!>>> cat_insert_matrix: update the mmat matrix and gmat matrix for insert
+!!>>> new segment or anti-segment
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, exp_s, exp_e
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -799,12 +820,16 @@
      return
   end subroutine cat_insert_matrix
 
-!>>> update the mmat matrix and gmat matrix for remove old segment
-! or anti-segment
+!!>>> cat_remove_matrix: update the mmat matrix and gmat matrix for remove
+!!>>> old segment or anti-segment
   subroutine cat_remove_matrix(flvr, is, ie)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, exp_s, exp_e
+     use context, only : lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -889,12 +914,18 @@
      return
   end subroutine cat_remove_matrix
 
-!>>> update the mmat matrix and gmat matrix for left shift old segment
-! or anti-segment
+!!>>> cat_lshift_matrix: update the mmat matrix and gmat matrix for left
+!!>>> shift old segment or anti-segment
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : mkink
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_e, exp_s, exp_e
+     use context, only : rmesh
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -918,7 +949,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over segments
