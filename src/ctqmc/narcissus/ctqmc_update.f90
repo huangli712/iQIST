@@ -1594,11 +1594,16 @@
      return
   end subroutine cat_remove_detrat
 
-!>>> calculate the determinant ratio for left shift old segment or anti-segment
+!!>>> cat_lshift_detrat: calculate the determinant ratio for left shift
+!!>>> old segment or anti-segment
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_e, time_e
+     use context, only : mmat
 
      implicit none
 
@@ -1620,7 +1625,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external    :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over segments
@@ -1663,11 +1668,16 @@
      return
   end subroutine cat_lshift_detrat
 
-!>>> calculate the determinant ratio for right shift old segment or anti-segment
+!!>>> cat_rshift_detrat: calculate the determinant ratio for right shift
+!!>>> old segment or anti-segment
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
+     use context, only : mmat
 
      implicit none
 
@@ -1689,7 +1699,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external    :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over segments
@@ -1732,11 +1742,15 @@
      return
   end subroutine cat_rshift_detrat
 
-!>>> calculate the determinant ratio for global spin flip
+!!>>> cat_reflip_detrat: calculate the determinant ratio for global
+!!>>> spin flip
   subroutine cat_reflip_detrat(up, dn, ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
+     use context, only : mmat
 
      implicit none
 
@@ -1752,7 +1766,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over segments
@@ -1787,8 +1801,8 @@
      allocate(Dmm(kaux,kaux), stat=istat)
      allocate(Tmm(kaux,kaux), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('cat_reflip_detrat','can not allocate enough memory')
-     endif
+         call s_print_error('cat_reflip_detrat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! init Dmm and Tmm matrix
      Dmm = zero
@@ -1811,7 +1825,7 @@
      call dgemm('N', 'N', kaux, kaux, kaux, one, Dmm, kaux, mmat(1:kaux, 1:kaux, up), kaux, zero, Tmm, kaux)
 
 ! calculate the determinant of Tmm, it is the desired ratio
-     call ctqmc_dmat_det(kaux, Tmm, ratio)
+     call s_det_d(kaux, Tmm, ratio)
 
 ! deallocate memory
      deallocate(Dmm)
