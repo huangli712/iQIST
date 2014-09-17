@@ -286,9 +286,9 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> beginning main iteration                                          <<<
-!=========================================================================
+!!========================================================================
+!!>>> beginning main iteration                                         <<<
+!!========================================================================
 
 ! start simulation
      if ( myid == master ) then ! only master node can do it
@@ -303,9 +303,9 @@
 
          CTQMC_DUMP_ITERATION: do j=1, nwrite
 
-!=========================================================================
-!>>> sampling perturbation expansion series                            <<<
-!=========================================================================
+!!========================================================================
+!!>>> sampling perturbation expansion series                           <<<
+!!========================================================================
 
 ! increase cstep by 1
              cstep = cstep + 1
@@ -313,9 +313,9 @@
 ! sampling the perturbation expansion feynman diagrams randomly
              call ctqmc_diagram_sampling(cstep)
 
-!=========================================================================
-!>>> sampling the physical observables                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> sampling the physical observables                                <<<
+!!========================================================================
 
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
