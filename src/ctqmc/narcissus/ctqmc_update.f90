@@ -1391,11 +1391,16 @@
      return
   end subroutine cat_reflip_matrix
 
-!>>> global update the mmat matrix and gmat matrix from scratch
+!!>>> cat_reload_matrix: global update the mmat matrix and gmat matrix
+!!>>> from scratch
   subroutine cat_reload_matrix(flvr)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rank
+     use context, only : mmat, gmat
 
      implicit none
 
@@ -1405,7 +1410,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over segments
@@ -1449,7 +1454,7 @@
      enddo ! over j={1,kaux} loop
 
 ! now we obtain dmat matrix, while what we need is its inversion
-     call ctqmc_dmat_inv(kaux, mmat(1:kaux, 1:kaux, flvr))
+     call s_inv_d(kaux, mmat(1:kaux, 1:kaux, flvr))
 
 ! reset gmat matrix
      gmat(:, flvr, flvr) = czero
@@ -1469,15 +1474,20 @@
      return
   end subroutine cat_reload_matrix
 
-!-------------------------------------------------------------------------
-!>>> service layer: evaluate the determinant ratio                     <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: evaluate the determinant ratio                    <<<
+!!========================================================================
 
-!>>> calculate the determinant ratio for insert new segment or anti-segment
+!!>>> cat_insert_detrat: calculate the determinant ratio for insert new
+!!>>> segment or anti-segment
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : lspace, rspace, mmat
 
      implicit none
 
@@ -1496,7 +1506,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over segments
@@ -1558,9 +1568,12 @@
      return
   end subroutine cat_insert_detrat
 
-!>>> calculate the determinant ratio for remove old segment or anti-segment
+!!>>> cat_remove_detrat: calculate the determinant ratio for remove old
+!!>>> segment or anti-segment
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
-     use context
+     use constants, only : dp
+
+     use context, only : mmat
 
      implicit none
 
