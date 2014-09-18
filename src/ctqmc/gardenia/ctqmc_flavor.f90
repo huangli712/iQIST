@@ -43,7 +43,7 @@
      use constants, only : dp, zero
 
      use control, only : norbs
-     use control, only : beta, mune
+     use control, only : mune, beta
      use context, only : eimp, uumat
 
      implicit none
@@ -139,7 +139,7 @@
      use constants, only : dp, zero
 
      use control, only : norbs
-     use control, only : beta, mune
+     use control, only : mune, beta
      use context, only : eimp, uumat
 
      implicit none
@@ -235,7 +235,7 @@
      use constants, only : dp, zero
 
      use control, only : norbs
-     use control, only : beta, mune
+     use control, only : mune, beta
      use context, only : eimp, uumat
 
      implicit none
@@ -341,7 +341,7 @@
      use constants, only : dp, zero
 
      use control, only : norbs
-     use control, only : beta, mune
+     use control, only : mune, beta
      use context, only : eimp, uumat
 
      implicit none

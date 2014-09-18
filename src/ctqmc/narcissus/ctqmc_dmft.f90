@@ -171,7 +171,7 @@
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(3(2X,a,i3))') 'NARCISSUS >>> cur_iter:', iter, 'min_iter:', minit, 'max_iter:', niter
-         write(mystd,'(2(2X,a,E10.4))') 'NARCISSUS >>> sig_curr:', seps, 'eps_curr:', eps8
+         write(mystd,'(2(2X,a,E12.4))') 'NARCISSUS >>> sig_curr:', seps, 'eps_curr:', eps8
          write(mystd,'( (2X,a,L1))') 'NARCISSUS >>> self-consistent iteration convergence is ', convergence
          write(mystd,*)
      endif ! back if ( myid == master ) block

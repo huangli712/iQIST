@@ -32,8 +32,9 @@
      use control, only : beta
      use control, only : myid, master
      use context, only : tmesh, rmesh
-     use context, only : hist, prob, nmat, nnmat
-     use context, only : schi, sschi, ochi, oochi, g2_re, g2_im, h2_re, h2_im
+     use context, only : hist, prob
+     use context, only : nmat, nnmat, schi, sschi, ochi, oochi
+     use context, only : g2_re, g2_im, h2_re, h2_im
      use context, only : symm
      use context, only : gtau, ftau, grnf
      use context, only : sig2
