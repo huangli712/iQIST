@@ -3,12 +3,25 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/common directory
+## Makefile for iqist/src/common directory.
 ##
 ## Usage
 ## =====
 ##
 ## 'make' or 'make clean'
+##
+## Author
+## ======
+##
+## This building system is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+## Department of Physics, University of Fribourg, Fribourg CH-1700, Switzerland
+##
+## History
+## =======
+##
+## 09/18/2014 by li huang
 ##
 ##
 
