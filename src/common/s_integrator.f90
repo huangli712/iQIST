@@ -4,8 +4,6 @@
 ! Module containg different fortran functions for integrating functions
 !
 ! A) 1D function to evaluate
-! B) 2D function to evaluate
-! c) 3D function to evaluate
 !
 ! 1)  Composite Midpoint Rule 1D
 ! 2)  Composite Trapezoid Rule 1D
@@ -13,11 +11,7 @@
 ! 4)  Composite Simpson's Method 1D
 ! 5)  Composite Wherry's Method 1D
 ! 6)  Gaussian Quadrature 1D w/ n=5
-! 7)  Gaussian Quadrature 2D w/ n=5
-! 8)  Gaussian Quadrature 3D w/ n=5
 ! 9)  Romburg's Method with Gaussian Quadrature 1D w/ n=5
-! 10) Composite Trapezoid 2D
-! 11) Romburg's Method with Composite Trapezoid 2D
 
 module integrationMethods
   implicit none
@@ -45,8 +39,6 @@ module integrationMethods
   ! Interface for handling functions of different dimensions
   interface f
     module procedure f1 ! 1D
-    module procedure f2 ! 2D
-    module procedure f3 ! 3D
   end interface f
 
   contains
@@ -63,31 +55,6 @@ module integrationMethods
       return
 
     end function f1
-
-    ! B) 2D function
-    double precision function f2(x,y)
-
-      double precision, intent(in) :: x,y
-
-      !f2 = sqrt(x**5 * (cos(y) + sin(y)) ) / (cos(y) + sin(y))
-      !f2 = x**2 + y**2 
-      f2 = ((x-0.5d0)**2 + (y-0.5d0)**2) -  
-
-      return
-
-    end function f2
-
-    ! C) 3D function
-    double precision function f3(x,y,z)
-
-      double precision, intent(in) :: x,y,z
-
-      f3 = ( (2.0d0+x**3)*sin(y+4.0d0)*(z+1.0d0)**2 ) / &
-           sqrt( (x-4.0d0)**2 + (y-5.0d0)**2 + (z-6.0d0)**2 )
-
-      return
-
-    end function f3
 
     ! 1) Composite Midpoint Rule
     double precision function compMidpoint1d(a,b,n)
@@ -230,53 +197,6 @@ module integrationMethods
 
     end function gaussQuad1d5
 
-    ! 7) Gaussian Quadrature 2D w/ n=5
-    double precision function gaussQuad2d5(a,b,c,d)
-
-      double precision, intent(in) :: a, b, c, d
-      double precision :: sum1
-      integer :: i,j
-
-      sum1 = 0.0d0
-      do i=0,4
-        do j=0,4
-          sum1 = sum1 + coeff(i) * coeff(j) * &
-                 f( ((b-a)*r(i) + b + a) / 2.0d0 , &
-                    ((d-c)*r(j) + d + c) / 2.0d0 )
-        end do
-      end do
-
-      gaussQuad2d5 = ((b - a) / 2.0d0) * ((d - c) / 2.0d0) * sum1
- 
-      return
- 
-    end function gaussQuad2d5
-
-    ! 8) Gaussian Quadrature 3D w/ n=5
-    double precision function gaussQuad3d5(a,b,c,d,e,fIn)
-
-      double precision, intent(in) :: a, b, c, d, e, fIn
-      double precision :: sum1
-      integer :: i,j,k
-
-      sum1 = 0.0d0
-      do i=0,4
-        do j=0,4
-          do k=0,4
-            sum1 = sum1 + coeff(i) * coeff(j) * coeff(k) * &
-                   f( ((b-a)*r(i) + b + a) / 2.0d0 , &
-                      ((d-c)*r(j) + d + c) / 2.0d0 , &
-                      ((fIn-e)*r(k) + fIn + e) / 2.0d0 )
-          end do
-        end do
-      end do
-
-      gaussQuad3d5 = ((b - a) / 2.0d0) * ((d - c) / 2.0d0) * ((fIn - e) / 2.0d0) * sum1
- 
-      return
- 
-    end function gaussQuad3d5
-
     ! 9) Romberg Method with Gaussian Quadrature 1D w/ n=5
     function rombergGaussQuad1d5(a,b,n,m)
 
@@ -313,70 +233,5 @@ module integrationMethods
       return
 
     end function rombergGaussQuad1d5
-
-    ! 10 - Composite Trapezoid 2D
-    double precision function compTrapezoid2d(a,b,c,d,n,m)
-
-      double precision, intent(in) :: a, b, c, d
-      integer, intent(in) :: n, m
-      double precision :: h, k, sum1a,sum1b,sum2
-      integer :: i,j
-
-      h = (b-a) / dble(n)
-      k = (d-c) / dble(m)
-
-      sum1a = 0.0d0
-      sum1b = 0.0d0
-      sum2 = 0.0d0
-
-      do i=1, n-1 
-        sum1a = sum1a + f(a+dble(i)*h,c) + f(a+dble(i)*h,d)
-      end do
-
-      do j=1, m-1
-        sum1b = sum1b + f(a,c+dble(j)*k) + f(a,c+dble(j)*k)
-      end do      
-
-      do i=1, n-1
-        do j=1, m-1
-          sum2 = sum2 + f(a+dble(i)*h,c+dble(j)*k)
-        end do
-      end do
-
-      compTrapezoid2d = (h*k/4.0d0) * ( f(a,c) + f(b,c) + f(a,d) + f(b,d) + &
-                                        2.0d0*(sum1a+sum1b) + 4.0d0*sum2)
-
-      return 
-
-    end function compTrapezoid2d
-
-    ! 11 - Romberg Method with Composite Trapezoid 2D
-    function rombergCompTrap2d(a,b,c,d,n,m,q)
-
-      integer, intent(in) :: q
-      double precision, dimension(0:q-1,0:q-1) :: R, rombergCompTrap2d
-      integer :: i,j,n,m
-      double precision , intent(in) :: a,b,c,d
-
-      ! Initialize romberg array
-      R = 0.0d0
-
-      ! Loop to compute intial Comp Trap 2D  approximations:
-      do i=0, q-1
-        R(i,0) = compTrapezoid2d(a,b,c,d,n,m)
-        n = n*2
-        m = m*2
-      end do
-    
-      ! Loop to compute Romberg approximations from intial CompTrap 2d approxs:
-      do j=1, q-1
-        do i=j, q-1
-          R(i,j) = R(i,j-1) + ( (R(i,j-1) - R(i-1,j-1)) / (4**j - 1) )
-        end do
-      end do
-
-      rombergCompTrap2d = R
-
-    end function rombergCompTrap2d
 
 end module integrationMethods
