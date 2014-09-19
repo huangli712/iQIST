@@ -194,12 +194,13 @@
   function spring_mt_stream() result(r)
      implicit none
 
-! return type
-     real(ieee64) :: r
-
 ! local parameters
 ! pre-calculated to avoid division below
      real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967296.0_ieee64
+
+! local variables
+! return type
+     real(ieee64) :: r
 
 ! compute it
      r = (real(spring_mt_source(),ieee64) + 0.5_ieee64) * factor
@@ -213,12 +214,13 @@
   function spring_mt_string() result(r)
      implicit none
 
-! return type
-     real(ieee64) :: r
-
 ! local parameters
 ! pre-calculated to avoid division below
      real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967295.0_ieee64
+
+! local variables
+! return type
+     real(ieee64) :: r
 
 ! compute it
      r = real(spring_mt_source(),ieee64) * factor
@@ -230,9 +232,6 @@
 !!>>> random sequence
   function spring_mt_source() result(r)
      implicit none
-
-! return type
-     integer(int64) :: r
 
 ! local parameters
      integer(int64), parameter :: MAGIC(0:1) = (/ 0_int64, -1727483681_int64 /)
@@ -246,6 +245,9 @@
      integer(int64), parameter :: TEMPERING_C =  -272236544_int64
 
 ! local variables
+! return type
+     integer(int64) :: r
+
 ! loop index
      integer(int32) :: k
 
@@ -295,7 +297,7 @@
 
 ! external arguments
 ! seed for random number generator
-     integer(int32) :: seed
+     integer(int32), intent(in) :: seed
 
 ! local variables
 ! loop index
@@ -358,12 +360,13 @@
   function spring_sfmt_stream() result(r)
      implicit none
 
-! return type
-     real(ieee64) :: r
-
 ! local parameters
 ! pre-calculated to avoid division below
      real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967296.0_ieee64
+
+! local variables
+! return type
+     real(ieee64) :: r
 
 ! compute it
      r = (real(spring_sfmt_source(),ieee64) + 0.5_ieee64) * factor
@@ -375,12 +378,13 @@
   function spring_sfmt_string() result(r)
      implicit none
 
-! return type
-     real(ieee64) :: r
-
 ! local parameters
 ! pre-calculated to avoid division below
      real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967295.0_ieee64
+
+! local variables
+! return type
+     real(ieee64) :: r
 
 ! compute it
      r = real(spring_sfmt_source(),ieee64) * factor
@@ -393,6 +397,7 @@
   function spring_sfmt_source() result(r)
      implicit none
 
+! local variables
 ! return type
      integer(int64) :: r
 
