@@ -287,10 +287,13 @@
      select type (t)
          type is (integer)
              allocate(s%item(s%nsize), source = 0)
+
          type is (logical)
              allocate(s%item(s%nsize), source = .true.)
+
          type is (real(dp))
              allocate(s%item(s%nsize), source = 0.0_dp)
+
          type is (complex(dp))
              allocate(s%item(s%nsize), source = (0.0_dp, 0.0_dp))
      end select
@@ -409,16 +412,19 @@
                  type is (integer)
                      v = u
              end select
+
          type is (logical)
              select type (u => sa%item)
                  type is (logical)
                      v = u
              end select
+
          type is (real(dp))
              select type (u => sa%item)
                  type is (real(dp))
                      v = u
              end select
+
          type is (complex(dp))
              select type (u => sa%item)
                  type is (complex(dp))
@@ -477,16 +483,19 @@
                      type is (integer)
                          v(pos) = item
                  end select
+
              type is (logical)
                  select type (item)
                      type is (logical)
                          v(pos) = item
                  end select
+
              type is (real(dp))
                  select type (item)
                      type is (real(dp))
                          v(pos) = item
                  end select
+
              type is (complex(dp))
                  select type (item)
                      type is (complex(dp))
@@ -546,16 +555,19 @@
                      type is (integer)
                          item = v(pos)
                  end select
+
              type is (logical)
                  select type (item)
                      type is (logical)
                          item = v(pos)
                  end select
+
              type is (real(dp))
                  select type (item)
                      type is (real(dp))
                          item = v(pos)
                  end select
+
              type is (complex(dp))
                  select type (item)
                      type is (complex(dp))
@@ -611,16 +623,19 @@
                      type is (integer)
                          v(s%top) = item
                  end select
+
              type is (logical)
                  select type (item)
                      type is (logical)
                          v(s%top) = item
                  end select
+
              type is (real(dp))
                  select type (item)
                      type is (real(dp))
                          v(s%top) = item
                  end select
+
              type is (complex(dp))
                  select type (item)
                      type is (complex(dp))
@@ -675,16 +690,19 @@
                      type is (integer)
                          item = v(s%top)
                  end select
+
              type is (logical)
                  select type (item)
                      type is (logical)
                          item = v(s%top)
                  end select
+
              type is (real(dp))
                  select type (item)
                      type is (real(dp))
                          item = v(s%top)
                  end select
+
              type is (complex(dp))
                  select type (item)
                      type is (complex(dp))
@@ -739,16 +757,19 @@
                      type is (integer)
                          item = v(s%top)
                  end select
+
              type is (logical)
                  select type (item)
                      type is (logical)
                          item = v(s%top)
                  end select
+
              type is (real(dp))
                  select type (item)
                      type is (real(dp))
                          item = v(s%top)
                  end select
+
              type is (complex(dp))
                  select type (item)
                      type is (complex(dp))
