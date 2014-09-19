@@ -226,7 +226,7 @@
      return
   end function spring_mt_string
 
-!!>>> spring_mt_source: obtain the next 32-bit integer in the psuedo
+!!>>> spring_mt_source: obtain the next 64-bit integer in the psuedo
 !!>>> random sequence
   function spring_mt_source() result(r)
      implicit none
@@ -329,7 +329,7 @@
          enddo ! over j={0,31} loop
      enddo ! over i={0,3} loop
 
-! the period is OK ? re-adjust pt32 array
+! the period is OK? re-adjust pt32 array
      if ( inner /= 1 ) then
          adjust_period_loop: do i=0,3
              work = 1
@@ -363,7 +363,7 @@
 
 ! local parameters
 ! pre-calculated to avoid division below
-     real(8), parameter :: factor = 1.0_ieee64 / 4294967296.0_ieee64
+     real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967296.0_ieee64
 
 ! compute it
      r = (real(spring_sfmt_source(),ieee64) + 0.5_ieee64) * factor
