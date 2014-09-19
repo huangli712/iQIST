@@ -40,20 +40,20 @@
 ##
 ## 'make xxx'
 ##
+## here xxx is the code name, please input 'make help-more' to obtain more
+## information about the possible values of xxx
+##
 ## 7. clean the directories
 ## ------------------------
 ##
 ## 'make clean'
 ##
-## here xxx is the code name, please input 'make help-more' to obtain more
-## information about the possible values of xxx
-##
 ## Author
 ## ======
 ##
-## This building system is designed, created, implemented, and maintained
-## by Li Huang (email: huangli712@gmail.com).
+## This building system is designed, created, implemented, and maintained by
 ##
+## Li Huang // email: huangli712@gmail.com
 ## Department of Physics, University of Fribourg, Fribourg CH-1700, Switzerland
 ##
 ## History
@@ -61,6 +61,7 @@
 ##
 ## 08/19/2014 by li huang
 ## 09/06/2014 by li huang
+## 09/18/2014 by li huang
 ##
 ##
 
@@ -92,9 +93,6 @@ help-more:
 	@echo '  targets:'
 	@echo '     help              print short usage information        '
 	@echo '     help-more         print full usage information         '
-	@echo
-	@echo '     common            build common modules and util library'
-	@echo '     clean-common      clean common directory               '
 	@echo
 	@echo '     azalea            build azalea code                    '
 	@echo '     azalea-lib        build azalea library                 '
@@ -133,26 +131,22 @@ help-more:
 	@echo '     hibiscus          build hibiscus code                  '
 	@echo '     clean-hibiscus    clean hibiscus directory             '
 	@echo
+	@echo '     common            build common modules and util library'
+	@echo '     clean-common      clean common directory               '
+	@echo
 	@echo '     api               generate api library                 '
 	@echo '     clean-api         clean api directory                  '
 	@echo
 	@echo '     doc               generate document                    '
 	@echo '     clean-doc         clean doc directory                  '
 
-# all-in-one target
+# all-in-one building target
 all: build-all
 build-all: common api solver tool other
 
+# all-in-one cleaning target
 clean: clean-all
 clean-all: clean-common clean-api clean-solver clean-tool clean-other
-
-# targets for common
-common: build-common
-build-common:
-	cd ../common/; pwd; make
-
-clean-common:
-	cd ../common/; pwd; make clean
 
 # targets for solver
 solver: common api build-solver
@@ -272,6 +266,14 @@ build-hibiscus:
 
 clean-hibiscus:
 	cd ../tools/hibiscus/; pwd; make clean
+
+# targets for common: common
+common: build-common
+build-common:
+	cd ../common/; pwd; make
+
+clean-common:
+	cd ../common/; pwd; make clean
 
 # tagets for api: api
 api: build-api

@@ -46,7 +46,7 @@
 
 ! external functions
 ! internal interpolation engine
-     procedure(real(dp))  :: s_spl_splint
+     procedure( real(dp) ) :: s_spl_splint
 
 ! local variables
 ! return value

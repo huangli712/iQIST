@@ -14,13 +14,15 @@ Introduction
 
 The Interacting Quantum Impurity Solver Toolkit (dubbed iQIST) is an open
 source software package aiming to provide a full, reliable, flexible, and
-powerful tool chain for various quantum impurity models. It contains some
+powerful tool chain for various quantum impurity models. It contains a few
 continuous-time quantum Monte Carlo impurity solvers (hybridization
-expansion version), Hirsch-Fye quantum Monte Carlo impurity solver, and
-corresponding prep-processed and post-processed tools.
+expansion version), a Hirsch-Fye quantum Monte Carlo impurity solver, and
+numerous prep-processed and post-processed tools. The iQIST is an all-in-one
+package. With it you can solve quantum impurity models and anaylyze the
+calculated results easily and efficiently.
 
-Licence
--------
+Policy
+------
 
 The iQIST software package is released under the General Public Licence
  3.0 (GPL) or later version.
@@ -28,10 +30,15 @@ The iQIST software package is released under the General Public Licence
 Versions
 --------
 
-The current release of iQIST is 0.2.x.
+The current stable release of iQIST is 0.2.x.
 
 Features
 --------
+
+The iQIST is a powerful software package. It consists of many components 
+(We just call the executable program as component in iQIST). The main
+components of iQIST is the continuous-time quantum Monte Carlo impurity
+solvers. So far these impurity solvers support the following features:
 
 * Density-density interaction
 * General interaction
@@ -63,13 +70,17 @@ Features
 Obtain
 ------
 
-The readers who are interested in it can write a letter to the authors to
-request an electronic copy of the newest version of iQIST, or they can
-download it directly from the public code repository. 
-(see http://bitbucket.org).
+The readers who are interested in it should write a letter to the authors
+to request an electronic copy of the newest version of iQIST, or they can
+download it directly from the public code repository. Please check the 
+following website regularly:
+    http://bitbucket.org
 
 Prerequisite
 ------------
+
+In order to compile and install iQIST correctly, you should ensure the
+following softwares are correctly installed and configured in your OS.
 
 * Intel Fortran compiler
 * MPICH2 or OpenMPI
@@ -77,7 +88,6 @@ Prerequisite
 * LAPACK
 * Python 2.X
 * scipy, numpy, and f2py
-
 
 Installation
 ------------
