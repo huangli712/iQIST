@@ -63,11 +63,13 @@
 
      implicit none
 
-! external argumenst
+! external arguments
      double precision, intent(in) :: a,b
      integer, intent(in) :: n
-     double precision :: h, oddSum, evenSum
      double precision :: f
+
+! local variables
+     double precision :: h, oddSum, evenSum
      integer :: i
 
      real(dp) :: val
