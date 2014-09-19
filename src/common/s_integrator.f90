@@ -26,8 +26,8 @@
      real(dp), intent(in) :: a
      real(dp), intent(in) :: b
 
-! external function
-     procedure( real(dp) ) :: f
+! external function, it means the integrator
+     real(dp) :: f
 
 ! local variables
 ! loop index
