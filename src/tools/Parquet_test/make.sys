@@ -1,0 +1,31 @@
+# fortran compiler and linker
+#-------------------------------------------------------------------------
+F90    = mpif90
+LINKER = $(F90)
+
+# fortran preprocessor options, common setting
+#-------------------------------------------------------------------------
+MPI    = -DMPI
+OMP    = #-openmp
+FPP    = -fpp
+CPP    = $(FPP) $(MPI) $(OMP)
+
+# machine tuning options, just for my laptop: iris system
+#-------------------------------------------------------------------------
+GPROF  = #-pg
+CHECK  = -warn all -check all -traceback -g
+CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
+LEVEL  = -O3 -xHost -unroll-aggressive -align all
+MTUNE  = -mtune=core2
+
+# flags for compiler and linker
+#-------------------------------------------------------------------------
+FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MTUNE) $(GPROF)
+LFLAGS = $(OMP) $(GPROF)
+
+# linear algebra library, lapack and blas
+#-------------------------------------------------------------------------
+#LIBS   = -L. -llapack -lblas #-lguide
+#LIBS   = -L. -llapack -lgoto #-lguide
+export MKL_LIBRARY_PATH=/opt/intel/composer_xe_2013.5.192/mkl/lib/intel64/
+LIBS   = -L ${MKL_LIBRARY_PATH}/libmkl_lapack95_lp64.a ${MKL_LIBRARY_PATH}/libmkl_scalapack_lp64.a -Wl,--start-group  ${MKL_LIBRARY_PATH}/libmkl_cdft_core.a ${MKL_LIBRARY_PATH}/libmkl_intel_lp64.a ${MKL_LIBRARY_PATH}/libmkl_sequential.a ${MKL_LIBRARY_PATH}/libmkl_core.a ${MKL_LIBRARY_PATH}/libmkl_blacs_intelmpi_lp64.a -Wl,--end-group -lpthread -lm
