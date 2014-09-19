@@ -339,7 +339,7 @@
                  if ( iand(work, parity(i)) /= 0 ) then
                      pt32(i) = ieor(pt32(i), work)
                      EXIT adjust_period_loop
-                 endif
+                 endif ! back if ( iand(work, parity(i)) /= 0 ) block
                  work = ishft(work,1)
              enddo ! over j={0,31} loop
          enddo adjust_period_loop ! over i={0,3} loop

@@ -36,7 +36,7 @@
 !!!           07/09/2014 by li huang
 !!!           07/30/2014 by li huang
 !!! purpose : the purpose of this module is to define a stack-type (LIFO)
-!!!           data structure in fortran version
+!!!           data structure in fortran version.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
