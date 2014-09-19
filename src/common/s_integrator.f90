@@ -1,45 +1,65 @@
-    ! 2) Composite Trapezoid Rule:
-    double precision function compTrapezoid1d(f, a, b, n)
- 
-      double precision, intent(in) :: a, b
-      integer, intent(in) :: n
-      double precision :: f
-      double precision :: h, trapSum
-      integer :: i
+!!!-----------------------------------------------------------------------
+!!! project : CSSL (Common Service Subroutines Library)
+!!! program : s_int_trapezoid
+!!!           s_int_simpson
+!!! source  : s_integrator.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/20/2014 by li huang
+!!! purpose : these subroutines are used to do numerical integration with
+!!!           composite trapezoid or composite simpson algorithms.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-      h = (b-a) / dble(n)
+  function s_int_trapezoid(f, a, b, n) result(val)
+     use constants
 
-      trapSum = 0.0d0
+     implicit none
 
-      do i=1, n-1
-        trapSum = trapSum + f(a+dble(i)*h)
-      end do
+     double precision, intent(in) :: a, b
+     integer, intent(in) :: n
+     double precision :: f
+     double precision :: h, trapSum
+     integer :: i
 
-      compTrapezoid1d = (h/2.0d0) * ( f(a) + f(b) + 2.0d0*trapSum )
+     real(dp) :: val
 
-      return 
-    end function compTrapezoid1d
+     h = (b-a) / dble(n)
 
-    ! 4) Composite Simpson's Method:
-    double precision function compSimpsons1d(f, a, b, n)
+     trapSum = 0.0d0
 
-      double precision, intent(in) :: a,b
-      integer, intent(in) :: n
-      double precision :: h, oddSum, evenSum
-      double precision :: f
-      integer :: i
+     do i=1, n-1
+         trapSum = trapSum + f(a+dble(i)*h)
+     enddo
 
-      h = (b-a) / dble(n)
+     val = (h/2.0d0) * ( f(a) + f(b) + 2.0d0*trapSum )
 
-      do i=1, n-1
-        if ( mod(i,2) == 0 ) then
-          evenSum = evenSum + f(a+dble(i)*h)
-        else
-          oddSum = oddSum + f(a+dble(i)*h)
-        end if
-      end do
+     return 
+  end function s_int_trapezoid
 
-      compSimpsons1d = (h/3.0d0) * ( f(a) + f(b) + 2.0d0*evenSum + 4.0d0*oddsum )
+  function s_int_simpson(f, a, b, n) result(val)
+     use constants
+     implicit none
 
-      return
-    end function compSimpsons1d
+     double precision, intent(in) :: a,b
+     integer, intent(in) :: n
+     double precision :: h, oddSum, evenSum
+     double precision :: f
+     integer :: i
+
+     real(dp) :: val
+     h = (b-a) / dble(n)
+
+     do i=1, n-1
+         if ( mod(i,2) == 0 ) then
+             evenSum = evenSum + f(a+dble(i)*h)
+         else
+             oddSum = oddSum + f(a+dble(i)*h)
+         endif
+     enddo
+
+     val = (h/3.0d0) * ( f(a) + f(b) + 2.0d0*evenSum + 4.0d0*oddsum )
+
+     return
+  end function s_int_simpson
