@@ -8,7 +8,7 @@
 !!!           07/08/2014 by li huang
 !!! purpose : this module is to provide the definition of some (selected)
 !!!           numerical and physical constants.
-!!! status  : unstable
+!!! status  : stable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
