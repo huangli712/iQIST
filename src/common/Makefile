@@ -3,12 +3,25 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/common directory
+## Makefile for iqist/src/common directory.
 ##
 ## Usage
 ## =====
 ##
 ## 'make' or 'make clean'
+##
+## Author
+## ======
+##
+## This building system is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+## Department of Physics, University of Fribourg, Fribourg CH-1700, Switzerland
+##
+## History
+## =======
+##
+## 09/18/2014 by li huang
 ##
 ##
 
@@ -17,7 +30,7 @@
 include ../build/make.sys
 
 mod = m_constants.o m_linkedlist.o m_mpi.o m_parser.o m_skynet.o m_sparse.o m_spring.o m_stack.o
-sub = s_error.o s_fft.o s_matrix.o s_spline.o s_util.o s_vector.o
+sub = s_error.o s_fft.o s_integrator.o s_matrix.o s_spline.o s_util.o s_vector.o
 objects = $(mod) $(sub)
 
 default: all

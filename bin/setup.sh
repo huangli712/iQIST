@@ -16,15 +16,15 @@
 ## Author
 ## ======
 ##
-## This shell script is designed, created, implemented, and maintained
-## by Li Huang (email: huangli712@gmail.com).
+## This shell script is designed, created, implemented, and maintained by
 ##
+## Li Huang // email: huangli712@gmail.com
 ## Department of Physics, University of Fribourg, Fribourg CH-1700, Switzerland
 ##
 ## History
 ## =======
 ##
-## 09/17/2014 by li huang
+## 09/18/2014 by li huang
 ##
 ##
 
@@ -39,9 +39,22 @@ function mln {
     fi
 }
 
-# loop over the components
+# loop over the ct-qmc components
 for solver in azalea gardenia narcissus begonia lavender pansy manjushaka
 do
     dir=$(echo ../src/ctqmc/$solver/ctqmc)
     mln $dir $solver
 done
+
+# loop over the hf-qmc components
+for solver in daisy
+do
+    dir=$(echo ../src/hfqmc/$solver/hfqmc)
+    mln $dir $solver
+done
+
+# loop over the jasmine components
+# TODO
+
+# loop over the hibiscus components
+# TODO
