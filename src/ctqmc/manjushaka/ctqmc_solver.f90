@@ -280,7 +280,7 @@
          call ctqmc_retrieve_status()
      endif
      call cpu_time(time_end)   ! record ending   time
-
+ 
 ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'

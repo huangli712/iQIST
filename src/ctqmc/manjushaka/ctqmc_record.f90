@@ -1683,7 +1683,7 @@
 !!>>> Hubbard-I approximation data, the full impurity green's function can be 
 !!>>> obtained by using dyson's equation finally
   subroutine ctqmc_make_hub1()
-     use constants, only : dp, zero, czero, one
+     use constants, only : dp, zero, czero, one, epst
      use control, only : norbs, mfreq, nfreq, mune, myid, master
      use context, only : prob, eigs, rmesh, cmesh, eimp, sig2, grnf, hybf
 
@@ -1714,7 +1714,6 @@
 ! dummy complex variables, used to interpolate self-energy function
      complex(dp) :: cb, ce
      complex(dp) :: sinf
-     complex(dp) :: caux
 
 ! dummy imurity green's function: G^{-1}
      complex(dp) :: gaux(norbs,norbs)
@@ -1724,26 +1723,26 @@
      complex(dp) :: shub(mfreq,norbs)
 
 ! calculate atomic green's function using Hubbard-I approximation
-     do i=1,norbs
-         do j=1, mfreq
-             caux = czero
-             do k=1, nsectors
-                 kk = sectors(k)%next_sector(i,0)
-                 if (kk == -1) cycle
-                 if (is_trunc(k) .and. is_trunc(kk)) cycle
-                 indx1 = sectors(k)%istart
-                 indx2 = sectors(kk)%istart
-                 do l=1, sectors(k)%ndim
-                     do m=1, sectors(kk)%ndim
-                         ob = sectors(k)%myfmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))    
+     ghub = czero
+     do k=1, nsectors
+         do i=1,norbs
+             kk = sectors(k)%next_sector(i,0)
+             if (is_trunc(k) .and. is_trunc(kk)) cycle
+             if (kk == -1) cycle
+             indx1 = sectors(k)%istart
+             indx2 = sectors(kk)%istart
+             do l=1, sectors(k)%ndim
+                 do m=1, sectors(kk)%ndim
+                     ob = sectors(k)%myfmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))    
+                     if ( abs(ob) < epst ) cycle 
+                     do j=1, mfreq
                          cb = cmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
-                         caux = caux + ob / cb
+                         ghub(j,i) = ghub(j,i) + ob / cb
                      enddo 
                  enddo
-             enddo ! over k={1,nsectors}
-             ghub(j,i) = caux
-         enddo ! over j={1,mfreq}
-     enddo ! over i={1,norbs}
+             enddo 
+         enddo ! over i={1,norbs}
+     enddo ! over k={1,nsectors}
 
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs

@@ -6,7 +6,7 @@
 !!!           ctqmc_solver_init
 !!!           ctqmc_final_array
 !!! source  : ctqmc_stream.f90
-!!! type    : subroutine
+!!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/08/2010 by li huang
@@ -22,11 +22,10 @@
 !!>>> ctqmc_config: setup key parameters for continuous time quantum Monte
 !!>>> Carlo quantum impurity solver and dynamical mean field theory kernel
   subroutine ctqmc_config()
-     use constants
-     use control
+     use parser, only : p_create, p_parse, p_get, p_destroy
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
-     use parser
+     use control ! ALL
 
      implicit none
 
@@ -37,10 +36,10 @@
 !!========================================================================
 !!>>> setup general control flags                                      <<<
 !!========================================================================
-     isscf  = 1            ! non-self-consistent (1) or self-consistent mode (2)
+     isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
-     isbin  = 1            ! without binning     (1) or with binning    mode (2)
+     isbin  = 2            ! without binning     (1) or with binning    mode (2)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
@@ -192,7 +191,7 @@
 !!>>> ctqmc_setup_array: allocate memory for global variables and then
 !!>>> initialize them
   subroutine ctqmc_setup_array()
-     use context
+     use context ! ALL
 
      implicit none
 
@@ -216,10 +215,16 @@
 !!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
      use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
-     use control, only : nband, norbs, ntime, mfreq, beta, part, myid, master
-     use context, only : tmesh, rmesh, symm, eimp, hybf
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : nband, norbs
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : beta, part
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : symm, eimp
+     use context, only : hybf
 
      implicit none
 
@@ -344,12 +349,12 @@
 !!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
 !!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
-     use constants
-     use control
-     use context
+     use constants, only : zero, czero
+     use stack, only : istack_clean, istack_push
+     use spring, only : spring_sfmt_init
 
-     use stack
-     use spring
+     use control ! ALL
+     use context ! ALL
 
      implicit none
 
@@ -522,7 +527,7 @@
 !!>>> ctqmc_final_array: garbage collection for this program, please refer
 !!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
-     use context
+     use context ! ALL
 
      implicit none
 

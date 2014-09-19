@@ -458,8 +458,8 @@
      implicit none
 
 ! allocate memory
-     allocate(tmesh(ntime), stat=istat)
-     allocate(rmesh(mfreq), stat=istat)
+     allocate(tmesh(ntime),       stat=istat)
+     allocate(rmesh(mfreq),       stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -482,6 +482,7 @@
 
      allocate(paux(  8  ),        stat=istat)
      allocate(prob(ncfgs),        stat=istat)
+
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
 
@@ -495,6 +496,7 @@
 
      paux  = zero
      prob  = zero
+
      nmat  = zero
      nnmat = zero
 
@@ -684,6 +686,7 @@
 
      if ( allocated(paux)  )   deallocate(paux )
      if ( allocated(prob)  )   deallocate(prob )
+
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
 
