@@ -152,7 +152,7 @@
 !! ------------------------------------------------
 !!
 !! do not forget to broadcast all of the parameters from master node to
-!! children nodes.
+!! children nodes. please see the comments in m_mmpi.f90
 !!
 !!
 
