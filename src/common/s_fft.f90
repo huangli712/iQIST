@@ -9,7 +9,7 @@
 !!! history : 07/10/2014 by li huang
 !!!           07/27/2014 by li huang
 !!! purpose : these subroutines are used to do fast fourier transformation
-!!!           for green's or hybridization functions
+!!!           for green's or hybridization functions.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------

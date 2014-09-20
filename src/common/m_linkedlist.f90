@@ -78,6 +78,8 @@
 !!
 !! call list_insert(list_ptr, transfer(data_ptr, list_d))
 !!
+!! list_insert() will always insert the new node after the given node
+!!
 !! 8. visit next node
 !! ------------------
 !!
@@ -187,7 +189,7 @@
          if ( associated(curr%data) ) then
              deallocate(curr%data)
              nullify(curr%data)
-         endif
+         endif ! back if ( associated(curr%data) ) block
 ! release memory for the node itself
          deallocate(curr)
          nullify(curr)
@@ -246,7 +248,7 @@
      if ( associated(self%data) ) then
          deallocate(self%data)
          nullify(self%data)
-     endif ! back if block
+     endif ! back if ( associated(self%data) ) block
 
 ! allocate new memory
      allocate( self%data( size(data) ) )
