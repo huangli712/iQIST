@@ -478,7 +478,7 @@
   end subroutine s_identity_z
 
 !!>>> s_diag_i: build integer diagonal matrix from a vector
-  subroutine s_diag_i(n, V, A)
+  subroutine s_diag_i(n, v, A)
      implicit none
 
 ! external arguments
@@ -486,7 +486,7 @@
      integer, intent(in)  :: n
 
 ! input integer vector
-     integer, intent(in)  :: V(n)
+     integer, intent(in)  :: v(n)
 
 ! output integer diagonal matrix
      integer, intent(out) :: A(n,n)
@@ -497,14 +497,14 @@
 
      A = 0
      do i=1,n
-         A(i,i) = V(i)
+         A(i,i) = v(i)
      enddo ! over i={1,n} loop
 
      return
   end subroutine s_diag_i
 
 !!>>> s_diag_d: build real(dp) diagonal matrix from a vector
-  subroutine s_diag_d(n, V, A)
+  subroutine s_diag_d(n, v, A)
      use constants, only : dp, zero
 
      implicit none
@@ -514,7 +514,7 @@
      integer, intent(in)   :: n
 
 ! input real(dp) vector
-     real(dp), intent(in)  :: V(n)
+     real(dp), intent(in)  :: v(n)
 
 ! output real(dp) diagonal matrix
      real(dp), intent(out) :: A(n,n)
@@ -525,14 +525,14 @@
 
      A = zero
      do i=1,n
-         A(i,i) = V(i)
+         A(i,i) = v(i)
      enddo ! over i={1,n} loop
 
      return
   end subroutine s_diag_d
 
 !!>>> s_diag_z: build complex(dp) diagonal matrix from a vector
-  subroutine s_diag_z(n, V, A)
+  subroutine s_diag_z(n, v, A)
      use constants, only : dp, czero
 
      implicit none
@@ -542,7 +542,7 @@
      integer, intent(in)      :: n
 
 ! input complex(dp) vector
-     complex(dp), intent(in)  :: V(n)
+     complex(dp), intent(in)  :: v(n)
 
 ! output complex(dp) diagonal matrix
      complex(dp), intent(out) :: A(n,n)
@@ -553,7 +553,7 @@
 
      A = czero
      do i=1,n
-         A(i,i) = V(i)
+         A(i,i) = v(i)
      enddo ! over i={1,n} loop
 
      return
