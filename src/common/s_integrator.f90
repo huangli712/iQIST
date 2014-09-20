@@ -43,7 +43,7 @@
      real(dp) :: trapSum
 
 ! evaluate the step
-     h = (b-a) / dble(n)
+     h = ( b - a ) / dble(n)
 
 ! calculate trapezoid sum
      trapSum = zero
@@ -59,7 +59,7 @@
 
 !!>>> s_int_simpson: numerical integration with simpson algorithm
   function s_int_simpson(f, a, b, n) result(val)
-     use constants, only : dp
+     use constants, only : dp, zero
 
      implicit none
 
@@ -88,17 +88,22 @@
      real(dp) :: oddSum
      real(dp) :: evenSum
 
-     h = (b-a) / dble(n)
+! evaluate the step
+     h = ( b - a ) / dble(n)
 
-     do i=1, n-1
+! calculate simpson sum
+     evenSum = zero
+     oddSum = zero
+     do i=1,n-1
          if ( mod(i,2) == 0 ) then
              evenSum = evenSum + f(a+dble(i)*h)
          else
              oddSum = oddSum + f(a+dble(i)*h)
-         endif
-     enddo
+         endif ! back if ( mod(i,2) == 0 ) block
+     enddo ! over i={1,n-1} loop
 
-     val = (h/3.0d0) * ( f(a) + f(b) + 2.0d0*evenSum + 4.0d0*oddsum )
+! calculate the final value
+     val = ( h / 3.0_dp ) * ( f(a) + f(b) + 2.0_dp * evenSum + 4.0_dp * oddsum )
 
      return
   end function s_int_simpson
