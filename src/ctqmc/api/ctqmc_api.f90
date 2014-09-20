@@ -1,6 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : lilac
 !!! program : api
+!!!           api@T_mpi
 !!!           api@T_solver
 !!!           api@T_segment_solver
 !!!           api@T_general_solver
@@ -11,7 +12,6 @@
 !!!           api@T_general_lavender
 !!!           api@T_general_pansy
 !!!           api@T_general_manjushaka
-!!!           api@T_mpi
 !!!           api@init_ctqmc
 !!!           api@exec_ctqmc
 !!!           api@stop_ctqmc
@@ -351,6 +351,8 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
+     public  :: T_mpi
+
      private :: T_solver
      private :: T_segment_solver
      private :: T_general_solver
@@ -364,8 +366,6 @@
 
      public  :: T_general_pansy
      public  :: T_general_manjushaka
-
-     public  :: T_mpi
 
      public  :: init_ctqmc
      public  :: exec_ctqmc
