@@ -59,20 +59,35 @@
 
 !!>>> s_int_simpson: numerical integration with simpson algorithm
   function s_int_simpson(f, a, b, n) result(val)
-     use constants
+     use constants, only : dp
 
      implicit none
 
 ! external arguments
-     double precision, intent(in) :: a,b
-     integer, intent(in) :: n
-     double precision :: f
+! number of data points
+     integer, intent(in)  :: n
+
+! boundries for numerical integration
+     real(dp), intent(in) :: a
+     real(dp), intent(in) :: b
+
+! external function, it means the integrator
+     real(dp) :: f
 
 ! local variables
-     double precision :: h, oddSum, evenSum
-     integer :: i
+! loop index
+     integer  :: i
 
+! return value
      real(dp) :: val
+
+! step for integration
+     real(dp) :: h
+
+! sum for trapezoid rule
+     real(dp) :: oddSum
+     real(dp) :: evenSum
+
      h = (b-a) / dble(n)
 
      do i=1, n-1
