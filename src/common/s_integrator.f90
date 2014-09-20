@@ -17,7 +17,7 @@
 !! Introduction
 !! ============
 !!
-!! To use s_int_trapezoid() or s_int_simpson(), you have to define the 
+!! To use s_int_trapezoid() or s_int_simpson(), you have to define the
 !! integrand at first. For example:
 !!
 !!
@@ -96,7 +96,7 @@
 ! calculate the final value
      val = ( h / two ) * ( f(a) + f(b) + two*trapSum )
 
-     return 
+     return
   end function s_int_trapezoid
 
 !!>>> s_int_simpson: numerical integration with simpson algorithm
