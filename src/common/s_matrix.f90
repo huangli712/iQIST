@@ -689,7 +689,7 @@
              ddet = ddet * ( +dmat(i,i) )
          else
              ddet = ddet * ( -dmat(i,i) )
-         endif
+         endif ! back if ( ipiv(i) == i ) block
      enddo ! over i={1,ndim} loop
 
 ! everything is ok!
@@ -755,7 +755,7 @@
              zdet = zdet * ( +zmat(i,i) )
          else
              zdet = zdet * ( -zmat(i,i) )
-         endif
+         endif ! back if ( ipiv(i) == i ) block
      enddo ! over i={1,ndim} loop
 
      return
