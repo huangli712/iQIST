@@ -19,7 +19,6 @@
 ## This shell script is designed, created, implemented, and maintained by
 ##
 ## Li Huang // email: huangli712@gmail.com
-## Department of Physics, University of Fribourg, Fribourg CH-1700, Switzerland
 ##
 ## History
 ## =======
