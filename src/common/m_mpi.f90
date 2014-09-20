@@ -80,7 +80,16 @@
 !!
 !! here master == 0 which means the master node/root process.
 !!
-!! 4. setup barrier
+!! 4. all-reduce data
+!! ------------------
+!!
+!! real(dp) :: real_data(:)
+!! real(dp) :: real_data_mpi(:)
+!!
+!! call mp_allreduce(real_data, real_data_mpi) ! all-readuce data
+!! real_data = real_data_mpi / number_of_processes ! calculate the average
+!!
+!! 5. setup barrier
 !! ----------------
 !!
 !! call mp_barrier()
@@ -155,7 +164,7 @@
 ! isize: size of elements
      integer, private :: isize
 
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+!-------------------------------------------------------------------------
 
 ! mpi_comm_cart: communicator for cartesian topology
      integer, public, save :: mpi_comm_cart
@@ -836,7 +845,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! invoke related mpi subroutines
          call MPI_COMM_RANK(group, myid, ierror)
@@ -860,7 +869,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! invoke related mpi subroutines
          call MPI_COMM_SIZE(group, nprocs, ierror)
@@ -1003,7 +1012,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! invoke related mpi subroutines
          call MPI_BARRIER(group, ierror)
@@ -1062,7 +1071,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1090,7 +1099,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1121,7 +1130,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1152,7 +1161,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1180,7 +1189,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1211,7 +1220,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1242,7 +1251,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1273,7 +1282,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1304,7 +1313,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1335,7 +1344,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1363,7 +1372,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1394,7 +1403,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1425,7 +1434,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1456,7 +1465,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1487,7 +1496,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1518,7 +1527,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1546,7 +1555,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1577,7 +1586,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1608,7 +1617,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1639,7 +1648,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1670,7 +1679,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1707,7 +1716,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1740,7 +1749,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1773,7 +1782,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1806,7 +1815,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1839,7 +1848,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1872,7 +1881,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1905,7 +1914,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1938,7 +1947,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -1971,7 +1980,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2004,7 +2013,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2037,7 +2046,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2070,7 +2079,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2103,7 +2112,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2136,7 +2145,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2169,7 +2178,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2209,7 +2218,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2245,7 +2254,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2281,7 +2290,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2317,7 +2326,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2353,7 +2362,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2389,7 +2398,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2425,7 +2434,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2461,7 +2470,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2497,7 +2506,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2533,7 +2542,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2569,7 +2578,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2605,7 +2614,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2641,7 +2650,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2677,7 +2686,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2713,7 +2722,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2750,7 +2759,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2783,7 +2792,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2816,7 +2825,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2849,7 +2858,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2882,7 +2891,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2915,7 +2924,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2948,7 +2957,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -2981,7 +2990,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3014,7 +3023,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3047,7 +3056,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3080,7 +3089,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3113,7 +3122,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3146,7 +3155,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3179,7 +3188,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3212,7 +3221,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3252,7 +3261,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3288,7 +3297,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3324,7 +3333,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3360,7 +3369,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3396,7 +3405,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3432,7 +3441,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3468,7 +3477,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3504,7 +3513,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3540,7 +3549,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3576,7 +3585,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3612,7 +3621,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3648,7 +3657,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3684,7 +3693,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3720,7 +3729,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3756,7 +3765,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3792,7 +3801,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3821,7 +3830,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3853,7 +3862,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3885,7 +3894,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3917,7 +3926,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3949,7 +3958,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -3981,7 +3990,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4010,7 +4019,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4042,7 +4051,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4074,7 +4083,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4106,7 +4115,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4138,7 +4147,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4170,7 +4179,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4199,7 +4208,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4231,7 +4240,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4263,7 +4272,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4295,7 +4304,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4327,7 +4336,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4362,7 +4371,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4390,7 +4399,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4421,7 +4430,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4452,7 +4461,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4483,7 +4492,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4514,7 +4523,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4545,7 +4554,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4573,7 +4582,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4604,7 +4613,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4635,7 +4644,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4666,7 +4675,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4697,7 +4706,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4728,7 +4737,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4756,7 +4765,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4787,7 +4796,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4818,7 +4827,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4849,7 +4858,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)
@@ -4880,7 +4889,7 @@
              group = gid
          else
              group = MPI_COMM_WORLD
-         endif
+         endif ! back if ( present(gid) .eqv. .true. ) block
 
 ! barrier until all processes reach here
          call mp_barrier(group)

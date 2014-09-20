@@ -152,7 +152,7 @@
 !! ------------------------------------------------
 !!
 !! do not forget to broadcast all of the parameters from master node to
-!! children nodes.
+!! children nodes. please see the comments in m_mpi.f90
 !!
 !!
 
@@ -409,7 +409,7 @@
              call s_str_lowcase(str_value)
              call s_str_compress(str_value)
              EXIT
-         endif ! back if block
+         endif ! back if ( trim(str_key) .eq. trim(data_ptr%str_key) ) block
      enddo ! over do loop
      curr => null()
 
@@ -420,13 +420,17 @@
 ! four cases: 1. integer; 2. logical; 3. real(dp); 4. character(len=*)
      select type (out_value)
          type is (integer)          ! for integer
-             read (str_value,*)   out_value
+             read (str_value,*) out_value
+
          type is (logical)          ! for logical
-             read (str_value,*)   out_value
+             read (str_value,*) out_value
+
          type is (real(dp))         ! for double precision number
-             read (str_value,*)   out_value
+             read (str_value,*) out_value
+
          type is (character(len=*)) ! for character
              out_value = str_value
+
          class default
              write(mystd, '(a)') 'parser: p_get, unrecognize data type'
              STOP
@@ -493,7 +497,7 @@
              call s_str_lowcase(str_value)
              call s_str_compress(str_value)
              EXIT
-         endif ! back if block
+         endif ! back if ( trim(str_key) .eq. trim(data_ptr%str_key) ) block
      enddo ! over do loop
      curr => null()
 
@@ -522,6 +526,7 @@
              enddo ! over p={1,nsize-1} loop
              read(str_value(q+1:), '(I10)') int_aux
              out_value(nsize) = int_aux
+
          type is (logical)          ! for logical
              q = 0
              do p=1,nsize-1
@@ -536,6 +541,7 @@
              enddo ! over p={1,nsize-1} loop
              read(str_value(q+1:), '(L4)') bool_aux
              out_value(nsize) = bool_aux
+
          type is (real(dp))         ! for double precision number
              q = 0
              do p=1,nsize-1
@@ -550,6 +556,7 @@
              enddo ! over p={1,nsize-1} loop
              read(str_value(q+1:), '(F16.8)') real_aux
              out_value(nsize) = real_aux
+
          type is (character(len=*)) ! for character
              q = 0
              do p=1,nsize-1
@@ -562,6 +569,7 @@
                  q = q + offset
              enddo ! over p={1,nsize-1} loop
              out_value(nsize) = str_value(q+1:)
+
          class default
              write(mystd, '(a)') 'parser: p_get_vec, unrecognize data type'
              STOP
