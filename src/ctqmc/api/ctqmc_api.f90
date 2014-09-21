@@ -194,7 +194,10 @@
 !!>>> declare global data structure                                    <<<
 !!========================================================================
 
-# if !defined (_F2PY_)
+! note: now f2py does not support derived types, so we have to comment
+! out them when f2py is used.
+
+# if !defined (F2PY)
 
 ! define type T_mpi, which is used to describe the mpi environment
      public :: T_mpi
@@ -377,6 +380,8 @@
          integer :: npart
      end type T_general_manjushaka
 
+# endif  /* F2PY */
+
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
@@ -388,6 +393,7 @@
      public  :: set_hybf
      public  :: set_symm
      public  :: set_eimp
+     public  :: set_ktau
 
      public  :: get_grnf
      public  :: get_sigf
@@ -395,6 +401,9 @@
   contains ! encapsulated functionality
 
 !!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
+# if !defined (F2PY)
+
+!! fortran version
   subroutine init_ctqmc(I_mpi, I_solver)
      implicit none
 
@@ -409,6 +418,19 @@
 
      return
   end subroutine init_ctqmc
+
+# else   /* F2PY */
+
+!! python version
+  subroutine init_ctqmc()
+     implicit none
+
+     call py_init_ctqmc()
+
+     return
+  end subroutine init_ctqmc
+
+# endif  /* F2PY */
 
 !!>>> exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine exec_ctqmc(iter)
@@ -479,6 +501,22 @@
 
      return
   end subroutine set_eimp
+
+!!>>> set_ktau: setup the impurity energy level
+  subroutine set_ktau(size_t, ktau_t)
+     implicit none
+
+! external arguments
+! size of ktau
+     integer :: size_t
+
+! impurity energy level
+     real(dp) :: ktau_t(size_t)
+
+     call cat_set_ktau(size_t, ktau_t)
+
+     return
+  end subroutine set_ktau
 
 !!>>> get_grnf: extract the impurity green's function
   subroutine get_grnf(size_t, grnf_t)
