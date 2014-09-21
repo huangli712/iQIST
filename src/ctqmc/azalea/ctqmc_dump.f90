@@ -17,7 +17,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
-!!!           08/09/2014 by li huang
+!!!           09/21/2014 by li huang
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -37,7 +37,6 @@
 
      use control, only : nband, norbs
      use control, only : ntime
-     use control, only : beta
 
      implicit none
 
@@ -53,19 +52,11 @@
      integer  :: i
      integer  :: j
 
-! dummy variables
-     real(dp) :: raux
-
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
 
 ! evaluate gaux first
-     raux = real(ntime) / (beta * beta)
-     do i=1,norbs
-         do j=1,ntime
-             gaux(j,i,i) = gtau(j,i,i) * raux
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
+     call ctqmc_make_gtau(tmesh, gtau, gaux)
 
 ! open data file: solver.green.dat
      open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
@@ -172,7 +163,6 @@
 
      use control, only : nband, norbs
      use control, only : ntime
-     use control, only : beta
 
      implicit none
 
@@ -191,9 +181,6 @@
      integer  :: i
      integer  :: j
 
-! dummy variables
-     real(dp) :: raux
-
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
 
@@ -201,12 +188,7 @@
      character(len=10) :: sbin
 
 ! evaluate gaux first
-     raux = real(ntime) / (beta * beta)
-     do i=1,norbs
-         do j=1,ntime
-             gaux(j,i,i) = gtau(j,i,i) * raux
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
+     call ctqmc_make_gtau(tmesh, gtau, gaux)
 
 ! open data file: solver.green.bin.x
      write(sbin,'(i10)') ibin ! convert ibin to sbin
