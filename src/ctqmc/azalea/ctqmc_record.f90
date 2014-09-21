@@ -876,9 +876,7 @@
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
      use constants, only : dp, zero, one, two, pi
 
-     use control, only : isort
      use control, only : norbs
-     use control, only : lemax, legrd, chmax, chgrd
      use control, only : ntime
      use control, only : beta
      use context, only : ppleg, qqche
@@ -899,18 +897,6 @@
 ! loop index
      integer  :: i
      integer  :: j
-
-! loop index for legendre polynomial
-     integer  :: fleg
-
-! loop index for chebyshev polynomial
-     integer  :: fche
-
-! index for imaginary time \tau
-     integer  :: curr
-
-! interval for imaginary time slice
-     real(dp) :: step
 
 ! dummy variables
      real(dp) :: raux
