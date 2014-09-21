@@ -56,7 +56,7 @@
      real(dp) :: gaux(ntime,norbs,norbs)
 
 ! evaluate gaux first
-     call ctqmc_make_gtau(tmesh, gtau, gaux)
+     call ctqmc_make_gtau(gtau, gaux)
 
 ! open data file: solver.green.dat
      open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
@@ -188,7 +188,7 @@
      character(len=10) :: sbin
 
 ! evaluate gaux first
-     call ctqmc_make_gtau(tmesh, gtau, gaux)
+     call ctqmc_make_gtau(gtau, gaux)
 
 ! open data file: solver.green.bin.x
      write(sbin,'(i10)') ibin ! convert ibin to sbin
