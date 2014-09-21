@@ -501,6 +501,7 @@
   end subroutine cat_set_eimp
 
 !!>>> cat_set_ktau: setup the kernel function
+!!>>> note: the azalea code does not support this function
   subroutine cat_set_ktau(size_t, ktau_t)
      use constants, only : dp
 
@@ -513,8 +514,9 @@
 ! kernel function
      real(dp), intent(in) :: ktau_t(size_t)
 
-     call s_assert( size(ktau_t) == size_t ) ! to avoid the warning from compiler
-     call s_print_error('cat_set_ktau', 'the current code does not support this feature')
+! to avoid the warning from compiler
+     call s_assert( size(ktau_t) == size_t )
+     call s_print_error('cat_set_ktau', 'this feature is not supported')
 
      return
   end subroutine cat_set_ktau
