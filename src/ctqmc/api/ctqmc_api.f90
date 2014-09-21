@@ -18,6 +18,7 @@
 !!!           api@set_hybf
 !!!           api@set_symm
 !!!           api@set_eimp
+!!!           api@set_ktau
 !!!           api@get_grnf
 !!!           api@get_sigf
 !!! source  : ctqmc_api.f90
@@ -25,10 +26,10 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 01/07/2014 by li huang
 !!!           01/11/2014 by li huang
-!!!           08/07/2014 by li huang
+!!!           09/21/2014 by li huang
 !!! purpose : the purpose of this module is to define a generic and robust
-!!!           application programming interface (CAPI) for continuous-time
-!!!           quantum Monte Carlo impurity solver
+!!!           application programming interface (API) for continuous-time
+!!!           quantum Monte Carlo impurity solver.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -39,12 +40,22 @@
 !! ============
 !!
 !! This module can provide a light weight interface (i.e., application
-!! programming interface, API) for fortran 90 language to the ctqmc quantum
-!! impurity solver. The user can use it to access the AZALEA, GARDENIA,
-!! NARCISSUS, BEGONIA, LAVENDER, PANSY, and MANJUSHAKA codes.
+!! programming interface, API) for Fortran 90/Python language to the ctqmc
+!! quantum impurity solver. The user can use it to access the AZALEA,
+!! GARDENIA, NARCISSUS, BEGONIA, LAVENDER, PANSY, and MANJUSHAKA codes.
 !!
-!! Usage
+!! Compile
+!! =======
+!!
+!! TODO
+!!
+!! Setup
 !! =====
+!!
+!! TODO
+!!
+!! Usage (Fortran 90 version)
+!! ==========================
 !!
 !! In the following, we will use AZALEA code as an example to show how to
 !! use api to control it.
@@ -66,14 +77,14 @@
 !! Note: The above codes need MPI support. Namely, you have to import the
 !! mpi support explicitly.
 !!
-!! use mmpi
+!! use mmpi ! import mpi support
 !!
 !! 3. create T_segment_azalea
 !! --------------------------
 !!
 !! type (T_segment_azalea) :: I_solver ! define I_solver
 !! ...
-!! I_solver%isscf  = 1                 ! setup I_solver
+!! I_solver%isscf  = 1  ! setup I_solver
 !! I_solver%issun  = 1
 !! I_solver%isspn  = 2
 !! I_solver%isbin  = 1
@@ -116,8 +127,8 @@
 !!
 !! call init_ctqmc(I_mpi, I_solver)
 !!
-!! 5. setup hybf, symm, and eimp
-!! -----------------------------
+!! 5. setup hybf, symm, eimp, and ktau
+!! -----------------------------------
 !!
 !! For examples:
 !!
@@ -127,7 +138,8 @@
 !! call set_hybf(size_t, hybf) ! setup hybridization function: hybf
 !!
 !! Note: This step is optional, because the ctqmc will provide default
-!! values for hybf, symm, and eimp.
+!! values for hybf, symm, eimp, and ktau or read them from external
+!! disk files.
 !!
 !! 6. start the ctqmc impurity solver
 !! ----------------------------------
@@ -161,6 +173,11 @@
 !!
 !! Note: This step is also optional.
 !!
+!! Usage (Python version)
+!! ==========================
+!!
+!! TODO
+!!
 !!
 
   module api
@@ -177,7 +194,10 @@
 !!>>> declare global data structure                                    <<<
 !!========================================================================
 
+# if !defined (_F2PY_)
+
 ! define type T_mpi, which is used to describe the mpi environment
+     public :: T_mpi
      type :: T_mpi
          integer :: nprocs
          integer :: myid
@@ -190,6 +210,7 @@
 ! define type T_solver, which is used to describe the generic abstract
 ! ctqmc impurity solver
 ! note: it can not be used directly
+     private :: T_solver
      type :: T_solver
          integer :: isscf
          integer :: issun
@@ -227,6 +248,7 @@
 ! define type T_segment_solver, which is used to describe the ctqmc
 ! impurity solver which based on segment representation
 ! note: it can not be used directly
+     private :: T_segment_solver
      type, extends (T_solver) :: T_segment_solver
          character(len=10) :: solver_type = 'SEGMENT'
      end type T_segment_solver
@@ -234,12 +256,14 @@
 ! define type T_general_solver, which is used to describe the ctqmc
 ! impurity solver which based on general matrix formulation
 ! note: it can not be used directly
+     private :: T_general_solver
      type, extends (T_solver) :: T_general_solver
          character(len=10) :: solver_type = 'GENERAL'
      end type T_general_solver
 
 ! define type T_segment_azalea, which is used to describe the ctqmc
 ! impurity solver code azalea
+     public :: T_segment_azalea
      type, extends (T_segment_solver) :: T_segment_azalea
          character(len=10) :: solver_name = 'AZALEA'
          integer :: solver_id = 101
@@ -248,6 +272,7 @@
 
 ! define type T_segment_gardenia, which is used to describe the ctqmc
 ! impurity solver code gardenia
+     public :: T_segment_gardenia
      type, extends (T_segment_solver) :: T_segment_gardenia
          character(len=10) :: solver_name = 'GARDENIA'
          integer :: solver_id = 102
@@ -265,6 +290,7 @@
 
 ! define type T_segment_narcissus, which is used to describe the ctqmc
 ! impurity solver code narcissus
+     public :: T_segment_narcissus
      type, extends (T_segment_solver) :: T_segment_narcissus
          character(len=10) :: solver_name = 'NARCISSUS'
          integer :: solver_id = 103
@@ -286,6 +312,7 @@
 
 ! define type T_general_begonia, which is used to describe the ctqmc
 ! impurity solver code begonia
+     public :: T_general_begonia
      type, extends (T_general_solver) :: T_general_begonia
          character(len=10) :: solver_name = 'BEGONIA'
          integer :: solver_id = 201
@@ -297,6 +324,7 @@
 
 ! define type T_general_lavender, which is used to describe the ctqmc
 ! impurity solver code lavender
+     public :: T_general_lavender
      type, extends (T_general_solver) :: T_general_lavender
          character(len=10) :: solver_name = 'LAVENDER'
          integer :: solver_id = 202
@@ -316,6 +344,7 @@
 
 ! define type T_general_pansy, which is used to describe the ctqmc
 ! impurity solver code pansy
+     public :: T_general_pansy
      type, extends (T_general_solver) :: T_general_pansy
          character(len=10) :: solver_name = 'PANSY'
          integer :: solver_id = 301
@@ -327,6 +356,7 @@
 
 ! define type T_general_manjushaka, which is used to describe the ctqmc
 ! impurity solver code manjushaka
+     public :: T_general_manjushaka
      type, extends (T_general_solver) :: T_general_manjushaka
          character(len=10) :: solver_name = 'MANJUSHAKA'
          integer :: solver_id = 302
@@ -350,22 +380,6 @@
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
-
-     public  :: T_mpi
-
-     private :: T_solver
-     private :: T_segment_solver
-     private :: T_general_solver
-
-     public  :: T_segment_azalea
-     public  :: T_segment_gardenia
-     public  :: T_segment_narcissus
-
-     public  :: T_general_begonia
-     public  :: T_general_lavender
-
-     public  :: T_general_pansy
-     public  :: T_general_manjushaka
 
      public  :: init_ctqmc
      public  :: exec_ctqmc
