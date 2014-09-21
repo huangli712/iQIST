@@ -500,7 +500,22 @@
      return
   end subroutine cat_set_eimp
 
-  subroutine cat_set_ktau()
+!!>>> cat_set_ktau: setup the kernel function
+  subroutine cat_set_ktau(size_t, ktau_t)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of ktau
+     integer, intent(in)  :: size_t
+
+! kernel function
+     real(dp), intent(in) :: ktau_t(size_t)
+
+     call s_print_error('cat_set_ktau', 'the current code does not support this feature')
+
+     return
   end subroutine cat_set_ktau
 
 !!>>> cat_get_grnf: extract the impurity green's function
