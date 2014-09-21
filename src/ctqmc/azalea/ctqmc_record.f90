@@ -14,13 +14,14 @@
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf
 !!!           ctqmc_smth_sigf   <<<---
+!!!           ctqmc_make_gtau   <<<---
 !!!           ctqmc_make_hub1   <<<---
 !!! source  : ctqmc_record.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
-!!!           08/14/2014 by li huang
+!!!           09/22/2014 by li huang
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -865,6 +866,101 @@
 
      return
   end subroutine ctqmc_smth_sigf
+
+!!========================================================================
+!!>>> postprocess physical observables                                 <<<
+!!========================================================================
+
+!!>>> ctqmc_make_gtau: build imaginary green's function using orthogonal
+!!>>> polynomial representation
+  subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
+     use constants, only : dp, zero, one, two, pi
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
+     use context, only : ppleg, qqche
+
+     implicit none
+
+! external arguments
+! imaginary time mesh
+     real(dp), intent(in)  :: tmesh(ntime)
+
+! impurity green's function/orthogonal polynomial coefficients
+     real(dp), intent(in)  :: gtau(ntime,norbs,norbs)
+
+! calculated impurity green's function
+     real(dp), intent(out) :: gaux(ntime,norbs,norbs)
+
+! local parameters
+! scheme of integral kernel used to damp the Gibbs oscillation
+! damp = 0, Dirichlet   mode
+! damp = 1, Jackson     mode, preferred
+! damp = 2, Lorentz     mode
+! damp = 3, Fejer       mode
+! damp = 4, Wang-Zunger mode
+     integer, parameter :: damp = 0
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! loop index for legendre polynomial
+     integer  :: fleg
+
+! loop index for chebyshev polynomial
+     integer  :: fche
+
+! index for imaginary time \tau
+     integer  :: curr
+
+! interval for imaginary time slice
+     real(dp) :: step
+
+! dummy variables
+     real(dp) :: raux
+
+! initialize gaux
+     gaux = zero
+
+! select calculation method
+     select case ( isort )
+
+         case (1, 4)
+             call cat_make_gtau1()
+
+         case (2, 5)
+             call cat_make_gtau2()
+
+         case (3, 6)
+             call cat_make_gtau3()
+
+     end select
+
+     return
+
+  contains
+
+!!>>> cat_make_gtau1: build impurity green's function using normal
+!!>>> representation
+  subroutine cat_make_gtau1()
+     implicit none
+
+     raux = real(ntime) / (beta * beta)
+     do i=1,norbs
+         do j=1,ntime
+             gaux(j,i,i) = gtau(j,i,i) * raux
+         enddo ! over j={1,ntime} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine cat_make_gtau1
+
+  end subroutine ctqmc_make_gtau
 
 !!========================================================================
 !!>>> build self-energy function                                       <<<
