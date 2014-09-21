@@ -44,18 +44,8 @@
 !! quantum impurity solver. The user can use it to access the AZALEA,
 !! GARDENIA, NARCISSUS, BEGONIA, LAVENDER, PANSY, and MANJUSHAKA codes.
 !!
-!! Compile
-!! =======
-!!
-!! TODO
-!!
-!! Setup
-!! =====
-!!
-!! TODO
-!!
-!! Usage (Fortran 90 version)
-!! ==========================
+!! Usage (Fortran version)
+!! =======================
 !!
 !! In the following, we will use AZALEA code as an example to show how to
 !! use api to control it.
@@ -174,7 +164,7 @@
 !! Note: This step is also optional.
 !!
 !! Usage (Python version)
-!! ==========================
+!! ======================
 !!
 !! TODO
 !!
@@ -425,7 +415,7 @@
   subroutine init_ctqmc()
      implicit none
 
-     call py_init_ctqmc()
+     call cat_init_ctqmc()
 
      return
   end subroutine init_ctqmc
