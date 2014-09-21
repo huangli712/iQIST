@@ -492,10 +492,10 @@
 
 ! external arguments
 ! size of eimp
-     integer :: size_t
+     integer, intent(in)  :: size_t
 
 ! impurity energy level
-     real(dp) :: eimp_t(size_t)
+     real(dp), intent(in) :: eimp_t(size_t)
 
      call cat_set_eimp(size_t, eimp_t)
 
@@ -509,10 +509,10 @@
 
 ! external arguments
 ! size of ktau
-     integer :: size_t
+     integer, intent(in)  :: size_t
 
 ! kernel function
-     real(dp) :: ktau_t(size_t)
+     real(dp), intent(in) :: ktau_t(size_t)
 
      call cat_set_ktau(size_t, ktau_t)
 
