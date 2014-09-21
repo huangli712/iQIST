@@ -513,6 +513,7 @@
 ! kernel function
      real(dp), intent(in) :: ktau_t(size_t)
 
+     call s_assert( size(ktau_t) == size_t ) ! to avoid the warning from compiler
      call s_print_error('cat_set_ktau', 'the current code does not support this feature')
 
      return
