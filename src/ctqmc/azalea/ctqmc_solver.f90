@@ -139,7 +139,7 @@
      if ( iter == 999 ) then
          nsweep = nsweep * 10
          nwrite = nwrite * 10
-     endif
+     endif ! back if ( iter == 999 ) block
 
 !!========================================================================
 !!>>> starting quantum impurity solver                                 <<<
@@ -257,22 +257,22 @@
 ! auxiliary physical observables
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the impurity green's function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_grnf()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the probability of eigenstates
              if ( mod(cstep, ncarlo) == 0 ) then
                  call ctqmc_record_prob()
-             endif
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
 ! record the impurity green's function in imaginary time space
              if ( mod(cstep, ncarlo) == 0 ) then
                  call ctqmc_record_gtau()
-             endif
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
