@@ -502,7 +502,8 @@
      return
   end subroutine set_eimp
 
-!!>>> set_ktau: setup the impurity energy level
+!!>>> set_ktau: setup the kernel function for dynamical screening effect
+! note: only the narcissus code will implement the cat_set_ktau()
   subroutine set_ktau(size_t, ktau_t)
      implicit none
 
@@ -510,7 +511,7 @@
 ! size of ktau
      integer :: size_t
 
-! impurity energy level
+! kernel function
      real(dp) :: ktau_t(size_t)
 
      call cat_set_ktau(size_t, ktau_t)
