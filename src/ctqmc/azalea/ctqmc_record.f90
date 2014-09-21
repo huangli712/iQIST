@@ -873,7 +873,7 @@
 
 !!>>> ctqmc_make_gtau: build imaginary green's function using normal
 !!>>> representation
-  subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
+  subroutine ctqmc_make_gtau(gtau, gaux)
      use constants, only : dp, zero
 
      use control, only : norbs
@@ -883,9 +883,6 @@
      implicit none
 
 ! external arguments
-! imaginary time mesh
-     real(dp), intent(in)  :: tmesh(ntime)
-
 ! impurity green's function
      real(dp), intent(in)  :: gtau(ntime,norbs,norbs)
 
@@ -899,9 +896,6 @@
 
 ! dummy variables
      real(dp) :: raux
-
-! to avoid the warning from compiler
-     call s_assert( size(tmesh) == ntime )
 
 ! initialize gaux
      gaux = zero
