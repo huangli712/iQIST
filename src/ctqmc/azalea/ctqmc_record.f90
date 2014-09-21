@@ -895,15 +895,6 @@
 ! calculated impurity green's function
      real(dp), intent(out) :: gaux(ntime,norbs,norbs)
 
-! local parameters
-! scheme of integral kernel used to damp the Gibbs oscillation
-! damp = 0, Dirichlet   mode
-! damp = 1, Jackson     mode, preferred
-! damp = 2, Lorentz     mode
-! damp = 3, Fejer       mode
-! damp = 4, Wang-Zunger mode
-     integer, parameter :: damp = 0
-
 ! local variables
 ! loop index
      integer  :: i
@@ -927,29 +918,6 @@
 ! initialize gaux
      gaux = zero
 
-! select calculation method
-     select case ( isort )
-
-         case (1, 4)
-             call cat_make_gtau1()
-
-         case (2, 5)
-             call cat_make_gtau2()
-
-         case (3, 6)
-             call cat_make_gtau3()
-
-     end select
-
-     return
-
-  contains
-
-!!>>> cat_make_gtau1: build impurity green's function using normal
-!!>>> representation
-  subroutine cat_make_gtau1()
-     implicit none
-
      raux = real(ntime) / (beta * beta)
      do i=1,norbs
          do j=1,ntime
@@ -958,8 +926,6 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine cat_make_gtau1
-
   end subroutine ctqmc_make_gtau
 
 !!========================================================================
