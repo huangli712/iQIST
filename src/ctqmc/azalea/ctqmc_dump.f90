@@ -544,7 +544,7 @@
                  basis(i,j) = 1
              else
                  basis(i,j) = 0
-             endif
+             endif ! back if ( btest(i-1,j-1) .eqv. .true. ) block
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
