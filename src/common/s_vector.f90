@@ -91,6 +91,11 @@
 !! subroutine s_legendre(...)
 !! subroutine s_chebyshev(...)
 !!
+!! 7. spheric Bessel function
+!! --------------------------
+!!
+!! subroutine s_sbessel(...)
+!!
 !!
 
 !!========================================================================

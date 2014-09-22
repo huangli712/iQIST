@@ -51,7 +51,11 @@
 ## Specify whether we want to obtain a library version of iqist. If it is
 ## enabled, what you can obtain is a library and you can write python or
 ## fortran codes to use it, instead of a standard executable program. In
-## default it is disabled.
+## default it is disabled. If only API macro is defined, then the Fortran
+## API will be generated. If both API and F2PY macros are defined, then
+## the Python API and Fortran API will be generated. If only F2PY macro is
+## defined, it is invalid.
+##
 ##
 ## FPP
 ## ---
@@ -133,7 +137,6 @@
 ## This building system is designed, created, implemented, and maintained by
 ##
 ## Li Huang // email: huangli712@gmail.com
-## Department of Physics, University of Fribourg, Fribourg CH-1700, Switzerland
 ##
 ## History
 ## =======
@@ -153,7 +156,7 @@ ARCHIVER = ar -ruv
 #-------------------------------------------------------------------------
 MPI    = -DMPI
 OMP    = #-openmp
-API    = #-DAPI
+API    = #-DAPI -DF2PY
 FPP    = -fpp
 CPP    = $(FPP) $(MPI) $(OMP) $(API)
 
