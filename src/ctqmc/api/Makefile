@@ -20,7 +20,7 @@
 ## History
 ## =======
 ##
-## 09/21/2014 by li huang
+## 09/23/2014 by li huang
 ##
 ##
 
@@ -39,9 +39,13 @@ build_mod: $(mod)
 f2py:
 	fpp -P -DF2PY ctqmc_api.f90 > py_api.f90
 
-build-azalea-py: f2py
-	cp ../azalea/libctqmc.a .
+MM:
 	cp ../../common/libMM.a .
+
+ctqmc:
+	cp ../azalea/libctqmc.a .
+	
+pyiqist: f2py MM ctqmc
 	f2py -c --fcompiler=intelem py_api.f90 -m pyiqist -L. -lctqmc -lMM -L/usr/local/openmpi/lib -lmpi_mpifh $(LIBS) 
 
 .f90.o:
