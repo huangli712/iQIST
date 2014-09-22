@@ -17,7 +17,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
-!!!           08/09/2014 by li huang
+!!!           09/21/2014 by li huang
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -37,7 +37,6 @@
 
      use control, only : nband, norbs
      use control, only : ntime
-     use control, only : beta
 
      implicit none
 
@@ -53,19 +52,11 @@
      integer  :: i
      integer  :: j
 
-! dummy variables
-     real(dp) :: raux
-
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
 
 ! evaluate gaux first
-     raux = real(ntime) / (beta * beta)
-     do i=1,norbs
-         do j=1,ntime
-             gaux(j,i,i) = gtau(j,i,i) * raux
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
+     call ctqmc_make_gtau(gtau, gaux)
 
 ! open data file: solver.green.dat
      open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
@@ -172,7 +163,6 @@
 
      use control, only : nband, norbs
      use control, only : ntime
-     use control, only : beta
 
      implicit none
 
@@ -191,9 +181,6 @@
      integer  :: i
      integer  :: j
 
-! dummy variables
-     real(dp) :: raux
-
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
 
@@ -201,12 +188,7 @@
      character(len=10) :: sbin
 
 ! evaluate gaux first
-     raux = real(ntime) / (beta * beta)
-     do i=1,norbs
-         do j=1,ntime
-             gaux(j,i,i) = gtau(j,i,i) * raux
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
+     call ctqmc_make_gtau(gtau, gaux)
 
 ! open data file: solver.green.bin.x
      write(sbin,'(i10)') ibin ! convert ibin to sbin
@@ -259,7 +241,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(grnf(j,i,i)), &
                                  aimag(grnf(j,i,i)), &
                       real(grnf(j,i+nband,i+nband)), &
@@ -303,7 +285,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(wssf(j,i,i)), &
                                  aimag(wssf(j,i,i)), &
                       real(wssf(j,i+nband,i+nband)), &
@@ -347,7 +329,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(hybf(j,i,i)), &
                                  aimag(hybf(j,i,i)), &
                       real(hybf(j,i+nband,i+nband)), &
@@ -391,7 +373,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(sigf(j,i,i)), &
                                  aimag(sigf(j,i,i)), &
                       real(sigf(j,i+nband,i+nband)), &
@@ -439,7 +421,7 @@
 ! write it
      do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                     real(ghub(j,i)), &
                                    aimag(ghub(j,i)), &
                                     real(shub(j,i)), &
@@ -494,7 +476,7 @@
 ! write it
      write(mytmp,'(a)') '# histogram: order | count | percent'
      do i=1,mkink
-         write(mytmp,'(i5,i12,f12.6)') i, hist(i), haux(i)
+         write(mytmp,'(i6,i12,f12.6)') i, hist(i), haux(i)
      enddo ! over i={1,mkink} loop
 
 ! close data file
@@ -544,7 +526,7 @@
                  basis(i,j) = 1
              else
                  basis(i,j) = 0
-             endif
+             endif ! back if ( btest(i-1,j-1) .eqv. .true. ) block
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
@@ -578,20 +560,20 @@
 ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(i5,3f12.6)') i, prob(i), real(noccs(i)), real(soccs(i)) * half
+         write(mytmp,'(i6,3f12.6)') i, prob(i), real(noccs(i)), real(soccs(i)) * half
      enddo ! over i={1,ncfgs} loop
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
-         write(mytmp,'(i5,2f12.6)') i+1, real(i), oprob(i)
+         write(mytmp,'(i6,2f12.6)') i+1, real(i), oprob(i)
      enddo ! over i={0,norbs} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(oprob)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(oprob)
 
      write(mytmp,'(a)') '# spin probability: index | spin | prob'
      do i=-nband,nband
-         write(mytmp,'(i5,2f12.6)') i+nband+1, i*half, sprob(i)
+         write(mytmp,'(i6,2f12.6)') i+nband+1, i*half, sprob(i)
      enddo ! over i={-nband,nband} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(sprob)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
 
 ! close data file
      close(mytmp)
@@ -626,16 +608,16 @@
 ! write it
      write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i5,f12.6)') i, nmat(i)
+         write(mytmp,'(i6,f12.6)') i, nmat(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
+     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
 
      write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
+             write(mytmp,'(2i6,f12.6)') i, j, nnmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 

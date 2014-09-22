@@ -350,8 +350,8 @@
 !!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
      use constants, only : zero, czero
-     use stack, only : istack_clean, istack_push
      use spring, only : spring_sfmt_init
+     use stack, only : istack_clean, istack_push
 
      use control ! ALL
      use context ! ALL

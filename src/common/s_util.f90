@@ -81,7 +81,8 @@
 !!>>> sort algorithm                                                   <<<
 !!========================================================================
 
-!!>>> s_sorter: using bubble sort algorithm to sort a real dataset, the slowest algorithm
+!!>>> s_sorter: using bubble sort algorithm to sort a real dataset, the
+!!>>> slowest algorithm
   subroutine s_sorter(nsize, list)
      use constants, only : dp
 
@@ -139,7 +140,8 @@
      return
   end subroutine s_qsorter
 
-!!>>> s_qscorer: this is the actually recursive portion of the quicksort algorithm
+!!>>> s_qscorer: this is the actually recursive portion of the
+!!>>> quicksort algorithm
 !!>>> note: do not call it directly, please use s_qsorter() insteadly
   recursive &
   subroutine s_qscorer(pstart, pend, nsize, list)
@@ -344,11 +346,12 @@
 ! definitions of a space and a tab character are made for the ASCII collating
 ! sequence. Each single character of the input string is checked against
 ! these definitions using the IACHAR() intrinsic. If the input string
-! character DOESNOT correspond to a space or tab, it is not copied to
+! character DOES NOT correspond to a space or tab, it is not copied to
 ! the output string.
 !
 ! Note that for input that ONLY has spaces or tabs BEFORE the first useful
-! character, the output of this function is the same as the ADJUSTL() instrinsic.
+! character, the output of this function is the same as the ADJUSTL()
+! instrinsic.
 !
 
 ! Initialise output string

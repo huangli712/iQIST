@@ -3,12 +3,24 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/ctqmc/api directory
+## Makefile for iqist/src/ctqmc/api directory.
 ##
 ## Usage
 ## =====
 ##
 ## 'make' or 'make clean'
+##
+## Author
+## ======
+##
+## This building system is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 09/21/2014 by li huang
 ##
 ##
 
@@ -30,6 +42,7 @@ build_mod: $(mod)
 clean:
 	rm -f *.mod
 	rm -f *.o
+	rm -f libMM.a
 
 clean-dat:
 	rm -f *.dat

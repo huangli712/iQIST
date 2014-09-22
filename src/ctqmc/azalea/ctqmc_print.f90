@@ -38,7 +38,7 @@
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2014.09.08T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2014.09.21T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
      write(mystd,'(2X,a)') 'License: GPL2 and later versions'
