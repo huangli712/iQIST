@@ -100,7 +100,7 @@
 !!
 !! check the target 'ctqmc', the original action is as follows:
 !!     cp ../azalea/libctqmc.a .
-!! If you want to use the other ctqmc components, instead of azalea, you
+!! If you want to use the other ctqmc components, instead of AZALEA, you
 !! have to change the directory. BE CAREFUL!
 !!
 !! 5. generate pyiqist.so
