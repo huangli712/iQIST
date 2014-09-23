@@ -347,6 +347,8 @@
 
 !! python version
   subroutine cat_init_ctqmc()
+     use mmpi, only : mp_comm_rank, mp_comm_size
+
      use control, only : nprocs, myid, master
 
      implicit none

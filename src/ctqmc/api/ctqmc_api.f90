@@ -40,9 +40,43 @@
 !! ============
 !!
 !! This module can provide a light weight interface (i.e., application
-!! programming interface, API) for Fortran 90/Python language to the ctqmc
+!! programming interface, API) for Fortran/Python language to the ctqmc
 !! quantum impurity solver. The user can use it to access the AZALEA,
 !! GARDENIA, NARCISSUS, BEGONIA, LAVENDER, PANSY, and MANJUSHAKA codes.
+!!
+!! How to build the Fortran API
+!! ============================
+!!
+!! 1. edit src/build/make.sys
+!! --------------------------
+!!
+!! Activate the API macro (keep F2PY macro disable).
+!!
+!! 2. compile api
+!! --------------
+!!
+!! Please compile api (this directory) again. You can use the 'make api'
+!! command in the src/build directory.
+!!
+!! 3. compile the ctqmc component
+!! ------------------------------
+!!
+!! Please compile the desired ctqmc component again. You have to clean it
+!! at first, and then compile it. Noted that you have to compile it in the
+!! library mode, i.e., you must use 'make lib' (in the src/ctqmc/azalea
+!! directory) or 'make azalea-lib' (in the src/build directory), etc.
+!!
+!! 4. get what you need
+!! --------------------
+!!
+!! If everything is OK, you will find the libctqmc.a file in the ctqmc
+!! component folder (for example, src/ctqmc/azalea directory). Please copy
+!! it (together with the api.mod) to your own directory. That's all.
+!!
+!! How to build the Python API
+!! ===========================
+!!
+!! TODO
 !!
 !! Usage (Fortran version)
 !! =======================
