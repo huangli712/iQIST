@@ -166,7 +166,7 @@
      convergence = ( ( seps <= eps8 ) .and. ( iter >= minit ) )
 
 ! update sig1
-     sig1 = sig1 * (one - alpha) + sig2 * alpha
+     call s_mix_z(size(sig1), sig2, sig1, one - alpha)
 
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
