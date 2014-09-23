@@ -557,6 +557,9 @@
 ! current iteration number
      integer, intent(in) :: iter
 
+! declare f2py directives
+!F2PY intent(in) iter
+
      call cat_exec_ctqmc(iter)
 
      return
@@ -582,6 +585,11 @@
 ! hybridization function
      complex(dp), intent(in) :: hybf_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) hybf_t
+!F2PY depend(size_t) hybf_t
+
      call cat_set_hybf(size_t, hybf_t)
 
      return
@@ -598,6 +606,11 @@
 ! symmetry vector
      integer, intent(in) :: symm_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) symm_t
+!F2PY depend(size_t) symm_t
+
      call cat_set_symm(size_t, symm_t)
 
      return
@@ -613,6 +626,11 @@
 
 ! impurity energy level
      real(dp), intent(in) :: eimp_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) eimp_t
+!F2PY depend(size_t) eimp_t
 
      call cat_set_eimp(size_t, eimp_t)
 
@@ -631,6 +649,11 @@
 ! kernel function
      real(dp), intent(in) :: ktau_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) ktau_t
+!F2PY depend(size_t) ktau_t
+
      call cat_set_ktau(size_t, ktau_t)
 
      return
@@ -647,6 +670,11 @@
 ! impurity green's function
      complex(dp), intent(out) :: grnf_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) grnf_t
+!F2PY depend(size_t) grnf_t
+
      call cat_get_grnf(size_t, grnf_t)
 
      return
@@ -662,6 +690,11 @@
 
 ! self-energy function
      complex(dp), intent(out) :: sigf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) sigf_t
+!F2PY depend(size_t) sigf_t
 
      call cat_get_sigf(size_t, sigf_t)
 
