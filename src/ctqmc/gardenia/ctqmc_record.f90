@@ -33,7 +33,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
-!!!           09/10/2014 by li huang
+!!!           09/22/2014 by li huang
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -138,7 +138,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! determine index for imaginary time
                  curr = nint( dtau * step ) + 1
@@ -146,7 +146,7 @@
 ! special tricks for the first point and the last point
                  if ( curr == 1 .or. curr == ntime ) then
                      maux = two * maux
-                 endif
+                 endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
                  gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
@@ -185,7 +185,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -233,7 +233,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -363,7 +363,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! determine index for imaginary time
                  curr = nint( dtau * step ) + 1
@@ -371,7 +371,7 @@
 ! special tricks for the first point and the last point
                  if ( curr == 1 .or. curr == ntime ) then
                      maux = two * maux
-                 endif
+                 endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
                  ftau(curr, clur, flvr) = ftau(curr, clur, flvr) - maux
@@ -418,7 +418,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -474,7 +474,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -1634,7 +1634,7 @@
                  do jbnd=1,norbs                ! gather the data
                      if ( symm(jbnd) == ibnd ) then
                          raux = raux + nmat(jbnd)
-                     endif
+                     endif ! back if ( symm(jbnd) == ibnd ) block
                  enddo ! over jbnd={1,norbs} loop
 
                  raux = raux / real(hist(ibnd)) ! calculate average value
@@ -1642,9 +1642,9 @@
                  do jbnd=1,norbs                ! setup it
                      if ( symm(jbnd) == ibnd ) then
                          nmat(jbnd) = raux
-                     endif
+                     endif ! back if ( symm(jbnd) == ibnd ) block
                  enddo ! over jbnd={1,norbs} loop
-             endif
+             endif ! back if ( hist(ibnd) > 0 ) block
          enddo ! over ibnd={1,norbs} loop
      endif ! back if ( issun == 2 ) block
 
@@ -1709,7 +1709,7 @@
                      do jbnd=1,norbs                ! gather the data
                          if ( symm(jbnd) == ibnd ) then
                              raux = raux + gtau(ktau,jbnd,jbnd)
-                         endif
+                         endif ! back if ( symm(jbnd) == ibnd ) block
                      enddo ! over jbnd={1,norbs} loop
 
                      raux = raux / real(hist(ibnd)) ! calculate average value
@@ -1717,9 +1717,9 @@
                      do jbnd=1,norbs                ! setup it
                          if ( symm(jbnd) == ibnd ) then
                              gtau(ktau,jbnd,jbnd) = raux
-                         endif
+                         endif ! back if ( symm(jbnd) == ibnd ) block
                      enddo ! over jbnd={1,norbs} loop
-                 endif
+                 endif ! back if ( hist(ibnd) > 0 ) block
              enddo ! over ibnd={1,norbs} loop
          enddo ! over ktau={1,ntime} loop
      endif ! back if ( issun == 2 ) block
@@ -1787,7 +1787,7 @@
                      do jbnd=1,norbs                ! gather the data
                          if ( symm(jbnd) == ibnd ) then
                              caux = caux + grnf(kfrq,jbnd,jbnd)
-                         endif
+                         endif ! back if ( symm(jbnd) == ibnd ) block
                      enddo ! over jbnd={1,norbs} loop
 
                      caux = caux / real(hist(ibnd)) ! calculate average value
@@ -1795,9 +1795,9 @@
                      do jbnd=1,norbs                ! setup it
                          if ( symm(jbnd) == ibnd ) then
                              grnf(kfrq,jbnd,jbnd) = caux
-                         endif
+                         endif ! back if ( symm(jbnd) == ibnd ) block
                      enddo ! over jbnd={1,norbs} loop
-                 endif
+                 endif ! back if ( hist(ibnd) > 0 ) block
              enddo ! over ibnd={1,norbs} loop
          enddo ! over kfrq={1,mfreq} loop
      endif ! back if ( issun == 2 ) block
@@ -2300,7 +2300,7 @@
                  basis(i,j) = 1
              else
                  basis(i,j) = 0
-             endif
+             endif ! back if ( btest(i-1,j-1) .eqv. .true. ) block
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
@@ -2314,7 +2314,7 @@
              do k=j+1,norbs
                  if ( basis(i,j) == 1 .and. basis(i,k) == 1 ) then
                      eaux(i) = eaux(i) + uumat(j,k)
-                 endif
+                 endif ! back if ( basis(i,j) == 1 .and. basis(i,k) == 1 ) block
              enddo ! over k={j+1,norbs} loop
          enddo ! over j={1,norbs-1} loop
      enddo ! over i={1,ncfgs} loop
@@ -2353,7 +2353,7 @@
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
                          call s_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
-                     endif
+                     endif ! back if ( fcounter(m) > nzero ) block
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
                      fv(fcounter(m),m) = value
@@ -2563,7 +2563,7 @@
                  basis(i,j) = 1
              else
                  basis(i,j) = 0
-             endif
+             endif ! back if ( btest(i-1,j-1) .eqv. .true. ) block
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
@@ -2577,7 +2577,7 @@
              do k=j+1,norbs
                  if ( basis(i,j) == 1 .and. basis(i,k) == 1 ) then
                      eaux(i) = eaux(i) + uumat(j,k)
-                 endif
+                 endif ! back if ( basis(i,j) == 1 .and. basis(i,k) == 1 ) block
              enddo ! over k={j+1,norbs} loop
          enddo ! over j={1,norbs-1} loop
      enddo ! over i={1,ncfgs} loop
@@ -2616,7 +2616,7 @@
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
                          call s_print_error('ctqmc_make_hub2','non-zero elements exceed limit')
-                     endif
+                     endif ! back if ( fcounter(m) > nzero ) block
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
                      fv(fcounter(m),m) = value
