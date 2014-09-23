@@ -348,29 +348,28 @@
                  call ctqmc_record_gtau()
              endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
-             STOP
 ! record nothing
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 1 ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
                  CONTINUE
              endif
 
 ! record the spin-spin correlation function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 2 ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
                  call ctqmc_record_schi()
              endif
 
 ! record the orbital-orbital correlation function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 3 ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
                  call ctqmc_record_ochi()
              endif
 
 ! record the two-particle green's function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 4 ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
                  call ctqmc_record_twop()
              endif
 
 ! record the vertex function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 5 ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
                  call ctqmc_record_vrtx()
              endif
 
