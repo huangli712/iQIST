@@ -213,7 +213,7 @@
      if ( iter == 999 ) then
          nsweep = nsweep * 10
          nwrite = nwrite * 10
-     endif
+     endif ! back if ( iter == 999 ) block
 
 !!========================================================================
 !!>>> starting quantum impurity solver                                 <<<
@@ -327,6 +327,28 @@
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
 
+! record the impurity (double) occupation number matrix and other
+! auxiliary physical observables
+             if ( mod(cstep, nmonte) == 0 ) then
+                 call ctqmc_record_nmat()
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
+
+! record the impurity green's function in matsubara frequency space
+             if ( mod(cstep, nmonte) == 0 ) then
+                 call ctqmc_record_grnf()
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
+
+! record the probability of eigenstates
+             if ( mod(cstep, ncarlo) == 0 ) then
+                 call ctqmc_record_prob()
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+
+! record the impurity green's function in imaginary time space
+             if ( mod(cstep, ncarlo) == 0 ) then
+                 call ctqmc_record_gtau()
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+
+             STOP
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. isvrt == 1 ) then
                  CONTINUE
@@ -352,30 +374,9 @@
                  call ctqmc_record_vrtx()
              endif
 
-! record the impurity (double) occupation number matrix and other
-! auxiliary physical observables
-             if ( mod(cstep, nmonte) == 0 ) then
-                 call ctqmc_record_nmat()
-             endif
-
-! record the impurity green's function in matsubara frequency space
-             if ( mod(cstep, nmonte) == 0 ) then
-                 call ctqmc_record_grnf()
-             endif
-
 ! record the auxiliary correlation function, F^{j}(\tau)
              if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
                  call ctqmc_record_ftau()
-             endif
-
-! record the probability of eigenstates
-             if ( mod(cstep, ncarlo) == 0 ) then
-                 call ctqmc_record_prob()
-             endif
-
-! record the impurity green's function in imaginary time space
-             if ( mod(cstep, ncarlo) == 0 ) then
-                 call ctqmc_record_gtau()
              endif
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
