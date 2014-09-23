@@ -539,10 +539,21 @@
 # else   /* F2PY */
 
 !! python version
-  subroutine init_ctqmc()
+  subroutine init_ctqmc(my_id, num_procs)
      implicit none
 
-     call cat_init_ctqmc()
+! external arguments
+! id for current process
+     integer, intent(in) :: my_id
+
+! number of processors
+     integer, intent(in) :: num_procs
+
+! declare f2py directives
+!F2PY intent(in) my_id
+!F2PY intent(in) num_procs
+
+     call cat_init_ctqmc(my_id, num_procs)
 
      return
   end subroutine init_ctqmc
