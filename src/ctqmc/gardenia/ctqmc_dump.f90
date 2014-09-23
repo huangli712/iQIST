@@ -655,7 +655,7 @@
      integer :: j
 
 ! check if we need to dump spin-spin correlation function data
-     if ( isvrt /= 2 ) RETURN
+     if ( .not. btest(isvrt, 1) ) RETURN
 
 ! open data file: solver.schi.dat
      open(mytmp, file='solver.schi.dat', form='formatted', status='unknown')
@@ -714,7 +714,7 @@
      integer :: j
 
 ! check if we need to dump orbital-orbital correlation function data
-     if ( isvrt /= 3 ) RETURN
+     if ( .not. btest(isvrt, 2) ) RETURN
 
 ! open data file: solver.ochi.dat
      open(mytmp, file='solver.ochi.dat', form='formatted', status='unknown')
@@ -802,7 +802,7 @@
 
 ! check if we need to dump two-particle green's function and vertex
 ! function data to solver.twop.dat
-     if ( isvrt /= 4 ) RETURN
+     if ( .not. btest(isvrt, 3) ) RETURN
 
 ! open data file: solver.twop.dat
      open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
@@ -935,7 +935,7 @@
 
 ! check if we need to dump two-particle green's function and vertex
 ! function data to solver.vrtx.dat
-     if ( isvrt /= 5 ) RETURN
+     if ( .not. btest(isvrt, 4) ) RETURN
 
 ! build frnf at first: F = G \Sigma
 ! in principle, F should be measured during the Monte Carlo procedure
