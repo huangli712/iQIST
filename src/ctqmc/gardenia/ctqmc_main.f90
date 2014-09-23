@@ -5,7 +5,7 @@
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
 !!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
-!!! version : v2014.09.10T                                               !
+!!! version : v2014.09.24T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on segment picture formalism !
 !!!           any question, please contact with huangli712@gmail.com     !
