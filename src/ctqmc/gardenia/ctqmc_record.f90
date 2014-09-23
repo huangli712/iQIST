@@ -884,6 +884,7 @@
   subroutine ctqmc_record_twop()
      use constants, only : dp, two, pi, czi, czero
 
+     use control, only : isvrt
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
@@ -930,6 +931,9 @@
 
 ! dummy complex(dp) arrays, used to store the intermediate results
      complex(dp), allocatable :: g2aux(:,:,:)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 3) .and. .not. btest(isvrt, 4) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
@@ -1005,6 +1009,7 @@
   subroutine ctqmc_record_vrtx()
      use constants, only : dp, zero, one, two, half, pi, czi, czero
 
+     use control, only : isvrt
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
@@ -1056,6 +1061,9 @@
 ! dummy complex(dp) arrays, used to store the intermediate results
      complex(dp), allocatable :: g2aux(:,:,:)
      complex(dp), allocatable :: h2aux(:,:,:)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 4) .and. .not. btest(isvrt, 3) )
 
 ! evaluate nfaux, determine the size of g2aux and h2aux
      nfaux = nffrq + nbfrq - 1
