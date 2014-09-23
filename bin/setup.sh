@@ -6,7 +6,7 @@
 ## ============
 ##
 ## It is a bash shell script. The purpose of this script is to make symbolic
-## links for the executable codes in the bin directory (current directory). 
+## links for the executable codes in the bin directory (current directory).
 ##
 ## Usage
 ## =====

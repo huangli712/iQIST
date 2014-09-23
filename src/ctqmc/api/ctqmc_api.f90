@@ -294,7 +294,7 @@
 !! the pyiqist.so is generated, the ctqmc impurity solver is determined.
 !! If you want to change the ctqmc impurity solver, you must regenerate
 !! the pyiqist.so file at first.
-!! 
+!!
 !!
 
   module api
