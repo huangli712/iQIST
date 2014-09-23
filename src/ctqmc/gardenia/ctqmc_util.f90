@@ -258,14 +258,14 @@
              if ( htau(j,i,i) > -eps6 ) then
                  start = j
                  EXIT
-             endif
+             endif ! back if ( htau(j,i,i) > -eps6 ) block
          enddo ! over j={1,ntime} loop
 
          do j=ntime,1,-1 ! search backward
              if ( htau(j,i,i) > -eps6 ) then
                  last = j
                  EXIT
-             endif
+             endif ! back if ( htau(j,i,i) > -eps6 ) block
          enddo ! over j={ntime,1,-1} loop
 
 !-------------------------------------------------------------------------
@@ -273,7 +273,7 @@
 !<             do j=start,last
 !<                 htau(j,i,i) = -eps6
 !<             enddo ! over j={start,last} loop
-!<         endif
+!<         endif ! back if ( start > 1 .and. last > 1 ) block
 !-------------------------------------------------------------------------
      enddo ! over i={1,norbs} loop
 
@@ -334,7 +334,7 @@
                      ut(k) = Uc
                  else
                      ut(k) = Uc - 2.0_dp * Jz
-                 endif
+                 endif ! back if ( m == i ) block
              else
                  ut(k) = Uc - 3.0_dp * Jz
              endif ! back if ( i <= nband .and. j > nband ) block
