@@ -351,32 +351,32 @@
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
                  CONTINUE
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) block
 
 ! record the spin-spin correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
                  call ctqmc_record_schi()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
 
 ! record the orbital-orbital correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
                  call ctqmc_record_ochi()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
 
 ! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
                  call ctqmc_record_twop()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
 
 ! record the vertex function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
                  call ctqmc_record_vrtx()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block
 
 ! record the auxiliary correlation function, F^{j}(\tau)
              if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
                  call ctqmc_record_ftau()
-             endif
+             endif ! back if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) block
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
