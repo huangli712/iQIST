@@ -17,7 +17,7 @@
 !! =======
 !!
 !! If you want to obtain an executable program, please go to src/build/,
-!! open make.sys and comment out the API flag. On the other hand, if you
+!! open make.sys and comment out the API flag. On the contrary, if you
 !! want to compile gardenia as a library, please activate the API flag.
 !!
 !! Introduction
@@ -25,7 +25,7 @@
 !!
 !! The gardenia code is a hybridization expansion version continuous time
 !! quantum Monte Carlo quantum impurity solver. It adopts the segment
-!! picuture, and implements many useful features, such as the orthogonal
+!! picture, and implements many useful features, such as the orthogonal
 !! polynomial representation and the measurement of two-particle Green's
 !! function, etc. So it is a bit less efficient than the azalea code. And
 !! it can be used as a standard to benchmark the other ctqmc impurity
@@ -269,6 +269,9 @@
 # endif  /* API */
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
+# if !defined (F2PY)
+
+!! fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
      use api, only : T_mpi, T_segment_gardenia
 
@@ -353,6 +356,52 @@
      return
   end subroutine cat_init_ctqmc
 
+# else   /* F2PY */
+
+!! python version
+  subroutine cat_init_ctqmc(my_id, num_procs)
+     use control, only : nprocs, myid, master
+
+     implicit none
+
+! external arguments
+! id for current process
+     integer, intent(in) :: my_id
+
+! number of processors
+     integer, intent(in) :: num_procs
+
+! initialize mpi envirnoment
+     myid = my_id
+     nprocs = num_procs
+
+! print the running header for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_header()
+     endif ! back if ( myid == master ) block
+
+! setup the important parameters for continuous time quantum Monte Carlo
+! quantum impurity solver and dynamical mean field theory self-consistent
+! engine
+     call ctqmc_config()
+
+! print out runtime parameters in summary, only for check
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_summary()
+     endif ! back if ( myid == master ) block
+
+! allocate memory and initialize
+     call ctqmc_setup_array()
+
+! prepare initial hybridization function, init self-consistent iteration
+     call ctqmc_selfer_init()
+
+     return
+  end subroutine cat_init_ctqmc
+
+# endif  /* F2PY */
+
 !!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
      implicit none
@@ -398,7 +447,7 @@
 
 ! external arguments
 ! size of hybf
-     integer, intent(in) :: size_t
+     integer, intent(in)     :: size_t
 
 ! hybridization function
      complex(dp), intent(in) :: hybf_t(size_t)
@@ -448,7 +497,7 @@
 
 ! external arguments
 ! size of eimp
-     integer, intent(in) :: size_t
+     integer, intent(in)  :: size_t
 
 ! impurity level
      real(dp), intent(in) :: eimp_t(size_t)
@@ -464,6 +513,27 @@
      return
   end subroutine cat_set_eimp
 
+!!>>> cat_set_ktau: setup the kernel function
+!!>>> note: the azalea code does not support this function
+  subroutine cat_set_ktau(size_t, ktau_t)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of ktau
+     integer, intent(in)  :: size_t
+
+! kernel function
+     real(dp), intent(in) :: ktau_t(size_t)
+
+! to avoid the warning from compiler
+     call s_assert( size(ktau_t) == size_t )
+     call s_print_error('cat_set_ktau', 'this feature is not supported')
+
+     return
+  end subroutine cat_set_ktau
+
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
@@ -476,7 +546,7 @@
 
 ! external arguments
 ! size of grnf
-     integer, intent(in) :: size_t
+     integer, intent(in)      :: size_t
 
 ! impurity green's function
      complex(dp), intent(out) :: grnf_t(size_t)
@@ -504,7 +574,7 @@
 
 ! external arguments
 ! size of sigf
-     integer, intent(in) :: size_t
+     integer, intent(in)      :: size_t
 
 ! self-energy function
      complex(dp), intent(out) :: sigf_t(size_t)
