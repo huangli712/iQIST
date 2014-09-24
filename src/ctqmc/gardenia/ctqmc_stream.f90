@@ -271,17 +271,17 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build mesh for legendre polynomial in [-1,1]
-     call s_linspace_d(-one, one, legrd, pmesh)
-
-! build mesh for chebyshev polynomial in [-1,1]
-     call s_linspace_d(-one, one, chgrd, qmesh)
-
 ! build imaginary time tau mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
 
 ! build matsubara frequency mesh: rmesh
      call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
+
+! build mesh for legendre polynomial in [-1,1]
+     call s_linspace_d(-one, one, legrd, pmesh)
+
+! build mesh for chebyshev polynomial in [-1,1]
+     call s_linspace_d(-one, one, chgrd, qmesh)
 
 ! build legendre polynomial in [-1,1]
      call s_legendre(lemax, legrd, pmesh, ppleg)
@@ -392,8 +392,8 @@
 !!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
      use constants, only : zero, czero
-     use stack, only : istack_clean, istack_push
      use spring, only : spring_sfmt_init
+     use stack, only : istack_clean, istack_push
 
      use control ! ALL
      use context ! ALL

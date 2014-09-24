@@ -26,7 +26,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 01/07/2014 by li huang
 !!!           01/11/2014 by li huang
-!!!           09/21/2014 by li huang
+!!!           09/23/2014 by li huang
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
 !!!           quantum Monte Carlo impurity solver.
@@ -76,13 +76,46 @@
 !! How to build the Python API
 !! ===========================
 !!
-!! TODO
+!! 1. edit src/build/make.sys
+!! --------------------------
+!!
+!! Activate the API macro and F2PY macro at the same time.
+!!
+!! 2. compile api
+!! --------------
+!!
+!! Please compile api (this directory) again. You can use the 'make api'
+!! command in the src/build directory. This step is mandatory.
+!!
+!! 3. compile the ctqmc component
+!! ------------------------------
+!!
+!! Please compile the desired ctqmc component again. You have to clean it
+!! at first, and then compile it. Noted that you have to compile it in the
+!! library mode, i.e., you must use 'make lib' (in the src/ctqmc/azalea
+!! directory) or 'make azalea-lib' (in the src/build directory), etc.
+!!
+!! 4. edit src/ctqmc/api/Makefile
+!! ------------------------------
+!!
+!! check the target 'ctqmc', the original action is as follows:
+!!     cp ../azalea/libctqmc.a .
+!! If you want to use the other ctqmc components, instead of AZALEA, you
+!! have to change the directory. BE CAREFUL!
+!!
+!! 5. generate pyiqist.so
+!! ----------------------
+!!
+!! In the src/ctqmc/api directory, just input 'make pyiqist' command and
+!! wait. At last you will get the pyiqist.so which is what you need.
 !!
 !! Usage (Fortran version)
 !! =======================
 !!
 !! In the following, we will use AZALEA code as an example to show how to
-!! use api to control it.
+!! use api to control it. When you want to compile your code, you have to
+!! ensure that api.mod and libctqmc.a are in correct PATH. Or else the
+!! compiler will complain that it can not find them.
 !!
 !! 1. import api support
 !! ---------------------
@@ -200,7 +233,67 @@
 !! Usage (Python version)
 !! ======================
 !!
-!! TODO
+!! In the following, we will use AZALEA code as an example to show how to
+!! use api to control it. When you want to run your Python code, you have
+!! to ensure that pyiqist.so is in correct PATH. Or else the Python will
+!! complain that it can not find iqist.
+!!
+!! 1. import mpi support
+!! ---------------------
+!!
+!! import pyalps.mpi
+!!
+!! We are not sure whether mpi4py will work. But pyalps.mpi always works.
+!! This code will also start the mpi running environment.
+!!
+!! 2. import pyiqist
+!! -----------------
+!!
+!! import pyiqist
+!!
+!! 3. configure the ctqmc impurity solver
+!! --------------------------------------
+!!
+!! You have to setup the parameters for the ctqmc impurity solver, and
+!! write them down to the 'solver.ctqmc.in' file. Now you must do that
+!! manually. In the futher we will write a Python module to facilitate
+!! this work.
+!!
+!! 4. init the ctqmc impurity solver
+!! ---------------------------------
+!!
+!! pyiqist.api.init_ctqmc() # there is no parameter for init_ctqmc()
+!!
+!! 5. setup hybf, symm, eimp, and ktau
+!! -----------------------------------
+!!
+!! This step has not been tested yet. I am sorry.
+!!
+!! 6. start the ctqmc impurity solver
+!! ----------------------------------
+!!
+!! pyiqist.api.exec_ctqmc(i)
+!!
+!! Here i is the current iteration number.
+!!
+!! 7. retrieve the calculated results
+!! ----------------------------------
+!!
+!! This step has not been tested yet. I am sorry.
+!!
+!! 8. close the ctqmc impurity solver
+!! ----------------------------------
+!!
+!! pyiqist.api.stop_ctqmc()
+!!
+!! Question:
+!!     Can we change the ctqmc impurity solver at runtime?
+!!
+!! Answer:
+!!     No. You can not change the ctqmc impurity solver dynamically. Once
+!! the pyiqist.so is generated, the ctqmc impurity solver is determined.
+!! If you want to change the ctqmc impurity solver, you must regenerate
+!! the pyiqist.so file at first.
 !!
 !!
 
@@ -446,10 +539,21 @@
 # else   /* F2PY */
 
 !! python version
-  subroutine init_ctqmc()
+  subroutine init_ctqmc(my_id, num_procs)
      implicit none
 
-     call cat_init_ctqmc()
+! external arguments
+! id for current process
+     integer, intent(in) :: my_id
+
+! number of processors
+     integer, intent(in) :: num_procs
+
+! declare f2py directives
+!F2PY intent(in) my_id
+!F2PY intent(in) num_procs
+
+     call cat_init_ctqmc(my_id, num_procs)
 
      return
   end subroutine init_ctqmc
@@ -463,6 +567,9 @@
 ! external arguments
 ! current iteration number
      integer, intent(in) :: iter
+
+! declare f2py directives
+!F2PY intent(in) iter
 
      call cat_exec_ctqmc(iter)
 
@@ -489,6 +596,11 @@
 ! hybridization function
      complex(dp), intent(in) :: hybf_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) hybf_t
+!F2PY depend(size_t) hybf_t
+
      call cat_set_hybf(size_t, hybf_t)
 
      return
@@ -505,6 +617,11 @@
 ! symmetry vector
      integer, intent(in) :: symm_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) symm_t
+!F2PY depend(size_t) symm_t
+
      call cat_set_symm(size_t, symm_t)
 
      return
@@ -520,6 +637,11 @@
 
 ! impurity energy level
      real(dp), intent(in) :: eimp_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) eimp_t
+!F2PY depend(size_t) eimp_t
 
      call cat_set_eimp(size_t, eimp_t)
 
@@ -538,6 +660,11 @@
 ! kernel function
      real(dp), intent(in) :: ktau_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) ktau_t
+!F2PY depend(size_t) ktau_t
+
      call cat_set_ktau(size_t, ktau_t)
 
      return
@@ -554,6 +681,11 @@
 ! impurity green's function
      complex(dp), intent(out) :: grnf_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) grnf_t
+!F2PY depend(size_t) grnf_t
+
      call cat_get_grnf(size_t, grnf_t)
 
      return
@@ -569,6 +701,11 @@
 
 ! self-energy function
      complex(dp), intent(out) :: sigf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) sigf_t
+!F2PY depend(size_t) sigf_t
 
      call cat_get_sigf(size_t, sigf_t)
 

@@ -5,7 +5,7 @@
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
 !!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
-!!! version : v2014.09.21T                                               !
+!!! version : v2014.09.24T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on segment picture formalism !
 !!!           any question, please contact with huangli712@gmail.com     !
@@ -346,23 +346,21 @@
 # else   /* F2PY */
 
 !! python version
-  subroutine cat_init_ctqmc()
-     use mmpi, only : mp_comm_rank, mp_comm_size
-
+  subroutine cat_init_ctqmc(my_id, num_procs)
      use control, only : nprocs, myid, master
 
      implicit none
 
+! external arguments
+! id for current process
+     integer, intent(in) :: my_id
+
+! number of processors
+     integer, intent(in) :: num_procs
+
 ! initialize mpi envirnoment
-# if defined (MPI)
-
-! determines the rank of the calling process in the communicator
-     call mp_comm_rank(myid)
-
-! determines the size of the group associated with a communicator
-     call mp_comm_size(nprocs)
-
-# endif  /* MPI */
+     myid = my_id
+     nprocs = num_procs
 
 ! print the running header for continuous time quantum Monte Carlo quantum
 ! impurity solver and dynamical mean field theory self-consistent engine

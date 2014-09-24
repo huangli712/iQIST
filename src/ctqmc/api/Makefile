@@ -44,9 +44,9 @@ MM:
 
 ctqmc:
 	cp ../azalea/libctqmc.a .
-	
+
 pyiqist: f2py MM ctqmc
-	f2py -c --fcompiler=intelem py_api.f90 -m pyiqist -L. -lctqmc -lMM -L/usr/local/openmpi/lib -lmpi_mpifh $(LIBS) 
+	f2py -c --fcompiler=intelem py_api.f90 -m pyiqist -L. -lctqmc -lMM -L/usr/local/openmpi/lib -lmpi_mpifh $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
