@@ -32,7 +32,8 @@
      use control, only : beta
      use control, only : myid, master
      use context, only : tmesh, rmesh
-     use context, only : hist, prob, nmat, nnmat
+     use context, only : hist, prob
+     use context, only : nmat, nnmat
      use context, only : symm
      use context, only : gtau, grnf
      use context, only : sig2

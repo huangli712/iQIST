@@ -11,7 +11,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/21/2010 by li huang
-!!!           09/10/2014 by li huang
+!!!           09/23/2014 by li huang
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
@@ -213,7 +213,7 @@
      if ( iter == 999 ) then
          nsweep = nsweep * 10
          nwrite = nwrite * 10
-     endif
+     endif ! back if ( iter == 999 ) block
 
 !!========================================================================
 !!>>> starting quantum impurity solver                                 <<<
@@ -327,56 +327,56 @@
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
 
-! record nothing
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 1 ) then
-                 CONTINUE
-             endif
-
-! record the spin-spin correlation function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 2 ) then
-                 call ctqmc_record_schi()
-             endif
-
-! record the orbital-orbital correlation function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 3 ) then
-                 call ctqmc_record_ochi()
-             endif
-
-! record the two-particle green's function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 4 ) then
-                 call ctqmc_record_twop()
-             endif
-
-! record the vertex function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 5 ) then
-                 call ctqmc_record_vrtx()
-             endif
-
 ! record the impurity (double) occupation number matrix and other
 ! auxiliary physical observables
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the impurity green's function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_grnf()
-             endif
-
-! record the auxiliary correlation function, F^{j}(\tau)
-             if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
-                 call ctqmc_record_ftau()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the probability of eigenstates
              if ( mod(cstep, ncarlo) == 0 ) then
                  call ctqmc_record_prob()
-             endif
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
 ! record the impurity green's function in imaginary time space
              if ( mod(cstep, ncarlo) == 0 ) then
                  call ctqmc_record_gtau()
-             endif
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+
+! record nothing
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
+                 CONTINUE
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) block
+
+! record the spin-spin correlation function
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
+                 call ctqmc_record_schi()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
+
+! record the orbital-orbital correlation function
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
+                 call ctqmc_record_ochi()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
+
+! record the two-particle green's function
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
+                 call ctqmc_record_twop()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
+
+! record the vertex function
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
+                 call ctqmc_record_vrtx()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block
+
+! record the auxiliary correlation function, F^{j}(\tau)
+             if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
+                 call ctqmc_record_ftau()
+             endif ! back if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) block
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 

@@ -103,7 +103,7 @@
                      maux = two * maux
                  endif ! back if ( curr == 1 .or. curr == ntime ) block
 
-! record gtau, we normalize gtau in ctqmc_dump_gtau() subroutine
+! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
                  gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
 
              enddo ! over ie={1,rank(flvr)} loop

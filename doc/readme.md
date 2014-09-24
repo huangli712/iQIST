@@ -35,7 +35,7 @@ The current stable release of iQIST is 0.2.x.
 Features
 --------
 
-The iQIST is a powerful software package. It consists of many components 
+The iQIST is a powerful software package. It consists of many components
 (We just call the executable program as component in iQIST). The main
 components of iQIST is the continuous-time quantum Monte Carlo impurity
 solvers. So far these impurity solvers support the following features:
@@ -48,18 +48,18 @@ solvers. So far these impurity solvers support the following features:
 * Orthogonal polynomial representation
 * Kernel polynomial representation
 * Improved estimator for self-energy
-* Single-particle Green’s function G(\tau) 
-* Single-particle Green’s function G(i\omega_n) 
+* Single-particle Green’s function G(\tau)
+* Single-particle Green’s function G(i\omega_n)
 * Two-particle correlation function \chi(\omega, \omega', \nu)
-* Local irreducible vertex function \Gamma(\omega, \omega', \nu) 
+* Local irreducible vertex function \Gamma(\omega, \omega', \nu)
 * Self-energy function \Sigma(i\omega_n)
-* Histogram of perturbation expansion order 
+* Histogram of perturbation expansion order
 * Kinetic and potential energies
-* (Double) occupation numbers, magnetic moment 
+* (Double) occupation numbers, magnetic moment
 * Atomic state probability
 * Spin-spin correlation function
-* Orbital-orbital correlation function 
-* Autocorrelation function and autocorrelation time 
+* Orbital-orbital correlation function
+* Autocorrelation function and autocorrelation time
 * Divide-and-conquer algorithm
 * Sparse matrix multiplication
 * Good quantum numbers
@@ -72,7 +72,7 @@ Obtain
 
 The readers who are interested in it should write a letter to the authors
 to request an electronic copy of the newest version of iQIST, or they can
-download it directly from the public code repository. Please check the 
+download it directly from the public code repository. Please check the
 following website regularly:
     http://bitbucket.org
 
