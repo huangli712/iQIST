@@ -1,6 +1,6 @@
 .SUFFIXES: .f90
 
-include ./make.sys
+include ../../build/make.sys
 
 default: all
 
