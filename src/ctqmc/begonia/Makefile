@@ -53,6 +53,7 @@ cssl:
 csml:
 	cp ../../common/constants.mod .
 	cp ../../common/mmpi.mod .
+	cp ../../common/sparse.mod .
 	cp ../../common/spring.mod .
 	cp ../../common/stack.mod .
 	cp ../../common/parser.mod .
