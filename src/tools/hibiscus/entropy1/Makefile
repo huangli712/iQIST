@@ -26,21 +26,32 @@
 
 .SUFFIXES: .f90
 
-include ./make.sys
+include ../../../build/make.sys
 
-default: all
-
-modm = mod_mpi.o mod_spring.o
-modn = entropy_constants.o entropy_control.o entropy_context.o
+modc = entropy_control.o entropy_context.o
 core = entropy_stream.o entropy_toolbox.o entropy_update.o
 dump = entropy_dump.o entropy_print.o
 main = entropy_main.o
+MAPI = libMM.a
 
-objects = $(modm) $(modn) $(core) $(dump) $(main)
+objects = $(modc) $(core) $(dump) $(main) $(MAPI)
 
-all: entropy
+default: all
 
-entropy: $(objects)
+all: exe
+
+cssl:
+	cp ../../../common/libMM.a .
+
+csml:
+	cp ../../../common/constants.mod .
+	cp ../../../common/mmpi.mod .
+	cp ../../../common/spring.mod .
+	cp ../../../common/parser.mod .
+	cp ../../../common/linkedlist.mod .
+
+exe: cssl csml entropy-exe
+entropy-exe: $(objects)
 	$(LINKER) $(objects) -o entropy $(LFLAGS) $(LIBS)
 
 .f90.o:
@@ -50,6 +61,7 @@ clean:
 	rm -f *.mod
 	rm -f *.o
 	rm -f entropy
+	rm -f libMM.a
 
 clean-dat:
 	rm -f *.dat
