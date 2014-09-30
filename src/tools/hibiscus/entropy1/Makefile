@@ -3,12 +3,12 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/ctqmc/azalea directory.
+## Makefile for iqist/src/tools/hibiscus/entropy1 directory.
 ##
 ## Usage
 ## =====
 ##
-## 'make', 'make lib', 'make clean', 'make clean-dat' or 'make clean-all'
+## 'make' or 'make clean'
 ##
 ## Author
 ## ======
@@ -20,7 +20,7 @@
 ## History
 ## =======
 ##
-## 09/21/2014 by li huang
+## 09/30/2014 by li huang
 ##
 ##
 
