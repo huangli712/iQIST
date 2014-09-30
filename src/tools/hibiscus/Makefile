@@ -31,3 +31,21 @@ clean: clean-hibiscus
 
 build-hibiscus: build-entropy1 build-entropy2 build-sac build-script build-swing build-toolbox
 clean-hibiscus: clean-entropy1 clean-entropy2 clean-sac clean-script clean-swing clean-toolbox
+
+build-entropy1:
+clean-entropy1:
+
+build-entropy2:
+clean-entropy2:
+
+build-sac:
+clean-sac:
+
+build-script:
+clean-script:
+
+build-swing:
+clean-swing:
+
+build-toolbox:
+clean-toolbox:
