@@ -26,19 +26,19 @@
 
 .SUFFIXES: .f90
 
-include ./make.sys
+include ../../../build/make.sys
+
+modc = sai_control.o sai_context.o
+core = sai_stream.o sai_toolbox.o sai_update.o sai_record.o
+dump = sai_dump.o sai_print.o
+main = sai_main.o
+MAPI = libMM.a
+
+objects = $(modc) $(core) $(dump) $(main) $(MAPI)
 
 default: all
 
-modm = mod_mpi.o mod_spring.o
-modn = sai_constants.o sai_control.o sai_context.o
-core = sai_record.o sai_stream.o sai_toolbox.o sai_update.o
-dump = sai_dump.o sai_print.o
-main = sai_main.o
-
-objects = $(modm) $(modn) $(core) $(dump) $(main)
-
-all: sai
+all: exe
 
 sai: $(objects)
 	$(LINKER) $(objects) -o sai $(LFLAGS) $(LIBS)
