@@ -24,4 +24,10 @@
 ##
 ##
 
+default: all
 
+all: build-hibiscus
+clean: clean-hibiscus
+
+build-hibiscus: build-entropy1 build-entropy2 build-sac build-script build-swing build-toolbox
+clean-hibiscus: clean-entropy1 clean-entropy2 clean-sac clean-script clean-swing clean-toolbox
