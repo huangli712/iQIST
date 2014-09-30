@@ -115,7 +115,7 @@
 ! open file maxent.palpha.dat 
       open(mytmp, file="maxent.palpha.dat", form="formatted", status="unknown")
       do i=1, nalpha
-          write(mytmp,"(f16.6,5X,E20.8E8)") amesh(i), palpha(i)
+          write(mytmp,"(f16.6,5X,f16.8)") amesh(i), palpha(i)
       enddo
       close(mytmp)
  
