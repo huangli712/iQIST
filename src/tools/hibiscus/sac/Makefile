@@ -40,7 +40,18 @@ default: all
 
 all: exe
 
-sai: $(objects)
+cssl:
+	cp ../../../common/libMM.a .
+
+csml:
+	cp ../../../common/constants.mod .
+	cp ../../../common/mmpi.mod .
+	cp ../../../common/spring.mod .
+	cp ../../../common/parser.mod .
+	cp ../../../common/linkedlist.mod .
+
+exe: cssl csml sai-exe
+sai-exe: $(objects)
 	$(LINKER) $(objects) -o sai $(LFLAGS) $(LIBS)
 
 .f90.o:
@@ -50,6 +61,7 @@ clean:
 	rm -f *.mod
 	rm -f *.o
 	rm -f sai
+	rm -f libMM.a
 
 clean-dat:
 	rm -f *.dat
