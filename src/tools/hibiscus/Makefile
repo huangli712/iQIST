@@ -38,20 +38,35 @@ clean-entropy1:
 
 # targets for entropy2
 build-entropy2:
+	cd ./entropy2; pwd; make
+
 clean-entropy2:
+	cd ./entropy2; pwd; make clean
 
 # targets for sac
 build-sac:
+	cd ./sac; pwd; make
+
 clean-sac:
+	cd ./sac; pwd; make clean
 
 # targets for script
 build-script:
+	cd ./script; pwd; make
+
 clean-script:
+	cd ./script; pwd; make clean
 
 # targets for swing
 build-swing:
+	cd ./swing; pwd; make
+
 clean-swing:
+	cd ./swing; pwd; make clean
 
 # targets for toolbox
 build-toolbox:
+	cd ./toolbox; pwd; make
+
 clean-toolbox:
+	cd ./toolbox; pwd; make clean
