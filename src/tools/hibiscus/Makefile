@@ -26,26 +26,32 @@
 
 default: all
 
-all: build-hibiscus
-clean: clean-hibiscus
+all: build-entropy1 build-entropy2 build-sac build-script build-swing build-toolbox
+clean: clean-entropy1 clean-entropy2 clean-sac clean-script clean-swing clean-toolbox
 
-build-hibiscus: build-entropy1 build-entropy2 build-sac build-script build-swing build-toolbox
-clean-hibiscus: clean-entropy1 clean-entropy2 clean-sac clean-script clean-swing clean-toolbox
-
+# targets for entropy1
 build-entropy1:
-clean-entropy1:
+	cd ./entropy1; pwd; make
 
+clean-entropy1:
+	cd ./entropy1; pwd; make clean
+
+# targets for entropy2
 build-entropy2:
 clean-entropy2:
 
+# targets for sac
 build-sac:
 clean-sac:
 
+# targets for script
 build-script:
 clean-script:
 
+# targets for swing
 build-swing:
 clean-swing:
 
+# targets for toolbox
 build-toolbox:
 clean-toolbox:
