@@ -1,3 +1,29 @@
+##
+##
+## Introduction
+## ============
+##
+## Makefile for iqist/src/tools/hibiscus/script directory.
+##
+## Usage
+## =====
+##
+## 'make' or 'make clean'
+##
+## Author
+## ======
+##
+## This building system is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 09/30/2014 by li huang
+##
+##
+
 swing:
 	f2py -c --fcompiler=intelem --f90flags="-O3 -xHost" swing_fast.f90 -m swing_fast
 
