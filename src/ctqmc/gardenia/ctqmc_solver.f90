@@ -27,7 +27,7 @@
      use control, only : issun, isspn, isort, isvrt
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
-     use control, only : nffrq, nbfrq, nfreq, ntime, nsweep, nwrite, nmonte, ncarlo
+     use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
      use control, only : Uc, Jz
      use control, only : beta
      use control, only : myid, master
