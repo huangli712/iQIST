@@ -99,7 +99,7 @@
      real(dp), allocatable :: ochi_mpi(:)
 
 ! orbital-orbital correlation function, orbital-resolved, for mpi case
-     real(dp), allocatable :: oochi_mpi(:,:)
+     real(dp), allocatable :: oochi_mpi(:,:,:)
 
 ! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
@@ -158,7 +158,7 @@
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(oochi_mpi(ntime,norbs),      stat=istat)
+     allocate(oochi_mpi(ntime,norbs,norbs),stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -511,28 +511,28 @@
      call ctqmc_reduce_grnf(grnf_mpi)
 
 ! update original data and calculate the averages simultaneously
-     hist  = hist_mpi
-     prob  = prob_mpi  * real(ncarlo) / real(nsweep)
+     hist = hist_mpi
+     prob = prob_mpi * real(ncarlo) / real(nsweep)
 
-     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
+     nmat = nmat_mpi * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m)   * real(nmonte) / real(nsweep)
+             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
-     schi  = schi_mpi  * real(nmonte) / real(nsweep)
+     schi = schi_mpi * real(nmonte) / real(nsweep)
      do m=1,nband
          do n=1,ntime
-             sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
+             sschi(n,m) = sschi_mpi(n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,ntime} loop
      enddo ! over m={1,nband} loop
 
-     ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
+     ochi = ochi_mpi * real(nmonte) / real(nsweep)
      do m=1,norbs
-         do n=1,ntime
-             oochi(n,m) = oochi_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
+         do n=1,norbs
+             oochi(:,n,m) = oochi_mpi(:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
@@ -550,21 +550,21 @@
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,ntime
-             gtau(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
+         do n=1,norbs
+             gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,ntime
-             ftau(n,m,:) = ftau_mpi(n,m,:) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
+         do n=1,norbs
+             ftau(:,n,m) = ftau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,nfreq
-             grnf(n,m,m) = grnf_mpi(n,m,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,nfreq} loop
+         do n=1,norbs
+             grnf(:,n,m) = grnf_mpi(:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
 ! build atomic green's function and self-energy function using improved
