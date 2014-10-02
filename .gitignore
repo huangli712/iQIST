@@ -20,5 +20,13 @@ src/ctqmc/*/ctqmc
 entropy
 maxent
 sai
+mchi
+mdos
+mkra
+mscr
+msig
+mstd
+mtau
+mups
 atomic
 .DS_Store
