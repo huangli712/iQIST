@@ -20,7 +20,7 @@
 ## History
 ## =======
 ##
-## 09/30/2014 by li huang
+## 10/02/2014 by li huang
 ##
 ##
 
@@ -45,28 +45,28 @@ csml:
 exe: cssl csml makedos makescr maketau makeups makekra makesig makestd makechi
 
 makedos: makedos.o
-	$(LINKER) $(objects) makedos.o -o mdos.x $(LFLAGS) $(LIBS)
+	$(LINKER) $(objects) makedos.o -o mdos $(LFLAGS) $(LIBS)
 
 makescr: makescr.o
-	$(LINKER) $(objects) makescr.o -o mscr.x $(LFLAGS) $(LIBS)
+	$(LINKER) $(objects) makescr.o -o mscr $(LFLAGS) $(LIBS)
 
 maketau: maketau.o
-	$(LINKER) $(objects) maketau.o -o mtau.x $(LFLAGS) $(LIBS)
+	$(LINKER) $(objects) maketau.o -o mtau $(LFLAGS) $(LIBS)
 
 makeups: makeups.o
-	$(LINKER) $(objects) makeups.o -o mups.x $(LFLAGS) $(LIBS)
+	$(LINKER) $(objects) makeups.o -o mups $(LFLAGS) $(LIBS)
 
 makekra: makekra.o
-	$(LINKER) $(objects) makekra.o -o mkra.x $(LFLAGS) $(LIBS)
+	$(LINKER) $(objects) makekra.o -o mkra $(LFLAGS) $(LIBS)
 
 makesig: makesig.o
-	$(LINKER) $(objects) makesig.o -o msig.x $(LFLAGS) $(LIBS)
+	$(LINKER) $(objects) makesig.o -o msig $(LFLAGS) $(LIBS)
 
 makestd: makestd.o
-	$(LINKER) $(objects) makestd.o -o mstd.x $(LFLAGS) $(LIBS)
+	$(LINKER) $(objects) makestd.o -o mstd $(LFLAGS) $(LIBS)
 
 makechi: makechi.o
-	$(LINKER) $(objects) makechi.o -o mchi.x $(LFLAGS) $(LIBS)
+	$(LINKER) $(objects) makechi.o -o mchi $(LFLAGS) $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -74,7 +74,7 @@ makechi: makechi.o
 clean:
 	rm -f *.mod
 	rm -f *.o
-	rm -f *.x
+	rm -f mdos mscr mtau mups mkra msig mstd mchi
 	rm -f libMM.a
 
 clean-dat:
