@@ -53,7 +53,11 @@ do
 done
 
 # loop over the jasmine components
-# TODO
+for component in atomic
+do
+    dir=$(echo ../src/tools/jasmine/$component)
+    mln $dir $component
+done
 
 # loop over the hibiscus components
 # TODO
