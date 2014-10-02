@@ -721,14 +721,16 @@
      open(mytmp, file='solver.ochi.dat', form='formatted', status='unknown')
 
 ! write it
-     do j=1,norbs
-         write(mytmp,'(a,i6)') '# flvr:', j
-         do i=1,ntime
-             write(mytmp,'(2f12.6)') tmesh(i), oochi(i,j)
-         enddo ! over i={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over j={1,norbs} loop
+     do k=1,norbs
+         do j=1,norbs
+             write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
+             do i=1,ntime
+                 write(mytmp,'(2f12.6)') tmesh(i), oochi(i,j,k)
+             enddo ! over i={1,ntime} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,norbs} loop
 
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
@@ -739,7 +741,7 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), sum( oochi(i,:) ) / real(norbs)
+         write(mytmp,'(2f12.6)') tmesh(i), sum( oochi(i,:,:) ) / real(norbs * norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
