@@ -39,17 +39,17 @@ function mln {
 }
 
 # loop over the ct-qmc components
-for solver in azalea gardenia narcissus begonia lavender pansy manjushaka
+for component in azalea gardenia narcissus begonia lavender pansy manjushaka
 do
-    dir=$(echo ../src/ctqmc/$solver/ctqmc)
-    mln $dir $solver
+    dir=$(echo ../src/ctqmc/$component/ctqmc)
+    mln $dir $component
 done
 
 # loop over the hf-qmc components
-for solver in daisy
+for component in daisy
 do
-    dir=$(echo ../src/hfqmc/$solver/hfqmc)
-    mln $dir $solver
+    dir=$(echo ../src/hfqmc/$component/hfqmc)
+    mln $dir $component
 done
 
 # loop over the jasmine components
