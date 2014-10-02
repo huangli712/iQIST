@@ -24,6 +24,7 @@
 ## =======
 ##
 ## 09/18/2014 by li huang
+## 10/02/2014 by li huang
 ##
 ##
 
@@ -60,4 +61,23 @@ do
 done
 
 # loop over the hibiscus components
-# TODO
+for component in entropy
+do
+    dir=$(echo ../src/tools/hibiscus/entropy1/$component)
+    mln $dir $component
+done
+for component in maxent
+do
+    dir=$(echo ../src/tools/hibiscus/entropy2/$component)
+    mln $dir $component
+done
+for component in sai
+do
+    dir=$(echo ../src/tools/hibiscus/sac/$component)
+    mln $dir $component
+done
+for component in mchi mdos mkra mscr msig mstd mtau mups
+do
+    dir=$(echo ../src/tools/hibiscus/toolbox/$component)
+    mln $dir $component
+done
