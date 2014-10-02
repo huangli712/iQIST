@@ -706,12 +706,13 @@
      real(dp), intent(in) :: ochi(ntime)
 
 ! orbital-orbital correlation function data, < N(0) N(\tau) >, orbital-resolved
-     real(dp), intent(in) :: oochi(ntime,norbs)
+     real(dp), intent(in) :: oochi(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
      integer :: i
      integer :: j
+     integer :: k
 
 ! check if we need to dump orbital-orbital correlation function data
      if ( .not. btest(isvrt, 2) ) RETURN
