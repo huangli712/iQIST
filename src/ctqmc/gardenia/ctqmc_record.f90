@@ -815,6 +815,7 @@
 !!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
   subroutine ctqmc_record_ochi()
      use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
      use control, only : norbs
      use control, only : ntime
@@ -823,9 +824,15 @@
 
      implicit none
 
+! local parameters
+! number of internal loop
+     integer, parameter :: num_try = 2
+
 ! local variables
 ! loop index over segments
      integer  :: i
+     integer  :: n
+     integer  :: m
 
 ! loop index for flavor channel
      integer  :: f1
@@ -835,24 +842,20 @@
      real(dp) :: nt_s
      real(dp) :: nz_s
 
-! N_i(0) and N_i(\tau)
-     real(dp) :: nt_i(norbs)
-     real(dp) :: nz_i(norbs)
-
 ! used to record occupations for current flavor channel and time
-     real(dp) :: oaux(norbs)
+     real(dp) :: oaux(ntime,norbs)
 
+! calculate ochi
+     oaux = zero
      TIME_LOOP: do i=1,ntime
 
 ! obtain occupation status
-         oaux = zero
          do f1=1,norbs
-             call ctqmc_spin_counter(f1, tmesh(i), oaux(f1))
+             call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
          enddo ! over f1={1,norbs} loop
 
-! calculate ochi
 ! evaluate N(\tau)
-         nt_s = sum( oaux )
+         nt_s = sum( oaux(i,:) )
 
 ! evaluate N(0)
          if ( i == 1 ) then
@@ -862,25 +865,26 @@
 ! sum up the contribution to ochi
          ochi(i) = ochi(i) + nz_s * nt_s
 
-! calculate oochi
-         BAND_LOOP: do f1=1,norbs
-
-! evaluate N_{\alpha}(\tau)
-             nt_i(f1) = oaux(f1)
-
-! evaluate N_{\alpha}(0)
-             if ( i == 1 ) then
-                 nz_i(f1) = nt_i(f1)
-             endif ! back if ( i == 1 ) block
-
-! sum up the contribution to oochi
-             do f2=1,norbs
-                 oochi(i,f1,f2) = oochi(i,f1,f2) + nz_i(f1) * nt_i(f2)
-             enddo ! over f2={1,norbs} loop
-
-         enddo BAND_LOOP ! over flvr={1,norbs} loop
-
      enddo TIME_LOOP ! over i={1,ntime} loop
+
+! calculate oochi
+     do f1=1,norbs
+         do f2=1,norbs
+             do i=1,num_try
+                 m = ceiling( spring_sfmt_stream() * ntime )
+                 if ( oaux(m,f2) > zero ) then
+! n - m + ntime \in [ntime - m + 1, ntime]
+                     do n=1,m
+                         oochi(n-m+ntime,f2,f1) = oochi(n-m+ntime,f2,f1) + oaux(n,f1) / real(num_try)
+                     enddo ! over n={1,m} loop
+! n - m \in [1, ntime - m]
+                     do n=m+1,ntime
+                         oochi(n-m,f2,f1) = oochi(n-m,f2,f1) + oaux(n,f1) / real(num_try)
+                     enddo ! over n={m+1,ntime} loop
+                 endif ! back if ( oaux(m,f2) > zero ) block
+             enddo ! over i={1,num_try} loop
+         enddo ! over f2={1,norbs} loop
+     enddo ! over f1={1,norbs} loop
 
      return
   end subroutine ctqmc_record_ochi
