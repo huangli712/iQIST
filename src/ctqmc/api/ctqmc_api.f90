@@ -256,7 +256,7 @@
 !!
 !! You have to setup the parameters for the ctqmc impurity solver, and
 !! write them down to the 'solver.ctqmc.in' file. Now you must do that
-!! manually. In the futher we will write a Python module to facilitate
+!! manually. In the future we will write a Python module to facilitate
 !! this work.
 !!
 !! 4. init the ctqmc impurity solver
@@ -286,11 +286,18 @@
 !!
 !! pyiqist.api.stop_ctqmc()
 !!
+!! FAQ
+!! ===
+!!
 !! Question:
-!!     Can we change the ctqmc impurity solver at runtime?
+!! ---------
+!!
+!! Can we change the ctqmc impurity solver at runtime?
 !!
 !! Answer:
-!!     No. You can not change the ctqmc impurity solver dynamically. Once
+!! -------
+!!
+!! No. You can not change the ctqmc impurity solver dynamically. Once
 !! the pyiqist.so is generated, the ctqmc impurity solver is determined.
 !! If you want to change the ctqmc impurity solver, you must regenerate
 !! the pyiqist.so file at first.

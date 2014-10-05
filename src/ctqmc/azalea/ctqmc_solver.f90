@@ -27,7 +27,7 @@
      use control, only : issun, isspn
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
-     use control, only : nfreq, ntime, nsweep, nwrite, nmonte, ncarlo
+     use control, only : ntime, nsweep, nwrite, nmonte, ncarlo
      use control, only : Uc, Jz
      use control, only : beta
      use control, only : myid, master
@@ -391,26 +391,26 @@
      call ctqmc_reduce_grnf(grnf_mpi)
 
 ! update original data and calculate the averages simultaneously
-     hist  = hist_mpi
-     prob  = prob_mpi  * real(ncarlo) / real(nsweep)
+     hist = hist_mpi
+     prob = prob_mpi * real(ncarlo) / real(nsweep)
 
-     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
+     nmat = nmat_mpi * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m)   * real(nmonte) / real(nsweep)
+             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,ntime
-             gtau(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
+         do n=1,norbs
+             gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,nfreq
-             grnf(n,m,m) = grnf_mpi(n,m,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,nfreq} loop
+         do n=1,norbs
+             grnf(:,n,m) = grnf_mpi(:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
 ! build atomic green's function and self-energy function using improved

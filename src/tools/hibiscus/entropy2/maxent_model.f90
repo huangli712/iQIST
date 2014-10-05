@@ -48,7 +48,7 @@
       integer :: iw
 
       do iw=1, nw
-          aw_model(iw) = one / ( sqrt(twopi) * sigma ) * exp( -(fmesh(iw)/sigma)**2 )
+          aw_model(iw) = one / ( sqrt(two*pi) * sigma ) * exp( -(fmesh(iw)/sigma)**2 )
       enddo
 
       return

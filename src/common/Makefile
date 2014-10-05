@@ -34,11 +34,11 @@ objects = $(mod) $(sub)
 
 default: all
 
-all: build_mod build_sub build_lib
+all: build-mod build-sub build-lib
 
-build_mod: $(mod)
-build_sub: $(sub)
-build_lib: $(objects)
+build-mod: $(mod)
+build-sub: $(sub)
+build-lib: $(objects)
 	$(ARCHIVER) libMM.a $(objects)
 
 .f90.o:

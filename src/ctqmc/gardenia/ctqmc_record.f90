@@ -1469,7 +1469,7 @@
      real(dp), intent(out) :: ochi_mpi(ntime)
 
 ! orbital-orbital correlation function, orbital-resolved
-     real(dp), intent(out) :: oochi_mpi(ntime,norbs)
+     real(dp), intent(out) :: oochi_mpi(ntime,norbs,norbs)
 
 ! initialize ochi_mpi and oochi_mpi
      ochi_mpi = zero

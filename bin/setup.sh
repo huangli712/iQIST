@@ -24,6 +24,7 @@
 ## =======
 ##
 ## 09/18/2014 by li huang
+## 10/02/2014 by li huang
 ##
 ##
 
@@ -39,21 +40,44 @@ function mln {
 }
 
 # loop over the ct-qmc components
-for solver in azalea gardenia narcissus begonia lavender pansy manjushaka
+for component in azalea gardenia narcissus begonia lavender pansy manjushaka
 do
-    dir=$(echo ../src/ctqmc/$solver/ctqmc)
-    mln $dir $solver
+    dir=$(echo ../src/ctqmc/$component/ctqmc)
+    mln $dir $component
 done
 
 # loop over the hf-qmc components
-for solver in daisy
+for component in daisy
 do
-    dir=$(echo ../src/hfqmc/$solver/hfqmc)
-    mln $dir $solver
+    dir=$(echo ../src/hfqmc/$component/hfqmc)
+    mln $dir $component
 done
 
 # loop over the jasmine components
-# TODO
+for component in atomic
+do
+    dir=$(echo ../src/tools/jasmine/$component)
+    mln $dir $component
+done
 
 # loop over the hibiscus components
-# TODO
+for component in entropy
+do
+    dir=$(echo ../src/tools/hibiscus/entropy1/$component)
+    mln $dir $component
+done
+for component in maxent
+do
+    dir=$(echo ../src/tools/hibiscus/entropy2/$component)
+    mln $dir $component
+done
+for component in sai
+do
+    dir=$(echo ../src/tools/hibiscus/sac/$component)
+    mln $dir $component
+done
+for component in mchi mdos mkra mscr msig mstd mtau mups
+do
+    dir=$(echo ../src/tools/hibiscus/toolbox/$component)
+    mln $dir $component
+done

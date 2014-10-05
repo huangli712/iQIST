@@ -1,32 +1,72 @@
+##
+##
+## Introduction
+## ============
+##
+## Makefile for iqist/src/tools/hibiscus/toolbox directory.
+##
+## Usage
+## =====
+##
+## 'make' or 'make clean'
+##
+## Author
+## ======
+##
+## This building system is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 10/02/2014 by li huang
+##
+##
+
 .SUFFIXES: .f90
 
-include ./make.sys
+include ../../../build/make.sys
 
-default: makedos makescr maketau makeups makekra makesig makestd makechi
+MAPI = libMM.a
 
-makedos: mconst.o makedos.o
-	$(LINKER) mconst.o makedos.o -o mdos.x $(LFLAGS) $(LIBS)
+objects = $(MAPI)
 
-makescr: mconst.o makescr.o
-	$(LINKER) mconst.o makescr.o -o mscr.x $(LFLAGS) $(LIBS)
+default: all
 
-maketau: mconst.o maketau.o
-	$(LINKER) mconst.o maketau.o -o mtau.x $(LFLAGS) $(LIBS)
+all: exe
 
-makeups: mconst.o makeups.o
-	$(LINKER) mconst.o makeups.o -o mups.x $(LFLAGS) $(LIBS)
+cssl:
+	cp ../../../common/libMM.a .
 
-makekra: mconst.o makekra.o
-	$(LINKER) mconst.o makekra.o -o mkra.x $(LFLAGS) $(LIBS)
+csml:
+	cp ../../../common/constants.mod .
 
-makesig: mconst.o makesig.o
-	$(LINKER) mconst.o makesig.o -o msig.x $(LFLAGS) $(LIBS)
+exe: cssl csml makedos makescr maketau makeups makekra makesig makestd makechi
 
-makestd: mconst.o makestd.o
-	$(LINKER) mconst.o makestd.o -o mstd.x $(LFLAGS) $(LIBS)
+makedos: makedos.o
+	$(LINKER) $(objects) makedos.o -o mdos $(LFLAGS) $(LIBS)
 
-makechi: mconst.o makechi.o
-	$(LINKER) mconst.o makechi.o -o mchi.x $(LFLAGS) $(LIBS)
+makescr: makescr.o
+	$(LINKER) $(objects) makescr.o -o mscr $(LFLAGS) $(LIBS)
+
+maketau: maketau.o
+	$(LINKER) $(objects) maketau.o -o mtau $(LFLAGS) $(LIBS)
+
+makeups: makeups.o
+	$(LINKER) $(objects) makeups.o -o mups $(LFLAGS) $(LIBS)
+
+makekra: makekra.o
+	$(LINKER) $(objects) makekra.o -o mkra $(LFLAGS) $(LIBS)
+
+makesig: makesig.o
+	$(LINKER) $(objects) makesig.o -o msig $(LFLAGS) $(LIBS)
+
+makestd: makestd.o
+	$(LINKER) $(objects) makestd.o -o mstd $(LFLAGS) $(LIBS)
+
+makechi: makechi.o
+	$(LINKER) $(objects) makechi.o -o mchi $(LFLAGS) $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -34,7 +74,8 @@ makechi: mconst.o makechi.o
 clean:
 	rm -f *.mod
 	rm -f *.o
-	rm -f *.x
+	rm -f mdos mscr mtau mups mkra msig mstd mchi
+	rm -f libMM.a
 
 clean-dat:
 	rm -f dos.*
