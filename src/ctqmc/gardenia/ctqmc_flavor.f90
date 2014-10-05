@@ -1767,7 +1767,7 @@
 !!========================================================================
 
 !!>>> ctqmc_spin_counter: evaluate the occupation status for current
-!!>>> flavor channel and time, ! which can be used to calculate spin-spin
+!!>>> flavor channel and time, which can be used to calculate spin-spin
 !!>>> correlation function
   subroutine ctqmc_spin_counter(flvr, curr, occu)
      use constants, only : dp, zero, one
