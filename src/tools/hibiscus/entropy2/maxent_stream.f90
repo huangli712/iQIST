@@ -297,8 +297,8 @@
 ! if icov == 2, we should adjust the small eigvalues to a larger constant
       if ( icov == 2 ) then
           do itime=1, ntime
-              if (eigcov(itime) < eps5) then
-                  eigcov(itime) = eps5
+              if (eigcov(itime) < eps6) then
+                  eigcov(itime) = eps6
               endif
           enddo
       endif

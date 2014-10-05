@@ -204,7 +204,7 @@
 
 ! build histogram
 ! if width == 0, there is no histogram, we just set hist(slice/2,itime) = minv
-          if ( width > eps12 ) then
+          if ( width > epss ) then
               do ibin=1, nbins
                   indx = ceiling( (grn(itime, ibin) - minv) / width )
                   if ( indx == 0 ) then

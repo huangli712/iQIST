@@ -61,6 +61,7 @@
 ## 08/19/2014 by li huang
 ## 09/06/2014 by li huang
 ## 09/18/2014 by li huang
+## 10/02/2014 by li huang
 ##
 ##
 
@@ -140,151 +141,126 @@ help-more:
 	@echo '     clean-doc         clean doc directory                  '
 
 # all-in-one building target
-all: build-all
-build-all: common api solver tool other
+all: common api solver tool other
 
 # all-in-one cleaning target
-clean: clean-all
-clean-all: clean-common clean-api clean-solver clean-tool clean-other
+clean: clean-common clean-api clean-solver clean-tool clean-other
 
 # targets for solver
-solver: common api build-solver
-build-solver: azalea gardenia narcissus begonia lavender pansy manjushaka daisy
+solver: common api azalea gardenia narcissus begonia lavender pansy manjushaka daisy
 clean-solver: clean-azalea clean-gardenia clean-narcissus clean-begonia clean-lavender clean-pansy clean-manjushaka clean-daisy
 
 # targets for tool
-tool: common build-tool
-build-tool: jasmine hibiscus
+tool: common jasmine hibiscus
 clean-tool: clean-jasmine clean-hibiscus
 
 # targets for other
-other: build-other
-build-other: doc
+other: doc
 clean-other: clean-doc
 
 # tagets for ctqmc codes: segment version (azalea, gardenia, narcissus)
-azalea: build-azalea
-build-azalea:
+azalea:
 	cd ../ctqmc/azalea/; pwd; make
 
-azalea-lib: build-azalea-lib
-build-azalea-lib:
+azalea-lib:
 	cd ../ctqmc/azalea/; pwd; make lib
 
 clean-azalea:
 	cd ../ctqmc/azalea/; pwd; make clean
 
-gardenia: build-gardenia
-build-gardenia:
+gardenia:
 	cd ../ctqmc/gardenia/; pwd; make
 
-gardenia-lib: build-gardenia-lib
-build-gardenia-lib:
+gardenia-lib:
 	cd ../ctqmc/gardenia/; pwd; make lib
 
 clean-gardenia:
 	cd ../ctqmc/gardenia/; pwd; make clean
 
-narcissus: build-narcissus
-build-narcissus:
+narcissus:
 	cd ../ctqmc/narcissus/; pwd; make
 
-narcissus-lib: build-narcissus-lib
-build-narcissus-lib:
+narcissus-lib:
 	cd ../ctqmc/narcissus/; pwd; make lib
 
 clean-narcissus:
 	cd ../ctqmc/narcissus/; pwd; make clean
 
 # tagets for ctqmc codes: general version (begonia, lavender)
-begonia: build-begonia
-build-begonia:
+begonia:
 	cd ../ctqmc/begonia/; pwd; make
 
-begonia-lib: build-begonia-lib
-build-begonia-lib:
+begonia-lib:
 	cd ../ctqmc/begonia/; pwd; make lib
 
 clean-begonia:
 	cd ../ctqmc/begonia/; pwd; make clean
 
-lavender: build-lavender
-build-lavender:
+lavender:
 	cd ../ctqmc/lavender/; pwd; make
 
-lavender-lib: build-lavender-lib
-build-lavender-lib:
+lavender-lib:
 	cd ../ctqmc/lavender/; pwd; make lib
 
 clean-lavender:
 	cd ../ctqmc/lavender/; pwd; make clean
 
 # tagets for ctqmc codes: general version (pansy, manjushaka)
-pansy: build-pansy
-build-pansy:
+pansy:
 	cd ../ctqmc/pansy/; pwd; make
 
-pansy-lib: build-pansy-lib
-build-pansy-lib:
+pansy-lib:
 	cd ../ctqmc/pansy/; pwd; make lib
 
 clean-pansy:
 	cd ../ctqmc/pansy/; pwd; make clean
 
-manjushaka: build-manjushaka
-build-manjushaka:
+manjushaka:
 	cd ../ctqmc/manjushaka/; pwd; make
 
-manjushaka-lib: build-manjushaka-lib
-build-manjushaka-lib:
+manjushaka-lib:
 	cd ../ctqmc/manjushaka/; pwd; make lib
 
 clean-manjushaka:
 	cd ../ctqmc/manjushaka/; pwd; make clean
 
 # tagets for hfqmc codes: daisy
-daisy: build-daisy
-build-daisy:
+daisy:
 	cd ../hfqmc/daisy/; pwd; make
 
 clean-daisy:
 	cd ../hfqmc/daisy/; pwd; make clean
 
 # tagets for atomic codes: jasmine
-jasmine: build-jasmine
-build-jasmine:
+jasmine:
 	cd ../tools/jasmine/; pwd; make
 
 clean-jasmine:
 	cd ../tools/jasmine/; pwd; make clean
 
 # tagets for toolkit codes: hibiscus
-hibiscus: build-hibiscus
-build-hibiscus:
+hibiscus:
 	cd ../tools/hibiscus/; pwd; make
 
 clean-hibiscus:
 	cd ../tools/hibiscus/; pwd; make clean
 
 # targets for common: common
-common: build-common
-build-common:
+common:
 	cd ../common/; pwd; make
 
 clean-common:
 	cd ../common/; pwd; make clean
 
 # tagets for api: api
-api: build-api
-build-api:
+api:
 	cd ../ctqmc/api/; pwd; make
 
 clean-api:
 	cd ../ctqmc/api/; pwd; make clean
 
 # tagets for doc: doc
-doc: build-doc
-build-doc:
+doc:
 	cd ../../doc/guide/; pwd; make
 
 clean-doc:

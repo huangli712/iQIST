@@ -17,4 +17,16 @@ fort.*
 test.f90
 py_api.f90
 src/ctqmc/*/ctqmc
+entropy
+maxent
+sai
+mchi
+mdos
+mkra
+mscr
+msig
+mstd
+mtau
+mups
+atomic
 .DS_Store

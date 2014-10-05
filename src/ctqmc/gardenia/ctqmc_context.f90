@@ -238,7 +238,7 @@
      real(dp), public, save, allocatable :: ochi(:)
 
 ! orbital-orbital correlation function: < N(0) N(\tau) >, orbital-resolved
-     real(dp), public, save, allocatable :: oochi(:,:)
+     real(dp), public, save, allocatable :: oochi(:,:,:)
 
 ! used to calculate two-particle green's function, real part
      real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
@@ -544,7 +544,7 @@
      allocate(schi(ntime),        stat=istat)
      allocate(sschi(ntime,nband), stat=istat)
      allocate(ochi(ntime),        stat=istat)
-     allocate(oochi(ntime,norbs), stat=istat)
+     allocate(oochi(ntime,norbs,norbs), stat=istat)
 
      allocate(g2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      allocate(g2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
