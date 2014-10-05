@@ -828,11 +828,14 @@
      integer  :: i
 
 ! loop index for flavor channel
-     integer  :: flvr
+     integer  :: f1
+     integer  :: f2
 
 ! N(0) and N(\tau)
      real(dp) :: nt_s
      real(dp) :: nz_s
+
+! N_i(0) and N_i(\tau)
      real(dp) :: nt_i(norbs)
      real(dp) :: nz_i(norbs)
 
@@ -843,9 +846,9 @@
 
 ! obtain occupation status
          oaux = zero
-         do flvr=1,norbs
-             call ctqmc_spin_counter(flvr, tmesh(i), oaux(flvr))
-         enddo ! over flvr={1,norbs} loop
+         do f1=1,norbs
+             call ctqmc_spin_counter(f1, tmesh(i), oaux(f1))
+         enddo ! over f1={1,norbs} loop
 
 ! calculate ochi
 ! evaluate N(\tau)
@@ -860,18 +863,20 @@
          ochi(i) = ochi(i) + nz_s * nt_s
 
 ! calculate oochi
-         BAND_LOOP: do flvr=1,norbs
+         BAND_LOOP: do f1=1,norbs
 
 ! evaluate N_{\alpha}(\tau)
-             nt_i(flvr) = oaux(flvr)
+             nt_i(f1) = oaux(f1)
 
 ! evaluate N_{\alpha}(0)
              if ( i == 1 ) then
-                 nz_i(flvr) = nt_i(flvr)
+                 nz_i(f1) = nt_i(f1)
              endif ! back if ( i == 1 ) block
 
 ! sum up the contribution to oochi
-             oochi(i,flvr) = oochi(i,flvr) + nz_i(flvr) * nt_i(flvr)
+             do f2=1,norbs
+                 oochi(i,f1,f2) = oochi(i,f1,f2) + nz_i(f1) * nt_i(f2)
+             enddo ! over f2={1,norbs} loop
 
          enddo BAND_LOOP ! over flvr={1,norbs} loop
 
