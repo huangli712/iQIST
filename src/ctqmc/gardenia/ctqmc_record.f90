@@ -826,7 +826,7 @@
 
 ! local parameters
 ! number of internal loop
-     integer, parameter :: num_try = 2
+     integer, parameter :: num_try = 16
 
 ! local variables
 ! loop index over segments
