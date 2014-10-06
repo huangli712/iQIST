@@ -842,9 +842,9 @@
                          endif ! back if ( i <= nffrq/2 ) block
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,m,m))
+                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                          else
-                             g4 = grnf(q-nffrq/2,m,m)
+                             g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chit
@@ -990,9 +990,9 @@
                          endif ! back if ( i <= nffrq/2 ) block
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,m,m))
+                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                          else
-                             g4 = grnf(q-nffrq/2,m,m)
+                             g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chih
