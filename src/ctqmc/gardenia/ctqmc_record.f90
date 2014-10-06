@@ -948,7 +948,7 @@
      nfaux = nffrq + nbfrq - 1
 
 ! allocate memory for g2aux and then initialize it
-     allocate( g2aux(norbs, nfaux, nfaux) ); g2aux = czero
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -976,7 +976,7 @@
                      do w2n=1,nfaux
                          cexp2 = cexp2 * dexp2
 
-                         g2aux(flvr, w1n, w2n) = g2aux(flvr, w1n, w2n) + maux * cexp1 * cexp2
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * cexp1 * cexp2
                      enddo ! over w2n={1,nfaux} loop
                  enddo ! over w1n={1,nfaux} loop
 
@@ -994,12 +994,12 @@
 
                      CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
-                         cmeas = g2aux(f1,w1n,w2n) * g2aux(f2,w3n,w4n)
+                         cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
-                             cmeas = cmeas - g2aux(f1,w1n,w4n) * g2aux(f1,w3n,w2n)
+                             cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(f1,f2,w2n,w3n,wbn) = g2_re(f1,f2,w2n,w3n,wbn) +  real(cmeas) / beta
-                         g2_im(f1,f2,w2n,w3n,wbn) = g2_im(f1,f2,w2n,w3n,wbn) + aimag(cmeas) / beta
+                         g2_re(w2n,w3n,wbn,f1,f2) = g2_re(w2n,w3n,wbn,f1,f2) +  real(cmeas) / beta
+                         g2_im(w2n,w3n,wbn,f1,f2) = g2_im(w2n,w3n,wbn,f1,f2) + aimag(cmeas) / beta
                      enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
 
                  enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
@@ -1078,10 +1078,10 @@
      nfaux = nffrq + nbfrq - 1
 
 ! allocate memory for g2aux and then initialize it
-     allocate( g2aux(norbs, nfaux, nfaux) ); g2aux = czero
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
 
 ! allocate memory for h2aux and then initialize it
-     allocate( h2aux(norbs, nfaux, nfaux) ); h2aux = czero
+     allocate( h2aux(nfaux, nfaux, norbs) ); h2aux = czero
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -1116,8 +1116,8 @@
                      do w2n=1,nfaux
                          cexp2 = cexp2 * dexp2
 
-                         g2aux(flvr, w1n, w2n) = g2aux(flvr, w1n, w2n) + maux * cexp1 * cexp2
-                         h2aux(flvr, w1n, w2n) = h2aux(flvr, w1n, w2n) + maux * cexp1 * cexp2 * oaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * cexp1 * cexp2
+                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + maux * cexp1 * cexp2 * oaux
                      enddo ! over w2n={1,nfaux} loop
                  enddo ! over w1n={1,nfaux} loop
 
@@ -1136,19 +1136,19 @@
                      CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
 
-                         cmeas = g2aux(f1,w1n,w2n) * g2aux(f2,w3n,w4n)
+                         cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
-                             cmeas = cmeas - g2aux(f1,w1n,w4n) * g2aux(f1,w3n,w2n)
+                             cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(f1,f2,w2n,w3n,wbn) = g2_re(f1,f2,w2n,w3n,wbn) +  real(cmeas) / beta
-                         g2_im(f1,f2,w2n,w3n,wbn) = g2_im(f1,f2,w2n,w3n,wbn) + aimag(cmeas) / beta
+                         g2_re(w2n,w3n,wbn,f1,f2) = g2_re(w2n,w3n,wbn,f1,f2) +  real(cmeas) / beta
+                         g2_im(w2n,w3n,wbn,f1,f2) = g2_im(w2n,w3n,wbn,f1,f2) + aimag(cmeas) / beta
 
-                         cmeas = h2aux(f1,w1n,w2n) * g2aux(f2,w3n,w4n)
+                         cmeas = h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
-                             cmeas = cmeas - h2aux(f1,w1n,w4n) * g2aux(f1,w3n,w2n)
+                             cmeas = cmeas - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         h2_re(f1,f2,w2n,w3n,wbn) = h2_re(f1,f2,w2n,w3n,wbn) +  real(cmeas) / beta
-                         h2_im(f1,f2,w2n,w3n,wbn) = h2_im(f1,f2,w2n,w3n,wbn) + aimag(cmeas) / beta
+                         h2_re(w2n,w3n,wbn,f1,f2) = h2_re(w2n,w3n,wbn,f1,f2) +  real(cmeas) / beta
+                         h2_im(w2n,w3n,wbn,f1,f2) = h2_im(w2n,w3n,wbn,f1,f2) + aimag(cmeas) / beta
 
                      enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
 
