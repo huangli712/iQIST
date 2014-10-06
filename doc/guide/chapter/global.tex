@@ -1,74 +1,42 @@
 %-------------------------------------------------------------------------
-% 包管理
+% package manager
 %-------------------------------------------------------------------------
 
-% 页面布局
+% page layout
 \usepackage[a4paper,top=4.0cm,textheight=22.0cm,textwidth=16.0cm]{geometry}
 \usepackage{fancyhdr,indentfirst,pdflscape,array,listings,longtable}
 
-% 超链接
+% hyperlinks
 \usepackage[xetex,colorlinks=true,linkcolor=purple,anchorcolor=blue,citecolor=green]{hyperref}
 
-% 参考文献
+% reference
 \usepackage[sort,super,comma,compress]{natbib}
 
-% 图片
+% figures
 \usepackage{graphicx,tikz,color}
 \usetikzlibrary{snakes,arrows,mindmap,automata}
 
-% 数学公式
+% math
 \usepackage{textcomp,amsmath,amssymb,mathrsfs,marvosym,wasysym}
 
 % XeLaTeX
-\usepackage[CJKnumber]{xeCJK}
-\usepackage{fontspec,xltxtra,xunicode,titlesec}
-\punctstyle{quanjiao}
+%%\usepackage[CJKnumber]{xeCJK}
+%%\usepackage{fontspec,xltxtra,xunicode,titlesec}
+%%\punctstyle{quanjiao}
+
 
 %-------------------------------------------------------------------------
-% 中文支持
+% font
 %-------------------------------------------------------------------------
 
-\renewcommand{\contentsname}{目\hspace{1em}录}
-\renewcommand{\listfigurename}{插图索引}
-\renewcommand{\listtablename}{表格索引}
-\renewcommand{\bibname}{参考文献}
-\renewcommand{\indexname}{索引}
-\renewcommand{\figurename}{图}
-\renewcommand{\tablename}{表}
-\renewcommand{\appendixname}{附录}
-\newcommand{\listequationname}{公式索引}
-\newcommand{\equationname}{公式}
-
-%% 断行
-\XeTeXlinebreaklocale "zh"
-\XeTeXlinebreakskip = 0pt plus 1pt minus 0.1pt
-
-%% 段间距
-\parskip 0.5ex plus 0.25ex minus 0.25ex
-
-%% 行间距
-\renewcommand{\baselinestretch}{1.5}
-
-%% 字间距
-%\renewcommand{\CJKglue}{\hskip 1pt plus 0.08\baselineskip}
+\setmainfont{Adobe Kaiti Std}
+\setmonofont{Courier New}
 
 %-------------------------------------------------------------------------
-% 字体设置
+% header and footer
 %-------------------------------------------------------------------------
 
-% 我的笔记本专用
-\setCJKmainfont{STKaiti}
-\setCJKmonofont{Courier New}
-
-% 我的苹果工作站专用
-%\setmainfont{Adobe Kaiti Std}
-%\setmonofont{Courier New}
-
-%-------------------------------------------------------------------------
-% 页眉页脚
-%-------------------------------------------------------------------------
-
-% 重定义\clearpage
+% redefine \clearpage
 \makeatletter
 \def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
     \hbox{}
@@ -77,7 +45,7 @@
     \if@twocolumn\hbox{}\newpage\fi\fi\fi}
 \makeatother \clearpage{\pagestyle{plain}\cleardoublepage}
 
-% 页眉页脚
+% header and footer
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\chaptermark}[1]{\markboth{\emph{#1}}{}}
@@ -94,13 +62,16 @@
 	\renewcommand{\footrulewidth}{0pt}
 }
 
+%% line spacing
+\renewcommand{\baselinestretch}{1.5}
+
 %-------------------------------------------------------------------------
 % 章节标题
 %-------------------------------------------------------------------------
 
 \titleformat{\chapter}[display]
   {\bfseries\Large}
-  {\filleft \Huge 第\CJKnumber{\thechapter}章}
+  {\filleft \Huge Chapter {\thechapter}}
   {4ex}
   {\titlerule
    \vspace{2ex}%
