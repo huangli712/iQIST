@@ -1,0 +1,777 @@
+\chapter{{\iqist}的标准输入文件}
+\label{chap:inf}
+
+本章将描述量子杂质求解器组件的输入文件的格式，在第\ref{chap:out}章将描述输出文件的格式。
+
+\section{solver.ctqmc.in}
+\label{sec:sci}
+
+solver.ctqmc.in文件是所有的量子杂质求解器组件都需要的可选的配置文件，它可以设置一些关键的
+计算参数。所有的量子杂质求解器组件都预置了一套完整的计算参数，因此即使用户不提供solver.ctqmc.in
+文件，量子杂质求解器组件也能正常执行。但是如果当前目录下存在solver.ctqmc.in文件，那么
+solver.ctqmc.in文件中设置的参数将会覆盖掉缺省的参数。这是我们提请用户需要特别注意的
+地方。此外，出于兼容性的考虑，对于不同的量子杂质求解器组件，其对应的solver.ctqmc.in文
+件的格式十分类似，仅有十分微小的差异。下面我们将给出不同量子杂质求解器组件的标准solver.ctqmc.in
+文件输入格式。
+
+注意:用户可以通过pysci.py程序产生标准的solver.ctqmc.in文件，具体步骤请参阅第\ref{sec:pysci}节。
+
+\subsection{{\azalea}//solver.ctqmc.in}
+
+{\azalea}组件的标准solver.ctqmc.in文件如下：
+
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+==========================================================================
+AZALEA: continuous time quantum Monte Carlo quantum impurity solver
+==========================================================================
+2            ! non-self-consistent (1) or self-consistent mode (2)
+2            ! without symmetry    (1) or with symmetry   mode (2)
+1            ! spin projection, PM (1) or AFM             mode (2)
+2            ! without binning     (1) or with binning    mode (2)
+--------------------------------------------------------------------------
+1            ! number of bands
+2            ! number of spin projection
+2            ! number of orbitals (= nband * nspin)
+4            ! number of atomic states
+20           ! maximum number of DMFT + CTQMC self-consistent iterations
+--------------------------------------------------------------------------
+4.00         ! U : average Coulomb interaction
+4.00         ! Uc: intraorbital Coulomb interaction
+4.00         ! Uv: interorbital Coulomb interaction, Uv = Uc-2*Jz for t2g system
+0.00         ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
+0.00         ! Js: spin-flip term
+0.00         ! Jp: pair-hopping term
+--------------------------------------------------------------------------
+2.00         ! chemical potential or fermi level
+8.00         ! inversion of temperature
+0.50         ! coupling parameter t for Hubbard model
+0.70         ! mixing parameter for self-consistent engine
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1024         ! maximum perturbation expansions order
+8193         ! maximum number of matsubara frequency
+--------------------------------------------------------------------------
+128          ! maximum number of matsubara frequency sampling by quantum impurity solver
+1024         ! number of time slice
+20000        ! flip period for spin up and spin down states
+200000       ! maximum number of thermalization steps
+200000000    ! maximum number of quantum Monte Carlo sampling steps
+20000000     ! output period
+100000       ! clean update period
+100          ! how often to sampling the gmat and nmat
+100          ! how often to sampling the gtau and prob
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+\end{lstlisting}
+
+具体的输入格式如表\ref{tab:azalea_in}所示。
+
+\begin{longtable}{rccc}
+\caption{{\azalea}组件solver.ctqmc.in文件的输入格式\label{tab:azalea_in}}\\
+\hline
+\hline
+变量名称 & 所在行号 & 数据类型 & 作用参考 \\
+\hline
+isscf    &  4       & integer  & 第\ref{sec:isscf}节 \\
+issun    &  5       & integer  & 第\ref{sec:issun}节 \\
+isspn    &  6       & integer  & 第\ref{sec:isspn}节 \\
+isbin    &  7       & integer  & 第\ref{sec:isbin}节 \\
+nband    &  9       & integer  & 第\ref{sec:nband}节 \\
+nspin    & 10       & integer  & 第\ref{sec:nspin}节 \\
+norbs    & 11       & integer  & 第\ref{sec:norbs}节 \\
+ncfgs    & 12       & integer  & 第\ref{sec:ncfgs}节 \\
+niter    & 13       & integer  & 第\ref{sec:niter}节 \\
+U        & 15       & real(dp) & 第\ref{sec:U}节     \\
+Uc       & 16       & real(dp) & 第\ref{sec:Uc}节    \\
+Uv       & 17       & real(dp) & 第\ref{sec:Uv}节    \\
+Jz       & 18       & real(dp) & 第\ref{sec:Jz}节    \\
+Js       & 19       & real(dp) & 第\ref{sec:Js}节    \\
+Jp       & 20       & real(dp) & 第\ref{sec:Jp}节    \\
+mune     & 22       & real(dp) & 第\ref{sec:mune}节  \\
+beta     & 23       & real(dp) & 第\ref{sec:beta}节  \\
+part     & 24       & real(dp) & 第\ref{sec:part}节  \\
+alpha    & 25       & real(dp) & 第\ref{sec:alpha}节 \\
+mkink    & 27       & integer  & 第\ref{sec:mkink}节 \\
+mfreq    & 28       & integer  & 第\ref{sec:mfreq}节 \\
+nfreq    & 30       & integer  & 第\ref{sec:nfreq}节 \\
+ntime    & 31       & integer  & 第\ref{sec:ntime}节 \\
+nflip    & 32       & integer  & 第\ref{sec:nflip}节 \\
+ntherm   & 33       & integer  & 第\ref{sec:ntherm}节\\
+nsweep   & 34       & integer  & 第\ref{sec:nsweep}节\\
+nwrite   & 35       & integer  & 第\ref{sec:nwrite}节\\
+nclean   & 36       & integer  & 第\ref{sec:nclean}节\\
+nmonte   & 37       & integer  & 第\ref{sec:nmonte}节\\
+ncarlo   & 38       & integer  & 第\ref{sec:ncarlo}节\\
+\hline
+\hline
+\end{longtable}
+
+\subsection{{\gardenia}//solver.ctqmc.in}
+
+{\gardenia}组件的标准solver.ctqmc.in文件如下：
+
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+==========================================================================
+GARDENIA: continuous time quantum Monte Carlo quantum impurity solver
+==========================================================================
+2            ! non-self-consistent (1) or self-consistent mode (2)
+2            ! without symmetry    (1) or with symmetry   mode (2)
+1            ! spin projection, PM (1) or AFM             mode (2)
+2            ! without binning     (1) or with binning    mode (2)
+5            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
+1            ! without vertex      (1) or with vertex function (2)
+--------------------------------------------------------------------------
+1            ! number of bands
+2            ! number of spin projection
+2            ! number of orbitals (= nband * nspin)
+4            ! number of atomic states
+20           ! maximum number of DMFT + CTQMC self-consistent iterations
+--------------------------------------------------------------------------
+4.00         ! U : average Coulomb interaction
+4.00         ! Uc: intraorbital Coulomb interaction
+4.00         ! Uv: interorbital Coulomb interaction, Uv = Uc-2*Jz for t2g system
+0.00         ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
+0.00         ! Js: spin-flip term
+0.00         ! Jp: pair-hopping term
+--------------------------------------------------------------------------
+2.00         ! chemical potential or fermi level
+8.00         ! inversion of temperature
+0.50         ! coupling parameter t for Hubbard model
+0.70         ! mixing parameter for self-consistent engine
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+24           ! maximum order for legendre polynomial
+20001        ! number of mesh points for legendre polynomial
+24           ! maximum order for chebyshev polynomial
+20001        ! number of mesh points for chebyshev polynomial
+--------------------------------------------------------------------------
+1024         ! maximum perturbation expansions order
+8193         ! maximum number of matsubara frequency
+--------------------------------------------------------------------------
+32           ! number of matsubara frequency for the two-particle green's function
+8            ! number of bosonic frequncy for the two-particle green's function
+128          ! maximum number of matsubara frequency sampling by quantum impurity solver
+1024         ! number of time slice
+20000        ! flip period for spin up and spin down states
+200000       ! maximum number of thermalization steps
+200000000    ! maximum number of quantum Monte Carlo sampling steps
+20000000     ! output period
+100000       ! clean update period
+100          ! how often to sampling the gmat and nmat
+100          ! how often to sampling the gtau and prob
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+\end{lstlisting}
+
+具体的输入格式如表\ref{tab:gardenia_in}所示。
+
+\begin{longtable}{rccc}
+\caption{{\gardenia}组件solver.ctqmc.in文件的输入格式\label{tab:gardenia_in}}\\
+\hline
+\hline
+变量名称 & 所在行号 & 数据类型 & 作用参考\\
+\hline
+isscf    &  4       & integer  &第\ref{sec:isscf}节 \\
+issun    &  5       & integer  &第\ref{sec:issun}节 \\
+isspn    &  6       & integer  &第\ref{sec:isspn}节 \\
+isbin    &  7       & integer  &第\ref{sec:isbin}节 \\
+isort    &  8       & integer  &第\ref{sec:isort}节 \\
+isvrt    &  9       & integer  &第\ref{sec:isvrt}节 \\
+nband    & 11       & integer  &第\ref{sec:nband}节 \\
+nspin    & 12       & integer  &第\ref{sec:nspin}节 \\
+norbs    & 13       & integer  &第\ref{sec:norbs}节 \\
+ncfgs    & 14       & integer  &第\ref{sec:ncfgs}节 \\
+niter    & 15       & integer  &第\ref{sec:niter}节 \\
+U        & 17       & real(dp) &第\ref{sec:U}节     \\
+Uc       & 18       & real(dp) &第\ref{sec:Uc}节    \\
+Uv       & 19       & real(dp) &第\ref{sec:Uv}节    \\
+Jz       & 20       & real(dp) &第\ref{sec:Jz}节    \\
+Js       & 21       & real(dp) &第\ref{sec:Js}节    \\
+Jp       & 22       & real(dp) &第\ref{sec:Jp}节    \\
+mune     & 24       & real(dp) &第\ref{sec:mune}节  \\
+beta     & 25       & real(dp) &第\ref{sec:beta}节  \\
+part     & 26       & real(dp) &第\ref{sec:part}节  \\
+alpha    & 27       & real(dp) &第\ref{sec:alpha}节 \\
+lemax    & 29       & integer  &第\ref{sec:lemax}节 \\
+legrd    & 30       & integer  &第\ref{sec:legrd}节 \\
+chmax    & 31       & integer  &第\ref{sec:chmax}节 \\
+chgrd    & 32       & integer  &第\ref{sec:chgrd}节 \\
+mkink    & 34       & integer  &第\ref{sec:mkink}节 \\
+mfreq    & 35       & integer  &第\ref{sec:mfreq}节 \\
+nffrq    & 37       & integer  &第\ref{sec:nffrq}节 \\
+nbfrq    & 38       & integer  &第\ref{sec:nbfrq}节 \\
+nfreq    & 39       & integer  &第\ref{sec:nfreq}节 \\
+ntime    & 40       & integer  &第\ref{sec:ntime}节 \\
+nflip    & 41       & integer  &第\ref{sec:nflip}节 \\
+ntherm   & 42       & integer  &第\ref{sec:ntherm}节\\
+nsweep   & 43       & integer  &第\ref{sec:nsweep}节\\
+nwrite   & 44       & integer  &第\ref{sec:nwrite}节\\
+nclean   & 45       & integer  &第\ref{sec:nclean}节\\
+nmonte   & 46       & integer  &第\ref{sec:nmonte}节\\
+ncarlo   & 47       & integer  &第\ref{sec:ncarlo}节\\
+\hline
+\hline
+\end{longtable}
+
+\subsection{{\narcissus}//solver.ctqmc.in}
+
+{\narcissus}组件的标准solver.ctqmc.in文件如下:
+
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+==========================================================================
+NARCISSUS: continuous time quantum Monte Carlo quantum impurity solver
+==========================================================================
+2            ! non-self-consistent (1) or self-consistent mode (2)
+2            ! without symmetry    (1) or with symmetry   mode (2)
+1            ! spin projection, PM (1) or AFM             mode (2)
+2            ! without binning     (1) or with binning    mode (2)
+2            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
+1            ! without vertex      (1) or with vertex function (2)
+1            ! normal (1) or holstein-hubbard (2) or plasmon pole (3) or ohmic model (4)
+--------------------------------------------------------------------------
+1            ! number of bands
+2            ! number of spin projection
+2            ! number of orbitals (= nband * nspin)
+4            ! number of atomic states
+20           ! maximum number of DMFT + CTQMC self-consistent iterations
+--------------------------------------------------------------------------
+4.00         ! U : average Coulomb interaction
+4.00         ! Uc: intraorbital Coulomb interaction
+4.00         ! Uv: interorbital Coulomb interaction, Uv = Uc-2*Jz for t2g system
+0.00         ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
+0.00         ! Js: spin-flip term
+0.00         ! Jp: pair-hopping term
+0.00         ! lc: strength of screening effect
+0.00         ! wc: screening frequency
+--------------------------------------------------------------------------
+2.00         ! chemical potential or fermi level
+8.00         ! inversion of temperature
+0.50         ! coupling parameter t for Hubbard model
+0.70         ! mixing parameter for self-consistent engine
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+24           ! maximum order for legendre polynomial
+20001        ! number of mesh points for legendre polynomial
+24           ! maximum order for chebyshev polynomial
+20001        ! number of mesh points for chebyshev polynomial
+--------------------------------------------------------------------------
+1024         ! maximum perturbation expansions order
+8193         ! maximum number of matsubara frequency
+--------------------------------------------------------------------------
+32           ! number of matsubara frequency for the two-particle green's function
+8            ! number of bosonic frequncy for the two-particle green's function
+128          ! maximum number of matsubara frequency sampling by quantum impurity solver
+1024         ! number of time slice
+20000        ! flip period for spin up and spin down states
+200000       ! maximum number of thermalization steps
+200000000    ! maximum number of quantum Monte Carlo sampling steps
+20000000     ! output period
+100000       ! clean update period
+100          ! how often to sampling the gmat and nmat
+100          ! how often to sampling the gtau and prob
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+\end{lstlisting}
+
+具体的输入格式如表\ref{tab:narcissus_in}所示。
+
+\begin{longtable}{rccc}
+\caption{{\narcissus}组件solver.ctqmc.in文件的输入格式\label{tab:narcissus_in}}\\
+\hline
+\hline
+变量名称 & 所在行号 & 数据类型 & 作用参考\\
+\hline
+isscf    &  4       & integer  &第\ref{sec:isscf}节 \\
+issun    &  5       & integer  &第\ref{sec:issun}节 \\
+isspn    &  6       & integer  &第\ref{sec:isspn}节 \\
+isbin    &  7       & integer  &第\ref{sec:isbin}节 \\
+isort    &  8       & integer  &第\ref{sec:isort}节 \\
+isvrt    &  9       & integer  &第\ref{sec:isvrt}节 \\
+isscr    & 10       & integer  &第\ref{sec:isscr}节 \\
+nband    & 12       & integer  &第\ref{sec:nband}节 \\
+nspin    & 13       & integer  &第\ref{sec:nspin}节 \\
+norbs    & 14       & integer  &第\ref{sec:norbs}节 \\
+ncfgs    & 15       & integer  &第\ref{sec:ncfgs}节 \\
+niter    & 16       & integer  &第\ref{sec:niter}节 \\
+U        & 18       & real(dp) &第\ref{sec:U}节     \\
+Uc       & 19       & real(dp) &第\ref{sec:Uc}节    \\
+Uv       & 20       & real(dp) &第\ref{sec:Uv}节    \\
+Jz       & 21       & real(dp) &第\ref{sec:Jz}节    \\
+Js       & 22       & real(dp) &第\ref{sec:Js}节    \\
+Jp       & 23       & real(dp) &第\ref{sec:Jp}节    \\
+lc       & 24       & real(dp) &第\ref{sec:lc}节    \\
+wc       & 25       & real(dp) &第\ref{sec:wc}节    \\
+mune     & 27       & real(dp) &第\ref{sec:mune}节  \\
+beta     & 28       & real(dp) &第\ref{sec:beta}节  \\
+part     & 29       & real(dp) &第\ref{sec:part}节  \\
+alpha    & 30       & real(dp) &第\ref{sec:alpha}节 \\
+lemax    & 32       & integer  &第\ref{sec:lemax}节 \\
+legrd    & 33       & integer  &第\ref{sec:legrd}节 \\
+chmax    & 34       & integer  &第\ref{sec:chmax}节 \\
+chgrd    & 35       & integer  &第\ref{sec:chgrd}节 \\
+mkink    & 37       & integer  &第\ref{sec:mkink}节 \\
+mfreq    & 38       & integer  &第\ref{sec:mfreq}节 \\
+nffrq    & 40       & integer  &第\ref{sec:nffrq}节 \\
+nbfrq    & 41       & integer  &第\ref{sec:nbfrq}节 \\
+nfreq    & 42       & integer  &第\ref{sec:nfreq}节 \\
+ntime    & 43       & integer  &第\ref{sec:ntime}节 \\
+nflip    & 44       & integer  &第\ref{sec:nflip}节 \\
+ntherm   & 45       & integer  &第\ref{sec:ntherm}节\\
+nsweep   & 46       & integer  &第\ref{sec:nsweep}节\\
+nwrite   & 47       & integer  &第\ref{sec:nwrite}节\\
+nclean   & 48       & integer  &第\ref{sec:nclean}节\\
+nmonte   & 49       & integer  &第\ref{sec:nmonte}节\\
+ncarlo   & 50       & integer  &第\ref{sec:ncarlo}节\\
+\hline
+\hline
+\end{longtable}
+
+\subsection{{\begonia}//solver.ctqmc.in}
+
+{\begonia}组件的标准solver.ctqmc.in文件如下:
+
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+==========================================================================
+  setup continuous time quantum Monte Carlo quantum impurity solver
+==========================================================================
+2            ! non-self-consistent (1) or self-consistent mode (2)
+2            ! without symmetry    (1) or with symmetry   mode (2)
+1            ! spin projection, PM (1) or AFM             mode (2)
+2            ! without binning     (1) or with binning    mode (2)
+--------------------------------------------------------------------------
+1            ! number of bands
+2            ! number of spin projection
+2            ! number of orbitals (= nband * nspin)
+4            ! number of atomic states
+1024         ! maximum number of non-zero elements in sparse matrix style
+20           ! maximum number of DMFT + CTQMC self-consistent iterations
+--------------------------------------------------------------------------
+4.00         ! U : average Coulomb interaction
+4.00         ! Uc: intraorbital Coulomb interaction
+3.00	     ! Uv: interorbital Coulomb interaction, Uv = Uc-2*Jz for t2g system
+0.50         ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
+0.50         ! Js: spin-flip term
+0.50         ! Jp: pair-hopping term
+--------------------------------------------------------------------------
+5.00         ! chemical potential or fermi level
+10.0         ! inversion of temperature
+0.50         ! coupling parameter t for Hubbard model
+0.70         ! mixing parameter for self-consistent engine
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1024         ! maximum perturbation expansions order
+8193         ! maximum number of matsubara frequency
+--------------------------------------------------------------------------
+128          ! maximum number of matsubara frequency sampling by quantum impurity solver
+1024         ! number of time slice
+4            ! number of parts that the imaginary time axis is split
+20000        ! flip period for spin up and spin down states
+200000       ! maximum number of thermalization steps
+20000000     ! maximum number of quantum Monte Carlo sampling steps
+2000000      ! output period
+10000        ! clean update period
+100          ! how often to sampling the gmat and nmat
+100          ! how often to sampling the gtau and prob
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+\end{lstlisting}
+
+具体的输入格式如表\ref{tab:begonia_in}所示。
+
+\begin{longtable}{rccc}
+\caption{{\begonia}组件solver.ctqmc.in文件的输入格式\label{tab:begonia_in}}\\
+\hline
+\hline
+变量名称 & 所在行号 & 数据类型 & 作用参考\\
+\hline
+isscf    &  4       & integer  &第\ref{sec:isscf}节 \\
+issun    &  5       & integer  &第\ref{sec:issun}节 \\
+isspn    &  6       & integer  &第\ref{sec:isspn}节 \\
+isbin    &  7       & integer  &第\ref{sec:isbin}节 \\
+nband    &  9       & integer  &第\ref{sec:nband}节 \\
+nspin    & 10       & integer  &第\ref{sec:nspin}节 \\
+norbs    & 11       & integer  &第\ref{sec:norbs}节 \\
+ncfgs    & 12       & integer  &第\ref{sec:ncfgs}节 \\
+nzero    & 13       & integer  &第\ref{sec:nzero}节 \\
+niter    & 14       & integer  &第\ref{sec:niter}节 \\
+U        & 16       & real(dp) &第\ref{sec:U}节     \\
+Uc       & 17       & real(dp) &第\ref{sec:Uc}节    \\
+Uv       & 18       & real(dp) &第\ref{sec:Uv}节    \\
+Jz       & 19       & real(dp) &第\ref{sec:Jz}节    \\
+Js       & 20       & real(dp) &第\ref{sec:Js}节    \\
+Jp       & 21       & real(dp) &第\ref{sec:Jp}节    \\
+mune     & 23       & real(dp) &第\ref{sec:mune}节  \\
+beta     & 24       & real(dp) &第\ref{sec:beta}节  \\
+part     & 25       & real(dp) &第\ref{sec:part}节  \\
+alpha    & 26       & real(dp) &第\ref{sec:alpha}节 \\
+mkink    & 28       & integer  &第\ref{sec:mkink}节 \\
+mfreq    & 29       & integer  &第\ref{sec:mfreq}节 \\
+nfreq    & 31       & integer  &第\ref{sec:nfreq}节 \\
+ntime    & 32       & integer  &第\ref{sec:ntime}节 \\
+npart    & 33       & integer  &第\ref{sec:npart}节 \\
+nflip    & 34       & integer  &第\ref{sec:nflip}节 \\
+ntherm   & 35       & integer  &第\ref{sec:ntherm}节\\
+nsweep   & 36       & integer  &第\ref{sec:nsweep}节\\
+nwrite   & 37       & integer  &第\ref{sec:nwrite}节\\
+nclean   & 38       & integer  &第\ref{sec:nclean}节\\
+nmonte   & 39       & integer  &第\ref{sec:nmonte}节\\
+ncarlo   & 40       & integer  &第\ref{sec:ncarlo}节\\
+\hline
+\hline
+\end{longtable}
+
+\subsection{{\lavender}//solver.ctqmc.in}
+
+{\lavender}组件的标准solver.ctqmc.in文件如下:
+
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+==========================================================================
+  setup continuous time quantum Monte Carlo quantum impurity solver
+==========================================================================
+2            ! non-self-consistent (1) or self-consistent mode (2)
+2            ! without symmetry    (1) or with symmetry   mode (2)
+1            ! spin projection, PM (1) or AFM             mode (2)
+2            ! without binning     (1) or with binning    mode (2)
+1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
+1            ! without vertex      (1) or with vertex function (2)
+--------------------------------------------------------------------------
+1            ! number of bands
+2            ! number of spin projection
+2            ! number of orbitals (= nband * nspin)
+4            ! number of atomic states
+1024         ! maximum number of non-zero elements in sparse matrix style
+20           ! maximum number of DMFT + CTQMC self-consistent iterations
+--------------------------------------------------------------------------
+2.00          ! U : average Coulomb interaction
+2.00          ! Uc: intraorbital Coulomb interaction
+1.50          ! Uv: interorbital Coulomb interaction, Uv = Uc-2*Jz for t2g system
+0.25          ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
+0.25          ! Js: spin-flip term
+0.25          ! Jp: pair-hopping term
+--------------------------------------------------------------------------
+8.0          ! chemical potential or fermi level
+80.0         ! inversion of temperature
+0.50         ! coupling parameter t for Hubbard model
+0.70         ! mixing parameter for self-consistent engine
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+24           ! maximum order for legendre polynomial
+20001        ! number of mesh points for legendre polynomial
+24           ! maximum order for chebyshev polynomial
+20001        ! number of mesh points for chebyshev polynomial
+--------------------------------------------------------------------------
+1024         ! maximum perturbation expansions order
+8193         ! maximum number of matsubara frequency
+--------------------------------------------------------------------------
+128          ! maximum number of matsubara frequency sampling by quantum impurity solver
+1024         ! number of time slice
+4            ! number of parts that the imaginary time axis is split
+20000        ! flip period for spin up and spin down states
+200000       ! maximum number of thermalization steps
+20000000     ! maximum number of quantum Monte Carlo sampling steps
+20000000     ! output period
+100000       ! clean update period
+100          ! how often to sampling the gmat and nmat
+100          ! how often to sampling the gtau and prob
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+\end{lstlisting}
+
+具体的输入格式如表\ref{tab:lavender_in}所示。
+
+\begin{longtable}{rccc}
+\caption{{\lavender}组件solver.ctqmc.in文件的输入格式\label{tab:lavender_in}}\\
+\hline
+\hline
+变量名称 & 所在行号 & 数据类型 & 作用参考\\
+\hline
+isscf    &  4       & integer  &第\ref{sec:isscf}节 \\
+issun    &  5       & integer  &第\ref{sec:issun}节 \\
+isspn    &  6       & integer  &第\ref{sec:isspn}节 \\
+isbin    &  7       & integer  &第\ref{sec:isbin}节 \\
+isort    &  8       & integer  &第\ref{sec:isort}节 \\
+isvrt    &  9       & integer  &第\ref{sec:isvrt}节 \\
+nband    & 11       & integer  &第\ref{sec:nband}节 \\
+nspin    & 12       & integer  &第\ref{sec:nspin}节 \\
+norbs    & 13       & integer  &第\ref{sec:norbs}节 \\
+ncfgs    & 14       & integer  &第\ref{sec:ncfgs}节 \\
+nzero    & 15       & integer  &第\ref{sec:nzero}节 \\
+niter    & 16       & integer  &第\ref{sec:niter}节 \\
+U        & 18       & real(dp) &第\ref{sec:U}节     \\
+Uc       & 19       & real(dp) &第\ref{sec:Uc}节    \\
+Uv       & 20       & real(dp) &第\ref{sec:Uv}节    \\
+Jz       & 21       & real(dp) &第\ref{sec:Jz}节    \\
+Js       & 22       & real(dp) &第\ref{sec:Js}节    \\
+Jp       & 23       & real(dp) &第\ref{sec:Jp}节    \\
+mune     & 25       & real(dp) &第\ref{sec:mune}节  \\
+beta     & 26       & real(dp) &第\ref{sec:beta}节  \\
+part     & 27       & real(dp) &第\ref{sec:part}节  \\
+alpha    & 28       & real(dp) &第\ref{sec:alpha}节 \\
+lemax    & 30       & integer  &第\ref{sec:lemax}节 \\
+legrd    & 31       & integer  &第\ref{sec:legrd}节 \\
+chmax    & 32       & integer  &第\ref{sec:chmax}节 \\
+chgrd    & 33       & integer  &第\ref{sec:chgrd}节 \\
+mkink    & 35       & integer  &第\ref{sec:mkink}节 \\
+mfreq    & 36       & integer  &第\ref{sec:mfreq}节 \\
+nfreq    & 38       & integer  &第\ref{sec:nfreq}节 \\
+ntime    & 39       & integer  &第\ref{sec:ntime}节 \\
+npart    & 40       & integer  &第\ref{sec:npart}节 \\
+nflip    & 41       & integer  &第\ref{sec:nflip}节 \\
+ntherm   & 42       & integer  &第\ref{sec:ntherm}节\\
+nsweep   & 43       & integer  &第\ref{sec:nsweep}节\\
+nwrite   & 44       & integer  &第\ref{sec:nwrite}节\\
+nclean   & 45       & integer  &第\ref{sec:nclean}节\\
+nmonte   & 46       & integer  &第\ref{sec:nmonte}节\\
+ncarlo   & 47       & integer  &第\ref{sec:ncarlo}节\\
+\hline
+\hline
+\end{longtable}
+
+\section{solver.eimp.in}
+\label{sec:sei}
+
+solver.eimp.in文件是{\iqist}量子杂质求解器组件的可选输入文件，它可以设置杂质能
+级$E_{\text{imp}}$和轨道的对称性。如果需要求解的量子杂质系统具有以下特性之一，
+那么该文件是至关重要的。
+\begin{itemize}
+\item 晶体场劈裂不为0
+\item 需要考虑自旋$-$轨道耦合效应
+\item 系统具有磁序
+\end{itemize}
+如果用户不提供solver.eimp.in文件，量子杂质求解器组件也能正常执行，但是此时所有杂
+质轨道的能级都将被置为0.0 eV，并且量子杂质求解器会根据默认设置进行对称化处理。如果在计算
+目录下存在solver.eimp.in文件，那么量子杂质求解器就会根据该文件设定杂质能级$E_{\text{imp}}$，
+并且根据对称指标symm对杂质轨道进行对称化处理。
+
+对于不同的量子杂质求解器组件，该文件格式完全一样。下面给出该文件的格式和说明。以三
+带杂质模型为例，典型的solver.eimp.in文件如下所示：
+
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+1  +0.500    1
+2  -0.500    2
+3  -0.500    2
+4  +0.500    3
+5  -0.500    4
+6  -0.500    4
+\end{lstlisting}
+文件详细说明如下：
+\begin{itemize}
+  \item 第1列，轨道指标$i$，自1变化到norbs，数据类型：integer
+  \item 第2列，杂质能级$E_{\text{imp}}$，数据类型：real(dp)
+  \item 第3列，对称指标symm，数据类型：integer
+\end{itemize}
+轨道排列是按照先spin up，后spin down的规则进行的，因此在该文件中前三行描述自旋向上的轨道，后三行描述
+自旋朝下的轨道\footnote{亦即轨道排列顺序为$1\uparrow2\uparrow3\uparrow1\downarrow2\downarrow3\downarrow$。}。在上
+述的solver.eimp.in文件中，能带1(包含轨道1和轨道4)的杂质能级为+0.5 eV，而能带2(包
+含轨道2和轨道5)和能带3(包含轨道3和轨道6)的杂质能级为-0.5 eV，即能带1在上，能带2和能带3在下。
+对称指标symm用于标定哪些轨道之间是简并的，它的取值范围是[1,norbs]。如果强制对称化功能被激
+活(参见第\ref{sec:isspn}与\ref{sec:issun}节)，那么量子杂质求解器组件将会认为对称指标相同的那些轨
+道之间是简并的，并对它们采取强制对称化。在上面给出的solver.eimp.in文件中，轨道2和轨道3之间是
+简并的，轨道5和轨道6之间是简并的，如果issun = 2，那么量子杂质求解器组件将会对它们进行强制对称化。
+
+注意:用户可以用任意字处理软件编辑solver.eimp.in文件，也可以通过pysci.py程序产生标准的
+solver.eimp.in文件，具体步骤请参阅第\ref{sec:pysci}节。
+
+\section{solver.hyb.in}
+\label{sec:shi}
+
+solver.hyb.in文件是{\iqist}组件的可选输入文件，它可以设置初始杂化函数$\Delta(i\omega_{n})$。
+该文件一般不手动生成，而是将量子杂质求解器的输出文件solver.hyb.dat直接重命名为solver.hyb.in，
+或者是将LDA+DMFT接口程序生成的杂化函数文件直接重命名为solver.hyb.in即可。
+如果用户不提供solver.hyb.in，那么量子杂质求解器组件内部将会使用无相互作用系统的杂化函数作为
+初始输入，如果用户提供了solver.hyb.in，那么从solver.hyb.in中读取的数据将覆盖掉缺省值，作为初
+始输入。
+
+对于所有的量子杂质求解器组件，solver.hyb.in文件的格式都是一样的，其格式如下：
+
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+1      0.07853982     -0.72761369     -0.53948595     -0.72761369     -0.53948595
+1      0.23561945     -0.61858636     -0.48305610     -0.61858636     -0.48305610
+1      0.39269908     -0.53404592     -0.44801239     -0.53404592     -0.44801239
+1      0.54977871     -0.46753732     -0.42301926     -0.46753732     -0.42301926
+1      0.70685835     -0.41300349     -0.40288646     -0.41300349     -0.40288646
+1      0.86393798     -0.36815701     -0.38507214     -0.36815701     -0.38507214
+1      1.02101761     -0.33059377     -0.36941834     -0.33059377     -0.36941834
+1      1.17809725     -0.29807311     -0.35534588     -0.29807311     -0.35534588
+1      1.33517688     -0.27024493     -0.34189638     -0.27024493     -0.34189638
+......
+\end{lstlisting}
+其文件共有nband个block，每个block之间间隔两个空行，最后一个block后面有两个空行，每个
+block的格式如下:
+\begin{itemize}
+\item 第1列，能带指标$i$，自1变化至nband，数据类型：integer
+\item 第2列，松原频率点$\omega_{n}=(2n+1)\pi/\beta$，$n$自0变化至mfreq-1，数据类型：real(dp)
+\item 第3列，实部，自旋朝上，$\Re \Delta_{i\uparrow}(i\omega_{n})$，数据类型：real(dp)
+\item 第4列，虚部，自旋朝上，$\Im \Delta_{i\uparrow}(i\omega_{n})$，数据类型：real(dp)
+\item 第5列，实部，自旋朝下，$\Re \Delta_{i\downarrow}(i\omega_{n})$，数据类型：real(dp)
+\item 第6列，虚部，自旋朝下，$\Im \Delta_{i\downarrow}(i\omega_{n})$，数据类型：real(dp)
+\end{itemize}
+第1个block存放第1条能带的数据，第2个block存放第2条能带的数据，然后依此类推。
+非对角项的数据均没有考虑在内。
+
+\section{solver.anydos.in}
+\label{sec:sai}
+
+solver.anydos.in文件存储的是晶格模型的电子态密度$N(\epsilon)$，它是量子杂质求解器组件的可选输入文件，
+仅在特殊情况下才会被用到。当晶格模型定义在bethe晶格上时，{\iqist}的量子杂质求解器组件内置了自洽方程，
+可以简捷了当地实现自洽迭代循环。但是当晶格模型不是定义在bethe晶格上时，此时又该当如何呢？解决方案是
+将晶格模型的电子态密度存储在solver.anydos.in中，由量子杂质模型求解器组件将其读入，再通过Hilbert变换
+实现自洽方程。
+
+对于所有的量子杂质求解器组件，solver.anydos.in文件的格式都是一样的，示例文件如下：
+
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+     -4.00000000      0.00020898
+     -3.99000000      0.00021008
+     -3.98000000      0.00021119
+     -3.97000000      0.00021231
+     -3.96000000      0.00021344
+     -3.95000000      0.00021458
+......
+      3.95000000      0.00021458
+      3.96000000      0.00021344
+      3.97000000      0.00021231
+      3.98000000      0.00021119
+      3.99000000      0.00021008
+      4.00000000      0.00020898
+\end{lstlisting}
+
+solver.anydos.in文件的格式如下:
+\begin{itemize}
+\item 第1列，实频率点$\epsilon$，共801个点，数据类型:real(dp)
+\item 第2列，$N(\epsilon)$，数据类型:real(dp)
+\end{itemize}
+
+在量子杂质求解器组件中，假定不同轨道的$N(\epsilon)$都是简并的，因此只需提供一套$N(\epsilon)$数据即
+可。假定实频率点围绕0点对称分布，左侧($<0$)有400个点，右侧($>0$)有400个点，包含0点后一共801个点。默
+认原始的$N(\epsilon)$数据未经归一化处理\footnote{如果用户提供的$N(\epsilon)$数据不止801个点，或者是
+不同轨道的$N(\epsilon)$之间并不简并，那么需要修改量子杂质求解器组件的源程序，详见ctqmc\_dmft.f90文
+件中的ctqmc\_dmft\_anydos()子程序。}。
+
+注意:一般不手动编辑solver.anydos.in文件，用户可以使用{\hibiscus}组件的makedos程序针对不同的晶格模型
+产生电子态密度文件，将其输出文件重命名为solver.anydos.in，并拷贝至当前计算目录下即可，具体步骤请参
+阅第\ref{sec:hib-tool}节。
+
+\section{solver.ktau.in}
+\label{sec:ski}
+
+对于{\narcissus}组件而言，如果需要考虑动态屏蔽效应时(isscr = 99，参见第\ref{sec:isscr}节)，双积分推
+迟作用函数$\mathcal{K}(\tau)$是一个很重要的输入数据。solver.ktau.in文件的作用就是存储$\mathcal{K}(\tau)$数据，
+它对于{\narcissus}组件来说也是一个可选的输入文件，仅当isscr = 99时，{\narcissus}组件才需要读取它，如果
+isscr取其它的值，那么{\narcissus}组件会完全忽略它。除了{\narcissus}组件以外，其余的量子杂质求解器组
+件完全不需要读取solver.ktau.in文件。
+
+典型的solver.ktau.in文件如下所示:
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+# u shift:             2.0  mu shift:             1.0
+      0.00000000      0.00000000      0.00000000
+      0.00977517      0.02397222      0.02397222
+      0.01955034      0.04705862      0.04705862
+      0.02932551      0.06932213      0.06932213
+      0.03910068      0.09081919      0.09081919
+......
+      9.96089932      0.09081919      0.09081919
+      9.97067449      0.06932213      0.06932213
+      9.98044966      0.04705862      0.04705862
+      9.99022483      0.02397222      0.02397222
+     10.00000000      0.00000000      0.00000000
+\end{lstlisting}
+
+solver.ktau.in文件的格式如下:
+\begin{itemize}
+\item 第1行，指定关于$U$以及$\mu$的shift
+\item 第2行至第ntime + 1行，包含$\mathcal{K}(\tau)$数据
+\item 第1列，虚时间点$\tau_{i}$，从0变化至$\beta$，数据类型:real(dp)
+\item 第2列，$\mathcal{K}(\tau_i)$数据，数据类型:real(dp)
+\item 第3列，参考数据，用途暂时不确定，数据类型:real(dp)
+\end{itemize}
+
+注意:一般不手动编辑solver.ktau.in文件，用户可以使用{\hibiscus}组件的makescr程序计算$\mathcal{K}(\tau)$，
+将输出文件重命名为solver.ktau.in，并拷贝至当前计算目录下即可，具体步骤请参
+阅第\ref{sec:hib-tool}节。
+
+\section{atom.cix}
+\label{sec:ac}
+
+atom.cix文件是广义相互作用版本的量子杂质模型求解器\footnote{在{\iqist}中，{\begonia}、
+{\lavender}、{\camellia}、{\epiphyllum}、{\pansy}、{\manjushaka}等组件属于广义相互作
+用版本的量子杂质模型求解器。这些量子杂质模型求解器又可以细分为三类，分别是:
+\begin{itemize}
+\item {\begonia}、{\lavender}
+\item {\camellia}、{\epiphyllum}
+\item {\pansy}、{\manjushaka}
+\end{itemize}
+它们的实现机制有较大的差异，因此所需要的atom.cix文件的格式也各不相同。由于在最新版本的{\iqist}软件包中，
+我们只公开发布{\begonia}与{\lavender}组件，因此此处仅就它们所需要的atom.cix文件的格式稍作说明。至于atom.cix
+文件的其它格式，待相关量子杂质求解器组件发布后，本文档再一并更新。}必需的输入文件。该文件包
+含了对角化原子问题后所获得的本征值/本征态，$\mathcal{F}$矩阵等信息，由原子问题程序自动生成。下面给出该文件的
+例子和详细说明。
+
+如下是一个2带系统的atom.cix文件，该文件可以分为两部分。
+
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+# atom.cix, style v1, begonia and lavender compatible
+# it is generated by jasmine code
+# eigenvalues: index | energy | occupy | spin
+ 1      0.00000000      0.00000000      0.00000000
+ 2      0.00000000      1.00000000      0.50000000
+ 3      0.00000000      1.00000000      0.50000000
+ 4      0.00000000      1.00000000     -0.50000000
+ 5      0.00000000      1.00000000     -0.50000000
+ 6      1.00000000      2.00000000      1.00000000
+ 7      1.00000000      2.00000000      0.00000000
+ 8      1.00000000      2.00000000     -1.00000000
+ 9      3.00000000      2.00000000      0.00000000
+10      3.00000000      2.00000000      0.00000000
+11      5.00000000      2.00000000      0.00000000
+12      7.00000000      3.00000000      0.50000000
+13      7.00000000      3.00000000      0.50000000
+14      7.00000000      3.00000000     -0.50000000
+15      7.00000000      3.00000000     -0.50000000
+16     14.00000000      4.00000000      0.00000000
+# f matrix element: alpha | beta | orbital | fmat
+ 1    1    1      0.00000000
+ 2    1    1      0.00000000
+ 3    1    1      0.00000000
+ 4    1    1      0.00000000
+ 5    1    1      0.00000000
+ 6    1    1      0.00000000
+ 7    1    1      0.00000000
+ 8    1    1      0.00000000
+ 9    1    1      0.00000000
+10    1    1      0.00000000
+11    1    1      0.00000000
+12    1    1      0.00000000
+13    1    1      0.00000000
+14    1    1      0.00000000
+15    1    1      0.00000000
+16    1    1      0.00000000
+......
+\end{lstlisting}
+
+atom.cix文件的格式如下:
+\begin{itemize}
+  \item 第1$\sim$2行，注释部分，注明此atom.cix文件的格式代码以及适用组件。
+  \item 第1部分，原子问题本征值、占据数、自旋。以第3行的描述文字开头。 
+  \begin{itemize}
+    \item 第1列，原子本征态指标$i$，自1变化到ncfgs(此处为16)，数据类型：integer
+    \item 第2列，原子问题本征值$E_{i}$，数据类型：real(dp)
+    \item 第3列，原子本征态的占据数$N_{i}$，数据类型：real(dp)
+    \item 第4列，原子本征态的自旋值$S_{i}$，数据类型：real(dp)
+  \end{itemize}
+  \item 第2部分，$\mathcal{F}$矩阵$\langle \alpha | d | \beta \rangle$，以第20行的描述文字开头。
+  \begin{itemize}
+    \item 第1列，原子本征态指标$\alpha$，自1变化到ncfgs(此处为16)，数据类型：integer
+    \item 第2列，原子本征态指标$\beta$，自1变化到ncfgs(此处为16)，数据类型：integer
+    \item 第3列，轨道指标$i$，自1变化到norbs(此处为4)，数据类型：integer
+    \item 第4列，$\mathcal{F}$矩阵元$\langle \alpha | d_{i} | \beta \rangle$，$d_{i}$为第$i$条
+    轨道上的消灭算符，数据类型：real(dp)
+  \end{itemize}
+\end{itemize}
+
+有两种方法可以生成atom.cix文件。方法一:应用{\iqist}软件包中内含的{\jasmine}组件，这是我们
+的首选程序，与{\iqist}软件包的其余组件配合得最好。关于{\jasmine}组件的具体用法，请参阅
+第\ref{sec:jasmine}节。方法二:应用杜亮博士开发的修改版的
+rambutan程序。rambutan程序不包含在{\iqist}中，想要获得它请与杜亮博士联
+系(mailto:duliang@iphy.ac.cn)。在生成atom.cix文件
+之后，如非十分必要，请勿对其进行修改，任何微小的改动都有可能导致计算失败。

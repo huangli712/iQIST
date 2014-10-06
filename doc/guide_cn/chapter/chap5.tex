@@ -1,0 +1,578 @@
+\chapter{{\iqist}的标准输出文件}
+\label{chap:out}
+
+在第\ref{chap:inf}章中，我们已经描述了{\iqist}的量子杂质求解器组件所需要的输入文件，那么
+在本章我们将详细描述{\iqist}的量子杂质求解器组件所产生的标准输出文件。
+
+\section{终端输出}
+\label{sec:terminal}
+
+\subsection{out.dat}
+\iqist 的量子杂质求解器组件在运行过程中会输出大量运行时刻信息到标准终端中，这些信息对于
+后续的模拟结果分析是十分重要的，因此在调用量子杂质求解器组件时，通常将程序输出重定向至名
+为out.dat的文件中去。这个out.dat就是所谓的终端输出文件。
+
+对于不同的量子杂质求解器组件而言其终端输出都是十分类似的。下面以{\azalea}组件为例，简要描述
+out.dat文件的结构。典型的由{\azalea}组件输出的out.dat文件如下所示:
+
+\lstset{backgroundcolor=\color{pink}, numbers=left, numberstyle=\tiny, basicstyle=\small, stringstyle=\sffamily}
+\begin{lstlisting}[frame=single]
+  AZALEA
+  >>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver
+ 
+  version: 2012.08.20T (built at 10:39:32 Nov 06 2012)
+  develop: by li huang, CAEP & IOP
+  support: huangli712@yahoo.com.cn
+  license: GPL2 and later versions
+ 
+  AZALEA >>> start running at 10:39:39 Nov  6 2012
+  AZALEA >>> parallelism: Yes >>> processors:   1
+ 
+  AZALEA >>> parameters list:
+    isscf :         2    isbin :         2
+    issun :         2    isspn :         1
+    mkink :      1024    mfreq :      8193
+    nband :         1    nspin :         2
+    norbs :         2    ncfgs :         4
+    niter :        20    nfreq :       128
+    ntime :      1024    nflip :     20000
+    ntherm:    200000    nsweep:  20000000
+    nclean:    100000    nwrite:   2000000
+    nmonte:        10    ncarlo:        10
+    U     :   4.00000    Uc    :   4.00000
+    Js    :   0.00000    Uv    :   4.00000
+    Jp    :   0.00000    Jz    :   0.00000
+    mune  :   2.00000    beta  :   8.00000
+    part  :   0.50000    temp  :1450.56313
+ 
+  AZALEA >>> DMFT iter:  1 <<< SELFING
+  AZALEA >>> CTQMC quantum impurity solver running
+    nband :         1    Uc    :   4.00000
+    nspin :         2    Jz    :   0.00000
+ 
+    quantum impurity solver initializing
+    seed:  747988718
+    time:     0.790s
+ 
+    quantum impurity solver retrieving
+    time:     0.000s
+ 
+    quantum impurity solver warmming
+    time:     0.200s
+ 
+    quantum impurity solver sampling
+ 
+  AZALEA >>> iter:  1 sweep:   2000000 of   20000000
+    auxiliary system observables:
+    etot :  -0.02928    epot :   0.13050
+    ekin :  -0.15978    <Sz> :  -0.07174
+    insert kink statistics:
+    count:    899142     98635    800507
+    ratio:   1.00000   0.10970   0.89030
+    remove kink statistics:
+    count:    900978     98635    802343
+    ratio:   1.00000   0.10948   0.89052
+    lshift kink statistics:
+    count:     99871     10329     89542
+    ratio:   1.00000   0.10342   0.89658
+    rshift kink statistics:
+    count:    100009     10354     89655
+    ratio:   1.00000   0.10353   0.89647
+    global swap statistics:
+    count:        -1         0         0
+    ratio:   1.00000   0.00000   0.00000
+    global flip statistics:
+    count:       100       100         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: normal
+    >>> used time:  2.27 s in this iteration.
+    >>> used time:  2.27 s in total iteration.
+......
+  AZALEA >>> CTQMC quantum impurity solver shutdown
+ 
+  AZALEA >>> DMFT hybridization function is updated
+ 
+  AZALEA >>> cur_iter: 20  min_iter: 16  max_iter: 20
+  AZALEA >>> sig_curr:0.9306E-06  eps_curr:0.1000E-07
+  AZALEA >>> self-consistent iteration convergence is F
+
+  AZALEA >>> DMFT iter:999 <<< BINNING
+  AZALEA >>> CTQMC quantum impurity solver running
+    nband :         1    Uc    :   4.00000
+    nspin :         2    Jz    :   0.00000
+ 
+    quantum impurity solver initializing
+    seed:  710026923
+    time:     0.780s
+ 
+    quantum impurity solver retrieving
+    time:     0.000s
+ 
+    quantum impurity solver warmming
+    time:     0.100s
+ 
+    quantum impurity solver sampling
+ 
+  AZALEA >>> iter:999 sweep:  20000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.03153    epot :   0.03284
+    ekin :  -0.06437    <Sz> :  -0.00056
+    insert kink statistics:
+    count:   9001306    466067   8535239
+    ratio:   1.00000   0.05178   0.94822
+    remove kink statistics:
+    count:   8997343    466067   8531276
+    ratio:   1.00000   0.05180   0.94820
+    lshift kink statistics:
+    count:   1001183     20190    980993
+    ratio:   1.00000   0.02017   0.97983
+    rshift kink statistics:
+    count:   1000168     19878    980290
+    ratio:   1.00000   0.01987   0.98013
+    global swap statistics:
+    count:        -1         0         0
+    ratio:   1.00000   0.00000   0.00000
+    global flip statistics:
+    count:      1000      1000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 11.61 s in this iteration.
+    >>> used time: 11.61 s in total iteration.
+......
+  AZALEA >>> CTQMC quantum impurity solver shutdown
+
+  AZALEA >>> total time spent:    414.10s
+ 
+  AZALEA >>> I am tired and want to go to bed. Bye!
+  AZALEA >>> happy ending at 11:44:57 Nov  6 2012
+\end{lstlisting}
+
+此out.dat文件的格式如下:
+\begin{itemize}
+\item 第1行，组件名称{\azalea}。
+\item 第4行，版本号以及此可执行程序的生成时间。版本号为日期与大写字母的组合，D表示开发版，T
+表示测试版，S表示稳定版。程序稳定程度为S $>$ T $>$ D。括号内的时间为此可执行程序的编译生成时间。
+\item 第9行，程序的启动时间。 
+\item 第10行，程序是否支持并行，当前一共使用多少个计算核心。
+\item 第12 $\sim$ 27行，输出当前设置的全部计算参数。
+\item 第29行，输出DMFT迭代计算的信息，当前是第几步。SELFING表示处于自洽计算模式，BINNING表示处于data binning模式。
+\item 第31 $\sim$ 32行，再次输出关键的相互作用常数以及能带数目信息。
+\item 第35行，随机数种子。这个数字很关键，当程序出错时，利用此随机数种子可以重复全部的计算结果，便于我们找出问题的所在。
+\item 第46行，输出量子杂质求解器组件的计算进程，当前的DMFT循环进行到第几步，总共nsweep次Monte Carlo sampling，目前已经进行了多少次。
+\item 第47 $\sim$ 49行，输出关键的观测量，如$E_{\text{tot}}$、$E_{\text{kin}}$、$E_{\text{pot}}$和$\langle S_{z}\rangle$。
+\item 第50 $\sim$ 52行，输出INSERT KINK操作的统计信息。第51行给出的三个数字依次分别是:尝试次数，接受次数，拒绝次数，第52行给出的三个数字
+分别是各自的概率。
+\item 第53 $\sim$ 55行，输出REMOVE KINK操作的统计信息。
+\item 第56 $\sim$ 58行，输出LSHIFT KINK操作的统计信息。
+\item 第59 $\sim$ 61行，输出RSHIFT KINK操作的统计信息。
+\item 第62 $\sim$ 64行，输出GLOBAL SWAP操作的统计信息。第63行的第1个数字-1表示此操作没有被启用。
+\item 第62 $\sim$ 64行，输出GLOBAL FLIP操作的统计信息。
+\item 第68行，判断量子杂质求解器组件的运行状态是否正常，normal表示一切正常。
+\item 第69 $\sim$ 70行，当前运行时间小计。
+\item 第76 $\sim$ 78行，输出自洽迭代过程中电子自能函数的收敛情况。在缺省情况下，量子杂质求解器组件内置的DMFT引擎最少迭代计算16次，最多迭
+代计算20次。电子自能函数的收敛标准为$0.1 \times 10^{-7}$。
+\item 第80行，程序结束迭代循环计算模式，进入到data binning模式。
+\item 第126行，程序总耗时。
+\item 第128 $\sim$ 129行，程序终止，输出终止时间。
+\end{itemize}
+
+\section{文件输出}
+\label{sec:file}
+
+\subsection{solver.green.dat}
+solver.green.dat文件包含了虚时杂质格林函数$G(\tau)$，所有量子杂质求解器组件在运行时刻均会输
+出该文件\footnote{每隔nwrite次Monte Carlo sampling，量子杂质求解器组件会输出一次
+当前的$G(\tau)$到solver.green.dat文件中去。}。其文件共有nband个block，每个block之间间隔
+两个空行，最后一个block后面有两个空行，每个block的格式如下:
+\begin{itemize}
+\item 第1列，能带指标$i$，自1变化至nband，格式i5
+\item 第2列，时间片指标$j$，自1变化至ntime，格式i5
+\item 第3列，虚时间点，$\tau_{j}$，格式f12.6
+\item 第4列，自旋朝上，$G_{i\uparrow}(\tau_{j})$，格式f12.6
+\item 第5列，自旋朝下，$G_{i\downarrow}(\tau_{j})$，格式f12.6
+\end{itemize}
+第1个block存放第1条能带的数据，第2个block存放第2条能带的数据，然后依此类推。不包括非对角项
+的数据。如果需要使用gnuplot绘图，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.green.dat' u 2:4 w lp }}
+
+或者是
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.green.dat' u 3:4 w lp }}
+
+\subsection{solver.green.bin}
+solver.green.bin文件包含了虚时杂质格林函数$G(\tau)$，仅当data binning模式被激活时(isbin = 2，参见第\ref{sec:isbin}节)
+量子杂质求解器组件才会输出此文件\footnote{事实上，正确的文件名应该为solver.green.bin.*，*代表当前
+data bin的编号，data bin的总数等于nsweep/nwrite。}。其文件共有nband个block，每个block之间间
+隔两个空行，最后一个block后面有两个空行，每个block的格式如下:
+\begin{itemize}
+\item 第1列，能带指标$i$，自1变化至nband，格式i5
+\item 第2列，时间片指标$j$，自1变化至ntime，格式i5
+\item 第3列，虚时间点，$\tau_{j}$，格式f12.6
+\item 第4列，自旋朝上，$G_{i\uparrow}(\tau_{j})$，格式f12.6
+\item 第5列，自旋朝下，$G_{i\downarrow}(\tau_{j})$，格式f12.6
+\end{itemize}
+第1个block存放第1条能带的数据，第2个block存放第2条能带的数据，然后依此类推。不包括非对角项
+的数据。如果需要使用gnuplot绘图，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.green.bin.1' u 2:4 w lp }}
+
+或者是
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.green.bin.1' u 3:4 w lp }}
+
+\subsection{solver.weiss.dat}
+solver.weiss.dat文件包含了虚时bath函数$\mathcal{G}(\tau)$，仅当自洽计算模式被激活时(isscf = 2，参见第\ref{sec:isscf}节)
+量子杂质求解器组件才会输出此文件\footnote{solver.weiss.dat文件在每次DMFT迭代计算后才会被更新一次。}。其文件共
+有nband个block，每个block之间间隔两个空行，最后一个block后面有两个空行，每个block的格式如下:
+\begin{itemize}
+\item 第1列，能带指标$i$，自1变化至nband，格式i5
+\item 第2列，时间片指标$j$，自1变化至ntime，格式i5
+\item 第3列，虚时间点，$\tau_{j}$，格式f12.6
+\item 第4列，自旋朝上，$\mathcal{G}_{i\uparrow}(\tau_{j})$，格式f12.6
+\item 第5列，自旋朝下，$\mathcal{G}_{i\downarrow}(\tau_{j})$，格式f12.6
+\end{itemize}
+第1个block存放第1条能带的数据，第2个block存放第2条能带的数据，然后依此类推。不包括非对角项
+的数据。如果需要使用gnuplot绘图，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.weiss.dat' u 2:4 w lp }}
+
+或者是
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.weiss.dat' u 3:4 w lp }}
+
+\subsection{solver.hybri.dat}
+solver.hybri.dat文件包含了虚时杂化函数$\Delta(\tau)$。所有量子杂质求解器组件在运行时刻均会输出该文
+件\footnote{solver.hybri.dat文件在每次DMFT迭代计算后才会被更新一次。}。其文件共有nband个block，每
+个block之间间隔两个空行，最后一个block后面有两个空行，每个block的格式如下:
+\begin{itemize}
+\item 第1列，能带指标$i$，自1变化至nband，格式i5
+\item 第2列，时间片指标$j$，自1变化至ntime，格式i5
+\item 第3列，虚时间点，$\tau_{j}$，格式f12.6
+\item 第4列，自旋朝上，$\Delta_{i\uparrow}(\tau_{j})$，格式f12.6
+\item 第5列，自旋朝下，$\Delta_{i\downarrow}(\tau_{j})$，格式f12.6
+\end{itemize}
+第1个block存放第1条能带的数据，第2个block存放第2条能带的数据，然后依此类推。不包括非对角项
+的数据。如果需要使用gnuplot绘图，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.hybri.dat' u 2:4 w lp }}
+
+或者是
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.hybri.dat' u 3:4 w lp }}
+
+\subsection{solver.grn.dat}
+solver.grn.dat文件包含了虚频杂质格林函数$G(i\omega)$。所有量子杂质求解器组件在运行时刻均会输出该文
+件\footnote{solver.grn.dat文件在每次DMFT迭代计算后才会被更新一次。}。其文件共有nband个block，每
+个block之间间隔两个空行，最后一个block后面有两个空行，每个block的格式如下:
+\begin{itemize}
+\item 第1列，能带指标$i$，自1变化至nband，格式i5
+\item 第2列，松原频率点$\omega_{n}=(2n+1)\pi/\beta$，$n$自0变化至mfreq-1，格式f16.8
+\item 第3列，实部，自旋朝上，$\Re G_{i\uparrow}(i\omega_{n})$，格式f16.8
+\item 第4列，虚部，自旋朝上，$\Im G_{i\uparrow}(i\omega_{n})$，格式f16.8
+\item 第5列，实部，自旋朝下，$\Re G_{i\downarrow}(i\omega_{n})$，格式f16.8
+\item 第6列，虚部，自旋朝下，$\Im G_{i\downarrow}(i\omega_{n})$，格式f16.8
+\end{itemize}
+第1个block存放第1条能带的数据，第2个block存放第2条能带的数据，然后依此类推。不包括非对角项
+的数据。如果需要使用gnuplot绘图，例如画出虚部，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.grn.dat' u 2:4 w lp }}
+或者画出低频的部分，例如前50个频率点，可用如下的命令：
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot [0:50] 'solver.grn.dat' u 2:4 w lp }}
+
+\subsection{solver.wss.dat}
+solver.wss.dat文件包含了虚频bath函数$\mathcal{G}(i\omega)$。仅当自洽计算模式被激活时(isscf = 2，参见
+第\ref{sec:isscf}节)量子杂质求解器组件才会输出此文件\footnote{solver.wss.dat文件在每次DMFT迭代计算后
+才会被更新一次。}。其文件共有nband个block，每个block之间间隔两个空行，最后一个block后面有两个空
+行，每个block的格式如下:
+\begin{itemize}
+\item 第1列，能带指标$i$，自1变化至nband，格式i5
+\item 第2列，松原频率点$\omega_{n}=(2n+1)\pi/\beta$，$n$自0变化至mfreq-1，格式f16.8
+\item 第3列，实部，自旋朝上，$\Re \mathcal{G}_{i\uparrow}(i\omega_{n})$，格式f16.8
+\item 第4列，虚部，自旋朝上，$\Im \mathcal{G}_{i\uparrow}(i\omega_{n})$，格式f16.8
+\item 第5列，实部，自旋朝下，$\Re \mathcal{G}_{i\downarrow}(i\omega_{n})$，格式f16.8
+\item 第6列，虚部，自旋朝下，$\Im \mathcal{G}_{i\downarrow}(i\omega_{n})$，格式f16.8
+\end{itemize}
+第1个block存放第1条能带的数据，第2个block存放第2条能带的数据，然后依此类推。不包括非对角项
+的数据。如果需要使用gnuplot绘图，例如画出虚部，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.wss.dat' u 2:4 w lp }}
+或者画出低频的部分，例如前50个频率点，可用如下的命令：
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot [0:50] 'solver.wss.dat' u 2:4 w lp }}
+
+\subsection{solver.hyb.dat}
+solver.hyb.dat文件包含了虚频杂化函数$\Delta(i\omega)$。所有量子杂质求解器组件在运行时刻均会输出该文
+件\footnote{solver.hyb.dat文件在每次DMFT迭代计算后才会被更新一次。}。其文件共有nband个block，每个
+block之间间隔两个空行，最后一个block后面有两个空行，每个block的格式如下:
+\begin{itemize}
+\item 第1列，能带指标$i$，自1变化至nband，格式i5
+\item 第2列，松原频率点$\omega_{n}=(2n+1)\pi/\beta$，$n$自0变化至mfreq-1，格式f16.8
+\item 第3列，实部，自旋朝上，$\Re \Delta_{i\uparrow}(i\omega_{n})$，格式f16.8
+\item 第4列，虚部，自旋朝上，$\Im \Delta_{i\uparrow}(i\omega_{n})$，格式f16.8
+\item 第5列，实部，自旋朝下，$\Re \Delta_{i\downarrow}(i\omega_{n})$，格式f16.8
+\item 第6列，虚部，自旋朝下，$\Im \Delta_{i\downarrow}(i\omega_{n})$，格式f16.8
+\end{itemize}
+第1个block存放第1条能带的数据，第2个block存放第2条能带的数据，然后依此类推。不包括非对角项
+的数据。如果需要使用gnuplot绘图，例如画出虚部，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.hyb.dat' u 2:4 w lp }}
+或者画出低频的部分，例如前50个频率点，可用如下的命令：
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot [0:50] 'solver.hyb.dat' u 2:4 w lp }}
+
+\subsection{solver.sgm.dat}
+solver.sgm.dat文件包含了虚频自能函数$\Sigma(i\omega)$。所有量子杂质求解器组件在运行时刻均会输出该文
+件\footnote{solver.sgm.dat文件在每次DMFT迭代计算后才会被更新一次。}。其文件共有nband个block，每个
+block之间间隔两个空行，最后一个block后面有两个空行，每个block的格式如下:
+\begin{itemize}
+\item 第1列，能带指标$i$，自1变化至nband，格式i5
+\item 第2列，松原频率点$\omega_{n}=(2n+1)\pi/\beta$，$n$自0变化至mfreq-1，格式f16.8
+\item 第3列，实部，自旋朝上，$\Re \Sigma_{i\uparrow}(i\omega_{n})$，格式f16.8
+\item 第4列，虚部，自旋朝上，$\Im \Sigma_{i\uparrow}(i\omega_{n})$，格式f16.8
+\item 第5列，实部，自旋朝下，$\Re \Sigma_{i\downarrow}(i\omega_{n})$，格式f16.8
+\item 第6列，虚部，自旋朝下，$\Im \Sigma_{i\downarrow}(i\omega_{n})$，格式f16.8
+\end{itemize}
+第1个block存放第1条能带的数据，第2个block存放第2条能带的数据，然后依此类推。不包括非对角项
+的数据。如果需要使用gnuplot绘图，例如画出虚部，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.sgm.dat' u 2:4 w lp }}
+或者画出低频的部分，例如前50个频率点，可用如下的命令：
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot [0:50] 'solver.sgm.dat' u 2:4 w lp }}
+
+\subsection{solver.hub.dat}
+solver.hub.dat文件包含了原子极限下的虚频杂质格林函数$G_{\text{atom}}(i\omega)$以及自能
+函数$\Sigma_{\text{atom}}(i\omega)$。所有量子杂质求解器组件在运行时刻均会输出该文件\footnote{solver.hub.dat文
+件在每次DMFT迭代计算后才会被更新一次。}。其文件共有nband个block，每个block之间间隔两个空行，最后一
+个block后面有两个空行，每个block的格式如下:
+\begin{itemize}
+\item 第1列，能带指标$i$，自1变化至nband，格式i5
+\item 第2列，虚频点$\omega_{n}=(2n+1)\pi/\beta$，$n$自0变化至mfreq-1，格式f16.8
+\item 第3列，实部，自旋朝上，$\Re G_{\text{atom}}(i\omega_{n})$，格式f16.8
+\item 第4列，虚部，自旋朝上，$\Im G_{\text{atom}}(i\omega_{n})$，格式f16.8
+\item 第5列，实部，自旋朝上，$\Re \Sigma_{\text{atom}}(i\omega_{n})$，格式f16.8
+\item 第6列，虚部，自旋朝上，$\Im \Sigma_{\text{atom}}(i\omega_{n})$，格式f16.8
+\end{itemize}
+第1个block存放第1条能带的数据，第2个block存放第2条能带的数据，然后依此类推。不包括非对角项
+的数据。如果需要使用gnuplot绘图，例如画出$G_{\text{atom}}$虚部，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.hub.dat' u 2:4 w lp }}
+或者画出低频的部分，例如前50个频率点，可用如下的命令：
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot [0:50] 'solver.hub.dat' u 2:4 w lp }}
+
+\subsection{solver.nmat.dat}
+solver.nmat.dat文件包含了占据数$\langle n_{i}\rangle$与双占据数$\langle n_{i} n_{j} \rangle$。
+所有量子杂质求解器组件在运行时刻均会输出该文件\footnote{solver.nmat.dat文件在每次DMFT迭代计算
+后才会被更新一次。}。其文件格式如下：
+\begin{itemize}
+\item 第1部分，占据数$\langle n_{i}\rangle$，该部分以描述文字”< n\_i >   data:“开头
+  \begin{itemize}
+  \item 接下来norbs行，轨道占据数$\langle n_{i}\rangle$。
+    \begin{itemize}
+    \item 第1列，轨道指标$i$，自1变化至norbs，格式i5； 
+    \item 第2列，占据数$\langle n_{i}\rangle$，格式f12.6
+    \end{itemize}
+  \item 接下来2行，不同自旋的占据数
+    \begin{itemize}
+    \item 第1列，不同自旋的占据数标识，sup和sdn，格式a
+    \item 第2列，不同自旋的占据数，格式f12.6
+    \end{itemize}
+  \item 接下来1行，总占据数
+    \begin{itemize}
+    \item 第1列，总占据数标识，sum，格式a
+    \item 第2列，总占据数，格式f12.6
+    \end{itemize}
+  \end{itemize}
+
+\item 第2部分，双占据数$\langle n_{i} n_{j} \rangle$，该部分以描述文字”<n\_i n\_j > data:“开头
+  \begin{itemize}
+  \item 接下来norbs*norbs行，双占据数$\langle n_{i} n_{j} \rangle$
+    \begin{itemize}
+    \item 第1列，轨道指标$i$，自1变化至norbs，格式i5
+    \item 第2列，轨道指标$j$，自1变化至norbs，格式i5
+    \item 第3列，双占据数$\langle n_{i} n_{j} \rangle$，格式f12.6
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection{solver.schi.dat}
+solver.schi.dat文件包含了自旋$-$自旋关联函数$\langle S_{z}(0)S_{z}(\tau) \rangle$。
+仅适用于{\gardenia}和{\narcissus}组件，当计算模式被设为(isvrt = 2，参见
+第\ref{sec:isvrt}节)时才会输出该文件\footnote{solver.schi.dat文件在每次
+DMFT迭代计算后才会被更新一次。}。其文件共有nband + 2个block，每个block之间间
+隔两个空行，最后一个block后面有两个空行。每个block的格式如下:
+\begin{itemize}
+  \item 第1列，虚时点$\tau_{i}$，一共ntime个点，自0变化至$\beta$，格式f12.6
+  \item 第2列，$\langle S_{z}(0)S_{z}(\tau_{i}) \rangle$, 格式f12.6
+\end{itemize}
+前nband个block是轨道分辨的自旋$-$自旋关联函数$\langle S_{z}^{i}(0)S_{z}^{i}(\tau) \rangle$，
+轨道指标$i$自1变化至nband，这些block以描述文字”\# flvr: $i$“开头；第nband + 1个block
+是平均的自旋$-$自旋关联函数$\langle S_{z}(0)S_{z}(\tau) \rangle/\text{nband}$，该block
+以描述文字”\#flvr: 8888“开头；第nband + 2个block也是平均的自旋$-$自旋关联函数，
+但是采用了另外一种平均方法$(\sum_{i} \langle S_{z}^{i}(0)S_{z}^{i}(\tau) \rangle)/\text{nband}$，
+该block以描述文字”\#flvr: 9999“开头。如果需要使用gnuplot绘图，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.schi.dat' u 1:2 w lp }}
+
+\subsection{solver.ochi.dat}
+solver.ochi.dat文件包含了轨道$-$轨道关联函数$\langle N(0) N(\tau) \rangle$。
+仅适用于{\gardenia}和{\narcissus}组件，当计算模式被设为(isvrt = 3，参见
+第\ref{sec:isvrt}节)时才会输出该文件\footnote{solver.ochi.dat文件在每次DMFT迭
+代计算后才会被更新一次。}。其文件共有norbs + 2个block，每个block之间间隔两个
+空行，最后一个block后面有两个空行。每个block的格式如下:
+\begin{itemize}
+  \item 第1列，虚时点$\tau_{i}$，一共ntime个点，自0变化至$\beta$，格式f12.6
+  \item 第2列，$\langle N(0) N(\tau_{i}) \rangle$, 格式f12.6
+\end{itemize}
+前norbs个block是轨道分辨的轨道$-$轨道关联函数$\langle N^{i}(0) N^{i}(\tau) \rangle$，
+轨道指标$i$自1变化至norbs，这些block以描述文字”\# flvr: $i$“开头；第norbs + 1个block是
+平均的轨道$-$轨道关联函数$\langle N(0) N(\tau) \rangle/\text{nband}$，该block以描述文
+字”\#flvr: 8888“开头；第norbs + 2个block也是平均的轨道$-$轨道关联函数，但是采用了另外
+一种平均方法$(\sum_{i} \langle N^{i}(0)N^{i}(\tau) \rangle)/\text{nband}$，该block以描
+述文字”\#flvr: 9999“开头。如果需要使用gnuplot绘图，可用如下的命令:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot 'solver.ochi.dat' u 1:2 w lp }}
+
+\subsection{solver.twop.dat}
+solver.twop.dat文件包含了双粒子格林函数以及顶角函数。
+仅适用于{\gardenia}和{\narcissus}组件，当计算模式被设为(isvrt = 4，参见
+第\ref{sec:isvrt}节)时才会输出该文件\footnote{solver.twop.dat文件在每次DMFT迭
+代计算后才会被更新一次。}。
+其文件一共有norbs $\times$ norbs $\times$ nbfrq个block，每个block之间间隔
+两个空行，最后一个block后面有两个空行。每个block的格式如下:
+\begin{itemize}
+\item 第1行，描述性文字，轨道指标$m$，自1变化至norbs，格式i5
+\item 第2行，描述性文字，轨道指标$n$，自1变化至norbs，格式i5
+\item 第3行，描述性文字，玻色频率$\nu$的指标，自1变化至nbfrq，格式i5
+\item 接下来nffrq $\times$ nffrq行，存储相关的数据
+    \begin{itemize}
+    \item 第1列，费米频率$\omega^{\prime}$的指标，从1 - nffrq变化至nffrq - 1(步长为2)，格式i5
+    \item 第2列，费米频率$\omega$的指标，从1 - nffrq变化至nffrq - 1(步长为2)，格式i5
+    \item 第3列，实部，总的双粒子格林函数，$\Re\chi^{mn}_{\text{tot}}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第4列，虚部，总的双粒子格林函数，$\Im\chi^{mn}_{\text{tot}}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第5列，实部，可约双粒子格林函数，$\Re\chi^{mn}_{0}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第6列，虚部，可约双粒子格林函数，$\Im\chi^{mn}_{0}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第7列，实部，不可约双粒子格林函数，$\Re\chi^{mn}_{\text{irr}}(\omega,\omega^{\prime},\nu)$，格
+          式f16.8\footnote{$\chi_{\text{irr}} = \chi_{\text{tot}} - \chi_{0}$。}
+    \item 第8列，虚部，不可约双粒子格林函数，$\Im\chi^{mn}_{\text{irr}}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第9列，实部，全顶角函数$\Re\mathcal{F}^{mn}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第10列，虚部，全顶角函数$\Im\mathcal{F}^{mn}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \end{itemize}
+\end{itemize}
+
+在许多情况下，双粒子格林函数以及顶角函数的数值比较大，用格式f16.8已经无法
+满足数据的输出要求，后果就是在solver.twop.dat文件中出现很多无法识别的"*"
+符号。如果出现此类情况，请用户关注ctqmc\_dump.f90文件中的ctqmc\_dump\_twop()
+子程序，修改其中的数据输出格式，例如将f16.8替换为f24.8或者是f16.4，然后重
+新编译程序，重新进行计算。如果情况还未得到改善，请重复上述步骤，直至
+solver.twop.dat文件中的数据显示正常。
+
+\subsection{solver.vrtx.dat}
+solver.vrtx.dat文件包含了双粒子格林函数以及顶角函数。
+仅适用于{\gardenia}和{\narcissus}组件，当计算模式被设为(isvrt = 5，参见
+第\ref{sec:isvrt}节)时才会输出该文件\footnote{solver.vrtx.dat文件在每次DMFT迭
+代计算后才会被更新一次。}。
+其文件一共有norbs $\times$ norbs $\times$ nbfrq个block，每个block之间间隔
+两个空行，最后一个block后面有两个空行。每个block的格式如下:
+\begin{itemize}
+\item 第1行，描述性文字，轨道指标$m$，自1变化至norbs，格式i5
+\item 第2行，描述性文字，轨道指标$n$，自1变化至norbs，格式i5
+\item 第3行，描述性文字，玻色频率$\nu$的指标，自1变化至nbfrq，格式i5
+\item 接下来nffrq $\times$ nffrq行，存储相关的数据
+    \begin{itemize}
+    \item 第1列，费米频率$\omega^{\prime}$的指标，从1 - nffrq变化至nffrq - 1(步长为2)，格式i5
+    \item 第2列，费米频率$\omega$的指标，从1 - nffrq变化至nffrq - 1(步长为2)，格式i5
+    \item 第3列，实部，总的双粒子格林函数，$\Re\chi^{mn}_{\text{tot}}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第4列，虚部，总的双粒子格林函数，$\Im\chi^{mn}_{\text{tot}}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第5列，实部，可约双粒子格林函数，$\Re\chi^{mn}_{0}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第6列，虚部，可约双粒子格林函数，$\Im\chi^{mn}_{0}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第7列，实部，不可约双粒子格林函数，$\Re\chi^{mn}_{\text{irr}}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第8列，虚部，不可约双粒子格林函数，$\Im\chi^{mn}_{\text{irr}}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第9列，实部，全顶角函数$\Re\mathcal{F}^{mn}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \item 第10列，虚部，全顶角函数$\Im\mathcal{F}^{mn}(\omega,\omega^{\prime},\nu)$，格式f16.8
+    \end{itemize}
+\end{itemize}
+
+在许多情况下，双粒子格林函数以及顶角函数的数值比较大，用格式f16.8已经无法
+满足数据的输出要求，后果就是在solver.vrtx.dat文件中出现很多无法识别的"*"
+符号。如果出现此类情况，请用户关注ctqmc\_dump.f90文件中的ctqmc\_dump\_vrtx()
+子程序，修改其中的数据输出格式，例如将f16.8替换为f24.8或者是f16.4，然后
+重新编译程序，重新进行计算。如果情况还未得到改善，请重复上述步骤，直
+至solver.vrtx.dat文件中的数据显示正常。
+
+\subsection{solver.hist.dat}
+\label{sec:hist}
+solver.hist.dat文件包含了连续时间量子杂质求解器微扰展开项的阶数分布$P_{\text{H}}$。所有量子杂质
+求解器组件在运行时刻均会输出该文件\footnote{每隔nwrite次Monte Carlo sampling，量子杂质求解器
+组件会输出一次当前的$P_{\text{H}}$到solver.hist.dat文件中去。}。
+其文件格式如下：
+\begin{itemize}
+\item 第1行，描述文字：”\# histogram: order | count | percent“，格式a
+\item 接下来mkink行，存储微扰展开项的阶数分布
+  \begin{itemize}
+  \item 第1列，阶数指标$i$，自1变化至mkink，格式i5
+  \item 第2列，阶数的统计数目，count，格式i12
+  \item 第3列，阶数的统计百分比，percent，格式f12.6
+  \end{itemize}
+\end{itemize}
+请注意0阶的数据保存在文件的最后一行。如果需要使用gnuplot绘图，可用如下的命令\footnote{一般来说，微扰
+展开阶数大于100的情况十分少见，因此只需绘制出前100阶的分布即可。}:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad gnuplot> plot [1:100]'solver.hist.dat' u 1:3 w lp }}
+
+\subsection{solver.prob.dat}
+solver.prob.dat文件包含了原子组态的出现概率$P_{\Gamma}$。所有量子杂质求解器组件在运行时刻均会输出
+该文件\footnote{solver.prob.dat文件在每次DMFT迭代计算后才会被更新一次。}。
+该文件包含3部分，其文件格式如下：
+\begin{itemize}
+\item 第1部分，原子组态概率分布，该部分以描述文字
+      ”\# state probability: index | prob | occupy | spin“开头
+  \begin{itemize}
+  \item 第1列，原子组态指标$i$，自1变化至ncfgs，格式i5
+  \item 第2列，第$i$个原子组态的概率$P_{\Gamma}$，格式f12.6 
+  \item 第3列，第$i$个原子组态的占据数$N_{\Gamma}$，格式f12.6
+  \item 第4列，第$i$个原子组态的自旋值$S_{z,\Gamma}$，格式f12.6
+  \end{itemize}
+\item 第2部分，具有不同占据数的原子组态的概率分布，该部分以描述文字
+      ”\# orbital probability: index | occupy | prob“开头
+  \begin{itemize}
+  \item 第1列，占据数指标$i$，$i$的变化范围视研究的具体系统而定，格式i5
+  \item 第2列，占据数$N$，格式f12.6
+  \item 第3列，占据数为$N$的原子组态的概率分布$P_{N}$，格式f12.6
+  \end{itemize}
+\item 第3部分，具有不同自旋值的原子组态的概率分布，该部分以描述文字
+      ”\# spin probability: index | spin | prob“开头
+  \begin{itemize}
+  \item 第1列，自旋指标$i$，$i$的变化范围视研究的具体系统而定，格式i5
+  \item 第2列，自旋$S_{z}$，格式f12.6
+  \item 第3列，自旋为$S_{z}$的原子组态的概率分布$P_{S_{z}}$，格式f12.6
+  \end{itemize}
+
+\end{itemize}
+
+\subsection{solver.kernel.dat}
+solver.kernel.dat文件包含了双积分推迟作用函数$\mathcal{K}(\tau)$的信息，仅
+仅{\narcissus}组件可能会输出它。{\narcissus}量子杂质求解器组件在初始化时，
+会输出$\mathcal{K}(\tau)$到solver.kernel.dat文件中。其文件格式如下:
+\begin{itemize}
+\item 第1列，虚时点的指标$i$，从1变化至ntime，格式i5
+\item 第2列，虚时间点$\tau_{i}$，从0变化至$\beta$，格式f12.6
+\item 第3列，$\mathcal{K}(\tau_{i})$，格式f12.6
+\end{itemize}
+
+注意:实际上solver.kernel.dat文件中的数据就是solver.ktau.in文件中数据的一个拷贝，因此如果
+solver.ktau.in文件不存在的话，那么solver.kernel.dat文件中的数据将全部为0。关于solver.ktau.in
+文件的信息，请参阅第\ref{sec:ski}节。
+
+\subsection{solver.status.dat}
+solver.status.dat文件包含了量子杂质求解器的图形配置信息。当量子杂质求解器组件关闭时，它会输出当前的图形配置
+信息到solver.status.dat文件中。当下次量子杂质求解器组件重新启动时，它会在当前目录中搜索solver.status.dat文件。
+如果solver.status.dat文件存在，那么量子杂质求解器组件会读取该文件，并利用该文件中包含的信息进行初始化。借助
+solver.status.dat文件可以帮助我们调试程序，也可以促使量子杂质求解器快速达到平衡状态。
+
+由于solver.status.dat文件关系到量子杂质求解器组件的内部实现细节，因此此处暂不公布其内在格式。我们强烈建议用户
+千万不要手动修改solver.status.dat文件，即使用户明确地知道自己在干些什么。如有疑问，请与开发者联系。
