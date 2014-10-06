@@ -546,10 +546,10 @@
      allocate(ochi(ntime),        stat=istat)
      allocate(oochi(ntime,norbs,norbs), stat=istat)
 
-     allocate(g2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-     allocate(g2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-     allocate(h2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-     allocate(h2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(g2_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(h2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
