@@ -1,44 +1,36 @@
 \documentclass[10pt]{book}
 
-% 全局设定
+% global setup
 \include{chapter/global}
 
 \begin{document}
 
-% 封面页
+% cover
 \include{chapter/title}
 
 \frontmatter
 
-% 正文目录
+% outlines
 \tableofcontents
 
-% 图片目录
+% figures
 \listoffigures
 
-% 表格目录
+% tables
 \listoftables
 
 \mainmatter
 \pagestyle{fancy}
 
-% 主要内容
-\include{chapter/chap1}
-\include{chapter/chap2}
-\include{chapter/chap3}
-\include{chapter/chap4}
-\include{chapter/chap5}
-\include{chapter/chap6}
-\include{chapter/chap7}
-\include{chapter/chap8}
+% main contents
 
 \backmatter
 \pagestyle{plain}
 
-% 附录
+% appendix
 \include{chapter/appendix}
 
-% 参考文献
+% reference
 \include{chapter/reference}
 
 \end{document}
