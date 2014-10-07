@@ -3,7 +3,29 @@
 \section{Uncompress}
 \section{Direcrory structures}
 \section{Compiling environment}
+
 \section{Compiling system}
+
+In order to compile and install iQIST correctly, you should ensure the
+following softwares are correctly installed and configured in your OS.
+
+* Intel Fortran compiler
+* MPICH2 or OpenMPI
+* BLAS
+* LAPACK
+* Python 2.X
+* scipy, numpy, and f2py
+
+The downloaded iQIST software package is likely a compressed file with zip
+or tar.gz suffix. The users should uncompress it at first. And then go to
+the iqist/src/build directory, edit the make.sys file to configure the
+compiling environment. Once the compiling environment is configured,
+please run the make command in the top-level directory of iQIST. After a
+few minutes (depending on the performance of compiling platform), the
+iQIST is ready for you. Note that all of the executable programs will be
+copied into the iqist/bin directory automatically. Please add this
+directory into the system environment variable PATH.
+
 \section{Build impurity solvers}
 \section{Build auxiliary tools}
 \section{Build documents}
