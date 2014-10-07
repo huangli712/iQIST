@@ -26,12 +26,12 @@
 
 default: all
 
-all: fast_build
+all: fast
 
-fast_build:
+fast:
 	xelatex ug
 
-full_build:
+full:
 	xelatex ug
 	bibtex ug
 	xelatex ug
