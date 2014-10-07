@@ -21,6 +21,12 @@
 
 % font
 \usepackage{fontspec,xunicode}
+
+%-------------------------------------------------------------------------
+% font style
+%-------------------------------------------------------------------------
+
+% need fontspec package support
 \setmainfont{Times}
 \setmonofont{Lucida Sans Typewriter}
 
@@ -28,7 +34,7 @@
 % page format
 %-------------------------------------------------------------------------
 
-% header and footer
+% define header and footer
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\chaptermark}[1]{\markboth{\emph{#1}}{}}
@@ -54,7 +60,7 @@
     \if@twocolumn\hbox{}\newpage\fi\fi\fi}
 \makeatother \clearpage{\pagestyle{plain}\cleardoublepage}
 
-%% line spacing
+%% define line spacing
 \renewcommand{\baselinestretch}{1.5}
 \renewcommand{\arraystretch}{1.5}
 
