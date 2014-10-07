@@ -1,5 +1,10 @@
 \chapter{INSTALLATION}
 \section{Obtain}
+
+The $i$QIST is an open source free software package. We release it under the General Public Licence 3.0 (GPL). The readers who are interested in it can write a letter to the authors to request an electronic copy of the newest version of $i$QIST, or they can download it directly from the public code repository (see http://bitbucket.org/huangli712/iqist). 
+
+The downloaded $i$QIST software package is likely a compressed file with zip or tar.gz suffix. The users should uncompress it at first. And then go to the iqist/src/build directory, edit the make.sys file to configure the compiling environment. The users must setup the Fortran compiler, MPI compiler, BLAS and LAPACK libraries manually. The components in $i$QIST can be successfully compiled using a recent Intel Fortran compiler. Most of the MPI implementations, such as MPICH, MVAPICH, OpenMPI and Intel MPI are compatible with $i$QIST. As for the BLAS implementation, we strongly recommend OpenBLAS. For the LAPACK, the Intel Math Kernel Library is a good candidate. Of course, it is also possible to use the linear algebra library provided by the operating system, for example, the vecLib Framework in the Mac OS X. Some post-processing scripts contained in the \texttt{HIBISCUS} component are developed using the Python language. In order to execute these scripts or use the Python language binding for $i$QIST, the users should install Python 2.x.  Furthermore, the numpy, scipy, and f2py packages are also necessary. Once the compiling environment is configured, run the make command in the top-level directory of $i$QIST. After a few minutes (depending on the performance of compiling platform), the $i$QIST is ready for use. Note that all of the executable programs will be copied into the iqist/bin directory automatically. Please add this directory into the system environment variable PATH.
+
 \section{Uncompress}
 \section{Direcrory structures}
 \section{Compiling environment}
