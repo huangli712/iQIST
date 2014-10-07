@@ -159,7 +159,7 @@ p_{\Gamma} = \langle |\Gamma \rangle \langle \Gamma| \rangle,
 \end{equation}
 where $\Gamma$ is the atomic state.
 
-\subsection{Two-particle measurements and DMFT + Parquet formalism}
+\subsection{Two-particle measurements and DMFT + Parquet formalism\label{subsec:parquet}}
 
 \begin{figure}[tp]
 \centering
@@ -188,7 +188,7 @@ With the irreducible vertex functions at hand, we can study the various instabil
 \end{equation}
 where the leading eigenvalue (LEV) $\lambda$ and the leading eigenvector $\phi(P)$ reveal the pairing information. Since $\Gamma^{s/t}_{pp}(P,P',Q)\chi^{pp}_{0}(P',Q)$ is the effective pairing interaction, as temperature approaches the transition temperature $T_{c}$, $\lambda \to 1$, and the leading eigenvector $\phi(P)$ reveals the momentum-dependence of the gap function~\cite{PhysRevB.88.041103,Meng14a,Meng14b}.
 
-\section{Implementations and optimizations}
+\section{Implementations and optimizations\label{sec:implement}}
 \subsection{Development platform}
 The main part of the $i$QIST software package was developed with the modern Fortran 90 language. We extensively used advanced language features in the Fortran 2003/2008 standard such as an object oriented programming style (polymorphic, inheritance, and module, etc.) to improve the readability and re-usability of the source codes. The compiler is fixed to the Intel Fortran compiler. We can not guarantee that the $i$QIST can be compiled successfully with other Fortran compilers. Some auxiliary scripts, pre- and post-processing tools are written using the Python language and Bash shell scripts. These scripts and tools act like a glue. They are very flexible and very easily extended or adapted to deal with various problems. In order to avoid incompatibilities, our Python codes only run on the Python 2.x runtime environment.
 
@@ -266,7 +266,7 @@ x(\tau + \beta), & \tau < 0. \\
 \end{equation}
 Unfortunately, there is no explicit expression for $G(i\omega_n)$ [like Eq.~(\ref{eq:gw_new})] in the Chebyshev polynomial representation.
 
-\subsection{Improved estimator for the self-energy function}
+\subsection{Improved estimator for the self-energy function\label{subsec:self}}
 Recently, Hafermann \emph{et al.} proposed efficient measurement procedures for the self-energy and vertex functions within the CT-HYB algorithm~\cite{PhysRevB.85.205106,PhysRevB.89.235128}. In their method, some higher-order correlation functions (related to the quantities being sought through the equation of motion) are measured. For the case of interactions of density-density type, the segment algorithm is available~\cite{PhysRevLett.97.076405}. Thus, the additional correlators can be obtained essentially at no additional computational cost. When the calculations are completed, the required self-energy function and vertex function can be evaluated analytically.
 
 The improved estimator for the self-energy function can be expressed in the following form:
@@ -301,7 +301,7 @@ The Mersenne Twister is a bit slow by today's standards. So in 2006, a variant o
 
 The $i$QIST software package offers other excellent generators as well, such as WELL (Well Equidistributed Long-period Linear)~\cite{Panneton:2006} and Marsaglia's XORSHIFT generators~\cite{Marsaglia:2003}, etc. The XORSHIFT generator is the fastest.
 
-\subsection{Subspaces and symmetry}
+\subsection{Subspaces and symmetry\label{subsec:subspace}}
 For a local Hamiltonian $H_{\text{loc}}$ with general interactions, the evaluation of local trace is heavily time-consuming,
 \begin{equation}
 \label{equ:tr1}
