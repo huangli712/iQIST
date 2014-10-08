@@ -1,22 +1,84 @@
 \chapter{{\iqist} IN ACTION}
 \section{Basic applications}
 \subsection{Hello {\iqist}!}
+The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
+\begin{verbatim}
+    import mpi4py
+    import pyiqist as iqist
+    ...
+    iqist.api.init_ctqmc(myid = 0, num_procs = 10)
+    iqist.api.exec_ctqmc(iter = 20)
+    iqist.api.stop_ctqmc()
+\end{verbatim}
+When the computations are finished, one can also collect and analyze the calculated results with Python scripts. Using these APIs, the users enjoy more freedom to design and implement very complex computational procedures and to adapt them to their own requirements.
+
 \subsection{Mott metal-insulator transition}
+The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
+\begin{verbatim}
+    import mpi4py
+    import pyiqist as iqist
+    ...
+    iqist.api.init_ctqmc(myid = 0, num_procs = 10)
+    iqist.api.exec_ctqmc(iter = 20)
+    iqist.api.stop_ctqmc()
+\end{verbatim}
+When the computations are finished, one can also collect and analyze the calculated results with Python scripts. Using these APIs, the users enjoy more freedom to design and implement very complex computational procedures and to adapt them to their own requirements.
+
 \section{Advanced applications I: Complex systems}
 \subsection{General Coulomb interaction}
+The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
+\begin{verbatim}
+    import mpi4py
+    import pyiqist as iqist
+    ...
+    iqist.api.init_ctqmc(myid = 0, num_procs = 10)
+    iqist.api.exec_ctqmc(iter = 20)
+    iqist.api.stop_ctqmc()
+\end{verbatim}
+When the computations are finished, one can also collect and analyze the calculated results with Python scripts. Using these APIs, the users enjoy more freedom to design and implement very complex computational procedures and to adapt them to their own requirements.
 \subsection{Spin-orbital coupling}
 \subsection{Crystal field splitting}
 \subsection{Retarded interaction and dynamical screening effect}
 \section{Advanced applications II: Accurate measurement of physical observables}
 \subsection{One-shot and self-consistent calculations}
+The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
+\begin{verbatim}
+    import mpi4py
+    import pyiqist as iqist
+    ...
+    iqist.api.init_ctqmc(myid = 0, num_procs = 10)
+    iqist.api.exec_ctqmc(iter = 20)
+    iqist.api.stop_ctqmc()
+\end{verbatim}
+When the computations are finished, one can also collect and analyze the calculated results with Python scripts. Using these APIs, the users enjoy more freedom to design and implement very complex computational procedures and to adapt them to their own requirements.
 \subsection{Data binning mode}
 \subsection{Imaginary-time Green's function}
 \subsection{Matsubara Green's function and self-energy function}
 \subsection{Spin-spin correlation function and orbital-orbital correlation function}
 \subsection{Two-particle Green's function and vertex function}
 \section{Advanced applications III: post-processing procedures}
+The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
+\begin{verbatim}
+    import mpi4py
+    import pyiqist as iqist
+    ...
+    iqist.api.init_ctqmc(myid = 0, num_procs = 10)
+    iqist.api.exec_ctqmc(iter = 20)
+    iqist.api.stop_ctqmc()
+\end{verbatim}
+When the computations are finished, one can also collect and analyze the calculated results with Python scripts. Using these APIs, the users enjoy more freedom to design and implement very complex computational procedures and to adapt them to their own requirements.
 \subsection{Analytical continuation for imaginary-time Green's function}
 \subsection{Analytical continuation for Matsubara self-energy function}
 \section{Practical exercises}
 \subsection{Orbital-selective Mott transition in two-band Hubbard model}
 \subsection{Orbital Kondo and spin Kondo effects in three-band Anderson impurity model}
+The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
+\begin{verbatim}
+    import mpi4py
+    import pyiqist as iqist
+    ...
+    iqist.api.init_ctqmc(myid = 0, num_procs = 10)
+    iqist.api.exec_ctqmc(iter = 20)
+    iqist.api.stop_ctqmc()
+\end{verbatim}
+When the computations are finished, one can also collect and analyze the calculated results with Python scripts. Using these APIs, the users enjoy more freedom to design and implement very complex computational procedures and to adapt them to their own requirements.
