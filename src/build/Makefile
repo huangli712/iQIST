@@ -261,7 +261,7 @@ clean-api:
 
 # tagets for doc: doc
 doc:
-	cd ../../doc/guide/; pwd; make
+	cd ../../doc/manual/; pwd; make full
 
 clean-doc:
-	cd ../../doc/guide/; pwd; make clean
+	cd ../../doc/manual/; pwd; make clean

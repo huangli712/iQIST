@@ -1,0 +1,51 @@
+\documentclass[11pt]{book}
+
+% global setup
+\include{chapter/global}
+
+\begin{document}
+
+% cover
+\include{chapter/title}
+
+\frontmatter
+
+% outlines
+\tableofcontents
+
+% figures
+\listoffigures
+
+% tables
+\listoftables
+
+% preface contents
+\include{chapter/ack}
+\include{chapter/new}
+\include{chapter/usage}
+
+\mainmatter
+\pagestyle{fancy}
+
+% main contents
+\include{chapter/chap1}
+\include{chapter/chap2}
+\include{chapter/chap3}
+\include{chapter/chap4}
+\include{chapter/chap5}
+\include{chapter/chap6}
+\include{chapter/chap7}
+\include{chapter/chap8}
+\include{chapter/chap9}
+\include{chapter/chap10}
+
+\backmatter
+\pagestyle{plain}
+
+% appendix
+\include{chapter/appendix}
+
+% reference
+\include{chapter/reference}
+
+\end{document}

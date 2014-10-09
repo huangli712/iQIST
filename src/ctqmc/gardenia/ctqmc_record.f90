@@ -826,7 +826,7 @@
 
 ! local parameters
 ! number of internal loop
-     integer, parameter :: num_try = 2
+     integer, parameter :: num_try = 16
 
 ! local variables
 ! loop index over segments
@@ -948,7 +948,7 @@
      nfaux = nffrq + nbfrq - 1
 
 ! allocate memory for g2aux and then initialize it
-     allocate( g2aux(norbs, nfaux, nfaux) ); g2aux = czero
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -976,7 +976,7 @@
                      do w2n=1,nfaux
                          cexp2 = cexp2 * dexp2
 
-                         g2aux(flvr, w1n, w2n) = g2aux(flvr, w1n, w2n) + maux * cexp1 * cexp2
+                         g2aux(w2n,w1n,flvr) = g2aux(w2n,w1n,flvr) + maux * cexp1 * cexp2
                      enddo ! over w2n={1,nfaux} loop
                  enddo ! over w1n={1,nfaux} loop
 
@@ -989,21 +989,21 @@
      CTQMC_ORBIT1_LOOP: do f1=1,norbs
          CTQMC_ORBIT2_LOOP: do f2=1,norbs
 
-             CTQMC_FERMI1_LOOP: do w2n=1,nffrq
-                 CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
 
-                     CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
-                         cmeas = g2aux(f1,w1n,w2n) * g2aux(f2,w3n,w4n)
+                         cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
-                             cmeas = cmeas - g2aux(f1,w1n,w4n) * g2aux(f1,w3n,w2n)
+                             cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(f1,f2,w2n,w3n,wbn) = g2_re(f1,f2,w2n,w3n,wbn) +  real(cmeas) / beta
-                         g2_im(f1,f2,w2n,w3n,wbn) = g2_im(f1,f2,w2n,w3n,wbn) + aimag(cmeas) / beta
-                     enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
-                 enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
-             enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
 
          enddo CTQMC_ORBIT2_LOOP ! over f2={1,norbs} loop
      enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
@@ -1078,10 +1078,10 @@
      nfaux = nffrq + nbfrq - 1
 
 ! allocate memory for g2aux and then initialize it
-     allocate( g2aux(norbs, nfaux, nfaux) ); g2aux = czero
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
 
 ! allocate memory for h2aux and then initialize it
-     allocate( h2aux(norbs, nfaux, nfaux) ); h2aux = czero
+     allocate( h2aux(nfaux, nfaux, norbs) ); h2aux = czero
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -1116,8 +1116,8 @@
                      do w2n=1,nfaux
                          cexp2 = cexp2 * dexp2
 
-                         g2aux(flvr, w1n, w2n) = g2aux(flvr, w1n, w2n) + maux * cexp1 * cexp2
-                         h2aux(flvr, w1n, w2n) = h2aux(flvr, w1n, w2n) + maux * cexp1 * cexp2 * oaux
+                         g2aux(w2n,w1n,flvr) = g2aux(w2n,w1n,flvr) + maux * cexp1 * cexp2
+                         h2aux(w2n,w1n,flvr) = h2aux(w2n,w1n,flvr) + maux * cexp1 * cexp2 * oaux
                      enddo ! over w2n={1,nfaux} loop
                  enddo ! over w1n={1,nfaux} loop
 
@@ -1130,30 +1130,29 @@
      CTQMC_ORBIT1_LOOP: do f1=1,norbs
          CTQMC_ORBIT2_LOOP: do f2=1,norbs
 
-             CTQMC_FERMI1_LOOP: do w2n=1,nffrq
-                 CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
 
-                     CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
 
-                         cmeas = g2aux(f1,w1n,w2n) * g2aux(f2,w3n,w4n)
+                         cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
-                             cmeas = cmeas - g2aux(f1,w1n,w4n) * g2aux(f1,w3n,w2n)
+                             cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(f1,f2,w2n,w3n,wbn) = g2_re(f1,f2,w2n,w3n,wbn) +  real(cmeas) / beta
-                         g2_im(f1,f2,w2n,w3n,wbn) = g2_im(f1,f2,w2n,w3n,wbn) + aimag(cmeas) / beta
+                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
 
-                         cmeas = h2aux(f1,w1n,w2n) * g2aux(f2,w3n,w4n)
+                         cmeas = h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
-                             cmeas = cmeas - h2aux(f1,w1n,w4n) * g2aux(f1,w3n,w2n)
+                             cmeas = cmeas - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         h2_re(f1,f2,w2n,w3n,wbn) = h2_re(f1,f2,w2n,w3n,wbn) +  real(cmeas) / beta
-                         h2_im(f1,f2,w2n,w3n,wbn) = h2_im(f1,f2,w2n,w3n,wbn) + aimag(cmeas) / beta
+                         h2_re(w3n,w2n,wbn,f2,f1) = h2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         h2_im(w3n,w2n,wbn,f2,f1) = h2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
-                     enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
-
-                 enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
-             enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
 
          enddo CTQMC_ORBIT2_LOOP ! over f2={1,norbs} loop
      enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
@@ -1523,10 +1522,10 @@
 
 ! external arguments
 ! two-particle green's function, real part
-     real(dp), intent(out) :: g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(out) :: g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! two-particle green's function, imaginary part
-     real(dp), intent(out) :: g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(out) :: g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! initialize g2_re_mpi and g2_im_mpi
      g2_re_mpi = zero
@@ -1571,10 +1570,10 @@
 
 ! external arguments
 ! vertex function, real part
-     real(dp), intent(out) :: h2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(out) :: h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! vertex function, imaginary part
-     real(dp), intent(out) :: h2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(out) :: h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! initialize h2_re_mpi and h2_im_mpi
      h2_re_mpi = zero

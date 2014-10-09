@@ -163,22 +163,22 @@
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(h2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(h2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -537,15 +537,15 @@
 
      do m=1,norbs
          do n=1,norbs
-             g2_re(n,m,:,:,:) = g2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-             g2_im(n,m,:,:,:) = g2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+             g2_re(:,:,:,n,m) = g2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             g2_im(:,:,:,n,m) = g2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
          do n=1,norbs
-             h2_re(n,m,:,:,:) = h2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-             h2_im(n,m,:,:,:) = h2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+             h2_re(:,:,:,n,m) = h2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             h2_im(:,:,:,n,m) = h2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
