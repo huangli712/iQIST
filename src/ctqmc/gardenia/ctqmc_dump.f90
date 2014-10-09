@@ -848,7 +848,7 @@
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
+                         chit = dcmplx( g2_re(j,i,k,m,n), g2_im(j,i,k,m,n) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -884,8 +884,8 @@
 
 !!>>> ctqmc_dump_vrtx: write out the two-particle green's function and
 !!>>> full (reducible) vertex function, the improved estimator was used
-!!>>> to improve the accuarcy
-  subroutine ctqmc_dump_vrtx_old(h2_re, h2_im)
+!!>>> to improve the accuracy
+  subroutine ctqmc_dump_vrtx(h2_re, h2_im)
      use constants, only : dp, czero, mytmp
 
      use control, only : isvrt
@@ -895,7 +895,7 @@
      use control, only : beta
      use context, only : g2_re, g2_im
      use context, only : grnf, frnf
-     use context, only : sig2, rmesh
+     use context, only : sig2
 
      implicit none
 
@@ -950,8 +950,6 @@
              frnf(k,m,m) = grnf(k,m,m) * sig2(k,m,m)
          enddo ! over k={1,mfreq} loop
      enddo ! over m={1,norbs} loop
-     call ctqmc_dump_wssf(rmesh, frnf)
-     STOP
 
 ! open data file: solver.vrtx.dat
      open(mytmp, file='solver.vrtx.dat', form='formatted', status='unknown')
@@ -1001,157 +999,6 @@
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chih
-                         chih = dcmplx( h2_re(i,j,k,n,m), h2_im(i,j,k,n,m) )
-
-! evaluate chit
-                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
-
-! evaluate chi0
-                         chi0 = czero
-                         if ( k == 1 ) chi0 = chi0 + beta * g1 * g3
-                         if ( i == j .and. m == n ) chi0 = chi0 - beta * g1 * g3
-
-! evaluate chii, more accurate than that in ctqmc_dump_twop() subroutine
-                         chii = g1 * chih - fw * chit
-
-! jt: \omega
-! it: \omega'
-! chit: \chi_{tot}(\omega, \omega', \nu)
-! chi0: \chi_{0}(\omega, \omega', \nu)
-! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu)
-                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         if ( it == 9 ) then
-                         write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chih, chii/(g1*g2*g3*g4)
-                         endif
-                     enddo ! over i={1,nffrq} loop
-                 enddo ! over j={1,nffrq} loop
-                 write(mytmp,*) ! write empty lines
-                 write(mytmp,*)
-             enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_vrtx_old
-
-  subroutine ctqmc_dump_vrtx(h2_re, h2_im)
-     use constants, only : dp, czero, mytmp
-
-     use control, only : isvrt
-     use control, only : norbs
-     use control, only : mfreq
-     use control, only : nffrq, nbfrq
-     use control, only : beta
-     use context, only : g2_re, g2_im
-     use context, only : grnf, frnf
-     use context, only : sig2
-
-     implicit none
-
-! external arguments
-! used to calculate vertex function, real part
-     real(dp), intent(in) :: h2_re(norbs,norbs,nffrq,nffrq,nbfrq)
-
-! used to calculate vertex function, imaginary part
-     real(dp), intent(in) :: h2_im(norbs,norbs,nffrq,nffrq,nbfrq)
-
-! local variables
-! loop index for frequencies
-     integer :: i
-     integer :: j
-     integer :: k
-     integer :: p
-     integer :: q
-
-! loop index for orbitals
-     integer :: m
-     integer :: n
-
-! dummy integer variables
-     integer :: it
-     integer :: jt
-
-! dummy complex(dp) variables, used to store the correct green's function
-     complex(dp) :: fw
-     complex(dp) :: g1
-     complex(dp) :: g2
-     complex(dp) :: g3
-     complex(dp) :: g4
-
-! two-particle green's function, full record
-     complex(dp) :: chit
-     complex(dp) :: chih
-
-! two-particle green's function, disconnected part
-     complex(dp) :: chi0
-
-! two-particle green's function, connected part
-     complex(dp) :: chii
-
-! check if we need to dump two-particle green's function and vertex
-! function data to solver.vrtx.dat
-!     if ( isvrt /= 5 ) RETURN
-
-! build frnf at first: F = G \Sigma
-! in principle, F should be measured during the Monte Carlo procedure
-     do m=1,norbs
-         do k=1,mfreq
-             frnf(k,m,m) = grnf(k,m,m) * sig2(k,m,m)
-         enddo ! over k={1,mfreq} loop
-     enddo ! over m={1,norbs} loop
-
-! open data file: solver.vrtx.dat
-     open(mytmp, file='solver.vrtx.dat', form='formatted', status='unknown')
-
-! write it
-     do m=1,norbs
-         do n=1,norbs
-             do k=1,nbfrq
-                 write(mytmp,'(a,i5)') '# flvr1:', m
-                 write(mytmp,'(a,i5)') '# flvr2:', n
-                 write(mytmp,'(a,i5)') '# nbfrq:', k
-                 do j=1,nffrq
-
-! evaluate g2 and g1
-                     if ( j <= nffrq/2 ) then
-                         g2 = dconjg( grnf(nffrq/2-j+1,m,m) )
-                     else
-                         g2 = grnf(j-nffrq/2,m,m)
-                     endif ! back if ( j <= nffrq/2 ) block
-                     p = j + k - 1
-                     if ( p <= nffrq/2 ) then
-                         g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
-                     else
-                         g1 = grnf(p-nffrq/2,m,m)
-                     endif ! back if ( p <= nffrq/2 ) block
-
-! evaluate fw
-                     if ( p <= nffrq/2 ) then
-                         fw = dconjg( frnf(nffrq/2-p+1,m,m) )
-                     else
-                         fw = frnf(p-nffrq/2,m,m)
-                     endif ! back if ( p <= nffrq/2 ) block
-
-                     do i=1,nffrq
-
-! evaluate g3 and g4
-                         if ( i <= nffrq/2 ) then
-                             g3 = dconjg( grnf(nffrq/2-i+1,n,n) )
-                         else
-                             g3 = grnf(i-nffrq/2,n,n)
-                         endif ! back if ( i <= nffrq/2 ) block
-                         q = i + k - 1
-                         if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
-                         else
-                             g4 = grnf(q-nffrq/2,m,m)
-                         endif ! back if ( q <= nffrq/2 ) block
-
-! evaluate chih
                          chih = dcmplx( h2_re(j,i,k,m,n), h2_im(j,i,k,m,n) )
 
 ! evaluate chit
@@ -1173,7 +1020,7 @@
 ! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu)
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
                          if ( it == 9 ) then
-                         write(mytmp,'(2i5,8f16.8)') jt, it, chit, chi0, chih, chii/(g1*g2*g3*g4)
+                         write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chih, chii/(g1*g2*g3*g4)
                          endif
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
