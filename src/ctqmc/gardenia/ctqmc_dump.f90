@@ -767,10 +767,10 @@
 
 ! external arguments
 ! used to calculate two-particle green's function, real part
-     real(dp), intent(in) :: g2_re(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: g2_re(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! used to calculate two-particle green's function, imaginary part
-     real(dp), intent(in) :: g2_im(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: g2_im(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index for frequencies
@@ -842,13 +842,13 @@
                          endif ! back if ( i <= nffrq/2 ) block
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,m,m))
+                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                          else
-                             g4 = grnf(q-nffrq/2,m,m)
+                             g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(m,n,j,i,k), g2_im(m,n,j,i,k) )
+                         chit = dcmplx( g2_re(j,i,k,m,n), g2_im(j,i,k,m,n) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -898,10 +898,10 @@
 
 ! external arguments
 ! used to calculate vertex function, real part
-     real(dp), intent(in) :: h2_re(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: h2_re(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! used to calculate vertex function, imaginary part
-     real(dp), intent(in) :: h2_im(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: h2_im(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index for frequencies
@@ -990,16 +990,16 @@
                          endif ! back if ( i <= nffrq/2 ) block
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,m,m))
+                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                          else
-                             g4 = grnf(q-nffrq/2,m,m)
+                             g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chih
-                         chih = dcmplx( h2_re(m,n,j,i,k), h2_im(m,n,j,i,k) )
+                         chih = dcmplx( h2_re(j,i,k,m,n), h2_im(j,i,k,m,n) )
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(m,n,j,i,k), g2_im(m,n,j,i,k) )
+                         chit = dcmplx( g2_re(j,i,k,m,n), g2_im(j,i,k,m,n) )
 
 ! evaluate chi0
                          chi0 = czero
