@@ -812,7 +812,7 @@
 
 ! write it
      do m=1,norbs
-         do n=1,norbs
+         do n=1,m
              do k=1,nbfrq
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
@@ -848,7 +848,7 @@
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(j,i,k,m,n), g2_im(j,i,k,m,n) )
+                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -873,7 +873,7 @@
                  write(mytmp,*) ! write empty lines
                  write(mytmp,*)
              enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,norbs} loop
+         enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
 ! close data file
@@ -956,7 +956,7 @@
 
 ! write it
      do m=1,norbs
-         do n=1,norbs
+         do n=1,m
              do k=1,nbfrq
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
@@ -999,10 +999,10 @@
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chih
-                         chih = dcmplx( h2_re(j,i,k,m,n), h2_im(j,i,k,m,n) )
+                         chih = dcmplx( h2_re(i,j,k,n,m), h2_im(i,j,k,n,m) )
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(j,i,k,m,n), g2_im(j,i,k,m,n) )
+                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -1027,7 +1027,7 @@
                  write(mytmp,*) ! write empty lines
                  write(mytmp,*)
              enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,norbs} loop
+         enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
 ! close data file

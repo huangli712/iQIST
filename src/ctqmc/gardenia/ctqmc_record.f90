@@ -968,17 +968,17 @@
                  iexp1 = exp(-(nffrq + 1) * czi * pi * taue / beta)
                  iexp2 = exp(+(nffrq + 1) * czi * pi * taus / beta)
 
-                 cexp1 = iexp1
-                 do w1n=1,nfaux
-                     cexp1 = cexp1 * dexp1
+                 cexp2 = iexp2
+                 do w2n=1,nfaux
+                     cexp2 = cexp2 * dexp2
 
-                     cexp2 = iexp2
-                     do w2n=1,nfaux
-                         cexp2 = cexp2 * dexp2
+                     cexp1 = iexp1
+                     do w1n=1,nfaux
+                         cexp1 = cexp1 * dexp1
 
                          g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * cexp1 * cexp2
-                     enddo ! over w2n={1,nfaux} loop
-                 enddo ! over w1n={1,nfaux} loop
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
@@ -987,25 +987,26 @@
 
 ! calculate g2_re and g2_im
      CTQMC_ORBIT1_LOOP: do f1=1,norbs
-         CTQMC_ORBIT2_LOOP: do f2=1,norbs
+         CTQMC_ORBIT2_LOOP: do f2=1,f1
 
-             CTQMC_FERMI1_LOOP: do w2n=1,nffrq
-                 CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
 
-                     CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
+
                          cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
                              cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(w2n,w3n,wbn,f1,f2) = g2_re(w2n,w3n,wbn,f1,f2) +  real(cmeas) / beta
-                         g2_im(w2n,w3n,wbn,f1,f2) = g2_im(w2n,w3n,wbn,f1,f2) + aimag(cmeas) / beta
-                     enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
-                 enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
-             enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
 
-         enddo CTQMC_ORBIT2_LOOP ! over f2={1,norbs} loop
+         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
      enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
 
 ! deallocate memory
@@ -1109,18 +1110,18 @@
                  iexp1 = exp(-(nffrq + 1) * czi * pi * taue / beta)
                  iexp2 = exp(+(nffrq + 1) * czi * pi * taus / beta)
 
-                 cexp1 = iexp1
-                 do w1n=1,nfaux
-                     cexp1 = cexp1 * dexp1
+                 cexp2 = iexp2
+                 do w2n=1,nfaux
+                     cexp2 = cexp2 * dexp2
 
-                     cexp2 = iexp2
-                     do w2n=1,nfaux
-                         cexp2 = cexp2 * dexp2
+                     cexp1 = iexp1
+                     do w1n=1,nfaux
+                         cexp1 = cexp1 * dexp1
 
                          g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * cexp1 * cexp2
                          h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + maux * cexp1 * cexp2 * oaux
-                     enddo ! over w2n={1,nfaux} loop
-                 enddo ! over w1n={1,nfaux} loop
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
 
              enddo ! over is={1,rank(flvr)} loop
          enddo ! over ie={1,rank(flvr)} loop
@@ -1129,34 +1130,33 @@
 
 ! calculate g2_re and g2_im, h2_re and h2_im
      CTQMC_ORBIT1_LOOP: do f1=1,norbs
-         CTQMC_ORBIT2_LOOP: do f2=1,norbs
+         CTQMC_ORBIT2_LOOP: do f2=1,f1
 
-             CTQMC_FERMI1_LOOP: do w2n=1,nffrq
-                 CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
 
-                     CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
 
                          cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
                              cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(w2n,w3n,wbn,f1,f2) = g2_re(w2n,w3n,wbn,f1,f2) +  real(cmeas) / beta
-                         g2_im(w2n,w3n,wbn,f1,f2) = g2_im(w2n,w3n,wbn,f1,f2) + aimag(cmeas) / beta
+                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
 
                          cmeas = h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
                              cmeas = cmeas - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         h2_re(w2n,w3n,wbn,f1,f2) = h2_re(w2n,w3n,wbn,f1,f2) +  real(cmeas) / beta
-                         h2_im(w2n,w3n,wbn,f1,f2) = h2_im(w2n,w3n,wbn,f1,f2) + aimag(cmeas) / beta
+                         h2_re(w3n,w2n,wbn,f2,f1) = h2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         h2_im(w3n,w2n,wbn,f2,f1) = h2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
-                     enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
 
-                 enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
-             enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
-
-         enddo CTQMC_ORBIT2_LOOP ! over f2={1,norbs} loop
+         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
      enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
 
 ! deallocate memory
