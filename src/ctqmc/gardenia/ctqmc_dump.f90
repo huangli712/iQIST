@@ -753,7 +753,7 @@
   end subroutine ctqmc_dump_ochi
 
 !!>>> ctqmc_dump_twop: write out the two-particle green's function and
-!!>>> vertex function
+!!>>> full (reducible) vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
      use constants, only : dp, czero, mytmp
 
@@ -848,7 +848,7 @@
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(j,i,k,m,n), g2_im(j,i,k,m,n) )
+                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -880,8 +880,9 @@
      return
   end subroutine ctqmc_dump_twop
 
-!!>>> ctqmc_dump_vrtx: write out the vertex function and two-particle
-!!>>> green's function
+!!>>> ctqmc_dump_vrtx: write out the two-particle green's function and
+!!>>> full (reducible) vertex function, the improved estimator was used
+!!>>> to improve the accuarcy
   subroutine ctqmc_dump_vrtx(h2_re, h2_im)
      use constants, only : dp, czero, mytmp
 
@@ -996,10 +997,10 @@
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chih
-                         chih = dcmplx( h2_re(j,i,k,m,n), h2_im(j,i,k,m,n) )
+                         chih = dcmplx( h2_re(i,j,k,n,m), h2_im(i,j,k,n,m) )
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(j,i,k,m,n), g2_im(j,i,k,m,n) )
+                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
 
 ! evaluate chi0
                          chi0 = czero

@@ -1014,7 +1014,8 @@
      return
   end subroutine ctqmc_record_twop
 
-!!>>> ctqmc_record_vrtx: record the fake vertex function
+!!>>> ctqmc_record_vrtx: record the two-particle green's function
+!!>>> improved estimator is used to improve the accuracy
   subroutine ctqmc_record_vrtx()
      use constants, only : dp, zero, one, two, half, pi, czi, czero
 
