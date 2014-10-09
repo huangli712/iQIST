@@ -817,7 +817,7 @@ if __name__ == '__main__':
         'U'     : [4.00  , "Onsite Coulomb interaction"             ],
         'J'     : [0.00  , "Onsite Hund exchange interaction"       ],
         'mune'  : [2.00  , "Chemical potential"                     ],
-        'beta'  : [2.00  , "Inverse temperature"                    ],
+        'beta'  : [10.0  , "Inverse temperature"                    ],
         'norbs' : [2     , "Number of orbitals"                     ],
         'nband' : [1     , "Number of bands"                        ],
         'nspin' : [2     , "Number of spin projections"             ],

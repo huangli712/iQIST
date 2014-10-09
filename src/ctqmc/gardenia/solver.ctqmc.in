@@ -1,8 +1,8 @@
 isbin = 1
 isort = 5
 isvrt = 16
-nffrq = 12
+nffrq = 16
 nbfrq = 1
 U = 4.0
-beta = 10.0
+beta = 2.0
 niter = 1
