@@ -929,17 +929,13 @@
      real(dp) :: taus
      real(dp) :: taue
 
-! dummy complex(dp) variables, used to calculate the exponential function
+! dummy complex(dp) variables, used to calculate the g2_re and g2_im
      complex(dp) :: cmeas
-     complex(dp) :: dexp1
-     complex(dp) :: dexp2
-     complex(dp) :: iexp1
-     complex(dp) :: iexp2
-     complex(dp) :: cexp1
-     complex(dp) :: cexp2
 
 ! dummy complex(dp) arrays, used to store the intermediate results
      complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: caux1(:)
+     complex(dp), allocatable :: caux2(:)
 
 ! check whether there is conflict
      call s_assert( btest(isvrt, 3) .and. .not. btest(isvrt, 4) )
@@ -949,6 +945,10 @@
 
 ! allocate memory for g2aux and then initialize it
      allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+
+! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux) ); caux1 = czero
+     allocate( caux2(nfaux) ); caux2 = czero
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -963,20 +963,15 @@
                  maux = mmat(ie, is, flvr)
 
 ! calculate g2aux
-                 dexp1 = exp(+    two     * czi * pi * taue / beta)
-                 dexp2 = exp(-    two     * czi * pi * taus / beta)
-                 iexp1 = exp(-(nffrq + 1) * czi * pi * taue / beta)
-                 iexp2 = exp(+(nffrq + 1) * czi * pi * taus / beta)
-
-                 cexp2 = iexp2
+                 caux1 = exp(+two * czi * pi * taue / beta)
+                 caux2 = exp(-two * czi * pi * taus / beta)
+                 call s_cumprod_z(nfaux, caux1, caux1)
+                 call s_cumprod_z(nfaux, caux2, caux2)
+                 caux1 = caux1 * exp(-(nffrq + 1) * czi * pi * taue / beta)
+                 caux2 = caux2 * exp(+(nffrq + 1) * czi * pi * taus / beta)
                  do w2n=1,nfaux
-                     cexp2 = cexp2 * dexp2
-
-                     cexp1 = iexp1
                      do w1n=1,nfaux
-                         cexp1 = cexp1 * dexp1
-
-                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * cexp1 * cexp2
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
                      enddo ! over w1n={1,nfaux} loop
                  enddo ! over w2n={1,nfaux} loop
 
@@ -1011,6 +1006,8 @@
 
 ! deallocate memory
      deallocate( g2aux )
+     deallocate( caux1 )
+     deallocate( caux2 )
 
      return
   end subroutine ctqmc_record_twop
@@ -1060,18 +1057,14 @@
      real(dp) :: occu
      real(dp) :: oaux
 
-! dummy complex(dp) variables, used to calculate the exponential function
+! dummy complex(dp) variables, used to calculate the h2_re and h2_im
      complex(dp) :: cmeas
-     complex(dp) :: dexp1
-     complex(dp) :: dexp2
-     complex(dp) :: iexp1
-     complex(dp) :: iexp2
-     complex(dp) :: cexp1
-     complex(dp) :: cexp2
 
 ! dummy complex(dp) arrays, used to store the intermediate results
      complex(dp), allocatable :: g2aux(:,:,:)
      complex(dp), allocatable :: h2aux(:,:,:)
+     complex(dp), allocatable :: caux1(:)
+     complex(dp), allocatable :: caux2(:)
 
 ! check whether there is conflict
      call s_assert( btest(isvrt, 4) .and. .not. btest(isvrt, 3) )
@@ -1084,6 +1077,10 @@
 
 ! allocate memory for h2aux and then initialize it
      allocate( h2aux(nfaux, nfaux, norbs) ); h2aux = czero
+
+! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux) ); caux1 = czero
+     allocate( caux2(nfaux) ); caux2 = czero
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -1105,21 +1102,16 @@
                  maux = mmat(ie, is, flvr)
 
 ! calculate g2aux and h2aux
-                 dexp1 = exp(+    two     * czi * pi * taue / beta)
-                 dexp2 = exp(-    two     * czi * pi * taus / beta)
-                 iexp1 = exp(-(nffrq + 1) * czi * pi * taue / beta)
-                 iexp2 = exp(+(nffrq + 1) * czi * pi * taus / beta)
-
-                 cexp2 = iexp2
+                 caux1 = exp(+two * czi * pi * taue / beta)
+                 caux2 = exp(-two * czi * pi * taus / beta)
+                 call s_cumprod_z(nfaux, caux1, caux1)
+                 call s_cumprod_z(nfaux, caux2, caux2)
+                 caux1 = caux1 * exp(-(nffrq + 1) * czi * pi * taue / beta)
+                 caux2 = caux2 * exp(+(nffrq + 1) * czi * pi * taus / beta)
                  do w2n=1,nfaux
-                     cexp2 = cexp2 * dexp2
-
-                     cexp1 = iexp1
                      do w1n=1,nfaux
-                         cexp1 = cexp1 * dexp1
-
-                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * cexp1 * cexp2
-                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + maux * cexp1 * cexp2 * oaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
+                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n) * oaux
                      enddo ! over w1n={1,nfaux} loop
                  enddo ! over w2n={1,nfaux} loop
 
@@ -1162,6 +1154,8 @@
 ! deallocate memory
      deallocate( g2aux )
      deallocate( h2aux )
+     deallocate( caux1 )
+     deallocate( caux2 )
 
      return
   end subroutine ctqmc_record_vrtx
