@@ -5,7 +5,7 @@
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
 !!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
-!!! version : v2014.08.10T                                               !
+!!! version : v2014.10.10T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on general matrix formalism  !
 !!!           any question, please contact with huangli712@gmail.com     !
@@ -288,7 +288,10 @@
 
 # endif  /* API */
 
-!>>> initialize the ctqmc quantum impurity solver
+!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
+# if !defined (F2PY)
+
+!! fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
      use api
      use control
@@ -366,7 +369,53 @@
      return
   end subroutine cat_init_ctqmc
 
-!>>> execute the ctqmc quantum impurity solver
+# else   /* F2PY */
+
+!! python version
+  subroutine cat_init_ctqmc(my_id, num_procs)
+     use control, only : nprocs, myid, master
+
+     implicit none
+
+! external arguments
+! id for current process
+     integer, intent(in) :: my_id
+
+! number of processors
+     integer, intent(in) :: num_procs
+
+! initialize mpi envirnoment
+     myid = my_id
+     nprocs = num_procs
+
+! print the running header for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_header()
+     endif ! back if ( myid == master ) block
+
+! setup the important parameters for continuous time quantum Monte Carlo
+! quantum impurity solver and dynamical mean field theory self-consistent
+! engine
+     call ctqmc_config()
+
+! print out runtime parameters in summary, only for check
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_summary()
+     endif ! back if ( myid == master ) block
+
+! allocate memory and initialize
+     call ctqmc_setup_array()
+
+! prepare initial hybridization function, init self-consistent iteration
+     call ctqmc_selfer_init()
+
+     return
+  end subroutine cat_init_ctqmc
+
+# endif  /* F2PY */
+
+!!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
      implicit none
 
@@ -381,7 +430,7 @@
      return
   end subroutine cat_exec_ctqmc
 
-!>>> stop the ctqmc quantum impurity solver
+!!>>> cat_stop_ctqmc: stop the ctqmc quantum impurity solver
   subroutine cat_stop_ctqmc()
      use control, only: myid, master
 
@@ -399,7 +448,7 @@
      return
   end subroutine cat_stop_ctqmc
 
-!>>> setup the hybridization function
+!!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
      use constants, only : dp
      use control, only: mfreq, norbs
@@ -425,7 +474,7 @@
      return
   end subroutine cat_set_hybf
 
-!>>> setup the symmetry vector
+!!>>> cat_set_symm: setup the symmetry vector
   subroutine cat_set_symm(size_t, symm_t)
      use context, only : symm
 
@@ -449,7 +498,7 @@
      return
   end subroutine cat_set_symm
 
-!>>> setup the impurity level
+!!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
      use constants, only : dp
      use context, only : eimp
@@ -474,7 +523,7 @@
      return
   end subroutine cat_set_eimp
 
-!>>> extract the impurity green's function
+!!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
      use control, only : mfreq, norbs
@@ -500,7 +549,7 @@
      return
   end subroutine cat_get_grnf
 
-!>>> extract the self-energy function
+!!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
      use constants, only : dp
      use control, only : mfreq, norbs
