@@ -38,7 +38,7 @@
 
 !!>>> s_spl_deriv1: evaluate the 1-order derivates of yval
   subroutine s_spl_deriv1(ydim, xval, yval, d1y)
-     use constants, only : dp, zero, one, two, half
+     use constants, only : dp
 
      implicit none
 
@@ -54,6 +54,23 @@
 
 ! 1-order derivates
      real(dp), intent(out) :: d1y(ydim)
+
+! local variables
+! loop index
+     integer :: i
+
+! compute derivation using two-point formula
+     do i=2,ydim-1
+         d1y(i) = ( yval(i+1) - yval(i-1) ) / ( xval(i+1) - xval(i-1) )
+     enddo ! over i={2,ydim-1} loop
+
+! compute first and last derivation using linear extrapolation
+     d1y(1) = d1y(2) + ( d1y(3) - d1y(2) ) / &
+                     ( xval(3) - xval(2) ) * &
+                     ( xval(1) - xval(2) )
+     d1y(ydim) = d1y(ydim-1) + ( d1y(ydim-1) - d1y(ydim-2) ) / &
+                             ( xval(ydim-1) - xval(ydim-2) ) * &
+                             ( xval(ydim-0) - xval(ydim-1) )
 
      return
   end subroutine s_spl_deriv1
