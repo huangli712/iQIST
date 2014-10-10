@@ -1,8 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
-!!! program : s_spl_splder
-!!!           s_spl_splint
-!!!           s_spl_spldif
+!!! program : s_spl_deriv1
+!!!           s_spl_deriv2
+!!!           s_spl_funct
 !!! source  : s_spline.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -19,25 +19,32 @@
 !! Introduction
 !! ============
 !!
-!! 1. calculate 2-order derivates for a given function
+!! 1. calculate 1-order derivates for a given function
 !! ---------------------------------------------------
 !!
-!! subroutine s_spl_splder(...)
+!! subroutine s_spl_deriv1(...)
 !!
-!! 2. evaluate function value at a given point
+!! 2. calculate 2-order derivates for a given function
+!! ---------------------------------------------------
+!!
+!! subroutine s_spl_deriv2(...)
+!!
+!! 3. evaluate function value at a given point
 !! -------------------------------------------
 !!
-!! function   s_spl_splint(...)
-!!
-!! 3. calculate 1-order derivates for a given function
-!! ---------------------------------------------------
-!!
-!! subroutine s_spl_spldif(...)
+!! function   s_spl_funct(...)
 !!
 !!
 
-!!>>> s_spl_splder: evaluate the 2-order derivates of yval
-  subroutine s_spl_splder(ydim, xval, yval, startu, startd, d2y)
+!!>>> s_spl_deriv1: evaluate the 1-order derivates of yval
+  subroutine s_spl_deriv1(ydim, xval, yval, d1y)
+     use constants, only : dp, zero, one, two, half
+
+     return
+  end subroutine s_spl_deriv1
+
+!!>>> s_spl_deriv2: evaluate the 2-order derivates of yval
+  subroutine s_spl_deriv2(ydim, xval, yval, startu, startd, d2y)
      use constants, only : dp, zero, one, two, half
 
      implicit none
@@ -112,10 +119,10 @@
      enddo ! over k={ydim-1,1} loop
 
      return
-  end subroutine s_spl_splder
+  end subroutine s_spl_deriv2
 
-!!>>> s_spl_splint: evaluate the spline value at x point
-  function s_spl_splint(xdim, xval, yval, d2y, x) result(val)
+!!>>> s_spl_funct: evaluate the spline value at x point
+  function s_spl_funct(xdim, xval, yval, d2y, x) result(val)
      use constants, only : dp
 
      implicit none
@@ -176,11 +183,4 @@
                ( h*h ) / 6.0_dp
 
      return
-  end function s_spl_splint
-
-!!>>> s_spl_spldif: evaluate the 1-order derivates of yval
-  subroutine s_spl_spldif(ydim, xval, yval, d1y)
-     use constants, only : dp, zero, one, two, half
-
-     return
-  end subroutine s_spldif
+  end function s_spl_funct
