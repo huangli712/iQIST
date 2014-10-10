@@ -232,6 +232,56 @@
      return
   end subroutine s_qscorer
 
+!!>>> s_combination: calculate combination algebra 
+  subroutine atomic_make_combination(ntiny, nlarg, value)
+     use constants, only : dp, one
+
+     implicit none
+  
+! external variables
+! the small number
+     integer, intent(in)  :: ntiny
+
+! the large number
+     integer, intent(in)  :: nlarg
+ 
+! result value of the combination algebra
+     integer, intent(out) :: value
+
+! local variables
+! loop index
+     integer  :: i
+
+! auxiliary integer variable
+     integer  :: nlow
+
+! numberator of the combination algebra
+     real(dp) :: numer
+
+! denominator of the combination algebra
+     real(dp) :: denom
+ 
+! find the minimum number 
+     nlow = min(ntiny, nlarg-ntiny)
+  
+! numerator in combination algebra
+     numer = one
+     do i=nlarg-nlow+1,nlarg
+        numer = numer * dble(i)
+     enddo ! over i={nlarg-nlow+1,nlarg} loop
+  
+! denominator in combination algebra
+     denom = one
+     do i=1,nlow
+        denom = denom * dble(i)
+     enddo ! over i={1,nlow} loop
+
+! result value
+     value = nint(numer / denom)
+
+     return
+  end subroutine s_combination
+
 !!========================================================================
 !!>>> string manipulation                                              <<<
 !!========================================================================
