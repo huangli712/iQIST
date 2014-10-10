@@ -560,3 +560,11 @@
 
      return
   end subroutine s_time_analyzer
+
+  program test
+
+     integer :: A
+
+     call s_combination(2, 4, A)
+     print *, A
+  end program test
