@@ -2685,11 +2685,11 @@
 ! specially treatment for the last time-evolution operator
          indx = sectors(string(1,i))%istart
          tmp_trb = tmp_trb * expt_t_loc(indx) * min_dim(i)
-         if ( ptmp * abs(tmp_trb/matrix_ptrace) < epst ) then
-             is_string(i,1) = .false.
-             nalive_sect = nalive_sect - 1
-             cycle
-         endif
+!>>>         if ( ptmp * abs(tmp_trb/matrix_ptrace) < epst ) then
+!>>>             is_string(i,1) = .false.
+!>>>             nalive_sect = nalive_sect - 1
+!>>>             cycle
+!>>>         endif
          trace_bound(nalive_sect) = tmp_trb
          orig_sect(nalive_sect) = i
      enddo
