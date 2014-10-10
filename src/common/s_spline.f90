@@ -29,6 +29,11 @@
 !!
 !! function   s_spl_splint(...)
 !!
+!! 3. calculate 1-order derivates for a given function
+!! ---------------------------------------------------
+!!
+!! subroutine s_spl_spldif(...)
+!!
 !!
 
 !!>>> s_spl_splder: evaluate the 2-order derivates of yval
@@ -172,3 +177,10 @@
 
      return
   end function s_spl_splint
+
+!!>>> s_spl_spldif: evaluate the 1-order derivates of yval
+  subroutine s_spl_spldif(ydim, xval, yval, d1y)
+     use constants, only : dp, zero, one, two, half
+
+     return
+  end subroutine s_spldif
