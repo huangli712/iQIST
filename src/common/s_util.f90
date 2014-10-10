@@ -4,6 +4,7 @@
 !!!           s_sorter
 !!!           s_qsorter
 !!!           s_qscorer
+!!!           s_combination
 !!!           s_str_upcase
 !!!           s_str_lowcase
 !!!           s_str_count
@@ -16,6 +17,7 @@
 !!! history : 07/10/2014 by li huang
 !!!           07/14/2014 by li huang
 !!!           08/21/2014 by li huang
+!!!           10/10/2014 by li huang
 !!! purpose : these subroutines are used to provide some useful facilities
 !!!           including string manipulation, date time information, etc.
 !!! status  : unstable
@@ -42,7 +44,12 @@
 !! Note: s_sorter() implements the bubble algorithm, and s_qsorter() implement
 !! the quick sort algorithm. s_qscorer() is called by s_qsorter() internally.
 !!
-!! 3. string manipulation
+!! 3. combination
+!! --------------
+!!
+!! subroutine s_combination(...)
+!!
+!! 4. string manipulation
 !! ----------------------
 !!
 !! subroutine s_str_upcase(...)
@@ -50,7 +57,7 @@
 !! subroutine s_str_count(...)
 !! subroutine s_str_compress(...)
 !!
-!! 4. date time manipulation
+!! 5. date time manipulation
 !! -------------------------
 !!
 !! subroutine s_time_builder(...)
