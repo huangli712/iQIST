@@ -21,12 +21,15 @@
 !!!           api@set_ktau
 !!!           api@get_grnf
 !!!           api@get_sigf
+!!!           api@get_nmat
+!!!           api@get_nnmat
 !!! source  : ctqmc_api.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 01/07/2014 by li huang
 !!!           01/11/2014 by li huang
 !!!           09/23/2014 by li huang
+!!!           10/10/2014 by li huang
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
 !!!           quantum Monte Carlo impurity solver.
@@ -521,13 +524,15 @@
 
      public  :: get_grnf
      public  :: get_sigf
+     public  :: get_nmat
+     public  :: get_nnmat
 
   contains ! encapsulated functionality
 
-!!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
 # if !defined (F2PY)
 
-!! fortran version
+!!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
+!!>>> fortran version
   subroutine init_ctqmc(I_mpi, I_solver)
      implicit none
 
@@ -545,7 +550,8 @@
 
 # else   /* F2PY */
 
-!! python version
+!!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
+!!>>> python version
   subroutine init_ctqmc(my_id, num_procs)
      implicit none
 
@@ -718,5 +724,47 @@
 
      return
   end subroutine get_sigf
+
+!!>>> get_nmat: extract the occupation number
+  subroutine get_nmat(size_t, nmat_t)
+     implicit none
+
+! external arguments
+! size of nmat
+     integer, intent(in)   :: size_t
+
+! occupation number
+     real(dp), intent(out) :: nmat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) nmat_t
+!F2PY depend(size_t) nmat_t
+
+     call cat_get_nmat(size_t, nmat_t)
+
+     return
+  end subroutine get_nmat
+
+!!>>> get_nnmat: extract the double occupation number
+  subroutine get_nnmat(size_t, nnmat_t)
+     implicit none
+
+! external arguments
+! size of nnmat
+     integer, intent(in)   :: size_t
+
+! double occupation number
+     real(dp), intent(out) :: nnmat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) nnmat_t
+!F2PY depend(size_t) nnmat_t
+
+     call cat_get_nnmat(size_t, nnmat_t)
+
+     return
+  end subroutine get_nnmat
 
   end module api
