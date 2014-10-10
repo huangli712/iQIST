@@ -216,3 +216,6 @@
 
      return
   end function s_spl_funct
+
+  program test
+  end program test
