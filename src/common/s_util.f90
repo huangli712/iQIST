@@ -232,8 +232,12 @@
      return
   end subroutine s_qscorer
 
+!!========================================================================
+!!>>> combination algebra                                              <<<
+!!========================================================================
+
 !!>>> s_combination: calculate combination algebra
-  subroutine atomic_make_combination(ntiny, nlarg, value)
+  subroutine s_combination(ntiny, nlarg, value)
      use constants, only : dp, one
 
      implicit none
@@ -560,11 +564,3 @@
 
      return
   end subroutine s_time_analyzer
-
-  program test
-
-     integer :: A
-
-     call s_combination(2, 4, A)
-     print *, A
-  end program test
