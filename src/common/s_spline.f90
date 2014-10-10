@@ -2,11 +2,13 @@
 !!! project : CSSL (Common Service Subroutines Library)
 !!! program : s_spl_splder
 !!!           s_spl_splint
+!!!           s_spl_spldif
 !!! source  : s_spline.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/27/2014 by li huang
+!!!           10/10/2014 by li huang
 !!! purpose : these subroutines are used to do cubic spline interpolation.
 !!! status  : unstable
 !!! comment :
@@ -157,7 +159,7 @@
 !<     if ( khi > xdim ) then
 !<         klo = xdim - 1
 !<         khi = xdim
-!<     endif
+!<     endif ! back if ( khi > xdim ) block
 
 ! calculate splined parameters a and b
      a = ( xval(khi) - x ) / h
