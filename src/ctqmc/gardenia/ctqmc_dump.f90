@@ -858,16 +858,14 @@
 ! evaluate chii, straightforward but less accurate
                          chii = chit - chi0
 
-! jt: \omega
-! it: \omega'
-! chit: \chi_{tot}(\omega, \omega', \nu)
-! chi0: \chi_{0}(\omega, \omega', \nu)
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+! chit: \chi_{tot}(\omega, \omega', \nu), two-particle green's function
+! chi0: \chi_{0}(\omega, \omega', \nu), bubble function
 ! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu)
+! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         if ( it == 9 ) then
                          write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
-                         endif
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -1012,16 +1010,14 @@
 ! evaluate chii, more accurate than that in ctqmc_dump_twop() subroutine
                          chii = g1 * chih - fw * chit
 
-! jt: \omega
-! it: \omega'
-! chit: \chi_{tot}(\omega, \omega', \nu)
-! chi0: \chi_{0}(\omega, \omega', \nu)
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+! chit: \chi_{tot}(\omega, \omega', \nu), two-particle green's function
+! chi0: \chi_{0}(\omega, \omega', \nu), bubble function
 ! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu)
+! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         if ( it == 9 ) then
-                         write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chih, chii/(g1*g2*g3*g4)
-                         endif
+                         write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
