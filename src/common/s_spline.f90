@@ -216,25 +216,3 @@
 
      return
   end function s_spl_funct
-
-  program test
-     use constants, only : dp
-
-     implicit none
-
-     real(dp) :: x(100)
-     real(dp) :: y(100), dy(100)
-
-     integer :: i
-
-     do i=1,100
-         x(i) = real(i)/100.0_dp
-         y(i) = sin(x(i))
-     enddo
-
-     call s_spl_deriv1(100, x, y, dy)
-
-     do i=1,100
-         write(100,'(3f16.6)') x(i), y(i), dy(i)-cos(x(i))
-     enddo
-  end program test
