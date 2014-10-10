@@ -294,6 +294,9 @@
 # endif  /* API */
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
+# if !defined (F2PY)
+
+!! fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
      use api
      use control
@@ -373,6 +376,52 @@
 
      return
   end subroutine cat_init_ctqmc
+
+# else   /* F2PY */
+
+!! python version
+  subroutine cat_init_ctqmc(my_id, num_procs)
+     use control, only : nprocs, myid, master
+
+     implicit none
+
+! external arguments
+! id for current process
+     integer, intent(in) :: my_id
+
+! number of processors
+     integer, intent(in) :: num_procs
+
+! initialize mpi envirnoment
+     myid = my_id
+     nprocs = num_procs
+
+! print the running header for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_header()
+     endif ! back if ( myid == master ) block
+
+! setup the important parameters for continuous time quantum Monte Carlo
+! quantum impurity solver and dynamical mean field theory self-consistent
+! engine
+     call ctqmc_config()
+
+! print out runtime parameters in summary, only for check
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_summary()
+     endif ! back if ( myid == master ) block
+
+! allocate memory and initialize
+     call ctqmc_setup_array()
+
+! prepare initial hybridization function, init self-consistent iteration
+     call ctqmc_selfer_init()
+
+     return
+  end subroutine cat_init_ctqmc
+
+# endif  /* F2PY */
 
 !!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
