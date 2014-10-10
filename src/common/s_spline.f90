@@ -40,6 +40,21 @@
   subroutine s_spl_deriv1(ydim, xval, yval, d1y)
      use constants, only : dp, zero, one, two, half
 
+     implicit none
+
+! external arguments
+! dimension of xval and yval
+     integer, intent(in)   :: ydim
+
+! old knots
+     real(dp), intent(in)  :: xval(ydim)
+
+! old function values to be interpolated
+     real(dp), intent(in)  :: yval(ydim)
+
+! 1-order derivates
+     real(dp), intent(out) :: d1y(ydim)
+
      return
   end subroutine s_spl_deriv1
 
