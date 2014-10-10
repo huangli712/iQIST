@@ -114,7 +114,7 @@
                  swap = list(j)
                  list(j) = list(j+1)
                  list(j+1) = swap
-             endif exchange
+             endif exchange ! back if ( list(j) > list(j+1) ) block
          enddo sort_loop2 ! over j={1,i-1} loop
      enddo sort_loop1 ! over i={nsize,1,-1} loop
 
