@@ -194,7 +194,7 @@
      implicit none
 
 ! histogram for perturbation expansion series
-     integer,  public, save, allocatable :: hist(:)
+     real(dp), public, save, allocatable :: hist(:)
 
 ! auxiliary physical observables
 ! paux(1) : total energy, Etot
@@ -492,7 +492,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     hist  = 0
+     hist  = zero
 
      paux  = zero
      prob  = zero
