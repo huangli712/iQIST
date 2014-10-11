@@ -753,7 +753,7 @@
   end subroutine ctqmc_dump_ochi
 
 !!>>> ctqmc_dump_twop: write out the two-particle green's function and
-!!>>> vertex function
+!!>>> full (reducible) vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
      use constants, only : dp, czero, mytmp
 
@@ -812,7 +812,7 @@
 
 ! write it
      do m=1,norbs
-         do n=1,norbs
+         do n=1,m
              do k=1,nbfrq
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
@@ -848,7 +848,7 @@
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(j,i,k,m,n), g2_im(j,i,k,m,n) )
+                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -858,12 +858,12 @@
 ! evaluate chii, straightforward but less accurate
                          chii = chit - chi0
 
-! jt: \omega
-! it: \omega'
-! chit: \chi_{tot}(\omega, \omega', \nu)
-! chi0: \chi_{0}(\omega, \omega', \nu)
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+! chit: \chi_{tot}(\omega, \omega', \nu), two-particle green's function
+! chi0: \chi_{0}(\omega, \omega', \nu), bubble function
 ! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu)
+! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
                          write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
                      enddo ! over i={1,nffrq} loop
@@ -871,7 +871,7 @@
                  write(mytmp,*) ! write empty lines
                  write(mytmp,*)
              enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,norbs} loop
+         enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
 ! close data file
@@ -880,8 +880,9 @@
      return
   end subroutine ctqmc_dump_twop
 
-!!>>> ctqmc_dump_vrtx: write out the vertex function and two-particle
-!!>>> green's function
+!!>>> ctqmc_dump_vrtx: write out the two-particle green's function and
+!!>>> full (reducible) vertex function, the improved estimator was used
+!!>>> to improve the accuracy
   subroutine ctqmc_dump_vrtx(h2_re, h2_im)
      use constants, only : dp, czero, mytmp
 
@@ -953,7 +954,7 @@
 
 ! write it
      do m=1,norbs
-         do n=1,norbs
+         do n=1,m
              do k=1,nbfrq
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
@@ -996,10 +997,10 @@
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chih
-                         chih = dcmplx( h2_re(j,i,k,m,n), h2_im(j,i,k,m,n) )
+                         chih = dcmplx( h2_re(i,j,k,n,m), h2_im(i,j,k,n,m) )
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(j,i,k,m,n), g2_im(j,i,k,m,n) )
+                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -1009,12 +1010,12 @@
 ! evaluate chii, more accurate than that in ctqmc_dump_twop() subroutine
                          chii = g1 * chih - fw * chit
 
-! jt: \omega
-! it: \omega'
-! chit: \chi_{tot}(\omega, \omega', \nu)
-! chi0: \chi_{0}(\omega, \omega', \nu)
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+! chit: \chi_{tot}(\omega, \omega', \nu), two-particle green's function
+! chi0: \chi_{0}(\omega, \omega', \nu), bubble function
 ! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu)
+! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
                          write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
                      enddo ! over i={1,nffrq} loop
@@ -1022,7 +1023,7 @@
                  write(mytmp,*) ! write empty lines
                  write(mytmp,*)
              enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,norbs} loop
+         enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
 ! close data file
