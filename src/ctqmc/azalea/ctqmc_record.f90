@@ -143,6 +143,8 @@
 
 !!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
+     use constants, only : one
+
      use control, only : mkink
      use context, only : ckink
      use context, only : hist
@@ -151,9 +153,9 @@
 
 ! note: if ckink == 0, we record its count in hist(mkink)
      if ( ckink > 0 ) then
-         hist(ckink) = hist(ckink) + 1
+         hist(ckink) = hist(ckink) + one
      else
-         hist(mkink) = hist(mkink) + 1
+         hist(mkink) = hist(mkink) + one
      endif ! back if ( ckink > 0 ) block
 
      return
