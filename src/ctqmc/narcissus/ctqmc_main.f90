@@ -407,7 +407,7 @@
 
 ! external arguments
 ! size of hybf
-     integer, intent(in) :: size_t
+     integer, intent(in)     :: size_t
 
 ! hybridization function
      complex(dp), intent(in) :: hybf_t(size_t)
@@ -457,7 +457,7 @@
 
 ! external arguments
 ! size of eimp
-     integer, intent(in) :: size_t
+     integer, intent(in)  :: size_t
 
 ! impurity level
      real(dp), intent(in) :: eimp_t(size_t)
@@ -485,7 +485,7 @@
 
 ! external arguments
 ! size of grnf
-     integer, intent(in) :: size_t
+     integer, intent(in)      :: size_t
 
 ! impurity green's function
      complex(dp), intent(out) :: grnf_t(size_t)
@@ -513,7 +513,7 @@
 
 ! external arguments
 ! size of sigf
-     integer, intent(in) :: size_t
+     integer, intent(in)      :: size_t
 
 ! self-energy function
      complex(dp), intent(out) :: sigf_t(size_t)
@@ -528,3 +528,57 @@
 
      return
   end subroutine cat_get_sigf
+
+!!>>> cat_get_nmat: extract the occupation number
+  subroutine cat_get_nmat(size_t, nmat_t)
+     use constants, only : dp
+
+     use control, only : norbs
+     use context, only : nmat
+
+     implicit none
+
+! external arguments
+! size of nmat
+     integer, intent(in)   :: size_t
+
+! occupation number
+     real(dp), intent(out) :: nmat_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(nmat) ) then
+         call s_print_error('cat_get_nmat', 'wrong dimension size of nmat_t')
+     endif ! back if ( size_t /= size(nmat) ) block
+
+! copy data
+     nmat_t = reshape(nmat, (/norbs/))
+
+     return
+  end subroutine cat_get_nmat
+
+!!>>> cat_get_nnmat: extract the double occupation number
+  subroutine cat_get_nnmat(size_t, nnmat_t)
+     use constants, only : dp
+
+     use control, only : norbs
+     use context, only : nnmat
+
+     implicit none
+
+! external arguments
+! size of nnmat
+     integer, intent(in)   :: size_t
+
+! double occupation number
+     real(dp), intent(out) :: nnmat_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(nnmat) ) then
+         call s_print_error('cat_get_nnmat', 'wrong dimension size of nnmat_t')
+     endif ! back if ( size_t /= size(nnmat) ) block
+
+! copy data
+     nnmat_t = reshape(nnmat, (/norbs*norbs/))
+
+     return
+  end subroutine cat_get_nnmat
