@@ -29,12 +29,12 @@
 ! approximation plus dynamical mean field theory case
 ! if isscf == 2, self-consistent scheme, used in normal model hamiltonian
 ! plus dynamical mean field theory case
-     integer, public, save :: isscf  = 1
+     integer, public, save :: isscf  = 2
 
 ! control flag: symmetry of bands
 ! if issun == 1, the bands are not symmetrized
 ! if issun == 2, the bands are symmetrized according to symmetry matrix
-     integer, public, save :: issun  = 1
+     integer, public, save :: issun  = 2
 
 ! control flag: symmetry of spin orientation
 ! if isspn == 1, enforce spin up = spin down
@@ -44,7 +44,7 @@
 ! control flag: impurity green's function binning mode
 ! if isbin == 1, without binning mode
 ! if isbin == 2, with binning mode
-     integer, public, save :: isbin  = 1
+     integer, public, save :: isbin  = 2
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
