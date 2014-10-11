@@ -473,6 +473,27 @@
      return
   end subroutine cat_set_eimp
 
+!!>>> cat_set_ktau: setup the kernel function
+!!>>> note: the azalea code does not support this function
+  subroutine cat_set_ktau(size_t, ktau_t)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of ktau
+     integer, intent(in)  :: size_t
+
+! kernel function
+     real(dp), intent(in) :: ktau_t(size_t)
+
+! to avoid the warning from compiler
+     call s_assert( size(ktau_t) == size_t )
+     call s_print_error('cat_set_ktau', 'sorry, this feature is not supported')
+
+     return
+  end subroutine cat_set_ktau
+
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
