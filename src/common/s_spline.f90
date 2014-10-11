@@ -1,12 +1,14 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
-!!! program : s_spl_splder
-!!!           s_spl_splint
+!!! program : s_spl_deriv1
+!!!           s_spl_deriv2
+!!!           s_spl_funct
 !!! source  : s_spline.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/27/2014 by li huang
+!!!           10/10/2014 by li huang
 !!! purpose : these subroutines are used to do cubic spline interpolation.
 !!! status  : unstable
 !!! comment :
@@ -17,20 +19,64 @@
 !! Introduction
 !! ============
 !!
-!! 1. calculate 2-order derivates for a given function
+!! 1. calculate 1-order derivates for a given function
 !! ---------------------------------------------------
 !!
-!! subroutine s_spl_splder(...)
+!! subroutine s_spl_deriv1(...)
 !!
-!! 2. evaluate function value at a given point
+!! 2. calculate 2-order derivates for a given function
+!! ---------------------------------------------------
+!!
+!! subroutine s_spl_deriv2(...)
+!!
+!! 3. evaluate function value at a given point
 !! -------------------------------------------
 !!
-!! function   s_spl_splint(...)
+!! function   s_spl_funct(...)
 !!
 !!
 
-!!>>> s_spl_splder: evaluate the 2-order derivates of yval
-  subroutine s_spl_splder(ydim, xval, yval, startu, startd, d2y)
+!!>>> s_spl_deriv1: evaluate the 1-order derivates of yval
+  subroutine s_spl_deriv1(ydim, xval, yval, d1y)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! dimension of xval and yval
+     integer, intent(in)   :: ydim
+
+! old knots
+     real(dp), intent(in)  :: xval(ydim)
+
+! old function values to be interpolated
+     real(dp), intent(in)  :: yval(ydim)
+
+! 1-order derivates
+     real(dp), intent(out) :: d1y(ydim)
+
+! local variables
+! loop index
+     integer :: i
+
+! compute derivation using two-point formula
+     do i=2,ydim-1
+         d1y(i) = ( yval(i+1) - yval(i-1) ) / ( xval(i+1) - xval(i-1) )
+     enddo ! over i={2,ydim-1} loop
+
+! compute first and last derivation using linear extrapolation
+     d1y(1) = d1y(2) + ( d1y(3) - d1y(2) ) / &
+                     ( xval(3) - xval(2) ) * &
+                     ( xval(1) - xval(2) )
+     d1y(ydim) = d1y(ydim-1) + ( d1y(ydim-1) - d1y(ydim-2) ) / &
+                             ( xval(ydim-1) - xval(ydim-2) ) * &
+                             ( xval(ydim-0) - xval(ydim-1) )
+
+     return
+  end subroutine s_spl_deriv1
+
+!!>>> s_spl_deriv2: evaluate the 2-order derivates of yval
+  subroutine s_spl_deriv2(ydim, xval, yval, startu, startd, d2y)
      use constants, only : dp, zero, one, two, half
 
      implicit none
@@ -105,10 +151,10 @@
      enddo ! over k={ydim-1,1} loop
 
      return
-  end subroutine s_spl_splder
+  end subroutine s_spl_deriv2
 
-!!>>> s_spl_splint: evaluate the spline value at x point
-  function s_spl_splint(xdim, xval, yval, d2y, x) result(val)
+!!>>> s_spl_funct: evaluate the spline value at x point
+  function s_spl_funct(xdim, xval, yval, d2y, x) result(val)
      use constants, only : dp
 
      implicit none
@@ -157,7 +203,7 @@
 !<     if ( khi > xdim ) then
 !<         klo = xdim - 1
 !<         khi = xdim
-!<     endif
+!<     endif ! back if ( khi > xdim ) block
 
 ! calculate splined parameters a and b
      a = ( xval(khi) - x ) / h
@@ -169,4 +215,4 @@
                ( h*h ) / 6.0_dp
 
      return
-  end function s_spl_splint
+  end function s_spl_funct
