@@ -158,7 +158,7 @@ clean-tool: clean-jasmine clean-hibiscus
 other: doc
 clean-other: clean-doc
 
-# tagets for ctqmc codes: segment version (azalea, gardenia, narcissus)
+# targets for ctqmc codes: segment version (azalea, gardenia, narcissus)
 azalea:
 	cd ../ctqmc/azalea/; pwd; make
 
@@ -186,7 +186,7 @@ narcissus-lib:
 clean-narcissus:
 	cd ../ctqmc/narcissus/; pwd; make clean
 
-# tagets for ctqmc codes: general version (begonia, lavender)
+# targets for ctqmc codes: general version (begonia, lavender)
 begonia:
 	cd ../ctqmc/begonia/; pwd; make
 
@@ -205,7 +205,7 @@ lavender-lib:
 clean-lavender:
 	cd ../ctqmc/lavender/; pwd; make clean
 
-# tagets for ctqmc codes: general version (pansy, manjushaka)
+# targets for ctqmc codes: general version (pansy, manjushaka)
 pansy:
 	cd ../ctqmc/pansy/; pwd; make
 
@@ -224,21 +224,21 @@ manjushaka-lib:
 clean-manjushaka:
 	cd ../ctqmc/manjushaka/; pwd; make clean
 
-# tagets for hfqmc codes: daisy
+# targets for hfqmc codes: daisy
 daisy:
 	cd ../hfqmc/daisy/; pwd; make
 
 clean-daisy:
 	cd ../hfqmc/daisy/; pwd; make clean
 
-# tagets for atomic codes: jasmine
+# targets for atomic codes: jasmine
 jasmine:
 	cd ../tools/jasmine/; pwd; make
 
 clean-jasmine:
 	cd ../tools/jasmine/; pwd; make clean
 
-# tagets for toolkit codes: hibiscus
+# targets for toolkit codes: hibiscus
 hibiscus:
 	cd ../tools/hibiscus/; pwd; make
 
@@ -252,14 +252,14 @@ common:
 clean-common:
 	cd ../common/; pwd; make clean
 
-# tagets for api: api
+# targets for api: api
 api:
 	cd ../ctqmc/api/; pwd; make
 
 clean-api:
 	cd ../ctqmc/api/; pwd; make clean
 
-# tagets for doc: doc
+# targets for doc: doc
 doc:
 	cd ../../doc/manual/; pwd; make full
 
