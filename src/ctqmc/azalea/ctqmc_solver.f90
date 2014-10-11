@@ -77,7 +77,7 @@
      real(dp) :: time_niter
 
 ! histogram for perturbation expansion series, for mpi case
-     integer, allocatable  :: hist_mpi(:)
+     real(dp), allocatable :: hist_mpi(:)
 
 ! probability of atomic states, for mpi case
      real(dp), allocatable :: prob_mpi(:)
