@@ -527,6 +527,8 @@
 
 !!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
+     use constants, only : one
+
      use control, only : mkink
      use context, only : ckink
      use context, only : hist
@@ -535,9 +537,9 @@
 
 ! note: if ckink == 0, we record its count in hist(mkink)
      if ( ckink > 0 ) then
-         hist(ckink) = hist(ckink) + 1
+         hist(ckink) = hist(ckink) + one
      else
-         hist(mkink) = hist(mkink) + 1
+         hist(mkink) = hist(mkink) + one
      endif ! back if ( ckink > 0 ) block
 
      return
@@ -1285,9 +1287,8 @@
   end subroutine ctqmc_reduce_grnf
 
 !!>>> ctqmc_reduce_hist: reduce the hist from all children processes
-!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is
-!!>>> important to avoid data overflow in them
   subroutine ctqmc_reduce_hist(hist_mpi)
+     use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
      use control, only : mkink
@@ -1298,16 +1299,16 @@
 
 ! external arguments
 ! histogram for perturbation expansion series
-     integer, intent(out) :: hist_mpi(mkink)
+     real(dp), intent(out) :: hist_mpi(mkink)
 
 ! initialize hist_mpi
-     hist_mpi = 0
+     hist_mpi = zero
 
 ! build hist_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(hist / nprocs, hist_mpi)
+     call mp_allreduce(hist, hist_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1319,7 +1320,7 @@
 # endif /* MPI */
 
 ! calculate the average
-     hist_mpi = hist_mpi / 1
+     hist_mpi = hist_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_hist
