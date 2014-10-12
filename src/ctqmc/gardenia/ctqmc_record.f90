@@ -36,6 +36,7 @@
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
 !!!           09/22/2014 by li huang
+!!!           10/13/2014 by li huang
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -1601,6 +1602,54 @@
 
      return
   end subroutine ctqmc_reduce_vrtx
+
+!!>>> ctqmc_reduce_vrtx: reduce the h2_re_mpi and h2_im_mpi from all
+!!>>> children processes
+  subroutine ctqmc_reduce_pair(h2_re_mpi, h2_im_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : h2_re, h2_im
+
+     implicit none
+
+! external arguments
+! two-particle green's function, real part
+     real(dp), intent(out) :: h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! two-particle green's function, imaginary part
+     real(dp), intent(out) :: h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! initialize h2_re_mpi and h2_im_mpi
+     h2_re_mpi = zero
+     h2_im_mpi = zero
+
+! build h2_re_mpi and h2_im_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(h2_re, h2_re_mpi)
+     call mp_allreduce(h2_im, h2_im_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     h2_re_mpi = h2_re
+     h2_im_mpi = h2_im
+
+# endif /* MPI */
+
+! calculate the average
+     h2_re_mpi = h2_re_mpi / real(nprocs)
+     h2_im_mpi = h2_im_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_pair
 
 !!========================================================================
 !!>>> symmetrize physical observables                                  <<<
