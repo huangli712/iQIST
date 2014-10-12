@@ -783,7 +783,7 @@
   end subroutine ctqmc_dump_ochi
 
 !!>>> ctqmc_dump_twop: write out the two-particle green's function and
-!!>>> vertex function
+!!>>> full (reducible) vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
      use constants, only : dp, czero, mytmp
 
@@ -797,10 +797,10 @@
 
 ! external arguments
 ! used to calculate two-particle green's function, real part
-     real(dp), intent(in) :: g2_re(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: g2_re(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! used to calculate two-particle green's function, imaginary part
-     real(dp), intent(in) :: g2_im(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: g2_im(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index for frequencies
@@ -835,18 +835,18 @@
 
 ! check if we need to dump two-particle green's function and vertex
 ! function data to solver.twop.dat
-     if ( isvrt /= 4 ) RETURN
+     if ( .not. btest(isvrt, 3) ) RETURN
 
 ! open data file: solver.twop.dat
      open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
 
 ! write it
      do m=1,norbs
-         do n=1,norbs
+         do n=1,m
              do k=1,nbfrq
-                 write(mytmp,'(a,i5)') '# flvr1:', m
-                 write(mytmp,'(a,i5)') '# flvr2:', n
-                 write(mytmp,'(a,i5)') '# nbfrq:', k
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
 ! evaluate g2 and g1
