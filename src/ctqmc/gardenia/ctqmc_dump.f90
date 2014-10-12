@@ -1065,5 +1065,11 @@
 ! to solver.pair.dat
      if ( .not. btest(isvrt, 5) ) RETURN
 
+! open data file: solver.pair.dat
+     open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')
+
+! close data file
+     close(mytmp)
+
      return
   end subroutine ctqmc_dump_pair
