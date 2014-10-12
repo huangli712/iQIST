@@ -16,12 +16,14 @@
 !!!           ctqmc_dump_ochi
 !!!           ctqmc_dump_twop
 !!!           ctqmc_dump_vrtx
+!!!           ctqmc_dump_pair
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
 !!!           09/23/2014 by li huang
+!!!           10/11/2014 by li huang
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -1025,3 +1027,23 @@
 
      return
   end subroutine ctqmc_dump_vrtx
+
+!!>>> ctqmc_dump_pair: write out the particle-particle pair susceptibility
+  subroutine ctqmc_dump_pair(p2_re, ps_im)
+     use constants, only : dp, mytmp
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+
+     implicit none
+
+! external arguments
+! particle-particle pair susceptibility, real part
+     real(dp), intent(in) :: ps_re(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), intent(in) :: ps_im(nffrq,nffrq,nbfrq,norbs,norbs)
+
+     return
+  end subroutine ctqmc_dump_pair
