@@ -17,12 +17,14 @@
 !!!           ctqmc_dump_ochi
 !!!           ctqmc_dump_twop
 !!!           ctqmc_dump_vrtx
+!!!           ctqmc_dump_pair
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
 !!!           09/12/2014 by li huang
+!!!           10/13/2014 by li huang
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -279,7 +281,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(grnf(j,i,i)), &
                                  aimag(grnf(j,i,i)), &
                       real(grnf(j,i+nband,i+nband)), &
@@ -323,7 +325,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(wssf(j,i,i)), &
                                  aimag(wssf(j,i,i)), &
                       real(wssf(j,i+nband,i+nband)), &
@@ -367,7 +369,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(hybf(j,i,i)), &
                                  aimag(hybf(j,i,i)), &
                       real(hybf(j,i+nband,i+nband)), &
@@ -411,7 +413,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(sigf(j,i,i)), &
                                  aimag(sigf(j,i,i)), &
                       real(sigf(j,i+nband,i+nband)), &
@@ -459,7 +461,7 @@
 ! write it
      do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                     real(ghub(j,i)), &
                                    aimag(ghub(j,i)), &
                                     real(shub(j,i)), &
