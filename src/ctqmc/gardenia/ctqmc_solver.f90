@@ -576,6 +576,13 @@
 
      do m=1,norbs
          do n=1,norbs
+             ps_re(:,:,:,n,m) = ps_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             ps_im(:,:,:,n,m) = ps_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,norbs
              gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
@@ -670,6 +677,11 @@
          call ctqmc_dump_vrtx(h2_re, h2_im)
      endif ! back if ( myid == master ) block
 
+! write out the final particle-particle pair susceptibility data, ps_re and ps_im
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_pair(ps_re, ps_im)
+     endif ! back if ( myid == master ) block
+
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_gtau(tmesh, gtau)
@@ -717,6 +729,8 @@
      deallocate(g2_im_mpi)
      deallocate(h2_re_mpi)
      deallocate(h2_im_mpi)
+     deallocate(ps_re_mpi)
+     deallocate(ps_im_mpi)
      deallocate(gtau_mpi )
      deallocate(ftau_mpi )
      deallocate(grnf_mpi )
