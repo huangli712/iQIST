@@ -750,6 +750,7 @@
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
 
+     use control, only : isvrt
      use control, only : nband, norbs
      use control, only : ntime
      use context, only : tmesh
@@ -772,6 +773,9 @@
 
 ! used to record occupations for current flavor channel and time
      real(dp) :: oaux(norbs)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 1) )
 
      TIME_LOOP: do i=1,ntime
 
@@ -822,6 +826,7 @@
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
 
+     use control, only : isvrt
      use control, only : norbs
      use control, only : ntime
      use context, only : tmesh
@@ -849,6 +854,9 @@
 
 ! used to record occupations for current flavor channel and time
      real(dp) :: oaux(ntime,norbs)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 2) )
 
 ! calculate ochi
      oaux = zero
