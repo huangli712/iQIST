@@ -1029,7 +1029,7 @@
   end subroutine ctqmc_dump_vrtx
 
 !!>>> ctqmc_dump_pair: write out the particle-particle pair susceptibility
-  subroutine ctqmc_dump_pair(p2_re, ps_im)
+  subroutine ctqmc_dump_pair(ps_re, ps_im)
      use constants, only : dp, mytmp
 
      use control, only : isvrt
@@ -1044,6 +1044,22 @@
 
 ! particle-particle pair susceptibility, imaginary part
      real(dp), intent(in) :: ps_im(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! local variables
+! loop index for frequencies
+     integer :: i
+     integer :: j
+     integer :: k
+     integer :: p
+     integer :: q
+
+! loop index for orbitals
+     integer :: m
+     integer :: n
+
+! dummy integer variables
+     integer :: it
+     integer :: jt
 
      return
   end subroutine ctqmc_dump_pair
