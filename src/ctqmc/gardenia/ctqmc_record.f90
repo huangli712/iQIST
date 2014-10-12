@@ -1627,12 +1627,12 @@
      ps_re_mpi = zero
      ps_im_mpi = zero
 
-! build h2_re_mpi and h2_im_mpi, collect data from all children processes
+! build ps_re_mpi and ps_im_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(h2_re, h2_re_mpi)
-     call mp_allreduce(h2_im, h2_im_mpi)
+     call mp_allreduce(ps_re, ps_re_mpi)
+     call mp_allreduce(ps_im, ps_im_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
