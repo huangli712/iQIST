@@ -431,6 +431,12 @@
          enddo ! over j={mkink,1} loop
      enddo ! over i={1,norbs} loop
 
+! for integer variables
+!-------------------------------------------------------------------------
+! init global variables
+     ckink   = 0
+     cstat   = 0
+
 ! for real variables
 !-------------------------------------------------------------------------
 ! init statistics variables
@@ -458,16 +464,11 @@
      reflip_accept = zero
      reflip_reject = zero
 
-! for integer variables
-!-------------------------------------------------------------------------
-! init global variables
-     ckink   = 0
-     cstat   = 0
-
 ! for integer arrays
 !-------------------------------------------------------------------------
-! init hist  array
-     hist    = 0
+! init index array
+     index_s = 0
+     index_e = 0
 
 ! init rank  array
      rank    = 0
@@ -479,15 +480,14 @@
 ! stts = 3 : full occupation case
      stts    = 0
 
-! init index array
-     index_s = 0
-     index_e = 0
-
 ! for real arrays
 !-------------------------------------------------------------------------
 ! init time  array
      time_s  = zero
      time_e  = zero
+
+! init hist  array
+     hist    = zero
 
 ! init auxiliary physical observables
      paux    = zero
@@ -559,7 +559,6 @@
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
      call ctqmc_four_hybf(hybf, htau)
-     htau = -0.5_dp
 
 ! dump the necessary files
 !-------------------------------------------------------------------------

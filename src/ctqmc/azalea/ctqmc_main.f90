@@ -4,8 +4,8 @@
 !!! A test program for dynamical mean field theory (DMFT) self-consistent!
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
-!!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
-!!! version : v2014.09.24T                                               !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on segment picture formalism !
 !!!           any question, please contact with huangli712@gmail.com     !
@@ -97,7 +97,7 @@
 !! Documents
 !! =========
 !!
-!! For more details, please go to iqist/doc/guide directory.
+!! For more details, please go to iqist/doc/manual directory.
 !!
 !!
 
@@ -263,10 +263,10 @@
 
 # endif  /* API */
 
-!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 # if !defined (F2PY)
 
-!! fortran version
+!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
+!!>>> fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
      use api, only : T_mpi, T_segment_azalea
 
@@ -345,7 +345,8 @@
 
 # else   /* F2PY */
 
-!! python version
+!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
+!!>>> python version
   subroutine cat_init_ctqmc(my_id, num_procs)
      use control, only : nprocs, myid, master
 
@@ -516,7 +517,7 @@
 
 ! to avoid the warning from compiler
      call s_assert( size(ktau_t) == size_t )
-     call s_print_error('cat_set_ktau', 'this feature is not supported')
+     call s_print_error('cat_set_ktau', 'sorry, this feature is not supported')
 
      return
   end subroutine cat_set_ktau

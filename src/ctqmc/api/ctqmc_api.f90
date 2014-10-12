@@ -225,7 +225,7 @@
 !!
 !! call stop_ctqmc()
 !!
-!! 9. finialize the mpi environment
+!! 9. finalize the mpi environment
 !! --------------------------------
 !!
 !! call mp_barrier()
@@ -259,7 +259,7 @@
 !!
 !! You have to setup the parameters for the ctqmc impurity solver, and
 !! write them down to the 'solver.ctqmc.in' file. Now you must do that
-!! manually. In the future we will write a Python module to facilitate
+!! manually. In the future we will provide a Python module to facilitate
 !! this work.
 !!
 !! 4. init the ctqmc impurity solver
