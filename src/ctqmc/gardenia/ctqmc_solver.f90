@@ -113,6 +113,12 @@
 ! used to measure two-particle green's function, imaginary part, for mpi case
      real(dp), allocatable :: h2_im_mpi(:,:,:,:,:)
 
+! used to measure particle-particle pair susceptibility, real part, for mpi case
+     real(dp), allocatable :: ps_re_mpi(:,:,:,:,:)
+
+! used to measure particle-particle pair susceptibility, imaginary part, for mpi case
+     real(dp), allocatable :: ps_im_mpi(:,:,:,:,:)
+
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
 
