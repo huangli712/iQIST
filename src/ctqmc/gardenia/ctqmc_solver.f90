@@ -34,7 +34,7 @@
      use context, only : tmesh, rmesh
      use context, only : hist, prob
      use context, only : nmat, nnmat, schi, sschi, ochi, oochi
-     use context, only : g2_re, g2_im, h2_re, h2_im
+     use context, only : g2_re, g2_im, h2_re, h2_im, ps_re, ps_im
      use context, only : symm
      use context, only : gtau, ftau, grnf
      use context, only : sig2
@@ -107,10 +107,10 @@
 ! used to measure two-particle green's function, imaginary part, for mpi case
      real(dp), allocatable :: g2_im_mpi(:,:,:,:,:)
 
-! used to measure vertex function, real part, for mpi case
+! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: h2_re_mpi(:,:,:,:,:)
 
-! used to measure vertex function, imaginary part, for mpi case
+! used to measure two-particle green's function, imaginary part, for mpi case
      real(dp), allocatable :: h2_im_mpi(:,:,:,:,:)
 
 ! impurity green's function, imaginary time axis, for mpi case
@@ -368,7 +368,7 @@
                  call ctqmc_record_twop()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
 
-! record the vertex function
+! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
                  call ctqmc_record_vrtx()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block
@@ -498,7 +498,7 @@
 ! collect the two-particle green's function from g2_re to g2_re_mpi, etc.
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
-! collect the vertex function from h2_re to h2_re_mpi, etc.
+! collect the two-particle green's function from h2_re to h2_re_mpi, etc.
      call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
@@ -640,7 +640,7 @@
          call ctqmc_dump_twop(g2_re, g2_im)
      endif ! back if ( myid == master ) block
 
-! write out the final vertex function data, h2_re and h2_im
+! write out the final two-particle green's function data, h2_re and h2_im
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_vrtx(h2_re, h2_im)
      endif ! back if ( myid == master ) block
