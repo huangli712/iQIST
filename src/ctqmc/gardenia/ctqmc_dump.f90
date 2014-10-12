@@ -1061,5 +1061,9 @@
      integer :: it
      integer :: jt
 
+! check if we need to dump particle-particle pair susceptibility
+! to solver.pair.dat
+     if ( .not. btest(isvrt, 5) ) RETURN
+
      return
   end subroutine ctqmc_dump_pair
