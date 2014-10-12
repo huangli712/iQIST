@@ -389,6 +389,11 @@
                  call ctqmc_record_vrtx()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block
 
+! record the particle-particle pair susceptibility
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) then
+                 call ctqmc_record_pair()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) block
+
 ! record the auxiliary correlation function, F^{j}(\tau)
              if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
                  call ctqmc_record_ftau()
