@@ -560,7 +560,7 @@
                  basis(i,j) = 1
              else
                  basis(i,j) = 0
-             endif
+             endif ! back if ( btest(i-1,j-1) .eqv. .true. ) block
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
@@ -594,20 +594,20 @@
 ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(i5,3f12.6)') i, prob(i), real(noccs(i)), real(soccs(i)) * half
+         write(mytmp,'(i6,3f12.6)') i, prob(i), real(noccs(i)), real(soccs(i)) * half
      enddo ! over i={1,ncfgs} loop
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
-         write(mytmp,'(i5,2f12.6)') i+1, real(i), oprob(i)
+         write(mytmp,'(i6,2f12.6)') i+1, real(i), oprob(i)
      enddo ! over i={0,norbs} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(oprob)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(oprob)
 
      write(mytmp,'(a)') '# spin probability: index | spin | prob'
      do i=-nband,nband
-         write(mytmp,'(i5,2f12.6)') i+nband+1, i*half, sprob(i)
+         write(mytmp,'(i6,2f12.6)') i+nband+1, i*half, sprob(i)
      enddo ! over i={-nband,nband} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(sprob)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
 
 ! close data file
      close(mytmp)
@@ -642,16 +642,16 @@
 ! write it
      write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i5,f12.6)') i, nmat(i)
+         write(mytmp,'(i6,f12.6)') i, nmat(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
+     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
 
      write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
+             write(mytmp,'(2i6,f12.6)') i, j, nnmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -685,14 +685,14 @@
      integer :: j
 
 ! check if we need to dump spin-spin correlation function data
-     if ( isvrt /= 2 ) RETURN
+     if ( .not. btest(isvrt, 1) ) RETURN
 
 ! open data file: solver.schi.dat
      open(mytmp, file='solver.schi.dat', form='formatted', status='unknown')
 
 ! write it
      do j=1,nband
-         write(mytmp,'(a,i5)') '# flvr:', j
+         write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,ntime
              write(mytmp,'(2f12.6)') tmesh(i), sschi(i,j)
          enddo ! over i={1,ntime} loop
@@ -700,14 +700,14 @@
          write(mytmp,*)
      enddo ! over j={1,nband} loop
 
-     write(mytmp,'(a,i5)') '# flvr:', 8888
+     write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
          write(mytmp,'(2f12.6)') tmesh(i), schi(i) / real(nband)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
-     write(mytmp,'(a,i5)') '# flvr:', 9999
+     write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
          write(mytmp,'(2f12.6)') tmesh(i), sum( sschi(i,:) ) / real(nband)
      enddo ! over i={1,ntime} loop
