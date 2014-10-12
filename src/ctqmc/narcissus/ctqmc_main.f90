@@ -4,8 +4,8 @@
 !!! A test program for dynamical mean field theory (DMFT) self-consistent!
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
-!!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
-!!! version : v2014.09.16T                                               !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on segment picture formalism !
 !!!           dynamical screening effect is included                     !
@@ -18,7 +18,7 @@
 !! =======
 !!
 !! If you want to obtain an executable program, please go to src/build/,
-!! open make.sys and comment out the API flag. On the other hand, if you
+!! open make.sys and comment out the API flag. On the contrary, if you
 !! want to compile narcissus as a library, please activate the API flag.
 !!
 !! Introduction
@@ -26,12 +26,12 @@
 !!
 !! The narcissus code is a hybridization expansion version continuous time
 !! quantum Monte Carlo quantum impurity solver. It adopts the segment
-!! picuture, and implements many useful features, such as the orthogonal
+!! picture, and implements many useful features, such as the orthogonal
 !! polynomial representation and the measurement of two-particle Green's
 !! function, etc. The narcissus code can be also used to solve the Hubbard
-!! -Holstein model and studied the dynamical screening effect. It can be
+!! -Holstein model and study the dynamical screening effect. It can be
 !! considered as an impurity solver for extended dynamical mean field
-!! theory as well. Wo it is a bit less efficient than the azalea code. And
+!! theory as well. So it is a bit less efficient than the azalea code. And
 !! it can be used as a standard to benchmark the other ctqmc impurity
 !! solvers. The narcissus code also includes a mini dynamical mean field
 !! theory engine which implements the self-consistent equation for Bethe
@@ -70,6 +70,7 @@
 !! solver.ochi.dat
 !! solver.twop.dat
 !! solver.vrtx.dat
+!! solver.pair.dat
 !! solver.status.dat
 !! solver.kernel.dat
 !! etc.
@@ -108,7 +109,7 @@
 !! Documents
 !! =========
 !!
-!! For more details, please go to iqist/doc/guide directory.
+!! For more details, please go to iqist/doc/manual directory.
 !!
 !!
 
@@ -274,7 +275,10 @@
 
 # endif  /* API */
 
+# if !defined (F2PY)
+
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
+!!>>> fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
      use api, only : T_mpi, T_segment_narcissus
 
@@ -361,6 +365,53 @@
 
      return
   end subroutine cat_init_ctqmc
+
+# else   /* F2PY */
+
+!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
+!!>>> python version
+  subroutine cat_init_ctqmc(my_id, num_procs)
+     use control, only : nprocs, myid, master
+
+     implicit none
+
+! external arguments
+! id for current process
+     integer, intent(in) :: my_id
+
+! number of processors
+     integer, intent(in) :: num_procs
+
+! initialize mpi envirnoment
+     myid = my_id
+     nprocs = num_procs
+
+! print the running header for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_header()
+     endif ! back if ( myid == master ) block
+
+! setup the important parameters for continuous time quantum Monte Carlo
+! quantum impurity solver and dynamical mean field theory self-consistent
+! engine
+     call ctqmc_config()
+
+! print out runtime parameters in summary, only for check
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_summary()
+     endif ! back if ( myid == master ) block
+
+! allocate memory and initialize
+     call ctqmc_setup_array()
+
+! prepare initial hybridization function, init self-consistent iteration
+     call ctqmc_selfer_init()
+
+     return
+  end subroutine cat_init_ctqmc
+
+# endif  /* F2PY */
 
 !!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
