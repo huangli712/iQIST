@@ -529,6 +529,8 @@
   subroutine cat_set_ktau(size_t, ktau_t)
      use constants, only : dp
 
+     use context, only : ktau
+
      implicit none
 
 ! external arguments
@@ -538,9 +540,13 @@
 ! kernel function
      real(dp), intent(in) :: ktau_t(size_t)
 
-! to avoid the warning from compiler
-     call s_assert( size(ktau_t) == size_t )
-     call s_print_error('cat_set_ktau', 'sorry, this feature is not supported')
+! check whether size_t is correct
+     if ( size_t /= size(ktau) ) then
+         call s_print_error('cat_set_ktau', 'wrong dimension size of ktau_t')
+     endif ! back if ( size_t /= size(ktau) ) block
+
+! copy data
+     ktau = ktau_t
 
      return
   end subroutine cat_set_ktau
