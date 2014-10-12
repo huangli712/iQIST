@@ -1068,6 +1068,18 @@
 ! open data file: solver.pair.dat
      open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')
 
+! write it
+     do m=1,norbs
+         do n=1,m
+             do k=1,nbfrq
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
+
+             enddo ! over k={1,nbfrq} loop
+         enddo ! over n={1,m} loop
+     enddo ! over m={1,norbs} loop
+
 ! close data file
      close(mytmp)
 
