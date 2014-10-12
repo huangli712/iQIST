@@ -1021,16 +1021,16 @@
                          endif ! back if ( i <= nffrq/2 ) block
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,m,m))
+                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                          else
-                             g4 = grnf(q-nffrq/2,m,m)
+                             g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chih
-                         chih = dcmplx( h2_re(m,n,j,i,k), h2_im(m,n,j,i,k) )
+                         chih = dcmplx( h2_re(i,j,k,n,m), h2_im(i,j,k,n,m) )
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(m,n,j,i,k), g2_im(m,n,j,i,k) )
+                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -1040,20 +1040,20 @@
 ! evaluate chii, more accurate than that in ctqmc_dump_twop() subroutine
                          chii = g1 * chih - fw * chit
 
-! jt: \omega
-! it: \omega'
-! chit: \chi_{tot}(\omega, \omega', \nu)
-! chi0: \chi_{0}(\omega, \omega', \nu)
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+! chit: \chi_{tot}(\omega, \omega', \nu), two-particle green's function
+! chi0: \chi_{0}(\omega, \omega', \nu), bubble function
 ! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu)
+! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i5,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
+                         write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
                  write(mytmp,*)
              enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,norbs} loop
+         enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
 ! close data file
