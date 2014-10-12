@@ -492,23 +492,17 @@
 
 ! external arguments
 ! histogram data
-     integer, intent(in) :: hist(mkink)
+     real(dp), intent(in) :: hist(mkink)
 
 ! local variables
 ! loop index
      integer  :: i
 
-! dummy variables
-     real(dp) :: raux
-
 ! scaled histogram data
      real(dp) :: haux(mkink)
 
 ! evaluate haux at first
-     raux = real( sum(hist) )
-     do i=1,mkink
-         haux(i) = real( hist(i) ) / raux
-     enddo ! over i={1,mkink} loop
+     haux = hist / sum(hist)
 
 ! open data file: solver.hist.dat
      open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
@@ -516,7 +510,7 @@
 ! write it
      write(mytmp,'(a)') '# histogram: order | count | percent'
      do i=1,mkink
-         write(mytmp,'(i5,i12,f12.6)') i, hist(i), haux(i)
+         write(mytmp,'(i6,i12,f12.6)') i, int( hist(i) ), haux(i)
      enddo ! over i={1,mkink} loop
 
 ! close data file
