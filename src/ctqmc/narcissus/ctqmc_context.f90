@@ -193,7 +193,7 @@
      implicit none
 
 ! histogram for perturbation expansion series
-     integer,  public, save, allocatable :: hist(:)
+     real(dp), public, save, allocatable :: hist(:)
 
 ! auxiliary physical observables
 ! paux(1) : total energy, Etot
@@ -225,7 +225,7 @@
      real(dp), public, save, allocatable :: ochi(:)
 
 ! orbital-orbital correlation function: < N(0) N(\tau) >, orbital-resolved
-     real(dp), public, save, allocatable :: oochi(:,:)
+     real(dp), public, save, allocatable :: oochi(:,:,:)
 
 ! used to calculate two-particle green's function, real part
      real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
@@ -233,11 +233,17 @@
 ! used to calculate two-particle green's function, imaginary part
      real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
 
-! used to calculate vertex function, real part
+! used to calculate two-particle green's function, real part
      real(dp), public, save, allocatable :: h2_re(:,:,:,:,:)
 
-! used to calculate vertex function, imaginary part
+! used to calculate two-particle green's function, imaginary part
      real(dp), public, save, allocatable :: h2_im(:,:,:,:,:)
+
+! particle-particle pair susceptibility, real part
+     real(dp), public, save, allocatable :: ps_re(:,:,:,:,:)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), public, save, allocatable :: ps_im(:,:,:,:,:)
 
   end module ctqmc_meat
 
