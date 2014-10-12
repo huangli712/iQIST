@@ -180,7 +180,7 @@
 
 ! how often to sampling the gmat and paux (nmat and nnmat)
 ! note: the measure periods for schi, sschi, ochi, oochi, g2_re, g2_im,
-! h2_re, and h2_im are also controlled by nmonte parameter.
+! h2_re, h2_im, ps_re, and ps_im are also controlled by nmonte parameter.
      integer, public, save :: nmonte = 10
 
 ! how often to sampling the gtau and prob
