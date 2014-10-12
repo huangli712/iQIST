@@ -1165,7 +1165,7 @@
      return
   end subroutine ctqmc_record_vrtx
 
-!!>>> ctqmc_record_twop: record the two-particle green's function
+!!>>> ctqmc_record_pair: record the particle-particle pair susceptibility
   subroutine ctqmc_record_pair()
      use constants, only : dp, two, pi, czi, czero
 
@@ -1174,7 +1174,7 @@
      use control, only : nffrq, nbfrq
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : g2_re, g2_im
+     use context, only : ps_re, ps_im
      use context, only : rank
      use context, only : mmat
 
@@ -1205,7 +1205,7 @@
      real(dp) :: taus
      real(dp) :: taue
 
-! dummy complex(dp) variables, used to calculate the g2_re and g2_im
+! dummy complex(dp) variables, used to calculate the ps_re and ps_im
      complex(dp) :: cmeas
 
 ! dummy complex(dp) arrays, used to store the intermediate results
@@ -1214,7 +1214,7 @@
      complex(dp), allocatable :: caux2(:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 3) .and. .not. btest(isvrt, 4) )
+     call s_assert( btest(isvrt, 5) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
@@ -1256,7 +1256,7 @@
 
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
-! calculate g2_re and g2_im
+! calculate ps_re and ps_im
      CTQMC_ORBIT1_LOOP: do f1=1,norbs
          CTQMC_ORBIT2_LOOP: do f2=1,f1
 
@@ -1270,8 +1270,8 @@
                          if ( f1 == f2 ) then
                              cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
-                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
                      enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
                  enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
