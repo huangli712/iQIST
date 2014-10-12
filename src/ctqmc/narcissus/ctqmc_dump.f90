@@ -910,8 +910,9 @@
      return
   end subroutine ctqmc_dump_twop
 
-!!>>> ctqmc_dump_vrtx: write out the vertex function and two-particle
-!!>>> green's function
+!!>>> ctqmc_dump_vrtx: write out the two-particle green's function and
+!!>>> full (reducible) vertex function, the improved estimator was used
+!!>>> to improve the accuracy
   subroutine ctqmc_dump_vrtx(h2_re, h2_im)
      use constants, only : dp, czero, mytmp
 
@@ -928,10 +929,10 @@
 
 ! external arguments
 ! used to calculate vertex function, real part
-     real(dp), intent(in) :: h2_re(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: h2_re(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! used to calculate vertex function, imaginary part
-     real(dp), intent(in) :: h2_im(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: h2_im(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index for frequencies
@@ -968,7 +969,7 @@
 
 ! check if we need to dump two-particle green's function and vertex
 ! function data to solver.vrtx.dat
-     if ( isvrt /= 5 ) RETURN
+     if ( .not. btest(isvrt, 4) ) RETURN
 
 ! build frnf at first: F = G \Sigma
 ! in principle, F should be measured during the Monte Carlo procedure
@@ -983,11 +984,11 @@
 
 ! write it
      do m=1,norbs
-         do n=1,norbs
+         do n=1,m
              do k=1,nbfrq
-                 write(mytmp,'(a,i5)') '# flvr1:', m
-                 write(mytmp,'(a,i5)') '# flvr2:', n
-                 write(mytmp,'(a,i5)') '# nbfrq:', k
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
 ! evaluate g2 and g1
