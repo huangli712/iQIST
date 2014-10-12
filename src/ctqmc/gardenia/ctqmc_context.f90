@@ -246,10 +246,10 @@
 ! used to calculate two-particle green's function, imaginary part
      real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
 
-! used to calculate vertex function, real part
+! used to calculate two-particle green's function, real part
      real(dp), public, save, allocatable :: h2_re(:,:,:,:,:)
 
-! used to calculate vertex function, imaginary part
+! used to calculate two-particle green's function, imaginary part
      real(dp), public, save, allocatable :: h2_im(:,:,:,:,:)
 
   end module ctqmc_meat
