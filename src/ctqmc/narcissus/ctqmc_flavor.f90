@@ -888,7 +888,7 @@
          anti = .true.  ! insert anti-segment
      else
          anti = .false. ! insert segment
-     endif
+     endif ! back if ( spring_sfmt_stream() > half ) block
 
 !-------------------------------------------------------------------------
 ! stage 1: need to insert a segment
@@ -977,7 +977,7 @@
                      endif ! back if ( tau_start > te .and. tau_start < ts ) block
                  enddo ! over i={1,ckink-1} loop
 
-             endif
+             endif ! back if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) block
 
          endif ! back if ( stts(flvr) == 1 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1009,7 +1009,7 @@
                      endif ! back if ( tau_start > ts .and. tau_start < te ) block
                  enddo ! over i={1,ckink-1} loop
 
-             endif
+             endif ! back if      ( tau_start < time_e(index_e(1    , flvr), flvr) ) block
 
 ! now we know we can insert tau_start, and then tau_end and tau_max should
 ! be determined carefully.
@@ -1080,7 +1080,7 @@
                      endif ! back if ( tau_start > te .and. tau_start < ts ) block
                  enddo ! over i={1,ckink-1} loop
 
-             endif
+             endif ! back if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) block
 
 ! now we know we can insert tau_start, and then tau_end and tau_max should
 ! be determined carefully.
@@ -1165,7 +1165,7 @@
                      endif ! back if ( tau_start > ts .and. tau_start < te ) block
                  enddo ! over i={1,ckink-1} loop
 
-             endif
+             endif ! back if      ( tau_start < time_e(index_e(1    , flvr), flvr) ) block
 
          endif ! back if ( stts(flvr) == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1245,7 +1245,7 @@
          anti = .true.  ! remove anti-segment
      else
          anti = .false. ! remove segment
-     endif
+     endif ! back if ( spring_sfmt_stream() > half ) block
 
 !-------------------------------------------------------------------------
 ! stage 1: need to remove a segment
@@ -1737,7 +1737,7 @@
 !!========================================================================
 
 !!>>> ctqmc_spin_counter: evaluate the occupation status for current
-!!>>> flavor channel and time, ! which can be used to calculate spin-spin
+!!>>> flavor channel and time, which can be used to calculate spin-spin
 !!>>> correlation function
   subroutine ctqmc_spin_counter(flvr, curr, occu)
      use constants, only : dp, zero, one
@@ -1783,7 +1783,7 @@
                  if ( curr > ts .and. curr < te ) then
                      occu = one
                      RETURN ! return to the parent subroutines immediately
-                 endif
+                 endif ! back if ( curr > ts .and. curr < te ) block
              enddo ! over i={1,rank(flvr)} loop
 
 ! case 3: there are segments, anti-segment configuration
@@ -1798,7 +1798,7 @@
                  if ( curr < ts .and. curr > te ) then
                      occu = zero
                      RETURN ! return to the parent subroutines immediately
-                 endif
+                 endif ! back if ( curr < ts .and. curr > te ) block
              enddo ! over i={1,rank(flvr)} loop
 
 ! case 4: there is no segments, full configuration
@@ -2208,7 +2208,7 @@
                  enddo ! over j={1,rank(i)} loop
              else if ( stts(i) == 3 ) then
                  write(mystd,'(4X,a)') '--->>> full occupation'
-             endif
+             endif ! back if      ( stts(i) == 0 ) block
 
              write(mystd,*) ! write empty lines
              write(mystd,*)
