@@ -1050,8 +1050,6 @@
      integer :: i
      integer :: j
      integer :: k
-     integer :: p
-     integer :: q
 
 ! loop index for orbitals
      integer :: m
