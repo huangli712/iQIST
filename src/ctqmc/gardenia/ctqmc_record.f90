@@ -1566,10 +1566,10 @@
      implicit none
 
 ! external arguments
-! vertex function, real part
+! two-particle green's function, real part
      real(dp), intent(out) :: h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! vertex function, imaginary part
+! two-particle green's function, imaginary part
      real(dp), intent(out) :: h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! initialize h2_re_mpi and h2_im_mpi
