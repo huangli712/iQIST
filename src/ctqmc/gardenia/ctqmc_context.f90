@@ -556,6 +556,8 @@
      allocate(g2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(h2_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(h2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
