@@ -522,6 +522,10 @@
 ! collect the two-particle green's function from h2_re to h2_re_mpi, etc.
      call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
 
+! collect the particle-particle pair susceptibility from ps_re to
+! ps_re_mpi, etc.
+     call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
+
 ! collect the impurity green's function data from gtau to gtau_mpi
      call ctqmc_reduce_gtau(gtau_mpi)
 
