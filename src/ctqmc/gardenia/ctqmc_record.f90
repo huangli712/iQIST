@@ -9,7 +9,8 @@
 !!!           ctqmc_record_schi
 !!!           ctqmc_record_ochi
 !!!           ctqmc_record_twop
-!!!           ctqmc_record_vrtx <<<---
+!!!           ctqmc_record_vrtx
+!!!           ctqmc_record_pair <<<---
 !!!           ctqmc_reduce_gtau
 !!!           ctqmc_reduce_ftau
 !!!           ctqmc_reduce_grnf
@@ -19,7 +20,8 @@
 !!!           ctqmc_reduce_schi
 !!!           ctqmc_reduce_ochi
 !!!           ctqmc_reduce_twop
-!!!           ctqmc_reduce_vrtx <<<---
+!!!           ctqmc_reduce_vrtx
+!!!           ctqmc_reduce_pair <<<---
 !!!           ctqmc_symm_nmat
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf
