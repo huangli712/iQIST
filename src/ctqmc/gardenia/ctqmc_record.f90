@@ -1639,14 +1639,14 @@
 
 # else  /* MPI */
 
-     h2_re_mpi = h2_re
-     h2_im_mpi = h2_im
+     ps_re_mpi = ps_re
+     ps_im_mpi = ps_im
 
 # endif /* MPI */
 
 ! calculate the average
-     h2_re_mpi = h2_re_mpi / real(nprocs)
-     h2_im_mpi = h2_im_mpi / real(nprocs)
+     ps_re_mpi = ps_re_mpi / real(nprocs)
+     ps_im_mpi = ps_im_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_pair
