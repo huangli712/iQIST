@@ -189,6 +189,16 @@
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
