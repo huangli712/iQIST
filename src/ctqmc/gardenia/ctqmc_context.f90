@@ -792,6 +792,8 @@
      if ( allocated(g2_im) )   deallocate(g2_im)
      if ( allocated(h2_re) )   deallocate(h2_re)
      if ( allocated(h2_im) )   deallocate(h2_im)
+     if ( allocated(ps_re) )   deallocate(ps_re)
+     if ( allocated(ps_im) )   deallocate(ps_im)
 
      return
   end subroutine ctqmc_deallocate_memory_meat
