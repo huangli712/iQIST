@@ -77,7 +77,7 @@
 ! if p == 3, calculate orbital-orbital correlation function
 ! if p == 4, calculate both two-particle green's function and vertex function
 ! if p == 5, calculate both two-particle green's function and vertex function
-! if p == 6, reserved
+! if p == 6, calculate particle-particle pair susceptibility
 ! if p == 7, reserved
 ! if p == 8, reserved
 ! example:
