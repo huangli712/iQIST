@@ -1603,29 +1603,29 @@
      return
   end subroutine ctqmc_reduce_vrtx
 
-!!>>> ctqmc_reduce_vrtx: reduce the h2_re_mpi and h2_im_mpi from all
+!!>>> ctqmc_reduce_pair: reduce the ps_re_mpi and ps_im_mpi from all
 !!>>> children processes
-  subroutine ctqmc_reduce_pair(h2_re_mpi, h2_im_mpi)
+  subroutine ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : nprocs
-     use context, only : h2_re, h2_im
+     use context, only : ps_re, ps_im
 
      implicit none
 
 ! external arguments
-! two-particle green's function, real part
-     real(dp), intent(out) :: h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+! particle-particle pair susceptibility, real part
+     real(dp), intent(out) :: ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! two-particle green's function, imaginary part
-     real(dp), intent(out) :: h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+! particle-particle pair susceptibility, imaginary part
+     real(dp), intent(out) :: ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! initialize h2_re_mpi and h2_im_mpi
-     h2_re_mpi = zero
-     h2_im_mpi = zero
+! initialize ps_re_mpi and ps_im_mpi
+     ps_re_mpi = zero
+     ps_im_mpi = zero
 
 ! build h2_re_mpi and h2_im_mpi, collect data from all children processes
 # if defined (MPI)
