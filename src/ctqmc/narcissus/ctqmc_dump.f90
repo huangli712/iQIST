@@ -736,39 +736,42 @@
      real(dp), intent(in) :: ochi(ntime)
 
 ! orbital-orbital correlation function data, < N(0) N(\tau) >, orbital-resolved
-     real(dp), intent(in) :: oochi(ntime,norbs)
+     real(dp), intent(in) :: oochi(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
      integer :: i
      integer :: j
+     integer :: k
 
 ! check if we need to dump orbital-orbital correlation function data
-     if ( isvrt /= 3 ) RETURN
+     if ( .not. btest(isvrt, 2) ) RETURN
 
 ! open data file: solver.ochi.dat
      open(mytmp, file='solver.ochi.dat', form='formatted', status='unknown')
 
 ! write it
-     do j=1,norbs
-         write(mytmp,'(a,i5)') '# flvr:', j
-         do i=1,ntime
-             write(mytmp,'(2f12.6)') tmesh(i), oochi(i,j)
-         enddo ! over i={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over j={1,norbs} loop
+     do k=1,norbs
+         do j=1,norbs
+             write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
+             do i=1,ntime
+                 write(mytmp,'(2f12.6)') tmesh(i), oochi(i,j,k)
+             enddo ! over i={1,ntime} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,norbs} loop
 
-     write(mytmp,'(a,i5)') '# flvr:', 8888
+     write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
          write(mytmp,'(2f12.6)') tmesh(i), ochi(i) / real(norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
-     write(mytmp,'(a,i5)') '# flvr:', 9999
+     write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), sum( oochi(i,:) ) / real(norbs)
+         write(mytmp,'(2f12.6)') tmesh(i), sum( oochi(i,:,:) ) / real(norbs * norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
