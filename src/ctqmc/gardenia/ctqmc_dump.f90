@@ -1075,7 +1075,12 @@
                  write(mytmp,'(a,i6)') '# flvr1:', m
                  write(mytmp,'(a,i6)') '# flvr2:', n
                  write(mytmp,'(a,i6)') '# nbfrq:', k
-
+                 do j=1,nffrq
+                     do i=1,nffrq
+                     enddo ! over i={1,nffrq} loop
+                 enddo ! over j={1,nffrq} loop
+                 write(mytmp,*) ! write empty lines
+                 write(mytmp,*)
              enddo ! over k={1,nbfrq} loop
          enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
