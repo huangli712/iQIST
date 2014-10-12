@@ -1266,9 +1266,9 @@
                      CTQMC_FERMI2_LOOP: do w3n=1,nffrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
 
-                         cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
-                         if ( f1 == f2 ) then
-                             cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                         cmeas = czero
+                         if ( f1 /= f2 ) then
+                             cmeas = cmeas + g2aux(w1n,w4n,f1) * g2aux(nffrq-w2n+1,nffrq-w3n+1,f2)
                          endif ! back if ( f1 == f2 ) block
                          ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
                          ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
