@@ -1,0 +1,31 @@
+!!!-----------------------------------------------------------------------
+!!! source  : solver.ctqmc.in
+!!! solver  : manjushaka
+!!! purpose : to test ctqmc impurity solver
+!!! author  : yilin wang (qhwyl2006@126.com)
+!!!-----------------------------------------------------------------------
+
+!!>>> setup general control flags
+!!------------------------------------------------------------------------
+  isscf  : 2
+  issun  : 2
+  isspn  : 1
+  isbin  : 2
+
+!!>>> setup common variables for quantum impurity model
+!!------------------------------------------------------------------------
+  nband  : 5
+  niter  : 20
+  mune   : 8.00
+  beta   : 10.0
+
+!!>>> setup common variables for quantum impurity solver
+!!------------------------------------------------------------------------
+  npart  : 4
+  nflip  : 20000
+  ntherm : 2000000
+  nsweep : 20000000
+  nwrite : 2000000
+  nclean : 100000
+  nmonte : 100
+  ncarlo : 100
