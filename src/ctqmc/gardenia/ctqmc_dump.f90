@@ -16,12 +16,14 @@
 !!!           ctqmc_dump_ochi
 !!!           ctqmc_dump_twop
 !!!           ctqmc_dump_vrtx
+!!!           ctqmc_dump_pair
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
 !!!           09/23/2014 by li huang
+!!!           10/11/2014 by li huang
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -1025,3 +1027,68 @@
 
      return
   end subroutine ctqmc_dump_vrtx
+
+!!>>> ctqmc_dump_pair: write out the particle-particle pair susceptibility
+  subroutine ctqmc_dump_pair(ps_re, ps_im)
+     use constants, only : dp, mytmp
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+
+     implicit none
+
+! external arguments
+! particle-particle pair susceptibility, real part
+     real(dp), intent(in) :: ps_re(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), intent(in) :: ps_im(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! local variables
+! loop index for frequencies
+     integer :: i
+     integer :: j
+     integer :: k
+
+! loop index for orbitals
+     integer :: m
+     integer :: n
+
+! dummy integer variables
+     integer :: it
+     integer :: jt
+
+! check if we need to dump particle-particle pair susceptibility
+! to solver.pair.dat
+     if ( .not. btest(isvrt, 5) ) RETURN
+
+! open data file: solver.pair.dat
+     open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')
+
+! write it
+     do m=1,norbs
+         do n=1,m
+             do k=1,nbfrq
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
+                 do j=1,nffrq
+                     do i=1,nffrq
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
+                         write(mytmp,'(2i6,2f16.8)') jt, it, ps_re(i,j,k,n,m), ps_im(i,j,k,n,m)
+                     enddo ! over i={1,nffrq} loop
+                 enddo ! over j={1,nffrq} loop
+                 write(mytmp,*) ! write empty lines
+                 write(mytmp,*)
+             enddo ! over k={1,nbfrq} loop
+         enddo ! over n={1,m} loop
+     enddo ! over m={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_pair

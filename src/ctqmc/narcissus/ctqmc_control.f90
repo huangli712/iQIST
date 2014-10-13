@@ -29,12 +29,12 @@
 ! approximation plus dynamical mean field theory case
 ! if isscf == 2, self-consistent scheme, used in normal model hamiltonian
 ! plus dynamical mean field theory case
-     integer, public, save :: isscf  = 1
+     integer, public, save :: isscf  = 2
 
 ! control flag: symmetry of bands
 ! if issun == 1, the bands are not symmetrized
 ! if issun == 2, the bands are symmetrized according to symmetry matrix
-     integer, public, save :: issun  = 1
+     integer, public, save :: issun  = 2
 
 ! control flag: symmetry of spin orientation
 ! if isspn == 1, enforce spin up = spin down
@@ -44,7 +44,7 @@
 ! control flag: impurity green's function binning mode
 ! if isbin == 1, without binning mode
 ! if isbin == 2, with binning mode
-     integer, public, save :: isbin  = 1
+     integer, public, save :: isbin  = 2
 
 ! control flag: apply orthogonal polynomial representation to perform measurement
 ! if isort == 1, use normal representation to measure G(\tau)
@@ -61,13 +61,32 @@
      integer, public, save :: isort  = 1
 
 ! control flag: whether we measure the high order correlation function
-! if isvrt == 1, do nothing
-! if isvrt == 2, calculate spin-spin correlation function
-! if isvrt == 3, calculate orbital-orbital correlation function
-! if isvrt == 4, calculate both two-particle green's function and vertex function
-! if isvrt == 5, calculate both two-particle green's function and vertex function
-! note: when isvrt == 4 and isvrt == 5, both the two-particle green's and
-! vertex functions are computed by using two different algorithms.
+! we just use the following algorithm to judge which correlation function
+! should be calculated:
+! (a) isvrt is converted to a binary representation at first. for example,
+! 10 is converted to 1010_2, 15 is converted to 1111_2, etc.
+! (b) then we examine the bits. If it is 1, then we do the calculation.
+! If it is 0, then we ignore the calculation. for example, we just use the
+! second bit (from right side to left side) to represent the calculation
+! of spin-spin correlation. So, it isvrt is 10 (1010_2), we will calculate
+! spin-spin correlation function. If isvrt is 13 (1101_2), we will not
+! calculate it since the second bit is 0.
+! The following are the definitions of bit representation:
+! if p == 1, do nothing
+! if p == 2, calculate spin-spin correlation function
+! if p == 3, calculate orbital-orbital correlation function
+! if p == 4, calculate both two-particle green's function and vertex function
+! if p == 5, calculate both two-particle green's function and vertex function
+! if p == 6, calculate particle-particle pair susceptibility
+! if p == 7, reserved
+! if p == 8, reserved
+! example:
+!     1 1 0 1 0 1 0 1
+! p = 8 7 6 5 4 3 2 1
+! note: if p == 4 or p == 5, both the two-particle green's and vertex
+! functions are computed, but using two different algorithms. you can not
+! set them to 1 at the same time. In order words, if you set the bit at
+! p == 4 to 1, then the bit at p == 5 must be 0, and vice versa.
      integer, public, save :: isvrt  = 1
 
 ! control flag: model need to be solved
@@ -176,7 +195,7 @@
 
 ! how often to sampling the gmat and paux (nmat and nnmat)
 ! note: the measure periods for schi, sschi, ochi, oochi, g2_re, g2_im,
-! h2_re, and h2_im are also controlled by nmonte parameter.
+! h2_re, h2_im, ps_re, and ps_im are also controlled by nmonte parameter.
      integer, public, save :: nmonte = 10
 
 ! how often to sampling the gtau and prob

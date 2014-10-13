@@ -77,7 +77,7 @@
 ! if p == 3, calculate orbital-orbital correlation function
 ! if p == 4, calculate both two-particle green's function and vertex function
 ! if p == 5, calculate both two-particle green's function and vertex function
-! if p == 6, reserved
+! if p == 6, calculate particle-particle pair susceptibility
 ! if p == 7, reserved
 ! if p == 8, reserved
 ! example:
@@ -180,7 +180,7 @@
 
 ! how often to sampling the gmat and paux (nmat and nnmat)
 ! note: the measure periods for schi, sschi, ochi, oochi, g2_re, g2_im,
-! h2_re, and h2_im are also controlled by nmonte parameter.
+! h2_re, h2_im, ps_re, and ps_im are also controlled by nmonte parameter.
      integer, public, save :: nmonte = 10
 
 ! how often to sampling the gtau and prob

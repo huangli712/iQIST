@@ -38,10 +38,10 @@
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2014.09.18T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop: by li huang, CAEP & UNIFR'
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
-     write(mystd,'(2X,a)') 'License: GPL2 and later versions'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'NARCISSUS >>> start running at '//date_time_string

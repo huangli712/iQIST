@@ -65,6 +65,7 @@
 !! solver.ochi.dat
 !! solver.twop.dat
 !! solver.vrtx.dat
+!! solver.pair.dat
 !! solver.status.dat
 !! etc.
 !!
