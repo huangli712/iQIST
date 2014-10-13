@@ -575,21 +575,21 @@
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,ntime
-             gtau(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
+         do n=1,norbs
+             gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,ntime
-             ftau(n,m,:) = ftau_mpi(n,m,:) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
+         do n=1,norbs
+             ftau(:,n,m) = ftau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,nfreq
-             grnf(n,m,m) = grnf_mpi(n,m,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,nfreq} loop
+         do n=1,norbs
+             grnf(:,n,m) = grnf_mpi(:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
 ! build atomic green's function and self-energy function using improved
@@ -665,9 +665,14 @@
          call ctqmc_dump_twop(g2_re, g2_im)
      endif ! back if ( myid == master ) block
 
-! write out the final vertex function data, h2_re and h2_im
+! write out the final two-particle green's function data, h2_re and h2_im
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_vrtx(h2_re, h2_im)
+     endif ! back if ( myid == master ) block
+
+! write out the final particle-particle pair susceptibility data, ps_re and ps_im
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_pair(ps_re, ps_im)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
