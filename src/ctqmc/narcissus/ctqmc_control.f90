@@ -225,10 +225,10 @@
      real(dp), public, save :: Jp    = 0.00_dp
 
 ! strength of dynamical screening effect ( or electron-phonon coupling )
-     real(dp), public, save :: lc    = 2.50_dp
+     real(dp), public, save :: lc    = 1.00_dp
 
 ! screening frequency ( or frequency for einstein phonons )
-     real(dp), public, save :: wc    = 3.00_dp
+     real(dp), public, save :: wc    = 1.00_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
