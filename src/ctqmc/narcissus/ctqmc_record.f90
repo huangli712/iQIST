@@ -421,7 +421,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -477,7 +477,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
