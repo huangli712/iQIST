@@ -722,6 +722,8 @@
      deallocate(g2_im_mpi)
      deallocate(h2_re_mpi)
      deallocate(h2_im_mpi)
+     deallocate(ps_re_mpi)
+     deallocate(ps_im_mpi)
      deallocate(gtau_mpi )
      deallocate(ftau_mpi )
      deallocate(grnf_mpi )
