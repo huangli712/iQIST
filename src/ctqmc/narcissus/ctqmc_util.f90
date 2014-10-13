@@ -3,7 +3,7 @@
 !!! program : ctqmc_make_htau
 !!!           ctqmc_make_hsed
 !!!           ctqmc_make_ktau
-!!!           ctqmc_make_hsed
+!!!           ctqmc_make_ksed
 !!!           ctqmc_four_htau
 !!!           ctqmc_four_hybf
 !!!           ctqmc_make_uumat

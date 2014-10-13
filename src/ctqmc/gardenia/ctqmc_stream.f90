@@ -510,10 +510,12 @@
 ! init two-particle green's function
      g2_re   = zero
      g2_im   = zero
-
-! init vertex function
      h2_re   = zero
      h2_im   = zero
+
+! init particle-particle pair susceptibility
+     ps_re   = zero
+     ps_im   = zero
 
 ! init M-matrix related array
      mmat    = zero
