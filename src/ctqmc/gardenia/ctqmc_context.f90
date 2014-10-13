@@ -206,7 +206,7 @@
      implicit none
 
 ! histogram for perturbation expansion series
-     integer,  public, save, allocatable :: hist(:)
+     real(dp), public, save, allocatable :: hist(:)
 
 ! auxiliary physical observables
 ! paux(1) : total energy, Etot
@@ -246,11 +246,17 @@
 ! used to calculate two-particle green's function, imaginary part
      real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
 
-! used to calculate vertex function, real part
+! used to calculate two-particle green's function, real part
      real(dp), public, save, allocatable :: h2_re(:,:,:,:,:)
 
-! used to calculate vertex function, imaginary part
+! used to calculate two-particle green's function, imaginary part
      real(dp), public, save, allocatable :: h2_im(:,:,:,:,:)
+
+! particle-particle pair susceptibility, real part
+     real(dp), public, save, allocatable :: ps_re(:,:,:,:,:)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), public, save, allocatable :: ps_im(:,:,:,:,:)
 
   end module ctqmc_meat
 
@@ -550,6 +556,8 @@
      allocate(g2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(h2_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(h2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -557,7 +565,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     hist  = 0
+     hist  = zero
 
      paux  = zero
      prob  = zero
@@ -573,6 +581,8 @@
      g2_im = zero
      h2_re = zero
      h2_im = zero
+     ps_re = zero
+     ps_im = zero
 
      return
   end subroutine ctqmc_allocate_memory_meat
@@ -782,6 +792,8 @@
      if ( allocated(g2_im) )   deallocate(g2_im)
      if ( allocated(h2_re) )   deallocate(h2_re)
      if ( allocated(h2_im) )   deallocate(h2_im)
+     if ( allocated(ps_re) )   deallocate(ps_re)
+     if ( allocated(ps_im) )   deallocate(ps_im)
 
      return
   end subroutine ctqmc_deallocate_memory_meat

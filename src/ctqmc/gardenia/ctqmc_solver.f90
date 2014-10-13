@@ -34,7 +34,7 @@
      use context, only : tmesh, rmesh
      use context, only : hist, prob
      use context, only : nmat, nnmat, schi, sschi, ochi, oochi
-     use context, only : g2_re, g2_im, h2_re, h2_im
+     use context, only : g2_re, g2_im, h2_re, h2_im, ps_re, ps_im
      use context, only : symm
      use context, only : gtau, ftau, grnf
      use context, only : sig2
@@ -78,7 +78,7 @@
      real(dp) :: time_niter
 
 ! histogram for perturbation expansion series, for mpi case
-     integer, allocatable  :: hist_mpi(:)
+     real(dp), allocatable :: hist_mpi(:)
 
 ! probability of atomic states, for mpi case
      real(dp), allocatable :: prob_mpi(:)
@@ -107,11 +107,17 @@
 ! used to measure two-particle green's function, imaginary part, for mpi case
      real(dp), allocatable :: g2_im_mpi(:,:,:,:,:)
 
-! used to measure vertex function, real part, for mpi case
+! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: h2_re_mpi(:,:,:,:,:)
 
-! used to measure vertex function, imaginary part, for mpi case
+! used to measure two-particle green's function, imaginary part, for mpi case
      real(dp), allocatable :: h2_im_mpi(:,:,:,:,:)
+
+! used to measure particle-particle pair susceptibility, real part, for mpi case
+     real(dp), allocatable :: ps_re_mpi(:,:,:,:,:)
+
+! used to measure particle-particle pair susceptibility, imaginary part, for mpi case
+     real(dp), allocatable :: ps_im_mpi(:,:,:,:,:)
 
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
@@ -179,6 +185,16 @@
      endif ! back if ( istat /= 0 ) block
 
      allocate(h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -368,10 +384,15 @@
                  call ctqmc_record_twop()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
 
-! record the vertex function
+! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
                  call ctqmc_record_vrtx()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block
+
+! record the particle-particle pair susceptibility
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) then
+                 call ctqmc_record_pair()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) block
 
 ! record the auxiliary correlation function, F^{j}(\tau)
              if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
@@ -498,8 +519,12 @@
 ! collect the two-particle green's function from g2_re to g2_re_mpi, etc.
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
-! collect the vertex function from h2_re to h2_re_mpi, etc.
+! collect the two-particle green's function from h2_re to h2_re_mpi, etc.
      call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
+
+! collect the particle-particle pair susceptibility from ps_re to
+! ps_re_mpi, etc.
+     call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
      call ctqmc_reduce_gtau(gtau_mpi)
@@ -546,6 +571,13 @@
          do n=1,norbs
              h2_re(:,:,:,n,m) = h2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
              h2_im(:,:,:,n,m) = h2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,norbs
+             ps_re(:,:,:,n,m) = ps_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             ps_im(:,:,:,n,m) = ps_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
@@ -640,9 +672,14 @@
          call ctqmc_dump_twop(g2_re, g2_im)
      endif ! back if ( myid == master ) block
 
-! write out the final vertex function data, h2_re and h2_im
+! write out the final two-particle green's function data, h2_re and h2_im
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_vrtx(h2_re, h2_im)
+     endif ! back if ( myid == master ) block
+
+! write out the final particle-particle pair susceptibility data, ps_re and ps_im
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_pair(ps_re, ps_im)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
@@ -692,6 +729,8 @@
      deallocate(g2_im_mpi)
      deallocate(h2_re_mpi)
      deallocate(h2_im_mpi)
+     deallocate(ps_re_mpi)
+     deallocate(ps_im_mpi)
      deallocate(gtau_mpi )
      deallocate(ftau_mpi )
      deallocate(grnf_mpi )

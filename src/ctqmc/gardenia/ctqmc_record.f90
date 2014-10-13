@@ -9,7 +9,8 @@
 !!!           ctqmc_record_schi
 !!!           ctqmc_record_ochi
 !!!           ctqmc_record_twop
-!!!           ctqmc_record_vrtx <<<---
+!!!           ctqmc_record_vrtx
+!!!           ctqmc_record_pair <<<---
 !!!           ctqmc_reduce_gtau
 !!!           ctqmc_reduce_ftau
 !!!           ctqmc_reduce_grnf
@@ -19,7 +20,8 @@
 !!!           ctqmc_reduce_schi
 !!!           ctqmc_reduce_ochi
 !!!           ctqmc_reduce_twop
-!!!           ctqmc_reduce_vrtx <<<---
+!!!           ctqmc_reduce_vrtx
+!!!           ctqmc_reduce_pair <<<---
 !!!           ctqmc_symm_nmat
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf
@@ -34,6 +36,7 @@
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
 !!!           09/22/2014 by li huang
+!!!           10/13/2014 by li huang
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -527,6 +530,8 @@
 
 !!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
+     use constants, only : one
+
      use control, only : mkink
      use context, only : ckink
      use context, only : hist
@@ -535,9 +540,9 @@
 
 ! note: if ckink == 0, we record its count in hist(mkink)
      if ( ckink > 0 ) then
-         hist(ckink) = hist(ckink) + 1
+         hist(ckink) = hist(ckink) + one
      else
-         hist(mkink) = hist(mkink) + 1
+         hist(mkink) = hist(mkink) + one
      endif ! back if ( ckink > 0 ) block
 
      return
@@ -745,6 +750,7 @@
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
 
+     use control, only : isvrt
      use control, only : nband, norbs
      use control, only : ntime
      use context, only : tmesh
@@ -767,6 +773,9 @@
 
 ! used to record occupations for current flavor channel and time
      real(dp) :: oaux(norbs)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 1) )
 
      TIME_LOOP: do i=1,ntime
 
@@ -817,6 +826,7 @@
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
 
+     use control, only : isvrt
      use control, only : norbs
      use control, only : ntime
      use context, only : tmesh
@@ -844,6 +854,9 @@
 
 ! used to record occupations for current flavor channel and time
      real(dp) :: oaux(ntime,norbs)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 2) )
 
 ! calculate ochi
      oaux = zero
@@ -1160,6 +1173,129 @@
      return
   end subroutine ctqmc_record_vrtx
 
+!!>>> ctqmc_record_pair: record the particle-particle pair susceptibility
+  subroutine ctqmc_record_pair()
+     use constants, only : dp, two, pi, czi, czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : ps_re, ps_im
+     use context, only : rank
+     use context, only : mmat
+
+     implicit none
+
+! local variables
+! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+     integer  :: flvr
+
+! loop index for frequency
+     integer  :: nfaux
+     integer  :: wbn
+     integer  :: w1n
+     integer  :: w2n
+     integer  :: w3n
+     integer  :: w4n
+
+! used to store the element of mmat matrix
+     real(dp) :: maux
+
+! imaginary time for start and end points
+     real(dp) :: taus
+     real(dp) :: taue
+
+! dummy complex(dp) variables, used to calculate the ps_re and ps_im
+     complex(dp) :: cmeas
+
+! dummy complex(dp) arrays, used to store the intermediate results
+     complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: caux1(:)
+     complex(dp), allocatable :: caux2(:)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 5) )
+
+! evaluate nfaux, determine the size of g2aux
+     nfaux = nffrq + nbfrq - 1
+
+! allocate memory for g2aux and then initialize it
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+
+! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux) ); caux1 = czero
+     allocate( caux2(nfaux) ); caux2 = czero
+
+     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+
+! get imaginary time value for segments
+         do is=1,rank(flvr)
+             taus = time_s( index_s(is, flvr), flvr )
+
+             do ie=1,rank(flvr)
+                 taue = time_e( index_e(ie, flvr), flvr )
+
+! get matrix element from mmat
+                 maux = mmat(ie, is, flvr)
+
+! calculate g2aux
+                 caux1 = exp(+two * czi * pi * taue / beta)
+                 caux2 = exp(-two * czi * pi * taus / beta)
+                 call s_cumprod_z(nfaux, caux1, caux1)
+                 call s_cumprod_z(nfaux, caux2, caux2)
+                 caux1 = caux1 * exp(-(nffrq + 1) * czi * pi * taue / beta)
+                 caux2 = caux2 * exp(+(nffrq + 1) * czi * pi * taus / beta)
+                 do w2n=1,nfaux
+                     do w1n=1,nfaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+
+! calculate ps_re and ps_im
+     CTQMC_ORBIT1_LOOP: do f1=1,norbs
+         CTQMC_ORBIT2_LOOP: do f2=1,f1
+
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+                         w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
+
+                         cmeas = czero
+                         if ( f1 /= f2 ) then
+                             cmeas = cmeas + g2aux(w1n,w4n,f1) * g2aux(nffrq-w2n+1,nffrq-w3n+1,f2)
+                         endif ! back if ( f1 == f2 ) block
+                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+
+         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
+     enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
+
+! deallocate memory
+     deallocate( g2aux )
+     deallocate( caux1 )
+     deallocate( caux2 )
+
+     return
+  end subroutine ctqmc_record_pair
+
 !!========================================================================
 !!>>> reduce physical observables                                      <<<
 !!========================================================================
@@ -1285,9 +1421,8 @@
   end subroutine ctqmc_reduce_grnf
 
 !!>>> ctqmc_reduce_hist: reduce the hist from all children processes
-!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is
-!!>>> important to avoid data overflow in them
   subroutine ctqmc_reduce_hist(hist_mpi)
+     use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
      use control, only : mkink
@@ -1298,16 +1433,16 @@
 
 ! external arguments
 ! histogram for perturbation expansion series
-     integer, intent(out) :: hist_mpi(mkink)
+     real(dp), intent(out) :: hist_mpi(mkink)
 
 ! initialize hist_mpi
-     hist_mpi = 0
+     hist_mpi = zero
 
 ! build hist_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(hist / nprocs, hist_mpi)
+     call mp_allreduce(hist, hist_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1319,7 +1454,7 @@
 # endif /* MPI */
 
 ! calculate the average
-     hist_mpi = hist_mpi / 1
+     hist_mpi = hist_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_hist
@@ -1565,10 +1700,10 @@
      implicit none
 
 ! external arguments
-! vertex function, real part
+! two-particle green's function, real part
      real(dp), intent(out) :: h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! vertex function, imaginary part
+! two-particle green's function, imaginary part
      real(dp), intent(out) :: h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! initialize h2_re_mpi and h2_im_mpi
@@ -1598,6 +1733,54 @@
 
      return
   end subroutine ctqmc_reduce_vrtx
+
+!!>>> ctqmc_reduce_pair: reduce the ps_re_mpi and ps_im_mpi from all
+!!>>> children processes
+  subroutine ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : ps_re, ps_im
+
+     implicit none
+
+! external arguments
+! particle-particle pair susceptibility, real part
+     real(dp), intent(out) :: ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), intent(out) :: ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! initialize ps_re_mpi and ps_im_mpi
+     ps_re_mpi = zero
+     ps_im_mpi = zero
+
+! build ps_re_mpi and ps_im_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(ps_re, ps_re_mpi)
+     call mp_allreduce(ps_im, ps_im_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     ps_re_mpi = ps_re
+     ps_im_mpi = ps_im
+
+# endif /* MPI */
+
+! calculate the average
+     ps_re_mpi = ps_re_mpi / real(nprocs)
+     ps_im_mpi = ps_im_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_pair
 
 !!========================================================================
 !!>>> symmetrize physical observables                                  <<<

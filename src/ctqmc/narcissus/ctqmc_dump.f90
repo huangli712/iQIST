@@ -17,12 +17,14 @@
 !!!           ctqmc_dump_ochi
 !!!           ctqmc_dump_twop
 !!!           ctqmc_dump_vrtx
+!!!           ctqmc_dump_pair
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
 !!!           09/12/2014 by li huang
+!!!           10/13/2014 by li huang
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -279,7 +281,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(grnf(j,i,i)), &
                                  aimag(grnf(j,i,i)), &
                       real(grnf(j,i+nband,i+nband)), &
@@ -323,7 +325,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(wssf(j,i,i)), &
                                  aimag(wssf(j,i,i)), &
                       real(wssf(j,i+nband,i+nband)), &
@@ -367,7 +369,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(hybf(j,i,i)), &
                                  aimag(hybf(j,i,i)), &
                       real(hybf(j,i+nband,i+nband)), &
@@ -411,7 +413,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(sigf(j,i,i)), &
                                  aimag(sigf(j,i,i)), &
                       real(sigf(j,i+nband,i+nband)), &
@@ -459,7 +461,7 @@
 ! write it
      do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                     real(ghub(j,i)), &
                                    aimag(ghub(j,i)), &
                                     real(shub(j,i)), &
@@ -490,23 +492,17 @@
 
 ! external arguments
 ! histogram data
-     integer, intent(in) :: hist(mkink)
+     real(dp), intent(in) :: hist(mkink)
 
 ! local variables
 ! loop index
      integer  :: i
 
-! dummy variables
-     real(dp) :: raux
-
 ! scaled histogram data
      real(dp) :: haux(mkink)
 
 ! evaluate haux at first
-     raux = real( sum(hist) )
-     do i=1,mkink
-         haux(i) = real( hist(i) ) / raux
-     enddo ! over i={1,mkink} loop
+     haux = hist / sum(hist)
 
 ! open data file: solver.hist.dat
      open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
@@ -514,7 +510,7 @@
 ! write it
      write(mytmp,'(a)') '# histogram: order | count | percent'
      do i=1,mkink
-         write(mytmp,'(i5,i12,f12.6)') i, hist(i), haux(i)
+         write(mytmp,'(i6,i12,f12.6)') i, int( hist(i) ), haux(i)
      enddo ! over i={1,mkink} loop
 
 ! close data file
@@ -564,7 +560,7 @@
                  basis(i,j) = 1
              else
                  basis(i,j) = 0
-             endif
+             endif ! back if ( btest(i-1,j-1) .eqv. .true. ) block
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
@@ -598,20 +594,20 @@
 ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(i5,3f12.6)') i, prob(i), real(noccs(i)), real(soccs(i)) * half
+         write(mytmp,'(i6,3f12.6)') i, prob(i), real(noccs(i)), real(soccs(i)) * half
      enddo ! over i={1,ncfgs} loop
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
-         write(mytmp,'(i5,2f12.6)') i+1, real(i), oprob(i)
+         write(mytmp,'(i6,2f12.6)') i+1, real(i), oprob(i)
      enddo ! over i={0,norbs} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(oprob)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(oprob)
 
      write(mytmp,'(a)') '# spin probability: index | spin | prob'
      do i=-nband,nband
-         write(mytmp,'(i5,2f12.6)') i+nband+1, i*half, sprob(i)
+         write(mytmp,'(i6,2f12.6)') i+nband+1, i*half, sprob(i)
      enddo ! over i={-nband,nband} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(sprob)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
 
 ! close data file
      close(mytmp)
@@ -646,16 +642,16 @@
 ! write it
      write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i5,f12.6)') i, nmat(i)
+         write(mytmp,'(i6,f12.6)') i, nmat(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
+     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
 
      write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
+             write(mytmp,'(2i6,f12.6)') i, j, nnmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -689,14 +685,14 @@
      integer :: j
 
 ! check if we need to dump spin-spin correlation function data
-     if ( isvrt /= 2 ) RETURN
+     if ( .not. btest(isvrt, 1) ) RETURN
 
 ! open data file: solver.schi.dat
      open(mytmp, file='solver.schi.dat', form='formatted', status='unknown')
 
 ! write it
      do j=1,nband
-         write(mytmp,'(a,i5)') '# flvr:', j
+         write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,ntime
              write(mytmp,'(2f12.6)') tmesh(i), sschi(i,j)
          enddo ! over i={1,ntime} loop
@@ -704,14 +700,14 @@
          write(mytmp,*)
      enddo ! over j={1,nband} loop
 
-     write(mytmp,'(a,i5)') '# flvr:', 8888
+     write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
          write(mytmp,'(2f12.6)') tmesh(i), schi(i) / real(nband)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
-     write(mytmp,'(a,i5)') '# flvr:', 9999
+     write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
          write(mytmp,'(2f12.6)') tmesh(i), sum( sschi(i,:) ) / real(nband)
      enddo ! over i={1,ntime} loop
@@ -740,39 +736,42 @@
      real(dp), intent(in) :: ochi(ntime)
 
 ! orbital-orbital correlation function data, < N(0) N(\tau) >, orbital-resolved
-     real(dp), intent(in) :: oochi(ntime,norbs)
+     real(dp), intent(in) :: oochi(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
      integer :: i
      integer :: j
+     integer :: k
 
 ! check if we need to dump orbital-orbital correlation function data
-     if ( isvrt /= 3 ) RETURN
+     if ( .not. btest(isvrt, 2) ) RETURN
 
 ! open data file: solver.ochi.dat
      open(mytmp, file='solver.ochi.dat', form='formatted', status='unknown')
 
 ! write it
-     do j=1,norbs
-         write(mytmp,'(a,i5)') '# flvr:', j
-         do i=1,ntime
-             write(mytmp,'(2f12.6)') tmesh(i), oochi(i,j)
-         enddo ! over i={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over j={1,norbs} loop
+     do k=1,norbs
+         do j=1,norbs
+             write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
+             do i=1,ntime
+                 write(mytmp,'(2f12.6)') tmesh(i), oochi(i,j,k)
+             enddo ! over i={1,ntime} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,norbs} loop
 
-     write(mytmp,'(a,i5)') '# flvr:', 8888
+     write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
          write(mytmp,'(2f12.6)') tmesh(i), ochi(i) / real(norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
-     write(mytmp,'(a,i5)') '# flvr:', 9999
+     write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), sum( oochi(i,:) ) / real(norbs)
+         write(mytmp,'(2f12.6)') tmesh(i), sum( oochi(i,:,:) ) / real(norbs * norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
@@ -784,7 +783,7 @@
   end subroutine ctqmc_dump_ochi
 
 !!>>> ctqmc_dump_twop: write out the two-particle green's function and
-!!>>> vertex function
+!!>>> full (reducible) vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
      use constants, only : dp, czero, mytmp
 
@@ -798,10 +797,10 @@
 
 ! external arguments
 ! used to calculate two-particle green's function, real part
-     real(dp), intent(in) :: g2_re(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: g2_re(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! used to calculate two-particle green's function, imaginary part
-     real(dp), intent(in) :: g2_im(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: g2_im(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index for frequencies
@@ -836,18 +835,18 @@
 
 ! check if we need to dump two-particle green's function and vertex
 ! function data to solver.twop.dat
-     if ( isvrt /= 4 ) RETURN
+     if ( .not. btest(isvrt, 3) ) RETURN
 
 ! open data file: solver.twop.dat
      open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
 
 ! write it
      do m=1,norbs
-         do n=1,norbs
+         do n=1,m
              do k=1,nbfrq
-                 write(mytmp,'(a,i5)') '# flvr1:', m
-                 write(mytmp,'(a,i5)') '# flvr2:', n
-                 write(mytmp,'(a,i5)') '# nbfrq:', k
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
 ! evaluate g2 and g1
@@ -873,13 +872,13 @@
                          endif ! back if ( i <= nffrq/2 ) block
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,m,m))
+                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                          else
-                             g4 = grnf(q-nffrq/2,m,m)
+                             g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(m,n,j,i,k), g2_im(m,n,j,i,k) )
+                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -889,20 +888,20 @@
 ! evaluate chii, straightforward but less accurate
                          chii = chit - chi0
 
-! jt: \omega
-! it: \omega'
-! chit: \chi_{tot}(\omega, \omega', \nu)
-! chi0: \chi_{0}(\omega, \omega', \nu)
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+! chit: \chi_{tot}(\omega, \omega', \nu), two-particle green's function
+! chi0: \chi_{0}(\omega, \omega', \nu), bubble function
 ! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu)
+! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i5,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
+                         write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
                  write(mytmp,*)
              enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,norbs} loop
+         enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
 ! close data file
@@ -911,8 +910,9 @@
      return
   end subroutine ctqmc_dump_twop
 
-!!>>> ctqmc_dump_vrtx: write out the vertex function and two-particle
-!!>>> green's function
+!!>>> ctqmc_dump_vrtx: write out the two-particle green's function and
+!!>>> full (reducible) vertex function, the improved estimator was used
+!!>>> to improve the accuracy
   subroutine ctqmc_dump_vrtx(h2_re, h2_im)
      use constants, only : dp, czero, mytmp
 
@@ -929,10 +929,10 @@
 
 ! external arguments
 ! used to calculate vertex function, real part
-     real(dp), intent(in) :: h2_re(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: h2_re(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! used to calculate vertex function, imaginary part
-     real(dp), intent(in) :: h2_im(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: h2_im(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index for frequencies
@@ -969,7 +969,7 @@
 
 ! check if we need to dump two-particle green's function and vertex
 ! function data to solver.vrtx.dat
-     if ( isvrt /= 5 ) RETURN
+     if ( .not. btest(isvrt, 4) ) RETURN
 
 ! build frnf at first: F = G \Sigma
 ! in principle, F should be measured during the Monte Carlo procedure
@@ -984,11 +984,11 @@
 
 ! write it
      do m=1,norbs
-         do n=1,norbs
+         do n=1,m
              do k=1,nbfrq
-                 write(mytmp,'(a,i5)') '# flvr1:', m
-                 write(mytmp,'(a,i5)') '# flvr2:', n
-                 write(mytmp,'(a,i5)') '# nbfrq:', k
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
 ! evaluate g2 and g1
@@ -1021,16 +1021,16 @@
                          endif ! back if ( i <= nffrq/2 ) block
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,m,m))
+                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                          else
-                             g4 = grnf(q-nffrq/2,m,m)
+                             g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chih
-                         chih = dcmplx( h2_re(m,n,j,i,k), h2_im(m,n,j,i,k) )
+                         chih = dcmplx( h2_re(i,j,k,n,m), h2_im(i,j,k,n,m) )
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(m,n,j,i,k), g2_im(m,n,j,i,k) )
+                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -1040,20 +1040,20 @@
 ! evaluate chii, more accurate than that in ctqmc_dump_twop() subroutine
                          chii = g1 * chih - fw * chit
 
-! jt: \omega
-! it: \omega'
-! chit: \chi_{tot}(\omega, \omega', \nu)
-! chi0: \chi_{0}(\omega, \omega', \nu)
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+! chit: \chi_{tot}(\omega, \omega', \nu), two-particle green's function
+! chi0: \chi_{0}(\omega, \omega', \nu), bubble function
 ! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu)
+! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i5,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
+                         write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
                  write(mytmp,*)
              enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,norbs} loop
+         enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
 ! close data file
@@ -1061,3 +1061,68 @@
 
      return
   end subroutine ctqmc_dump_vrtx
+
+!!>>> ctqmc_dump_pair: write out the particle-particle pair susceptibility
+  subroutine ctqmc_dump_pair(ps_re, ps_im)
+     use constants, only : dp, mytmp
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+
+     implicit none
+
+! external arguments
+! particle-particle pair susceptibility, real part
+     real(dp), intent(in) :: ps_re(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), intent(in) :: ps_im(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! local variables
+! loop index for frequencies
+     integer :: i
+     integer :: j
+     integer :: k
+
+! loop index for orbitals
+     integer :: m
+     integer :: n
+
+! dummy integer variables
+     integer :: it
+     integer :: jt
+
+! check if we need to dump particle-particle pair susceptibility
+! to solver.pair.dat
+     if ( .not. btest(isvrt, 5) ) RETURN
+
+! open data file: solver.pair.dat
+     open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')
+
+! write it
+     do m=1,norbs
+         do n=1,m
+             do k=1,nbfrq
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
+                 do j=1,nffrq
+                     do i=1,nffrq
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
+                         write(mytmp,'(2i6,2f16.8)') jt, it, ps_re(i,j,k,n,m), ps_im(i,j,k,n,m)
+                     enddo ! over i={1,nffrq} loop
+                 enddo ! over j={1,nffrq} loop
+                 write(mytmp,*) ! write empty lines
+                 write(mytmp,*)
+             enddo ! over k={1,nbfrq} loop
+         enddo ! over n={1,m} loop
+     enddo ! over m={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_pair

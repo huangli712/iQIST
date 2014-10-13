@@ -3,7 +3,7 @@
 !!! program : ctqmc_make_htau
 !!!           ctqmc_make_hsed
 !!!           ctqmc_make_ktau
-!!!           ctqmc_make_hsed
+!!!           ctqmc_make_ksed
 !!!           ctqmc_four_htau
 !!!           ctqmc_four_hybf
 !!!           ctqmc_make_uumat
@@ -48,13 +48,13 @@
 
 ! external functions
 ! internal interpolation engine
-     procedure( real(dp) ) :: s_spl_splint
+     procedure( real(dp) ) :: s_spl_funct
 
 ! local variables
 ! return value
      real(dp) :: val
 
-     val = s_spl_splint(ntime, tmesh, htau(:, flvr, flvr), hsed(:, flvr, flvr), dtau)
+     val = s_spl_funct(ntime, tmesh, htau(:, flvr, flvr), hsed(:, flvr, flvr), dtau)
 
      return
   end function ctqmc_make_htau
@@ -125,7 +125,7 @@
              d2y = zero
 
 ! call the service layer
-             call s_spl_splder(ntime, tmesh, htau(:,i,j), startu, startd, d2y)
+             call s_spl_deriv2(ntime, tmesh, htau(:,i,j), startu, startd, d2y)
 
 ! copy the results to hsed
              hsed(:,i,j) = d2y
@@ -156,13 +156,13 @@
 
 ! external functions
 ! internal interpolation engine
-     real(dp), external :: s_spl_splint
+     procedure( real(dp) ) :: s_spl_funct
 
 ! local variables
 ! return value
      real(dp) :: val
 
-     val = s_spl_splint(ntime, tmesh, ktau, ksed, dtau)
+     val = s_spl_funct(ntime, tmesh, ktau, ksed, dtau)
 
      return
   end function ctqmc_make_ktau
@@ -219,7 +219,7 @@
                  3.0_dp*ktau(ntime-4)) / 12.0_dp / deltau
 
 ! call the service layer
-     call s_spl_splder(ntime, tmesh, ktau, startu, startd, ksed)
+     call s_spl_deriv2(ntime, tmesh, ktau, startu, startd, ksed)
 
      return
   end subroutine ctqmc_make_ksed
