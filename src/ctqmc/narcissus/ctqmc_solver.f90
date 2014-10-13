@@ -535,35 +535,42 @@
      nmat = nmat_mpi * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m)   * real(nmonte) / real(nsweep)
+             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
-     schi  = schi_mpi  * real(nmonte) / real(nsweep)
+     schi = schi_mpi * real(nmonte) / real(nsweep)
      do m=1,nband
          do n=1,ntime
-             sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
+             sschi(n,m) = sschi_mpi(n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,ntime} loop
      enddo ! over m={1,nband} loop
 
-     ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
-     do m=1,norbs
-         do n=1,ntime
-             oochi(n,m) = oochi_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,norbs} loop
-
+     ochi = ochi_mpi * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,norbs
-             g2_re(n,m,:,:,:) = g2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-             g2_im(n,m,:,:,:) = g2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+             oochi(:,n,m) = oochi_mpi(:,n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
          do n=1,norbs
-             h2_re(n,m,:,:,:) = h2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-             h2_im(n,m,:,:,:) = h2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+             g2_re(:,:,:,n,m) = g2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             g2_im(:,:,:,n,m) = g2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,norbs
+             h2_re(:,:,:,n,m) = h2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             h2_im(:,:,:,n,m) = h2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,norbs
+             ps_re(:,:,:,n,m) = ps_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             ps_im(:,:,:,n,m) = ps_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
