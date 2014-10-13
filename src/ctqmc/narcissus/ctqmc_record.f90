@@ -1653,10 +1653,10 @@
 
 ! external arguments
 ! two-particle green's function, real part
-     real(dp), intent(out) :: g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(out) :: g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! two-particle green's function, imaginary part
-     real(dp), intent(out) :: g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(out) :: g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! initialize g2_re_mpi and g2_im_mpi
      g2_re_mpi = zero
@@ -1700,11 +1700,11 @@
      implicit none
 
 ! external arguments
-! vertex function, real part
-     real(dp), intent(out) :: h2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+! two-particle green's function, real part
+     real(dp), intent(out) :: h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! vertex function, imaginary part
-     real(dp), intent(out) :: h2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+! two-particle green's function, imaginary part
+     real(dp), intent(out) :: h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! initialize h2_re_mpi and h2_im_mpi
      h2_re_mpi = zero
