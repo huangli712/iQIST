@@ -1734,6 +1734,54 @@
      return
   end subroutine ctqmc_reduce_vrtx
 
+!!>>> ctqmc_reduce_pair: reduce the ps_re_mpi and ps_im_mpi from all
+!!>>> children processes
+  subroutine ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : ps_re, ps_im
+
+     implicit none
+
+! external arguments
+! particle-particle pair susceptibility, real part
+     real(dp), intent(out) :: ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), intent(out) :: ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! initialize ps_re_mpi and ps_im_mpi
+     ps_re_mpi = zero
+     ps_im_mpi = zero
+
+! build ps_re_mpi and ps_im_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(ps_re, ps_re_mpi)
+     call mp_allreduce(ps_im, ps_im_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     ps_re_mpi = ps_re
+     ps_im_mpi = ps_im
+
+# endif /* MPI */
+
+! calculate the average
+     ps_re_mpi = ps_re_mpi / real(nprocs)
+     ps_im_mpi = ps_im_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_pair
+
 !!========================================================================
 !!>>> symmetrize physical observables                                  <<<
 !!========================================================================
