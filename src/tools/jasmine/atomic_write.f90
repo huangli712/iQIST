@@ -45,7 +45,7 @@
 !!>>> atomic_write_eimpmat: write on-site impurity energy on natural basis 
   subroutine atomic_write_eimpmat()
      use constants, only : mytmp
-     use control, only : norbs
+     use control, only : nband, norbs, isoc
 
      use m_spmat, only : eimpmat
   
@@ -53,10 +53,20 @@
   
 ! local variables
      integer :: i
-  
+     integer :: s_order
+ 
      open(mytmp, file='atom.eimp.dat') 
      do i=1, norbs
-         write(mytmp, '(I10,F20.10)') i, real(eimpmat(i,i))
+         if (isoc==0) then
+             if (i <= nband) then
+                 s_order = 2*i-1  
+             else
+                 s_order = 2*(i-nband)
+             endif
+         else 
+             s_order = i
+         endif 
+         write(mytmp, '(I10,F20.10)') i, real(eimpmat(s_order,s_order))
      enddo
      close(mytmp)
   
