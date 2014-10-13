@@ -10,7 +10,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/21/2010 by li huang
-!!!           09/18/2014 by li huang
+!!!           10/13/2014 by li huang
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
@@ -512,8 +512,12 @@
 ! collect the two-particle green's function from g2_re to g2_re_mpi, etc.
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
-! collect the vertex function from h2_re to h2_re_mpi, etc.
+! collect the two-particle green's function from h2_re to h2_re_mpi, etc.
      call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
+
+! collect the particle-particle pair susceptibility from ps_re to
+! ps_re_mpi, etc.
+     call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
      call ctqmc_reduce_gtau(gtau_mpi)
@@ -525,10 +529,10 @@
      call ctqmc_reduce_grnf(grnf_mpi)
 
 ! update original data and calculate the averages simultaneously
-     hist  = hist_mpi
-     prob  = prob_mpi  * real(ncarlo) / real(nsweep)
+     hist = hist_mpi
+     prob = prob_mpi * real(ncarlo) / real(nsweep)
 
-     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
+     nmat = nmat_mpi * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,norbs
              nnmat(n,m) = nnmat_mpi(n,m)   * real(nmonte) / real(nsweep)
