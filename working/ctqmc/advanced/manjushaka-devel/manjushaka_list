@@ -1,0 +1,88 @@
+
+
+
+Interacting Quantum Impurity Solver Toolkit
+===========================================
+
+Advanced Test Cases For MANJUSHAKA
+==================================
+
+
+
+1. 3 band model
+---------------
+
+* 3a // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 5.00, GQNs (N,Sz,PS)
+
+* 3b // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 5.00, GQNs (N,Sz,PS)
+
+* 3c // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 5.00, GQNs (N,Sz,PS)
+
+* 3d // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 5.00, non-diagonal CF, GQNs (N,Sz,PS)
+
+* 3e // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 5.00, non-diagonal CF, GQNs (N,Sz,PS)
+
+* 3f // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 5.00, non-diagonal CF, GQNs (N,Sz,PS)
+
+* 3g // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 5.00, SOC, lambda = 0.50, GQNs (N,Jz) 
+
+* 3h // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 5.00, SOC, lambda = 0.50, GQNs (N,Jz) 
+
+* 3i // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 5.00, SOC, lambda = 0.50, GQNs (N,Jz) 
+
+* 3j // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 5.00, non-diagonal CF, SOC, lambda = 0.50, GQNs (N)
+
+* 3k // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 5.00, non-diagonal CF, SOC, lambda = 0.50, GQNs (N)
+
+* 3l // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 5.00, non-diagonal CF, SOC, lambda = 0.50, GQNs (N)
+
+* 3m // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 1.00, GQNs (N,Sz,PS)
+
+* 3n // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 1.00, GQNs (N,Sz,PS)
+
+* 3o // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 1.00, GQNs (N,Sz,PS)
+
+
+2. 5 band model
+---------------
+
+* 5a // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 8.00, GQNs (N,Sz,PS)
+
+* 5b // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 8.00, GQNs (N,Sz,PS)
+
+* 5c // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 8.00, GQNs (N,Sz,PS)
+
+* 5d // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 8.00, diagonal CF, GQNs (N,Sz,PS)
+
+* 5e // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 8.00, diagonal CF, GQNs (N,Sz,PS)
+
+* 5f // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 8.00, diagonal CF, GQNs (N,Sz,PS)
+
+* 5g // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 8.00, SOC, lambda = 0.50, GQNs (N,Jz)
+
+* 5h // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 8.00, SOC, lambda = 0.50, GQNs (N,Jz)
+
+* 5i // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 8.00, SOC, lambda = 0.50, GQNs (N,Jz)
+
+* 5j // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 1.00, GQNs (N,Sz,PS)
+
+* 5k // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 1.00, GQNs (N,Sz,PS)
+
+* 5l // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 1.00, GQNs (N,Sz,PS)
+
+* 5m // Ud = 2.457990, JH = 1.349258, beta = 10.00, mune = 8.00, GQNs (N,Sz)
+
+* 5n // Ud = 2.457990, JH = 1.349258, beta = 40.00, mune = 8.00, GQNs (N,Sz)
+
+* 5o // Ud = 2.457990, JH = 1.349258, beta = 100.00, mune = 8.00, GQNs (N,Sz)
+
+3. 7 band model
+---------------
+
+* 7a // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 11.00, SOC, lambda = 0.50, GQNs (N,Jz)
+
+* 7b // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 11.00, SOC, lambda = 0.50, GQNs (N,Jz)
+
+* 7c // Ud = 2.457990, JH = 1.349258, beta = 10.00, mune = 11.00, SOC, lambda = 0.50, GQNs (N,Jz)
+
+* 7d // Ud = 2.457990, JH = 1.349258, beta = 40.00, mune = 11.00, SOC, lambda = 0.50, GQNs (N,Jz)
