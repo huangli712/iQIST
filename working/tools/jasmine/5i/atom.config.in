@@ -12,7 +12,7 @@
 
 ! good quantum numbers (GQNs)
 ! (1) without any GQNs, (2) N, (3) N,Sz, (4) N,Sz,PS, (5) N,Jz
-  ictqmc : 2       
+  ictqmc : 3       
 
 ! type of crystal field splitting
 ! (0) without, (1) diagonal, (2) non-diagonal 
