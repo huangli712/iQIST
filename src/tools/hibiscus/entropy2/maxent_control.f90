@@ -12,7 +12,7 @@
 !!!---------------------------------------------------------------
 
   module control
-     use constants, only : dp
+     use constants, only : dp, one
 
      implicit none
 

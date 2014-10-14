@@ -115,7 +115,7 @@
 
 ! process allocate error
      if ( istat /= 0 ) then
-         call maxent_print_error("maxent_allocate_memory_databins", "can't allocate enough memory")
+         call s_print_error("maxent_allocate_memory_databins", "can't allocate enough memory")
      endif 
 
 ! initialize these variables
@@ -147,7 +147,7 @@
 
 ! process allocate error
      if ( istat /= 0 ) then
-         call maxent_print_error("maxent_allocate_memory_singular", "can't allocate enough memory")
+         call s_print_error("maxent_allocate_memory_singular", "can't allocate enough memory")
      endif 
 
 ! initialize them

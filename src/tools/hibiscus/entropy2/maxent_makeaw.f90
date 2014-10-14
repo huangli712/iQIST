@@ -1,333 +1,344 @@
-!---------------------------------------------------------------
-! project : maxent
-! program : maxent_makeaw
-!         : maxent_makemu
-! source  : maxent_makeaw.f90
-! type    : subroutine
-! author  : yilin wang (email: qhwyl2006@126.com)
-! history : 06/10/2013 by yilin wang
-! purpose : for fixed $\alpha$, find the optimal spectrum $A(\omega)$. 
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!---------------------------------------------------------------
+!!!---------------------------------------------------------------
+!!! project : maxent
+!!! program : maxent_makeaw
+!!!           maxent_makemu
+!!! source  : maxent_makeaw.f90
+!!! type    : subroutine
+!!! author  : yilin wang (email: qhwyl2006@126.com)
+!!! history : 06/10/2013 by yilin wang
+!!!           10/14/2014 by yilin wang 
+!!! purpose : for fixed $\alpha$, find the optimal spectrum $A(\omega)$. 
+!!! status  : unstable
+!!! comment :
+!!!---------------------------------------------------------------
 
-!=================================================================
-! subroutine: maxent_makeaw
-! purpose   : find the optimal spectrum $A(\omega)$
-!           : for fixed parmaeter $\alpha$                                
-!=================================================================
+!!>>> maxent_makeaw: find the optimal spectrum $A(\omega)$
+!!>>> for fixed parmaeter $\alpha$                                
   subroutine maxent_makeaw(ialpha)
-      use constants
-      use control
-      use context
+     use constants, only : dp, zero, one, half, two, eps8, mystd
+     use control, only : nw, ntime 
+     use context, only : ns, aw_model, amesh, rkern, rgrn
+     use context, only : eigcov, sigvec, umat, weight, vmatt
+     use context, only : ent, chi2, qval, mmat, aw_alpha
 
-      implicit none
+     implicit none
 
 ! external variables
-      integer, intent(in) :: ialpha
+     integer, intent(in) :: ialpha
 
 ! local variables
 ! loop index
-      integer :: itime
-      integer :: iw
-      integer :: iss
+     integer :: itime
+     integer :: iw
+     integer :: iss
 
 ! the error information from the dsyev call
-      integer :: info
+     integer :: info
 
 ! counter for loop times
-      integer :: counter
+     integer :: counter
 
 ! current alpha
-      real(dp) :: alpha
+     real(dp) :: alpha
 
 ! parameter $\mu$
-      real(dp) :: mune
+     real(dp) :: mune
 
 ! the u vector
-      real(dp) :: uvec(ns)
+     real(dp) :: uvec(ns)
 
 ! the optimal spectrum function
-      real(dp) :: aw(nw)
+     real(dp) :: aw(nw)
 
 ! rkern * aw
-      real(dp) :: keraw(ntime)
+     real(dp) :: keraw(ntime)
 
 ! gardient of L
-      real(dp) :: gardl(ntime)
+     real(dp) :: gardl(ntime)
 
 ! g vector
-      real(dp) :: gvec(ns)
+     real(dp) :: gvec(ns)
 
 ! $-\alpha * u - g$ vector augvec
-      real(dp) :: augvec(ns)
+     real(dp) :: augvec(ns)
 
 ! matrix $K = U^{T} * diag{aw} * U$
-      real(dp) :: kmat(ns,ns)
+     real(dp) :: kmat(ns,ns)
 
 ! eigvalues of K
-      real(dp) :: keigval(ns)
+     real(dp) :: keigval(ns)
 
 ! eigvectors of K
-      real(dp) :: pmat(ns,ns)
+     real(dp) :: pmat(ns,ns)
 
 ! matrix $A = diag{\sqrt{keigval}} * P^{T} * M * P * diag{\sqrt{keigval}}$
-      real(dp) :: amat(ns,ns)
+     real(dp) :: amat(ns,ns)
 
 ! eigvalues of A
-      real(dp) :: aeigval(ns)
+     real(dp) :: aeigval(ns)
 
 ! eigvectors of A
-      real(dp) :: rmat(ns,ns)
+     real(dp) :: rmat(ns,ns)
 
 ! $Y^{-1}$
-      real(dp) :: yinv(ns,ns)
+     real(dp) :: yinv(ns,ns)
 
 ! $Y^{-T}$
-      real(dp) :: yinvt(ns,ns)
+     real(dp) :: yinvt(ns,ns)
 
 ! $M * Y^{-T}$
-      real(dp) :: myinvt(ns,ns)
+     real(dp) :: myinvt(ns,ns)
 
 ! $-\alpha * Y^{-1} * u - Y^{-1} * g$
-      real(dp) :: yiaugvec(ns)
+     real(dp) :: yiaugvec(ns)
 
 ! $L=-\chi^2 / 2$
-      real(dp) :: sum_l
+     real(dp) :: sum_l
 
 ! entropy S
-      real(dp) :: sum_s
+     real(dp) :: sum_s
 
 ! -\alpha * s
-      real(dp) :: alpha_s
+     real(dp) :: alpha_s
 
 ! Q = -\alpha * S - L
-      real(dp) :: sum_q
+     real(dp) :: sum_q
 
 ! norm of L
-      real(dp) :: norml
+     real(dp) :: norml
 
 ! norm of s
-      real(dp) :: norms
+     real(dp) :: norms
 
 ! norm of -\alpha *s - l
-      real(dp) :: normsl
+     real(dp) :: normsl
 
 ! difference
-      real(dp) :: diff
+     real(dp) :: diff
 
 ! posterior probability for present alpha
-      real(dp) :: post
+     real(dp) :: post
 
 ! temp vectors
-      real(dp) :: vtemp1(ns)
-      real(dp) :: vtemp2(ns)
-      real(dp) :: vtemp3(nw)
+     real(dp) :: vtemp1(ns)
+     real(dp) :: vtemp2(ns)
+     real(dp) :: vtemp3(nw)
 
 ! temp matrixs
-      real(dp) :: mtemp1(nw, ns)
-      real(dp) :: mtemp2(ns, nw)
-      real(dp) :: mtemp3(ns, ns)
-      real(dp) :: mtemp4(ns, ns)
-      real(dp) :: mtemp5(ns, ns)
+     real(dp) :: mtemp1(nw, ns)
+     real(dp) :: mtemp2(ns, nw)
+     real(dp) :: mtemp3(ns, ns)
+     real(dp) :: mtemp4(ns, ns)
+     real(dp) :: mtemp5(ns, ns)
 
 ! begin to search the optimal spectrum function $A(\omega)$ by using
 ! the quasi-Newton method
 
 ! step 1: initialize aw and the uvec 
-      aw = aw_model
-      uvec = zero
-      alpha = amesh(ialpha) 
+     aw = aw_model
+     uvec = zero
+     alpha = amesh(ialpha) 
 ! the main loop
-      counter = 0   
-      SEARCH_LOOP: do while(.true.)
-      
-          counter = counter + 1
+     counter = 0   
+     SEARCH_LOOP: do while(.true.)
+     
+         counter = counter + 1
 
 ! step 2: construct the gardient of L
-          call maxent_dgemv(ntime, nw, rkern, aw, keraw)
-
-          do itime=1, ntime
-              gardl(itime) = ( keraw(itime) - rgrn(itime) ) / eigcov(itime)
-          enddo           
+         call dgemv('N', ntime, nw, one, rkern, ntime, aw, 1, zero, keraw, 1)
+         do itime=1, ntime
+             gardl(itime) = ( keraw(itime) - rgrn(itime) ) / eigcov(itime)
+         enddo           
 
 ! step 3: construct g vector
-          call maxent_dgemv(ns, ntime, vmatt, gardl, vtemp1)
-        
-          do iss=1, ns
-              gvec(iss) = sigvec(iss) * vtemp1(iss)
-          enddo
+         call dgemv('N', ns, ntime, one, vmatt, ns, gardl, 1, zero, vtemp1, 1)
+         do iss=1, ns
+             gvec(iss) = sigvec(iss) * vtemp1(iss)
+         enddo
 
 ! step 4: construct $-\alpha * u - g$
-          augvec = -alpha * uvec - gvec
+         augvec = -alpha * uvec - gvec
 
 ! step 5: construct $K=U^{T} * diag{aw} * U$ and diagonalize it
 ! step 5.1: construct K
-          do iw=1, nw
-              mtemp1(iw,:) =  aw(iw) * umat(iw,:)
-          enddo 
+         do iw=1, nw
+             mtemp1(iw,:) =  aw(iw) * umat(iw,:)
+         enddo 
 
-          mtemp2 = transpose(umat)
+         mtemp2 = transpose(umat)
 
-          call maxent_dgemm(ns, nw, mtemp2, ns, mtemp1, kmat)
-
+         call dgemm('N', 'N', ns, ns, nw, &
+                         one, mtemp2, ns, &
+                              mtemp1, nw, &
+                          zero, kmat, ns,  )
+ 
 ! step 5.2: diagonalize K
-          mtemp3 = kmat
-          call maxent_dsyev(ns, mtemp3, keigval, info)
+         mtemp3 = kmat
+         call maxent_dsyev(ns, mtemp3, keigval, info)
 ! check error from dsyev call
-          if( info /= 0 ) then
-              call maxent_print_advice("Kmat")
-          endif
-          pmat = mtemp3
+         if( info /= 0 ) then
+             call maxent_print_advice("Kmat")
+         endif
+         pmat = mtemp3
 
 ! step 6: construct $A=diag{\sqrt{keigval}} * P^{T} * M * P * diag{\sqrt{keigval}} $
 ! and diagonalize it
 ! step 6.1: construct A
-          do iss=1, ns
-              mtemp3(:,iss) = pmat(:,iss) * sqrt( keigval(iss) )
-          enddo 
-          mtemp4 = transpose(mtemp3)
+         do iss=1, ns
+             mtemp3(:,iss) = pmat(:,iss) * sqrt( keigval(iss) )
+         enddo 
+         mtemp4 = transpose(mtemp3)
 
-          call maxent_dgemm(ns, ns, mtemp4, ns, mmat, mtemp5)
-          call maxent_dgemm(ns, ns, mtemp5, ns, mtemp3, mtemp4)
-        
+         call dgemm('N', 'N', ns, ns, ns, &
+                         one, mtemp4, ns, &
+                                mmat, ns, &
+                        zero, mtemp5, ns   )
+
+         call dgemm('N', 'N', ns, ns, ns, &
+                         one, mtemp5, ns, &
+                              mtemp3, ns, &
+                        zero, mtemp4, ns   )
+       
 
 ! step 6.2: diagonalize A
-          amat = mtemp4
-          call maxent_dsyev(ns, mtemp4, aeigval, info)
+         amat = mtemp4
+         call maxent_dsyev(ns, mtemp4, aeigval, info)
 ! check error from dsyev call
-          if( info /= 0 ) then
-              call maxent_print_advice("Amat")
-          endif
-          rmat = mtemp4 
+         if( info /= 0 ) then
+             call maxent_print_advice("Amat")
+         endif
+         rmat = mtemp4 
 
 ! step 7: construct $Y^{-1}$ and $Y^{-T}$
 ! step 7.1: $Y^{-1}$
-          mtemp3 = transpose(rmat)
-          do iss=1, ns
-              mtemp4(iss,:) = sqrt(keigval(iss)) * pmat(:,iss)
-          enddo        
-          call maxent_dgemm(ns, ns, mtemp3, ns, mtemp4, mtemp5)
-          yinv = mtemp5
+         mtemp3 = transpose(rmat)
+         do iss=1, ns
+             mtemp4(iss,:) = sqrt(keigval(iss)) * pmat(:,iss)
+         enddo        
+         call dgemm('N', 'N', ns, ns, ns, &
+                         one, mtemp3, ns, &
+                              mtemp4, ns, &
+                        zero, mtemp5, ns   )
+ 
+         yinv = mtemp5
 
 ! step 7.2: $Y^{-T}$
-          mtemp3 = pmat
-          do iss=1, ns
-              mtemp4(iss,:) = sqrt(keigval(iss)) * rmat(iss,:)
-          enddo
-          call maxent_dgemm(ns, ns, mtemp3, ns, mtemp4, mtemp5)
-          yinvt = mtemp5
+         mtemp3 = pmat
+         do iss=1, ns
+             mtemp4(iss,:) = sqrt(keigval(iss)) * rmat(iss,:)
+         enddo
+         call dgemm('N', 'N', ns, ns, ns, &
+                         one, mtemp3, ns, &
+                              mtemp4, ns, &
+                        zero, mtemp5, ns   )
+ 
+         yinvt = mtemp5
 
 ! step 8: consturct $M * Y^{-T}$
-          call maxent_dgemm(ns, ns, mmat, ns, yinvt, myinvt)
-
+         call dgemm('N', 'N', ns, ns, ns, &
+                           one, mmat, ns, &
+                               yinvt, ns, &
+                        zero, myinvt, ns   )
+ 
 ! step 9: consturct $-\alpha * Y^{-1} * u - Y^{-1} * g$ 
-          call maxent_dgemv(ns, ns, yinv, augvec, yiaugvec)
-
+         call dgemv('N', ns, ns, one, yinv, ns, augvec, 1, zero, yiaugvec, 1)
 ! step 10: adjust the parameter $\mu$
-          call maxent_makemu(yiaugvec, aeigval, alpha, mune)
+         call maxent_makemu(yiaugvec, aeigval, alpha, mune)
 
 ! step 11: construct new spectrum 
 ! step 11.1: construct $Y^{-1} * du$
-          do iss=1, ns
-              vtemp1(iss) = ( yiaugvec(iss) ) / ( alpha + mune + aeigval(iss) )            
-          enddo
+         do iss=1, ns
+             vtemp1(iss) = ( yiaugvec(iss) ) / ( alpha + mune + aeigval(iss) )            
+         enddo
 ! step 11.2: construct $M * Y^{-T} * ( Y^{-1} * du)$
-          call maxent_dgemv(ns, ns, myinvt, vtemp1, vtemp2) 
-
+         call dgemv('N', ns, ns, one, myinvt, ns, vtemp1, 1, zero, vtemp2, 1)
 ! step 11.3: construct new uvec
-          do iss=1, ns
-              uvec(iss) = uvec(iss) + ( augvec(iss) - vtemp2(iss) ) / ( alpha + mune )
-          enddo
+         do iss=1, ns
+             uvec(iss) = uvec(iss) + ( augvec(iss) - vtemp2(iss) ) / ( alpha + mune )
+         enddo
 
 ! step 11.4: construct new aw
-          call maxent_dgemv(nw, ns, umat, uvec, vtemp3)
-
-          do iw=1, nw
-              aw(iw) = aw_model(iw) * exp( vtemp3(iw) )
-          enddo
+         call dgemv('N', nw, ns, one, umat, nw, uvec, 1, zero, vtemp3, 1)
+         do iw=1, nw
+             aw(iw) = aw_model(iw) * exp( vtemp3(iw) )
+         enddo
 
 ! step 12: calculate S and L
 ! step 12.1: L
-          sum_l = zero
-          call maxent_dgemv(ntime, nw, rkern, aw, keraw)
-          do itime=1, ntime
-              sum_l = sum_l + half * ( keraw(itime) - rgrn(itime) ) **2 / eigcov(itime)
-          enddo
+         sum_l = zero
+         call dgemv('N', ntime, nw, one, rkern, ntime, aw, 1, zero, keraw, 1)
+         do itime=1, ntime
+             sum_l = sum_l + half * ( keraw(itime) - rgrn(itime) ) **2 / eigcov(itime)
+         enddo
 
 ! step 12.2: S
-          sum_s = zero
-          do iw=1, nw
-              sum_s = sum_s - aw(iw) * vtemp3(iw) + aw(iw) - aw_model(iw) 
-          enddo
+         sum_s = zero
+         do iw=1, nw
+             sum_s = sum_s - aw(iw) * vtemp3(iw) + aw(iw) - aw_model(iw) 
+         enddo
 
 ! step 12.3: \alpha * s and Q
-          alpha_s = alpha * sum_s
-          sum_q = alpha_s - sum_l
+         alpha_s = alpha * sum_s
+         sum_q = alpha_s - sum_l
 
 ! step 13: check the convergence
-          call maxent_dgemv(ns, ns, yinv, uvec, vtemp1)  
-          call maxent_dgemv(ns, ns, yinv, gvec, vtemp2)  
+         call dgemv('N', ns, ns, one, yinv, ns, uvec, 1, zero, vtemp1, 1)
+         call dgemv('N', ns, ns, one, yinv, ns, gvec, 1, zero, vtemp2, 1)
 
-          norml = zero
-          norms = zero
-          do iss=1, ns
-             norml = norml + vtemp1(iss) **2 
-             norms = norms + vtemp2(iss) **2 
-          enddo
-          norml = sqrt(norml)
-          norms = sqrt(norms)
+         norml = zero
+         norms = zero
+         do iss=1, ns
+            norml = norml + vtemp1(iss) **2 
+            norms = norms + vtemp2(iss) **2 
+         enddo
+         norml = sqrt(norml)
+         norms = sqrt(norms)
 
-          call maxent_dgemv(ns, ns, yinv, augvec, vtemp1)
-          normsl = zero
-          do iss=1, ns
-              normsl = normsl + vtemp1(iss) ** 2
-          enddo
-          normsl = sqrt(normsl)
+         call dgemv('N', ns, ns, one, yinv, ns, augvec, 1, zero, vtemp1, 1)
+         normsl = zero
+         do iss=1, ns
+             normsl = normsl + vtemp1(iss) ** 2
+         enddo
+         normsl = sqrt(normsl)
 
-          diff = two * normsl **2 / (alpha * norms + norml) **2
+         diff = two * normsl **2 / (alpha * norms + norml) **2
 
-          if ( diff <= eps8 ) then
-               write(mystd,"(4X,a,f12.6)") "Convergence For Alpha: ",amesh(ialpha)
-               EXIT SEARCH_LOOP
-          endif
-      enddo SEARCH_LOOP
+         if ( diff <= eps8 ) then
+              write(mystd,"(4X,a,f12.6)") "Convergence For Alpha: ",amesh(ialpha)
+              EXIT SEARCH_LOOP
+         endif
+     enddo SEARCH_LOOP
 
 ! step 14: calculate the posterior probability for the present alpha
-      post = one
-      do iss=1, ns
-          post = post * alpha / (alpha + aeigval(iss))
-      enddo
-      post = sqrt(post) / alpha
+     post = one
+     do iss=1, ns
+         post = post * alpha / (alpha + aeigval(iss))
+     enddo
+     post = sqrt(post) / alpha
 
 ! put local variables into the global variables
-      weight(ialpha) = post 
-      ent(ialpha) = alpha_s
-      chi2(ialpha) = sum_l
-      qval(ialpha) = sum_q
+     weight(ialpha) = post 
+     ent(ialpha) = alpha_s
+     chi2(ialpha) = sum_l
+     qval(ialpha) = sum_q
   
-      aw_alpha(:,ialpha) = aw
+     aw_alpha(:,ialpha) = aw
 
 ! print runtime information for reference
     
-      write(mystd,"(4X,a,i5)") "Loops to Find The Optimal Aw: ", counter
-      write(mystd,"(4X,a,f16.6)") "alpha * S:                 ", alpha_s
-      write(mystd,"(4X,a,f16.6)") "L=chi^2 / 2:               ", sum_l
-      write(mystd,"(4X,a,f16.6)") "Q=alpha * S - L:           ", sum_q
-      write(mystd,"(4X,a)") "---------------------------------------------------------"
-      write(mystd,*)
-      write(mystd,*)
+     write(mystd,"(4X,a,i5)") "Loops to Find The Optimal Aw: ", counter
+     write(mystd,"(4X,a,f16.6)") "alpha * S:                 ", alpha_s
+     write(mystd,"(4X,a,f16.6)") "L=chi^2 / 2:               ", sum_l
+     write(mystd,"(4X,a,f16.6)") "Q=alpha * S - L:           ", sum_q
+     write(mystd,"(4X,a)") "---------------------------------------------------------"
+     write(mystd,*)
+     write(mystd,*)
 
-      return        
+     return        
   end subroutine maxent_makeaw
 
-!===============================================================
-! subroutine: maxent_makemu 
-! purpose   : adjust the parameter mune to reach the condition 
-!           : $|Y^{-1}\delta u|^{2}$ <= \sum m_{i}
-!===============================================================
+!!>>> maxent_makemu: adjust the parameter mune to reach the condition 
+!!>>> $|Y^{-1}\delta u|^{2}$ <= \sum m_{i}
   subroutine maxent_makemu(yiaugvec, aeigval, alpha, mune)
      use constants
      use control

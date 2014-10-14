@@ -2,7 +2,7 @@
 !!! ENTROPY2 @ iQIST                                                     !
 !!!                                                                      !
 !!! author  : Yilin Wang (at IOP/CAS)                                    !
-!!! version : v2014.10.13T                                               !
+!!! version : v2014.10.14T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment :                                                            !
 !!!=========+=========+=========+=========+=========+=========+=========+!
