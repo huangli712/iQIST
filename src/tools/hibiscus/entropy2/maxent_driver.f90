@@ -15,7 +15,7 @@
 !!>>> maxent_driver: used to find the optimal $A(\omega)$
 !!>>> for all of the values of $\alpha$.
   subroutine maxent_driver()
-     use constants, only : dp, half, mystd
+     use constants, only : dp, zero, half, mystd
      use control, only : nalpha, nw, step
      use context, only : amesh, fmesh, weight, qval, aw_alpha
 

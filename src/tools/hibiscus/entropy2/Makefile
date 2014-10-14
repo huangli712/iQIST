@@ -28,7 +28,7 @@
 
 include ../../../build/make.sys
 
-modc = mod_control.o mod_context.o
+modc = maxent_control.o maxent_context.o
 util = maxent_utils.o 
 lev1 = maxent_stream.o maxent_model.o
 lev2 = maxent_makeaw.o
