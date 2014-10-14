@@ -281,17 +281,17 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build mesh for legendre polynomial in [-1,1]
-     call s_linspace_d(-one, one, legrd, pmesh)
-
-! build mesh for chebyshev polynomial in [-1,1]
-     call s_linspace_d(-one, one, chgrd, qmesh)
-
 ! build imaginary time tau mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
 
 ! build matsubara frequency mesh: rmesh
      call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
+
+! build mesh for legendre polynomial in [-1,1]
+     call s_linspace_d(-one, one, legrd, pmesh)
+
+! build mesh for chebyshev polynomial in [-1,1]
+     call s_linspace_d(-one, one, chgrd, qmesh)
 
 ! build legendre polynomial in [-1,1]
      call s_legendre(lemax, legrd, pmesh, ppleg)
@@ -447,8 +447,8 @@
 !!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
      use constants, only : zero, czero
-     use stack, only : istack_clean, istack_push
      use spring, only : spring_sfmt_init
+     use stack, only : istack_clean, istack_push
 
      use control ! ALL
      use context ! ALL
@@ -486,6 +486,12 @@
          enddo ! over j={mkink,1} loop
      enddo ! over i={1,norbs} loop
 
+! for integer variables
+!-------------------------------------------------------------------------
+! init global variables
+     ckink   = 0
+     cstat   = 0
+
 ! for real variables
 !-------------------------------------------------------------------------
 ! init statistics variables
@@ -509,16 +515,11 @@
      reflip_accept = zero
      reflip_reject = zero
 
-! for integer variables
-!-------------------------------------------------------------------------
-! init global variables
-     ckink   = 0
-     cstat   = 0
-
 ! for integer arrays
 !-------------------------------------------------------------------------
-! init hist  array
-     hist    = 0
+! init index array
+     index_s = 0
+     index_e = 0
 
 ! init rank  array
      rank    = 0
@@ -530,15 +531,14 @@
 ! stts = 3 : full occupation case
      stts    = 0
 
-! init index array
-     index_s = 0
-     index_e = 0
-
 ! for real arrays
 !-------------------------------------------------------------------------
 ! init time  array
      time_s  = zero
      time_e  = zero
+
+! init hist  array
+     hist    = zero
 
 ! init auxiliary physical observables
      paux    = zero
@@ -561,10 +561,12 @@
 ! init two-particle green's function
      g2_re   = zero
      g2_im   = zero
-
-! init vertex function
      h2_re   = zero
      h2_im   = zero
+
+! init particle-particle pair susceptibility
+     ps_re   = zero
+     ps_im   = zero
 
 ! init M-matrix related array
      mmat    = zero

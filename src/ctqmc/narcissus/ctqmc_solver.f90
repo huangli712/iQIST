@@ -10,7 +10,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/21/2010 by li huang
-!!!           09/18/2014 by li huang
+!!!           10/13/2014 by li huang
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
@@ -26,14 +26,14 @@
      use control, only : issun, isspn, isort, isvrt
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
-     use control, only : nffrq, nbfrq, nfreq, ntime, nsweep, nwrite, nmonte, ncarlo
+     use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
      use control, only : Uc, Jz
      use control, only : beta
      use control, only : myid, master
      use context, only : tmesh, rmesh
      use context, only : hist, prob
      use context, only : nmat, nnmat, schi, sschi, ochi, oochi
-     use context, only : g2_re, g2_im, h2_re, h2_im
+     use context, only : g2_re, g2_im, h2_re, h2_im, ps_re, ps_im
      use context, only : symm
      use context, only : gtau, ftau, grnf
      use context, only : sig2
@@ -77,7 +77,7 @@
      real(dp) :: time_niter
 
 ! histogram for perturbation expansion series, for mpi case
-     integer, allocatable  :: hist_mpi(:)
+     real(dp), allocatable :: hist_mpi(:)
 
 ! probability of atomic states, for mpi case
      real(dp), allocatable :: prob_mpi(:)
@@ -98,7 +98,7 @@
      real(dp), allocatable :: ochi_mpi(:)
 
 ! orbital-orbital correlation function, orbital-resolved, for mpi case
-     real(dp), allocatable :: oochi_mpi(:,:)
+     real(dp), allocatable :: oochi_mpi(:,:,:)
 
 ! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
@@ -106,11 +106,17 @@
 ! used to measure two-particle green's function, imaginary part, for mpi case
      real(dp), allocatable :: g2_im_mpi(:,:,:,:,:)
 
-! used to measure vertex function, real part, for mpi case
+! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: h2_re_mpi(:,:,:,:,:)
 
-! used to measure vertex function, imaginary part, for mpi case
+! used to measure two-particle green's function, imaginary part, for mpi case
      real(dp), allocatable :: h2_im_mpi(:,:,:,:,:)
+
+! used to measure particle-particle pair susceptibility, real part, for mpi case
+     real(dp), allocatable :: ps_re_mpi(:,:,:,:,:)
+
+! used to measure particle-particle pair susceptibility, imaginary part, for mpi case
+     real(dp), allocatable :: ps_im_mpi(:,:,:,:,:)
 
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
@@ -157,27 +163,37 @@
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(oochi_mpi(ntime,norbs),      stat=istat)
+     allocate(oochi_mpi(ntime,norbs,norbs),stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(h2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(h2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
+     allocate(h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -212,7 +228,7 @@
      if ( iter == 999 ) then
          nsweep = nsweep * 10
          nwrite = nwrite * 10
-     endif
+     endif ! back if ( iter == 999 ) block
 
 !!========================================================================
 !!>>> starting quantum impurity solver                                 <<<
@@ -320,56 +336,61 @@
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
 
-! record nothing
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 1 ) then
-                 CONTINUE
-             endif
-
-! record the spin-spin correlation function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 2 ) then
-                 call ctqmc_record_schi()
-             endif
-
-! record the orbital-orbital correlation function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 3 ) then
-                 call ctqmc_record_ochi()
-             endif
-
-! record the two-particle green's function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 4 ) then
-                 call ctqmc_record_twop()
-             endif
-
-! record the vertex function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 5 ) then
-                 call ctqmc_record_vrtx()
-             endif
-
 ! record the impurity (double) occupation number matrix and other
 ! auxiliary physical observables
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the impurity green's function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_grnf()
-             endif
-
-! record the auxiliary correlation function, F^{j}(\tau)
-             if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
-                 call ctqmc_record_ftau()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the probability of eigenstates
              if ( mod(cstep, ncarlo) == 0 ) then
                  call ctqmc_record_prob()
-             endif
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
 ! record the impurity green's function in imaginary time space
              if ( mod(cstep, ncarlo) == 0 ) then
                  call ctqmc_record_gtau()
-             endif
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+
+! record nothing
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
+                 CONTINUE
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) block
+
+! record the spin-spin correlation function
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
+                 call ctqmc_record_schi()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
+
+! record the orbital-orbital correlation function
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
+                 call ctqmc_record_ochi()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
+
+! record the two-particle green's function
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
+                 call ctqmc_record_twop()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
+
+! record the two-particle green's function
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
+                 call ctqmc_record_vrtx()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block
+
+! record the particle-particle pair susceptibility
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) then
+                 call ctqmc_record_pair()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) block
+
+! record the auxiliary correlation function, F^{j}(\tau)
+             if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
+                 call ctqmc_record_ftau()
+             endif ! back if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) block
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
@@ -491,8 +512,12 @@
 ! collect the two-particle green's function from g2_re to g2_re_mpi, etc.
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
-! collect the vertex function from h2_re to h2_re_mpi, etc.
+! collect the two-particle green's function from h2_re to h2_re_mpi, etc.
      call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
+
+! collect the particle-particle pair susceptibility from ps_re to
+! ps_re_mpi, etc.
+     call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
      call ctqmc_reduce_gtau(gtau_mpi)
@@ -504,60 +529,67 @@
      call ctqmc_reduce_grnf(grnf_mpi)
 
 ! update original data and calculate the averages simultaneously
-     hist  = hist_mpi
-     prob  = prob_mpi  * real(ncarlo) / real(nsweep)
+     hist = hist_mpi
+     prob = prob_mpi * real(ncarlo) / real(nsweep)
 
-     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
+     nmat = nmat_mpi * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m)   * real(nmonte) / real(nsweep)
+             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
-     schi  = schi_mpi  * real(nmonte) / real(nsweep)
+     schi = schi_mpi * real(nmonte) / real(nsweep)
      do m=1,nband
          do n=1,ntime
-             sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
+             sschi(n,m) = sschi_mpi(n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,ntime} loop
      enddo ! over m={1,nband} loop
 
-     ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
-     do m=1,norbs
-         do n=1,ntime
-             oochi(n,m) = oochi_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,norbs} loop
-
+     ochi = ochi_mpi * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,norbs
-             g2_re(n,m,:,:,:) = g2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-             g2_im(n,m,:,:,:) = g2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+             oochi(:,n,m) = oochi_mpi(:,n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
          do n=1,norbs
-             h2_re(n,m,:,:,:) = h2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-             h2_im(n,m,:,:,:) = h2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+             g2_re(:,:,:,n,m) = g2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             g2_im(:,:,:,n,m) = g2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,ntime
-             gtau(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
+         do n=1,norbs
+             h2_re(:,:,:,n,m) = h2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             h2_im(:,:,:,n,m) = h2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,ntime
-             ftau(n,m,:) = ftau_mpi(n,m,:) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
+         do n=1,norbs
+             ps_re(:,:,:,n,m) = ps_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             ps_im(:,:,:,n,m) = ps_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,nfreq
-             grnf(n,m,m) = grnf_mpi(n,m,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,nfreq} loop
+         do n=1,norbs
+             gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
+         enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,norbs
+             ftau(:,n,m) = ftau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
+         enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,norbs
+             grnf(:,n,m) = grnf_mpi(:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
 ! build atomic green's function and self-energy function using improved
@@ -633,9 +665,14 @@
          call ctqmc_dump_twop(g2_re, g2_im)
      endif ! back if ( myid == master ) block
 
-! write out the final vertex function data, h2_re and h2_im
+! write out the final two-particle green's function data, h2_re and h2_im
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_vrtx(h2_re, h2_im)
+     endif ! back if ( myid == master ) block
+
+! write out the final particle-particle pair susceptibility data, ps_re and ps_im
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_pair(ps_re, ps_im)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
@@ -685,6 +722,8 @@
      deallocate(g2_im_mpi)
      deallocate(h2_re_mpi)
      deallocate(h2_im_mpi)
+     deallocate(ps_re_mpi)
+     deallocate(ps_im_mpi)
      deallocate(gtau_mpi )
      deallocate(ftau_mpi )
      deallocate(grnf_mpi )
