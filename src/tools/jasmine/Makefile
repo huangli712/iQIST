@@ -20,7 +20,7 @@ include ../../build/make.sys
 
 default: all
 
-modn = atomic_control.o atomic_sector.o atomic_global.o
+modn = atomic_control.o atomic_context.o
 lev1 = atomic_tran.o atomic_print.o atomic_config.o atomic_check.o atomic_gaunt.o atomic_read.o atomic_write.o atomic_basis.o
 lev2 = atomic_mksector.o atomic_mkspmat.o atomic_natural.o 
 lev3 = atomic_hmat.o atomic_fmat.o atomic_occu.o atomic_driver.o
