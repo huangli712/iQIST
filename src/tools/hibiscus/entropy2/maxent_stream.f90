@@ -8,7 +8,7 @@
 !!! type    : subroutine
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 05/30/2013 by yilin wang
-!!!         : 10/14/2014 by yilin wang
+!!!           10/14/2014 by yilin wang
 !!! purpose : define subroutines used to configure, setup array, 
 !!!           finalize array, and initialize data bins
 !!! status  : unstable
@@ -20,7 +20,7 @@
      use constants, only : dp
      use parser, only : p_create, p_parse, p_get, p_destroy
 
-     use control
+     use control  ! ALL
 
      implicit none
 
