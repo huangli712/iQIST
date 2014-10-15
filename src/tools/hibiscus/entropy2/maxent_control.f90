@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 05/29/2013 by yilin wang
-!!!         : 10/13/2014 by yilin wang
+!!!           10/13/2014 by yilin wang
 !!! purpose : define some control variables for maxent
 !!! status  : unstable
 !!! comment :

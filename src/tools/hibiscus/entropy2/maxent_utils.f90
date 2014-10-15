@@ -1,7 +1,8 @@
 !!!---------------------------------------------------------------
 !!! project : maxent
-!!! program : maxent_dgesvd 
-!!!         : maxent_make_hist
+!!! program : maxent_dsyev
+!!!           maxent_dgesvd 
+!!!           maxent_make_hist
 !!! source  : maxent_utils.f90
 !!! type    : subroutine
 !!! author  : yilin wang (email: qhwyl2006@126.com)
