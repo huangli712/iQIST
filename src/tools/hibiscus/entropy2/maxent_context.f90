@@ -5,14 +5,14 @@
 !!! type    : module
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 05/29/2013 by yilin wang
-!!!         : 10/13/2014 by yilin wang
+!!!           10/13/2014 by yilin wang
 !!! purpose : define the global variables for maxent
 !!! status  : unstable
 !!! comment :
 !!!---------------------------------------------------------------
 
   module databins
-     use constants
+     use constants, only : dp
 
      implicit none
 
@@ -56,7 +56,7 @@
   end module databins
 
   module singular
-     use constants
+     use constants, only : dp
 
      implicit none
 
@@ -79,10 +79,10 @@
   end module singular
 
   module context
-     use constants 
-     use control
-     use databins
-     use singular
+     use constants, only : zero 
+     use control  ! ALL
+     use databins ! ALL
+     use singular ! ALL
  
      implicit none
 
@@ -100,9 +100,9 @@
      implicit none
 
 ! allocate memory      
-     allocate(rgrn(ntime),        stat=istat) 
+     allocate(rgrn(ntime),         stat=istat) 
      allocate(rkern(ntime,nw),     stat=istat)
-     allocate(eigcov(ntime),      stat=istat)
+     allocate(eigcov(ntime),       stat=istat)
      allocate(fmesh(nw),           stat=istat)
      allocate(tmesh(ntime),        stat=istat)
      allocate(amesh(nalpha),       stat=istat)
@@ -162,9 +162,9 @@
   subroutine maxent_deallocate_memory_databins()
      implicit none
 
-     if( allocated(rgrn)    ) deallocate(rgrn)
+     if( allocated(rgrn)     ) deallocate(rgrn)
      if( allocated(rkern)    ) deallocate(rkern)
-     if( allocated(eigcov)  ) deallocate(eigcov)
+     if( allocated(eigcov)   ) deallocate(eigcov)
      if( allocated(fmesh)    ) deallocate(fmesh)
      if( allocated(tmesh)    ) deallocate(tmesh)
      if( allocated(amesh)    ) deallocate(amesh)

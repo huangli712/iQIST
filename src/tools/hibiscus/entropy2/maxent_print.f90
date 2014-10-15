@@ -1,13 +1,13 @@
 !!!---------------------------------------------------------------
 !!! project : maxent
 !!! program : maxent_print_header
-!!!         : maxent_print_footer
-!!!         : maxent_print_summary
+!!!           maxent_print_footer
+!!!           maxent_print_summary
 !!! source  : maxent_print.f90
 !!! type    : subroutine
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 06/11/2013 by yilin wang
-!!!         : 10/14/2014 by yilin wang
+!!!           10/14/2014 by yilin wang
 !!! purpose : print some information 
 !!! status  : unstable
 !!! comment :

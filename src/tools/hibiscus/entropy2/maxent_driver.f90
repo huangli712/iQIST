@@ -5,7 +5,7 @@
 !!! type    : subroutine
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 06/11/2013 by yilin wang
-!!!         : 10/13/2014 by yilin wang
+!!!           10/13/2014 by yilin wang
 !!! purpose : for all the values of $\alpha$, find the optimal 
 !!!         : spectrum $A(\omega)$. 
 !!! status  : unstable
