@@ -20,7 +20,7 @@
      use constants, only : zero
      use control, only : norbs
 
-     use m_basis_fullspace, only : dec_basis, index_basis
+     use m_full, only : dec_basis, index_basis
      use m_glob_sectors, only : nsectors, sectors
      use m_sector, only : alloc_one_fmat
   
@@ -126,7 +126,7 @@
      use constants, only : dp, czero, epst
      use control, only : norbs, ncfgs
 
-     use m_basis_fullspace, only : dec_basis, index_basis, bin_basis
+     use m_full, only : dec_basis, index_basis, bin_basis
      use m_spmat, only : eimpmat, cumat
      use m_glob_sectors, only : nsectors, sectors
   
@@ -320,7 +320,7 @@
      use constants, only : mytmp, zero
      use control, only : nband, norbs, ncfgs, ictqmc
 
-     use m_basis_fullspace, only : dim_sub_n, bin_basis
+     use m_full, only : dim_sub_n, bin_basis
      use m_sector, only : alloc_one_sector
      use m_glob_sectors, only : nsectors, sectors, alloc_m_glob_sectors
      use m_glob_sectors, only : max_dim_sect, ave_dim_sect

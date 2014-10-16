@@ -23,7 +23,7 @@
   subroutine atomic_dump_basis()
      use constants, only : mytmp
      use control, only : ncfgs
-     use m_basis_fullspace, only : dec_basis, index_basis, bin_basis
+     use m_full, only : dec_basis, index_basis, bin_basis
   
      implicit none
   
@@ -129,7 +129,7 @@
      use constants, only : mytmp, eps6
      use control, only : ncfgs
 
-     use m_basis_fullspace, only : bin_basis
+     use m_full, only : bin_basis
      use m_glob_fullspace, only : hmat_eigvec
   
      implicit none
@@ -236,7 +236,7 @@
   subroutine atomic_dump_seigvec()
      use constants, only : mytmp, eps6
 
-     use m_basis_fullspace, only : bin_basis
+     use m_full, only : bin_basis
      use m_glob_sectors, only : nsectors, sectors
   
      implicit none

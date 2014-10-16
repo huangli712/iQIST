@@ -1,46 +1,89 @@
-
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : jasmine
 !!! program : m_sector  module
-!!!           m_sector@nullify_one_fmat
-!!!           m_sector@alloc_one_fmat
-!!!           m_sector@dealloc_one_fmat
-!!!           m_sector@nullify_one_sector
-!!!           m_sector@alloc_one_sector
-!!!           m_sector@dealloc_one_sector
-!!! source  : mod_control.f90
-!!! type    : module
+!!! program : m_basis_fullspace  module
+!!!           m_spmat            module
+!!!           m_glob_fullspace   module
+!!!           m_glob_sectors     module
+!!! source  : atomic_context.f90
+!!! type    : modules
 !!! authors : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
 !!! purpose : define data structure for good quantum numbers (GQNs) algorithm
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
-!!!-------------------------------------------------------------------------
-!!! project : jasmine
-!!! program : m_basis_fullspace  module
-!!!           m_spmat            module
-!!!           m_glob_fullspace   module
-!!!           m_glob_sectors     module
-!!!           m_basis_fullspace@alloc_m_basis_fullspace
-!!!           m_basis_fullspace@dealloc_m_basis_fullspace
-!!!           m_spmat@alloc_m_spmat
-!!!           m_spmat@dealloc_m_spmat
-!!!           m_glob_fullspace@alloc_m_glob_fullspace
-!!!           m_glob_fullspace@dealloc_m_glob_fullspace
-!!!           m_glob_sectors@alloc_m_glob_sectors
-!!!           m_glob_sectors@dealloc_m_glob_sectors
-!!! source  : mod_global.f90
-!!! type    : modules 
-!!! authors : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!! purpose : global variables
-!!! status  : unstable
-!!! comment :
-!!!-------------------------------------------------------------------------
+!!>>> Fock basis of full Hilbert space
+  module m_full
+     use control, only : norbs, ncfgs
+  
+     implicit none
+  
+! dimension of subspace of total electron N
+     integer, public, allocatable, save :: dim_sub_n(:)
+  
+! binary form of Fock basis
+     integer, public, allocatable, save :: bin_basis(:,:)
+  
+! decimal form of Fock basis
+     integer, public, allocatable, save :: dec_basis(:)
+  
+! index of Fock basis, given their decimal number
+     integer, public, allocatable, save :: index_basis(:)
+
+! status flag
+     integer, private :: istat
+
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
+
+     public :: alloc_m_basis_fullspace
+     public :: dealloc_m_basis_fullspace
+
+  contains
+  
+!!>>> alloc_m_basis_fullspace: allocate memory for these matrices
+  subroutine alloc_m_basis_fullspace()
+     implicit none
+  
+! allocate them
+     allocate( dim_sub_n(0:norbs),        stat=istat )
+     allocate( bin_basis(norbs, ncfgs),   stat=istat )
+     allocate( dec_basis(ncfgs),          stat=istat )
+     allocate( index_basis(0:ncfgs-1),    stat=istat )
+  
+! check the status 
+     if ( istat /= 0 ) then
+         call s_print_error('alloc_m_basis_fullspace', &
+                            'can not allocate enough memory')
+     endif
+
+! initialize them
+     dim_sub_n = 0
+     bin_basis = 0
+     dec_basis = 0
+     index_basis = 0
+  
+     return
+  end subroutine alloc_m_basis_fullspace
+  
+!!>>> dealloc_m_basis_fullspace: deallocate memory for these matrices
+  subroutine dealloc_m_basis_fullspace()
+     implicit none
+  
+! deallocate them
+     if (allocated(dim_sub_n))   deallocate(dim_sub_n)
+     if (allocated(bin_basis))   deallocate(bin_basis)
+     if (allocated(dec_basis))   deallocate(dec_basis) 
+     if (allocated(index_basis)) deallocate(index_basis) 
+  
+     return
+  end subroutine dealloc_m_basis_fullspace
+  
+  end module m_full
 
 !!>>> data structure for good quantum numbers (GQNs) algorithm
   module m_sector
@@ -243,75 +286,6 @@
 
 
 
-!!>>> Fock basis of full Hilbert space
-  module m_basis_fullspace
-     use control, only : norbs, ncfgs
-  
-     implicit none
-  
-! dimension of subspace of total electron N
-     integer, public, allocatable, save :: dim_sub_n(:)
-  
-! binary form of Fock basis
-     integer, public, allocatable, save :: bin_basis(:,:)
-  
-! decimal form of Fock basis
-     integer, public, allocatable, save :: dec_basis(:)
-  
-! index of Fock basis, given their decimal number
-     integer, public, allocatable, save :: index_basis(:)
-
-! status flag
-     integer, private :: istat
-
-!!========================================================================
-!!>>> declare accessibility for module routines                        <<<
-!!========================================================================
-
-     public :: alloc_m_basis_fullspace
-     public :: dealloc_m_basis_fullspace
-
-  contains
-  
-!!>>> alloc_m_basis_fullspace: allocate memory for these matrices
-  subroutine alloc_m_basis_fullspace()
-     implicit none
-  
-! allocate them
-     allocate( dim_sub_n(0:norbs),        stat=istat )
-     allocate( bin_basis(norbs, ncfgs),   stat=istat )
-     allocate( dec_basis(ncfgs),          stat=istat )
-     allocate( index_basis(0:ncfgs-1),    stat=istat )
-  
-! check the status 
-     if ( istat /= 0 ) then
-         call s_print_error('alloc_m_basis_fullspace', &
-                            'can not allocate enough memory')
-     endif
-
-! initialize them
-     dim_sub_n = 0
-     bin_basis = 0
-     dec_basis = 0
-     index_basis = 0
-  
-     return
-  end subroutine alloc_m_basis_fullspace
-  
-!!>>> dealloc_m_basis_fullspace: deallocate memory for these matrices
-  subroutine dealloc_m_basis_fullspace()
-     implicit none
-  
-! deallocate them
-     if (allocated(dim_sub_n))   deallocate(dim_sub_n)
-     if (allocated(bin_basis))   deallocate(bin_basis)
-     if (allocated(dec_basis))   deallocate(dec_basis) 
-     if (allocated(index_basis)) deallocate(index_basis) 
-  
-     return
-  end subroutine dealloc_m_basis_fullspace
-  
-  end module m_basis_fullspace
 
 !!>>> single particle related matrices, including: 
 !!>>> crystal field, spin-orbital coupling, Coulomb interaction U tensor

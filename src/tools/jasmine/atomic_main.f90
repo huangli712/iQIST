@@ -16,7 +16,7 @@
      use constants,         only : mystd
      use control,           only : ictqmc
 
-     use m_basis_fullspace, only : alloc_m_basis_fullspace, dealloc_m_basis_fullspace
+     use m_full, only : alloc_m_basis_fullspace, dealloc_m_basis_fullspace
      use m_spmat,           only : alloc_m_spmat, dealloc_m_spmat
   
      implicit none
