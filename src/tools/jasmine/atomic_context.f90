@@ -169,16 +169,16 @@
          integer :: istart
 
 ! the Fock basis index of this sector
-         integer, pointer :: mybasis(:)
+         integer, pointer :: basis(:)
 
 ! the Hamiltonian of this sector
-         complex(dp), pointer :: myham(:,:)
+         complex(dp), pointer :: ham(:,:)
 
 ! the eigenvalues
-         real(dp), pointer :: myeigval(:) 
+         real(dp), pointer :: eigval(:) 
 
 ! the eigenvectors, Hamiltonian must be real
-         real(dp), pointer :: myeigvec(:,:) 
+         real(dp), pointer :: eigvec(:,:) 
 
 ! the next sector it points to when a fermion operator acts on this sector
 ! -1: outside of the Hilbert space, otherwise, it is the index of next sector
@@ -188,7 +188,7 @@
 ! the fmat between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
 ! mymfat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
-         type(t_fmat), pointer :: myfmat(:,:)
+         type(t_fmat), pointer :: fmat(:,:)
      end type t_sector
 
 ! number of sectors
@@ -272,12 +272,12 @@
 ! external variables
      type(t_sector), intent(inout) :: one_sector
   
-     nullify( one_sector%mybasis )
-     nullify( one_sector%myham )
-     nullify( one_sector%myeigval )
-     nullify( one_sector%myeigvec )
+     nullify( one_sector%basis )
+     nullify( one_sector%ham )
+     nullify( one_sector%eigval )
+     nullify( one_sector%eigvec )
      nullify( one_sector%next_sector )
-     nullify( one_sector%myfmat )
+     nullify( one_sector%fmat )
   
      return
   end subroutine nullify_one_sector
@@ -292,12 +292,12 @@
 ! local variables
      integer :: i, j
   
-     allocate( one_sector%mybasis(one_sector%ndim),                   stat=istat ) 
-     allocate( one_sector%myham(one_sector%ndim, one_sector%ndim),    stat=istat ) 
-     allocate( one_sector%myeigval(one_sector%ndim),                  stat=istat )
-     allocate( one_sector%myeigvec(one_sector%ndim, one_sector%ndim), stat=istat ) 
+     allocate( one_sector%basis(one_sector%ndim),                   stat=istat ) 
+     allocate( one_sector%ham(one_sector%ndim, one_sector%ndim),    stat=istat ) 
+     allocate( one_sector%eigval(one_sector%ndim),                  stat=istat )
+     allocate( one_sector%eigvec(one_sector%ndim, one_sector%ndim), stat=istat ) 
      allocate( one_sector%next_sector(one_sector%nops,0:1),           stat=istat )
-     allocate( one_sector%myfmat(one_sector%nops,0:1),                stat=istat )
+     allocate( one_sector%fmat(one_sector%nops,0:1),                stat=istat )
   
 ! check status
      if ( istat /= 0 ) then
@@ -305,18 +305,18 @@
      endif
 
 ! initialize them
-     one_sector%mybasis = 0
-     one_sector%myham = czero
-     one_sector%myeigval = zero
-     one_sector%myeigvec = zero
+     one_sector%basis = 0
+     one_sector%ham = czero
+     one_sector%eigval = zero
+     one_sector%eigvec = zero
      one_sector%next_sector = 0
   
 ! initialize myfmat one by one
      do i=1, one_sector%nops 
         do j=0, 1
-            one_sector%myfmat(i,j)%n = 0
-            one_sector%myfmat(i,j)%m = 0
-            call nullify_one_fmat(one_sector%myfmat(i,j))
+            one_sector%fmat(i,j)%n = 0
+            one_sector%fmat(i,j)%m = 0
+            call nullify_one_fmat(one_sector%fmat(i,j))
         enddo
      enddo
   
@@ -333,16 +333,16 @@
 ! local variables  
      integer :: i, j
   
-     if (associated(one_sector%mybasis))      deallocate(one_sector%mybasis)
-     if (associated(one_sector%myham))        deallocate(one_sector%myham)
-     if (associated(one_sector%myeigval))     deallocate(one_sector%myeigval)
-     if (associated(one_sector%myeigvec))     deallocate(one_sector%myeigvec)
+     if (associated(one_sector%basis))      deallocate(one_sector%basis)
+     if (associated(one_sector%ham))        deallocate(one_sector%ham)
+     if (associated(one_sector%eigval))     deallocate(one_sector%eigval)
+     if (associated(one_sector%eigvec))     deallocate(one_sector%eigvec)
      if (associated(one_sector%next_sector))  deallocate(one_sector%next_sector)
   
 ! deallocate myfmat one by one
      do i=1, one_sector%nops
          do j=0,1
-             call dealloc_one_fmat(one_sector%myfmat(i,j))
+             call dealloc_one_fmat(one_sector%fmat(i,j))
          enddo
      enddo 
   

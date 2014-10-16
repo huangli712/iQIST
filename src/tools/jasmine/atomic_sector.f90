@@ -49,13 +49,13 @@
                  jsect = sectors(isect)%next_sector(iorb, ifermi) 
                  if (jsect == -1) cycle
 ! allocate memory for fmat
-                 sectors(isect)%myfmat(iorb, ifermi)%n = sectors(jsect)%ndim
-                 sectors(isect)%myfmat(iorb, ifermi)%m = sectors(isect)%ndim
-                 call alloc_one_fmat(sectors(isect)%myfmat(iorb, ifermi))
-                 sectors(isect)%myfmat(iorb,ifermi)%item = zero
+                 sectors(isect)%fmat(iorb, ifermi)%n = sectors(jsect)%ndim
+                 sectors(isect)%fmat(iorb, ifermi)%m = sectors(isect)%ndim
+                 call alloc_one_fmat(sectors(isect)%fmat(iorb, ifermi))
+                 sectors(isect)%fmat(iorb,ifermi)%item = zero
 ! build fmat
                  do jbas=1, sectors(isect)%ndim
-                     jold = dec_basis(sectors(isect)%mybasis(jbas))
+                     jold = dec_basis(sectors(isect)%basis(jbas))
 ! for creation fermion operator
                      if (ifermi == 1 .and. ( btest(jold, iorb-1) .eqv. .false. )) then
                          call atomic_make_cdagger(iorb, jold, jnew, isgn)
@@ -67,16 +67,16 @@
                      endif
                      ibas = index_basis(jnew)
                      do i=1, sectors(jsect)%ndim 
-                         if (ibas == sectors(jsect)%mybasis(i)) then
+                         if (ibas == sectors(jsect)%basis(i)) then
                              ibas = i
-                             sectors(isect)%myfmat(iorb, ifermi)%item(ibas, jbas) = dble(isgn)
+                             sectors(isect)%fmat(iorb, ifermi)%item(ibas, jbas) = dble(isgn)
                              exit
                          endif
                      enddo
                  enddo  ! over jbas={1, sectors(isect)%ndim} loop
 ! roate fmat to atomic eigenstates basis
-                 call atomic_tran_sfmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%myeigvec, &
-                     sectors(isect)%myfmat(iorb, ifermi)%item, sectors(isect)%myeigvec)
+                 call atomic_tran_sfmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%eigvec, &
+                     sectors(isect)%fmat(iorb, ifermi)%item, sectors(isect)%eigvec)
              enddo ! over ifermi={0,1} loop
          enddo ! over iorb={1, norbs} loop
      enddo ! over isect={1,nsectors} loop
@@ -153,7 +153,7 @@
      logical :: insect
       
      do isect=1, nsectors
-         sectors(isect)%myham = czero
+         sectors(isect)%ham = czero
   
 !---------------------------------------------------------------------------------------!
 ! two fermion operators
@@ -163,8 +163,8 @@
              betloop: do betta=1,norbs
   
                  isgn = 0
-                 knew = dec_basis(sectors(isect)%mybasis(jbas))
-                 code(1:norbs) = bin_basis(1:norbs, sectors(isect)%mybasis(jbas))
+                 knew = dec_basis(sectors(isect)%basis(jbas))
+                 code(1:norbs) = bin_basis(1:norbs, sectors(isect)%basis(jbas))
   
                  if ( abs(emat(alpha, betta)) .lt. epst ) cycle
   
@@ -194,14 +194,14 @@
   
                          insect = .false.
                          do i=1, sectors(isect)%ndim 
-                             if (sectors(isect)%mybasis(i) == ibas) then
+                             if (sectors(isect)%basis(i) == ibas) then
                                  ibas = i
                                  insect = .true.
                              endif
                          enddo
   
                          if (insect) then
-                             sectors(isect)%myham(ibas,jbas) = sectors(isect)%myham(ibas,jbas) + &
+                             sectors(isect)%ham(ibas,jbas) = sectors(isect)%ham(ibas,jbas) + &
                                                             emat(alpha, betta) * (-1.0d0)**isgn 
                          endif
   
@@ -222,8 +222,8 @@
              deltaloop : do delta=1,norbs
   
                  isgn = 0
-                 knew = dec_basis(sectors(isect)%mybasis(jbas))
-                 code(1:norbs) = bin_basis(1:norbs, sectors(isect)%mybasis(jbas))
+                 knew = dec_basis(sectors(isect)%basis(jbas))
+                 code(1:norbs) = bin_basis(1:norbs, sectors(isect)%basis(jbas))
   
 ! very important if single particle basis has been rotated
                  if ((alpha .eq. betta) .or. (delta .eq. gamma)) cycle
@@ -265,14 +265,14 @@
   
                          insect = .false.
                          do i=1, sectors(isect)%ndim 
-                             if (sectors(isect)%mybasis(i) == ibas) then
+                             if (sectors(isect)%basis(i) == ibas) then
                                  ibas = i
                                  insect = .true.
                              endif
                          enddo
   
                          if (insect) then
-                             sectors(isect)%myham(ibas,jbas) = sectors(isect)%myham(ibas,jbas) + &
+                             sectors(isect)%ham(ibas,jbas) = sectors(isect)%ham(ibas,jbas) + &
                                                   umat(alpha,betta,delta,gamma) * (-1.0d0)**isgn
                          endif
   
@@ -305,8 +305,8 @@
      
      do i=1, nsectors
          allocate( hmat(sectors(i)%ndim, sectors(i)%ndim) )
-         hmat = real( sectors(i)%myham )
-         call s_eig_sy( sectors(i)%ndim, sectors(i)%ndim, hmat, sectors(i)%myeigval, sectors(i)%myeigvec )
+         hmat = real( sectors(i)%ham )
+         call s_eig_sy( sectors(i)%ndim, sectors(i)%ndim, hmat, sectors(i)%eigval, sectors(i)%eigvec )
          deallocate( hmat )
      enddo
   
@@ -563,7 +563,7 @@
          call alloc_one_sector( sectors(i) )  
 ! set basis for each sector
          do j=1, ndims(i)
-             sectors(i)%mybasis(j) = sector_basis(j,i) 
+             sectors(i)%basis(j) = sector_basis(j,i) 
          enddo
      enddo
 !----------------------------------------------------------------
@@ -580,7 +580,7 @@
 ! we should check each state in this sector
                  can = .false.
                  do l=1, sectors(i)%ndim
-                     ibasis = sectors(i)%mybasis(l)
+                     ibasis = sectors(i)%basis(l)
 ! for creation fermion operator
                      if (k==1 .and. bin_basis(j,ibasis) == 0) then
                          tmp_basis = bin_basis(:, ibasis)
@@ -695,7 +695,7 @@
              do i=1, nsectors
                  do j=1, sectors(i)%ndim
                      write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,8X, 14I1)') i, sectors(i)%nelectron, &
-                                           sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+                                           sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j)) 
                  enddo
              enddo
 
@@ -704,7 +704,7 @@
              do i=1, nsectors
                  do j=1, sectors(i)%ndim
                      write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i),&
-                          sect_good_sz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+                          sect_good_sz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j)) 
                  enddo
              enddo
 
@@ -714,7 +714,7 @@
              do i=1, nsectors
                  do j=1, sectors(i)%ndim
                      write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i), &
-                   sect_good_sz(i), sect_good_ps(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+                   sect_good_sz(i), sect_good_ps(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j)) 
                  enddo
              enddo
 
@@ -723,7 +723,7 @@
               do i=1, nsectors
                   do j=1, sectors(i)%ndim
                       write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i),&
-                           sect_good_jz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%mybasis(j)) 
+                           sect_good_jz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j)) 
                   enddo
               enddo
      end select ! back select case(ictqmc) block

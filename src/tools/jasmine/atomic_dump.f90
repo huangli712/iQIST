@@ -223,7 +223,7 @@
          do j=1, sectors(i)%ndim
              counter = counter + 1
              write(mytmp, "(I10,4X,I10,4X,I10,4X,I10, F20.10)") counter, i, &
-                               sectors(i)%nelectron, j, sectors(i)%myeigval(j)
+                               sectors(i)%nelectron, j, sectors(i)%eigval(j)
          enddo
      enddo
      close(mytmp)
@@ -251,9 +251,9 @@
      do i=1, nsectors
          do j=1, sectors(i)%ndim
              do k=1, sectors(i)%ndim
-                 if ( abs(sectors(i)%myeigvec(k,j)) < eps6 ) cycle
+                 if ( abs(sectors(i)%eigvec(k,j)) < eps6 ) cycle
                      write(mytmp, "(3I10, F20.10, 8X, 14I1)") i, k+counter, j+counter, &
-                     sectors(i)%myeigvec(k,j), bin_basis(:,sectors(i)%mybasis(k))
+                     sectors(i)%eigvec(k,j), bin_basis(:,sectors(i)%basis(k))
              enddo
          enddo
          counter = counter + sectors(i)%ndim
@@ -320,7 +320,7 @@
 ! write eigeanvalue
          write(mytmp, "(4X,a)") "# EIGENVALUES"
          do j=1, sectors(i)%ndim
-             write(mytmp, "(2X,I10, F20.10)") j, sectors(i)%myeigval(j) 
+             write(mytmp, "(2X,I10, F20.10)") j, sectors(i)%eigval(j) 
          enddo
      enddo
      close(mytmp)
@@ -341,7 +341,7 @@
              do k=0,1
                  ii = sectors(i)%next_sector(s_order,k)
                  if (ii == -1) cycle 
-                 write(mytmp)  sectors(i)%myfmat(s_order,k)%item(:,:)
+                 write(mytmp)  sectors(i)%fmat(s_order,k)%item(:,:)
              enddo  ! over k={0,1} loop
          enddo ! over j={1, sectors(i)%nops} loop
      enddo  ! over i={1, nsect} loop
