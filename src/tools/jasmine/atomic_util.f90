@@ -1,8 +1,11 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_check_realmat
-!!!           atomic_mat_2nospin
+!!! program : atomic_mat_2nospin
 !!!           atomic_mat_2spin
+!!!           atomic_make_cdagger
+!!!           atomic_make_c
+!!!           atomic_make_gsz
+!!!           atomic_make_gjz
 !!!           atomic_make_gaunt5
 !!!           atomic_make_gaunt7
 !!!           atomic_make_cumatK
@@ -27,39 +30,6 @@
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
-
-!!>>> atomic_check_realmat: check whether a matrix is real
-  subroutine atomic_check_realmat(ndim, mat, lreal)
-     use constants, only : dp, eps6
-  
-     implicit none
-  
-! external variables
-! dimension of the matrix
-     integer, intent(in) :: ndim
-
-! the matrix to be checked
-     complex(dp), intent(in) :: mat(ndim, ndim)
-
-! whether Hamiltonian is real
-     logical, intent(out) :: lreal
-  
-! local variables
-     integer :: i, j
-  
-     do i=1, ndim
-         do j=1, ndim
-             if ( aimag(mat(j,i)) > eps6 ) then
-                 lreal = .false. 
-                 return
-             endif
-         enddo
-     enddo
-  
-     lreal = .true.
-  
-     return
-  end subroutine atomic_check_realmat
 
 !!>>> atomic_mat_2nospin: convert matrix with spin to no-spin
   subroutine atomic_mat_2nospin(norbs, amat, bmat)
@@ -119,6 +89,157 @@
   
       return
   end subroutine atomic_mat_2spin 
+
+!!>>> atomic_make_cdagger: create one electron on ipos 
+!!>>> of |jold> to deduce |jnew>
+  subroutine atomic_make_cdagger(ipos, jold, jnew, isgn)
+     implicit none
+  
+! external argument
+! position number (serial number of orbit)
+     integer, intent(in) :: ipos
+  
+! old Fock state and new Fock state
+     integer, intent(in ):: jold
+     integer, intent(out):: jnew
+  
+! sgn due to anti-commute relation between fernions
+     integer, intent(out):: isgn
+  
+! local variables
+! loop index over orbit
+     integer :: iorb
+  
+     if (btest(jold, ipos-1) .eqv. .true.) then
+         call s_print_error("atomic_construct", "severe error happened")
+     endif
+  
+     isgn = 0
+     do iorb=1,ipos-1
+        if (btest(jold, iorb-1)) isgn = isgn + 1
+     enddo
+     isgn = mod(isgn, 2)
+  
+     isgn = (-1)**isgn
+     jnew = jold + 2**(ipos-1)
+  
+     return
+  end subroutine atomic_make_cdagger
+
+!!>>> atomic_make_c: destroy one electron on ipos 
+!!>>> of |jold> to deduce |jnew>
+  subroutine atomic_make_c(ipos, jold, jnew, isgn)
+      implicit none
+  
+! external argument
+! position number (serial number of orbit)
+      integer, intent(in)  :: ipos
+  
+! old Fock state and new Fock state
+      integer, intent(in ) :: jold
+      integer, intent(out) :: jnew
+  
+! sgn due to anti-commute relation between fernions
+      integer, intent(out) :: isgn
+  
+! local variables
+! loop index
+      integer :: iorb
+  
+      if (btest(jold, ipos-1) .eqv. .false.) then
+          call s_print_error("atomic_eliminate", "severe error happened")
+      endif 
+  
+      isgn = 0
+      do iorb=1,ipos-1
+          if (btest(jold, iorb-1)) isgn = isgn + 1
+      enddo
+      isgn = mod(isgn, 2)
+  
+      isgn = (-1)**isgn
+      jnew = jold - 2**(ipos-1)
+  
+      return
+  end subroutine atomic_make_c
+
+!!>>> atomic_make_gsz: make sz for each orbital
+  subroutine atomic_make_gsz(good_sz)
+     use control, only : norbs
+  
+     implicit none
+  
+! external variables
+     integer, intent(out) :: good_sz(norbs)
+
+! local variables
+     integer :: i
+  
+     do i=1, norbs
+         if (mod(i,2) /= 0 ) then
+             good_sz(i) = 1
+         else
+             good_sz(i) = -1
+         endif
+     enddo
+  
+     return
+  end subroutine atomic_make_gsz
+  
+!>>> atomic_make_gjz: make jz for each orbital
+  subroutine atomic_make_gjz(good_jz)
+     use control, only : nband, norbs
+  
+     implicit none
+  
+! external variables
+     integer, intent(out) :: good_jz(norbs)
+  
+     if (nband == 3) then
+! j=1/2
+         good_jz(1) = -1
+         good_jz(2) =  1
+! j=3/2
+         good_jz(3) = -3
+         good_jz(4) = -1
+         good_jz(5) =  1
+         good_jz(6) =  3
+     elseif (nband == 5) then
+! j=3/2
+         good_jz(1) = -3
+         good_jz(2) = -1
+         good_jz(3) =  1
+         good_jz(4) =  3
+! j=5/2
+         good_jz(5) = -5
+         good_jz(6) = -3
+         good_jz(7) = -1
+         good_jz(8) =  1
+         good_jz(9) =  3
+         good_jz(10)=  5
+     elseif (nband == 7) then
+! j=5/2
+         good_jz(1) = -5
+         good_jz(2) = -3
+         good_jz(3) = -1
+         good_jz(4) =  1
+         good_jz(5) =  3
+         good_jz(6) =  5
+! j=7/2
+         good_jz(7) = -7
+         good_jz(8) = -5
+         good_jz(9) = -3
+         good_jz(10)= -1
+         good_jz(11)=  1
+         good_jz(12)=  3
+         good_jz(13)=  5
+         good_jz(14)=  7
+     else
+         call s_print_error('atomic_make_good_jz', &
+            'not implemented for this norbs value !')
+     endif
+  
+     return
+  end subroutine atomic_make_gjz
 
 !!>>> atomic_make_gaunt5: build gaunt coefficients for 5 band case
   subroutine atomic_make_gaunt5(gaunt)

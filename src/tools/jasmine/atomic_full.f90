@@ -70,7 +70,7 @@
          do j=1,ncfgs
              right = dec_basis(j)
              if (btest(right, i-1) .eqv. .true.) then
-                call atomic_make_eliminate(i, right, left, isgn)
+                call atomic_make_c(i, right, left, isgn)
                 k = index_basis(left)
                 anni_fmat(k, j, i) = dble(isgn)
              endif

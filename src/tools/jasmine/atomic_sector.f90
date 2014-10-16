@@ -1,14 +1,10 @@
 !!!----------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_make_sfmat
+!!!           atomic_tran_sfmat
 !!!           atomic_make_shmat
 !!!           atomic_diag_shmat
-!!!           atomic_rotate_fmat
-!!!           atomic_make_construct
-!!!           atomic_make_eliminate
-!!!           atomic_mksectors
-!!!           atomic_mkgood_sz
-!!!           atomic_mkgood_jz
+!!!           atomic_make_sectors
 !!! source  : atomic_sector.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
@@ -62,10 +58,10 @@
                      jold = dec_basis(sectors(isect)%mybasis(jbas))
 ! for creation fermion operator
                      if (ifermi == 1 .and. ( btest(jold, iorb-1) .eqv. .false. )) then
-                         call atomic_make_construct(iorb, jold, jnew, isgn)
+                         call atomic_make_cdagger(iorb, jold, jnew, isgn)
 ! for annihilation fermion operator
                      elseif (ifermi == 0 .and. ( btest(jold, iorb-1) .eqv. .true. )) then
-                         call atomic_make_eliminate(iorb, jold, jnew, isgn)
+                         call atomic_make_c(iorb, jold, jnew, isgn)
                      else
                          cycle
                      endif
@@ -79,7 +75,7 @@
                      enddo
                  enddo  ! over jbas={1, sectors(isect)%ndim} loop
 ! roate fmat to atomic eigenstates basis
-                 call atomic_rotate_fmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%myeigvec, &
+                 call atomic_tran_sfmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%myeigvec, &
                      sectors(isect)%myfmat(iorb, ifermi)%item, sectors(isect)%myeigvec)
              enddo ! over ifermi={0,1} loop
          enddo ! over iorb={1, norbs} loop
@@ -87,6 +83,43 @@
   
      return
   end subroutine atomic_make_sfmat
+
+!!>>> atomic_tran_sfmat: rotate fmat from Fock basis to eigenstates basis
+  subroutine atomic_tran_sfmat(ndimx, ndimy, amat, bmat, cmat)
+     use constants, only: dp, zero, one
+     implicit none
+     
+! external variables
+     integer, intent(in) :: ndimx
+     integer, intent(in) :: ndimy
+     real(dp), intent(in) :: amat(ndimx, ndimx)
+     real(dp), intent(inout) :: bmat(ndimx, ndimy)
+     real(dp), intent(in) :: cmat(ndimy, ndimy)
+  
+! local variables
+     real(dp) :: tmp_mat(ndimx, ndimy)
+     real(dp) :: amat_t(ndimx, ndimx)
+     real(dp) :: alpha
+     real(dp) :: betta
+  
+     amat_t = transpose(amat)
+     tmp_mat = zero
+  
+     alpha = one; betta = zero
+     call dgemm('N', 'N', ndimx, ndimy, ndimy, &
+                           alpha, bmat, ndimx, &
+                                  cmat, ndimy, &
+                        betta, tmp_mat, ndimx  )
+  
+     alpha = one; betta = zero
+     call dgemm('N', 'N', ndimx, ndimy, ndimx, &
+                         alpha, amat_t, ndimx, &
+                               tmp_mat, ndimx, &
+                           betta, bmat, ndimx  )
+  
+  
+     return
+  end subroutine atomic_tran_sfmat
 
 !!>>> atomic_make_shmat: make Hamiltonian for each sector one by one
   subroutine atomic_make_shmat()
@@ -280,15 +313,10 @@
      return
   end subroutine atomic_diag_shmat
 
-
-
-
-
-
-!!>>> atomic_mksectors: determine all the sectors for good quantum numbers
+!!>>> atomic_make_sectors: determine all the sectors for good quantum numbers
 !!>>> a sector consists of some many particle Fock states labeled by 
 !!>>> good quantum numbers
-  subroutine atomic_mksectors()
+  subroutine atomic_make_sectors()
      use constants, only : mytmp, zero
      use control, only : nband, norbs, ncfgs, ictqmc
 
@@ -390,11 +418,11 @@
 ! make good_sz and good_jz
      orb_good_sz = 0
      orb_good_jz = 0
-     call atomic_mkgood_sz(orb_good_sz)
+     call atomic_make_gsz(orb_good_sz)
      
 ! jz only valid for nband==3, 5, 7
      if (nband == 3 .or. nband == 5 .or. nband == 7 ) then
-         call atomic_mkgood_jz(orb_good_jz)
+         call atomic_make_gjz(orb_good_jz)
      endif
 
 ! build good quantum numbers for each Fock state
@@ -718,196 +746,4 @@
      if (allocated(sector_basis))   deallocate(sector_basis)
   
      return
-  end subroutine atomic_mksectors
- 
-!!>>> atomic_mkgood_sz: make sz for each orbital
-  subroutine atomic_mkgood_sz(good_sz)
-     use control, only : norbs
-  
-     implicit none
-  
-! external variables
-     integer, intent(out) :: good_sz(norbs)
-
-! local variables
-     integer :: i
-  
-     do i=1, norbs
-         if (mod(i,2) /= 0 ) then
-             good_sz(i) = 1
-         else
-             good_sz(i) = -1
-         endif
-     enddo
-  
-     return
-  end subroutine atomic_mkgood_sz
-  
-!>>> atomic_mkgood_jz: make jz for each orbital
-  subroutine atomic_mkgood_jz(good_jz)
-     use control, only : nband, norbs
-  
-     implicit none
-  
-! external variables
-     integer, intent(out) :: good_jz(norbs)
-  
-     if (nband == 3) then
-! j=1/2
-         good_jz(1) = -1
-         good_jz(2) =  1
-! j=3/2
-         good_jz(3) = -3
-         good_jz(4) = -1
-         good_jz(5) =  1
-         good_jz(6) =  3
-     elseif (nband == 5) then
-! j=3/2
-         good_jz(1) = -3
-         good_jz(2) = -1
-         good_jz(3) =  1
-         good_jz(4) =  3
-! j=5/2
-         good_jz(5) = -5
-         good_jz(6) = -3
-         good_jz(7) = -1
-         good_jz(8) =  1
-         good_jz(9) =  3
-         good_jz(10)=  5
-     elseif (nband == 7) then
-! j=5/2
-         good_jz(1) = -5
-         good_jz(2) = -3
-         good_jz(3) = -1
-         good_jz(4) =  1
-         good_jz(5) =  3
-         good_jz(6) =  5
-! j=7/2
-         good_jz(7) = -7
-         good_jz(8) = -5
-         good_jz(9) = -3
-         good_jz(10)= -1
-         good_jz(11)=  1
-         good_jz(12)=  3
-         good_jz(13)=  5
-         good_jz(14)=  7
-     else
-         call s_print_error('atomic_make_good_jz', &
-            'not implemented for this norbs value !')
-     endif
-  
-     return
-  end subroutine atomic_mkgood_jz
-
-
-!!>>> atomic_rotate_fmat: rotate fmat from Fock basis to eigenstates basis
-  subroutine atomic_rotate_fmat(ndimx, ndimy, amat, bmat, cmat)
-     use constants, only: dp, zero, one
-     implicit none
-     
-! external variables
-     integer, intent(in) :: ndimx
-     integer, intent(in) :: ndimy
-     real(dp), intent(in) :: amat(ndimx, ndimx)
-     real(dp), intent(inout) :: bmat(ndimx, ndimy)
-     real(dp), intent(in) :: cmat(ndimy, ndimy)
-  
-! local variables
-     real(dp) :: tmp_mat(ndimx, ndimy)
-     real(dp) :: amat_t(ndimx, ndimx)
-     real(dp) :: alpha
-     real(dp) :: betta
-  
-     amat_t = transpose(amat)
-     tmp_mat = zero
-  
-     alpha = one; betta = zero
-     call dgemm('N', 'N', ndimx, ndimy, ndimy, &
-                           alpha, bmat, ndimx, &
-                                  cmat, ndimy, &
-                        betta, tmp_mat, ndimx  )
-  
-     alpha = one; betta = zero
-     call dgemm('N', 'N', ndimx, ndimy, ndimx, &
-                         alpha, amat_t, ndimx, &
-                               tmp_mat, ndimx, &
-                           betta, bmat, ndimx  )
-  
-  
-     return
-  end subroutine atomic_rotate_fmat
-
-!!>>> atomic_make_construct: create one electron on ipos 
-!!>>> of |jold> to deduce |jnew>
-  subroutine atomic_make_construct(ipos, jold, jnew, isgn)
-     implicit none
-  
-! external argument
-! position number (serial number of orbit)
-     integer, intent(in) :: ipos
-  
-! old Fock state and new Fock state
-     integer, intent(in ):: jold
-     integer, intent(out):: jnew
-  
-! sgn due to anti-commute relation between fernions
-     integer, intent(out):: isgn
-  
-! local variables
-! loop index over orbit
-     integer :: iorb
-  
-     if (btest(jold, ipos-1) .eqv. .true.) then
-         call s_print_error("atomic_construct", "severe error happened")
-     endif
-  
-     isgn = 0
-     do iorb=1,ipos-1
-        if (btest(jold, iorb-1)) isgn = isgn + 1
-     enddo
-     isgn = mod(isgn, 2)
-  
-     isgn = (-1)**isgn
-     jnew = jold + 2**(ipos-1)
-  
-     return
-  end subroutine atomic_make_construct
-
-!!>>> atomic_make_eliminate: destroy one electron on ipos 
-!!>>> of |jold> to deduce |jnew>
-  subroutine atomic_make_eliminate(ipos, jold, jnew, isgn)
-      implicit none
-  
-! external argument
-! position number (serial number of orbit)
-      integer, intent(in)  :: ipos
-  
-! old Fock state and new Fock state
-      integer, intent(in ) :: jold
-      integer, intent(out) :: jnew
-  
-! sgn due to anti-commute relation between fernions
-      integer, intent(out) :: isgn
-  
-! local variables
-! loop index
-      integer :: iorb
-  
-      if (btest(jold, ipos-1) .eqv. .false.) then
-          call s_print_error("atomic_eliminate", "severe error happened")
-      endif 
-  
-      isgn = 0
-      do iorb=1,ipos-1
-          if (btest(jold, iorb-1)) isgn = isgn + 1
-      enddo
-      isgn = mod(isgn, 2)
-  
-      isgn = (-1)**isgn
-      jnew = jold - 2**(ipos-1)
-  
-      return
-  end subroutine atomic_make_eliminate
-
-
-
+  end subroutine atomic_make_sectors

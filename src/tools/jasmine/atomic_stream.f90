@@ -690,7 +690,7 @@
 !!>>> atomic_2natural_case4: make natural basis for the case with 
 !!>>> crystal field and with spin-orbital coupling
   subroutine atomic_2natural_case4()
-     use constants, only : dp, mystd
+     use constants, only : dp, mystd, eps6
      use control, only : norbs, mune
 
      use m_spmat, only : cfmat, socmat, eimpmat, tran_umat
@@ -717,7 +717,7 @@
      integer :: i
 
 ! whether cfmat is real on complex orbital basis
-     logical :: lreal
+!     logical :: lreal
   
 ! get umat_r2c
      call atomic_make_tmat_r2c(umat_r2c)
@@ -726,8 +726,7 @@
      call atomic_tran_repr_cmpl(norbs, cfmat, umat_r2c)
   
 ! check whether cfmat is real, if not, we cann't make natural basis
-     call atomic_check_realmat(norbs, cfmat, lreal)
-     if (lreal .eqv. .false.) then
+     if ( any( abs( aimag(cfmat) ) > eps6 ) ) then
          call s_print_error('atomic_2natural_case4', 'crystal field on &
              complex orbital basis is not real, cannot make natural basis !')
      endif

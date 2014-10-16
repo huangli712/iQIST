@@ -16,7 +16,7 @@
 !!>>> atomic_f_driver: CTQMC direct matrices multiplications 
 !!>>> trace algorithm, use full Hilbert space 
   subroutine atomic_f_driver()
-     use constants, only : dp, mystd
+     use constants, only : dp, mystd, eps6
      use control, only : ncfgs
 
      use m_glob_fullspace, only : hmat, hmat_eigval, hmat_eigvec
@@ -29,7 +29,7 @@
      real(dp) :: tmp_mat(ncfgs, ncfgs)
 
 ! whether the Hamiltonian is real ? 
-     logical :: lreal 
+     !!logical :: lreal 
   
 ! allocate memory 
      write(mystd, "(2X,a)") "jasmine >>> allocate memory of global variables for fullspace case ..."
@@ -44,8 +44,7 @@
 ! check whether the many particle Hamiltonian is real 
      write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
      write(mystd,*)
-     call atomic_check_realmat(ncfgs, hmat, lreal)
-     if (lreal .eqv. .false.) then
+     if ( any( abs( aimag(hmat) ) > eps6 ) ) then
          call s_print_error('atomic_f_driver', 'hmat is not real !')
      else
          write(mystd, "(2X,a)") "jasmine >>> the atomic Hamiltonian is real"
@@ -93,7 +92,7 @@
   
 !!>>> atomic_s_driver: CTQMC trace algorithm: use good quantum numbers (GQNs)
   subroutine atomic_s_driver()
-     use constants, only : mystd
+     use constants, only : mystd, eps6
      use m_glob_sectors, only : nsectors, sectors, dealloc_m_glob_sectors
   
      implicit none
@@ -103,12 +102,12 @@
      integer :: i
 
 ! whether the Hamiltonian is real ?
-     logical :: lreal
+!     logical :: lreal
 
 ! make all the sectors, allocate m_glob_sectors memory inside
      write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers (GQNs)... "
      write(mystd,*)
-     call atomic_mksectors()
+     call atomic_make_sectors()
  
 ! make atomic Hamiltonian
      write(mystd, "(2X,a)") "jasmine >>> make atomic Hamiltonian for each sector ... "
@@ -119,8 +118,7 @@
      write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
      write(mystd,*)
      do i=1, nsectors 
-         call atomic_check_realmat(sectors(i)%ndim, sectors(i)%myham, lreal)
-         if (lreal .eqv. .false.) then
+         if ( any( abs( aimag(sectors(i)%myham) ) > eps6 ) ) then
              call s_print_error('atomic_solve_sectors', 'hmat is not real !')
          endif
      enddo
@@ -130,7 +128,7 @@
 ! diagonalize Hamiltonian of each sector one by one
      write(mystd, "(2X,a)") "jasmine >>> diagonalize atomic Hamiltonian for each sector ... "
      write(mystd,*)
-     call atomic_diaghmat_sectors()
+     call atomic_diag_shmat()
   
 ! make fmat of both creation and annihilation operators for each sector
      write(mystd, "(2X,a)") "jasmine >>> make fmat for each sector ..."
