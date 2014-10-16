@@ -316,12 +316,12 @@
   end subroutine atomic_read_eimp
   
 !!>>> atomic_read_tmat: read the transformation matrix 
-!!>>> tran_umat from file 'atomic.umat.in'
+!!>>> tmat from file 'atomic.umat.in'
   subroutine atomic_read_tmat()
      use constants, only : mytmp, dp, zero
      use control, only : norbs
 
-     use m_spmat, only : tran_umat
+     use m_spmat, only : tmat
   
      implicit none
   
@@ -344,7 +344,7 @@
          do i=1, norbs
              do j=1, norbs
                  read(mytmp, *) i1, i2, r1
-                 tran_umat(j,i) = dcmplx(r1, zero)
+                 tmat(j,i) = dcmplx(r1, zero)
              enddo
          enddo
      else
@@ -487,7 +487,7 @@
   subroutine atomic_make_natural()
      use constants, only : dp, czero, mystd
      use control, only : norbs, itask, icf, isoc, icu
-     use m_spmat, only : cumat, tran_umat
+     use m_spmat, only : cumat, tmat
   
      implicit none
   
@@ -548,7 +548,7 @@
      endif
   
 ! finally, transform cumat to natural basis
-     call atomic_tran_cumat(tran_umat, cumat, tmp_mat) 
+     call atomic_tran_cumat(tmat, cumat, tmp_mat) 
      cumat = tmp_mat
   
      return
@@ -559,7 +559,7 @@
   subroutine atomic_2natural_case1()
      use constants, only : mystd, zero, cone
      use control, only : norbs, mune
-     use m_spmat, only : cfmat, eimpmat, tran_umat
+     use m_spmat, only : cfmat, eimpmat, tmat
   
      implicit none
   
@@ -575,9 +575,9 @@
      enddo
 ! for this case, the natural basis is the real orbital basis
 ! so, the tran_umat is a unity matrix
-     tran_umat = zero
+     tmat = zero
      do i=1, norbs
-         tran_umat(i,i) = cone
+         tmat(i,i) = cone
      enddo
   
      write(mystd,'(2X,a)') 'jasmine >>> natural basis is: real orbital basis'
@@ -593,7 +593,7 @@
   subroutine atomic_2natural_case2()
      use constants, only : mystd, dp, czero
      use control, only : norbs, nband, mune
-     use m_spmat, only : cfmat, eimpmat, tran_umat
+     use m_spmat, only : cfmat, eimpmat, tmat
   
      implicit none
   
@@ -638,8 +638,8 @@
          do j=1, nband
              eimpmat(2*j-1,2*i-1) = eimp_nospin(j,i)
              eimpmat(2*j,2*i)     = eimp_nospin(j,i)
-             tran_umat(2*j-1,2*i-1) = umat_nospin(j,i)
-             tran_umat(2*j,2*i)     = umat_nospin(j,i)
+             tmat(2*j-1,2*i-1) = umat_nospin(j,i)
+             tmat(2*j,2*i)     = umat_nospin(j,i)
          enddo
      enddo
   
@@ -662,7 +662,7 @@
   subroutine atomic_2natural_case3()
      use constants, only : dp, mystd
      use control, only : norbs, mune
-     use m_spmat, only : eimpmat, socmat, tran_umat
+     use m_spmat, only : eimpmat, socmat, tmat
   
      implicit none
   
@@ -679,10 +679,10 @@
      call atomic_make_tmat_c2j(umat_c2j)
   
 ! for soc case, the tran_umat is from complex orbital basis to natural basis
-     tran_umat = umat_c2j
+     tmat = umat_c2j
   
 ! transform sp_eimp_mat to natural basis
-     call atomic_tran_repr_cmpl(norbs, eimpmat, tran_umat)   
+     call atomic_tran_repr_cmpl(norbs, eimpmat, tmat)   
   
 ! add chemical potential to eimpmat
      do i=1, norbs
@@ -703,7 +703,7 @@
      use constants, only : dp, mystd, eps6
      use control, only : norbs, mune
 
-     use m_spmat, only : cfmat, socmat, eimpmat, tran_umat
+     use m_spmat, only : cfmat, socmat, eimpmat, tmat
   
      implicit none
   
@@ -749,7 +749,7 @@
      call s_eig_sy(norbs, norbs, tmp_mat, eigval, eigvec)
   
      umat_c2n = eigvec
-     tran_umat = umat_c2n
+     tmat = umat_c2n
   
 ! transform eimpmat to natural basis
      call atomic_tran_repr_cmpl(norbs, eimpmat, umat_c2n)   

@@ -48,7 +48,7 @@
   subroutine atomic_dump_natural(info)
      use constants, only : dp, mytmp
      use control, only : norbs
-     use m_spmat, only : tran_umat
+     use m_spmat, only : tmat
   
 ! external variables
      character(len=*), intent(in) :: info
@@ -61,7 +61,7 @@
      write(mytmp,'(a)') '#      i |       j |    umat_real(i,j) |    umat_imag(i,j) |'
      do i=1, norbs
          do j=1, norbs
-             write(mytmp, '(2I10,2F20.10)') j, i, tran_umat(j,i)
+             write(mytmp, '(2I10,2F20.10)') j, i, tmat(j,i)
          enddo
      enddo 
      close(mytmp)

@@ -410,10 +410,10 @@
      complex(dp), public, allocatable, save :: eimpmat(:,:)
   
 ! Coulomb interaction U tensor
-     complex(dp), public, allocatable, save :: cumat(:,:,:,:)
+     complex(dp), public, allocatable, save :: umat(:,:,:,:)
   
 ! the transformation matrix from origional basis to natural basis 
-     complex(dp), public, allocatable, save :: tran_umat(:,:)
+     complex(dp), public, allocatable, save :: tmat(:,:)
   
 ! the status flag
      integer, private :: istat
@@ -435,8 +435,8 @@
      allocate( cfmat(norbs, norbs),               stat=istat )
      allocate( socmat(norbs, norbs),              stat=istat )
      allocate( eimpmat(norbs, norbs),             stat=istat )
-     allocate( cumat(norbs, norbs, norbs, norbs), stat=istat )
-     allocate( tran_umat(norbs, norbs),           stat=istat )
+     allocate( umat(norbs, norbs, norbs, norbs), stat=istat )
+     allocate( tmat(norbs, norbs),           stat=istat )
   
 ! check the status
      if ( istat /= 0 ) then
@@ -447,8 +447,8 @@
      cfmat    = czero
      socmat   = czero
      eimpmat  = czero
-     cumat    = czero
-     tran_umat= czero
+     umat    = czero
+     tmat= czero
   
      return
   end subroutine alloc_m_spmat
@@ -461,8 +461,8 @@
      if (allocated(cfmat))      deallocate(cfmat)
      if (allocated(socmat))     deallocate(socmat)
      if (allocated(eimpmat))    deallocate(eimpmat)
-     if (allocated(cumat))      deallocate(cumat)
-     if (allocated(tran_umat))  deallocate(tran_umat)
+     if (allocated(umat))      deallocate(umat)
+     if (allocated(tmat))  deallocate(tmat)
   
      return
   end subroutine dealloc_m_spmat
