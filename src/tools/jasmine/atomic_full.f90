@@ -19,7 +19,7 @@
      use control, only: ncfgs, norbs
 
      use m_full, only: bin_basis
-     use m_full, only: occu_mat, hmat_eigvec
+     use m_full, only: occu, hmat_eigvec
   
      implicit none
   
@@ -30,16 +30,16 @@
 ! loop index over configurations
      integer :: ibas
   
-     occu_mat = zero
+     occu = zero
      do ibas=1,ncfgs
          do iorb=1,norbs
              if (bin_basis(iorb, ibas) .eq. 1) then
-                 occu_mat(ibas, ibas) = occu_mat(ibas, ibas) + one
+                 occu(ibas, ibas) = occu(ibas, ibas) + one
              endif
          enddo 
      enddo 
   
-     call atomic_tran_repr_real(ncfgs, occu_mat, hmat_eigvec)
+     call atomic_tran_repr_real(ncfgs, occu, hmat_eigvec)
   
      return
   end subroutine atomic_make_foccu

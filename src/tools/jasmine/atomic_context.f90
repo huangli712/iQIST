@@ -45,7 +45,7 @@
      real(dp), public, allocatable, save :: anni_fmat(:,:,:)
   
 ! occupany number for atomic eigenstates
-     real(dp), public, allocatable, save :: occu_mat(:,:)
+     real(dp), public, allocatable, save :: occu(:,:)
 
 ! status flag
      integer, private :: istat
@@ -107,7 +107,7 @@
      allocate( hmat_eigval(ncfgs),              stat=istat )
      allocate( hmat_eigvec(ncfgs, ncfgs),       stat=istat )
      allocate( anni_fmat(ncfgs, ncfgs, norbs),  stat=istat )
-     allocate( occu_mat(ncfgs, ncfgs),          stat=istat )
+     allocate( occu(ncfgs, ncfgs),          stat=istat )
   
 ! check status
      if ( istat /= 0 ) then
@@ -119,7 +119,7 @@
      hmat_eigval = zero
      hmat_eigvec = zero
      anni_fmat = zero
-     occu_mat = zero
+     occu = zero
   
      return
   end subroutine alloc_m_glob_fullspace
@@ -132,7 +132,7 @@
      if(allocated(hmat_eigval)) deallocate(hmat_eigval)
      if(allocated(hmat_eigvec)) deallocate(hmat_eigvec)
      if(allocated(anni_fmat))   deallocate(anni_fmat)
-     if(allocated(occu_mat))    deallocate(occu_mat)
+     if(allocated(occu))    deallocate(occu)
   
      return
   end subroutine dealloc_m_glob_fullspace

@@ -105,7 +105,7 @@
   subroutine atomic_dump_feigval()
      use constants, only : mytmp
      use control, only : ncfgs
-     use m_full, only : hmat_eigval, occu_mat
+     use m_full, only : hmat_eigval, occu
   
      implicit none
   
@@ -116,7 +116,7 @@
      open(mytmp, file='atom.eigval.dat')
      write(mytmp, '(a)') '#       i |     eigenvalue(i) |      occupancy(i) |'
      do i=1, ncfgs
-         write(mytmp, "(I10, 2F20.10)") i, hmat_eigval(i), occu_mat(i,i)
+         write(mytmp, "(I10, 2F20.10)") i, hmat_eigval(i), occu(i,i)
      enddo
      close(mytmp)
   
@@ -157,7 +157,7 @@
      use constants, only : mytmp, zero
      use control, only : nband, norbs, ncfgs, isoc
 
-     use m_full, only : hmat_eigval, occu_mat, anni_fmat
+     use m_full, only : hmat_eigval, occu, anni_fmat
   
      implicit none
   
@@ -171,7 +171,7 @@
 ! write eigenvalues
      write(mytmp,'(a)') '# eigenvalues: index | energy | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(I10,3F20.10)') i, hmat_eigval(i), occu_mat(i,i), zero
+         write(mytmp,'(I10,3F20.10)') i, hmat_eigval(i), occu(i,i), zero
      enddo 
   
 ! write fmat
