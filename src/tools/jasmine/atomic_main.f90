@@ -72,7 +72,7 @@
 ! make Fock basis for the full many particle Hiblert space
      write(mystd, "(2X,a)") "jasmine >>> make Fock basis ..."
      write(mystd,*)
-     call atomic_mkbasis_fullspace()
+     call atomic_make_fock()
   
 ! call the drivers for different CTQMC algorithm
      select case(ictqmc)
@@ -81,7 +81,7 @@
              write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: full space &
                                                            matrices multiplications."
              write(mystd, *)
-             call atomic_driver_fullspace()
+             call atomic_f_driver()
   
 ! itask 2: use good quantum numbers
 ! total number of electrons: N
@@ -89,7 +89,7 @@
          case(2) 
              write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: use good quantum number N."
              write(mystd, *)
-             call atomic_driver_sectors()
+             call atomic_s_driver()
   
 ! itask 3: use good quantum numbers
 ! total number of electrons: N 
@@ -98,7 +98,7 @@
          case(3) 
              write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: use good quantum numbers N, Sz."
              write(mystd, *)
-             call atomic_driver_sectors()
+             call atomic_s_driver()
   
 ! itask 4: use good quantum numbers
 ! total number of electrons: N 
@@ -108,7 +108,7 @@
          case(4) 
              write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: use good quantum numbers N, Sz, PS."
              write(mystd, *)
-             call atomic_driver_sectors()
+             call atomic_s_driver()
   
 ! itask 5: use good quantum numbers
 ! total number of electrons: N
@@ -117,7 +117,7 @@
          case(5) 
              write(mystd, "(2X,a)") "jasmine >>> CTQMC trace algorithm: use good quantum numbers N, Jz."
              write(mystd, *)
-             call atomic_driver_sectors()
+             call atomic_s_driver()
   
      end select 
   

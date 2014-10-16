@@ -1,75 +1,23 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_config
-!!! source  : atomic_config.f90
-!!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!! purpose : set control parameters 
-!!! status  : unstable
-!!! comment :
-!!!-------------------------------------------------------------------------
-
-!!!-------------------------------------------------------------------------
-!!! project : jasmine
-!!! program : atomic_read_cf
+!!!           atomic_check_config
+!!!           atomic_read_cf
 !!!           atomic_read_eimp
-!!!           atomic_read_umat
-!!! source  : atomic_natural.f90
-!!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!! purpose : read data from files
-!!! status  : unstable
-!!! comment :
-!!!-------------------------------------------------------------------------
-
-!!!-------------------------------------------------------------------------
-!!! project : jasmine
-!!! program : atomic_check_config
-!!! source  : atomic_check.f90
-!!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!! purpose : do some checks
-!!! status  : unstable
-!!! comment :
-!!!-------------------------------------------------------------------------
-
-!!!-------------------------------------------------------------------------
-!!! project : jasmine
-!!! program : atomic_make_spmat
-!!!           atomic_make_soc
-!!! source  : atomic_mkspmat.f90
-!!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!! purpose : make single particle related matrices, including crystal field,
-!!!           spin-orbital coupling, and Coulomb interaction U tensor
-!!! status  : unstable
-!!! comment : subroutine atomic_mkcumat_kanamori and atomic_mkcumat_slater are 
-!!!           modified from Dr. LiangDu's (duleung@gmail.com) atomic program
-!!!-------------------------------------------------------------------------
-
-!!!-------------------------------------------------------------------------
-!!! project : jasmine
-!!! program : atomic_make_natural
+!!!           atomic_read_tmat
+!!!           atomic_make_spmat
+!!!           atomic_make_fock
+!!!           atomic_make_natural
 !!!           atomic_2natural_case1
 !!!           atomic_2natural_case2
 !!!           atomic_2natural_case3
 !!!           atomic_2natural_case4
-!!!           atomic_mat_2nospin
-!!!           atomic_mat_2spin
-!!! source  : atomic_natural.f90
+!!! source  : atomic_stream.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
-!!! purpose : make natural basis 
+!!! purpose : set control parameters
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
@@ -176,120 +124,6 @@
   
      return
   end subroutine atomic_config
-
-!!>>> atomic_read_cf: read crystal field from file 'atomic.cf.in'
-  subroutine atomic_read_cf()
-     use constants, only : mytmp, dp, zero
-     use m_spmat, only : cfmat
-  
-     implicit none
-  
-! local variables
-! file status
-     logical :: exists
-
-! iostat
-     integer :: ierr
-
-! dummy variables
-     integer :: i, j
-     real(dp) :: r1
-  
-! we read crystal field from file "atom.cf.in"
-! inquire file
-     inquire(file='atom.cf.in', exist=exists)
-  
-     if (exists .eqv. .true.) then
-         open(mytmp, file='atom.cf.in')
-         do while(.true.)
-             read(mytmp, *, iostat=ierr) i, j, r1
-             ! crystal field is actually real
-             cfmat(i,j) = dcmplx(r1, zero)
-             if (ierr /= 0) exit
-         enddo
-     else
-         call s_print_error('atomic_read_cf', 'no file atomic.cf.in !')
-     endif 
-  
-     return
-  end subroutine atomic_read_cf
-
-!!>>> atomic_read_eimp: read on-site impurity energy 
-!!>>> from file 'atomic.eimp.in'
-  subroutine atomic_read_eimp()
-     use constants, only : mytmp, dp, zero
-     use control, only : norbs
-
-     use m_spmat, only : eimpmat
-  
-     implicit none
-  
-! local variables
-! file status
-     logical :: exists
-
-! loop index
-     integer :: i
-
-! dummy variables
-     integer :: i1, i2
-     real(dp) :: r1
-  
-! we read eimp from file 'atomic.eimp.in'
-     inquire(file='atom.eimp.in', exist=exists)
-  
-     if (exists .eqv. .true.) then
-         open(mytmp, file='atom.eimp.in')
-         do i=1, norbs
-             read(mytmp, *) i1, i2, r1
-             ! eimpmat is actually real in natural basis
-             eimpmat(i,i) = dcmplx(r1, zero)
-         enddo 
-     else
-         call s_print_error('atomic_read_eimp', 'no file atomic.eimp.in !')
-     endif
-  
-     return
-  end subroutine atomic_read_eimp
-  
-!!>>> atomic_read_umat: read the transformation matrix 
-!!>>> tran_umat from file 'atomic.umat.in'
-  subroutine atomic_read_umat()
-     use constants, only : mytmp, dp, zero
-     use control, only : norbs
-
-     use m_spmat, only : tran_umat
-  
-     implicit none
-  
-! local variables
-! file status
-     logical :: exists
-
-! loop index
-     integer :: i, j
-
-! dummy variables
-     integer :: i1, i2
-     real(dp) :: r1
-  
-! we read ran_umat from file 'atomic.umat.in'
-     inquire(file='atom.umat.in', exist=exists)
-  
-     if (exists .eqv. .true.) then
-         open(mytmp, file='atom.umat.in')
-         do i=1, norbs
-             do j=1, norbs
-                 read(mytmp, *) i1, i2, r1
-                 tran_umat(j,i) = dcmplx(r1, zero)
-             enddo
-         enddo
-     else
-         call s_print_error('atomic_read_umat', 'no file atomic.umat.in')
-     endif
-  
-     return
-  end subroutine atomic_read_umat
 
 !!>>> atomic_check_config: check the validity of input config parameters
   subroutine atomic_check_config()
@@ -406,13 +240,126 @@
      return
   end subroutine atomic_check_config
 
+!!>>> atomic_read_cf: read crystal field from file 'atomic.cf.in'
+  subroutine atomic_read_cf()
+     use constants, only : mytmp, dp, zero
+     use m_spmat, only : cfmat
+  
+     implicit none
+  
+! local variables
+! file status
+     logical :: exists
+
+! iostat
+     integer :: ierr
+
+! dummy variables
+     integer :: i, j
+     real(dp) :: r1
+  
+! we read crystal field from file "atom.cf.in"
+! inquire file
+     inquire(file='atom.cf.in', exist=exists)
+  
+     if (exists .eqv. .true.) then
+         open(mytmp, file='atom.cf.in')
+         do while(.true.)
+             read(mytmp, *, iostat=ierr) i, j, r1
+             ! crystal field is actually real
+             cfmat(i,j) = dcmplx(r1, zero)
+             if (ierr /= 0) exit
+         enddo
+     else
+         call s_print_error('atomic_read_cf', 'no file atomic.cf.in !')
+     endif 
+  
+     return
+  end subroutine atomic_read_cf
+
+!!>>> atomic_read_eimp: read on-site impurity energy 
+!!>>> from file 'atomic.eimp.in'
+  subroutine atomic_read_eimp()
+     use constants, only : mytmp, dp, zero
+     use control, only : norbs
+
+     use m_spmat, only : eimpmat
+  
+     implicit none
+  
+! local variables
+! file status
+     logical :: exists
+
+! loop index
+     integer :: i
+
+! dummy variables
+     integer :: i1, i2
+     real(dp) :: r1
+  
+! we read eimp from file 'atomic.eimp.in'
+     inquire(file='atom.eimp.in', exist=exists)
+  
+     if (exists .eqv. .true.) then
+         open(mytmp, file='atom.eimp.in')
+         do i=1, norbs
+             read(mytmp, *) i1, i2, r1
+             ! eimpmat is actually real in natural basis
+             eimpmat(i,i) = dcmplx(r1, zero)
+         enddo 
+     else
+         call s_print_error('atomic_read_eimp', 'no file atomic.eimp.in !')
+     endif
+  
+     return
+  end subroutine atomic_read_eimp
+  
+!!>>> atomic_read_tmat: read the transformation matrix 
+!!>>> tran_umat from file 'atomic.umat.in'
+  subroutine atomic_read_tmat()
+     use constants, only : mytmp, dp, zero
+     use control, only : norbs
+
+     use m_spmat, only : tran_umat
+  
+     implicit none
+  
+! local variables
+! file status
+     logical :: exists
+
+! loop index
+     integer :: i, j
+
+! dummy variables
+     integer :: i1, i2
+     real(dp) :: r1
+  
+! we read ran_umat from file 'atomic.umat.in'
+     inquire(file='atom.umat.in', exist=exists)
+  
+     if (exists .eqv. .true.) then
+         open(mytmp, file='atom.umat.in')
+         do i=1, norbs
+             do j=1, norbs
+                 read(mytmp, *) i1, i2, r1
+                 tran_umat(j,i) = dcmplx(r1, zero)
+             enddo
+         enddo
+     else
+         call s_print_error('atomic_read_tmat', 'no file atomic.umat.in')
+     endif
+  
+     return
+  end subroutine atomic_read_tmat
+
 !!>>> atomic_make_spmat: make single particle related matrices, including
 !!>>> crystal field (CF), spin-orbit coupling (SOC), and Coulomb interaction
 !!>>> U tensor
   subroutine atomic_make_spmat()
-     use constants, only : czero
-     use control, only : itask, icf, isoc, icu
-
+     use constants, only : czero, two
+     use control, only : itask, icf, isoc, icu, nband, lambda
      use m_spmat, only : cfmat, socmat
   
      implicit none
@@ -435,7 +382,19 @@
          if (isoc > 0) then
 ! make an atomic on-site SOC, $\lambda * L * S$
 ! it is defined on the complex orbital basis
-             call atomic_make_soc()
+             if (nband == 3) then
+                 call atomic_make_socmat3(socmat)
+                 ! for 3 bands system, there is a minus sign
+                 socmat = -socmat * lambda / two
+             elseif(nband == 5) then
+                 call atomic_make_socmat5(socmat)
+                 socmat = socmat * lambda / two
+             elseif(nband == 7) then
+                 call atomic_make_socmat7(socmat)
+                 socmat = socmat * lambda / two
+             else
+                 call s_print_error('atomic_make_soc', 'not implementd!')
+             endif
          else
              socmat = czero
          endif
@@ -449,7 +408,7 @@
 ! without SOC, the original basis is the real orbital basis
 ! with SOC, the original basis is the complex orbital basis
 ! at present, we just only support real numbers of this umat
-         call atomic_read_umat()
+         call atomic_read_tmat()
      endif
   
 ! make Coulomb interaction U
@@ -466,30 +425,66 @@
      return
   end subroutine atomic_make_spmat 
 
-!!>>> atomic_make_soc: make spin-orbital coupling (SOC)
-  subroutine atomic_make_soc()
-     use constants, only : two
-     use control, only : nband, lambda
-     use m_spmat, only : socmat
+!!>>> atomic_make_fock: make Fock basis for full Hilbert space
+  subroutine atomic_make_fock()
+     use control, only : norbs, ncfgs
+     use m_basis_fullspace, only : dim_sub_n, dec_basis, bin_basis, index_basis  
   
      implicit none
   
-     if (nband == 3) then
-         call atomic_make_socmat3(socmat)
-! for 3 bands system, there is a minus sign
-         socmat = -socmat * lambda / two
-     elseif(nband == 5) then
-         call atomic_make_socmat5(socmat)
-         socmat = socmat * lambda / two
-     elseif(nband == 7) then
-         call atomic_make_socmat7(socmat)
-         socmat = socmat * lambda / two
-     else
-         call s_print_error('atomic_make_soc', 'not implementd!')
-     endif
+! external variables
+! function used to calculate combination number
+     integer, external :: atomic_make_combination
   
-     return 
-  end subroutine atomic_make_soc
+! local variables
+! loop index
+     integer :: i, j, k
+
+! basis counter
+     integer :: basis_count
+
+! number of electrons for Fock state
+     integer :: nelec
+  
+! initialize them
+     dim_sub_n = 0
+     dec_basis = 0
+     bin_basis = 0
+     index_basis = 0
+  
+! it is a number of combination C_{norbs}^{i}
+     do i=0,norbs
+         dim_sub_n(i) = atomic_make_combination(i, norbs)
+     enddo 
+  
+! construct decimal form and index of Fock basis
+     basis_count = 0
+     do i=0, norbs
+         do j=0, 2**norbs-1
+             nelec = 0
+             do k=1,norbs
+                 if( btest(j, k-1) ) nelec = nelec + 1
+             enddo 
+             if ( nelec .eq. i ) then
+                 basis_count = basis_count + 1
+                 dec_basis(basis_count) = j
+                 index_basis(j) = basis_count
+             endif 
+         enddo 
+     enddo 
+  
+! construct binary form of Fock basis
+     do i=1,ncfgs
+         do j=1,norbs
+             if( btest(dec_basis(i), j-1) ) bin_basis(j, i) = 1
+         enddo 
+     enddo 
+  
+! dump Fock basis to file "atom.basis.dat" for reference
+     call atomic_dump_basis()
+  
+     return
+  end subroutine atomic_make_fock
 
 !!>>> make natural basis, the natural basis is the basis on which the 
 !!>>> impurity energy matrix is diagonal
@@ -592,7 +587,7 @@
      write(mystd,'(2X,a)') 'jasmine >>> natural basis is: real orbital basis'
      write(mystd, *)
   
-     call atomic_write_natural('# natural basis is real orbital, umat: real to natural')
+     call atomic_dump_natural('# natural basis is real orbital, umat: real to natural')
    
      return
   end subroutine atomic_2natural_case1
@@ -650,7 +645,7 @@
      write(mystd, '(2X,a)') 'jasmine >>> natural basis is: linear combination of real orbitals '
      write(mystd, *)
   
-     call atomic_write_natural('# natural basis is linear combination of real orbitals, umat: real to natural')
+     call atomic_dump_natural('# natural basis is linear combination of real orbitals, umat: real to natural')
   
      return
   end subroutine atomic_2natural_case2
@@ -691,7 +686,7 @@
      write(mystd, '(2X,a)') 'jasmine >>> natural basis is: |j2,jz> '
      write(mystd, *)
   
-     call atomic_write_natural('# natural basis is |j2,jz>, umat: complex to natural')
+     call atomic_dump_natural('# natural basis is |j2,jz>, umat: complex to natural')
   
      return
   end subroutine atomic_2natural_case3
@@ -762,7 +757,7 @@
      write(mystd, '(2X,a)') 'jasmine >>> natural basis is: linear combination of complex orbitals '
      write(mystd, *)
   
-     call atomic_write_natural('# natural basis is linear combination of complex orbitals, umat: complex to natural')
+     call atomic_dump_natural('# natural basis is linear combination of complex orbitals, umat: complex to natural')
   
      return
   end subroutine atomic_2natural_case4

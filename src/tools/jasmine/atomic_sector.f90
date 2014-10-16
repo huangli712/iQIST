@@ -3,8 +3,14 @@
 !!! program : atomic_mkfmat_sectors
 !!!           atomic_rotate_fmat
 !!!           atomic_make_construct
-!!!           atomic_make_eliminate 
-!!! source  : atomic_fmat.f90
+!!!           atomic_make_eliminate
+!!! program : atomic_mksectors
+!!!           atomic_mkgood_sz
+!!!           atomic_mkgood_jz
+!!!           atomic_mkhmat_sectors
+!!!           atomic_diaghmat_sectors
+!!!           atomic_diag_one_sector 
+!!! source  : atomic_sector.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
@@ -12,38 +18,6 @@
 !!! status  : unstable
 !!! comment : these subroutines are based on Dr. LiangDu's (duleung@gmail.com) 
 !!!           atomic program
-!!!----------------------------------------------------------------------------
-
-!!!-------------------------------------------------------------------------
-!!! project : jasmine
-!!! program : atomic_mksectors
-!!!           atomic_mkgood_sz
-!!!           atomic_mkgood_jz
-!!! source  : atomic_mksector.f90
-!!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!! purpose : make sectors by using good quantum numbers (GQNs)
-!!! status  : unstable
-!!! comment :
-!!!-------------------------------------------------------------------------
-
-!!!----------------------------------------------------------------------------
-!!! project : jasmine
-!!! program : atomic_mkhmat_fullspace
-!!!           atomic_mkhmat_sectors
-!!!           atomic_diaghmat_sectors
-!!!           atomic_diag_one_sector 
-!!! source  : atomic_hmat.f90
-!!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!! purpose : make Hamltonian matrices
-!!! status  : unstable
-!!! comment : subroutine atomic_mkhmat_fullspace and atomic_mkhmat_sectors are 
-!!!           modified from Dr. LiangDu's (duleung@gmail.com) atomic program
 !!!----------------------------------------------------------------------------
 
 !!>>> atomic_mksectors: determine all the sectors for good quantum numbers

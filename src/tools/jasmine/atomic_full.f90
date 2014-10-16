@@ -1,7 +1,9 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_mkoccu_fullspace
-!!! source  : atomic_occu.f90
+!!! program : atomic_make_foccu
+!!!           atomic_make_ffmat
+!!!           atomic_make_fhmat 
+!!! source  : atomic_full.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
@@ -9,24 +11,10 @@
 !!! purpose : make occupancy of eigensates of atomic Hamiltonian 
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
-!!!------------------------------------------------------------------------
-!!! project : jasmine
-!!! program : atomic_mkbasis_fullspace
-!!! source  : atomic_basis.f90
-!!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!! purpose : make Fock basis 
-!!! status  : unstable
-!!! comment : these subroutines are modified from Dr. LiangDu's 
-!!!           (duleung@gmail.com) atomic program
-!!!-------------------------------------------------------------------------
-
-!!>>> atomic_mkoccu_fullspace: make occupancy for atomic eigenstates, fullspace case
-  subroutine atomic_mkoccu_fullspace()
+!!>>> atomic_make_foccu: make occupancy for atomic eigenstates, fullspace case
+  subroutine atomic_make_foccu()
      use constants, only: zero, one
      use control, only: ncfgs, norbs
 
@@ -54,11 +42,11 @@
      call atomic_tran_repr_real(ncfgs, occu_mat, hmat_eigvec)
   
      return
-  end subroutine atomic_mkoccu_fullspace
+  end subroutine atomic_make_foccu
 
-!!>>> atomic_mkfmat_fullspace: make fmat for annihilation operators 
+!!>>> atomic_make_ffmat: make fmat for annihilation operators 
 !!>>> for full space case
-  subroutine atomic_mkfmat_fullspace()
+  subroutine atomic_make_ffmat()
      use control, only : norbs, ncfgs
      use m_glob_fullspace, only : anni_fmat, hmat_eigvec
      use m_basis_fullspace, only : dec_basis, index_basis
@@ -95,10 +83,10 @@
      enddo
   
      return
-  end subroutine atomic_mkfmat_fullspace
+  end subroutine atomic_make_ffmat
 
-!!>>> atomic_mkhmat_fullspace: make atomic Hamiltonian for the full space
-  subroutine atomic_mkhmat_fullspace()
+!!>>> atomic_make_fhmat: make atomic Hamiltonian for the full space
+  subroutine atomic_make_fhmat()
      use constants, only : czero, epst
      use control, only : norbs, ncfgs
 
@@ -231,65 +219,4 @@
      enddo  
   
      return
-  end subroutine atomic_mkhmat_fullspace
-
-!!>>> atomic_mkbasis_fullspace: make Fock basis for full Hilbert space
-  subroutine atomic_mkbasis_fullspace()
-     use control, only : norbs, ncfgs
-     use m_basis_fullspace, only : dim_sub_n, dec_basis, bin_basis, index_basis  
-  
-     implicit none
-  
-! external variables
-! function used to calculate combination number
-     integer, external :: atomic_make_combination
-  
-! local variables
-! loop index
-     integer :: i, j, k
-
-! basis counter
-     integer :: basis_count
-
-! number of electrons for Fock state
-     integer :: nelec
-  
-! initialize them
-     dim_sub_n = 0
-     dec_basis = 0
-     bin_basis = 0
-     index_basis = 0
-  
-! it is a number of combination C_{norbs}^{i}
-     do i=0,norbs
-         dim_sub_n(i) = atomic_make_combination(i, norbs)
-     enddo 
-  
-! construct decimal form and index of Fock basis
-     basis_count = 0
-     do i=0, norbs
-         do j=0, 2**norbs-1
-             nelec = 0
-             do k=1,norbs
-                 if( btest(j, k-1) ) nelec = nelec + 1
-             enddo 
-             if ( nelec .eq. i ) then
-                 basis_count = basis_count + 1
-                 dec_basis(basis_count) = j
-                 index_basis(j) = basis_count
-             endif 
-         enddo 
-     enddo 
-  
-! construct binary form of Fock basis
-     do i=1,ncfgs
-         do j=1,norbs
-             if( btest(dec_basis(i), j-1) ) bin_basis(j, i) = 1
-         enddo 
-     enddo 
-  
-! dump Fock basis to file "atom.basis.dat" for reference
-     call atomic_dump_basis()
-  
-     return
-  end subroutine atomic_mkbasis_fullspace
+  end subroutine atomic_make_fhmat

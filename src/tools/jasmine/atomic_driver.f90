@@ -1,7 +1,7 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_driver_fullspace
-!!!           atomic_driver_sectors
+!!! program : atomic_f_driver
+!!!           atomic_s_driver
 !!! source  : atomic_driver.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
@@ -13,9 +13,9 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> atomic_driver_fullspace: CTQMC direct matrices multiplications 
+!!>>> atomic_f_driver: CTQMC direct matrices multiplications 
 !!>>> trace algorithm, use full Hilbert space 
-  subroutine atomic_driver_fullspace()
+  subroutine atomic_f_driver()
      use constants, only : dp, mystd
      use control, only : ncfgs
 
@@ -39,14 +39,14 @@
 ! build atomic many particle Hamiltonian matrix
      write(mystd, "(2X,a)") "jasmine >>> make atomic many particle Hamiltonian ..."
      write(mystd,*)
-     call atomic_mkhmat_fullspace()
+     call atomic_make_fhmat()
   
 ! check whether the many particle Hamiltonian is real 
      write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
      write(mystd,*)
      call atomic_check_realmat(ncfgs, hmat, lreal)
      if (lreal .eqv. .false.) then
-         call s_print_error('atomic_driver_fullspace', 'hmat is not real !')
+         call s_print_error('atomic_f_driver', 'hmat is not real !')
      else
          write(mystd, "(2X,a)") "jasmine >>> the atomic Hamiltonian is real"
          write(mystd,*)
@@ -63,12 +63,12 @@
 ! then, transform them to the eigen basis
      write(mystd, "(2X,a)") "jasmine >>> make fmat for annihilation fermion operators ... "
      write(mystd,*)
-     call atomic_mkfmat_fullspace()
+     call atomic_make_ffmat()
 
 ! build occupancy number
      write(mystd, "(2X,a)") "jasmine >>> make occupancy number of atomic eigenstates ... "
      write(mystd,*)
-     call atomic_mkoccu_fullspace()    
+     call atomic_make_foccu()    
 
 ! write eigenvalues of hmat to file 'atom.eigval.dat'
      write(mystd, "(2X,a)") "jasmine >>> write eigenvalue, eigenvector, and atom.cix to files ..."
@@ -89,10 +89,10 @@
      call dealloc_m_glob_fullspace()
   
      return
-  end subroutine atomic_driver_fullspace
+  end subroutine atomic_f_driver
   
-!!>>> atomic_driver_sectors: CTQMC trace algorithm: use good quantum numbers (GQNs)
-  subroutine atomic_driver_sectors()
+!!>>> atomic_s_driver: CTQMC trace algorithm: use good quantum numbers (GQNs)
+  subroutine atomic_s_driver()
      use constants, only : mystd
      use m_glob_sectors, only : nsectors, sectors, dealloc_m_glob_sectors
   
@@ -154,4 +154,4 @@
      call dealloc_m_glob_sectors()
  
      return
-  end subroutine atomic_driver_sectors
+  end subroutine atomic_s_driver
