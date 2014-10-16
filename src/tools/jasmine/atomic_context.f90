@@ -3,8 +3,6 @@
 !!! program : m_full  module
 !!!           m_sector  module
 !!!           m_spmat            module
-!!!           m_glob_fullspace   module
-!!!           m_glob_sectors     module
 !!! source  : atomic_context.f90
 !!! type    : modules
 !!! authors : yilin wang (email: qhwyl2006@126.com)
