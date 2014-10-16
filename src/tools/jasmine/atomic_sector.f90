@@ -127,7 +127,7 @@
      use control, only : norbs, ncfgs
 
      use m_full, only : dec_basis, index_basis, bin_basis
-     use m_spmat, only : eimpmat, cumat
+     use m_spmat, only : emat, umat
      use m_sector, only : nsectors, sectors
   
      implicit none
@@ -166,7 +166,7 @@
                  knew = dec_basis(sectors(isect)%mybasis(jbas))
                  code(1:norbs) = bin_basis(1:norbs, sectors(isect)%mybasis(jbas))
   
-                 if ( abs(eimpmat(alpha, betta)) .lt. epst ) cycle
+                 if ( abs(emat(alpha, betta)) .lt. epst ) cycle
   
 ! simulate one annihilation operator
                  if (code(betta) == 1) then
@@ -202,7 +202,7 @@
   
                          if (insect) then
                              sectors(isect)%myham(ibas,jbas) = sectors(isect)%myham(ibas,jbas) + &
-                                                            eimpmat(alpha, betta) * (-1.0d0)**isgn 
+                                                            emat(alpha, betta) * (-1.0d0)**isgn 
                          endif
   
                      endif ! back if (code(alpha) == 0) block
@@ -227,7 +227,7 @@
   
 ! very important if single particle basis has been rotated
                  if ((alpha .eq. betta) .or. (delta .eq. gamma)) cycle
-                 if ( abs(cumat(alpha,betta,delta,gamma)) .lt. epst ) cycle
+                 if ( abs(umat(alpha,betta,delta,gamma)) .lt. epst ) cycle
   
 ! simulate two annihilation operators
                  if ((code(delta) == 1) .and. (code(gamma) == 1)) then
@@ -273,7 +273,7 @@
   
                          if (insect) then
                              sectors(isect)%myham(ibas,jbas) = sectors(isect)%myham(ibas,jbas) + &
-                                                  cumat(alpha,betta,delta,gamma) * (-1.0d0)**isgn
+                                                  umat(alpha,betta,delta,gamma) * (-1.0d0)**isgn
                          endif
   
                      endif ! back if ((code(delta) == 1) .and. (code(gamma) == 1)) block

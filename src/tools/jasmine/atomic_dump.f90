@@ -74,7 +74,7 @@
      use constants, only : mytmp
      use control, only : nband, norbs, isoc
 
-     use m_spmat, only : eimpmat
+     use m_spmat, only : emat
   
      implicit none
   
@@ -93,7 +93,7 @@
          else 
              s_order = i
          endif 
-         write(mytmp, '(I10,F20.10)') i, real(eimpmat(s_order,s_order))
+         write(mytmp, '(I10,F20.10)') i, real(emat(s_order,s_order))
      enddo
      close(mytmp)
   

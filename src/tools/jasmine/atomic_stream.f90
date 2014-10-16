@@ -243,7 +243,7 @@
 !!>>> atomic_read_cf: read crystal field from file 'atomic.cf.in'
   subroutine atomic_read_cf()
      use constants, only : mytmp, dp, zero
-     use m_spmat, only : cfmat
+     use m_spmat, only : cmat
   
      implicit none
   
@@ -267,7 +267,7 @@
          do while(.true.)
              read(mytmp, *, iostat=ierr) i, j, r1
              ! crystal field is actually real
-             cfmat(i,j) = dcmplx(r1, zero)
+             cmat(i,j) = dcmplx(r1, zero)
              if (ierr /= 0) exit
          enddo
      else
@@ -283,7 +283,7 @@
      use constants, only : mytmp, dp, zero
      use control, only : norbs
 
-     use m_spmat, only : eimpmat
+     use m_spmat, only : emat
   
      implicit none
   
@@ -306,7 +306,7 @@
          do i=1, norbs
              read(mytmp, *) i1, i2, r1
              ! eimpmat is actually real in natural basis
-             eimpmat(i,i) = dcmplx(r1, zero)
+             emat(i,i) = dcmplx(r1, zero)
          enddo 
      else
          call s_print_error('atomic_read_eimp', 'no file atomic.eimp.in !')
@@ -360,7 +360,7 @@
   subroutine atomic_make_spmat()
      use constants, only : czero, two
      use control, only : itask, icf, isoc, icu, nband, lambda
-     use m_spmat, only : cfmat, socmat
+     use m_spmat, only : cmat, smat
   
      implicit none
   
@@ -376,27 +376,27 @@
 ! so, the elements in this file provided by user must be real
              call atomic_read_cf()
          else
-             cfmat = czero
+             cmat = czero
          endif
 ! spin-orbit coupling
          if (isoc > 0) then
 ! make an atomic on-site SOC, $\lambda * L * S$
 ! it is defined on the complex orbital basis
              if (nband == 3) then
-                 call atomic_make_socmat3(socmat)
+                 call atomic_make_socmat3(smat)
                  ! for 3 bands system, there is a minus sign
-                 socmat = -socmat * lambda / two
+                 smat = -smat * lambda / two
              elseif(nband == 5) then
-                 call atomic_make_socmat5(socmat)
-                 socmat = socmat * lambda / two
+                 call atomic_make_socmat5(smat)
+                 smat = smat * lambda / two
              elseif(nband == 7) then
-                 call atomic_make_socmat7(socmat)
-                 socmat = socmat * lambda / two
+                 call atomic_make_socmat7(smat)
+                 smat = smat * lambda / two
              else
                  call s_print_error('atomic_make_soc', 'not implementd!')
              endif
          else
-             socmat = czero
+             smat = czero
          endif
 ! make natural basis outside
      else 
@@ -487,7 +487,7 @@
   subroutine atomic_make_natural()
      use constants, only : dp, czero, mystd
      use control, only : norbs, itask, icf, isoc, icu
-     use m_spmat, only : cumat, tmat
+     use m_spmat, only : umat, tmat
   
      implicit none
   
@@ -533,8 +533,8 @@
 ! we first need to transfrom cumat from complex orbital basis to real orbital basis
          if ( icu == 2 ) then
              call atomic_make_tmat_c2r( umat_c2r )
-             call atomic_tran_cumat( umat_c2r, cumat, tmp_mat )
-             cumat = tmp_mat
+             call atomic_tran_cumat( umat_c2r, umat, tmp_mat )
+             umat = tmp_mat
          endif
 ! for soc case, the tran_umat is defined as from complex orbital basis to natural basis
      else
@@ -542,14 +542,14 @@
 ! we first need to transfrom cumat from real orbital basis to complex orbital basis
          if ( icu == 1 ) then
              call atomic_make_tmat_r2c( umat_r2c )
-             call atomic_tran_cumat( umat_r2c, cumat, tmp_mat )
-             cumat = tmp_mat
+             call atomic_tran_cumat( umat_r2c, umat, tmp_mat )
+             umat = tmp_mat
          endif
      endif
   
 ! finally, transform cumat to natural basis
-     call atomic_tran_cumat(tmat, cumat, tmp_mat) 
-     cumat = tmp_mat
+     call atomic_tran_cumat(tmat, umat, tmp_mat) 
+     umat = tmp_mat
   
      return
   end subroutine atomic_make_natural
@@ -559,19 +559,19 @@
   subroutine atomic_2natural_case1()
      use constants, only : mystd, zero, cone
      use control, only : norbs, mune
-     use m_spmat, only : cfmat, eimpmat, tmat
+     use m_spmat, only : cmat, emat, tmat
   
      implicit none
   
 ! local variables
      integer :: i
   
-! set eimpmat
-     eimpmat = cfmat
+! set emat
+     emat = cmat
 
 ! add chemical potential to eimpmat
      do i=1, norbs
-         eimpmat(i,i) = eimpmat(i,i) + mune
+         emat(i,i) = emat(i,i) + mune
      enddo
 ! for this case, the natural basis is the real orbital basis
 ! so, the tran_umat is a unity matrix
@@ -593,7 +593,7 @@
   subroutine atomic_2natural_case2()
      use constants, only : mystd, dp, czero
      use control, only : norbs, nband, mune
-     use m_spmat, only : cfmat, eimpmat, tmat
+     use m_spmat, only : cmat, emat, tmat
   
      implicit none
   
@@ -615,12 +615,12 @@
      integer :: i, j
   
 ! set eimpmat
-     eimpmat = cfmat   
+     emat = cmat   
   
 ! get eimp for nospin freedom
      do i=1, norbs/2
          do j=1, norbs/2
-             eimp_nospin(j,i) = eimpmat(2*j-1,2*i-1)
+             eimp_nospin(j,i) = emat(2*j-1,2*i-1)
          enddo
      enddo
   
@@ -636,8 +636,8 @@
   
      do i=1, nband
          do j=1, nband
-             eimpmat(2*j-1,2*i-1) = eimp_nospin(j,i)
-             eimpmat(2*j,2*i)     = eimp_nospin(j,i)
+             emat(2*j-1,2*i-1) = eimp_nospin(j,i)
+             emat(2*j,2*i)     = eimp_nospin(j,i)
              tmat(2*j-1,2*i-1) = umat_nospin(j,i)
              tmat(2*j,2*i)     = umat_nospin(j,i)
          enddo
@@ -645,7 +645,7 @@
   
 ! add chemical potential to eimpmat
      do i=1, norbs
-         eimpmat(i,i) = eimpmat(i,i) + mune
+         emat(i,i) = emat(i,i) + mune
      enddo
   
      write(mystd, '(2X,a)') 'jasmine >>> natural basis is: linear combination of real orbitals '
@@ -662,7 +662,7 @@
   subroutine atomic_2natural_case3()
      use constants, only : dp, mystd
      use control, only : norbs, mune
-     use m_spmat, only : eimpmat, socmat, tmat
+     use m_spmat, only : emat, smat, tmat
   
      implicit none
   
@@ -674,7 +674,7 @@
      integer :: i
   
 ! set eimpmat
-     eimpmat = socmat   
+     emat = smat   
   
      call atomic_make_tmat_c2j(umat_c2j)
   
@@ -682,11 +682,11 @@
      tmat = umat_c2j
   
 ! transform sp_eimp_mat to natural basis
-     call atomic_tran_repr_cmpl(norbs, eimpmat, tmat)   
+     call atomic_tran_repr_cmpl(norbs, emat, tmat)   
   
 ! add chemical potential to eimpmat
      do i=1, norbs
-         eimpmat(i,i) = eimpmat(i,i) + mune
+         emat(i,i) = emat(i,i) + mune
      enddo
   
      write(mystd, '(2X,a)') 'jasmine >>> natural basis is: |j2,jz> '
@@ -703,7 +703,7 @@
      use constants, only : dp, mystd, eps6
      use control, only : norbs, mune
 
-     use m_spmat, only : cfmat, socmat, eimpmat, tmat
+     use m_spmat, only : cmat, smat, emat, tmat
   
      implicit none
   
@@ -733,18 +733,18 @@
      call atomic_make_tmat_r2c(umat_r2c)
   
 ! transfrom cfmat to complex orbital basis
-     call atomic_tran_repr_cmpl(norbs, cfmat, umat_r2c)
+     call atomic_tran_repr_cmpl(norbs, cmat, umat_r2c)
   
 ! check whether cfmat is real, if not, we cann't make natural basis
-     if ( any( abs( aimag(cfmat) ) > eps6 ) ) then
+     if ( any( abs( aimag(cmat) ) > eps6 ) ) then
          call s_print_error('atomic_2natural_case4', 'crystal field on &
              complex orbital basis is not real, cannot make natural basis !')
      endif
   
 ! set eimpmat
-     eimpmat = socmat + cfmat   
+     emat = smat + cmat   
   
-     tmp_mat = real(eimpmat)
+     tmp_mat = real(emat)
   
      call s_eig_sy(norbs, norbs, tmp_mat, eigval, eigvec)
   
@@ -752,11 +752,11 @@
      tmat = umat_c2n
   
 ! transform eimpmat to natural basis
-     call atomic_tran_repr_cmpl(norbs, eimpmat, umat_c2n)   
+     call atomic_tran_repr_cmpl(norbs, emat, umat_c2n)   
   
 ! add chemical poential to eimpmat
      do i=1, norbs
-         eimpmat(i,i) = eimpmat(i,i) + mune
+         emat(i,i) = emat(i,i) + mune
      enddo
   
      write(mystd, '(2X,a)') 'jasmine >>> natural basis is: linear combination of complex orbitals '

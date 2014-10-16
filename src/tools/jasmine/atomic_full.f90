@@ -91,7 +91,7 @@
      use control, only : norbs, ncfgs
 
      use m_full, only : dec_basis, index_basis, bin_basis
-     use m_spmat, only : eimpmat, cumat
+     use m_spmat, only : emat, umat
      use m_full, only : hmat
   
      implicit none
@@ -125,7 +125,7 @@
              knew = dec_basis(jbas)
              code(1:norbs) = bin_basis(1:norbs, jbas)
            
-             if ( abs(eimpmat(alpha, betta)) .lt. epst ) cycle
+             if ( abs(emat(alpha, betta)) .lt. epst ) cycle
   
 ! simulate one annihilation operator
              if (code(betta) == 1) then
@@ -151,7 +151,7 @@
                                             'error while determining row1')
                      endif
   
-                     hmat(ibas,jbas) = hmat(ibas,jbas) + eimpmat(alpha,betta) * (-1.0d0)**sgn 
+                     hmat(ibas,jbas) = hmat(ibas,jbas) + emat(alpha,betta) * (-1.0d0)**sgn 
   
                  endif ! back if (code(alpha) == 0) block
              endif ! back if (code(betta) == 1) block
@@ -172,7 +172,7 @@
              code(1:norbs) = bin_basis(1:norbs, jbas)
   
              if ((alpha .eq. betta) .or. (delta .eq. gamma)) cycle
-             if ( abs(cumat(alpha,betta,delta,gamma)) .lt. epst ) cycle
+             if ( abs(umat(alpha,betta,delta,gamma)) .lt. epst ) cycle
   
 ! simulate two annihilation operators
              if ((code(delta) == 1) .and. (code(gamma) == 1)) then
@@ -207,7 +207,7 @@
                          call s_print_error('atomic_mkhmat_fullspace', 'error while determining row3')
                      endif
   
-                     hmat(ibas,jbas) = hmat(ibas,jbas) + cumat(alpha,betta,delta,gamma) * (-1.0d0)**sgn
+                     hmat(ibas,jbas) = hmat(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-1.0d0)**sgn
   
                  endif ! back if ((code(delta) == 1) .and. (code(gamma) == 1)) block
              endif ! back if ((code(alpha) == 0) .and. (code(betta) == 0)) block

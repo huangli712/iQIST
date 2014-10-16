@@ -328,7 +328,7 @@
      use constants, only : dp, czero, zero
      use control, only : norbs, Uc, Uv, Jz, Js, Jp
 
-     use m_spmat, only : cumat
+     use m_spmat, only : umat
   
      implicit none
   
@@ -347,7 +347,7 @@
      real(dp) :: dtmp
   
 ! initialize cumat to zero
-     cumat = czero
+     umat = czero
   
 ! loop for creation operators
      alphaloop: do alpha=1,norbs-1
@@ -398,7 +398,7 @@
                 endif
             endif
                  
-            cumat(alpha, betta, delta, gamma) = dtmp
+            umat(alpha, betta, delta, gamma) = dtmp
   
         enddo deltaloop ! over delta={gamma+1,norbs} loop
         enddo gammaloop ! over gamma={1,norbs-1} loop
@@ -413,7 +413,7 @@
   subroutine atomic_make_cumatS()
      use constants, only : dp, zero, half
      use control, only : nband, norbs, F0, F2, F4, F6
-     use m_spmat, only : cumat
+     use m_spmat, only : umat
   
      implicit none
   
@@ -488,14 +488,14 @@
              do i=0, 2*l, 2
                  res = res + gaunt(aband, gband, i) * gaunt(dband, bband, i) * slater_cordon(i)
              enddo
-             cumat(alpha, betta, delta, gamma) = res
+             umat(alpha, betta, delta, gamma) = res
          enddo ! over gamma={1,norbs} loop
          enddo ! over delta={1,norbs} loop
   
      enddo ! over betta={1,norbs} loop
      enddo ! over alpha={1,norbs} loop
   
-     cumat = half * cumat
+     umat = half * umat
   
 ! deallocate memory
      if (allocated(slater_cordon)) deallocate(slater_cordon) 

@@ -401,13 +401,13 @@
      implicit none
   
 ! crystal field (CF)
-     complex(dp), public, allocatable, save :: cfmat(:,:) 
+     complex(dp), public, allocatable, save :: cmat(:,:) 
   
 ! spin-orbital coupling (SOC)
-     complex(dp), public, allocatable, save :: socmat(:,:)
+     complex(dp), public, allocatable, save :: smat(:,:)
   
 ! on-site energy (CF+SOC) of impurity
-     complex(dp), public, allocatable, save :: eimpmat(:,:)
+     complex(dp), public, allocatable, save :: emat(:,:)
   
 ! Coulomb interaction U tensor
      complex(dp), public, allocatable, save :: umat(:,:,:,:)
@@ -432,9 +432,9 @@
      implicit none
   
 ! allocate them
-     allocate( cfmat(norbs, norbs),               stat=istat )
-     allocate( socmat(norbs, norbs),              stat=istat )
-     allocate( eimpmat(norbs, norbs),             stat=istat )
+     allocate( cmat(norbs, norbs),               stat=istat )
+     allocate( smat(norbs, norbs),              stat=istat )
+     allocate( emat(norbs, norbs),             stat=istat )
      allocate( umat(norbs, norbs, norbs, norbs), stat=istat )
      allocate( tmat(norbs, norbs),           stat=istat )
   
@@ -444,9 +444,9 @@
      endif
 
 ! initialize them
-     cfmat    = czero
-     socmat   = czero
-     eimpmat  = czero
+     cmat    = czero
+     smat   = czero
+     emat  = czero
      umat    = czero
      tmat= czero
   
@@ -458,9 +458,9 @@
      implicit none
   
 ! deallocate them
-     if (allocated(cfmat))      deallocate(cfmat)
-     if (allocated(socmat))     deallocate(socmat)
-     if (allocated(eimpmat))    deallocate(eimpmat)
+     if (allocated(cmat))      deallocate(cmat)
+     if (allocated(smat))     deallocate(smat)
+     if (allocated(emat))    deallocate(emat)
      if (allocated(umat))      deallocate(umat)
      if (allocated(tmat))  deallocate(tmat)
   
