@@ -1,7 +1,6 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : 
-!!!           atomic_check_realmat
+!!! program : atomic_check_realmat
 !!!           atomic_mat_2nospin
 !!!           atomic_mat_2spin
 !!!           atomic_make_gaunt5

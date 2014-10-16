@@ -1,15 +1,14 @@
 !!!----------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_mkfmat_sectors
+!!! program : atomic_make_sfmat
+!!!           atomic_make_shmat
+!!!           atomic_diag_shmat
 !!!           atomic_rotate_fmat
 !!!           atomic_make_construct
 !!!           atomic_make_eliminate
-!!! program : atomic_mksectors
+!!!           atomic_mksectors
 !!!           atomic_mkgood_sz
 !!!           atomic_mkgood_jz
-!!!           atomic_mkhmat_sectors
-!!!           atomic_diaghmat_sectors
-!!!           atomic_diag_one_sector 
 !!! source  : atomic_sector.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
@@ -19,6 +18,272 @@
 !!! comment : these subroutines are based on Dr. LiangDu's (duleung@gmail.com) 
 !!!           atomic program
 !!!----------------------------------------------------------------------------
+
+!!>>> atomic_make_sfmat: build fmat for good quantum numbers (GQNs) algorithm
+  subroutine atomic_make_sfmat()
+     use constants, only : zero
+     use control, only : norbs
+
+     use m_basis_fullspace, only : dec_basis, index_basis
+     use m_glob_sectors, only : nsectors, sectors
+     use m_sector, only : alloc_one_fmat
+  
+     implicit none
+  
+! local variables
+! loop index 
+     integer :: iorb
+     integer :: ifermi
+     integer :: isect, jsect
+     integer :: ibas, jbas
+     integer :: i
+
+! sign change due to commute relation
+     integer :: isgn
+
+! auxiliary integer variables
+     integer :: jold, jnew
+  
+! loop over all the sectors
+     do isect=1, nsectors
+! loop over all the orbitals
+         do iorb=1,norbs
+! loop over the creation and annihilation fermion operators
+             do ifermi=0, 1 
+                 jsect = sectors(isect)%next_sector(iorb, ifermi) 
+                 if (jsect == -1) cycle
+! allocate memory for fmat
+                 sectors(isect)%myfmat(iorb, ifermi)%n = sectors(jsect)%ndim
+                 sectors(isect)%myfmat(iorb, ifermi)%m = sectors(isect)%ndim
+                 call alloc_one_fmat(sectors(isect)%myfmat(iorb, ifermi))
+                 sectors(isect)%myfmat(iorb,ifermi)%item = zero
+! build fmat
+                 do jbas=1, sectors(isect)%ndim
+                     jold = dec_basis(sectors(isect)%mybasis(jbas))
+! for creation fermion operator
+                     if (ifermi == 1 .and. ( btest(jold, iorb-1) .eqv. .false. )) then
+                         call atomic_make_construct(iorb, jold, jnew, isgn)
+! for annihilation fermion operator
+                     elseif (ifermi == 0 .and. ( btest(jold, iorb-1) .eqv. .true. )) then
+                         call atomic_make_eliminate(iorb, jold, jnew, isgn)
+                     else
+                         cycle
+                     endif
+                     ibas = index_basis(jnew)
+                     do i=1, sectors(jsect)%ndim 
+                         if (ibas == sectors(jsect)%mybasis(i)) then
+                             ibas = i
+                             sectors(isect)%myfmat(iorb, ifermi)%item(ibas, jbas) = dble(isgn)
+                             exit
+                         endif
+                     enddo
+                 enddo  ! over jbas={1, sectors(isect)%ndim} loop
+! roate fmat to atomic eigenstates basis
+                 call atomic_rotate_fmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%myeigvec, &
+                     sectors(isect)%myfmat(iorb, ifermi)%item, sectors(isect)%myeigvec)
+             enddo ! over ifermi={0,1} loop
+         enddo ! over iorb={1, norbs} loop
+     enddo ! over isect={1,nsectors} loop
+  
+     return
+  end subroutine atomic_make_sfmat
+
+!!>>> atomic_make_shmat: make Hamiltonian for each sector one by one
+  subroutine atomic_make_shmat()
+     use constants, only : dp, czero, epst
+     use control, only : norbs, ncfgs
+
+     use m_basis_fullspace, only : dec_basis, index_basis, bin_basis
+     use m_spmat, only : eimpmat, cumat
+     use m_glob_sectors, only : nsectors, sectors
+  
+     implicit none
+  
+! local variables
+! loop index
+     integer :: i
+     integer :: isect
+     integer :: ibas, jbas
+     integer :: alpha, betta
+     integer :: delta, gamma
+
+! sign change due to fermion anti-commute relation
+     integer :: isgn
+
+! new basis state after four fermion operation
+     integer :: knew
+
+! binary form of a Fock state
+     integer :: code(norbs)
+
+! whether in some sector
+     logical :: insect
+      
+     do isect=1, nsectors
+         sectors(isect)%myham = czero
+  
+!---------------------------------------------------------------------------------------!
+! two fermion operators
+         do jbas=1,sectors(isect)%ndim
+  
+             alploop: do alpha=1,norbs
+             betloop: do betta=1,norbs
+  
+                 isgn = 0
+                 knew = dec_basis(sectors(isect)%mybasis(jbas))
+                 code(1:norbs) = bin_basis(1:norbs, sectors(isect)%mybasis(jbas))
+  
+                 if ( abs(eimpmat(alpha, betta)) .lt. epst ) cycle
+  
+! simulate one annihilation operator
+                 if (code(betta) == 1) then
+                     do i=1,betta-1
+                         if (code(i) == 1) isgn = isgn + 1
+                     enddo 
+                     code(betta) = 0
+  
+! simulate one creation operator
+                     if (code(alpha) == 0) then
+                         do i=1,alpha-1
+                             if (code(i) == 1) isgn = isgn + 1
+                         enddo
+                         code(alpha) = 1
+  
+! determine the row number and hamiltonian matrix elememt
+                         knew = knew - 2**(betta-1)
+                         knew = knew + 2**(alpha-1)
+                         isgn  = mod(isgn, 2)
+                         ibas = index_basis(knew)
+                         if (ibas == 0) then
+                             call s_print_error('atomic_mkhmat_sectors', &
+                                                'error while determining row1')
+                         endif
+  
+                         insect = .false.
+                         do i=1, sectors(isect)%ndim 
+                             if (sectors(isect)%mybasis(i) == ibas) then
+                                 ibas = i
+                                 insect = .true.
+                             endif
+                         enddo
+  
+                         if (insect) then
+                             sectors(isect)%myham(ibas,jbas) = sectors(isect)%myham(ibas,jbas) + &
+                                                            eimpmat(alpha, betta) * (-1.0d0)**isgn 
+                         endif
+  
+                     endif ! back if (code(alpha) == 0) block
+                 endif ! back if (betta == 1) block
+  
+             enddo betloop ! over betta={1,norbs} loop
+             enddo alploop ! over alpha={1,norbs} loop
+         enddo ! over jbas={1,sectors(isect)%ndim} loop
+!---------------------------------------------------------------------------------------!
+  
+!---------------------------------------------------------------------------------------!
+! four fermion operators
+         do jbas=1,sectors(isect)%ndim
+             alphaloop : do alpha=1,norbs
+             bettaloop : do betta=1,norbs
+             gammaloop : do gamma=1,norbs
+             deltaloop : do delta=1,norbs
+  
+                 isgn = 0
+                 knew = dec_basis(sectors(isect)%mybasis(jbas))
+                 code(1:norbs) = bin_basis(1:norbs, sectors(isect)%mybasis(jbas))
+  
+! very important if single particle basis has been rotated
+                 if ((alpha .eq. betta) .or. (delta .eq. gamma)) cycle
+                 if ( abs(cumat(alpha,betta,delta,gamma)) .lt. epst ) cycle
+  
+! simulate two annihilation operators
+                 if ((code(delta) == 1) .and. (code(gamma) == 1)) then
+                     do i=1,gamma-1
+                         if(code(i) == 1) isgn = isgn + 1
+                     enddo 
+                     code(gamma) = 0
+  
+                     do i=1,delta-1
+                         if(code(i) == 1) isgn = isgn + 1
+                     enddo 
+                     code(delta) = 0
+  
+! simulate two creation operators
+                     if ((code(alpha) == 0) .and. (code(betta) == 0)) then
+                         do i=1,betta-1
+                             if(code(i) == 1) isgn = isgn + 1
+                         enddo 
+                         code(betta) = 1
+  
+                         do i=1,alpha-1
+                             if(code(i) == 1) isgn = isgn + 1
+                         enddo
+                         code(alpha) = 1
+  
+! determine the row number and hamiltonian matrix elememt
+                         knew = knew - 2**(gamma-1) - 2**(delta-1)
+                         knew = knew + 2**(betta-1) + 2**(alpha-1)
+                         ibas = index_basis(knew)
+                         isgn = mod(isgn, 2)
+                         if (ibas == 0) then
+                             call s_print_error('atomic_mkhmat_sectors', &
+                                                'error while determining row3')
+                         endif
+  
+                         insect = .false.
+                         do i=1, sectors(isect)%ndim 
+                             if (sectors(isect)%mybasis(i) == ibas) then
+                                 ibas = i
+                                 insect = .true.
+                             endif
+                         enddo
+  
+                         if (insect) then
+                             sectors(isect)%myham(ibas,jbas) = sectors(isect)%myham(ibas,jbas) + &
+                                                  cumat(alpha,betta,delta,gamma) * (-1.0d0)**isgn
+                         endif
+  
+                     endif ! back if ((code(delta) == 1) .and. (code(gamma) == 1)) block
+                 endif ! back if ((code(alpha) == 0) .and. (code(betta) == 0)) block
+  
+             enddo deltaloop ! over delta={gamma+1,norbs} loop
+             enddo gammaloop ! over gamma={1,norbs-1} loop
+             enddo bettaloop ! over betta={alpha+1,norbs} loop
+             enddo alphaloop ! over alpha={1,norbs-1} loop
+         enddo ! over jbas={1,sectors(isect)%ndim} loop
+!---------------------------------------------------------------------------------------!
+  
+     enddo ! over i={1, nsectors}
+  
+     return
+  end subroutine atomic_make_shmat
+
+!!>>> atomic_diag_shmat: diagonalize the Hamiltonian for each sector one by one
+  subroutine atomic_diag_shmat()
+     use constants, only : dp
+     use m_glob_sectors, only : nsectors, sectors
+  
+     implicit none
+  
+! local variables
+     integer :: i
+
+     real(dp), allocatable :: hmat(:,:)
+     
+     do i=1, nsectors
+         allocate( hmat(sectors(i)%ndim, sectors(i)%ndim) )
+         hmat = real( sectors(i)%myham )
+         call s_eig_sy( sectors(i)%ndim, sectors(i)%ndim, hmat, sectors(i)%myeigval, sectors(i)%myeigvec )
+         deallocate( hmat )
+     enddo
+  
+     return
+  end subroutine atomic_diag_shmat
+
+
+
+
+
 
 !!>>> atomic_mksectors: determine all the sectors for good quantum numbers
 !!>>> a sector consists of some many particle Fock states labeled by 
@@ -534,74 +799,6 @@
      return
   end subroutine atomic_mkgood_jz
 
-!!>>> atomic_mkfmat_sectors: build fmat for good quantum numbers (GQNs) algorithm
-  subroutine atomic_mkfmat_sectors()
-     use constants, only : zero
-     use control, only : norbs
-
-     use m_basis_fullspace, only : dec_basis, index_basis
-     use m_glob_sectors, only : nsectors, sectors
-     use m_sector, only : alloc_one_fmat
-  
-     implicit none
-  
-! local variables
-! loop index 
-     integer :: iorb
-     integer :: ifermi
-     integer :: isect, jsect
-     integer :: ibas, jbas
-     integer :: i
-
-! sign change due to commute relation
-     integer :: isgn
-
-! auxiliary integer variables
-     integer :: jold, jnew
-  
-! loop over all the sectors
-     do isect=1, nsectors
-! loop over all the orbitals
-         do iorb=1,norbs
-! loop over the creation and annihilation fermion operators
-             do ifermi=0, 1 
-                 jsect = sectors(isect)%next_sector(iorb, ifermi) 
-                 if (jsect == -1) cycle
-! allocate memory for fmat
-                 sectors(isect)%myfmat(iorb, ifermi)%n = sectors(jsect)%ndim
-                 sectors(isect)%myfmat(iorb, ifermi)%m = sectors(isect)%ndim
-                 call alloc_one_fmat(sectors(isect)%myfmat(iorb, ifermi))
-                 sectors(isect)%myfmat(iorb,ifermi)%item = zero
-! build fmat
-                 do jbas=1, sectors(isect)%ndim
-                     jold = dec_basis(sectors(isect)%mybasis(jbas))
-! for creation fermion operator
-                     if (ifermi == 1 .and. ( btest(jold, iorb-1) .eqv. .false. )) then
-                         call atomic_make_construct(iorb, jold, jnew, isgn)
-! for annihilation fermion operator
-                     elseif (ifermi == 0 .and. ( btest(jold, iorb-1) .eqv. .true. )) then
-                         call atomic_make_eliminate(iorb, jold, jnew, isgn)
-                     else
-                         cycle
-                     endif
-                     ibas = index_basis(jnew)
-                     do i=1, sectors(jsect)%ndim 
-                         if (ibas == sectors(jsect)%mybasis(i)) then
-                             ibas = i
-                             sectors(isect)%myfmat(iorb, ifermi)%item(ibas, jbas) = dble(isgn)
-                             exit
-                         endif
-                     enddo
-                 enddo  ! over jbas={1, sectors(isect)%ndim} loop
-! roate fmat to atomic eigenstates basis
-                 call atomic_rotate_fmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%myeigvec, &
-                     sectors(isect)%myfmat(iorb, ifermi)%item, sectors(isect)%myeigvec)
-             enddo ! over ifermi={0,1} loop
-         enddo ! over iorb={1, norbs} loop
-     enddo ! over isect={1,nsectors} loop
-  
-     return
-  end subroutine atomic_mkfmat_sectors
 
 !!>>> atomic_rotate_fmat: rotate fmat from Fock basis to eigenstates basis
   subroutine atomic_rotate_fmat(ndimx, ndimy, amat, bmat, cmat)
@@ -712,222 +909,5 @@
       return
   end subroutine atomic_make_eliminate
 
-!!>>> atomic_mkhmat_sectors: make Hamiltonian for each sector one by one
-  subroutine atomic_mkhmat_sectors()
-     use constants, only : dp, czero, epst
-     use control, only : norbs, ncfgs
 
-     use m_basis_fullspace, only : dec_basis, index_basis, bin_basis
-     use m_spmat, only : eimpmat, cumat
-     use m_glob_sectors, only : nsectors, sectors
-  
-     implicit none
-  
-! local variables
-! loop index
-     integer :: i
-     integer :: isect
-     integer :: ibas, jbas
-     integer :: alpha, betta
-     integer :: delta, gamma
 
-! sign change due to fermion anti-commute relation
-     integer :: isgn
-
-! new basis state after four fermion operation
-     integer :: knew
-
-! binary form of a Fock state
-     integer :: code(norbs)
-
-! whether in some sector
-     logical :: insect
-      
-     do isect=1, nsectors
-         sectors(isect)%myham = czero
-  
-!---------------------------------------------------------------------------------------!
-! two fermion operators
-         do jbas=1,sectors(isect)%ndim
-  
-             alploop: do alpha=1,norbs
-             betloop: do betta=1,norbs
-  
-                 isgn = 0
-                 knew = dec_basis(sectors(isect)%mybasis(jbas))
-                 code(1:norbs) = bin_basis(1:norbs, sectors(isect)%mybasis(jbas))
-  
-                 if ( abs(eimpmat(alpha, betta)) .lt. epst ) cycle
-  
-! simulate one annihilation operator
-                 if (code(betta) == 1) then
-                     do i=1,betta-1
-                         if (code(i) == 1) isgn = isgn + 1
-                     enddo 
-                     code(betta) = 0
-  
-! simulate one creation operator
-                     if (code(alpha) == 0) then
-                         do i=1,alpha-1
-                             if (code(i) == 1) isgn = isgn + 1
-                         enddo
-                         code(alpha) = 1
-  
-! determine the row number and hamiltonian matrix elememt
-                         knew = knew - 2**(betta-1)
-                         knew = knew + 2**(alpha-1)
-                         isgn  = mod(isgn, 2)
-                         ibas = index_basis(knew)
-                         if (ibas == 0) then
-                             call s_print_error('atomic_mkhmat_sectors', &
-                                                'error while determining row1')
-                         endif
-  
-                         insect = .false.
-                         do i=1, sectors(isect)%ndim 
-                             if (sectors(isect)%mybasis(i) == ibas) then
-                                 ibas = i
-                                 insect = .true.
-                             endif
-                         enddo
-  
-                         if (insect) then
-                             sectors(isect)%myham(ibas,jbas) = sectors(isect)%myham(ibas,jbas) + &
-                                                            eimpmat(alpha, betta) * (-1.0d0)**isgn 
-                         endif
-  
-                     endif ! back if (code(alpha) == 0) block
-                 endif ! back if (betta == 1) block
-  
-             enddo betloop ! over betta={1,norbs} loop
-             enddo alploop ! over alpha={1,norbs} loop
-         enddo ! over jbas={1,sectors(isect)%ndim} loop
-!---------------------------------------------------------------------------------------!
-  
-!---------------------------------------------------------------------------------------!
-! four fermion operators
-         do jbas=1,sectors(isect)%ndim
-             alphaloop : do alpha=1,norbs
-             bettaloop : do betta=1,norbs
-             gammaloop : do gamma=1,norbs
-             deltaloop : do delta=1,norbs
-  
-                 isgn = 0
-                 knew = dec_basis(sectors(isect)%mybasis(jbas))
-                 code(1:norbs) = bin_basis(1:norbs, sectors(isect)%mybasis(jbas))
-  
-! very important if single particle basis has been rotated
-                 if ((alpha .eq. betta) .or. (delta .eq. gamma)) cycle
-                 if ( abs(cumat(alpha,betta,delta,gamma)) .lt. epst ) cycle
-  
-! simulate two annihilation operators
-                 if ((code(delta) == 1) .and. (code(gamma) == 1)) then
-                     do i=1,gamma-1
-                         if(code(i) == 1) isgn = isgn + 1
-                     enddo 
-                     code(gamma) = 0
-  
-                     do i=1,delta-1
-                         if(code(i) == 1) isgn = isgn + 1
-                     enddo 
-                     code(delta) = 0
-  
-! simulate two creation operators
-                     if ((code(alpha) == 0) .and. (code(betta) == 0)) then
-                         do i=1,betta-1
-                             if(code(i) == 1) isgn = isgn + 1
-                         enddo 
-                         code(betta) = 1
-  
-                         do i=1,alpha-1
-                             if(code(i) == 1) isgn = isgn + 1
-                         enddo
-                         code(alpha) = 1
-  
-! determine the row number and hamiltonian matrix elememt
-                         knew = knew - 2**(gamma-1) - 2**(delta-1)
-                         knew = knew + 2**(betta-1) + 2**(alpha-1)
-                         ibas = index_basis(knew)
-                         isgn = mod(isgn, 2)
-                         if (ibas == 0) then
-                             call s_print_error('atomic_mkhmat_sectors', &
-                                                'error while determining row3')
-                         endif
-  
-                         insect = .false.
-                         do i=1, sectors(isect)%ndim 
-                             if (sectors(isect)%mybasis(i) == ibas) then
-                                 ibas = i
-                                 insect = .true.
-                             endif
-                         enddo
-  
-                         if (insect) then
-                             sectors(isect)%myham(ibas,jbas) = sectors(isect)%myham(ibas,jbas) + &
-                                                  cumat(alpha,betta,delta,gamma) * (-1.0d0)**isgn
-                         endif
-  
-                     endif ! back if ((code(delta) == 1) .and. (code(gamma) == 1)) block
-                 endif ! back if ((code(alpha) == 0) .and. (code(betta) == 0)) block
-  
-             enddo deltaloop ! over delta={gamma+1,norbs} loop
-             enddo gammaloop ! over gamma={1,norbs-1} loop
-             enddo bettaloop ! over betta={alpha+1,norbs} loop
-             enddo alphaloop ! over alpha={1,norbs-1} loop
-         enddo ! over jbas={1,sectors(isect)%ndim} loop
-!---------------------------------------------------------------------------------------!
-  
-     enddo ! over i={1, nsectors}
-  
-     return
-  end subroutine atomic_mkhmat_sectors
-
-!!>>> atomic_diaghmat_sectors: diagonalize the Hamiltonian for each sector one by one
-  subroutine atomic_diaghmat_sectors()
-     use m_glob_sectors, only : nsectors, sectors
-  
-     implicit none
-  
-! local variables
-     integer :: i
-     
-     do i=1, nsectors
-         call atomic_diag_one_sector(sectors(i)%ndim, sectors(i)%myham, &
-                                sectors(i)%myeigval, sectors(i)%myeigvec)
-     enddo
-  
-     return
-  end subroutine atomic_diaghmat_sectors
-
-!!>>> atomic_diag_one_sector: diagonalize one sector
-  subroutine atomic_diag_one_sector(ndim, amat, eval, evec)
-     use constants, only : dp
-     implicit none
-  
-! external variables
-! the order of the matrix amat
-     integer, intent(in) :: ndim
-  
-! original  matrix to compute eigenval and eigenvector
-     complex(dp), intent(in) :: amat(ndim, ndim)
-  
-! if info = 0, the eigenvalues in ascending order.
-     real(dp), intent(out) :: eval(ndim)
-  
-! if info = 0, orthonormal eigenvectors of the matrix A
-     real(dp), intent(out) :: evec(ndim, ndim)
-  
-! local variables
-     integer :: i, j
-     real(dp) :: hmat(ndim, ndim)
-  
-     do i=1, ndim
-         do j=1, ndim
-             hmat(i,j) = real(amat(i, j))
-         enddo
-     enddo
-  
-     call s_eig_sy(ndim, ndim, hmat, eval, evec)
-  
-     return
-  end subroutine atomic_diag_one_sector 

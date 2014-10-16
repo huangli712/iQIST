@@ -113,7 +113,7 @@
 ! make atomic Hamiltonian
      write(mystd, "(2X,a)") "jasmine >>> make atomic Hamiltonian for each sector ... "
      write(mystd,*)
-     call atomic_mkhmat_sectors()
+     call atomic_make_shmat()
   
 ! check whether the many particle Hamiltonian is real 
      write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
@@ -135,7 +135,7 @@
 ! make fmat of both creation and annihilation operators for each sector
      write(mystd, "(2X,a)") "jasmine >>> make fmat for each sector ..."
      write(mystd,*)
-     call atomic_mkfmat_sectors()
+     call atomic_make_sfmat()
   
      write(mystd, "(2X,a)") "jasmine >>> write eigenvalue, eigenvector, and atom.cix to files ... "
      write(mystd,*)
