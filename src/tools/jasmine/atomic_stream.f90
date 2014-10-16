@@ -456,11 +456,11 @@
      if (icu == 1) then
 ! Kanamori parameters type
 ! it is defined on real orbital basis 
-         call atomic_mkcumat_kanamori()
+         call atomic_make_cumatK()
      else
 ! Slater-Cordon parameters type
 ! it is defined on complex orbital basis
-         call atomic_mkcumat_slater()
+         call atomic_make_cumatS()
      endif
   
      return
@@ -475,14 +475,14 @@
      implicit none
   
      if (nband == 3) then
-         call atomic_mksoc_3band(socmat)
+         call atomic_make_soc3(socmat)
 ! for 3 bands system, there is a minus sign
          socmat = -socmat * lambda / two
      elseif(nband == 5) then
-         call atomic_mksoc_5band(socmat)
+         call atomic_make_soc5(socmat)
          socmat = socmat * lambda / two
      elseif(nband == 7) then
-         call atomic_mksoc_7band(socmat)
+         call atomic_make_soc7(socmat)
          socmat = socmat * lambda / two
      else
          call s_print_error('atomic_make_soc', 'not implementd!')
@@ -541,7 +541,7 @@
 ! for Slater-Cordon parameters Coulomb interaction U
 ! we first need to transfrom cumat from complex orbital basis to real orbital basis
          if ( icu == 2 ) then
-             call atomic_mkumat_c2r( umat_c2r )
+             call atomic_make_tmat_c2r( umat_c2r )
              call atomic_tran_cumat( umat_c2r, cumat, tmp_mat )
              cumat = tmp_mat
          endif
@@ -550,7 +550,7 @@
 ! for Kanamori parameters Coulomb interaction U
 ! we first need to transfrom cumat from real orbital basis to complex orbital basis
          if ( icu == 1 ) then
-             call atomic_mkumat_r2c( umat_r2c )
+             call atomic_make_tmat_r2c( umat_r2c )
              call atomic_tran_cumat( umat_r2c, cumat, tmp_mat )
              cumat = tmp_mat
          endif
@@ -675,7 +675,7 @@
 ! set eimpmat
      eimpmat = socmat   
   
-     call atomic_mkumat_c2j(umat_c2j)
+     call atomic_make_tmat_c2j(umat_c2j)
   
 ! for soc case, the tran_umat is from complex orbital basis to natural basis
      tran_umat = umat_c2j
@@ -729,7 +729,7 @@
      logical :: lreal
   
 ! get umat_r2c
-     call atomic_mkumat_r2c(umat_r2c)
+     call atomic_make_tmat_r2c(umat_r2c)
   
 ! transfrom cfmat to complex orbital basis
      call atomic_tran_repr_cmpl(norbs, cfmat, umat_r2c)

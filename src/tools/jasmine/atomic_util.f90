@@ -4,17 +4,17 @@
 !!!           atomic_check_realmat
 !!!           atomic_mat_2nospin
 !!!           atomic_mat_2spin
-!!!           atomic_gaunt_5band
-!!!           atomic_gaunt_7band
-!!!           atomic_mkcumat_kanamori
-!!!           atomic_mkcumat_slater
+!!!           atomic_make_gaunt5
+!!!           atomic_make_gaunt7
+!!!           atomic_make_cumatK
+!!!           atomic_make_cumatS
 !!!           atomic_tran_cumat
-!!!           atomic_mksoc_3band
-!!!           atomic_mksoc_5band
-!!!           atomic_mksoc_7band
-!!! program : atomic_mkumat_c2r
-!!!           atomic_mkumat_r2c
-!!!           atomic_mkumat_c2j
+!!!           atomic_make_soc3
+!!!           atomic_make_soc5
+!!!           atomic_make_soc7
+!!!           atomic_make_tmat_c2r
+!!!           atomic_make_tmat_r2c
+!!!           atomic_make_tmat_c2j
 !!!           atomic_tran_repr_cmpl
 !!!           atomic_tran_repr_real
 !!! source  : atomic_gaunt.f90
@@ -172,8 +172,8 @@
       return
   end subroutine atomic_mat_2spin 
 
-!!>>> atomic_gaunt_5band: build gaunt coefficients for 5 band case
-  subroutine atomic_gaunt_5band(gaunt)
+!!>>> atomic_make_gaunt5: build gaunt coefficients for 5 band case
+  subroutine atomic_make_gaunt5(gaunt)
      use constants, only : dp, zero, one
      
 ! external variables
@@ -218,10 +218,10 @@
      gaunt( 2,  2, 4) =  sqrt( 1.0_dp/441.0_dp)
      
      return
-  end subroutine atomic_gaunt_5band
+  end subroutine atomic_make_gaunt5
 
-!!>>> atomic_gaunt_7band: build gaunt coefficients for 7 band case
-  subroutine atomic_gaunt_7band(gaunt)
+!!>>> atomic_make_gaunt7: build gaunt coefficients for 7 band case
+  subroutine atomic_make_gaunt7(gaunt)
      use constants, only: dp, zero, one
    
      implicit none
@@ -310,13 +310,13 @@
      gaunt( 3,  1, 6) = -sqrt(  700.0_dp/184041_dp); gaunt( 1,  3, 6) = gaunt( 3,  1, 6) * (-1.0)**( 3-1)
      gaunt( 3,  2, 6) =  sqrt(  175.0_dp/184041_dp); gaunt( 2,  3, 6) = gaunt( 3,  2, 6) * (-1.0)**( 3-2)
      gaunt( 3,  3, 6) = -sqrt(   25.0_dp/184041_dp)
-  
-     return
-  end subroutine atomic_gaunt_7band
 
-!!>>> atomic_mkcumat_kanamori: make Coulomb interaction U according to
+     return
+  end subroutine atomic_make_gaunt7
+
+!!>>> atomic_make_cumatK: make Coulomb interaction U according to
 !!>>> Kanamori parameterized Hamiltonian
-  subroutine atomic_mkcumat_kanamori()
+  subroutine atomic_make_cumatK()
      use constants, only : dp, czero, zero
      use control, only : norbs, Uc, Uv, Jz, Js, Jp
 
@@ -398,11 +398,11 @@
      enddo alphaloop ! over alpha={1,norbs-1} loop
   
      return
-  end subroutine atomic_mkcumat_kanamori
+  end subroutine atomic_make_cumatK
 
-!!>>> atomic_mkcumat_slater: make Coulomb interation U, according to 
+!!>>> atomic_make_cumatS: make Coulomb interation U, according to 
 !!>>> Slater-Cordon parameterized Hamiltonian
-  subroutine atomic_mkcumat_slater()
+  subroutine atomic_make_cumatS()
      use constants, only : dp, zero, half
      use control, only : nband, norbs, F0, F2, F4, F6
      use m_spmat, only : cumat
@@ -441,7 +441,7 @@
          slater_cordon(2) = F2
          slater_cordon(4) = F4
          allocate(gaunt(-l:l, -l:l, 0:2*l))
-         call atomic_gaunt_5band(gaunt) 
+         call atomic_make_gaunt5(gaunt) 
      elseif(nband == 7) then
          l = 3
          allocate(slater_cordon(0:2*l))     
@@ -451,7 +451,7 @@
          slater_cordon(4) = F4
          slater_cordon(6) = F6
          allocate(gaunt(-l:l, -l:l, 0:2*l))
-         call atomic_gaunt_7band(gaunt)
+         call atomic_make_gaunt7(gaunt)
      else
          call s_print_error('atomic_make_cumat_slater', 'not implemented for this nband!')
      endif
@@ -494,7 +494,7 @@
      if (allocated(gaunt))         deallocate(gaunt)
   
      return
-  end subroutine atomic_mkcumat_slater
+  end subroutine atomic_make_cumatS
 
 !!>>> atomic_tran_cumat: transform Coulomb interaction U tensor 
 !!>>> from one representation to another representation
@@ -554,8 +554,8 @@
      return
   end subroutine atomic_tran_cumat
 
-!>>> atomic_mksoc_3band: make spin-orbit coupling matrix for 3 bands
-  subroutine atomic_mksoc_3band(socmat)
+!>>> atomic_make_soc3: make spin-orbit coupling matrix for 3 bands
+  subroutine atomic_make_soc3(socmat)
      use constants, only : dp
 
      implicit none
@@ -582,10 +582,10 @@
      socmat(6,6) = -1.0_dp
   
      return
-  end subroutine atomic_mksoc_3band
+  end subroutine atomic_make_soc3
 
-!!>>> atomic_mksoc_5band: make spin-orbit coupling matrix for 5 bands
-  subroutine atomic_mksoc_5band(socmat)
+!!>>> atomic_make_soc5: make spin-orbit coupling matrix for 5 bands
+  subroutine atomic_make_soc5(socmat)
      use constants, only : dp
 
      implicit none
@@ -620,10 +620,10 @@
      socmat(10,10)= -2.0_dp
   
      return 
-  end subroutine atomic_mksoc_5band
+  end subroutine atomic_make_soc5
 
-!!>>> atomic_mksoc_7band: make spin-orbit coupling matrix for 7 bands
-  subroutine atomic_mksoc_7band(socmat)
+!!>>> atomic_make_soc7: make spin-orbit coupling matrix for 7 bands
+  subroutine atomic_make_soc7(socmat)
      use constants, only : dp
 
      implicit none
@@ -668,11 +668,11 @@
      socmat(14,14) =  -3.0_dp
   
      return
-  end subroutine atomic_mksoc_7band
+  end subroutine atomic_make_soc7
 
-!!>>> atomic_mkumat_c2r: make transformation matrix from 
+!!>>> atomic_make_tmat_c2r: make transformation matrix from 
 !!>>> complex orbital basis to real orbital 
-  subroutine atomic_mkumat_c2r( umat_c2r )
+  subroutine atomic_make_tmat_c2r( umat_c2r )
      use constants, only : dp, czero, cone, czi
      use control, only : nband, norbs
   
@@ -767,11 +767,11 @@
      endif
   
      return
-  end subroutine atomic_mkumat_c2r
+  end subroutine atomic_make_tmat_c2r
 
-!!>>> atomic_mkumat_r2c: make umat from real orbital 
+!!>>> atomic_make_tmat_r2c: make umat from real orbital 
 !!>>> basis to complex orbital basis
-  subroutine atomic_mkumat_r2c(umat_r2c)
+  subroutine atomic_make_tmat_r2c(umat_r2c)
      use constants, only : dp, czero
      use control, only : norbs
   
@@ -782,15 +782,15 @@
      complex(dp) :: umat_c2r(norbs, norbs)
   
      umat_c2r = czero
-     call atomic_mkumat_c2r(umat_c2r)
+     call atomic_make_tmat_c2r(umat_c2r)
   
      umat_r2c = transpose(dconjg(umat_c2r))
   
      return
-  end subroutine atomic_mkumat_r2c
+  end subroutine atomic_make_tmat_r2c
 
-!!>>> atomic_mkumat_c2j: make CG coefficients
-  subroutine atomic_mkumat_c2j( umat_c2j ) 
+!!>>> atomic_make_tmat_c2j: make CG coefficients
+  subroutine atomic_make_tmat_c2j( umat_c2j ) 
      use constants, only : dp, czero
      use control, only : nband, norbs
   
@@ -880,7 +880,7 @@
      endif
   
      return
-  end subroutine atomic_mkumat_c2j
+  end subroutine atomic_make_tmat_c2j
 
 !!>>> atomic_tran_repr_cmpl: transformation from one representation 
 !!>>> to another representation, complex version
