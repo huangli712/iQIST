@@ -207,7 +207,7 @@
   subroutine atomic_dump_seigval()
      use constants, only : mytmp
 
-     use m_glob_sectors, only : nsectors, sectors
+     use m_sector, only : nsectors, sectors
   
      implicit none
   
@@ -237,7 +237,7 @@
      use constants, only : mytmp, eps6
 
      use m_full, only : bin_basis
-     use m_glob_sectors, only : nsectors, sectors
+     use m_sector, only : nsectors, sectors
   
      implicit none
   
@@ -269,7 +269,7 @@
      use constants, only : mytmp
      use control, only : Uc, Uv, Jz, Js, Jp, Ud, JH, F0, F2, F4, F6, icu, isoc
 
-     use m_glob_sectors, only : nsectors, sectors, max_dim_sect, ave_dim_sect
+     use m_sector, only : nsectors, sectors, max_dim_sect, ave_dim_sect
   
      implicit none
   

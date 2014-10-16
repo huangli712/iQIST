@@ -93,7 +93,7 @@
 !!>>> atomic_s_driver: CTQMC trace algorithm: use good quantum numbers (GQNs)
   subroutine atomic_s_driver()
      use constants, only : mystd, eps6
-     use m_glob_sectors, only : nsectors, sectors, dealloc_m_glob_sectors
+     use m_sector, only : nsectors, sectors, dealloc_m_glob_sectors
   
      implicit none
 

@@ -21,7 +21,7 @@
      use control, only : norbs
 
      use m_full, only : dec_basis, index_basis
-     use m_glob_sectors, only : nsectors, sectors
+     use m_sector, only : nsectors, sectors
      use m_sector, only : alloc_one_fmat
   
      implicit none
@@ -128,7 +128,7 @@
 
      use m_full, only : dec_basis, index_basis, bin_basis
      use m_spmat, only : eimpmat, cumat
-     use m_glob_sectors, only : nsectors, sectors
+     use m_sector, only : nsectors, sectors
   
      implicit none
   
@@ -294,7 +294,7 @@
 !!>>> atomic_diag_shmat: diagonalize the Hamiltonian for each sector one by one
   subroutine atomic_diag_shmat()
      use constants, only : dp
-     use m_glob_sectors, only : nsectors, sectors
+     use m_sector, only : nsectors, sectors
   
      implicit none
   
@@ -322,8 +322,8 @@
 
      use m_full, only : dim_sub_n, bin_basis
      use m_sector, only : alloc_one_sector
-     use m_glob_sectors, only : nsectors, sectors, alloc_m_glob_sectors
-     use m_glob_sectors, only : max_dim_sect, ave_dim_sect
+     use m_sector, only : nsectors, sectors, alloc_m_glob_sectors
+     use m_sector, only : max_dim_sect, ave_dim_sect
   
      implicit none
   
