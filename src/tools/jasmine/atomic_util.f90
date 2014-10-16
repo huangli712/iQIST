@@ -1,42 +1,33 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_gaunt_5band
+!!! program : atomic_make_combination
+!!!           atomic_check_realmat
+!!!           atomic_mat_2nospin
+!!!           atomic_mat_2spin
+!!!           atomic_gaunt_5band
 !!!           atomic_gaunt_7band
+!!!           atomic_mkcumat_kanamori
+!!!           atomic_mkcumat_slater
+!!!           atomic_tran_cumat
 !!!           atomic_mksoc_3band
 !!!           atomic_mksoc_5band
 !!!           atomic_mksoc_7band
-!!!           atomic_mkcumat_kanamori
-!!!           atomic_mkcumat_slater
-!!!           atomic_check_realmat
+!!! program : atomic_mkumat_c2r
+!!!           atomic_mkumat_r2c
+!!!           atomic_mkumat_c2j
+!!!           atomic_tran_repr_cmpl
+!!!           atomic_tran_repr_real
 !!! source  : atomic_gaunt.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
 !!! purpose : make gaunt coefficients
-!!! status  : unstable
-!!! comment :
-!!!-------------------------------------------------------------------------
-
-!!!-------------------------------------------------------------------------
-!!! project : jasmine
-!!! program : atomic_mkumat_c2r
-!!!           atomic_mkumat_r2c
-!!!           atomic_mkumat_c2j
-!!!           atomic_tran_cumat
-!!!           atomic_tran_repr_cmpl
-!!!           atomic_tran_repr_real
-!!! source  : atomic_natural.f90
-!!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
 !!! purpose : make transformation from one representation to another 
-!!!           representation 
+!!!           representation
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
-
 
 !!>>> atomic_make_combination: calculate combination algebra 
   function atomic_make_combination(ntiny, nlarg) result(value)
@@ -121,6 +112,65 @@
   
      return
   end subroutine atomic_check_realmat
+
+!!>>> atomic_mat_2nospin: convert matrix with spin to no-spin
+  subroutine atomic_mat_2nospin(norbs, amat, bmat)
+     use constants, only : dp
+     
+     implicit none
+  
+! external variables
+! number of orbitals
+     integer, intent(in) :: norbs
+
+! matrix with spin
+     complex(dp), intent(in) :: amat(norbs, norbs)
+
+! matrix without spin
+     complex(dp), intent(out) :: bmat(norbs/2, norbs/2)
+  
+! local variables
+! loop index
+     integer :: i, j
+  
+     do i=1, norbs/2
+         do j=1, norbs/2
+             bmat(j,i) = amat(2*j-1,2*i-1)
+         enddo
+     enddo
+  
+     return
+  end subroutine atomic_mat_2nospin 
+  
+!!>>> atomic_mat_2spin: convert matrix without spin to with spin
+  subroutine atomic_mat_2spin(nband, amat, bmat)
+      use constants, only : dp
+      
+      implicit none
+  
+! external variables
+! number of orbitals
+      integer, intent(in) :: nband
+
+! matrix with spin
+      complex(dp), intent(in) :: amat(nband, nband)
+
+! matrix without spin
+      complex(dp), intent(out) :: bmat(2*nband, 2*nband)
+  
+! local variables
+! loop index
+      integer :: i, j
+  
+      do i=1, nband
+          do j=1, nband
+              bmat(2*j-1,2*i-1) = amat(j,i)
+              bmat(2*j,2*i)     = amat(j,i)
+          enddo
+      enddo
+  
+      return
+  end subroutine atomic_mat_2spin 
 
 !!>>> atomic_gaunt_5band: build gaunt coefficients for 5 band case
   subroutine atomic_gaunt_5band(gaunt)
@@ -445,6 +495,64 @@
   
      return
   end subroutine atomic_mkcumat_slater
+
+!!>>> atomic_tran_cumat: transform Coulomb interaction U tensor 
+!!>>> from one representation to another representation
+  subroutine atomic_tran_cumat(amtrx, cumat, cumat_t)
+     use constants, only : dp, czero, epst
+     use control, only : norbs
+  
+     implicit none
+  
+! transformation matrix from orginal basis to natural basis
+     complex(dp), intent(in) :: amtrx(norbs, norbs)
+
+! coefficents matrix for generalized interaction U in orginal basis
+     complex(dp), intent(in) :: cumat(norbs, norbs, norbs, norbs)
+
+! coefficents matrix for generalized interaction U in natural basis
+     complex(dp), intent(out) :: cumat_t(norbs, norbs, norbs, norbs)
+  
+! local varoables
+! loop index over orbits in orginal single particle basis
+     integer :: alpha1, alpha2
+     integer :: alpha3, alpha4
+     integer :: sigma1, sigma2
+     integer :: sigma3, sigma4
+
+! auxiliary complex(dp) variables
+     complex(dp) :: ctmp
+  
+! initialize cumat_t to be zero
+     cumat_t = czero 
+  
+     sigma1loop: do sigma1=1,norbs
+     sigma2loop: do sigma2=1,norbs
+     sigma3loop: do sigma3=1,norbs
+     sigma4loop: do sigma4=1,norbs
+         ctmp = czero
+  
+         alpha1loop: do alpha1=1,norbs
+         alpha2loop: do alpha2=1,norbs
+         alpha3loop: do alpha3=1,norbs
+         alpha4loop: do alpha4=1,norbs
+             if (abs(cumat(alpha1, alpha2, alpha3, alpha4)) .lt. epst) cycle
+             ctmp = ctmp + cumat(alpha1, alpha2, alpha3, alpha4)          &
+                  * conjg(amtrx(alpha1, sigma1)) * amtrx(alpha3, sigma3)  &
+                  * conjg(amtrx(alpha2, sigma2)) * amtrx(alpha4, sigma4)
+         enddo alpha4loop ! over alpha4={1,norbs} loop
+         enddo alpha3loop ! over alpha3={1,norbs} loop
+         enddo alpha2loop ! over alpha2={1,norbs} loop
+         enddo alpha1loop ! over alpha1={1,norbs} loop
+  
+         cumat_t(sigma1, sigma2, sigma3, sigma4) = ctmp
+     enddo sigma4loop ! over sigma4={1,norbs} loop
+     enddo sigma3loop ! over sigma3={1,norbs} loop
+     enddo sigma2loop ! over sigma2={1,norbs} loop
+     enddo sigma1loop ! over sigma1={1,norbs} loop
+  
+     return
+  end subroutine atomic_tran_cumat
 
 !>>> atomic_mksoc_3band: make spin-orbit coupling matrix for 3 bands
   subroutine atomic_mksoc_3band(socmat)
@@ -773,64 +881,6 @@
   
      return
   end subroutine atomic_mkumat_c2j
- 
-!!>>> atomic_tran_cumat: transform Coulomb interaction U tensor 
-!!>>> from one representation to another representation
-  subroutine atomic_tran_cumat(amtrx, cumat, cumat_t)
-     use constants, only : dp, czero, epst
-     use control, only : norbs
-  
-     implicit none
-  
-! transformation matrix from orginal basis to natural basis
-     complex(dp), intent(in) :: amtrx(norbs, norbs)
-
-! coefficents matrix for generalized interaction U in orginal basis
-     complex(dp), intent(in) :: cumat(norbs, norbs, norbs, norbs)
-
-! coefficents matrix for generalized interaction U in natural basis
-     complex(dp), intent(out) :: cumat_t(norbs, norbs, norbs, norbs)
-  
-! local varoables
-! loop index over orbits in orginal single particle basis
-     integer :: alpha1, alpha2
-     integer :: alpha3, alpha4
-     integer :: sigma1, sigma2
-     integer :: sigma3, sigma4
-
-! auxiliary complex(dp) variables
-     complex(dp) :: ctmp
-  
-! initialize cumat_t to be zero
-     cumat_t = czero 
-  
-     sigma1loop: do sigma1=1,norbs
-     sigma2loop: do sigma2=1,norbs
-     sigma3loop: do sigma3=1,norbs
-     sigma4loop: do sigma4=1,norbs
-         ctmp = czero
-  
-         alpha1loop: do alpha1=1,norbs
-         alpha2loop: do alpha2=1,norbs
-         alpha3loop: do alpha3=1,norbs
-         alpha4loop: do alpha4=1,norbs
-             if (abs(cumat(alpha1, alpha2, alpha3, alpha4)) .lt. epst) cycle
-             ctmp = ctmp + cumat(alpha1, alpha2, alpha3, alpha4)          &
-                  * conjg(amtrx(alpha1, sigma1)) * amtrx(alpha3, sigma3)  &
-                  * conjg(amtrx(alpha2, sigma2)) * amtrx(alpha4, sigma4)
-         enddo alpha4loop ! over alpha4={1,norbs} loop
-         enddo alpha3loop ! over alpha3={1,norbs} loop
-         enddo alpha2loop ! over alpha2={1,norbs} loop
-         enddo alpha1loop ! over alpha1={1,norbs} loop
-  
-         cumat_t(sigma1, sigma2, sigma3, sigma4) = ctmp
-     enddo sigma4loop ! over sigma4={1,norbs} loop
-     enddo sigma3loop ! over sigma3={1,norbs} loop
-     enddo sigma2loop ! over sigma2={1,norbs} loop
-     enddo sigma1loop ! over sigma1={1,norbs} loop
-  
-     return
-  end subroutine atomic_tran_cumat
 
 !!>>> atomic_tran_repr_cmpl: transformation from one representation 
 !!>>> to another representation, complex version
@@ -896,62 +946,3 @@
   
      return
   end subroutine atomic_tran_repr_real
-
-!!>>> atomic_mat_2nospin: convert matrix with spin to no-spin
-  subroutine atomic_mat_2nospin(norbs, amat, bmat)
-     use constants, only : dp
-     
-     implicit none
-  
-! external variables
-! number of orbitals
-     integer, intent(in) :: norbs
-
-! matrix with spin
-     complex(dp), intent(in) :: amat(norbs, norbs)
-
-! matrix without spin
-     complex(dp), intent(out) :: bmat(norbs/2, norbs/2)
-  
-! local variables
-! loop index
-     integer :: i, j
-  
-     do i=1, norbs/2
-         do j=1, norbs/2
-             bmat(j,i) = amat(2*j-1,2*i-1)
-         enddo
-     enddo
-  
-     return
-  end subroutine atomic_mat_2nospin 
-  
-!!>>> atomic_mat_2spin: convert matrix without spin to with spin
-  subroutine atomic_mat_2spin(nband, amat, bmat)
-      use constants, only : dp
-      
-      implicit none
-  
-! external variables
-! number of orbitals
-      integer, intent(in) :: nband
-
-! matrix with spin
-      complex(dp), intent(in) :: amat(nband, nband)
-
-! matrix without spin
-      complex(dp), intent(out) :: bmat(2*nband, 2*nband)
-  
-! local variables
-! loop index
-      integer :: i, j
-  
-      do i=1, nband
-          do j=1, nband
-              bmat(2*j-1,2*i-1) = amat(j,i)
-              bmat(2*j,2*i)     = amat(j,i)
-          enddo
-      enddo
-  
-      return
-  end subroutine atomic_mat_2spin 
