@@ -105,7 +105,7 @@
   subroutine atomic_dump_feigval()
      use constants, only : mytmp
      use control, only : ncfgs
-     use m_glob_fullspace, only : hmat_eigval, occu_mat
+     use m_full, only : hmat_eigval, occu_mat
   
      implicit none
   
@@ -130,7 +130,7 @@
      use control, only : ncfgs
 
      use m_full, only : bin_basis
-     use m_glob_fullspace, only : hmat_eigvec
+     use m_full, only : hmat_eigvec
   
      implicit none
   
@@ -157,7 +157,7 @@
      use constants, only : mytmp, zero
      use control, only : nband, norbs, ncfgs, isoc
 
-     use m_glob_fullspace, only : hmat_eigval, occu_mat, anni_fmat
+     use m_full, only : hmat_eigval, occu_mat, anni_fmat
   
      implicit none
   

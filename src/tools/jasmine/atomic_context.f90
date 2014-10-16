@@ -1,7 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : jasmine
-!!! program : m_sector  module
-!!! program : m_basis_fullspace  module
+!!! program : m_full  module
+!!!           m_sector  module
 !!!           m_spmat            module
 !!!           m_glob_fullspace   module
 !!!           m_glob_sectors     module
@@ -17,6 +17,7 @@
 
 !!>>> Fock basis of full Hilbert space
   module m_full
+     use constants, only : dp, zero, czero
      use control, only : norbs, ncfgs
   
      implicit none
@@ -33,6 +34,21 @@
 ! index of Fock basis, given their decimal number
      integer, public, allocatable, save :: index_basis(:)
 
+! atomic Hamiltonian (CF + SOC + CU)
+     complex(dp), public, allocatable, save :: hmat(:,:)
+  
+! eigenvalues of hmat
+     real(dp), public, allocatable, save :: hmat_eigval(:)
+  
+! eigenvectors of hmat
+     real(dp), public, allocatable, save :: hmat_eigvec(:, :)
+  
+! fmat for annihilation fermion operators
+     real(dp), public, allocatable, save :: anni_fmat(:,:,:)
+  
+! occupany number for atomic eigenstates
+     real(dp), public, allocatable, save :: occu_mat(:,:)
+
 ! status flag
      integer, private :: istat
 
@@ -42,6 +58,8 @@
 
      public :: alloc_m_basis_fullspace
      public :: dealloc_m_basis_fullspace
+     public :: alloc_m_glob_fullspace 
+     public :: dealloc_m_glob_fullspace 
 
   contains
   
@@ -82,7 +100,45 @@
   
      return
   end subroutine dealloc_m_basis_fullspace
+
+!!>>> alloc_m_glob_fullspace: allocate memory for m_glob_fullspace module
+  subroutine alloc_m_glob_fullspace()
+     implicit none
+
+     allocate( hmat(ncfgs, ncfgs),              stat=istat )
+     allocate( hmat_eigval(ncfgs),              stat=istat )
+     allocate( hmat_eigvec(ncfgs, ncfgs),       stat=istat )
+     allocate( anni_fmat(ncfgs, ncfgs, norbs),  stat=istat )
+     allocate( occu_mat(ncfgs, ncfgs),          stat=istat )
   
+! check status
+     if ( istat /= 0 ) then
+         call s_print_error('alloc_m_glob_fullspace', 'can not allocate enough memory')
+     endif
+
+! init them
+     hmat = czero
+     hmat_eigval = zero
+     hmat_eigvec = zero
+     anni_fmat = zero
+     occu_mat = zero
+  
+     return
+  end subroutine alloc_m_glob_fullspace
+  
+!!>>> dealloc_m_glob_fullspace: deallocate memory for m_glob_fullspace module
+  subroutine dealloc_m_glob_fullspace()
+     implicit none
+  
+     if(allocated(hmat))        deallocate(hmat)
+     if(allocated(hmat_eigval)) deallocate(hmat_eigval)
+     if(allocated(hmat_eigvec)) deallocate(hmat_eigvec)
+     if(allocated(anni_fmat))   deallocate(anni_fmat)
+     if(allocated(occu_mat))    deallocate(occu_mat)
+  
+     return
+  end subroutine dealloc_m_glob_fullspace
+ 
   end module m_full
 
 !!>>> data structure for good quantum numbers (GQNs) algorithm
@@ -136,7 +192,19 @@
 ! mymfat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
          type(t_fmat), pointer :: myfmat(:,:)
      end type t_sector
-     
+
+! number of sectors
+     integer, public, save :: nsectors
+  
+! maximum dimension of sectors
+     integer, public, save :: max_dim_sect
+  
+! average dimension of sectors
+     real(dp), public, save :: ave_dim_sect
+  
+! all the sectors
+     type(t_sector), public, allocatable, save :: sectors(:)
+
 ! status of allocating memory
      integer, private :: istat
 
@@ -150,6 +218,9 @@
      public :: nullify_one_sector
      public :: alloc_one_sector
      public :: dealloc_one_sector
+
+     public :: alloc_m_glob_sectors
+     public :: dealloc_m_glob_sectors
 
   contains
   
@@ -280,12 +351,48 @@
      return
   end subroutine dealloc_one_sector
 
+!!>>> alloc_m_glob_sectors: allocate memory for sectors
+  subroutine alloc_m_glob_sectors()
+     implicit none
+  
+! local variables
+! loop index
+     integer :: i
+  
+     allocate( sectors(nsectors),   stat=istat ) 
+  
+! check status
+     if ( istat /= 0 ) then
+         call s_print_error('alloc_m_glob_sectors', &
+                            'can not allocate enough memory')
+     endif
+ 
+! nullify each sector one by one
+     do i=1, nsectors
+         call nullify_one_sector(sectors(i))
+     enddo          
+  
+     return
+  end subroutine alloc_m_glob_sectors
+  
+!!>>> dealloc_m_glob_sectors: deallocate memory of sectors
+  subroutine dealloc_m_glob_sectors()
+     implicit none
+     
+     integer :: i
+
+! deallocate memory for pointers in t_sectors
+! before deallocating sectors to avoid memory leak 
+     do i=1, nsectors
+         call dealloc_one_sector(sectors(i)) 
+     enddo 
+  
+     if (allocated(sectors))  deallocate(sectors) 
+     
+     return
+  end subroutine dealloc_m_glob_sectors
+
   end module m_sector
-
-
-
-
-
 
 !!>>> single particle related matrices, including: 
 !!>>> crystal field, spin-orbital coupling, Coulomb interaction U tensor
@@ -363,151 +470,3 @@
   end subroutine dealloc_m_spmat
   
   end module m_spmat
-
-!!>>> global variables for full space algorithm case
-  module m_glob_fullspace
-     use constants, only : dp, zero, czero
-     use control, only : norbs, ncfgs
-  
-     implicit none
-  
-! atomic Hamiltonian (CF + SOC + CU)
-     complex(dp), public, allocatable, save :: hmat(:,:)
-  
-! eigenvalues of hmat
-     real(dp), public, allocatable, save :: hmat_eigval(:)
-  
-! eigenvectors of hmat
-     real(dp), public, allocatable, save :: hmat_eigvec(:, :)
-  
-! fmat for annihilation fermion operators
-     real(dp), public, allocatable, save :: anni_fmat(:,:,:)
-  
-! occupany number for atomic eigenstates
-     real(dp), public, allocatable, save :: occu_mat(:,:)
-
-! the status flag
-     integer, private :: istat
-
-!!========================================================================
-!!>>> declare accessibility for module routines                        <<<
-!!========================================================================
-   
-     public :: alloc_m_glob_fullspace 
-     public :: dealloc_m_glob_fullspace 
-     
-  contains
-  
-!!>>> alloc_m_glob_fullspace: allocate memory for m_glob_fullspace module
-  subroutine alloc_m_glob_fullspace()
-     implicit none
-
-     allocate( hmat(ncfgs, ncfgs),              stat=istat )
-     allocate( hmat_eigval(ncfgs),              stat=istat )
-     allocate( hmat_eigvec(ncfgs, ncfgs),       stat=istat )
-     allocate( anni_fmat(ncfgs, ncfgs, norbs),  stat=istat )
-     allocate( occu_mat(ncfgs, ncfgs),          stat=istat )
-  
-! check status
-     if ( istat /= 0 ) then
-         call s_print_error('alloc_m_glob_fullspace', 'can not allocate enough memory')
-     endif
-
-! init them
-     hmat = czero
-     hmat_eigval = zero
-     hmat_eigvec = zero
-     anni_fmat = zero
-     occu_mat = zero
-  
-     return
-  end subroutine alloc_m_glob_fullspace
-  
-!!>>> dealloc_m_glob_fullspace: deallocate memory for m_glob_fullspace module
-  subroutine dealloc_m_glob_fullspace()
-     implicit none
-  
-     if(allocated(hmat))        deallocate(hmat)
-     if(allocated(hmat_eigval)) deallocate(hmat_eigval)
-     if(allocated(hmat_eigvec)) deallocate(hmat_eigvec)
-     if(allocated(anni_fmat))   deallocate(anni_fmat)
-     if(allocated(occu_mat))    deallocate(occu_mat)
-  
-     return
-  end subroutine dealloc_m_glob_fullspace
-  
-  end module m_glob_fullspace
-
-!!>>> global variables for sectors algorithm case
-  module m_glob_sectors
-     use constants, only : dp
-     use m_sector, only : t_sector, nullify_one_sector, dealloc_one_sector
-  
-     implicit none
-  
-! number of sectors
-     integer, public, save :: nsectors
-  
-! maximum dimension of sectors
-     integer, public, save :: max_dim_sect
-  
-! average dimension of sectors
-     real(dp), public, save :: ave_dim_sect
-  
-! all the sectors
-     type(t_sector), public, allocatable, save :: sectors(:)
-  
-! the status flag
-     integer, private :: istat
-
-!!========================================================================
-!!>>> declare accessibility for module routines                        <<<
-!!========================================================================
-   
-     public :: alloc_m_glob_sectors
-     public :: dealloc_m_glob_sectors
-     
-  contains
- 
-!!>>> alloc_m_glob_sectors: allocate memory for sectors
-  subroutine alloc_m_glob_sectors()
-     implicit none
-  
-! local variables
-! loop index
-     integer :: i
-  
-     allocate( sectors(nsectors),   stat=istat ) 
-  
-! check status
-     if ( istat /= 0 ) then
-         call s_print_error('alloc_m_glob_sectors', &
-                            'can not allocate enough memory')
-     endif
- 
-! nullify each sector one by one
-     do i=1, nsectors
-         call nullify_one_sector(sectors(i))
-     enddo          
-  
-     return
-  end subroutine alloc_m_glob_sectors
-  
-!!>>> dealloc_m_glob_sectors: deallocate memory of sectors
-  subroutine dealloc_m_glob_sectors()
-     implicit none
-     
-     integer :: i
-
-! deallocate memory for pointers in t_sectors
-! before deallocating sectors to avoid memory leak 
-     do i=1, nsectors
-         call dealloc_one_sector(sectors(i)) 
-     enddo 
-  
-     if (allocated(sectors))  deallocate(sectors) 
-     
-     return
-  end subroutine dealloc_m_glob_sectors
-  
-  end module m_glob_sectors

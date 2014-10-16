@@ -19,7 +19,7 @@
      use control, only: ncfgs, norbs
 
      use m_full, only: bin_basis
-     use m_glob_fullspace, only: occu_mat, hmat_eigvec
+     use m_full, only: occu_mat, hmat_eigvec
   
      implicit none
   
@@ -48,7 +48,7 @@
 !!>>> for full space case
   subroutine atomic_make_ffmat()
      use control, only : norbs, ncfgs
-     use m_glob_fullspace, only : anni_fmat, hmat_eigvec
+     use m_full, only : anni_fmat, hmat_eigvec
      use m_full, only : dec_basis, index_basis
   
      implicit none
@@ -92,7 +92,7 @@
 
      use m_full, only : dec_basis, index_basis, bin_basis
      use m_spmat, only : eimpmat, cumat
-     use m_glob_fullspace, only : hmat
+     use m_full, only : hmat
   
      implicit none
   

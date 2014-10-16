@@ -19,8 +19,8 @@
      use constants, only : dp, mystd, eps6
      use control, only : ncfgs
 
-     use m_glob_fullspace, only : hmat, hmat_eigval, hmat_eigvec
-     use m_glob_fullspace, only : alloc_m_glob_fullspace, dealloc_m_glob_fullspace
+     use m_full, only : hmat, hmat_eigval, hmat_eigvec
+     use m_full, only : alloc_m_glob_fullspace, dealloc_m_glob_fullspace
   
      implicit none
   
