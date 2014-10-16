@@ -19,7 +19,7 @@
      use control, only: ncfgs, norbs
 
      use m_full, only: bin_basis
-     use m_full, only: occu, hmat_eigvec
+     use m_full, only: occu, eigvec
   
      implicit none
   
@@ -39,7 +39,7 @@
          enddo 
      enddo 
   
-     call atomic_tran_repr_real(ncfgs, occu, hmat_eigvec)
+     call atomic_tran_repr_real(ncfgs, occu, eigvec)
   
      return
   end subroutine atomic_make_foccu
@@ -48,7 +48,7 @@
 !!>>> for full space case
   subroutine atomic_make_ffmat()
      use control, only : norbs, ncfgs
-     use m_full, only : fmat, hmat_eigvec
+     use m_full, only : fmat, eigvec
      use m_full, only : dec_basis, index_basis
   
      implicit none
@@ -79,7 +79,7 @@
   
 ! rotate it to the atomic eigenvector basis
      do i=1, norbs
-         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), hmat_eigvec)
+         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), eigvec)
      enddo
   
      return
@@ -147,7 +147,7 @@
                      sgn  = mod(sgn, 2)
                      ibas = index_basis(knew)
                      if (ibas == 0) then
-                         call s_print_error('atomic_mkhmat_fullspace', &
+                         call s_print_error('atomic_make_fhmat', &
                                             'error while determining row1')
                      endif
   
@@ -204,7 +204,7 @@
                      sgn  = mod(sgn, 2)
                      ibas = index_basis(knew)
                      if (ibas == 0) then
-                         call s_print_error('atomic_mkhmat_fullspace', 'error while determining row3')
+                         call s_print_error('atomic_make_fhmat', 'error while determining row3')
                      endif
   
                      hmat(ibas,jbas) = hmat(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-1.0d0)**sgn

@@ -19,7 +19,7 @@
      use constants, only : dp, mystd, eps6
      use control, only : ncfgs
 
-     use m_full, only : hmat, hmat_eigval, hmat_eigvec
+     use m_full, only : hmat, eigval, eigvec
      use m_full, only : alloc_m_glob_fullspace, dealloc_m_glob_fullspace
   
      implicit none
@@ -55,7 +55,7 @@
      write(mystd, "(2X,a)") "jasmine >>> diagonalize the atomic Hamiltonian ..."
      write(mystd,*)
      tmp_mat = real(hmat)
-     call s_eig_sy(ncfgs, ncfgs, tmp_mat, hmat_eigval, hmat_eigvec)
+     call s_eig_sy(ncfgs, ncfgs, tmp_mat, eigval, eigvec)
   
 ! build fmat
 ! first, build fmat of annihilation operators in Fock basis

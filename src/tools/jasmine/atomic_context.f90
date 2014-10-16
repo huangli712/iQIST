@@ -36,10 +36,10 @@
      complex(dp), public, allocatable, save :: hmat(:,:)
   
 ! eigenvalues of hmat
-     real(dp), public, allocatable, save :: hmat_eigval(:)
+     real(dp), public, allocatable, save :: eigval(:)
   
 ! eigenvectors of hmat
-     real(dp), public, allocatable, save :: hmat_eigvec(:, :)
+     real(dp), public, allocatable, save :: eigvec(:, :)
   
 ! fmat for annihilation fermion operators
      real(dp), public, allocatable, save :: fmat(:,:,:)
@@ -104,8 +104,8 @@
      implicit none
 
      allocate( hmat(ncfgs, ncfgs),              stat=istat )
-     allocate( hmat_eigval(ncfgs),              stat=istat )
-     allocate( hmat_eigvec(ncfgs, ncfgs),       stat=istat )
+     allocate( eigval(ncfgs),              stat=istat )
+     allocate( eigvec(ncfgs, ncfgs),       stat=istat )
      allocate( fmat(ncfgs, ncfgs, norbs),  stat=istat )
      allocate( occu(ncfgs, ncfgs),          stat=istat )
   
@@ -116,8 +116,8 @@
 
 ! init them
      hmat = czero
-     hmat_eigval = zero
-     hmat_eigvec = zero
+     eigval = zero
+     eigvec = zero
      fmat = zero
      occu = zero
   
@@ -129,8 +129,8 @@
      implicit none
   
      if(allocated(hmat))        deallocate(hmat)
-     if(allocated(hmat_eigval)) deallocate(hmat_eigval)
-     if(allocated(hmat_eigvec)) deallocate(hmat_eigvec)
+     if(allocated(eigval)) deallocate(eigval)
+     if(allocated(eigvec)) deallocate(eigvec)
      if(allocated(fmat))   deallocate(fmat)
      if(allocated(occu))    deallocate(occu)
   
