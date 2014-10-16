@@ -1,8 +1,6 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_mat_2nospin
-!!!           atomic_mat_2spin
-!!!           atomic_make_cdagger
+!!! program : atomic_make_cdagger
 !!!           atomic_make_c
 !!!           atomic_make_gsz
 !!!           atomic_make_gjz
@@ -30,65 +28,6 @@
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
-
-!!>>> atomic_mat_2nospin: convert matrix with spin to no-spin
-  subroutine atomic_mat_2nospin(norbs, amat, bmat)
-     use constants, only : dp
-     
-     implicit none
-  
-! external variables
-! number of orbitals
-     integer, intent(in) :: norbs
-
-! matrix with spin
-     complex(dp), intent(in) :: amat(norbs, norbs)
-
-! matrix without spin
-     complex(dp), intent(out) :: bmat(norbs/2, norbs/2)
-  
-! local variables
-! loop index
-     integer :: i, j
-  
-     do i=1, norbs/2
-         do j=1, norbs/2
-             bmat(j,i) = amat(2*j-1,2*i-1)
-         enddo
-     enddo
-  
-     return
-  end subroutine atomic_mat_2nospin 
-  
-!!>>> atomic_mat_2spin: convert matrix without spin to with spin
-  subroutine atomic_mat_2spin(nband, amat, bmat)
-      use constants, only : dp
-      
-      implicit none
-  
-! external variables
-! number of orbitals
-      integer, intent(in) :: nband
-
-! matrix with spin
-      complex(dp), intent(in) :: amat(nband, nband)
-
-! matrix without spin
-      complex(dp), intent(out) :: bmat(2*nband, 2*nband)
-  
-! local variables
-! loop index
-      integer :: i, j
-  
-      do i=1, nband
-          do j=1, nband
-              bmat(2*j-1,2*i-1) = amat(j,i)
-              bmat(2*j,2*i)     = amat(j,i)
-          enddo
-      enddo
-  
-      return
-  end subroutine atomic_mat_2spin 
 
 !!>>> atomic_make_cdagger: create one electron on ipos 
 !!>>> of |jold> to deduce |jnew>

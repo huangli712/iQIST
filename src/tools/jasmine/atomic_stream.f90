@@ -612,13 +612,17 @@
      real(dp) :: eigvec(nband, nband)
 
 ! index loop
-     integer :: i
+     integer :: i, j
   
 ! set eimpmat
      eimpmat = cfmat   
   
 ! get eimp for nospin freedom
-     call atomic_mat_2nospin(norbs, eimpmat, eimp_nospin)
+     do i=1, norbs/2
+         do j=1, norbs/2
+             eimp_nospin(j,i) = eimpmat(2*j-1,2*i-1)
+         enddo
+     enddo
   
 ! diagonalize eimp_nospin to get natural basis
      eimp_nospin_real = real(eimp_nospin)
@@ -630,8 +634,14 @@
      enddo
      umat_nospin = dcmplx(eigvec)
   
-     call atomic_mat_2spin(nband, eimp_nospin, eimpmat) 
-     call atomic_mat_2spin(nband, umat_nospin, tran_umat)
+     do i=1, nband
+         do j=1, nband
+             eimpmat(2*j-1,2*i-1) = eimp_nospin(j,i)
+             eimpmat(2*j,2*i)     = eimp_nospin(j,i)
+             tran_umat(2*j-1,2*i-1) = umat_nospin(j,i)
+             tran_umat(2*j,2*i)     = umat_nospin(j,i)
+         enddo
+     enddo
   
 ! add chemical potential to eimpmat
      do i=1, norbs
