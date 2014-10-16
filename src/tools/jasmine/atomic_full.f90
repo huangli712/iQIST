@@ -48,7 +48,7 @@
 !!>>> for full space case
   subroutine atomic_make_ffmat()
      use control, only : norbs, ncfgs
-     use m_full, only : anni_fmat, hmat_eigvec
+     use m_full, only : fmat, hmat_eigvec
      use m_full, only : dec_basis, index_basis
   
      implicit none
@@ -72,14 +72,14 @@
              if (btest(right, i-1) .eqv. .true.) then
                 call atomic_make_c(i, right, left, isgn)
                 k = index_basis(left)
-                anni_fmat(k, j, i) = dble(isgn)
+                fmat(k, j, i) = dble(isgn)
              endif
          enddo 
      enddo 
   
 ! rotate it to the atomic eigenvector basis
      do i=1, norbs
-         call atomic_tran_repr_real(ncfgs, anni_fmat(:,:,i), hmat_eigvec)
+         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), hmat_eigvec)
      enddo
   
      return

@@ -42,7 +42,7 @@
      real(dp), public, allocatable, save :: hmat_eigvec(:, :)
   
 ! fmat for annihilation fermion operators
-     real(dp), public, allocatable, save :: anni_fmat(:,:,:)
+     real(dp), public, allocatable, save :: fmat(:,:,:)
   
 ! occupany number for atomic eigenstates
      real(dp), public, allocatable, save :: occu(:,:)
@@ -106,7 +106,7 @@
      allocate( hmat(ncfgs, ncfgs),              stat=istat )
      allocate( hmat_eigval(ncfgs),              stat=istat )
      allocate( hmat_eigvec(ncfgs, ncfgs),       stat=istat )
-     allocate( anni_fmat(ncfgs, ncfgs, norbs),  stat=istat )
+     allocate( fmat(ncfgs, ncfgs, norbs),  stat=istat )
      allocate( occu(ncfgs, ncfgs),          stat=istat )
   
 ! check status
@@ -118,7 +118,7 @@
      hmat = czero
      hmat_eigval = zero
      hmat_eigvec = zero
-     anni_fmat = zero
+     fmat = zero
      occu = zero
   
      return
@@ -131,7 +131,7 @@
      if(allocated(hmat))        deallocate(hmat)
      if(allocated(hmat_eigval)) deallocate(hmat_eigval)
      if(allocated(hmat_eigvec)) deallocate(hmat_eigvec)
-     if(allocated(anni_fmat))   deallocate(anni_fmat)
+     if(allocated(fmat))   deallocate(fmat)
      if(allocated(occu))    deallocate(occu)
   
      return
