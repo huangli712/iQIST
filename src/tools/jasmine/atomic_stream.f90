@@ -432,10 +432,6 @@
   
      implicit none
   
-! external variables
-! function used to calculate combination number
-     integer, external :: atomic_make_combination
-  
 ! local variables
 ! loop index
      integer :: i, j, k
@@ -454,7 +450,7 @@
   
 ! it is a number of combination C_{norbs}^{i}
      do i=0,norbs
-         dim_sub_n(i) = atomic_make_combination(i, norbs)
+         call s_combination(i, norbs, dim_sub_n(i))
      enddo 
   
 ! construct decimal form and index of Fock basis

@@ -1,6 +1,6 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_make_combination
+!!! program : 
 !!!           atomic_check_realmat
 !!!           atomic_mat_2nospin
 !!!           atomic_mat_2spin
@@ -28,57 +28,6 @@
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
-
-!!>>> atomic_make_combination: calculate combination algebra 
-  function atomic_make_combination(ntiny, nlarg) result(value)
-     use constants, only : dp
-
-     implicit none
-  
-! external variables
-! the small number
-     integer, intent(in) :: ntiny
-
-! the large number
-     integer, intent(in) :: nlarg
- 
-! result value of the combination algebra
-     integer :: value
-  
-! local variables
-! loop index
-     integer :: i
-
-! auxiliary integer variable
-     integer :: nlow
-
-! numberator of the combination algebra
-     real(dp) :: numer
-
-! denominator of the combination algebra
-     real(dp) :: denom
-
- 
-! find the minimum number 
-     nlow = min(ntiny, nlarg-ntiny)
-  
-! numerator in combination algebra
-     numer = 1.0_dp
-     do i=nlarg-nlow+1,nlarg
-        numer = numer * dble(i)
-     enddo 
-  
-! denominator in combination algebra
-     denom = 1.0_dp
-     do i=1,nlow
-        denom = denom * dble(i)
-     enddo 
-  
-! result value
-     value = nint(numer / denom)
-  
-     return
-  end function atomic_make_combination
 
 !!>>> atomic_check_realmat: check whether a matrix is real
   subroutine atomic_check_realmat(ndim, mat, lreal)
