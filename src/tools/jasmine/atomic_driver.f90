@@ -73,15 +73,15 @@
 ! write eigenvalues of hmat to file 'atom.eigval.dat'
      write(mystd, "(2X,a)") "jasmine >>> write eigenvalue, eigenvector, and atom.cix to files ..."
      write(mystd,*)
-     call atomic_write_eigval_fullspace()
+     call atomic_dump_feigval()
   
 ! write eigenvectors of hmat to file 'atom.eigvec.dat'
-     call atomic_write_eigvec_fullspace()
+     call atomic_dump_feigvec()
    
 ! write eigenvalue of hmat, occupany number of eigenstates and 
 ! fmat of annihilation fermion operators to file "atom.cix"
 ! this is for begonia, lavender codes of iQIST package
-     call atomic_write_atomcix_fullspace()
+     call atomic_dump_fcix()
   
 ! deallocate memory
      write(mystd, "(2X,a)") "jasmine >>> free memory of global variables for fullspace case ... "
@@ -140,13 +140,13 @@
      write(mystd, "(2X,a)") "jasmine >>> write eigenvalue, eigenvector, and atom.cix to files ... "
      write(mystd,*)
 ! write eigenvalues to file 'atom.eigval.dat'
-     call atomic_write_eigval_sectors()
+     call atomic_dump_seigval()
   
 ! write eigenvectors to file 'atom.eigvec.dat'
-     call atomic_write_eigvec_sectors()
+     call atomic_dump_seigvec()
   
 ! write information of sectors to file 'atom.cix'
-     call atomic_write_atomcix_sectors()
+     call atomic_dump_scix()
 
 ! free memory
      write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."

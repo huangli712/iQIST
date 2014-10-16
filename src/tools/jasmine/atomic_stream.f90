@@ -475,14 +475,14 @@
      implicit none
   
      if (nband == 3) then
-         call atomic_make_soc3(socmat)
+         call atomic_make_socmat3(socmat)
 ! for 3 bands system, there is a minus sign
          socmat = -socmat * lambda / two
      elseif(nband == 5) then
-         call atomic_make_soc5(socmat)
+         call atomic_make_socmat5(socmat)
          socmat = socmat * lambda / two
      elseif(nband == 7) then
-         call atomic_make_soc7(socmat)
+         call atomic_make_socmat7(socmat)
          socmat = socmat * lambda / two
      else
          call s_print_error('atomic_make_soc', 'not implementd!')
@@ -533,7 +533,7 @@
      endif
   
 ! dump eimpmat for reference
-     call atomic_write_eimpmat()
+     call atomic_dump_eimp()
   
 ! we need transform Coulomb interaction U
 ! for non-soc case, the tran_umat is defined as from real orbital basis to natural basis

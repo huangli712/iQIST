@@ -1,14 +1,14 @@
 !!!-------------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_write_basis
-!!!           atomic_write_eimpmat
-!!!           atomic_write_eigval_fullspace
-!!!           atomic_write_eigvec_fullspace
-!!!           atomic_write_atomcix_fullspace
-!!!           atomic_write_eigval_sectors
-!!!           atomic_write_eigvec_sectors
-!!!           atomic_write_atomcix_sectors
-!!! source  : atomic_write.f90
+!!! program : atomic_dump_basis
+!!!           atomic_dump_eimp
+!!!           atomic_dump_feigval
+!!!           atomic_dump_feigvec
+!!!           atomic_dump_fcix
+!!!           atomic_dump_seigval
+!!!           atomic_dump_seigvec
+!!!           atomic_dump_scix
+!!! source  : atomic_dump.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
@@ -18,8 +18,8 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> atomic_write_basis: write basis of fullspace to file 'atom.basis.dat'
-  subroutine atomic_write_basis()
+!!>>> atomic_dump_basis: write basis of fullspace to file 'atom.basis.dat'
+  subroutine atomic_dump_basis()
      use constants, only : mytmp
      use control, only : ncfgs
      use m_basis_fullspace, only : dec_basis, index_basis, bin_basis
@@ -40,10 +40,10 @@
      close(mytmp)
   
      return
-  end subroutine atomic_write_basis
+  end subroutine atomic_dump_basis
 
-!!>>> atomic_write_eimpmat: write on-site impurity energy on natural basis 
-  subroutine atomic_write_eimpmat()
+!!>>> atomic_dump_eimp: write on-site impurity energy on natural basis 
+  subroutine atomic_dump_eimp()
      use constants, only : mytmp
      use control, only : nband, norbs, isoc
 
@@ -71,11 +71,11 @@
      close(mytmp)
   
      return
-  end subroutine atomic_write_eimpmat
+  end subroutine atomic_dump_eimp
 
-!!>>> atomic_write_eigval_fullspace: write eigenvalue of fullspace 
+!!>>> atomic_dump_feigval: write eigenvalue of fullspace 
 !!>>> to file 'atom.eigval.dat'
-  subroutine atomic_write_eigval_fullspace()
+  subroutine atomic_dump_feigval()
      use constants, only : mytmp
      use control, only : ncfgs
      use m_glob_fullspace, only : hmat_eigval, occu_mat
@@ -94,11 +94,11 @@
      close(mytmp)
   
      return
-  end subroutine atomic_write_eigval_fullspace
+  end subroutine atomic_dump_feigval
 
-!!>>> atomic_write_eigvec_fullspace: write eigenvector of 
+!!>>> atomic_dump_feigvec: write eigenvector of 
 !!>>> fullspace to file 'atom.eigvec.dat'
-  subroutine atomic_write_eigvec_fullspace()
+  subroutine atomic_dump_feigvec()
      use constants, only : mytmp, eps6
      use control, only : ncfgs
 
@@ -122,11 +122,11 @@
      close(mytmp)
   
      return
-  end subroutine atomic_write_eigvec_fullspace
+  end subroutine atomic_dump_feigvec
 
-!!>>> atomic_write_atomcix_fullspace: write atom.cix for CTQMC input
+!!>>> atomic_dump_fcix: write atom.cix for CTQMC input
 !!>>> for ictqmc == 1 case.
-  subroutine atomic_write_atomcix_fullspace()
+  subroutine atomic_dump_fcix()
      use constants, only : mytmp, zero
      use control, only : nband, norbs, ncfgs, isoc
 
@@ -173,11 +173,11 @@
      close(mytmp)
   
      return
-  end subroutine atomic_write_atomcix_fullspace
+  end subroutine atomic_dump_fcix
 
-!!>>> atomic_write_eigval_sectors: write eigenvalue of sectors 
+!!>>> atomic_dump_seigval: write eigenvalue of sectors 
 !!>>> to file 'atom.eigval.dat'
-  subroutine atomic_write_eigval_sectors()
+  subroutine atomic_dump_seigval()
      use constants, only : mytmp
 
      use m_glob_sectors, only : nsectors, sectors
@@ -202,11 +202,11 @@
      close(mytmp)
   
      return
-  end subroutine atomic_write_eigval_sectors
+  end subroutine atomic_dump_seigval
 
-!!>>> atomic_write_eigvec_sectors: write eigenvector of sectors 
+!!>>> atomic_dump_seigvec: write eigenvector of sectors 
 !!>>> to file 'atom.eigval.dat'
-  subroutine atomic_write_eigvec_sectors()
+  subroutine atomic_dump_seigvec()
      use constants, only : mytmp, eps6
 
      use m_basis_fullspace, only : bin_basis
@@ -234,11 +234,11 @@
      close(mytmp)
   
      return
-  end subroutine atomic_write_eigvec_sectors
+  end subroutine atomic_dump_seigvec
 
-!!>>> atomic_write_atomcix_sectors: write atom.cix for CTQMC input, 
+!!>>> atomic_dump_scix: write atom.cix for CTQMC input, 
 !!>>> for good quantum numbers (GQNs) algorithm
-  subroutine atomic_write_atomcix_sectors()
+  subroutine atomic_dump_scix()
      use constants, only : mytmp
      use control, only : Uc, Uv, Jz, Js, Jp, Ud, JH, F0, F2, F4, F6, icu, isoc
 
@@ -321,7 +321,7 @@
      close(mytmp)
   
      return
-  end subroutine atomic_write_atomcix_sectors
+  end subroutine atomic_dump_scix
 
 !!>>> atomic_write_natural: write the transformation matrix 
 !!>>> from the original basis to natural basis

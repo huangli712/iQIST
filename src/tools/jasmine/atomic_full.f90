@@ -289,7 +289,7 @@
      enddo 
   
 ! dump Fock basis to file "atom.basis.dat" for reference
-     call atomic_write_basis()
+     call atomic_dump_basis()
   
      return
   end subroutine atomic_mkbasis_fullspace

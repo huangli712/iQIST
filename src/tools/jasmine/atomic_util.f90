@@ -9,9 +9,9 @@
 !!!           atomic_make_cumatK
 !!!           atomic_make_cumatS
 !!!           atomic_tran_cumat
-!!!           atomic_make_soc3
-!!!           atomic_make_soc5
-!!!           atomic_make_soc7
+!!!           atomic_make_socmat3
+!!!           atomic_make_socmat5
+!!!           atomic_make_socmat7
 !!!           atomic_make_tmat_c2r
 !!!           atomic_make_tmat_r2c
 !!!           atomic_make_tmat_c2j
@@ -554,8 +554,8 @@
      return
   end subroutine atomic_tran_cumat
 
-!>>> atomic_make_soc3: make spin-orbit coupling matrix for 3 bands
-  subroutine atomic_make_soc3(socmat)
+!>>> atomic_make_socmat3: make spin-orbit coupling matrix for 3 bands
+  subroutine atomic_make_socmat3(socmat)
      use constants, only : dp
 
      implicit none
@@ -582,10 +582,10 @@
      socmat(6,6) = -1.0_dp
   
      return
-  end subroutine atomic_make_soc3
+  end subroutine atomic_make_socmat3
 
-!!>>> atomic_make_soc5: make spin-orbit coupling matrix for 5 bands
-  subroutine atomic_make_soc5(socmat)
+!!>>> atomic_make_socmat5: make spin-orbit coupling matrix for 5 bands
+  subroutine atomic_make_socmat5(socmat)
      use constants, only : dp
 
      implicit none
@@ -620,10 +620,10 @@
      socmat(10,10)= -2.0_dp
   
      return 
-  end subroutine atomic_make_soc5
+  end subroutine atomic_make_socmat5
 
-!!>>> atomic_make_soc7: make spin-orbit coupling matrix for 7 bands
-  subroutine atomic_make_soc7(socmat)
+!!>>> atomic_make_socmat7: make spin-orbit coupling matrix for 7 bands
+  subroutine atomic_make_socmat7(socmat)
      use constants, only : dp
 
      implicit none
@@ -668,7 +668,7 @@
      socmat(14,14) =  -3.0_dp
   
      return
-  end subroutine atomic_make_soc7
+  end subroutine atomic_make_socmat7
 
 !!>>> atomic_make_tmat_c2r: make transformation matrix from 
 !!>>> complex orbital basis to real orbital 
