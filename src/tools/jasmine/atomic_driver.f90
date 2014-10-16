@@ -118,7 +118,7 @@
      write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
      write(mystd,*)
      do i=1, nsectors 
-         if ( any( abs( aimag(sectors(i)%myham) ) > eps6 ) ) then
+         if ( any( abs( aimag(sectors(i)%ham) ) > eps6 ) ) then
              call s_print_error('atomic_solve_sectors', 'hmat is not real !')
          endif
      enddo

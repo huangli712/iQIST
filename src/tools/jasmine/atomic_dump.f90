@@ -314,7 +314,7 @@
              else 
                  s_order = j
              endif 
-             write(mytmp, "(2X, 3I10)") j, sectors(i)%next_sector(s_order,0), sectors(i)%next_sector(s_order,1)  
+             write(mytmp, "(2X, 3I10)") j, sectors(i)%next(s_order,0), sectors(i)%next(s_order,1)  
          enddo
   
 ! write eigeanvalue
@@ -339,7 +339,7 @@
                  s_order = j
              endif 
              do k=0,1
-                 ii = sectors(i)%next_sector(s_order,k)
+                 ii = sectors(i)%next(s_order,k)
                  if (ii == -1) cycle 
                  write(mytmp)  sectors(i)%fmat(s_order,k)%item(:,:)
              enddo  ! over k={0,1} loop

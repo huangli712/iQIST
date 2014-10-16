@@ -183,7 +183,7 @@
 ! the next sector it points to when a fermion operator acts on this sector
 ! -1: outside of the Hilbert space, otherwise, it is the index of next sector
 ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-         integer, pointer :: next_sector(:,:)
+         integer, pointer :: next(:,:)
 
 ! the fmat between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
@@ -276,7 +276,7 @@
      nullify( one_sector%ham )
      nullify( one_sector%eigval )
      nullify( one_sector%eigvec )
-     nullify( one_sector%next_sector )
+     nullify( one_sector%next )
      nullify( one_sector%fmat )
   
      return
@@ -296,7 +296,7 @@
      allocate( one_sector%ham(one_sector%ndim, one_sector%ndim),    stat=istat ) 
      allocate( one_sector%eigval(one_sector%ndim),                  stat=istat )
      allocate( one_sector%eigvec(one_sector%ndim, one_sector%ndim), stat=istat ) 
-     allocate( one_sector%next_sector(one_sector%nops,0:1),           stat=istat )
+     allocate( one_sector%next(one_sector%nops,0:1),           stat=istat )
      allocate( one_sector%fmat(one_sector%nops,0:1),                stat=istat )
   
 ! check status
@@ -309,7 +309,7 @@
      one_sector%ham = czero
      one_sector%eigval = zero
      one_sector%eigvec = zero
-     one_sector%next_sector = 0
+     one_sector%next = 0
   
 ! initialize myfmat one by one
      do i=1, one_sector%nops 
@@ -337,7 +337,7 @@
      if (associated(one_sector%ham))        deallocate(one_sector%ham)
      if (associated(one_sector%eigval))     deallocate(one_sector%eigval)
      if (associated(one_sector%eigvec))     deallocate(one_sector%eigvec)
-     if (associated(one_sector%next_sector))  deallocate(one_sector%next_sector)
+     if (associated(one_sector%next))  deallocate(one_sector%next)
   
 ! deallocate myfmat one by one
      do i=1, one_sector%nops

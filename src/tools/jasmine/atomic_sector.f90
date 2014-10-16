@@ -46,7 +46,7 @@
          do iorb=1,norbs
 ! loop over the creation and annihilation fermion operators
              do ifermi=0, 1 
-                 jsect = sectors(isect)%next_sector(iorb, ifermi) 
+                 jsect = sectors(isect)%next(iorb, ifermi) 
                  if (jsect == -1) cycle
 ! allocate memory for fmat
                  sectors(isect)%fmat(iorb, ifermi)%n = sectors(jsect)%ndim
@@ -667,7 +667,7 @@
                              enddo 
                      end select ! back select case(ictqmc) block
                  endif  ! back to if (can == .true.) block
-                 sectors(i)%next_sector(j,k) = which_sect 
+                 sectors(i)%next(j,k) = which_sect 
              enddo ! over k={0,1} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1, nsectors} loop
