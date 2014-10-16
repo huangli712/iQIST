@@ -18,6 +18,30 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
+!!!-------------------------------------------------------------------------
+!!! project : jasmine
+!!! program : m_basis_fullspace  module
+!!!           m_spmat            module
+!!!           m_glob_fullspace   module
+!!!           m_glob_sectors     module
+!!!           m_basis_fullspace@alloc_m_basis_fullspace
+!!!           m_basis_fullspace@dealloc_m_basis_fullspace
+!!!           m_spmat@alloc_m_spmat
+!!!           m_spmat@dealloc_m_spmat
+!!!           m_glob_fullspace@alloc_m_glob_fullspace
+!!!           m_glob_fullspace@dealloc_m_glob_fullspace
+!!!           m_glob_sectors@alloc_m_glob_sectors
+!!!           m_glob_sectors@dealloc_m_glob_sectors
+!!! source  : mod_global.f90
+!!! type    : modules 
+!!! authors : yilin wang (email: qhwyl2006@126.com)
+!!! history : 07/09/2014 by yilin wang
+!!!           08/22/2014 by yilin wang
+!!! purpose : global variables
+!!! status  : unstable
+!!! comment :
+!!!-------------------------------------------------------------------------
+
 !!>>> data structure for good quantum numbers (GQNs) algorithm
   module m_sector
      use constants, only : dp, zero, czero
@@ -217,29 +241,7 @@
 
 
 
-!!!-------------------------------------------------------------------------
-!!! project : jasmine
-!!! program : m_basis_fullspace  module
-!!!           m_spmat            module
-!!!           m_glob_fullspace   module
-!!!           m_glob_sectors     module
-!!!           m_basis_fullspace@alloc_m_basis_fullspace
-!!!           m_basis_fullspace@dealloc_m_basis_fullspace
-!!!           m_spmat@alloc_m_spmat
-!!!           m_spmat@dealloc_m_spmat
-!!!           m_glob_fullspace@alloc_m_glob_fullspace
-!!!           m_glob_fullspace@dealloc_m_glob_fullspace
-!!!           m_glob_sectors@alloc_m_glob_sectors
-!!!           m_glob_sectors@dealloc_m_glob_sectors
-!!! source  : mod_global.f90
-!!! type    : modules 
-!!! authors : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!! purpose : global variables
-!!! status  : unstable
-!!! comment :
-!!!-------------------------------------------------------------------------
+
 
 !!>>> Fock basis of full Hilbert space
   module m_basis_fullspace
