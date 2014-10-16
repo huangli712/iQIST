@@ -383,17 +383,17 @@
 ! make an atomic on-site SOC, $\lambda * L * S$
 ! it is defined on the complex orbital basis
              if (nband == 3) then
-                 call atomic_make_socmat3(smat)
+                 call atomic_make_smat3(smat)
                  ! for 3 bands system, there is a minus sign
                  smat = -smat * lambda / two
              elseif(nband == 5) then
-                 call atomic_make_socmat5(smat)
+                 call atomic_make_smat5(smat)
                  smat = smat * lambda / two
              elseif(nband == 7) then
-                 call atomic_make_socmat7(smat)
+                 call atomic_make_smat7(smat)
                  smat = smat * lambda / two
              else
-                 call s_print_error('atomic_make_soc', 'not implementd!')
+                 call s_print_error('atomic_make_spmat', 'not implementd!')
              endif
          else
              smat = czero
@@ -415,11 +415,11 @@
      if (icu == 1) then
 ! Kanamori parameters type
 ! it is defined on real orbital basis 
-         call atomic_make_cumatK()
+         call atomic_make_umatK()
      else
 ! Slater-Cordon parameters type
 ! it is defined on complex orbital basis
-         call atomic_make_cumatS()
+         call atomic_make_umatS()
      endif
   
      return
@@ -530,25 +530,25 @@
 ! for non-soc case, the tran_umat is defined as from real orbital basis to natural basis
      if (isoc==0) then
 ! for Slater-Cordon parameters Coulomb interaction U
-! we first need to transfrom cumat from complex orbital basis to real orbital basis
+! we first need to transfrom umat from complex orbital basis to real orbital basis
          if ( icu == 2 ) then
              call atomic_make_tmat_c2r( umat_c2r )
-             call atomic_tran_cumat( umat_c2r, umat, tmp_mat )
+             call atomic_tran_umat( umat_c2r, umat, tmp_mat )
              umat = tmp_mat
          endif
 ! for soc case, the tran_umat is defined as from complex orbital basis to natural basis
      else
 ! for Kanamori parameters Coulomb interaction U
-! we first need to transfrom cumat from real orbital basis to complex orbital basis
+! we first need to transfrom umat from real orbital basis to complex orbital basis
          if ( icu == 1 ) then
              call atomic_make_tmat_r2c( umat_r2c )
-             call atomic_tran_cumat( umat_r2c, umat, tmp_mat )
+             call atomic_tran_umat( umat_r2c, umat, tmp_mat )
              umat = tmp_mat
          endif
      endif
   
-! finally, transform cumat to natural basis
-     call atomic_tran_cumat(tmat, umat, tmp_mat) 
+! finally, transform umat to natural basis
+     call atomic_tran_umat(tmat, umat, tmp_mat) 
      umat = tmp_mat
   
      return

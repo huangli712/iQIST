@@ -1,4 +1,4 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_make_cdagger
 !!!           atomic_make_c
@@ -6,15 +6,15 @@
 !!!           atomic_make_gjz
 !!!           atomic_make_gaunt5
 !!!           atomic_make_gaunt7
-!!!           atomic_make_cumatK
-!!!           atomic_make_cumatS
-!!!           atomic_make_socmat3
-!!!           atomic_make_socmat5
-!!!           atomic_make_socmat7
+!!!           atomic_make_umatK
+!!!           atomic_make_umatS
+!!!           atomic_make_smat3
+!!!           atomic_make_smat5
+!!!           atomic_make_smat7
 !!!           atomic_make_tmat_c2r
 !!!           atomic_make_tmat_r2c
 !!!           atomic_make_tmat_c2j
-!!!           atomic_tran_cumat
+!!!           atomic_tran_umat
 !!!           atomic_tran_repr_cmpl
 !!!           atomic_tran_repr_real
 !!! source  : atomic_gaunt.f90
@@ -27,7 +27,7 @@
 !!!           representation
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
 !!>>> atomic_make_cdagger: create one electron on ipos 
 !!>>> of |jold> to deduce |jnew>
@@ -322,9 +322,9 @@
      return
   end subroutine atomic_make_gaunt7
 
-!!>>> atomic_make_cumatK: make Coulomb interaction U according to
+!!>>> atomic_make_umatK: make Coulomb interaction U according to
 !!>>> Kanamori parameterized Hamiltonian
-  subroutine atomic_make_cumatK()
+  subroutine atomic_make_umatK()
      use constants, only : dp, czero, zero
      use control, only : norbs, Uc, Uv, Jz, Js, Jp
 
@@ -346,7 +346,7 @@
 ! dummy variables
      real(dp) :: dtmp
   
-! initialize cumat to zero
+! initialize umat to zero
      umat = czero
   
 ! loop for creation operators
@@ -406,11 +406,11 @@
      enddo alphaloop ! over alpha={1,norbs-1} loop
   
      return
-  end subroutine atomic_make_cumatK
+  end subroutine atomic_make_umatK
 
-!!>>> atomic_make_cumatS: make Coulomb interation U, according to 
+!!>>> atomic_make_umatS: make Coulomb interation U, according to 
 !!>>> Slater-Cordon parameterized Hamiltonian
-  subroutine atomic_make_cumatS()
+  subroutine atomic_make_umatS()
      use constants, only : dp, zero, half
      use control, only : nband, norbs, F0, F2, F4, F6
      use m_spmat, only : umat
@@ -461,7 +461,7 @@
          allocate(gaunt(-l:l, -l:l, 0:2*l))
          call atomic_make_gaunt7(gaunt)
      else
-         call s_print_error('atomic_make_cumat_slater', 'not implemented for this nband!')
+         call s_print_error('atomic_make_umatS', 'not implemented for this nband!')
      endif
   
 ! make Coulomb interaction U matrix
@@ -502,10 +502,10 @@
      if (allocated(gaunt))         deallocate(gaunt)
   
      return
-  end subroutine atomic_make_cumatS
+  end subroutine atomic_make_umatS
 
-!>>> atomic_make_socmat3: make spin-orbit coupling matrix for 3 bands
-  subroutine atomic_make_socmat3(socmat)
+!>>> atomic_make_smat3: make spin-orbit coupling matrix for 3 bands
+  subroutine atomic_make_smat3(socmat)
      use constants, only : dp
 
      implicit none
@@ -532,10 +532,10 @@
      socmat(6,6) = -1.0_dp
   
      return
-  end subroutine atomic_make_socmat3
+  end subroutine atomic_make_smat3
 
-!!>>> atomic_make_socmat5: make spin-orbit coupling matrix for 5 bands
-  subroutine atomic_make_socmat5(socmat)
+!!>>> atomic_make_smat5: make spin-orbit coupling matrix for 5 bands
+  subroutine atomic_make_smat5(socmat)
      use constants, only : dp
 
      implicit none
@@ -570,10 +570,10 @@
      socmat(10,10)= -2.0_dp
   
      return 
-  end subroutine atomic_make_socmat5
+  end subroutine atomic_make_smat5
 
-!!>>> atomic_make_socmat7: make spin-orbit coupling matrix for 7 bands
-  subroutine atomic_make_socmat7(socmat)
+!!>>> atomic_make_smat7: make spin-orbit coupling matrix for 7 bands
+  subroutine atomic_make_smat7(socmat)
      use constants, only : dp
 
      implicit none
@@ -618,7 +618,7 @@
      socmat(14,14) =  -3.0_dp
   
      return
-  end subroutine atomic_make_socmat7
+  end subroutine atomic_make_smat7
 
 !!>>> atomic_make_tmat_c2r: make transformation matrix from 
 !!>>> complex orbital basis to real orbital 
@@ -832,9 +832,9 @@
      return
   end subroutine atomic_make_tmat_c2j
 
-!!>>> atomic_tran_cumat: transform Coulomb interaction U tensor 
+!!>>> atomic_tran_umat: transform Coulomb interaction U tensor 
 !!>>> from one representation to another representation
-  subroutine atomic_tran_cumat(amtrx, cumat, cumat_t)
+  subroutine atomic_tran_umat(amtrx, umat, umat_t)
      use constants, only : dp, czero, epst
      use control, only : norbs
   
@@ -844,10 +844,10 @@
      complex(dp), intent(in) :: amtrx(norbs, norbs)
 
 ! coefficents matrix for generalized interaction U in orginal basis
-     complex(dp), intent(in) :: cumat(norbs, norbs, norbs, norbs)
+     complex(dp), intent(in) :: umat(norbs, norbs, norbs, norbs)
 
 ! coefficents matrix for generalized interaction U in natural basis
-     complex(dp), intent(out) :: cumat_t(norbs, norbs, norbs, norbs)
+     complex(dp), intent(out) :: umat_t(norbs, norbs, norbs, norbs)
   
 ! local varoables
 ! loop index over orbits in orginal single particle basis
@@ -859,8 +859,8 @@
 ! auxiliary complex(dp) variables
      complex(dp) :: ctmp
   
-! initialize cumat_t to be zero
-     cumat_t = czero 
+! initialize umat_t to be zero
+     umat_t = czero 
   
      sigma1loop: do sigma1=1,norbs
      sigma2loop: do sigma2=1,norbs
@@ -872,8 +872,8 @@
          alpha2loop: do alpha2=1,norbs
          alpha3loop: do alpha3=1,norbs
          alpha4loop: do alpha4=1,norbs
-             if (abs(cumat(alpha1, alpha2, alpha3, alpha4)) .lt. epst) cycle
-             ctmp = ctmp + cumat(alpha1, alpha2, alpha3, alpha4)          &
+             if (abs(umat(alpha1, alpha2, alpha3, alpha4)) .lt. epst) cycle
+             ctmp = ctmp + umat(alpha1, alpha2, alpha3, alpha4)          &
                   * conjg(amtrx(alpha1, sigma1)) * amtrx(alpha3, sigma3)  &
                   * conjg(amtrx(alpha2, sigma2)) * amtrx(alpha4, sigma4)
          enddo alpha4loop ! over alpha4={1,norbs} loop
@@ -881,14 +881,14 @@
          enddo alpha2loop ! over alpha2={1,norbs} loop
          enddo alpha1loop ! over alpha1={1,norbs} loop
   
-         cumat_t(sigma1, sigma2, sigma3, sigma4) = ctmp
+         umat_t(sigma1, sigma2, sigma3, sigma4) = ctmp
      enddo sigma4loop ! over sigma4={1,norbs} loop
      enddo sigma3loop ! over sigma3={1,norbs} loop
      enddo sigma2loop ! over sigma2={1,norbs} loop
      enddo sigma1loop ! over sigma1={1,norbs} loop
   
      return
-  end subroutine atomic_tran_cumat
+  end subroutine atomic_tran_umat
 
 !!>>> atomic_tran_repr_cmpl: transformation from one representation 
 !!>>> to another representation, complex version
