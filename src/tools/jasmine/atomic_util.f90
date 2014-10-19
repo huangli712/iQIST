@@ -126,7 +126,7 @@
 
      do i=1,norbs
          if (mod(i,2) /= 0 ) then
-             good_sz(i) = 1
+             good_sz(i) = +1
          else
              good_sz(i) = -1
          endif ! back if (mod(i,2) /= 0 ) block
@@ -193,62 +193,64 @@
 !!>>> atomic_make_gaunt5: build gaunt coefficients for 5 band case
   subroutine atomic_make_gaunt5(gaunt)
      use constants, only : dp, zero, one
-     
+
 ! external variables
+! gaunt coefficients
      real(dp), intent(out) :: gaunt(-2:2, -2:2, 0:4)
-  
+
      gaunt = zero
-  
+
      gaunt(-2, -2, 0) = one
      gaunt(-1, -1, 0) = one
      gaunt(0,   0, 0) = one
      gaunt(1,   1, 0) = one
      gaunt(2,   2, 0) = one
-  
-     gaunt(-2, -2, 2) = -sqrt(4.0_dp/49.0_dp) 
-     gaunt(-2, -1, 2) =  sqrt(6.0_dp/49.0_dp);   gaunt(-1, -2, 2) = gaunt(-2, -1, 2) * (-1)**(-2+1) 
-     gaunt(-2,  0, 2) = -sqrt(4.0_dp/49.0_dp);   gaunt(0,  -2, 2) = gaunt(-2,  0, 2) * (-1)**(-2-0)
+
+     gaunt(-2, -2, 2) = -sqrt(4.0_dp/49.0_dp)
+     gaunt(-2, -1, 2) =  sqrt(6.0_dp/49.0_dp);   gaunt(-1, -2, 2) = gaunt(-2, -1, 2) * (-1)**(-2+1)
+     gaunt(-2,  0, 2) = -sqrt(4.0_dp/49.0_dp);   gaunt( 0, -2, 2) = gaunt(-2,  0, 2) * (-1)**(-2-0)
      gaunt(-1, -1, 2) =  sqrt(1.0_dp/49.0_dp)
-     gaunt(-1,  0, 2) =  sqrt(1.0_dp/49.0_dp);   gaunt(0,  -1, 2) = gaunt(-1,  0, 2) * (-1)**(-1-0)
-     gaunt(-1,  1, 2) = -sqrt(6.0_dp/49.0_dp);   gaunt(1,  -1, 2) = gaunt(-1,  1, 2) * (-1)**(-1-1)
-     gaunt(0,   0, 2) =  sqrt(4.0_dp/49.0_dp)
-     gaunt(1,  -1, 2) = -sqrt(6.0_dp/49.0_dp);   gaunt(-1,  1, 2) = gaunt(1,  -1, 2) * (-1)**(1+1)
-     gaunt(1,   0, 2) =  sqrt(1.0_dp/49.0_dp);   gaunt(0,   1, 2) = gaunt(1,   0, 2) * (-1)**(1-0)
-     gaunt(1,   1, 2) =  sqrt(1.0_dp/49.0_dp)
-     gaunt(2,   0, 2) = -sqrt(4.0_dp/49.0_dp);   gaunt(0,   2, 2) = gaunt(2,   0, 2) * (-1)**(2-0)
-     gaunt(2,   1, 2) =  sqrt(6.0_dp/49.0_dp);   gaunt(1,   2, 2) = gaunt(2,   1, 2) * (-1)**(2-1)
-     gaunt(2,   2, 2) = -sqrt(4.0_dp/49.0_dp)
-     
+     gaunt(-1,  0, 2) =  sqrt(1.0_dp/49.0_dp);   gaunt( 0, -1, 2) = gaunt(-1,  0, 2) * (-1)**(-1-0)
+     gaunt(-1,  1, 2) = -sqrt(6.0_dp/49.0_dp);   gaunt( 1, -1, 2) = gaunt(-1,  1, 2) * (-1)**(-1-1)
+     gaunt( 0,  0, 2) =  sqrt(4.0_dp/49.0_dp)
+     gaunt( 1, -1, 2) = -sqrt(6.0_dp/49.0_dp);   gaunt(-1,  1, 2) = gaunt( 1, -1, 2) * (-1)**( 1+1)
+     gaunt( 1,  0, 2) =  sqrt(1.0_dp/49.0_dp);   gaunt( 0,  1, 2) = gaunt( 1,  0, 2) * (-1)**( 1-0)
+     gaunt( 1,  1, 2) =  sqrt(1.0_dp/49.0_dp)
+     gaunt( 2,  0, 2) = -sqrt(4.0_dp/49.0_dp);   gaunt( 0,  2, 2) = gaunt( 2,  0, 2) * (-1)**( 2-0)
+     gaunt( 2,  1, 2) =  sqrt(6.0_dp/49.0_dp);   gaunt( 1,  2, 2) = gaunt( 2,  1, 2) * (-1)**( 2-1)
+     gaunt( 2,  2, 2) = -sqrt(4.0_dp/49.0_dp)
+
      gaunt(-2, -2, 4) =  sqrt( 1.0_dp/441.0_dp)
      gaunt(-2, -1, 4) = -sqrt( 5.0_dp/441.0_dp); gaunt(-1, -2, 4) = gaunt(-2, -1, 4) * (-1)**(-2+1)
-     gaunt(-2,  0, 4) =  sqrt(15.0_dp/441.0_dp); gaunt(0,  -2, 4) = gaunt(-2,  0, 4) * (-1)**(-2-0)
-     gaunt(-2,  1, 4) = -sqrt(35.0_dp/441.0_dp); gaunt(1,  -2, 4) = gaunt(-2,  1, 4) * (-1)**(-2-1)
-     gaunt(-2,  2, 4) =  sqrt(70.0_dp/441.0_dp); gaunt(2,  -2, 4) = gaunt(-2,  2, 4) * (-1)**(-2-2)
+     gaunt(-2,  0, 4) =  sqrt(15.0_dp/441.0_dp); gaunt( 0, -2, 4) = gaunt(-2,  0, 4) * (-1)**(-2-0)
+     gaunt(-2,  1, 4) = -sqrt(35.0_dp/441.0_dp); gaunt( 1, -2, 4) = gaunt(-2,  1, 4) * (-1)**(-2-1)
+     gaunt(-2,  2, 4) =  sqrt(70.0_dp/441.0_dp); gaunt( 2, -2, 4) = gaunt(-2,  2, 4) * (-1)**(-2-2)
      gaunt(-1, -1, 4) = -sqrt(16.0_dp/441.0_dp)
-     gaunt(-1,  0, 4) =  sqrt(30.0_dp/441.0_dp); gaunt(0,  -1, 4) = gaunt(-1,  0, 4) * (-1)**(-1-0)
-     gaunt(-1,  1, 4) = -sqrt(40.0_dp/441.0_dp); gaunt(1,  -1, 4) = gaunt(-1,  1, 4) * (-1)**(-1-1)
+     gaunt(-1,  0, 4) =  sqrt(30.0_dp/441.0_dp); gaunt( 0, -1, 4) = gaunt(-1,  0, 4) * (-1)**(-1-0)
+     gaunt(-1,  1, 4) = -sqrt(40.0_dp/441.0_dp); gaunt( 1, -1, 4) = gaunt(-1,  1, 4) * (-1)**(-1-1)
      gaunt( 0,  0, 4) =  sqrt(36.0_dp/441.0_dp)
-     gaunt( 1,  0, 4) =  sqrt(30.0_dp/441.0_dp); gaunt(0,   1, 4) = gaunt(1,   0, 4) * (-1)**(1-0)
+     gaunt( 1,  0, 4) =  sqrt(30.0_dp/441.0_dp); gaunt( 0,  1, 4) = gaunt( 1,  0, 4) * (-1)**( 1-0)
      gaunt( 1,  1, 4) = -sqrt(16.0_dp/441.0_dp)
-     gaunt( 2, -1, 4) = -sqrt(35.0_dp/441.0_dp); gaunt(-1,  2, 4) = gaunt(2,  -1, 4) * (-1)**(2+1)
-     gaunt( 2,  0, 4) =  sqrt(15.0_dp/441.0_dp); gaunt( 0,  2, 4) = gaunt(2,   0, 4) * (-1)**(2-0)
-     gaunt( 2,  1, 4) = -sqrt( 5.0_dp/441.0_dp); gaunt( 1,  2, 4) = gaunt(2,   1, 4) * (-1)**(2-1)
+     gaunt( 2, -1, 4) = -sqrt(35.0_dp/441.0_dp); gaunt(-1,  2, 4) = gaunt( 2, -1, 4) * (-1)**( 2+1)
+     gaunt( 2,  0, 4) =  sqrt(15.0_dp/441.0_dp); gaunt( 0,  2, 4) = gaunt( 2,  0, 4) * (-1)**( 2-0)
+     gaunt( 2,  1, 4) = -sqrt( 5.0_dp/441.0_dp); gaunt( 1,  2, 4) = gaunt( 2,  1, 4) * (-1)**( 2-1)
      gaunt( 2,  2, 4) =  sqrt( 1.0_dp/441.0_dp)
-     
+
      return
   end subroutine atomic_make_gaunt5
 
 !!>>> atomic_make_gaunt7: build gaunt coefficients for 7 band case
   subroutine atomic_make_gaunt7(gaunt)
      use constants, only: dp, zero, one
-   
+
      implicit none
-  
+
 ! external variables
+! gaunt coefficients
      real(dp), intent(out) :: gaunt(-3:3, -3:3, 0:6)
 
      gaunt = zero
-  
+
      gaunt(-3, -3, 0) = one
      gaunt(-2, -2, 0) = one
      gaunt(-1, -1, 0) = one
@@ -256,7 +258,7 @@
      gaunt( 1,  1, 0) = one
      gaunt( 2,  2, 0) = one
      gaunt( 3,  3, 0) = one
-  
+
      gaunt(-3, -3, 2) = -sqrt(25.0_dp/225.0_dp)
      gaunt(-3, -2, 2) =  sqrt(25.0_dp/225.0_dp);  gaunt(-2, -3, 2) = gaunt(-3, -2, 2) * (-1.0)**(-3+2)
      gaunt(-3, -1, 2) = -sqrt(10.0_dp/225.0_dp);  gaunt(-1, -3, 2) = gaunt(-3, -1, 2) * (-1.0)**(-3+1)
@@ -273,7 +275,7 @@
      gaunt( 3,  1, 2) = -sqrt(10.0_dp/225.0_dp);  gaunt( 1,  3, 2) = gaunt( 3,  1, 2) * (-1.0)**( 3-1)
      gaunt( 3,  2, 2) =  sqrt(25.0_dp/225.0_dp);  gaunt( 2,  3, 2) = gaunt( 3,  2, 2) * (-1.0)**( 3-2)
      gaunt( 3,  3, 2) = -sqrt(25.0_dp/225.0_dp)
-  
+
      gaunt(-3, -3, 4) =  sqrt( 9.0_dp/1089.0_dp)
      gaunt(-3, -2, 4) = -sqrt(30.0_dp/1089.0_dp); gaunt(-2, -3, 4) = gaunt(-3, -2, 4) * (-1.0)**(-3+2)
      gaunt(-3, -1, 4) =  sqrt(54.0_dp/1089.0_dp); gaunt(-1, -3, 4) = gaunt(-3, -1, 4) * (-1.0)**(-3+1)
@@ -299,7 +301,7 @@
      gaunt( 3,  1, 4) =  sqrt(54.0_dp/1089.0_dp); gaunt( 1,  3, 4) = gaunt( 3,  1, 4) * (-1.0)**( 3-1)
      gaunt( 3,  2, 4) = -sqrt(30.0_dp/1089.0_dp); gaunt( 2,  3, 4) = gaunt( 3,  2, 4) * (-1.0)**( 3-2)
      gaunt( 3,  3, 4) =  sqrt( 9.0_dp/1089.0_dp)
-  
+
      gaunt(-3, -3, 6) = -sqrt(   25.0_dp/184041_dp)
      gaunt(-3, -2, 6) =  sqrt(  175.0_dp/184041_dp); gaunt(-2, -3, 6) = gaunt(-3, -2, 6) * (-1.0)**(-3+2)
      gaunt(-3, -1, 6) = -sqrt(  700.0_dp/184041_dp); gaunt(-1, -3, 6) = gaunt(-3, -1, 6) * (-1.0)**(-3+1)
@@ -332,89 +334,94 @@
      return
   end subroutine atomic_make_gaunt7
 
-!!>>> atomic_make_umatK: make Coulomb interaction U according to
-!!>>> Kanamori parameterized Hamiltonian
-  subroutine atomic_make_umatK()
-     use constants, only : dp, czero, zero
-     use control, only : norbs, Uc, Uv, Jz, Js, Jp
+!!========================================================================
+!!>>> determine Coulomb interaction matrix                             <<<
+!!========================================================================
 
+!!>>> atomic_make_umatK: make Coulomb interaction U according to Kanamori
+!!>>> parameterized Hamiltonian
+  subroutine atomic_make_umatK()
+     use constants, only : dp, zero, czero
+
+     use control, only : norbs
+     use control, only : Uc, Uv, Jz, Js, Jp
      use m_spmat, only : umat
-  
+
      implicit none
-  
+
 ! local varibales
 ! orbital index
      integer :: alpha, betta
      integer :: delta, gamma
 
 ! band index and spin index
-     integer :: aband, bband 
-     integer :: dband, gband 
-     integer :: aspin, bspin 
-     integer :: dspin, gspin 
+     integer :: aband, bband
+     integer :: dband, gband
+     integer :: aspin, bspin
+     integer :: dspin, gspin
 
 ! dummy variables
      real(dp) :: dtmp
-  
+
 ! initialize umat to zero
      umat = czero
-  
+
 ! loop for creation operators
      alphaloop: do alpha=1,norbs-1
-     bettaloop: do betta=alpha+1,norbs
-  
+         bettaloop: do betta=alpha+1,norbs
+
 ! loop for annihilation operators
-        gammaloop: do gamma=1,norbs-1
-        deltaloop: do delta=gamma+1,norbs
-            aband = (alpha+1)/2; aspin = mod(alpha,2)
-            bband = (betta+1)/2; bspin = mod(betta,2)
-            gband = (gamma+1)/2; gspin = mod(gamma,2)
-            dband = (delta+1)/2; dspin = mod(delta,2)
-  
-            dtmp = zero
-  
+             gammaloop: do gamma=1,norbs-1
+                 deltaloop: do delta=gamma+1,norbs
+                     aband = (alpha+1)/2; aspin = mod(alpha,2)
+                     bband = (betta+1)/2; bspin = mod(betta,2)
+                     gband = (gamma+1)/2; gspin = mod(gamma,2)
+                     dband = (delta+1)/2; dspin = mod(delta,2)
+
+                     dtmp = zero
+
 ! intraorbital Coulomb interaction
-            if ((alpha.eq.gamma) .and. (betta.eq.delta)) then
-                if ((aband.eq.bband) .and. (aspin.ne.bspin)) then
-                    dtmp = dtmp + Uc
-                endif
-            endif
-  
+                     if ((alpha.eq.gamma) .and. (betta.eq.delta)) then
+                         if ((aband.eq.bband) .and. (aspin.ne.bspin)) then
+                             dtmp = dtmp + Uc
+                         endif
+                     endif
+
 ! interorbital Coulomb interaction
-            if ((alpha.eq.gamma) .and. (betta.eq.delta)) then
-                if (aband .ne. bband) then
-                    dtmp = dtmp + Uv
-                endif
-            endif
-  
-! Hund's exchange interaction 
-            if ((alpha.eq.gamma) .and. (betta.eq.delta)) then
-                if ((aband.ne.bband) .and. (aspin.eq.bspin)) then
-                    dtmp = dtmp - Jz
-                endif
-            endif
-           
+                     if ((alpha.eq.gamma) .and. (betta.eq.delta)) then
+                         if (aband .ne. bband) then
+                             dtmp = dtmp + Uv
+                         endif
+                     endif
+
+! Hund's exchange interaction
+                     if ((alpha.eq.gamma) .and. (betta.eq.delta)) then
+                         if ((aband.ne.bband) .and. (aspin.eq.bspin)) then
+                             dtmp = dtmp - Jz
+                         endif
+                     endif
+
 ! spin flip term
-            if ((aband.eq.gband) .and. (bband.eq.dband)) then
-                if ((aspin.ne.gspin) .and. (bspin.ne.dspin) .and. (aspin.ne.bspin)) then
-                    dtmp = dtmp - Js
-                endif
-            endif
-          
+                     if ((aband.eq.gband) .and. (bband.eq.dband)) then
+                         if ((aspin.ne.gspin) .and. (bspin.ne.dspin) .and. (aspin.ne.bspin)) then
+                             dtmp = dtmp - Js
+                         endif
+                     endif
+
 ! pair hopping term
-            if ((aband.eq.bband) .and. (dband.eq.gband) .and. (aband.ne.dband)) then
-                if ((aspin.ne.bspin) .and. (dspin.ne.gspin) .and. (aspin.eq.gspin)) then
-                    dtmp = dtmp + Jp
-                endif
-            endif
-                 
-            umat(alpha, betta, delta, gamma) = dtmp
-  
-        enddo deltaloop ! over delta={gamma+1,norbs} loop
-        enddo gammaloop ! over gamma={1,norbs-1} loop
-     enddo bettaloop ! over betta={alpha+1,norbs} loop
+                     if ((aband.eq.bband) .and. (dband.eq.gband) .and. (aband.ne.dband)) then
+                         if ((aspin.ne.bspin) .and. (dspin.ne.gspin) .and. (aspin.eq.gspin)) then
+                             dtmp = dtmp + Jp
+                         endif
+                     endif
+
+                     umat(alpha, betta, delta, gamma) = dtmp
+
+                 enddo deltaloop ! over delta={gamma+1,norbs} loop
+             enddo gammaloop ! over gamma={1,norbs-1} loop
+         enddo bettaloop ! over betta={alpha+1,norbs} loop
      enddo alphaloop ! over alpha={1,norbs-1} loop
-  
+
      return
   end subroutine atomic_make_umatK
 
