@@ -351,14 +351,14 @@
 
 ! local varibales
 ! orbital index
-     integer :: alpha, betta
-     integer :: delta, gamma
+     integer  :: alpha, betta
+     integer  :: delta, gamma
 
 ! band index and spin index
-     integer :: aband, bband
-     integer :: dband, gband
-     integer :: aspin, bspin
-     integer :: dspin, gspin
+     integer  :: aband, bband
+     integer  :: dband, gband
+     integer  :: aspin, bspin
+     integer  :: dspin, gspin
 
 ! dummy variables
      real(dp) :: dtmp
@@ -425,99 +425,106 @@
      return
   end subroutine atomic_make_umatK
 
-!!>>> atomic_make_umatS: make Coulomb interation U, according to 
+!!>>> atomic_make_umatS: make Coulomb interation U, according to
 !!>>> Slater-Cordon parameterized Hamiltonian
   subroutine atomic_make_umatS()
      use constants, only : dp, zero, half
-     use control, only : nband, norbs, F0, F2, F4, F6
+
+     use control, only : nband, norbs
+     use control, only : F0, F2, F4, F6
      use m_spmat, only : umat
-  
+
      implicit none
   
 ! local variables
-! Slater-Cordon parameters
-     real(dp), allocatable :: slater_cordon(:)
-
-! gaunt coefficients
-     real(dp), allocatable :: gaunt(:,:,:)
-  
 ! orbital momentum quantum number
-     integer :: l
+     integer  :: l
 
 ! loop index
-     integer :: i
-     integer :: alpha, betta
-     integer :: delta, gamma
-     integer :: aband, aspin
-     integer :: bband, bspin
-     integer :: dband, dspin
-     integer :: gband, gspin
+     integer  :: i
+
+! orbital index
+     integer  :: alpha, betta
+     integer  :: delta, gamma
+
+! band index and spin index
+     integer  :: aband, aspin
+     integer  :: bband, bspin
+     integer  :: dband, dspin
+     integer  :: gband, gspin
 
 ! dummy variables
      real(dp) :: res
-  
-  
+
+! gaunt coefficients
+     real(dp), allocatable :: gaunt(:,:,:)
+
+! Slater-Cordon parameters
+     real(dp), allocatable :: slater_cordon(:)
+
 ! allocate memory for slater_cordon and gaunt and then build them
-     if (nband == 5) then
-         l = 2
-         allocate(slater_cordon(0:2*l))     
-         slater_cordon = zero
-         slater_cordon(0) = F0
-         slater_cordon(2) = F2
-         slater_cordon(4) = F4
-         allocate(gaunt(-l:l, -l:l, 0:2*l))
-         call atomic_make_gaunt5(gaunt) 
-     elseif(nband == 7) then
-         l = 3
-         allocate(slater_cordon(0:2*l))     
-         slater_cordon = zero
-         slater_cordon(0) = F0
-         slater_cordon(2) = F2
-         slater_cordon(4) = F4
-         slater_cordon(6) = F6
-         allocate(gaunt(-l:l, -l:l, 0:2*l))
-         call atomic_make_gaunt7(gaunt)
-     else
-         call s_print_error('atomic_make_umatS', 'not implemented for this nband!')
-     endif
-  
+     select case (nband)
+         case (5)
+             l = 2
+             allocate(slater_cordon(0:2*l))     
+             slater_cordon = zero
+             slater_cordon(0) = F0
+             slater_cordon(2) = F2
+             slater_cordon(4) = F4
+             allocate(gaunt(-l:l, -l:l, 0:2*l))
+             call atomic_make_gaunt5(gaunt)
+
+         case (7)
+             l = 3
+             allocate(slater_cordon(0:2*l))     
+             slater_cordon = zero
+             slater_cordon(0) = F0
+             slater_cordon(2) = F2
+             slater_cordon(4) = F4
+             slater_cordon(6) = F6
+             allocate(gaunt(-l:l, -l:l, 0:2*l))
+             call atomic_make_gaunt7(gaunt)
+
+         case default
+             call s_print_error('atomic_make_umatS', 'not implemented for this nband!')
+
+     end select
+
 ! make Coulomb interaction U matrix
      do alpha=1,norbs
-     do betta=1,norbs
-         aband = (alpha-1)/2-l
-         bband = (betta-1)/2-l
-         aspin = mod(alpha, 2)
-         bspin = mod(betta, 2)
-  
-         do delta=1,norbs
-         do gamma=1,norbs
-             dband = (delta-1)/2-l
-             gband = (gamma-1)/2-l
-             dspin = mod(delta, 2)
-             gspin = mod(gamma, 2)
-  
-             if ((alpha .eq. betta) .or. (delta .eq. gamma)) cycle
-  
-             if ((aband + bband) .ne. (dband + gband)) cycle
-             if ((aspin .ne. gspin) .or. (bspin .ne. dspin)) cycle
-  
-             res = zero
-             do i=0, 2*l, 2
-                 res = res + gaunt(aband, gband, i) * gaunt(dband, bband, i) * slater_cordon(i)
-             enddo
-             umat(alpha, betta, delta, gamma) = res
-         enddo ! over gamma={1,norbs} loop
-         enddo ! over delta={1,norbs} loop
-  
-     enddo ! over betta={1,norbs} loop
+         do betta=1,norbs
+             aband = (alpha-1)/2-l
+             bband = (betta-1)/2-l
+             aspin = mod(alpha, 2)
+             bspin = mod(betta, 2)
+
+             do delta=1,norbs
+                 do gamma=1,norbs
+                     dband = (delta-1)/2-l
+                     gband = (gamma-1)/2-l
+                     dspin = mod(delta, 2)
+                     gspin = mod(gamma, 2)
+
+                     if ((alpha .eq. betta) .or. (delta .eq. gamma)) CYCLE
+                     if ((aband + bband) .ne. (dband + gband)) CYCLE
+                     if ( (aspin .ne. gspin) .or. (bspin .ne. dspin) ) CYCLE
+
+                     res = zero
+                     do i=0,2*l,2
+                         res = res + gaunt(aband, gband, i) * gaunt(dband, bband, i) * slater_cordon(i)
+                     enddo ! over i={0,2*l} loop
+                     umat(alpha, betta, delta, gamma) = res
+                 enddo ! over gamma={1,norbs} loop
+             enddo ! over delta={1,norbs} loop
+
+         enddo ! over betta={1,norbs} loop
      enddo ! over alpha={1,norbs} loop
-  
      umat = half * umat
-  
+
 ! deallocate memory
-     if (allocated(slater_cordon)) deallocate(slater_cordon) 
      if (allocated(gaunt))         deallocate(gaunt)
-  
+     if (allocated(slater_cordon)) deallocate(slater_cordon)
+ 
      return
   end subroutine atomic_make_umatS
 
