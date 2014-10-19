@@ -435,7 +435,7 @@
      use m_spmat, only : umat
 
      implicit none
-  
+
 ! local variables
 ! orbital momentum quantum number
      integer  :: l
@@ -466,7 +466,7 @@
      select case (nband)
          case (5)
              l = 2
-             allocate(slater_cordon(0:2*l))     
+             allocate(slater_cordon(0:2*l))
              slater_cordon = zero
              slater_cordon(0) = F0
              slater_cordon(2) = F2
@@ -476,7 +476,7 @@
 
          case (7)
              l = 3
-             allocate(slater_cordon(0:2*l))     
+             allocate(slater_cordon(0:2*l))
              slater_cordon = zero
              slater_cordon(0) = F0
              slater_cordon(2) = F2
@@ -524,7 +524,7 @@
 ! deallocate memory
      if (allocated(gaunt))         deallocate(gaunt)
      if (allocated(slater_cordon)) deallocate(slater_cordon)
- 
+
      return
   end subroutine atomic_make_umatS
 
@@ -533,28 +533,28 @@
      use constants, only : dp
 
      implicit none
-  
+
 ! external variables
      complex(dp), intent(out) :: socmat(6,6)
-  
+
 ! local variables
      real(dp) :: sqrt2
-  
+
      sqrt2 = sqrt(2.0_dp)
-     
+
 ! make SOC on complex orbital basis, the orbital order is:
-! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>      
+! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>
      socmat = dcmplx(0.0_dp, 0.0_dp)
-  
+
      socmat(1,1) = -1.0_dp
-     socmat(4,1) = sqrt2 
+     socmat(4,1) = sqrt2
      socmat(2,2) =  1.0_dp
      socmat(6,3) = sqrt2
      socmat(1,4) = sqrt2
      socmat(5,5) = 1.0_dp
      socmat(3,6) = sqrt2
      socmat(6,6) = -1.0_dp
-  
+
      return
   end subroutine atomic_make_smat3
 
@@ -563,20 +563,20 @@
      use constants, only : dp
 
      implicit none
-  
+
 ! external variables
      complex(dp), intent(out) :: socmat(10,10)
-  
+
 ! local variables
      real(dp) :: sqrt6
-  
+
      sqrt6 = sqrt(6.0_dp)
 ! make SOC on complex orbital basis, the orbital order is:
-! |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>      
-  
+! |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>
+
      socmat = dcmplx(0.0_dp, 0.0_dp)
-  
-     socmat(1,1) = -2.0_dp 
+
+     socmat(1,1) = -2.0_dp
      socmat(4,1) =  2.0_dp
      socmat(2,2) =  2.0_dp
      socmat(3,3) = -1.0_dp
@@ -587,13 +587,13 @@
      socmat(3,6) =  sqrt6
      socmat(7,7) =  1.0_dp
      socmat(10,7)=  2.0_dp
-     socmat(5,8) =  sqrt6  
+     socmat(5,8) =  sqrt6
      socmat(8,8) = -1.0_dp
      socmat(9,9) =  2.0_dp
-     socmat(7,10)=  2.0_dp 
+     socmat(7,10)=  2.0_dp
      socmat(10,10)= -2.0_dp
-  
-     return 
+
+     return
   end subroutine atomic_make_smat5
 
 !!>>> atomic_make_smat7: make spin-orbit coupling matrix for 7 bands
@@ -601,31 +601,31 @@
      use constants, only : dp
 
      implicit none
-  
+
 ! local variables
      real(dp) :: sqrt6
      real(dp) :: sqrt10
      real(dp) :: sqrt12
-  
+
 ! external variables
-     complex(dp), intent(out) :: socmat(14,14)    
-  
+     complex(dp), intent(out) :: socmat(14,14)
+
      sqrt6  = sqrt(6.0_dp)
      sqrt10 = sqrt(10.0_dp)
      sqrt12 = sqrt(12.0_dp)
-  
+
      socmat = dcmplx(0.0_dp, 0.0_dp)
-  
+
      socmat(1,1) = -3.0_dp
      socmat(4,1) = sqrt6
      socmat(2,2) = 3.0_dp
      socmat(3,3) = -2.0_dp
-     socmat(6,3) = sqrt10 
+     socmat(6,3) = sqrt10
      socmat(1,4) = sqrt6
      socmat(4,4) = 2.0_dp
      socmat(5,5) = -1.0_dp
      socmat(8,5) = sqrt12
-     socmat(3,6) = sqrt10 
+     socmat(3,6) = sqrt10
      socmat(6,6) = 1.0_dp
      socmat(10,7) = sqrt12
      socmat(5,8) = sqrt12
@@ -640,35 +640,35 @@
      socmat(13,13) =  3.0_dp
      socmat(11,14) =  sqrt6
      socmat(14,14) =  -3.0_dp
-  
+
      return
   end subroutine atomic_make_smat7
 
-!!>>> atomic_make_tmat_c2r: make transformation matrix from 
-!!>>> complex orbital basis to real orbital 
+!!>>> atomic_make_tmat_c2r: make transformation matrix from
+!!>>> complex orbital basis to real orbital
   subroutine atomic_make_tmat_c2r( umat_c2r )
      use constants, only : dp, czero, cone, czi
      use control, only : nband, norbs
-  
+
      implicit none
-  
+
 ! external variables
 ! the transformation matrix from real orbitals to complex orbitals
      complex(dp), intent(out) :: umat_c2r( norbs, norbs )
-  
+
 ! sqrt(2)
      real(dp) :: sqrt2
-  
+
      sqrt2 = sqrt(2.0_dp)
      umat_c2r = czero
-  
+
      if ( nband == 3 ) then
-! the real orbital order (t2g) is:  
+! the real orbital order (t2g) is:
 ! dxzup, dxzdn, dyzup, dyzdn, dxyup, dxydn
 ! the corresponding p orbital order is:
 ! pyup, pydn, pxup, pxdn, pzup, pzdn
 ! the complex orbital |Lz,Sz> order is
-! -1up, -1dn, 0up, 0dn, 1up, 1dn 
+! -1up, -1dn, 0up, 0dn, 1up, 1dn
          umat_c2r(1,1) =  czi/sqrt2
          umat_c2r(5,1) =  czi/sqrt2
          umat_c2r(2,2) =  czi/sqrt2
@@ -679,17 +679,17 @@
          umat_c2r(6,4) =  -cone/sqrt2
          umat_c2r(3,5) =  cone
          umat_c2r(4,6) =  cone
-  
+
      elseif ( nband == 5 ) then
-! the real orbital order is: 
-! dz2up, dz2dn, dxzup, dxzdn, dyzup, dyzdn, dx2-y2up, dx2-y2dn, dxyup, dxydn 
+! the real orbital order is:
+! dz2up, dz2dn, dxzup, dxzdn, dyzup, dyzdn, dx2-y2up, dx2-y2dn, dxyup, dxydn
 ! the complex orbital |Lz,Sz> order is:
 ! -2up, -2dn, -1up, -1dn, 0up, 0dn, 1up, 1dn, 2up, 2dn
          umat_c2r(5,1) = cone
          umat_c2r(6,2) = cone
-         umat_c2r(3,3) =  cone/sqrt2 
+         umat_c2r(3,3) =  cone/sqrt2
          umat_c2r(7,3) =  -cone/sqrt2
-         umat_c2r(4,4) =  cone/sqrt2 
+         umat_c2r(4,4) =  cone/sqrt2
          umat_c2r(8,4) =  -cone/sqrt2
          umat_c2r(3,5) =    czi/sqrt2
          umat_c2r(7,5) =    czi/sqrt2
@@ -708,9 +708,9 @@
 ! fz3up, fz3dn, fxz2up, fxz2dn, fyz2up, fyz2dn, fz(x2-y2)up, fz(x2-y2)dn, fxyzup, fxyzdn,
 ! fx(x2-3y2)up, fx(x2-3y2)dn, fy(3x2-y2)up, fy(3x2-y2)dn
 ! the complex orbital order is:
-! -3up, -3dn, -2up, -2dn, -1up, -1dn, 0up, 0dn, 1up, 1dn, 2up, 2dn, 3up, 3dn    
-         umat_c2r( 7, 1) = cone 
-         umat_c2r( 8, 2) = cone 
+! -3up, -3dn, -2up, -2dn, -1up, -1dn, 0up, 0dn, 1up, 1dn, 2up, 2dn, 3up, 3dn
+         umat_c2r( 7, 1) = cone
+         umat_c2r( 8, 2) = cone
          umat_c2r( 5, 3) = cone/sqrt2
          umat_c2r( 9, 3) = -cone/sqrt2
          umat_c2r( 6, 4) = cone/sqrt2
@@ -739,56 +739,56 @@
          call s_print_error('atomic_make_umat_c2r', &
                     'not implemented for this nband!')
      endif
-  
+
      return
   end subroutine atomic_make_tmat_c2r
 
-!!>>> atomic_make_tmat_r2c: make umat from real orbital 
+!!>>> atomic_make_tmat_r2c: make umat from real orbital
 !!>>> basis to complex orbital basis
   subroutine atomic_make_tmat_r2c(umat_r2c)
      use constants, only : dp, czero
      use control, only : norbs
-  
+
 ! external variables
      complex(dp), intent(out) :: umat_r2c(norbs, norbs)
-   
+
 ! local variables
      complex(dp) :: umat_c2r(norbs, norbs)
-  
+
      umat_c2r = czero
      call atomic_make_tmat_c2r(umat_c2r)
-  
+
      umat_r2c = transpose(dconjg(umat_c2r))
-  
+
      return
   end subroutine atomic_make_tmat_r2c
 
 !!>>> atomic_make_tmat_c2j: make CG coefficients
-  subroutine atomic_make_tmat_c2j( umat_c2j ) 
+  subroutine atomic_make_tmat_c2j(umat_c2j)
      use constants, only : dp, czero
      use control, only : nband, norbs
-  
+
      implicit none
-     
+
 ! the transformation matrix from complex orbitals |lz,sz> to |j2,jz>
      complex(dp), intent(out) :: umat_c2j( norbs, norbs )
-     
+
      umat_c2j = czero
-  
+
      if (nband == 3) then
 ! the |lz,sz> order is:
 ! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>
 ! the |j2,jz> order is:
 ! |1/2,-1/2>, |1/2,1/2>, |3/2,-3/2>, |3/2, -1/2>, |3/2, 1/2>, |3/2,3/2>
-         umat_c2j(1,1) = -sqrt(2.0_dp/3.0_dp) 
-         umat_c2j(4,1) =  sqrt(1.0_dp/3.0_dp) 
-         umat_c2j(3,2) = -sqrt(1.0_dp/3.0_dp) 
-         umat_c2j(6,2) =  sqrt(2.0_dp/3.0_dp) 
+         umat_c2j(1,1) = -sqrt(2.0_dp/3.0_dp)
+         umat_c2j(4,1) =  sqrt(1.0_dp/3.0_dp)
+         umat_c2j(3,2) = -sqrt(1.0_dp/3.0_dp)
+         umat_c2j(6,2) =  sqrt(2.0_dp/3.0_dp)
          umat_c2j(2,3) =  1.0_dp
-         umat_c2j(1,4) =  sqrt(1.0_dp/3.0_dp) 
-         umat_c2j(4,4) =  sqrt(2.0_dp/3.0_dp) 
-         umat_c2j(3,5) =  sqrt(2.0_dp/3.0_dp) 
-         umat_c2j(6,5) =  sqrt(1.0_dp/3.0_dp) 
+         umat_c2j(1,4) =  sqrt(1.0_dp/3.0_dp)
+         umat_c2j(4,4) =  sqrt(2.0_dp/3.0_dp)
+         umat_c2j(3,5) =  sqrt(2.0_dp/3.0_dp)
+         umat_c2j(6,5) =  sqrt(1.0_dp/3.0_dp)
          umat_c2j(5,6) =  1.0_dp
      elseif ( nband == 5 ) then
 ! the |lz,sz> order is:
@@ -796,15 +796,15 @@
 ! the |j2,jz> order is:
 ! |3/2,-3/2>, |3/2,-1/2>, |3/2,1/2>, |3/2,3/2>
 ! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
-         umat_c2j(1,1) = -sqrt(4.0_dp/5.0_dp) 
-         umat_c2j(4,1) =  sqrt(1.0_dp/5.0_dp) 
-         umat_c2j(3,2) = -sqrt(3.0_dp/5.0_dp) 
-         umat_c2j(6,2) =  sqrt(2.0_dp/5.0_dp) 
-         umat_c2j(5,3) = -sqrt(2.0_dp/5.0_dp) 
-         umat_c2j(8,3) =  sqrt(3.0_dp/5.0_dp) 
-         umat_c2j(7,4) = -sqrt(1.0_dp/5.0_dp) 
-         umat_c2j(10,4)=  sqrt(4.0_dp/5.0_dp) 
-         umat_c2j(2,5) = 1.0_dp 
+         umat_c2j(1,1) = -sqrt(4.0_dp/5.0_dp)
+         umat_c2j(4,1) =  sqrt(1.0_dp/5.0_dp)
+         umat_c2j(3,2) = -sqrt(3.0_dp/5.0_dp)
+         umat_c2j(6,2) =  sqrt(2.0_dp/5.0_dp)
+         umat_c2j(5,3) = -sqrt(2.0_dp/5.0_dp)
+         umat_c2j(8,3) =  sqrt(3.0_dp/5.0_dp)
+         umat_c2j(7,4) = -sqrt(1.0_dp/5.0_dp)
+         umat_c2j(10,4)=  sqrt(4.0_dp/5.0_dp)
+         umat_c2j(2,5) = 1.0_dp
          umat_c2j(1,6) =  sqrt(1.0_dp/5.0_dp)
          umat_c2j(4,6) =  sqrt(4.0_dp/5.0_dp)
          umat_c2j(3,7) =  sqrt(2.0_dp/5.0_dp)
@@ -816,11 +816,11 @@
          umat_c2j(9,10)= 1.0_dp
      elseif ( nband == 7 ) then
 ! the |lz,sz> order is:
-! |-3,up>, |-3,dn>, |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, 
+! |-3,up>, |-3,dn>, |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>,
 ! | 0,dn>, | 1,up>, | 1,dn>, | 2,up>, | 2,dn>, | 3,up>, |3,dn>
 ! the |j2,jz> order is:
 ! |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
-! |7/2,-7/2>, |7/2,-5/2>, |7/2,-3/2>, |7/2,-1/2>, |7/2,1/2>, |7/2,3/2>, 
+! |7/2,-7/2>, |7/2,-5/2>, |7/2,-3/2>, |7/2,-1/2>, |7/2,1/2>, |7/2,3/2>,
 ! |7/2,5/2>, |7/2, 7/2>
          umat_c2j(1, 1) = -sqrt(6.0_dp/7.0_dp)
          umat_c2j(4, 1) =  sqrt(1.0_dp/7.0_dp)
@@ -834,7 +834,7 @@
          umat_c2j(12,5) =  sqrt(5.0_dp/7.0_dp)
          umat_c2j(11,6) = -sqrt(1.0_dp/7.0_dp)
          umat_c2j(14,6) =  sqrt(6.0_dp/7.0_dp)
-  
+
          umat_c2j(2, 7)  = 1.0_dp
          umat_c2j(1, 8) =  sqrt(1.0_dp/7.0_dp)
          umat_c2j(4, 8) =  sqrt(6.0_dp/7.0_dp)
@@ -852,18 +852,18 @@
      else
          call s_print_error('atomic_make_umat_c2j','not implemented !')
      endif
-  
+
      return
   end subroutine atomic_make_tmat_c2j
 
-!!>>> atomic_tran_umat: transform Coulomb interaction U tensor 
+!!>>> atomic_tran_umat: transform Coulomb interaction U tensor
 !!>>> from one representation to another representation
   subroutine atomic_tran_umat(amtrx, umat, umat_t)
      use constants, only : dp, czero, epst
      use control, only : norbs
-  
+
      implicit none
-  
+
 ! transformation matrix from orginal basis to natural basis
      complex(dp), intent(in) :: amtrx(norbs, norbs)
 
@@ -872,7 +872,7 @@
 
 ! coefficents matrix for generalized interaction U in natural basis
      complex(dp), intent(out) :: umat_t(norbs, norbs, norbs, norbs)
-  
+
 ! local varoables
 ! loop index over orbits in orginal single particle basis
      integer :: alpha1, alpha2
@@ -882,16 +882,16 @@
 
 ! auxiliary complex(dp) variables
      complex(dp) :: ctmp
-  
+
 ! initialize umat_t to be zero
-     umat_t = czero 
-  
+     umat_t = czero
+
      sigma1loop: do sigma1=1,norbs
      sigma2loop: do sigma2=1,norbs
      sigma3loop: do sigma3=1,norbs
      sigma4loop: do sigma4=1,norbs
          ctmp = czero
-  
+
          alpha1loop: do alpha1=1,norbs
          alpha2loop: do alpha2=1,norbs
          alpha3loop: do alpha3=1,norbs
@@ -904,77 +904,76 @@
          enddo alpha3loop ! over alpha3={1,norbs} loop
          enddo alpha2loop ! over alpha2={1,norbs} loop
          enddo alpha1loop ! over alpha1={1,norbs} loop
-  
+
          umat_t(sigma1, sigma2, sigma3, sigma4) = ctmp
      enddo sigma4loop ! over sigma4={1,norbs} loop
      enddo sigma3loop ! over sigma3={1,norbs} loop
      enddo sigma2loop ! over sigma2={1,norbs} loop
      enddo sigma1loop ! over sigma1={1,norbs} loop
-  
+
      return
   end subroutine atomic_tran_umat
 
-!!>>> atomic_tran_repr_cmpl: transformation from one representation 
+!!>>> atomic_tran_repr_cmpl: transformation from one representation
 !!>>> to another representation, complex version
   subroutine atomic_tran_repr_cmpl( ndim, amat, umat )
      use constants, only : dp, cone, czero
-  
+
      implicit none
-  
+
 ! external variables
      integer, intent(in) :: ndim
      complex(dp), intent(inout) :: amat(ndim, ndim)
      complex(dp), intent(in) :: umat(ndim, ndim)
-  
+
 ! local variables
      complex(dp) :: tmp_mat(ndim, ndim)
      complex(dp) :: alpha
      complex(dp) :: betta
-  
+
      alpha = cone; betta = czero
-     call zgemm('N', 'N', ndim, ndim, ndim, & 
+     call zgemm('N', 'N', ndim, ndim, ndim, &
                          alpha, amat, ndim, &
                                 umat, ndim, &
                       betta, tmp_mat, ndim  )
-  
+
      alpha = cone; betta = czero
      call zgemm('C', 'N', ndim, ndim, ndim, &
                          alpha, umat, ndim, &
                              tmp_mat, ndim, &
                          betta, amat, ndim  )
-  
-  
+
      return
   end subroutine atomic_tran_repr_cmpl
 
-!>>> atomic_tran_repr_real: transformation from one representation to 
+!>>> atomic_tran_repr_real: transformation from one representation to
 !!>>> another representation, real version
   subroutine atomic_tran_repr_real( ndim, amat, umat )
      use constants, only : dp, zero, one
-  
+
      implicit none
-  
+
 ! external variables
      integer, intent(in) :: ndim
      real(dp), intent(inout) :: amat(ndim, ndim)
      real(dp), intent(in) :: umat(ndim, ndim)
-  
+
 ! local variables
      real(dp) :: tmp_mat(ndim, ndim)
      real(dp) :: alpha
      real(dp) :: betta
-  
+
      alpha = one; betta = zero
      call dgemm('N', 'N', ndim, ndim, ndim, &
                          alpha, amat, ndim, &
                                 umat, ndim, &
                       betta, tmp_mat, ndim  )
-  
-     alpha = one; betta = zero 
+
+     alpha = one; betta = zero
      call dgemm('T', 'N', ndim, ndim, ndim, &
                          alpha, umat, ndim, &
                              tmp_mat, ndim, &
                          betta, amat, ndim  )
-  
+
      return
   end subroutine atomic_tran_repr_real
