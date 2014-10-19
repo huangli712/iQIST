@@ -528,15 +528,19 @@
      return
   end subroutine atomic_make_umatS
 
+!!========================================================================
+!!>>> determine spin-orbital coupling matrix                           <<<
+!!========================================================================
 
 !>>> atomic_make_smat3: make spin-orbit coupling matrix for 3 bands
-  subroutine atomic_make_smat3(socmat)
-     use constants, only : dp
+  subroutine atomic_make_smat3(smat)
+     use constants, only : dp, czero
 
      implicit none
 
 ! external variables
-     complex(dp), intent(out) :: socmat(6,6)
+! SOC matrix
+     complex(dp), intent(out) :: smat(6,6)
 
 ! local variables
      real(dp) :: sqrt2
@@ -544,103 +548,119 @@
      sqrt2 = sqrt(2.0_dp)
 
 ! make SOC on complex orbital basis, the orbital order is:
-! |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>
-     socmat = dcmplx(0.0_dp, 0.0_dp)
+! |-1,up>, |-1,dn>,
+! | 0,up>, | 0,dn>,
+! | 1,up>, | 1,dn>
+     smat = czero
 
-     socmat(1,1) = -1.0_dp
-     socmat(4,1) = sqrt2
-     socmat(2,2) =  1.0_dp
-     socmat(6,3) = sqrt2
-     socmat(1,4) = sqrt2
-     socmat(5,5) = 1.0_dp
-     socmat(3,6) = sqrt2
-     socmat(6,6) = -1.0_dp
+     smat(1,1) = -1.0_dp
+     smat(4,1) = sqrt2
+     smat(2,2) = +1.0_dp
+     smat(6,3) = sqrt2
+     smat(1,4) = sqrt2
+     smat(5,5) = +1.0_dp
+     smat(3,6) = sqrt2
+     smat(6,6) = -1.0_dp
 
      return
   end subroutine atomic_make_smat3
 
 !!>>> atomic_make_smat5: make spin-orbit coupling matrix for 5 bands
-  subroutine atomic_make_smat5(socmat)
-     use constants, only : dp
+  subroutine atomic_make_smat5(smat)
+     use constants, only : dp, czero
 
      implicit none
 
 ! external variables
-     complex(dp), intent(out) :: socmat(10,10)
+! SOC matrix
+     complex(dp), intent(out) :: smat(10,10)
 
 ! local variables
      real(dp) :: sqrt6
 
      sqrt6 = sqrt(6.0_dp)
+
 ! make SOC on complex orbital basis, the orbital order is:
-! |-2,up>, |-2,dn>, |-1,up>, |-1,dn>, |0,up>, |0,dn>, |1,up>, |1,dn>, |2,up>, |2,dn>
+! |-2,up>, |-2,dn>,
+! |-1,up>, |-1,dn>,
+! | 0,up>, | 0,dn>,
+! | 1,up>, | 1,dn>,
+! | 2,up>, | 2,dn>
+     smat = czero
 
-     socmat = dcmplx(0.0_dp, 0.0_dp)
-
-     socmat(1,1) = -2.0_dp
-     socmat(4,1) =  2.0_dp
-     socmat(2,2) =  2.0_dp
-     socmat(3,3) = -1.0_dp
-     socmat(6,3) =  sqrt6
-     socmat(1,4) =  2.0_dp
-     socmat(4,4) =  1.0_dp
-     socmat(8,5) =  sqrt6
-     socmat(3,6) =  sqrt6
-     socmat(7,7) =  1.0_dp
-     socmat(10,7)=  2.0_dp
-     socmat(5,8) =  sqrt6
-     socmat(8,8) = -1.0_dp
-     socmat(9,9) =  2.0_dp
-     socmat(7,10)=  2.0_dp
-     socmat(10,10)= -2.0_dp
+     smat(1,1)  = -2.0_dp
+     smat(4,1)  = +2.0_dp
+     smat(2,2)  = +2.0_dp
+     smat(3,3)  = -1.0_dp
+     smat(6,3)  =  sqrt6
+     smat(1,4)  = +2.0_dp
+     smat(4,4)  = +1.0_dp
+     smat(8,5)  =  sqrt6
+     smat(3,6)  =  sqrt6
+     smat(7,7)  = +1.0_dp
+     smat(10,7) = +2.0_dp
+     smat(5,8)  =  sqrt6
+     smat(8,8)  = -1.0_dp
+     smat(9,9)  = +2.0_dp
+     smat(7,10) = +2.0_dp
+     smat(10,10)= -2.0_dp
 
      return
   end subroutine atomic_make_smat5
 
 !!>>> atomic_make_smat7: make spin-orbit coupling matrix for 7 bands
-  subroutine atomic_make_smat7(socmat)
-     use constants, only : dp
+  subroutine atomic_make_smat7(smat)
+     use constants, only : dp, czero
 
      implicit none
+
+! external variables
+! SOC matrix
+     complex(dp), intent(out) :: smat(14,14)
 
 ! local variables
      real(dp) :: sqrt6
      real(dp) :: sqrt10
      real(dp) :: sqrt12
 
-! external variables
-     complex(dp), intent(out) :: socmat(14,14)
-
      sqrt6  = sqrt(6.0_dp)
      sqrt10 = sqrt(10.0_dp)
      sqrt12 = sqrt(12.0_dp)
 
-     socmat = dcmplx(0.0_dp, 0.0_dp)
+! make SOC on complex orbital basis, the orbital order is:
+! |-3,up>, |-3,dn>,
+! |-2,up>, |-2,dn>,
+! |-1,up>, |-1,dn>,
+! | 0,up>, | 0,dn>,
+! | 1,up>, | 1,dn>,
+! | 2,up>, | 2,dn>
+! | 3,up>, | 3,dn>
+     smat = czero
 
-     socmat(1,1) = -3.0_dp
-     socmat(4,1) = sqrt6
-     socmat(2,2) = 3.0_dp
-     socmat(3,3) = -2.0_dp
-     socmat(6,3) = sqrt10
-     socmat(1,4) = sqrt6
-     socmat(4,4) = 2.0_dp
-     socmat(5,5) = -1.0_dp
-     socmat(8,5) = sqrt12
-     socmat(3,6) = sqrt10
-     socmat(6,6) = 1.0_dp
-     socmat(10,7) = sqrt12
-     socmat(5,8) = sqrt12
-     socmat(9,9) = 1.0_dp
-     socmat(12,9) = sqrt10
-     socmat(7,10) = sqrt12
-     socmat(10,10) = -1.0_dp
-     socmat(11,11) =  2.0_dp
-     socmat(14,11) =  sqrt6
-     socmat(9,12) = sqrt10
-     socmat(12,12) =  -2.0_dp
-     socmat(13,13) =  3.0_dp
-     socmat(11,14) =  sqrt6
-     socmat(14,14) =  -3.0_dp
+     smat(1,1)   = -3.0_dp
+     smat(4,1)   = sqrt6
+     smat(2,2)   = +3.0_dp
+     smat(3,3)   = -2.0_dp
+     smat(6,3)   = sqrt10
+     smat(1,4)   = sqrt6
+     smat(4,4)   = +2.0_dp
+     smat(5,5)   = -1.0_dp
+     smat(8,5)   = sqrt12
+     smat(3,6)   = sqrt10
+     smat(6,6)   = +1.0_dp
+     smat(10,7)  = sqrt12
+     smat(5,8)   = sqrt12
+     smat(9,9)   = +1.0_dp
+     smat(12,9)  = sqrt10
+     smat(7,10)  = sqrt12
+     smat(10,10) = -1.0_dp
+     smat(11,11) = +2.0_dp
+     smat(14,11) =  sqrt6
+     smat(9,12)  = sqrt10
+     smat(12,12) = -2.0_dp
+     smat(13,13) = +3.0_dp
+     smat(11,14) =  sqrt6
+     smat(14,14) = -3.0_dp
 
      return
   end subroutine atomic_make_smat7
