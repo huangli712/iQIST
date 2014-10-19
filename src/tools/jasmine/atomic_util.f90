@@ -381,39 +381,39 @@
                      dtmp = zero
 
 ! intraorbital Coulomb interaction
-                     if ((alpha.eq.gamma) .and. (betta.eq.delta)) then
-                         if ((aband.eq.bband) .and. (aspin.ne.bspin)) then
+                     if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
+                         if ( ( aband == bband ) .and. ( aspin /= bspin ) ) then
                              dtmp = dtmp + Uc
-                         endif
-                     endif
+                         endif ! back if ( ( aband == bband ) .and. ( aspin /= bspin ) ) block
+                     endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
 
 ! interorbital Coulomb interaction
-                     if ((alpha.eq.gamma) .and. (betta.eq.delta)) then
-                         if (aband .ne. bband) then
+                     if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
+                         if ( aband /= bband ) then
                              dtmp = dtmp + Uv
-                         endif
-                     endif
+                         endif ! back if ( aband /= bband ) block
+                     endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
 
 ! Hund's exchange interaction
-                     if ((alpha.eq.gamma) .and. (betta.eq.delta)) then
-                         if ((aband.ne.bband) .and. (aspin.eq.bspin)) then
+                     if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
+                         if ( ( aband /= bband ) .and. ( aspin == bspin ) ) then
                              dtmp = dtmp - Jz
-                         endif
-                     endif
+                         endif ! back if ( ( aband /= bband ) .and. ( aspin == bspin ) ) block
+                     endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
 
 ! spin flip term
-                     if ((aband.eq.gband) .and. (bband.eq.dband)) then
-                         if ((aspin.ne.gspin) .and. (bspin.ne.dspin) .and. (aspin.ne.bspin)) then
+                     if ( ( aband == gband ) .and. ( bband == dband ) ) then
+                         if ( ( aspin /= gspin ) .and. ( bspin /= dspin ) .and. ( aspin /= bspin ) ) then
                              dtmp = dtmp - Js
-                         endif
-                     endif
+                         endif ! back if ( ( aspin /= gspin ) .and. ( bspin /= dspin ) .and. ( aspin /= bspin ) ) block
+                     endif ! back if ( ( aband == gband ) .and. ( bband == dband ) ) block
 
 ! pair hopping term
-                     if ((aband.eq.bband) .and. (dband.eq.gband) .and. (aband.ne.dband)) then
-                         if ((aspin.ne.bspin) .and. (dspin.ne.gspin) .and. (aspin.eq.gspin)) then
+                     if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) then
+                         if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) then
                              dtmp = dtmp + Jp
-                         endif
-                     endif
+                         endif ! back if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) block
+                     endif ! back if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) block
 
                      umat(alpha, betta, delta, gamma) = dtmp
 
@@ -505,9 +505,9 @@
                      dspin = mod(delta, 2)
                      gspin = mod(gamma, 2)
 
-                     if ((alpha .eq. betta) .or. (delta .eq. gamma)) CYCLE
-                     if ((aband + bband) .ne. (dband + gband)) CYCLE
-                     if ( (aspin .ne. gspin) .or. (bspin .ne. dspin) ) CYCLE
+                     if ( (alpha == betta) .or. (delta == gamma) ) CYCLE
+                     if ( aband + bband /= dband + gband ) CYCLE
+                     if ( (aspin /= gspin) .or. (bspin /= dspin) ) CYCLE
 
                      res = zero
                      do i=0,2*l,2
@@ -527,6 +527,7 @@
 
      return
   end subroutine atomic_make_umatS
+
 
 !>>> atomic_make_smat3: make spin-orbit coupling matrix for 3 bands
   subroutine atomic_make_smat3(socmat)
