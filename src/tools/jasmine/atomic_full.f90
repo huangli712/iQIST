@@ -8,7 +8,9 @@
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
-!!! purpose : make occupancy of eigensates of atomic Hamiltonian
+!!!           10/20/2014 by li huang
+!!! purpose : computational subroutines for the calculations of occupation
+!!!           number, F-matrix, and atomic Hamiltonian in full Fock space.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
