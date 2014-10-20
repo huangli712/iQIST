@@ -8,14 +8,21 @@
 !!! authors : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
-!!! purpose : define data structure for good quantum numbers (GQNs) algorithm
+!!!           10/20/2014 by li huang
+!!! purpose : define global data structures for the atomic eigenvalue
+!!!           problem solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> Fock basis of full Hilbert space
+!!========================================================================
+!!>>> module m_full                                                    <<<
+!!========================================================================
+
+!!>>> define Fock basis of full Hilbert space
   module m_full
      use constants, only : dp, zero, czero
+
      use control, only : norbs, ncfgs
 
      implicit none
@@ -138,6 +145,10 @@
   end subroutine dealloc_m_glob_fullspace
 
   end module m_full
+
+!!========================================================================
+!!>>> module m_full                                                    <<<
+!!========================================================================
 
 !!>>> data structure for good quantum numbers (GQNs) algorithm
   module m_sector
@@ -391,6 +402,10 @@
   end subroutine dealloc_m_glob_sectors
 
   end module m_sector
+
+!!========================================================================
+!!>>> module m_full                                                    <<<
+!!========================================================================
 
 !!>>> single particle related matrices, including:
 !!>>> crystal field, spin-orbital coupling, Coulomb interaction U tensor
