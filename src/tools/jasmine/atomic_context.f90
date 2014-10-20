@@ -45,7 +45,7 @@
 ! eigenvectors of hmat
      real(dp), public, allocatable, save :: eigvec(:,:)
 
-! fmat for annihilation fermion operators
+! F-matrix for annihilation fermion operators
      real(dp), public, allocatable, save :: fmat(:,:,:)
 
 ! occupany number for atomic eigenstates
@@ -77,7 +77,7 @@
 ! the status flag
      integer :: istat
 
-! allocate them
+! allocate memory
      allocate(dim_sub_n(0:norbs),     stat=istat)
      allocate(bin_basis(norbs,ncfgs), stat=istat)
      allocate(dec_basis(ncfgs),       stat=istat)
@@ -85,7 +85,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_full_basis', 'can not allocate enough memory')
+         call s_print_error('alloc_m_full_basis','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -104,7 +104,7 @@
 ! the status flag
      integer :: istat
 
-! allocate them
+! allocate memory
      allocate(eigval(ncfgs),           stat=istat)
      allocate(eigvec(ncfgs,ncfgs),     stat=istat)
      allocate(fmat(ncfgs,ncfgs,norbs), stat=istat)
@@ -113,7 +113,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_full', 'can not allocate enough memory')
+         call s_print_error('alloc_m_full','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -134,11 +134,10 @@
   subroutine dealloc_m_full_basis()
      implicit none
 
-! deallocate them
-     if (allocated(dim_sub_n)  ) deallocate(dim_sub_n  )
-     if (allocated(bin_basis)  ) deallocate(bin_basis  )
-     if (allocated(dec_basis)  ) deallocate(dec_basis  )
-     if (allocated(index_basis)) deallocate(index_basis)
+     if ( allocated(dim_sub_n)   ) deallocate(dim_sub_n  )
+     if ( allocated(bin_basis)   ) deallocate(bin_basis  )
+     if ( allocated(dec_basis)   ) deallocate(dec_basis  )
+     if ( allocated(index_basis) ) deallocate(index_basis)
 
      return
   end subroutine dealloc_m_full_basis
@@ -147,12 +146,11 @@
   subroutine dealloc_m_full()
      implicit none
 
-! deallocate them
-     if (allocated(eigval)) deallocate(eigval)
-     if (allocated(eigvec)) deallocate(eigvec)
-     if (allocated(fmat)  ) deallocate(fmat  )
-     if (allocated(occu)  ) deallocate(occu  )
-     if (allocated(hmat)  ) deallocate(hmat  )
+     if ( allocated(eigval) ) deallocate(eigval)
+     if ( allocated(eigvec) ) deallocate(eigvec)
+     if ( allocated(fmat)   ) deallocate(fmat  )
+     if ( allocated(occu)   ) deallocate(occu  )
+     if ( allocated(hmat)   ) deallocate(hmat  )
 
      return
   end subroutine dealloc_m_full
@@ -169,7 +167,7 @@
 
      implicit none
 
-! the F-matrix (fmat) between any two sectors, it is just a matrix
+! the F-matrix between any two sectors, it is just a matrix
      private :: T_fmat
      type T_fmat
 
@@ -189,8 +187,8 @@
 ! the dimension of this sector
          integer :: ndim
 
-! total number of electrons n
-         integer :: nelectron
+! total number of electrons N
+         integer :: nele
 
 ! number of fermion operators
          integer :: nops
@@ -215,7 +213,7 @@
 ! the Hamiltonian of this sector
          complex(dp), pointer :: ham(:,:)
 
-! the F-matrix (fmat) between this sector and all other sectors
+! the F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
 ! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
          type(T_fmat), pointer :: fmat(:,:)
@@ -267,12 +265,12 @@
 ! the status flag
      integer :: istat
 
-! allocate it
+! allocate memory
      allocate(one_fmat%item(one_fmat%n,one_fmat%m), stat=istat)
 
 ! check status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_fmat', 'can not allocate enough memory')
+         call s_print_error('alloc_one_fmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize it
@@ -297,17 +295,17 @@
      integer :: i
      integer :: j
 
-! allocate them
-     allocate(one_sector%basis(one_sector%ndim),                   stat=istat)
-     allocate(one_sector%next(one_sector%nops,0:1),                stat=istat)
-     allocate(one_sector%eigval(one_sector%ndim),                  stat=istat)
-     allocate(one_sector%eigvec(one_sector%ndim, one_sector%ndim), stat=istat)
-     allocate(one_sector%ham(one_sector%ndim, one_sector%ndim),    stat=istat)
-     allocate(one_sector%fmat(one_sector%nops,0:1),                stat=istat)
+! allocate memory
+     allocate(one_sector%basis(one_sector%ndim),                  stat=istat)
+     allocate(one_sector%next(one_sector%nops,0:1),               stat=istat)
+     allocate(one_sector%eigval(one_sector%ndim),                 stat=istat)
+     allocate(one_sector%eigvec(one_sector%ndim,one_sector%ndim), stat=istat)
+     allocate(one_sector%ham(one_sector%ndim,one_sector%ndim),    stat=istat)
+     allocate(one_sector%fmat(one_sector%nops,0:1),               stat=istat)
 
 ! check status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_sector', 'can not allocate enough memory')
+         call s_print_error('alloc_one_sector','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -340,12 +338,12 @@
 ! loop index
      integer :: i
 
-! allocate it
+! allocate memory
      allocate(sectors(nsectors), stat=istat)
 
 ! check status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_sector', 'can not allocate enough memory')
+         call s_print_error('alloc_m_sector','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! nullify each sector one by one
@@ -368,7 +366,6 @@
 ! the fmat
      type(T_fmat), intent(inout) :: one_fmat
 
-! nullify it
      nullify(one_fmat%item)
 
      return
@@ -382,8 +379,7 @@
 ! the fmat
      type(T_fmat), intent(inout) :: one_fmat
 
-! deallocate it
-     if (associated(one_fmat%item)) deallocate(one_fmat%item)
+     if ( associated(one_fmat%item) ) deallocate(one_fmat%item)
 
      return
   end subroutine dealloc_one_fmat
@@ -396,7 +392,6 @@
 ! the sector
      type(T_sector), intent(inout) :: one_sector
 
-! nullify them
      nullify(one_sector%basis )
      nullify(one_sector%next  )
      nullify(one_sector%eigval)
@@ -420,12 +415,11 @@
      integer :: i
      integer :: j
 
-! deallocate them
-     if (associated(one_sector%basis) ) deallocate(one_sector%basis )
-     if (associated(one_sector%next)  ) deallocate(one_sector%next  )
-     if (associated(one_sector%eigval)) deallocate(one_sector%eigval)
-     if (associated(one_sector%eigvec)) deallocate(one_sector%eigvec)
-     if (associated(one_sector%ham)   ) deallocate(one_sector%ham   )
+     if ( associated(one_sector%basis)  ) deallocate(one_sector%basis )
+     if ( associated(one_sector%next)   ) deallocate(one_sector%next  )
+     if ( associated(one_sector%eigval) ) deallocate(one_sector%eigval)
+     if ( associated(one_sector%eigvec) ) deallocate(one_sector%eigvec)
+     if ( associated(one_sector%ham)    ) deallocate(one_sector%ham   )
 
 ! deallocate fmat one by one
      do i=1,one_sector%nops
@@ -451,8 +445,7 @@
          call dealloc_one_sector(sectors(i))
      enddo ! over i={1,nsectors} loop
 
-! deallocate it
-     if (allocated(sectors)) deallocate(sectors)
+     if ( allocated(sectors) ) deallocate(sectors)
 
      return
   end subroutine dealloc_m_sector
@@ -467,6 +460,7 @@
 !!>>> crystal field, spin-orbital coupling, Coulomb interaction U tensor
   module m_spmat
      use constants, only : dp, czero
+
      use control, only : norbs
 
      implicit none
@@ -507,7 +501,7 @@
 ! the status flag
      integer :: istat
 
-! allocate them
+! allocate memory
      allocate(umat(norbs,norbs,norbs,norbs), stat=istat)
      allocate(cmat(norbs,norbs),             stat=istat)
      allocate(smat(norbs,norbs),             stat=istat)
@@ -516,7 +510,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_m_spmat', 'can not allocate enough memory')
+         call s_print_error('alloc_m_spmat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -537,12 +531,11 @@
   subroutine dealloc_m_spmat()
      implicit none
 
-! deallocate them
-     if (allocated(umat)) deallocate(umat)
-     if (allocated(cmat)) deallocate(cmat)
-     if (allocated(smat)) deallocate(smat)
-     if (allocated(emat)) deallocate(emat)
-     if (allocated(tmat)) deallocate(tmat)
+     if ( allocated(umat) ) deallocate(umat)
+     if ( allocated(cmat) ) deallocate(cmat)
+     if ( allocated(smat) ) deallocate(smat)
+     if ( allocated(emat) ) deallocate(emat)
+     if ( allocated(tmat) ) deallocate(tmat)
 
      return
   end subroutine dealloc_m_spmat
