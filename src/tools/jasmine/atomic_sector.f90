@@ -322,7 +322,7 @@
 
      use m_full, only : dim_sub_n, bin_basis
      use m_sector, only : alloc_one_sector
-     use m_sector, only : nsectors, sectors, alloc_m_glob_sectors
+     use m_sector, only : nsectors, sectors, alloc_m_sector
      use m_sector, only : max_dim_sect, ave_dim_sect
   
      implicit none
@@ -550,7 +550,7 @@
      max_dim_sect = 0
      ave_dim_sect = zero
      nsectors = nsect
-     call alloc_m_glob_sectors()
+     call alloc_m_sector()
 ! now we will build each sector
      counter = 1
      do i=1, nsect

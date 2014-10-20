@@ -13,11 +13,11 @@
 !!!-------------------------------------------------------------------------
 
   program main
-     use constants,         only : mystd
-     use control,           only : ictqmc
+     use constants, only : mystd
 
-     use m_full, only : alloc_m_basis_fullspace, dealloc_m_basis_fullspace
-     use m_spmat,           only : alloc_m_spmat, dealloc_m_spmat
+     use control, only : ictqmc
+     use m_full, only : alloc_m_full_basis, dealloc_m_full_basis
+     use m_spmat, only : alloc_m_spmat, dealloc_m_spmat
   
      implicit none
   
@@ -39,7 +39,7 @@
      write(mystd,*)
 
 ! allocate memory for basis-related matrices
-     call alloc_m_basis_fullspace()
+     call alloc_m_full_basis()
 
 ! allocate memory for single particle matrices
      call alloc_m_spmat()
@@ -123,7 +123,7 @@
   
 ! deallocate memory
      call dealloc_m_spmat()
-     call dealloc_m_basis_fullspace()
+     call dealloc_m_full_basis()
   
 ! print footer
      call atomic_print_footer()

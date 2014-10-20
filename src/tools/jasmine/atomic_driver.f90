@@ -20,7 +20,7 @@
      use control, only : ncfgs
 
      use m_full, only : hmat, eigval, eigvec
-     use m_full, only : alloc_m_glob_fullspace, dealloc_m_glob_fullspace
+     use m_full, only : alloc_m_full, dealloc_m_full
   
      implicit none
   
@@ -34,7 +34,7 @@
 ! allocate memory 
      write(mystd, "(2X,a)") "jasmine >>> allocate memory of global variables for fullspace case ..."
      write(mystd,*)
-     call alloc_m_glob_fullspace()
+     call alloc_m_full()
   
 ! build atomic many particle Hamiltonian matrix
      write(mystd, "(2X,a)") "jasmine >>> make atomic many particle Hamiltonian ..."
@@ -85,7 +85,7 @@
 ! deallocate memory
      write(mystd, "(2X,a)") "jasmine >>> free memory of global variables for fullspace case ... "
      write(mystd,*)
-     call dealloc_m_glob_fullspace()
+     call dealloc_m_full()
   
      return
   end subroutine atomic_f_driver
@@ -93,7 +93,7 @@
 !!>>> atomic_s_driver: CTQMC trace algorithm: use good quantum numbers (GQNs)
   subroutine atomic_s_driver()
      use constants, only : mystd, eps6
-     use m_sector, only : nsectors, sectors, dealloc_m_glob_sectors
+     use m_sector, only : nsectors, sectors, dealloc_m_sector
   
      implicit none
 
@@ -149,7 +149,7 @@
 ! free memory
      write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
      write(mystd,*)
-     call dealloc_m_glob_sectors()
+     call dealloc_m_sector()
  
      return
   end subroutine atomic_s_driver
