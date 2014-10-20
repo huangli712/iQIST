@@ -2,8 +2,8 @@
 !!! project : jasmine
 !!! program : atomic_config
 !!!           atomic_check_config
-!!!           atomic_read_cf
-!!!           atomic_read_eimp
+!!!           atomic_read_cmat
+!!!           atomic_read_emat
 !!!           atomic_read_tmat
 !!!           atomic_make_spmat
 !!!           atomic_make_fock
@@ -23,7 +23,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_config: read config parameters from file 'atom.config.in'
+!!>>> atomic_config: read config parameters from file atom.config.in
   subroutine atomic_config()
      use constants, only : dp, mytmp
      use parser, only : p_create, p_destroy, p_parse, p_get
@@ -142,195 +142,218 @@
      use control ! ALL
 
 ! local variables
+! status flag for whether all of the parameters are OK
      logical :: lpass
 
+! initialize lpass
      lpass = .true.
 
-! check nband
-     if (nband <= 0) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: number of bands must &
-                                                    be larger than zero !'
-         write(mystd, *)
-         lpass = .false.
-     endif
-
 ! check itask
-     if (itask /= 1 .and. itask /= 2) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: itask must be 1 or 2 !'
-         write(mystd, *)
+     if ( itask /= 1 .and. itask /= 2 ) then
+         write(mystd,'(2X,a)') 'ERROR: itask must be 1 or 2!'
+         write(mystd,*)
          lpass = .false.
-     endif
-
-! check icf
-     if (icf /= 0 .and. icf /=1 .and. icf /= 2) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: icf must be one of 0, 1, 2 !'
-         write(mystd, *)
-         lpass = .false.
-     endif
-
-! check isoc
-     if (isoc /= 0 .and. isoc /=1) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: isoc must be 0 or 1 !'
-         write(mystd, *)
-         lpass = .false.
-     endif
-     if (isoc == 1 .and. nband /=3 .and. nband /= 5 .and. nband /=7) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: only support spin-orbital &
-                                                  coupling for nband=3, 5, 7 !'
-         write(mystd, *)
-         lpass = .false.
-     endif
-
-! check icu
-     if (icu /= 1 .and. icu /= 2) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: icu must be 1 or 2 !'
-         write(mystd, *)
-         lpass = .false.
-     endif
-     if (icu == 2 .and. nband /= 5 .and. nband /= 7) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: only support Slater-Cordon type &
-                                                Coulomb interaction for nband=5, 7 !'
-         write(mystd, *)
-         lpass = .false.
-     endif
-
-! check Uc, Uv, Jz, Js, Jp, Ud, JH
-     if (Uc < zero .or. Uv < zero .or. Jz < zero .or. Js < zero .or. &
-                                  Jp < zero .or. Ud < zero .or. JH < zero) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: Uc, Uv, Jz, Js, Jp, Ud, JH &
-                                                        must be larger than zero !'
-         write(mystd, *)
-         lpass = .false.
-     endif
+     endif ! back if ( itask /= 1 .and. itask /= 2 ) block
 
 ! check ictqmc
-     if (ictqmc /=1 .and. ictqmc /=2 .and. ictqmc /=3 .and. ictqmc /=4 .and. ictqmc /=5) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: ictqmc must be one of 1, 2, 3, 4, 5 !'
-         write(mystd, *)
+     if ( ictqmc /= 1 .and. ictqmc /= 2 .and. ictqmc /= 3 .and. ictqmc /= 4 .and. ictqmc /= 5 ) then
+         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 1, 2, 3, 4, 5!'
+         write(mystd,*)
          lpass = .false.
-     endif
-     if (ictqmc == 3 .and. isoc == 1) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: CTQMC good quantum numbers (N,Sz) &
-                           algorithm is NOT supported for spin-orbital coupling case ! '
-         write(mystd, *)
-         lpass = .false.
-     endif
-     if (ictqmc == 4 .and. isoc == 1) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: CTQMC good quantum numbers (N,Sz,Ps) &
-                              algorithm is NOT supported for spin-orbital coupling case ! '
-         write(mystd, *)
-         lpass = .false.
-     endif
-     if (ictqmc == 4 .and. icu == 2) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: CTQMC good quantum numbers (N,Sz,Ps) &
-                   algorithm is NOT supported for Slater-Cordon type Coulomb interaction U'
-         write(mystd, *)
-         lpass = .false.
-     endif
-     if (ictqmc == 5 .and. isoc == 0) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: CTQMC good quantum numbers (N,Jz) &
-                             algorithm is ONLY supported for spin-orbital coupling case !'
-         write(mystd, *)
-         lpass = .false.
-     endif
-     if (ictqmc == 5 .and. isoc == 1 .and. icf /= 0) then
-         write(mystd, '(2X,a)') 'jasmine >>> ERROR: CTQMC good quantum numbers (N,Jz) &
-          algorithm is NOT supported for spin-orbital coupling plus crystal field case !'
-         write(mystd, *)
-         lpass = .false.
-     endif
+     endif ! back if ( ictqmc /= 1 .and. ictqmc /= 2 .and. ictqmc /= 3 .and. ictqmc /= 4 .and. ictqmc /= 5 ) block
 
-     if (lpass == .true.) then
-         !!write(mystd, '(2X,a)') 'jasmine >>> Good News: all control parameters are OK !'
-     else
-         call s_print_error('atomic_check_config', 'Found some wrong setting of parameters, &
-                                                   please check the "atom.config.in" file !')
-     endif
+     if ( ictqmc == 3 .and. isoc == 1 ) then
+         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz) algorithm is NOT supported for SOC case!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( ictqmc == 3 .and. isoc == 1 ) block
+
+     if ( ictqmc == 4 .and. isoc == 1 ) then
+         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz,Ps) algorithm is NOT supported for SOC case!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( ictqmc == 4 .and. isoc == 1 ) block
+
+     if ( ictqmc == 4 .and. icu == 2 ) then
+         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz,Ps) algorithm is NOT supported for Slater-Cordon type interaction U!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( ictqmc == 4 .and. icu == 2 ) block
+
+     if ( ictqmc == 5 .and. isoc == 0 ) then
+         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Jz) algorithm is ONLY supported for SOC case!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( ictqmc == 5 .and. isoc == 0 ) block
+
+     if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) then
+         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Jz) algorithm is NOT supported for SOC plus CF case!'
+         write(mystd, *)
+         lpass = .false.
+     endif ! back if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) block
+
+! check icu
+     if ( icu /= 1 .and. icu /= 2 ) then
+         write(mystd,'(2X,a)') 'ERROR: icu must be 1 or 2!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( icu /= 1 .and. icu /= 2 ) block
+
+     if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) then
+         write(mystd,'(2X,a)') 'ERROR: only support Slater-Cordon type Coulomb interaction for nband=5 or 7!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
+
+! check icf
+     if ( icf /= 0 .and. icf /= 1 .and. icf /= 2 ) then
+         write(mystd,'(2X,a)') 'ERROR: icf must be one of 0, 1, 2!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( icf /= 0 .and. icf /= 1 .and. icf /= 2 ) block
+
+! check isoc
+     if ( isoc /= 0 .and. isoc /= 1 ) then
+         write(mystd,'(2X,a)') 'ERROR: isoc must be 0 or 1!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( isoc /= 0 .and. isoc /= 1 ) block
+
+     if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) then
+         write(mystd,'(2X,a)') 'ERROR: only support SOC for nband=3, 5, or 7!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) block
+
+! check nband
+     if ( nband <= 0 ) then
+         write(mystd,'(2X,a)') 'ERROR: number of bands must be larger than zero!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( nband <= 0 ) block
+
+! check Uc, Uv, Jz, Js, Jp, Ud, JH
+     if ( Uc < zero .or. Uv < zero ) then
+         write(mystd,'(2X,a)') 'ERROR: Uc and Uv must be larger than zero!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( Uc < zero .or. Uv < zero ) block
+
+     if ( Jz < zero .or. Js < zero .or. Jp < zero ) then
+         write(mystd,'(2X,a)') 'ERROR: Jz, Js, and Jp must be larger than zero!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( Jz < zero .or. Js < zero .or. Jp < zero ) block
+
+     if ( Ud < zero .or. Jh < zero ) then
+         write(mystd,'(2X,a)') 'ERROR: Ud and Jh must be larger than zero!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( Ud < zero .or. Jh < zero ) block
+
+     if ( lpass .eqv. .false. ) then
+         call s_print_error('atomic_check_config','invalid parameters found in atom.config.in file!')
+     endif ! back if ( lpass .eqv. .false. ) block
 
      return
   end subroutine atomic_check_config
 
-!!>>> atomic_read_cf: read crystal field from file 'atomic.cf.in'
-  subroutine atomic_read_cf()
-     use constants, only : mytmp, dp, zero
+!!>>> atomic_read_cmat: read crystal field from file atomic.cf.in
+  subroutine atomic_read_cmat()
+     use, intrinsic :: iso_fortran_env, only : iostat_end
+     use constants, only : dp, zero, mytmp
+
      use m_spmat, only : cmat
 
      implicit none
 
 ! local variables
 ! file status
-     logical :: exists
+     logical  :: exists
 
 ! iostat
-     integer :: ierr
+     integer  :: ierr
 
 ! dummy variables
-     integer :: i, j
-     real(dp) :: r1
+     integer  :: i
+     integer  :: j
+     real(dp) :: raux
 
-! we read crystal field from file "atom.cf.in"
-! inquire file
-     inquire(file='atom.cf.in', exist=exists)
+! we shall read crystal field cmat from file atom.cf.in
+! inquire file at first
+     inquire(file = 'atom.cf.in', exist = exists)
 
-     if (exists .eqv. .true.) then
-         open(mytmp, file='atom.cf.in')
-         do while(.true.)
-             read(mytmp, *, iostat=ierr) i, j, r1
-             ! crystal field is actually real
-             cmat(i,j) = dcmplx(r1, zero)
-             if (ierr /= 0) exit
-         enddo
+     if ( exists .eqv. .true. ) then
+! open file atom.cf.in
+         open(mytmp, file='atom.cf.in', form='formatted', status='unknown')
+
+! read the data until EOF
+         do
+             read(mytmp, *, iostat = ierr) i, j, raux
+             if ( ierr == iostat_end ) EXIT
+! crystal field is actually real
+             cmat(i,j) = dcmplx(raux, zero)
+         enddo ! over do while loop
+
+! close data file
+         close(mytmp)
      else
-         call s_print_error('atomic_read_cf', 'no file atomic.cf.in !')
-     endif
+         call s_print_error('atomic_read_cmat', 'file atomic.cf.in does not exist!')
+     endif ! back if ( exists .eqv. .true. ) block
 
      return
-  end subroutine atomic_read_cf
+  end subroutine atomic_read_cmat
 
-!!>>> atomic_read_eimp: read on-site impurity energy
-!!>>> from file 'atomic.eimp.in'
-  subroutine atomic_read_eimp()
-     use constants, only : mytmp, dp, zero
+!!>>> atomic_read_emat: read onsite impurity level from file atomic.eimp.in
+  subroutine atomic_read_emat()
+     use constants, only : dp, zero, mytmp
+
      use control, only : norbs
-
      use m_spmat, only : emat
 
      implicit none
 
 ! local variables
 ! file status
-     logical :: exists
+     logical  :: exists
 
 ! loop index
-     integer :: i
+     integer  :: i
 
 ! dummy variables
-     integer :: i1, i2
-     real(dp) :: r1
+     integer  :: i1
+     integer  :: i2
+     real(dp) :: raux
 
-! we read eimp from file 'atomic.eimp.in'
-     inquire(file='atom.eimp.in', exist=exists)
+! we shall read emat from file atomic.eimp.in
+! inquire file at first
+     inquire(file = 'atom.eimp.in', exist = exists)
 
-     if (exists .eqv. .true.) then
-         open(mytmp, file='atom.eimp.in')
-         do i=1, norbs
-             read(mytmp, *) i1, i2, r1
-             ! eimpmat is actually real in natural basis
-             emat(i,i) = dcmplx(r1, zero)
-         enddo
+     if ( exists .eqv. .true. ) then
+! open file atom.eimp.in
+         open(mytmp, file='atom.eimp.in', form='formatted', status='unknown')
+
+! read the data file
+         do i=1,norbs
+             read(mytmp, *) i1, i2, raux
+! emat is actually real in natural basis
+             emat(i,i) = dcmplx(raux, zero)
+         enddo ! over i={1,norbs} loop
+
+! close data file
+         close(mytmp)
      else
-         call s_print_error('atomic_read_eimp', 'no file atomic.eimp.in !')
-     endif
+         call s_print_error('atomic_read_emat', 'file atomic.eimp.in does not exist!')
+     endif ! back if ( exists .eqv. .true. ) block
 
      return
-  end subroutine atomic_read_eimp
+  end subroutine atomic_read_emat
 
-!!>>> atomic_read_tmat: read the transformation matrix
-!!>>> tmat from file 'atomic.umat.in'
+!!>>> atomic_read_tmat: read the transformation matrix tmat from file atomic.tmat.in
   subroutine atomic_read_tmat()
-     use constants, only : mytmp, dp, zero
-     use control, only : norbs
+     use constants, only : dp, zero, mytmp
 
+     use control, only : norbs
      use m_spmat, only : tmat
 
      implicit none
@@ -340,26 +363,35 @@
      logical :: exists
 
 ! loop index
-     integer :: i, j
+     integer :: i
+     integer :: j
 
 ! dummy variables
-     integer :: i1, i2
-     real(dp) :: r1
+     integer :: i1
+     integer :: i2
+     real(dp) :: raux
 
-! we read ran_umat from file 'atomic.umat.in'
-     inquire(file='atom.umat.in', exist=exists)
+! we shall read transformation matrix tmat from file atomic.umat.in
+! inquire file at first
+     inquire(file = 'atom.tmat.in', exist = exists)
 
-     if (exists .eqv. .true.) then
-         open(mytmp, file='atom.umat.in')
-         do i=1, norbs
-             do j=1, norbs
-                 read(mytmp, *) i1, i2, r1
-                 tmat(j,i) = dcmplx(r1, zero)
-             enddo
-         enddo
+     if ( exists .eqv. .true. ) then
+! open file atom.tmat.in
+         open(mytmp, file='atom.tmat.in', form='formatted', status='unknown')
+
+! read the data file
+         do i=1,norbs
+             do j=1,norbs
+                 read(mytmp,*) i1, i2, raux
+                 tmat(j,i) = dcmplx(raux, zero)
+             enddo ! over j={1,norbs} loop
+         enddo ! over i={1,norbs} loop
+
+! close data file
+         close(mytmp)
      else
-         call s_print_error('atomic_read_tmat', 'no file atomic.umat.in')
-     endif
+         call s_print_error('atomic_read_tmat', 'file atomic.tmat.in does not exist')
+     endif ! back if ( exists .eqv. .true. ) block
 
      return
   end subroutine atomic_read_tmat
@@ -368,61 +400,71 @@
 !!>>> crystal field (CF), spin-orbit coupling (SOC), and Coulomb interaction
 !!>>> U tensor
   subroutine atomic_make_spmat()
-     use constants, only : czero, two
-     use control, only : itask, icf, isoc, icu, nband, lambda
+     use constants, only : two, czero
+
+     use control, only : itask
+     use control, only : icu, icf, isoc
+     use control, only : nband
+     use control, only : lambda
      use m_spmat, only : cmat, smat
 
      implicit none
 
 ! make crystal field and spin-orbital coupling
-! make natural basis inside
-     if (itask == 1) then
-! crysal field
-         if (icf > 0) then
-! we read the non-zero elements of
-! crystal field from a file "atom.cf.in".
-! the crystal field is defined on real orbital basis
-! at present, we only support real crystal field,
-! so, the elements in this file provided by user must be real
-             call atomic_read_cf()
+! method 1: make them inside
+     if ( itask == 1 ) then
+! 1A: make crysal field
+! we read the non-zero elements of crystal field from file atom.cf.in.
+! the crystal field is defined on real orbital basis. at present, we only
+! support real crystal field, so, the elements in this file provided by
+! user must be real
+         if ( icf > 0 ) then
+             call atomic_read_cmat()
          else
              cmat = czero
-         endif
-! spin-orbit coupling
-         if (isoc > 0) then
+         endif ! back if ( icf > 0 ) block
+
+! 1B: make spin-orbit coupling
 ! make an atomic on-site SOC, $\lambda * L * S$
 ! it is defined on the complex orbital basis
-             if (nband == 3) then
-                 call atomic_make_smat3(smat)
-                 ! for 3 bands system, there is a minus sign
-                 smat = -smat * lambda / two
-             elseif(nband == 5) then
-                 call atomic_make_smat5(smat)
-                 smat = smat * lambda / two
-             elseif(nband == 7) then
-                 call atomic_make_smat7(smat)
-                 smat = smat * lambda / two
-             else
-                 call s_print_error('atomic_make_spmat', 'not implementd!')
-             endif
+         if ( isoc > 0 ) then
+             select case (nband)
+
+                 case (3)
+                     call atomic_make_smat3(smat)
+! for 3 bands system, there is a minus sign
+                     smat = -smat * lambda / two
+
+                 case (5)
+                     call atomic_make_smat5(smat)
+                     smat = smat * lambda / two
+
+                 case (7)
+                     call atomic_make_smat7(smat)
+                     smat = smat * lambda / two
+
+                 case default
+                     call s_print_error('atomic_make_spmat', 'not implemented!')
+
+             end select
          else
              smat = czero
-         endif
-! make natural basis outside
+         endif ! back if ( isoc > 0 ) block
+! method 2: make them outside
      else
-! read the eimp (CF+SOC) matrices on natural basis
-! this matrix should be a diagonal matrix, and the elements must be real
-         call atomic_read_eimp()
-! read the transformation matrices used to transfer eimp
-! from original basis to natural basis
-! without SOC, the original basis is the real orbital basis
-! with SOC, the original basis is the complex orbital basis
-! at present, we just only support real numbers of this umat
+! read the emat (CF+SOC) matrices on natural basis, this matrix should be
+! a diagonal matrix, and the elements must be real
+         call atomic_read_emat()
+
+! read the transformation matrices used to transfer emat from original
+! basis to natural basis. without SOC, the original basis is the real
+! orbital basis. with SOC, the original basis is the complex orbital basis
+! at present, we just only support real numbers of this tmat
          call atomic_read_tmat()
-     endif
+     endif ! back if ( itask == 1 ) block
 
 ! make Coulomb interaction U
-     if (icu == 1) then
+     if ( icu == 1 ) then
 ! Kanamori parameters type
 ! it is defined on real orbital basis
          call atomic_make_umatK()
@@ -430,7 +472,7 @@
 ! Slater-Cordon parameters type
 ! it is defined on complex orbital basis
          call atomic_make_umatS()
-     endif
+     endif ! back if ( icu == 1 ) block
 
      return
   end subroutine atomic_make_spmat

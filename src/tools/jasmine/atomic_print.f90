@@ -94,7 +94,7 @@
      write(mystd,'(2(4X,a,f10.5))') 'F0    :', F0     , 'F2     :', F2
      write(mystd,'(2(4X,a,f10.5))') 'F4    :', F4     , 'F6     :', F6
 
-     write(mystd,'(2(4X,a,f10.5))') 'lambda:', lambda,  'mune   :', mune
+     write(mystd,'(2(4X,a,f10.5))') 'mune  :', mune   , 'lambda :', lambda
 
      write(mystd,*)
 
