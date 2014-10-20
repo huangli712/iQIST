@@ -487,7 +487,7 @@
      enddo
 
 ! dump Fock basis to file "atom.basis.dat" for reference
-     call atomic_dump_basis()
+     call atomic_dump_fock()
 
      return
   end subroutine atomic_make_fock
@@ -534,7 +534,7 @@
      endif
 
 ! dump eimpmat for reference
-     call atomic_dump_eimp()
+     call atomic_dump_emat()
 
 ! we need transform Coulomb interaction U
 ! for non-soc case, the tran_umat is defined as from real orbital basis to natural basis
