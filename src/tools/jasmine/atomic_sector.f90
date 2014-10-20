@@ -555,7 +555,7 @@
      counter = 1
      do i=1, nsect
          sectors(i)%ndim = ndims(i)
-         sectors(i)%nelectron = sect_good_ntot(i)
+         sectors(i)%nele = sect_good_ntot(i)
          sectors(i)%nops = norbs
          sectors(i)%istart = counter 
          counter = counter + ndims(i)
@@ -694,7 +694,7 @@
              write(mytmp, '(a)') '#      i | electron(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
              do i=1, nsectors
                  do j=1, sectors(i)%ndim
-                     write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,8X, 14I1)') i, sectors(i)%nelectron, &
+                     write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,8X, 14I1)') i, sectors(i)%nele, &
                                            sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j)) 
                  enddo
              enddo

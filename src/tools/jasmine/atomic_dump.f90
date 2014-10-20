@@ -223,7 +223,7 @@
          do j=1, sectors(i)%ndim
              counter = counter + 1
              write(mytmp, "(I10,4X,I10,4X,I10,4X,I10, F20.10)") counter, i, &
-                               sectors(i)%nelectron, j, sectors(i)%eigval(j)
+                               sectors(i)%nele, j, sectors(i)%eigval(j)
          enddo
      enddo
      close(mytmp)
@@ -299,7 +299,7 @@
 ! write dimension, total electrons, next_sector, eigenvalue of each sector
      do i=1, nsectors
          write(mytmp, "(a)") "# SECT_INFO: INDEX  |  NDIM  |  NELEC  |   NOPS  |  ISTART"  
-         write(mytmp, "(6X,5I10)") i, sectors(i)%ndim, sectors(i)%nelectron, sectors(i)%nops, sectors(i)%istart
+         write(mytmp, "(6X,5I10)") i, sectors(i)%ndim, sectors(i)%nele, sectors(i)%nops, sectors(i)%istart
   
 ! write next_sector
          write(mytmp, "(4X,a)") "# NEXT_SECTOR    F     F^{\dagger}"
