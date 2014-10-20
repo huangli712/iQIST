@@ -1,4 +1,4 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_f_driver
 !!!           atomic_s_driver
@@ -8,148 +8,198 @@
 !!! history : 07/09/2014 by yilin wang
 !!!           08/13/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
-!!! purpose : solve atomic problem for different CTQMC trace algorithms
+!!!           10/20/2014 by li huang
+!!! purpose : core drivers for atomic eigenvalue problem solver
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
-!!>>> atomic_f_driver: CTQMC direct matrices multiplications 
-!!>>> trace algorithm, use full Hilbert space 
+!!>>> atomic_f_driver: solve the atomic eigenvalue problem using full
+!!>>> Hilbert space diagonalization
+!!>>> note: the output files are only compatible with BEGONIA and LAVENDER
+!!>>> commponents int the iQIST software package
   subroutine atomic_f_driver()
      use constants, only : dp, mystd, eps6
-     use control, only : ncfgs
 
+     use control, only : ncfgs
      use m_full, only : hmat, eigval, eigvec
      use m_full, only : alloc_m_full, dealloc_m_full
-  
-     implicit none
-  
-! local variables
-! a temp matrix
-     real(dp) :: tmp_mat(ncfgs, ncfgs)
 
-! whether the Hamiltonian is real ? 
-     !!logical :: lreal 
-  
-! allocate memory 
-     write(mystd, "(2X,a)") "jasmine >>> allocate memory of global variables for fullspace case ..."
-     write(mystd,*)
+     implicit none
+
+! local variables
+! starting time
+     real(dp) :: time_begin
+
+! ending time
+     real(dp) :: time_end
+
+! dummy matrix
+     real(dp) :: tmp_mat(ncfgs,ncfgs)
+
+! allocate memory for global variables
+     write(mystd,"(2X,a)") "allocate memory for global variables in full Hilbert space"
+     call cpu_time(time_begin) ! record starting time
      call alloc_m_full()
-  
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     write(mystd,*)
+
 ! build atomic many particle Hamiltonian matrix
-     write(mystd, "(2X,a)") "jasmine >>> make atomic many particle Hamiltonian ..."
-     write(mystd,*)
+     write(mystd,"(2X,a)") "make atomic many particle Hamiltonian"
+     call cpu_time(time_begin) ! record starting time
      call atomic_make_fhmat()
-  
-! check whether the many particle Hamiltonian is real 
-     write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
+
+! check whether the many particle Hamiltonian is real
+     write(mystd,"(2X,a)") "check whether Hamiltonian is real or not"
+     call cpu_time(time_begin) ! record starting time
      if ( any( abs( aimag(hmat) ) > eps6 ) ) then
-         call s_print_error('atomic_f_driver', 'hmat is not real !')
-     else
-         write(mystd, "(2X,a)") "jasmine >>> the atomic Hamiltonian is real"
-         write(mystd,*)
-     endif
-  
-! diagonalize hmat
-     write(mystd, "(2X,a)") "jasmine >>> diagonalize the atomic Hamiltonian ..."
+         call s_print_error('atomic_f_driver','hmat is not real!')
+     endif ! back if ( any( abs( aimag(hmat) ) > eps6 ) ) block
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
+
+! diagonalize hmat
+     write(mystd,"(2X,a)") "diagonalize the atomic Hamiltonian"
+     call cpu_time(time_begin) ! record starting time
      tmp_mat = real(hmat)
      call s_eig_sy(ncfgs, ncfgs, tmp_mat, eigval, eigvec)
-  
-! build fmat
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     write(mystd,*)
+
+! build F-matrix
 ! first, build fmat of annihilation operators in Fock basis
 ! then, transform them to the eigen basis
-     write(mystd, "(2X,a)") "jasmine >>> make fmat for annihilation fermion operators ... "
-     write(mystd,*)
+     write(mystd,"(2X,a)") "make F-matrix for annihilation fermion operators"
+     call cpu_time(time_begin) ! record starting time
      call atomic_make_ffmat()
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     write(mystd,*)
 
 ! build occupancy number
-     write(mystd, "(2X,a)") "jasmine >>> make occupancy number of atomic eigenstates ... "
+     write(mystd,"(2X,a)") "make occupancy number of atomic eigenstates"
+     call cpu_time(time_begin) ! record starting time
+     call atomic_make_foccu()
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
-     call atomic_make_foccu()    
 
 ! write eigenvalues of hmat to file 'atom.eigval.dat'
-     write(mystd, "(2X,a)") "jasmine >>> write eigenvalue, eigenvector, and atom.cix to files ..."
-     write(mystd,*)
-     call atomic_dump_feigval()
-  
 ! write eigenvectors of hmat to file 'atom.eigvec.dat'
+! write eigenvalue of hmat, occupany number of eigenstates and fmat of
+! annihilation fermion operators to file "atom.cix"
+     write(mystd,"(2X,a)") "write eigenvalue, eigenvector, and atom.cix to files"
+     call cpu_time(time_begin) ! record starting time
+     call atomic_dump_feigval()
      call atomic_dump_feigvec()
-   
-! write eigenvalue of hmat, occupany number of eigenstates and 
-! fmat of annihilation fermion operators to file "atom.cix"
-! this is for begonia, lavender codes of iQIST package
      call atomic_dump_fcix()
-  
-! deallocate memory
-     write(mystd, "(2X,a)") "jasmine >>> free memory of global variables for fullspace case ... "
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
+
+! deallocate memory
+     write(mystd,"(2X,a)") "deallocate memory for global variables in full Hilbert space"
+     call cpu_time(time_begin) ! record starting time
      call dealloc_m_full()
-  
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     write(mystd,*)
+
      return
   end subroutine atomic_f_driver
-  
-!!>>> atomic_s_driver: CTQMC trace algorithm: use good quantum numbers (GQNs)
+
+!!>>> atomic_s_driver: solve the atomic eigenvalue problem using good
+!!>>> quantum numbers (GQNs) algorithm and sector-by-sector diagonalization
+!!>>> note: the output files are only compatible with PANSY and MANJUSHAKA
+!!>>> commponents int the iQIST software package
   subroutine atomic_s_driver()
-     use constants, only : mystd, eps6
-     use m_sector, only : nsectors, sectors, dealloc_m_sector
-  
+     use constants, only : dp, mystd, eps6
+
+     use m_sector, only : nsectors
+     use m_sector, only : sectors
+     use m_sector, only : dealloc_m_sector
+
      implicit none
 
 ! local variables
 ! loop index
      integer :: i
 
-! whether the Hamiltonian is real ?
-!     logical :: lreal
+! starting time
+     real(dp) :: time_begin
 
-! make all the sectors, allocate m_glob_sectors memory inside
-     write(mystd, "(2X,a)") "jasmine >>> determine sectors by good quantum numbers (GQNs)... "
-     write(mystd,*)
+! ending time
+     real(dp) :: time_end
+
+! make all the sectors, allocate sectors memory inside
+     write(mystd,"(2X,a)") "determine sectors using good quantum numbers (GQNs)"
+     call cpu_time(time_begin) ! record starting time
      call atomic_make_sectors()
- 
-! make atomic Hamiltonian
-     write(mystd, "(2X,a)") "jasmine >>> make atomic Hamiltonian for each sector ... "
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
-     call atomic_make_shmat()
-  
-! check whether the many particle Hamiltonian is real 
-     write(mystd, "(2X,a)") "jasmine >>> check whether Hamiltonian is real or not ..."
-     write(mystd,*)
-     do i=1, nsectors 
-         if ( any( abs( aimag(sectors(i)%ham) ) > eps6 ) ) then
-             call s_print_error('atomic_solve_sectors', 'hmat is not real !')
-         endif
-     enddo
-     write(mystd, "(2X,a)") "jasmine >>> the Hamiltonian is real"
-     write(mystd,*)
-  
-! diagonalize Hamiltonian of each sector one by one
-     write(mystd, "(2X,a)") "jasmine >>> diagonalize atomic Hamiltonian for each sector ... "
-     write(mystd,*)
-     call atomic_diag_shmat()
-  
-! make fmat of both creation and annihilation operators for each sector
-     write(mystd, "(2X,a)") "jasmine >>> make fmat for each sector ..."
-     write(mystd,*)
-     call atomic_make_sfmat()
-  
-     write(mystd, "(2X,a)") "jasmine >>> write eigenvalue, eigenvector, and atom.cix to files ... "
-     write(mystd,*)
-! write eigenvalues to file 'atom.eigval.dat'
-     call atomic_dump_seigval()
-  
-! write eigenvectors to file 'atom.eigvec.dat'
-     call atomic_dump_seigvec()
-  
-! write information of sectors to file 'atom.cix'
-     call atomic_dump_scix()
 
-! free memory
-     write(mystd, "(2X,a)") "jasmine >>> free memory for sectors case ..."
+! make atomic Hamiltonian
+     write(mystd,"(2X,a)") "make atomic Hamiltonian for every sector"
+     call cpu_time(time_begin) ! record starting time
+     call atomic_make_shmat()
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
+
+! check whether the many particle Hamiltonian is real
+     write(mystd,"(2X,a)") "check whether Hamiltonian is real or not"
+     call cpu_time(time_begin) ! record starting time
+     do i=1,nsectors
+         if ( any( abs( aimag(sectors(i)%ham) ) > eps6 ) ) then
+             call s_print_error('atomic_s_driver', 'hmat is not real!')
+         endif ! back if ( any( abs( aimag(sectors(i)%ham) ) > eps6 ) ) block
+     enddo ! over i={1,nsectors} loop
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     write(mystd,*)
+
+! diagonalize Hamiltonian of each sector one by one
+     write(mystd,"(2X,a)") "diagonalize atomic Hamiltonian for every sector"
+     call cpu_time(time_begin) ! record starting time
+     call atomic_diag_shmat()
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     write(mystd,*)
+
+! make F-matrix of both creation and annihilation operators for each sector
+     write(mystd,"(2X,a)") "make F-matrix for every sector"
+     call cpu_time(time_begin) ! record starting time
+     call atomic_make_sfmat()
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     write(mystd,*)
+
+! write eigenvalues to file 'atom.eigval.dat'
+! write eigenvectors to file 'atom.eigvec.dat'
+! write information of sectors to file 'atom.cix'
+     write(mystd,"(2X,a)") "write eigenvalue, eigenvector, and atom.cix to files"
+     call cpu_time(time_begin) ! record starting time
+     call atomic_dump_seigval()
+     call atomic_dump_seigvec()
+     call atomic_dump_scix()
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     write(mystd,*)
+
+! deallocate memory
+     write(mystd,"(2X,a)") "deallocate memory for global variables in sectors"
+     call cpu_time(time_begin) ! record starting time
      call dealloc_m_sector()
- 
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     write(mystd,*)
+
      return
   end subroutine atomic_s_driver
