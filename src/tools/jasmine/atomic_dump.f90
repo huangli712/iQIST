@@ -9,6 +9,7 @@
 !!!           atomic_dump_seigval
 !!!           atomic_dump_seigvec
 !!!           atomic_dump_scix
+!!!           atomic_dump_sector
 !!! source  : atomic_dump.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
@@ -444,3 +445,114 @@
 
      return
   end subroutine atomic_dump_scix
+
+!!>>> atomic_dump_sector: write out the configuration for each sector
+!!>>> to file atom.sector.dat
+  subroutine atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
+     use constants, only : mytmp
+
+     use control, only : ictqmc
+     use control, only : ncfgs
+     use m_full, only : bin_basis
+     use m_sector, only : nsectors, max_dim_sect, ave_dim_sect
+     use m_sector, only : sectors
+
+     implicit none
+
+! external arguments
+! good quantum number: N
+     integer, intent(in) :: sect_good_ntot(ncfgs)
+
+! good quantum number: Sz
+     integer, intent(in) :: sect_good_sz(ncfgs)
+
+! good quantum number: PS
+     integer, intent(in) :: sect_good_ps(ncfgs)
+
+! good quantum number: Jz
+     integer, intent(in) :: sect_good_jz(ncfgs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open 'atom.sector.dat' to write
+     open(mytmp, file='atom.sector.dat', form='formatted', status='unknown')
+
+! write header
+     write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
+     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
+     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
+
+! write the data
+     select case (ictqmc)
+         case (1)
+             call s_print_error('atomic_dump_sector','this function is not implemented')
+
+         case (2)
+             write(mytmp,'(a)',advance='no') '#      i |'
+             write(mytmp,'(a)',advance='no') ' electron(i) '
+             write(mytmp,'(a)') '|     ndim(i) |           j |   fock_basis(j,i) |'
+             do i=1,nsectors
+                 do j=1,sectors(i)%ndim
+                     write(mytmp,'(I10,4X)',advance='no') i
+                     write(mytmp,'(I10,4X)',advance='no') sectors(i)%nele
+                     write(mytmp,'(I10,4X)',advance='no') sectors(i)%ndim
+                     write(mytmp,'(I10,8X)',advance='no') j
+                     write(mytmp,'(14I1)') bin_basis(:, sectors(i)%basis(j))
+                 enddo ! over j={1,sectors(i)%ndim} loop
+             enddo ! over i={1,nsectors} loop
+
+         case(3)
+             write(mytmp,'(a)',advance='no') '#      i |'
+             write(mytmp,'(a)',advance='no') ' electron(i) |       Sz(i)' 
+             write(mytmp,'(a)') '|     ndim(i) |           j |   fock_basis(j,i) |'
+             do i=1,nsectors
+                 do j=1,sectors(i)%ndim
+                     write(mytmp,'(I10,4X)',advance='no') i
+                     write(mytmp,'(I10,4X)',advance='no') sect_good_ntot(i)
+                     write(mytmp,'(I10,4X)',advance='no') sect_good_sz(i)
+                     write(mytmp,'(I10,4X)',advance='no') sectors(i)%ndim
+                     write(mytmp,'(I10,8X)',advance='no') j
+                     write(mytmp,'(14I1)') bin_basis(:, sectors(i)%basis(j))
+                 enddo ! over j={1,sectors(i)%ndim} loop
+             enddo ! over i={1,nsectors} loop
+
+         case(4)
+             write(mytmp,'(a)',advance='no') '#      i |'
+             write(mytmp,'(a)',advance='no') ' electron(i) |       Sz(i) |       PS(i) '
+             write(mytmp,'(a)') '|     ndim(i) |           j |    fock_basis(j,i) |'
+             do i=1,nsectors
+                 do j=1,sectors(i)%ndim
+                     write(mytmp,'(I10,4X)',advance='no') i
+                     write(mytmp,'(I10,4X)',advance='no') sect_good_ntot(i)
+                     write(mytmp,'(I10,4X)',advance='no') sect_good_sz(i)
+                     write(mytmp,'(I10,4X)',advance='no') sect_good_ps(i)
+                     write(mytmp,'(I10,4X)',advance='no') sectors(i)%ndim
+                     write(mytmp,'(I10,8X)',advance='no') j
+                     write(mytmp,'(14I1)') bin_basis(:, sectors(i)%basis(j))
+                 enddo ! over j={1,sectors(i)%ndim} loop
+             enddo ! over i={1,nsectors} loop
+
+          case(5)
+              write(mytmp,'(a)',advance='no') '#      i |'
+              write(mytmp,'(a)',advance='no') ' electron(i) |       Jz(i) '
+              write(mytmp,'(a)') '|     ndim(i) |           j |   fock_basis(j,i) |'
+              do i=1,nsectors
+                  do j=1,sectors(i)%ndim
+                     write(mytmp,'(I10,4X)',advance='no') i
+                     write(mytmp,'(I10,4X)',advance='no') sect_good_ntot(i)
+                     write(mytmp,'(I10,4X)',advance='no') sect_good_jz(i)
+                     write(mytmp,'(I10,4X)',advance='no') sectors(i)%ndim
+                     write(mytmp,'(I10,8X)',advance='no') j
+                     write(mytmp,'(14I1)') bin_basis(:, sectors(i)%basis(j))
+                  enddo ! over j={1,sectors(i)%ndim} loop
+              enddo ! over i={1,nsectors} loop
+     end select ! back select case (ictqmc) block
+
+! close data file
+     close(mytmp)
+
+     return
+   end subroutine atomic_dump_sector

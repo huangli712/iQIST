@@ -645,52 +645,6 @@
          counter = counter + sectors(i)%ndim
      enddo
      ave_dim_sect = real(counter) / real(nsectors)
-
-     open(mytmp, file='atom.sector.dat')
-     write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
-     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
-     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
-
-     select case(ictqmc)
-         case(2)
-             write(mytmp, '(a)') '#      i | electron(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
-             do i=1, nsectors
-                 do j=1, sectors(i)%ndim
-                     write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,8X, 14I1)') i, sectors(i)%nele, &
-                                           sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j))
-                 enddo
-             enddo
-
-         case(3)
-             write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
-             do i=1, nsectors
-                 do j=1, sectors(i)%ndim
-                     write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i),&
-                          sect_good_sz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j))
-                 enddo
-             enddo
-
-         case(4)
-             write(mytmp, '(a)') '#      i | electron(i) |       Sz(i) |       PS(i) |     nd&
-                                 im(i) |           j |    fock_basis(j,i) |  '
-             do i=1, nsectors
-                 do j=1, sectors(i)%ndim
-                     write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i), &
-                   sect_good_sz(i), sect_good_ps(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j))
-                 enddo
-             enddo
-
-          case(5)
-              write(mytmp, '(a)') '#      i | electron(i) |       Jz(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
-              do i=1, nsectors
-                  do j=1, sectors(i)%ndim
-                      write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i),&
-                           sect_good_jz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j))
-                  enddo
-              enddo
-     end select ! back select case(ictqmc) block
-
-     close(mytmp)
 !----------------------------------------------------------------
 
 ! free memeory
