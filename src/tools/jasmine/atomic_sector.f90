@@ -74,7 +74,7 @@
                      enddo
                  enddo  ! over jbas={1, sectors(isect)%ndim} loop
 ! roate fmat to atomic eigenstates basis
-                 call atomic_tran_sfmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%eigvec, &
+                 call atomic_tran_fmat(sectors(jsect)%ndim, sectors(isect)%ndim, sectors(jsect)%eigvec, &
                      sectors(isect)%fmat(iorb, ifermi)%item, sectors(isect)%eigvec)
              enddo ! over ifermi={0,1} loop
          enddo ! over iorb={1, norbs} loop
@@ -82,43 +82,6 @@
 
      return
   end subroutine atomic_make_sfmat
-
-!!>>> atomic_tran_sfmat: rotate fmat from Fock basis to eigenstates basis
-  subroutine atomic_tran_sfmat(ndimx, ndimy, amat, bmat, cmat)
-     use constants, only: dp, zero, one
-     implicit none
-
-! external variables
-     integer, intent(in) :: ndimx
-     integer, intent(in) :: ndimy
-     real(dp), intent(in) :: amat(ndimx, ndimx)
-     real(dp), intent(inout) :: bmat(ndimx, ndimy)
-     real(dp), intent(in) :: cmat(ndimy, ndimy)
-
-! local variables
-     real(dp) :: tmp_mat(ndimx, ndimy)
-     real(dp) :: amat_t(ndimx, ndimx)
-     real(dp) :: alpha
-     real(dp) :: betta
-
-     amat_t = transpose(amat)
-     tmp_mat = zero
-
-     alpha = one; betta = zero
-     call dgemm('N', 'N', ndimx, ndimy, ndimy, &
-                           alpha, bmat, ndimx, &
-                                  cmat, ndimy, &
-                        betta, tmp_mat, ndimx  )
-
-     alpha = one; betta = zero
-     call dgemm('N', 'N', ndimx, ndimy, ndimx, &
-                         alpha, amat_t, ndimx, &
-                               tmp_mat, ndimx, &
-                           betta, bmat, ndimx  )
-
-
-     return
-  end subroutine atomic_tran_sfmat
 
 !!>>> atomic_make_shmat: make Hamiltonian for each sector one by one
   subroutine atomic_make_shmat()

@@ -14,6 +14,7 @@
 !!!           atomic_make_tmat_c2r
 !!!           atomic_make_tmat_r2c
 !!!           atomic_make_tmat_c2j
+!!!           atomic_tran_fmat
 !!!           atomic_tran_umat
 !!!           atomic_tran_repr_cmpl
 !!!           atomic_tran_repr_real
@@ -900,6 +901,48 @@
 !!========================================================================
 !!>>> perform representation transformation                            <<<
 !!========================================================================
+
+!!>>> atomic_tran_fmat: rotate F-matrix (fmat) from Fock basis to eigen-
+!!>>> states basis
+  subroutine atomic_tran_fmat(ndimx, ndimy, amat, bmat, cmat)
+     use constants, only: dp, zero, one
+
+     implicit none
+
+! external arguments
+! x dimension of matrix
+     integer, intent(in)  :: ndimx
+
+! y dimension of matrix
+     integer, intent(in)  :: ndimy
+
+! left transformation matrix
+     real(dp), intent(in) :: amat(ndimx,ndimx)
+
+! right transformation matrix
+     real(dp), intent(in) :: cmat(ndimy,ndimy)
+
+! F-matrix
+     real(dp), intent(inout) :: bmat(ndimx,ndimy)
+
+! local variables
+! dummy array
+     real(dp) :: tmp_mat(ndimx,ndimy)
+
+     tmp_mat = zero
+     call dgemm('N', 'N', ndimx, ndimy, ndimy, &
+                             one, bmat, ndimx, &
+                                  cmat, ndimy, &
+                         zero, tmp_mat, ndimx  )
+
+     alpha = one; betta = zero
+     call dgemm('T', 'N', ndimx, ndimy, ndimx, &
+                             one, amat, ndimx, &
+                               tmp_mat, ndimx, &
+                            zero, bmat, ndimx  )
+
+     return
+  end subroutine atomic_tran_fmat
 
 !!>>> atomic_tran_umat: transform Coulomb interaction U tensor from one
 !!>>> representation to another representation
