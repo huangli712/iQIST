@@ -1,7 +1,6 @@
-!!!----------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_make_sfmat
-!!!           atomic_tran_sfmat
 !!!           atomic_make_shmat
 !!!           atomic_diag_shmat
 !!!           atomic_make_sectors
@@ -9,11 +8,11 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
-!!! purpose : make fmat
+!!!           10/21/2014 by li huang
+!!! purpose :
 !!! status  : unstable
-!!! comment : these subroutines are based on Dr. LiangDu's (duleung@gmail.com) 
-!!!           atomic program
-!!!----------------------------------------------------------------------------
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !!>>> atomic_make_sfmat: build fmat for good quantum numbers (GQNs) algorithm
   subroutine atomic_make_sfmat()
@@ -23,11 +22,11 @@
      use m_full, only : dec_basis, index_basis
      use m_sector, only : nsectors, sectors
      use m_sector, only : alloc_one_fmat
-  
+
      implicit none
-  
+
 ! local variables
-! loop index 
+! loop index
      integer :: iorb
      integer :: ifermi
      integer :: isect, jsect
@@ -39,14 +38,14 @@
 
 ! auxiliary integer variables
      integer :: jold, jnew
-  
+
 ! loop over all the sectors
      do isect=1, nsectors
 ! loop over all the orbitals
          do iorb=1,norbs
 ! loop over the creation and annihilation fermion operators
-             do ifermi=0, 1 
-                 jsect = sectors(isect)%next(iorb, ifermi) 
+             do ifermi=0, 1
+                 jsect = sectors(isect)%next(iorb, ifermi)
                  if (jsect == -1) cycle
 ! allocate memory for fmat
                  sectors(isect)%fmat(iorb, ifermi)%n = sectors(jsect)%ndim
@@ -66,7 +65,7 @@
                          cycle
                      endif
                      ibas = index_basis(jnew)
-                     do i=1, sectors(jsect)%ndim 
+                     do i=1, sectors(jsect)%ndim
                          if (ibas == sectors(jsect)%basis(i)) then
                              ibas = i
                              sectors(isect)%fmat(iorb, ifermi)%item(ibas, jbas) = dble(isgn)
@@ -80,7 +79,7 @@
              enddo ! over ifermi={0,1} loop
          enddo ! over iorb={1, norbs} loop
      enddo ! over isect={1,nsectors} loop
-  
+
      return
   end subroutine atomic_make_sfmat
 
@@ -88,36 +87,36 @@
   subroutine atomic_tran_sfmat(ndimx, ndimy, amat, bmat, cmat)
      use constants, only: dp, zero, one
      implicit none
-     
+
 ! external variables
      integer, intent(in) :: ndimx
      integer, intent(in) :: ndimy
      real(dp), intent(in) :: amat(ndimx, ndimx)
      real(dp), intent(inout) :: bmat(ndimx, ndimy)
      real(dp), intent(in) :: cmat(ndimy, ndimy)
-  
+
 ! local variables
      real(dp) :: tmp_mat(ndimx, ndimy)
      real(dp) :: amat_t(ndimx, ndimx)
      real(dp) :: alpha
      real(dp) :: betta
-  
+
      amat_t = transpose(amat)
      tmp_mat = zero
-  
+
      alpha = one; betta = zero
      call dgemm('N', 'N', ndimx, ndimy, ndimy, &
                            alpha, bmat, ndimx, &
                                   cmat, ndimy, &
                         betta, tmp_mat, ndimx  )
-  
+
      alpha = one; betta = zero
      call dgemm('N', 'N', ndimx, ndimy, ndimx, &
                          alpha, amat_t, ndimx, &
                                tmp_mat, ndimx, &
                            betta, bmat, ndimx  )
-  
-  
+
+
      return
   end subroutine atomic_tran_sfmat
 
@@ -129,9 +128,9 @@
      use m_full, only : dec_basis, index_basis, bin_basis
      use m_spmat, only : emat, umat
      use m_sector, only : nsectors, sectors
-  
+
      implicit none
-  
+
 ! local variables
 ! loop index
      integer :: i
@@ -151,37 +150,37 @@
 
 ! whether in some sector
      logical :: insect
-      
+
      do isect=1, nsectors
          sectors(isect)%ham = czero
-  
+
 !---------------------------------------------------------------------------------------!
 ! two fermion operators
          do jbas=1,sectors(isect)%ndim
-  
+
              alploop: do alpha=1,norbs
              betloop: do betta=1,norbs
-  
+
                  isgn = 0
                  knew = dec_basis(sectors(isect)%basis(jbas))
                  code(1:norbs) = bin_basis(1:norbs, sectors(isect)%basis(jbas))
-  
+
                  if ( abs(emat(alpha, betta)) .lt. epst ) cycle
-  
+
 ! simulate one annihilation operator
                  if (code(betta) == 1) then
                      do i=1,betta-1
                          if (code(i) == 1) isgn = isgn + 1
-                     enddo 
+                     enddo
                      code(betta) = 0
-  
+
 ! simulate one creation operator
                      if (code(alpha) == 0) then
                          do i=1,alpha-1
                              if (code(i) == 1) isgn = isgn + 1
                          enddo
                          code(alpha) = 1
-  
+
 ! determine the row number and hamiltonian matrix elememt
                          knew = knew - 2**(betta-1)
                          knew = knew + 2**(alpha-1)
@@ -191,28 +190,28 @@
                              call s_print_error('atomic_mkhmat_sectors', &
                                                 'error while determining row1')
                          endif
-  
+
                          insect = .false.
-                         do i=1, sectors(isect)%ndim 
+                         do i=1, sectors(isect)%ndim
                              if (sectors(isect)%basis(i) == ibas) then
                                  ibas = i
                                  insect = .true.
                              endif
                          enddo
-  
+
                          if (insect) then
                              sectors(isect)%ham(ibas,jbas) = sectors(isect)%ham(ibas,jbas) + &
-                                                            emat(alpha, betta) * (-1.0d0)**isgn 
+                                                            emat(alpha, betta) * (-1.0d0)**isgn
                          endif
-  
+
                      endif ! back if (code(alpha) == 0) block
                  endif ! back if (betta == 1) block
-  
+
              enddo betloop ! over betta={1,norbs} loop
              enddo alploop ! over alpha={1,norbs} loop
          enddo ! over jbas={1,sectors(isect)%ndim} loop
 !---------------------------------------------------------------------------------------!
-  
+
 !---------------------------------------------------------------------------------------!
 ! four fermion operators
          do jbas=1,sectors(isect)%ndim
@@ -220,39 +219,39 @@
              bettaloop : do betta=1,norbs
              gammaloop : do gamma=1,norbs
              deltaloop : do delta=1,norbs
-  
+
                  isgn = 0
                  knew = dec_basis(sectors(isect)%basis(jbas))
                  code(1:norbs) = bin_basis(1:norbs, sectors(isect)%basis(jbas))
-  
+
 ! very important if single particle basis has been rotated
                  if ((alpha .eq. betta) .or. (delta .eq. gamma)) cycle
                  if ( abs(umat(alpha,betta,delta,gamma)) .lt. epst ) cycle
-  
+
 ! simulate two annihilation operators
                  if ((code(delta) == 1) .and. (code(gamma) == 1)) then
                      do i=1,gamma-1
                          if(code(i) == 1) isgn = isgn + 1
-                     enddo 
+                     enddo
                      code(gamma) = 0
-  
+
                      do i=1,delta-1
                          if(code(i) == 1) isgn = isgn + 1
-                     enddo 
+                     enddo
                      code(delta) = 0
-  
+
 ! simulate two creation operators
                      if ((code(alpha) == 0) .and. (code(betta) == 0)) then
                          do i=1,betta-1
                              if(code(i) == 1) isgn = isgn + 1
-                         enddo 
+                         enddo
                          code(betta) = 1
-  
+
                          do i=1,alpha-1
                              if(code(i) == 1) isgn = isgn + 1
                          enddo
                          code(alpha) = 1
-  
+
 ! determine the row number and hamiltonian matrix elememt
                          knew = knew - 2**(gamma-1) - 2**(delta-1)
                          knew = knew + 2**(betta-1) + 2**(alpha-1)
@@ -262,32 +261,32 @@
                              call s_print_error('atomic_mkhmat_sectors', &
                                                 'error while determining row3')
                          endif
-  
+
                          insect = .false.
-                         do i=1, sectors(isect)%ndim 
+                         do i=1, sectors(isect)%ndim
                              if (sectors(isect)%basis(i) == ibas) then
                                  ibas = i
                                  insect = .true.
                              endif
                          enddo
-  
+
                          if (insect) then
                              sectors(isect)%ham(ibas,jbas) = sectors(isect)%ham(ibas,jbas) + &
                                                   umat(alpha,betta,delta,gamma) * (-1.0d0)**isgn
                          endif
-  
+
                      endif ! back if ((code(delta) == 1) .and. (code(gamma) == 1)) block
                  endif ! back if ((code(alpha) == 0) .and. (code(betta) == 0)) block
-  
+
              enddo deltaloop ! over delta={gamma+1,norbs} loop
              enddo gammaloop ! over gamma={1,norbs-1} loop
              enddo bettaloop ! over betta={alpha+1,norbs} loop
              enddo alphaloop ! over alpha={1,norbs-1} loop
          enddo ! over jbas={1,sectors(isect)%ndim} loop
 !---------------------------------------------------------------------------------------!
-  
+
      enddo ! over i={1, nsectors}
-  
+
      return
   end subroutine atomic_make_shmat
 
@@ -295,26 +294,26 @@
   subroutine atomic_diag_shmat()
      use constants, only : dp
      use m_sector, only : nsectors, sectors
-  
+
      implicit none
-  
+
 ! local variables
      integer :: i
 
      real(dp), allocatable :: hmat(:,:)
-     
+
      do i=1, nsectors
          allocate( hmat(sectors(i)%ndim, sectors(i)%ndim) )
          hmat = real( sectors(i)%ham )
          call s_eig_sy( sectors(i)%ndim, sectors(i)%ndim, hmat, sectors(i)%eigval, sectors(i)%eigvec )
          deallocate( hmat )
      enddo
-  
+
      return
   end subroutine atomic_diag_shmat
 
 !!>>> atomic_make_sectors: determine all the sectors for good quantum numbers
-!!>>> a sector consists of some many particle Fock states labeled by 
+!!>>> a sector consists of some many particle Fock states labeled by
 !!>>> good quantum numbers
   subroutine atomic_make_sectors()
      use constants, only : mytmp, zero
@@ -324,9 +323,9 @@
      use m_sector, only : alloc_one_sector
      use m_sector, only : nsectors, sectors, alloc_m_sector
      use m_sector, only : max_dim_sect, ave_dim_sect
-  
+
      implicit none
-  
+
 ! local variables
 ! the maximum number of sectors
      integer :: max_nsect
@@ -387,8 +386,8 @@
      integer :: i,j,k,l
 
 ! can point to next sector
-     logical :: can  
-  
+     logical :: can
+
 ! allocate status
      integer :: istat
 
@@ -408,7 +407,7 @@
 
      allocate( ndims(max_nsect),                  stat=istat )
      allocate( sector_basis(max_ndim, max_nsect), stat=istat )
-  
+
 ! check status
      if ( istat /= 0 ) then
          call s_print_error('atomic_mksectors','can not allocate enough memory')
@@ -419,7 +418,7 @@
      orb_good_sz = 0
      orb_good_jz = 0
      call atomic_make_gsz(orb_good_sz)
-     
+
 ! jz only valid for nband==3, 5, 7
      if (nband == 3 .or. nband == 5 .or. nband == 7 ) then
          call atomic_make_gjz(orb_good_jz)
@@ -433,7 +432,7 @@
      fock_good_jz = 0
 ! loop over all number of total electrons
      do i=0, norbs
-! loop over each state 
+! loop over each state
          do j=1, dim_sub_n(i)
              counter = counter + 1
 ! build N
@@ -441,13 +440,13 @@
 ! build Sz
              mysz = 0
              do k=1, norbs
-                 mysz = mysz + orb_good_sz(k) * bin_basis(k, counter) 
+                 mysz = mysz + orb_good_sz(k) * bin_basis(k, counter)
              enddo
              fock_good_sz(counter) = mysz
 ! build Jz
               myjz = 0
               do k=1, norbs
-                  myjz = myjz + orb_good_jz(k) * bin_basis(k, counter) 
+                  myjz = myjz + orb_good_jz(k) * bin_basis(k, counter)
               enddo
               fock_good_jz(counter) = myjz
 ! build PS number
@@ -455,16 +454,16 @@
                  fock_good_ps(counter) = fock_good_ps(counter) + &
                  2**k * (bin_basis(2*k-1,counter) - bin_basis(2*k,counter))**2
              enddo
-         enddo  
+         enddo
      enddo
 !----------------------------------------------------------------
-  
+
 !----------------------------------------------------------------
 ! loop over all the Fock states to determine sectors
      nsect = 0
      ndims = 0
      sector_basis = 0
-     do i=1, ncfgs    
+     do i=1, ncfgs
          myntot = fock_good_ntot(i)
          if (ictqmc == 3 .or. ictqmc == 4) then
              mysz   = fock_good_sz(i)
@@ -489,7 +488,7 @@
              endif
 
              nsect = nsect + 1
-             ndims(1) = ndims(1) + 1 
+             ndims(1) = ndims(1) + 1
              sector_basis(ndims(1),1) = i
          else
 ! loop over the exists sectors
@@ -537,13 +536,13 @@
                  sector_basis(ndims(nsect), nsect) = i
 ! old sector
              else
-                 ndims(which_sect) = ndims(which_sect) + 1 
+                 ndims(which_sect) = ndims(which_sect) + 1
                  sector_basis(ndims(which_sect), which_sect) = i
              endif
-         endif ! back to if (nsect == 0) then block 
+         endif ! back to if (nsect == 0) then block
      enddo ! over i={1,ncfgs} loop
 !----------------------------------------------------------------
-  
+
 !----------------------------------------------------------------
 ! after we know how many sectors and the dimension of each sector,
 ! we can allocate memory for global variables for sectors
@@ -557,25 +556,25 @@
          sectors(i)%ndim = ndims(i)
          sectors(i)%nele = sect_good_ntot(i)
          sectors(i)%nops = norbs
-         sectors(i)%istart = counter 
+         sectors(i)%istart = counter
          counter = counter + ndims(i)
-! allocate memory for each sector 
-         call alloc_one_sector( sectors(i) )  
+! allocate memory for each sector
+         call alloc_one_sector( sectors(i) )
 ! set basis for each sector
          do j=1, ndims(i)
-             sectors(i)%basis(j) = sector_basis(j,i) 
+             sectors(i)%basis(j) = sector_basis(j,i)
          enddo
      enddo
 !----------------------------------------------------------------
-  
+
 !----------------------------------------------------------------
 ! make next_sector index
 ! loop over all the sectors
      do i=1, nsectors
 ! loop over all the orbtials
-         do j=1, norbs 
+         do j=1, norbs
 ! loop over creation and annihilation fermion operators
-             do k=0,1 
+             do k=0,1
                  which_sect = -1
 ! we should check each state in this sector
                  can = .false.
@@ -589,11 +588,11 @@
 ! for annihilation fermion operator
                      elseif (k==0 .and. bin_basis(j, ibasis) == 1) then
                          tmp_basis = bin_basis(:, ibasis)
-                         can = .true. 
+                         can = .true.
                          exit
-                     endif 
-                 enddo 
-  
+                     endif
+                 enddo
+
                  if (can == .true.) then
                      select case(ictqmc)
                          case(2)
@@ -602,13 +601,13 @@
                              else
                                  myntot = sect_good_ntot(i) - 1
                              endif
-! loop over all sectors to see which sector it will point to 
+! loop over all sectors to see which sector it will point to
                              do l=1, nsectors
                                  if (sect_good_ntot(l) == myntot ) then
                                      which_sect = l
-                                     exit 
-                                 endif 
-                             enddo 
+                                     exit
+                                 endif
+                             enddo
 
                          case(3)
                              if (k==1) then
@@ -618,13 +617,13 @@
                                  myntot = sect_good_ntot(i) - 1
                                  mysz   = sect_good_sz(i) - orb_good_sz(j)
                              endif
-! loop over all sectors to see which sector it will point to 
+! loop over all sectors to see which sector it will point to
                              do l=1, nsectors
                                  if (sect_good_ntot(l) == myntot .and. sect_good_sz(l) == mysz ) then
                                      which_sect = l
-                                     exit 
-                                 endif 
-                             enddo 
+                                     exit
+                                 endif
+                             enddo
 
                          case(4)
                              if (k==1) then
@@ -641,14 +640,14 @@
                              do l=1, nband
                                  myps = myps + 2**l * ( tmp_basis(2*l-1) - tmp_basis(2*l) )**2
                              enddo
-! loop over all sectors to see which sector it will point to 
+! loop over all sectors to see which sector it will point to
                              do l=1, nsectors
                                  if (sect_good_ntot(l) == myntot .and. sect_good_sz(l) == mysz &
                                      .and. sect_good_ps(l) == myps) then
                                      which_sect = l
-                                     exit 
-                                 endif 
-                             enddo 
+                                     exit
+                                 endif
+                             enddo
 
                          case(5)
                              if (k==1) then
@@ -658,44 +657,44 @@
                                  myntot = sect_good_ntot(i) - 1
                                  myjz   = sect_good_jz(i) - orb_good_jz(j)
                              endif
-! loop over all sectors to see which sector it will point to 
+! loop over all sectors to see which sector it will point to
                              do l=1, nsectors
                                  if (sect_good_ntot(l) == myntot .and. sect_good_jz(l) == myjz ) then
                                      which_sect = l
-                                     exit 
-                                 endif 
-                             enddo 
+                                     exit
+                                 endif
+                             enddo
                      end select ! back select case(ictqmc) block
                  endif  ! back to if (can == .true.) block
-                 sectors(i)%next(j,k) = which_sect 
+                 sectors(i)%next(j,k) = which_sect
              enddo ! over k={0,1} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1, nsectors} loop
 !----------------------------------------------------------------
-  
+
 !----------------------------------------------------------------
 ! dump sector information for reference
 ! calculate the maximum and average dimensions of sectors
      max_dim_sect = 0
-     counter = 0 
+     counter = 0
      do i=1, nsectors
          if (sectors(i)%ndim > max_dim_sect) max_dim_sect = sectors(i)%ndim
          counter = counter + sectors(i)%ndim
      enddo
      ave_dim_sect = real(counter) / real(nsectors)
-  
+
      open(mytmp, file='atom.sector.dat')
      write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
      write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
      write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
- 
+
      select case(ictqmc)
          case(2)
              write(mytmp, '(a)') '#      i | electron(i) |     ndim(i) |           j |   fock_basis(j,i) |  '
              do i=1, nsectors
                  do j=1, sectors(i)%ndim
                      write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,8X, 14I1)') i, sectors(i)%nele, &
-                                           sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j)) 
+                                           sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j))
                  enddo
              enddo
 
@@ -704,7 +703,7 @@
              do i=1, nsectors
                  do j=1, sectors(i)%ndim
                      write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i),&
-                          sect_good_sz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j)) 
+                          sect_good_sz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j))
                  enddo
              enddo
 
@@ -714,7 +713,7 @@
              do i=1, nsectors
                  do j=1, sectors(i)%ndim
                      write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i), &
-                   sect_good_sz(i), sect_good_ps(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j)) 
+                   sect_good_sz(i), sect_good_ps(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j))
                  enddo
              enddo
 
@@ -723,14 +722,14 @@
               do i=1, nsectors
                   do j=1, sectors(i)%ndim
                       write(mytmp,'(I10,4X,I10,4X,I10,4X,I10,4X,I10,8X,14I1)') i, sect_good_ntot(i),&
-                           sect_good_jz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j)) 
+                           sect_good_jz(i), sectors(i)%ndim, j, bin_basis(:, sectors(i)%basis(j))
                   enddo
               enddo
      end select ! back select case(ictqmc) block
 
      close(mytmp)
 !----------------------------------------------------------------
-  
+
 ! free memeory
      if (allocated(fock_good_ntot)) deallocate(fock_good_ntot)
      if (allocated(fock_good_sz))   deallocate(fock_good_sz)
@@ -744,6 +743,6 @@
 
      if (allocated(ndims))          deallocate(ndims)
      if (allocated(sector_basis))   deallocate(sector_basis)
-  
+
      return
   end subroutine atomic_make_sectors
