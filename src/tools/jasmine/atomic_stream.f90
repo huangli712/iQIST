@@ -579,10 +579,14 @@
              call atomic_dump_natural('# natural basis is linear combination of real orbitals, tmat: real to natural')
 
          elseif ( isoc == 1 .and. icf == 0 ) then
+             write(mystd,'(1X,a)') '|j2,jz>'
              call atomic_2natural_case3()
+             call atomic_dump_natural('# natural basis is |j2,jz>, tmat: complex to natural')
 
          elseif ( isoc == 1 .and. icf >  0 ) then
+             write(mystd,'(1X,a)') 'linear combination of complex orbitals'
              call atomic_2natural_case4()
+             call atomic_dump_natural('# natural basis is linear combination of complex orbitals, tmat: complex to natural')
 
          endif ! back if ( isoc == 0 .and. ( icf == 0 .or. icf == 1 ) ) block
      endif ! back if ( itask == 1 ) block
@@ -625,8 +629,6 @@
 !!>>> atomic_2natural_case1: make natural basis for no crystal field or
 !!>>> diagonal crystal field, without spin-orbital coupling
   subroutine atomic_2natural_case1()
-     use constants, only : mystd
-
      use control, only : norbs
      use control, only : mune
      use m_spmat, only : cmat, emat, tmat
@@ -655,7 +657,7 @@
 !!>>> atomic_2natural_case2: make natural basis for non-diagonal
 !!>>> crystal field without spin-orbital coupling
   subroutine atomic_2natural_case2()
-     use constants, only : dp, czero
+     use constants, only : dp
 
      use control, only : nband, norbs
      use control, only : mune
@@ -721,41 +723,39 @@
 
 !!>>> atomic_2natural_case3: make natural basis for the case without
 !!>>> crystal field and with spin-orbital coupling
-!!>>> for this special case, the natural basis is |J^2,Jz>
+!!>>> for this special case, the natural basis is |j^2,jz>
   subroutine atomic_2natural_case3()
-     use constants, only : dp, mystd
-     use control, only : norbs, mune
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : mune
      use m_spmat, only : emat, smat, tmat
 
      implicit none
 
 ! local variables
-! umat from complex orbital basis to |j^2, jz> basis
-     complex(dp) :: umat_c2j(norbs, norbs)
-
 ! loop inex
      integer :: i
 
-! set eimpmat
+! transformation matrix from complex orbital basis to |j^2,jz> basis
+     complex(dp) :: tmat_c2j(norbs,norbs)
+
+! set emat
      emat = smat
 
-     call atomic_make_tmat_c2j(umat_c2j)
+! evaluate transformation matrix tmat_c2j
+     call atomic_make_tmat_c2j(tmat_c2j)
 
 ! for soc case, the tran_umat is from complex orbital basis to natural basis
-     tmat = umat_c2j
+     tmat = tmat_c2j
 
 ! transform sp_eimp_mat to natural basis
      call atomic_tran_repr_cmpl(norbs, emat, tmat)
 
-! add chemical potential to eimpmat
-     do i=1, norbs
+! add chemical potential to emat
+     do i=1,norbs
          emat(i,i) = emat(i,i) + mune
-     enddo
-
-     write(mystd, '(2X,a)') 'jasmine >>> natural basis is: |j2,jz> '
-     write(mystd, *)
-
-     call atomic_dump_natural('# natural basis is |j2,jz>, umat: complex to natural')
+     enddo ! over i={1,norbs} loop
 
      return
   end subroutine atomic_2natural_case3
@@ -763,69 +763,64 @@
 !!>>> atomic_2natural_case4: make natural basis for the case with
 !!>>> crystal field and with spin-orbital coupling
   subroutine atomic_2natural_case4()
-     use constants, only : dp, mystd, eps6
-     use control, only : norbs, mune
+     use constants, only : dp, eps6
 
+     use control, only : norbs
+     use control, only : mune
      use m_spmat, only : cmat, smat, emat, tmat
 
      implicit none
 
 ! local variables
-! umat from real orbital basis to complex orbital basis
-     complex(dp) :: umat_r2c(norbs, norbs)
-
-! umat from complex orbital basis to natural basis
-     complex(dp) :: umat_c2n(norbs, norbs)
-
-! real version of eimp_mat
-     real(dp) :: tmp_mat(norbs, norbs)
-
-! eigen value
-     real(dp) :: eigval(norbs)
-
-! eigen vector
-     real(dp) :: eigvec(norbs, norbs)
-
 ! loop index
      integer :: i
 
-! whether cfmat is real on complex orbital basis
-!     logical :: lreal
+! eigenvalue
+     real(dp) :: eigval(norbs)
 
-! get umat_r2c
-     call atomic_make_tmat_r2c(umat_r2c)
+! eigenvector
+     real(dp) :: eigvec(norbs,norbs)
 
-! transfrom cfmat to complex orbital basis
-     call atomic_tran_repr_cmpl(norbs, cmat, umat_r2c)
+! real version of emat
+     real(dp) :: emat_tmp(norbs,norbs)
 
-! check whether cfmat is real, if not, we cann't make natural basis
+! transformation matrix from real orbital basis to complex orbital basis
+     complex(dp) :: tmat_r2c(norbs,norbs)
+
+! transformation matrix from complex orbital basis to natural basis
+     complex(dp) :: tmat_c2n(norbs,norbs)
+
+! build tmat_r2c
+     call atomic_make_tmat_r2c(tmat_r2c)
+
+! transfrom crystal field (cmat) to complex orbital basis
+     call atomic_tran_repr_cmpl(norbs, cmat, tmat_r2c)
+
+! check whether cmat is real, if not, we cann't make natural basis
      if ( any( abs( aimag(cmat) ) > eps6 ) ) then
-         call s_print_error('atomic_2natural_case4', 'crystal field on &
-             complex orbital basis is not real, cannot make natural basis !')
-     endif
+         call s_print_error('atomic_2natural_case4','crystal field on complex orbital basis should be real!')
+     endif ! back if ( any( abs( aimag(cmat) ) > eps6 ) ) block
 
-! set eimpmat
+! set emat: CF + SOC
      emat = smat + cmat
 
-     tmp_mat = real(emat)
+! get real version of emat
+     emat_tmp = real(emat)
 
-     call s_eig_sy(norbs, norbs, tmp_mat, eigval, eigvec)
+! diagonalize emat_tmp
+     call s_eig_sy(norbs, norbs, emat_tmp, eigval, eigvec)
 
-     umat_c2n = eigvec
-     tmat = umat_c2n
+! get the transformation matrix from complex orbital basis to natural basis
+     tmat_c2n = eigvec
+     tmat = tmat_c2n
 
-! transform eimpmat to natural basis
-     call atomic_tran_repr_cmpl(norbs, emat, umat_c2n)
+! transform emat to natural basis
+     call atomic_tran_repr_cmpl(norbs, emat, tmat_c2n)
 
 ! add chemical poential to eimpmat
-     do i=1, norbs
+     do i=1,norbs
          emat(i,i) = emat(i,i) + mune
-     enddo
-
-     write(mystd, '(2X,a)') 'jasmine >>> natural basis is: linear combination of complex orbitals '
-     write(mystd, *)
-
-     call atomic_dump_natural('# natural basis is linear combination of complex orbitals, umat: complex to natural')
+     enddo ! over i={1,norbs} loop
 
      return
   end subroutine atomic_2natural_case4
