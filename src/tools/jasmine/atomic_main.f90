@@ -96,7 +96,7 @@
      write(mystd,*)
 
 ! make natural basis
-     write(mystd,"(2X,a)") "make natural basis"
+     write(mystd,"(2X,a)",advance='no') "make natural basis:"
      call atomic_make_natural()
      write(mystd,*)
 

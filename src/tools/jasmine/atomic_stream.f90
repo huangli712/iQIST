@@ -129,7 +129,7 @@
 
          end select
      else
-         call s_print_error('atomic_config', 'file atom.config.in does not exist!')
+         call s_print_error('atomic_config','file atom.config.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
 
      return
@@ -298,7 +298,7 @@
 ! close data file
          close(mytmp)
      else
-         call s_print_error('atomic_read_cmat', 'file atomic.cf.in does not exist!')
+         call s_print_error('atomic_read_cmat','file atomic.cf.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
 
      return
@@ -343,7 +343,7 @@
 ! close data file
          close(mytmp)
      else
-         call s_print_error('atomic_read_emat', 'file atomic.eimp.in does not exist!')
+         call s_print_error('atomic_read_emat','file atomic.eimp.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
 
      return
@@ -390,7 +390,7 @@
 ! close data file
          close(mytmp)
      else
-         call s_print_error('atomic_read_tmat', 'file atomic.tmat.in does not exist')
+         call s_print_error('atomic_read_tmat','file atomic.tmat.in does not exist')
      endif ! back if ( exists .eqv. .true. ) block
 
      return
@@ -452,7 +452,7 @@
          endif ! back if ( isoc > 0 ) block
 ! method 2: make them outside
      else
-! read the emat (CF+SOC) matrices on natural basis, this matrix should be
+! read the emat (CF + SOC) matrices on natural basis, this matrix should be
 ! a diagonal matrix, and the elements must be real
          call atomic_read_emat()
 
@@ -486,7 +486,9 @@
 
 ! local variables
 ! loop index
-     integer :: i, j, k
+     integer :: i
+     integer :: j
+     integer :: k
 
 ! basis counter
      integer :: basis_count
@@ -503,30 +505,30 @@
 ! it is a number of combination C_{norbs}^{i}
      do i=0,norbs
          call s_combination(i, norbs, dim_sub_n(i))
-     enddo
+     enddo ! over i={0,norbs} loop
 
 ! construct decimal form and index of Fock basis
      basis_count = 0
-     do i=0, norbs
-         do j=0, 2**norbs-1
+     do i=0,norbs
+         do j=0,2**norbs-1
              nelec = 0
              do k=1,norbs
-                 if( btest(j, k-1) ) nelec = nelec + 1
-             enddo
-             if ( nelec .eq. i ) then
+                 if ( btest(j, k-1) ) nelec = nelec + 1
+             enddo ! over k={1,norbs} loop
+             if ( nelec == i ) then
                  basis_count = basis_count + 1
                  dec_basis(basis_count) = j
                  index_basis(j) = basis_count
-             endif
-         enddo
-     enddo
+             endif ! back if ( nelec == i ) block
+         enddo ! over j={0,2**norbs-1} loop
+     enddo ! over i={0,norbs} loop
 
 ! construct binary form of Fock basis
      do i=1,ncfgs
          do j=1,norbs
-             if( btest(dec_basis(i), j-1) ) bin_basis(j, i) = 1
-         enddo
-     enddo
+             if ( btest(dec_basis(i), j-1) ) bin_basis(j,i) = 1
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,ncfgs} loop
 
 ! dump Fock basis to file "atom.basis.dat" for reference
      call atomic_dump_fock()
@@ -534,108 +536,118 @@
      return
   end subroutine atomic_make_fock
 
-!!>>> make natural basis, the natural basis is the basis on which the
-!!>>> impurity energy matrix is diagonal
+!!>>> atomic_make_natural: make natural basis, on which the impurity
+!!>>> energy matrix is diagonal
   subroutine atomic_make_natural()
      use constants, only : dp, czero, mystd
-     use control, only : norbs, itask, icf, isoc, icu
+
+     use control, only : itask
+     use control, only : icu, icf, isoc
+     use control, only : norbs
      use m_spmat, only : umat, tmat
 
      implicit none
 
 ! local variables
-     complex(dp) :: tmp_mat(norbs, norbs, norbs, norbs)
+! transformation matrix from real orbital basis to complex orbital basis
+     complex(dp) :: tmat_r2c(norbs, norbs)
 
-! umat from real orbital basis to complex orbital basis
-     complex(dp) :: umat_r2c(norbs, norbs)
+! transformation matrix from complex orbital basis to real orbital basis
+     complex(dp) :: tmat_c2r(norbs, norbs)
 
-! umat from complex orbital basis to real orbital basis
-     complex(dp) :: umat_c2r(norbs, norbs)
+! dummy Coulomb interaction matrix
+     complex(dp) :: umat_tmp(norbs,norbs,norbs,norbs)
 
-     tmp_mat  = czero
-     umat_r2c = czero
-     umat_c2r = czero
+! initialize them
+     umat_tmp = czero
+     tmat_r2c = czero
+     tmat_c2r = czero
 
-! make umat from origional basis to natural basis: tran_umat
-! and set the eimp: eimpmat
-     if ( itask==1) then
-         if ( isoc==0 .and. (icf==0 .or. icf==1) ) then
+! make transformation matrix from origional basis to natural basis: tmat
+! and set the eimp: emat
+     if ( itask == 1 ) then
+         if ( isoc == 0 .and. ( icf == 0 .or. icf == 1 ) ) then
 ! for model calculation, no spin-orbital coupling, no crystal field or
 ! crystal field is diagonal, the real orbital basis is the natural basis
+             write(mystd,'(1X,a)') 'real orbital basis'
              call atomic_2natural_case1()
-         elseif ( isoc==0 .and. icf==2 ) then
-             call atomic_2natural_case2()
-         elseif ( isoc==1 .and. icf==0 ) then
-             call atomic_2natural_case3()
-         elseif ( isoc==1 .and. icf>0 ) then
-             call atomic_2natural_case4()
-         endif
-     else
-         write(mystd, '(2X,a)') 'jasmine >>> natural basis is made outside !'
-         write(mystd, *)
-     endif
+             call atomic_dump_natural('# natural basis is real orbital, tmat: real to natural')
 
-! dump eimpmat for reference
+         elseif ( isoc == 0 .and. icf == 2 ) then
+             write(mystd,'(1X,a)') 'linear combination of real orbitals'
+             call atomic_2natural_case2()
+             call atomic_dump_natural('# natural basis is linear combination of real orbitals, tmat: real to natural')
+
+         elseif ( isoc == 1 .and. icf == 0 ) then
+             call atomic_2natural_case3()
+
+         elseif ( isoc == 1 .and. icf >  0 ) then
+             call atomic_2natural_case4()
+
+         endif ! back if ( isoc == 0 .and. ( icf == 0 .or. icf == 1 ) ) block
+     endif ! back if ( itask == 1 ) block
+
+! dump emat for reference
      call atomic_dump_emat()
 
 ! we need transform Coulomb interaction U
-! for non-soc case, the tran_umat is defined as from real orbital basis to natural basis
-     if (isoc==0) then
-! for Slater-Cordon parameters Coulomb interaction U
-! we first need to transfrom umat from complex orbital basis to real orbital basis
+! for non-soc case, the transformation matrix is defined as from real
+! orbital basis to natural basis
+     if ( isoc == 0 ) then
+! for Slater-Cordon parameters Coulomb interaction U,
+! we first need to transfrom umat from complex orbital basis to real
+! orbital basis
          if ( icu == 2 ) then
-             call atomic_make_tmat_c2r( umat_c2r )
-             call atomic_tran_umat( umat_c2r, umat, tmp_mat )
-             umat = tmp_mat
-         endif
-! for soc case, the tran_umat is defined as from complex orbital basis to natural basis
+             call atomic_make_tmat_c2r(tmat_c2r)
+             call atomic_tran_umat(tmat_c2r, umat, umat_tmp)
+             umat = umat_tmp
+         endif ! back if ( icu == 2 ) block
+! for soc case, the transformation matrix is defined as from complex
+! orbital basis to natural basis
      else
 ! for Kanamori parameters Coulomb interaction U
-! we first need to transfrom umat from real orbital basis to complex orbital basis
+! we first need to transfrom umat from real orbital basis to complex
+! orbital basis
          if ( icu == 1 ) then
-             call atomic_make_tmat_r2c( umat_r2c )
-             call atomic_tran_umat( umat_r2c, umat, tmp_mat )
-             umat = tmp_mat
-         endif
-     endif
+             call atomic_make_tmat_r2c(tmat_r2c)
+             call atomic_tran_umat(tmat_r2c, umat, umat_tmp)
+             umat = umat_tmp
+         endif ! back if ( icu == 1 ) block
+     endif ! back if ( isoc == 0 ) block
 
 ! finally, transform umat to natural basis
-     call atomic_tran_umat(tmat, umat, tmp_mat)
-     umat = tmp_mat
+     call atomic_tran_umat(tmat, umat, umat_tmp)
+     umat = umat_tmp
 
      return
   end subroutine atomic_make_natural
 
-!!>>> atomic_2natural_case1: make natural basis for no crystal or
-!!>>> diagonal crystal without spin-orbital coupling
+!!>>> atomic_2natural_case1: make natural basis for no crystal field or
+!!>>> diagonal crystal field, without spin-orbital coupling
   subroutine atomic_2natural_case1()
-     use constants, only : mystd, zero, cone
-     use control, only : norbs, mune
+     use constants, only : mystd
+
+     use control, only : norbs
+     use control, only : mune
      use m_spmat, only : cmat, emat, tmat
 
      implicit none
 
 ! local variables
+! loop index
      integer :: i
 
 ! set emat
      emat = cmat
 
 ! add chemical potential to eimpmat
-     do i=1, norbs
+     do i=1,norbs
          emat(i,i) = emat(i,i) + mune
-     enddo
+     enddo ! over i={1,norbs} loop
+
 ! for this case, the natural basis is the real orbital basis
-! so, the tran_umat is a unity matrix
-     tmat = zero
-     do i=1, norbs
-         tmat(i,i) = cone
-     enddo
-
-     write(mystd,'(2X,a)') 'jasmine >>> natural basis is: real orbital basis'
-     write(mystd, *)
-
-     call atomic_dump_natural('# natural basis is real orbital, umat: real to natural')
+! so, the tmat is a unity matrix
+     call s_identity_z(norbs, tmat)
 
      return
   end subroutine atomic_2natural_case1
@@ -643,67 +655,66 @@
 !!>>> atomic_2natural_case2: make natural basis for non-diagonal
 !!>>> crystal field without spin-orbital coupling
   subroutine atomic_2natural_case2()
-     use constants, only : mystd, dp, czero
-     use control, only : norbs, nband, mune
+     use constants, only : dp, czero
+
+     use control, only : nband, norbs
+     use control, only : mune
      use m_spmat, only : cmat, emat, tmat
 
      implicit none
 
 ! local variables
-! eimp matrix for no spin freedom
-     complex(dp) :: eimp_nospin(nband, nband)
-     real(dp) :: eimp_nospin_real(nband, nband)
-
-! umat for no spin freedom
-     complex(dp) :: umat_nospin(nband, nband)
+! loop index
+     integer  :: i
+     integer  :: j
 
 ! eigenvalue
      real(dp) :: eigval(nband)
 
 ! eigen vector
-     real(dp) :: eigvec(nband, nband)
+     real(dp) :: eigvec(nband,nband)
 
-! index loop
-     integer :: i, j
+! emat matrix for no spin freedom
+     real(dp) :: emat_nospin_real(nband,nband)
+     complex(dp) :: emat_nospin(nband,nband)
 
-! set eimpmat
+! tmat for no spin freedom
+     complex(dp) :: tmat_nospin(nband, nband)
+
+! set emat to crystal field
      emat = cmat
 
-! get eimp for nospin freedom
-     do i=1, norbs/2
-         do j=1, norbs/2
-             eimp_nospin(j,i) = emat(2*j-1,2*i-1)
-         enddo
-     enddo
+! get emat for no spin freedom
+     do i=1,nband
+         do j=1,nband
+             emat_nospin(j,i) = emat(2*j-1,2*i-1)
+         enddo ! over j={1,nband} loop
+     enddo ! over i={1,nband}
 
-! diagonalize eimp_nospin to get natural basis
-     eimp_nospin_real = real(eimp_nospin)
-     call s_eig_sy(nband, nband, eimp_nospin_real, eigval, eigvec)
+! diagonalize emat_nospin to get natural basis
+     emat_nospin_real = real(emat_nospin)
+     call s_eig_sy(nband, nband, emat_nospin_real, eigval, eigvec)
 
-     eimp_nospin = czero
-     do i=1, nband
-         eimp_nospin(i,i) = eigval(i)
-     enddo
-     umat_nospin = dcmplx(eigvec)
+! get diagonal emat for no spin freedom
+     call s_diag_z(nband, dcmplx(eigval), emat_nospin)
 
-     do i=1, nband
-         do j=1, nband
-             emat(2*j-1,2*i-1) = eimp_nospin(j,i)
-             emat(2*j,2*i)     = eimp_nospin(j,i)
-             tmat(2*j-1,2*i-1) = umat_nospin(j,i)
-             tmat(2*j,2*i)     = umat_nospin(j,i)
-         enddo
-     enddo
+! get tmat for no spin freedom
+     tmat_nospin = dcmplx(eigvec)
 
-! add chemical potential to eimpmat
-     do i=1, norbs
+! build emat and tmat with spin freedom
+     do i=1,nband
+         do j=1,nband
+             emat(2*j-1,2*i-1) = emat_nospin(j,i)
+             emat(2*j,2*i)     = emat_nospin(j,i)
+             tmat(2*j-1,2*i-1) = tmat_nospin(j,i)
+             tmat(2*j,2*i)     = tmat_nospin(j,i)
+         enddo ! over j={1,nband} loop
+     enddo ! over i={1,nband} loop
+
+! add chemical potential to emat
+     do i=1,norbs
          emat(i,i) = emat(i,i) + mune
-     enddo
-
-     write(mystd, '(2X,a)') 'jasmine >>> natural basis is: linear combination of real orbitals '
-     write(mystd, *)
-
-     call atomic_dump_natural('# natural basis is linear combination of real orbitals, umat: real to natural')
+     enddo ! over i={1,norbs} loop
 
      return
   end subroutine atomic_2natural_case2
