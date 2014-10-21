@@ -935,8 +935,8 @@
                                   cmat, ndimy, &
                          zero, tmp_mat, ndimx  )
 
-     call dgemm('T', 'N', ndimx, ndimy, ndimx, &
-                             one, amat, ndimx, &
+     call dgemm('N', 'N', ndimx, ndimy, ndimx, &
+                  one, transpose(amat), ndimx, &
                                tmp_mat, ndimx, &
                             zero, bmat, ndimx  )
 
