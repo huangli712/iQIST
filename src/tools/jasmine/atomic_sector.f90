@@ -636,7 +636,6 @@
 !----------------------------------------------------------------
 
 !----------------------------------------------------------------
-! dump sector information for reference
 ! calculate the maximum and average dimensions of sectors
      max_dim_sect = 0
      counter = 0
@@ -645,6 +644,11 @@
          counter = counter + sectors(i)%ndim
      enddo
      ave_dim_sect = real(counter) / real(nsectors)
+!----------------------------------------------------------------
+
+!----------------------------------------------------------------
+! dump sector information for reference
+     call atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
 !----------------------------------------------------------------
 
 ! free memeory
