@@ -935,7 +935,6 @@
                                   cmat, ndimy, &
                          zero, tmp_mat, ndimx  )
 
-     alpha = one; betta = zero
      call dgemm('T', 'N', ndimx, ndimy, ndimx, &
                              one, amat, ndimx, &
                                tmp_mat, ndimx, &
