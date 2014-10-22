@@ -37,7 +37,7 @@
 
 ! control flag: type of Coulomb interaction U
 ! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp)
-! 2: Slater-Cordon parameters (F0, F2, F4, F6)
+! 2: Slater-Cordon parameters (Ud, Jh => F0, F2, F4, F6)
      integer, public, save :: icu    = 1
 
 ! control flag: type of crystal field
@@ -93,12 +93,6 @@
 
 ! Hund's exchange parameters
      real(dp), public, save :: Jh    = 0.0_dp
-
-! Slater-Cordon parameters
-     real(dp), public, save :: F0    = 0.0_dp
-     real(dp), public, save :: F2    = 0.0_dp
-     real(dp), public, save :: F4    = 0.0_dp
-     real(dp), public, save :: F6    = 0.0_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -24,7 +24,7 @@
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
 !!!           10/17/2014 by li huang
-!!! purpose :
+!!! purpose : provide the 
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -436,7 +436,7 @@
      use constants, only : dp, zero, half
 
      use control, only : nband, norbs
-     use control, only : F0, F2, F4, F6
+     use control, only : Ud, Jh
      use m_spmat, only : umat
 
      implicit none
@@ -469,29 +469,30 @@
 
 ! allocate memory for slater_cordon and gaunt and then build them
      select case (nband)
+
          case (5)
              l = 2
              allocate(slater_cordon(0:2*l))
              slater_cordon = zero
-             slater_cordon(0) = F0
-             slater_cordon(2) = F2
-             slater_cordon(4) = F4
-             allocate(gaunt(-l:l, -l:l, 0:2*l))
+             slater_cordon(0) = Ud
+             slater_cordon(2) = Jh * 14.0_dp / 1.625_dp
+             slater_cordon(4) = 0.625_dp * slater_cordon(2)
+             allocate(gaunt(-l:l,-l:l,0:2*l))
              call atomic_make_gaunt5(gaunt)
 
          case (7)
              l = 3
              allocate(slater_cordon(0:2*l))
              slater_cordon = zero
-             slater_cordon(0) = F0
-             slater_cordon(2) = F2
-             slater_cordon(4) = F4
-             slater_cordon(6) = F6
-             allocate(gaunt(-l:l, -l:l, 0:2*l))
+             slater_cordon(0) = Ud
+             slater_cordon(2) = Jh * 6435.0_dp / ( 286.0_dp + ( 195.0_dp * 451.0_dp / 675.0_dp ) + ( 250.0_dp * 1001.0_dp / 2025.0_dp ) )
+             slater_cordon(4) = 451.0_dp / 675.0_dp * slater_cordon(2)
+             slater_cordon(6) = 1001.0_dp / 2025.0_dp * slater_cordon(2)
+             allocate(gaunt(-l:l,-l:l,0:2*l))
              call atomic_make_gaunt7(gaunt)
 
          case default
-             call s_print_error('atomic_make_umatS', 'not implemented for this nband!')
+             call s_print_error('atomic_make_umatS','not implemented for this nband!')
 
      end select
 

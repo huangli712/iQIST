@@ -56,10 +56,6 @@
 
      Ud = 2.00_dp         ! Ud
      Jh = 0.00_dp         ! Jh
-     F0 = 0.00_dp         ! F0
-     F2 = 0.00_dp         ! F2
-     F4 = 0.00_dp         ! F4
-     F6 = 0.00_dp         ! F6
 
      mune   = 0.00_dp     ! chemical potential
      lambda = 0.00_dp     ! spin-orbit coupling parameter
@@ -99,10 +95,6 @@
 
          call p_get('Ud'    ,     Ud)
          call p_get('Jh'    ,     Jh)
-         call p_get('F0'    ,     F0) ! not useful
-         call p_get('F2'    ,     F2) ! not useful
-         call p_get('F4'    ,     F4) ! not useful
-         call p_get('F6'    ,     F6) ! not useful
 
          call p_get('mune'  ,   mune)
          call p_get('lambda', lambda)
@@ -113,21 +105,6 @@
 ! calculate the norbs and ncfgs
          norbs = nband * nspin
          ncfgs = 2 ** norbs
-
-! calculate F0, F2, F4, F6 here
-         F0 = Ud
-         select case (nband)
-             case (5)
-                 F2 = Jh * 14.0_dp / 1.625_dp
-                 F4 = 0.625_dp * F2
-
-             case (7)
-                 F2 = Jh * 6435.0_dp / (286.0_dp + (195.0_dp * 451.0_dp / 675.0_dp) &
-                         + (250.0_dp * 1001.0_dp / 2025.0_dp))
-                 F4 = 451.0_dp / 675.0_dp * F2
-                 F6 = 1001.0_dp / 2025.0_dp * F2
-
-         end select
      else
          call s_print_error('atomic_config','file atom.config.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block

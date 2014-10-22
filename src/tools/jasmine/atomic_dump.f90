@@ -353,7 +353,7 @@
 
      use control, only : icu, isoc
      use control, only : Uc, Uv, Jz, Js, Jp
-     use control, only : Ud, Jh, F0, F2, F4, F6
+     use control, only : Ud, Jh
      use m_sector, only : nsectors, max_dim_sect, ave_dim_sect
      use m_sector, only : sectors
 
@@ -379,7 +379,7 @@
          write(mytmp,"(5(a,F9.5,2X))") "# Uc:", Uc, "Uv:", Uv, "Jz:", Jz, "Js:", Js, "Jp:", Jp
      else
          write(mytmp,"(a)") "# Slater-parameterized Coulomb interaction: "
-         write(mytmp,"(6(a,F9.5,2X))") "# Ud:", Ud, "JH:", JH, "F0:", F0, "F2:", F2, "F4:", F4, "F6:", F6
+         write(mytmp,"(2(a,F9.5,2X))") "# Ud:", Ud, "Jh:", Jh
      endif ! back if ( icu == 1 ) block
      write(mytmp,"(a)") "#================================================================================"
 

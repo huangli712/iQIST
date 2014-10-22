@@ -89,10 +89,7 @@
      write(mystd,'(2(4X,a,f10.5))') 'Uc    :', Uc     , 'Uv     :', Uv
      write(mystd,'(2(4X,a,f10.5))') 'Jz    :', Jz     , 'Js     :', Js
      write(mystd,'(1(4X,a,f10.5))') 'Jp    :', Jp
-
      write(mystd,'(2(4X,a,f10.5))') 'Ud    :', Ud     , 'Jh     :', Jh
-     write(mystd,'(2(4X,a,f10.5))') 'F0    :', F0     , 'F2     :', F2
-     write(mystd,'(2(4X,a,f10.5))') 'F4    :', F4     , 'F6     :', F6
 
      write(mystd,'(2(4X,a,f10.5))') 'mune  :', mune   , 'lambda :', lambda
 
