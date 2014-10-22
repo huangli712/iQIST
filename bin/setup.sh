@@ -54,9 +54,9 @@ do
 done
 
 # loop over the jasmine components
-for component in atomic
+for component in jasmine
 do
-    dir=$(echo ../src/tools/jasmine/$component)
+    dir=$(echo ../src/tools/jasmine/atomic)
     mln $dir $component
 done
 

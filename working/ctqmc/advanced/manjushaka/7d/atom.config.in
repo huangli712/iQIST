@@ -12,13 +12,20 @@
 
 ! good quantum numbers (GQNs)
 ! (1) without any GQNs, (2) N, (3) N,Sz, (4) N,Sz,PS, (5) N,Jz
-  ictqmc : 3       
+  ictqmc : 5       
+
+! type of spin-oribt coupling (SOC)
+! (0) without, (1) with atomic SOC
+  isoc   : 1
+
+! strength of SOC
+  lambda : 0.50
 
 ! type of Coulomb interaction: (1) Kanamori (2) Slater
   icu    : 2
 
-! Coulomb interaction parameter
-  Ud     : 4.00
+! Coulomb interaction parameters
+  Ud     : 2.457990
 
-! Hund's rule interaction parameter
-  Jh     : 1.00
+! Hund's rule coupling parameters
+  Jh     : 1.349258
