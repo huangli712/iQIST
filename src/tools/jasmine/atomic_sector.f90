@@ -154,7 +154,7 @@
 ! determine the row number and hamiltonian matrix elememt
                              knew = knew - 2**(betta-1)
                              knew = knew + 2**(alpha-1)
-                             isgn  = mod(isgn, 2)
+                             isgn = mod(isgn, 2)
                              ibas = index_basis(knew)
                              if ( ibas == 0 ) then
                                  call s_print_error('atomic_make_shmat','error while determining row')
