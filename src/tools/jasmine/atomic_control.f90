@@ -6,7 +6,7 @@
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
-!!!           10/16/2014 by li huang
+!!!           10/23/2014 by li huang
 !!! purpose : define global control parameters for the atomic eigenvalue
 !!!           problem solver
 !!! status  : unstable
@@ -22,13 +22,14 @@
 !!>>> integer variables                                                <<<
 !!========================================================================
 
-! control flag: type of task
+! control flag: where is the source for natural basis (the eigenstate of
+! crystal field + spin-orbital coupling)
 ! 1: make natural basis inside of this program
 ! 2: make natural basis outside of this program
      integer, public, save :: itask  = 1
 
-! control flag: type of CTQMC trace algorithm
-! 1: general matrices multiplication
+! control flag: type of atomic Hamiltonian matrix diagonalization
+! 1: direct diagonalization in full Hilbert space
 ! 2: good quantum numbers: N
 ! 3: good quantum numbers: N, Sz
 ! 4: good quantum numbers: N, Sz, PS
@@ -48,7 +49,7 @@
 
 ! control flag: type of spin-orbit coupling (SOC)
 ! 0: no SOC
-! 1: on-site atomic SOC, H_soc = \lambda * L*S
+! 1: onsite atomic SOC, H_soc = \lambda * L*S
      integer, public, save :: isoc   = 0
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -56,7 +57,7 @@
 ! number of bands
      integer, public, save :: nband  = 1
 
-! number of spins
+! number of spins, it should not be changed
      integer, public, save :: nspin  = 2
 
 ! number of orbitals
@@ -69,7 +70,7 @@
 !!>>> real variables                                                   <<<
 !!========================================================================
 
-! the following are useful when icu = 1
+! the following parameters are useful when icu = 1
 ! intraorbital Coulomb interaction
      real(dp), public, save :: Uc    = 2.0_dp
 
@@ -87,7 +88,8 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! the following are useful when icu = 2
+! the following parameters are useful when icu = 2. they are used to
+! calculate the F0, F2, F4, and F6.
 ! Coulomb parameters
      real(dp), public, save :: Ud    = 2.0_dp
 
