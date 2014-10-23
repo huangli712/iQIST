@@ -435,7 +435,7 @@
              endif ! back if ( isoc == 0 ) block
              do k=0,1
                  if ( sectors(i)%next(s_order,k) == -1 ) CYCLE
-                 write(mytmp) sectors(i)%fmat(s_order,k)%item(:,:)
+                 write(mytmp) sectors(i)%fmat(s_order,k)%val
              enddo  ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
      enddo  ! over i={1,nsect} loop

@@ -55,7 +55,7 @@
                  sectors(isect)%fmat(iorb,ifermi)%n = sectors(jsect)%ndim
                  sectors(isect)%fmat(iorb,ifermi)%m = sectors(isect)%ndim
                  call alloc_one_fmat(sectors(isect)%fmat(iorb,ifermi))
-                 sectors(isect)%fmat(iorb,ifermi)%item = zero
+                 sectors(isect)%fmat(iorb,ifermi)%val = zero
 ! build fmat
                  do jbas=1,sectors(isect)%ndim
                      jold = dec_basis(sectors(isect)%basis(jbas))
@@ -72,7 +72,7 @@
                      do i=1,sectors(jsect)%ndim
                          if ( ibas == sectors(jsect)%basis(i) ) then
                              ibas = i
-                             sectors(isect)%fmat(iorb, ifermi)%item(ibas,jbas) = dble(isgn)
+                             sectors(isect)%fmat(iorb, ifermi)%val(ibas,jbas) = dble(isgn)
                              EXIT
                          endif ! back if ( ibas == sectors(jsect)%basis(i) ) block
                      enddo ! over i={1,sectors(jsect)%ndim} loop
@@ -81,7 +81,7 @@
                  call atomic_tran_fmat(sectors(jsect)%ndim, &
                                        sectors(isect)%ndim, &
                                        sectors(jsect)%evec, &
-                                       sectors(isect)%fmat(iorb,ifermi)%item, &
+                                       sectors(isect)%fmat(iorb,ifermi)%val, &
                                        sectors(isect)%evec)
              enddo ! over ifermi={0,1} loop
          enddo ! over iorb={1,norbs} loop

@@ -48,7 +48,7 @@
 ! F-matrix for annihilation fermion operators
      real(dp), public, allocatable, save :: fmat(:,:,:)
 
-! occupany number for atomic eigenstates
+! occupany number for the atomic eigenstates
      real(dp), public, allocatable, save :: occu(:,:)
 
 ! atomic Hamiltonian
@@ -169,22 +169,24 @@
 
      implicit none
 
-! the F-matrix between any two sectors, it is just a matrix
-     private :: T_fmat
-     type T_fmat
+! data structure for one F-matrix
+!-------------------------------------------------------------------------
+     private :: t_fmat
+     type t_fmat
 
-! the dimension, n X m
+! the dimension, n x m
          integer :: n
          integer :: m
 
-! the items of the matrix
-         real(dp), pointer :: item(:,:)
+! the memory space for the matrix
+         real(dp), pointer :: val(:,:)
 
-     end type T_fmat
+     end type t_fmat
 
 ! data structure for one sector
-     public :: T_sector
-     type :: T_sector
+!-------------------------------------------------------------------------
+     public :: t_sector
+     type :: t_sector
 
 ! the dimension of this sector
          integer :: ndim
@@ -201,7 +203,7 @@
 ! the Fock basis index of this sector
          integer, pointer  :: basis(:)
 
-! the next sector it points to when a fermion operator acts on this sector
+! the next sector after a fermion operator acts on this sector
 ! -1: outside of the Hilbert space, otherwise, it is the index of next sector
 ! next(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
          integer, pointer  :: next(:,:)
@@ -218,9 +220,9 @@
 ! the F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
 ! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-         type (T_fmat), pointer :: fmat(:,:)
+         type (t_fmat), pointer :: fmat(:,:)
 
-     end type T_sector
+     end type t_sector
 
 ! number of sectors
      integer, public, save  :: nsectors
@@ -232,7 +234,7 @@
      real(dp), public, save :: ave_dim_sect
 
 ! all the sectors
-     type(T_sector), public, allocatable, save :: sectors(:)
+     type (t_sector), public, allocatable, save :: sectors(:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -261,14 +263,14 @@
 
 ! external arguments
 ! the fmat
-     type(T_fmat), intent(inout) :: one_fmat
+     type (t_fmat), intent(inout) :: one_fmat
 
 ! local variables
 ! the status flag
      integer :: istat
 
 ! allocate memory
-     allocate(one_fmat%item(one_fmat%n,one_fmat%m), stat=istat)
+     allocate(one_fmat%val(one_fmat%n,one_fmat%m), stat=istat)
 
 ! check status
      if ( istat /= 0 ) then
@@ -276,7 +278,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize it
-     one_fmat%item = zero
+     one_fmat%val = zero
 
      return
   end subroutine alloc_one_fmat
@@ -287,15 +289,15 @@
 
 ! external arguments
 ! the sector
-     type(T_sector), intent(inout) :: one_sector
+     type (t_sector), intent(inout) :: one_sector
 
 ! local variables
-! the status flag
-     integer :: istat
-
 ! loop index
      integer :: i
      integer :: j
+
+! the status flag
+     integer :: istat
 
 ! allocate memory
      allocate(one_sector%basis(one_sector%ndim),                stat=istat)
@@ -334,11 +336,11 @@
      implicit none
 
 ! local variables
-! the status flag
-     integer :: istat
-
 ! loop index
      integer :: i
+
+! the status flag
+     integer :: istat
 
 ! allocate memory
      allocate(sectors(nsectors), stat=istat)
@@ -366,9 +368,9 @@
 
 ! external arguments
 ! the fmat
-     type(T_fmat), intent(inout) :: one_fmat
+     type (t_fmat), intent(inout) :: one_fmat
 
-     nullify(one_fmat%item)
+     nullify(one_fmat%val)
 
      return
   end subroutine nullify_one_fmat
@@ -379,9 +381,9 @@
 
 ! external arguments
 ! the fmat
-     type(T_fmat), intent(inout) :: one_fmat
+     type (t_fmat), intent(inout) :: one_fmat
 
-     if ( associated(one_fmat%item) ) deallocate(one_fmat%item)
+     if ( associated(one_fmat%val) ) deallocate(one_fmat%val)
 
      return
   end subroutine dealloc_one_fmat
@@ -392,7 +394,7 @@
 
 ! external arguments
 ! the sector
-     type(T_sector), intent(inout) :: one_sector
+     type (t_sector), intent(inout) :: one_sector
 
      nullify(one_sector%basis)
      nullify(one_sector%next )
@@ -410,7 +412,7 @@
 
 ! external arguments
 ! the sector
-     type(T_sector), intent(inout) :: one_sector
+     type (t_sector), intent(inout) :: one_sector
 
 ! local variables
 ! loop index
@@ -429,6 +431,8 @@
              call dealloc_one_fmat(one_sector%fmat(i,j))
          enddo ! over j={0,1} loop
      enddo ! over i={1,one_sector%nops} loop
+
+     if ( associated(one_sector%fmat)  ) deallocate(one_sector%fmat )
 
      return
   end subroutine dealloc_one_sector
