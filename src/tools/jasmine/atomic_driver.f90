@@ -22,7 +22,7 @@
      use constants, only : dp, mystd, eps6
 
      use control, only : ncfgs
-     use m_full, only : hmat, eigval, eigvec
+     use m_full, only : hmat, eval, evec
      use m_full, only : alloc_m_full, dealloc_m_full
 
      implicit none
@@ -67,7 +67,7 @@
      write(mystd,"(2X,a)") "diagonalize the atomic Hamiltonian"
      call cpu_time(time_begin) ! record starting time
      tmp_mat = real(hmat)
-     call s_eig_sy(ncfgs, ncfgs, tmp_mat, eigval, eigvec)
+     call s_eig_sy(ncfgs, ncfgs, tmp_mat, eval, evec)
      call cpu_time(time_end)   ! record ending   time
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)

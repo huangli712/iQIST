@@ -136,7 +136,7 @@
      use constants, only : mytmp
 
      use control, only : ncfgs
-     use m_full, only : eigval, occu
+     use m_full, only : eval, occu
 
      implicit none
 
@@ -152,7 +152,7 @@
 
 ! write the data
      do i=1,ncfgs
-         write(mytmp,"(I10,2F20.10)") i, eigval(i), occu(i,i)
+         write(mytmp,"(I10,2F20.10)") i, eval(i), occu(i,i)
      enddo ! over i={1,ncfgs} loop
 
 ! close data file
@@ -168,7 +168,7 @@
 
      use control, only : ncfgs
      use m_full, only : bin_basis
-     use m_full, only : eigvec
+     use m_full, only : evec
 
      implicit none
 
@@ -186,8 +186,8 @@
 ! write the data
      do i=1,ncfgs
          do j=1,ncfgs
-             if ( abs(eigvec(j,i)) < eps6 ) CYCLE
-             write(mytmp,"(2I10,F20.10,8X,14I1)") j, i, eigvec(j,i), bin_basis(:,j)
+             if ( abs(evec(j,i)) < eps6 ) CYCLE
+             write(mytmp,"(2I10,F20.10,8X,14I1)") j, i, evec(j,i), bin_basis(:,j)
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,ncfgs} loop
 
@@ -204,7 +204,7 @@
 
      use control, only : isoc
      use control, only : nband, norbs, ncfgs
-     use m_full, only : eigval, occu, fmat
+     use m_full, only : eval, occu, fmat
 
      implicit none
 
@@ -223,7 +223,7 @@
 ! write eigenvalues
      write(mytmp,'(a)') '# eigenvalues: index | energy | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(I10,3F20.10)') i, eigval(i), occu(i,i), zero
+         write(mytmp,'(I10,3F20.10)') i, eval(i), occu(i,i), zero
      enddo ! over i={1,ncfgs} loop
 
 ! write F-matrix

@@ -40,10 +40,10 @@
      integer, public, allocatable, save  :: index_basis(:)
 
 ! eigenvalues of hmat
-     real(dp), public, allocatable, save :: eigval(:)
+     real(dp), public, allocatable, save :: eval(:)
 
 ! eigenvectors of hmat
-     real(dp), public, allocatable, save :: eigvec(:,:)
+     real(dp), public, allocatable, save :: evec(:,:)
 
 ! F-matrix for annihilation fermion operators
      real(dp), public, allocatable, save :: fmat(:,:,:)
@@ -51,7 +51,7 @@
 ! occupany number for atomic eigenstates
      real(dp), public, allocatable, save :: occu(:,:)
 
-! atomic Hamiltonian (CF + SOC + CU)
+! atomic Hamiltonian
      complex(dp), public, allocatable, save :: hmat(:,:)
 
 !!========================================================================
@@ -105,8 +105,8 @@
      integer :: istat
 
 ! allocate memory
-     allocate(eigval(ncfgs),           stat=istat)
-     allocate(eigvec(ncfgs,ncfgs),     stat=istat)
+     allocate(eval(ncfgs),             stat=istat)
+     allocate(evec(ncfgs,ncfgs),       stat=istat)
      allocate(fmat(ncfgs,ncfgs,norbs), stat=istat)
      allocate(occu(ncfgs,ncfgs),       stat=istat)
      allocate(hmat(ncfgs,ncfgs),       stat=istat)
@@ -117,11 +117,11 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     eigval = zero
-     eigvec = zero
-     fmat   = zero
-     occu   = zero
-     hmat   = czero
+     eval = zero
+     evec = zero
+     fmat = zero
+     occu = zero
+     hmat = czero
 
      return
   end subroutine alloc_m_full
@@ -146,11 +146,11 @@
   subroutine dealloc_m_full()
      implicit none
 
-     if ( allocated(eigval) ) deallocate(eigval)
-     if ( allocated(eigvec) ) deallocate(eigvec)
-     if ( allocated(fmat)   ) deallocate(fmat  )
-     if ( allocated(occu)   ) deallocate(occu  )
-     if ( allocated(hmat)   ) deallocate(hmat  )
+     if ( allocated(eval) ) deallocate(eval)
+     if ( allocated(evec) ) deallocate(evec)
+     if ( allocated(fmat) ) deallocate(fmat)
+     if ( allocated(occu) ) deallocate(occu)
+     if ( allocated(hmat) ) deallocate(hmat)
 
      return
   end subroutine dealloc_m_full
