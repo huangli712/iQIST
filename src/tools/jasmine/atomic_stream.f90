@@ -37,7 +37,7 @@
      logical :: exists
 
 ! setup default values
-     itask  = 1           ! type of task
+     ibasis = 1           ! source of the natural basis
      ictqmc = 1           ! type of CTQMC algorithm
      icu    = 1           ! type of Coulomb interaction
      icf    = 0           ! type of crystal field
@@ -76,7 +76,7 @@
          call p_parse('atom.config.in')
 
 ! extract parameters
-         call p_get('itask' ,  itask)
+         call p_get('ibasis', ibasis)
          call p_get('ictqmc', ictqmc)
          call p_get('icu'   ,    icu)
          call p_get('icf'   ,    icf)
@@ -125,12 +125,12 @@
 ! initialize lpass
      lpass = .true.
 
-! check itask
-     if ( itask /= 1 .and. itask /= 2 ) then
-         write(mystd,'(2X,a)') 'ERROR: itask must be 1 or 2!'
+! check ibasis
+     if ( ibasis /= 1 .and. ibasis /= 2 ) then
+         write(mystd,'(2X,a)') 'ERROR: ibasis must be 1 or 2!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( itask /= 1 .and. itask /= 2 ) block
+     endif ! back if ( ibasis /= 1 .and. ibasis /= 2 ) block
 
 ! check ictqmc
      if ( ictqmc /= 1 .and. ictqmc /= 2 .and. ictqmc /= 3 .and. ictqmc /= 4 .and. ictqmc /= 5 ) then
@@ -379,7 +379,7 @@
   subroutine atomic_make_spmat()
      use constants, only : two, czero
 
-     use control, only : itask
+     use control, only : ibasis
      use control, only : icu, icf, isoc
      use control, only : nband
      use control, only : lambda
@@ -389,7 +389,7 @@
 
 ! make crystal field and spin-orbital coupling
 ! method 1: make them inside
-     if ( itask == 1 ) then
+     if ( ibasis == 1 ) then
 ! 1A: make crysal field
 ! we read the non-zero elements of crystal field from file atom.cf.in.
 ! the crystal field is defined on real orbital basis. at present, we only
@@ -438,7 +438,7 @@
 ! orbital basis. with SOC, the original basis is the complex orbital basis
 ! at present, we just only support real numbers of this tmat
          call atomic_read_tmat()
-     endif ! back if ( itask == 1 ) block
+     endif ! back if ( ibasis == 1 ) block
 
 ! make Coulomb interaction U
      if ( icu == 1 ) then
@@ -518,7 +518,7 @@
   subroutine atomic_make_natural()
      use constants, only : dp, czero, mystd
 
-     use control, only : itask
+     use control, only : ibasis
      use control, only : icu, icf, isoc
      use control, only : norbs
      use m_spmat, only : umat, tmat
@@ -542,7 +542,7 @@
 
 ! make transformation matrix from origional basis to natural basis: tmat
 ! and set the eimp: emat
-     if ( itask == 1 ) then
+     if ( ibasis == 1 ) then
          if ( isoc == 0 .and. ( icf == 0 .or. icf == 1 ) ) then
 ! for model calculation, no spin-orbital coupling, no crystal field or
 ! crystal field is diagonal, the real orbital basis is the natural basis
@@ -566,7 +566,7 @@
              call atomic_dump_natural('# natural basis is linear combination of complex orbitals, tmat: complex to natural')
 
          endif ! back if ( isoc == 0 .and. ( icf == 0 .or. icf == 1 ) ) block
-     endif ! back if ( itask == 1 ) block
+     endif ! back if ( ibasis == 1 ) block
 
 ! dump emat for reference
      call atomic_dump_emat()

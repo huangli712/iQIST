@@ -26,7 +26,7 @@
 ! crystal field + spin-orbital coupling)
 ! 1: make natural basis inside of this program
 ! 2: make natural basis outside of this program
-     integer, public, save :: itask  = 1
+     integer, public, save :: ibasis = 1
 
 ! control flag: type of atomic Hamiltonian matrix diagonalization
 ! 1: direct diagonalization in full Hilbert space

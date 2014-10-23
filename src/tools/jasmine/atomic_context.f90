@@ -480,10 +480,10 @@
 ! spin-orbital coupling (SOC)
      complex(dp), public, allocatable, save :: smat(:,:)
 
-! on-site energy (CF + SOC) of impurity
+! onsite energy (CF + SOC) of impurity
      complex(dp), public, allocatable, save :: emat(:,:)
 
-! the transformation matrix from origional basis to natural basis
+! the transformation matrix from original basis to natural basis
      complex(dp), public, allocatable, save :: tmat(:,:)
 
 !!========================================================================
