@@ -48,8 +48,11 @@
 ! F-matrix for annihilation fermion operators
      real(dp), public, allocatable, save :: fmat(:,:,:)
 
-! occupany number for the atomic eigenstates
+! N occupany number for the atomic eigenstates
      real(dp), public, allocatable, save :: occu(:,:)
+
+! Sz for the atomic eigenstates
+     real(dp), public, allocatable, save :: spin(:,:)
 
 ! atomic Hamiltonian
      complex(dp), public, allocatable, save :: hmat(:,:)
@@ -109,6 +112,7 @@
      allocate(evec(ncfgs,ncfgs),       stat=istat)
      allocate(fmat(ncfgs,ncfgs,norbs), stat=istat)
      allocate(occu(ncfgs,ncfgs),       stat=istat)
+     allocate(spin(ncfgs,ncfgs),       stat=istat)
 
      allocate(hmat(ncfgs,ncfgs),       stat=istat)
 
@@ -122,6 +126,7 @@
      evec = zero
      fmat = zero
      occu = zero
+     spin = zero
 
      hmat = czero
 
@@ -152,6 +157,8 @@
      if ( allocated(evec) ) deallocate(evec)
      if ( allocated(fmat) ) deallocate(fmat)
      if ( allocated(occu) ) deallocate(occu)
+     if ( allocated(spin) ) deallocate(spin)
+
      if ( allocated(hmat) ) deallocate(hmat)
 
      return
