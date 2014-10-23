@@ -29,7 +29,7 @@
      write(mystd,'(2X,a)') '>>> An Atomic Eigenvalue Problem Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2014.10.24T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by yilin wang (at IOP/CAS)'
      write(mystd,'(2X,a)') '         by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: qhwyl2006@126.com'
