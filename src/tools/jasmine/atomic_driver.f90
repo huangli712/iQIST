@@ -9,7 +9,7 @@
 !!!           08/13/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
 !!!           10/20/2014 by li huang
-!!! purpose : core drivers for atomic eigenvalue problem solver
+!!! purpose : kernel drivers for atomic eigenvalue problem solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -19,7 +19,7 @@
 !!>>> note: the output files are only compatible with BEGONIA and LAVENDER
 !!>>> commponents int the iQIST software package
   subroutine atomic_f_driver()
-     use constants, only : dp, mystd, eps6
+     use constants, only : dp, eps6, mystd
 
      use control, only : ncfgs
      use m_full, only : hmat, eval, evec
@@ -66,8 +66,7 @@
 ! diagonalize hmat
      write(mystd,"(2X,a)") "diagonalize the atomic Hamiltonian"
      call cpu_time(time_begin) ! record starting time
-     tmp_mat = real(hmat)
-     call s_eig_sy(ncfgs, ncfgs, tmp_mat, eval, evec)
+     call s_eig_sy(ncfgs, ncfgs, real(hmat), eval, evec)
      call cpu_time(time_end)   ! record ending   time
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
