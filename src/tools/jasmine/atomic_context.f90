@@ -109,6 +109,7 @@
      allocate(evec(ncfgs,ncfgs),       stat=istat)
      allocate(fmat(ncfgs,ncfgs,norbs), stat=istat)
      allocate(occu(ncfgs,ncfgs),       stat=istat)
+
      allocate(hmat(ncfgs,ncfgs),       stat=istat)
 
 ! check the status
@@ -121,6 +122,7 @@
      evec = zero
      fmat = zero
      occu = zero
+
      hmat = czero
 
      return
@@ -205,18 +207,18 @@
          integer, pointer  :: next(:,:)
 
 ! the eigenvalues
-         real(dp), pointer :: eigval(:)
+         real(dp), pointer :: eval(:)
 
 ! the eigenvectors, since Hamiltonian must be real, then it is real as well
-         real(dp), pointer :: eigvec(:,:)
+         real(dp), pointer :: evec(:,:)
 
 ! the Hamiltonian of this sector
-         complex(dp), pointer :: ham(:,:)
+         complex(dp), pointer :: hmat(:,:)
 
 ! the F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
 ! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-         type(T_fmat), pointer :: fmat(:,:)
+         type (T_fmat), pointer :: fmat(:,:)
 
      end type T_sector
 
@@ -296,12 +298,12 @@
      integer :: j
 
 ! allocate memory
-     allocate(one_sector%basis(one_sector%ndim),                  stat=istat)
-     allocate(one_sector%next(one_sector%nops,0:1),               stat=istat)
-     allocate(one_sector%eigval(one_sector%ndim),                 stat=istat)
-     allocate(one_sector%eigvec(one_sector%ndim,one_sector%ndim), stat=istat)
-     allocate(one_sector%ham(one_sector%ndim,one_sector%ndim),    stat=istat)
-     allocate(one_sector%fmat(one_sector%nops,0:1),               stat=istat)
+     allocate(one_sector%basis(one_sector%ndim),                stat=istat)
+     allocate(one_sector%next(one_sector%nops,0:1),             stat=istat)
+     allocate(one_sector%eval(one_sector%ndim),                 stat=istat)
+     allocate(one_sector%evec(one_sector%ndim,one_sector%ndim), stat=istat)
+     allocate(one_sector%hmat(one_sector%ndim,one_sector%ndim), stat=istat)
+     allocate(one_sector%fmat(one_sector%nops,0:1),             stat=istat)
 
 ! check status
      if ( istat /= 0 ) then
@@ -309,11 +311,11 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     one_sector%basis  = 0
-     one_sector%next   = 0
-     one_sector%eigval = zero
-     one_sector%eigvec = zero
-     one_sector%ham    = czero
+     one_sector%basis = 0
+     one_sector%next  = 0
+     one_sector%eval  = zero
+     one_sector%evec  = zero
+     one_sector%hmat  = czero
 
 ! initialize fmat one by one
      do i=1,one_sector%nops
@@ -392,12 +394,12 @@
 ! the sector
      type(T_sector), intent(inout) :: one_sector
 
-     nullify(one_sector%basis )
-     nullify(one_sector%next  )
-     nullify(one_sector%eigval)
-     nullify(one_sector%eigvec)
-     nullify(one_sector%ham   )
-     nullify(one_sector%fmat  )
+     nullify(one_sector%basis)
+     nullify(one_sector%next )
+     nullify(one_sector%eval )
+     nullify(one_sector%evec )
+     nullify(one_sector%hmat )
+     nullify(one_sector%fmat )
 
      return
   end subroutine nullify_one_sector
@@ -415,11 +417,11 @@
      integer :: i
      integer :: j
 
-     if ( associated(one_sector%basis)  ) deallocate(one_sector%basis )
-     if ( associated(one_sector%next)   ) deallocate(one_sector%next  )
-     if ( associated(one_sector%eigval) ) deallocate(one_sector%eigval)
-     if ( associated(one_sector%eigvec) ) deallocate(one_sector%eigvec)
-     if ( associated(one_sector%ham)    ) deallocate(one_sector%ham   )
+     if ( associated(one_sector%basis) ) deallocate(one_sector%basis)
+     if ( associated(one_sector%next)  ) deallocate(one_sector%next )
+     if ( associated(one_sector%eval)  ) deallocate(one_sector%eval )
+     if ( associated(one_sector%evec)  ) deallocate(one_sector%evec )
+     if ( associated(one_sector%hmat)  ) deallocate(one_sector%hmat )
 
 ! deallocate fmat one by one
      do i=1,one_sector%nops

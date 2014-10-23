@@ -78,11 +78,11 @@
                      enddo ! over i={1,sectors(jsect)%ndim} loop
                  enddo  ! over jbas={1, sectors(isect)%ndim} loop
 ! roate fmat to atomic eigenstates basis
-                 call atomic_tran_fmat(sectors(jsect)%ndim,   &
-                                       sectors(isect)%ndim,   &
-                                       sectors(jsect)%eigvec, &
+                 call atomic_tran_fmat(sectors(jsect)%ndim, &
+                                       sectors(isect)%ndim, &
+                                       sectors(jsect)%evec, &
                                        sectors(isect)%fmat(iorb,ifermi)%item, &
-                                       sectors(isect)%eigvec)
+                                       sectors(isect)%evec)
              enddo ! over ifermi={0,1} loop
          enddo ! over iorb={1,norbs} loop
      enddo ! over isect={1,nsectors} loop
@@ -123,7 +123,7 @@
      logical :: insect
 
      do isect=1,nsectors
-         sectors(isect)%ham = czero
+         sectors(isect)%hmat = czero
 
 ! two fermions term
 !-------------------------------------------------------------------------
@@ -168,7 +168,7 @@
                              enddo ! over i={1,sectors(isect)%ndim} loop
 
                              if ( insect .eqv. .true. ) then
-                                 sectors(isect)%ham(ibas,jbas) = sectors(isect)%ham(ibas,jbas) + emat(alpha,betta) * (-one)**isgn
+                                 sectors(isect)%hmat(ibas,jbas) = sectors(isect)%hmat(ibas,jbas) + emat(alpha,betta) * (-one)**isgn
                              endif ! back if ( insect .eqv. .true. ) block
                          endif ! back if ( code(alpha) == 0 ) block
                      endif ! back if ( code(betta_ == 1 ) block
@@ -232,7 +232,7 @@
                                      enddo ! over i={1,sectors(isect)%ndim} loop
 
                                      if ( insect .eqv. .true. ) then
-                                         sectors(isect)%ham(ibas,jbas) = sectors(isect)%ham(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-one)**isgn
+                                         sectors(isect)%hmat(ibas,jbas) = sectors(isect)%hmat(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-one)**isgn
                                      endif ! back if ( insect .eqv. .true. ) block
                                  endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
                              endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
@@ -265,8 +265,8 @@
 
      do i=1,nsectors
          allocate( hmat(sectors(i)%ndim, sectors(i)%ndim) )
-         hmat = real( sectors(i)%ham )
-         call s_eig_sy(sectors(i)%ndim, sectors(i)%ndim, hmat, sectors(i)%eigval, sectors(i)%eigvec)
+         hmat = real( sectors(i)%hmat )
+         call s_eig_sy(sectors(i)%ndim, sectors(i)%ndim, hmat, sectors(i)%eval, sectors(i)%evec)
          deallocate( hmat )
      enddo ! over i={1,nsectors} loop
 

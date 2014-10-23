@@ -288,7 +288,7 @@
              write(mytmp,"(I10,4X)",advance="no") i
              write(mytmp,"(I10,4X)",advance="no") sectors(i)%nele
              write(mytmp,"(I10)",advance="no") j
-             write(mytmp,"(F20.10)") sectors(i)%eigval(j)
+             write(mytmp,"(F20.10)") sectors(i)%eval(j)
          enddo ! over i={1,nsectors} loop
      enddo ! over j={1,sectors(i)%ndim} loop
 
@@ -329,11 +329,11 @@
      do i=1,nsectors
          do j=1,sectors(i)%ndim
              do k=1,sectors(i)%ndim
-                 if ( abs( sectors(i)%eigvec(k,j) ) < eps6 ) CYCLE
+                 if ( abs( sectors(i)%evec(k,j) ) < eps6 ) CYCLE
                  write(mytmp,"(I10)",advance="no") i
                  write(mytmp,"(I10)",advance="no") k + counter
                  write(mytmp,"(I10)",advance="no") j + counter
-                 write(mytmp,"(F20.10)",advance="no") sectors(i)%eigvec(k,j)
+                 write(mytmp,"(F20.10)",advance="no") sectors(i)%evec(k,j)
                  write(mytmp,"(8X,14I1)") bin_basis(:,sectors(i)%basis(k))
              enddo ! over k={1,sectors(i)%ndim} loop
          enddo ! over j={1,sectors(i)%ndim} loop
@@ -411,7 +411,7 @@
 ! write eigeanvalue
          write(mytmp, "(4X,a)") "# EIGENVALUES"
          do j=1,sectors(i)%ndim
-             write(mytmp, "(2X,I10, F20.10)") j, sectors(i)%eigval(j)
+             write(mytmp, "(2X,I10, F20.10)") j, sectors(i)%eval(j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsectors} loop
 
