@@ -1,8 +1,9 @@
 !!!-----------------------------------------------------------------------
 !!! project : jasmine
 !!! program : atomic_dump_fock
-!!!           atomic_dump_natural
+!!!           atomic_dump_tmat
 !!!           atomic_dump_emat
+!!!           atomic_dump_umat
 !!!           atomic_dump_feigval
 !!!           atomic_dump_feigvec
 !!!           atomic_dump_fcix
@@ -21,7 +22,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> atomic_dump_fock: write Fock basis to file 'atom.basis.dat'
+!!>>> atomic_dump_fock: write Fock basis to file atom.fock.dat
   subroutine atomic_dump_fock()
      use constants, only : mytmp
 
@@ -31,20 +32,28 @@
      implicit none
 
 ! local variables
+! loop index
      integer :: i
 
-! open file 'atom.basis.dat' to write
-     open(mytmp, file='atom.basis.dat', form='formatted', status='unknown')
+! used to draw a dashed line
+     character (len=1) :: dash(75)
+
+! setup dash
+     dash = '-'
+
+! open file atom.fock.dat to write
+     open(mytmp, file='atom.fock.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '#      i |  decimal(i) |    index(i) |      binary(i) |'
+     write(mytmp,'(a)') '# i | decimal | index | binary |'
+     write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      do i=1,ncfgs
-         write(mytmp,"(I10,4X)",advance="no") i
-         write(mytmp,"(I10,4X)",advance="no") dec_basis(i)
-         write(mytmp,"(I10,8X)",advance="no") index_basis(dec_basis(i))
-         write(mytmp,"(14I1)") bin_basis(:,i)
+         write(mytmp,'(i10)',advance='no') i
+         write(mytmp,'(i10)',advance='no') dec_basis(i)
+         write(mytmp,'(i10)',advance='no') index_basis(dec_basis(i))
+         write(mytmp,'(4X,14i1)') bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
 
 ! close data file
@@ -53,34 +62,36 @@
      return
   end subroutine atomic_dump_fock
 
-!!>>> atomic_dump_natural: write the transformation matrix from the
-!!>>> original basis to natural basis
-  subroutine atomic_dump_natural(info)
-     use constants, only : dp, mytmp
+!!>>> atomic_dump_tmat: write the transformation matrix from the original
+!!>>> basis to natural basis
+  subroutine atomic_dump_tmat()
+     use constants, only : mytmp
 
      use control, only : norbs
      use m_spmat, only : tmat
-
-! external arguments
-! message to be displayed in the file header
-     character(len=*), intent(in) :: info
 
 ! local variables
 ! loop index
      integer :: i
      integer :: j
 
-! open file 'atom.natural.dat' to write
-     open(mytmp, file='atom.natural.dat', form='formatted', status='unknown')
+! used to draw a dashed line
+     character (len=1) :: dash(75)
+
+! setup dash
+     dash = '-'
+
+! open file atom.tmat.dat to write
+     open(mytmp, file='atom.tmat.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') info
-     write(mytmp,'(a)') '#      i |       j |    umat_real(i,j) |    umat_imag(i,j) |'
+     write(mytmp,'(a)') '# i | j | tmat_real | tmat_imag |'
+     write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2I10,2F20.10)') j, i, tmat(j,i)
+             write(mytmp,'(2i10,2f20.10)') i, j, tmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -88,9 +99,9 @@
      close(mytmp)
 
      return
-  end subroutine atomic_dump_natural
+  end subroutine atomic_dump_tmat
 
-!!>>> atomic_dump_emat: write on-site impurity energy on natural basis
+!!>>> atomic_dump_emat: write onsite impurity energy on natural basis
   subroutine atomic_dump_emat()
      use constants, only : mytmp
 
@@ -107,8 +118,18 @@
 ! auxiliary integer variable used to convert the spin sequence
      integer :: s_order
 
-! open file 'atom.eimp.dat' to write
-     open(mytmp, file='atom.eimp.dat', form='formatted', status='unknown')
+! used to draw a dashed line
+     character (len=1) :: dash(75)
+
+! setup dash
+     dash = '-'
+
+! open file atom.emat.dat to write
+     open(mytmp, file='atom.emat.dat', form='formatted', status='unknown')
+
+! write the header
+     write(mytmp,'(a)') '# i | emat_real | emat_imag |'
+     write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      do i=1,norbs
@@ -121,7 +142,7 @@
          else
              s_order = i
          endif ! back if ( isoc == 0 ) block
-         write(mytmp,'(I10,F20.10)') i, real(emat(s_order,s_order))
+         write(mytmp,'(i10,2f20.10)') i, emat(s_order,s_order)
      enddo ! over i={1,norbs} loop
 
 ! close data file
@@ -130,13 +151,62 @@
      return
   end subroutine atomic_dump_emat
 
+!!>>> atomic_dump_umat: write onsite Coulomb interaction matrix
+  subroutine atomic_dump_umat()
+     use constants, only : zero, mytmp
+
+     use control, only : norbs
+     use m_spmat, only : umat
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+     integer :: l
+
+! used to draw a dashed line
+     character (len=1) :: dash(75)
+
+! setup dash
+     dash = '-'
+
+! open file atom.umat.dat to write
+     open(mytmp, file='atom.umat.dat', form='formatted', status='unknown')
+
+! write the header
+     write(mytmp,'(a)') '# i | j | k | l | umat_real | umat_imag |'
+     write(mytmp,'(75a1)') dash ! dashed line
+
+! write the data, only the non-zero elements are outputed
+! note: we do not change the spin sequence here
+     do i=1,norbs
+         do j=1,norbs
+             do k=1,norbs
+                 do l=1,norbs
+                     if ( real( umat(i,j,k,l) ) > zero ) then
+                         write(mytmp,'(4i10,2f20.10)') i, j, k, l, umat(i,j,k,l)
+                     endif ! back if ( real( umat(i,j,k,l) ) > zero ) block
+                 enddo ! over l={1,norbs} loop
+             enddo ! over k={1,norbs} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine atomic_dump_umat
+
 !!>>> atomic_dump_feigval: write eigenvalue for full Hilbert space to
-!!>>> file 'atom.eigval.dat'
+!!>>> file atom.eigval.dat
   subroutine atomic_dump_feigval()
      use constants, only : mytmp
 
      use control, only : ncfgs
-     use m_full, only : eval, occu
+     use m_full, only : eval
 
      implicit none
 
@@ -144,15 +214,22 @@
 ! loop index
      integer :: i
 
-! open file 'atom.eigval.dat' to write
+! used to draw a dashed line
+     character (len=1) :: dash(75)
+
+! setup dash
+     dash = '-'
+
+! open file atom.eigval.dat to write
      open(mytmp, file='atom.eigval.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '#       i |     eigenvalue(i) |      occupancy(i) |'
+     write(mytmp,'(a)') '#  i | eigenvalues |'
+     write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      do i=1,ncfgs
-         write(mytmp,"(I10,2F20.10)") i, eval(i), occu(i,i)
+         write(mytmp,'(i10,f20.10)') i, eval(i)
      enddo ! over i={1,ncfgs} loop
 
 ! close data file
@@ -162,12 +239,11 @@
   end subroutine atomic_dump_feigval
 
 !!>>> atomic_dump_feigvec: write eigenvector for full Hilbert space to
-!!>>> file 'atom.eigvec.dat'
+!!>>> file atom.eigvec.dat
   subroutine atomic_dump_feigvec()
      use constants, only : eps6, mytmp
 
      use control, only : ncfgs
-     use m_full, only : bin_basis
      use m_full, only : evec
 
      implicit none
@@ -177,17 +253,25 @@
      integer :: i
      integer :: j
 
-! open file 'atom.eigvec.dat' to write
+! used to draw a dashed line
+     character (len=1) :: dash(75)
+
+! setup dash
+     dash = '-'
+
+! open file atom.eigvec.dat to write
      open(mytmp, file='atom.eigvec.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '#      i |       j |  eigenvector(i,j) |       fock_basis(i) |'
+     write(mytmp,'(a)') '#  i | j | eigenvectors |'
+     write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      do i=1,ncfgs
          do j=1,ncfgs
-             if ( abs(evec(j,i)) < eps6 ) CYCLE
-             write(mytmp,"(2I10,F20.10,8X,14I1)") j, i, evec(j,i), bin_basis(:,j)
+             if ( abs( evec(i,j) ) > eps6 ) then
+                 write(mytmp,'(2i10,f20.10)') i, j, evec(i,j)
+             endif ! back if ( abs( evec(i,j) ) > zero ) block
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,ncfgs} loop
 
@@ -203,8 +287,8 @@
      use constants, only : zero, mytmp
 
      use control, only : isoc
-     use control, only : nband, norbs, ncfgs
-     use m_full, only : eval, occu, fmat
+     use control, only : nband, nspin, norbs, ncfgs
+     use m_full, only : eval, occu, spin, fmat
 
      implicit none
 
@@ -217,20 +301,49 @@
 ! auxiliary integer variable used to convert the spin sequence
      integer :: s_order
 
-! open file 'atom.cix' to write
+! used to draw a dashed line
+     character (len=1) :: dash(75)
+
+! string for current date and time
+     character (len = 20) :: date_time_string
+
+! setup dash
+     dash = '-'
+
+! obtain current date and time
+     call s_time_builder(date_time_string)
+
+! open file atom.cix to write
      open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
+! write the header
+     write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
+     write(mytmp,'(a)') '# File    : atom.cix'
+     write(mytmp,'(a)') '# Format  : v1.1, designed for BEGONIA and LAVENDER'
+     write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
+     write(mytmp,'(a)') '# Support : any problem, please contact me: huangli712@gmail.com'
+     write(mytmp,*)
+     write(mytmp,*)
+
+! write configurations
+     write(mytmp,'(a)') '# PARAMETERS:'
+     write(mytmp,'(75a1)') dash ! dashed line
+     write(mytmp,'(4i10)') nband, nspin, norbs, ncfgs
+     write(mytmp,'(1i10)') isoc
+
 ! write eigenvalues
-     write(mytmp,'(a)') '# eigenvalues: index | energy | occupy | spin'
+     write(mytmp,'(a)') '# EIGENVALUES: INDEX | ENERGY | OCCUPY | SPIN'
+     write(mytmp,'(75a1)') dash ! dashed line
      do i=1,ncfgs
-         write(mytmp,'(I10,3F20.10)') i, eval(i), occu(i,i), zero
+         write(mytmp,'(i10,3f20.10)') i, eval(i), occu(i,i), spin(i,i)
      enddo ! over i={1,ncfgs} loop
 
 ! write F-matrix
 ! for non-soc case, the spin order of CTQMC is like up, up, up, dn, dn, dn
 ! but the spin order of this program is up, dn, up, dn, up, dn. So we have
 ! to adjust it here. However for soc case, it doesn't matter
-     write(mytmp,'(a)') '# f matrix element: alpha | beta | orbital | fmat'
+     write(mytmp,'(a)') '# F MATRIX ELEMENT: ALPHA | BETA | FLAVOR | FMAT'
+     write(mytmp,'(75a1)') dash ! dashed line
      do i=1,norbs
          if ( isoc == 0 ) then
              if ( i <= nband ) then
@@ -506,7 +619,7 @@
 
          case(3)
              write(mytmp,'(a)',advance='no') '#      i |'
-             write(mytmp,'(a)',advance='no') ' electron(i) |       Sz(i)' 
+             write(mytmp,'(a)',advance='no') ' electron(i) |       Sz(i)'
              write(mytmp,'(a)') '|     ndim(i) |           j |   fock_basis(j,i) |'
              do i=1,nsectors
                  do j=1,sectors(i)%ndim

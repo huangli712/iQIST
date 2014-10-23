@@ -451,6 +451,8 @@
          call atomic_make_umatS()
      endif ! back if ( icu == 1 ) block
 
+     call atomic_dump_umat()
+
      return
   end subroutine atomic_make_spmat
 
@@ -548,22 +550,22 @@
 ! crystal field is diagonal, the real orbital basis is the natural basis
              write(mystd,'(1X,a)') 'real orbital basis'
              call atomic_2natural_case1()
-             call atomic_dump_natural('# natural basis is real orbital, tmat: real to natural')
+             call atomic_dump_tmat('# natural basis is real orbital, tmat: real to natural')
 
          elseif ( isoc == 0 .and. icf == 2 ) then
              write(mystd,'(1X,a)') 'linear combination of real orbitals'
              call atomic_2natural_case2()
-             call atomic_dump_natural('# natural basis is linear combination of real orbitals, tmat: real to natural')
+             call atomic_dump_tmat('# natural basis is linear combination of real orbitals, tmat: real to natural')
 
          elseif ( isoc == 1 .and. icf == 0 ) then
              write(mystd,'(1X,a)') '|j2,jz>'
              call atomic_2natural_case3()
-             call atomic_dump_natural('# natural basis is |j2,jz>, tmat: complex to natural')
+             call atomic_dump_tmat('# natural basis is |j2,jz>, tmat: complex to natural')
 
          elseif ( isoc == 1 .and. icf >  0 ) then
              write(mystd,'(1X,a)') 'linear combination of complex orbitals'
              call atomic_2natural_case4()
-             call atomic_dump_natural('# natural basis is linear combination of complex orbitals, tmat: complex to natural')
+             call atomic_dump_tmat('# natural basis is linear combination of complex orbitals, tmat: complex to natural')
 
          endif ! back if ( isoc == 0 .and. ( icf == 0 .or. icf == 1 ) ) block
      endif ! back if ( ibasis == 1 ) block
