@@ -1,4 +1,16 @@
-# eigenvalues: index | energy | occupy | spin
+# WARNING : DO NOT MODIFY THIS FILE MANUALLY!
+# File    : atom.cix
+# Format  : v1.1, designed for BEGONIA and LAVENDER
+# Built   : by JASMINE code at  1:38:40 Oct 24 2014
+# Support : any problem, please contact me: huangli712@gmail.com
+ 
+ 
+# PARAMETERS:
+---------------------------------------------------------------------------
+         3         2         6        64
+         1
+# EIGENVALUES: INDEX | ENERGY | OCCUPY | SPIN
+---------------------------------------------------------------------------
          1        0.0000000000        0.0000000000        0.0000000000
          2        0.7500000000        1.0000000000        0.0000000000
          3        0.7500000000        1.0000000000        0.0000000000
@@ -63,7 +75,8 @@
         62       27.2500000000        5.0000000000        0.0000000000
         63       27.2500000000        5.0000000000        0.0000000000
         64       38.0000000000        6.0000000000        0.0000000000
-# f matrix element: alpha | beta | orbital | fmat
+# F MATRIX ELEMENT: ALPHA | BETA | FLAVOR | FMAT
+---------------------------------------------------------------------------
          1         1         1        0.0000000000
          2         1         1        0.0000000000
          3         1         1        0.0000000000

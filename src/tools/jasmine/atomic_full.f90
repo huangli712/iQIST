@@ -22,7 +22,7 @@
 
      use control, only: norbs, ncfgs
      use m_full, only: bin_basis
-     use m_full, only: occu, eigvec
+     use m_full, only: occu, evec
 
      implicit none
 
@@ -44,7 +44,7 @@
      enddo ! over ibas={1,ncfgs} loop
 
 ! transform the occupancy from Fock basis to atomic eigenbasis
-     call atomic_tran_repr_real(ncfgs, occu, eigvec)
+     call atomic_tran_repr_real(ncfgs, occu, evec)
 
      return
   end subroutine atomic_make_foccu
@@ -54,7 +54,7 @@
   subroutine atomic_make_ffmat()
      use control, only : norbs, ncfgs
      use m_full, only : dec_basis, index_basis
-     use m_full, only : fmat, eigvec
+     use m_full, only : fmat, evec
 
      implicit none
 
@@ -87,7 +87,7 @@
 
 ! rotate fmat from Fock basis to the atomic eigenvector basis
      do i=1,norbs
-         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), eigvec)
+         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
      enddo ! over i={1,norbs} loop
 
      return

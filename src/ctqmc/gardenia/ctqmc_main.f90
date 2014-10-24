@@ -456,7 +456,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
-         call s_print_error('cat_set_hybf', 'wrong dimension size of hybf_t')
+         call s_print_error('cat_set_hybf','wrong dimension size of hybf_t')
      endif ! back if ( size_t /= size(hybf) ) block
 
 ! copy data
@@ -480,7 +480,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(symm) ) then
-         call s_print_error('cat_set_symm', 'wrong dimension size of symm_t')
+         call s_print_error('cat_set_symm','wrong dimension size of symm_t')
      endif ! back if ( size_t /= size(symm) ) block
 
 ! copy data
@@ -506,7 +506,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
-         call s_print_error('cat_set_eimp', 'wrong dimension size of eimp_t')
+         call s_print_error('cat_set_eimp','wrong dimension size of eimp_t')
      endif ! back if ( size_t /= size(eimp) ) block
 
 ! copy data
@@ -531,7 +531,7 @@
 
 ! to avoid the warning from compiler
      call s_assert( size(ktau_t) == size_t )
-     call s_print_error('cat_set_ktau', 'sorry, this feature is not supported')
+     call s_print_error('cat_set_ktau','sorry, this feature is not supported')
 
      return
   end subroutine cat_set_ktau
@@ -555,7 +555,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(grnf) ) then
-         call s_print_error('cat_get_grnf', 'wrong dimension size of grnf_t')
+         call s_print_error('cat_get_grnf','wrong dimension size of grnf_t')
      endif ! back if ( size_t /= size(grnf) ) block
 
 ! copy data
@@ -583,7 +583,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(sig2) ) then
-         call s_print_error('cat_get_sigf', 'wrong dimension size of sigf_t')
+         call s_print_error('cat_get_sigf','wrong dimension size of sigf_t')
      endif ! back if ( size_t /= size(sig2) ) block
 
 ! copy data
@@ -610,7 +610,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(nmat) ) then
-         call s_print_error('cat_get_nmat', 'wrong dimension size of nmat_t')
+         call s_print_error('cat_get_nmat','wrong dimension size of nmat_t')
      endif ! back if ( size_t /= size(nmat) ) block
 
 ! copy data
@@ -637,7 +637,7 @@
 
 ! check whether size_t is correct
      if ( size_t /= size(nnmat) ) then
-         call s_print_error('cat_get_nnmat', 'wrong dimension size of nnmat_t')
+         call s_print_error('cat_get_nnmat','wrong dimension size of nnmat_t')
      endif ! back if ( size_t /= size(nnmat) ) block
 
 ! copy data

@@ -55,7 +55,7 @@
                  sectors(isect)%fmat(iorb,ifermi)%n = sectors(jsect)%ndim
                  sectors(isect)%fmat(iorb,ifermi)%m = sectors(isect)%ndim
                  call alloc_one_fmat(sectors(isect)%fmat(iorb,ifermi))
-                 sectors(isect)%fmat(iorb,ifermi)%item = zero
+                 sectors(isect)%fmat(iorb,ifermi)%val = zero
 ! build fmat
                  do jbas=1,sectors(isect)%ndim
                      jold = dec_basis(sectors(isect)%basis(jbas))
@@ -72,17 +72,17 @@
                      do i=1,sectors(jsect)%ndim
                          if ( ibas == sectors(jsect)%basis(i) ) then
                              ibas = i
-                             sectors(isect)%fmat(iorb, ifermi)%item(ibas,jbas) = dble(isgn)
+                             sectors(isect)%fmat(iorb, ifermi)%val(ibas,jbas) = dble(isgn)
                              EXIT
                          endif ! back if ( ibas == sectors(jsect)%basis(i) ) block
                      enddo ! over i={1,sectors(jsect)%ndim} loop
                  enddo  ! over jbas={1, sectors(isect)%ndim} loop
 ! roate fmat to atomic eigenstates basis
-                 call atomic_tran_fmat(sectors(jsect)%ndim,   &
-                                       sectors(isect)%ndim,   &
-                                       sectors(jsect)%eigvec, &
-                                       sectors(isect)%fmat(iorb,ifermi)%item, &
-                                       sectors(isect)%eigvec)
+                 call atomic_tran_fmat(sectors(jsect)%ndim, &
+                                       sectors(isect)%ndim, &
+                                       sectors(jsect)%evec, &
+                                       sectors(isect)%fmat(iorb,ifermi)%val, &
+                                       sectors(isect)%evec)
              enddo ! over ifermi={0,1} loop
          enddo ! over iorb={1,norbs} loop
      enddo ! over isect={1,nsectors} loop
@@ -123,7 +123,7 @@
      logical :: insect
 
      do isect=1,nsectors
-         sectors(isect)%ham = czero
+         sectors(isect)%hmat = czero
 
 ! two fermions term
 !-------------------------------------------------------------------------
@@ -154,7 +154,7 @@
 ! determine the row number and hamiltonian matrix elememt
                              knew = knew - 2**(betta-1)
                              knew = knew + 2**(alpha-1)
-                             isgn  = mod(isgn, 2)
+                             isgn = mod(isgn, 2)
                              ibas = index_basis(knew)
                              if ( ibas == 0 ) then
                                  call s_print_error('atomic_make_shmat','error while determining row')
@@ -168,7 +168,7 @@
                              enddo ! over i={1,sectors(isect)%ndim} loop
 
                              if ( insect .eqv. .true. ) then
-                                 sectors(isect)%ham(ibas,jbas) = sectors(isect)%ham(ibas,jbas) + emat(alpha,betta) * (-one)**isgn
+                                 sectors(isect)%hmat(ibas,jbas) = sectors(isect)%hmat(ibas,jbas) + emat(alpha,betta) * (-one)**isgn
                              endif ! back if ( insect .eqv. .true. ) block
                          endif ! back if ( code(alpha) == 0 ) block
                      endif ! back if ( code(betta_ == 1 ) block
@@ -232,7 +232,7 @@
                                      enddo ! over i={1,sectors(isect)%ndim} loop
 
                                      if ( insect .eqv. .true. ) then
-                                         sectors(isect)%ham(ibas,jbas) = sectors(isect)%ham(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-one)**isgn
+                                         sectors(isect)%hmat(ibas,jbas) = sectors(isect)%hmat(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-one)**isgn
                                      endif ! back if ( insect .eqv. .true. ) block
                                  endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
                              endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
@@ -265,8 +265,8 @@
 
      do i=1,nsectors
          allocate( hmat(sectors(i)%ndim, sectors(i)%ndim) )
-         hmat = real( sectors(i)%ham )
-         call s_eig_sy(sectors(i)%ndim, sectors(i)%ndim, hmat, sectors(i)%eigval, sectors(i)%eigvec)
+         hmat = real( sectors(i)%hmat )
+         call s_eig_sy(sectors(i)%ndim, sectors(i)%ndim, hmat, sectors(i)%eval, sectors(i)%evec)
          deallocate( hmat )
      enddo ! over i={1,nsectors} loop
 

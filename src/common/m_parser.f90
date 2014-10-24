@@ -310,12 +310,12 @@
              q = index(string, '=')
 ! case 1: we do not find any ":" or "=" character
              if ( p == 0 .and. q == 0 ) then
-                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 write(mystd,'(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
                  STOP
              endif ! back if ( p == 0 .and. q == 0 ) block
 ! case 2: we find both ":" and "=" characters
              if ( p >  0 .and. q >  0 ) then
-                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 write(mystd,'(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
                  STOP
              endif ! back if ( p >  0 .and. q >  0 ) block
 ! case 3: we find only ":" character
@@ -337,11 +337,11 @@
 
 ! check the length of str_key and str_value
              if ( len_trim(str_key) == 0   ) then
-                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 write(mystd,'(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
                  STOP
              endif ! back if ( len_trim(str_key) == 0   ) block
              if ( len_trim(str_value) == 0 ) then
-                 write(mystd, '(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
+                 write(mystd,'(a)') 'parser: p_parse, wrong file format for '//trim(in_file)
                  STOP
              endif ! back if ( len_trim(str_value) == 0 ) block
 
@@ -432,7 +432,7 @@
              out_value = str_value
 
          class default
-             write(mystd, '(a)') 'parser: p_get, unrecognize data type'
+             write(mystd,'(a)') 'parser: p_get, unrecognize data type'
              STOP
      end select
 
@@ -517,7 +517,7 @@
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
                  if ( offset == 0 ) then
-                     write(mystd, '(a)') 'parser: p_get_vec, wrong number of vector'
+                     write(mystd,'(a)') 'parser: p_get_vec, wrong number of vector'
                      STOP
                  endif ! back if ( offset == 0 ) block
                  read (str_value(q+1:q+offset-1), '(I10)') int_aux
@@ -532,7 +532,7 @@
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
                  if ( offset == 0 ) then
-                     write(mystd, '(a)') 'parser: p_get_vec, wrong number of vector'
+                     write(mystd,'(a)') 'parser: p_get_vec, wrong number of vector'
                      STOP
                  endif ! back if ( offset == 0 ) block
                  read (str_value(q+1:q+offset-1), '(L4)') bool_aux
@@ -547,7 +547,7 @@
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
                  if ( offset == 0 ) then
-                     write(mystd, '(a)') 'parser: p_get_vec, wrong number of vector'
+                     write(mystd,'(a)') 'parser: p_get_vec, wrong number of vector'
                      STOP
                  endif ! back if ( offset == 0 ) block
                  read (str_value(q+1:q+offset-1), '(F16.8)') real_aux
@@ -562,7 +562,7 @@
              do p=1,nsize-1
                  offset = index(str_value(q+1:), ',')
                  if ( offset == 0 ) then
-                     write(mystd, '(a)') 'parser: p_get_vec, wrong number of vector'
+                     write(mystd,'(a)') 'parser: p_get_vec, wrong number of vector'
                      STOP
                  endif ! back if ( offset == 0 ) block
                  out_value(p) = str_value(q+1:q+offset-1)
@@ -571,7 +571,7 @@
              out_value(nsize) = str_value(q+1:)
 
          class default
-             write(mystd, '(a)') 'parser: p_get_vec, unrecognize data type'
+             write(mystd,'(a)') 'parser: p_get_vec, unrecognize data type'
              STOP
      end select
 

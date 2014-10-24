@@ -37,7 +37,7 @@
      logical :: exists
 
 ! setup default values
-     itask  = 1           ! type of task
+     ibasis = 1           ! source of the natural basis
      ictqmc = 1           ! type of CTQMC algorithm
      icu    = 1           ! type of Coulomb interaction
      icf    = 0           ! type of crystal field
@@ -56,10 +56,6 @@
 
      Ud = 2.00_dp         ! Ud
      Jh = 0.00_dp         ! Jh
-     F0 = 0.00_dp         ! F0
-     F2 = 0.00_dp         ! F2
-     F4 = 0.00_dp         ! F4
-     F6 = 0.00_dp         ! F6
 
      mune   = 0.00_dp     ! chemical potential
      lambda = 0.00_dp     ! spin-orbit coupling parameter
@@ -80,7 +76,7 @@
          call p_parse('atom.config.in')
 
 ! extract parameters
-         call p_get('itask' ,  itask)
+         call p_get('ibasis', ibasis)
          call p_get('ictqmc', ictqmc)
          call p_get('icu'   ,    icu)
          call p_get('icf'   ,    icf)
@@ -99,10 +95,6 @@
 
          call p_get('Ud'    ,     Ud)
          call p_get('Jh'    ,     Jh)
-         call p_get('F0'    ,     F0) ! not useful
-         call p_get('F2'    ,     F2) ! not useful
-         call p_get('F4'    ,     F4) ! not useful
-         call p_get('F6'    ,     F6) ! not useful
 
          call p_get('mune'  ,   mune)
          call p_get('lambda', lambda)
@@ -113,21 +105,6 @@
 ! calculate the norbs and ncfgs
          norbs = nband * nspin
          ncfgs = 2 ** norbs
-
-! calculate F0, F2, F4, F6 here
-         F0 = Ud
-         select case (nband)
-             case (5)
-                 F2 = Jh * 14.0_dp / 1.625_dp
-                 F4 = 0.625_dp * F2
-
-             case (7)
-                 F2 = Jh * 6435.0_dp / (286.0_dp + (195.0_dp * 451.0_dp / 675.0_dp) &
-                         + (250.0_dp * 1001.0_dp / 2025.0_dp))
-                 F4 = 451.0_dp / 675.0_dp * F2
-                 F6 = 1001.0_dp / 2025.0_dp * F2
-
-         end select
      else
          call s_print_error('atomic_config','file atom.config.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
@@ -148,12 +125,12 @@
 ! initialize lpass
      lpass = .true.
 
-! check itask
-     if ( itask /= 1 .and. itask /= 2 ) then
-         write(mystd,'(2X,a)') 'ERROR: itask must be 1 or 2!'
+! check ibasis
+     if ( ibasis /= 1 .and. ibasis /= 2 ) then
+         write(mystd,'(2X,a)') 'ERROR: ibasis must be 1 or 2!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( itask /= 1 .and. itask /= 2 ) block
+     endif ! back if ( ibasis /= 1 .and. ibasis /= 2 ) block
 
 ! check ictqmc
      if ( ictqmc /= 1 .and. ictqmc /= 2 .and. ictqmc /= 3 .and. ictqmc /= 4 .and. ictqmc /= 5 ) then
@@ -402,7 +379,7 @@
   subroutine atomic_make_spmat()
      use constants, only : two, czero
 
-     use control, only : itask
+     use control, only : ibasis
      use control, only : icu, icf, isoc
      use control, only : nband
      use control, only : lambda
@@ -412,7 +389,7 @@
 
 ! make crystal field and spin-orbital coupling
 ! method 1: make them inside
-     if ( itask == 1 ) then
+     if ( ibasis == 1 ) then
 ! 1A: make crysal field
 ! we read the non-zero elements of crystal field from file atom.cf.in.
 ! the crystal field is defined on real orbital basis. at present, we only
@@ -461,7 +438,7 @@
 ! orbital basis. with SOC, the original basis is the complex orbital basis
 ! at present, we just only support real numbers of this tmat
          call atomic_read_tmat()
-     endif ! back if ( itask == 1 ) block
+     endif ! back if ( ibasis == 1 ) block
 
 ! make Coulomb interaction U
      if ( icu == 1 ) then
@@ -473,6 +450,8 @@
 ! it is defined on complex orbital basis
          call atomic_make_umatS()
      endif ! back if ( icu == 1 ) block
+
+     call atomic_dump_umat()
 
      return
   end subroutine atomic_make_spmat
@@ -541,7 +520,7 @@
   subroutine atomic_make_natural()
      use constants, only : dp, czero, mystd
 
-     use control, only : itask
+     use control, only : ibasis
      use control, only : icu, icf, isoc
      use control, only : norbs
      use m_spmat, only : umat, tmat
@@ -565,31 +544,31 @@
 
 ! make transformation matrix from origional basis to natural basis: tmat
 ! and set the eimp: emat
-     if ( itask == 1 ) then
+     if ( ibasis == 1 ) then
          if ( isoc == 0 .and. ( icf == 0 .or. icf == 1 ) ) then
 ! for model calculation, no spin-orbital coupling, no crystal field or
 ! crystal field is diagonal, the real orbital basis is the natural basis
              write(mystd,'(1X,a)') 'real orbital basis'
              call atomic_2natural_case1()
-             call atomic_dump_natural('# natural basis is real orbital, tmat: real to natural')
+             call atomic_dump_tmat('# natural basis is real orbital, tmat: real to natural')
 
          elseif ( isoc == 0 .and. icf == 2 ) then
              write(mystd,'(1X,a)') 'linear combination of real orbitals'
              call atomic_2natural_case2()
-             call atomic_dump_natural('# natural basis is linear combination of real orbitals, tmat: real to natural')
+             call atomic_dump_tmat('# natural basis is linear combination of real orbitals, tmat: real to natural')
 
          elseif ( isoc == 1 .and. icf == 0 ) then
              write(mystd,'(1X,a)') '|j2,jz>'
              call atomic_2natural_case3()
-             call atomic_dump_natural('# natural basis is |j2,jz>, tmat: complex to natural')
+             call atomic_dump_tmat('# natural basis is |j2,jz>, tmat: complex to natural')
 
          elseif ( isoc == 1 .and. icf >  0 ) then
              write(mystd,'(1X,a)') 'linear combination of complex orbitals'
              call atomic_2natural_case4()
-             call atomic_dump_natural('# natural basis is linear combination of complex orbitals, tmat: complex to natural')
+             call atomic_dump_tmat('# natural basis is linear combination of complex orbitals, tmat: complex to natural')
 
          endif ! back if ( isoc == 0 .and. ( icf == 0 .or. icf == 1 ) ) block
-     endif ! back if ( itask == 1 ) block
+     endif ! back if ( ibasis == 1 ) block
 
 ! dump emat for reference
      call atomic_dump_emat()

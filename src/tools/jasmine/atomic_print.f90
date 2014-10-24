@@ -29,7 +29,7 @@
      write(mystd,'(2X,a)') '>>> An Atomic Eigenvalue Problem Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2014.10.24T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by yilin wang (at IOP/CAS)'
      write(mystd,'(2X,a)') '         by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: qhwyl2006@126.com'
@@ -79,22 +79,19 @@
 
      write(mystd,'(2X,a)') 'JASMINE >>> parameters list:'
 
-     write(mystd,'(2(4X,a,i10))')   'itask :', itask  , 'ictqmc :', ictqmc
-     write(mystd,'(2(4X,a,i10))')   'icu   :', icu    , 'icf    :', icf
-     write(mystd,'(1(4X,a,i10))')   'isoc  :', isoc    
+     write(mystd,'(2(4X,a,i10))')   'ibasis :', ibasis , 'ictqmc :', ictqmc
+     write(mystd,'(2(4X,a,i10))')   'icu    :', icu    , 'icf    :', icf
+     write(mystd,'(1(4X,a,i10))')   'isoc   :', isoc    
 
-     write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin  :', nspin
-     write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs  :', ncfgs
+     write(mystd,'(2(4X,a,i10))')   'nband  :', nband  , 'nspin  :', nspin
+     write(mystd,'(2(4X,a,i10))')   'norbs  :', norbs  , 'ncfgs  :', ncfgs
 
-     write(mystd,'(2(4X,a,f10.5))') 'Uc    :', Uc     , 'Uv     :', Uv
-     write(mystd,'(2(4X,a,f10.5))') 'Jz    :', Jz     , 'Js     :', Js
-     write(mystd,'(1(4X,a,f10.5))') 'Jp    :', Jp
+     write(mystd,'(2(4X,a,f10.5))') 'Uc     :', Uc     , 'Uv     :', Uv
+     write(mystd,'(2(4X,a,f10.5))') 'Jz     :', Jz     , 'Js     :', Js
+     write(mystd,'(1(4X,a,f10.5))') 'Jp     :', Jp
+     write(mystd,'(2(4X,a,f10.5))') 'Ud     :', Ud     , 'Jh     :', Jh
 
-     write(mystd,'(2(4X,a,f10.5))') 'Ud    :', Ud     , 'Jh     :', Jh
-     write(mystd,'(2(4X,a,f10.5))') 'F0    :', F0     , 'F2     :', F2
-     write(mystd,'(2(4X,a,f10.5))') 'F4    :', F4     , 'F6     :', F6
-
-     write(mystd,'(2(4X,a,f10.5))') 'mune  :', mune   , 'lambda :', lambda
+     write(mystd,'(2(4X,a,f10.5))') 'mune   :', mune   , 'lambda :', lambda
 
      write(mystd,*)
 
