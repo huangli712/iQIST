@@ -40,18 +40,21 @@
      integer, public, allocatable, save  :: index_basis(:)
 
 ! eigenvalues of hmat
-     real(dp), public, allocatable, save :: eigval(:)
+     real(dp), public, allocatable, save :: eval(:)
 
 ! eigenvectors of hmat
-     real(dp), public, allocatable, save :: eigvec(:,:)
+     real(dp), public, allocatable, save :: evec(:,:)
 
 ! F-matrix for annihilation fermion operators
      real(dp), public, allocatable, save :: fmat(:,:,:)
 
-! occupany number for atomic eigenstates
+! N occupany number for the atomic eigenstates
      real(dp), public, allocatable, save :: occu(:,:)
 
-! atomic Hamiltonian (CF + SOC + CU)
+! Sz for the atomic eigenstates
+     real(dp), public, allocatable, save :: spin(:,:)
+
+! atomic Hamiltonian
      complex(dp), public, allocatable, save :: hmat(:,:)
 
 !!========================================================================
@@ -105,10 +108,12 @@
      integer :: istat
 
 ! allocate memory
-     allocate(eigval(ncfgs),           stat=istat)
-     allocate(eigvec(ncfgs,ncfgs),     stat=istat)
+     allocate(eval(ncfgs),             stat=istat)
+     allocate(evec(ncfgs,ncfgs),       stat=istat)
      allocate(fmat(ncfgs,ncfgs,norbs), stat=istat)
      allocate(occu(ncfgs,ncfgs),       stat=istat)
+     allocate(spin(ncfgs,ncfgs),       stat=istat)
+
      allocate(hmat(ncfgs,ncfgs),       stat=istat)
 
 ! check the status
@@ -117,11 +122,13 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     eigval = zero
-     eigvec = zero
-     fmat   = zero
-     occu   = zero
-     hmat   = czero
+     eval = zero
+     evec = zero
+     fmat = zero
+     occu = zero
+     spin = zero
+
+     hmat = czero
 
      return
   end subroutine alloc_m_full
@@ -146,11 +153,13 @@
   subroutine dealloc_m_full()
      implicit none
 
-     if ( allocated(eigval) ) deallocate(eigval)
-     if ( allocated(eigvec) ) deallocate(eigvec)
-     if ( allocated(fmat)   ) deallocate(fmat  )
-     if ( allocated(occu)   ) deallocate(occu  )
-     if ( allocated(hmat)   ) deallocate(hmat  )
+     if ( allocated(eval) ) deallocate(eval)
+     if ( allocated(evec) ) deallocate(evec)
+     if ( allocated(fmat) ) deallocate(fmat)
+     if ( allocated(occu) ) deallocate(occu)
+     if ( allocated(spin) ) deallocate(spin)
+
+     if ( allocated(hmat) ) deallocate(hmat)
 
      return
   end subroutine dealloc_m_full
@@ -167,22 +176,24 @@
 
      implicit none
 
-! the F-matrix between any two sectors, it is just a matrix
-     private :: T_fmat
-     type T_fmat
+! data structure for one F-matrix
+!-------------------------------------------------------------------------
+     private :: t_fmat
+     type t_fmat
 
-! the dimension, n X m
+! the dimension, n x m
          integer :: n
          integer :: m
 
-! the items of the matrix
-         real(dp), pointer :: item(:,:)
+! the memory space for the matrix
+         real(dp), pointer :: val(:,:)
 
-     end type T_fmat
+     end type t_fmat
 
 ! data structure for one sector
-     public :: T_sector
-     type :: T_sector
+!-------------------------------------------------------------------------
+     public :: t_sector
+     type :: t_sector
 
 ! the dimension of this sector
          integer :: ndim
@@ -199,26 +210,26 @@
 ! the Fock basis index of this sector
          integer, pointer  :: basis(:)
 
-! the next sector it points to when a fermion operator acts on this sector
+! the next sector after a fermion operator acts on this sector
 ! -1: outside of the Hilbert space, otherwise, it is the index of next sector
 ! next(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
          integer, pointer  :: next(:,:)
 
 ! the eigenvalues
-         real(dp), pointer :: eigval(:)
+         real(dp), pointer :: eval(:)
 
 ! the eigenvectors, since Hamiltonian must be real, then it is real as well
-         real(dp), pointer :: eigvec(:,:)
+         real(dp), pointer :: evec(:,:)
 
 ! the Hamiltonian of this sector
-         complex(dp), pointer :: ham(:,:)
+         complex(dp), pointer :: hmat(:,:)
 
 ! the F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
 ! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-         type(T_fmat), pointer :: fmat(:,:)
+         type (t_fmat), pointer :: fmat(:,:)
 
-     end type T_sector
+     end type t_sector
 
 ! number of sectors
      integer, public, save  :: nsectors
@@ -230,7 +241,7 @@
      real(dp), public, save :: ave_dim_sect
 
 ! all the sectors
-     type(T_sector), public, allocatable, save :: sectors(:)
+     type (t_sector), public, allocatable, save :: sectors(:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -259,14 +270,14 @@
 
 ! external arguments
 ! the fmat
-     type(T_fmat), intent(inout) :: one_fmat
+     type (t_fmat), intent(inout) :: one_fmat
 
 ! local variables
 ! the status flag
      integer :: istat
 
 ! allocate memory
-     allocate(one_fmat%item(one_fmat%n,one_fmat%m), stat=istat)
+     allocate(one_fmat%val(one_fmat%n,one_fmat%m), stat=istat)
 
 ! check status
      if ( istat /= 0 ) then
@@ -274,7 +285,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize it
-     one_fmat%item = zero
+     one_fmat%val = zero
 
      return
   end subroutine alloc_one_fmat
@@ -285,23 +296,23 @@
 
 ! external arguments
 ! the sector
-     type(T_sector), intent(inout) :: one_sector
+     type (t_sector), intent(inout) :: one_sector
 
 ! local variables
-! the status flag
-     integer :: istat
-
 ! loop index
      integer :: i
      integer :: j
 
+! the status flag
+     integer :: istat
+
 ! allocate memory
-     allocate(one_sector%basis(one_sector%ndim),                  stat=istat)
-     allocate(one_sector%next(one_sector%nops,0:1),               stat=istat)
-     allocate(one_sector%eigval(one_sector%ndim),                 stat=istat)
-     allocate(one_sector%eigvec(one_sector%ndim,one_sector%ndim), stat=istat)
-     allocate(one_sector%ham(one_sector%ndim,one_sector%ndim),    stat=istat)
-     allocate(one_sector%fmat(one_sector%nops,0:1),               stat=istat)
+     allocate(one_sector%basis(one_sector%ndim),                stat=istat)
+     allocate(one_sector%next(one_sector%nops,0:1),             stat=istat)
+     allocate(one_sector%eval(one_sector%ndim),                 stat=istat)
+     allocate(one_sector%evec(one_sector%ndim,one_sector%ndim), stat=istat)
+     allocate(one_sector%hmat(one_sector%ndim,one_sector%ndim), stat=istat)
+     allocate(one_sector%fmat(one_sector%nops,0:1),             stat=istat)
 
 ! check status
      if ( istat /= 0 ) then
@@ -309,11 +320,11 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     one_sector%basis  = 0
-     one_sector%next   = 0
-     one_sector%eigval = zero
-     one_sector%eigvec = zero
-     one_sector%ham    = czero
+     one_sector%basis = 0
+     one_sector%next  = 0
+     one_sector%eval  = zero
+     one_sector%evec  = zero
+     one_sector%hmat  = czero
 
 ! initialize fmat one by one
      do i=1,one_sector%nops
@@ -332,11 +343,11 @@
      implicit none
 
 ! local variables
-! the status flag
-     integer :: istat
-
 ! loop index
      integer :: i
+
+! the status flag
+     integer :: istat
 
 ! allocate memory
      allocate(sectors(nsectors), stat=istat)
@@ -364,9 +375,9 @@
 
 ! external arguments
 ! the fmat
-     type(T_fmat), intent(inout) :: one_fmat
+     type (t_fmat), intent(inout) :: one_fmat
 
-     nullify(one_fmat%item)
+     nullify(one_fmat%val)
 
      return
   end subroutine nullify_one_fmat
@@ -377,9 +388,9 @@
 
 ! external arguments
 ! the fmat
-     type(T_fmat), intent(inout) :: one_fmat
+     type (t_fmat), intent(inout) :: one_fmat
 
-     if ( associated(one_fmat%item) ) deallocate(one_fmat%item)
+     if ( associated(one_fmat%val) ) deallocate(one_fmat%val)
 
      return
   end subroutine dealloc_one_fmat
@@ -390,14 +401,14 @@
 
 ! external arguments
 ! the sector
-     type(T_sector), intent(inout) :: one_sector
+     type (t_sector), intent(inout) :: one_sector
 
-     nullify(one_sector%basis )
-     nullify(one_sector%next  )
-     nullify(one_sector%eigval)
-     nullify(one_sector%eigvec)
-     nullify(one_sector%ham   )
-     nullify(one_sector%fmat  )
+     nullify(one_sector%basis)
+     nullify(one_sector%next )
+     nullify(one_sector%eval )
+     nullify(one_sector%evec )
+     nullify(one_sector%hmat )
+     nullify(one_sector%fmat )
 
      return
   end subroutine nullify_one_sector
@@ -408,18 +419,18 @@
 
 ! external arguments
 ! the sector
-     type(T_sector), intent(inout) :: one_sector
+     type (t_sector), intent(inout) :: one_sector
 
 ! local variables
 ! loop index
      integer :: i
      integer :: j
 
-     if ( associated(one_sector%basis)  ) deallocate(one_sector%basis )
-     if ( associated(one_sector%next)   ) deallocate(one_sector%next  )
-     if ( associated(one_sector%eigval) ) deallocate(one_sector%eigval)
-     if ( associated(one_sector%eigvec) ) deallocate(one_sector%eigvec)
-     if ( associated(one_sector%ham)    ) deallocate(one_sector%ham   )
+     if ( associated(one_sector%basis) ) deallocate(one_sector%basis)
+     if ( associated(one_sector%next)  ) deallocate(one_sector%next )
+     if ( associated(one_sector%eval)  ) deallocate(one_sector%eval )
+     if ( associated(one_sector%evec)  ) deallocate(one_sector%evec )
+     if ( associated(one_sector%hmat)  ) deallocate(one_sector%hmat )
 
 ! deallocate fmat one by one
      do i=1,one_sector%nops
@@ -427,6 +438,8 @@
              call dealloc_one_fmat(one_sector%fmat(i,j))
          enddo ! over j={0,1} loop
      enddo ! over i={1,one_sector%nops} loop
+
+     if ( associated(one_sector%fmat)  ) deallocate(one_sector%fmat )
 
      return
   end subroutine dealloc_one_sector
@@ -474,10 +487,10 @@
 ! spin-orbital coupling (SOC)
      complex(dp), public, allocatable, save :: smat(:,:)
 
-! on-site energy (CF + SOC) of impurity
+! onsite energy (CF + SOC) of impurity
      complex(dp), public, allocatable, save :: emat(:,:)
 
-! the transformation matrix from origional basis to natural basis
+! the transformation matrix from original basis to natural basis
      complex(dp), public, allocatable, save :: tmat(:,:)
 
 !!========================================================================

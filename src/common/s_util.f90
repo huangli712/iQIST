@@ -475,7 +475,7 @@
 
 ! convert date and time from integer to string
      write (cdate,'(1X,a3,1X,i2,1X,i4)') months(date_time(2)), date_time(3), date_time(1)
-     write (ctime, '(i2,":",i2,":",i2)') date_time(5), date_time(6), date_time(7)
+     write (ctime,'(i2,":",i2,":",i2)') date_time(5), date_time(6), date_time(7)
 
 ! build final output string by concating them
      date_time_string = ctime // cdate
@@ -518,23 +518,23 @@
      mmin = msec / 60
      msec = msec - 60 * mmin
 
-     write(mystd, '(4X, ">>> used time: ")', advance = 'no')
+     write(mystd,'(4X, ">>> used time: ")', advance = 'no')
      if ( mday > 0 ) then
-         write(mystd, '(i2, " d ")', advance = 'no') mday
+         write(mystd,'(i2, " d ")', advance = 'no') mday
      endif ! back if ( mday > 0 ) block
 
      if ( mhou > 0 ) then
-         write(mystd, '(i2, " h ")', advance = 'no') mhou
+         write(mystd,'(i2, " h ")', advance = 'no') mhou
      endif ! back if ( mhou > 0 ) block
 
      if ( mmin > 0 ) then
-         write(mystd, '(i2, " m ")', advance = 'no') mmin
+         write(mystd,'(i2, " m ")', advance = 'no') mmin
      endif ! back if ( mmin > 0 ) block
 
      if ( msec > 0 ) then
-         write(mystd, '(f5.2, " s ")', advance = 'no') msec
+         write(mystd,'(f5.2, " s ")', advance = 'no') msec
      endif ! back if ( msec > 0 ) block
-     write(mystd, '("in current iteration.")')
+     write(mystd,'("in current iteration.")')
 
 ! run time for total iteration
      nday = time_niter / 86400
@@ -544,23 +544,23 @@
      nmin = nsec / 60
      nsec = nsec - 60 * nmin
 
-     write(mystd, '(4X, ">>> used time: ")', advance = 'no')
+     write(mystd,'(4X, ">>> used time: ")', advance = 'no')
      if ( nday > 0 ) then
-         write(mystd, '(i2, " d ")', advance = 'no') nday
+         write(mystd,'(i2, " d ")', advance = 'no') nday
      endif ! back if ( nday > 0 ) block
 
      if ( nhou > 0 ) then
-         write(mystd, '(i2, " h ")', advance = 'no') nhou
+         write(mystd,'(i2, " h ")', advance = 'no') nhou
      endif ! back if ( nhou > 0 ) block
 
      if ( nmin > 0 ) then
-         write(mystd, '(i2, " m ")', advance = 'no') nmin
+         write(mystd,'(i2, " m ")', advance = 'no') nmin
      endif ! back if ( nmin > 0 ) block
 
      if ( nsec > 0 ) then
-         write(mystd, '(f5.2, " s ")', advance = 'no') nsec
+         write(mystd,'(f5.2, " s ")', advance = 'no') nsec
      endif ! back if ( nsec > 0 ) block
-     write(mystd, '("in total iteration.")')
+     write(mystd,'("in total iteration.")')
 
      return
   end subroutine s_time_analyzer
