@@ -45,14 +45,15 @@
      open(mytmp, file='atom.fock.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '# i | decimal | index | binary |'
+     write(mytmp,'(75a1)') dash ! dashed line
+     write(mytmp,'(a)') '# i | decimal | index | binary'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      do i=1,ncfgs
-         write(mytmp,'(i10)',advance='no') i
-         write(mytmp,'(i10)',advance='no') dec_basis(i)
-         write(mytmp,'(i10)',advance='no') index_basis(dec_basis(i))
+         write(mytmp,'(i6)',advance='no') i
+         write(mytmp,'(i6)',advance='no') dec_basis(i)
+         write(mytmp,'(i6)',advance='no') index_basis(dec_basis(i))
          write(mytmp,'(4X,14i1)') bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
 
@@ -85,13 +86,14 @@
      open(mytmp, file='atom.tmat.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '# i | j | tmat_real | tmat_imag |'
+     write(mytmp,'(75a1)') dash ! dashed line
+     write(mytmp,'(a)') '# i | j | tmat_real | tmat_imag'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i10,2f20.10)') i, j, tmat(i,j)
+             write(mytmp,'(2i6,2f16.8)') i, j, tmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -128,7 +130,8 @@
      open(mytmp, file='atom.emat.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '# i | emat_real | emat_imag |'
+     write(mytmp,'(75a1)') dash ! dashed line
+     write(mytmp,'(a)') '# i | emat_real | emat_imag'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
@@ -142,7 +145,7 @@
          else
              s_order = i
          endif ! back if ( isoc == 0 ) block
-         write(mytmp,'(i10,2f20.10)') i, emat(s_order,s_order)
+         write(mytmp,'(i6,2f16.8)') i, emat(s_order,s_order)
      enddo ! over i={1,norbs} loop
 
 ! close data file
@@ -177,7 +180,8 @@
      open(mytmp, file='atom.umat.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '# i | j | k | l | umat_real | umat_imag |'
+     write(mytmp,'(75a1)') dash ! dashed line
+     write(mytmp,'(a)') '# i | j | k | l | umat_real | umat_imag'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data, only the non-zero elements are outputed
@@ -187,7 +191,7 @@
              do k=1,norbs
                  do l=1,norbs
                      if ( real( umat(i,j,k,l) ) > zero ) then
-                         write(mytmp,'(4i10,2f20.10)') i, j, k, l, umat(i,j,k,l)
+                         write(mytmp,'(4i6,2f16.8)') i, j, k, l, umat(i,j,k,l)
                      endif ! back if ( real( umat(i,j,k,l) ) > zero ) block
                  enddo ! over l={1,norbs} loop
              enddo ! over k={1,norbs} loop
@@ -224,12 +228,13 @@
      open(mytmp, file='atom.eigval.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '#  i | eigenvalues |'
+     write(mytmp,'(75a1)') dash ! dashed line
+     write(mytmp,'(a)') '#  i | eigenvalues'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      do i=1,ncfgs
-         write(mytmp,'(i10,f20.10)') i, eval(i)
+         write(mytmp,'(i6,f16.8)') i, eval(i)
      enddo ! over i={1,ncfgs} loop
 
 ! close data file
@@ -263,14 +268,15 @@
      open(mytmp, file='atom.eigvec.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '#  i | j | eigenvectors |'
+     write(mytmp,'(75a1)') dash ! dashed line
+     write(mytmp,'(a)') '#  i | j | eigenvectors'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      do i=1,ncfgs
          do j=1,ncfgs
              if ( abs( evec(i,j) ) > eps6 ) then
-                 write(mytmp,'(2i10,f20.10)') i, j, evec(i,j)
+                 write(mytmp,'(2i6,f16.8)') i, j, evec(i,j)
              endif ! back if ( abs( evec(i,j) ) > eps6 ) block
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,ncfgs} loop
@@ -366,9 +372,9 @@
 
          do j=1,ncfgs
              do k=1,ncfgs
-!<                 if ( abs( fmat(k,j,s_order) ) > epss ) then
+                 if ( abs( fmat(k,j,s_order) ) > epss ) then
                      write(mytmp,'(3i10,f20.10)') k, j, i, fmat(k,j,s_order)
-!<                 endif ! back if ( abs( fmat(k,j,s_order) ) > epss ) block
+                 endif ! back if ( abs( fmat(k,j,s_order) ) > epss ) block
              enddo ! back k={1,ncfgs} loop
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
@@ -407,7 +413,8 @@
      open(mytmp, file='atom.eigval.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '# i | sector | j | eigenvalues |'
+     write(mytmp,'(75a1)') dash ! dashed line
+     write(mytmp,'(a)') '# i | sector | j | eigenvalues'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
@@ -415,7 +422,7 @@
      do i=1,nsectors
          do j=1,sectors(i)%ndim
              counter = counter + 1
-             write(mytmp,'(3(i10,4X),f20.10)') counter, i, j, sectors(i)%eval(j)
+             write(mytmp,'(3i6,f16.8)') counter, i, j, sectors(i)%eval(j)
          enddo ! over i={1,nsectors} loop
      enddo ! over j={1,sectors(i)%ndim} loop
 
@@ -449,10 +456,11 @@
      dash = '-'
 
 ! open file atom.eigvec.dat to write
-     open(mytmp, file="atom.eigvec.dat", form='formatted', status='unknown')
+     open(mytmp, file='atom.eigvec.dat', form='formatted', status='unknown')
 
 ! write the header
-     write(mytmp,'(a)') '# sector | m | n | eigenvectors |'
+     write(mytmp,'(75a1)') dash ! dashed line
+     write(mytmp,'(a)') '# sector | i | j | eigenvectors'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
@@ -460,7 +468,7 @@
          do j=1,sectors(i)%ndim
              do k=1,sectors(i)%ndim
                  if ( abs( sectors(i)%evec(j,k) ) > eps6 ) then
-                     write(mytmp,'(3(i10,4X),f20.10)') i, j, k, sectors(i)%evec(j,k)
+                     write(mytmp,'(3i6,f16.8)') i, j, k, sectors(i)%evec(j,k)
                  endif ! back if ( abs( sectors(i)%evec(j,k) ) > eps6 ) block
              enddo ! over k={1,sectors(i)%ndim} loop
          enddo ! over j={1,sectors(i)%ndim} loop
@@ -575,6 +583,7 @@
 ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%nops
+! adjust the orbital order for CT-QMC, up, up, up, dn, dn, dn
              if ( isoc == 0 ) then
                  if (j <= sectors(i)%nops / 2) then
                      s_order = 2*j-1
@@ -634,76 +643,79 @@
      integer :: i
      integer :: j
 
+! used to draw a dashed line
+     character (len=1) :: dash(75)
+
+! setup dash
+     dash = '-'
+
 ! open 'atom.sector.dat' to write
      open(mytmp, file='atom.sector.dat', form='formatted', status='unknown')
 
 ! write header
-     write(mytmp, '(a,I10)')    '#number_sectors : ', nsectors
-     write(mytmp, '(a,I10)')    '#max_dim_sectors: ', max_dim_sect
-     write(mytmp, '(a,F16.8)')  '#ave_dim_sectors: ', ave_dim_sect
+     write(mytmp,'(a,i10)')   '# number_sectors : ', nsectors
+     write(mytmp,'(a,i10)')   '# max_dim_sectors: ', max_dim_sect
+     write(mytmp,'(a,f10.5)') '# ave_dim_sectors: ', ave_dim_sect
+     write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      select case (ictqmc)
          case (1)
-             call s_print_error('atomic_dump_sector','this function is not implemented')
+             call s_print_error('atomic_dump_sector','this case is not implemented')
 
          case (2)
-             write(mytmp,'(a)',advance='no') '#      i |'
-             write(mytmp,'(a)',advance='no') ' electron(i) '
-             write(mytmp,'(a)') '|     ndim(i) |           j |   fock_basis(j,i) |'
+             write(mytmp,'(a)') '# i | Ntot | Ndim | j | Fock'
+             write(mytmp,'(75a1)') dash ! dashed line
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
-                     write(mytmp,'(I10,4X)',advance='no') i
-                     write(mytmp,'(I10,4X)',advance='no') sectors(i)%nele
-                     write(mytmp,'(I10,4X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(I10,8X)',advance='no') j
-                     write(mytmp,'(14I1)') bin_basis(:, sectors(i)%basis(j))
+                     write(mytmp,'(i4,2X)',advance='no') i
+                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%nele
+                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
 
          case(3)
-             write(mytmp,'(a)',advance='no') '#      i |'
-             write(mytmp,'(a)',advance='no') ' electron(i) |       Sz(i)'
-             write(mytmp,'(a)') '|     ndim(i) |           j |   fock_basis(j,i) |'
+             write(mytmp,'(a)') '# i | Ntot | Sz | Ndim | j | Fock'
+             write(mytmp,'(75a1)') dash ! dashed line
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
-                     write(mytmp,'(I10,4X)',advance='no') i
-                     write(mytmp,'(I10,4X)',advance='no') sect_good_ntot(i)
-                     write(mytmp,'(I10,4X)',advance='no') sect_good_sz(i)
-                     write(mytmp,'(I10,4X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(I10,8X)',advance='no') j
-                     write(mytmp,'(14I1)') bin_basis(:, sectors(i)%basis(j))
+                     write(mytmp,'(i4,2X)',advance='no') i
+                     write(mytmp,'(i4,2X)',advance='no') sect_good_ntot(i)
+                     write(mytmp,'(i4,2X)',advance='no') sect_good_sz(i)
+                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
 
          case(4)
-             write(mytmp,'(a)',advance='no') '#      i |'
-             write(mytmp,'(a)',advance='no') ' electron(i) |       Sz(i) |       PS(i) '
-             write(mytmp,'(a)') '|     ndim(i) |           j |    fock_basis(j,i) |'
+             write(mytmp,'(a)') '# i | Ntot | Sz | PS | Ndim | j | Fock'
+             write(mytmp,'(75a1)') dash ! dashed line
              do i=1,nsectors
                  do j=1,sectors(i)%ndim
-                     write(mytmp,'(I10,4X)',advance='no') i
-                     write(mytmp,'(I10,4X)',advance='no') sect_good_ntot(i)
-                     write(mytmp,'(I10,4X)',advance='no') sect_good_sz(i)
-                     write(mytmp,'(I10,4X)',advance='no') sect_good_ps(i)
-                     write(mytmp,'(I10,4X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(I10,8X)',advance='no') j
-                     write(mytmp,'(14I1)') bin_basis(:, sectors(i)%basis(j))
+                     write(mytmp,'(i4,2X)',advance='no') i
+                     write(mytmp,'(i4,2X)',advance='no') sect_good_ntot(i)
+                     write(mytmp,'(i4,2X)',advance='no') sect_good_sz(i)
+                     write(mytmp,'(i4,2X)',advance='no') sect_good_ps(i)
+                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
 
           case(5)
-              write(mytmp,'(a)',advance='no') '#      i |'
-              write(mytmp,'(a)',advance='no') ' electron(i) |       Jz(i) '
-              write(mytmp,'(a)') '|     ndim(i) |           j |   fock_basis(j,i) |'
+              write(mytmp,'(a)') '# i | Ntot | Jz | Ndim | j | Fock'
+              write(mytmp,'(75a1)') dash ! dashed line
               do i=1,nsectors
                   do j=1,sectors(i)%ndim
-                     write(mytmp,'(I10,4X)',advance='no') i
-                     write(mytmp,'(I10,4X)',advance='no') sect_good_ntot(i)
-                     write(mytmp,'(I10,4X)',advance='no') sect_good_jz(i)
-                     write(mytmp,'(I10,4X)',advance='no') sectors(i)%ndim
-                     write(mytmp,'(I10,8X)',advance='no') j
-                     write(mytmp,'(14I1)') bin_basis(:, sectors(i)%basis(j))
+                     write(mytmp,'(i4,2X)',advance='no') i
+                     write(mytmp,'(i4,2X)',advance='no') sect_good_ntot(i)
+                     write(mytmp,'(i4,2X)',advance='no') sect_good_jz(i)
+                     write(mytmp,'(i4,2X)',advance='no') sectors(i)%ndim
+                     write(mytmp,'(i4,2X)',advance='no') j
+                     write(mytmp,'(14i1)') bin_basis(:,sectors(i)%basis(j))
                   enddo ! over j={1,sectors(i)%ndim} loop
               enddo ! over i={1,nsectors} loop
      end select ! back select case (ictqmc) block
