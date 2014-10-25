@@ -1,7 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! project : jasmine
-!!! program : atomic_make_foccu
-!!!           atomic_make_ffmat
+!!! program : atomic_make_ffmat
+!!!           atomic_make_foccu
+!!!           atomic_make_fspin
 !!!           atomic_make_fhmat
 !!! source  : atomic_full.f90
 !!! type    : subroutines
@@ -14,6 +15,50 @@
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!>>> atomic_make_ffmat: make F-matrix for annihilation operators in
+!!>>> full Hilbert space case
+  subroutine atomic_make_ffmat()
+     use control, only : norbs, ncfgs
+     use m_full, only : dec_basis, index_basis
+     use m_full, only : fmat, evec
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
+! left Fock state
+     integer :: left
+
+! right Fock state
+     integer :: right
+
+! the sign change
+     integer :: isgn
+
+! evaluate F-matrix in the Fock basis
+     do i=1,norbs
+         do j=1,ncfgs
+             right = dec_basis(j)
+             if ( btest(right,i-1) .eqv. .true. ) then
+                call atomic_make_c(i, right, left, isgn)
+                k = index_basis(left)
+                fmat(k,j,i) = dble(isgn)
+             endif ! back if ( btest(right,i-1) .eqv. .true. ) block
+         enddo ! over j={1,ncfgs} loop
+     enddo ! over i={1,norbs} loop
+
+! rotate fmat from Fock basis to the atomic eigenvector basis
+     do i=1,norbs
+         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine atomic_make_ffmat
 
 !!>>> atomic_make_foccu: make occupancy for atomic eigenstates in full
 !!>>> Hilbert space case
@@ -49,49 +94,8 @@
      return
   end subroutine atomic_make_foccu
 
-!!>>> atomic_make_ffmat: make F-matrix for annihilation operators in
-!!>>> full Hilbert space case
-  subroutine atomic_make_ffmat()
-     use control, only : norbs, ncfgs
-     use m_full, only : dec_basis, index_basis
-     use m_full, only : fmat, evec
-
-     implicit none
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-     integer :: k
-
-! left Fock state
-     integer :: left
-
-! right Fock state
-     integer :: right
-
-! the sign change
-     integer :: isgn
-
-! evaluate F-matrix in the Fock basis
-     do i=1,norbs
-         do j=1,ncfgs
-             right = dec_basis(j)
-             if (btest(right,i-1) .eqv. .true.) then
-                call atomic_make_c(i, right, left, isgn)
-                k = index_basis(left)
-                fmat(k,j,i) = dble(isgn)
-             endif ! back if (btest(right,i-1) .eqv. .true.) block
-         enddo ! over j={1,ncfgs} loop
-     enddo ! over i={1,norbs} loop
-
-! rotate fmat from Fock basis to the atomic eigenvector basis
-     do i=1,norbs
-         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine atomic_make_ffmat
+  subroutine atomic_make_fspin()
+  end subroutine atomic_make_fspin
 
 !!>>> atomic_make_fhmat: make atomic Hamiltonian in the full Hilbert space
   subroutine atomic_make_fhmat()
