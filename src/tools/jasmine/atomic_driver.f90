@@ -86,6 +86,14 @@
      write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
      write(mystd,*)
 
+! build Sz
+     write(mystd,'(2X,a)') 'make Sz of atomic eigenstates'
+     call cpu_time(time_begin) ! record starting time
+     call atomic_make_fspin()
+     call cpu_time(time_end)   ! record ending   time
+     write(mystd,'(2X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+     write(mystd,*)
+
 ! write eigenvalues of hmat to file 'atom.eigval.dat'
 ! write eigenvectors of hmat to file 'atom.eigvec.dat'
 ! write eigenvalue of hmat, occupany number of eigenstates and fmat of
