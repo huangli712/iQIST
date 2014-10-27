@@ -19,7 +19,7 @@
 !!!           08/22/2014 by yilin wang
 !!!           10/27/2014 by li huang
 !!! purpose : read input data from the external files, make the Fock basis
-!!!           and natural basis 
+!!!           and natural basis, etc.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -258,11 +258,11 @@
      return
   end subroutine atomic_check_config
 
-!!>>> atomic_read_cmat: read crystal field from file atomic.cf.in
+!!>>> atomic_read_cmat: read crystal field from file atomic.cmat.in
   subroutine atomic_read_cmat()
-     use, intrinsic :: iso_fortran_env, only : iostat_end
      use constants, only : dp, zero, mytmp
 
+     use control, only : norbs
      use m_spmat, only : cmat
 
      implicit none
@@ -271,40 +271,39 @@
 ! file status
      logical  :: exists
 
-! iostat
-     integer  :: ierr
+! loop index
+     integer  :: i
 
 ! dummy variables
-     integer  :: i
-     integer  :: j
+     integer  :: i1
+     integer  :: i2
      real(dp) :: raux
 
-! we shall read crystal field cmat from file atom.cf.in
+! we shall read crystal field (cmat) from file atom.cmat.in
 ! inquire file at first
-     inquire(file = 'atom.cf.in', exist = exists)
+     inquire( file = 'atom.cmat.in', exist = exists )
 
      if ( exists .eqv. .true. ) then
-! open file atom.cf.in
-         open(mytmp, file='atom.cf.in', form='formatted', status='unknown')
+! open file atom.cmat.in
+         open(mytmp, file='atom.cmat.in', form='formatted', status='unknown')
 
-! read the data until EOF
-         do
-             read(mytmp, *, iostat = ierr) i, j, raux
-             if ( ierr == iostat_end ) EXIT
+! read the data file
+         do i=1,norbs
+             read(mytmp,*) i1, i2, raux
 ! crystal field is actually real
              cmat(i,j) = dcmplx(raux, zero)
-         enddo ! over do while loop
+         enddo ! over i={1,norbs} loop
 
 ! close data file
          close(mytmp)
      else
-         call s_print_error('atomic_read_cmat','file atomic.cf.in does not exist!')
+         call s_print_error('atomic_read_cmat','file atomic.cmat.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
 
      return
   end subroutine atomic_read_cmat
 
-!!>>> atomic_read_emat: read onsite impurity level from file atomic.eimp.in
+!!>>> atomic_read_emat: read onsite impurity level from file atomic.emat.in
   subroutine atomic_read_emat()
      use constants, only : dp, zero, mytmp
 
@@ -325,17 +324,17 @@
      integer  :: i2
      real(dp) :: raux
 
-! we shall read emat from file atomic.eimp.in
+! we shall read emat from file atomic.emat.in
 ! inquire file at first
-     inquire(file = 'atom.eimp.in', exist = exists)
+     inquire( file = 'atom.emat.in', exist = exists )
 
      if ( exists .eqv. .true. ) then
-! open file atom.eimp.in
-         open(mytmp, file='atom.eimp.in', form='formatted', status='unknown')
+! open file atom.emat.in
+         open(mytmp, file='atom.emat.in', form='formatted', status='unknown')
 
 ! read the data file
          do i=1,norbs
-             read(mytmp, *) i1, i2, raux
+             read(mytmp,*) i1, i2, raux
 ! emat is actually real in natural basis
              emat(i,i) = dcmplx(raux, zero)
          enddo ! over i={1,norbs} loop
@@ -343,7 +342,7 @@
 ! close data file
          close(mytmp)
      else
-         call s_print_error('atomic_read_emat','file atomic.eimp.in does not exist!')
+         call s_print_error('atomic_read_emat','file atomic.emat.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
 
      return
@@ -414,7 +413,7 @@
 ! method 1: make them inside
      if ( ibasis == 1 ) then
 ! 1A: make crysal field
-! we read the non-zero elements of crystal field from file atom.cf.in.
+! we read the non-zero elements of crystal field from file atom.cmat.in.
 ! the crystal field is defined on real orbital basis. at present, we only
 ! support real crystal field, so, the elements in this file provided by
 ! user must be real
