@@ -115,7 +115,7 @@
 
 !!>>> atomic_check_config: check the validity of input config parameters
   subroutine atomic_check_config()
-     use constants, only : mystd, zero
+     use constants, only : zero, mystd
 
      use control ! ALL
 
@@ -127,18 +127,18 @@
      lpass = .true.
 
 ! check ibasis
-     if ( ibasis /= 1 .and. ibasis /= 2 ) then
+     if ( ibasis < 1 .or. ibasis > 2 ) then
          write(mystd,'(2X,a)') 'ERROR: ibasis must be 1 or 2!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( ibasis /= 1 .and. ibasis /= 2 ) block
+     endif ! back if ( ibasis < 1 .or. ibasis > 2 ) block
 
 ! check ictqmc
-     if ( ictqmc /= 1 .and. ictqmc /= 2 .and. ictqmc /= 3 .and. ictqmc /= 4 .and. ictqmc /= 5 ) then
+     if ( ictqmc < 1 .or. ictqmc > 5 ) then
          write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 1, 2, 3, 4, 5!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( ictqmc /= 1 .and. ictqmc /= 2 .and. ictqmc /= 3 .and. ictqmc /= 4 .and. ictqmc /= 5 ) block
+     endif ! back if ( ictqmc < 1 .or. ictqmc > 5 ) block
 
      if ( ictqmc == 3 .and. isoc == 1 ) then
          write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz) algorithm is NOT supported for SOC case!'
@@ -165,40 +165,40 @@
      endif ! back if ( ictqmc == 5 .and. isoc == 0 ) block
 
      if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) then
-         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Jz) algorithm is NOT supported for SOC plus CF case!'
+         write(mystd,'(2X,a)') 'ERROR: GQNs (N,Jz) algorithm is NOT supported for SOC + CF case!'
          write(mystd, *)
          lpass = .false.
      endif ! back if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) block
 
 ! check icu
-     if ( icu /= 1 .and. icu /= 2 ) then
+     if ( icu < 1 .or. icu > 2 ) then
          write(mystd,'(2X,a)') 'ERROR: icu must be 1 or 2!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( icu /= 1 .and. icu /= 2 ) block
+     endif ! back if ( icu < 1 .or. icu > 2 ) block
 
      if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) then
-         write(mystd,'(2X,a)') 'ERROR: only support Slater-Cordon type Coulomb interaction for nband=5 or 7!'
+         write(mystd,'(2X,a)') 'ERROR: only support Slater-Cordon type Coulomb interaction for 5- or 7-band system!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
 
 ! check icf
-     if ( icf /= 0 .and. icf /= 1 .and. icf /= 2 ) then
+     if ( icf < 0 .or. icf > 2 ) then
          write(mystd,'(2X,a)') 'ERROR: icf must be one of 0, 1, 2!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( icf /= 0 .and. icf /= 1 .and. icf /= 2 ) block
+     endif ! back if ( icf < 0 .or. icf > 2 ) block
 
 ! check isoc
-     if ( isoc /= 0 .and. isoc /= 1 ) then
+     if ( isoc < 0 .or. isoc > 1 ) then
          write(mystd,'(2X,a)') 'ERROR: isoc must be 0 or 1!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( isoc /= 0 .and. isoc /= 1 ) block
+     endif ! back if ( isoc < 0 .or. isoc > 1 ) block
 
      if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) then
-         write(mystd,'(2X,a)') 'ERROR: only support SOC for nband=3, 5, or 7!'
+         write(mystd,'(2X,a)') 'ERROR: only support SOC for 3-, 5-, or 7-band system!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( isoc == 1 .and. nband /= 3 .and. nband /= 5 .and. nband /= 7 ) block
@@ -210,24 +210,46 @@
          lpass = .false.
      endif ! back if ( nband <= 0 ) block
 
-! check Uc, Uv, Jz, Js, Jp, Ud, JH
+! check norbs
+     if ( norbs /= nspin * nband ) then
+         write(mystd,'(2X,a)') 'ERROR: number of bands is not compatible with number of orbitals!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( norbs /= nspin * nband ) block
+
+! check ncfgs
+     if ( ncfgs /= 2 ** norbs ) then
+         write(mystd,'(2X,a)') 'ERROR: number of orbitals is not compatible with number of configurations!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( ncfgs /= 2 ** norbs ) block
+
+! check Uc, Uv, Jz, Js, Jp
      if ( Uc < zero .or. Uv < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: Uc and Uv must be larger than zero!'
+         write(mystd,'(2X,a)') 'ERROR: Uc and Uv must be larger than or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Uc < zero .or. Uv < zero ) block
 
      if ( Jz < zero .or. Js < zero .or. Jp < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: Jz, Js, and Jp must be larger than zero!'
+         write(mystd,'(2X,a)') 'ERROR: Jz, Js, and Jp must be larger than or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Jz < zero .or. Js < zero .or. Jp < zero ) block
 
+! check Ud and Jh
      if ( Ud < zero .or. Jh < zero ) then
-         write(mystd,'(2X,a)') 'ERROR: Ud and Jh must be larger than zero!'
+         write(mystd,'(2X,a)') 'ERROR: Ud and Jh must be larger than or equal to zero!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( Ud < zero .or. Jh < zero ) block
+
+! check lambda
+     if ( lambda < zero ) then
+         write(mystd,'(2X,a)') 'ERROR: lambda must be larger than or equal to zero!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( lambda < zero ) block
 
      if ( lpass .eqv. .false. ) then
          call s_print_error('atomic_check_config','invalid parameters found in atom.config.in file!')
