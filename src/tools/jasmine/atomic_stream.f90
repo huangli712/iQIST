@@ -260,6 +260,7 @@
 
 !!>>> atomic_read_cmat: read crystal field from file atomic.cmat.in
   subroutine atomic_read_cmat()
+     use, intrinsic :: iso_fortran_env, only : iostat_end
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
@@ -271,8 +272,8 @@
 ! file status
      logical  :: exists
 
-! loop index
-     integer  :: i
+! iostat
+     integer  :: ierr
 
 ! dummy variables
      integer  :: i1
@@ -287,12 +288,14 @@
 ! open file atom.cmat.in
          open(mytmp, file='atom.cmat.in', form='formatted', status='unknown')
 
-! read the data file
-         do i=1,norbs
-             read(mytmp,*) i1, i2, raux
+! read the data until EOF
+         do
+             read(mytmp,*,iostat = ierr) i1, i2, raux
+             if ( ierr == iostat_end ) EXIT
+             call s_assert( i1 <= norbs .and. i2 <= norbs )
 ! crystal field is actually real
-             cmat(i,j) = dcmplx(raux, zero)
-         enddo ! over i={1,norbs} loop
+             cmat(i1,i2) = dcmplx(raux, zero)
+         enddo ! over do while loop
 
 ! close data file
          close(mytmp)
