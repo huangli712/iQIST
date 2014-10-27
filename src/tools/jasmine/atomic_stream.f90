@@ -17,8 +17,9 @@
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
-!!!           10/20/2014 by li huang
-!!! purpose :
+!!!           10/27/2014 by li huang
+!!! purpose : read input data from the external files, make the Fock basis
+!!!           and natural basis 
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -33,14 +34,14 @@
      implicit none
 
 ! local variables
-! file status
+! file status, if the atom.config.in file exists
      logical :: exists
 
 ! setup default values
      ibasis = 1           ! source of the natural basis
-     ictqmc = 1           ! type of CTQMC algorithm
+     ictqmc = 1           ! type of atomic Hamiltonian matrix diagonalization
      icu    = 1           ! type of Coulomb interaction
-     icf    = 0           ! type of crystal field
+     icf    = 0           ! type of crystal field (CF)
      isoc   = 0           ! type of spin-orbital coupling (SOC)
 
      nband = 1            ! number of bands
@@ -54,11 +55,11 @@
      Js = 0.00_dp         ! spin-flip interaction
      Jp = 0.00_dp         ! pair-hopping interaction
 
-     Ud = 2.00_dp         ! Ud
-     Jh = 0.00_dp         ! Jh
+     Ud = 2.00_dp         ! Coulomb interaction parameter
+     Jh = 0.00_dp         ! Hund's exchange parameter
 
      mune   = 0.00_dp     ! chemical potential
-     lambda = 0.00_dp     ! spin-orbit coupling parameter
+     lambda = 0.00_dp     ! spin-orbit coupling strength
 
 ! read in input file if possible
 ! reset file status
@@ -106,7 +107,7 @@
          norbs = nband * nspin
          ncfgs = 2 ** norbs
      else
-         call s_print_error('atomic_config','file atom.config.in does not exist!')
+         call s_print_exception('atomic_config','file atom.config.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
 
      return
