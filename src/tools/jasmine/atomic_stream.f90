@@ -324,7 +324,7 @@
      integer  :: i2
      real(dp) :: raux
 
-! we shall read emat from file atomic.emat.in
+! we shall read onsite impurity level (emat) from file atomic.emat.in
 ! inquire file at first
      inquire( file = 'atom.emat.in', exist = exists )
 
@@ -348,7 +348,8 @@
      return
   end subroutine atomic_read_emat
 
-!!>>> atomic_read_tmat: read the transformation matrix tmat from file atomic.tmat.in
+!!>>> atomic_read_tmat: read the transformation matrix tmat from
+!!>>> file atomic.tmat.in
   subroutine atomic_read_tmat()
      use constants, only : dp, zero, mytmp
 
@@ -370,9 +371,9 @@
      integer :: i2
      real(dp) :: raux
 
-! we shall read transformation matrix tmat from file atomic.umat.in
+! we shall read transformation matrix tmat from file atomic.tmat.in
 ! inquire file at first
-     inquire(file = 'atom.tmat.in', exist = exists)
+     inquire( file = 'atom.tmat.in', exist = exists )
 
      if ( exists .eqv. .true. ) then
 ! open file atom.tmat.in
