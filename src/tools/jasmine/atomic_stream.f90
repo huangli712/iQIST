@@ -417,7 +417,7 @@
 ! we read the non-zero elements of crystal field from file atom.cmat.in.
 ! the crystal field is defined on real orbital basis. at present, we only
 ! support real crystal field, so, the elements in this file provided by
-! user must be real
+! users must be real
          if ( icf > 0 ) then
              call atomic_read_cmat()
          else
@@ -430,21 +430,21 @@
          if ( isoc > 0 ) then
              select case (nband)
 
-                 case (3)
+                 case (3) ! 3-band system
                      call atomic_make_smat3(smat)
 ! for 3 bands system, there is a minus sign
                      smat = -smat * lambda / two
 
-                 case (5)
+                 case (5) ! 5-band system
                      call atomic_make_smat5(smat)
                      smat = smat * lambda / two
 
-                 case (7)
+                 case (7) ! 7-band system
                      call atomic_make_smat7(smat)
                      smat = smat * lambda / two
 
                  case default
-                     call s_print_error('atomic_make_spmat', 'not implemented!')
+                     call s_print_error('atomic_make_spmat','not implemented!')
 
              end select
          else
@@ -455,12 +455,6 @@
 ! read the emat (CF + SOC) matrices on natural basis, this matrix should be
 ! a diagonal matrix, and the elements must be real
          call atomic_read_emat()
-
-! read the transformation matrices used to transfer emat from original
-! basis to natural basis. without SOC, the original basis is the real
-! orbital basis. with SOC, the original basis is the complex orbital basis
-! at present, we just only support real numbers of this tmat
-         call atomic_read_tmat()
      endif ! back if ( ibasis == 1 ) block
 
 ! make Coulomb interaction U
@@ -474,12 +468,10 @@
          call atomic_make_umatS()
      endif ! back if ( icu == 1 ) block
 
-     call atomic_dump_umat()
-
      return
   end subroutine atomic_make_spmat
 
-!!>>> atomic_make_fock: make Fock basis for full Hilbert space
+!!>>> atomic_make_fock: make Fock basis for the full Hilbert space
   subroutine atomic_make_fock()
      use control, only : norbs, ncfgs
      use m_full, only : dim_sub_n, dec_basis, bin_basis, index_basis
@@ -504,7 +496,7 @@
      bin_basis = 0
      index_basis = 0
 
-! it is a number of combination C_{norbs}^{i}
+! evaluate dim_sub_n, it is a number of combination C_{norbs}^{i}
      do i=0,norbs
          call s_combination(i, norbs, dim_sub_n(i))
      enddo ! over i={0,norbs} loop
@@ -532,7 +524,7 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
-! dump Fock basis to file "atom.basis.dat" for reference
+! dump Fock basis to file atom.fock.dat for reference
      call atomic_dump_fock()
 
      return
@@ -552,10 +544,10 @@
 
 ! local variables
 ! transformation matrix from real orbital basis to complex orbital basis
-     complex(dp) :: tmat_r2c(norbs, norbs)
+     complex(dp) :: tmat_r2c(norbs,norbs)
 
 ! transformation matrix from complex orbital basis to real orbital basis
-     complex(dp) :: tmat_c2r(norbs, norbs)
+     complex(dp) :: tmat_c2r(norbs,norbs)
 
 ! dummy Coulomb interaction matrix
      complex(dp) :: umat_tmp(norbs,norbs,norbs,norbs)
@@ -566,31 +558,39 @@
      tmat_c2r = czero
 
 ! make transformation matrix from origional basis to natural basis: tmat
-! and set the eimp: emat
+! A: make tmat internally for different cases
      if ( ibasis == 1 ) then
-         if ( isoc == 0 .and. ( icf == 0 .or. icf == 1 ) ) then
-! for model calculation, no spin-orbital coupling, no crystal field or
-! crystal field is diagonal, the real orbital basis is the natural basis
+         if      ( isoc == 0 .and. icf <  2 ) then
+! no spin-orbital coupling, no crystal field or crystal field is diagonal
              write(mystd,'(1X,a)') 'real orbital basis'
              call atomic_2natural_case1()
              call atomic_dump_tmat('# natural basis is real orbital, tmat: real to natural')
 
-         elseif ( isoc == 0 .and. icf == 2 ) then
+! no spin-orbital coupling, non-diagonal crystal field
+         else if ( isoc == 0 .and. icf == 2 ) then
              write(mystd,'(1X,a)') 'linear combination of real orbitals'
              call atomic_2natural_case2()
              call atomic_dump_tmat('# natural basis is linear combination of real orbitals, tmat: real to natural')
 
-         elseif ( isoc == 1 .and. icf == 0 ) then
+! with spin-orbital coupling, no crystal field
+         else if ( isoc == 1 .and. icf == 0 ) then
              write(mystd,'(1X,a)') '|j2,jz>'
              call atomic_2natural_case3()
              call atomic_dump_tmat('# natural basis is |j2,jz>, tmat: complex to natural')
 
-         elseif ( isoc == 1 .and. icf >  0 ) then
+! with spin-orbital coupling and crystal field
+         else if ( isoc == 1 .and. icf >  0 ) then
              write(mystd,'(1X,a)') 'linear combination of complex orbitals'
              call atomic_2natural_case4()
              call atomic_dump_tmat('# natural basis is linear combination of complex orbitals, tmat: complex to natural')
 
          endif ! back if ( isoc == 0 .and. ( icf == 0 .or. icf == 1 ) ) block
+! B: read the transformation matrices used to transfer emat from original
+! basis to natural basis. without SOC, the original basis is the real
+! orbital basis. with SOC, the original basis is the complex orbital basis
+! at present, we just only support real numbers for this tmat
+     else
+         call atomic_read_tmat()
      endif ! back if ( ibasis == 1 ) block
 
 ! dump emat for reference
@@ -624,6 +624,9 @@
 ! finally, transform umat to natural basis
      call atomic_tran_umat(tmat, umat, umat_tmp)
      umat = umat_tmp
+
+! write the U matrix as reference
+     call atomic_dump_umat()
 
      return
   end subroutine atomic_make_natural
