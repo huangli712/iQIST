@@ -9,7 +9,8 @@
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           10/27/2014 by li huang
-!!! purpose :
+!!! purpose : implement the sector algorithm, calculate the F-matrix and
+!!!           build the atomic Hamiltonian sector-by-sector
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -27,12 +28,17 @@
      implicit none
 
 ! local variables
-! loop index
-     integer :: i
+! loop index for orbital
      integer :: iorb
-     integer :: ifermi
-     integer :: isect
-     integer :: jsect
+
+! loop index for annihilation and creation operators
+     integer :: ityp
+
+! loop index for sector
+     integer :: isec
+     integer :: jsec
+
+! loop index for basis
      integer :: ibas
      integer :: jbas
 
@@ -44,48 +50,56 @@
      integer :: jnew
 
 ! loop over all the sectors
-     do isect=1,nsectors
+     do isec=1,nsectors
 ! loop over all the orbitals
          do iorb=1,norbs
 ! loop over the creation and annihilation fermion operators
-             do ifermi=0,1
-                 jsect = sectors(isect)%next(iorb,ifermi)
-                 if ( jsect == -1 ) CYCLE
-! allocate memory for fmat
-                 sectors(isect)%fmat(iorb,ifermi)%n = sectors(jsect)%ndim
-                 sectors(isect)%fmat(iorb,ifermi)%m = sectors(isect)%ndim
-                 call alloc_one_fmat(sectors(isect)%fmat(iorb,ifermi))
-                 sectors(isect)%fmat(iorb,ifermi)%val = zero
-! build fmat
-                 do jbas=1,sectors(isect)%ndim
-                     jold = dec_basis(sectors(isect)%basis(jbas))
-! for creation fermion operator
-                     if ( ifermi == 1 .and. ( btest(jold, iorb-1) .eqv. .false. ) ) then
+             do ityp=0,1
+
+! get the next sector: jsec
+                 jsec = sectors(isec)%next(iorb,ityp)
+                 if ( jsec == -1 ) CYCLE
+
+! allocate memory for fmat and then initialize it
+                 sectors(isec)%fmat(iorb,ityp)%n = sectors(jsec)%ndim
+                 sectors(isec)%fmat(iorb,ityp)%m = sectors(isec)%ndim
+                 call alloc_one_fmat(sectors(isec)%fmat(iorb,ityp))
+                 sectors(isec)%fmat(iorb,ityp)%val = zero
+
+! loop over the basis for the isec-th sector
+                 do jbas=1,sectors(isec)%ndim
+                     jold = dec_basis(sectors(isec)%basis(jbas))
+
+! apply creation fermion operator
+                     if ( ityp == 1 .and. ( btest(jold, iorb-1) .eqv. .false. ) ) then
                          call atomic_make_cdagger(iorb, jold, jnew, isgn)
-! for annihilation fermion operator
-                     elseif ( ifermi == 0 .and. ( btest(jold, iorb-1) .eqv. .true. ) ) then
+! apply annihilation fermion operator
+                     else if ( ityp == 0 .and. ( btest(jold, iorb-1) .eqv. .true. ) ) then
                          call atomic_make_c(iorb, jold, jnew, isgn)
                      else
                          CYCLE
-                     endif ! back if ( ifermi == 1 .and. ( btest(jold, iorb-1) .eqv. .false. ) ) block
-                     ibas = index_basis(jnew)
-                     do i=1,sectors(jsect)%ndim
-                         if ( ibas == sectors(jsect)%basis(i) ) then
-                             ibas = i
-                             sectors(isect)%fmat(iorb, ifermi)%val(ibas,jbas) = dble(isgn)
+                     endif ! back if ( ityp == 1 .and. ( btest(jold, iorb-1) .eqv. .false. ) ) block
+
+! loop over the basis for the jsec-th sector
+                     do ibas=1,sectors(jsec)%ndim
+                         if ( sectors(jsec)%basis(ibas) == index_basis(jnew) ) then
+! build matrix element for F-matrix
+                             sectors(isec)%fmat(iorb,ityp)%val(ibas,jbas) = dble(isgn)
                              EXIT
-                         endif ! back if ( ibas == sectors(jsect)%basis(i) ) block
-                     enddo ! over i={1,sectors(jsect)%ndim} loop
-                 enddo  ! over jbas={1, sectors(isect)%ndim} loop
+                         endif ! back if ( sectors(jsec)%basis(ibas) == index_basis(jnew) ) block
+                     enddo ! over ibas={1,sectors(jsec)%ndim} loop
+                 enddo ! over jbas={1,sectors(isec)%ndim} loop
+
 ! roate fmat to atomic eigenstates basis
-                 call atomic_tran_fmat(sectors(jsect)%ndim, &
-                                       sectors(isect)%ndim, &
-                                       sectors(jsect)%evec, &
-                                       sectors(isect)%fmat(iorb,ifermi)%val, &
-                                       sectors(isect)%evec)
-             enddo ! over ifermi={0,1} loop
+                 call atomic_tran_fmat(sectors(jsec)%ndim, &
+                                       sectors(isec)%ndim, &
+                                       sectors(jsec)%evec, &
+                                       sectors(isec)%fmat(iorb,ityp)%val, &
+                                       sectors(isec)%evec)
+
+             enddo ! over ityp={0,1} loop
          enddo ! over iorb={1,norbs} loop
-     enddo ! over isect={1,nsectors} loop
+     enddo ! over isec={1,nsectors} loop
 
      return
   end subroutine atomic_make_sfmat
