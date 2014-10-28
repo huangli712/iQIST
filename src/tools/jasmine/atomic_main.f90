@@ -6,7 +6,7 @@
 !!! time quantum Monte Carlo (CTQMC) quantum impurity solver             !
 !!! author  : Yilin Wang (at IOP/CAS)                                    !
 !!!           Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2014.10.20T                                               !
+!!! version : v2014.10.29T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : the atomic solver is based on Dr. Liang Du's rambutan code !
 !!!           any question, please contact with huangli712@gmail.com     !
@@ -32,8 +32,22 @@
 !! Input
 !! =====
 !!
+!! atom.config.in (necessary)
+!! atom.cmat.in (optional)
+!! atom.emat.in (optional)
+!! atom.tmat.in (optional)
+!!
 !! Output
 !! ======
+!!
+!! atom.fock.dat
+!! atom.tmat.dat
+!! atom.emat.dat
+!! atom.umat.dat
+!! atom.eigval.dat
+!! atom.eigvec.dat
+!! atom.sector.dat
+!! atom.cix
 !!
 !! Documents
 !! =========
