@@ -41,7 +41,7 @@
 ! 2: Slater-Cordon parameters (Ud, Jh => F0, F2, F4, F6)
      integer, public, save :: icu    = 1
 
-! control flag: type of crystal field
+! control flag: type of crystal field (CF)
 ! 0: no crystal field
 ! 1: diagonal crystal field
 ! 2: non-diagonal crystal field
@@ -90,10 +90,10 @@
 
 ! the following parameters are useful when icu = 2. they are used to
 ! calculate the F0, F2, F4, and F6.
-! Coulomb parameters
+! Coulomb parameter
      real(dp), public, save :: Ud    = 2.0_dp
 
-! Hund's exchange parameters
+! Hund's exchange parameter
      real(dp), public, save :: Jh    = 0.0_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

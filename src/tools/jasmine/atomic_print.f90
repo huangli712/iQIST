@@ -81,7 +81,7 @@
 
      write(mystd,'(2(4X,a,i10))')   'ibasis :', ibasis , 'ictqmc :', ictqmc
      write(mystd,'(2(4X,a,i10))')   'icu    :', icu    , 'icf    :', icf
-     write(mystd,'(1(4X,a,i10))')   'isoc   :', isoc    
+     write(mystd,'(1(4X,a,i10))')   'isoc   :', isoc
 
      write(mystd,'(2(4X,a,i10))')   'nband  :', nband  , 'nspin  :', nspin
      write(mystd,'(2(4X,a,i10))')   'norbs  :', norbs  , 'ncfgs  :', ncfgs
