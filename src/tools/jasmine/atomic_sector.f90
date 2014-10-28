@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
-!!!           10/27/2014 by li huang
+!!!           10/28/2014 by li huang
 !!! purpose : implement the sector algorithm, calculate the F-matrix and
 !!!           build the atomic Hamiltonian sector-by-sector
 !!! status  : unstable
@@ -118,9 +118,15 @@
 ! local variables
 ! loop index
      integer :: i
-     integer :: isect
+
+! loop index for sector
+     integer :: isec
+
+! loop index for basis
      integer :: ibas
      integer :: jbas
+
+! loop index for orbital
      integer :: alpha, betta
      integer :: delta, gamma
 
@@ -133,23 +139,22 @@
 ! binary form of a Fock state
      integer :: code(norbs)
 
-! whether in some sector
-     logical :: insect
-
-     do isect=1,nsectors
-         sectors(isect)%hmat = czero
+! loop over all sectors
+     do isec=1,nsectors
+         sectors(isec)%hmat = czero
 
 ! two fermions term
 !-------------------------------------------------------------------------
-         do jbas=1,sectors(isect)%ndim
+         do jbas=1,sectors(isec)%ndim
              alploop: do alpha=1,norbs
                  betloop: do betta=1,norbs
 
                      isgn = 0
-                     knew = dec_basis(sectors(isect)%basis(jbas))
-                     code(1:norbs) = bin_basis(1:norbs, sectors(isect)%basis(jbas))
+                     knew = dec_basis(sectors(isec)%basis(jbas))
+                     code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
 
-                     if ( abs(emat(alpha, betta)) < epst ) CYCLE
+! impurity level is too small
+                     if ( abs(emat(alpha,betta)) < epst ) CYCLE
 
 ! simulate one annihilation operator
                      if ( code(betta) == 1 ) then
@@ -168,22 +173,19 @@
 ! determine the row number and hamiltonian matrix elememt
                              knew = knew - 2**(betta-1)
                              knew = knew + 2**(alpha-1)
-                             isgn = mod(isgn, 2)
-                             ibas = ind_basis(knew)
-                             if ( ibas == 0 ) then
-                                 call s_print_error('atomic_make_shmat','error while determining row')
-                             endif ! back if ( ibas == 0 ) block
+                             isgn = mod(isgn,2)
 
-                             insect = .false.
-                             do i=1,sectors(isect)%ndim
-                                 if ( sectors(isect)%basis(i) == ibas ) then
-                                     ibas = i; insect = .true.
-                                 endif ! back if ( sectors(isect)%basis(i) == ibas ) block
-                             enddo ! over i={1,sectors(isect)%ndim} loop
-
-                             if ( insect .eqv. .true. ) then
-                                 sectors(isect)%hmat(ibas,jbas) = sectors(isect)%hmat(ibas,jbas) + emat(alpha,betta) * (-one)**isgn
-                             endif ! back if ( insect .eqv. .true. ) block
+! now ind_basis(knew) means the index of new Fock state
+                             if ( ind_basis(knew) == 0 ) then
+                                 call s_print_error('atomic_make_shmat','error while determining new state!')
+                             endif ! back if ( ind_basis(knew) == 0 ) block
+                             do ibas=1,sectors(isec)%ndim
+                                 if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
+                                     sectors(isec)%hmat(ibas,jbas) = &
+                                     sectors(isec)%hmat(ibas,jbas) + &
+                                     emat(alpha,betta) * (-one)**isgn
+                                 endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
+                             enddo ! over ibas={1,sectors(isec)%ndim} loop
                          endif ! back if ( code(alpha) == 0 ) block
                      endif ! back if ( code(betta_ == 1 ) block
 
@@ -193,18 +195,20 @@
 
 ! four fermions term
 !-------------------------------------------------------------------------
-         do jbas=1,sectors(isect)%ndim
-             alphaloop : do alpha=1,norbs
-                 bettaloop : do betta=1,norbs
-                     gammaloop : do gamma=1,norbs
-                         deltaloop : do delta=1,norbs
+         do jbas=1,sectors(isec)%ndim
+             alphaloop: do alpha=1,norbs
+                 bettaloop: do betta=1,norbs
+                     gammaloop: do gamma=1,norbs
+                         deltaloop: do delta=1,norbs
 
                              isgn = 0
-                             knew = dec_basis(sectors(isect)%basis(jbas))
-                             code(1:norbs) = bin_basis(1:norbs, sectors(isect)%basis(jbas))
+                             knew = dec_basis(sectors(isec)%basis(jbas))
+                             code(1:norbs) = bin_basis(1:norbs,sectors(isec)%basis(jbas))
 
-! very important if single particle basis has been rotated
+! applying Pauli principle
                              if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
+
+! U-matrix element is too small
                              if ( abs(umat(alpha,betta,delta,gamma)) < epst ) CYCLE
 
 ! simulate two annihilation operators
@@ -214,40 +218,37 @@
                                  enddo ! over i={1,gamma-1} loop
                                  code(gamma) = 0
                                  do i=1,delta-1
-                                     if(code(i) == 1) isgn = isgn + 1
+                                     if ( code(i) == 1 ) isgn = isgn + 1
                                  enddo ! over i={1,delta-1} loop
                                  code(delta) = 0
 
 ! simulate two creation operators
                                  if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) then
                                      do i=1,betta-1
-                                         if (code(i) == 1) isgn = isgn + 1
+                                         if ( code(i) == 1 ) isgn = isgn + 1
                                      enddo ! over i={1,betta-1} loop
                                      code(betta) = 1
                                      do i=1,alpha-1
-                                         if (code(i) == 1) isgn = isgn + 1
+                                         if ( code(i) == 1 ) isgn = isgn + 1
                                      enddo ! over i={1,alpha-1} loop
                                      code(alpha) = 1
 
 ! determine the row number and hamiltonian matrix elememt
                                      knew = knew - 2**(gamma-1) - 2**(delta-1)
                                      knew = knew + 2**(betta-1) + 2**(alpha-1)
-                                     ibas = ind_basis(knew)
-                                     isgn = mod(isgn, 2)
-                                     if ( ibas == 0 ) then
-                                         call s_print_error('atomic_make_shmat','error while determining row')
-                                     endif ! back if ( ibas == 0 ) block
+                                     isgn = mod(isgn,2)
 
-                                     insect = .false.
-                                     do i=1,sectors(isect)%ndim
-                                         if ( sectors(isect)%basis(i) == ibas ) then
-                                             ibas = i; insect = .true.
-                                         endif ! back if ( sectors(isect)%basis(i) == ibas ) block
-                                     enddo ! over i={1,sectors(isect)%ndim} loop
-
-                                     if ( insect .eqv. .true. ) then
-                                         sectors(isect)%hmat(ibas,jbas) = sectors(isect)%hmat(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-one)**isgn
-                                     endif ! back if ( insect .eqv. .true. ) block
+! now ind_basis(knew) means the index of new Fock state
+                                     if ( ind_basis(knew) == 0 ) then
+                                         call s_print_error('atomic_make_shmat','error while determining new state!')
+                                     endif ! back if ( ind_basis(knew) == 0 ) block
+                                     do ibas=1,sectors(isec)%ndim
+                                         if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) then
+                                             sectors(isec)%hmat(ibas,jbas) = &
+                                             sectors(isec)%hmat(ibas,jbas) + &
+                                             umat(alpha,betta,delta,gamma) * (-one)**isgn
+                                         endif ! back if ( sectors(isec)%basis(ibas) == ind_basis(knew) ) block
+                                     enddo ! over ibas={1,sectors(isec)%ndim} loop
                                  endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
                              endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
 
@@ -257,7 +258,7 @@
              enddo alphaloop ! over alpha={1,norbs-1} loop
          enddo ! over jbas={1,sectors(isect)%ndim} loop
 
-     enddo ! over i={1,nsectors} loop
+     enddo ! over isec={1,nsectors} loop
 
      return
   end subroutine atomic_make_shmat
