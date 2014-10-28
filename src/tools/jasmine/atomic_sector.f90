@@ -275,14 +275,12 @@
 ! loop index
      integer :: i
 
-! dummy hamiltonian matrix
-     real(dp), allocatable :: hmat(:,:)
-
      do i=1,nsectors
-         allocate( hmat(sectors(i)%ndim, sectors(i)%ndim) )
-         hmat = real( sectors(i)%hmat )
-         call s_eig_sy(sectors(i)%ndim, sectors(i)%ndim, hmat, sectors(i)%eval, sectors(i)%evec)
-         deallocate( hmat )
+         call s_eig_sy( sectors(i)%ndim, &
+                        sectors(i)%ndim, &
+                        real( sectors(i)%hmat ), &
+                        sectors(i)%eval, &
+                        sectors(i)%evec )
      enddo ! over i={1,nsectors} loop
 
      return
