@@ -9,9 +9,10 @@
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
-!!!           10/20/2014 by li huang
+!!!           10/27/2014 by li huang
 !!! purpose : computational subroutines for the calculations of occupation
-!!!           number, F-matrix, and atomic Hamiltonian in full Fock space.
+!!!           number, spin moment, F-matrix, and atomic Hamiltonian in the
+!!!           full Fock space.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -60,14 +61,14 @@
      return
   end subroutine atomic_make_ffmat
 
-!!>>> atomic_make_foccu: make occupancy for atomic eigenstates in full
+!!>>> atomic_make_foccu: make occupancy for atomic eigenstates in the full
 !!>>> Hilbert space case
   subroutine atomic_make_foccu()
-     use constants, only: zero, one
+     use constants, only : zero, one
 
-     use control, only: norbs, ncfgs
-     use m_full, only: bin_basis
-     use m_full, only: occu, evec
+     use control, only : norbs, ncfgs
+     use m_full, only : bin_basis
+     use m_full, only : occu, evec
 
      implicit none
 
@@ -82,9 +83,9 @@
      occu = zero
      do ibas=1,ncfgs
          do iorb=1,norbs
-             if (bin_basis(iorb,ibas) == 1) then
+             if ( bin_basis(iorb,ibas) == 1 ) then
                  occu(ibas,ibas) = occu(ibas,ibas) + one
-             endif ! back if (bin_basis(iorb,ibas) == 1) block
+             endif ! back if ( bin_basis(iorb,ibas ) == 1) block
          enddo ! over iorb={1,norbs} loop
      enddo ! over ibas={1,ncfgs} loop
 
@@ -94,12 +95,45 @@
      return
   end subroutine atomic_make_foccu
 
+!!>>> atomic_make_fspin: make net Sz for atomic eigenstates in the full
+!!>>> Hilbert space case
   subroutine atomic_make_fspin()
+     use constants, only: zero, half
+
+     use control, only : norbs, ncfgs
+     use m_full, only : bin_basis
+     use m_full, only : spin, evec
+
+! local variables
+! loop index over orbits
+     integer :: iorb
+
+! loop index over configurations
+     integer :: ibas
+
+! evaluate spin moment in the Fock basis
+     spin = zero
+     do ibas=1,ncfgs
+         do iorb=1,norbs
+             if ( bin_basis(iorb,ibas) == 1 ) then
+                 if ( mod(iorb,2) /= 0 ) then ! spin up
+                     spin(ibas,ibas) = spin(ibas,ibas) + half
+                 else                         ! spin down
+                     spin(ibas,ibas) = spin(ibas,ibas) - half
+                 endif ! back if ( mod(iorb,2) /= 0 ) block
+             endif ! back if ( bin_basis(iorb,ibas ) == 1) block
+         enddo ! over iorb={1,norbs} loop
+     enddo ! over ibas={1,ncfgs} loop
+
+! transform the net Sz from Fock basis to atomic eigenbasis
+     call atomic_tran_repr_real(ncfgs, spin, evec)
+
+     return
   end subroutine atomic_make_fspin
 
 !!>>> atomic_make_fhmat: make atomic Hamiltonian in the full Hilbert space
   subroutine atomic_make_fhmat()
-     use constants, only : czero, epst
+     use constants, only : one, czero, epst
 
      use control, only : norbs, ncfgs
      use m_full, only : dec_basis, index_basis, bin_basis
@@ -111,8 +145,11 @@
 ! local variables
 ! loop index
      integer :: i
-     integer :: ibas
-     integer :: jbas
+
+! loop index for basis
+     integer :: ibas, jbas
+
+! loop index for orbital
      integer :: alpha, betta
      integer :: delta, gamma
 
@@ -139,7 +176,7 @@
                  code(1:norbs) = bin_basis(1:norbs,jbas)
 
 ! impurity level is too small
-                 if ( abs(emat(alpha,betta)) .lt. epst ) CYCLE
+                 if ( abs( emat(alpha,betta) ) < epst ) CYCLE
 
 ! simulate one annihilation operator
                  if ( code(betta) == 1 ) then
@@ -151,7 +188,7 @@
 ! simulate one creation operator
                      if ( code(alpha) == 0 ) then
                          do i=1,alpha-1
-                             if (code(i) == 1) sgn = sgn + 1
+                             if ( code(i) == 1 ) sgn = sgn + 1
                          enddo ! over i={1,alpha-1} loop
                          code(alpha) = 1
 
@@ -159,11 +196,12 @@
                          knew = knew - 2**(betta-1)
                          knew = knew + 2**(alpha-1)
                          sgn  = mod(sgn,2)
+! now ibas means the index for the new state
                          ibas = index_basis(knew)
                          if ( ibas == 0 ) then
-                             call s_print_error('atomic_make_fhmat','error while determining row!')
+                             call s_print_error('atomic_make_fhmat','error while determining new state!')
                          endif ! back if ( ibas == 0 ) block
-                         hmat(ibas,jbas) = hmat(ibas,jbas) + emat(alpha,betta) * (-1.0d0)**sgn
+                         hmat(ibas,jbas) = hmat(ibas,jbas) + emat(alpha,betta) * (-one)**sgn
                      endif ! back if (code(alpha) == 0) block
                  endif ! back if (code(betta) == 1) block
 
@@ -180,19 +218,22 @@
 
                          sgn  = 0
                          knew = dec_basis(jbas)
-                         code(1:norbs) = bin_basis(1:norbs, jbas)
+                         code(1:norbs) = bin_basis(1:norbs,jbas)
 
+! applying Pauli principle
                          if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
-                         if ( abs(umat(alpha,betta,delta,gamma)) < epst ) CYCLE
+
+! U-matrix element is too small
+                         if ( abs( umat(alpha,betta,delta,gamma) ) < epst ) CYCLE
 
 ! simulate two annihilation operators
                          if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) then
                              do i=1,gamma-1
-                                 if (code(i) == 1) sgn = sgn + 1
+                                 if ( code(i) == 1 ) sgn = sgn + 1
                              enddo ! over i={1,gamma-1} loop
                              code(gamma) = 0
                              do i=1,delta-1
-                                 if (code(i) == 1) sgn = sgn + 1
+                                 if ( code(i) == 1 ) sgn = sgn + 1
                              enddo ! over i={1,delta-1} loop
                              code(delta) = 0
 
@@ -211,11 +252,12 @@
                                  knew = knew - 2**(gamma-1) - 2**(delta-1)
                                  knew = knew + 2**(betta-1) + 2**(alpha-1)
                                  sgn  = mod(sgn,2)
+! now ibas means the index for the new state
                                  ibas = index_basis(knew)
                                  if ( ibas == 0 ) then
-                                     call s_print_error('atomic_make_fhmat','error while determining row')
+                                     call s_print_error('atomic_make_fhmat','error while determining new state')
                                  endif ! back if ( ibas == 0 ) block
-                                 hmat(ibas,jbas) = hmat(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-1.0d0)**sgn
+                                 hmat(ibas,jbas) = hmat(ibas,jbas) + umat(alpha,betta,delta,gamma) * (-one)**sgn
                              endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
                          endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
 

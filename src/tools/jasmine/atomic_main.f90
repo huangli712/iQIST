@@ -85,18 +85,18 @@
 !                  |5/2,-5/2>, |5/2,-3/2>, |5/2,-1/2>, |5/2,1/2>, |5/2,3/2>, |5/2,5/2>
 ! (4) the so-called natural basis, on which the on-site energy of impurity
 !     is diagonal. we have to diagonalize CF + SOC to obtain natural basis
-     write(mystd,"(2X,a)") "JASMINE >>> prepare basis set and single particle matrix"
-     write(mystd,"(2X,a)") "make crystal field, spin-orbital coupling, and Coulomb interaction U"
+     write(mystd,'(2X,a)') 'JASMINE >>> prepare basis set and single particle matrix'
+     write(mystd,'(2X,a)') 'make crystal field, spin-orbital coupling, and Coulomb interaction U'
      call atomic_make_spmat()
      write(mystd,*)
 
 ! make Fock basis for the full many particle Hiblert space
-     write(mystd,"(2X,a)") "make Fock basis"
+     write(mystd,'(2X,a)') 'make Fock basis'
      call atomic_make_fock()
      write(mystd,*)
 
 ! make natural basis
-     write(mystd,"(2X,a)",advance='no') "make natural basis:"
+     write(mystd,'(2X,a)') "make natural basis"
      call atomic_make_natural()
      write(mystd,*)
 
