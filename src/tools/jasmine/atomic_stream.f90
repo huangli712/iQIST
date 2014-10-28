@@ -477,7 +477,7 @@
 !!>>> atomic_make_fock: make Fock basis for the full Hilbert space
   subroutine atomic_make_fock()
      use control, only : norbs, ncfgs
-     use m_full, only : dim_sub_n, dec_basis, bin_basis, index_basis
+     use m_full, only : dim_sub_n, bin_basis, dec_basis, ind_basis
 
      implicit none
 
@@ -495,9 +495,9 @@
 
 ! initialize them
      dim_sub_n = 0
-     dec_basis = 0
      bin_basis = 0
-     index_basis = 0
+     dec_basis = 0
+     ind_basis = 0
 
 ! evaluate dim_sub_n, it is a number of combination C_{norbs}^{i}
      do i=0,norbs
@@ -515,7 +515,7 @@
              if ( nelec == i ) then
                  basis_count = basis_count + 1
                  dec_basis(basis_count) = j
-                 index_basis(j) = basis_count
+                 ind_basis(j) = basis_count
              endif ! back if ( nelec == i ) block
          enddo ! over j={0,2**norbs-1} loop
      enddo ! over i={0,norbs} loop

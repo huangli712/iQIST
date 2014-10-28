@@ -21,7 +21,7 @@
      use constants, only : zero
 
      use control, only : norbs
-     use m_full, only : dec_basis, index_basis
+     use m_full, only : dec_basis, ind_basis
      use m_sector, only : nsectors, sectors
      use m_sector, only : alloc_one_fmat
 
@@ -82,11 +82,11 @@
 
 ! loop over the basis for the jsec-th sector
                      do ibas=1,sectors(jsec)%ndim
-                         if ( sectors(jsec)%basis(ibas) == index_basis(jnew) ) then
+                         if ( sectors(jsec)%basis(ibas) == ind_basis(jnew) ) then
 ! build matrix element for F-matrix
                              sectors(isec)%fmat(iorb,ityp)%val(ibas,jbas) = dble(isgn)
                              EXIT
-                         endif ! back if ( sectors(jsec)%basis(ibas) == index_basis(jnew) ) block
+                         endif ! back if ( sectors(jsec)%basis(ibas) == ind_basis(jnew) ) block
                      enddo ! over ibas={1,sectors(jsec)%ndim} loop
                  enddo ! over jbas={1,sectors(isec)%ndim} loop
 
@@ -109,7 +109,7 @@
      use constants, only : dp, one, epst, czero
 
      use control, only : norbs, ncfgs
-     use m_full, only : dec_basis, index_basis, bin_basis
+     use m_full, only : bin_basis, dec_basis, ind_basis
      use m_spmat, only : emat, umat
      use m_sector, only : nsectors, sectors
 
@@ -169,7 +169,7 @@
                              knew = knew - 2**(betta-1)
                              knew = knew + 2**(alpha-1)
                              isgn = mod(isgn, 2)
-                             ibas = index_basis(knew)
+                             ibas = ind_basis(knew)
                              if ( ibas == 0 ) then
                                  call s_print_error('atomic_make_shmat','error while determining row')
                              endif ! back if ( ibas == 0 ) block
@@ -232,7 +232,7 @@
 ! determine the row number and hamiltonian matrix elememt
                                      knew = knew - 2**(gamma-1) - 2**(delta-1)
                                      knew = knew + 2**(betta-1) + 2**(alpha-1)
-                                     ibas = index_basis(knew)
+                                     ibas = ind_basis(knew)
                                      isgn = mod(isgn, 2)
                                      if ( ibas == 0 ) then
                                          call s_print_error('atomic_make_shmat','error while determining row')

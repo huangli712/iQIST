@@ -27,7 +27,7 @@
      use constants, only : mytmp
 
      use control, only : ncfgs
-     use m_full, only : dec_basis, index_basis, bin_basis
+     use m_full, only : bin_basis, dec_basis, ind_basis
 
      implicit none
 
@@ -53,7 +53,7 @@
      do i=1,ncfgs
          write(mytmp,'(i6)',advance='no') i
          write(mytmp,'(i6)',advance='no') dec_basis(i)
-         write(mytmp,'(i6)',advance='no') index_basis(dec_basis(i))
+         write(mytmp,'(i6)',advance='no') ind_basis(dec_basis(i))
          write(mytmp,'(4X,14i1)') bin_basis(:,i)
      enddo ! over i={1,ncfgs} loop
 
