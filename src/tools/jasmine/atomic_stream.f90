@@ -210,6 +210,13 @@
          lpass = .false.
      endif ! back if ( nband <= 0 ) block
 
+! check nspin
+     if ( nspin /= 2 ) then
+         write(mystd,'(2X,a)') 'ERROR: number of spin projections must be 2!'
+         write(mystd,*)
+         lpass = .false.
+     endif
+
 ! check norbs
      if ( norbs /= nspin * nband ) then
          write(mystd,'(2X,a)') 'ERROR: number of bands is not compatible with number of orbitals!'
