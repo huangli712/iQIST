@@ -43,7 +43,7 @@
      write(mystd,*)
 
 ! build atomic many particle Hamiltonian matrix
-     write(mystd,'(2X,a)') 'make atomic many particle Hamiltonian'
+     write(mystd,'(2X,a)') 'assemble atomic many particle Hamiltonian'
      call cpu_time(time_begin) ! record starting time
      call atomic_make_fhmat()
      call cpu_time(time_end)   ! record ending   time
@@ -71,7 +71,7 @@
 ! build F-matrix
 ! first, build fmat of annihilation operators in Fock basis
 ! then, transform them to the eigen basis
-     write(mystd,'(2X,a)') 'make F-matrix for annihilation fermion operators'
+     write(mystd,'(2X,a)') 'build F-matrix for annihilation fermion operators'
      call cpu_time(time_begin) ! record starting time
      call atomic_make_ffmat()
      call cpu_time(time_end)   ! record ending   time
@@ -79,7 +79,7 @@
      write(mystd,*)
 
 ! build occupancy number
-     write(mystd,'(2X,a)') 'make occupancy number of atomic eigenstates'
+     write(mystd,'(2X,a)') 'compute occupancy number of atomic eigenstates'
      call cpu_time(time_begin) ! record starting time
      call atomic_make_foccu()
      call cpu_time(time_end)   ! record ending   time
@@ -87,7 +87,7 @@
      write(mystd,*)
 
 ! build Sz
-     write(mystd,'(2X,a)') 'make Sz of atomic eigenstates'
+     write(mystd,'(2X,a)') 'compute magnetic moment of atomic eigenstates'
      call cpu_time(time_begin) ! record starting time
      call atomic_make_fspin()
      call cpu_time(time_end)   ! record ending   time
@@ -142,7 +142,7 @@
      real(dp) :: time_end
 
 ! make all the sectors, allocate sectors memory inside
-     write(mystd,'(2X,a)') 'determine sectors using good quantum numbers (GQNs)'
+     write(mystd,'(2X,a)') 'determine sectors using good quantum numbers'
      call cpu_time(time_begin) ! record starting time
      call atomic_make_sectors()
      call cpu_time(time_end)   ! record ending   time
@@ -150,7 +150,7 @@
      write(mystd,*)
 
 ! make atomic Hamiltonian
-     write(mystd,'(2X,a)') 'make atomic Hamiltonian for all sectors'
+     write(mystd,'(2X,a)') 'assemble atomic Hamiltonian for all sectors'
      call cpu_time(time_begin) ! record starting time
      call atomic_make_shmat()
      call cpu_time(time_end)   ! record ending   time
@@ -178,7 +178,7 @@
      write(mystd,*)
 
 ! make F-matrix of both creation and annihilation operators for each sector
-     write(mystd,'(2X,a)') 'make F-matrix for all sectors'
+     write(mystd,'(2X,a)') 'build F-matrix for all sectors'
      call cpu_time(time_begin) ! record starting time
      call atomic_make_sfmat()
      call cpu_time(time_end)   ! record ending   time
