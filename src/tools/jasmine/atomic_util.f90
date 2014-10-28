@@ -811,7 +811,7 @@
   end subroutine atomic_make_tmat_r2c
 
 !!>>> atomic_make_tmat_c2j: make transformation matrix from complex
-!!>>> orbital basis (|lz,sz>) to j2-jz orbital basis (|j2,jz>), i.e., 
+!!>>> orbital basis (|lz,sz>) to j2-jz orbital basis (|j2,jz>), i.e.,
 !!>>> the Cordon-Gaunt (CG) coefficients
   subroutine atomic_make_tmat_c2j(tmat_c2j)
      use constants, only : dp, czero

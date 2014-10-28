@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : yilin wang (email: qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
-!!!           10/21/2014 by li huang
+!!!           10/27/2014 by li huang
 !!! purpose :
 !!! status  : unstable
 !!! comment :
