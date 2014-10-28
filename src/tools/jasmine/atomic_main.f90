@@ -24,6 +24,15 @@
 !! Introduction
 !! ============
 !!
+!! The jasmine code is a key component in the iqist software package. We
+!! usually use it to (1) assemble the atomic Hamiltonian (H_{cf} + H_{soc}
+!! + H_{int}), (2) diagonalize it, (3) and generate suitable input files
+!! (the so-called atom.cix file) for the continuous-time quantum Monte
+!! Carlo impurity solvers. Now it supports two different diagonalization
+!! modes, full diagonalization and sector-by-sector diagonalization. The
+!! former is useful for the begonia and lavender codes, while the latter
+!! is designed for the pansy and manjushaka codes. Enjoy it.
+!!
 !! Usage
 !! =====
 !!
