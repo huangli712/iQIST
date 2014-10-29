@@ -77,14 +77,14 @@
 
 !!>>> init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> fortran version
-  subroutine init_atomic(I_jasmine)
+  subroutine init_atomic(I_solver)
      implicit none
 
 ! external arguments
-! type structure of generic solver
-     class(*), intent(in) :: I_jasmine
+! type structure of generic atomic eigenvalue problem solver
+     class(*), intent(in) :: I_solver
 
-     call cat_init_atomic(I_jasmine)
+     call cat_init_atomic(I_solver)
 
      return
   end subroutine init_atomic
