@@ -34,6 +34,33 @@
 ! out them when f2py is used.
 
 # if !defined (F2PY)
+
+! define type T_jasmine, which is used to describe the control parameters
+! for jasmine code
+     public :: T_jasmine
+     type :: T_jasmine
+         integer :: ibasis
+         integer :: ictqmc
+         integer :: icu
+         integer :: icf
+         integer :: isoc
+
+         integer :: nband
+         integer :: nspin
+         integer :: norbs
+         integer :: ncfgs
+
+         real(dp) :: Uc
+         real(dp) :: Uv
+         real(dp) :: Jz
+         real(dp) :: Js
+         real(dp) :: Jp
+         real(dp) :: Ud
+         real(dp) :: Jh
+         real(dp) :: mune
+         real(dp) :: lambda
+     end type T_jasmine
+
 # endif  /* F2PY */
 
 !!========================================================================
@@ -45,5 +72,35 @@
      public  :: stop_atomic
 
   contains ! encapsulated functionality
+
+# if !defined (F2PY)
+
+!!>>> init_atomic: initialize the atomic eigenvalue problem solver
+!!>>> fortran version
+  subroutine init_atomic(I_jasmine)
+     implicit none
+
+! external arguments
+! type structure of generic solver
+     class(*), intent(in) :: I_jasmine
+
+     call cat_init_atomic(I_jasmine)
+
+     return
+  end subroutine init_atomic
+
+# else   /* F2PY */
+
+!!>>> init_atomic: initialize the atomic eigenvalue problem solver
+!!>>> python version
+  subroutine init_atomic()
+     implicit none
+
+     call cat_init_atomic()
+
+     return
+  end subroutine init_atomic
+
+# endif  /* F2PY */
 
   end module api
