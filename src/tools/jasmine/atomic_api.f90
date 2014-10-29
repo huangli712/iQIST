@@ -103,4 +103,22 @@
 
 # endif  /* F2PY */
 
+!!>>> exec_atomic: execute the atomic eigenvalue problem solver
+  subroutine exec_atomic()
+     implicit none
+
+     call cat_exec_atomic()
+
+     return
+  end subroutine exec_atomic
+
+!!>>> stop_atomic: stop the atomic eigenvalue problem solver
+  subroutine stop_atomic()
+     implicit none
+
+     call cat_stop_atomic()
+
+     return
+  end subroutine stop_atomic
+
   end module api
