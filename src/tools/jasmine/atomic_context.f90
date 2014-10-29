@@ -40,9 +40,9 @@
      integer, public, allocatable, save  :: dec_basis(:)
 
 ! index of Fock basis, given their decimal number
-! index_basis(i) will tell you for a given decimal number what its
+! ind_basis(i) will tell you for a given decimal number what its
 ! corresponding Fock state index is
-     integer, public, allocatable, save  :: index_basis(:)
+     integer, public, allocatable, save  :: ind_basis(:)
 
 ! eigenvalues of hmat
      real(dp), public, allocatable, save :: eval(:)
@@ -89,7 +89,7 @@
      allocate(dim_sub_n(0:norbs),     stat=istat)
      allocate(bin_basis(norbs,ncfgs), stat=istat)
      allocate(dec_basis(ncfgs),       stat=istat)
-     allocate(index_basis(0:ncfgs-1), stat=istat)
+     allocate(ind_basis(0:ncfgs-1),   stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -100,7 +100,7 @@
      dim_sub_n = 0
      bin_basis = 0
      dec_basis = 0
-     index_basis = 0
+     ind_basis = 0
 
      return
   end subroutine alloc_m_full_basis
@@ -146,10 +146,10 @@
   subroutine dealloc_m_full_basis()
      implicit none
 
-     if ( allocated(dim_sub_n)   ) deallocate(dim_sub_n  )
-     if ( allocated(bin_basis)   ) deallocate(bin_basis  )
-     if ( allocated(dec_basis)   ) deallocate(dec_basis  )
-     if ( allocated(index_basis) ) deallocate(index_basis)
+     if ( allocated(dim_sub_n) ) deallocate(dim_sub_n)
+     if ( allocated(bin_basis) ) deallocate(bin_basis)
+     if ( allocated(dec_basis) ) deallocate(dec_basis)
+     if ( allocated(ind_basis) ) deallocate(ind_basis)
 
      return
   end subroutine dealloc_m_full_basis
