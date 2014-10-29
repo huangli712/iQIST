@@ -32,4 +32,18 @@
 
 ! note: now f2py does not support derived types, so we have to comment
 ! out them when f2py is used.
+
+# if !defined (F2PY)
+# endif  /* F2PY */
+
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
+
+     public  :: init_atomic
+     public  :: exec_atomic
+     public  :: stop_atomic
+
+  contains ! encapsulated functionality
+
   end module api
