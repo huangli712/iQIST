@@ -197,12 +197,12 @@
 
 # if !defined (F2PY)
 
-!!>>> init_atomic: initialize the atomic eigenvalue problem solver
+!!>>> cat_init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> fortran version
-  subroutine init_atomic( i_ibasis, i_ictqmc, i_icu, i_icf, i_isoc, &
-                          i_nband, i_nspin, i_norbs, i_ncfgs,       &
-                          i_Uc, i_Uv, i_Jz, i_Js, i_Jp, i_Ud, i_Jh, &
-                          i_mune, i_lambda )
+  subroutine cat_init_atomic( i_ibasis, i_ictqmc, i_icu, i_icf, i_isoc, &
+                              i_nband, i_nspin, i_norbs, i_ncfgs,       &
+                              i_Uc, i_Uv, i_Jz, i_Js, i_Jp, i_Ud, i_Jh, &
+                              i_mune, i_lambda )
      use constants, only : dp
 
      use control ! ALL
@@ -274,13 +274,13 @@
      call alloc_m_spmat()
 
      return
-  end subroutine init_atomic
+  end subroutine cat_init_atomic
 
 # else   /* F2PY */
 
-!!>>> init_atomic: initialize the atomic eigenvalue problem solver
+!!>>> cat_init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> python version
-  subroutine init_atomic()
+  subroutine cat_init_atomic()
      use m_full, only : alloc_m_full_basis
      use m_spmat, only : alloc_m_spmat
 
@@ -305,12 +305,12 @@
      call alloc_m_spmat()
 
      return
-  end subroutine init_atomic
+  end subroutine cat_init_atomic
 
 # endif  /* F2PY */
 
-!!>>> exec_atomic: execute the atomic eigenvalue problem solver
-  subroutine exec_atomic()
+!!>>> cat_exec_atomic: execute the atomic eigenvalue problem solver
+  subroutine cat_exec_atomic()
      use constants, only : mystd
 
      use control, only : ictqmc
@@ -406,10 +406,10 @@
      end select
 
      return
-  end subroutine exec_atomic
+  end subroutine cat_exec_atomic
 
-!!>>> stop_atomic: stop the atomic eigenvalue problem solver
-  subroutine stop_atomic()
+!!>>> cat_stop_atomic: stop the atomic eigenvalue problem solver
+  subroutine cat_stop_atomic()
      use m_full, only : dealloc_m_full_basis
      use m_spmat, only : dealloc_m_spmat
 
@@ -423,4 +423,4 @@
      call atomic_print_footer()
 
      return
-  end subroutine stop_atomic
+  end subroutine cat_stop_atomic

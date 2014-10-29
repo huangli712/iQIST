@@ -156,7 +156,7 @@
 
 !!>>> atomic_dump_umat: write onsite Coulomb interaction matrix
   subroutine atomic_dump_umat()
-     use constants, only : zero, mytmp
+     use constants, only : epst, mytmp
 
      use control, only : norbs
      use m_spmat, only : umat
@@ -190,7 +190,7 @@
          do j=1,norbs
              do k=1,norbs
                  do l=1,norbs
-                     if ( real( umat(i,j,k,l) ) > zero ) then
+                     if ( real( umat(i,j,k,l) ) > epst ) then
                          write(mytmp,'(4i6,2f16.8)') i, j, k, l, umat(i,j,k,l)
                      endif ! back if ( real( umat(i,j,k,l) ) > zero ) block
                  enddo ! over l={1,norbs} loop
