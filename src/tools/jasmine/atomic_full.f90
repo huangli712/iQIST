@@ -21,7 +21,7 @@
 !!>>> full Hilbert space case
   subroutine atomic_make_ffmat()
      use control, only : norbs, ncfgs
-     use m_full, only : dec_basis, index_basis
+     use m_full, only : dec_basis, ind_basis
      use m_full, only : fmat, evec
 
      implicit none
@@ -47,7 +47,7 @@
              right = dec_basis(j)
              if ( btest(right,i-1) .eqv. .true. ) then
                 call atomic_make_c(i, right, left, isgn)
-                k = index_basis(left)
+                k = ind_basis(left)
                 fmat(k,j,i) = dble(isgn)
              endif ! back if ( btest(right,i-1) .eqv. .true. ) block
          enddo ! over j={1,ncfgs} loop
@@ -136,7 +136,7 @@
      use constants, only : one, czero, epst
 
      use control, only : norbs, ncfgs
-     use m_full, only : dec_basis, index_basis, bin_basis
+     use m_full, only : bin_basis, dec_basis, ind_basis
      use m_full, only : hmat
      use m_spmat, only : emat, umat
 
@@ -197,7 +197,7 @@
                          knew = knew + 2**(alpha-1)
                          sgn  = mod(sgn,2)
 ! now ibas means the index for the new state
-                         ibas = index_basis(knew)
+                         ibas = ind_basis(knew)
                          if ( ibas == 0 ) then
                              call s_print_error('atomic_make_fhmat','error while determining new state!')
                          endif ! back if ( ibas == 0 ) block
@@ -253,7 +253,7 @@
                                  knew = knew + 2**(betta-1) + 2**(alpha-1)
                                  sgn  = mod(sgn,2)
 ! now ibas means the index for the new state
-                                 ibas = index_basis(knew)
+                                 ibas = ind_basis(knew)
                                  if ( ibas == 0 ) then
                                      call s_print_error('atomic_make_fhmat','error while determining new state')
                                  endif ! back if ( ibas == 0 ) block

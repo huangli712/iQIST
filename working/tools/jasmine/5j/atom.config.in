@@ -12,7 +12,7 @@
 
 ! where to make natural basis
 ! (1) inside the atomic program, (2) outside
-  itask  : 2
+  ibasis : 2
 
 ! good quantum numbers (GQNs)
 ! (1) without any GQNs, (2) N, (3) N,Sz, (4) N,Sz,PS, (5) N,Jz
