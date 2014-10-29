@@ -943,7 +943,10 @@
 
 ! local variables
 ! dummy array
-     real(dp) :: tmp_mat(ndimx,ndimy)
+     real(dp), allocatable :: tmp_mat(:,:)
+
+! allocate memory
+     allocate(tmp_mat(ndimx,ndimy))
 
      tmp_mat = zero
      call dgemm('N', 'N', ndimx, ndimy, ndimy, &
@@ -951,10 +954,13 @@
                                   cmat, ndimy, &
                          zero, tmp_mat, ndimx  )
 
-     call dgemm('N', 'N', ndimx, ndimy, ndimx, &
-                  one, transpose(amat), ndimx, &
+     call dgemm('T', 'N', ndimx, ndimy, ndimx, &
+                             one, amat, ndimx, &
                                tmp_mat, ndimx, &
                             zero, bmat, ndimx  )
+
+! deallocate memory
+     deallocate(tmp_mat)
 
      return
   end subroutine atomic_tran_fmat

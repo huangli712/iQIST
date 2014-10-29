@@ -275,12 +275,18 @@
 ! loop index
      integer :: i
 
+! dummy array
+     real(dp), allocatable :: hmat(:,:)
+
      do i=1,nsectors
+         allocate(hmat(sectors(i)%ndim,sectors(i)%ndim))
+         hmat = real( sectors(i)%hmat )
          call s_eig_sy( sectors(i)%ndim, &
                         sectors(i)%ndim, &
-                        real( sectors(i)%hmat ), &
+                        hmat,            &
                         sectors(i)%eval, &
                         sectors(i)%evec )
+         deallocate(hmat)
      enddo ! over i={1,nsectors} loop
 
      return
@@ -362,7 +368,10 @@
 ! sector basis index
 ! the first index: dimension size of the sector
 ! the second index: the index of sector
-     integer :: sector_basis(ncfgs,ncfgs)
+     integer, allocatable :: sector_basis(:,:)
+
+! allocate memory
+     allocate(sector_basis(ncfgs,ncfgs))
 
 ! make orb_good_sz and orb_good_jz
 !-------------------------------------------------------------------------
@@ -644,6 +653,9 @@
 ! dump sector information for reference
 !-------------------------------------------------------------------------
      call atomic_dump_sector(sect_good_ntot, sect_good_sz, sect_good_ps, sect_good_jz)
+
+! deallocate memory
+     deallocate(sector_basis)
 
      return
   end subroutine atomic_make_sectors
