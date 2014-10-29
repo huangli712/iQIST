@@ -200,7 +200,7 @@
 !!>>> cat_init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> fortran version
   subroutine cat_init_atomic(I_solver)
-     use api, only : T_jasmine
+     use japi, only : T_jasmine
 
      use control ! ALL
      use m_full, only : alloc_m_full_basis
