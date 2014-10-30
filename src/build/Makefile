@@ -126,6 +126,7 @@ help-more:
 	@echo '     clean-daisy       clean daisy directory                '
 	@echo
 	@echo '     jasmine           build jasmine code                   '
+	@echo '     jasmine-lib       build jasmine library                '
 	@echo '     clean-jasmine     clean jasmine directory              '
 	@echo
 	@echo '     hibiscus          build hibiscus code                  '
@@ -234,6 +235,9 @@ clean-daisy:
 # targets for atomic codes: jasmine
 jasmine:
 	cd ../tools/jasmine/; pwd; make
+
+jasmine-lib:
+	cd ../tools/jasmine/; pwd; make lib
 
 clean-jasmine:
 	cd ../tools/jasmine/; pwd; make clean

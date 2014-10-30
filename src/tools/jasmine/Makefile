@@ -34,13 +34,15 @@ lev1 = atomic_full.o atomic_sector.o
 lev2 = atomic_stream.o atomic_util.o
 lev3 = atomic_dump.o atomic_print.o
 main = atomic_main.o
-MAPI = libMM.a
+MAPI = atomic_api.o libMM.a
 
 objects = $(modc) $(core) $(lev1) $(lev2) $(lev3) $(main) $(MAPI)
 
 default: all
 
 all: exe
+
+api: atomic_api.o
 
 cssl:
 	cp ../../common/libMM.a .
@@ -50,13 +52,19 @@ csml:
 	cp ../../common/parser.mod .
 	cp ../../common/linkedlist.mod .
 
-exe: cssl csml atomic-exe
+exe: api cssl csml atomic-exe
 atomic-exe: $(objects)
 	$(LINKER) $(objects) -o atomic $(LFLAGS) $(LIBS)
 
-lib: cssl csml atomic-lib
+lib: api cssl csml atomic-lib
 atomic-lib: $(objects)
 	$(ARCHIVER) libatomic.a $(objects)
+
+f2py:
+	fpp -P -DF2PY atomic_api.f90 > py_api.f90
+
+pyjasmine: f2py lib
+	f2py -c --fcompiler=intelem py_api.f90 -m pyjasmine -L. -latomic -lMM $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -64,9 +72,11 @@ atomic-lib: $(objects)
 clean:
 	rm -f *.mod
 	rm -f *.o
+	rm -f *.so
 	rm -f atomic
 	rm -f libatomic.a
 	rm -f libMM.a
+	rm -f py_api.f90
 
 clean-dat:
 	rm -f *.dat
