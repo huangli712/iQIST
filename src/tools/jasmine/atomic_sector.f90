@@ -430,7 +430,7 @@
          my_ntot = fock_good_ntot(i)
 
 ! truncate the occupancy according to nmini and nmaxi
-         if ( my_ntot < nmini  .or. my_ntot > nmaxi ) cycle
+         if ( my_ntot < nmini  .or. my_ntot > nmaxi ) CYCLE
 
          if ( ictqmc == 3 .or. ictqmc == 4 ) then
              my_sz = fock_good_sz(i)
