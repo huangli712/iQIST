@@ -301,6 +301,7 @@
 
      use control, only : ictqmc
      use control, only : nband, norbs, ncfgs
+     use control, only : nmini, nmaxi
      use m_full, only : dim_sub_n, bin_basis
      use m_sector, only : max_dim_sect, ave_dim_sect
      use m_sector, only : nsectors, sectors
@@ -427,6 +428,10 @@
      sector_basis = 0
      do i=1,ncfgs
          my_ntot = fock_good_ntot(i)
+
+! truncate the occupancy according to nmini and nmaxi
+         if ( my_ntot < nmini  .or. my_ntot > nmaxi ) cycle
+
          if ( ictqmc == 3 .or. ictqmc == 4 ) then
              my_sz = fock_good_sz(i)
          endif ! back if ( ictqmc == 3 .or. ictqmc == 4 ) block

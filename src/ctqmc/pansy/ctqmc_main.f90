@@ -523,6 +523,28 @@
      return
   end subroutine cat_set_eimp
 
+!!>>> cat_set_ktau: setup the kernel function
+!!>>> note: the azalea code does not support this function
+  subroutine cat_set_ktau(size_t, ktau_t)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of ktau
+     integer, intent(in)  :: size_t
+
+! kernel function
+     real(dp), intent(in) :: ktau_t(size_t)
+
+! to avoid the warning from compiler
+     call s_assert( size(ktau_t) == size_t )
+     call s_print_error('cat_set_ktau','sorry, this feature is not supported')
+
+     return
+  end subroutine cat_set_ktau
+
+
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
@@ -574,3 +596,58 @@
 
      return
   end subroutine cat_get_sigf
+
+!!>>> cat_get_nmat: extract the occupation number
+  subroutine cat_get_nmat(size_t, nmat_t)
+     use constants, only : dp
+
+     use control, only : norbs
+     use context, only : nmat
+
+     implicit none
+
+! external arguments
+! size of nmat
+     integer, intent(in)   :: size_t
+
+! occupation number
+     real(dp), intent(out) :: nmat_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(nmat) ) then
+         call s_print_error('cat_get_nmat','wrong dimension size of nmat_t')
+     endif ! back if ( size_t /= size(nmat) ) block
+
+! copy data
+     nmat_t = reshape(nmat, (/norbs/))
+
+     return
+  end subroutine cat_get_nmat
+
+!!>>> cat_get_nnmat: extract the double occupation number
+  subroutine cat_get_nnmat(size_t, nnmat_t)
+     use constants, only : dp
+
+     use control, only : norbs
+     use context, only : nnmat
+
+     implicit none
+
+! external arguments
+! size of nnmat
+     integer, intent(in)   :: size_t
+
+! double occupation number
+     real(dp), intent(out) :: nnmat_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(nnmat) ) then
+         call s_print_error('cat_get_nnmat','wrong dimension size of nnmat_t')
+     endif ! back if ( size_t /= size(nnmat) ) block
+
+! copy data
+     nnmat_t = reshape(nnmat, (/norbs*norbs/))
+
+     return
+  end subroutine cat_get_nnmat
+

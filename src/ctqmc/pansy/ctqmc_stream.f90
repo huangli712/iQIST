@@ -249,10 +249,13 @@
 
 ! local variables
 ! loop index
-     integer  :: i, j, k, ii
+     integer  :: i, j, k, ii, n
+
+! number of nonzero elements of F-matrix
+     integer :: nonzero
 
 ! dummy integer variables
-     integer  :: j1
+     integer  :: j1, j2, j3
 
 ! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
      logical  :: exists
@@ -391,15 +394,12 @@
 ! find 'atom.cix', read it 
          if ( exists .eqv. .true. ) then
              open(mytmp, file='atom.cix', form='formatted', status='unknown')
-! skip five header lines
-             read(mytmp,*) 
-             read(mytmp,*) 
-             read(mytmp,*) 
-             read(mytmp,*) 
-             read(mytmp,*) 
+! skip 19 header lines
+             do i=1, 19
+                 read(mytmp,*) 
+             enddo
 ! read the total number of sectors, maximum dimension of sectors, 
 ! and average dimension of sectors
-             read(mytmp,*) 
              read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
 
 ! after we know the total number of sectors, we can allocate memory 
@@ -431,35 +431,39 @@
                      read(mytmp,*) j1, sectors(i)%myeigval(j)
                  enddo
              enddo
-             close(mytmp) 
-         else
-             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
-         endif ! back if ( exists .eqv. .true. ) block
 
-!-------------------------------------------------------------------------
-! read the fmat
-         exists = .false.
-! file 'atom.fmat' is necessary, the code can not run without it
-         inquire (file = 'atom.fmat', exist = exists)
-! find file 'atom.fmat', read it
-         if ( exists .eqv. .true. ) then
-             open(mytmp, file='atom.fmat', form='unformatted', status='unknown')
+! read F-matrix
+! skip three header lines
+             read(mytmp, *)
+             read(mytmp, *)
+             read(mytmp, *)
+
              do i=1, nsectors
                  do j=1, sectors(i)%nops
                      do k=0,1
                          ii = sectors(i)%next_sector(j,k)
                          if (ii == -1) cycle
+! skip one hader line
+                         read(mytmp, *)
+                         read(mytmp, *) j1, j2, j3, i1, i2, nonzero 
                          sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
                          sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
                          call alloc_one_fmat(sectors(i)%myfmat(j,k))
-                         read(mytmp) sectors(i)%myfmat(j,k)%item
+! read nonzero elements of F-matrix 
+                         sectors(i)%myfmat(j,k)%item = zero
+                         do n=1, nonzero
+                             read(mytmp, *) i1, i2, r1
+                             sectors(i)%myfmat(j,k)%item(i1,i2) = r1
+                         enddo
                      enddo 
                  enddo 
              enddo 
-             close(mytmp)
+
+             close(mytmp) 
          else
-             call s_print_error('ctqmc_selfer_init','file atom.fmat does not exist')
-         endif
+             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+         endif ! back if ( exists .eqv. .true. ) block
+
      endif ! back if ( myid == master ) block
 
 # if defined (MPI)

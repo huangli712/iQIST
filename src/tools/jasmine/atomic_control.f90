@@ -66,6 +66,14 @@
 ! number of many-body configurations, the dimension of Hilbert space
      integer, public, save :: ncfgs  = 4
 
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! the minimal total occupancy N will be kept
+     integer, public, save :: nmini = 0
+
+! the maximal total occupancy N will be kept
+     integer, public, save :: nmaxi = 2
+
 !!========================================================================
 !!>>> real variables                                                   <<<
 !!========================================================================
