@@ -199,11 +199,8 @@
 
 !!>>> cat_init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> fortran version
-  subroutine cat_init_atomic( i_ibasis, i_ictqmc, i_icu, i_icf, i_isoc, &
-                              i_nband, i_nspin, i_norbs, i_ncfgs,       &
-                              i_Uc, i_Uv, i_Jz, i_Js, i_Jp, i_Ud, i_Jh, &
-                              i_mune, i_lambda )
-     use constants, only : dp
+  subroutine cat_init_atomic(I_solver)
+     use japi, only : T_jasmine
 
      use control ! ALL
      use m_full, only : alloc_m_full_basis
@@ -212,54 +209,33 @@
      implicit none
 
 ! external arguments
-! parameters list
-     integer, intent(in)  :: i_ibasis
-     integer, intent(in)  :: i_ictqmc
-     integer, intent(in)  :: i_icu
-     integer, intent(in)  :: i_icf
-     integer, intent(in)  :: i_isoc
-
-     integer, intent(in)  :: i_nband
-     integer, intent(in)  :: i_nspin
-     integer, intent(in)  :: i_norbs
-     integer, intent(in)  :: i_ncfgs
-
-     real(dp), intent(in) :: i_Uc
-     real(dp), intent(in) :: i_Uv
-     real(dp), intent(in) :: i_Jz
-     real(dp), intent(in) :: i_Js
-     real(dp), intent(in) :: i_Jp
-     real(dp), intent(in) :: i_Ud
-     real(dp), intent(in) :: i_Jh
-
-     real(dp), intent(in) :: i_mune
-     real(dp), intent(in) :: i_lambda
+! type structure of generic atomic eigenvalue problem solver
+     type (T_jasmine), intent(in) :: I_solver
 
 ! print the running header
      call atomic_print_header()
 
-! set control parameters
-     ibasis = i_ibasis
-     ictqmc = i_ictqmc
-     icu    = i_icu
-     icf    = i_icf
-     isoc   = i_isoc
+! setup I_solver: integer parameters
+     ibasis = I_solver%ibasis
+     ictqmc = I_solver%ictqmc
+     icu    = I_solver%icu
+     icf    = I_solver%icf
+     isoc   = I_solver%isoc
+     nband  = I_solver%nband
+     nspin  = I_solver%nspin
+     norbs  = I_solver%norbs
+     ncfgs  = I_solver%ncfgs
 
-     nband  = i_nband
-     nspin  = i_nspin
-     norbs  = i_norbs
-     ncfgs  = i_ncfgs
-
-     Uc     = i_Uc
-     Uv     = i_Uv
-     Jz     = i_Jz
-     Js     = i_Js
-     Jp     = i_Jp
-     Ud     = i_Ud
-     Jh     = i_Jh
-
-     mune   = i_mune
-     lambda = i_lambda
+! setup I_solver: real parameters
+     Uc     = I_solver%Uc
+     Uv     = I_solver%Uv
+     Jz     = I_solver%Jz
+     Js     = I_solver%Js
+     Jp     = I_solver%Jp
+     Ud     = I_solver%Ud
+     Jh     = I_solver%Jh
+     mune   = I_solver%mune
+     lambda = I_solver%lambda
 
 ! check validity of control parameters
      call atomic_check_config()

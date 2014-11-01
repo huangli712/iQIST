@@ -192,7 +192,7 @@
                  do l=1,norbs
                      if ( real( umat(i,j,k,l) ) > epst ) then
                          write(mytmp,'(4i6,2f16.8)') i, j, k, l, umat(i,j,k,l)
-                     endif ! back if ( real( umat(i,j,k,l) ) > zero ) block
+                     endif ! back if ( real( umat(i,j,k,l) ) > epst ) block
                  enddo ! over l={1,norbs} loop
              enddo ! over k={1,norbs} loop
          enddo ! over j={1,norbs} loop
@@ -290,7 +290,7 @@
 !!>>> atomic_dump_fcix: write atom.cix file which are only compatible with
 !!>>> the BEGONIA and LAVENDER components
   subroutine atomic_dump_fcix()
-     use constants, only : epss, mytmp
+     use constants, only : epst, mytmp
 
      use control, only : icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
@@ -372,9 +372,9 @@
 
          do j=1,ncfgs
              do k=1,ncfgs
-                 if ( abs( fmat(k,j,s_order) ) > epss ) then
+                 if ( abs( fmat(k,j,s_order) ) > epst ) then
                      write(mytmp,'(3i10,f20.10)') k, j, i, fmat(k,j,s_order)
-                 endif ! back if ( abs( fmat(k,j,s_order) ) > epss ) block
+                 endif ! back if ( abs( fmat(k,j,s_order) ) > epst ) block
              enddo ! back k={1,ncfgs} loop
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,norbs} loop
@@ -483,7 +483,7 @@
 !!>>> atomic_dump_scix: write atom.cix file which are only compatible with
 !!>>> the PANSY and MANJUSHAKA components
   subroutine atomic_dump_scix()
-     use constants, only : mytmp
+     use constants, only : epst, mytmp
 
      use control, only : icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
@@ -502,6 +502,9 @@
      integer :: k
      integer :: m
      integer :: n
+
+! counter for the non-zero matrix elements
+     integer :: counter
 
 ! auxiliary integer variable used to convert the spin sequence
      integer :: s_order
@@ -595,13 +598,21 @@
              endif ! back if ( isoc == 0 ) block
              do k=0,1
                  if ( sectors(i)%next(s_order,k) == -1 ) CYCLE
-                 write(mytmp,'(a)') '# SECTOR | FLAVOR | DAGGER |      N |      M'
-                 write(mytmp,'(2X,5(i6,3X))') i, j, k, sectors(i)%fmat(s_order,k)%n, sectors(i)%fmat(s_order,k)%m
+                 write(mytmp,'(a)') '# SECTOR | FLAVOR | DAGGER |      N |      M | SPARSE'
+                 write(mytmp,'(2X,6(i6,3X))') i, j, k, &
+                                              sectors(i)%fmat(s_order,k)%n, &
+                                              sectors(i)%fmat(s_order,k)%m, &
+                                              count( abs(sectors(i)%fmat(s_order,k)%val) > epst )
+                 counter = 0
                  do n=1,sectors(i)%fmat(s_order,k)%n
                      do m=1,sectors(i)%fmat(s_order,k)%m
-                         write(mytmp,'(2i10,f20.10)') n, m, sectors(i)%fmat(s_order,k)%val(n,m)
+                         if ( abs( sectors(i)%fmat(s_order,k)%val(n,m) ) > epst ) then
+                             counter = counter + 1
+                             write(mytmp,'(2i6,f20.10)') n, m, sectors(i)%fmat(s_order,k)%val(n,m)
+                         endif ! back if ( abs( sectors(i)%fmat(s_order,k)%val(n,m) ) > epst ) block
                      enddo ! over m={1,sectors(i)%fmat(s_order,k)%m} loop
                  enddo ! over n={1,sectors(i)%fmat(s_order,k)%n} loop
+                 call s_assert( counter == count( abs(sectors(i)%fmat(s_order,k)%val) > epst ) )
              enddo  ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
      enddo  ! over i={1,nsect} loop
