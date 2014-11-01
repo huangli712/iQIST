@@ -269,11 +269,13 @@
      if ( nmini < zero ) then
          nmini = zero
          write(mystd,'(2X,a)') 'WARNING: nmini < zero, enforce to be zero!'
+         write(mystd,*)
      endif ! back if ( nmini < zero ) block
      if ( nmaxi > norbs ) then
          nmaxi = norbs
          write(mystd,'(2X,a)') 'WARNING: nmaxi > norbs, enforce to be norbs!'
-     endif ! back if ( nmini < zero ) block
+         write(mystd,*)
+     endif ! back if ( nmaix > norbs ) block
 
      if ( lpass .eqv. .false. ) then
          call s_print_error('atomic_check_config','invalid parameters found in atom.config.in file!')
