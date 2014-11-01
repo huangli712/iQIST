@@ -48,6 +48,8 @@
      nspin = 2            ! number of spins
      norbs = nband*nspin  ! number of orbits
      ncfgs = 2**norbs     ! number of many-body configurations
+     nmini = 0            ! minimal of total occupancy N to be kept
+     nmaxi = norbs        ! maximal of total occupancy N to be kept
 
      Uc = 2.00_dp         ! intraorbital Coulomb interaction
      Uv = 2.00_dp         ! interorbital Coulomb interaction
@@ -87,6 +89,14 @@
          call p_get('nspin' ,  nspin) ! not useful
          call p_get('norbs' ,  norbs) ! not useful
          call p_get('ncfgs' ,  ncfgs) ! not useful
+! calculate the norbs and ncfgs
+         norbs = nband * nspin
+         ncfgs = 2 ** norbs
+         nmini = 0
+         nmaxi = norbs
+
+         call p_get('nmini' ,  nmini)
+         call p_get('nmaxi' ,  nmaxi)
 
          call p_get('Uc'    ,     Uc)
          call p_get('Uv'    ,     Uv)
@@ -103,9 +113,6 @@
 ! destroy the parser
          call p_destroy()
 
-! calculate the norbs and ncfgs
-         norbs = nband * nspin
-         ncfgs = 2 ** norbs
      else
          call s_print_exception('atomic_config','file atom.config.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
@@ -257,6 +264,16 @@
          write(mystd,*)
          lpass = .false.
      endif ! back if ( lambda < zero ) block
+
+! check nmini and nmaxi
+     if ( nmini < zero ) then
+         nmini = zero
+         write(mystd,'(2X,a)') 'WARNING: nmini < zero, enforce to be zero!'
+     endif ! back if ( nmini < zero ) block
+     if ( nmaxi > norbs ) then
+         nmaxi = norbs
+         write(mystd,'(2X,a)') 'WARNING: nmaxi > norbs, enforce to be norbs!'
+     endif ! back if ( nmini < zero ) block
 
      if ( lpass .eqv. .false. ) then
          call s_print_error('atomic_check_config','invalid parameters found in atom.config.in file!')
