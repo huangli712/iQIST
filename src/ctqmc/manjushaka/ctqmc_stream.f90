@@ -62,8 +62,8 @@
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
      ncfgs  = 2**norbs     ! number of atomic states
      niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
-     nmini  = 0            ! minimum of occupancy number 
-     nmaxi  = norbs        ! maximum of occupancy number 
+     nmini  = 0            ! minimum of occupancy number
+     nmaxi  = norbs        ! maximum of occupancy number
 !-------------------------------------------------------------------------
      U      = 0.00_dp      ! U : average Coulomb interaction
      Uc     = 0.00_dp      ! Uc: intraorbital Coulomb interaction
@@ -466,30 +466,30 @@
 
      if (myid == master) then ! only master node can do it
          exists = .false.
-! inquire about file 'atom.cix', this file is necessary, 
+! inquire about file 'atom.cix', this file is necessary,
 ! the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
 
-! find 'atom.cix', read it 
+! find 'atom.cix', read it
          if ( exists .eqv. .true. ) then
              open(mytmp, file='atom.cix', form='formatted', status='unknown')
-! skip 19 header lines
-             do i=1, 19
-                 read(mytmp,*) 
-             enddo
-! read the total number of sectors, maximum dimension of sectors, 
+! skip 20 header lines
+             do i=1,20
+                 read(mytmp,*)
+             enddo ! over i={1,20} loop
+! read the total number of sectors, maximum dimension of sectors,
 ! and average dimension of sectors
              read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
 
-! after we know the total number of sectors, we can allocate memory 
+! after we know the total number of sectors, we can allocate memory
 ! for array sectors and parts
              call ctqmc_allocate_memory_sect()
 
 ! read each sector's information
-             do i=1, nsectors
+             do i=1,nsectors
                  read(mytmp,*) ! skip the header
 
-! read the dimension, total number of electrons, number of fermion operators, 
+! read the dimension, total number of electrons, number of fermion operators,
 ! and start index of this sector
                  read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelectron, &
                                    sectors(i)%nops, sectors(i)%istart
@@ -501,44 +501,44 @@
                  read(mytmp,*) ! skip the header
                  do j=1, sectors(i)%nops
                      read(mytmp,*) j1, sectors(i)%next_sector(j,0), &
-                                       sectors(i)%next_sector(j,1)  
+                                       sectors(i)%next_sector(j,1)
                  enddo
 
 ! read the eigenvalue of this sector
                  read(mytmp,*) ! skip the header
-                 do j=1, sectors(i)%ndim
+                 do j=1,sectors(i)%ndim
                      read(mytmp,*) j1, sectors(i)%myeigval(j)
-                 enddo
-             enddo
+                 enddo ! over j={1,sectors(i)%ndim} loop
+             enddo ! over i={1,nsectors} loop
 
 ! read F-matrix
 ! skip three header lines
-             read(mytmp, *)
-             read(mytmp, *)
-             read(mytmp, *)
+             read(mytmp,*)
+             read(mytmp,*)
+             read(mytmp,*)
 
-             do i=1, nsectors
-                 do j=1, sectors(i)%nops
+             do i=1,nsectors
+                 do j=1,sectors(i)%nops
                      do k=0,1
                          ii = sectors(i)%next_sector(j,k)
                          if (ii == -1) cycle
 ! skip one hader line
                          read(mytmp, *)
-                         read(mytmp, *) j1, j2, j3, i1, i2, nonzero 
+                         read(mytmp, *) j1, j2, j3, i1, i2, nonzero
                          sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
                          sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
                          call alloc_one_fmat(sectors(i)%myfmat(j,k))
-! read nonzero elements of F-matrix 
+! read non-zero elements of F-matrix
                          sectors(i)%myfmat(j,k)%item = zero
-                         do n=1, nonzero
+                         do n=1,nonzero
                              read(mytmp, *) i1, i2, r1
                              sectors(i)%myfmat(j,k)%item(i1,i2) = r1
-                         enddo
-                     enddo 
-                 enddo 
-             enddo 
+                         enddo ! over n={1,nonzero} loop
+                     enddo ! over k={0,1} loop
+                 enddo ! over j={1,sectors(i)%nops} loop
+             enddo ! over i={1,nsectors} loop
 
-             close(mytmp) 
+             close(mytmp)
          else
              call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
          endif ! back if ( exists .eqv. .true. ) block
@@ -550,9 +550,9 @@
 ! block until all processes have reached here
      call mp_barrier()
 
-     call mp_bcast(nsectors,     master) 
-     call mp_bcast(max_dim_sect, master) 
-     call mp_bcast(ave_dim_sect, master) 
+     call mp_bcast(nsectors,     master)
+     call mp_bcast(max_dim_sect, master)
+     call mp_bcast(ave_dim_sect, master)
 
      if (myid /= master ) then
          call ctqmc_allocate_memory_sect()
@@ -560,15 +560,15 @@
 
      do i=1, nsectors
          call mp_barrier()
-         call mp_bcast(sectors(i)%ndim,        master) 
-         call mp_bcast(sectors(i)%nelectron,   master) 
-         call mp_bcast(sectors(i)%nops,        master) 
-         call mp_bcast(sectors(i)%istart,      master) 
+         call mp_bcast(sectors(i)%ndim,        master)
+         call mp_bcast(sectors(i)%nelectron,   master)
+         call mp_bcast(sectors(i)%nops,        master)
+         call mp_bcast(sectors(i)%istart,      master)
          if ( myid /= master) then
              call alloc_one_sector(sectors(i))
          endif
-         call mp_bcast(sectors(i)%next_sector, master) 
-         call mp_bcast(sectors(i)%myeigval,    master) 
+         call mp_bcast(sectors(i)%next_sector, master)
+         call mp_bcast(sectors(i)%myeigval,    master)
      enddo
      call mp_barrier()
 
@@ -583,10 +583,10 @@
                      call alloc_one_fmat(sectors(i)%myfmat(j,k))
                  endif
                  call mp_barrier()
-                 call mp_bcast(sectors(i)%myfmat(j,k)%item, master) 
-             enddo 
-         enddo 
-     enddo 
+                 call mp_bcast(sectors(i)%myfmat(j,k)%item, master)
+             enddo
+         enddo
+     enddo
      call mp_barrier()
 
 # endif  /* MPI */
@@ -598,22 +598,22 @@
      do i=1,nsectors
          do j=1, sectors(i)%ndim
              j1 = j1 + 1
-             sectors(i)%myeigval(j) = sectors(i)%myeigval(j) & 
+             sectors(i)%myeigval(j) = sectors(i)%myeigval(j) &
                                       - mune * sectors(i)%nelectron
-             eigs(j1) = sectors(i)%myeigval(j)  
+             eigs(j1) = sectors(i)%myeigval(j)
              naux(j1) = sectors(i)%nelectron
          enddo
-     enddo 
+     enddo
 
-! substract the eigenvalues zero point, here we store the eigen energy 
+! substract the eigenvalues zero point, here we store the eigen energy
 ! zero point in U
      r1 = minval(eigs)
      r2 = maxval(eigs)
 ! here we choose the minimum as zero point
-     U  = r1 + one              
+     U  = r1 + one
      do i=1,ncfgs
          eigs(i) = eigs(i) - U
-     enddo 
+     enddo
 
 ! check eigs
 ! note: \infity - \infity is undefined, which return NaN
@@ -622,7 +622,7 @@
              call s_print_error('ctqmc_selfer_init', &
                                 'NaN error, please adjust the zero base of eigs')
          endif
-     enddo 
+     enddo
 
      return
   end subroutine ctqmc_selfer_init
@@ -814,9 +814,9 @@
 ! truncate the Hilbert space here
      call ctqmc_make_trunc()
 
-! allocate final_product, occu, double_occu for un-truncated sectors 
+! allocate final_product, occu, double_occu for un-truncated sectors
      call ctqmc_allocate_memory_occu()
-   
+
 ! build occu, double_occu for un-truncated sectors
      call ctqmc_make_occu()
 
