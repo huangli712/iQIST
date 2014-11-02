@@ -416,7 +416,7 @@
                                    sectors(i)%nops, sectors(i)%istart
 
 ! allocate the memory for sectors(i)
-                 call alloc_one_sector(sectors(i))
+                 call alloc_one_sect(sectors(i))
 
 ! read the next_sector index
                  read(mytmp,*) ! skip the header
@@ -811,7 +811,7 @@
 !!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
      use context
-     use m_sector
+     use m_sect
      use m_npart
 
      implicit none

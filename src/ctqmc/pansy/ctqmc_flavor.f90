@@ -2571,7 +2571,7 @@
      enddo 
 
 ! store the diagonal elements of final product in ddmat(:,1)
-     do i=1,nsectors
+     do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
              ddmat(indx+j-1,1) = sectors(i)%fprod(j,j,1) 

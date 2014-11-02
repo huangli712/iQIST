@@ -838,7 +838,7 @@
      use control, only : norbs, mfreq, nfreq, mune, myid, master
      use context, only : prob, eigs, rmesh, cmesh, eimp, sig2, grnf, hybf
 
-     use m_sector, only : nsectors, sectors
+     use m_sect, only : nsect, sectors
 
      implicit none
 
@@ -875,15 +875,15 @@
 
 ! calculate atomic green's function using Hubbard-I approximation
      ghub = czero
-     do k=1, nsectors
+     do k=1,nsect
          do i=1,norbs
-             kk = sectors(k)%next_sector(i,0)
+             kk = sectors(k)%next_sect(i,0)
              if (kk == -1) cycle
              indx1 = sectors(k)%istart
              indx2 = sectors(kk)%istart
              do l=1, sectors(k)%ndim
                  do m=1, sectors(kk)%ndim
-                     ob = sectors(k)%myfmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))    
+                     ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))    
                      do j=1, mfreq
                          cb = cmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
                          ghub(j,i) = ghub(j,i) + ob / cb
