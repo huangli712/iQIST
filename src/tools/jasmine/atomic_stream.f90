@@ -274,19 +274,11 @@
      endif ! back if ( lpass .eqv. .false. ) block
 
 ! check nmini and nmaxi
-<<<<<<< HEAD
-     if ( nmini < zero ) then
-         nmini = zero
-         write(mystd,'(2X,a)') 'WARNING: nmini < zero, enforce to be zero!'
-         write(mystd,*)
-     endif ! back if ( nmini < zero ) block
-=======
      if ( nmini < 0 ) then
          nmini = 0
          write(mystd,'(2X,a)') 'WARNING: nmini < 0, enforce to be zero!'
      endif ! back if ( nmini < 0 ) block
 
->>>>>>> 8c2c24797d17bb7f3769823eae14d0e72c0b7db3
      if ( nmaxi > norbs ) then
          nmaxi = norbs
          write(mystd,'(2X,a)') 'WARNING: nmaxi > norbs, enforce to be norbs!'
