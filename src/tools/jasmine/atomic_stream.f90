@@ -89,12 +89,16 @@
          call p_get('nspin' ,  nspin) ! not useful
          call p_get('norbs' ,  norbs) ! not useful
          call p_get('ncfgs' ,  ncfgs) ! not useful
+
 ! calculate the norbs and ncfgs
          norbs = nband * nspin
          ncfgs = 2 ** norbs
+
+! setup nmini and nmaxi
          nmini = 0
          nmaxi = norbs
 
+! continue to extract parameters
          call p_get('nmini' ,  nmini)
          call p_get('nmaxi' ,  nmaxi)
 
@@ -112,7 +116,6 @@
 
 ! destroy the parser
          call p_destroy()
-
      else
          call s_print_exception('atomic_config','file atom.config.in does not exist!')
      endif ! back if ( exists .eqv. .true. ) block
@@ -265,19 +268,21 @@
          lpass = .false.
      endif ! back if ( lambda < zero ) block
 
+! final assert
+     if ( lpass .eqv. .false. ) then
+         call s_print_error('atomic_check_config','invalid parameters found in atom.config.in file!')
+     endif ! back if ( lpass .eqv. .false. ) block
+
 ! check nmini and nmaxi
-     if ( nmini < zero ) then
-         nmini = zero
-         write(mystd,'(2X,a)') 'WARNING: nmini < zero, enforce to be zero!'
-     endif ! back if ( nmini < zero ) block
+     if ( nmini < 0 ) then
+         nmini = 0
+         write(mystd,'(2X,a)') 'WARNING: nmini < 0, enforce to be zero!'
+     endif ! back if ( nmini < 0 ) block
+
      if ( nmaxi > norbs ) then
          nmaxi = norbs
          write(mystd,'(2X,a)') 'WARNING: nmaxi > norbs, enforce to be norbs!'
      endif ! back if ( nmini < zero ) block
-
-     if ( lpass .eqv. .false. ) then
-         call s_print_error('atomic_check_config','invalid parameters found in atom.config.in file!')
-     endif ! back if ( lpass .eqv. .false. ) block
 
      return
   end subroutine atomic_check_config

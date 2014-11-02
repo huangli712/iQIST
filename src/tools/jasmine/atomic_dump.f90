@@ -294,6 +294,7 @@
 
      use control, only : icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
+     use control, only : nmini, nmaxi
      use control, only : Uc, Uv, Js, Jp, Jz
      use control, only : Ud, Jh
      use control, only : mune, lambda
@@ -328,7 +329,7 @@
 ! write the header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
-     write(mytmp,'(a)') '# Format  : v1.1, designed for BEGONIA and LAVENDER'
+     write(mytmp,'(a)') '# Format  : v1.2, designed for BEGONIA and LAVENDER'
      write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
      write(mytmp,'(a)') '# Support : any problem, please contact me: huangli712@gmail.com'
      write(mytmp,*)
@@ -340,6 +341,7 @@
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(3i8,20X,a)') icu, icf, isoc, 'ICU ICF ISOC'
      write(mytmp,'(4i8,12X,a)') nband, nspin, norbs, ncfgs, 'NBAND NSPIN NORBS NCFGS'
+     write(mytmp,'(2i8,28X,a)') nmini, nmaxi, 'NMINI NMAXI'
      write(mytmp,'(5f8.4,04X,a)') Uc, Uv, Jz, Js, Jp, 'Uc Uv Jz Js Jp'
      write(mytmp,'(2f8.4,28X,a)') Ud, Jh, 'Ud Jh'
      write(mytmp,'(2f8.4,28X,a)') mune, lambda, 'mune lambda'
@@ -487,6 +489,7 @@
 
      use control, only : icu, icf, isoc
      use control, only : nband, nspin, norbs, ncfgs
+     use control, only : nmini, nmaxi
      use control, only : Uc, Uv, Jz, Js, Jp
      use control, only : Ud, Jh
      use control, only : mune, lambda
@@ -527,7 +530,7 @@
 ! write header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
-     write(mytmp,'(a)') '# Format  : v2.1, designed for PANSY and MANJUSHAKA'
+     write(mytmp,'(a)') '# Format  : v2.2, designed for PANSY and MANJUSHAKA'
      write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
      write(mytmp,'(a)') '# Support : any problem, please contact me: huangli712@gmail.com'
      write(mytmp,*)
@@ -539,6 +542,7 @@
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(3i8,20X,a)') icu, icf, isoc, 'ICU ICF ISOC'
      write(mytmp,'(4i8,12X,a)') nband, nspin, norbs, ncfgs, 'NBAND NSPIN NORBS NCFGS'
+     write(mytmp,'(2i8,28X,a)') nmini, nmaxi, 'NMINI NMAXI'
      write(mytmp,'(5f8.4,04X,a)') Uc, Uv, Jz, Js, Jp, 'Uc Uv Jz Js Jp'
      write(mytmp,'(2f8.4,28X,a)') Ud, Jh, 'Ud Jh'
      write(mytmp,'(2f8.4,28X,a)') mune, lambda, 'mune lambda'
