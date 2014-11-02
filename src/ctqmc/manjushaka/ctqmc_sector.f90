@@ -5,132 +5,139 @@
 !!!           m_sector@dealloc_one_fmat
 !!!           m_sector@alloc_one_sqrmat
 !!!           m_sector@dealloc_one_sqrmat
-!!!           m_sector@alloc_one_sector
-!!!           m_sector@dealloc_one_sector
+!!!           m_sector@alloc_one_sect
+!!!           m_sector@dealloc_one_sect
 !!!           m_sector@ctqmc_allocate_memory_sect
 !!!           m_sector@ctqmc_deallocate_memory_sect
 !!!           m_sector@ctqmc_allocate_memory_occu
 !!!           m_sector@ctqmc_deallocate_memory_occu
 !!!           m_sector@ctqmc_make_trunc
-!!!           m_sector@cat_truncate_sectors
+!!!           m_sector@cat_trunc_sect
 !!!           m_sector@ctqmc_make_occu
 !!!           m_sector@ctqmc_make_string
 !!! source  : ctqmc_sector.f90
 !!! type    : module
 !!! authors : yilin wang (email: qhwyl2006@126.com)
-!!! history : 07/09/2014
-!!!           07/19/2014
-!!!           08/09/2014
-!!!           08/13/2014
-!!!           08/20/2014
+!!! history : 07/09/2014 by yilin wang
+!!!           07/19/2014 by yilin wang
+!!!           08/09/2014 by yilin wang
+!!!           08/13/2014 by yilin wang
+!!!           08/20/2014 by yilin wang
+!!!           11/02/2014 by yilin wang
 !!! purpose : define data structure for good quantum numbers (GQNs) algorithm
 !!! status  : unstable
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> data structure for good quantum numbers (GQNs) algorithm
-  module m_sector
+!!>>> m_sect: define the data structure for good quantum numbers (GQNs) algorithm
+  module m_sect
      use constants, only : dp, zero, one, mystd, mytmp
-     use control, only : mkink, norbs, idoub, itrun, myid, master, nmini, nmaxi
+     use control, only : idoub, itrun, myid, master
+     use control, only : mkink, norbs, nmini, nmaxi
      use context, only : type_v, flvr_v
 
      use mmpi
 
      implicit none
   
-! the fmat between two sectors, it is a rectangle matrix
+! F-matrix between any two sectors, it is a rectangle matrix
      type :: t_fmat
-! the dimension
+
+! dimensions
          integer :: n, m
 
-! the items 
+! items
          real(dp), dimension(:,:), pointer :: item => null()
+
      end type t_fmat
-  
-! a square matrix
+
+! square matrix
      type :: t_sqrmat
-! the dimension
+
+! dimension
          integer :: n
 
-! the items 
+! items 
          real(dp), dimension(:,:), pointer :: item => null()
+
      end type t_sqrmat
 
-! one sector
-     type :: t_sector 
-! the dimension of this sector
+ ! t_sect type contains all the information of a subspace of H_{loc} 
+     type :: t_sect
+
+! dimension
          integer :: ndim
 
 ! total number of electrons
-         integer :: nelectron 
+         integer :: nelec 
 
 ! number of fermion operators
          integer :: nops
 
-! the start index of this sector
+! start index of this sector
          integer :: istart
 
-! the eigenvalues
-         real(dp), dimension(:), pointer :: myeigval => null()
+! eigenvalues
+         real(dp), dimension(:), pointer :: eval => null() 
 
-! the next sector it points to when a fermion operator acts on this sector
-! -1: outside of the Hilbert space, otherwise, it is the index of next sector
+! next sector it points to when a fermion operator acts on this sector, F|i> --> |j>
 ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-! F|i> --> |j>
-         integer, dimension(:,:), pointer :: next_sector => null()
+! it is -1 if goes outside of the Hilbert space, 
+! otherwise, it is the index of next sector
+         integer, dimension(:,:), pointer :: next_sect => null()
 
-! this is for truncating the Hilbert space
-         integer, dimension(:,:), pointer :: next_sector_trunc => null()
-
-! the fmat between this sector and all other sectors
+! index of next sector, for truncating the Hilbert space of H_{loc}
+         integer, dimension(:,:), pointer :: next_sect_t => null()
+   
+! F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
-! mymfat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
-         type(t_fmat), dimension(:,:), pointer :: myfmat => null()
-     end type t_sector
-     
-! some private variables
-! allocate status flag 
+! fmat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
+         type(t_fmat), dimension(:,:), pointer :: fmat => null()
+
+     end type t_sect
+    
+! some global variables
+! status flag
      integer, private :: istat
- 
-! some public and save variables
+
 ! total number of sectors
-     integer, public, save :: nsectors
+     integer, public, save :: nsect
 
-! total number of sectors after truncated
-     integer, public, save :: nsectors_trunc 
+! total number of sectors after truncating H_{loc}
+     integer, public, save :: nsect_t
+     
+! maximal dimension of the sectors
+     integer, public, save :: mdim_sect
 
-! max dimension of sectors
-     integer, public, save :: max_dim_sect
+! maximal dimension of the sectors after truncating H_{loc}
+     integer, public, save :: mdim_sect_t
 
-! max dimension of sectors after truncated
-     integer, public, save :: max_dim_sect_trunc
+! average dimension of the sectors
+     real(dp), public, save :: adim_sect
 
-! average dimension of sectors
-     real(dp), public, save :: ave_dim_sect
+! average dimension of the sectors after truncating H_{loc}
+     real(dp), public, save :: adim_sect_t
 
-! average dimension of sectors after truncated
-     real(dp), public, save :: ave_dim_sect_trunc
+! array of t_sect contains all the sectors
+     type(t_sect), public, save, allocatable :: sectors(:)
 
-! the array contains all the sectors
-     type(t_sector), public, save, allocatable :: sectors(:)
-
-! the probability of each sector, used to truncate high energy states
+! probability of each sector, used to truncate high energy states
      real(dp), public, save, allocatable :: prob_sect(:)
 
 ! which sectors should be truncated ?
      logical, public, save, allocatable :: is_trunc(:)
 
-! whether it form a string begin with a sector
+! whether it forms a string ?
      logical, public, save, allocatable :: is_string(:,:)
 
-! the final product matrices, which will be used to calculate the nmat
-     type(t_sqrmat), public, save, allocatable :: final_product(:,:)
+! final product of matrices multiplications, which will be used to calculate nmat
+     type(t_sqrmat), public, save, allocatable :: fprod(:,:)
 
-! matrices of occupancy operator c^{\dagger}c 
+! matrix of occupancy operator c^{\dagger}c 
      type(t_sqrmat), public, save, allocatable :: occu(:,:)
 
-! matrices of double occupancy operator c^{\dagger}cc^{\dagger}c
-     type(t_sqrmat), public, save, allocatable :: double_occu(:,:,:)
+! matrix of double occupancy operator c^{\dagger}cc^{\dagger}c
+     type(t_sqrmat), public, save, allocatable :: doccu(:,:,:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -140,154 +147,150 @@
      public :: dealloc_one_fmat
      public :: alloc_one_sqrmat
      public :: dealloc_one_sqrmat
-     public :: alloc_one_sector
-     public :: dealloc_one_sector
+     public :: alloc_one_sect
+     public :: dealloc_one_sect
      public :: ctqmc_allocate_memory_sect
      public :: ctqmc_deallocate_memory_sect
      public :: ctqmc_allocate_memory_occu
      public :: ctqmc_deallocate_memory_occu
      public :: ctqmc_make_trunc
-     public :: cat_truncate_sectors
+     public :: cat_trunc_sect
      public :: ctqmc_make_string
      public :: ctqmc_make_occu 
 
   contains ! encapsulated functionality
- 
+
 !!>>> alloc_one_fmat: allocate one fmat
-  subroutine alloc_one_fmat(one_fmat)
+  subroutine alloc_one_fmat(fmat)
      implicit none
   
 ! external variables
-     type(t_fmat), intent(inout) :: one_fmat
+     type(t_fmat), intent(inout) :: fmat
   
-! allocate it
-     allocate( one_fmat%item(one_fmat%n, one_fmat%m),  stat=istat )
-
+     allocate( fmat%item(fmat%n, fmat%m), stat=istat )
+  
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_fmat', &
-                            'can not allocate enough memory')
-     endif
+         call s_print_error('alloc_one_fmat', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize it
-     one_fmat%item = zero
+     fmat%item = zero
   
      return
   end subroutine alloc_one_fmat
   
 !!>>> dealloc_one_fmat: deallocate one fmat
-  subroutine dealloc_one_fmat(one_fmat)
+  subroutine dealloc_one_fmat(fmat)
      implicit none
   
 ! external variables
-     type(t_fmat), intent(inout) :: one_fmat
+     type(t_fmat), intent(inout) :: fmat
   
-     if ( associated(one_fmat%item) ) deallocate(one_fmat%item)
+     if ( associated(fmat%item) ) deallocate(fmat%item)
   
      return
   end subroutine dealloc_one_fmat
 
 !!>>> alloc_one_sqrmat: allocate one sqrmat
-  subroutine alloc_one_sqrmat(one_sqrmat)
+  subroutine alloc_one_sqrmat(sqrmat)
      implicit none
   
 ! external variables
-     type(t_sqrmat), intent(inout) :: one_sqrmat
+     type(t_sqrmat), intent(inout) :: sqrmat
   
 ! allocate it
-     allocate( one_sqrmat%item(one_sqrmat%n, one_sqrmat%n),  stat=istat )
+     allocate( sqrmat%item(sqrmat%n,sqrmat%n),  stat=istat )
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_sqrmat', &
-                            'can not allocate enough memory')
-     endif
+         call s_print_error('alloc_one_sqrmat', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
  
 ! initialize it
-     one_sqrmat%item = zero
+     sqrmat%item = zero
   
      return
   end subroutine alloc_one_sqrmat
   
 !!>>> dealloc_one_sqrmat: deallocate one sqrmat
-  subroutine dealloc_one_sqrmat(one_sqrmat)
+  subroutine dealloc_one_sqrmat(sqrmat)
      implicit none
   
 ! external variables
-     type(t_sqrmat), intent(inout) :: one_sqrmat
+     type(t_sqrmat), intent(inout) :: sqrmat
   
-     if ( associated(one_sqrmat%item) ) deallocate(one_sqrmat%item)
+     if ( associated(sqrmat%item) ) deallocate(sqrmat%item)
   
      return
   end subroutine dealloc_one_sqrmat
  
 !!>>> alloc_one_sector: allocate memory for one sector
-  subroutine alloc_one_sector(one_sector)
+  subroutine alloc_one_sect(sect)
      implicit none
   
 ! external variables
-     type(t_sector), intent(inout) :: one_sector
+     type(t_sect), intent(inout) :: sect
   
 ! local variables
      integer :: i, j
   
 ! allocate them
-     allocate( one_sector%myeigval(one_sector%ndim),              stat=istat )
-     allocate( one_sector%next_sector(one_sector%nops,0:1),       stat=istat )
-     allocate( one_sector%next_sector_trunc(one_sector%nops,0:1), stat=istat )
-     allocate( one_sector%myfmat(one_sector%nops,0:1),            stat=istat )
+     allocate( sect%eval(sect%ndim),            stat=istat )
+     allocate( sect%next_sect(sect%nops,0:1),   stat=istat )
+     allocate( sect%next_sect_t(sect%nops,0:1), stat=istat )
+     allocate( sect%fmat(sect%nops,0:1),        stat=istat )
 
-! check the statsu
+! check the status
      if ( istat /= 0 ) then
          call s_print_error('alloc_one_sector','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /=0 ) block
   
 ! initialize them
-     one_sector%myeigval = zero
-     one_sector%next_sector = 0
-     one_sector%next_sector_trunc = 0
+     sect%eval = zero
+     sect%next_sect = 0
+     sect%next_sect_t = 0
   
-! initialize myfmat one by one
-     do i=1, one_sector%nops 
-        do j=0, 1
-            one_sector%myfmat(i,j)%n = 0
-            one_sector%myfmat(i,j)%m = 0
-            one_sector%myfmat(i,j)%item => null()
-        enddo
-     enddo
+! initialize fmat one by one
+     do i=1,sect%nops 
+         do j=0,1
+             sect%fmat(i,j)%n = 0
+             sect%fmat(i,j)%m = 0
+             sect%fmat(i,j)%item => null()
+         enddo ! over j={0,1} loop
+     enddo ! over i={1,sect%nops} loop
 
      return
-  end subroutine alloc_one_sector
+  end subroutine alloc_one_sect
   
 !!>>> dealloc_one_sector: deallocate memory for one sector
-  subroutine dealloc_one_sector(one_sector)
+  subroutine dealloc_one_sect(sect)
      implicit none
   
 ! external variables
-     type(t_sector), intent(inout) :: one_sector 
+     type(t_sect), intent(inout) :: sect
   
 ! local variables  
      integer :: i, j
   
-     if (associated(one_sector%myeigval))            deallocate(one_sector%myeigval)
-     if (associated(one_sector%next_sector))         deallocate(one_sector%next_sector)
-     if (associated(one_sector%next_sector_trunc))   deallocate(one_sector%next_sector_trunc)
+     if ( associated(sect%eval) )          deallocate(sect%eval)
+     if ( associated(sect%next_sect) )     deallocate(sect%next_sect)
+     if ( associated(sect%next_sect_t) )   deallocate(sect%next_sect_t)
   
-! deallocate myfmat one by one
-     if ( associated(one_sector%myfmat) ) then
-         do i=1, one_sector%nops
+! deallocate fmat one by one
+     if ( associated(sect%fmat) ) then
+         do i=1,sect%nops
              do j=0,1
-                 call dealloc_one_fmat(one_sector%myfmat(i,j))
-             enddo
-         enddo 
-         deallocate(one_sector%myfmat)
-     endif
+                 call dealloc_one_fmat(sect%fmat(i,j))
+             enddo ! over j={0,1} loop
+         enddo ! over i={1,sect%nops} loop
+         deallocate(sect%fmat)
+     endif ! back if ( associated(sect%fmat) ) block
   
      return
-  end subroutine dealloc_one_sector
+  end subroutine dealloc_one_sect
 
-!!>>> ctqmc_allocate_memory_sect: allocate memory for 
-!!>>> sectors-related variables
+!!>>> ctqmc_allocate_memory_sect: allocate memory for sectors related variables
   subroutine ctqmc_allocate_memory_sect()
      implicit none
 
@@ -295,28 +298,28 @@
      integer :: i
 
 ! allocate memory
-     allocate(sectors(nsectors),      stat=istat)
-     allocate(is_trunc(nsectors),     stat=istat)
-     allocate(is_string(nsectors,2),  stat=istat)
-     allocate(prob_sect(nsectors),    stat=istat)
+     allocate( sectors(nsect),      stat=istat )
+     allocate( is_trunc(nsect),     stat=istat )
+     allocate( is_string(nsect,2),  stat=istat )
+     allocate( prob_sect(nsect),    stat=istat )
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_sect', &
-                            'can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_allocate_memory_sect', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     do i=1, nsectors
+     do i=1,nsect
          sectors(i)%ndim = 0
-         sectors(i)%nelectron = 0
+         sectors(i)%nelec = 0
          sectors(i)%nops = norbs
          sectors(i)%istart = 0
-         sectors(i)%myeigval => null()
-         sectors(i)%next_sector => null()
-         sectors(i)%next_sector_trunc => null()
-         sectors(i)%myfmat => null()
-     enddo 
+         sectors(i)%eval => null()
+         sectors(i)%next_sect => null()
+         sectors(i)%next_sect_t => null()
+         sectors(i)%fmat => null()
+     enddo ! over i={1,nsect} loop
+
      is_trunc = .false.
      is_string = .false.
      prob_sect = zero
@@ -324,8 +327,7 @@
      return
   end subroutine ctqmc_allocate_memory_sect
 
-!!>>> ctqmc_deallocate_memory_sect: deallocate memory for 
-!!>>> sect-related variables
+!!>>> ctqmc_deallocate_memory_sect: deallocate memory for sectors related variables
   subroutine ctqmc_deallocate_memory_sect()
      implicit none
 
@@ -334,12 +336,13 @@
 
      if ( allocated(sectors) ) then
 ! first, loop over all the sectors and deallocate their memory
-         do i=1, nsectors
-             call dealloc_one_sector(sectors(i))
-         enddo
-! then, deallocate memory of sect
+         do i=1,nsect
+             call dealloc_one_sect(sectors(i))
+         enddo ! over i={1,nsect} loop
+
+! then, deallocate memory of sectors
          deallocate(sectors)
-     endif
+     endif ! back if ( allocated(sectors) ) block
 
      if ( allocated(is_trunc) )  deallocate(is_trunc)
      if ( allocated(is_string) ) deallocate(is_string)
@@ -355,48 +358,47 @@
      integer :: i,j,k
 
 ! allocate them
-     allocate(final_product(nsectors,2),  stat=istat)
-     allocate(occu(norbs, nsectors),      stat=istat)
+     allocate( fprod(nsect,2),     stat=istat )
+     allocate( occu(norbs, nsect), stat=istat )
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_occu', &
-                            'can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_allocate_memory_occu', 'can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     do i=1, nsectors
-         if (is_trunc(i)) cycle
+     do i=1,nsect
+         if ( is_trunc(i) ) cycle
          
          do j=1,2
-             final_product(i,j)%n = sectors(i)%ndim
-             call alloc_one_sqrmat( final_product(i,j) )
-         enddo
+             fprod(i,j)%n = sectors(i)%ndim
+             call alloc_one_sqrmat(fprod(i,j))
+         enddo ! over j={1,2} loop
 
-         do j=1, norbs
+         do j=1,norbs
              occu(j,i)%n = sectors(i)%ndim
-             call alloc_one_sqrmat( occu(j,i) )
-         enddo
-
-     enddo
+             call alloc_one_sqrmat(occu(j,i))
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,nsect} loop
  
-     if (idoub == 2) then
-         allocate(double_occu(norbs, norbs, nsectors),  stat=istat)
-         if ( istat /= 0 ) then
-             call s_print_error('ctqmc_allocate_memory_occu', &
-                                'can not allocate enough memory')
-         endif
+     if ( idoub == 2 ) then
+         allocate( doccu(norbs,norbs,nsect),  stat = istat )
 
-         do i=1, nsectors
+         if ( istat /= 0 ) then
+             call s_print_error('ctqmc_allocate_memory_occu', 'can not allocate enough memory')
+         endif ! back if ( istat /= 0 ) block
+
+         do i=1,nsect
              if (is_trunc(i)) cycle
-             do j=1, norbs
-                 do k=1, norbs
-                     double_occu(k,j,i)%n = sectors(i)%ndim
-                     call alloc_one_sqrmat( double_occu(k,j,i) )
-                 enddo
-             enddo
-         enddo
-     endif
+
+             do j=1,norbs
+                 do k=1,norbs
+                     doccu(k,j,i)%n = sectors(i)%ndim
+                     call alloc_one_sqrmat(doccu(k,j,i))
+                 enddo ! over k={1,norbs} loop
+             enddo ! over j={1,norbs} loop
+         enddo ! over i={1,nsect} loop
+     endif ! back if ( idoub == 2 ) block
   
      return
   end subroutine ctqmc_allocate_memory_occu
@@ -407,37 +409,37 @@
 
      integer :: i,j,k
 
-     if ( allocated(final_product) ) then
-         do i=1, nsectors
-             if (is_trunc(i)) cycle
+     if ( allocated(fprod) ) then
+         do i=1,nsect
+             if ( is_trunc(i) ) cycle
              do j=1,2
-                 call dealloc_one_sqrmat(final_product(i,j))
-             enddo
-         enddo
-         deallocate(final_product)
-     endif
+                 call dealloc_one_sqrmat(fprod(i,j))
+             enddo ! over j={1,2} loop
+         enddo ! over i={1,nsect} loop
+         deallocate(fprod)
+     endif ! back if ( allocated(fprod) ) block
 
      if ( allocated(occu) ) then
-         do i=1, nsectors
-             if (is_trunc(i)) cycle
-             do j=1, norbs
-                 call dealloc_one_sqrmat( occu(j,i) )
-             enddo
-         enddo
+         do i=1,nsect
+             if ( is_trunc(i) ) cycle
+             do j=1,norbs
+                 call dealloc_one_sqrmat(occu(j,i))
+             enddo ! over j={1,norbs} loop
+         enddo ! over i={1,nsect} loop
          deallocate(occu)
-     endif
+     endif ! back if ( allocated(occu) ) block
 
-     if ( allocated(double_occu) ) then
-         do i=1, nsectors
-             if (is_trunc(i)) cycle
-             do j=1, norbs
-                 do k=1, norbs
-                     call dealloc_one_sqrmat( double_occu(k,j,i) ) 
-                 enddo
-             enddo
-         enddo
-         deallocate(double_occu)
-     endif
+     if ( allocated(doccu) ) then
+         do i=1,nsect
+             if ( is_trunc(i) ) cycle
+             do j=1,norbs
+                 do k=1,norbs
+                     call dealloc_one_sqrmat(doccu(k,j,i)) 
+                 enddo ! over k={1,norbs} loop
+             enddo ! over j={1,norbs} loop
+         enddo ! over i={1,nsect} loop
+         deallocate(doccu)
+     endif ! back if ( allocated(doccu) ) block
 
      return
   end subroutine ctqmc_deallocate_memory_occu
@@ -451,76 +453,78 @@
      integer :: i
 
 ! temp integer
-     integer :: int1
+     integer :: i1
 
 ! file status
      logical :: exists
 
 ! don't truncate the Hilbert space at all
-     if (itrun == 1) then
-         do i=1, nsectors
-             sectors(i)%next_sector_trunc = sectors(i)%next_sector
-         enddo
-         nsectors_trunc     = nsectors
-         max_dim_sect_trunc = max_dim_sect
-         ave_dim_sect_trunc = ave_dim_sect
+     if ( itrun == 1 ) then
+         do i=1,nsect
+             sectors(i)%next_sect_t = sectors(i)%next_sect
+         enddo ! over i={1,nsect} loop
+         nsect_t = nsect
+         mdim_sect_t = mdim_sect
+         adim_sect_t = adim_sect
 
-         if (myid == master) then
+         if ( myid == master ) then
              write(mystd,*)
              write(mystd,'(4X,a)') 'use full Hilbert space' 
-         endif
+         endif ! back if ( myid == master ) block
 
 ! truncate the Hilbert space according to the total occupancy number
-     elseif (itrun == 2) then
+     elseif ( itrun == 2 ) then
          is_trunc = .false.
-         do i=1, nsectors
-             if (sectors(i)%nelectron < nmini .or. sectors(i)%nelectron > nmaxi) then
+         do i=1,nsect
+             if ( sectors(i)%nelec < nmini .or. sectors(i)%nelec > nmaxi ) then
                  is_trunc(i) = .true.
              endif
-         enddo
-         call cat_truncate_sectors()
-         if (myid == master) then
-             write(mystd, *)
+         enddo ! over i={1,nsect} loop
+
+         call cat_trunc_sect()
+
+         if ( myid == master ) then
+             write(mystd,*)
              write(mystd,'(4X,a,i2,a,i2)') 'truncate occupancy number, just keep ', &
                                                nmini,' ~ ',  nmaxi 
-         endif
+         endif ! back if ( myid == master ) block
 
 ! truncate the Hilbert space according to the total occupancy number and 
-! probatility of atomic states
-     elseif (itrun == 3) then
-         if (myid == master) then
+! the probatility of atomic states
+     elseif ( itrun == 3 ) then
+         if ( myid == master ) then
              write(mystd,*)
              write(mystd,'(4X,a,i2,a,i2)') 'truncate occupancy number, just keep ', &
                                                nmini, ' ~ ',  nmaxi
              is_trunc = .false.
              prob_sect = zero
-             inquire(file = 'solver.psect.dat', exist = exists)
-             if (exists) then
+             inquire(file='solver.psect.dat', exist=exists)
+             if ( exists ) then
                  write(mystd,'(4X,a)') 'truncate high energy atomic states according to their probability'
+
                  open(mytmp, file='solver.psect.dat', form='formatted', status='unknown')
                  read(mytmp, *) ! skip header
-                 do i=1, nsectors
-                     read(mytmp, *) int1, prob_sect(i) 
-                 enddo
+                 do i=1,nsect
+                     read(mytmp,*) i1, prob_sect(i) 
+                 enddo ! over i={1,nsect} loop
                  close(mytmp)
 
-                 do i=1, nsectors
-                     if ( sectors(i)%nelectron < nmini .or. &
-                          sectors(i)%nelectron > nmaxi .or. &
-                                         prob_sect(i) < 1e-4 ) then
+                 do i=1,nsect
+                     if ( sectors(i)%nelec < nmini .or. &
+                          sectors(i)%nelec > nmaxi .or. &
+                          prob_sect(i) < 1e-4           ) then
 
                          is_trunc(i) = .true.
                      endif
-                 enddo
+                 enddo ! over i={1,nsect} loop
              else
-                 do i=1, nsectors
-                     if ( sectors(i)%nelectron < nmini .or. &
-                          sectors(i)%nelectron > nmaxi       ) then
+                 do i=1,nsect
+                     if ( sectors(i)%nelec < nmini .or. sectors(i)%nelec > nmaxi ) then
                          is_trunc(i) = .true.
                      endif
-                 enddo
-             endif ! back if (exists) block
-         endif ! back if (myid == master) block
+                 enddo ! over i={1,nsect} loop
+             endif ! back if ( exists ) block
+         endif ! back if ( myid == master ) block
 
 # if defined (MPI)
 ! block until all processes have reached here
@@ -530,120 +534,124 @@
          call mp_barrier()
 # endif  /* MPI */
 
-         call cat_truncate_sectors()
-     endif ! back if (itrun == 1) block
+         call cat_trunc_sect()
+     endif ! back if ( itrun == 1 ) block
 
-! print summary of sectors after truncated
-     if (myid == master) then
-         if ( itrun == 1) then 
-             write(mystd,'(4X,a,i5)')    'number of sectors:', nsectors_trunc 
-             write(mystd,'(4X,a,i5)')    'maximum dimension of sectors:', max_dim_sect_trunc
-             write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors:', ave_dim_sect_trunc
+! print summary of sectors after truncating
+     if ( myid == master ) then
+         if ( itrun == 1 ) then 
+             write(mystd,'(4X,a,i5)')    'tot_num_sect:', nsect_t
+             write(mystd,'(4X,a,i5)')    'max_dim_sect:', mdim_sect_t
+             write(mystd,'(4X,a,f10.2)') 'ave_dim_sect:', adim_sect_t
              write(mystd,*)
          elseif ( itrun == 2 .or. itrun == 3 ) then
-              write(mystd,'(4X,a)') 'before truncated:'
-              write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors
-              write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect
-              write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect
-              write(mystd,'(4X,a)') 'after truncated:'
-              write(mystd,'(4X,a,i5)')    'number of sectors: ', nsectors_trunc 
-              write(mystd,'(4X,a,i5)')    'maximum dimension of sectors: ', max_dim_sect_trunc
-              write(mystd,'(4X,a,f10.2)') 'averaged dimension of sectors: ', ave_dim_sect_trunc
+              write(mystd,'(4X,a)') 'before truncation:'
+              write(mystd,'(4X,a,i5)')    'tot_num_sect: ', nsect
+              write(mystd,'(4X,a,i5)')    'max_dim_sect: ', mdim_sect
+              write(mystd,'(4X,a,f10.2)') 'ave_dim_sect: ', adim_sect
+              write(mystd,'(4X,a)') 'after truncation:'
+              write(mystd,'(4X,a,i5)')    'tot_num_sect: ', nsect_t
+              write(mystd,'(4X,a,i5)')    'max_dim_sect: ', mdim_sect_t
+              write(mystd,'(4X,a,f10.2)') 'ave_dim_sect: ', adim_sect_t
               write(mystd,*)
-         endif
-     endif
+         endif ! back if ( itrun == 1 ) block
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine ctqmc_make_trunc
 
-!!>>> cat_truncate_sectors: recalculate the sectors information after truncated
-  subroutine cat_truncate_sectors()
+!!>>> cat_trunc_sect: recalculate information of sectors after truncation
+  subroutine cat_trunc_sect()
      implicit none
 
      integer :: i,j,k,ii
      integer :: sum_dim
  
-     max_dim_sect_trunc = -1
-     nsectors_trunc = 0
+     mdim_sect_t = -1
+     nsect_t = 0
      sum_dim = 0
-     do i=1, nsectors
-         sectors(i)%next_sector_trunc = -1
-         if (is_trunc(i)) then
+     do i=1,nsect
+         sectors(i)%next_sect_t = -1
+         if ( is_trunc(i) ) then
              cycle
-         endif
-         if (max_dim_sect_trunc < sectors(i)%ndim) then
-             max_dim_sect_trunc = sectors(i)%ndim
-         endif 
+         endif ! back if ( is_trunc(i) ) block
+         if ( mdim_sect_t < sectors(i)%ndim ) then
+             mdim_sect_t = sectors(i)%ndim
+         endif ! back if ( mdim_sect_t < sectors(i)%ndim ) block 
+
          sum_dim = sum_dim + sectors(i)%ndim
-         nsectors_trunc = nsectors_trunc + 1 
-         do j=1, sectors(i)%nops
+         nsect_t = nsect_t + 1 
+         do j=1,sectors(i)%nops
              do k=0,1
-                 ii = sectors(i)%next_sector(j,k) 
-                 if (ii == -1) cycle
-                 if (.not. is_trunc(ii)) then
-                     sectors(i)%next_sector_trunc(j,k) = ii
-                 endif
-             enddo
-         enddo
-     enddo
-     ave_dim_sect_trunc = real(sum_dim) / real(nsectors_trunc)
+                 ii = sectors(i)%next_sect(j,k) 
+                 if ( ii == -1 ) cycle
+                 if ( .not. is_trunc(ii) ) then
+                     sectors(i)%next_sect_t(j,k) = ii
+                 endif ! back if ( .not. is_trunc(ii) ) block
+             enddo ! over k={0,1} loop
+         enddo ! over j={1,sectors(i)%nops} loop
+     enddo ! over i={1,nsect} loop
+
+     adim_sect_t = real(sum_dim) / real(nsect_t)
 
      return
-  end subroutine cat_truncate_sectors
+  end subroutine cat_trunc_sect
 
 !!>>> ctqmc_make_occu: calculate < c^{\dag} c>, < c^{\dag} c c^{\dag} c >
   subroutine ctqmc_make_occu()
      implicit none
 
      integer :: i,j,k,ii,jj
-     real(dp) :: tmp_mat1(max_dim_sect_trunc, max_dim_sect_trunc) 
-     real(dp) :: tmp_mat2(max_dim_sect_trunc, max_dim_sect_trunc) 
+     real(dp) :: t_mat1(mdim_sect_t, mdim_sect_t) 
+     real(dp) :: t_mat2(mdim_sect_t, mdim_sect_t) 
 
-     do i=1, norbs
-         do j=1, nsectors
+     do i=1,norbs
+         do j=1,nsect
              if ( is_trunc(j) ) cycle
-             k=sectors(j)%next_sector(i,0)
-             if (k == -1) then
+             k=sectors(j)%next_sect(i,0)
+             if ( k == -1 ) then
                  occu(i,j)%item = zero
                  cycle
-             endif
-             call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, one, &
-                         sectors(k)%myfmat(i,1)%item,                     sectors(j)%ndim, &
-                         sectors(j)%myfmat(i,0)%item,                     sectors(k)%ndim, & 
-                         zero, occu(i,j)%item,                   sectors(j)%ndim   ) 
-         enddo
-     enddo 
+             endif ! back if ( k == -1 ) block
 
-     if (idoub == 2) then
-         do i=1, norbs
-             do j=1, norbs
-                 do k=1, nsectors
+             call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, &
+                         one,  sectors(k)%fmat(i,1)%item,            sectors(j)%ndim, &
+                               sectors(j)%fmat(i,0)%item,            sectors(k)%ndim, & 
+                         zero, occu(i,j)%item,                       sectors(j)%ndim  ) 
+         enddo ! over j={1,nsect} loop
+     enddo ! over i={1,norbs} loop
+
+     if ( idoub == 2 ) then
+         do i=1,norbs
+             do j=1,norbs
+                 do k=1,nsect
                      if ( is_trunc(k) ) cycle 
-                     jj = sectors(k)%next_sector(j,0) 
-                     ii = sectors(k)%next_sector(i,0)
-                     if (ii == -1 .or. jj == -1) then
-                         double_occu(i,j,k)%item = zero
+                     jj = sectors(k)%next_sect(j,0) 
+                     ii = sectors(k)%next_sect(i,0)
+                     if ( ii == -1 .or. jj == -1 ) then
+                         doccu(i,j,k)%item = zero
                          cycle
-                     endif
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
-                                 sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  & 
-                                 sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, & 
-                                 zero, tmp_mat1,                                  max_dim_sect_trunc ) 
+                     endif ! back if ( ii == -1 .or. jj == -1 ) block
 
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
-                                 sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
-                                 sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, & 
-                                 zero, tmp_mat2,                                  max_dim_sect_trunc ) 
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
+                                 one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  & 
+                                       sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, & 
+                                 zero, t_mat1,                               mdim_sect_t       ) 
 
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one,   &
-                                 tmp_mat2,                                        max_dim_sect_trunc,& 
-                                 tmp_mat1,                                        max_dim_sect_trunc,& 
-                                 zero, double_occu(i,j,k)%item,          sectors(k)%ndim     )
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
+                                 one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
+                                       sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, & 
+                                 zero, t_mat2,                               mdim_sect_t       ) 
 
-                 enddo
-             enddo
-         enddo
-     endif
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
+                                 one,  t_mat2,                               mdim_sect_t,      & 
+                                       t_mat1,                               mdim_sect_t,      & 
+                                 zero, doccu(i,j,k)%item,                    sectors(k)%ndim   )
+
+                 enddo ! over k={1,nsect} loop
+             enddo ! over j={1,norbs} loop
+         enddo ! over i={1,norbs} loop
+     endif ! back if ( idoub == 2 ) block
 
      return
   end subroutine ctqmc_make_occu
@@ -653,88 +661,96 @@
      implicit none
 
 ! external variables
-! the number of fermion operators
+! number of fermion operators for current diagram
      integer, intent(in) :: csize
 
-! the address index of fermion operators
+! address index of fermion operators
      integer, intent(in) :: index_t_loc(mkink)
 
-! the string
-     integer, intent(out) :: string(csize+1, nsectors)
+! string index
+     integer, intent(out) :: string(csize+1, nsect)
 
 ! local variables
-! sector index
-     integer :: curr_sect_left
-     integer :: next_sect_left
-     integer :: curr_sect_right
-     integer :: next_sect_right
+! sector index: from left direction
      integer :: left
-     integer :: right
+     integer :: curr_sect_l
+     integer :: next_sect_l
 
-! flvr and type of fermion operators
+! sector index: from right direction
+     integer :: right
+     integer :: curr_sect_r
+     integer :: next_sect_r
+
+! flavor and type of fermion operators
      integer :: vf
      integer :: vt
 
 ! loop index
-     integer :: i,j
+     integer :: i, j
 
-!--------------------------------------------------------------------
+     is_string = .true.
+     string = -1
+
      is_string(:,1) = .true.
      string = -1
 
-! we build a string from right to left, that is,  beta <------- 0
-! build the string from the beginning sector, that is:
-! S_a1(q1)-->q2, S_a2(q2)-->q3, ... S_ai(qi)-->qi+1, ..., Sak(qk)-->q1
-! if we find some qi==0, we cycle this sector immediately
-     do i=1,nsectors
-         if (is_trunc(i)) then
+! we build a string from right to left, that is, beta <------- 0
+! begin with S1: F1(S1)-->S2, F2(S2)-->S3, ... ,Fk(Sk)-->S1
+! if find some Si==-1, cycle this sector immediately
+     do i=1,nsect
+         if ( is_trunc(i) ) then
              is_string(i,1) = .false.
-         endif
-         curr_sect_left = i
-         curr_sect_right = i
-         next_sect_left = i
-         next_sect_right = i
+         endif ! back if ( is_trunc(i) ) block
+
+         curr_sect_l = i
+         curr_sect_r = i
+         next_sect_l = i
+         next_sect_r = i
          left = 0
          right = csize + 1
+
          do j=1,csize
              if ( mod(j,2) == 1) then
                  left = left + 1
-                 string(left,i) = curr_sect_left 
+                 string(left,i) = curr_sect_l
                  vt = type_v( index_t_loc(left) )
                  vf = flvr_v( index_t_loc(left) ) 
-                 next_sect_left = sectors(curr_sect_left)%next_sector_trunc(vf,vt)
-                 if (next_sect_left == -1 ) then
+                 next_sect_l = sectors(curr_sect_l)%next_sect_t(vf,vt)
+                 if ( next_sect_l == -1 ) then
                      is_string(i,1) = .false. 
                      EXIT   ! finish check, exit
-                 endif
-                 curr_sect_left = next_sect_left
+                 endif ! back if ( next_sect_l == -1 ) block
+                 curr_sect_l = next_sect_l
              else
                  right = right - 1
                  vt = type_v( index_t_loc(right) )
                  vf = flvr_v( index_t_loc(right) ) 
                  vt = mod(vt+1,2)
-                 next_sect_right = sectors(curr_sect_right)%next_sector_trunc(vf,vt)
-                 if (next_sect_right == -1 ) then
+                 next_sect_r = sectors(curr_sect_r)%next_sect_t(vf,vt)
+                 if ( next_sect_r == -1 ) then
                      is_string(i,1) = .false. 
                      EXIT   ! finish check, exit
-                 endif
-                 string(right,i) = next_sect_right
-                 curr_sect_right = next_sect_right
-             endif
-         enddo 
+                 endif ! back if ( next_sect_r == -1 ) block
+                 string(right,i) = next_sect_r
+                 curr_sect_r = next_sect_r
+             endif ! back if ( mod(j,2) == 1 ) block
+         enddo ! over j={1,csize} loop
 
 ! if it doesn't form a string, we cycle it, go to the next sector
          if ( .not. is_string(i,1) ) then
              cycle
-         endif
+         endif ! back if ( .not. is_string(i,1) ) block
+
 ! add the last sector to string, and check whether string(csize+1,i) == string(1,i)
 ! important for csize = 0
          string(csize+1,i) = i
+
 ! this case will generate a non-diagonal block, it will not contribute to trace 
-         if ( next_sect_right /= next_sect_left ) then
+         if ( next_sect_r /= next_sect_l ) then
              is_string(i,1) = .false.
-         endif
-     enddo ! over i={1,nsectors} loop
+         endif ! back if ( next_sect_r /= next_sect_l ) block
+
+     enddo ! over i={1,nsect} loop
 
      return
   end subroutine ctqmc_make_string
