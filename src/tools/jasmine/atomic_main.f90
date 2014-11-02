@@ -225,6 +225,8 @@
      nspin  = I_solver%nspin
      norbs  = I_solver%norbs
      ncfgs  = I_solver%ncfgs
+     nmini  = I_solver%nmini
+     nmaxi  = I_solver%nmaxi
 
 ! setup I_solver: real parameters
      Uc     = I_solver%Uc
