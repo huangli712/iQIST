@@ -2475,7 +2475,7 @@
 
 !!>>> ctqmc_make_ztrace: core subroutine of pansy
 !! (1) use good quantum numbers (GQNs) algorithm, split the total Hibert space 
-!!     to small subspace, the dimension of F mat will be smaller.
+!!     to small subspace, the dimension of F-matrix will be smaller.
 !! (2) use divide and conqure algorithm, split the imaginary time axis into 
 !!     many parts, save the matrices products of that part, which may be used 
 !!     by next Monte Carlo move.
@@ -2485,8 +2485,12 @@
      use control, only : mkink, ncfgs
      use context, only : expt_t, index_v, index_t, ddmat
 
-     use m_sector, only : nsectors, sectors, ctqmc_make_string
-     use m_npart, only : is_copy, ctqmc_make_nparts, cat_sector_ztrace
+     use m_sect, only : nsect, sectors
+     use m_sect, only : ctqmc_make_string
+
+     use m_npart, only : is_cp
+     use m_npart, only : ctqmc_make_npart
+     use m_npart, only : cat_sector_ztrace
 
      implicit none
 
@@ -2497,7 +2501,7 @@
 ! total number of operators for current diagram
      integer,  intent(in)  :: csize
 
-! calculated trace
+! the calculated trace
      real(dp), intent(out) :: trace
 
 ! imaginary time value of operator A, only needed in cmode = 1 or 2
@@ -2508,10 +2512,10 @@
 
 ! local variables
 ! whether it forms a string
-     logical :: is_string(nsectors)
+     logical :: is_string(nsect)
 
-! sector index in a string
-     integer :: string(csize+1, nsectors)
+! sector index of a string
+     integer :: string(csize+1, nsect)
 
 ! local version of index_t
      integer :: index_t_loc(mkink)
@@ -2519,8 +2523,8 @@
 ! local version of expt_t
      real(dp) :: expt_t_loc(ncfgs)
 
-! the trace for each sector
-     real(dp) :: trace_sector(nsectors)
+! trace for each sector
+     real(dp) :: trace_sect(nsect)
 
 ! start index of a sector
      integer :: indx
@@ -2545,48 +2549,43 @@
              expt_t_loc = expt_t(:,2)
      end select
 
-! build string for all the sectors
-! it will return is_string and string
+! build string for all the sectors, it will return is_string and string
      call ctqmc_make_string(csize, index_t_loc, is_string, string)
 
-! determine which part should be recalculated
-! it will modify is_save internal
-     call ctqmc_make_nparts(cmode, csize, index_t_loc, tau_s, tau_e)
+! determine which part should be recalculated, it will modify isave internal
+     call ctqmc_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
 
 ! calculate the trace of each sector one by one
 ! reset copy status to false, it is very important ! 
-     is_copy = .false.
-     trace_sector = zero
+     is_cp = .false.
+     trace_sect = zero
      trace = zero
-     do i=1, nsectors
-         if (is_string(i) .eqv. .false.) then
-             trace_sector(i) = zero
-             sectors(i)%final_product(:,:,1) = zero
+     do i=1,nsect
+         if ( .not. is_string(i) ) then
+             trace_sect(i) = zero
+             sectors(i)%fprod(:,:,1) = zero
          else
-             call cat_sector_ztrace(csize, string(:,i), index_t_loc, &
-                                           expt_t_loc, trace_sector(i))
+             call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
          endif
-         trace = trace + trace_sector(i)
+         trace = trace + trace_sect(i)
      enddo 
 
 ! store the diagonal elements of final product in ddmat(:,1)
-     do i=1, nsectors
+     do i=1,nsectors
          indx = sectors(i)%istart
-         do j=1, sectors(i)%ndim
-             ddmat(indx+j-1,1) = sectors(i)%final_product(j,j,1) 
+         do j=1,sectors(i)%ndim
+             ddmat(indx+j-1,1) = sectors(i)%fprod(j,j,1) 
          enddo
      enddo
 
      return
   end subroutine ctqmc_make_ztrace
 
-!!>>> ctqmc_make_evolve: used to update the operator traces of the 
-!!>>> modified part
+!!>>> ctqmc_make_evolve: used to update the operator traces of the modified part
   subroutine ctqmc_make_evolve()
      use context, only : matrix_ptrace, matrix_ntrace, ddmat
-
-     use m_sector, only : nsectors, sectors
-     use m_npart, only : ctqmc_save_parts
+     use m_sect, only : nsect, sectors
+     use m_npart, only : ctqmc_save_npart
 
      implicit none
 
@@ -2600,14 +2599,14 @@
 ! update ddmat for the calculation of atomic state probability
      ddmat(:,2) = ddmat(:,1)
 
-! transfer the final matrix product from final_product(:,:,1) to 
-! final_product(:,:,2) the latter can be used to calculate nmat and nnmat
-     do i=1, nsectors
-         sectors(i)%final_product(:,:,2) = sectors(i)%final_product(:,:,1)
+! transfer the final matrix product from fprod(:,:,1) to fprod(:,:,2),
+! the latter can be used to calculate nmat and nnmat
+     do i=1, nsect
+         sectors(i)%fprod(:,:,2) = sectors(i)%fprod(:,:,1)
      enddo
   
 ! save the data of each part
-     call ctqmc_save_parts()
+     call ctqmc_save_npart()
 
      return
   end subroutine ctqmc_make_evolve

@@ -242,7 +242,7 @@
      use context, only : symm, eimp, eigs, naux
 
      use mmpi
-     use m_sector
+     use m_sect
      use m_npart
 
      implicit none
@@ -400,19 +400,19 @@
              enddo ! over i={1,20} loop
 ! read the total number of sectors, maximum dimension of sectors,
 ! and average dimension of sectors
-             read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
+             read(mytmp,*) nsect, mdim_sect, adim_sect
 
 ! after we know the total number of sectors, we can allocate memory
 ! for array sectors and parts
              call ctqmc_allocate_memory_sect()
 
 ! read each sector's information
-             do i=1,nsectors
+             do i=1,nsect
                  read(mytmp,*) ! skip the header
 
 ! read the dimension, total number of electrons, number of fermion operators,
 ! and start index of this sector
-                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelectron, &
+                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelec, &
                                    sectors(i)%nops, sectors(i)%istart
 
 ! allocate the memory for sectors(i)
@@ -421,14 +421,14 @@
 ! read the next_sector index
                  read(mytmp,*) ! skip the header
                  do j=1, sectors(i)%nops
-                     read(mytmp,*) j1, sectors(i)%next_sector(j,0), &
-                                       sectors(i)%next_sector(j,1)
+                     read(mytmp,*) j1, sectors(i)%next_sect(j,0), &
+                                       sectors(i)%next_sect(j,1)
                  enddo
 
 ! read the eigenvalue of this sector
                  read(mytmp,*) ! skip the header
                  do j=1,sectors(i)%ndim
-                     read(mytmp,*) j1, sectors(i)%myeigval(j)
+                     read(mytmp,*) j1, sectors(i)%eval(j)
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
 
@@ -438,22 +438,22 @@
              read(mytmp,*)
              read(mytmp,*)
 
-             do i=1,nsectors
+             do i=1,nsect
                  do j=1,sectors(i)%nops
                      do k=0,1
-                         ii = sectors(i)%next_sector(j,k)
+                         ii = sectors(i)%next_sect(j,k)
                          if (ii == -1) cycle
 ! skip one hader line
                          read(mytmp, *)
                          read(mytmp, *) j1, j2, j3, i1, i2, nonzero
-                         sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
-                         sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
-                         call alloc_one_fmat(sectors(i)%myfmat(j,k))
+                         sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
+                         sectors(i)%fmat(j,k)%m = sectors(i)%ndim
+                         call alloc_one_fmat(sectors(i)%fmat(j,k))
 ! read non-zero elements of F-matrix
-                         sectors(i)%myfmat(j,k)%item = zero
+                         sectors(i)%fmat(j,k)%item = zero
                          do n=1,nonzero
                              read(mytmp, *) i1, i2, r1
-                             sectors(i)%myfmat(j,k)%item(i1,i2) = r1
+                             sectors(i)%fmat(j,k)%item(i1,i2) = r1
                          enddo ! over n={1,nonzero} loop
                      enddo ! over k={0,1} loop
                  enddo ! over j={1,sectors(i)%nops} loop
@@ -470,40 +470,40 @@
 ! block until all processes have reached here
      call mp_barrier()
 
-     call mp_bcast(nsectors,     master)
-     call mp_bcast(max_dim_sect, master)
-     call mp_bcast(ave_dim_sect, master)
+     call mp_bcast(nsect,     master)
+     call mp_bcast(mdim_sect, master)
+     call mp_bcast(adim_sect, master)
 
      if (myid /= master ) then
          call ctqmc_allocate_memory_sect()
      endif
 
-     do i=1, nsectors
+     do i=1, nsect
          call mp_barrier()
-         call mp_bcast(sectors(i)%ndim,        master)
-         call mp_bcast(sectors(i)%nelectron,   master)
-         call mp_bcast(sectors(i)%nops,        master)
-         call mp_bcast(sectors(i)%istart,      master)
+         call mp_bcast(sectors(i)%ndim,   master)
+         call mp_bcast(sectors(i)%nelec,  master)
+         call mp_bcast(sectors(i)%nops,   master)
+         call mp_bcast(sectors(i)%istart, master)
          if ( myid /= master) then
-             call alloc_one_sector(sectors(i))
+             call alloc_one_sect(sectors(i))
          endif
-         call mp_bcast(sectors(i)%next_sector, master)
-         call mp_bcast(sectors(i)%myeigval,    master)
+         call mp_bcast(sectors(i)%next_sect, master)
+         call mp_bcast(sectors(i)%eval,      master)
      enddo
      call mp_barrier()
 
-     do i=1, nsectors
+     do i=1, nsect
          do j=1, sectors(i)%nops
              do k=0,1
-                 ii = sectors(i)%next_sector(j,k)
+                 ii = sectors(i)%next_sect(j,k)
                  if (ii == -1) cycle
                  if ( myid /= master) then
-                     sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
-                     sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
-                     call alloc_one_fmat(sectors(i)%myfmat(j,k))
+                     sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
+                     sectors(i)%fmat(j,k)%m = sectors(i)%ndim
+                     call alloc_one_fmat(sectors(i)%fmat(j,k))
                  endif
                  call mp_barrier()
-                 call mp_bcast(sectors(i)%myfmat(j,k)%item, master)
+                 call mp_bcast(sectors(i)%fmat(j,k)%item, master)
              enddo
          enddo
      enddo
@@ -516,11 +516,11 @@
 
 ! add the contribution from chemical potential to eigenvalues
      j1 = 0
-     do i=1,nsectors
+     do i=1,nsect
          do j=1, sectors(i)%ndim
              j1 = j1 + 1
-             eigs(j1) = sectors(i)%myeigval(j)
-             naux(j1) = sectors(i)%nelectron
+             eigs(j1) = sectors(i)%eval(j)
+             naux(j1) = sectors(i)%nelec
          enddo
      enddo
      do i=1,ncfgs
@@ -559,7 +559,7 @@
      use stack
      use spring
 
-     use m_sector
+     use m_sect
      use m_npart
 
      implicit none
@@ -577,8 +577,8 @@
      integer  :: stream_seed
 
 ! dummy matrices
-     real(dp) :: tmp_mat1(max_dim_sect, max_dim_sect)
-     real(dp) :: tmp_mat2(max_dim_sect, max_dim_sect)
+     real(dp) :: t_mat1(mdim_sect, mdim_sect)
+     real(dp) :: t_mat2(mdim_sect, mdim_sect)
 
 ! init random number generator
      call system_clock(system_time)
@@ -720,62 +720,62 @@
      sig2    = czero
 
 ! init npart
-     num_prod = zero
-     is_save = 1
-     is_copy = .false.
-     col_copy = 0
+     nprod = zero
+     isave = 1
+     is_cp = .false.
+     ncol_cp = 0
      ops = 0
      ope = 0
-     saved_a = zero
-     saved_b = zero
+     saved_p = zero
+     saved_n = zero
 
 ! init op_n, < c^{\dag} c >,
 ! which are used to calculate occupation number
-     do i=1, norbs
-         do j=1, nsectors
-             k=sectors(j)%next_sector(i,0)
-             if (k == -1) then
+     do i=1,norbs
+         do j=1,nsect
+             k=sectors(j)%next_sect(i,0)
+             if ( k == -1 ) then
                  sectors(j)%occu(:,:,i) = zero
                  cycle
-             endif
-             call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, one, &
-                         sectors(k)%myfmat(i,1)%item,                     sectors(j)%ndim, &
-                         sectors(j)%myfmat(i,0)%item,                     sectors(k)%ndim, &
-                         zero, sectors(j)%occu(:,:,i),                    sectors(j)%ndim   )
-         enddo
+             endif ! back if ( k == -1 ) block
+             call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, &
+                         one,  sectors(k)%fmat(i,1)%item,            sectors(j)%ndim, &
+                               sectors(j)%fmat(i,0)%item,            sectors(k)%ndim, &
+                         zero, sectors(j)%occu(:,:,i),               sectors(j)%ndim  )
+         enddo ! over j={1,nsect} loop
      enddo ! over i={1,norbs} loop
 
 ! init op_m, < c^{\dag} c c^{\dag} c >,
 ! which are used to calculate double occupation number
-     if (idoub == 2) then
-         do i=1, norbs
-             do j=1, norbs
-                 do k=1, nsectors
-                     jj = sectors(k)%next_sector(j,0)
-                     ii = sectors(k)%next_sector(i,0)
-                     if (ii == -1 .or. jj == -1) then
-                         sectors(k)%double_occu(:,:,i,j) = zero
+     if ( idoub == 2 ) then
+         do i=1,norbs
+             do j=1,norbs
+                 do k=1,nsect
+                     jj = sectors(k)%next_sect(j,0)
+                     ii = sectors(k)%next_sect(i,0)
+                     if ( ii == -1 .or. jj == -1 ) then
+                         sectors(k)%doccu(:,:,i,j) = zero
                          cycle
-                     endif
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, one, &
-                                 sectors(jj)%myfmat(j,1)%item,                    sectors(k)%ndim,  &
-                                 sectors(k)%myfmat(j,0)%item,                     sectors(jj)%ndim, &
-                                 zero, tmp_mat1,                                  max_dim_sect       )
+                     endif ! back if ( ii == -1 .or. jj == -1 ) block
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
+                                 one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  &
+                                       sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, &
+                                 zero, t_mat1,                               mdim_sect         )
 
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, one, &
-                                 sectors(ii)%myfmat(i,1)%item,                    sectors(k)%ndim,  &
-                                 sectors(k)%myfmat(i,0)%item,                     sectors(ii)%ndim, &
-                                 zero, tmp_mat2,                                  max_dim_sect       )
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
+                                 one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
+                                       sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, &
+                                 zero, t_mat2,                               mdim_sect         )
 
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim, one, &
-                                 tmp_mat2,                                        max_dim_sect,    &
-                                 tmp_mat1,                                        max_dim_sect,    &
-                                 zero, sectors(k)%double_occu(:,:,i,j),           sectors(k)%ndim   )
+                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
+                                 one,  t_mat2,                               mdim_sect,        &
+                                       t_mat1,                               mdim_sect,        &
+                                 zero, sectors(k)%doccu(:,:,i,j),            sectors(k)%ndim   )
 
-                 enddo
-             enddo
-         enddo
-     endif
+                 enddo ! over k={1,nsect} loop
+             enddo ! over j={1,norbs} loop
+         enddo ! over i={1,norbs} loop
+     endif ! back if ( idoub == 2 ) block
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
