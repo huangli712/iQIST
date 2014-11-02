@@ -146,7 +146,7 @@
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : paux, cnegs, caves
      
-     use m_npart, only : num_prod
+     use m_npart, only : nprod
 
      implicit none
 
@@ -204,7 +204,7 @@
      write(mystd,'(4X,a,i10)')    'negative sign counter:', cnegs
      write(mystd,'(4X,a,f10.5)')  'averaged sign sampler:', caves / real(cstep)
 
-     write(mystd,'(4X,a,f14.1)')  'averaged matrices products:', num_prod / real(cstep)
+     write(mystd,'(4X,a,f14.1)')  'averaged matrices products:', nprod / real(cstep)
 
      return
   end subroutine ctqmc_print_runtime

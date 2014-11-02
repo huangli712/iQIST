@@ -2729,7 +2729,7 @@
      pass = .false.
      is_cp = .false.
      sum_abs_trace = zero
-     trace_sector = zero
+     trace_sect = zero
      do i=1,nalive_sect
 ! calculate the trace for one sector, this call will consume a lot of time
 ! if the dimension of fmat and expansion order is large, so we should carefully 
@@ -2739,7 +2739,7 @@
 ! if this move is not accepted, refine the trace bound to see whether we can
 ! reject it before calculating the trace of all of the sectors
          if ( .not. pass ) then
-             sum_abs_trace = sum_abs_trace + abs( trace_sector(i) )
+             sum_abs_trace = sum_abs_trace + abs( trace_sect(i) )
              sum_bound = sum_bound - trace_bound(i)
 ! calculate pmax and pmin
              pmax = ptmp * abs( (sum_abs_trace + sum_bound) / matrix_ptrace )
@@ -2761,7 +2761,7 @@
 ! if we arrive here, two cases
 ! case 1: pass == .false., we haven't determined the pass
 ! case 2: pass == .true. we have determined the pass
-     matrix_ntrace = sum(trace_sector(1:nalive_sect)) 
+     matrix_ntrace = sum(trace_sect(1:nalive_sect)) 
      accept_p = propose  *  deter_ratio * (matrix_ntrace / matrix_ptrace)
      pass = ( min(one, abs(accept_p)) > rand_num)
      if ( .not. pass ) then

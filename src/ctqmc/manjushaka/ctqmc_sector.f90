@@ -755,4 +755,4 @@
      return
   end subroutine ctqmc_make_string
 
-  end module m_sector
+  end module m_sect
