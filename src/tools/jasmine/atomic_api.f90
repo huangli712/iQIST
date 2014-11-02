@@ -191,6 +191,9 @@
          integer :: norbs
          integer :: ncfgs
 
+         integer :: nmini
+         integer :: nmaxi
+
          real(dp) :: Uc
          real(dp) :: Uv
          real(dp) :: Jz
