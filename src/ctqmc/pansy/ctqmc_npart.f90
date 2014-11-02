@@ -90,7 +90,7 @@
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_sect', &
                           'can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      isave = 1
@@ -176,48 +176,48 @@
          ops(1) = 1
          ope(1) = csize
          ffpart = 1
-         if (nop(1) <= 0) then
+         if ( nop(1) <= 0 ) then
              isave(1,:,1) = 2
          else
              isave(1,:,1) = 1
-         endif
+         endif ! back if ( nop(1) <= 0 ) block
 ! case 2: use npart alogithm
-     elseif ( npart > 1) then
+     elseif ( npart > 1 ) then
          interval = beta / real(npart)
 ! calculate number of operators for each part
          do i=1,csize
              j = ceiling( time_v( index_t_loc(i) ) / interval )
              nop(j) = nop(j) + 1
-         enddo 
+         enddo  ! over i={1,csize} loop
 ! if no operators in this part, ignore them
-         do i=1, npart
-             if (ffpart == 0 .and. nop(i) > 0) then
+         do i=1,npart
+             if ( ffpart == 0 .and. nop(i) > 0 ) then
                  ffpart = i
-             endif
-             if (nop(i) <= 0) then
+             endif ! back if ( ffpart == 0 .and. nop(i) > 0 ) block
+             if ( nop(i) <= 0 ) then
                  isave(i,:,1) = 2 
-             endif
-         enddo
+             endif ! back if ( nop(i) <= 0 ) block
+         enddo ! over i={1,npart} loop
 ! calculate the start and end index of operators for each part
          do i=1,npart
              if ( nop(i) > 0 ) then
                  ops(i) = 1
                  do j=1,i-1
                      ops(i) = ops(i) + nop(j)
-                 enddo 
+                 enddo  ! over j={1,i-1} loop
                  ope(i) = ops(i) + nop(i) - 1
-             endif 
-         enddo 
+             endif  ! back if ( nop(i) > 0 ) block
+         enddo  ! over i={1,npart} loop
    
 ! case 2A: use some saved matrices products from previous accepted Monte Carlo move
-         if (cmode == 1 .or. cmode == 2) then
+         if ( cmode == 1 .or. cmode == 2 ) then
 ! get the position of operator A and operator B
              tis = ceiling( tau_s / interval )
              tie = ceiling( tau_e / interval )
 ! operator A:
-             if (nop(tis)>0) then
+             if ( nop(tis) > 0 ) then
                  isave(tis,:,1) = 1
-             endif
+             endif ! back if ( nop(tis) > 0 ) block
 ! special attention: if operator A is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
              if ( nop(tis) > 0 ) then
@@ -228,23 +228,23 @@
                              isave(tip,:,1) = 1;  EXIT
                          endif
                          tip = tip + 1
-                     enddo ! over do while loop
-                 endif
+                     enddo ! over do while ( tip <= npart ) loop
+                 endif ! back if ( tau_s >= time_v( index_t_loc( ope(tis) ) ) ) block
 ! for remove an operator, nop(tis) may be zero
              else
                  tip = tis + 1
                  do while ( tip <= npart )
                      if ( nop(tip) > 0 ) then
                          isave(tip,:,1) = 1; EXIT
-                     endif
+                     endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
-                 enddo ! over do while loop
+                 enddo ! over do while ( tip <= npart ) loop
              endif ! back if ( nop(tis) > 0 ) block
    
 ! operator B:
-             if (nop(tie)>0) then
+             if ( nop(tie) > 0 ) then
                  isave(tie,:,1) = 1
-             endif
+             endif ! back if ( nop(tie) > 0 ) block
 ! special attention: if operator B is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
              if ( nop(tie) > 0 ) then
@@ -253,30 +253,30 @@
                      do while ( tip <= npart )
                          if ( nop(tip) > 0 ) then
                              isave(tip,:,1) = 1; EXIT
-                         endif
+                         endif ! back if ( nop(tip) > 0 ) block
                          tip = tip + 1
-                     enddo ! over do while loop
-                 endif
+                     enddo ! over do while ( tau_e >= time_v( index_t_loc( ope(tie) ) ) ) loop
+                 endif ! back if ( nop(tie) > 0 ) block
 ! for remove an operator, nop(tie) may be zero
              else
                  tip = tie + 1
                  do while ( tip <= npart )
                      if ( nop(tip) > 0 ) then
                          isave(tip,:,1) = 1; EXIT
-                     endif
+                     endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
-                 enddo ! over do while loop
+                 enddo ! over do while ( tip <= npart ) loop
              endif ! back if ( nop(tie) > 0 ) block
    
 ! case 2B: recalculate all the matrices products 
-         elseif (cmode == 3 .or. cmode == 4) then
-             do i=1, nsect
-                 do j=1, npart
-                     if (isave(j,i,1) == 0) then
+         elseif ( cmode == 3 .or. cmode == 4 ) then
+             do i=1,nsect
+                 do j=1,npart
+                     if ( isave(j,i,1) == 0 ) then
                          isave(j,i,1) = 1
-                     endif  
-                 enddo
-             enddo
+                     endif ! back if ( isave(j,i,1) == 0 ) block
+                 enddo ! over j={1,npart} loop
+             enddo ! over i={1,nsect} loop
          endif ! back if (cmode == 1 .or. cmode == 2) block
    
 ! npart should be larger than zero
@@ -309,16 +309,22 @@
      real(dp), intent(out) :: trace
    
 ! local variables
-! temp matrices
+! temp matrix
      real(dp) :: r_mat(mdim_sect, mdim_sect)
      real(dp) :: t_mat(mdim_sect, mdim_sect)
    
 ! temp index
-     integer :: dim1, dim2, dim3, dim4
-     integer :: isect, sect1, sect2
+     integer :: dim1
+     integer :: dim2
+     integer :: dim3
+     integer :: dim4
+     integer :: isect
+     integer :: sect1
+     integer :: sect2
      integer :: indx
      integer :: counter
-     integer :: vt, vf
+     integer :: vt
+     integer :: vf
    
 ! loop index
      integer :: i, j, k, l
@@ -332,121 +338,121 @@
      t_mat = zero
 
 ! loop over all the parts
-     do i=1, npart
+     do i=1,npart
    
 ! this part has been calculated previously, just use its results
-         if ( isave(i, isect, 1) == 0 ) then
+         if ( isave(i,isect,1) == 0 ) then
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
              dim2 = sectors(sect1)%ndim
              dim3 = sectors(sect2)%ndim
              if ( i > ffpart ) then
-                 call dgemm( 'N', 'N', dim2, dim1, dim3, one,     &
-                              saved_p(:, :, i, isect), mdim_sect, &
-                              r_mat,                   mdim_sect, &
-                              zero, t_mat,             mdim_sect  )
+                 call dgemm( 'N', 'N', dim2, dim1, dim3,             &
+                              one,  saved_p(:,:,i,isect), mdim_sect, &
+                                    r_mat,                mdim_sect, &
+                              zero, t_mat,                mdim_sect  )
 
-                 r_mat(:, 1:dim1) = t_mat(:, 1:dim1)
+                 r_mat(:,1:dim1) = t_mat(:,1:dim1)
                  nprod = nprod + one
              else
-                 r_mat(:, 1:dim1) = saved_p(:, 1:dim1, i, isect)
+                 r_mat(:,1:dim1) = saved_p(:,1:dim1,i,isect)
              endif ! back if ( i > ffpart ) block
   
 ! this part should be recalcuated 
-         elseif ( isave(i, isect, 1) == 1 ) then 
+         elseif ( isave(i,isect,1) == 1 ) then 
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
              dim4 = sectors(sect2)%ndim
-             saved_n(:, :, i, isect) = zero
+             saved_n(:,:,i,isect) = zero
    
 ! loop over all the fermion operators in this part
              counter = 0
-             do j=ops(i), ope(i)
+             do j=ops(i),ope(i)
                  counter = counter + 1
                  indx = sectors(string(j)  )%istart
                  dim2 = sectors(string(j+1))%ndim
                  dim3 = sectors(string(j)  )%ndim
    
 ! multiply the diagonal matrix of time evolution operator 
-                 if (counter > 1) then
+                 if ( counter > 1 ) then
                      do l=1,dim4
                          do k=1,dim3
-                             t_mat(k, l) = saved_n(k, l, i, isect) * expt_v(indx+k-1, index_t_loc(j))
-                         enddo
-                     enddo
+                             t_mat(k,l) = saved_n(k,l,i,isect) * expt_v(indx+k-1,index_t_loc(j))
+                         enddo ! over k={1,dim3} loop
+                     enddo ! over l={1,dim4} loop
                      nprod = nprod + one
                  else
                      t_mat = zero
                      do k=1,dim3
-                         t_mat(k,k) = expt_v(indx+k-1, index_t_loc(j))
+                         t_mat(k,k) = expt_v(indx+k-1,index_t_loc(j))
                      enddo
-                 endif
+                 endif ! back if ( counter > 1) block
    
 ! multiply the matrix of fermion operator
                  vt = type_v( index_t_loc(j) )
                  vf = flvr_v( index_t_loc(j) ) 
-                 call dgemm( 'N', 'N', dim2, dim4, dim3, one,            &
-                             sectors(string(j))%fmat(vf, vt)%item, dim2, &
-                             t_mat,                           mdim_sect, &
-                             zero, saved_n(:, :, i, isect),   mdim_sect  ) 
+                 call dgemm( 'N', 'N', dim2, dim4, dim3,                      &
+                             one,  sectors(string(j))%fmat(vf,vt)%item, dim2, &
+                                   t_mat,                          mdim_sect, &
+                             zero, saved_n(:,:,i,isect),           mdim_sect  ) 
    
                  nprod = nprod + one
-             enddo  
+             enddo ! over j={ops(i),ope(i)} loop
 
 ! set its save status and copy status
-             isave(i, isect, 1) = 0
-             is_cp(i, isect) = .true.
-             ncol_cp(i, isect) = dim4
+             isave(i,isect,1) = 0
+             is_cp(i,isect) = .true.
+             ncol_cp(i,isect) = dim4
    
 ! multiply this part with the rest parts
              if ( i > ffpart ) then
-                 call dgemm( 'N', 'N', dim2, dim1, dim4, one,    &
-                             saved_n(:, :, i, isect), mdim_sect, &
-                             r_mat,                   mdim_sect, &
-                             zero, t_mat,             mdim_sect  ) 
+                 call dgemm( 'N', 'N', dim2, dim1, dim4,            &
+                             one,  saved_n(:,:,i,isect), mdim_sect, &
+                                   r_mat,                mdim_sect, &
+                             zero, t_mat,                mdim_sect  ) 
 
-                 r_mat(:, 1:dim1) = t_mat(:, 1:dim1)
+                 r_mat(:,1:dim1) = t_mat(:,1:dim1)
                  nprod = nprod + one
              else
-                 r_mat(:, 1:dim1) = saved_n(:, 1:dim1, i, isect)
-             endif
+                 r_mat(:,1:dim1) = saved_n(:,1:dim1,i,isect)
+             endif ! back if ( i > ffpart ) block
 
 ! no operators in this part, do nothing
-         elseif ( isave(i, isect, 1) == 2 ) then
+         elseif ( isave(i,isect,1) == 2 ) then
              cycle
-         endif ! back if ( is_save(i, isect) ==0 )  block
+         endif ! back if ( is_save(i, isect) == 0 )  block
    
 ! the start sector for next part
          isect = sect1
    
-     enddo  ! over i={1, npart} loop   
+     enddo  ! over i={1,npart} loop   
    
 ! special treatment of the last time-evolution operator
      indx = sectors(string(1))%istart
 
 ! no fermion operators
      if ( csize == 0 ) then
-         do k=1, dim1
-             r_mat(k, k) = expt_t_loc(indx+k-1)
+         do k=1,dim1
+             r_mat(k,k) = expt_t_loc(indx+k-1)
          enddo
 ! multiply the last time-evolution operator
      else
          do l=1,dim1
              do k=1,dim1
-                 r_mat(k, l) = r_mat(k, l) * expt_t_loc(indx+k-1)
+                 r_mat(k,l) = r_mat(k,l) * expt_t_loc(indx+k-1)
              enddo
          enddo
          nprod = nprod + one
      endif
    
 ! store final product
-     sectors( string(1) )%fprod(:, :, 1) = r_mat(1:dim1, 1:dim1)
+     sectors( string(1) )%fprod(:,:,1) = r_mat(1:dim1,1:dim1)
    
 ! calculate the trace
      trace  = zero
-     do j=1, sectors(string(1))%ndim
+     do j=1,sectors(string(1))%ndim
          trace = trace + r_mat(j,j)
-     enddo
+     enddo ! over j={1,sectors(string(1))%ndim} loop
    
      return
   end subroutine cat_sector_ztrace
@@ -459,19 +465,19 @@
      integer :: i,j
 
 ! copy save-state for all the parts 
-     isave(:, :, 2) = isave(:, :, 1)
+     isave(:,:,2) = isave(:,:,1)
 
 ! when npart > 1, we used the npart algorithm, save the changed 
 ! matrices products when moves are accepted
      if ( npart > 1 ) then
-         do i=1, nsect
-             do j=1, npart
-                 if ( is_cp(j, i) ) then
-                     saved_p(:, 1:ncol_cp(j, i), j, i) = saved_n(:, 1:ncol_cp(j, i), j, i) 
-                 endif
-             enddo
-         enddo
-     endif
+         do i=1,nsect
+             do j=1,npart
+                 if ( is_cp(j,i) ) then
+                     saved_p(:,1:ncol_cp(j,i),j,i) = saved_n(:,1:ncol_cp(j,i),j,i) 
+                 endif ! back if ( is_cp(j,i) ) block
+             enddo ! over j={1,npart} loop
+         enddo ! over i={1,nsect} loop
+     endif ! back if ( npart > 1 ) block
 
      return
   end subroutine ctqmc_save_npart

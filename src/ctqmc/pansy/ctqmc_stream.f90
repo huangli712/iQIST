@@ -385,14 +385,14 @@
      eigs = zero
      naux = zero
 
-     if (myid == master) then ! only master node can do it
+     if ( myid == master ) then ! only master node can do it
          exists = .false.
 ! inquire about file 'atom.cix', this file is necessary,
 ! the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
 
 ! find 'atom.cix', read it
-         if ( exists .eqv. .true. ) then
+         if ( exists ) then
              open(mytmp, file='atom.cix', form='formatted', status='unknown')
 ! skip 20 header lines
              do i=1,20
@@ -474,39 +474,39 @@
      call mp_bcast(mdim_sect, master)
      call mp_bcast(adim_sect, master)
 
-     if (myid /= master ) then
+     if ( myid /= master ) then
          call ctqmc_allocate_memory_sect()
-     endif
+     endif ! back if ( myid /= master ) block
 
-     do i=1, nsect
+     do i=1,nsect
          call mp_barrier()
          call mp_bcast(sectors(i)%ndim,   master)
          call mp_bcast(sectors(i)%nelec,  master)
          call mp_bcast(sectors(i)%nops,   master)
          call mp_bcast(sectors(i)%istart, master)
-         if ( myid /= master) then
+         if ( myid /= master ) then
              call alloc_one_sect(sectors(i))
-         endif
+         endif ! back if ( myid /= master ) block
          call mp_bcast(sectors(i)%next_sect, master)
          call mp_bcast(sectors(i)%eval,      master)
-     enddo
+     enddo ! over i={1,nsect} loop
      call mp_barrier()
 
-     do i=1, nsect
-         do j=1, sectors(i)%nops
+     do i=1,nsect
+         do j=1,sectors(i)%nops
              do k=0,1
                  ii = sectors(i)%next_sect(j,k)
                  if (ii == -1) cycle
-                 if ( myid /= master) then
+                 if ( myid /= master ) then
                      sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
                      sectors(i)%fmat(j,k)%m = sectors(i)%ndim
                      call alloc_one_fmat(sectors(i)%fmat(j,k))
-                 endif
+                 endif ! back if ( myid /= master ) block
                  call mp_barrier()
                  call mp_bcast(sectors(i)%fmat(j,k)%item, master)
-             enddo
-         enddo
-     enddo
+             enddo ! over k={0,1} loop
+         enddo ! over j={1,sectors(i)%nops} loop
+     enddo ! over i={1,nsect} loop
      call mp_barrier()
 
 # endif  /* MPI */
@@ -517,15 +517,15 @@
 ! add the contribution from chemical potential to eigenvalues
      j1 = 0
      do i=1,nsect
-         do j=1, sectors(i)%ndim
+         do j=1,sectors(i)%ndim
              j1 = j1 + 1
              eigs(j1) = sectors(i)%eval(j)
              naux(j1) = sectors(i)%nelec
-         enddo
-     enddo
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
      do i=1,ncfgs
          eigs(i) = eigs(i) - mune * naux(i)
-     enddo
+     enddo ! over i={1,ncfgs} loop
 
 ! substract the eigenvalues zero point, here we store the eigen energy
 ! zero point in U
@@ -798,10 +798,9 @@
 ! the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
-         write(mystd,*) 
-         write(mystd,'(4X,a,i11)') 'tot_num_sect:', nsect
-         write(mystd,'(4X,a,i11)') 'max_dim_sect:', mdim_sect
-         write(mystd,'(4X,a,f10.3)') 'ave_dim_sect:', adim_sect
+         write(mystd,'(4X,a,i8)') 'tot_num_sect:', nsect
+         write(mystd,'(4X,a,i8)') 'max_dim_sect:', mdim_sect
+         write(mystd,'(4X,a,f8.1)') 'ave_dim_sect:', adim_sect
      endif
 
      return

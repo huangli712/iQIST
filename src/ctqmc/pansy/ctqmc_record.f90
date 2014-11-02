@@ -881,17 +881,17 @@
              if (kk == -1) cycle
              indx1 = sectors(k)%istart
              indx2 = sectors(kk)%istart
-             do l=1, sectors(k)%ndim
-                 do m=1, sectors(kk)%ndim
+             do l=1,sectors(k)%ndim
+                 do m=1,sectors(kk)%ndim
                      ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))    
-                     do j=1, mfreq
+                     do j=1,mfreq
                          cb = cmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
                          ghub(j,i) = ghub(j,i) + ob / cb
-                     enddo 
-                 enddo
-             enddo 
-         enddo ! over i={1,norbs}
-     enddo ! over k={1,nsectors}
+                     enddo ! over j={1,mfreq} loop
+                 enddo ! over m={1,sectors(kk)%ndim} loop
+             enddo  ! over l={1,sectors(k)%ndim} loop
+         enddo ! over i={1,norbs} loop
+     enddo ! over k={1,nsect} loop
 
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs

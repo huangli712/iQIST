@@ -1,6 +1,13 @@
 !!!-------------------------------------------------------------------------
 !!! project : pansy
 !!! program : m_sect module
+!!!           m_sect@alloc_one_fmat
+!!!           m_sect@dealloc_one_fmat
+!!!           m_sect@alloc_one_sect
+!!!           m_sect@dealloc_one_sect
+!!!           m_sect@ctqmc_allocate_memory_sect
+!!!           m_sect@ctqmc_deallocate_memory_sect
+!!!           m_sect@ctqmc_make_string
 !!! source  : mod_control.f90
 !!! type    : module
 !!! authors : yilin wang (email: qhwyl2006@126.com)
@@ -8,6 +15,7 @@
 !!!           07/19/2014  by yilin wang
 !!!           08/18/2014  by yilin wang
 !!!           11/01/2014  by yilin wang 
+!!!           11/02/2014  by yilin wang 
 !!! purpose : define data structure for good quantum numbers (GQNs) algorithm
 !!! status  : unstable
 !!! comment :
@@ -16,7 +24,7 @@
 !!>>> m_sect: define the data structure for good quantum numbers (GQNs) algorithm
   module m_sect
      use constants, only : dp, zero
-     use control, only : mkink, idoub, norbs
+     use control, only : idoub, mkink, norbs
      use context, only : type_v, flvr_v
  
      implicit none
@@ -94,8 +102,8 @@
 !!========================================================================
     
      public :: alloc_one_fmat
-     public :: alloc_one_sect
      public :: dealloc_one_fmat
+     public :: alloc_one_sect
      public :: dealloc_one_sect
      public :: ctqmc_allocate_memory_sect
      public :: ctqmc_deallocate_memory_sect
@@ -110,12 +118,12 @@
 ! external variables
      type(t_fmat), intent(inout) :: fmat
   
-     allocate( fmat%item( fmat%n, fmat%m ), stat=istat )
+     allocate( fmat%item(fmat%n, fmat%m), stat=istat )
   
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('alloc_one_fmat', 'can not allocate enough memory')
-     endif
+     endif ! back if ( istat /=0 ) block
 
 ! initialize it
      fmat%item = zero
@@ -151,15 +159,15 @@
      allocate( sect%fprod(sect%ndim, sect%ndim, 2),        stat=istat )
      allocate( sect%occu(sect%ndim, sect%ndim, sect%nops), stat=istat )
 
-     if (idoub == 2) then
+     if ( idoub == 2 ) then
          allocate( sect%doccu(sect%ndim, sect%ndim, sect%nops, sect%nops), stat=istat )
          sect%doccu = zero
-     endif
+     endif ! back if ( idoub == 2 ) block
 
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('alloc_one_sect', 'can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
  
 ! initialize them
      sect%eval = zero
@@ -168,12 +176,12 @@
      sect%occu = zero
   
 ! initialize fmat one by one
-     do i=1, sect%nops 
-         do j=0, 1
+     do i=1,sect%nops 
+         do j=0,1
              sect%fmat(i,j)%n = 0
              sect%fmat(i,j)%m = 0
-         enddo
-     enddo
+         enddo ! over j={0,1} loop
+     enddo ! over i={1,sect%nops} loop
   
      return
   end subroutine alloc_one_sect
@@ -195,11 +203,11 @@
      if ( associated(sect%doccu) )       deallocate(sect%doccu)
   
 ! deallocate fmat one by one
-     do i=1, sect%nops
+     do i=1,sect%nops
          do j=0,1
              call dealloc_one_fmat(sect%fmat(i,j))
-         enddo
-     enddo 
+         enddo ! over j={0,1} loop
+     enddo ! over i={1,sect%nops} loop
   
      return
   end subroutine dealloc_one_sect
@@ -218,15 +226,15 @@
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_sect', &
                           'can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     do i=1, nsect
+     do i=1,nsect
          sectors(i)%ndim = 0
          sectors(i)%nelec = 0
          sectors(i)%nops = norbs
          sectors(i)%istart = 0
-     enddo 
+     enddo ! over i={1,nsect} loop
 
      return
   end subroutine ctqmc_allocate_memory_sect
@@ -240,12 +248,12 @@
 
      if ( allocated(sectors) ) then
 ! first, loop over all the sectors and deallocate their component's memory
-         do i=1, nsect
+         do i=1,nsect
              call dealloc_one_sect(sectors(i))
-         enddo
+         enddo ! over i={1,nsect} loop
 ! then, deallocate memory of sectors itself
          deallocate(sectors)
-     endif
+     endif ! back if ( allocated(sectors) ) block
 
      return
   end subroutine ctqmc_deallocate_memory_sect
@@ -291,7 +299,7 @@
 ! we build a string from right to left, that is, beta <------- 0
 ! begin with S1: F1(S1)-->S2, F2(S2)-->S3, ... ,Fk(Sk)-->S1
 ! if find some Si==-1, cycle this sector immediately
-     do i=1, nsect
+     do i=1,nsect
          curr_sect_l = i
          curr_sect_r = i
          next_sect_l = i
@@ -299,16 +307,16 @@
          left = 0
          right = csize + 1
          do j=1,csize
-             if ( mod(j,2) == 1) then
+             if ( mod(j,2) == 1 ) then
                  left = left + 1
                  string(left,i) = curr_sect_l
                  vt = type_v( index_t_loc(left) )
                  vf = flvr_v( index_t_loc(left) ) 
                  next_sect_l = sectors(curr_sect_l)%next_sect(vf,vt)
-                 if (next_sect_l == -1 ) then
+                 if ( next_sect_l == -1 ) then
                      is_string(i) = .false. 
                      EXIT   ! finish check, exit
-                 endif
+                 endif ! back if ( next_sect_l == - 1 ) block
                  curr_sect_l = next_sect_l
              else
                  right = right - 1
@@ -316,19 +324,19 @@
                  vf = flvr_v( index_t_loc(right) ) 
                  vt = mod(vt+1,2)
                  next_sect_r = sectors(curr_sect_r)%next_sect(vf,vt)
-                 if (next_sect_r == -1 ) then
+                 if ( next_sect_r == -1 ) then
                      is_string(i) = .false. 
                      EXIT   ! finish check, exit
-                 endif
+                 endif ! back if ( next_sect_r == -1 ) block
                  string(right,i) = next_sect_r
                  curr_sect_r = next_sect_r
              endif ! back if ( mod(j,2) == 1 ) block
-         enddo  ! over j={1,csize} loop
+         enddo ! over j={1,csize} loop
 
 ! if it doesn't form a string, we cycle it, go to the next sector
-         if (is_string(i) .eqv. .false.) then
+         if ( .not. is_string(i) ) then
              cycle
-         endif
+         endif ! back if ( .not. is_string(i) ) block
 
 ! add the last sector to string, and check whether string(csize+1,i) == string(1,i)
 ! important for csize = 0
@@ -337,7 +345,7 @@
 ! this case will generate a non-diagonal block, it will not contribute to the trace 
          if ( next_sect_r /= next_sect_l ) then
              is_string(i) = .false.
-         endif
+         endif ! back if ( next_sect_r /= next_sect_l ) block
      enddo ! over i={1,nsect} loop
 
      return

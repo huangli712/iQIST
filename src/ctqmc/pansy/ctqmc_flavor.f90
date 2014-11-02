@@ -2566,17 +2566,17 @@
              sectors(i)%fprod(:,:,1) = zero
          else
              call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
-         endif
+         endif ! back if ( .not. is_string(i) ) block
          trace = trace + trace_sect(i)
-     enddo 
+     enddo ! over i={1,nsect} loop
 
 ! store the diagonal elements of final product in ddmat(:,1)
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
              ddmat(indx+j-1,1) = sectors(i)%fprod(j,j,1) 
-         enddo
-     enddo
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
 
      return
   end subroutine ctqmc_make_ztrace
@@ -2601,9 +2601,9 @@
 
 ! transfer the final matrix product from fprod(:,:,1) to fprod(:,:,2),
 ! the latter can be used to calculate nmat and nnmat
-     do i=1, nsect
+     do i=1,nsect
          sectors(i)%fprod(:,:,2) = sectors(i)%fprod(:,:,1)
-     enddo
+     enddo ! over i={1,nsect} loop
   
 ! save the data of each part
      call ctqmc_save_npart()
