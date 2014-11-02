@@ -798,6 +798,10 @@
 ! the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
+         write(mystd,*) 
+         write(mystd,'(4X,a,i11)') 'tot_num_sect:', nsect
+         write(mystd,'(4X,a,i11)') 'max_dim_sect:', mdim_sect
+         write(mystd,'(4X,a,f10.3)') 'ave_dim_sect:', adim_sect
      endif
 
      return
