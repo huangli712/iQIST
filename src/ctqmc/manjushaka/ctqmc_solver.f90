@@ -30,6 +30,7 @@
 !!!           06/09/2010 by li huang
 !!!           06/21/2010 by li huang
 !!!           08/20/2014 by yilin wang
+!!!           11/02/2014 by yilin wang
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
@@ -52,7 +53,7 @@
      use context, only : schi, sschi, ochi, oochi, ftau, g2_re, g2_im
      use context, only : h2_re, h2_im
 
-     use m_sector, only : ctqmc_deallocate_memory_occu
+     use m_sect, only : ctqmc_deallocate_memory_occu
      use m_npart, only : ctqmc_deallocate_memory_part
 
      implicit none
