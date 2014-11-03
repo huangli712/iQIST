@@ -68,7 +68,7 @@
 !!>>> service layer: evaluate ztrace ratio                              <<<
 !!-------------------------------------------------------------------------
 
-!!>>> cat_insert_ztrace: calculate the trace ratio for insert new create and 
+!!>>> cat_insert_ztrace: calculate the trace ratio for insert new create and
 !!>>> destroy operators on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
@@ -270,7 +270,7 @@
      return
   end subroutine cat_insert_ztrace
 
-!!>>> cat_remove_ztrace: calculate the trace ratio for remove old create 
+!!>>> cat_remove_ztrace: calculate the trace ratio for remove old create
 !!>>> and destroy operators on perturbation expansion series
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
@@ -741,8 +741,8 @@
 !!>>> service layer: update perturbation expansion series A             <<<
 !!-------------------------------------------------------------------------
 
-!!>>> try_insert_colour: generate create and destroy operators for selected 
-!!>>> flavor channel randomly, and then determinte their index address for 
+!!>>> try_insert_colour: generate create and destroy operators for selected
+!!>>> flavor channel randomly, and then determinte their index address for
 !!>>> the colour (determinant) part
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, epss
@@ -837,8 +837,8 @@
      return
   end subroutine try_insert_colour
 
-!!>>> try_remove_colour: select index address is and ie for selected flavor 
-!!>>> channel randomly, and then determine their imaginary time points for 
+!!>>> try_remove_colour: select index address is and ie for selected flavor
+!!>>> channel randomly, and then determine their imaginary time points for
 !!>>> the colour (determinant) part
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, epss
@@ -881,8 +881,8 @@
      return
   end subroutine try_remove_colour
 
-!!>>> try_lshift_colour: select index address isn for selected flavor channel 
-!!>>> randomly, and then determine its imaginary time points, shift it randomly, 
+!!>>> try_lshift_colour: select index address isn for selected flavor channel
+!!>>> randomly, and then determine its imaginary time points, shift it randomly,
 !!>>> and then evaluate its final index address for the colour (determinant) part
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
      use constants, only : dp, zero
@@ -966,8 +966,8 @@
      return
   end subroutine try_lshift_colour
 
-!!>>> try_rshift_colour: select index address ien for selected flavor channel 
-!!>>> randomly, and then determine its imaginary time points, shift it randomly, 
+!!>>> try_rshift_colour: select index address ien for selected flavor channel
+!!>>> randomly, and then determine its imaginary time points, shift it randomly,
 !!>>> and then evaluate its final index address for the colour (determinant) part
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
      use constants, only : dp, zero
@@ -1055,7 +1055,7 @@
 !!>>> service layer: update perturbation expansion series B             <<<
 !!-------------------------------------------------------------------------
 
-!!>>> cat_insert_colour: update the perturbation expansion series for insert 
+!!>>> cat_insert_colour: update the perturbation expansion series for insert
 !!>>> new create and destroy operators in the colour part actually
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
@@ -1127,7 +1127,7 @@
      return
   end subroutine cat_insert_colour
 
-!!>>> cat_remove_colour: update the perturbation expansion series for remove 
+!!>>> cat_remove_colour: update the perturbation expansion series for remove
 !!>>> old create and destroy operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
      use context, only : ckink, empty_s, empty_e, index_s, index_e
@@ -1174,7 +1174,7 @@
      return
   end subroutine cat_remove_colour
 
-!!>>> cat_lshift_colour: update the perturbation expansion series for lshift 
+!!>>> cat_lshift_colour: update the perturbation expansion series for lshift
 !!>>> an old create operators in the colour part actually
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
      use constants, only : dp
@@ -1230,7 +1230,7 @@
      return
   end subroutine cat_lshift_colour
 
-!!>>> cat_rshift_colour: update the perturbation expansion series for rshift 
+!!>>> cat_rshift_colour: update the perturbation expansion series for rshift
 !!>>> an old destroy operators in the colour part actually
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
      use constants, only : dp
@@ -1290,8 +1290,8 @@
 !!>>> service layer: update perturbation expansion series C             <<<
 !!-------------------------------------------------------------------------
 
-!!>>> try_insert_flavor: determine index addresses for the new create and 
-!!>>> destroy operators in the flavor part, and then determine whether they 
+!!>>> try_insert_flavor: determine index addresses for the new create and
+!!>>> destroy operators in the flavor part, and then determine whether they
 !!>>> can be inserted diagrammatically
   subroutine try_insert_flavor(flvr, is, ie, tau_start, tau_end, ladd)
      use constants, only : dp
@@ -1457,8 +1457,8 @@
      return
   end subroutine try_insert_flavor
 
-!!>>> try_remove_flavor: determine index addresses for the new create and 
-!!>>> destroy operators in the flavor part, and then determine whether they 
+!!>>> try_remove_flavor: determine index addresses for the new create and
+!!>>> destroy operators in the flavor part, and then determine whether they
 !!>>> can be inserted diagrammatically
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
      use constants, only : dp
@@ -1588,8 +1588,8 @@
      return
   end subroutine try_remove_flavor
 
-!!>>> try_lshift_flavor: determine index addresses for the old and new create 
-!!>>> operators in the flavor part, and then determine whether it can be shifted 
+!!>>> try_lshift_flavor: determine index addresses for the old and new create
+!!>>> operators in the flavor part, and then determine whether it can be shifted
 !!>>> diagrammatically
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
      use constants, only : dp
@@ -1747,8 +1747,8 @@
      return
   end subroutine try_lshift_flavor
 
-!!>>> try_rshift_flavor: determine index addresses for the old and new destroy 
-!!>>> operators in the flavor part, and then determine whether it can be shifted 
+!!>>> try_rshift_flavor: determine index addresses for the old and new destroy
+!!>>> operators in the flavor part, and then determine whether it can be shifted
 !!>>> diagrammatically
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
      use constants, only : dp
@@ -2474,10 +2474,10 @@
 !!-------------------------------------------------------------------------
 
 !!>>> ctqmc_make_ztrace: core subroutine of pansy
-!! (1) use good quantum numbers (GQNs) algorithm, split the total Hibert space 
+!! (1) use good quantum numbers (GQNs) algorithm, split the total Hibert space
 !!     to small subspace, the dimension of F-matrix will be smaller.
-!! (2) use divide and conqure algorithm, split the imaginary time axis into 
-!!     many parts, save the matrices products of that part, which may be used 
+!! (2) use divide and conqure algorithm, split the imaginary time axis into
+!!     many parts, save the matrices products of that part, which may be used
 !!     by next Monte Carlo move.
 !! NOTE: you should carefully choose npart in order to obtain the best speedup.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
@@ -2556,7 +2556,7 @@
      call ctqmc_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
 
 ! calculate the trace of each sector one by one
-! reset copy status to false, it is very important ! 
+! reset copy status to false, it is very important !
      is_cp = .false.
      trace_sect = zero
      trace = zero
@@ -2574,7 +2574,7 @@
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             ddmat(indx+j-1,1) = sectors(i)%fprod(j,j,1) 
+             ddmat(indx+j-1,1) = sectors(i)%fprod(j,j,1)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -2604,7 +2604,7 @@
      do i=1,nsect
          sectors(i)%fprod(:,:,2) = sectors(i)%fprod(:,:,1)
      enddo ! over i={1,nsect} loop
-  
+
 ! save the data of each part
      call ctqmc_save_npart()
 
@@ -2615,7 +2615,7 @@
 !!>>> service layer: utility subroutines to look up in the flavor       <<<
 !!-------------------------------------------------------------------------
 
-!!>>> ctqmc_make_equate: to determine whether there exists an operator whose 
+!!>>> ctqmc_make_equate: to determine whether there exists an operator whose
 !!>>> imaginary time is equal to time
   subroutine ctqmc_make_equate(flvr, time, have)
      use constants, only : dp, epss
@@ -2658,7 +2658,7 @@
      return
   end subroutine ctqmc_make_equate
 
-!!>>> ctqmc_make_search: determine index address of operators in the 
+!!>>> ctqmc_make_search: determine index address of operators in the
 !!>>> flavor part using bisection algorithm
   subroutine ctqmc_make_search(addr, ndim, time)
      use constants, only : dp
@@ -2714,7 +2714,7 @@
 !!>>> service layer: utility subroutines to build colour and flavor     <<<
 !!-------------------------------------------------------------------------
 
-!!>>> ctqmc_make_colour: generate perturbation expansion series for the colour 
+!!>>> ctqmc_make_colour: generate perturbation expansion series for the colour
 !!>>> (determinant) part, it should be synchronized with the flavor part
   subroutine ctqmc_make_colour(flvr, kink)
      use constants, only : dp
@@ -2810,7 +2810,7 @@
 !!>>> service layer: utility subroutines to show the colour and flavor  <<<
 !!-------------------------------------------------------------------------
 
-!!>>> ctqmc_make_display: display operators information (include colour and 
+!!>>> ctqmc_make_display: display operators information (include colour and
 !!>>> flavor parts) on the screen, only used to debug the code
   subroutine ctqmc_make_display(show_type)
      use constants, only : mystd

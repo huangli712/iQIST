@@ -14,8 +14,8 @@
 !!! history : 07/09/2014  by yilin wang
 !!!           07/19/2014  by yilin wang
 !!!           08/18/2014  by yilin wang
-!!!           11/01/2014  by yilin wang 
-!!!           11/02/2014  by yilin wang 
+!!!           11/01/2014  by yilin wang
+!!!           11/02/2014  by yilin wang
 !!! purpose : define data structure for good quantum numbers (GQNs) algorithm
 !!! status  : unstable
 !!! comment :
@@ -26,9 +26,9 @@
      use constants, only : dp, zero
      use control, only : idoub, mkink, norbs
      use context, only : type_v, flvr_v
- 
+
      implicit none
-  
+
 ! a matrix type
      type :: t_matrix
 
@@ -39,16 +39,16 @@
          real(dp), dimension(:,:), pointer :: item => null()
 
      end type t_matrix
-  
 
-! a sector type contains all the information of a subspace of H_{loc} 
+
+! a sector type contains all the information of a subspace of H_{loc}
      type :: t_sector
 
 ! dimension
          integer :: ndim
 
 ! total number of electrons
-         integer :: nelec 
+         integer :: nelec
 
 ! number of fermion operators, it should be equal to norbs
          integer :: nops
@@ -57,11 +57,11 @@
          integer :: istart
 
 ! eigenvalues
-         real(dp), dimension(:), pointer :: eval => null() 
+         real(dp), dimension(:), pointer :: eval => null()
 
 ! next sector it points to when a fermion operator acts on this sector, F|i> --> |j>
 ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-! it is -1 if goes outside of the Hilbert space, 
+! it is -1 if goes outside of the Hilbert space,
 ! otherwise, it is the index of next sector
          integer, dimension(:,:), pointer :: next_sect => null()
 
@@ -73,14 +73,14 @@
 ! final products of matrices, which will be used to calculate nmat and nnmat
          real(dp), dimension(:,:,:), pointer :: fprod => null()
 
-! matrix of occupancy operator c^{\dagger}c 
+! matrix of occupancy operator c^{\dagger}c
          real(dp), dimension(:,:,:), pointer :: occu => null()
 
 ! matrix of double occupancy operator c^{\dagger}cc^{\dagger}c
          real(dp), dimension(:,:,:,:), pointer :: doccu => null()
 
      end type t_sector
-     
+
 ! some global variables
 ! allocating status flag
      integer, private :: istat
@@ -100,7 +100,7 @@
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
-    
+
      public :: alloc_one_mat
      public :: dealloc_one_mat
      public :: alloc_one_sect
@@ -110,16 +110,16 @@
      public :: ctqmc_make_string
 
   contains ! encapsulated functionality
-  
+
 !!>>> alloc_one_mat: allocate one matrix
   subroutine alloc_one_mat(mat)
      implicit none
-  
+
 ! external variables
      type(t_matrix), intent(inout) :: mat
-  
+
      allocate( mat%item(mat%n, mat%m), stat=istat )
-  
+
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('alloc_one_mat', 'can not allocate enough memory')
@@ -127,32 +127,32 @@
 
 ! initialize it
      mat%item = zero
-  
+
      return
   end subroutine alloc_one_mat
-  
+
 !!>>> dealloc_one_mat: deallocate one matrix
   subroutine dealloc_one_mat(mat)
      implicit none
-  
+
 ! external variables
      type(t_matrix), intent(inout) :: mat
-  
+
      if ( associated(mat%item) ) deallocate(mat%item)
-  
+
      return
   end subroutine dealloc_one_mat
-  
+
 !!>>> alloc_one_sect: allocate memory for one sector
   subroutine alloc_one_sect(sect)
      implicit none
-  
+
 ! external variables
      type(t_sector), intent(inout) :: sect
-  
+
 ! local variables
      integer :: i, j
-  
+
      allocate( sect%eval(sect%ndim),                      stat=istat )
      allocate( sect%next_sect(sect%nops,0:1),             stat=istat )
      allocate( sect%fmat(sect%nops,0:1),                  stat=istat )
@@ -169,48 +169,48 @@
      if ( istat /= 0 ) then
          call s_print_error('alloc_one_sect', 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
- 
+
 ! initialize them
      sect%eval = zero
      sect%next_sect = 0
      sect%fprod = zero
      sect%occu = zero
-  
+
 ! initialize fmat one by one
-     do i=1,sect%nops 
+     do i=1,sect%nops
          do j=0,1
              sect%fmat(i,j)%n = 0
              sect%fmat(i,j)%m = 0
              sect%fmat(i,j)%item => null()
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
-  
+
      return
   end subroutine alloc_one_sect
-  
+
 !!>>> dealloc_one_sect: deallocate memory for one sector
   subroutine dealloc_one_sect(sect)
      implicit none
-  
+
 ! external variables
      type(t_sector), intent(inout) :: sect
-  
-! local variables  
+
+! local variables
      integer :: i, j
-  
+
      if ( associated(sect%eval) )        deallocate(sect%eval)
      if ( associated(sect%next_sect) )   deallocate(sect%next_sect)
      if ( associated(sect%fprod) )       deallocate(sect%fprod)
      if ( associated(sect%occu) )        deallocate(sect%occu)
      if ( associated(sect%doccu) )       deallocate(sect%doccu)
-  
+
 ! deallocate fmat one by one
      do i=1,sect%nops
          do j=0,1
              call dealloc_one_mat(sect%fmat(i,j))
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
-  
+
      return
   end subroutine dealloc_one_sect
 
@@ -317,21 +317,21 @@
                  left = left + 1
                  string(left,i) = curr_sect_l
                  vt = type_v( index_t_loc(left) )
-                 vf = flvr_v( index_t_loc(left) ) 
+                 vf = flvr_v( index_t_loc(left) )
                  next_sect_l = sectors(curr_sect_l)%next_sect(vf,vt)
                  if ( next_sect_l == -1 ) then
-                     is_string(i) = .false. 
+                     is_string(i) = .false.
                      EXIT   ! finish check, exit
                  endif ! back if ( next_sect_l == - 1 ) block
                  curr_sect_l = next_sect_l
              else
                  right = right - 1
                  vt = type_v( index_t_loc(right) )
-                 vf = flvr_v( index_t_loc(right) ) 
+                 vf = flvr_v( index_t_loc(right) )
                  vt = mod(vt+1,2)
                  next_sect_r = sectors(curr_sect_r)%next_sect(vf,vt)
                  if ( next_sect_r == -1 ) then
-                     is_string(i) = .false. 
+                     is_string(i) = .false.
                      EXIT   ! finish check, exit
                  endif ! back if ( next_sect_r == -1 ) block
                  string(right,i) = next_sect_r
@@ -348,7 +348,7 @@
 ! important for csize = 0
          string(csize+1,i) = i
 
-! this case will generate a non-diagonal block, it will not contribute to the trace 
+! this case will generate a non-diagonal block, it will not contribute to the trace
          if ( next_sect_r /= next_sect_l ) then
              is_string(i) = .false.
          endif ! back if ( next_sect_r /= next_sect_l ) block
@@ -356,5 +356,5 @@
 
      return
   end subroutine ctqmc_make_string
- 
+
   end module m_sector

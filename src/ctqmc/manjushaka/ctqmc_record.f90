@@ -62,7 +62,7 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> ctqmc_record_gtau: record the impurity green's function in 
+!!>>> ctqmc_record_gtau: record the impurity green's function in
 !!>>> imaginary time axis
   subroutine ctqmc_record_gtau()
      use constants, only : dp, zero, one, two, pi
@@ -261,7 +261,7 @@
   end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
-!!>>> ctqmc_record_ftau: record the auxiliary correlation 
+!!>>> ctqmc_record_ftau: record the auxiliary correlation
 !!>>> function in imaginary time axis
   subroutine ctqmc_record_ftau()
      use constants
@@ -276,7 +276,7 @@
      return
   end subroutine ctqmc_record_ftau
 
-!!>>> ctqmc_record_grnf: record the impurity green's 
+!!>>> ctqmc_record_grnf: record the impurity green's
 !!>>> function in matsubara frequency space
   subroutine ctqmc_record_grnf()
      use control, only : norbs, nfreq
@@ -303,7 +303,7 @@
      return
   end subroutine ctqmc_record_grnf
 
-!!>>> ctqmc_record_hist: record the histogram of 
+!!>>> ctqmc_record_hist: record the histogram of
 !!>>> perturbation expansion series
   subroutine ctqmc_record_hist()
      use control, only : mkink
@@ -324,8 +324,8 @@
      return
   end subroutine ctqmc_record_hist
 
-!!>>> ctqmc_record_nmat: record the occupation matrix, 
-!!>>> double occupation matrix, and auxiliary physical 
+!!>>> ctqmc_record_nmat: record the occupation matrix,
+!!>>> double occupation matrix, and auxiliary physical
 !!>>> observables simulataneously
   subroutine ctqmc_record_nmat()
      use constants, only : dp, zero, one
@@ -391,11 +391,11 @@
              if ( .not. is_string(i,2) ) cycle
              call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
                          one,  fprod(i,2)%item,                      sectors(i)%ndim, &
-                               occu(flvr,i)%item,                    sectors(i)%ndim, & 
+                               occu(flvr,i)%item,                    sectors(i)%ndim, &
                          zero, mat_t,                                mdim_sect_t      )
 
              do j=1,sectors(i)%ndim
-                 raux1 = raux1 + mat_t(j,j)    
+                 raux1 = raux1 + mat_t(j,j)
              enddo ! over j={1,sectors(i)%ndim} loop
          enddo ! over i={1,nsect} loop
          nvec(flvr) = raux1 / raux2
@@ -416,11 +416,11 @@
                      if ( .not. is_string(j,2) ) cycle
                      call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
                                   one,  fprod(j,2)%item,                     sectors(j)%ndim, &
-                                        doccu(flvr,i,j)%item,                sectors(j)%ndim, & 
+                                        doccu(flvr,i,j)%item,                sectors(j)%ndim, &
                                   zero, mat_t,                               mdim_sect_t      )
 
                      do k=1,sectors(j)%ndim
-                         raux1 = raux1 + mat_t(k,k)    
+                         raux1 = raux1 + mat_t(k,k)
                      enddo ! over k={1,sectors(j)%ndim} loop
                  enddo ! over j={1,nsect} loop
                  nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
@@ -430,17 +430,17 @@
                      if ( .not. is_string(j,2) ) cycle
                      call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
                                  one,  fprod(j,2)%item,                      sectors(j)%ndim, &
-                                       doccu(i,flvr,j)%item,                 sectors(j)%ndim, & 
+                                       doccu(i,flvr,j)%item,                 sectors(j)%ndim, &
                                  zero, mat_t,                                mdim_sect_t      )
 
                      do k=1,sectors(j)%ndim
-                         raux1 = raux1 + mat_t(k,k)    
+                         raux1 = raux1 + mat_t(k,k)
                      enddo ! over k={1,sectors(j)%ndim} loop
                  enddo ! over j={1,nsect} loop
                  nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
              enddo ! over i={flvr+1,norbs} loop
          enddo ! over flvr={1,norbs-1} loop
-     else 
+     else
          nnmat = zero
      endif ! back if ( idoub == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -769,7 +769,7 @@
   end subroutine ctqmc_reduce_grnf
 
 !!>>> ctqmc_reduce_hist: reduce the hist from all children processes
-!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is 
+!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is
 !!>>> important to avoid data overflow in them
   subroutine ctqmc_reduce_hist(hist_mpi)
      use control, only : mkink, nprocs
@@ -807,7 +807,7 @@
      return
   end subroutine ctqmc_reduce_hist
 
-!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from 
+!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from
 !!>>> all children processes
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
      use constants, only : dp, zero
@@ -853,7 +853,7 @@
      return
   end subroutine ctqmc_reduce_nmat
 
-!!>>> ctqmc_reduce_schi: reduce the schi and sschi from 
+!!>>> ctqmc_reduce_schi: reduce the schi and sschi from
 !!>>> all children processes
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
      use constants, only : dp, zero
@@ -899,7 +899,7 @@
      return
   end subroutine ctqmc_reduce_schi
 
-!!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from 
+!!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from
 !!>>> all children processes
   subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
      use constants, only : dp, zero
@@ -945,7 +945,7 @@
      return
   end subroutine ctqmc_reduce_ochi
 
-!!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from 
+!!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from
 !!>>> all children processes
   subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
      use constants, only : dp, zero
@@ -991,7 +991,7 @@
      return
   end subroutine ctqmc_reduce_twop
 
-!!>>> ctqmc_reduce_vrtx: reduce the h2_re_mpi and h2_im_mpi from 
+!!>>> ctqmc_reduce_vrtx: reduce the h2_re_mpi and h2_im_mpi from
 !!>>> all children processes
   subroutine ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
      use constants, only : dp, zero
@@ -1037,7 +1037,7 @@
      return
   end subroutine ctqmc_reduce_vrtx
 
-!!>>> ctqmc_reduce_prob: reduce the prob from 
+!!>>> ctqmc_reduce_prob: reduce the prob from
 !!>>> all children processes
   subroutine ctqmc_reduce_prob(prob_mpi)
      use constants, only : dp, zero
@@ -1293,7 +1293,7 @@
      return
   end subroutine ctqmc_symm_grnf
 
-!!>>> ctqmc_smth_sigf: smooth impurity self-energy 
+!!>>> ctqmc_smth_sigf: smooth impurity self-energy
 !!>>> function in low frequency region
   subroutine ctqmc_smth_sigf(sigf)
      use constants, only : dp, czero
@@ -1364,7 +1364,7 @@
      return
   end subroutine ctqmc_smth_sigf
 
-!!>>> ctqmc_make_gtau: build imaginary green's function using 
+!!>>> ctqmc_make_gtau: build imaginary green's function using
 !!>>> orthogonal polynomial representation
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
      use constants, only : dp, zero, one, two, pi
@@ -1548,7 +1548,7 @@
   end subroutine cat_make_gtau3
   end subroutine ctqmc_make_gtau
 
-!!>>> ctqmc_make_ftau: build auxiliary correlation function using 
+!!>>> ctqmc_make_ftau: build auxiliary correlation function using
 !!>>> orthogonal polynomial representation
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
      use constants, only : dp, zero, two
@@ -1677,10 +1677,10 @@
   end subroutine cat_make_ftau3
   end subroutine ctqmc_make_ftau
 
-!!>>> ctqmc_make_hub1: build atomic green's function and self-energy function 
-!!>>> using improved Hubbard-I approximation, and then make interpolation for 
-!!>>> self-energy function between low frequency QMC data and high frequency 
-!!>>> Hubbard-I approximation data, the full impurity green's function can be 
+!!>>> ctqmc_make_hub1: build atomic green's function and self-energy function
+!!>>> using improved Hubbard-I approximation, and then make interpolation for
+!!>>> self-energy function between low frequency QMC data and high frequency
+!!>>> Hubbard-I approximation data, the full impurity green's function can be
 !!>>> obtained by using dyson's equation finally
   subroutine ctqmc_make_hub1()
      use constants, only : dp, zero, czero, one, epst
@@ -1733,8 +1733,8 @@
              indx2 = sectors(kk)%istart
              do l=1,sectors(k)%ndim
                  do m=1,sectors(kk)%ndim
-                     ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))    
-!>>>                     if ( abs(ob) < epst ) cycle 
+                     ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))
+!>>>                     if ( abs(ob) < epst ) cycle
                      do j=1,mfreq
                          cb = cmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
                          ghub(j,i) = ghub(j,i) + ob / cb
@@ -1845,9 +1845,9 @@
      return
   end subroutine ctqmc_make_hub1
 
-!!>>> ctqmc_make_hub2: build atomic green's function and self-energy function 
-!!>>> using improved Hubbard-I approximation, and then make forward fourier 
-!!>>> transformation for impurity green's function and auxiliary correlation 
+!!>>> ctqmc_make_hub2: build atomic green's function and self-energy function
+!!>>> using improved Hubbard-I approximation, and then make forward fourier
+!!>>> transformation for impurity green's function and auxiliary correlation
 !!>>> function. then the final self-energy function is obtained by analytical formula.
   subroutine ctqmc_make_hub2()
      use constants

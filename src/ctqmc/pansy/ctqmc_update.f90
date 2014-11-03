@@ -58,7 +58,7 @@
 !!>>> driver layer: updating perturbation expansion series              <<<
 !!-------------------------------------------------------------------------
 
-!!>>> ctqmc_insert_kink: insert new create and destroy operators 
+!!>>> ctqmc_insert_kink: insert new create and destroy operators
 !!>>> in the perturbation expansion series
   subroutine ctqmc_insert_kink()
      use constants, only : dp, zero, one
@@ -147,7 +147,7 @@
 
 ! calculate the transition probability for insert new create and destroy operators
      p = deter_ratio * trace_ratio * ( beta / real( ckink + 1 ) ) ** 2
-    
+
 ! determine pass, using important sampling algorithm (metropolis algorithm)
      pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 ! if the update action is accepted
@@ -192,7 +192,7 @@
      return
   end subroutine ctqmc_insert_kink
 
-!!>>> ctqmc_remove_kink: remove old create and destroy operators 
+!!>>> ctqmc_remove_kink: remove old create and destroy operators
 !!>>> in the perturbation expansion series
   subroutine ctqmc_remove_kink()
      use constants, only : dp, zero, one
@@ -327,7 +327,7 @@
      return
   end subroutine ctqmc_remove_kink
 
-!!>>> ctqmc_lshift_kink: shift old create operators in the perturbation 
+!!>>> ctqmc_lshift_kink: shift old create operators in the perturbation
 !!>>> expansion series
   subroutine ctqmc_lshift_kink()
      use constants, only : dp, zero, one
@@ -456,7 +456,7 @@
      return
   end subroutine ctqmc_lshift_kink
 
-!!>>> ctqmc_rshift_kink: shift old destroy operators in the perturbation 
+!!>>> ctqmc_rshift_kink: shift old destroy operators in the perturbation
 !!>>> expansion series
   subroutine ctqmc_rshift_kink()
      use constants, only : dp, zero, one
@@ -585,7 +585,7 @@
      return
   end subroutine ctqmc_rshift_kink
 
-!!>>> ctqmc_reflip_kink: perform a global update, exchange the states 
+!!>>> ctqmc_reflip_kink: perform a global update, exchange the states
 !!>>> between spin up and spin down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
      use constants, only : dp, one
@@ -915,7 +915,7 @@
      return
   end subroutine ctqmc_reflip_kink
 
-!!>>> ctqmc_reload_kink: global update all operators in the perturbation 
+!!>>> ctqmc_reload_kink: global update all operators in the perturbation
 !!>>> expansion series
   subroutine ctqmc_reload_kink()
      use control, only : norbs
@@ -945,14 +945,14 @@
 !!>>> service layer: update M and G matrices                            <<<
 !!-------------------------------------------------------------------------
 
-!!>>> cat_insert_matrix: update the mmat matrix and gmat matrix for insert 
+!!>>> cat_insert_matrix: update the mmat matrix and gmat matrix for insert
 !!>>> new create and destroy operators
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
      use constants, only : dp, one, zero, czero
      use control, only : nfreq, beta
 
      use context, only : ckink, lspace, rspace, lsaves, rsaves, mmat, gmat
-     use context, only : index_s, index_e, exp_s, exp_e 
+     use context, only : index_s, index_e, exp_s, exp_e
 
      implicit none
 
@@ -1072,7 +1072,7 @@
      return
   end subroutine cat_insert_matrix
 
-!!>>> cat_remove_matrix: update the mmat matrix and gmat matrix 
+!!>>> cat_remove_matrix: update the mmat matrix and gmat matrix
 !!>>> for remove old create and destroy operators
   subroutine cat_remove_matrix(flvr, is, ie)
      use constants, only : dp, czero, one
@@ -1164,7 +1164,7 @@
      return
   end subroutine cat_remove_matrix
 
-!!>>> cat_lshift_matrix: update the mmat matrix and gmat matrix for shift old 
+!!>>> cat_lshift_matrix: update the mmat matrix and gmat matrix for shift old
 !!>>> create operators
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, czero, zero
@@ -1352,7 +1352,7 @@
      return
   end subroutine cat_lshift_matrix
 
-!!>>> cat_rshift_matrix: update the mmat matrix and gmat matrix for shift old 
+!!>>> cat_rshift_matrix: update the mmat matrix and gmat matrix for shift old
 !!>>> destroy operators
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp, czero, zero
@@ -1540,9 +1540,9 @@
      return
   end subroutine cat_rshift_matrix
 
-!!>>> cat_reflip_matrix: global flip the time_s, time_e, 
-!!>>> mmat matrix, gmat matrix, and other related global 
-!!>>> variables between spin up and spin down states. it 
+!!>>> cat_reflip_matrix: global flip the time_s, time_e,
+!!>>> mmat matrix, gmat matrix, and other related global
+!!>>> variables between spin up and spin down states. it
 !!>>> is used to avoid trapped by unphysical phase
   subroutine cat_reflip_matrix(fup, fdn, kmax)
      use control, only : mkink, nfreq
@@ -1655,13 +1655,13 @@
 
   end subroutine cat_reflip_matrix
 
-!!>>> cat_reload_matrix: global update the mmat matrix 
+!!>>> cat_reload_matrix: global update the mmat matrix
 !!>>> and gmat matrix from scratch
   subroutine cat_reload_matrix(flvr)
      use constants, only : dp, zero, czero
      use control, only : beta, nfreq
 
-     use context, only : rank, mmat, gmat, index_s, index_e 
+     use context, only : rank, mmat, gmat, index_s, index_e
      use context, only : time_s, time_e, exp_s, exp_e
 
      implicit none
@@ -1740,7 +1740,7 @@
 !!>>> service layer: evaluate the determinant ratio                     <<<
 !!-------------------------------------------------------------------------
 
-!!>>> cat_insert_detrat: calculate the determinant ratio for insert new 
+!!>>> cat_insert_detrat: calculate the determinant ratio for insert new
 !!>>> create and destroy operators
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero
@@ -1828,7 +1828,7 @@
      return
   end subroutine cat_insert_detrat
 
-!!>>> cat_remove_detrat: calculate the determinant ratio for 
+!!>>> cat_remove_detrat: calculate the determinant ratio for
 !!>>> remove old create and destroy operators
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
      use constants, only : dp
