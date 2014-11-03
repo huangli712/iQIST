@@ -1,13 +1,13 @@
 !!!-------------------------------------------------------------------------
 !!! project : pansy
-!!! program : m_sect module
-!!!           m_sect@alloc_one_fmat
-!!!           m_sect@dealloc_one_fmat
-!!!           m_sect@alloc_one_sect
-!!!           m_sect@dealloc_one_sect
-!!!           m_sect@ctqmc_allocate_memory_sect
-!!!           m_sect@ctqmc_deallocate_memory_sect
-!!!           m_sect@ctqmc_make_string
+!!! program : m_sector module
+!!!           m_sector@alloc_one_mat
+!!!           m_sector@dealloc_one_mat
+!!!           m_sector@alloc_one_sect
+!!!           m_sector@dealloc_one_sect
+!!!           m_sector@ctqmc_allocate_memory_sect
+!!!           m_sector@ctqmc_deallocate_memory_sect
+!!!           m_sector@ctqmc_make_string
 !!! source  : mod_control.f90
 !!! type    : module
 !!! authors : yilin wang (email: qhwyl2006@126.com)
@@ -21,8 +21,8 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> m_sect: define the data structure for good quantum numbers (GQNs) algorithm
-  module m_sect
+!!>>> m_sector: define the data structure for good quantum numbers (GQNs) algorithm
+  module m_sector
      use constants, only : dp, zero
      use control, only : idoub, mkink, norbs
      use context, only : type_v, flvr_v
@@ -30,7 +30,7 @@
      implicit none
   
 ! F-matrix between any two sectors, it is a rectangle matrix
-     type :: t_fmat
+     type :: t_matrix
 
 ! dimensions
          integer :: n, m
@@ -38,11 +38,11 @@
 ! items
          real(dp), dimension(:,:), pointer :: item => null()
 
-     end type t_fmat
+     end type t_matrix
   
 
 ! t_sect type contains all the information of a subspace of H_{loc} 
-     type :: t_sect
+     type :: t_sector
 
 ! dimension
          integer :: ndim
@@ -68,7 +68,7 @@
 ! F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
 ! fmat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
-         type(t_fmat), dimension(:,:), pointer :: fmat => null()
+         type(t_matrix), dimension(:,:), pointer :: fmat => null()
 
 ! final products of matrices, which will be used to calculate nmat and nnmat
          real(dp), dimension(:,:,:), pointer :: fprod => null()
@@ -79,7 +79,7 @@
 ! matrix of double occupancy operator c^{\dagger}cc^{\dagger}c
          real(dp), dimension(:,:,:,:), pointer :: doccu => null()
 
-     end type t_sect
+     end type t_sector
      
 ! some global variables
 ! status flag
@@ -95,14 +95,14 @@
      real(dp), public, save :: adim_sect
 
 ! array of t_sect contains all the sectors
-     type(t_sect), public, save, allocatable :: sectors(:)
+     type(t_sector), public, save, allocatable :: sectors(:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
     
-     public :: alloc_one_fmat
-     public :: dealloc_one_fmat
+     public :: alloc_one_mat
+     public :: dealloc_one_mat
      public :: alloc_one_sect
      public :: dealloc_one_sect
      public :: ctqmc_allocate_memory_sect
@@ -111,44 +111,44 @@
 
   contains ! encapsulated functionality
   
-!!>>> alloc_one_fmat: allocate one fmat
-  subroutine alloc_one_fmat(fmat)
+!!>>> alloc_one_mat: allocate one matrix
+  subroutine alloc_one_mat(mat)
      implicit none
   
 ! external variables
-     type(t_fmat), intent(inout) :: fmat
+     type(t_matrix), intent(inout) :: mat
   
-     allocate( fmat%item(fmat%n, fmat%m), stat=istat )
+     allocate( mat%item(mat%n, mat%m), stat=istat )
   
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_fmat', 'can not allocate enough memory')
+         call s_print_error('alloc_one_mat', 'can not allocate enough memory')
      endif ! back if ( istat /=0 ) block
 
 ! initialize it
-     fmat%item = zero
+     mat%item = zero
   
      return
-  end subroutine alloc_one_fmat
+  end subroutine alloc_one_mat
   
-!!>>> dealloc_one_fmat: deallocate one fmat
-  subroutine dealloc_one_fmat(fmat)
+!!>>> dealloc_one_mat: deallocate one matrix
+  subroutine dealloc_one_mat(mat)
      implicit none
   
 ! external variables
-     type(t_fmat), intent(inout) :: fmat
+     type(t_matrix), intent(inout) :: mat
   
-     if ( associated(fmat%item) ) deallocate(fmat%item)
+     if ( associated(mat%item) ) deallocate(mat%item)
   
      return
-  end subroutine dealloc_one_fmat
+  end subroutine dealloc_one_mat
   
 !!>>> alloc_one_sector: allocate memory for one sector
   subroutine alloc_one_sect(sect)
      implicit none
   
 ! external variables
-     type(t_sect), intent(inout) :: sect
+     type(t_sector), intent(inout) :: sect
   
 ! local variables
      integer :: i, j
@@ -191,7 +191,7 @@
      implicit none
   
 ! external variables
-     type(t_sect), intent(inout) :: sect
+     type(t_sector), intent(inout) :: sect
   
 ! local variables  
      integer :: i, j
@@ -205,7 +205,7 @@
 ! deallocate fmat one by one
      do i=1,sect%nops
          do j=0,1
-             call dealloc_one_fmat(sect%fmat(i,j))
+             call dealloc_one_mat(sect%fmat(i,j))
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
   
@@ -351,4 +351,4 @@
      return
   end subroutine ctqmc_make_string
  
-  end module m_sect
+  end module m_sector

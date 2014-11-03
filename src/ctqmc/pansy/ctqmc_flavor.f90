@@ -2485,8 +2485,8 @@
      use control, only : mkink, ncfgs
      use context, only : expt_t, index_v, index_t, ddmat
 
-     use m_sect, only : nsect, sectors
-     use m_sect, only : ctqmc_make_string
+     use m_sector, only : nsect, sectors
+     use m_sector, only : ctqmc_make_string
 
      use m_npart, only : is_cp
      use m_npart, only : ctqmc_make_npart
@@ -2584,7 +2584,7 @@
 !!>>> ctqmc_make_evolve: used to update the operator traces of the modified part
   subroutine ctqmc_make_evolve()
      use context, only : matrix_ptrace, matrix_ntrace, ddmat
-     use m_sect, only : nsect, sectors
+     use m_sector, only : nsect, sectors
      use m_npart, only : ctqmc_save_npart
 
      implicit none

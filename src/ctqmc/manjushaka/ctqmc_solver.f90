@@ -53,7 +53,7 @@
      use context, only : schi, sschi, ochi, oochi, ftau, g2_re, g2_im
      use context, only : h2_re, h2_im
 
-     use m_sect, only : ctqmc_deallocate_memory_occu
+     use m_sector, only : ctqmc_deallocate_memory_occu
      use m_npart, only : ctqmc_deallocate_memory_part
 
      implicit none

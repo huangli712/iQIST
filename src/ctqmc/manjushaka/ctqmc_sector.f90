@@ -1,10 +1,8 @@
 !!!-------------------------------------------------------------------------
 !!! project : manjushaka
 !!! program : m_sector  module
-!!!           m_sector@alloc_one_fmat
-!!!           m_sector@dealloc_one_fmat
-!!!           m_sector@alloc_one_sqrmat
-!!!           m_sector@dealloc_one_sqrmat
+!!!           m_sector@alloc_one_mat
+!!!           m_sector@dealloc_one_mat
 !!!           m_sector@alloc_one_sect
 !!!           m_sector@dealloc_one_sect
 !!!           m_sector@ctqmc_allocate_memory_sect
@@ -29,8 +27,8 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> m_sect: define the data structure for good quantum numbers (GQNs) algorithm
-  module m_sect
+!!>>> m_sector: define the data structure for good quantum numbers (GQNs) algorithm
+  module m_sector
      use constants, only : dp, zero, one, mystd, mytmp
      use control, only : idoub, itrun, myid, master
      use control, only : mkink, norbs, nmini, nmaxi
@@ -40,8 +38,8 @@
 
      implicit none
   
-! F-matrix between any two sectors, it is a rectangle matrix
-     type :: t_fmat
+! a matrix type
+     type :: t_matrix
 
 ! dimensions
          integer :: n, m
@@ -49,21 +47,10 @@
 ! items
          real(dp), dimension(:,:), pointer :: item => null()
 
-     end type t_fmat
-
-! square matrix
-     type :: t_sqrmat
-
-! dimension
-         integer :: n
-
-! items 
-         real(dp), dimension(:,:), pointer :: item => null()
-
-     end type t_sqrmat
+     end type t_matrix
 
  ! t_sect type contains all the information of a subspace of H_{loc} 
-     type :: t_sect
+     type :: t_sector
 
 ! dimension
          integer :: ndim
@@ -92,9 +79,9 @@
 ! F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
 ! fmat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
-         type(t_fmat), dimension(:,:), pointer :: fmat => null()
+         type(t_matrix), dimension(:,:), pointer :: fmat => null()
 
-     end type t_sect
+     end type t_sector
     
 ! some global variables
 ! status flag
@@ -119,7 +106,7 @@
      real(dp), public, save :: adim_sect_t
 
 ! array of t_sect contains all the sectors
-     type(t_sect), public, save, allocatable :: sectors(:)
+     type(t_sector), public, save, allocatable :: sectors(:)
 
 ! probability of each sector, used to truncate high energy states
      real(dp), public, save, allocatable :: prob_sect(:)
@@ -131,22 +118,20 @@
      logical, public, save, allocatable :: is_string(:,:)
 
 ! final product of matrices multiplications, which will be used to calculate nmat
-     type(t_sqrmat), public, save, allocatable :: fprod(:,:)
+     type(t_matrix), public, save, allocatable :: fprod(:,:)
 
 ! matrix of occupancy operator c^{\dagger}c 
-     type(t_sqrmat), public, save, allocatable :: occu(:,:)
+     type(t_matrix), public, save, allocatable :: occu(:,:)
 
 ! matrix of double occupancy operator c^{\dagger}cc^{\dagger}c
-     type(t_sqrmat), public, save, allocatable :: doccu(:,:,:)
+     type(t_matrix), public, save, allocatable :: doccu(:,:,:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
     
-     public :: alloc_one_fmat
-     public :: dealloc_one_fmat
-     public :: alloc_one_sqrmat
-     public :: dealloc_one_sqrmat
+     public :: alloc_one_mat
+     public :: dealloc_one_mat
      public :: alloc_one_sect
      public :: dealloc_one_sect
      public :: ctqmc_allocate_memory_sect
@@ -160,77 +145,44 @@
 
   contains ! encapsulated functionality
 
-!!>>> alloc_one_fmat: allocate one fmat
-  subroutine alloc_one_fmat(fmat)
+!!>>> alloc_one_mat: allocate one mat
+  subroutine alloc_one_mat(mat)
      implicit none
   
 ! external variables
-     type(t_fmat), intent(inout) :: fmat
+     type(t_matrix), intent(inout) :: mat
   
-     allocate( fmat%item(fmat%n, fmat%m), stat=istat )
+     allocate( mat%item(mat%n, mat%m), stat=istat )
   
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_fmat', 'can not allocate enough memory')
+         call s_print_error('alloc_one_mat', 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize it
-     fmat%item = zero
+     mat%item = zero
   
      return
-  end subroutine alloc_one_fmat
+  end subroutine alloc_one_mat
   
-!!>>> dealloc_one_fmat: deallocate one fmat
-  subroutine dealloc_one_fmat(fmat)
+!!>>> dealloc_one_mat: deallocate one mat
+  subroutine dealloc_one_mat(mat)
      implicit none
   
 ! external variables
-     type(t_fmat), intent(inout) :: fmat
+     type(t_matrix), intent(inout) :: mat
   
-     if ( associated(fmat%item) ) deallocate(fmat%item)
+     if ( associated(mat%item) ) deallocate(mat%item)
   
      return
-  end subroutine dealloc_one_fmat
+  end subroutine dealloc_one_mat
 
-!!>>> alloc_one_sqrmat: allocate one sqrmat
-  subroutine alloc_one_sqrmat(sqrmat)
-     implicit none
-  
-! external variables
-     type(t_sqrmat), intent(inout) :: sqrmat
-  
-! allocate it
-     allocate( sqrmat%item(sqrmat%n,sqrmat%n),  stat=istat )
-
-! check the status
-     if ( istat /= 0 ) then
-         call s_print_error('alloc_one_sqrmat', 'can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
- 
-! initialize it
-     sqrmat%item = zero
-  
-     return
-  end subroutine alloc_one_sqrmat
-  
-!!>>> dealloc_one_sqrmat: deallocate one sqrmat
-  subroutine dealloc_one_sqrmat(sqrmat)
-     implicit none
-  
-! external variables
-     type(t_sqrmat), intent(inout) :: sqrmat
-  
-     if ( associated(sqrmat%item) ) deallocate(sqrmat%item)
-  
-     return
-  end subroutine dealloc_one_sqrmat
- 
 !!>>> alloc_one_sector: allocate memory for one sector
   subroutine alloc_one_sect(sect)
      implicit none
   
 ! external variables
-     type(t_sect), intent(inout) :: sect
+     type(t_sector), intent(inout) :: sect
   
 ! local variables
      integer :: i, j
@@ -268,7 +220,7 @@
      implicit none
   
 ! external variables
-     type(t_sect), intent(inout) :: sect
+     type(t_sector), intent(inout) :: sect
   
 ! local variables  
      integer :: i, j
@@ -281,7 +233,7 @@
      if ( associated(sect%fmat) ) then
          do i=1,sect%nops
              do j=0,1
-                 call dealloc_one_fmat(sect%fmat(i,j))
+                 call dealloc_one_mat(sect%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,sect%nops} loop
          deallocate(sect%fmat)
@@ -372,12 +324,14 @@
          
          do j=1,2
              fprod(i,j)%n = sectors(i)%ndim
-             call alloc_one_sqrmat(fprod(i,j))
+             fprod(i,j)%m = sectors(i)%ndim
+             call alloc_one_mat(fprod(i,j))
          enddo ! over j={1,2} loop
 
          do j=1,norbs
              occu(j,i)%n = sectors(i)%ndim
-             call alloc_one_sqrmat(occu(j,i))
+             occu(j,i)%m = sectors(i)%ndim
+             call alloc_one_mat(occu(j,i))
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,nsect} loop
  
@@ -394,7 +348,8 @@
              do j=1,norbs
                  do k=1,norbs
                      doccu(k,j,i)%n = sectors(i)%ndim
-                     call alloc_one_sqrmat(doccu(k,j,i))
+                     doccu(k,j,i)%m = sectors(i)%ndim
+                     call alloc_one_mat(doccu(k,j,i))
                  enddo ! over k={1,norbs} loop
              enddo ! over j={1,norbs} loop
          enddo ! over i={1,nsect} loop
@@ -413,7 +368,7 @@
          do i=1,nsect
              if ( is_trunc(i) ) cycle
              do j=1,2
-                 call dealloc_one_sqrmat(fprod(i,j))
+                 call dealloc_one_mat(fprod(i,j))
              enddo ! over j={1,2} loop
          enddo ! over i={1,nsect} loop
          deallocate(fprod)
@@ -423,7 +378,7 @@
          do i=1,nsect
              if ( is_trunc(i) ) cycle
              do j=1,norbs
-                 call dealloc_one_sqrmat(occu(j,i))
+                 call dealloc_one_mat(occu(j,i))
              enddo ! over j={1,norbs} loop
          enddo ! over i={1,nsect} loop
          deallocate(occu)
@@ -434,7 +389,7 @@
              if ( is_trunc(i) ) cycle
              do j=1,norbs
                  do k=1,norbs
-                     call dealloc_one_sqrmat(doccu(k,j,i)) 
+                     call dealloc_one_mat(doccu(k,j,i)) 
                  enddo ! over k={1,norbs} loop
              enddo ! over j={1,norbs} loop
          enddo ! over i={1,nsect} loop
@@ -602,8 +557,8 @@
      implicit none
 
      integer :: i,j,k,ii,jj
-     real(dp) :: t_mat1(mdim_sect_t, mdim_sect_t) 
-     real(dp) :: t_mat2(mdim_sect_t, mdim_sect_t) 
+     real(dp) :: mat_t1(mdim_sect_t, mdim_sect_t) 
+     real(dp) :: mat_t2(mdim_sect_t, mdim_sect_t) 
 
      do i=1,norbs
          do j=1,nsect
@@ -636,16 +591,16 @@
                      call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
                                  one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  & 
                                        sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, & 
-                                 zero, t_mat1,                               mdim_sect_t       ) 
+                                 zero, mat_t1,                               mdim_sect_t       ) 
 
                      call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
                                  one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
                                        sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, & 
-                                 zero, t_mat2,                               mdim_sect_t       ) 
+                                 zero, mat_t2,                               mdim_sect_t       ) 
 
                      call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
-                                 one,  t_mat2,                               mdim_sect_t,      & 
-                                       t_mat1,                               mdim_sect_t,      & 
+                                 one,  mat_t2,                               mdim_sect_t,      & 
+                                       mat_t1,                               mdim_sect_t,      & 
                                  zero, doccu(i,j,k)%item,                    sectors(k)%ndim   )
 
                  enddo ! over k={1,nsect} loop
@@ -755,4 +710,4 @@
      return
   end subroutine ctqmc_make_string
 
-  end module m_sect
+  end module m_sector

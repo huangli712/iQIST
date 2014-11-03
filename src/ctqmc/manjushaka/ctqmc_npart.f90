@@ -26,9 +26,9 @@
      use control, only : npart, mkink, ncfgs, beta
      use context, only : time_v, type_v, flvr_v, expt_v
   
-     use m_sect, only : nsect, sectors, is_trunc, t_sqrmat
-     use m_sect, only : mdim_sect_t, fprod
-     use m_sect, only : alloc_one_sqrmat, dealloc_one_sqrmat
+     use m_sector, only : nsect, sectors, is_trunc, t_matrix
+     use m_sector, only : mdim_sect_t, fprod
+     use m_sector, only : alloc_one_mat, dealloc_one_mat
  
      implicit none
 
@@ -57,10 +57,10 @@
      integer, public, save, allocatable :: ope(:)
 
 ! saved parts of matrices product, for previous configuration 
-     type(t_sqrmat), public, save, allocatable :: saved_p(:,:)
+     type(t_matrix), public, save, allocatable :: saved_p(:,:)
 
 ! saved parts of matrices product, for new configuration
-     type(t_sqrmat), public, save, allocatable :: saved_n(:,:)
+     type(t_matrix), public, save, allocatable :: saved_n(:,:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -99,9 +99,11 @@
          if ( is_trunc(i) ) cycle
          do j=1,npart
              saved_p(j,i)%n = mdim_sect_t
+             saved_p(j,i)%m = mdim_sect_t
              saved_n(j,i)%n = mdim_sect_t
-             call alloc_one_sqrmat(saved_p(j,i))
-             call alloc_one_sqrmat(saved_n(j,i))
+             saved_n(j,i)%m = mdim_sect_t
+             call alloc_one_mat(saved_p(j,i))
+             call alloc_one_mat(saved_n(j,i))
          enddo ! over j={1,npart} loop
      enddo ! over i={1,nsect} loop
 
@@ -130,7 +132,7 @@
          do i=1,nsect
              if (is_trunc(i)) cycle
              do j=1,npart
-                 call dealloc_one_sqrmat(saved_p(j,i)) 
+                 call dealloc_one_mat(saved_p(j,i)) 
              enddo ! over j={1,npart} loop
          enddo ! over i={1,nsect} loop
          deallocate(saved_p)
@@ -140,7 +142,7 @@
          do i=1,nsect
              if ( is_trunc(i) ) cycle
              do j=1,npart
-                 call dealloc_one_sqrmat(saved_n(j,i)) 
+                 call dealloc_one_mat(saved_n(j,i)) 
              enddo ! over j={1,npart} loop
          enddo ! over i={1,nsect} loop
          deallocate(saved_n)
@@ -339,8 +341,8 @@
    
 ! local variables
 ! temp matrices
-     real(dp) :: r_mat(mdim_sect_t, mdim_sect_t)
-     real(dp) :: t_mat(mdim_sect_t, mdim_sect_t)
+     real(dp) :: mat_r(mdim_sect_t, mdim_sect_t)
+     real(dp) :: mat_t(mdim_sect_t, mdim_sect_t)
    
 ! temp index
      integer :: dim1
@@ -363,8 +365,8 @@
 !--------------------------------------------------------------------
 ! from right to left: beta <------ 0
      dim1 = sectors(string(1))%ndim
-     r_mat = zero 
-     t_mat = zero
+     mat_r = zero 
+     mat_t = zero
 
 ! loop over all the parts
      do i=1,npart
@@ -378,13 +380,13 @@
              if ( i > ffpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim3,                &
                               one,  saved_p(i,isect)%item, mdim_sect_t, &
-                                    r_mat,                 mdim_sect_t, &
-                              zero, t_mat,                 mdim_sect_t  )
+                                    mat_r,                 mdim_sect_t, &
+                              zero, mat_t,                 mdim_sect_t  )
 
-                 r_mat(:,1:dim1) = t_mat(:,1:dim1)
+                 mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
              else
-                 r_mat(:,1:dim1) = saved_p(i,isect)%item(:,1:dim1)
+                 mat_r(:,1:dim1) = saved_p(i,isect)%item(:,1:dim1)
              endif ! back if ( i > ffpart ) block
   
 ! this part should be recalcuated 
@@ -405,14 +407,14 @@
                  if ( counter > 1 ) then
                      do l=1,dim4
                          do k=1,dim3
-                             t_mat(k,l) = saved_n(i,isect)%item(k,l) * expt_v(indx+k-1,index_t_loc(j))
+                             mat_t(k,l) = saved_n(i,isect)%item(k,l) * expt_v(indx+k-1,index_t_loc(j))
                          enddo ! over k={1,dim3} loop
                      enddo ! over l={1,dim4} loop
                      nprod = nprod + one
                  else
-                     t_mat = zero
+                     mat_t = zero
                      do k=1,dim3
-                         t_mat(k,k) = expt_v(indx+k-1,index_t_loc(j))
+                         mat_t(k,k) = expt_v(indx+k-1,index_t_loc(j))
                      enddo ! over k={1,dim3} loop
                  endif ! back if ( counter > 1 ) block
    
@@ -420,7 +422,7 @@
                  vf = flvr_v( index_t_loc(j) ) 
                  call dgemm( 'N', 'N', dim2, dim4, dim3,                       &
                              one,  sectors(string(j))%fmat(vf, vt)%item, dim2, &
-                                   t_mat,                         mdim_sect_t, &
+                                   mat_t,                         mdim_sect_t, &
                              zero, saved_n(i,isect)%item,         mdim_sect_t  ) 
    
                  nprod = nprod + one
@@ -434,13 +436,13 @@
              if ( i > ffpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim4,               &
                              one,  saved_n(i,isect)%item, mdim_sect_t, &
-                                   r_mat,                 mdim_sect_t, &
-                             zero, t_mat,                 mdim_sect_t  ) 
+                                   mat_r,                 mdim_sect_t, &
+                             zero, mat_t,                 mdim_sect_t  ) 
 
-                 r_mat(:,1:dim1) = t_mat(:,1:dim1)
+                 mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
              else
-                 r_mat(:,1:dim1) = saved_n(i,isect)%item(:,1:dim1)
+                 mat_r(:,1:dim1) = saved_n(i,isect)%item(:,1:dim1)
              endif ! back if ( i > ffpart ) block
 
          elseif ( isave(i,isect,1) == 2 ) then
@@ -456,24 +458,24 @@
      indx = sectors(string(1))%istart
      if ( csize == 0 ) then
          do k=1,dim1
-             r_mat(k,k) = expt_t_loc(indx+k-1)
+             mat_r(k,k) = expt_t_loc(indx+k-1)
          enddo ! over k={1,dim1} loop
      else
          do l=1,dim1
              do k=1,dim1
-                 r_mat(k,l) = r_mat(k,l) * expt_t_loc(indx+k-1)
+                 mat_r(k,l) = mat_r(k,l) * expt_t_loc(indx+k-1)
              enddo ! over k={1,dim1} loop
          enddo ! over l={1,dim1} loop
          nprod = nprod + one
      endif ! back if ( csize == 0 ) block
    
 ! store final product
-     fprod(string(1),1)%item = r_mat(1:dim1,1:dim1)
+     fprod(string(1),1)%item = mat_r(1:dim1,1:dim1)
    
 ! calculate the trace
      trace  = zero
      do j=1,sectors(string(1))%ndim
-         trace = trace + r_mat(j,j)
+         trace = trace + mat_r(j,j)
      enddo ! over j={1,sectors(string(1))%ndim} loop
    
      return

@@ -242,7 +242,7 @@
      use context, only : symm, eimp, eigs, naux
 
      use mmpi
-     use m_sect
+     use m_sector
      use m_npart
 
      implicit none
@@ -448,7 +448,7 @@
                          read(mytmp, *) j1, j2, j3, i1, i2, nonzero
                          sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
                          sectors(i)%fmat(j,k)%m = sectors(i)%ndim
-                         call alloc_one_fmat(sectors(i)%fmat(j,k))
+                         call alloc_one_mat(sectors(i)%fmat(j,k))
 ! read non-zero elements of F-matrix
                          sectors(i)%fmat(j,k)%item = zero
                          do n=1,nonzero
@@ -500,7 +500,7 @@
                  if ( myid /= master ) then
                      sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
                      sectors(i)%fmat(j,k)%m = sectors(i)%ndim
-                     call alloc_one_fmat(sectors(i)%fmat(j,k))
+                     call alloc_one_mat(sectors(i)%fmat(j,k))
                  endif ! back if ( myid /= master ) block
                  call mp_barrier()
                  call mp_bcast(sectors(i)%fmat(j,k)%item, master)
@@ -559,7 +559,7 @@
      use stack
      use spring
 
-     use m_sect
+     use m_sector
      use m_npart
 
      implicit none
@@ -577,8 +577,8 @@
      integer  :: stream_seed
 
 ! dummy matrices
-     real(dp) :: t_mat1(mdim_sect, mdim_sect)
-     real(dp) :: t_mat2(mdim_sect, mdim_sect)
+     real(dp) :: mat_t1(mdim_sect, mdim_sect)
+     real(dp) :: mat_t2(mdim_sect, mdim_sect)
 
 ! init random number generator
      call system_clock(system_time)
@@ -760,16 +760,16 @@
                      call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
                                  one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  &
                                        sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, &
-                                 zero, t_mat1,                               mdim_sect         )
+                                 zero, mat_t1,                               mdim_sect         )
 
                      call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
                                  one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
                                        sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, &
-                                 zero, t_mat2,                               mdim_sect         )
+                                 zero, mat_t2,                               mdim_sect         )
 
                      call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
-                                 one,  t_mat2,                               mdim_sect,        &
-                                       t_mat1,                               mdim_sect,        &
+                                 one,  mat_t2,                               mdim_sect,        &
+                                       mat_t1,                               mdim_sect,        &
                                  zero, sectors(k)%doccu(:,:,i,j),            sectors(k)%ndim   )
 
                  enddo ! over k={1,nsect} loop
@@ -810,7 +810,7 @@
 !!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
      use context
-     use m_sect
+     use m_sector
      use m_npart
 
      implicit none

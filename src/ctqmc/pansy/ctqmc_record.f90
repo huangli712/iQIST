@@ -185,7 +185,7 @@
      use context, only : nmat, nnmat, paux, ckink
      use context, only : ddmat, matrix_ptrace, eigs
 
-     use m_sect, only : mdim_sect, nsect, sectors
+     use m_sector, only : mdim_sect, nsect, sectors
 
      implicit none
 
@@ -209,7 +209,7 @@
      real(dp) :: cprob(ncfgs)
 
 ! dummy sparse matrix, used to calculate nmat and nnmat
-     real(dp) :: t_mat(mdim_sect, mdim_sect)
+     real(dp) :: mat_t(mdim_sect, mdim_sect)
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
@@ -233,17 +233,17 @@
 ! evaluate occupation matrix: < n_i >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
-     t_mat = zero
+     mat_t = zero
      do flvr=1,norbs
          raux1 = zero
          do i=1,nsect
              call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
                          one,  sectors(i)%fprod(:,:,2),              sectors(i)%ndim, &
                                sectors(i)%occu(:,:,flvr),            sectors(i)%ndim, & 
-                         zero, t_mat,                                mdim_sect        )
+                         zero, mat_t,                                mdim_sect        )
 
              do j=1,sectors(i)%ndim
-                 raux1 = raux1 + t_mat(j,j)    
+                 raux1 = raux1 + mat_t(j,j)    
              enddo ! over j={1,sectors(i)%ndim} loop
          enddo  ! over i={1,nsect} loop
          nvec(flvr) = raux1 / raux2
@@ -264,10 +264,10 @@
                      call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
                                   one,  sectors(j)%fprod(:,:,2),             sectors(j)%ndim, &
                                         sectors(j)%doccu(:,:,flvr,i),        sectors(j)%ndim, & 
-                                  zero, t_mat,                               mdim_sect        )
+                                  zero, mat_t,                               mdim_sect        )
 
                      do k=1,sectors(j)%ndim
-                         raux1 = raux1 + t_mat(k,k)    
+                         raux1 = raux1 + mat_t(k,k)    
                      enddo ! over k={1,sectors(j)%ndim} loop
                  enddo ! over j={1,nsect} loop
                  nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
@@ -277,10 +277,10 @@
                      call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
                                  one,  sectors(j)%fprod(:,:,2),              sectors(j)%ndim, &
                                        sectors(j)%doccu(:,:,i,flvr),         sectors(j)%ndim, & 
-                                 zero, t_mat,                                mdim_sect        )
+                                 zero, mat_t,                                mdim_sect        )
 
                      do k=1,sectors(j)%ndim
-                         raux1 = raux1 + t_mat(k,k)    
+                         raux1 = raux1 + mat_t(k,k)    
                      enddo ! over k={1,sectors(j)%ndim} loop
                  enddo ! over j={1,nsect} loop
                  nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
@@ -838,7 +838,7 @@
      use control, only : norbs, mfreq, nfreq, mune, myid, master
      use context, only : prob, eigs, rmesh, cmesh, eimp, sig2, grnf, hybf
 
-     use m_sect, only : nsect, sectors
+     use m_sector, only : nsect, sectors
 
      implicit none
 

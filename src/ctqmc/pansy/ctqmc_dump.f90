@@ -633,7 +633,7 @@
   subroutine ctqmc_dump_psect()
      use constants, only : dp, zero, mytmp
      use context, only : prob
-     use m_sect, only : nsect, sectors
+     use m_sector, only : nsect, sectors
 
      implicit none
 
