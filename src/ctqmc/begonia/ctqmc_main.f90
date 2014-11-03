@@ -270,7 +270,7 @@
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use api, only : T_mpi, T_segment_azalea
+     use api, only : T_mpi, T_general_begonia
 
      use control ! ALL
 
@@ -281,7 +281,7 @@
      type (T_mpi), intent(in) :: I_mpi
 
 ! type structure of generic solver
-     type (T_segment_azalea), intent(in) :: I_solver
+     type (T_general_begonia), intent(in) :: I_solver
 
 ! setup I_mpi
      nprocs = I_mpi%nprocs
@@ -300,11 +300,13 @@
      nspin  = I_solver%nspin
      norbs  = I_solver%norbs
      ncfgs  = I_solver%ncfgs
+     nzero  = I_solver%nzero
      niter  = I_solver%niter
      mkink  = I_solver%mkink
      mfreq  = I_solver%mfreq
      nfreq  = I_solver%nfreq
      ntime  = I_solver%ntime
+     npart  = I_solver%npart
      nflip  = I_solver%nflip
      ntherm = I_solver%ntherm
      nsweep = I_solver%nsweep
