@@ -39,6 +39,7 @@
 !!!           08/23/2010 by li huang
 !!!           07/19/2014 by yilin wang
 !!!           08/20/2014 by yilin wang
+!!!           11/02/2014 by yilin wang
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -988,13 +989,13 @@
      use constants, only : dp, zero, mytmp
      use context, only : prob
 
-     use m_sector, only : nsectors, sectors
+     use m_sector, only : nsect, sectors
 
      implicit none
 
 ! local variables
 ! probability of sectors
-     real(dp) :: psect(nsectors)
+     real(dp) :: psect(nsect)
 
 ! loop index 
      integer :: i,j
@@ -1004,19 +1005,19 @@
 
      psect = zero
   
-     do i=1, nsectors
+     do i=1,nsect
          indx = sectors(i)%istart
-         do j=1, sectors(i)%ndim
+         do j=1,sectors(i)%ndim
              psect(i) = psect(i) + prob(indx+j-1)
-         enddo
-     enddo      
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
 
 ! open file solver.psect.dat to write 
      open(mytmp, file='solver.psect.dat', form='formatted', status='unknown')
      write(mytmp, '(a)') '#sector | probability | nelectron |'
-     do i=1, nsectors
-         write(mytmp, '(I10, F20.10, I10)') i, psect(i), sectors(i)%nelectron
-     enddo
+     do i=1,nsect
+         write(mytmp, '(I10, F20.10, I10)') i, psect(i), sectors(i)%nelec
+     enddo ! over i={1,nsect} loop
      close(mytmp)
 
      return

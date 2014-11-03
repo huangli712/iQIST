@@ -30,6 +30,7 @@
 !!!           06/09/2010 by li huang
 !!!           06/21/2010 by li huang
 !!!           08/20/2014 by yilin wang
+!!!           11/02/2014 by yilin wang
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
