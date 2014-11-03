@@ -1,37 +1,35 @@
-!-------------------------------------------------------------------------
-! project : begonia
-! program : ctqmc_dmft_selfer
-!           ctqmc_dmft_conver
-!           ctqmc_dmft_mixer
-!           ctqmc_dmft_bethe
-! source  : ctqmc_dmft.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/21/2009 by li huang
-!           09/22/2009 by li huang
-!           10/28/2009 by li huang
-!           12/01/2009 by li huang
-!           12/06/2009 by li huang
-!           12/24/2009 by li huang
-!           01/13/2010 by li huang
-! purpose : self-consistent engine for dynamical mean field theory (DMFT)
-!           simulation. it is only suitable for hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver plus bethe lattice model.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : begonia
+!!! program : ctqmc_dmft_selfer
+!!!           ctqmc_dmft_conver
+!!!           ctqmc_dmft_bethe
+!!!           ctqmc_dmft_anydos
+!!! source  : ctqmc_dmft.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           01/13/2010 by li huang
+!!!           11/03/2014 by li huang
+!!! purpose : the self-consistent engine for dynamical mean field theory
+!!!           (DMFT) simulation. it is only suitable for hybridization
+!!!           expansion version continuous time quantum Monte Carlo (CTQMC)
+!!!           quantum impurity solver plus bethe lattice model.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> the self-consistent engine for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory simulation
+!!>>> ctqmc_dmft_selfer: the self-consistent engine for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
+!!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
-     use constants
-     use control
-     use context
+     use constants, only : dp, mystd
+
+     use control, only : nband
+     use control, only : mune
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : eimp
+     use context, only : wssf, hybf
 
      implicit none
 

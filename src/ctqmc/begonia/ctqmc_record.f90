@@ -205,7 +205,7 @@
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
-         cprob(i) = ddmat(i,2) / matrix_ptrace
+         cprob(i) = diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop
 
 ! evaluate raux2, it is Tr ( e^{- \beta H} )
@@ -314,7 +314,7 @@
      integer :: i
 
      do i=1,ncfgs
-         prob(i) = prob(i) + csign * ddmat(i,2) / matrix_ptrace
+         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop
 
      return

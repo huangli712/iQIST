@@ -624,7 +624,7 @@
 
 ! init probability for atomic states
      prob    = zero
-     ddmat   = zero
+     diag    = zero
 
 ! init auxiliary physical observables
      paux    = zero

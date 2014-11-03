@@ -277,7 +277,7 @@
 
 ! diagonal elements of current matrix product of flavor part
 ! it is used to calculate the probability of eigenstates
-     real(dp), public, save, allocatable :: ddmat(:,:)
+     real(dp), public, save, allocatable :: diag(:,:)
 
 !-------------------------------------------------------------------------
 !::: input data variables                                              :::
@@ -744,7 +744,8 @@
 
 ! allocate memory
      allocate(rank(norbs),        stat=istat)
-     allocate(ddmat(ncfgs,  2  ), stat=istat)
+
+     allocate(diag(ncfgs,  2  ),  stat=istat)
 
      allocate(symm(norbs),        stat=istat)
 
@@ -760,7 +761,8 @@
 
 ! initialize them
      rank  = 0
-     ddmat = zero
+
+     diag  = zero
 
      symm  = 0
 
@@ -1037,7 +1039,8 @@
      implicit none
 
      if ( allocated(rank)  )   deallocate(rank )
-     if ( allocated(ddmat) )   deallocate(ddmat)
+
+     if ( allocated(diag)  )   deallocate(diag )
 
      if ( allocated(symm)  )   deallocate(symm )
 
