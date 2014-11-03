@@ -16,7 +16,7 @@
 
 include ../../build/make.sys
 
-modc = ctqmc_control.o ctqmc_context.o ctqmc_sector.o ctqmc_npart.o
+modc = ctqmc_control.o ctqmc_context.o 
 dmft = ctqmc_dmft.o
 core = ctqmc_solver.o
 lev1 = ctqmc_flavor.o ctqmc_update.o
