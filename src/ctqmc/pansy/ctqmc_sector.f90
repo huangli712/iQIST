@@ -29,7 +29,7 @@
  
      implicit none
   
-! F-matrix between any two sectors, it is a rectangle matrix
+! a matrix type
      type :: t_matrix
 
 ! dimensions
@@ -41,7 +41,7 @@
      end type t_matrix
   
 
-! t_sect type contains all the information of a subspace of H_{loc} 
+! a sector type contains all the information of a subspace of H_{loc} 
      type :: t_sector
 
 ! dimension
@@ -50,7 +50,7 @@
 ! total number of electrons
          integer :: nelec 
 
-! number of fermion operators
+! number of fermion operators, it should be equal to norbs
          integer :: nops
 
 ! start index of this sector
@@ -66,7 +66,7 @@
          integer, dimension(:,:), pointer :: next_sect => null()
 
 ! F-matrix between this sector and all other sectors
-! if this sector doesn't point to some other sectors, the pointer is null
+! the pointer is null if this sector doesn't point to some other sectors
 ! fmat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
          type(t_matrix), dimension(:,:), pointer :: fmat => null()
 
@@ -82,19 +82,19 @@
      end type t_sector
      
 ! some global variables
-! status flag
+! allocating status flag
      integer, private :: istat
 
 ! total number of sectors
      integer, public, save :: nsect
 
-! maximal dimension of the sectors
+! maximal dimension of sectors
      integer, public, save :: mdim_sect
 
-! average dimension of the sectors
+! average dimension of sectors
      real(dp), public, save :: adim_sect
 
-! array of t_sect contains all the sectors
+! array of t_sector contains all the sectors
      type(t_sector), public, save, allocatable :: sectors(:)
 
 !!========================================================================
@@ -143,7 +143,7 @@
      return
   end subroutine dealloc_one_mat
   
-!!>>> alloc_one_sector: allocate memory for one sector
+!!>>> alloc_one_sect: allocate memory for one sector
   subroutine alloc_one_sect(sect)
      implicit none
   
@@ -153,14 +153,15 @@
 ! local variables
      integer :: i, j
   
-     allocate( sect%eval(sect%ndim),                       stat=istat )
-     allocate( sect%next_sect(sect%nops, 0:1),             stat=istat )
-     allocate( sect%fmat(sect%nops, 0:1),                  stat=istat )
-     allocate( sect%fprod(sect%ndim, sect%ndim, 2),        stat=istat )
-     allocate( sect%occu(sect%ndim, sect%ndim, sect%nops), stat=istat )
+     allocate( sect%eval(sect%ndim),                      stat=istat )
+     allocate( sect%next_sect(sect%nops,0:1),             stat=istat )
+     allocate( sect%fmat(sect%nops,0:1),                  stat=istat )
+     allocate( sect%fprod(sect%ndim,sect%ndim,2),         stat=istat )
+     allocate( sect%occu(sect%ndim,sect%ndim,sect%nops),  stat=istat )
 
+! allocate doccu if one need to calculate the double occupancy
      if ( idoub == 2 ) then
-         allocate( sect%doccu(sect%ndim, sect%ndim, sect%nops, sect%nops), stat=istat )
+         allocate( sect%doccu(sect%ndim,sect%ndim,sect%nops,sect%nops), stat=istat )
          sect%doccu = zero
      endif ! back if ( idoub == 2 ) block
 
@@ -180,13 +181,14 @@
          do j=0,1
              sect%fmat(i,j)%n = 0
              sect%fmat(i,j)%m = 0
+             sect%fmat(i,j)%item => null()
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
   
      return
   end subroutine alloc_one_sect
   
-!!>>> dealloc_one_sector: deallocate memory for one sector
+!!>>> dealloc_one_sect: deallocate memory for one sector
   subroutine dealloc_one_sect(sect)
      implicit none
   
@@ -224,8 +226,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_sect', &
-                          'can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_sect', 'can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -234,6 +235,11 @@
          sectors(i)%nelec = 0
          sectors(i)%nops = norbs
          sectors(i)%istart = 0
+         sectors(i)%eval => null()
+         sectors(i)%next_sect => null()
+         sectors(i)%fprod => null()
+         sectors(i)%occu => null()
+         sectors(i)%doccu => null()
      enddo ! over i={1,nsect} loop
 
      return

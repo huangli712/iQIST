@@ -77,14 +77,14 @@
      implicit none
 
 ! allocate memory
-     allocate( isave(npart, nsect, 2), stat=istat )
-     allocate( is_cp(npart, nsect),    stat=istat )
-     allocate( ncol_cp(npart, nsect),  stat=istat )
-     allocate( ops(npart),             stat=istat )
-     allocate( ope(npart),             stat=istat )
+     allocate( isave(npart,nsect,2),  stat=istat )
+     allocate( is_cp(npart,nsect),    stat=istat )
+     allocate( ncol_cp(npart,nsect),  stat=istat )
+     allocate( ops(npart),            stat=istat )
+     allocate( ope(npart),            stat=istat )
 
-     allocate( saved_p(mdim_sect, mdim_sect, npart, nsect), stat=istat )
-     allocate( saved_n(mdim_sect, mdim_sect, npart, nsect), stat=istat )
+     allocate( saved_p(mdim_sect,mdim_sect,npart,nsect), stat=istat )
+     allocate( saved_n(mdim_sect,mdim_sect,npart,nsect), stat=istat )
 
 ! check the status
      if ( istat /= 0 ) then
@@ -104,8 +104,7 @@
      return
   end subroutine ctqmc_allocate_memory_part
 
-!!>>> ctqmc_deallocate_memory_part: deallocate memory for 
-!!>>> npart-related variables
+!!>>> ctqmc_deallocate_memory_part: deallocate memory for npart related variables
   subroutine ctqmc_deallocate_memory_part()
      implicit none
 
@@ -181,6 +180,7 @@
          else
              isave(1,:,1) = 1
          endif ! back if ( nop(1) <= 0 ) block
+
 ! case 2: use npart alogithm
      elseif ( npart > 1 ) then
          interval = beta / real(npart)
@@ -255,8 +255,8 @@
                              isave(tip,:,1) = 1; EXIT
                          endif ! back if ( nop(tip) > 0 ) block
                          tip = tip + 1
-                     enddo ! over do while ( tau_e >= time_v( index_t_loc( ope(tie) ) ) ) loop
-                 endif ! back if ( nop(tie) > 0 ) block
+                     enddo ! over do while ( tip <= npart ) loop
+                 endif ! back if ( tau_e >= time_v( index_t_loc( ope(tie) ) ) ) block
 ! for remove an operator, nop(tie) may be zero
              else
                  tip = tie + 1
@@ -310,8 +310,8 @@
    
 ! local variables
 ! temp matrix
-     real(dp) :: mat_r(mdim_sect, mdim_sect)
-     real(dp) :: mat_t(mdim_sect, mdim_sect)
+     real(dp) :: mat_r(mdim_sect,mdim_sect)
+     real(dp) :: mat_t(mdim_sect,mdim_sect)
    
 ! temp index
      integer :: dim1
@@ -434,22 +434,22 @@
      if ( csize == 0 ) then
          do k=1,dim1
              mat_r(k,k) = expt_t_loc(indx+k-1)
-         enddo
+         enddo ! over k={1,dim1} loop
 ! multiply the last time-evolution operator
      else
          do l=1,dim1
              do k=1,dim1
                  mat_r(k,l) = mat_r(k,l) * expt_t_loc(indx+k-1)
-             enddo
-         enddo
+             enddo ! over k={1,dim1} loop
+         enddo ! over l={1,dim1} loop
          nprod = nprod + one
-     endif
+     endif ! back if ( csize == 0 ) block
    
 ! store final product
      sectors( string(1) )%fprod(:,:,1) = mat_r(1:dim1,1:dim1)
    
 ! calculate the trace
-     trace  = zero
+     trace = zero
      do j=1,sectors(string(1))%ndim
          trace = trace + mat_r(j,j)
      enddo ! over j={1,sectors(string(1))%ndim} loop
