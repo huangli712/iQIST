@@ -1574,6 +1574,8 @@
      use control
      use context
 
+     use stack
+
      implicit none
 
 ! external arguments
@@ -1726,6 +1728,8 @@
      use constants
      use control
      use context
+
+     use stack
 
      implicit none
 
