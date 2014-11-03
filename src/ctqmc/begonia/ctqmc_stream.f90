@@ -446,7 +446,7 @@
 ! note: \infity - \infity is undefined, which return NaN
              do i=1,ncfgs
                  if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
-                     call ctqmc_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
+                     call s_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
                  endif
              enddo ! over i={1,ncfgs} loop
 
@@ -456,7 +456,7 @@
              enddo ! over i={1,norbs} loop
 
          else
-             call ctqmc_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
