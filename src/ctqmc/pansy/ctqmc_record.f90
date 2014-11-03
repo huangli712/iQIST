@@ -51,11 +51,11 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary 
+!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
 !!>>> time axis
   subroutine ctqmc_record_gtau()
      use constants, only : dp, zero, one, two
-     use control, only : beta, ntime, norbs 
+     use control, only : beta, ntime, norbs
      use context, only : time_s, time_e, index_s, index_e, mmat, gtau, rank
 
      implicit none
@@ -126,7 +126,7 @@
      return
   end subroutine ctqmc_record_gtau
 
-!!>>> ctqmc_record_grnf: record the impurity green's function in 
+!!>>> ctqmc_record_grnf: record the impurity green's function in
 !!>>> matsubara frequency space
   subroutine ctqmc_record_grnf()
      use control, only : norbs, nfreq
@@ -153,7 +153,7 @@
      return
   end subroutine ctqmc_record_grnf
 
-!!>>> ctqmc_record_hist: record the histogram of perturbation 
+!!>>> ctqmc_record_hist: record the histogram of perturbation
 !!>>> expansion series
   subroutine ctqmc_record_hist()
      use control, only : mkink
@@ -174,7 +174,7 @@
      return
   end subroutine ctqmc_record_hist
 
-!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation 
+!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
      use constants, only : dp, zero, one
@@ -239,11 +239,11 @@
          do i=1,nsect
              call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
                          one,  sectors(i)%fprod(:,:,2),              sectors(i)%ndim, &
-                               sectors(i)%occu(:,:,flvr),            sectors(i)%ndim, & 
+                               sectors(i)%occu(:,:,flvr),            sectors(i)%ndim, &
                          zero, mat_t,                                mdim_sect        )
 
              do j=1,sectors(i)%ndim
-                 raux1 = raux1 + mat_t(j,j)    
+                 raux1 = raux1 + mat_t(j,j)
              enddo ! over j={1,sectors(i)%ndim} loop
          enddo  ! over i={1,nsect} loop
          nvec(flvr) = raux1 / raux2
@@ -263,11 +263,11 @@
                  do j=1,nsect
                      call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
                                   one,  sectors(j)%fprod(:,:,2),             sectors(j)%ndim, &
-                                        sectors(j)%doccu(:,:,flvr,i),        sectors(j)%ndim, & 
+                                        sectors(j)%doccu(:,:,flvr,i),        sectors(j)%ndim, &
                                   zero, mat_t,                               mdim_sect        )
 
                      do k=1,sectors(j)%ndim
-                         raux1 = raux1 + mat_t(k,k)    
+                         raux1 = raux1 + mat_t(k,k)
                      enddo ! over k={1,sectors(j)%ndim} loop
                  enddo ! over j={1,nsect} loop
                  nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
@@ -276,11 +276,11 @@
                  do j=1,nsect
                      call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
                                  one,  sectors(j)%fprod(:,:,2),              sectors(j)%ndim, &
-                                       sectors(j)%doccu(:,:,i,flvr),         sectors(j)%ndim, & 
+                                       sectors(j)%doccu(:,:,i,flvr),         sectors(j)%ndim, &
                                  zero, mat_t,                                mdim_sect        )
 
                      do k=1,sectors(j)%ndim
-                         raux1 = raux1 + mat_t(k,k)    
+                         raux1 = raux1 + mat_t(k,k)
                      enddo ! over k={1,sectors(j)%ndim} loop
                  enddo ! over j={1,nsect} loop
                  nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
@@ -418,7 +418,7 @@
   end subroutine ctqmc_reduce_grnf
 
 !!>>> ctqmc_reduce_hist: reduce the hist from all children processes
-!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is 
+!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is
 !!>>> important to avoid data overflow in them
   subroutine ctqmc_reduce_hist(hist_mpi)
      use control, only : mkink, nprocs
@@ -456,7 +456,7 @@
      return
   end subroutine ctqmc_reduce_hist
 
-!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all 
+!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all
 !!>>> children processes
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
      use constants, only : dp, zero
@@ -543,7 +543,7 @@
 !!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
      use constants, only : dp, zero, two
-     use control, only : norbs, nband, issun, isspn 
+     use control, only : norbs, nband, issun, isspn
 
      implicit none
 
@@ -757,7 +757,7 @@
      return
   end subroutine ctqmc_symm_grnf
 
-!!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low 
+!!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
 !!>>> frequency region
   subroutine ctqmc_smth_sigf(sigf)
      use constants, only : dp, czero
@@ -828,10 +828,10 @@
      return
   end subroutine ctqmc_smth_sigf
 
-!!>>> ctqmc_make_hub1: build atomic green's function and self-energy function 
-!!>>> using improved Hubbard-I approximation, and then make interpolation for 
-!!>>> self-energy function between low frequency QMC data and high frequency 
-!!>>> Hubbard-I approximation data, the full impurity green's function can be 
+!!>>> ctqmc_make_hub1: build atomic green's function and self-energy function
+!!>>> using improved Hubbard-I approximation, and then make interpolation for
+!!>>> self-energy function between low frequency QMC data and high frequency
+!!>>> Hubbard-I approximation data, the full impurity green's function can be
 !!>>> obtained by using dyson's equation finally
   subroutine ctqmc_make_hub1()
      use constants, only : dp, zero, czero, one, epst
@@ -883,7 +883,7 @@
              indx2 = sectors(kk)%istart
              do l=1,sectors(k)%ndim
                  do m=1,sectors(kk)%ndim
-                     ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))    
+                     ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))
                      do j=1,mfreq
                          cb = cmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
                          ghub(j,i) = ghub(j,i) + ob / cb

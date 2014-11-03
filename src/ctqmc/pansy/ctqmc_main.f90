@@ -26,8 +26,8 @@
 !! The pansy code is a hybridization expansion version continuous time
 !! quantum Monte Carlo quantum impurity solver. It adopts the general matrix
 !! formalism, and implements the basic good quantum numbers (GQNs) algorithm.
-!! This algorithm doesn't depend on any information of GQNs, so, it can 
-!! deal with any GQNs scheme. It implements the divide and conquer algorithm 
+!! This algorithm doesn't depend on any information of GQNs, so, it can
+!! deal with any GQNs scheme. It implements the divide and conquer algorithm
 !! to accelerate the trace evaluation. You can use it to solve 1~5 orbitals
 !! systems with general interaction. The pansy code also includes a mini
 !! dynamical mean field theory engine which implements the self-consistent
@@ -69,7 +69,7 @@
 !!
 !! Running mode
 !! ============
-!! 
+!!
 !! case 1: isscf == 1 .and. isbin == 1
 !! -----------------------------------
 !!

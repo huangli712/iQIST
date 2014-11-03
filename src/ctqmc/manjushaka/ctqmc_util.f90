@@ -306,7 +306,7 @@
                  list(j+1) = real_tmp
                  int_tmp = indx(j)
                  indx(j) = indx(j+1)
-                 indx(j+1) = int_tmp 
+                 indx(j+1) = int_tmp
              endif
          enddo
      enddo

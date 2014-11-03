@@ -176,8 +176,8 @@
      return
   end subroutine ctqmc_dmft_conver
 
-!!>>> ctqmc_dmft_bethe: dmft self-consistent conditions, bethe lattice, 
-!!>>> semicircular density of states, force a paramagnetic order, equal 
+!!>>> ctqmc_dmft_bethe: dmft self-consistent conditions, bethe lattice,
+!!>>> semicircular density of states, force a paramagnetic order, equal
 !!>>> bandwidth
   subroutine ctqmc_dmft_bethe(hybf, grnf)
      use constants, only : dp

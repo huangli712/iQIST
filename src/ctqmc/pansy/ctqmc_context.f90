@@ -523,7 +523,7 @@
      return
   end subroutine ctqmc_allocate_memory_clur
 
-!!>>> ctqmc_allocate_memory_flvr: allocate memory for 
+!!>>> ctqmc_allocate_memory_flvr: allocate memory for
 !!>>> flvr-related variables
   subroutine ctqmc_allocate_memory_flvr()
      implicit none
@@ -563,7 +563,7 @@
      return
   end subroutine ctqmc_allocate_memory_flvr
 
-!!>>> ctqmc_allocate_memory_mesh: allocate memory for 
+!!>>> ctqmc_allocate_memory_mesh: allocate memory for
 !!>>> mesh-related variables
   subroutine ctqmc_allocate_memory_mesh()
      implicit none
@@ -587,7 +587,7 @@
      return
   end subroutine ctqmc_allocate_memory_mesh
 
-!!>>> ctqmc_allocate_memory_meat: allocate memory for 
+!!>>> ctqmc_allocate_memory_meat: allocate memory for
 !!>>> meat-related variables
   subroutine ctqmc_allocate_memory_meat()
      implicit none
@@ -620,7 +620,7 @@
   end subroutine ctqmc_allocate_memory_meat
 
 
-!!>>> ctqmc_allocate_memory_umat: allocate memory for 
+!!>>> ctqmc_allocate_memory_umat: allocate memory for
 !!>>> umat-related variables
   subroutine ctqmc_allocate_memory_umat()
      implicit none
@@ -656,7 +656,7 @@
      return
   end subroutine ctqmc_allocate_memory_umat
 
-!!>>> ctqmc_allocate_memory_mmat: allocate memory for 
+!!>>> ctqmc_allocate_memory_mmat: allocate memory for
 !!>>> mmat-related variables
   subroutine ctqmc_allocate_memory_mmat()
      implicit none
@@ -692,7 +692,7 @@
      return
   end subroutine ctqmc_allocate_memory_mmat
 
-!!>>> ctqmc_allocate_memory_gmat: allocate memory for 
+!!>>> ctqmc_allocate_memory_gmat: allocate memory for
 !!>>> gmat-related variables
   subroutine ctqmc_allocate_memory_gmat()
      implicit none
@@ -715,7 +715,7 @@
      return
   end subroutine ctqmc_allocate_memory_gmat
 
-!!>>> ctqmc_allocate_memory_wmat: allocate memory for 
+!!>>> ctqmc_allocate_memory_wmat: allocate memory for
 !!>>> wmat-related variables
   subroutine ctqmc_allocate_memory_wmat()
      implicit none
@@ -745,7 +745,7 @@
      return
   end subroutine ctqmc_allocate_memory_wmat
 
-!!>>> ctqmc_allocate_memory_smat: allocate memory for 
+!!>>> ctqmc_allocate_memory_smat: allocate memory for
 !!>>> smat-related variables
   subroutine ctqmc_allocate_memory_smat()
      implicit none
@@ -771,7 +771,7 @@
 !!>>> deallocate memory subroutines                                     <<<
 !!=========================================================================
 
-!!>>> ctqmc_deallocate_memory_clur: deallocate memory for 
+!!>>> ctqmc_deallocate_memory_clur: deallocate memory for
 !!>>> clur-related variables
   subroutine ctqmc_deallocate_memory_clur()
      implicit none
@@ -799,7 +799,7 @@
      return
   end subroutine ctqmc_deallocate_memory_clur
 
-!!>>> ctqmc_deallocate_memory_flvr: deallocate memory for 
+!!>>> ctqmc_deallocate_memory_flvr: deallocate memory for
 !!>>> flvr-related variables
   subroutine ctqmc_deallocate_memory_flvr()
      implicit none
@@ -820,7 +820,7 @@
      return
   end subroutine ctqmc_deallocate_memory_flvr
 
-!!>>> ctqmc_deallocate_memory_mesh: deallocate memory for 
+!!>>> ctqmc_deallocate_memory_mesh: deallocate memory for
 !!>>> mesh-related variables
   subroutine ctqmc_deallocate_memory_mesh()
      implicit none
@@ -832,7 +832,7 @@
      return
   end subroutine ctqmc_deallocate_memory_mesh
 
-!!>>> ctqmc_deallocate_memory_meat: deallocate memory for 
+!!>>> ctqmc_deallocate_memory_meat: deallocate memory for
 !!>>> meat-related variables
   subroutine ctqmc_deallocate_memory_meat()
      implicit none
@@ -849,7 +849,7 @@
   end subroutine ctqmc_deallocate_memory_meat
 
 
-!!>>> ctqmc_deallocate_memory_umat: deallocate memory for 
+!!>>> ctqmc_deallocate_memory_umat: deallocate memory for
 !!>>> umat-related variables
   subroutine ctqmc_deallocate_memory_umat()
      implicit none
@@ -869,7 +869,7 @@
   end subroutine ctqmc_deallocate_memory_umat
 
 
-!!>>> ctqmc_deallocate_memory_mmat: deallocate memory for 
+!!>>> ctqmc_deallocate_memory_mmat: deallocate memory for
 !!>>> mmat-related variables
   subroutine ctqmc_deallocate_memory_mmat()
      implicit none
@@ -887,7 +887,7 @@
      return
   end subroutine ctqmc_deallocate_memory_mmat
 
-!!>>> ctqmc_deallocate_memory_gmat: deallocate memory for 
+!!>>> ctqmc_deallocate_memory_gmat: deallocate memory for
 !!>>> gmat-related variables
   subroutine ctqmc_deallocate_memory_gmat()
      implicit none
@@ -899,7 +899,7 @@
      return
   end subroutine ctqmc_deallocate_memory_gmat
 
-!!>>> ctqmc_deallocate_memory_wmat: deallocate memory for 
+!!>>> ctqmc_deallocate_memory_wmat: deallocate memory for
 !!>>> wmat-related variables
   subroutine ctqmc_deallocate_memory_wmat()
      implicit none
@@ -914,7 +914,7 @@
      return
   end subroutine ctqmc_deallocate_memory_wmat
 
-!!>>> ctqmc_deallocate_memory_smat: deallocate memory for 
+!!>>> ctqmc_deallocate_memory_smat: deallocate memory for
 !!>>> smat-related variables
   subroutine ctqmc_deallocate_memory_smat()
      implicit none

@@ -28,15 +28,15 @@
 !! quantum Monte Carlo quantum impurity solver. It adopts the general matrix
 !! formalism, and implements the good quantum numbers (GQNs) algorithm.
 !! It implements the divide and conquer algorithm, lazy trace algorithm,
-!! and dynamically truncation of the Hilbert space algorithm. It also 
+!! and dynamically truncation of the Hilbert space algorithm. It also
 !! implements the orthogonal polynomial represention to measure very high
 !! quality of physical quantities. It can also measure two particle related
-!! physical quantities. Thus, it is a very powerful solver. You can use it 
-!! to solve almost all of the 1~7 orbitals systems with general interaction, 
-!! for temperature range from a few thounds Kelvin to a few Kelvin. The 
-!! manjushka code also includes a mini dynamical mean field theory engine 
-!! which implements the self-consistent equation for Bethe lattice in 
-!! paramagnetic state. So you can use it to perform dynamical mean field 
+!! physical quantities. Thus, it is a very powerful solver. You can use it
+!! to solve almost all of the 1~7 orbitals systems with general interaction,
+!! for temperature range from a few thounds Kelvin to a few Kelvin. The
+!! manjushka code also includes a mini dynamical mean field theory engine
+!! which implements the self-consistent equation for Bethe lattice in
+!! paramagnetic state. So you can use it to perform dynamical mean field
 !! theory calculations quickly. Enjoy it.
 !!
 !! Usage
@@ -74,7 +74,7 @@
 !!
 !! Running mode
 !! ============
-!! 
+!!
 !! case 1: isscf == 1 .and. isbin == 1
 !! -----------------------------------
 !!

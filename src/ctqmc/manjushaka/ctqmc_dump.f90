@@ -48,7 +48,7 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary 
+!!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_gtau(tmesh, gtau)
      use constants, only : dp, mytmp
@@ -92,7 +92,7 @@
      return
   end subroutine ctqmc_dump_gtau
 
-!!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary 
+!!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_wtau(tmesh, wtau)
      use constants, only : dp, mytmp
@@ -130,7 +130,7 @@
      return
   end subroutine ctqmc_dump_wtau
 
-!!>>> ctqmc_dump_htau: write out hybridization function in imaginary 
+!!>>> ctqmc_dump_htau: write out hybridization function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_htau(tmesh, htau)
      use constants, only : dp, mytmp
@@ -168,7 +168,7 @@
      return
   end subroutine ctqmc_dump_htau
 
-!!>>> ctqmc_dump_gbin: write out impurity green's function in imaginary 
+!!>>> ctqmc_dump_gbin: write out impurity green's function in imaginary
 !!>>> time space (binning mode)
   subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
      use constants, only : dp, mytmp
@@ -219,11 +219,11 @@
      return
   end subroutine ctqmc_dump_gbin
 
-!!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara 
+!!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
 !!>>> frequency space
   subroutine ctqmc_dump_grnf(rmesh, grnf)
      use constants, only : dp, mytmp
-     use control, only : mfreq, norbs, nband 
+     use control, only : mfreq, norbs, nband
 
      implicit none
 
@@ -261,11 +261,11 @@
      return
   end subroutine ctqmc_dump_grnf
 
-!!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara 
+!!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara
 !!>>> frequency space
   subroutine ctqmc_dump_wssf(rmesh, wssf)
      use constants, only : dp, mytmp
-     use control, only : mfreq, norbs, nband 
+     use control, only : mfreq, norbs, nband
 
      implicit none
 
@@ -303,7 +303,7 @@
      return
   end subroutine ctqmc_dump_wssf
 
-!!>>> ctqmc_dump_hybf: write out hybridization function in matsubara 
+!!>>> ctqmc_dump_hybf: write out hybridization function in matsubara
 !!>>> frequency space
   subroutine ctqmc_dump_hybf(rmesh, hybf)
      use constants, only : dp, mytmp
@@ -345,7 +345,7 @@
      return
   end subroutine ctqmc_dump_hybf
 
-!!>>> ctqmc_dump_sigf: write out self-energy function in matsubara 
+!!>>> ctqmc_dump_sigf: write out self-energy function in matsubara
 !!>>> frequency space
   subroutine ctqmc_dump_sigf(rmesh, sigf)
      use constants, only : dp, mytmp
@@ -387,11 +387,11 @@
      return
   end subroutine ctqmc_dump_sigf
 
-!!>>> ctqmc_dump_hub1: write out impurity green's function and self-energy 
-!!>>> function obtained by hubbard-I approximation in matsubara frequency 
+!!>>> ctqmc_dump_hub1: write out impurity green's function and self-energy
+!!>>> function obtained by hubbard-I approximation in matsubara frequency
 !!>>> space
   subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
-     use constants, only : dp, mytmp 
+     use constants, only : dp, mytmp
      use control, only : mfreq, norbs
 
      implicit none
@@ -433,7 +433,7 @@
      return
   end subroutine ctqmc_dump_hub1
 
-!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for 
+!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
 !!>>> perturbation expansion series
   subroutine ctqmc_dump_hist(hist)
      use constants, only : dp, mytmp
@@ -476,7 +476,7 @@
      return
   end subroutine ctqmc_dump_hist
 
-!!>>> ctqmc_dump_nmat: write out the occupation matrix and 
+!!>>> ctqmc_dump_nmat: write out the occupation matrix and
 !!>>> double occupation matrix
   subroutine ctqmc_dump_nmat(nmat, nnmat)
      use constants, only : dp, mytmp
@@ -627,7 +627,7 @@
      return
   end subroutine ctqmc_dump_schi
 
-!!>>> ctqmc_dump_twop: write out the two-particle green's function 
+!!>>> ctqmc_dump_twop: write out the two-particle green's function
 !!>>> and vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
      use constants, only : dp, czero, mytmp
@@ -747,7 +747,7 @@
      return
   end subroutine ctqmc_dump_twop
 
-!!>>> ctqmc_dump_vrtx: write out the vertex function and 
+!!>>> ctqmc_dump_vrtx: write out the vertex function and
 !!>>> two-particle green's function
   subroutine ctqmc_dump_vrtx(h2_re, h2_im)
      use constants, only : dp, czero, mytmp
@@ -887,7 +887,7 @@
      return
   end subroutine ctqmc_dump_vrtx
 
-!!>>> ctqmc_dump_prob: write out the probability of eigenstates of local 
+!!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
 !!>>> hamiltonian matrix
   subroutine ctqmc_dump_prob(prob, naux, saux)
      use constants, only : dp, zero, eps6, mytmp
@@ -997,14 +997,14 @@
 ! probability of sectors
      real(dp) :: psect(nsect)
 
-! loop index 
+! loop index
      integer :: i,j
 
 ! start index of sectors
      integer :: indx
 
      psect = zero
-  
+
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
@@ -1012,7 +1012,7 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
-! open file solver.psect.dat to write 
+! open file solver.psect.dat to write
      open(mytmp, file='solver.psect.dat', form='formatted', status='unknown')
      write(mytmp, '(a)') '#sector | probability | nelectron |'
      do i=1,nsect

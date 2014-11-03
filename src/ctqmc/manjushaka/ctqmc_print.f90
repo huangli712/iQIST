@@ -7,7 +7,7 @@
 !!! source  : ctqmc_print.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@yahoo.com.cn)
-!!!           yilin wang (eamil:qhwyl2006@126.com) 
+!!!           yilin wang (eamil:qhwyl2006@126.com)
 !!! history : 09/15/2009 by li huang
 !!!           09/20/2009 by li huang
 !!!           12/01/2009 by li huang
@@ -22,8 +22,8 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> ctqmc_print_header: print the startup information for continuous time 
-!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field 
+!!>>> ctqmc_print_header: print the startup information for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
 !!>>> theory self-consistent engine
   subroutine ctqmc_print_header()
      use constants, only : mystd
@@ -64,8 +64,8 @@
      return
   end subroutine ctqmc_print_header
 
-!!>>> ctqmc_print_footer: print the ending information for continuous time 
-!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field 
+!!>>> ctqmc_print_footer: print the ending information for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
 !!>>> theory self-consistent engine
   subroutine ctqmc_print_footer()
      use constants, only : dp, mystd
@@ -105,7 +105,7 @@
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
      write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'isvrt :', isvrt
-     write(mystd,'(2(4X,a,i10))')   'itrun :', itrun  , 'idoub :', idoub 
+     write(mystd,'(2(4X,a,i10))')   'itrun :', itrun  , 'idoub :', idoub
 
      write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
      write(mystd,'(2(4X,a,i10))')   'chmax :', chmax  , 'chgrd :', chgrd
@@ -133,7 +133,7 @@
      return
   end subroutine ctqmc_print_summary
 
-!!>>> ctqmc_print_runtime: print the runtime information, including physical 
+!!>>> ctqmc_print_runtime: print the runtime information, including physical
 !!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : one, half, mystd
@@ -145,7 +145,7 @@
      use context, only : rshift_tcount, rshift_accept, rshift_reject
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : paux, cnegs, caves
-     
+
      use m_npart, only : nprod
 
      implicit none
