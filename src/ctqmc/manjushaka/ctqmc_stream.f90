@@ -23,6 +23,7 @@
 !!!           02/27/2010 by li huang
 !!!           06/08/2010 by li huang
 !!!           08/29/2014 by yilin wang
+!!!           11/02/2014 by yilin wang
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -464,14 +465,14 @@
      eigs = zero
      naux = zero
 
-     if (myid == master) then ! only master node can do it
+     if ( myid == master ) then ! only master node can do it
          exists = .false.
 ! inquire about file 'atom.cix', this file is necessary,
 ! the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
 
 ! find 'atom.cix', read it
-         if ( exists .eqv. .true. ) then
+         if ( exists ) then
              open(mytmp, file='atom.cix', form='formatted', status='unknown')
 ! skip 20 header lines
              do i=1,20
@@ -479,35 +480,35 @@
              enddo ! over i={1,20} loop
 ! read the total number of sectors, maximum dimension of sectors,
 ! and average dimension of sectors
-             read(mytmp,*) nsectors, max_dim_sect, ave_dim_sect
+             read(mytmp,*) nsect, mdim_sect, adim_sect
 
 ! after we know the total number of sectors, we can allocate memory
 ! for array sectors and parts
              call ctqmc_allocate_memory_sect()
 
 ! read each sector's information
-             do i=1,nsectors
+             do i=1,nsect
                  read(mytmp,*) ! skip the header
 
 ! read the dimension, total number of electrons, number of fermion operators,
 ! and start index of this sector
-                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelectron, &
+                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelec, &
                                    sectors(i)%nops, sectors(i)%istart
 
 ! allocate the memory for sectors(i)
-                 call alloc_one_sector(sectors(i))
+                 call alloc_one_sect(sectors(i))
 
 ! read the next_sector index
                  read(mytmp,*) ! skip the header
                  do j=1, sectors(i)%nops
-                     read(mytmp,*) j1, sectors(i)%next_sector(j,0), &
-                                       sectors(i)%next_sector(j,1)
+                     read(mytmp,*) j1, sectors(i)%next_sect(j,0), &
+                                       sectors(i)%next_sect(j,1)
                  enddo
 
 ! read the eigenvalue of this sector
                  read(mytmp,*) ! skip the header
                  do j=1,sectors(i)%ndim
-                     read(mytmp,*) j1, sectors(i)%myeigval(j)
+                     read(mytmp,*) j1, sectors(i)%eval(j)
                  enddo ! over j={1,sectors(i)%ndim} loop
              enddo ! over i={1,nsectors} loop
 
@@ -517,22 +518,22 @@
              read(mytmp,*)
              read(mytmp,*)
 
-             do i=1,nsectors
+             do i=1,nsect
                  do j=1,sectors(i)%nops
                      do k=0,1
-                         ii = sectors(i)%next_sector(j,k)
+                         ii = sectors(i)%next_sect(j,k)
                          if (ii == -1) cycle
 ! skip one hader line
                          read(mytmp, *)
                          read(mytmp, *) j1, j2, j3, i1, i2, nonzero
-                         sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
-                         sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
-                         call alloc_one_fmat(sectors(i)%myfmat(j,k))
+                         sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
+                         sectors(i)%fmat(j,k)%m = sectors(i)%ndim
+                         call alloc_one_mat(sectors(i)%fmat(j,k))
 ! read non-zero elements of F-matrix
-                         sectors(i)%myfmat(j,k)%item = zero
+                         sectors(i)%fmat(j,k)%item = zero
                          do n=1,nonzero
                              read(mytmp, *) i1, i2, r1
-                             sectors(i)%myfmat(j,k)%item(i1,i2) = r1
+                             sectors(i)%fmat(j,k)%item(i1,i2) = r1
                          enddo ! over n={1,nonzero} loop
                      enddo ! over k={0,1} loop
                  enddo ! over j={1,sectors(i)%nops} loop
@@ -550,43 +551,44 @@
 ! block until all processes have reached here
      call mp_barrier()
 
-     call mp_bcast(nsectors,     master)
-     call mp_bcast(max_dim_sect, master)
-     call mp_bcast(ave_dim_sect, master)
+     call mp_bcast(nsect,     master)
+     call mp_bcast(mdim_sect, master)
+     call mp_bcast(adim_sect, master)
 
-     if (myid /= master ) then
+     if ( myid /= master ) then
          call ctqmc_allocate_memory_sect()
-     endif
+     endif ! back if ( myid /= master ) block
 
-     do i=1, nsectors
+     do i=1,nsect
          call mp_barrier()
-         call mp_bcast(sectors(i)%ndim,        master)
-         call mp_bcast(sectors(i)%nelectron,   master)
-         call mp_bcast(sectors(i)%nops,        master)
-         call mp_bcast(sectors(i)%istart,      master)
-         if ( myid /= master) then
-             call alloc_one_sector(sectors(i))
-         endif
-         call mp_bcast(sectors(i)%next_sector, master)
-         call mp_bcast(sectors(i)%myeigval,    master)
-     enddo
+         call mp_bcast(sectors(i)%ndim,    master)
+         call mp_bcast(sectors(i)%nelec,   master)
+         call mp_bcast(sectors(i)%nops,    master)
+         call mp_bcast(sectors(i)%istart,  master)
+
+         if ( myid /= master ) then
+             call alloc_one_sect(sectors(i))
+         endif ! back if ( myid /= master ) block
+         call mp_bcast(sectors(i)%next_sect, master)
+         call mp_bcast(sectors(i)%eval,      master)
+     enddo ! over i={1,nsect} loop
      call mp_barrier()
 
-     do i=1, nsectors
-         do j=1, sectors(i)%nops
+     do i=1,nsect
+         do j=1,sectors(i)%nops
              do k=0,1
-                 ii = sectors(i)%next_sector(j,k)
+                 ii = sectors(i)%next_sect(j,k)
                  if (ii == -1) cycle
-                 if ( myid /= master) then
-                     sectors(i)%myfmat(j,k)%n = sectors(ii)%ndim
-                     sectors(i)%myfmat(j,k)%m = sectors(i)%ndim
-                     call alloc_one_fmat(sectors(i)%myfmat(j,k))
-                 endif
+                 if ( myid /= master ) then
+                     sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
+                     sectors(i)%fmat(j,k)%m = sectors(i)%ndim
+                     call alloc_one_mat(sectors(i)%fmat(j,k))
+                 endif ! back if ( myid /= master ) block
                  call mp_barrier()
-                 call mp_bcast(sectors(i)%myfmat(j,k)%item, master)
-             enddo
-         enddo
-     enddo
+                 call mp_bcast(sectors(i)%fmat(j,k)%item, master)
+             enddo ! over k={0,1} loop
+         enddo ! over j={1,sectors(i)%nops} loop
+     enddo ! over i={1,nsect} loop
      call mp_barrier()
 
 # endif  /* MPI */
@@ -595,15 +597,14 @@
 ! add the contribution from chemical potential to eigenvalues
 ! and determine the minimum eigenvalue
      j1 = 0
-     do i=1,nsectors
-         do j=1, sectors(i)%ndim
+     do i=1,nsect
+         do j=1,sectors(i)%ndim
              j1 = j1 + 1
-             sectors(i)%myeigval(j) = sectors(i)%myeigval(j) &
-                                      - mune * sectors(i)%nelectron
-             eigs(j1) = sectors(i)%myeigval(j)
-             naux(j1) = sectors(i)%nelectron
-         enddo
-     enddo
+             sectors(i)%eval(j) = sectors(i)%eval(j) - mune * sectors(i)%nelec
+             eigs(j1) = sectors(i)%eval(j)
+             naux(j1) = sectors(i)%nelec
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
 
 ! substract the eigenvalues zero point, here we store the eigen energy
 ! zero point in U
@@ -823,10 +824,10 @@
 ! allocate memory for npart
      call ctqmc_allocate_memory_part()
 
-     num_prod = zero
-     is_save = 1
-     is_copy = .false.
-     col_copy = 0
+     nprod = zero
+     isave = 1
+     is_cp = .false.
+     ncol_cp = 0
      ops = 0
      ope = 0
 

@@ -30,6 +30,7 @@
 !!!           06/09/2010 by li huang
 !!!           06/21/2010 by li huang
 !!!           08/20/2014 by yilin wang
+!!!           11/02/2014 by yilin wang
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
@@ -37,12 +38,12 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> ctqmc_impurity_solver: core engine for hybridization expansion version 
+!!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, one, mystd
 
-     use control, only : issun, isspn, itrun, isvrt, isort 
+     use control, only : issun, isspn, itrun, isvrt, isort
      use control, only : ncfgs, norbs, nband, nspin, myid, master
      use control, only : nsweep, nwrite, nmonte, ncarlo, Uc, Jz, beta
      use control, only : nffrq, nbfrq, mkink, mfreq, nfreq, ntime
@@ -274,13 +275,13 @@
      endif
 
      call cpu_time(time_begin) ! record starting time
-! for dynamically truncate high energy states, the trace of saved diagramm 
+! for dynamically truncate high energy states, the trace of saved diagramm
 ! may be zero, so we don't retrieve it for itrun == 3
      if (itrun == 1 .or. itrun == 2) then
          call ctqmc_retrieve_status()
      endif
      call cpu_time(time_end)   ! record ending   time
- 
+
 ! print the time information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
@@ -743,7 +744,7 @@
      use context, only : rshift_tcount, rshift_accept, rshift_reject
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : cnegs, caves
-  
+
      implicit none
 
 ! local variables
@@ -843,7 +844,7 @@
 !!>>> ctqmc_diagram_checking: checking whether the quantum impurity solver
 !!>>> is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
-     use constants, only : mystd 
+     use constants, only : mystd
      use control, only : norbs, myid, master
 
      use context, only : rank, index_s, index_e, time_s, time_e

@@ -37,7 +37,7 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> ctqmc_impurity_solver: core engine for hybridization expansion version 
+!!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, one, mystd
@@ -636,7 +636,7 @@
 !!>>> ctqmc_diagram_checking: checking whether the quantum impurity solver
 !!>>> is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
-     use constants, only : mystd 
+     use constants, only : mystd
      use control, only : norbs, myid, master
 
      use context, only : rank, index_s, index_e, time_s, time_e

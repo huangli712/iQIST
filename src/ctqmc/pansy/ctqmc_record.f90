@@ -43,6 +43,7 @@
 !!!           09/29/2010 by li huang
 !!!           07/19/2014 by yilin wang
 !!!           08/18/2014 by yilin wang
+!!!           11/02/2014 by yilin wang
 !!! purpose : measure, record, and postprocess the key observables produced
 !!!           by the hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver
@@ -50,11 +51,11 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary 
+!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
 !!>>> time axis
   subroutine ctqmc_record_gtau()
      use constants, only : dp, zero, one, two
-     use control, only : beta, ntime, norbs 
+     use control, only : beta, ntime, norbs
      use context, only : time_s, time_e, index_s, index_e, mmat, gtau, rank
 
      implicit none
@@ -125,7 +126,7 @@
      return
   end subroutine ctqmc_record_gtau
 
-!!>>> ctqmc_record_grnf: record the impurity green's function in 
+!!>>> ctqmc_record_grnf: record the impurity green's function in
 !!>>> matsubara frequency space
   subroutine ctqmc_record_grnf()
      use control, only : norbs, nfreq
@@ -152,7 +153,7 @@
      return
   end subroutine ctqmc_record_grnf
 
-!!>>> ctqmc_record_hist: record the histogram of perturbation 
+!!>>> ctqmc_record_hist: record the histogram of perturbation
 !!>>> expansion series
   subroutine ctqmc_record_hist()
      use control, only : mkink
@@ -173,14 +174,18 @@
      return
   end subroutine ctqmc_record_hist
 
-!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation 
+!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
      use constants, only : dp, zero, one
-     use control, only : nband, norbs, ncfgs, beta, mune, U, idoub
-     use context, only : ddmat, matrix_ptrace, nmat, nnmat, paux, ckink, eigs
 
-     use m_sector, only : max_dim_sect, nsectors, sectors
+     use control, only : nband, norbs, ncfgs, idoub
+     use control, only : beta, mune, U
+
+     use context, only : nmat, nnmat, paux, ckink
+     use context, only : ddmat, matrix_ptrace, eigs
+
+     use m_sector, only : mdim_sect, nsect, sectors
 
      implicit none
 
@@ -204,7 +209,7 @@
      real(dp) :: cprob(ncfgs)
 
 ! dummy sparse matrix, used to calculate nmat and nnmat
-     real(dp) :: tmp_mat(max_dim_sect, max_dim_sect)
+     real(dp) :: mat_t(mdim_sect, mdim_sect)
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
@@ -214,11 +219,11 @@
 ! evaluate raux2, it is Tr ( e^{- \beta H} )
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
-     do i=1, nsectors
-         do j=1, sectors(i)%ndim
-             raux2 = raux2 + sectors(i)%final_product(j, j, 2)
-         enddo
-     enddo
+     do i=1,nsect
+         do j=1,sectors(i)%ndim
+             raux2 = raux2 + sectors(i)%fprod(j, j, 2)
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
 
 ! check validity of raux2
 !<     if ( abs(raux2) < epss ) then
@@ -228,21 +233,21 @@
 ! evaluate occupation matrix: < n_i >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
-     tmp_mat = zero
-     do flvr=1, norbs
+     mat_t = zero
+     do flvr=1,norbs
          raux1 = zero
-         do i=1, nsectors
-             call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, one, &
-                         sectors(i)%final_product(:,:,2),                 sectors(i)%ndim, &
-                         sectors(i)%occu(:,:,flvr),                       sectors(i)%ndim, & 
-                         zero, tmp_mat,                                   max_dim_sect      )
+         do i=1,nsect
+             call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
+                         one,  sectors(i)%fprod(:,:,2),              sectors(i)%ndim, &
+                               sectors(i)%occu(:,:,flvr),            sectors(i)%ndim, &
+                         zero, mat_t,                                mdim_sect        )
 
-             do j=1, sectors(i)%ndim
-                 raux1 = raux1 + tmp_mat(j,j)    
-             enddo
-         enddo 
+             do j=1,sectors(i)%ndim
+                 raux1 = raux1 + mat_t(j,j)
+             enddo ! over j={1,sectors(i)%ndim} loop
+         enddo  ! over i={1,nsect} loop
          nvec(flvr) = raux1 / raux2
-     enddo
+     enddo ! over flvr={1,norbs} loop
 
 ! update nmat
      nmat = nmat + nvec
@@ -251,39 +256,39 @@
 ! evaluate double occupation matrix: < n_i n_j >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
-     if (idoub == 2) then
-         do flvr=1, norbs-1
-             do i=flvr+1, norbs
+     if ( idoub == 2 ) then
+         do flvr=1,norbs-1
+             do i=flvr+1,norbs
                  raux1 = zero
-                 do j=1, nsectors
-                     call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, one, &
-                                  sectors(j)%final_product(:,:,2),                sectors(j)%ndim, &
-                                  sectors(j)%double_occu(:,:,flvr,i),             sectors(j)%ndim, & 
-                                  zero, tmp_mat,                                  max_dim_sect      )
+                 do j=1,nsect
+                     call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
+                                  one,  sectors(j)%fprod(:,:,2),             sectors(j)%ndim, &
+                                        sectors(j)%doccu(:,:,flvr,i),        sectors(j)%ndim, &
+                                  zero, mat_t,                               mdim_sect        )
 
-                     do k=1, sectors(j)%ndim
-                         raux1 = raux1 + tmp_mat(k,k)    
-                     enddo
-                 enddo 
+                     do k=1,sectors(j)%ndim
+                         raux1 = raux1 + mat_t(k,k)
+                     enddo ! over k={1,sectors(j)%ndim} loop
+                 enddo ! over j={1,nsect} loop
                  nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
 
                  raux1 = zero
-                 do j=1, nsectors
-                     call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, one, &
-                                 sectors(j)%final_product(:,:,2),                 sectors(j)%ndim, &
-                                 sectors(j)%double_occu(:,:,i,flvr),              sectors(j)%ndim, & 
-                                 zero, tmp_mat,                                   max_dim_sect      )
+                 do j=1,nsect
+                     call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
+                                 one,  sectors(j)%fprod(:,:,2),              sectors(j)%ndim, &
+                                       sectors(j)%doccu(:,:,i,flvr),         sectors(j)%ndim, &
+                                 zero, mat_t,                                mdim_sect        )
 
-                     do k=1, sectors(j)%ndim
-                         raux1 = raux1 + tmp_mat(k,k)    
-                     enddo
-                 enddo 
+                     do k=1,sectors(j)%ndim
+                         raux1 = raux1 + mat_t(k,k)
+                     enddo ! over k={1,sectors(j)%ndim} loop
+                 enddo ! over j={1,nsect} loop
                  nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
-             enddo
-         enddo
+             enddo ! over i={flvr+1,norbs} loop
+         enddo ! over flvr={1,norbs-1} loop
      else
          nnmat = zero
-     endif
+     endif ! back if ( idoub == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
@@ -413,7 +418,7 @@
   end subroutine ctqmc_reduce_grnf
 
 !!>>> ctqmc_reduce_hist: reduce the hist from all children processes
-!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is 
+!!>>> note: since hist_mpi and hist are integer (kind=4) type, it is
 !!>>> important to avoid data overflow in them
   subroutine ctqmc_reduce_hist(hist_mpi)
      use control, only : mkink, nprocs
@@ -451,7 +456,7 @@
      return
   end subroutine ctqmc_reduce_hist
 
-!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all 
+!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all
 !!>>> children processes
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
      use constants, only : dp, zero
@@ -538,7 +543,7 @@
 !!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
      use constants, only : dp, zero, two
-     use control, only : norbs, nband, issun, isspn 
+     use control, only : norbs, nband, issun, isspn
 
      implicit none
 
@@ -752,7 +757,7 @@
      return
   end subroutine ctqmc_symm_grnf
 
-!!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low 
+!!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
 !!>>> frequency region
   subroutine ctqmc_smth_sigf(sigf)
      use constants, only : dp, czero
@@ -823,17 +828,17 @@
      return
   end subroutine ctqmc_smth_sigf
 
-!!>>> ctqmc_make_hub1: build atomic green's function and self-energy function 
-!!>>> using improved Hubbard-I approximation, and then make interpolation for 
-!!>>> self-energy function between low frequency QMC data and high frequency 
-!!>>> Hubbard-I approximation data, the full impurity green's function can be 
+!!>>> ctqmc_make_hub1: build atomic green's function and self-energy function
+!!>>> using improved Hubbard-I approximation, and then make interpolation for
+!!>>> self-energy function between low frequency QMC data and high frequency
+!!>>> Hubbard-I approximation data, the full impurity green's function can be
 !!>>> obtained by using dyson's equation finally
   subroutine ctqmc_make_hub1()
      use constants, only : dp, zero, czero, one, epst
      use control, only : norbs, mfreq, nfreq, mune, myid, master
      use context, only : prob, eigs, rmesh, cmesh, eimp, sig2, grnf, hybf
 
-     use m_sector, only : nsectors, sectors
+     use m_sector, only : nsect, sectors
 
      implicit none
 
@@ -870,23 +875,23 @@
 
 ! calculate atomic green's function using Hubbard-I approximation
      ghub = czero
-     do k=1, nsectors
+     do k=1,nsect
          do i=1,norbs
-             kk = sectors(k)%next_sector(i,0)
+             kk = sectors(k)%next_sect(i,0)
              if (kk == -1) cycle
              indx1 = sectors(k)%istart
              indx2 = sectors(kk)%istart
-             do l=1, sectors(k)%ndim
-                 do m=1, sectors(kk)%ndim
-                     ob = sectors(k)%myfmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))    
-                     do j=1, mfreq
+             do l=1,sectors(k)%ndim
+                 do m=1,sectors(kk)%ndim
+                     ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))
+                     do j=1,mfreq
                          cb = cmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
                          ghub(j,i) = ghub(j,i) + ob / cb
-                     enddo 
-                 enddo
-             enddo 
-         enddo ! over i={1,norbs}
-     enddo ! over k={1,nsectors}
+                     enddo ! over j={1,mfreq} loop
+                 enddo ! over m={1,sectors(kk)%ndim} loop
+             enddo  ! over l={1,sectors(k)%ndim} loop
+         enddo ! over i={1,norbs} loop
+     enddo ! over k={1,nsect} loop
 
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs

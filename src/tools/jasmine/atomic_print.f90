@@ -85,6 +85,7 @@
 
      write(mystd,'(2(4X,a,i10))')   'nband  :', nband  , 'nspin  :', nspin
      write(mystd,'(2(4X,a,i10))')   'norbs  :', norbs  , 'ncfgs  :', ncfgs
+     write(mystd,'(2(4X,a,i10))')   'nmini  :', nmini  , 'nmaxi  :', nmaxi 
 
      write(mystd,'(2(4X,a,f10.5))') 'Uc     :', Uc     , 'Uv     :', Uv
      write(mystd,'(2(4X,a,f10.5))') 'Jz     :', Jz     , 'Js     :', Js

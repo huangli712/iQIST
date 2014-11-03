@@ -20,8 +20,8 @@
 !!! comment :
 !!!-------------------------------------------------------------------------
 
-!!>>> ctqmc_print_header: print the startup information for continuous time 
-!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field 
+!!>>> ctqmc_print_header: print the startup information for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
 !!>>> theory self-consistent engine
   subroutine ctqmc_print_header()
      use constants, only : mystd
@@ -62,8 +62,8 @@
      return
   end subroutine ctqmc_print_header
 
-!!>>> ctqmc_print_footer: print the ending information for continuous time 
-!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field 
+!!>>> ctqmc_print_footer: print the ending information for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
 !!>>> theory self-consistent engine
   subroutine ctqmc_print_footer()
      use constants, only : dp, mystd
@@ -124,7 +124,7 @@
      return
   end subroutine ctqmc_print_summary
 
-!!>>> ctqmc_print_runtime: print the runtime information, including physical 
+!!>>> ctqmc_print_runtime: print the runtime information, including physical
 !!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : one, half, mystd
@@ -136,8 +136,8 @@
      use context, only : rshift_tcount, rshift_accept, rshift_reject
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : paux, cnegs, caves
-     
-     use m_npart, only : num_prod
+
+     use m_npart, only : nprod
 
      implicit none
 
@@ -196,7 +196,7 @@
      write(mystd,'(4X,a,f10.5)')  'averaged sign sampler:', caves / real(cstep)
 
 ! number of total matrices multiplication
-     write(mystd,'(4X,a,f14.1)')  'averaged matrices products:', num_prod / real(cstep)
+     write(mystd,'(4X,a,f14.1)')  'averaged matrices products:', nprod / real(cstep)
 
      return
   end subroutine ctqmc_print_runtime

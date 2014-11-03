@@ -282,7 +282,8 @@
      if ( nmaxi > norbs ) then
          nmaxi = norbs
          write(mystd,'(2X,a)') 'WARNING: nmaxi > norbs, enforce to be norbs!'
-     endif ! back if ( nmini < zero ) block
+         write(mystd,*)
+     endif ! back if ( nmaix > norbs ) block
 
      return
   end subroutine atomic_check_config

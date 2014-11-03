@@ -55,6 +55,7 @@
 !!!           04/12/2010 by li huang
 !!!           10/20/2010 by li huang
 !!!           08/20/2014 by li huang
+!!!           11/02/2014 by li huang
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -67,7 +68,7 @@
 !!>>> service layer: evaluate ztrace ratio                              <<<
 !!-------------------------------------------------------------------------
 
-!!>>> cat_insert_ztrace: calculate the trace ratio for insert new create and 
+!!>>> cat_insert_ztrace: calculate the trace ratio for insert new create and
 !!>>> destroy operators on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
      use constants, only : dp, zero
@@ -276,7 +277,7 @@
      return
   end subroutine cat_insert_ztrace
 
-!!>>> cat_remove_ztrace: calculate the trace ratio for remove old create 
+!!>>> cat_remove_ztrace: calculate the trace ratio for remove old create
 !!>>> and destroy operators on perturbation expansion series
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
      use constants, only : dp, zero
@@ -770,8 +771,8 @@
 !!>>> service layer: update perturbation expansion series A             <<<
 !!-------------------------------------------------------------------------
 
-!!>>> try_insert_colour: generate create and destroy operators for selected 
-!!>>> flavor channel randomly, and then determinte their index address for 
+!!>>> try_insert_colour: generate create and destroy operators for selected
+!!>>> flavor channel randomly, and then determinte their index address for
 !!>>> the colour (determinant) part
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, epss
@@ -866,8 +867,8 @@
      return
   end subroutine try_insert_colour
 
-!!>>> try_remove_colour: select index address is and ie for selected flavor 
-!!>>> channel randomly, and then determine their imaginary time points for 
+!!>>> try_remove_colour: select index address is and ie for selected flavor
+!!>>> channel randomly, and then determine their imaginary time points for
 !!>>> the colour (determinant) part
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, epss
@@ -910,8 +911,8 @@
      return
   end subroutine try_remove_colour
 
-!!>>> try_lshift_colour: select index address isn for selected flavor channel 
-!!>>> randomly, and then determine its imaginary time points, shift it randomly, 
+!!>>> try_lshift_colour: select index address isn for selected flavor channel
+!!>>> randomly, and then determine its imaginary time points, shift it randomly,
 !!>>> and then evaluate its final index address for the colour (determinant) part
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
      use constants, only : dp, zero
@@ -995,8 +996,8 @@
      return
   end subroutine try_lshift_colour
 
-!!>>> try_rshift_colour: select index address ien for selected flavor channel 
-!!>>> randomly, and then determine its imaginary time points, shift it randomly, 
+!!>>> try_rshift_colour: select index address ien for selected flavor channel
+!!>>> randomly, and then determine its imaginary time points, shift it randomly,
 !!>>> and then evaluate its final index address for the colour (determinant) part
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
      use constants, only : dp, zero
@@ -1084,7 +1085,7 @@
 !!>>> service layer: update perturbation expansion series B             <<<
 !!-------------------------------------------------------------------------
 
-!!>>> cat_insert_colour: update the perturbation expansion series for insert 
+!!>>> cat_insert_colour: update the perturbation expansion series for insert
 !!>>> new create and destroy operators in the colour part actually
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
@@ -1156,7 +1157,7 @@
      return
   end subroutine cat_insert_colour
 
-!!>>> cat_remove_colour: update the perturbation expansion series for remove 
+!!>>> cat_remove_colour: update the perturbation expansion series for remove
 !!>>> old create and destroy operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
      use context, only : ckink, empty_s, empty_e, index_s, index_e
@@ -1203,7 +1204,7 @@
      return
   end subroutine cat_remove_colour
 
-!!>>> cat_lshift_colour: update the perturbation expansion series for lshift 
+!!>>> cat_lshift_colour: update the perturbation expansion series for lshift
 !!>>> an old create operators in the colour part actually
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
      use constants, only : dp
@@ -1259,7 +1260,7 @@
      return
   end subroutine cat_lshift_colour
 
-!!>>> cat_rshift_colour: update the perturbation expansion series for rshift 
+!!>>> cat_rshift_colour: update the perturbation expansion series for rshift
 !!>>> an old destroy operators in the colour part actually
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
      use constants, only : dp
@@ -1319,8 +1320,8 @@
 !!>>> service layer: update perturbation expansion series C             <<<
 !!-------------------------------------------------------------------------
 
-!!>>> try_insert_flavor: determine index addresses for the new create and 
-!!>>> destroy operators in the flavor part, and then determine whether they 
+!!>>> try_insert_flavor: determine index addresses for the new create and
+!!>>> destroy operators in the flavor part, and then determine whether they
 !!>>> can be inserted diagrammatically
   subroutine try_insert_flavor(flvr, is, ie, tau_start, tau_end, ladd)
      use constants, only : dp
@@ -1486,8 +1487,8 @@
      return
   end subroutine try_insert_flavor
 
-!!>>> try_remove_flavor: determine index addresses for the new create and 
-!!>>> destroy operators in the flavor part, and then determine whether they 
+!!>>> try_remove_flavor: determine index addresses for the new create and
+!!>>> destroy operators in the flavor part, and then determine whether they
 !!>>> can be inserted diagrammatically
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
      use constants, only : dp
@@ -1617,8 +1618,8 @@
      return
   end subroutine try_remove_flavor
 
-!!>>> try_lshift_flavor: determine index addresses for the old and new create 
-!!>>> operators in the flavor part, and then determine whether it can be shifted 
+!!>>> try_lshift_flavor: determine index addresses for the old and new create
+!!>>> operators in the flavor part, and then determine whether it can be shifted
 !!>>> diagrammatically
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
      use constants, only : dp
@@ -1776,8 +1777,8 @@
      return
   end subroutine try_lshift_flavor
 
-!!>>> try_rshift_flavor: determine index addresses for the old and new destroy 
-!!>>> operators in the flavor part, and then determine whether it can be shifted 
+!!>>> try_rshift_flavor: determine index addresses for the old and new destroy
+!!>>> operators in the flavor part, and then determine whether it can be shifted
 !!>>> diagrammatically
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
      use constants, only : dp
@@ -2503,17 +2504,17 @@
 !!-------------------------------------------------------------------------
 
 !!>>> ctqmc_lazy_ztrace: core subroutine of manjushaka
-!! (1) use good quantum numbers (GQNs) algorithm, split the total Hibert space 
-!!     to small subspace, the dimension of F mat will be smaller.
+!! (1) use good quantum numbers (GQNs) algorithm, split the total Hibert space
+!!     to small subspace, the dimension of F-matrix will be smaller.
 !!
-!! (2) use divide and conqure algorithm, split the imaginary time axis into 
-!!     many parts, save the matrices products of that part, which may be used 
+!! (2) use divide and conqure algorithm, split the imaginary time axis into
+!!     many parts, save the matrices products of that part, which may be used
 !!     by next Monte Carlo move.
 !! NOTE: you should carefully choose npart in order to obtain the best speedup.
 !!
 !! (3) use lazy trace algorithm to reject some proposed moves immediately.
 !!
-!! (4) truncate the Hilbert space according to the total occupancy and the 
+!! (4) truncate the Hilbert space according to the total occupancy and the
 !!     probability of atomic eigenstates.
   subroutine ctqmc_lazy_ztrace(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
      use constants, only : dp, zero, one, epst
@@ -2522,21 +2523,21 @@
      use context, only : expt_t, expt_v, index_t, index_v, ckink
      use context, only : matrix_ptrace, matrix_ntrace, ddmat
 
-     use m_sector, only : nsectors, sectors, final_product
+     use m_sector, only : nsect, sectors, fprod
      use m_sector, only : is_string, ctqmc_make_string
 
-     use m_npart, only : is_copy, cat_sector_ztrace, ctqmc_make_nparts
+     use m_npart, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
 
      implicit none
 
 ! external arguments
-! the type of Monte Carlo moves
+! type of Monte Carlo moves
      integer,  intent(in)  :: imove
 
-! the mode how to calculate trace
+! mode on how to calculate trace
      integer,  intent(in)  :: cmode
 
-! the total number of operators for current diagram
+! total number of operators for current diagram
      integer,  intent(in)  :: csize
 
 ! the calculated determinant ratio
@@ -2556,7 +2557,7 @@
 
 ! imaginary time value of operator B, only valid in cmode = 1 or 2
      real(dp), intent(in) :: tau_e
-     
+
 ! local variables
 ! local version of index_t
      integer :: index_t_loc(mkink)
@@ -2565,24 +2566,24 @@
      real(dp) :: expt_t_loc(ncfgs)
 
 ! a particular string begins at one sector
-     integer :: string(csize+1, nsectors) 
+     integer :: string(csize+1, nsect)
 
 ! minimum dimension of the sectors
-     integer :: min_dim(nsectors)
+     integer :: min_dim(nsect)
 
-! the trace boundary
-     real(dp) :: trace_bound(nsectors)
+! trace boundary
+     real(dp) :: trace_bound(nsect)
 
-! the index to original sector
-     integer :: orig_sect(nsectors)
+! index of original sector
+     integer :: orig_sect(nsect)
 
-! the trace of each sector
-     real(dp) :: trace_sector(nsectors)
+! trace of each sector
+     real(dp) :: trace_sect(nsect)
 
-! the number of alive sector
+! number of alive sector
      integer :: nalive_sect
 
-! the maximum and minimum bounds of acceptance ratio
+! maximum and minimum bounds of acceptance ratio
      real(dp) :: pmax
      real(dp) :: pmin
      real(dp) :: ptmp
@@ -2601,7 +2602,7 @@
 
 ! start index of sectors
      integer :: indx
-     
+
 ! loop index
      integer :: i, j
 
@@ -2625,7 +2626,7 @@
 ! make propose ratio for different type of moves
      select case(imove)
          case(1)
-             propose = ( beta / real( ckink + 1 ) ) ** 2 
+             propose = ( beta / real( ckink + 1 ) ) ** 2
          case(2)
              propose = ( real( ckink ) / beta ) ** 2
          case(3)
@@ -2635,53 +2636,54 @@
          case(5)
              propose = one
      end select
-     ptmp = propose  *  abs(deter_ratio) 
+     ptmp = propose  *  abs(deter_ratio)
 
-! build string for all the sectors, is_string(:,1) will be 
+! build string for all the sectors, is_string(:,1) will be
 ! modified internally
      call ctqmc_make_string(csize, index_t_loc, string)
 
 ! we can check is_string here to see whether this diagram can survive ?
 ! if not, return immediately.
      pass = .false.
-     do i=1, nsectors
+     do i=1,nsect
          if ( is_string(i,1) ) then
              pass = .true.
              EXIT
-         endif
-     enddo
+         endif ! back if ( is_string(i,1) ) block
+     enddo ! over i={1,nsect} loop
      if ( .not. pass ) then
          accept_p = zero
          RETURN
-     endif
+     endif ! back if ( .not. pass ) block
 
 ! determine the minimal dimension for each alive string
      min_dim = 0
-     do i=1, nsectors
+     do i=1,nsect
          if ( .not. is_string(i,1) ) cycle
          min_dim(i) = sectors(i)%ndim
-         do j=1, csize
+         do j=1,csize
              if ( min_dim(i) > sectors(string(j,i))%ndim ) then
                  min_dim(i) = sectors(string(j,i))%ndim
              endif
-         enddo
-     enddo
+         enddo ! over j={1,csize} loop
+     enddo ! over i={1,nsect} loop
 
-! calculate the trace bounds for each sector and determine the 
+! calculate the trace bounds for each sector and determine the
 ! number sectors which actually contribute to the total trace
      trace_bound = zero
      nalive_sect = 0
      orig_sect = -1
-     do i=1, nsectors
+     do i=1,nsect
          if ( .not. is_string(i,1) ) cycle
 ! find one sector which may contribute to the total trace
          nalive_sect = nalive_sect + 1
 ! calculate its trace bound
          tmp_trb = one
-         do j=1, csize
+         do j=1,csize
              indx = sectors(string(j,i))%istart
-             tmp_trb = tmp_trb * expt_v(indx, index_t_loc(j)) 
-         enddo 
+             tmp_trb = tmp_trb * expt_v(indx, index_t_loc(j))
+         enddo ! over j={1,csize} loop
+
 ! specially treatment for the last time-evolution operator
          indx = sectors(string(1,i))%istart
          tmp_trb = tmp_trb * expt_t_loc(indx) * min_dim(i)
@@ -2697,27 +2699,27 @@
 ! don't find any alive string, return immediately
      if ( nalive_sect == 0 ) then
          pass = .false.
-         accept_p = zero 
+         accept_p = zero
          RETURN
 ! otherwise, calculate the summmation of trace bounds
      else
          sum_bound = sum( trace_bound(1:nalive_sect) )
-     endif
+     endif ! back if ( nalive_sect == 0 ) block
 
 ! calculate the maximum bound of the acceptance ratio
      pmax = ptmp * abs(sum_bound/matrix_ptrace)
 
 ! check whether pmax < rand_num
 ! if it is true, reject this move immediately
-     if (pmax < rand_num) then
+     if ( pmax < rand_num ) then
          pass = .false.
-         accept_p = zero 
+         accept_p = zero
          RETURN
-     endif
+     endif ! back if ( pmax < rand_num ) block
 
 ! determine which part has been changed due to local change of diagram
-! it will set is_save internally
-     call ctqmc_make_nparts(cmode, csize, index_t_loc, tau_s, tau_e)
+! it will set isave internally
+     call ctqmc_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
 
 ! sort the trace_bound to speed up the refining process
 ! here, we use simple bubble sort algorithm, because nalive_sect is usually small
@@ -2725,52 +2727,52 @@
 
 ! begin to refine the trace bounds
      pass = .false.
-     is_copy = .false.
+     is_cp = .false.
      sum_abs_trace = zero
-     trace_sector = zero
-     do i=1, nalive_sect
+     trace_sect = zero
+     do i=1,nalive_sect
 ! calculate the trace for one sector, this call will consume a lot of time
-! if the dimension of fmat and expansion order is large, so we should carefully 
+! if the dimension of fmat and expansion order is large, so we should carefully
 ! optimize it.
-         call cat_sector_ztrace( csize, string(:,orig_sect(i)), index_t_loc, &
-                                                  expt_t_loc, trace_sector(i) )
+         call cat_sector_ztrace(csize, string(:,orig_sect(i)), index_t_loc, expt_t_loc, trace_sect(i))
 ! if this move is not accepted, refine the trace bound to see whether we can
 ! reject it before calculating the trace of all of the sectors
          if ( .not. pass ) then
-             sum_abs_trace = sum_abs_trace + abs( trace_sector(i) )
+             sum_abs_trace = sum_abs_trace + abs( trace_sect(i) )
              sum_bound = sum_bound - trace_bound(i)
 ! calculate pmax and pmin
              pmax = ptmp * abs( (sum_abs_trace + sum_bound) / matrix_ptrace )
              pmin = ptmp * abs( (sum_abs_trace - sum_bound) / matrix_ptrace )
 ! check whether pmax < rand_num
-             if (pmax < rand_num) then
+             if ( pmax < rand_num ) then
                  pass = .false.
-                 accept_p = zero 
+                 accept_p = zero
                  return
-             endif
-! this move is accepted, stop refining process, calculate the trace of 
+             endif ! back if ( pmax < rand_num ) block
+! this move is accepted, stop refining process, calculate the trace of
 ! remaining sectors to get the final result of trace.
-             if (pmin > rand_num) then
+             if ( pmin > rand_num ) then
                  pass = .true.
-             endif
-         endif 
-     enddo  ! over i={1, nalive_sect} loop
+             endif ! back if ( pmin > rand_num ) block
+         endif ! back if ( .not. pass ) block
+     enddo ! over i={1, nalive_sect} loop
 
 ! if we arrive here, two cases
 ! case 1: pass == .false., we haven't determined the pass
 ! case 2: pass == .true. we have determined the pass
-     matrix_ntrace = sum(trace_sector(1:nalive_sect)) 
+     matrix_ntrace = sum(trace_sect(1:nalive_sect))
      accept_p = propose  *  deter_ratio * (matrix_ntrace / matrix_ptrace)
-     pass = ( min(one, abs(accept_p)) > rand_num)
+     pass = ( min(one, abs(accept_p)) > rand_num )
      if ( .not. pass ) then
         return
-     endif
+     endif ! back if ( .not. pass ) block
+
 ! store the diagonal elements of final product in ddmat(:,1)
      ddmat(:,1) = zero
-     do i=1, nalive_sect
+     do i=1,nalive_sect
          indx = sectors( orig_sect(i) )%istart
-         do j=1, sectors( orig_sect(i) )%ndim
-             ddmat(indx+j-1,1) = final_product(orig_sect(i),1)%item(j,j) 
+         do j=1,sectors( orig_sect(i) )%ndim
+             ddmat(indx+j-1,1) = fprod(orig_sect(i),1)%item(j,j)
          enddo
      enddo
 
@@ -2783,10 +2785,10 @@
      use control, only : mkink, ncfgs
      use context, only : expt_t, expt_v, index_t, index_v, ddmat
 
-     use m_sector, only : nsectors, sectors, final_product
+     use m_sector, only : nsect, sectors, fprod
      use m_sector, only : is_string, ctqmc_make_string
 
-     use m_npart, only : is_copy, cat_sector_ztrace, ctqmc_make_nparts
+     use m_npart, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
 
      implicit none
 
@@ -2805,10 +2807,10 @@
      real(dp) :: expt_t_loc(ncfgs)
 
 ! a particular string begins at one sector
-     integer :: string(csize+1, nsectors) 
+     integer :: string(csize+1, nsect)
 
 ! trace for each sector
-     real(dp) :: trace_sector(nsectors)
+     real(dp) :: trace_sect(nsect)
 
 ! loop index
      integer :: i, j
@@ -2821,44 +2823,44 @@
      index_t_loc = index_v
      expt_t_loc = expt_t(:,2)
 
-! build string for all the sectors, is_string(:,1) will be 
+! build string for all the sectors, is_string(:,1) will be
 ! modified internally
      call ctqmc_make_string(csize, index_t_loc, string)
 
-! determine is_save, all parts with some fermion operators should be 
+! determine is_save, all parts with some fermion operators should be
 ! recalculated in this case.
-     call ctqmc_make_nparts(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
+     call ctqmc_make_npart(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
 
 ! calculate the trace for all the alive sectors
-     is_copy = .false.
-     trace_sector = zero
-     do i=1, nsectors
+     is_cp = .false.
+     trace_sect = zero
+     do i=1,nsect
          if ( .not. is_string(i,1) ) cycle
-         call cat_sector_ztrace( csize, string(:,i), index_t_loc, expt_t_loc, trace_sector(i) )
-     enddo
+         call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
+     enddo ! over j={1,nsect} loop
 
-     trace = sum(trace_sector)
+     trace = sum(trace_sect)
 
 ! store the diagonal elements of final product in ddmat(:,1)
      ddmat(:,1) = zero
-     do i=1, nsectors
+     do i=1,nsect
          if( .not. is_string(i,1) ) cycle
          indx = sectors(i)%istart
-         do j=1, sectors(i)%ndim
-             ddmat(indx+j-1,1) = final_product(i,1)%item(j,j) 
-         enddo
-     enddo
+         do j=1,sectors(i)%ndim
+             ddmat(indx+j-1,1) = fprod(i,1)%item(j,j)
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect}  loop
 
      return
   end subroutine ctqmc_retrieve_ztrace
 
-!!>>> ctqmc_make_evolve: used to update the operator traces of the 
+!!>>> ctqmc_make_evolve: used to update the operator traces of the
 !!>>> modified part
   subroutine ctqmc_make_evolve()
      use context, only : matrix_ptrace, matrix_ntrace, ddmat
 
-     use m_sector, only : nsectors, sectors, is_string, final_product
-     use m_npart, only : ctqmc_save_parts
+     use m_sector, only : nsect, sectors, is_string, fprod
+     use m_npart, only : ctqmc_save_npart
 
      implicit none
 
@@ -2875,15 +2877,15 @@
 ! update is_string for calculating nmat and nnmat
      is_string(:,2) = is_string(:,1)
 
-! transfer the final matrix product from final_product(:,:,1) to 
+! transfer the final matrix product from final_product(:,:,1) to
 ! final_product(:,:,2) the latter can be used to calculate nmat and nnmat
-     do i=1, nsectors
+     do i=1,nsect
          if ( .not. is_string(i,1) ) cycle
-         final_product(i,2)%item = final_product(i,1)%item
-     enddo
-  
+         fprod(i,2)%item = fprod(i,1)%item
+     enddo ! over i={1,nsect} loop
+
  ! save the data of each part
-     call ctqmc_save_parts()
+     call ctqmc_save_npart()
 
      return
   end subroutine ctqmc_make_evolve
@@ -2892,7 +2894,7 @@
 !!>>> service layer: utility subroutines to look up in the flavor       <<<
 !!-------------------------------------------------------------------------
 
-!!>>> ctqmc_make_equate: to determine whether there exists an operator whose 
+!!>>> ctqmc_make_equate: to determine whether there exists an operator whose
 !!>>> imaginary time is equal to time
   subroutine ctqmc_make_equate(flvr, time, have)
      use constants, only : dp, epss
@@ -2935,7 +2937,7 @@
      return
   end subroutine ctqmc_make_equate
 
-!!>>> ctqmc_make_search: determine index address of operators in the 
+!!>>> ctqmc_make_search: determine index address of operators in the
 !!>>> flavor part using bisection algorithm
   subroutine ctqmc_make_search(addr, ndim, time)
      use constants, only : dp
@@ -2991,7 +2993,7 @@
 !!>>> service layer: utility subroutines to build colour and flavor     <<<
 !!-------------------------------------------------------------------------
 
-!!>>> ctqmc_make_colour: generate perturbation expansion series for the colour 
+!!>>> ctqmc_make_colour: generate perturbation expansion series for the colour
 !!>>> (determinant) part, it should be synchronized with the flavor part
   subroutine ctqmc_make_colour(flvr, kink)
      use constants, only : dp
@@ -3087,7 +3089,7 @@
 !!>>> service layer: utility subroutines to show the colour and flavor  <<<
 !!-------------------------------------------------------------------------
 
-!!>>> ctqmc_make_display: display operators information (include colour and 
+!!>>> ctqmc_make_display: display operators information (include colour and
 !!>>> flavor parts) on the screen, only used to debug the code
   subroutine ctqmc_make_display(show_type)
      use constants, only : mystd
