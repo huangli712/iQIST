@@ -1,13 +1,15 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! A test program for dynamical mean field theory (DMFT) self-consistent  !
-! engine plus hybridization expansion version continuous time quantum    !
-! Monte Carlo (CTQMC) quantum impurity solver                            !
-! author  : li huang                                                     !
-! version : v2012.08.20T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : this impurity solver is based on general matrix formalism    !
-!           any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! BEGONIA @ iQIST                                                      !
+!!!                                                                      !
+!!! A test program for dynamical mean field theory (DMFT) self-consistent!
+!!! engine plus hybridization expansion version continuous time quantum  !
+!!! Monte Carlo (CTQMC) quantum impurity solver                          !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : this impurity solver is based on general matrix formalism  !
+!!!           any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
 
 !!
 !!
