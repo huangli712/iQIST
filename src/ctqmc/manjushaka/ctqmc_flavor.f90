@@ -2723,7 +2723,7 @@
 
 ! sort the trace_bound to speed up the refining process
 ! here, we use simple bubble sort algorithm, because nalive_sect is usually small
-     call ctqmc_sort_list( nalive_sect, trace_bound(1:nalive_sect), orig_sect(1:nalive_sect) )
+     call s_sorter2( nalive_sect, trace_bound(1:nalive_sect), orig_sect(1:nalive_sect) )
 
 ! begin to refine the trace bounds
      pass = .false.

@@ -18,6 +18,7 @@
 !!!           07/14/2014 by li huang
 !!!           08/21/2014 by li huang
 !!!           10/10/2014 by li huang
+!!!           11/02/2014 by yilin wang
 !!! purpose : these subroutines are used to provide some useful facilities
 !!!           including string manipulation, date time information, etc.
 !!! status  : unstable
@@ -38,11 +39,13 @@
 !! -----------------
 !!
 !! subroutine s_sorter(...)
+!! subroutine s_sorter2(...)
 !! subroutine s_qsorter(...)
 !! subroutine s_qscorer(...)
 !!
-!! Note: s_sorter() implements the bubble algorithm, and s_qsorter() implement
-!! the quick sort algorithm. s_qscorer() is called by s_qsorter() internally.
+!! Note: s_sorter() and s_sorter2() implements the bubble algorithm,
+!! s_qsorter() implement the quick sort algorithm. s_qscorer() is called 
+!! by s_qsorter() internally.
 !!
 !! 3. combination
 !! --------------
@@ -127,6 +130,48 @@
 
      return
   end subroutine s_sorter
+
+!!>>> s_sorter2: using bubble sort algorithm to sort a real list and its index 
+!!>>> according to the descending order of the list.
+  subroutine s_sorter2(nsize, list, indx)
+     use constants, only : dp
+
+     implicit none
+
+! external variables
+! size of the list
+     integer, intent(in) :: nsize
+
+! the list to be sorted
+     real(dp), intent(inout) :: list(nsize)
+
+! in:  index of original list
+! out: original index of the sorted list
+     integer, intent(inout) :: indx(nsize)
+
+! local variables
+! loop index
+     integer :: i,j
+
+! temp variables
+     real(dp) :: real_tmp
+     integer  :: int_tmp
+
+     do i=1, nsize-1
+         do j=1, nsize-i
+             if ( list(j) < list(j+1) ) then
+                 real_tmp = list(j)
+                 list(j) = list(j+1)
+                 list(j+1) = real_tmp
+                 int_tmp = indx(j)
+                 indx(j) = indx(j+1)
+                 indx(j+1) = int_tmp
+             endif
+         enddo
+     enddo
+
+     return
+  end subroutine s_sorter2
 
 !!>>> s_qsorter: sets up for the quick sort recursive method
   subroutine s_qsorter(nsize, list)
