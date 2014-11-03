@@ -63,6 +63,9 @@
 ! averaged sign values, used to measure the sign problem
      integer, public, save  :: caves = 0
 
+! current status of spin-orbit coupling (SOC)
+     integer, public, save  :: cssoc = 0
+
 !-------------------------------------------------------------------------
 !::: core variables: real, matrix trace                                :::
 !-------------------------------------------------------------------------
