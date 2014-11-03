@@ -280,7 +280,7 @@
 
      use context, only : unity, tmesh, rmesh, cmesh, hybf
      use context, only : pmesh, qmesh, ppleg, qqche
-     use context, only : symm, eimp, eigs, naux
+     use context, only : symm, eimp, eigs, naux, cssoc
 
      use mmpi
 
@@ -474,10 +474,16 @@
 ! find 'atom.cix', read it
          if ( exists ) then
              open(mytmp, file='atom.cix', form='formatted', status='unknown')
-! skip 20 header lines
-             do i=1,20
+! skip 10 header lines
+             do i=1,10
                  read(mytmp,*)
-             enddo ! over i={1,20} loop
+             enddo ! over i={1,10} loop
+! read the status of spin-orbit coupling (SOC)
+             read(mytmp,*) j1, j2, cssoc
+! skip another 9 header lines
+             do i=1,9
+                 read(mytmp,*)
+             enddo ! over i={1,9} loop
 ! read the total number of sectors, maximum dimension of sectors,
 ! and average dimension of sectors
              read(mytmp,*) nsect, mdim_sect, adim_sect
@@ -551,6 +557,7 @@
 ! block until all processes have reached here
      call mp_barrier()
 
+     call mp_bcast(cssoc,     master)
      call mp_bcast(nsect,     master)
      call mp_bcast(mdim_sect, master)
      call mp_bcast(adim_sect, master)
@@ -846,6 +853,15 @@
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)
+     endif
+
+! write out the current status of spin-orbit coupling
+     if ( myid == master ) then ! only master node can do it
+         if ( cssoc == 1 ) then
+             write(mystd,'(4X,a)') 'SOC calculation:  Yes'
+         else
+             write(mystd,'(4X,a)') 'SOC calculation:   No'
+         endif
      endif
 
 ! write out the seed for random number stream, it is useful to reproduce
