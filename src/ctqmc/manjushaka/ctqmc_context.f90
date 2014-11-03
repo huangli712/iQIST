@@ -30,6 +30,7 @@
 !!!           06/08/2010 by li huang
 !!!           07/19/2014 by yilin wang
 !!!           08/20/2014 by yilin wang
+!!!           11/02/2014 by yilin wang
 !!! purpose : define the key data structure and global arrays/variables for
 !!!           hybridization expansion version continuous time quantum Monte
 !!!           Carlo (CTQMC) quantum impurity solver and dynamical mean field
@@ -60,6 +61,9 @@
 
 ! averaged sign values, used to measure the sign problem
      integer, public, save  :: caves = 0
+
+! current status of spin-orbit coupling (SOC)
+     integer, public, save  :: cssoc = 0
 
 !-------------------------------------------------------------------------
 !::: core variables: real, matrix trace                                :::
