@@ -1604,11 +1604,16 @@
 
   end subroutine cat_reflip_matrix
 
-!>>> global update the mmat matrix and gmat matrix from scratch
+!!>>> cat_reload_matrix: global update the mmat matrix and gmat matrix
+!!>>> from scratch
   subroutine cat_reload_matrix(flvr)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rank
+     use context, only : mmat, gmat
 
      implicit none
 
@@ -1618,7 +1623,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
