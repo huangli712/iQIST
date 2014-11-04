@@ -1,62 +1,40 @@
-!-------------------------------------------------------------------------
-! project : begonia
-! program : ctqmc_insert_kink
-!           ctqmc_remove_kink
-!           ctqmc_lshift_kink
-!           ctqmc_rshift_kink
-!           ctqmc_reflip_kink
-!           ctqmc_reload_kink <<<---
-!           cat_insert_matrix
-!           cat_remove_matrix
-!           cat_lshift_matrix
-!           cat_rshift_matrix
-!           cat_reflip_matrix
-!           cat_reload_matrix <<<---
-!           cat_insert_detrat
-!           cat_remove_detrat
-!           cat_lshift_detrat
-!           cat_rshift_detrat
-!           cat_reflip_detrat <<<---
-! source  : ctqmc_update.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/26/2009 by li huang
-!           09/30/2009 by li huang
-!           10/02/2009 by li huang
-!           10/25/2009 by li huang
-!           10/29/2009 by li huang
-!           11/02/2009 by li huang
-!           11/08/2009 by li huang
-!           11/17/2009 by li huang
-!           11/20/2009 by li huang
-!           11/24/2009 by li huang
-!           11/27/2009 by li huang
-!           11/30/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/26/2009 by li huang
-!           01/05/2010 by li huang
-!           02/27/2010 by li huang
-!           03/22/2010 by li huang
-!           06/09/2010 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver.
-!           the following subroutines mainly deal with the \mathscr{M}
-!           matrix: mmat, and \mathscr{G} matrix: gmat.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : begonia
+!!! program : ctqmc_insert_kink
+!!!           ctqmc_remove_kink
+!!!           ctqmc_lshift_kink
+!!!           ctqmc_rshift_kink
+!!!           ctqmc_reflip_kink
+!!!           ctqmc_reload_kink <<<---
+!!!           cat_insert_matrix
+!!!           cat_remove_matrix
+!!!           cat_lshift_matrix
+!!!           cat_rshift_matrix
+!!!           cat_reflip_matrix
+!!!           cat_reload_matrix <<<---
+!!!           cat_insert_detrat
+!!!           cat_remove_detrat
+!!!           cat_lshift_detrat
+!!!           cat_rshift_detrat
+!!!           cat_reflip_detrat <<<---
+!!! source  : ctqmc_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           06/09/2010 by li huang
+!!!           11/05/2014 by li huang
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
+!!!           the following subroutines mainly deal with the \mathscr{M}
+!!!           matrix: mmat, and \mathscr{G} matrix: gmat.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> driver layer: updating perturbation expansion series              <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> driver layer: updating perturbation expansion series             <<<
+!!========================================================================
 
 !>>> insert new create and destroy operators in the perturbation expansion series
   subroutine ctqmc_insert_kink()
@@ -1887,9 +1865,13 @@
 
 !>>> calculate the determinant ratio for shift old destroy operators
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
+     use context, only : mmat
 
      implicit none
 
@@ -1911,7 +1893,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external    :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1928,7 +1910,7 @@
              lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
          else
              lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1)
-         endif
+         endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
@@ -1937,7 +1919,7 @@
              rvec(j) = -ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
          else
              rvec(j) =  ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2)
-         endif
+         endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust lvec
@@ -1954,11 +1936,15 @@
      return
   end subroutine cat_rshift_detrat
 
-!>>> calculate the determinant ratio for global spin flip
+!!>>> cat_reflip_detrat: calculate the determinant ratio for global
+!!>>> spin flip
   subroutine cat_reflip_detrat(up, dn, ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
+     use context, only : mmat
 
      implicit none
 
@@ -1974,7 +1960,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over segments
@@ -2010,7 +1996,7 @@
      allocate(Tmm(kaux,kaux), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('cat_reflip_detrat','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! init Dmm and Tmm matrix
      Dmm = zero
