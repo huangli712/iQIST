@@ -213,16 +213,19 @@
 !!>>> dump data on matsubara frequency axis                            <<<
 !!========================================================================
 
-!>>> write out impurity green's function in matsubara frequency space
+!!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_grnf(rmesh, grnf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! impurity green's function
      complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
@@ -238,7 +241,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(grnf(j,i,i)), &
                                  aimag(grnf(j,i,i)), &
                       real(grnf(j,i+nband,i+nband)), &
@@ -254,16 +257,19 @@
      return
   end subroutine ctqmc_dump_grnf
 
-!>>> write out bath weiss's function in matsubara frequency space
+!!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_wssf(rmesh, wssf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! bath weiss's function
      complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
@@ -279,7 +285,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(wssf(j,i,i)), &
                                  aimag(wssf(j,i,i)), &
                       real(wssf(j,i+nband,i+nband)), &
@@ -295,16 +301,19 @@
      return
   end subroutine ctqmc_dump_wssf
 
-!>>> write out hybridization function in matsubara frequency space
+!!>>> ctqmc_dump_hybf: write out hybridization function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_hybf(rmesh, hybf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! hybridization function
      complex(dp), intent(in) :: hybf(mfreq,norbs,norbs)
@@ -320,7 +329,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(hybf(j,i,i)), &
                                  aimag(hybf(j,i,i)), &
                       real(hybf(j,i+nband,i+nband)), &
@@ -336,16 +345,19 @@
      return
   end subroutine ctqmc_dump_hybf
 
-!>>> write out self-energy function in matsubara frequency space
+!!>>> ctqmc_dump_sigf: write out self-energy function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_sigf(rmesh, sigf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! self-energy function
      complex(dp), intent(in) :: sigf(mfreq,norbs,norbs)
@@ -361,7 +373,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(sigf(j,i,i)), &
                                  aimag(sigf(j,i,i)), &
                       real(sigf(j,i+nband,i+nband)), &
@@ -377,11 +389,14 @@
      return
   end subroutine ctqmc_dump_sigf
 
-!>>> write out impurity green's function and self-energy function obtained
-! by hubbard-I approximation in matsubara frequency space
+!!>>> ctqmc_dump_hub1: write out impurity green's function and self-energy
+!!>>> function obtained by hubbard-I approximation in matsubara frequency
+!!>>> space
   subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -404,9 +419,9 @@
      open(mytmp, file='solver.hub.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                     real(ghub(j,i)), &
                                    aimag(ghub(j,i)), &
                                     real(shub(j,i)), &
@@ -414,7 +429,7 @@
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -422,32 +437,32 @@
      return
   end subroutine ctqmc_dump_hub1
 
-!>>> write out the Monte Carlo sampling histogram for perturbation expansion series
+!!========================================================================
+!!>>> dump data of physical observables                                <<<
+!!========================================================================
+
+!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
+!!>>> perturbation expansion series
   subroutine ctqmc_dump_hist(hist)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : mkink
 
      implicit none
 
 ! external arguments
 ! histogram data
-     integer, intent(in) :: hist(mkink)
+     real(dp), intent(in) :: hist(mkink)
 
 ! local variables
 ! loop index
      integer  :: i
 
-! dummy variables
-     real(dp) :: raux
-
 ! scaled histogram data
      real(dp) :: haux(mkink)
 
 ! evaluate haux at first
-     raux = real( sum(hist) )
-     do i=1,mkink
-         haux(i) = real( hist(i) ) / raux
-     enddo ! over i={1,mkink} loop
+     haux = hist / sum(hist)
 
 ! open data file: solver.hist.dat
      open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
@@ -455,7 +470,7 @@
 ! write it
      write(mytmp,'(a)') '# histogram: order | count | percent'
      do i=1,mkink
-         write(mytmp,'(i5,i12,f12.6)') i, hist(i), haux(i)
+         write(mytmp,'(i6,i12,f12.6)') i, int( hist(i) ), haux(i)
      enddo ! over i={1,mkink} loop
 
 ! close data file
@@ -464,10 +479,12 @@
      return
   end subroutine ctqmc_dump_hist
 
-!>>> write out the probability of eigenstates of local hamiltonian matrix
+!!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
+!!>>> hamiltonian matrix
   subroutine ctqmc_dump_prob(prob, naux, saux)
-     use constants
-     use control
+     use constants, only : dp, zero, eps6, mytmp
+
+     use control, only : norbs, ncfgs
 
      implicit none
 
@@ -518,7 +535,7 @@
          if ( stmp2(ns) < stmp1(i) ) then
              ns = ns + 1
              stmp2(ns) = stmp1(i)
-         endif
+         endif ! back if ( stmp2(ns) < stmp1(i) ) block
      enddo ! over i={2,ncfgs} loop
 
 ! evaluate sprob
@@ -526,9 +543,8 @@
      do i=1,ncfgs
          do j=1,ns
              if ( abs( stmp2(j) - saux(i) ) < eps6 ) then
-                 sprob(j) = sprob(j) + prob(i)
-                 EXIT
-             endif
+                 sprob(j) = sprob(j) + prob(i); EXIT
+             endif ! back if ( abs( stmp2(j) - saux(i) ) < eps6 ) block
          enddo ! over j={1,ns} loop
      enddo ! over i={1,ncfgs} loop
 
@@ -538,20 +554,20 @@
 ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(i5,3f12.6)') i, prob(i), naux(i), saux(i)
+         write(mytmp,'(i6,3f12.6)') i, prob(i), naux(i), saux(i)
      enddo ! over i={1,ncfgs} loop
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
-         write(mytmp,'(i5,2f12.6)') i+1, real(i), oprob(i)
+         write(mytmp,'(i6,2f12.6)') i+1, real(i), oprob(i)
      enddo ! over i={0,norbs} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(oprob)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(oprob)
 
      write(mytmp,'(a)') '# spin probability: index | spin | prob'
      do i=1,ns
-         write(mytmp,'(i5,2f12.6)') i, stmp2(i), sprob(i)
+         write(mytmp,'(i6,2f12.6)') i, stmp2(i), sprob(i)
      enddo ! over i={1,ns} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(sprob)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
 
 ! close data file
      close(mytmp)
@@ -559,10 +575,12 @@
      return
   end subroutine ctqmc_dump_prob
 
-!>>> write out the occupation matrix and double occupation matrix
+!!>>> ctqmc_dump_nmat: write out the occupation matrix and double
+!!>>> occupation matrix
   subroutine ctqmc_dump_nmat(nmat, nnmat)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
 
      implicit none
 
@@ -582,18 +600,18 @@
      open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
 
 ! write it
-     write(mytmp,'(a)') '  < n_i >   data:'
+     write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i5,f12.6)') i, nmat(i)
+         write(mytmp,'(i6,f12.6)') i, nmat(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
+     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
 
-     write(mytmp,'(a)') '< n_i n_j > data:'
+     write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
+             write(mytmp,'(2i6,f12.6)') i, j, nnmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
