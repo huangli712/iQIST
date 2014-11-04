@@ -2,6 +2,7 @@
 !!! project : CSSL (Common Service Subroutines Library)
 !!! program : s_assert
 !!!           s_sorter
+!!!           s_sorter2
 !!!           s_qsorter
 !!!           s_qscorer
 !!!           s_combination
@@ -44,7 +45,7 @@
 !! subroutine s_qscorer(...)
 !!
 !! Note: s_sorter() and s_sorter2() implements the bubble algorithm,
-!! s_qsorter() implement the quick sort algorithm. s_qscorer() is called 
+!! s_qsorter() implement the quick sort algorithm. s_qscorer() is called
 !! by s_qsorter() internally.
 !!
 !! 3. combination
@@ -131,34 +132,37 @@
      return
   end subroutine s_sorter
 
-!!>>> s_sorter2: using bubble sort algorithm to sort a real list and its index 
-!!>>> according to the descending order of the list.
+!!>>> s_sorter2: using bubble sort algorithm to sort a real list and its
+!!>>> index according to the descending order of the list
   subroutine s_sorter2(nsize, list, indx)
      use constants, only : dp
 
      implicit none
 
-! external variables
+! external arguments
 ! size of the list
      integer, intent(in) :: nsize
+
+! in: index of original list
+! out: original index of the sorted list
+     integer, intent(inout)  :: indx(nsize)
 
 ! the list to be sorted
      real(dp), intent(inout) :: list(nsize)
 
-! in:  index of original list
-! out: original index of the sorted list
-     integer, intent(inout) :: indx(nsize)
-
 ! local variables
 ! loop index
-     integer :: i,j
+     integer  :: i
+     integer  :: j
 
-! temp variables
-     real(dp) :: real_tmp
+! used to exchange index
      integer  :: int_tmp
 
-     do i=1, nsize-1
-         do j=1, nsize-i
+! used to exchange list element
+     real(dp) :: real_tmp
+
+     do i=1,nsize-1
+         do j=1,nsize-i
              if ( list(j) < list(j+1) ) then
                  real_tmp = list(j)
                  list(j) = list(j+1)
@@ -166,9 +170,9 @@
                  int_tmp = indx(j)
                  indx(j) = indx(j+1)
                  indx(j+1) = int_tmp
-             endif
-         enddo
-     enddo
+             endif ! back if ( list(j) < list(j+1) ) block
+         enddo ! over j={1,nsize-i} loop
+     enddo ! over i={1,nsize-1} loop
 
      return
   end subroutine s_sorter2

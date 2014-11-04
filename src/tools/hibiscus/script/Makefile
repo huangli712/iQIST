@@ -20,7 +20,7 @@
 ## History
 ## =======
 ##
-## 09/30/2014 by li huang
+## 11/03/2014 by li huang
 ##
 ##
 
@@ -29,7 +29,13 @@ default: all
 all:
 
 clean:
+	rm -fr *.o
+	rm -fr *.pyc
+	rm -fr *.so
 
 clean-dat:
+	rm -fr *.dat
+	rm -fr *.out
+	rm -fr *.data
 
 clean-all: clean clean-dat
