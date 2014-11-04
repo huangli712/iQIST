@@ -26,6 +26,7 @@
      use stack, only : istack_getrest
 
      use control, only : norbs
+     use context, only : index_s, index_e, time_s, time_e
      use context, only : empty_v
 
      implicit none
@@ -104,7 +105,7 @@
      use control, only : mkink
      use control, only : beta
      use control, only : myid, master
-     use context, only : csign, cnegs
+     use context, only : csign, cnegs, matrix_ntrace
      use context, only : ckink
      use context, only : rank
 
