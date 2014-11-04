@@ -21,10 +21,20 @@
 !!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
-     use constants
+     use constants, only : dp, zero, mystd
 
-     use control
-     use context
+     use control, only : issun, isspn
+     use control, only : nband, nspin, norbs, ncfgs
+     use control, only : mkink, mfreq
+     use control, only : ntime, nsweep, nwrite, nmonte, ncarlo
+     use control, only : Uc, Jz
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : hist, prob
+     use context, only : nmat, nnmat
+     use context, only : symm
+     use context, only : gtau, grnf
+     use context, only : sig2
 
      implicit none
 
