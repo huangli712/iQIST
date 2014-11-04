@@ -501,11 +501,11 @@
      use constants, only : zero
 
      use control, only : ntherm
+     use context, only : cnegs, caves
      use context, only : insert_tcount, insert_accept, insert_reject
      use context, only : remove_tcount, remove_accept, remove_reject
      use context, only : lshift_tcount, lshift_accept, lshift_reject
      use context, only : rshift_tcount, rshift_accept, rshift_reject
-     use context, only : reswap_tcount, reswap_accept, reswap_reject
      use context, only : reflip_tcount, reflip_accept, reflip_reject
 
      implicit none
@@ -549,12 +549,13 @@
      return
   end subroutine ctqmc_diagram_warmming
 
-!>>> visit the perturbation expansion diagrams randomly
+!!>>> ctqmc_diagram_sampling: visit the perturbation expansion diagrams
+!!>>> randomly
   subroutine ctqmc_diagram_sampling(cstep)
      use constants, only : dp
-     use control, only : nflip, nclean
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : nflip, nclean
 
      implicit none
 
