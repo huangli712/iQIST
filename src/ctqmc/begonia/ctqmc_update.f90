@@ -174,11 +174,11 @@
 
 !>>> remove old create and destroy operators in the perturbation expansion series
   subroutine ctqmc_remove_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : rank
 
      implicit none
 
