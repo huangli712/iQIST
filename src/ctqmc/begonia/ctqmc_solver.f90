@@ -620,7 +620,10 @@
      use constants, only : mystd
 
      use control, only : norbs
+     use control, only : myid, master
      use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_v, time_v
+     use context, only : rank
 
      implicit none
 
