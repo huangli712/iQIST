@@ -29,10 +29,11 @@
      use control, only : ntime, nsweep, nwrite, nmonte, ncarlo
      use control, only : Uc, Jz
      use control, only : myid, master
+     use context, only : caves
      use context, only : tmesh, rmesh
      use context, only : hist, prob
      use context, only : nmat, nnmat
-     use context, only : symm
+     use context, only : symm, naux, saux
      use context, only : gtau, grnf
      use context, only : sig2
 
