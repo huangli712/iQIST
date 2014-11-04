@@ -38,12 +38,13 @@
 
 !>>> insert new create and destroy operators in the perturbation expansion series
   subroutine ctqmc_insert_kink()
-     use constants, only : dp, one
+     use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
 
      use control, only : norbs
      use control, only : mkink
-     use context, only : ckink
+     use control, only : beta
+     use context, only : ckink, csign, cnegs
      use context, only : insert_tcount, insert_accept, insert_reject
      use context, only : rank
 
