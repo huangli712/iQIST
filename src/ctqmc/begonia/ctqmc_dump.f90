@@ -79,8 +79,10 @@
 !!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_wtau(tmesh, wtau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -114,10 +116,13 @@
      return
   end subroutine ctqmc_dump_wtau
 
-!>>> write out hybridization function in imaginary time space
+!!>>> ctqmc_dump_htau: write out hybridization function in imaginary
+!!>>> time space
   subroutine ctqmc_dump_htau(tmesh, htau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -139,7 +144,7 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), htau(j,i,i), htau(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), htau(j,i+nband,i+nband)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -151,10 +156,13 @@
      return
   end subroutine ctqmc_dump_htau
 
-!>>> write out impurity green's function in imaginary time space (binning mode)
+!!>>> ctqmc_dump_gbin: write out impurity green's function in imaginary
+!!>>> time space (generated in binning mode)
   subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -173,9 +181,6 @@
      integer  :: i
      integer  :: j
 
-! dummy variables
-     real(dp) :: raux
-
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
 
@@ -183,12 +188,7 @@
      character(len=10) :: sbin
 
 ! evaluate gaux first
-     raux = real(ntime) / (beta * beta)
-     do i=1,norbs
-         do j=1,ntime
-             gaux(j,i,i) = gtau(j,i,i) * raux
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
+     call ctqmc_make_gtau(gtau, gaux)
 
 ! open data file: solver.green.bin.x
      write(sbin,'(i10)') ibin ! convert ibin to sbin
@@ -197,7 +197,7 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -208,6 +208,10 @@
 
      return
   end subroutine ctqmc_dump_gbin
+
+!!========================================================================
+!!>>> dump data on matsubara frequency axis                            <<<
+!!========================================================================
 
 !>>> write out impurity green's function in matsubara frequency space
   subroutine ctqmc_dump_grnf(rmesh, grnf)
@@ -460,50 +464,6 @@
      return
   end subroutine ctqmc_dump_hist
 
-!>>> write out the occupation matrix and double occupation matrix
-  subroutine ctqmc_dump_nmat(nmat, nnmat)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! occupation matrix data
-     real(dp), intent(in) :: nmat(norbs)
-
-! double occupation matrix data
-     real(dp), intent(in) :: nnmat(norbs,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.nmat.dat
-     open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
-
-! write it
-     write(mytmp,'(a)') '  < n_i >   data:'
-     do i=1,norbs
-         write(mytmp,'(i5,f12.6)') i, nmat(i)
-     enddo ! over i={1,norbs} loop
-     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
-
-     write(mytmp,'(a)') '< n_i n_j > data:'
-     do i=1,norbs
-         do j=1,norbs
-             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_nmat
-
 !>>> write out the probability of eigenstates of local hamiltonian matrix
   subroutine ctqmc_dump_prob(prob, naux, saux)
      use constants
@@ -598,3 +558,47 @@
 
      return
   end subroutine ctqmc_dump_prob
+
+!>>> write out the occupation matrix and double occupation matrix
+  subroutine ctqmc_dump_nmat(nmat, nnmat)
+     use constants
+     use control
+
+     implicit none
+
+! external arguments
+! occupation matrix data
+     real(dp), intent(in) :: nmat(norbs)
+
+! double occupation matrix data
+     real(dp), intent(in) :: nnmat(norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.nmat.dat
+     open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
+
+! write it
+     write(mytmp,'(a)') '  < n_i >   data:'
+     do i=1,norbs
+         write(mytmp,'(i5,f12.6)') i, nmat(i)
+     enddo ! over i={1,norbs} loop
+     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
+     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
+     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
+
+     write(mytmp,'(a)') '< n_i n_j > data:'
+     do i=1,norbs
+         do j=1,norbs
+             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_nmat
