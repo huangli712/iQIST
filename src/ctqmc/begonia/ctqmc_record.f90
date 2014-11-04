@@ -205,7 +205,7 @@
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
-         cprob(i) = ddmat(i,2) / matrix_ptrace
+         cprob(i) = diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop
 
 ! evaluate raux2, it is Tr ( e^{- \beta H} )
@@ -314,7 +314,7 @@
      integer :: i
 
      do i=1,ncfgs
-         prob(i) = prob(i) + csign * ddmat(i,2) / matrix_ptrace
+         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop
 
      return
@@ -394,29 +394,29 @@
      return
   end subroutine ctqmc_reduce_grnf
 
-!>>> reduce the hist from all children processes
-! note: since hist_mpi and hist are integer (kind=4) type, it is important
-! to avoid data overflow in them
+!!>>> ctqmc_reduce_hist: reduce the hist from all children processes
   subroutine ctqmc_reduce_hist(hist_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : mkink
+     use control, only : nprocs
+     use context, only : hist
 
      implicit none
 
 ! external arguments
 ! histogram for perturbation expansion series
-     integer, intent(out) :: hist_mpi(mkink)
+     real(dp), intent(out) :: hist_mpi(mkink)
 
 ! initialize hist_mpi
-     hist_mpi = 0
+     hist_mpi = zero
 
 ! build hist_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(hist / nprocs, hist_mpi)
+     call mp_allreduce(hist, hist_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -428,7 +428,7 @@
 # endif /* MPI */
 
 ! calculate the average
-     hist_mpi = hist_mpi / 1
+     hist_mpi = hist_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_hist
@@ -862,7 +862,7 @@
                  if ( abs(value - zero) > eps6 ) then
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
-                         call ctqmc_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
+                         call s_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
                      endif
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
@@ -878,7 +878,7 @@
              caux = czero
              do m=1,fcounter(i)
                  ob = fv(m,i) * fv(m,i) * ( prob(fa(m,i)) + prob(fb(m,i)) )
-                 cb = cmesh(k) + eigs(fa(m,i)) - eigs(fb(m,i))
+                 cb = czi * rmesh(k) + eigs(fa(m,i)) - eigs(fb(m,i))
                  caux = caux +  ob / cb
              enddo ! over m={1,fcounter(i)} loop
              ghub(k,i) = caux
@@ -888,7 +888,7 @@
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs
          do k=1,mfreq
-             shub(k,i) = cmesh(k) + mune - eimp(i) - one / ghub(k,i)
+             shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
@@ -911,9 +911,9 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      do k=1,nfreq
          gaux = grnf(k,:,:)
-         call ctqmc_zmat_inv(norbs, gaux)
+         call s_inv_z(norbs, gaux)
          do i=1,norbs
-             sig2(k,i,i) = cmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
+             sig2(k,i,i) = czi * rmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
      enddo ! over k={1,nfreq} loop
 !-------------------------------------------------------------------------
@@ -977,9 +977,9 @@
      do k=1,mfreq
          gaux = czero
          do i=1,norbs
-             gaux(i,i) = cmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
+             gaux(i,i) = czi * rmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
-         call ctqmc_zmat_inv(norbs, gaux)
+         call s_inv_z(norbs, gaux)
          grnf(k,:,:) = gaux
      enddo ! over k={1,mfreq} loop
 

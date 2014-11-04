@@ -821,7 +821,7 @@
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
-         call ctqmc_print_error('try_insert_colour','tau_start is equal to tau_end')
+         call s_print_error('try_insert_colour','tau_start is equal to tau_end')
      endif
 
      return
@@ -866,7 +866,7 @@
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
-         call ctqmc_print_error('try_remove_colour','tau_start is equal to tau_end')
+         call s_print_error('try_remove_colour','tau_start is equal to tau_end')
      endif
 
      return
@@ -1574,6 +1574,8 @@
      use control
      use context
 
+     use stack
+
      implicit none
 
 ! external arguments
@@ -1726,6 +1728,8 @@
      use constants
      use control
      use context
+
+     use stack
 
      implicit none
 
@@ -2973,9 +2977,9 @@
 
 ! now smm2 is the final product, we can use it to evaluate the matrix trace
      do j=1,ncfgs
-         ddmat(j,1) = sparse_csr_cp_elm( j, j, ncfgs, nzero, smm2, jmm2, imm2 )
+         diag(j,1) = sparse_csr_cp_elm( j, j, ncfgs, nzero, smm2, jmm2, imm2 )
      enddo ! over j={1,ncfgs} loop
-     trace = sum( ddmat(:,1) )
+     trace = sum( diag(:,1) )
 
 ! save the final matrix product to op_s
      call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, sop_s(:,1), sop_js(:,1), sop_is(:,1) )
@@ -3008,8 +3012,8 @@
 ! update the operator traces
      matrix_ptrace = matrix_ntrace
 
-! update ddmat for the calculation of atomic state probability
-     ddmat(:,2) = ddmat(:,1)
+! update diag for the calculation of atomic state probability
+     diag(:,2) = diag(:,1)
 
 ! transfer the final matrix product from op_s(:,1) to op_s(:,2), the
 ! latter can be used to calculate nmat and nnmat
@@ -3159,7 +3163,7 @@
      time = time * beta
 
 ! sort time series
-     call ctqmc_time_sorter(2*kink, time)
+     call s_sorter(2*kink, time)
 
 ! insert new operators into the colour part
      do i=1,kink

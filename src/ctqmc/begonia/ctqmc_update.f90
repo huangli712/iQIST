@@ -1684,7 +1684,7 @@
      enddo ! over j={1,kaux} loop
 
 ! now we obtain dmat matrix, while what we need is its inversion
-     call ctqmc_dmat_inv(kaux, mmat(1:kaux, 1:kaux, flvr))
+     call s_inv_d(kaux, mmat(1:kaux, 1:kaux, flvr))
 
 ! reset gmat matrix
      gmat(:, flvr, flvr) = czero
@@ -2009,7 +2009,7 @@
      allocate(Dmm(kaux,kaux), stat=istat)
      allocate(Tmm(kaux,kaux), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('cat_reflip_detrat','can not allocate enough memory')
+         call s_print_error('cat_reflip_detrat','can not allocate enough memory')
      endif
 
 ! init Dmm and Tmm matrix
@@ -2033,7 +2033,7 @@
      call dgemm('N', 'N', kaux, kaux, kaux, one, Dmm, kaux, mmat(1:kaux, 1:kaux, up), kaux, zero, Tmm, kaux)
 
 ! calculate the determinant of Tmm, it is the desired ratio
-     call ctqmc_dmat_det(kaux, Tmm, ratio)
+     call s_det_d(kaux, Tmm, ratio)
 
 ! deallocate memory
      deallocate(Dmm)

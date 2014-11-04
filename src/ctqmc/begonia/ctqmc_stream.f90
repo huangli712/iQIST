@@ -280,12 +280,6 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build identity: unity
-     unity = czero
-     do i=1,norbs
-         unity(i,i) = cone
-     enddo ! over i={1,norbs} loop
-
 ! build imaginary time tau mesh: tmesh
      do i=1,ntime
          tmesh(i) = zero + ( beta - zero ) / real(ntime - 1) * real(i - 1)
@@ -296,16 +290,12 @@
          rmesh(j) = ( two * real(j - 1) + one ) * ( pi / beta )
      enddo ! over j={1,mfreq} loop
 
-! build matsubara frequency mesh: cmesh
-     do k=1,mfreq
-         cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
-     enddo ! over k={1,mfreq} loop
-
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
-         hybf(i,:,:) = unity * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         call s_identity_z( norbs, hybf(i,:,:) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
@@ -456,7 +446,7 @@
 ! note: \infity - \infity is undefined, which return NaN
              do i=1,ncfgs
                  if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
-                     call ctqmc_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
+                     call s_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
                  endif
              enddo ! over i={1,ncfgs} loop
 
@@ -466,7 +456,7 @@
              enddo ! over i={1,norbs} loop
 
          else
-             call ctqmc_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
@@ -624,7 +614,7 @@
 
 ! init probability for atomic states
      prob    = zero
-     ddmat   = zero
+     diag    = zero
 
 ! init auxiliary physical observables
      paux    = zero
@@ -733,7 +723,7 @@
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
-     call ctqmc_fourier_hybf(hybf, htau)
+     call ctqmc_four_hybf(hybf, htau)
 
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then
