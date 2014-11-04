@@ -88,7 +88,7 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == mkink ) then
-!<         call ctqmc_print_exception('ctqmc_insert_kink','can not insert any operators')
+!<         call s_print_exception('ctqmc_insert_kink','can not insert any operators')
          insert_tcount = insert_tcount + one
          insert_reject = insert_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
@@ -154,7 +154,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_insert_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_insert_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the insert statistics
@@ -220,7 +220,7 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_remove_kink','can not remove any operators')
+!<         call s_print_exception('ctqmc_remove_kink','can not remove any operators')
          remove_tcount = remove_tcount + one
          remove_reject = remove_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
@@ -286,7 +286,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_remove_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_remove_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the remove statistics
@@ -352,7 +352,7 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_lshift_kink','can not lshift any operators')
+!<         call s_print_exception('ctqmc_lshift_kink','can not lshift any operators')
          lshift_tcount = lshift_tcount + one
          lshift_reject = lshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
@@ -412,7 +412,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_lshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_lshift_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the lshift statistics
@@ -478,7 +478,7 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_rshift_kink','can not rshift any operators')
+!<         call s_print_exception('ctqmc_rshift_kink','can not rshift any operators')
          rshift_tcount = rshift_tcount + one
          rshift_reject = rshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
@@ -538,7 +538,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_rshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_rshift_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the rshift statistics
@@ -608,7 +608,7 @@
 
 ! not need to perform global flip if there are no operators at all
      if ( nsize == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_reflip_kink','can not reflip any operators')
+!<         call s_print_exception('ctqmc_reflip_kink','can not reflip any operators')
          reflip_tcount = reflip_tcount + one
          reflip_reject = reflip_reject + one
          RETURN
@@ -687,7 +687,7 @@
              enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<             call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<             call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
          endif ! back if ( pass .eqv. .true. ) block
 
@@ -770,7 +770,7 @@
                  enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<                 call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<                 call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
              endif ! back if ( pass .eqv. .true. ) block
 
@@ -860,7 +860,7 @@
              enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<             call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<             call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
          endif ! back if ( pass .eqv. .true. ) block
 
