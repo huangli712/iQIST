@@ -1,44 +1,25 @@
-!-------------------------------------------------------------------------
-! project : begonia
-! program : ctqmc_impurity_solver
-!           ctqmc_diagram_warmming
-!           ctqmc_diagram_sampling
-!           ctqmc_diagram_checking
-!           ctqmc_impurity_tester
-! source  : ctqmc_solver.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/26/2009 by li huang
-!           10/20/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/17/2009 by li huang
-!           11/22/2009 by li huang
-!           12/02/2009 by li huang
-!           12/04/2009 by li huang
-!           12/06/2009 by li huang
-!           12/17/2009 by li huang
-!           12/22/2009 by li huang
-!           12/26/2009 by li huang
-!           12/30/2009 by li huang
-!           01/13/2010 by li huang
-!           02/27/2010 by li huang
-!           06/09/2010 by li huang
-!           06/21/2010 by li huang
-! purpose : the main subroutine for the hybridization expansion version
-!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!           solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : begonia
+!!! program : ctqmc_impurity_solver
+!!!           ctqmc_diagram_warmming
+!!!           ctqmc_diagram_sampling
+!!!           ctqmc_diagram_checking
+!!!           ctqmc_impurity_tester
+!!! source  : ctqmc_solver.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           06/21/2010 by li huang
+!!!           11/04/2014 by li huang
+!!! purpose : the main subroutine for the hybridization expansion version
+!!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
+!!!           solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> core engine for hybridization expansion version continuous time
-! quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
+!!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
      use constants
      use control
@@ -85,11 +66,11 @@
 ! histogram for perturbation expansion series, for mpi case
      real(dp), allocatable :: hist_mpi(:)
 
-! impurity occupation number matrix, for mpi case
-     real(dp), allocatable :: nmat_mpi(:)
-
 ! probability of atomic states, for mpi case
      real(dp), allocatable :: prob_mpi(:)
+
+! impurity occupation number matrix, for mpi case
+     real(dp), allocatable :: nmat_mpi(:)
 
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
@@ -104,32 +85,32 @@
      allocate(hist_mpi(mkink),             stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
-
-     allocate(nmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
      allocate(prob_mpi(ncfgs),             stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(nmat_mpi(norbs),             stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! setup cstep
      cstep = 0
@@ -146,11 +127,11 @@
      if ( iter == 999 ) then
          nsweep = nsweep * 10
          nwrite = nwrite * 10
-     endif
+     endif ! back if ( iter == 999 ) block
 
-!=========================================================================
-!>>> starting quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> starting quantum impurity solver                                 <<<
+!!========================================================================
 
 ! print the header of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
@@ -158,17 +139,17 @@
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nband :', nband, 'Uc    :', Uc
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nspin :', nspin, 'Jz    :', Jz
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> initializing quantum impurity solver                              <<<
-!=========================================================================
+!!========================================================================
+!!>>> initializing quantum impurity solver                             <<<
+!!========================================================================
 
 ! init the continuous time quantum Monte Carlo quantum impurity solver
 ! setup the key variables
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver initializing'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_solver_init()
@@ -178,17 +159,17 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> retrieving quantum impurity solver                                <<<
-!=========================================================================
+!!========================================================================
+!!>>> retrieving quantum impurity solver                               <<<
+!!========================================================================
 
 ! init the continuous time quantum Monte Carlo quantum impurity solver further
 ! retrieving the time series information produced by previous running
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver retrieving'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_retrieve_status()
@@ -198,17 +179,17 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> warmming quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> warmming quantum impurity solver                                 <<<
+!!========================================================================
 
 ! warmup the continuous time quantum Monte Carlo quantum impurity solver,
 ! in order to achieve equilibrium state
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver warmming'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_diagram_warmming()
@@ -218,17 +199,17 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> beginning main iteration                                          <<<
-!=========================================================================
+!!========================================================================
+!!>>> beginning main iteration                                         <<<
+!!========================================================================
 
 ! start simulation
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver sampling'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      CTQMC_MAIN_ITERATION: do i=1, nsweep, nwrite
 
@@ -303,23 +284,23 @@
              enddo ! over n={1,ntime} loop
          enddo ! over m={1,norbs} loop
 
-!=========================================================================
-!>>> symmetrizing immediate results                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> symmetrizing immediate results                                   <<<
+!!========================================================================
 
 ! symmetrize the impurity green's function over spin or over bands
          if ( issun == 2 .or. isspn == 1 ) then
              call ctqmc_symm_gtau(symm, gtau_mpi)
          endif
 
-!=========================================================================
-!>>> writing immediate results                                         <<<
-!=========================================================================
+!!========================================================================
+!!>>> writing immediate results                                        <<<
+!!========================================================================
 
 ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
              call ctqmc_dump_hist(hist_mpi)
-         endif
+         endif ! back if ( myid == master ) block
 
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
@@ -331,15 +312,15 @@
              endif ! back if ( iter /= 999 ) block
          endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> checking quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> checking quantum impurity solver                                 <<<
+!!========================================================================
 
          call ctqmc_diagram_checking(cflag)
 
-!=========================================================================
-!>>> timing quantum impurity solver                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> timing quantum impurity solver                                   <<<
+!!========================================================================
 
 ! record ending time for this iteration
          call cpu_time(time_end)
