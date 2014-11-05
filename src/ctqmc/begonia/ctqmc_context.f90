@@ -49,6 +49,12 @@
 ! averaged sign values, used to measure the sign problem
      integer, public, save  :: caves = 0
 
+! current status of spin-orbital coupling
+! if cssoc = 0, no spin-orbital coupling,
+! if cssoc = 1, atomic spin-orbital coupling
+! note: this variable is determined by atom.cix, do not setup it manually
+     integer, public, save  :: cssoc = 0
+
 !-------------------------------------------------------------------------
 !::: core variables: real, matrix trace                                :::
 !-------------------------------------------------------------------------
