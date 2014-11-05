@@ -222,12 +222,16 @@
 !!>>> Carlo quantum impurity solver plus dynamical mean field theory
 !!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
-     use constants
-     use mmpi
+     use constants, only : dp, zero, one, two, pi, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
      use sparse
 
-     use control
-     use context
+     use control, only : nband, norbs, ncfgs
+     use control, only : ntime
+     use control, only : beta, part
+     use control, only : myid, master
+     use context, only : tmesh
+     use context, only : hybf
 
      implicit none
 
@@ -487,18 +491,18 @@
 
 ! local variables
 ! loop index
-     integer  :: i
-     integer  :: j
+     integer :: i
+     integer :: j
 
 ! system time since 1970, Jan 1, used to generate the random number seed
-     integer  :: system_time
+     integer :: system_time
 
 ! random number seed for twist generator
-     integer  :: stream_seed
+     integer :: stream_seed
 
 ! dummy sparse matrix in CSR format
-     integer  :: sop_it(ncfgs+1)
-     integer  :: sop_jt(nzero)
+     integer :: sop_it(ncfgs+1)
+     integer :: sop_jt(nzero)
      real(dp) :: sop_t(nzero)
 
 ! init random number generator
