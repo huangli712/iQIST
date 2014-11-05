@@ -145,60 +145,48 @@
 ! to broadcast config parameters from root to all children processes
 # if defined (MPI)
 
-!------------------------------------------------------------------------+
-     call mp_bcast( isscf , master )                                     !
-     call mp_bcast( issun , master )                                     !
-     call mp_bcast( isspn , master )                                     !
-     call mp_bcast( isbin , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( isscf , master )
+     call mp_bcast( issun , master )
+     call mp_bcast( isspn , master )
+     call mp_bcast( isbin , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( nband , master )                                     !
-     call mp_bcast( nspin , master )                                     !
-     call mp_bcast( norbs , master )                                     !
-     call mp_bcast( ncfgs , master )                                     !
-     call mp_bcast( nzero , master )                                     !
-     call mp_bcast( niter , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( nband , master )
+     call mp_bcast( nspin , master )
+     call mp_bcast( norbs , master )
+     call mp_bcast( ncfgs , master )
+     call mp_bcast( nzero , master )
+     call mp_bcast( niter , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( U     , master )                                     !
-     call mp_bcast( Uc    , master )                                     !
-     call mp_bcast( Uv    , master )                                     !
-     call mp_bcast( Jz    , master )                                     !
-     call mp_bcast( Js    , master )                                     !
-     call mp_bcast( Jp    , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( U     , master )
+     call mp_bcast( Uc    , master )
+     call mp_bcast( Uv    , master )
+     call mp_bcast( Jz    , master )
+     call mp_bcast( Js    , master )
+     call mp_bcast( Jp    , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( mune  , master )                                     !
-     call mp_bcast( beta  , master )                                     !
-     call mp_bcast( part  , master )                                     !
-     call mp_bcast( alpha , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( mune  , master )
+     call mp_bcast( beta  , master )
+     call mp_bcast( part  , master )
+     call mp_bcast( alpha , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( mkink , master )                                     !
-     call mp_bcast( mfreq , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( mkink , master )
+     call mp_bcast( mfreq , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( nfreq , master )                                     !
-     call mp_bcast( ntime , master )                                     !
-     call mp_bcast( npart , master )                                     !
-     call mp_bcast( nflip , master )                                     !
-     call mp_bcast( ntherm, master )                                     !
-     call mp_bcast( nsweep, master )                                     !
-     call mp_bcast( nwrite, master )                                     !
-     call mp_bcast( nclean, master )                                     !
-     call mp_bcast( nmonte, master )                                     !
-     call mp_bcast( ncarlo, master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( nfreq , master )
+     call mp_bcast( ntime , master )
+     call mp_bcast( npart , master )
+     call mp_bcast( nflip , master )
+     call mp_bcast( ntherm, master )
+     call mp_bcast( nsweep, master )
+     call mp_bcast( nwrite, master )
+     call mp_bcast( nclean, master )
+     call mp_bcast( nmonte, master )
+     call mp_bcast( ncarlo, master )
      call mp_barrier()
 
 # endif  /* MPI */
