@@ -174,10 +174,13 @@
 
 !>>> remove old create and destroy operators in the perturbation expansion series
   subroutine ctqmc_remove_kink()
-     use constants, only : dp
+     use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
 
      use control, only : norbs
+     use control, only : beta
+     use context, only : ckink, csign, cnegs
+     use context, only : remove_tcount, remove_accept, remove_reject
      use context, only : rank
 
      implicit none
@@ -306,11 +309,13 @@
 
 !>>> shift old create operators in the perturbation expansion series
   subroutine ctqmc_lshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, csign, cnegs
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rank
 
      implicit none
 
