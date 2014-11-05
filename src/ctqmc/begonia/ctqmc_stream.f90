@@ -233,6 +233,7 @@
      use control, only : myid, master
      use context, only : tmesh, rmesh
      use context, only : symm, eimp, eigs, naux, saux
+     use context, only : op_c, op_d
      use context, only : hybf
 
      implicit none
