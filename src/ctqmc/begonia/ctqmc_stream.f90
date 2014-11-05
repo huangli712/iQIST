@@ -194,9 +194,10 @@
      return
   end subroutine ctqmc_config
 
-!>>> allocate memory for global variables and then initialize them
+!!>>> ctqmc_setup_array: allocate memory for global variables and then
+!!>>> initialize them
   subroutine ctqmc_setup_array()
-     use context
+     use context ! ALL
 
      implicit none
 
@@ -204,6 +205,8 @@
      call ctqmc_allocate_memory_clur()
      call ctqmc_allocate_memory_flvr()
 
+     call ctqmc_allocate_memory_mesh()
+     call ctqmc_allocate_memory_meat()
      call ctqmc_allocate_memory_umat()
      call ctqmc_allocate_memory_fmat()
      call ctqmc_allocate_memory_mmat()
@@ -215,16 +218,16 @@
      return
   end subroutine ctqmc_setup_array
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity
-! solver plus dynamical mean field theory self-consistent engine
+!!>>> ctqmc_selfer_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver plus dynamical mean field theory
+!!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
      use constants
-     use control
-     use context
-
+     use mmpi
      use sparse
 
-     use mmpi
+     use control
+     use context
 
      implicit none
 
@@ -246,14 +249,10 @@
      real(dp) :: i1, i2
 
 ! build imaginary time tau mesh: tmesh
-     do i=1,ntime
-         tmesh(i) = zero + ( beta - zero ) / real(ntime - 1) * real(i - 1)
-     enddo ! over i={1,ntime} loop
+     call s_linspace_d(zero, beta, ntime, tmesh)
 
 ! build matsubara frequency mesh: rmesh
-     do j=1,mfreq
-         rmesh(j) = ( two * real(j - 1) + one ) * ( pi / beta )
-     enddo ! over j={1,mfreq} loop
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
@@ -295,7 +294,7 @@
 ! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
@@ -473,15 +472,16 @@
      return
   end subroutine ctqmc_selfer_init
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
      use constants
-     use control
-     use context
-
+     use spring
      use stack
      use sparse
-     use spring
+
+     use control
+     use context
 
      implicit none
 
@@ -506,6 +506,8 @@
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
+! for stack data structure
+!-------------------------------------------------------------------------
 ! init empty_s and empty_e stack structure
      do i=1,norbs
          call istack_clean( empty_s(i) )
@@ -525,6 +527,16 @@
          call istack_push( empty_v, j )
      enddo ! over j={mkink,1} loop
 
+! for integer variables
+!-------------------------------------------------------------------------
+! init global variables
+     ckink   = 0
+     csign   = 1
+     cnegs   = 0
+     caves   = 0
+
+! for real variables
+!-------------------------------------------------------------------------
 ! init statistics variables
      insert_tcount = zero
      insert_accept = zero
@@ -546,18 +558,8 @@
      reflip_accept = zero
      reflip_reject = zero
 
-! init global variables
-     ckink   = 0
-     csign   = 1
-     cnegs   = 0
-     caves   = 0
-
-! init hist  array
-     hist    = 0
-
-! init rank  array
-     rank    = 0
-
+! for integer arrays
+!-------------------------------------------------------------------------
 ! init index array
      index_s = 0
      index_e = 0
@@ -571,18 +573,28 @@
 ! init flvr  array
      flvr_v  = 1
 
+! init rank  array
+     rank    = 0
+
+! for real arrays
+!-------------------------------------------------------------------------
 ! init time  array
      time_s  = zero
      time_e  = zero
 
      time_v  = zero
 
+! init hist  array
+     hist    = zero
+
+! init auxiliary physical observables
+     paux    = zero
+
 ! init probability for atomic states
      prob    = zero
      diag    = zero
 
-! init auxiliary physical observables
-     paux    = zero
+
 
 ! init occupation number array
      nmat    = zero
@@ -618,6 +630,8 @@
      matrix_ntrace = sum( expt_t(:, 1) )
      matrix_ptrace = sum( expt_t(:, 2) )
 
+! for complex arrays
+!-------------------------------------------------------------------------
 ! init exponent array exp_s and exp_e
      exp_s   = czero
      exp_e   = czero
