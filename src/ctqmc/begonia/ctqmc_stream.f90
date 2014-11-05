@@ -594,8 +594,6 @@
      prob    = zero
      diag    = zero
 
-
-
 ! init occupation number array
      nmat    = zero
      nnmat   = zero
@@ -653,6 +651,8 @@
 !<     sig1    = czero
      sig2    = czero
 
+! for the other variables/arrays
+!-------------------------------------------------------------------------
 ! init op_n, < c^{\dag} c >,
 ! which are used to calculate occupation number
      do i=1,norbs
@@ -704,10 +704,12 @@
 ! space to imaginary time space
      call ctqmc_four_hybf(hybf, htau)
 
+! dump the necessary files
+!-------------------------------------------------------------------------
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, htau)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
      call ctqmc_make_hsed(tmesh, htau, hsed)
@@ -715,20 +717,21 @@
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the seed for random number stream, it is useful to reproduce
 ! the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine ctqmc_solver_init
 
-!>>> garbage collection for this program, please refer to ctqmc_setup_array
+!!>>> ctqmc_final_array: garbage collection for this program, please refer
+!!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
-     use context
+     use context ! ALL
 
      implicit none
 
@@ -736,6 +739,8 @@
      call ctqmc_deallocate_memory_clur()
      call ctqmc_deallocate_memory_flvr()
 
+     call ctqmc_deallocate_memory_mesh()
+     call ctqmc_deallocate_memory_meat()
      call ctqmc_deallocate_memory_umat()
      call ctqmc_deallocate_memory_fmat()
      call ctqmc_deallocate_memory_mmat()
