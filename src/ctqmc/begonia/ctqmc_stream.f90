@@ -22,10 +22,10 @@
 !!>>> ctqmc_config: setup key parameters for continuous time quantum Monte
 !!>>> Carlo quantum impurity solver and dynamical mean field theory kernel
   subroutine ctqmc_config()
-     use constants
-     use control
+     use parser, only : p_create, p_parse, p_get, p_destroy
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control ! ALL
 
      implicit none
 
@@ -33,19 +33,23 @@
 ! used to check whether the input file (solver.ctqmc.in) exists
      logical :: exists
 
-!=========================================================================
-! setup dynamical mean field theory self-consistent engine related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup general control flags                                      <<<
+!!========================================================================
      isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
-!-------------------------------------------------------------------------
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!!========================================================================
+!!>>> setup common variables for quantum impurity model                <<<
+!!========================================================================
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
      ncfgs  = 2**norbs     ! number of atomic states
-     nzero  = 128          ! maximum number of non-zero elements in sparse matrix style
+     nzero  = 512          ! maximum number of non-zero elements in sparse matrix style
      niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp      ! U : average Coulomb interaction
@@ -61,9 +65,9 @@
      alpha  = 0.70_dp      ! mixing parameter for self-consistent engine
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!=========================================================================
-! setup continuous time quantum Monte Carlo quantum impurity solver related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup common variables for quantum impurity model                <<<
+!!========================================================================
      mkink  = 1024         ! maximum perturbation expansions order
      mfreq  = 8193         ! maximum number of matsubara frequency
 !-------------------------------------------------------------------------
