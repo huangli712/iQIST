@@ -437,11 +437,13 @@
 
 !>>> shift old destroy operators in the perturbation expansion series
   subroutine ctqmc_rshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, csign, cnegs
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : rank
 
      implicit none
 
@@ -564,12 +566,15 @@
 !>>> perform a global update, exchange the states between spin up and spin
 ! down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_stream
+     use stack, only : istack_getrest
 
-     use stack
-     use spring
+     use control, only : nband, norbs
+     use context, only : matrix_ptrace, matrix_ntrace 
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : index_t, index_v, flvr_v, empty_v
+     use context, only : rank, symm
 
      implicit none
 
