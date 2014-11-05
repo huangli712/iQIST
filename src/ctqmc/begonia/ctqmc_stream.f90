@@ -475,13 +475,13 @@
 !!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
 !!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
-     use constants
-     use spring
-     use stack
-     use sparse
+     use constants, only : zero, czero
+     use spring, only : spring_sfmt_init
+     use stack, only : istack_clean, istack_push
+     use sparse, only : sparse_csr_mm_csr, sparse_csr_cp_csr, sparse_uni_to_csr
 
-     use control
-     use context
+     use control ! ALL
+     use context ! ALL
 
      implicit none
 
