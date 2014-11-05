@@ -235,7 +235,7 @@
      use context, only : tmesh, rmesh
      use context, only : symm, eimp, eigs, naux, saux
      use context, only : op_c, op_d
-     use context, only : sop_c
+     use context, only : sop_c, sop_jc, sop_ic, sop_d, sop_jd, sop_id
      use context, only : hybf
 
      implicit none
