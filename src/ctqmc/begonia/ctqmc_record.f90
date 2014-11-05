@@ -801,6 +801,53 @@
      return
   end subroutine ctqmc_smth_sigf
 
+!!========================================================================
+!!>>> postprocess physical observables                                 <<<
+!!========================================================================
+
+!!>>> ctqmc_make_gtau: build imaginary green's function using normal
+!!>>> representation
+  subroutine ctqmc_make_gtau(gtau, gaux)
+     use constants, only : dp, zero
+
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : beta
+
+     implicit none
+
+! external arguments
+! impurity green's function
+     real(dp), intent(in)  :: gtau(ntime,norbs,norbs)
+
+! calculated impurity green's function
+     real(dp), intent(out) :: gaux(ntime,norbs,norbs)
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! dummy variables
+     real(dp) :: raux
+
+! initialize gaux
+     gaux = zero
+
+     raux = real(ntime) / (beta * beta)
+     do i=1,norbs
+         do j=1,ntime
+             gaux(j,i,i) = gtau(j,i,i) * raux
+         enddo ! over j={1,ntime} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine ctqmc_make_gtau
+
+!!========================================================================
+!!>>> build self-energy function                                       <<<
+!!========================================================================
+
 !>>> build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
 ! function between low frequency QMC data and high frequency Hubbard-I
