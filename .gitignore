@@ -13,6 +13,7 @@
 *.out
 *.pyf
 *.optrpt
+atom.cix
 fort.*
 test.f90
 py_api.f90
