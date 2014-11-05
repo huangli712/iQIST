@@ -226,14 +226,16 @@
      use mmpi, only : mp_bcast, mp_barrier
      use sparse
 
-     use control, only : nband, norbs, ncfgs
+     use control, only : nband, norbs, ncfgs, nzero
      use control, only : mfreq
      use control, only : ntime
-     use control, only : beta, part
+     use control, only : U
+     use control, only : mune, beta, part
      use control, only : myid, master
      use context, only : tmesh, rmesh
      use context, only : symm, eimp, eigs, naux, saux
      use context, only : op_c, op_d
+     use context, only : sop_c
      use context, only : hybf
 
      implicit none
