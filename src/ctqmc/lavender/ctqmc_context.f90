@@ -665,9 +665,9 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!>>> allocate memory for clur-related variables
-     subroutine ctqmc_allocate_memory_clur()
-         implicit none
+!!>>> ctqmc_allocate_memory_clur: allocate memory for clur-related variables
+  subroutine ctqmc_allocate_memory_clur()
+     implicit none
 
 ! loop index
          integer :: i
@@ -691,60 +691,60 @@
          endif
 
 ! initialize them
-         index_s = 0
-         index_e = 0
+     index_s = 0
+     index_e = 0
 
-         time_s  = zero
-         time_e  = zero
+     time_s  = zero
+     time_e  = zero
 
-         exp_s   = czero
-         exp_e   = czero
+     exp_s   = czero
+     exp_e   = czero
 
-         do i=1,norbs
-             empty_s(i) = istack_create(mkink)
-             empty_e(i) = istack_create(mkink)
-         enddo ! over i={1,norbs} loop
+     do i=1,norbs
+         empty_s(i) = istack_create(mkink)
+         empty_e(i) = istack_create(mkink)
+     enddo ! over i={1,norbs} loop
 
-         return
+     return
      end subroutine ctqmc_allocate_memory_clur
 
-!>>> allocate memory for flvr-related variables
-     subroutine ctqmc_allocate_memory_flvr()
-         implicit none
+!!>>> ctqmc_allocate_memory_flvr: allocate memory for flvr-related variables
+  subroutine ctqmc_allocate_memory_flvr()
+     implicit none
 
 ! allocate memory
-         allocate(index_t(mkink),      stat=istat)
-         allocate(index_v(mkink),      stat=istat)
+     allocate(index_t(mkink),      stat=istat)
+     allocate(index_v(mkink),      stat=istat)
 
-         allocate(type_v(mkink),       stat=istat)
-         allocate(flvr_v(mkink),       stat=istat)
+     allocate(type_v(mkink),       stat=istat)
+     allocate(flvr_v(mkink),       stat=istat)
 
-         allocate(time_v(mkink),       stat=istat)
+     allocate(time_v(mkink),       stat=istat)
 
-         allocate(expt_t(ncfgs,  4  ), stat=istat)
-         allocate(expt_v(ncfgs,mkink), stat=istat)
+     allocate(expt_t(ncfgs,  4  ), stat=istat)
+     allocate(expt_v(ncfgs,mkink), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_flvr','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_flvr','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         index_t = 0
-         index_v = 0
+     index_t = 0
+     index_v = 0
 
-         type_v  = 1
-         flvr_v  = 1
+     type_v  = 1
+     flvr_v  = 1
 
-         time_v  = zero
+     time_v  = zero
 
-         expt_t  = zero
-         expt_v  = zero
+     expt_t  = zero
+     expt_v  = zero
 
-         empty_v = istack_create(mkink)
+     call istack_create(empty_v, mkink)
 
-         return
-     end subroutine ctqmc_allocate_memory_flvr
+     return
+  end subroutine ctqmc_allocate_memory_flvr
 
 !>>> allocate memory for umat-related variables
      subroutine ctqmc_allocate_memory_umat()
@@ -838,85 +838,85 @@
          return
      end subroutine ctqmc_allocate_memory_umat
 
-!>>> allocate memory for fmat-related variables
-     subroutine ctqmc_allocate_memory_fmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_fmat: allocate memory for fmat-related variables
+  subroutine ctqmc_allocate_memory_fmat()
+     implicit none
 
 ! allocate memory
-         allocate(isave(npart),            stat=istat)
+     allocate(isave(npart),            stat=istat)
 
-         allocate(sop_ia(ncfgs+1,npart),   stat=istat)
-         allocate(sop_ja(nzero,npart),     stat=istat)
-         allocate(sop_a(nzero,npart),      stat=istat)
+     allocate(sop_ia(ncfgs+1,npart),   stat=istat)
+     allocate(sop_ja(nzero,npart),     stat=istat)
+     allocate(sop_a(nzero,npart),      stat=istat)
 
-         allocate(sop_ib(ncfgs+1,npart),   stat=istat)
-         allocate(sop_jb(nzero,npart),     stat=istat)
-         allocate(sop_b(nzero,npart),      stat=istat)
+     allocate(sop_ib(ncfgs+1,npart),   stat=istat)
+     allocate(sop_jb(nzero,npart),     stat=istat)
+     allocate(sop_b(nzero,npart),      stat=istat)
 
-         allocate(sop_ic(ncfgs+1,norbs),   stat=istat)
-         allocate(sop_jc(nzero,norbs),     stat=istat)
-         allocate(sop_c(nzero,norbs),      stat=istat)
+     allocate(sop_ic(ncfgs+1,norbs),   stat=istat)
+     allocate(sop_jc(nzero,norbs),     stat=istat)
+     allocate(sop_c(nzero,norbs),      stat=istat)
 
-         allocate(sop_id(ncfgs+1,norbs),   stat=istat)
-         allocate(sop_jd(nzero,norbs),     stat=istat)
-         allocate(sop_d(nzero,norbs),      stat=istat)
+     allocate(sop_id(ncfgs+1,norbs),   stat=istat)
+     allocate(sop_jd(nzero,norbs),     stat=istat)
+     allocate(sop_d(nzero,norbs),      stat=istat)
 
-         allocate(sop_is(ncfgs+1,2),       stat=istat)
-         allocate(sop_js(nzero,2),         stat=istat)
-         allocate(sop_s(nzero,2),          stat=istat)
+     allocate(sop_is(ncfgs+1,2),       stat=istat)
+     allocate(sop_js(nzero,2),         stat=istat)
+     allocate(sop_s(nzero,2),          stat=istat)
 
-         allocate(sop_in(ncfgs+1,norbs),   stat=istat)
-         allocate(sop_jn(nzero,norbs),     stat=istat)
-         allocate(sop_n(nzero,norbs),      stat=istat)
+     allocate(sop_in(ncfgs+1,norbs),   stat=istat)
+     allocate(sop_jn(nzero,norbs),     stat=istat)
+     allocate(sop_n(nzero,norbs),      stat=istat)
 
-         allocate(sop_im(ncfgs+1,norbs,norbs), stat=istat)
-         allocate(sop_jm(nzero,norbs,norbs),   stat=istat)
-         allocate(sop_m(nzero,norbs,norbs),    stat=istat)
+     allocate(sop_im(ncfgs+1,norbs,norbs), stat=istat)
+     allocate(sop_jm(nzero,norbs,norbs),   stat=istat)
+     allocate(sop_m(nzero,norbs,norbs),    stat=istat)
 
-         allocate(op_c(ncfgs,ncfgs,norbs), stat=istat)
-         allocate(op_d(ncfgs,ncfgs,norbs), stat=istat)
+     allocate(op_c(ncfgs,ncfgs,norbs), stat=istat)
+     allocate(op_d(ncfgs,ncfgs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_fmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_fmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         isave  = 0
+     isave  = 0
 
-         sop_ia = 0
-         sop_ja = 0
-         sop_a  = zero
+     sop_ia = 0
+     sop_ja = 0
+     sop_a  = zero
 
-         sop_ib = 0
-         sop_jb = 0
-         sop_b  = zero
+     sop_ib = 0
+     sop_jb = 0
+     sop_b  = zero
 
-         sop_ic = 0
-         sop_jc = 0
-         sop_c  = zero
+     sop_ic = 0
+     sop_jc = 0
+     sop_c  = zero
 
-         sop_id = 0
-         sop_jd = 0
-         sop_d  = zero
+     sop_id = 0
+     sop_jd = 0
+     sop_d  = zero
 
-         sop_is = 0
-         sop_js = 0
-         sop_s  = zero
+     sop_is = 0
+     sop_js = 0
+     sop_s  = zero
 
-         sop_in = 0
-         sop_jn = 0
-         sop_n  = zero
+     sop_in = 0
+     sop_jn = 0
+     sop_n  = zero
 
-         sop_im = 0
-         sop_jm = 0
-         sop_m  = zero
+     sop_im = 0
+     sop_jm = 0
+     sop_m  = zero
 
-         op_c   = zero
-         op_d   = zero
+     op_c   = zero
+     op_d   = zero
 
-         return
-     end subroutine ctqmc_allocate_memory_fmat
+     return
+  end subroutine ctqmc_allocate_memory_fmat
 
 !!>>> ctqmc_allocate_memory_mmat: allocate memory for mmat-related variables
   subroutine ctqmc_allocate_memory_mmat()
