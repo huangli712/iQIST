@@ -252,10 +252,10 @@
                                  endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
                              endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
 
-                         enddo deltaloop ! over delta={gamma+1,norbs} loop
-                     enddo gammaloop ! over gamma={1,norbs-1} loop
-                 enddo bettaloop ! over betta={alpha+1,norbs} loop
-             enddo alphaloop ! over alpha={1,norbs-1} loop
+                         enddo deltaloop ! over delta={1,norbs} loop
+                     enddo gammaloop ! over gamma={1,norbs} loop
+                 enddo bettaloop ! over betta={1,norbs} loop
+             enddo alphaloop ! over alpha={1,norbs} loop
          enddo ! over jbas={1,sectors(isect)%ndim} loop
 
      enddo ! over isec={1,nsectors} loop

@@ -36,7 +36,8 @@
 !!>>> driver layer: updating perturbation expansion series             <<<
 !!========================================================================
 
-!>>> insert new create and destroy operators in the perturbation expansion series
+!!>>> ctqmc_insert_kink: insert new create and destroy operators in the
+!!>>> perturbation expansion series
   subroutine ctqmc_insert_kink()
      use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
@@ -97,7 +98,7 @@
          insert_reject = insert_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == mkink ) block
 
 ! randomly generate tau_start and tau_end at selected flvr channel, and
 ! then determine index address cis and cie for them
@@ -114,7 +115,7 @@
          call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -122,7 +123,7 @@
          call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! calculate the transition probability for insert new create and destroy operators
      p = deter_ratio * trace_ratio * ( beta / real( ckink + 1 ) ) ** 2
@@ -172,7 +173,8 @@
      return
   end subroutine ctqmc_insert_kink
 
-!>>> remove old create and destroy operators in the perturbation expansion series
+!!>>> ctqmc_remove_kink: remove old create and destroy operators in the
+!!>>> perturbation expansion series
   subroutine ctqmc_remove_kink()
      use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
@@ -232,7 +234,7 @@
          remove_reject = remove_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! randomly generate cis and cie at selected flvr channel, and then determine
 ! tau_start and tau_end for them
@@ -249,7 +251,7 @@
          call cat_remove_ztrace(fis, fie, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( lrmv .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -257,7 +259,7 @@
          call cat_remove_detrat(flvr, cis, cie, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( lrmv .eqv. .true. ) block
 
 ! calculate the transition probability for remove old create and destroy operators
      p = deter_ratio * trace_ratio * ( real( ckink ) / beta ) ** 2
@@ -307,7 +309,8 @@
      return
   end subroutine ctqmc_remove_kink
 
-!>>> shift old create operators in the perturbation expansion series
+!!>>> ctqmc_lshift_kink: shift old create operators in the perturbation
+!!>>> expansion series
   subroutine ctqmc_lshift_kink()
      use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
@@ -366,7 +369,7 @@
          lshift_reject = lshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first, we select ciso randomly, and then obtain tau_start1. according
 ! to the existing operators, we determine tau_start2 and related index cisn
@@ -383,7 +386,7 @@
          call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( lshf .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -391,7 +394,7 @@
          call cat_lshift_detrat(flvr, ciso, tau_start1, tau_start2, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( lshf .eqv. .true. ) block
 
 ! calculate the transition probability for shift old create operators
      p = deter_ratio * trace_ratio
@@ -435,7 +438,8 @@
      return
   end subroutine ctqmc_lshift_kink
 
-!>>> shift old destroy operators in the perturbation expansion series
+!!>>> ctqmc_rshift_kink: shift old destroy operators in the perturbation
+!!>>> expansion series
   subroutine ctqmc_rshift_kink()
      use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
@@ -494,7 +498,7 @@
          rshift_reject = rshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first, we select cieo randomly, and then obtain tau_end1. according
 ! to the existing operators, we determine tau_end2 and related index cien
@@ -511,7 +515,7 @@
          call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( rshf .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -519,7 +523,7 @@
          call cat_rshift_detrat(flvr, cieo, tau_end1, tau_end2, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( rshf .eqv. .true. ) block
 
 ! calculate the transition probability for shift old destroy operators
      p = deter_ratio * trace_ratio
@@ -563,15 +567,15 @@
      return
   end subroutine ctqmc_rshift_kink
 
-!>>> perform a global update, exchange the states between spin up and spin
-! down, it maybe useful for magnetic systems
+!!>>> ctqmc_reflip_kink: perform a global update, exchange the states
+!!>>> between spin up and spin down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
      use constants, only : dp, one
      use spring, only : spring_sfmt_stream
      use stack, only : istack_getrest
 
      use control, only : nband, norbs
-     use context, only : matrix_ptrace, matrix_ntrace 
+     use context, only : matrix_ptrace, matrix_ntrace
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : index_t, index_v, flvr_v, empty_v
      use context, only : rank, symm
@@ -626,7 +630,7 @@
          reflip_tcount = reflip_tcount + one
          reflip_reject = reflip_reject + one
          RETURN
-     endif
+     endif ! back if ( nsize == 0 ) block
 
      if ( cflip == 1 ) then
 ! determine fup and fdn, and fup /= fdn
@@ -650,13 +654,11 @@
 ! make a trial swap for flvr_v
          do i=1,nsize
              if ( flvr_v ( index_v(i) ) == fup ) then
-                 flvr_v ( index_v(i) ) = fdn
-                 CYCLE
-             endif
+                 flvr_v ( index_v(i) ) = fdn; CYCLE
+             endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
              if ( flvr_v ( index_v(i) ) == fdn ) then
-                 flvr_v ( index_v(i) ) = fup
-                 CYCLE
-             endif
+                 flvr_v ( index_v(i) ) = fup; CYCLE
+             endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
          enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -691,13 +693,11 @@
 ! recover the original status of flvr_v
              do i=1,nsize
                  if ( flvr_v ( index_v(i) ) == fup ) then
-                     flvr_v ( index_v(i) ) = fdn
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fdn; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                  if ( flvr_v ( index_v(i) ) == fdn ) then
-                     flvr_v ( index_v(i) ) = fup
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fup; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
              enddo ! over i={1,nsize} loop
 
 ! print exception information
@@ -733,13 +733,11 @@
 ! make a trial swap for flvr_v
              do i=1,nsize
                  if ( flvr_v ( index_v(i) ) == fup ) then
-                     flvr_v ( index_v(i) ) = fdn
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fdn; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                  if ( flvr_v ( index_v(i) ) == fdn ) then
-                     flvr_v ( index_v(i) ) = fup
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fup; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
              enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -774,13 +772,11 @@
 ! recover the original status of flvr_v
                  do i=1,nsize
                      if ( flvr_v ( index_v(i) ) == fup ) then
-                         flvr_v ( index_v(i) ) = fdn
-                         CYCLE
-                     endif
+                         flvr_v ( index_v(i) ) = fdn; CYCLE
+                     endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                      if ( flvr_v ( index_v(i) ) == fdn ) then
-                         flvr_v ( index_v(i) ) = fup
-                         CYCLE
-                     endif
+                         flvr_v ( index_v(i) ) = fup; CYCLE
+                     endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                  enddo ! over i={1,nsize} loop
 
 ! print exception information
@@ -824,7 +820,7 @@
                  flvr_v ( index_v(i) ) = flvr + nband
              else
                  flvr_v ( index_v(i) ) = flvr - nband
-             endif
+             endif ! back if ( flvr <= nband ) block 
          enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -870,7 +866,7 @@
                      flvr_v ( index_v(i) ) = flvr + nband
                  else
                      flvr_v ( index_v(i) ) = flvr - nband
-                 endif
+                 endif ! back if ( flvr <= nband ) block
              enddo ! over i={1,nsize} loop
 
 ! print exception information
@@ -1144,7 +1140,8 @@
      return
   end subroutine cat_remove_matrix
 
-!>>> update the mmat matrix and gmat matrix for shift old create operators
+!!>>> cat_lshift_matrix: update the mmat matrix and gmat matrix for shift
+!!>>> old create operators
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, zero, czero
 
@@ -1992,7 +1989,7 @@
      procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
-! loop index over segments
+! loop index over operators
      integer  :: i
      integer  :: j
 
@@ -2002,7 +1999,7 @@
 ! status flag
      integer  :: istat
 
-! imaginary time for start and end points
+! imaginary time for create and destroy operators
      real(dp) :: tau_start
      real(dp) :: tau_end
 
