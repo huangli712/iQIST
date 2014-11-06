@@ -256,15 +256,13 @@
      do i=1,norbs
          do j=1,ntime    ! search forward
              if ( htau(j,i,i) > -eps6 ) then
-                 start = j
-                 EXIT
+                 start = j; EXIT
              endif ! back if ( htau(j,i,i) > -eps6 ) block
          enddo ! over j={1,ntime} loop
 
          do j=ntime,1,-1 ! search backward
              if ( htau(j,i,i) > -eps6 ) then
-                 last = j
-                 EXIT
+                 last = j; EXIT
              endif ! back if ( htau(j,i,i) > -eps6 ) block
          enddo ! over j={ntime,1,-1} loop
 
