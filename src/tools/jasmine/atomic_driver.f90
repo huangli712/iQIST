@@ -17,7 +17,7 @@
 !!>>> atomic_f_driver: solve the atomic eigenvalue problem using full
 !!>>> Hilbert space diagonalization
 !!>>> note: the output files are only compatible with BEGONIA and LAVENDER
-!!>>> commponents int the iQIST software package
+!!>>> commponents in the iQIST software package
   subroutine atomic_f_driver()
      use constants, only : dp, eps6, mystd
 
@@ -121,7 +121,7 @@
 !!>>> atomic_s_driver: solve the atomic eigenvalue problem using good
 !!>>> quantum numbers (GQNs) algorithm and sector-by-sector diagonalization
 !!>>> note: the output files are only compatible with PANSY and MANJUSHAKA
-!!>>> commponents int the iQIST software package
+!!>>> commponents in the iQIST software package
   subroutine atomic_s_driver()
      use constants, only : dp, eps6, mystd
 

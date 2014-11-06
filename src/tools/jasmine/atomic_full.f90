@@ -213,9 +213,8 @@
      do jbas=1,ncfgs
          alphaloop : do alpha=1,norbs
              bettaloop : do betta=1,norbs
-                 deltaloop : do delta=1,norbs
-                     gammaloop : do gamma=1,norbs
-
+                 gammaloop : do gamma=1,norbs
+                     deltaloop : do delta=1,norbs
                          sgn  = 0
                          knew = dec_basis(jbas)
                          code(1:norbs) = bin_basis(1:norbs,jbas)
@@ -261,8 +260,8 @@
                              endif ! back if ( ( code(delta) == 1 ) .and. ( code(gamma) == 1 ) ) block
                          endif ! back if ( ( code(alpha) == 0 ) .and. ( code(betta) == 0 ) ) block
 
-                     enddo gammaloop ! over gamma={1,norbs} loop
-                 enddo deltaloop ! over delta={1,norbs} loop
+                     enddo deltaloop ! over delta={1,norbs} loop
+                 enddo gammaloop ! over gamma={1,norbs} loop
              enddo bettaloop ! over betta={1,norbs} loop
          enddo alphaloop ! over alpha={1,norbs} loop
      enddo ! over jbas={1,ncfgs} loop
