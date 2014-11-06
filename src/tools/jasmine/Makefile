@@ -79,6 +79,7 @@ clean:
 	rm -f py_api.f90
 
 clean-dat:
+	rm -f *.cix
 	rm -f *.dat
 	rm -f *.bin.*
 	rm -f *.out
