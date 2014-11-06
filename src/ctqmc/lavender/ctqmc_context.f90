@@ -14,19 +14,6 @@
 ! type    : module
 ! author  : li huang (email:huangli712@yahoo.com.cn)
 ! history : 09/16/2009 by li huang
-!           09/17/2009 by li huang
-!           09/19/2009 by li huang
-!           09/20/2009 by li huang
-!           09/21/2009 by li huang
-!           09/22/2009 by li huang
-!           09/27/2009 by li huang
-!           11/01/2009 by li huang
-!           11/10/2009 by li huang
-!           11/18/2009 by li huang
-!           12/01/2009 by li huang
-!           12/05/2009 by li huang
-!           02/21/2010 by li huang
-!           02/23/2010 by li huang
 !           06/08/2010 by li huang
 ! purpose : define the key data structure and global arrays/variables for
 !           hybridization expansion version continuous time quantum Monte
