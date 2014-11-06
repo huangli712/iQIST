@@ -1546,8 +1546,8 @@
      type (istack) :: Tempty_e
 
 ! allocate memory for Tempty_s and Tempty_e
-     Tempty_s = istack_create(mkink)
-     Tempty_e = istack_create(mkink)
+     call istack_create(Tempty_s, mkink)
+     call istack_create(Tempty_e, mkink)
 
 ! swap empty_s and empty_e
      call istack_copyer(empty_s(fup), Tempty_s)
