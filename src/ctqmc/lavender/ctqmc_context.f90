@@ -227,7 +227,6 @@
 
   end module ctqmc_mesh
 
-
 !!========================================================================
 !!>>> module ctqmc_meat                                                <<<
 !!========================================================================
@@ -264,25 +263,32 @@
 
   end module ctqmc_meat
 
-!=========================================================================
-!>>> module ctqmc_umat                                                 <<<
-!=========================================================================
-!>>> containing util-matrix related arrays used by continuous time quantum
-! Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_umat                                                <<<
+!!========================================================================
+
+!!>>> containing auxiliary arrays used by continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
   module ctqmc_umat
      use constants, only : dp
 
      implicit none
 
-! histogram for perturbation expansion series
-     integer,  public, save, allocatable :: hist(:)
+!-------------------------------------------------------------------------
+!::: ctqmc status variables                                            :::
+!-------------------------------------------------------------------------
 
 ! current perturbation expansion order for different flavor channel
      integer,  public, save, allocatable :: rank(:)
 
+! diagonal elements of current matrix product of flavor part
+! it is used to calculate the probability of eigenstates
+     real(dp), public, save, allocatable :: diag(:,:)
+
 !-------------------------------------------------------------------------
 !::: input data variables                                              :::
 !-------------------------------------------------------------------------
+
 ! symmetry properties for correlated orbitals
      integer,  public, save, allocatable :: symm(:)
 
@@ -297,20 +303,8 @@
 
 ! total spin for the eigenstates of local hamiltonian matrix
      real(dp), public, save, allocatable :: saux(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-!::: physical observables                                              :::
-!-------------------------------------------------------------------------
-! probability of eigenstates of local hamiltonian matrix
-     real(dp), public, save, allocatable :: prob(:)
 
-! auxiliary physical observables
-! paux(1) : total energy, Etot
-! paux(2) : potential engrgy, Epot
-! paux(3) : kinetic energy, Ekin
-! paux(4) : magnetic moment, < Sz >
-     real(dp), public, save, allocatable :: paux(:)
 
 ! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, totally-averaged
      real(dp), public, save, allocatable :: schi(:)
@@ -330,10 +324,6 @@
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
 
-! diagonal elements of current matrix product of flavor part
-! it is used to calculate the probability of eigenstates
-     real(dp), public, save, allocatable :: ddmat(:,:)
-
 ! used to calculate two-particle green's function, real part
      real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
 
@@ -345,47 +335,27 @@
 
 ! used to calculate vertex function, imaginary part
      real(dp), public, save, allocatable :: h2_im(:,:,:,:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-!::: orthogonal polynomial variables                                   :::
-!-------------------------------------------------------------------------
 ! legendre polynomial defined on [-1,1]
      real(dp), public, save, allocatable :: ppleg(:,:)
 
 ! chebyshev polynomial defined on [-1,1]
      real(dp), public, save, allocatable :: qqche(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-!::: mesh data variables                                               :::
-!-------------------------------------------------------------------------
 ! interval [-1,1] on which legendre polynomial is defined
      real(dp), public, save, allocatable :: pmesh(:)
 
 ! interval [-1,1] on which chebyshev polynomial is defined
      real(dp), public, save, allocatable :: qmesh(:)
 
-! imaginary time mesh
-     real(dp), public, save, allocatable :: tmesh(:)
-
-! real matsubara frequency mesh
-     real(dp), public, save, allocatable :: rmesh(:)
-
-! complex matsubara frequency mesh
-     complex(dp), public, save, allocatable :: cmesh(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! identity matrix
-     complex(dp), public, save, allocatable :: unity(:,:)
-
   end module ctqmc_umat
 
-!=========================================================================
-!>>> module ctqmc_fmat                                                 <<<
-!=========================================================================
-!>>> containing F-matrix related arrays used by continuous time quantum
-! Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_fmat                                                <<<
+!!========================================================================
+
+!!>>> containing F-matrix related arrays used by continuous time quantum
+!!>>> Monte Carlo quantum impurity solver
   module ctqmc_fmat
      use constants, only : dp
 
@@ -525,11 +495,12 @@
 
   end module ctqmc_fmat
 
-!=========================================================================
-!>>> module ctqmc_mmat                                                 <<<
-!=========================================================================
-!>>> containing M-matrix and G-matrix related arrays used by continuous
-! time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_mmat                                                <<<
+!!========================================================================
+
+!!>>> containing M-matrix and G-matrix related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
   module ctqmc_mmat
      use constants, only : dp
 
@@ -555,11 +526,12 @@
 
   end module ctqmc_mmat
 
-!=========================================================================
-!>>> module ctqmc_gmat                                                 <<<
-!=========================================================================
-!>>> containing green's function matrix related arrays used by continuous
-! time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_gmat                                                <<<
+!!========================================================================
+
+!!>>> containing green's function matrix related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
   module ctqmc_gmat
      use constants, only : dp
 
@@ -581,11 +553,13 @@
 
   end module ctqmc_gmat
 
-!=========================================================================
-!>>> module ctqmc_wmat                                                 <<<
-!=========================================================================
-!>>> containing weiss's function and hybridization function matrix related
-! arrays used by continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_wmat                                                <<<
+!!========================================================================
+
+!!>>> containing weiss's function and hybridization function matrix related
+!!>>> arrays used by continuous time quantum Monte Carlo quantum impurity
+!!>>> solver
   module ctqmc_wmat
      use constants, only : dp
 
@@ -608,11 +582,12 @@
 
   end module ctqmc_wmat
 
-!=========================================================================
-!>>> module ctqmc_smat                                                 <<<
-!=========================================================================
-!>>> containing self-energy function matrix related arrays used by
-! continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_smat                                                <<<
+!!========================================================================
+
+!!>>> containing self-energy function matrix related arrays used by
+!!>>> continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_smat
      use constants, only : dp
 
@@ -626,10 +601,11 @@
 
   end module ctqmc_smat
 
-!=========================================================================
-!>>> module context                                                    <<<
-!=========================================================================
-!>>> containing memory management subroutines and define global variables
+!!========================================================================
+!!>>> module context                                                   <<<
+!!========================================================================
+
+!!>>> containing memory management subroutines and define global variables
   module context
      use constants
      use control
