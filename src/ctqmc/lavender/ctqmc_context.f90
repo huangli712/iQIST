@@ -132,14 +132,15 @@
 
   end module ctqmc_core
 
-!=========================================================================
-!>>> module ctqmc_clur                                                 <<<
-!=========================================================================
-!>>> containing perturbation expansion series related arrays (colour part)
-! used by continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_clur                                                <<<
+!!========================================================================
+
+!!>>> containing perturbation expansion series related arrays (colour part)
+!!>>> used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_clur
      use constants, only : dp
-     use stack
+     use stack, only : istack, istack_create, istack_destroy
 
      implicit none
 
@@ -169,14 +170,15 @@
 
   end module ctqmc_clur
 
-!=========================================================================
-!>>> module ctqmc_flvr                                                 <<<
-!=========================================================================
-!>>> containing perturbation expansion series related arrays (flavor part)
-! used by continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_flvr                                                <<<
+!!========================================================================
+
+!!>>> containing perturbation expansion series related arrays (flavor part)
+!!>>> used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_flvr
      use constants, only : dp
-     use stack
+     use stack, only : istack, istack_create, istack_destroy
 
      implicit none
 
@@ -205,6 +207,62 @@
      real(dp), public, save, allocatable :: expt_v(:,:)
 
   end module ctqmc_flvr
+
+!!========================================================================
+!!>>> module ctqmc_mesh                                                <<<
+!!========================================================================
+
+!!>>> containing mesh related arrays used by continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
+  module ctqmc_mesh
+     use constants, only : dp
+
+     implicit none
+
+! imaginary time mesh
+     real(dp), public, save, allocatable :: tmesh(:)
+
+! real matsubara frequency mesh
+     real(dp), public, save, allocatable :: rmesh(:)
+
+  end module ctqmc_mesh
+
+
+!!========================================================================
+!!>>> module ctqmc_meat                                                <<<
+!!========================================================================
+
+!!>>> containing physical observables related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
+  module ctqmc_meat !!>>> To tell you a truth, meat means MEAsuremenT
+     use constants, only : dp
+
+     implicit none
+
+! histogram for perturbation expansion series
+     real(dp), public, save, allocatable :: hist(:)
+
+! auxiliary physical observables
+! paux(1) : total energy, Etot
+! paux(2) : potential engrgy, Epot
+! paux(3) : kinetic energy, Ekin
+! paux(4) : magnetic moment, < Sz >
+! paux(5) : average of occupation, < N > = < N1 >
+! paux(6) : average of occupation square, < N2 >
+! paux(7) : reserved
+! paux(8) : reserved
+     real(dp), public, save, allocatable :: paux(:)
+
+! probability of eigenstates of local hamiltonian matrix
+     real(dp), public, save, allocatable :: prob(:)
+
+! impurity occupation number, < n_i >
+     real(dp), public, save, allocatable :: nmat(:)
+
+! impurity double occupation number matrix, < n_i n_j >
+     real(dp), public, save, allocatable :: nnmat(:,:)
+
+  end module ctqmc_meat
 
 !=========================================================================
 !>>> module ctqmc_umat                                                 <<<
