@@ -1,29 +1,29 @@
-!-------------------------------------------------------------------------
-! project : lavender
-! program : ctqmc_core module
-!           ctqmc_clur module
-!           ctqmc_flvr module
-!           ctqmc_umat module
-!           ctqmc_fmat module
-!           ctqmc_mmat module
-!           ctqmc_gmat module
-!           ctqmc_wmat module
-!           ctqmc_smat module
-!           context    module
-! source  : ctqmc_context.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           06/08/2010 by li huang
-! purpose : define the key data structure and global arrays/variables for
-!           hybridization expansion version continuous time quantum Monte
-!           Carlo (CTQMC) quantum impurity solver and dynamical mean field
-!           theory (DMFT) self-consistent engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : lavender
+!!! program : ctqmc_core module
+!!!           ctqmc_clur module
+!!!           ctqmc_flvr module
+!!!           ctqmc_mesh module
+!!!           ctqmc_meat module
+!!!           ctqmc_umat module
+!!!           ctqmc_fmat module
+!!!           ctqmc_mmat module
+!!!           ctqmc_gmat module
+!!!           ctqmc_wmat module
+!!!           ctqmc_smat module
+!!!           context    module
+!!! source  : ctqmc_context.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! history : 09/16/2009 by li huang
+!!!           06/08/2010 by li huang
+!!! purpose : define the key data structure and global arrays/variables for
+!!!           hybridization expansion version continuous time quantum Monte
+!!!           Carlo (CTQMC) quantum impurity solver and dynamical mean field
+!!!           theory (DMFT) self-consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !=========================================================================
 !>>> module ctqmc_core                                                 <<<
