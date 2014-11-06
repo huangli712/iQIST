@@ -225,6 +225,18 @@
 ! real matsubara frequency mesh
      real(dp), public, save, allocatable :: rmesh(:)
 
+! interval [-1,1] on which legendre polynomial is defined
+     real(dp), public, save, allocatable :: pmesh(:)
+
+! interval [-1,1] on which chebyshev polynomial is defined
+     real(dp), public, save, allocatable :: qmesh(:)
+
+! legendre polynomial defined on [-1,1]
+     real(dp), public, save, allocatable :: ppleg(:,:)
+
+! chebyshev polynomial defined on [-1,1]
+     real(dp), public, save, allocatable :: qqche(:,:)
+
   end module ctqmc_mesh
 
 !!========================================================================
@@ -260,6 +272,18 @@
 
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
+
+! used to calculate two-particle green's function, real part
+     real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
+
+! used to calculate two-particle green's function, imaginary part
+     real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
+
+! particle-particle pair susceptibility, real part
+     real(dp), public, save, allocatable :: ps_re(:,:,:,:,:)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), public, save, allocatable :: ps_im(:,:,:,:,:)
 
   end module ctqmc_meat
 
@@ -303,24 +327,6 @@
 
 ! total spin for the eigenstates of local hamiltonian matrix
      real(dp), public, save, allocatable :: saux(:)
-
-! used to calculate two-particle green's function, real part
-     real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
-
-! used to calculate two-particle green's function, imaginary part
-     real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
-
-! legendre polynomial defined on [-1,1]
-     real(dp), public, save, allocatable :: ppleg(:,:)
-
-! chebyshev polynomial defined on [-1,1]
-     real(dp), public, save, allocatable :: qqche(:,:)
-
-! interval [-1,1] on which legendre polynomial is defined
-     real(dp), public, save, allocatable :: pmesh(:)
-
-! interval [-1,1] on which chebyshev polynomial is defined
-     real(dp), public, save, allocatable :: qmesh(:)
 
   end module ctqmc_umat
 
@@ -720,6 +726,12 @@
      allocate(tmesh(ntime),       stat=istat)
      allocate(rmesh(mfreq),       stat=istat)
 
+     allocate(pmesh(legrd),       stat=istat)
+     allocate(qmesh(chgrd),       stat=istat)
+
+     allocate(ppleg(legrd,lemax), stat=istat)
+     allocate(qqche(chgrd,chmax), stat=istat)
+
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_mesh','can not allocate enough memory')
@@ -728,6 +740,12 @@
 ! initialize them
      tmesh = zero
      rmesh = zero
+
+     pmesh = zero
+     qmesh = zero
+
+     ppleg = zero
+     qqche = zero
 
      return
   end subroutine ctqmc_allocate_memory_mesh
@@ -745,6 +763,11 @@
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
 
+     allocate(g2_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_meat','can not allocate enough memory')
@@ -758,6 +781,11 @@
 
      nmat  = zero
      nnmat = zero
+
+     g2_re = zero
+     g2_im = zero
+     ps_re = zero
+     ps_im = zero
 
      return
   end subroutine ctqmc_allocate_memory_meat
@@ -778,15 +806,6 @@
      allocate(naux(ncfgs),        stat=istat)
      allocate(saux(ncfgs),        stat=istat)
 
-     allocate(g2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-     allocate(g2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-
-     allocate(ppleg(legrd,lemax), stat=istat)
-     allocate(qqche(chgrd,chmax), stat=istat)
-
-     allocate(pmesh(legrd),       stat=istat)
-     allocate(qmesh(chgrd),       stat=istat)
-
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
@@ -803,15 +822,6 @@
      eigs  = zero
      naux  = zero
      saux  = zero
-
-     g2_re = zero
-     g2_im = zero
-
-     ppleg = zero
-     qqche = zero
-
-     pmesh = zero
-     qmesh = zero
 
      return
   end subroutine ctqmc_allocate_memory_umat
@@ -1058,6 +1068,12 @@
      if ( allocated(tmesh) )   deallocate(tmesh)
      if ( allocated(rmesh) )   deallocate(rmesh)
 
+     if ( allocated(pmesh) )   deallocate(pmesh)
+     if ( allocated(qmesh) )   deallocate(qmesh)
+
+     if ( allocated(ppleg) )   deallocate(ppleg)
+     if ( allocated(qqche) )   deallocate(qqche)
+
      return
   end subroutine ctqmc_deallocate_memory_mesh
 
@@ -1072,6 +1088,12 @@
 
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
+
+     if ( allocated(g2_re) )   deallocate(g2_re)
+     if ( allocated(g2_im) )   deallocate(g2_im)
+
+     if ( allocated(ps_re) )   deallocate(ps_re)
+     if ( allocated(ps_im) )   deallocate(ps_im)
 
      return
   end subroutine ctqmc_deallocate_memory_meat
@@ -1090,15 +1112,6 @@
      if ( allocated(eigs)  )   deallocate(eigs )
      if ( allocated(naux)  )   deallocate(naux )
      if ( allocated(saux)  )   deallocate(saux )
-
-     if ( allocated(g2_re) )   deallocate(g2_re)
-     if ( allocated(g2_im) )   deallocate(g2_im)
-
-     if ( allocated(ppleg) )   deallocate(ppleg)
-     if ( allocated(qqche) )   deallocate(qqche)
-
-     if ( allocated(pmesh) )   deallocate(pmesh)
-     if ( allocated(qmesh) )   deallocate(qmesh)
 
      return
   end subroutine ctqmc_deallocate_memory_umat
