@@ -918,8 +918,8 @@
          return
      end subroutine ctqmc_allocate_memory_fmat
 
-!>>> allocate memory for mmat-related variables
-     subroutine ctqmc_allocate_memory_mmat()
+!!>>> ctqmc_allocate_memory_mmat: allocate memory for mmat-related variables
+  subroutine ctqmc_allocate_memory_mmat()
      implicit none
 
 ! allocate memory
@@ -936,7 +936,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      lspace = zero
@@ -950,7 +950,7 @@
      gmat   = czero
 
      return
-     end subroutine ctqmc_allocate_memory_mmat
+  end subroutine ctqmc_allocate_memory_mmat
 
 !!>>> ctqmc_allocate_memory_gmat: allocate memory for gmat-related variables
   subroutine ctqmc_allocate_memory_gmat()
