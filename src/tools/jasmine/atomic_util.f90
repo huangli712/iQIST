@@ -518,8 +518,8 @@
              aspin = mod(alpha,2)
              bspin = mod(betta,2)
 
-             do delta=1,norbs
-                 do gamma=1,norbs
+             do gamma=1,norbs
+                 do delta=1,norbs
                      dband = ( delta - 1 ) / 2 - l
                      gband = ( gamma - 1 ) / 2 - l
                      dspin = mod(delta,2)
