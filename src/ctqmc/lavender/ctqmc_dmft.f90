@@ -76,7 +76,7 @@
 ! calculate new bath weiss's function
      do i=1,norbs
          do k=1,mfreq
-             wssf(k,i,i) = cmesh(k) + qmune - eimp(i) - hybf(k,i,i)
+             wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 

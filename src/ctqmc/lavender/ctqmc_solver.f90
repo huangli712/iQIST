@@ -516,22 +516,22 @@
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
 
-     schi  = schi_mpi  * real(nmonte) / real(nsweep)
-     ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
+     !schi  = schi_mpi  * real(nmonte) / real(nsweep)
+     !ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      prob  = prob_mpi  * real(ncarlo)
 
-     do m=1,nband
-         do n=1,ntime
-             sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,nband} loop
+     !do m=1,nband
+     !    do n=1,ntime
+     !        sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
+     !    enddo ! over n={1,ntime} loop
+     !enddo ! over m={1,nband} loop
 
-     do m=1,norbs
-         do n=1,ntime
-             oochi(n,m) = oochi_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,norbs} loop
+     !do m=1,norbs
+     !    do n=1,ntime
+     !        oochi(n,m) = oochi_mpi(n,m)   * real(nmonte) / real(nsweep)
+     !    enddo ! over n={1,ntime} loop
+     !enddo ! over m={1,norbs} loop
 
      do m=1,norbs
          do n=1,norbs
@@ -551,11 +551,11 @@
          enddo ! over n={1,nfreq} loop
      enddo ! over m={1,norbs} loop
 
-     do m=1,norbs
-         do n=1,ntime
-             ftau(n,m,:) = ftau_mpi(n,m,:) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,norbs} loop
+     !do m=1,norbs
+     !    do n=1,ntime
+     !        ftau(n,m,:) = ftau_mpi(n,m,:) * real(ncarlo) / real(nsweep)
+     !    enddo ! over n={1,ntime} loop
+     !enddo ! over m={1,norbs} loop
 
      do m=1,norbs
          do n=1,norbs
@@ -564,12 +564,12 @@
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
-     do m=1,norbs
-         do n=1,norbs
-             h2_re(n,m,:,:,:) = h2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-             h2_im(n,m,:,:,:) = h2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
+     !do m=1,norbs
+     !    do n=1,norbs
+     !        h2_re(n,m,:,:,:) = h2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+     !        h2_im(n,m,:,:,:) = h2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+     !    enddo ! over n={1,norbs} loop
+     !enddo ! over m={1,norbs} loop
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
@@ -620,14 +620,14 @@
      endif
 
 ! write out the final spin-spin correlation function data, schi and sschi
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_schi(schi, sschi)
-     endif
+     !if ( myid == master ) then ! only master node can do it
+     !    call ctqmc_dump_schi(schi, sschi)
+     !endif
 
 ! write out the final orbital-orbital correlation function data, ochi and oochi
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_ochi(ochi, oochi)
-     endif
+     !if ( myid == master ) then ! only master node can do it
+     !    call ctqmc_dump_ochi(ochi, oochi)
+     !endif
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
@@ -660,9 +660,9 @@
      endif
 
 ! write out the final vertex function data, h2_re and h2_im
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_vrtx(h2_re, h2_im)
-     endif
+     !if ( myid == master ) then ! only master node can do it
+     !    call ctqmc_dump_vrtx(h2_re, h2_im)
+     !endif
 
 !=========================================================================
 !>>> saving quantum impurity solver                                    <<<
