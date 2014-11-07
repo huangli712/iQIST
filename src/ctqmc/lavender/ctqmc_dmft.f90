@@ -3,25 +3,36 @@
 !!! program : ctqmc_dmft_selfer
 !!!           ctqmc_dmft_conver
 !!!           ctqmc_dmft_bethe
+!!!           ctqmc_dmft_anydos
 !!! source  : ctqmc_dmft.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           01/13/2010 by li huang
-!!! purpose : self-consistent engine for dynamical mean field theory (DMFT)
-!!!           simulation. it is only suitable for hybridization expansion
-!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!!!           impurity solver plus bethe lattice model.
+!!!           11/07/2014 by li huang
+!!! purpose : the self-consistent engine for dynamical mean field theory
+!!!           (DMFT) simulation. it is only suitable for hybridization
+!!!           expansion version continuous time quantum Monte Carlo (CTQMC)
+!!!           quantum impurity solver plus bethe lattice model.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> the self-consistent engine for continuous time quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory simulation
+!!>>> ctqmc_dmft_selfer: the self-consistent engine for continuous time
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
+!!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, half, czi, mystd
+
+     use control, only : nband, norbs
+     use control, only : mfreq
+     use control, only : Uc, Jz
+     use control, only : mune, alpha
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : eimp
+     use context, only : grnf
+     use context, only : wtau, wssf, hybf
 
      implicit none
 
@@ -44,26 +55,24 @@
 ! allocate memory
      allocate(htmp(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize htmp
-     htmp = czero
+     htmp = hybf
 
 ! calculate new hybridization function using self-consistent condition
-     call ctqmc_dmft_bethe(htmp, grnf)
+     call ctqmc_dmft_bethe(hybf, grnf)
 
 ! mixing new and old hybridization function: htmp and hybf
-     call ctqmc_dmft_mixer(hybf, htmp)
-
-! update original hybridization function
-     hybf = htmp
+     call s_mix_z(size(hybf), htmp, hybf, alpha)
 
 ! \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
      qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
      qmune = mune - qmune
 
 ! calculate new bath weiss's function
+! G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
      do i=1,norbs
          do k=1,mfreq
              wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
@@ -81,23 +90,23 @@
 ! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wssf(rmesh, wssf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the new bath weiss's function in imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wtau(tmesh, wtau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the new hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'LAVENDER >>> DMFT hybridization function is updated'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(htmp)
