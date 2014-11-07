@@ -105,32 +105,12 @@
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(schi_mpi(ntime),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-     allocate(ochi_mpi(ntime),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-     allocate(nmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(prob_mpi(ncfgs),             stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(sschi_mpi(ntime,nband),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-     allocate(oochi_mpi(ntime,norbs),      stat=istat)
+     allocate(nmat_mpi(norbs),             stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -145,27 +125,12 @@
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     allocate(ftau_mpi(ntime,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      allocate(g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-     allocate(h2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-     allocate(h2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -190,7 +155,7 @@
      if ( iter == 999 ) then
          nsweep = nsweep * 10
          nwrite = nwrite * 10
-     endif
+     endif ! back if ( iter == 999 ) block
 
 !=========================================================================
 !>>> starting quantum impurity solver                                  <<<
@@ -202,7 +167,7 @@
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nband :', nband, 'Uc    :', Uc
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nspin :', nspin, 'Jz    :', Jz
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 !=========================================================================
 !>>> initializing quantum impurity solver                              <<<
@@ -212,7 +177,7 @@
 ! setup the key variables
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver initializing'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_solver_init()
@@ -222,7 +187,7 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 !=========================================================================
 !>>> retrieving quantum impurity solver                                <<<
@@ -232,7 +197,7 @@
 ! retrieving the time series information produced by previous running
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver retrieving'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_retrieve_status()
@@ -242,7 +207,7 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 !=========================================================================
 !>>> warmming quantum impurity solver                                  <<<
@@ -252,7 +217,7 @@
 ! in order to achieve equilibrium state
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver warmming'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_diagram_warmming()
@@ -262,7 +227,7 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 !=========================================================================
 !>>> beginning main iteration                                          <<<
@@ -272,7 +237,7 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver sampling'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      CTQMC_MAIN_ITERATION: do i=1, nsweep, nwrite
 
@@ -393,7 +358,7 @@
 ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
              call ctqmc_dump_hist(hist_mpi)
-         endif
+         endif ! back if ( myid == master ) block
 
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
@@ -589,7 +554,7 @@
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final spin-spin correlation function data, schi and sschi
      !if ( myid == master ) then ! only master node can do it
@@ -604,32 +569,32 @@
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_nmat(nmat, nnmat)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final probability data, prob
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_prob(prob, naux, saux)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_gtau(tmesh, gtau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, grnf
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_grnf(rmesh, grnf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final self-energy function data, sig2
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_sigf(rmesh, sig2)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, g2_re and g2_im
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_twop(g2_re, g2_im)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the final vertex function data, h2_re and h2_im
      !if ( myid == master ) then ! only master node can do it
@@ -643,7 +608,7 @@
 ! save the perturbation expansion series information to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
-     endif
+     endif ! back if ( myid == master ) block
 
 !=========================================================================
 !>>> finishing quantum impurity solver                                 <<<
@@ -653,7 +618,7 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'LAVENDER >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(hist_mpi)
