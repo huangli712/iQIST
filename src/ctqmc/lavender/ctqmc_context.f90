@@ -1,48 +1,37 @@
-!-------------------------------------------------------------------------
-! project : lavender
-! program : ctqmc_core module
-!           ctqmc_clur module
-!           ctqmc_flvr module
-!           ctqmc_umat module
-!           ctqmc_fmat module
-!           ctqmc_mmat module
-!           ctqmc_gmat module
-!           ctqmc_wmat module
-!           ctqmc_smat module
-!           context    module
-! source  : ctqmc_context.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/17/2009 by li huang
-!           09/19/2009 by li huang
-!           09/20/2009 by li huang
-!           09/21/2009 by li huang
-!           09/22/2009 by li huang
-!           09/27/2009 by li huang
-!           11/01/2009 by li huang
-!           11/10/2009 by li huang
-!           11/18/2009 by li huang
-!           12/01/2009 by li huang
-!           12/05/2009 by li huang
-!           02/21/2010 by li huang
-!           02/23/2010 by li huang
-!           06/08/2010 by li huang
-! purpose : define the key data structure and global arrays/variables for
-!           hybridization expansion version continuous time quantum Monte
-!           Carlo (CTQMC) quantum impurity solver and dynamical mean field
-!           theory (DMFT) self-consistent engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : lavender
+!!! program : ctqmc_core module
+!!!           ctqmc_clur module
+!!!           ctqmc_flvr module
+!!!           ctqmc_mesh module
+!!!           ctqmc_meat module
+!!!           ctqmc_umat module
+!!!           ctqmc_fmat module
+!!!           ctqmc_mmat module
+!!!           ctqmc_gmat module
+!!!           ctqmc_wmat module
+!!!           ctqmc_smat module
+!!!           context    module
+!!! source  : ctqmc_context.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           06/08/2010 by li huang
+!!!           11/06/2014 by li huang
+!!! purpose : To define the key data structure and global arrays/variables
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
+!!!           mean field theory (DMFT) self-consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!=========================================================================
-!>>> module ctqmc_core                                                 <<<
-!=========================================================================
-!>>> containing core (internal) variables used by continuous time quantum
-! Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_core                                                <<<
+!!========================================================================
+
+!!>>> containing core (internal) variables used by continuous time quantum
+!!>>> Monte Carlo quantum impurity solver
   module ctqmc_core
      use constants, only : dp, zero
 
@@ -59,6 +48,12 @@
 
 ! averaged sign values, used to measure the sign problem
      integer, public, save  :: caves = 0
+
+! current status of spin-orbital coupling
+! if cssoc = 0, no spin-orbital coupling,
+! if cssoc = 1, atomic spin-orbital coupling
+! note: this variable is determined by atom.cix, do not setup it manually
+     integer, public, save  :: cssoc = 0
 
 !-------------------------------------------------------------------------
 !::: core variables: real, matrix trace                                :::
@@ -137,14 +132,15 @@
 
   end module ctqmc_core
 
-!=========================================================================
-!>>> module ctqmc_clur                                                 <<<
-!=========================================================================
-!>>> containing perturbation expansion series related arrays (colour part)
-! used by continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_clur                                                <<<
+!!========================================================================
+
+!!>>> containing perturbation expansion series related arrays (colour part)
+!!>>> used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_clur
      use constants, only : dp
-     use stack
+     use stack, only : istack, istack_create, istack_destroy
 
      implicit none
 
@@ -174,14 +170,15 @@
 
   end module ctqmc_clur
 
-!=========================================================================
-!>>> module ctqmc_flvr                                                 <<<
-!=========================================================================
-!>>> containing perturbation expansion series related arrays (flavor part)
-! used by continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_flvr                                                <<<
+!!========================================================================
+
+!!>>> containing perturbation expansion series related arrays (flavor part)
+!!>>> used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_flvr
      use constants, only : dp
-     use stack
+     use stack, only : istack, istack_create, istack_destroy
 
      implicit none
 
@@ -211,25 +208,111 @@
 
   end module ctqmc_flvr
 
-!=========================================================================
-!>>> module ctqmc_umat                                                 <<<
-!=========================================================================
-!>>> containing util-matrix related arrays used by continuous time quantum
-! Monte Carlo quantum impurity solver
-  module ctqmc_umat
+!!========================================================================
+!!>>> module ctqmc_mesh                                                <<<
+!!========================================================================
+
+!!>>> containing mesh related arrays used by continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
+  module ctqmc_mesh
+     use constants, only : dp
+
+     implicit none
+
+! imaginary time mesh
+     real(dp), public, save, allocatable :: tmesh(:)
+
+! real matsubara frequency mesh
+     real(dp), public, save, allocatable :: rmesh(:)
+
+! interval [-1,1] on which legendre polynomial is defined
+     real(dp), public, save, allocatable :: pmesh(:)
+
+! interval [-1,1] on which chebyshev polynomial is defined
+     real(dp), public, save, allocatable :: qmesh(:)
+
+! legendre polynomial defined on [-1,1]
+     real(dp), public, save, allocatable :: ppleg(:,:)
+
+! chebyshev polynomial defined on [-1,1]
+     real(dp), public, save, allocatable :: qqche(:,:)
+
+  end module ctqmc_mesh
+
+!!========================================================================
+!!>>> module ctqmc_meat                                                <<<
+!!========================================================================
+
+!!>>> containing physical observables related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
+  module ctqmc_meat !!>>> To tell you a truth, meat means MEAsuremenT
      use constants, only : dp
 
      implicit none
 
 ! histogram for perturbation expansion series
-     integer,  public, save, allocatable :: hist(:)
+     real(dp), public, save, allocatable :: hist(:)
+
+! auxiliary physical observables
+! paux(1) : total energy, Etot
+! paux(2) : potential engrgy, Epot
+! paux(3) : kinetic energy, Ekin
+! paux(4) : magnetic moment, < Sz >
+! paux(5) : average of occupation, < N > = < N1 >
+! paux(6) : average of occupation square, < N2 >
+! paux(7) : reserved
+! paux(8) : reserved
+     real(dp), public, save, allocatable :: paux(:)
+
+! probability of eigenstates of local hamiltonian matrix
+     real(dp), public, save, allocatable :: prob(:)
+
+! impurity occupation number, < n_i >
+     real(dp), public, save, allocatable :: nmat(:)
+
+! impurity double occupation number matrix, < n_i n_j >
+     real(dp), public, save, allocatable :: nnmat(:,:)
+
+! used to calculate two-particle green's function, real part
+     real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
+
+! used to calculate two-particle green's function, imaginary part
+     real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
+
+! particle-particle pair susceptibility, real part
+     real(dp), public, save, allocatable :: ps_re(:,:,:,:,:)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), public, save, allocatable :: ps_im(:,:,:,:,:)
+
+  end module ctqmc_meat
+
+!!========================================================================
+!!>>> module ctqmc_umat                                                <<<
+!!========================================================================
+
+!!>>> containing auxiliary arrays used by continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
+  module ctqmc_umat
+     use constants, only : dp
+
+     implicit none
+
+!-------------------------------------------------------------------------
+!::: ctqmc status variables                                            :::
+!-------------------------------------------------------------------------
 
 ! current perturbation expansion order for different flavor channel
      integer,  public, save, allocatable :: rank(:)
 
+! diagonal elements of current matrix product of flavor part
+! it is used to calculate the probability of eigenstates
+     real(dp), public, save, allocatable :: diag(:,:)
+
 !-------------------------------------------------------------------------
 !::: input data variables                                              :::
 !-------------------------------------------------------------------------
+
 ! symmetry properties for correlated orbitals
      integer,  public, save, allocatable :: symm(:)
 
@@ -244,95 +327,15 @@
 
 ! total spin for the eigenstates of local hamiltonian matrix
      real(dp), public, save, allocatable :: saux(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-!-------------------------------------------------------------------------
-!::: physical observables                                              :::
-!-------------------------------------------------------------------------
-! probability of eigenstates of local hamiltonian matrix
-     real(dp), public, save, allocatable :: prob(:)
-
-! auxiliary physical observables
-! paux(1) : total energy, Etot
-! paux(2) : potential engrgy, Epot
-! paux(3) : kinetic energy, Ekin
-! paux(4) : magnetic moment, < Sz >
-     real(dp), public, save, allocatable :: paux(:)
-
-! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, totally-averaged
-     real(dp), public, save, allocatable :: schi(:)
-
-! orbital-orbital correlation function: < N(0) N(\tau) >, totally-averaged
-     real(dp), public, save, allocatable :: ochi(:)
-
-! impurity occupation number, < n_i >
-     real(dp), public, save, allocatable :: nmat(:)
-
-! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, orbital-resolved
-     real(dp), public, save, allocatable :: sschi(:,:)
-
-! orbital-orbital correlation function: < N(0) N(\tau) >, orbital-resolved
-     real(dp), public, save, allocatable :: oochi(:,:)
-
-! impurity double occupation number matrix, < n_i n_j >
-     real(dp), public, save, allocatable :: nnmat(:,:)
-
-! diagonal elements of current matrix product of flavor part
-! it is used to calculate the probability of eigenstates
-     real(dp), public, save, allocatable :: ddmat(:,:)
-
-! used to calculate two-particle green's function, real part
-     real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
-
-! used to calculate two-particle green's function, imaginary part
-     real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
-
-! used to calculate vertex function, real part
-     real(dp), public, save, allocatable :: h2_re(:,:,:,:,:)
-
-! used to calculate vertex function, imaginary part
-     real(dp), public, save, allocatable :: h2_im(:,:,:,:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-!-------------------------------------------------------------------------
-!::: orthogonal polynomial variables                                   :::
-!-------------------------------------------------------------------------
-! legendre polynomial defined on [-1,1]
-     real(dp), public, save, allocatable :: ppleg(:,:)
-
-! chebyshev polynomial defined on [-1,1]
-     real(dp), public, save, allocatable :: qqche(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-!-------------------------------------------------------------------------
-!::: mesh data variables                                               :::
-!-------------------------------------------------------------------------
-! interval [-1,1] on which legendre polynomial is defined
-     real(dp), public, save, allocatable :: pmesh(:)
-
-! interval [-1,1] on which chebyshev polynomial is defined
-     real(dp), public, save, allocatable :: qmesh(:)
-
-! imaginary time mesh
-     real(dp), public, save, allocatable :: tmesh(:)
-
-! real matsubara frequency mesh
-     real(dp), public, save, allocatable :: rmesh(:)
-
-! complex matsubara frequency mesh
-     complex(dp), public, save, allocatable :: cmesh(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! identity matrix
-     complex(dp), public, save, allocatable :: unity(:,:)
 
   end module ctqmc_umat
 
-!=========================================================================
-!>>> module ctqmc_fmat                                                 <<<
-!=========================================================================
-!>>> containing F-matrix related arrays used by continuous time quantum
-! Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_fmat                                                <<<
+!!========================================================================
+
+!!>>> containing F-matrix related arrays used by continuous time quantum
+!!>>> Monte Carlo quantum impurity solver
   module ctqmc_fmat
      use constants, only : dp
 
@@ -472,11 +475,12 @@
 
   end module ctqmc_fmat
 
-!=========================================================================
-!>>> module ctqmc_mmat                                                 <<<
-!=========================================================================
-!>>> containing M-matrix and G-matrix related arrays used by continuous
-! time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_mmat                                                <<<
+!!========================================================================
+
+!!>>> containing M-matrix and G-matrix related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
   module ctqmc_mmat
      use constants, only : dp
 
@@ -502,11 +506,12 @@
 
   end module ctqmc_mmat
 
-!=========================================================================
-!>>> module ctqmc_gmat                                                 <<<
-!=========================================================================
-!>>> containing green's function matrix related arrays used by continuous
-! time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_gmat                                                <<<
+!!========================================================================
+
+!!>>> containing green's function matrix related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
   module ctqmc_gmat
      use constants, only : dp
 
@@ -515,24 +520,18 @@
 ! impurity green's function, in imaginary time axis, matrix form
      real(dp), public, save, allocatable    :: gtau(:,:,:)
 
-! auxiliary correlation function, in imaginary time axis, matrix form
-! used to measure self-energy function
-     real(dp), public, save, allocatable    :: ftau(:,:,:)
-
 ! impurity green's function, in matsubara frequency axis, matrix form
      complex(dp), public, save, allocatable :: grnf(:,:,:)
 
-! auxiliary correlation function, in matsubara frequency axis, matrix form
-! used to measure self-energy function
-     complex(dp), public, save, allocatable :: frnf(:,:,:)
-
   end module ctqmc_gmat
 
-!=========================================================================
-!>>> module ctqmc_wmat                                                 <<<
-!=========================================================================
-!>>> containing weiss's function and hybridization function matrix related
-! arrays used by continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_wmat                                                <<<
+!!========================================================================
+
+!!>>> containing weiss's function and hybridization function matrix related
+!!>>> arrays used by continuous time quantum Monte Carlo quantum impurity
+!!>>> solver
   module ctqmc_wmat
      use constants, only : dp
 
@@ -555,11 +554,12 @@
 
   end module ctqmc_wmat
 
-!=========================================================================
-!>>> module ctqmc_smat                                                 <<<
-!=========================================================================
-!>>> containing self-energy function matrix related arrays used by
-! continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_smat                                                <<<
+!!========================================================================
+
+!!>>> containing self-energy function matrix related arrays used by
+!!>>> continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_smat
      use constants, only : dp
 
@@ -573,10 +573,11 @@
 
   end module ctqmc_smat
 
-!=========================================================================
-!>>> module context                                                    <<<
-!=========================================================================
-!>>> containing memory management subroutines and define global variables
+!!========================================================================
+!!>>> module context                                                   <<<
+!!========================================================================
+
+!!>>> containing memory management subroutines and define global variables
   module context
      use constants
      use control
@@ -584,23 +585,33 @@
      use ctqmc_core
      use ctqmc_clur
      use ctqmc_flvr
-
+     use ctqmc_mesh
+     use ctqmc_meat
      use ctqmc_umat
      use ctqmc_fmat
      use ctqmc_mmat
-
      use ctqmc_gmat
      use ctqmc_wmat
      use ctqmc_smat
 
      implicit none
 
+!!========================================================================
+!!>>> declare global variables                                         <<<
+!!========================================================================
+
 ! status flag
      integer, private :: istat
+
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
 ! declaration of module procedures: allocate memory
      public :: ctqmc_allocate_memory_clur
      public :: ctqmc_allocate_memory_flvr
+     public :: ctqmc_allocate_memory_mesh
+     public :: ctqmc_allocate_memory_meat
      public :: ctqmc_allocate_memory_umat
      public :: ctqmc_allocate_memory_fmat
      public :: ctqmc_allocate_memory_mmat
@@ -611,6 +622,8 @@
 ! declaration of module procedures: deallocate memory
      public :: ctqmc_deallocate_memory_clur
      public :: ctqmc_deallocate_memory_flvr
+     public :: ctqmc_deallocate_memory_mesh
+     public :: ctqmc_deallocate_memory_meat
      public :: ctqmc_deallocate_memory_umat
      public :: ctqmc_deallocate_memory_fmat
      public :: ctqmc_deallocate_memory_mmat
@@ -618,562 +631,581 @@
      public :: ctqmc_deallocate_memory_wmat
      public :: ctqmc_deallocate_memory_smat
 
-     contains
+  contains ! encapsulated functionality
 
-!=========================================================================
-!>>> allocate memory subroutines                                       <<<
-!=========================================================================
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
 
-!>>> allocate memory for clur-related variables
-     subroutine ctqmc_allocate_memory_clur()
-         implicit none
+!!>>> ctqmc_allocate_memory_clur: allocate memory for clur-related variables
+  subroutine ctqmc_allocate_memory_clur()
+     implicit none
 
 ! loop index
-         integer :: i
+     integer :: i
 
 ! allocate memory
-         allocate(index_s(mkink,norbs),     stat=istat)
-         allocate(index_e(mkink,norbs),     stat=istat)
+     allocate(index_s(mkink,norbs),     stat=istat)
+     allocate(index_e(mkink,norbs),     stat=istat)
 
-         allocate(time_s(mkink,norbs),      stat=istat)
-         allocate(time_e(mkink,norbs),      stat=istat)
+     allocate(time_s(mkink,norbs),      stat=istat)
+     allocate(time_e(mkink,norbs),      stat=istat)
 
-         allocate(exp_s(nfreq,mkink,norbs), stat=istat)
-         allocate(exp_e(nfreq,mkink,norbs), stat=istat)
+     allocate(exp_s(nfreq,mkink,norbs), stat=istat)
+     allocate(exp_e(nfreq,mkink,norbs), stat=istat)
 
-         allocate(empty_s(norbs),           stat=istat)
-         allocate(empty_e(norbs),           stat=istat)
+     allocate(empty_s(norbs),           stat=istat)
+     allocate(empty_e(norbs),           stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         index_s = 0
-         index_e = 0
+     index_s = 0
+     index_e = 0
 
-         time_s  = zero
-         time_e  = zero
+     time_s  = zero
+     time_e  = zero
 
-         exp_s   = czero
-         exp_e   = czero
+     exp_s   = czero
+     exp_e   = czero
 
-         do i=1,norbs
-             empty_s(i) = istack_create(mkink)
-             empty_e(i) = istack_create(mkink)
-         enddo ! over i={1,norbs} loop
+     do i=1,norbs
+         call istack_create(empty_s(i), mkink)
+         call istack_create(empty_e(i), mkink)
+     enddo ! over i={1,norbs} loop
 
-         return
-     end subroutine ctqmc_allocate_memory_clur
+     return
+  end subroutine ctqmc_allocate_memory_clur
 
-!>>> allocate memory for flvr-related variables
-     subroutine ctqmc_allocate_memory_flvr()
-         implicit none
+!!>>> ctqmc_allocate_memory_flvr: allocate memory for flvr-related variables
+  subroutine ctqmc_allocate_memory_flvr()
+     implicit none
 
 ! allocate memory
-         allocate(index_t(mkink),      stat=istat)
-         allocate(index_v(mkink),      stat=istat)
+     allocate(index_t(mkink),      stat=istat)
+     allocate(index_v(mkink),      stat=istat)
 
-         allocate(type_v(mkink),       stat=istat)
-         allocate(flvr_v(mkink),       stat=istat)
+     allocate(type_v(mkink),       stat=istat)
+     allocate(flvr_v(mkink),       stat=istat)
 
-         allocate(time_v(mkink),       stat=istat)
+     allocate(time_v(mkink),       stat=istat)
 
-         allocate(expt_t(ncfgs,  4  ), stat=istat)
-         allocate(expt_v(ncfgs,mkink), stat=istat)
+     allocate(expt_t(ncfgs,  4  ), stat=istat)
+     allocate(expt_v(ncfgs,mkink), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_flvr','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_flvr','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         index_t = 0
-         index_v = 0
+     index_t = 0
+     index_v = 0
 
-         type_v  = 1
-         flvr_v  = 1
+     type_v  = 1
+     flvr_v  = 1
 
-         time_v  = zero
+     time_v  = zero
 
-         expt_t  = zero
-         expt_v  = zero
+     expt_t  = zero
+     expt_v  = zero
 
-         empty_v = istack_create(mkink)
+     call istack_create(empty_v, mkink)
 
-         return
-     end subroutine ctqmc_allocate_memory_flvr
+     return
+  end subroutine ctqmc_allocate_memory_flvr
 
-!>>> allocate memory for umat-related variables
-     subroutine ctqmc_allocate_memory_umat()
-         implicit none
+!!>>> ctqmc_allocate_memory_mesh: allocate memory for mesh-related variables
+  subroutine ctqmc_allocate_memory_mesh()
+     implicit none
 
 ! allocate memory
-         allocate(hist(mkink),        stat=istat)
-         allocate(rank(norbs),        stat=istat)
+     allocate(tmesh(ntime),       stat=istat)
+     allocate(rmesh(mfreq),       stat=istat)
 
-         allocate(symm(norbs),        stat=istat)
+     allocate(pmesh(legrd),       stat=istat)
+     allocate(qmesh(chgrd),       stat=istat)
 
-         allocate(eimp(norbs),        stat=istat)
-         allocate(eigs(ncfgs),        stat=istat)
-         allocate(naux(ncfgs),        stat=istat)
-         allocate(saux(ncfgs),        stat=istat)
-
-         allocate(prob(ncfgs),        stat=istat)
-         allocate(paux(  4  ),        stat=istat)
-         allocate(schi(ntime),        stat=istat)
-         allocate(ochi(ntime),        stat=istat)
-         allocate(nmat(norbs),        stat=istat)
-
-         allocate(sschi(ntime,nband), stat=istat)
-         allocate(oochi(ntime,norbs), stat=istat)
-         allocate(nnmat(norbs,norbs), stat=istat)
-         allocate(ddmat(ncfgs,  2  ), stat=istat)
-
-         allocate(g2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-         allocate(g2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-         allocate(h2_re(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-         allocate(h2_im(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-
-         allocate(ppleg(legrd,lemax), stat=istat)
-         allocate(qqche(chgrd,chmax), stat=istat)
-
-         allocate(pmesh(legrd),       stat=istat)
-         allocate(qmesh(chgrd),       stat=istat)
-
-         allocate(tmesh(ntime),       stat=istat)
-         allocate(rmesh(mfreq),       stat=istat)
-
-         allocate(cmesh(mfreq),       stat=istat)
-
-         allocate(unity(norbs,norbs), stat=istat)
+     allocate(ppleg(legrd,lemax), stat=istat)
+     allocate(qqche(chgrd,chmax), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_mesh','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         hist  = 0
-         rank  = 0
+     tmesh = zero
+     rmesh = zero
 
-         symm  = 0
+     pmesh = zero
+     qmesh = zero
 
-         eimp  = zero
-         eigs  = zero
-         naux  = zero
-         saux  = zero
+     ppleg = zero
+     qqche = zero
 
-         prob  = zero
-         paux  = zero
-         schi  = zero
-         ochi  = zero
-         nmat  = zero
+     return
+  end subroutine ctqmc_allocate_memory_mesh
 
-         sschi = zero
-         oochi = zero
-         nnmat = zero
-         ddmat = zero
-
-         g2_re = zero
-         g2_im = zero
-         h2_re = zero
-         h2_im = zero
-
-         ppleg = zero
-         qqche = zero
-
-         pmesh = zero
-         qmesh = zero
-
-         tmesh = zero
-         rmesh = zero
-
-         cmesh = czero
-
-         unity = czero
-
-         return
-     end subroutine ctqmc_allocate_memory_umat
-
-!>>> allocate memory for fmat-related variables
-     subroutine ctqmc_allocate_memory_fmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_meat: allocate memory for meat-related variables
+  subroutine ctqmc_allocate_memory_meat()
+     implicit none
 
 ! allocate memory
-         allocate(isave(npart),            stat=istat)
+     allocate(hist(mkink),        stat=istat)
 
-         allocate(sop_ia(ncfgs+1,npart),   stat=istat)
-         allocate(sop_ja(nzero,npart),     stat=istat)
-         allocate(sop_a(nzero,npart),      stat=istat)
+     allocate(paux(  8  ),        stat=istat)
+     allocate(prob(ncfgs),        stat=istat)
 
-         allocate(sop_ib(ncfgs+1,npart),   stat=istat)
-         allocate(sop_jb(nzero,npart),     stat=istat)
-         allocate(sop_b(nzero,npart),      stat=istat)
+     allocate(nmat(norbs),        stat=istat)
+     allocate(nnmat(norbs,norbs), stat=istat)
 
-         allocate(sop_ic(ncfgs+1,norbs),   stat=istat)
-         allocate(sop_jc(nzero,norbs),     stat=istat)
-         allocate(sop_c(nzero,norbs),      stat=istat)
-
-         allocate(sop_id(ncfgs+1,norbs),   stat=istat)
-         allocate(sop_jd(nzero,norbs),     stat=istat)
-         allocate(sop_d(nzero,norbs),      stat=istat)
-
-         allocate(sop_is(ncfgs+1,2),       stat=istat)
-         allocate(sop_js(nzero,2),         stat=istat)
-         allocate(sop_s(nzero,2),          stat=istat)
-
-         allocate(sop_in(ncfgs+1,norbs),   stat=istat)
-         allocate(sop_jn(nzero,norbs),     stat=istat)
-         allocate(sop_n(nzero,norbs),      stat=istat)
-
-         allocate(sop_im(ncfgs+1,norbs,norbs), stat=istat)
-         allocate(sop_jm(nzero,norbs,norbs),   stat=istat)
-         allocate(sop_m(nzero,norbs,norbs),    stat=istat)
-
-         allocate(op_c(ncfgs,ncfgs,norbs), stat=istat)
-         allocate(op_d(ncfgs,ncfgs,norbs), stat=istat)
+     allocate(g2_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_fmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_meat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         isave  = 0
+     hist  = zero
 
-         sop_ia = 0
-         sop_ja = 0
-         sop_a  = zero
+     paux  = zero
+     prob  = zero
 
-         sop_ib = 0
-         sop_jb = 0
-         sop_b  = zero
+     nmat  = zero
+     nnmat = zero
 
-         sop_ic = 0
-         sop_jc = 0
-         sop_c  = zero
+     g2_re = zero
+     g2_im = zero
+     ps_re = zero
+     ps_im = zero
 
-         sop_id = 0
-         sop_jd = 0
-         sop_d  = zero
+     return
+  end subroutine ctqmc_allocate_memory_meat
 
-         sop_is = 0
-         sop_js = 0
-         sop_s  = zero
-
-         sop_in = 0
-         sop_jn = 0
-         sop_n  = zero
-
-         sop_im = 0
-         sop_jm = 0
-         sop_m  = zero
-
-         op_c   = zero
-         op_d   = zero
-
-         return
-     end subroutine ctqmc_allocate_memory_fmat
-
-!>>> allocate memory for mmat-related variables
-     subroutine ctqmc_allocate_memory_mmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_umat: allocate memory for umat-related variables
+  subroutine ctqmc_allocate_memory_umat()
+     implicit none
 
 ! allocate memory
-         allocate(lspace(mkink,norbs),     stat=istat)
-         allocate(rspace(mkink,norbs),     stat=istat)
+     allocate(rank(norbs),        stat=istat)
 
-         allocate(mmat(mkink,mkink,norbs), stat=istat)
+     allocate(diag(ncfgs,  2  ),  stat=istat)
 
-         allocate(lsaves(nfreq,norbs),     stat=istat)
-         allocate(rsaves(nfreq,norbs),     stat=istat)
+     allocate(symm(norbs),        stat=istat)
 
-         allocate(gmat(nfreq,norbs,norbs), stat=istat)
+     allocate(eimp(norbs),        stat=istat)
+     allocate(eigs(ncfgs),        stat=istat)
+     allocate(naux(ncfgs),        stat=istat)
+     allocate(saux(ncfgs),        stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_umat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         lspace = zero
-         rspace = zero
+     rank  = 0
 
-         mmat   = zero
+     diag  = zero
 
-         lsaves = czero
-         rsaves = czero
+     symm  = 0
 
-         gmat   = czero
+     eimp  = zero
+     eigs  = zero
+     naux  = zero
+     saux  = zero
 
-         return
-     end subroutine ctqmc_allocate_memory_mmat
+     return
+  end subroutine ctqmc_allocate_memory_umat
 
-!>>> allocate memory for gmat-related variables
-     subroutine ctqmc_allocate_memory_gmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_fmat: allocate memory for fmat-related variables
+  subroutine ctqmc_allocate_memory_fmat()
+     implicit none
 
 ! allocate memory
-         allocate(gtau(ntime,norbs,norbs), stat=istat)
-         allocate(ftau(ntime,norbs,norbs), stat=istat)
+     allocate(isave(npart),            stat=istat)
 
-         allocate(grnf(mfreq,norbs,norbs), stat=istat)
-         allocate(frnf(mfreq,norbs,norbs), stat=istat)
+     allocate(sop_ia(ncfgs+1,npart),   stat=istat)
+     allocate(sop_ja(nzero,npart),     stat=istat)
+     allocate(sop_a(nzero,npart),      stat=istat)
+
+     allocate(sop_ib(ncfgs+1,npart),   stat=istat)
+     allocate(sop_jb(nzero,npart),     stat=istat)
+     allocate(sop_b(nzero,npart),      stat=istat)
+
+     allocate(sop_ic(ncfgs+1,norbs),   stat=istat)
+     allocate(sop_jc(nzero,norbs),     stat=istat)
+     allocate(sop_c(nzero,norbs),      stat=istat)
+
+     allocate(sop_id(ncfgs+1,norbs),   stat=istat)
+     allocate(sop_jd(nzero,norbs),     stat=istat)
+     allocate(sop_d(nzero,norbs),      stat=istat)
+
+     allocate(sop_is(ncfgs+1,2),       stat=istat)
+     allocate(sop_js(nzero,2),         stat=istat)
+     allocate(sop_s(nzero,2),          stat=istat)
+
+     allocate(sop_in(ncfgs+1,norbs),   stat=istat)
+     allocate(sop_jn(nzero,norbs),     stat=istat)
+     allocate(sop_n(nzero,norbs),      stat=istat)
+
+     allocate(sop_im(ncfgs+1,norbs,norbs), stat=istat)
+     allocate(sop_jm(nzero,norbs,norbs),   stat=istat)
+     allocate(sop_m(nzero,norbs,norbs),    stat=istat)
+
+     allocate(op_c(ncfgs,ncfgs,norbs), stat=istat)
+     allocate(op_d(ncfgs,ncfgs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_fmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         gtau = zero
-         ftau = zero
+     isave  = 0
 
-         grnf = czero
-         frnf = czero
+     sop_ia = 0
+     sop_ja = 0
+     sop_a  = zero
 
-         return
-     end subroutine ctqmc_allocate_memory_gmat
+     sop_ib = 0
+     sop_jb = 0
+     sop_b  = zero
 
-!>>> allocate memory for wmat-related variables
-     subroutine ctqmc_allocate_memory_wmat()
-         implicit none
+     sop_ic = 0
+     sop_jc = 0
+     sop_c  = zero
+
+     sop_id = 0
+     sop_jd = 0
+     sop_d  = zero
+
+     sop_is = 0
+     sop_js = 0
+     sop_s  = zero
+
+     sop_in = 0
+     sop_jn = 0
+     sop_n  = zero
+
+     sop_im = 0
+     sop_jm = 0
+     sop_m  = zero
+
+     op_c   = zero
+     op_d   = zero
+
+     return
+  end subroutine ctqmc_allocate_memory_fmat
+
+!!>>> ctqmc_allocate_memory_mmat: allocate memory for mmat-related variables
+  subroutine ctqmc_allocate_memory_mmat()
+     implicit none
 
 ! allocate memory
-         allocate(wtau(ntime,norbs,norbs), stat=istat)
-         allocate(htau(ntime,norbs,norbs), stat=istat)
-         allocate(hsed(ntime,norbs,norbs), stat=istat)
+     allocate(lspace(mkink,norbs),     stat=istat)
+     allocate(rspace(mkink,norbs),     stat=istat)
 
-         allocate(wssf(mfreq,norbs,norbs), stat=istat)
-         allocate(hybf(mfreq,norbs,norbs), stat=istat)
+     allocate(mmat(mkink,mkink,norbs), stat=istat)
+
+     allocate(lsaves(nfreq,norbs),     stat=istat)
+     allocate(rsaves(nfreq,norbs),     stat=istat)
+
+     allocate(gmat(nfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         wtau = zero
-         htau = zero
-         hsed = zero
+     lspace = zero
+     rspace = zero
 
-         wssf = czero
-         hybf = czero
+     mmat   = zero
 
-         return
-     end subroutine ctqmc_allocate_memory_wmat
+     lsaves = czero
+     rsaves = czero
 
-!>>> allocate memory for smat-related variables
-     subroutine ctqmc_allocate_memory_smat()
-         implicit none
+     gmat   = czero
+
+     return
+  end subroutine ctqmc_allocate_memory_mmat
+
+!!>>> ctqmc_allocate_memory_gmat: allocate memory for gmat-related variables
+  subroutine ctqmc_allocate_memory_gmat()
+     implicit none
 
 ! allocate memory
-         allocate(sig1(mfreq,norbs,norbs), stat=istat)
-         allocate(sig2(mfreq,norbs,norbs), stat=istat)
+     allocate(gtau(ntime,norbs,norbs), stat=istat)
+
+     allocate(grnf(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         sig1 = czero
-         sig2 = czero
+     gtau = zero
 
-         return
-     end subroutine ctqmc_allocate_memory_smat
+     grnf = czero
 
-!=========================================================================
-!>>> deallocate memory subroutines                                     <<<
-!=========================================================================
+     return
+  end subroutine ctqmc_allocate_memory_gmat
 
-!>>> deallocate memory for clur-related variables
-     subroutine ctqmc_deallocate_memory_clur()
-         implicit none
+!!>>> ctqmc_allocate_memory_wmat: allocate memory for wmat-related variables
+  subroutine ctqmc_allocate_memory_wmat()
+     implicit none
+
+! allocate memory
+     allocate(wtau(ntime,norbs,norbs), stat=istat)
+     allocate(htau(ntime,norbs,norbs), stat=istat)
+     allocate(hsed(ntime,norbs,norbs), stat=istat)
+
+     allocate(wssf(mfreq,norbs,norbs), stat=istat)
+     allocate(hybf(mfreq,norbs,norbs), stat=istat)
+
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize them
+     wtau = zero
+     htau = zero
+     hsed = zero
+
+     wssf = czero
+     hybf = czero
+
+     return
+  end subroutine ctqmc_allocate_memory_wmat
+
+!!>>> ctqmc_allocate_memory_smat: allocate memory for smat-related variables
+  subroutine ctqmc_allocate_memory_smat()
+     implicit none
+
+! allocate memory
+     allocate(sig1(mfreq,norbs,norbs), stat=istat)
+     allocate(sig2(mfreq,norbs,norbs), stat=istat)
+
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize them
+     sig1 = czero
+     sig2 = czero
+
+     return
+  end subroutine ctqmc_allocate_memory_smat
+
+!!========================================================================
+!!>>> deallocate memory subroutines                                    <<<
+!!========================================================================
+
+!!>>> ctqmc_deallocate_memory_clur: deallocate memory for clur-related variables
+  subroutine ctqmc_deallocate_memory_clur()
+     implicit none
 
 ! loop index
-         integer :: i
+     integer :: i
 
-         do i=1,norbs
-             call istack_destroy(empty_s(i))
-             call istack_destroy(empty_e(i))
-         enddo ! over i={1,norbs} loop
+     do i=1,norbs
+         call istack_destroy(empty_s(i))
+         call istack_destroy(empty_e(i))
+     enddo ! over i={1,norbs} loop
 
-         if ( allocated(index_s) ) deallocate(index_s)
-         if ( allocated(index_e) ) deallocate(index_e)
+     if ( allocated(index_s) ) deallocate(index_s)
+     if ( allocated(index_e) ) deallocate(index_e)
 
-         if ( allocated(time_s)  ) deallocate(time_s )
-         if ( allocated(time_e)  ) deallocate(time_e )
+     if ( allocated(time_s)  ) deallocate(time_s )
+     if ( allocated(time_e)  ) deallocate(time_e )
 
-         if ( allocated(exp_s)   ) deallocate(exp_s  )
-         if ( allocated(exp_e)   ) deallocate(exp_e  )
+     if ( allocated(exp_s)   ) deallocate(exp_s  )
+     if ( allocated(exp_e)   ) deallocate(exp_e  )
 
-         if ( allocated(empty_s) ) deallocate(empty_s)
-         if ( allocated(empty_e) ) deallocate(empty_e)
+     if ( allocated(empty_s) ) deallocate(empty_s)
+     if ( allocated(empty_e) ) deallocate(empty_e)
 
-         return
-     end subroutine ctqmc_deallocate_memory_clur
+     return
+  end subroutine ctqmc_deallocate_memory_clur
 
-!>>> deallocate memory for flvr-related variables
-     subroutine ctqmc_deallocate_memory_flvr()
-         implicit none
+!!>>> ctqmc_deallocate_memory_flvr: deallocate memory for flvr-related variables
+  subroutine ctqmc_deallocate_memory_flvr()
+     implicit none
 
-         call istack_destroy(empty_v)
+     call istack_destroy(empty_v)
 
-         if ( allocated(index_t) ) deallocate(index_t)
-         if ( allocated(index_v) ) deallocate(index_v)
+     if ( allocated(index_t) ) deallocate(index_t)
+     if ( allocated(index_v) ) deallocate(index_v)
 
-         if ( allocated(type_v)  ) deallocate(type_v )
-         if ( allocated(flvr_v)  ) deallocate(flvr_v )
+     if ( allocated(type_v)  ) deallocate(type_v )
+     if ( allocated(flvr_v)  ) deallocate(flvr_v )
 
-         if ( allocated(time_v)  ) deallocate(time_v )
+     if ( allocated(time_v)  ) deallocate(time_v )
 
-         if ( allocated(expt_t)  ) deallocate(expt_t )
-         if ( allocated(expt_v)  ) deallocate(expt_v )
+     if ( allocated(expt_t)  ) deallocate(expt_t )
+     if ( allocated(expt_v)  ) deallocate(expt_v )
 
-         return
-     end subroutine ctqmc_deallocate_memory_flvr
+     return
+  end subroutine ctqmc_deallocate_memory_flvr
 
-!>>> deallocate memory for umat-related variables
-     subroutine ctqmc_deallocate_memory_umat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_mesh: deallocate memory for mesh-related variables
+  subroutine ctqmc_deallocate_memory_mesh()
+     implicit none
 
-         if ( allocated(hist)  )   deallocate(hist )
-         if ( allocated(rank)  )   deallocate(rank )
+     if ( allocated(tmesh) )   deallocate(tmesh)
+     if ( allocated(rmesh) )   deallocate(rmesh)
 
-         if ( allocated(symm)  )   deallocate(symm )
+     if ( allocated(pmesh) )   deallocate(pmesh)
+     if ( allocated(qmesh) )   deallocate(qmesh)
 
-         if ( allocated(eimp)  )   deallocate(eimp )
-         if ( allocated(eigs)  )   deallocate(eigs )
-         if ( allocated(naux)  )   deallocate(naux )
-         if ( allocated(saux)  )   deallocate(saux )
+     if ( allocated(ppleg) )   deallocate(ppleg)
+     if ( allocated(qqche) )   deallocate(qqche)
 
-         if ( allocated(prob)  )   deallocate(prob )
-         if ( allocated(paux)  )   deallocate(paux )
-         if ( allocated(schi)  )   deallocate(schi )
-         if ( allocated(ochi)  )   deallocate(ochi )
-         if ( allocated(nmat)  )   deallocate(nmat )
+     return
+  end subroutine ctqmc_deallocate_memory_mesh
 
-         if ( allocated(sschi) )   deallocate(sschi)
-         if ( allocated(oochi) )   deallocate(oochi)
-         if ( allocated(nnmat) )   deallocate(nnmat)
-         if ( allocated(ddmat) )   deallocate(ddmat)
+!!>>> ctqmc_deallocate_memory_meat: deallocate memory for meat-related variables
+  subroutine ctqmc_deallocate_memory_meat()
+     implicit none
 
-         if ( allocated(g2_re) )   deallocate(g2_re)
-         if ( allocated(g2_im) )   deallocate(g2_im)
-         if ( allocated(h2_re) )   deallocate(h2_re)
-         if ( allocated(h2_im) )   deallocate(h2_im)
+     if ( allocated(hist)  )   deallocate(hist )
 
-         if ( allocated(ppleg) )   deallocate(ppleg)
-         if ( allocated(qqche) )   deallocate(qqche)
+     if ( allocated(paux)  )   deallocate(paux )
+     if ( allocated(prob)  )   deallocate(prob )
 
-         if ( allocated(pmesh) )   deallocate(pmesh)
-         if ( allocated(qmesh) )   deallocate(qmesh)
+     if ( allocated(nmat)  )   deallocate(nmat )
+     if ( allocated(nnmat) )   deallocate(nnmat)
 
-         if ( allocated(tmesh) )   deallocate(tmesh)
-         if ( allocated(rmesh) )   deallocate(rmesh)
+     if ( allocated(g2_re) )   deallocate(g2_re)
+     if ( allocated(g2_im) )   deallocate(g2_im)
 
-         if ( allocated(cmesh) )   deallocate(cmesh)
+     if ( allocated(ps_re) )   deallocate(ps_re)
+     if ( allocated(ps_im) )   deallocate(ps_im)
 
-         if ( allocated(unity) )   deallocate(unity)
+     return
+  end subroutine ctqmc_deallocate_memory_meat
 
-         return
-     end subroutine ctqmc_deallocate_memory_umat
+!!>>> ctqmc_deallocate_memory_umat: deallocate memory for umat-related variables
+  subroutine ctqmc_deallocate_memory_umat()
+     implicit none
 
-!>>> deallocate memory for fmat-related variables
-     subroutine ctqmc_deallocate_memory_fmat()
-         implicit none
+     if ( allocated(rank)  )   deallocate(rank )
 
-         if ( allocated(isave)  )  deallocate(isave )
+     if ( allocated(diag)  )   deallocate(diag )
 
-         if ( allocated(sop_ia) )  deallocate(sop_ia)
-         if ( allocated(sop_ja) )  deallocate(sop_ja)
-         if ( allocated(sop_a)  )  deallocate(sop_a )
+     if ( allocated(symm)  )   deallocate(symm )
 
-         if ( allocated(sop_ib) )  deallocate(sop_ib)
-         if ( allocated(sop_jb) )  deallocate(sop_jb)
-         if ( allocated(sop_b)  )  deallocate(sop_b )
+     if ( allocated(eimp)  )   deallocate(eimp )
+     if ( allocated(eigs)  )   deallocate(eigs )
+     if ( allocated(naux)  )   deallocate(naux )
+     if ( allocated(saux)  )   deallocate(saux )
 
-         if ( allocated(sop_ic) )  deallocate(sop_ic)
-         if ( allocated(sop_jc) )  deallocate(sop_jc)
-         if ( allocated(sop_c)  )  deallocate(sop_c )
+     return
+  end subroutine ctqmc_deallocate_memory_umat
 
-         if ( allocated(sop_id) )  deallocate(sop_id)
-         if ( allocated(sop_jd) )  deallocate(sop_jd)
-         if ( allocated(sop_d)  )  deallocate(sop_d )
+!!>>> ctqmc_deallocate_memory_fmat: deallocate memory for fmat-related variables
+  subroutine ctqmc_deallocate_memory_fmat()
+     implicit none
 
-         if ( allocated(sop_is) )  deallocate(sop_is)
-         if ( allocated(sop_js) )  deallocate(sop_js)
-         if ( allocated(sop_s)  )  deallocate(sop_s )
+     if ( allocated(isave)  )  deallocate(isave )
 
-         if ( allocated(sop_in) )  deallocate(sop_in)
-         if ( allocated(sop_jn) )  deallocate(sop_jn)
-         if ( allocated(sop_n)  )  deallocate(sop_n )
+     if ( allocated(sop_ia) )  deallocate(sop_ia)
+     if ( allocated(sop_ja) )  deallocate(sop_ja)
+     if ( allocated(sop_a)  )  deallocate(sop_a )
 
-         if ( allocated(sop_im) )  deallocate(sop_im)
-         if ( allocated(sop_jm) )  deallocate(sop_jm)
-         if ( allocated(sop_m)  )  deallocate(sop_m )
+     if ( allocated(sop_ib) )  deallocate(sop_ib)
+     if ( allocated(sop_jb) )  deallocate(sop_jb)
+     if ( allocated(sop_b)  )  deallocate(sop_b )
 
-         if ( allocated(op_c)   )  deallocate(op_c  )
-         if ( allocated(op_d)   )  deallocate(op_d  )
+     if ( allocated(sop_ic) )  deallocate(sop_ic)
+     if ( allocated(sop_jc) )  deallocate(sop_jc)
+     if ( allocated(sop_c)  )  deallocate(sop_c )
 
-         return
-     end subroutine ctqmc_deallocate_memory_fmat
+     if ( allocated(sop_id) )  deallocate(sop_id)
+     if ( allocated(sop_jd) )  deallocate(sop_jd)
+     if ( allocated(sop_d)  )  deallocate(sop_d )
 
-!>>> deallocate memory for mmat-related variables
-     subroutine ctqmc_deallocate_memory_mmat()
-         implicit none
+     if ( allocated(sop_is) )  deallocate(sop_is)
+     if ( allocated(sop_js) )  deallocate(sop_js)
+     if ( allocated(sop_s)  )  deallocate(sop_s )
 
-         if ( allocated(lspace) )  deallocate(lspace)
-         if ( allocated(rspace) )  deallocate(rspace)
+     if ( allocated(sop_in) )  deallocate(sop_in)
+     if ( allocated(sop_jn) )  deallocate(sop_jn)
+     if ( allocated(sop_n)  )  deallocate(sop_n )
 
-         if ( allocated(mmat)   )  deallocate(mmat  )
+     if ( allocated(sop_im) )  deallocate(sop_im)
+     if ( allocated(sop_jm) )  deallocate(sop_jm)
+     if ( allocated(sop_m)  )  deallocate(sop_m )
 
-         if ( allocated(lsaves) )  deallocate(lsaves)
-         if ( allocated(rsaves) )  deallocate(rsaves)
+     if ( allocated(op_c)   )  deallocate(op_c  )
+     if ( allocated(op_d)   )  deallocate(op_d  )
 
-         if ( allocated(gmat)   )  deallocate(gmat  )
+     return
+  end subroutine ctqmc_deallocate_memory_fmat
 
-         return
-     end subroutine ctqmc_deallocate_memory_mmat
+!!>>> ctqmc_deallocate_memory_mmat: deallocate memory for mmat-related variables
+  subroutine ctqmc_deallocate_memory_mmat()
+     implicit none
 
-!>>> deallocate memory for gmat-related variables
-     subroutine ctqmc_deallocate_memory_gmat()
-         implicit none
+     if ( allocated(lspace) )  deallocate(lspace)
+     if ( allocated(rspace) )  deallocate(rspace)
 
-         if ( allocated(gtau) )    deallocate(gtau)
-         if ( allocated(ftau) )    deallocate(ftau)
+     if ( allocated(mmat)   )  deallocate(mmat  )
 
-         if ( allocated(grnf) )    deallocate(grnf)
-         if ( allocated(frnf) )    deallocate(frnf)
+     if ( allocated(lsaves) )  deallocate(lsaves)
+     if ( allocated(rsaves) )  deallocate(rsaves)
 
-         return
-     end subroutine ctqmc_deallocate_memory_gmat
+     if ( allocated(gmat)   )  deallocate(gmat  )
 
-!>>> deallocate memory for wmat-related variables
-     subroutine ctqmc_deallocate_memory_wmat()
-         implicit none
+     return
+  end subroutine ctqmc_deallocate_memory_mmat
 
-         if ( allocated(wtau) )    deallocate(wtau)
-         if ( allocated(htau) )    deallocate(htau)
-         if ( allocated(hsed) )    deallocate(hsed)
+!!>>> ctqmc_deallocate_memory_gmat: deallocate memory for gmat-related variables
+  subroutine ctqmc_deallocate_memory_gmat()
+     implicit none
 
-         if ( allocated(wssf) )    deallocate(wssf)
-         if ( allocated(hybf) )    deallocate(hybf)
+     if ( allocated(gtau) )    deallocate(gtau)
 
-         return
-     end subroutine ctqmc_deallocate_memory_wmat
+     if ( allocated(grnf) )    deallocate(grnf)
 
-!>>> deallocate memory for smat-related variables
-     subroutine ctqmc_deallocate_memory_smat()
-         implicit none
+     return
+  end subroutine ctqmc_deallocate_memory_gmat
 
-         if ( allocated(sig1) )    deallocate(sig1)
-         if ( allocated(sig2) )    deallocate(sig2)
+!!>>> ctqmc_deallocate_memory_wmat: deallocate memory for wmat-related variables
+  subroutine ctqmc_deallocate_memory_wmat()
+     implicit none
 
-         return
-     end subroutine ctqmc_deallocate_memory_smat
+     if ( allocated(wtau) )    deallocate(wtau)
+     if ( allocated(htau) )    deallocate(htau)
+     if ( allocated(hsed) )    deallocate(hsed)
+
+     if ( allocated(wssf) )    deallocate(wssf)
+     if ( allocated(hybf) )    deallocate(hybf)
+
+     return
+  end subroutine ctqmc_deallocate_memory_wmat
+
+!!>>> ctqmc_deallocate_memory_smat: deallocate memory for smat-related variables
+  subroutine ctqmc_deallocate_memory_smat()
+     implicit none
+
+     if ( allocated(sig1) )    deallocate(sig1)
+     if ( allocated(sig2) )    deallocate(sig2)
+
+     return
+  end subroutine ctqmc_deallocate_memory_smat
 
   end module context

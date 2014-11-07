@@ -76,17 +76,17 @@
 ! calculate new bath weiss's function
      do i=1,norbs
          do k=1,mfreq
-             wssf(k,i,i) = cmesh(k) + qmune - eimp(i) - hybf(k,i,i)
+             wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
      do k=1,mfreq
-         call ctqmc_zmat_inv(norbs, wssf(k,:,:))
+         call s_inv_z(norbs, wssf(k,:,:))
      enddo ! over k={1,mfreq} loop
 
 ! fourier transformation bath weiss's function from matsubara frequency
 ! space to imaginary time space
-     call ctqmc_fourier_hybf(wssf, wtau)
+     call ctqmc_four_hybf(wssf, wtau)
 
 ! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
