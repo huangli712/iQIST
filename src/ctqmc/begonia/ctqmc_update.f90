@@ -776,7 +776,7 @@
                      endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                      if ( flvr_v ( index_v(i) ) == fdn ) then
                          flvr_v ( index_v(i) ) = fup; CYCLE
-                     endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
+                     endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
                  enddo ! over i={1,nsize} loop
 
 ! print exception information
