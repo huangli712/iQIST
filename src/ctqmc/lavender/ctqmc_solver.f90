@@ -395,12 +395,12 @@
 ! collect the histogram data from hist to hist_mpi
      call ctqmc_reduce_hist(hist_mpi)
 
-! collect the (double) occupation matrix data from nmat to nmat_mpi, from
-! nnmat to nnmat_mpi
-     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
-
 ! collect the probability data from prob to prob_mpi
      call ctqmc_reduce_prob(prob_mpi)
+
+! collect the (double) occupation matrix data from nmat to nmat_mpi, and
+! from nnmat to nnmat_mpi
+     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
      call ctqmc_reduce_gtau(gtau_mpi)
@@ -412,81 +412,45 @@
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
 ! update original data and calculate the averages simultaneously
-     hist  = hist_mpi
+     hist = hist_mpi
+     prob = prob_mpi * real(ncarlo)
 
-     !schi  = schi_mpi  * real(nmonte) / real(nsweep)
-     !ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
-     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
-     prob  = prob_mpi  * real(ncarlo)
-
-     !do m=1,nband
-     !    do n=1,ntime
-     !        sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
-     !    enddo ! over n={1,ntime} loop
-     !enddo ! over m={1,nband} loop
-
-     !do m=1,norbs
-     !    do n=1,ntime
-     !        oochi(n,m) = oochi_mpi(n,m)   * real(nmonte) / real(nsweep)
-     !    enddo ! over n={1,ntime} loop
-     !enddo ! over m={1,norbs} loop
-
+     nmat = nmat_mpi * real(nmonte) / real(nsweep)
      do m=1,norbs
          do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m)   * real(nmonte) / real(nsweep)
+             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
-         do n=1,ntime
-             gtau(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,nfreq
-             grnf(n,m,m) = grnf_mpi(n,m,m) * real(nmonte)
-         enddo ! over n={1,nfreq} loop
-     enddo ! over m={1,norbs} loop
-
-     !do m=1,norbs
-     !    do n=1,ntime
-     !        ftau(n,m,:) = ftau_mpi(n,m,:) * real(ncarlo) / real(nsweep)
-     !    enddo ! over n={1,ntime} loop
-     !enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
          do n=1,norbs
-             g2_re(n,m,:,:,:) = g2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-             g2_im(n,m,:,:,:) = g2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
+             gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
-     !do m=1,norbs
-     !    do n=1,norbs
-     !        h2_re(n,m,:,:,:) = h2_re_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-     !        h2_im(n,m,:,:,:) = h2_im_mpi(n,m,:,:,:) * real(nmonte) / real(nsweep)
-     !    enddo ! over n={1,norbs} loop
-     !enddo ! over m={1,norbs} loop
+     do m=1,norbs
+         do n=1,norbs
+             grnf(:,n,m) = grnf_mpi(:,n,m) * real(nmonte)
+         enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,norbs
+             g2_re(:,:,:,n,m) = g2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             g2_im(:,:,:,n,m) = g2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
 ! function between low frequency QMC data and high frequency Hubbard-I
 ! approximation data, the impurity green's function can be obtained by
 ! using dyson's equation finally
-     if ( isort <= 3 ) then
-         call ctqmc_make_hub1()
-! build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make forward fourier transformation
-! for impurity green's function and auxiliary correlation function. then
-! the final self-energy function is obtained by analytical formula
-     else
-         call ctqmc_make_hub1() ! call ctqmc_make_hub2() ! not implemented
-     endif ! back if ( isort <= 3 ) block
+     call ctqmc_make_hub1()
 
-!=========================================================================
-!>>> symmetrizing final results                                        <<<
-!=========================================================================
+!!========================================================================
+!!>>> symmetrizing final results                                       <<<
+!!========================================================================
 
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
