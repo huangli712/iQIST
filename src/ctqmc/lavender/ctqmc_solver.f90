@@ -455,50 +455,40 @@
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_nmat(symm, nmat)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (gtau) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, gtau)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (grnf) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, grnf)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity self-energy function (sig2) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, sig2)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
-!=========================================================================
-!>>> writing final results                                             <<<
-!=========================================================================
+!!========================================================================
+!!>>> writing final results                                            <<<
+!!========================================================================
 
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist)
      endif ! back if ( myid == master ) block
 
-! write out the final spin-spin correlation function data, schi and sschi
-     !if ( myid == master ) then ! only master node can do it
-     !    call ctqmc_dump_schi(schi, sschi)
-     !endif
-
-! write out the final orbital-orbital correlation function data, ochi and oochi
-     !if ( myid == master ) then ! only master node can do it
-     !    call ctqmc_dump_ochi(ochi, oochi)
-     !endif
+! write out the final probability data, prob
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_prob(prob, naux, saux)
+     endif ! back if ( myid == master ) block
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_nmat(nmat, nnmat)
-     endif ! back if ( myid == master ) block
-
-! write out the final probability data, prob
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_prob(prob, naux, saux)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
@@ -521,23 +511,18 @@
          call ctqmc_dump_twop(g2_re, g2_im)
      endif ! back if ( myid == master ) block
 
-! write out the final vertex function data, h2_re and h2_im
-     !if ( myid == master ) then ! only master node can do it
-     !    call ctqmc_dump_vrtx(h2_re, h2_im)
-     !endif
-
-!=========================================================================
-!>>> saving quantum impurity solver                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> saving quantum impurity solver                                   <<<
+!!========================================================================
 
 ! save the perturbation expansion series information to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
      endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> finishing quantum impurity solver                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> finishing quantum impurity solver                                <<<
+!!========================================================================
 
 ! print the footer of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
@@ -546,21 +531,14 @@
      endif ! back if ( myid == master ) block
 
 ! deallocate memory
-     deallocate(hist_mpi)
-     deallocate(schi_mpi)
-     deallocate(ochi_mpi)
-     deallocate(nmat_mpi)
-     deallocate(prob_mpi)
-     deallocate(gtau_mpi)
-     deallocate(ftau_mpi)
-     deallocate(grnf_mpi)
-     deallocate(sschi_mpi)
-     deallocate(oochi_mpi)
+     deallocate(hist_mpi )
+     deallocate(prob_mpi )
+     deallocate(nmat_mpi )
      deallocate(nnmat_mpi)
+     deallocate(gtau_mpi )
+     deallocate(grnf_mpi )
      deallocate(g2_re_mpi)
      deallocate(g2_im_mpi)
-     deallocate(h2_re_mpi)
-     deallocate(h2_im_mpi)
 
      return
   end subroutine ctqmc_impurity_solver
