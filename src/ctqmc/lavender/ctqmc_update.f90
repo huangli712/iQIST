@@ -1611,11 +1611,16 @@
      return
   end subroutine cat_reflip_matrix
 
-!>>> global update the mmat matrix and gmat matrix from scratch
+!!>>> cat_reload_matrix: global update the mmat matrix and gmat matrix
+!!>>> from scratch
   subroutine cat_reload_matrix(flvr)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rank
+     use context, only : mmat, gmat
 
      implicit none
 
@@ -1625,7 +1630,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1689,15 +1694,20 @@
      return
   end subroutine cat_reload_matrix
 
-!-------------------------------------------------------------------------
-!>>> service layer: evaluate the determinant ratio                     <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: evaluate the determinant ratio                    <<<
+!!========================================================================
 
-!>>> calculate the determinant ratio for insert new create and destroy operators
+!!>>> cat_insert_detrat: calculate the determinant ratio for insert new
+!!>>> create and destroy operators
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : lspace, rspace, mmat
 
      implicit none
 
@@ -1716,7 +1726,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1737,7 +1747,7 @@
              lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end + beta)
          else
              lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end)
-         endif
+         endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end   ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
@@ -1746,7 +1756,7 @@
              rvec(j) = -ctqmc_make_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr) + beta)
          else
              rvec(j) =  ctqmc_make_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr))
-         endif
+         endif ! back if ( tau_start < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
 ! calculate deter_ratio by cubic spline interpolation
@@ -1754,7 +1764,7 @@
          deter_ratio =  ctqmc_make_htau(flvr, tau_start - tau_end)
      else
          deter_ratio = -ctqmc_make_htau(flvr, tau_start - tau_end + beta)
-     endif
+     endif ! back if ( tau_start > tau_end ) block
 
 ! calculate lspace and rspace
      do i=1,ckink
@@ -1778,9 +1788,12 @@
      return
   end subroutine cat_insert_detrat
 
-!>>> calculate the determinant ratio for remove old create and destroy operators
+!!>>> cat_remove_detrat: calculate the determinant ratio for remove old
+!!>>> create and destroy operators
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
-     use context
+     use constants, only : dp
+
+     use context, only : mmat
 
      implicit none
 
@@ -1801,11 +1814,16 @@
      return
   end subroutine cat_remove_detrat
 
-!>>> calculate the determinant ratio for shift old create operators
+!!>>> cat_lshift_detrat: calculate the determinant ratio for shift old
+!!>>> create operators
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_e, time_e
+     use context, only : mmat
 
      implicit none
 
@@ -1827,7 +1845,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external    :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1844,7 +1862,7 @@
              rvec(i) = -ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr) + beta)
          else
              rvec(i) =  ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr))
-         endif
+         endif ! back if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate lvec by cubic spline interpolation
@@ -1853,7 +1871,7 @@
              lvec(j) = -ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr) + beta)
          else
              lvec(j) =  ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr))
-         endif
+         endif ! back if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust rvec
@@ -1870,11 +1888,16 @@
      return
   end subroutine cat_lshift_detrat
 
-!>>> calculate the determinant ratio for shift old destroy operators
+!!>>> cat_rshift_detrat: calculate the determinant ratio for shift old
+!!>>> destroy operators
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
+     use context, only : mmat
 
      implicit none
 
@@ -1896,7 +1919,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external    :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1913,7 +1936,7 @@
              lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
          else
              lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1)
-         endif
+         endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
@@ -1922,7 +1945,7 @@
              rvec(j) = -ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
          else
              rvec(j) =  ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2)
-         endif
+         endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust lvec
@@ -1939,11 +1962,15 @@
      return
   end subroutine cat_rshift_detrat
 
-!>>> calculate the determinant ratio for global spin flip
+!!>>> cat_reflip_detrat: calculate the determinant ratio for global
+!!>>> spin flip
   subroutine cat_reflip_detrat(up, dn, ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
+     use context, only : mmat
 
      implicit none
 
@@ -1959,10 +1986,10 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
-! loop index over segments
+! loop index over operators
      integer  :: i
      integer  :: j
 
@@ -1972,7 +1999,7 @@
 ! status flag
      integer  :: istat
 
-! imaginary time for start and end points
+! imaginary time for create and destroy operators
      real(dp) :: tau_start
      real(dp) :: tau_end
 
@@ -1995,7 +2022,7 @@
      allocate(Tmm(kaux,kaux), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('cat_reflip_detrat','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! init Dmm and Tmm matrix
      Dmm = zero
