@@ -480,10 +480,12 @@
      return
   end subroutine ctqmc_dump_hist
 
-!>>> write out the probability of eigenstates of local hamiltonian matrix
+!!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
+!!>>> hamiltonian matrix
   subroutine ctqmc_dump_prob(prob, naux, saux)
-     use constants
-     use control
+     use constants, only : dp, zero, eps6, mytmp
+
+     use control, only : norbs, ncfgs
 
      implicit none
 
@@ -534,7 +536,7 @@
          if ( stmp2(ns) < stmp1(i) ) then
              ns = ns + 1
              stmp2(ns) = stmp1(i)
-         endif
+         endif ! back if ( stmp2(ns) < stmp1(i) ) block
      enddo ! over i={2,ncfgs} loop
 
 ! evaluate sprob
@@ -542,9 +544,8 @@
      do i=1,ncfgs
          do j=1,ns
              if ( abs( stmp2(j) - saux(i) ) < eps6 ) then
-                 sprob(j) = sprob(j) + prob(i)
-                 EXIT
-             endif
+                 sprob(j) = sprob(j) + prob(i); EXIT
+             endif ! back if ( abs( stmp2(j) - saux(i) ) < eps6 ) block
          enddo ! over j={1,ns} loop
      enddo ! over i={1,ncfgs} loop
 
@@ -554,20 +555,20 @@
 ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(i5,3f12.6)') i, prob(i), naux(i), saux(i)
+         write(mytmp,'(i6,3f12.6)') i, prob(i), naux(i), saux(i)
      enddo ! over i={1,ncfgs} loop
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
-         write(mytmp,'(i5,2f12.6)') i+1, real(i), oprob(i)
+         write(mytmp,'(i6,2f12.6)') i+1, real(i), oprob(i)
      enddo ! over i={0,norbs} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(oprob)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(oprob)
 
      write(mytmp,'(a)') '# spin probability: index | spin | prob'
      do i=1,ns
-         write(mytmp,'(i5,2f12.6)') i, stmp2(i), sprob(i)
+         write(mytmp,'(i6,2f12.6)') i, stmp2(i), sprob(i)
      enddo ! over i={1,ns} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(sprob)
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
 
 ! close data file
      close(mytmp)
@@ -575,10 +576,12 @@
      return
   end subroutine ctqmc_dump_prob
 
-!>>> write out the occupation matrix and double occupation matrix
+!!>>> ctqmc_dump_nmat: write out the occupation matrix and double
+!!>>> occupation matrix
   subroutine ctqmc_dump_nmat(nmat, nnmat)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
 
      implicit none
 
@@ -598,18 +601,18 @@
      open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
 
 ! write it
-     write(mytmp,'(a)') '  < n_i >   data:'
+     write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i5,f12.6)') i, nmat(i)
+         write(mytmp,'(i6,f12.6)') i, nmat(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
+     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
 
-     write(mytmp,'(a)') '< n_i n_j > data:'
+     write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
+             write(mytmp,'(2i6,f12.6)') i, j, nnmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
