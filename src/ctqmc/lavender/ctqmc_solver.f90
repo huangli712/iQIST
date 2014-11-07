@@ -1,48 +1,41 @@
-!-------------------------------------------------------------------------
-! project : lavender
-! program : ctqmc_impurity_solver
-!           ctqmc_diagram_warmming
-!           ctqmc_diagram_sampling
-!           ctqmc_diagram_checking
-!           ctqmc_impurity_tester
-! source  : ctqmc_solver.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/26/2009 by li huang
-!           10/20/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/17/2009 by li huang
-!           11/22/2009 by li huang
-!           12/02/2009 by li huang
-!           12/04/2009 by li huang
-!           12/06/2009 by li huang
-!           12/17/2009 by li huang
-!           12/22/2009 by li huang
-!           12/26/2009 by li huang
-!           12/30/2009 by li huang
-!           01/13/2010 by li huang
-!           02/27/2010 by li huang
-!           06/09/2010 by li huang
-!           06/21/2010 by li huang
-! purpose : the main subroutine for the hybridization expansion version
-!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!           solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : lavender
+!!! program : ctqmc_impurity_solver
+!!!           ctqmc_diagram_warmming
+!!!           ctqmc_diagram_sampling
+!!!           ctqmc_diagram_checking
+!!!           ctqmc_impurity_tester
+!!! source  : ctqmc_solver.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           06/21/2010 by li huang
+!!!           11/07/2014 by li huang
+!!! purpose : the main subroutine for the hybridization expansion version
+!!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
+!!!           solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> core engine for hybridization expansion version continuous time
-! quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
+!!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, mystd
+
+     use control, only : issun, isspn
+     use control, only : nband, nspin, norbs, ncfgs
+     use control, only : mkink, mfreq
+     use control, only : ntime, nsweep, nwrite, nmonte, ncarlo
+     use control, only : Uc, Jz
+     use control, only : myid, master
+     use context, only : caves
+     use context, only : tmesh, rmesh
+     use context, only : hist, prob
+     use context, only : nmat, nnmat
+     use context, only : symm, naux, saux
+     use context, only : gtau, grnf
+     use context, only : sig2
 
      implicit none
 
@@ -83,25 +76,13 @@
      real(dp) :: time_niter
 
 ! histogram for perturbation expansion series, for mpi case
-     integer, allocatable  :: hist_mpi(:)
-
-! spin-spin correlation function, totally-averaged, for mpi case
-     real(dp), allocatable :: schi_mpi(:)
-
-! orbital-orbital correlation function, totally-averaged, for mpi case
-     real(dp), allocatable :: ochi_mpi(:)
-
-! impurity occupation number matrix, for mpi case
-     real(dp), allocatable :: nmat_mpi(:)
+     real(dp), allocatable :: hist_mpi(:)
 
 ! probability of atomic states, for mpi case
      real(dp), allocatable :: prob_mpi(:)
 
-! spin-spin correlation function, orbital-resolved, for mpi case
-     real(dp), allocatable :: sschi_mpi(:,:)
-
-! orbital-orbital correlation function, orbital-resolved, for mpi case
-     real(dp), allocatable :: oochi_mpi(:,:)
+! impurity occupation number matrix, for mpi case
+     real(dp), allocatable :: nmat_mpi(:)
 
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
@@ -109,20 +90,11 @@
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
 
-! auxiliary correlation function, imaginary time axis, for mpi case
-     real(dp), allocatable :: ftau_mpi(:,:,:)
-
 ! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
 
 ! used to measure two-particle green's function, imaginary part, for mpi case
      real(dp), allocatable :: g2_im_mpi(:,:,:,:,:)
-
-! used to measure vertex function, real part, for mpi case
-     real(dp), allocatable :: h2_re_mpi(:,:,:,:,:)
-
-! used to measure vertex function, imaginary part, for mpi case
-     real(dp), allocatable :: h2_im_mpi(:,:,:,:,:)
 
 ! impurity green's function, matsubara frequency axis, for mpi case
      complex(dp), allocatable :: grnf_mpi(:,:,:)
@@ -130,78 +102,78 @@
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(schi_mpi(ntime),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(ochi_mpi(ntime),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(nmat_mpi(norbs),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(prob_mpi(ncfgs),             stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(sschi_mpi(ntime,nband),      stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(oochi_mpi(ntime,norbs),      stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(ftau_mpi(ntime,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(h2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(h2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! setup cstep
      cstep = 0
@@ -385,7 +357,7 @@
 
 ! it is time to write out the statistics results
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_print_runtime(iter, cstep)
+             call s_print_runtime(iter, cstep)
          endif ! back if ( myid == master ) block
 
 !=========================================================================
@@ -855,7 +827,7 @@
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: error?'
                  write(mystd,'(4X,a)') '>>> please check the status file: solver.status.dat'
                  call ctqmc_save_status()
-                 call ctqmc_print_error('ctqmc_diagram_checking','unknown fatal error occur')
+                 call s_print_error('ctqmc_diagram_checking','unknown fatal error occur')
              else
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: normal'
              endif
@@ -880,7 +852,7 @@
 
      call ctqmc_make_display(1)
      call ctqmc_make_display(2)
-     call ctqmc_print_error('ctqmc_impurity_tester','in debug mode')
+     call s_print_error('ctqmc_impurity_tester','in debug mode')
 
      return
   end subroutine ctqmc_impurity_tester
