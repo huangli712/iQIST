@@ -653,11 +653,16 @@
      return
   end subroutine ctqmc_diagram_sampling
 
-!>>> checking whether the quantum impurity solver is consistent internally
+!!>>> ctqmc_diagram_checking: checking whether the quantum impurity
+!!>>> solver is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
-     use constants
-     use control
-     use context
+     use constants, only : mystd
+
+     use control, only : norbs
+     use control, only : myid, master
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_v, time_v
+     use context, only : rank
 
      implicit none
 
@@ -677,10 +682,10 @@
              do j=1,rank(i)-1
                  if ( time_s( index_s(j, i), i ) > time_s( index_s(j+1, i), i ) ) then
                      cflag = 99
-                 endif
+                 endif ! back if ( time_s( index_s(j, i), i ) > time_s( index_s(j+1, i), i ) ) block
                  if ( time_e( index_e(j, i), i ) > time_e( index_e(j+1, i), i ) ) then
                      cflag = 99
-                 endif
+                 endif ! back if ( time_e( index_e(j, i), i ) > time_e( index_e(j+1, i), i ) ) block
              enddo ! over j={1,rank(i)-1} loop
          enddo ! over i={1,norbs} loop
 
@@ -688,13 +693,13 @@
          do j=1,2*sum(rank)-1
              if ( index_v(j) <= 0 .or. index_v(j+1) <= 0 ) then
                  cflag = 99
-             endif
+             endif ! back if ( index_v(j) <= 0 .or. index_v(j+1) <= 0 ) block
          enddo ! over j={1,2*sum(rank)-1} loop
 
          do j=1,2*sum(rank)-1
              if ( time_v( index_v(j) ) > time_v( index_v(j+1) ) ) then
                  cflag = 99
-             endif
+             endif ! back if ( time_v( index_v(j) ) > time_v( index_v(j+1) ) ) block
          enddo ! over j={1,2*sum(rank)-1} loop
 
 ! write the results, only master node can do it
@@ -706,7 +711,7 @@
                  call s_print_error('ctqmc_diagram_checking','unknown fatal error occur')
              else
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: normal'
-             endif
+             endif ! back if ( cflag == 99 ) block
          endif ! back if ( myid == master ) block
 
      endif ! back if ( cflag == 1 ) block
@@ -714,16 +719,18 @@
      return
   end subroutine ctqmc_diagram_checking
 
-!>>> testing subroutine, please active it on ctqmc_diagram_sampling()
+!!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
+!!>>> on ctqmc_diagram_sampling() subroutine
   subroutine ctqmc_impurity_tester()
-     use constants
-     use control
-     use context
+     use constants ! ALL
+
+     use control   ! ALL
+     use context   ! ALL
 
      implicit none
 
 !-------------------------------------------------------------------------
-! insert your debug code here
+! please insert your debug code here
 !-------------------------------------------------------------------------
 
      call ctqmc_make_display(1)
