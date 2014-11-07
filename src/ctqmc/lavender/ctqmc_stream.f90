@@ -314,10 +314,10 @@
      real(dp) :: i1, i2
 
 ! build identity: unity
-     unity = czero
-     do i=1,norbs
-         unity(i,i) = cone
-     enddo ! over i={1,norbs} loop
+     !unity = czero
+     !do i=1,norbs
+     !    unity(i,i) = cone
+     !enddo ! over i={1,norbs} loop
 
 ! build mesh for legendre polynomial in [-1,1]
      do i=1,legrd
@@ -340,9 +340,9 @@
      enddo ! over j={1,mfreq} loop
 
 ! build matsubara frequency mesh: cmesh
-     do k=1,mfreq
-         cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
-     enddo ! over k={1,mfreq} loop
+     !do k=1,mfreq
+     !    cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
+     !enddo ! over k={1,mfreq} loop
 
 ! build legendre polynomial in [-1,1]
      if ( lemax <= 2 ) then
@@ -376,7 +376,7 @@
 ! using the analytical equation at non-interaction limit, and then
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
-         hybf(i,:,:) = unity * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         !hybf(i,:,:) = unity * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
@@ -695,26 +695,26 @@
 
 ! init probability for atomic states
      prob    = zero
-     ddmat   = zero
+     diag    = zero
 
 ! init auxiliary physical observables
      paux    = zero
 
 ! init spin-spin correlation function
-     schi    = zero
-     sschi   = zero
+     !schi    = zero
+     !sschi   = zero
 
 ! init orbital-orbital correlation function
-     ochi    = zero
-     oochi   = zero
+     !ochi    = zero
+     !oochi   = zero
 
 ! init two-particle green's function
      g2_re   = zero
      g2_im   = zero
 
 ! init vertex function
-     h2_re   = zero
-     h2_im   = zero
+     !h2_re   = zero
+     !h2_im   = zero
 
 ! init occupation number array
      nmat    = zero
@@ -727,7 +727,7 @@
 
 ! init imaginary time impurity green's function array
      gtau    = zero
-     ftau    = zero
+     !ftau    = zero
 
 ! init imaginary time bath weiss's function array
      wtau    = zero
@@ -762,7 +762,7 @@
 
 ! init impurity green's function array
      grnf    = czero
-     frnf    = czero
+     !frnf    = czero
 
 ! init bath weiss's function array
      wssf    = czero
@@ -822,7 +822,7 @@
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
-     call ctqmc_fourier_hybf(hybf, htau)
+     call ctqmc_four_hybf(hybf, htau)
 
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then

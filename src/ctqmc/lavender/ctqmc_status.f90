@@ -54,7 +54,7 @@
      character (len = 20) :: date_time_string
 
 ! obtain current date and time
-     call ctqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
 ! evaluate nsize at first
      nsize = istack_getrest( empty_v )

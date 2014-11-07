@@ -355,7 +355,7 @@
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
-         cprob(i) = ddmat(i,2) / matrix_ptrace
+         cprob(i) = diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop
 
 ! evaluate raux2, it is Tr ( e^{- \beta H} )
@@ -618,7 +618,7 @@
      integer :: i
 
      do i=1,ncfgs
-         prob(i) = prob(i) + csign * ddmat(i,2) / matrix_ptrace
+         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop
 
      return
@@ -681,14 +681,14 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(ftau, ftau_mpi)
+     !call mp_allreduce(ftau, ftau_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     ftau_mpi = ftau
+     !ftau_mpi = ftau
 
 # endif /* MPI */
 
@@ -748,7 +748,7 @@
 
 ! external arguments
 ! histogram for perturbation expansion series
-     integer, intent(out) :: hist_mpi(mkink)
+     real(dp), intent(out) :: hist_mpi(mkink)
 
 ! initialize hist_mpi
      hist_mpi = 0
@@ -842,16 +842,16 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(schi, schi_mpi)
-     call mp_allreduce(sschi, sschi_mpi)
+     !call mp_allreduce(schi, schi_mpi)
+     !call mp_allreduce(sschi, sschi_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     schi_mpi = schi
-     sschi_mpi = sschi
+     !schi_mpi = schi
+     !sschi_mpi = sschi
 
 # endif /* MPI */
 
@@ -886,16 +886,16 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(ochi, ochi_mpi)
-     call mp_allreduce(oochi, oochi_mpi)
+     !call mp_allreduce(ochi, ochi_mpi)
+     !call mp_allreduce(oochi, oochi_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     ochi_mpi = ochi
-     oochi_mpi = oochi
+     !ochi_mpi = ochi
+     !oochi_mpi = oochi
 
 # endif /* MPI */
 
@@ -974,16 +974,16 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(h2_re, h2_re_mpi)
-     call mp_allreduce(h2_im, h2_im_mpi)
+     !call mp_allreduce(h2_re, h2_re_mpi)
+     !call mp_allreduce(h2_im, h2_im_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     h2_re_mpi = h2_re
-     h2_im_mpi = h2_im
+     !h2_re_mpi = h2_re
+     !h2_im_mpi = h2_im
 
 # endif /* MPI */
 
@@ -1703,7 +1703,7 @@
              caux = czero
              do m=1,fcounter(i)
                  ob = fv(m,i) * fv(m,i) * ( prob(fa(m,i)) + prob(fb(m,i)) )
-                 cb = cmesh(k) + eigs(fa(m,i)) - eigs(fb(m,i))
+                 cb = czi * rmesh(k) + eigs(fa(m,i)) - eigs(fb(m,i))
                  caux = caux +  ob / cb
              enddo ! over m={1,fcounter(i)} loop
              ghub(k,i) = caux
@@ -1713,7 +1713,7 @@
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs
          do k=1,mfreq
-             shub(k,i) = cmesh(k) + mune - eimp(i) - one / ghub(k,i)
+             shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
@@ -1736,9 +1736,9 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      do k=1,nfreq
          gaux = grnf(k,:,:)
-         call ctqmc_zmat_inv(norbs, gaux)
+         call s_inv_z(norbs, gaux)
          do i=1,norbs
-             sig2(k,i,i) = cmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
+             sig2(k,i,i) = czi * rmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
      enddo ! over k={1,nfreq} loop
 !-------------------------------------------------------------------------
@@ -1802,9 +1802,9 @@
      do k=1,mfreq
          gaux = czero
          do i=1,norbs
-             gaux(i,i) = cmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
+             gaux(i,i) = czi * rmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
-         call ctqmc_zmat_inv(norbs, gaux)
+         call s_inv_z(norbs, gaux)
          grnf(k,:,:) = gaux
      enddo ! over k={1,mfreq} loop
 
