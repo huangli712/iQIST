@@ -438,32 +438,32 @@
      return
   end subroutine ctqmc_dump_hub1
 
-!>>> write out the Monte Carlo sampling histogram for perturbation expansion series
+!!========================================================================
+!!>>> dump data of physical observables                                <<<
+!!========================================================================
+
+!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
+!!>>> perturbation expansion series
   subroutine ctqmc_dump_hist(hist)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : mkink
 
      implicit none
 
 ! external arguments
 ! histogram data
-     integer, intent(in) :: hist(mkink)
+     real(dp), intent(in) :: hist(mkink)
 
 ! local variables
 ! loop index
      integer  :: i
 
-! dummy variables
-     real(dp) :: raux
-
 ! scaled histogram data
      real(dp) :: haux(mkink)
 
 ! evaluate haux at first
-     raux = real( sum(hist) )
-     do i=1,mkink
-         haux(i) = real( hist(i) ) / raux
-     enddo ! over i={1,mkink} loop
+     haux = hist / sum(hist)
 
 ! open data file: solver.hist.dat
      open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
@@ -471,7 +471,7 @@
 ! write it
      write(mytmp,'(a)') '# histogram: order | count | percent'
      do i=1,mkink
-         write(mytmp,'(i5,i12,f12.6)') i, hist(i), haux(i)
+         write(mytmp,'(i6,i12,f12.6)') i, int( hist(i) ), haux(i)
      enddo ! over i={1,mkink} loop
 
 ! close data file
@@ -479,6 +479,101 @@
 
      return
   end subroutine ctqmc_dump_hist
+
+!>>> write out the probability of eigenstates of local hamiltonian matrix
+  subroutine ctqmc_dump_prob(prob, naux, saux)
+     use constants
+     use control
+
+     implicit none
+
+! external arguments
+! probability data of eigenstates
+     real(dp), intent(in) :: prob(ncfgs)
+
+! occupation number of eigenstates
+     real(dp), intent(in) :: naux(ncfgs)
+
+! net spin of eigenstates
+     real(dp), intent(in) :: saux(ncfgs)
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! number of individual spin values
+     integer  :: ns
+
+! probability of occupation number distribution
+     real(dp) :: oprob(0:norbs)
+
+! dummy arrays, used to store spin of eigenstates
+     real(dp) :: stmp1(ncfgs)
+     real(dp) :: stmp2(ncfgs)
+
+! probability of net spin distribution
+     real(dp) :: sprob(ncfgs)
+
+! evaluate oprob
+     oprob = zero
+     do i=1,ncfgs
+         j = int( naux(i) )
+         oprob(j) = oprob(j) + prob(i)
+     enddo ! over i={1,ncfgs} loop
+
+! sort all the spin values
+     stmp1 = saux
+     call s_sorter(ncfgs, stmp1)
+
+! find out individual spin values, and store them into stmp2
+     ns = 1
+     stmp2 = zero
+     stmp2(1) = stmp1(1)
+     do i=2,ncfgs
+         if ( stmp2(ns) < stmp1(i) ) then
+             ns = ns + 1
+             stmp2(ns) = stmp1(i)
+         endif
+     enddo ! over i={2,ncfgs} loop
+
+! evaluate sprob
+     sprob = zero
+     do i=1,ncfgs
+         do j=1,ns
+             if ( abs( stmp2(j) - saux(i) ) < eps6 ) then
+                 sprob(j) = sprob(j) + prob(i)
+                 EXIT
+             endif
+         enddo ! over j={1,ns} loop
+     enddo ! over i={1,ncfgs} loop
+
+! open data file: solver.prob.dat
+     open(mytmp, file='solver.prob.dat', form='formatted', status='unknown')
+
+! write it
+     write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
+     do i=1,ncfgs
+         write(mytmp,'(i5,3f12.6)') i, prob(i), naux(i), saux(i)
+     enddo ! over i={1,ncfgs} loop
+
+     write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
+     do i=0,norbs
+         write(mytmp,'(i5,2f12.6)') i+1, real(i), oprob(i)
+     enddo ! over i={0,norbs} loop
+     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(oprob)
+
+     write(mytmp,'(a)') '# spin probability: index | spin | prob'
+     do i=1,ns
+         write(mytmp,'(i5,2f12.6)') i, stmp2(i), sprob(i)
+     enddo ! over i={1,ns} loop
+     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(sprob)
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_prob
 
 !>>> write out the occupation matrix and double occupation matrix
   subroutine ctqmc_dump_nmat(nmat, nnmat)
@@ -523,59 +618,6 @@
 
      return
   end subroutine ctqmc_dump_nmat
-
-!>>> write out the orbital-orbital correlation function
-  subroutine ctqmc_dump_ochi(ochi, oochi)
-     use constants
-     use control
-     use context, only : tmesh
-
-     implicit none
-
-! external arguments
-! orbital-orbital correlation function data, < N(0) N(\tau) >, totally-averaged
-     real(dp), intent(in) :: ochi(ntime)
-
-! orbital-orbital correlation function data, < N(0) N(\tau) >, orbital-resolved
-     real(dp), intent(in) :: oochi(ntime,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.ochi.dat
-     open(mytmp, file='solver.ochi.dat', form='formatted', status='unknown')
-
-! write it
-     do j=1,norbs
-         write(mytmp,'(a,i5)') '# flvr:', j
-         do i=1,ntime
-             write(mytmp,'(2f12.6)') tmesh(i), oochi(i,j)
-         enddo ! over i={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over j={1,norbs} loop
-
-     write(mytmp,'(a,i5)') '# flvr:', 8888
-     do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), ochi(i) / real(norbs)
-     enddo ! over i={1,ntime} loop
-     write(mytmp,*) ! write empty lines
-     write(mytmp,*)
-
-     write(mytmp,'(a,i5)') '# flvr:', 9999
-     do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), sum( oochi(i,:) ) / real(norbs)
-     enddo ! over i={1,ntime} loop
-     write(mytmp,*) ! write empty lines
-     write(mytmp,*)
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_ochi
 
 !>>> write out the spin-spin correlation function
   subroutine ctqmc_dump_schi(schi, sschi)
@@ -888,97 +930,4 @@
      return
   end subroutine ctqmc_dump_vrtx
 
-!>>> write out the probability of eigenstates of local hamiltonian matrix
-  subroutine ctqmc_dump_prob(prob, naux, saux)
-     use constants
-     use control
 
-     implicit none
-
-! external arguments
-! probability data of eigenstates
-     real(dp), intent(in) :: prob(ncfgs)
-
-! occupation number of eigenstates
-     real(dp), intent(in) :: naux(ncfgs)
-
-! net spin of eigenstates
-     real(dp), intent(in) :: saux(ncfgs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! number of individual spin values
-     integer  :: ns
-
-! probability of occupation number distribution
-     real(dp) :: oprob(0:norbs)
-
-! dummy arrays, used to store spin of eigenstates
-     real(dp) :: stmp1(ncfgs)
-     real(dp) :: stmp2(ncfgs)
-
-! probability of net spin distribution
-     real(dp) :: sprob(ncfgs)
-
-! evaluate oprob
-     oprob = zero
-     do i=1,ncfgs
-         j = int( naux(i) )
-         oprob(j) = oprob(j) + prob(i)
-     enddo ! over i={1,ncfgs} loop
-
-! sort all the spin values
-     stmp1 = saux
-     call s_sorter(ncfgs, stmp1)
-
-! find out individual spin values, and store them into stmp2
-     ns = 1
-     stmp2 = zero
-     stmp2(1) = stmp1(1)
-     do i=2,ncfgs
-         if ( stmp2(ns) < stmp1(i) ) then
-             ns = ns + 1
-             stmp2(ns) = stmp1(i)
-         endif
-     enddo ! over i={2,ncfgs} loop
-
-! evaluate sprob
-     sprob = zero
-     do i=1,ncfgs
-         do j=1,ns
-             if ( abs( stmp2(j) - saux(i) ) < eps6 ) then
-                 sprob(j) = sprob(j) + prob(i)
-                 EXIT
-             endif
-         enddo ! over j={1,ns} loop
-     enddo ! over i={1,ncfgs} loop
-
-! open data file: solver.prob.dat
-     open(mytmp, file='solver.prob.dat', form='formatted', status='unknown')
-
-! write it
-     write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
-     do i=1,ncfgs
-         write(mytmp,'(i5,3f12.6)') i, prob(i), naux(i), saux(i)
-     enddo ! over i={1,ncfgs} loop
-
-     write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
-     do i=0,norbs
-         write(mytmp,'(i5,2f12.6)') i+1, real(i), oprob(i)
-     enddo ! over i={0,norbs} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(oprob)
-
-     write(mytmp,'(a)') '# spin probability: index | spin | prob'
-     do i=1,ns
-         write(mytmp,'(i5,2f12.6)') i, stmp2(i), sprob(i)
-     enddo ! over i={1,ns} loop
-     write(mytmp,'(a5,12X,f12.6)') 'sum', sum(sprob)
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_prob
