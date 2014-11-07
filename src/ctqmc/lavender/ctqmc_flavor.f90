@@ -3163,7 +3163,7 @@
      time = time * beta
 
 ! sort time series
-     call ctqmc_time_sorter(2*kink, time)
+     call s_sorter(2*kink, time)
 
 ! insert new operators into the colour part
      do i=1,kink
