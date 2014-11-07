@@ -1,70 +1,53 @@
-!-------------------------------------------------------------------------
-! project : lavender
-! program : ctqmc_insert_kink
-!           ctqmc_remove_kink
-!           ctqmc_lshift_kink
-!           ctqmc_rshift_kink
-!           ctqmc_reflip_kink
-!           ctqmc_reload_kink <<<---
-!           cat_insert_matrix
-!           cat_remove_matrix
-!           cat_lshift_matrix
-!           cat_rshift_matrix
-!           cat_reflip_matrix
-!           cat_reload_matrix <<<---
-!           cat_insert_detrat
-!           cat_remove_detrat
-!           cat_lshift_detrat
-!           cat_rshift_detrat
-!           cat_reflip_detrat <<<---
-! source  : ctqmc_update.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/26/2009 by li huang
-!           09/30/2009 by li huang
-!           10/02/2009 by li huang
-!           10/25/2009 by li huang
-!           10/29/2009 by li huang
-!           11/02/2009 by li huang
-!           11/08/2009 by li huang
-!           11/17/2009 by li huang
-!           11/20/2009 by li huang
-!           11/24/2009 by li huang
-!           11/27/2009 by li huang
-!           11/30/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/26/2009 by li huang
-!           01/05/2010 by li huang
-!           02/27/2010 by li huang
-!           03/22/2010 by li huang
-!           06/09/2010 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver.
-!           the following subroutines mainly deal with the \mathscr{M}
-!           matrix: mmat, and \mathscr{G} matrix: gmat.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : lavender
+!!! program : ctqmc_insert_kink
+!!!           ctqmc_remove_kink
+!!!           ctqmc_lshift_kink
+!!!           ctqmc_rshift_kink
+!!!           ctqmc_reflip_kink
+!!!           ctqmc_reload_kink <<<---
+!!!           cat_insert_matrix
+!!!           cat_remove_matrix
+!!!           cat_lshift_matrix
+!!!           cat_rshift_matrix
+!!!           cat_reflip_matrix
+!!!           cat_reload_matrix <<<---
+!!!           cat_insert_detrat
+!!!           cat_remove_detrat
+!!!           cat_lshift_detrat
+!!!           cat_rshift_detrat
+!!!           cat_reflip_detrat <<<---
+!!! source  : ctqmc_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           06/09/2010 by li huang
+!!!           11/07/2014 by li huang
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
+!!!           the following subroutines mainly deal with the \mathscr{M}
+!!!           matrix: mmat, and \mathscr{G} matrix: gmat.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> driver layer: updating perturbation expansion series              <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> driver layer: updating perturbation expansion series             <<<
+!!========================================================================
 
-!>>> insert new create and destroy operators in the perturbation expansion series
+!!>>> ctqmc_insert_kink: insert new create and destroy operators in the
+!!>>> perturbation expansion series
   subroutine ctqmc_insert_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink, csign, cnegs
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : rank
 
      implicit none
 
@@ -110,12 +93,12 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == mkink ) then
-!<         call ctqmc_print_exception('ctqmc_insert_kink','can not insert any operators')
+!<         call s_print_exception('ctqmc_insert_kink','can not insert any operators')
          insert_tcount = insert_tcount + one
          insert_reject = insert_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == mkink ) block
 
 ! randomly generate tau_start and tau_end at selected flvr channel, and
 ! then determine index address cis and cie for them
@@ -132,7 +115,7 @@
          call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -140,7 +123,7 @@
          call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! calculate the transition probability for insert new create and destroy operators
      p = deter_ratio * trace_ratio * ( beta / real( ckink + 1 ) ) ** 2
@@ -176,7 +159,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_insert_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_insert_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the insert statistics
@@ -190,13 +173,17 @@
      return
   end subroutine ctqmc_insert_kink
 
-!>>> remove old create and destroy operators in the perturbation expansion series
+!!>>> ctqmc_remove_kink: remove old create and destroy operators in the
+!!>>> perturbation expansion series
   subroutine ctqmc_remove_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use control, only : beta
+     use context, only : ckink, csign, cnegs
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : rank
 
      implicit none
 
@@ -242,12 +229,12 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_remove_kink','can not remove any operators')
+!<         call s_print_exception('ctqmc_remove_kink','can not remove any operators')
          remove_tcount = remove_tcount + one
          remove_reject = remove_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! randomly generate cis and cie at selected flvr channel, and then determine
 ! tau_start and tau_end for them
@@ -264,7 +251,7 @@
          call cat_remove_ztrace(fis, fie, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( lrmv .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -272,7 +259,7 @@
          call cat_remove_detrat(flvr, cis, cie, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( lrmv .eqv. .true. ) block
 
 ! calculate the transition probability for remove old create and destroy operators
      p = deter_ratio * trace_ratio * ( real( ckink ) / beta ) ** 2
@@ -308,7 +295,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_remove_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_remove_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the remove statistics
@@ -322,13 +309,16 @@
      return
   end subroutine ctqmc_remove_kink
 
-!>>> shift old create operators in the perturbation expansion series
+!!>>> ctqmc_lshift_kink: shift old create operators in the perturbation
+!!>>> expansion series
   subroutine ctqmc_lshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, csign, cnegs
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rank
 
      implicit none
 
@@ -374,12 +364,12 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_lshift_kink','can not lshift any operators')
+!<         call s_print_exception('ctqmc_lshift_kink','can not lshift any operators')
          lshift_tcount = lshift_tcount + one
          lshift_reject = lshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first, we select ciso randomly, and then obtain tau_start1. according
 ! to the existing operators, we determine tau_start2 and related index cisn
@@ -396,7 +386,7 @@
          call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( lshf .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -404,7 +394,7 @@
          call cat_lshift_detrat(flvr, ciso, tau_start1, tau_start2, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( lshf .eqv. .true. ) block
 
 ! calculate the transition probability for shift old create operators
      p = deter_ratio * trace_ratio
@@ -434,7 +424,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_lshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_lshift_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the lshift statistics
@@ -448,13 +438,16 @@
      return
   end subroutine ctqmc_lshift_kink
 
-!>>> shift old destroy operators in the perturbation expansion series
+!!>>> ctqmc_rshift_kink: shift old destroy operators in the perturbation
+!!>>> expansion series
   subroutine ctqmc_rshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, csign, cnegs
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : rank
 
      implicit none
 
@@ -500,12 +493,12 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_rshift_kink','can not rshift any operators')
+!<         call s_print_exception('ctqmc_rshift_kink','can not rshift any operators')
          rshift_tcount = rshift_tcount + one
          rshift_reject = rshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first, we select cieo randomly, and then obtain tau_end1. according
 ! to the existing operators, we determine tau_end2 and related index cien
@@ -522,7 +515,7 @@
          call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( rshf .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -530,7 +523,7 @@
          call cat_rshift_detrat(flvr, cieo, tau_end1, tau_end2, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( rshf .eqv. .true. ) block
 
 ! calculate the transition probability for shift old destroy operators
      p = deter_ratio * trace_ratio
@@ -560,7 +553,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_rshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_rshift_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the rshift statistics
@@ -574,15 +567,18 @@
      return
   end subroutine ctqmc_rshift_kink
 
-!>>> perform a global update, exchange the states between spin up and spin
-! down, it maybe useful for magnetic systems
+!!>>> ctqmc_reflip_kink: perform a global update, exchange the states
+!!>>> between spin up and spin down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_stream
+     use stack, only : istack_getrest
 
-     use stack
-     use spring
+     use control, only : nband, norbs
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : index_t, index_v, flvr_v, empty_v
+     use context, only : rank, symm
 
      implicit none
 
@@ -630,11 +626,11 @@
 
 ! not need to perform global flip if there are no operators at all
      if ( nsize == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_reflip_kink','can not reflip any operators')
+!<         call s_print_exception('ctqmc_reflip_kink','can not reflip any operators')
          reflip_tcount = reflip_tcount + one
          reflip_reject = reflip_reject + one
          RETURN
-     endif
+     endif ! back if ( nsize == 0 ) block
 
      if ( cflip == 1 ) then
 ! determine fup and fdn, and fup /= fdn
@@ -658,13 +654,11 @@
 ! make a trial swap for flvr_v
          do i=1,nsize
              if ( flvr_v ( index_v(i) ) == fup ) then
-                 flvr_v ( index_v(i) ) = fdn
-                 CYCLE
-             endif
+                 flvr_v ( index_v(i) ) = fdn; CYCLE
+             endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
              if ( flvr_v ( index_v(i) ) == fdn ) then
-                 flvr_v ( index_v(i) ) = fup
-                 CYCLE
-             endif
+                 flvr_v ( index_v(i) ) = fup; CYCLE
+             endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
          enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -699,17 +693,15 @@
 ! recover the original status of flvr_v
              do i=1,nsize
                  if ( flvr_v ( index_v(i) ) == fup ) then
-                     flvr_v ( index_v(i) ) = fdn
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fdn; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                  if ( flvr_v ( index_v(i) ) == fdn ) then
-                     flvr_v ( index_v(i) ) = fup
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fup; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
              enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<             call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<             call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
          endif ! back if ( pass .eqv. .true. ) block
 
@@ -741,13 +733,11 @@
 ! make a trial swap for flvr_v
              do i=1,nsize
                  if ( flvr_v ( index_v(i) ) == fup ) then
-                     flvr_v ( index_v(i) ) = fdn
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fdn; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                  if ( flvr_v ( index_v(i) ) == fdn ) then
-                     flvr_v ( index_v(i) ) = fup
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fup; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
              enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -782,17 +772,15 @@
 ! recover the original status of flvr_v
                  do i=1,nsize
                      if ( flvr_v ( index_v(i) ) == fup ) then
-                         flvr_v ( index_v(i) ) = fdn
-                         CYCLE
-                     endif
+                         flvr_v ( index_v(i) ) = fdn; CYCLE
+                     endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                      if ( flvr_v ( index_v(i) ) == fdn ) then
-                         flvr_v ( index_v(i) ) = fup
-                         CYCLE
-                     endif
+                         flvr_v ( index_v(i) ) = fup; CYCLE
+                     endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
                  enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<                 call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<                 call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
              endif ! back if ( pass .eqv. .true. ) block
 
@@ -832,7 +820,7 @@
                  flvr_v ( index_v(i) ) = flvr + nband
              else
                  flvr_v ( index_v(i) ) = flvr - nband
-             endif
+             endif ! back if ( flvr <= nband ) block
          enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -878,11 +866,11 @@
                      flvr_v ( index_v(i) ) = flvr + nband
                  else
                      flvr_v ( index_v(i) ) = flvr - nband
-                 endif
+                 endif ! back if ( flvr <= nband ) block
              enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<             call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<             call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
          endif ! back if ( pass .eqv. .true. ) block
 
@@ -2009,7 +1997,7 @@
      allocate(Dmm(kaux,kaux), stat=istat)
      allocate(Tmm(kaux,kaux), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('cat_reflip_detrat','can not allocate enough memory')
+         call s_print_error('cat_reflip_detrat','can not allocate enough memory')
      endif
 
 ! init Dmm and Tmm matrix
