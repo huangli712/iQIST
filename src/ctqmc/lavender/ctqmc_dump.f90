@@ -13,6 +13,7 @@
 !!!           ctqmc_dump_prob
 !!!           ctqmc_dump_nmat
 !!!           ctqmc_dump_twop
+!!!           ctqmc_dump_pair
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
