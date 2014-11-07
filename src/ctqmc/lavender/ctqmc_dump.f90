@@ -27,10 +27,17 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> write out impurity green's function in imaginary time space
+!!========================================================================
+!!>>> dump data on imaginary time axis                                 <<<
+!!========================================================================
+
+!!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
+!!>>> time space
   subroutine ctqmc_dump_gtau(tmesh, gtau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -58,7 +65,7 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -70,10 +77,13 @@
      return
   end subroutine ctqmc_dump_gtau
 
-!>>> write out bath weiss's function in imaginary time space
+!!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
+!!>>> time space
   subroutine ctqmc_dump_wtau(tmesh, wtau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -95,7 +105,7 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), wtau(j,i,i), wtau(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), wtau(j,i+nband,i+nband)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -107,10 +117,13 @@
      return
   end subroutine ctqmc_dump_wtau
 
-!>>> write out hybridization function in imaginary time space
+!!>>> ctqmc_dump_htau: write out hybridization function in imaginary
+!!>>> time space
   subroutine ctqmc_dump_htau(tmesh, htau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -132,7 +145,7 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), htau(j,i,i), htau(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), htau(j,i+nband,i+nband)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -144,10 +157,13 @@
      return
   end subroutine ctqmc_dump_htau
 
-!>>> write out impurity green's function in imaginary time space (binning mode)
+!!>>> ctqmc_dump_gbin: write out impurity green's function in imaginary
+!!>>> time space (generated in binning mode)
   subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -182,7 +198,7 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -193,6 +209,10 @@
 
      return
   end subroutine ctqmc_dump_gbin
+
+!!========================================================================
+!!>>> dump data on matsubara frequency axis                            <<<
+!!========================================================================
 
 !>>> write out impurity green's function in matsubara frequency space
   subroutine ctqmc_dump_grnf(rmesh, grnf)
