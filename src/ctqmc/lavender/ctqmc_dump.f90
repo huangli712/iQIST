@@ -390,11 +390,14 @@
      return
   end subroutine ctqmc_dump_sigf
 
-!>>> write out impurity green's function and self-energy function obtained
-! by hubbard-I approximation in matsubara frequency space
+!!>>> ctqmc_dump_hub1: write out impurity green's function and self-energy
+!!>>> function obtained by hubbard-I approximation in matsubara frequency
+!!>>> space
   subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -417,9 +420,9 @@
      open(mytmp, file='solver.hub.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                     real(ghub(j,i)), &
                                    aimag(ghub(j,i)), &
                                     real(shub(j,i)), &
@@ -427,7 +430,7 @@
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
