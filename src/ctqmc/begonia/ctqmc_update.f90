@@ -820,7 +820,7 @@
                  flvr_v ( index_v(i) ) = flvr + nband
              else
                  flvr_v ( index_v(i) ) = flvr - nband
-             endif ! back if ( flvr <= nband ) block 
+             endif ! back if ( flvr <= nband ) block
          enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
