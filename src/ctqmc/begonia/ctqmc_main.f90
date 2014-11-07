@@ -18,7 +18,7 @@
 !!
 !! If you want to obtain an executable program, please go to src/build/,
 !! open make.sys and comment out the API flag. On the contrary, if you
-!! want to compile azalea as a library, please activate the API flag.
+!! want to compile begonia as a library, please activate the API flag.
 !!
 !! Introduction
 !! ============

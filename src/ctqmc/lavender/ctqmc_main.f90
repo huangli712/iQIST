@@ -18,26 +18,25 @@
 !!
 !! If you want to obtain an executable program, please go to src/build/,
 !! open make.sys and comment out the API flag. On the contrary, if you
-!! want to compile azalea as a library, please activate the API flag.
+!! want to compile lavender as a library, please activate the API flag.
 !!
 !! Introduction
 !! ============
 !!
-!! The begonia code is a hybridization expansion version continuous time
+!! The lavender code is a hybridization expansion version continuous time
 !! quantum Monte Carlo quantum impurity solver. It adopts the general
-!! matrix formalism, and only implements very limited features. So it is
-!! highly efficient, and can be used as a standard to benchmark the other
-!! ctqmc impurity solvers. In fact, it is the prototype for the other more
-!! advanced ctqmc impurity solver (likes lavender, pansy, and manjushaka,
-!! etc). The begonia code also includes a mini dynamical mean field theory
-!! engine which implements the self-consistent equation for Bethe lattice
-!! in paramagnetic state. So you can use it to perform dynamical mean field
+!! matrix formalism, and implements many useful and advanced features. So
+!! it is somewhat less efficient then the begonia code. It can be used as
+!! a standard to benchmark the other ctqmc impurity solvers. The current
+!! lavender code also includes a mini dynamical mean field theory engine
+!! which implements the self-consistent equation for Bethe lattice in
+!! paramagnetic state. So you can use it to perform dynamical mean field
 !! theory calculations quickly. Enjoy it.
 !!
 !! Usage
 !! =====
 !!
-!! # ./ctqmc or bin/begonia.x
+!! # ./ctqmc or bin/lavender.x
 !!
 !! Input
 !! =====
@@ -62,6 +61,8 @@
 !! solver.hist.dat
 !! solver.prob.dat
 !! solver.nmat.dat
+!! solver.twop.dat
+!! solver.pair.dat
 !! solver.status.dat
 !! etc.
 !!
@@ -270,7 +271,7 @@
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use api, only : T_mpi, T_general_begonia
+     use api, only : T_mpi, T_general_lavender
 
      use control ! ALL
 
@@ -281,7 +282,7 @@
      type (T_mpi), intent(in) :: I_mpi
 
 ! type structure of generic solver
-     type (T_general_begonia), intent(in) :: I_solver
+     type (T_general_lavender), intent(in) :: I_solver
 
 ! setup I_mpi
      nprocs = I_mpi%nprocs
@@ -296,14 +297,22 @@
      issun  = I_solver%issun
      isspn  = I_solver%isspn
      isbin  = I_solver%isbin
+     isort  = I_solver%isort
+     isvrt  = I_solver%isvrt
      nband  = I_solver%nband
      nspin  = I_solver%nspin
      norbs  = I_solver%norbs
      ncfgs  = I_solver%ncfgs
      nzero  = I_solver%nzero
      niter  = I_solver%niter
+     lemax  = I_solver%lemax
+     legrd  = I_solver%legrd
+     chmax  = I_solver%chmax
+     chgrd  = I_solver%chgrd
      mkink  = I_solver%mkink
      mfreq  = I_solver%mfreq
+     nffrq  = I_solver%nffrq
+     nbfrq  = I_solver%nbfrq
      nfreq  = I_solver%nfreq
      ntime  = I_solver%ntime
      npart  = I_solver%npart
