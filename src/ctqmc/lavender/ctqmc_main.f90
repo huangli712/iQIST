@@ -106,10 +106,14 @@
 # if !defined (API)
 
   program ctqmc_main
-     use constants
-     use control
+     use constants, only : mystd
+     use mmpi, only : mp_init, mp_finalize
+     use mmpi, only : mp_comm_rank, mp_comm_size
+     use mmpi, only : mp_barrier
 
-     use mmpi
+     use control, only : isscf, isbin
+     use control, only : niter
+     use control, only : nprocs, myid, master
 
      implicit none
 
@@ -138,7 +142,7 @@
 ! impurity solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! setup the important parameters for continuous time quantum Monte Carlo
 ! quantum impurity solver and dynamical mean field theory self-consistent
@@ -148,37 +152,13 @@
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call ctqmc_setup_array()
 
 ! prepare initial hybridization function, init self-consistent iteration
      call ctqmc_selfer_init()
-
-!-------------------------------------------------------------------------
-! note: running mode                                                     !
-!-------------------------------------------------------------------------
-!    if isscf == 1 .and. isbin == 1                                      !
-!        call ctqmc_impurity_solver only, normal mode                    !
-!                                                                        !
-!    if isscf == 1 .and. isbin == 2                                      !
-!        call ctqmc_impurity_solver only, binner mode                    !
-!                                                                        !
-!    if isscf == 2 .and. isbin == 1                                      !
-!        call ctqmc_impurity_solver, normal mode                         !
-!        plus                                                            !
-!        call ctqmc_dmft_selfer                                          !
-!        until convergence                                               !
-!                                                                        !
-!    if isscf == 2 .and. isbin == 2                                      !
-!        call ctqmc_impurity_solver, normal mode                         !
-!        plus                                                            !
-!        call ctqmc_dmft_selfer                                          !
-!        until convergence                                               !
-!        plus                                                            !
-!        call ctqmc_impurity_solver, binner mode                         !
-!-------------------------------------------------------------------------
 
 !=========================================================================
 !>>> DMFT ITERATION BEGIN                                              <<<
@@ -196,7 +176,7 @@
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'LAVENDER >>> DMFT iter:', iter, ' <<< SELFING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
@@ -213,12 +193,12 @@
 ! check the running mode
          if ( isscf == 1 ) then
              EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( isscf == 1 ) block
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'LAVENDER >>> DMFT iter:', iter, ' <<< SELFING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
@@ -235,7 +215,7 @@
 ! now convergence is achieved
          if ( convergence .eqv. .true. ) then
              EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( convergence .eqv. .true. ) block
 
      enddo DMFT_CTQMC_ITERATION ! over iter={1,niter} loop
 
@@ -250,7 +230,7 @@
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'LAVENDER >>> DMFT iter:', iter, ' <<< BINNING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! accumulate the quantum Monte Carlo data
          call ctqmc_impurity_solver(iter)
@@ -268,7 +248,7 @@
 ! solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_footer()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! finalize mpi envirnoment
 # if defined (MPI)
@@ -282,6 +262,8 @@
 # endif  /* MPI */
 
   end program ctqmc_main
+
+# endif  /* API */
 
 # if !defined (F2PY)
 
