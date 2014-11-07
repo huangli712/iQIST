@@ -615,7 +615,7 @@
      return
   end subroutine ctqmc_diagram_sampling
 
-!!>>> ictqmc_diagram_checking: checking whether the quantum impurity
+!!>>> ctqmc_diagram_checking: checking whether the quantum impurity
 !!>>> solver is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
      use constants, only : mystd
