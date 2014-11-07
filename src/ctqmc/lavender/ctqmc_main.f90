@@ -11,6 +11,100 @@
 !!!           any question, please contact with huangli712@gmail.com     !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
+!!
+!!
+!! WARNING
+!! =======
+!!
+!! If you want to obtain an executable program, please go to src/build/,
+!! open make.sys and comment out the API flag. On the contrary, if you
+!! want to compile azalea as a library, please activate the API flag.
+!!
+!! Introduction
+!! ============
+!!
+!! The begonia code is a hybridization expansion version continuous time
+!! quantum Monte Carlo quantum impurity solver. It adopts the general
+!! matrix formalism, and only implements very limited features. So it is
+!! highly efficient, and can be used as a standard to benchmark the other
+!! ctqmc impurity solvers. In fact, it is the prototype for the other more
+!! advanced ctqmc impurity solver (likes lavender, pansy, and manjushaka,
+!! etc). The begonia code also includes a mini dynamical mean field theory
+!! engine which implements the self-consistent equation for Bethe lattice
+!! in paramagnetic state. So you can use it to perform dynamical mean field
+!! theory calculations quickly. Enjoy it.
+!!
+!! Usage
+!! =====
+!!
+!! # ./ctqmc or bin/begonia.x
+!!
+!! Input
+!! =====
+!!
+!! solver.ctqmc.in (optional)
+!! solver.eimp.in (optional)
+!! solver.hyb.in (optional)
+!! atom.cix (necessary)
+!!
+!! Output
+!! ======
+!!
+!! terminal output
+!! solver.green.bin.*
+!! solver.green.dat
+!! solver.grn.dat
+!! solver.hybri.dat
+!! solver.hyb.dat
+!! solver.wss.dat
+!! solver.sgm.dat
+!! solver.hub.dat
+!! solver.hist.dat
+!! solver.prob.dat
+!! solver.nmat.dat
+!! solver.status.dat
+!! etc.
+!!
+!! Running mode
+!! ============
+!!
+!! case 1: isscf == 1 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, normal mode
+!!
+!! case 2: isscf == 1 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, binner mode
+!!
+!! case 3: isscf == 2 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!!
+!! case 4: isscf == 2 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!! plus
+!! call ctqmc_impurity_solver, binner mode
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
+
+# if !defined (API)
+
   program ctqmc_main
      use constants
      use control
