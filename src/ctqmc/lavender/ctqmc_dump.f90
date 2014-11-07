@@ -214,16 +214,19 @@
 !!>>> dump data on matsubara frequency axis                            <<<
 !!========================================================================
 
-!>>> write out impurity green's function in matsubara frequency space
+!!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_grnf(rmesh, grnf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! impurity green's function
      complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
@@ -239,7 +242,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(grnf(j,i,i)), &
                                  aimag(grnf(j,i,i)), &
                       real(grnf(j,i+nband,i+nband)), &
@@ -255,16 +258,19 @@
      return
   end subroutine ctqmc_dump_grnf
 
-!>>> write out bath weiss's function in matsubara frequency space
+!!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_wssf(rmesh, wssf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! bath weiss's function
      complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
@@ -280,7 +286,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(wssf(j,i,i)), &
                                  aimag(wssf(j,i,i)), &
                       real(wssf(j,i+nband,i+nband)), &
@@ -296,16 +302,19 @@
      return
   end subroutine ctqmc_dump_wssf
 
-!>>> write out hybridization function in matsubara frequency space
+!!>>> ctqmc_dump_hybf: write out hybridization function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_hybf(rmesh, hybf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! hybridization function
      complex(dp), intent(in) :: hybf(mfreq,norbs,norbs)
@@ -321,7 +330,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(hybf(j,i,i)), &
                                  aimag(hybf(j,i,i)), &
                       real(hybf(j,i+nband,i+nband)), &
@@ -337,16 +346,19 @@
      return
   end subroutine ctqmc_dump_hybf
 
-!>>> write out self-energy function in matsubara frequency space
+!!>>> ctqmc_dump_sigf: write out self-energy function in matsubara
+!!>>> frequency space
   subroutine ctqmc_dump_sigf(rmesh, sigf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! self-energy function
      complex(dp), intent(in) :: sigf(mfreq,norbs,norbs)
@@ -362,7 +374,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(sigf(j,i,i)), &
                                  aimag(sigf(j,i,i)), &
                       real(sigf(j,i+nband,i+nband)), &
