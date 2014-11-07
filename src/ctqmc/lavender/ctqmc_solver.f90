@@ -23,16 +23,17 @@
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, mystd
 
-     use control, only : issun, isspn
+     use control, only : issun, isspn, isvrt
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
-     use control, only : ntime, nsweep, nwrite, nmonte, ncarlo
+     use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
      use control, only : Uc, Jz
      use control, only : myid, master
      use context, only : caves
      use context, only : tmesh, rmesh
      use context, only : hist, prob
      use context, only : nmat, nnmat
+     use context, only : g2_re, g2_im, ps_re, ps_im
      use context, only : symm, naux, saux
      use context, only : gtau, grnf
      use context, only : sig2
@@ -87,14 +88,20 @@
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
 
-! impurity green's function, imaginary time axis, for mpi case
-     real(dp), allocatable :: gtau_mpi(:,:,:)
-
 ! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
 
 ! used to measure two-particle green's function, imaginary part, for mpi case
      real(dp), allocatable :: g2_im_mpi(:,:,:,:,:)
+
+! used to measure particle-particle pair susceptibility, real part, for mpi case
+     real(dp), allocatable :: ps_re_mpi(:,:,:,:,:)
+
+! used to measure particle-particle pair susceptibility, imaginary part, for mpi case
+     real(dp), allocatable :: ps_im_mpi(:,:,:,:,:)
+
+! impurity green's function, imaginary time axis, for mpi case
+     real(dp), allocatable :: gtau_mpi(:,:,:)
 
 ! impurity green's function, matsubara frequency axis, for mpi case
      complex(dp), allocatable :: grnf_mpi(:,:,:)
@@ -120,17 +127,27 @@
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-     allocate(g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-     allocate(g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -284,10 +301,20 @@
                  call ctqmc_record_gtau()
              endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
+! record nothing
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
+                 CONTINUE
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) block
+
 ! record the two-particle green's function
-             if ( mod(cstep, nmonte) == 0 .and. isvrt == 4 ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
                  call ctqmc_record_twop()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
+
+! record the particle-particle pair susceptibility
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) then
+                 call ctqmc_record_pair()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) block
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
@@ -402,14 +429,18 @@
 ! from nnmat to nnmat_mpi
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
+! collect the two-particle green's function from g2_re to g2_re_mpi, etc.
+     call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
+
+! collect the particle-particle pair susceptibility from ps_re to
+! ps_re_mpi, etc.
+     call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
+
 ! collect the impurity green's function data from gtau to gtau_mpi
      call ctqmc_reduce_gtau(gtau_mpi)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
      call ctqmc_reduce_grnf(grnf_mpi)
-
-! collect the two-particle green's function from g2_re to g2_re_mpi, etc.
-     call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
 ! update original data and calculate the averages simultaneously
      hist = hist_mpi
@@ -424,6 +455,20 @@
 
      do m=1,norbs
          do n=1,norbs
+             g2_re(:,:,:,n,m) = g2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             g2_im(:,:,:,n,m) = g2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,norbs
+             ps_re(:,:,:,n,m) = ps_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+             ps_im(:,:,:,n,m) = ps_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
+         enddo ! over n={1,norbs} loop
+     enddo ! over m={1,norbs} loop
+
+     do m=1,norbs
+         do n=1,norbs
              gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
@@ -431,13 +476,6 @@
      do m=1,norbs
          do n=1,norbs
              grnf(:,n,m) = grnf_mpi(:,n,m) * real(nmonte)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             g2_re(:,:,:,n,m) = g2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-             g2_im(:,:,:,n,m) = g2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
@@ -491,6 +529,16 @@
          call ctqmc_dump_nmat(nmat, nnmat)
      endif ! back if ( myid == master ) block
 
+! write out the final two-particle green's function data, g2_re and g2_im
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_twop(g2_re, g2_im)
+     endif ! back if ( myid == master ) block
+
+! write out the final particle-particle pair susceptibility data, ps_re and ps_im
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_pair(ps_re, ps_im)
+     endif ! back if ( myid == master ) block
+
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_gtau(tmesh, gtau)
@@ -504,11 +552,6 @@
 ! write out the final self-energy function data, sig2
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_sigf(rmesh, sig2)
-     endif ! back if ( myid == master ) block
-
-! write out the final two-particle green's function data, g2_re and g2_im
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_twop(g2_re, g2_im)
      endif ! back if ( myid == master ) block
 
 !!========================================================================
@@ -535,10 +578,12 @@
      deallocate(prob_mpi )
      deallocate(nmat_mpi )
      deallocate(nnmat_mpi)
-     deallocate(gtau_mpi )
-     deallocate(grnf_mpi )
      deallocate(g2_re_mpi)
      deallocate(g2_im_mpi)
+     deallocate(ps_re_mpi)
+     deallocate(ps_im_mpi)
+     deallocate(gtau_mpi )
+     deallocate(grnf_mpi )
 
      return
   end subroutine ctqmc_impurity_solver
