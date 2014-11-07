@@ -619,59 +619,6 @@
      return
   end subroutine ctqmc_dump_nmat
 
-!>>> write out the spin-spin correlation function
-  subroutine ctqmc_dump_schi(schi, sschi)
-     use constants
-     use control
-     use context, only : tmesh
-
-     implicit none
-
-! external arguments
-! spin-spin correlation function data, < Sz(0) Sz(\tau) >, totally-averaged
-     real(dp), intent(in) :: schi(ntime)
-
-! spin-spin correlation function data, < Sz(0) Sz(\tau) >, orbital-resolved
-     real(dp), intent(in) :: sschi(ntime,nband)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.schi.dat
-     open(mytmp, file='solver.schi.dat', form='formatted', status='unknown')
-
-! write it
-     do j=1,nband
-         write(mytmp,'(a,i5)') '# flvr:', j
-         do i=1,ntime
-             write(mytmp,'(2f12.6)') tmesh(i), sschi(i,j)
-         enddo ! over i={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over j={1,nband} loop
-
-     write(mytmp,'(a,i5)') '# flvr:', 8888
-     do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), schi(i) / real(nband)
-     enddo ! over i={1,ntime} loop
-     write(mytmp,*) ! write empty lines
-     write(mytmp,*)
-
-     write(mytmp,'(a,i5)') '# flvr:', 9999
-     do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), sum( sschi(i,:) ) / real(nband)
-     enddo ! over i={1,ntime} loop
-     write(mytmp,*) ! write empty lines
-     write(mytmp,*)
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_schi
-
 !>>> write out the two-particle green's function and vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
      use constants
