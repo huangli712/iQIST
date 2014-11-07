@@ -623,20 +623,25 @@
      return
   end subroutine ctqmc_dump_nmat
 
-!>>> write out the two-particle green's function and vertex function
+!!>>> ctqmc_dump_twop: write out the two-particle green's function and
+!!>>> full (reducible) vertex function
   subroutine ctqmc_dump_twop(g2_re, g2_im)
-     use constants
-     use control
+     use constants, only : dp, czero, mytmp
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
      use context, only : grnf
 
      implicit none
 
 ! external arguments
 ! used to calculate two-particle green's function, real part
-     real(dp), intent(in) :: g2_re(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: g2_re(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! used to calculate two-particle green's function, imaginary part
-     real(dp), intent(in) :: g2_im(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(in) :: g2_im(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index for frequencies
@@ -669,16 +674,20 @@
 ! two-particle green's function, connected part
      complex(dp) :: chii
 
+! check if we need to dump two-particle green's function and vertex
+! function data to solver.twop.dat
+     if ( .not. btest(isvrt, 3) ) RETURN
+
 ! open data file: solver.twop.dat
      open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
 
 ! write it
      do m=1,norbs
-         do n=1,norbs
+         do n=1,m
              do k=1,nbfrq
-                 write(mytmp,'(a,i5)') '# flvr1:', m
-                 write(mytmp,'(a,i5)') '# flvr2:', n
-                 write(mytmp,'(a,i5)') '# nbfrq:', k
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
 ! evaluate g2 and g1
@@ -704,13 +713,13 @@
                          endif ! back if ( i <= nffrq/2 ) block
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
-                             g4 = dconjg( grnf(nffrq/2-q+1,m,m))
+                             g4 = dconjg( grnf(nffrq/2-q+1,n,n))
                          else
-                             g4 = grnf(q-nffrq/2,m,m)
+                             g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
 ! evaluate chit
-                         chit = dcmplx( g2_re(m,n,j,i,k), g2_im(m,n,j,i,k) )
+                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
 
 ! evaluate chi0
                          chi0 = czero
@@ -720,12 +729,12 @@
 ! evaluate chii, straightforward but less accurate
                          chii = chit - chi0
 
-! jt: \omega
-! it: \omega'
-! chit: \chi_{tot}(\omega, \omega', \nu)
-! chi0: \chi_{0}(\omega, \omega', \nu)
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+! chit: \chi_{tot}(\omega, \omega', \nu), two-particle green's function
+! chi0: \chi_{0}(\omega, \omega', \nu), bubble function
 ! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu)
+! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
                          write(mytmp,'(2i5,8f12.6)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
                      enddo ! over i={1,nffrq} loop
@@ -733,7 +742,7 @@
                  write(mytmp,*) ! write empty lines
                  write(mytmp,*)
              enddo ! over k={1,nbfrq} loop
-         enddo ! over n={1,norbs} loop
+         enddo ! over n={1,m} loop
      enddo ! over m={1,norbs} loop
 
 ! close data file
@@ -741,3 +750,68 @@
 
      return
   end subroutine ctqmc_dump_twop
+
+!!>>> ctqmc_dump_pair: write out the particle-particle pair susceptibility
+  subroutine ctqmc_dump_pair(ps_re, ps_im)
+     use constants, only : dp, mytmp
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+
+     implicit none
+
+! external arguments
+! particle-particle pair susceptibility, real part
+     real(dp), intent(in) :: ps_re(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), intent(in) :: ps_im(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! local variables
+! loop index for frequencies
+     integer :: i
+     integer :: j
+     integer :: k
+
+! loop index for orbitals
+     integer :: m
+     integer :: n
+
+! dummy integer variables
+     integer :: it
+     integer :: jt
+
+! check if we need to dump particle-particle pair susceptibility
+! to solver.pair.dat
+     if ( .not. btest(isvrt, 5) ) RETURN
+
+! open data file: solver.pair.dat
+     open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')
+
+! write it
+     do m=1,norbs
+         do n=1,m
+             do k=1,nbfrq
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
+                 do j=1,nffrq
+                     do i=1,nffrq
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
+                         write(mytmp,'(2i6,2f16.8)') jt, it, ps_re(i,j,k,n,m), ps_im(i,j,k,n,m)
+                     enddo ! over i={1,nffrq} loop
+                 enddo ! over j={1,nffrq} loop
+                 write(mytmp,*) ! write empty lines
+                 write(mytmp,*)
+             enddo ! over k={1,nbfrq} loop
+         enddo ! over n={1,m} loop
+     enddo ! over m={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_pair
