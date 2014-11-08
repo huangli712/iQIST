@@ -18,7 +18,7 @@
 !!
 !! If you want to obtain an executable program, please go to src/build/,
 !! open make.sys and comment out the API flag. On the contrary, if you
-!! want to compile azalea as a library, please activate the API flag.
+!! want to compile begonia as a library, please activate the API flag.
 !!
 !! Introduction
 !! ============
@@ -160,9 +160,9 @@
 ! prepare initial hybridization function, init self-consistent iteration
      call ctqmc_selfer_init()
 
-!=========================================================================
-!>>> DMFT ITERATION BEGIN                                              <<<
-!=========================================================================
+!!========================================================================
+!!>>> DMFT ITERATION BEGIN                                             <<<
+!!========================================================================
 
 ! case A: one-shot non-self-consistent mode
 !-------------------------------------------------------------------------
@@ -237,9 +237,9 @@
 
      endif ! back if ( isbin == 2 ) block
 
-!=========================================================================
-!>>> DMFT ITERATION END                                                <<<
-!=========================================================================
+!!========================================================================
+!!>>> DMFT ITERATION END                                               <<<
+!!========================================================================
 
 ! deallocate memory and finalize
      call ctqmc_final_array()

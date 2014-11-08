@@ -776,7 +776,7 @@
                      endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                      if ( flvr_v ( index_v(i) ) == fdn ) then
                          flvr_v ( index_v(i) ) = fup; CYCLE
-                     endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
+                     endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
                  enddo ! over i={1,nsize} loop
 
 ! print exception information
@@ -820,7 +820,7 @@
                  flvr_v ( index_v(i) ) = flvr + nband
              else
                  flvr_v ( index_v(i) ) = flvr - nband
-             endif ! back if ( flvr <= nband ) block 
+             endif ! back if ( flvr <= nband ) block
          enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()

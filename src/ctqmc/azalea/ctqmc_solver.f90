@@ -761,6 +761,7 @@
 !!>>> on ctqmc_diagram_sampling() subroutine
   subroutine ctqmc_impurity_tester()
      use constants ! ALL
+
      use control   ! ALL
      use context   ! ALL
 
