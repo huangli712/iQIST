@@ -372,7 +372,7 @@
 ! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
@@ -451,21 +451,40 @@
 ! open data file
              open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
+! skip ten comment lines
+             do i=1,10
+                 read(mytmp,*)
+             enddo ! over i={1,10} loop
+
+! determine whether the spin-orbital coupling effect should be considered
+             read(mytmp,*) i, j, cssoc
+
+! skip eight comment lines
+             do i=1,8
+                 read(mytmp,*)
+             enddo ! over i={1,8} loop
+
 ! read in eigenvalues for local hamiltonian matrix from atom.cix
-             read(mytmp,*) ! skip one line
              do i=1,ncfgs
                  read(mytmp,*) k, eigs(i), naux(i), saux(i)
              enddo ! over i={1,ncfgs} loop
 
+! skip three comment lines
+             do i=1,3
+                 read(mytmp,*)
+             enddo ! over i={1,3} loop
+
 ! read in F matrix from atom.cix
-             read(mytmp,*) ! skip one line
-             do i=1,norbs
-                 do j=1,ncfgs
-                     do k=1,ncfgs
-                         read(mytmp,*) j1, j2, j3, op_d(k,j,i)
-                     enddo ! over k={1,ncfgs} loop
-                 enddo ! over j={1,ncfgs} loop
-             enddo ! over i={1,norbs} loop
+! only the non-zero elements are included in the atom.cix, but we do not
+! know how many non-zero elements there are
+             ATOM_CIX_PARSER: do
+                 read(mytmp, *, iostat = istat) k, j, i, rtmp
+                 if ( istat == iostat_end ) then
+                     EXIT ATOM_CIX_PARSER
+                 else
+                     op_d(k,j,i) = rtmp
+                 endif ! back if ( istat == iostat_end ) block
+             enddo ATOM_CIX_PARSER ! over do loop
 
 ! close data file
              close(mytmp)
