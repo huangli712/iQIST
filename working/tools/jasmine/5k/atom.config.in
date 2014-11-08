@@ -8,15 +8,26 @@
 !!>>> setup general control flags
 !!------------------------------------------------------------------------
 ! number of bands
-  nband  : 7       
+  nband  : 5       
 
 ! minimal and maximal occupancy to be kept
-  nmini  : 0
-  nmaxi  : 5
+  nmini  : 3
+  nmaxi  : 7
 
 ! good quantum numbers (GQNs)
 ! (1) without any GQNs, (2) N, (3) N,Sz, (4) N,Sz,PS, (5) N,Jz
-  ictqmc : 3       
+  ictqmc : 2       
+
+! type of crystal field splitting
+! (0) without, (1) diagonal, (2) non-diagonal 
+  icf    : 1
+
+! type of spin-oribt coupling (SOC)
+! (0) without, (1) with atomic SOC
+  isoc   : 1
+
+! strength of SOC
+  lambda : 0.50
 
 ! type of Coulomb interaction: (1) Kanamori (2) Slater
   icu    : 2
