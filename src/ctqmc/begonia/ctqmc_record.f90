@@ -890,11 +890,12 @@
 !!>>> build self-energy function                                       <<<
 !!========================================================================
 
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make interpolation for self-energy
-! function between low frequency QMC data and high frequency Hubbard-I
-! approximation data, the full impurity green's function can be obtained by
-! using dyson's equation finally
+!!>>> ctqmc_make_hub1: build atomic green's function and self-energy
+!!>>> function using improved Hubbard-I approximation, and then make
+!!>>> interpolation for self-energy function between low frequency QMC
+!!>>> data and high frequency Hubbard-I approximation data, the full
+!!>>> impurity green's function can be obtained by using dyson's equation
+!!>>> finally
   subroutine ctqmc_make_hub1()
      use constants
      use control
@@ -952,7 +953,7 @@
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
                          call s_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
-                     endif
+                     endif ! back if ( fcounter(m) > nzero ) block
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
                      fv(fcounter(m),m) = value
@@ -984,7 +985,7 @@
 ! dump the ghub and shub, only for reference, only the master node can do it
      if ( myid == master ) then
          call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! build self-energy function at low frequency region
 !-------------------------------------------------------------------------
