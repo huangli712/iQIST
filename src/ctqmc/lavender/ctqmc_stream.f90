@@ -257,13 +257,14 @@
      use sparse, only : sparse_dns_to_csr
 
      use control, only : nband, norbs, ncfgs, nzero
+     use control, only : lemax, legrd, chmax, chgrd
      use control, only : mfreq
      use control, only : ntime
      use control, only : U
      use control, only : mune, beta, part
      use control, only : myid, master
      use context, only : cssoc
-     use context, only : tmesh, rmesh
+     use context, only : tmesh, rmesh, pmesh, qmesh, ppleg, qqche
      use context, only : symm, eimp, eigs, naux, saux
      use context, only : op_c, op_d
      use context, only : sop_c, sop_jc, sop_ic, sop_d, sop_jd, sop_id
@@ -295,42 +296,17 @@
      call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build mesh for legendre polynomial in [-1,1]
-     do i=1,legrd
-         pmesh(i) = real(i - 1) * two / real(legrd - 1) - one
-     enddo ! over i={1,legrd} loop
+     call s_linspace_d(-one, one, legrd, pmesh)
 
 ! build mesh for chebyshev polynomial in [-1,1]
-     do i=1,chgrd
-         qmesh(i) = real(i - 1) * two / real(chgrd - 1) - one
-     enddo ! over i={1,chgrd} loop
+     call s_linspace_d(-one, one, chgrd, qmesh)
 
 ! build legendre polynomial in [-1,1]
-     if ( lemax <= 2 ) then
-         call s_print_error('ctqmc_selfer_init','lemax must be larger than 2')
-     endif
-
-     do i=1,legrd
-         ppleg(i,1) = one
-         ppleg(i,2) = pmesh(i)
-         do j=3,lemax
-             k = j - 1
-             ppleg(i,j) = ( real(2*k-1) * pmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
-         enddo ! over j={3,lemax} loop
-     enddo ! over i={1,legrd} loop
+     call s_legendre(lemax, legrd, pmesh, ppleg)
 
 ! build chebyshev polynomial in [-1,1]
 ! note: it is second kind chebyshev polynomial
-     if ( chmax <= 2 ) then
-         call s_print_error('ctqmc_selfer_init','chmax must be larger than 2')
-     endif
-
-     do i=1,chgrd
-         qqche(i,1) = one
-         qqche(i,2) = two * qmesh(i)
-         do j=3,chmax
-             qqche(i,j) = two * qmesh(i) * qqche(i,j-1) - qqche(i,j-2)
-         enddo ! over j={3,chmax} loop
-     enddo ! over i={1,chgrd} loop
+     call s_chebyshev(chmax, chgrd, qmesh, qqche)
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
@@ -698,6 +674,10 @@
 ! init two-particle green's function
      g2_re   = zero
      g2_im   = zero
+
+! init particle-particle pair susceptibility
+     ps_re   = zero
+     ps_im   = zero
 
 ! init M-matrix related array
      mmat    = zero
