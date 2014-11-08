@@ -454,55 +454,40 @@ All of the CT-HYB impurity solvers in the $i$QIST software package are paralleli
 In practical calculations, we always fix the number of Monte Carlo steps $N_{\text{sweep}}$ done by each process, and launch as many processes as possible. Suppose that the number of processes is $N_{\text{proc}}$, then the total number of Monte Carlo samplings should be $N_{\text{proc}}N_{\text{sweep}}$. Naturally, the more processes we use, the more accurate data we can obtain.
 
 \section{Atomic Solver}
-The $\mathcal{J}asmine$ component of $i$QIST is used to solve a local atomic Hamiltonian defined as,
-
+The \jasmine component of \iqist is used to solve a local atomic Hamiltonian defined as,
 \begin{equation}
 \hat{H}_{\text{atom}}=\hat{H}_{0}+\hat{H}_{U},
 \end{equation}
-where, $\text{\ensuremath{\hat{H}}}_{0}$ is the on-site term, including
-crystal field (CF) splitting term $\hat{H}_{\text{CF}}$, spin-orbit
-coupling (SOC) term $\hat{H}_{\text{SOC}}$, and other terms such
-as a Zeeman term in case of the presence of external magnetic field,
-
+where, $\text{\ensuremath{\hat{H}}}_{0}$ is the on-site term, including crystal field (CF) splitting term $\hat{H}_{\text{CF}}$, spin-orbit coupling (SOC) term $\hat{H}_{\text{SOC}}$, and other terms such as a Zeeman term in case of the presence of external magnetic field,
 \begin{equation}
 \hat{H}_{0}=\hat{H}_{\text{CF}}+\hat{H}_{\text{SOC}}+\text{other on-site terms},
 \end{equation}
 and $\hat{H}_{U}$ is the Coulomb interaction term.
 
 We write these terms in second quantization form, 
-
 \begin{equation}
-\hat{H}_{\text{atom}}=\sum_{\alpha,\beta}E_{\alpha,\beta}\hat{f}_{\alpha}^{\dagger}\hat{f}_{\beta}+\sum_{\alpha,\beta,\gamma,\delta}U_{\alpha,\beta,\gamma,\delta}\hat{f}_{\alpha}^{\dagger}\hat{f}_{\beta}^{\dagger}\hat{f}_{\delta}\hat{f}_{\gamma},
+\hat{H}_{\text{atom}}=\sum_{\alpha,\beta}E_{\alpha,\beta}\hat{f}_{\alpha}^{\dagger}\hat{f}_{\beta}\\
+                     +\sum_{\alpha,\beta,\gamma,\delta}U_{\alpha,\beta,\gamma,\delta}\hat{f}_{\alpha}^{\dagger}\\
+                     \hat{f}_{\beta}^{\dagger}\hat{f}_{\delta}\hat{f}_{\gamma},
 \end{equation}
-where, $\alpha,\beta,\gamma,\delta$ is the single particle orbital-spin
-index, the first term is the on-site term, the second one is the Coulomb
-interaction term.
-
+where, $\alpha,\beta,\gamma,\delta$ is the single particle orbital-spin index, the first term is the on-site term, the second one is the Coulomb interaction term.
 
 \subsection{Definition of single particle basis}
+In this section, we define some single particle basis we used in $\mathcal{J}asmine$ to write down the atomic Hamiltonian $\hat{H}_{\text{atom}}$. We set $\hbar=1$ in this note.
 
-In this section, we define some single particle basis we used in $\mathcal{J}asmine$
-to write down the atomic Hamiltonian $\hat{H}_{\text{atom}}$. We
-set $\hbar=1$ in this note.
+\underline{complex spherical harmonics basis}
 
-
-\subsubsection{complex spherical harmonics basis}
-
-The complex shperical harmonics $Y_{l}^{m}(\theta,\phi)$ is the eigenstate
-of $l^{2},l_{z}$,
+The complex shperical harmonics $Y_{l}^{m}(\theta,\phi)$ is the eigenstate of $l^{2},l_{z}$,
 
 \begin{equation}
 l^{2}Y_{l}^{m}=l(l+1)Y_{l}^{m},
 \end{equation}
 
-
 \begin{equation}
 l_{z}Y_{l}^{m}=mY_{l}^{m},\ m=-l,-l+1,\cdots,l.
 \end{equation}
 
-
-
-\subsubsection{real spherical harmonics basis}
+\underline{real spherical harmonics basis}
 
 The real spherical harmonics $Y_{lm}$ is defined as
 
@@ -549,21 +534,17 @@ f_{y(3x^{2}-y^{2})} & = & Y_{3,-3}=\frac{i}{\sqrt{2}}\left(Y_{3}^{-3}+Y_{3}^{3}\
 \end{eqnarray}
 
 
+\underline{cubic spherical harmonics basis}
 
-\subsubsection{cubic spherical harmonics basis}
-
-The cubic shperical harmonics is defined as the basis of the irreducible
-representation of cubic point group $O_{h}$.
+The cubic shperical harmonics is defined as the basis of the irreducible representation of cubic point group $O_{h}$.
 
 $p$ orbitals:
-
 \begin{equation}
 T_{1u}:p_{x},p_{y},p_{z}
 \end{equation}
 
 
 $d$ orbitals:
-
 \begin{gather}
 \begin{cases}
 E_{g}: & d_{z^{2}},d_{x^{2}-y^{2}}\\
@@ -573,7 +554,6 @@ T_{2g}: & d_{zx},d_{zy},d_{xy}
 
 
 $f$ orbitals:
-
 \begin{eqnarray}
 f_{x^{3}} & = & -\frac{\sqrt{6}}{4}f_{xz^{2}}+\frac{\sqrt{10}}{4}f_{x(x^{2}-3y^{2})}\nonumber \\
 f_{y^{3}} & = & -\frac{\sqrt{6}}{4}f_{yz^{2}}-\frac{\sqrt{10}}{4}f_{y(3x^{2}-y^{2})}\nonumber \\
@@ -595,7 +575,7 @@ A_{2u}: & f_{xyz}
 
 
 
-\subsubsection{$j^{2},j_{z}$ diagonal basis}
+\underline{$j^{2},j_{z}$ diagonal basis}
 
 Define $\phi_{ljm_{j}}$ as the eigenstate of $j^{2},j_{z}$,
 
@@ -603,63 +583,46 @@ Define $\phi_{ljm_{j}}$ as the eigenstate of $j^{2},j_{z}$,
 j^{2}\phi_{ljm_{j}}=j(j+1)\phi_{ljm_{j}},
 \end{equation}
 
-
 \begin{equation}
 j_{z}\phi_{ljm_{j}}=m_{j}\phi_{ljm_{j}}.
 \end{equation}
 
 
 For $j=l+\frac{1}{2},m_{j}=m+\frac{1}{2}$,
-
 \begin{equation}
 \phi_{ljm_{j}}=\sqrt{\frac{l+m+1}{2l+1}}Y_{l}^{m}\uparrow+\sqrt{\frac{l-m}{2l+1}}Y_{l}^{m+1}\downarrow.
 \end{equation}
 
-
 For $j=l-\frac{1}{2},m_{j}=m+\frac{1}{2}$,
-
 \begin{equation}
 \phi_{ljm_{j}}=-\sqrt{\frac{l-m}{2l+1}}Y_{l}^{m}\uparrow+\sqrt{\frac{l+m+1}{2l+1}}Y_{l}^{m+1}\downarrow.
 \end{equation}
 
 
 
-\subsubsection{Natural basis}
+\underline{Natural basis}
 
-The natural basis is defined as the diagonal basis of on-site term
-$E_{\alpha\beta}$.
+The natural basis is defined as the diagonal basis of on-site term $E_{\alpha\beta}$.
 
 
 \subsection{Spin-orbit coupling}
-
 The spin-orbit coupling (SOC) is implemented at atomic level, 
 
 \begin{equation}
 \hat{H}_{\text{SOC}}=\lambda\sum_{i}\vec{\mathbf{l}}_{i}\cdot\vec{\mathbf{s}}_{i},
 \end{equation}
-
-
-where, $\vec{\mathbf{l}}$ is orbital angular momentum, and $\vec{\mathbf{s}}$
-is spin angular momentum. 
+where, $\vec{\mathbf{l}}$ is orbital angular momentum, and $\vec{\mathbf{s}}$ is spin angular momentum. 
 
 In second quantization form,
-
 \begin{equation}
-\hat{H}_{\text{SOC}}=\lambda\sum_{\alpha\sigma,\beta\sigma^{\prime}}\Braket{\alpha\sigma|\vec{\mathbf{l}}\cdot\vec{\mathbf{s}}|\beta\sigma^{\prime}}\hat{f}_{\alpha\sigma}^{\dagger}\hat{f}_{\beta\sigma^{\prime}},
+\hat{H}_{\text{SOC}}=\lambda\sum_{\alpha\sigma,\beta\sigma^{\prime}}\Braket{\alpha\sigma|\vec{\mathbf{l}}\cdot\vec{\mathbf{s}}|\beta\sigma^{\prime}}\\
+\hat{f}_{\alpha\sigma}^{\dagger}\hat{f}_{\beta\sigma^{\prime}},
 \end{equation}
-
-
 where, $\alpha$ is orbital index and $\sigma$ is spin index, and 
-
 \begin{eqnarray}
 \vec{\mathbf{l}}\cdot\vec{\mathbf{s}} & = & \frac{1}{2}\vec{\mathbf{l}}\cdot\vec{\mathbf{\mathbf{\sigma},}}
 \end{eqnarray}
-
-
 where, $\vec{\mathbf{\sigma}}$ is Pauli operator.
-
-\begin{eqnarray*}
-\end{eqnarray*}
 \begin{eqnarray*}
 \vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}} & = & \hat{l}_{x}\hat{\sigma}_{x}+\hat{l}_{y}\hat{\sigma}_{y}+\hat{l}_{z}\hat{\sigma}_{z}\\
  & = & \left[\begin{array}{cc}
@@ -681,29 +644,17 @@ i\hat{l}_{y} & 0
 \hat{l}_{+} & -\hat{l}_{z}
 \end{array}\right]
 \end{eqnarray*}
-
-
-\begin{eqnarray*}
-\end{eqnarray*}
-
-
 where, $\hat{l}_{\pm}=\hat{l}_{x}\pm\hat{l}_{y}$, and
-
 \begin{equation}
 \hat{l}_{\pm}Y_{l}^{m}=\sqrt{(l\mp m)(l\pm m+1)}Y_{l}^{m\pm1}.
 \end{equation}
 
-
-Write down $\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}$ in the complex
-shperical harmonics basis, the orbital order is:
-
+Write down $\vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}$ in the complex shperical harmonics basis, the orbital order is:
 \begin{equation}
 Y_{l}^{-l}\uparrow,Y_{l}^{-l}\downarrow,Y_{l}^{-l+1}\uparrow,Y_{l}^{-l+1}\downarrow,\cdots,Y_{l}^{l}\uparrow,Y_{l}^{l}\downarrow.
 \end{equation}
 
-
 For $p$ system,
-
 \begin{equation}
 \vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{cccccc}
 -1 & 0 & 0 & \sqrt{2} & 0 & 0\\
@@ -717,7 +668,6 @@ For $p$ system,
 
 
 For $t_{2g}$ system, 
-
 \begin{equation}
 \vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=-\left[\begin{array}{cccccc}
 -1 & 0 & 0 & \sqrt{2} & 0 & 0\\
@@ -731,7 +681,6 @@ For $t_{2g}$ system,
 
 
 For $d$ system,
-
 \begin{equation}
 \vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{cccccccccc}
 -2 & 0 & 0 & 2 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -749,7 +698,6 @@ For $d$ system,
 
 
 For $f$ system,
-
 \begin{equation}
 \vec{\mathbf{l}}\cdot\vec{\mathbf{\sigma}}=\left[\begin{array}{cccccccccccccc}
 -3 & 0 & 0 & \sqrt{6} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
@@ -772,106 +720,70 @@ For $f$ system,
 
 
 \subsection{Coulomb interaction}
-
-The standard form of Coulomb interaction in second quantization form
-is:
-
-\begin{equation}
-\text{\ensuremath{\hat{H}}}_{U}=\frac{1}{2}\sum_{\sigma,\sigma^{\prime}}\sum_{a,b,c,d}\Braket{a\sigma,b\sigma^{\prime}|\frac{1}{r_{12}}|c\sigma,d\sigma^{\prime}}\hat{f}_{a\sigma}^{\dagger}\hat{f}_{b\sigma^{\prime}}^{\dagger}\hat{f}_{d\sigma^{\prime}}\hat{f}_{c\sigma}\label{eq:gen_form}
+The standard form of Coulomb interaction in second quantization form is:
+\begin{equation}\label{eqn:coulomb}
+\text{\ensuremath{\hat{H}}}_{U}=\frac{1}{2}\sum_{\sigma,\sigma^{\prime}}\sum_{a,b,c,d}\\
+\Braket{a\sigma,b\sigma^{\prime}|\frac{1}{r_{12}}|c\sigma,d\sigma^{\prime}}\\
+\hat{f}_{a\sigma}^{\dagger}\hat{f}_{b\sigma^{\prime}}^{\dagger}\hat{f}_{d\sigma^{\prime}}\hat{f}_{c\sigma}
 \end{equation}
 
-
-\[
-\]
-\begin{equation}
-\Braket{a\sigma,b\sigma^{\prime}|\frac{1}{r_{12}}|c\sigma,d\sigma^{\prime}}=\int d\vec{r}_{1}d\vec{r}_{2}\phi_{\alpha\sigma}^{*}(\vec{r}_{1})\phi_{b\sigma^{\prime}}^{*}(\vec{r}_{2})\frac{1}{r_{12}}\phi_{c\sigma}(\vec{r}_{1})\phi_{d\sigma^{\prime}}(\vec{r}_{2})\label{eq:u_tensor}
+\begin{equation}\label{eqn:u_tensor}
+\Braket{a\sigma,b\sigma^{\prime}|\frac{1}{r_{12}}|c\sigma,d\sigma^{\prime}}=\\
+\int d\vec{r}_{1}d\vec{r}_{2}\phi_{\alpha\sigma}^{*}(\vec{r}_{1})\phi_{b\sigma^{\prime}}^{*}(\vec{r}_{2})\frac{1}{r_{12}}\phi_{c\sigma}\\
+(\vec{r}_{1})\phi_{d\sigma^{\prime}}(\vec{r}_{2})
 \end{equation}
+where, $\frac{1}{r_{12}}$ is the Coulomb interaction, $r_{12}=|\vec{r}_{1}-\vec{r}_{2}|$, $a,b,c,d$ is orbital index and $\sigma,\sigma^{\prime}=\uparrow,\downarrow$ is spin index. In jasmine, we use a array UMAT to store the $U$ tensor, BE VERY CAREFUL WITH THE ORBITAL ORDER, the indices order of UMAT is the same with that of the Fermion operators, it is NOT the same with that of the $U$ tensor.
 
+\underline{Slater Type}
 
-where, $\frac{1}{r_{12}}$ is the Coulomb interaction, $r_{12}=|\vec{r}_{1}-\vec{r}_{2}|$,
-$a,b,c,d$ is orbital index and $\sigma,\sigma^{\prime}=\uparrow,\downarrow$
-is spin index. In jasmine, we use a array UMAT to store the $U$ tensor,
-BE VERY CAREFUL WITH THE ORBITAL ORDER, the indices order of UMAT
-is the same with that of the Fermion operators, it is NOT the same
-with that of the $U$ tensor.
-
-
-\subsubsection{Slater Type}
-
-Expand $\frac{1}{r_{12}}$ in terms of complex spherical harmonics
-$Y_{l}^{m}$,
+Expand $\frac{1}{r_{12}}$ in terms of complex spherical harmonics $Y_{l}^{m}$,
 
 \begin{equation}
 \frac{1}{r_{12}}=\sum_{k}\frac{r_{<}^{k}}{r_{>}^{k+1}}\sum_{m}(-1)^{m}C_{m}^{k}(\theta_{1}\phi_{1})C_{-m}^{k}(\theta_{2}\phi_{2})
 \end{equation}
-
-
 where, $C_{m}^{k}(\theta\phi)=\sqrt{\frac{4\pi}{2k+1}}Y_{l}^{m}(\theta\phi)$.
 
-Set $\phi(\vec{r})=R_{nl}(r)Y_{l}^{m}(\theta\phi)$, then, for fixed
-$n,l$, Eqn.$\ref{eq:u_tensor}$ becomes,
+Set $\phi(\vec{r})=R_{nl}(r)Y_{l}^{m}(\theta\phi)$, then, for fixed $n,l$, Eqn.$\ref{eqn:u_tensor}$ becomes,
 
 \begin{eqnarray}
 \Braket{m_{1},m_{2}|\frac{1}{r_{12}}|m_{1}^{\prime},m_{2}^{\prime}} & = & \sum_{km}(-1)^{m}c_{l}^{k}(m_{1},m_{1}^{\prime})c_{l}^{k}(m_{2},m_{2}^{\prime})\delta(m+m_{1}^{\prime},m_{1})\delta(-m+m_{2}^{\prime},m_{2})F_{nl}^{k}\nonumber \\
- & = & \delta(m_{1}+m_{2},m_{1}^{\prime}+m_{2}^{\prime})(-1)^{m_{2}^{\prime}-m_{2}}\sum_{k}c_{l}^{k}(m_{1},m_{1}^{\prime})c_{l}^{k}(m_{2},m_{2}^{\prime})F_{nl}^{k}\\
- & = & \delta(m_{1}+m_{2},m_{1}^{\prime}+m_{2}^{\prime})\sum_{k}c_{l}^{k}(m_{1},m_{1}^{\prime})c_{l}^{k}(m_{2}^{\prime},m_{2})F_{nl}^{k}\nonumber 
+ & = & \delta(m_{1}+m_{2},m_{1}^{\prime}+m_{2}^{\prime})(-1)^{m_{2}^{\prime}-m_{2}}\sum_{k}c_{l}^{k}(m_{1},m_{1}^{\prime})c_{l}^{k}(m_{2},m_{2}^{\prime})F_{nl}^{k}\nonumber \\
+ & = & \delta(m_{1}+m_{2},m_{1}^{\prime}+m_{2}^{\prime})\sum_{k}c_{l}^{k}(m_{1},m_{1}^{\prime})c_{l}^{k}(m_{2}^{\prime},m_{2})F_{nl}^{k}
 \end{eqnarray}
-
-
 where, 
 \begin{equation}
 c_{l}^{k}(m^{\prime},m^{\prime\prime})=\int d\phi d\theta sin(\theta)Y_{l}^{m^{\prime}*}(\theta\phi)C_{m^{\prime}-m^{\prime\prime}}^{k}(\theta\phi)Y_{l}^{m^{\prime\prime}}(\theta\phi)
 \end{equation}
-
-
 is the Gaunt coefficient for fixed $l$, and
-
 \begin{equation}
 F_{nl}^{k}=\int_{0}^{\infty}r_{1}^{2}dr_{1}\int_{0}^{\infty}r_{2}^{2}dr_{2}R_{nl}^{2}(r_{1})R_{nl}^{2}(r_{2})\frac{r_{<}^{k}}{r_{>}^{k+1}}
 \end{equation}
-
-
 is the Slater integrals.
 
-In this single particle basis, the Coulomb interaction Hamiltonian
-is:
+In this single particle basis, the Coulomb interaction Hamiltonian is:
 
-\begin{equation}
-\end{equation}
-
-
-\[
-\]
 \begin{equation}
 \text{\ensuremath{\hat{H}}}_{U}=\frac{1}{2}\sum_{m_{1},m_{2},m_{1}^{\prime},m_{2}^{\prime},\sigma,\sigma^{\prime}}\Braket{m_{1}\sigma,m_{2}\sigma^{\prime}|\frac{1}{r_{12}}|m_{1}^{\prime}\sigma,m_{2}^{\prime}\sigma^{\prime}}\hat{f}_{m_{1}\sigma}^{\dagger}\hat{f}_{m_{2}\sigma^{\prime}}^{\dagger}\hat{f}_{m_{2}^{\prime}\sigma^{\prime}}\hat{f}_{m_{1}^{\prime}\sigma}
 \end{equation}
-
-
 where, $\sigma,\sigma^{\prime}$ is spin index.
 
-Set $\alpha=m_{1}\sigma,\beta=m_{2}\sigma^{\prime},\gamma=m_{1}^{\prime}\sigma,\delta=m_{2}^{\prime}\sigma^{\prime}$,
-thus, the UMAT in jasmine is:
+Set $\alpha=m_{1}\sigma,\beta=m_{2}\sigma^{\prime},\gamma=m_{1}^{\prime}\sigma,\delta=m_{2}^{\prime}\sigma^{\prime}$, thus, the UMAT in jasmine is:
 
 \begin{equation}
 \textbf{UMAT}(\alpha,\beta,\delta,\gamma)=\frac{1}{2}\delta(m_{1}+m_{2},m_{1}^{\prime}+m_{2}^{\prime})\sum_{k}c_{l}^{k}(m_{1},m_{1}^{\prime})c_{l}^{k}(m_{2}^{\prime},m_{2})F_{nl}^{k}
 \end{equation}
 
 
+\underline{Kanamori Type}
 
-\subsubsection{Kanamori Type}
+The Kanomori type of Coulomb interaction Hamiltonian in jasmine is defined as:
 
-The Kanomori type of Coulomb interaction Hamiltonian in jasmine is
-defined as:
-
-\begin{eqnarray*}
-\hat{H}_{U} & = & U\sum_{a}\hat{f}_{a,\uparrow}^{\dagger}\hat{f}_{a,\uparrow}\hat{f}_{a,\downarrow}^{\dagger}\hat{f}_{a,\downarrow}\\
- & = & U^{\prime}\sum_{a\text{<}b,\sigma}\hat{f}_{a,\sigma}^{\dagger}\hat{f}_{a,\sigma}\hat{f}_{b,-\sigma}^{\dagger}\hat{f}_{b,-\sigma}\\
- & = & (U^{\prime}-J_{z})\sum_{a<b,\sigma}\hat{f}_{a,\sigma}^{\dagger}\hat{f}_{a,\sigma}\hat{f}_{b,\sigma}^{\dagger}\hat{f}_{b,\sigma}\\
- & = & -J_{s}\sum_{a<b,\sigma}\hat{f}_{a,\sigma}^{\dagger}\hat{f}_{a,-\sigma}\hat{f}_{b,-\sigma}^{\dagger}\hat{f}_{b,\sigma}\\
+\begin{eqnarray}
+\hat{H}_{U} & = & U\sum_{a}\hat{f}_{a,\uparrow}^{\dagger}\hat{f}_{a,\uparrow}\hat{f}_{a,\downarrow}^{\dagger}\hat{f}_{a,\downarrow}\nonumber\\
+ & = & U^{\prime}\sum_{a\text{<}b,\sigma}\hat{f}_{a,\sigma}^{\dagger}\hat{f}_{a,\sigma}\hat{f}_{b,-\sigma}^{\dagger}\hat{f}_{b,-\sigma}\nonumber\\
+ & = & (U^{\prime}-J_{z})\sum_{a<b,\sigma}\hat{f}_{a,\sigma}^{\dagger}\hat{f}_{a,\sigma}\hat{f}_{b,\sigma}^{\dagger}\hat{f}_{b,\sigma}\nonumber\\
+ & = & -J_{s}\sum_{a<b,\sigma}\hat{f}_{a,\sigma}^{\dagger}\hat{f}_{a,-\sigma}\hat{f}_{b,-\sigma}^{\dagger}\hat{f}_{b,\sigma}\nonumber\\
  & = & J_{p}\sum_{a\neq b}\hat{f}_{a,\uparrow}^{\dagger}\hat{f}_{a,\downarrow}^{\dagger}\hat{f}_{b,\downarrow}\hat{f}_{b,\uparrow}
-\end{eqnarray*}
-
-
-where, $a,b$ is orbital index, and $\sigma=\uparrow,\downarrow$
-is spin index.
+\end{eqnarray}
+where, $a,b$ is orbital index, and $\sigma=\uparrow,\downarrow$ is spin index.
 
