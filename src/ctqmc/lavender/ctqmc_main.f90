@@ -1,19 +1,120 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! A test program for dynamical mean field theory (DMFT) self-consistent  !
-! engine plus hybridization expansion version continuous time quantum    !
-! Monte Carlo (CTQMC) quantum impurity solver                            !
-! author  : li huang                                                     !
-! version : v2012.08.20T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : this impurity solver is based on general matrix formalism    !
-!           any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! LAVENDER @ iQIST                                                     !
+!!!                                                                      !
+!!! A test program for dynamical mean field theory (DMFT) self-consistent!
+!!! engine plus hybridization expansion version continuous time quantum  !
+!!! Monte Carlo (CTQMC) quantum impurity solver                          !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : this impurity solver is based on general matrix formalism  !
+!!!           any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! WARNING
+!! =======
+!!
+!! If you want to obtain an executable program, please go to src/build/,
+!! open make.sys and comment out the API flag. On the contrary, if you
+!! want to compile lavender as a library, please activate the API flag.
+!!
+!! Introduction
+!! ============
+!!
+!! The lavender code is a hybridization expansion version continuous time
+!! quantum Monte Carlo quantum impurity solver. It adopts the general
+!! matrix formalism, and implements many useful and advanced features. So
+!! it is somewhat less efficient then the begonia code. It can be used as
+!! a standard to benchmark the other ctqmc impurity solvers. The current
+!! lavender code also includes a mini dynamical mean field theory engine
+!! which implements the self-consistent equation for Bethe lattice in
+!! paramagnetic state. So you can use it to perform dynamical mean field
+!! theory calculations quickly. Enjoy it.
+!!
+!! Usage
+!! =====
+!!
+!! # ./ctqmc or bin/lavender.x
+!!
+!! Input
+!! =====
+!!
+!! solver.ctqmc.in (optional)
+!! solver.eimp.in (optional)
+!! solver.hyb.in (optional)
+!! atom.cix (necessary)
+!!
+!! Output
+!! ======
+!!
+!! terminal output
+!! solver.green.bin.*
+!! solver.green.dat
+!! solver.grn.dat
+!! solver.hybri.dat
+!! solver.hyb.dat
+!! solver.wss.dat
+!! solver.sgm.dat
+!! solver.hub.dat
+!! solver.hist.dat
+!! solver.prob.dat
+!! solver.nmat.dat
+!! solver.twop.dat
+!! solver.pair.dat
+!! solver.status.dat
+!! etc.
+!!
+!! Running mode
+!! ============
+!!
+!! case 1: isscf == 1 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, normal mode
+!!
+!! case 2: isscf == 1 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver only, binner mode
+!!
+!! case 3: isscf == 2 .and. isbin == 1
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!!
+!! case 4: isscf == 2 .and. isbin == 2
+!! -----------------------------------
+!!
+!! call ctqmc_impurity_solver, normal mode
+!! plus
+!! call ctqmc_dmft_selfer
+!! until convergence
+!! plus
+!! call ctqmc_impurity_solver, binner mode
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
+
+# if !defined (API)
 
   program ctqmc_main
-     use constants
-     use control
+     use constants, only : mystd
+     use mmpi, only : mp_init, mp_finalize
+     use mmpi, only : mp_comm_rank, mp_comm_size
+     use mmpi, only : mp_barrier
 
-     use mmpi
+     use control, only : isscf, isbin
+     use control, only : niter
+     use control, only : nprocs, myid, master
 
      implicit none
 
@@ -42,7 +143,7 @@
 ! impurity solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! setup the important parameters for continuous time quantum Monte Carlo
 ! quantum impurity solver and dynamical mean field theory self-consistent
@@ -52,7 +153,7 @@
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call ctqmc_setup_array()
@@ -60,33 +161,9 @@
 ! prepare initial hybridization function, init self-consistent iteration
      call ctqmc_selfer_init()
 
-!-------------------------------------------------------------------------
-! note: running mode                                                     !
-!-------------------------------------------------------------------------
-!    if isscf == 1 .and. isbin == 1                                      !
-!        call ctqmc_impurity_solver only, normal mode                    !
-!                                                                        !
-!    if isscf == 1 .and. isbin == 2                                      !
-!        call ctqmc_impurity_solver only, binner mode                    !
-!                                                                        !
-!    if isscf == 2 .and. isbin == 1                                      !
-!        call ctqmc_impurity_solver, normal mode                         !
-!        plus                                                            !
-!        call ctqmc_dmft_selfer                                          !
-!        until convergence                                               !
-!                                                                        !
-!    if isscf == 2 .and. isbin == 2                                      !
-!        call ctqmc_impurity_solver, normal mode                         !
-!        plus                                                            !
-!        call ctqmc_dmft_selfer                                          !
-!        until convergence                                               !
-!        plus                                                            !
-!        call ctqmc_impurity_solver, binner mode                         !
-!-------------------------------------------------------------------------
-
-!=========================================================================
-!>>> DMFT ITERATION BEGIN                                              <<<
-!=========================================================================
+!!========================================================================
+!!>>> DMFT ITERATION BEGIN                                             <<<
+!!========================================================================
 
 ! case A: one-shot non-self-consistent mode
 !-------------------------------------------------------------------------
@@ -100,7 +177,7 @@
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'LAVENDER >>> DMFT iter:', iter, ' <<< SELFING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
@@ -117,12 +194,12 @@
 ! check the running mode
          if ( isscf == 1 ) then
              EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( isscf == 1 ) block
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'LAVENDER >>> DMFT iter:', iter, ' <<< SELFING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
@@ -139,7 +216,7 @@
 ! now convergence is achieved
          if ( convergence .eqv. .true. ) then
              EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( convergence .eqv. .true. ) block
 
      enddo DMFT_CTQMC_ITERATION ! over iter={1,niter} loop
 
@@ -154,16 +231,16 @@
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              write(mystd,'(2X,a,i3,a)') 'LAVENDER >>> DMFT iter:', iter, ' <<< BINNING'
-         endif
+         endif ! back if ( myid == master ) block
 
 ! accumulate the quantum Monte Carlo data
          call ctqmc_impurity_solver(iter)
 
      endif ! back if ( isbin == 2 ) block
 
-!=========================================================================
-!>>> DMFT ITERATION END                                                <<<
-!=========================================================================
+!!========================================================================
+!!>>> DMFT ITERATION END                                               <<<
+!!========================================================================
 
 ! deallocate memory and finalize
      call ctqmc_final_array()
@@ -172,7 +249,7 @@
 ! solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_footer()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! finalize mpi envirnoment
 # if defined (MPI)
@@ -187,12 +264,14 @@
 
   end program ctqmc_main
 
+# endif  /* API */
+
 # if !defined (F2PY)
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use api, only : T_mpi, T_general_begonia
+     use api, only : T_mpi, T_general_lavender
 
      use control ! ALL
 
@@ -203,7 +282,7 @@
      type (T_mpi), intent(in) :: I_mpi
 
 ! type structure of generic solver
-     type (T_general_begonia), intent(in) :: I_solver
+     type (T_general_lavender), intent(in) :: I_solver
 
 ! setup I_mpi
      nprocs = I_mpi%nprocs
@@ -218,14 +297,22 @@
      issun  = I_solver%issun
      isspn  = I_solver%isspn
      isbin  = I_solver%isbin
+     isort  = I_solver%isort
+     isvrt  = I_solver%isvrt
      nband  = I_solver%nband
      nspin  = I_solver%nspin
      norbs  = I_solver%norbs
      ncfgs  = I_solver%ncfgs
      nzero  = I_solver%nzero
      niter  = I_solver%niter
+     lemax  = I_solver%lemax
+     legrd  = I_solver%legrd
+     chmax  = I_solver%chmax
+     chgrd  = I_solver%chgrd
      mkink  = I_solver%mkink
      mfreq  = I_solver%mfreq
+     nffrq  = I_solver%nffrq
+     nbfrq  = I_solver%nbfrq
      nfreq  = I_solver%nfreq
      ntime  = I_solver%ntime
      npart  = I_solver%npart

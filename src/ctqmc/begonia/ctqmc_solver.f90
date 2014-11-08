@@ -584,9 +584,9 @@
 ! do not change the order of perturbation expansion series
      else
          if ( spring_sfmt_stream() > 0.5_dp ) then
-             call ctqmc_lshift_kink()  ! shift the left  endpoints
+             call ctqmc_lshift_kink()  ! shift the create  operators
          else
-             call ctqmc_rshift_kink()  ! shift the right endpoints
+             call ctqmc_rshift_kink()  ! shift the destroy operators
          endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
      endif ! back if ( spring_sfmt_stream() < 0.9_dp ) block
 
@@ -615,7 +615,8 @@
      return
   end subroutine ctqmc_diagram_sampling
 
-!>>> checking whether the quantum impurity solver is consistent internally
+!!>>> ctqmc_diagram_checking: checking whether the quantum impurity
+!!>>> solver is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
      use constants, only : mystd
 
@@ -684,6 +685,7 @@
 !!>>> on ctqmc_diagram_sampling() subroutine
   subroutine ctqmc_impurity_tester()
      use constants ! ALL
+
      use control   ! ALL
      use context   ! ALL
 

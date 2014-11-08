@@ -260,19 +260,6 @@
   end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
-!>>> record the auxiliary correlation function in imaginary time axis
-  subroutine ctqmc_record_ftau()
-     use constants
-     use control
-     use context
-
-     implicit none
-
-     call ctqmc_print_error('ctqmc_record_ftau', 'this subroutine is not implemented')
-
-     return
-  end subroutine ctqmc_record_ftau
-
 !>>> record the impurity green's function in matsubara frequency space
   subroutine ctqmc_record_grnf()
      use constants
@@ -451,32 +438,6 @@
      return
   end subroutine ctqmc_record_nmat
 
-!>>> record the spin-spin correlation function
-  subroutine ctqmc_record_schi()
-     use constants
-     use control
-     use context
-
-     implicit none
-
-     call ctqmc_print_error('ctqmc_record_schi', 'this subroutine is not implemented')
-
-     return
-  end subroutine ctqmc_record_schi
-
-!>>> record the orbital-orbital correlation function
-  subroutine ctqmc_record_ochi()
-     use constants
-     use control
-     use context
-
-     implicit none
-
-     call ctqmc_print_error('ctqmc_record_ochi', 'this subroutine is not implemented')
-
-     return
-  end subroutine ctqmc_record_ochi
-
 !>>> record the two-particle green's function
   subroutine ctqmc_record_twop()
      use constants
@@ -591,19 +552,6 @@
 
      return
   end subroutine ctqmc_record_twop
-
-!>>> record the vertex function
-  subroutine ctqmc_record_vrtx()
-     use constants
-     use control
-     use context
-
-     implicit none
-
-     call ctqmc_print_error('ctqmc_record_vrtx', 'this subroutine is not implemented')
-
-     return
-  end subroutine ctqmc_record_vrtx
 
 !>>> record the probability of atomic states
   subroutine ctqmc_record_prob()
@@ -1687,7 +1635,7 @@
                  if ( abs(value - zero) > eps6 ) then
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
-                         call ctqmc_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
+                         call s_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
                      endif
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
@@ -1810,19 +1758,3 @@
 
      return
   end subroutine ctqmc_make_hub1
-
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make forward fourier transformation
-! for impurity green's function and auxiliary correlation function. then
-! the final self-energy function is obtained by analytical formula.
-  subroutine ctqmc_make_hub2()
-     use constants
-     use control
-     use context
-
-     implicit none
-
-     call ctqmc_print_error('ctqmc_make_hub2', 'this subroutine is not implemented')
-
-     return
-  end subroutine ctqmc_make_hub2

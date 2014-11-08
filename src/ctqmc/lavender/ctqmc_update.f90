@@ -1,70 +1,53 @@
-!-------------------------------------------------------------------------
-! project : lavender
-! program : ctqmc_insert_kink
-!           ctqmc_remove_kink
-!           ctqmc_lshift_kink
-!           ctqmc_rshift_kink
-!           ctqmc_reflip_kink
-!           ctqmc_reload_kink <<<---
-!           cat_insert_matrix
-!           cat_remove_matrix
-!           cat_lshift_matrix
-!           cat_rshift_matrix
-!           cat_reflip_matrix
-!           cat_reload_matrix <<<---
-!           cat_insert_detrat
-!           cat_remove_detrat
-!           cat_lshift_detrat
-!           cat_rshift_detrat
-!           cat_reflip_detrat <<<---
-! source  : ctqmc_update.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/26/2009 by li huang
-!           09/30/2009 by li huang
-!           10/02/2009 by li huang
-!           10/25/2009 by li huang
-!           10/29/2009 by li huang
-!           11/02/2009 by li huang
-!           11/08/2009 by li huang
-!           11/17/2009 by li huang
-!           11/20/2009 by li huang
-!           11/24/2009 by li huang
-!           11/27/2009 by li huang
-!           11/30/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/26/2009 by li huang
-!           01/05/2010 by li huang
-!           02/27/2010 by li huang
-!           03/22/2010 by li huang
-!           06/09/2010 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver.
-!           the following subroutines mainly deal with the \mathscr{M}
-!           matrix: mmat, and \mathscr{G} matrix: gmat.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : lavender
+!!! program : ctqmc_insert_kink
+!!!           ctqmc_remove_kink
+!!!           ctqmc_lshift_kink
+!!!           ctqmc_rshift_kink
+!!!           ctqmc_reflip_kink
+!!!           ctqmc_reload_kink <<<---
+!!!           cat_insert_matrix
+!!!           cat_remove_matrix
+!!!           cat_lshift_matrix
+!!!           cat_rshift_matrix
+!!!           cat_reflip_matrix
+!!!           cat_reload_matrix <<<---
+!!!           cat_insert_detrat
+!!!           cat_remove_detrat
+!!!           cat_lshift_detrat
+!!!           cat_rshift_detrat
+!!!           cat_reflip_detrat <<<---
+!!! source  : ctqmc_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           06/09/2010 by li huang
+!!!           11/07/2014 by li huang
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
+!!!           the following subroutines mainly deal with the \mathscr{M}
+!!!           matrix: mmat, and \mathscr{G} matrix: gmat.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> driver layer: updating perturbation expansion series              <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> driver layer: updating perturbation expansion series             <<<
+!!========================================================================
 
-!>>> insert new create and destroy operators in the perturbation expansion series
+!!>>> ctqmc_insert_kink: insert new create and destroy operators in the
+!!>>> perturbation expansion series
   subroutine ctqmc_insert_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink, csign, cnegs
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : rank
 
      implicit none
 
@@ -110,12 +93,12 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == mkink ) then
-!<         call ctqmc_print_exception('ctqmc_insert_kink','can not insert any operators')
+!<         call s_print_exception('ctqmc_insert_kink','can not insert any operators')
          insert_tcount = insert_tcount + one
          insert_reject = insert_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == mkink ) block
 
 ! randomly generate tau_start and tau_end at selected flvr channel, and
 ! then determine index address cis and cie for them
@@ -132,7 +115,7 @@
          call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -140,7 +123,7 @@
          call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! calculate the transition probability for insert new create and destroy operators
      p = deter_ratio * trace_ratio * ( beta / real( ckink + 1 ) ) ** 2
@@ -176,7 +159,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_insert_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_insert_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the insert statistics
@@ -190,13 +173,17 @@
      return
   end subroutine ctqmc_insert_kink
 
-!>>> remove old create and destroy operators in the perturbation expansion series
+!!>>> ctqmc_remove_kink: remove old create and destroy operators in the
+!!>>> perturbation expansion series
   subroutine ctqmc_remove_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use control, only : beta
+     use context, only : ckink, csign, cnegs
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : rank
 
      implicit none
 
@@ -242,12 +229,12 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_remove_kink','can not remove any operators')
+!<         call s_print_exception('ctqmc_remove_kink','can not remove any operators')
          remove_tcount = remove_tcount + one
          remove_reject = remove_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! randomly generate cis and cie at selected flvr channel, and then determine
 ! tau_start and tau_end for them
@@ -264,7 +251,7 @@
          call cat_remove_ztrace(fis, fie, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( lrmv .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -272,7 +259,7 @@
          call cat_remove_detrat(flvr, cis, cie, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( lrmv .eqv. .true. ) block
 
 ! calculate the transition probability for remove old create and destroy operators
      p = deter_ratio * trace_ratio * ( real( ckink ) / beta ) ** 2
@@ -308,7 +295,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_remove_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_remove_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the remove statistics
@@ -322,13 +309,16 @@
      return
   end subroutine ctqmc_remove_kink
 
-!>>> shift old create operators in the perturbation expansion series
+!!>>> ctqmc_lshift_kink: shift old create operators in the perturbation
+!!>>> expansion series
   subroutine ctqmc_lshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, csign, cnegs
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rank
 
      implicit none
 
@@ -374,12 +364,12 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_lshift_kink','can not lshift any operators')
+!<         call s_print_exception('ctqmc_lshift_kink','can not lshift any operators')
          lshift_tcount = lshift_tcount + one
          lshift_reject = lshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first, we select ciso randomly, and then obtain tau_start1. according
 ! to the existing operators, we determine tau_start2 and related index cisn
@@ -396,7 +386,7 @@
          call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( lshf .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -404,7 +394,7 @@
          call cat_lshift_detrat(flvr, ciso, tau_start1, tau_start2, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( lshf .eqv. .true. ) block
 
 ! calculate the transition probability for shift old create operators
      p = deter_ratio * trace_ratio
@@ -434,7 +424,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_lshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_lshift_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the lshift statistics
@@ -448,13 +438,16 @@
      return
   end subroutine ctqmc_lshift_kink
 
-!>>> shift old destroy operators in the perturbation expansion series
+!!>>> ctqmc_rshift_kink: shift old destroy operators in the perturbation
+!!>>> expansion series
   subroutine ctqmc_rshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, csign, cnegs
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : rank
 
      implicit none
 
@@ -500,12 +493,12 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_rshift_kink','can not rshift any operators')
+!<         call s_print_exception('ctqmc_rshift_kink','can not rshift any operators')
          rshift_tcount = rshift_tcount + one
          rshift_reject = rshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first, we select cieo randomly, and then obtain tau_end1. according
 ! to the existing operators, we determine tau_end2 and related index cien
@@ -522,7 +515,7 @@
          call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( rshf .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -530,7 +523,7 @@
          call cat_rshift_detrat(flvr, cieo, tau_end1, tau_end2, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( rshf .eqv. .true. ) block
 
 ! calculate the transition probability for shift old destroy operators
      p = deter_ratio * trace_ratio
@@ -560,7 +553,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_rshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_rshift_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the rshift statistics
@@ -574,15 +567,18 @@
      return
   end subroutine ctqmc_rshift_kink
 
-!>>> perform a global update, exchange the states between spin up and spin
-! down, it maybe useful for magnetic systems
+!!>>> ctqmc_reflip_kink: perform a global update, exchange the states
+!!>>> between spin up and spin down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_stream
+     use stack, only : istack_getrest
 
-     use stack
-     use spring
+     use control, only : nband, norbs
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : index_t, index_v, flvr_v, empty_v
+     use context, only : rank, symm
 
      implicit none
 
@@ -630,11 +626,11 @@
 
 ! not need to perform global flip if there are no operators at all
      if ( nsize == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_reflip_kink','can not reflip any operators')
+!<         call s_print_exception('ctqmc_reflip_kink','can not reflip any operators')
          reflip_tcount = reflip_tcount + one
          reflip_reject = reflip_reject + one
          RETURN
-     endif
+     endif ! back if ( nsize == 0 ) block
 
      if ( cflip == 1 ) then
 ! determine fup and fdn, and fup /= fdn
@@ -658,13 +654,11 @@
 ! make a trial swap for flvr_v
          do i=1,nsize
              if ( flvr_v ( index_v(i) ) == fup ) then
-                 flvr_v ( index_v(i) ) = fdn
-                 CYCLE
-             endif
+                 flvr_v ( index_v(i) ) = fdn; CYCLE
+             endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
              if ( flvr_v ( index_v(i) ) == fdn ) then
-                 flvr_v ( index_v(i) ) = fup
-                 CYCLE
-             endif
+                 flvr_v ( index_v(i) ) = fup; CYCLE
+             endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
          enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -699,17 +693,15 @@
 ! recover the original status of flvr_v
              do i=1,nsize
                  if ( flvr_v ( index_v(i) ) == fup ) then
-                     flvr_v ( index_v(i) ) = fdn
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fdn; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                  if ( flvr_v ( index_v(i) ) == fdn ) then
-                     flvr_v ( index_v(i) ) = fup
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fup; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
              enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<             call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<             call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
          endif ! back if ( pass .eqv. .true. ) block
 
@@ -741,13 +733,11 @@
 ! make a trial swap for flvr_v
              do i=1,nsize
                  if ( flvr_v ( index_v(i) ) == fup ) then
-                     flvr_v ( index_v(i) ) = fdn
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fdn; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                  if ( flvr_v ( index_v(i) ) == fdn ) then
-                     flvr_v ( index_v(i) ) = fup
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fup; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
              enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -782,17 +772,15 @@
 ! recover the original status of flvr_v
                  do i=1,nsize
                      if ( flvr_v ( index_v(i) ) == fup ) then
-                         flvr_v ( index_v(i) ) = fdn
-                         CYCLE
-                     endif
+                         flvr_v ( index_v(i) ) = fdn; CYCLE
+                     endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                      if ( flvr_v ( index_v(i) ) == fdn ) then
-                         flvr_v ( index_v(i) ) = fup
-                         CYCLE
-                     endif
+                         flvr_v ( index_v(i) ) = fup; CYCLE
+                     endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
                  enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<                 call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<                 call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
              endif ! back if ( pass .eqv. .true. ) block
 
@@ -832,7 +820,7 @@
                  flvr_v ( index_v(i) ) = flvr + nband
              else
                  flvr_v ( index_v(i) ) = flvr - nband
-             endif
+             endif ! back if ( flvr <= nband ) block
          enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -878,11 +866,11 @@
                      flvr_v ( index_v(i) ) = flvr + nband
                  else
                      flvr_v ( index_v(i) ) = flvr - nband
-                 endif
+                 endif ! back if ( flvr <= nband ) block
              enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<             call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<             call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
          endif ! back if ( pass .eqv. .true. ) block
 
@@ -899,10 +887,11 @@
      return
   end subroutine ctqmc_reflip_kink
 
-!>>> global update all operators in the perturbation expansion series
+!!>>> ctqmc_reload_kink: global update all operators in the perturbation
+!!>>> expansion series
   subroutine ctqmc_reload_kink()
-     use control
-     use context
+     use control, only : norbs
+     use context, only : rank
 
      implicit none
 
@@ -924,16 +913,20 @@
      return
   end subroutine ctqmc_reload_kink
 
-!-------------------------------------------------------------------------
-!>>> service layer: update M and G matrices                            <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update M and G matrices                           <<<
+!!========================================================================
 
-!>>> update the mmat matrix and gmat matrix for insert new create and
-! destroy operators
+!!>>> cat_insert_matrix: update the mmat matrix and gmat matrix for insert
+!!>>> new create and destroy operators
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, exp_s, exp_e
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -1053,12 +1046,16 @@
      return
   end subroutine cat_insert_matrix
 
-!>>> update the mmat matrix and gmat matrix for remove old create and
-! destroy operators
+!!>>> cat_remove_matrix: update the mmat matrix and gmat matrix for remove
+!!>>> old create and destroy operators
   subroutine cat_remove_matrix(flvr, is, ie)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, exp_s, exp_e
+     use context, only : lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -1103,7 +1100,7 @@
          do i=1,ckink
              if ( i /= ie .and. j /= is ) then
                  mmat(i, j, flvr) = mmat(i, j, flvr) - mmat(i, is, flvr) * mmat(ie, j, flvr) * p
-             endif
+             endif ! back if ( i /= ie .and. j /= is ) block
          enddo ! over i={1,ckink} loop
      enddo ! over j={1,ckink} loop
 
@@ -1143,11 +1140,18 @@
      return
   end subroutine cat_remove_matrix
 
-!>>> update the mmat matrix and gmat matrix for shift old create operators
+!!>>> cat_lshift_matrix: update the mmat matrix and gmat matrix for shift
+!!>>> old create operators
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : mkink
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_e, exp_s, exp_e
+     use context, only : rmesh
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -1171,7 +1175,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1225,7 +1229,7 @@
              rvec(i) = -ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr) + beta)
          else
              rvec(i) =  ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr))
-         endif
+         endif ! back if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate lvec by cubic spline interpolation
@@ -1234,7 +1238,7 @@
              lvec(j) = -ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr) + beta)
          else
              lvec(j) =  ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr))
-         endif
+         endif ! back if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust rvec
@@ -1328,11 +1332,18 @@
      return
   end subroutine cat_lshift_matrix
 
-!>>> update the mmat matrix and gmat matrix for shift old destroy operators
+!!>>> cat_rshift_matrix: update the mmat matrix and gmat matrix for shift
+!!>>> old destroy operators
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : mkink
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, exp_s, exp_e
+     use context, only : rmesh
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -1356,7 +1367,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1410,7 +1421,7 @@
              lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
          else
              lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1)
-         endif
+         endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
@@ -1419,7 +1430,7 @@
              rvec(j) = -ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
          else
              rvec(j) =  ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2)
-         endif
+         endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust lvec
@@ -1513,15 +1524,17 @@
      return
   end subroutine cat_rshift_matrix
 
-!>>> global flip the time_s, time_e, mmat matrix, gmat matrix, and other
-! related global variables between spin up and spin down states. it is
-! used to avoid trapped by unphysical phase
+!!>>> cat_reflip_matrix: global flip the time_s, time_e, mmat matrix, gmat
+!!>>> matrix, and other related global variables between spin up and spin
+!!>>> down states. it is used to avoid trapped by unphysical phase
   subroutine cat_reflip_matrix(fup, fdn, kmax)
-     use constants
-     use control
-     use context
+     use stack, only : istack, istack_create, istack_copyer, istack_destroy
 
-     use stack
+     use control, only : mkink
+     use control, only : nfreq
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rank
+     use context, only : gmat
 
      implicit none
 
@@ -1569,7 +1582,7 @@
      rank(fdn) = Trank
 
 ! swap gmat matrix when needed
-     call zswap(nfreq, gmat(1:nfreq, fup, fup), 1, gmat(1:nfreq, fdn, fdn), 1)
+     call s_swap_z(nfreq, gmat(1:nfreq, fup, fup), gmat(1:nfreq, fdn, fdn))
 
      if ( kmax > 0 ) then
 
@@ -1578,16 +1591,16 @@
          iemax = max( maxval( index_e(1:kmax, fup) ), maxval( index_e(1:kmax, fdn) ) )
 
 ! swap index_s and index_e
-         call iswap(kmax, index_s(1:kmax, fup), index_s(1:kmax, fdn))
-         call iswap(kmax, index_e(1:kmax, fup), index_e(1:kmax, fdn))
+         call s_swap_i(kmax, index_s(1:kmax, fup), index_s(1:kmax, fdn))
+         call s_swap_i(kmax, index_e(1:kmax, fup), index_e(1:kmax, fdn))
 
 ! swap time_s and time_e
-         call dswap(ismax, time_s(1:ismax, fup), 1, time_s(1:ismax, fdn), 1)
-         call dswap(iemax, time_e(1:iemax, fup), 1, time_e(1:iemax, fdn), 1)
+         call s_swap_d(ismax, time_s(1:ismax, fup), time_s(1:ismax, fdn))
+         call s_swap_d(iemax, time_e(1:iemax, fup), time_e(1:iemax, fdn))
 
 ! swap exp_s and exp_e
-         call zswap(nfreq*ismax, exp_s(1:nfreq, 1:ismax, fup), 1, exp_s(1:nfreq, 1:ismax, fdn), 1)
-         call zswap(nfreq*iemax, exp_e(1:nfreq, 1:iemax, fup), 1, exp_e(1:nfreq, 1:iemax, fdn), 1)
+         call s_swap_z(nfreq*ismax, exp_s(1:nfreq, 1:ismax, fup), exp_s(1:nfreq, 1:ismax, fdn))
+         call s_swap_z(nfreq*iemax, exp_e(1:nfreq, 1:iemax, fup), exp_e(1:nfreq, 1:iemax, fdn))
 
 ! update mmat and gmat matrix when needed
          if ( rank(fup) > 0 ) call cat_reload_matrix(fup)
@@ -1596,41 +1609,18 @@
      endif ! back if ( kmax > 0 ) block
 
      return
-
-  contains
-
-!>>> extended BLAS subroutines, exchange two integer vectors
-  pure subroutine iswap(n, ix, iy)
-     implicit none
-
-! external arguments
-! dimension of integer vector
-     integer, intent(in) :: n
-
-! integer vector X
-     integer, intent(inout) :: ix(n)
-
-! integer vector Y
-     integer, intent(inout) :: iy(n)
-
-! local variables
-! dummy integer vector
-     integer :: it(n)
-
-     it = ix
-     ix = iy
-     iy = it
-
-     return
-  end subroutine iswap
-
   end subroutine cat_reflip_matrix
 
-!>>> global update the mmat matrix and gmat matrix from scratch
+!!>>> cat_reload_matrix: global update the mmat matrix and gmat matrix
+!!>>> from scratch
   subroutine cat_reload_matrix(flvr)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rank
+     use context, only : mmat, gmat
 
      implicit none
 
@@ -1640,7 +1630,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1704,15 +1694,20 @@
      return
   end subroutine cat_reload_matrix
 
-!-------------------------------------------------------------------------
-!>>> service layer: evaluate the determinant ratio                     <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: evaluate the determinant ratio                    <<<
+!!========================================================================
 
-!>>> calculate the determinant ratio for insert new create and destroy operators
+!!>>> cat_insert_detrat: calculate the determinant ratio for insert new
+!!>>> create and destroy operators
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : lspace, rspace, mmat
 
      implicit none
 
@@ -1731,7 +1726,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1752,7 +1747,7 @@
              lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end + beta)
          else
              lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end)
-         endif
+         endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end   ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
@@ -1761,7 +1756,7 @@
              rvec(j) = -ctqmc_make_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr) + beta)
          else
              rvec(j) =  ctqmc_make_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr))
-         endif
+         endif ! back if ( tau_start < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
 ! calculate deter_ratio by cubic spline interpolation
@@ -1769,7 +1764,7 @@
          deter_ratio =  ctqmc_make_htau(flvr, tau_start - tau_end)
      else
          deter_ratio = -ctqmc_make_htau(flvr, tau_start - tau_end + beta)
-     endif
+     endif ! back if ( tau_start > tau_end ) block
 
 ! calculate lspace and rspace
      do i=1,ckink
@@ -1793,9 +1788,12 @@
      return
   end subroutine cat_insert_detrat
 
-!>>> calculate the determinant ratio for remove old create and destroy operators
+!!>>> cat_remove_detrat: calculate the determinant ratio for remove old
+!!>>> create and destroy operators
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
-     use context
+     use constants, only : dp
+
+     use context, only : mmat
 
      implicit none
 
@@ -1816,11 +1814,16 @@
      return
   end subroutine cat_remove_detrat
 
-!>>> calculate the determinant ratio for shift old create operators
+!!>>> cat_lshift_detrat: calculate the determinant ratio for shift old
+!!>>> create operators
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_e, time_e
+     use context, only : mmat
 
      implicit none
 
@@ -1842,7 +1845,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external    :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1859,7 +1862,7 @@
              rvec(i) = -ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr) + beta)
          else
              rvec(i) =  ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr))
-         endif
+         endif ! back if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate lvec by cubic spline interpolation
@@ -1868,7 +1871,7 @@
              lvec(j) = -ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr) + beta)
          else
              lvec(j) =  ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr))
-         endif
+         endif ! back if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust rvec
@@ -1885,11 +1888,16 @@
      return
   end subroutine cat_lshift_detrat
 
-!>>> calculate the determinant ratio for shift old destroy operators
+!!>>> cat_rshift_detrat: calculate the determinant ratio for shift old
+!!>>> destroy operators
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
+     use context, only : mmat
 
      implicit none
 
@@ -1911,7 +1919,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external    :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1928,7 +1936,7 @@
              lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
          else
              lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1)
-         endif
+         endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
@@ -1937,7 +1945,7 @@
              rvec(j) = -ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
          else
              rvec(j) =  ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2)
-         endif
+         endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust lvec
@@ -1954,11 +1962,15 @@
      return
   end subroutine cat_rshift_detrat
 
-!>>> calculate the determinant ratio for global spin flip
+!!>>> cat_reflip_detrat: calculate the determinant ratio for global
+!!>>> spin flip
   subroutine cat_reflip_detrat(up, dn, ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
+     use context, only : mmat
 
      implicit none
 
@@ -1974,10 +1986,10 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
-! loop index over segments
+! loop index over operators
      integer  :: i
      integer  :: j
 
@@ -1987,7 +1999,7 @@
 ! status flag
      integer  :: istat
 
-! imaginary time for start and end points
+! imaginary time for create and destroy operators
      real(dp) :: tau_start
      real(dp) :: tau_end
 
@@ -2009,8 +2021,8 @@
      allocate(Dmm(kaux,kaux), stat=istat)
      allocate(Tmm(kaux,kaux), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('cat_reflip_detrat','can not allocate enough memory')
-     endif
+         call s_print_error('cat_reflip_detrat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! init Dmm and Tmm matrix
      Dmm = zero
