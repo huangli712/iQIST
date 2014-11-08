@@ -21,6 +21,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
+!!!           11/08/2014 by li huang
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -333,12 +334,19 @@
      return
   end subroutine ctqmc_record_nmat
 
-!>>> reduce the gtau from all children processes
-  subroutine ctqmc_reduce_gtau(gtau_mpi)
-     use constants
-     use context
+!!========================================================================
+!!>>> reduce physical observables                                      <<<
+!!========================================================================
 
-     use mmpi
+!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
+  subroutine ctqmc_reduce_gtau(gtau_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : gtau
 
      implicit none
 
@@ -370,12 +378,15 @@
      return
   end subroutine ctqmc_reduce_gtau
 
-!>>> reduce the grnf from all children processes
+!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi)
-     use constants
-     use context
+     use constants, only : dp, czero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nprocs
+     use context, only : grnf
 
      implicit none
 
@@ -384,7 +395,7 @@
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
 
 ! initialize grnf_mpi
-     grnf_mpi = zero
+     grnf_mpi = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
@@ -446,12 +457,53 @@
      return
   end subroutine ctqmc_reduce_hist
 
-!>>> reduce the nmat and nnmat from all children processes
-  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
-     use constants
-     use context
+!!>>> ctqmc_reduce_prob: reduce the prob from all children processes
+  subroutine ctqmc_reduce_prob(prob_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : ncfgs
+     use control, only : nprocs
+     use context, only : prob
+
+     implicit none
+
+! external arguments
+! probability of atomic states
+     real(dp), intent(out) :: prob_mpi(ncfgs)
+
+! initialize prob_mpi
+     prob_mpi = zero
+
+! build prob_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(prob, prob_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     prob_mpi = prob
+
+# endif /* MPI */
+
+! calculate the average
+     prob_mpi = prob_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_prob
+
+!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
+  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : nmat, nnmat
 
      implicit none
 
@@ -490,42 +542,9 @@
      return
   end subroutine ctqmc_reduce_nmat
 
-!>>> reduce the prob from all children processes
-  subroutine ctqmc_reduce_prob(prob_mpi)
-     use constants
-     use context
-
-     use mmpi
-
-     implicit none
-
-! external arguments
-! probability of atomic states
-     real(dp), intent(out) :: prob_mpi(ncfgs)
-
-! initialize prob_mpi
-     prob_mpi = zero
-
-! build prob_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     call mp_allreduce(prob, prob_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     prob_mpi = prob
-
-# endif /* MPI */
-
-! calculate the average
-     prob_mpi = prob_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_prob
+!!========================================================================
+!!>>> symmetrize physical observables                                  <<<
+!!========================================================================
 
 !>>> symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
