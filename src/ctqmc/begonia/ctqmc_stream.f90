@@ -687,12 +687,13 @@
 ! init op_n, < c^{\dag} c >,
 ! which are used to calculate occupation number
      do i=1,norbs
-         call sparse_csr_mm_csr(   ncfgs, ncfgs, ncfgs, nzero,           &
-                                   sop_c(:,i), sop_jc(:,i), sop_ic(:,i), &
-                                   sop_d(:,i), sop_jd(:,i), sop_id(:,i), &
-                                   sop_t     , sop_jt     , sop_it      )
+         call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                       sop_c(:,i), sop_jc(:,i), sop_ic(:,i), &
+                       sop_d(:,i), sop_jd(:,i), sop_id(:,i), &
+                                      sop_t, sop_jt, sop_it )
 
-         call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, sop_n(:,i), sop_jn(:,i), sop_in(:,i) )
+         call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, &
+                                sop_n(:,i), sop_jn(:,i), sop_in(:,i) )
      enddo ! over i={1,norbs} loop
 
 ! init op_m, < c^{\dag} c c^{\dag} c >,
@@ -700,26 +701,28 @@
 ! note: here we use op_a and op_b as dummy matrix temporarily
      do i=1,norbs-1
          do j=i+1,norbs
-             call sparse_csr_mm_csr(   ncfgs, ncfgs, ncfgs, nzero,       &
-                                   sop_c(:,i), sop_jc(:,i), sop_ic(:,i), &
-                                   sop_d(:,i), sop_jd(:,i), sop_id(:,i), &
-                                   sop_a(:,1), sop_ja(:,1), sop_ia(:,1) )
-             call sparse_csr_mm_csr(   ncfgs, ncfgs, ncfgs, nzero,       &
-                                   sop_c(:,j), sop_jc(:,j), sop_ic(:,j), &
-                                   sop_d(:,j), sop_jd(:,j), sop_id(:,j), &
-                                   sop_b(:,1), sop_jb(:,1), sop_ib(:,1) )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_c(:,i), sop_jc(:,i), sop_ic(:,i), &
+                           sop_d(:,i), sop_jd(:,i), sop_id(:,i), &
+                           sop_a(:,1), sop_ja(:,1), sop_ia(:,1) )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_c(:,j), sop_jc(:,j), sop_ic(:,j), &
+                           sop_d(:,j), sop_jd(:,j), sop_id(:,j), &
+                           sop_b(:,1), sop_jb(:,1), sop_ib(:,1) )
 
-             call sparse_csr_mm_csr(   ncfgs, ncfgs, ncfgs, nzero,       &
-                                   sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
-                                   sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
-                                   sop_t     , sop_jt     , sop_it      )
-             call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, sop_m(:,i,j), sop_jm(:,i,j), sop_im(:,i,j) )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
+                           sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
+                                          sop_t, sop_jt, sop_it )
+             call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, &
+                              sop_m(:,i,j), sop_jm(:,i,j), sop_im(:,i,j) )
 
-             call sparse_csr_mm_csr(   ncfgs, ncfgs, ncfgs, nzero,       &
-                                   sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
-                                   sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
-                                   sop_t     , sop_jt     , sop_it      )
-             call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, sop_m(:,j,i), sop_jm(:,j,i), sop_im(:,j,i) )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
+                           sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
+                                          sop_t, sop_jt, sop_it )
+             call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, &
+                              sop_m(:,j,i), sop_jm(:,j,i), sop_im(:,j,i) )
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
 
