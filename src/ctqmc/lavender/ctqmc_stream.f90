@@ -101,79 +101,61 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='solver.ctqmc.in', form='formatted', status='unknown')
+! create the file parser
+             call p_create()
+! parse the config file
+             call p_parse('solver.ctqmc.in')
 
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) isscf                                         !
-             read(mytmp,*) issun                                         !
-             read(mytmp,*) isspn                                         !
-             read(mytmp,*) isbin                                         !
-             read(mytmp,*) isort                                         !
-             read(mytmp,*) isvrt                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+! extract parameters
+             call p_get('isscf' , isscf )
+             call p_get('issun' , issun )
+             call p_get('isspn' , isspn )
+             call p_get('isbin' , isbin )
+             call p_get('isort' , isort )
+             call p_get('isvrt' , isvrt )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) nband                                         !
-             read(mytmp,*) nspin                                         !
-             read(mytmp,*) norbs                                         !
-             read(mytmp,*) ncfgs                                         !
-             read(mytmp,*) nzero                                         !
-             read(mytmp,*) niter                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('nband' , nband )
+             call p_get('nspin' , nspin )
+             call p_get('norbs' , norbs )
+             call p_get('ncfgs' , ncfgs )
+             call p_get('nzero' , nzero )
+             call p_get('niter' , niter )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) U                                             !
-             read(mytmp,*) Uc                                            !
-             read(mytmp,*) Uv                                            !
-             read(mytmp,*) Jz                                            !
-             read(mytmp,*) Js                                            !
-             read(mytmp,*) Jp                                            !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('U'     , U     )
+             call p_get('Uc'    , Uc    )
+             call p_get('Uv'    , Uv    )
+             call p_get('Jz'    , Jz    )
+             call p_get('Js'    , Js    )
+             call p_get('Jp'    , Jp    )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) mune                                          !
-             read(mytmp,*) beta                                          !
-             read(mytmp,*) part                                          !
-             read(mytmp,*) alpha                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('mune'  , mune  )
+             call p_get('beta'  , beta  )
+             call p_get('part'  , part  )
+             call p_get('alpha' , alpha )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) lemax                                         !
-             read(mytmp,*) legrd                                         !
-             read(mytmp,*) chmax                                         !
-             read(mytmp,*) chgrd                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('lemax' , lemax )
+             call p_get('legrd' , legrd )
+             call p_get('chmax' , chmax )
+             call p_get('chgrd' , chgrd )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) mkink                                         !
-             read(mytmp,*) mfreq                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('mkink' , mkink )
+             call p_get('mfreq' , mfreq )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) nffrq                                         !
-             read(mytmp,*) nbfrq                                         !
-             read(mytmp,*) nfreq                                         !
-             read(mytmp,*) ntime                                         !
-             read(mytmp,*) npart                                         !
-             read(mytmp,*) nflip                                         !
-             read(mytmp,*) ntherm                                        !
-             read(mytmp,*) nsweep                                        !
-             read(mytmp,*) nwrite                                        !
-             read(mytmp,*) nclean                                        !
-             read(mytmp,*) nmonte                                        !
-             read(mytmp,*) ncarlo                                        !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('nffrq' , nffrq )
+             call p_get('nbfrq' , nbfrq )
+             call p_get('nfreq' , nfreq )
+             call p_get('ntime' , ntime )
+             call p_get('npart' , npart )
+             call p_get('nflip' , nflip )
+             call p_get('ntherm', ntherm)
+             call p_get('nsweep', nsweep)
+             call p_get('nwrite', nwrite)
+             call p_get('nclean', nclean)
+             call p_get('nmonte', nmonte)
+             call p_get('ncarlo', ncarlo)
 
-             close(mytmp)
+! destroy the parser
+             call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
