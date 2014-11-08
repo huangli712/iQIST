@@ -249,7 +249,7 @@
      use constants, only : eps6, mytmp
 
      use control, only : ncfgs
-     use m_full, only : evec
+     use m_full, only : evec, bin_basis
 
      implicit none
 
@@ -269,14 +269,14 @@
 
 ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
-     write(mytmp,'(a)') '#  i | j | eigenvectors'
+     write(mytmp,'(a)') '#  i | j | eigenvectors | fockbasis'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
      do i=1,ncfgs
          do j=1,ncfgs
-             if ( abs( evec(i,j) ) > eps6 ) then
-                 write(mytmp,'(2i6,f16.8)') i, j, evec(i,j)
+             if ( abs( evec(j,i) ) > eps6 ) then
+                 write(mytmp,'(2i6,f16.8,2X,14I1)') j, i, evec(j,i), bin_basis(:,j)
              endif ! back if ( abs( evec(i,j) ) > eps6 ) block
          enddo ! over j={1,ncfgs} loop
      enddo ! over i={1,ncfgs} loop
@@ -469,8 +469,8 @@
      do i=1,nsectors
          do j=1,sectors(i)%ndim
              do k=1,sectors(i)%ndim
-                 if ( abs( sectors(i)%evec(j,k) ) > eps6 ) then
-                     write(mytmp,'(3i6,f16.8)') i, j, k, sectors(i)%evec(j,k)
+                 if ( abs( sectors(i)%evec(k,j) ) > eps6 ) then
+                     write(mytmp,'(3i6,f16.8,2X,14I1)') i, k, j, sectors(i)%evec(k,j), bin_basis(:,sectors(i)%basis(k))
                  endif ! back if ( abs( sectors(i)%evec(j,k) ) > eps6 ) block
              enddo ! over k={1,sectors(i)%ndim} loop
          enddo ! over j={1,sectors(i)%ndim} loop
