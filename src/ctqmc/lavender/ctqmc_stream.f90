@@ -222,9 +222,10 @@
      return
   end subroutine ctqmc_config
 
-!>>> allocate memory for global variables and then initialize them
+!!>>> ctqmc_setup_array: allocate memory for global variables and then
+!!>>> initialize them
   subroutine ctqmc_setup_array()
-     use context
+     use context ! ALL
 
      implicit none
 
@@ -232,6 +233,8 @@
      call ctqmc_allocate_memory_clur()
      call ctqmc_allocate_memory_flvr()
 
+     call ctqmc_allocate_memory_mesh()
+     call ctqmc_allocate_memory_meat()
      call ctqmc_allocate_memory_umat()
      call ctqmc_allocate_memory_fmat()
      call ctqmc_allocate_memory_mmat()
@@ -243,16 +246,28 @@
      return
   end subroutine ctqmc_setup_array
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity
-! solver plus dynamical mean field theory self-consistent engine
+!!>>> ctqmc_selfer_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver plus dynamical mean field theory
+!!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
-     use constants
-     use control
-     use context
+     use, intrinsic :: iso_fortran_env, only : iostat_end
 
-     use sparse
+     use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
+     use sparse, only : sparse_dns_to_csr
 
-     use mmpi
+     use control, only : nband, norbs, ncfgs, nzero
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : U
+     use control, only : mune, beta, part
+     use control, only : myid, master
+     use context, only : cssoc
+     use context, only : tmesh, rmesh
+     use context, only : symm, eimp, eigs, naux, saux
+     use context, only : op_c, op_d
+     use context, only : sop_c, sop_jc, sop_ic, sop_d, sop_jd, sop_id
+     use context, only : hybf
 
      implicit none
 
@@ -262,8 +277,8 @@
      integer  :: j
      integer  :: k
 
-! dummy integer variables
-     integer  :: j1, j2, j3
+! file status flag
+     integer  :: istat
 
 ! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
      logical  :: exists
