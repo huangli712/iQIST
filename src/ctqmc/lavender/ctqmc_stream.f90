@@ -33,16 +33,20 @@
 ! used to check whether the input file (solver.ctqmc.in) exists
      logical :: exists
 
-!=========================================================================
-! setup dynamical mean field theory self-consistent engine related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup general control flags                                      <<<
+!!========================================================================
      isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
-!-------------------------------------------------------------------------
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!!========================================================================
+!!>>> setup common variables for quantum impurity model                <<<
+!!========================================================================
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
@@ -63,9 +67,9 @@
      alpha  = 0.70_dp      ! mixing parameter for self-consistent engine
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!=========================================================================
-! setup continuous time quantum Monte Carlo quantum impurity solver related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup common variables for quantum impurity solver               <<<
+!!========================================================================
      lemax  = 32           ! maximum order for legendre polynomial
      legrd  = 20001        ! number of mesh points for legendre polynomial
      chmax  = 32           ! maximum order for chebyshev polynomial
@@ -78,7 +82,7 @@
      nbfrq  = 8            ! number of bosonic frequncy for the two-particle green's function
      nfreq  = 128          ! maximum number of matsubara frequency sampling by quantum impurity solver
      ntime  = 1024         ! number of time slice
-     npart  = 16           ! number of parts that the imaginary time axis is split
+     npart  = 4            ! number of parts that the imaginary time axis is split
      nflip  = 20000        ! flip period for spin up and spin down states
      ntherm = 200000       ! maximum number of thermalization steps
      nsweep = 20000000     ! maximum number of quantum Monte Carlo sampling steps
