@@ -569,32 +569,33 @@
      return
   end subroutine ctqmc_selfer_init
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
-     use constants
-     use control
-     use context
+     use constants, only : zero, czero
+     use spring, only : spring_sfmt_init
+     use stack, only : istack_clean, istack_push
+     use sparse, only : sparse_csr_mm_csr, sparse_csr_cp_csr, sparse_uni_to_csr
 
-     use stack
-     use sparse
-     use spring
+     use control ! ALL
+     use context ! ALL
 
      implicit none
 
 ! local variables
 ! loop index
-     integer  :: i
-     integer  :: j
+     integer :: i
+     integer :: j
 
 ! system time since 1970, Jan 1, used to generate the random number seed
-     integer  :: system_time
+     integer :: system_time
 
 ! random number seed for twist generator
-     integer  :: stream_seed
+     integer :: stream_seed
 
 ! dummy sparse matrix in CSR format
-     integer  :: sop_it(ncfgs+1)
-     integer  :: sop_jt(nzero)
+     integer :: sop_it(ncfgs+1)
+     integer :: sop_jt(nzero)
      real(dp) :: sop_t(nzero)
 
 ! init random number generator
@@ -602,6 +603,8 @@
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
+! for stack data structure
+!-------------------------------------------------------------------------
 ! init empty_s and empty_e stack structure
      do i=1,norbs
          call istack_clean( empty_s(i) )
@@ -621,6 +624,16 @@
          call istack_push( empty_v, j )
      enddo ! over j={mkink,1} loop
 
+! for integer variables
+!-------------------------------------------------------------------------
+! init global variables
+     ckink   = 0
+     csign   = 1
+     cnegs   = 0
+     caves   = 0
+
+! for real variables
+!-------------------------------------------------------------------------
 ! init statistics variables
      insert_tcount = zero
      insert_accept = zero
@@ -642,18 +655,8 @@
      reflip_accept = zero
      reflip_reject = zero
 
-! init global variables
-     ckink   = 0
-     csign   = 1
-     cnegs   = 0
-     caves   = 0
-
-! init hist  array
-     hist    = 0
-
-! init rank  array
-     rank    = 0
-
+! for integer arrays
+!-------------------------------------------------------------------------
 ! init index array
      index_s = 0
      index_e = 0
@@ -667,38 +670,34 @@
 ! init flvr  array
      flvr_v  = 1
 
+! init rank  array
+     rank    = 0
+
+! for real arrays
+!-------------------------------------------------------------------------
 ! init time  array
      time_s  = zero
      time_e  = zero
 
      time_v  = zero
 
-! init probability for atomic states
-     prob    = zero
-     diag    = zero
+! init hist  array
+     hist    = zero
 
 ! init auxiliary physical observables
      paux    = zero
 
-! init spin-spin correlation function
-     !schi    = zero
-     !sschi   = zero
-
-! init orbital-orbital correlation function
-     !ochi    = zero
-     !oochi   = zero
-
-! init two-particle green's function
-     g2_re   = zero
-     g2_im   = zero
-
-! init vertex function
-     !h2_re   = zero
-     !h2_im   = zero
+! init probability for atomic states
+     prob    = zero
+     diag    = zero
 
 ! init occupation number array
      nmat    = zero
      nnmat   = zero
+
+! init two-particle green's function
+     g2_re   = zero
+     g2_im   = zero
 
 ! init M-matrix related array
      mmat    = zero
@@ -707,7 +706,6 @@
 
 ! init imaginary time impurity green's function array
      gtau    = zero
-     !ftau    = zero
 
 ! init imaginary time bath weiss's function array
      wtau    = zero
@@ -731,6 +729,8 @@
      matrix_ntrace = sum( expt_t(:, 1) )
      matrix_ptrace = sum( expt_t(:, 2) )
 
+! for complex arrays
+!-------------------------------------------------------------------------
 ! init exponent array exp_s and exp_e
      exp_s   = czero
      exp_e   = czero
@@ -742,7 +742,6 @@
 
 ! init impurity green's function array
      grnf    = czero
-     !frnf    = czero
 
 ! init bath weiss's function array
      wssf    = czero
@@ -753,6 +752,8 @@
 !<     sig1    = czero
      sig2    = czero
 
+! for the other variables/arrays
+!-------------------------------------------------------------------------
 ! init op_n, < c^{\dag} c >,
 ! which are used to calculate occupation number
      do i=1,norbs
@@ -807,28 +808,31 @@
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, htau)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
      call ctqmc_make_hsed(tmesh, htau, hsed)
 
+! dump the necessary files
+!-------------------------------------------------------------------------
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the seed for random number stream, it is useful to reproduce
 ! the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine ctqmc_solver_init
 
-!>>> garbage collection for this program, please refer to ctqmc_setup_array
+!!>>> ctqmc_final_array: garbage collection for this program, please refer
+!!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
-     use context
+     use context ! ALL
 
      implicit none
 
@@ -836,6 +840,8 @@
      call ctqmc_deallocate_memory_clur()
      call ctqmc_deallocate_memory_flvr()
 
+     call ctqmc_deallocate_memory_mesh()
+     call ctqmc_deallocate_memory_meat()
      call ctqmc_deallocate_memory_umat()
      call ctqmc_deallocate_memory_fmat()
      call ctqmc_deallocate_memory_mmat()
