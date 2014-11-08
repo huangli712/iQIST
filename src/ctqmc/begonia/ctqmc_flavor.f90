@@ -1,70 +1,49 @@
-!-------------------------------------------------------------------------
-! project : begonia
-! program : cat_insert_ztrace
-!           cat_remove_ztrace
-!           cat_lshift_ztrace
-!           cat_rshift_ztrace <<<---
-!           try_insert_colour
-!           try_remove_colour
-!           try_lshift_colour
-!           try_rshift_colour <<<---
-!           cat_insert_colour
-!           cat_remove_colour
-!           cat_lshift_colour
-!           cat_rshift_colour <<<---
-!           try_insert_flavor
-!           try_remove_flavor
-!           try_lshift_flavor
-!           try_rshift_flavor <<<---
-!           cat_insert_flavor
-!           cat_remove_flavor
-!           cat_lshift_flavor
-!           cat_rshift_flavor <<<---
-!           ctqmc_make_ztrace
-!           ctqmc_make_evolve <<<---
-!           ctqmc_make_equate
-!           ctqmc_make_search <<<---
-!           ctqmc_make_colour
-!           ctqmc_make_flavor <<<---
-!           ctqmc_make_display<<<---
-! source  : ctqmc_flavor.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/23/2009 by li huang
-!           09/26/2009 by li huang
-!           10/02/2009 by li huang
-!           11/01/2009 by li huang
-!           11/06/2009 by li huang
-!           11/19/2009 by li huang
-!           11/24/2009 by li huang
-!           11/28/2009 by li huang
-!           12/08/2009 by li huang
-!           12/29/2009 by li huang
-!           01/05/2010 by li huang
-!           01/09/2010 by li huang
-!           01/20/2010 by li huang
-!           01/22/2010 by li huang
-!           01/25/2010 by li huang
-!           02/01/2010 by li huang
-!           02/07/2010 by li huang
-!           02/15/2010 by li huang
-!           03/01/2010 by li huang
-!           04/01/2010 by li huang
-!           04/12/2010 by li huang
-!           10/20/2010 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver.
-!           the following subroutines deal with the operators traces only.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : begonia
+!!! program : cat_insert_ztrace
+!!!           cat_remove_ztrace
+!!!           cat_lshift_ztrace
+!!!           cat_rshift_ztrace <<<---
+!!!           try_insert_colour
+!!!           try_remove_colour
+!!!           try_lshift_colour
+!!!           try_rshift_colour <<<---
+!!!           cat_insert_colour
+!!!           cat_remove_colour
+!!!           cat_lshift_colour
+!!!           cat_rshift_colour <<<---
+!!!           try_insert_flavor
+!!!           try_remove_flavor
+!!!           try_lshift_flavor
+!!!           try_rshift_flavor <<<---
+!!!           cat_insert_flavor
+!!!           cat_remove_flavor
+!!!           cat_lshift_flavor
+!!!           cat_rshift_flavor <<<---
+!!!           ctqmc_make_ztrace
+!!!           ctqmc_make_evolve <<<---
+!!!           ctqmc_make_equate
+!!!           ctqmc_make_search <<<---
+!!!           ctqmc_make_colour
+!!!           ctqmc_make_flavor <<<---
+!!!           ctqmc_make_display<<<---
+!!! source  : ctqmc_flavor.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/23/2009 by li huang
+!!!           10/20/2010 by li huang
+!!!           11/08/2014 by li huang
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
+!!!           the following subroutines deal with the operators traces only.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> service layer: evaluate ztrace ratio                              <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: evaluate ztrace ratio                             <<<
+!!========================================================================
 
 !>>> calculate the trace ratio for insert new create and destroy operators
 ! on perturbation expansion series
