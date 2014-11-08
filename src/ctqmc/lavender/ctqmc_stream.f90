@@ -288,11 +288,11 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build identity: unity
-     !unity = czero
-     !do i=1,norbs
-     !    unity(i,i) = cone
-     !enddo ! over i={1,norbs} loop
+! build imaginary time tau mesh: tmesh
+     call s_linspace_d(zero, beta, ntime, tmesh)
+
+! build matsubara frequency mesh: rmesh
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build mesh for legendre polynomial in [-1,1]
      do i=1,legrd
@@ -303,21 +303,6 @@
      do i=1,chgrd
          qmesh(i) = real(i - 1) * two / real(chgrd - 1) - one
      enddo ! over i={1,chgrd} loop
-
-! build imaginary time tau mesh: tmesh
-     do i=1,ntime
-         tmesh(i) = zero + ( beta - zero ) / real(ntime - 1) * real(i - 1)
-     enddo ! over i={1,ntime} loop
-
-! build matsubara frequency mesh: rmesh
-     do j=1,mfreq
-         rmesh(j) = ( two * real(j - 1) + one ) * ( pi / beta )
-     enddo ! over j={1,mfreq} loop
-
-! build matsubara frequency mesh: cmesh
-     !do k=1,mfreq
-     !    cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
-     !enddo ! over k={1,mfreq} loop
 
 ! build legendre polynomial in [-1,1]
      if ( lemax <= 2 ) then
@@ -351,7 +336,8 @@
 ! using the analytical equation at non-interaction limit, and then
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
-         !hybf(i,:,:) = unity * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         call s_identity_z( norbs, hybf(i,:,:) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
