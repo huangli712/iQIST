@@ -170,7 +170,7 @@ MARCH  = -march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2
 # flags for compiler and linker
 #-------------------------------------------------------------------------
 FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MARCH) $(GPROF)
-LFLAGS = -static $(OMP) $(GPROF) -Wl,-no_pie -Wl,-stack_size,0x100000000
+LFLAGS = -static $(OMP) $(GPROF) -Wl,-no_pie
 
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------
