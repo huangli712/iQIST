@@ -3188,9 +3188,9 @@
 !!>>> ctqmc_make_search: determine index address of operators in the
 !!>>> flavor part using bisection algorithm
   subroutine ctqmc_make_search(addr, ndim, time)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+
+     use context, only : index_v, time_v
 
      implicit none
 
