@@ -3095,10 +3095,16 @@
 !!>>> ctqmc_make_evolve: used to update the operator traces of the
 !!>>> modified part
   subroutine ctqmc_make_evolve()
-     use control
-     use context
+     use sparse, only : sparse_csr_cp_csr
 
-     use sparse
+     use control, only : ncfgs, nzero
+     use control, only : npart
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : diag
+     use context, only : isave
+     use context, only : sop_a, sop_ia, sop_ja
+     use context, only : sop_b, sop_ib, sop_jb
+     use context, only : sop_s, sop_is, sop_js
 
      implicit none
 
