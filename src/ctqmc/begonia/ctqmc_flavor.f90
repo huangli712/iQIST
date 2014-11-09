@@ -3345,11 +3345,13 @@
 !!>>> ctqmc_make_display: display operators information (include colour
 !!>>> and flavor parts) on the screen, only used to debug the code
   subroutine ctqmc_make_display(show_type)
-     use constants
-     use stack
+     use constants, only : mystd
+     use stack, only : istack_getrest
 
-     use control
-     use context
+     use control, only : norbs, ncfgs
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : rank
 
      implicit none
 
