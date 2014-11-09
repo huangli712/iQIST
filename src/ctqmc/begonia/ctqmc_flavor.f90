@@ -972,11 +972,12 @@
 !!>>> shift it randomly, and then evaluate its final index address for
 !!>>> the colour (determinant) part
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_e, time_e
 
      implicit none
 
