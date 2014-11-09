@@ -240,7 +240,7 @@
 
 ! check validity of raux2
 !<     if ( abs(raux2) < epss ) then
-!<         call ctqmc_print_exception('ctqmc_record_nmat()','Z trace is too small')
+!<         call s_print_exception('ctqmc_record_nmat()','Z trace is too small')
 !<     endif ! back if ( abs(raux2) < epss ) block
 
 ! evaluate occupation matrix: < n_i >
