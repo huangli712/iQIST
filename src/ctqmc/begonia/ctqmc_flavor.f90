@@ -1,73 +1,52 @@
-!-------------------------------------------------------------------------
-! project : begonia
-! program : cat_insert_ztrace
-!           cat_remove_ztrace
-!           cat_lshift_ztrace
-!           cat_rshift_ztrace <<<---
-!           try_insert_colour
-!           try_remove_colour
-!           try_lshift_colour
-!           try_rshift_colour <<<---
-!           cat_insert_colour
-!           cat_remove_colour
-!           cat_lshift_colour
-!           cat_rshift_colour <<<---
-!           try_insert_flavor
-!           try_remove_flavor
-!           try_lshift_flavor
-!           try_rshift_flavor <<<---
-!           cat_insert_flavor
-!           cat_remove_flavor
-!           cat_lshift_flavor
-!           cat_rshift_flavor <<<---
-!           ctqmc_make_ztrace
-!           ctqmc_make_evolve <<<---
-!           ctqmc_make_equate
-!           ctqmc_make_search <<<---
-!           ctqmc_make_colour
-!           ctqmc_make_flavor <<<---
-!           ctqmc_make_display<<<---
-! source  : ctqmc_flavor.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/23/2009 by li huang
-!           09/26/2009 by li huang
-!           10/02/2009 by li huang
-!           11/01/2009 by li huang
-!           11/06/2009 by li huang
-!           11/19/2009 by li huang
-!           11/24/2009 by li huang
-!           11/28/2009 by li huang
-!           12/08/2009 by li huang
-!           12/29/2009 by li huang
-!           01/05/2010 by li huang
-!           01/09/2010 by li huang
-!           01/20/2010 by li huang
-!           01/22/2010 by li huang
-!           01/25/2010 by li huang
-!           02/01/2010 by li huang
-!           02/07/2010 by li huang
-!           02/15/2010 by li huang
-!           03/01/2010 by li huang
-!           04/01/2010 by li huang
-!           04/12/2010 by li huang
-!           10/20/2010 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver.
-!           the following subroutines deal with the operators traces only.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : begonia
+!!! program : cat_insert_ztrace
+!!!           cat_remove_ztrace
+!!!           cat_lshift_ztrace
+!!!           cat_rshift_ztrace <<<---
+!!!           try_insert_colour
+!!!           try_remove_colour
+!!!           try_lshift_colour
+!!!           try_rshift_colour <<<---
+!!!           cat_insert_colour
+!!!           cat_remove_colour
+!!!           cat_lshift_colour
+!!!           cat_rshift_colour <<<---
+!!!           try_insert_flavor
+!!!           try_remove_flavor
+!!!           try_lshift_flavor
+!!!           try_rshift_flavor <<<---
+!!!           cat_insert_flavor
+!!!           cat_remove_flavor
+!!!           cat_lshift_flavor
+!!!           cat_rshift_flavor <<<---
+!!!           ctqmc_make_ztrace
+!!!           ctqmc_make_evolve <<<---
+!!!           ctqmc_make_equate
+!!!           ctqmc_make_search <<<---
+!!!           ctqmc_make_colour
+!!!           ctqmc_make_flavor <<<---
+!!!           ctqmc_make_display<<<---
+!!! source  : ctqmc_flavor.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/23/2009 by li huang
+!!!           10/20/2010 by li huang
+!!!           11/08/2014 by li huang
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
+!!!           the following subroutines deal with the operators traces only.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> service layer: evaluate ztrace ratio                              <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: evaluate ztrace ratio                             <<<
+!!========================================================================
 
-!>>> calculate the trace ratio for insert new create and destroy operators
-! on perturbation expansion series
+!!>>> cat_insert_ztrace: calculate the trace ratio for insert new create
+!!>>> and destroy operators on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
      use constants
      use control
@@ -266,8 +245,8 @@
      return
   end subroutine cat_insert_ztrace
 
-!>>> calculate the trace ratio for remove old create and destroy operators
-! on perturbation expansion series
+!!>>> cat_remove_ztrace: calculate the trace ratio for remove old create
+!!>>> and destroy operators on perturbation expansion series
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
      use constants
      use control
@@ -441,8 +420,8 @@
      return
   end subroutine cat_remove_ztrace
 
-!>>> calculate the trace ratio for shift old create operators
-! on perturbation expansion series
+!!>>> cat_lshift_ztrace: calculate the trace ratio for shift old create
+!!>>> operators on perturbation expansion series
   subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, trace_ratio)
      use constants
      use control
@@ -476,6 +455,9 @@
 
 ! memory address for old and new create operators
      integer  :: as
+
+! index address for old create operator
+     integer  :: iso_t
 
 ! total number of operators
      integer  :: nsize
@@ -551,16 +533,21 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( iso < nsize .and. iso /= isn ) then
-         if ( iso == 1 ) then
-             t_prev = time_v( index_t(iso) ) - zero
+         if ( iso > isn ) then
+             iso_t = iso + 1
          else
-             t_prev = time_v( index_t(iso) ) - time_v( index_t(iso-1) )
-         endif ! back if ( iso == 1 ) block
+             iso_t = iso
+         endif ! back if ( iso > isn ) block
+         if ( iso_t == 1 ) then
+             t_prev = time_v( index_t(iso_t) ) - zero
+         else
+             t_prev = time_v( index_t(iso_t) ) - time_v( index_t(iso_t-1) )
+         endif ! back if ( iso_t == 1 ) block
          call istack_getter( empty_v, istack_gettop( empty_v ) - 2, as )
-         time_v(as) = time_v( index_t(iso) )
-         flvr_v(as) = flvr_v( index_t(iso) )
-         type_v(as) = type_v( index_t(iso) )
-         index_t(iso) = as
+         time_v(as) = time_v( index_t(iso_t) )
+         flvr_v(as) = flvr_v( index_t(iso_t) )
+         type_v(as) = type_v( index_t(iso_t) )
+         index_t(iso_t) = as
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
@@ -584,8 +571,8 @@
      return
   end subroutine cat_lshift_ztrace
 
-!>>> calculate the trace ratio for shift old destroy operators
-! on perturbation expansion series
+!!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy
+!!>>> operators on perturbation expansion series
   subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, trace_ratio)
      use constants
      use control
@@ -619,6 +606,9 @@
 
 ! memory address for old and new destroy operators
      integer  :: ae
+
+! index address for old destroy operator
+     integer  :: ieo_t
 
 ! total number of operators
      integer  :: nsize
@@ -694,16 +684,21 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( ieo < nsize .and. ieo /= ien ) then
-         if ( ieo == 1 ) then
-             t_prev = time_v( index_t(ieo) ) - zero
+         if ( ieo > ien ) then
+             ieo_t = ieo + 1
          else
-             t_prev = time_v( index_t(ieo) ) - time_v( index_t(ieo-1) )
-         endif ! back if ( ieo == 1 ) block
+             ieo_t = ieo
+         endif ! back if ( ieo > ien ) block
+         if ( ieo_t == 1 ) then
+             t_prev = time_v( index_t(ieo_t) ) - zero
+         else
+             t_prev = time_v( index_t(ieo_t) ) - time_v( index_t(ieo_t-1) )
+         endif ! back if ( ieo_t == 1 ) block
          call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
-         time_v(ae) = time_v( index_t(ieo) )
-         flvr_v(ae) = flvr_v( index_t(ieo) )
-         type_v(ae) = type_v( index_t(ieo) )
-         index_t(ieo) = ae
+         time_v(ae) = time_v( index_t(ieo_t) )
+         flvr_v(ae) = flvr_v( index_t(ieo_t) )
+         type_v(ae) = type_v( index_t(ieo_t) )
+         index_t(ieo_t) = ae
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
@@ -727,13 +722,13 @@
      return
   end subroutine cat_rshift_ztrace
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series A             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series A            <<<
+!!========================================================================
 
-!>>> generate create and destroy operators for selected flavor channel
-! randomly, and then determinte their index address for the colour
-! (determinant) part
+!!>>> try_insert_colour: generate create and destroy operators for selected
+!!>>> flavor channel randomly, and then determinte their index address for
+!!>>> the colour (determinant) part
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants
      use control
@@ -786,7 +781,7 @@
 ! we need to ensure tau_start is not equal to tau_end
          if ( abs( tau_start - tau_end ) < epss ) then
              have = 99
-         endif
+         endif ! back if ( abs( tau_start - tau_end ) < epss ) block
      enddo destroyer ! over do while loop
 
 ! determine the new position (index address, is) of tau_start in time_s
@@ -801,7 +796,7 @@
                  i = i + 1
              enddo ! over do while loop
              is = i
-         endif
+         endif ! back if      ( tau_start < time_s(index_s(1,     flvr), flvr) ) block
      endif ! back if ( ckink > 0 ) block
 
 ! determine the new position (index address, ie) of tau_end in time_e
@@ -816,20 +811,20 @@
                  i = i + 1
              enddo ! over do while loop
              ie = i
-         endif
+         endif ! back if      ( tau_end < time_e(index_e(1,     flvr), flvr) ) block
      endif ! back if ( ckink > 0 ) block
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
          call s_print_error('try_insert_colour','tau_start is equal to tau_end')
-     endif
+     endif ! back if ( abs( tau_start - tau_end ) < epss ) block
 
      return
   end subroutine try_insert_colour
 
-!>>> select index address is and ie for selected flavor channel randomly,
-! and then determine their imaginary time points for the colour
-! (determinant) part
+!!>>> try_remove_colour: select index address is and ie for selected
+!!>>> flavor channel randomly, and then determine their imaginary time
+!!>>> points for the colour (determinant) part
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
      use constants
      use control
@@ -867,14 +862,15 @@
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
          call s_print_error('try_remove_colour','tau_start is equal to tau_end')
-     endif
+     endif ! back if ( abs( tau_start - tau_end ) < epss ) block
 
      return
   end subroutine try_remove_colour
 
-!>>> select index address isn for selected flavor channel randomly, and
-! then determine its imaginary time points, shift it randomly, and then
-! evaluate its final index address for the colour (determinant) part
+!!>>> try_lshift_colour: select index address isn for selected flavor
+!!>>> channel randomly, and then determine its imaginary time points,
+!!>>> shift it randomly, and then evaluate its final index address for
+!!>>> the colour (determinant) part
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
      use constants
      use control
@@ -957,9 +953,10 @@
      return
   end subroutine try_lshift_colour
 
-!>>> select index address ien for selected flavor channel randomly, and
-! then determine its imaginary time points, shift it randomly, and then
-! evaluate its final index address for the colour (determinant) part
+!!>>> try_rshift_colour: select index address ien for selected flavor
+!!>>> channel randomly, and then determine its imaginary time points,
+!!>>> shift it randomly, and then evaluate its final index address for
+!!>>> the colour (determinant) part
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
      use constants
      use control
@@ -1042,12 +1039,12 @@
      return
   end subroutine try_rshift_colour
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series B             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series B            <<<
+!!========================================================================
 
-!>>> update the perturbation expansion series for insert new create and
-! destroy operators in the colour part actually
+!!>>> cat_insert_colour: update the perturbation expansion series for
+!!>>> insert new create and destroy operators in the colour part actually
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants
      use context
@@ -1115,8 +1112,8 @@
      return
   end subroutine cat_insert_colour
 
-!>>> update the perturbation expansion series for remove old create and
-! destroy operators in the colour part actually
+!!>>> cat_remove_colour: update the perturbation expansion series for
+!!>>> remove old create and destroy operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
      use constants
      use context
@@ -1163,8 +1160,8 @@
      return
   end subroutine cat_remove_colour
 
-!>>> update the perturbation expansion series for lshift an old create
-! operators in the colour part actually
+!!>>> cat_lshift_colour: update the perturbation expansion series for
+!!>>> lshift an old create operators in the colour part actually
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
      use constants
      use context
@@ -1218,8 +1215,8 @@
      return
   end subroutine cat_lshift_colour
 
-!>>> update the perturbation expansion series for rshift an old destroy
-! operators in the colour part actually
+!!>>> cat_rshift_colour: update the perturbation expansion series for
+!!>>> rshift an old destroy operators in the colour part actually
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
      use constants
      use context
@@ -1273,12 +1270,13 @@
      return
   end subroutine cat_rshift_colour
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series C             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series C            <<<
+!!========================================================================
 
-!>>> determine index addresses for the new create and destroy operators in
-! the flavor part, and then determine whether they can be inserted diagrammatically
+!!>>> try_insert_flavor: determine index addresses for the new create and
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> they can be inserted diagrammatically
   subroutine try_insert_flavor(flvr, is, ie, tau_start, tau_end, ladd)
      use constants
      use control
@@ -1353,7 +1351,7 @@
              i = 1
              do while ( time_v( index_v(i) ) < tau_start )
                  i = i + 1
-             enddo
+             enddo ! over do while loop
              is = i
          endif ! back if ( tau_start < time_v( index_v(1) ) ) block
      endif ! back if ( nsize > 0 ) block
@@ -1369,7 +1367,7 @@
              i = 1
              do while ( time_v( index_v(i) ) < tau_end )
                  i = i + 1
-             enddo
+             enddo ! over do while loop
              ie = i
          endif ! back if ( tau_end < time_v( index_v(1) ) ) block
      endif ! back if ( nsize > 0 ) block
@@ -1378,17 +1376,17 @@
 ! insert destroy operator
      if ( tau_start < tau_end ) then
          ie = ie + 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine ladd, whether we can get them ?
-!-------------------------------------------------------------------------
+!-------------------------------------------------------------------------     
 ! evaluate pis and pie
      pis = is
      pie = ie
      if ( tau_start > tau_end ) then
          pis = pis + 1
-     endif
+     endif ! back if ( tau_start > tau_end ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1430,9 +1428,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 2 ) then
-                 ladd = .true.
-                 RETURN
-             endif
+                 ladd = .true.; RETURN
+             endif ! back if ( idead == nsize + 2 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1440,8 +1437,9 @@
      return
   end subroutine try_insert_flavor
 
-!>>> determine index addresses for the new create and destroy operators in
-! the flavor part, and then determine whether they can be inserted diagrammatically
+!!>>> try_remove_flavor: determine index addresses for the new create and
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> they can be inserted diagrammatically
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
      use constants
      use control
@@ -1519,7 +1517,7 @@
 ! remove destroy operator
      if ( tau_start < tau_end ) then
          ie = ie - 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine lrmv, whether we can kick off them ?
@@ -1529,7 +1527,7 @@
      pie = ie
      if ( tau_start < tau_end ) then
          pie = pie + 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1557,9 +1555,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize ) then
-                 lrmv = .true.
-                 RETURN
-             endif
+                 lrmv = .true.; RETURN
+             endif ! back if ( idead == nsize ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1567,8 +1564,9 @@
      return
   end subroutine try_remove_flavor
 
-!>>> determine index addresses for the old and new create operators in the
-! flavor part, and then determine whether it can be shifted diagrammatically
+!!>>> try_lshift_flavor: determine index addresses for the old and new
+!!>>> create operators in the flavor part, and then determine whether it
+!!>>> can be shifted diagrammatically
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
      use constants
      use control
@@ -1659,7 +1657,7 @@
 ! adjust isn further
      if ( tau_start1 < tau_start2 ) then
          isn = isn - 1
-     endif
+     endif ! back if ( tau_start1 < tau_start2 ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine lshf, whether we can shift it ?
@@ -1671,7 +1669,7 @@
          pisn = pisn + 1
      else
          piso = piso + 1
-     endif
+     endif ! back if ( tau_start1 < tau_start2 ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1712,9 +1710,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 1 ) then
-                 lshf = .true.
-                 RETURN
-             endif
+                 lshf = .true.; RETURN
+             endif ! back if ( idead == nsize + 1 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1722,8 +1719,9 @@
      return
   end subroutine try_lshift_flavor
 
-!>>> determine index addresses for the old and new destroy operators in the
-! flavor part, and then determine whether it can be shifted diagrammatically
+!!>>> try_rshift_flavor: determine index addresses for the old and new
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> it can be shifted diagrammatically
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
      use constants
      use control
@@ -1814,7 +1812,7 @@
 ! adjust ien further
      if ( tau_end1 < tau_end2 ) then
          ien = ien - 1
-     endif
+     endif ! back if ( tau_end1 < tau_end2 ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine rshf, whether we can shift it ?
@@ -1826,7 +1824,7 @@
          pien = pien + 1
      else
          pieo = pieo + 1
-     endif
+     endif ! back if ( tau_end1 < tau_end2 ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1867,9 +1865,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 1 ) then
-                 rshf = .true.
-                 RETURN
-             endif
+                 rshf = .true.; RETURN
+             endif ! back if ( idead == nsize + 1 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1877,11 +1874,12 @@
      return
   end subroutine try_rshift_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series D             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series D            <<<
+!!========================================================================
 
-!>>> insert new create and destroy operators in the flavor part
+!!>>> cat_insert_flavor: insert new create and destroy operators in the
+!!>>> flavor part
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
      use constants
      use control
@@ -2043,7 +2041,8 @@
      return
   end subroutine cat_insert_flavor
 
-!>>> remove old create and destroy operators in the flavor part
+!!>>> cat_remove_flavor: remove old create and destroy operators in the
+!!>>> flavor part
   subroutine cat_remove_flavor(is, ie, tau_start, tau_end)
      use constants
      use control
@@ -2186,13 +2185,13 @@
 ! please refer to try_remove_flavor().
      if ( tau_start < tau_end ) then
          ae = ae + 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 ! it is assumed that destroy operator is removed at first, so as should be
 ! adjusted if needed
      if ( tau_start > tau_end ) then
          as = as - 1
-     endif
+     endif ! back if ( tau_start > tau_end ) block
 
 ! evaluate csign, TO BE CHECKED
      csign = csign * ( 1 - 2 * mod( nsize - ae + nsize - as + 1, 2 ) )
@@ -2200,7 +2199,7 @@
      return
   end subroutine cat_remove_flavor
 
-!>>> shift the old create operator in the flavor part
+!!>>> cat_lshift_flavor: shift the old create operator in the flavor part
   subroutine cat_lshift_flavor(flvr, iso, isn, tau_start2)
      use constants
      use control
@@ -2317,7 +2316,7 @@
      return
   end subroutine cat_lshift_flavor
 
-!>>> shift the old destroy operator in the flavor part
+!!>>> cat_rshift_flavor: shift the old destroy operator in the flavor part
   subroutine cat_rshift_flavor(flvr, ieo, ien, tau_end2)
      use constants
      use control
@@ -2434,9 +2433,9 @@
      return
   end subroutine cat_rshift_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to calculate trace             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to calculate trace            <<<
+!!========================================================================
 
 !>>> core subroutine of begonia
 ! used to evaluate the operator traces by direct matrix multiplication.

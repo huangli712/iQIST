@@ -562,8 +562,6 @@
 ! space to imaginary time space
      call ctqmc_four_hybf(hybf, htau)
 
-! dump the necessary files
-!-------------------------------------------------------------------------
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, htau)
@@ -572,6 +570,8 @@
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
      call ctqmc_make_hsed(tmesh, htau, hsed)
 
+! dump the necessary files
+!-------------------------------------------------------------------------
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)
