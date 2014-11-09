@@ -1304,11 +1304,12 @@
 !!>>> destroy operators in the flavor part, and then determine whether
 !!>>> they can be inserted diagrammatically
   subroutine try_insert_flavor(flvr, is, ie, tau_start, tau_end, ladd)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, empty_v
 
      implicit none
 
