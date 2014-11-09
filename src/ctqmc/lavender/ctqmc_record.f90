@@ -472,11 +472,18 @@
      return
   end subroutine ctqmc_record_nmat
 
-!>>> record the two-particle green's function
+!!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
-     use constants
-     use control
-     use context
+     use constants, only : dp, two, pi, czi, czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : g2_re, g2_im
+     use context, only : rank
+     use context, only : mmat
 
      implicit none
 
@@ -505,23 +512,26 @@
      real(dp) :: taus
      real(dp) :: taue
 
-! dummy complex(dp) variables, used to calculate the exponential function
+! dummy complex(dp) variables, used to calculate the g2_re and g2_im
      complex(dp) :: cmeas
-     complex(dp) :: dexp1
-     complex(dp) :: dexp2
-     complex(dp) :: iexp1
-     complex(dp) :: iexp2
-     complex(dp) :: cexp1
-     complex(dp) :: cexp2
 
 ! dummy complex(dp) arrays, used to store the intermediate results
      complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: caux1(:)
+     complex(dp), allocatable :: caux2(:)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 3) .and. .not. btest(isvrt, 4) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
 
 ! allocate memory for g2aux and then initialize it
-     allocate( g2aux(norbs, nfaux, nfaux) ); g2aux = czero
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+
+! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux) ); caux1 = czero
+     allocate( caux2(nfaux) ); caux2 = czero
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -536,22 +546,17 @@
                  maux = mmat(ie, is, flvr)
 
 ! calculate g2aux
-                 dexp1 = exp(+    two     * czi * pi * taue / beta)
-                 dexp2 = exp(-    two     * czi * pi * taus / beta)
-                 iexp1 = exp(-(nffrq + 1) * czi * pi * taue / beta)
-                 iexp2 = exp(+(nffrq + 1) * czi * pi * taus / beta)
-
-                 cexp1 = iexp1
-                 do w1n=1,nfaux
-                     cexp1 = cexp1 * dexp1
-
-                     cexp2 = iexp2
-                     do w2n=1,nfaux
-                         cexp2 = cexp2 * dexp2
-
-                         g2aux(flvr, w1n, w2n) = g2aux(flvr, w1n, w2n) + maux * cexp1 * cexp2
-                     enddo ! over w2n={1,nfaux} loop
-                 enddo ! over w1n={1,nfaux} loop
+                 caux1 = exp(+two * czi * pi * taue / beta)
+                 caux2 = exp(-two * czi * pi * taus / beta)
+                 call s_cumprod_z(nfaux, caux1, caux1)
+                 call s_cumprod_z(nfaux, caux2, caux2)
+                 caux1 = caux1 * exp(-(nffrq + 1) * czi * pi * taue / beta)
+                 caux2 = caux2 * exp(+(nffrq + 1) * czi * pi * taus / beta)
+                 do w2n=1,nfaux
+                     do w1n=1,nfaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
@@ -560,32 +565,162 @@
 
 ! calculate g2_re and g2_im
      CTQMC_ORBIT1_LOOP: do f1=1,norbs
-         CTQMC_ORBIT2_LOOP: do f2=1,norbs
+         CTQMC_ORBIT2_LOOP: do f2=1,f1
 
-             CTQMC_FERMI1_LOOP: do w2n=1,nffrq
-                 CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
 
-                     CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
-                         cmeas = g2aux(f1,w1n,w2n) * g2aux(f2,w3n,w4n)
+
+                         cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
-                             cmeas = cmeas - g2aux(f1,w1n,w4n) * g2aux(f1,w3n,w2n)
+                             cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(f1,f2,w2n,w3n,wbn) = g2_re(f1,f2,w2n,w3n,wbn) +  real(cmeas) / beta
-                         g2_im(f1,f2,w2n,w3n,wbn) = g2_im(f1,f2,w2n,w3n,wbn) + aimag(cmeas) / beta
-                     enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
-                 enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
-             enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
 
-         enddo CTQMC_ORBIT2_LOOP ! over f2={1,norbs} loop
+         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
      enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
 
 ! deallocate memory
      deallocate( g2aux )
+     deallocate( caux1 )
+     deallocate( caux2 )
 
      return
   end subroutine ctqmc_record_twop
+
+!!>>> ctqmc_record_pair: record the particle-particle pair susceptibility
+  subroutine ctqmc_record_pair()
+     use constants, only : dp, two, pi, czi, czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : ps_re, ps_im
+     use context, only : rank
+     use context, only : mmat
+
+     implicit none
+
+! local variables
+! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+     integer  :: flvr
+
+! loop index for frequency
+     integer  :: nfaux
+     integer  :: wbn
+     integer  :: w1n
+     integer  :: w2n
+     integer  :: w3n
+     integer  :: w4n
+
+! used to store the element of mmat matrix
+     real(dp) :: maux
+
+! imaginary time for start and end points
+     real(dp) :: taus
+     real(dp) :: taue
+
+! dummy complex(dp) variables, used to calculate the ps_re and ps_im
+     complex(dp) :: cmeas
+
+! dummy complex(dp) arrays, used to store the intermediate results
+     complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: caux1(:)
+     complex(dp), allocatable :: caux2(:)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 5) )
+
+! evaluate nfaux, determine the size of g2aux
+     nfaux = nffrq + nbfrq - 1
+
+! allocate memory for g2aux and then initialize it
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+
+! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux) ); caux1 = czero
+     allocate( caux2(nfaux) ); caux2 = czero
+
+     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+
+! get imaginary time value for segments
+         do is=1,rank(flvr)
+             taus = time_s( index_s(is, flvr), flvr )
+
+             do ie=1,rank(flvr)
+                 taue = time_e( index_e(ie, flvr), flvr )
+
+! get matrix element from mmat
+                 maux = mmat(ie, is, flvr)
+
+! calculate g2aux
+                 caux1 = exp(+two * czi * pi * taue / beta)
+                 caux2 = exp(-two * czi * pi * taus / beta)
+                 call s_cumprod_z(nfaux, caux1, caux1)
+                 call s_cumprod_z(nfaux, caux2, caux2)
+                 caux1 = caux1 * exp(-(nffrq + 1) * czi * pi * taue / beta)
+                 caux2 = caux2 * exp(+(nffrq + 1) * czi * pi * taus / beta)
+                 do w2n=1,nfaux
+                     do w1n=1,nfaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+
+! calculate ps_re and ps_im
+     CTQMC_ORBIT1_LOOP: do f1=1,norbs
+         CTQMC_ORBIT2_LOOP: do f2=1,f1
+
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+                         w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
+
+                         cmeas = czero
+                         if ( f1 /= f2 ) then
+                             cmeas = cmeas + g2aux(w1n,w4n,f1) * g2aux(nffrq-w2n+1,nffrq-w3n+1,f2)
+                         endif ! back if ( f1 == f2 ) block
+                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+
+         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
+     enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
+
+! deallocate memory
+     deallocate( g2aux )
+     deallocate( caux1 )
+     deallocate( caux2 )
+
+     return
+  end subroutine ctqmc_record_pair
+
+!!========================================================================
+!!>>> reduce physical observables                                      <<<
+!!========================================================================
 
 !>>> reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
