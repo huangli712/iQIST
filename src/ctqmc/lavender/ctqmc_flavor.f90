@@ -1926,17 +1926,21 @@
      return
   end subroutine try_rshift_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series D             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series D            <<<
+!!========================================================================
 
-!>>> insert new create and destroy operators in the flavor part
+!!>>> cat_insert_flavor: insert new create and destroy operators in the
+!!>>> flavor part
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_pop
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -2005,7 +2009,7 @@
          t_next = beta - time_v( index_v(is) )
      else
          t_next = time_v( index_v(is+1) ) - time_v( index_v(is) )
-     endif ! back if ( is == nsize +1 ) block
+     endif ! back if ( is == nsize + 1 ) block
 
 ! update the expt_v and expt_t, matrix of time evolution operator
 ! if is == nsize + 1, index_v(is+1) is not indexed (i.e, equal to 0),
@@ -2061,7 +2065,7 @@
          t_next = beta - time_v( index_v(ie) )
      else
          t_next = time_v( index_v(ie+1) ) - time_v( index_v(ie) )
-     endif ! back if ( ie == nsize +1 ) block
+     endif ! back if ( ie == nsize + 1 ) block
 
 ! update the expt_v and expt_t, matrix of time evolution operator
 ! if ie == nsize + 1, index_v(ie+1) is not indexed (i.e, equal to 0),
@@ -2092,13 +2096,17 @@
      return
   end subroutine cat_insert_flavor
 
-!>>> remove old create and destroy operators in the flavor part
+!!>>> cat_remove_flavor: remove old create and destroy operators in the
+!!>>> flavor part
   subroutine cat_remove_flavor(is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_push
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -2235,13 +2243,13 @@
 ! please refer to try_remove_flavor().
      if ( tau_start < tau_end ) then
          ae = ae + 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 ! it is assumed that destroy operator is removed at first, so as should be
 ! adjusted if needed
      if ( tau_start > tau_end ) then
          as = as - 1
-     endif
+     endif ! back if ( tau_start > tau_end ) block
 
 ! evaluate csign, TO BE CHECKED
      csign = csign * ( 1 - 2 * mod( nsize - ae + nsize - as + 1, 2 ) )
