@@ -1181,8 +1181,12 @@
 !!>>> cat_lshift_colour: update the perturbation expansion series for
 !!>>> lshift an old create operators in the colour part actually
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
-     use constants
-     use context
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, time_s, exp_s
+     use context, only : rmesh
 
      implicit none
 
@@ -1236,8 +1240,12 @@
 !!>>> cat_rshift_colour: update the perturbation expansion series for
 !!>>> rshift an old destroy operators in the colour part actually
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_e, time_e, exp_e
+     use context, only : rmesh
 
      implicit none
 
