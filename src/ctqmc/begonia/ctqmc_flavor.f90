@@ -1381,7 +1381,6 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine ladd, whether we can get them ?
 !-------------------------------------------------------------------------
-
 ! for the spin-orbital coupling case, we can not lookup the operators
 ! series quickly
      if ( cssoc == 1 ) then
@@ -1708,7 +1707,6 @@
 
 ! meet the old create operator
                  if      ( i == piso ) then
-                     counter = counter - 1
                      idead = idead + 1
 ! meet the new create operator
                  else if ( i == pisn ) then
@@ -1869,7 +1867,6 @@
 
 ! meet the old destroy operator
                  if      ( i == pieo ) then
-                     counter = counter - 1
                      idead = idead + 1
 ! meet the new destroy operator
                  else if ( i == pien ) then
