@@ -1604,14 +1604,16 @@
      return
   end subroutine try_remove_flavor
 
-!>>> determine index addresses for the old and new create operators in the
-! flavor part, and then determine whether it can be shifted diagrammatically
+!!>>> try_lshift_flavor: determine index addresses for the old and new
+!!>>> create operators in the flavor part, and then determine whether it
+!!>>> can be shifted diagrammatically
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, empty_v
 
      implicit none
 
@@ -1696,11 +1698,17 @@
 ! adjust isn further
      if ( tau_start1 < tau_start2 ) then
          isn = isn - 1
-     endif
+     endif ! back if ( tau_start1 < tau_start2 ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine lshf, whether we can shift it ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         lshf = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate piso and pisn
      piso = iso
      pisn = isn
@@ -1708,7 +1716,7 @@
          pisn = pisn + 1
      else
          piso = piso + 1
-     endif
+     endif ! back if ( tau_start1 < tau_start2 ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1728,7 +1736,6 @@
 
 ! meet the old create operator
                  if      ( i == piso ) then
-                     counter = counter - 1
                      idead = idead + 1
 ! meet the new create operator
                  else if ( i == pisn ) then
@@ -1749,9 +1756,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 1 ) then
-                 lshf = .true.
-                 RETURN
-             endif
+                 lshf = .true.; RETURN
+             endif ! back if ( idead == nsize + 1 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1759,14 +1765,16 @@
      return
   end subroutine try_lshift_flavor
 
-!>>> determine index addresses for the old and new destroy operators in the
-! flavor part, and then determine whether it can be shifted diagrammatically
+!!>>> try_rshift_flavor: determine index addresses for the old and new
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> it can be shifted diagrammatically
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, time_v, empty_v
 
      implicit none
 
@@ -1851,11 +1859,17 @@
 ! adjust ien further
      if ( tau_end1 < tau_end2 ) then
          ien = ien - 1
-     endif
+     endif ! back if ( tau_end1 < tau_end2 ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine rshf, whether we can shift it ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         rshf = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pieo and pien
      pieo = ieo
      pien = ien
@@ -1863,7 +1877,7 @@
          pien = pien + 1
      else
          pieo = pieo + 1
-     endif
+     endif ! back if ( tau_end1 < tau_end2 ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1883,7 +1897,6 @@
 
 ! meet the old destroy operator
                  if      ( i == pieo ) then
-                     counter = counter - 1
                      idead = idead + 1
 ! meet the new destroy operator
                  else if ( i == pien ) then
@@ -1904,9 +1917,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 1 ) then
-                 rshf = .true.
-                 RETURN
-             endif
+                 rshf = .true.; RETURN
+             endif ! back if ( idead == nsize + 1 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
