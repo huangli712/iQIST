@@ -1,72 +1,57 @@
-!-------------------------------------------------------------------------
-! project : lavender
-! program : ctqmc_record_gtau
-!           ctqmc_record_ftau
-!           ctqmc_record_grnf
-!           ctqmc_record_hist
-!           ctqmc_record_nmat
-!           ctqmc_record_schi
-!           ctqmc_record_ochi
-!           ctqmc_record_twop
-!           ctqmc_record_vrtx
-!           ctqmc_record_prob <<<---
-!           ctqmc_reduce_gtau
-!           ctqmc_reduce_ftau
-!           ctqmc_reduce_grnf
-!           ctqmc_reduce_hist
-!           ctqmc_reduce_nmat
-!           ctqmc_reduce_schi
-!           ctqmc_reduce_ochi
-!           ctqmc_reduce_twop
-!           ctqmc_reduce_vrtx
-!           ctqmc_reduce_prob <<<---
-!           ctqmc_symm_nmat
-!           ctqmc_symm_gtau
-!           ctqmc_symm_grnf
-!           ctqmc_smth_sigf   <<<---
-!           ctqmc_make_gtau
-!           ctqmc_make_ftau   <<<---
-!           ctqmc_make_hub1
-!           ctqmc_make_hub2   <<<---
-! source  : ctqmc_record.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/25/2009 by li huang
-!           09/27/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/03/2009 by li huang
-!           11/10/2009 by li huang
-!           11/19/2009 by li huang
-!           11/30/2009 by li huang
-!           12/06/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/22/2009 by li huang
-!           12/26/2009 by li huang
-!           12/29/2009 by li huang
-!           01/14/2010 by li huang
-!           02/01/2010 by li huang
-!           02/24/2010 by li huang
-!           02/27/2010 by li huang
-!           09/29/2010 by li huang
-! purpose : measure, record, and postprocess the key observables produced
-!           by the hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : lavender
+!!! program : ctqmc_record_gtau
+!!!           ctqmc_record_grnf
+!!!           ctqmc_record_hist
+!!!           ctqmc_record_prob
+!!!           ctqmc_record_nmat
+!!!           ctqmc_record_twop
+!!!           ctqmc_record_pair <<<---
+!!!           ctqmc_reduce_gtau
+!!!           ctqmc_reduce_grnf
+!!!           ctqmc_reduce_hist
+!!!           ctqmc_reduce_prob
+!!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_twop
+!!!           ctqmc_reduce_pair <<<---
+!!!           ctqmc_symm_nmat
+!!!           ctqmc_symm_gtau
+!!!           ctqmc_symm_grnf
+!!!           ctqmc_smth_sigf   <<<---
+!!!           ctqmc_make_gtau   <<<---
+!!!           ctqmc_make_hub1   <<<---
+!!! source  : ctqmc_record.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           09/29/2010 by li huang
+!!!           11/09/2014 by li huang
+!!! purpose : measure, record, and postprocess the important observables
+!!!           produced by the hybridization expansion version continuous
+!!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> record the impurity green's function in imaginary time axis
+!!========================================================================
+!!>>> measure physical observables                                     <<<
+!!========================================================================
+
+!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
+!!>>> time axis
   subroutine ctqmc_record_gtau()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, pi
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : ppleg, qqche
+     use context, only : rank
+     use context, only : mmat
+     use context, only : gtau
 
      implicit none
 
@@ -119,7 +104,8 @@
 
   contains
 
-!>>> record impurity green's function using normal representation
+!!>>> cat_record_gtau1: record impurity green's function using normal
+!!>>> representation
   subroutine cat_record_gtau1()
      implicit none
 
@@ -144,7 +130,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! determine index for imaginary time
                  curr = nint( dtau * step ) + 1
@@ -152,7 +138,7 @@
 ! special tricks for the first point and the last point
                  if ( curr == 1 .or. curr == ntime ) then
                      maux = two * maux
-                 endif
+                 endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
                  gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
@@ -165,7 +151,8 @@
      return
   end subroutine cat_record_gtau1
 
-!>>> record impurity green's function using legendre polynomial representation
+!!>>> cat_record_gtau2: record impurity green's function using legendre
+!!>>> polynomial representation
   subroutine cat_record_gtau2()
      implicit none
 
@@ -190,7 +177,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -212,7 +199,8 @@
      return
   end subroutine cat_record_gtau2
 
-!>>> record impurity green's function using chebyshev polynomial representation
+!!>>> cat_record_gtau3: record impurity green's function using chebyshev
+!!>>> polynomial representation
   subroutine cat_record_gtau3()
      implicit none
 
@@ -237,7 +225,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -260,11 +248,14 @@
   end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
-!>>> record the impurity green's function in matsubara frequency space
+!!>>> ctqmc_record_grnf: record the impurity green's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_record_grnf()
-     use constants
-     use control
-     use context
+     use control, only : norbs
+     use control, only : nfreq
+     use context, only : csign
+     use context, only : gmat
+     use context, only : grnf
 
      implicit none
 
@@ -276,8 +267,6 @@
      integer :: flvr
 
 ! note: only the first nfreq points of grnf are modified
-! we enforce csign equal to 1, the influence of sign problem is unclear so far
-!<     csign = 1
      do flvr=1,norbs
          do ifrq=1,nfreq
              grnf(ifrq, flvr, flvr) = grnf(ifrq, flvr, flvr) + csign * gmat(ifrq, flvr, flvr)
@@ -287,9 +276,13 @@
      return
   end subroutine ctqmc_record_grnf
 
-!>>> record the histogram of perturbation expansion series
+!!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
-     use context
+     use constants, only : one
+
+     use control, only : mkink
+     use context, only : ckink, csign, caves
+     use context, only : hist
 
      implicit none
 
@@ -298,10 +291,10 @@
 
 ! note: if ckink == 0, we record its count in hist(mkink)
      if ( ckink > 0 ) then
-         hist(ckink) = hist(ckink) + 1
+         hist(ckink) = hist(ckink) + one
      else
-         hist(mkink) = hist(mkink) + 1
-     endif
+         hist(mkink) = hist(mkink) + one
+     endif ! back if ( ckink > 0 ) block
 
      return
   end subroutine ctqmc_record_hist
