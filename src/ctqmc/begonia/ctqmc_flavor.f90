@@ -1933,11 +1933,14 @@
 !!>>> cat_insert_flavor: insert new create and destroy operators in the
 !!>>> flavor part
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_pop
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
