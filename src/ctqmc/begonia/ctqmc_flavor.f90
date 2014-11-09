@@ -3082,8 +3082,8 @@
 !!>>> service layer: utility subroutines to look up in the flavor      <<<
 !!========================================================================
 
-!>>> to determine whether there exists an operator whose imaginary time is
-! equal to time
+!!>>> ctqmc_make_equate: to determine whether there exists an operator
+!!>>> whose imaginary time is equal to time
   subroutine ctqmc_make_equate(flvr, time, have)
      use constants
      use control
@@ -3114,20 +3114,20 @@
 ! check creators, if meet it, return 1
          if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) then
              have = 1; EXIT
-         endif
+         endif ! back if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) block
 
 ! check destroyers, if meet it, return 2
          if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) then
              have = 2; EXIT
-         endif
+         endif ! back if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) block
 
      enddo ! over i={1,ckink} loop
 
      return
   end subroutine ctqmc_make_equate
 
-!>>> determine index address of operators in the flavor part using
-! bisection algorithm
+!!>>> ctqmc_make_search: determine index address of operators in the
+!!>>> flavor part using bisection algorithm
   subroutine ctqmc_make_search(addr, ndim, time)
      use constants
      use control
@@ -3179,12 +3179,13 @@
      return
   end subroutine ctqmc_make_search
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to build colour and flavor     <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to build colour and flavor    <<<
+!!========================================================================
 
-!>>> generate perturbation expansion series for the colour (determinant)
-! part, it should be synchronized with the flavor part
+!!>>> ctqmc_make_colour: generate perturbation expansion series for the
+!!>>> colour (determinant) part, it should be synchronized with the
+!!>>> flavor part
   subroutine ctqmc_make_colour(flvr, kink)
      use constants
      use control
@@ -3231,9 +3232,10 @@
      return
   end subroutine ctqmc_make_colour
 
-!>>> generate perturbation expansion series for the flavor (operator trace)
-! part, it should be synchronized with the colour part.
-! note: ctqmc_make_colour() must be called beforehand
+!!>>> ctqmc_make_flavor: generate perturbation expansion series for the
+!!>>> flavor (operator trace) part, it should be synchronized with the
+!!>>> colour part.
+!!>>> note: ctqmc_make_colour() must be called beforehand
   subroutine ctqmc_make_flavor(flvr, kink)
      use constants
      use control
@@ -3276,12 +3278,12 @@
      return
   end subroutine ctqmc_make_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to show the colour and flavor  <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to show the colour and flavor <<<
+!!========================================================================
 
-!>>> display operators information (include colour and flavor parts) on
-! the screen, only used to debug the code
+!!>>> ctqmc_make_display: display operators information (include colour
+!!>>> and flavor parts) on the screen, only used to debug the code
   subroutine ctqmc_make_display(show_type)
      use constants
      use control
