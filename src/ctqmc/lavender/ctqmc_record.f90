@@ -299,6 +299,27 @@
      return
   end subroutine ctqmc_record_hist
 
+!!>>> ctqmc_record_prob: record the probability of atomic states
+  subroutine ctqmc_record_prob()
+     use control, only : ncfgs
+     use context, only : csign
+     use context, only : matrix_ptrace
+     use context, only : prob
+     use context, only : diag
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+
+     do i=1,ncfgs
+         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
+     enddo ! over i={1,ncfgs} loop
+
+     return
+  end subroutine ctqmc_record_prob
+
 !>>> record the occupation matrix, double occupation matrix, and auxiliary
 ! physical observables simulataneously
   subroutine ctqmc_record_nmat()
@@ -545,25 +566,6 @@
 
      return
   end subroutine ctqmc_record_twop
-
-!>>> record the probability of atomic states
-  subroutine ctqmc_record_prob()
-     use constants
-     use control
-     use context
-
-     implicit none
-
-! local variables
-! loop index
-     integer :: i
-
-     do i=1,ncfgs
-         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
-     enddo ! over i={1,ncfgs} loop
-
-     return
-  end subroutine ctqmc_record_prob
 
 !>>> reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
