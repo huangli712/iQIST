@@ -1470,14 +1470,16 @@
      return
   end subroutine try_insert_flavor
 
-!>>> determine index addresses for the new create and destroy operators in
-! the flavor part, and then determine whether they can be inserted diagrammatically
+!!>>> try_remove_flavor: determine index addresses for the new create and
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> they can be inserted diagrammatically
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, empty_v
 
      implicit none
 
@@ -1549,17 +1551,23 @@
 ! remove destroy operator
      if ( tau_start < tau_end ) then
          ie = ie - 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine lrmv, whether we can kick off them ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         lrmv = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pis and pie
      pis = is
      pie = ie
      if ( tau_start < tau_end ) then
          pie = pie + 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1587,9 +1595,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize ) then
-                 lrmv = .true.
-                 RETURN
-             endif
+                 lrmv = .true.; RETURN
+             endif ! back if ( idead == nsize ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
