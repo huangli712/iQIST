@@ -734,19 +734,20 @@
      return
   end subroutine cat_rshift_ztrace
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series A             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series A            <<<
+!!========================================================================
 
-!>>> generate create and destroy operators for selected flavor channel
-! randomly, and then determinte their index address for the colour
-! (determinant) part
+!!>>> try_insert_colour: generate create and destroy operators for selected
+!!>>> flavor channel randomly, and then determinte their index address for
+!!>>> the colour (determinant) part
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -793,7 +794,7 @@
 ! we need to ensure tau_start is not equal to tau_end
          if ( abs( tau_start - tau_end ) < epss ) then
              have = 99
-         endif
+         endif ! back if ( abs( tau_start - tau_end ) < epss ) block
      enddo destroyer ! over do while loop
 
 ! determine the new position (index address, is) of tau_start in time_s
@@ -808,7 +809,7 @@
                  i = i + 1
              enddo ! over do while loop
              is = i
-         endif
+         endif ! back if      ( tau_start < time_s(index_s(1,     flvr), flvr) ) block
      endif ! back if ( ckink > 0 ) block
 
 ! determine the new position (index address, ie) of tau_end in time_e
@@ -823,26 +824,26 @@
                  i = i + 1
              enddo ! over do while loop
              ie = i
-         endif
+         endif ! back if      ( tau_end < time_e(index_e(1,     flvr), flvr) ) block
      endif ! back if ( ckink > 0 ) block
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
          call s_print_error('try_insert_colour','tau_start is equal to tau_end')
-     endif
+     endif ! back if ( abs( tau_start - tau_end ) < epss ) block
 
      return
   end subroutine try_insert_colour
 
-!>>> select index address is and ie for selected flavor channel randomly,
-! and then determine their imaginary time points for the colour
-! (determinant) part
+!!>>> try_remove_colour: select index address is and ie for selected
+!!>>> flavor channel randomly, and then determine their imaginary time
+!!>>> points for the colour (determinant) part
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -874,20 +875,22 @@
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
          call s_print_error('try_remove_colour','tau_start is equal to tau_end')
-     endif
+     endif ! back if ( abs( tau_start - tau_end ) < epss ) block
 
      return
   end subroutine try_remove_colour
 
-!>>> select index address isn for selected flavor channel randomly, and
-! then determine its imaginary time points, shift it randomly, and then
-! evaluate its final index address for the colour (determinant) part
+!!>>> try_lshift_colour: select index address isn for selected flavor
+!!>>> channel randomly, and then determine its imaginary time points,
+!!>>> shift it randomly, and then evaluate its final index address for
+!!>>> the colour (determinant) part
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
 
      implicit none
 
@@ -964,15 +967,17 @@
      return
   end subroutine try_lshift_colour
 
-!>>> select index address ien for selected flavor channel randomly, and
-! then determine its imaginary time points, shift it randomly, and then
-! evaluate its final index address for the colour (determinant) part
+!!>>> try_rshift_colour: select index address ien for selected flavor
+!!>>> channel randomly, and then determine its imaginary time points,
+!!>>> shift it randomly, and then evaluate its final index address for
+!!>>> the colour (determinant) part
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_e, time_e
 
      implicit none
 
@@ -1049,17 +1054,20 @@
      return
   end subroutine try_rshift_colour
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series B             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series B            <<<
+!!========================================================================
 
-!>>> update the perturbation expansion series for insert new create and
-! destroy operators in the colour part actually
+!!>>> cat_insert_colour: update the perturbation expansion series for
+!!>>> insert new create and destroy operators in the colour part actually
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use stack, only : istack_pop
 
-     use stack
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e, empty_s, empty_e
+     use context, only : rmesh
 
      implicit none
 
@@ -1122,13 +1130,13 @@
      return
   end subroutine cat_insert_colour
 
-!>>> update the perturbation expansion series for remove old create and
-! destroy operators in the colour part actually
+!!>>> cat_remove_colour: update the perturbation expansion series for
+!!>>> remove old create and destroy operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
-     use constants
-     use context
+     use stack, only : istack_push
 
-     use stack
+     use context, only : ckink
+     use context, only : index_s, index_e, empty_s, empty_e
 
      implicit none
 
@@ -1170,11 +1178,15 @@
      return
   end subroutine cat_remove_colour
 
-!>>> update the perturbation expansion series for lshift an old create
-! operators in the colour part actually
+!!>>> cat_lshift_colour: update the perturbation expansion series for
+!!>>> lshift an old create operators in the colour part actually
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
-     use constants
-     use context
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, time_s, exp_s
+     use context, only : rmesh
 
      implicit none
 
@@ -1225,11 +1237,15 @@
      return
   end subroutine cat_lshift_colour
 
-!>>> update the perturbation expansion series for rshift an old destroy
-! operators in the colour part actually
+!!>>> cat_rshift_colour: update the perturbation expansion series for
+!!>>> rshift an old destroy operators in the colour part actually
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_e, time_e, exp_e
+     use context, only : rmesh
 
      implicit none
 
@@ -1280,9 +1296,9 @@
      return
   end subroutine cat_rshift_colour
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series C             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series C            <<<
+!!========================================================================
 
 !>>> determine index addresses for the new create and destroy operators in
 ! the flavor part, and then determine whether they can be inserted diagrammatically
