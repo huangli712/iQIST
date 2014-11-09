@@ -320,14 +320,20 @@
      return
   end subroutine ctqmc_record_prob
 
-!>>> record the occupation matrix, double occupation matrix, and auxiliary
-! physical observables simulataneously
+!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
+!!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use sparse, only : sparse_csr_cp_elm, sparse_csr_mm_csr
 
-     use sparse
+     use control, only : nband, norbs, ncfgs, nzero
+     use control, only : U, mune, beta
+     use context, only : ckink, matrix_ptrace
+     use context, only : paux, nmat, nnmat
+     use context, only : diag, eigs
+     use context, only : sop_s, sop_is, sop_js
+     use context, only : sop_n, sop_in, sop_jn
+     use context, only : sop_m, sop_im, sop_jm
 
      implicit none
 
@@ -363,25 +369,27 @@
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
      do i=1,ncfgs
-         raux2 = raux2 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_s(:,2), sop_js(:,2), sop_is(:,2) )
+         raux2 = raux2 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                          sop_s(:,2), sop_js(:,2), sop_is(:,2) )
      enddo ! over i={1,ncfgs} loop
 
 ! check validity of raux2
 !<     if ( abs(raux2) < epss ) then
-!<         call ctqmc_print_exception('ctqmc_record_nmat()','Z trace is too small')
-!<     endif
+!<         call s_print_exception('ctqmc_record_nmat()','Z trace is too small')
+!<     endif ! back if ( abs(raux2) < epss ) block
 
 ! evaluate occupation matrix: < n_i >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
      do flvr=1,norbs
-         call sparse_csr_mm_csr(             ncfgs, ncfgs, ncfgs, nzero, &
-                             sop_s(:,2),    sop_js(:,2),    sop_is(:,2), &
-                          sop_n(:,flvr), sop_jn(:,flvr), sop_in(:,flvr), &
-                                  sop_t,         sop_jt,         sop_it )
+         call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                       sop_s(:,2), sop_js(:,2), sop_is(:,2), &
+              sop_n(:,flvr), sop_jn(:,flvr), sop_in(:,flvr), &
+                                      sop_t, sop_jt, sop_it )
          raux1 = zero
          do i=1,ncfgs
-             raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
+             raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                                             sop_t, sop_jt, sop_it )
          enddo ! over i={1,ncfgs} loop
          nvec(flvr) = raux1 / raux2
      enddo ! over flvr={1,norbs} loop
@@ -395,29 +403,41 @@
 !-------------------------------------------------------------------------
      do flvr=1,norbs-1
          do j=flvr+1,norbs
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                         sop_s(:,2),      sop_js(:,2),      sop_is(:,2), &
-                    sop_m(:,flvr,j), sop_jm(:,flvr,j), sop_im(:,flvr,j), &
-                              sop_t,           sop_jt,           sop_it )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_s(:,2), sop_js(:,2), sop_is(:,2), &
+            sop_m(:,flvr,j), sop_jm(:,flvr,j), sop_im(:,flvr,j), &
+                                          sop_t, sop_jt, sop_it )
 
              raux1 = zero
              do i=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
+                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                                                 sop_t, sop_jt, sop_it )
              enddo ! over i={1,ncfgs} loop
              nnmat(flvr,j) = nnmat(flvr,j) + raux1 / raux2
 
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                         sop_s(:,2),      sop_js(:,2),      sop_is(:,2), &
-                    sop_m(:,j,flvr), sop_jm(:,j,flvr), sop_im(:,j,flvr), &
-                              sop_t,           sop_jt,           sop_it )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_s(:,2), sop_js(:,2), sop_is(:,2), &
+            sop_m(:,j,flvr), sop_jm(:,j,flvr), sop_im(:,j,flvr), &
+                                          sop_t, sop_jt, sop_it )
 
              raux1 = zero
              do i=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
+                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                                                 sop_t, sop_jt, sop_it )
              enddo ! over i={1,ncfgs} loop
              nnmat(j,flvr) = nnmat(j,flvr) + raux1 / raux2
          enddo ! over j={flvr+1,norbs} loop
      enddo ! over flvr={1,norbs-1} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^2>
+!-------------------------------------------------------------------------
+     paux(6) = paux(6) + ( sum(nvec) )**2
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^1>
+!-------------------------------------------------------------------------
+     paux(5) = paux(5) + sum(nvec)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
