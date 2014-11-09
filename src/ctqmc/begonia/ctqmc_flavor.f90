@@ -2259,11 +2259,14 @@
 
 !!>>> cat_lshift_flavor: shift the old create operator in the flavor part
   subroutine cat_lshift_flavor(flvr, iso, isn, tau_start2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
