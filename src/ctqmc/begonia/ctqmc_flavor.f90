@@ -2100,7 +2100,7 @@
 !!>>> flavor part
   subroutine cat_remove_flavor(is, ie, tau_start, tau_end)
      use constants, only : dp, zero
-     use stack, only : istack_getrest
+     use stack, only : istack_getrest, istack_push
 
      use control, only : ncfgs
      use control, only : beta
