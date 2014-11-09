@@ -2547,12 +2547,20 @@
 !!>>> according to our extensive benchmarks, this algorithm can improve
 !!>>> the computational efficiency significantly.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use sparse, only : sparse_uni_to_csr, sparse_csr_cp_elm
 
-     use sparse
-     use stack
+     use control, only : ncfgs, nzero
+     use control, only : npart
+     use control, only : beta
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
+     use context, only : diag
+     use context, only : isave
+     use context, only : sop_a, sop_ia, sop_ja
+     use context, only : sop_b, sop_ib, sop_jb
+     use context, only : sop_c, sop_ic, sop_jc
+     use context, only : sop_d, sop_id, sop_jd
+     use context, only : sop_s, sop_is, sop_js
 
      implicit none
 
