@@ -1675,6 +1675,12 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine lshf, whether we can shift it ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         lshf = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate piso and pisn
      piso = iso
      pisn = isn
@@ -1830,6 +1836,12 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine rshf, whether we can shift it ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         rshf = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pieo and pien
      pieo = ieo
      pien = ien
