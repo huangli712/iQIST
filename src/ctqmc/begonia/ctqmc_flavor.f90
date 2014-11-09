@@ -1380,7 +1380,14 @@
 
 !-------------------------------------------------------------------------
 ! stage 2: determine ladd, whether we can get them ?
-!-------------------------------------------------------------------------     
+!-------------------------------------------------------------------------
+
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         ladd = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+ 
 ! evaluate pis and pie
      pis = is
      pie = ie
@@ -1522,6 +1529,12 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine lrmv, whether we can kick off them ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         lrmv = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pis and pie
      pis = is
      pie = ie
