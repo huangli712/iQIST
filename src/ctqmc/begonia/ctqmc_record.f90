@@ -235,7 +235,8 @@
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
      do i=1,ncfgs
-         raux2 = raux2 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_s(:,2), sop_js(:,2), sop_is(:,2) )
+         raux2 = raux2 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                          sop_s(:,2), sop_js(:,2), sop_is(:,2) )
      enddo ! over i={1,ncfgs} loop
 
 ! check validity of raux2
@@ -253,7 +254,8 @@
                                       sop_t, sop_jt, sop_it )
          raux1 = zero
          do i=1,ncfgs
-             raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
+             raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                                             sop_t, sop_jt, sop_it )
          enddo ! over i={1,ncfgs} loop
          nvec(flvr) = raux1 / raux2
      enddo ! over flvr={1,norbs} loop
@@ -274,7 +276,8 @@
 
              raux1 = zero
              do i=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
+                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                                                 sop_t, sop_jt, sop_it )
              enddo ! over i={1,ncfgs} loop
              nnmat(flvr,j) = nnmat(flvr,j) + raux1 / raux2
 
@@ -285,7 +288,8 @@
 
              raux1 = zero
              do i=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
+                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                                                 sop_t, sop_jt, sop_it )
              enddo ! over i={1,ncfgs} loop
              nnmat(j,flvr) = nnmat(j,flvr) + raux1 / raux2
          enddo ! over j={flvr+1,norbs} loop
