@@ -49,7 +49,7 @@
 !!>>> and destroy operators on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
-     use stack, only : istack_getrest
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
      use control, only : ncfgs
      use control, only : beta
