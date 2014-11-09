@@ -3297,9 +3297,9 @@
 !!>>> colour part.
 !!>>> note: ctqmc_make_colour() must be called beforehand
   subroutine ctqmc_make_flavor(flvr, kink)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -3346,10 +3346,10 @@
 !!>>> and flavor parts) on the screen, only used to debug the code
   subroutine ctqmc_make_display(show_type)
      use constants
+     use stack
+
      use control
      use context
-
-     use stack
 
      implicit none
 
