@@ -171,7 +171,7 @@
      use context, only : csign
      use context, only : matrix_ptrace
      use context, only : prob
-     use context, only : diag  
+     use context, only : diag
 
      implicit none
 
@@ -909,7 +909,7 @@
      use context, only : eimp, eigs
      use context, only : op_d
      use context, only : grnf
-     use context, only : hybf 
+     use context, only : hybf
      use context, only : sig2
 
      implicit none
