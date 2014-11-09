@@ -134,7 +134,7 @@
          t_next = beta - time_v( index_t(is) )
      else
          t_next = time_v( index_t(is+1) ) - time_v( index_t(is) )
-     endif ! back if ( is == nsize +1 ) block
+     endif ! back if ( is == nsize + 1 ) block
 
 ! evaluate ilast
 ! if is == nsize + 1, index_t(is+1) is not indexed (i.e, equal to 0),
@@ -202,7 +202,7 @@
          t_next = beta - time_v( index_t(ie) )
      else
          t_next = time_v( index_t(ie+1) ) - time_v( index_t(ie) )
-     endif ! back if ( ie == nsize +1 ) block
+     endif ! back if ( ie == nsize + 1 ) block
 
 ! evaluate ilast
 ! if ie == nsize + 1, index_t(ie+1) is not indexed (i.e, equal to 0),
@@ -1976,7 +1976,7 @@
          t_next = beta - time_v( index_v(is) )
      else
          t_next = time_v( index_v(is+1) ) - time_v( index_v(is) )
-     endif ! back if ( is == nsize +1 ) block
+     endif ! back if ( is == nsize + 1 ) block
 
 ! update the expt_v and expt_t, matrix of time evolution operator
 ! if is == nsize + 1, index_v(is+1) is not indexed (i.e, equal to 0),
@@ -2032,7 +2032,7 @@
          t_next = beta - time_v( index_v(ie) )
      else
          t_next = time_v( index_v(ie+1) ) - time_v( index_v(ie) )
-     endif ! back if ( ie == nsize +1 ) block
+     endif ! back if ( ie == nsize + 1 ) block
 
 ! update the expt_v and expt_t, matrix of time evolution operator
 ! if ie == nsize + 1, index_v(ie+1) is not indexed (i.e, equal to 0),
@@ -2250,6 +2250,9 @@
 ! memory address for old and new create operators
      integer  :: as
 
+! index address for old create operator
+     integer  :: iso_t
+
 ! total number of operators
      integer  :: nsize
 
@@ -2312,12 +2315,17 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( iso < nsize .and. iso /= isn ) then
-         if ( iso == 1 ) then
-             t_prev = time_v( index_v(iso) ) - zero
+         if ( iso > isn ) then
+             iso_t = iso + 1
          else
-             t_prev = time_v( index_v(iso) ) - time_v( index_v(iso-1) )
-         endif ! back if ( iso == 1 ) block
-         as = index_v(iso)
+             iso_t = iso
+         endif ! back if ( iso > isn ) block
+         if ( iso_t == 1 ) then
+             t_prev = time_v( index_v(iso_t) ) - zero
+         else
+             t_prev = time_v( index_v(iso_t) ) - time_v( index_v(iso_t-1) )
+         endif ! back if ( iso_t == 1 ) block
+         as = index_v(iso_t)
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
