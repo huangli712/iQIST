@@ -1,79 +1,61 @@
-!-------------------------------------------------------------------------
-! project : lavender
-! program : cat_insert_ztrace
-!           cat_remove_ztrace
-!           cat_lshift_ztrace
-!           cat_rshift_ztrace <<<---
-!           try_insert_colour
-!           try_remove_colour
-!           try_lshift_colour
-!           try_rshift_colour <<<---
-!           cat_insert_colour
-!           cat_remove_colour
-!           cat_lshift_colour
-!           cat_rshift_colour <<<---
-!           try_insert_flavor
-!           try_remove_flavor
-!           try_lshift_flavor
-!           try_rshift_flavor <<<---
-!           cat_insert_flavor
-!           cat_remove_flavor
-!           cat_lshift_flavor
-!           cat_rshift_flavor <<<---
-!           ctqmc_make_ztrace
-!           ctqmc_make_evolve <<<---
-!           ctqmc_make_equate
-!           ctqmc_make_search <<<---
-!           ctqmc_make_colour
-!           ctqmc_make_flavor <<<---
-!           ctqmc_make_display<<<---
-! source  : ctqmc_flavor.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/23/2009 by li huang
-!           09/26/2009 by li huang
-!           10/02/2009 by li huang
-!           11/01/2009 by li huang
-!           11/06/2009 by li huang
-!           11/19/2009 by li huang
-!           11/24/2009 by li huang
-!           11/28/2009 by li huang
-!           12/08/2009 by li huang
-!           12/29/2009 by li huang
-!           01/05/2010 by li huang
-!           01/09/2010 by li huang
-!           01/20/2010 by li huang
-!           01/22/2010 by li huang
-!           01/25/2010 by li huang
-!           02/01/2010 by li huang
-!           02/07/2010 by li huang
-!           02/15/2010 by li huang
-!           03/01/2010 by li huang
-!           04/01/2010 by li huang
-!           04/12/2010 by li huang
-!           10/20/2010 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver.
-!           the following subroutines deal with the operators traces only.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : lavender
+!!! program : cat_insert_ztrace
+!!!           cat_remove_ztrace
+!!!           cat_lshift_ztrace
+!!!           cat_rshift_ztrace <<<---
+!!!           try_insert_colour
+!!!           try_remove_colour
+!!!           try_lshift_colour
+!!!           try_rshift_colour <<<---
+!!!           cat_insert_colour
+!!!           cat_remove_colour
+!!!           cat_lshift_colour
+!!!           cat_rshift_colour <<<---
+!!!           try_insert_flavor
+!!!           try_remove_flavor
+!!!           try_lshift_flavor
+!!!           try_rshift_flavor <<<---
+!!!           cat_insert_flavor
+!!!           cat_remove_flavor
+!!!           cat_lshift_flavor
+!!!           cat_rshift_flavor <<<---
+!!!           ctqmc_make_ztrace
+!!!           ctqmc_make_evolve <<<---
+!!!           ctqmc_make_equate
+!!!           ctqmc_make_search <<<---
+!!!           ctqmc_make_colour
+!!!           ctqmc_make_flavor <<<---
+!!!           ctqmc_make_display<<<---
+!!! source  : ctqmc_flavor.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/23/2009 by li huang
+!!!           10/20/2010 by li huang
+!!!           11/09/2014 by li huang
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
+!!!           the following subroutines deal with the operators traces only.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> service layer: evaluate ztrace ratio                              <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: evaluate ztrace ratio                             <<<
+!!========================================================================
 
-!>>> calculate the trace ratio for insert new create and destroy operators
-! on perturbation expansion series
+!!>>> cat_insert_ztrace: calculate the trace ratio for insert new create
+!!>>> and destroy operators on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -155,7 +137,7 @@
          t_next = beta - time_v( index_t(is) )
      else
          t_next = time_v( index_t(is+1) ) - time_v( index_t(is) )
-     endif ! back if ( is == nsize +1 ) block
+     endif ! back if ( is == nsize + 1 ) block
 
 ! evaluate ilast
 ! if is == nsize + 1, index_t(is+1) is not indexed (i.e, equal to 0),
@@ -223,7 +205,7 @@
          t_next = beta - time_v( index_t(ie) )
      else
          t_next = time_v( index_t(ie+1) ) - time_v( index_t(ie) )
-     endif ! back if ( ie == nsize +1 ) block
+     endif ! back if ( ie == nsize + 1 ) block
 
 ! evaluate ilast
 ! if ie == nsize + 1, index_t(ie+1) is not indexed (i.e, equal to 0),
@@ -266,14 +248,17 @@
      return
   end subroutine cat_insert_ztrace
 
-!>>> calculate the trace ratio for remove old create and destroy operators
-! on perturbation expansion series
+!!>>> cat_remove_ztrace: calculate the trace ratio for remove old create
+!!>>> and destroy operators on perturbation expansion series
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -441,14 +426,17 @@
      return
   end subroutine cat_remove_ztrace
 
-!>>> calculate the trace ratio for shift old create operators
-! on perturbation expansion series
+!!>>> cat_lshift_ztrace: calculate the trace ratio for shift old create
+!!>>> operators on perturbation expansion series
   subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, trace_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -476,6 +464,9 @@
 
 ! memory address for old and new create operators
      integer  :: as
+
+! index address for old create operator
+     integer  :: iso_t
 
 ! total number of operators
      integer  :: nsize
@@ -551,16 +542,21 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( iso < nsize .and. iso /= isn ) then
-         if ( iso == 1 ) then
-             t_prev = time_v( index_t(iso) ) - zero
+         if ( iso > isn ) then
+             iso_t = iso + 1
          else
-             t_prev = time_v( index_t(iso) ) - time_v( index_t(iso-1) )
-         endif ! back if ( iso == 1 ) block
+             iso_t = iso
+         endif ! back if ( iso > isn ) block
+         if ( iso_t == 1 ) then
+             t_prev = time_v( index_t(iso_t) ) - zero
+         else
+             t_prev = time_v( index_t(iso_t) ) - time_v( index_t(iso_t-1) )
+         endif ! back if ( iso_t == 1 ) block
          call istack_getter( empty_v, istack_gettop( empty_v ) - 2, as )
-         time_v(as) = time_v( index_t(iso) )
-         flvr_v(as) = flvr_v( index_t(iso) )
-         type_v(as) = type_v( index_t(iso) )
-         index_t(iso) = as
+         time_v(as) = time_v( index_t(iso_t) )
+         flvr_v(as) = flvr_v( index_t(iso_t) )
+         type_v(as) = type_v( index_t(iso_t) )
+         index_t(iso_t) = as
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
@@ -584,14 +580,17 @@
      return
   end subroutine cat_lshift_ztrace
 
-!>>> calculate the trace ratio for shift old destroy operators
-! on perturbation expansion series
+!!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy
+!!>>> operators on perturbation expansion series
   subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, trace_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -619,6 +618,9 @@
 
 ! memory address for old and new destroy operators
      integer  :: ae
+
+! index address for old destroy operator
+     integer  :: ieo_t
 
 ! total number of operators
      integer  :: nsize
@@ -694,16 +696,21 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( ieo < nsize .and. ieo /= ien ) then
-         if ( ieo == 1 ) then
-             t_prev = time_v( index_t(ieo) ) - zero
+         if ( ieo > ien ) then
+             ieo_t = ieo + 1
          else
-             t_prev = time_v( index_t(ieo) ) - time_v( index_t(ieo-1) )
-         endif ! back if ( ieo == 1 ) block
+             ieo_t = ieo
+         endif ! back if ( ieo > ien ) block
+         if ( ieo_t == 1 ) then
+             t_prev = time_v( index_t(ieo_t) ) - zero
+         else
+             t_prev = time_v( index_t(ieo_t) ) - time_v( index_t(ieo_t-1) )
+         endif ! back if ( ieo_t == 1 ) block
          call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
-         time_v(ae) = time_v( index_t(ieo) )
-         flvr_v(ae) = flvr_v( index_t(ieo) )
-         type_v(ae) = type_v( index_t(ieo) )
-         index_t(ieo) = ae
+         time_v(ae) = time_v( index_t(ieo_t) )
+         flvr_v(ae) = flvr_v( index_t(ieo_t) )
+         type_v(ae) = type_v( index_t(ieo_t) )
+         index_t(ieo_t) = ae
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
