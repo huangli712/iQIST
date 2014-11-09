@@ -885,11 +885,12 @@
 !!>>> shift it randomly, and then evaluate its final index address for
 !!>>> the colour (determinant) part
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
-     use constants
-     use spring
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use control
-     use context
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
 
      implicit none
 
