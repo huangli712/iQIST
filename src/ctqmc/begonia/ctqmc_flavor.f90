@@ -1608,11 +1608,12 @@
 !!>>> create operators in the flavor part, and then determine whether it
 !!>>> can be shifted diagrammatically
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, empty_v
 
      implicit none
 
