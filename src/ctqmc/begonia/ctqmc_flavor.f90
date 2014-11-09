@@ -1061,10 +1061,13 @@
 !!>>> cat_insert_colour: update the perturbation expansion series for
 !!>>> insert new create and destroy operators in the colour part actually
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use stack, only : istack_pop
 
-     use stack
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e, empty_s, empty_e
+     use context, only : rmesh
 
      implicit none
 
