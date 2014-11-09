@@ -839,11 +839,12 @@
 !!>>> flavor channel randomly, and then determine their imaginary time
 !!>>> points for the colour (determinant) part
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     !use control
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
