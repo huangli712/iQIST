@@ -251,11 +251,14 @@
 !!>>> cat_remove_ztrace: calculate the trace ratio for remove old create
 !!>>> and destroy operators on perturbation expansion series
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
