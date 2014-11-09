@@ -1133,10 +1133,10 @@
 !!>>> cat_remove_colour: update the perturbation expansion series for
 !!>>> remove old create and destroy operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
-     use constants
-     use context
+     use stack, only : istack_push
 
-     use stack
+     use context, only : ckink
+     use context, only : index_s, index_e, empty_s, empty_e
 
      implicit none
 
