@@ -3246,11 +3246,12 @@
 !!>>> colour (determinant) part, it should be synchronized with the
 !!>>> flavor part
   subroutine ctqmc_make_colour(flvr, kink)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : rank
 
      implicit none
 
