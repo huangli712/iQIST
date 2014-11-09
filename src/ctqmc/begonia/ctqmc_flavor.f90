@@ -2475,33 +2475,35 @@
 !!>>> service layer: utility subroutines to calculate trace            <<<
 !!========================================================================
 
-!>>> core subroutine of begonia
-! used to evaluate the operator traces by direct matrix multiplication.
-! how to deal with the operator traces is the most important problem of
-! the general version hybridization expansion continuous time quantum
-! Monte Carlo impurity solver. since this subroutine should be called
-! for about one thousand millions times in one DMFT loop, so its execution
-! efficiency is our focus.
-!
-! in general, in each quantum Monte Carlo step, we need to multiply all f
-! matrices and related time evolution operators together, and then evaluate
-! the matrix trace. this method is very very inefficient for multiorbitals
-! systems, in which the dimension of f matrix increasing exponently, and
-! for low temperature (large \beta) and weak interaction (small U) systems,
-! in which the perturbation orders is so large, i.e, the number of matrix
-! we need to store and multiply is very large.
-!
-! in order to overcome this problem, we adopt a smart algorithm. we divide
-! the imaginary time axis [0, \beta] into npart parts, and then evaluate
-! operator traces in each part in advance. in each Monte Carlo step, only
-! those modified parts are picked up, and their operators multiplication
-! are performed again. the results are multiplied with the rest parts, and
-! then obtain the final operator traces. in the worst situation, only four
-! parts should be recalculated. in the best situation, only one part should
-! be recalculated.
-!
-! according to our benchmark, this algorithm can improve the efficiency
-! significantly.
+!!>>> ctqmc_make_ztrace: core subroutine of begonia
+!!>>> used to evaluate the operator traces by direct matrix multiplication.
+!!>>> how to deal with the operator traces is the most important problem
+!!>>> of the general matrix version hybridization expansion continuous
+!!>>> time quantum Monte Carlo impurity solver. since this subroutine
+!!>>> should be called for about one thousand millions times in one DMFT
+!!>>> loop, so its execution efficiency is our focus.
+!!
+!!>>> in general, in each quantum Monte Carlo step, we need to multiply
+!!>>> all f-matrices and related time evolution operators together, and
+!!>>> then evaluate the matrix trace. this method is very very inefficient
+!!>>> for multi-orbitals systems, in which the dimension of the f-matrix
+!!>>> increasing exponently, and for low temperature (large \beta) and
+!!>>> weak interaction (small U) systems, in which the perturbation orders
+!!>>> is so large, i.e., the number of matrices that we need to store and
+!!>>> multiply is very large.
+!!
+!!>>> in order to overcome this problem, we adopt a smart algorithm. we
+!!>>> divide the imaginary time axis [0, \beta] into npart parts, and then
+!!>>> evaluate the operator traces in each part in advance. in each Monte
+!!>>> Carlo step, only those modified parts are picked up, and then their
+!!>>> operators multiplication are performed again. the obtained results
+!!>>> are multiplied with the rest parts, and then the product can be used
+!!>>> to extract the final operator traces. in the worst situation, only
+!!>>> four parts should be recalculated again. in the best situation, only
+!!>>> one part should be recalculated.
+!!
+!!>>> according to our extensive benchmarks, this algorithm can improve
+!!>>> the computational efficiency significantly.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants
      use control
