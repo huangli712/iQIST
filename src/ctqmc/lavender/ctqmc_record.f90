@@ -722,12 +722,15 @@
 !!>>> reduce physical observables                                      <<<
 !!========================================================================
 
-!>>> reduce the gtau from all children processes
+!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : gtau
 
      implicit none
 
@@ -759,49 +762,15 @@
      return
   end subroutine ctqmc_reduce_gtau
 
-!>>> reduce the ftau from all children processes
-  subroutine ctqmc_reduce_ftau(ftau_mpi)
-     use constants
-     use context
-
-     use mmpi
-
-     implicit none
-
-! external arguments
-! auxiliary correlation function
-     real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
-
-! initialize ftau_mpi
-     ftau_mpi = zero
-
-! build ftau_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     !call mp_allreduce(ftau, ftau_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     !ftau_mpi = ftau
-
-# endif /* MPI */
-
-! calculate the average
-     ftau_mpi = ftau_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_ftau
-
-!>>> reduce the grnf from all children processes
+!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi)
-     use constants
-     use context
+     use constants, only : dp, czero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nprocs
+     use context, only : grnf
 
      implicit none
 
@@ -810,7 +779,7 @@
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
 
 ! initialize grnf_mpi
-     grnf_mpi = zero
+     grnf_mpi = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
@@ -833,14 +802,14 @@
      return
   end subroutine ctqmc_reduce_grnf
 
-!>>> reduce the hist from all children processes
-! note: since hist_mpi and hist are integer (kind=4) type, it is important
-! to avoid data overflow in them
+!!>>> ctqmc_reduce_hist: reduce the hist from all children processes
   subroutine ctqmc_reduce_hist(hist_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : mkink
+     use control, only : nprocs
+     use context, only : hist
 
      implicit none
 
@@ -849,13 +818,13 @@
      real(dp), intent(out) :: hist_mpi(mkink)
 
 ! initialize hist_mpi
-     hist_mpi = 0
+     hist_mpi = zero
 
 ! build hist_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(hist / nprocs, hist_mpi)
+     call mp_allreduce(hist, hist_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -867,17 +836,58 @@
 # endif /* MPI */
 
 ! calculate the average
-     hist_mpi = hist_mpi / 1
+     hist_mpi = hist_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_hist
 
-!>>> reduce the nmat and nnmat from all children processes
-  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
-     use constants
-     use context
+!!>>> ctqmc_reduce_prob: reduce the prob from all children processes
+  subroutine ctqmc_reduce_prob(prob_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : ncfgs
+     use control, only : nprocs
+     use context, only : prob
+
+     implicit none
+
+! external arguments
+! probability of atomic states
+     real(dp), intent(out) :: prob_mpi(ncfgs)
+
+! initialize prob_mpi
+     prob_mpi = zero
+
+! build prob_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(prob, prob_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     prob_mpi = prob
+
+# endif /* MPI */
+
+! calculate the average
+     prob_mpi = prob_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_prob
+
+!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
+  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : nmat, nnmat
 
      implicit none
 
@@ -916,109 +926,25 @@
      return
   end subroutine ctqmc_reduce_nmat
 
-!>>> reduce the schi and sschi from all children processes
-  subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
-     use constants
-     use context
-
-     use mmpi
-
-     implicit none
-
-! external arguments
-! spin-spin correlation function, totally-averaged
-     real(dp), intent(out) :: schi_mpi(ntime)
-
-! spin-spin correlation function, orbital-resolved
-     real(dp), intent(out) :: sschi_mpi(ntime,nband)
-
-! initialize schi_mpi and sschi_mpi
-     schi_mpi = zero
-     sschi_mpi = zero
-
-! build schi_mpi and sschi_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     !call mp_allreduce(schi, schi_mpi)
-     !call mp_allreduce(sschi, sschi_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     !schi_mpi = schi
-     !sschi_mpi = sschi
-
-# endif /* MPI */
-
-! calculate the average
-     schi_mpi = schi_mpi / real(nprocs)
-     sschi_mpi = sschi_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_schi
-
-!>>> reduce the ochi and oochi from all children processes
-  subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
-     use constants
-     use context
-
-     use mmpi
-
-     implicit none
-
-! external arguments
-! orbital-orbital correlation function, totally-averaged
-     real(dp), intent(out) :: ochi_mpi(ntime)
-
-! orbital-orbital correlation function, orbital-resolved
-     real(dp), intent(out) :: oochi_mpi(ntime,norbs)
-
-! initialize ochi_mpi and oochi_mpi
-     ochi_mpi = zero
-     oochi_mpi = zero
-
-! build ochi_mpi and oochi_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     !call mp_allreduce(ochi, ochi_mpi)
-     !call mp_allreduce(oochi, oochi_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     !ochi_mpi = ochi
-     !oochi_mpi = oochi
-
-# endif /* MPI */
-
-! calculate the average
-     ochi_mpi = ochi_mpi / real(nprocs)
-     oochi_mpi = oochi_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_ochi
-
-!>>> reduce the g2_re_mpi and g2_im_mpi from all children processes
+!!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from all
+!!>>> children processes
   subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : g2_re, g2_im
 
      implicit none
 
 ! external arguments
 ! two-particle green's function, real part
-     real(dp), intent(out) :: g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(out) :: g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! two-particle green's function, imaginary part
-     real(dp), intent(out) :: g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(out) :: g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! initialize g2_re_mpi and g2_im_mpi
      g2_re_mpi = zero
@@ -1048,86 +974,53 @@
      return
   end subroutine ctqmc_reduce_twop
 
-!>>> reduce the h2_re_mpi and h2_im_mpi from all children processes
-  subroutine ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
-     use constants
-     use context
+!!>>> ctqmc_reduce_pair: reduce the ps_re_mpi and ps_im_mpi from all
+!!>>> children processes
+  subroutine ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : ps_re, ps_im
 
      implicit none
 
 ! external arguments
-! vertex function, real part
-     real(dp), intent(out) :: h2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+! particle-particle pair susceptibility, real part
+     real(dp), intent(out) :: ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! vertex function, imaginary part
-     real(dp), intent(out) :: h2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+! particle-particle pair susceptibility, imaginary part
+     real(dp), intent(out) :: ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! initialize h2_re_mpi and h2_im_mpi
-     h2_re_mpi = zero
-     h2_im_mpi = zero
+! initialize ps_re_mpi and ps_im_mpi
+     ps_re_mpi = zero
+     ps_im_mpi = zero
 
-! build h2_re_mpi and h2_im_mpi, collect data from all children processes
+! build ps_re_mpi and ps_im_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     !call mp_allreduce(h2_re, h2_re_mpi)
-     !call mp_allreduce(h2_im, h2_im_mpi)
+     call mp_allreduce(ps_re, ps_re_mpi)
+     call mp_allreduce(ps_im, ps_im_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     !h2_re_mpi = h2_re
-     !h2_im_mpi = h2_im
+     ps_re_mpi = ps_re
+     ps_im_mpi = ps_im
 
 # endif /* MPI */
 
 ! calculate the average
-     h2_re_mpi = h2_re_mpi / real(nprocs)
-     h2_im_mpi = h2_im_mpi / real(nprocs)
+     ps_re_mpi = ps_re_mpi / real(nprocs)
+     ps_im_mpi = ps_im_mpi / real(nprocs)
 
      return
-  end subroutine ctqmc_reduce_vrtx
-
-!>>> reduce the prob from all children processes
-  subroutine ctqmc_reduce_prob(prob_mpi)
-     use constants
-     use context
-
-     use mmpi
-
-     implicit none
-
-! external arguments
-! probability of atomic states
-     real(dp), intent(out) :: prob_mpi(ncfgs)
-
-! initialize prob_mpi
-     prob_mpi = zero
-
-! build prob_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     call mp_allreduce(prob, prob_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     prob_mpi = prob
-
-# endif /* MPI */
-
-! calculate the average
-     prob_mpi = prob_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_prob
+  end subroutine ctqmc_reduce_pair
 
 !>>> symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
