@@ -2375,6 +2375,9 @@
 ! memory address for old and new destroy operators
      integer  :: ae
 
+! index address for old destroy operator
+     integer  :: ieo_t
+
 ! total number of operators
      integer  :: nsize
 
@@ -2437,12 +2440,17 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( ieo < nsize .and. ieo /= ien ) then
-         if ( ieo == 1 ) then
-             t_prev = time_v( index_v(ieo) ) - zero
+         if ( ieo > ien ) then
+             ieo_t = ieo + 1
          else
-             t_prev = time_v( index_v(ieo) ) - time_v( index_v(ieo-1) )
-         endif ! back if ( ieo == 1 ) block
-         ae = index_v(ieo)
+             ieo_t = ieo
+         endif ! back if ( ieo > ien ) block
+         if ( ieo_t == 1 ) then
+             t_prev = time_v( index_v(ieo_t) ) - zero
+         else
+             t_prev = time_v( index_v(ieo_t) ) - time_v( index_v(ieo_t-1) )
+         endif ! back if ( ieo_t == 1 ) block
+         ae = index_v(ieo_t)
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
