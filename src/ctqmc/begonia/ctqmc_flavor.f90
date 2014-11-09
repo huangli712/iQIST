@@ -2548,7 +2548,9 @@
 !!>>> the computational efficiency significantly.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants, only : dp
-     use sparse, only : sparse_uni_to_csr, sparse_csr_cp_elm
+     use sparse, only : sparse_uni_to_csr
+     use sparse, only : sparse_csr_cp_elm, sparse_csr_cp_csr
+     use sparse, only : sparse_csr_mm_csr, sparse_dia_mm_csr
 
      use control, only : ncfgs, nzero
      use control, only : npart
