@@ -1769,11 +1769,12 @@
 !!>>> destroy operators in the flavor part, and then determine whether
 !!>>> it can be shifted diagrammatically
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, time_v, empty_v
 
      implicit none
 
