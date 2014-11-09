@@ -842,7 +842,6 @@
      use constants, only : dp, epss
      use spring, only : spring_sfmt_stream
 
-     !use control
      use context, only : ckink
      use context, only : index_s, index_e, time_s, time_e
 
@@ -887,10 +886,10 @@
 !!>>> the colour (determinant) part
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
      use constants
+     use spring
+
      use control
      use context
-
-     use spring
 
      implicit none
 
