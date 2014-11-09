@@ -3143,9 +3143,10 @@
 !!>>> ctqmc_make_equate: to determine whether there exists an operator
 !!>>> whose imaginary time is equal to time
   subroutine ctqmc_make_equate(flvr, time, have)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
