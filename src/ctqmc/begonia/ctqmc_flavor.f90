@@ -48,11 +48,14 @@
 !!>>> cat_insert_ztrace: calculate the trace ratio for insert new create
 !!>>> and destroy operators on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -134,7 +137,7 @@
          t_next = beta - time_v( index_t(is) )
      else
          t_next = time_v( index_t(is+1) ) - time_v( index_t(is) )
-     endif ! back if ( is == nsize +1 ) block
+     endif ! back if ( is == nsize + 1 ) block
 
 ! evaluate ilast
 ! if is == nsize + 1, index_t(is+1) is not indexed (i.e, equal to 0),
@@ -202,7 +205,7 @@
          t_next = beta - time_v( index_t(ie) )
      else
          t_next = time_v( index_t(ie+1) ) - time_v( index_t(ie) )
-     endif ! back if ( ie == nsize +1 ) block
+     endif ! back if ( ie == nsize + 1 ) block
 
 ! evaluate ilast
 ! if ie == nsize + 1, index_t(ie+1) is not indexed (i.e, equal to 0),
@@ -248,11 +251,14 @@
 !!>>> cat_remove_ztrace: calculate the trace ratio for remove old create
 !!>>> and destroy operators on perturbation expansion series
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -423,11 +429,14 @@
 !!>>> cat_lshift_ztrace: calculate the trace ratio for shift old create
 !!>>> operators on perturbation expansion series
   subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, trace_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -574,11 +583,14 @@
 !!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy
 !!>>> operators on perturbation expansion series
   subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, trace_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -730,11 +742,12 @@
 !!>>> flavor channel randomly, and then determinte their index address for
 !!>>> the colour (determinant) part
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -826,11 +839,11 @@
 !!>>> flavor channel randomly, and then determine their imaginary time
 !!>>> points for the colour (determinant) part
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -872,11 +885,12 @@
 !!>>> shift it randomly, and then evaluate its final index address for
 !!>>> the colour (determinant) part
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
 
      implicit none
 
@@ -958,11 +972,12 @@
 !!>>> shift it randomly, and then evaluate its final index address for
 !!>>> the colour (determinant) part
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_e, time_e
 
      implicit none
 
@@ -1046,10 +1061,13 @@
 !!>>> cat_insert_colour: update the perturbation expansion series for
 !!>>> insert new create and destroy operators in the colour part actually
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use stack, only : istack_pop
 
-     use stack
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e, empty_s, empty_e
+     use context, only : rmesh
 
      implicit none
 
@@ -1115,10 +1133,10 @@
 !!>>> cat_remove_colour: update the perturbation expansion series for
 !!>>> remove old create and destroy operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
-     use constants
-     use context
+     use stack, only : istack_push
 
-     use stack
+     use context, only : ckink
+     use context, only : index_s, index_e, empty_s, empty_e
 
      implicit none
 
@@ -1163,8 +1181,12 @@
 !!>>> cat_lshift_colour: update the perturbation expansion series for
 !!>>> lshift an old create operators in the colour part actually
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
-     use constants
-     use context
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, time_s, exp_s
+     use context, only : rmesh
 
      implicit none
 
@@ -1218,8 +1240,12 @@
 !!>>> cat_rshift_colour: update the perturbation expansion series for
 !!>>> rshift an old destroy operators in the colour part actually
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_e, time_e, exp_e
+     use context, only : rmesh
 
      implicit none
 
@@ -1278,11 +1304,12 @@
 !!>>> destroy operators in the flavor part, and then determine whether
 !!>>> they can be inserted diagrammatically
   subroutine try_insert_flavor(flvr, is, ie, tau_start, tau_end, ladd)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, empty_v
 
      implicit none
 
@@ -1380,7 +1407,13 @@
 
 !-------------------------------------------------------------------------
 ! stage 2: determine ladd, whether we can get them ?
-!-------------------------------------------------------------------------     
+!-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         ladd = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pis and pie
      pis = is
      pie = ie
@@ -1441,11 +1474,12 @@
 !!>>> destroy operators in the flavor part, and then determine whether
 !!>>> they can be inserted diagrammatically
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, empty_v
 
      implicit none
 
@@ -1522,6 +1556,12 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine lrmv, whether we can kick off them ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         lrmv = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pis and pie
      pis = is
      pie = ie
@@ -1568,11 +1608,12 @@
 !!>>> create operators in the flavor part, and then determine whether it
 !!>>> can be shifted diagrammatically
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, empty_v
 
      implicit none
 
@@ -1662,6 +1703,12 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine lshf, whether we can shift it ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         lshf = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate piso and pisn
      piso = iso
      pisn = isn
@@ -1689,7 +1736,6 @@
 
 ! meet the old create operator
                  if      ( i == piso ) then
-                     counter = counter - 1
                      idead = idead + 1
 ! meet the new create operator
                  else if ( i == pisn ) then
@@ -1723,11 +1769,12 @@
 !!>>> destroy operators in the flavor part, and then determine whether
 !!>>> it can be shifted diagrammatically
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, time_v, empty_v
 
      implicit none
 
@@ -1817,6 +1864,12 @@
 !-------------------------------------------------------------------------
 ! stage 2: determine rshf, whether we can shift it ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         rshf = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pieo and pien
      pieo = ieo
      pien = ien
@@ -1844,7 +1897,6 @@
 
 ! meet the old destroy operator
                  if      ( i == pieo ) then
-                     counter = counter - 1
                      idead = idead + 1
 ! meet the new destroy operator
                  else if ( i == pien ) then
@@ -1881,11 +1933,14 @@
 !!>>> cat_insert_flavor: insert new create and destroy operators in the
 !!>>> flavor part
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_pop
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -1954,7 +2009,7 @@
          t_next = beta - time_v( index_v(is) )
      else
          t_next = time_v( index_v(is+1) ) - time_v( index_v(is) )
-     endif ! back if ( is == nsize +1 ) block
+     endif ! back if ( is == nsize + 1 ) block
 
 ! update the expt_v and expt_t, matrix of time evolution operator
 ! if is == nsize + 1, index_v(is+1) is not indexed (i.e, equal to 0),
@@ -2010,7 +2065,7 @@
          t_next = beta - time_v( index_v(ie) )
      else
          t_next = time_v( index_v(ie+1) ) - time_v( index_v(ie) )
-     endif ! back if ( ie == nsize +1 ) block
+     endif ! back if ( ie == nsize + 1 ) block
 
 ! update the expt_v and expt_t, matrix of time evolution operator
 ! if ie == nsize + 1, index_v(ie+1) is not indexed (i.e, equal to 0),
@@ -2044,11 +2099,14 @@
 !!>>> cat_remove_flavor: remove old create and destroy operators in the
 !!>>> flavor part
   subroutine cat_remove_flavor(is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_push
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -2201,11 +2259,14 @@
 
 !!>>> cat_lshift_flavor: shift the old create operator in the flavor part
   subroutine cat_lshift_flavor(flvr, iso, isn, tau_start2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -2227,6 +2288,9 @@
 
 ! memory address for old and new create operators
      integer  :: as
+
+! index address for old create operator
+     integer  :: iso_t
 
 ! total number of operators
      integer  :: nsize
@@ -2290,12 +2354,17 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( iso < nsize .and. iso /= isn ) then
-         if ( iso == 1 ) then
-             t_prev = time_v( index_v(iso) ) - zero
+         if ( iso > isn ) then
+             iso_t = iso + 1
          else
-             t_prev = time_v( index_v(iso) ) - time_v( index_v(iso-1) )
-         endif ! back if ( iso == 1 ) block
-         as = index_v(iso)
+             iso_t = iso
+         endif ! back if ( iso > isn ) block
+         if ( iso_t == 1 ) then
+             t_prev = time_v( index_v(iso_t) ) - zero
+         else
+             t_prev = time_v( index_v(iso_t) ) - time_v( index_v(iso_t-1) )
+         endif ! back if ( iso_t == 1 ) block
+         as = index_v(iso_t)
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
@@ -2318,11 +2387,14 @@
 
 !!>>> cat_rshift_flavor: shift the old destroy operator in the flavor part
   subroutine cat_rshift_flavor(flvr, ieo, ien, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -2344,6 +2416,9 @@
 
 ! memory address for old and new destroy operators
      integer  :: ae
+
+! index address for old destroy operator
+     integer  :: ieo_t
 
 ! total number of operators
      integer  :: nsize
@@ -2407,12 +2482,17 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( ieo < nsize .and. ieo /= ien ) then
-         if ( ieo == 1 ) then
-             t_prev = time_v( index_v(ieo) ) - zero
+         if ( ieo > ien ) then
+             ieo_t = ieo + 1
          else
-             t_prev = time_v( index_v(ieo) ) - time_v( index_v(ieo-1) )
-         endif ! back if ( ieo == 1 ) block
-         ae = index_v(ieo)
+             ieo_t = ieo
+         endif ! back if ( ieo > ien ) block
+         if ( ieo_t == 1 ) then
+             t_prev = time_v( index_v(ieo_t) ) - zero
+         else
+             t_prev = time_v( index_v(ieo_t) ) - time_v( index_v(ieo_t-1) )
+         endif ! back if ( ieo_t == 1 ) block
+         ae = index_v(ieo_t)
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
@@ -2437,40 +2517,52 @@
 !!>>> service layer: utility subroutines to calculate trace            <<<
 !!========================================================================
 
-!>>> core subroutine of begonia
-! used to evaluate the operator traces by direct matrix multiplication.
-! how to deal with the operator traces is the most important problem of
-! the general version hybridization expansion continuous time quantum
-! Monte Carlo impurity solver. since this subroutine should be called
-! for about one thousand millions times in one DMFT loop, so its execution
-! efficiency is our focus.
-!
-! in general, in each quantum Monte Carlo step, we need to multiply all f
-! matrices and related time evolution operators together, and then evaluate
-! the matrix trace. this method is very very inefficient for multiorbitals
-! systems, in which the dimension of f matrix increasing exponently, and
-! for low temperature (large \beta) and weak interaction (small U) systems,
-! in which the perturbation orders is so large, i.e, the number of matrix
-! we need to store and multiply is very large.
-!
-! in order to overcome this problem, we adopt a smart algorithm. we divide
-! the imaginary time axis [0, \beta] into npart parts, and then evaluate
-! operator traces in each part in advance. in each Monte Carlo step, only
-! those modified parts are picked up, and their operators multiplication
-! are performed again. the results are multiplied with the rest parts, and
-! then obtain the final operator traces. in the worst situation, only four
-! parts should be recalculated. in the best situation, only one part should
-! be recalculated.
-!
-! according to our benchmark, this algorithm can improve the efficiency
-! significantly.
+!!>>> ctqmc_make_ztrace: core subroutine of begonia
+!!>>> used to evaluate the operator traces by direct matrix multiplication.
+!!>>> how to deal with the operator traces is the most important problem
+!!>>> of the general matrix version hybridization expansion continuous
+!!>>> time quantum Monte Carlo impurity solver. since this subroutine
+!!>>> should be called for about one thousand millions times in one DMFT
+!!>>> loop, so its execution efficiency is our focus.
+!!
+!!>>> in general, in each quantum Monte Carlo step, we need to multiply
+!!>>> all f-matrices and related time evolution operators together, and
+!!>>> then evaluate the matrix trace. this method is very very inefficient
+!!>>> for multi-orbitals systems, in which the dimension of the f-matrix
+!!>>> increasing exponently, and for low temperature (large \beta) and
+!!>>> weak interaction (small U) systems, in which the perturbation orders
+!!>>> is so large, i.e., the number of matrices that we need to store and
+!!>>> multiply is very large.
+!!
+!!>>> in order to overcome this problem, we adopt a smart algorithm. we
+!!>>> divide the imaginary time axis [0, \beta] into npart parts, and then
+!!>>> evaluate the operator traces in each part in advance. in each Monte
+!!>>> Carlo step, only those modified parts are picked up, and then their
+!!>>> operators multiplication are performed again. the obtained results
+!!>>> are multiplied with the rest parts, and then the product can be used
+!!>>> to extract the final operator traces. in the worst situation, only
+!!>>> four parts should be recalculated again. in the best situation, only
+!!>>> one part should be recalculated.
+!!
+!!>>> according to our extensive benchmarks, this algorithm can improve
+!!>>> the computational efficiency significantly.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use sparse, only : sparse_uni_to_csr
+     use sparse, only : sparse_csr_cp_elm, sparse_csr_cp_csr
+     use sparse, only : sparse_csr_mm_csr, sparse_dia_mm_csr
 
-     use sparse
-     use stack
+     use control, only : ncfgs, nzero
+     use control, only : npart
+     use control, only : beta
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
+     use context, only : diag
+     use context, only : isave
+     use context, only : sop_a, sop_ia, sop_ja
+     use context, only : sop_b, sop_ib, sop_jb
+     use context, only : sop_c, sop_ic, sop_jc
+     use context, only : sop_d, sop_id, sop_jd
+     use context, only : sop_s, sop_is, sop_js
 
      implicit none
 
@@ -2582,16 +2674,16 @@
                  do while ( tip <= npart )
                      if ( nop(tip) > 0 ) then
                          isave(tip) = 1; EXIT
-                     endif
+                     endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
                  enddo ! over do while loop
-             endif
+             endif ! back if ( tau_s >= time_v( index_t( ope(tis) ) ) ) block
          else
              tip = tis + 1
              do while ( tip <= npart )
                  if ( nop(tip) > 0 ) then
                      isave(tip) = 1; EXIT
-                 endif
+                 endif ! back if ( nop(tip) > 0 ) block
                  tip = tip + 1
              enddo ! over do while loop
          endif ! back if ( nop(tis) > 0 ) block
@@ -2606,16 +2698,16 @@
                  do while ( tip <= npart )
                      if ( nop(tip) > 0 ) then
                          isave(tip) = 1; EXIT
-                     endif
+                     endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
                  enddo ! over do while loop
-             endif
+             endif ! back if ( tau_e >= time_v( index_t( ope(tie) ) ) ) block
          else
              tip = tie + 1
              do while ( tip <= npart )
                  if ( nop(tip) > 0 ) then
                      isave(tip) = 1; EXIT
-                 endif
+                 endif ! back if ( nop(tip) > 0 ) block
                  tip = tip + 1
              enddo ! over do while loop
          endif ! back if ( nop(tie) > 0 ) block
@@ -2639,52 +2731,55 @@
 
 ! multiply sop_b matrix with time evolution operator at first, and then
 ! multiply the result smm2 matrix with F matrix
-                         call sparse_dia_mm_csr(           ncfgs, nzero, &
-                                                expt_v( :, index_t(j) ), &
-                                   sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-                                         smm2,        jmm2,        imm2 )
+                         call sparse_dia_mm_csr( ncfgs, nzero, &
+                                      expt_v( :, index_t(j) ), &
+                         sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
+                                             smm2, jmm2, imm2 )
                          if ( vt == 1 ) then ! create  operator
-                             call sparse_csr_mm_csr(       ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_b(:,i),  sop_jb(:,i),  sop_ib(:,i) )
+                             call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                                                     ncfgs, nzero, &
+                          sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
+                                                 smm2, jmm2, imm2, &
+                             sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
                          else                ! destroy operator
-                             call sparse_csr_mm_csr(       ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_b(:,i),  sop_jb(:,i),  sop_ib(:,i) )
+                             call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                                                     ncfgs, nzero, &
+                          sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
+                                                 smm2, jmm2, imm2, &
+                             sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
                          endif ! back if ( vt == 1 ) block
                      enddo operator_loop1 ! over j={ops(i),ope(i)} loop
                  endif ! back if ( nop(i) > 0 ) block
 
 ! multiply current part (sop_b) with the rest parts (smm1), and get smm2
-                 call sparse_csr_mm_csr(     ncfgs, ncfgs, ncfgs, nzero, &
-                                   sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-                                         smm1,        jmm1,        imm1, &
-                                         smm2,        jmm2,        imm2 )
+                 call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                               sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
+                                                   smm1, jmm1, imm1, &
+                                                   smm2, jmm2, imm2 )
 
 ! if current part no need to be recalculated
              else
 
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
-                 call sparse_csr_mm_csr(     ncfgs, ncfgs, ncfgs, nzero, &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
-                                         smm1,        jmm1,        imm1, &
-                                         smm2,        jmm2,        imm2 )
+                 call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                               sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
+                                                   smm1, jmm1, imm1, &
+                                                   smm2, jmm2, imm2 )
 
 
              endif ! back if ( isave(i) == 1 ) block
 
 ! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, smm1, jmm1, imm1 )
+             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
+                                                   smm1, jmm1, imm1 )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,1), smm1, jmm1, imm1, smm2, jmm2, imm2 )
+         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,1), &
+                                          smm1, jmm1, imm1, &
+                                          smm2, jmm2, imm2 )
 
 !-------------------------------------------------------------------------
 ! case B: partly-normal mode
@@ -2722,16 +2817,16 @@
                  do while ( tip <= npart )
                      if ( nop(tip) > 0 ) then
                          isave(tip) = 1; EXIT
-                     endif
+                     endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
                  enddo ! over do while loop
-             endif
+             endif ! back if ( tau_s >= time_v( index_v( ope(tis) ) ) ) block
          else
              tip = tis + 1
              do while ( tip <= npart )
                  if ( nop(tip) > 0 ) then
                      isave(tip) = 1; EXIT
-                 endif
+                 endif ! back if ( nop(tip) > 0 ) block
                  tip = tip + 1
              enddo ! over do while loop
          endif ! back if ( nop(tis) > 0 ) block
@@ -2746,16 +2841,16 @@
                  do while ( tip <= npart )
                      if ( nop(tip) > 0 ) then
                          isave(tip) = 1; EXIT
-                     endif
+                     endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
                  enddo ! over do while loop
-             endif
+             endif ! back if ( tau_e >= time_v( index_v( ope(tie) ) ) ) block
          else
              tip = tie + 1
              do while ( tip <= npart )
                  if ( nop(tip) > 0 ) then
                      isave(tip) = 1; EXIT
-                 endif
+                 endif ! back if ( nop(tip) > 0 ) block
                  tip = tip + 1
              enddo ! over do while loop
          endif ! back if ( nop(tie) > 0 ) block
@@ -2779,22 +2874,22 @@
 
 ! multiply sop_a matrix with time evolution operator at first, and then
 ! multiply the result smm2 matrix with F matrix
-                         call sparse_dia_mm_csr(           ncfgs, nzero, &
-                                                expt_v( :, index_v(j) ), &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
-                                         smm2,        jmm2,        imm2 )
+                         call sparse_dia_mm_csr( ncfgs, nzero, &
+                                      expt_v( :, index_v(j) ), &
+                         sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
+                                             smm2, jmm2, imm2 )
                          if ( vt == 1 ) then ! create  operator
-                             call sparse_csr_mm_csr(       ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_a(:,i),  sop_ja(:,i),  sop_ia(:,i) )
+                             call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                                                     ncfgs, nzero, &
+                          sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
+                                                 smm2, jmm2, imm2, &
+                             sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
                          else                ! destroy operator
-                             call sparse_csr_mm_csr(       ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_a(:,i),  sop_ja(:,i),  sop_ia(:,i) )
+                             call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                                                     ncfgs, nzero, &
+                          sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
+                                                 smm2, jmm2, imm2, &
+                             sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
                          endif ! back if ( vt == 1 ) block
                      enddo operator_loop2 ! over j={ops(i),ope(i)} loop
                  endif ! back if ( nop(i) > 0 ) block
@@ -2802,19 +2897,22 @@
              endif ! back if ( isave(i) == 1 ) block
 
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
-                                         smm1,        jmm1,        imm1, &
-                                         smm2,        jmm2,        imm2 )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
+                                               smm1, jmm1, imm1, &
+                                               smm2, jmm2, imm2 )
 
 ! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, smm1, jmm1, imm1 )
+             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
+                                                   smm1, jmm1, imm1 )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), smm1, jmm1, imm1, smm2, jmm2, imm2 )
+         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
+                                          smm1, jmm1, imm1, &
+                                          smm2, jmm2, imm2 )
 
 ! reset isave, since sop_a should not be overrode by sop_b in this case.
          isave = 0
@@ -2860,40 +2958,43 @@
 
 ! multiply sop_b matrix with time evolution operator at first, and then
 ! multiply the result smm2 matrix with F matrix
-                     call sparse_dia_mm_csr(               ncfgs, nzero, &
-                                                expt_v( :, index_t(j) ), &
-                                   sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-                                         smm2,        jmm2,        imm2 )
+                     call sparse_dia_mm_csr( ncfgs, nzero, &
+                                  expt_v( :, index_t(j) ), &
+                     sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
+                                         smm2, jmm2, imm2 )
                      if ( vt == 1 ) then ! create  operator
-                         call sparse_csr_mm_csr(           ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_b(:,i),  sop_jb(:,i),  sop_ib(:,i) )
+                         call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                                                 ncfgs, nzero, &
+                      sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
+                                             smm2, jmm2, imm2, &
+                         sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
                      else                ! destroy operator
-                         call sparse_csr_mm_csr(           ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_b(:,i),  sop_jb(:,i),  sop_ib(:,i) )
+                         call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                                                 ncfgs, nzero, &
+                      sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
+                                             smm2, jmm2, imm2, &
+                         sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
                      endif ! back if ( vt == 1 ) block
                  enddo operator_loop3 ! over j={ops(i),ope(i)} loop
              endif ! back if ( nop(i) > 0 ) block
 
 ! multiply current part (sop_b) with the rest parts (smm1), and get smm2
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                                   sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-                                         smm1,        jmm1,        imm1, &
-                                         smm2,        jmm2,        imm2 )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
+                                               smm1, jmm1, imm1, &
+                                               smm2, jmm2, imm2 )
 
 ! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, smm1, jmm1, imm1 )
+             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
+                                                   smm1, jmm1, imm1 )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), smm1, jmm1, imm1, smm2, jmm2, imm2 )
+         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
+                                          smm1, jmm1, imm1, &
+                                          smm2, jmm2, imm2 )
 
 !-------------------------------------------------------------------------
 ! case D: fully-normal mode
@@ -2936,62 +3037,74 @@
 
 ! multiply sop_a matrix with time evolution operator at first, and then
 ! multiply the result smm2 matrix with F matrix
-                     call sparse_dia_mm_csr(               ncfgs, nzero, &
-                                                expt_v( :, index_v(j) ), &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
-                                         smm2,        jmm2,        imm2 )
+                     call sparse_dia_mm_csr( ncfgs, nzero, &
+                                  expt_v( :, index_v(j) ), &
+                     sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
+                                         smm2, jmm2, imm2 )
                      if ( vt == 1 ) then ! create  operator
-                         call sparse_csr_mm_csr(           ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_a(:,i),  sop_ja(:,i),  sop_ia(:,i) )
+                         call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                                                 ncfgs, nzero, &
+                      sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
+                                             smm2, jmm2, imm2, &
+                         sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
                      else                ! destroy operator
-                         call sparse_csr_mm_csr(           ncfgs, ncfgs, &
-                                                           ncfgs, nzero, &
-                                sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
-                                       smm2,         jmm2,         imm2, &
-                                 sop_a(:,i),  sop_ja(:,i),  sop_ia(:,i) )
+                         call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                                                 ncfgs, nzero, &
+                      sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
+                                             smm2, jmm2, imm2, &
+                         sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
                      endif ! back if ( vt == 1 ) block
                  enddo operator_loop4 ! over j={ops(i),ope(i)} loop
              endif ! back if ( nop(i) > 0 ) block
 
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
-                                         smm1,        jmm1,        imm1, &
-                                         smm2,        jmm2,        imm2 )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
+                                               smm1, jmm1, imm1, &
+                                               smm2, jmm2, imm2 )
 
 ! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, smm1, jmm1, imm1 )
+             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
+                                                   smm1, jmm1, imm1 )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), smm1, jmm1, imm1, smm2, jmm2, imm2 )
+         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
+                                          smm1, jmm1, imm1, &
+                                          smm2, jmm2, imm2 )
 
      endif ! back if ( cmode == 1 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! now smm2 is the final product, we can use it to evaluate the matrix trace
      do j=1,ncfgs
-         diag(j,1) = sparse_csr_cp_elm( j, j, ncfgs, nzero, smm2, jmm2, imm2 )
+         diag(j,1) = sparse_csr_cp_elm( j, j, ncfgs, nzero, &
+                                          smm2, jmm2, imm2 )
      enddo ! over j={1,ncfgs} loop
      trace = sum( diag(:,1) )
 
 ! save the final matrix product to op_s
-     call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, sop_s(:,1), sop_js(:,1), sop_is(:,1) )
+     call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
+                       sop_s(:,1), sop_js(:,1), sop_is(:,1) )
 
      return
   end subroutine ctqmc_make_ztrace
 
-!>>> used to update the operator traces of the modified part
+!!>>> ctqmc_make_evolve: used to update the operator traces of the
+!!>>> modified part
   subroutine ctqmc_make_evolve()
-     use control
-     use context
+     use sparse, only : sparse_csr_cp_csr
 
-     use sparse
+     use control, only : ncfgs, nzero
+     use control, only : npart
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : diag
+     use context, only : isave
+     use context, only : sop_a, sop_ia, sop_ja
+     use context, only : sop_b, sop_ib, sop_jb
+     use context, only : sop_s, sop_is, sop_js
 
      implicit none
 
@@ -3002,9 +3115,9 @@
 ! transfer sop_b into sop_a if needed (cmode == 1 or cmode == 3)
      do i=1,npart
          if ( isave(i) == 1 ) then
-             call sparse_csr_cp_csr(                       ncfgs, nzero, &
-                                   sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-                                   sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+             call sparse_csr_cp_csr( ncfgs, nzero, &
+             sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
+             sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
          endif ! back if ( isave(i) == 1 ) block
      enddo ! over i={1,npart} loop
 
@@ -3016,23 +3129,24 @@
 
 ! transfer the final matrix product from op_s(:,1) to op_s(:,2), the
 ! latter can be used to calculate nmat and nnmat
-     call sparse_csr_cp_csr(                               ncfgs, nzero, &
-                                   sop_s(:,1), sop_js(:,1), sop_is(:,1), &
-                                   sop_s(:,2), sop_js(:,2), sop_is(:,2) )
+     call sparse_csr_cp_csr( ncfgs, nzero, &
+     sop_s(:,1), sop_js(:,1), sop_is(:,1), &
+     sop_s(:,2), sop_js(:,2), sop_is(:,2) )
 
      return
   end subroutine ctqmc_make_evolve
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to look up in the flavor       <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to look up in the flavor      <<<
+!!========================================================================
 
-!>>> to determine whether there exists an operator whose imaginary time is
-! equal to time
+!!>>> ctqmc_make_equate: to determine whether there exists an operator
+!!>>> whose imaginary time is equal to time
   subroutine ctqmc_make_equate(flvr, time, have)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -3059,24 +3173,24 @@
 ! check creators, if meet it, return 1
          if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) then
              have = 1; EXIT
-         endif
+         endif ! back if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) block
 
 ! check destroyers, if meet it, return 2
          if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) then
              have = 2; EXIT
-         endif
+         endif ! back if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) block
 
      enddo ! over i={1,ckink} loop
 
      return
   end subroutine ctqmc_make_equate
 
-!>>> determine index address of operators in the flavor part using
-! bisection algorithm
+!!>>> ctqmc_make_search: determine index address of operators in the
+!!>>> flavor part using bisection algorithm
   subroutine ctqmc_make_search(addr, ndim, time)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+
+     use context, only : index_v, time_v
 
      implicit none
 
@@ -3124,18 +3238,20 @@
      return
   end subroutine ctqmc_make_search
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to build colour and flavor     <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to build colour and flavor    <<<
+!!========================================================================
 
-!>>> generate perturbation expansion series for the colour (determinant)
-! part, it should be synchronized with the flavor part
+!!>>> ctqmc_make_colour: generate perturbation expansion series for the
+!!>>> colour (determinant) part, it should be synchronized with the
+!!>>> flavor part
   subroutine ctqmc_make_colour(flvr, kink)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : rank
 
      implicit none
 
@@ -3176,13 +3292,14 @@
      return
   end subroutine ctqmc_make_colour
 
-!>>> generate perturbation expansion series for the flavor (operator trace)
-! part, it should be synchronized with the colour part.
-! note: ctqmc_make_colour() must be called beforehand
+!!>>> ctqmc_make_flavor: generate perturbation expansion series for the
+!!>>> flavor (operator trace) part, it should be synchronized with the
+!!>>> colour part.
+!!>>> note: ctqmc_make_colour() must be called beforehand
   subroutine ctqmc_make_flavor(flvr, kink)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -3221,18 +3338,20 @@
      return
   end subroutine ctqmc_make_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to show the colour and flavor  <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to show the colour and flavor <<<
+!!========================================================================
 
-!>>> display operators information (include colour and flavor parts) on
-! the screen, only used to debug the code
+!!>>> ctqmc_make_display: display operators information (include colour
+!!>>> and flavor parts) on the screen, only used to debug the code
   subroutine ctqmc_make_display(show_type)
-     use constants
-     use control
-     use context
+     use constants, only : mystd
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : norbs, ncfgs
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : rank
 
      implicit none
 
