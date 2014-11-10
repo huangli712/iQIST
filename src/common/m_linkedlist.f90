@@ -112,7 +112,7 @@
      type list_t
          private
          integer, dimension(:), pointer :: data => null()
-         type(list_t), pointer :: next => null()
+         type (list_t), pointer :: next => null()
      end type list_t
 
 !!========================================================================
@@ -140,7 +140,7 @@
 
 ! external arguments
 ! pointer to new linked list
-     type(list_t), pointer :: self
+     type (list_t), pointer :: self
 
 ! the data for the first element
      integer, dimension(:), intent(in), optional :: data
@@ -166,14 +166,14 @@
 
 ! external arguments
 ! pointer to the list to be destroyed
-     type(list_t), pointer :: self
+     type (list_t), pointer :: self
 
 ! local variables
 ! pointer to the current node
-     type(list_t), pointer :: curr
+     type (list_t), pointer :: curr
 
 ! pointer to the next node
-     type(list_t), pointer :: next
+     type (list_t), pointer :: next
 
 ! go through the whole linked list
      curr => self
@@ -201,14 +201,14 @@
 
 ! external arguments
 ! element in the linked list after which the new element should be inserted
-     type(list_t), pointer :: self
+     type (list_t), pointer :: self
 
 ! the data for the new element
      integer, dimension(:), intent(in), optional :: data
 
 ! local variables
 ! pointer to new node
-     type(list_t), pointer :: next
+     type (list_t), pointer :: next
 
 ! allocate memory for new node
      allocate(next)
@@ -234,7 +234,7 @@
 
 ! external arguments
 ! element in the linked list
-     type(list_t), pointer :: self
+     type (list_t), pointer :: self
 
 ! the data to be stored
      integer, dimension(:), intent(in) :: data
@@ -260,7 +260,7 @@
 
 ! external arguments
 ! node in the linked list
-     type(list_t), pointer :: self
+     type (list_t), pointer :: self
 
 ! function value, the node's data
      integer, dimension(:), pointer :: data
@@ -276,10 +276,10 @@
 
 ! external arguments
 ! pointer to the list
-     type(list_t), pointer :: self
+     type (list_t), pointer :: self
 
 ! function value, pointer to the next node
-     type(list_t), pointer :: next
+     type (list_t), pointer :: next
 
      next => self%next
 
@@ -294,14 +294,14 @@
 
 ! external arguments
 ! pointer to the list
-     type(list_t), pointer :: self
+     type (list_t), pointer :: self
 
 ! function value
      integer :: counter
 
 ! local variables
 ! pointer to current node
-     type(list_t), pointer :: curr
+     type (list_t), pointer :: curr
 
      if ( associated(self) ) then
          counter = 1

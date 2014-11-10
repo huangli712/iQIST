@@ -1,25 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : skynet
-!!!           skynet@sunu_to_sunu
-!!!           skynet@sunu_to_real
-!!!           skynet@real_to_sunu
-!!!           skynet@sunu_add_sunu
-!!!           skynet@sunu_add_real
-!!!           skynet@real_add_sunu
-!!!           skynet@sunu_sub_sunu
-!!!           skynet@sunu_sub_real
-!!!           skynet@real_sub_sunu
-!!!           skynet@sunu_mul_sunu
-!!!           skynet@sunu_mul_real
-!!!           skynet@real_mul_sunu
-!!!           skynet@sunu_div_sunu
-!!!           skynet@sunu_div_real
-!!!           skynet@real_div_sunu
-!!!           skynet@skynet_make_sunu
-!!!           skynet@skynet_done_sunu
-!!!           skynet@skynet_test_sunu
-!!!           skynet@skynet_zero_sunu
 !!! source  : m_skynet.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -36,10 +17,10 @@
 !! Introduction
 !! ============
 !!
-!! In this module, we define such a data structure (sunu) which is used to
-!! represent very large float number. We reload basic arithmetic operations
-!! such +/-/*// for it. Due to the performance issue, we do not use it now.
-!! But it may be useful in the other fields.
+!! In this module, we define such a data structure (sunu) which is used
+!! to represent very large float number. We overload the basic arithmetic
+!! operations such +/-/*/\/ for it. Due to the performance issue, we do
+!! not use it now. But it may be useful in the other fields.
 !!
 !! Usage
 !! =====
@@ -110,6 +91,7 @@
 !!========================================================================
 
 ! SUper-large-NUmber structure
+     public :: sunu
      type sunu
          real(dp) :: mant ! mantisa
          real(dp) :: expt ! exponent
