@@ -1,15 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : linkedlist
-!!!           linkedlist@list_d
-!!!           linkedlist@list_t
-!!!           linkedlist@list_init
-!!!           linkedlist@list_free
-!!!           linkedlist@list_insert
-!!!           linkedlist@list_put
-!!!           linkedlist@list_get
-!!!           linkedlist@list_next
-!!!           linkedlist@list_count
 !!! source  : m_linkedlist.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -78,7 +69,11 @@
 !!
 !! call list_insert(list_ptr, transfer(data_ptr, list_d))
 !!
-!! list_insert() will always insert the new node after the given node
+!! list_insert() will always insert the new node after the given node,
+!! i.e., list_ptr. If you want to update the data for the given node,
+!! please use the following code:
+!!
+!! call list_put(list_ptr, transfer(data_ptr, list_d))
 !!
 !! 8. visit next node
 !! ------------------
