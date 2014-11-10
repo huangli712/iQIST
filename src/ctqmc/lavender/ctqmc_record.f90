@@ -1,72 +1,57 @@
-!-------------------------------------------------------------------------
-! project : lavender
-! program : ctqmc_record_gtau
-!           ctqmc_record_ftau
-!           ctqmc_record_grnf
-!           ctqmc_record_hist
-!           ctqmc_record_nmat
-!           ctqmc_record_schi
-!           ctqmc_record_ochi
-!           ctqmc_record_twop
-!           ctqmc_record_vrtx
-!           ctqmc_record_prob <<<---
-!           ctqmc_reduce_gtau
-!           ctqmc_reduce_ftau
-!           ctqmc_reduce_grnf
-!           ctqmc_reduce_hist
-!           ctqmc_reduce_nmat
-!           ctqmc_reduce_schi
-!           ctqmc_reduce_ochi
-!           ctqmc_reduce_twop
-!           ctqmc_reduce_vrtx
-!           ctqmc_reduce_prob <<<---
-!           ctqmc_symm_nmat
-!           ctqmc_symm_gtau
-!           ctqmc_symm_grnf
-!           ctqmc_smth_sigf   <<<---
-!           ctqmc_make_gtau
-!           ctqmc_make_ftau   <<<---
-!           ctqmc_make_hub1
-!           ctqmc_make_hub2   <<<---
-! source  : ctqmc_record.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/25/2009 by li huang
-!           09/27/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/03/2009 by li huang
-!           11/10/2009 by li huang
-!           11/19/2009 by li huang
-!           11/30/2009 by li huang
-!           12/06/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/22/2009 by li huang
-!           12/26/2009 by li huang
-!           12/29/2009 by li huang
-!           01/14/2010 by li huang
-!           02/01/2010 by li huang
-!           02/24/2010 by li huang
-!           02/27/2010 by li huang
-!           09/29/2010 by li huang
-! purpose : measure, record, and postprocess the key observables produced
-!           by the hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : lavender
+!!! program : ctqmc_record_gtau
+!!!           ctqmc_record_grnf
+!!!           ctqmc_record_hist
+!!!           ctqmc_record_prob
+!!!           ctqmc_record_nmat
+!!!           ctqmc_record_twop
+!!!           ctqmc_record_pair <<<---
+!!!           ctqmc_reduce_gtau
+!!!           ctqmc_reduce_grnf
+!!!           ctqmc_reduce_hist
+!!!           ctqmc_reduce_prob
+!!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_twop
+!!!           ctqmc_reduce_pair <<<---
+!!!           ctqmc_symm_nmat
+!!!           ctqmc_symm_gtau
+!!!           ctqmc_symm_grnf
+!!!           ctqmc_smth_sigf   <<<---
+!!!           ctqmc_make_gtau   <<<---
+!!!           ctqmc_make_hub1   <<<---
+!!! source  : ctqmc_record.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 09/16/2009 by li huang
+!!!           09/29/2010 by li huang
+!!!           11/09/2014 by li huang
+!!! purpose : measure, record, and postprocess the important observables
+!!!           produced by the hybridization expansion version continuous
+!!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> record the impurity green's function in imaginary time axis
+!!========================================================================
+!!>>> measure physical observables                                     <<<
+!!========================================================================
+
+!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
+!!>>> time axis
   subroutine ctqmc_record_gtau()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, pi
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : ppleg, qqche
+     use context, only : rank
+     use context, only : mmat
+     use context, only : gtau
 
      implicit none
 
@@ -119,7 +104,8 @@
 
   contains
 
-!>>> record impurity green's function using normal representation
+!!>>> cat_record_gtau1: record impurity green's function using normal
+!!>>> representation
   subroutine cat_record_gtau1()
      implicit none
 
@@ -144,7 +130,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! determine index for imaginary time
                  curr = nint( dtau * step ) + 1
@@ -152,7 +138,7 @@
 ! special tricks for the first point and the last point
                  if ( curr == 1 .or. curr == ntime ) then
                      maux = two * maux
-                 endif
+                 endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
                  gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
@@ -165,7 +151,8 @@
      return
   end subroutine cat_record_gtau1
 
-!>>> record impurity green's function using legendre polynomial representation
+!!>>> cat_record_gtau2: record impurity green's function using legendre
+!!>>> polynomial representation
   subroutine cat_record_gtau2()
      implicit none
 
@@ -190,7 +177,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -212,7 +199,8 @@
      return
   end subroutine cat_record_gtau2
 
-!>>> record impurity green's function using chebyshev polynomial representation
+!!>>> cat_record_gtau3: record impurity green's function using chebyshev
+!!>>> polynomial representation
   subroutine cat_record_gtau3()
      implicit none
 
@@ -237,7 +225,7 @@
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -260,11 +248,14 @@
   end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
-!>>> record the impurity green's function in matsubara frequency space
+!!>>> ctqmc_record_grnf: record the impurity green's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_record_grnf()
-     use constants
-     use control
-     use context
+     use control, only : norbs
+     use control, only : nfreq
+     use context, only : csign
+     use context, only : gmat
+     use context, only : grnf
 
      implicit none
 
@@ -276,8 +267,6 @@
      integer :: flvr
 
 ! note: only the first nfreq points of grnf are modified
-! we enforce csign equal to 1, the influence of sign problem is unclear so far
-!<     csign = 1
      do flvr=1,norbs
          do ifrq=1,nfreq
              grnf(ifrq, flvr, flvr) = grnf(ifrq, flvr, flvr) + csign * gmat(ifrq, flvr, flvr)
@@ -287,9 +276,13 @@
      return
   end subroutine ctqmc_record_grnf
 
-!>>> record the histogram of perturbation expansion series
+!!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
-     use context
+     use constants, only : one
+
+     use control, only : mkink
+     use context, only : ckink, csign, caves
+     use context, only : hist
 
      implicit none
 
@@ -298,22 +291,49 @@
 
 ! note: if ckink == 0, we record its count in hist(mkink)
      if ( ckink > 0 ) then
-         hist(ckink) = hist(ckink) + 1
+         hist(ckink) = hist(ckink) + one
      else
-         hist(mkink) = hist(mkink) + 1
-     endif
+         hist(mkink) = hist(mkink) + one
+     endif ! back if ( ckink > 0 ) block
 
      return
   end subroutine ctqmc_record_hist
 
-!>>> record the occupation matrix, double occupation matrix, and auxiliary
-! physical observables simulataneously
-  subroutine ctqmc_record_nmat()
-     use constants
-     use control
-     use context
+!!>>> ctqmc_record_prob: record the probability of atomic states
+  subroutine ctqmc_record_prob()
+     use control, only : ncfgs
+     use context, only : csign
+     use context, only : matrix_ptrace
+     use context, only : prob
+     use context, only : diag
 
-     use sparse
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+
+     do i=1,ncfgs
+         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
+     enddo ! over i={1,ncfgs} loop
+
+     return
+  end subroutine ctqmc_record_prob
+
+!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
+!!>>> matrix, and auxiliary physical observables simulataneously
+  subroutine ctqmc_record_nmat()
+     use constants, only : dp, zero
+     use sparse, only : sparse_csr_cp_elm, sparse_csr_mm_csr
+
+     use control, only : nband, norbs, ncfgs, nzero
+     use control, only : U, mune, beta
+     use context, only : ckink, matrix_ptrace
+     use context, only : paux, nmat, nnmat
+     use context, only : diag, eigs
+     use context, only : sop_s, sop_is, sop_js
+     use context, only : sop_n, sop_in, sop_jn
+     use context, only : sop_m, sop_im, sop_jm
 
      implicit none
 
@@ -349,25 +369,27 @@
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
      do i=1,ncfgs
-         raux2 = raux2 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_s(:,2), sop_js(:,2), sop_is(:,2) )
+         raux2 = raux2 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                          sop_s(:,2), sop_js(:,2), sop_is(:,2) )
      enddo ! over i={1,ncfgs} loop
 
 ! check validity of raux2
 !<     if ( abs(raux2) < epss ) then
-!<         call ctqmc_print_exception('ctqmc_record_nmat()','Z trace is too small')
-!<     endif
+!<         call s_print_exception('ctqmc_record_nmat()','Z trace is too small')
+!<     endif ! back if ( abs(raux2) < epss ) block
 
 ! evaluate occupation matrix: < n_i >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
      do flvr=1,norbs
-         call sparse_csr_mm_csr(             ncfgs, ncfgs, ncfgs, nzero, &
-                             sop_s(:,2),    sop_js(:,2),    sop_is(:,2), &
-                          sop_n(:,flvr), sop_jn(:,flvr), sop_in(:,flvr), &
-                                  sop_t,         sop_jt,         sop_it )
+         call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                       sop_s(:,2), sop_js(:,2), sop_is(:,2), &
+              sop_n(:,flvr), sop_jn(:,flvr), sop_in(:,flvr), &
+                                      sop_t, sop_jt, sop_it )
          raux1 = zero
          do i=1,ncfgs
-             raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
+             raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                                             sop_t, sop_jt, sop_it )
          enddo ! over i={1,ncfgs} loop
          nvec(flvr) = raux1 / raux2
      enddo ! over flvr={1,norbs} loop
@@ -381,29 +403,41 @@
 !-------------------------------------------------------------------------
      do flvr=1,norbs-1
          do j=flvr+1,norbs
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                         sop_s(:,2),      sop_js(:,2),      sop_is(:,2), &
-                    sop_m(:,flvr,j), sop_jm(:,flvr,j), sop_im(:,flvr,j), &
-                              sop_t,           sop_jt,           sop_it )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_s(:,2), sop_js(:,2), sop_is(:,2), &
+            sop_m(:,flvr,j), sop_jm(:,flvr,j), sop_im(:,flvr,j), &
+                                          sop_t, sop_jt, sop_it )
 
              raux1 = zero
              do i=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
+                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                                                 sop_t, sop_jt, sop_it )
              enddo ! over i={1,ncfgs} loop
              nnmat(flvr,j) = nnmat(flvr,j) + raux1 / raux2
 
-             call sparse_csr_mm_csr(         ncfgs, ncfgs, ncfgs, nzero, &
-                         sop_s(:,2),      sop_js(:,2),      sop_is(:,2), &
-                    sop_m(:,j,flvr), sop_jm(:,j,flvr), sop_im(:,j,flvr), &
-                              sop_t,           sop_jt,           sop_it )
+             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                           sop_s(:,2), sop_js(:,2), sop_is(:,2), &
+            sop_m(:,j,flvr), sop_jm(:,j,flvr), sop_im(:,j,flvr), &
+                                          sop_t, sop_jt, sop_it )
 
              raux1 = zero
              do i=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, sop_t, sop_jt, sop_it )
+                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+                                                 sop_t, sop_jt, sop_it )
              enddo ! over i={1,ncfgs} loop
              nnmat(j,flvr) = nnmat(j,flvr) + raux1 / raux2
          enddo ! over j={flvr+1,norbs} loop
      enddo ! over flvr={1,norbs-1} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^2>
+!-------------------------------------------------------------------------
+     paux(6) = paux(6) + ( sum(nvec) )**2
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^1>
+!-------------------------------------------------------------------------
+     paux(5) = paux(5) + sum(nvec)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
@@ -438,11 +472,18 @@
      return
   end subroutine ctqmc_record_nmat
 
-!>>> record the two-particle green's function
+!!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
-     use constants
-     use control
-     use context
+     use constants, only : dp, two, pi, czi, czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : g2_re, g2_im
+     use context, only : rank
+     use context, only : mmat
 
      implicit none
 
@@ -471,23 +512,26 @@
      real(dp) :: taus
      real(dp) :: taue
 
-! dummy complex(dp) variables, used to calculate the exponential function
+! dummy complex(dp) variables, used to calculate the g2_re and g2_im
      complex(dp) :: cmeas
-     complex(dp) :: dexp1
-     complex(dp) :: dexp2
-     complex(dp) :: iexp1
-     complex(dp) :: iexp2
-     complex(dp) :: cexp1
-     complex(dp) :: cexp2
 
 ! dummy complex(dp) arrays, used to store the intermediate results
      complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: caux1(:)
+     complex(dp), allocatable :: caux2(:)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 3) .and. .not. btest(isvrt, 4) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
 
 ! allocate memory for g2aux and then initialize it
-     allocate( g2aux(norbs, nfaux, nfaux) ); g2aux = czero
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+
+! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux) ); caux1 = czero
+     allocate( caux2(nfaux) ); caux2 = czero
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -502,22 +546,17 @@
                  maux = mmat(ie, is, flvr)
 
 ! calculate g2aux
-                 dexp1 = exp(+    two     * czi * pi * taue / beta)
-                 dexp2 = exp(-    two     * czi * pi * taus / beta)
-                 iexp1 = exp(-(nffrq + 1) * czi * pi * taue / beta)
-                 iexp2 = exp(+(nffrq + 1) * czi * pi * taus / beta)
-
-                 cexp1 = iexp1
-                 do w1n=1,nfaux
-                     cexp1 = cexp1 * dexp1
-
-                     cexp2 = iexp2
-                     do w2n=1,nfaux
-                         cexp2 = cexp2 * dexp2
-
-                         g2aux(flvr, w1n, w2n) = g2aux(flvr, w1n, w2n) + maux * cexp1 * cexp2
-                     enddo ! over w2n={1,nfaux} loop
-                 enddo ! over w1n={1,nfaux} loop
+                 caux1 = exp(+two * czi * pi * taue / beta)
+                 caux2 = exp(-two * czi * pi * taus / beta)
+                 call s_cumprod_z(nfaux, caux1, caux1)
+                 call s_cumprod_z(nfaux, caux2, caux2)
+                 caux1 = caux1 * exp(-(nffrq + 1) * czi * pi * taue / beta)
+                 caux2 = caux2 * exp(+(nffrq + 1) * czi * pi * taus / beta)
+                 do w2n=1,nfaux
+                     do w1n=1,nfaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
@@ -526,58 +565,172 @@
 
 ! calculate g2_re and g2_im
      CTQMC_ORBIT1_LOOP: do f1=1,norbs
-         CTQMC_ORBIT2_LOOP: do f2=1,norbs
+         CTQMC_ORBIT2_LOOP: do f2=1,f1
 
-             CTQMC_FERMI1_LOOP: do w2n=1,nffrq
-                 CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
 
-                     CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
                          w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
-                         cmeas = g2aux(f1,w1n,w2n) * g2aux(f2,w3n,w4n)
+
+                         cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
-                             cmeas = cmeas - g2aux(f1,w1n,w4n) * g2aux(f1,w3n,w2n)
+                             cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(f1,f2,w2n,w3n,wbn) = g2_re(f1,f2,w2n,w3n,wbn) +  real(cmeas) / beta
-                         g2_im(f1,f2,w2n,w3n,wbn) = g2_im(f1,f2,w2n,w3n,wbn) + aimag(cmeas) / beta
-                     enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
-                 enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
-             enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
 
-         enddo CTQMC_ORBIT2_LOOP ! over f2={1,norbs} loop
+         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
      enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
 
 ! deallocate memory
      deallocate( g2aux )
+     deallocate( caux1 )
+     deallocate( caux2 )
 
      return
   end subroutine ctqmc_record_twop
 
-!>>> record the probability of atomic states
-  subroutine ctqmc_record_prob()
-     use constants
-     use control
-     use context
+!!>>> ctqmc_record_pair: record the particle-particle pair susceptibility
+  subroutine ctqmc_record_pair()
+     use constants, only : dp, two, pi, czi, czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : ps_re, ps_im
+     use context, only : rank
+     use context, only : mmat
 
      implicit none
 
 ! local variables
-! loop index
-     integer :: i
+! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
 
-     do i=1,ncfgs
-         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
-     enddo ! over i={1,ncfgs} loop
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+     integer  :: flvr
+
+! loop index for frequency
+     integer  :: nfaux
+     integer  :: wbn
+     integer  :: w1n
+     integer  :: w2n
+     integer  :: w3n
+     integer  :: w4n
+
+! used to store the element of mmat matrix
+     real(dp) :: maux
+
+! imaginary time for start and end points
+     real(dp) :: taus
+     real(dp) :: taue
+
+! dummy complex(dp) variables, used to calculate the ps_re and ps_im
+     complex(dp) :: cmeas
+
+! dummy complex(dp) arrays, used to store the intermediate results
+     complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: caux1(:)
+     complex(dp), allocatable :: caux2(:)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 5) )
+
+! evaluate nfaux, determine the size of g2aux
+     nfaux = nffrq + nbfrq - 1
+
+! allocate memory for g2aux and then initialize it
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+
+! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux) ); caux1 = czero
+     allocate( caux2(nfaux) ); caux2 = czero
+
+     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+
+! get imaginary time value for segments
+         do is=1,rank(flvr)
+             taus = time_s( index_s(is, flvr), flvr )
+
+             do ie=1,rank(flvr)
+                 taue = time_e( index_e(ie, flvr), flvr )
+
+! get matrix element from mmat
+                 maux = mmat(ie, is, flvr)
+
+! calculate g2aux
+                 caux1 = exp(+two * czi * pi * taue / beta)
+                 caux2 = exp(-two * czi * pi * taus / beta)
+                 call s_cumprod_z(nfaux, caux1, caux1)
+                 call s_cumprod_z(nfaux, caux2, caux2)
+                 caux1 = caux1 * exp(-(nffrq + 1) * czi * pi * taue / beta)
+                 caux2 = caux2 * exp(+(nffrq + 1) * czi * pi * taus / beta)
+                 do w2n=1,nfaux
+                     do w1n=1,nfaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+
+! calculate ps_re and ps_im
+     CTQMC_ORBIT1_LOOP: do f1=1,norbs
+         CTQMC_ORBIT2_LOOP: do f2=1,f1
+
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+                         w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
+
+                         cmeas = czero
+                         if ( f1 /= f2 ) then
+                             cmeas = cmeas + g2aux(w1n,w4n,f1) * g2aux(nffrq-w2n+1,nffrq-w3n+1,f2)
+                         endif ! back if ( f1 == f2 ) block
+                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
+                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+
+         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
+     enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
+
+! deallocate memory
+     deallocate( g2aux )
+     deallocate( caux1 )
+     deallocate( caux2 )
 
      return
-  end subroutine ctqmc_record_prob
+  end subroutine ctqmc_record_pair
 
-!>>> reduce the gtau from all children processes
+!!========================================================================
+!!>>> reduce physical observables                                      <<<
+!!========================================================================
+
+!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : gtau
 
      implicit none
 
@@ -609,49 +762,15 @@
      return
   end subroutine ctqmc_reduce_gtau
 
-!>>> reduce the ftau from all children processes
-  subroutine ctqmc_reduce_ftau(ftau_mpi)
-     use constants
-     use context
-
-     use mmpi
-
-     implicit none
-
-! external arguments
-! auxiliary correlation function
-     real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
-
-! initialize ftau_mpi
-     ftau_mpi = zero
-
-! build ftau_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     !call mp_allreduce(ftau, ftau_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     !ftau_mpi = ftau
-
-# endif /* MPI */
-
-! calculate the average
-     ftau_mpi = ftau_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_ftau
-
-!>>> reduce the grnf from all children processes
+!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi)
-     use constants
-     use context
+     use constants, only : dp, czero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : nprocs
+     use context, only : grnf
 
      implicit none
 
@@ -660,7 +779,7 @@
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
 
 ! initialize grnf_mpi
-     grnf_mpi = zero
+     grnf_mpi = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
@@ -683,14 +802,14 @@
      return
   end subroutine ctqmc_reduce_grnf
 
-!>>> reduce the hist from all children processes
-! note: since hist_mpi and hist are integer (kind=4) type, it is important
-! to avoid data overflow in them
+!!>>> ctqmc_reduce_hist: reduce the hist from all children processes
   subroutine ctqmc_reduce_hist(hist_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : mkink
+     use control, only : nprocs
+     use context, only : hist
 
      implicit none
 
@@ -699,13 +818,13 @@
      real(dp), intent(out) :: hist_mpi(mkink)
 
 ! initialize hist_mpi
-     hist_mpi = 0
+     hist_mpi = zero
 
 ! build hist_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(hist / nprocs, hist_mpi)
+     call mp_allreduce(hist, hist_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -717,17 +836,58 @@
 # endif /* MPI */
 
 ! calculate the average
-     hist_mpi = hist_mpi / 1
+     hist_mpi = hist_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_hist
 
-!>>> reduce the nmat and nnmat from all children processes
-  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
-     use constants
-     use context
+!!>>> ctqmc_reduce_prob: reduce the prob from all children processes
+  subroutine ctqmc_reduce_prob(prob_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : ncfgs
+     use control, only : nprocs
+     use context, only : prob
+
+     implicit none
+
+! external arguments
+! probability of atomic states
+     real(dp), intent(out) :: prob_mpi(ncfgs)
+
+! initialize prob_mpi
+     prob_mpi = zero
+
+! build prob_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(prob, prob_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     prob_mpi = prob
+
+# endif /* MPI */
+
+! calculate the average
+     prob_mpi = prob_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_prob
+
+!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
+  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : nmat, nnmat
 
      implicit none
 
@@ -766,109 +926,25 @@
      return
   end subroutine ctqmc_reduce_nmat
 
-!>>> reduce the schi and sschi from all children processes
-  subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
-     use constants
-     use context
-
-     use mmpi
-
-     implicit none
-
-! external arguments
-! spin-spin correlation function, totally-averaged
-     real(dp), intent(out) :: schi_mpi(ntime)
-
-! spin-spin correlation function, orbital-resolved
-     real(dp), intent(out) :: sschi_mpi(ntime,nband)
-
-! initialize schi_mpi and sschi_mpi
-     schi_mpi = zero
-     sschi_mpi = zero
-
-! build schi_mpi and sschi_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     !call mp_allreduce(schi, schi_mpi)
-     !call mp_allreduce(sschi, sschi_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     !schi_mpi = schi
-     !sschi_mpi = sschi
-
-# endif /* MPI */
-
-! calculate the average
-     schi_mpi = schi_mpi / real(nprocs)
-     sschi_mpi = sschi_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_schi
-
-!>>> reduce the ochi and oochi from all children processes
-  subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
-     use constants
-     use context
-
-     use mmpi
-
-     implicit none
-
-! external arguments
-! orbital-orbital correlation function, totally-averaged
-     real(dp), intent(out) :: ochi_mpi(ntime)
-
-! orbital-orbital correlation function, orbital-resolved
-     real(dp), intent(out) :: oochi_mpi(ntime,norbs)
-
-! initialize ochi_mpi and oochi_mpi
-     ochi_mpi = zero
-     oochi_mpi = zero
-
-! build ochi_mpi and oochi_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     !call mp_allreduce(ochi, ochi_mpi)
-     !call mp_allreduce(oochi, oochi_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     !ochi_mpi = ochi
-     !oochi_mpi = oochi
-
-# endif /* MPI */
-
-! calculate the average
-     ochi_mpi = ochi_mpi / real(nprocs)
-     oochi_mpi = oochi_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_ochi
-
-!>>> reduce the g2_re_mpi and g2_im_mpi from all children processes
+!!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from all
+!!>>> children processes
   subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : g2_re, g2_im
 
      implicit none
 
 ! external arguments
 ! two-particle green's function, real part
-     real(dp), intent(out) :: g2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(out) :: g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! two-particle green's function, imaginary part
-     real(dp), intent(out) :: g2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+     real(dp), intent(out) :: g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! initialize g2_re_mpi and g2_im_mpi
      g2_re_mpi = zero
@@ -898,91 +974,64 @@
      return
   end subroutine ctqmc_reduce_twop
 
-!>>> reduce the h2_re_mpi and h2_im_mpi from all children processes
-  subroutine ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
-     use constants
-     use context
+!!>>> ctqmc_reduce_pair: reduce the ps_re_mpi and ps_im_mpi from all
+!!>>> children processes
+  subroutine ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : nprocs
+     use context, only : ps_re, ps_im
 
      implicit none
 
 ! external arguments
-! vertex function, real part
-     real(dp), intent(out) :: h2_re_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+! particle-particle pair susceptibility, real part
+     real(dp), intent(out) :: ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! vertex function, imaginary part
-     real(dp), intent(out) :: h2_im_mpi(norbs,norbs,nffrq,nffrq,nbfrq)
+! particle-particle pair susceptibility, imaginary part
+     real(dp), intent(out) :: ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! initialize h2_re_mpi and h2_im_mpi
-     h2_re_mpi = zero
-     h2_im_mpi = zero
+! initialize ps_re_mpi and ps_im_mpi
+     ps_re_mpi = zero
+     ps_im_mpi = zero
 
-! build h2_re_mpi and h2_im_mpi, collect data from all children processes
+! build ps_re_mpi and ps_im_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     !call mp_allreduce(h2_re, h2_re_mpi)
-     !call mp_allreduce(h2_im, h2_im_mpi)
+     call mp_allreduce(ps_re, ps_re_mpi)
+     call mp_allreduce(ps_im, ps_im_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     !h2_re_mpi = h2_re
-     !h2_im_mpi = h2_im
+     ps_re_mpi = ps_re
+     ps_im_mpi = ps_im
 
 # endif /* MPI */
 
 ! calculate the average
-     h2_re_mpi = h2_re_mpi / real(nprocs)
-     h2_im_mpi = h2_im_mpi / real(nprocs)
+     ps_re_mpi = ps_re_mpi / real(nprocs)
+     ps_im_mpi = ps_im_mpi / real(nprocs)
 
      return
-  end subroutine ctqmc_reduce_vrtx
+  end subroutine ctqmc_reduce_pair
 
-!>>> reduce the prob from all children processes
-  subroutine ctqmc_reduce_prob(prob_mpi)
-     use constants
-     use context
+!!========================================================================
+!!>>> symmetrize physical observables                                  <<<
+!!========================================================================
 
-     use mmpi
-
-     implicit none
-
-! external arguments
-! probability of atomic states
-     real(dp), intent(out) :: prob_mpi(ncfgs)
-
-! initialize prob_mpi
-     prob_mpi = zero
-
-! build prob_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     call mp_allreduce(prob, prob_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     prob_mpi = prob
-
-# endif /* MPI */
-
-! calculate the average
-     prob_mpi = prob_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_prob
-
-!>>> symmetrize the nmat according to symm vector
+!!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
   subroutine ctqmc_symm_nmat(symm, nmat)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
 
      implicit none
 
@@ -1020,7 +1069,7 @@
                  do jbnd=1,norbs                ! gather the data
                      if ( symm(jbnd) == ibnd ) then
                          raux = raux + nmat(jbnd)
-                     endif
+                     endif ! back if ( symm(jbnd) == ibnd ) block
                  enddo ! over jbnd={1,norbs} loop
 
                  raux = raux / real(hist(ibnd)) ! calculate average value
@@ -1028,9 +1077,9 @@
                  do jbnd=1,norbs                ! setup it
                      if ( symm(jbnd) == ibnd ) then
                          nmat(jbnd) = raux
-                     endif
+                     endif ! back if ( symm(jbnd) == ibnd ) block
                  enddo ! over jbnd={1,norbs} loop
-             endif
+             endif ! back if ( hist(ibnd) > 0 ) block
          enddo ! over ibnd={1,norbs} loop
      endif ! back if ( issun == 2 ) block
 
@@ -1046,11 +1095,14 @@
      return
   end subroutine ctqmc_symm_nmat
 
-!>>> symmetrize the gtau according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_gtau: symmetrize the gtau according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_gtau(symm, gtau)
-     use constants
-     use control
+     use constants, only : dp, zero, two
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : ntime
 
      implicit none
 
@@ -1092,7 +1144,7 @@
                      do jbnd=1,norbs                ! gather the data
                          if ( symm(jbnd) == ibnd ) then
                              raux = raux + gtau(ktau,jbnd,jbnd)
-                         endif
+                         endif ! back if ( symm(jbnd) == ibnd ) block
                      enddo ! over jbnd={1,norbs} loop
 
                      raux = raux / real(hist(ibnd)) ! calculate average value
@@ -1100,9 +1152,9 @@
                      do jbnd=1,norbs                ! setup it
                          if ( symm(jbnd) == ibnd ) then
                              gtau(ktau,jbnd,jbnd) = raux
-                         endif
+                         endif ! back if ( symm(jbnd) == ibnd ) block
                      enddo ! over jbnd={1,norbs} loop
-                 endif
+                 endif ! back if ( hist(ibnd) > 0 ) block
              enddo ! over ibnd={1,norbs} loop
          enddo ! over ktau={1,ntime} loop
      endif ! back if ( issun == 2 ) block
@@ -1121,11 +1173,14 @@
      return
   end subroutine ctqmc_symm_gtau
 
-!>>> symmetrize the grnf according to symm vector
-! only the diagonal elements are taken into considerations
+!!>>> ctqmc_symm_grnf: symmetrize the grnf according to symm vector
+!!>>> only the diagonal elements are taken into considerations
   subroutine ctqmc_symm_grnf(symm, grnf)
-     use constants
-     use control
+     use constants, only : dp, two, czero
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -1167,7 +1222,7 @@
                      do jbnd=1,norbs                ! gather the data
                          if ( symm(jbnd) == ibnd ) then
                              caux = caux + grnf(kfrq,jbnd,jbnd)
-                         endif
+                         endif ! back if ( symm(jbnd) == ibnd ) block
                      enddo ! over jbnd={1,norbs} loop
 
                      caux = caux / real(hist(ibnd)) ! calculate average value
@@ -1175,9 +1230,9 @@
                      do jbnd=1,norbs                ! setup it
                          if ( symm(jbnd) == ibnd ) then
                              grnf(kfrq,jbnd,jbnd) = caux
-                         endif
+                         endif ! back if ( symm(jbnd) == ibnd ) block
                      enddo ! over jbnd={1,norbs} loop
-                 endif
+                 endif ! back if ( hist(ibnd) > 0 ) block
              enddo ! over ibnd={1,norbs} loop
          enddo ! over kfrq={1,mfreq} loop
      endif ! back if ( issun == 2 ) block
@@ -1196,10 +1251,12 @@
      return
   end subroutine ctqmc_symm_grnf
 
-!>>> smooth impurity self-energy function in low frequency region
+!!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
+!!>>> frequency region
   subroutine ctqmc_smth_sigf(sigf)
-     use constants
-     use control
+     use constants, only : dp, czero
+
+     use control, only : nfreq
 
      implicit none
 
@@ -1266,10 +1323,20 @@
      return
   end subroutine ctqmc_smth_sigf
 
-!>>> build imaginary green's function using orthogonal polynomial representation
+!!========================================================================
+!!>>> postprocess physical observables                                 <<<
+!!========================================================================
+
+!!>>> ctqmc_make_gtau: build imaginary green's function using orthogonal
+!!>>> polynomial representation
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, pi
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
      use context, only : ppleg, qqche
 
      implicit none
@@ -1334,7 +1401,7 @@
 
   contains
 
-!>>> build the integral kernel function
+!!>>> cat_make_kernel: build the integral kernel function
   subroutine cat_make_kernel(kdim, kern)
      implicit none
 
@@ -1382,7 +1449,8 @@
      return
   end subroutine cat_make_kernel
 
-!>>> build impurity green's function using normal representation
+!!>>> cat_make_gtau1: build impurity green's function using normal
+!!>>> representation
   subroutine cat_make_gtau1()
      implicit none
 
@@ -1396,7 +1464,8 @@
      return
   end subroutine cat_make_gtau1
 
-!>>> build impurity green's function using legendre polynomial representation
+!!>>> cat_make_gtau2: build impurity green's function using legendre
+!!>>> polynomial representation
   subroutine cat_make_gtau2()
      implicit none
 
@@ -1422,7 +1491,8 @@
      return
   end subroutine cat_make_gtau2
 
-!>>> build impurity green's function using chebyshev polynomial representation
+!!>>> cat_make_gtau3: build impurity green's function using chebyshev
+!!>>> polynomial representation
   subroutine cat_make_gtau3()
      implicit none
 
@@ -1449,140 +1519,31 @@
   end subroutine cat_make_gtau3
   end subroutine ctqmc_make_gtau
 
-!>>> build auxiliary correlation function using orthogonal polynomial representation
-  subroutine ctqmc_make_ftau(tmesh, ftau, faux)
-     use constants
-     use control
-     use context, only : ppleg, qqche
+!!========================================================================
+!!>>> build self-energy function                                       <<<
+!!========================================================================
 
-     implicit none
-
-! external arguments
-! imaginary time mesh
-     real(dp), intent(in)  :: tmesh(ntime)
-
-! auxiliary correlation function/orthogonal polynomial coefficients
-     real(dp), intent(in)  :: ftau(ntime,norbs,norbs)
-
-! calculated auxiliary correlation function
-     real(dp), intent(out) :: faux(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-     integer  :: k
-
-! loop index for legendre polynomial
-     integer  :: fleg
-
-! loop index for chebyshev polynomial
-     integer  :: fche
-
-! index for imaginary time \tau
-     integer  :: curr
-
-! interval for imaginary time slice
-     real(dp) :: step
-
-! dummy variables
-     real(dp) :: raux
-
-! initialize faux
-     faux = zero
-
-! select calculation method
-     select case ( isort )
-
-         case (4)
-             call cat_make_ftau1()
-
-         case (5)
-             call cat_make_ftau2()
-
-         case (6)
-             call cat_make_ftau3()
-
-     end select
-
-     return
-
-  contains
-
-!>>> build auxiliary correlation function using normal representation
-  subroutine cat_make_ftau1()
-     implicit none
-
-     raux = real(ntime) / (beta * beta)
-     do i=1,norbs
-         do j=1,norbs
-             if ( i == j ) CYCLE
-
-             do k=1,ntime
-                 faux(k,j,i) = ftau(k,j,i) * raux
-             enddo ! over k={1,ntime} loop
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine cat_make_ftau1
-
-!>>> build auxiliary correlation function using legendre polynomial representation
-  subroutine cat_make_ftau2()
-     implicit none
-
-     step = real(legrd - 1) / two
-     do i=1,norbs
-         do j=1,norbs
-             if ( i == j ) CYCLE
-
-             do k=1,ntime
-                 raux = two * tmesh(k) / beta
-                 curr = nint(raux * step) + 1
-                 do fleg=1,lemax
-                     raux = sqrt(two * fleg - 1) / (beta * beta)
-                     faux(k,j,i) = faux(k,j,i) + raux * ftau(fleg,j,i) * ppleg(curr,fleg)
-                 enddo ! over fleg={1,lemax} loop
-             enddo ! over k={1,ntime} loop
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine cat_make_ftau2
-
-!>>> build auxiliary correlation function using chebyshev polynomial representation
-  subroutine cat_make_ftau3()
-     implicit none
-
-     step = real(chgrd - 1) / two
-     do i=1,norbs
-         do j=1,norbs
-             if ( i == j ) CYCLE
-
-             do k=1,ntime
-                 raux = two * tmesh(k) / beta
-                 curr = nint(raux * step) + 1
-                 raux = two / (beta * beta)
-                 do fche=1,chmax
-                     faux(k,j,i) = faux(k,j,i) + raux * ftau(fche,j,i) * qqche(curr,fche)
-                 enddo ! over fche={1,chmax} loop
-             enddo ! over k={1,ntime} loop
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine cat_make_ftau3
-  end subroutine ctqmc_make_ftau
-
-!>>> build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make interpolation for self-energy
-! function between low frequency QMC data and high frequency Hubbard-I
-! approximation data, the full impurity green's function can be obtained by
-! using dyson's equation finally
+!!>>> ctqmc_make_hub1: build atomic green's function and self-energy
+!!>>> function using improved Hubbard-I approximation, and then make
+!!>>> interpolation for self-energy function between low frequency QMC
+!!>>> data and high frequency Hubbard-I approximation data, the full
+!!>>> impurity green's function can be obtained by using dyson's equation
+!!>>> finally
   subroutine ctqmc_make_hub1()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, czi, czero, eps6
+
+     use control, only : norbs, ncfgs, nzero
+     use control, only : mfreq
+     use control, only : nfreq
+     use control, only : mune
+     use control, only : myid, master
+     use context, only : rmesh
+     use context, only : prob
+     use context, only : eimp, eigs
+     use context, only : op_d
+     use context, only : grnf
+     use context, only : hybf
+     use context, only : sig2
 
      implicit none
 
@@ -1636,7 +1597,7 @@
                      fcounter(m) = fcounter(m) + 1
                      if ( fcounter(m) > nzero ) then
                          call s_print_error('ctqmc_make_hub1','non-zero elements exceed limit')
-                     endif
+                     endif ! back if ( fcounter(m) > nzero ) block
                      fa(fcounter(m),m) = i
                      fb(fcounter(m),m) = j
                      fv(fcounter(m),m) = value
@@ -1668,7 +1629,7 @@
 ! dump the ghub and shub, only for reference, only the master node can do it
      if ( myid == master ) then
          call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! build self-energy function at low frequency region
 !-------------------------------------------------------------------------
