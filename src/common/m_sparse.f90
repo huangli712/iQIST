@@ -1,24 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : sparse
-!!!           sparse@sparse_format_csrdns
-!!!           sparse@sparse_format_csrdns_z
-!!!           sparse@sparse_format_dnscsr
-!!!           sparse@sparse_format_dnscsr_z
-!!!           sparse@sparse_format_unicsr
-!!!           sparse@sparse_format_unicsr_z
-!!!           sparse@sparse_matrix_copyer
-!!!           sparse@sparse_matrix_copyer_z
-!!!           sparse@sparse_matrix_getter
-!!!           sparse@sparse_matrix_getter_z
-!!!           sparse@sparse_matmul_amuvec
-!!!           sparse@sparse_matmul_amuvec_z
-!!!           sparse@sparse_matmul_amumat
-!!!           sparse@sparse_matmul_amumat_z
-!!!           sparse@sparse_matmul_amudia
-!!!           sparse@sparse_matmul_amudia_z
-!!!           sparse@sparse_matmul_diamua
-!!!           sparse@sparse_matmul_diamua_z
 !!! source  : m_sparse.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
