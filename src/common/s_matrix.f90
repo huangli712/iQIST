@@ -41,7 +41,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/26/2014 by li huang
-!!!           08/06/2014 by li huang
+!!!           11/10/2014 by li huang
 !!! purpose : these subroutines are used to encapsulate some important and
 !!!           frequently used linear algebra operations.
 !!! status  : unstable

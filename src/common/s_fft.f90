@@ -30,7 +30,8 @@
 !! subroutine s_fft_backward(...)
 !! subroutine s_fft_tails(...)
 !!
-!! Note: the s_fft_tails() subroutine is called by s_fft_backward() internally.
+!! Note: the s_fft_tails() subroutine is called by the s_fft_backward()
+!! subroutine internally. DO NOT call it directly!
 !!
 !!
 
