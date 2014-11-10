@@ -44,9 +44,10 @@
 !! subroutine s_qsorter(...)
 !! subroutine s_qscorer(...)
 !!
-!! Note: s_sorter() and s_sorter2() implements the bubble algorithm,
-!! s_qsorter() implement the quick sort algorithm. s_qscorer() is called
-!! by s_qsorter() internally.
+!! Note: the s_sorter() and s_sorter2() subroutines implement the bubble
+!! algorithm, and the s_qsorter() subroutine implements the quick sort
+!! algorithm. The s_qscorer() subroutine is called by the s_qsorter()
+!! internally. DO NOT call it directly!
 !!
 !! 3. combination
 !! --------------
@@ -101,7 +102,7 @@
 
 ! external arguments
 ! grab the number of values from the calling code
-     integer, intent(in) :: nsize
+     integer, intent(in)     :: nsize
 
 ! dataset to be sorted
      real(dp), intent(inout) :: list(nsize)
@@ -141,7 +142,7 @@
 
 ! external arguments
 ! size of the list
-     integer, intent(in) :: nsize
+     integer, intent(in)     :: nsize
 
 ! in: index of original list
 ! out: original index of the sorted list
@@ -185,7 +186,7 @@
 
 ! external arguments
 ! grab the number of values from the calling code
-     integer, intent(in) :: nsize
+     integer, intent(in)     :: nsize
 
 ! dataset to be sorted
      real(dp), intent(inout) :: list(nsize)
@@ -207,13 +208,13 @@
 
 ! external arguments
 ! start point
-     integer, intent(in) :: pstart
+     integer, intent(in)     :: pstart
 
 ! end point
-     integer, intent(in) :: pend
+     integer, intent(in)     :: pend
 
 ! size of array
-     integer, intent(in) :: nsize
+     integer, intent(in)     :: nsize
 
 ! dataset to be sorted
      real(dp), intent(inout) :: list(nsize)
@@ -345,7 +346,7 @@
 
 ! external arguments
 ! input/output string
-     character(*), intent(inout) :: s
+     character(len=*), intent(inout) :: s
 
 ! local variables
 ! loop index
@@ -372,7 +373,7 @@
 
 ! external arguments
 ! input/output string
-     character(*), intent(inout) :: s
+     character(len=*), intent(inout) :: s
 
 ! local variables
 ! loop index
@@ -431,7 +432,7 @@
 
 ! external arguments
 ! character string to be compressed.
-     character( * ), intent(inout) :: string
+     character(len=*), intent(inout) :: string
 
 ! local parameters
 ! ASCII number for tab space ' ' and tab
@@ -498,20 +499,20 @@
 
 ! external arguments
 ! output date and time
-     character (len = 20), intent(out) :: date_time_string
+     character (len=20), intent(out) :: date_time_string
 
 ! local variables
 ! used to extract data from a standard fortran call: date_and_time()
      integer :: date_time(8)
 
 ! string for current date
-     character (len = 12) :: cdate
+     character (len=12) :: cdate
 
 ! string for current time
-     character (len = 08) :: ctime
+     character (len=08) :: ctime
 
 ! month array
-     character (len = 03) :: months(12)
+     character (len=03) :: months(12)
 
 ! init the month array
      months( 1) = 'Jan'; months( 2) = 'Feb'; months( 3) = 'Mar'
