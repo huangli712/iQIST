@@ -627,10 +627,10 @@
 
 ! external arguments
 ! dimension of dmat matrix
-     integer, intent(in) :: ndim
+     integer, intent(in)     :: ndim
 
 ! determinant of dmat matrix
-     real(dp), intent(out) :: ddet
+     real(dp), intent(out)   :: ddet
 
 ! object matrix, on entry, it contains the original matrix, on exit,
 ! it is destroyed and replaced with the L and U matrix
@@ -646,28 +646,40 @@
 ! size of working array work
      integer  :: lwork
 
-! working arrays for lapack subroutines: dgetrf
-     integer  :: ipiv(ndim)
-
-! working arrays for lapack subroutines: dgeev
-     real(dp) :: work(4*ndim)
-
-! real and imaginary parts of the computed eigenvalues
-     real(dp) :: wi(ndim)
-     real(dp) :: wr(ndim)
-
-! left and right eigenvectors
-     real(dp) :: vl(ndim,ndim)
-     real(dp) :: vr(ndim,ndim)
-
-! dummy arrays, used to save dmat
-     real(dp) :: amat(ndim,ndim)
-
 ! used to calculate determinant
      complex(dp) :: cres
 
+! working arrays for lapack subroutines: dgetrf
+     integer, allocatable  :: ipiv(:)
+
+! working arrays for lapack subroutines: dgeev
+     real(dp), allocatable :: work(:)
+
+! real and imaginary parts of the computed eigenvalues
+     real(dp), allocatable :: wi(:)
+     real(dp), allocatable :: wr(:)
+
+! left and right eigenvectors
+     real(dp), allocatable :: vl(:,:)
+     real(dp), allocatable :: vr(:,:)
+
+! dummy arrays, used to save dmat
+     real(dp), allocatable :: amat(:,:)
+
 ! setup lwork
      lwork = 4 * ndim
+
+! allocate memory
+     allocate(ipiv(ndim),      stat=ierror)
+     allocate(work(lwork),     stat=ierror)
+     allocate(wi(ndim),        stat=ierror)
+     allocate(wr(ndim),        stat=ierror)
+     allocate(vl(ndim,ndim),   stat=ierror)
+     allocate(vr(ndim,ndim),   stat=ierror)
+     allocate(amat(ndim,ndim), stat=ierror)
+     if ( ierror /= 0 ) then
+         call s_print_error('s_det_d','can not allocate enough memory')
+     endif ! back if ( ierror /= 0 ) block
 
 ! copy dmat to amat at first
      amat = dmat
@@ -711,6 +723,15 @@
      enddo ! over i={1,ndim} loop
      ddet = cres
 
+! deallocate memory
+     if ( allocated(ipiv) ) deallocate(ipiv)
+     if ( allocated(work) ) deallocate(work)
+     if ( allocated(wi  ) ) deallocate(wi  )
+     if ( allocated(wr  ) ) deallocate(wr  )
+     if ( allocated(vl  ) ) deallocate(vl  )
+     if ( allocated(vr  ) ) deallocate(vr  )
+     if ( allocated(amat) ) deallocate(amat)
+
      return
   end subroutine s_det_d
 
@@ -722,10 +743,10 @@
 
 ! external arguments
 ! dimension of zmat matrix
-     integer, intent(in) :: ndim
+     integer, intent(in)        :: ndim
 
 ! determinant of zmat matrix
-     complex(dp), intent(out) :: zdet
+     complex(dp), intent(out)   :: zdet
 
 ! object matrix, on entry, it contains the original matrix, on exit,
 ! it is destroyed and replaced with the L and U matrix
@@ -739,7 +760,13 @@
      integer :: ierror
 
 ! working arrays for lapack subroutines
-     integer :: ipiv(ndim)
+     integer, allocatable :: ipiv(:)
+
+! allocate memory
+     allocate(ipiv(ndim), stat=ierror)
+     if ( ierror /= 0 ) then
+         call s_print_error('s_det_z','can not allocate enough memory')
+     endif ! back if ( ierror /= 0 ) block
 
 ! computes the LU factorization of a general m-by-n matrix, need lapack
 ! package, zgetrf subroutine
@@ -758,6 +785,9 @@
          endif ! back if ( ipiv(i) == i ) block
      enddo ! over i={1,ndim} loop
 
+! deallocate memory
+     if ( allocated(ipiv) ) deallocate(ipiv)
+
      return
   end subroutine s_det_z
 
@@ -773,7 +803,7 @@
 
 ! external arguments
 ! dimension of dmat matrix
-     integer, intent(in) :: ndim
+     integer, intent(in)     :: ndim
 
 ! object matrix, on entry, it contains the original matrix, on exit,
 ! it is destroyed and replaced with the inversed matrix
@@ -784,8 +814,15 @@
      integer  :: ierror
 
 ! working arrays for lapack subroutines
-     integer  :: ipiv(ndim)
-     real(dp) :: work(ndim)
+     integer, allocatable  :: ipiv(:)
+     real(dp), allocatable :: work(:)
+
+! allocate memory
+     allocate(ipiv(ndim), stat=ierror)
+     allocate(work(ndim), stat=ierror)
+     if ( ierror /= 0 ) then
+         call s_print_error('s_inv_d','can not allocate enough memory')
+     endif ! back if ( ierror /= 0 ) block
 
 ! computes the LU factorization of a general m-by-n matrix, need lapack
 ! package, dgetrf subroutine
@@ -801,6 +838,10 @@
          call s_print_error('s_inv_d','error in lapack subroutine dgetri')
      endif ! back if ( ierror /= 0 ) block
 
+! deallocate memory
+     if ( allocated(ipiv) ) deallocate(ipiv)
+     if ( allocated(work) ) deallocate(work)
+
      return
   end subroutine s_inv_d
 
@@ -812,7 +853,7 @@
 
 ! external arguments
 ! dimension of zmat matrix
-     integer, intent(in) :: ndim
+     integer, intent(in)        :: ndim
 
 ! object matrix, on entry, it contains the original matrix, on exit,
 ! it is destroyed and replaced with the inversed matrix
@@ -823,8 +864,15 @@
      integer     :: ierror
 
 ! working arrays for lapack subroutines
-     integer     :: ipiv(ndim)
-     complex(dp) :: work(ndim)
+     integer, allocatable     :: ipiv(:)
+     complex(dp), allocatable :: work(:)
+
+! allocate memory
+     allocate(ipiv(ndim), stat=ierror)
+     allocate(work(ndim), stat=ierror)
+     if ( ierror /= 0 ) then
+         call s_print_error('s_inv_z','can not allocate enough memory')
+     endif ! back if ( ierror /= 0 ) block
 
 ! computes the LU factorization of a general m-by-n matrix, need lapack
 ! package, zgetrf subroutine
@@ -839,6 +887,10 @@
      if ( ierror /= 0 ) then
          call s_print_error('s_inv_z','error in lapack subroutine zgetri')
      endif ! back if ( ierror /= 0 ) block
+
+! deallocate memory
+     if ( allocated(ipiv) ) deallocate(ipiv)
+     if ( allocated(work) ) deallocate(work)
 
      return
   end subroutine s_inv_z
@@ -892,7 +944,7 @@
      real(dp), allocatable :: vl(:,:)
 
 ! initialize lwork
-     lwork = 4*ndim
+     lwork = 4 * ndim
 
 ! allocate memory
      allocate(work(lwork),   stat=istat)
@@ -901,7 +953,7 @@
      allocate(vr(ndim,ndim), stat=istat)
      allocate(vl(ndim,ndim), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_eig_dg', 'can not allocate enough memory')
+         call s_print_error('s_eig_dg','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
@@ -913,7 +965,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_eig_dg', 'error in lapack subroutine dgeev')
+         call s_print_error('s_eig_dg','error in lapack subroutine dgeev')
      endif ! back if ( info /= 0 ) block
 
 ! copy eigenvalues and eigenvectors
@@ -974,7 +1026,7 @@
      complex(dp), allocatable :: vl(:,:)
 
 ! initialize lwork
-     lwork = 2*ndim
+     lwork = 2 * ndim
 
 ! allocate memory
      allocate(work(lwork),   stat=istat)
@@ -982,7 +1034,7 @@
      allocate(vr(ndim,ndim), stat=istat)
      allocate(vl(ndim,ndim), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_eig_zg', 'can not allocate enough memory')
+         call s_print_error('s_eig_zg','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
@@ -994,7 +1046,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_eig_zg', 'error in lapack subroutine zgeev')
+         call s_print_error('s_eig_zg','error in lapack subroutine zgeev')
      endif ! back if ( info /= 0 ) block
 
 ! copy eigenvectors
@@ -1053,7 +1105,7 @@
      real(dp), allocatable :: vl(:,:)
 
 ! initialize lwork
-     lwork = 4*ndim
+     lwork = 4 * ndim
 
 ! allocate memory
      allocate(evec(ldim,ndim), stat=istat)
@@ -1063,7 +1115,7 @@
      allocate(vr(ndim,ndim),   stat=istat)
      allocate(vl(ndim,ndim),   stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_eigvals_dg', 'can not allocate enough memory')
+         call s_print_error('s_eigvals_dg','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
@@ -1075,7 +1127,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_eigvals_dg', 'error in lapack subroutine dgeev')
+         call s_print_error('s_eigvals_dg','error in lapack subroutine dgeev')
      endif ! back if ( info /= 0 ) block
 
 ! copy eigenvalues
@@ -1135,7 +1187,7 @@
      complex(dp), allocatable :: vl(:,:)
 
 ! initialize lwork
-     lwork = 2*ndim
+     lwork = 2 * ndim
 
 ! allocate memory
      allocate(zvec(ldim,ndim), stat=istat)
@@ -1144,7 +1196,7 @@
      allocate(vr(ndim,ndim),   stat=istat)
      allocate(vl(ndim,ndim),   stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_eigvals_zg', 'can not allocate enough memory')
+         call s_print_error('s_eigvals_zg','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
@@ -1156,7 +1208,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_eigvals_zg', 'error in lapack subroutine zgeev')
+         call s_print_error('s_eigvals_zg','error in lapack subroutine zgeev')
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
@@ -1205,12 +1257,12 @@
      real(dp), allocatable :: work(:)
 
 ! initialize lwork
-     lwork = 3*ndim-1
+     lwork = 3 * ndim - 1
 
 ! allocate memory
      allocate(work(lwork), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_eig_sy', 'can not allocate enough memory')
+         call s_print_error('s_eig_sy','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
@@ -1222,7 +1274,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_eig_sy', 'error in lapack subroutine dsyev')
+         call s_print_error('s_eig_sy','error in lapack subroutine dsyev')
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
@@ -1270,14 +1322,14 @@
      complex(dp), allocatable :: work(:)
 
 ! initialize lwork (lrwork)
-     lwork = 2*ndim-1
-     lrwork = 3*ndim-2
+     lwork = 2 * ndim - 1
+     lrwork = 3 * ndim - 2
 
 ! allocate memory
      allocate(work(lwork),   stat=istat)
      allocate(rwork(lrwork), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_eig_he', 'can not allocate enough memory')
+         call s_print_error('s_eig_he','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
@@ -1289,7 +1341,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_eig_he', 'error in lapack subroutine zheev')
+         call s_print_error('s_eig_he','error in lapack subroutine zheev')
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
@@ -1335,13 +1387,13 @@
      real(dp), allocatable :: evec(:,:)
 
 ! initialize lwork
-     lwork = 3*ndim-1
+     lwork = 3 * ndim - 1
 
 ! allocate memory
      allocate(work(lwork),     stat=istat)
      allocate(evec(ldim,ndim), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_eigvals_sy', 'can not allocate enough memory')
+         call s_print_error('s_eigvals_sy','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
@@ -1353,7 +1405,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_eigvals_sy', 'error in lapack subroutine dsyev')
+         call s_print_error('s_eigvals_sy','error in lapack subroutine dsyev')
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
@@ -1402,15 +1454,15 @@
      complex(dp), allocatable :: evec(:,:)
 
 ! initialize lwork (lrwork)
-     lwork = 2*ndim-1
-     lrwork = 3*ndim-2
+     lwork = 2 * ndim - 1
+     lrwork = 3 * ndim - 2
 
 ! allocate memory
      allocate(work(lwork),     stat=istat)
      allocate(rwork(lrwork),   stat=istat)
      allocate(evec(ldim,ndim), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_eigvals_he', 'can not allocate enough memory')
+         call s_print_error('s_eigvals_he','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize output arrays
@@ -1422,7 +1474,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_eigvals_he', 'error in lapack subroutine zheev')
+         call s_print_error('s_eigvals_he','error in lapack subroutine zheev')
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
@@ -1469,9 +1521,9 @@
      integer, allocatable :: ipiv(:)
 
 ! allocate memory
-     allocate(ipiv(n), stat = istat)
+     allocate(ipiv(n), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_solve_dg', 'can not allocate enough memory')
+         call s_print_error('s_solve_dg','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! call the computational subroutine: dgesv
@@ -1479,7 +1531,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_solve_dg', 'error in lapack subroutine dgesv')
+         call s_print_error('s_solve_dg','error in lapack subroutine dgesv')
      endif ! back if ( info /= 0 ) block
 
 ! deallocate memory
@@ -1520,9 +1572,9 @@
      integer, allocatable :: ipiv(:)
 
 ! allocate memory
-     allocate(ipiv(n), stat = istat)
+     allocate(ipiv(n), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_solve_zg', 'can not allocate enough memory')
+         call s_print_error('s_solve_zg','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! call the computational subroutine: zgesv
@@ -1530,7 +1582,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_solve_zg', 'error in lapack subroutine zgesv')
+         call s_print_error('s_solve_zg','error in lapack subroutine zgesv')
      endif ! back if ( info /= 0 ) block
 
 ! deallocate memory
@@ -1574,10 +1626,10 @@
      real(dp), allocatable :: work(:)
 
 ! allocate memory
-     allocate(ipiv(n), stat = istat)
-     allocate(work(n), stat = istat)
+     allocate(ipiv(n), stat=istat)
+     allocate(work(n), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_solve_sy', 'can not allocate enough memory')
+         call s_print_error('s_solve_sy','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! call the computational subroutine: dsysv
@@ -1585,7 +1637,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_solve_sy', 'error in lapack subroutine dsysv')
+         call s_print_error('s_solve_sy','error in lapack subroutine dsysv')
      endif ! back if ( info /= 0 ) block
 
 ! deallocate memory
@@ -1630,10 +1682,10 @@
      complex(dp), allocatable :: work(:)
 
 ! allocate memory
-     allocate(ipiv(n), stat = istat)
-     allocate(work(n), stat = istat)
+     allocate(ipiv(n), stat=istat)
+     allocate(work(n), stat=istat)
      if ( istat /= 0 ) then
-         call s_print_error('s_solve_he', 'can not allocate enough memory')
+         call s_print_error('s_solve_he','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! call the computational subroutine: zhesv
@@ -1641,7 +1693,7 @@
 
 ! check the status
      if ( info /= 0 ) then
-         call s_print_error('s_solve_he', 'error in lapack subroutine zhesv')
+         call s_print_error('s_solve_he','error in lapack subroutine zhesv')
      endif ! back if ( info /= 0 ) block
 
 ! deallocate memory
