@@ -94,7 +94,7 @@
 !!
 !! call mp_barrier()
 !!
-!! 5. finialize mpi environment
+!! 6. finialize mpi environment
 !! ----------------------------
 !!
 !! call mp_finalize()
