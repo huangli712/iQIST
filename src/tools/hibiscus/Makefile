@@ -20,14 +20,14 @@
 ## History
 ## =======
 ##
-## 09/30/2014 by li huang
+## 11/10/2014 by li huang
 ##
 ##
 
 default: all
 
-all: build-entropy1 build-entropy2 build-sac build-script build-swing build-toolbox
-clean: clean-entropy1 clean-entropy2 clean-sac clean-script clean-swing clean-toolbox
+all: build-entropy1 build-entropy2 build-stoch build-script build-swing build-toolbox
+clean: clean-entropy1 clean-entropy2 clean-stoch clean-script clean-swing clean-toolbox
 
 # targets for entropy1
 build-entropy1:
@@ -43,12 +43,12 @@ build-entropy2:
 clean-entropy2:
 	cd ./entropy2; pwd; make clean
 
-# targets for sac
-build-sac:
-	cd ./sac; pwd; make
+# targets for stoch
+build-stoch:
+	cd ./stoch; pwd; make
 
-clean-sac:
-	cd ./sac; pwd; make clean
+clean-stoch:
+	cd ./stoch; pwd; make clean
 
 # targets for script
 build-script:
