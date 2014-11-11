@@ -20,7 +20,8 @@
 ## F90
 ## ---
 ##
-## Fortran compiler. It can be 'mpif90' or 'ifort'
+## Intel Fortran compiler. It can be 'mpif90' or 'ifort'. If it is mpif90,
+## the internal compiler invoked by mpif90 must be ifort.
 ##
 ## LINKER
 ## ------
@@ -37,13 +38,15 @@
 ## ---
 ##
 ## Specify whether MPI is enable. If you want to compile a sequential code,
-## please comment it out with '#' symbol and then setup F90 to 'ifort'.
+## please comment it out with '#' symbol and then setup F90 to 'ifort'. We
+## strongly suggest to compile MPI parallelized codes. 
 ##
 ## OMP
 ## ---
 ##
 ## Specify whether OpenMP is enable. If you want to disable it, please
-## comment it out. In default it is disabled.
+## comment it out. In default it is disabled. So far OpenMP was not used
+## by any components.
 ##
 ## API
 ## ---
@@ -114,13 +117,14 @@
 ## FFLAGS
 ## ------
 ##
-## Collection of Fortran compiler opinions. Do not modify them.
+## Collection of Fortran compiler opinions. Do not modify them for ever.
 ##
 ## LFLAGS
 ## ------
 ##
 ## Collection of linker opinions. '-Wl,-no_pie' is useful when you are
-## using Mac Os X system. Do not modify them.
+## using Mac Os X system. Do not modify them unless you know what you
+## are doing.
 ##
 ## LIB
 ## ---
@@ -140,8 +144,7 @@
 ## History
 ## =======
 ##
-## 08/04/2014 by li huang
-## 09/22/2014 by li huang
+## 11/10/2014 by li huang
 ##
 ##
 
@@ -170,7 +173,7 @@ MARCH  = -march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2
 # flags for compiler and linker
 #-------------------------------------------------------------------------
 FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MARCH) $(GPROF)
-LFLAGS = -static $(OMP) $(GPROF) -Wl,-no_pie
+LFLAGS = -static -Wl,-no_pie $(OMP) $(GPROF)
 
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------

@@ -810,8 +810,7 @@
 ! for x < lmax recurse down
      if ( x < lmax ) then
          if ( lmax == 0 ) then
-             jl(0) = sin(x) / x
-             RETURN
+             jl(0) = sin(x) / x; RETURN
          endif ! back if ( lmax == 0 ) block
 
 ! start from truly random numbers

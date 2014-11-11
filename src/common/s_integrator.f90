@@ -20,7 +20,6 @@
 !! To use s_int_trapezoid() or s_int_simpson(), you have to define the
 !! integrand at first. For example:
 !!
-!!
 !!  function f(x)
 !!     use constants, only : dp
 !!

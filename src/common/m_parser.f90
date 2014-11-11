@@ -1,13 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : parser
-!!!           parser@data_ptr
-!!!           parser@list_ptr
-!!!           parser@p_create
-!!!           parser@p_destroy
-!!!           parser@p_parse
-!!!           parser@p_get
-!!!           parser@p_get_vec
 !!! source  : m_parser.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -25,7 +18,7 @@
 !! Introduction
 !! ============
 !!
-!! The original input file format for iQIST is not very well. We need a
+!! The original input file format for iQIST is not very good. We need a
 !! flexible, convenient, and powerful input file format, and corresponding
 !! file reader and parser. Thus, we redesign the input file format and
 !! implement this file parser.
@@ -70,9 +63,11 @@
 !!
 !!    example
 !!
-!!    nband = 4 norbs = 8 ! it is not valid
-!!    nband =
-!!    4                   ! it is not valid
+!!    nband = 4 norbs = 8  ! it is not valid
+!!    nband = 4, norbs = 8 ! it is not valid
+!!    nband = 4; norbs = 8 ! it is not valid
+!!    nband =              !
+!!    4                    ! it is not valid
 !!
 !! 6. in the value part, now only integer, real(dp), logical, and character
 !!    data type are support.
@@ -118,7 +113,7 @@
 !! call p_parse(file_name)
 !!
 !! note: in the mpi environment, only the master node can execute this
-!! command.
+!! command. you should broadcast the data manually.
 !!
 !! 4. extract parameters
 !! ---------------------
@@ -195,6 +190,7 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
+     private :: data_t
      private :: data_ptr
      private :: list_ptr
 
@@ -270,7 +266,7 @@
 ! flag, the line content is stored in string
          read(mytmp, '(a100)', iostat = istat) string
          if ( istat == iostat_end ) then
-             EXIT
+             EXIT FILE_PARSING
          else ! it is not the end
 ! get rid of the empty, tab, and null in the string
              call s_str_compress(string)
