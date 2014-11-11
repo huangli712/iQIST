@@ -23,12 +23,11 @@
 ## History
 ## =======
 ##
-## 09/18/2014 by li huang
-## 10/02/2014 by li huang
+## 11/10/2014 by li huang
 ##
 ##
 
-# define my ln function
+# define my own ln function
 function mln {
     name=$(echo $2 | tr '[:lower:]' '[:upper:]')
     if [ -e "$1" ]
@@ -71,9 +70,9 @@ do
     dir=$(echo ../src/tools/hibiscus/entropy2/$component)
     mln $dir $component
 done
-for component in sai
+for component in sac
 do
-    dir=$(echo ../src/tools/hibiscus/sac/$component)
+    dir=$(echo ../src/tools/hibiscus/stoch/$component)
     mln $dir $component
 done
 for component in mchi mdos mkra mscr msig mstd mtau mups

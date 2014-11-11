@@ -58,10 +58,7 @@
 ## History
 ## =======
 ##
-## 08/19/2014 by li huang
-## 09/06/2014 by li huang
-## 09/18/2014 by li huang
-## 10/02/2014 by li huang
+## 11/10/2014 by li huang
 ##
 ##
 
@@ -123,6 +120,7 @@ help-more:
 	@echo '     clean-manjushaka  clean manjushaka directory           '
 	@echo
 	@echo '     daisy             build daisy code                     '
+	@echo '     daisy-lib         build daisy library                  '
 	@echo '     clean-daisy       clean daisy directory                '
 	@echo
 	@echo '     jasmine           build jasmine code                   '
@@ -148,8 +146,15 @@ all: common api solver tool other
 clean: clean-common clean-api clean-solver clean-tool clean-other
 
 # targets for solver
-solver: common api azalea gardenia narcissus begonia lavender pansy manjushaka daisy
-clean-solver: clean-azalea clean-gardenia clean-narcissus clean-begonia clean-lavender clean-pansy clean-manjushaka clean-daisy
+solver: common api \
+        azalea gardenia narcissus \
+        begonia lavender \
+        pansy manjushaka \
+        daisy
+clean-solver: clean-azalea clean-gardenia clean-narcissus \
+              clean-begonia clean-lavender \
+              clean-pansy clean-manjushaka \
+              clean-daisy
 
 # targets for tool
 tool: common jasmine hibiscus
@@ -228,6 +233,9 @@ clean-manjushaka:
 # targets for hfqmc codes: daisy
 daisy:
 	cd ../hfqmc/daisy/; pwd; make
+
+daisy-lib:
+	cd ../hfqmc/daisy/; pwd; make lib
 
 clean-daisy:
 	cd ../hfqmc/daisy/; pwd; make clean

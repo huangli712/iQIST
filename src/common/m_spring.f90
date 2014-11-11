@@ -1,16 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : spring
-!!!           spring@spring_mt_init
-!!!           spring@spring_mt_stream
-!!!           spring@spring_mt_string
-!!!           spring@spring_mt_source
-!!!           spring@spring_sfmt_init
-!!!           spring@spring_sfmt_stream
-!!!           spring@spring_sfmt_string
-!!!           spring@spring_sfmt_source
-!!!           spring@spring_sfmt_kernel
-!!!           spring@spring_sfmt_core
 !!! source  : m_spring.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)

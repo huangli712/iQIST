@@ -1,34 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSML (Common Service Modules Library)
 !!! program : stack
-!!!           stack@istack_create
-!!!           stack@istack_clean
-!!!           stack@istack_destroy
-!!!           stack@istack_copyer
-!!!           stack@istack_setter
-!!!           stack@istack_getter
-!!!           stack@istack_push
-!!!           stack@istack_pop
-!!!           stack@istack_display
-!!!           stack@istack_gettop
-!!!           stack@istack_getrest
-!!!           stack@istack_getsize
-!!!           stack@istack_isfull
-!!!           stack@istack_isempty
-!!!           stack@gstack_create
-!!!           stack@gstack_clean
-!!!           stack@gstack_destroy
-!!!           stack@gstack_copyer
-!!!           stack@gstack_setter
-!!!           stack@gstack_getter
-!!!           stack@gstack_push
-!!!           stack@gstack_pop
-!!!           stack@gstack_display
-!!!           stack@gstack_gettop
-!!!           stack@gstack_getrest
-!!!           stack@gstack_getsize
-!!!           stack@gstack_isfull
-!!!           stack@gstack_isempty
 !!! source  : m_stack.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -47,8 +19,9 @@
 !! ============
 !!
 !! In this module, we implement two types of stack, istack and gstack. The
-!! istack type was designed to deal with integer numbers. However, gstack
-!! is a generic type stack, it supports the following four data types:
+!! istack type was designed to deal with integer numbers only. However,
+!! gstack is a generic type stack. More specifically, it supports the
+!! following four data types:
 !!     integer,
 !!     logical,
 !!     real(dp),
@@ -59,7 +32,8 @@
 !! fortran compilers can support these features. This module was tested
 !! using intel fortran compiler only. We do not guarantee it can work/be
 !! compiled correctly for using the other fortran compilers. So please
-!! use it carefully.
+!! use it carefully. In the iqist project, so far we only use the istack
+!! type. However, in the future, we will turn to the gstack type.
 !!
 !! Usage
 !! =====
@@ -110,10 +84,12 @@
 !! print *, istack_isfull(is)
 !! print *, istack_isempty(is)
 !! print *, istack_getsize(is)
+!! print *, istack_getrest(is)
 !!
 !! print *, gstack_isfull(gs)
 !! print *, gstack_isempty(gs)
 !! print *, gstack_getsize(gs)
+!! print *, gstack_getrest(gs)
 !!
 !! The above three function calls will tell you whether the stack is full,
 !! whether it is empty, and its capacity.
