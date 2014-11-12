@@ -22,5 +22,33 @@
 ##
 ##
 
-class ctqmc(object):
-    pass
+import numpy
+import scipy
+
+
+class p_ctqmc_solver(object):
+    """
+    """
+
+    def __init__(self, solver):
+        """
+        """
+        pass
+
+    def setp(self):
+        """
+        """
+        pass
+
+    def check(self):
+        """
+        """
+        pass
+
+    def write(self):
+        """
+        """
+        pass
+
+if __name__ == '__main__':
+    print 'here'
