@@ -20,13 +20,14 @@
 ## History
 ## =======
 ##
-## 09/23/2014 by li huang
+## 11/11/2014 by li huang
 ##
 ##
 
 .SUFFIXES: .f90
 
 include ../../build/make.sys
+MPIL = -L/usr/local/openmpi/lib -lmpi_mpifh
 
 mod = ctqmc_api.o
 
@@ -37,16 +38,16 @@ all: build_mod
 build_mod: $(mod)
 
 f2py:
-	fpp -P -DF2PY ctqmc_api.f90 > py_api.f90
+	fpp -P -DF2PY ctqmc_api.f90 > ctqmc_api_py.f90
 
-MM:
-	cp ../../common/libMM.a .
-
-ctqmc:
+libctqmc:
 	cp ../azalea/libctqmc.a .
 
-pyiqist: f2py MM ctqmc
-	f2py -c --fcompiler=intelem py_api.f90 -m pyiqist -L. -lctqmc -lMM -L/usr/local/openmpi/lib -lmpi_mpifh $(LIBS)
+libMM:
+	cp ../../common/libMM.a .
+
+pyiqist: f2py libctqmc libMM
+	f2py -c --fcompiler=intelem ctqmc_api_py.f90 -m pyiqist -L. -lctqmc -lMM $(MPIL) $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -57,7 +58,7 @@ clean:
 	rm -f *.so
 	rm -f libctqmc.a
 	rm -f libMM.a
-	rm -f py_api.f90
+	rm -f ctqmc_api_py.f90
 
 clean-dat:
 	rm -f *.dat
