@@ -1,4 +1,4 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : pansy
 !!! program : ctqmc_print_header
 !!!           ctqmc_print_footer
@@ -6,25 +6,26 @@
 !!!           ctqmc_print_runtime
 !!! source  : ctqmc_print.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! author  : li huang (email:huangli712@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/15/2009 by li huang
-!!!           09/20/2009 by li huang
-!!!           12/01/2009 by li huang
 !!!           02/21/2010 by li huang
 !!!           08/18/2014 by yilin wang
+!!!           11/11/2014 by yilin wang
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!!!           impurity solver
-!!! status  : very unstable
+!!!           impurity solver and dynamical mean field theory (DMFT) self
+!!!           -consistent engine
+!!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_print_header: print the startup information for continuous time
-!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
-!!>>> theory self-consistent engine
+!!>>> ctqmc_print_header: print the startup information for continuous
+!!>>> time quantum Monte Carlo quantum impurity solver plus dynamical
+!!>>> mean field theory self-consistent engine
   subroutine ctqmc_print_header()
      use constants, only : mystd
+
      use control, only : nprocs
 
      implicit none
@@ -39,10 +40,11 @@
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'version: 2012.08.20T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & IOP and yilin wang, IOP'
-     write(mystd,'(2X,a)') 'support: huangli712@yahoo.com.cn, qhwyl2006@126.com'
-     write(mystd,'(2X,a)') 'license: GPL2 and later versions'
+     write(mystd,'(2X,a)') 'Version: 2014.11.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') '         by yilin wang (at IOP/CAS )'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'PANSY >>> start running at '//date_time_string
@@ -93,8 +95,9 @@
 
 !!>>> ctqmc_print_summary: print the running parameters, only for reference
   subroutine ctqmc_print_summary()
-     use constants, only : ev2k, mystd
-     use control
+     use constants, only : mystd, ev2k
+
+     use control ! ALL
 
      implicit none
 
@@ -109,6 +112,7 @@
      write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs :', ncfgs
      write(mystd,'(2(4X,a,i10))')   'nfreq :', nfreq  , 'ntime :', ntime
      write(mystd,'(2(4X,a,i10))')   'npart :', npart  , 'nflip :', nflip
+
      write(mystd,'(2(4X,a,i10))')   'ntherm:', ntherm , 'nsweep:', nsweep
      write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite
      write(mystd,'(2(4X,a,i10))')   'nmonte:', nmonte , 'ncarlo:', ncarlo
@@ -128,15 +132,15 @@
 !!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : one, half, mystd
-     use control, only : nsweep, nmonte
 
+     use control, only : nsweep, nmonte
+     use context, only : cnegs, caves
      use context, only : insert_tcount, insert_accept, insert_reject
      use context, only : remove_tcount, remove_accept, remove_reject
      use context, only : lshift_tcount, lshift_accept, lshift_reject
      use context, only : rshift_tcount, rshift_accept, rshift_reject
      use context, only : reflip_tcount, reflip_accept, reflip_reject
-     use context, only : paux, cnegs, caves
-
+     use context, only : paux
      use m_npart, only : nprod
 
      implicit none
@@ -160,6 +164,7 @@
      write(mystd,'(4X,a)')        'auxiliary system observables:'
      write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / istat, 'epot :', paux(2) / istat
      write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / istat, '<Sz> :', paux(4) / istat
+     write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / istat, '<N2> :', paux(6) / istat
 
 ! about insert action
      if ( insert_tcount <= half ) insert_tcount = -one ! if insert is disable

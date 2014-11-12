@@ -1,4 +1,4 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : pansy
 !!! program : ctqmc_config
 !!!           ctqmc_setup_array
@@ -7,38 +7,28 @@
 !!!           ctqmc_final_array
 !!! source  : ctqmc_stream.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! author  : li huang (email:huangli712@gmail.com)
 !!!         : yilin wang (email: qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
-!!!           09/20/2009 by li huang
-!!!           09/24/2009 by li huang
-!!!           09/27/2009 by li huang
-!!!           10/24/2009 by li huang
-!!!           10/29/2009 by li huang
-!!!           11/01/2009 by li huang
-!!!           11/10/2009 by li huang
-!!!           11/18/2009 by li huang
-!!!           12/01/2009 by li huang
-!!!           12/05/2009 by li huang
-!!!           02/27/2010 by li huang
 !!!           06/08/2010 by li huang
 !!!           07/19/2014 by yilin wang
 !!!           08/18/2014 by yilin wang
+!!!           11/11/2014 by yilin wang
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
 !!!           engine
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
 !!>>> ctqmc_config: setup key parameters for continuous time quantum Monte
 !!>>> Carlo quantum impurity solver and dynamical mean field theory kernel
   subroutine ctqmc_config()
-     use control
      use parser, only : p_create, p_parse, p_get, p_destroy
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control ! ALL
 
      implicit none
 
@@ -46,24 +36,28 @@
 ! used to check whether the input file (solver.ctqmc.in) exists
      logical :: exists
 
-!=========================================================================
-! setup dynamical mean field theory self-consistent engine related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup general control flags                                      <<<
+!!========================================================================
      isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
-     isbin  = 1            ! without binning     (1) or with binning    mode (2)
-     idoub  = 1            ! whether to measure the double occupancy number
-!-------------------------------------------------------------------------
+     isbin  = 2            ! without binning     (1) or with binning    mode (2)
+     idoub  = 1            ! don't measure double occupancy (1) or measure it (2)
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!!========================================================================
+!!>>> setup common variables for quantum impurity model                <<<
+!!========================================================================
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
      ncfgs  = 2**norbs     ! number of atomic states
      niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
-     U      = 0.00_dp      ! U : average Coulomb interaction
-     Uc     = 0.00_dp      ! Uc: intraorbital Coulomb interaction
-     Uv     = 0.00_dp      ! Uv: interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
+     U      = 4.00_dp      ! U : average Coulomb interaction
+     Uc     = 4.00_dp      ! Uc: intraorbital Coulomb interaction
+     Uv     = 4.00_dp      ! Uv: interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
      Jz     = 0.00_dp      ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
      Js     = 0.00_dp      ! Js: spin-flip term
      Jp     = 0.00_dp      ! Jp: pair-hopping term
@@ -74,15 +68,15 @@
      alpha  = 0.70_dp      ! mixing parameter for self-consistent engine
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!=========================================================================
-! setup continuous time quantum Monte Carlo quantum impurity solver related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup common variables for quantum impurity solver               <<<
+!!========================================================================
      mkink  = 1024         ! maximum perturbation expansions order
      mfreq  = 8193         ! maximum number of matsubara frequency
 !-------------------------------------------------------------------------
      nfreq  = 128          ! maximum number of matsubara frequency sampling by quantum impurity solver
      ntime  = 1024         ! number of time slice
-     npart  = 16           ! number of parts that the imaginary time axis is split
+     npart  = 4            ! number of parts that the imaginary time axis is split
      nflip  = 20000        ! flip period for spin up and spin down states
      ntherm = 200000       ! maximum number of thermalization steps
      nsweep = 20000000     ! maximum number of quantum Monte Carlo sampling steps
@@ -101,40 +95,56 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
+! create the file parser
 !------------------------------------------------------------------------+
              call p_create()
+! parse the config file
              call p_parse('solver.ctqmc.in')
-!------------------------------------------------------------------------+
-             call p_get('isscf', isscf)
-             call p_get('issun', issun)
-             call p_get('isspn', isspn)
-             call p_get('isbin', isbin)
-             call p_get('idoub', idoub)
-!------------------------------------------------------------------------+
-             call p_get('nband', nband)
-             norbs = nband * nspin
-             ncfgs = 2**norbs
-             call p_get('niter', niter)
-!------------------------------------------------------------------------+
-             call p_get('mune',  mune)
-             call p_get('beta',  beta)
-             call p_get('part',  part)
-             call p_get('alpha', alpha)
-!------------------------------------------------------------------------+
-             call p_get('mkink', mkink)
-             call p_get('mfreq', mfreq)
-!------------------------------------------------------------------------+
-             call p_get('nfreq', nfreq)
-             call p_get('ntime', ntime)
-             call p_get('npart', npart)
-             call p_get('nflip', nflip)
+
+! extract parameters
+             call p_get('isscf' , isscf )
+             call p_get('issun' , issun )
+             call p_get('isspn' , isspn )
+             call p_get('isbin' , isbin )
+             call p_get('idoub' , idoub )
+
+             call p_get('nband' , nband )
+             call p_get('nspin' , nspin )
+             call p_get('norbs' , norbs )
+             call p_get('ncfgs' , ncfgs )
+             call p_get('niter' , niter )
+
+             call p_get('U'     , U     )
+             call p_get('Uc'    , Uc    )
+             call p_get('Uv'    , Uv    )
+             call p_get('Jz'    , Jz    )
+             call p_get('Js'    , Js    )
+             call p_get('Jp'    , Jp    )
+
+             call p_get('mune'  , mune  )
+             call p_get('beta'  , beta  )
+             call p_get('part'  , part  )
+             call p_get('alpha' , alpha )
+
+             call p_get('mkink' , mkink )
+             call p_get('mfreq' , mfreq )
+
+             call p_get('nfreq' , nfreq )
+             call p_get('ntime' , ntime )
+             call p_get('npart' , npart )
+             call p_get('nflip' , nflip )
              call p_get('ntherm', ntherm)
              call p_get('nsweep', nsweep)
              call p_get('nwrite', nwrite)
              call p_get('nclean', nclean)
              call p_get('nmonte', nmonte)
              call p_get('ncarlo', ncarlo)
-!------------------------------------------------------------------------+
+
+             nspin = 2
+             norbs = nspin * nband
+             ncfgs = 2 ** norbs
+
+! destroy the parser
              call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
@@ -143,60 +153,48 @@
 ! to broadcast config parameters from root to all children processes
 # if defined (MPI)
 
-!------------------------------------------------------------------------+
-     call mp_bcast( isscf , master )                                     !
-     call mp_bcast( issun , master )                                     !
-     call mp_bcast( isspn , master )                                     !
-     call mp_bcast( isbin , master )                                     !
-     call mp_bcast( idoub , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( isscf , master )
+     call mp_bcast( issun , master )
+     call mp_bcast( isspn , master )
+     call mp_bcast( isbin , master )
+     call mp_bcast( idoub , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( nband , master )                                     !
-     call mp_bcast( nspin , master )                                     !
-     call mp_bcast( norbs , master )                                     !
-     call mp_bcast( ncfgs , master )                                     !
-     call mp_bcast( niter , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( nband , master )
+     call mp_bcast( nspin , master )
+     call mp_bcast( norbs , master )
+     call mp_bcast( ncfgs , master )
+     call mp_bcast( niter , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( U     , master )                                     !
-     call mp_bcast( Uc    , master )                                     !
-     call mp_bcast( Uv    , master )                                     !
-     call mp_bcast( Jz    , master )                                     !
-     call mp_bcast( Js    , master )                                     !
-     call mp_bcast( Jp    , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( U     , master )
+     call mp_bcast( Uc    , master )
+     call mp_bcast( Uv    , master )
+     call mp_bcast( Jz    , master )
+     call mp_bcast( Js    , master )
+     call mp_bcast( Jp    , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( mune  , master )                                     !
-     call mp_bcast( beta  , master )                                     !
-     call mp_bcast( part  , master )                                     !
-     call mp_bcast( alpha , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( mune  , master )
+     call mp_bcast( beta  , master )
+     call mp_bcast( part  , master )
+     call mp_bcast( alpha , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( mkink , master )                                     !
-     call mp_bcast( mfreq , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( mkink , master )
+     call mp_bcast( mfreq , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( nfreq , master )                                     !
-     call mp_bcast( ntime , master )                                     !
-     call mp_bcast( npart , master )                                     !
-     call mp_bcast( nflip , master )                                     !
-     call mp_bcast( ntherm, master )                                     !
-     call mp_bcast( nsweep, master )                                     !
-     call mp_bcast( nwrite, master )                                     !
-     call mp_bcast( nclean, master )                                     !
-     call mp_bcast( nmonte, master )                                     !
-     call mp_bcast( ncarlo, master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( nfreq , master )
+     call mp_bcast( ntime , master )
+     call mp_bcast( npart , master )
+     call mp_bcast( nflip , master )
+     call mp_bcast( ntherm, master )
+     call mp_bcast( nsweep, master )
+     call mp_bcast( nwrite, master )
+     call mp_bcast( nclean, master )
+     call mp_bcast( nmonte, master )
+     call mp_bcast( ncarlo, master )
      call mp_barrier()
 
 # endif  /* MPI */
@@ -207,7 +205,7 @@
 !!>>> ctqmc_setup_array: allocate memory for global variables and then
 !!>>> initialize them
   subroutine ctqmc_setup_array()
-     use context
+     use context ! ALL
 
      implicit none
 
@@ -217,7 +215,6 @@
 
      call ctqmc_allocate_memory_mesh()
      call ctqmc_allocate_memory_meat()
-
      call ctqmc_allocate_memory_umat()
      call ctqmc_allocate_memory_mmat()
 
@@ -232,24 +229,32 @@
 !!>>> Carlo quantum impurity solver plus dynamical mean field theory
 !!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
-     use constants, only : dp, czero, cone, zero, one
-     use constants, only : two, pi, czi, mytmp
+     use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use control, only : norbs, nband, ncfgs, ntime, mfreq
-     use control, only : beta, mune, part, U, myid, master
+     use control, only : nband, norbs, ncfgs
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : U
+     use control, only : mune, beta, part
+     use control, only : myid, master
+     use context, only : cssoc
+     use context, only : tmesh, rmesh
+     use context, only : symm, eimp, eigs, naux, saux
+     use context, only : hybf
 
-     use context, only : unity, tmesh, rmesh, cmesh, hybf
-     use context, only : symm, eimp, eigs, naux, cssoc
-
-     use mmpi
-     use m_sector
-     use m_npart
+     use m_sector ! ALL
+     use m_npart  ! ALL
 
      implicit none
 
 ! local variables
 ! loop index
-     integer  :: i, j, k, ii, n
+     integer  :: i
+     integer  :: j
+     integer  :: k
+     integer  :: ii
+     integer  :: n
 
 ! number of nonzero elements of F-matrix
      integer :: nonzero
@@ -265,32 +270,18 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build identity: unity
-     unity = czero
-     do i=1,norbs
-         unity(i,i) = cone
-     enddo ! over i={1,norbs} loop
-
 ! build imaginary time tau mesh: tmesh
-     do i=1,ntime
-         tmesh(i) = zero + ( beta - zero ) / real(ntime - 1) * real(i - 1)
-     enddo ! over i={1,ntime} loop
+     call s_linspace_d(zero, beta, ntime, tmesh)
 
 ! build matsubara frequency mesh: rmesh
-     do j=1,mfreq
-         rmesh(j) = ( two * real(j - 1) + one ) * ( pi / beta )
-     enddo ! over j={1,mfreq} loop
-
-! build matsubara frequency mesh: cmesh
-     do k=1,mfreq
-         cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
-     enddo ! over k={1,mfreq} loop
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
-         hybf(i,:,:) = unity * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         call s_identity_z( norbs, hybf(i,:,:) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
@@ -325,7 +316,7 @@
 ! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
@@ -380,27 +371,32 @@
 
 # endif  /* MPI */
 
-!-------------------------------------------------------------------------
-! first, read the information of sectors
+! setup initial eigs, naux, and saux
      eigs = zero
      naux = zero
 
      if ( myid == master ) then ! only master node can do it
          exists = .false.
-! inquire about file 'atom.cix', this file is necessary,
-! the code can not run without it
+
+! inquire about file's existence
          inquire (file = 'atom.cix', exist = exists)
 
-! find 'atom.cix', read it
-         if ( exists ) then
+! find input file: atom.cix, read it
+! file atom.cix is necessary, the code can not run without it
+         if ( exists .eqv. .true. ) then
+
+! open data file
              open(mytmp, file='atom.cix', form='formatted', status='unknown')
-! skip 10 header lines
+
+! skip ten comment lines
              do i=1,10
                  read(mytmp,*)
              enddo ! over i={1,10} loop
-! read the status of spin-orbit coupling (SOC)
-             read(mytmp,*) j1, j2, cssoc
-! skip another 9 header lines
+
+! determine whether the spin-orbital coupling effect should be considered
+             read(mytmp,*) i, j, cssoc
+
+! skip nine comment lines
              do i=1,9
                  read(mytmp,*)
              enddo ! over i={1,9} loop
@@ -559,29 +555,30 @@
 !!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
 !!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
-     use constants
-     use control
-     use context
+     use constants, only : zero, czero
+     use spring, only : spring_sfmt_init
+     use stack, only : istack_clean, istack_push
 
-     use stack
-     use spring
-
-     use m_sector
-     use m_npart
+     use control ! ALL
+     use context ! ALL
+     use m_sector ! ALL
+     use m_npart  ! ALL
 
      implicit none
 
 ! local variables
 ! loop index
-     integer  :: i, ii
-     integer  :: j, jj
-     integer  :: k
+     integer :: i
+     integer :: ii
+     integer :: j
+     integer :: jj
+     integer :: k
 
 ! system time since 1970, Jan 1, used to generate the random number seed
-     integer  :: system_time
+     integer :: system_time
 
 ! random number seed for twist generator
-     integer  :: stream_seed
+     integer :: stream_seed
 
 ! dummy matrices
      real(dp) :: mat_t1(mdim_sect, mdim_sect)
@@ -589,10 +586,11 @@
 
 ! init random number generator
      call system_clock(system_time)
-     !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     stream_seed = 123456
+     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
+! for stack data structure
+!-------------------------------------------------------------------------
 ! init empty_s and empty_e stack structure
      do i=1,norbs
          call istack_clean( empty_s(i) )
@@ -612,6 +610,16 @@
          call istack_push( empty_v, j )
      enddo ! over j={mkink,1} loop
 
+! for integer variables
+!-------------------------------------------------------------------------
+! init global variables
+     ckink   = 0
+     csign   = 1
+     cnegs   = 0
+     caves   = 0
+
+! for real variables
+!-------------------------------------------------------------------------
 ! init statistics variables
      insert_tcount = zero
      insert_accept = zero
@@ -633,18 +641,8 @@
      reflip_accept = zero
      reflip_reject = zero
 
-! init global variables
-     ckink   = 0
-     csign   = 1
-     cnegs   = 0
-     caves   = 0
-
-! init hist  array
-     hist    = 0
-
-! init rank  array
-     rank    = 0
-
+! for integer arrays
+!-------------------------------------------------------------------------
 ! init index array
      index_s = 0
      index_e = 0
@@ -658,18 +656,26 @@
 ! init flvr  array
      flvr_v  = 1
 
+! init rank  array
+     rank    = 0
+
+! for real arrays
+!-------------------------------------------------------------------------
 ! init time  array
      time_s  = zero
      time_e  = zero
 
      time_v  = zero
 
-! init probability for atomic states
-     prob    = zero
-     ddmat   = zero
+! init hist  array
+     hist    = zero
 
 ! init auxiliary physical observables
      paux    = zero
+
+! init probability for atomic states
+     prob    = zero
+     diag    = zero
 
 ! init occupation number array
      nmat    = zero
@@ -705,6 +711,7 @@
      matrix_ntrace = sum( expt_t(:, 1) )
      matrix_ptrace = sum( expt_t(:, 2) )
 
+! for complex arrays
 ! init exponent array exp_s and exp_e
      exp_s   = czero
      exp_e   = czero
@@ -726,6 +733,8 @@
 !<     sig1    = czero
      sig2    = czero
 
+! for the other variables/arrays
+!-------------------------------------------------------------------------
 ! init npart
      nprod = zero
      isave = 1
@@ -791,15 +800,17 @@
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, htau)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
      call ctqmc_make_hsed(tmesh, htau, hsed)
 
+! dump the necessary files
+!-------------------------------------------------------------------------
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the number of sectors, the maximal dimension of sectors, and
 ! the average dimension of sectors
@@ -821,7 +832,7 @@
 ! the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine ctqmc_solver_init
@@ -829,9 +840,9 @@
 !!>>> ctqmc_final_array: garbage collection for this program, please refer
 !!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
-     use context
-     use m_sector
-     use m_npart
+     use context ! ALL
+     use m_sector ! ALL
+     use m_npart ! ALL
 
      implicit none
 
@@ -841,7 +852,6 @@
 
      call ctqmc_deallocate_memory_mesh()
      call ctqmc_deallocate_memory_meat()
-
      call ctqmc_deallocate_memory_umat()
      call ctqmc_deallocate_memory_mmat()
 
