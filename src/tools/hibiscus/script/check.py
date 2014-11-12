@@ -8,6 +8,8 @@
 ## It is a python script. The purpose of this script is to check whether
 ## the lines in a given file are ended with blanks.
 ##
+## This script should be used by the developer only.
+##
 ## Usage
 ## =====
 ##
@@ -23,7 +25,7 @@
 ## History
 ## =======
 ##
-## 09/21/2014 by li huang
+## 11/13/2014 by li huang
 ##
 ##
 
@@ -39,7 +41,6 @@ while True:
         break
     i = i + 1
     if len(line) != len(line.rstrip()) + 1:
-        print 'check space:'
-        print i, line,
+        print 'check space:', i, line,
 
 f.close()
