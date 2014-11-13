@@ -10,6 +10,18 @@
 ##
 ## 'make', 'make lib', 'make clean', 'make clean-dat' or 'make clean-all'
 ##
+## Author
+## ======
+##
+## This building system is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 11/06/2014 by li huang
+##
 ##
 
 .SUFFIXES: .f90
@@ -46,12 +58,12 @@ csml:
 	cp ../../common/parser.mod .
 	cp ../../common/linkedlist.mod .
 
-exe: api cssl csml ctqmc_exe
-ctqmc_exe: $(objects)
+exe: api cssl csml ctqmc-exe
+ctqmc-exe: $(objects)
 	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
 
-lib: api cssl csml ctqmc_lib
-ctqmc_lib: $(objects)
+lib: api cssl csml ctqmc-lib
+ctqmc-lib: $(objects)
 	$(ARCHIVER) libctqmc.a $(objects)
 
 .f90.o:
