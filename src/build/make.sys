@@ -39,7 +39,7 @@
 ##
 ## Specify whether MPI is enable. If you want to compile a sequential code,
 ## please comment it out with '#' symbol and then setup F90 to 'ifort'. We
-## strongly suggest to compile MPI parallelized codes. 
+## strongly suggest to compile MPI parallelized codes.
 ##
 ## OMP
 ## ---
