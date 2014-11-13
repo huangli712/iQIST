@@ -142,8 +142,8 @@
      enddo ! over i={1,ntime-1} loop
 
 ! write out the calculated results
-     write(mystd,'(2X,a,f12.6)') 'magnetic susceptibility  :', xchi
-     write(mystd,'(2X,a,f12.6)') 'effective magnetic moment:', sqrt(xchi / beta)
+     write(mystd,'(2X,a,f12.6)') 'Magnetic susceptibility  :', xchi
+     write(mystd,'(2X,a,f12.6)') 'Effective magnetic moment:', sqrt(xchi / beta)
 
 ! deallocate memory
      deallocate(schi)
