@@ -1,44 +1,42 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : manjushaka
 !!! program : control    module
 !!! source  : ctqmc_control.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! author  : li huang (email:huangli712@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/15/2009 by li huang
-!!!           09/20/2009 by li huang
-!!!           11/01/2009 by li huang
-!!!           12/01/2009 by li huang
 !!!           02/23/2010 by li huang
 !!!           08/20/2014 by yilin wang
+!!!           11/11/2014 by yilin wang
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
 !!!           consistent engine
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
   module control
      use constants, only : dp
 
      implicit none
 
-!!=========================================================================
-!!>>> integer variables                                                 <<<
-!!=========================================================================
+!!========================================================================
+!!>>> integer variables                                                <<<
+!!========================================================================
 
 ! control flag: running mode
 ! if isscf == 1, one-shot non-self-consistent scheme, used in local density
 ! approximation plus dynamical mean field theory case
 ! if isscf == 2, self-consistent scheme, used in normal model hamiltonian
 ! plus dynamical mean field theory case
-     integer, public, save :: isscf  = 1
+     integer, public, save :: isscf  = 2
 
 ! control flag: symmetry of bands
 ! if issun == 1, the bands are not symmetrized
 ! if issun == 2, the bands are symmetrized according to symmetry matrix
-     integer, public, save :: issun  = 1
+     integer, public, save :: issun  = 2
 
 ! control flag: symmetry of spin orientation
 ! if isspn == 1, enforce spin up = spin down
@@ -48,7 +46,7 @@
 ! control flag: impurity green's function binning mode
 ! if isbin == 1, without binning mode
 ! if isbin == 2, with binning mode
-     integer, public, save :: isbin  = 1
+     integer, public, save :: isbin  = 2
 
 ! control flag: apply orthogonal polynomial representation to perform measurement
 ! if isort == 1, use normal representation to measure G(\tau)
@@ -66,21 +64,36 @@
      integer, public, save :: isort  = 1
 
 ! control flag: whether we measure the high order correlation function
-! if isvrt == 1, do nothing
-! if isvrt == 2, calculate spin-spin correlation function
-! if isvrt == 3, calculate orbital-orbital correlation function
-! if isvrt == 4, calculate both two-particle green's function and vertex function
-! if isvrt == 5, calculate both two-particle green's function and vertex function
-! note: when isvrt == 4 and isvrt == 5, both the two-particle green's and
-! vertex functions are computed by using two different algorithms.
-! note: when isvrt == 4, both the solver.twop.dat and solver.vrtx.dat files
-! are written, but the data contained in solver.vrtx.dat file is not right.
-! note: when isvrt == 5, both the solver.twop.dat and solver.vrtx.dat files
-! are written, the data contained in solver.twop.dat are less accurate than
-! those in solver.vrtx.dat, more specifically, the irreducible part of two-
-! particle green's function and vertex function.
-! note: isvrt == 2, 3, and 5 are not implemented so far.
+! we just use the following algorithm to judge which correlation function
+! should be calculated:
+! (a) isvrt is converted to a binary representation at first. for example,
+! 10 is converted to 1010_2, 15 is converted to 1111_2, etc.
+! (b) then we examine the bits. If it is 1, then we do the calculation.
+! If it is 0, then we ignore the calculation. for example, we just use the
+! second bit (from right side to left side) to represent the calculation
+! of spin-spin correlation. So, it isvrt is 10 (1010_2), we will calculate
+! spin-spin correlation function. If isvrt is 13 (1101_2), we will not
+! calculate it since the second bit is 0.
+! The following are the definitions of bit representation:
+! if p == 1, do nothing
+! if p == 2, calculate spin-spin correlation function
+! if p == 3, calculate orbital-orbital correlation function
+! if p == 4, calculate both two-particle green's function and vertex function
+! if p == 5, calculate both two-particle green's function and vertex function
+! if p == 6, calculate particle-particle pair susceptibility
+! if p == 7, reserved
+! if p == 8, reserved
+! example:
+!     1 1 0 1 0 1 0 1
+! p = 8 7 6 5 4 3 2 1
+! note: if p == 4 or p == 5, both the two-particle green's and vertex
+! functions are computed, but using two different algorithms. you can not
+! set them to 1 at the same time. In order words, if you set the bit at
+! p == 4 to 1, then the bit at p == 5 must be 0, and vice versa.
+! note: for the lavender code, the bits at p == 2, 3, and 5 must be 0, in
+! other words, these features are not implemented so far.
      integer, public, save :: isvrt  = 1
+
 
 ! the mode how to truncate the Hilbert space
 ! if itrun == 1, don't truncate it
@@ -161,7 +174,7 @@
 ! those changed parts are carefully dealt with, not all the parts.
 ! note: 2\sqrt{3 <k> nband} ~ 4\sqrt{3 <k> nband} may be the optimal value
 ! for npart to achieve maximum performance
-     integer, public, save :: npart  = 16
+     integer, public, save :: npart  = 4
 
 ! flip period for spin up and spin down states
 ! note: care must be taken to prevent the system from being trapped in a
@@ -196,16 +209,16 @@
 
 ! how often to sampling the gmat and paux (nmat and nnmat)
 ! note: the measure periods for schi, sschi, ochi, oochi, g2_re, g2_im,
-! h2_re, and h2_im are also controlled by nmonte parameter.
+! h2_re, h2_im, ps_re, and ps_im are also controlled by nmonte parameter.
      integer, public, save :: nmonte = 10
 
 ! how often to sampling the gtau and prob
 ! note: the measure period for ftau is also controlled by ncarlo parameter.
      integer, public, save :: ncarlo = 10
 
-!=========================================================================
-!>>> real variables                                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> real variables                                                   <<<
+!!========================================================================
 
 ! note: U, Uc, Uv, Jz, Js, and Jp are not used by this quantum impurity
 ! solver actually. we keep them here is just for reference
@@ -227,8 +240,10 @@
 ! pair-hopping term
      real(dp), public, save :: Jp    = 0.00_dp
 
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! chemical potential or fermi level
-! note: it should be replaced with eimp
+! note: it should/can be replaced with eimp
      real(dp), public, save :: mune  = 2.00_dp
 
 ! inversion of temperature
@@ -240,9 +255,9 @@
 ! mixing parameter for dynamical mean field theory self-consistent engine
      real(dp), public, save :: alpha = 0.70_dp
 
-!=========================================================================
-!>>> MPI related common variables                                      <<<
-!=========================================================================
+!!========================================================================
+!!>>> MPI related common variables                                     <<<
+!!========================================================================
 
 ! number of processors: default value 1
      integer, public, save :: nprocs = 1

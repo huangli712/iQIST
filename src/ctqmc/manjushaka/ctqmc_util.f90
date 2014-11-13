@@ -10,6 +10,7 @@
 !!! history : 10/01/2008 by li huang
 !!!           06/22/2010 by li huang
 !!!           08/07/2014 by li huang
+!!!           11/11/2014 by li huang
 !!! purpose : to provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -28,8 +29,10 @@
 !!>>> cubic spline interpolation
   function ctqmc_make_htau(flvr, dtau) result(val)
      use constants, only : dp
+
      use control, only : ntime
-     use context, only : tmesh, htau, hsed
+     use context, only : tmesh
+     use context, only : htau, hsed
 
      implicit none
 
@@ -42,7 +45,7 @@
 
 ! external functions
 ! internal interpolation engine
-     procedure(real(dp))  :: s_spl_funct
+     procedure( real(dp) ) :: s_spl_funct
 
 ! local variables
 ! return value
@@ -57,7 +60,10 @@
 !!>>> function on imaginary time space
   subroutine ctqmc_make_hsed(tmesh, htau, hsed)
      use constants, only : dp, zero
-     use control, only : ntime, norbs, beta
+
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : beta
 
      implicit none
 
@@ -140,7 +146,10 @@
 !!>>> matsubara frequency
   subroutine ctqmc_four_htau(htau, hybf)
      use constants, only : dp, zero, czero
-     use control, only : ntime, norbs, mfreq
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : ntime
      use context, only : tmesh, rmesh
 
      implicit none
@@ -187,7 +196,11 @@
 !!>>> imaginary time
   subroutine ctqmc_four_hybf(hybf, htau)
      use constants, only : dp, zero, czero, eps6
-     use control, only : ntime, norbs, mfreq, beta
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : beta
      use context, only : tmesh, rmesh
 
      implicit none
@@ -242,16 +255,14 @@
      do i=1,norbs
          do j=1,ntime    ! search forward
              if ( htau(j,i,i) > -eps6 ) then
-                 start = j
-                 EXIT
-             endif
+                 start = j; EXIT
+             endif ! back if ( htau(j,i,i) > -eps6 ) block
          enddo ! over j={1,ntime} loop
 
          do j=ntime,1,-1 ! search backward
              if ( htau(j,i,i) > -eps6 ) then
-                 last = j
-                 EXIT
-             endif
+                 last = j; EXIT
+             endif ! back if ( htau(j,i,i) > -eps6 ) block
          enddo ! over j={ntime,1,-1} loop
 
 !-------------------------------------------------------------------------
@@ -259,7 +270,7 @@
 !<             do j=start,last
 !<                 htau(j,i,i) = -eps6
 !<             enddo ! over j={start,last} loop
-!<         endif
+!<         endif ! back if ( start > 1 .and. last > 1 ) block
 !-------------------------------------------------------------------------
      enddo ! over i={1,norbs} loop
 

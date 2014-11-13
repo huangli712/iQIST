@@ -1,38 +1,40 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : manjushaka
 !!! program : ctqmc_dmft_selfer
 !!!           ctqmc_dmft_conver
 !!!           ctqmc_dmft_bethe
 !!!           ctqmc_dmft_anydos
 !!! source  : ctqmc_dmft.f90
-!!! type    : subroutine
-!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
-!!!           09/18/2009 by li huang
-!!!           09/21/2009 by li huang
-!!!           09/22/2009 by li huang
-!!!           10/28/2009 by li huang
-!!!           12/01/2009 by li huang
-!!!           12/06/2009 by li huang
-!!!           12/24/2009 by li huang
 !!!           01/13/2010 by li huang
 !!!           08/20/2014 by yilin wang
-!!! purpose : self-consistent engine for dynamical mean field theory (DMFT)
-!!!           simulation. it is only suitable for hybridization expansion
-!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!!!           impurity solver plus bethe lattice model.
+!!!           11/11/2014 by yilin wang
+!!! purpose : the self-consistent engine for dynamical mean field theory
+!!!           (DMFT) simulation. it is only suitable for hybridization
+!!!           expansion version continuous time quantum Monte Carlo (CTQMC)
+!!!           quantum impurity solver plus bethe lattice model.
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
 !!>>> ctqmc_dmft_selfer: the self-consistent engine for continuous time
 !!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
 !!>>> theory simulation
   subroutine ctqmc_dmft_selfer()
-     use constants, only : dp, mystd
-     use control, only : norbs, mfreq, mune, alpha, myid, master
-     use context, only : tmesh, rmesh, cmesh, eimp, hybf, grnf, wssf, wtau
+     use constants, only : dp, one, half, czi, mystd
+
+     use control, only : nband, norbs
+     use control, only : mfreq
+     use control, only : Uc, Jz
+     use control, only : mune, alpha
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : eimp
+     use context, only : grnf
+     use context, only : wtau, wssf, hybf
 
      implicit none
 
@@ -56,7 +58,7 @@
      allocate(htmp(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize htmp
      htmp = hybf
@@ -73,9 +75,10 @@
       qmune = mune
 
 ! calculate new bath weiss's function
+! G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
      do i=1,norbs
          do k=1,mfreq
-             wssf(k,i,i) = cmesh(k) + qmune - eimp(i) - hybf(k,i,i)
+             wssf(k,i,i) = czi * rmesh(k) + qmune - eimp(i) - hybf(k,i,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
@@ -90,23 +93,23 @@
 ! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wssf(rmesh, wssf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the new bath weiss's function in imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wtau(tmesh, wtau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the new hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'MANJUSHAKA >>> DMFT hybridization function is updated'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(htmp)
@@ -117,7 +120,11 @@
 !!>>> ctqmc_dmft_conver: check the convergence of self-energy function
   subroutine ctqmc_dmft_conver(iter, convergence)
      use constants, only : dp, zero, one, two, eps8, mystd
-     use control, only : norbs, mfreq, niter, alpha, myid, master
+
+     use control, only : norbs, niter
+     use control, only : mfreq
+     use control, only : alpha
+     use control, only : myid, master
      use context, only : sig1, sig2
 
      implicit none
@@ -162,7 +169,7 @@
      convergence = ( ( seps <= eps8 ) .and. ( iter >= minit ) )
 
 ! update sig1
-     sig1 = sig1 * (one - alpha) + sig2 * alpha
+     call s_mix_z(size(sig1), sig2, sig1, one - alpha)
 
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
@@ -170,17 +177,20 @@
          write(mystd,'(2(2X,a,E12.4))') 'MANJUSHAKA >>> sig_curr:', seps, 'eps_curr:', eps8
          write(mystd,'( (2X,a,L1))') 'MANJUSHAKA >>> self-consistent iteration convergence is ', convergence
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine ctqmc_dmft_conver
 
 !!>>> ctqmc_dmft_bethe: dmft self-consistent conditions, bethe lattice,
 !!>>> semicircular density of states, force a paramagnetic order, equal
-!!>>> bandwidth
+!!>>> band width
   subroutine ctqmc_dmft_bethe(hybf, grnf)
      use constants, only : dp
-     use control, only : norbs, mfreq, part
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : part
 
      implicit none
 
@@ -210,10 +220,14 @@
 !!>>> transformation and numerical integration
   subroutine ctqmc_dmft_anydos(hybf, grnf, sigf)
      use constants, only : dp, zero, czi, czero, mytmp
-     use control, only : norbs, mfreq, mune, myid, master
-     use context, only : rmesh, eimp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : mune
+     use control, only : myid, master
+     use context, only : rmesh
+     use context, only : eimp
 
      implicit none
 
@@ -343,4 +357,3 @@
 
      return
   end subroutine ctqmc_dmft_anydos
-
