@@ -1,4 +1,4 @@
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 !!! project : manjushaka
 !!! program : cat_insert_ztrace
 !!!           cat_remove_ztrace
@@ -30,54 +30,36 @@
 !!!           ctqmc_make_display<<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! author  : li huang (email:huangli712@gmail.com)
 !!!           yilin wang (email: qhwyl2006@126.com)
 !!! history : 09/23/2009 by li huang
-!!!           09/26/2009 by li huang
-!!!           10/02/2009 by li huang
-!!!           11/01/2009 by li huang
-!!!           11/06/2009 by li huang
-!!!           11/19/2009 by li huang
-!!!           11/24/2009 by li huang
-!!!           11/28/2009 by li huang
-!!!           12/08/2009 by li huang
-!!!           12/29/2009 by li huang
-!!!           01/05/2010 by li huang
-!!!           01/09/2010 by li huang
-!!!           01/20/2010 by li huang
-!!!           01/22/2010 by li huang
-!!!           01/25/2010 by li huang
-!!!           02/01/2010 by li huang
-!!!           02/07/2010 by li huang
-!!!           02/15/2010 by li huang
-!!!           03/01/2010 by li huang
-!!!           04/01/2010 by li huang
-!!!           04/12/2010 by li huang
 !!!           10/20/2010 by li huang
 !!!           08/20/2014 by li huang
 !!!           11/02/2014 by li huang
+!!!           11/11/2014 by li huang
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
 !!!           the following subroutines deal with the operators traces only.
 !!! status  : unstable
 !!! comment :
-!!!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
 
-!!-------------------------------------------------------------------------
-!!>>> service layer: evaluate ztrace ratio                              <<<
-!!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: evaluate ztrace ratio                             <<<
+!!========================================================================
 
-!!>>> cat_insert_ztrace: calculate the trace ratio for insert new create and
-!!>>> destroy operators on perturbation expansion series
+!!>>> cat_insert_ztrace: calculate the trace ratio for insert new create
+!!>>> and destroy operators on perturbation expansion series
   subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
      use constants, only : dp, zero
-     use control, only : beta, ncfgs
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
-     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
-
-     use stack, only : istack_getrest, istack_getter, istack_gettop
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -168,7 +150,7 @@
          t_next = beta - time_v( index_t(is) )
      else
          t_next = time_v( index_t(is+1) ) - time_v( index_t(is) )
-     endif ! back if ( is == nsize +1 ) block
+     endif ! back if ( is == nsize + 1 ) block
 
 ! evaluate ilast
 ! if is == nsize + 1, index_t(is+1) is not indexed (i.e, equal to 0),
@@ -236,7 +218,7 @@
          t_next = beta - time_v( index_t(ie) )
      else
          t_next = time_v( index_t(ie+1) ) - time_v( index_t(ie) )
-     endif ! back if ( ie == nsize +1 ) block
+     endif ! back if ( ie == nsize + 1 ) block
 
 ! evaluate ilast
 ! if ie == nsize + 1, index_t(ie+1) is not indexed (i.e, equal to 0),
@@ -271,8 +253,7 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace( 1, 1, nsize+1, deter_ratio, rand_num, &
-                                 accept_p, pass, tau_start, tau_end )
+     call ctqmc_lazy_ztrace( 1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end )
 
      return
   end subroutine cat_insert_ztrace
@@ -281,12 +262,13 @@
 !!>>> and destroy operators on perturbation expansion series
   subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
      use constants, only : dp, zero
-     use control, only : beta, ncfgs
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
-     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
-
-     use stack, only : istack_getrest, istack_getter, istack_gettop
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -455,22 +437,22 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace( 2, 1, nsize-1, deter_ratio, rand_num, &
-                                 accept_p, pass, tau_start, tau_end )
+     call ctqmc_lazy_ztrace( 2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end )
 
      return
   end subroutine cat_remove_ztrace
 
-!!>>> cat_lshift_ztrace: calculate the trace ratio for shift old create operators
-!!>>> on perturbation expansion series
+!!>>> cat_lshift_ztrace: calculate the trace ratio for shift old create
+!!>>> operators on perturbation expansion series
   subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, deter_ratio, rand_num, accept_p, pass)
      use constants, only : dp, zero
-     use control, only : ncfgs, beta
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
-     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
-
-     use stack, only : istack_getrest, istack_getter, istack_gettop
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -508,6 +490,9 @@
 
 ! memory address for old and new create operators
      integer  :: as
+
+! index address for old create operator
+     integer  :: iso_t
 
 ! total number of operators
      integer  :: nsize
@@ -583,16 +568,21 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( iso < nsize .and. iso /= isn ) then
-         if ( iso == 1 ) then
-             t_prev = time_v( index_t(iso) ) - zero
+         if ( iso > isn ) then
+             iso_t = iso + 1
          else
-             t_prev = time_v( index_t(iso) ) - time_v( index_t(iso-1) )
-         endif ! back if ( iso == 1 ) block
+             iso_t = iso
+         endif ! back if ( iso > isn ) block
+         if ( iso_t == 1 ) then
+             t_prev = time_v( index_t(iso_t) ) - zero
+         else
+             t_prev = time_v( index_t(iso_t) ) - time_v( index_t(iso_t-1) )
+         endif ! back if ( iso_t == 1 ) block
          call istack_getter( empty_v, istack_gettop( empty_v ) - 2, as )
-         time_v(as) = time_v( index_t(iso) )
-         flvr_v(as) = flvr_v( index_t(iso) )
-         type_v(as) = type_v( index_t(iso) )
-         index_t(iso) = as
+         time_v(as) = time_v( index_t(iso_t) )
+         flvr_v(as) = flvr_v( index_t(iso_t) )
+         type_v(as) = type_v( index_t(iso_t) )
+         index_t(iso_t) = as
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
@@ -608,22 +598,22 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace( 3, 1, nsize, deter_ratio, rand_num, &
-                             accept_p, pass, tau_start1, tau_start2 )
+     call ctqmc_lazy_ztrace( 3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2 )
 
      return
   end subroutine cat_lshift_ztrace
 
-!!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy operators
-!!>>> on perturbation expansion series
+!!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy
+!!>>> operators on perturbation expansion series
   subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio, rand_num, accept_p, pass)
      use constants, only : dp, zero
-     use control, only : ncfgs, beta
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use context, only : index_t, index_v, empty_v, time_v, type_v, flvr_v
-     use context, only : expt_t, expt_v, eigs, matrix_ntrace, matrix_ptrace
-
-     use stack, only : istack_getrest, istack_getter, istack_gettop
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -661,6 +651,9 @@
 
 ! memory address for old and new destroy operators
      integer  :: ae
+
+! index address for old destroy operator
+     integer  :: ieo_t
 
 ! total number of operators
      integer  :: nsize
@@ -736,16 +729,21 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( ieo < nsize .and. ieo /= ien ) then
-         if ( ieo == 1 ) then
-             t_prev = time_v( index_t(ieo) ) - zero
+         if ( ieo > ien ) then
+             ieo_t = ieo + 1
          else
-             t_prev = time_v( index_t(ieo) ) - time_v( index_t(ieo-1) )
-         endif ! back if ( ieo == 1 ) block
+             ieo_t = ieo
+         endif ! back if ( ieo > ien ) block
+         if ( ieo_t == 1 ) then
+             t_prev = time_v( index_t(ieo_t) ) - zero
+         else
+             t_prev = time_v( index_t(ieo_t) ) - time_v( index_t(ieo_t-1) )
+         endif ! back if ( ieo_t == 1 ) block
          call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
-         time_v(ae) = time_v( index_t(ieo) )
-         flvr_v(ae) = flvr_v( index_t(ieo) )
-         type_v(ae) = type_v( index_t(ieo) )
-         index_t(ieo) = ae
+         time_v(ae) = time_v( index_t(ieo_t) )
+         flvr_v(ae) = flvr_v( index_t(ieo_t) )
+         type_v(ae) = type_v( index_t(ieo_t) )
+         index_t(ieo_t) = ae
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
@@ -761,25 +759,25 @@
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
 ! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace( 4, 1, nsize, deter_ratio, rand_num, &
-                               accept_p, pass, tau_end1, tau_end2 )
+     call ctqmc_lazy_ztrace( 4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2 )
 
      return
   end subroutine cat_rshift_ztrace
 
-!!-------------------------------------------------------------------------
-!!>>> service layer: update perturbation expansion series A             <<<
-!!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series A            <<<
+!!========================================================================
 
 !!>>> try_insert_colour: generate create and destroy operators for selected
 !!>>> flavor channel randomly, and then determinte their index address for
 !!>>> the colour (determinant) part
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, epss
-     use control, only : beta
-     use context, only : ckink, time_s, time_e, index_s, index_e
-
      use spring, only : spring_sfmt_stream
+
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -826,7 +824,7 @@
 ! we need to ensure tau_start is not equal to tau_end
          if ( abs( tau_start - tau_end ) < epss ) then
              have = 99
-         endif
+         endif ! back if ( abs( tau_start - tau_end ) < epss ) block
      enddo destroyer ! over do while loop
 
 ! determine the new position (index address, is) of tau_start in time_s
@@ -841,7 +839,7 @@
                  i = i + 1
              enddo ! over do while loop
              is = i
-         endif
+         endif ! back if      ( tau_start < time_s(index_s(1,     flvr), flvr) ) block
      endif ! back if ( ckink > 0 ) block
 
 ! determine the new position (index address, ie) of tau_end in time_e
@@ -856,25 +854,26 @@
                  i = i + 1
              enddo ! over do while loop
              ie = i
-         endif
+         endif ! back if      ( tau_end < time_e(index_e(1,     flvr), flvr) ) block
      endif ! back if ( ckink > 0 ) block
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
          call s_print_error('try_insert_colour','tau_start is equal to tau_end')
-     endif
+     endif ! back if ( abs( tau_start - tau_end ) < epss ) block
 
      return
   end subroutine try_insert_colour
 
-!!>>> try_remove_colour: select index address is and ie for selected flavor
-!!>>> channel randomly, and then determine their imaginary time points for
-!!>>> the colour (determinant) part
+!!>>> try_remove_colour: select index address is and ie for selected
+!!>>> flavor channel randomly, and then determine their imaginary time
+!!>>> points for the colour (determinant) part
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, epss
-     use context, only : ckink, time_s, time_e, index_s, index_e
-
      use spring, only : spring_sfmt_stream
+
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -906,20 +905,22 @@
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
          call s_print_error('try_remove_colour','tau_start is equal to tau_end')
-     endif
+     endif ! back if ( abs( tau_start - tau_end ) < epss ) block
 
      return
   end subroutine try_remove_colour
 
-!!>>> try_lshift_colour: select index address isn for selected flavor channel
-!!>>> randomly, and then determine its imaginary time points, shift it randomly,
-!!>>> and then evaluate its final index address for the colour (determinant) part
+!!>>> try_lshift_colour: select index address isn for selected flavor
+!!>>> channel randomly, and then determine its imaginary time points,
+!!>>> shift it randomly, and then evaluate its final index address for
+!!>>> the colour (determinant) part
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
      use constants, only : dp, zero
-     use control, only : beta
-     use context, only : ckink, time_s, index_s
-
      use spring, only : spring_sfmt_stream
+
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
 
      implicit none
 
@@ -996,15 +997,17 @@
      return
   end subroutine try_lshift_colour
 
-!!>>> try_rshift_colour: select index address ien for selected flavor channel
-!!>>> randomly, and then determine its imaginary time points, shift it randomly,
-!!>>> and then evaluate its final index address for the colour (determinant) part
+!!>>> try_rshift_colour: select index address ien for selected flavor
+!!>>> channel randomly, and then determine its imaginary time points,
+!!>>> shift it randomly, and then evaluate its final index address for
+!!>>> the colour (determinant) part
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
      use constants, only : dp, zero
-     use control, only : beta
-     use context, only : ckink, time_e, index_e
-
      use spring, only : spring_sfmt_stream
+
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_e, time_e
 
      implicit none
 
@@ -1081,20 +1084,20 @@
      return
   end subroutine try_rshift_colour
 
-!!-------------------------------------------------------------------------
-!!>>> service layer: update perturbation expansion series B             <<<
-!!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series B            <<<
+!!========================================================================
 
-!!>>> cat_insert_colour: update the perturbation expansion series for insert
-!!>>> new create and destroy operators in the colour part actually
+!!>>> cat_insert_colour: update the perturbation expansion series for
+!!>>> insert new create and destroy operators in the colour part actually
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
-     use control, only : nfreq
-
-     use context, only : ckink, rmesh, empty_s, empty_e, index_s
-     use context, only : index_e, time_s, time_e, exp_s, exp_e
-
      use stack, only : istack_pop
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e, empty_s, empty_e
+     use context, only : rmesh
 
      implicit none
 
@@ -1157,12 +1160,13 @@
      return
   end subroutine cat_insert_colour
 
-!!>>> cat_remove_colour: update the perturbation expansion series for remove
-!!>>> old create and destroy operators in the colour part actually
+!!>>> cat_remove_colour: update the perturbation expansion series for
+!!>>> remove old create and destroy operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
-     use context, only : ckink, empty_s, empty_e, index_s, index_e
-
      use stack, only : istack_push
+
+     use context, only : ckink
+     use context, only : index_s, index_e, empty_s, empty_e
 
      implicit none
 
@@ -1204,12 +1208,15 @@
      return
   end subroutine cat_remove_colour
 
-!!>>> cat_lshift_colour: update the perturbation expansion series for lshift
-!!>>> an old create operators in the colour part actually
+!!>>> cat_lshift_colour: update the perturbation expansion series for
+!!>>> lshift an old create operators in the colour part actually
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
      use constants, only : dp
+
      use control, only : nfreq
-     use context, only : ckink, rmesh, index_s, time_s, exp_s
+     use context, only : ckink
+     use context, only : index_s, time_s, exp_s
+     use context, only : rmesh
 
      implicit none
 
@@ -1260,12 +1267,15 @@
      return
   end subroutine cat_lshift_colour
 
-!!>>> cat_rshift_colour: update the perturbation expansion series for rshift
-!!>>> an old destroy operators in the colour part actually
+!!>>> cat_rshift_colour: update the perturbation expansion series for
+!!>>> rshift an old destroy operators in the colour part actually
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
      use constants, only : dp
+
      use control, only : nfreq
-     use context, only : ckink, rmesh, index_e, time_e, exp_e
+     use context, only : ckink
+     use context, only : index_e, time_e, exp_e
+     use context, only : rmesh
 
      implicit none
 
@@ -1316,19 +1326,20 @@
      return
   end subroutine cat_rshift_colour
 
-!!-------------------------------------------------------------------------
-!!>>> service layer: update perturbation expansion series C             <<<
-!!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series C            <<<
+!!========================================================================
 
 !!>>> try_insert_flavor: determine index addresses for the new create and
-!!>>> destroy operators in the flavor part, and then determine whether they
-!!>>> can be inserted diagrammatically
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> they can be inserted diagrammatically
   subroutine try_insert_flavor(flvr, is, ie, tau_start, tau_end, ladd)
      use constants, only : dp
-     use control, only : nband
-     use context, only : empty_v, time_v, index_v, flvr_v, type_v
-
      use stack, only : istack_getrest
+
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, empty_v
 
      implicit none
 
@@ -1397,7 +1408,7 @@
              i = 1
              do while ( time_v( index_v(i) ) < tau_start )
                  i = i + 1
-             enddo
+             enddo ! over do while loop
              is = i
          endif ! back if ( tau_start < time_v( index_v(1) ) ) block
      endif ! back if ( nsize > 0 ) block
@@ -1413,7 +1424,7 @@
              i = 1
              do while ( time_v( index_v(i) ) < tau_end )
                  i = i + 1
-             enddo
+             enddo ! over do while loop
              ie = i
          endif ! back if ( tau_end < time_v( index_v(1) ) ) block
      endif ! back if ( nsize > 0 ) block
@@ -1422,20 +1433,23 @@
 ! insert destroy operator
      if ( tau_start < tau_end ) then
          ie = ie + 1
-     endif
-
-     ladd = .true.
-     return
+     endif ! back if ( tau_start < tau_end ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine ladd, whether we can get them ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         ladd = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pis and pie
      pis = is
      pie = ie
      if ( tau_start > tau_end ) then
          pis = pis + 1
-     endif
+     endif ! back if ( tau_start > tau_end ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1477,9 +1491,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 2 ) then
-                 ladd = .true.
-                 RETURN
-             endif
+                 ladd = .true.; RETURN
+             endif ! back if ( idead == nsize + 2 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1488,14 +1501,15 @@
   end subroutine try_insert_flavor
 
 !!>>> try_remove_flavor: determine index addresses for the new create and
-!!>>> destroy operators in the flavor part, and then determine whether they
-!!>>> can be inserted diagrammatically
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> they can be inserted diagrammatically
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
      use constants, only : dp
-     use control, only : nband
-     use context, only : empty_v, flvr_v, type_v, index_v
-
      use stack, only : istack_getrest
+
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, empty_v
 
      implicit none
 
@@ -1567,20 +1581,23 @@
 ! remove destroy operator
      if ( tau_start < tau_end ) then
          ie = ie - 1
-     endif
-
-     lrmv = .true.
-     return
+     endif ! back if ( tau_start < tau_end ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine lrmv, whether we can kick off them ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         lrmv = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pis and pie
      pis = is
      pie = ie
      if ( tau_start < tau_end ) then
          pie = pie + 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1608,9 +1625,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize ) then
-                 lrmv = .true.
-                 RETURN
-             endif
+                 lrmv = .true.; RETURN
+             endif ! back if ( idead == nsize ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1618,15 +1634,16 @@
      return
   end subroutine try_remove_flavor
 
-!!>>> try_lshift_flavor: determine index addresses for the old and new create
-!!>>> operators in the flavor part, and then determine whether it can be shifted
-!!>>> diagrammatically
+!!>>> try_lshift_flavor: determine index addresses for the old and new
+!!>>> create operators in the flavor part, and then determine whether it
+!!>>> can be shifted diagrammatically
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
      use constants, only : dp
-     use control, only : nband
-     use context, only : empty_v, time_v, index_v, flvr_v, type_v
-
      use stack, only : istack_getrest
+
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, empty_v
 
      implicit none
 
@@ -1711,14 +1728,17 @@
 ! adjust isn further
      if ( tau_start1 < tau_start2 ) then
          isn = isn - 1
-     endif
-
-     lshf = .true.
-     return
+     endif ! back if ( tau_start1 < tau_start2 ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine lshf, whether we can shift it ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         lshf = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate piso and pisn
      piso = iso
      pisn = isn
@@ -1726,7 +1746,7 @@
          pisn = pisn + 1
      else
          piso = piso + 1
-     endif
+     endif ! back if ( tau_start1 < tau_start2 ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1746,7 +1766,6 @@
 
 ! meet the old create operator
                  if      ( i == piso ) then
-                     counter = counter - 1
                      idead = idead + 1
 ! meet the new create operator
                  else if ( i == pisn ) then
@@ -1767,9 +1786,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 1 ) then
-                 lshf = .true.
-                 RETURN
-             endif
+                 lshf = .true.; RETURN
+             endif ! back if ( idead == nsize + 1 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1777,15 +1795,16 @@
      return
   end subroutine try_lshift_flavor
 
-!!>>> try_rshift_flavor: determine index addresses for the old and new destroy
-!!>>> operators in the flavor part, and then determine whether it can be shifted
-!!>>> diagrammatically
+!!>>> try_rshift_flavor: determine index addresses for the old and new
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> it can be shifted diagrammatically
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
      use constants, only : dp
-     use control, only : nband
-     use context, only : empty_v, time_v, index_v, flvr_v, type_v
-
      use stack, only : istack_getrest
+
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : index_v, type_v, flvr_v, time_v, time_v, empty_v
 
      implicit none
 
@@ -1870,14 +1889,17 @@
 ! adjust ien further
      if ( tau_end1 < tau_end2 ) then
          ien = ien - 1
-     endif
-
-     rshf = .true.
-     return
+     endif ! back if ( tau_end1 < tau_end2 ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine rshf, whether we can shift it ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         rshf = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pieo and pien
      pieo = ieo
      pien = ien
@@ -1885,7 +1907,7 @@
          pien = pien + 1
      else
          pieo = pieo + 1
-     endif
+     endif ! back if ( tau_end1 < tau_end2 ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1905,7 +1927,6 @@
 
 ! meet the old destroy operator
                  if      ( i == pieo ) then
-                     counter = counter - 1
                      idead = idead + 1
 ! meet the new destroy operator
                  else if ( i == pien ) then
@@ -1926,9 +1947,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 1 ) then
-                 rshf = .true.
-                 RETURN
-             endif
+                 rshf = .true.; RETURN
+             endif ! back if ( idead == nsize + 1 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1936,19 +1956,21 @@
      return
   end subroutine try_rshift_flavor
 
-!!-------------------------------------------------------------------------
-!!>>> service layer: update perturbation expansion series D             <<<
-!!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series D            <<<
+!!========================================================================
 
-!!>>> cat_insert_flavor: insert new create and destroy operators in the flavor part
+!!>>> cat_insert_flavor: insert new create and destroy operators in the
+!!>>> flavor part
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp, zero
-     use control, only : beta, ncfgs
-
-     use context, only : empty_v, time_v, index_v, flvr_v, type_v
-     use context, only : expt_v, expt_t, eigs, csign
-
      use stack, only : istack_getrest, istack_pop
+
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -2017,7 +2039,7 @@
          t_next = beta - time_v( index_v(is) )
      else
          t_next = time_v( index_v(is+1) ) - time_v( index_v(is) )
-     endif ! back if ( is == nsize +1 ) block
+     endif ! back if ( is == nsize + 1 ) block
 
 ! update the expt_v and expt_t, matrix of time evolution operator
 ! if is == nsize + 1, index_v(is+1) is not indexed (i.e, equal to 0),
@@ -2073,7 +2095,7 @@
          t_next = beta - time_v( index_v(ie) )
      else
          t_next = time_v( index_v(ie+1) ) - time_v( index_v(ie) )
-     endif ! back if ( ie == nsize +1 ) block
+     endif ! back if ( ie == nsize + 1 ) block
 
 ! update the expt_v and expt_t, matrix of time evolution operator
 ! if ie == nsize + 1, index_v(ie+1) is not indexed (i.e, equal to 0),
@@ -2104,13 +2126,17 @@
      return
   end subroutine cat_insert_flavor
 
-!!>>> cat_remove_flavor: remove old create and destroy operators in the flavor part
+!!>>> cat_remove_flavor: remove old create and destroy operators in the
+!!>>> flavor part
   subroutine cat_remove_flavor(is, ie, tau_start, tau_end)
      use constants, only : dp, zero
-     use control, only : beta, ncfgs
-     use context, only : empty_v, time_v, index_v, expt_v, expt_t, eigs, csign
-
      use stack, only : istack_getrest, istack_push
+
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -2247,13 +2273,13 @@
 ! please refer to try_remove_flavor().
      if ( tau_start < tau_end ) then
          ae = ae + 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 ! it is assumed that destroy operator is removed at first, so as should be
 ! adjusted if needed
      if ( tau_start > tau_end ) then
          as = as - 1
-     endif
+     endif ! back if ( tau_start > tau_end ) block
 
 ! evaluate csign, TO BE CHECKED
      csign = csign * ( 1 - 2 * mod( nsize - ae + nsize - as + 1, 2 ) )
@@ -2264,12 +2290,13 @@
 !!>>> cat_lshift_flavor: shift the old create operator in the flavor part
   subroutine cat_lshift_flavor(flvr, iso, isn, tau_start2)
      use constants, only : dp, zero
-     use control, only : beta, ncfgs
-
-     use context, only : empty_v, time_v, index_v, expt_v, expt_t
-     use context, only : flvr_v, type_v, eigs, csign
-
      use stack, only : istack_getrest
+
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -2291,6 +2318,9 @@
 
 ! memory address for old and new create operators
      integer  :: as
+
+! index address for old create operator
+     integer  :: iso_t
 
 ! total number of operators
      integer  :: nsize
@@ -2354,12 +2384,17 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( iso < nsize .and. iso /= isn ) then
-         if ( iso == 1 ) then
-             t_prev = time_v( index_v(iso) ) - zero
+         if ( iso > isn ) then
+             iso_t = iso + 1
          else
-             t_prev = time_v( index_v(iso) ) - time_v( index_v(iso-1) )
-         endif ! back if ( iso == 1 ) block
-         as = index_v(iso)
+             iso_t = iso
+         endif ! back if ( iso > isn ) block
+         if ( iso_t == 1 ) then
+             t_prev = time_v( index_v(iso_t) ) - zero
+         else
+             t_prev = time_v( index_v(iso_t) ) - time_v( index_v(iso_t-1) )
+         endif ! back if ( iso_t == 1 ) block
+         as = index_v(iso_t)
          do i=1,ncfgs
              expt_v( i, as ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
@@ -2383,12 +2418,13 @@
 !!>>> cat_rshift_flavor: shift the old destroy operator in the flavor part
   subroutine cat_rshift_flavor(flvr, ieo, ien, tau_end2)
      use constants, only : dp, zero
-     use control, only : beta, ncfgs
-
-     use context, only : empty_v, time_v, index_v, expt_v, expt_t
-     use context, only : flvr_v, type_v, eigs, csign
-
      use stack, only : istack_getrest
+
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : eigs
 
      implicit none
 
@@ -2410,6 +2446,9 @@
 
 ! memory address for old and new destroy operators
      integer  :: ae
+
+! index address for old destroy operator
+     integer  :: ieo_t
 
 ! total number of operators
      integer  :: nsize
@@ -2473,12 +2512,17 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( ieo < nsize .and. ieo /= ien ) then
-         if ( ieo == 1 ) then
-             t_prev = time_v( index_v(ieo) ) - zero
+         if ( ieo > ien ) then
+             ieo_t = ieo + 1
          else
-             t_prev = time_v( index_v(ieo) ) - time_v( index_v(ieo-1) )
-         endif ! back if ( ieo == 1 ) block
-         ae = index_v(ieo)
+             ieo_t = ieo
+         endif ! back if ( ieo > ien ) block
+         if ( ieo_t == 1 ) then
+             t_prev = time_v( index_v(ieo_t) ) - zero
+         else
+             t_prev = time_v( index_v(ieo_t) ) - time_v( index_v(ieo_t-1) )
+         endif ! back if ( ieo_t == 1 ) block
+         ae = index_v(ieo_t)
          do i=1,ncfgs
              expt_v( i, ae ) = exp ( -eigs(i) * t_prev )
          enddo ! over i={1,ncfgs} loop
@@ -2499,9 +2543,9 @@
      return
   end subroutine cat_rshift_flavor
 
-!!-------------------------------------------------------------------------
-!!>>> service layer: utility subroutines to calculate trace             <<<
-!!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to calculate trace            <<<
+!!========================================================================
 
 !!>>> ctqmc_lazy_ztrace: core subroutine of manjushaka
 !! (1) use good quantum numbers (GQNs) algorithm, split the total Hibert space
@@ -2521,7 +2565,7 @@
      use control, only : mkink, ncfgs, beta
 
      use context, only : expt_t, expt_v, index_t, index_v, ckink
-     use context, only : matrix_ptrace, matrix_ntrace, ddmat
+     use context, only : matrix_ptrace, matrix_ntrace, diag
 
      use m_sector, only : nsect, sectors, fprod
      use m_sector, only : is_string, ctqmc_make_string
@@ -2767,12 +2811,12 @@
         return
      endif ! back if ( .not. pass ) block
 
-! store the diagonal elements of final product in ddmat(:,1)
-     ddmat(:,1) = zero
+! store the diagonal elements of final product in diag(:,1)
+     diag(:,1) = zero
      do i=1,nalive_sect
          indx = sectors( orig_sect(i) )%istart
          do j=1,sectors( orig_sect(i) )%ndim
-             ddmat(indx+j-1,1) = fprod(orig_sect(i),1)%item(j,j)
+             diag(indx+j-1,1) = fprod(orig_sect(i),1)%item(j,j)
          enddo
      enddo
 
@@ -2783,7 +2827,7 @@
   subroutine ctqmc_retrieve_ztrace(csize, trace)
      use constants, only : dp, zero
      use control, only : mkink, ncfgs
-     use context, only : expt_t, expt_v, index_t, index_v, ddmat
+     use context, only : expt_t, expt_v, index_t, index_v, diag
 
      use m_sector, only : nsect, sectors, fprod
      use m_sector, only : is_string, ctqmc_make_string
@@ -2841,13 +2885,13 @@
 
      trace = sum(trace_sect)
 
-! store the diagonal elements of final product in ddmat(:,1)
-     ddmat(:,1) = zero
+! store the diagonal elements of final product in diag(:,1)
+     diag(:,1) = zero
      do i=1,nsect
          if( .not. is_string(i,1) ) cycle
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             ddmat(indx+j-1,1) = fprod(i,1)%item(j,j)
+             diag(indx+j-1,1) = fprod(i,1)%item(j,j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect}  loop
 
@@ -2857,7 +2901,7 @@
 !!>>> ctqmc_make_evolve: used to update the operator traces of the
 !!>>> modified part
   subroutine ctqmc_make_evolve()
-     use context, only : matrix_ptrace, matrix_ntrace, ddmat
+     use context, only : matrix_ptrace, matrix_ntrace, diag
 
      use m_sector, only : nsect, sectors, is_string, fprod
      use m_npart, only : ctqmc_save_npart
@@ -2871,8 +2915,8 @@
 ! update the operator traces
      matrix_ptrace = matrix_ntrace
 
-! update ddmat for the calculation of atomic state probability
-     ddmat(:,2) = ddmat(:,1)
+! update diag for the calculation of atomic state probability
+     diag(:,2) = diag(:,1)
 
 ! update is_string for calculating nmat and nnmat
      is_string(:,2) = is_string(:,1)
@@ -2890,15 +2934,17 @@
      return
   end subroutine ctqmc_make_evolve
 
-!!-------------------------------------------------------------------------
-!!>>> service layer: utility subroutines to look up in the flavor       <<<
-!!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to look up in the flavor      <<<
+!!========================================================================
 
-!!>>> ctqmc_make_equate: to determine whether there exists an operator whose
-!!>>> imaginary time is equal to time
+!!>>> ctqmc_make_equate: to determine whether there exists an operator
+!!>>> whose imaginary time is equal to time
   subroutine ctqmc_make_equate(flvr, time, have)
      use constants, only : dp, epss
-     use context, only : ckink, time_s, time_e, index_s, index_e
+
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -2925,12 +2971,12 @@
 ! check creators, if meet it, return 1
          if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) then
              have = 1; EXIT
-         endif
+         endif ! back if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) block
 
 ! check destroyers, if meet it, return 2
          if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) then
              have = 2; EXIT
-         endif
+         endif ! back if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) block
 
      enddo ! over i={1,ckink} loop
 
@@ -2941,7 +2987,8 @@
 !!>>> flavor part using bisection algorithm
   subroutine ctqmc_make_search(addr, ndim, time)
      use constants, only : dp
-     use context, only : time_v, index_v
+
+     use context, only : index_v, time_v
 
      implicit none
 
@@ -2989,18 +3036,20 @@
      return
   end subroutine ctqmc_make_search
 
-!!-------------------------------------------------------------------------
-!!>>> service layer: utility subroutines to build colour and flavor     <<<
-!!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to build colour and flavor    <<<
+!!========================================================================
 
-!!>>> ctqmc_make_colour: generate perturbation expansion series for the colour
-!!>>> (determinant) part, it should be synchronized with the flavor part
+!!>>> ctqmc_make_colour: generate perturbation expansion series for the
+!!>>> colour (determinant) part, it should be synchronized with the
+!!>>> flavor part
   subroutine ctqmc_make_colour(flvr, kink)
      use constants, only : dp
-     use control, only : beta
-     use context, only : ckink, rank
-
      use spring, only : spring_sfmt_stream
+
+     use control, only : beta
+     use context, only : ckink
+     use context, only : rank
 
      implicit none
 
@@ -3041,12 +3090,14 @@
      return
   end subroutine ctqmc_make_colour
 
-!!>>> ctqmc_make_flavor: generate perturbation expansion series for the flavor
-!!>>> (operator trace) part, it should be synchronized with the colour part.
+!!>>> ctqmc_make_flavor: generate perturbation expansion series for the
+!!>>> flavor (operator trace) part, it should be synchronized with the
+!!>>> colour part.
 !!>>> note: ctqmc_make_colour() must be called beforehand
   subroutine ctqmc_make_flavor(flvr, kink)
      use constants, only : dp
-     use context, only : time_s, time_e, index_s, index_e
+
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -3085,20 +3136,20 @@
      return
   end subroutine ctqmc_make_flavor
 
-!!-------------------------------------------------------------------------
-!!>>> service layer: utility subroutines to show the colour and flavor  <<<
-!!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to show the colour and flavor <<<
+!!========================================================================
 
-!!>>> ctqmc_make_display: display operators information (include colour and
-!!>>> flavor parts) on the screen, only used to debug the code
+!!>>> ctqmc_make_display: display operators information (include colour
+!!>>> and flavor parts) on the screen, only used to debug the code
   subroutine ctqmc_make_display(show_type)
      use constants, only : mystd
-     use control, only: norbs, ncfgs
-
-     use context, only : rank, time_s, time_e, time_v, index_s, index_e
-     use context, only : index_v, flvr_v, type_v, expt_v, expt_t, empty_v
-
      use stack, only : istack_getrest
+
+     use control, only : norbs, ncfgs
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : rank
 
      implicit none
 
