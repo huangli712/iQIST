@@ -35,15 +35,15 @@ class p_ctqmc_solver(object):
         """
         pass
 
-    def setp(self):
+    def setp(self, aa):
         """
         """
-        pass
+        self.bb = aa
 
     def check(self):
         """
         """
-        pass
+        print self.bb
 
     def write(self):
         """
@@ -52,3 +52,6 @@ class p_ctqmc_solver(object):
 
 if __name__ == '__main__':
     print 'here'
+    p = p_ctqmc_solver('azalea')
+    p.setp(10)
+    p.check()
