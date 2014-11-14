@@ -1,11 +1,14 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! build gaussian, cubic lattice, bethe lattice, and lorentzian density   !
-! of states, which can be used by hilbert transformation program.        !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makedos @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to build gaussian, cubic lattice, bethe lattice,   !
+!!! and lorentzian density of states, which will be used by the other    !
+!!! hilbert transformation program.                                      !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
 
   program makedos
      use constants
