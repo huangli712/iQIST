@@ -21,11 +21,11 @@
 !! is obtained, which can be used to calculate the self-energy function
 !! on real axis by the invert hilbert transformation.
 !!
-!! Now this code is interfaced with hibiscus/entropy1 code merely. it can
-!! read the mem.dos.dat file as input data. While to interface it with the
-!! hibiscus/stoch code is very simple. What you need to do is to rename
-!! sai.imsum.dat to mem.dos.dat file, and then supplement the data for
-!! different orbitals.
+!! Now this code is interfaced with hibiscus/entropy1 code merely. it
+!! can read the mem.dos.dat file as input data. While to interface it
+!! with the hibiscus/stoch code is very simple. What you need to do is
+!! to rename sai.imsum.dat to mem.dos.dat file, and then supplement
+!! the data for different orbitals.
 !!
 !! Usage
 !! =====
@@ -50,23 +50,18 @@
 !!
 
   program makekra
-     use constants
+     use constants, only : dp, zero, one, half, pi, mystd, mytmp
 
      implicit none
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
+! local control parameters
 ! number of frequency grid on half plane (total number = 2*nw + 1)
      integer :: nw = 400
 
 ! number of orbitals, include the spin degree of freedom
      integer :: nq = 2
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
 ! local variables
-!-------------------------------------------------------------------------
 ! loop index for frequency grid
      integer :: iw
 
@@ -93,21 +88,25 @@
 
 ! real part of green''s function
      real(dp), allocatable :: reg(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! print program header
-     write(mystd,'(2X,a)') 'MKRA'
-     write(mystd,'(2X,a)') 'making kramer-kronig transformation'
-     write(mystd,'(2X,a)') 'version: 2011.08.18T'
+     write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makekra'
+     write(mystd,'(2X,a)') '>>> Making kramer-kronig transformation for matsubara green function'
+     write(mystd,*) ! print blank line
+
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   '>>> number of orbitals (default = 2):'
+     write(mystd,'(2X,a)')   'Number of orbitals (default = 2):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points (default = 400):'
+     write(mystd,'(2X,a)')   'Number of frequency points (default = 400):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nw
      write(mystd,*)

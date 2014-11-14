@@ -88,7 +88,7 @@
      read (mystd,'(i)') nband
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   'Number of time slice (default = 1024):'
+     write(mystd,'(2X,a)')   'Number of time slices (default = 1024):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') ntime
      write(mystd,*)
@@ -99,9 +99,9 @@
      write(mystd,*)
 
 ! check the parameters
-     call s_assert2( nband > 0 .and. nband < 8, 'wrong nband' )
-     call s_assert2( ntime > 0, 'wrong ntime' )
-     call s_assert2( beta > 0, 'wrong beta' )
+     call s_assert2( nband > 0 .and. nband < 8, 'wrong number of bands' )
+     call s_assert2( ntime > 0, 'wrong number of time slices' )
+     call s_assert2( beta > 0, 'wrong inversion of temperature' )
 
 ! allocate memory
      allocate(schi(ntime), stat=istat)
