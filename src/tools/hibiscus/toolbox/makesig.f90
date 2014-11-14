@@ -42,17 +42,15 @@
 !!
 
   program makesig
-     use constants
+     use constants, only : dp, one, two, pi, czero, czi, mystd, mytmp
 
      implicit none
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
+! local control parameters
 ! number of orbitals, include spin degree of freedom
      integer  :: nq    = 2
 
-! number of frequency points for matsubara mesh
+! number of selected frequency points for matsubara mesh
      integer  :: nmesh = 256
 
 ! number of frequency points for real axis
@@ -69,11 +67,8 @@
 
 ! local parameters to build z = e + i*delta
      real(dp) :: delta = 0.0001_dp
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
 ! local variables
-!-------------------------------------------------------------------------
 ! loop index
      integer  :: i
      integer  :: j
@@ -107,39 +102,50 @@
 
 ! self-energy function on real frequency representation
      complex(dp), allocatable :: sigmat(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! print program header
-     write(mystd,'(2X,a)') 'MSIG'
-     write(mystd,'(2X,a)') 'making sigma in real frequency axis'
-     write(mystd,'(2X,a)') 'version: 2011.08.18T'
+     write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makesig'
+     write(mystd,'(2X,a)') '>>> Making self-energy function in real frequency axis'
+     write(mystd,*) ! print blank line
+
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   '>>> number of orbitals (default = 2):'
+     write(mystd,'(2X,a)')   'Number of orbitals (default = 2):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points for matsubara mesh (default = 256):'
+     write(mystd,'(2X,a)')   'Number of selected frequency points for matsubara mesh (default = 256):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nmesh
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points for real axis (default = 1000):'
+     write(mystd,'(2X,a)')   'Number of frequency points for real axis (default = 1000):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') ngrid
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points for self-energy (default = 8193):'
+     write(mystd,'(2X,a)')   'Number of frequency points for original self-energy (default = 8193):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nfreq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> inversion of temperature (default = 10.0):'
+     write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) beta
      write(mystd,*)
+
+! check the parameters
+     call s_assert2( nq > 0   , 'wrong number of orbitals' )
+     call s_assert2( nmesh > 0, 'wrong number of selected frequency points for matsubara mesh' )
+     call s_assert2( ngrid > 0, 'wrong number of frequency points for real axis' )
+     call s_assert2( nfreq > 0, 'wrong number of frequency points for original self-energy' )
+     call s_assert2( beta > 0 , 'wrong inversion of temperature' )
 
 ! allocate memory
      allocate(cmesh(nmesh),            stat=istat)
