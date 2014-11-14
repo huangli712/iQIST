@@ -1,20 +1,51 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! this program reads the density of states data, and then calculate the  !
-! imaginary part of green's function. and then using the kramers-kronig  !
-! transformation, we can calculate the real part of green's function     !
-! easily. so the complete green's function can be obtained, which can be !
-! used to calculate the self-energy function on real axis by the invert  !
-! hilbert transformation.                                                !
-! now this code is interfaced with hibiscus-entropy code merely. it can  !
-! read the mem.dos.dat file as input data. while to interface it with    !
-! hibiscus-stochastic code is very simple. what you need to do is to     !
-! rename sai.imsum.dat to mem.dos.dat file, and then supplement the lost !
-! orbital data.                                                          !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makedos @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to build gaussian, cubic lattice, bethe lattice,   !
+!!! and lorentzian density of states, which will be used by the other    !
+!!! hilbert transformation program.                                      !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! this program reads the density of states data, and then calculate the  !
+!! imaginary part of green's function. and then using the kramers-kronig  !
+!! transformation, we can calculate the real part of green's function     !
+!! easily. so the complete green's function can be obtained, which can be !
+!! used to calculate the self-energy function on real axis by the invert  !
+!! hilbert transformation.                                                !
+!! now this code is interfaced with hibiscus-entropy code merely. it can  !
+!! read the mem.dos.dat file as input data. while to interface it with    !
+!! hibiscus-stochastic code is very simple. what you need to do is to     !
+!! rename sai.imsum.dat to mem.dos.dat file, and then supplement the lost !
+!! orbital data.                                                          !
+!!
+!! Usage
+!! =====
+!!
+!! # ./mkra or bin/mkra.x
+!!
+!! Input
+!! =====
+!!
+!! N/A
+!!
+!! Output
+!! ======
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
   program makekra
      use constants
