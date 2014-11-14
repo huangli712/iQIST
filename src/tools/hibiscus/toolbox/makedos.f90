@@ -10,24 +10,52 @@
 !!! comment : any question, please contact with huangli712@gmail.com     !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makedos code is often used to generate typical density of states
+!! for general lattice models.
+!!
+!! Usage
+!! =====
+!!
+!! # ./mdos or bin/mdos.x
+!!
+!! Input
+!! =====
+!!
+!! N/A
+!!
+!! Output
+!! ======
+!!
+!! dos.gauss.dat
+!! dos.cubic.dat
+!! dos.bethe.dat
+!! dos.loren.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
+
   program makedos
-     use constants
+     use constants, only : dp, zero, one, two, pi, mystd, mytmp
 
      implicit none
 
-!-------------------------------------------------------------------------
 ! local parameters
-!-------------------------------------------------------------------------
 ! \eta parameter, used to build delta function
      real(dp), parameter :: eta1  = 0.01_dp
 
 ! \eta^{2} parameter, used to build delta function
      real(dp), parameter :: eta2  = eta1**2
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
+! local control parameters
 ! number of frequency points, the mesh is [-nw:nw]
      integer  :: nw   = 400
 
@@ -45,11 +73,8 @@
 
 ! minimum value of energy window
      real(dp) :: emin =-10.0_dp
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
 ! local variables
-!-------------------------------------------------------------------------
 ! loop index
      integer  :: i
 
@@ -73,13 +98,18 @@
 
 ! precalculated cos function
      real(dp), allocatable :: cosk(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! print program header
-     write(mystd,'(2X,a)') 'MDOS'
-     write(mystd,'(2X,a)') 'making density of states'
-     write(mystd,'(2X,a)') 'version: 2011.08.18T'
      write(mystd,*) ! write blank lines
+     write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makedos'
+     write(mystd,'(2X,a)') '>>> Making density of states for general lattices'
+     write(mystd,*) ! print blank line
+
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
+     write(mystd,*) ! print blank line
 
 ! setup necessary parameters
      write(mystd,'(2X,a)')   '>>> number of frequency points (default = 400):'
@@ -187,7 +217,7 @@
 
 ! semicircular density of states: bethe lattice
 !-------------------------------------------------------------------------
-! D(\epsilon) = \frac{1} {2\pi t^{2}} \sqrt{4t^{2}-\epsilon^{2}} 
+! D(\epsilon) = \frac{1} {2\pi t^{2}} \sqrt{4t^{2}-\epsilon^{2}}
 ! with \abs{\epsilon} < 2t
 ! see Rev. Mods. Phys. 68, 13, 1996, eq(21)
      write(mystd,'(2X,a)') '>>> make bethe      density of states ...'
