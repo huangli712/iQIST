@@ -111,6 +111,10 @@
      read (mystd,'(i)') nw
      write(mystd,*)
 
+! check the parameters
+     call s_assert2( nq > 0, 'wrong number of orbitals' )
+     call s_assert2( nw > 0, 'wrong number of frequency points' )
+
 ! allocate memory
      allocate(w(-nw:nw),      stat=istat)
      allocate(dh(-nw:nw),     stat=istat)
@@ -120,6 +124,9 @@
      allocate(dos(-nw:nw,nq), stat=istat)
      allocate(img(-nw:nw,nq), stat=istat)
      allocate(reg(-nw:nw,nq), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('makekra','can not allocate enough memory')
+     endif ! back if ( istat / = 0 ) block
 
 ! initialize arrays
      dos = zero
@@ -129,12 +136,11 @@
 ! inquire data file
      inquire(file = 'mem.dos.dat', exist = fexist)
      if ( fexist == .false. ) then
-         write(mystd,'(2X,a)') 'file mem.dos.dat does not exist'
-         STOP ! terminate this program
-     endif
+         call s_print_error('makekra','file mem.dos.dat does not exist')
+     endif ! back if ( fexist == .false. ) block
 
 ! open density of states file
-     write(mystd,'(2X,a)') '>>> reading mem.dos.dat ...'
+     write(mystd,'(2X,a)') 'Reading mem.dos.dat ...'
      open(mytmp, file='mem.dos.dat', form='formatted', status='unknown')
 
 ! read in density of states data
@@ -172,16 +178,14 @@
 
 ! perform the kramers-kronig transformations
      do iq=1,nq
-         write(mystd,'(2X,a,i2)') '>>> perform kramers-kronig transformation #', iq
-
+         write(mystd,'(2X,a,i2)') 'Doing kramers-kronig transformation #', iq
          call kramers(nw, img(:,iq), reg(:,iq), w, dh, logf, delta)
-
          write(mystd,'(2X,a)')    '>>> status: OK'
          write(mystd,*)
      enddo ! over iq={1,nq} loop
 
 ! write out the green's function
-     write(mystd,'(2X,a)') '>>> writing kra.grn.dat ...'
+     write(mystd,'(2X,a)') 'Writing kra.grn.dat ...'
      open(mytmp, file='kra.grn.dat', form='formatted', status='unknown')
 
      do iq=1,nq
@@ -208,7 +212,7 @@
 
   end program makekra
 
-!>>> kramers: implement the kramers-kronig transformation
+!!>>> kramers: implement the kramers-kronig transformation
   subroutine kramers(nw, img, reg, w, dh, logf, delta)
      use constants
 
@@ -250,34 +254,30 @@
              ip1 = i + 1
          else
              ip1 = i
-         endif
+         endif ! back if ( i < +nw ) block
 
          if ( i > -nw ) then
-             im1 = i-1
+             im1 = i - 1
          else
              im1 = i
-         endif
+         endif ! back if ( i > -nw ) block 
 
 ! determine om1 and om2
          if ( i > -nw ) then
              om1 = delta(i-1)
          else
              om1 = zero
-         endif
-
+         endif ! back if ( i > -nw ) block
          om2 = half * ( delta(i) * ( img(ip1) - img(i) ) + om1 * ( img(i) - img(im1) ) )
 
          summ = zero
          MESH2: do j=-nw,nw
-
              if ( i /= j ) then
                  summ = summ + ( img(j) - img(i) ) * dh(j) / ( w(j) - w(i) )
              else
                  summ = summ + om2 * dh(j)
-             endif
-
+             endif ! back if ( i /= j ) block
          enddo MESH2 ! over j={-nw,nw} loop
-
          reg(i) = ( summ + img(i) * logf(i) ) / pi
      enddo MESH1 ! over i={-nw,nw} loop
 
