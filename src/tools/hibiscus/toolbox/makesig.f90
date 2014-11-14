@@ -27,8 +27,12 @@
 !! Input
 !! =====
 !!
+!! solver.sgm.dat (necessary)
+!!
 !! Output
 !! ======
+!!
+!! sig.sgm.dat
 !!
 !! Documents
 !! =========
