@@ -1,11 +1,41 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! using Pade approximation to transform self-energy functions from       !
-! matsubara frequency representation to real frequency representation    !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makesig @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to perform analytical continuation for the self-   !
+!!! energy function using the Pade approximation.                        !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makesig code is often used to transform self-energy functions from
+!! matsubara frequency representation to real frequency representation
+!! via the Pade approximation. The results are very sensitive to the data
+!! noises in the self-energy function.
+!!
+!! Usage
+!! =====
+!!
+!! # ./msig or bin/msig.x
+!!
+!! Input
+!! =====
+!!
+!! Output
+!! ======
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
   program makesig
      use constants
