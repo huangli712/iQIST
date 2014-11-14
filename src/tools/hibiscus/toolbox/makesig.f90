@@ -42,7 +42,7 @@
 !!
 
   program makesig
-     use constants, only : dp, one, two, pi, czero, czi, mystd, mytmp
+     use constants, only : dp, one, two, pi, czero, cone, czi, mystd, mytmp
 
      implicit none
 
@@ -156,18 +156,26 @@
 
      allocate(sigmaw(nfreq,nq),        stat=istat)
      allocate(sigmat(-ngrid:ngrid,nq), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('makesig','can not allocate enough memory')
+     endif ! back if ( istat / = 0 ) block
 
-!-------------------------------------------------------------------------
+! build matsubara frequency grid
+     call s_linspace_z(czi, czi * ( two * real(nmesh - 1) + one ), nmesh, cmesh)
+     cmesh = cmesh * pi / beta
+
+! build real frequency grid
+     call s_linspace_z(-dcmplx(ngrid * dw), dcmplx(ngrid * dw), 2 * ngrid + 1, rgrid)
+     rgrid = rgrid + czi * delta
 
 ! inquire data file: solver.sgm.dat
      inquire(file = 'solver.sgm.dat', exist = fexist)
      if ( fexist == .false. ) then
-         write(mystd,'(2X,a)') 'file solver.sgm.dat does not exist'
-         STOP ! terminate this program
-     endif
+         call s_print_error('makesig','file solver.sgm.dat does not exist')
+     endif ! back if ( fexist == .false. ) block
 
 ! open data file: solver.sgm.dat
-     write(mystd,'(2X,a)') '>>> reading solver.sgm.dat ...'
+     write(mystd,'(2X,a)') 'Reading solver.sgm.dat ...'
      open(mytmp, file='solver.sgm.dat', form='formatted', status='unknown')
 
 ! read in self-energy function
@@ -186,23 +194,9 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-!-------------------------------------------------------------------------
-
-! build matsubara frequency grid
-     do i=1,nmesh
-         cmesh(i) = czi * ( two * real(i - 1) + one ) * pi / beta
-     enddo ! over i={1,nmesh} loop
-
-! build real frequency grid
-     do i=-ngrid,ngrid
-         rgrid(i) = real(i) * dw + czi * delta
-     enddo ! over i={-ngrid,ngrid} loop
-
-!-------------------------------------------------------------------------
-
 ! using Pade approximation to deal with self-energy function
-     pade_loop: do i=1,nq
-         write(mystd,'(2X,a,i2)') '>>> Pade transformation for sigma function # ', i
+     PA_LOOP: do i=1,nq
+         write(mystd,'(2X,a,i2)') 'Doing Pade transformation for self-energy function # ', i
 
 ! initialize dummy arrays
          cdummy = czero
@@ -223,12 +217,10 @@
 
          write(mystd,'(2X,a)') '>>> status: OK'
          write(mystd,*)
-     enddo pade_loop ! over i={1,nq} loop
-
-!-------------------------------------------------------------------------
+     enddo PA_LOOP ! over i={1,nq} loop
 
 ! open data file: sig.sgm.dat
-     write(mystd,'(2X,a)') '>>> writing sig.sgm.dat ...'
+     write(mystd,'(2X,a)') 'Writing sig.sgm.dat ...'
      open(mytmp, file='sig.sgm.dat', form='formatted', status='unknown')
 
 ! write out self-energy function
@@ -245,8 +237,6 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-!-------------------------------------------------------------------------
-
 ! deallocate memory
      deallocate(cmesh)
      deallocate(rgrid)
@@ -259,10 +249,10 @@
 
   end program makesig
 
-!>>> using Pade approximation to transform green's function from
-! matsubara frequency representation to real axis
+!!>>> pade: using Pade approximation to transform green's function from
+!!>>> matsubara frequency representation to real axis
   subroutine pade(nmesh, ngrid, cmesh, rgrid, matsubara, transform)
-     use constants
+     use constants, only : dp, czero, cone
 
      implicit none
 
