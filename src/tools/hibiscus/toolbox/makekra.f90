@@ -1,39 +1,67 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! this program reads the density of states data, and then calculate the  !
-! imaginary part of green's function. and then using the kramers-kronig  !
-! transformation, we can calculate the real part of green's function     !
-! easily. so the complete green's function can be obtained, which can be !
-! used to calculate the self-energy function on real axis by the invert  !
-! hilbert transformation.                                                !
-! now this code is interfaced with hibiscus-entropy code merely. it can  !
-! read the mem.dos.dat file as input data. while to interface it with    !
-! hibiscus-stochastic code is very simple. what you need to do is to     !
-! rename sai.imsum.dat to mem.dos.dat file, and then supplement the lost !
-! orbital data.                                                          !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makekra @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to perform kramers-kronig transformation for the   !
+!!! imaginary part of matsubara green's function.                        !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makekra code reads the density of states data, and then calculate
+!! the imaginary part of matsubara green's function. And then using the
+!! kramers-kronig transformation, we can calculate the real part of the
+!! matsubara green's function easily. So the complete green's function
+!! is obtained, which can be used to calculate the self-energy function
+!! on real axis by the invert hilbert transformation.
+!!
+!! Now this code is interfaced with hibiscus/entropy1 code merely. it
+!! can read the mem.dos.dat file as input data. While to interface it
+!! with the hibiscus/stoch code is very simple. What you need to do is
+!! to rename sai.imsum.dat to mem.dos.dat file, and then supplement
+!! the data for different orbitals.
+!!
+!! Usage
+!! =====
+!!
+!! # ./mkra or bin/mkra.x
+!!
+!! Input
+!! =====
+!!
+!! mem.dos.dat (necessary)
+!!
+!! Output
+!! ======
+!!
+!! kra.grn.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
   program makekra
-     use constants
+     use constants, only : dp, zero, one, half, pi, mystd, mytmp
 
      implicit none
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
+! local control parameters
 ! number of frequency grid on half plane (total number = 2*nw + 1)
      integer :: nw = 400
 
 ! number of orbitals, include the spin degree of freedom
      integer :: nq = 2
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
 ! local variables
-!-------------------------------------------------------------------------
 ! loop index for frequency grid
      integer :: iw
 
@@ -60,24 +88,32 @@
 
 ! real part of green''s function
      real(dp), allocatable :: reg(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! print program header
-     write(mystd,'(2X,a)') 'MKRA'
-     write(mystd,'(2X,a)') 'making kramer-kronig transformation'
-     write(mystd,'(2X,a)') 'version: 2011.08.18T'
+     write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makekra'
+     write(mystd,'(2X,a)') '>>> Making kramer-kronig transformation for matsubara green function'
+     write(mystd,*) ! print blank line
+
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   '>>> number of orbitals (default = 2):'
+     write(mystd,'(2X,a)')   'Number of orbitals (default = 2):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points (default = 400):'
+     write(mystd,'(2X,a)')   'Number of frequency points (default = 400):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nw
      write(mystd,*)
+
+! check the parameters
+     call s_assert2( nq > 0, 'wrong number of orbitals' )
+     call s_assert2( nw > 0, 'wrong number of frequency points' )
 
 ! allocate memory
      allocate(w(-nw:nw),      stat=istat)
@@ -88,6 +124,9 @@
      allocate(dos(-nw:nw,nq), stat=istat)
      allocate(img(-nw:nw,nq), stat=istat)
      allocate(reg(-nw:nw,nq), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('makekra','can not allocate enough memory')
+     endif ! back if ( istat / = 0 ) block
 
 ! initialize arrays
      dos = zero
@@ -97,12 +136,11 @@
 ! inquire data file
      inquire(file = 'mem.dos.dat', exist = fexist)
      if ( fexist == .false. ) then
-         write(mystd,'(2X,a)') 'file mem.dos.dat does not exist'
-         STOP ! terminate this program
-     endif
+         call s_print_error('makekra','file mem.dos.dat does not exist')
+     endif ! back if ( fexist == .false. ) block
 
 ! open density of states file
-     write(mystd,'(2X,a)') '>>> reading mem.dos.dat ...'
+     write(mystd,'(2X,a)') 'Reading mem.dos.dat ...'
      open(mytmp, file='mem.dos.dat', form='formatted', status='unknown')
 
 ! read in density of states data
@@ -140,16 +178,14 @@
 
 ! perform the kramers-kronig transformations
      do iq=1,nq
-         write(mystd,'(2X,a,i2)') '>>> perform kramers-kronig transformation #', iq
-
+         write(mystd,'(2X,a,i2)') 'Doing kramers-kronig transformation #', iq
          call kramers(nw, img(:,iq), reg(:,iq), w, dh, logf, delta)
-
          write(mystd,'(2X,a)')    '>>> status: OK'
          write(mystd,*)
      enddo ! over iq={1,nq} loop
 
 ! write out the green's function
-     write(mystd,'(2X,a)') '>>> writing kra.grn.dat ...'
+     write(mystd,'(2X,a)') 'Writing kra.grn.dat ...'
      open(mytmp, file='kra.grn.dat', form='formatted', status='unknown')
 
      do iq=1,nq
@@ -176,7 +212,7 @@
 
   end program makekra
 
-!>>> kramers: implement the kramers-kronig transformation
+!!>>> kramers: implement the kramers-kronig transformation
   subroutine kramers(nw, img, reg, w, dh, logf, delta)
      use constants
 
@@ -218,34 +254,30 @@
              ip1 = i + 1
          else
              ip1 = i
-         endif
+         endif ! back if ( i < +nw ) block
 
          if ( i > -nw ) then
-             im1 = i-1
+             im1 = i - 1
          else
              im1 = i
-         endif
+         endif ! back if ( i > -nw ) block 
 
 ! determine om1 and om2
          if ( i > -nw ) then
              om1 = delta(i-1)
          else
              om1 = zero
-         endif
-
+         endif ! back if ( i > -nw ) block
          om2 = half * ( delta(i) * ( img(ip1) - img(i) ) + om1 * ( img(i) - img(im1) ) )
 
          summ = zero
          MESH2: do j=-nw,nw
-
              if ( i /= j ) then
                  summ = summ + ( img(j) - img(i) ) * dh(j) / ( w(j) - w(i) )
              else
                  summ = summ + om2 * dh(j)
-             endif
-
+             endif ! back if ( i /= j ) block
          enddo MESH2 ! over j={-nw,nw} loop
-
          reg(i) = ( summ + img(i) * logf(i) ) / pi
      enddo MESH1 ! over i={-nw,nw} loop
 

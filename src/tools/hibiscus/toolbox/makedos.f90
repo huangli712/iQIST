@@ -1,30 +1,61 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! build gaussian, cubic lattice, bethe lattice, and lorentzian density   !
-! of states, which can be used by hilbert transformation program.        !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makedos @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to build gaussian, cubic lattice, bethe lattice,   !
+!!! and lorentzian density of states, which will be used by the other    !
+!!! hilbert transformation program.                                      !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makedos code is often used to generate typical density of states
+!! for general lattice models.
+!!
+!! Usage
+!! =====
+!!
+!! # ./mdos or bin/mdos.x
+!!
+!! Input
+!! =====
+!!
+!! N/A
+!!
+!! Output
+!! ======
+!!
+!! dos.gauss.dat
+!! dos.cubic.dat
+!! dos.bethe.dat
+!! dos.loren.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
   program makedos
-     use constants
+     use constants, only : dp, zero, one, two, pi, mystd, mytmp
 
      implicit none
 
-!-------------------------------------------------------------------------
 ! local parameters
-!-------------------------------------------------------------------------
 ! \eta parameter, used to build delta function
      real(dp), parameter :: eta1  = 0.01_dp
 
 ! \eta^{2} parameter, used to build delta function
      real(dp), parameter :: eta2  = eta1**2
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
+! local control parameters
 ! number of frequency points, the mesh is [-nw:nw]
      integer  :: nw   = 400
 
@@ -42,11 +73,8 @@
 
 ! minimum value of energy window
      real(dp) :: emin =-10.0_dp
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
 ! local variables
-!-------------------------------------------------------------------------
 ! loop index
      integer  :: i
 
@@ -70,62 +98,70 @@
 
 ! precalculated cos function
      real(dp), allocatable :: cosk(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! print program header
-     write(mystd,'(2X,a)') 'MDOS'
-     write(mystd,'(2X,a)') 'making density of states'
-     write(mystd,'(2X,a)') 'version: 2011.08.18T'
-     write(mystd,*) ! write blank lines
+     write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makedos'
+     write(mystd,'(2X,a)') '>>> Making density of states for general lattices'
+     write(mystd,*) ! print blank line
+
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
+     write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   '>>> number of frequency points (default = 400):'
+     write(mystd,'(2X,a)')   'Number of frequency points (default = 400):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nw
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of k points (default = 200):'
+     write(mystd,'(2X,a)')   'Number of k points (default = 200):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nk
      write(mystd,*)
      nk3 = (nk+1)**3
 
-     write(mystd,'(2X,a)')   '>>> hopping parameters t (default = 1.0):'
+     write(mystd,'(2X,a)')   'Hopping parameters t (default = 1.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) part
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> energy window, maximum value (default = 10.0):'
+     write(mystd,'(2X,a)')   'Energy window, maximum value (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) emax
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> energy window, minimum value (default =-10.0):'
+     write(mystd,'(2X,a)')   'Energy window, minimum value (default =-10.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) emin
      write(mystd,*)
+
+! check the parameters
+     call s_assert2( nw > 0, 'wrong number of frequency points' )
+     call s_assert2( nk > 0, 'wrong number of k points' )
+     call s_assert2( emax > emin, 'wrong energy window' )
 
 ! allocate memory
      allocate(mesh(-nw:nw), stat=istat)
      allocate(pdos(-nw:nw), stat=istat)
      allocate(cosk( 0 :nk), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('makedos','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! build frequency mesh
-     dw = ( emax - emin ) / real( 2 * nw )
-     do i=-nw,nw
-         mesh(i) = real(i) * dw
-     enddo ! over i={-nw,nw} loop
+     call s_linspace_d(emin, emax, 2 * nw + 1, mesh)
 
 ! build cosk
-     do i=0,nk
-         cosk(i) = cos(pi * i / nk)
-     enddo ! over i={0,nk} loop
+     call s_linspace_d(zero, pi, nk + 1, cosk)
+     cosk = cos(cosk)
 
 ! gaussian density of states: d=\infty cubic lattice
 !-------------------------------------------------------------------------
 ! D(\epsilon) = \frac{1}{t\sqrt{2\pi}} \exp{(-\frac{\epsilon^{2}}{2t^{2}})}
 ! see Rev. Mods. Phys. 68, 13, 1996, eq(19)
-     write(mystd,'(2X,a)') '>>> make gaussian   density of states ...'
+     write(mystd,'(2X,a)') 'Make gaussian   density of states ...'
 
      fa = two * part**2
      dw = one / ( part * sqrt( two * pi ) )
@@ -148,7 +184,7 @@
 ! see Dieter Vollhardt
 ! Investigation of correlated electron systems using the limit of high dimensions
 ! url: http://www.physik.uni-augsburg.de/theo3/Research/high_dimensions.pdf
-     write(mystd,'(2X,a)') '>>> make cubic      density of states ...'
+     write(mystd,'(2X,a)') 'Make cubic      density of states ...'
 
 ! setup factor, due to the rescaling of part
 ! \epsilon_k = -2t* \sum_{i=1}^{d} cos k_{i}
@@ -184,10 +220,10 @@
 
 ! semicircular density of states: bethe lattice
 !-------------------------------------------------------------------------
-! D(\epsilon) = \frac{1} {2\pi t^{2}} \sqrt{4t^{2}-\epsilon^{2}} 
+! D(\epsilon) = \frac{1} {2\pi t^{2}} \sqrt{4t^{2}-\epsilon^{2}}
 ! with \abs{\epsilon} < 2t
 ! see Rev. Mods. Phys. 68, 13, 1996, eq(21)
-     write(mystd,'(2X,a)') '>>> make bethe      density of states ...'
+     write(mystd,'(2X,a)') 'Make bethe      density of states ...'
 
      fa = two * pi * part**2
      do i=-nw,nw
@@ -195,7 +231,7 @@
              pdos(i) = zero
          else
              pdos(i) = sqrt( 4.0_dp * part**2 - mesh(i)**2 ) / fa
-         endif
+         endif ! back if ( abs( mesh(i) ) > two * part ) block
      enddo ! over i={-nw,nw} loop
 
 ! write it to data file
@@ -212,7 +248,7 @@
 !-------------------------------------------------------------------------
 ! D(\epsilon) = \frac{t}{\pi (\epsilon^{2} + t^{2})}
 ! see Rev. Mods. Phys. 68, 13, 1996, eq(24)
-     write(mystd,'(2X,a)') '>>> make lorentzian density of states ...'
+     write(mystd,'(2X,a)') 'Make lorentzian density of states ...'
 
      do i=-nw,nw
          pdos(i) = part / ( pi * ( mesh(i)**2 + part**2 ) )
