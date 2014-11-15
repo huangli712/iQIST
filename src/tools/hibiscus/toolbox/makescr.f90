@@ -55,7 +55,6 @@
      real(dp) :: lc    = 0.625_dp
      real(dp) :: wc    = 4.000_dp
      real(dp) :: step  = 0.020_dp
-     real(dp) :: scal  = 1.500_dp
 
 ! inversion of temperature
      real(dp) :: beta  = 10.00_dp
@@ -144,16 +143,14 @@
      wimf = zero
 
 ! build imaginary time slice mesh
-     do i=1,ntime
-         kmsh(i) = beta * real( i - 1 ) / real(ntime - 1)
-     enddo ! over i={1,ntime} loop
+     call s_linspace_d(zero, beta, ntime, kmsh)
 
 ! inquire file status: scr.frq.dat
      inquire (file = 'scr.frq.dat', exist = exists)
 
 ! read screening spectral function from scr.frq.dat file
-     if ( exists == .true. ) then
-         write(mystd,'(2X,a)') '>>> reading scr.frq.dat ...'
+     if ( exists .eqv. .true. ) then
+         write(mystd,'(2X,a)') 'Reading scr.frq.dat ...'
 
 ! open data file: scr.frq.dat
          open(mytmp, file='scr.frq.dat', form='formatted', status='unknown')
@@ -162,7 +159,6 @@
          do i=1,nfreq
              read(mytmp,*) wmsh(i), wref(i), wimf(i)
          enddo ! over i={1,nfreq} loop
-         scal = one
 
 ! close data file
          close(mytmp)
@@ -175,27 +171,18 @@
          do i=1,nfreq
              wmsh(i) = real(i - one) * step
              wref(i) = lc * wmsh(i) * log(abs(( wc + wmsh(i) ) / ( wc - wmsh(i) ))) - two * lc * wc
-             if ( wmsh(i) <= wc / scal ) then
-                 wimf(i) = - lc * pi * wmsh(i)
-             else
-                 wimf(i) = zero
-             endif
+             wimf(i) = - lc * pi * wmsh(i)
          enddo ! over i={1,nfreq} loop
-     endif ! back if ( exists == .true. ) block
+     endif ! back if ( exists .eqv. .true. ) block
 
 ! calculate kernel function and energy shift for U and mu
-     write(mystd,'(2X,a)') '>>> calculating kernel function ...'
+     write(mystd,'(2X,a)') 'Calculating kernel function ...'
 
      do i=1,ntime
          do j=1,nfreq-1
              step = wmsh(j+1) - wmsh(j)
-!<             if ( j == 1 ) then
-!<                  f1 = cosh( (kmsh(i) - beta/two) * epss ) - cosh( - beta/two * epss )
-!<                  f1 = f1 * wimf(j) / ( epss ** 2 ) / sinh( epss * beta/two )
-!<             else
-                  f1 = cosh( (kmsh(i) - beta/two) * wmsh(j) ) - cosh( - beta/two * wmsh(j) )
-                  f1 = f1 * wimf(j) / ( wmsh(j) ** 2 ) / sinh( wmsh(j) * beta/two )
-!<             endif ! back if ( j == 1 ) block
+             f1 = cosh( (kmsh(i) - beta/two) * wmsh(j) ) - cosh( - beta/two * wmsh(j) )
+             f1 = f1 * wimf(j) / ( wmsh(j) ** 2 ) / sinh( wmsh(j) * beta/two )
              f2 = cosh( (kmsh(i) - beta/two) * wmsh(j+1) ) - cosh( - beta/two * wmsh(j+1) )
              f2 = f2 * wimf(j+1) / ( wmsh(j+1) ** 2 ) / sinh( wmsh(j+1) * beta/two )
              ktau(i) = ktau(i) + (f1 + f2) * step / (two * pi)
@@ -205,27 +192,22 @@
      f3 = zero
      do j=1,nfreq-1
          step = wmsh(j+1) - wmsh(j)
-!<         if ( j == 1 ) then
-!<              f1 = wimf(j) / epss
-!<         else
-              f1 = wimf(j) / wmsh(j)
-!<         endif ! back if ( j == 1 ) block
+         f1 = wimf(j) / wmsh(j)
          f2 = wimf(j+1) / wmsh(j+1)
          f3 = f3 + (f1 + f2) * step / (two * pi)
      enddo ! over j={1,nfreq-1} loop
-     f3 = f3 * scal
 
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
 ! dump data to scr.tau.dat file, which is used as the input for narcissus program
-     write(mystd,'(2X,a)') '>>> writing scr.tau.dat ...'
+     write(mystd,'(2X,a)') 'Writing scr.tau.dat ...'
 
 ! open data file: scr.tau.dat
      open(mytmp, file='scr.tau.dat', form='formatted', status='unknown')
 
 ! write ktau data to disk file
-! note: the third column is the reference data
+! note: the third column is the reference data, we use the ohmic model
      write(mytmp,'(a,f16.8,2X,a,f16.8)') '# u shift:', two * f3, 'mu shift:', f3
      do i=1,ntime
          f1 = beta * wc * sin( pi * kmsh(i) / beta ) / pi
