@@ -40,7 +40,7 @@
 !!
 !!
   program makescr
-     use constants, only : dp
+     use constants, only : dp, zero, one, two, pi, mystd, mytmp
 
      implicit none
 
@@ -90,9 +90,14 @@
      real(dp), allocatable :: wimf(:)
 
 ! print program header
-     write(mystd,'(2X,a)') 'MSCR'
-     write(mystd,'(2X,a)') 'making kernel function from screening spectral function'
-     write(mystd,'(2X,a)') 'version: 2011.08.18T'
+     write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makescr'
+     write(mystd,'(2X,a)') '>>> Making kernel function from screening spectral function'
+     write(mystd,*) ! print blank line
+
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
