@@ -51,7 +51,7 @@
 ! number of bands
      integer  :: nband = 1
 
-! number of time slice in [0, \beta]
+! number of time slices in [0, \beta]
      integer  :: ntime = 1024
 
 ! inversion of temperature

@@ -101,20 +101,25 @@
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   '>>> number of time slice (default = 1024):'
+     write(mystd,'(2X,a)')   'Number of time slices (default = 1024):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') ntime
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points (default = 400):'
+     write(mystd,'(2X,a)')   'Number of frequency points (default = 400):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nfreq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> inversion of temperature (default = 10.0):'
+     write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) beta
      write(mystd,*)
+
+! check the parameters
+     call s_assert2( ntime > 0, 'wrong number of time slices' )
+     call s_assert2( nfreq > 0, 'wrong number of frequency points' )
+     call s_assert2( beta > 0, 'wrong inversion of temperature' )
 
 ! allocate memory
      allocate(kmsh(ntime), stat=istat)
@@ -123,6 +128,9 @@
      allocate(wmsh(nfreq), stat=istat)
      allocate(wref(nfreq), stat=istat)
      allocate(wimf(nfreq), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('makescr','can not allocate enough memory')
+     endif ! back if ( istat / = 0 ) block
 
 ! initialize variables
      exists = .false.
