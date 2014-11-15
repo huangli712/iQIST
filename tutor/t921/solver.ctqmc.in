@@ -1,41 +1,47 @@
-==========================================================================
-BEGONIA: setup continuous time quantum Monte Carlo quantum impurity solver
-==========================================================================
-2            ! non-self-consistent (1) or self-consistent mode (2)
-2            ! without symmetry    (1) or with symmetry   mode (2)
-1            ! spin projection, PM (1) or AFM             mode (2)
-1            ! without binning     (1) or with binning    mode (2)
---------------------------------------------------------------------------
-2            ! number of bands
-2            ! number of spin projection
-4            ! number of orbitals (= nband * nspin)
-16           ! number of atomic states
-256          ! maximum number of non-zero elements in sparse matrix style
-20           ! maximum number of DMFT + CTQMC self-consistent iterations
---------------------------------------------------------------------------
-4.0          ! U : average Coulomb interaction
-4.0          ! Uc: intraorbital Coulomb interaction
-2.0   	     ! Uv: interorbital Coulomb interaction, Uv = Uc-2*Jz for t2g system
-1.0          ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
-1.0          ! Js: spin-flip term
-1.0          ! Jp: pair-hopping term
---------------------------------------------------------------------------
-3.954869     ! chemical potential or fermi level
-10.0         ! inversion of temperature
-0.50         ! coupling parameter t for Hubbard model
-0.70         ! mixing parameter for self-consistent engine
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-1024         ! maximum perturbation expansions order
-8193         ! maximum number of matsubara frequency
---------------------------------------------------------------------------
-128          ! maximum number of matsubara frequency sampling by quantum impurity solver
-1024         ! number of time slice
-4            ! number of parts that the imaginary time axis is split
-20000        ! flip period for spin up and spin down states
-200000       ! maximum number of thermalization steps
-20000000     ! maximum number of quantum Monte Carlo sampling steps
-2000000      ! output period
-10000        ! clean update period
-100          ! how often to sampling the gmat and nmat
-100          ! how often to sampling the gtau and prob
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+!!!-----------------------------------------------------------------------
+!!! source  : t921/solver.ctqmc.in
+!!! solver  : begonia
+!!! purpose : for tutorial
+!!! author  : yilin wang (email:qhwyl2006@126.com)
+!!!-----------------------------------------------------------------------
+
+!!>>> setup general control flags
+!!------------------------------------------------------------------------
+  isscf  : 2
+  issun  : 2
+  isspn  : 1
+  isbin  : 1
+
+!!>>> setup common variables for quantum impurity model
+!!------------------------------------------------------------------------
+  nband  : 2
+  nspin  : 2
+  norbs  : 4
+  ncfgs  : 16
+  nzero  : 256
+  niter  : 20
+  U      : 4.00
+  Uc     : 4.00
+  Uv     : 2.00
+  Jz     : 1.00
+  Js     : 1.00
+  Jp     : 1.00
+  mune   : 3.50
+  beta   : 10.0
+  part   : 0.50
+  alpha  : 0.70
+
+!!>>> setup common variables for quantum impurity solver
+!!------------------------------------------------------------------------
+  mkink  : 1024
+  mfreq  : 8193
+  nfreq  : 128
+  ntime  : 1024
+  npart  : 4
+  nflip  : 20000
+  ntherm : 20000000
+  nsweep : 200000000
+  nwrite : 20000000
+  nclean : 100000
+  nmonte : 100
+  ncarlo : 100
