@@ -1,6 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
 !!! program : s_assert
+!!!           s_assert2
 !!!           s_sorter
 !!!           s_sorter2
 !!!           s_qsorter
@@ -31,10 +32,11 @@
 !! Introduction
 !! ============
 !!
-!! 1. assert
-!! ---------
+!! 1. assertion
+!! ------------
 !!
 !! subroutine s_assert(...)
+!! subroutine s_assert2(...)
 !!
 !! 2. sort algorithm
 !! -----------------
@@ -79,15 +81,36 @@
      implicit none
 
 ! external arguments
+! the logical condition that we have to assert
      logical, intent(in) :: condition
 
 ! if condition == .false., it aborts the program.
      if ( .not. condition ) then
-         call s_print_error("s_assert", "assert failed.")
+         call s_print_error('s_assert','assert failed.')
      endif ! back if ( .not. condition ) block
 
      return
   end subroutine s_assert
+
+!!>>> s_assert2: fortran version of assert, additional message will be
+!!>>> presented for further analysis
+  subroutine s_assert2(condition, message)
+     implicit none
+
+! external arguments
+! the logical condition that we have to assert
+     logical, intent(in) :: condition
+
+! the additional message
+     character(len=*)    :: message
+
+! if condition == .false., it aborts the program.
+     if ( .not. condition ) then
+         call s_print_error('s_assert2','assert failed -> '//message)
+     endif ! back if ( .not. condition ) block
+
+     return
+  end subroutine s_assert2
 
 !!========================================================================
 !!>>> sort algorithm                                                   <<<
