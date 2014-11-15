@@ -1,3 +1,14 @@
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makekra @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to perform kramers-kronig transformation for the   !
+!!! imaginary part of matsubara green's function.                        !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
 !=========+=========+=========+=========+=========+=========+=========+>>>
 ! from screening spectral function W(\omega) calculate kernel function   !
 ! (K(\tau)), which can be used to feed narcissus code.                   !
@@ -7,6 +18,38 @@
 ! comment : any question, please contact with huangli712@yahoo.com.cn    !
 !=========+=========+=========+=========+=========+=========+=========+>>>
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makedos code is often used to generate typical density of states
+!! for general lattice models.
+!!
+!! Usage
+!! =====
+!!
+!! # ./mdos or bin/mdos.x
+!!
+!! Input
+!! =====
+!!
+!! N/A
+!!
+!! Output
+!! ======
+!!
+!! dos.gauss.dat
+!! dos.cubic.dat
+!! dos.bethe.dat
+!! dos.loren.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
   program makescr
      use constants
 
