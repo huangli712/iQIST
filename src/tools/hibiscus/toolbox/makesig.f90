@@ -1,24 +1,56 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! using Pade approximation to transform self-energy functions from       !
-! matsubara frequency representation to real frequency representation    !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makesig @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to perform analytical continuation for the self-   !
+!!! energy function using the Pade approximation.                        !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makesig code is often used to transform self-energy functions from
+!! matsubara frequency representation to real frequency representation
+!! via the Pade approximation. The results are very sensitive to the data
+!! noises in the self-energy function.
+!!
+!! Usage
+!! =====
+!!
+!! # ./msig or bin/msig.x
+!!
+!! Input
+!! =====
+!!
+!! solver.sgm.dat (necessary)
+!!
+!! Output
+!! ======
+!!
+!! sig.sgm.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
   program makesig
-     use constants
+     use constants, only : dp, one, two, pi, czero, cone, czi, mystd, mytmp
 
      implicit none
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
+! local control parameters
 ! number of orbitals, include spin degree of freedom
      integer  :: nq    = 2
 
-! number of frequency points for matsubara mesh
+! number of selected frequency points for matsubara mesh
      integer  :: nmesh = 256
 
 ! number of frequency points for real axis
@@ -35,11 +67,8 @@
 
 ! local parameters to build z = e + i*delta
      real(dp) :: delta = 0.0001_dp
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
 ! local variables
-!-------------------------------------------------------------------------
 ! loop index
      integer  :: i
      integer  :: j
@@ -73,39 +102,50 @@
 
 ! self-energy function on real frequency representation
      complex(dp), allocatable :: sigmat(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! print program header
-     write(mystd,'(2X,a)') 'MSIG'
-     write(mystd,'(2X,a)') 'making sigma in real frequency axis'
-     write(mystd,'(2X,a)') 'version: 2011.08.18T'
+     write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makesig'
+     write(mystd,'(2X,a)') '>>> Making self-energy function in real frequency axis'
+     write(mystd,*) ! print blank line
+
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   '>>> number of orbitals (default = 2):'
+     write(mystd,'(2X,a)')   'Number of orbitals (default = 2):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points for matsubara mesh (default = 256):'
+     write(mystd,'(2X,a)')   'Number of selected frequency points for matsubara mesh (default = 256):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nmesh
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points for real axis (default = 1000):'
+     write(mystd,'(2X,a)')   'Number of frequency points for real axis (default = 1000):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') ngrid
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points for self-energy (default = 8193):'
+     write(mystd,'(2X,a)')   'Number of frequency points for original self-energy (default = 8193):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nfreq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> inversion of temperature (default = 10.0):'
+     write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) beta
      write(mystd,*)
+
+! check the parameters
+     call s_assert2( nq > 0   , 'wrong number of orbitals' )
+     call s_assert2( nmesh > 0, 'wrong number of selected frequency points for matsubara mesh' )
+     call s_assert2( ngrid > 0, 'wrong number of frequency points for real axis' )
+     call s_assert2( nfreq > 0, 'wrong number of frequency points for original self-energy' )
+     call s_assert2( beta > 0 , 'wrong inversion of temperature' )
 
 ! allocate memory
      allocate(cmesh(nmesh),            stat=istat)
@@ -116,18 +156,26 @@
 
      allocate(sigmaw(nfreq,nq),        stat=istat)
      allocate(sigmat(-ngrid:ngrid,nq), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('makesig','can not allocate enough memory')
+     endif ! back if ( istat / = 0 ) block
 
-!-------------------------------------------------------------------------
+! build matsubara frequency grid
+     call s_linspace_z(czi, czi * ( two * real(nmesh - 1) + one ), nmesh, cmesh)
+     cmesh = cmesh * pi / beta
+
+! build real frequency grid
+     call s_linspace_z(-dcmplx(ngrid * dw), dcmplx(ngrid * dw), 2 * ngrid + 1, rgrid)
+     rgrid = rgrid + czi * delta
 
 ! inquire data file: solver.sgm.dat
      inquire(file = 'solver.sgm.dat', exist = fexist)
      if ( fexist == .false. ) then
-         write(mystd,'(2X,a)') 'file solver.sgm.dat does not exist'
-         STOP ! terminate this program
-     endif
+         call s_print_error('makesig','file solver.sgm.dat does not exist')
+     endif ! back if ( fexist == .false. ) block
 
 ! open data file: solver.sgm.dat
-     write(mystd,'(2X,a)') '>>> reading solver.sgm.dat ...'
+     write(mystd,'(2X,a)') 'Reading solver.sgm.dat ...'
      open(mytmp, file='solver.sgm.dat', form='formatted', status='unknown')
 
 ! read in self-energy function
@@ -146,23 +194,9 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-!-------------------------------------------------------------------------
-
-! build matsubara frequency grid
-     do i=1,nmesh
-         cmesh(i) = czi * ( two * real(i - 1) + one ) * pi / beta
-     enddo ! over i={1,nmesh} loop
-
-! build real frequency grid
-     do i=-ngrid,ngrid
-         rgrid(i) = real(i) * dw + czi * delta
-     enddo ! over i={-ngrid,ngrid} loop
-
-!-------------------------------------------------------------------------
-
 ! using Pade approximation to deal with self-energy function
-     pade_loop: do i=1,nq
-         write(mystd,'(2X,a,i2)') '>>> Pade transformation for sigma function # ', i
+     PA_LOOP: do i=1,nq
+         write(mystd,'(2X,a,i2)') 'Doing Pade transformation for self-energy function # ', i
 
 ! initialize dummy arrays
          cdummy = czero
@@ -183,12 +217,10 @@
 
          write(mystd,'(2X,a)') '>>> status: OK'
          write(mystd,*)
-     enddo pade_loop ! over i={1,nq} loop
-
-!-------------------------------------------------------------------------
+     enddo PA_LOOP ! over i={1,nq} loop
 
 ! open data file: sig.sgm.dat
-     write(mystd,'(2X,a)') '>>> writing sig.sgm.dat ...'
+     write(mystd,'(2X,a)') 'Writing sig.sgm.dat ...'
      open(mytmp, file='sig.sgm.dat', form='formatted', status='unknown')
 
 ! write out self-energy function
@@ -205,8 +237,6 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-!-------------------------------------------------------------------------
-
 ! deallocate memory
      deallocate(cmesh)
      deallocate(rgrid)
@@ -219,10 +249,10 @@
 
   end program makesig
 
-!>>> using Pade approximation to transform green's function from
-! matsubara frequency representation to real axis
+!!>>> pade: using Pade approximation to transform green's function from
+!!>>> matsubara frequency representation to real axis
   subroutine pade(nmesh, ngrid, cmesh, rgrid, matsubara, transform)
-     use constants
+     use constants, only : dp, czero, cone
 
      implicit none
 
