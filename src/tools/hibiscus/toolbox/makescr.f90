@@ -1,48 +1,37 @@
 !!!=========+=========+=========+=========+=========+=========+=========+!
-!!! HIBISCUS/toolbox/makekra @ iQIST                                     !
+!!! HIBISCUS/toolbox/makescr @ iQIST                                     !
 !!!                                                                      !
-!!! This tool is used to perform kramers-kronig transformation for the   !
-!!! imaginary part of matsubara green's function.                        !
+!!! This tool is used to general the kernel function, i.e., K(\tau), for !
+!!! the narcissus code.                                                  !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : any question, please contact with huangli712@gmail.com     !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! from screening spectral function W(\omega) calculate kernel function   !
-! (K(\tau)), which can be used to feed narcissus code.                   !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
-
 !!
 !!
 !! Introduction
 !! ============
 !!
-!! The makedos code is often used to generate typical density of states
-!! for general lattice models.
+!! The makescr code is often used to calculate the K(\tau) from classic
+!! models or from the screening spectral function W(\omega). The results
+!! are necessary input for the narcissus code.
 !!
 !! Usage
 !! =====
 !!
-!! # ./mdos or bin/mdos.x
+!! # ./mscr or bin/mscr.x
 !!
 !! Input
 !! =====
 !!
-!! N/A
+!! src.frq.dat
 !!
 !! Output
 !! ======
 !!
-!! dos.gauss.dat
-!! dos.cubic.dat
-!! dos.bethe.dat
-!! dos.loren.dat
+!! src.tau.dat
 !!
 !! Documents
 !! =========
@@ -51,14 +40,12 @@
 !!
 !!
   program makescr
-     use constants
+     use constants, only : dp
 
      implicit none
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
-! number of time slice in [0, \beta]
+! local control parameters
+! number of time slices in [0, \beta]
      integer  :: ntime = 1024
 
 ! number of frequency points
@@ -72,11 +59,8 @@
 
 ! inversion of temperature
      real(dp) :: beta  = 10.00_dp
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
 ! local variables
-!-------------------------------------------------------------------------
 ! loop index
      integer  :: i
      integer  :: j
@@ -104,7 +88,6 @@
 
 ! screening spectral function, imaginary part
      real(dp), allocatable :: wimf(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! print program header
      write(mystd,'(2X,a)') 'MSCR'
