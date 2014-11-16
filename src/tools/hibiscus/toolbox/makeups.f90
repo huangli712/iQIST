@@ -41,12 +41,13 @@
 !! Input
 !! =====
 !!
-!! solver.sgm.dat.*
+!! mem.dos.dat (necessary)
 !!
 !! Output
 !! ======
 !!
-!! std.sgm.dat
+!! ups.pes.dat
+!! ups.xas.dat
 !!
 !! Documents
 !! =========
