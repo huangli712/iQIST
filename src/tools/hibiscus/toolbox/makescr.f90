@@ -39,6 +39,7 @@
 !! For more details, please go to iqist/doc/manual directory.
 !!
 !!
+
   program makescr
      use constants, only : dp, zero, one, two, pi, mystd, mytmp
 
@@ -51,13 +52,16 @@
 ! number of frequency points
      integer  :: nfreq = 400
 
+! number of cutoff frequency points, ncut <= nfreq
+     integer  :: ncut  = 400
+
+! inversion of temperature
+     real(dp) :: beta  = 10.00_dp
+
 ! experienced parameters to build default screening spectral function
      real(dp) :: lc    = 0.625_dp
      real(dp) :: wc    = 4.000_dp
      real(dp) :: step  = 0.020_dp
-
-! inversion of temperature
-     real(dp) :: beta  = 10.00_dp
 
 ! local variables
 ! loop index
@@ -110,6 +114,11 @@
      read (mystd,'(i)') nfreq
      write(mystd,*)
 
+     write(mystd,'(2X,a)')   'Number of cutoff frequency points (default = 400):'
+     write(mystd,'(2X,a,$)') '>>> '
+     read (mystd,'(i)') ncut
+     write(mystd,*)
+
      write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) beta
@@ -118,6 +127,8 @@
 ! check the parameters
      call s_assert2( ntime > 0, 'wrong number of time slices' )
      call s_assert2( nfreq > 0, 'wrong number of frequency points' )
+     call s_assert2( ncut > 0, 'wrong number of cutoff frequency points' )
+     call s_assert2( ncut <= nfreq, 'wrong number of cutoff frequency points' )
      call s_assert2( beta > 0, 'wrong inversion of temperature' )
 
 ! allocate memory
