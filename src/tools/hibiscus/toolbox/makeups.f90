@@ -1,30 +1,59 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! calculate Gaussian broadening for density of states, which can be used !
-! to compare with PES and XAS experiments.                               !
-! now this code is interfaced with hibiscus-entropy code merely. it can  !
-! read the mem.dos.dat file as input data. while to interface it with    !
-! hibiscus-stochastic code is very simple. what you need to do is to     !
-! rename sai.imsum.dat to mem.dos.dat file, and then supplement the lost !
-! orbital data.                                                          !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : about the smearing parameter                                 !
-!           the standard deviation smearing parameter was chosen to be   !
-!           in the same range as estimates of experimental resolution    !
-!           (which are around 0.1 for high resolution PES, and approxi-  !
-!           mately 0.2 to 0.4 for XAS.                                   !
-!           a good test to decide if the broadening is correct is the    !
-!           comparison of the Fermi edge in theory and experiment.       !
-!                                                                        !
-!           about the beta parameter                                     !
-!           the beta parameter practically plays no role if one uses the !
-!           Fermi function at the experimental temperature or at the     !
-!           temperature of the QMC calculations                          !
-!                                                                        !
-!           any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makeups @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to calculate Gaussian broadening for density of    !
+!!! states, which can be used to compare with PES and XAS experiments.   !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makeups code is often used to postprocess the spectral function
+!! data to compare with the XAS and UPS experiments. Now this code is
+!! interfaced with entropy1 code merely. It can read the mem.dos.dat file
+!! as input data. While to interface it with the stoch code is straight-
+!! forward. What you need to do is to rename sai.imsum.dat to mem.dos.dat
+!! file, and then supplement the lost orbital data.
+!!
+!! About the smearing parameter
+!! The standard deviation smearing parameter was chosen to be in the same
+!! range as estimates of experimental resolution (which are around 0.1
+!! for high resolution PES, and approximately 0.2 to 0.4 for XAS. A good
+!! test to decide if the broadening is correct is the comparison of the
+!! Fermi edge in theory and experiment.
+!!
+!! About the beta parameter
+!! The beta parameter practically plays no role if one uses the Fermi
+!! function at the experimental temperature or at the temperature of the
+!! QMC calculations
+!!
+!! Usage
+!! =====
+!!
+!! # ./mups or bin/mups.x
+!!
+!! Input
+!! =====
+!!
+!! solver.sgm.dat.*
+!!
+!! Output
+!! ======
+!!
+!! std.sgm.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
   program makeups
      use constants
 
