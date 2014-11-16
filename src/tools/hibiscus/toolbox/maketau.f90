@@ -1,49 +1,37 @@
 !!!=========+=========+=========+=========+=========+=========+=========+!
-!!! HIBISCUS/toolbox/makedos @ iQIST                                     !
+!!! HIBISCUS/toolbox/maketau @ iQIST                                     !
 !!!                                                                      !
-!!! This tool is used to build gaussian, cubic lattice, bethe lattice,   !
-!!! and lorentzian density of states, which will be used by the other    !
-!!! hilbert transformation program.                                      !
+!!! This tool is used to postprocess the bins data of the imaginary time !
+!!! green's function.
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : any question, please contact with huangli712@gmail.com     !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! convert solver.green.bin or solver.green.dat to tau.grn.dat, prepare   !
-! input data for hibiscus-entropy or hibiscus-stochastic program         !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
-
 !!
 !!
 !! Introduction
 !! ============
 !!
-!! The makedos code is often used to generate typical density of states
-!! for general lattice models.
+!! The maketau code is often used to convert file solver.green.bin.*
+!! or solver.green.dat to tau.grn.dat, prepare input data for hibiscus/
+!! entropy1 or hibiscus/stoch codes.
 !!
 !! Usage
 !! =====
 !!
-!! # ./mdos or bin/mdos.x
+!! # ./mtau or bin/mtau.x
 !!
 !! Input
 !! =====
 !!
-!! N/A
+!! solver.green.dat or solver.green.bin.* (necessary)
 !!
 !! Output
 !! ======
 !!
-!! dos.gauss.dat
-!! dos.cubic.dat
-!! dos.bethe.dat
-!! dos.loren.dat
+!! tau.grn.dat
 !!
 !! Documents
 !! =========
