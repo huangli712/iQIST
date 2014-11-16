@@ -134,7 +134,7 @@
      write(mystd,*)
 
 ! check the parameters
-     call s_assert2( nband > 0, 'wrong number of bands' )
+     call s_assert2( nband > 0 .and. nband < 8, 'wrong number of bands' )
      call s_assert2( nfreq > 0, 'wrong number of matsubara frequency points' )
      call s_assert2( nbins > 0, 'wrong number of data bins' )
 

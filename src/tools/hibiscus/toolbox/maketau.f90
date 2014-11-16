@@ -15,8 +15,19 @@
 !! ============
 !!
 !! The maketau code is often used to convert file solver.green.bin.*
-!! or solver.green.dat to tau.grn.dat, prepare input data for hibiscus/
-!! entropy1 or hibiscus/stoch codes.
+!! or solver.green.dat to tau.grn.dat, prepare necessary input data for
+!! the hibiscus/entropy1 or hibiscus/stoch codes.
+!!
+!! About solver.green.bin.* files:
+!! In order to obtain solver.green.bin.* files, you have to active the
+!! data binning mode of the ctqmc impurity solver, i.e., you have to
+!! set isbin to 2 in the solver.ctqmc.in file, and then execute the
+!! calculations.
+!!
+!! About ctqmc control parameter:
+!! When ctqmc == 1 or 2, then the output file is suitable for the
+!! hibiscus/entropy1 code. When ctqmc == 3 or 4, then the output file is
+!! suitable for the hibiscus/stoch code.
 !!
 !! Usage
 !! =====
@@ -151,7 +162,7 @@
      call s_assert2( ntime > 0, 'wrong number of time slices' )
      call s_assert2( nbins > 0, 'wrong number of data bins' )
      call s_assert2( ctqmc > 0 .and. ctqmc < 5, 'wrong file type' )
-     call s_assert2( beta > zero , 'wrong inversion of temperature' )
+     call s_assert2( beta > zero, 'wrong inversion of temperature' )
 
 ! allocate memory
      allocate(tau(ntime),       stat=istat)

@@ -132,10 +132,10 @@
      write(mystd,*)
 
 ! check the parameters
-     call s_assert2( nq > 0, 'wrong number of orbitals' )
+     call s_assert2( nq > 0 .and. nq < 15, 'wrong number of orbitals' )
      call s_assert2( nw > 0, 'wrong number of frequency points' )
-     call s_assert2( beta > zero , 'wrong inversion of temperature' )
-     call s_assert2( gamm > zero , 'wrong broadening parameter' )
+     call s_assert2( beta > zero, 'wrong inversion of temperature' )
+     call s_assert2( gamm > zero, 'wrong broadening parameter' )
 
 ! allocate memory
      allocate(mesh(-nw:nw),    stat=istat)
