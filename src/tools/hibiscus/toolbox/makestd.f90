@@ -1,20 +1,51 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! convert solver.sgm.dat.nn to std.sgm.dat, prepare key input data for   !
-! the hibiscus-swing analytical continuation code                        !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makestd @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to convert solver.sgm.dat.* to std.sgm.dat, which  !
+!!! is necessary for the self-energy function analytical continuation    !
+!!! code (swing).                                                        !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makestd code is often used to postprocess the self-energy function
+!! data to generate suitable input files for the swing code.
+!!
+!! Usage
+!! =====
+!!
+!! # ./mstd or bin/mstd.x
+!!
+!! Input
+!! =====
+!!
+!! solver.sgm.dat.*
+!!
+!! Output
+!! ======
+!!
+!! std.sgm.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
   program makestd
      use constants
 
      implicit none
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
+! local control parameters
 ! number of bands
      integer  :: nband = 1
 
@@ -30,7 +61,6 @@
 
 ! number of data bins
      integer  :: nbins = 1
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
 ! local variables
