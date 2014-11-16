@@ -317,9 +317,11 @@
 
   end program maketau
 
-!>>> spline green's function from old mesh to new mesh
+!!>>> make_spline: spline green's function from old mesh to new mesh
+!!>>> this size of old mesh is ntime, however, the size of new mesh
+!!>>> is fixed to ntau (129).
   subroutine make_spline(ntime, norbs, beta, tau, grn)
-     use constants
+     use constants, only : dp, zero
 
      implicit none
 
@@ -368,11 +370,9 @@
      deltau = beta / real( ntime - 1 )
 
 ! build new imaginary mesh
-     do i=1,ntau
-         tau_t(i) = beta * real( i - 1 ) / real( ntau - 1 )
-     enddo ! over i={1,ntau} loop
+     call s_linspace_d(zero, beta, ntau, tau_t)
 
-! calculate 2nd derivates of green's function
+! calculate 2nd derivates of old green's function
      do i=1,norbs
 
 ! calculate first-order derivate of \Delta(0): startu
@@ -400,7 +400,7 @@
 
      enddo ! over i={1,norbs} loop
 
-! perform cubic spline interpolation
+! perform cubic spline interpolation to obtain new green's function
      do i=1,norbs
          do j=1,ntau
              grn_t(j,i) = s_spl_funct(ntime, tau, grn(:,i), g2d(:,i), tau_t(j))
@@ -422,9 +422,9 @@
      return
   end subroutine make_spline
 
-!>>> smooth orginal green's function using bezier curves
+!!>>> make_bezier: smooth orginal green's function using bezier curves
   subroutine make_bezier(ntime, norbs, tau, grn)
-     use constants
+     use constants, only : dp, zero, one
 
      implicit none
 
@@ -463,7 +463,6 @@
      do m=1,norbs
          do j=1,ntime
              t = dt * real(j - 1)
-
              x = zero
              y = zero
 
@@ -479,11 +478,12 @@
                  x = x + tau(i)   * bern(i)
              enddo ! over i={1,ntime} loop
 
-             tau_(j) = x ! save x and y to tau_ and grn_ respectively
+! save x and y to tau_ and grn_ respectively
+             tau_(j) = x
              grn_(j) = y
-         enddo ! over m={1,ntime} loop
+         enddo ! over j={1,ntime} loop
          grn(:,m) = grn_
-     enddo ! over j={1,norbs} loop
+     enddo ! over m={1,norbs} loop
      tau = tau_
 
      return
