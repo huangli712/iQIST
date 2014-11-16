@@ -25,9 +25,15 @@
 !! calculations.
 !!
 !! About ctqmc control parameter:
-!! When ctqmc == 1 or 2, then the output file is suitable for the
-!! hibiscus/entropy1 code. When ctqmc == 3 or 4, then the output file is
-!! suitable for the hibiscus/stoch code.
+!! In general, when ctqmc == 1 or 2, then the output file is suitable for
+!! the hibiscus/entropy1 code. When ctqmc == 3 or 4, then the output file
+!! is suitable for the hibiscus/stoch code.
+!!
+!! About nskip control parameter:
+!! If ctqmc == 1 or 2, then nskip must be 0. If ctqmc == 3 or 4, then
+!! nskip couble be finite value. Be careful, nskip can not be any integer.
+!! Notice that mod(ntime - 1, nskip) must be 0, or else the obtained
+!! tau.grn.dat must be wrong.
 !!
 !! Usage
 !! =====
@@ -79,6 +85,9 @@
 ! if ctqmc == 3, ctqmc in bin mode;
 ! if ctqmc == 4, hfqmc in bin mode.
      integer  :: ctqmc = 1
+
+! number of skipped points between two successive selected points
+     integer  :: nskip = 0
 
 ! inversion of temperature
      real(dp) :: beta  = 10.0_dp
@@ -152,6 +161,11 @@
      read (mystd,'(i)') ctqmc
      write(mystd,*)
 
+     write(mystd,'(2X,a)')   'Number of skipped points between two successive selected points (default = 0):'
+     write(mystd,'(2X,a,$)') '>>> '
+     read (mystd,'(i)') nskip
+     write(mystd,*)
+
      write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) beta
@@ -162,6 +176,7 @@
      call s_assert2( ntime > 0, 'wrong number of time slices' )
      call s_assert2( nbins > 0, 'wrong number of data bins' )
      call s_assert2( ctqmc > 0 .and. ctqmc < 5, 'wrong file type' )
+     call s_assert2( nskip >= 0, 'wrong number of skipped points' )
      call s_assert2( beta > zero, 'wrong inversion of temperature' )
 
 ! allocate memory
@@ -303,7 +318,7 @@
 
 ! write out data
      do i=1,nband
-         do j=1,ntime
+         do j=1,ntime,nskip
              write(mytmp,'(5f16.8)') tau(j), grn(j,i), err(j,i), grn(j,i+nband), err(j,i+nband)
          enddo ! over j={1,ntime} loop
 
@@ -405,14 +420,14 @@
 
 ! local parameters
 ! predefined mesh size
-     integer, parameter  :: ntau = 129
+     integer, parameter   :: ntau = 129
 
 ! external arguments
 ! number of imaginary time points
-     integer, intent(in) :: ntime
+     integer, intent(in)  :: ntime
 
 ! number of orbitals
-     integer, intent(in) :: norbs
+     integer, intent(in)  :: norbs
 
 ! inversion of temperature
      real(dp), intent(in) :: beta
