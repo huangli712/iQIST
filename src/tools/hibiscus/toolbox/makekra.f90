@@ -72,7 +72,7 @@
      integer :: istat
 
 ! logical file exist flag
-     logical :: fexist
+     logical :: exists
 
 ! frequency grid
      real(dp), allocatable :: w(:)
@@ -134,10 +134,10 @@
      reg = zero
 
 ! inquire data file
-     inquire(file = 'mem.dos.dat', exist = fexist)
-     if ( fexist == .false. ) then
+     inquire(file = 'mem.dos.dat', exist = exists)
+     if ( exists .eqv. .false. ) then
          call s_print_error('makekra','file mem.dos.dat does not exist')
-     endif ! back if ( fexist == .false. ) block
+     endif ! back if ( exists .eqv. .false. ) block
 
 ! open density of states file
      write(mystd,'(2X,a)') 'Reading mem.dos.dat ...'

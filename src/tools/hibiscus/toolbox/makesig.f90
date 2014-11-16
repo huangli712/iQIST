@@ -78,7 +78,7 @@
      integer  :: istat
 
 ! logical file exist flag
-     logical  :: fexist
+     logical  :: exists
 
 ! dummy variables
      real(dp) :: r
@@ -169,10 +169,10 @@
      rgrid = rgrid + czi * delta
 
 ! inquire data file: solver.sgm.dat
-     inquire(file = 'solver.sgm.dat', exist = fexist)
-     if ( fexist == .false. ) then
+     inquire(file = 'solver.sgm.dat', exist = exists)
+     if ( exists .eqv. .false. ) then
          call s_print_error('makesig','file solver.sgm.dat does not exist')
-     endif ! back if ( fexist == .false. ) block
+     endif ! back if ( exists .eqv. .false. ) block
 
 ! open data file: solver.sgm.dat
      write(mystd,'(2X,a)') 'Reading solver.sgm.dat ...'

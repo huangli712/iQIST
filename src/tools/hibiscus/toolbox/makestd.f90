@@ -112,21 +112,26 @@
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   '>>> number of bands (default = 1):'
+     write(mystd,'(2X,a)')   'Number of bands (default = 1):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nband
      write(mystd,*)
      norbs = nband * nspin
 
-     write(mystd,'(2X,a)')   '>>> number of matsubara frequency points (default = 8193):'
+     write(mystd,'(2X,a)')   'Number of matsubara frequency points (default = 8193):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nfreq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of data bins (default = 1):'
+     write(mystd,'(2X,a)')   'Number of data bins (default = 1):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nbins
      write(mystd,*)
+
+! check the parameters
+     call s_assert2( nband > 0, 'wrong number of bands' )
+     call s_assert2( nfreq > 0, 'wrong number of matsubara frequency points' )
+     call s_assert2( nbins > 0, 'wrong number of data bins' )
 
 ! allocate memory
      allocate(msh(nfreq),                 stat=istat)
@@ -139,6 +144,9 @@
 
      allocate(sre_bin(nfreq,norbs,nbins), stat=istat)
      allocate(sim_bin(nfreq,norbs,nbins), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('makestd','can not allocate enough memory')
+     endif ! back if ( istat / = 0 ) block
 
 ! initialize variables
      exists = .false.
@@ -155,6 +163,7 @@
      sre_bin = zero
      sim_bin = zero
 
+! collect the self-energy function data
      std_loop: do ibin=1,nbins
 
 ! convert ibin to sbin
@@ -162,35 +171,36 @@
 
 ! inquire file status: solver.sgm.dat.ibin
          inquire (file = 'solver.sgm.dat.'//trim(adjustl(sbin)), exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('makestd','file solver.sgm.dat does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
-         if ( exists == .true. ) then
 ! open solver.sgm.dat file
-             write(mystd,'(2X,a,i4)') '>>> reading solver.sgm.dat ...', ibin
-             open(mytmp, file='solver.sgm.dat.'//trim(adjustl(sbin)), form='formatted', status='unknown')
+         write(mystd,'(2X,a,i4)') 'Reading solver.sgm.dat ...', ibin
+         open(mytmp, file='solver.sgm.dat.'//trim(adjustl(sbin)), form='formatted', status='unknown')
 
 ! read self-energy function data
-             do i=1,nband
-                 do j=1,nfreq
-                     read(mytmp,*) itmp, msh(j), sre_bin(j,i,ibin), &
-                                                 sim_bin(j,i,ibin), &
-                                           sre_bin(j,i+nband,ibin), &
-                                           sim_bin(j,i+nband,ibin)
-                 enddo ! over j={1,nfreq} loop
-                 read(mytmp,*) ! skip two lines
-                 read(mytmp,*)
-             enddo ! over i={1,nband} loop
+         do i=1,nband
+             do j=1,nfreq
+                 read(mytmp,*) itmp, msh(j), sre_bin(j,i,ibin), &
+                                             sim_bin(j,i,ibin), &
+                                       sre_bin(j,i+nband,ibin), &
+                                       sim_bin(j,i+nband,ibin)
+             enddo ! over j={1,nfreq} loop
+             read(mytmp,*) ! skip two lines
+             read(mytmp,*)
+         enddo ! over i={1,nband} loop
 
 ! close solver.sgm.dat file
-             close(mytmp)
+         close(mytmp)
 
-             write(mystd,'(2X,a)') '>>> status: OK'
-             write(mystd,*)
-         else
-             write(mystd,'(2X,a)') 'WARNING: solver.sgm.dat file do not exist!'
-             STOP
-         endif ! back if ( exists == .true. ) then
+         write(mystd,'(2X,a)') '>>> status: OK'
+         write(mystd,*)
 
      enddo std_loop ! over ibin={1,nbins} loop
+
+! process the self-energy function data
+     write(mystd,'(2X,a)') 'Postprocessing self-energy function data ...'
 
 ! calculate the averaged self-energy function
      do ibin=1,nbins
@@ -201,7 +211,6 @@
      sim = sim / real(nbins)
 
 ! calculate the standard deviation for self-energy function
-     write(mystd,'(2X,a)') '>>> postprocessing self-energy function data ...'
      do i=1,norbs
          do j=1,nfreq
 
@@ -226,8 +235,8 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-! open std.sgm.dat file, which is used as the input for hibiscus-swing program
-     write(mystd,'(2X,a)') '>>> writing std.sgm.dat ...'
+! open std.sgm.dat file, which is used as the input for swing code
+     write(mystd,'(2X,a)') 'Writing std.sgm.dat ...'
 
 ! open data file
      open(mytmp, file='std.sgm.dat', form='formatted', status='unknown')
