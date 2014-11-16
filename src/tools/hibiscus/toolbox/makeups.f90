@@ -84,7 +84,7 @@
      integer :: istat
 
 ! logical file exist flag
-     logical :: fexist
+     logical :: exists
 
 ! energy grid
      real(dp), allocatable :: mesh(:)
@@ -156,17 +156,14 @@
      dos3 = zero
      dos4 = zero
 
-!-------------------------------------------------------------------------
-
 ! inquire data file
-     inquire(file = 'mem.dos.dat', exist = fexist)
-     if ( fexist == .false. ) then
-         write(mystd,'(2X,a)') 'file mem.dos.dat does not exist'
-         STOP ! terminate this program
-     endif
+     inquire(file = 'mem.dos.dat', exist = exists)
+     if ( exists .eqv. .false. ) then
+         call s_print_error('makeups','file mem.dos.dat does not exist')
+     endif ! back if ( exists .eqv. .false. ) block
 
 ! open density of states file
-     write(mystd,'(2X,a)') '>>> reading mem.dos.dat ...'
+     write(mystd,'(2X,a)') 'Reading mem.dos.dat ...'
      open(mytmp, file='mem.dos.dat', form='formatted', status='unknown')
 
 ! read in data
@@ -183,8 +180,6 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-!-------------------------------------------------------------------------
-
 ! copy data from dos1 to dos3
      dos3 = dos1
 
@@ -196,7 +191,7 @@
 
 ! broadening density of states
      do iq=1,nq
-         write(mystd,'(2X,a,i2)') 'PES >>> smearing band #', iq
+         write(mystd,'(2X,a,i2)') 'Smearing PES at band #', iq
 
          call broadening(nw, gamm, mesh, dos1(:,iq), dos2(:,iq))
 
@@ -205,7 +200,7 @@
      enddo ! over iq={1,nq} loop
 
      do iq=1,nq
-         write(mystd,'(2X,a,i2)') 'XAS >>> smearing band #', iq
+         write(mystd,'(2X,a,i2)') 'Smearing XAS at band #', iq
 
          call broadening(nw, gamm, mesh, dos3(:,iq), dos4(:,iq))
 
@@ -213,10 +208,8 @@
          write(mystd,*)
      enddo ! over iq={1,nq} loop
 
-!-------------------------------------------------------------------------
-
 ! open density of states file
-     write(mystd,'(2X,a)') '>>> writing ups.pes.dat ...'
+     write(mystd,'(2X,a)') 'Writing ups.pes.dat ...'
      open(mytmp, file='ups.pes.dat', form='formatted', status='unknown')
 
 ! write out broadened density of states
@@ -233,10 +226,8 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-!-------------------------------------------------------------------------
-
 ! open density of states file
-     write(mystd,'(2X,a)') '>>> writing ups.xas.dat ...'
+     write(mystd,'(2X,a)') 'Writing ups.xas.dat ...'
      open(mytmp, file='ups.xas.dat', form='formatted', status='unknown')
 
 ! write out broadened density of states
@@ -253,8 +244,6 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-!-------------------------------------------------------------------------
-
 ! deallocate memory
      deallocate(mesh)
 
@@ -265,17 +254,17 @@
 
   end program makeups
 
-!>>> calculate broadening with the Gaussian function (S = smearing):
-! we define:
-!     fct(x) = \frac{1}{S\sqrt{2\pi}} e^{-\frac{x^{2}}{2 S^{2}}}
-! and
-!     Precision = S / dx. (dx = Delta Energy between 2 points)
-! then
-!     Broad. Spectrum(x) =
-!         \sum_{x'=-3*Precision}^{3*Precision} fct(x')*Spectrum(x+x')
-! where x' = DeltaJ in the procedure.
+!!>>> broadening: calculate broadening with the Gaussian function
+!! we define:
+!!     fct(x) = \frac{1}{S\sqrt{2\pi}} e^{-\frac{x^{2}}{2 S^{2}}}
+!! and
+!!     Precision = S / dx. (dx = Delta Energy between 2 points)
+!! then
+!!     Broadening Spectrum(x) =
+!!         \sum_{x'=-3*Precision}^{3*Precision} fct(x')*Spectrum(x+x')
+!! where x' = DeltaJ in the procedure, and S = smearing
   subroutine broadening(nw, gamm, mesh, xinp, xout)
-     use constants
+     use constants, only : dp, zero, one, two, pi
 
      implicit none
 
@@ -308,9 +297,7 @@
      real(dp) :: fac2
 
 ! initialize xout
-     do iw=-nw,nw
-         xout(iw) = zero
-     enddo ! over iw={-nw,nw} loop
+     xout = zero
 
 ! calculate broadening range
      prec = nint( abs( gamm / ( mesh(2) - mesh(1) ) ) )
@@ -325,17 +312,13 @@
          do iw=-nw,nw
              do delj=max(-3*prec,-nw-iw),min(3*prec,nw-iw)
                  xout(iw) = xout(iw) + xinp(iw+delj) * exp( -real( delj * delj ) / fac2 )
-             enddo
+             enddo ! over delj={max(-3*prec,-nw-iw),min(3*prec,nw-iw)} loop
              xout(iw) = xout(iw) * fac1
          enddo ! over iw={-nw,nw} loop
 
 ! set xinp == xout, do nothing
      else
-
-         do iw=-nw,nw
-             xout(iw) = xinp(iw)
-         enddo ! over iw={-nw,nw} loop
-
+         xout = xinp
      endif ! back if ( prec > 0 ) block
 
      return
