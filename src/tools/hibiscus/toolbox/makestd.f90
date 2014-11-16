@@ -41,7 +41,7 @@
 !!
 
   program makestd
-     use constants
+     use constants, only : dp, zero, mystd, mytmp
 
      implicit none
 
@@ -101,9 +101,14 @@
      real(dp), allocatable :: sim_bin(:,:,:)
 
 ! print program header
-     write(mystd,'(2X,a)') 'MSTD'
-     write(mystd,'(2X,a)') 'making average and standard deviation for self-energy function'
-     write(mystd,'(2X,a)') 'version: 2011.08.18T'
+     write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makestd'
+     write(mystd,'(2X,a)') '>>> Making mean value and standard deviation for self-energy function'
+     write(mystd,*) ! print blank line
+
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
