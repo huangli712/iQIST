@@ -3,7 +3,7 @@
 !!!                                                                      !
 !!! This tool is used to convert solver.sgm.dat.* to std.sgm.dat, which  !
 !!! is necessary for the self-energy function analytical continuation    !
-!!! code (swing).                                                        !
+!!! code (hibiscus/swing)                                                !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
@@ -16,7 +16,12 @@
 !! ============
 !!
 !! The makestd code is often used to postprocess the self-energy function
-!! data to generate suitable input files for the swing code.
+!! data to generate suitable input files for the hibiscus/swing code.
+!!
+!! At first, you have to run the ctqmc impurity solver for many times to
+!! generate a series of solver.sgm.dat file. And then this code is used
+!! to deal with these solver.sgm.dat files to output std.sgm.dat which is
+!! just what the hibiscus/swing code needs.
 !!
 !! Usage
 !! =====
