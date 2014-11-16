@@ -101,7 +101,7 @@
 ! check the parameters
      call s_assert2( nband > 0 .and. nband < 8, 'wrong number of bands' )
      call s_assert2( ntime > 0, 'wrong number of time slices' )
-     call s_assert2( beta > 0, 'wrong inversion of temperature' )
+     call s_assert2( beta > zero, 'wrong inversion of temperature' )
 
 ! allocate memory
      allocate(schi(ntime), stat=istat)

@@ -129,7 +129,7 @@
      call s_assert2( nfreq > 0, 'wrong number of frequency points' )
      call s_assert2( ncut > 0, 'wrong number of cutoff frequency points' )
      call s_assert2( ncut <= nfreq, 'wrong number of cutoff frequency points' )
-     call s_assert2( beta > 0, 'wrong inversion of temperature' )
+     call s_assert2( beta > zero, 'wrong inversion of temperature' )
 
 ! allocate memory
      allocate(kmsh(ntime), stat=istat)

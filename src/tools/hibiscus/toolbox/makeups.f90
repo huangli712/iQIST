@@ -56,13 +56,11 @@
 !!
 !!
   program makeups
-     use constants
+     use constants, only : dp, zero, one, mystd, mytmp
 
      implicit none
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
+! local control parameters
 ! number of frequency grid on half plane (total number = 2*nw + 1)
      integer  :: nw   = 400
 
@@ -74,11 +72,8 @@
 
 ! broadening parameter
      real(dp) :: gamm = 0.30_dp
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
 ! local variables
-!-------------------------------------------------------------------------
 ! loop index for frequency grid
      integer :: iw
 
@@ -103,34 +98,44 @@
 
 ! broadened data of density of states (XAS)
      real(dp), allocatable :: dos4(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! print program header
-     write(mystd,'(2X,a)') 'MUPS'
-     write(mystd,'(2X,a)') 'making ultraviolet photoemission spectra'
-     write(mystd,'(2X,a)') 'version: 2011.08.18T'
+     write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makeups'
+     write(mystd,'(2X,a)') '>>> Making ultraviolet photoemission spectra'
+     write(mystd,*) ! print blank line
+
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   '>>> number of orbitals (default = 2):'
+     write(mystd,'(2X,a)')   'Number of orbitals (default = 2):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points (default = 400):'
+     write(mystd,'(2X,a)')   'Number of frequency points (default = 400):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nw
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> inversion of temperature (default = 10.0):'
+     write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) beta
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> broadening parameter (default = 0.30):'
+     write(mystd,'(2X,a)')   'Broadening parameter (default = 0.30):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) gamm
      write(mystd,*)
+
+! check the parameters
+     call s_assert2( nq > 0, 'wrong number of orbitals' )
+     call s_assert2( nw > 0, 'wrong number of frequency points' )
+     call s_assert2( beta > zero , 'wrong inversion of temperature' )
+     call s_assert2( gamm > zero , 'wrong broadening parameter' )
 
 ! allocate memory
      allocate(mesh(-nw:nw),    stat=istat)
@@ -139,6 +144,9 @@
      allocate(dos2(-nw:nw,nq), stat=istat)
      allocate(dos3(-nw:nw,nq), stat=istat)
      allocate(dos4(-nw:nw,nq), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('makeups','can not allocate enough memory')
+     endif ! back if ( istat / = 0 ) block
 
 ! initialize arrays
      mesh = zero

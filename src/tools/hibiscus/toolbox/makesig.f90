@@ -145,7 +145,7 @@
      call s_assert2( nmesh > 0, 'wrong number of selected frequency points for matsubara mesh' )
      call s_assert2( ngrid > 0, 'wrong number of frequency points for real axis' )
      call s_assert2( nfreq > 0, 'wrong number of frequency points for original self-energy' )
-     call s_assert2( beta > 0 , 'wrong inversion of temperature' )
+     call s_assert2( beta > zero , 'wrong inversion of temperature' )
 
 ! allocate memory
      allocate(cmesh(nmesh),            stat=istat)
