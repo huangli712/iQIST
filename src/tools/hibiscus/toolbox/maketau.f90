@@ -1,3 +1,15 @@
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makedos @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to build gaussian, cubic lattice, bethe lattice,   !
+!!! and lorentzian density of states, which will be used by the other    !
+!!! hilbert transformation program.                                      !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
 !=========+=========+=========+=========+=========+=========+=========+>>>
 ! convert solver.green.bin or solver.green.dat to tau.grn.dat, prepare   !
 ! input data for hibiscus-entropy or hibiscus-stochastic program         !
@@ -6,6 +18,39 @@
 ! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
 ! comment : any question, please contact with huangli712@yahoo.com.cn    !
 !=========+=========+=========+=========+=========+=========+=========+>>>
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makedos code is often used to generate typical density of states
+!! for general lattice models.
+!!
+!! Usage
+!! =====
+!!
+!! # ./mdos or bin/mdos.x
+!!
+!! Input
+!! =====
+!!
+!! N/A
+!!
+!! Output
+!! ======
+!!
+!! dos.gauss.dat
+!! dos.cubic.dat
+!! dos.bethe.dat
+!! dos.loren.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
   program maketau
      use constants
