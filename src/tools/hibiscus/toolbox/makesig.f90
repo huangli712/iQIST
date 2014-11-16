@@ -2,7 +2,7 @@
 !!! HIBISCUS/toolbox/makesig @ iQIST                                     !
 !!!                                                                      !
 !!! This tool is used to perform analytical continuation for the self-   !
-!!! energy function using the Pade approximation.                        !
+!!! energy function using the Pade approximation                         !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
@@ -17,7 +17,9 @@
 !! The makesig code is often used to transform self-energy functions from
 !! matsubara frequency representation to real frequency representation
 !! via the Pade approximation. The results are very sensitive to the data
-!! noises in the self-energy function.
+!! noises in the self-energy function. So we do not recommend to use this
+!! code to perform analytical continuation for the self-energy function.
+!! However, the hibiscus/swing code may be a better choice.
 !!
 !! Usage
 !! =====
@@ -50,16 +52,16 @@
 ! number of orbitals, include spin degree of freedom
      integer  :: nq    = 2
 
-! number of selected frequency points for matsubara mesh
+! number of selected frequency points in matsubara mesh
      integer  :: nmesh = 256
 
-! number of frequency points for real axis
+! number of frequency points in real axis
      integer  :: ngrid = 1000
 
 ! number of frequency points for original self-energy function
      integer  :: nfreq = 8193
 
-! inversion temperature
+! inversion of temperature
      real(dp) :: beta  = 10.0_dp
 
 ! energy step, used to build real axis
@@ -120,12 +122,12 @@
      read (mystd,'(i)') nq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   'Number of selected frequency points for matsubara mesh (default = 256):'
+     write(mystd,'(2X,a)')   'Number of selected frequency points in matsubara mesh (default = 256):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nmesh
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   'Number of frequency points for real axis (default = 1000):'
+     write(mystd,'(2X,a)')   'Number of frequency points in real axis (default = 1000):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') ngrid
      write(mystd,*)
@@ -159,6 +161,14 @@
      if ( istat /= 0 ) then
          call s_print_error('makesig','can not allocate enough memory')
      endif ! back if ( istat / = 0 ) block
+
+! initialize arrays
+     cmesh  = czero
+     rgrid  = czero
+     cdummy = czero
+     rdummy = czero
+     sigmaw = czero
+     sigmat = czero
 
 ! build matsubara frequency grid
      call s_linspace_z(czi, czi * ( two * real(nmesh - 1) + one ), nmesh, cmesh)
