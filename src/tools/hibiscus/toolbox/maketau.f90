@@ -146,6 +146,13 @@
      read (mystd,  *  ) beta
      write(mystd,*)
 
+! check the parameters
+     call s_assert2( nband > 0 .and. nband < 8, 'wrong number of bands' )
+     call s_assert2( ntime > 0, 'wrong number of time slices' )
+     call s_assert2( nbins > 0, 'wrong number of data bins' )
+     call s_assert2( ctqmc > 0 .and. ctqmc < 5, 'wrong file type' )
+     call s_assert2( beta > zero , 'wrong inversion of temperature' )
+
 ! allocate memory
      allocate(tau(ntime),       stat=istat)
 
