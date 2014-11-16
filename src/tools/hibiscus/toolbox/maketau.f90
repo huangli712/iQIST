@@ -41,13 +41,11 @@
 !!
 
   program maketau
-     use constants
+     use constants, only : dp, zero, mystd, mytmp
 
      implicit none
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
+! local control parameters
 ! number of bands
      integer  :: nband = 1
 
@@ -58,7 +56,7 @@
 ! number of orbitals, norbs = nspin * nband
      integer  :: norbs = 2
 
-! number of time slice, 129 or 1024, in [0, \beta]
+! number of time slices, 129 or 1024, in [0, \beta]
      integer  :: ntime = 129
 
 ! number of data bins
@@ -73,7 +71,6 @@
 
 ! inversion of temperature
      real(dp) :: beta  = 10.0_dp
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
 ! local variables
