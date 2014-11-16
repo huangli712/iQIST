@@ -317,6 +317,73 @@
 
   end program maketau
 
+!!>>> make_bezier: smooth orginal green's function using bezier curves
+  subroutine make_bezier(ntime, norbs, tau, grn)
+     use constants, only : dp, zero, one
+
+     implicit none
+
+! external arguments
+! number of imaginary time points
+     integer, intent(in) :: ntime
+
+! number of orbitals
+     integer, intent(in) :: norbs
+
+! imaginary time mesh
+     real(dp), intent(inout) :: tau(ntime)
+
+! green's function data
+     real(dp), intent(inout) :: grn(ntime,norbs)
+
+! local variables
+! loop index
+     integer  :: i, j, m
+
+! intervals
+     real(dp) :: dt, t
+
+! current tau(i) and grn(i)
+     real(dp) :: x, y
+
+! dummy copy for tau and grn
+     real(dp) :: tau_(ntime)
+     real(dp) :: grn_(ntime)
+
+! to store Bernstein polynomials
+     real(dp) :: bern(ntime)
+
+     dt = one / real(ntime - 1)
+
+     do m=1,norbs
+         do j=1,ntime
+             t = dt * real(j - 1)
+             x = zero
+             y = zero
+
+! to evaluate Bernstein polynomials
+             call s_bezier(ntime-1, t, bern)
+             do i=1,ntime
+                 y = y + grn(i,m) * bern(i)
+             enddo ! over i={1,ntime} loop
+
+! to evaluate Bernstein polynomials
+             call s_bezier(ntime-1, t, bern)
+             do i=1,ntime
+                 x = x + tau(i)   * bern(i)
+             enddo ! over i={1,ntime} loop
+
+! save x and y to tau_ and grn_ respectively
+             tau_(j) = x
+             grn_(j) = y
+         enddo ! over j={1,ntime} loop
+         grn(:,m) = grn_
+     enddo ! over m={1,norbs} loop
+     tau = tau_
+
+     return
+  end subroutine make_bezier
+
 !!>>> make_spline: spline green's function from old mesh to new mesh
 !!>>> this size of old mesh is ntime, however, the size of new mesh
 !!>>> is fixed to ntau (129).
@@ -421,137 +488,3 @@
 
      return
   end subroutine make_spline
-
-!!>>> make_bezier: smooth orginal green's function using bezier curves
-  subroutine make_bezier(ntime, norbs, tau, grn)
-     use constants, only : dp, zero, one
-
-     implicit none
-
-! external arguments
-! number of imaginary time points
-     integer, intent(in) :: ntime
-
-! number of orbitals
-     integer, intent(in) :: norbs
-
-! imaginary time mesh
-     real(dp), intent(inout) :: tau(ntime)
-
-! green's function data
-     real(dp), intent(inout) :: grn(ntime,norbs)
-
-! local variables
-! loop index
-     integer  :: i, j, m
-
-! intervals
-     real(dp) :: dt, t
-
-! current tau(i) and grn(i)
-     real(dp) :: x, y
-
-! dummy copy for tau and grn
-     real(dp) :: tau_(ntime)
-     real(dp) :: grn_(ntime)
-
-! to store Bernstein polynomials
-     real(dp) :: bern(ntime)
-
-     dt = one / real(ntime - 1)
-
-     do m=1,norbs
-         do j=1,ntime
-             t = dt * real(j - 1)
-             x = zero
-             y = zero
-
-! to evaluate Bernstein polynomials
-             call cat_make_bezier(ntime-1, t, bern)
-             do i=1,ntime
-                 y = y + grn(i,m) * bern(i)
-             enddo ! over i={1,ntime} loop
-
-! to evaluate Bernstein polynomials
-             call cat_make_bezier(ntime-1, t, bern)
-             do i=1,ntime
-                 x = x + tau(i)   * bern(i)
-             enddo ! over i={1,ntime} loop
-
-! save x and y to tau_ and grn_ respectively
-             tau_(j) = x
-             grn_(j) = y
-         enddo ! over j={1,ntime} loop
-         grn(:,m) = grn_
-     enddo ! over m={1,norbs} loop
-     tau = tau_
-
-     return
-  end subroutine make_bezier
-
-!>>> to evaluates the bernstein polynomials at a point x
-! the bernstein polynomials are assumed to be based on [0,1].
-! the formula is:
-!    B(N,I)(X) = [N!/(I!*(N-I)!)] * (1-X)**(N-I) * X**I
-! first values:
-!    B(0,0)(X) = 1
-!    B(1,0)(X) =      1-X
-!    B(1,1)(X) =                X
-!    B(2,0)(X) =     (1-X)**2
-!    B(2,1)(X) = 2 * (1-X)    * X
-!    B(2,2)(X) =                X**2
-!    B(3,0)(X) =     (1-X)**3
-!    B(3,1)(X) = 3 * (1-X)**2 * X
-!    B(3,2)(X) = 3 * (1-X)    * X**2
-!    B(3,3)(X) =                X**3
-!    B(4,0)(X) =     (1-X)**4
-!    B(4,1)(X) = 4 * (1-X)**3 * X
-!    B(4,2)(X) = 6 * (1-X)**2 * X**2
-!    B(4,3)(X) = 4 * (1-X)    * X**3
-!    B(4,4)(X) =                X**4
-! special values:
-!    B(N,I)(X) has a unique maximum value at X = I/N.
-!    B(N,I)(X) has an I-fold zero at 0 and and N-I fold zero at 1.
-!    B(N,I)(1/2) = C(N,K) / 2**N
-!    for a fixed X and N, the polynomials add up to 1:
-!    sum ( 0 <= I <= N ) B(N,I)(X) = 1
-  subroutine cat_make_bezier(n, x, bern)
-     use constants
-
-     implicit none
-
-! external arguments
-! the degree of the Bernstein polynomials to be used.  for any N, there
-! is a set of N+1 Bernstein polynomials, each of degree N, which form a
-! basis for polynomials on [0,1].
-     integer, intent(in)  :: n
-
-! the evaluation point.
-     real(dp), intent(in) :: x
-
-! the values of the N+1 Bernstein polynomials at X
-     real(dp), intent(inout) :: bern(0:n)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-     if ( n == 0 ) then
-         bern(0) = one
-
-     else if ( 0 < n ) then
-         bern(0) = one - x
-         bern(1) = x
-         do i=2,n
-             bern(i) = x * bern(i-1)
-             do j=i-1,1,-1
-                 bern(j) = x * bern(j-1) + ( one - x ) * bern(j)
-             enddo ! over j={i-1,1} loop
-             bern(0) = ( one - x ) * bern(0)
-         enddo ! over i={2,n} loop
-
-     endif ! back if ( n == 0 ) block
- 
-     return
-  end subroutine cat_make_bezier
