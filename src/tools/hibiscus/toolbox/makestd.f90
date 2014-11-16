@@ -26,7 +26,7 @@
 !! Input
 !! =====
 !!
-!! solver.sgm.dat.*
+!! solver.sgm.dat.* (necessary)
 !!
 !! Output
 !! ======
