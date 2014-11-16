@@ -2,7 +2,7 @@
 !!! HIBISCUS/toolbox/makekra @ iQIST                                     !
 !!!                                                                      !
 !!! This tool is used to perform kramers-kronig transformation for the   !
-!!! imaginary part of matsubara green's function.                        !
+!!! imaginary part of matsubara green's function                         !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
@@ -55,7 +55,7 @@
      implicit none
 
 ! local control parameters
-! number of frequency grid on half plane (total number = 2*nw + 1)
+! number of frequency grid points on half plane (total number = 2*nw + 1)
      integer :: nw = 400
 
 ! number of orbitals, include the spin degree of freedom
@@ -91,7 +91,7 @@
 
 ! print program header
      write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makekra'
-     write(mystd,'(2X,a)') '>>> Making kramer-kronig transformation for matsubara green function'
+     write(mystd,'(2X,a)') '>>> Making kramer-kronig transformation for matsubara green''s function'
      write(mystd,*) ! print blank line
 
      write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
@@ -113,7 +113,7 @@
 
 ! check the parameters
      call s_assert2( nq > 0, 'wrong number of orbitals' )
-     call s_assert2( nw > 0, 'wrong number of frequency points' )
+     call s_assert2( nw > 0, 'wrong number of frequency points in half plane' )
 
 ! allocate memory
      allocate(w(-nw:nw),      stat=istat)
@@ -214,7 +214,7 @@
 
 !!>>> kramers: implement the kramers-kronig transformation
   subroutine kramers(nw, img, reg, w, dh, logf, delta)
-     use constants
+     use constants, only : dp, zero, half, pi
 
      implicit none
 
