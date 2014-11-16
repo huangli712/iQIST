@@ -62,9 +62,7 @@
 ! number of data bins
      integer  :: nbins = 1
 
-!-------------------------------------------------------------------------
 ! local variables
-!-------------------------------------------------------------------------
 ! loop index
      integer  :: i
      integer  :: j
@@ -101,7 +99,6 @@
 ! binning data for self-energy function
      real(dp), allocatable :: sre_bin(:,:,:)
      real(dp), allocatable :: sim_bin(:,:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! print program header
      write(mystd,'(2X,a)') 'MSTD'
