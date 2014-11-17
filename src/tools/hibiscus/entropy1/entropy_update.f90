@@ -1,31 +1,31 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : entropy_make_image
-!           entropy_make_sampling
-!           entropy_make_updating
-! source  : entropy_update.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/09/2011 by li huang
-!           01/11/2011 by li huang
-!           01/25/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for classic maximum entropy method code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus
+!!! program : entropy_make_image
+!!!           entropy_make_sampling
+!!!           entropy_make_updating
+!!! source  : entropy_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/09/2011 by li huang
+!!!           01/26/2011 by li huang
+!!!           11/18/2014 by li huang
+!!! purpose : to provide basic subroutines (in other words, elementary
+!!!           updating subroutines) for classic maximum entropy method
+!!!           code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> the driver subroutine of classic maximum entropy program
+!!>>> entropy_make_image: the driver subroutine of classic maximum entropy
+!!>>> program
   subroutine entropy_make_image(G_qmc, G_dev, model, fnorm, fkern, image)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, half, mystd
+     use mmpi, only : mp_allreduce, mp_barrier
+     use spring, only : spring_sfmt_stream
 
-     use spring
-
-     use mmpi
+     use control, only : ntime, nwmax, niter, ntune
+     use control, only : ainit
+     use control, only : nprocs, myid, master
 
      implicit none
 
@@ -194,10 +194,12 @@
      return
   end subroutine entropy_make_image
 
-!>>> implement the kernel algorithm of classic maximum entropy method
+!!>>> entropy_make_sampling: implement the kernel algorithm of classic
+!!>>> maximum entropy method
   subroutine entropy_make_sampling(rfac, tfac, alpha, G_qmc, G_dev, model, fkern, image)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : ntime, nwmax, nstep
 
      implicit none
 
@@ -205,6 +207,9 @@
 ! parameters to control the monte carlo annealing steps
      real(dp), intent(inout) :: rfac
      real(dp), intent(inout) :: tfac
+
+! spectrum function
+     real(dp), intent(inout) :: image(-nwmax:nwmax)
 
 ! alpha parameter
      real(dp), intent(in) :: alpha
@@ -221,9 +226,6 @@
 ! fermion kernel function
      real(dp), intent(in) :: fkern(-nwmax:nwmax,ntime)
 
-! spectrum function
-     real(dp), intent(inout) :: image(-nwmax:nwmax)
-
 ! local variables
 ! loop index
      integer  :: i
@@ -238,7 +240,7 @@
 ! maximum value in image function
      real(dp) :: amax
 
-! \delta image function 
+! \delta image function
      real(dp) :: dimg(-nwmax:nwmax)
 
 ! local parameters
@@ -265,11 +267,11 @@
          if ( acc / try > 0.1_dp ) then
              if ( rfac < 0.01_dp ) then
                  rfac = rfac * 1.5_dp
-             endif
+             endif ! back if ( rfac < 0.01_dp ) block
          else
              if ( rfac > 0.001_dp ) then
                  rfac = rfac / 1.5_dp
-             endif
+             endif ! back if ( rfac > 0.001_dp ) block
          endif ! back if ( arat > 0.1_dp ) block
 
 ! scaling tfac

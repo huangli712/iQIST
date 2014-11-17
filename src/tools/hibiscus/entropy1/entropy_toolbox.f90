@@ -241,7 +241,7 @@
   end subroutine entropy_make_sterm
 
 !!>>> entropy_make_chihc: to calculate \chi^{2}
-!!>>>   \chi^{2} = \sum_{l=1}^{L} 
+!!>>>   \chi^{2} = \sum_{l=1}^{L}
 !!>>>              (\frac{ G_{l}-\sum_{j} K_{lj}A_{j} }{ \sigma_{l} })^{2}
   subroutine entropy_make_chihc(chi2, akern, G_qmc, G_dev)
      use constants, only : dp, zero

@@ -69,7 +69,7 @@
              call p_get('nband' , nband )
              call p_get('norbs' , norbs )
              call p_get('ntype' , ntype )
-             
+
              call p_get('ainit' , ainit )
              call p_get('devia' , devia )
              call p_get('beta'  , beta  )
@@ -137,7 +137,7 @@
      integer :: j
 
 ! used to check whether the input file (tau.grn.dat) exists
-     logical :: exists 
+     logical :: exists
 
 ! read in original imaginary time data if available
      if ( myid == master ) then ! only master node can do it
