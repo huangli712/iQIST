@@ -3,7 +3,7 @@
 !!!                                                                      !
 !!! This tool is used to build gaussian, cubic lattice, bethe lattice,   !
 !!! and lorentzian density of states, which will be used by the other    !
-!!! hilbert transformation program.                                      !
+!!! hilbert transformation program                                       !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
@@ -16,7 +16,8 @@
 !! ============
 !!
 !! The makedos code is often used to generate typical density of states
-!! for general lattice models.
+!! for general lattice models. The output files can be processed by the
+!! ctqmc_dmft_anydos() subroutine in the ctqmc_dmft.f90 file.
 !!
 !! Usage
 !! =====
@@ -122,7 +123,7 @@
      write(mystd,*)
      nk3 = (nk+1)**3
 
-     write(mystd,'(2X,a)')   'Hopping parameters t (default = 1.0):'
+     write(mystd,'(2X,a)')   'Hopping parameter t (default = 1.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) part
      write(mystd,*)
@@ -140,6 +141,7 @@
 ! check the parameters
      call s_assert2( nw > 0, 'wrong number of frequency points' )
      call s_assert2( nk > 0, 'wrong number of k points' )
+     call s_assert2( part > zero, 'wrong hopping parameter' )
      call s_assert2( emax > emin, 'wrong energy window' )
 
 ! allocate memory
@@ -149,6 +151,11 @@
      if ( istat /= 0 ) then
          call s_print_error('makedos','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
+
+! initialize arrays
+     mesh = zero
+     pdos = zero
+     cosk = zero
 
 ! build frequency mesh
      call s_linspace_d(emin, emax, 2 * nw + 1, mesh)
@@ -193,7 +200,6 @@
 
 ! reset pdos
      pdos = zero
-
      BZ_K1_LOOP: do k1=0,nk         ! loop over kx
          BZ_K2_LOOP: do k2=0,nk     ! loop over ky
              BZ_K3_LOOP: do k3=0,nk ! loop over kz

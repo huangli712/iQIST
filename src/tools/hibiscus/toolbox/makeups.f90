@@ -1,39 +1,69 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! calculate Gaussian broadening for density of states, which can be used !
-! to compare with PES and XAS experiments.                               !
-! now this code is interfaced with hibiscus-entropy code merely. it can  !
-! read the mem.dos.dat file as input data. while to interface it with    !
-! hibiscus-stochastic code is very simple. what you need to do is to     !
-! rename sai.imsum.dat to mem.dos.dat file, and then supplement the lost !
-! orbital data.                                                          !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : about the smearing parameter                                 !
-!           the standard deviation smearing parameter was chosen to be   !
-!           in the same range as estimates of experimental resolution    !
-!           (which are around 0.1 for high resolution PES, and approxi-  !
-!           mately 0.2 to 0.4 for XAS.                                   !
-!           a good test to decide if the broadening is correct is the    !
-!           comparison of the Fermi edge in theory and experiment.       !
-!                                                                        !
-!           about the beta parameter                                     !
-!           the beta parameter practically plays no role if one uses the !
-!           Fermi function at the experimental temperature or at the     !
-!           temperature of the QMC calculations                          !
-!                                                                        !
-!           any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/toolbox/makeups @ iQIST                                     !
+!!!                                                                      !
+!!! This tool is used to calculate Gaussian broadening for density of    !
+!!! states, which can be used to compare with PES and XAS experiments    !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makeups code is often used to postprocess the spectral function
+!! data to compare with the XAS and UPS experiments. Now this code is
+!! interfaced with the hibiscus/entropy1 code merely. It can read the
+!! mem.dos.dat file as input data. While to interface it with the others
+!! code, such as hibiscus/stoch code, is straightforward. What you need
+!! to do is just to rename sai.imsum.dat to mem.dos.dat file, and then
+!! supplement the lost orbital data.
+!!
+!! About the smearing parameter:
+!! The standard deviation smearing parameter was chosen to be in the same
+!! range as estimates of experimental resolution (which are around 0.1
+!! for high resolution PES, and approximately 0.2 to 0.4 for XAS. A good
+!! test to decide if the broadening is correct is the comparison of the
+!! Fermi edge in theory and experiment.
+!!
+!! About the beta parameter:
+!! The beta parameter practically plays no role if one uses the Fermi
+!! function at the experimental temperature or at the temperature of the
+!! QMC calculations
+!!
+!! Usage
+!! =====
+!!
+!! # ./mups or bin/mups.x
+!!
+!! Input
+!! =====
+!!
+!! mem.dos.dat (necessary)
+!!
+!! Output
+!! ======
+!!
+!! ups.pes.dat
+!! ups.xas.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
   program makeups
-     use constants
+     use constants, only : dp, zero, one, mystd, mytmp
 
      implicit none
 
-!-------------------------------------------------------------------------
-! local setting parameters
-!-------------------------------------------------------------------------
-! number of frequency grid on half plane (total number = 2*nw + 1)
+! local control parameters
+! number of frequency grid points on half plane (total number = 2*nw + 1)
      integer  :: nw   = 400
 
 ! number of orbitals, include spin degree of freedom
@@ -44,11 +74,8 @@
 
 ! broadening parameter
      real(dp) :: gamm = 0.30_dp
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!-------------------------------------------------------------------------
 ! local variables
-!-------------------------------------------------------------------------
 ! loop index for frequency grid
      integer :: iw
 
@@ -59,7 +86,7 @@
      integer :: istat
 
 ! logical file exist flag
-     logical :: fexist
+     logical :: exists
 
 ! energy grid
      real(dp), allocatable :: mesh(:)
@@ -73,34 +100,44 @@
 
 ! broadened data of density of states (XAS)
      real(dp), allocatable :: dos4(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! print program header
-     write(mystd,'(2X,a)') 'MUPS'
-     write(mystd,'(2X,a)') 'making ultraviolet photoemission spectra'
-     write(mystd,'(2X,a)') 'version: 2011.08.18T'
+     write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makeups'
+     write(mystd,'(2X,a)') '>>> Making ultraviolet photoemission spectra'
+     write(mystd,*) ! print blank line
+
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   '>>> number of orbitals (default = 2):'
+     write(mystd,'(2X,a)')   'Number of orbitals (default = 2):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nq
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> number of frequency points (default = 400):'
+     write(mystd,'(2X,a)')   'Number of frequency points (default = 400):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nw
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> inversion of temperature (default = 10.0):'
+     write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) beta
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   '>>> broadening parameter (default = 0.30):'
+     write(mystd,'(2X,a)')   'Broadening parameter (default = 0.30):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,  *  ) gamm
      write(mystd,*)
+
+! check the parameters
+     call s_assert2( nq > 0 .and. nq < 15, 'wrong number of orbitals' )
+     call s_assert2( nw > 0, 'wrong number of frequency points' )
+     call s_assert2( beta > zero, 'wrong inversion of temperature' )
+     call s_assert2( gamm > zero, 'wrong broadening parameter' )
 
 ! allocate memory
      allocate(mesh(-nw:nw),    stat=istat)
@@ -109,6 +146,9 @@
      allocate(dos2(-nw:nw,nq), stat=istat)
      allocate(dos3(-nw:nw,nq), stat=istat)
      allocate(dos4(-nw:nw,nq), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('makeups','can not allocate enough memory')
+     endif ! back if ( istat / = 0 ) block
 
 ! initialize arrays
      mesh = zero
@@ -118,17 +158,14 @@
      dos3 = zero
      dos4 = zero
 
-!-------------------------------------------------------------------------
-
 ! inquire data file
-     inquire(file = 'mem.dos.dat', exist = fexist)
-     if ( fexist == .false. ) then
-         write(mystd,'(2X,a)') 'file mem.dos.dat does not exist'
-         STOP ! terminate this program
-     endif
+     inquire(file = 'mem.dos.dat', exist = exists)
+     if ( exists .eqv. .false. ) then
+         call s_print_error('makeups','file mem.dos.dat does not exist')
+     endif ! back if ( exists .eqv. .false. ) block
 
 ! open density of states file
-     write(mystd,'(2X,a)') '>>> reading mem.dos.dat ...'
+     write(mystd,'(2X,a)') 'Reading mem.dos.dat ...'
      open(mytmp, file='mem.dos.dat', form='formatted', status='unknown')
 
 ! read in data
@@ -145,8 +182,6 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-!-------------------------------------------------------------------------
-
 ! copy data from dos1 to dos3
      dos3 = dos1
 
@@ -158,7 +193,7 @@
 
 ! broadening density of states
      do iq=1,nq
-         write(mystd,'(2X,a,i2)') 'PES >>> smearing band #', iq
+         write(mystd,'(2X,a,i2)') 'Smearing PES at band #', iq
 
          call broadening(nw, gamm, mesh, dos1(:,iq), dos2(:,iq))
 
@@ -167,7 +202,7 @@
      enddo ! over iq={1,nq} loop
 
      do iq=1,nq
-         write(mystd,'(2X,a,i2)') 'XAS >>> smearing band #', iq
+         write(mystd,'(2X,a,i2)') 'Smearing XAS at band #', iq
 
          call broadening(nw, gamm, mesh, dos3(:,iq), dos4(:,iq))
 
@@ -175,10 +210,8 @@
          write(mystd,*)
      enddo ! over iq={1,nq} loop
 
-!-------------------------------------------------------------------------
-
 ! open density of states file
-     write(mystd,'(2X,a)') '>>> writing ups.pes.dat ...'
+     write(mystd,'(2X,a)') 'Writing ups.pes.dat ...'
      open(mytmp, file='ups.pes.dat', form='formatted', status='unknown')
 
 ! write out broadened density of states
@@ -195,10 +228,8 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-!-------------------------------------------------------------------------
-
 ! open density of states file
-     write(mystd,'(2X,a)') '>>> writing ups.xas.dat ...'
+     write(mystd,'(2X,a)') 'Writing ups.xas.dat ...'
      open(mytmp, file='ups.xas.dat', form='formatted', status='unknown')
 
 ! write out broadened density of states
@@ -215,8 +246,6 @@
      write(mystd,'(2X,a)') '>>> status: OK'
      write(mystd,*)
 
-!-------------------------------------------------------------------------
-
 ! deallocate memory
      deallocate(mesh)
 
@@ -227,17 +256,9 @@
 
   end program makeups
 
-!>>> calculate broadening with the Gaussian function (S = smearing):
-! we define:
-!     fct(x) = \frac{1}{S\sqrt{2\pi}} e^{-\frac{x^{2}}{2 S^{2}}}
-! and
-!     Precision = S / dx. (dx = Delta Energy between 2 points)
-! then
-!     Broad. Spectrum(x) =
-!         \sum_{x'=-3*Precision}^{3*Precision} fct(x')*Spectrum(x+x')
-! where x' = DeltaJ in the procedure.
+!!>>> broadening: calculate broadening with the Gaussian function
   subroutine broadening(nw, gamm, mesh, xinp, xout)
-     use constants
+     use constants, only : dp, zero, one, two, pi
 
      implicit none
 
@@ -269,10 +290,17 @@
      real(dp) :: fac1
      real(dp) :: fac2
 
+! here we define:
+!     fct(x) = \frac{1}{S\sqrt{2\pi}} e^{-\frac{x^{2}}{2 S^{2}}}
+! and
+!     Precision = S / dx. (dx = Delta Energy between 2 points)
+! then
+!     Broadening Spectrum(x) =
+!         \sum_{x'=-3*Precision}^{3*Precision} fct(x')*Spectrum(x+x')
+! where x' = DeltaJ in the procedure, and S = smearing
+
 ! initialize xout
-     do iw=-nw,nw
-         xout(iw) = zero
-     enddo ! over iw={-nw,nw} loop
+     xout = zero
 
 ! calculate broadening range
      prec = nint( abs( gamm / ( mesh(2) - mesh(1) ) ) )
@@ -287,17 +315,13 @@
          do iw=-nw,nw
              do delj=max(-3*prec,-nw-iw),min(3*prec,nw-iw)
                  xout(iw) = xout(iw) + xinp(iw+delj) * exp( -real( delj * delj ) / fac2 )
-             enddo
+             enddo ! over delj={max(-3*prec,-nw-iw),min(3*prec,nw-iw)} loop
              xout(iw) = xout(iw) * fac1
          enddo ! over iw={-nw,nw} loop
 
 ! set xinp == xout, do nothing
      else
-
-         do iw=-nw,nw
-             xout(iw) = xinp(iw)
-         enddo ! over iw={-nw,nw} loop
-
+         xout = xinp
      endif ! back if ( prec > 0 ) block
 
      return
