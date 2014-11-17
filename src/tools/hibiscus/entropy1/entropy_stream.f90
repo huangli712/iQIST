@@ -248,7 +248,7 @@
      call spring_sfmt_init(stream_seed)
 
 ! build real frequency grid
-     call entropy_make_wmesh(wmesh)
+     call s_linspace_d(-nwmax * wstep, nwmax * wstep, 2 * nwmax + 1, wmesh)
 
 ! calculate fermion kernel function
      call entropy_make_fkern(tmesh, wmesh, fkern)

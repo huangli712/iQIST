@@ -2,7 +2,6 @@
 !!! project : hibiscus
 !!! program : entropy_make_smooth
 !!!           entropy_make_normal
-!!!           entropy_make_wmesh
 !!!           entropy_make_model
 !!!           entropy_make_fnorm
 !!!           entropy_make_srule
@@ -118,28 +117,6 @@
 
      return
   end subroutine entropy_make_normal
-
-!>>> build real linear frequency grid
-  subroutine entropy_make_wmesh(wmesh)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! real frequency grid
-     real(dp), intent(out)  :: wmesh(-nwmax:nwmax)
-
-! local variables
-! loop index
-     integer :: i
-
-     do i=-nwmax,nwmax
-         wmesh(i) = real(i) * wstep
-     enddo ! over i={-nwmax,nwmax} loop
-
-     return
-  end subroutine entropy_make_wmesh
 
 !>>> to build the default model, here for simplicity, we only implement
 ! the flat model---model(\omega) = constant, and gaussian model
