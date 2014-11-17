@@ -282,12 +282,14 @@
      return
   end subroutine entropy_make_sampling
 
-!>>> update the image function by monte carlo procedure
+!!>>> entropy_make_updating: update the image function by monte
+!!>>> carlo procedure
   subroutine entropy_make_updating(acc, try, tfac, amax, alpha, G_qmc, G_dev, delta, model, fkern, image)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, half, epss
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : ntime, nwmax
+     use control, only : wstep
 
      implicit none
 
