@@ -1,60 +1,52 @@
 !!!=========+=========+=========+=========+=========+=========+=========+!
-!!! AZALEA @ iQIST                                                       !
+!!! HIBISCUS/entropy1 @ iQIST                                            !
 !!!                                                                      !
-!!! A test program for dynamical mean field theory (DMFT) self-consistent!
-!!! engine plus hybridization expansion version continuous time quantum  !
-!!! Monte Carlo (CTQMC) quantum impurity solver                          !
+!!! This tool implements the classic maximum entropy method to perform   !
+!!! analytical continuation for imaginary time green's function outputed !
+!!! by the hybridization expansion version continuous time quantum Monte !
+!!! Carlo (CT-QMC) or Hirsch-Fye quantum Monte Carlo (HF-QMC) quantum    !
+!!! impurity solver                                                      !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
-!!! comment : this impurity solver is based on segment picture formalism !
+!!! comment : the code is originally written by                          !
+!!!           Anders W. Sandvik                                          !
+!!!           Akademi University, Finland, email:asandvik@ra.abo.fi      !
+!!!           and modified by li huang using fortran 90 language         !
 !!!           any question, please contact with huangli712@gmail.com     !
 !!!=========+=========+=========+=========+=========+=========+=========+!
-
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! build spectral function from imaginary-time green's function using the !
-! well-known maximum entropy method. in principle, it solves the laplace !
-! transformation                                                         !
-!     G(\tau) = \int kernel A(\omega) d\omega                            !
-! where                                                                  !
-!     kernel = \frac{ \exp{-\tau\omega} }{1.0+\exp{-\beta\omega}}        !
-! for details of maximum entropy method, please refer to:                !
-!     Physics Reports 269 (1996) 133-195                                 !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : the code is written by Anders W. Sandvik (Akademi University,!
-!           Finland, email:asandvik@ra.abo.fi) originally, and modified  !
-!           by li huang using fortran 90 language                        !
-!           any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
 
 !!
 !!
 !! Introduction
 !! ============
 !!
-!! The makedos code is often used to generate typical density of states
-!! for general lattice models. The output files can be processed by the
-!! ctqmc_dmft_anydos() subroutine in the ctqmc_dmft.f90 file.
+!! The hibiscus/entropy1 code is often used to perform the analytical
+!! continuation to build spectral function from imaginary-time green's
+!! function using the well-known maximum entropy method. In principle,
+!! it solves the laplace transformation
+!!     G(\tau) = \int kernel A(\omega) d\omega
+!! where
+!!     kernel = \frac{ \exp{-\tau\omega} }{1.0+\exp{-\beta\omega}}
+!! for details of the maximum entropy method, please refer to:
+!!     Physics Reports 269 (1996) 133-195
 !!
 !! Usage
 !! =====
 !!
-!! # ./mdos or bin/mdos.x
+!! # ./entropy or bin/entropy.x
 !!
 !! Input
 !! =====
 !!
-!! N/A
+!! tau.grn.dat (necessary)
+!! entropy.in (necessary)
 !!
 !! Output
 !! ======
 !!
-!! dos.gauss.dat
-!! dos.cubic.dat
-!! dos.bethe.dat
-!! dos.loren.dat
+!! mem.dos.dat
+!! mem.sum.dat
 !!
 !! Documents
 !! =========
