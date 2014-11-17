@@ -14,12 +14,13 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> setup key parameters for classic maximum entropy method code
+!!>>> entropy_config: setup key parameters for classic maximum entropy
+!!>>> method code
   subroutine entropy_config()
-     use constants
-     use control
+     use parser, only : p_create, p_parse, p_get, p_destroy
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control ! ALL
 
      implicit none
 
@@ -54,28 +55,29 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='entropy.in', form='formatted', status='unknown')
+! create the file parser
+             call p_create()
+! parse the config file
+             call p_parse('entropy.in')
 
-             read(mytmp,*) ! skip comment lines
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*) ntime
-             read(mytmp,*) nwmax
-             read(mytmp,*) niter
-             read(mytmp,*) ntune
-             read(mytmp,*) nstep
-             read(mytmp,*) nband
-             read(mytmp,*) norbs
-             read(mytmp,*) ntype
+! extract parameters
+             call p_get('ntime' , ntime )
+             call p_get('nwmax' , nwmax )
+             call p_get('niter' , niter )
+             call p_get('ntune' , ntune )
+             call p_get('nstep' , nstep )
+             call p_get('nband' , nband )
+             call p_get('norbs' , norbs )
+             call p_get('ntype' , ntype )
+             
+             call p_get('ainit' , ainit )
+             call p_get('devia' , devia )
+             call p_get('beta'  , beta  )
+             call p_get('sigma' , sigma )
+             call p_get('wstep' , wstep )
 
-             read(mytmp,*) ! skip comment lines
-             read(mytmp,*) ainit
-             read(mytmp,*) devia
-             read(mytmp,*) beta
-             read(mytmp,*) sigma
-             read(mytmp,*) wstep
-
-             close(mytmp)
+! destroy the parser
+             call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
