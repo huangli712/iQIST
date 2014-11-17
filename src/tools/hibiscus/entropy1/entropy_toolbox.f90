@@ -108,11 +108,13 @@
      return
   end subroutine entropy_make_normal
 
-!>>> to build the default model, here for simplicity, we only implement
-! the flat model---model(\omega) = constant, and gaussian model
+!!>>> entropy_make_model: to build the default model, here for simplicity,
+!!>>> we only implement the flat model---model(\omega) = constant, and
+!!>>> gaussian model
   subroutine entropy_make_model(wmesh, model)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : nwmax
 
      implicit none
 
