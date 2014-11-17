@@ -80,10 +80,11 @@
      return
   end subroutine entropy_make_smooth
 
-!>>> used to perform normalization on image function
+!!>>> entropy_make_normal: used to perform normalization on image function
   subroutine entropy_make_normal(npara, fnorm, image)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : nwmax
 
      implicit none
 
@@ -98,21 +99,11 @@
      real(dp), intent(inout) :: image(-nwmax:nwmax)
 
 ! local variables
-! loop index for real frequency grid
-     integer  :: i
-
 ! normalized factor
      real(dp) :: f
 
-     f = zero
-     do i=-nwmax,nwmax
-         f = f + image(i) * fnorm(i)
-     enddo ! over i={-nwmax,nwmax} loop
-
-     f = npara / f
-     do i=-nwmax,nwmax
-         image(i) = f * image(i)
-     enddo ! over i={-nwmax,nwmax} loop
+     f = npara / dot_product(fnorm, image)
+     image = f * image
 
      return
   end subroutine entropy_make_normal
