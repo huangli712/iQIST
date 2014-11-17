@@ -56,10 +56,18 @@
 !!
 
   program entropy_main
-     use constants
-     use context
+     use constants, only : mystd
+     use mmpi, only : mp_init, mp_finalize
+     use mmpi, only : mp_comm_rank, mp_comm_size
+     use mmpi, only : mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nprocs, myid, master
+     use context, only : tmesh, wmesh
+     use context, only : model, srule, fnorm, fkern
+     use context, only : G_qmc, G_dev
+     use context, only : image
+     use context, only : entropy_allocate_memory, entropy_deallocate_memory
 
      implicit none
 
@@ -84,7 +92,7 @@
 ! print the running header for classic maximum entropy method code
      if ( myid == master ) then ! only master node can do it
          call entropy_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! setup the important parameters for classic maximum entropy method code
      call entropy_config()
@@ -92,7 +100,7 @@
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then
          call entropy_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call entropy_allocate_memory()
@@ -107,8 +115,8 @@
 
 ! write out helpful information
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,2(a,i2))') 'HIBISCUS >>> data index: ', i, ' in ', norbs
-         endif
+             write(mystd,'(2X,2(a,i2))') 'HIBISCUS/entropy1 >>> data index: ', i, ' in ', norbs
+         endif ! back if ( myid == master ) block
 
 ! perform the classic maximum entropy algorithm
          call entropy_make_image(G_qmc(:,i), G_dev(:,i), model, fnorm(:,1), fkern, image(:,i))
@@ -121,12 +129,12 @@
 ! write out the final spectrum data
      if ( myid == master ) then ! only master node can do it
          call entropy_dump_image(wmesh, image)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out check data for sum-rules
      if ( myid == master ) then ! only master node can do it
          call entropy_dump_srule(srule)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory and finalize
      call entropy_deallocate_memory()
@@ -134,7 +142,7 @@
 ! print the footer for classic maximum entropy method code
      if ( myid == master ) then ! only master node can do it
          call entropy_print_footer()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! finalize mpi envirnoment
 # if defined (MPI)
