@@ -1,8 +1,8 @@
 !!!=========+=========+=========+=========+=========+=========+=========+!
 !!! HIBISCUS/toolbox/makescr @ iQIST                                     !
 !!!                                                                      !
-!!! This tool is used to general the kernel function, i.e., K(\tau), for !
-!!! the narcissus code                                                   !
+!!! This tool is used to general the screening function, i.e., K(\tau),  !
+!!! for the narcissus code                                               !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
@@ -22,6 +22,9 @@
 !! The W(\omega) data are often obtained by the RPA calculations which
 !! are not included in the iQIST software package.
 !!
+!! In order to compatible with the narcissus code, you have to rename the
+!! output file from scr.tau.dat to solver.ktau.in.
+!!
 !! Usage
 !! =====
 !!
@@ -30,12 +33,12 @@
 !! Input
 !! =====
 !!
-!! src.frq.dat
+!! scr.frq.dat
 !!
 !! Output
 !! ======
 !!
-!! src.tau.dat
+!! scr.tau.dat
 !!
 !! Documents
 !! =========
@@ -50,6 +53,12 @@
      implicit none
 
 ! local control parameters
+! model of screening functions
+! model == 1, dervied from RPA calculation
+! model == 2, plasmon pole model
+! model == 3, ohmic model
+     integer  :: model = 1
+
 ! number of time slices in [0, \beta]
      integer  :: ntime = 1024
 
@@ -62,10 +71,9 @@
 ! inversion of temperature
      real(dp) :: beta  = 10.00_dp
 
-! experienced parameters to build default screening spectral function
+! experienced parameters to build default screening function
      real(dp) :: lc    = 0.625_dp
      real(dp) :: wc    = 4.000_dp
-     real(dp) :: step  = 0.020_dp
 
 ! local variables
 ! loop index
@@ -79,13 +87,16 @@
      logical  :: exists
 
 ! real(dp) dummy variables
-     real(dp) :: f1, f2, f3
+     real(dp) :: f1, f2, step
 
-! imaginary time mesh for kernel function
+! imaginary time mesh for screening function
      real(dp), allocatable :: kmsh(:)
 
-! kernel function K(\tau)
+! screening function K(\tau)
      real(dp), allocatable :: ktau(:)
+
+! first derivates of screening function K'(\tau)
+     real(dp), allocatable :: ptau(:)
 
 ! frequency mesh for screening spectral function
      real(dp), allocatable :: wmsh(:)
@@ -98,7 +109,7 @@
 
 ! print program header
      write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makescr'
-     write(mystd,'(2X,a)') '>>> Making kernel function from screening spectral function'
+     write(mystd,'(2X,a)') '>>> Making screening function and its first derivates'
      write(mystd,*) ! print blank line
 
      write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
@@ -108,6 +119,14 @@
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
+     write(mystd,'(2X,a)')   'Model of screening functions (default = 1):'
+     write(mystd,'(2X,a)')   'model : 1, dervied from RPA calculation'
+     write(mystd,'(2X,a)')   'model : 2, plasmon pole model'
+     write(mystd,'(2X,a)')   'model : 3, ohmic model'
+     write(mystd,'(2X,a,$)') '>>> '
+     read (mystd,'(i)') model
+     write(mystd,*)
+
      write(mystd,'(2X,a)')   'Number of time slices (default = 1024):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') ntime
@@ -129,15 +148,16 @@
      write(mystd,*)
 
 ! check the parameters
+     call s_assert2( model > 0 .and. model < 4, 'wrong model of screening functions' )
      call s_assert2( ntime > 0, 'wrong number of time slices' )
      call s_assert2( nfreq > 0, 'wrong number of frequency points' )
-     call s_assert2( ncut > 0, 'wrong number of cutoff frequency points' )
-     call s_assert2( ncut <= nfreq, 'wrong number of cutoff frequency points' )
+     call s_assert2( ncut > 0 .and. ncut <= nfreq, 'wrong number of cutoff frequency points' )
      call s_assert2( beta > zero, 'wrong inversion of temperature' )
 
 ! allocate memory
      allocate(kmsh(ntime), stat=istat)
      allocate(ktau(ntime), stat=istat)
+     allocate(ptau(ntime), stat=istat)
 
      allocate(wmsh(nfreq), stat=istat)
      allocate(wref(nfreq), stat=istat)
@@ -152,6 +172,7 @@
 ! initialize arrays
      kmsh = zero
      ktau = zero
+     ptau = zero
 
      wmsh = zero
      wref = zero
@@ -160,11 +181,16 @@
 ! build imaginary time slice mesh
      call s_linspace_d(zero, beta, ntime, kmsh)
 
+! case 1: calculate screening function using screening spectral function
+     if ( model == 1 ) then
+
 ! inquire file status: scr.frq.dat
-     inquire (file = 'scr.frq.dat', exist = exists)
+         inquire (file = 'scr.frq.dat', exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('makescr','file scr.frq.dat does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
 ! read screening spectral function from scr.frq.dat file
-     if ( exists .eqv. .true. ) then
          write(mystd,'(2X,a)') 'Reading scr.frq.dat ...'
 
 ! open data file: scr.frq.dat
@@ -177,61 +203,63 @@
 
 ! close data file
          close(mytmp)
-
          write(mystd,'(2X,a)') '>>> status: OK'
          write(mystd,*)
-! build screening spectral function using default ohmic model, only for debug
-     else
-         write(mystd,'(2X,a)') 'WARNING: scr.frq.dat file do not exist! using ohmic model'
-         do i=1,nfreq
-             wmsh(i) = real(i - one) * step
-             wref(i) = lc * wmsh(i) * log(abs(( wc + wmsh(i) ) / ( wc - wmsh(i) ))) - two * lc * wc
-             wimf(i) = - lc * pi * wmsh(i)
-         enddo ! over i={1,nfreq} loop
-     endif ! back if ( exists .eqv. .true. ) block
 
-! shift the first point for wmsh
-     if ( abs( wmsh(1) ) < epss ) then
-         wmsh(1) = 0.0001_dp
-     endif ! back if ( abs( wmsh(1) ) < epss ) block
+! shift the first point for wmsh if it is zero
+         if ( abs( wmsh(1) ) < epss ) then
+             wmsh(1) = epss
+         endif ! back if ( abs( wmsh(1) ) < epss ) block
 
-! calculate kernel function and energy shift for U and mu
-     write(mystd,'(2X,a)') 'Calculating kernel function ...'
+! calculate screening function and its first derivates
+         write(mystd,'(2X,a)') 'Calculating screening function ...'
+         do i=1,ntime
+             do j=1,nfreq-1
+                 step = wmsh(j+1) - wmsh(j)
+                 f1 = cosh( (kmsh(i) - beta/two) * wmsh(j) ) - cosh( - beta/two * wmsh(j) )
+                 f1 = f1 * wimf(j) / ( wmsh(j) ** 2 ) / sinh( wmsh(j) * beta/two )
+                 f2 = cosh( (kmsh(i) - beta/two) * wmsh(j+1) ) - cosh( - beta/two * wmsh(j+1) )
+                 f2 = f2 * wimf(j+1) / ( wmsh(j+1) ** 2 ) / sinh( wmsh(j+1) * beta/two )
+                 ktau(i) = ktau(i) + (f1 + f2) * step / (two * pi)
 
-     do i=1,ntime
-         do j=1,nfreq-1
-             step = wmsh(j+1) - wmsh(j)
-             f1 = cosh( (kmsh(i) - beta/two) * wmsh(j) ) - cosh( - beta/two * wmsh(j) )
-             f1 = f1 * wimf(j) / ( wmsh(j) ** 2 ) / sinh( wmsh(j) * beta/two )
-             f2 = cosh( (kmsh(i) - beta/two) * wmsh(j+1) ) - cosh( - beta/two * wmsh(j+1) )
-             f2 = f2 * wimf(j+1) / ( wmsh(j+1) ** 2 ) / sinh( wmsh(j+1) * beta/two )
-             ktau(i) = ktau(i) + (f1 + f2) * step / (two * pi)
-         enddo ! over j={1,nfreq-1} loop
-     enddo ! over i={1,ntime} loop
+                 f1 = sinh( (kmsh(i) - beta/two) * wmsh(j) ) / sinh( wmsh(j) * beta/two )
+                 f1 = f1 * wimf(j) / wmsh(j)
+                 f2 = sinh( (kmsh(i) - beta/two) * wmsh(j+1) ) / sinh( wmsh(j+1) * beta/two )
+                 f2 = f2 * wimf(j+1) / wmsh(j+1)
+                 ptau(i) = ptau(i) + (f1 + f2) * step / (two * pi)
+             enddo ! over j={1,nfreq-1} loop
+         enddo ! over i={1,ntime} loop
+         write(mystd,'(2X,a)') '>>> status: OK'
+         write(mystd,*)
 
-     f3 = zero
-     do j=1,nfreq-1
-         step = wmsh(j+1) - wmsh(j)
-         f1 = wimf(j) / wmsh(j)
-         f2 = wimf(j+1) / wmsh(j+1)
-         f3 = f3 + (f1 + f2) * step / (two * pi)
-     enddo ! over j={1,nfreq-1} loop
+     endif ! back if ( model == 1 ) block
 
-     write(mystd,'(2X,a)') '>>> status: OK'
-     write(mystd,*)
+! case 2: build screening function using default plasmon pole model
+     if ( model == 2 ) then
+         do i=1,ntime
+             ktau(i) = (lc / wc)**2 / sinh(beta * wc / two)
+             ktau(i) = ktau(i) * ( cosh(beta * wc / two) - cosh(beta * wc / two - kmsh(i) * wc) ) 
+         enddo ! over i={1,ntime} loop
+     endif ! back if ( model == 2 ) block
 
-! dump data to scr.tau.dat file, which is used as the input for narcissus program
+! case 3: build screening function using default ohmic model
+     if ( model == 3 ) then
+         do i=1,ntime
+             ktau(i) = lc * log(one + beta * wc * sin(pi * kmsh(i) / beta) / pi)
+         enddo ! over i={1,ntime} loop
+     endif ! back if ( model == 3 ) block
+
+! dump data to scr.tau.dat file, which is served as the input for the
+! narcissus code
      write(mystd,'(2X,a)') 'Writing scr.tau.dat ...'
 
 ! open data file: scr.tau.dat
      open(mytmp, file='scr.tau.dat', form='formatted', status='unknown')
 
-! write ktau data to disk file
-! note: the third column is the reference data, we use the ohmic model
-     write(mytmp,'(a,f16.8,2X,a,f16.8)') '# u shift:', two * f3, 'mu shift:', f3
+! write ktau and ptau data to disk file
+     write(mytmp,'(a,f16.8,2X,a,f16.8)') '# u shift:', two * ptau(1), 'mu shift:', ptau(1)
      do i=1,ntime
-         f1 = beta * wc * sin( pi * kmsh(i) / beta ) / pi
-         write(mytmp,'(3f16.8)') kmsh(i), ktau(i), lc * log(one + f1)
+         write(mytmp,'(3f16.8)') kmsh(i), ktau(i), ptau(i)
      enddo ! over i={1,ntime} loop
 
 ! close data file
@@ -243,6 +271,7 @@
 ! deallocate memory
      deallocate(kmsh)
      deallocate(ktau)
+     deallocate(ptau)
 
      deallocate(wmsh)
      deallocate(wref)
