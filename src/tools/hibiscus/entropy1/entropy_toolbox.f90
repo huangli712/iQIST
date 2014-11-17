@@ -146,11 +146,13 @@
      return
   end subroutine entropy_make_model
 
-!>>> to calculate f-norms, which is necessary in the calculation of sum
-! rules for spectrum function
+!!>>> entropy_make_fnorm: to calculate f-norms, which is necessary in the
+!!>>> calculation of sum rules for spectrum function
   subroutine entropy_make_fnorm(wmesh, fnorm)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : nwmax
+     use control, only : wstep
 
      implicit none
 
