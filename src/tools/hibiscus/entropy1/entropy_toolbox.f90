@@ -347,11 +347,12 @@
      return
   end subroutine entropy_make_trace
 
-!>>> to calculate akern, an important immediate variable
-!    akern_{l} = \sum_{j} K_{lj} A_{j}
+!!>>> entropy_make_akern: to calculate akern, an important immediate
+!!>>> variable: akern_{l} = \sum_{j} K_{lj} A_{j}
   subroutine entropy_make_akern(akern, image, fkern)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : ntime, nwmax
 
      implicit none
 
@@ -383,16 +384,18 @@
      return
   end subroutine entropy_make_akern
 
-!>>> to calculate the following quantity:
-!    ckern = \frac{ \partial ^{2} L }{ \partial A_{i} \partial A_{j} }
-!          = [ K^{T} . C^{-1} K ]_{ij}
-!          = \sum_{kl} K_{ki} [ C^{-1} ]_{kl} K_{lj}
-! here C means covariance matrix, and it is a diagonal matrix if the
-! measurements at different values of \tau are uncorrelated. K is kernel
-! and L means likelihood function. A means spectrum function.
+!!>>> entropy_make_ckern: to calculate the following quantity:
+!!>>>   ckern = \frac{ \partial ^{2} L }{ \partial A_{i} \partial A_{j} }
+!!>>>         = [ K^{T} . C^{-1} K ]_{ij}
+!!>>>         = \sum_{kl} K_{ki} [ C^{-1} ]_{kl} K_{lj}
+!!>>> here C means covariance matrix, and it is a diagonal matrix if the
+!!>>> measurements at different values of \tau are uncorrelated. K is
+!!>>> kernel and L means likelihood function. A means spectrum function.
   subroutine entropy_make_ckern(G_dev, fkern, ckern)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : ntime, nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -423,19 +426,22 @@
              iw = i - nwmax - 1
              jw = j - nwmax - 1
              do k=1,ntime
-                 ckern(j,i) = ckern(j,i) + fkern(iw,k) * G_dev(k) * fkern(jw,k) / ( wstep**2 )
+                 ckern(j,i) = ckern(j,i) + fkern(iw,k) * G_dev(k) * fkern(jw,k)
              enddo ! over k={1,ntime} loop
          enddo ! over j={1,2*nwmax+1} loop
      enddo ! over i={1,2*nwmax+1} loop
+     ckern = ckern / ( wstep**2 )
 
      return
   end subroutine entropy_make_ckern
 
-!>>> to calculate fermion kernel function
-!    fkern = \frac{ \exp{-\tau\omega} }{ 1.0 + \exp{-\beta\omega} }
+!!>>> entropy_make_fkern: to calculate fermion kernel function
+!!>>>   fkern = \frac{ \exp{-\tau\omega} }{ 1.0 + \exp{-\beta\omega} }
   subroutine entropy_make_fkern(tmesh, wmesh, fkern)
-     use constants
-     use control
+     use constants, only : dp, zero, one
+
+     use control, only : ntime, nwmax
+     use control, only : beta, wstep
 
      implicit none
 
@@ -460,12 +466,13 @@
      do i=1,ntime
          do j=-nwmax,nwmax
              if ( wmesh(j) >= zero ) then
-                 fkern(j,i) = wstep * exp(        - tmesh(i)   * wmesh(j) ) / ( one + exp( -beta * wmesh(j) ) )
+                 fkern(j,i) = exp(        - tmesh(i)   * wmesh(j) ) / ( one + exp( -beta * wmesh(j) ) )
              else
-                 fkern(j,i) = wstep * exp( ( beta - tmesh(i) ) * wmesh(j) ) / ( one + exp(  beta * wmesh(j) ) )
-             endif
+                 fkern(j,i) = exp( ( beta - tmesh(i) ) * wmesh(j) ) / ( one + exp(  beta * wmesh(j) ) )
+             endif ! back if ( wmesh(j) >= zero ) block
          enddo ! over j={-nwmax,nwmax} loop
      enddo ! over i={1,ntime} loop
+     fkern = fkern * wstep
 
      return
   end subroutine entropy_make_fkern
