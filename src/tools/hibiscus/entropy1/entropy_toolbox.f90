@@ -1,33 +1,28 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : entropy_dmat_inv
-!           entropy_make_smooth
-!           entropy_make_normal
-!           entropy_make_wmesh
-!           entropy_make_model
-!           entropy_make_fnorm
-!           entropy_make_srule
-!           entropy_make_sterm
-!           entropy_make_chihc
-!           entropy_make_trace
-!           entropy_make_akern
-!           entropy_make_ckern
-!           entropy_make_fkern
-! source  : entropy_toolbox.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 10/01/2008 by li huang
-!           01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           01/20/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : to provide utility functions and subroutines for the classic
-!           maximum entropy method code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus
+!!! program : entropy_dmat_inv
+!!!           entropy_make_smooth
+!!!           entropy_make_normal
+!!!           entropy_make_wmesh
+!!!           entropy_make_model
+!!!           entropy_make_fnorm
+!!!           entropy_make_srule
+!!!           entropy_make_sterm
+!!!           entropy_make_chihc
+!!!           entropy_make_trace
+!!!           entropy_make_akern
+!!!           entropy_make_ckern
+!!!           entropy_make_fkern
+!!! source  : entropy_toolbox.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! history : 10/01/2008 by li huang
+!!!           01/26/2011 by li huang
+!!! purpose : to provide utility functions and subroutines for the classic
+!!!           maximum entropy method code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> invert real(dp) matrix using lapack subroutines
   subroutine entropy_dmat_inv(ndim, dmat)
