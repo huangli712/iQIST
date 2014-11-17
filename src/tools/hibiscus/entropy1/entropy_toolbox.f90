@@ -15,9 +15,10 @@
 !!!           entropy_make_fkern
 !!! source  : entropy_toolbox.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 10/01/2008 by li huang
 !!!           01/26/2011 by li huang
+!!!           11/17/2014 by li huang
 !!! purpose : to provide utility functions and subroutines for the classic
 !!!           maximum entropy method code
 !!! status  : unstable
