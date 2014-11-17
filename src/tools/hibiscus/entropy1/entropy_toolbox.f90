@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : hibiscus
+!!! project : hibiscus/entropy1
 !!! program : entropy_make_smooth
 !!!           entropy_make_normal
 !!!           entropy_make_model

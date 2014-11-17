@@ -1,49 +1,54 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : entropy_print_header
-!           entropy_print_footer
-!           entropy_print_summary
-! source  : entropy_print.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/10/2011 by li huang
-!           01/20/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : provide printing infrastructure for classic maximum entropy
-!           method code
-! input   :
-! output  :
-! status  : very unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/entropy1
+!!! program : entropy_print_header
+!!!           entropy_print_footer
+!!!           entropy_print_summary
+!!! source  : entropy_print.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/26/2011 by li huang
+!!!           11/17/2014 by li huang
+!!! purpose : provide printing infrastructure for classic maximum entropy
+!!!           method code
+!!! status  : very unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> print the startup information for classic maximum entropy method code
+!!>>> entropy_print_header: print the startup information for classic
+!!>>> maximum entropy method code
   subroutine entropy_print_header()
-     use constants
+     use constants, only : mystd
+
      use control, only : nprocs
 
      implicit none
 
-     write(mystd,'(2X,a)') 'HIBISCUS'
+! string for current date and time
+     character (len = 20) :: date_time_string
+
+! obtain current date and time
+     call s_time_builder(date_time_string)
+
+     write(mystd,'(2X,a)') 'HIBISCUS/entropy1'
      write(mystd,'(2X,a)') '>>> A Classic Maximum Entropy Method Code for Imaginary Time Data'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'version: 2011.08.18T            '
-     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & IOP'
-     write(mystd,'(2X,a)') 'support: huangli712@yahoo.com.cn'
-     write(mystd,'(2X,a)') 'license: GPL2 and later versions'
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'HIBISCUS >>> running'
+     write(mystd,'(2X,a)') 'HIBISCUS/entropy1 >>> start running at '//date_time_string
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') 'HIBISCUS >>> parallelism: Yes >>> processors:', nprocs
+     write(mystd,'(2X,a,i4)') 'HIBISCUS/entropy1 >>> parallelism: Yes >>> processors:', nprocs
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') 'HIBISCUS >>> parallelism: No  >>> processors:', 1
+     write(mystd,'(2X,a,i4)') 'HIBISCUS/entropy1 >>> parallelism: No  >>> processors:', 1
 
 # endif  /* MPI */
 
