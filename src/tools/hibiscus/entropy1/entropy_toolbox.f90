@@ -205,11 +205,13 @@
      return
   end subroutine entropy_make_srule
 
-!>>> to calculate the entropy term S
-!    S = \int dw (A(\omage)-m(\omega)-A(\omage)*ln [A(\omega)/m(\omega)])
+!!>>> entropy_make_sterm: to calculate the entropy term S
+!!>>>   S = \int dw (A(\omage)-m(\omega)-A(\omage)*ln [A(\omega)/m(\omega)])
   subroutine entropy_make_sterm(sterm, image, model)
-     use constants
-     use control
+     use constants, only : dp, zero, epss
+
+     use control, only : nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -232,7 +234,7 @@
      do i=-nwmax,nwmax
          if ( image(i) > epss .and. model(i) > epss ) then
              sterm = sterm + ( image(i) - model(i) - image(i) * log( image(i) / model(i) ) ) * wstep
-         endif
+         endif ! back if ( image(i) > epss .and. model(i) > epss ) block
      enddo ! over i={-nwmax,nwmax} loop
 
      return
