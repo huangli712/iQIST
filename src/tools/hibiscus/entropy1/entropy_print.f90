@@ -3,8 +3,6 @@
 ! program : entropy_print_header
 !           entropy_print_footer
 !           entropy_print_summary
-!           entropy_print_error
-!           entropy_print_exception
 ! source  : entropy_print.f90
 ! type    : subroutines
 ! author  : li huang (email:huangli712@yahoo.com.cn)
@@ -97,51 +95,3 @@
 
      return
   end subroutine entropy_print_summary
-
-!>>> print the error information and STOP the program
-  subroutine entropy_print_error(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! error message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
-
-! TERMINATE THE PROGRAM
-!-------------------------------------------------------------------------
-     STOP
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine entropy_print_error
-
-!>>> print normal runtime exceptional information, and continue
-  subroutine entropy_print_exception(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! exception message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
-
-! CONTINUE/PAUSE THE PROGRAM
-!-------------------------------------------------------------------------
-     CONTINUE ! OR PAUSE
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine entropy_print_exception
