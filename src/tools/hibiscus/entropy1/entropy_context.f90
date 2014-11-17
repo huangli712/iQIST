@@ -54,47 +54,47 @@
 !!========================================================================
 
 !>>> allocate module memory
-     subroutine entropy_allocate_memory()
-         implicit none
+  subroutine entropy_allocate_memory()
+     implicit none
 
 ! status flag
-         integer :: istat
+     integer :: istat
 
 ! allocate memory
-         allocate(tmesh(ntime),              stat=istat)
-         allocate(wmesh(-nwmax:nwmax),       stat=istat)
-         allocate(model(-nwmax:nwmax),       stat=istat)
+     allocate(tmesh(ntime),              stat=istat)
+     allocate(wmesh(-nwmax:nwmax),       stat=istat)
+     allocate(model(-nwmax:nwmax),       stat=istat)
 
-         allocate(srule(3,norbs),            stat=istat)
-         allocate(fnorm(-nwmax:nwmax,3),     stat=istat)
+     allocate(srule(3,norbs),            stat=istat)
+     allocate(fnorm(-nwmax:nwmax,3),     stat=istat)
 
-         allocate(G_qmc(ntime,norbs),        stat=istat)
-         allocate(G_dev(ntime,norbs),        stat=istat)
+     allocate(G_qmc(ntime,norbs),        stat=istat)
+     allocate(G_dev(ntime,norbs),        stat=istat)
 
-         allocate(fkern(-nwmax:nwmax,ntime), stat=istat)
-         allocate(image(-nwmax:nwmax,norbs), stat=istat)
+     allocate(fkern(-nwmax:nwmax,ntime), stat=istat)
+     allocate(image(-nwmax:nwmax,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call entropy_print_error('entropy_allocate_memory','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('entropy_allocate_memory','can not allocate enough memory')
+     endif
 
 ! initialize them
-         tmesh = zero
-         wmesh = zero
-         model = zero
+     tmesh = zero
+     wmesh = zero
+     model = zero
 
-         srule = zero
-         fnorm = zero
+     srule = zero
+     fnorm = zero
 
-         G_qmc = zero
-         G_dev = zero
+     G_qmc = zero
+     G_dev = zero
 
-         fkern = zero
-         image = zero
+     fkern = zero
+     image = zero
 
-         return
-     end subroutine entropy_allocate_memory
+     return
+  end subroutine entropy_allocate_memory
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
