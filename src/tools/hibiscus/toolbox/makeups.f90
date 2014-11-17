@@ -2,7 +2,7 @@
 !!! HIBISCUS/toolbox/makeups @ iQIST                                     !
 !!!                                                                      !
 !!! This tool is used to calculate Gaussian broadening for density of    !
-!!! states, which can be used to compare with PES and XAS experiments.   !
+!!! states, which can be used to compare with PES and XAS experiments    !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
@@ -16,19 +16,20 @@
 !!
 !! The makeups code is often used to postprocess the spectral function
 !! data to compare with the XAS and UPS experiments. Now this code is
-!! interfaced with entropy1 code merely. It can read the mem.dos.dat file
-!! as input data. While to interface it with the stoch code is straight-
-!! forward. What you need to do is to rename sai.imsum.dat to mem.dos.dat
-!! file, and then supplement the lost orbital data.
+!! interfaced with the hibiscus/entropy1 code merely. It can read the
+!! mem.dos.dat file as input data. While to interface it with the others
+!! code, such as hibiscus/stoch code, is straightforward. What you need
+!! to do is just to rename sai.imsum.dat to mem.dos.dat file, and then
+!! supplement the lost orbital data.
 !!
-!! About the smearing parameter
+!! About the smearing parameter:
 !! The standard deviation smearing parameter was chosen to be in the same
 !! range as estimates of experimental resolution (which are around 0.1
 !! for high resolution PES, and approximately 0.2 to 0.4 for XAS. A good
 !! test to decide if the broadening is correct is the comparison of the
 !! Fermi edge in theory and experiment.
 !!
-!! About the beta parameter
+!! About the beta parameter:
 !! The beta parameter practically plays no role if one uses the Fermi
 !! function at the experimental temperature or at the temperature of the
 !! QMC calculations
@@ -55,13 +56,14 @@
 !! For more details, please go to iqist/doc/manual directory.
 !!
 !!
+
   program makeups
      use constants, only : dp, zero, one, mystd, mytmp
 
      implicit none
 
 ! local control parameters
-! number of frequency grid on half plane (total number = 2*nw + 1)
+! number of frequency grid points on half plane (total number = 2*nw + 1)
      integer  :: nw   = 400
 
 ! number of orbitals, include spin degree of freedom
@@ -255,14 +257,6 @@
   end program makeups
 
 !!>>> broadening: calculate broadening with the Gaussian function
-!! we define:
-!!     fct(x) = \frac{1}{S\sqrt{2\pi}} e^{-\frac{x^{2}}{2 S^{2}}}
-!! and
-!!     Precision = S / dx. (dx = Delta Energy between 2 points)
-!! then
-!!     Broadening Spectrum(x) =
-!!         \sum_{x'=-3*Precision}^{3*Precision} fct(x')*Spectrum(x+x')
-!! where x' = DeltaJ in the procedure, and S = smearing
   subroutine broadening(nw, gamm, mesh, xinp, xout)
      use constants, only : dp, zero, one, two, pi
 
@@ -295,6 +289,15 @@
 ! fac1 and fac2 are used to build Gaussian function
      real(dp) :: fac1
      real(dp) :: fac2
+
+! here we define:
+!     fct(x) = \frac{1}{S\sqrt{2\pi}} e^{-\frac{x^{2}}{2 S^{2}}}
+! and
+!     Precision = S / dx. (dx = Delta Energy between 2 points)
+! then
+!     Broadening Spectrum(x) =
+!         \sum_{x'=-3*Precision}^{3*Precision} fct(x')*Spectrum(x+x')
+! where x' = DeltaJ in the procedure, and S = smearing
 
 ! initialize xout
      xout = zero

@@ -2,7 +2,7 @@
 !!! HIBISCUS/toolbox/makescr @ iQIST                                     !
 !!!                                                                      !
 !!! This tool is used to general the kernel function, i.e., K(\tau), for !
-!!! the narcissus code.                                                  !
+!!! the narcissus code                                                   !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !

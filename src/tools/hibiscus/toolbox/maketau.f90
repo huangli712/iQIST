@@ -2,7 +2,7 @@
 !!! HIBISCUS/toolbox/maketau @ iQIST                                     !
 !!!                                                                      !
 !!! This tool is used to postprocess the bins data of the imaginary time !
-!!! green's function.
+!!! green's function                                                     !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
