@@ -1,3 +1,16 @@
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! AZALEA @ iQIST                                                       !
+!!!                                                                      !
+!!! A test program for dynamical mean field theory (DMFT) self-consistent!
+!!! engine plus hybridization expansion version continuous time quantum  !
+!!! Monte Carlo (CTQMC) quantum impurity solver                          !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : this impurity solver is based on segment picture formalism !
+!!!           any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
 !=========+=========+=========+=========+=========+=========+=========+>>>
 ! build spectral function from imaginary-time green's function using the !
 ! well-known maximum entropy method. in principle, it solves the laplace !
@@ -15,6 +28,40 @@
 !           by li huang using fortran 90 language                        !
 !           any question, please contact with huangli712@yahoo.com.cn    !
 !=========+=========+=========+=========+=========+=========+=========+>>>
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The makedos code is often used to generate typical density of states
+!! for general lattice models. The output files can be processed by the
+!! ctqmc_dmft_anydos() subroutine in the ctqmc_dmft.f90 file.
+!!
+!! Usage
+!! =====
+!!
+!! # ./mdos or bin/mdos.x
+!!
+!! Input
+!! =====
+!!
+!! N/A
+!!
+!! Output
+!! ======
+!!
+!! dos.gauss.dat
+!! dos.cubic.dat
+!! dos.bethe.dat
+!! dos.loren.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
   program entropy_main
      use constants

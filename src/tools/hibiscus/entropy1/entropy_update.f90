@@ -300,6 +300,9 @@
 ! try statistics
      real(dp), intent(inout) :: try
 
+! image function
+     real(dp), intent(inout) :: image(-nwmax:nwmax)
+
 ! parameters to control the monte carlo annealing steps
      real(dp), intent(in) :: tfac
 
@@ -323,9 +326,6 @@
 
 ! fermion kernel function
      real(dp), intent(in) :: fkern(-nwmax:nwmax,ntime)
-
-! image function
-     real(dp), intent(inout) :: image(-nwmax:nwmax)
 
 ! local variables
 ! loop index
@@ -369,24 +369,18 @@
              do while ( .true. )
                  j1 = min( int( spring_sfmt_stream() * ( 2 * nwmax + 1 ) ), 2 * nwmax ) - nwmax
                  j2 = min( int( spring_sfmt_stream() * ( 2 * nwmax + 1 ) ), 2 * nwmax ) - nwmax
-                 if ( j1 /= j2 ) then
-                     EXIT
-                 endif
+                 if ( j1 /= j2 ) EXIT
              enddo ! over do while loop
 
 ! calculate dj1
              do while ( .true. )
-                 dj1 =                  delta(j1) * ( spring_sfmt_stream() - half )
-                 if ( image(j1) + dj1 > zero ) then
-                     EXIT
-                 endif
+                 dj1 = delta(j1) * ( spring_sfmt_stream() - half )
+                 if ( image(j1) + dj1 > zero ) EXIT
              enddo ! over do while loop
 
 ! calculate dj2
-                 dj2 = -dj1 + 0.05_dp * delta(j2) * ( spring_sfmt_stream() - half )
-                 if ( image(j2) + dj2 > zero ) then
-                     EXIT entropy_j1j2_loop
-                 endif
+             dj2 = -dj1 + 0.05_dp * delta(j2) * ( spring_sfmt_stream() - half )
+             if ( image(j2) + dj2 > zero ) EXIT entropy_j1j2_loop
 
          enddo entropy_j1j2_loop ! over do while loop
 
@@ -407,19 +401,19 @@
 
          if ( del_img1 > epss ) then
              del_ent = del_ent - wstep * del_img1 * log( del_img1 / model(j1) )
-         endif
+         endif ! back if ( del_img1 > epss ) block
 
          if ( del_img2 > epss ) then
              del_ent = del_ent - wstep * del_img2 * log( del_img2 / model(j2) )
-         endif
+         endif ! back if ( del_img2 > epss ) block
 
          if ( image(j1) > epss ) then
              del_ent = del_ent + wstep * image(j1) * log( image(j1) / model(j1) )
-         endif
+         endif ! back if ( image(j1) > epss ) block
 
          if ( image(j2) > epss ) then
              del_ent = del_ent + wstep * image(j2) * log( image(j2) / model(j2) )
-         endif
+         endif ! back if ( image(j2) > epss ) block
 
 ! calculate weight
          p = ( ( old_chihc - new_chihc ) / two + alpha * del_ent ) / tfac
@@ -442,7 +436,7 @@
              if ( image(j1) > 0.1_dp * amax ) then
                  acc = acc + one
                  try = try + one
-             endif
+             endif ! back if ( image(j1) > 0.1_dp * amax ) block
 
 ! update related variables
              image(j1) = del_img1
@@ -455,7 +449,7 @@
 ! record try statistics
              if ( image(j1) > 0.1_dp * amax ) then
                  try = try + one
-             endif
+             endif ! back if ( image(j1) > 0.1_dp * amax ) block
 
          endif ! back if ( spring_sfmt_stream() < p ) block
 
