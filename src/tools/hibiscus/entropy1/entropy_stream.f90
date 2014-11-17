@@ -1,22 +1,18 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : entropy_config
-!           entropy_make_init1
-!           entropy_make_init2
-! source  : entropy_stream.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           01/10/2011 by li huang
-!           01/20/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : initialize the classic maximum entropy method code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/entropy1
+!!! program : entropy_config
+!!!           entropy_make_init1
+!!!           entropy_make_init2
+!!! source  : entropy_stream.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/26/2011 by li huang
+!!!           11/17/2014 by li huang
+!!! purpose : initialize the classic maximum entropy method code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> setup key parameters for classic maximum entropy method code
   subroutine entropy_config()
