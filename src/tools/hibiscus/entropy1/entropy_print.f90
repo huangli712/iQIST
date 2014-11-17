@@ -57,23 +57,30 @@
      return
   end subroutine entropy_print_header
 
-!>>> print the ending information for classic maximum entropy method code
+!!>>> entropy_print_footer: print the ending information for classic
+!!>>> maximum entropy method code
   subroutine entropy_print_footer()
-     use constants
+     use constants, only : dp, mystd
 
      implicit none
 
-! used to record the time information
+! string for current date and time
+     character (len = 20) :: date_time_string
+
+! used to record the time usage information
      real(dp) :: tot_time
 
-! obtain time information
+! obtain time usage information
      call cpu_time(tot_time)
 
-     write(mystd,'(2X,a,f10.2,a)') 'HIBISCUS >>> total time spent:', tot_time, 's'
+! obtain current date and time
+     call s_time_builder(date_time_string)
+
+     write(mystd,'(2X,a,f10.2,a)') 'HIBISCUS/entropy1 >>> total time spent:', tot_time, 's'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'HIBISCUS >>> I am tired and want to go to bed. Bye!'
-     write(mystd,'(2X,a)') 'HIBISCUS >>> ending'
+     write(mystd,'(2X,a)') 'HIBISCUS/entropy1 >>> I am tired and want to go to bed. Bye!'
+     write(mystd,'(2X,a)') 'HIBISCUS/entropy1 >>> happy ending at '//date_time_string
 
      return
   end subroutine entropy_print_footer
