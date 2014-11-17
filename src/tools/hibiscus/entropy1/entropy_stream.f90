@@ -107,13 +107,15 @@
      return
   end subroutine entropy_config
 
-!>>> initialize the classic maximum entropy method code, input original
-! imaginary time data and related mesh
+!!>>> entropy_make_init1: initialize the classic maximum entropy method
+!!>>> code, input original imaginary time data and related mesh
   subroutine entropy_make_init1(tmesh, G_qmc, G_dev)
-     use constants
-     use control
-
+     use constants, only : dp, one, mytmp
      use mmpi
+
+     use control, only : ntime, nband, norbs, ntype
+     use control, only : devia
+     use control, only : myid, master
 
      implicit none
 
