@@ -176,14 +176,15 @@
      return
   end subroutine entropy_make_fnorm
 
-!>>> to calculate the following integrations
-!    s0 = \int A dw
-!    s1 = \int A w dw
-!    s2 = \int A w^{2} dw
-! here A means the spectrum function, and w means frequency grid
+!!>>> entropy_make_srule: to calculate the following integrations
+!!>>>    s0 = \int A dw
+!!>>>    s1 = \int A w dw
+!!>>>    s2 = \int A w^{2} dw
+!!>>> here A means the spectrum function, and w means frequency grid
   subroutine entropy_make_srule(fnorm, image, srule)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : nwmax
 
      implicit none
 
