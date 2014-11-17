@@ -1,25 +1,22 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : context    module
-! source  : entropy_context.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           01/10/2011 by li huang
-!           01/19/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : define the key data structure and global arrays/variables for
-!           classic maximum entropy method code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/entropy1
+!!! program : context    module
+!!! source  : entropy_context.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/26/2011 by li huang
+!!!           11/17/2014 by li huang
+!!! purpose : define the key data structure and global arrays/variables
+!!!           for classic maximum entropy method code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
   module context
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control ! ALL
 
      implicit none
 

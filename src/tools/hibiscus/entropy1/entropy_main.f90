@@ -17,6 +17,7 @@
 !=========+=========+=========+=========+=========+=========+=========+>>>
 
   program entropy_main
+     use constants
      use context
 
      use mmpi
