@@ -16,7 +16,11 @@
 !!
 !! The makescr code is often used to calculate the K(\tau) from classic
 !! models or from the screening spectral function W(\omega). The results
-!! are necessary input for the narcissus code.
+!! are necessary input for the narcissus code. In this code and narcissus
+!! code, we assume that K(\tau) is degenerated for multi-orbital system.
+!!
+!! The W(\omega) data are often obtained by the RPA calculations which
+!! are not included in the iQIST software package.
 !!
 !! Usage
 !! =====
@@ -41,7 +45,7 @@
 !!
 
   program makescr
-     use constants, only : dp, zero, one, two, pi, mystd, mytmp
+     use constants, only : dp, zero, one, two, pi, epss, mystd, mytmp
 
      implicit none
 
@@ -178,13 +182,18 @@
          write(mystd,*)
 ! build screening spectral function using default ohmic model, only for debug
      else
-         write(mystd,'(2X,a)') 'WARNING: scr.frq.dat file do not exist! using default screeing function'
+         write(mystd,'(2X,a)') 'WARNING: scr.frq.dat file do not exist! using ohmic model'
          do i=1,nfreq
              wmsh(i) = real(i - one) * step
              wref(i) = lc * wmsh(i) * log(abs(( wc + wmsh(i) ) / ( wc - wmsh(i) ))) - two * lc * wc
              wimf(i) = - lc * pi * wmsh(i)
          enddo ! over i={1,nfreq} loop
      endif ! back if ( exists .eqv. .true. ) block
+
+! shift the first point for wmsh
+     if ( abs( wmsh(1) ) < epss ) then
+         wmsh(1) = 0.0001_dp
+     endif ! back if ( abs( wmsh(1) ) < epss ) block
 
 ! calculate kernel function and energy shift for U and mu
      write(mystd,'(2X,a)') 'Calculating kernel function ...'
