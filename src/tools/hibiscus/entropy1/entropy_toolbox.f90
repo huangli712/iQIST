@@ -240,11 +240,13 @@
      return
   end subroutine entropy_make_sterm
 
-!>>> to calculate \chi^{2}
-!    \chi^{2} = \sum_{l=1}^{L} (\frac{ G_{l}-\sum_{j} K_{lj}A_{j} }{ \sigma_{l} })^{2}
+!!>>> entropy_make_chihc: to calculate \chi^{2}
+!!>>>   \chi^{2} = \sum_{l=1}^{L} 
+!!>>>              (\frac{ G_{l}-\sum_{j} K_{lj}A_{j} }{ \sigma_{l} })^{2}
   subroutine entropy_make_chihc(chi2, akern, G_qmc, G_dev)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : ntime
 
      implicit none
 
@@ -274,12 +276,14 @@
      return
   end subroutine entropy_make_chihc
 
-!>>> to calculate the trace:
-!    Tr \Lambda [ \Lambda + \alpha *I ]^{-1}
-! it is used to solve the classic maximum entropy method equation
+!!>>> entropy_make_trace: to calculate the trace:
+!!>>>    Tr \Lambda [ \Lambda + \alpha *I ]^{-1}
+!!>>> it is used to solve the classic maximum entropy method equation
   subroutine entropy_make_trace(trace, alpha, image, ckern)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : nwmax
+     use control, only : wstep
 
      implicit none
 
