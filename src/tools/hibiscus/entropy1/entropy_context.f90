@@ -13,10 +13,14 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-  module context
-     use constants, only : dp, zero
+!!========================================================================
+!!>>> module context                                                   <<<
+!!========================================================================
 
-     use control ! ALL
+!!>>> containing memory management subroutines and define global variables
+  module context
+     use constants
+     use control
 
      implicit none
 
@@ -53,7 +57,7 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!>>> allocate module memory
+!!>>> entropy_allocate_memory: allocate module memory
   subroutine entropy_allocate_memory()
      implicit none
 
@@ -77,7 +81,7 @@
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('entropy_allocate_memory','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      tmesh = zero
@@ -100,7 +104,7 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!>>> deallocate module memory
+!!>>> entropy_deallocate_memory: deallocate module memory
   subroutine entropy_deallocate_memory()
      implicit none
 
