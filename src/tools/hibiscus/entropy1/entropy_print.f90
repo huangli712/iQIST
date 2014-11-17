@@ -85,14 +85,16 @@
      return
   end subroutine entropy_print_footer
 
-!>>> print the running parameters, only for reference
+!!>>> entropy_print_summary: print the running parameters,
+!!>>> only for reference
   subroutine entropy_print_summary()
-     use constants
-     use control
+     use constants, only : mystd, ev2k
+
+     use control ! ALL
 
      implicit none
 
-     write(mystd,'(2X,a)') 'HIBISCUS >>> parameters list:'
+     write(mystd,'(2X,a)') 'HIBISCUS/entropy1 >>> parameters list:'
 
      write(mystd,'(2(4X,a,i10)  )') 'ntime:', ntime, 'niter:', niter
      write(mystd,'(2(4X,a,i10)  )') 'nwmax:', nwmax, 'ntune:', ntune
@@ -101,7 +103,7 @@
 
      write(mystd,'(2(4X,a,f10.5))') 'ainit:', ainit, 'devia:', devia
      write(mystd,'(2(4X,a,f10.5))') 'wstep:', wstep, 'sigma:', sigma
-     write(mystd,'(2(4X,a,f10.5))') 'beta :', beta , 'temp :', ev2k / beta
+     write(mystd,'(2(4X,a,f10.5))') 'beta :', beta , 'temp :', ev2k/beta
 
      write(mystd,*)
 
