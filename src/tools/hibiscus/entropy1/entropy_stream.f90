@@ -209,13 +209,15 @@
      return
   end subroutine entropy_make_init1
 
-!>>> initialize the classic maximum entropy method code, setup important
-! array and variables
+!!>>> entropy_make_init2: initialize the classic maximum entropy method
+!!>>> code, setup important array and variables
   subroutine entropy_make_init2(tmesh, wmesh, model, fnorm, fkern)
-     use constants
-     use control
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_init
 
-     use spring
+     use control, only : ntime, nwmax
+     use control, only : wstep
+     use control, only : myid
 
      implicit none
 
