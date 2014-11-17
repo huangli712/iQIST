@@ -23,17 +23,18 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> to smooth the image function. its principle is very simple. the 
-! value of every points in the curve is equal to the avarage value 
-! of 2[naver]-near-neighbors points.
+!!>>> entropy_make_smooth: to smooth the image function. its principle is
+!!>>> very simple. the value of every points in the curve is equal to the
+!!>>> avarage value of 2[naver]-near-neighbors points.
   subroutine entropy_make_smooth(naver, image)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : nwmax
 
      implicit none
 
 ! external arguments
-! number of neighbor points 
+! number of neighbor points
      integer, intent(in) :: naver
 
 ! specctrum function
@@ -62,9 +63,9 @@
          endif ! back if ( i1 < -nwmax ) block
 
          i2 = i + naver
-         if ( i2 >  nwmax ) then
+         if ( i2 > +nwmax ) then
              i2 = nwmax
-         endif ! back if ( i2 >  nwmax ) block
+         endif ! back if ( i2 > +nwmax ) block
 
 ! smooth it in the smoothing zone
          do j=i1,i2
@@ -74,9 +75,7 @@
      enddo ! over i={-nwmax,nwmax} loop
 
 ! copy image1 to image
-     do i=-nwmax,nwmax
-         image(i) = image_s(i)
-     enddo ! over i={-nwmax,nwmax} loop
+     image = image_s
 
      return
   end subroutine entropy_make_smooth
