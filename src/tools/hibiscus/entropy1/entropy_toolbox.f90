@@ -1,7 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : hibiscus
-!!! program : entropy_dmat_inv
-!!!           entropy_make_smooth
+!!! program : entropy_make_smooth
 !!!           entropy_make_normal
 !!!           entropy_make_wmesh
 !!!           entropy_make_model
@@ -24,45 +23,6 @@
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
-
-!>>> invert real(dp) matrix using lapack subroutines
-  subroutine entropy_dmat_inv(ndim, dmat)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of dmat matrix
-     integer, intent(in) :: ndim
-
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the inversed matrix
-     real(dp), intent(inout) :: dmat(ndim,ndim)
-
-! local variables
-! error flag
-     integer  :: ierror
-
-! working arrays for lapack subroutines
-     integer  :: ipiv(ndim)
-     real(dp) :: work(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, dgetrf subroutine
-     call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call entropy_print_error('entropy_dmat_inv','error in lapack subroutine dgetrf')
-     endif
-
-! computes the inverse of an LU-factored general matrix, need lapack
-! package, dgetri subroutine
-     call dgetri(ndim, dmat, ndim, ipiv, work, ndim, ierror)
-     if ( ierror /= 0 ) then
-         call entropy_print_error('entropy_dmat_inv','error in lapack subroutine dgetri')
-     endif
-
-     return
-  end subroutine entropy_dmat_inv
 
 !>>> to smooth the image function. its principle is very simple. the 
 ! value of every points in the curve is equal to the avarage value 
@@ -401,7 +361,7 @@
      enddo ! over j={1,2*nwmax+1} loop
 
 ! calculate lamb2^{-1}
-     call entropy_dmat_inv( 2*nwmax+1, lamb2(1:2*nwmax+1,1:2*nwmax+1) )
+     call s_inv_d( 2*nwmax+1, lamb2(1:2*nwmax+1,1:2*nwmax+1) )
 
 ! calculate trace = Tr \Lambda [ \Lambda + \alpha * I ]^{-1}
 ! please refer to equation (4.28) in the reference
