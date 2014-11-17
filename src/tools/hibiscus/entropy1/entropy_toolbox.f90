@@ -182,7 +182,7 @@
 !!>>>    s2 = \int A w^{2} dw
 !!>>> here A means the spectrum function, and w means frequency grid
   subroutine entropy_make_srule(fnorm, image, srule)
-     use constants, only : dp, zero
+     use constants, only : dp
 
      use control, only : nwmax
 
@@ -198,16 +198,9 @@
 ! spectrum function
      real(dp), intent(in)  :: image(-nwmax:nwmax)
 
-! local variables
-! loop index
-     integer :: i
-
-     srule = zero
-     do i=-nwmax,nwmax
-         srule(1) = srule(1) + image(i) * fnorm(i,1)
-         srule(2) = srule(2) + image(i) * fnorm(i,2)
-         srule(3) = srule(3) + image(i) * fnorm(i,3)
-     enddo ! over i={-nwmax,nwmax} loop
+     srule(1) = dot_product(image, fnorm(:,1))
+     srule(2) = dot_product(image, fnorm(:,2))
+     srule(3) = dot_product(image, fnorm(:,3))
 
      return
   end subroutine entropy_make_srule
