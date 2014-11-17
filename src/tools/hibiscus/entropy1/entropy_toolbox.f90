@@ -112,9 +112,10 @@
 !!>>> we only implement the flat model---model(\omega) = constant, and
 !!>>> gaussian model
   subroutine entropy_make_model(wmesh, model)
-     use constants, only : dp
+     use constants, only : dp, one, two, pi
 
-     use control, only : nwmax
+     use control, only : nwmax, ntype
+     use control, only : sigma
 
      implicit none
 
