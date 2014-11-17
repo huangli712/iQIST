@@ -124,9 +124,9 @@
 
 ! setup necessary parameters
      write(mystd,'(2X,a)')   'Model for screening functions (default = 1):'
-     write(mystd,'(2X,a)')   'model : 1, dervied from cRPA calculation'
-     write(mystd,'(2X,a)')   'model : 2, plasmon pole model'
-     write(mystd,'(2X,a)')   'model : 3, ohmic model'
+     write(mystd,'(2X,a)')   '  model : 1, dervied from cRPA calculation'
+     write(mystd,'(2X,a)')   '  model : 2, plasmon pole model'
+     write(mystd,'(2X,a)')   '  model : 3, ohmic model'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') model
      write(mystd,*)

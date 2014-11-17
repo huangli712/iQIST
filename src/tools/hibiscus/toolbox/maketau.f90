@@ -33,7 +33,7 @@
 !! If ctqmc == 1 or 2, then nskip must be 0. If ctqmc == 3 or 4, then
 !! nskip couble be finite value. Be careful, nskip can not be any integer.
 !! Notice that mod(ntime - 1, nskip) must be 0, or else the obtained
-!! tau.grn.dat must be wrong.
+!! tau.grn.dat should be wrong.
 !!
 !! Usage
 !! =====
