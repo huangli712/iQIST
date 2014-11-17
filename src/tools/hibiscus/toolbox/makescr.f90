@@ -147,12 +147,24 @@
      read (mystd,  *  ) beta
      write(mystd,*)
 
+     write(mystd,'(2X,a)')   'Experienced parameter for screening function lc (default = 0.625):'
+     write(mystd,'(2X,a,$)') '>>> '
+     read (mystd,  *  ) lc
+     write(mystd,*)
+
+     write(mystd,'(2X,a)')   'Experienced parameter for screening function wc (default = 4.000):'
+     write(mystd,'(2X,a,$)') '>>> '
+     read (mystd,  *  ) wc
+     write(mystd,*)
+
 ! check the parameters
      call s_assert2( model > 0 .and. model < 4, 'wrong model of screening functions' )
      call s_assert2( ntime > 0, 'wrong number of time slices' )
      call s_assert2( nfreq > 0, 'wrong number of frequency points' )
      call s_assert2( ncut > 0 .and. ncut <= nfreq, 'wrong number of cutoff frequency points' )
      call s_assert2( beta > zero, 'wrong inversion of temperature' )
+     call s_assert2( lc > zero, 'wrong experienced parameter for screening function lc' )
+     call s_assert2( wc > zero, 'wrong experienced parameter for screening function wc' )
 
 ! allocate memory
      allocate(kmsh(ntime), stat=istat)
@@ -238,7 +250,9 @@
      if ( model == 2 ) then
          do i=1,ntime
              ktau(i) = (lc / wc)**2 / sinh(beta * wc / two)
-             ktau(i) = ktau(i) * ( cosh(beta * wc / two) - cosh(beta * wc / two - kmsh(i) * wc) ) 
+             ktau(i) = ktau(i) * ( cosh(beta * wc / two) - cosh(beta * wc / two - kmsh(i) * wc) )
+             ptau(i) = (lc / wc)**2 / sinh(beta * wc / two)
+             ptau(i) = ptau(i) * sinh(beta * wc / two - kmsh(i) * wc) * wc
          enddo ! over i={1,ntime} loop
      endif ! back if ( model == 2 ) block
 
@@ -246,6 +260,7 @@
      if ( model == 3 ) then
          do i=1,ntime
              ktau(i) = lc * log(one + beta * wc * sin(pi * kmsh(i) / beta) / pi)
+             ptau(i) = lc * wc * cos(pi * kmsh(i) / beta) / (one + beta * wc * sin(pi * kmsh(i) / beta) / pi)
          enddo ! over i={1,ntime} loop
      endif ! back if ( model == 3 ) block
 
