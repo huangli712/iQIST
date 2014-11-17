@@ -47,7 +47,11 @@
 ! image function, i.e., spectral function
      real(dp), public, save, allocatable :: image(:,:)
 
-  contains
+  contains ! encapsulated functionality
+
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
 
 !>>> allocate module memory
      subroutine entropy_allocate_memory()
@@ -92,24 +96,28 @@
          return
      end subroutine entropy_allocate_memory
 
+!!========================================================================
+!!>>> deallocate memory subroutines                                    <<<
+!!========================================================================
+
 !>>> deallocate module memory
-     subroutine entropy_deallocate_memory()
-         implicit none
+  subroutine entropy_deallocate_memory()
+     implicit none
 
-         if ( allocated(tmesh) ) deallocate(tmesh)
-         if ( allocated(wmesh) ) deallocate(wmesh)
-         if ( allocated(model) ) deallocate(model)
+     if ( allocated(tmesh) ) deallocate(tmesh)
+     if ( allocated(wmesh) ) deallocate(wmesh)
+     if ( allocated(model) ) deallocate(model)
 
-         if ( allocated(srule) ) deallocate(srule)
-         if ( allocated(fnorm) ) deallocate(fnorm)
+     if ( allocated(srule) ) deallocate(srule)
+     if ( allocated(fnorm) ) deallocate(fnorm)
 
-         if ( allocated(G_qmc) ) deallocate(G_qmc)
-         if ( allocated(G_dev) ) deallocate(G_dev)
+     if ( allocated(G_qmc) ) deallocate(G_qmc)
+     if ( allocated(G_dev) ) deallocate(G_dev)
 
-         if ( allocated(fkern) ) deallocate(fkern)
-         if ( allocated(image) ) deallocate(image)
+     if ( allocated(fkern) ) deallocate(fkern)
+     if ( allocated(image) ) deallocate(image)
 
-         return
-     end subroutine entropy_deallocate_memory
+     return
+  end subroutine entropy_deallocate_memory
 
   end module context
