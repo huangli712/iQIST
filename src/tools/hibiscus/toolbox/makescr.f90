@@ -19,11 +19,11 @@
 !! are necessary input for the narcissus code. In this code and narcissus
 !! code, we assume that K(\tau) is degenerated for multi-orbital system.
 !!
-!! The W(\omega) data are often obtained by the RPA calculations which
-!! are not included in the iQIST software package.
+!! The W(\omega) data are often obtained by the cRPA calculations. This
+!! feature are unfortunately not included in the iQIST software package.
 !!
-!! In order to compatible with the narcissus code, you have to rename the
-!! output file from scr.tau.dat to solver.ktau.in.
+!! In order to be compatible with the narcissus code, you have to rename
+!! the output file (i.e., scr.tau.dat) to solver.ktau.in.
 !!
 !! Usage
 !! =====
@@ -53,8 +53,8 @@
      implicit none
 
 ! local control parameters
-! model of screening functions
-! model == 1, dervied from RPA calculation
+! model for screening functions
+! model == 1, dervied from cRPA calculation
 ! model == 2, plasmon pole model
 ! model == 3, ohmic model
      integer  :: model = 1
@@ -66,6 +66,7 @@
      integer  :: nfreq = 400
 
 ! number of cutoff frequency points, ncut <= nfreq
+! we use it to avoid numerical overflow in sinh function
      integer  :: ncut  = 400
 
 ! inversion of temperature
@@ -88,6 +89,9 @@
 
 ! real(dp) dummy variables
      real(dp) :: f1, f2, step
+
+! Bose factor zb
+     real(dp) :: zb
 
 ! imaginary time mesh for screening function
      real(dp), allocatable :: kmsh(:)
@@ -119,8 +123,8 @@
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   'Model of screening functions (default = 1):'
-     write(mystd,'(2X,a)')   'model : 1, dervied from RPA calculation'
+     write(mystd,'(2X,a)')   'Model for screening functions (default = 1):'
+     write(mystd,'(2X,a)')   'model : 1, dervied from cRPA calculation'
      write(mystd,'(2X,a)')   'model : 2, plasmon pole model'
      write(mystd,'(2X,a)')   'model : 3, ohmic model'
      write(mystd,'(2X,a,$)') '>>> '
@@ -158,7 +162,7 @@
      write(mystd,*)
 
 ! check the parameters
-     call s_assert2( model > 0 .and. model < 4, 'wrong model of screening functions' )
+     call s_assert2( model > 0 .and. model < 4, 'wrong model for screening functions' )
      call s_assert2( ntime > 0, 'wrong number of time slices' )
      call s_assert2( nfreq > 0, 'wrong number of frequency points' )
      call s_assert2( ncut > 0 .and. ncut <= nfreq, 'wrong number of cutoff frequency points' )
@@ -226,7 +230,7 @@
 ! calculate screening function and its first derivates
          write(mystd,'(2X,a)') 'Calculating screening function ...'
          do i=1,ntime
-             do j=1,nfreq-1
+             do j=1,ncut-1
                  step = wmsh(j+1) - wmsh(j)
                  f1 = cosh( (kmsh(i) - beta/two) * wmsh(j) ) - cosh( - beta/two * wmsh(j) )
                  f1 = f1 * wimf(j) / ( wmsh(j) ** 2 ) / sinh( wmsh(j) * beta/two )
@@ -239,8 +243,21 @@
                  f2 = sinh( (kmsh(i) - beta/two) * wmsh(j+1) ) / sinh( wmsh(j+1) * beta/two )
                  f2 = f2 * wimf(j+1) / wmsh(j+1)
                  ptau(i) = ptau(i) + (f1 + f2) * step / (two * pi)
-             enddo ! over j={1,nfreq-1} loop
+             enddo ! over j={1,ncut-1} loop
          enddo ! over i={1,ntime} loop
+         write(mystd,'(2X,a)') '>>> status: OK'
+         write(mystd,*)
+
+! calculate Bose factor Zb
+         write(mystd,'(2X,a)') 'Calculating Bose factor Zb ...'
+         zb = zero
+         do j=1,nfreq-1
+             step = wmsh(j+1) - wmsh(j)
+             f1 = wimf(j) / ( wmsh(j) ** 2 )
+             f2 = wimf(j+1) / ( wmsh(j+1) ** 2 )
+             zb = zb + (f1 + f2) * step / (two * pi)
+         enddo ! over j={1,nfreq-1} loop
+         write(mystd,'(2X,a,f12.6)') 'Bose factor Zb:', exp(zb)
          write(mystd,'(2X,a)') '>>> status: OK'
          write(mystd,*)
 
