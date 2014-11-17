@@ -16,8 +16,9 @@
 
 !!>>> entropy_dump_image: write out image function in real frequency space
   subroutine entropy_dump_image(wmesh, image)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nwmax, norbs
 
      implicit none
 
@@ -53,8 +54,9 @@
 
 !!>>> entropy_dump_srule: write out final sumrules values for image function
   subroutine entropy_dump_srule(srule)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : norbs
 
      implicit none
 
