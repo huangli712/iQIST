@@ -154,9 +154,9 @@
 
              do i=1,nband
                  do j=1,ntime
-
 ! read in data
-                     read(mytmp,*) tmesh(j), G_qmc(j,i), G_dev(j,i), G_qmc(j,i+nband), G_dev(j,i+nband)
+                     read(mytmp,*) tmesh(j), G_qmc(j,i), G_dev(j,i), &
+                                 G_qmc(j,i+nband), G_dev(j,i+nband)
 
 ! deal with error bar data
 ! it is based gaussian model
@@ -168,14 +168,12 @@
                          G_dev(j,i)       = devia
                          G_dev(j,i+nband) = devia
                      endif ! back if ( ntype == 0 ) block
-
                      if ( abs(G_dev(j,i)) < 0.00001_dp ) then
                          G_dev(j,i)       = 0.00001_dp
                          G_dev(j,i+nband) = 0.00001_dp
                      endif
                      G_dev(j,i)       = one / G_dev(j,i)**2
                      G_dev(j,i+nband) = one / G_dev(j,i+nband)**2
-
                  enddo ! over j={1,ntime} loop
                  read(mytmp,*) ! skip two lines
                  read(mytmp,*)
@@ -184,6 +182,8 @@
 ! close data file
              close(mytmp)
 
+         else
+             call s_print_error('entropy_make_init1','file tau.grn.dat does not exist')
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
