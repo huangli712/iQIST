@@ -2,7 +2,7 @@
 !!! HIBISCUS/toolbox/makekra @ iQIST                                     !
 !!!                                                                      !
 !!! This tool is used to perform kramers-kronig transformation for the   !
-!!! imaginary part of matsubara green's function.                        !
+!!! imaginary part of matsubara green's function                         !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
@@ -55,7 +55,7 @@
      implicit none
 
 ! local control parameters
-! number of frequency grid on half plane (total number = 2*nw + 1)
+! number of frequency grid points on half plane (total number = 2*nw + 1)
      integer :: nw = 400
 
 ! number of orbitals, include the spin degree of freedom
@@ -72,7 +72,7 @@
      integer :: istat
 
 ! logical file exist flag
-     logical :: fexist
+     logical :: exists
 
 ! frequency grid
      real(dp), allocatable :: w(:)
@@ -91,7 +91,7 @@
 
 ! print program header
      write(mystd,'(2X,a)') 'HIBISCUS/toolbox/makekra'
-     write(mystd,'(2X,a)') '>>> Making kramer-kronig transformation for matsubara green function'
+     write(mystd,'(2X,a)') '>>> Making kramer-kronig transformation for matsubara green''s function'
      write(mystd,*) ! print blank line
 
      write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
@@ -112,8 +112,8 @@
      write(mystd,*)
 
 ! check the parameters
-     call s_assert2( nq > 0, 'wrong number of orbitals' )
-     call s_assert2( nw > 0, 'wrong number of frequency points' )
+     call s_assert2( nq > 0 .and. nq < 15, 'wrong number of orbitals' )
+     call s_assert2( nw > 0, 'wrong number of frequency points in half plane' )
 
 ! allocate memory
      allocate(w(-nw:nw),      stat=istat)
@@ -134,10 +134,10 @@
      reg = zero
 
 ! inquire data file
-     inquire(file = 'mem.dos.dat', exist = fexist)
-     if ( fexist == .false. ) then
+     inquire(file = 'mem.dos.dat', exist = exists)
+     if ( exists .eqv. .false. ) then
          call s_print_error('makekra','file mem.dos.dat does not exist')
-     endif ! back if ( fexist == .false. ) block
+     endif ! back if ( exists .eqv. .false. ) block
 
 ! open density of states file
      write(mystd,'(2X,a)') 'Reading mem.dos.dat ...'
@@ -214,7 +214,7 @@
 
 !!>>> kramers: implement the kramers-kronig transformation
   subroutine kramers(nw, img, reg, w, dh, logf, delta)
-     use constants
+     use constants, only : dp, zero, half, pi
 
      implicit none
 

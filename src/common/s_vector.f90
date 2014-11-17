@@ -24,12 +24,13 @@
 !!!           s_legendre
 !!!           s_chebyshev
 !!!           s_sbessel
+!!!           s_bezier
 !!! source  : s_vector.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/24/2014 by li huang
-!!!           09/11/2014 by li huang
+!!!           11/16/2014 by li huang
 !!! purpose : these subroutines are designed for vectors or arrays. They
 !!!           can be used to manipulate grid and mesh, to generate the
 !!!           Legendre polynomial and Chebyshev polynomial, etc.
@@ -95,6 +96,11 @@
 !! --------------------------
 !!
 !! subroutine s_sbessel(...)
+!!
+!! 8. bernstein polynomial
+!! -----------------------
+!!
+!! subroutine s_bezier(...)
 !!
 !!
 
@@ -864,3 +870,74 @@
 
      return
   end subroutine s_sbessel
+
+!!========================================================================
+!!>>> Bernstein polynomials                                            <<<
+!!========================================================================
+
+!!>>> s_bezier: to evaluates the bernstein polynomials at a point x
+  subroutine s_bezier(n, x, bern)
+     use constants, only : dp, one
+
+     implicit none
+
+! external arguments
+! the degree of the bernstein polynomials to be used. for any N, there
+! is a set of N+1 bernstein polynomials, each of degree N, which form a
+! basis for polynomials on [0,1].
+     integer, intent(in)  :: n
+
+! the evaluation point.
+     real(dp), intent(in) :: x
+
+! the values of the N+1 bernstein polynomials at X
+     real(dp), intent(inout) :: bern(0:n)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! the bernstein polynomials are assumed to be based on [0,1].
+! the formula is:
+!    B(N,I)(X) = [N!/(I!*(N-I)!)] * (1-X)**(N-I) * X**I
+! first values:
+!    B(0,0)(X) = 1
+!    B(1,0)(X) =      1-X
+!    B(1,1)(X) =                X
+!    B(2,0)(X) =     (1-X)**2
+!    B(2,1)(X) = 2 * (1-X)    * X
+!    B(2,2)(X) =                X**2
+!    B(3,0)(X) =     (1-X)**3
+!    B(3,1)(X) = 3 * (1-X)**2 * X
+!    B(3,2)(X) = 3 * (1-X)    * X**2
+!    B(3,3)(X) =                X**3
+!    B(4,0)(X) =     (1-X)**4
+!    B(4,1)(X) = 4 * (1-X)**3 * X
+!    B(4,2)(X) = 6 * (1-X)**2 * X**2
+!    B(4,3)(X) = 4 * (1-X)    * X**3
+!    B(4,4)(X) =                X**4
+! special values:
+!    B(N,I)(X) has a unique maximum value at X = I/N.
+!    B(N,I)(X) has an I-fold zero at 0 and and N-I fold zero at 1.
+!    B(N,I)(1/2) = C(N,K) / 2**N
+!    for a fixed X and N, the polynomials add up to 1:
+!    sum ( 0 <= I <= N ) B(N,I)(X) = 1
+     if ( n == 0 ) then
+         bern(0) = one
+
+     else if ( 0 < n ) then
+         bern(0) = one - x
+         bern(1) = x
+         do i=2,n
+             bern(i) = x * bern(i-1)
+             do j=i-1,1,-1
+                 bern(j) = x * bern(j-1) + ( one - x ) * bern(j)
+             enddo ! over j={i-1,1} loop
+             bern(0) = ( one - x ) * bern(0)
+         enddo ! over i={2,n} loop
+
+     endif ! back if ( n == 0 ) block
+
+     return
+  end subroutine s_bezier
