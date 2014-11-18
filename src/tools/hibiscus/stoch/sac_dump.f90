@@ -40,12 +40,12 @@
 
 ! postprocess the image, only for legendre polynomial representation
      if ( ltype /= 1 ) then
-! convert image function from legendre polynomial representation to 
+! convert image function from legendre polynomial representation to
 ! normal representation
          image_l = immpi(1:lemax,:) / step
          call sac_warp_image(image_l, image_t)
      endif ! back if ( ltype /=1 ) block
- 
+
 ! postprocess the image, copy it to image_t
      if ( ltype == 1 ) then
          do i=1,nalph
@@ -99,7 +99,7 @@
   subroutine sac_dump_aprob(step)
      use constants, only : dp, zero, mytmp
 
-     use control, only : nalph, ndump 
+     use control, only : nalph, ndump
      use context, only : move_accept, move_tcount
      use context, only : swap_accept, swap_tcount
 

@@ -51,8 +51,8 @@
      integer, public, save :: ndump = 40000
 
 ! measurement scheme
-! if ltype == 1, normal measurement; 
-! if ltype == 2, using legendre polynomial representation.
+! if ltype == 1, normal measurement
+! if ltype == 2, using legendre polynomial representation
      integer, public, save :: ltype = 1
 
 ! maximum order for legendre polynomial
