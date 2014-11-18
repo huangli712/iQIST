@@ -1,23 +1,21 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : sai_config
-!           sai_make_init1
-!           sai_make_init2
-! source  : sai_stream.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           01/10/2011 by li huang
-! purpose : initialize the stochastic analytic continuation code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/stoch
+!!! program : sac_config
+!!!           sac_make_init1
+!!!           sac_make_init2
+!!! source  : sac_stream.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/09/2011 by li huang
+!!!           11/19/2014 by li huang
+!!! purpose : initialize the stochastic analytic continuation code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> setup key parameters for stochastic analytic continuation code
-  subroutine sai_config()
+  subroutine sac_config()
      use constants
      use control
 
@@ -26,7 +24,7 @@
      implicit none
 
 ! local variables
-! used to check whether the input file (sai.in) exists
+! used to check whether the input file (sac.in) exists
      logical :: exists
 
 ! setup default control parameters
@@ -56,12 +54,12 @@
      if ( myid == master ) then
          exists = .false.
 
-! inquire file status: sai.in
-         inquire(file = 'sai.in', exist = exists)
+! inquire file status: sac.in
+         inquire(file = 'sac.in', exist = exists)
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='sai.in', form='formatted', status='unknown')
+             open(mytmp, file='sac.in', form='formatted', status='unknown')
 
              read(mytmp,*) ! skip comment lines
              read(mytmp,*)
@@ -121,11 +119,11 @@
      eta2 = eta1 * eta1
 
      return
-  end subroutine sai_config
+  end subroutine sac_config
 
 !>>> initialize the stochastic analytic continuation code, input original
 ! imaginary time data and related mesh
-  subroutine sai_make_init1()
+  subroutine sac_make_init1()
      use constants
      use control
      use context
@@ -191,11 +189,11 @@
 # endif  /* MPI */
 
      return
-  end subroutine sai_make_init1
+  end subroutine sac_make_init1
 
 !>>> initialize the stochastic analytic continuation code, setup important
 ! array and variables
-  subroutine sai_make_init2()
+  subroutine sac_make_init2()
      use constants
      use control
      use context
@@ -217,35 +215,35 @@
      call spring_sfmt_init(stream_seed)
 
 ! generate alpha parameters list
-     call sai_make_alpha(alpha)
+     call sac_make_alpha(alpha)
 
 ! generate initial configurations randomly
-     call sai_make_rgamm(igamm, rgamm)
+     call sac_make_rgamm(igamm, rgamm)
 
 ! setup frequency mesh
      call s_linspace_d(-nwmax * wstep, nwmax * wstep, 2 * nwmax + 1, wmesh)
 
 ! setup default model: flat or gaussian type
      if ( sigma <= zero ) then
-         call sai_make_const(model)
+         call sac_make_const(model)
      else
-         call sai_make_gauss(model)
+         call sac_make_gauss(model)
      endif ! back if ( sigma <= zero ) block
 
 ! calculate \phi(\omega)
-     call sai_make_fphi(model, F_phi)
+     call sac_make_fphi(model, F_phi)
 
 ! generate a dense grid of x = \phi(\omega)
-     call sai_make_grid(wgrid, xgrid)
+     call sac_make_grid(wgrid, xgrid)
 
 ! generate delta function
-     call sai_make_delta(xgrid, F_phi, delta)
+     call sac_make_delta(xgrid, F_phi, delta)
 
 ! generate legendre polynomial
      call s_legendre(lemax, legrd, pmesh, ppleg)
 
 ! generate kernel function
-     call sai_make_kernel(fkern)
+     call sac_make_kernel(fkern)
 
 ! write out the seed for random number stream, it is useful to reproduce
 ! the calculation process once fatal error occurs.
@@ -256,4 +254,4 @@
      endif
 
      return
-  end subroutine sai_make_init2
+  end subroutine sac_make_init2
