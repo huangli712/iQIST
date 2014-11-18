@@ -61,7 +61,7 @@
      integer :: i
 
 ! perform local update action
-     if ( spring_sfmt_stream() < 0.90_dp .or. nalph == 1 ) then
+     if ( spring_sfmt_stream() < 0.90_dp ) then
          if ( spring_sfmt_stream() > 0.50_dp ) then
              do i=1,nalph
                  call sac_make_mov1(i)
@@ -72,14 +72,16 @@
              enddo ! over i={1,nalph} loop
          endif ! back if ( spring_sfmt_stream() > 0.50_dp ) block
 ! perform global update action
-! note: if nalph == 1, the global update is forbidden
      else
-         if ( spring_sfmt_stream() > 0.10_dp ) then
-             call sac_make_swap(1)
-         else
-             call sac_make_swap(2)
-         endif ! back if ( spring_sfmt_stream() > 0.10_dp ) block
-     endif ! back if ( spring_sfmt_stream() < 0.90_dp .or. nalph == 1 ) block
+! note: if nalph == 1, the global update is forbidden
+         if ( nalph > 1 ) then
+             if ( spring_sfmt_stream() > 0.10_dp ) then
+                 call sac_make_swap(1)
+             else
+                 call sac_make_swap(2)
+             endif ! back if ( spring_sfmt_stream() > 0.10_dp ) block
+         endif ! back if ( nalph > 1 ) block
+     endif ! back if ( spring_sfmt_stream() < 0.90_dp ) block
 
      return
   end subroutine sac_sampling
