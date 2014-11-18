@@ -1,25 +1,23 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : sai_warmming
-!           sai_sampling
-!           sai_make_mov1
-!           sai_make_mov2
-!           sai_make_swap
-! source  : sai_update.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/09/2011 by li huang
-!           01/11/2011 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for stochastic analytic continuation code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus
+!!! program : sac_warmming
+!!!           sac_sampling
+!!!           sac_make_mov1
+!!!           sac_make_mov2
+!!!           sac_make_swap
+!!! source  : sac_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! history : 01/09/2011 by li huang
+!!!           01/11/2011 by li huang
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for stochastic analytic continuation code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> warm up the configurations
-  subroutine sai_warmming()
+  subroutine sac_warmming()
      use constants
      use control
      use context
@@ -31,7 +29,7 @@
      integer :: i
 
      do i=1,nwarm
-         call sai_sampling()
+         call sac_sampling()
      enddo ! over i={1,nwarm} loop
 
 ! reset the statistics
@@ -44,10 +42,10 @@
      swap_tcount = zero
 
      return
-  end subroutine sai_warmming
+  end subroutine sac_warmming
 
 !>>> selector, choose update scheme
-  subroutine sai_sampling()
+  subroutine sac_sampling()
      use constants
      use control
 
@@ -63,28 +61,28 @@
      if ( spring_sfmt_stream() < 0.90_dp .or. nalph == 1 ) then
          if ( spring_sfmt_stream() > 0.50_dp ) then
              do i=1,nalph
-                 call sai_make_mov1(i)
+                 call sac_make_mov1(i)
              enddo ! over i={1,nalph} loop
          else
              do i=1,nalph
-                 call sai_make_mov2(i)
+                 call sac_make_mov2(i)
              enddo ! over i={1,nalph} loop
          endif ! back if ( spring_sfmt_stream() > 0.50_dp ) block
 ! perform global update action
 ! note: if nalph == 1, the global update is forbidden
      else
          if ( spring_sfmt_stream() > 0.10_dp ) then
-             call sai_make_swap(1)
+             call sac_make_swap(1)
          else
-             call sai_make_swap(2)
+             call sac_make_swap(2)
          endif ! back if ( spring_sfmt_stream() > 0.10_dp ) block
      endif ! back if ( spring_sfmt_stream() < 0.90_dp .or. nalph == 1 ) block
 
      return
-  end subroutine sai_sampling
+  end subroutine sac_sampling
 
 !>>> standard update, move the configurations: shift the weight
-  subroutine sai_make_mov1(ia)
+  subroutine sac_make_mov1(ia)
      use constants
      use control
      use context
@@ -128,7 +126,7 @@
      dhc = zero
 
 ! build initial h_C from input configuration r_{\gamma} and a_{\gamma}
-     call sai_make_hamil0( rgamm(ia,:), igamm(ia,:), hc )
+     call sac_make_hamil0( rgamm(ia,:), igamm(ia,:), hc )
 
 ! generate two random integers in [1,ngamm] as \lambda1, \lambda2
      do while ( .true. )
@@ -188,13 +186,13 @@
      endif ! back if ( pass .eqv. .true. ) block
 
 ! recalculate hamiltonian in new configuration
-     call sai_make_hamil1( hc, hamil(ia) )
+     call sac_make_hamil1( hc, hamil(ia) )
 
      return
-  end subroutine sai_make_mov1
+  end subroutine sac_make_mov1
 
 !>>> standard update, move the configurations: shift the coordinates
-  subroutine sai_make_mov2(ia)
+  subroutine sac_make_mov2(ia)
      use constants
      use control
      use context
@@ -238,7 +236,7 @@
      dhc = zero
 
 ! build initial h_C from input configuration r_{\gamma} and a_{\gamma}
-     call sai_make_hamil0( rgamm(ia,:), igamm(ia,:), hc )
+     call sac_make_hamil0( rgamm(ia,:), igamm(ia,:), hc )
 
 ! generate two random integers in [1,ngamm] as \lambda1, \lambda2
      do while ( .true. )
@@ -293,13 +291,13 @@
      endif ! back if ( pass .eqv. .true. ) block
 
 ! recalculate hamiltonian in new configuration
-     call sai_make_hamil1( hc, hamil(ia) )
+     call sac_make_hamil1( hc, hamil(ia) )
 
      return
-  end subroutine sai_make_mov2
+  end subroutine sac_make_mov2
 
 !>>> global update, parallel tempering
-  subroutine sai_make_swap(scheme)
+  subroutine sac_make_swap(scheme)
      use constants
      use control
      use context
@@ -374,11 +372,11 @@
          call iswap(ngamm, igamm(i, :),    igamm(j, :)   )
          call dswap(ngamm, rgamm(i, :), 1, rgamm(j, :), 1)
 
-         call sai_make_hamil0( rgamm(i,:), igamm(i,:), hc )
-         call sai_make_hamil1( hc, hamil(i) )
+         call sac_make_hamil0( rgamm(i,:), igamm(i,:), hc )
+         call sac_make_hamil1( hc, hamil(i) )
 
-         call sai_make_hamil0( rgamm(j,:), igamm(j,:), hc )
-         call sai_make_hamil1( hc, hamil(j) )
+         call sac_make_hamil0( rgamm(j,:), igamm(j,:), hc )
+         call sac_make_hamil1( hc, hamil(j) )
      endif ! back if ( pass .eqv. .true. ) block
 
 ! update the accept/reject statistics
@@ -421,4 +419,4 @@
      return
   end subroutine iswap
 
-  end subroutine sai_make_swap
+  end subroutine sac_make_swap
