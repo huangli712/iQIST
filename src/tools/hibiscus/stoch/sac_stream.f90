@@ -242,7 +242,7 @@
      call sai_make_delta(xgrid, F_phi, delta)
 
 ! generate legendre polynomial
-     call sai_make_ppleg(ppleg, pmesh)
+     call s_legendre(lemax, legrd, pmesh, ppleg)
 
 ! generate kernel function
      call sai_make_kernel(fkern)

@@ -1,33 +1,29 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : sai_make_mesh
-!           sai_make_grid
-!           sai_make_fphi
-!           sai_make_const
-!           sai_make_gauss
-!           sai_make_alpha
-!           sai_make_rgamm
-!           sai_make_delta
-!           sai_make_ppleg
-!           sai_warp_image
-!           sai_make_normal
-!           sai_make_hamil0
-!           sai_make_hamil1
-!           sai_make_kernel
-! source  : sai_toolbox.f90
-! type    : functions & subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 10/01/2008 by li huang
-!           01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           12/13/2011 by li huang
-! purpose : to provide utility functions and subroutines for stochastic
-!           analytic continuation code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/stoch
+!!! program : sac_make_mesh
+!!!           sac_make_grid
+!!!           sac_make_fphi
+!!!           sac_make_const
+!!!           sac_make_gauss
+!!!           sac_make_alpha
+!!!           sac_make_rgamm
+!!!           sac_make_delta
+!!!           sac_make_ppleg
+!!!           sac_warp_image
+!!!           sac_make_normal
+!!!           sac_make_hamil0
+!!!           sac_make_hamil1
+!!!           sac_make_kernel
+!!! source  : sac_toolbox.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 10/01/2008 by li huang
+!!!           12/13/2011 by li huang
+!!! purpose : to provide utility functions and subroutines for stochastic
+!!!           analytic continuation code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> build equidistance frequency mesh, [ -wstep * nwmax, +wstep * nwmax ]
   subroutine sai_make_mesh(mesh)
@@ -282,48 +278,6 @@
 
      return
   end subroutine sai_make_delta
-
-!>>> build the legendre polynomial and related mesh
-  subroutine sai_make_ppleg(ppleg, pmesh)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! frequency mesh in which legendre polynomial is defined
-     real(dp), intent(out) :: pmesh(legrd)
-
-! legendre polynomial
-     real(dp), intent(out) :: ppleg(legrd,lemax)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-     integer :: k
-
-! build mesh for legendre polynomial in [-1,1]
-     do i=1,legrd
-         pmesh(i) = real(i - 1) * two / real(legrd - 1) - one
-     enddo ! over i={1,legrd} loop
-
-! build legendre polynomial in [-1,1]
-     if ( lemax <= 2 ) then
-         call s_print_error('sac_selfer_init','lemax must be larger than 2')
-     endif
-
-     do i=1,legrd
-         ppleg(i,1) = one
-         ppleg(i,2) = pmesh(i)
-         do j=3,lemax
-             k = j - 1
-             ppleg(i,j) = ( real(2*k-1) * pmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
-         enddo ! over j={3,lemax} loop
-     enddo ! over i={1,legrd} loop
-
-     return
-  end subroutine sai_make_ppleg
 
 !>>> convert the image function from legendre polynomial representation to
 ! normal representation
