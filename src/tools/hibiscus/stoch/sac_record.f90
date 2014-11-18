@@ -14,7 +14,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> update the image function over every alpha parameters
+!!>>> sac_recording: update the image function over every alpha parameters
   subroutine sac_recording()
      use control, only : nalph
 
@@ -31,13 +31,13 @@
      return
   end subroutine sac_recording
 
-!>>> reduce image function from all children nodes
+!!>>> sac_reducing: reduce image function from all children nodes
   subroutine sac_reducing()
-     use constants
-     use control
-     use context
+     use constants, only : zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : nprocs
+     use context, only : image, immpi
 
      implicit none
 
@@ -65,11 +65,14 @@
      return
   end subroutine sac_reducing
 
-!>>> calculate image function using current configurations
+!!>>> sac_make_image: calculate image function using current configurations
   subroutine sac_make_image(ia)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two
+
+     use control, only : nwmax, ngamm
+     use control, only : ltype, lemax, legrd
+     use context, only : igamm, rgamm
+     use context, only : ppleg, delta, image, xgrid
 
      implicit none
 
