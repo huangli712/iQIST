@@ -86,13 +86,19 @@
      return
   end subroutine sac_sampling
 
-!>>> standard update, move the configurations: shift the weight
+!!>>> sac_make_mov1: standard update 1, move the configurations
+!!>>> i.e., shift the weight
   subroutine sac_make_mov1(ia)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : ntime, ngamm
+     use context, only : igamm, rgamm
+     use context, only : fkern
+     use context, only : tmesh
+     use context, only : G_dev
+     use context, only : alpha, hamil
+     use context, only : move_accept, move_reject, move_tcount
 
      implicit none
 
