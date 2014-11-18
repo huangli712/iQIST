@@ -152,10 +152,12 @@
      return
   end subroutine sac_make_gauss
 
-!>>> build alpha parameters list
+!!>>> sac_make_alpha: build alpha parameters list
   subroutine sac_make_alpha(alpha)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : nalph
+     use control, only : ainit, ratio
 
      implicit none
 
@@ -175,12 +177,12 @@
      return
   end subroutine sac_make_alpha
 
-!>>> build rgamm and igamm, randomly
+!!>>> sac_make_rgamm: build rgamm and igamm, randomly
   subroutine sac_make_rgamm(igamm, rgamm)
-     use constants
-     use control
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : ngrid, ngamm, nalph
 
      implicit none
 
