@@ -94,11 +94,14 @@
      return
   end subroutine sac_dump_image
 
-!>>> write out the accept/reject probability for different alpha parameters
+!!>>> sac_dump_aprob: write out the accept/reject probability for
+!!>>> different alpha parameters
   subroutine sac_dump_aprob(step)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, mytmp
+
+     use control, only : nalph, ndump 
+     use context, only : move_accept, move_tcount
+     use context, only : swap_accept, swap_tcount
 
      implicit none
 
@@ -110,8 +113,8 @@
 ! loop index
      integer :: i
 
-! open data file: sai.move.dat
-     open(mytmp, file='sai.move.dat', form='formatted', access='append')
+! open data file: sac.move.dat
+     open(mytmp, file='sac.move.dat', form='formatted', access='append')
 
 ! write it
      write(mytmp,'(i8)', advance='no') int(step) / ndump
@@ -123,8 +126,8 @@
 ! close data file
      close(mytmp)
 
-! open data file: sai.swap.dat
-     open(mytmp, file='sai.swap.dat', form='formatted', access='append')
+! open data file: sac.swap.dat
+     open(mytmp, file='sac.swap.dat', form='formatted', access='append')
 
 ! write it
      write(mytmp,'(i8)', advance='no') int(step) / ndump
