@@ -1,26 +1,24 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : entropy_dump_image
-!           entropy_dump_srule
-! source  : entropy_dump.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/10/2011 by li huang
-!           01/19/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : dump key observables produced by the classic maximum entropy
-!           method code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/entropy1
+!!! program : entropy_dump_image
+!!!           entropy_dump_srule
+!!! source  : entropy_dump.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/26/2011 by li huang
+!!!           11/17/2014 by li huang
+!!! purpose : dump key observables produced by the classic maximum entropy
+!!!           method code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> write out image function in real frequency space
+!!>>> entropy_dump_image: write out image function in real frequency space
   subroutine entropy_dump_image(wmesh, image)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nwmax, norbs
 
      implicit none
 
@@ -54,10 +52,11 @@
      return
   end subroutine entropy_dump_image
 
-!>>> write out final sumrules values for image function
+!!>>> entropy_dump_srule: write out final sumrules values for image function
   subroutine entropy_dump_srule(srule)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : norbs
 
      implicit none
 

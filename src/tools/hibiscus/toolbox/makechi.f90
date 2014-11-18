@@ -19,7 +19,8 @@
 !! function (in imaginary time). It can output the magnetic susceptibility
 !! and effective magnetic moment. So far only the gardenia and narcissus
 !! codes can build the spin-spin correlation function in imaginary time
-!! space.
+!! space. If the spin-spin correlation function is in frequency space,
+!! this code can not be used directly.
 !!
 !! Usage
 !! =====

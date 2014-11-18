@@ -1,22 +1,23 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : context    module
-! source  : entropy_context.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           01/10/2011 by li huang
-!           01/19/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : define the key data structure and global arrays/variables for
-!           classic maximum entropy method code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/entropy1
+!!! program : context    module
+!!! source  : entropy_context.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/26/2011 by li huang
+!!!           11/17/2014 by li huang
+!!! purpose : define the key data structure and global arrays/variables
+!!!           for classic maximum entropy method code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> module context                                                   <<<
+!!========================================================================
+
+!!>>> containing memory management subroutines and define global variables
   module context
      use constants
      use control
@@ -50,69 +51,77 @@
 ! image function, i.e., spectral function
      real(dp), public, save, allocatable :: image(:,:)
 
-  contains
+  contains ! encapsulated functionality
 
-!>>> allocate module memory
-     subroutine entropy_allocate_memory()
-         implicit none
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
+
+!!>>> entropy_allocate_memory: allocate module memory
+  subroutine entropy_allocate_memory()
+     implicit none
 
 ! status flag
-         integer :: istat
+     integer :: istat
 
 ! allocate memory
-         allocate(tmesh(ntime),              stat=istat)
-         allocate(wmesh(-nwmax:nwmax),       stat=istat)
-         allocate(model(-nwmax:nwmax),       stat=istat)
+     allocate(tmesh(ntime),              stat=istat)
+     allocate(wmesh(-nwmax:nwmax),       stat=istat)
+     allocate(model(-nwmax:nwmax),       stat=istat)
 
-         allocate(srule(3,norbs),            stat=istat)
-         allocate(fnorm(-nwmax:nwmax,3),     stat=istat)
+     allocate(srule(3,norbs),            stat=istat)
+     allocate(fnorm(-nwmax:nwmax,3),     stat=istat)
 
-         allocate(G_qmc(ntime,norbs),        stat=istat)
-         allocate(G_dev(ntime,norbs),        stat=istat)
+     allocate(G_qmc(ntime,norbs),        stat=istat)
+     allocate(G_dev(ntime,norbs),        stat=istat)
 
-         allocate(fkern(-nwmax:nwmax,ntime), stat=istat)
-         allocate(image(-nwmax:nwmax,norbs), stat=istat)
+     allocate(fkern(-nwmax:nwmax,ntime), stat=istat)
+     allocate(image(-nwmax:nwmax,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call entropy_print_error('entropy_allocate_memory','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('entropy_allocate_memory','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         tmesh = zero
-         wmesh = zero
-         model = zero
+     tmesh = zero
+     wmesh = zero
+     model = zero
 
-         srule = zero
-         fnorm = zero
+     srule = zero
+     fnorm = zero
 
-         G_qmc = zero
-         G_dev = zero
+     G_qmc = zero
+     G_dev = zero
 
-         fkern = zero
-         image = zero
+     fkern = zero
+     image = zero
 
-         return
-     end subroutine entropy_allocate_memory
+     return
+  end subroutine entropy_allocate_memory
 
-!>>> deallocate module memory
-     subroutine entropy_deallocate_memory()
-         implicit none
+!!========================================================================
+!!>>> deallocate memory subroutines                                    <<<
+!!========================================================================
 
-         if ( allocated(tmesh) ) deallocate(tmesh)
-         if ( allocated(wmesh) ) deallocate(wmesh)
-         if ( allocated(model) ) deallocate(model)
+!!>>> entropy_deallocate_memory: deallocate module memory
+  subroutine entropy_deallocate_memory()
+     implicit none
 
-         if ( allocated(srule) ) deallocate(srule)
-         if ( allocated(fnorm) ) deallocate(fnorm)
+     if ( allocated(tmesh) ) deallocate(tmesh)
+     if ( allocated(wmesh) ) deallocate(wmesh)
+     if ( allocated(model) ) deallocate(model)
 
-         if ( allocated(G_qmc) ) deallocate(G_qmc)
-         if ( allocated(G_dev) ) deallocate(G_dev)
+     if ( allocated(srule) ) deallocate(srule)
+     if ( allocated(fnorm) ) deallocate(fnorm)
 
-         if ( allocated(fkern) ) deallocate(fkern)
-         if ( allocated(image) ) deallocate(image)
+     if ( allocated(G_qmc) ) deallocate(G_qmc)
+     if ( allocated(G_dev) ) deallocate(G_dev)
 
-         return
-     end subroutine entropy_deallocate_memory
+     if ( allocated(fkern) ) deallocate(fkern)
+     if ( allocated(image) ) deallocate(image)
+
+     return
+  end subroutine entropy_deallocate_memory
 
   end module context

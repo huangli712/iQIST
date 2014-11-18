@@ -1,31 +1,31 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : entropy_make_image
-!           entropy_make_sampling
-!           entropy_make_updating
-! source  : entropy_update.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/09/2011 by li huang
-!           01/11/2011 by li huang
-!           01/25/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for classic maximum entropy method code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus
+!!! program : entropy_make_image
+!!!           entropy_make_sampling
+!!!           entropy_make_updating
+!!! source  : entropy_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/09/2011 by li huang
+!!!           01/26/2011 by li huang
+!!!           11/18/2014 by li huang
+!!! purpose : to provide basic subroutines (in other words, elementary
+!!!           updating subroutines) for classic maximum entropy method
+!!!           code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> the driver subroutine of classic maximum entropy program
+!!>>> entropy_make_image: the driver subroutine of classic maximum entropy
+!!>>> program
   subroutine entropy_make_image(G_qmc, G_dev, model, fnorm, fkern, image)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, half, mystd
+     use mmpi, only : mp_allreduce, mp_barrier
+     use spring, only : spring_sfmt_stream
 
-     use spring
-
-     use mmpi
+     use control, only : ntime, nwmax, niter, ntune
+     use control, only : ainit
+     use control, only : nprocs, myid, master
 
      implicit none
 
@@ -194,10 +194,12 @@
      return
   end subroutine entropy_make_image
 
-!>>> implement the kernel algorithm of classic maximum entropy method
+!!>>> entropy_make_sampling: implement the kernel algorithm of classic
+!!>>> maximum entropy method
   subroutine entropy_make_sampling(rfac, tfac, alpha, G_qmc, G_dev, model, fkern, image)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : ntime, nwmax, nstep
 
      implicit none
 
@@ -205,6 +207,9 @@
 ! parameters to control the monte carlo annealing steps
      real(dp), intent(inout) :: rfac
      real(dp), intent(inout) :: tfac
+
+! spectrum function
+     real(dp), intent(inout) :: image(-nwmax:nwmax)
 
 ! alpha parameter
      real(dp), intent(in) :: alpha
@@ -221,9 +226,6 @@
 ! fermion kernel function
      real(dp), intent(in) :: fkern(-nwmax:nwmax,ntime)
 
-! spectrum function
-     real(dp), intent(inout) :: image(-nwmax:nwmax)
-
 ! local variables
 ! loop index
      integer  :: i
@@ -238,7 +240,7 @@
 ! maximum value in image function
      real(dp) :: amax
 
-! \delta image function 
+! \delta image function
      real(dp) :: dimg(-nwmax:nwmax)
 
 ! local parameters
@@ -265,11 +267,11 @@
          if ( acc / try > 0.1_dp ) then
              if ( rfac < 0.01_dp ) then
                  rfac = rfac * 1.5_dp
-             endif
+             endif ! back if ( rfac < 0.01_dp ) block
          else
              if ( rfac > 0.001_dp ) then
                  rfac = rfac / 1.5_dp
-             endif
+             endif ! back if ( rfac > 0.001_dp ) block
          endif ! back if ( arat > 0.1_dp ) block
 
 ! scaling tfac
@@ -280,12 +282,14 @@
      return
   end subroutine entropy_make_sampling
 
-!>>> update the image function by monte carlo procedure
+!!>>> entropy_make_updating: update the image function by monte
+!!>>> carlo procedure
   subroutine entropy_make_updating(acc, try, tfac, amax, alpha, G_qmc, G_dev, delta, model, fkern, image)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, half, epss
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : ntime, nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -295,6 +299,9 @@
 
 ! try statistics
      real(dp), intent(inout) :: try
+
+! image function
+     real(dp), intent(inout) :: image(-nwmax:nwmax)
 
 ! parameters to control the monte carlo annealing steps
      real(dp), intent(in) :: tfac
@@ -319,9 +326,6 @@
 
 ! fermion kernel function
      real(dp), intent(in) :: fkern(-nwmax:nwmax,ntime)
-
-! image function
-     real(dp), intent(inout) :: image(-nwmax:nwmax)
 
 ! local variables
 ! loop index
@@ -365,24 +369,18 @@
              do while ( .true. )
                  j1 = min( int( spring_sfmt_stream() * ( 2 * nwmax + 1 ) ), 2 * nwmax ) - nwmax
                  j2 = min( int( spring_sfmt_stream() * ( 2 * nwmax + 1 ) ), 2 * nwmax ) - nwmax
-                 if ( j1 /= j2 ) then
-                     EXIT
-                 endif
+                 if ( j1 /= j2 ) EXIT
              enddo ! over do while loop
 
 ! calculate dj1
              do while ( .true. )
-                 dj1 =                  delta(j1) * ( spring_sfmt_stream() - half )
-                 if ( image(j1) + dj1 > zero ) then
-                     EXIT
-                 endif
+                 dj1 = delta(j1) * ( spring_sfmt_stream() - half )
+                 if ( image(j1) + dj1 > zero ) EXIT
              enddo ! over do while loop
 
 ! calculate dj2
-                 dj2 = -dj1 + 0.05_dp * delta(j2) * ( spring_sfmt_stream() - half )
-                 if ( image(j2) + dj2 > zero ) then
-                     EXIT entropy_j1j2_loop
-                 endif
+             dj2 = -dj1 + 0.05_dp * delta(j2) * ( spring_sfmt_stream() - half )
+             if ( image(j2) + dj2 > zero ) EXIT entropy_j1j2_loop
 
          enddo entropy_j1j2_loop ! over do while loop
 
@@ -403,19 +401,19 @@
 
          if ( del_img1 > epss ) then
              del_ent = del_ent - wstep * del_img1 * log( del_img1 / model(j1) )
-         endif
+         endif ! back if ( del_img1 > epss ) block
 
          if ( del_img2 > epss ) then
              del_ent = del_ent - wstep * del_img2 * log( del_img2 / model(j2) )
-         endif
+         endif ! back if ( del_img2 > epss ) block
 
          if ( image(j1) > epss ) then
              del_ent = del_ent + wstep * image(j1) * log( image(j1) / model(j1) )
-         endif
+         endif ! back if ( image(j1) > epss ) block
 
          if ( image(j2) > epss ) then
              del_ent = del_ent + wstep * image(j2) * log( image(j2) / model(j2) )
-         endif
+         endif ! back if ( image(j2) > epss ) block
 
 ! calculate weight
          p = ( ( old_chihc - new_chihc ) / two + alpha * del_ent ) / tfac
@@ -438,7 +436,7 @@
              if ( image(j1) > 0.1_dp * amax ) then
                  acc = acc + one
                  try = try + one
-             endif
+             endif ! back if ( image(j1) > 0.1_dp * amax ) block
 
 ! update related variables
              image(j1) = del_img1
@@ -451,7 +449,7 @@
 ! record try statistics
              if ( image(j1) > 0.1_dp * amax ) then
                  try = try + one
-             endif
+             endif ! back if ( image(j1) > 0.1_dp * amax ) block
 
          endif ! back if ( spring_sfmt_stream() < p ) block
 

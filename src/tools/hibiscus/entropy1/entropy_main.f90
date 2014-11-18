@@ -1,25 +1,73 @@
-!=========+=========+=========+=========+=========+=========+=========+>>>
-! build spectral function from imaginary-time green's function using the !
-! well-known maximum entropy method. in principle, it solves the laplace !
-! transformation                                                         !
-!     G(\tau) = \int kernel A(\omega) d\omega                            !
-! where                                                                  !
-!     kernel = \frac{ \exp{-\tau\omega} }{1.0+\exp{-\beta\omega}}        !
-! for details of maximum entropy method, please refer to:                !
-!     Physics Reports 269 (1996) 133-195                                 !
-! author  : li huang                                                     !
-! version : v2011.08.18T                                                 !
-! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK               !
-! comment : the code is written by Anders W. Sandvik (Akademi University,!
-!           Finland, email:asandvik@ra.abo.fi) originally, and modified  !
-!           by li huang using fortran 90 language                        !
-!           any question, please contact with huangli712@yahoo.com.cn    !
-!=========+=========+=========+=========+=========+=========+=========+>>>
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/entropy1 @ iQIST                                            !
+!!!                                                                      !
+!!! This tool implements the classic maximum entropy method to perform   !
+!!! analytical continuation for imaginary time green's function outputed !
+!!! by the hybridization expansion version continuous time quantum Monte !
+!!! Carlo (CT-QMC) or Hirsch-Fye quantum Monte Carlo (HF-QMC) quantum    !
+!!! impurity solver                                                      !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : the code is originally written by                          !
+!!!           Anders W. Sandvik                                          !
+!!!           Akademi University, Finland, email:asandvik@ra.abo.fi      !
+!!!           and modified by li huang using fortran 90 language         !
+!!!           any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The hibiscus/entropy1 code is often used to perform the analytical
+!! continuation to build spectral function from imaginary-time green's
+!! function using the well-known maximum entropy method. In principle,
+!! it solves the laplace transformation
+!!     G(\tau) = \int kernel A(\omega) d\omega
+!! where
+!!     kernel = \frac{ \exp{-\tau\omega} }{1.0+\exp{-\beta\omega}}
+!! for details of the maximum entropy method, please refer to:
+!!     Physics Reports 269 (1996) 133-195
+!!
+!! Usage
+!! =====
+!!
+!! # ./entropy or bin/entropy.x
+!!
+!! Input
+!! =====
+!!
+!! tau.grn.dat (necessary)
+!! entropy.in (necessary)
+!!
+!! Output
+!! ======
+!!
+!! mem.dos.dat
+!! mem.sum.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
   program entropy_main
-     use context
+     use constants, only : mystd
+     use mmpi, only : mp_init, mp_finalize
+     use mmpi, only : mp_comm_rank, mp_comm_size
+     use mmpi, only : mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nprocs, myid, master
+     use context, only : tmesh, wmesh
+     use context, only : model, srule, fnorm, fkern
+     use context, only : G_qmc, G_dev
+     use context, only : image
+     use context, only : entropy_allocate_memory, entropy_deallocate_memory
 
      implicit none
 
@@ -44,7 +92,7 @@
 ! print the running header for classic maximum entropy method code
      if ( myid == master ) then ! only master node can do it
          call entropy_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! setup the important parameters for classic maximum entropy method code
      call entropy_config()
@@ -52,7 +100,7 @@
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then
          call entropy_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call entropy_allocate_memory()
@@ -67,8 +115,8 @@
 
 ! write out helpful information
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,2(a,i2))') 'HIBISCUS >>> data index: ', i, ' in ', norbs
-         endif
+             write(mystd,'(2X,2(a,i2))') 'HIBISCUS/entropy1 >>> data index: ', i, ' in ', norbs
+         endif ! back if ( myid == master ) block
 
 ! perform the classic maximum entropy algorithm
          call entropy_make_image(G_qmc(:,i), G_dev(:,i), model, fnorm(:,1), fkern, image(:,i))
@@ -81,12 +129,12 @@
 ! write out the final spectrum data
      if ( myid == master ) then ! only master node can do it
          call entropy_dump_image(wmesh, image)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out check data for sum-rules
      if ( myid == master ) then ! only master node can do it
          call entropy_dump_srule(srule)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory and finalize
      call entropy_deallocate_memory()
@@ -94,7 +142,7 @@
 ! print the footer for classic maximum entropy method code
      if ( myid == master ) then ! only master node can do it
          call entropy_print_footer()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! finalize mpi envirnoment
 # if defined (MPI)
