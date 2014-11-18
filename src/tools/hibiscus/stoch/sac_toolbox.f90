@@ -24,10 +24,12 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> build wgrid and xgrid, very dense grid
+!!>>> sac_make_grid: build wgrid and xgrid, very dense grid
   subroutine sac_make_grid(wgrid, xgrid)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, half
+
+     use control, only : nwmax, ngrid
+     use control, only : sigma, wstep
 
      implicit none
 
@@ -49,30 +51,25 @@
      real(dp) :: model(ngrid)
 
 ! build wgrid
-     f = two * wstep * nwmax
-     do i=1,ngrid
-         wgrid(i) = f * ( i - 1 - ( ngrid - 1 ) / two ) / real( ngrid - 1 )
-     enddo ! over i={1,ngrid} loop
+     call s_linspace_d(-wstep*nwmax, +wstep*nwmax, ngrid, wgrid)
 
 ! build default model according to sigma
+! case 1: gaussian model
      if ( sigma > zero ) then
          f = half / ( sigma * sigma )
          do i=1,ngrid
              model(i) = exp( - f * wgrid(i) * wgrid(i) )
          enddo ! over i={1,ngrid} loop
+! case 2: flat model
      else
-         do i=1,ngrid
-             model(i) = one
-         enddo ! over i={1,ngrid} loop
+         model = one
      endif ! back if ( sigma > zero ) block
 
 ! normalization default model
      call sac_make_normal( ngrid, one, model )
 
 ! build xgrid
-     do i=1,ngrid
-         xgrid(i) = sum( model(1:i) )
-     enddo ! over i={1,ngrid} loop
+     call s_cumsum_d(ngrid, model, xgrid)
 
      return
   end subroutine sac_make_grid
@@ -249,7 +246,7 @@
      do j=-nwmax,nwmax
          do i=1,ngrid
              s = F_phi(j) - xgrid(i)
-             delta(j,i) = eta1 / ( s * s + eta2 ) 
+             delta(j,i) = eta1 / ( s * s + eta2 )
          enddo ! over i={1,ngrid} loop
      enddo ! over j={-nwmax,nwmax} loop
 
@@ -435,7 +432,7 @@
              if ( omega >= zero )then
                  kern(i,j) = exp(        - tau   * omega ) / ( one + exp( - beta * omega ) )
              else
-                 kern(i,j) = exp( ( beta - tau ) * omega ) / ( one + exp(   beta * omega ) ) 
+                 kern(i,j) = exp( ( beta - tau ) * omega ) / ( one + exp(   beta * omega ) )
              endif
          enddo ! over i={1,ntime} loop
      enddo ! over j={1,ngrid} loop
