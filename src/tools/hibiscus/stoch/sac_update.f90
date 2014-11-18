@@ -286,7 +286,7 @@
      pass = .false.
      if ( dhh <= zero .or. exp( -alpha(ia) * dhh ) > spring_sfmt_stream() ) then
          pass = .true.
-     endif
+     endif ! back if ( dhh <= zero .or. exp( -alpha(ia) * dhh ) > spring_sfmt_stream() ) block
 
 ! if update action is accepted
      if ( pass .eqv. .true. ) then
@@ -313,20 +313,22 @@
      return
   end subroutine sac_make_mov2
 
-!>>> global update, parallel tempering
+!!>>> sac_make_swap: global update, parallel tempering
   subroutine sac_make_swap(scheme)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : ntime, ngamm, nalph
+     use context, only : igamm, rgamm
+     use context, only : alpha, hamil
+     use context, only : swap_accept, swap_reject, swap_tcount
 
      implicit none
 
 ! external arguments
 ! swap scheme
-! if scheme == 1, swap alpha with neighbour
-! if scheme == 2, swap alpha randomly
+! if scheme == 1, swap alpha-related with neighbour
+! if scheme == 2, swap alpha-related randomly
      integer, intent(in) :: scheme
 
 ! local variables
@@ -346,25 +348,30 @@
 ! current h_C(\tau)
      real(dp) :: hc(ntime)
 
+! check nalph
+     call s_assert( nalph > 1 )
+
 ! init h_C
      hc = zero
 
+! scheme 1:
      if ( scheme == 1 ) then
 
 ! choose the first alpha index randomly
          i = ceiling( spring_sfmt_stream() * nalph )
 
 ! determine its neighbour
-         if ( spring_sfmt_stream() > half ) then
+         if ( spring_sfmt_stream() > 0.5_dp ) then
              j = i + 1
          else
              j = i - 1
-         endif
+         endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
 
 ! check the second alpha index
          if ( i == 1 ) j = i + 1
          if ( i == nalph ) j = i - 1
 
+! scheme 2:
      else
 
 ! choose two alpha configuration randomly
@@ -386,8 +393,8 @@
 ! if this update action is accepted, swap two configurations
 ! and hamiltonian is also recalculated
      if ( pass .eqv. .true. ) then
-         call iswap(ngamm, igamm(i, :),    igamm(j, :)   )
-         call dswap(ngamm, rgamm(i, :), 1, rgamm(j, :), 1)
+         call s_swap_i( ngamm, igamm(i,:), igamm(j,:) )
+         call s_swap_d( ngamm, rgamm(i,:), rgamm(j,:) )
 
          call sac_make_hamil0( rgamm(i,:), igamm(i,:), hc )
          call sac_make_hamil1( hc, hamil(i) )
@@ -408,32 +415,4 @@
      endif ! back if ( pass .eqv. .true. ) block
 
      return
-
-  contains
-
-!>>> extended BLAS subroutines, exchange two integer vectors
-  pure subroutine iswap(n, ix, iy)
-     implicit none
-
-! external arguments
-! dimension of integer vector
-     integer, intent(in) :: n
-
-! integer vector X
-     integer, intent(inout) :: ix(n)
-
-! integer vector Y
-     integer, intent(inout) :: iy(n)
-
-! local variables
-! dummy integer vector
-     integer :: it(n)
-
-     it = ix
-     ix = iy
-     iy = it
-
-     return
-  end subroutine iswap
-
   end subroutine sac_make_swap
