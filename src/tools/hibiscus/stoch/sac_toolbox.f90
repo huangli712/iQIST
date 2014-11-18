@@ -220,6 +220,7 @@
      use constants, only : dp
 
      use control, only : nwmax, ngrid
+     use control, only : eta1, eta2
 
      implicit none
 
@@ -251,12 +252,14 @@
      return
   end subroutine sac_make_delta
 
-!>>> convert the image function from legendre polynomial representation to
-! normal representation
+!!>>> sac_warp_image: convert the image function from legendre polynomial
+!!>>> representation to normal representation
   subroutine sac_warp_image(image_l, image_t)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two
+
+     use control, only : nwmax, nalph
+     use control, only : lemax, legrd
+     use context, only : ppleg, wmesh
 
      implicit none
 
