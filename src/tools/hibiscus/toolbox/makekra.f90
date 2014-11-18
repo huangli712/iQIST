@@ -24,7 +24,7 @@
 !! Now this code is interfaced with hibiscus/entropy1 code merely. it
 !! can read the mem.dos.dat file as input data. While to interface it
 !! with the hibiscus/stoch code is very simple. What you need to do is
-!! to rename sai.imsum.dat to mem.dos.dat file, and then supplement
+!! to rename sac.imsum.dat to mem.dos.dat file, and then supplement
 !! the data for different orbitals.
 !!
 !! Usage
