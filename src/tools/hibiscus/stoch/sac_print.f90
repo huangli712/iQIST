@@ -1,26 +1,23 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : sai_print_header
-!           sai_print_footer
-!           sai_print_summary
-!           sai_print_runtime
-!           sai_print_error
-!           sai_print_exception
-! source  : sai_print.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/10/2011 by li huang
-! purpose : provide printing infrastructure for stochastic analytic
-!           continuation code
-! input   :
-! output  :
-! status  : very unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/stoch
+!!! program : sac_print_header
+!!!           sac_print_footer
+!!!           sac_print_summary
+!!!           sac_print_runtime
+!!! source  : sac_print.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/10/2011 by li huang
+!!!           11/18/2014 by li huang
+!!! purpose : provide printing infrastructure for stochastic analytic
+!!!           continuation code
+!!! status  : very unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> print the startup information for stochastic analytic continuation code
-  subroutine sai_print_header()
+  subroutine sac_print_header()
      use constants
      use control, only : nprocs
 
@@ -51,10 +48,10 @@
      write(mystd,*)
 
      return
-  end subroutine sai_print_header
+  end subroutine sac_print_header
 
 !>>> print the ending information for stochastic analytic continuation code
-  subroutine sai_print_footer()
+  subroutine sac_print_footer()
      use constants
 
      implicit none
@@ -72,10 +69,10 @@
      write(mystd,'(2X,a)') 'HIBISCUS >>> ending'
 
      return
-  end subroutine sai_print_footer
+  end subroutine sac_print_footer
 
 !>>> print the running parameters, only for reference
-  subroutine sai_print_summary()
+  subroutine sac_print_summary()
      use constants
      use control
 
@@ -96,10 +93,10 @@
      write(mystd,*)
 
      return
-  end subroutine sai_print_summary
+  end subroutine sac_print_summary
 
 !>>> print the runtime information, including statistic data, only for reference
-  subroutine sai_print_runtime(step, time_start, time_end)
+  subroutine sac_print_runtime(step, time_start, time_end)
      use constants
      use control
      use context
@@ -134,52 +131,4 @@
      write(mystd,*)
 
      return
-  end subroutine sai_print_runtime
-
-!>>> print the error information and STOP the program
-  subroutine sai_print_error(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! error message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
-
-! TERMINATE THE PROGRAM
-!-------------------------------------------------------------------------
-     STOP
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine sai_print_error
-
-!>>> print normal runtime exceptional information, and continue
-  subroutine sai_print_exception(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! exception message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
-
-! CONTINUE/PAUSE THE PROGRAM
-!-------------------------------------------------------------------------
-     CONTINUE ! OR PAUSE
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine sai_print_exception
+  end subroutine sac_print_runtime
