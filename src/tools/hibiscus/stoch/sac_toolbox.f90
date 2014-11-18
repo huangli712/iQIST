@@ -304,10 +304,9 @@
      return
   end subroutine sac_warp_image
 
-!>>> normalize a given function
+!!>>> sac_make_normal: normalize a given function
   subroutine sac_make_normal(ndim, weight, vector)
-     use constants
-     use control
+     use constants, only : dp
 
      implicit none
 
@@ -322,16 +321,11 @@
      real(dp), intent(inout) :: vector(ndim)
 
 ! local variables
-! loop index
-     integer  :: i
-
 ! norm of given function
      real(dp) :: norm
 
      norm = sum(vector) * weight
-     do i=1,ndim
-        vector(i) = vector(i) / norm
-     enddo ! over i={1,ndim} loop
+     vector = vector / norm
 
      return
   end subroutine sac_make_normal
