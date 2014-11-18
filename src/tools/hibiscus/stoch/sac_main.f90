@@ -7,7 +7,7 @@
 !           any question, please contact with huangli712@yahoo.com.cn    !
 !=========+=========+=========+=========+=========+=========+=========+>>>
 
-  program sai_main
+  program sac_main
      use constants
      use control
      use context
@@ -48,25 +48,25 @@
 
 ! print the running header for stochastic analytic continuation code
      if ( myid == master ) then ! only master node can do it
-         call sai_print_header()
+         call sac_print_header()
      endif
 
 ! setup the important parameters for stochastic analytic continuation code
-     call sai_config()
+     call sac_config()
 
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then
-         call sai_print_summary()
+         call sac_print_summary()
      endif
 
 ! allocate memory and initialize
-     call sai_allocate_memory()
+     call sac_allocate_memory()
 
 ! input imaginary time data and related mesh
-     call sai_make_init1()
+     call sac_make_init1()
 
 ! prepare initial data for stochastic analytic continuation code
-     call sai_make_init2()
+     call sac_make_init2()
 
 ! warmup the stochastic analytic continuation code, in order to achieve
 ! equilibrium state quickly
@@ -75,7 +75,7 @@
      endif
 
      call cpu_time(time_start) ! record starting time
-     call sai_warmming()
+     call sac_warmming()
      call cpu_time(time_end)   ! record ending   time
 
 ! print the time information
@@ -103,10 +103,10 @@
              step = step + one
 
 ! perform monte carlo sampling
-             call sai_sampling()
+             call sac_sampling()
 
 ! record alpha-resolved image function
-             call sai_recording()
+             call sac_recording()
 
          enddo SAI_DUMP_LOOP ! over dump={1,ndump} loop
 
@@ -114,21 +114,21 @@
          call cpu_time(time_end)
 
 ! reduce alpha-resolved image function from all children nodes
-         call sai_reducing()
+         call sac_reducing()
 
 ! dump the statistics data: accept/reject ratio
          if ( myid == master ) then ! only master node can do it
-             call sai_dump_aprob(step)
+             call sac_dump_aprob(step)
          endif
 
 ! dump the alpha-resolved image function
          if ( myid == master ) then ! only master node can do it
-             call sai_dump_image(step)
+             call sac_dump_image(step)
          endif
 
 ! it is time to write out the statistics results
          if ( myid == master ) then ! only master node can do it
-             call sai_print_runtime(step, time_start, time_end)
+             call sac_print_runtime(step, time_start, time_end)
          endif
 
      enddo SAI_MAIN_LOOP ! over iter={1,nstep} loop
@@ -140,11 +140,11 @@
      endif
 
 ! deallocate memory and finalize
-     call sai_deallocate_memory()
+     call sac_deallocate_memory()
 
 ! print the footer for stochastic analytic continuation code
      if ( myid == master ) then ! only master node can do it
-         call sai_print_footer()
+         call sac_print_footer()
      endif
 
 ! finalize mpi envirnoment
@@ -158,4 +158,4 @@
 
 # endif  /* MPI */
 
-  end program sai_main
+  end program sac_main
