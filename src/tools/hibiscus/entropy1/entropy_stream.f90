@@ -1,29 +1,26 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : entropy_config
-!           entropy_make_init1
-!           entropy_make_init2
-! source  : entropy_stream.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           01/10/2011 by li huang
-!           01/20/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : initialize the classic maximum entropy method code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/entropy1
+!!! program : entropy_config
+!!!           entropy_make_init1
+!!!           entropy_make_init2
+!!! source  : entropy_stream.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/26/2011 by li huang
+!!!           11/17/2014 by li huang
+!!! purpose : initialize the classic maximum entropy method code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> setup key parameters for classic maximum entropy method code
+!!>>> entropy_config: setup key parameters for classic maximum entropy
+!!>>> method code
   subroutine entropy_config()
-     use constants
-     use control
+     use parser, only : p_create, p_parse, p_get, p_destroy
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control ! ALL
 
      implicit none
 
@@ -58,28 +55,29 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='entropy.in', form='formatted', status='unknown')
+! create the file parser
+             call p_create()
+! parse the config file
+             call p_parse('entropy.in')
 
-             read(mytmp,*) ! skip comment lines
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*) ntime
-             read(mytmp,*) nwmax
-             read(mytmp,*) niter
-             read(mytmp,*) ntune
-             read(mytmp,*) nstep
-             read(mytmp,*) nband
-             read(mytmp,*) norbs
-             read(mytmp,*) ntype
+! extract parameters
+             call p_get('ntime' , ntime )
+             call p_get('nwmax' , nwmax )
+             call p_get('niter' , niter )
+             call p_get('ntune' , ntune )
+             call p_get('nstep' , nstep )
+             call p_get('nband' , nband )
+             call p_get('norbs' , norbs )
+             call p_get('ntype' , ntype )
 
-             read(mytmp,*) ! skip comment lines
-             read(mytmp,*) ainit
-             read(mytmp,*) devia
-             read(mytmp,*) beta
-             read(mytmp,*) sigma
-             read(mytmp,*) wstep
+             call p_get('ainit' , ainit )
+             call p_get('devia' , devia )
+             call p_get('beta'  , beta  )
+             call p_get('sigma' , sigma )
+             call p_get('wstep' , wstep )
 
-             close(mytmp)
+! destroy the parser
+             call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
@@ -109,13 +107,15 @@
      return
   end subroutine entropy_config
 
-!>>> initialize the classic maximum entropy method code, input original
-! imaginary time data and related mesh
+!!>>> entropy_make_init1: initialize the classic maximum entropy method
+!!>>> code, input original imaginary time data and related mesh
   subroutine entropy_make_init1(tmesh, G_qmc, G_dev)
-     use constants
-     use control
-
+     use constants, only : dp, one, mytmp
      use mmpi
+
+     use control, only : ntime, nband, norbs, ntype
+     use control, only : devia
+     use control, only : myid, master
 
      implicit none
 
@@ -137,7 +137,7 @@
      integer :: j
 
 ! used to check whether the input file (tau.grn.dat) exists
-     logical :: exists 
+     logical :: exists
 
 ! read in original imaginary time data if available
      if ( myid == master ) then ! only master node can do it
@@ -154,9 +154,9 @@
 
              do i=1,nband
                  do j=1,ntime
-
 ! read in data
-                     read(mytmp,*) tmesh(j), G_qmc(j,i), G_dev(j,i), G_qmc(j,i+nband), G_dev(j,i+nband)
+                     read(mytmp,*) tmesh(j), G_qmc(j,i), G_dev(j,i), &
+                                 G_qmc(j,i+nband), G_dev(j,i+nband)
 
 ! deal with error bar data
 ! it is based gaussian model
@@ -168,14 +168,12 @@
                          G_dev(j,i)       = devia
                          G_dev(j,i+nband) = devia
                      endif ! back if ( ntype == 0 ) block
-
                      if ( abs(G_dev(j,i)) < 0.00001_dp ) then
                          G_dev(j,i)       = 0.00001_dp
                          G_dev(j,i+nband) = 0.00001_dp
                      endif
                      G_dev(j,i)       = one / G_dev(j,i)**2
                      G_dev(j,i+nband) = one / G_dev(j,i+nband)**2
-
                  enddo ! over j={1,ntime} loop
                  read(mytmp,*) ! skip two lines
                  read(mytmp,*)
@@ -184,6 +182,8 @@
 ! close data file
              close(mytmp)
 
+         else
+             call s_print_error('entropy_make_init1','file tau.grn.dat does not exist')
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
@@ -209,13 +209,15 @@
      return
   end subroutine entropy_make_init1
 
-!>>> initialize the classic maximum entropy method code, setup important
-! array and variables
+!!>>> entropy_make_init2: initialize the classic maximum entropy method
+!!>>> code, setup important array and variables
   subroutine entropy_make_init2(tmesh, wmesh, model, fnorm, fkern)
-     use constants
-     use control
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_init
 
-     use spring
+     use control, only : ntime, nwmax
+     use control, only : wstep
+     use control, only : myid
 
      implicit none
 
@@ -248,7 +250,7 @@
      call spring_sfmt_init(stream_seed)
 
 ! build real frequency grid
-     call entropy_make_wmesh(wmesh)
+     call s_linspace_d(-nwmax * wstep, nwmax * wstep, 2 * nwmax + 1, wmesh)
 
 ! calculate fermion kernel function
      call entropy_make_fkern(tmesh, wmesh, fkern)

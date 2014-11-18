@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/tools/hibiscus/sac directory.
+## Makefile for iqist/src/tools/hibiscus/stoch directory.
 ##
 ## Usage
 ## =====
@@ -28,10 +28,10 @@
 
 include ../../../build/make.sys
 
-modc = sai_control.o sai_context.o
-core = sai_stream.o sai_toolbox.o sai_update.o sai_record.o
-dump = sai_dump.o sai_print.o
-main = sai_main.o
+modc = sac_control.o sac_context.o
+core = sac_stream.o sac_toolbox.o sac_update.o sac_record.o
+dump = sac_dump.o sac_print.o
+main = sac_main.o
 MAPI = libMM.a
 
 objects = $(modc) $(core) $(dump) $(main) $(MAPI)
@@ -50,9 +50,9 @@ csml:
 	cp ../../../common/parser.mod .
 	cp ../../../common/linkedlist.mod .
 
-exe: cssl csml sai-exe
-sai-exe: $(objects)
-	$(LINKER) $(objects) -o sai $(LFLAGS) $(LIBS)
+exe: cssl csml sac-exe
+sac-exe: $(objects)
+	$(LINKER) $(objects) -o sac $(LFLAGS) $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -60,7 +60,7 @@ sai-exe: $(objects)
 clean:
 	rm -f *.mod
 	rm -f *.o
-	rm -f sai
+	rm -f sac
 	rm -f libMM.a
 
 clean-dat:

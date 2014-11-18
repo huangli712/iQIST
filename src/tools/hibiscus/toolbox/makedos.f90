@@ -141,7 +141,7 @@
 ! check the parameters
      call s_assert2( nw > 0, 'wrong number of frequency points' )
      call s_assert2( nk > 0, 'wrong number of k points' )
-     call s_assert2( part > zero, 'wrong hopping parameter' )
+     call s_assert2( part > zero, 'wrong hopping parameter t' )
      call s_assert2( emax > emin, 'wrong energy window' )
 
 ! allocate memory

@@ -1,84 +1,40 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : entropy_dmat_inv
-!           entropy_make_smooth
-!           entropy_make_normal
-!           entropy_make_wmesh
-!           entropy_make_model
-!           entropy_make_fnorm
-!           entropy_make_srule
-!           entropy_make_sterm
-!           entropy_make_chihc
-!           entropy_make_trace
-!           entropy_make_akern
-!           entropy_make_ckern
-!           entropy_make_fkern
-! source  : entropy_toolbox.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 10/01/2008 by li huang
-!           01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           01/20/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : to provide utility functions and subroutines for the classic
-!           maximum entropy method code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/entropy1
+!!! program : entropy_make_smooth
+!!!           entropy_make_normal
+!!!           entropy_make_model
+!!!           entropy_make_fnorm
+!!!           entropy_make_srule
+!!!           entropy_make_sterm
+!!!           entropy_make_chihc
+!!!           entropy_make_trace
+!!!           entropy_make_akern
+!!!           entropy_make_ckern
+!!!           entropy_make_fkern
+!!! source  : entropy_toolbox.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 10/01/2008 by li huang
+!!!           01/26/2011 by li huang
+!!!           11/17/2014 by li huang
+!!! purpose : to provide utility functions and subroutines for the classic
+!!!           maximum entropy method code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> invert real(dp) matrix using lapack subroutines
-  subroutine entropy_dmat_inv(ndim, dmat)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of dmat matrix
-     integer, intent(in) :: ndim
-
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the inversed matrix
-     real(dp), intent(inout) :: dmat(ndim,ndim)
-
-! local variables
-! error flag
-     integer  :: ierror
-
-! working arrays for lapack subroutines
-     integer  :: ipiv(ndim)
-     real(dp) :: work(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, dgetrf subroutine
-     call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call entropy_print_error('entropy_dmat_inv','error in lapack subroutine dgetrf')
-     endif
-
-! computes the inverse of an LU-factored general matrix, need lapack
-! package, dgetri subroutine
-     call dgetri(ndim, dmat, ndim, ipiv, work, ndim, ierror)
-     if ( ierror /= 0 ) then
-         call entropy_print_error('entropy_dmat_inv','error in lapack subroutine dgetri')
-     endif
-
-     return
-  end subroutine entropy_dmat_inv
-
-!>>> to smooth the image function. its principle is very simple. the 
-! value of every points in the curve is equal to the avarage value 
-! of 2[naver]-near-neighbors points.
+!!>>> entropy_make_smooth: to smooth the image function. its principle is
+!!>>> very simple. the value of every points in the curve is equal to the
+!!>>> avarage value of 2[naver]-near-neighbors points.
   subroutine entropy_make_smooth(naver, image)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : nwmax
 
      implicit none
 
 ! external arguments
-! number of neighbor points 
+! number of neighbor points
      integer, intent(in) :: naver
 
 ! specctrum function
@@ -107,9 +63,9 @@
          endif ! back if ( i1 < -nwmax ) block
 
          i2 = i + naver
-         if ( i2 >  nwmax ) then
+         if ( i2 > +nwmax ) then
              i2 = nwmax
-         endif ! back if ( i2 >  nwmax ) block
+         endif ! back if ( i2 > +nwmax ) block
 
 ! smooth it in the smoothing zone
          do j=i1,i2
@@ -119,17 +75,16 @@
      enddo ! over i={-nwmax,nwmax} loop
 
 ! copy image1 to image
-     do i=-nwmax,nwmax
-         image(i) = image_s(i)
-     enddo ! over i={-nwmax,nwmax} loop
+     image = image_s
 
      return
   end subroutine entropy_make_smooth
 
-!>>> used to perform normalization on image function
+!!>>> entropy_make_normal: used to perform normalization on image function
   subroutine entropy_make_normal(npara, fnorm, image)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : nwmax
 
      implicit none
 
@@ -144,52 +99,23 @@
      real(dp), intent(inout) :: image(-nwmax:nwmax)
 
 ! local variables
-! loop index for real frequency grid
-     integer  :: i
-
 ! normalized factor
      real(dp) :: f
 
-     f = zero
-     do i=-nwmax,nwmax
-         f = f + image(i) * fnorm(i)
-     enddo ! over i={-nwmax,nwmax} loop
-
-     f = npara / f
-     do i=-nwmax,nwmax
-         image(i) = f * image(i)
-     enddo ! over i={-nwmax,nwmax} loop
+     f = npara / dot_product(fnorm, image)
+     image = f * image
 
      return
   end subroutine entropy_make_normal
 
-!>>> build real linear frequency grid
-  subroutine entropy_make_wmesh(wmesh)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! real frequency grid
-     real(dp), intent(out)  :: wmesh(-nwmax:nwmax)
-
-! local variables
-! loop index
-     integer :: i
-
-     do i=-nwmax,nwmax
-         wmesh(i) = real(i) * wstep
-     enddo ! over i={-nwmax,nwmax} loop
-
-     return
-  end subroutine entropy_make_wmesh
-
-!>>> to build the default model, here for simplicity, we only implement
-! the flat model---model(\omega) = constant, and gaussian model
+!!>>> entropy_make_model: to build the default model, here for simplicity,
+!!>>> we only implement the flat model---model(\omega) = constant, and
+!!>>> gaussian model
   subroutine entropy_make_model(wmesh, model)
-     use constants
-     use control
+     use constants, only : dp, one, two, pi
+
+     use control, only : nwmax, ntype
+     use control, only : sigma
 
      implicit none
 
@@ -220,11 +146,13 @@
      return
   end subroutine entropy_make_model
 
-!>>> to calculate f-norms, which is necessary in the calculation of sum
-! rules for spectrum function
+!!>>> entropy_make_fnorm: to calculate f-norms, which is necessary in the
+!!>>> calculation of sum rules for spectrum function
   subroutine entropy_make_fnorm(wmesh, fnorm)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -248,14 +176,15 @@
      return
   end subroutine entropy_make_fnorm
 
-!>>> to calculate the following integrations
-!    s0 = \int A dw
-!    s1 = \int A w dw
-!    s2 = \int A w^{2} dw
-! here A means the spectrum function, and w means frequency grid
+!!>>> entropy_make_srule: to calculate the following integrations
+!!>>>    s0 = \int A dw
+!!>>>    s1 = \int A w dw
+!!>>>    s2 = \int A w^{2} dw
+!!>>> here A means the spectrum function, and w means frequency grid
   subroutine entropy_make_srule(fnorm, image, srule)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : nwmax
 
      implicit none
 
@@ -269,25 +198,20 @@
 ! spectrum function
      real(dp), intent(in)  :: image(-nwmax:nwmax)
 
-! local variables
-! loop index
-     integer :: i
-
-     srule = zero
-     do i=-nwmax,nwmax
-         srule(1) = srule(1) + image(i) * fnorm(i,1)
-         srule(2) = srule(2) + image(i) * fnorm(i,2)
-         srule(3) = srule(3) + image(i) * fnorm(i,3)
-     enddo ! over i={-nwmax,nwmax} loop
+     srule(1) = dot_product(image, fnorm(:,1))
+     srule(2) = dot_product(image, fnorm(:,2))
+     srule(3) = dot_product(image, fnorm(:,3))
 
      return
   end subroutine entropy_make_srule
 
-!>>> to calculate the entropy term S
-!    S = \int dw (A(\omage)-m(\omega)-A(\omage)*ln [A(\omega)/m(\omega)])
+!!>>> entropy_make_sterm: to calculate the entropy term S
+!!>>>   S = \int dw (A(\omage)-m(\omega)-A(\omage)*ln [A(\omega)/m(\omega)])
   subroutine entropy_make_sterm(sterm, image, model)
-     use constants
-     use control
+     use constants, only : dp, zero, epss
+
+     use control, only : nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -310,17 +234,19 @@
      do i=-nwmax,nwmax
          if ( image(i) > epss .and. model(i) > epss ) then
              sterm = sterm + ( image(i) - model(i) - image(i) * log( image(i) / model(i) ) ) * wstep
-         endif
+         endif ! back if ( image(i) > epss .and. model(i) > epss ) block
      enddo ! over i={-nwmax,nwmax} loop
 
      return
   end subroutine entropy_make_sterm
 
-!>>> to calculate \chi^{2}
-!    \chi^{2} = \sum_{l=1}^{L} (\frac{ G_{l}-\sum_{j} K_{lj}A_{j} }{ \sigma_{l} })^{2}
+!!>>> entropy_make_chihc: to calculate \chi^{2}
+!!>>>   \chi^{2} = \sum_{l=1}^{L}
+!!>>>              (\frac{ G_{l}-\sum_{j} K_{lj}A_{j} }{ \sigma_{l} })^{2}
   subroutine entropy_make_chihc(chi2, akern, G_qmc, G_dev)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : ntime
 
      implicit none
 
@@ -350,12 +276,14 @@
      return
   end subroutine entropy_make_chihc
 
-!>>> to calculate the trace:
-!    Tr \Lambda [ \Lambda + \alpha *I ]^{-1}
-! it is used to solve the classic maximum entropy method equation
+!!>>> entropy_make_trace: to calculate the trace:
+!!>>>    Tr \Lambda [ \Lambda + \alpha *I ]^{-1}
+!!>>> it is used to solve the classic maximum entropy method equation
   subroutine entropy_make_trace(trace, alpha, image, ckern)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -405,7 +333,7 @@
      enddo ! over j={1,2*nwmax+1} loop
 
 ! calculate lamb2^{-1}
-     call entropy_dmat_inv( 2*nwmax+1, lamb2(1:2*nwmax+1,1:2*nwmax+1) )
+     call s_inv_d( 2*nwmax+1, lamb2(1:2*nwmax+1,1:2*nwmax+1) )
 
 ! calculate trace = Tr \Lambda [ \Lambda + \alpha * I ]^{-1}
 ! please refer to equation (4.28) in the reference
@@ -419,11 +347,12 @@
      return
   end subroutine entropy_make_trace
 
-!>>> to calculate akern, an important immediate variable
-!    akern_{l} = \sum_{j} K_{lj} A_{j}
+!!>>> entropy_make_akern: to calculate akern, an important immediate
+!!>>> variable: akern_{l} = \sum_{j} K_{lj} A_{j}
   subroutine entropy_make_akern(akern, image, fkern)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : ntime, nwmax
 
      implicit none
 
@@ -455,16 +384,18 @@
      return
   end subroutine entropy_make_akern
 
-!>>> to calculate the following quantity:
-!    ckern = \frac{ \partial ^{2} L }{ \partial A_{i} \partial A_{j} }
-!          = [ K^{T} . C^{-1} K ]_{ij}
-!          = \sum_{kl} K_{ki} [ C^{-1} ]_{kl} K_{lj}
-! here C means covariance matrix, and it is a diagonal matrix if the
-! measurements at different values of \tau are uncorrelated. K is kernel
-! and L means likelihood function. A means spectrum function.
+!!>>> entropy_make_ckern: to calculate the following quantity:
+!!>>>   ckern = \frac{ \partial ^{2} L }{ \partial A_{i} \partial A_{j} }
+!!>>>         = [ K^{T} . C^{-1} K ]_{ij}
+!!>>>         = \sum_{kl} K_{ki} [ C^{-1} ]_{kl} K_{lj}
+!!>>> here C means covariance matrix, and it is a diagonal matrix if the
+!!>>> measurements at different values of \tau are uncorrelated. K is
+!!>>> kernel and L means likelihood function. A means spectrum function.
   subroutine entropy_make_ckern(G_dev, fkern, ckern)
-     use constants
-     use control
+     use constants, only : dp, zero
+
+     use control, only : ntime, nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -495,19 +426,22 @@
              iw = i - nwmax - 1
              jw = j - nwmax - 1
              do k=1,ntime
-                 ckern(j,i) = ckern(j,i) + fkern(iw,k) * G_dev(k) * fkern(jw,k) / ( wstep**2 )
+                 ckern(j,i) = ckern(j,i) + fkern(iw,k) * G_dev(k) * fkern(jw,k)
              enddo ! over k={1,ntime} loop
          enddo ! over j={1,2*nwmax+1} loop
      enddo ! over i={1,2*nwmax+1} loop
+     ckern = ckern / ( wstep**2 )
 
      return
   end subroutine entropy_make_ckern
 
-!>>> to calculate fermion kernel function
-!    fkern = \frac{ \exp{-\tau\omega} }{ 1.0 + \exp{-\beta\omega} }
+!!>>> entropy_make_fkern: to calculate fermion kernel function
+!!>>>   fkern = \frac{ \exp{-\tau\omega} }{ 1.0 + \exp{-\beta\omega} }
   subroutine entropy_make_fkern(tmesh, wmesh, fkern)
-     use constants
-     use control
+     use constants, only : dp, zero, one
+
+     use control, only : ntime, nwmax
+     use control, only : beta, wstep
 
      implicit none
 
@@ -532,12 +466,13 @@
      do i=1,ntime
          do j=-nwmax,nwmax
              if ( wmesh(j) >= zero ) then
-                 fkern(j,i) = wstep * exp(        - tmesh(i)   * wmesh(j) ) / ( one + exp( -beta * wmesh(j) ) )
+                 fkern(j,i) = exp(        - tmesh(i)   * wmesh(j) ) / ( one + exp( -beta * wmesh(j) ) )
              else
-                 fkern(j,i) = wstep * exp( ( beta - tmesh(i) ) * wmesh(j) ) / ( one + exp(  beta * wmesh(j) ) )
-             endif
+                 fkern(j,i) = exp( ( beta - tmesh(i) ) * wmesh(j) ) / ( one + exp(  beta * wmesh(j) ) )
+             endif ! back if ( wmesh(j) >= zero ) block
          enddo ! over j={-nwmax,nwmax} loop
      enddo ! over i={1,ntime} loop
+     fkern = fkern * wstep
 
      return
   end subroutine entropy_make_fkern

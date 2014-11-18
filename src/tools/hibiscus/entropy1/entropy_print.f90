@@ -1,51 +1,54 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : entropy_print_header
-!           entropy_print_footer
-!           entropy_print_summary
-!           entropy_print_error
-!           entropy_print_exception
-! source  : entropy_print.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/10/2011 by li huang
-!           01/20/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : provide printing infrastructure for classic maximum entropy
-!           method code
-! input   :
-! output  :
-! status  : very unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/entropy1
+!!! program : entropy_print_header
+!!!           entropy_print_footer
+!!!           entropy_print_summary
+!!! source  : entropy_print.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/26/2011 by li huang
+!!!           11/17/2014 by li huang
+!!! purpose : provide printing infrastructure for classic maximum entropy
+!!!           method code
+!!! status  : very unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> print the startup information for classic maximum entropy method code
+!!>>> entropy_print_header: print the startup information for classic
+!!>>> maximum entropy method code
   subroutine entropy_print_header()
-     use constants
+     use constants, only : mystd
+
      use control, only : nprocs
 
      implicit none
 
-     write(mystd,'(2X,a)') 'HIBISCUS'
+! string for current date and time
+     character (len = 20) :: date_time_string
+
+! obtain current date and time
+     call s_time_builder(date_time_string)
+
+     write(mystd,'(2X,a)') 'HIBISCUS/entropy1'
      write(mystd,'(2X,a)') '>>> A Classic Maximum Entropy Method Code for Imaginary Time Data'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'version: 2011.08.18T            '
-     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & IOP'
-     write(mystd,'(2X,a)') 'support: huangli712@yahoo.com.cn'
-     write(mystd,'(2X,a)') 'license: GPL2 and later versions'
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'HIBISCUS >>> running'
+     write(mystd,'(2X,a)') 'HIBISCUS/entropy1 >>> start running at '//date_time_string
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') 'HIBISCUS >>> parallelism: Yes >>> processors:', nprocs
+     write(mystd,'(2X,a,i4)') 'HIBISCUS/entropy1 >>> parallelism: Yes >>> processors:', nprocs
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') 'HIBISCUS >>> parallelism: No  >>> processors:', 1
+     write(mystd,'(2X,a,i4)') 'HIBISCUS/entropy1 >>> parallelism: No  >>> processors:', 1
 
 # endif  /* MPI */
 
@@ -54,35 +57,44 @@
      return
   end subroutine entropy_print_header
 
-!>>> print the ending information for classic maximum entropy method code
+!!>>> entropy_print_footer: print the ending information for classic
+!!>>> maximum entropy method code
   subroutine entropy_print_footer()
-     use constants
+     use constants, only : dp, mystd
 
      implicit none
 
-! used to record the time information
+! string for current date and time
+     character (len = 20) :: date_time_string
+
+! used to record the time usage information
      real(dp) :: tot_time
 
-! obtain time information
+! obtain time usage information
      call cpu_time(tot_time)
 
-     write(mystd,'(2X,a,f10.2,a)') 'HIBISCUS >>> total time spent:', tot_time, 's'
+! obtain current date and time
+     call s_time_builder(date_time_string)
+
+     write(mystd,'(2X,a,f10.2,a)') 'HIBISCUS/entropy1 >>> total time spent:', tot_time, 's'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'HIBISCUS >>> I am tired and want to go to bed. Bye!'
-     write(mystd,'(2X,a)') 'HIBISCUS >>> ending'
+     write(mystd,'(2X,a)') 'HIBISCUS/entropy1 >>> I am tired and want to go to bed. Bye!'
+     write(mystd,'(2X,a)') 'HIBISCUS/entropy1 >>> happy ending at '//date_time_string
 
      return
   end subroutine entropy_print_footer
 
-!>>> print the running parameters, only for reference
+!!>>> entropy_print_summary: print the running parameters,
+!!>>> only for reference
   subroutine entropy_print_summary()
-     use constants
-     use control
+     use constants, only : mystd, ev2k
+
+     use control ! ALL
 
      implicit none
 
-     write(mystd,'(2X,a)') 'HIBISCUS >>> parameters list:'
+     write(mystd,'(2X,a)') 'HIBISCUS/entropy1 >>> parameters list:'
 
      write(mystd,'(2(4X,a,i10)  )') 'ntime:', ntime, 'niter:', niter
      write(mystd,'(2(4X,a,i10)  )') 'nwmax:', nwmax, 'ntune:', ntune
@@ -91,57 +103,9 @@
 
      write(mystd,'(2(4X,a,f10.5))') 'ainit:', ainit, 'devia:', devia
      write(mystd,'(2(4X,a,f10.5))') 'wstep:', wstep, 'sigma:', sigma
-     write(mystd,'(2(4X,a,f10.5))') 'beta :', beta , 'temp :', ev2k / beta
+     write(mystd,'(2(4X,a,f10.5))') 'beta :', beta , 'temp :', ev2k/beta
 
      write(mystd,*)
 
      return
   end subroutine entropy_print_summary
-
-!>>> print the error information and STOP the program
-  subroutine entropy_print_error(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! error message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
-
-! TERMINATE THE PROGRAM
-!-------------------------------------------------------------------------
-     STOP
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine entropy_print_error
-
-!>>> print normal runtime exceptional information, and continue
-  subroutine entropy_print_exception(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! exception message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
-
-! CONTINUE/PAUSE THE PROGRAM
-!-------------------------------------------------------------------------
-     CONTINUE ! OR PAUSE
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine entropy_print_exception

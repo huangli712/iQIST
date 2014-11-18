@@ -20,8 +20,8 @@
 !!
 !! At first, you have to run the ctqmc impurity solver for many times to
 !! generate a series of solver.sgm.dat file. And then this code is used
-!! to deal with these solver.sgm.dat files to output std.sgm.dat which is
-!! just what the hibiscus/swing code needs.
+!! to deal with these solver.sgm.dat files to generate std.sgm.dat which
+!! is just what the hibiscus/swing code needs.
 !!
 !! Usage
 !! =====
