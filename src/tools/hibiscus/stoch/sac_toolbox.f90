@@ -215,10 +215,11 @@
      return
   end subroutine sac_make_rgamm
 
-!>>> build the delta function in advance
+!!>>> sac_make_delta: build the delta function in advance
   subroutine sac_make_delta(xgrid, F_phi, delta)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : nwmax, ngrid
 
      implicit none
 
