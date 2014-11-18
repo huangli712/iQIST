@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : hibiscus
+!!! project : hibiscus/stoch
 !!! program : sac_warmming
 !!!           sac_sampling
 !!!           sac_make_mov1
@@ -10,17 +10,20 @@
 !!! author  : li huang (email:huangli712@yahoo.com.cn)
 !!! history : 01/09/2011 by li huang
 !!!           01/11/2011 by li huang
-!!! purpose : provide basic infrastructure (elementary updating subroutines)
-!!!           for stochastic analytic continuation code
+!!!           11/18/2014 by li huang
+!!! purpose : to provide some basic infrastructures (elementary updating
+!!!           subroutines) for stochastic analytic continuation code
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> warm up the configurations
+!!>>> sac_warmming: warm up the configurations
   subroutine sac_warmming()
-     use constants
-     use control
-     use context
+     use constants, only : zero
+
+     use control, only : nwarm
+     use context, only : move_accept, move_reject, move_tcount
+     use context, only : swap_accept, swap_reject, swap_tcount
 
      implicit none
 
