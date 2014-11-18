@@ -368,12 +368,13 @@
      return
   end subroutine sac_make_hamil0
 
-!>>> calculate hamiltonian: H_C
-! please refer to equation (35)
+!!>>> sac_make_hamil1: calculate hamiltonian: H_C
+!!>>> please refer to equation (35)
   subroutine sac_make_hamil1(hc, hh)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : ntime
+     use context, only : tmesh
 
      implicit none
 
@@ -384,25 +385,19 @@
 ! H_C term
      real(dp), intent(out) :: hh
 
-! local variables
-! loop index
-     integer :: i
-
 ! H_C = \int_0^{\beta} ( h_C(\tau) )^2
-     hh = zero
-     do i=1,ntime
-         hh = hh + hc(i) * hc(i)
-     enddo ! over i={1,ntime} loop
-     hh = hh * ( tmesh(2) - tmesh(1) )
+     hh = dot_product(hc, hc) * ( tmesh(2) - tmesh(1) )
 
      return
   end subroutine sac_make_hamil1
 
-!>>> calculate kernel function
-! please refer to equation (7)
+!!>>> sac_make_kernel: calculate kernel function
+!!>>> please refer to equation (7)
   subroutine sac_make_kernel(kern)
-     use constants, only : dp, one, zero
-     use control, only : beta, ntime, ngrid
+     use constants, only : dp, zero, one
+
+     use control, only : ntime, ngrid
+     use control, only : beta
      use context, only : tmesh, wgrid
 
      implicit none
@@ -430,7 +425,7 @@
                  kern(i,j) = exp(        - tau   * omega ) / ( one + exp( - beta * omega ) )
              else
                  kern(i,j) = exp( ( beta - tau ) * omega ) / ( one + exp(   beta * omega ) )
-             endif
+             endif ! back if ( omega >= zero ) block
          enddo ! over i={1,ntime} loop
      enddo ! over j={1,ngrid} loop
 
