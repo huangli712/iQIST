@@ -87,7 +87,7 @@
   end subroutine sac_sampling
 
 !!>>> sac_make_mov1: standard update 1, move the configurations
-!!>>> i.e., shift the weight
+!!>>> i.e., shift the weights
   subroutine sac_make_mov1(ia)
      use constants, only : dp, zero, one, two
      use spring, only : spring_sfmt_stream
@@ -175,7 +175,7 @@
      pass = .false.
      if ( dhh <= zero .or. exp( -alpha(ia) * dhh ) > spring_sfmt_stream() ) then
          pass = .true.
-     endif
+     endif ! back if ( dhh <= zero .or. exp( -alpha(ia) * dhh ) > spring_sfmt_stream() ) block
 
 ! if update action is accepted
      if ( pass .eqv. .true. ) then
@@ -202,13 +202,14 @@
      return
   end subroutine sac_make_mov1
 
-!>>> standard update, move the configurations: shift the coordinates
+!!>>> sac_make_mov2: standard update 2, move the configurations,
+!!>>> i.e., shift the coordinates
   subroutine sac_make_mov2(ia)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : ntime
+     use context, only : igamm, rgamm
 
      implicit none
 
