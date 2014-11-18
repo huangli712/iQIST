@@ -47,12 +47,12 @@
      return
   end subroutine sac_warmming
 
-!>>> selector, choose update scheme
+!!>>> sac_sampling: selector, choose update scheme randomly
   subroutine sac_sampling()
-     use constants
-     use control
+     use constants, only : dp
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : nalph
 
      implicit none
 
