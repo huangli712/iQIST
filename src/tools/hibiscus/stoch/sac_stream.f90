@@ -166,7 +166,7 @@
              close(mytmp)
 
          else
-             call sai_print_error('sai_make_init1','file tau.grn.dat does not exist')
+             call s_print_error('sac_make_init1','file tau.grn.dat does not exist')
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 

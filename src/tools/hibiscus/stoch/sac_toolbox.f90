@@ -310,7 +310,7 @@
 
 ! build legendre polynomial in [-1,1]
      if ( lemax <= 2 ) then
-         call sai_print_error('sai_selfer_init','lemax must be larger than 2')
+         call s_print_error('sac_selfer_init','lemax must be larger than 2')
      endif
 
      do i=1,legrd
