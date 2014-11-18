@@ -1,7 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : hibiscus/stoch
-!!! program : sac_make_mesh
-!!!           sac_make_grid
+!!! program : sac_make_grid
 !!!           sac_make_fphi
 !!!           sac_make_const
 !!!           sac_make_gauss
@@ -24,28 +23,6 @@
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
-
-!>>> build equidistance frequency mesh, [ -wstep * nwmax, +wstep * nwmax ]
-  subroutine sac_make_mesh(mesh)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! frequency mesh
-     real(dp), intent(out) :: mesh(-nwmax:nwmax)
-
-! local variables
-! loop index
-     integer :: i
-
-     do i=-nwmax,nwmax
-         mesh(i) = real(i) * wstep
-     enddo ! over i={-nwmax,nwmax} loop
-
-     return
-  end subroutine sac_make_mesh
 
 !>>> build wgrid and xgrid, very dense grid
   subroutine sac_make_grid(wgrid, xgrid)

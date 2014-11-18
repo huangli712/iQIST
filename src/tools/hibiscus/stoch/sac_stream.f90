@@ -223,7 +223,7 @@
      call sai_make_rgamm(igamm, rgamm)
 
 ! setup frequency mesh
-     call sai_make_mesh(wmesh)
+     call s_linspace_d(-nwmax * wstep, nwmax * wstep, 2 * nwmax + 1, wmesh)
 
 ! setup default model: flat or gaussian type
      if ( sigma <= zero ) then
