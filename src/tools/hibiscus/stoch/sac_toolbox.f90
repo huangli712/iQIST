@@ -119,10 +119,12 @@
      return
   end subroutine sac_make_const
 
-!>>> build default model: gaussian
+!!>>> sac_make_gauss: build default model: gaussian
   subroutine sac_make_gauss(model)
-     use constants
-     use control
+     use constants, only : dp, half
+
+     use control, only : nwmax
+     use control, only : sigma, wstep
      use context, only : wmesh
 
      implicit none
