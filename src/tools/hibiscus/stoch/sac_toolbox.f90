@@ -24,7 +24,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> sac_make_grid: build wgrid and xgrid, very dense grid
+!!>>> sac_make_grid: build wgrid and xgrid, very dense grids
   subroutine sac_make_grid(wgrid, xgrid)
      use constants, only : dp, zero, one, two, half
 
@@ -51,7 +51,7 @@
      real(dp) :: model(ngrid)
 
 ! build wgrid
-     call s_linspace_d(-wstep*nwmax, +wstep*nwmax, ngrid, wgrid)
+     call s_linspace_d( -wstep*nwmax, +wstep*nwmax, ngrid, wgrid )
 
 ! build default model according to sigma
 ! case 1: gaussian model
@@ -69,16 +69,18 @@
      call sac_make_normal( ngrid, one, model )
 
 ! build xgrid
-     call s_cumsum_d(ngrid, model, xgrid)
+     call s_cumsum_d( ngrid, model, xgrid )
 
      return
   end subroutine sac_make_grid
 
-!>>> calculate \phi(\omega), it is belong to [0, 1]
+!!>>> sac_make_fphi: calculate \phi(\omega), it is belong to [0, 1]
 ! please refer to equation (16)
   subroutine sac_make_fphi(model, fphi)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -89,21 +91,18 @@
 ! \phi(\omega)
      real(dp), intent(out) :: fphi(-nwmax:nwmax)
 
-! local variables
-! loop index
-     integer :: i
-
-     do i=-nwmax,nwmax
-         fphi(i) = sum( model(-nwmax:i) ) * wstep
-     enddo ! over i={-nwmax,nwmax} loop
+     call s_cumsum_d( 2*nwmax+1, model, fphi )
+     fphi = fphi * wstep
 
      return
   end subroutine sac_make_fphi
 
-!>>> build default model: flat
+!!>>> sac_make_const: build default model (flat model)
   subroutine sac_make_const(model)
-     use constants
-     use control
+     use constants, only : dp, one
+
+     use control, only : nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -111,14 +110,8 @@
 ! default model
      real(dp), intent(out) :: model(-nwmax:nwmax)
 
-! local variables
-! loop index
-     integer :: i
-
 ! build model
-     do i=-nwmax,nwmax
-         model(i) = one
-     enddo ! over i={-nwmax,nwmax} loop
+     model = one
 
 ! enforce it to be normalized
      call sac_make_normal( 2*nwmax+1, wstep, model )
