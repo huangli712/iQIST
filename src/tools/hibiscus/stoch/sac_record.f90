@@ -1,23 +1,21 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : sai_recording
-!           sai_reducing
-!           sai_make_image
-! source  : sai_record.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/09/2011 by li huang
-!           01/10/2011 by li huang
-!           08/10/2011 by li huang
-! purpose : measure, record, and postprocess the key observables
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/stoch
+!!! program : sac_recording
+!!!           sac_reducing
+!!!           sac_make_image
+!!! source  : sac_record.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/09/2011 by li huang
+!!!           08/10/2011 by li huang
+!!!           11/18/2014 by li huang
+!!! purpose : measure, record, and postprocess the key observables
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> update the image function over every alpha parameters
-  subroutine sai_recording()
+  subroutine sac_recording()
      use control, only : nalph
 
      implicit none
@@ -27,14 +25,14 @@
      integer :: i
 
      do i=1,nalph
-         call sai_make_image(i)
+         call sac_make_image(i)
      enddo ! over i={1,nalph} loop
 
      return
-  end subroutine sai_recording
+  end subroutine sac_recording
 
 !>>> reduce image function from all children nodes
-  subroutine sai_reducing()
+  subroutine sac_reducing()
      use constants
      use control
      use context
@@ -65,10 +63,10 @@
      immpi = immpi / real(nprocs)
 
      return
-  end subroutine sai_reducing
+  end subroutine sac_reducing
 
 !>>> calculate image function using current configurations
-  subroutine sai_make_image(ia)
+  subroutine sac_make_image(ia)
      use constants
      use control
      use context
@@ -123,4 +121,4 @@
      image(ia,:) = image(ia,:) + image_t
 
      return
-  end subroutine sai_make_image
+  end subroutine sac_make_image
