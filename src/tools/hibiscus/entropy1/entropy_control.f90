@@ -22,11 +22,11 @@
 !!>>> integer variables                                                <<<
 !!========================================================================
 
-! number of imaginary time slice sampling by continuous time or hirsh-fye
+! number of imaginary time slices sampling by continuous time or hirsh-fye
 ! quantum Monte Carlo quantum impurity solver
      integer, public, save :: ntime = 129
 
-! number of frequency point on half axis, energy range can be expressed by
+! number of frequency points on half axis, energy range can be expressed by
 ! [ -wstep * nwmax, wstep * nwmax ]
      integer, public, save :: nwmax = 200
 
