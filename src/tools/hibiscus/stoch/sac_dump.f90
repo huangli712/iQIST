@@ -1,20 +1,18 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : sai_dump_image
-!           sai_dump_aprob
-! source  : sai_dump.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/10/2011 by li huang
-!           12/14/2011 by li huang
-! purpose : dump key observables produced by the stochastic analytic
-!           continuation code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/stoch
+!!! program : sac_dump_image
+!!!           sac_dump_aprob
+!!! source  : sac_dump.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           12/14/2011 by li huang
+!!!           11/18/2014 by li huang
+!!! purpose : dump key observables produced by the stochastic analytic
+!!!           continuation code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> write out image function in real frequency space
 ! note: sai.image.dat file contain the alpha-resolved image function, and
