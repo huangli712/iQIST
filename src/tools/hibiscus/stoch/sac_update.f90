@@ -205,11 +205,16 @@
 !!>>> sac_make_mov2: standard update 2, move the configurations,
 !!>>> i.e., shift the coordinates
   subroutine sac_make_mov2(ia)
-     use constants, only : dp, zero
+     use constants, only : dp, zero, one, two
      use spring, only : spring_sfmt_stream
 
-     use control, only : ntime
+     use control, only : ntime, ngrid, ngamm
      use context, only : igamm, rgamm
+     use context, only : fkern
+     use context, only : tmesh
+     use context, only : G_dev
+     use context, only : alpha, hamil
+     use context, only : move_accept, move_reject, move_tcount
 
      implicit none
 
