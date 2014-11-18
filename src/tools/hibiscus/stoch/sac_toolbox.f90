@@ -330,12 +330,14 @@
      return
   end subroutine sac_make_normal
 
-!>>> calculate hamiltonian, h_C(\tau)
-! please refer to equation (39)
+!!>>> sac_make_hamil0: calculate hamiltonian, h_C(\tau)
+!!>>> please refer to equation (39)
   subroutine sac_make_hamil0(rg, ig, hc)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : ntime, ngamm
+     use context, only : fkern
+     use context, only : G_tau, G_dev
 
      implicit none
 
