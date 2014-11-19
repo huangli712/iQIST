@@ -110,8 +110,8 @@
 !!>>> entropy_make_init1: initialize the classic maximum entropy method
 !!>>> code, input original imaginary time data and related mesh
   subroutine entropy_make_init1(tmesh, G_qmc, G_dev)
-     use constants, only : dp, one, mytmp
-     use mmpi
+     use constants, only : dp, one, eps6, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
      use control, only : ntime, nband, norbs, ntype
      use control, only : devia
@@ -169,10 +169,10 @@
                      G_dev(j,i)       = devia
                      G_dev(j,i+nband) = devia
                  endif ! back if ( ntype == 0 ) block
-                 if ( abs(G_dev(j,i)) < 0.00001_dp ) then
-                     G_dev(j,i)       = 0.00001_dp
-                     G_dev(j,i+nband) = 0.00001_dp
-                 endif
+                 if ( abs(G_dev(j,i)) < eps6 ) then
+                     G_dev(j,i)       = eps6
+                     G_dev(j,i+nband) = eps6
+                 endif ! back if ( abs(G_dev(j,i)) < eps6 ) block
                  G_dev(j,i)       = one / G_dev(j,i)**2
                  G_dev(j,i+nband) = one / G_dev(j,i+nband)**2
              enddo ! over j={1,ntime} loop
