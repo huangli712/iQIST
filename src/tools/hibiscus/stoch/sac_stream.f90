@@ -220,14 +220,11 @@
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
-! generate alpha parameters list
-     call sac_make_alpha(alpha)
-
-! generate initial configurations randomly
-     call sac_make_rgamm(igamm, rgamm)
-
 ! setup frequency mesh
      call s_linspace_d(-nwmax * wstep, nwmax * wstep, 2 * nwmax + 1, wmesh)
+
+! setup legendre polynomial
+     call s_legendre(lemax, legrd, pmesh, ppleg)
 
 ! setup default model: flat or gaussian type
      if ( sigma <= zero ) then
@@ -236,7 +233,13 @@
          call sac_make_gauss(model)
      endif ! back if ( sigma <= zero ) block
 
-! calculate \phi(\omega)
+! generate alpha parameters list
+     call sac_make_alpha(alpha)
+
+! generate initial configurations randomly
+     call sac_make_rgamm(igamm, rgamm)
+
+! generate \phi(\omega)
      call sac_make_fphi(model, F_phi)
 
 ! generate a dense grid of x = \phi(\omega)
@@ -244,9 +247,6 @@
 
 ! generate delta function
      call sac_make_delta(xgrid, F_phi, delta)
-
-! generate legendre polynomial
-     call s_legendre(lemax, legrd, pmesh, ppleg)
 
 ! generate kernel function
      call sac_make_kernel(fkern)
@@ -257,7 +257,7 @@
          write(mystd,'(4X,a)') 'stochastic analytic continuation preparing'
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine sac_make_init2
