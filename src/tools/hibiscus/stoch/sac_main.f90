@@ -1,3 +1,21 @@
+!!!=========+=========+=========+=========+=========+=========+=========+!
+!!! HIBISCUS/entropy1 @ iQIST                                            !
+!!!                                                                      !
+!!! This tool implements the classic maximum entropy method to perform   !
+!!! analytical continuation for imaginary time green's function outputed !
+!!! by the hybridization expansion version continuous time quantum Monte !
+!!! Carlo (CT-QMC) or Hirsch-Fye quantum Monte Carlo (HF-QMC) quantum    !
+!!! impurity solver                                                      !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
+!!! version : v2014.10.11T                                               !
+!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! comment : the code is originally written by                          !
+!!!           Anders W. Sandvik                                          !
+!!!           Akademi University, Finland, email:asandvik@ra.abo.fi      !
+!!!           and modified by li huang using fortran 90 language         !
+!!!           any question, please contact with huangli712@gmail.com     !
+!!!=========+=========+=========+=========+=========+=========+=========+!
+
 !=========+=========+=========+=========+=========+=========+=========+>>>
 ! A test program for stochastic analytic continuation method             !
 ! author  : li huang                                                     !
@@ -7,12 +25,54 @@
 !           any question, please contact with huangli712@yahoo.com.cn    !
 !=========+=========+=========+=========+=========+=========+=========+>>>
 
-  program sac_main
-     use constants
-     use control
-     use context
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! The hibiscus/entropy1 code is often used to perform the analytical
+!! continuation to build spectral function from imaginary-time green's
+!! function using the well-known maximum entropy method. In principle,
+!! it solves the laplace transformation
+!!     G(\tau) = \int kernel A(\omega) d\omega
+!! where
+!!     kernel = \frac{ \exp{-\tau\omega} }{1.0+\exp{-\beta\omega}}
+!! for details of the maximum entropy method, please refer to:
+!!     Physics Reports 269 (1996) 133-195
+!!
+!! Usage
+!! =====
+!!
+!! # ./entropy or bin/entropy.x
+!!
+!! Input
+!! =====
+!!
+!! tau.grn.dat (necessary)
+!! entropy.in (necessary)
+!!
+!! Output
+!! ======
+!!
+!! mem.dos.dat
+!! mem.sum.dat
+!!
+!! Documents
+!! =========
+!!
+!! For more details, please go to iqist/doc/manual directory.
+!!
+!!
 
-     use mmpi
+  program sac_main
+     use constants, only : dp, zero, one, mystd
+     use mmpi, only : mp_init, mp_finalize
+     use mmpi, only : mp_comm_rank, mp_comm_size
+     use mmpi, only : mp_barrier
+
+     use control, only : nprocs, myid, master
+     use control, only : nstep, ndump
+     use context, only : sac_allocate_memory, sac_deallocate_memory
 
      implicit none
 
@@ -49,7 +109,7 @@
 ! print the running header for stochastic analytic continuation code
      if ( myid == master ) then ! only master node can do it
          call sac_print_header()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! setup the important parameters for stochastic analytic continuation code
      call sac_config()
@@ -57,7 +117,7 @@
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then
          call sac_print_summary()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call sac_allocate_memory()
@@ -72,7 +132,7 @@
 ! equilibrium state quickly
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'stochastic analytic continuation warmming'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_start) ! record starting time
      call sac_warmming()
@@ -82,13 +142,13 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_start, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! print the monte carlo sampling header
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'HIBISCUS >>> SAI stochastic analytic continuation running'
+         write(mystd,'(2X,a)') 'HIBISCUS/stoch >>> stochastic analytic continuation running'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! main loop for stochastic analytic continuation code
      step = zero
@@ -119,25 +179,25 @@
 ! dump the statistics data: accept/reject ratio
          if ( myid == master ) then ! only master node can do it
              call sac_dump_aprob(step)
-         endif
+         endif ! back if ( myid == master ) block
 
 ! dump the alpha-resolved image function
          if ( myid == master ) then ! only master node can do it
              call sac_dump_image(step)
-         endif
+         endif ! back if ( myid == master ) block
 
 ! it is time to write out the statistics results
          if ( myid == master ) then ! only master node can do it
              call sac_print_runtime(step, time_start, time_end)
-         endif
+         endif ! back if ( myid == master ) block
 
      enddo SAI_MAIN_LOOP ! over iter={1,nstep} loop
 
 ! print the footer for stochastic analytic continuation code
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'HIBISCUS >>> SAI stochastic analytic continuation shutdown'
+         write(mystd,'(2X,a)') 'HIBISCUS/stoch >>> stochastic analytic continuation shutdown'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory and finalize
      call sac_deallocate_memory()
@@ -145,7 +205,7 @@
 ! print the footer for stochastic analytic continuation code
      if ( myid == master ) then ! only master node can do it
          call sac_print_footer()
-     endif
+     endif ! back if ( myid == master ) block
 
 ! finalize mpi envirnoment
 # if defined (MPI)
