@@ -123,8 +123,8 @@
      return
   end subroutine sac_config
 
-!!>>> sac_make_init1: initialize the stochastic analytic continuation code,
-!!>>> input original imaginary time data and related mesh
+!!>>> sac_make_init1: initialize the stochastic analytic continuation
+!!>>> code, input original imaginary time data and related mesh
   subroutine sac_make_init1()
      use constants, only : dp, eps6, mytmp
      use mmpi, only : mp_bcast, mp_barrier
@@ -191,14 +191,20 @@
      return
   end subroutine sac_make_init1
 
-!>>> initialize the stochastic analytic continuation code, setup important
-! array and variables
+!!>>> sac_make_init2: initialize the stochastic analytic continuation
+!!>>> code, setup important arrays and variables
   subroutine sac_make_init2()
-     use constants
-     use control
-     use context
+     use constants, only : zero, mystd
+     use spring, only : spring_sfmt_init
 
-     use spring
+     use control, only : nwmax
+     use control, only : lemax, legrd
+     use control, only : sigma, wstep
+     use control, only : myid, master
+     use context, only : igamm, rgamm
+     use context, only : fkern, ppleg, delta, F_phi, model
+     use context, only : wmesh, pmesh, xgrid, wgrid
+     use context, only : alpha
 
      implicit none
 
