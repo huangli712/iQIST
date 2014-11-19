@@ -63,7 +63,7 @@
 ! create the file parser
              call p_create()
 ! parse the config file
-             call p_parse('entropy.in')
+             call p_parse('sac.in')
 
 ! extract parameters
              call p_get('ntime' , ntime )
