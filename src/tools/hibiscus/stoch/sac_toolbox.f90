@@ -265,10 +265,10 @@
 
 ! external arguments
 ! image function in legendre polynomial representation
-     real(dp), intent(in)  :: image_l(nalph,lemax)
+     real(dp), intent(in)  :: image_l(lemax,nalph)
 
 ! image function in normal representation
-     real(dp), intent(out) :: image_t(nalph,-nwmax:nwmax)
+     real(dp), intent(out) :: image_t(-nwmax:nwmax,nalph)
 
 ! local variables
 ! loop index
@@ -296,7 +296,7 @@
              curr = nint(raux * step) + 1
              do fleg=1,lemax
                  raux = sqrt(two * fleg - 1)
-                 image_t(i,j) = image_t(i,j) + raux * image_l(i,fleg) * ppleg(curr,fleg)
+                 image_t(j,i) = image_t(j,i) + raux * image_l(fleg,i) * ppleg(curr,fleg)
              enddo ! over fleg={1,lemax} loop
          enddo ! over j={-nwmax,nwmax} loop
      enddo ! over i={1,nalph} loop

@@ -121,7 +121,7 @@
      endif ! back if ( ltype == 1 ) block
 
 ! add up image_t to image
-     image(ia,:) = image(ia,:) + image_t
+     image(:,ia) = image(:,ia) + image_t
 
      return
   end subroutine sac_make_image
