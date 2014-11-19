@@ -14,12 +14,13 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> setup key parameters for stochastic analytic continuation code
+!!>>> sac_config: setup key parameters for stochastic analytic
+!!>>> continuation code
   subroutine sac_config()
-     use constants
-     use control
+     use parser, only : p_create, p_parse, p_get, p_destroy
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control ! ALL
 
      implicit none
 
@@ -59,32 +60,33 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='sac.in', form='formatted', status='unknown')
+! create the file parser
+             call p_create()
+! parse the config file
+             call p_parse('entropy.in')
 
-             read(mytmp,*) ! skip comment lines
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*) ntime
-             read(mytmp,*) nwmax
-             read(mytmp,*) ngrid
-             read(mytmp,*) ngamm
-             read(mytmp,*) nalph
-             read(mytmp,*) nwarm
-             read(mytmp,*) nstep
-             read(mytmp,*) ndump
-             read(mytmp,*) ltype
-             read(mytmp,*) lemax
-             read(mytmp,*) legrd
+! extract parameters
+             call p_get('ntime' , ntime )
+             call p_get('nwmax' , nwmax )
+             call p_get('ngrid' , ngrid )
+             call p_get('ngamm' , ngamm )
+             call p_get('nalph' , nalph )
+             call p_get('nwarm' , nwarm )
+             call p_get('nstep' , nstep )
+             call p_get('ndump' , ndump )
+             call p_get('ltype' , ltype )
+             call p_get('lemax' , lemax )
+             call p_get('legrd' , legrd )
 
-             read(mytmp,*) ! skip comment lines
-             read(mytmp,*) ainit
-             read(mytmp,*) ratio
-             read(mytmp,*) beta
-             read(mytmp,*) eta1
-             read(mytmp,*) sigma
-             read(mytmp,*) wstep
+             call p_get('ainit' , ainit )
+             call p_get('ratio' , ratio )
+             call p_get('beta'  , beta  )
+             call p_get('eta1'  , eta1  )
+             call p_get('sigma' , sigma )
+             call p_get('wstep' , wstep )
 
-             close(mytmp)
+! destroy the parser
+             call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
@@ -121,14 +123,16 @@
      return
   end subroutine sac_config
 
-!>>> initialize the stochastic analytic continuation code, input original
-! imaginary time data and related mesh
+!!>>> sac_make_init1: initialize the stochastic analytic continuation code,
+!!>>> input original imaginary time data and related mesh
   subroutine sac_make_init1()
-     use constants
-     use control
-     use context
+     use constants, only : dp, eps6, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : ntime
+     use control, only : myid, master
+     use context, only : tmesh
+     use context, only : G_qmc, G_tau, G_dev
 
      implicit none
 
@@ -137,8 +141,7 @@
      integer :: i
 
 ! used to check whether the input file (tau.grn.dat) exists
-! note: which is ouput from mtau.x
-     logical :: exists 
+     logical :: exists
 
 ! read in original imaginary time data if available
      if ( myid == master ) then ! only master node can do it
@@ -146,26 +149,23 @@
 
 ! inquire about file's existence
          inquire(file = 'tau.grn.dat', exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('sac_make_init1','file tau.grn.dat does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
 ! find input file: tau.grn.dat, read it
-         if ( exists .eqv. .true. ) then
-
 ! read in imaginary time function from tau.grn.dat
-             open(mytmp, file = 'tau.grn.dat', status = 'unknown')
+         open(mytmp, file = 'tau.grn.dat', form='formatted', status = 'unknown')
 
-             do i=1,ntime
-                 read(mytmp,*) tmesh(i), G_qmc(i), G_dev(i)
-                 if ( abs( G_dev(i) ) < eps6 ) then
-                     G_dev(i) = eps6
-                 endif
-                 G_tau(i) = abs( G_qmc(i) ) / G_dev(i)
-             enddo ! over i={1,ntime} loop
+         do i=1,ntime
+             read(mytmp,*) tmesh(i), G_qmc(i), G_dev(i)
+             if ( abs( G_dev(i) ) < eps6 ) then
+                 G_dev(i) = eps6
+             endif ! back if ( abs( G_dev(i) ) < eps6 ) block
+             G_tau(i) = abs( G_qmc(i) ) / G_dev(i)
+         enddo ! over i={1,ntime} loop
 
-             close(mytmp)
-
-         else
-             call s_print_error('sac_make_init1','file tau.grn.dat does not exist')
-         endif ! back if ( exists .eqv. .true. ) block
+         close(mytmp)
      endif ! back if ( myid == master ) block
 
 ! since the imaginary time function may be updated in master node, it is
