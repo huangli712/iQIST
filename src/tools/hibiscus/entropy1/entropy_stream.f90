@@ -145,46 +145,43 @@
 
 ! inquire about file's existence
          inquire(file = 'tau.grn.dat', exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('entropy_make_init1','file tau.grn.dat does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
 ! find input file: tau.grn.dat, read it
-         if ( exists .eqv. .true. ) then
-
 ! read in imaginary time function from tau.grn.dat
-             open(mytmp, file = 'tau.grn.dat', status = 'unknown')
+         open(mytmp, file = 'tau.grn.dat', form='formatted', status = 'unknown')
 
-             do i=1,nband
-                 do j=1,ntime
+         do i=1,nband
+             do j=1,ntime
 ! read in data
-                     read(mytmp,*) tmesh(j), G_qmc(j,i), G_dev(j,i), &
-                                 G_qmc(j,i+nband), G_dev(j,i+nband)
+                 read(mytmp,*) tmesh(j), G_qmc(j,i), G_dev(j,i), &
+                             G_qmc(j,i+nband), G_dev(j,i+nband)
 
 ! deal with error bar data
 ! it is based gaussian model
-                     if( ntype == 0 ) then
-                         G_dev(j,i)       = G_dev(j,i)       * devia
-                         G_dev(j,i+nband) = G_dev(j,i+nband) * devia
+                 if( ntype == 0 ) then
+                     G_dev(j,i)       = G_dev(j,i)       * devia
+                     G_dev(j,i+nband) = G_dev(j,i+nband) * devia
 ! it is based flat model
-                     else
-                         G_dev(j,i)       = devia
-                         G_dev(j,i+nband) = devia
-                     endif ! back if ( ntype == 0 ) block
-                     if ( abs(G_dev(j,i)) < 0.00001_dp ) then
-                         G_dev(j,i)       = 0.00001_dp
-                         G_dev(j,i+nband) = 0.00001_dp
-                     endif
-                     G_dev(j,i)       = one / G_dev(j,i)**2
-                     G_dev(j,i+nband) = one / G_dev(j,i+nband)**2
-                 enddo ! over j={1,ntime} loop
-                 read(mytmp,*) ! skip two lines
-                 read(mytmp,*)
-             enddo ! over i={1,nband} loop
+                 else
+                     G_dev(j,i)       = devia
+                     G_dev(j,i+nband) = devia
+                 endif ! back if ( ntype == 0 ) block
+                 if ( abs(G_dev(j,i)) < 0.00001_dp ) then
+                     G_dev(j,i)       = 0.00001_dp
+                     G_dev(j,i+nband) = 0.00001_dp
+                 endif
+                 G_dev(j,i)       = one / G_dev(j,i)**2
+                 G_dev(j,i+nband) = one / G_dev(j,i+nband)**2
+             enddo ! over j={1,ntime} loop
+             read(mytmp,*) ! skip two lines
+             read(mytmp,*)
+         enddo ! over i={1,nband} loop
 
 ! close data file
-             close(mytmp)
-
-         else
-             call s_print_error('entropy_make_init1','file tau.grn.dat does not exist')
-         endif ! back if ( exists .eqv. .true. ) block
+         close(mytmp)
      endif ! back if ( myid == master ) block
 
 ! since the imaginary time function may be updated in master node, it is
