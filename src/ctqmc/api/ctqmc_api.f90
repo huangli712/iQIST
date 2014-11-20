@@ -694,7 +694,9 @@
 ! declare f2py directives
 !F2PY intent(in) size_t
 !F2PY intent(in) ktau_t
+!F2PY intent(in) ptau_t
 !F2PY depend(size_t) ktau_t
+!F2PY depend(size_t) ptau_t
 
      call cat_set_ktau(size_t, ktau_t, ptau_t)
 
