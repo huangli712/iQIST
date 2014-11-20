@@ -9,7 +9,7 @@ nalph = 1          ! nalph : number of alpha parameter used in parallel temperin
 nwarm = 2000       ! nwarm : maximum number of thermalization steps
 nstep = 200000     ! nstep : maximum number of quantum Monte Carlo sampling steps
 ndump = 2000       ! ndump : output period for stochastic analytic continuation code
-ltype = 2          ! ltype : measurement scheme
+ltype = 1          ! ltype : measurement scheme
 lemax = 64         ! lemax : maximum number of legendre polynomial
 legrd = 20001      ! legrd : number of mesh points for legendre polynomial
 !!------------------------------------------------------------------------
