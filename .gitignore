@@ -20,7 +20,7 @@ py_api.f90
 src/ctqmc/*/ctqmc
 entropy
 maxent
-sai
+sac
 mchi
 mdos
 mkra

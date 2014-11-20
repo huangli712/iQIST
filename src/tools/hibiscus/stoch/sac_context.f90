@@ -1,20 +1,23 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : context    module
-! source  : sai_context.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           01/10/2011 by li huang
-! purpose : define the key data structure and global arrays/variables for
-!           stochastic analytic continuation code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/stoch
+!!! program : context    module
+!!! source  : sac_context.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/10/2011 by li huang
+!!!           11/18/2014 by li huang
+!!! purpose : define the key data structure and global arrays/variables for
+!!!           stochastic analytic continuation code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> module context                                                   <<<
+!!========================================================================
+
+!!>>> containing memory management subroutines and define global variables
   module context
      use constants
      use control
@@ -33,7 +36,7 @@
 ! legendre polynomial defined on [-1,1]
      real(dp), public, save, allocatable :: ppleg(:,:)
 
-! precalculated delta function, to facilite the calculation of image function
+! pre-calculated delta function, to facilite the calculation of image function
      real(dp), public, save, allocatable :: delta(:,:)
 
 ! alpha-resolved image function, it is what we need
@@ -66,7 +69,7 @@
 ! imaginary time green's function from QMC quantum impurity solver: G(t)
      real(dp), public, save, allocatable :: G_qmc(:)
 
-! imaginary time green's function rescaled by the variance: G(t)/sigma(t)
+! imaginary time green's function rescaled by the variance: G(t)/\sigma(t)
      real(dp), public, save, allocatable :: G_tau(:)
 
 ! standard deviation of G(t) from QMC data: \sigma(t)
@@ -88,130 +91,133 @@
      real(dp), public, save, allocatable :: swap_reject(:)
      real(dp), public, save, allocatable :: swap_tcount(:)
 
-  contains
+  contains ! encapsulated functionality
 
-!>>> allocate module memory
-     subroutine sai_allocate_memory()
-         implicit none
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
+
+!!>>> sac_allocate_memory: allocate module memory
+  subroutine sac_allocate_memory()
+     implicit none
 
 ! status flag
-         integer :: istat
+     integer :: istat
 
 ! allocate memory
-         allocate(igamm(nalph,ngamm),        stat=istat)
-         allocate(rgamm(nalph,ngamm),        stat=istat)
-         allocate(fkern(ntime,ngrid),        stat=istat)
-         allocate(ppleg(legrd,lemax),        stat=istat)
+     allocate(igamm(nalph,ngamm),        stat=istat)
+     allocate(rgamm(nalph,ngamm),        stat=istat)
+     allocate(fkern(ntime,ngrid),        stat=istat)
+     allocate(ppleg(legrd,lemax),        stat=istat)
 
-         allocate(delta(-nwmax:nwmax,ngrid), stat=istat)
-         allocate(image(nalph,-nwmax:nwmax), stat=istat)
-         allocate(immpi(nalph,-nwmax:nwmax), stat=istat)
+     allocate(delta(-nwmax:nwmax,ngrid), stat=istat)
+     allocate(image(-nwmax:nwmax,nalph), stat=istat)
+     allocate(immpi(-nwmax:nwmax,nalph), stat=istat)
 
-         allocate(F_phi(-nwmax:nwmax),       stat=istat)
-         allocate(model(-nwmax:nwmax),       stat=istat)
+     allocate(F_phi(-nwmax:nwmax),       stat=istat)
+     allocate(model(-nwmax:nwmax),       stat=istat)
 
-         allocate(wmesh(-nwmax:nwmax),       stat=istat)
-         allocate(tmesh(ntime),              stat=istat)
-         allocate(pmesh(legrd),              stat=istat)
-         allocate(xgrid(ngrid),              stat=istat)
-         allocate(wgrid(ngrid),              stat=istat)
+     allocate(wmesh(-nwmax:nwmax),       stat=istat)
+     allocate(tmesh(ntime),              stat=istat)
+     allocate(pmesh(legrd),              stat=istat)
+     allocate(xgrid(ngrid),              stat=istat)
+     allocate(wgrid(ngrid),              stat=istat)
 
-         allocate(G_qmc(ntime),              stat=istat)
-         allocate(G_tau(ntime),              stat=istat)
-         allocate(G_dev(ntime),              stat=istat)
+     allocate(G_qmc(ntime),              stat=istat)
+     allocate(G_tau(ntime),              stat=istat)
+     allocate(G_dev(ntime),              stat=istat)
 
-         allocate(alpha(nalph),              stat=istat)
-         allocate(hamil(nalph),              stat=istat)
+     allocate(alpha(nalph),              stat=istat)
+     allocate(hamil(nalph),              stat=istat)
 
-         allocate(move_accept(nalph),        stat=istat)
-         allocate(move_reject(nalph),        stat=istat)
-         allocate(move_tcount(nalph),        stat=istat)
+     allocate(move_accept(nalph),        stat=istat)
+     allocate(move_reject(nalph),        stat=istat)
+     allocate(move_tcount(nalph),        stat=istat)
 
-         allocate(swap_accept(nalph),        stat=istat)
-         allocate(swap_reject(nalph),        stat=istat)
-         allocate(swap_tcount(nalph),        stat=istat)
-
+     allocate(swap_accept(nalph),        stat=istat)
+     allocate(swap_reject(nalph),        stat=istat)
+     allocate(swap_tcount(nalph),        stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call sai_print_error('sai_allocate_memory','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('sac_allocate_memory','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         igamm = 0
-         rgamm = zero
-         fkern = zero
-         ppleg = zero
+     igamm = 0
+     rgamm = zero
+     fkern = zero
+     ppleg = zero
 
-         delta = zero
-         image = zero
-         immpi = zero
+     delta = zero
+     image = zero
+     immpi = zero
 
-         F_phi = zero
-         model = zero
+     F_phi = zero
+     model = zero
 
-         wmesh = zero
-         tmesh = zero
-         pmesh = zero
-         xgrid = zero
-         wgrid = zero
+     wmesh = zero
+     tmesh = zero
+     pmesh = zero
+     xgrid = zero
+     wgrid = zero
 
-         G_qmc = zero
-         G_tau = zero
-         G_dev = zero
+     G_qmc = zero
+     G_tau = zero
+     G_dev = zero
 
-         alpha = zero
-         hamil = zero
+     alpha = zero
+     hamil = zero
 
-         move_accept = zero
-         move_reject = zero
-         move_tcount = zero
+     move_accept = zero
+     move_reject = zero
+     move_tcount = zero
 
-         swap_accept = zero
-         swap_reject = zero
-         swap_tcount = zero
+     swap_accept = zero
+     swap_reject = zero
+     swap_tcount = zero
 
-         return
-     end subroutine sai_allocate_memory
+     return
+  end subroutine sac_allocate_memory
 
-!>>> deallocate module memory
-     subroutine sai_deallocate_memory()
-         implicit none
+!!>>> sac_deallocate_memory: deallocate module memory
+  subroutine sac_deallocate_memory()
+     implicit none
 
-         if ( allocated(igamm) )  deallocate(igamm)
-         if ( allocated(rgamm) )  deallocate(rgamm)
-         if ( allocated(fkern) )  deallocate(fkern)
-         if ( allocated(ppleg) )  deallocate(ppleg)
+     if ( allocated(igamm) )  deallocate(igamm)
+     if ( allocated(rgamm) )  deallocate(rgamm)
+     if ( allocated(fkern) )  deallocate(fkern)
+     if ( allocated(ppleg) )  deallocate(ppleg)
 
-         if ( allocated(delta) )  deallocate(delta)
-         if ( allocated(image) )  deallocate(image)
-         if ( allocated(immpi) )  deallocate(immpi)
+     if ( allocated(delta) )  deallocate(delta)
+     if ( allocated(image) )  deallocate(image)
+     if ( allocated(immpi) )  deallocate(immpi)
 
-         if ( allocated(F_phi) )  deallocate(F_phi)
-         if ( allocated(model) )  deallocate(model)
+     if ( allocated(F_phi) )  deallocate(F_phi)
+     if ( allocated(model) )  deallocate(model)
 
-         if ( allocated(wmesh) )  deallocate(wmesh)
-         if ( allocated(tmesh) )  deallocate(tmesh)
-         if ( allocated(pmesh) )  deallocate(pmesh)
-         if ( allocated(xgrid) )  deallocate(xgrid)
-         if ( allocated(wgrid) )  deallocate(wgrid)
+     if ( allocated(wmesh) )  deallocate(wmesh)
+     if ( allocated(tmesh) )  deallocate(tmesh)
+     if ( allocated(pmesh) )  deallocate(pmesh)
+     if ( allocated(xgrid) )  deallocate(xgrid)
+     if ( allocated(wgrid) )  deallocate(wgrid)
 
-         if ( allocated(G_qmc) )  deallocate(G_qmc)
-         if ( allocated(G_tau) )  deallocate(G_tau)
-         if ( allocated(G_dev) )  deallocate(G_dev)
+     if ( allocated(G_qmc) )  deallocate(G_qmc)
+     if ( allocated(G_tau) )  deallocate(G_tau)
+     if ( allocated(G_dev) )  deallocate(G_dev)
 
-         if ( allocated(alpha) )  deallocate(alpha)
-         if ( allocated(hamil) )  deallocate(hamil)
+     if ( allocated(alpha) )  deallocate(alpha)
+     if ( allocated(hamil) )  deallocate(hamil)
 
-         if ( allocated(move_accept) ) deallocate(move_accept)
-         if ( allocated(move_reject) ) deallocate(move_reject)
-         if ( allocated(move_tcount) ) deallocate(move_tcount)
+     if ( allocated(move_accept) ) deallocate(move_accept)
+     if ( allocated(move_reject) ) deallocate(move_reject)
+     if ( allocated(move_tcount) ) deallocate(move_tcount)
 
-         if ( allocated(swap_accept) ) deallocate(swap_accept)
-         if ( allocated(swap_reject) ) deallocate(swap_reject)
-         if ( allocated(swap_tcount) ) deallocate(swap_tcount)
+     if ( allocated(swap_accept) ) deallocate(swap_accept)
+     if ( allocated(swap_reject) ) deallocate(swap_reject)
+     if ( allocated(swap_tcount) ) deallocate(swap_tcount)
 
-         return
-     end subroutine sai_deallocate_memory
+     return
+  end subroutine sac_deallocate_memory
 
   end module context
