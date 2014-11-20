@@ -263,6 +263,47 @@
 
 # endif  /* API */
 
+!!>>> cat_solver_id: return the solver identity
+  subroutine cat_solver_id(I_solver_id)
+     use api, only : T_segment_azalea
+
+     implicit none
+
+! external arguments
+! solver identity
+     integer, intent(out) :: I_solver_id
+
+! local variables
+! type structure of generic solver
+     type (T_segment_azalea) :: I_solver
+
+     I_solver_id = I_solver%solver_id
+
+     return
+  end subroutine cat_solver_id
+
+!!>>> cat_solver_status: return the solver status
+  subroutine cat_solver_status(I_solver_status)
+     use api, only : T_segment_azalea
+
+     implicit none
+
+! external arguments
+! solver status
+     integer, intent(out) :: I_solver_status
+
+! local variables
+! type structure of generic solver
+     type (T_segment_azalea) :: I_solver
+
+     I_solver_status = I_solver%solver_is_ready
+     if ( I_solver_status == 0 ) then
+         call s_print_error('cat_solver_status','Sorry, the current solver is not ready!')
+     endif ! back if ( I_solver_status == 0 ) block
+
+     return
+  end subroutine cat_solver_status
+
 # if !defined (F2PY)
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
