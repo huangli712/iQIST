@@ -675,24 +675,28 @@
      return
   end subroutine set_eimp
 
-!!>>> set_ktau: setup the kernel function for dynamical screening effect
-! note: only the narcissus code will implement the cat_set_ktau()
-  subroutine set_ktau(size_t, ktau_t)
+!!>>> set_ktau: setup the screening function and its first derivates for
+!!>>> the dynamical screening effect
+!!>>> note: only the narcissus code will implement the cat_set_ktau()
+  subroutine set_ktau(size_t, ktau_t, ptau_t)
      implicit none
 
 ! external arguments
 ! size of ktau
      integer, intent(in)  :: size_t
 
-! kernel function
+! screening function K(\tau)
      real(dp), intent(in) :: ktau_t(size_t)
+
+! first derivates of screening function K'(\tau)
+     real(dp), intent(in) :: ptau_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
 !F2PY intent(in) ktau_t
 !F2PY depend(size_t) ktau_t
 
-     call cat_set_ktau(size_t, ktau_t)
+     call cat_set_ktau(size_t, ktau_t, ptau_t)
 
      return
   end subroutine set_ktau
