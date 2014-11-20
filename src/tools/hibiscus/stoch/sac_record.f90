@@ -32,6 +32,9 @@
 ! loop index of alpha parameters
      integer  :: ia
 
+! status flag
+     integer  :: istat
+
 ! integer dummy variables
      integer  :: si, curr
 
@@ -39,7 +42,10 @@
      real(dp) :: sr, step
 
 ! dummy image function
-     real(dp) :: image_t(-nwmax:nwmax)
+     real(dp), allocatable :: image_t(:)
+
+! allocate memory
+     allocate(image_t(-nwmax:nwmax), stat=istat)
 
      ALPH_LOOP: do ia=1,nalph
 
@@ -73,6 +79,9 @@
          image(:,ia) = image(:,ia) + image_t
 
      enddo ALPH_LOOP ! over ia={1,nalph} loop
+
+! deallocate memory
+     deallocate(image_t)
 
      return
   end subroutine sac_recording
