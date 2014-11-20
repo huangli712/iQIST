@@ -1,70 +1,69 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : control    module
-! source  : sai_control.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/10/2011 by li huang
-! purpose : define global control parameters for stochastic analytic
-!           continuation code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/stoch
+!!! program : control    module
+!!! source  : sac_control.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/10/2011 by li huang
+!!!           11/18/2014 by li huang
+!!! purpose : define global control parameters for stochastic analytic
+!!!           continuation code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
   module control
-     use constants
+     use constants, only : dp
 
      implicit none
 
-!=========================================================================
-!>>> integer variables                                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> integer variables                                                <<<
+!!========================================================================
 
-! number of imaginary time slice sampling by continuous time or hirsh-fye
+! number of imaginary time slices sampling by continuous time or hirsh-fye
 ! quantum Monte Carlo quantum impurity solver
-     integer, public, save  :: ntime = 1024
+     integer, public, save :: ntime = 1024
 
-! number of frequency point on half axis, energy range can be expressed by
+! number of frequency points on half axis, energy range can be expressed by
 ! [ -wstep * nwmax, wstep * nwmax ]
-     integer, public, save  :: nwmax = 128
+     integer, public, save :: nwmax = 128
 
-! number of slice of x in [0,1]
-     integer, public, save  :: ngrid = 10001
+! number of slices of x in [0,1]
+     integer, public, save :: ngrid = 10001
 
-! number of configuration, dimension for r_{\gamma} and a_{\gamma}
-     integer, public, save  :: ngamm = 1024
+! number of configurations, dimension for r_{\gamma} and a_{\gamma}
+     integer, public, save :: ngamm = 1024
 
-! number of alpha parameter used in parallel tempering
+! number of alpha parameters used in parallel tempering
 ! note: it must be an even number, since we need to exchange configurations
 ! between different alpha channel
-     integer, public, save  :: nalph = 10
+     integer, public, save :: nalph = 10
 
 ! maximum number of thermalization steps
-     integer, public, save  :: nwarm = 4000
+     integer, public, save :: nwarm = 4000
 
 ! maximum number of quantum Monte Carlo sampling steps
-     integer, public, save  :: nstep = 4000000
+     integer, public, save :: nstep = 4000000
 
 ! output period for stochastic analytic continuation code
-     integer, public, save  :: ndump = 40000
+     integer, public, save :: ndump = 40000
 
 ! measurement scheme
-! note: if ltype == 1, normal measurement; if ltype == 2, using legendre
-! polynomial representation.
-     integer, public, save  :: ltype = 1
+! if ltype == 1, normal measurement
+! if ltype == 2, using legendre polynomial representation
+     integer, public, save :: ltype = 1
 
 ! maximum order for legendre polynomial
-     integer, public, save  :: lemax = 64
+     integer, public, save :: lemax = 64
 
 ! number of mesh points for legendre polynomial in [-1,1] range
-     integer, public, save  :: legrd = 20001
+     integer, public, save :: legrd = 20001
 
-!=========================================================================
-!>>> real variables                                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> real variables                                                   <<<
+!!========================================================================
 
 ! initial alpha parameter
      real(dp), public, save :: ainit = 1.00_dp
@@ -85,9 +84,9 @@
 ! frequency step, used to build the frequency mesh
      real(dp), public, save :: wstep = 0.05_dp
 
-!=========================================================================
-!>>> MPI related common variables                                      <<<
-!=========================================================================
+!!========================================================================
+!!>>> MPI related common variables                                     <<<
+!!========================================================================
 
 ! number of processors: default value 1
      integer, public, save :: nprocs = 1

@@ -1,28 +1,29 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : sai_warmming
-!           sai_sampling
-!           sai_make_mov1
-!           sai_make_mov2
-!           sai_make_swap
-! source  : sai_update.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/09/2011 by li huang
-!           01/11/2011 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for stochastic analytic continuation code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/stoch
+!!! program : sac_warmming
+!!!           sac_sampling
+!!!           sac_make_mov1
+!!!           sac_make_mov2
+!!!           sac_make_swap
+!!! source  : sac_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! history : 01/09/2011 by li huang
+!!!           01/11/2011 by li huang
+!!!           11/18/2014 by li huang
+!!! purpose : to provide some basic infrastructures (elementary updating
+!!!           subroutines) for stochastic analytic continuation code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> warm up the configurations
-  subroutine sai_warmming()
-     use constants
-     use control
-     use context
+!!>>> sac_warmming: warm up the configurations
+  subroutine sac_warmming()
+     use constants, only : zero
+
+     use control, only : nwarm
+     use context, only : move_accept, move_reject, move_tcount
+     use context, only : swap_accept, swap_reject, swap_tcount
 
      implicit none
 
@@ -31,7 +32,7 @@
      integer :: i
 
      do i=1,nwarm
-         call sai_sampling()
+         call sac_sampling()
      enddo ! over i={1,nwarm} loop
 
 ! reset the statistics
@@ -44,14 +45,14 @@
      swap_tcount = zero
 
      return
-  end subroutine sai_warmming
+  end subroutine sac_warmming
 
-!>>> selector, choose update scheme
-  subroutine sai_sampling()
-     use constants
-     use control
+!!>>> sac_sampling: selector, choose update scheme randomly
+  subroutine sac_sampling()
+     use constants, only : dp
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : nalph
 
      implicit none
 
@@ -60,36 +61,44 @@
      integer :: i
 
 ! perform local update action
-     if ( spring_sfmt_stream() < 0.90_dp .or. nalph == 1 ) then
+     if ( spring_sfmt_stream() < 0.90_dp ) then
          if ( spring_sfmt_stream() > 0.50_dp ) then
              do i=1,nalph
-                 call sai_make_mov1(i)
+                 call sac_make_mov1(i)
              enddo ! over i={1,nalph} loop
          else
              do i=1,nalph
-                 call sai_make_mov2(i)
+                 call sac_make_mov2(i)
              enddo ! over i={1,nalph} loop
          endif ! back if ( spring_sfmt_stream() > 0.50_dp ) block
 ! perform global update action
-! note: if nalph == 1, the global update is forbidden
      else
-         if ( spring_sfmt_stream() > 0.10_dp ) then
-             call sai_make_swap(1)
-         else
-             call sai_make_swap(2)
-         endif ! back if ( spring_sfmt_stream() > 0.10_dp ) block
-     endif ! back if ( spring_sfmt_stream() < 0.90_dp .or. nalph == 1 ) block
+! note: if nalph == 1, the global update is forbidden
+         if ( nalph > 1 ) then
+             if ( spring_sfmt_stream() > 0.10_dp ) then
+                 call sac_make_swap(1)
+             else
+                 call sac_make_swap(2)
+             endif ! back if ( spring_sfmt_stream() > 0.10_dp ) block
+         endif ! back if ( nalph > 1 ) block
+     endif ! back if ( spring_sfmt_stream() < 0.90_dp ) block
 
      return
-  end subroutine sai_sampling
+  end subroutine sac_sampling
 
-!>>> standard update, move the configurations: shift the weight
-  subroutine sai_make_mov1(ia)
-     use constants
-     use control
-     use context
+!!>>> sac_make_mov1: standard update 1, move the configurations
+!!>>> i.e., shift the weights
+  subroutine sac_make_mov1(ia)
+     use constants, only : dp, zero, one, two
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : ntime, ngamm
+     use context, only : igamm, rgamm
+     use context, only : fkern
+     use context, only : tmesh
+     use context, only : G_dev
+     use context, only : alpha, hamil
+     use context, only : move_accept, move_reject, move_tcount
 
      implicit none
 
@@ -128,7 +137,7 @@
      dhc = zero
 
 ! build initial h_C from input configuration r_{\gamma} and a_{\gamma}
-     call sai_make_hamil0( rgamm(ia,:), igamm(ia,:), hc )
+     call sac_make_hamil0( rgamm(ia,:), igamm(ia,:), hc )
 
 ! generate two random integers in [1,ngamm] as \lambda1, \lambda2
      do while ( .true. )
@@ -166,7 +175,7 @@
      pass = .false.
      if ( dhh <= zero .or. exp( -alpha(ia) * dhh ) > spring_sfmt_stream() ) then
          pass = .true.
-     endif
+     endif ! back if ( dhh <= zero .or. exp( -alpha(ia) * dhh ) > spring_sfmt_stream() ) block
 
 ! if update action is accepted
      if ( pass .eqv. .true. ) then
@@ -188,18 +197,24 @@
      endif ! back if ( pass .eqv. .true. ) block
 
 ! recalculate hamiltonian in new configuration
-     call sai_make_hamil1( hc, hamil(ia) )
+     call sac_make_hamil1( hc, hamil(ia) )
 
      return
-  end subroutine sai_make_mov1
+  end subroutine sac_make_mov1
 
-!>>> standard update, move the configurations: shift the coordinates
-  subroutine sai_make_mov2(ia)
-     use constants
-     use control
-     use context
+!!>>> sac_make_mov2: standard update 2, move the configurations,
+!!>>> i.e., shift the coordinates
+  subroutine sac_make_mov2(ia)
+     use constants, only : dp, zero, one, two
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : ntime, ngrid, ngamm
+     use context, only : igamm, rgamm
+     use context, only : fkern
+     use context, only : tmesh
+     use context, only : G_dev
+     use context, only : alpha, hamil
+     use context, only : move_accept, move_reject, move_tcount
 
      implicit none
 
@@ -238,7 +253,7 @@
      dhc = zero
 
 ! build initial h_C from input configuration r_{\gamma} and a_{\gamma}
-     call sai_make_hamil0( rgamm(ia,:), igamm(ia,:), hc )
+     call sac_make_hamil0( rgamm(ia,:), igamm(ia,:), hc )
 
 ! generate two random integers in [1,ngamm] as \lambda1, \lambda2
      do while ( .true. )
@@ -271,7 +286,7 @@
      pass = .false.
      if ( dhh <= zero .or. exp( -alpha(ia) * dhh ) > spring_sfmt_stream() ) then
          pass = .true.
-     endif
+     endif ! back if ( dhh <= zero .or. exp( -alpha(ia) * dhh ) > spring_sfmt_stream() ) block
 
 ! if update action is accepted
      if ( pass .eqv. .true. ) then
@@ -293,25 +308,27 @@
      endif ! back if ( pass .eqv. .true. ) block
 
 ! recalculate hamiltonian in new configuration
-     call sai_make_hamil1( hc, hamil(ia) )
+     call sac_make_hamil1( hc, hamil(ia) )
 
      return
-  end subroutine sai_make_mov2
+  end subroutine sac_make_mov2
 
-!>>> global update, parallel tempering
-  subroutine sai_make_swap(scheme)
-     use constants
-     use control
-     use context
+!!>>> sac_make_swap: global update, parallel tempering
+  subroutine sac_make_swap(scheme)
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : ntime, ngamm, nalph
+     use context, only : igamm, rgamm
+     use context, only : alpha, hamil
+     use context, only : swap_accept, swap_reject, swap_tcount
 
      implicit none
 
 ! external arguments
 ! swap scheme
-! if scheme == 1, swap alpha with neighbour
-! if scheme == 2, swap alpha randomly
+! if scheme == 1, swap alpha-related with neighbour
+! if scheme == 2, swap alpha-related randomly
      integer, intent(in) :: scheme
 
 ! local variables
@@ -331,25 +348,30 @@
 ! current h_C(\tau)
      real(dp) :: hc(ntime)
 
+! check nalph
+     call s_assert( nalph > 1 )
+
 ! init h_C
      hc = zero
 
+! scheme 1:
      if ( scheme == 1 ) then
 
 ! choose the first alpha index randomly
          i = ceiling( spring_sfmt_stream() * nalph )
 
 ! determine its neighbour
-         if ( spring_sfmt_stream() > half ) then
+         if ( spring_sfmt_stream() > 0.5_dp ) then
              j = i + 1
          else
              j = i - 1
-         endif
+         endif ! back if ( spring_sfmt_stream() > 0.5_dp ) block
 
 ! check the second alpha index
          if ( i == 1 ) j = i + 1
          if ( i == nalph ) j = i - 1
 
+! scheme 2:
      else
 
 ! choose two alpha configuration randomly
@@ -371,14 +393,14 @@
 ! if this update action is accepted, swap two configurations
 ! and hamiltonian is also recalculated
      if ( pass .eqv. .true. ) then
-         call iswap(ngamm, igamm(i, :),    igamm(j, :)   )
-         call dswap(ngamm, rgamm(i, :), 1, rgamm(j, :), 1)
+         call s_swap_i( ngamm, igamm(i,:), igamm(j,:) )
+         call s_swap_d( ngamm, rgamm(i,:), rgamm(j,:) )
 
-         call sai_make_hamil0( rgamm(i,:), igamm(i,:), hc )
-         call sai_make_hamil1( hc, hamil(i) )
+         call sac_make_hamil0( rgamm(i,:), igamm(i,:), hc )
+         call sac_make_hamil1( hc, hamil(i) )
 
-         call sai_make_hamil0( rgamm(j,:), igamm(j,:), hc )
-         call sai_make_hamil1( hc, hamil(j) )
+         call sac_make_hamil0( rgamm(j,:), igamm(j,:), hc )
+         call sac_make_hamil1( hc, hamil(j) )
      endif ! back if ( pass .eqv. .true. ) block
 
 ! update the accept/reject statistics
@@ -393,32 +415,4 @@
      endif ! back if ( pass .eqv. .true. ) block
 
      return
-
-  contains
-
-!>>> extended BLAS subroutines, exchange two integer vectors
-  pure subroutine iswap(n, ix, iy)
-     implicit none
-
-! external arguments
-! dimension of integer vector
-     integer, intent(in) :: n
-
-! integer vector X
-     integer, intent(inout) :: ix(n)
-
-! integer vector Y
-     integer, intent(inout) :: iy(n)
-
-! local variables
-! dummy integer vector
-     integer :: it(n)
-
-     it = ix
-     ix = iy
-     iy = it
-
-     return
-  end subroutine iswap
-
-  end subroutine sai_make_swap
+  end subroutine sac_make_swap

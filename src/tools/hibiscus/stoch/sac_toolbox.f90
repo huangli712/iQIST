@@ -1,60 +1,35 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : sai_make_mesh
-!           sai_make_grid
-!           sai_make_fphi
-!           sai_make_const
-!           sai_make_gauss
-!           sai_make_alpha
-!           sai_make_rgamm
-!           sai_make_delta
-!           sai_make_ppleg
-!           sai_warp_image
-!           sai_make_normal
-!           sai_make_hamil0
-!           sai_make_hamil1
-!           sai_make_kernel
-! source  : sai_toolbox.f90
-! type    : functions & subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 10/01/2008 by li huang
-!           01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           12/13/2011 by li huang
-! purpose : to provide utility functions and subroutines for stochastic
-!           analytic continuation code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/stoch
+!!! program : sac_make_grid
+!!!           sac_make_fphi
+!!!           sac_make_const
+!!!           sac_make_gauss
+!!!           sac_make_alpha
+!!!           sac_make_rgamm
+!!!           sac_make_delta
+!!!           sac_make_ppleg
+!!!           sac_warp_image
+!!!           sac_make_normal
+!!!           sac_make_hamil0
+!!!           sac_make_hamil1
+!!!           sac_make_kernel
+!!! source  : sac_toolbox.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 10/01/2008 by li huang
+!!!           12/13/2011 by li huang
+!!! purpose : to provide utility functions and subroutines for stochastic
+!!!           analytic continuation code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> build equidistance frequency mesh, [ -wstep * nwmax, +wstep * nwmax ]
-  subroutine sai_make_mesh(mesh)
-     use constants
-     use control
+!!>>> sac_make_grid: build wgrid and xgrid, very dense grids
+  subroutine sac_make_grid(wgrid, xgrid)
+     use constants, only : dp, zero, one, two, half
 
-     implicit none
-
-! external arguments
-! frequency mesh
-     real(dp), intent(out) :: mesh(-nwmax:nwmax)
-
-! local variables
-! loop index
-     integer :: i
-
-     do i=-nwmax,nwmax
-         mesh(i) = real(i) * wstep
-     enddo ! over i={-nwmax,nwmax} loop
-
-     return
-  end subroutine sai_make_mesh
-
-!>>> build wgrid and xgrid, very dense grid
-  subroutine sai_make_grid(wgrid, xgrid)
-     use constants
-     use control
+     use control, only : nwmax, ngrid
+     use control, only : sigma, wstep
 
      implicit none
 
@@ -76,39 +51,36 @@
      real(dp) :: model(ngrid)
 
 ! build wgrid
-     f = two * wstep * nwmax
-     do i=1,ngrid
-         wgrid(i) = f * ( i - 1 - ( ngrid - 1 ) / two ) / real( ngrid - 1 )
-     enddo ! over i={1,ngrid} loop
+     call s_linspace_d( -wstep*nwmax, +wstep*nwmax, ngrid, wgrid )
 
 ! build default model according to sigma
+! case 1: gaussian model
      if ( sigma > zero ) then
          f = half / ( sigma * sigma )
          do i=1,ngrid
              model(i) = exp( - f * wgrid(i) * wgrid(i) )
          enddo ! over i={1,ngrid} loop
+! case 2: flat model
      else
-         do i=1,ngrid
-             model(i) = one
-         enddo ! over i={1,ngrid} loop
+         model = one
      endif ! back if ( sigma > zero ) block
 
 ! normalization default model
-     call sai_make_normal( ngrid, one, model )
+     call sac_make_normal( ngrid, one, model )
 
 ! build xgrid
-     do i=1,ngrid
-         xgrid(i) = sum( model(1:i) )
-     enddo ! over i={1,ngrid} loop
+     call s_cumsum_d( ngrid, model, xgrid )
 
      return
-  end subroutine sai_make_grid
+  end subroutine sac_make_grid
 
-!>>> calculate \phi(\omega), it is belong to [0, 1]
+!!>>> sac_make_fphi: calculate \phi(\omega), it is belong to [0, 1]
 ! please refer to equation (16)
-  subroutine sai_make_fphi(model, fphi)
-     use constants
-     use control
+  subroutine sac_make_fphi(model, fphi)
+     use constants, only : dp
+
+     use control, only : nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -119,21 +91,18 @@
 ! \phi(\omega)
      real(dp), intent(out) :: fphi(-nwmax:nwmax)
 
-! local variables
-! loop index
-     integer :: i
-
-     do i=-nwmax,nwmax
-         fphi(i) = sum( model(-nwmax:i) ) * wstep
-     enddo ! over i={-nwmax,nwmax} loop
+     call s_cumsum_d( 2*nwmax+1, model, fphi )
+     fphi = fphi * wstep
 
      return
-  end subroutine sai_make_fphi
+  end subroutine sac_make_fphi
 
-!>>> build default model: flat
-  subroutine sai_make_const(model)
-     use constants
-     use control
+!!>>> sac_make_const: build default model (flat model)
+  subroutine sac_make_const(model)
+     use constants, only : dp, one
+
+     use control, only : nwmax
+     use control, only : wstep
 
      implicit none
 
@@ -141,25 +110,21 @@
 ! default model
      real(dp), intent(out) :: model(-nwmax:nwmax)
 
-! local variables
-! loop index
-     integer :: i
-
 ! build model
-     do i=-nwmax,nwmax
-         model(i) = one
-     enddo ! over i={-nwmax,nwmax} loop
+     model = one
 
 ! enforce it to be normalized
-     call sai_make_normal( 2*nwmax+1, wstep, model )
+     call sac_make_normal( 2*nwmax+1, wstep, model )
 
      return
-  end subroutine sai_make_const
+  end subroutine sac_make_const
 
-!>>> build default model: gaussian
-  subroutine sai_make_gauss(model)
-     use constants
-     use control
+!!>>> sac_make_gauss: build default model: gaussian
+  subroutine sac_make_gauss(model)
+     use constants, only : dp, half
+
+     use control, only : nwmax
+     use control, only : sigma, wstep
      use context, only : wmesh
 
      implicit none
@@ -182,15 +147,17 @@
      enddo ! over i={-nwmax,nwmax} loop
 
 ! enforce it to be normalized
-     call sai_make_normal( 2*nwmax+1, wstep, model )
+     call sac_make_normal( 2*nwmax+1, wstep, model )
 
      return
-  end subroutine sai_make_gauss
+  end subroutine sac_make_gauss
 
-!>>> build alpha parameters list
-  subroutine sai_make_alpha(alpha)
-     use constants
-     use control
+!!>>> sac_make_alpha: build alpha parameters list
+  subroutine sac_make_alpha(alpha)
+     use constants, only : dp
+
+     use control, only : nalph
+     use control, only : ainit, ratio
 
      implicit none
 
@@ -208,14 +175,14 @@
      enddo ! over i={1,nalph} loop
 
      return
-  end subroutine sai_make_alpha
+  end subroutine sac_make_alpha
 
-!>>> build rgamm and igamm, randomly
-  subroutine sai_make_rgamm(igamm, rgamm)
-     use constants
-     use control
+!!>>> sac_make_rgamm: build rgamm and igamm, randomly
+  subroutine sac_make_rgamm(igamm, rgamm)
+     use constants, only : dp, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : ngrid, ngamm, nalph
 
      implicit none
 
@@ -241,17 +208,19 @@
          enddo ! over i={1,ngamm} loop
 
 ! enforce \sum_{\gamma} r_{\gamma} = 1, it is necessary
-         call sai_make_normal( ngamm, one, rgamm(j,:) )
+         call sac_make_normal( ngamm, one, rgamm(j,:) )
 
      enddo ! over j={1,nalph} loop
 
      return
-  end subroutine sai_make_rgamm
+  end subroutine sac_make_rgamm
 
-!>>> build the delta function in advance
-  subroutine sai_make_delta(xgrid, F_phi, delta)
-     use constants
-     use control
+!!>>> sac_make_delta: build the delta function in advance
+  subroutine sac_make_delta(xgrid, F_phi, delta)
+     use constants, only : dp
+
+     use control, only : nwmax, ngrid
+     use control, only : eta1, eta2
 
      implicit none
 
@@ -276,70 +245,30 @@
      do j=-nwmax,nwmax
          do i=1,ngrid
              s = F_phi(j) - xgrid(i)
-             delta(j,i) = eta1 / ( s * s + eta2 ) 
+             delta(j,i) = eta1 / ( s * s + eta2 )
          enddo ! over i={1,ngrid} loop
      enddo ! over j={-nwmax,nwmax} loop
 
      return
-  end subroutine sai_make_delta
+  end subroutine sac_make_delta
 
-!>>> build the legendre polynomial and related mesh
-  subroutine sai_make_ppleg(ppleg, pmesh)
-     use constants
-     use control
+!!>>> sac_warp_image: convert the image function from legendre polynomial
+!!>>> representation to normal representation
+  subroutine sac_warp_image(image_l, image_t)
+     use constants, only : dp, zero, one, two
 
-     implicit none
-
-! external arguments
-! frequency mesh in which legendre polynomial is defined
-     real(dp), intent(out) :: pmesh(legrd)
-
-! legendre polynomial
-     real(dp), intent(out) :: ppleg(legrd,lemax)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-     integer :: k
-
-! build mesh for legendre polynomial in [-1,1]
-     do i=1,legrd
-         pmesh(i) = real(i - 1) * two / real(legrd - 1) - one
-     enddo ! over i={1,legrd} loop
-
-! build legendre polynomial in [-1,1]
-     if ( lemax <= 2 ) then
-         call sai_print_error('sai_selfer_init','lemax must be larger than 2')
-     endif
-
-     do i=1,legrd
-         ppleg(i,1) = one
-         ppleg(i,2) = pmesh(i)
-         do j=3,lemax
-             k = j - 1
-             ppleg(i,j) = ( real(2*k-1) * pmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
-         enddo ! over j={3,lemax} loop
-     enddo ! over i={1,legrd} loop
-
-     return
-  end subroutine sai_make_ppleg
-
-!>>> convert the image function from legendre polynomial representation to
-! normal representation
-  subroutine sai_warp_image(image_l, image_t)
-     use constants
-     use control
-     use context
+     use control, only : nwmax, nalph
+     use control, only : lemax, legrd
+     use context, only : ppleg, wmesh
 
      implicit none
 
 ! external arguments
 ! image function in legendre polynomial representation
-     real(dp), intent(in)  :: image_l(nalph,lemax)
+     real(dp), intent(in)  :: image_l(lemax,nalph)
 
 ! image function in normal representation
-     real(dp), intent(out) :: image_t(nalph,-nwmax:nwmax)
+     real(dp), intent(out) :: image_t(-nwmax:nwmax,nalph)
 
 ! local variables
 ! loop index
@@ -367,18 +296,17 @@
              curr = nint(raux * step) + 1
              do fleg=1,lemax
                  raux = sqrt(two * fleg - 1)
-                 image_t(i,j) = image_t(i,j) + raux * image_l(i,fleg) * ppleg(curr,fleg)
+                 image_t(j,i) = image_t(j,i) + raux * image_l(fleg,i) * ppleg(curr,fleg)
              enddo ! over fleg={1,lemax} loop
          enddo ! over j={-nwmax,nwmax} loop
      enddo ! over i={1,nalph} loop
 
      return
-  end subroutine sai_warp_image
+  end subroutine sac_warp_image
 
-!>>> normalize a given function
-  subroutine sai_make_normal(ndim, weight, vector)
-     use constants
-     use control
+!!>>> sac_make_normal: normalize a given function
+  subroutine sac_make_normal(ndim, weight, vector)
+     use constants, only : dp
 
      implicit none
 
@@ -393,26 +321,23 @@
      real(dp), intent(inout) :: vector(ndim)
 
 ! local variables
-! loop index
-     integer  :: i
-
 ! norm of given function
      real(dp) :: norm
 
      norm = sum(vector) * weight
-     do i=1,ndim
-        vector(i) = vector(i) / norm
-     enddo ! over i={1,ndim} loop
+     vector = vector / norm
 
      return
-  end subroutine sai_make_normal
+  end subroutine sac_make_normal
 
-!>>> calculate hamiltonian, h_C(\tau)
-! please refer to equation (39)
-  subroutine sai_make_hamil0(rg, ig, hc)
-     use constants
-     use control
-     use context
+!!>>> sac_make_hamil0: calculate hamiltonian, h_C(\tau)
+!!>>> please refer to equation (39)
+  subroutine sac_make_hamil0(rg, ig, hc)
+     use constants, only : dp, zero
+
+     use control, only : ntime, ngamm
+     use context, only : fkern
+     use context, only : G_tau, G_dev
 
      implicit none
 
@@ -441,14 +366,15 @@
      enddo ! over i={1,ntime} loop
 
      return
-  end subroutine sai_make_hamil0
+  end subroutine sac_make_hamil0
 
-!>>> calculate hamiltonian: H_C
-! please refer to equation (35)
-  subroutine sai_make_hamil1(hc, hh)
-     use constants
-     use control
-     use context
+!!>>> sac_make_hamil1: calculate hamiltonian: H_C
+!!>>> please refer to equation (35)
+  subroutine sac_make_hamil1(hc, hh)
+     use constants, only : dp, zero
+
+     use control, only : ntime
+     use context, only : tmesh
 
      implicit none
 
@@ -459,25 +385,19 @@
 ! H_C term
      real(dp), intent(out) :: hh
 
-! local variables
-! loop index
-     integer :: i
-
 ! H_C = \int_0^{\beta} ( h_C(\tau) )^2
-     hh = zero
-     do i=1,ntime
-         hh = hh + hc(i) * hc(i)
-     enddo ! over i={1,ntime} loop
-     hh = hh * ( tmesh(2) - tmesh(1) )
+     hh = dot_product(hc, hc) * ( tmesh(2) - tmesh(1) )
 
      return
-  end subroutine sai_make_hamil1
+  end subroutine sac_make_hamil1
 
-!>>> calculate kernel function
-! please refer to equation (7)
-  subroutine sai_make_kernel(kern)
-     use constants, only : dp, one, zero
-     use control, only : beta, ntime, ngrid
+!!>>> sac_make_kernel: calculate kernel function
+!!>>> please refer to equation (7)
+  subroutine sac_make_kernel(kern)
+     use constants, only : dp, zero, one
+
+     use control, only : ntime, ngrid
+     use control, only : beta
      use context, only : tmesh, wgrid
 
      implicit none
@@ -504,10 +424,10 @@
              if ( omega >= zero )then
                  kern(i,j) = exp(        - tau   * omega ) / ( one + exp( - beta * omega ) )
              else
-                 kern(i,j) = exp( ( beta - tau ) * omega ) / ( one + exp(   beta * omega ) ) 
-             endif
+                 kern(i,j) = exp( ( beta - tau ) * omega ) / ( one + exp(   beta * omega ) )
+             endif ! back if ( omega >= zero ) block
          enddo ! over i={1,ntime} loop
      enddo ! over j={1,ngrid} loop
 
      return
-  end subroutine sai_make_kernel
+  end subroutine sac_make_kernel

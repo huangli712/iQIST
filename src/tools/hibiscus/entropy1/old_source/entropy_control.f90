@@ -1,32 +1,35 @@
-!!!-----------------------------------------------------------------------
-!!! project : hibiscus/entropy1
-!!! program : control    module
-!!! source  : entropy_control.f90
-!!! type    : module
-!!! author  : li huang (email:huangli712@gmail.com)
-!!! history : 01/08/2011 by li huang
-!!!           01/26/2011 by li huang
-!!!           11/17/2014 by li huang
-!!! purpose : define global control parameters for classic maximum entropy
-!!!           method code
-!!! status  : unstable
-!!! comment :
-!!!-----------------------------------------------------------------------
+!-------------------------------------------------------------------------
+! project : hibiscus
+! program : control    module
+! source  : entropy_control.f90
+! type    : module
+! author  : li huang (email:huangli712@yahoo.com.cn)
+! history : 01/08/2011 by li huang
+!           01/10/2011 by li huang
+!           01/19/2011 by li huang
+!           01/26/2011 by li huang
+! purpose : define global control parameters for classic maximum entropy
+!           method code
+! input   :
+! output  :
+! status  : unstable
+! comment :
+!-------------------------------------------------------------------------
 
   module control
      use constants, only : dp
 
      implicit none
 
-!!========================================================================
-!!>>> integer variables                                                <<<
-!!========================================================================
+!=========================================================================
+!>>> integer variables                                                 <<<
+!=========================================================================
 
-! number of imaginary time slices sampling by continuous time or hirsh-fye
+! number of imaginary time slice sampling by continuous time or hirsh-fye
 ! quantum Monte Carlo quantum impurity solver
      integer, public, save :: ntime = 129
 
-! number of frequency points on half axis, energy range can be expressed by
+! number of frequency point on half axis, energy range can be expressed by
 ! [ -wstep * nwmax, wstep * nwmax ]
      integer, public, save :: nwmax = 200
 
@@ -50,9 +53,9 @@
 ! if ntype == 1, flat model
      integer, public, save :: ntype = 1
 
-!!========================================================================
-!!>>> real variables                                                   <<<
-!!========================================================================
+!=========================================================================
+!>>> real variables                                                    <<<
+!=========================================================================
 
 ! initial alpha parameter
      real(dp), public, save :: ainit = 1200._dp
@@ -69,9 +72,9 @@
 ! delta frequency, step of real frequency grid
      real(dp), public, save :: wstep = 0.025_dp
 
-!!========================================================================
-!!>>> MPI related common variables                                     <<<
-!!========================================================================
+!=========================================================================
+!>>> MPI related common variables                                      <<<
+!=========================================================================
 
 ! number of processors: default value 1
      integer, public, save :: nprocs = 1

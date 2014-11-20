@@ -1,32 +1,31 @@
-!-------------------------------------------------------------------------
-! project : hibiscus
-! program : sai_config
-!           sai_make_init1
-!           sai_make_init2
-! source  : sai_stream.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/08/2011 by li huang
-!           01/09/2011 by li huang
-!           01/10/2011 by li huang
-! purpose : initialize the stochastic analytic continuation code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/stoch
+!!! program : sac_config
+!!!           sac_make_init1
+!!!           sac_make_init2
+!!! source  : sac_stream.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/08/2011 by li huang
+!!!           01/09/2011 by li huang
+!!!           11/19/2014 by li huang
+!!! purpose : initialize the stochastic analytic continuation code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> setup key parameters for stochastic analytic continuation code
-  subroutine sai_config()
-     use constants
-     use control
+!!>>> sac_config: setup key parameters for stochastic analytic
+!!>>> continuation code
+  subroutine sac_config()
+     use parser, only : p_create, p_parse, p_get, p_destroy
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control ! ALL
 
      implicit none
 
 ! local variables
-! used to check whether the input file (sai.in) exists
+! used to check whether the input file (sac.in) exists
      logical :: exists
 
 ! setup default control parameters
@@ -56,37 +55,38 @@
      if ( myid == master ) then
          exists = .false.
 
-! inquire file status: sai.in
-         inquire(file = 'sai.in', exist = exists)
+! inquire file status: sac.in
+         inquire(file = 'sac.in', exist = exists)
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='sai.in', form='formatted', status='unknown')
+! create the file parser
+             call p_create()
+! parse the config file
+             call p_parse('sac.in')
 
-             read(mytmp,*) ! skip comment lines
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*) ntime
-             read(mytmp,*) nwmax
-             read(mytmp,*) ngrid
-             read(mytmp,*) ngamm
-             read(mytmp,*) nalph
-             read(mytmp,*) nwarm
-             read(mytmp,*) nstep
-             read(mytmp,*) ndump
-             read(mytmp,*) ltype
-             read(mytmp,*) lemax
-             read(mytmp,*) legrd
+! extract parameters
+             call p_get('ntime' , ntime )
+             call p_get('nwmax' , nwmax )
+             call p_get('ngrid' , ngrid )
+             call p_get('ngamm' , ngamm )
+             call p_get('nalph' , nalph )
+             call p_get('nwarm' , nwarm )
+             call p_get('nstep' , nstep )
+             call p_get('ndump' , ndump )
+             call p_get('ltype' , ltype )
+             call p_get('lemax' , lemax )
+             call p_get('legrd' , legrd )
 
-             read(mytmp,*) ! skip comment lines
-             read(mytmp,*) ainit
-             read(mytmp,*) ratio
-             read(mytmp,*) beta
-             read(mytmp,*) eta1
-             read(mytmp,*) sigma
-             read(mytmp,*) wstep
+             call p_get('ainit' , ainit )
+             call p_get('ratio' , ratio )
+             call p_get('beta'  , beta  )
+             call p_get('eta1'  , eta1  )
+             call p_get('sigma' , sigma )
+             call p_get('wstep' , wstep )
 
-             close(mytmp)
+! destroy the parser
+             call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
@@ -121,16 +121,18 @@
      eta2 = eta1 * eta1
 
      return
-  end subroutine sai_config
+  end subroutine sac_config
 
-!>>> initialize the stochastic analytic continuation code, input original
-! imaginary time data and related mesh
-  subroutine sai_make_init1()
-     use constants
-     use control
-     use context
+!!>>> sac_make_init1: initialize the stochastic analytic continuation
+!!>>> code, input original imaginary time data and related mesh
+  subroutine sac_make_init1()
+     use constants, only : dp, eps6, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : ntime
+     use control, only : myid, master
+     use context, only : tmesh
+     use context, only : G_qmc, G_tau, G_dev
 
      implicit none
 
@@ -139,8 +141,7 @@
      integer :: i
 
 ! used to check whether the input file (tau.grn.dat) exists
-! note: which is ouput from mtau.x
-     logical :: exists 
+     logical :: exists
 
 ! read in original imaginary time data if available
      if ( myid == master ) then ! only master node can do it
@@ -148,26 +149,23 @@
 
 ! inquire about file's existence
          inquire(file = 'tau.grn.dat', exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('sac_make_init1','file tau.grn.dat does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
 ! find input file: tau.grn.dat, read it
-         if ( exists .eqv. .true. ) then
-
 ! read in imaginary time function from tau.grn.dat
-             open(mytmp, file = 'tau.grn.dat', status = 'unknown')
+         open(mytmp, file = 'tau.grn.dat', form='formatted', status = 'unknown')
 
-             do i=1,ntime
-                 read(mytmp,*) tmesh(i), G_qmc(i), G_dev(i)
-                 if ( abs( G_dev(i) ) < eps6 ) then
-                     G_dev(i) = eps6
-                 endif
-                 G_tau(i) = abs( G_qmc(i) ) / G_dev(i)
-             enddo ! over i={1,ntime} loop
+         do i=1,ntime
+             read(mytmp,*) tmesh(i), G_qmc(i), G_dev(i)
+             if ( abs( G_dev(i) ) < eps6 ) then
+                 G_dev(i) = eps6
+             endif ! back if ( abs( G_dev(i) ) < eps6 ) block
+             G_tau(i) = abs( G_qmc(i) ) / G_dev(i)
+         enddo ! over i={1,ntime} loop
 
-             close(mytmp)
-
-         else
-             call sai_print_error('sai_make_init1','file tau.grn.dat does not exist')
-         endif ! back if ( exists .eqv. .true. ) block
+         close(mytmp)
      endif ! back if ( myid == master ) block
 
 ! since the imaginary time function may be updated in master node, it is
@@ -191,16 +189,22 @@
 # endif  /* MPI */
 
      return
-  end subroutine sai_make_init1
+  end subroutine sac_make_init1
 
-!>>> initialize the stochastic analytic continuation code, setup important
-! array and variables
-  subroutine sai_make_init2()
-     use constants
-     use control
-     use context
+!!>>> sac_make_init2: initialize the stochastic analytic continuation
+!!>>> code, setup important arrays and variables
+  subroutine sac_make_init2()
+     use constants, only : zero, one, mystd
+     use spring, only : spring_sfmt_init
 
-     use spring
+     use control, only : nwmax
+     use control, only : lemax, legrd
+     use control, only : sigma, wstep
+     use control, only : myid, master
+     use context, only : igamm, rgamm
+     use context, only : fkern, ppleg, delta, F_phi, model
+     use context, only : wmesh, pmesh, xgrid, wgrid
+     use context, only : alpha
 
      implicit none
 
@@ -216,36 +220,39 @@
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
-! generate alpha parameters list
-     call sai_make_alpha(alpha)
-
-! generate initial configurations randomly
-     call sai_make_rgamm(igamm, rgamm)
-
 ! setup frequency mesh
-     call sai_make_mesh(wmesh)
+     call s_linspace_d(-nwmax * wstep, nwmax * wstep, 2 * nwmax + 1, wmesh)
+
+! build mesh for legendre polynomial in [-1,1]
+     call s_linspace_d(-one, one, legrd, pmesh)
+
+! setup legendre polynomial
+     call s_legendre(lemax, legrd, pmesh, ppleg)
 
 ! setup default model: flat or gaussian type
      if ( sigma <= zero ) then
-         call sai_make_const(model)
+         call sac_make_const(model)
      else
-         call sai_make_gauss(model)
+         call sac_make_gauss(model)
      endif ! back if ( sigma <= zero ) block
 
-! calculate \phi(\omega)
-     call sai_make_fphi(model, F_phi)
+! generate alpha parameters list
+     call sac_make_alpha(alpha)
+
+! generate initial configurations randomly
+     call sac_make_rgamm(igamm, rgamm)
+
+! generate \phi(\omega)
+     call sac_make_fphi(model, F_phi)
 
 ! generate a dense grid of x = \phi(\omega)
-     call sai_make_grid(wgrid, xgrid)
+     call sac_make_grid(wgrid, xgrid)
 
 ! generate delta function
-     call sai_make_delta(xgrid, F_phi, delta)
-
-! generate legendre polynomial
-     call sai_make_ppleg(ppleg, pmesh)
+     call sac_make_delta(xgrid, F_phi, delta)
 
 ! generate kernel function
-     call sai_make_kernel(fkern)
+     call sac_make_kernel(fkern)
 
 ! write out the seed for random number stream, it is useful to reproduce
 ! the calculation process once fatal error occurs.
@@ -253,7 +260,7 @@
          write(mystd,'(4X,a)') 'stochastic analytic continuation preparing'
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
-  end subroutine sai_make_init2
+  end subroutine sac_make_init2
