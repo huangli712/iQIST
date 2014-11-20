@@ -3,8 +3,8 @@ nwmax = 400    ! nwmax : number of frequency point on half axis
 niter = 20     ! niter : number of cycles for maximum entropy method
 ntune = 16     ! ntune : number of smooth runs for maximum entropy method
 nstep = 3000   ! nstep : number of annealing steps per maximum entropy method cycle
-nband = 2      ! nband : number of bands
-norbs = 4      ! norbs : number of orbitals
+nband = 1      ! nband : number of bands
+norbs = 2      ! norbs : number of orbitals
 ntype = 1      ! ntype : type of default model, if ntype = 0, gaussion type, if ntype = 1, flat type
 ainit = 1200.  ! ainit : initial alpha parameter
 devia = 0.001  ! devia : it is the deviation from the green's function
