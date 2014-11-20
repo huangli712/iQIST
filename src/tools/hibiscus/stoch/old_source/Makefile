@@ -26,7 +26,7 @@
 
 .SUFFIXES: .f90
 
-include ../../../build/make.sys
+include ../../../../build/make.sys
 
 modc = sai_control.o sai_context.o
 core = sai_stream.o sai_toolbox.o sai_update.o sai_record.o
@@ -41,14 +41,14 @@ default: all
 all: exe
 
 cssl:
-	cp ../../../common/libMM.a .
+	cp ../../../../common/libMM.a .
 
 csml:
-	cp ../../../common/constants.mod .
-	cp ../../../common/mmpi.mod .
-	cp ../../../common/spring.mod .
-	cp ../../../common/parser.mod .
-	cp ../../../common/linkedlist.mod .
+	cp ../../../../common/constants.mod .
+	cp ../../../../common/mmpi.mod .
+	cp ../../../../common/spring.mod .
+	cp ../../../../common/parser.mod .
+	cp ../../../../common/linkedlist.mod .
 
 exe: cssl csml sai-exe
 sai-exe: $(objects)

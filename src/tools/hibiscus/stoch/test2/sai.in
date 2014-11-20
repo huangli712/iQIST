@@ -1,0 +1,22 @@
+--------------------------------------------------------------------------
+>>> sai.in: config parameters for stochastic analytic continuation code
+--------------------------------------------------------------------------
+1024       ! ntime : number of imaginary time slice
+400        ! nwmax : number of frequency point on half axis
+10001      ! ngrid : number of slice of x in [0,1]
+1024       ! ngamm : number of r_{\gamma} and a_{\gamma}
+1          ! nalph : number of alpha parameter used in parallel tempering
+2000       ! nwarm : maximum number of thermalization steps
+200000     ! nstep : maximum number of quantum Monte Carlo sampling steps
+2000       ! ndump : output period for stochastic analytic continuation code
+2          ! ltype : measurement scheme
+64         ! lemax : maximum number of legendre polynomial
+20001      ! legrd : number of mesh points for legendre polynomial
+--------------------------------------------------------------------------
+1.000      ! ainit : initial alpha parameter
+2.000      ! ratio : \alpha_(p+1) / \alpha_p = R
+8.000      ! beta  : inversion of real temperature
+0.005      ! eta1  : lorentz broadening parameter \eta_1
+0.000      ! sigma : gauss broadening parameter
+0.020      ! wstep : frequency step, used to build the real frequency mesh
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

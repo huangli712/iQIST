@@ -194,7 +194,7 @@
 !!>>> sac_make_init2: initialize the stochastic analytic continuation
 !!>>> code, setup important arrays and variables
   subroutine sac_make_init2()
-     use constants, only : zero, mystd
+     use constants, only : zero, one, mystd
      use spring, only : spring_sfmt_init
 
      use control, only : nwmax
@@ -222,6 +222,9 @@
 
 ! setup frequency mesh
      call s_linspace_d(-nwmax * wstep, nwmax * wstep, 2 * nwmax + 1, wmesh)
+
+! build mesh for legendre polynomial in [-1,1]
+     call s_linspace_d(-one, one, legrd, pmesh)
 
 ! setup legendre polynomial
      call s_legendre(lemax, legrd, pmesh, ppleg)
