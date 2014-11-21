@@ -292,7 +292,7 @@
      implicit none
 
 !!========================================================================
-!!>>> declare global parameters                                        <<<
+!!>>> declare private parameters                                       <<<
 !!========================================================================
 
 ! dp: number precision, double precision for reals
