@@ -299,6 +299,28 @@
      integer, private, parameter :: dp = kind(1.0d0)
 
 !!========================================================================
+!!>>> declare global constants                                         <<<
+!!========================================================================
+
+! solver identity
+     integer, public, parameter :: solver_id_azalea     = 101
+     integer, public, parameter :: solver_id_gardenia   = 102
+     integer, public, parameter :: solver_id_narcissus  = 103
+     integer, public, parameter :: solver_id_begonia    = 201
+     integer, public, parameter :: solver_id_lavender   = 202
+     integer, public, parameter :: solver_id_pansy      = 301
+     integer, public, parameter :: solver_id_manjushaka = 302
+
+! solver status, 1 means ready, 0 means not ready
+     integer, public, parameter :: solver_is_ready_azalea     = 1
+     integer, public, parameter :: solver_is_ready_gardenia   = 1
+     integer, public, parameter :: solver_is_ready_narcissus  = 1
+     integer, public, parameter :: solver_is_ready_begonia    = 1
+     integer, public, parameter :: solver_is_ready_lavender   = 1
+     integer, public, parameter :: solver_is_ready_pansy      = 1
+     integer, public, parameter :: solver_is_ready_manjushaka = 1
+
+!!========================================================================
 !!>>> declare global data structure                                    <<<
 !!========================================================================
 
@@ -377,8 +399,6 @@
      public :: T_segment_azalea
      type, extends (T_segment_solver) :: T_segment_azalea
          character(len=10) :: solver_name = 'AZALEA'
-         integer :: solver_id = 101
-         integer :: solver_is_ready = 1
      end type T_segment_azalea
 
 ! define type T_segment_gardenia, which is used to describe the ctqmc
@@ -386,8 +406,6 @@
      public :: T_segment_gardenia
      type, extends (T_segment_solver) :: T_segment_gardenia
          character(len=10) :: solver_name = 'GARDENIA'
-         integer :: solver_id = 102
-         integer :: solver_is_ready = 1
 
          integer :: isort
          integer :: isvrt
@@ -404,8 +422,6 @@
      public :: T_segment_narcissus
      type, extends (T_segment_solver) :: T_segment_narcissus
          character(len=10) :: solver_name = 'NARCISSUS'
-         integer :: solver_id = 103
-         integer :: solver_is_ready = 1
 
          integer :: isort
          integer :: isvrt
@@ -426,8 +442,6 @@
      public :: T_general_begonia
      type, extends (T_general_solver) :: T_general_begonia
          character(len=10) :: solver_name = 'BEGONIA'
-         integer :: solver_id = 201
-         integer :: solver_is_ready = 1
 
          integer :: nzero
          integer :: npart
@@ -438,8 +452,6 @@
      public :: T_general_lavender
      type, extends (T_general_solver) :: T_general_lavender
          character(len=10) :: solver_name = 'LAVENDER'
-         integer :: solver_id = 202
-         integer :: solver_is_ready = 1
 
          integer :: isort
          integer :: isvrt
@@ -458,8 +470,6 @@
      public :: T_general_pansy
      type, extends (T_general_solver) :: T_general_pansy
          character(len=10) :: solver_name = 'PANSY'
-         integer :: solver_id = 301
-         integer :: solver_is_ready = 1
 
          integer :: idoub
          integer :: npart
@@ -470,8 +480,6 @@
      public :: T_general_manjushaka
      type, extends (T_general_solver) :: T_general_manjushaka
          character(len=10) :: solver_name = 'MANJUSHAKA'
-         integer :: solver_id = 302
-         integer :: solver_is_ready = 1
 
          integer :: isort
          integer :: isvrt
