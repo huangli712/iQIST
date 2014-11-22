@@ -29,14 +29,21 @@
 
 ! local variables
 ! loop index
-     integer  :: i
-     integer  :: j
+     integer :: i
+     integer :: j
+
+! status flag
+     integer :: istat
 
 ! dummy image function in legendre polynomial representation
-     real(dp) :: image_l(lemax,nalph)
+     real(dp), allocatable :: image_l(:,:)
 
 ! dummy image function in normal representation
-     real(dp) :: image_t(-nwmax:nwmax,nalph)
+     real(dp), allocatable :: image_t(:,:)
+
+! allocate memory
+     allocate(image_l(lemax,nalph), stat=istat)
+     allocate(image_t(-nwmax:nwmax,nalph), stat=istat)
 
 ! postprocess the image, only for legendre polynomial representation
      if ( ltype /= 1 ) then
@@ -90,6 +97,10 @@
 
 ! close data file
      close(mytmp)
+
+! deallocate memory
+     deallocate(image_l)
+     deallocate(image_t)
 
      return
   end subroutine sac_dump_image

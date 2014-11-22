@@ -18,6 +18,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 10/01/2008 by li huang
 !!!           12/13/2011 by li huang
+!!!           11/20/2014 by li huang
 !!! purpose : to provide utility functions and subroutines for stochastic
 !!!           analytic continuation code
 !!! status  : unstable
@@ -44,11 +45,17 @@
 ! loop index
      integer  :: i
 
+! status flag
+     integer  :: istat
+
 ! prefactor for gaussian type model
      real(dp) :: f
 
 ! default model on wgrid
-     real(dp) :: model(ngrid)
+     real(dp), allocatable :: model(:)
+
+! allocate memory
+     allocate(model(ngrid), stat=istat)
 
 ! build wgrid
      call s_linspace_d( -wstep*nwmax, +wstep*nwmax, ngrid, wgrid )
@@ -70,6 +77,9 @@
 
 ! build xgrid
      call s_cumsum_d( ngrid, model, xgrid )
+
+! deallocate memory
+     deallocate(model)
 
      return
   end subroutine sac_make_grid

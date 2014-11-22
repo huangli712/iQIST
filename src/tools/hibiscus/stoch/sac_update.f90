@@ -113,6 +113,9 @@
 ! loop index
      integer  :: n
 
+! status flag
+     integer  :: istat
+
 ! \lambda_1 and \lambda_2
      integer  :: l1, l2
 
@@ -127,10 +130,14 @@
      real(dp) :: dhh
 
 ! current h_C(\tau)
-     real(dp) :: hc(ntime)
+     real(dp), allocatable :: hc(:)
 
 ! \Delta h_C(\tau)
-     real(dp) :: dhc(ntime)
+     real(dp), allocatable :: dhc(:)
+
+! allocate memory
+     allocate(hc(ntime), stat=istat)
+     allocate(dhc(ntime), stat=istat)
 
 ! init h_C and \Delta h_C
      hc  = zero
@@ -199,6 +206,10 @@
 ! recalculate hamiltonian in new configuration
      call sac_make_hamil1( hc, hamil(ia) )
 
+! deallocate memory
+     deallocate(hc)
+     deallocate(dhc)
+
      return
   end subroutine sac_make_mov1
 
@@ -229,6 +240,9 @@
 ! loop index
      integer  :: n
 
+! status flag
+     integer  :: istat
+
 ! \lambda_1 and \lambda_2
      integer  :: l1, l2
 
@@ -243,10 +257,14 @@
      real(dp) :: dhh
 
 ! current h_C(\tau)
-     real(dp) :: hc(ntime)
+     real(dp), allocatable :: hc(:)
 
 ! \Delta h_C(\tau)
-     real(dp) :: dhc(ntime)
+     real(dp), allocatable :: dhc(:)
+
+! allocate memory
+     allocate(hc(ntime), stat=istat)
+     allocate(dhc(ntime), stat=istat)
 
 ! init h_C and \Delta h_C
      hc  = zero
@@ -310,6 +328,10 @@
 ! recalculate hamiltonian in new configuration
      call sac_make_hamil1( hc, hamil(ia) )
 
+! deallocate memory
+     deallocate(hc)
+     deallocate(dhc)
+
      return
   end subroutine sac_make_mov2
 
@@ -339,6 +361,9 @@
      integer  :: i
      integer  :: j
 
+! status flag
+     integer  :: istat
+
 ! \delta alpha = \alpha_{i} - \alpha_{j}
      real(dp) :: da
 
@@ -346,10 +371,13 @@
      real(dp) :: dh
 
 ! current h_C(\tau)
-     real(dp) :: hc(ntime)
+     real(dp), allocatable :: hc(:)
 
 ! check nalph
      call s_assert( nalph > 1 )
+
+! allocate memory
+     allocate(hc(ntime), stat=istat)
 
 ! init h_C
      hc = zero
@@ -413,6 +441,9 @@
          swap_reject(i) = swap_reject(i) + one
          swap_reject(j) = swap_reject(j) + one
      endif ! back if ( pass .eqv. .true. ) block
+
+! deallocate memory
+     deallocate(hc)
 
      return
   end subroutine sac_make_swap
