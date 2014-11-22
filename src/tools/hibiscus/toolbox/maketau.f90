@@ -30,10 +30,10 @@
 !! is suitable for the hibiscus/stoch code.
 !!
 !! About nskip control parameter:
-!! If ctqmc == 1 or 2, then nskip must be 0. If ctqmc == 3 or 4, then
-!! nskip couble be finite value. Be careful, nskip can not be any integer.
-!! Notice that mod(ntime - 1, nskip) must be 0, or else the obtained
-!! tau.grn.dat should be wrong.
+!! If ctqmc == 1 or 2, then nskip must be 1. If ctqmc == 3 or 4, then
+!! nskip couble be positive integer. Be careful, nskip can not be any
+!! integer. Notice that mod(ntime - 1, nskip) must be 0, or else the
+!! obtained tau.grn.dat should be wrong.
 !!
 !! Usage
 !! =====
@@ -87,7 +87,7 @@
      integer  :: ctqmc = 1
 
 ! number of skipped points between two successive selected points
-     integer  :: nskip = 0
+     integer  :: nskip = 1
 
 ! inversion of temperature
      real(dp) :: beta  = 10.0_dp
@@ -161,7 +161,7 @@
      read (mystd,'(i)') ctqmc
      write(mystd,*)
 
-     write(mystd,'(2X,a)')   'Number of skipped points between two successive selected points (default = 0):'
+     write(mystd,'(2X,a)')   'Number of skipped points between two successive selected points (default = 1):'
      write(mystd,'(2X,a,$)') '>>> '
      read (mystd,'(i)') nskip
      write(mystd,*)
@@ -176,7 +176,7 @@
      call s_assert2( ntime > 0, 'wrong number of time slices' )
      call s_assert2( nbins > 0, 'wrong number of data bins' )
      call s_assert2( ctqmc > 0 .and. ctqmc < 5, 'wrong file type' )
-     call s_assert2( nskip >= 0, 'wrong number of skipped points' )
+     call s_assert2( nskip >= 1, 'wrong number of skipped points' )
      call s_assert2( beta > zero, 'wrong inversion of temperature' )
 
 ! allocate memory

@@ -42,15 +42,21 @@
 
 ! local variables
 ! loop index
-     integer  :: i
-     integer  :: j
+     integer :: i
+     integer :: j
 
 ! array index, used to bracket the smoothing zone
-     integer  :: i1
-     integer  :: i2
+     integer :: i1
+     integer :: i2
+
+! status flag
+     integer :: istat
 
 ! smoothed spectrum function
-     real(dp) :: image_s(-nwmax:nwmax)
+     real(dp), allocatable :: image_s(:)
+
+! allocate memory
+     allocate(image_s(-nwmax:nwmax), stat=istat)
 
 ! initialize it
      image_s = zero
@@ -76,6 +82,9 @@
 
 ! copy image1 to image
      image = image_s
+
+! deallocate memory
+     deallocate(image_s)
 
      return
   end subroutine entropy_make_smooth
@@ -303,18 +312,25 @@
 
 ! local variables
 ! loop index
-     integer  :: i
-     integer  :: j
+     integer :: i
+     integer :: j
 
 ! index for frequency grid
-     integer  :: iw
-     integer  :: jw
+     integer :: iw
+     integer :: jw
+
+! status flag
+     integer :: istat
 
 ! \Lambda matrix
-     real(dp) :: lamb1(2*nwmax+1,2*nwmax+1)
+     real(dp), allocatable :: lamb1(:,:)
 
 ! inversion of (\Lambda + \alpha I) matrix
-     real(dp) :: lamb2(2*nwmax+1,2*nwmax+1)
+     real(dp), allocatable :: lamb2(:,:)
+
+! allocate memory
+     allocate(lamb1(2*nwmax+1,2*nwmax+1), stat=istat)
+     allocate(lamb2(2*nwmax+1,2*nwmax+1), stat=istat)
 
 ! calculate lamb1 and lamb2
 ! lamb1 = \Lambda
@@ -343,6 +359,10 @@
              trace = trace + lamb1(i,j) * lamb2(j,i)
          enddo ! over j={1,2*nwmax+1} loop
      enddo ! over i={1,2*nwmax+1} loop
+
+! deallocate memory
+     deallocate(lamb1)
+     deallocate(lamb2)
 
      return
   end subroutine entropy_make_trace

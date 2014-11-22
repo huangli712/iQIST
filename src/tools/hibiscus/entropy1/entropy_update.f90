@@ -52,6 +52,9 @@
 ! iteration number
      integer  :: iter
 
+! status flag
+     integer  :: istat
+
 ! variables to control the annealing procedure
      real(dp) :: rfac
      real(dp) :: tfac
@@ -66,10 +69,14 @@
      real(dp) :: trace
 
 ! dummy image function, used in mpi case
-     real(dp) :: image_t(-nwmax:nwmax)
+     real(dp), allocatable :: image_t(:)
 
 ! see entropy_make_ckern() subroutine, important immediate arrays
-     real(dp) :: ckern(2*nwmax+1,2*nwmax+1)
+     real(dp), allocatable :: ckern(:,:)
+
+! allocate memory
+     allocate(image_t(-nwmax:nwmax), stat=istat)
+     allocate(ckern(2*nwmax+1,2*nwmax+1), stat=istat)
 
 ! calculate 2-order differential of Likelihood function
      call entropy_make_ckern(G_dev, fkern, ckern)
@@ -191,6 +198,10 @@
 ! calculate the average image function
      image = image_t / real(nprocs)
 
+! deallocate memory
+     deallocate(image_t)
+     deallocate(ckern)
+
      return
   end subroutine entropy_make_image
 
@@ -231,6 +242,9 @@
      integer  :: i
      integer  :: j
 
+! status flag
+     integer  :: istat
+
 ! accept statistics
      real(dp) :: acc
 
@@ -241,11 +255,14 @@
      real(dp) :: amax
 
 ! \delta image function
-     real(dp) :: dimg(-nwmax:nwmax)
+     real(dp), allocatable :: dimg(:)
 
 ! local parameters
 ! how often to adjust the annealing parameters
      integer, parameter :: nfast = 100
+
+! allocate memory
+     allocate(dimg(-nwmax:nwmax), stat=istat)
 
      entropy_annealing_loop: do i=1,nstep,nfast
 
@@ -278,6 +295,9 @@
          tfac = tfac / 1.5_dp
 
      enddo entropy_annealing_loop ! over i={1,nstep} loop
+
+! deallocate memory
+     deallocate(dimg)
 
      return
   end subroutine entropy_make_sampling
@@ -336,6 +356,9 @@
      integer  :: j1
      integer  :: j2
 
+! status flag
+     integer  :: istat
+
 ! transition probability
      real(dp) :: p
 
@@ -351,8 +374,12 @@
      real(dp) :: new_chihc
 
 ! old and new akern ( = K . A )
-     real(dp) :: old_akern(ntime)
-     real(dp) :: new_akern(ntime)
+     real(dp), allocatable :: old_akern(:)
+     real(dp), allocatable :: new_akern(:)
+
+! allocate memory
+     allocate(old_akern(ntime), stat=istat)
+     allocate(new_akern(ntime), stat=istat)
 
 ! calculate akern ( = K * A )
      call entropy_make_akern(old_akern, image, fkern)
@@ -454,6 +481,10 @@
          endif ! back if ( spring_sfmt_stream() < p ) block
 
      enddo entropy_mesh_loop ! over j={1,2*nwmax+1} loop
+
+! deallocate memory
+     deallocate(old_akern)
+     deallocate(new_akern)
 
      return
   end subroutine entropy_make_updating
