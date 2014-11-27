@@ -273,6 +273,39 @@
 
 # endif  /* API */
 
+!!>>> cat_solver_id: return the solver identity
+  subroutine cat_solver_id(I_solver_id)
+     use api, only : solver_id_manjushaka
+
+     implicit none
+
+! external arguments
+! solver identity
+     integer, intent(out) :: I_solver_id
+
+     I_solver_id = solver_id_manjushaka
+
+     return
+  end subroutine cat_solver_id
+
+!!>>> cat_solver_status: return the solver status
+  subroutine cat_solver_status(I_solver_status)
+     use api, only : solver_is_ready_manjushaka
+
+     implicit none
+
+! external arguments
+! solver status
+     integer, intent(out) :: I_solver_status
+
+     I_solver_status = solver_is_ready_manjushaka
+     if ( I_solver_status == 0 ) then
+         call s_print_error('cat_solver_status','Sorry, the current solver is not ready!')
+     endif ! back if ( I_solver_status == 0 ) block
+
+     return
+  end subroutine cat_solver_status
+
 # if !defined (F2PY)
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver

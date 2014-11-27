@@ -622,8 +622,7 @@
 
 ! init random number generator
      call system_clock(system_time)
-     !stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     stream_seed = 19860412
+     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
 ! for stack data structure
