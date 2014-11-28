@@ -36,12 +36,14 @@
 !!!           s_solve_zg
 !!!           s_solve_sy
 !!!           s_solve_he
+!!!           s_svd_dg
 !!! source  : s_matrix.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/26/2014 by li huang
 !!!           11/10/2014 by li huang
+!!!           11/28/2014 by yilin wang
 !!! purpose : these subroutines are used to encapsulate some important and
 !!!           frequently used linear algebra operations.
 !!! status  : unstable
@@ -136,6 +138,12 @@
 !! subroutine s_solve_zg(...)
 !! subroutine s_solve_sy(...)
 !! subroutine s_solve_he(...)
+!!
+!! 13. singular value decomposition
+!! --------------------------------
+!!
+!! subroutine s_svd_dg(...)
+!! subroutine s_svd_zg(...)
 !!
 !! Note: _i means integer version, _d real(dp) version, and _z complex(dp)
 !! version. _dg means real(dp) general version, _zg complex(dp) general
@@ -1702,3 +1710,67 @@
 
      return
   end subroutine s_solve_he
+
+!!>>>> s_svd_dg: make the singular values decomposition, $A=U \Sigma V^T$
+  subroutine s_svd_dg(m, n, min_mn, amat, umat, sigvec, vmatt)
+     use constants, only : dp
+ 
+     implicit none
+
+! external arguments
+! number of rows of A matrix
+     integer, intent(in) :: m
+
+! number of columns of A matrix
+     integer, intent(in) :: n
+
+! minimal value of m and n
+     integer, intent(in) :: min_mn
+
+! A matrix
+     real(dp), intent(inout) :: amat(m,n)
+
+! left vectors of svd, U
+     real(dp), intent(out) :: umat(m,min_mn)
+
+! singular values of svd, \Sigma
+     real(dp), intent(out) :: sigvec(min_mn)
+
+! right vectors of svd, V^T
+     real(dp), intent(out) :: vmatt(min_mn,n)
+
+! local variables
+! status flag
+     integer :: istat
+
+! return information from dgesvd
+     integer :: info
+
+! length of work array, lwork >= max( 3 * min_mn + max(m,n), 5 * min_mn)
+     integer :: lwork 
+
+! workspace array
+     real(dp), allocatable :: work(:)
+
+! initialize lwrok
+     lwork = max(3 * min_mn + max(m,n), 5 * min_mn)
+
+! allocate memory
+     allocate(work(lwork), stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('s_svd_dg','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! call the computational subroutine: dgesvd
+     call dgesvd('S', 'S', m, n, amat, m, sigvec, umat, m, vmatt, min_mn, work, lwork, info)
+
+! check the status
+     if ( info /= 0 ) then
+         call s_print_error('s_svd_dg','error in lapack subroutine dgesvd')
+     endif ! back if ( info /= 0 ) block
+
+! deallocate the memory for workspace array
+     deallocate(work)
+
+     return
+  end subroutine s_svd_dg
