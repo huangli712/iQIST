@@ -290,7 +290,7 @@
 
      I_solver_status = solver_is_ready_azalea
      if ( I_solver_status == 0 ) then
-         call s_print_error('cat_solver_status','Sorry, the current solver is not ready!')
+         call s_print_error('cat_solver_status','sorry, the current solver is not ready!')
      endif ! back if ( I_solver_status == 0 ) block
 
      return
