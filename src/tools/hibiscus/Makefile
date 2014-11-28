@@ -26,22 +26,15 @@
 
 default: all
 
-all: build-entropy1 build-entropy2 build-stoch build-script build-swing build-toolbox
-clean: clean-entropy1 clean-entropy2 clean-stoch clean-script clean-swing clean-toolbox
+all: build-entropy build-stoch build-script build-swing build-toolbox
+clean: clean-entropy clean-stoch clean-script clean-swing clean-toolbox
 
-# targets for entropy1
-build-entropy1:
-	cd ./entropy1; pwd; make
+# targets for entropy
+build-entropy:
+	cd ./entropy; pwd; make
 
-clean-entropy1:
-	cd ./entropy1; pwd; make clean
-
-# targets for entropy2
-build-entropy2:
-	cd ./entropy2; pwd; make
-
-clean-entropy2:
-	cd ./entropy2; pwd; make clean
+clean-entropy:
+	cd ./entropy; pwd; make clean
 
 # targets for stoch
 build-stoch:
