@@ -140,8 +140,8 @@
 !! subroutine s_solve_sy(...)
 !! subroutine s_solve_he(...)
 !!
-!! 13. singular value decomposition
-!! --------------------------------
+!! 13. general singular value decomposition
+!! ----------------------------------------
 !!
 !! subroutine s_svd_dg(...)
 !! subroutine s_svd_zg(...)
@@ -1712,35 +1712,39 @@
      return
   end subroutine s_solve_he
 
-!!>>>> s_svd_dg: make the singular values decomposition of a general real(dp) 
-!!>>>> m-by-n matrix A, A=U * SIGMA * transpose(V), return its left vectors,
-!!>>>> right vectors and singular values
-  subroutine s_svd_dg(m, n, min_mn, amat, umat, sigvec, vmatt)
+!!========================================================================
+!!>>> matrix manipulation: singular values decomposition               <<<
+!!========================================================================
+
+!!>>> s_svd_dg: perform the singular values decomposition for a general
+!!>>> real(dp) m-by-n matrix A, where A = U * SIGMA * transpose(V), return
+!!>>> its left vectors, right vectors, and singular values
+  subroutine s_svd_dg(m, n, min_mn, amat, umat, svec, vmat)
      use constants, only : dp
  
      implicit none
 
 ! external arguments
 ! number of rows of A matrix
-     integer, intent(in) :: m
+     integer, intent(in)     :: m
 
 ! number of columns of A matrix
-     integer, intent(in) :: n
+     integer, intent(in)     :: n
 
 ! minimal value of m and n
-     integer, intent(in) :: min_mn
+     integer, intent(in)     :: min_mn
 
 ! A matrix
      real(dp), intent(inout) :: amat(m,n)
 
 ! left vectors of svd, U
-     real(dp), intent(out) :: umat(m,min_mn)
+     real(dp), intent(out)   :: umat(m,min_mn)
 
 ! singular values of svd, SIGMA
-     real(dp), intent(out) :: sigvec(min_mn)
+     real(dp), intent(out)   :: svec(min_mn)
 
 ! right vectors of svd, transpose(V)
-     real(dp), intent(out) :: vmatt(min_mn,n)
+     real(dp), intent(out)   :: vmat(min_mn,n)
 
 ! local variables
 ! status flag
@@ -1765,7 +1769,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! call the computational subroutine: dgesvd
-     call dgesvd('S', 'S', m, n, amat, m, sigvec, umat, m, vmatt, min_mn, work, lwork, info)
+     call DGESVD('S', 'S', m, n, amat, m, svec, umat, m, vmat, min_mn, work, lwork, info)
 
 ! check the status
      if ( info /= 0 ) then
