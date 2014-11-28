@@ -16,7 +16,7 @@
 !!
 !! The makeups code is often used to postprocess the spectral function
 !! data to compare with the XAS and UPS experiments. Now this code is
-!! interfaced with the hibiscus/entropy1 code merely. It can read the
+!! interfaced with the hibiscus/entropy code merely. It can read the
 !! mem.dos.dat file as input data. While to interface it with the others
 !! code, such as hibiscus/stoch code, is straightforward. What you need
 !! to do is just to rename sac.imsum.dat to mem.dos.dat file, and then

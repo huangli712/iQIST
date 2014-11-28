@@ -18,8 +18,6 @@ fort.*
 test.f90
 py_api.f90
 src/ctqmc/*/ctqmc
-entropy
-maxent
 sac
 mchi
 mdos

@@ -62,12 +62,7 @@ done
 # loop over the hibiscus components
 for component in entropy
 do
-    dir=$(echo ../src/tools/hibiscus/entropy1/$component)
-    mln $dir $component
-done
-for component in maxent
-do
-    dir=$(echo ../src/tools/hibiscus/entropy2/$component)
+    dir=$(echo ../src/tools/hibiscus/entropy/$component)
     mln $dir $component
 done
 for component in sac

@@ -16,7 +16,7 @@
 !!
 !! The maketau code is often used to convert file solver.green.bin.*
 !! or solver.green.dat to tau.grn.dat, prepare necessary input data for
-!! the hibiscus/entropy1 or hibiscus/stoch codes.
+!! the hibiscus/entropy or hibiscus/stoch codes.
 !!
 !! About solver.green.bin.* files:
 !! In order to obtain solver.green.bin.* files, you have to active the
@@ -26,7 +26,7 @@
 !!
 !! About ctqmc control parameter:
 !! In general, when ctqmc == 1 or 2, then the output file is suitable for
-!! the hibiscus/entropy1 code. When ctqmc == 3 or 4, then the output file
+!! the hibiscus/entropy code. When ctqmc == 3 or 4, then the output file
 !! is suitable for the hibiscus/stoch code.
 !!
 !! About nskip control parameter:
@@ -311,7 +311,7 @@
      endif ! back if ( ctqmc == 1 ) block
 
 ! open tau.grn.dat file, which is used as the input for the
-! hibiscus/entropy1 or hibiscus/stoch codes
+! hibiscus/entropy or hibiscus/stoch codes
      write(mystd,'(2X,a)') 'Writing tau.grn.dat ...'
 
      open(mytmp, file='tau.grn.dat', form='formatted', status='unknown')

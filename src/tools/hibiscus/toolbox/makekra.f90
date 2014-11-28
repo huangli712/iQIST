@@ -21,7 +21,7 @@
 !! is obtained, which can be used to calculate the self-energy function
 !! on real axis by the invert hilbert transformation.
 !!
-!! Now this code is interfaced with hibiscus/entropy1 code merely. it
+!! Now this code is interfaced with hibiscus/entropy code merely. it
 !! can read the mem.dos.dat file as input data. While to interface it
 !! with the hibiscus/stoch code is very simple. What you need to do is
 !! to rename sac.imsum.dat to mem.dos.dat file, and then supplement
