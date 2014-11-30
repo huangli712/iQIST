@@ -68,7 +68,7 @@
 ! (b) then we examine the bits. If it is 1, then we do the calculation.
 ! If it is 0, then we ignore the calculation. for example, we just use the
 ! second bit (from right side to left side) to represent the calculation
-! of spin-spin correlation. So, it isvrt is 10 (1010_2), we will calculate
+! of spin-spin correlation. So, if isvrt is 10 (1010_2), we will calculate
 ! spin-spin correlation function. If isvrt is 13 (1101_2), we will not
 ! calculate it since the second bit is 0.
 ! The following are the definitions of bit representation:
@@ -80,9 +80,10 @@
 ! if p == 6, calculate particle-particle pair susceptibility
 ! if p == 7, reserved
 ! if p == 8, reserved
+! if p == 9, reserved
 ! example:
-!     1 1 0 1 0 1 0 1
-! p = 8 7 6 5 4 3 2 1
+!     1 1 1 0 1 0 1 0 1
+! p = 9 8 7 6 5 4 3 2 1
 ! note: if p == 4 or p == 5, both the two-particle green's and vertex
 ! functions are computed, but using two different algorithms. you can not
 ! set them to 1 at the same time. In order words, if you set the bit at
