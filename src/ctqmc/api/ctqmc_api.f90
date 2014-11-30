@@ -303,13 +303,13 @@
 !!========================================================================
 
 ! solver identity
-     integer, public, parameter :: solver_id_azalea     = 101
-     integer, public, parameter :: solver_id_gardenia   = 102
-     integer, public, parameter :: solver_id_narcissus  = 103
-     integer, public, parameter :: solver_id_begonia    = 201
-     integer, public, parameter :: solver_id_lavender   = 202
-     integer, public, parameter :: solver_id_pansy      = 301
-     integer, public, parameter :: solver_id_manjushaka = 302
+     integer, public, parameter :: solver_id_azalea         = 101
+     integer, public, parameter :: solver_id_gardenia       = 102
+     integer, public, parameter :: solver_id_narcissus      = 103
+     integer, public, parameter :: solver_id_begonia        = 201
+     integer, public, parameter :: solver_id_lavender       = 202
+     integer, public, parameter :: solver_id_pansy          = 301
+     integer, public, parameter :: solver_id_manjushaka     = 302
 
 ! solver status, 1 means ready, 0 means not ready
      integer, public, parameter :: solver_is_ready_azalea     = 1

@@ -295,7 +295,8 @@
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
-         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
+         hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available

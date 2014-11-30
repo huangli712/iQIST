@@ -22,7 +22,6 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
-!!!           09/23/2014 by li huang
 !!!           10/11/2014 by li huang
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum

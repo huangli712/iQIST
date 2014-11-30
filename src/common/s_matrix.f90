@@ -140,8 +140,8 @@
 !! subroutine s_solve_sy(...)
 !! subroutine s_solve_he(...)
 !!
-!! 13. singular value decomposition
-!! --------------------------------
+!! 13. general singular value decomposition
+!! ----------------------------------------
 !!
 !! subroutine s_svd_dg(...)
 !! subroutine s_svd_zg(...)
@@ -982,11 +982,11 @@
      evec(1:ndim,1:ndim) = vr(1:ndim,1:ndim)
 
 ! dealloate memory for workspace array
-     if (allocated(work)) deallocate(work)
-     if (allocated(wr  )) deallocate(wr  )
-     if (allocated(wi  )) deallocate(wi  )
-     if (allocated(vr  )) deallocate(vr  )
-     if (allocated(vl  )) deallocate(vl  )
+     if ( allocated(work) ) deallocate(work)
+     if ( allocated(wr  ) ) deallocate(wr  )
+     if ( allocated(wi  ) ) deallocate(wi  )
+     if ( allocated(vr  ) ) deallocate(vr  )
+     if ( allocated(vl  ) ) deallocate(vl  )
 
      return
   end subroutine s_eig_dg
@@ -1062,10 +1062,10 @@
      zvec = vr
 
 ! dealloate memory for workspace array
-     if (allocated(work ))  deallocate(work )
-     if (allocated(rwork))  deallocate(rwork)
-     if (allocated(vr   ))  deallocate(vr   )
-     if (allocated(vl   ))  deallocate(vl   )
+     if ( allocated(work ) )  deallocate(work )
+     if ( allocated(rwork) )  deallocate(rwork)
+     if ( allocated(vr   ) )  deallocate(vr   )
+     if ( allocated(vl   ) )  deallocate(vl   )
 
      return
   end subroutine s_eig_zg
@@ -1143,12 +1143,12 @@
      eval(1:ndim) = wr(1:ndim)
 
 ! dealloate memory for workspace array
-     if (allocated(evec)) deallocate(evec)
-     if (allocated(work)) deallocate(work)
-     if (allocated(wr  )) deallocate(wr  )
-     if (allocated(wi  )) deallocate(wi  )
-     if (allocated(vr  )) deallocate(vr  )
-     if (allocated(vl  )) deallocate(vl  )
+     if ( allocated(evec) ) deallocate(evec)
+     if ( allocated(work) ) deallocate(work)
+     if ( allocated(wr  ) ) deallocate(wr  )
+     if ( allocated(wi  ) ) deallocate(wi  )
+     if ( allocated(vr  ) ) deallocate(vr  )
+     if ( allocated(vl  ) ) deallocate(vl  )
 
      return
   end subroutine s_eigvals_dg
@@ -1221,11 +1221,11 @@
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
-     if (allocated(zvec ))  deallocate(zvec )
-     if (allocated(work ))  deallocate(work )
-     if (allocated(rwork))  deallocate(rwork)
-     if (allocated(vr   ))  deallocate(vr   )
-     if (allocated(vl   ))  deallocate(vl   )
+     if ( allocated(zvec ) )  deallocate(zvec )
+     if ( allocated(work ) )  deallocate(work )
+     if ( allocated(rwork) )  deallocate(rwork)
+     if ( allocated(vr   ) )  deallocate(vr   )
+     if ( allocated(vl   ) )  deallocate(vl   )
 
      return
   end subroutine s_eigvals_zg
@@ -1287,7 +1287,7 @@
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
-     if (allocated(work)) deallocate(work)
+     if ( allocated(work) ) deallocate(work)
 
      return
   end subroutine s_eig_sy
@@ -1354,8 +1354,8 @@
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
-     if (allocated(work )) deallocate(work )
-     if (allocated(rwork)) deallocate(rwork)
+     if ( allocated(work ) ) deallocate(work )
+     if ( allocated(rwork) ) deallocate(rwork)
 
      return
   end subroutine s_eig_he
@@ -1418,8 +1418,8 @@
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
-     if (allocated(work)) deallocate(work)
-     if (allocated(evec)) deallocate(evec)
+     if ( allocated(work) ) deallocate(work)
+     if ( allocated(evec) ) deallocate(evec)
 
      return
   end subroutine s_eigvals_sy
@@ -1487,9 +1487,9 @@
      endif ! back if ( info /= 0 ) block
 
 ! dealloate memory for workspace array
-     if (allocated(work )) deallocate(work )
-     if (allocated(rwork)) deallocate(rwork)
-     if (allocated(evec )) deallocate(evec )
+     if ( allocated(work ) ) deallocate(work )
+     if ( allocated(rwork) ) deallocate(rwork)
+     if ( allocated(evec ) ) deallocate(evec )
 
      return
   end subroutine s_eigvals_he
@@ -1544,7 +1544,7 @@
      endif ! back if ( info /= 0 ) block
 
 ! deallocate memory
-     if (allocated(ipiv)) deallocate(ipiv)
+     if ( allocated(ipiv) ) deallocate(ipiv)
 
      return
   end subroutine s_solve_dg
@@ -1595,7 +1595,7 @@
      endif ! back if ( info /= 0 ) block
 
 ! deallocate memory
-     if (allocated(ipiv)) deallocate(ipiv)
+     if ( allocated(ipiv) ) deallocate(ipiv)
 
      return
   end subroutine s_solve_zg
@@ -1650,8 +1650,8 @@
      endif ! back if ( info /= 0 ) block
 
 ! deallocate memory
-     if (allocated(ipiv)) deallocate(ipiv)
-     if (allocated(work)) deallocate(work)
+     if ( allocated(ipiv) ) deallocate(ipiv)
+     if ( allocated(work) ) deallocate(work)
 
      return
   end subroutine s_solve_sy
@@ -1706,41 +1706,45 @@
      endif ! back if ( info /= 0 ) block
 
 ! deallocate memory
-     if (allocated(ipiv)) deallocate(ipiv)
-     if (allocated(work)) deallocate(work)
+     if ( allocated(ipiv) ) deallocate(ipiv)
+     if ( allocated(work) ) deallocate(work)
 
      return
   end subroutine s_solve_he
 
-!!>>>> s_svd_dg: make the singular values decomposition of a general real(dp) 
-!!>>>> m-by-n matrix A, A=U * SIGMA * transpose(V), return its left vectors,
-!!>>>> right vectors and singular values
-  subroutine s_svd_dg(m, n, min_mn, amat, umat, sigvec, vmatt)
+!!========================================================================
+!!>>> matrix manipulation: singular values decomposition               <<<
+!!========================================================================
+
+!!>>> s_svd_dg: perform the singular values decomposition for a general
+!!>>> real(dp) m-by-n matrix A, where A = U * SIGMA * transpose(V), return
+!!>>> its left vectors, right vectors, and singular values
+  subroutine s_svd_dg(m, n, min_mn, amat, umat, svec, vmat)
      use constants, only : dp
  
      implicit none
 
 ! external arguments
 ! number of rows of A matrix
-     integer, intent(in) :: m
+     integer, intent(in)     :: m
 
 ! number of columns of A matrix
-     integer, intent(in) :: n
+     integer, intent(in)     :: n
 
 ! minimal value of m and n
-     integer, intent(in) :: min_mn
+     integer, intent(in)     :: min_mn
 
 ! A matrix
      real(dp), intent(inout) :: amat(m,n)
 
 ! left vectors of svd, U
-     real(dp), intent(out) :: umat(m,min_mn)
+     real(dp), intent(out)   :: umat(m,min_mn)
 
 ! singular values of svd, SIGMA
-     real(dp), intent(out) :: sigvec(min_mn)
+     real(dp), intent(out)   :: svec(min_mn)
 
 ! right vectors of svd, transpose(V)
-     real(dp), intent(out) :: vmatt(min_mn,n)
+     real(dp), intent(out)   :: vmat(min_mn,n)
 
 ! local variables
 ! status flag
@@ -1765,7 +1769,7 @@
      endif ! back if ( istat /= 0 ) block
 
 ! call the computational subroutine: dgesvd
-     call dgesvd('S', 'S', m, n, amat, m, sigvec, umat, m, vmatt, min_mn, work, lwork, info)
+     call DGESVD('S', 'S', m, n, amat, m, svec, umat, m, vmat, min_mn, work, lwork, info)
 
 ! check the status
      if ( info /= 0 ) then
@@ -1773,46 +1777,46 @@
      endif ! back if ( info /= 0 ) block
 
 ! deallocate the memory for workspace array
-     deallocate(work)
+     if ( allocated(work) ) deallocate(work)
 
      return
   end subroutine s_svd_dg
 
-!!>>> s_svd_zg: make the singular values decomposition of a general complex(dp) 
-!!>>> m-by-n matrix A, A=U * SIGMA * conjugate-transpose(V), return its left 
-!!>>> vectors, right vectors and singular values
-  subroutine s_svd_zg(m, n, min_mn, amat, umat, sigvec, vmatt)
+!!>>> s_svd_zg: perform the singular values decomposition for a general
+!!>>> complex(dp) m-by-n matrix A, where A = U * SIGMA * conjugate-transpose(V),
+!!>>> return its left vectors, right vectors, and singular values
+  subroutine s_svd_zg(m, n, min_mn, amat, umat, svec, vmat)
      use constants, only : dp
  
      implicit none
 
 ! external arguments
 ! number of rows of A matrix
-     integer, intent(in) :: m
+     integer, intent(in)        :: m
 
 ! number of columns of A matrix
-     integer, intent(in) :: n
+     integer, intent(in)        :: n
 
 ! minimal value of m and n
-     integer, intent(in) :: min_mn
+     integer, intent(in)        :: min_mn
 
 ! A matrix
      complex(dp), intent(inout) :: amat(m,n)
 
 ! left vectors of svd, U
-     complex(dp), intent(out) :: umat(m,min_mn)
+     complex(dp), intent(out)   :: umat(m,min_mn)
 
 ! singular values of svd, SIGMA
-     real(dp), intent(out) :: sigvec(min_mn)
+     real(dp), intent(out)      :: svec(min_mn)
 
 ! right vectors of svd, conjugate-transpose(V)
-     complex(dp), intent(out) :: vmatt(min_mn,n)
+     complex(dp), intent(out)   :: vmat(min_mn,n)
 
 ! local variables
 ! status flag
      integer :: istat
 
-! return information from dgesvd
+! return information from zgesvd
      integer :: info
 
 ! length of work array, lwork >= max(1, 2 * min_mn + max(m,n))
@@ -1832,8 +1836,8 @@
          call s_print_error('s_svd_zg','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! call the computational subroutine: dgesvd
-     call zgesvd('S', 'S', m, n, amat, m, sigvec, umat, m, vmatt, min_mn, work, lwork, rwork, info)
+! call the computational subroutine: zgesvd
+     call ZGESVD('S', 'S', m, n, amat, m, svec, umat, m, vmat, min_mn, work, lwork, rwork, info)
 
 ! check the status
      if ( info /= 0 ) then
@@ -1841,8 +1845,8 @@
      endif ! back if ( info /= 0 ) block
 
 ! deallocate the memory for workspace array
-     deallocate(work)
-     deallocate(rwork)
+     if ( allocated(work ) ) deallocate(work )
+     if ( allocated(rwork) ) deallocate(rwork)
 
      return
   end subroutine s_svd_zg
