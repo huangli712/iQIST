@@ -31,15 +31,25 @@ class p_ctqmc_solver(object):
         """
         pass
 
-    def setp(self, aa):
+    def setp(self, **kwargs):
         """
+        setup the parameters using a series of key-value pairs
         """
-        pass
+        if kwargs is not None:
+            for key, value in kwargs.iteritems():
+                self.__p_inp[key] = value
 
     def check(self):
         """
+        check the correctness of input parameters
         """
-        pass
+        for key in self.__p_inp.iterkeys():
+            # check whether the key is valid
+            if key not in self.__p_cmp:
+                sys.exit('FATAL ERROR: wrong key ' + key)
+            # check the data type of key's value
+            if type( self.__p_inp[key] ) is not type( self.__p_cmp[key] ):
+                sys.exit('FATAL ERROR: wrong value ' + key + ' = ' + str(self.__p_inp[key]))
 
     def write(self):
         """
@@ -50,3 +60,31 @@ class p_ctqmc_solver(object):
             empty = ( 8 - len(key) ) * ' ' + ': '
             f.write(key + empty + str(self.__p_inp[key]) + '\n')
         f.close()
+
+class switch(object):
+    """ This class provides the functionality we want. You only need to
+        look at this if you want to know how this works. It only needs to
+        be defined once, no need to muck around with its internals.
+    """
+    def __init__(self, value):
+        """ class constructor for the switch
+        """
+        self.__value = value
+        self.__fall = False
+
+    def __iter__(self):
+        """ return the match method once, then stop
+        """
+        yield self.match
+        raise StopIteration
+
+    def match(self, *args):
+        """ indicate whether or not to enter a case suite
+        """
+        if self.__fall or not args:
+            return True
+        elif self.__value in args:
+            self.__fall = True
+            return True
+        else:
+            return False
