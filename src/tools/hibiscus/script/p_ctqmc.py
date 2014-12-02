@@ -22,9 +22,6 @@
 ##
 ##
 
-import numpy
-import scipy
-
 class p_ctqmc_solver(object):
     """
     """
