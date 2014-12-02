@@ -70,9 +70,9 @@ class p_ctqmc_solver(object):
             'alpha'  : 0.70    ,
         }
  
-        self.__p_cmp_azalea = self.__p_cmp_solver
+        self.__p_cmp_azalea = self.__p_cmp_solver.copy()
 
-        self.__p_cmp_gardenia = self.__p_cmp_solver
+        self.__p_cmp_gardenia = self.__p_cmp_solver.copy()
         self.__p_cmp_gardenia['isort'] = 1
         self.__p_cmp_gardenia['isvrt'] = 1
         self.__p_cmp_gardenia['lemax'] = 32
@@ -82,7 +82,7 @@ class p_ctqmc_solver(object):
         self.__p_cmp_gardenia['nffrq'] = 32
         self.__p_cmp_gardenia['nbfrq'] = 8
 
-        self.__p_cmp_narcissus = self.__p_cmp_solver
+        self.__p_cmp_narcissus = self.__p_cmp_solver.copy()
         self.__p_cmp_narcissus['isort'] = 1
         self.__p_cmp_narcissus['isvrt'] = 1
         self.__p_cmp_narcissus['isscr'] = 1
@@ -95,11 +95,11 @@ class p_ctqmc_solver(object):
         self.__p_cmp_narcissus['lc'] = 1.00
         self.__p_cmp_narcissus['wc'] = 1.00
 
-        self.__p_cmp_begonia = self.__p_cmp_solver
+        self.__p_cmp_begonia = self.__p_cmp_solver.copy()
         self.__p_cmp_begonia['nzero'] = 128
         self.__p_cmp_begonia['npart'] = 4
 
-        self.__p_cmp_lavender = self.__p_cmp_solver
+        self.__p_cmp_lavender = self.__p_cmp_solver.copy()
         self.__p_cmp_lavender['isort'] = 1
         self.__p_cmp_lavender['isvrt'] = 1
         self.__p_cmp_lavender['nzero'] = 128
@@ -111,11 +111,11 @@ class p_ctqmc_solver(object):
         self.__p_cmp_lavender['nbfrq'] = 8
         self.__p_cmp_lavender['npart'] = 4
 
-        self.__p_cmp_pansy = self.__p_cmp_solver
+        self.__p_cmp_pansy = self.__p_cmp_solver.copy()
         self.__p_cmp_pansy['idoub'] = 1
         self.__p_cmp_pansy['npart'] = 4
 
-        self.__p_cmp_manjushaka = self.__p_cmp_solver
+        self.__p_cmp_manjushaka = self.__p_cmp_solver.copy()
         self.__p_cmp_manjushaka['isort'] = 1
         self.__p_cmp_manjushaka['isvrt'] = 1
         self.__p_cmp_manjushaka['itrun'] = 1
@@ -138,35 +138,36 @@ class p_ctqmc_solver(object):
 
         for case in switch( solver.lower() ):
             if case ('azalea'):
-                self.__p_cmp = self.__p_cmp_azalea
+                self.__p_cmp = self.__p_cmp_azalea.copy()
                 break
 
             if case ('gardenia'):
-                self.__p_cmp = self.__p_cmp_gardenia
+                self.__p_cmp = self.__p_cmp_gardenia.copy()
                 break
 
             if case ('narcissus'):
-                self.__p_cmp = self.__p_cmp_narcissus
+                self.__p_cmp = self.__p_cmp_narcissus.copy()
                 break
 
             if case ('begonia'):
-                self.__p_cmp = self.__p_cmp_begonia
+                self.__p_cmp = self.__p_cmp_begonia.copy()
                 break
 
             if case ('lavender'):
-                self.__p_cmp = self.__p_cmp_lavender
+                self.__p_cmp = self.__p_cmp_lavender.copy()
                 break
 
             if case ('pansy'):
-                self.__p_cmp = self.__p_cmp_pansy
+                self.__p_cmp = self.__p_cmp_pansy.copy()
                 break
 
             if case ('manjushaka'):
-                self.__p_cmp = self.__p_cmp_manjushaka
+                self.__p_cmp = self.__p_cmp_manjushaka.copy()
                 break
 
             if case ():
                 sys.exit('FATAL ERROR: unrecognize quantum impurity solver')
+        print self.__p_cmp
 
     def setp(self, **kwargs):
         """ setup the parameters using a series of key-value pairs
