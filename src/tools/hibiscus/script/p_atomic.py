@@ -59,7 +59,7 @@ class p_atomic_solver(object):
     def __init__(self):
         """ define the class variables
         """
-        # _p_cmp: the official parameter dict
+        # __p_cmp: the official parameter dict
         # here the default values are just used to verify the data type of
         # user's input data
         self.__p_cmp = {
@@ -85,7 +85,7 @@ class p_atomic_solver(object):
             'lambda' : 0.00,
         }
 
-        # _p_inp: the user-input parameter dict
+        # __p_inp: the user-input parameter dict
         self.__p_inp = {}
 
     def setp(self, **kwargs):
