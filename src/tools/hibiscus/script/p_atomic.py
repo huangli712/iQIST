@@ -36,8 +36,12 @@ class p_atomic_solver(object):
 
     def __init__(self):
         """
+        define the class variables
         """
-        self._p_cmp = {
+        # _p_cmp: the official parameter dict
+        # here the default values are just used to verify the data type of
+        # user's input data
+        self.__p_cmp = {
             'ibasis' : 1   ,
             'ictqmc' : 1   ,
             'icu'    : 1   ,
@@ -60,29 +64,35 @@ class p_atomic_solver(object):
             'lambda' : 0.00,
         }
 
-        self._p_inp = {}
+        # _p_inp: the user-input parameter dict
+        self.__p_inp = {}
 
     def setp(self, **kwargs):
         """
+        setup the parameters using a series of key-value pairs
         """
         if kwargs is not None:
             for key, value in kwargs.iteritems():
-                self._p_inp[key] = value
+                self.__p_inp[key] = value
 
     def check(self):
         """
+        check the correctness of input parameters
         """
-        for key in self._p_inp.iterkeys():
-            if key not in self._p_cmp:
+        for key in self.__p_inp.iterkeys():
+            # check whether the key is valid
+            if key not in self.__p_cmp:
                 sys.exit('FATAL ERROR: wrong key ' + key)
-            if type( self._p_inp[key] ) is not type( self._p_cmp[key] ):
-                sys.exit('FATAL ERROR: wrong value ' + key + ' = ' + str(self._p_inp[key]))
+            # check the data type of key's value
+            if type( self.__p_inp[key] ) is not type( self.__p_cmp[key] ):
+                sys.exit('FATAL ERROR: wrong value ' + key + ' = ' + str(self.__p_inp[key]))
 
     def write(self):
         """
+        write the parameters to the config file: atom.config.in
         """
         f = open('atom.config.in','w')
-        for key in self._p_inp.iterkeys():
+        for key in self.__p_inp.iterkeys():
             empty = ( 8 - len(key) ) * ' ' + ': '
-            f.write(key + empty + str(self._p_inp[key]) + '\n')
+            f.write(key + empty + str(self.__p_inp[key]) + '\n')
         f.close()
