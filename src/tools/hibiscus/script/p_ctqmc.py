@@ -18,7 +18,7 @@
 ## History
 ## =======
 ##
-## 11/13/2014 by li huang
+## 12/02/2014 by li huang
 ##
 ##
 
@@ -34,20 +34,14 @@ class p_ctqmc_solver(object):
     def setp(self, aa):
         """
         """
-        self.bb = aa
+        pass
 
     def check(self):
         """
         """
-        print self.bb
+        pass
 
     def write(self):
         """
         """
         pass
-
-if __name__ == '__main__':
-    print 'here'
-    p = p_ctqmc_solver('azalea')
-    p.setp(10)
-    p.check()
