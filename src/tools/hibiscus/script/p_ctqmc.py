@@ -37,13 +37,68 @@ class p_ctqmc_solver(object):
     def __init__(self, solver):
         """ define the class variables
         """
-        self.__p_cmp_azalea = {}
-        self.__p_cmp_gardenia = {}
-        self.__p_cmp_narcissus = {}
-        self.__p_cmp_begonia = {}
-        self.__p_cmp_lavender = {}
-        self.__p_cmp_pansy = {}
-        self.__p_cmp_manjushaka = {}
+        self.__p_cmp_solver = {
+            'isscf'  : 2       ,
+            'issun'  : 2       ,
+            'isspn'  : 1       ,
+            'isbin'  : 2       ,
+            'nband'  : 1       ,
+            'nspin'  : 2       ,
+            'norbs'  : 2       ,
+            'ncfgs'  : 4       ,
+            'niter'  : 20      ,
+            'mkink'  : 1024    ,
+            'mfreq'  : 8193    ,
+            'nfreq'  : 128     ,
+            'ntime'  : 1024    ,
+            'nflip'  : 20000   ,
+            'ntherm' : 200000  ,
+            'nsweep' : 20000000,
+            'nwrite' : 2000000 ,
+            'nclean' : 100000  ,
+            'nmonte' : 10      ,
+            'ncarlo' : 10      ,
+            'U'      : 4.00    ,
+            'Uc'     : 4.00    ,
+            'Uv'     : 4.00    ,
+            'Jz'     : 0.00    ,
+            'Js'     : 0.00    ,
+            'Jp'     : 0.00    ,
+            'mune'   : 2.00    ,
+            'beta'   : 8.00    ,
+            'part'   : 0.50    ,
+            'alpha'  : 0.70    ,
+        }
+ 
+        self.__p_cmp_azalea = self.__p_cmp_solver
+
+        self.__p_cmp_gardenia = self.__p_cmp_solver
+        self.__p_cmp_gardenia['isort'] = 1
+        self.__p_cmp_gardenia['isvrt'] = 1
+        self.__p_cmp_gardenia['lemax'] = 32
+        self.__p_cmp_gardenia['legrd'] = 20001
+        self.__p_cmp_gardenia['chmax'] = 32
+        self.__p_cmp_gardenia['chgrd'] = 20001
+        self.__p_cmp_gardenia['nffrq'] = 32
+        self.__p_cmp_gardenia['nbfrq'] = 8
+
+        self.__p_cmp_narcissus = self.__p_cmp_solver
+        self.__p_cmp_narcissus['isort'] = 1
+        self.__p_cmp_narcissus['isvrt'] = 1
+        self.__p_cmp_narcissus['isscr'] = 1
+        self.__p_cmp_narcissus['lemax'] = 32
+        self.__p_cmp_narcissus['legrd'] = 20001
+        self.__p_cmp_narcissus['chmax'] = 32
+        self.__p_cmp_narcissus['chgrd'] = 20001
+        self.__p_cmp_narcissus['nffrq'] = 32
+        self.__p_cmp_narcissus['nbfrq'] = 8
+        self.__p_cmp_narcissus['lc'] = 1.00
+        self.__p_cmp_narcissus['wc'] = 1.00
+
+        self.__p_cmp_begonia = self.__p_cmp_solver
+        self.__p_cmp_lavender = self.__p_cmp_solver
+        self.__p_cmp_pansy = self.__p_cmp_solver
+        self.__p_cmp_manjushaka = self.__p_cmp_solver
 
         # __p_cmp: the official parameter dict
         self.__p_cmp = {}
