@@ -43,5 +43,10 @@ class p_ctqmc_solver(object):
 
     def write(self):
         """
+        write the parameters to the config file: solver.ctqmc.in
         """
-        pass
+        f = open('solver.ctqmc.in','w')
+        for key in self.__p_inp.iterkeys():
+            empty = ( 8 - len(key) ) * ' ' + ': '
+            f.write(key + empty + str(self.__p_inp[key]) + '\n')
+        f.close()
