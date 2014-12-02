@@ -96,9 +96,39 @@ class p_ctqmc_solver(object):
         self.__p_cmp_narcissus['wc'] = 1.00
 
         self.__p_cmp_begonia = self.__p_cmp_solver
+        self.__p_cmp_begonia['nzero'] = 128
+        self.__p_cmp_begonia['npart'] = 4
+
         self.__p_cmp_lavender = self.__p_cmp_solver
+        self.__p_cmp_lavender['isort'] = 1
+        self.__p_cmp_lavender['isvrt'] = 1
+        self.__p_cmp_lavender['nzero'] = 128
+        self.__p_cmp_lavender['lemax'] = 32
+        self.__p_cmp_lavender['legrd'] = 20001
+        self.__p_cmp_lavender['chmax'] = 32
+        self.__p_cmp_lavender['chgrd'] = 20001
+        self.__p_cmp_lavender['nffrq'] = 32
+        self.__p_cmp_lavender['nbfrq'] = 8
+        self.__p_cmp_lavender['npart'] = 4
+
         self.__p_cmp_pansy = self.__p_cmp_solver
+        self.__p_cmp_pansy['idoub'] = 1
+        self.__p_cmp_pansy['npart'] = 4
+
         self.__p_cmp_manjushaka = self.__p_cmp_solver
+        self.__p_cmp_manjushaka['isort'] = 1
+        self.__p_cmp_manjushaka['isvrt'] = 1
+        self.__p_cmp_manjushaka['itrun'] = 1
+        self.__p_cmp_manjushaka['idoub'] = 1
+        self.__p_cmp_manjushaka['nmini'] = 0
+        self.__p_cmp_manjushaka['nmaxi'] = 2
+        self.__p_cmp_manjushaka['lemax'] = 32
+        self.__p_cmp_manjushaka['legrd'] = 20001
+        self.__p_cmp_manjushaka['chmax'] = 32
+        self.__p_cmp_manjushaka['chgrd'] = 20001
+        self.__p_cmp_manjushaka['nffrq'] = 32
+        self.__p_cmp_manjushaka['nbfrq'] = 8
+        self.__p_cmp_manjushaka['npart'] = 4
 
         # __p_cmp: the official parameter dict
         self.__p_cmp = {}
