@@ -32,6 +32,29 @@ import sys
 
 class p_atomic_solver(object):
     """
+    This class can be used to generate the config file for the jasmine.
+
+    typical usage:
+        # import this module
+        from p_atomic import *
+
+        # create an instance
+        p = p_atomic_solver()
+
+        # setup the parameters
+        p.setp(ibasis = 2, Uv = 2.0)
+        p.setp(icu = 30)
+        p.setp(icu = 1)
+        p.setp()
+
+        # verify the parameters 
+        p.check()
+
+        # generate the atom.config.in file
+        p.write()
+
+        # destroy the instance
+        del p
     """
 
     def __init__(self):
