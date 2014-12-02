@@ -86,12 +86,3 @@ class p_atomic_solver(object):
             empty = ( 8 - len(key) ) * ' ' + ': '
             f.write(key + empty + str(self._p_inp[key]) + '\n')
         f.close()
-
-#if __name__ == '__main__':
-#    p = p_atomic_solver()
-#    p.setp(ibasis = 2, Uv = 2.0)
-#    p.setp(icu = 30)
-#    p.setp(icu = 1)
-#    p.setp()
-#    p.check()
-#    p.write()
