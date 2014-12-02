@@ -31,35 +31,33 @@
 import sys
 
 class p_atomic_solver(object):
-    """
-    This class can be used to generate the config file for the jasmine.
+    """ This class can be used to generate the config file for the jasmine.
 
-    typical usage:
-        # import this module
-        from p_atomic import *
+        typical usage:
+            # import this module
+            from p_atomic import *
 
-        # create an instance
-        p = p_atomic_solver()
+            # create an instance
+            p = p_atomic_solver()
 
-        # setup the parameters
-        p.setp(ibasis = 2, Uv = 2.0)
-        p.setp(icu = 30)
-        p.setp(icu = 1)
-        p.setp()
+            # setup the parameters
+            p.setp(ibasis = 2, Uv = 2.0)
+            p.setp(icu = 30)
+            p.setp(icu = 1)
+            p.setp()
 
-        # verify the parameters 
-        p.check()
+            # verify the parameters 
+            p.check()
 
-        # generate the atom.config.in file
-        p.write()
+            # generate the atom.config.in file
+            p.write()
 
-        # destroy the instance
-        del p
+            # destroy the instance
+            del p
     """
 
     def __init__(self):
-        """
-        define the class variables
+        """ define the class variables
         """
         # _p_cmp: the official parameter dict
         # here the default values are just used to verify the data type of
@@ -91,16 +89,14 @@ class p_atomic_solver(object):
         self.__p_inp = {}
 
     def setp(self, **kwargs):
-        """
-        setup the parameters using a series of key-value pairs
+        """ setup the parameters using a series of key-value pairs
         """
         if kwargs is not None:
             for key, value in kwargs.iteritems():
                 self.__p_inp[key] = value
 
     def check(self):
-        """
-        check the correctness of input parameters
+        """ check the correctness of input parameters
         """
         for key in self.__p_inp.iterkeys():
             # check whether the key is valid
@@ -111,8 +107,7 @@ class p_atomic_solver(object):
                 sys.exit('FATAL ERROR: wrong value ' + key + ' = ' + str(self.__p_inp[key]))
 
     def write(self):
-        """
-        write the parameters to the config file: atom.config.in
+        """ write the parameters to the config file: atom.config.in
         """
         f = open('atom.config.in','w')
         for key in self.__p_inp.iterkeys():
