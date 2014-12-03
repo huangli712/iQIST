@@ -28,22 +28,41 @@
 
 include ../../build/make.sys
 
-modn = hfqmc_constants.o hfqmc_control.o hfqmc_context.o
+modc = hfqmc_control.o hfqmc_context.o
 dmft = hfqmc_dmft.o
 core = hfqmc_solver.o
 lev1 = hfqmc_update.o
-lev2 = hfqmc_record.o hfqmc_stream.o
-lev3 = hfqmc_fourier.o hfqmc_util.o
-dump = hfqmc_dump.o hfqmc_print.o
+lev2 = hfqmc_record.o hfqmc_stream.o hfqmc_util.o
+lev3 = hfqmc_dump.o hfqmc_print.o
 main = hfqmc_main.o
+MAPI = libMM.a
 
-objects = $(modm) $(modn) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(dump) $(main)
+objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(main) $(MAPI)
 
 default: all
-all: hfqmc
 
-hfqmc: $(objects)
+all: exe
+
+api:
+
+cssl:
+	cp ../../common/libMM.a .
+
+csml:
+	cp ../../common/constants.mod .
+	cp ../../common/mmpi.mod .
+	cp ../../common/spring.mod .
+	cp ../../common/stack.mod .
+	cp ../../common/parser.mod .
+	cp ../../common/linkedlist.mod .
+
+exe: api cssl csml hfqmc-exe
+hfqmc-exe: $(objects)
 	$(LINKER) $(objects) -o hfqmc $(LFLAGS) $(LIBS)
+
+lib: api cssl csml hfqmc-lib
+hfqmc-lib: $(objects)
+	$(ARCHIVER) libhfqmc.a $(objects)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -52,6 +71,8 @@ clean:
 	rm -f *.mod
 	rm -f *.o
 	rm -f hfqmc
+	rm -f libhfqmc.a
+	rm -f libMM.a
 
 clean-dat:
 	rm -f *.dat
