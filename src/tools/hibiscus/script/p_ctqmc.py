@@ -24,19 +24,43 @@
 ## History
 ## =======
 ##
-## 12/02/2014 by li huang
+## 12/03/2014 by li huang
 ##
 ##
 
 import sys
 
 class p_ctqmc_solver(object):
-    """
+    """ This class can be used to generate the config file for the quantum
+        impurity solver components.
+
+        typical usage:
+            # import this module
+            from p_ctqmc import *
+
+            # create an instance
+            p = p_ctqmc_solver('manjushaka')
+
+            # setup the parameters
+            p.setp(isscf = 2, isort = 1, nsweep = 10000000)
+            p.setp(mune = 2.0, nmaxi = 10)
+            p.setp()
+            p.setp(isscf = 1)
+
+            # verify the parameters 
+            p.check()
+
+            # generate the solver.ctqmc.in file
+            p.write()
+
+            # destroy the instance
+            del p
     """
 
     def __init__(self, solver):
         """ define the class variables
         """
+        # __p_cmp_solver: the official parameter dict for generic solver
         self.__p_cmp_solver = {
             'isscf'  : 2       ,
             'issun'  : 2       ,
@@ -70,8 +94,10 @@ class p_ctqmc_solver(object):
             'alpha'  : 0.70    ,
         }
  
+        # __p_cmp_azalea: the official parameter dict for azalea
         self.__p_cmp_azalea = self.__p_cmp_solver.copy()
 
+        # __p_cmp_gardenia: the official parameter dict for gardenia
         self.__p_cmp_gardenia = self.__p_cmp_solver.copy()
         self.__p_cmp_gardenia['isort'] = 1
         self.__p_cmp_gardenia['isvrt'] = 1
@@ -82,6 +108,7 @@ class p_ctqmc_solver(object):
         self.__p_cmp_gardenia['nffrq'] = 32
         self.__p_cmp_gardenia['nbfrq'] = 8
 
+        # __p_cmp_narcissus: the official parameter dict for narcissus
         self.__p_cmp_narcissus = self.__p_cmp_solver.copy()
         self.__p_cmp_narcissus['isort'] = 1
         self.__p_cmp_narcissus['isvrt'] = 1
@@ -95,10 +122,12 @@ class p_ctqmc_solver(object):
         self.__p_cmp_narcissus['lc'] = 1.00
         self.__p_cmp_narcissus['wc'] = 1.00
 
+        # __p_cmp_begonia: the official parameter dict for begonia
         self.__p_cmp_begonia = self.__p_cmp_solver.copy()
         self.__p_cmp_begonia['nzero'] = 128
         self.__p_cmp_begonia['npart'] = 4
 
+        # __p_cmp_lavender: the official parameter dict for lavender
         self.__p_cmp_lavender = self.__p_cmp_solver.copy()
         self.__p_cmp_lavender['isort'] = 1
         self.__p_cmp_lavender['isvrt'] = 1
@@ -111,10 +140,12 @@ class p_ctqmc_solver(object):
         self.__p_cmp_lavender['nbfrq'] = 8
         self.__p_cmp_lavender['npart'] = 4
 
+        # __p_cmp_pansy: the official parameter dict for pansy
         self.__p_cmp_pansy = self.__p_cmp_solver.copy()
         self.__p_cmp_pansy['idoub'] = 1
         self.__p_cmp_pansy['npart'] = 4
 
+        # __p_cmp_manjushaka: the official parameter dict for manjushaka
         self.__p_cmp_manjushaka = self.__p_cmp_solver.copy()
         self.__p_cmp_manjushaka['isort'] = 1
         self.__p_cmp_manjushaka['isvrt'] = 1
@@ -136,6 +167,7 @@ class p_ctqmc_solver(object):
         # __p_inp: the user-input parameter dict
         self.__p_inp = {}
 
+        # config __p_cmp according to the selected solver
         for case in switch( solver.lower() ):
             if case ('azalea'):
                 self.__p_cmp = self.__p_cmp_azalea.copy()
@@ -167,7 +199,6 @@ class p_ctqmc_solver(object):
 
             if case ():
                 sys.exit('FATAL ERROR: unrecognize quantum impurity solver')
-        print self.__p_cmp
 
     def setp(self, **kwargs):
         """ setup the parameters using a series of key-value pairs
