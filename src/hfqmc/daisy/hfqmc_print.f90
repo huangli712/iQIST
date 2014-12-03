@@ -44,7 +44,7 @@
      character (len = 20) :: date_time_string
 
 ! obtain current date and time
-     call hfqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a)') 'DAISY'
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Hirsch-Fye Quantum Monte Carlo Impurity Solver'
@@ -91,7 +91,7 @@
      call cpu_time(tot_time)
 
 ! obtain current date and time
-     call hfqmc_time_builder(date_time_string)
+     call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a,f10.2,a)') 'DAISY >>> total time spent:', tot_time, 's'
      write(mystd,*)
