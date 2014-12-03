@@ -10,19 +10,20 @@
 !!! history : 10/24/2008 by li huang
 !!!           03/27/2010 by li huang
 !!!           12/04/2014 by li huang
-!!! purpose : define the key data structure and global arrays/variables for
-!!!           Hirsch-Fye quantum Monte Carlo (HFQMC) quantum impurity solver
-!!!           and dynamical mean field theory (DMFT) self-consistent engine
+!!! purpose : To define the key data structure and global arrays/variables
+!!!           for Hirsch-Fye quantum Monte Carlo (HFQMC) quantum impurity
+!!!           solver and dynamical mean field theory (DMFT) self-consistent
+!!!           engine
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!=========================================================================
-!>>> module hfqmc_core                                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> module hfqmc_core                                                <<<
+!!========================================================================
 
-!>>> containing core (internal) variables used by Hirsch-Fye quantum Monte
-! Carlo quantum impurity solver
+!!>>> containing core (internal) variables used by Hirsch-Fye quantum
+!!>>> Monte Carlo quantum impurity solver
   module hfqmc_core
      use constants, only : dp
 
@@ -63,11 +64,12 @@
 
   end module hfqmc_core
 
-!=========================================================================
-!>>> module hfqmc_umat                                                 <<<
-!=========================================================================
-!>>> containing util-matrix related arrays used by Hirsch-Fye quantum Monte
-! Carlo quantum impurity solver
+!!========================================================================
+!!>>> module hfqmc_umat                                                <<<
+!!========================================================================
+
+!!>>> containing util-matrix related arrays used by Hirsch-Fye quantum
+!!>>> Monte Carlo quantum impurity solver
   module hfqmc_umat
      use constants, only : dp
 
@@ -99,11 +101,12 @@
 
   end module hfqmc_umat
 
-!=========================================================================
-!>>> module hfqmc_base                                                 <<<
-!=========================================================================
-!>>> containing basic arrays used by the dynamical mean field theory self-
-! consistent engine
+!!========================================================================
+!!>>> module hfqmc_base                                                <<<
+!!========================================================================
+
+!!>>> containing basic arrays used by the dynamical mean field theory
+!!>>> self-consistent engine
   module hfqmc_base
      use constants, only : dp
 
@@ -129,10 +132,11 @@
 
   end module hfqmc_base
 
-!=========================================================================
-!>>> module context                                                    <<<
-!=========================================================================
-!>>> containing memory management subroutines and define global variables
+!!========================================================================
+!!>>> module context                                                   <<<
+!!========================================================================
+
+!!>>> containing memory management subroutines and define global variables
   module context
      use constants
      use control
@@ -143,8 +147,16 @@
 
      implicit none
 
+!!========================================================================
+!!>>> declare global variables                                         <<<
+!!========================================================================
+
 ! status flag
      integer, private :: istat
+
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
 ! declaration of module procedures: allocate memory
      public :: hfqmc_allocate_memory_core
@@ -156,11 +168,11 @@
      public :: hfqmc_deallocate_memory_umat
      public :: hfqmc_deallocate_memory_base
 
-     contains
+  contains ! encapsulated functionality
 
-!=========================================================================
-!>>> allocate memory subroutines                                       <<<
-!=========================================================================
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
 
 !>>> allocate memory for core-related variables
      subroutine hfqmc_allocate_memory_core()
@@ -282,68 +294,68 @@
          return
      end subroutine hfqmc_allocate_memory_base
 
-!=========================================================================
-!>>> deallocate memory subroutines                                     <<<
-!=========================================================================
+!!========================================================================
+!!>>> deallocate memory subroutines                                    <<<
+!!========================================================================
 
-!>>> deallocate memory for core-related variables
-     subroutine hfqmc_deallocate_memory_core()
-         implicit none
+!!>>> hfqmc_deallocate_memory_core: deallocate memory for core-related variables
+  subroutine hfqmc_deallocate_memory_core()
+     implicit none
 
-         if ( allocated(ktep) )    deallocate(ktep)
-         if ( allocated(pmat) )    deallocate(pmat)
+     if ( allocated(ktep) )    deallocate(ktep)
+     if ( allocated(pmat) )    deallocate(pmat)
 
-         if ( allocated(umat) )    deallocate(umat)
-         if ( allocated(lmat) )    deallocate(lmat)
+     if ( allocated(umat) )    deallocate(umat)
+     if ( allocated(lmat) )    deallocate(lmat)
 
-         if ( allocated(imat) )    deallocate(imat)
-         if ( allocated(smat) )    deallocate(smat)
+     if ( allocated(imat) )    deallocate(imat)
+     if ( allocated(smat) )    deallocate(smat)
 
-         if ( allocated(diag) )    deallocate(diag)
-         if ( allocated(atep) )    deallocate(atep)
-         if ( allocated(btep) )    deallocate(btep)
+     if ( allocated(diag) )    deallocate(diag)
+     if ( allocated(atep) )    deallocate(atep)
+     if ( allocated(btep) )    deallocate(btep)
 
-         if ( allocated(gmat) )    deallocate(gmat)
-         if ( allocated(wmat) )    deallocate(wmat)
+     if ( allocated(gmat) )    deallocate(gmat)
+     if ( allocated(wmat) )    deallocate(wmat)
 
-         return
-     end subroutine hfqmc_deallocate_memory_core
+     return
+  end subroutine hfqmc_deallocate_memory_core
 
-!>>> deallocate memory for umat-related variables
-     subroutine hfqmc_deallocate_memory_umat()
-         implicit none
+!!>>> hfqmc_deallocate_memory_umat: deallocate memory for umat-related variables
+  subroutine hfqmc_deallocate_memory_umat()
+     implicit none
 
-         if ( allocated(symm)  )   deallocate(symm )
+     if ( allocated(symm)  )   deallocate(symm )
 
-         if ( allocated(eimp)  )   deallocate(eimp )
+     if ( allocated(eimp)  )   deallocate(eimp )
 
-         if ( allocated(quas)  )   deallocate(quas )
-         if ( allocated(nmat)  )   deallocate(nmat )
+     if ( allocated(quas)  )   deallocate(quas )
+     if ( allocated(nmat)  )   deallocate(nmat )
 
-         if ( allocated(tmesh) )   deallocate(tmesh)
-         if ( allocated(rmesh) )   deallocate(rmesh)
+     if ( allocated(tmesh) )   deallocate(tmesh)
+     if ( allocated(rmesh) )   deallocate(rmesh)
 
-         if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(nnmat) )   deallocate(nnmat)
 
-         if ( allocated(unity) )   deallocate(unity)
+     if ( allocated(unity) )   deallocate(unity)
 
-         return
-     end subroutine hfqmc_deallocate_memory_umat
+     return
+  end subroutine hfqmc_deallocate_memory_umat
 
-!>>> deallocate memory for base-related variables
-     subroutine hfqmc_deallocate_memory_base()
-         implicit none
+!!>>> hfqmc_deallocate_memory_base: deallocate memory for base-related variables
+  subroutine hfqmc_deallocate_memory_base()
+     implicit none
 
-         if ( allocated(gtau) )    deallocate(gtau)
-         if ( allocated(wtau) )    deallocate(wtau)
+     if ( allocated(gtau) )    deallocate(gtau)
+     if ( allocated(wtau) )    deallocate(wtau)
 
-         if ( allocated(grnf) )    deallocate(grnf)
-         if ( allocated(wssf) )    deallocate(wssf)
+     if ( allocated(grnf) )    deallocate(grnf)
+     if ( allocated(wssf) )    deallocate(wssf)
 
-         if ( allocated(sig1) )    deallocate(sig1)
-         if ( allocated(sig2) )    deallocate(sig2)
+     if ( allocated(sig1) )    deallocate(sig1)
+     if ( allocated(sig2) )    deallocate(sig2)
 
-         return
-     end subroutine hfqmc_deallocate_memory_base
+     return
+  end subroutine hfqmc_deallocate_memory_base
 
   end module context
