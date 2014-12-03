@@ -23,6 +23,7 @@ test.py
 test.f90
 ctqmc_api_py.f90
 src/ctqmc/*/ctqmc
+src/hfqmc/*/hfqmc
 src/tools/hibiscus/entropy/entropy
 src/tools/hibiscus/stoch/sac
 src/tools/hibiscus/toolbox/mchi
