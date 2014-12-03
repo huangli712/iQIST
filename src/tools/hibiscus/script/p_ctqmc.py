@@ -47,7 +47,7 @@ class p_ctqmc_solver(object):
             p.setp()
             p.setp(isscf = 1)
 
-            # verify the parameters 
+            # verify the parameters
             p.check()
 
             # generate the solver.ctqmc.in file
@@ -93,7 +93,7 @@ class p_ctqmc_solver(object):
             'part'   : 0.50    ,
             'alpha'  : 0.70    ,
         }
- 
+
         # __p_cmp_azalea: the official parameter dict for azalea
         self.__p_cmp_azalea = self.__p_cmp_solver.copy()
 
