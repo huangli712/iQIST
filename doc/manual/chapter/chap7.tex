@@ -1,4 +1,5 @@
 \chapter{AUXILIARY TOOLS}
+\section{{\daisy} component}
 \section{{\jasmine} component}
 When the Coulomb interaction is general in the local Hamiltonian $H_{\text{loc}}$, as discussed above, we have to diagonalize $H_{\text{loc}}$ in advance to obtain its eigenvalues, eigenvectors, and the $F$-matrix. In general, the local Hamiltonian is defined as
 \begin{equation}
@@ -51,8 +52,7 @@ To calculate real physical quantities, such as the optical conductivity, Seebeck
 
 The calculated results for the self-energy function on the real axis using Pad\'{e} approximation strongly depend on the numerical accuracy of the original self-energy data. However, the CT-HYB/DMFT calculations yield a Matsubara self-energy function with numerical noise~\cite{PhysRevB.76.205120}. In this case, the Pad\'{e} approximation does not work well. To overcome this problem, Haule \emph{et al.}~\cite{PhysRevB.81.195107} suggested to split the Matsubara self-energy function into a low-frequency part and high-frequency tail. The low-frequency part is fitted by some sort of model functions which depends on whether the system is metallic or insulating, and the high-frequency part is fitted by modified Gaussian polynomials. It was shown that their trick works quite well even when the original self-energy function is noisy, and is superior to the Pad\'{e} approximation in all cases. Thus, in the \texttt{HIBISCUS} component, we also implemented this algorithm. It has broad applications in the LDA + DMFT calculations~\cite{RevModPhys.78.865}.
 
-\subsection{Maximum entropy method: entropy1}
-\subsection{Maximum entropy method: entropy2}
+\subsection{Maximum entropy method: entropy}
 \subsection{Stochastic analytical continuation: sac}
 \subsection{Analytical continuation for self-energy: swing}
 \subsection{toolbox/makechi}
@@ -63,7 +63,10 @@ The calculated results for the self-energy function on the real axis using Pad\'
 \subsection{toolbox/makestd}
 \subsection{toolbox/maketau}
 \subsection{toolbox/makeups}
-\subsection{script/pysci.py}
+\subsection{script/p\_atomic.py}
+\subsection{script/p\_ctqmc.py}
+\subsection{script/clean.py}
 \subsection{script/check.py}
+\subsection{script/trailing.sh}
 \section{Parquet component}
 As discussed in Sec.~\ref{subsec:parquet}, the DMFT + Parquet formalism is a post-processing tool of the $i$QIST package, which can be used to obtain the temperature dependence of various interaction-driven instabilities (ferromagnetic, antiferromagnetic, charge-order, superconductivity) of the system, and furthermore valuable spatial correlation information which is missing in the single-site DMFT. In the DMFT + Parquet code, one takes the lattice single-particle Green's function $G(P)$ and local irreducible vertex functions $\Gamma(\omega,\omega',\nu)$ as input, and then uses the Bethe-Salpeter equation and Parquet equations to incorporate momentum-dependence into the lattice two-particle correlation and vertex functions. In practical calculations, due to the huge memory requirements for saving the two-particle quantities [$\chi(P,P',Q)$ and $\Gamma(P,P',Q)$ are three-dimension tensor with double precision complex elements] and the instability issues occurring when performing operations on them (contraction, multiplication, inversion, etc.), one can perform one-shot calculations instead of two-particle self-consistent calculations. A scheme with true self-consistent calculation at both the single- and two-particle level, are still under development. Nevertheless, with the two-particle correlation and vertex functions obtained with the DMFT + Parquet code, one can  analyze the gap equation [i.e., Eq.~(\ref{eq:gapeq})] in various interaction channels, to study the instabilities of the system due to competition between lattice, spin, orbital and multi-orbital interactions.
