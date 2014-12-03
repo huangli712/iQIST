@@ -174,125 +174,125 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!>>> allocate memory for core-related variables
-     subroutine hfqmc_allocate_memory_core()
-         implicit none
+!!>>> hfqmc_allocate_memory_core: allocate memory for core-related variables
+  subroutine hfqmc_allocate_memory_core()
+     implicit none
 
 ! allocate memory
-         allocate(ktep(norbs),             stat=istat)
-         allocate(pmat(nsing,nspin),       stat=istat)
+     allocate(ktep(norbs),             stat=istat)
+     allocate(pmat(nsing,nspin),       stat=istat)
 
-         allocate(umat(nsing),             stat=istat)
-         allocate(lmat(nsing),             stat=istat)
+     allocate(umat(nsing),             stat=istat)
+     allocate(lmat(nsing),             stat=istat)
 
-         allocate(imat(ntime,nsing),       stat=istat)
-         allocate(smat(norbs,nsing),       stat=istat)
+     allocate(imat(ntime,nsing),       stat=istat)
+     allocate(smat(norbs,nsing),       stat=istat)
 
-         allocate(diag(ntime,norbs),       stat=istat)
-         allocate(atep(ntime,mstep,norbs), stat=istat)
-         allocate(btep(ntime,mstep,norbs), stat=istat)
+     allocate(diag(ntime,norbs),       stat=istat)
+     allocate(atep(ntime,mstep,norbs), stat=istat)
+     allocate(btep(ntime,mstep,norbs), stat=istat)
 
-         allocate(gmat(ntime,ntime,norbs), stat=istat)
-         allocate(wmat(ntime,ntime,norbs), stat=istat)
+     allocate(gmat(ntime,ntime,norbs), stat=istat)
+     allocate(wmat(ntime,ntime,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call s_print_error('hfqmc_allocate_memory_core','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('hfqmc_allocate_memory_core','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         ktep = 0
-         pmat = 0
+     ktep = 0
+     pmat = 0
 
-         umat = zero
-         lmat = zero
+     umat = zero
+     lmat = zero
 
-         imat = zero
-         smat = zero
+     imat = zero
+     smat = zero
 
-         diag = zero
-         atep = zero
-         btep = zero
+     diag = zero
+     atep = zero
+     btep = zero
 
-         gmat = zero
-         wmat = zero
+     gmat = zero
+     wmat = zero
 
-         return
-     end subroutine hfqmc_allocate_memory_core
+     return
+  end subroutine hfqmc_allocate_memory_core
 
-!>>> allocate memory for umat-related variables
-     subroutine hfqmc_allocate_memory_umat()
-         implicit none
+!!>>> hfqmc_allocate_memory_umat: allocate memory for umat-related variables
+  subroutine hfqmc_allocate_memory_umat()
+     implicit none
 
 ! allocate memory
-         allocate(symm(norbs),        stat=istat)
+     allocate(symm(norbs),        stat=istat)
 
-         allocate(eimp(norbs),        stat=istat)
+     allocate(eimp(norbs),        stat=istat)
 
-         allocate(quas(norbs),        stat=istat)
-         allocate(nmat(norbs),        stat=istat)
+     allocate(quas(norbs),        stat=istat)
+     allocate(nmat(norbs),        stat=istat)
 
-         allocate(tmesh(ntime),       stat=istat)
-         allocate(rmesh(mfreq),       stat=istat)
+     allocate(tmesh(ntime),       stat=istat)
+     allocate(rmesh(mfreq),       stat=istat)
 
-         allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(nnmat(norbs,norbs), stat=istat)
 
-         allocate(unity(ntime,ntime), stat=istat)
+     allocate(unity(ntime,ntime), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call s_print_error('hfqmc_allocate_memory_umat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('hfqmc_allocate_memory_umat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         symm  = 0
+     symm  = 0
 
-         eimp  = zero
+     eimp  = zero
 
-         quas  = zero
-         nmat  = zero
+     quas  = zero
+     nmat  = zero
 
-         tmesh = zero
-         rmesh = zero
+     tmesh = zero
+     rmesh = zero
 
-         nnmat = zero
+     nnmat = zero
 
-         unity = zero
+     unity = zero
 
-         return
-     end subroutine hfqmc_allocate_memory_umat
+     return
+  end subroutine hfqmc_allocate_memory_umat
 
-!>>> allocate memory for base-related variables
-     subroutine hfqmc_allocate_memory_base()
-         implicit none
+!!>>> hfqmc_allocate_memory_base: allocate memory for base-related variables
+  subroutine hfqmc_allocate_memory_base()
+     implicit none
 
 ! allocate memory
-         allocate(gtau(ntime,norbs), stat=istat)
-         allocate(wtau(ntime,norbs), stat=istat)
+     allocate(gtau(ntime,norbs), stat=istat)
+     allocate(wtau(ntime,norbs), stat=istat)
 
-         allocate(grnf(mfreq,norbs), stat=istat)
-         allocate(wssf(mfreq,norbs), stat=istat)
+     allocate(grnf(mfreq,norbs), stat=istat)
+     allocate(wssf(mfreq,norbs), stat=istat)
 
-         allocate(sig1(mfreq,norbs), stat=istat)
-         allocate(sig2(mfreq,norbs), stat=istat)
+     allocate(sig1(mfreq,norbs), stat=istat)
+     allocate(sig2(mfreq,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call s_print_error('hfqmc_allocate_memory_base','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('hfqmc_allocate_memory_base','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         gtau = zero
-         wtau = zero
+     gtau = zero
+     wtau = zero
 
-         grnf = czero
-         wssf = czero
+     grnf = czero
+     wssf = czero
 
-         sig1 = czero
-         sig2 = czero
+     sig1 = czero
+     sig2 = czero
 
-         return
-     end subroutine hfqmc_allocate_memory_base
+     return
+  end subroutine hfqmc_allocate_memory_base
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
@@ -302,21 +302,21 @@
   subroutine hfqmc_deallocate_memory_core()
      implicit none
 
-     if ( allocated(ktep) )    deallocate(ktep)
-     if ( allocated(pmat) )    deallocate(pmat)
+     if ( allocated(ktep) )  deallocate(ktep)
+     if ( allocated(pmat) )  deallocate(pmat)
 
-     if ( allocated(umat) )    deallocate(umat)
-     if ( allocated(lmat) )    deallocate(lmat)
+     if ( allocated(umat) )  deallocate(umat)
+     if ( allocated(lmat) )  deallocate(lmat)
 
-     if ( allocated(imat) )    deallocate(imat)
-     if ( allocated(smat) )    deallocate(smat)
+     if ( allocated(imat) )  deallocate(imat)
+     if ( allocated(smat) )  deallocate(smat)
 
-     if ( allocated(diag) )    deallocate(diag)
-     if ( allocated(atep) )    deallocate(atep)
-     if ( allocated(btep) )    deallocate(btep)
+     if ( allocated(diag) )  deallocate(diag)
+     if ( allocated(atep) )  deallocate(atep)
+     if ( allocated(btep) )  deallocate(btep)
 
-     if ( allocated(gmat) )    deallocate(gmat)
-     if ( allocated(wmat) )    deallocate(wmat)
+     if ( allocated(gmat) )  deallocate(gmat)
+     if ( allocated(wmat) )  deallocate(wmat)
 
      return
   end subroutine hfqmc_deallocate_memory_core
@@ -325,19 +325,19 @@
   subroutine hfqmc_deallocate_memory_umat()
      implicit none
 
-     if ( allocated(symm)  )   deallocate(symm )
+     if ( allocated(symm)  ) deallocate(symm )
 
-     if ( allocated(eimp)  )   deallocate(eimp )
+     if ( allocated(eimp)  ) deallocate(eimp )
 
-     if ( allocated(quas)  )   deallocate(quas )
-     if ( allocated(nmat)  )   deallocate(nmat )
+     if ( allocated(quas)  ) deallocate(quas )
+     if ( allocated(nmat)  ) deallocate(nmat )
 
-     if ( allocated(tmesh) )   deallocate(tmesh)
-     if ( allocated(rmesh) )   deallocate(rmesh)
+     if ( allocated(tmesh) ) deallocate(tmesh)
+     if ( allocated(rmesh) ) deallocate(rmesh)
 
-     if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(nnmat) ) deallocate(nnmat)
 
-     if ( allocated(unity) )   deallocate(unity)
+     if ( allocated(unity) ) deallocate(unity)
 
      return
   end subroutine hfqmc_deallocate_memory_umat
@@ -346,14 +346,14 @@
   subroutine hfqmc_deallocate_memory_base()
      implicit none
 
-     if ( allocated(gtau) )    deallocate(gtau)
-     if ( allocated(wtau) )    deallocate(wtau)
+     if ( allocated(gtau) )  deallocate(gtau)
+     if ( allocated(wtau) )  deallocate(wtau)
 
-     if ( allocated(grnf) )    deallocate(grnf)
-     if ( allocated(wssf) )    deallocate(wssf)
+     if ( allocated(grnf) )  deallocate(grnf)
+     if ( allocated(wssf) )  deallocate(wssf)
 
-     if ( allocated(sig1) )    deallocate(sig1)
-     if ( allocated(sig2) )    deallocate(sig2)
+     if ( allocated(sig1) )  deallocate(sig1)
+     if ( allocated(sig2) )  deallocate(sig2)
 
      return
   end subroutine hfqmc_deallocate_memory_base
