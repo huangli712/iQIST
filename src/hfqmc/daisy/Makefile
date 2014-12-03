@@ -1,10 +1,33 @@
+##
+##
+## Introduction
+## ============
+##
+## Makefile for iqist/src/ctqmc/azalea directory.
+##
+## Usage
+## =====
+##
+## 'make', 'make lib', 'make clean', 'make clean-dat' or 'make clean-all'
+##
+## Author
+## ======
+##
+## This building system is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 09/21/2014 by li huang
+##
+##
+
 .SUFFIXES: .f90
 
 include ../../build/make.sys
 
-default: all
-
-modm = mod_mpi.o mod_spring.o
 modn = hfqmc_constants.o hfqmc_control.o hfqmc_context.o
 dmft = hfqmc_dmft.o
 core = hfqmc_solver.o
@@ -16,6 +39,7 @@ main = hfqmc_main.o
 
 objects = $(modm) $(modn) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(dump) $(main)
 
+default: all
 all: hfqmc
 
 hfqmc: $(objects)
