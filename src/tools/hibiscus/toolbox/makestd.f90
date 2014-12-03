@@ -234,7 +234,7 @@
              enddo ! over ibin={1,nbins} loop
              rtmp = rtmp / real(nbins)
              sim_std(j,i) = sqrt( rtmp - sim(j,i)**2 )
-             
+
          enddo ! over j={1,nfreq} loop
      enddo ! over i={1,norbs} loop
      write(mystd,'(2X,a)') '>>> status: OK'

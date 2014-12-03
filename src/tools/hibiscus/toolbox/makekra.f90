@@ -260,7 +260,7 @@
              im1 = i - 1
          else
              im1 = i
-         endif ! back if ( i > -nw ) block 
+         endif ! back if ( i > -nw ) block
 
 ! determine om1 and om2
          if ( i > -nw ) then
