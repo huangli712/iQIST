@@ -44,21 +44,21 @@
      icf    = 0           ! type of crystal field (CF)
      isoc   = 0           ! type of spin-orbital coupling (SOC)
 
-     nband = 1            ! number of bands
-     nspin = 2            ! number of spins
-     norbs = nband*nspin  ! number of orbits
-     ncfgs = 2**norbs     ! number of many-body configurations
-     nmini = 0            ! minimal of total occupancy N to be kept
-     nmaxi = norbs        ! maximal of total occupancy N to be kept
+     nband  = 1           ! number of bands
+     nspin  = 2           ! number of spins
+     norbs  = nband*nspin ! number of orbits
+     ncfgs  = 2**norbs    ! number of many-body configurations
+     nmini  = 0           ! minimal of total occupancy N to be kept
+     nmaxi  = norbs       ! maximal of total occupancy N to be kept
 
-     Uc = 2.00_dp         ! intraorbital Coulomb interaction
-     Uv = 2.00_dp         ! interorbital Coulomb interaction
-     Jz = 0.00_dp         ! Hund's exchange interaction
-     Js = 0.00_dp         ! spin-flip interaction
-     Jp = 0.00_dp         ! pair-hopping interaction
+     Uc     = 2.00_dp     ! intraorbital Coulomb interaction
+     Uv     = 2.00_dp     ! interorbital Coulomb interaction
+     Jz     = 0.00_dp     ! Hund's exchange interaction
+     Js     = 0.00_dp     ! spin-flip interaction
+     Jp     = 0.00_dp     ! pair-hopping interaction
 
-     Ud = 2.00_dp         ! Coulomb interaction parameter
-     Jh = 0.00_dp         ! Hund's exchange parameter
+     Ud     = 2.00_dp     ! Coulomb interaction parameter
+     Jh     = 0.00_dp     ! Hund's exchange parameter
 
      mune   = 0.00_dp     ! chemical potential
      lambda = 0.00_dp     ! spin-orbit coupling strength
