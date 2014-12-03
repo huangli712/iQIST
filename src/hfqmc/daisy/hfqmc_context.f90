@@ -196,7 +196,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call hfqmc_print_error('hfqmc_allocate_memory_core','can not allocate enough memory')
+             call s_print_error('hfqmc_allocate_memory_core','can not allocate enough memory')
          endif
 
 ! initialize them
@@ -240,7 +240,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call hfqmc_print_error('hfqmc_allocate_memory_umat','can not allocate enough memory')
+             call s_print_error('hfqmc_allocate_memory_umat','can not allocate enough memory')
          endif
 
 ! initialize them
@@ -277,7 +277,7 @@
 
 ! check the status
          if ( istat /= 0 ) then
-             call hfqmc_print_error('hfqmc_allocate_memory_base','can not allocate enough memory')
+             call s_print_error('hfqmc_allocate_memory_base','can not allocate enough memory')
          endif
 
 ! initialize them

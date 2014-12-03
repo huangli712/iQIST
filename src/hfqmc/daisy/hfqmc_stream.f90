@@ -601,7 +601,7 @@
 ! additional check for umat
      do i=1,nsing
          if ( umat(i) < zero ) then
-             call hfqmc_print_error('hfqmc_solver_init','umat element is negative')
+             call s_print_error('hfqmc_solver_init','umat element is negative')
          endif
      enddo ! over i={1,nsing} loop
 

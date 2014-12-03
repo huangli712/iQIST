@@ -57,14 +57,14 @@
 ! package, dgetrf subroutine
      call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
-         call hfqmc_print_error('hfqmc_dmat_inv','error in lapack subroutine dgetrf')
+         call s_print_error('hfqmc_dmat_inv','error in lapack subroutine dgetrf')
      endif
 
 ! computes the inverse of an LU-factored general matrix, need lapack
 ! package, dgetri subroutine
      call dgetri(ndim, dmat, ndim, ipiv, work, ndim, ierror)
      if ( ierror /= 0 ) then
-         call hfqmc_print_error('hfqmc_dmat_inv','error in lapack subroutine dgetri')
+         call s_print_error('hfqmc_dmat_inv','error in lapack subroutine dgetri')
      endif
 
      return
@@ -96,14 +96,14 @@
 ! package, zgetrf subroutine
      call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
      if ( ierror /= 0 ) then
-         call hfqmc_print_error('hfqmc_zmat_inv','error in lapack subroutine zgetrf')
+         call s_print_error('hfqmc_zmat_inv','error in lapack subroutine zgetrf')
      endif
 
 ! computes the inverse of an LU-factored general matrix, need lapack
 ! package, zgetri subroutine
      call zgetri(ndim, zmat, ndim, ipiv, work, ndim, ierror)
      if ( ierror /= 0 ) then
-         call hfqmc_print_error('hfqmc_zmat_inv','error in lapack subroutine zgetri')
+         call s_print_error('hfqmc_zmat_inv','error in lapack subroutine zgetri')
      endif
 
      return

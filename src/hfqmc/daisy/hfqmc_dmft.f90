@@ -69,23 +69,23 @@
 ! allocate memory for impurity green's function arrays
      allocate(grnt(ntime,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call hfqmc_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
+         call s_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
      endif
 
      allocate(grnw(mfreq,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call hfqmc_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
+         call s_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
      endif
 
 ! allocate memory for bath weiss's function arrays
      allocate(wsst(ntime,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call hfqmc_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
+         call s_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
      endif
 
      allocate(wssw(mfreq,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call hfqmc_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
+         call s_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
      endif
 
 ! preparing local arrays and matrices
