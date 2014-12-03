@@ -11,15 +11,16 @@
 !!!           12/03/2014 by li huang
 !!! purpose : provide printing infrastructure for Hirsch-Fye quantum Monte
 !!!           Carlo (HFQMC) quantum impurity solver
-!!! status  : very unstable
+!!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> print the startup information for Hirsch-Fye quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> hfqmc_print_header: print the startup information for Hirsch-Fye
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean
+!!>>> field theory self-consistent engine
   subroutine hfqmc_print_header()
-     use constants
+     use constants, only : mystd
+
      use control, only : nprocs
 
      implicit none
@@ -34,10 +35,10 @@
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Hirsch-Fye Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'version: 2012.08.20T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'develop: by li huang, CAEP & IOP'
-     write(mystd,'(2X,a)') 'support: huangli712@yahoo.com.cn'
-     write(mystd,'(2X,a)') 'license: GPL2 and later versions'
+     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'DAISY >>> start running at '//date_time_string
@@ -57,11 +58,11 @@
      return
   end subroutine hfqmc_print_header
 
-!>>> print the ending information for Hirsch-Fye quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory self-consistent
-! engine
+!!>>> hfqmc_print_footer: print the ending information for Hirsch-Fye
+!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean
+!!>>> field theory self-consistent engine
   subroutine hfqmc_print_footer()
-     use constants
+     use constants, only : dp, mystd
 
      implicit none
 
@@ -86,10 +87,11 @@
      return
   end subroutine hfqmc_print_footer
 
-!>>> print the running parameters, only for reference
+!!>>> hfqmc_print_summary: print the running parameters, only for reference
   subroutine hfqmc_print_summary()
-     use constants
-     use control
+     use constants, only : mystd, ev2k
+
+     use control ! ALL
 
      implicit none
 
