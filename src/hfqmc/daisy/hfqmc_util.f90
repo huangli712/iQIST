@@ -1,24 +1,3 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_dmat_inv
-!           hfqmc_zmat_inv
-!           hfqmc_time_builder
-!           hfqmc_time_analyzer
-! source  : hfqmc_util.f90
-! type    : functions & subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 12/24/2009 by li huang
-!           02/26/2010 by li huang
-!           03/04/2010 by li huang
-!           08/25/2010 by li huang
-! purpose : to provide utility functions and subroutines for Hirsch-Fye
-!           quantum Monte Carlo (HFQMC) quantum impurity solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
-
 # define prefix '>>> used time: '
 
 # define iolst1 prefix , mday, ' d ', mhou, ' h ', mmin, ' m in this iteration.'
@@ -30,84 +9,6 @@
 # define iolst6 prefix , nhou, ' h ', nmin, ' m in total iteration.'
 # define iolst7 prefix , nmin, ' m ', nsec, ' s in total iteration.'
 # define iolst8 prefix , nsec, ' s in total iteration.'
-
-!>>> invert real(dp) matrix using lapack subroutines
-  subroutine hfqmc_dmat_inv(ndim, dmat)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of dmat matrix
-     integer, intent(in) :: ndim
-
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the inversed matrix
-     real(dp), intent(inout) :: dmat(ndim,ndim)
-
-! local variables
-! error flag
-     integer  :: ierror
-
-! working arrays for lapack subroutines
-     integer  :: ipiv(ndim)
-     real(dp) :: work(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, dgetrf subroutine
-     call dgetrf(ndim, ndim, dmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call s_print_error('hfqmc_dmat_inv','error in lapack subroutine dgetrf')
-     endif
-
-! computes the inverse of an LU-factored general matrix, need lapack
-! package, dgetri subroutine
-     call dgetri(ndim, dmat, ndim, ipiv, work, ndim, ierror)
-     if ( ierror /= 0 ) then
-         call s_print_error('hfqmc_dmat_inv','error in lapack subroutine dgetri')
-     endif
-
-     return
-  end subroutine hfqmc_dmat_inv
-
-!>>> invert complex(dp) matrix using lapack subroutines
-  subroutine hfqmc_zmat_inv(ndim, zmat)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! dimension of zmat matrix
-     integer, intent(in) :: ndim
-
-! object matrix, on entry, it contains the original matrix, on exit,
-! it is destroyed and replaced with the inversed matrix
-     complex(dp), intent(inout) :: zmat(ndim,ndim)
-
-! local variables
-! error flag
-     integer     :: ierror
-
-! working arrays for lapack subroutines
-     integer     :: ipiv(ndim)
-     complex(dp) :: work(ndim)
-
-! computes the LU factorization of a general m-by-n matrix, need lapack
-! package, zgetrf subroutine
-     call zgetrf(ndim, ndim, zmat, ndim, ipiv, ierror)
-     if ( ierror /= 0 ) then
-         call s_print_error('hfqmc_zmat_inv','error in lapack subroutine zgetrf')
-     endif
-
-! computes the inverse of an LU-factored general matrix, need lapack
-! package, zgetri subroutine
-     call zgetri(ndim, zmat, ndim, ipiv, work, ndim, ierror)
-     if ( ierror /= 0 ) then
-         call s_print_error('hfqmc_zmat_inv','error in lapack subroutine zgetri')
-     endif
-
-     return
-  end subroutine hfqmc_zmat_inv
 
 !>>> returns a string containing date and time in human-readable format
   subroutine hfqmc_time_builder(date_time_string)
