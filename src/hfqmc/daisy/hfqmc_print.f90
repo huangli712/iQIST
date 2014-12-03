@@ -1,35 +1,19 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_print_header
-!           hfqmc_print_footer
-!           hfqmc_print_summary
-! source  : hfqmc_print.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 10/24/2008 by li huang
-!           10/28/2008 by li huang
-!           11/04/2008 by li huang
-!           12/20/2008 by li huang
-!           12/27/2008 by li huang
-!           12/30/2008 by li huang
-!           01/03/2009 by li huang
-!           01/06/2009 by li huang
-!           03/18/2009 by li huang
-!           04/16/2009 by li huang
-!           04/19/2009 by li huang
-!           08/11/2009 by li huang
-!           08/23/2009 by li huang
-!           12/23/2009 by li huang
-!           02/26/2010 by li huang
-!           03/08/2010 by li huang
-!           03/25/2010 by li huang
-! purpose : provide printing infrastructure for Hirsch-Fye quantum Monte
-!           Carlo (HFQMC) quantum impurity solver
-! input   :
-! output  :
-! status  : very unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_print_header
+!!!           hfqmc_print_footer
+!!!           hfqmc_print_summary
+!!! source  : hfqmc_print.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 10/24/2008 by li huang
+!!!           03/25/2010 by li huang
+!!!           12/03/2014 by li huang
+!!! purpose : provide printing infrastructure for Hirsch-Fye quantum Monte
+!!!           Carlo (HFQMC) quantum impurity solver
+!!! status  : very unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> print the startup information for Hirsch-Fye quantum Monte Carlo
 ! quantum impurity solver plus dynamical mean field theory self-consistent
