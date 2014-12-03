@@ -1,37 +1,26 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_core module
-!           hfqmc_umat module
-!           hfqmc_base module
-!           context    module
-! source  : hfqmc_context.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 10/24/2008 by li huang
-!           10/27/2008 by li huang
-!           12/18/2008 by li huang
-!           12/30/2008 by li huang
-!           01/03/2009 by li huang
-!           03/16/2009 by li huang
-!           04/18/2009 by li huang
-!           08/10/2009 by li huang
-!           08/24/2009 by li huang
-!           12/24/2009 by li huang
-!           02/26/2010 by li huang
-!           03/08/2010 by li huang
-!           03/27/2010 by li huang
-! purpose : define the key data structure and global arrays/variables for
-!           Hirsch-Fye quantum Monte Carlo (HFQMC) quantum impurity solver
-!           and dynamical mean field theory (DMFT) self-consistent engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_core module
+!!!           hfqmc_umat module
+!!!           hfqmc_base module
+!!!           context    module
+!!! source  : hfqmc_context.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 10/24/2008 by li huang
+!!!           03/27/2010 by li huang
+!!!           12/04/2014 by li huang
+!!! purpose : define the key data structure and global arrays/variables for
+!!!           Hirsch-Fye quantum Monte Carlo (HFQMC) quantum impurity solver
+!!!           and dynamical mean field theory (DMFT) self-consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !=========================================================================
 !>>> module hfqmc_core                                                 <<<
 !=========================================================================
+
 !>>> containing core (internal) variables used by Hirsch-Fye quantum Monte
 ! Carlo quantum impurity solver
   module hfqmc_core
