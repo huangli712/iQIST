@@ -3,8 +3,6 @@
 ! program : hfqmc_print_header
 !           hfqmc_print_footer
 !           hfqmc_print_summary
-!           hfqmc_print_error
-!           hfqmc_print_exception
 ! source  : hfqmc_print.f90
 ! type    : subroutines
 ! author  : li huang (email:huangli712@yahoo.com.cn)
@@ -132,51 +130,3 @@
 
      return
   end subroutine hfqmc_print_summary
-
-!>>> print the error information and STOP the program
-  subroutine hfqmc_print_error(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! error message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
-
-! TERMINATE THE PROGRAM
-!-------------------------------------------------------------------------
-     STOP
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine hfqmc_print_error
-
-!>>> print normal runtime exceptional information, and continue
-  subroutine hfqmc_print_exception(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! exception message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
-
-! CONTINUE/PAUSE THE PROGRAM
-!-------------------------------------------------------------------------
-     CONTINUE ! OR PAUSE
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine hfqmc_print_exception
