@@ -1,42 +1,26 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_dmft_selfer
-!           hfqmc_dmft_conver
-!           hfqmc_dmft_mixer
-!           hfqmc_dmft_nbethe
-!           hfqmc_dmft_abethe
-! source  : hfqmc_dmft.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 12/27/2005 by li huang
-!           01/11/2008 by li huang
-!           10/27/2008 by li huang
-!           10/30/2008 by li huang
-!           11/01/2008 by li huang
-!           11/06/2008 by li huang
-!           12/20/2008 by li huang
-!           12/30/2008 by li huang
-!           01/07/2009 by li huang
-!           03/16/2009 by li huang
-!           04/18/2009 by li huang
-!           08/11/2009 by li huang
-!           08/24/2009 by li huang
-!           09/05/2009 by li huang
-!           12/24/2009 by li huang
-!           02/26/2010 by li huang
-!           03/08/2010 by li huang
-!           03/26/2010 by li huang
-! purpose : self-consistent engine for dynamical mean field theory (DMFT)
-!           simulation. it is only suitable for Hirsch-Fye quantum Monte
-!           Carlo (HFQMC) quantum impurity solver plus bethe lattice model.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_dmft_selfer
+!!!           hfqmc_dmft_conver
+!!!           hfqmc_dmft_nbethe
+!!!           hfqmc_dmft_abethe
+!!! source  : hfqmc_dmft.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 12/27/2005 by li huang
+!!!           03/26/2010 by li huang
+!!!           12/04/2014 by li huang
+!!! purpose : the self-consistent engine for dynamical mean field theory
+!!!           (DMFT) simulation. it is only suitable for Hirsch-Fye
+!!!           quantum Monte Carlo (HFQMC) quantum impurity solver plus
+!!!           bethe lattice model.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> the self-consistent engine for Hirsch-Fye quantum Monte Carlo
-! quantum impurity solver plus dynamical mean field theory simulation
+!!>>> hfqmc_dmft_selfer: the self-consistent engine for Hirsch-Fye quantum
+!!>>> Monte Carlo quantum impurity solver plus dynamical mean field theory
+!!>>> simulation
   subroutine hfqmc_dmft_selfer()
      use constants
      use control
@@ -117,7 +101,7 @@
 ! mixing two bath weiss's function to produce a newer one
 ! before mixing: wssf is the old bath weiss's function, and wssw is the new one.
 ! after mixing: wssw is the newer bath weiss's function, and wssf is untouched.
-     call hfqmc_dmft_mixer(wssf, wssw)
+     call s_mix_z(size(wssw), wssf, wssw, alpha)
 
 ! invfourier bath weiss's function from G0(i\omega) to G0(\tau)
      call hfqmc_fourier_w2t(wssw, wsst)
@@ -161,7 +145,7 @@
      return
   end subroutine hfqmc_dmft_selfer
 
-!>>> check the convergence of self-energy function
+!!>>> hfqmc_dmft_conver: check the convergence of self-energy function
   subroutine hfqmc_dmft_conver(iter, convergence)
      use constants
      use control
@@ -197,45 +181,21 @@
      convergence = ( ( seps <= eps8 ) .and. ( iter >= minit ) )
 
 ! update sig1
-     sig1 = sig1 * (one - alpha) + sig2 * alpha
+     call s_mix_z(size(sig1), sig2, sig1, one - alpha)
 
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(3(2X,a,i3))') 'DAISY >>> cur_iter:', iter, 'min_iter:', minit, 'max_iter:', niter
-         write(mystd,'(2(2X,a,E10.4))') 'DAISY >>> sig_curr:', seps, 'eps_curr:', eps8
+         write(mystd,'(2(2X,a,E12.4))') 'DAISY >>> sig_curr:', seps, 'eps_curr:', eps8
          write(mystd,'( (2X,a,L1))') 'DAISY >>> self-consistent iteration convergence is ', convergence
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine hfqmc_dmft_conver
 
-!>>> complex(dp) version, mixing two vectors using linear mixing algorithm
-  subroutine hfqmc_dmft_mixer(vec1, vec2)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! older green/weiss/sigma function in input
-     complex(dp), intent(inout) :: vec1(mfreq,norbs)
-
-! newer green/weiss/sigma function in input, newest in output
-     complex(dp), intent(inout) :: vec2(mfreq,norbs)
-
-! linear mixing scheme
-     vec2 = vec1 * (one - alpha) + vec2 * alpha
-
-     return
-  end subroutine hfqmc_dmft_mixer
-
-!=========================================================================
-!>>> dynamical mean-field theory self-consistent engine                <<<
-!=========================================================================
-
-!>>> self-consistent conditions, bethe lattice, semicircular density of
-! states, force a paramagnetic order
+!!>>> hfqmc_dmft_nbethe: self-consistent conditions, bethe lattice,
+!!>>> semicircular density of states, force a paramagnetic order
   subroutine hfqmc_dmft_nbethe(grnw, wssw)
      use constants
      use control
@@ -277,8 +237,9 @@
      return
   end subroutine hfqmc_dmft_nbethe
 
-!>>> self-cosistent conditions, bethe lattice, semicircular density of
-! states, force a antiferromagnetic long range order
+!!>>> hfqmc_dmft_abethe: self-cosistent conditions, bethe lattice,
+!!>>> semicircular density of states, force a antiferromagnetic long
+!!>>> range order
   subroutine hfqmc_dmft_abethe(grnw, wssw)
      use constants
      use control
