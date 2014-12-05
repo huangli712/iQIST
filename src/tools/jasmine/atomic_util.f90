@@ -542,8 +542,8 @@
      umat = half * umat
 
 ! deallocate memory
-     if (allocated(gaunt))         deallocate(gaunt)
-     if (allocated(slater_cordon)) deallocate(slater_cordon)
+     if ( allocated(gaunt) )         deallocate(gaunt)
+     if ( allocated(slater_cordon) ) deallocate(slater_cordon)
 
      return
   end subroutine atomic_make_umatS
@@ -563,6 +563,7 @@
      complex(dp), intent(out) :: smat(6,6)
 
 ! local parameters
+! \sqrt{2}
      real(dp), parameter :: sqrt2 = sqrt(2.0_dp)
 
 ! make SOC on complex orbital basis, the orbital order is:
@@ -594,6 +595,7 @@
      complex(dp), intent(out) :: smat(10,10)
 
 ! local parameters
+! \sqrt{6}
      real(dp), parameter :: sqrt6 = sqrt(6.0_dp)
 
 ! make SOC on complex orbital basis, the orbital order is:
@@ -635,6 +637,7 @@
      complex(dp), intent(out) :: smat(14,14)
 
 ! local parameters
+! \sqrt{6}, \sqrt{10}, and \sqrt{12}
      real(dp), parameter :: sqrt6  = sqrt( 6.0_dp)
      real(dp), parameter :: sqrt10 = sqrt(10.0_dp)
      real(dp), parameter :: sqrt12 = sqrt(12.0_dp)
@@ -695,6 +698,7 @@
      complex(dp), intent(out) :: tmat_c2r(norbs,norbs)
 
 ! local parameters
+! \sqrt{2}
      real(dp), parameter :: sqrt2 = sqrt(2.0_dp)
 
      tmat_c2r = czero
@@ -822,7 +826,7 @@
 
 ! external arguments
 ! the transformation matrix from complex orbitals |lz,sz> to |j2,jz>
-     complex(dp), intent(out) :: tmat_c2j( norbs, norbs )
+     complex(dp), intent(out) :: tmat_c2j(norbs,norbs)
 
      tmat_c2j = czero
      select case (nband)
