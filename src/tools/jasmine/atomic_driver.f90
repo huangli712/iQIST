@@ -162,7 +162,7 @@
      call cpu_time(time_begin) ! record starting time
      do i=1,nsectors
          if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) then
-             call s_print_error('atomic_s_driver', 'hmat is not real!')
+             call s_print_error('atomic_s_driver','hmat is not real!')
          endif ! back if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) block
      enddo ! over i={1,nsectors} loop
      call cpu_time(time_end)   ! record ending   time
