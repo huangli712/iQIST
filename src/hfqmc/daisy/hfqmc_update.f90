@@ -327,7 +327,7 @@
      gmat(:,:,pp) = wmat(:,:,pp)
      call dgesv(ntime, ntime, amat, ntime, ipiv, gmat(:,:,pp), ntime, ierr)
      if ( ierr /= 0 ) then
-         call hfqmc_print_error('cat_clean_update','error in lapack subroutine dgesv')
+         call s_print_error('cat_clean_update','error in lapack subroutine dgesv')
      endif
 
      return

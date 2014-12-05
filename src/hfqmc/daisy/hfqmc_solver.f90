@@ -107,25 +107,25 @@
 ! allocate memory
      allocate(msum(-ntime+1:ntime-1),  stat=istat)
      if ( istat /= 0 ) then
-         call hfqmc_print_error('hfqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
      endif
 
 ! allocate memory
      allocate(osum(norbs,norbs),       stat=istat)
      if ( istat /= 0 ) then
-         call hfqmc_print_error('hfqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
      endif
 
 ! allocate memory
      allocate(gsum(ntime,norbs),       stat=istat)
      if ( istat /= 0 ) then
-         call hfqmc_print_error('hfqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
      endif
 
 ! allocate memory
      allocate(tmat(ntime,ntime,norbs), stat=istat)
      if ( istat /= 0 ) then
-         call hfqmc_print_error('hfqmc_impurity_solver','can not allocate enough memory')
+         call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
      endif
 
 ! setup timer
@@ -406,7 +406,7 @@
 
 ! print out the result
              if ( myid == master ) then ! only master node can do it
-                 call hfqmc_time_analyzer(time_iter, time_niter)
+                 call s_time_analyzer(time_iter, time_niter)
                  write(mystd,*)
              endif
 

@@ -46,7 +46,7 @@ class p_atomic_solver(object):
             p.setp(icu = 1)
             p.setp()
 
-            # verify the parameters 
+            # verify the parameters
             p.check()
 
             # generate the atom.config.in file
