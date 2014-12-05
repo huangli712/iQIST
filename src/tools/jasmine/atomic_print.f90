@@ -5,7 +5,7 @@
 !!!           atomic_print_summary
 !!! source  : atomic_print.f90
 !!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
+!!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
 !!!           10/20/2014 by li huang

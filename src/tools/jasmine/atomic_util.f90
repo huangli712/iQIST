@@ -20,7 +20,7 @@
 !!!           atomic_tran_repr_real
 !!! source  : atomic_util.f90
 !!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
+!!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
 !!!           10/23/2014 by li huang

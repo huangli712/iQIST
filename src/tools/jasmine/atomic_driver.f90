@@ -4,7 +4,7 @@
 !!!           atomic_s_driver
 !!! source  : atomic_driver.f90
 !!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
+!!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/13/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
