@@ -119,10 +119,10 @@
 !                  |2, 2,up>, |2, 2,dn>
 ! (3) |j2,jz> orbital basis (eigenstates of j2, jz)
 !     for example, |3/2,-3/2>, |3/2,3/2>,
-!                  |3/2,-1/2>, |3/2,1/2>, 
+!                  |3/2,-1/2>, |3/2,1/2>,
 !                  |5/2,-5/2>, |5/2,5/2>,
 !                  |5/2,-3/2>, |5/2,3/2>,
-!                  |5/2,-1/2>, |5/2,1/2>,  
+!                  |5/2,-1/2>, |5/2,1/2>,
 ! (4) the so-called natural basis, on which the onsite energy of impurity
 !     is diagonal. we have to diagonalize CF + SOC to obtain natural basis
 ! Note that the CF is always defined in real orbital basis, SOC is always
@@ -318,10 +318,10 @@
 !                  |2, 2,up>, |2, 2,dn>
 ! (3) |j2,jz> orbital basis (eigenstates of j2, jz)
 !     for example, |3/2,-3/2>, |3/2,3/2>,
-!                  |3/2,-1/2>, |3/2,1/2>, 
+!                  |3/2,-1/2>, |3/2,1/2>,
 !                  |5/2,-5/2>, |5/2,5/2>,
 !                  |5/2,-3/2>, |5/2,3/2>,
-!                  |5/2,-1/2>, |5/2,1/2>,  
+!                  |5/2,-1/2>, |5/2,1/2>,
 ! (4) the so-called natural basis, on which the onsite energy of impurity
 !     is diagonal. we have to diagonalize CF + SOC to obtain natural basis
 ! Note that the CF is always defined in real orbital basis, SOC is always
