@@ -24,11 +24,11 @@ Advanced Test Cases For MANJUSHAKA
 
 * 3f // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 5.00, non-diagonal CF, GQNs (N,Sz,PS)
 
-* 3g // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 5.00, SOC, lambda = 0.50, GQNs (N,Jz) 
+* 3g // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 5.00, SOC, lambda = 0.50, GQNs (N,Jz)
 
-* 3h // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 5.00, SOC, lambda = 0.50, GQNs (N,Jz) 
+* 3h // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 40.00, mune = 5.00, SOC, lambda = 0.50, GQNs (N,Jz)
 
-* 3i // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 5.00, SOC, lambda = 0.50, GQNs (N,Jz) 
+* 3i // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 100.00, mune = 5.00, SOC, lambda = 0.50, GQNs (N,Jz)
 
 * 3j // Uc = 4.0, Uv=2.0, Jz = 1.0, Js=1.0, Jp=1.0, beta = 10.00, mune = 5.00, non-diagonal CF, SOC, lambda = 0.50, GQNs (N)
 
@@ -75,6 +75,7 @@ Advanced Test Cases For MANJUSHAKA
 * 5n // Ud = 2.457990, JH = 1.349258, beta = 40.00, mune = 8.00, GQNs (N,Sz)
 
 * 5o // Ud = 2.457990, JH = 1.349258, beta = 100.00, mune = 8.00, GQNs (N,Sz)
+
 
 3. 7 band model
 ---------------
