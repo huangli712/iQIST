@@ -241,6 +241,18 @@
          lpass = .false.
      endif ! back if ( ncfgs /= 2 ** norbs ) block
 
+! check nmini and nmaxi
+     if ( nmini < 0 ) then
+         nmini = 0
+         write(mystd,'(2X,a)') 'WARNING: nmini < 0, enforce to be zero!'
+     endif ! back if ( nmini < 0 ) block
+
+     if ( nmaxi > norbs ) then
+         nmaxi = norbs
+         write(mystd,'(2X,a)') 'WARNING: nmaxi > norbs, enforce to be norbs!'
+         write(mystd,*)
+     endif ! back if ( nmaix > norbs ) block
+
 ! check Uc, Uv, Jz, Js, Jp
      if ( Uc < zero .or. Uv < zero ) then
          write(mystd,'(2X,a)') 'ERROR: Uc and Uv must be larger than or equal to zero!'
@@ -273,18 +285,6 @@
          call s_print_error('atomic_check_config','invalid parameters found in atom.config.in file!')
      endif ! back if ( lpass .eqv. .false. ) block
 
-! check nmini and nmaxi
-     if ( nmini < 0 ) then
-         nmini = 0
-         write(mystd,'(2X,a)') 'WARNING: nmini < 0, enforce to be zero!'
-     endif ! back if ( nmini < 0 ) block
-
-     if ( nmaxi > norbs ) then
-         nmaxi = norbs
-         write(mystd,'(2X,a)') 'WARNING: nmaxi > norbs, enforce to be norbs!'
-         write(mystd,*)
-     endif ! back if ( nmaix > norbs ) block
-
      return
   end subroutine atomic_check_config
 
@@ -313,25 +313,24 @@
 ! we shall read crystal field (cmat) from file atom.cmat.in
 ! inquire file at first
      inquire( file = 'atom.cmat.in', exist = exists )
+     if ( exists .eqv. .false. ) then
+         call s_print_error('atomic_read_cmat','file atomic.cmat.in does not exist!')
+     endif ! back if ( exists .eqv. .false. ) block
 
-     if ( exists .eqv. .true. ) then
 ! open file atom.cmat.in
-         open(mytmp, file='atom.cmat.in', form='formatted', status='unknown')
+     open(mytmp, file='atom.cmat.in', form='formatted', status='unknown')
 
 ! read the data until EOF
-         do
-             read(mytmp,*,iostat = ierr) i1, i2, raux
-             if ( ierr == iostat_end ) EXIT
-             call s_assert( i1 <= norbs .and. i2 <= norbs )
+     do
+         read(mytmp,*,iostat = ierr) i1, i2, raux
+         if ( ierr == iostat_end ) EXIT
 ! crystal field is actually real
-             cmat(i1,i2) = dcmplx(raux, zero)
-         enddo ! over do while loop
+         call s_assert( i1 <= norbs .and. i2 <= norbs )
+         cmat(i1,i2) = dcmplx(raux, zero)
+     enddo ! over do while loop
 
 ! close data file
-         close(mytmp)
-     else
-         call s_print_error('atomic_read_cmat','file atomic.cmat.in does not exist!')
-     endif ! back if ( exists .eqv. .true. ) block
+     close(mytmp)
 
      return
   end subroutine atomic_read_cmat
@@ -360,23 +359,22 @@
 ! we shall read onsite impurity level (emat) from file atomic.emat.in
 ! inquire file at first
      inquire( file = 'atom.emat.in', exist = exists )
+     if ( exists .eqv. .false. ) then
+         call s_print_error('atomic_read_emat','file atomic.emat.in does not exist!')
+     endif ! back if ( exists .eqv. .false. ) block
 
-     if ( exists .eqv. .true. ) then
 ! open file atom.emat.in
-         open(mytmp, file='atom.emat.in', form='formatted', status='unknown')
+     open(mytmp, file='atom.emat.in', form='formatted', status='unknown')
 
 ! read the data file
-         do i=1,norbs
-             read(mytmp,*) i1, i2, raux
+     do i=1,norbs
+         read(mytmp,*) i1, i2, raux
 ! emat is actually real in natural basis
-             emat(i,i) = dcmplx(raux, zero)
-         enddo ! over i={1,norbs} loop
+         emat(i,i) = dcmplx(raux, zero)
+     enddo ! over i={1,norbs} loop
 
 ! close data file
-         close(mytmp)
-     else
-         call s_print_error('atomic_read_emat','file atomic.emat.in does not exist!')
-     endif ! back if ( exists .eqv. .true. ) block
+     close(mytmp)
 
      return
   end subroutine atomic_read_emat
@@ -407,24 +405,24 @@
 ! we shall read transformation matrix tmat from file atomic.tmat.in
 ! inquire file at first
      inquire( file = 'atom.tmat.in', exist = exists )
+     if ( exists .eqv. .false. ) then
+         call s_print_error('atomic_read_tmat','file atomic.tmat.in does not exist')
+     endif ! back if ( exists .eqv. .false. ) block
 
-     if ( exists .eqv. .true. ) then
 ! open file atom.tmat.in
-         open(mytmp, file='atom.tmat.in', form='formatted', status='unknown')
+     open(mytmp, file='atom.tmat.in', form='formatted', status='unknown')
 
 ! read the data file
-         do i=1,norbs
-             do j=1,norbs
-                 read(mytmp,*) i1, i2, raux
-                 tmat(j,i) = dcmplx(raux, zero)
-             enddo ! over j={1,norbs} loop
-         enddo ! over i={1,norbs} loop
+     do i=1,norbs
+         do j=1,norbs
+             read(mytmp,*) i1, i2, raux
+! tmat is actually real
+             tmat(j,i) = dcmplx(raux, zero)
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
-         close(mytmp)
-     else
-         call s_print_error('atomic_read_tmat','file atomic.tmat.in does not exist')
-     endif ! back if ( exists .eqv. .true. ) block
+     close(mytmp)
 
      return
   end subroutine atomic_read_tmat
