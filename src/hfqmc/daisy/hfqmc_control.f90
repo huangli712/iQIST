@@ -1,53 +1,39 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : control    module
-! source  : hfqmc_control.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 10/24/2008 by li huang
-!           10/27/2008 by li huang
-!           12/17/2008 by li huang
-!           12/21/2008 by li huang
-!           12/23/2008 by li huang
-!           12/30/2008 by li huang
-!           01/05/2009 by li huang
-!           03/16/2009 by li huang
-!           04/18/2009 by li huang
-!           08/09/2009 by li huang
-!           08/22/2009 by li huang
-!           12/23/2009 by li huang
-!           02/26/2010 by li huang
-!           03/08/2010 by li huang
-!           03/25/2010 by li huang
-! purpose : define global control parameters for Hirsch-Fye quantum Monte
-!           Carlo (HFQMC) quantum impurity solver and dynamical mean field
-!           theory (DMFT) self-consistent engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : control    module
+!!! source  : hfqmc_control.f90
+!!! type    : module
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 10/24/2008 by li huang
+!!!           03/25/2010 by li huang
+!!!           12/04/2014 by li huang
+!!! purpose : define global control parameters for Hirsch-Fye quantum
+!!!           Monte Carlo (HFQMC) quantum impurity solver and dynamical
+!!!           mean field theory (DMFT) self-consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
   module control
      use constants, only : dp
 
      implicit none
 
-!=========================================================================
-!>>> integer variables                                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> integer variables                                                <<<
+!!========================================================================
 
 ! control flag: running mode
 ! if isscf == 1, one-shot non-self-consistent scheme, used in local density
 ! approximation plus dynamical mean field theory case
 ! if isscf == 2, self-consistent scheme, used in normal model hamiltonian
 ! plus dynamical mean field theory case
-     integer, public, save :: isscf  = 1
+     integer, public, save :: isscf  = 2
 
 ! control flag: symmetry of bands
 ! if issun == 1, the bands are not symmetrized
 ! if issun == 2, the bands are symmetrized according to symmetry matrix
-     integer, public, save :: issun  = 1
+     integer, public, save :: issun  = 2
 
 ! control flag: symmetry of spin orientation
 ! if isspn == 1, enforce spin up = spin down
@@ -57,7 +43,7 @@
 ! control flag: impurity green's function binning mode
 ! if isbin == 1, without binning mode
 ! if isbin == 2, with binning mode
-     integer, public, save :: isbin  = 1
+     integer, public, save :: isbin  = 2
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -107,9 +93,9 @@
 ! ising spin flips. noted by li huang, 2007/03/15
      integer, public, save :: ncarlo = 10
 
-!=========================================================================
-!>>> real variables                                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> real variables                                                   <<<
+!!========================================================================
 
 ! intraorbital Coulomb interaction
      real(dp), public, save :: Uc    = 4.00_dp
@@ -117,8 +103,10 @@
 ! Hund's exchange interaction in z axis (Jz = Js = Jp = J)
      real(dp), public, save :: Jz    = 0.00_dp
 
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! chemical potential or fermi level
-! note: it should be replaced with eimp
+! note: it should/can be replaced with eimp
      real(dp), public, save :: mune  = 2.00_dp
 
 ! inversion of temperature
@@ -130,9 +118,9 @@
 ! mixing parameter for dynamical mean field theory self-consistent engine
      real(dp), public, save :: alpha = 0.70_dp
 
-!=========================================================================
-!>>> MPI related common variables                                      <<<
-!=========================================================================
+!!========================================================================
+!!>>> MPI related common variables                                     <<<
+!!========================================================================
 
 ! number of processors: default value 1
      integer, public, save :: nprocs = 1

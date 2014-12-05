@@ -68,7 +68,7 @@
      implicit none
 
 ! local variables
-! loop index 
+! loop index
      integer  :: iter
 
 ! loop index
