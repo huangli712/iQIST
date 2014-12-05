@@ -39,7 +39,7 @@ class p_hfqmc_solver(object):
             from p_hfqmc import *
 
             # create an instance
-            p = p_hfqmc_solver()
+            p = p_hfqmc_solver('daisy')
 
             # setup the parameters
             p.setp(isscf = 2, nsweep = 10000000)
@@ -60,6 +60,9 @@ class p_hfqmc_solver(object):
     def __init__(self, solver):
         """ define the class variables
         """
+        # to ensure you are using the daisy code
+        assert (solver.lower() == 'daisy'), 'sorry. only daisy code is supported now'
+
         # __p_cmp: the official parameter dict
         # here the default values are just used to verify the data type of
         # user's input data
