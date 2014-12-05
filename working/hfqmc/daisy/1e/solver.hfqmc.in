@@ -1,31 +1,37 @@
-==========================================================================
-DAISY: Hirsch-Fye quantum Monte Carlo quantum impurity solver
-==========================================================================
-2         ! non-self-consistent (1) or self-consistent mode (2)
-2         ! without symmetry    (1) or with symmetry   mode (2)
-1         ! spin projection, PM (1) or AFM             mode (2)
-2         ! without binning     (1) or with binning    mode (2)
---------------------------------------------------------------------------
-1         ! number of bands
-2         ! number of spin projection
-2         ! number of orbitals (= nband * nspin)
-20        ! maximum number of DMFT + HFQMC self-consistent iterations
---------------------------------------------------------------------------
-2.00      ! Uc: intraorbital Coulomb interaction
-0.00      ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
---------------------------------------------------------------------------
-1.00      ! chemical potential or fermi level
-8.00      ! inversion of temperature
-0.50      ! coupling parameter t for Hubbard model
-0.70      ! mixing parameter for self-consistent engine
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-10        ! maximum number of delayed update steps
-8193      ! maximum number of matsubara frequency
---------------------------------------------------------------------------
-1         ! number of auxiliary ising fields
-128       ! number of time slice
-100       ! maximum number of thermalization steps
-240000    ! maximum number of quantum Monte Carlo sampling steps
-100       ! number of steps for restart calculation from scratch
-2         ! number of steps for record accepted measurement
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+!!!-----------------------------------------------------------------------
+!!! source  : 1e/solver.hfqmc.in
+!!! solver  : DAISY
+!!! purpose : to test hfqmc impurity solver
+!!! author  : li huang (email:huangli712@gmail.com)
+!!!-----------------------------------------------------------------------
+
+!!>>> setup general control flags
+!!------------------------------------------------------------------------
+  isscf  : 2
+  issun  : 2
+  isspn  : 1
+  isbin  : 2
+
+!!>>> setup common variables for quantum impurity model
+!!------------------------------------------------------------------------
+  nband  : 1
+  nspin  : 2
+  norbs  : 2
+  niter  : 20
+  Uc     : 2.00
+  Jz     : 0.00
+  mune   : 1.00
+  beta   : 8.00
+  part   : 0.50
+  alpha  : 0.70
+
+!!>>> setup common variables for quantum impurity solver
+!!------------------------------------------------------------------------
+  mstep  : 10
+  mfreq  : 8193
+  nsing  : 1
+  ntime  : 128
+  ntherm : 100
+  nsweep : 240000
+  nclean : 100
+  ncarlo : 2
