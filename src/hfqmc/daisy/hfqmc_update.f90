@@ -276,11 +276,12 @@
      return
   end subroutine cat_dirty_update
 
-!>>> update green's function by orignial weiss's function
+!!>>> cat_clean_update: update green's function by orignial weiss's function
   subroutine cat_clean_update(pp)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : ntime
+     use context, only : imat, smat, gmat, wmat
 
      implicit none
 
@@ -327,7 +328,7 @@
      call dgesv(ntime, ntime, amat, ntime, ipiv, gmat(:,:,pp), ntime, ierr)
      if ( ierr /= 0 ) then
          call s_print_error('cat_clean_update','error in lapack subroutine dgesv')
-     endif
+     endif ! back if ( ierr /= 0 ) block
 
      return
   end subroutine cat_clean_update
