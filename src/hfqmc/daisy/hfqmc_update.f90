@@ -1,26 +1,27 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_make_detrat
-!           hfqmc_make_accept
-!           hfqmc_make_vertex
-!           cat_dirty_update
-!           cat_clean_update
-!           cat_delay_update
-!           cat_clear_update
-! source  : hfqmc_update.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/06/2006 by li huang
-!           03/28/2010 by li huang
-! purpose : to provide the core subroutines for Hirsch-Fye quantum Monte
-!           Carlo quantum impurity solver.
-!           to calculate the transition probability, to wrap the green's
-!           function matrix, to update the green's function from weiss's
-!           function by using traditional update algorithm, and recently
-!           proposed delayed update algorithm.
-! status  : unstable
-! comment : need blas and lapack support
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_make_detrat
+!!!           hfqmc_make_accept
+!!!           hfqmc_make_vertex
+!!!           cat_dirty_update
+!!!           cat_clean_update
+!!!           cat_delay_update
+!!!           cat_clear_update
+!!! source  : hfqmc_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/06/2006 by li huang
+!!!           03/28/2010 by li huang
+!!!           12/06/2010 by li huang
+!!! purpose : To provide the core subroutines for Hirsch-Fye quantum Monte
+!!!           Carlo quantum impurity solver: to calculate the transition
+!!!           probability, to wrap the green's function matrix, to update
+!!!           the green's function from weiss's function by using the
+!!!           traditional update algorithm, and recently proposed delayed
+!!!           update algorithm.
+!!! status  : unstable
+!!! comment : need blas and lapack support
+!!!-----------------------------------------------------------------------
 
 !>>> to calculate the transition probability using heat-bath algorithm
   subroutine hfqmc_make_detrat(n, m, p)
