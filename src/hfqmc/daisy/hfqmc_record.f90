@@ -320,21 +320,15 @@
      return
   end subroutine hfqmc_make_freq
 
-!>>> to calculate the quasiparticle weight
-! original equation:
-!
-! Z = \frac{m}{m*}
-!   = \frac{1}{1-\frac{\partial}{\partial\omega} Re \Sigma(\omega) |_{\omega=0}}
-!
-! in the context of QMC simulations, one usually approximates this
-! quantity by its discrete Eliashberg estimate
-!
-! Z = \frac{1}{1-\frac{Im \Sigma(i\omega_1)}{\pi T}}
-!
+!!>>> hfqmc_make_quas: to calculate the quasiparticle weight
   subroutine hfqmc_make_quas()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, pi
+
+     use control, only : norbs
+     use control, only : beta
+     use control, only : myid, master
+     use context, only : quas
+     use context, only : sig2
 
      implicit none
 
@@ -346,6 +340,12 @@
      quas = zero
 
 ! calculate quasiparticle weight Z using Eliashberg estimate
+! original equation:
+!     Z = \frac{m}{m*}
+!       = \frac{1}{1-\frac{\partial}{\partial\omega} Re \Sigma(\omega) |_{\omega=0}}
+! in the context of QMC simulations, one usually approximates this
+! quantity by its discrete Eliashberg estimate
+!     Z = \frac{1}{1-\frac{Im \Sigma(i\omega_1)}{\pi T}}
      do i=1,norbs
          quas(i) = one / ( one - aimag( sig2(1,i) ) * ( beta / pi ) )
      enddo ! over i={1,norbs} loop
@@ -353,7 +353,7 @@
 ! write out quasiparticle weight to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_quas(quas)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine hfqmc_make_quas
