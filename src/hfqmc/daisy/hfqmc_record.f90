@@ -322,7 +322,7 @@
 
 !!>>> hfqmc_make_quas: to calculate the quasiparticle weight
   subroutine hfqmc_make_quas()
-     use constants, only : dp, zero, one, pi
+     use constants, only : zero, one, pi
 
      use control, only : norbs
      use control, only : beta
@@ -358,11 +358,14 @@
      return
   end subroutine hfqmc_make_quas
 
-!>>> to calculate the occupation number
+!!>>> hfqmc_make_nmat: to calculate the occupation number
   subroutine hfqmc_make_nmat()
-     use constants
-     use control
-     use context
+     use constants, only : zero, one
+
+     use control, only : norbs
+     use control, only : myid, master
+     use context, only : nmat, nnmat
+     use context, only : gtau
 
      implicit none
 
@@ -381,7 +384,7 @@
 ! write out occupation number to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_nmat(nmat, nnmat)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine hfqmc_make_nmat
