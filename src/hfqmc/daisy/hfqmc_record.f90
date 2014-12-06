@@ -1,38 +1,27 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_symm_spin
-!           hfqmc_symm_band
-!           hfqmc_make_symm
-!           hfqmc_make_smth
-!           hfqmc_make_freq
-!           hfqmc_make_quas
-!           hfqmc_make_nmat
-!           hfqmc_reduce_gtau
-!           hfqmc_reduce_nmat
-! source  : hfqmc_record.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/07/2006 by li huang
-!           01/11/2007 by li huang
-!           10/26/2008 by li huang
-!           12/21/2008 by li huang
-!           04/18/2009 by li huang
-!           07/01/2009 by li huang
-!           08/23/2009 by li huang
-!           09/05/2009 by li huang
-!           12/24/2009 by li huang
-!           03/08/2010 by li huang
-!           03/27/2010 by li huang
-!           08/25/2010 by li huang
-! purpose : to build impurity green's function, bath weiss's function and
-!           self-energy function in matsubara frequency space.
-!           some auxiliary subroutines, for examples, symmetrizing and
-!           smoothing tools, are provided as well.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_symm_spin
+!!!           hfqmc_symm_band
+!!!           hfqmc_make_symm
+!!!           hfqmc_make_smth
+!!!           hfqmc_make_freq
+!!!           hfqmc_make_quas
+!!!           hfqmc_make_nmat
+!!!           hfqmc_reduce_gtau
+!!!           hfqmc_reduce_nmat
+!!! source  : hfqmc_record.f90
+!!! type    : subroutine
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/07/2006 by li huang
+!!!           08/25/2010 by li huang
+!!!           12/06/2014 by li huang
+!!! purpose : To build impurity green's function, bath weiss's function
+!!!           and self-energy function in matsubara frequency space. some
+!!!           auxiliary subroutines, such as symmetrizing and smoothing
+!!!           tools are provided as well.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> enforce symmetry to the green's functions over spin
   subroutine hfqmc_symm_spin(norbs, gtau)
