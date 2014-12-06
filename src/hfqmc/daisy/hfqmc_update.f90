@@ -217,12 +217,14 @@
      return
   end subroutine hfqmc_make_vertex
 
-!>>> record changes of accepted move on the green's function matrix, by
-! using traditional update algorithm
+!!>>> cat_dirty_update: record changes of accepted move on the green's
+!!>>> function matrix, by using traditional update algorithm
   subroutine cat_dirty_update(it, is, pp, ps)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, two
+
+     use control, only : ntime
+     use context, only : unity
+     use context, only : imat, gmat
 
      implicit none
 
