@@ -153,10 +153,12 @@
      return
   end subroutine hfqmc_make_symm
 
-!>>> smooth impurity self-energy function
+!!>>> hfqmc_make_smth: smooth impurity self-energy function
   subroutine hfqmc_make_smth(sigf)
-     use constants
-     use control
+     use constants, only : dp, czero
+
+     use control, only : mfreq
+     use control, only : ntime
 
      implicit none
 
@@ -226,12 +228,18 @@
      return
   end subroutine hfqmc_make_smth
 
-!>>> calculate the final impurity green's function, bath weiss's function,
-! and self-energy function in matsubara space
+!!>>> hfqmc_make_freq: calculate the final impurity green's function,
+!!>>> bath weiss's function, and self-energy function in matsubara space
   subroutine hfqmc_make_freq()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : myid, master
+     use context, only : umat
+     use context, only : rmesh
+     use context, only : gtau, wtau
+     use context, only : grnf, wssf, sig2
 
      implicit none
 
