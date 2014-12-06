@@ -105,10 +105,14 @@
      return
   end subroutine hfqmc_dump_wtau
 
-!>>> write out impurity green's function in imaginary time space (binning mode)
+!!>>> hfqmc_dump_gbin: write out impurity green's function in imaginary
+!!>>> time space (binning mode)
   subroutine hfqmc_dump_gbin(ibin, tmesh, gtau)
-     use constants
-     use control
+     use constants, only : dp, one, mytmp
+
+     use control, only : nband, norbs
+     use control, only : ntime
+     use control, only : beta
 
      implicit none
 
@@ -137,9 +141,9 @@
 ! write it
      do i=1,nband
          do j=1,ntime
-             write(mytmp,'(2i5,3f12.6)') i, j, tmesh(j), -gtau(j,i), -gtau(j,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -gtau(j,i), -gtau(j,i+nband)
          enddo ! over j={1,ntime} loop
-         write(mytmp,'(2i5,3f12.6)') i, ntime+1, beta, gtau(1,i)-one, gtau(1,i+nband)-one
+         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, gtau(1,i)-one, gtau(1,i+nband)-one
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
      enddo ! over i={1,nband} loop
