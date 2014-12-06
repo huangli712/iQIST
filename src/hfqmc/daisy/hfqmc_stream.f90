@@ -163,9 +163,10 @@
      return
   end subroutine hfqmc_config
 
-!>>> allocate memory for global variables and then initialize them
+!!>>> hfqmc_setup_array: allocate memory for global variables and then
+!!>>> initialize them
   subroutine hfqmc_setup_array()
-     use context
+     use context ! ALL
 
      implicit none
 
@@ -177,14 +178,21 @@
      return
   end subroutine hfqmc_setup_array
 
-!>>> initialize the Hirsch-Fye quantum Monte Carlo quantum impurity solver
-! plus dynamical mean field theory self-consistent engine
+!!>>> hfqmc_selfer_init: initialize the Hirsch-Fye quantum Monte Carlo
+!!>>> quantum impurity solver plus the dynamical mean field theory
+!!>>> self-consistent engine
   subroutine hfqmc_selfer_init()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : nband, norbs
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : beta
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : symm, eimp
+     use context, only : wssf
 
      implicit none
 
@@ -206,14 +214,10 @@
      logical  :: exists
 
 ! build imaginary time tau mesh: tmesh
-     do i=1,ntime
-         tmesh(i) = zero + ( beta - zero ) / real(ntime) * real(i - 1)
-     enddo ! over i={1,ntime} loop
+     call s_linspace_d(zero, beta, ntime, tmesh)
 
 ! build matsubara frequency mesh: rmesh
-     do j=1,mfreq
-         rmesh(j) = ( two * real(j - 1) + one ) * ( pi / beta )
-     enddo ! over j={1,mfreq} loop
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build initial bath weiss's function at non-interaction limit
      do i=1,norbs
@@ -221,13 +225,6 @@
              wssf(j,i) = ( czi * two ) * ( rmesh(j) - sqrt( rmesh(j)**2 + one ) )
          enddo ! over j={1,mfreq} loop
      enddo ! over i={1,norbs} loop
-
-! build initial bath weiss's function at atomic limit
-!<     do i=1,norbs
-!<         do j=1,mfreq
-!<             wssf(j,i) = -czi / rmesh(j)
-!<         enddo ! over j={1,mfreq} loop
-!<     enddo ! over i={1,norbs} loop
 
 ! read in initial bath weiss's function if available
 !-------------------------------------------------------------------------
@@ -261,7 +258,7 @@
 ! write out the bath weiss's function
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_wssf(rmesh, wssf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! since the bath weiss's function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
