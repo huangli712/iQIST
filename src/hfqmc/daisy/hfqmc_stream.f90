@@ -6,7 +6,7 @@
 !           hfqmc_solver_init
 !           hfqmc_final_array
 ! source  : hfqmc_stream.f90
-! type    : subroutine
+! type    : subroutines
 ! author  : li huang (email:huangli712@yahoo.com.cn)
 ! history : 01/07/2006 by li huang
 !           01/11/2007 by li huang

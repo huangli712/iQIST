@@ -6,7 +6,7 @@
 !           hfqmc_fourier_forward
 !           hfqmc_fourier_backward
 ! source  : hfqmc_fourier.f90
-! type    : subroutine
+! type    : subroutines
 ! author  : li huang (email:huangli712@yahoo.com.cn)
 ! history : 12/28/2005 by li huang
 !           05/15/2007 by li huang

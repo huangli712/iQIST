@@ -8,17 +8,9 @@
 !           cat_delay_update
 !           cat_clear_update
 ! source  : hfqmc_update.f90
-! type    : subroutine
+! type    : subroutines
 ! author  : li huang (email:huangli712@yahoo.com.cn)
 ! history : 01/06/2006 by li huang
-!           01/16/2008 by li huang
-!           10/26/2008 by li huang
-!           10/31/2008 by li huang
-!           11/02/2008 by li huang
-!           04/18/2009 by li huang
-!           12/24/2009 by li huang
-!           02/26/2010 by li huang
-!           03/08/2010 by li huang
 !           03/28/2010 by li huang
 ! purpose : to provide the core subroutines for Hirsch-Fye quantum Monte
 !           Carlo quantum impurity solver.
@@ -26,8 +18,6 @@
 !           function matrix, to update the green's function from weiss's
 !           function by using traditional update algorithm, and recently
 !           proposed delayed update algorithm.
-! input   :
-! output  :
 ! status  : unstable
 ! comment : need blas and lapack support
 !-------------------------------------------------------------------------

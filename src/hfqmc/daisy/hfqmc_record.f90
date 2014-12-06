@@ -10,7 +10,7 @@
 !!!           hfqmc_reduce_gtau
 !!!           hfqmc_reduce_nmat
 !!! source  : hfqmc_record.f90
-!!! type    : subroutine
+!!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 01/07/2006 by li huang
 !!!           08/25/2010 by li huang
@@ -429,12 +429,14 @@
      return
   end subroutine hfqmc_reduce_gtau
 
-!>>> reduce the nnmat from all children processes
+!!>>> hfqmc_reduce_nmat: reduce the nnmat from all children processes
   subroutine hfqmc_reduce_nmat(nnmat_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : nnmat
 
      implicit none
 
