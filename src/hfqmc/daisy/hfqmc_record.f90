@@ -389,12 +389,15 @@
      return
   end subroutine hfqmc_make_nmat
 
-!>>> reduce the gtau from all children processes
+!!>>> hfqmc_reduce_gtau: reduce the gtau from all children processes
   subroutine hfqmc_reduce_gtau(gtau_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : gtau
 
      implicit none
 
