@@ -286,10 +286,12 @@
      return
   end subroutine hfqmc_dump_sigf
 
-!>>> write out the occupation matrix and double occupation matrix
+!!>>> hfqmc_dump_nmat: write out the occupation matrix and double
+!!>>> occupation matrix
   subroutine hfqmc_dump_nmat(nmat, nnmat)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
 
      implicit none
 
@@ -309,18 +311,18 @@
      open(mytmp, file='solver.nmat.dat', form='formatted', status='unknown')
 
 ! write it
-     write(mytmp,'(a)') '  < n_i >   data:'
+     write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i5,f12.6)') i, nmat(i)
+         write(mytmp,'(i6,f12.6)') i, nmat(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a5,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a5,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a5,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
+     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
+     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
 
-     write(mytmp,'(a)') '< n_i n_j > data:'
+     write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i5,f12.6)') i, j, nnmat(i,j)
+             write(mytmp,'(2i6,f12.6)') i, j, nnmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -330,15 +332,16 @@
      return
   end subroutine hfqmc_dump_nmat
 
-!>>> write out the quasiparticle weight
+!!>>> hfqmc_dump_quas: write out the orbital-dependent quasiparticle weight
   subroutine hfqmc_dump_quas(quas)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : norbs
 
      implicit none
 
 ! external arguments
-! quasiparticle weight
+! quasiparticle weight Z
      real(dp), intent(in) :: quas(norbs)
 
 ! local variables
@@ -350,7 +353,7 @@
 
 ! write it
      do i=1,norbs
-         write(mytmp,'(i5,f12.6)') i, quas(i)
+         write(mytmp,'(i6,f12.6)') i, quas(i)
      enddo ! over i={1,norbs} loop
 
 ! close data file
