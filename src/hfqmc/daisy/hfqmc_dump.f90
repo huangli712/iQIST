@@ -242,10 +242,13 @@
      return
   end subroutine hfqmc_dump_wssf
 
-!>>> write out self-energy function in matsubara frequency space
+!!>>> hfqmc_dump_sigf: write out self-energy function in matsubara
+!!>>> frequency space
   subroutine hfqmc_dump_sigf(rmesh, sigf)
-     use constants
-     use control
+     use constants, only : dp, mytmp
+
+     use control, only : nband, norbs
+     use control, only : mfreq
 
      implicit none
 
@@ -267,7 +270,7 @@
 ! write it
      do i=1,nband
          do j=1,mfreq
-             write(mytmp,'(i5,5f16.8)') i, rmesh(j), &
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                     real(sigf(j,i)), &
                                    aimag(sigf(j,i)), &
                               real(sigf(j,i+nband)), &
