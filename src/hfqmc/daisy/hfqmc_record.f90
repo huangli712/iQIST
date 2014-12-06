@@ -23,9 +23,9 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> enforce symmetry to the green's functions over spin
+!!>>> hfqmc_symm_spin: enforce symmetry to the green's functions over spin
   subroutine hfqmc_symm_spin(norbs, gtau)
-     use constants
+     use constants, only : dp, two
 
      implicit none
 
@@ -56,9 +56,9 @@
      return
   end subroutine hfqmc_symm_spin
 
-!>>> enforce symmetry to the green's functions over band
+!!>>> hfqmc_symm_band: enforce symmetry to the green's functions over band
   subroutine hfqmc_symm_band(norbs, symm, gtau)
-     use constants
+     use constants, only : dp, zero
 
      implicit none
 
@@ -113,10 +113,13 @@
      return
   end subroutine hfqmc_symm_band
 
-!>>> to deal with the final green's function
+!!>>> hfqmc_make_symm: to symmetrize the final green's function
   subroutine hfqmc_make_symm(symm, gtau)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : issun, isspn
+     use control, only : norbs
+     use control, only : ntime
 
      implicit none
 
