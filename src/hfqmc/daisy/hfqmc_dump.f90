@@ -21,6 +21,10 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> dump data on imaginary time axis                                 <<<
+!!========================================================================
+
 !!>>> hfqmc_dump_gtau: write out impurity green's function in imaginary
 !!>>> time space
   subroutine hfqmc_dump_gtau(tmesh, gtau)
@@ -154,6 +158,10 @@
      return
   end subroutine hfqmc_dump_gbin
 
+!!========================================================================
+!!>>> dump data on matsubara frequency axis                            <<<
+!!========================================================================
+
 !!>>> hfqmc_dump_grnf: write out impurity green's function in matsubara
 !!>>> frequency space
   subroutine hfqmc_dump_grnf(rmesh, grnf)
@@ -166,7 +174,7 @@
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! impurity green's function
      complex(dp), intent(in) :: grnf(mfreq,norbs)
@@ -210,7 +218,7 @@
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! bath weiss's function
      complex(dp), intent(in) :: wssf(mfreq,norbs)
@@ -254,7 +262,7 @@
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in) :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(mfreq)
 
 ! self-energy function
      complex(dp), intent(in) :: sigf(mfreq,norbs)
@@ -285,6 +293,10 @@
 
      return
   end subroutine hfqmc_dump_sigf
+
+!!========================================================================
+!!>>> dump data of physical observables                                <<<
+!!========================================================================
 
 !!>>> hfqmc_dump_nmat: write out the occupation matrix and double
 !!>>> occupation matrix
