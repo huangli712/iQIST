@@ -1,41 +1,22 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_config
-!           hfqmc_setup_array
-!           hfqmc_selfer_init
-!           hfqmc_solver_init
-!           hfqmc_final_array
-! source  : hfqmc_stream.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/07/2006 by li huang
-!           01/11/2007 by li huang
-!           10/26/2008 by li huang
-!           10/31/2008 by li huang
-!           11/02/2008 by li huang
-!           12/20/2008 by li huang
-!           12/23/2008 by li huang
-!           12/30/2008 by li huang
-!           01/03/2009 by li huang
-!           01/06/2009 by li huang
-!           03/18/2009 by li huang
-!           04/18/2009 by li huang
-!           06/30/2009 by li huang
-!           08/10/2009 by li huang
-!           08/24/2009 by li huang
-!           09/05/2009 by li huang
-!           12/24/2009 by li huang
-!           02/26/2010 by li huang
-!           03/09/2010 by li huang
-!           03/26/2010 by li huang
-! purpose : initialize and finalize the Hirsch-Fye quantum Monte Carlo
-!           (HFQMC) quantum impurity solver and dynamical mean field
-!           theory (DMFT) self-consistent engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_config
+!!!           hfqmc_setup_array
+!!!           hfqmc_selfer_init
+!!!           hfqmc_solver_init
+!!!           hfqmc_final_array
+!!! source  : hfqmc_stream.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/07/2006 by li huang
+!!!           03/26/2010 by li huang
+!!!           12/06/2014 by li huang
+!!! purpose : initialize and finalize the Hirsch-Fye quantum Monte Carlo
+!!!           (HFQMC) quantum impurity solver and dynamical mean field
+!!!           theory (DMFT) self-consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> setup key parameters for Hirsch-Fye quantum Monte Carlo quantum
 ! impurity solver and dynamical mean field theory kernel
