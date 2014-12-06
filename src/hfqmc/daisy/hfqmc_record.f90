@@ -290,7 +290,7 @@
          do j=1,norbs
              if ( i /= j ) then
                  u0(i) = u0(i) + uumat(j,i) * ( one - gtau(1,j) )
-             endif
+             endif ! back if ( i /= j ) block
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -305,17 +305,17 @@
 ! write out impurity green's function to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_grnf(rmesh, grnf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out bath weiss's function to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_wssf(rmesh, wssf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out self-energy function to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_sigf(rmesh, sig2)
-     endif
+     endif ! back if ( myid == master ) block 
 
      return
   end subroutine hfqmc_make_freq
