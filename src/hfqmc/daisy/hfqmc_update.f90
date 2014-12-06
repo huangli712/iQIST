@@ -158,11 +158,12 @@
      return
   end subroutine hfqmc_make_accept
 
-!>>> wrap green's function matrix to green's function
+!!>>> hfqmc_make_vertex: wrap green's function matrix to green's function
   subroutine hfqmc_make_vertex(pp, tmat, msum)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : norbs
+     use control, only : ntime
 
      implicit none
 
