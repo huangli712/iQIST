@@ -35,34 +35,45 @@
 
 # if !defined (F2PY)
 
-! define type T_jasmine, which is used to describe the control parameters
-! for the jasmine code
-     public :: T_jasmine
-     type :: T_jasmine
-         integer :: ibasis
-         integer :: ictqmc
-         integer :: icu
-         integer :: icf
-         integer :: isoc
+! define type T_mpi, which is used to describe the mpi environment
+     public :: T_mpi
+     type :: T_mpi
+         integer :: nprocs
+         integer :: myid
+         integer :: master
+         integer :: cid
+         integer :: cx
+         integer :: cy
+     end type T_mpi
 
+! define type T_daisy, which is used to describe the control parameters
+! for the daisy code
+     public :: T_daisy
+     type :: T_daisy
+         integer :: isscf
+         integer :: issun
+         integer :: isspn
+         integer :: isbin
          integer :: nband
          integer :: nspin
          integer :: norbs
-         integer :: ncfgs
-
-         integer :: nmini
-         integer :: nmaxi
+         integer :: niter
+         integer :: mstep
+         integer :: mfreq
+         integer :: nsing
+         integer :: ntime
+         integer :: ntherm
+         integer :: nsweep
+         integer :: nclean
+         integer :: ncarlo
 
          real(dp) :: Uc
-         real(dp) :: Uv
          real(dp) :: Jz
-         real(dp) :: Js
-         real(dp) :: Jp
-         real(dp) :: Ud
-         real(dp) :: Jh
          real(dp) :: mune
-         real(dp) :: lambda
-     end type T_jasmine
+         real(dp) :: beta
+         real(dp) :: part
+         real(dp) :: alpha
+     end type T_daisy
 
 # endif  /* F2PY */
 
@@ -77,12 +88,21 @@
   contains ! encapsulated functionality
 
   subroutine init_hfqmc()
+     implicit none
+
+     return
   end subroutine init_hfqmc
 
   subroutine exec_hfqmc()
+     implicit none
+
+     return
   end subroutine exec_hfqmc
 
   subroutine stop_hfqmc()
+     implicit none
+
+     return
   end subroutine stop_hfqmc
 
   end module dapi
