@@ -23,11 +23,13 @@
 !!! comment : need blas and lapack support
 !!!-----------------------------------------------------------------------
 
-!>>> to calculate the transition probability using heat-bath algorithm
+!!>>> hfqmc_make_detrat: to calculate the transition probability using
+!!>>> the heat-bath algorithm
   subroutine hfqmc_make_detrat(n, m, p)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, two
+
+     use control, only : mstep
+     use context, only : pmat, imat, diag, gmat
 
      implicit none
 
@@ -81,12 +83,15 @@
      return
   end subroutine hfqmc_make_detrat
 
-!>>> core subroutine, to update the auxiliary ising-like fields and the
-! green's function matrix
+!!>>> hfqmc_make_accept: core subroutine, to update the auxiliary ising
+!!>>> like fields and the green's function matrix
   subroutine hfqmc_make_accept(n, m, cstep)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+
+     use control, only : mstep
+     use control, only : ntime
+     use control, only : nclean
+     use context, only : ktep, pmat, imat, diag, gmat
 
      implicit none
 
