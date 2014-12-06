@@ -595,9 +595,9 @@
      return
   end subroutine hfqmc_solver_init
 
-!>>> garbage collection for this program
+!!>>> hfqmc_final_array: garbage collection for this program
   subroutine hfqmc_final_array()
-     use context
+     use context ! ALL
 
      implicit none
 
