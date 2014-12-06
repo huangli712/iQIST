@@ -18,13 +18,13 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> setup key parameters for Hirsch-Fye quantum Monte Carlo quantum
-! impurity solver and dynamical mean field theory kernel
+!!>>> hfqmc_config: setup key parameters for Hirsch-Fye quantum Monte
+!!>>> Carlo quantum impurity solver and dynamical mean field theory kernel
   subroutine hfqmc_config()
-     use constants
-     use control
+     use parser, only : p_create, p_parse, p_get, p_destroy
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control ! ALL
 
      implicit none
 
@@ -32,14 +32,18 @@
 ! used to check whether the input file (solver.hfqmc.in) exists
      logical :: exists
 
-!=========================================================================
-! setup dynamical mean field theory self-consistent engine related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup general control flags                                      <<<
+!!========================================================================
      isscf  = 2               ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2               ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1               ! spin projection, PM (1) or AFM             mode (2)
      isbin  = 2               ! without binning     (1) or with binning    mode (2)
-!-------------------------------------------------------------------------
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!!========================================================================
+!!>>> setup common variables for quantum impurity model                <<<
+!!========================================================================
      nband  = 1               ! number of correlated bands
      nspin  = 2               ! number of spin projection
      norbs  = nspin*nband     ! number of correlated orbitals (= nband * nspin)
@@ -54,9 +58,9 @@
      alpha  = 0.70_dp         ! mixing parameter for self-consistent engine
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!=========================================================================
-! setup Hirsch-Fye quantum Monte Carlo quantum impurity solver related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup common variables for quantum impurity solver               <<<
+!!========================================================================
      mstep  = 16              ! maximum number of delayed update steps
      mfreq  = 8193            ! maximum number of matsubara frequency
 !-------------------------------------------------------------------------
@@ -77,57 +81,42 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='solver.hfqmc.in', form='formatted', status='unknown')
+! create the file parser
+             call p_create()
+! parse the config file
+             call p_parse('solver.hfqmc.in')
 
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) isscf                                         !
-             read(mytmp,*) issun                                         !
-             read(mytmp,*) isspn                                         !
-             read(mytmp,*) isbin                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+! extract parameters
+             call p_get('isscf' , isscf )
+             call p_get('issun' , issun )
+             call p_get('isspn' , isspn )
+             call p_get('isbin' , isbin )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) nband                                         !
-             read(mytmp,*) nspin                                         !
-             read(mytmp,*) norbs                                         !
-             read(mytmp,*) niter                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('nband' , nband )
+             call p_get('nspin' , nspin )
+             call p_get('norbs' , norbs )
+             call p_get('niter' , niter )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) Uc                                            !
-             read(mytmp,*) Jz                                            !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('Uc'    , Uc    )
+             call p_get('Jz'    , Jz    )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) mune                                          !
-             read(mytmp,*) beta                                          !
-             read(mytmp,*) part                                          !
-             read(mytmp,*) alpha                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('mune'  , mune  )
+             call p_get('beta'  , beta  )
+             call p_get('part'  , part  )
+             call p_get('alpha' , alpha )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) mstep                                         !
-             read(mytmp,*) mfreq                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('mstep' , mstep )
+             call p_get('mfreq' , mfreq )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) nsing                                         !
-             read(mytmp,*) ntime                                         !
-             read(mytmp,*) ntherm                                        !
-             read(mytmp,*) nsweep                                        !
-             read(mytmp,*) nclean                                        !
-             read(mytmp,*) ncarlo                                        !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('nsing' , nsing )
+             call p_get('ntime' , ntime )
+             call p_get('ntherm', ntherm)
+             call p_get('nsweep', nsweep)
+             call p_get('nclean', nclean)
+             call p_get('ncarlo', ncarlo)
 
-             close(mytmp)
+! destroy the parser
+             call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
@@ -135,50 +124,38 @@
 ! to broadcast config parameters from root to all children processes
 # if defined (MPI)
 
-!------------------------------------------------------------------------+
-     call mp_bcast( isscf , master )                                     !
-     call mp_bcast( issun , master )                                     !
-     call mp_bcast( isspn , master )                                     !
-     call mp_bcast( isbin , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( isscf , master )
+     call mp_bcast( issun , master )
+     call mp_bcast( isspn , master )
+     call mp_bcast( isbin , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( nband , master )                                     !
-     call mp_bcast( nspin , master )                                     !
-     call mp_bcast( norbs , master )                                     !
-     call mp_bcast( niter , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( nband , master )
+     call mp_bcast( nspin , master )
+     call mp_bcast( norbs , master )
+     call mp_bcast( niter , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( Uc    , master )                                     !
-     call mp_bcast( Jz    , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( Uc    , master )
+     call mp_bcast( Jz    , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( mune  , master )                                     !
-     call mp_bcast( beta  , master )                                     !
-     call mp_bcast( part  , master )                                     !
-     call mp_bcast( alpha , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( mune  , master )
+     call mp_bcast( beta  , master )
+     call mp_bcast( part  , master )
+     call mp_bcast( alpha , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( mstep , master )                                     !
-     call mp_bcast( mfreq , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( mstep , master )
+     call mp_bcast( mfreq , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( nsing , master )                                     !
-     call mp_bcast( ntime , master )                                     !
-     call mp_bcast( ntherm, master )                                     !
-     call mp_bcast( nsweep, master )                                     !
-     call mp_bcast( nclean, master )                                     !
-     call mp_bcast( ncarlo, master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( nsing , master )
+     call mp_bcast( ntime , master )
+     call mp_bcast( ntherm, master )
+     call mp_bcast( nsweep, master )
+     call mp_bcast( nclean, master )
+     call mp_bcast( ncarlo, master )
      call mp_barrier()
 
 # endif  /* MPI */
