@@ -206,9 +206,13 @@
 !!>>> hfqmc_dmft_nbethe: self-consistent conditions, bethe lattice,
 !!>>> semicircular density of states, force a paramagnetic order
   subroutine hfqmc_dmft_nbethe(grnw, wssw)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, half, czi
+
+     use control, only : nband, norbs
+     use control, only : mfreq
+     use control, only : Uc, Jz
+     use control, only : mune, part
+     use context, only : eimp, rmesh
 
      implicit none
 
