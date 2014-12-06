@@ -333,12 +333,15 @@
      return
   end subroutine cat_clean_update
 
-!>>> record changes of accepted move on the green's function matrix, by
-! using delayed update algorithm
+!!>>> cat_delay_update: record changes of accepted move on the green's
+!!>>> function matrix, by using delayed update algorithm
   subroutine cat_delay_update(it, is, pp, ps)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, two
+
+     use control, only : mstep
+     use control, only : ntime
+     use context, only : unity
+     use context, only : ktep, imat, diag, atep, btep, gmat
 
      implicit none
 
