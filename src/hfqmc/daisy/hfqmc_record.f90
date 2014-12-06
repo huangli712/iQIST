@@ -315,7 +315,7 @@
 ! write out self-energy function to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_sigf(rmesh, sig2)
-     endif ! back if ( myid == master ) block 
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine hfqmc_make_freq
