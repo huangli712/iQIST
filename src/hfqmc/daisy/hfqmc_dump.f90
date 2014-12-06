@@ -1,27 +1,25 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_dump_gtau
-!           hfqmc_dump_wtau
-!           hfqmc_dump_gbin
-!           hfqmc_dump_grnf
-!           hfqmc_dump_wssf
-!           hfqmc_dump_sigf
-!           hfqmc_dump_nmat
-!           hfqmc_dump_quas
-! source  : hfqmc_dump.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 12/23/2009 by li huang
-!           02/26/2010 by li huang
-!           03/08/2010 by li huang
-! purpose : dump key observables produced by the Hirsch-Fye quantum Monte
-!           Carlo (HFQMC) quantum impurity solver and dynamical mean field
-!           theory (DMFT) self-consistent engine to disk files
-! input   :
-! output  :
-! status  : very unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_dump_gtau
+!!!           hfqmc_dump_wtau
+!!!           hfqmc_dump_gbin
+!!!           hfqmc_dump_grnf
+!!!           hfqmc_dump_wssf
+!!!           hfqmc_dump_sigf
+!!!           hfqmc_dump_nmat
+!!!           hfqmc_dump_quas
+!!! source  : hfqmc_dump.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 12/23/2009 by li huang
+!!!           03/08/2010 by li huang
+!!!           12/06/2014 by li huang
+!!! purpose : To dump key observables produced by the Hirsch-Fye quantum
+!!!           Monte Carlo (HFQMC) quantum impurity solver and dynamical
+!!!           mean field theory (DMFT) self-consistent engine to files
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> write out impurity green's function in imaginary time space
   subroutine hfqmc_dump_gtau(tmesh, gtau)
