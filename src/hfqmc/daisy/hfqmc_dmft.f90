@@ -254,9 +254,13 @@
 !!>>> semicircular density of states, force a antiferromagnetic long
 !!>>> range order
   subroutine hfqmc_dmft_abethe(grnw, wssw)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, half, czi
+
+     use control, only : nband, norbs
+     use control, only : mfreq
+     use control, only : Uc, Jz
+     use control, only : mune, part
+     use context, only : eimp, rmesh
 
      implicit none
 
