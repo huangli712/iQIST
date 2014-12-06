@@ -9,7 +9,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 12/27/2005 by li huang
 !!!           03/26/2010 by li huang
-!!!           12/04/2014 by li huang
+!!!           12/06/2014 by li huang
 !!! purpose : the self-consistent engine for dynamical mean field theory
 !!!           (DMFT) simulation. it is only suitable for Hirsch-Fye
 !!!           quantum Monte Carlo (HFQMC) quantum impurity solver plus
@@ -22,9 +22,15 @@
 !!>>> Monte Carlo quantum impurity solver plus dynamical mean field theory
 !!>>> simulation
   subroutine hfqmc_dmft_selfer()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, czero, mystd
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : alpha
+     use control, only : myid, master
+     use context, only : symm, tmesh, rmesh
+     use context, only : gtau, wtau, wssf, sig2
 
      implicit none
 
@@ -54,23 +60,23 @@
      allocate(grnt(ntime,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
      allocate(grnw(mfreq,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! allocate memory for bath weiss's function arrays
      allocate(wsst(ntime,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
      allocate(wssw(mfreq,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_dmft_selfer','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! preparing local arrays and matrices
 ! initialize real variables and arrays
@@ -127,13 +133,13 @@
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_wtau(tmesh, wtau)
          call hfqmc_dump_wssf(rmesh, wssf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'DAISY >>> DMFT bath weiss function is updated'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(grnt)
