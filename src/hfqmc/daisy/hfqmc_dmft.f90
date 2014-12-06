@@ -153,9 +153,12 @@
 
 !!>>> hfqmc_dmft_conver: check the convergence of self-energy function
   subroutine hfqmc_dmft_conver(iter, convergence)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, half, eps8, mystd
+
+     use control, only : niter
+     use control, only : alpha
+     use control, only : myid, master
+     use context, only : sig1, sig2
 
      implicit none
 
