@@ -316,13 +316,20 @@
      return
   end subroutine hfqmc_selfer_init
 
-!>>> initialize the Hirsch-Fye quantum Monte Carlo quantum impurity solver
+!!>>> hfqmc_solver_init: initialize the Hirsch-Fye quantum Monte Carlo
+!!>>> quantum impurity solver
   subroutine hfqmc_solver_init()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, half, czero
+     use spring, only : spring_sfmt_init, spring_sfmt_stream
 
-     use spring
+     use control, only : nband, norbs
+     use control, only : nsing, ntime
+     use control, only : Uc, Jz
+     use control, only : beta
+     use control, only : myid, master
+     use context, only : pmat, umat, lmat, imat, smat
+     use context, only : symm, tmesh, unity
+     use context, only : wtau, wssf
 
      implicit none
 
@@ -342,14 +349,8 @@
 ! real(dp) dummy variable
      real(dp) :: raux
 
-! ratio between spin up and spin down states
-     real(dp) :: ratio
-
 ! \delta \tau
      real(dp) :: deltau
-
-! let spin up = spin down
-     ratio = half
 
 ! evaluate $\delta \tau$
      deltau = beta / real(ntime)
@@ -371,9 +372,7 @@
      call spring_sfmt_init(stream_seed)
 
 !>>> step 2, build identity matrix
-     do i=1,ntime
-         unity(i,i) = one
-     enddo ! over i={1,ntime} loop
+     call s_identity_d(ntime, unity)
 
 !>>> step 3, build smat, $\sigma$, Pauli matrix
 !-------------------------------------------------------------------------
@@ -510,10 +509,10 @@
 !<                     umat(k) = Uc + Jz
 !<                 else
 !<                     umat(k) = Uc
-!<                 endif
+!<                 endif ! back if ( m == i ) block
 !<             else
 !<                 umat(k) = Uc - Jz
-!<             endif
+!<             endif ! back if ( i <= nband .and. j > nband ) block
 !<         enddo ! over j={i+1,norbs} loop
 !<     enddo ! over i={1,norbs-1} loop
 !<
@@ -528,10 +527,10 @@
 !<                     umat(k) = Uc
 !<                 else
 !<                     umat(k) = Uc - Jz
-!<                 endif
+!<                 endif ! back if ( m == i ) block
 !<             else
 !<                 umat(k) = Uc
-!<             endif
+!<             endif ! back if ( i <= nband .and. j > nband ) block
 !<         enddo ! over j={i+1,norbs} loop
 !<     enddo ! over i={1,norbs-1} loop
 !<
@@ -546,10 +545,10 @@
                      umat(k) = Uc
                  else
                      umat(k) = Uc - 2.0_dp * Jz
-                 endif
+                 endif ! back if ( m == i ) block
              else
                  umat(k) = Uc - 3.0_dp * Jz
-             endif
+             endif ! back if ( i <= nband .and. j > nband ) block
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
 
@@ -557,7 +556,7 @@
      do i=1,nsing
          if ( umat(i) < zero ) then
              call s_print_error('hfqmc_solver_init','umat element is negative')
-         endif
+         endif ! back if ( umat(i) < zero ) block
      enddo ! over i={1,nsing} loop
 
 !>>> step 6, build lmat, $\lambda$ matrix
@@ -570,11 +569,11 @@
      do j=1,nsing
          do i=1,ntime
              raux = spring_sfmt_stream()
-             if ( raux <= ratio ) then
+             if ( raux <= half ) then
                  imat(i,j) =  one
              else
                  imat(i,j) = -one
-             endif
+             endif ! back if ( raux <= half ) block
              imat(i,j) = imat(i,j) * lmat(j)
          enddo ! over i={1,ntime} loop
      enddo ! over j={1,nsing} loop
@@ -591,7 +590,7 @@
 ! write out initial bath weiss's function
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_wtau(tmesh, wtau)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine hfqmc_solver_init
