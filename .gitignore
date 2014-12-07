@@ -16,12 +16,12 @@
 *.optrpt
 .DS_Store
 fort.*
-solver.ctqmc.in
-atom.config.in
 atom.cix
 test.py
 test.f90
 ctqmc_api_py.f90
+hfqmc_api_py.f90
+atomic_api_py.f90
 src/ctqmc/*/ctqmc
 src/hfqmc/*/hfqmc
 src/tools/hibiscus/entropy/entropy

@@ -329,7 +329,7 @@
 ! write the header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
-     write(mytmp,'(a)') '# Format  : v1.2, designed for BEGONIA and LAVENDER'
+     write(mytmp,'(a)') '# Format  : v1.3, designed for BEGONIA and LAVENDER'
      write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
      write(mytmp,'(a)') '# Support : any problem, please contact me: huangli712@gmail.com'
      write(mytmp,*)
@@ -339,7 +339,7 @@
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# PARAMETERS:'
      write(mytmp,'(75a1)') dash ! dashed line
-     write(mytmp,'(3i8,20X,a)') icu, icf, isoc, 'ICU ICF ISOC'
+     write(mytmp,'(4i8,12X,a)') 1, icu, icf, isoc, 'VER ICU ICF ISOC'
      write(mytmp,'(4i8,12X,a)') nband, nspin, norbs, ncfgs, 'NBAND NSPIN NORBS NCFGS'
      write(mytmp,'(2i8,28X,a)') nmini, nmaxi, 'NMINI NMAXI'
      write(mytmp,'(5f8.4,04X,a)') Uc, Uv, Jz, Js, Jp, 'Uc Uv Jz Js Jp'
@@ -530,7 +530,7 @@
 ! write header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
-     write(mytmp,'(a)') '# Format  : v2.2, designed for PANSY and MANJUSHAKA'
+     write(mytmp,'(a)') '# Format  : v2.3, designed for PANSY and MANJUSHAKA'
      write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
      write(mytmp,'(a)') '# Support : any problem, please contact me: huangli712@gmail.com'
      write(mytmp,*)
@@ -540,7 +540,7 @@
      write(mytmp,'(75a1)') dash ! dashed line
      write(mytmp,'(a)') '# PARAMETERS:'
      write(mytmp,'(75a1)') dash ! dashed line
-     write(mytmp,'(3i8,20X,a)') icu, icf, isoc, 'ICU ICF ISOC'
+     write(mytmp,'(4i8,12X,a)') 2, icu, icf, isoc, 'VER ICU ICF ISOC'
      write(mytmp,'(4i8,12X,a)') nband, nspin, norbs, ncfgs, 'NBAND NSPIN NORBS NCFGS'
      write(mytmp,'(2i8,28X,a)') nmini, nmaxi, 'NMINI NMAXI'
      write(mytmp,'(5f8.4,04X,a)') Uc, Uv, Jz, Js, Jp, 'Uc Uv Jz Js Jp'
@@ -560,7 +560,7 @@
          write(mytmp,'(11X,5i7)') i, sectors(i)%ndim, sectors(i)%nele, sectors(i)%nops, sectors(i)%istart
 
 ! write next sector
-         write(mytmp,'(4X,a)') '# NEXT SECTOR    F     F^{\dagger}'
+         write(mytmp,'(4X,a)') '# NEXT SECTOR    F     F^{\DAGGER}'
          do j=1,sectors(i)%nops
 ! adjust the orbital order for CT-QMC, up, up, up, dn, dn, dn
              if ( isoc == 0 ) then
@@ -590,7 +590,7 @@
 ! write the data
      do i=1,nsectors
          do j=1,sectors(i)%nops
-! adjust the orbital order for CT-QMC, up, up, up, dn, dn, dn
+! adjust the orbital order for CTQMC, up, up, up, dn, dn, dn
              if ( isoc == 0 ) then
                  if (j <= sectors(i)%nops / 2) then
                      s_order = 2*j-1

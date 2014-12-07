@@ -4,7 +4,7 @@
 !!!           atomic_s_driver
 !!! source  : atomic_driver.f90
 !!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
+!!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/13/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
@@ -162,7 +162,7 @@
      call cpu_time(time_begin) ! record starting time
      do i=1,nsectors
          if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) then
-             call s_print_error('atomic_s_driver', 'hmat is not real!')
+             call s_print_error('atomic_s_driver','hmat is not real!')
          endif ! back if ( any( abs( aimag(sectors(i)%hmat) ) > eps6 ) ) block
      enddo ! over i={1,nsectors} loop
      call cpu_time(time_end)   ! record ending   time

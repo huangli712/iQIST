@@ -27,7 +27,6 @@
 .SUFFIXES: .f90
 
 include ../../build/make.sys
-MPIL = -L/usr/local/openmpi/lib -lmpi_mpifh
 
 mod = ctqmc_api.o
 

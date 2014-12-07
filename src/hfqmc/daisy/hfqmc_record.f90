@@ -1,42 +1,31 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_symm_spin
-!           hfqmc_symm_band
-!           hfqmc_make_symm
-!           hfqmc_make_smth
-!           hfqmc_make_freq
-!           hfqmc_make_quas
-!           hfqmc_make_nmat
-!           hfqmc_reduce_gtau
-!           hfqmc_reduce_nmat
-! source  : hfqmc_record.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/07/2006 by li huang
-!           01/11/2007 by li huang
-!           10/26/2008 by li huang
-!           12/21/2008 by li huang
-!           04/18/2009 by li huang
-!           07/01/2009 by li huang
-!           08/23/2009 by li huang
-!           09/05/2009 by li huang
-!           12/24/2009 by li huang
-!           03/08/2010 by li huang
-!           03/27/2010 by li huang
-!           08/25/2010 by li huang
-! purpose : to build impurity green's function, bath weiss's function and
-!           self-energy function in matsubara frequency space.
-!           some auxiliary subroutines, for examples, symmetrizing and
-!           smoothing tools, are provided as well.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_symm_spin
+!!!           hfqmc_symm_band
+!!!           hfqmc_make_symm
+!!!           hfqmc_make_smth
+!!!           hfqmc_make_freq
+!!!           hfqmc_make_quas
+!!!           hfqmc_make_nmat
+!!!           hfqmc_reduce_gtau
+!!!           hfqmc_reduce_nmat
+!!! source  : hfqmc_record.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/07/2006 by li huang
+!!!           08/25/2010 by li huang
+!!!           12/06/2014 by li huang
+!!! purpose : To build impurity green's function, bath weiss's function
+!!!           and self-energy function in matsubara frequency space. some
+!!!           auxiliary subroutines, such as symmetrizing and smoothing
+!!!           tools are provided as well.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> enforce symmetry to the green's functions over spin
+!!>>> hfqmc_symm_spin: enforce symmetry to the green's functions over spin
   subroutine hfqmc_symm_spin(norbs, gtau)
-     use constants
+     use constants, only : dp, two
 
      implicit none
 
@@ -67,9 +56,9 @@
      return
   end subroutine hfqmc_symm_spin
 
-!>>> enforce symmetry to the green's functions over band
+!!>>> hfqmc_symm_band: enforce symmetry to the green's functions over band
   subroutine hfqmc_symm_band(norbs, symm, gtau)
-     use constants
+     use constants, only : dp, zero
 
      implicit none
 
@@ -124,10 +113,13 @@
      return
   end subroutine hfqmc_symm_band
 
-!>>> to deal with the final green's function
+!!>>> hfqmc_make_symm: to symmetrize the final green's function
   subroutine hfqmc_make_symm(symm, gtau)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : issun, isspn
+     use control, only : norbs
+     use control, only : ntime
 
      implicit none
 
@@ -161,10 +153,12 @@
      return
   end subroutine hfqmc_make_symm
 
-!>>> smooth impurity self-energy function
+!!>>> hfqmc_make_smth: smooth impurity self-energy function
   subroutine hfqmc_make_smth(sigf)
-     use constants
-     use control
+     use constants, only : dp, czero
+
+     use control, only : mfreq
+     use control, only : ntime
 
      implicit none
 
@@ -234,12 +228,18 @@
      return
   end subroutine hfqmc_make_smth
 
-!>>> calculate the final impurity green's function, bath weiss's function,
-! and self-energy function in matsubara space
+!!>>> hfqmc_make_freq: calculate the final impurity green's function,
+!!>>> bath weiss's function, and self-energy function in matsubara space
   subroutine hfqmc_make_freq()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : myid, master
+     use context, only : umat
+     use context, only : rmesh
+     use context, only : gtau, wtau
+     use context, only : grnf, wssf, sig2
 
      implicit none
 
@@ -290,7 +290,7 @@
          do j=1,norbs
              if ( i /= j ) then
                  u0(i) = u0(i) + uumat(j,i) * ( one - gtau(1,j) )
-             endif
+             endif ! back if ( i /= j ) block
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -305,36 +305,30 @@
 ! write out impurity green's function to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_grnf(rmesh, grnf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out bath weiss's function to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_wssf(rmesh, wssf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out self-energy function to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_sigf(rmesh, sig2)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine hfqmc_make_freq
 
-!>>> to calculate the quasiparticle weight
-! original equation:
-!
-! Z = \frac{m}{m*}
-!   = \frac{1}{1-\frac{\partial}{\partial\omega} Re \Sigma(\omega) |_{\omega=0}}
-!
-! in the context of QMC simulations, one usually approximates this
-! quantity by its discrete Eliashberg estimate
-!
-! Z = \frac{1}{1-\frac{Im \Sigma(i\omega_1)}{\pi T}}
-!
+!!>>> hfqmc_make_quas: to calculate the quasiparticle weight
   subroutine hfqmc_make_quas()
-     use constants
-     use control
-     use context
+     use constants, only : zero, one, pi
+
+     use control, only : norbs
+     use control, only : beta
+     use control, only : myid, master
+     use context, only : quas
+     use context, only : sig2
 
      implicit none
 
@@ -346,6 +340,12 @@
      quas = zero
 
 ! calculate quasiparticle weight Z using Eliashberg estimate
+! original equation:
+!     Z = \frac{m}{m*}
+!       = \frac{1}{1-\frac{\partial}{\partial\omega} Re \Sigma(\omega) |_{\omega=0}}
+! in the context of QMC simulations, one usually approximates this
+! quantity by its discrete Eliashberg estimate
+!     Z = \frac{1}{1-\frac{Im \Sigma(i\omega_1)}{\pi T}}
      do i=1,norbs
          quas(i) = one / ( one - aimag( sig2(1,i) ) * ( beta / pi ) )
      enddo ! over i={1,norbs} loop
@@ -353,16 +353,19 @@
 ! write out quasiparticle weight to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_quas(quas)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine hfqmc_make_quas
 
-!>>> to calculate the occupation number
+!!>>> hfqmc_make_nmat: to calculate the occupation number
   subroutine hfqmc_make_nmat()
-     use constants
-     use control
-     use context
+     use constants, only : zero, one
+
+     use control, only : norbs
+     use control, only : myid, master
+     use context, only : nmat, nnmat
+     use context, only : gtau
 
      implicit none
 
@@ -381,17 +384,20 @@
 ! write out occupation number to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_nmat(nmat, nnmat)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine hfqmc_make_nmat
 
-!>>> reduce the gtau from all children processes
+!!>>> hfqmc_reduce_gtau: reduce the gtau from all children processes
   subroutine hfqmc_reduce_gtau(gtau_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : nprocs
+     use context, only : gtau
 
      implicit none
 
@@ -423,12 +429,14 @@
      return
   end subroutine hfqmc_reduce_gtau
 
-!>>> reduce the nnmat from all children processes
+!!>>> hfqmc_reduce_nmat: reduce the nnmat from all children processes
   subroutine hfqmc_reduce_nmat(nnmat_mpi)
-     use constants
-     use context
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
 
-     use mmpi
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : nnmat
 
      implicit none
 

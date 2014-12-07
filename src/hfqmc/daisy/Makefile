@@ -35,7 +35,7 @@ lev1 = hfqmc_update.o
 lev2 = hfqmc_record.o hfqmc_stream.o hfqmc_util.o
 lev3 = hfqmc_dump.o hfqmc_print.o
 main = hfqmc_main.o
-MAPI = libMM.a
+MAPI = hfqmc_api.o libMM.a
 
 objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(main) $(MAPI)
 
@@ -43,7 +43,7 @@ default: all
 
 all: exe
 
-api:
+api: hfqmc_api.o
 
 cssl:
 	cp ../../common/libMM.a .
@@ -52,7 +52,6 @@ csml:
 	cp ../../common/constants.mod .
 	cp ../../common/mmpi.mod .
 	cp ../../common/spring.mod .
-	cp ../../common/stack.mod .
 	cp ../../common/parser.mod .
 	cp ../../common/linkedlist.mod .
 
@@ -64,15 +63,23 @@ lib: api cssl csml hfqmc-lib
 hfqmc-lib: $(objects)
 	$(ARCHIVER) libhfqmc.a $(objects)
 
+f2py:
+	fpp -P -DF2PY hfqmc_api.f90 > hfqmc_api_py.f90
+
+pydaisy: f2py lib
+	f2py -c --fcompiler=intelem hfqmc_api_py.f90 -m pydaisy -L. -lhfqmc -lMM $(MPIL) $(LIBS)
+
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
 
 clean:
 	rm -f *.mod
 	rm -f *.o
+	rm -f *.so
 	rm -f hfqmc
 	rm -f libhfqmc.a
 	rm -f libMM.a
+	rm -f hfqmc_api_py.f90
 
 clean-dat:
 	rm -f *.dat

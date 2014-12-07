@@ -126,13 +126,23 @@
 ## using Mac Os X system. Do not modify them unless you know what you
 ## are doing.
 ##
-## LIB
-## ---
+## LIBS
+## ----
 ##
 ## Specify the external libraries. Now the iqist software package depends
 ## on LAPACK and BLAS heavily. To achieve good performance, the highly
 ## optimized LAPACK and BLAS implementations are essential. Here we want
 ## to recommend the OpenBLAS and Intel MKL.
+##
+## MPIL
+## ----
+##
+## Specify the external mpi libraries for fortran binding. It is useful
+## when you are compiling the python application programming interface
+## using f2py (pyiqist and pydaisy). The f2py will automatically use the
+## 'bare' intel fortran compiler (ifort) to link and generate the python
+## modules (*.so). If you do not specify MPIL, then the python modules
+## will not work properly. 
 ##
 ## Author
 ## ======
@@ -181,3 +191,7 @@ LIBS   = -L. -llapack -lblas #-lguide
 LIBS   = -L. -llapack -lgoto #-lguide
 LIBS   = -lmkl_intel_lp64 -lmkl_core -lmkl_sequential
 LIBS   = -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
+
+# mpi library, just for fortran
+#-------------------------------------------------------------------------
+MPIL   = -L/usr/local/openmpi/lib -lmpi_mpifh
