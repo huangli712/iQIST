@@ -123,5 +123,16 @@
   subroutine hfqmc_print_runtime()
      implicit none
 
+! about iteration number
+     write(mystd,'(2X,a,i3,2(a,i10))') 'DAISY >>> iter:', iter, ' sweep:', nstep, ' of ', nsweep
+
+! about update action
+     write(mystd,'(4X,a)')        'hfqmc sampling statistics:'
+     write(mystd,'(4X,a,3i12)')   'count:', int(tcount), int(accept), int(reject)
+     write(mystd,'(4X,a,3f12.5)') 'ratio:', one, accept / tcount, reject / tcount
+
+     write(mystd,'(4X,a)')        'delayed update statistics:'
+     write(mystd,'(4X,a,10i6)')   'count:', (ktep(i), i=1, norbs)
+
      return
   end subroutine hfqmc_print_runtime
