@@ -1,47 +1,36 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_impurity_solver
-! source  : hfqmc_solver.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/05/2006 by li huang
-!           02/28/2008 by li huang
-!           10/26/2008 by li huang
-!           10/30/2008 by li huang
-!           11/04/2008 by li huang
-!           12/20/2008 by li huang
-!           12/24/2008 by li huang
-!           12/30/2008 by li huang
-!           01/03/2009 by li huang
-!           03/16/2009 by li huang
-!           04/19/2009 by li huang
-!           06/30/2009 by li huang
-!           08/11/2009 by li huang
-!           09/05/2009 by li huang
-!           12/24/2009 by li huang
-!           02/26/2010 by li huang
-!           03/08/2010 by li huang
-!           03/27/2010 by li huang
-!           08/25/2010 by li huang
-! purpose : it is a mature parallel implemention of the famous Hirsch
-!           -Fye quantum Monte Carlo algorithm, which is used to solve
-!           the multi-orbital Anderson impurity model as usually. we
-!           denote it as HFQMC (Hirsch-Fye quantum Monte Carlo) quantum
-!           impurity solver.
-! input   :
-! output  :
-! status  : unstable
-! comment : this subroutine is fully parallelism by mpi
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_impurity_solver
+!!! source  : hfqmc_solver.f90
+!!! type    : subroutine
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/05/2006 by li huang
+!!!           08/25/2010 by li huang
+!!!           12/08/2014 by li huang
+!!! purpose : it is a mature parallel implemention of the famous Hirsch
+!!!           -Fye quantum Monte Carlo algorithm, which is used to solve
+!!!           the multi-orbital Anderson impurity model as usually. we
+!!!           denote it as HFQMC (Hirsch-Fye quantum Monte Carlo) quantum
+!!!           impurity solver.
+!!! status  : unstable
+!!! comment : this subroutine is fully parallelism by mpi
+!!!-----------------------------------------------------------------------
 
-!>>> solve the Anderson impurity model using Hirsch-Fye quantum Monte Carlo algorithm
+!!>>> hfqmc_impurity_solver: solve the Anderson impurity model using the
+!!>>> Hirsch-Fye quantum Monte Carlo algorithm
   subroutine hfqmc_impurity_solver(iter)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, mystd
+     use spring, only : spring_sfmt_stream
 
-     use spring
-     use mmpi
+     use control, only : isscf
+     use control, only : norbs
+     use control, only : mstep
+     use control, only : nsing, ntime, ntherm, nsweep, ncarlo
+     use control, only : myid, master
+     use context, only : ktep, diag, atep, btep
+     use context, only : gmat, wmat
+     use context, only : symm, tmesh, nnmat
+     use context, only : gtau, wtau
 
      implicit none
 
