@@ -97,25 +97,25 @@
      allocate(msum(-ntime+1:ntime-1),  stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! allocate memory
      allocate(osum(norbs,norbs),       stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! allocate memory
      allocate(gsum(ntime,norbs),       stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! allocate memory
      allocate(tmat(ntime,ntime,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! setup timer
      time_iter = zero
@@ -125,7 +125,7 @@
 ! whether it is time to enter QMC data accumulating mode
      if ( iter == 999 ) then
          nsweep = nsweep * 10
-     endif
+     endif ! back if ( iter == 999 ) block
 
 ! setup internal iteration parameters
 ! we need 10 data bins
@@ -205,11 +205,11 @@
 ! print main iteration information, only for master node
      if ( myid == master ) then
          write(mystd,'(2X,a)') 'DAISY >>> HFQMC quantum impurity solver running'
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!--->>> begin main iteration
-!=========================================================================
+!!========================================================================
+!!>>> begin main iteration                                             <<<
+!!========================================================================
 
      HFQMC_MAIN_ITERATION: do cstep = 1, nsweep + ntherm
 
@@ -225,9 +225,9 @@
              call cpu_time(time_begin)
          endif ! back if ( mod(nstep, nfast) == 1 ) block
 
-!=========================================================================
-!--->>> begin fast loop
-!=========================================================================
+!!========================================================================
+!!>>> begin fast loop                                                  <<<
+!!========================================================================
 
          HFQMC_ISING_ITERATION: do m=1,nsing
              HFQMC_SLICE_ITERATION: do n=1,ntime
@@ -262,9 +262,9 @@
              enddo HFQMC_SLICE_ITERATION ! over n={1,ntime} loop
          enddo HFQMC_ISING_ITERATION ! over m={1,nsing} loop
 
-!=========================================================================
-!--->>> end fast loop
-!=========================================================================
+!!========================================================================
+!!>>> end fast loop                                                    <<<
+!!========================================================================
 
 ! reporting quantum impurity solver
 !-------------------------------------------------------------------------

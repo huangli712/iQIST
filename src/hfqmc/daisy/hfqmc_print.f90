@@ -3,12 +3,13 @@
 !!! program : hfqmc_print_header
 !!!           hfqmc_print_footer
 !!!           hfqmc_print_summary
+!!!           hfqmc_print_runtime
 !!! source  : hfqmc_print.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 10/24/2008 by li huang
 !!!           03/25/2010 by li huang
-!!!           12/03/2014 by li huang
+!!!           12/08/2014 by li huang
 !!! purpose : provide printing infrastructure for Hirsch-Fye quantum Monte
 !!!           Carlo (HFQMC) quantum impurity solver
 !!! status  : unstable
@@ -116,3 +117,11 @@
 
      return
   end subroutine hfqmc_print_summary
+
+!!>>> ctqmc_print_runtime: print the runtime information, including the
+!!>>> iteration messages and statistic data, only for reference
+  subroutine hfqmc_print_runtime()
+     implicit none
+
+     return
+  end subroutine hfqmc_print_runtime
