@@ -7,7 +7,7 @@
 !!!           sac_make_swap
 !!! source  : sac_update.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@yahoo.com.cn)
+!!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 01/09/2011 by li huang
 !!!           01/11/2011 by li huang
 !!!           11/18/2014 by li huang

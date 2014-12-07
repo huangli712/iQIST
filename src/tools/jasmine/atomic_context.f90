@@ -5,7 +5,7 @@
 !!!           m_spmat    module
 !!! source  : atomic_context.f90
 !!! type    : modules
-!!! authors : yilin wang (email: qhwyl2006@126.com)
+!!! authors : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
 !!!           10/20/2014 by li huang

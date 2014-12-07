@@ -1,42 +1,35 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_make_detrat
-!           hfqmc_make_accept
-!           hfqmc_make_vertex
-!           cat_dirty_update
-!           cat_clean_update
-!           cat_delay_update
-!           cat_clear_update
-! source  : hfqmc_update.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/06/2006 by li huang
-!           01/16/2008 by li huang
-!           10/26/2008 by li huang
-!           10/31/2008 by li huang
-!           11/02/2008 by li huang
-!           04/18/2009 by li huang
-!           12/24/2009 by li huang
-!           02/26/2010 by li huang
-!           03/08/2010 by li huang
-!           03/28/2010 by li huang
-! purpose : to provide the core subroutines for Hirsch-Fye quantum Monte
-!           Carlo quantum impurity solver.
-!           to calculate the transition probability, to wrap the green's
-!           function matrix, to update the green's function from weiss's
-!           function by using traditional update algorithm, and recently
-!           proposed delayed update algorithm.
-! input   :
-! output  :
-! status  : unstable
-! comment : need blas and lapack support
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_make_detrat
+!!!           hfqmc_make_accept
+!!!           hfqmc_make_vertex
+!!!           cat_dirty_update
+!!!           cat_clean_update
+!!!           cat_delay_update
+!!!           cat_clear_update
+!!! source  : hfqmc_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/06/2006 by li huang
+!!!           03/28/2010 by li huang
+!!!           12/06/2014 by li huang
+!!! purpose : To provide the core subroutines for Hirsch-Fye quantum Monte
+!!!           Carlo quantum impurity solver: to calculate the transition
+!!!           probability, to wrap the green's function matrix, to update
+!!!           the green's function from weiss's function by using the
+!!!           traditional update algorithm, and recently proposed delayed
+!!!           update algorithm.
+!!! status  : unstable
+!!! comment : need blas and lapack support
+!!!-----------------------------------------------------------------------
 
-!>>> to calculate the transition probability using heat-bath algorithm
+!!>>> hfqmc_make_detrat: to calculate the transition probability using
+!!>>> the heat-bath algorithm
   subroutine hfqmc_make_detrat(n, m, p)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, two
+
+     use control, only : mstep
+     use context, only : pmat, imat, diag, gmat
 
      implicit none
 
@@ -90,12 +83,15 @@
      return
   end subroutine hfqmc_make_detrat
 
-!>>> core subroutine, to update the auxiliary ising-like fields and the
-! green's function matrix
+!!>>> hfqmc_make_accept: core subroutine, to update the auxiliary ising
+!!>>> like fields and the green's function matrix
   subroutine hfqmc_make_accept(n, m, cstep)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+
+     use control, only : mstep
+     use control, only : ntime
+     use control, only : nclean
+     use context, only : ktep, pmat, imat, diag, gmat
 
      implicit none
 
@@ -162,11 +158,12 @@
      return
   end subroutine hfqmc_make_accept
 
-!>>> wrap green's function matrix to green's function
+!!>>> hfqmc_make_vertex: wrap green's function matrix to green's function
   subroutine hfqmc_make_vertex(pp, tmat, msum)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : norbs
+     use control, only : ntime
 
      implicit none
 
@@ -220,12 +217,14 @@
      return
   end subroutine hfqmc_make_vertex
 
-!>>> record changes of accepted move on the green's function matrix, by
-! using traditional update algorithm
+!!>>> cat_dirty_update: record changes of accepted move on the green's
+!!>>> function matrix, by using traditional update algorithm
   subroutine cat_dirty_update(it, is, pp, ps)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, two
+
+     use control, only : ntime
+     use context, only : unity
+     use context, only : imat, gmat
 
      implicit none
 
@@ -243,10 +242,6 @@
      integer, intent(in) :: ps
 
 ! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
 ! $\mathcal(A)$ for spin up and down
      real(dp) :: aa
 
@@ -268,20 +263,17 @@
      uu = gmat(:,it,pp) - unity(:,it)
 
 ! build new gmat using fast-update equation
-     do j=1,ntime
-         do i=1,ntime
-             gmat(i,j,pp) = gmat(i,j,pp) + uu(i) * tt(j)
-         enddo ! over i={1,ntime} loop
-     enddo ! over j={1,ntime} loop
+     call dger(ntime, ntime, one, uu, 1, tt, 1, gmat(:,:,pp), ntime)
 
      return
   end subroutine cat_dirty_update
 
-!>>> update green's function by orignial weiss's function
+!!>>> cat_clean_update: update green's function by orignial weiss's function
   subroutine cat_clean_update(pp)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : ntime
+     use context, only : imat, smat, gmat, wmat
 
      implicit none
 
@@ -292,12 +284,6 @@
 ! local variables
 ! loop index
      integer  :: i
-
-! status flag
-     integer  :: ierr
-
-! working space for lapack subroutines
-     integer  :: ipiv(ntime)
 
 ! \exp(V) matrix
      real(dp) :: vmat(ntime)
@@ -325,20 +311,20 @@
 ! note: on input, gmat contain wmat (G0), on output, it contain G. amat is
 ! destroyed on output
      gmat(:,:,pp) = wmat(:,:,pp)
-     call dgesv(ntime, ntime, amat, ntime, ipiv, gmat(:,:,pp), ntime, ierr)
-     if ( ierr /= 0 ) then
-         call s_print_error('cat_clean_update','error in lapack subroutine dgesv')
-     endif
+     call s_solve_dg(ntime, ntime, amat, gmat(:,:,pp))
 
      return
   end subroutine cat_clean_update
 
-!>>> record changes of accepted move on the green's function matrix, by
-! using delayed update algorithm
+!!>>> cat_delay_update: record changes of accepted move on the green's
+!!>>> function matrix, by using delayed update algorithm
   subroutine cat_delay_update(it, is, pp, ps)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, two
+
+     use control, only : mstep
+     use control, only : ntime
+     use context, only : unity
+     use context, only : ktep, imat, diag, atep, btep, gmat
 
      implicit none
 
@@ -415,12 +401,14 @@
      return
   end subroutine cat_delay_update
 
-!>>> record changes of accepted move on the green's function matrix, by
-! using delayed update algorithm
+!!>>> cat_clear_update: record changes of accepted move on the green's
+!!>>> function matrix, by using delayed update algorithm
   subroutine cat_clear_update()
-     use constants
-     use control
-     use context
+     use constants, only : one
+
+     use control, only : norbs
+     use control, only : ntime
+     use context, only : ktep, diag, atep, btep, gmat
 
      implicit none
 

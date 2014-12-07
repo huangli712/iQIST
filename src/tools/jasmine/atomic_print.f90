@@ -5,7 +5,7 @@
 !!!           atomic_print_summary
 !!! source  : atomic_print.f90
 !!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
+!!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
 !!!           10/20/2014 by li huang
@@ -85,7 +85,7 @@
 
      write(mystd,'(2(4X,a,i10))')   'nband  :', nband  , 'nspin  :', nspin
      write(mystd,'(2(4X,a,i10))')   'norbs  :', norbs  , 'ncfgs  :', ncfgs
-     write(mystd,'(2(4X,a,i10))')   'nmini  :', nmini  , 'nmaxi  :', nmaxi 
+     write(mystd,'(2(4X,a,i10))')   'nmini  :', nmini  , 'nmaxi  :', nmaxi
 
      write(mystd,'(2(4X,a,f10.5))') 'Uc     :', Uc     , 'Uv     :', Uv
      write(mystd,'(2(4X,a,f10.5))') 'Jz     :', Jz     , 'Js     :', Js

@@ -1,49 +1,30 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_config
-!           hfqmc_setup_array
-!           hfqmc_selfer_init
-!           hfqmc_solver_init
-!           hfqmc_final_array
-! source  : hfqmc_stream.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/07/2006 by li huang
-!           01/11/2007 by li huang
-!           10/26/2008 by li huang
-!           10/31/2008 by li huang
-!           11/02/2008 by li huang
-!           12/20/2008 by li huang
-!           12/23/2008 by li huang
-!           12/30/2008 by li huang
-!           01/03/2009 by li huang
-!           01/06/2009 by li huang
-!           03/18/2009 by li huang
-!           04/18/2009 by li huang
-!           06/30/2009 by li huang
-!           08/10/2009 by li huang
-!           08/24/2009 by li huang
-!           09/05/2009 by li huang
-!           12/24/2009 by li huang
-!           02/26/2010 by li huang
-!           03/09/2010 by li huang
-!           03/26/2010 by li huang
-! purpose : initialize and finalize the Hirsch-Fye quantum Monte Carlo
-!           (HFQMC) quantum impurity solver and dynamical mean field
-!           theory (DMFT) self-consistent engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_config
+!!!           hfqmc_setup_array
+!!!           hfqmc_selfer_init
+!!!           hfqmc_solver_init
+!!!           hfqmc_final_array
+!!! source  : hfqmc_stream.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/07/2006 by li huang
+!!!           03/26/2010 by li huang
+!!!           12/06/2014 by li huang
+!!! purpose : initialize and finalize the Hirsch-Fye quantum Monte Carlo
+!!!           (HFQMC) quantum impurity solver and dynamical mean field
+!!!           theory (DMFT) self-consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> setup key parameters for Hirsch-Fye quantum Monte Carlo quantum
-! impurity solver and dynamical mean field theory kernel
+!!>>> hfqmc_config: setup key parameters for Hirsch-Fye quantum Monte
+!!>>> Carlo quantum impurity solver and dynamical mean field theory kernel
   subroutine hfqmc_config()
-     use constants
-     use control
+     use parser, only : p_create, p_parse, p_get, p_destroy
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control ! ALL
 
      implicit none
 
@@ -51,14 +32,18 @@
 ! used to check whether the input file (solver.hfqmc.in) exists
      logical :: exists
 
-!=========================================================================
-! setup dynamical mean field theory self-consistent engine related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup general control flags                                      <<<
+!!========================================================================
      isscf  = 2               ! non-self-consistent (1) or self-consistent mode (2)
      issun  = 2               ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1               ! spin projection, PM (1) or AFM             mode (2)
      isbin  = 2               ! without binning     (1) or with binning    mode (2)
-!-------------------------------------------------------------------------
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!!========================================================================
+!!>>> setup common variables for quantum impurity model                <<<
+!!========================================================================
      nband  = 1               ! number of correlated bands
      nspin  = 2               ! number of spin projection
      norbs  = nspin*nband     ! number of correlated orbitals (= nband * nspin)
@@ -73,9 +58,9 @@
      alpha  = 0.70_dp         ! mixing parameter for self-consistent engine
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!=========================================================================
-! setup Hirsch-Fye quantum Monte Carlo quantum impurity solver related common variables
-!=========================================================================
+!!========================================================================
+!!>>> setup common variables for quantum impurity solver               <<<
+!!========================================================================
      mstep  = 16              ! maximum number of delayed update steps
      mfreq  = 8193            ! maximum number of matsubara frequency
 !-------------------------------------------------------------------------
@@ -96,57 +81,42 @@
 
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
-             open(mytmp, file='solver.hfqmc.in', form='formatted', status='unknown')
+! create the file parser
+             call p_create()
+! parse the config file
+             call p_parse('solver.hfqmc.in')
 
-             read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) isscf                                         !
-             read(mytmp,*) issun                                         !
-             read(mytmp,*) isspn                                         !
-             read(mytmp,*) isbin                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+! extract parameters
+             call p_get('isscf' , isscf )
+             call p_get('issun' , issun )
+             call p_get('isspn' , isspn )
+             call p_get('isbin' , isbin )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) nband                                         !
-             read(mytmp,*) nspin                                         !
-             read(mytmp,*) norbs                                         !
-             read(mytmp,*) niter                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('nband' , nband )
+             call p_get('nspin' , nspin )
+             call p_get('norbs' , norbs )
+             call p_get('niter' , niter )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) Uc                                            !
-             read(mytmp,*) Jz                                            !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('Uc'    , Uc    )
+             call p_get('Jz'    , Jz    )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) mune                                          !
-             read(mytmp,*) beta                                          !
-             read(mytmp,*) part                                          !
-             read(mytmp,*) alpha                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('mune'  , mune  )
+             call p_get('beta'  , beta  )
+             call p_get('part'  , part  )
+             call p_get('alpha' , alpha )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) mstep                                         !
-             read(mytmp,*) mfreq                                         !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('mstep' , mstep )
+             call p_get('mfreq' , mfreq )
 
-             read(mytmp,*)
-!------------------------------------------------------------------------+
-             read(mytmp,*) nsing                                         !
-             read(mytmp,*) ntime                                         !
-             read(mytmp,*) ntherm                                        !
-             read(mytmp,*) nsweep                                        !
-             read(mytmp,*) nclean                                        !
-             read(mytmp,*) ncarlo                                        !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+             call p_get('nsing' , nsing )
+             call p_get('ntime' , ntime )
+             call p_get('ntherm', ntherm)
+             call p_get('nsweep', nsweep)
+             call p_get('nclean', nclean)
+             call p_get('ncarlo', ncarlo)
 
-             close(mytmp)
+! destroy the parser
+             call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
@@ -154,50 +124,38 @@
 ! to broadcast config parameters from root to all children processes
 # if defined (MPI)
 
-!------------------------------------------------------------------------+
-     call mp_bcast( isscf , master )                                     !
-     call mp_bcast( issun , master )                                     !
-     call mp_bcast( isspn , master )                                     !
-     call mp_bcast( isbin , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( isscf , master )
+     call mp_bcast( issun , master )
+     call mp_bcast( isspn , master )
+     call mp_bcast( isbin , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( nband , master )                                     !
-     call mp_bcast( nspin , master )                                     !
-     call mp_bcast( norbs , master )                                     !
-     call mp_bcast( niter , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( nband , master )
+     call mp_bcast( nspin , master )
+     call mp_bcast( norbs , master )
+     call mp_bcast( niter , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( Uc    , master )                                     !
-     call mp_bcast( Jz    , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( Uc    , master )
+     call mp_bcast( Jz    , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( mune  , master )                                     !
-     call mp_bcast( beta  , master )                                     !
-     call mp_bcast( part  , master )                                     !
-     call mp_bcast( alpha , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( mune  , master )
+     call mp_bcast( beta  , master )
+     call mp_bcast( part  , master )
+     call mp_bcast( alpha , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( mstep , master )                                     !
-     call mp_bcast( mfreq , master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( mstep , master )
+     call mp_bcast( mfreq , master )
      call mp_barrier()
 
-!------------------------------------------------------------------------+
-     call mp_bcast( nsing , master )                                     !
-     call mp_bcast( ntime , master )                                     !
-     call mp_bcast( ntherm, master )                                     !
-     call mp_bcast( nsweep, master )                                     !
-     call mp_bcast( nclean, master )                                     !
-     call mp_bcast( ncarlo, master )                                     !
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^+
+     call mp_bcast( nsing , master )
+     call mp_bcast( ntime , master )
+     call mp_bcast( ntherm, master )
+     call mp_bcast( nsweep, master )
+     call mp_bcast( nclean, master )
+     call mp_bcast( ncarlo, master )
      call mp_barrier()
 
 # endif  /* MPI */
@@ -205,9 +163,10 @@
      return
   end subroutine hfqmc_config
 
-!>>> allocate memory for global variables and then initialize them
+!!>>> hfqmc_setup_array: allocate memory for global variables and then
+!!>>> initialize them
   subroutine hfqmc_setup_array()
-     use context
+     use context ! ALL
 
      implicit none
 
@@ -219,14 +178,21 @@
      return
   end subroutine hfqmc_setup_array
 
-!>>> initialize the Hirsch-Fye quantum Monte Carlo quantum impurity solver
-! plus dynamical mean field theory self-consistent engine
+!!>>> hfqmc_selfer_init: initialize the Hirsch-Fye quantum Monte Carlo
+!!>>> quantum impurity solver plus the dynamical mean field theory
+!!>>> self-consistent engine
   subroutine hfqmc_selfer_init()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use mmpi
+     use control, only : nband, norbs
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : beta
+     use control, only : myid, master
+     use context, only : tmesh, rmesh
+     use context, only : symm, eimp
+     use context, only : wssf
 
      implicit none
 
@@ -248,14 +214,10 @@
      logical  :: exists
 
 ! build imaginary time tau mesh: tmesh
-     do i=1,ntime
-         tmesh(i) = zero + ( beta - zero ) / real(ntime) * real(i - 1)
-     enddo ! over i={1,ntime} loop
+     call s_linspace_d(zero, beta, ntime, tmesh)
 
 ! build matsubara frequency mesh: rmesh
-     do j=1,mfreq
-         rmesh(j) = ( two * real(j - 1) + one ) * ( pi / beta )
-     enddo ! over j={1,mfreq} loop
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
 ! build initial bath weiss's function at non-interaction limit
      do i=1,norbs
@@ -263,13 +225,6 @@
              wssf(j,i) = ( czi * two ) * ( rmesh(j) - sqrt( rmesh(j)**2 + one ) )
          enddo ! over j={1,mfreq} loop
      enddo ! over i={1,norbs} loop
-
-! build initial bath weiss's function at atomic limit
-!<     do i=1,norbs
-!<         do j=1,mfreq
-!<             wssf(j,i) = -czi / rmesh(j)
-!<         enddo ! over j={1,mfreq} loop
-!<     enddo ! over i={1,norbs} loop
 
 ! read in initial bath weiss's function if available
 !-------------------------------------------------------------------------
@@ -303,7 +258,7 @@
 ! write out the bath weiss's function
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_wssf(rmesh, wssf)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! since the bath weiss's function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
@@ -361,13 +316,20 @@
      return
   end subroutine hfqmc_selfer_init
 
-!>>> initialize the Hirsch-Fye quantum Monte Carlo quantum impurity solver
+!!>>> hfqmc_solver_init: initialize the Hirsch-Fye quantum Monte Carlo
+!!>>> quantum impurity solver
   subroutine hfqmc_solver_init()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, half, czero
+     use spring, only : spring_sfmt_init, spring_sfmt_stream
 
-     use spring
+     use control, only : nband, norbs
+     use control, only : nsing, ntime
+     use control, only : Uc, Jz
+     use control, only : beta
+     use control, only : myid, master
+     use context, only : pmat, umat, lmat, imat, smat
+     use context, only : symm, tmesh, unity
+     use context, only : wtau, wssf
 
      implicit none
 
@@ -387,14 +349,8 @@
 ! real(dp) dummy variable
      real(dp) :: raux
 
-! ratio between spin up and spin down states
-     real(dp) :: ratio
-
 ! \delta \tau
      real(dp) :: deltau
-
-! let spin up = spin down
-     ratio = half
 
 ! evaluate $\delta \tau$
      deltau = beta / real(ntime)
@@ -416,9 +372,7 @@
      call spring_sfmt_init(stream_seed)
 
 !>>> step 2, build identity matrix
-     do i=1,ntime
-         unity(i,i) = one
-     enddo ! over i={1,ntime} loop
+     call s_identity_d(ntime, unity)
 
 !>>> step 3, build smat, $\sigma$, Pauli matrix
 !-------------------------------------------------------------------------
@@ -555,10 +509,10 @@
 !<                     umat(k) = Uc + Jz
 !<                 else
 !<                     umat(k) = Uc
-!<                 endif
+!<                 endif ! back if ( m == i ) block
 !<             else
 !<                 umat(k) = Uc - Jz
-!<             endif
+!<             endif ! back if ( i <= nband .and. j > nband ) block
 !<         enddo ! over j={i+1,norbs} loop
 !<     enddo ! over i={1,norbs-1} loop
 !<
@@ -573,10 +527,10 @@
 !<                     umat(k) = Uc
 !<                 else
 !<                     umat(k) = Uc - Jz
-!<                 endif
+!<                 endif ! back if ( m == i ) block
 !<             else
 !<                 umat(k) = Uc
-!<             endif
+!<             endif ! back if ( i <= nband .and. j > nband ) block
 !<         enddo ! over j={i+1,norbs} loop
 !<     enddo ! over i={1,norbs-1} loop
 !<
@@ -591,10 +545,10 @@
                      umat(k) = Uc
                  else
                      umat(k) = Uc - 2.0_dp * Jz
-                 endif
+                 endif ! back if ( m == i ) block
              else
                  umat(k) = Uc - 3.0_dp * Jz
-             endif
+             endif ! back if ( i <= nband .and. j > nband ) block
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
 
@@ -602,7 +556,7 @@
      do i=1,nsing
          if ( umat(i) < zero ) then
              call s_print_error('hfqmc_solver_init','umat element is negative')
-         endif
+         endif ! back if ( umat(i) < zero ) block
      enddo ! over i={1,nsing} loop
 
 !>>> step 6, build lmat, $\lambda$ matrix
@@ -615,11 +569,11 @@
      do j=1,nsing
          do i=1,ntime
              raux = spring_sfmt_stream()
-             if ( raux <= ratio ) then
+             if ( raux <= half ) then
                  imat(i,j) =  one
              else
                  imat(i,j) = -one
-             endif
+             endif ! back if ( raux <= half ) block
              imat(i,j) = imat(i,j) * lmat(j)
          enddo ! over i={1,ntime} loop
      enddo ! over j={1,nsing} loop
@@ -636,14 +590,14 @@
 ! write out initial bath weiss's function
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_wtau(tmesh, wtau)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine hfqmc_solver_init
 
-!>>> garbage collection for this program
+!!>>> hfqmc_final_array: garbage collection for this program
   subroutine hfqmc_final_array()
-     use context
+     use context ! ALL
 
      implicit none
 

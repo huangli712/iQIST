@@ -133,7 +133,7 @@
 !! You have to setup the key parameters for the atomic eigenvalue problem
 !! solver, and write them down to the 'atom.config.in' file. Now you must
 !! do that manually. In the future we will provide a Python module to
-!! facilitate this work.
+!! facilitate this work (see src/tools/hibiscus/script/p_atomic.py).
 !!
 !! 3. init the atomic eigenvalue problem solver
 !! --------------------------------------------
