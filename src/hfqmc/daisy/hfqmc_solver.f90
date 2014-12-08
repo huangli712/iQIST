@@ -160,9 +160,9 @@
 ! fields configuration are lost.
      if ( iter == 1 .or. isscf == 1 ) then
          call hfqmc_solver_init() ! init solver-related matrix
-         ntherm = 100             ! adjust ntherm here for iter = 1
+!<         ntherm = 100             ! adjust ntherm here for iter = 1
      else
-         ntherm = 30              ! adjust ntherm here for iter > 1
+!<         ntherm = 30              ! adjust ntherm here for iter > 1
      endif ! back if ( iter == 1 .or. isscf == 1 ) block
 
 ! setup wmat, the bath weiss's function matrix
