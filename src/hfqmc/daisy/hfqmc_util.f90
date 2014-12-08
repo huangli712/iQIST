@@ -87,7 +87,7 @@
 
 ! external arguments
 ! green's function in imaginary time space
-     real(dp), intent(out) :: grnt(ntime,norbs)
+     real(dp), intent(out)   :: grnt(ntime,norbs)
 
 ! green's function in matsubara frequency space
      complex(dp), intent(in) :: grnw(mfreq,norbs)
@@ -124,10 +124,13 @@
      return
   end subroutine hfqmc_fourier_w2t
 
-!>>> to calculate the first-order derivate of G(0) and G(\beta)
+!!>>> hfqmc_fourier_nderiv: to calculate the first-order derivate of
+!!>>> G(0) and G(\beta)
   subroutine hfqmc_fourier_nderiv(gt, d1, d2)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : ntime
+     use control, only : beta
 
      implicit none
 
@@ -160,22 +163,26 @@
      return
   end subroutine hfqmc_fourier_nderiv
 
-!>>> fourier transformation, from imaginary time to matsubara freqency
+!!>>> hfqmc_fourier_forward: fourier transformation, from imaginary time
+!!>>> to matsubara freqency
   subroutine hfqmc_fourier_forward(taudat, omegadat, deriv1, deriv2)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, half, pi, czi
+
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : beta
 
      implicit none
 
 ! external arguments
 ! first order derivated of G(0)
-     real(dp), intent(in) :: deriv1
+     real(dp), intent(in)     :: deriv1
 
 ! first order derivated of G(\beta)
-     real(dp), intent(in) :: deriv2
+     real(dp), intent(in)     :: deriv2
 
 ! original data in imaginary-time
-     real(dp), intent(in) :: taudat(ntime)
+     real(dp), intent(in)     :: taudat(ntime)
 
 ! fouriered data in matsubara frequency
      complex(dp), intent(out) :: omegadat(mfreq)
@@ -310,17 +317,20 @@
      return
   end subroutine hfqmc_fourier_forward
 
-!>>> invert fourier green's or weiss's function from matsubara frequency
-! representation to imaginary time representation
+!!>>> hfqmc_fourier_backward: invert fourier green's or weiss's function
+!!>>> from matsubara frequency representation to imaginary time representation
   subroutine hfqmc_fourier_backward(omegadat, taudat)
-     use constants
-     use control
+     use constants, only : dp, zero, one, two, half, pi
+
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : beta
 
      implicit none
 
 ! external arguments
 ! invfouriered data in imaginary time
-     real(dp), intent(out) :: taudat(ntime)
+     real(dp), intent(out)   :: taudat(ntime)
 
 ! original data in matsubara frequency
      complex(dp), intent(in) :: omegadat(mfreq)
