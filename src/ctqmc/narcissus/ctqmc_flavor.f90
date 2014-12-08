@@ -2031,8 +2031,8 @@
      return
   end subroutine ctqmc_make_wscreen
 
-!!>>> ctqmc_make_wkernel: used to calculate K(\tau), the kernel function
-!!>>> for extra weight factor
+!!>>> ctqmc_make_wkernel: used to calculate K(\tau), i.e., the screening
+!!>>> function for extra weight factor
   subroutine ctqmc_make_wkernel(tau, cur)
      use constants, only : dp, zero, one, two, pi
 
@@ -2050,7 +2050,7 @@
      real(dp), intent(out) :: cur
 
 ! external functions
-! used to interpolate kernel function
+! used to interpolate screening function
      procedure( real(dp) ) :: ctqmc_make_ktau
 
      SCREENING_SWITCHER: select case ( isscr )
