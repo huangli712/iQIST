@@ -210,7 +210,7 @@
 !! 4. init the hfqmc impurity solver
 !! ---------------------------------
 !!
-!! pydaisy.api.init_hfqmc(my_id, num_procs)
+!! pydaisy.dapi.init_hfqmc(my_id, num_procs)
 !!
 !! Here my_id means the rank for current process, and num_procs means
 !! number of processes.
@@ -223,7 +223,7 @@
 !! 6. start the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! pydaisy.api.exec_hfqmc(i)
+!! pydaisy.dapi.exec_hfqmc(i)
 !!
 !! Here i is the current iteration number.
 !!
@@ -235,7 +235,7 @@
 !! 8. close the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! pydaisy.api.stop_hfqmc()
+!! pydaisy.dapi.stop_hfqmc()
 !!
 !! FAQ
 !! ===
