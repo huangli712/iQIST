@@ -17,32 +17,33 @@
 !!
 !! If you want to obtain an executable program, please go to src/build/,
 !! open make.sys and comment out the API flag. On the contrary, if you
-!! want to compile azalea as a library, please activate the API flag.
+!! want to compile daisy as a library, please activate the API flag.
 !!
 !! Introduction
 !! ============
 !!
-!! The azalea code is a hybridization expansion version continuous time
-!! quantum Monte Carlo quantum impurity solver. It adopts the segment
-!! picture, and only implements very limited features. So it is highly
-!! efficient, and can be used as a standard to benchmark the other ctqmc
-!! impurity solvers. In fact, it is the prototype for the other more
-!! advanced ctqmc impurity solver. The azalea code also includes a mini
-!! dynamical mean field theory engine which implements the self-consistent
-!! equation for Bethe lattice in paramagnetic state. So you can use it
-!! to perform dynamical mean field theory calculations quickly. Enjoy it.
+!! The daisy code is a Hirsch-Fye auxiliary field quantum Monte Carlo
+!! quantum impurity solver. It adopts the discrete time picture, and only
+!! implements very limited features. It is much less efficient than the
+!! ctqmc codes. On the other hand, since this algorithm is very mature
+!! and reliable (somewhat outdated), and this code is well-examined, it
+!! was often used as a standard to benchmark the other ctqmc impurity
+!! solvers. The daisy code also includes a mini dynamical mean field
+!! theory engine which implements the self-consistent equation for Bethe
+!! lattice in paramagnetic state. So you can use it to perform dynamical
+!! mean field theory calculations quickly. Enjoy it.
 !!
 !! Usage
 !! =====
 !!
-!! # ./ctqmc or bin/azalea.x
+!! # ./hfqmc or bin/daisy.x
 !!
 !! Input
 !! =====
 !!
-!! solver.ctqmc.in (optional)
+!! solver.hfqmc.in (optional)
 !! solver.eimp.in (optional)
-!! solver.hyb.in (optional)
+!! solver.wss.in (optional)
 !!
 !! Output
 !! ======
@@ -50,16 +51,11 @@
 !! terminal output
 !! solver.green.bin.*
 !! solver.green.dat
+!! solver.weiss.dat
 !! solver.grn.dat
-!! solver.hybri.dat
-!! solver.hyb.dat
 !! solver.wss.dat
 !! solver.sgm.dat
-!! solver.hub.dat
-!! solver.hist.dat
-!! solver.prob.dat
 !! solver.nmat.dat
-!! solver.status.dat
 !! etc.
 !!
 !! Running mode
