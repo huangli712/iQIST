@@ -164,7 +164,7 @@
 
 !!>>> ctqmc_dump_ktau: write out screening function and its derivates in
 !!>>> imaginary time space
-  subroutine ctqmc_dump_ktau(tmesh, ktau, ksed, ptau)
+  subroutine ctqmc_dump_ktau(tmesh, ktau, ptau)
      use constants, only : dp, mytmp
 
      use control, only : ntime
@@ -178,9 +178,6 @@
 ! screening function
      real(dp), intent(in) :: ktau(ntime)
 
-! second order derivates for screening function
-     real(dp), intent(in) :: ksed(ntime)
-
 ! first order derivates for screening function
      real(dp), intent(in) :: ptau(ntime)
 
@@ -193,7 +190,7 @@
 
 ! write it
      do i=1,ntime
-         write(mytmp,'(i6,4f12.6)') i, tmesh(i), ktau(i), ksed(i), ptau(i)
+         write(mytmp,'(i6,3f12.6)') i, tmesh(i), ktau(i), ptau(i)
      enddo ! over i={1,ntime} loop
 
 ! close data file

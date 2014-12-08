@@ -384,7 +384,7 @@
 
 ! write out the kernel function
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_ktau(tmesh, ktau)
+         call ctqmc_dump_ktau(tmesh, ktau, ptau)
      endif ! back if ( myid == master ) block
 
 ! since the kernel function may be updated in master node, it is
