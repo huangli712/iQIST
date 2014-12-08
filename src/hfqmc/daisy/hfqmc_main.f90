@@ -64,30 +64,30 @@
 !! case 1: isscf == 1 .and. isbin == 1
 !! -----------------------------------
 !!
-!! call ctqmc_impurity_solver only, normal mode
+!! call hfqmc_impurity_solver only, normal mode
 !!
 !! case 2: isscf == 1 .and. isbin == 2
 !! -----------------------------------
 !!
-!! call ctqmc_impurity_solver only, binner mode
+!! call hfqmc_impurity_solver only, binner mode
 !!
 !! case 3: isscf == 2 .and. isbin == 1
 !! -----------------------------------
 !!
-!! call ctqmc_impurity_solver, normal mode
+!! call hfqmc_impurity_solver, normal mode
 !! plus
-!! call ctqmc_dmft_selfer
+!! call hfqmc_dmft_selfer
 !! until convergence
 !!
 !! case 4: isscf == 2 .and. isbin == 2
 !! -----------------------------------
 !!
-!! call ctqmc_impurity_solver, normal mode
+!! call hfqmc_impurity_solver, normal mode
 !! plus
-!! call ctqmc_dmft_selfer
+!! call hfqmc_dmft_selfer
 !! until convergence
 !! plus
-!! call ctqmc_impurity_solver, binner mode
+!! call hfqmc_impurity_solver, binner mode
 !!
 !! Documents
 !! =========
