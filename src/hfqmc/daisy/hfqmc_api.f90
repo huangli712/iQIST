@@ -500,4 +500,46 @@
      return
   end subroutine set_wssf
 
+!!>>> set_symm: setup the symmetry vector
+  subroutine set_symm(size_t, symm_t)
+     implicit none
+
+! external arguments
+! size of symm
+     integer, intent(in) :: size_t
+
+! symmetry vector
+     integer, intent(in) :: symm_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) symm_t
+!F2PY depend(size_t) symm_t
+
+     call cat_set_symm(size_t, symm_t)
+
+     return
+  end subroutine set_symm
+
+!!>>> set_eimp: setup the impurity energy level
+  subroutine set_eimp(size_t, eimp_t)
+     implicit none
+
+! external arguments
+! size of eimp
+     integer, intent(in)  :: size_t
+
+! impurity energy level
+     real(dp), intent(in) :: eimp_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) eimp_t
+!F2PY depend(size_t) eimp_t
+
+     call cat_set_eimp(size_t, eimp_t)
+
+     return
+  end subroutine set_eimp
+
   end module dapi
