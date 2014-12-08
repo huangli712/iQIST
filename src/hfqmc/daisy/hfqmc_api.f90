@@ -136,20 +136,71 @@
      return
   end subroutine solver_status
 
-  subroutine init_hfqmc()
+# if !defined (F2PY)
+
+!!>>> init_hfqmc: initialize the hfqmc quantum impurity solver
+!!>>> fortran version
+  subroutine init_hfqmc(I_mpi, I_solver)
      implicit none
+
+! external arguments
+! type structure of mpi
+     class(*), intent(in) :: I_mpi
+
+! type structure of generic solver
+     class(*), intent(in) :: I_solver
+
+     call cat_init_hfqmc(I_mpi, I_solver)
 
      return
   end subroutine init_hfqmc
 
-  subroutine exec_hfqmc()
+# else   /* F2PY */
+
+!!>>> init_hfqmc: initialize the hfqmc quantum impurity solver
+!!>>> python version
+  subroutine init_hfqmc(my_id, num_procs)
      implicit none
+
+! external arguments
+! id for current process
+     integer, intent(in) :: my_id
+
+! number of processors
+     integer, intent(in) :: num_procs
+
+! declare f2py directives
+!F2PY intent(in) my_id
+!F2PY intent(in) num_procs
+
+     call cat_init_hfqmc(my_id, num_procs)
+
+     return
+  end subroutine init_hfqmc
+
+# endif  /* F2PY */
+
+!!>>> exec_hfqmc: execute the hfqmc quantum impurity solver
+  subroutine exec_hfqmc(iter)
+     implicit none
+
+! external arguments
+! current iteration number
+     integer, intent(in) :: iter
+
+! declare f2py directives
+!F2PY intent(in) iter
+
+     call cat_exec_hfqmc(iter)
 
      return
   end subroutine exec_hfqmc
 
+!!>>> stop_hfqmc: stop the hfqmc quantum impurity solver
   subroutine stop_hfqmc()
      implicit none
+
+     call cat_stop_hfqmc()
 
      return
   end subroutine stop_hfqmc
