@@ -1,47 +1,36 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_impurity_solver
-! source  : hfqmc_solver.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/05/2006 by li huang
-!           02/28/2008 by li huang
-!           10/26/2008 by li huang
-!           10/30/2008 by li huang
-!           11/04/2008 by li huang
-!           12/20/2008 by li huang
-!           12/24/2008 by li huang
-!           12/30/2008 by li huang
-!           01/03/2009 by li huang
-!           03/16/2009 by li huang
-!           04/19/2009 by li huang
-!           06/30/2009 by li huang
-!           08/11/2009 by li huang
-!           09/05/2009 by li huang
-!           12/24/2009 by li huang
-!           02/26/2010 by li huang
-!           03/08/2010 by li huang
-!           03/27/2010 by li huang
-!           08/25/2010 by li huang
-! purpose : it is a mature parallel implemention of the famous Hirsch
-!           -Fye quantum Monte Carlo algorithm, which is used to solve
-!           the multi-orbital Anderson impurity model as usually. we
-!           denote it as HFQMC (Hirsch-Fye quantum Monte Carlo) quantum
-!           impurity solver.
-! input   :
-! output  :
-! status  : unstable
-! comment : this subroutine is fully parallelism by mpi
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_impurity_solver
+!!! source  : hfqmc_solver.f90
+!!! type    : subroutine
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/05/2006 by li huang
+!!!           08/25/2010 by li huang
+!!!           12/08/2014 by li huang
+!!! purpose : it is a mature parallel implemention of the famous Hirsch
+!!!           -Fye quantum Monte Carlo algorithm, which is used to solve
+!!!           the multi-orbital Anderson impurity model as usually. we
+!!!           denote it as HFQMC (Hirsch-Fye quantum Monte Carlo) quantum
+!!!           impurity solver.
+!!! status  : unstable
+!!! comment : this subroutine is fully parallelism by mpi
+!!!-----------------------------------------------------------------------
 
-!>>> solve the Anderson impurity model using Hirsch-Fye quantum Monte Carlo algorithm
+!!>>> hfqmc_impurity_solver: solve the Anderson impurity model using the
+!!>>> Hirsch-Fye quantum Monte Carlo algorithm
   subroutine hfqmc_impurity_solver(iter)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, mystd
+     use spring, only : spring_sfmt_stream
 
-     use spring
-     use mmpi
+     use control, only : isscf
+     use control, only : norbs
+     use control, only : mstep
+     use control, only : nsing, ntime, ntherm, nsweep, ncarlo
+     use control, only : myid, master
+     use context, only : ktep, diag, atep, btep
+     use context, only : gmat, wmat
+     use context, only : symm, quas, nmat, tmesh, rmesh, nnmat
+     use context, only : gtau, wtau, grnf, wssf, sig2
 
      implicit none
 
@@ -108,25 +97,25 @@
      allocate(msum(-ntime+1:ntime-1),  stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! allocate memory
      allocate(osum(norbs,norbs),       stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! allocate memory
      allocate(gsum(ntime,norbs),       stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! allocate memory
      allocate(tmat(ntime,ntime,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
-     endif
+     endif ! back if ( istat /= 0 ) block
 
 ! setup timer
      time_iter = zero
@@ -136,7 +125,7 @@
 ! whether it is time to enter QMC data accumulating mode
      if ( iter == 999 ) then
          nsweep = nsweep * 10
-     endif
+     endif ! back if ( iter == 999 ) block
 
 ! setup internal iteration parameters
 ! we need 10 data bins
@@ -171,9 +160,9 @@
 ! fields configuration are lost.
      if ( iter == 1 .or. isscf == 1 ) then
          call hfqmc_solver_init() ! init solver-related matrix
-         ntherm = 100             ! adjust ntherm here for iter = 1
+!<         ntherm = 100             ! adjust ntherm here for iter = 1
      else
-         ntherm = 30              ! adjust ntherm here for iter > 1
+!<         ntherm = 30              ! adjust ntherm here for iter > 1
      endif ! back if ( iter == 1 .or. isscf == 1 ) block
 
 ! setup wmat, the bath weiss's function matrix
@@ -216,11 +205,11 @@
 ! print main iteration information, only for master node
      if ( myid == master ) then
          write(mystd,'(2X,a)') 'DAISY >>> HFQMC quantum impurity solver running'
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!--->>> begin main iteration
-!=========================================================================
+!!========================================================================
+!!>>> begin main iteration                                             <<<
+!!========================================================================
 
      HFQMC_MAIN_ITERATION: do cstep = 1, nsweep + ntherm
 
@@ -236,9 +225,9 @@
              call cpu_time(time_begin)
          endif ! back if ( mod(nstep, nfast) == 1 ) block
 
-!=========================================================================
-!--->>> begin fast loop
-!=========================================================================
+!!========================================================================
+!!>>> begin fast loop                                                  <<<
+!!========================================================================
 
          HFQMC_ISING_ITERATION: do m=1,nsing
              HFQMC_SLICE_ITERATION: do n=1,ntime
@@ -273,32 +262,15 @@
              enddo HFQMC_SLICE_ITERATION ! over n={1,ntime} loop
          enddo HFQMC_ISING_ITERATION ! over m={1,nsing} loop
 
-!=========================================================================
-!--->>> end fast loop
-!=========================================================================
+!!========================================================================
+!!>>> end fast loop                                                    <<<
+!!========================================================================
 
 ! reporting quantum impurity solver
 !-------------------------------------------------------------------------
 ! print out QMC trace information, only for master node
          if ( mod(nstep, nfast) == 0 .and. nstep > 0 .and. myid == master ) then
-
-! about iteration number
-             write(mystd,'(2X,a,i3,2(a,i10))') 'DAISY >>> iter:', iter,  &
-                                         ' sweep:', nstep, ' of ', nsweep
-
-! about update action
-             write(mystd,'(4X,a)')        'hfqmc sampling statistics:'
-             write(mystd,'(4X,a,3i12)')   'count:',                      &
-                                           int( tcount ),                &
-                                           int( accept ),                &
-                                           int( reject )
-             write(mystd,'(4X,a,3f12.5)') 'ratio:', one,                 &
-                                           accept / tcount,              &
-                                           reject / tcount
-
-             write(mystd,'(4X,a)')        'delayed update statistics:'
-             write(mystd,'(4X,a,10i6)')   'count:', (ktep(i), i=1, norbs)
-
+             call hfqmc_print_runtime(iter, nstep, accept, reject, tcount)
          endif ! back if ( mod(nstep, nfast) == 0 .and. nstep > 0 .and. myid == master ) block
 
 ! sampling the physical observables
@@ -408,15 +380,15 @@
              if ( myid == master ) then ! only master node can do it
                  call s_time_analyzer(time_iter, time_niter)
                  write(mystd,*)
-             endif
+             endif ! back if ( myid == master ) block
 
          endif ! back if ( mod(nstep, nfast) == 0  .and. nstep > 0 ) block
 
      enddo HFQMC_MAIN_ITERATION ! over main loop
 
-!=========================================================================
-!--->>> end main iteration
-!=========================================================================
+!!========================================================================
+!!>>> end main iteration                                               <<<
+!!========================================================================
 
 ! collect the (double) occupation matrix data from nnmat to osum
      call hfqmc_reduce_nmat(osum)
@@ -453,13 +425,38 @@
 ! write out the final green's function to file, only for master node
      if ( myid == master ) then
          call hfqmc_dump_gtau(tmesh, gtau)
-     endif
+     endif ! back if ( myid == master ) block
+
+! write out impurity green's function to disk file
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_dump_grnf(rmesh, grnf)
+     endif ! back if ( myid == master ) block
+
+! write out bath weiss's function to disk file
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_dump_wssf(rmesh, wssf)
+     endif ! back if ( myid == master ) block
+
+! write out self-energy function to disk file
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_dump_sigf(rmesh, sig2)
+     endif ! back if ( myid == master ) block
+
+! write out quasiparticle weight to disk file
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_dump_quas(quas)
+     endif ! back if ( myid == master ) block
+
+! write out occupation number to disk file
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_dump_nmat(nmat, nnmat)
+     endif ! back if ( myid == master ) block
 
 ! print the footer of Hirsch-Fye quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'DAISY >>> HFQMC quantum impurity solver shutdown'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(msum)
