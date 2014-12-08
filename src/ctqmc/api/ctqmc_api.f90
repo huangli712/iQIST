@@ -502,22 +502,22 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public  :: solver_id
-     public  :: solver_status
+     public :: solver_id
+     public :: solver_status
 
-     public  :: init_ctqmc
-     public  :: exec_ctqmc
-     public  :: stop_ctqmc
+     public :: init_ctqmc
+     public :: exec_ctqmc
+     public :: stop_ctqmc
 
-     public  :: set_hybf
-     public  :: set_symm
-     public  :: set_eimp
-     public  :: set_ktau
+     public :: set_hybf
+     public :: set_symm
+     public :: set_eimp
+     public :: set_ktau
 
-     public  :: get_grnf
-     public  :: get_sigf
-     public  :: get_nmat
-     public  :: get_nnmat
+     public :: get_grnf
+     public :: get_sigf
+     public :: get_nmat
+     public :: get_nnmat
 
   contains ! encapsulated functionality
 
