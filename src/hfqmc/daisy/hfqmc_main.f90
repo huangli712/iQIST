@@ -450,7 +450,7 @@
      return
   end subroutine cat_stop_hfqmc
 
-!!>>> cat_set_wssf: setup the bath green's function
+!!>>> cat_set_wssf: setup the bath weiss's function
   subroutine cat_set_wssf(size_t, wssf_t)
      use constants, only : dp
 
@@ -464,7 +464,7 @@
 ! size of wssf
      integer, intent(in)     :: size_t
 
-! bath green's function
+! bath weiss's function
      complex(dp), intent(in) :: wssf_t(size_t)
 
 ! check whether size_t is correct
