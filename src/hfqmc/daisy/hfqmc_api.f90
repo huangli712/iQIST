@@ -1,14 +1,11 @@
 !!!-----------------------------------------------------------------------
 !!! project : lilac
 !!! program : dapi
-!!!           dapi@T_daisy
-!!!           dapi@init_hfqmc
-!!!           dapi@exec_hfqmc
-!!!           dapi@stop_hfqmc
 !!! source  : hfqmc_api.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 12/06/2014 by li huang
+!!!           12/08/2014 by li huang
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for the Hirsch-Fye
 !!!           quantum Monte Carlo impurity solver
