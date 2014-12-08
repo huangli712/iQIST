@@ -264,6 +264,31 @@
 
 
 
+!!>>> cat_set_eimp: setup the impurity level
+  subroutine cat_set_eimp(size_t, eimp_t)
+     use constants, only : dp
+
+     use context, only : eimp
+
+     implicit none
+
+! external arguments
+! size of eimp
+     integer, intent(in)  :: size_t
+
+! impurity level
+     real(dp), intent(in) :: eimp_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(eimp) ) then
+         call s_print_error('cat_set_eimp','wrong dimension size of eimp_t')
+     endif ! back if ( size_t /= size(eimp) ) block
+
+! copy data
+     eimp = eimp_t
+
+     return
+  end subroutine cat_set_eimp
 
 !!>>> cat_set_ktau: setup the screening function and its first derivates
 !!>>> note: the daisy code does not support this function now
