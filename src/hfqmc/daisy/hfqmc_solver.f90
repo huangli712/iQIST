@@ -29,7 +29,7 @@
      use control, only : myid, master
      use context, only : ktep, diag, atep, btep
      use context, only : gmat, wmat
-     use context, only : symm, quas, nmat, tmesh, rmesh, nnmat
+     use context, only : symm, nmat, tmesh, rmesh, nnmat
      use context, only : gtau, wtau, grnf, wssf, sig2
 
      implicit none
@@ -416,9 +416,6 @@
 ! self energy function at matsubara space by self-consistent equation
      call hfqmc_make_freq()
 
-! calculate quasiparticle weight
-     call hfqmc_make_quas()
-
 ! calculate impurity occupation number
      call hfqmc_make_nmat()
 
@@ -440,11 +437,6 @@
 ! write out self-energy function to disk file
      if ( myid == master ) then ! only master node can do it
          call hfqmc_dump_sigf(rmesh, sig2)
-     endif ! back if ( myid == master ) block
-
-! write out quasiparticle weight to disk file
-     if ( myid == master ) then ! only master node can do it
-         call hfqmc_dump_quas(quas)
      endif ! back if ( myid == master ) block
 
 ! write out occupation number to disk file
