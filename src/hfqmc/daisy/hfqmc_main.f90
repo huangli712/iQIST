@@ -372,9 +372,9 @@
 
 # else   /* F2PY */
 
-!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
+!!>>> cat_init_hfqmc: initialize the hfqmc quantum impurity solver
 !!>>> python version
-  subroutine cat_init_ctqmc(my_id, num_procs)
+  subroutine cat_init_hfqmc(my_id, num_procs)
      use control, only : nprocs, myid, master
 
      implicit none
@@ -390,30 +390,30 @@
      myid = my_id
      nprocs = num_procs
 
-! print the running header for continuous time quantum Monte Carlo quantum
+! print the running header for Hirsch-Fye quantum Monte Carlo quantum
 ! impurity solver and dynamical mean field theory self-consistent engine
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_print_header()
+         call hfqmc_print_header()
      endif ! back if ( myid == master ) block
 
-! setup the important parameters for continuous time quantum Monte Carlo
+! setup the important parameters for Hirsch-Fye quantum Monte Carlo
 ! quantum impurity solver and dynamical mean field theory self-consistent
 ! engine
-     call ctqmc_config()
+     call hfqmc_config()
 
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_print_summary()
+         call hfqmc_print_summary()
      endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
-     call ctqmc_setup_array()
+     call hfqmc_setup_array()
 
-! prepare initial hybridization function, init self-consistent iteration
-     call ctqmc_selfer_init()
+! prepare initial bath weiss's function, init self-consistent iteration
+     call hfqmc_selfer_init()
 
      return
-  end subroutine cat_init_ctqmc
+  end subroutine cat_init_hfqmc
 
 # endif  /* F2PY */
 
