@@ -120,8 +120,34 @@
 
 !!>>> ctqmc_print_runtime: print the runtime information, including the
 !!>>> iteration messages and statistic data, only for reference
-  subroutine hfqmc_print_runtime()
+  subroutine hfqmc_print_runtime(iter, nstep, accept, reject, tcount)
+     use constants, only : dp, one, mystd
+
+     use control, only : norbs
+     use control, only : nsweep
+     use context, only : ktep
+
      implicit none
+
+! external arguments
+! current iteration number
+     integer, intent(in) :: iter
+
+! current QMC effective sweep count
+     integer  :: nstep
+
+! accepted QMC flip count
+     real(dp) :: accept
+
+! rejected QMC flip count
+     real(dp) :: reject
+
+! total QMC flip count
+     real(dp) :: tcount
+
+! local variables
+! loop index
+     integer :: i
 
 ! about iteration number
      write(mystd,'(2X,a,i3,2(a,i10))') 'DAISY >>> iter:', iter, ' sweep:', nstep, ' of ', nsweep
@@ -132,7 +158,7 @@
      write(mystd,'(4X,a,3f12.5)') 'ratio:', one, accept / tcount, reject / tcount
 
      write(mystd,'(4X,a)')        'delayed update statistics:'
-     write(mystd,'(4X,a,10i6)')   'count:', (ktep(i), i=1, norbs)
+     write(mystd,'(4X,a,10i6)')   'count:', (ktep(i), i=1,norbs)
 
      return
   end subroutine hfqmc_print_runtime
