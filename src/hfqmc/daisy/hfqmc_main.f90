@@ -263,6 +263,34 @@
 # endif  /* API */
 
 
+!!>>> cat_get_grnf: extract the impurity green's function
+  subroutine cat_get_grnf(size_t, grnf_t)
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : mfreq
+     use context, only : grnf
+
+     implicit none
+
+! external arguments
+! size of grnf
+     integer, intent(in)      :: size_t
+
+! impurity green's function
+     complex(dp), intent(out) :: grnf_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(grnf) ) then
+         call s_print_error('cat_get_grnf','wrong dimension size of grnf_t')
+     endif ! back if ( size_t /= size(grnf) ) block
+
+! copy data
+     grnf_t = reshape(grnf, (/mfreq*norbs/))
+
+     return
+  end subroutine cat_get_grnf
+
 !!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
      use constants, only : dp
