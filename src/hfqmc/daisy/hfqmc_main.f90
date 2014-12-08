@@ -264,6 +264,25 @@
 
 
 
+
+!!>>> cat_stop_hfqmc: stop the hfqmc quantum impurity solver
+  subroutine cat_stop_hfqmc()
+     use control, only : myid, master
+
+     implicit none
+
+! deallocate memory and finalize
+     call hfqmc_final_array()
+
+! print the footer for Hirsch-Fye quantum Monte Carlo quantum impurity
+! solver and dynamical mean field theory self-consistent engine
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_print_footer()
+     endif ! back if ( myid == master ) block
+
+     return
+  end subroutine cat_stop_hfqmc
+
 !!>>> cat_set_wssf: setup the bath green's function
   subroutine cat_set_wssf(size_t, wssf_t)
      use constants, only : dp
