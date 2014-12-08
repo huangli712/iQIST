@@ -19,9 +19,8 @@
 !! ============
 !!
 !! This module can provide a light weight interface (i.e., application
-!! programming interface, API) for Fortran/Python language to the ctqmc
-!! quantum impurity solver. The user can use it to access the azalea,
-!! gardenia, narcissus, begonia, lavender, pansy, and manjushaka codes.
+!! programming interface, API) for Fortran/Python language to the hfqmc
+!! quantum impurity solver. The user can use it to access the daisy code.
 !!
 !! How to build the Fortran API
 !! ============================
@@ -31,26 +30,20 @@
 !!
 !! Activate the API macro (keep F2PY macro disable).
 !!
-!! 2. compile api
-!! --------------
-!!
-!! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory.
-!!
-!! 3. compile the ctqmc component
+!! 2. compile the hfqmc component
 !! ------------------------------
 !!
-!! Please compile the desired ctqmc component again. You have to clean it
+!! Please compile the desired hfqmc component again. You have to clean it
 !! at first, and then compile it. Noted that you have to compile it in the
-!! library mode, i.e., you must use 'make lib' (in the src/ctqmc/azalea
-!! directory) or 'make azalea-lib' (in the src/build directory), etc.
+!! library mode, i.e., you must use 'make lib' (in the src/hfqmc/daisy
+!! directory) or 'make daisy-lib' (in the src/build directory), etc.
 !!
-!! 4. get what you need
+!! 3. get what you need
 !! --------------------
 !!
-!! If everything is OK, you will find the libctqmc.a file in the ctqmc
-!! component folder (for example, src/ctqmc/azalea directory). Please copy
-!! it (together with the api.mod) to your own directory. That's all.
+!! If everything is OK, you will find the libhfqmc.a file in the hfqmc
+!! component folder (for example, src/hfqmc/daisy directory). Please copy
+!! it (together with the dapi.mod) to your own directory. That's all.
 !!
 !! How to build the Python API
 !! ===========================
@@ -60,46 +53,32 @@
 !!
 !! Activate the API macro and F2PY macro at the same time.
 !!
-!! 2. compile api
-!! --------------
-!!
-!! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory. This step is mandatory.
-!!
-!! 3. compile the ctqmc component
+!! 2. compile the hfqmc component
 !! ------------------------------
 !!
-!! Please compile the desired ctqmc component again. You have to clean it
+!! Please compile the desired hfqmc component again. You have to clean it
 !! at first, and then compile it. Noted that you have to compile it in the
-!! library mode, i.e., you must use 'make lib' (in the src/ctqmc/azalea
-!! directory) or 'make azalea-lib' (in the src/build directory), etc.
+!! library mode, i.e., you must use 'make lib' (in the src/hfqmc/daisy
+!! directory) or 'make daisy-lib' (in the src/build directory), etc.
 !!
-!! 4. edit src/ctqmc/api/Makefile
-!! ------------------------------
-!!
-!! check the target 'ctqmc', the original action is as follows:
-!!     cp ../azalea/libctqmc.a .
-!! If you want to use the other ctqmc components, instead of azalea, you
-!! have to change the directory. BE CAREFUL!
-!!
-!! 5. generate pyiqist.so
+!! 3. generate pydaisy.so
 !! ----------------------
 !!
-!! In the src/ctqmc/api directory, just input 'make pyiqist' command and
-!! wait. At last you will get the pyiqist.so which is what you need.
+!! In the src/hfqmc/daisy directory, just input 'make pydaisy' command and
+!! wait. At last you will get the pydaisy.so which is what you need.
 !!
 !! Usage (Fortran version)
 !! =======================
 !!
-!! In the following, we will use azalea code as an example to show how to
+!! In the following, we will use daisy code as an example to show how to
 !! use api to control it. When you want to compile your code, you have to
-!! ensure that api.mod and libctqmc.a are in correct PATH. Or else the
+!! ensure that dapi.mod and libhfqmc.a are in correct PATH. Or else the
 !! compiler will complain that it can not find them.
 !!
 !! 1. import api support
 !! ---------------------
 !!
-!! use api
+!! use dapi
 !!
 !! 2. create T_mpi
 !! ---------------
@@ -115,10 +94,10 @@
 !!
 !! use mmpi ! import mpi support
 !!
-!! 3. create T_segment_azalea
-!! --------------------------
+!! 3. create T_daisy
+!! -----------------
 !!
-!! type (T_segment_azalea) :: I_solver ! define I_solver
+!! type (T_daisy) :: I_solver ! define I_solver
 !! ...
 !! I_solver%isscf  = 1  ! setup I_solver
 !! I_solver%issun  = 1
@@ -127,60 +106,49 @@
 !! I_solver%nband  = 1
 !! I_solver%nspin  = 2
 !! I_solver%norbs  = 2
-!! I_solver%ncfgs  = 4
 !! I_solver%niter  = 20
-!! I_solver%mkink  = 1024
+!! I_solver%mstep  = 16
 !! I_solver%mfreq  = 8193
-!! I_solver%nfreq  = 128
-!! I_solver%ntime  = 1024
-!! I_solver%nflip  = 10000
-!! I_solver%ntherm = 20000
-!! I_solver%nsweep = 20000000
-!! I_solver%nwrite = 2000000
-!! I_solver%nclean = 20000
-!! I_solver%nmonte = 100
-!! I_solver%ncarlo = 100
+!! I_solver%nsing  = 1
+!! I_solver%ntime  = 128
+!! I_solver%ntherm = 100
+!! I_solver%nsweep = 240000
+!! I_solver%nclean = 100
+!! I_solver%ncarlo = 10
 !!
-!! I_solver%U     = 4.0
 !! I_solver%Uc    = 4.0
-!! I_solver%Uv    = 4.0
 !! I_solver%Jz    = 0.0
-!! I_solver%Js    = 0.0
-!! I_solver%Jp    = 0.0
 !! I_solver%mune  = 2.0
 !! I_solver%beta  = 10.0
 !! I_solver%part  = 0.50
 !! I_solver%alpha = 0.50
 !!
-!! Note: If you want to use the other solvers, instead of the azalea code,
-!! please choose suitable solver type.
-!!
 !! Note: Every parameter for quantum impurity solver must be initialized
 !! here, or else the solver will not work properly.
 !!
-!! 4. init the ctqmc impurity solver
+!! 4. init the hfqmc impurity solver
 !! ---------------------------------
 !!
-!! call init_ctqmc(I_mpi, I_solver)
+!! call init_hfqmc(I_mpi, I_solver)
 !!
-!! 5. setup hybf, symm, eimp, and ktau
+!! 5. setup wssf, symm, eimp, and ktau
 !! -----------------------------------
 !!
 !! For examples:
 !!
 !! integer :: size_t
-!! complex(dp) :: hybf(size_t)
+!! complex(dp) :: wssf(size_t)
 !! ...
-!! call set_hybf(size_t, hybf) ! setup hybridization function: hybf
+!! call set_wssf(size_t, wssf) ! setup bath green's function: hybf
 !!
-!! Note: This step is optional, because the ctqmc will provide default
-!! values for hybf, symm, eimp, and ktau or read them from external
+!! Note: This step is optional, because the hfqmc will provide default
+!! values for wssf, symm, eimp, and ktau or read them from external
 !! disk files.
 !!
-!! 6. start the ctqmc impurity solver
+!! 6. start the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! call exec_ctqmc(i)
+!! call exec_hfqmc(i)
 !!
 !! Here i is the current iteration number.
 !!
@@ -197,10 +165,10 @@
 !! complex(dp) :: grnf(size_t)
 !! call get_grnf(size_t, grnf)
 !!
-!! 8. close the ctqmc impurity solver
+!! 8. close the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! call stop_ctqmc()
+!! call stop_hfqmc()
 !!
 !! 9. finalize the mpi environment
 !! --------------------------------
@@ -213,9 +181,9 @@
 !! Usage (Python version)
 !! ======================
 !!
-!! In the following, we will use azalea code as an example to show how to
+!! In the following, we will use daisy code as an example to show how to
 !! use api to control it. When you want to run your Python code, you have
-!! to ensure that pyiqist.so is in correct PATH. Or else the Python will
+!! to ensure that pydaisy.so is in correct PATH. Or else the Python will
 !! complain that it can not find iqist.
 !!
 !! 1. import mpi support
@@ -226,36 +194,36 @@
 !! We are not sure whether mpi4py will work. But pyalps.mpi always works.
 !! This code will also start the mpi running environment implicitly.
 !!
-!! 2. import pyiqist
+!! 2. import pydaisy
 !! -----------------
 !!
-!! import pyiqist
+!! import pydaisy
 !!
-!! 3. configure the ctqmc impurity solver
+!! 3. configure the hfqmc impurity solver
 !! --------------------------------------
 !!
-!! You have to setup the parameters for the ctqmc impurity solver, and
-!! write them down to the 'solver.ctqmc.in' file. Now you must do that
+!! You have to setup the parameters for the hfqmc impurity solver, and
+!! write them down to the 'solver.hfqmc.in' file. Now you must do that
 !! manually. In the future we will provide a Python module to facilitate
-!! this work (see src/tools/hibiscus/script/p_ctqmc.py).
+!! this work (see src/tools/hibiscus/script/p_hfqmc.py).
 !!
-!! 4. init the ctqmc impurity solver
+!! 4. init the hfqmc impurity solver
 !! ---------------------------------
 !!
-!! pyiqist.api.init_ctqmc(my_id, num_procs)
+!! pydaisy.api.init_hfqmc(my_id, num_procs)
 !!
 !! Here my_id means the rank for current process, and num_procs means
 !! number of processes.
 !!
-!! 5. setup hybf, symm, eimp, and ktau
+!! 5. setup wssf, symm, eimp, and ktau
 !! -----------------------------------
 !!
 !! This step has not been tested yet. I am sorry.
 !!
-!! 6. start the ctqmc impurity solver
+!! 6. start the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! pyiqist.api.exec_ctqmc(i)
+!! pydaisy.api.exec_hfqmc(i)
 !!
 !! Here i is the current iteration number.
 !!
@@ -264,10 +232,10 @@
 !!
 !! This step has not been tested yet. I am sorry.
 !!
-!! 8. close the ctqmc impurity solver
+!! 8. close the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! pyiqist.api.stop_ctqmc()
+!! pydaisy.api.stop_hfqmc()
 !!
 !! FAQ
 !! ===
@@ -275,15 +243,15 @@
 !! Question:
 !! ---------
 !!
-!! Can we change the ctqmc impurity solver at runtime?
+!! Can we change the hfqmc impurity solver at runtime?
 !!
 !! Answer:
 !! -------
 !!
-!! No. You can not change the ctqmc impurity solver dynamically. Once
-!! the pyiqist.so is generated, the ctqmc impurity solver is determined.
-!! If you want to change the ctqmc impurity solver, you must regenerate
-!! the pyiqist.so file at first.
+!! No. You can not change the hfqmc impurity solver dynamically. Once
+!! the pydaisy.so is generated, the hfqmc impurity solver is determined.
+!! If you want to change the hfqmc impurity solver, you must regenerate
+!! the pydaisy.so file at first.
 !!
 !!
 
