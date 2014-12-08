@@ -298,6 +298,125 @@
      return
   end subroutine cat_solver_status
 
+# if !defined (F2PY)
+
+!!>>> cat_init_hfqmc: initialize the hfqmc quantum impurity solver
+!!>>> fortran version
+  subroutine cat_init_hfqmc(I_mpi, I_solver)
+     use dapi, only : T_mpi, T_daisy
+
+     use control ! ALL
+
+     implicit none
+
+! external arguments
+! type structure of mpi
+     type (T_mpi), intent(in) :: I_mpi
+
+! type structure of generic solver
+     type (T_daisy), intent(in) :: I_solver
+
+! setup I_mpi
+     nprocs = I_mpi%nprocs
+     myid   = I_mpi%myid
+     master = I_mpi%master
+     cid    = I_mpi%cid
+     cx     = I_mpi%cx
+     cy     = I_mpi%cy
+
+! setup I_solver: integer parameters
+     isscf  = I_solver%isscf
+     issun  = I_solver%issun
+     isspn  = I_solver%isspn
+     isbin  = I_solver%isbin
+     nband  = I_solver%nband
+     nspin  = I_solver%nspin
+     norbs  = I_solver%norbs
+     niter  = I_solver%niter
+     mstep  = I_solver%mstep
+     mfreq  = I_solver%mfreq
+     nsing  = I_solver%nsing
+     ntime  = I_solver%ntime
+     ntherm = I_solver%ntherm
+     nsweep = I_solver%nsweep
+     nclean = I_solver%nclean
+     ncarlo = I_solver%ncarlo
+
+! setup I_solver: real parameters
+     Uc     = I_solver%Uc
+     Jz     = I_solver%Jz
+     mune   = I_solver%mune
+     beta   = I_solver%beta
+     part   = I_solver%part
+     alpha  = I_solver%alpha
+
+! print the running header for Hirsch-Fye quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_print_header()
+     endif ! back if ( myid == master ) block
+
+! print out runtime parameters in summary, only for check
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_print_summary()
+     endif ! back if ( myid == master ) block
+
+! allocate memory and initialize
+     call hfqmc_setup_array()
+
+! prepare initial bath weiss's function, init self-consistent iteration
+     call hfqmc_selfer_init()
+
+     return
+  end subroutine cat_init_hfqmc
+
+# else   /* F2PY */
+
+!!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
+!!>>> python version
+  subroutine cat_init_ctqmc(my_id, num_procs)
+     use control, only : nprocs, myid, master
+
+     implicit none
+
+! external arguments
+! id for current process
+     integer, intent(in) :: my_id
+
+! number of processors
+     integer, intent(in) :: num_procs
+
+! initialize mpi envirnoment
+     myid = my_id
+     nprocs = num_procs
+
+! print the running header for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_header()
+     endif ! back if ( myid == master ) block
+
+! setup the important parameters for continuous time quantum Monte Carlo
+! quantum impurity solver and dynamical mean field theory self-consistent
+! engine
+     call ctqmc_config()
+
+! print out runtime parameters in summary, only for check
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_summary()
+     endif ! back if ( myid == master ) block
+
+! allocate memory and initialize
+     call ctqmc_setup_array()
+
+! prepare initial hybridization function, init self-consistent iteration
+     call ctqmc_selfer_init()
+
+     return
+  end subroutine cat_init_ctqmc
+
+# endif  /* F2PY */
+
 !!>>> cat_exec_hfqmc: execute the hfqmc quantum impurity solver
   subroutine cat_exec_hfqmc(iter)
      implicit none

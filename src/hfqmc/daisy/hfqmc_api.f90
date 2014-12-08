@@ -139,7 +139,7 @@
 !! integer :: size_t
 !! complex(dp) :: wssf(size_t)
 !! ...
-!! call set_wssf(size_t, wssf) ! setup bath green's function: hybf
+!! call set_wssf(size_t, wssf) ! setup bath weiss's function: hybf
 !!
 !! Note: This step is optional, because the hfqmc will provide default
 !! values for wssf, symm, eimp, and ktau or read them from external
@@ -448,7 +448,7 @@
      return
   end subroutine stop_hfqmc
 
-!!>>> set_wssf: setup the bath green's function
+!!>>> set_wssf: setup the bath weiss's function
   subroutine set_wssf(size_t, wssf_t)
      implicit none
 
@@ -456,7 +456,7 @@
 ! size of wssf
      integer, intent(in)     :: size_t
 
-! bath green's function
+! bath weiss's function
      complex(dp), intent(in) :: wssf_t(size_t)
 
 ! declare f2py directives
