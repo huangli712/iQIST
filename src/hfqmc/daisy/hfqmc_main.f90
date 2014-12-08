@@ -263,6 +263,34 @@
 # endif  /* API */
 
 
+!!>>> cat_get_sigf: extract the self-energy function
+  subroutine cat_get_sigf(size_t, sigf_t)
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : mfreq
+     use context, only : sig2
+
+     implicit none
+
+! external arguments
+! size of sigf
+     integer, intent(in)      :: size_t
+
+! self-energy function
+     complex(dp), intent(out) :: sigf_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(sig2) ) then
+         call s_print_error('cat_get_sigf','wrong dimension size of sigf_t')
+     endif ! back if ( size_t /= size(sig2) ) block
+
+! copy data
+     sigf_t = reshape(sig2, (/mfreq*norbs/))
+
+     return
+  end subroutine cat_get_sigf
+
 !!>>> cat_get_nmat: extract the occupation number
   subroutine cat_get_nmat(size_t, nmat_t)
      use constants, only : dp
