@@ -207,9 +207,9 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public  :: init_atomic
-     public  :: exec_atomic
-     public  :: stop_atomic
+     public :: init_atomic
+     public :: exec_atomic
+     public :: stop_atomic
 
   contains ! encapsulated functionality
 
