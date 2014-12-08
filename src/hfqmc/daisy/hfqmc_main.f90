@@ -265,6 +265,21 @@
 
 
 
+!!>>> cat_exec_hfqmc: execute the hfqmc quantum impurity solver
+  subroutine cat_exec_hfqmc(iter)
+     implicit none
+
+! external arguments
+! current iteration number
+     integer, intent(in) :: iter
+
+! call the Hirsch-Fye quantum Monte Carlo quantum impurity solver, to
+! build the impurity green's function and self-energy function
+     call hfqmc_impurity_solver(iter)
+
+     return
+  end subroutine cat_exec_hfqmc
+
 !!>>> cat_stop_hfqmc: stop the hfqmc quantum impurity solver
   subroutine cat_stop_hfqmc()
      use control, only : myid, master
