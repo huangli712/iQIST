@@ -263,6 +263,33 @@
 # endif  /* API */
 
 
+
+
+!!>>> cat_set_ktau: setup the screening function and its first derivates
+!!>>> note: the daisy code does not support this function now
+  subroutine cat_set_ktau(size_t, ktau_t, ptau_t)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of ktau
+     integer, intent(in)  :: size_t
+
+! screening function K(\tau)
+     real(dp), intent(in) :: ktau_t(size_t)
+
+! first derivate of screening function K'(\tau)
+     real(dp), intent(in) :: ptau_t(size_t)
+
+! to avoid the warning from compiler
+     call s_assert( size(ktau_t) == size_t )
+     call s_assert( size(ptau_t) == size_t )
+     call s_print_error('cat_set_ktau','sorry, this feature is not supported')
+
+     return
+  end subroutine cat_set_ktau
+
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
