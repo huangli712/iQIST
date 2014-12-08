@@ -265,6 +265,39 @@
 
 
 
+!!>>> cat_solver_id: return the solver identity
+  subroutine cat_solver_id(I_solver_id)
+     use dapi, only : solver_id_daisy
+
+     implicit none
+
+! external arguments
+! solver identity
+     integer, intent(out) :: I_solver_id
+
+     I_solver_id = solver_id_daisy
+
+     return
+  end subroutine cat_solver_id
+
+!!>>> cat_solver_status: return the solver status
+  subroutine cat_solver_status(I_solver_status)
+     use dapi, only : solver_is_ready_daisy
+
+     implicit none
+
+! external arguments
+! solver status
+     integer, intent(out) :: I_solver_status
+
+     I_solver_status = solver_is_ready_daisy
+     if ( I_solver_status == 0 ) then
+         call s_print_error('cat_solver_status','sorry, the current solver is not ready!')
+     endif ! back if ( I_solver_status == 0 ) block
+
+     return
+  end subroutine cat_solver_status
+
 !!>>> cat_exec_hfqmc: execute the hfqmc quantum impurity solver
   subroutine cat_exec_hfqmc(iter)
      implicit none
