@@ -264,6 +264,34 @@
 
 
 
+!!>>> cat_set_wssf: setup the bath green's function
+  subroutine cat_set_wssf(size_t, wssf_t)
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : mfreq
+     use context, only : wssf
+
+     implicit none
+
+! external arguments
+! size of wssf
+     integer, intent(in)     :: size_t
+
+! bath green's function
+     complex(dp), intent(in) :: wssf_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(wssf) ) then
+         call s_print_error('cat_set_wssf','wrong dimension size of wssf_t')
+     endif ! back if ( size_t /= size(wssf) ) block
+
+! copy data
+     wssf = reshape(wssf_t,(/mfreq,norbs/))
+
+     return
+  end subroutine cat_set_wssf
+
 !!>>> cat_set_symm: setup the symmetry vector
   subroutine cat_set_symm(size_t, symm_t)
      use context, only : symm
