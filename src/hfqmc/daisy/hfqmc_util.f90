@@ -17,17 +17,20 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!>>> wrapper subroutines for fourier transformation from imaginary time
-! space to matsubara frequency space
+!!>>> hfqmc_fourier_t2w: wrapper subroutines for fourier transformation
+!!>>> from imaginary time space to matsubara frequency space
   subroutine hfqmc_fourier_t2w(grnt, grnw)
-     use constants
-     use control
+     use constants, only : dp, zero, czero
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : ntime
 
      implicit none
 
 ! external arguments
 ! green's function in imaginary time space
-     real(dp), intent(in) :: grnt(ntime,norbs)
+     real(dp), intent(in)     :: grnt(ntime,norbs)
 
 ! green's function in matsubara frequency space
      complex(dp), intent(out) :: grnw(mfreq,norbs)
@@ -71,11 +74,14 @@
      return
   end subroutine hfqmc_fourier_t2w
 
-!>>> wrapper subroutines for fourier transformation from matsubara frequency
-! space to imaginary time space
+!!>>> hfqmc_fourier_w2t: wrapper subroutines for fourier transformation
+!!>>> from matsubara frequency space to imaginary time space
   subroutine hfqmc_fourier_w2t(grnw, grnt)
-     use constants
-     use control
+     use constants, only : dp, zero, czero
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : ntime
 
      implicit none
 
