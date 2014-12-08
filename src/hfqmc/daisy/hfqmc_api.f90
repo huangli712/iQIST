@@ -571,4 +571,88 @@
      return
   end subroutine set_ktau
 
+!!>>> get_grnf: extract the impurity green's function
+  subroutine get_grnf(size_t, grnf_t)
+     implicit none
+
+! external arguments
+! size of grnf
+     integer, intent(in)      :: size_t
+
+! impurity green's function
+     complex(dp), intent(out) :: grnf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) grnf_t
+!F2PY depend(size_t) grnf_t
+
+     call cat_get_grnf(size_t, grnf_t)
+
+     return
+  end subroutine get_grnf
+
+!!>>> get_sigf: extract the self-energy function
+  subroutine get_sigf(size_t, sigf_t)
+     implicit none
+
+! external arguments
+! size of sigf
+     integer, intent(in)      :: size_t
+
+! self-energy function
+     complex(dp), intent(out) :: sigf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) sigf_t
+!F2PY depend(size_t) sigf_t
+
+     call cat_get_sigf(size_t, sigf_t)
+
+     return
+  end subroutine get_sigf
+
+!!>>> get_nmat: extract the occupation number
+  subroutine get_nmat(size_t, nmat_t)
+     implicit none
+
+! external arguments
+! size of nmat
+     integer, intent(in)   :: size_t
+
+! occupation number
+     real(dp), intent(out) :: nmat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) nmat_t
+!F2PY depend(size_t) nmat_t
+
+     call cat_get_nmat(size_t, nmat_t)
+
+     return
+  end subroutine get_nmat
+
+!!>>> get_nnmat: extract the double occupation number
+  subroutine get_nnmat(size_t, nnmat_t)
+     implicit none
+
+! external arguments
+! size of nnmat
+     integer, intent(in)   :: size_t
+
+! double occupation number
+     real(dp), intent(out) :: nnmat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) nnmat_t
+!F2PY depend(size_t) nnmat_t
+
+     call cat_get_nnmat(size_t, nnmat_t)
+
+     return
+  end subroutine get_nnmat
+
   end module dapi
