@@ -17,11 +17,21 @@
      implicit none
 
 !!========================================================================
-!!>>> declare global parameters                                        <<<
+!!>>> declare private parameters                                       <<<
 !!========================================================================
 
 ! dp: number precision, double precision for reals
      integer, private, parameter :: dp = kind(1.0d0)
+
+!!========================================================================
+!!>>> declare global constants                                         <<<
+!!========================================================================
+
+! solver identity
+     integer, public, parameter :: solver_id_daisy     = 901
+
+! solver status, 1 means ready, 0 means not ready
+     integer, public, parameter :: solver_is_ready_daisy = 1
 
 !!========================================================================
 !!>>> declare global data structure                                    <<<
@@ -78,11 +88,53 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public  :: init_hfqmc
-     public  :: exec_hfqmc
-     public  :: stop_hfqmc
+     public :: solver_id
+     public :: solver_status
+
+     public :: init_hfqmc
+     public :: exec_hfqmc
+     public :: stop_hfqmc
+
+     public :: set_wssf
+     public :: set_symm
+     public :: set_eimp
+
+     public :: get_grnf
+     public :: get_sigf
+     public :: get_nmat
+     public :: get_nnmat
 
   contains ! encapsulated functionality
+
+!!>>> solver_id: return the solver identity
+  subroutine solver_id(I_solver_id)
+     implicit none
+
+! external arguments
+! solver identity
+     integer, intent(out) :: I_solver_id
+
+! declare f2py directives
+!F2PY intent(out) I_solver_id
+     call cat_solver_id(I_solver_id)
+
+     return
+  end subroutine solver_id
+
+!!>>> solver_status: return the solver status
+  subroutine solver_status(I_solver_status)
+     implicit none
+
+! external arguments
+! solver status
+     integer, intent(out) :: I_solver_status
+
+! declare f2py directives
+!F2PY intent(out) I_solver_status
+     call cat_solver_status(I_solver_status)
+
+     return
+  end subroutine solver_status
 
   subroutine init_hfqmc()
      implicit none
