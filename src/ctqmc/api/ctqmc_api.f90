@@ -9,7 +9,7 @@
 !!!           11/11/2014 by li huang
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
-!!!           quantum Monte Carlo impurity solver.
+!!!           quantum Monte Carlo impurity solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
