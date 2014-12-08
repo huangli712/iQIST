@@ -1,31 +1,21 @@
-!-------------------------------------------------------------------------
-! project : daisy
-! program : hfqmc_fourier_t2w
-!           hfqmc_fourier_w2t
-!           hfqmc_fourier_nderiv
-!           hfqmc_fourier_forward
-!           hfqmc_fourier_backward
-! source  : hfqmc_fourier.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 12/28/2005 by li huang
-!           05/15/2007 by li huang
-!           10/28/2008 by li huang
-!           12/20/2008 by li huang
-!           01/04/2009 by li huang
-!           04/18/2009 by li huang
-!           08/10/2009 by li huang
-!           08/23/2009 by li huang
-!           12/24/2009 by li huang
-!           02/26/2010 by li huang
-!           03/26/2010 by li huang
-! purpose : perform forward fourier transformation (\tau to \omega) and
-!           backward fourier transformation (\omega to \tau))
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : daisy
+!!! program : hfqmc_fourier_t2w
+!!!           hfqmc_fourier_w2t
+!!!           hfqmc_fourier_nderiv
+!!!           hfqmc_fourier_forward
+!!!           hfqmc_fourier_backward
+!!! source  : hfqmc_fourier.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 12/28/2005 by li huang
+!!!           03/26/2010 by li huang
+!!!           12/08/2014 by li huang
+!!! purpose : perform forward fourier transformation (\tau to \omega) and
+!!!           backward fourier transformation (\omega to \tau))
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> wrapper subroutines for fourier transformation from imaginary time
 ! space to matsubara frequency space
