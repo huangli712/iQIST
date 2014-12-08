@@ -278,11 +278,14 @@
 ! impurity level for correlated orbitals
      real(dp), public, save, allocatable :: eimp(:)
 
-! kernel function, used to measure dynamical screening effect
+! screening function, used to measure dynamical screening effect
      real(dp), public, save, allocatable :: ktau(:)
 
-! second order derivates for kernel function
+! second order derivates for the screening function
      real(dp), public, save, allocatable :: ksed(:)
+
+! first  order derivates for the screening function
+     real(dp), public, save, allocatable :: ptau(:)
 
 ! reduced Coulomb interaction matrix, two-index version
      real(dp), public, save, allocatable :: uumat(:,:)
@@ -593,6 +596,7 @@
      allocate(eimp(norbs),        stat=istat)
      allocate(ktau(ntime),        stat=istat)
      allocate(ksed(ntime),        stat=istat)
+     allocate(ptau(ntime),        stat=istat)
      allocate(uumat(norbs,norbs), stat=istat)
 
 ! check the status
@@ -609,6 +613,7 @@
      eimp  = zero
      ktau  = zero
      ksed  = zero
+     ptau  = zero
      uumat = zero
 
      return
@@ -807,6 +812,7 @@
      if ( allocated(eimp)  )   deallocate(eimp )
      if ( allocated(ktau)  )   deallocate(ktau )
      if ( allocated(ksed)  )   deallocate(ksed )
+     if ( allocated(ptau)  )   deallocate(ptau )
      if ( allocated(uumat) )   deallocate(uumat)
 
      return
