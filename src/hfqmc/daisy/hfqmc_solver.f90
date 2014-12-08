@@ -29,8 +29,8 @@
      use control, only : myid, master
      use context, only : ktep, diag, atep, btep
      use context, only : gmat, wmat
-     use context, only : symm, tmesh, nnmat
-     use context, only : gtau, wtau
+     use context, only : symm, quas, nmat, tmesh, rmesh, nnmat
+     use context, only : gtau, wtau, grnf, wssf, sig2
 
      implicit none
 
@@ -380,15 +380,15 @@
              if ( myid == master ) then ! only master node can do it
                  call s_time_analyzer(time_iter, time_niter)
                  write(mystd,*)
-             endif
+             endif ! back if ( myid == master ) block
 
          endif ! back if ( mod(nstep, nfast) == 0  .and. nstep > 0 ) block
 
      enddo HFQMC_MAIN_ITERATION ! over main loop
 
-!=========================================================================
-!--->>> end main iteration
-!=========================================================================
+!!========================================================================
+!!>>> end main iteration                                               <<<
+!!========================================================================
 
 ! collect the (double) occupation matrix data from nnmat to osum
      call hfqmc_reduce_nmat(osum)
@@ -425,13 +425,38 @@
 ! write out the final green's function to file, only for master node
      if ( myid == master ) then
          call hfqmc_dump_gtau(tmesh, gtau)
-     endif
+     endif ! back if ( myid == master ) block
+
+! write out impurity green's function to disk file
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_dump_grnf(rmesh, grnf)
+     endif ! back if ( myid == master ) block
+
+! write out bath weiss's function to disk file
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_dump_wssf(rmesh, wssf)
+     endif ! back if ( myid == master ) block
+
+! write out self-energy function to disk file
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_dump_sigf(rmesh, sig2)
+     endif ! back if ( myid == master ) block
+
+! write out quasiparticle weight to disk file
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_dump_quas(quas)
+     endif ! back if ( myid == master ) block
+
+! write out occupation number to disk file
+     if ( myid == master ) then ! only master node can do it
+         call hfqmc_dump_nmat(nmat, nnmat)
+     endif ! back if ( myid == master ) block
 
 ! print the footer of Hirsch-Fye quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'DAISY >>> HFQMC quantum impurity solver shutdown'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(msum)
