@@ -131,19 +131,19 @@
 
 ! external arguments
 ! current iteration number
-     integer, intent(in) :: iter
+     integer, intent(in)  :: iter
 
 ! current QMC effective sweep count
-     integer  :: nstep
+     integer, intent(in)  :: nstep
 
 ! accepted QMC flip count
-     real(dp) :: accept
+     real(dp), intent(in) :: accept
 
 ! rejected QMC flip count
-     real(dp) :: reject
+     real(dp), intent(in) :: reject
 
 ! total QMC flip count
-     real(dp) :: tcount
+     real(dp), intent(in) :: tcount
 
 ! local variables
 ! loop index
