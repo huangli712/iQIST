@@ -1,10 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : lilac
 !!! program : japi
-!!!           japi@T_jasmine
-!!!           japi@init_atomic
-!!!           japi@exec_atomic
-!!!           japi@stop_atomic
 !!! source  : atomic_api.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
