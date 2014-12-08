@@ -3,12 +3,13 @@
 !!! program : hfqmc_print_header
 !!!           hfqmc_print_footer
 !!!           hfqmc_print_summary
+!!!           hfqmc_print_runtime
 !!! source  : hfqmc_print.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 10/24/2008 by li huang
 !!!           03/25/2010 by li huang
-!!!           12/03/2014 by li huang
+!!!           12/08/2014 by li huang
 !!! purpose : provide printing infrastructure for Hirsch-Fye quantum Monte
 !!!           Carlo (HFQMC) quantum impurity solver
 !!! status  : unstable
@@ -116,3 +117,48 @@
 
      return
   end subroutine hfqmc_print_summary
+
+!!>>> ctqmc_print_runtime: print the runtime information, including the
+!!>>> iteration messages and statistic data, only for reference
+  subroutine hfqmc_print_runtime(iter, nstep, accept, reject, tcount)
+     use constants, only : dp, one, mystd
+
+     use control, only : norbs
+     use control, only : nsweep
+     use context, only : ktep
+
+     implicit none
+
+! external arguments
+! current iteration number
+     integer, intent(in)  :: iter
+
+! current QMC effective sweep count
+     integer, intent(in)  :: nstep
+
+! accepted QMC flip count
+     real(dp), intent(in) :: accept
+
+! rejected QMC flip count
+     real(dp), intent(in) :: reject
+
+! total QMC flip count
+     real(dp), intent(in) :: tcount
+
+! local variables
+! loop index
+     integer :: i
+
+! about iteration number
+     write(mystd,'(2X,a,i3,2(a,i10))') 'DAISY >>> iter:', iter, ' sweep:', nstep, ' of ', nsweep
+
+! about update action
+     write(mystd,'(4X,a)')        'hfqmc sampling statistics:'
+     write(mystd,'(4X,a,3i12)')   'count:', int(tcount), int(accept), int(reject)
+     write(mystd,'(4X,a,3f12.5)') 'ratio:', one, accept / tcount, reject / tcount
+
+     write(mystd,'(4X,a)')        'delayed update statistics:'
+     write(mystd,'(4X,a,10i6)')   'count:', (ktep(i), i=1,norbs)
+
+     return
+  end subroutine hfqmc_print_runtime

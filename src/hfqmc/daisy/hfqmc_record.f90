@@ -235,9 +235,7 @@
 
      use control, only : norbs
      use control, only : mfreq
-     use control, only : myid, master
      use context, only : umat
-     use context, only : rmesh
      use context, only : gtau, wtau
      use context, only : grnf, wssf, sig2
 
@@ -302,21 +300,6 @@
          enddo ! over j={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
-! write out impurity green's function to disk file
-     if ( myid == master ) then ! only master node can do it
-         call hfqmc_dump_grnf(rmesh, grnf)
-     endif ! back if ( myid == master ) block
-
-! write out bath weiss's function to disk file
-     if ( myid == master ) then ! only master node can do it
-         call hfqmc_dump_wssf(rmesh, wssf)
-     endif ! back if ( myid == master ) block
-
-! write out self-energy function to disk file
-     if ( myid == master ) then ! only master node can do it
-         call hfqmc_dump_sigf(rmesh, sig2)
-     endif ! back if ( myid == master ) block
-
      return
   end subroutine hfqmc_make_freq
 
@@ -326,7 +309,6 @@
 
      use control, only : norbs
      use control, only : beta
-     use control, only : myid, master
      use context, only : quas
      use context, only : sig2
 
@@ -350,11 +332,6 @@
          quas(i) = one / ( one - aimag( sig2(1,i) ) * ( beta / pi ) )
      enddo ! over i={1,norbs} loop
 
-! write out quasiparticle weight to disk file
-     if ( myid == master ) then ! only master node can do it
-         call hfqmc_dump_quas(quas)
-     endif ! back if ( myid == master ) block
-
      return
   end subroutine hfqmc_make_quas
 
@@ -363,8 +340,7 @@
      use constants, only : zero, one
 
      use control, only : norbs
-     use control, only : myid, master
-     use context, only : nmat, nnmat
+     use context, only : nmat
      use context, only : gtau
 
      implicit none
@@ -380,11 +356,6 @@
      do i=1,norbs
          nmat(i) = one - gtau(1,i)
      enddo ! over i={1,norbs} loop
-
-! write out occupation number to disk file
-     if ( myid == master ) then ! only master node can do it
-         call hfqmc_dump_nmat(nmat, nnmat)
-     endif ! back if ( myid == master ) block
 
      return
   end subroutine hfqmc_make_nmat
