@@ -264,6 +264,30 @@
 
 
 
+!!>>> cat_set_symm: setup the symmetry vector
+  subroutine cat_set_symm(size_t, symm_t)
+     use context, only : symm
+
+     implicit none
+
+! external arguments
+! size of symm
+     integer, intent(in) :: size_t
+
+! symmetry vector
+     integer, intent(in) :: symm_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(symm) ) then
+         call s_print_error('cat_set_symm','wrong dimension size of symm_t')
+     endif ! back if ( size_t /= size(symm) ) block
+
+! copy data
+     symm = symm_t
+
+     return
+  end subroutine cat_set_symm
+
 !!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
      use constants, only : dp
