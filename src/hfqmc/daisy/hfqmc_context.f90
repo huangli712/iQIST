@@ -81,9 +81,6 @@
 ! impurity level for correlated orbitals
      real(dp), public, save, allocatable :: eimp(:)
 
-! quasiparticle weight, Z
-     real(dp), public, save, allocatable :: quas(:)
-
 ! impurity occupation number, < n_i >
      real(dp), public, save, allocatable :: nmat(:)
 
@@ -229,7 +226,6 @@
 
      allocate(eimp(norbs),        stat=istat)
 
-     allocate(quas(norbs),        stat=istat)
      allocate(nmat(norbs),        stat=istat)
 
      allocate(tmesh(ntime),       stat=istat)
@@ -249,7 +245,6 @@
 
      eimp  = zero
 
-     quas  = zero
      nmat  = zero
 
      tmesh = zero
@@ -329,7 +324,6 @@
 
      if ( allocated(eimp)  ) deallocate(eimp )
 
-     if ( allocated(quas)  ) deallocate(quas )
      if ( allocated(nmat)  ) deallocate(nmat )
 
      if ( allocated(tmesh) ) deallocate(tmesh)

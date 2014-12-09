@@ -275,6 +275,42 @@
 
 # endif  /* API */
 
+
+
+
+!!>>> cat_solver_id: return the solver identity
+  subroutine cat_solver_id(I_solver_id)
+     use api, only : solver_id_narcissus
+
+     implicit none
+
+! external arguments
+! solver identity
+     integer, intent(out) :: I_solver_id
+
+     I_solver_id = solver_id_narcissus
+
+     return
+  end subroutine cat_solver_id
+
+!!>>> cat_solver_status: return the solver status
+  subroutine cat_solver_status(I_solver_status)
+     use api, only : solver_is_ready_narcissus
+
+     implicit none
+
+! external arguments
+! solver status
+     integer, intent(out) :: I_solver_status
+
+     I_solver_status = solver_is_ready_narcissus
+     if ( I_solver_status == 0 ) then
+         call s_print_error('cat_solver_status','sorry, the current solver is not ready!')
+     endif ! back if ( I_solver_status == 0 ) block
+
+     return
+  end subroutine cat_solver_status
+
 # if !defined (F2PY)
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
@@ -524,12 +560,11 @@
      return
   end subroutine cat_set_eimp
 
-!!>>> cat_set_ktau: setup the kernel function
-!!>>> note: the azalea code does not support this function
-  subroutine cat_set_ktau(size_t, ktau_t)
+!!>>> cat_set_ktau: setup the screening function and its first derivates
+  subroutine cat_set_ktau(size_t, ktau_t, ptau_t)
      use constants, only : dp
 
-     use context, only : ktau
+     use context, only : ktau, ptau
 
      implicit none
 
@@ -537,16 +572,24 @@
 ! size of ktau
      integer, intent(in)  :: size_t
 
-! kernel function
+! screening function K(\tau)
      real(dp), intent(in) :: ktau_t(size_t)
+
+! first derivate of screening function K'(\tau)
+     real(dp), intent(in) :: ptau_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(ktau) ) then
          call s_print_error('cat_set_ktau','wrong dimension size of ktau_t')
      endif ! back if ( size_t /= size(ktau) ) block
 
+     if ( size_t /= size(ptau) ) then
+         call s_print_error('cat_set_ktau','wrong dimension size of ptau_t')
+     endif ! back if ( size_t /= size(ptau) ) block
+
 ! copy data
      ktau = ktau_t
+     ptau = ptau_t
 
      return
   end subroutine cat_set_ktau

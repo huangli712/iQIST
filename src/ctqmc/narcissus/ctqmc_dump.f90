@@ -23,7 +23,6 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
-!!!           09/12/2014 by li huang
 !!!           10/13/2014 by li huang
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
@@ -163,8 +162,9 @@
      return
   end subroutine ctqmc_dump_htau
 
-!!>>> ctqmc_dump_ktau: write out kernel function in imaginary time space
-  subroutine ctqmc_dump_ktau(tmesh, ktau)
+!!>>> ctqmc_dump_ktau: write out screening function and its derivates in
+!!>>> imaginary time space
+  subroutine ctqmc_dump_ktau(tmesh, ktau, ptau)
      use constants, only : dp, mytmp
 
      use control, only : ntime
@@ -175,8 +175,11 @@
 ! imaginary time mesh
      real(dp), intent(in) :: tmesh(ntime)
 
-! kernel function
+! screening function
      real(dp), intent(in) :: ktau(ntime)
+
+! first order derivates for screening function
+     real(dp), intent(in) :: ptau(ntime)
 
 ! local variables
 ! loop index
@@ -187,7 +190,7 @@
 
 ! write it
      do i=1,ntime
-         write(mytmp,'(i6,2f12.6)') i, tmesh(i), ktau(i)
+         write(mytmp,'(i6,3f12.6)') i, tmesh(i), ktau(i), ptau(i)
      enddo ! over i={1,ntime} loop
 
 ! close data file

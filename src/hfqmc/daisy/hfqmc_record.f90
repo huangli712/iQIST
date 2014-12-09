@@ -5,7 +5,6 @@
 !!!           hfqmc_make_symm
 !!!           hfqmc_make_smth
 !!!           hfqmc_make_freq
-!!!           hfqmc_make_quas
 !!!           hfqmc_make_nmat
 !!!           hfqmc_reduce_gtau
 !!!           hfqmc_reduce_nmat
@@ -302,38 +301,6 @@
 
      return
   end subroutine hfqmc_make_freq
-
-!!>>> hfqmc_make_quas: to calculate the quasiparticle weight
-  subroutine hfqmc_make_quas()
-     use constants, only : zero, one, pi
-
-     use control, only : norbs
-     use control, only : beta
-     use context, only : quas
-     use context, only : sig2
-
-     implicit none
-
-! local variables
-! loop index
-     integer :: i
-
-! initialize it
-     quas = zero
-
-! calculate quasiparticle weight Z using Eliashberg estimate
-! original equation:
-!     Z = \frac{m}{m*}
-!       = \frac{1}{1-\frac{\partial}{\partial\omega} Re \Sigma(\omega) |_{\omega=0}}
-! in the context of QMC simulations, one usually approximates this
-! quantity by its discrete Eliashberg estimate
-!     Z = \frac{1}{1-\frac{Im \Sigma(i\omega_1)}{\pi T}}
-     do i=1,norbs
-         quas(i) = one / ( one - aimag( sig2(1,i) ) * ( beta / pi ) )
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine hfqmc_make_quas
 
 !!>>> hfqmc_make_nmat: to calculate the occupation number
   subroutine hfqmc_make_nmat()
