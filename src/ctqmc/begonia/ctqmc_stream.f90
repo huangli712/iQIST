@@ -398,7 +398,7 @@
 ! check the version of atom.cix
              if ( ver /= 1 ) then
                  call s_print_error('ctqmc_selfer_init','file atom.cix is NOT the version for begonia')
-             endif ! back if ( ver /= 2) block
+             endif ! back if ( ver /= 1) block
 
 ! skip eight comment lines
              do i=1,8
