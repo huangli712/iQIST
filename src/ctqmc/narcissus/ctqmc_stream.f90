@@ -262,7 +262,7 @@
      use control, only : beta, part
      use control, only : myid, master
      use context, only : tmesh, rmesh, pmesh, qmesh, ppleg, qqche
-     use context, only : symm, eimp, ktau
+     use context, only : symm, eimp, ktau, ptau
      use context, only : hybf
 
      implicit none
@@ -305,7 +305,8 @@
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
-         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
+         hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
@@ -354,7 +355,13 @@
 
 # endif  /* MPI */
 
-! read in initial kernel function if available
+! setup initial ktau
+     ktau = zero
+
+! setup initial ptau
+     ptau = zero
+
+! read in initial screening function and its derivates if available
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
@@ -365,34 +372,35 @@
 ! find input file: solver.ktau.in, read it
          if ( exists .eqv. .true. ) then
 
-             ktau = zero ! reset it to zero
-
-! read in kernel function from solver.ktau.in
+! read in screening function and its derivates from solver.ktau.in
              open(mytmp, file='solver.ktau.in', form='formatted', status='unknown')
              read(mytmp,*) ! skip one line
              do i=1,ntime
-                 read(mytmp,*) rtmp, ktau(i)
+                 read(mytmp,*) rtmp, ktau(i), ptau(i)
              enddo ! over i={1,ntime} loop
              close(mytmp)
 
          else
              if ( isscr == 99 ) then
-                 call s_print_error('ctqmc_selfer_init', 'solver.ktau.in does not exist')
+                 call s_print_error('ctqmc_selfer_init','solver.ktau.in does not exist')
              endif ! back if ( isscr == 99 ) block
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
-! write out the kernel function
+! write out the screening function and its derivates
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_ktau(tmesh, ktau, ptau)
      endif ! back if ( myid == master ) block
 
-! since the kernel function may be updated in master node, it is
-! important to broadcast it from root to all children processes
+! since the screening function and its derivates may be updated in master
+! node, it is important to broadcast it from root to all children processes
 # if defined (MPI)
 
 ! broadcast data
      call mp_bcast(ktau, master)
+
+! broadcast data
+     call mp_bcast(ptau, master)
 
 ! block until all processes have reached here
      call mp_barrier()
