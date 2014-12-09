@@ -255,6 +255,9 @@
 ! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
      logical  :: exists
 
+! version of file 'atom.cix'
+     integer  :: ver
+
 ! dummy real variables
      real(dp) :: rtmp
      real(dp) :: r1, r2
@@ -391,7 +394,11 @@
              enddo ! over i={1,10} loop
 
 ! determine whether the spin-orbital coupling effect should be considered
-             read(mytmp,*) i, j, cssoc
+             read(mytmp,*) ver, i, j, cssoc
+! check the version of atom.cix
+             if ( ver /= 1 ) then
+                 call s_print_error('ctqmc_selfer_init','file atom.cix is NOT the version for begonia')
+             endif ! back if ( ver /= 1) block
 
 ! skip eight comment lines
              do i=1,8
