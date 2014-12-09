@@ -137,7 +137,8 @@
   end subroutine ctqmc_make_hsed
 
 !! To provide cubic spline subroutines and wrapper functions to interpolate
-!! the retarded interaction integrated function in imaginary-time axis.
+!! the retarded interaction integrated function (i.e., screening function)
+!! in imaginary-time axis.
 
 !!>>> ctqmc_make_ktau: evaluate the intermediate elements for ktau using
 !!>>> cubic spline interpolation
@@ -167,7 +168,7 @@
      return
   end function ctqmc_make_ktau
 
-!!>>> ctqmc_make_ksed: calculate the second order derivates of kernel
+!!>>> ctqmc_make_ksed: calculate the second order derivates of screening
 !!>>> function on imaginary time space
   subroutine ctqmc_make_ksed(tmesh, ktau, ksed)
      use constants, only : dp, zero
@@ -181,10 +182,10 @@
 ! imaginary time axis
      real(dp), intent(in)  :: tmesh(ntime)
 
-! kernel function on imaginary time axis
+! screening function on imaginary time axis
      real(dp), intent(in)  :: ktau(ntime)
 
-! second order derivates of kernel function
+! second order derivates of screening function
      real(dp), intent(out) :: ksed(ntime)
 
 ! local variables
