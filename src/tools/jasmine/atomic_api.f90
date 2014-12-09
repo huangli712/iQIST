@@ -1,10 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : lilac
 !!! program : japi
-!!!           japi@T_jasmine
-!!!           japi@init_atomic
-!!!           japi@exec_atomic
-!!!           japi@stop_atomic
 !!! source  : atomic_api.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -161,7 +157,7 @@
      implicit none
 
 !!========================================================================
-!!>>> declare global parameters                                        <<<
+!!>>> declare private parameters                                       <<<
 !!========================================================================
 
 ! dp: number precision, double precision for reals
@@ -211,9 +207,9 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public  :: init_atomic
-     public  :: exec_atomic
-     public  :: stop_atomic
+     public :: init_atomic
+     public :: exec_atomic
+     public :: stop_atomic
 
   contains ! encapsulated functionality
 

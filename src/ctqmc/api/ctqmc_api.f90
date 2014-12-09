@@ -9,7 +9,7 @@
 !!!           11/11/2014 by li huang
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
-!!!           quantum Monte Carlo impurity solver.
+!!!           quantum Monte Carlo impurity solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -502,22 +502,22 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public  :: solver_id
-     public  :: solver_status
+     public :: solver_id
+     public :: solver_status
 
-     public  :: init_ctqmc
-     public  :: exec_ctqmc
-     public  :: stop_ctqmc
+     public :: init_ctqmc
+     public :: exec_ctqmc
+     public :: stop_ctqmc
 
-     public  :: set_hybf
-     public  :: set_symm
-     public  :: set_eimp
-     public  :: set_ktau
+     public :: set_hybf
+     public :: set_symm
+     public :: set_eimp
+     public :: set_ktau
 
-     public  :: get_grnf
-     public  :: get_sigf
-     public  :: get_nmat
-     public  :: get_nnmat
+     public :: get_grnf
+     public :: get_sigf
+     public :: get_nmat
+     public :: get_nnmat
 
   contains ! encapsulated functionality
 

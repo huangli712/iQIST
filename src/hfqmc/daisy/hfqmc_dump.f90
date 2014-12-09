@@ -343,33 +343,3 @@
 
      return
   end subroutine hfqmc_dump_nmat
-
-!!>>> hfqmc_dump_quas: write out the orbital-dependent quasiparticle weight
-  subroutine hfqmc_dump_quas(quas)
-     use constants, only : dp, mytmp
-
-     use control, only : norbs
-
-     implicit none
-
-! external arguments
-! quasiparticle weight Z
-     real(dp), intent(in) :: quas(norbs)
-
-! local variables
-! loop index
-     integer :: i
-
-! open data file: solver.quas.dat
-     open(mytmp, file='solver.quas.dat', form='formatted', status='unknown')
-
-! write it
-     do i=1,norbs
-         write(mytmp,'(i6,f12.6)') i, quas(i)
-     enddo ! over i={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine hfqmc_dump_quas
