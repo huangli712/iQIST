@@ -142,16 +142,22 @@
 
 !!>>> ctqmc_make_ktau: evaluate the intermediate elements for ktau using
 !!>>> cubic spline interpolation
-  function ctqmc_make_ktau(dtau) result(val)
+!!>>> Note: this function can be used to interpolate K'(\tau) as well
+  function ctqmc_make_ktau(mode, dtau) result(val)
      use constants, only : dp
 
      use control, only : ntime
      use context, only : tmesh
-     use context, only : ktau, ksed
+     use context, only : ktau, ksed, ptau, psed
 
      implicit none
 
 ! external arguments
+! order for derivates
+! if mode = 0, K(\tau), ktau is considered
+! if mode = 1, K'(\tau), ptau is considered
+     integer, intent(in)  :: mode
+
 ! current imaginary time
      real(dp), intent(in) :: dtau
 
@@ -163,13 +169,22 @@
 ! return value
      real(dp) :: val
 
-     val = s_spl_funct(ntime, tmesh, ktau, ksed, dtau)
+! using cubic spline interpolation for K(\tau)
+     if ( mode == 0 ) then
+         val = s_spl_funct(ntime, tmesh, ktau, ksed, dtau)
+! using cubic spline interpolation for K'(\tau)
+     else
+         val = s_spl_funct(ntime, tmesh, ptau, psed, dtau)
+     endif ! back if ( mode == 0 ) block
 
      return
   end function ctqmc_make_ktau
 
 !!>>> ctqmc_make_ksed: calculate the second order derivates of screening
 !!>>> function on imaginary time space
+!!>>> Note: this subroutine can be used to calculate the second order
+!!>>> derivates of K'(\tau) as well. What you have to do is to transfer
+!!>>> ptau and psed to this subroutine
   subroutine ctqmc_make_ksed(tmesh, ktau, ksed)
      use constants, only : dp, zero
 
