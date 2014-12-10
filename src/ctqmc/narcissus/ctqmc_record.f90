@@ -1340,30 +1340,37 @@
      return
   end subroutine ctqmc_reduce_gtau
 
-!!>>> ctqmc_reduce_ftau: reduce the ftau from all children processes
-  subroutine ctqmc_reduce_ftau(ftau_mpi)
+!!>>> ctqmc_reduce_ftau: reduce the ftau and fret from all children processes
+  subroutine ctqmc_reduce_ftau(ftau_mpi, fret_mpi)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
      use control, only : norbs
      use control, only : ntime
      use control, only : nprocs
-     use context, only : ftau
+     use context, only : ftau, fret
 
      implicit none
 
 ! external arguments
-! auxiliary correlation function
+! auxiliary correlation function, F^{j}_{sta}(\tau)
      real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
 
-! initialize ftau_mpi
-     ftau_mpi = zero
+! auxiliary correlation function, F^{j}_{ret}(\tau)
+     real(dp), intent(out) :: fret_mpi(ntime,norbs,norbs)
 
-! build ftau_mpi, collect data from all children processes
+! initialize ftau_mpi and fret_mpi
+     ftau_mpi = zero
+     fret_mpi = zero
+
+! build ftau_mpi and fret_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
      call mp_allreduce(ftau, ftau_mpi)
+
+! collect data
+     call mp_allreduce(fret, fret_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1371,11 +1378,13 @@
 # else  /* MPI */
 
      ftau_mpi = ftau
+     fret_mpi = fret
 
 # endif /* MPI */
 
 ! calculate the average
      ftau_mpi = ftau_mpi / real(nprocs)
+     fret_mpi = fret_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_ftau
