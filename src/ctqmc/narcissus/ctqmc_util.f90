@@ -154,8 +154,8 @@
 
 ! external arguments
 ! order for derivates
-! if mode = 0, K(\tau), ktau is considered
-! if mode = 1, K'(\tau), ptau is considered
+! if mode = 1, K(\tau), ktau is considered
+! if mode = 2, K'(\tau), ptau is considered
      integer, intent(in)  :: mode
 
 ! current imaginary time
@@ -170,12 +170,12 @@
      real(dp) :: val
 
 ! using cubic spline interpolation for K(\tau)
-     if ( mode == 0 ) then
+     if ( mode == 1 ) then
          val = s_spl_funct(ntime, tmesh, ktau, ksed, dtau)
 ! using cubic spline interpolation for K'(\tau)
      else
          val = s_spl_funct(ntime, tmesh, ptau, psed, dtau)
-     endif ! back if ( mode == 0 ) block
+     endif ! back if ( mode == 1 ) block
 
      return
   end function ctqmc_make_ktau
