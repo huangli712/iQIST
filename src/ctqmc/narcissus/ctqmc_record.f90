@@ -259,6 +259,52 @@
   end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
+  subroutine cat_make_iret(clur, taus, iret)
+     use constants, only : dp, zero, two
+
+     use control, only : norbs
+     use context, only : rank
+     use context, only : index_s, index_e, time_s, time_e
+
+     implicit none
+
+     integer, intent(in) :: clur
+     real(dp), intent(in) :: taus
+     real(dp), intent(out) :: iret
+
+     integer :: it
+     real(dp) :: dtau, daux
+
+     iret = zero
+     do it=1,rank(clur)
+         dtau = time_s( index_s(it, clur), clur ) - taus
+         if ( dtau > zero ) then
+             call ctqmc_make_wkernel(2, +dtau, daux)
+             iret = iret + daux
+         else
+             call ctqmc_make_wkernel(2, -dtau, daux)
+             iret = iret - daux
+         endif ! back if ( dtau > zero ) block
+
+         dtau = time_e( index_e(it, clur), clur ) - taus
+         if ( dtau > zero ) then
+             call ctqmc_make_wkernel(2, +dtau, daux)
+             iret = iret - daux
+         else
+             call ctqmc_make_wkernel(2, -dtau, daux)
+             iret = iret + daux
+         endif ! back if ( dtau > zero ) block
+     enddo ! over ie={1,rank(clur)} loop
+
+     !!print *, 'AA', iret
+     call ctqmc_make_wkernel(2, zero, daux)
+     iret = - two * daux / real(norbs) - iret
+     !!print *, iret, daux
+     !pause
+
+     return
+  end subroutine cat_make_iret
+
 !!>>> ctqmc_record_ftau: record the auxiliary correlation function in
 !!>>> imaginary time axis
   subroutine ctqmc_record_ftau()
@@ -273,7 +319,7 @@
      use context, only : ppleg, qqche
      use context, only : rank
      use context, only : mmat
-     use context, only : ftau
+     use context, only : ftau, fret
 
      implicit none
 
@@ -310,6 +356,7 @@
 
 ! occupation number at taus
      real(dp) :: occu
+     real(dp) :: tret
 
 ! interval for imaginary time slice
      real(dp) :: step
@@ -344,14 +391,15 @@
      CTQMC_COLOUR_LOOP: do clur=1,norbs
 
 ! skip diagonal term
-         if ( flvr == clur ) CYCLE
+!<         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
 
 ! evaluate occu, and then check it
-             call ctqmc_spin_counter(clur, taus, occu); if ( occu < one ) CYCLE
+             call ctqmc_spin_counter(clur, taus, occu); !< if ( occu < one ) CYCLE
+             call cat_make_iret(clur, taus, tret)
 
 ! get imaginary time value for segments
              do ie=1,rank(flvr)
@@ -361,7 +409,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau) * occu
+                 maux = mmat(ie, is, flvr) * sign(one, dtau)
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -377,7 +425,8 @@
                  endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
-                 ftau(curr, clur, flvr) = ftau(curr, clur, flvr) - maux
+                 ftau(curr, clur, flvr) = ftau(curr, clur, flvr) - maux * occu
+                 fret(curr, clur, flvr) = fret(curr, clur, flvr) - maux * tret
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
@@ -400,7 +449,7 @@
      CTQMC_COLOUR_LOOP: do clur=1,norbs
 
 ! skip diagonal term
-         if ( flvr == clur ) CYCLE
+!<         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
@@ -456,7 +505,7 @@
      CTQMC_COLOUR_LOOP: do clur=1,norbs
 
 ! skip diagonal term
-         if ( flvr == clur ) CYCLE
+!<         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
@@ -2363,7 +2412,7 @@
      raux = real(ntime) / (beta * beta)
      do i=1,norbs
          do j=1,norbs
-             if ( i == j ) CYCLE
+!<             if ( i == j ) CYCLE
 
              do k=1,ntime
                  faux(k,j,i) = ftau(k,j,i) * raux
@@ -2381,7 +2430,7 @@
      step = real(legrd - 1) / two
      do i=1,norbs
          do j=1,norbs
-             if ( i == j ) CYCLE
+!<             if ( i == j ) CYCLE
 
              do k=1,ntime
                  raux = two * tmesh(k) / beta
@@ -2404,7 +2453,7 @@
      step = real(chgrd - 1) / two
      do i=1,norbs
          do j=1,norbs
-             if ( i == j ) CYCLE
+!<             if ( i == j ) CYCLE
 
              do k=1,ntime
                  raux = two * tmesh(k) / beta
@@ -2912,7 +2961,7 @@
          frew = czero
          do i=1,norbs
              do j=1,norbs
-                 if ( i == j ) CYCLE
+!<                 if ( i == j ) CYCLE
                  do k=1,mfreq
                      do m=1,lemax
                          frnf(k,j,i) = frnf(k,j,i) + taux(k,m) * ftau(m,j,i) / beta
