@@ -281,11 +281,14 @@
 ! screening function, used to measure dynamical screening effect
      real(dp), public, save, allocatable :: ktau(:)
 
-! second order derivates for the screening function
+! second order derivates for the screening function, K''(\tau)
      real(dp), public, save, allocatable :: ksed(:)
 
-! first  order derivates for the screening function
+! first  order derivates for the screening function, K'(\tau)
      real(dp), public, save, allocatable :: ptau(:)
+
+! second order derivates for ptau, K'''(\tau)
+     real(dp), public, save, allocatable :: psed(:)
 
 ! reduced Coulomb interaction matrix, two-index version
      real(dp), public, save, allocatable :: uumat(:,:)
@@ -597,6 +600,7 @@
      allocate(ktau(ntime),        stat=istat)
      allocate(ksed(ntime),        stat=istat)
      allocate(ptau(ntime),        stat=istat)
+     allocate(psed(ntime),        stat=istat)
      allocate(uumat(norbs,norbs), stat=istat)
 
 ! check the status
@@ -614,6 +618,7 @@
      ktau  = zero
      ksed  = zero
      ptau  = zero
+     psed  = zero
      uumat = zero
 
      return
@@ -813,6 +818,7 @@
      if ( allocated(ktau)  )   deallocate(ktau )
      if ( allocated(ksed)  )   deallocate(ksed )
      if ( allocated(ptau)  )   deallocate(ptau )
+     if ( allocated(psed)  )   deallocate(psed )
      if ( allocated(uumat) )   deallocate(uumat)
 
      return
