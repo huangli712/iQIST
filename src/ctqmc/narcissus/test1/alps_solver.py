@@ -835,6 +835,8 @@ if __name__ == '__main__':
     hybf = numpy.zeros((p['norbs'][0],p['nffrq'][0]), dtype = numpy.complex)
     sloc = numpy.zeros((p['norbs'][0],p['nffrq'][0]), dtype = numpy.complex)
     htau = numpy.zeros((p['norbs'][0],p['ntime'][0]), dtype = numpy.float)
+    ktau = numpy.zeros((p['norbs'][0],p['ntime'][0]), dtype = numpy.float)
+    ptau = numpy.zeros((p['norbs'][0],p['ntime'][0]), dtype = numpy.float)
 
     # create imaginary time mesh
     tmesh = Mesh.create_time_mesh(p["beta"][0], p["ntime"][0])
@@ -853,8 +855,20 @@ if __name__ == '__main__':
             for j in range(1,p['norbs'][0]):
                 hybf[j,i] = hybf[0,i]
         f.close()
+        f = open('solver.ktau.in', 'r')
+        f.readline()
+        for i in range(p['ntime'][0]):
+            spl = f.readline().split()
+            ktau[0,i] = float(spl[1])
+            ptau[0,i] = float(spl[2])
+            for j in range(1,p['norbs'][0]):
+                ktau[j,i] = ktau[0,i]
+                ptau[j,i] = ptau[0,i]
+        f.close()
 
     hybf = pyalps.mpi.broadcast(pyalps.mpi.world, hybf, 0)
+    ktau = pyalps.mpi.broadcast(pyalps.mpi.world, ktau, 0)
+    ptau = pyalps.mpi.broadcast(pyalps.mpi.world, ptau, 0)
     pyalps.mpi.world.barrier()
 
     fourier = Fourier(p, 1)
@@ -864,6 +878,7 @@ if __name__ == '__main__':
 
     if pyalps.mpi.rank == 0:
         Dump.dump_htau_data("D.dat", tmesh, htau)
+        Dump.dump_ktau_data("K.dat", tmesh, ktau, ptau)
     
     pyalps.mpi.world.barrier()
 
