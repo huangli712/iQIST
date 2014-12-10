@@ -618,7 +618,7 @@ class AlpsSolver(object):
             'TEXT_OUTPUT'               : 1          ,
             #'SPINFLIP'                  : 1          ,
             'DELTA'                     : "D.dat"    ,
-            #'RET_INT_K'                 : "K.dat"    ,
+            'RET_INT_K'                 : "K.dat"    ,
             'SEED'                      : int( time.time() ) + ( pyalps.mpi.rank + 3 ) * 1981
         }
 
@@ -645,6 +645,7 @@ class AlpsSolver(object):
                 sys.exit("FATAL ERROR : please check it and then run this code again")
 
         return
+
         # check whether the K.dat is available
         if not self.__params.has_key("RET_INT_K"):
             sys.exit("FATAL ERROR : please provide the K(\tau) and K'(\tau) data")
@@ -810,11 +811,11 @@ if __name__ == '__main__':
 
     p = {
         'U'     : [4.00  , "Onsite Coulomb interaction"             ],
-        'J'     : [1.00  , "Onsite Hund exchange interaction"       ],
-        'mune'  : [11.761, "Chemical potential"                     ],
-        'beta'  : [100.0 , "Inverse temperature"                    ],
-        'norbs' : [10    , "Number of orbitals"                     ],
-        'nband' : [5     , "Number of bands"                        ],
+        'J'     : [0.00  , "Onsite Hund exchange interaction"       ],
+        'mune'  : [2.00  , "Chemical potential"                     ],
+        'beta'  : [8.00  , "Inverse temperature"                    ],
+        'norbs' : [2     , "Number of orbitals"                     ],
+        'nband' : [1     , "Number of bands"                        ],
         'nspin' : [2     , "Number of spin projections"             ],
         'ntime' : [1024  , "Number of imaginary time points"        ],
         'nffrq' : [256   , "Number of fermionic frequencies"        ],

@@ -1,2 +1,5 @@
+isort = 1
 niter = 1
 isbin = 1
+isscr = 4
+lc = 0.625
