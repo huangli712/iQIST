@@ -2870,6 +2870,8 @@
      if ( isort /= 5 ) then
          call ctqmc_make_ftau(tmesh, ftau, faux)
          call ctqmc_four_htau(faux, frnf)
+         call ctqmc_make_ftau(tmesh, fret, faux)
+         call ctqmc_four_htau(faux, frew)
      endif ! back if ( isort /= 5 ) block
 
 ! special consideration must be taken for legendre representation, we can
@@ -2907,12 +2909,14 @@
 ! rebuild auxiliary correlation function on matsubara frequency (frnf)
 ! using orthogonal polynomial representation
          frnf = czero
+         frew = czero
          do i=1,norbs
              do j=1,norbs
                  if ( i == j ) CYCLE
                  do k=1,mfreq
                      do m=1,lemax
                          frnf(k,j,i) = frnf(k,j,i) + taux(k,m) * ftau(m,j,i) / beta
+                         frew(k,j,i) = frew(k,j,i) + taux(k,m) * fret(m,j,i) / beta
                      enddo ! over m={1,lemax} loop
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,norbs} loop
@@ -2924,7 +2928,7 @@
          do k=1,mfreq
              sig2(k,i,i) = czero
              do j=1,norbs
-                 sig2(k,i,i) = sig2(k,i,i) + ( uumat(j,i) + uumat(i,j) ) * frnf(k,j,i)
+                 sig2(k,i,i) = sig2(k,i,i) + ( uumat(j,i) + uumat(i,j) ) * frnf(k,j,i) + frew(k,j,i)
              enddo ! over j={1,norbs} loop
              sig2(k,i,i) = half * sig2(k,i,i) / grnf(k,i,i)
          enddo ! over k={1,nfreq} loop
