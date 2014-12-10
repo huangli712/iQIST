@@ -341,22 +341,22 @@
      real(dp), public, save, allocatable    :: gtau(:,:,:)
 
 ! auxiliary correlation function, in imaginary time axis, matrix form
-! used to measure self-energy function
+! used to measure self-energy function, F^{j}_{sta}(\tau)
      real(dp), public, save, allocatable    :: ftau(:,:,:)
 
 ! auxiliary correlation function, in imaginary time axis, matrix form
-! used to measure self-energy function, for retarded interaction
+! used to measure self-energy function, F^{j}_{ret}(\tau)
      real(dp), public, save, allocatable    :: fret(:,:,:)
 
 ! impurity green's function, in matsubara frequency axis, matrix form
      complex(dp), public, save, allocatable :: grnf(:,:,:)
 
 ! auxiliary correlation function, in matsubara frequency axis, matrix form
-! used to measure self-energy function
+! used to measure self-energy function, F^{j}_{sta}(i\omega)
      complex(dp), public, save, allocatable :: frnf(:,:,:)
 
 ! auxiliary correlation function, in matsubara frequency axis, matrix form
-! used to measure self-energy function, for retarded interaction
+! used to measure self-energy function, F^{j}_{ret}(i\omega)
      complex(dp), public, save, allocatable :: frew(:,:,:)
 
   end module ctqmc_gmat
