@@ -2701,7 +2701,7 @@
      use context, only : tmesh, rmesh
      use context, only : prob
      use context, only : eimp, uumat
-     use context, only : gtau, ftau, grnf, frnf
+     use context, only : gtau, ftau, fret, grnf, frnf, frew
      use context, only : sig2
 
      implicit none
