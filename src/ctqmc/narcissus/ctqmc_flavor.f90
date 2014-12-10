@@ -2075,23 +2075,35 @@
 
 ! normal model
          case (1)
-             if ( typ == 2 ) cur = zero; RETURN
-             cur = zero
+             if ( typ == 2 ) then
+                 cur = zero
+             else
+                 cur = zero
+             endif ! back if ( typ == 2 ) block
 
 ! holstein-hubbard model
          case (2)
-             if ( typ == 2 ) cur = -wc * exp(wc * (beta - tau)) + wc * exp(wc * tau); RETURN
-             cur = exp(wc * (beta - tau)) + exp(wc * tau)
+             if ( typ == 2 ) then
+                 cur = -wc * exp(wc * (beta - tau)) + wc * exp(wc * tau)
+             else
+                 cur = exp(wc * (beta - tau)) + exp(wc * tau)
+             endif ! back if ( typ == 2 ) block
 
 ! plasmon pole model
          case (3)
-             if ( typ == 2 ) cur = (lc / wc)**2 / sinh(beta * wc / two) * sinh(beta * wc / two - tau * wc) * wc; RETURN
-             cur = (lc / wc)**2 * ( cosh(beta * wc / two) - cosh(beta * wc / two - tau * wc) ) / sinh(beta * wc / two)
+             if ( typ == 2 ) then
+                 cur = (lc / wc)**2 / sinh(beta * wc / two) * sinh(beta * wc / two - tau * wc) * wc
+             else
+                 cur = (lc / wc)**2 * ( cosh(beta * wc / two) - cosh(beta * wc / two - tau * wc) ) / sinh(beta * wc / two)
+             endif ! back if ( typ == 2 ) block
 
 ! ohmic model
          case (4)
-             if ( typ == 2 ) cur = lc * wc * cos(pi * tau / beta) / (one + beta * wc * sin(pi * tau / beta) / pi); RETURN
-             cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
+             if ( typ == 2 ) then
+                 cur = lc * wc * cos(pi * tau / beta) / (one + beta * wc * sin(pi * tau / beta) / pi)
+             else
+                 cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
+             endif ! back if ( typ == 2 ) block
 
 ! realistic materials
          case (99)

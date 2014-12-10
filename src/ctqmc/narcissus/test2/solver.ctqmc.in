@@ -2,9 +2,9 @@ isort = 1
 niter = 1
 isbin = 1
 
-#isscr = 4
-#lc = 0.625
-#wc = 1.00
+isscr = 4
+lc = 0.625
+wc = 1.00
 
-isscr = 99
-lc = 1.25
+#isscr = 99
+#lc = 1.25
