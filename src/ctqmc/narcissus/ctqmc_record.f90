@@ -2290,6 +2290,8 @@
 
 !!>>> ctqmc_make_ftau: build auxiliary correlation function using
 !!>>> orthogonal polynomial representation
+!!>>> Note: this subroutine not only can be used to deal with ftau, i.e.,
+!!>>> F^{j}_{sta}(\tau), but also fret, i.e., F^{j}_{ret}(\tau)
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
      use constants, only : dp, zero, two
 
