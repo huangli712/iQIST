@@ -399,11 +399,11 @@
 
 ! evaluate occu, and then check it
              call ctqmc_spin_counter(clur, taus, occu); !< if ( occu < one ) CYCLE
-             call cat_make_iret(clur, taus, tret)
 
 ! get imaginary time value for segments
              do ie=1,rank(flvr)
                  taue = time_e( index_e(ie, flvr), flvr )
+                 call cat_make_iret(clur, taue, tret)
 
 ! evaluate dtau
                  dtau = taue - taus
