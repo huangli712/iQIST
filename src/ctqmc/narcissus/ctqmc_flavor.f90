@@ -145,7 +145,7 @@
      endif ! back if ( anti .eqv. .false. ) block
 
 ! quickly return if we don't need to consider the dynamical screening effect
-     if ( isscr > 1 ) RETURN
+     if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by new create operator
      call ctqmc_make_wscreen(tau_start, ts_scr)
@@ -279,7 +279,7 @@
      endif ! back if ( anti .eqv. .false. ) block
 
 ! quickly return if we don't need to consider the dynamical screening effect
-     if ( isscr > 1 ) RETURN
+     if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by old create operator
      call ctqmc_make_wscreen(tau_start, ts_scr)
@@ -423,7 +423,7 @@
      endif ! back if ( ring .eqv. .false. ) block
 
 ! quickly return if we don't need to consider the dynamical screening effect
-     if ( isscr > 1 ) RETURN
+     if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by old create operator
      call ctqmc_make_wscreen(tau_start1, ts1_scr)
@@ -566,7 +566,7 @@
      endif ! back if ( ring .eqv. .false. ) block
 
 ! quickly return if we don't need to consider the dynamical screening effect
-     if ( isscr > 1 ) RETURN
+     if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by old destroy operator
      call ctqmc_make_wscreen(tau_end1, te1_scr)
