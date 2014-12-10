@@ -632,6 +632,9 @@
 ! calculate the 2nd-derivates of ktau, which is used in spline subroutines
      call ctqmc_make_ksed(tmesh, ktau, ksed)
 
+! calculate the 2nd-derivates of ptau, which is used in spline subroutines
+     call ctqmc_make_ksed(tmesh, ptau, psed)
+
 ! dump the necessary files
 !-------------------------------------------------------------------------
 ! write out the hybridization function on imaginary time axis
