@@ -151,7 +151,7 @@
      call ctqmc_make_wscreen(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by new create and destroy operator
-     call ctqmc_make_wkernel(dtau,      se_scr)
+     call ctqmc_make_wkernel(1, dtau,   se_scr)
 
 ! evaluate total weight factor (screening part)
      scr = ts_scr - te_scr - se_scr
@@ -282,7 +282,7 @@
      call ctqmc_make_wscreen(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by old create and destroy operator
-     call ctqmc_make_wkernel(dtau,      se_scr)
+     call ctqmc_make_wkernel(1, dtau,   se_scr)
 
 ! evaluate total weight factor (screening part)
      scr = ts_scr - te_scr + se_scr
@@ -423,7 +423,7 @@
      call ctqmc_make_wscreen(tau_start2, ts2_scr)
 
 ! calculate the extra weight factor contributed by old and new create operator
-     call ctqmc_make_wkernel(dtau,      ts12_scr)
+     call ctqmc_make_wkernel(1, dtau,   ts12_scr)
 
 ! evaluate total weight factor (screening part)
      scr = ts2_scr - ts1_scr - ts12_scr
@@ -563,7 +563,7 @@
      call ctqmc_make_wscreen(tau_end2, te2_scr)
 
 ! calculate the extra weight factor contributed by old and new destroy operator
-     call ctqmc_make_wkernel(dtau,    te12_scr)
+     call ctqmc_make_wkernel(1, dtau, te12_scr)
 
 ! evaluate total weight factor (screening part)
      scr = te1_scr - te2_scr - te12_scr
