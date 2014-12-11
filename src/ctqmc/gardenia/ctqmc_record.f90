@@ -28,6 +28,8 @@
 !!!           ctqmc_smth_sigf   <<<---
 !!!           ctqmc_make_gtau
 !!!           ctqmc_make_ftau   <<<---
+!!!           ctqmc_make_iret
+!!!           ctqmc_make_pref   <<<---
 !!!           ctqmc_make_hub1
 !!!           ctqmc_make_hub2   <<<---
 !!! source  : ctqmc_record.f90
@@ -35,8 +37,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
-!!!           09/22/2014 by li huang
-!!!           10/13/2014 by li huang
+!!!           12/11/2014 by li huang
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -260,7 +261,7 @@
   end subroutine ctqmc_record_gtau
 
 !!>>> ctqmc_record_ftau: record the auxiliary correlation function in
-!!>>> imaginary time axis
+!!>>> imaginary time axis, F(\tau)
   subroutine ctqmc_record_ftau()
      use constants, only : dp, zero, one, two, pi
 
@@ -271,7 +272,7 @@
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
      use context, only : ppleg, qqche
-     use context, only : rank
+     use context, only : rank, pref
      use context, only : mmat
      use context, only : ftau
 
@@ -284,9 +285,6 @@
 
 ! loop index for flavor channel
      integer  :: flvr
-
-! loop index for colour channel
-     integer  :: clur
 
 ! loop index for legendre polynomial
      integer  :: fleg
@@ -307,9 +305,6 @@
 ! length betweem taus and taue
      real(dp) :: dtau
      real(dp) :: daux
-
-! occupation number at taus
-     real(dp) :: occu
 
 ! interval for imaginary time slice
      real(dp) :: step
@@ -337,21 +332,17 @@
   subroutine cat_record_ftau1()
      implicit none
 
+! calculate prefactor: pref
+     call ctqmc_make_pref()
+
 ! evaluate step at first
      step = real(ntime - 1) / beta
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-     CTQMC_COLOUR_LOOP: do clur=1,norbs
-
-! skip diagonal term
-         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
-
-! evaluate occu, and then check it
-             call ctqmc_spin_counter(clur, taus, occu); if ( occu < one ) CYCLE
 
 ! get imaginary time value for segments
              do ie=1,rank(flvr)
@@ -361,7 +352,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau) * occu
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * pref(ie,flvr)
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -377,12 +368,11 @@
                  endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
-                 ftau(curr, clur, flvr) = ftau(curr, clur, flvr) - maux
+                 ftau(curr, flvr, flvr) = ftau(curr, flvr, flvr) - maux
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
-     enddo CTQMC_COLOUR_LOOP ! over clur={1,norbs} loop
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
      return
@@ -393,21 +383,17 @@
   subroutine cat_record_ftau2()
      implicit none
 
+! calculate prefactor: pref
+     call ctqmc_make_pref()
+
 ! evaluate step at first
      step = real(legrd - 1) / two
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-     CTQMC_COLOUR_LOOP: do clur=1,norbs
-
-! skip diagonal term
-         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
-
-! evaluate occu, and then check it
-             call ctqmc_spin_counter(clur, taus, occu); if ( occu < one ) CYCLE
 
              do ie=1,rank(flvr)
                  taue = time_e( index_e(ie, flvr), flvr )
@@ -416,7 +402,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau) * occu
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * pref(ie,flvr)
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -432,13 +418,12 @@
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
                  CTQMC_FLALEG_LOOP: do fleg=1,lemax
                      dtau = sqrt(two * fleg - 1) * ppleg(curr,fleg)
-                     ftau(fleg, clur, flvr) = ftau(fleg, clur, flvr) - maux * dtau
+                     ftau(fleg, flvr, flvr) = ftau(fleg, flvr, flvr) - maux * dtau
                  enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
-     enddo CTQMC_COLOUR_LOOP ! over clur={1,norbs} loop
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
      return
@@ -449,21 +434,17 @@
   subroutine cat_record_ftau3()
      implicit none
 
+! calculate prefactor: pref
+     call ctqmc_make_pref()
+
 ! evaluate step at first
      step = real(chgrd - 1) / two
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-     CTQMC_COLOUR_LOOP: do clur=1,norbs
-
-! skip diagonal term
-         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
-
-! evaluate occu, and then check it
-             call ctqmc_spin_counter(clur, taus, occu); if ( occu < one ) CYCLE
 
              do ie=1,rank(flvr)
                  taue = time_e( index_e(ie, flvr), flvr )
@@ -472,7 +453,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau) * occu
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * pref(ie,flvr)
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -488,13 +469,12 @@
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
                  CTQMC_FLACHE_LOOP: do fche=1,chmax
                      dtau = (two / pi) * sqrt(one - (daux - one)**2) * qqche(curr,fche)
-                     ftau(fche, clur, flvr) = ftau(fche, clur, flvr) - maux * dtau
+                     ftau(fche, flvr, flvr) = ftau(fche, flvr, flvr) - maux * dtau
                  enddo CTQMC_FLACHE_LOOP ! over fche={1,chmax} loop
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
-     enddo CTQMC_COLOUR_LOOP ! over clur={1,norbs} loop
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
      return
@@ -1036,7 +1016,7 @@
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
      use context, only : g2_re, g2_im, h2_re, h2_im
-     use context, only : rank, uumat
+     use context, only : rank, pref
      use context, only : mmat
 
      implicit none
@@ -1061,14 +1041,11 @@
 
 ! used to store the element of mmat matrix
      real(dp) :: maux
+     real(dp) :: naux
 
 ! imaginary time for start and end points
      real(dp) :: taus
      real(dp) :: taue
-
-! occupation number at taus
-     real(dp) :: occu
-     real(dp) :: oaux
 
 ! dummy complex(dp) variables, used to calculate the h2_re and h2_im
      complex(dp) :: cmeas
@@ -1095,24 +1072,21 @@
      allocate( caux1(nfaux) ); caux1 = czero
      allocate( caux2(nfaux) ); caux2 = czero
 
+! calculate prefactor: pref
+     call ctqmc_make_pref()
+
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
 ! get imaginary time value for segments
-         do ie=1,rank(flvr)
-             taue = time_e( index_e(ie, flvr), flvr )
+         do is=1,rank(flvr)
+             taus = time_s( index_s(is, flvr), flvr )
 
-! evaluate occu, and then check it
-             oaux = zero
-             do f1=1,norbs
-                 call ctqmc_spin_counter(f1, taue, occu); if ( occu < one ) CYCLE
-                 oaux = oaux + half * ( uumat(f1,flvr) + uumat(flvr,f1) ) * occu
-             enddo ! over f1={1,norbs} loop
-
-             do is=1,rank(flvr)
-                 taus = time_s( index_s(is, flvr), flvr )
+             do ie=1,rank(flvr)
+                 taue = time_e( index_e(ie, flvr), flvr )
 
 ! get matrix element from mmat
                  maux = mmat(ie, is, flvr)
+                 naux = mmat(ie, is, flvr) * pref(ie,flvr)
 
 ! calculate g2aux and h2aux
                  caux1 = exp(+two * czi * pi * taue / beta)
@@ -1124,12 +1098,12 @@
                  do w2n=1,nfaux
                      do w1n=1,nfaux
                          g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
-                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n) * oaux
+                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + naux * caux1(w1n) * caux2(w2n)
                      enddo ! over w1n={1,nfaux} loop
                  enddo ! over w2n={1,nfaux} loop
 
-             enddo ! over is={1,rank(flvr)} loop
-         enddo ! over ie={1,rank(flvr)} loop
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
 
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
@@ -1353,7 +1327,7 @@
      implicit none
 
 ! external arguments
-! auxiliary correlation function
+! auxiliary correlation function, F(\tau)
      real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
 
 ! initialize ftau_mpi
@@ -2161,8 +2135,8 @@
 
   contains
 
-!!>>> cat_make_kernel: build the integral kernel function
-  subroutine cat_make_kernel(kdim, kern)
+!!>>> cat_make_kpm: build the integral kernel function
+  subroutine cat_make_kpm(kdim, kern)
      implicit none
 
 ! external arguments
@@ -2207,7 +2181,7 @@
      enddo ! over kcur={1,kdim} loop
 
      return
-  end subroutine cat_make_kernel
+  end subroutine cat_make_kpm
 
 !!>>> cat_make_gtau1: build impurity green's function using normal
 !!>>> representation
@@ -2233,7 +2207,7 @@
      real(dp) :: ker1(lemax)
 
 ! build kernel function at first
-     ker1 = one; call cat_make_kernel(lemax, ker1)
+     ker1 = one; call cat_make_kpm(lemax, ker1)
 
 ! reconstruct green's function
      step = real(legrd - 1) / two
@@ -2260,7 +2234,7 @@
      real(dp) :: ker2(chmax)
 
 ! build kernel function at first
-     ker2 = one; call cat_make_kernel(chmax, ker2)
+     ker2 = one; call cat_make_kpm(chmax, ker2)
 
 ! reconstruct green's function
      step = real(chgrd - 1) / two
@@ -2280,7 +2254,7 @@
   end subroutine ctqmc_make_gtau
 
 !!>>> ctqmc_make_ftau: build auxiliary correlation function using
-!!>>> orthogonal polynomial representation
+!!>>> orthogonal polynomial representation, F(\tau)
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
      use constants, only : dp, zero, two
 
@@ -2345,15 +2319,14 @@
 
   contains
 
-!>>> build auxiliary correlation function using normal representation
+!!>>> cat_make_ftau1: build auxiliary correlation function using normal
+!!>>> representation
   subroutine cat_make_ftau1()
      implicit none
 
      raux = real(ntime) / (beta * beta)
      do i=1,norbs
          do j=1,norbs
-             if ( i == j ) CYCLE
-
              do k=1,ntime
                  faux(k,j,i) = ftau(k,j,i) * raux
              enddo ! over k={1,ntime} loop
@@ -2363,15 +2336,14 @@
      return
   end subroutine cat_make_ftau1
 
-!>>> build auxiliary correlation function using legendre polynomial representation
+!!>>> cat_make_ftau2: build auxiliary correlation function using legendre
+!!>>> polynomial representation
   subroutine cat_make_ftau2()
      implicit none
 
      step = real(legrd - 1) / two
      do i=1,norbs
          do j=1,norbs
-             if ( i == j ) CYCLE
-
              do k=1,ntime
                  raux = two * tmesh(k) / beta
                  curr = nint(raux * step) + 1
@@ -2386,15 +2358,14 @@
      return
   end subroutine cat_make_ftau2
 
-!>>> build auxiliary correlation function using chebyshev polynomial representation
+!!>>> cat_make_ftau3: build auxiliary correlation function using chebyshev
+!!>>> polynomial representation
   subroutine cat_make_ftau3()
      implicit none
 
      step = real(chgrd - 1) / two
      do i=1,norbs
          do j=1,norbs
-             if ( i == j ) CYCLE
-
              do k=1,ntime
                  raux = two * tmesh(k) / beta
                  curr = nint(raux * step) + 1
@@ -2409,6 +2380,61 @@
      return
   end subroutine cat_make_ftau3
   end subroutine ctqmc_make_ftau
+
+!!========================================================================
+!!>>> build prefactor for improved estimator                           <<<
+!!========================================================================
+
+!!>>> ctqmc_make_iret: to calculate the integral I(\tau_end) which is very
+!!>>> important when retarded interaction is included
+  subroutine ctqmc_make_iret()
+     implicit none
+
+     call s_print_error('ctqmc_make_iret','sorry, this feature is not implemented')
+
+     return
+  end subroutine ctqmc_make_iret
+
+!!>>> ctqmc_make_pref: to calculate the prefactor used by the improved
+!!>>> estimator for self-energy function and vertex function
+  subroutine ctqmc_make_pref()
+     use constants, only : dp, zero, half
+
+     use control, only : norbs
+     use context, only : index_e, time_e
+     use context, only : rank, pref, uumat
+
+     implicit none
+
+! local variables
+! loop index for start and end points
+     integer  :: it
+
+! loop index for flavor channel
+     integer  :: flvr
+
+! loop index for colour channel
+     integer  :: clur
+
+! occupation number at \tau_end
+     real(dp) :: occu
+
+     do flvr=1,norbs
+         do it=1,rank(flvr)
+
+! reset the prefactor
+             pref(it,flvr) = zero
+
+! calculate normal contribution
+             do clur=1,norbs
+                 call ctqmc_spin_counter(clur, time_e( index_e(it, flvr), flvr ), occu)
+                 pref(it,flvr) = pref(it,flvr) + half * ( uumat(flvr,clur) + uumat(clur,flvr) ) * occu
+             enddo ! over clur={1,norbs} loop
+         enddo ! over it={1,rank(flvr)} loop
+     enddo ! over flvr={1,norbs} loop
+
+     return
+  end subroutine ctqmc_make_pref
 
 !!========================================================================
 !!>>> build self-energy function                                       <<<
