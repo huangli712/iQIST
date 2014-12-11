@@ -261,7 +261,7 @@
   end subroutine ctqmc_record_gtau
 
 !!>>> ctqmc_record_ftau: record the auxiliary correlation function in
-!!>>> imaginary time axis
+!!>>> imaginary time axis, F^{j}(\tau)
   subroutine ctqmc_record_ftau()
      use constants, only : dp, zero, one, two, pi
 
@@ -273,9 +273,9 @@
      use context, only : index_s, index_e, time_s, time_e
      use context, only : ppleg, qqche
      use context, only : rank
+     use context, only : pref
      use context, only : mmat
      use context, only : ftau
-     use context, only : pref
 
      implicit none
 
@@ -286,9 +286,6 @@
 
 ! loop index for flavor channel
      integer  :: flvr
-
-! loop index for colour channel
-!<     integer  :: clur
 
 ! loop index for legendre polynomial
      integer  :: fleg
@@ -309,9 +306,6 @@
 ! length betweem taus and taue
      real(dp) :: dtau
      real(dp) :: daux
-
-! occupation number at taus
-!<     real(dp) :: occu
 
 ! interval for imaginary time slice
      real(dp) :: step
@@ -339,23 +333,17 @@
   subroutine cat_record_ftau1()
      implicit none
 
+! calculate prefactor: pref
      call ctqmc_make_pref()
 
 ! evaluate step at first
      step = real(ntime - 1) / beta
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-!<     CTQMC_COLOUR_LOOP: do clur=1,norbs
-
-! skip diagonal term
-!<         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
-
-! evaluate occu, and then check it
-!<             call ctqmc_spin_counter(clur, taus, occu); !< if ( occu < one ) CYCLE
 
 ! get imaginary time value for segments
              do ie=1,rank(flvr)
@@ -365,7 +353,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * pref(ie,flvr)
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -381,12 +369,11 @@
                  endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
-                 ftau(curr, flvr, flvr) = ftau(curr, flvr, flvr) - maux * pref(ie,flvr)
+                 ftau(curr, flvr, flvr) = ftau(curr, flvr, flvr) - maux
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
-!<     enddo CTQMC_COLOUR_LOOP ! over clur={1,norbs} loop
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
      return
@@ -397,23 +384,17 @@
   subroutine cat_record_ftau2()
      implicit none
 
+! calculate prefactor: pref
      call ctqmc_make_pref()
 
 ! evaluate step at first
      step = real(legrd - 1) / two
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-!<     CTQMC_COLOUR_LOOP: do clur=1,norbs
-
-! skip diagonal term
-!<         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
-
-! evaluate occu, and then check it
-!<             call ctqmc_spin_counter(clur, taus, occu); if ( occu < one ) CYCLE
 
              do ie=1,rank(flvr)
                  taue = time_e( index_e(ie, flvr), flvr )
@@ -422,7 +403,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * pref(ie,flvr)
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -438,13 +419,12 @@
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
                  CTQMC_FLALEG_LOOP: do fleg=1,lemax
                      dtau = sqrt(two * fleg - 1) * ppleg(curr,fleg)
-                     ftau(fleg, flvr, flvr) = ftau(fleg, flvr, flvr) - maux * dtau * pref(ie,flvr)
+                     ftau(fleg, flvr, flvr) = ftau(fleg, flvr, flvr) - maux * dtau
                  enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
-!<     enddo CTQMC_COLOUR_LOOP ! over clur={1,norbs} loop
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
      return
@@ -455,6 +435,7 @@
   subroutine cat_record_ftau3()
      implicit none
 
+! calculate prefactor: pref
      call ctqmc_make_pref()
 
 ! evaluate step at first
