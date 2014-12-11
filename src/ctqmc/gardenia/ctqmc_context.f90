@@ -281,6 +281,9 @@
 ! current occupation status for different flavor channel
      integer,  public, save, allocatable :: stts(:)
 
+! prefactor for improved estimator
+     real(dp), public, save, allocatable :: pref(:,:)
+
 !-------------------------------------------------------------------------
 !::: input data variables                                              :::
 !-------------------------------------------------------------------------
@@ -342,14 +345,14 @@
      real(dp), public, save, allocatable    :: gtau(:,:,:)
 
 ! auxiliary correlation function, in imaginary time axis, matrix form
-! used to measure self-energy function, F^{j}_{sta}(\tau)
+! used to measure self-energy function, F(\tau)
      real(dp), public, save, allocatable    :: ftau(:,:,:)
 
 ! impurity green's function, in matsubara frequency axis, matrix form
      complex(dp), public, save, allocatable :: grnf(:,:,:)
 
 ! auxiliary correlation function, in matsubara frequency axis, matrix form
-! used to measure self-energy function, F^{j}_{sta}(i\omega)
+! used to measure self-energy function, F(i\omega)
      complex(dp), public, save, allocatable :: frnf(:,:,:)
 
   end module ctqmc_gmat
@@ -595,6 +598,8 @@
      allocate(rank(norbs),        stat=istat)
      allocate(stts(norbs),        stat=istat)
 
+     allocate(pref(mkink,norbs),  stat=istat)
+
      allocate(symm(norbs),        stat=istat)
 
      allocate(eimp(norbs),        stat=istat)
@@ -608,6 +613,8 @@
 ! initialize them
      rank  = 0
      stts  = 0
+
+     pref  = zero
 
      symm  = 0
 
@@ -804,6 +811,8 @@
 
      if ( allocated(rank)  )   deallocate(rank )
      if ( allocated(stts)  )   deallocate(stts )
+
+     if ( allocated(pref)  )   deallocate(pref )
 
      if ( allocated(symm)  )   deallocate(symm )
 
