@@ -1,4 +1,4 @@
-isort = 6
+isort = 1
 niter = 1
 isbin = 1
 
@@ -9,5 +9,7 @@ isbin = 1
 #isscr = 99
 #lc = 1.25
 
-isscr = 1
-isvrt = 16
+#isscr = 1
+#isvrt = 16
+
+isscr = 3
