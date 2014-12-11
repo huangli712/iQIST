@@ -144,6 +144,9 @@
          trace_ratio = exp(-raux)
      endif ! back if ( anti .eqv. .false. ) block
 
+! quickly return if we don't need to consider the dynamical screening effect
+     if ( isscr == 1 ) RETURN
+
 ! calculate the extra weight factor contributed by new create operator
      call ctqmc_make_wscreen(tau_start, ts_scr)
 
@@ -151,7 +154,7 @@
      call ctqmc_make_wscreen(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by new create and destroy operator
-     call ctqmc_make_wkernel(dtau,      se_scr)
+     call ctqmc_make_wkernel(1, dtau,   se_scr)
 
 ! evaluate total weight factor (screening part)
      scr = ts_scr - te_scr - se_scr
@@ -275,6 +278,9 @@
          trace_ratio = exp(+raux)
      endif ! back if ( anti .eqv. .false. ) block
 
+! quickly return if we don't need to consider the dynamical screening effect
+     if ( isscr == 1 ) RETURN
+
 ! calculate the extra weight factor contributed by old create operator
      call ctqmc_make_wscreen(tau_start, ts_scr)
 
@@ -282,7 +288,7 @@
      call ctqmc_make_wscreen(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by old create and destroy operator
-     call ctqmc_make_wkernel(dtau,      se_scr)
+     call ctqmc_make_wkernel(1, dtau,   se_scr)
 
 ! evaluate total weight factor (screening part)
      scr = ts_scr - te_scr + se_scr
@@ -416,6 +422,9 @@
          endif ! back if ( tau_start1 > tau_start2 ) block
      endif ! back if ( ring .eqv. .false. ) block
 
+! quickly return if we don't need to consider the dynamical screening effect
+     if ( isscr == 1 ) RETURN
+
 ! calculate the extra weight factor contributed by old create operator
      call ctqmc_make_wscreen(tau_start1, ts1_scr)
 
@@ -423,7 +432,7 @@
      call ctqmc_make_wscreen(tau_start2, ts2_scr)
 
 ! calculate the extra weight factor contributed by old and new create operator
-     call ctqmc_make_wkernel(dtau,      ts12_scr)
+     call ctqmc_make_wkernel(1, dtau,   ts12_scr)
 
 ! evaluate total weight factor (screening part)
      scr = ts2_scr - ts1_scr - ts12_scr
@@ -556,6 +565,9 @@
          endif ! back if ( tau_end1 > tau_end2 ) block
      endif ! back if ( ring .eqv. .false. ) block
 
+! quickly return if we don't need to consider the dynamical screening effect
+     if ( isscr == 1 ) RETURN
+
 ! calculate the extra weight factor contributed by old destroy operator
      call ctqmc_make_wscreen(tau_end1, te1_scr)
 
@@ -563,7 +575,7 @@
      call ctqmc_make_wscreen(tau_end2, te2_scr)
 
 ! calculate the extra weight factor contributed by old and new destroy operator
-     call ctqmc_make_wkernel(dtau,    te12_scr)
+     call ctqmc_make_wkernel(1, dtau, te12_scr)
 
 ! evaluate total weight factor (screening part)
      scr = te1_scr - te2_scr - te12_scr
@@ -2006,9 +2018,9 @@
              ts = time_s(index_s(j, i), i)
              if ( ts == tau ) CYCLE ! meet myself
              if ( ts < tau ) then
-                 call ctqmc_make_wkernel(tau - ts, cur)
+                 call ctqmc_make_wkernel(1, tau - ts, cur)
              else
-                 call ctqmc_make_wkernel(ts - tau, cur)
+                 call ctqmc_make_wkernel(1, ts - tau, cur)
              endif ! back if ( ts < tau ) block
              scr = scr + cur
          enddo ! over j={1,rank(i)} loop
@@ -2020,9 +2032,9 @@
              te = time_e(index_e(j, i), i)
              if ( te == tau ) CYCLE ! meet myself
              if ( te < tau ) then
-                 call ctqmc_make_wkernel(tau - te, cur)
+                 call ctqmc_make_wkernel(1, tau - te, cur)
              else
-                 call ctqmc_make_wkernel(te - tau, cur)
+                 call ctqmc_make_wkernel(1, te - tau, cur)
              endif ! back if ( te < tau ) block
              scr = scr - cur
          enddo ! over j={1,rank(i)} loop
@@ -2033,7 +2045,8 @@
 
 !!>>> ctqmc_make_wkernel: used to calculate K(\tau), i.e., the screening
 !!>>> function for extra weight factor
-  subroutine ctqmc_make_wkernel(tau, cur)
+!!>>> Note: this subroutine can be used to calculate K'(\tau) as well
+  subroutine ctqmc_make_wkernel(typ, tau, cur)
      use constants, only : dp, zero, one, two, pi
 
      use control, only : isscr
@@ -2043,6 +2056,11 @@
      implicit none
 
 ! external arguments
+! control the computational type
+! if typ = 1, to calculate K(\tau), i.e., ktau
+! if typ = 2, to calculate K'(\tau), i.e., ptau
+     integer, intent(in)   :: typ
+
 ! imaginary time
      real(dp), intent(in)  :: tau
 
@@ -2057,23 +2075,39 @@
 
 ! normal model
          case (1)
-             cur = zero
+             if ( typ == 2 ) then
+                 cur = zero
+             else
+                 cur = zero
+             endif ! back if ( typ == 2 ) block
 
 ! holstein-hubbard model
          case (2)
-             cur = exp(wc * (beta - tau)) + exp(wc * tau)
+             if ( typ == 2 ) then
+                 cur = -wc * exp(wc * (beta - tau)) + wc * exp(wc * tau)
+             else
+                 cur = exp(wc * (beta - tau)) + exp(wc * tau)
+             endif ! back if ( typ == 2 ) block
 
 ! plasmon pole model
          case (3)
-             cur = (lc / wc)**2 * ( cosh(beta * wc / two) - cosh(beta * wc / two - tau * wc) ) / sinh(beta * wc / two)
+             if ( typ == 2 ) then
+                 cur = (lc / wc)**2 / sinh(beta * wc / two) * sinh(beta * wc / two - tau * wc) * wc
+             else
+                 cur = (lc / wc)**2 * ( cosh(beta * wc / two) - cosh(beta * wc / two - tau * wc) ) / sinh(beta * wc / two)
+             endif ! back if ( typ == 2 ) block
 
 ! ohmic model
          case (4)
-             cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
+             if ( typ == 2 ) then
+                 cur = lc * wc * cos(pi * tau / beta) / (one + beta * wc * sin(pi * tau / beta) / pi)
+             else
+                 cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
+             endif ! back if ( typ == 2 ) block
 
 ! realistic materials
          case (99)
-             cur = ctqmc_make_ktau(tau)
+             cur = ctqmc_make_ktau(typ, tau)
 
      end select SCREENING_SWITCHER
 

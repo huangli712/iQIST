@@ -259,6 +259,52 @@
   end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
+  subroutine cat_make_iret(clur, taus, iret)
+     use constants, only : dp, zero, two
+
+     use control, only : norbs
+     use context, only : rank
+     use context, only : index_s, index_e, time_s, time_e
+
+     implicit none
+
+     integer, intent(in) :: clur
+     real(dp), intent(in) :: taus
+     real(dp), intent(out) :: iret
+
+     integer :: it
+     real(dp) :: dtau, daux
+
+     iret = zero
+     do it=1,rank(clur)
+         dtau = time_s( index_s(it, clur), clur ) - taus
+         if ( dtau > zero ) then
+             call ctqmc_make_wkernel(2, +dtau, daux)
+             iret = iret + daux
+         else
+             call ctqmc_make_wkernel(2, -dtau, daux)
+             iret = iret - daux
+         endif ! back if ( dtau > zero ) block
+
+         dtau = time_e( index_e(it, clur), clur ) - taus
+         if ( dtau > zero ) then
+             call ctqmc_make_wkernel(2, +dtau, daux)
+             iret = iret - daux
+         else
+             call ctqmc_make_wkernel(2, -dtau, daux)
+             iret = iret + daux
+         endif ! back if ( dtau > zero ) block
+     enddo ! over ie={1,rank(clur)} loop
+
+     !!print *, 'AA', iret
+     call ctqmc_make_wkernel(2, zero, daux)
+     iret = - two * daux / real(norbs) - iret
+     !!print *, iret, daux
+     !pause
+
+     return
+  end subroutine cat_make_iret
+
 !!>>> ctqmc_record_ftau: record the auxiliary correlation function in
 !!>>> imaginary time axis
   subroutine ctqmc_record_ftau()
@@ -273,7 +319,7 @@
      use context, only : ppleg, qqche
      use context, only : rank
      use context, only : mmat
-     use context, only : ftau
+     use context, only : ftau, fret
 
      implicit none
 
@@ -310,6 +356,7 @@
 
 ! occupation number at taus
      real(dp) :: occu
+     real(dp) :: tret
 
 ! interval for imaginary time slice
      real(dp) :: step
@@ -344,24 +391,25 @@
      CTQMC_COLOUR_LOOP: do clur=1,norbs
 
 ! skip diagonal term
-         if ( flvr == clur ) CYCLE
+!<         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
 
 ! evaluate occu, and then check it
-             call ctqmc_spin_counter(clur, taus, occu); if ( occu < one ) CYCLE
+             call ctqmc_spin_counter(clur, taus, occu); !< if ( occu < one ) CYCLE
 
 ! get imaginary time value for segments
              do ie=1,rank(flvr)
                  taue = time_e( index_e(ie, flvr), flvr )
+                 call cat_make_iret(clur, taue, tret)
 
 ! evaluate dtau
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau) * occu
+                 maux = mmat(ie, is, flvr) * sign(one, dtau)
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -377,7 +425,8 @@
                  endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
-                 ftau(curr, clur, flvr) = ftau(curr, clur, flvr) - maux
+                 ftau(curr, clur, flvr) = ftau(curr, clur, flvr) - maux * occu
+                 fret(curr, clur, flvr) = fret(curr, clur, flvr) - maux * tret
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
@@ -400,7 +449,7 @@
      CTQMC_COLOUR_LOOP: do clur=1,norbs
 
 ! skip diagonal term
-         if ( flvr == clur ) CYCLE
+!<         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
@@ -456,7 +505,7 @@
      CTQMC_COLOUR_LOOP: do clur=1,norbs
 
 ! skip diagonal term
-         if ( flvr == clur ) CYCLE
+!<         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
@@ -1340,30 +1389,37 @@
      return
   end subroutine ctqmc_reduce_gtau
 
-!!>>> ctqmc_reduce_ftau: reduce the ftau from all children processes
-  subroutine ctqmc_reduce_ftau(ftau_mpi)
+!!>>> ctqmc_reduce_ftau: reduce the ftau and fret from all children processes
+  subroutine ctqmc_reduce_ftau(ftau_mpi, fret_mpi)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
      use control, only : norbs
      use control, only : ntime
      use control, only : nprocs
-     use context, only : ftau
+     use context, only : ftau, fret
 
      implicit none
 
 ! external arguments
-! auxiliary correlation function
+! auxiliary correlation function, F^{j}_{sta}(\tau)
      real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
 
-! initialize ftau_mpi
-     ftau_mpi = zero
+! auxiliary correlation function, F^{j}_{ret}(\tau)
+     real(dp), intent(out) :: fret_mpi(ntime,norbs,norbs)
 
-! build ftau_mpi, collect data from all children processes
+! initialize ftau_mpi and fret_mpi
+     ftau_mpi = zero
+     fret_mpi = zero
+
+! build ftau_mpi and fret_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
      call mp_allreduce(ftau, ftau_mpi)
+
+! collect data
+     call mp_allreduce(fret, fret_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1371,11 +1427,13 @@
 # else  /* MPI */
 
      ftau_mpi = ftau
+     fret_mpi = fret
 
 # endif /* MPI */
 
 ! calculate the average
      ftau_mpi = ftau_mpi / real(nprocs)
+     fret_mpi = fret_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_ftau
@@ -2161,8 +2219,8 @@
 
   contains
 
-!!>>> cat_make_kernel: build the integral kernel function
-  subroutine cat_make_kernel(kdim, kern)
+!!>>> cat_make_kpm: build the integral kernel function
+  subroutine cat_make_kpm(kdim, kern)
      implicit none
 
 ! external arguments
@@ -2207,7 +2265,7 @@
      enddo ! over kcur={1,kdim} loop
 
      return
-  end subroutine cat_make_kernel
+  end subroutine cat_make_kpm
 
 !!>>> cat_make_gtau1: build impurity green's function using normal
 !!>>> representation
@@ -2233,7 +2291,7 @@
      real(dp) :: ker1(lemax)
 
 ! build kernel function at first
-     ker1 = one; call cat_make_kernel(lemax, ker1)
+     ker1 = one; call cat_make_kpm(lemax, ker1)
 
 ! reconstruct green's function
      step = real(legrd - 1) / two
@@ -2260,7 +2318,7 @@
      real(dp) :: ker2(chmax)
 
 ! build kernel function at first
-     ker2 = one; call cat_make_kernel(chmax, ker2)
+     ker2 = one; call cat_make_kpm(chmax, ker2)
 
 ! reconstruct green's function
      step = real(chgrd - 1) / two
@@ -2281,6 +2339,8 @@
 
 !!>>> ctqmc_make_ftau: build auxiliary correlation function using
 !!>>> orthogonal polynomial representation
+!!>>> Note: this subroutine not only can be used to deal with ftau, i.e.,
+!!>>> F^{j}_{sta}(\tau), but also fret, i.e., F^{j}_{ret}(\tau)
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
      use constants, only : dp, zero, two
 
@@ -2352,7 +2412,7 @@
      raux = real(ntime) / (beta * beta)
      do i=1,norbs
          do j=1,norbs
-             if ( i == j ) CYCLE
+!<             if ( i == j ) CYCLE
 
              do k=1,ntime
                  faux(k,j,i) = ftau(k,j,i) * raux
@@ -2370,7 +2430,7 @@
      step = real(legrd - 1) / two
      do i=1,norbs
          do j=1,norbs
-             if ( i == j ) CYCLE
+!<             if ( i == j ) CYCLE
 
              do k=1,ntime
                  raux = two * tmesh(k) / beta
@@ -2393,7 +2453,7 @@
      step = real(chgrd - 1) / two
      do i=1,norbs
          do j=1,norbs
-             if ( i == j ) CYCLE
+!<             if ( i == j ) CYCLE
 
              do k=1,ntime
                  raux = two * tmesh(k) / beta
@@ -2690,7 +2750,7 @@
      use context, only : tmesh, rmesh
      use context, only : prob
      use context, only : eimp, uumat
-     use context, only : gtau, ftau, grnf, frnf
+     use context, only : gtau, ftau, fret, grnf, frnf, frew
      use context, only : sig2
 
      implicit none
@@ -2859,6 +2919,8 @@
      if ( isort /= 5 ) then
          call ctqmc_make_ftau(tmesh, ftau, faux)
          call ctqmc_four_htau(faux, frnf)
+         call ctqmc_make_ftau(tmesh, fret, faux)
+         call ctqmc_four_htau(faux, frew)
      endif ! back if ( isort /= 5 ) block
 
 ! special consideration must be taken for legendre representation, we can
@@ -2896,12 +2958,14 @@
 ! rebuild auxiliary correlation function on matsubara frequency (frnf)
 ! using orthogonal polynomial representation
          frnf = czero
+         frew = czero
          do i=1,norbs
              do j=1,norbs
-                 if ( i == j ) CYCLE
+!<                 if ( i == j ) CYCLE
                  do k=1,mfreq
                      do m=1,lemax
                          frnf(k,j,i) = frnf(k,j,i) + taux(k,m) * ftau(m,j,i) / beta
+                         frew(k,j,i) = frew(k,j,i) + taux(k,m) * fret(m,j,i) / beta
                      enddo ! over m={1,lemax} loop
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,norbs} loop
@@ -2913,7 +2977,7 @@
          do k=1,mfreq
              sig2(k,i,i) = czero
              do j=1,norbs
-                 sig2(k,i,i) = sig2(k,i,i) + ( uumat(j,i) + uumat(i,j) ) * frnf(k,j,i)
+                 sig2(k,i,i) = sig2(k,i,i) + ( uumat(j,i) + uumat(i,j) ) * frnf(k,j,i) + frew(k,j,i)
              enddo ! over j={1,norbs} loop
              sig2(k,i,i) = half * sig2(k,i,i) / grnf(k,i,i)
          enddo ! over k={1,nfreq} loop

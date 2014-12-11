@@ -584,6 +584,7 @@
 ! init imaginary time impurity green's function array
      gtau    = zero
      ftau    = zero
+     fret    = zero
 
 ! init imaginary time bath weiss's function array
      wtau    = zero
@@ -602,6 +603,7 @@
 ! init impurity green's function array
      grnf    = czero
      frnf    = czero
+     frew    = czero
 
 ! init bath weiss's function array
      wssf    = czero
@@ -631,6 +633,9 @@
 
 ! calculate the 2nd-derivates of ktau, which is used in spline subroutines
      call ctqmc_make_ksed(tmesh, ktau, ksed)
+
+! calculate the 2nd-derivates of ptau, which is used in spline subroutines
+     call ctqmc_make_ksed(tmesh, ptau, psed)
 
 ! dump the necessary files
 !-------------------------------------------------------------------------

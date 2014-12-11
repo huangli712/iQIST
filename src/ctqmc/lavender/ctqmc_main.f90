@@ -266,6 +266,9 @@
 
 # endif  /* API */
 
+
+
+
 !!>>> cat_solver_id: return the solver identity
   subroutine cat_solver_id(I_solver_id)
      use api, only : solver_id_lavender
@@ -293,7 +296,7 @@
 
      I_solver_status = solver_is_ready_lavender
      if ( I_solver_status == 0 ) then
-         call s_print_error('cat_solver_status','Sorry, the current solver is not ready!')
+         call s_print_error('cat_solver_status','sorry, the current solver is not ready!')
      endif ! back if ( I_solver_status == 0 ) block
 
      return
