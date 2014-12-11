@@ -281,7 +281,7 @@
 ! impurity level for correlated orbitals
      real(dp), public, save, allocatable :: eimp(:)
 
-! screening function, used to measure dynamical screening effect
+! screening function, used to measure dynamical screening effect, K(\tau)
      real(dp), public, save, allocatable :: ktau(:)
 
 ! second order derivates for the screening function, K''(\tau)
