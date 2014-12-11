@@ -2254,8 +2254,7 @@
   end subroutine ctqmc_make_gtau
 
 !!>>> ctqmc_make_ftau: build auxiliary correlation function using
-!!>>> orthogonal polynomial representation
-!!>>> Note: this subroutine not only can be used to deal with ftau, i.e.,
+!!>>> orthogonal polynomial representation, F^{j}(\tau)
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
      use constants, only : dp, zero, two
 
@@ -2320,15 +2319,14 @@
 
   contains
 
-!>>> build auxiliary correlation function using normal representation
+!!>>> cat_make_ftau1: build auxiliary correlation function using normal
+!!>>> representation
   subroutine cat_make_ftau1()
      implicit none
 
      raux = real(ntime) / (beta * beta)
      do i=1,norbs
          do j=1,norbs
-!<             if ( i == j ) CYCLE
-
              do k=1,ntime
                  faux(k,j,i) = ftau(k,j,i) * raux
              enddo ! over k={1,ntime} loop
@@ -2338,15 +2336,14 @@
      return
   end subroutine cat_make_ftau1
 
-!>>> build auxiliary correlation function using legendre polynomial representation
+!!>>> cat_make_ftau2: build auxiliary correlation function using legendre
+!!>>> polynomial representation
   subroutine cat_make_ftau2()
      implicit none
 
      step = real(legrd - 1) / two
      do i=1,norbs
          do j=1,norbs
-!<             if ( i == j ) CYCLE
-
              do k=1,ntime
                  raux = two * tmesh(k) / beta
                  curr = nint(raux * step) + 1
@@ -2361,15 +2358,14 @@
      return
   end subroutine cat_make_ftau2
 
-!>>> build auxiliary correlation function using chebyshev polynomial representation
+!!>>> cat_make_ftau3: build auxiliary correlation function using chebyshev
+!!>>> polynomial representation
   subroutine cat_make_ftau3()
      implicit none
 
      step = real(chgrd - 1) / two
      do i=1,norbs
          do j=1,norbs
-!<             if ( i == j ) CYCLE
-
              do k=1,ntime
                  raux = two * tmesh(k) / beta
                  curr = nint(raux * step) + 1
