@@ -181,7 +181,7 @@
   end function ctqmc_make_ktau
 
 !!>>> ctqmc_make_ksed: calculate the second order derivates of screening
-!!>>> function on imaginary time space
+!!>>> function K(\tau) on imaginary time space
 !!>>> note: this subroutine can be used to calculate the second order
 !!>>> derivates of K'(\tau) as well. What you have to do is to transfer
 !!>>> ptau and psed to this subroutine
