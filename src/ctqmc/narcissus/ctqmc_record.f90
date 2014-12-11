@@ -272,8 +272,7 @@
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
      use context, only : ppleg, qqche
-     use context, only : rank
-     use context, only : pref
+     use context, only : rank, pref
      use context, only : mmat
      use context, only : ftau
 
@@ -1017,7 +1016,7 @@
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
      use context, only : g2_re, g2_im, h2_re, h2_im
-     use context, only : rank, uumat
+     use context, only : rank, pref
      use context, only : mmat
 
      implicit none
@@ -1042,14 +1041,11 @@
 
 ! used to store the element of mmat matrix
      real(dp) :: maux
+     real(dp) :: naux
 
 ! imaginary time for start and end points
      real(dp) :: taus
      real(dp) :: taue
-
-! occupation number at taus
-     real(dp) :: occu
-     real(dp) :: oaux
 
 ! dummy complex(dp) variables, used to calculate the h2_re and h2_im
      complex(dp) :: cmeas
@@ -1076,24 +1072,21 @@
      allocate( caux1(nfaux) ); caux1 = czero
      allocate( caux2(nfaux) ); caux2 = czero
 
+! calculate prefactor: pref
+     call ctqmc_make_pref()
+
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
 ! get imaginary time value for segments
-         do ie=1,rank(flvr)
-             taue = time_e( index_e(ie, flvr), flvr )
+         do is=1,rank(flvr)
+             taus = time_s( index_s(is, flvr), flvr )
 
-! evaluate occu, and then check it
-             oaux = zero
-             do f1=1,norbs
-                 call ctqmc_spin_counter(f1, taue, occu); if ( occu < one ) CYCLE
-                 oaux = oaux + half * ( uumat(f1,flvr) + uumat(flvr,f1) ) * occu
-             enddo ! over f1={1,norbs} loop
-
-             do is=1,rank(flvr)
-                 taus = time_s( index_s(is, flvr), flvr )
+             do ie=1,rank(flvr)
+                 taue = time_e( index_e(ie, flvr), flvr )
 
 ! get matrix element from mmat
                  maux = mmat(ie, is, flvr)
+                 naux = mmat(ie, is, flvr) * pref(ie,flvr)
 
 ! calculate g2aux and h2aux
                  caux1 = exp(+two * czi * pi * taue / beta)
@@ -1105,12 +1098,12 @@
                  do w2n=1,nfaux
                      do w1n=1,nfaux
                          g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
-                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n) * oaux
+                         h2aux(w1n,w2n,flvr) = h2aux(w1n,w2n,flvr) + naux * caux1(w1n) * caux2(w2n)
                      enddo ! over w1n={1,nfaux} loop
                  enddo ! over w2n={1,nfaux} loop
 
-             enddo ! over is={1,rank(flvr)} loop
-         enddo ! over ie={1,rank(flvr)} loop
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
 
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
