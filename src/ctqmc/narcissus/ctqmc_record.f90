@@ -28,6 +28,8 @@
 !!!           ctqmc_smth_sigf   <<<---
 !!!           ctqmc_make_gtau
 !!!           ctqmc_make_ftau   <<<---
+!!!           ctqmc_make_iret
+!!!           ctqmc_make_pref   <<<---
 !!!           ctqmc_make_hub1
 !!!           ctqmc_make_hub2   <<<---
 !!! source  : ctqmc_record.f90
@@ -35,8 +37,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
-!!!           09/18/2014 by li huang
-!!!           10/13/2014 by li huang
+!!!           12/11/2014 by li huang
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
