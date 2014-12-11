@@ -442,17 +442,10 @@
      step = real(chgrd - 1) / two
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-!<     CTQMC_COLOUR_LOOP: do clur=1,norbs
-
-! skip diagonal term
-!<         if ( flvr == clur ) CYCLE
 
 ! get imaginary time value for segments
          do is=1,rank(flvr)
              taus = time_s( index_s(is, flvr), flvr )
-
-! evaluate occu, and then check it
-!<             call ctqmc_spin_counter(clur, taus, occu); if ( occu < one ) CYCLE
 
              do ie=1,rank(flvr)
                  taue = time_e( index_e(ie, flvr), flvr )
@@ -461,7 +454,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * pref(ie,flvr)
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -477,13 +470,12 @@
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
                  CTQMC_FLACHE_LOOP: do fche=1,chmax
                      dtau = (two / pi) * sqrt(one - (daux - one)**2) * qqche(curr,fche)
-                     ftau(fche, flvr, flvr) = ftau(fche, flvr, flvr) - maux * dtau * pref(ie,flvr)
+                     ftau(fche, flvr, flvr) = ftau(fche, flvr, flvr) - maux * dtau
                  enddo CTQMC_FLACHE_LOOP ! over fche={1,chmax} loop
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
 
-!<     enddo CTQMC_COLOUR_LOOP ! over clur={1,norbs} loop
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
      return
