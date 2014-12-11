@@ -175,10 +175,10 @@
 ! imaginary time mesh
      real(dp), intent(in) :: tmesh(ntime)
 
-! screening function
+! screening function, K(\tau)
      real(dp), intent(in) :: ktau(ntime)
 
-! first order derivates for screening function
+! first order derivates for screening function, K'(\tau)
      real(dp), intent(in) :: ptau(ntime)
 
 ! local variables
