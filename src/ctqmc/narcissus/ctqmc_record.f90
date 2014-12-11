@@ -2477,6 +2477,10 @@
 ! integral value for I(\tau_end)
      real(dp) :: iret
 
+! if it is holstein-hubbard model, the improved estimator algorithm
+! can not be used now
+     call s_assert2(isscr /= 2,'sorry, isscr = 2 is not compatible with improved estimator')
+
      do flvr=1,norbs
          do it=1,rank(flvr)
 
