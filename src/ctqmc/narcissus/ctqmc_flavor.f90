@@ -2103,7 +2103,7 @@
 ! ohmic model
          case (4)
              if ( typ == 2 ) then
-                 cur = lc * wc * cos(pi * tau / beta) 
+                 cur = lc * wc * cos(pi * tau / beta)
                  cur = cur / (one + beta * wc * sin(pi * tau / beta) / pi)
              else
                  cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
