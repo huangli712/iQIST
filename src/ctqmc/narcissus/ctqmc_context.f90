@@ -268,6 +268,9 @@
 ! current occupation status for different flavor channel
      integer,  public, save, allocatable :: stts(:)
 
+! prefactor for improved estimator
+     real(dp), public, save, allocatable :: pref(:,:)
+
 !-------------------------------------------------------------------------
 !::: input data variables                                              :::
 !-------------------------------------------------------------------------
@@ -341,23 +344,15 @@
      real(dp), public, save, allocatable    :: gtau(:,:,:)
 
 ! auxiliary correlation function, in imaginary time axis, matrix form
-! used to measure self-energy function, F^{j}_{sta}(\tau)
+! used to measure self-energy function, F^{j}(\tau)
      real(dp), public, save, allocatable    :: ftau(:,:,:)
-
-! auxiliary correlation function, in imaginary time axis, matrix form
-! used to measure self-energy function, F^{j}_{ret}(\tau)
-     real(dp), public, save, allocatable    :: fret(:,:,:)
 
 ! impurity green's function, in matsubara frequency axis, matrix form
      complex(dp), public, save, allocatable :: grnf(:,:,:)
 
 ! auxiliary correlation function, in matsubara frequency axis, matrix form
-! used to measure self-energy function, F^{j}_{sta}(i\omega)
+! used to measure self-energy function, F^{j}(i\omega)
      complex(dp), public, save, allocatable :: frnf(:,:,:)
-
-! auxiliary correlation function, in matsubara frequency axis, matrix form
-! used to measure self-energy function, F^{j}_{ret}(i\omega)
-     complex(dp), public, save, allocatable :: frew(:,:,:)
 
   end module ctqmc_gmat
 
@@ -602,6 +597,8 @@
      allocate(rank(norbs),        stat=istat)
      allocate(stts(norbs),        stat=istat)
 
+     allocate(pref(mkink,norbs),  stat=istat)
+
      allocate(symm(norbs),        stat=istat)
 
      allocate(eimp(norbs),        stat=istat)
@@ -619,6 +616,8 @@
 ! initialize them
      rank  = 0
      stts  = 0
+
+     pref  = zero
 
      symm  = 0
 
@@ -673,11 +672,9 @@
 ! allocate memory
      allocate(gtau(ntime,norbs,norbs), stat=istat)
      allocate(ftau(ntime,norbs,norbs), stat=istat)
-     allocate(fret(ntime,norbs,norbs), stat=istat)
 
      allocate(grnf(mfreq,norbs,norbs), stat=istat)
      allocate(frnf(mfreq,norbs,norbs), stat=istat)
-     allocate(frew(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -687,11 +684,9 @@
 ! initialize them
      gtau = zero
      ftau = zero
-     fret = zero
 
      grnf = czero
      frnf = czero
-     frew = czero
 
      return
   end subroutine ctqmc_allocate_memory_gmat
@@ -824,6 +819,8 @@
      if ( allocated(rank)  )   deallocate(rank )
      if ( allocated(stts)  )   deallocate(stts )
 
+     if ( allocated(pref)  )   deallocate(pref )
+
      if ( allocated(symm)  )   deallocate(symm )
 
      if ( allocated(eimp)  )   deallocate(eimp )
@@ -859,11 +856,9 @@
 
      if ( allocated(gtau) )    deallocate(gtau)
      if ( allocated(ftau) )    deallocate(ftau)
-     if ( allocated(fret) )    deallocate(fret)
 
      if ( allocated(grnf) )    deallocate(grnf)
      if ( allocated(frnf) )    deallocate(frnf)
-     if ( allocated(frew) )    deallocate(frew)
 
      return
   end subroutine ctqmc_deallocate_memory_gmat
