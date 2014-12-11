@@ -106,8 +106,7 @@
      use control, only : mkink
      use control, only : beta
      use control, only : myid, master
-     use context, only : csign, cnegs, matrix_ntrace
-     use context, only : ckink
+     use context, only : ckink, csign, cnegs, matrix_ntrace
      use context, only : rank
 
      implicit none
