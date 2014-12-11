@@ -387,7 +387,7 @@
                  call ctqmc_record_pair()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) block
 
-! record the auxiliary correlation function, F^{j}(\tau)
+! record the auxiliary correlation function, F(\tau)
              if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
                  call ctqmc_record_ftau()
              endif ! back if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) block

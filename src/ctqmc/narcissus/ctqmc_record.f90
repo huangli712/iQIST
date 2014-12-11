@@ -261,7 +261,7 @@
   end subroutine ctqmc_record_gtau
 
 !!>>> ctqmc_record_ftau: record the auxiliary correlation function in
-!!>>> imaginary time axis, F^{j}(\tau)
+!!>>> imaginary time axis, F(\tau)
   subroutine ctqmc_record_ftau()
      use constants, only : dp, zero, one, two, pi
 
@@ -1327,7 +1327,7 @@
      implicit none
 
 ! external arguments
-! auxiliary correlation function, F^{j}(\tau)
+! auxiliary correlation function, F(\tau)
      real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
 
 ! initialize ftau_mpi
@@ -2254,7 +2254,7 @@
   end subroutine ctqmc_make_gtau
 
 !!>>> ctqmc_make_ftau: build auxiliary correlation function using
-!!>>> orthogonal polynomial representation, F^{j}(\tau)
+!!>>> orthogonal polynomial representation, F(\tau)
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
      use constants, only : dp, zero, two
 
