@@ -281,11 +281,14 @@
 ! screening function, used to measure dynamical screening effect
      real(dp), public, save, allocatable :: ktau(:)
 
-! second order derivates for the screening function
+! second order derivates for the screening function, K''(\tau)
      real(dp), public, save, allocatable :: ksed(:)
 
-! first  order derivates for the screening function
+! first  order derivates for the screening function, K'(\tau)
      real(dp), public, save, allocatable :: ptau(:)
+
+! second order derivates for ptau, K'''(\tau)
+     real(dp), public, save, allocatable :: psed(:)
 
 ! reduced Coulomb interaction matrix, two-index version
      real(dp), public, save, allocatable :: uumat(:,:)
@@ -338,15 +341,23 @@
      real(dp), public, save, allocatable    :: gtau(:,:,:)
 
 ! auxiliary correlation function, in imaginary time axis, matrix form
-! used to measure self-energy function
+! used to measure self-energy function, F^{j}_{sta}(\tau)
      real(dp), public, save, allocatable    :: ftau(:,:,:)
+
+! auxiliary correlation function, in imaginary time axis, matrix form
+! used to measure self-energy function, F^{j}_{ret}(\tau)
+     real(dp), public, save, allocatable    :: fret(:,:,:)
 
 ! impurity green's function, in matsubara frequency axis, matrix form
      complex(dp), public, save, allocatable :: grnf(:,:,:)
 
 ! auxiliary correlation function, in matsubara frequency axis, matrix form
-! used to measure self-energy function
+! used to measure self-energy function, F^{j}_{sta}(i\omega)
      complex(dp), public, save, allocatable :: frnf(:,:,:)
+
+! auxiliary correlation function, in matsubara frequency axis, matrix form
+! used to measure self-energy function, F^{j}_{ret}(i\omega)
+     complex(dp), public, save, allocatable :: frew(:,:,:)
 
   end module ctqmc_gmat
 
@@ -597,6 +608,7 @@
      allocate(ktau(ntime),        stat=istat)
      allocate(ksed(ntime),        stat=istat)
      allocate(ptau(ntime),        stat=istat)
+     allocate(psed(ntime),        stat=istat)
      allocate(uumat(norbs,norbs), stat=istat)
 
 ! check the status
@@ -614,6 +626,7 @@
      ktau  = zero
      ksed  = zero
      ptau  = zero
+     psed  = zero
      uumat = zero
 
      return
@@ -660,9 +673,11 @@
 ! allocate memory
      allocate(gtau(ntime,norbs,norbs), stat=istat)
      allocate(ftau(ntime,norbs,norbs), stat=istat)
+     allocate(fret(ntime,norbs,norbs), stat=istat)
 
      allocate(grnf(mfreq,norbs,norbs), stat=istat)
      allocate(frnf(mfreq,norbs,norbs), stat=istat)
+     allocate(frew(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -672,9 +687,11 @@
 ! initialize them
      gtau = zero
      ftau = zero
+     fret = zero
 
      grnf = czero
      frnf = czero
+     frew = czero
 
      return
   end subroutine ctqmc_allocate_memory_gmat
@@ -813,6 +830,7 @@
      if ( allocated(ktau)  )   deallocate(ktau )
      if ( allocated(ksed)  )   deallocate(ksed )
      if ( allocated(ptau)  )   deallocate(ptau )
+     if ( allocated(psed)  )   deallocate(psed )
      if ( allocated(uumat) )   deallocate(uumat)
 
      return
@@ -841,9 +859,11 @@
 
      if ( allocated(gtau) )    deallocate(gtau)
      if ( allocated(ftau) )    deallocate(ftau)
+     if ( allocated(fret) )    deallocate(fret)
 
      if ( allocated(grnf) )    deallocate(grnf)
      if ( allocated(frnf) )    deallocate(frnf)
+     if ( allocated(frew) )    deallocate(frew)
 
      return
   end subroutine ctqmc_deallocate_memory_gmat
