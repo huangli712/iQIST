@@ -2385,6 +2385,8 @@
 !!>>> build prefactor for improved estimator                           <<<
 !!========================================================================
 
+!!>>> ctqmc_make_iret: to calculate the integral I(\tau_end) which is very
+!!>>> important when retarded interaction is included
   subroutine ctqmc_make_iret(time, iret)
      use constants, only : dp, zero, two
 
@@ -2395,20 +2397,30 @@
      implicit none
 
 ! external arguments
+! imaginary time point, in principle, it is \tau_end
      real(dp), intent(in)  :: time
+
+! integral value for I(\tau_end)
      real(dp), intent(out) :: iret
 
 ! local variables
-     integer  :: flvr
+! loop index for start and end points
      integer  :: it
 
+! loop index for flavor channel
+     integer  :: flvr
+
+! length betweem two time points
      real(dp) :: dtau
      real(dp) :: daux
 
+! calculate integral I(\tau_end), the equation is
+! Eq. (39) in Phys. Rev. B 89, 235128 (2014)
      iret = zero
 
      do flvr=1,norbs
          do it=1,rank(flvr)
+! contribution from create operators
              dtau = time_s( index_s(it, flvr), flvr ) - time
              if ( dtau >= zero ) then
                  call ctqmc_make_wkernel(2, +dtau, daux)
@@ -2418,6 +2430,7 @@
                  iret = iret - daux
              endif ! back if ( dtau >= zero ) block
 
+! contribution from destroy operators
              dtau = time_e( index_e(it, flvr), flvr ) - time
              if ( dtau >= zero ) then
                  call ctqmc_make_wkernel(2, +dtau, daux)
@@ -2429,39 +2442,55 @@
          enddo ! over it={1,rank(flvr)} loop
      enddo ! over flvr={1,norbs} loop
 
+! add additional term
      call ctqmc_make_wkernel(2, zero, daux)
      iret = -iret - two * daux
 
      return
   end subroutine ctqmc_make_iret
 
+!!>>> ctqmc_make_pref: to calculate the prefactor used by the improved
+!!>>> estimator for self-energy function and vertex function
   subroutine ctqmc_make_pref()
      use constants, only : dp, zero, half
 
      use control, only : isscr
      use control, only : norbs
      use context, only : index_e, time_e
-     use context, only : rank
-     use context, only : pref
-     use context, only : uumat
+     use context, only : rank, pref, uumat
 
      implicit none
 
 ! local variables
-     integer  :: flvr
-     integer  :: clur
+! loop index for start and end points
      integer  :: it
 
+! loop index for flavor channel
+     integer  :: flvr
+
+! loop index for colour channel
+     integer  :: clur
+
+! occupation number at \tau_end
      real(dp) :: occu
+
+! integral value for I(\tau_end)
      real(dp) :: iret
 
      do flvr=1,norbs
          do it=1,rank(flvr)
+
+! reset the prefactor
              pref(it,flvr) = zero
+
+! calculate normal contribution
              do clur=1,norbs
                  call ctqmc_spin_counter(clur, time_e( index_e(it, flvr), flvr ), occu)
                  pref(it,flvr) = pref(it,flvr) + half * ( uumat(flvr,clur) + uumat(clur,flvr) ) * occu
              enddo ! over clur={1,norbs} loop
+
+! if retarded interaction is considered, we have to include the
+! contribution from I(\tau_end)
              if ( isscr > 1 ) then
                  call ctqmc_make_iret(time_e( index_e(it, flvr), flvr ), iret)
                  pref(it,flvr) = pref(it,flvr) + iret

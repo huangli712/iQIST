@@ -94,10 +94,11 @@
 ! improved estimator for two-particle green's function is used.
 ! note: isvrt has nothing to do with isort parameter, but when p = 5 bit
 ! is set to 1, the prefactor for improved estimator (please see 'pref'
-! in ctqmc_context.f90) should be calculated.
+! in ctqmc_context.f90) should be calculated. you can not setup isscr = 2
+! at this time.
      integer, public, save :: isvrt  = 1
 
-! control flag: model need to be solved
+! control flag: hamiltonian model need to be solved
 ! if isscr == 1, normal model
 ! if isscr == 2, holstein-hubbard model
 ! if isscr == 3, dynamic screening, palsmon pole model
@@ -115,7 +116,11 @@
 ! in other words, in such cases, isort can be any values (isort \in [1,6]).
 ! on the other hand, when isscr = 2, the orthogonal polynomial technology
 ! is useful as well (G is accurate), but the improved estimator for \Sigma
-! does not work! so in this case, you can not set isort to 4, 5, or 6.
+! and vertex function does not work any more! so in this case, you can not
+! setup isort to 4, 5, or 6.
+! note: isscr = 2 is not compatible with the p = 5 bit of isvrt. so if you
+! want to study the two-particle green's function and vertex function of
+! holstein-hubbard model, you can only set the p = 4 bit of isvrt.
      integer, public, save :: isscr  = 1
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
