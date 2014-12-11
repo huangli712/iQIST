@@ -2704,7 +2704,7 @@
 !!>>> auxiliary correlation function. then the final self-energy function
 !!>>> is obtained by analytical formula.
   subroutine ctqmc_make_hub2()
-     use constants, only : dp, zero, one, two, half, pi, czi, czero
+     use constants, only : dp, zero, one, two, pi, czi, czero
 
      use control, only : isort
      use control, only : norbs, ncfgs
@@ -2909,39 +2909,25 @@
          enddo ! over i={1,lemax} loop
 
 ! rebuild impurity green's function on matsubara frequency (grnf) using
-! orthogonal polynomial representation
-         grnf = czero
-         do i=1,norbs
-             do k=1,mfreq
-                 do j=1,lemax
-                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gtau(j,i,i) / beta
-                 enddo ! over j={1,lemax} loop
-             enddo ! over k={1,mfreq} loop
-         enddo ! over i={1,norbs} loop
-
+! orthogonal polynomial representation, G(i\omega)
 ! rebuild auxiliary correlation function on matsubara frequency (frnf)
-! using orthogonal polynomial representation
+! using orthogonal polynomial representation, F(i\omega)
+         grnf = czero
          frnf = czero
          do i=1,norbs
-             do j=1,norbs
-                 if ( i == j ) CYCLE
+             do j=1,lemax
                  do k=1,mfreq
-                     do m=1,lemax
-                         frnf(k,j,i) = frnf(k,j,i) + taux(k,m) * ftau(m,j,i) / beta
-                     enddo ! over m={1,lemax} loop
+                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gtau(j,i,i) / beta
+                     frnf(k,i,i) = frnf(k,i,i) + taux(k,j) * ftau(j,i,i) / beta
                  enddo ! over k={1,mfreq} loop
-             enddo ! over j={1,norbs} loop
+             enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
      endif ! back if ( isort == 5 ) block
 
 ! build full self-energy function by using frnf and grnf
      do i=1,norbs
          do k=1,mfreq
-             sig2(k,i,i) = czero
-             do j=1,norbs
-                 sig2(k,i,i) = sig2(k,i,i) + ( uumat(j,i) + uumat(i,j) ) * frnf(k,j,i)
-             enddo ! over j={1,norbs} loop
-             sig2(k,i,i) = half * sig2(k,i,i) / grnf(k,i,i)
+             sig2(k,i,i) = frnf(k,i,i) / grnf(k,i,i)
          enddo ! over k={1,nfreq} loop
      enddo ! over i={1,norbs} loop
 
