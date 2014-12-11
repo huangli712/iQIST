@@ -27,7 +27,7 @@
 
      use control, only : norbs
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
      use context, only : rank
 
      implicit none

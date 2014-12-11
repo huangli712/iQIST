@@ -54,7 +54,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -257,7 +257,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -435,7 +435,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -589,7 +589,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -1309,7 +1309,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
 
      implicit none
 
@@ -1479,7 +1479,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v
 
      implicit none
 
@@ -1613,7 +1613,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
 
      implicit none
 
@@ -1774,7 +1774,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, time_v
 
      implicit none
 
@@ -1939,7 +1939,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2105,7 +2105,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2265,7 +2265,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2393,7 +2393,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -3350,7 +3350,7 @@
 
      use control, only : norbs, ncfgs
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : rank
 
      implicit none
