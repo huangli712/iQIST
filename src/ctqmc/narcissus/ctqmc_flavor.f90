@@ -2045,7 +2045,7 @@
 
 !!>>> ctqmc_make_wkernel: used to calculate K(\tau), i.e., the screening
 !!>>> function for extra weight factor
-!!>>> Note: this subroutine can be used to calculate K'(\tau) as well.
+!!>>> note: this subroutine can be used to calculate K'(\tau) as well.
 !!>>> you should use the 'typ' parameter to control it
   subroutine ctqmc_make_wkernel(typ, tau, cur)
      use constants, only : dp, zero, one, two, pi
