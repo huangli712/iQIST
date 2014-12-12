@@ -142,7 +142,6 @@ class p_ctqmc_solver(object):
 
         # __p_cmp_pansy: the official parameter dict for pansy
         self.__p_cmp_pansy = self.__p_cmp_solver.copy()
-        self.__p_cmp_pansy['idoub'] = 1
         self.__p_cmp_pansy['npart'] = 4
 
         # __p_cmp_manjushaka: the official parameter dict for manjushaka
@@ -150,7 +149,6 @@ class p_ctqmc_solver(object):
         self.__p_cmp_manjushaka['isort'] = 1
         self.__p_cmp_manjushaka['isvrt'] = 1
         self.__p_cmp_manjushaka['itrun'] = 1
-        self.__p_cmp_manjushaka['idoub'] = 1
         self.__p_cmp_manjushaka['nmini'] = 0
         self.__p_cmp_manjushaka['nmaxi'] = 2
         self.__p_cmp_manjushaka['lemax'] = 32

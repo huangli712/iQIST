@@ -194,7 +194,6 @@
      use constants, only : dp, zero, one
 
      use control, only : nband, norbs, ncfgs
-     use control, only : idoub
      use control, only : beta, mune, U
      use context, only : nmat, nnmat, paux
      use context, only : ckink, matrix_ptrace
@@ -270,39 +269,35 @@
 ! evaluate double occupation matrix: < n_i n_j >
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
-     if ( idoub == 2 ) then
-         do flvr=1,norbs-1
-             do i=flvr+1,norbs
-                 raux1 = zero
-                 do j=1,nsect
-                     call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                                  one,  sectors(j)%fprod(:,:,2),             sectors(j)%ndim, &
-                                        sectors(j)%doccu(:,:,flvr,i),        sectors(j)%ndim, &
-                                  zero, mat_t,                               mdim_sect        )
+     do flvr=1,norbs-1
+         do i=flvr+1,norbs
+             raux1 = zero
+             do j=1,nsect
+                 call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
+                              one,  sectors(j)%fprod(:,:,2),             sectors(j)%ndim, &
+                                    sectors(j)%doccu(:,:,flvr,i),        sectors(j)%ndim, &
+                              zero, mat_t,                               mdim_sect        )
 
-                     do k=1,sectors(j)%ndim
-                         raux1 = raux1 + mat_t(k,k)
-                     enddo ! over k={1,sectors(j)%ndim} loop
-                 enddo ! over j={1,nsect} loop
-                 nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
+                 do k=1,sectors(j)%ndim
+                     raux1 = raux1 + mat_t(k,k)
+                 enddo ! over k={1,sectors(j)%ndim} loop
+             enddo ! over j={1,nsect} loop
+             nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
 
-                 raux1 = zero
-                 do j=1,nsect
-                     call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                                 one,  sectors(j)%fprod(:,:,2),              sectors(j)%ndim, &
-                                       sectors(j)%doccu(:,:,i,flvr),         sectors(j)%ndim, &
-                                 zero, mat_t,                                mdim_sect        )
+             raux1 = zero
+             do j=1,nsect
+                 call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
+                             one,  sectors(j)%fprod(:,:,2),              sectors(j)%ndim, &
+                                   sectors(j)%doccu(:,:,i,flvr),         sectors(j)%ndim, &
+                             zero, mat_t,                                mdim_sect        )
 
-                     do k=1,sectors(j)%ndim
-                         raux1 = raux1 + mat_t(k,k)
-                     enddo ! over k={1,sectors(j)%ndim} loop
-                 enddo ! over j={1,nsect} loop
-                 nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
-             enddo ! over i={flvr+1,norbs} loop
-         enddo ! over flvr={1,norbs-1} loop
-     else
-         nnmat = zero
-     endif ! back if ( idoub == 2 ) block
+                 do k=1,sectors(j)%ndim
+                     raux1 = raux1 + mat_t(k,k)
+                 enddo ! over k={1,sectors(j)%ndim} loop
+             enddo ! over j={1,nsect} loop
+             nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
+         enddo ! over i={flvr+1,norbs} loop
+     enddo ! over flvr={1,norbs-1} loop
 
 ! evaluate <N^2>
 !-------------------------------------------------------------------------

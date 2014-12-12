@@ -43,7 +43,6 @@
      issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
-     idoub  = 1            ! don't measure double occupancy (1) or measure it (2)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
@@ -106,7 +105,6 @@
              call p_get('issun' , issun )
              call p_get('isspn' , isspn )
              call p_get('isbin' , isbin )
-             call p_get('idoub' , idoub )
 
              call p_get('nband' , nband )
              call p_get('nspin' , nspin )
@@ -157,7 +155,6 @@
      call mp_bcast( issun , master )
      call mp_bcast( isspn , master )
      call mp_bcast( isbin , master )
-     call mp_bcast( idoub , master )
      call mp_barrier()
 
      call mp_bcast( nband , master )
@@ -770,35 +767,33 @@
 
 ! init op_m, < c^{\dag} c c^{\dag} c >,
 ! which are used to calculate double occupation number
-     if ( idoub == 2 ) then
-         do i=1,norbs
-             do j=1,norbs
-                 do k=1,nsect
-                     jj = sectors(k)%next_sect(j,0)
-                     ii = sectors(k)%next_sect(i,0)
-                     if ( ii == -1 .or. jj == -1 ) then
-                         sectors(k)%doccu(:,:,i,j) = zero
-                         cycle
-                     endif ! back if ( ii == -1 .or. jj == -1 ) block
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
-                                 one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  &
-                                       sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, &
-                                 zero, mat_t1,                               mdim_sect         )
+     do i=1,norbs
+         do j=1,norbs
+             do k=1,nsect
+                 jj = sectors(k)%next_sect(j,0)
+                 ii = sectors(k)%next_sect(i,0)
+                 if ( ii == -1 .or. jj == -1 ) then
+                     sectors(k)%doccu(:,:,i,j) = zero
+                     cycle
+                 endif ! back if ( ii == -1 .or. jj == -1 ) block
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
+                             one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  &
+                                   sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, &
+                             zero, mat_t1,                               mdim_sect         )
 
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
-                                 one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
-                                       sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, &
-                                 zero, mat_t2,                               mdim_sect         )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
+                             one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
+                                   sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, &
+                             zero, mat_t2,                               mdim_sect         )
 
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
-                                 one,  mat_t2,                               mdim_sect,        &
-                                       mat_t1,                               mdim_sect,        &
-                                 zero, sectors(k)%doccu(:,:,i,j),            sectors(k)%ndim   )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
+                             one,  mat_t2,                               mdim_sect,        &
+                                   mat_t1,                               mdim_sect,        &
+                             zero, sectors(k)%doccu(:,:,i,j),            sectors(k)%ndim   )
 
-                 enddo ! over k={1,nsect} loop
-             enddo ! over j={1,norbs} loop
-         enddo ! over i={1,norbs} loop
-     endif ! back if ( idoub == 2 ) block
+             enddo ! over k={1,nsect} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space

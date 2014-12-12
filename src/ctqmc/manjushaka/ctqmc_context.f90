@@ -951,7 +951,7 @@
 !!>>> m_sector: define the data structure for good quantum numbers (GQNs) algorithm
   module m_sector
      use constants, only : dp, zero, one, mystd, mytmp
-     use control, only : idoub, itrun, myid, master
+     use control, only : itrun, myid, master
      use control, only : mkink, norbs, nmini, nmaxi
      use context, only : type_v, flvr_v
 
@@ -1233,6 +1233,7 @@
 ! allocate them
      allocate( fprod(nsect,2),     stat=istat )
      allocate( occu(norbs,nsect),  stat=istat )
+     allocate( doccu(norbs,norbs,nsect),  stat=istat )
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1256,25 +1257,16 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,nsect} loop
 
-! allocate doccu if one need to calculate the double occupancy
-     if ( idoub == 2 ) then
-         allocate( doccu(norbs,norbs,nsect),  stat=istat )
-
-         if ( istat /= 0 ) then
-             call s_print_error('ctqmc_allocate_memory_occu', 'can not allocate enough memory')
-         endif ! back if ( istat /= 0 ) block
-
-         do i=1,nsect
-             if (is_trunc(i)) cycle
-             do j=1,norbs
-                 do k=1,norbs
-                     doccu(k,j,i)%n = sectors(i)%ndim
-                     doccu(k,j,i)%m = sectors(i)%ndim
-                     call alloc_one_mat(doccu(k,j,i))
-                 enddo ! over k={1,norbs} loop
-             enddo ! over j={1,norbs} loop
-         enddo ! over i={1,nsect} loop
-     endif ! back if ( idoub == 2 ) block
+     do i=1,nsect
+         if (is_trunc(i)) cycle
+         do j=1,norbs
+             do k=1,norbs
+                 doccu(k,j,i)%n = sectors(i)%ndim
+                 doccu(k,j,i)%m = sectors(i)%ndim
+                 call alloc_one_mat(doccu(k,j,i))
+             enddo ! over k={1,norbs} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,nsect} loop
 
      return
   end subroutine ctqmc_allocate_memory_occu
@@ -1497,37 +1489,35 @@
          enddo ! over j={1,nsect} loop
      enddo ! over i={1,norbs} loop
 
-     if ( idoub == 2 ) then
-         do i=1,norbs
-             do j=1,norbs
-                 do k=1,nsect
-                     if ( is_trunc(k) ) cycle
-                     jj = sectors(k)%next_sect(j,0)
-                     ii = sectors(k)%next_sect(i,0)
-                     if ( ii == -1 .or. jj == -1 ) then
-                         doccu(i,j,k)%item = zero
-                         cycle
-                     endif ! back if ( ii == -1 .or. jj == -1 ) block
+     do i=1,norbs
+         do j=1,norbs
+             do k=1,nsect
+                 if ( is_trunc(k) ) cycle
+                 jj = sectors(k)%next_sect(j,0)
+                 ii = sectors(k)%next_sect(i,0)
+                 if ( ii == -1 .or. jj == -1 ) then
+                     doccu(i,j,k)%item = zero
+                     cycle
+                 endif ! back if ( ii == -1 .or. jj == -1 ) block
 
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
-                                 one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  &
-                                       sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, &
-                                 zero, mat_t1,                               mdim_sect_t       )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
+                             one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  &
+                                   sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, &
+                             zero, mat_t1,                               mdim_sect_t       )
 
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
-                                 one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
-                                       sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, &
-                                 zero, mat_t2,                               mdim_sect_t       )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
+                             one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
+                                   sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, &
+                             zero, mat_t2,                               mdim_sect_t       )
 
-                     call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
-                                 one,  mat_t2,                               mdim_sect_t,      &
-                                       mat_t1,                               mdim_sect_t,      &
-                                 zero, doccu(i,j,k)%item,                    sectors(k)%ndim   )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
+                             one,  mat_t2,                               mdim_sect_t,      &
+                                   mat_t1,                               mdim_sect_t,      &
+                             zero, doccu(i,j,k)%item,                    sectors(k)%ndim   )
 
-                 enddo ! over k={1,nsect} loop
-             enddo ! over j={1,norbs} loop
-         enddo ! over i={1,norbs} loop
-     endif ! back if ( idoub == 2 ) block
+             enddo ! over k={1,nsect} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
 
      return
   end subroutine ctqmc_make_occu
