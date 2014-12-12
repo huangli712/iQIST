@@ -302,8 +302,7 @@
 !!>>> ctqmc_record_prob: record the probability of atomic states
   subroutine ctqmc_record_prob()
      use control, only : ncfgs
-     use context, only : csign
-     use context, only : matrix_ptrace
+     use context, only : csign, matrix_ptrace
      use context, only : prob
      use context, only : diag
 
@@ -1401,8 +1400,8 @@
 
   contains
 
-!!>>> cat_make_kernel: build the integral kernel function
-  subroutine cat_make_kernel(kdim, kern)
+!!>>> cat_make_kpm: build the integral kernel function
+  subroutine cat_make_kpm(kdim, kern)
      implicit none
 
 ! external arguments
@@ -1447,7 +1446,7 @@
      enddo ! over kcur={1,kdim} loop
 
      return
-  end subroutine cat_make_kernel
+  end subroutine cat_make_kpm
 
 !!>>> cat_make_gtau1: build impurity green's function using normal
 !!>>> representation
@@ -1473,7 +1472,7 @@
      real(dp) :: ker1(lemax)
 
 ! build kernel function at first
-     ker1 = one; call cat_make_kernel(lemax, ker1)
+     ker1 = one; call cat_make_kpm(lemax, ker1)
 
 ! reconstruct green's function
      step = real(legrd - 1) / two
@@ -1500,7 +1499,7 @@
      real(dp) :: ker2(chmax)
 
 ! build kernel function at first
-     ker2 = one; call cat_make_kernel(chmax, ker2)
+     ker2 = one; call cat_make_kpm(chmax, ker2)
 
 ! reconstruct green's function
      step = real(chgrd - 1) / two
