@@ -46,7 +46,6 @@
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
      itrun  = 1            ! how to truncate the Hilbert space
-     idoub  = 1            ! whether to measure the double occupancy number
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
@@ -120,7 +119,6 @@
              call p_get('isort' , isort )
              call p_get('isvrt' , isvrt )
              call p_get('itrun' , itrun )
-             call p_get('idoub' , idoub )
 
              call p_get('nband' , nband )
              call p_get('niter' , niter )
@@ -174,7 +172,6 @@
      call mp_bcast( isort , master )
      call mp_bcast( isvrt , master )
      call mp_bcast( itrun , master )
-     call mp_bcast( idoub , master )
      call mp_barrier()
 
      call mp_bcast( nband , master )

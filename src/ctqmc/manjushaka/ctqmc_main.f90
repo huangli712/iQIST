@@ -343,7 +343,6 @@
      isort  = I_solver%isort
      isvrt  = I_solver%isvrt
      itrun  = I_solver%itrun
-     idoub  = I_solver%idoub
      nband  = I_solver%nband
      nspin  = I_solver%nspin
      norbs  = I_solver%norbs

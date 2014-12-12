@@ -471,7 +471,6 @@
      type, extends (T_general_solver) :: T_general_pansy
          character(len=10) :: solver_name = 'PANSY'
 
-         integer :: idoub
          integer :: npart
      end type T_general_pansy
 
@@ -484,7 +483,6 @@
          integer :: isort
          integer :: isvrt
          integer :: itrun
-         integer :: idoub
          integer :: nmini
          integer :: nmaxi
          integer :: lemax

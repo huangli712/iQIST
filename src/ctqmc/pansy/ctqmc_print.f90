@@ -106,12 +106,12 @@
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
 
-     write(mystd,'(2(4X,a,i10))')   'idoub :', idoub  , 'niter :', niter
      write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
      write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin :', nspin
      write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs :', ncfgs
      write(mystd,'(2(4X,a,i10))')   'nfreq :', nfreq  , 'ntime :', ntime
      write(mystd,'(2(4X,a,i10))')   'npart :', npart  , 'nflip :', nflip
+     write(mystd,'(1(4X,a,i10))')   'niter :', niter
 
      write(mystd,'(2(4X,a,i10))')   'ntherm:', ntherm , 'nsweep:', nsweep
      write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite
