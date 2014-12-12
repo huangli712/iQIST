@@ -168,8 +168,7 @@
 !!>>> ctqmc_record_prob: record the probability of atomic states
   subroutine ctqmc_record_prob()
      use control, only : ncfgs
-     use context, only : csign
-     use context, only : matrix_ptrace
+     use context, only : csign, matrix_ptrace
      use context, only : prob
      use context, only : diag
 
