@@ -27,7 +27,7 @@
 
      use control, only : norbs
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
      use context, only : rank
 
      implicit none
@@ -106,8 +106,7 @@
      use control, only : mkink
      use control, only : beta
      use control, only : myid, master
-     use context, only : csign, cnegs, matrix_ntrace
-     use context, only : ckink
+     use context, only : ckink, csign, cnegs, matrix_ntrace
      use context, only : rank
 
      implicit none
