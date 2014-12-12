@@ -541,9 +541,9 @@
      return
   end subroutine cat_set_eimp
 
-!!>>> cat_set_ktau: setup the kernel function
-!!>>> note: the azalea code does not support this function
-  subroutine cat_set_ktau(size_t, ktau_t)
+!!>>> cat_set_ktau: setup the screening function and its first derivates
+!!>>> note: the begonia code does not support this function now
+  subroutine cat_set_ktau(size_t, ktau_t, ptau_t)
      use constants, only : dp
 
      implicit none
@@ -552,11 +552,15 @@
 ! size of ktau
      integer, intent(in)  :: size_t
 
-! kernel function
+! screening function K(\tau)
      real(dp), intent(in) :: ktau_t(size_t)
+
+! first derivate of screening function K'(\tau)
+     real(dp), intent(in) :: ptau_t(size_t)
 
 ! to avoid the warning from compiler
      call s_assert( size(ktau_t) == size_t )
+     call s_assert( size(ptau_t) == size_t )
      call s_print_error('cat_set_ktau','sorry, this feature is not supported')
 
      return

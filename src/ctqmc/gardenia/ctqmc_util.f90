@@ -289,9 +289,9 @@
 !!>>> Coulomb interaction matrix                                       <<<
 !!========================================================================
 
-!! Note: Do not support spin-flip and pair-hopping term so far.
+!! note: do not support spin-flip and pair-hopping term so far.
 !!
-!! Note: Only Uc and Jz are need, the other Coulomb interaction parameters
+!! note: only Uc and Jz are need, the other Coulomb interaction parameters
 !! are used as backup
 
 !!>>> ctqmc_make_uumat: to build general U interaction matrix: uumat, using

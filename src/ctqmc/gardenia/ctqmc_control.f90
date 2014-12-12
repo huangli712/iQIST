@@ -65,13 +65,13 @@
 ! should be calculated:
 ! (a) isvrt is converted to a binary representation at first. for example,
 ! 10 is converted to 1010_2, 15 is converted to 1111_2, etc.
-! (b) then we examine the bits. If it is 1, then we do the calculation.
-! If it is 0, then we ignore the calculation. for example, we just use the
+! (b) then we examine the bits. if it is 1, then we do the calculation.
+! if it is 0, then we ignore the calculation. for example, we just use the
 ! second bit (from right side to left side) to represent the calculation
-! of spin-spin correlation. So, if isvrt is 10 (1010_2), we will calculate
-! spin-spin correlation function. If isvrt is 13 (1101_2), we will not
-! calculate it since the second bit is 0.
-! The following are the definitions of bit representation:
+! of spin-spin correlation function. so, if isvrt is 10 (1010_2), we will
+! calculate the spin-spin correlation function. if isvrt is 13 (1101_2),
+! we will not calculate it since the second bit is 0.
+! the following are the definitions of bit representation:
 ! if p == 1, do nothing
 ! if p == 2, calculate spin-spin correlation function
 ! if p == 3, calculate orbital-orbital correlation function
@@ -86,8 +86,13 @@
 ! p = 9 8 7 6 5 4 3 2 1
 ! note: if p == 4 or p == 5, both the two-particle green's and vertex
 ! functions are computed, but using two different algorithms. you can not
-! set them to 1 at the same time. In order words, if you set the bit at
+! set them to 1 at the same time. in order words, if you set the bit at
 ! p == 4 to 1, then the bit at p == 5 must be 0, and vice versa.
+! note: if p == 4, the traditional algorithm is used. if p == 5, the
+! improved estimator for two-particle green's function is used.
+! note: isvrt has nothing to do with isort parameter, but when p = 5 bit
+! is set to 1, the prefactor for improved estimator (please see 'pref'
+! in ctqmc_context.f90) should be calculated.
      integer, public, save :: isvrt  = 1
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -55,6 +55,8 @@
 ! if isort == 6, use chebyshev polynomial (the second kind) to measure G(\tau) and F(\tau)
 ! note: if isort \in [1,3], we use ctqmc_make_hub1() to calculate the self
 ! energy function, or else we use ctqmc_make_hub2().
+! note: isort \in [4, 5, 6] is not compatible with isscr = 2. in other
+! words, you can not set isort = 4, 5, or 6 when isscr = 2.
 ! note: as for the kernel polynomial representation, the default dirichlet
 ! kernel is applied automatically. if you want to choose the other kernel,
 ! please check the ctqmc_make_gtau() subroutine.
@@ -65,13 +67,13 @@
 ! should be calculated:
 ! (a) isvrt is converted to a binary representation at first. for example,
 ! 10 is converted to 1010_2, 15 is converted to 1111_2, etc.
-! (b) then we examine the bits. If it is 1, then we do the calculation.
-! If it is 0, then we ignore the calculation. for example, we just use the
+! (b) then we examine the bits. if it is 1, then we do the calculation.
+! if it is 0, then we ignore the calculation. for example, we just use the
 ! second bit (from right side to left side) to represent the calculation
-! of spin-spin correlation. So, if isvrt is 10 (1010_2), we will calculate
-! spin-spin correlation function. If isvrt is 13 (1101_2), we will not
-! calculate it since the second bit is 0.
-! The following are the definitions of bit representation:
+! of spin-spin correlation function. so, if isvrt is 10 (1010_2), we will
+! calculate the spin-spin correlation function. if isvrt is 13 (1101_2),
+! we will not calculate it since the second bit is 0.
+! the following are the definitions of bit representation:
 ! if p == 1, do nothing
 ! if p == 2, calculate spin-spin correlation function
 ! if p == 3, calculate orbital-orbital correlation function
@@ -86,11 +88,17 @@
 ! p = 9 8 7 6 5 4 3 2 1
 ! note: if p == 4 or p == 5, both the two-particle green's and vertex
 ! functions are computed, but using two different algorithms. you can not
-! set them to 1 at the same time. In order words, if you set the bit at
+! set them to 1 at the same time. in order words, if you set the bit at
 ! p == 4 to 1, then the bit at p == 5 must be 0, and vice versa.
+! note: if p == 4, the traditional algorithm is used. if p == 5, the
+! improved estimator for two-particle green's function is used.
+! note: isvrt has nothing to do with isort parameter, but when p = 5 bit
+! is set to 1, the prefactor for improved estimator (please see 'pref'
+! in ctqmc_context.f90) should be calculated. you can not setup isscr = 2
+! at this time.
      integer, public, save :: isvrt  = 1
 
-! control flag: model need to be solved
+! control flag: hamiltonian model need to be solved
 ! if isscr == 1, normal model
 ! if isscr == 2, holstein-hubbard model
 ! if isscr == 3, dynamic screening, palsmon pole model
@@ -103,6 +111,16 @@
 ! and wc just mean the control parameters \alpha and \omega_{c}, respectively.
 ! when isscr == 99, wc is ignored and lc means the shift for interaction
 ! matrix and chemical potential.
+! note: when isscr = 1, 3, 4, or 99, you can use the combination of improved
+! estimator and orthogonal polynomial technology to measure G and \Sigma.
+! in other words, in such cases, isort can be any values (isort \in [1,6]).
+! on the other hand, when isscr = 2, the orthogonal polynomial technology
+! is useful as well (G is accurate), but the improved estimator for \Sigma
+! and vertex function does not work any more! so in this case, you can not
+! setup isort to 4, 5, or 6.
+! note: isscr = 2 is not compatible with the p = 5 bit of isvrt. so if you
+! want to study the two-particle green's function and vertex function of
+! holstein-hubbard model, you can only set the p = 4 bit of isvrt.
      integer, public, save :: isscr  = 1
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
