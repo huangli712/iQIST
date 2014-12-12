@@ -576,6 +576,9 @@
      ps_re   = zero
      ps_im   = zero
 
+! init prefactor for improved estimator
+     pref    = zero
+
 ! init M-matrix related array
      mmat    = zero
      lspace  = zero
@@ -584,7 +587,6 @@
 ! init imaginary time impurity green's function array
      gtau    = zero
      ftau    = zero
-     fret    = zero
 
 ! init imaginary time bath weiss's function array
      wtau    = zero
@@ -603,7 +605,6 @@
 ! init impurity green's function array
      grnf    = czero
      frnf    = czero
-     frew    = czero
 
 ! init bath weiss's function array
      wssf    = czero

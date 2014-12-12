@@ -2045,7 +2045,8 @@
 
 !!>>> ctqmc_make_wkernel: used to calculate K(\tau), i.e., the screening
 !!>>> function for extra weight factor
-!!>>> Note: this subroutine can be used to calculate K'(\tau) as well
+!!>>> note: this subroutine can be used to calculate K'(\tau) as well.
+!!>>> you should use the 'typ' parameter to control it
   subroutine ctqmc_make_wkernel(typ, tau, cur)
      use constants, only : dp, zero, one, two, pi
 
@@ -2092,15 +2093,18 @@
 ! plasmon pole model
          case (3)
              if ( typ == 2 ) then
-                 cur = (lc / wc)**2 / sinh(beta * wc / two) * sinh(beta * wc / two - tau * wc) * wc
+                 cur = (lc / wc)**2 / sinh(beta * wc / two)
+                 cur = cur * sinh(beta * wc / two - tau * wc) * wc
              else
-                 cur = (lc / wc)**2 * ( cosh(beta * wc / two) - cosh(beta * wc / two - tau * wc) ) / sinh(beta * wc / two)
+                 cur = (lc / wc)**2 / sinh(beta * wc / two)
+                 cur = cur * ( cosh(beta * wc / two) - cosh(beta * wc / two - tau * wc) )
              endif ! back if ( typ == 2 ) block
 
 ! ohmic model
          case (4)
              if ( typ == 2 ) then
-                 cur = lc * wc * cos(pi * tau / beta) / (one + beta * wc * sin(pi * tau / beta) / pi)
+                 cur = lc * wc * cos(pi * tau / beta)
+                 cur = cur / (one + beta * wc * sin(pi * tau / beta) / pi)
              else
                  cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
              endif ! back if ( typ == 2 ) block

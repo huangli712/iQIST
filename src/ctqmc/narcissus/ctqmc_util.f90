@@ -140,9 +140,9 @@
 !! the retarded interaction integrated function (i.e., screening function)
 !! in imaginary-time axis.
 
-!!>>> ctqmc_make_ktau: evaluate the intermediate elements for ktau using
-!!>>> cubic spline interpolation
-!!>>> Note: this function can be used to interpolate K'(\tau) as well
+!!>>> ctqmc_make_ktau: evaluate the intermediate elements for K(\tau)
+!!>>> using cubic spline interpolation
+!!>>> note: this function can be used to interpolate K'(\tau) as well
   function ctqmc_make_ktau(mode, dtau) result(val)
      use constants, only : dp
 
@@ -181,8 +181,8 @@
   end function ctqmc_make_ktau
 
 !!>>> ctqmc_make_ksed: calculate the second order derivates of screening
-!!>>> function on imaginary time space
-!!>>> Note: this subroutine can be used to calculate the second order
+!!>>> function K(\tau) on imaginary time space
+!!>>> note: this subroutine can be used to calculate the second order
 !!>>> derivates of K'(\tau) as well. What you have to do is to transfer
 !!>>> ptau and psed to this subroutine
   subroutine ctqmc_make_ksed(tmesh, ktau, ksed)
@@ -395,9 +395,9 @@
 !!>>> Coulomb interaction matrix                                       <<<
 !!========================================================================
 
-!! Note: Do not support spin-flip and pair-hopping term so far.
+!! note: do not support spin-flip and pair-hopping term so far.
 !!
-!! Note: Only Uc and Jz are need, the other Coulomb interaction parameters
+!! note: only Uc and Jz are need, the other Coulomb interaction parameters
 !! are used as backup
 
 !!>>> ctqmc_make_uumat: to build general U interaction matrix: uumat, using

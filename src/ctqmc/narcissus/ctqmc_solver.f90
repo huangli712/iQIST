@@ -35,7 +35,7 @@
      use context, only : nmat, nnmat, schi, sschi, ochi, oochi
      use context, only : g2_re, g2_im, h2_re, h2_im, ps_re, ps_im
      use context, only : symm
-     use context, only : gtau, ftau, fret, grnf
+     use context, only : gtau, ftau, grnf
      use context, only : sig2
 
      implicit none
@@ -124,9 +124,6 @@
 ! auxiliary correlation function, imaginary time axis, for mpi case
      real(dp), allocatable :: ftau_mpi(:,:,:)
 
-! auxiliary correlation function, imaginary time axis, for mpi case
-     real(dp), allocatable :: fret_mpi(:,:,:)
-
 ! impurity green's function, matsubara frequency axis, for mpi case
      complex(dp), allocatable :: grnf_mpi(:,:,:)
 
@@ -207,11 +204,6 @@
      endif ! back if ( istat /= 0 ) block
 
      allocate(ftau_mpi(ntime,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
-     allocate(fret_mpi(ntime,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -395,7 +387,7 @@
                  call ctqmc_record_pair()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) block
 
-! record the auxiliary correlation function, F^{j}_{sta}(\tau) and F^{j}_{ret}(\tau)
+! record the auxiliary correlation function, F(\tau)
              if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
                  call ctqmc_record_ftau()
              endif ! back if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) block
@@ -530,9 +522,8 @@
 ! collect the impurity green's function data from gtau to gtau_mpi
      call ctqmc_reduce_gtau(gtau_mpi)
 
-! collect the auxiliary correlation function from ftau to ftau_mpi, from
-! fret to fret_mpi
-     call ctqmc_reduce_ftau(ftau_mpi, fret_mpi)
+! collect the auxiliary correlation function from ftau to ftau_mpi
+     call ctqmc_reduce_ftau(ftau_mpi)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
      call ctqmc_reduce_grnf(grnf_mpi)
@@ -592,7 +583,6 @@
      do m=1,norbs
          do n=1,norbs
              ftau(:,n,m) = ftau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
-             fret(:,n,m) = fret_mpi(:,n,m) * real(ncarlo) / real(nsweep)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
@@ -736,7 +726,6 @@
      deallocate(ps_im_mpi)
      deallocate(gtau_mpi )
      deallocate(ftau_mpi )
-     deallocate(fret_mpi )
      deallocate(grnf_mpi )
 
      return
