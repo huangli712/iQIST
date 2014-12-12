@@ -334,7 +334,6 @@
      issun  = I_solver%issun
      isspn  = I_solver%isspn
      isbin  = I_solver%isbin
-     idoub  = I_solver%idoub
      nband  = I_solver%nband
      nspin  = I_solver%nspin
      norbs  = I_solver%norbs

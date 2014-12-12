@@ -893,7 +893,7 @@
 !!>>> m_sector: define the data structure for good quantum numbers (GQNs) algorithm
   module m_sector
      use constants, only : dp, zero
-     use control, only : idoub, mkink, norbs
+     use control, only : mkink, norbs
      use context, only : type_v, flvr_v
 
      implicit none
@@ -1022,17 +1022,12 @@
 ! local variables
      integer :: i, j
 
-     allocate( sect%eval(sect%ndim),                      stat=istat )
-     allocate( sect%next_sect(sect%nops,0:1),             stat=istat )
-     allocate( sect%fmat(sect%nops,0:1),                  stat=istat )
-     allocate( sect%fprod(sect%ndim,sect%ndim,2),         stat=istat )
-     allocate( sect%occu(sect%ndim,sect%ndim,sect%nops),  stat=istat )
-
-! allocate doccu if one need to calculate the double occupancy
-     if ( idoub == 2 ) then
-         allocate( sect%doccu(sect%ndim,sect%ndim,sect%nops,sect%nops), stat=istat )
-         sect%doccu = zero
-     endif ! back if ( idoub == 2 ) block
+     allocate( sect%eval(sect%ndim),                                stat=istat )
+     allocate( sect%next_sect(sect%nops,0:1),                       stat=istat )
+     allocate( sect%fmat(sect%nops,0:1),                            stat=istat )
+     allocate( sect%fprod(sect%ndim,sect%ndim,2),                   stat=istat )
+     allocate( sect%occu(sect%ndim,sect%ndim,sect%nops),            stat=istat )
+     allocate( sect%doccu(sect%ndim,sect%ndim,sect%nops,sect%nops), stat=istat )
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1044,6 +1039,7 @@
      sect%next_sect = 0
      sect%fprod = zero
      sect%occu = zero
+     sect%doccu = zero
 
 ! initialize fmat one by one
      do i=1,sect%nops

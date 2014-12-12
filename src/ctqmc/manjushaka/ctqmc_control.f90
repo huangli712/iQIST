@@ -100,11 +100,6 @@
 ! if itrun == 2, only truncate the occupancy number
 ! if itrun == 3, truncate both occupancy number and high energy states
      integer, public, save :: itrun  = 1
-
-! whether to measure the double occupancy number
-! if idoub == 1, don't measure the double occupancy number
-! if idoub == 2, measure the double occupancy number
-     integer, public, save :: idoub  = 1
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! number of correlated bands

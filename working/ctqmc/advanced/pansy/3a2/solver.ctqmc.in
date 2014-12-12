@@ -11,7 +11,6 @@
   issun  : 2
   isspn  : 1
   isbin  : 2
-  idoub  : 1
 
 !!>>> setup common variables for quantum impurity model
 !!------------------------------------------------------------------------
