@@ -3,12 +3,11 @@
 !!! program : ctqmc_save_status
 !!!           ctqmc_retrieve_status
 !!! source  : ctqmc_status.f90
-!!! type    : subroutine
+!!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/23/2009 by li huang
 !!!           02/21/2010 by li huang
-!!!           08/18/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
@@ -29,7 +28,7 @@
 
      use control, only : norbs
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
      use context, only : rank
 
      implicit none
@@ -101,15 +100,14 @@
 !!>>> information to initialize the continuous time quantum Monte Carlo
 !!>>> quantum impurity solver
   subroutine ctqmc_retrieve_status()
-     use constants, only : dp, zero, epss, mytmp
+     use constants, only : dp, zero, one, epss, mytmp
      use mmpi, only : mp_bcast, mp_barrier
 
      use control, only : norbs
      use control, only : mkink
      use control, only : beta
      use control, only : myid, master
-     use context, only : csign, cnegs, matrix_ntrace
-     use context, only : ckink
+     use context, only : ckink, csign, cnegs, matrix_ntrace
      use context, only : rank
 
      implicit none
@@ -252,7 +250,7 @@
 
 ! update the matrix trace for product of F matrix and time evolution operators
      i = 2 * sum(rank) ! get total number of operators
-     call ctqmc_make_ztrace(4, i, matrix_ntrace, -1.0_dp, -1.0_dp)
+     call ctqmc_make_ztrace(4, i, matrix_ntrace, -one, -one)
 
 ! update the operators trace
      call ctqmc_make_evolve()
