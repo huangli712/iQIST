@@ -278,14 +278,14 @@
      integer  :: j
      integer  :: k
 
+! version of file 'atom.cix'
+     integer  :: ver
+
 ! file status flag
      integer  :: istat
 
 ! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
      logical  :: exists
-
-! version of file 'atom.cix'
-     integer  :: ver
 
 ! dummy real variables
      real(dp) :: rtmp
@@ -316,7 +316,8 @@
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
-         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
+         hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
@@ -421,87 +422,84 @@
          exists = .false.
 
 ! inquire about file's existence
+! file atom.cix is necessary, the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
 ! find input file: atom.cix, read it
-! file atom.cix is necessary, the code can not run without it
-         if ( exists .eqv. .true. ) then
-
 ! open data file
-             open(mytmp, file='atom.cix', form='formatted', status='unknown')
+         open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
 ! skip ten comment lines
-             do i=1,10
-                 read(mytmp,*)
-             enddo ! over i={1,10} loop
+         do i=1,10
+             read(mytmp,*)
+         enddo ! over i={1,10} loop
 
 ! determine whether the spin-orbital coupling effect should be considered
-             read(mytmp,*) ver, i, j, cssoc
-! check the version of atom.cix
-             if ( ver /= 1 ) then
-                 call s_print_error('ctqmc_selfer_init','file atom.cix is NOT the version for lavender')
-             endif ! back if ( ver /= 1) block
+! and check the version of atom.cix
+         read(mytmp,*) ver, i, j, cssoc
+         if ( ver /= 1 ) then
+             call s_print_error('ctqmc_selfer_init','file format of atom.cix is not correct')
+         endif ! back if ( ver /= 1) block
 
 ! skip eight comment lines
-             do i=1,8
-                 read(mytmp,*)
-             enddo ! over i={1,8} loop
+         do i=1,8
+             read(mytmp,*)
+         enddo ! over i={1,8} loop
 
 ! read in eigenvalues for local hamiltonian matrix from atom.cix
-             do i=1,ncfgs
-                 read(mytmp,*) k, eigs(i), naux(i), saux(i)
-             enddo ! over i={1,ncfgs} loop
+         do i=1,ncfgs
+             read(mytmp,*) k, eigs(i), naux(i), saux(i)
+         enddo ! over i={1,ncfgs} loop
 
 ! skip three comment lines
-             do i=1,3
-                 read(mytmp,*)
-             enddo ! over i={1,3} loop
+         do i=1,3
+             read(mytmp,*)
+         enddo ! over i={1,3} loop
 
 ! read in F matrix from atom.cix
 ! only the non-zero elements are included in the atom.cix, but we do not
 ! know how many non-zero elements there are
-             ATOM_CIX_PARSER: do
-                 read(mytmp, *, iostat = istat) k, j, i, rtmp
-                 if ( istat == iostat_end ) then
-                     EXIT ATOM_CIX_PARSER
-                 else
-                     op_d(k,j,i) = rtmp
-                 endif ! back if ( istat == iostat_end ) block
-             enddo ATOM_CIX_PARSER ! over do loop
+         ATOM_CIX_PARSER: do
+             read(mytmp, *, iostat = istat) k, j, i, rtmp
+             if ( istat == iostat_end ) then
+                 EXIT ATOM_CIX_PARSER
+             else
+                 op_d(k,j,i) = rtmp
+             endif ! back if ( istat == iostat_end ) block
+         enddo ATOM_CIX_PARSER ! over do loop
 
 ! close data file
-             close(mytmp)
+         close(mytmp)
 
 ! add the contribution from chemical potential to eigenvalues
-             do i=1,ncfgs
-                 eigs(i) = eigs(i) - mune * naux(i)
-             enddo ! over i={1,ncfgs} loop
+         do i=1,ncfgs
+             eigs(i) = eigs(i) - mune * naux(i)
+         enddo ! over i={1,ncfgs} loop
 
 ! substract the eigenvalues zero point, here we store the eigen energy
 ! zero point in U
-             r1 = minval(eigs)
-             r2 = maxval(eigs)
-             U  = r1 + one ! here we choose the minimum as zero point
-             do i=1,ncfgs
-                 eigs(i) = eigs(i) - U
-             enddo ! over i={1,ncfgs} loop
+         r1 = minval(eigs)
+         r2 = maxval(eigs)
+         U  = r1 + one ! here we choose the minimum as zero point
+         do i=1,ncfgs
+             eigs(i) = eigs(i) - U
+         enddo ! over i={1,ncfgs} loop
 
-! check eigs
+! check validity of eigs
 ! note: \infity - \infity is undefined, which return NaN
-             do i=1,ncfgs
-                 if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
-                     call s_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
-                 endif
-             enddo ! over i={1,ncfgs} loop
+         do i=1,ncfgs
+             if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
+                 call s_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
+             endif ! back if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) block
+         enddo ! over i={1,ncfgs} loop
 
 ! calculate op_c from op_d
-             do i=1,norbs
-                 op_c(:,:,i) = transpose( op_d(:,:,i) )
-             enddo ! over i={1,norbs} loop
-
-         else
-             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
-         endif ! back if ( exists .eqv. .true. ) block
+         do i=1,norbs
+             op_c(:,:,i) = transpose( op_d(:,:,i) )
+         enddo ! over i={1,norbs} loop
      endif ! back if ( myid == master ) block
 
 ! broadcast U, op_c, op_d, eigs, naux, and saux from master node to all children nodes
@@ -538,12 +536,14 @@
 ! now all the processes have one copies of op_c and op_d
 ! convert op_c from dense-stored matrix form to row-stored sparse matrix
      do i=1,norbs
-         call sparse_dns_to_csr( ncfgs, ncfgs, nzero, op_c(:,:,i), sop_c(:,i), sop_jc(:,i), sop_ic(:,i) )
+         call sparse_dns_to_csr( ncfgs, ncfgs, nzero, op_c(:,:,i), &
+                             sop_c(:,i), sop_jc(:,i), sop_ic(:,i) )
      enddo ! over i={1,norbs} loop
 
 ! convert op_d from dense-stored matrix form to row-stored sparse matrix
      do i=1,norbs
-         call sparse_dns_to_csr( ncfgs, ncfgs, nzero, op_d(:,:,i), sop_d(:,i), sop_jd(:,i), sop_id(:,i) )
+         call sparse_dns_to_csr( ncfgs, ncfgs, nzero, op_d(:,:,i), &
+                             sop_d(:,i), sop_jd(:,i), sop_id(:,i) )
      enddo ! over i={1,norbs} loop
 
 ! note: we can not deallocate op_c and op_d to release the memory at here,
