@@ -30,37 +30,37 @@
 ! dimension of subspace with total electron N
 ! if i is the number of electrons, then dim_sub_n(i) will tell you how
 ! many states there are in the subspace with i electrons
-     integer, public, allocatable, save  :: dim_sub_n(:)
+     integer, public, save, allocatable  :: dim_sub_n(:)
 
 ! binary form of Fock basis
-     integer, public, allocatable, save  :: bin_basis(:,:)
+     integer, public, save, allocatable  :: bin_basis(:,:)
 
 ! decimal form of Fock basis
 ! dec_basis(i) will tell you what the i-th Fock state is (a decimal number)
-     integer, public, allocatable, save  :: dec_basis(:)
+     integer, public, save, allocatable  :: dec_basis(:)
 
 ! index of Fock basis, given their decimal number
 ! ind_basis(i) will tell you for a given decimal number what its
 ! corresponding Fock state index is
-     integer, public, allocatable, save  :: ind_basis(:)
+     integer, public, save, allocatable  :: ind_basis(:)
 
 ! eigenvalues of hmat
-     real(dp), public, allocatable, save :: eval(:)
+     real(dp), public, save, allocatable :: eval(:)
 
 ! eigenvectors of hmat
-     real(dp), public, allocatable, save :: evec(:,:)
+     real(dp), public, save, allocatable :: evec(:,:)
 
 ! F-matrix for annihilation fermion operators
-     real(dp), public, allocatable, save :: fmat(:,:,:)
+     real(dp), public, save, allocatable :: fmat(:,:,:)
 
 ! N occupany number for the atomic eigenstates
-     real(dp), public, allocatable, save :: occu(:,:)
+     real(dp), public, save, allocatable :: occu(:,:)
 
 ! Sz for the atomic eigenstates
-     real(dp), public, allocatable, save :: spin(:,:)
+     real(dp), public, save, allocatable :: spin(:,:)
 
 ! atomic Hamiltonian
-     complex(dp), public, allocatable, save :: hmat(:,:)
+     complex(dp), public, save, allocatable :: hmat(:,:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -246,7 +246,7 @@
      real(dp), public, save :: ave_dim_sect
 
 ! all the sectors
-     type (t_sector), public, allocatable, save :: sectors(:)
+     type (t_sector), public, save, allocatable :: sectors(:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
