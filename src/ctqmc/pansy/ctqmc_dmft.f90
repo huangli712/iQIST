@@ -10,7 +10,6 @@
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           01/13/2010 by li huang
-!!!           08/18/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : the self-consistent engine for dynamical mean field theory
 !!!           (DMFT) simulation. it is only suitable for hybridization
@@ -70,9 +69,8 @@
      call s_mix_z(size(hybf), htmp, hybf, alpha)
 
 ! \mu_{eff} = (N - 0.5)*U - (N - 1)*2.5*J
-!>>     qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
-!>>     qmune = mune - qmune
-      qmune = mune
+     qmune = ( real(nband) - half ) * Uc - ( real(nband) - one ) * 2.5_dp * Jz
+     qmune = mune - qmune
 
 ! calculate new bath weiss's function
 ! G^{-1}_0 = i\omega + mu - E_{imp} - \Delta(i\omega)
@@ -283,25 +281,22 @@
 
 ! inquire about file's existence
          inquire (file = 'solver.anydos.in', exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('ctqmc_dmft_anydos','file solver.anydos.in does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
 ! find input file: solver.anydos.in, read it
-         if ( exists .eqv. .true. ) then
-
 ! read in frequency grid and density of states from solver.anydos.in
 ! note: we assume the density of states for different orbitals are
 ! degenerate. please make sure it again before using this subroutine.
-             open(mytmp, file='solver.anydos.in', form='formatted', status='unknown')
-             do i=1,ngrid
-                 read(mytmp,*) epsi(i), pdos(i,1)
-                 do j=2,norbs
-                     pdos(:,j) = pdos(:,1)
-                 enddo ! over j={2,norbs} loop
-             enddo ! over i={1,ngrid} loop
-             close(mytmp)
-
-         else
-             call s_print_error('ctqmc_dmft_anydos','file solver.anydos.in does not exist')
-         endif ! back if ( exists .eqv. .true. ) block
+         open(mytmp, file='solver.anydos.in', form='formatted', status='unknown')
+         do i=1,ngrid
+             read(mytmp,*) epsi(i), pdos(i,1)
+             do j=2,norbs
+                 pdos(:,j) = pdos(:,1)
+             enddo ! over j={2,norbs} loop
+         enddo ! over i={1,ngrid} loop
+         close(mytmp)
      endif ! back if ( myid == master ) block
 
 ! broadcast epsi and pdos from master node to all children nodes
