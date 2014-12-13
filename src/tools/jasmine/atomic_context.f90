@@ -198,7 +198,7 @@
 ! data structure for one sector
 !-------------------------------------------------------------------------
      public :: t_sector
-     type :: t_sector
+     type t_sector
 
 ! the dimension of this sector
          integer :: ndim
