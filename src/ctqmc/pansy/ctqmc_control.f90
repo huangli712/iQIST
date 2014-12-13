@@ -4,11 +4,9 @@
 !!! source  : ctqmc_control.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
-!!!           yilin wang (qhwyl2006@126.com)
+!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/15/2009 by li huang
 !!!           02/23/2010 by li huang
-!!!           07/19/2014 by yilin wang
-!!!           08/18/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
@@ -48,6 +46,7 @@
 ! if isbin == 1, without binning mode
 ! if isbin == 2, with binning mode
      integer, public, save :: isbin  = 2
+
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! number of correlated bands
