@@ -23,8 +23,7 @@
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/09/2010 by li huang
-!!!           08/18/2014 by li huang
-!!!           11/11/2014 by li huang
+!!!           11/11/2014 by yilin wang
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -579,7 +578,7 @@
      use control, only : nband, norbs
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : reflip_tcount, reflip_accept, reflip_reject
-     use context, only : index_t, index_v, flvr_v, empty_v
+     use context, only : empty_v, index_t, index_v, flvr_v
      use context, only : rank, symm
 
      implicit none
@@ -669,8 +668,7 @@
          enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-         call ctqmc_make_ztrace(3, nsize, matrix_ntrace, -1.0_dp, -1.0_dp)
-
+         call ctqmc_make_ztrace(3, nsize, matrix_ntrace, -one, -one)
 
 ! evaluate the final transition ratio
          p = p * ( matrix_ntrace / matrix_ptrace )
@@ -749,8 +747,7 @@
              enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-             call ctqmc_make_ztrace(3, nsize, matrix_ntrace, -1.0_dp, -1.0_dp)
-
+             call ctqmc_make_ztrace(3, nsize, matrix_ntrace, -one, -one)
 
 ! evaluate the final transition ratio
              p = p * ( matrix_ntrace / matrix_ptrace )
@@ -833,7 +830,7 @@
          enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-         call ctqmc_make_ztrace(3, nsize, matrix_ntrace, -1.0_dp, -1.0_dp)
+         call ctqmc_make_ztrace(3, nsize, matrix_ntrace, -one, -one)
 
 ! evaluate the final transition ratio
          p = p * ( matrix_ntrace / matrix_ptrace )
