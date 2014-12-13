@@ -198,7 +198,7 @@
      use context, only : nmat, nnmat, paux
      use context, only : ckink, matrix_ptrace
      use context, only : diag, eigs
-     use m_sector, only : mdim_sect, nsect, sectors
+     use m_sector, only : max_dim_sect, nsect, sectors
 
      implicit none
 
@@ -222,7 +222,7 @@
      real(dp) :: cprob(ncfgs)
 
 ! dummy sparse matrix, used to calculate nmat and nnmat
-     real(dp) :: mat_t(mdim_sect, mdim_sect)
+     real(dp) :: mat_t(max_dim_sect, max_dim_sect)
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
@@ -253,7 +253,7 @@
              call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
                          one,  sectors(i)%prod(:,:,2),              sectors(i)%ndim, &
                                sectors(i)%occu(:,:,flvr),            sectors(i)%ndim, &
-                         zero, mat_t,                                mdim_sect        )
+                         zero, mat_t,                                max_dim_sect        )
 
              do j=1,sectors(i)%ndim
                  raux1 = raux1 + mat_t(j,j)
@@ -276,7 +276,7 @@
                  call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
                               one,  sectors(j)%prod(:,:,2),             sectors(j)%ndim, &
                                     sectors(j)%doccu(:,:,flvr,i),        sectors(j)%ndim, &
-                              zero, mat_t,                               mdim_sect        )
+                              zero, mat_t,                               max_dim_sect        )
 
                  do k=1,sectors(j)%ndim
                      raux1 = raux1 + mat_t(k,k)
@@ -289,7 +289,7 @@
                  call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
                              one,  sectors(j)%prod(:,:,2),              sectors(j)%ndim, &
                                    sectors(j)%doccu(:,:,i,flvr),         sectors(j)%ndim, &
-                             zero, mat_t,                                mdim_sect        )
+                             zero, mat_t,                                max_dim_sect        )
 
                  do k=1,sectors(j)%ndim
                      raux1 = raux1 + mat_t(k,k)

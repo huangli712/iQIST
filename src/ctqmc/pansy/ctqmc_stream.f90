@@ -406,7 +406,7 @@
              enddo ! over i={1,9} loop
 ! read the total number of sectors, maximum dimension of sectors,
 ! and average dimension of sectors
-             read(mytmp,*) nsect, mdim_sect, adim_sect
+             read(mytmp,*) nsect, max_dim_sect, ave_dim_sect
 
 ! after we know the total number of sectors, we can allocate memory
 ! for array sectors and parts
@@ -478,8 +478,8 @@
 
      call mp_bcast(cssoc,     master)
      call mp_bcast(nsect,     master)
-     call mp_bcast(mdim_sect, master)
-     call mp_bcast(adim_sect, master)
+     call mp_bcast(max_dim_sect, master)
+     call mp_bcast(ave_dim_sect, master)
 
      if ( myid /= master ) then
          call ctqmc_allocate_memory_sect()
@@ -585,8 +585,8 @@
      integer :: stream_seed
 
 ! dummy matrices
-     real(dp) :: mat_t1(mdim_sect, mdim_sect)
-     real(dp) :: mat_t2(mdim_sect, mdim_sect)
+     real(dp) :: mat_t1(max_dim_sect,max_dim_sect)
+     real(dp) :: mat_t2(max_dim_sect,max_dim_sect)
 
 ! init random number generator
      call system_clock(system_time)
@@ -779,16 +779,16 @@
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
                              one,  sectors(jj)%fmat(j,1)%val,           sectors(k)%ndim,  &
                                    sectors(k)%fmat(j,0)%val,            sectors(jj)%ndim, &
-                             zero, mat_t1,                               mdim_sect         )
+                             zero, mat_t1,                               max_dim_sect         )
 
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
                              one,  sectors(ii)%fmat(i,1)%val,           sectors(k)%ndim,  &
                                    sectors(k)%fmat(i,0)%val,            sectors(ii)%ndim, &
-                             zero, mat_t2,                               mdim_sect         )
+                             zero, mat_t2,                               max_dim_sect         )
 
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
-                             one,  mat_t2,                               mdim_sect,        &
-                                   mat_t1,                               mdim_sect,        &
+                             one,  mat_t2,                               max_dim_sect,        &
+                                   mat_t1,                               max_dim_sect,        &
                              zero, sectors(k)%doccu(:,:,i,j),            sectors(k)%ndim   )
 
              enddo ! over k={1,nsect} loop
@@ -818,8 +818,8 @@
 ! the average dimension of sectors
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i8)')   'tot_num_sect:', nsect
-         write(mystd,'(4X,a,i8)')   'max_dim_sect:', mdim_sect
-         write(mystd,'(4X,a,f8.1)') 'ave_dim_sect:', adim_sect
+         write(mystd,'(4X,a,i8)')   'max_dim_sect:', max_dim_sect
+         write(mystd,'(4X,a,f8.1)') 'ave_dim_sect:', ave_dim_sect
      endif
 ! write out the current status of spin-orbit coupling
      if ( myid == master ) then ! only master node can do it

@@ -965,10 +965,10 @@
      integer, public, save  :: nsect
 
 ! maximal dimension of sectors
-     integer, public, save  :: mdim_sect
+     integer, public, save  :: max_dim_sect
 
 ! average dimension of sectors
-     real(dp), public, save :: adim_sect
+     real(dp), public, save :: ave_dim_sect
 
 ! array of t_sector contains all the sectors
      type (t_sector), public, save, allocatable :: sectors(:)
@@ -1239,7 +1239,7 @@
      use control, only : npart, mkink, beta, ncfgs
      use context, only : time_v, expt_v, type_v, flvr_v
 
-     use m_sector, only : nsect, sectors, mdim_sect
+     use m_sector, only : nsect, sectors, max_dim_sect
 
      implicit none
 
@@ -1296,8 +1296,8 @@
      allocate( ops(npart),            stat=istat )
      allocate( ope(npart),            stat=istat )
 
-     allocate( saved_p(mdim_sect,mdim_sect,npart,nsect), stat=istat )
-     allocate( saved_n(mdim_sect,mdim_sect,npart,nsect), stat=istat )
+     allocate( saved_p(max_dim_sect,max_dim_sect,npart,nsect), stat=istat )
+     allocate( saved_n(max_dim_sect,max_dim_sect,npart,nsect), stat=istat )
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1523,8 +1523,8 @@
 
 ! local variables
 ! temp matrix
-     real(dp) :: mat_r(mdim_sect,mdim_sect)
-     real(dp) :: mat_t(mdim_sect,mdim_sect)
+     real(dp) :: mat_r(max_dim_sect,max_dim_sect)
+     real(dp) :: mat_t(max_dim_sect,max_dim_sect)
 
 ! temp index
      integer :: dim1
@@ -1561,9 +1561,9 @@
              dim3 = sectors(sect2)%ndim
              if ( i > ffpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim3,             &
-                              one,  saved_p(:,:,i,isect), mdim_sect, &
-                                    mat_r,                mdim_sect, &
-                              zero, mat_t,                mdim_sect  )
+                              one,  saved_p(:,:,i,isect), max_dim_sect, &
+                                    mat_r,                max_dim_sect, &
+                              zero, mat_t,                max_dim_sect  )
 
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
@@ -1606,8 +1606,8 @@
                  vf = flvr_v( index_t_loc(j) )
                  call dgemm( 'N', 'N', dim2, dim4, dim3,                     &
                              one,  sectors(string(j))%fmat(vf,vt)%val, dim2, &
-                                   mat_t,                         mdim_sect, &
-                             zero, saved_n(:,:,i,isect),          mdim_sect  )
+                                   mat_t,                         max_dim_sect, &
+                             zero, saved_n(:,:,i,isect),          max_dim_sect  )
 
                  nprod = nprod + one
              enddo ! over j={ops(i),ope(i)} loop
@@ -1620,9 +1620,9 @@
 ! multiply this part with the rest parts
              if ( i > ffpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim4,            &
-                             one,  saved_n(:,:,i,isect), mdim_sect, &
-                                   mat_r,                mdim_sect, &
-                             zero, mat_t,                mdim_sect  )
+                             one,  saved_n(:,:,i,isect), max_dim_sect, &
+                                   mat_r,                max_dim_sect, &
+                             zero, mat_t,                max_dim_sect  )
 
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
