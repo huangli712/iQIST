@@ -8,11 +8,9 @@
 !!! source  : ctqmc_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
-!!!         : yilin wang (email: qhwyl2006@126.com)
+!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/08/2010 by li huang
-!!!           07/19/2014 by yilin wang
-!!!           08/18/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
@@ -95,7 +93,6 @@
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
 ! create the file parser
-!------------------------------------------------------------------------+
              call p_create()
 ! parse the config file
              call p_parse('solver.ctqmc.in')
@@ -137,10 +134,6 @@
              call p_get('nclean', nclean)
              call p_get('nmonte', nmonte)
              call p_get('ncarlo', ncarlo)
-
-             nspin = 2
-             norbs = nspin * nband
-             ncfgs = 2 ** norbs
 
 ! destroy the parser
              call p_destroy()
@@ -253,17 +246,17 @@
      integer  :: ii
      integer  :: n
 
+! version of file 'atom.cix'
+     integer  :: ver
+
 ! number of nonzero elements of F-matrix
-     integer :: nonzero
+     integer  :: nonzero
 
 ! dummy integer variables
      integer  :: j1, j2, j3
 
 ! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
      logical  :: exists
-
-! version of file 'atom.cix'
-     integer  :: ver
 
 ! dummy real variables
      real(dp) :: rtmp
@@ -281,7 +274,8 @@
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
-         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
+         hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
@@ -374,102 +368,102 @@
 ! setup initial eigs, naux, and saux
      eigs = zero
      naux = zero
+     saux = zero
 
+! read in initial F matrix if available
+!-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
 ! inquire about file's existence
+! file atom.cix is necessary, the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
 ! find input file: atom.cix, read it
-! file atom.cix is necessary, the code can not run without it
-         if ( exists .eqv. .true. ) then
-
 ! open data file
-             open(mytmp, file='atom.cix', form='formatted', status='unknown')
+         open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
 ! skip ten comment lines
-             do i=1,10
-                 read(mytmp,*)
-             enddo ! over i={1,10} loop
+         do i=1,10
+             read(mytmp,*)
+         enddo ! over i={1,10} loop
 
 ! determine whether the spin-orbital coupling effect should be considered
-             read(mytmp,*) ver, i, j, cssoc
-! check the version of atom.cix
-             if ( ver /= 2 ) then
-                 call s_print_error('ctqmc_selfer_init','file atom.cix is NOT the version for pansy')
-             endif ! back if ( ver /= 2) block
+! and check the version of atom.cix
+         read(mytmp,*) ver, i, j, cssoc
+         if ( ver /= 2 ) then
+             call s_print_error('ctqmc_selfer_init','file format of atom.cix is not correct')
+         endif ! back if ( ver /= 2) block
 
 ! skip nine comment lines
-             do i=1,9
-                 read(mytmp,*)
-             enddo ! over i={1,9} loop
+         do i=1,9
+             read(mytmp,*)
+         enddo ! over i={1,9} loop
+
 ! read the total number of sectors, maximum dimension of sectors,
 ! and average dimension of sectors
-             read(mytmp,*) nsect, max_dim_sect, ave_dim_sect
+         read(mytmp,*) nsect, max_dim_sect, ave_dim_sect
 
 ! after we know the total number of sectors, we can allocate memory
 ! for array sectors and parts
-             call ctqmc_allocate_memory_sect()
+         call ctqmc_allocate_memory_sect()
 
 ! read each sector's information
-             do i=1,nsect
-                 read(mytmp,*) ! skip the header
+         do i=1,nsect
+             read(mytmp,*) ! skip the header
 
 ! read the dimension, total number of electrons, number of fermion operators,
 ! and start index of this sector
-                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nele, &
-                                   sectors(i)%nops, sectors(i)%istart
+             read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nele, sectors(i)%nops, sectors(i)%istart
 
 ! allocate the memory for sectors(i)
-                 call alloc_one_sect(sectors(i))
+             call alloc_one_sect(sectors(i))
 
-! read the next_sector index
-                 read(mytmp,*) ! skip the header
-                 do j=1, sectors(i)%nops
-                     read(mytmp,*) j1, sectors(i)%next(j,0), &
-                                       sectors(i)%next(j,1)
-                 enddo
+! read the next index
+             read(mytmp,*) ! skip the header
+             do j=1,sectors(i)%nops
+                 read(mytmp,*) j1, sectors(i)%next(j,0), sectors(i)%next(j,1)
+             enddo ! over do j={1,sectors(i)%nops} loop
 
 ! read the eigenvalue of this sector
-                 read(mytmp,*) ! skip the header
-                 do j=1,sectors(i)%ndim
-                     read(mytmp,*) j1, sectors(i)%eval(j)
-                 enddo ! over j={1,sectors(i)%ndim} loop
-             enddo ! over i={1,nsectors} loop
+             read(mytmp,*) ! skip the header
+             do j=1,sectors(i)%ndim
+                 read(mytmp,*) j1, sectors(i)%eval(j)
+             enddo ! over j={1,sectors(i)%ndim} loop
+         enddo ! over i={1,nsectors} loop
 
 ! read F-matrix
 ! skip three header lines
+         do i=1,3
              read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*)
+         enddo ! over i={1,3} loop
 
-             do i=1,nsect
-                 do j=1,sectors(i)%nops
-                     do k=0,1
-                         ii = sectors(i)%next(j,k)
-                         if (ii == -1) cycle
-! skip one hader line
-                         read(mytmp, *)
-                         read(mytmp, *) j1, j2, j3, i1, i2, nonzero
-                         sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
-                         sectors(i)%fmat(j,k)%m = sectors(i)%ndim
-                         call alloc_one_mat(sectors(i)%fmat(j,k))
+         do i=1,nsect
+             do j=1,sectors(i)%nops
+                 do k=0,1
+                     ii = sectors(i)%next(j,k)
+                     if (ii == -1) cycle
+! skip one header line
+                     read(mytmp, *)
+                     read(mytmp, *) j1, j2, j3, i1, i2, nonzero
+                     sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
+                     sectors(i)%fmat(j,k)%m = sectors(i)%ndim
+                     call alloc_one_mat(sectors(i)%fmat(j,k))
 ! read non-zero elements of F-matrix
-                         sectors(i)%fmat(j,k)%val = zero
-                         do n=1,nonzero
-                             read(mytmp, *) i1, i2, r1
-                             sectors(i)%fmat(j,k)%val(i1,i2) = r1
-                         enddo ! over n={1,nonzero} loop
-                     enddo ! over k={0,1} loop
-                 enddo ! over j={1,sectors(i)%nops} loop
-             enddo ! over i={1,nsectors} loop
+                     sectors(i)%fmat(j,k)%val = zero
+                     do n=1,nonzero
+                         read(mytmp, *) i1, i2, r1
+                         sectors(i)%fmat(j,k)%val(i1,i2) = r1
+                     enddo ! over n={1,nonzero} loop
+                 enddo ! over k={0,1} loop
+             enddo ! over j={1,sectors(i)%nops} loop
+         enddo ! over i={1,nsectors} loop
 
-             close(mytmp)
-         else
-             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
-         endif ! back if ( exists .eqv. .true. ) block
-
+! close data file
+         close(mytmp)
      endif ! back if ( myid == master ) block
 
 # if defined (MPI)
