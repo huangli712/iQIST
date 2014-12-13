@@ -418,7 +418,7 @@
 
 ! read the dimension, total number of electrons, number of fermion operators,
 ! and start index of this sector
-                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelec, &
+                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nele, &
                                    sectors(i)%nops, sectors(i)%istart
 
 ! allocate the memory for sectors(i)
@@ -488,7 +488,7 @@
      do i=1,nsect
          call mp_barrier()
          call mp_bcast(sectors(i)%ndim,   master)
-         call mp_bcast(sectors(i)%nelec,  master)
+         call mp_bcast(sectors(i)%nele,   master)
          call mp_bcast(sectors(i)%nops,   master)
          call mp_bcast(sectors(i)%istart, master)
          if ( myid /= master ) then
@@ -527,7 +527,7 @@
          do j=1,sectors(i)%ndim
              j1 = j1 + 1
              eigs(j1) = sectors(i)%eval(j)
-             naux(j1) = sectors(i)%nelec
+             naux(j1) = sectors(i)%nele
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
      do i=1,ncfgs

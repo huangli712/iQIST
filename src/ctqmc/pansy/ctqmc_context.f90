@@ -925,7 +925,7 @@
          integer :: ndim
 
 ! total number of electrons
-         integer :: nelec
+         integer :: nele
 
 ! number of fermion operators, it should be equal to norbs
          integer :: nops
@@ -1105,7 +1105,7 @@
 ! initialize them
      do i=1,nsect
          sectors(i)%ndim = 0
-         sectors(i)%nelec = 0
+         sectors(i)%nele = 0
          sectors(i)%nops = norbs
          sectors(i)%istart = 0
          sectors(i)%eval => null()
