@@ -11,7 +11,6 @@
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/21/2010 by li huang
-!!!           08/18/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
@@ -455,11 +454,6 @@
 ! write out the final probability data, prob
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_prob(prob, naux, saux)
-     endif ! back if ( myid == master ) block
-
-! write out the final probability data of sectors
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_psect()
      endif ! back if ( myid == master ) block
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
