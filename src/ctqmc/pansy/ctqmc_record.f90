@@ -963,7 +963,7 @@
              indx2 = sectors(kk)%istart
              do l=1,sectors(k)%ndim
                  do m=1,sectors(kk)%ndim
-                     ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))
+                     ob = sectors(k)%fmat(i,0)%val(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))
                      do j=1,mfreq
                          cb = czi * rmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
                          ghub(j,i) = ghub(j,i) + ob / cb

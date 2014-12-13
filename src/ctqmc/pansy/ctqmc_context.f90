@@ -6,7 +6,6 @@
 !!!           ctqmc_mesh module
 !!!           ctqmc_meat module
 !!!           ctqmc_umat module
-!!!           ctqmc_fmat module
 !!!           ctqmc_mmat module
 !!!           ctqmc_gmat module
 !!!           ctqmc_wmat module
@@ -20,8 +19,6 @@
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/08/2010 by li huang
-!!!           08/18/2014 by yilin wang
-!!!           11/02/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : To define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
@@ -890,28 +887,39 @@
 
   end module context
 
-!!>>> m_sector: define the data structure for good quantum numbers (GQNs) algorithm
+
+
+
+!!========================================================================
+!!>>> module m_sector                                                  <<<
+!!========================================================================
+
+!!>>> define the data structure for good quantum numbers (GQNs) algorithm
   module m_sector
      use constants, only : dp, zero
-     use control, only : mkink, norbs
+
+     use control, only : norbs
+     use control, only : mkink
      use context, only : type_v, flvr_v
 
      implicit none
 
-! a matrix type
-     type :: t_matrix
+! data structure for one F-matrix
+!-------------------------------------------------------------------------
+     type t_fmat
 
-! dimensions
-         integer :: n, m
+! the dimension, n x m
+         integer :: n
+         integer :: m
 
-! items
-         real(dp), dimension(:,:), pointer :: item => null()
+! the memory space for the matrix
+         real(dp), pointer :: val(:,:)
 
-     end type t_matrix
+     end type t_fmat
 
-
-! a sector type contains all the information of a subspace of H_{loc}
-     type :: t_sector
+! data structure for one sector
+!-------------------------------------------------------------------------
+     type t_sector
 
 ! dimension
          integer :: ndim
@@ -937,7 +945,7 @@
 ! F-matrix between this sector and all other sectors
 ! the pointer is null if this sector doesn't point to some other sectors
 ! fmat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
-         type(t_matrix), dimension(:,:), pointer :: fmat => null()
+         type (t_fmat), dimension(:,:), pointer :: fmat => null()
 
 ! final products of matrices, which will be used to calculate nmat and nnmat
          real(dp), dimension(:,:,:), pointer :: fprod => null()
@@ -985,17 +993,17 @@
      implicit none
 
 ! external variables
-     type(t_matrix), intent(inout) :: mat
+     type (t_fmat), intent(inout) :: mat
 
-     allocate( mat%item(mat%n, mat%m), stat=istat )
+     allocate(mat%val(mat%n,mat%m), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_mat', 'can not allocate enough memory')
+         call s_print_error('alloc_one_mat','can not allocate enough memory')
      endif ! back if ( istat /=0 ) block
 
 ! initialize it
-     mat%item = zero
+     mat%val = zero
 
      return
   end subroutine alloc_one_mat
@@ -1005,9 +1013,9 @@
      implicit none
 
 ! external variables
-     type(t_matrix), intent(inout) :: mat
+     type (t_fmat), intent(inout) :: mat
 
-     if ( associated(mat%item) ) deallocate(mat%item)
+     if ( associated(mat%val) ) deallocate(mat%val)
 
      return
   end subroutine dealloc_one_mat
@@ -1046,7 +1054,7 @@
          do j=0,1
              sect%fmat(i,j)%n = 0
              sect%fmat(i,j)%m = 0
-             sect%fmat(i,j)%item => null()
+             sect%fmat(i,j)%val => null()
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
 
@@ -1091,7 +1099,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_sect', 'can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -1228,6 +1236,7 @@
 !!>>> and conquer (npart) algorithm to speed up the trace evaluation
   module m_npart
      use constants, only : dp, zero, one
+
      use control, only : npart, mkink, beta, ncfgs
      use context, only : time_v, expt_v, type_v, flvr_v
 
@@ -1596,10 +1605,10 @@
 ! multiply the matrix of fermion operator
                  vt = type_v( index_t_loc(j) )
                  vf = flvr_v( index_t_loc(j) )
-                 call dgemm( 'N', 'N', dim2, dim4, dim3,                      &
-                             one,  sectors(string(j))%fmat(vf,vt)%item, dim2, &
-                                   mat_t,                          mdim_sect, &
-                             zero, saved_n(:,:,i,isect),           mdim_sect  )
+                 call dgemm( 'N', 'N', dim2, dim4, dim3,                     &
+                             one,  sectors(string(j))%fmat(vf,vt)%val, dim2, &
+                                   mat_t,                         mdim_sect, &
+                             zero, saved_n(:,:,i,isect),          mdim_sect  )
 
                  nprod = nprod + one
              enddo ! over j={ops(i),ope(i)} loop

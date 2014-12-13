@@ -456,10 +456,10 @@
                          sectors(i)%fmat(j,k)%m = sectors(i)%ndim
                          call alloc_one_mat(sectors(i)%fmat(j,k))
 ! read non-zero elements of F-matrix
-                         sectors(i)%fmat(j,k)%item = zero
+                         sectors(i)%fmat(j,k)%val = zero
                          do n=1,nonzero
                              read(mytmp, *) i1, i2, r1
-                             sectors(i)%fmat(j,k)%item(i1,i2) = r1
+                             sectors(i)%fmat(j,k)%val(i1,i2) = r1
                          enddo ! over n={1,nonzero} loop
                      enddo ! over k={0,1} loop
                  enddo ! over j={1,sectors(i)%nops} loop
@@ -510,7 +510,7 @@
                      call alloc_one_mat(sectors(i)%fmat(j,k))
                  endif ! back if ( myid /= master ) block
                  call mp_barrier()
-                 call mp_bcast(sectors(i)%fmat(j,k)%item, master)
+                 call mp_bcast(sectors(i)%fmat(j,k)%val, master)
              enddo ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
      enddo ! over i={1,nsect} loop
@@ -759,8 +759,8 @@
                  cycle
              endif ! back if ( k == -1 ) block
              call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, &
-                         one,  sectors(k)%fmat(i,1)%item,            sectors(j)%ndim, &
-                               sectors(j)%fmat(i,0)%item,            sectors(k)%ndim, &
+                         one,  sectors(k)%fmat(i,1)%val,            sectors(j)%ndim, &
+                               sectors(j)%fmat(i,0)%val,            sectors(k)%ndim, &
                          zero, sectors(j)%occu(:,:,i),               sectors(j)%ndim  )
          enddo ! over j={1,nsect} loop
      enddo ! over i={1,norbs} loop
@@ -777,13 +777,13 @@
                      cycle
                  endif ! back if ( ii == -1 .or. jj == -1 ) block
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
-                             one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  &
-                                   sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, &
+                             one,  sectors(jj)%fmat(j,1)%val,           sectors(k)%ndim,  &
+                                   sectors(k)%fmat(j,0)%val,            sectors(jj)%ndim, &
                              zero, mat_t1,                               mdim_sect         )
 
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
-                             one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
-                                   sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, &
+                             one,  sectors(ii)%fmat(i,1)%val,           sectors(k)%ndim,  &
+                                   sectors(k)%fmat(i,0)%val,            sectors(ii)%ndim, &
                              zero, mat_t2,                               mdim_sect         )
 
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
