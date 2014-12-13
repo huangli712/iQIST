@@ -933,28 +933,27 @@
 ! start index of this sector
          integer :: istart
 
-! eigenvalues
-         real(dp), dimension(:), pointer :: eval => null()
+! the next sector after a fermion operator acts on this sector
+! -1: outside of the Hilbert space, otherwise, it is the index of next sector
+! next(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
+         integer, pointer  :: next(:,:)
 
-! next sector it points to when a fermion operator acts on this sector, F|i> --> |j>
-! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-! it is -1 if goes outside of the Hilbert space,
-! otherwise, it is the index of next sector
-         integer, dimension(:,:), pointer :: next_sect => null()
-
-! F-matrix between this sector and all other sectors
-! the pointer is null if this sector doesn't point to some other sectors
-! fmat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
-         type (t_fmat), dimension(:,:), pointer :: fmat => null()
+! the eigenvalues
+         real(dp), pointer :: eval(:)
 
 ! final products of matrices, which will be used to calculate nmat and nnmat
-         real(dp), dimension(:,:,:), pointer :: fprod => null()
+         real(dp), pointer :: prod(:,:,:)
 
 ! matrix of occupancy operator c^{\dagger}c
-         real(dp), dimension(:,:,:), pointer :: occu => null()
+         real(dp), pointer :: occu(:,:,:)
 
 ! matrix of double occupancy operator c^{\dagger}cc^{\dagger}c
-         real(dp), dimension(:,:,:,:), pointer :: doccu => null()
+         real(dp), pointer :: doccu(:,:,:,:)
+
+! the F-matrix between this sector and all other sectors
+! if this sector doesn't point to some other sectors, the pointer is null
+! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
+         type (t_fmat), pointer :: fmat(:,:)
 
      end type t_sector
 
@@ -963,16 +962,16 @@
      integer, private :: istat
 
 ! total number of sectors
-     integer, public, save :: nsect
+     integer, public, save  :: nsect
 
 ! maximal dimension of sectors
-     integer, public, save :: mdim_sect
+     integer, public, save  :: mdim_sect
 
 ! average dimension of sectors
      real(dp), public, save :: adim_sect
 
 ! array of t_sector contains all the sectors
-     type(t_sector), public, save, allocatable :: sectors(:)
+     type (t_sector), public, save, allocatable :: sectors(:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -1031,9 +1030,9 @@
      integer :: i, j
 
      allocate( sect%eval(sect%ndim),                                stat=istat )
-     allocate( sect%next_sect(sect%nops,0:1),                       stat=istat )
+     allocate( sect%next(sect%nops,0:1),                       stat=istat )
      allocate( sect%fmat(sect%nops,0:1),                            stat=istat )
-     allocate( sect%fprod(sect%ndim,sect%ndim,2),                   stat=istat )
+     allocate( sect%prod(sect%ndim,sect%ndim,2),                   stat=istat )
      allocate( sect%occu(sect%ndim,sect%ndim,sect%nops),            stat=istat )
      allocate( sect%doccu(sect%ndim,sect%ndim,sect%nops,sect%nops), stat=istat )
 
@@ -1044,8 +1043,8 @@
 
 ! initialize them
      sect%eval = zero
-     sect%next_sect = 0
-     sect%fprod = zero
+     sect%next = 0
+     sect%prod = zero
      sect%occu = zero
      sect%doccu = zero
 
@@ -1072,8 +1071,8 @@
      integer :: i, j
 
      if ( associated(sect%eval) )        deallocate(sect%eval)
-     if ( associated(sect%next_sect) )   deallocate(sect%next_sect)
-     if ( associated(sect%fprod) )       deallocate(sect%fprod)
+     if ( associated(sect%next) )   deallocate(sect%next)
+     if ( associated(sect%prod) )       deallocate(sect%prod)
      if ( associated(sect%occu) )        deallocate(sect%occu)
      if ( associated(sect%doccu) )       deallocate(sect%doccu)
 
@@ -1109,8 +1108,8 @@
          sectors(i)%nops = norbs
          sectors(i)%istart = 0
          sectors(i)%eval => null()
-         sectors(i)%next_sect => null()
-         sectors(i)%fprod => null()
+         sectors(i)%next => null()
+         sectors(i)%prod => null()
          sectors(i)%occu => null()
          sectors(i)%doccu => null()
      enddo ! over i={1,nsect} loop
@@ -1191,7 +1190,7 @@
                  string(left,i) = curr_sect_l
                  vt = type_v( index_t_loc(left) )
                  vf = flvr_v( index_t_loc(left) )
-                 next_sect_l = sectors(curr_sect_l)%next_sect(vf,vt)
+                 next_sect_l = sectors(curr_sect_l)%next(vf,vt)
                  if ( next_sect_l == -1 ) then
                      is_string(i) = .false.
                      EXIT   ! finish check, exit
@@ -1202,7 +1201,7 @@
                  vt = type_v( index_t_loc(right) )
                  vf = flvr_v( index_t_loc(right) )
                  vt = mod(vt+1,2)
-                 next_sect_r = sectors(curr_sect_r)%next_sect(vf,vt)
+                 next_sect_r = sectors(curr_sect_r)%next(vf,vt)
                  if ( next_sect_r == -1 ) then
                      is_string(i) = .false.
                      EXIT   ! finish check, exit
@@ -1660,7 +1659,7 @@
      endif ! back if ( csize == 0 ) block
 
 ! store final product
-     sectors( string(1) )%fprod(:,:,1) = mat_r(1:dim1,1:dim1)
+     sectors( string(1) )%prod(:,:,1) = mat_r(1:dim1,1:dim1)
 
 ! calculate the trace
      trace = zero

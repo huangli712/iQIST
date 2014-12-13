@@ -2613,7 +2613,7 @@
      do i=1,nsect
          if ( .not. is_string(i) ) then
              trace_sect(i) = zero
-             sectors(i)%fprod(:,:,1) = zero
+             sectors(i)%prod(:,:,1) = zero
          else
              call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
          endif ! back if ( .not. is_string(i) ) block
@@ -2624,7 +2624,7 @@
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             diag(indx+j-1,1) = sectors(i)%fprod(j,j,1)
+             diag(indx+j-1,1) = sectors(i)%prod(j,j,1)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -2654,7 +2654,7 @@
 ! transfer the final matrix product from fprod(:,:,1) to fprod(:,:,2),
 ! the latter can be used to calculate nmat and nnmat
      do i=1,nsect
-         sectors(i)%fprod(:,:,2) = sectors(i)%fprod(:,:,1)
+         sectors(i)%prod(:,:,2) = sectors(i)%prod(:,:,1)
      enddo ! over i={1,nsect} loop
 
 ! save the data of each part

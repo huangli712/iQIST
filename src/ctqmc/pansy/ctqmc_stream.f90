@@ -427,8 +427,8 @@
 ! read the next_sector index
                  read(mytmp,*) ! skip the header
                  do j=1, sectors(i)%nops
-                     read(mytmp,*) j1, sectors(i)%next_sect(j,0), &
-                                       sectors(i)%next_sect(j,1)
+                     read(mytmp,*) j1, sectors(i)%next(j,0), &
+                                       sectors(i)%next(j,1)
                  enddo
 
 ! read the eigenvalue of this sector
@@ -447,7 +447,7 @@
              do i=1,nsect
                  do j=1,sectors(i)%nops
                      do k=0,1
-                         ii = sectors(i)%next_sect(j,k)
+                         ii = sectors(i)%next(j,k)
                          if (ii == -1) cycle
 ! skip one hader line
                          read(mytmp, *)
@@ -494,7 +494,7 @@
          if ( myid /= master ) then
              call alloc_one_sect(sectors(i))
          endif ! back if ( myid /= master ) block
-         call mp_bcast(sectors(i)%next_sect, master)
+         call mp_bcast(sectors(i)%next, master)
          call mp_bcast(sectors(i)%eval,      master)
      enddo ! over i={1,nsect} loop
      call mp_barrier()
@@ -502,7 +502,7 @@
      do i=1,nsect
          do j=1,sectors(i)%nops
              do k=0,1
-                 ii = sectors(i)%next_sect(j,k)
+                 ii = sectors(i)%next(j,k)
                  if (ii == -1) cycle
                  if ( myid /= master ) then
                      sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
@@ -753,7 +753,7 @@
 ! which are used to calculate occupation number
      do i=1,norbs
          do j=1,nsect
-             k=sectors(j)%next_sect(i,0)
+             k=sectors(j)%next(i,0)
              if ( k == -1 ) then
                  sectors(j)%occu(:,:,i) = zero
                  cycle
@@ -770,8 +770,8 @@
      do i=1,norbs
          do j=1,norbs
              do k=1,nsect
-                 jj = sectors(k)%next_sect(j,0)
-                 ii = sectors(k)%next_sect(i,0)
+                 jj = sectors(k)%next(j,0)
+                 ii = sectors(k)%next(i,0)
                  if ( ii == -1 .or. jj == -1 ) then
                      sectors(k)%doccu(:,:,i,j) = zero
                      cycle

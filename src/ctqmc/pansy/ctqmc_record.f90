@@ -234,7 +234,7 @@
      raux2 = zero
      do i=1,nsect
          do j=1,sectors(i)%ndim
-             raux2 = raux2 + sectors(i)%fprod(j, j, 2)
+             raux2 = raux2 + sectors(i)%prod(j, j, 2)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -251,7 +251,7 @@
          raux1 = zero
          do i=1,nsect
              call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
-                         one,  sectors(i)%fprod(:,:,2),              sectors(i)%ndim, &
+                         one,  sectors(i)%prod(:,:,2),              sectors(i)%ndim, &
                                sectors(i)%occu(:,:,flvr),            sectors(i)%ndim, &
                          zero, mat_t,                                mdim_sect        )
 
@@ -274,7 +274,7 @@
              raux1 = zero
              do j=1,nsect
                  call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                              one,  sectors(j)%fprod(:,:,2),             sectors(j)%ndim, &
+                              one,  sectors(j)%prod(:,:,2),             sectors(j)%ndim, &
                                     sectors(j)%doccu(:,:,flvr,i),        sectors(j)%ndim, &
                               zero, mat_t,                               mdim_sect        )
 
@@ -287,7 +287,7 @@
              raux1 = zero
              do j=1,nsect
                  call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                             one,  sectors(j)%fprod(:,:,2),              sectors(j)%ndim, &
+                             one,  sectors(j)%prod(:,:,2),              sectors(j)%ndim, &
                                    sectors(j)%doccu(:,:,i,flvr),         sectors(j)%ndim, &
                              zero, mat_t,                                mdim_sect        )
 
@@ -957,7 +957,7 @@
      ghub = czero
      do k=1,nsect
          do i=1,norbs
-             kk = sectors(k)%next_sect(i,0)
+             kk = sectors(k)%next(i,0)
              if (kk == -1) cycle
              indx1 = sectors(k)%istart
              indx2 = sectors(kk)%istart
