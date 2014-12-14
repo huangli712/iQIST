@@ -8,11 +8,9 @@
 !!! source  : ctqmc_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
-!!!         : yilin wang (email: qhwyl2006@126.com)
+!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/08/2010 by li huang
-!!!           07/19/2014 by yilin wang
-!!!           08/18/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
@@ -95,7 +93,6 @@
 ! read in parameters, default setting should be overrided
          if ( exists .eqv. .true. ) then
 ! create the file parser
-!------------------------------------------------------------------------+
              call p_create()
 ! parse the config file
              call p_parse('solver.ctqmc.in')
@@ -137,10 +134,6 @@
              call p_get('nclean', nclean)
              call p_get('nmonte', nmonte)
              call p_get('ncarlo', ncarlo)
-
-             nspin = 2
-             norbs = nspin * nband
-             ncfgs = 2 ** norbs
 
 ! destroy the parser
              call p_destroy()
@@ -240,8 +233,8 @@
      use context, only : symm, eimp, eigs, naux, saux
      use context, only : hybf
 
-     use m_sector ! ALL
-     use m_npart  ! ALL
+     use m_sect ! ALL
+     use m_part ! ALL
 
      implicit none
 
@@ -250,20 +243,17 @@
      integer  :: i
      integer  :: j
      integer  :: k
-     integer  :: ii
+     integer  :: m
      integer  :: n
-
-! number of nonzero elements of F-matrix
-     integer :: nonzero
-
-! dummy integer variables
-     integer  :: j1, j2, j3
-
-! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
-     logical  :: exists
 
 ! version of file 'atom.cix'
      integer  :: ver
+
+! dummy integer variables
+     integer  :: j1, j2, j3, j4, j5
+
+! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
+     logical  :: exists
 
 ! dummy real variables
      real(dp) :: rtmp
@@ -281,7 +271,8 @@
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
-         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
+         hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
@@ -374,184 +365,227 @@
 ! setup initial eigs, naux, and saux
      eigs = zero
      naux = zero
+     saux = zero
 
+! read in initial F matrix if available
+!-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
 ! inquire about file's existence
+! file atom.cix is necessary, the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
 ! find input file: atom.cix, read it
-! file atom.cix is necessary, the code can not run without it
-         if ( exists .eqv. .true. ) then
-
 ! open data file
-             open(mytmp, file='atom.cix', form='formatted', status='unknown')
+         open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
 ! skip ten comment lines
-             do i=1,10
-                 read(mytmp,*)
-             enddo ! over i={1,10} loop
+         do i=1,10
+             read(mytmp,*)
+         enddo ! over i={1,10} loop
 
 ! determine whether the spin-orbital coupling effect should be considered
-             read(mytmp,*) ver, i, j, cssoc
-! check the version of atom.cix
-             if ( ver /= 2 ) then
-                 call s_print_error('ctqmc_selfer_init','file atom.cix is NOT the version for pansy')
-             endif ! back if ( ver /= 2) block
+! and check the version of atom.cix
+         read(mytmp,*) ver, i, j, cssoc
+         if ( ver /= 2 ) then
+             call s_print_error('ctqmc_selfer_init','file format of atom.cix is not correct')
+         endif ! back if ( ver /= 2) block
 
 ! skip nine comment lines
-             do i=1,9
-                 read(mytmp,*)
-             enddo ! over i={1,9} loop
+         do i=1,9
+             read(mytmp,*)
+         enddo ! over i={1,9} loop
+
 ! read the total number of sectors, maximum dimension of sectors,
 ! and average dimension of sectors
-             read(mytmp,*) nsect, mdim_sect, adim_sect
+         read(mytmp,*) nsect, max_dim_sect, ave_dim_sect
 
 ! after we know the total number of sectors, we can allocate memory
-! for array sectors and parts
-             call ctqmc_allocate_memory_sect()
+! for sectors, only for master node
+         call ctqmc_allocate_memory_sect()
+         call ctqmc_allocate_memory_part()
 
 ! read each sector's information
-             do i=1,nsect
-                 read(mytmp,*) ! skip the header
+         do i=1,nsect
+! read the dimension, total number of electrons, number of fermion
+! operators, and start index of this sector
+             read(mytmp,*) ! skip the header
+             read(mytmp,*) k, sectors(i)%ndim, sectors(i)%nele, sectors(i)%nops, sectors(i)%istart
 
-! read the dimension, total number of electrons, number of fermion operators,
-! and start index of this sector
-                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelec, &
-                                   sectors(i)%nops, sectors(i)%istart
+! allocate the memory for sectors(i), only for master node
+             call alloc_one_sect(sectors(i))
 
-! allocate the memory for sectors(i)
-                 call alloc_one_sect(sectors(i))
-
-! read the next_sector index
-                 read(mytmp,*) ! skip the header
-                 do j=1, sectors(i)%nops
-                     read(mytmp,*) j1, sectors(i)%next_sect(j,0), &
-                                       sectors(i)%next_sect(j,1)
-                 enddo
+! read the next index
+             read(mytmp,*) ! skip the header
+             do j=1,sectors(i)%nops
+                 read(mytmp,*) k, sectors(i)%next(j,0), sectors(i)%next(j,1)
+             enddo ! over do j={1,sectors(i)%nops} loop
 
 ! read the eigenvalue of this sector
-                 read(mytmp,*) ! skip the header
-                 do j=1,sectors(i)%ndim
-                     read(mytmp,*) j1, sectors(i)%eval(j)
-                 enddo ! over j={1,sectors(i)%ndim} loop
-             enddo ! over i={1,nsectors} loop
+             read(mytmp,*) ! skip the header
+             do j=1,sectors(i)%ndim
+                 read(mytmp,*) k, sectors(i)%eval(j)
+             enddo ! over j={1,sectors(i)%ndim} loop
+         enddo ! over i={1,nsect} loop
 
-! read F-matrix
-! skip three header lines
+! skip three comment lines
+         do i=1,3
              read(mytmp,*)
-             read(mytmp,*)
-             read(mytmp,*)
+         enddo ! over i={1,3} loop
 
-             do i=1,nsect
-                 do j=1,sectors(i)%nops
-                     do k=0,1
-                         ii = sectors(i)%next_sect(j,k)
-                         if (ii == -1) cycle
-! skip one hader line
-                         read(mytmp, *)
-                         read(mytmp, *) j1, j2, j3, i1, i2, nonzero
-                         sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
-                         sectors(i)%fmat(j,k)%m = sectors(i)%ndim
-                         call alloc_one_mat(sectors(i)%fmat(j,k))
+! read F-matrix from atom.cix
+         do i=1,nsect
+             do j=1,sectors(i)%nops
+                 do k=0,1
+                     m = sectors(i)%next(j,k)
+                     if ( m == -1 ) CYCLE
+                     read(mytmp,*) ! skip one header line
+! determine the dimension of F-matrix, number of non-zero elements
+                     read(mytmp,*) j1, j2, j3, j4, j5, n
+                     call s_assert(j4 == sectors(m)%ndim)
+                     call s_assert(j5 == sectors(i)%ndim)
+                     sectors(i)%fmat(j,k)%n = j4
+                     sectors(i)%fmat(j,k)%m = j5
+! allocate memory for F-matrix, only for master node
+                     call alloc_one_mat(sectors(i)%fmat(j,k))
 ! read non-zero elements of F-matrix
-                         sectors(i)%fmat(j,k)%item = zero
-                         do n=1,nonzero
-                             read(mytmp, *) i1, i2, r1
-                             sectors(i)%fmat(j,k)%item(i1,i2) = r1
-                         enddo ! over n={1,nonzero} loop
-                     enddo ! over k={0,1} loop
-                 enddo ! over j={1,sectors(i)%nops} loop
-             enddo ! over i={1,nsectors} loop
+                     sectors(i)%fmat(j,k)%val = zero
+                     do m=1,n
+                         read(mytmp,*) j1, j2, r1
+                         sectors(i)%fmat(j,k)%val(j1,j2) = r1
+                     enddo ! over m={1,n} loop
+                 enddo ! over k={0,1} loop
+             enddo ! over j={1,sectors(i)%nops} loop
+         enddo ! over i={1,nsect} loop
 
-             close(mytmp)
-         else
-             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
-         endif ! back if ( exists .eqv. .true. ) block
+! close data file
+         close(mytmp)
 
+! add the contribution from chemical potential to eigenvalues
+         k = 0
+         do i=1,nsect
+             do j=1,sectors(i)%ndim
+                 k = k + 1
+                 naux(k) = sectors(i)%nele
+                 eigs(k) = sectors(i)%eval(j) - mune * naux(k)
+             enddo ! over j={1,sectors(i)%ndim} loop
+         enddo ! over i={1,nsect} loop
+
+! substract the eigenvalues zero point, here we store the eigen energy
+! zero point in U
+         r1 = minval(eigs)
+         r2 = maxval(eigs)
+         U  = r1 + one ! here we choose the minimum as zero point
+         do i=1,ncfgs
+             eigs(i) = eigs(i) - U
+         enddo ! over i={1,ncfgs} loop
+
+! check validity of eigs
+! note: \infity - \infity is undefined, which return NaN
+         do i=1,ncfgs
+             if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
+                 call s_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
+             endif ! back if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) block
+         enddo ! over i={1,ncfgs} loop
      endif ! back if ( myid == master ) block
 
+! broadcast U, eigs, naux, and saux from master node to all children nodes
 # if defined (MPI)
+
+! broadcast data
+     call mp_bcast(U,     master)
+
 ! block until all processes have reached here
      call mp_barrier()
 
-     call mp_bcast(cssoc,     master)
-     call mp_bcast(nsect,     master)
-     call mp_bcast(mdim_sect, master)
-     call mp_bcast(adim_sect, master)
+! broadcast data
+     call mp_bcast(eigs,  master)
 
-     if ( myid /= master ) then
-         call ctqmc_allocate_memory_sect()
-     endif ! back if ( myid /= master ) block
-
-     do i=1,nsect
-         call mp_barrier()
-         call mp_bcast(sectors(i)%ndim,   master)
-         call mp_bcast(sectors(i)%nelec,  master)
-         call mp_bcast(sectors(i)%nops,   master)
-         call mp_bcast(sectors(i)%istart, master)
-         if ( myid /= master ) then
-             call alloc_one_sect(sectors(i))
-         endif ! back if ( myid /= master ) block
-         call mp_bcast(sectors(i)%next_sect, master)
-         call mp_bcast(sectors(i)%eval,      master)
-     enddo ! over i={1,nsect} loop
+! block until all processes have reached here
      call mp_barrier()
 
-     do i=1,nsect
-         do j=1,sectors(i)%nops
-             do k=0,1
-                 ii = sectors(i)%next_sect(j,k)
-                 if (ii == -1) cycle
-                 if ( myid /= master ) then
-                     sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
-                     sectors(i)%fmat(j,k)%m = sectors(i)%ndim
-                     call alloc_one_mat(sectors(i)%fmat(j,k))
-                 endif ! back if ( myid /= master ) block
-                 call mp_barrier()
-                 call mp_bcast(sectors(i)%fmat(j,k)%item, master)
-             enddo ! over k={0,1} loop
-         enddo ! over j={1,sectors(i)%nops} loop
-     enddo ! over i={1,nsect} loop
+! broadcast data
+     call mp_bcast(naux,  master)
+     call mp_bcast(saux,  master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+! broadcast data
+     call mp_bcast(cssoc, master)
+     call mp_bcast(nsect, master)
+     call mp_bcast(max_dim_sect, master)
+     call mp_bcast(ave_dim_sect, master)
+
+! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
 
-! allocate memory for npart algorithm
-     call ctqmc_allocate_memory_part()
+! allocate memory for sectors, only for children nodes
+     if ( myid /= master ) then
+         call ctqmc_allocate_memory_sect()
+         call ctqmc_allocate_memory_part()
+     endif ! back if ( myid /= master ) block
 
-! add the contribution from chemical potential to eigenvalues
-     j1 = 0
+! broadcast sectors from master node to all children nodes
+# if defined (MPI)
+
+! broadcast data
      do i=1,nsect
-         do j=1,sectors(i)%ndim
-             j1 = j1 + 1
-             eigs(j1) = sectors(i)%eval(j)
-             naux(j1) = sectors(i)%nelec
-         enddo ! over j={1,sectors(i)%ndim} loop
+! broadcast sector's information
+         call mp_bcast(sectors(i)%ndim,   master)
+         call mp_bcast(sectors(i)%nele,   master)
+         call mp_bcast(sectors(i)%nops,   master)
+         call mp_bcast(sectors(i)%istart, master)
+! setup barrier
+         call mp_barrier()
+! allocate memory for t_sector structure, only for children nodes
+         if ( myid /= master ) then
+             call alloc_one_sect(sectors(i))
+         endif ! back if ( myid /= master ) block
+! setup barrier
+         call mp_barrier()
+! broadcast sector's data
+         call mp_bcast(sectors(i)%next,   master)
+         call mp_bcast(sectors(i)%eval,   master)
+! setup barrier
+         call mp_barrier()
      enddo ! over i={1,nsect} loop
-     do i=1,ncfgs
-         eigs(i) = eigs(i) - mune * naux(i)
-     enddo ! over i={1,ncfgs} loop
 
-! substract the eigenvalues zero point, here we store the eigen energy
-! zero point in U
-     r1 = minval(eigs)
-     r2 = maxval(eigs)
-! here we choose the minimum as zero point
-     U  = r1 + one
-     do i=1,ncfgs
-         eigs(i) = eigs(i) - U
-     enddo
+! block until all processes have reached here
+     call mp_barrier()
 
-! check eigs
-! note: \infity - \infity is undefined, which return NaN
-     do i=1,ncfgs
-         if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
-             call s_print_error('ctqmc_selfer_init','NaN error, please &
-                                               adjust the zero base of eigs')
-         endif
-     enddo
+! broadcast data
+     do i=1,nsect
+         do j=1,sectors(i)%nops
+             do k=0,1
+                 m = sectors(i)%next(j,k)
+                 if ( m == -1 ) CYCLE
+! setup the dimension for F-matrix and allocate memory, only for children nodes
+                 if ( myid /= master ) then
+                     sectors(i)%fmat(j,k)%n = sectors(m)%ndim
+                     sectors(i)%fmat(j,k)%m = sectors(i)%ndim
+                     call alloc_one_mat(sectors(i)%fmat(j,k))
+                 endif ! back if ( myid /= master ) block
+! setup barrier
+                 call mp_barrier()
+! broadcast sector's F-matrix
+                 call mp_bcast(sectors(i)%fmat(j,k)%val, master)
+! setup barrier
+                 call mp_barrier()
+             enddo ! over k={0,1} loop
+         enddo ! over j={1,sectors(i)%nops} loop
+     enddo ! over i={1,nsect} loop
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif  /* MPI */
 
      return
   end subroutine ctqmc_selfer_init
@@ -565,18 +599,19 @@
 
      use control ! ALL
      use context ! ALL
-     use m_sector ! ALL
-     use m_npart  ! ALL
+
+     use m_sect  ! ALL
+     use m_part  ! ALL
 
      implicit none
 
 ! local variables
 ! loop index
      integer :: i
-     integer :: ii
      integer :: j
-     integer :: jj
      integer :: k
+     integer :: m
+     integer :: n
 
 ! system time since 1970, Jan 1, used to generate the random number seed
      integer :: system_time
@@ -584,9 +619,9 @@
 ! random number seed for twist generator
      integer :: stream_seed
 
-! dummy matrices
-     real(dp) :: mat_t1(mdim_sect, mdim_sect)
-     real(dp) :: mat_t2(mdim_sect, mdim_sect)
+! real(dp) dummy matrices
+     real(dp) :: mat_t1(max_dim_sect,max_dim_sect)
+     real(dp) :: mat_t2(max_dim_sect,max_dim_sect)
 
 ! init random number generator
      call system_clock(system_time)
@@ -716,6 +751,7 @@
      matrix_ptrace = sum( expt_t(:, 2) )
 
 ! for complex arrays
+!-------------------------------------------------------------------------
 ! init exponent array exp_s and exp_e
      exp_s   = czero
      exp_e   = czero
@@ -739,13 +775,13 @@
 
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
-! init npart
-     nprod = zero
-     isave = 1
-     is_cp = .false.
-     ncol_cp = 0
-     ops = 0
-     ope = 0
+! init m_npart module
+     nprod   = zero
+     is_cp   = .false.
+     nc_cp   = 0
+     ops     = 0
+     ope     = 0
+     isave   = 1
      saved_p = zero
      saved_n = zero
 
@@ -753,15 +789,19 @@
 ! which are used to calculate occupation number
      do i=1,norbs
          do j=1,nsect
-             k=sectors(j)%next_sect(i,0)
+             k = sectors(j)%next(i,0)
              if ( k == -1 ) then
-                 sectors(j)%occu(:,:,i) = zero
-                 cycle
+                 sectors(j)%occu(:,:,i) = zero; CYCLE
              endif ! back if ( k == -1 ) block
-             call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, &
-                         one,  sectors(k)%fmat(i,1)%item,            sectors(j)%ndim, &
-                               sectors(j)%fmat(i,0)%item,            sectors(k)%ndim, &
-                         zero, sectors(j)%occu(:,:,i),               sectors(j)%ndim  )
+             call dgemm( 'N', 'N', sectors(j)%ndim, &
+                                   sectors(j)%ndim, &
+                                   sectors(k)%ndim, &
+                     one, sectors(k)%fmat(i,1)%val, &
+                                   sectors(j)%ndim, &
+                          sectors(j)%fmat(i,0)%val, &
+                                   sectors(k)%ndim, &
+                      zero, sectors(j)%occu(:,:,i), &
+                                   sectors(j)%ndim )
          enddo ! over j={1,nsect} loop
      enddo ! over i={1,norbs} loop
 
@@ -770,27 +810,34 @@
      do i=1,norbs
          do j=1,norbs
              do k=1,nsect
-                 jj = sectors(k)%next_sect(j,0)
-                 ii = sectors(k)%next_sect(i,0)
-                 if ( ii == -1 .or. jj == -1 ) then
-                     sectors(k)%doccu(:,:,i,j) = zero
-                     cycle
-                 endif ! back if ( ii == -1 .or. jj == -1 ) block
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
-                             one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  &
-                                   sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, &
-                             zero, mat_t1,                               mdim_sect         )
-
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
-                             one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
-                                   sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, &
-                             zero, mat_t2,                               mdim_sect         )
-
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
-                             one,  mat_t2,                               mdim_sect,        &
-                                   mat_t1,                               mdim_sect,        &
-                             zero, sectors(k)%doccu(:,:,i,j),            sectors(k)%ndim   )
-
+                 n = sectors(k)%next(j,0)
+                 m = sectors(k)%next(i,0)
+                 if ( m == -1 .or. n == -1 ) then
+                     sectors(k)%doccu(:,:,i,j) = zero; CYCLE
+                 endif ! back if ( m == -1 .or. n == -1 ) block
+                 call dgemm( 'N', 'N', sectors(k)%ndim, &
+                                       sectors(k)%ndim, &
+                                       sectors(n)%ndim, &
+                         one, sectors(n)%fmat(j,1)%val, &
+                                       sectors(k)%ndim, &
+                              sectors(k)%fmat(j,0)%val, &
+                                       sectors(n)%ndim, &
+                            zero, mat_t1, max_dim_sect )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, &
+                                       sectors(k)%ndim, &
+                                       sectors(m)%ndim, &
+                         one, sectors(m)%fmat(i,1)%val, &
+                                       sectors(k)%ndim, &
+                              sectors(k)%fmat(i,0)%val, &
+                                       sectors(m)%ndim, &
+                            zero, mat_t2, max_dim_sect )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, &
+                                       sectors(k)%ndim, &
+                                       sectors(k)%ndim, &
+                             one, mat_t2, max_dim_sect, &
+                                  mat_t1, max_dim_sect, &
+                       zero, sectors(k)%doccu(:,:,i,j), &
+                                       sectors(k)%ndim )
              enddo ! over k={1,nsect} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
@@ -814,22 +861,6 @@
          call ctqmc_dump_htau(tmesh, htau)
      endif ! back if ( myid == master ) block
 
-! write out the number of sectors, the maximal dimension of sectors, and
-! the average dimension of sectors
-     if ( myid == master ) then ! only master node can do it
-         write(mystd,'(4X,a,i8)')   'tot_num_sect:', nsect
-         write(mystd,'(4X,a,i8)')   'max_dim_sect:', mdim_sect
-         write(mystd,'(4X,a,f8.1)') 'ave_dim_sect:', adim_sect
-     endif
-! write out the current status of spin-orbit coupling
-     if ( myid == master ) then ! only master node can do it
-         if ( cssoc == 1 ) then
-             write(mystd,'(4X,a)') 'SOC calculation:  Yes'
-         else
-             write(mystd,'(4X,a)') 'SOC calculation:   No'
-         endif
-     endif
-
 ! write out the seed for random number stream, it is useful to reproduce
 ! the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
@@ -843,8 +874,9 @@
 !!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
      use context ! ALL
-     use m_sector ! ALL
-     use m_npart ! ALL
+
+     use m_sect  ! ALL
+     use m_part  ! ALL
 
      implicit none
 
@@ -861,8 +893,8 @@
      call ctqmc_deallocate_memory_wmat()
      call ctqmc_deallocate_memory_smat()
 
-     call ctqmc_deallocate_memory_part()
      call ctqmc_deallocate_memory_sect()
+     call ctqmc_deallocate_memory_part()
 
      return
   end subroutine ctqmc_final_array

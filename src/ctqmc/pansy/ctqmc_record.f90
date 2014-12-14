@@ -198,7 +198,9 @@
      use context, only : nmat, nnmat, paux
      use context, only : ckink, matrix_ptrace
      use context, only : diag, eigs
-     use m_sector, only : mdim_sect, nsect, sectors
+
+     use m_sect, only : nsect, max_dim_sect
+     use m_sect, only : sectors
 
      implicit none
 
@@ -222,7 +224,7 @@
      real(dp) :: cprob(ncfgs)
 
 ! dummy sparse matrix, used to calculate nmat and nnmat
-     real(dp) :: mat_t(mdim_sect, mdim_sect)
+     real(dp) :: mat_t(max_dim_sect, max_dim_sect)
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
@@ -234,7 +236,7 @@
      raux2 = zero
      do i=1,nsect
          do j=1,sectors(i)%ndim
-             raux2 = raux2 + sectors(i)%fprod(j, j, 2)
+             raux2 = raux2 + sectors(i)%prod(j, j, 2)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -251,9 +253,9 @@
          raux1 = zero
          do i=1,nsect
              call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
-                         one,  sectors(i)%fprod(:,:,2),              sectors(i)%ndim, &
+                         one,  sectors(i)%prod(:,:,2),              sectors(i)%ndim, &
                                sectors(i)%occu(:,:,flvr),            sectors(i)%ndim, &
-                         zero, mat_t,                                mdim_sect        )
+                         zero, mat_t,                                max_dim_sect        )
 
              do j=1,sectors(i)%ndim
                  raux1 = raux1 + mat_t(j,j)
@@ -274,9 +276,9 @@
              raux1 = zero
              do j=1,nsect
                  call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                              one,  sectors(j)%fprod(:,:,2),             sectors(j)%ndim, &
+                              one,  sectors(j)%prod(:,:,2),             sectors(j)%ndim, &
                                     sectors(j)%doccu(:,:,flvr,i),        sectors(j)%ndim, &
-                              zero, mat_t,                               mdim_sect        )
+                              zero, mat_t,                               max_dim_sect        )
 
                  do k=1,sectors(j)%ndim
                      raux1 = raux1 + mat_t(k,k)
@@ -287,9 +289,9 @@
              raux1 = zero
              do j=1,nsect
                  call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                             one,  sectors(j)%fprod(:,:,2),              sectors(j)%ndim, &
+                             one,  sectors(j)%prod(:,:,2),              sectors(j)%ndim, &
                                    sectors(j)%doccu(:,:,i,flvr),         sectors(j)%ndim, &
-                             zero, mat_t,                                mdim_sect        )
+                             zero, mat_t,                                max_dim_sect        )
 
                  do k=1,sectors(j)%ndim
                      raux1 = raux1 + mat_t(k,k)
@@ -917,8 +919,9 @@
      use context, only : grnf
      use context, only : hybf
      use context, only : sig2
-     use m_sector, only : nsect
-     use m_sector, only : sectors
+
+     use m_sect, only : nsect
+     use m_sect, only : sectors
 
      implicit none
 
@@ -957,13 +960,13 @@
      ghub = czero
      do k=1,nsect
          do i=1,norbs
-             kk = sectors(k)%next_sect(i,0)
+             kk = sectors(k)%next(i,0)
              if (kk == -1) cycle
              indx1 = sectors(k)%istart
              indx2 = sectors(kk)%istart
              do l=1,sectors(k)%ndim
                  do m=1,sectors(kk)%ndim
-                     ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))
+                     ob = sectors(k)%fmat(i,0)%val(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))
                      do j=1,mfreq
                          cb = czi * rmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
                          ghub(j,i) = ghub(j,i) + ob / cb

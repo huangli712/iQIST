@@ -6,22 +6,19 @@
 !!!           ctqmc_mesh module
 !!!           ctqmc_meat module
 !!!           ctqmc_umat module
-!!!           ctqmc_fmat module
 !!!           ctqmc_mmat module
 !!!           ctqmc_gmat module
 !!!           ctqmc_wmat module
 !!!           ctqmc_smat module
 !!!           context    module
-!!!           m_sector   module
-!!!           m_npart    module
+!!!           m_sect     module
+!!!           m_part     module
 !!! source  : ctqmc_context.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/08/2010 by li huang
-!!!           08/18/2014 by yilin wang
-!!!           11/02/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : To define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
@@ -890,34 +887,45 @@
 
   end module context
 
-!!>>> m_sector: define the data structure for good quantum numbers (GQNs) algorithm
-  module m_sector
+
+
+
+!!========================================================================
+!!>>> module m_sect                                                    <<<
+!!========================================================================
+
+!!>>> define the data structure for good quantum numbers (GQNs) algorithm
+  module m_sect
      use constants, only : dp, zero
-     use control, only : mkink, norbs
+
+     use control, only : norbs
+     use control, only : mkink
      use context, only : type_v, flvr_v
 
      implicit none
 
-! a matrix type
-     type :: t_matrix
+! data structure for one F-matrix
+!-------------------------------------------------------------------------
+     type t_fmat
 
-! dimensions
-         integer :: n, m
+! the dimension, n x m
+         integer :: n
+         integer :: m
 
-! items
-         real(dp), dimension(:,:), pointer :: item => null()
+! the memory space for the matrix
+         real(dp), pointer :: val(:,:)
 
-     end type t_matrix
+     end type t_fmat
 
-
-! a sector type contains all the information of a subspace of H_{loc}
-     type :: t_sector
+! data structure for one sector
+!-------------------------------------------------------------------------
+     type t_sector
 
 ! dimension
          integer :: ndim
 
 ! total number of electrons
-         integer :: nelec
+         integer :: nele
 
 ! number of fermion operators, it should be equal to norbs
          integer :: nops
@@ -925,28 +933,27 @@
 ! start index of this sector
          integer :: istart
 
-! eigenvalues
-         real(dp), dimension(:), pointer :: eval => null()
+! the next sector after a fermion operator acts on this sector
+! -1: outside of the Hilbert space, otherwise, it is the index of next sector
+! next(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
+         integer, pointer  :: next(:,:)
 
-! next sector it points to when a fermion operator acts on this sector, F|i> --> |j>
-! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-! it is -1 if goes outside of the Hilbert space,
-! otherwise, it is the index of next sector
-         integer, dimension(:,:), pointer :: next_sect => null()
-
-! F-matrix between this sector and all other sectors
-! the pointer is null if this sector doesn't point to some other sectors
-! fmat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
-         type(t_matrix), dimension(:,:), pointer :: fmat => null()
+! the eigenvalues
+         real(dp), pointer :: eval(:)
 
 ! final products of matrices, which will be used to calculate nmat and nnmat
-         real(dp), dimension(:,:,:), pointer :: fprod => null()
+         real(dp), pointer :: prod(:,:,:)
 
 ! matrix of occupancy operator c^{\dagger}c
-         real(dp), dimension(:,:,:), pointer :: occu => null()
+         real(dp), pointer :: occu(:,:,:)
 
 ! matrix of double occupancy operator c^{\dagger}cc^{\dagger}c
-         real(dp), dimension(:,:,:,:), pointer :: doccu => null()
+         real(dp), pointer :: doccu(:,:,:,:)
+
+! the F-matrix between this sector and all other sectors
+! if this sector doesn't point to some other sectors, the pointer is null
+! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
+         type (t_fmat), pointer :: fmat(:,:)
 
      end type t_sector
 
@@ -955,16 +962,16 @@
      integer, private :: istat
 
 ! total number of sectors
-     integer, public, save :: nsect
+     integer, public, save  :: nsect
 
 ! maximal dimension of sectors
-     integer, public, save :: mdim_sect
+     integer, public, save  :: max_dim_sect
 
 ! average dimension of sectors
-     real(dp), public, save :: adim_sect
+     real(dp), public, save :: ave_dim_sect
 
 ! array of t_sector contains all the sectors
-     type(t_sector), public, save, allocatable :: sectors(:)
+     type (t_sector), public, save, allocatable :: sectors(:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -985,17 +992,17 @@
      implicit none
 
 ! external variables
-     type(t_matrix), intent(inout) :: mat
+     type (t_fmat), intent(inout) :: mat
 
-     allocate( mat%item(mat%n, mat%m), stat=istat )
+     allocate(mat%val(mat%n,mat%m), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_mat', 'can not allocate enough memory')
+         call s_print_error('alloc_one_mat','can not allocate enough memory')
      endif ! back if ( istat /=0 ) block
 
 ! initialize it
-     mat%item = zero
+     mat%val = zero
 
      return
   end subroutine alloc_one_mat
@@ -1005,9 +1012,9 @@
      implicit none
 
 ! external variables
-     type(t_matrix), intent(inout) :: mat
+     type (t_fmat), intent(inout) :: mat
 
-     if ( associated(mat%item) ) deallocate(mat%item)
+     if ( associated(mat%val) ) deallocate(mat%val)
 
      return
   end subroutine dealloc_one_mat
@@ -1023,9 +1030,9 @@
      integer :: i, j
 
      allocate( sect%eval(sect%ndim),                                stat=istat )
-     allocate( sect%next_sect(sect%nops,0:1),                       stat=istat )
+     allocate( sect%next(sect%nops,0:1),                       stat=istat )
      allocate( sect%fmat(sect%nops,0:1),                            stat=istat )
-     allocate( sect%fprod(sect%ndim,sect%ndim,2),                   stat=istat )
+     allocate( sect%prod(sect%ndim,sect%ndim,2),                   stat=istat )
      allocate( sect%occu(sect%ndim,sect%ndim,sect%nops),            stat=istat )
      allocate( sect%doccu(sect%ndim,sect%ndim,sect%nops,sect%nops), stat=istat )
 
@@ -1036,8 +1043,8 @@
 
 ! initialize them
      sect%eval = zero
-     sect%next_sect = 0
-     sect%fprod = zero
+     sect%next = 0
+     sect%prod = zero
      sect%occu = zero
      sect%doccu = zero
 
@@ -1046,7 +1053,7 @@
          do j=0,1
              sect%fmat(i,j)%n = 0
              sect%fmat(i,j)%m = 0
-             sect%fmat(i,j)%item => null()
+             sect%fmat(i,j)%val => null()
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
 
@@ -1064,8 +1071,8 @@
      integer :: i, j
 
      if ( associated(sect%eval) )        deallocate(sect%eval)
-     if ( associated(sect%next_sect) )   deallocate(sect%next_sect)
-     if ( associated(sect%fprod) )       deallocate(sect%fprod)
+     if ( associated(sect%next) )   deallocate(sect%next)
+     if ( associated(sect%prod) )       deallocate(sect%prod)
      if ( associated(sect%occu) )        deallocate(sect%occu)
      if ( associated(sect%doccu) )       deallocate(sect%doccu)
 
@@ -1091,18 +1098,18 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_sect', 'can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      do i=1,nsect
          sectors(i)%ndim = 0
-         sectors(i)%nelec = 0
+         sectors(i)%nele = 0
          sectors(i)%nops = norbs
          sectors(i)%istart = 0
          sectors(i)%eval => null()
-         sectors(i)%next_sect => null()
-         sectors(i)%fprod => null()
+         sectors(i)%next => null()
+         sectors(i)%prod => null()
          sectors(i)%occu => null()
          sectors(i)%doccu => null()
      enddo ! over i={1,nsect} loop
@@ -1183,7 +1190,7 @@
                  string(left,i) = curr_sect_l
                  vt = type_v( index_t_loc(left) )
                  vf = flvr_v( index_t_loc(left) )
-                 next_sect_l = sectors(curr_sect_l)%next_sect(vf,vt)
+                 next_sect_l = sectors(curr_sect_l)%next(vf,vt)
                  if ( next_sect_l == -1 ) then
                      is_string(i) = .false.
                      EXIT   ! finish check, exit
@@ -1194,7 +1201,7 @@
                  vt = type_v( index_t_loc(right) )
                  vf = flvr_v( index_t_loc(right) )
                  vt = mod(vt+1,2)
-                 next_sect_r = sectors(curr_sect_r)%next_sect(vf,vt)
+                 next_sect_r = sectors(curr_sect_r)%next(vf,vt)
                  if ( next_sect_r == -1 ) then
                      is_string(i) = .false.
                      EXIT   ! finish check, exit
@@ -1222,42 +1229,44 @@
      return
   end subroutine ctqmc_make_string
 
-  end module m_sector
+  end module m_sect
 
 !!>>> m_npart: contains some key global variables and subroutines for divide
 !!>>> and conquer (npart) algorithm to speed up the trace evaluation
-  module m_npart
+  module m_part
      use constants, only : dp, zero, one
+
      use control, only : npart, mkink, beta, ncfgs
      use context, only : time_v, expt_v, type_v, flvr_v
 
-     use m_sector, only : nsect, sectors, mdim_sect
+     use m_sect, only : nsect, max_dim_sect
+     use m_sect, only : sectors
 
      implicit none
 
 ! status flag for allocating memory
      integer, private :: istat
 
-! total number of matrices products
-     real(dp), public, save :: nprod = zero
-
 ! the first filled part
      integer, public, save :: ffpart = 0
 
-! how to treat each part when calculating trace
-     integer, public, save, allocatable :: isave(:,:,:)
+! total number of matrices products
+     real(dp), public, save :: nprod = zero
 
-! whether to copy this part ?
+! whether to copy this part?
      logical, public, save, allocatable :: is_cp(:,:)
 
 ! number of columns to be copied, in order to save copy time
-     integer, public, save, allocatable :: ncol_cp(:,:)
+     integer, public, save, allocatable :: nc_cp(:,:)
 
 ! the start positions of fermion operators for each part
      integer, public, save, allocatable :: ops(:)
 
 ! the end positions of fermion operators for each part
      integer, public, save, allocatable :: ope(:)
+
+! how to treat each part when calculating trace
+     integer, public, save, allocatable :: isave(:,:,:)
 
 ! saved parts of matrices product, for previous accepted configuration
      real(dp), public, save, allocatable :: saved_p(:,:,:,:)
@@ -1284,12 +1293,12 @@
 ! allocate memory
      allocate( isave(npart,nsect,2),  stat=istat )
      allocate( is_cp(npart,nsect),    stat=istat )
-     allocate( ncol_cp(npart,nsect),  stat=istat )
+     allocate( nc_cp(npart,nsect),  stat=istat )
      allocate( ops(npart),            stat=istat )
      allocate( ope(npart),            stat=istat )
 
-     allocate( saved_p(mdim_sect,mdim_sect,npart,nsect), stat=istat )
-     allocate( saved_n(mdim_sect,mdim_sect,npart,nsect), stat=istat )
+     allocate( saved_p(max_dim_sect,max_dim_sect,npart,nsect), stat=istat )
+     allocate( saved_n(max_dim_sect,max_dim_sect,npart,nsect), stat=istat )
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1300,7 +1309,7 @@
 ! initialize them
      isave = 1
      is_cp = .false.
-     ncol_cp = 0
+     nc_cp = 0
      ops = 0
      ope = 0
      saved_p = zero
@@ -1315,7 +1324,7 @@
 
      if ( allocated(isave) )    deallocate(isave)
      if ( allocated(is_cp) )    deallocate(is_cp)
-     if ( allocated(ncol_cp) )  deallocate(ncol_cp)
+     if ( allocated(nc_cp) )  deallocate(nc_cp)
      if ( allocated(ops) )      deallocate(ops)
      if ( allocated(ope) )      deallocate(ope)
      if ( allocated(saved_p) )  deallocate(saved_p)
@@ -1515,8 +1524,8 @@
 
 ! local variables
 ! temp matrix
-     real(dp) :: mat_r(mdim_sect,mdim_sect)
-     real(dp) :: mat_t(mdim_sect,mdim_sect)
+     real(dp) :: mat_r(max_dim_sect,max_dim_sect)
+     real(dp) :: mat_t(max_dim_sect,max_dim_sect)
 
 ! temp index
      integer :: dim1
@@ -1553,9 +1562,9 @@
              dim3 = sectors(sect2)%ndim
              if ( i > ffpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim3,             &
-                              one,  saved_p(:,:,i,isect), mdim_sect, &
-                                    mat_r,                mdim_sect, &
-                              zero, mat_t,                mdim_sect  )
+                              one,  saved_p(:,:,i,isect), max_dim_sect, &
+                                    mat_r,                max_dim_sect, &
+                              zero, mat_t,                max_dim_sect  )
 
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
@@ -1596,10 +1605,10 @@
 ! multiply the matrix of fermion operator
                  vt = type_v( index_t_loc(j) )
                  vf = flvr_v( index_t_loc(j) )
-                 call dgemm( 'N', 'N', dim2, dim4, dim3,                      &
-                             one,  sectors(string(j))%fmat(vf,vt)%item, dim2, &
-                                   mat_t,                          mdim_sect, &
-                             zero, saved_n(:,:,i,isect),           mdim_sect  )
+                 call dgemm( 'N', 'N', dim2, dim4, dim3,                     &
+                             one,  sectors(string(j))%fmat(vf,vt)%val, dim2, &
+                                   mat_t,                         max_dim_sect, &
+                             zero, saved_n(:,:,i,isect),          max_dim_sect  )
 
                  nprod = nprod + one
              enddo ! over j={ops(i),ope(i)} loop
@@ -1607,14 +1616,14 @@
 ! set its save status and copy status
              isave(i,isect,1) = 0
              is_cp(i,isect) = .true.
-             ncol_cp(i,isect) = dim4
+             nc_cp(i,isect) = dim4
 
 ! multiply this part with the rest parts
              if ( i > ffpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim4,            &
-                             one,  saved_n(:,:,i,isect), mdim_sect, &
-                                   mat_r,                mdim_sect, &
-                             zero, mat_t,                mdim_sect  )
+                             one,  saved_n(:,:,i,isect), max_dim_sect, &
+                                   mat_r,                max_dim_sect, &
+                             zero, mat_t,                max_dim_sect  )
 
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
@@ -1651,7 +1660,7 @@
      endif ! back if ( csize == 0 ) block
 
 ! store final product
-     sectors( string(1) )%fprod(:,:,1) = mat_r(1:dim1,1:dim1)
+     sectors( string(1) )%prod(:,:,1) = mat_r(1:dim1,1:dim1)
 
 ! calculate the trace
      trace = zero
@@ -1678,7 +1687,7 @@
          do i=1,nsect
              do j=1,npart
                  if ( is_cp(j,i) ) then
-                     saved_p(:,1:ncol_cp(j,i),j,i) = saved_n(:,1:ncol_cp(j,i),j,i)
+                     saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
                  endif ! back if ( is_cp(j,i) ) block
              enddo ! over j={1,npart} loop
          enddo ! over i={1,nsect} loop
@@ -1687,4 +1696,4 @@
      return
   end subroutine ctqmc_save_npart
 
-  end module m_npart
+  end module m_part

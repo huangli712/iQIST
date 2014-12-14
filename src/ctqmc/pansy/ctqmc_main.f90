@@ -25,15 +25,16 @@
 !! ============
 !!
 !! The pansy code is a hybridization expansion version continuous time
-!! quantum Monte Carlo quantum impurity solver. It adopts the general matrix
-!! formalism, and implements the basic good quantum numbers (GQNs) algorithm.
-!! This algorithm doesn't depend on any information of GQNs, so, it can
-!! deal with any GQNs scheme. It implements the divide and conquer algorithm
-!! to accelerate the trace evaluation. You can use it to solve 1~5 orbitals
-!! systems with general interaction. The pansy code also includes a mini
-!! dynamical mean field theory engine which implements the self-consistent
-!! equation for Bethe lattice in paramagnetic state. So you can use it
-!! to perform dynamical mean field theory calculations quickly. Enjoy it.
+!! quantum Monte Carlo quantum impurity solver. It adopts the general
+!! matrix formalism, and implements the basic good quantum numbers (GQNs)
+!! algorithm. This algorithm doesn't depend on any information of GQNs,
+!! so, it can deal with any GQNs scheme. It also implements the divide
+!! and conquer algorithm to accelerate the trace evaluation. You can use
+!! it to solve 1~5 bands (i.e., 2~10 orbitals) systems with very general
+!! Coulomb interaction. The pansy code also includes a mini dynamical
+!! mean field theory engine which implements the self-consistent equation
+!! for Bethe lattice in paramagnetic state. So you can use it to perform
+!! dynamical mean field theory calculations quickly. Enjoy it.
 !!
 !! Usage
 !! =====
@@ -62,7 +63,6 @@
 !! solver.hub.dat
 !! solver.hist.dat
 !! solver.prob.dat
-!! solver.psect.dat
 !! solver.nmat.dat
 !! solver.status.dat
 !! etc.
@@ -542,9 +542,9 @@
      return
   end subroutine cat_set_eimp
 
-!!>>> cat_set_ktau: setup the kernel function
-!!>>> note: the azalea code does not support this function
-  subroutine cat_set_ktau(size_t, ktau_t)
+!!>>> cat_set_ktau: setup the screening function and its first derivates
+!!>>> note: the pansy code does not support this function now
+  subroutine cat_set_ktau(size_t, ktau_t, ptau_t)
      use constants, only : dp
 
      implicit none
@@ -553,11 +553,15 @@
 ! size of ktau
      integer, intent(in)  :: size_t
 
-! kernel function
+! screening function K(\tau)
      real(dp), intent(in) :: ktau_t(size_t)
+
+! first derivate of screening function K'(\tau)
+     real(dp), intent(in) :: ptau_t(size_t)
 
 ! to avoid the warning from compiler
      call s_assert( size(ktau_t) == size_t )
+     call s_assert( size(ptau_t) == size_t )
      call s_print_error('cat_set_ktau','sorry, this feature is not supported')
 
      return

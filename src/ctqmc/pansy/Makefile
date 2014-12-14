@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/ctqmc/pansy directory
+## Makefile for iqist/src/ctqmc/pansy directory.
 ##
 ## Usage
 ## =====

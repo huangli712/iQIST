@@ -506,27 +506,33 @@
 # if defined (MPI)
 
 ! broadcast data
-     call mp_bcast(U,    master)
+     call mp_bcast(U,     master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 ! broadcast data
-     call mp_bcast(op_c, master)
-     call mp_bcast(op_d, master)
+     call mp_bcast(op_c,  master)
+     call mp_bcast(op_d,  master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 ! broadcast data
-     call mp_bcast(eigs, master)
+     call mp_bcast(eigs,  master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 ! broadcast data
-     call mp_bcast(naux, master)
-     call mp_bcast(saux, master)
+     call mp_bcast(naux,  master)
+     call mp_bcast(saux,  master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+! broadcast data
+     call mp_bcast(cssoc, master)
 
 ! block until all processes have reached here
      call mp_barrier()
