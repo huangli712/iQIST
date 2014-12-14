@@ -288,7 +288,7 @@
                  raux1 = raux1 + sparse_csr_cp_elm( j, j, ncfgs, nzero, &
                                                  sop_t, sop_jt, sop_it )
              enddo ! over j={1,ncfgs} loop
-             nnmat(j,flvr) = nnmat(j,flvr) + raux1 / raux2
+             nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
          enddo ! over i={flvr+1,norbs} loop
      enddo ! over flvr={1,norbs-1} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
