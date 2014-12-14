@@ -487,7 +487,8 @@
 
      use control, only : norbs, ncfgs
 
-     use m_sect, only : nsect, sectors
+     use m_sect, only : nsect
+     use m_sect, only : sectors
 
      implicit none
 

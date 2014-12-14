@@ -2537,7 +2537,8 @@
      use context, only : expt_t
      use context, only : diag
 
-     use m_sect, only : nsect, sectors
+     use m_sect, only : nsect
+     use m_sect, only : sectors
      use m_sect, only : ctqmc_make_string
      use m_part, only : is_cp
      use m_part, only : ctqmc_make_npart
@@ -2638,7 +2639,8 @@
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : diag
 
-     use m_sect, only : nsect, sectors
+     use m_sect, only : nsect
+     use m_sect, only : sectors
      use m_part, only : ctqmc_save_npart
 
      implicit none

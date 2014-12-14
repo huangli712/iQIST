@@ -1239,7 +1239,8 @@
      use control, only : npart, mkink, beta, ncfgs
      use context, only : time_v, expt_v, type_v, flvr_v
 
-     use m_sect, only : nsect, sectors, max_dim_sect
+     use m_sect, only : nsect, max_dim_sect
+     use m_sect, only : sectors
 
      implicit none
 
