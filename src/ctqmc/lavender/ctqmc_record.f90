@@ -381,11 +381,11 @@
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
      do flvr=1,norbs
+         raux1 = zero
          call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                        sop_s(:,2), sop_js(:,2), sop_is(:,2), &
               sop_n(:,flvr), sop_jn(:,flvr), sop_in(:,flvr), &
                                       sop_t, sop_jt, sop_it )
-         raux1 = zero
          do i=1,ncfgs
              raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
                                              sop_t, sop_jt, sop_it )
