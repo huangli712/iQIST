@@ -2540,7 +2540,7 @@
      use m_sect, only : cat_make_string
      use m_part, only : is_cp
      use m_part, only : cat_make_npart
-     use m_part, only : cat_sector_ztrace
+     use m_part, only : cat_make_trace
 
      implicit none
 
@@ -2621,7 +2621,7 @@
              trace_sect(i) = zero
              sectors(i)%prod(:,:,1) = zero
          else
-             call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
+             call cat_make_trace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
          endif ! back if ( .not. is_string(i) ) block
          trace = trace + trace_sect(i)
      enddo ! over i={1,nsect} loop

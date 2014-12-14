@@ -1228,8 +1228,8 @@
      is_string = .true.
      string = -1
 
-! we build a string from right to left, that is, beta <------- 0
-! begin with S1: F1(S1)-->S2, F2(S2)-->S3, ... , Fk(Sk)-->S1
+! we build a string from right to left, that is, beta <- 0
+! begin with S1: F1(S1) -> S2, F2(S2) -> S3, ... , Fk(Sk) -> S1
 ! if find some Si==-1, cycle this sector immediately
      do i=1,nsect
          curr_sect_l = i
@@ -1349,7 +1349,7 @@
 
      public :: cat_make_npart
      public :: cat_save_npart
-     public :: cat_sector_ztrace
+     public :: cat_make_trace
 
   contains ! encapsulated functionality
 
@@ -1579,18 +1579,20 @@
      return
   end subroutine cat_make_npart
 
-!!>>> ctqmc_save_npart: copy data if propose has been accepted
+!!>>> cat_save_npart: copy data if proposed action has been accepted
   subroutine cat_save_npart()
      implicit none
 
+! local variables
 ! loop index
-     integer :: i,j
+     integer :: i
+     integer :: j
 
 ! copy save-state for all the parts
      isave(:,:,2) = isave(:,:,1)
 
-! when npart > 1, we used the npart algorithm, save the changed
-! matrices products when moves are accepted
+! when npart > 1, we used the divide-and-conquer algorithm, and had to
+! save the changed matrices products when proposed moves were accepted
      if ( npart > 1 ) then
          do i=1,nsect
              do j=1,npart
@@ -1604,54 +1606,68 @@
      return
   end subroutine cat_save_npart
 
-!!>>> cat_sector_ztrace: calculate the trace for one sector
-  subroutine cat_sector_ztrace(csize, string, index_t_loc, expt_t_loc, trace)
+!!>>> cat_make_trace: calculate the trace for one sector
+  subroutine cat_make_trace(csize, string, index_t_loc, expt_t_loc, trace)
      implicit none
 
 ! external variables
 ! number of total fermion operators
-     integer, intent(in) :: csize
+     integer, intent(in)   :: csize
 
-! string for this sector
-     integer, intent(in) :: string(csize+1)
+! evolutional string for this sector
+     integer, intent(in)   :: string(csize+1)
 
 ! address index of fermion operators
-     integer, intent(in) :: index_t_loc(mkink)
+     integer, intent(in)   :: index_t_loc(mkink)
 
 ! diagonal elements of last time-evolution matrices
-     real(dp), intent(in) :: expt_t_loc(ncfgs)
+     real(dp), intent(in)  :: expt_t_loc(ncfgs)
 
 ! the calculated trace of this sector
      real(dp), intent(out) :: trace
 
 ! local variables
-! temp matrix
+! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+     integer  :: l
+
+! type for current operator
+     integer  :: vt
+
+! flavor channel for current operator
+     integer  :: vf
+
+! start index of this sector
+     integer  :: indx
+
+! dimension for the sectors
+     integer  :: dim1
+     integer  :: dim2
+     integer  :: dim3
+     integer  :: dim4
+
+! index for sectors
+     integer  :: isect
+     integer  :: sect1
+     integer  :: sect2
+
+! counter for fermion operators
+     integer  :: counter
+
+! real(dp) dummy matrix
      real(dp) :: mat_r(max_dim_sect,max_dim_sect)
      real(dp) :: mat_t(max_dim_sect,max_dim_sect)
 
-! temp index
-     integer :: dim1
-     integer :: dim2
-     integer :: dim3
-     integer :: dim4
-     integer :: isect
-     integer :: sect1
-     integer :: sect2
-     integer :: indx
-     integer :: counter
-     integer :: vt
-     integer :: vf
-
-! loop index
-     integer :: i, j, k, l
-
-     isect = string(1)
-
-!--------------------------------------------------------------------
-! from right to left: beta <------ 0
-     dim1 = sectors(string(1))%ndim
+! next we perform time evolution from right to left: beta <- 0
+! initialize some arrays
      mat_r = zero
      mat_t = zero
+
+! select the first sector in the string
+     isect = string(1)
+     dim1  = sectors(string(1))%ndim
 
 ! loop over all the parts
      do i=1,npart
@@ -1663,11 +1679,12 @@
              dim2 = sectors(sect1)%ndim
              dim3 = sectors(sect2)%ndim
              if ( i > fpart ) then
-                 call dgemm( 'N', 'N', dim2, dim1, dim3,             &
-                              one,  saved_p(:,:,i,isect), max_dim_sect, &
-                                    mat_r,                max_dim_sect, &
-                              zero, mat_t,                max_dim_sect  )
-
+                 call dgemm( 'N', 'N', dim2, dim1, dim3, &
+                              one, saved_p(:,:,i,isect), &
+                                           max_dim_sect, &
+                                                  mat_r, &
+                                           max_dim_sect, &
+                              zero, mat_t, max_dim_sect )
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
              else
@@ -1675,7 +1692,7 @@
              endif ! back if ( i > fpart ) block
 
 ! this part should be recalcuated
-         elseif ( isave(i,isect,1) == 1 ) then
+         else if ( isave(i,isect,1) == 1 ) then
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
              dim4 = sectors(sect2)%ndim
@@ -1701,17 +1718,19 @@
                      mat_t = zero
                      do k=1,dim3
                          mat_t(k,k) = expt_v(indx+k-1,index_t_loc(j))
-                     enddo
+                     enddo ! over k={1,dim3} loop
                  endif ! back if ( counter > 1) block
 
 ! multiply the matrix of fermion operator
                  vt = type_v( index_t_loc(j) )
                  vf = flvr_v( index_t_loc(j) )
-                 call dgemm( 'N', 'N', dim2, dim4, dim3,                     &
-                             one,  sectors(string(j))%fmat(vf,vt)%val, dim2, &
-                                   mat_t,                         max_dim_sect, &
-                             zero, saved_n(:,:,i,isect),          max_dim_sect  )
-
+                 call dgemm( 'N', 'N', dim2, dim4, dim3, &
+                                                    one, &
+                     sectors(string(j))%fmat(vf,vt)%val, &
+                                            dim2, mat_t, &
+                                           max_dim_sect, &
+                             zero, saved_n(:,:,i,isect), &
+                                           max_dim_sect )
                  nprod = nprod + one
              enddo ! over j={ops(i),ope(i)} loop
 
@@ -1722,11 +1741,13 @@
 
 ! multiply this part with the rest parts
              if ( i > fpart ) then
-                 call dgemm( 'N', 'N', dim2, dim1, dim4,            &
-                             one,  saved_n(:,:,i,isect), max_dim_sect, &
-                                   mat_r,                max_dim_sect, &
-                             zero, mat_t,                max_dim_sect  )
-
+                 call dgemm( 'N', 'N', dim2, dim1, dim4, &
+                              one, saved_n(:,:,i,isect), &
+                                           max_dim_sect, &
+                                                  mat_r, &
+                                           max_dim_sect, &
+                                            zero, mat_t, &
+                                           max_dim_sect )
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
              else
@@ -1734,11 +1755,11 @@
              endif ! back if ( i > fpart ) block
 
 ! no operators in this part, do nothing
-         elseif ( isave(i,isect,1) == 2 ) then
-             cycle
-         endif ! back if ( is_save(i, isect) == 0 )  block
+         else if ( isave(i,isect,1) == 2 ) then
+             CYCLE
+         endif ! back if ( isave(i,isect,1) == 0 )  block
 
-! the start sector for next part
+! setup the start sector for next part
          isect = sect1
 
      enddo  ! over i={1,npart} loop
@@ -1771,6 +1792,6 @@
      enddo ! over j={1,sectors(string(1))%ndim} loop
 
      return
-  end subroutine cat_sector_ztrace
+  end subroutine cat_make_trace
 
   end module m_part
