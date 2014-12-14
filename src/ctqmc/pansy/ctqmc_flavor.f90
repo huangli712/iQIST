@@ -2537,9 +2537,9 @@
 
      use m_sect, only : nsect
      use m_sect, only : sectors
-     use m_sect, only : ctqmc_make_string
+     use m_sect, only : cat_make_string
      use m_part, only : is_cp
-     use m_part, only : ctqmc_make_npart
+     use m_part, only : cat_make_npart
      use m_part, only : cat_sector_ztrace
 
      implicit none
@@ -2606,10 +2606,10 @@
      end select
 
 ! build string for all the sectors, it will return is_string and string
-     call ctqmc_make_string(csize, index_t_loc, is_string, string)
+     call cat_make_string(csize, index_t_loc, is_string, string)
 
 ! determine which part should be recalculated, it will modify isave internal
-     call ctqmc_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
+     call cat_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
 
 ! calculate the trace of each sector one by one
 ! reset copy status to false, it is very important!
@@ -2645,7 +2645,7 @@
 
      use m_sect, only : nsect
      use m_sect, only : sectors
-     use m_part, only : ctqmc_save_npart
+     use m_part, only : cat_save_npart
 
      implicit none
 
@@ -2666,7 +2666,7 @@
      enddo ! over i={1,nsect} loop
 
 ! save the data of each part
-     call ctqmc_save_npart()
+     call cat_save_npart()
 
      return
   end subroutine ctqmc_make_evolve

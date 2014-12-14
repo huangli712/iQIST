@@ -904,6 +904,10 @@
 
      implicit none
 
+!!========================================================================
+!!>>> declare global structures                                        <<<
+!!========================================================================
+
 ! data structure for one F-matrix
 !-------------------------------------------------------------------------
      private :: t_fmat
@@ -959,8 +963,10 @@
 
      end type t_sector
 
-! some global variables
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global variables                                         <<<
+!!========================================================================
+
 ! total number of sectors
      integer, public, save  :: nsect
 
@@ -985,9 +991,13 @@
      public :: ctqmc_deallocate_memory_one_sect
      public :: ctqmc_deallocate_memory_sect
 
-     public :: ctqmc_make_string
+     public :: cat_make_string
 
   contains ! encapsulated functionality
+
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
 
 !!>>> ctqmc_allocate_memory_one_fmat: allocate memory for one F-matrix
   subroutine ctqmc_allocate_memory_one_fmat(mat)
@@ -1106,6 +1116,10 @@
      return
   end subroutine ctqmc_allocate_memory_sect
 
+!!========================================================================
+!!>>> deallocate memory subroutines                                    <<<
+!!========================================================================
+
 !!>>> ctqmc_deallocate_memory_one_fmat: deallocate memory for one F-matrix
   subroutine ctqmc_deallocate_memory_one_fmat(mat)
      implicit none
@@ -1170,24 +1184,32 @@
      return
   end subroutine ctqmc_deallocate_memory_sect
 
-!!>>> ctqmc_make_string: subroutine used to build a string
-  subroutine ctqmc_make_string(csize, index_t_loc, is_string, string)
+!!========================================================================
+!!>>> core service subroutines                                         <<<
+!!========================================================================
+
+!!>>> cat_make_string: subroutine used to build a evolutional string
+  subroutine cat_make_string(csize, index_t_loc, is_string, string)
      implicit none
 
 ! external variables
-! number of fermion operators for current diagram
-     integer, intent(in) :: csize
+! number of fermion operators for the current diagram
+     integer, intent(in)  :: csize
 
-! address index of fermion operators
-     integer, intent(in) :: index_t_loc(mkink)
+! memory address index of fermion operators
+     integer, intent(in)  :: index_t_loc(mkink)
 
-! whether it is a string ?
+! whether it is a valid string?
      logical, intent(out) :: is_string(nsect)
 
 ! string index
-     integer, intent(out) :: string(csize+1, nsect)
+     integer, intent(out) :: string(csize+1,nsect)
 
 ! local variables
+! loop index
+     integer :: i
+     integer :: j
+
 ! sector index: from left direction
      integer :: left
      integer :: curr_sect_l
@@ -1202,14 +1224,12 @@
      integer :: vf
      integer :: vt
 
-! loop index
-     integer :: i, j
-
+! init return arrays
      is_string = .true.
      string = -1
 
 ! we build a string from right to left, that is, beta <------- 0
-! begin with S1: F1(S1)-->S2, F2(S2)-->S3, ... ,Fk(Sk)-->S1
+! begin with S1: F1(S1)-->S2, F2(S2)-->S3, ... , Fk(Sk)-->S1
 ! if find some Si==-1, cycle this sector immediately
      do i=1,nsect
          curr_sect_l = i
@@ -1226,8 +1246,7 @@
                  vf = flvr_v( index_t_loc(left) )
                  next_sect_l = sectors(curr_sect_l)%next(vf,vt)
                  if ( next_sect_l == -1 ) then
-                     is_string(i) = .false.
-                     EXIT   ! finish check, exit
+                     is_string(i) = .false.; EXIT ! finish check, exit
                  endif ! back if ( next_sect_l == - 1 ) block
                  curr_sect_l = next_sect_l
              else
@@ -1237,8 +1256,7 @@
                  vt = mod(vt+1,2)
                  next_sect_r = sectors(curr_sect_r)%next(vf,vt)
                  if ( next_sect_r == -1 ) then
-                     is_string(i) = .false.
-                     EXIT   ! finish check, exit
+                     is_string(i) = .false.; EXIT ! finish check, exit
                  endif ! back if ( next_sect_r == -1 ) block
                  string(right,i) = next_sect_r
                  curr_sect_r = next_sect_r
@@ -1247,60 +1265,70 @@
 
 ! if it doesn't form a string, we cycle it, go to the next sector
          if ( .not. is_string(i) ) then
-             cycle
+             CYCLE
          endif ! back if ( .not. is_string(i) ) block
 
-! add the last sector to string, and check whether string(csize+1,i) == string(1,i)
-! important for csize = 0
+! add the last sector to string, and check whether 
+! string(csize+1,i) == string(1,i)
+! which is important for csize = 0
          string(csize+1,i) = i
 
-! this case will generate a non-diagonal block, it will not contribute to the trace
+! this case will generate a non-diagonal block, it will not contribute
+! to the trace
          if ( next_sect_r /= next_sect_l ) then
              is_string(i) = .false.
          endif ! back if ( next_sect_r /= next_sect_l ) block
      enddo ! over i={1,nsect} loop
 
      return
-  end subroutine ctqmc_make_string
+  end subroutine cat_make_string
 
   end module m_sect
 
-!!>>> m_npart: contains some key global variables and subroutines for divide
-!!>>> and conquer (npart) algorithm to speed up the trace evaluation
+!!========================================================================
+!!>>> module m_part                                                    <<<
+!!========================================================================
+
+!!>>> contains some key global variables and subroutines for divide and
+!!>>> conquer algorithm to speed up the trace evaluation
   module m_part
      use constants, only : dp, zero, one
 
-     use control, only : npart, mkink, beta, ncfgs
-     use context, only : time_v, expt_v, type_v, flvr_v
+     use control, only : ncfgs
+     use control, only : mkink
+     use control, only : npart
+     use control, only : beta
+     use context, only : type_v, flvr_v, time_v, expt_v
 
      use m_sect, only : nsect, max_dim_sect
      use m_sect, only : sectors
 
      implicit none
 
-! status flag for allocating memory
-     integer, private :: istat
+!!========================================================================
+!!>>> declare global variables                                         <<<
+!!========================================================================
 
 ! the first filled part
-     integer, public, save :: ffpart = 0
+     integer, public, save  :: fpart = 0
 
 ! total number of matrices products
      real(dp), public, save :: nprod = zero
 
 ! whether to copy this part?
-     logical, public, save, allocatable :: is_cp(:,:)
+     logical, public, save, allocatable  :: is_cp(:,:)
 
 ! number of columns to be copied, in order to save copy time
-     integer, public, save, allocatable :: nc_cp(:,:)
+     integer, public, save, allocatable  :: nc_cp(:,:)
 
 ! the start positions of fermion operators for each part
-     integer, public, save, allocatable :: ops(:)
+     integer, public, save, allocatable  :: ops(:)
 
 ! the end positions of fermion operators for each part
-     integer, public, save, allocatable :: ope(:)
+     integer, public, save, allocatable  :: ope(:)
 
 ! how to treat each part when calculating trace
-     integer, public, save, allocatable :: isave(:,:,:)
+     integer, public, save, allocatable  :: isave(:,:,:)
 
 ! saved parts of matrices product, for previous accepted configuration
      real(dp), public, save, allocatable :: saved_p(:,:,:,:)
@@ -1314,61 +1342,78 @@
 
      public :: ctqmc_allocate_memory_part
      public :: ctqmc_deallocate_memory_part
-     public :: ctqmc_make_npart
-     public :: ctqmc_save_npart
+
+     public :: cat_make_npart
+     public :: cat_save_npart
      public :: cat_sector_ztrace
 
   contains ! encapsulated functionality
 
-!!>>> ctqmc_allocate_memory_part: allocate memory for npart related variables
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
+
+!!>>> ctqmc_allocate_memory_part: allocate memory for part related variables
   subroutine ctqmc_allocate_memory_part()
      implicit none
 
-! allocate memory
-     allocate( isave(npart,nsect,2),  stat=istat )
-     allocate( is_cp(npart,nsect),    stat=istat )
-     allocate( nc_cp(npart,nsect),  stat=istat )
-     allocate( ops(npart),            stat=istat )
-     allocate( ope(npart),            stat=istat )
+! local variables
+! loop index
+     integer :: istat
 
-     allocate( saved_p(max_dim_sect,max_dim_sect,npart,nsect), stat=istat )
-     allocate( saved_n(max_dim_sect,max_dim_sect,npart,nsect), stat=istat )
+! allocate memory
+     allocate(is_cp(npart,nsect),   stat=istat)
+     allocate(nc_cp(npart,nsect),   stat=istat)
+     allocate(ops(npart),           stat=istat)
+     allocate(ope(npart),           stat=istat)
+     allocate(isave(npart,nsect,2), stat=istat)
+
+     allocate(saved_p(max_dim_sect,max_dim_sect,npart,nsect), stat=istat)
+     allocate(saved_n(max_dim_sect,max_dim_sect,npart,nsect), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_sect', &
-                          'can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_part','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     isave = 1
-     is_cp = .false.
-     nc_cp = 0
-     ops = 0
-     ope = 0
+     is_cp   = .false.
+     nc_cp   = 0
+     ops     = 0
+     ope     = 0
+     isave   = 1
+
      saved_p = zero
      saved_n = zero
 
      return
   end subroutine ctqmc_allocate_memory_part
 
-!!>>> ctqmc_deallocate_memory_part: deallocate memory for npart related variables
+!!========================================================================
+!!>>> deallocate memory subroutines                                    <<<
+!!========================================================================
+
+!!>>> ctqmc_deallocate_memory_part: deallocate memory for part related variables
   subroutine ctqmc_deallocate_memory_part()
      implicit none
 
-     if ( allocated(isave) )    deallocate(isave)
-     if ( allocated(is_cp) )    deallocate(is_cp)
-     if ( allocated(nc_cp) )  deallocate(nc_cp)
-     if ( allocated(ops) )      deallocate(ops)
-     if ( allocated(ope) )      deallocate(ope)
-     if ( allocated(saved_p) )  deallocate(saved_p)
-     if ( allocated(saved_n) )  deallocate(saved_n)
+     if ( allocated(is_cp)   ) deallocate(is_cp  )
+     if ( allocated(nc_cp)   ) deallocate(nc_cp  )
+     if ( allocated(ops)     ) deallocate(ops    )
+     if ( allocated(ope)     ) deallocate(ope    )
+     if ( allocated(isave)   ) deallocate(isave  )
+     if ( allocated(saved_p) ) deallocate(saved_p)
+     if ( allocated(saved_n) ) deallocate(saved_n)
 
      return
   end subroutine ctqmc_deallocate_memory_part
 
+!!========================================================================
+!!>>> core service subroutines                                         <<<
+!!========================================================================
+
 !!>>> ctqmc_make_npart: subroutine used to determine isave
-  subroutine ctqmc_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
+  subroutine cat_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
      implicit none
 
 ! external arguments
@@ -1406,7 +1451,7 @@
      nop = 0
      ops = 0
      ope = 0
-     ffpart = 0
+     fpart = 0
 
 ! isave: how to treat each part for each alive string
 ! isave = 0: matrices product for this part has been calculated previously
@@ -1422,7 +1467,7 @@
          nop(1) = csize
          ops(1) = 1
          ope(1) = csize
-         ffpart = 1
+         fpart = 1
          if ( nop(1) <= 0 ) then
              isave(1,:,1) = 2
          else
@@ -1439,9 +1484,9 @@
          enddo  ! over i={1,csize} loop
 ! if no operators in this part, ignore them
          do i=1,npart
-             if ( ffpart == 0 .and. nop(i) > 0 ) then
-                 ffpart = i
-             endif ! back if ( ffpart == 0 .and. nop(i) > 0 ) block
+             if ( fpart == 0 .and. nop(i) > 0 ) then
+                 fpart = i
+             endif ! back if ( fpart == 0 .and. nop(i) > 0 ) block
              if ( nop(i) <= 0 ) then
                  isave(i,:,1) = 2
              endif ! back if ( nop(i) <= 0 ) block
@@ -1534,7 +1579,32 @@
      endif ! back if ( npart == 1 ) block
 
      return
-  end subroutine ctqmc_make_npart
+  end subroutine cat_make_npart
+
+!!>>> ctqmc_save_npart: copy data if propose has been accepted
+  subroutine cat_save_npart()
+     implicit none
+
+! loop index
+     integer :: i,j
+
+! copy save-state for all the parts
+     isave(:,:,2) = isave(:,:,1)
+
+! when npart > 1, we used the npart algorithm, save the changed
+! matrices products when moves are accepted
+     if ( npart > 1 ) then
+         do i=1,nsect
+             do j=1,npart
+                 if ( is_cp(j,i) ) then
+                     saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
+                 endif ! back if ( is_cp(j,i) ) block
+             enddo ! over j={1,npart} loop
+         enddo ! over i={1,nsect} loop
+     endif ! back if ( npart > 1 ) block
+
+     return
+  end subroutine cat_save_npart
 
 !!>>> cat_sector_ztrace: calculate the trace for one sector
   subroutine cat_sector_ztrace(csize, string, index_t_loc, expt_t_loc, trace)
@@ -1594,7 +1664,7 @@
              sect2 = string(ops(i))
              dim2 = sectors(sect1)%ndim
              dim3 = sectors(sect2)%ndim
-             if ( i > ffpart ) then
+             if ( i > fpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim3,             &
                               one,  saved_p(:,:,i,isect), max_dim_sect, &
                                     mat_r,                max_dim_sect, &
@@ -1604,7 +1674,7 @@
                  nprod = nprod + one
              else
                  mat_r(:,1:dim1) = saved_p(:,1:dim1,i,isect)
-             endif ! back if ( i > ffpart ) block
+             endif ! back if ( i > fpart ) block
 
 ! this part should be recalcuated
          elseif ( isave(i,isect,1) == 1 ) then
@@ -1653,7 +1723,7 @@
              nc_cp(i,isect) = dim4
 
 ! multiply this part with the rest parts
-             if ( i > ffpart ) then
+             if ( i > fpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim4,            &
                              one,  saved_n(:,:,i,isect), max_dim_sect, &
                                    mat_r,                max_dim_sect, &
@@ -1663,7 +1733,7 @@
                  nprod = nprod + one
              else
                  mat_r(:,1:dim1) = saved_n(:,1:dim1,i,isect)
-             endif ! back if ( i > ffpart ) block
+             endif ! back if ( i > fpart ) block
 
 ! no operators in this part, do nothing
          elseif ( isave(i,isect,1) == 2 ) then
@@ -1704,30 +1774,5 @@
 
      return
   end subroutine cat_sector_ztrace
-
-!!>>> ctqmc_save_npart: copy data if propose has been accepted
-  subroutine ctqmc_save_npart()
-     implicit none
-
-! loop index
-     integer :: i,j
-
-! copy save-state for all the parts
-     isave(:,:,2) = isave(:,:,1)
-
-! when npart > 1, we used the npart algorithm, save the changed
-! matrices products when moves are accepted
-     if ( npart > 1 ) then
-         do i=1,nsect
-             do j=1,npart
-                 if ( is_cp(j,i) ) then
-                     saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
-                 endif ! back if ( is_cp(j,i) ) block
-             enddo ! over j={1,npart} loop
-         enddo ! over i={1,nsect} loop
-     endif ! back if ( npart > 1 ) block
-
-     return
-  end subroutine ctqmc_save_npart
 
   end module m_part
