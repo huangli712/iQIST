@@ -979,11 +979,11 @@
 
      public :: ctqmc_allocate_memory_one_fmat
      public :: ctqmc_allocate_memory_one_sect
-     public :: ctqmc_allocate_memory_sectors
+     public :: ctqmc_allocate_memory_sect
 
      public :: ctqmc_deallocate_memory_one_fmat
      public :: ctqmc_deallocate_memory_one_sect
-     public :: ctqmc_deallocate_memory_sectors
+     public :: ctqmc_deallocate_memory_sect
 
      public :: ctqmc_make_string
 
@@ -1068,8 +1068,8 @@
      return
   end subroutine ctqmc_allocate_memory_one_sect
 
-!!>>> ctqmc_allocate_memory_sectors: allocate memory for sector related variables
-  subroutine ctqmc_allocate_memory_sectors()
+!!>>> ctqmc_allocate_memory_sect: allocate memory for sector related variables
+  subroutine ctqmc_allocate_memory_sect()
      implicit none
 
 ! local variables
@@ -1084,7 +1084,7 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_sectors','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
@@ -1104,7 +1104,7 @@
      enddo ! over i={1,nsect} loop
 
      return
-  end subroutine ctqmc_allocate_memory_sectors
+  end subroutine ctqmc_allocate_memory_sect
 
 !!>>> ctqmc_deallocate_memory_one_fmat: deallocate memory for one F-matrix
   subroutine ctqmc_deallocate_memory_one_fmat(mat)
@@ -1143,7 +1143,7 @@
 ! deallocate fmat one by one
      do i=1,sect%nops
          do j=0,1
-             call ctqmc_deallocate_memory_one_mat(sect%fmat(i,j))
+             call ctqmc_deallocate_memory_one_fmat(sect%fmat(i,j))
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
 
@@ -1155,14 +1155,15 @@
      implicit none
 
 ! local variables
+! loop index
      integer :: i
 
-     if ( allocated(sectors) ) then
 ! first, loop over all the sectors and deallocate their component's memory
+! then, deallocate memory of the sectors itself
+     if ( allocated(sectors) ) then
          do i=1,nsect
-             call dealloc_one_sect(sectors(i))
+             call ctqmc_deallocate_memory_one_sect(sectors(i))
          enddo ! over i={1,nsect} loop
-! then, deallocate memory of sectors itself
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
 
