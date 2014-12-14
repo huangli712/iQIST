@@ -401,31 +401,29 @@
 ! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
 !-------------------------------------------------------------------------
      do flvr=1,norbs-1
-         do j=flvr+1,norbs
+         do i=flvr+1,norbs
+             raux1 = zero
              call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_s(:,2), sop_js(:,2), sop_is(:,2), &
-            sop_m(:,flvr,j), sop_jm(:,flvr,j), sop_im(:,flvr,j), &
+            sop_m(:,flvr,i), sop_jm(:,flvr,i), sop_im(:,flvr,i), &
                                           sop_t, sop_jt, sop_it )
+             do j=1,ncfgs
+                 raux1 = raux1 + sparse_csr_cp_elm( j, j, ncfgs, nzero, &
+                                                 sop_t, sop_jt, sop_it )
+             enddo ! over j={1,ncfgs} loop
+             nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
 
              raux1 = zero
-             do i=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
-                                                 sop_t, sop_jt, sop_it )
-             enddo ! over i={1,ncfgs} loop
-             nnmat(flvr,j) = nnmat(flvr,j) + raux1 / raux2
-
              call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_s(:,2), sop_js(:,2), sop_is(:,2), &
-            sop_m(:,j,flvr), sop_jm(:,j,flvr), sop_im(:,j,flvr), &
+            sop_m(:,i,flvr), sop_jm(:,i,flvr), sop_im(:,i,flvr), &
                                           sop_t, sop_jt, sop_it )
-
-             raux1 = zero
-             do i=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+             do j=1,ncfgs
+                 raux1 = raux1 + sparse_csr_cp_elm( j, j, ncfgs, nzero, &
                                                  sop_t, sop_jt, sop_it )
-             enddo ! over i={1,ncfgs} loop
-             nnmat(j,flvr) = nnmat(j,flvr) + raux1 / raux2
-         enddo ! over j={flvr+1,norbs} loop
+             enddo ! over j={1,ncfgs} loop
+             nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
+         enddo ! over i={flvr+1,norbs} loop
      enddo ! over flvr={1,norbs-1} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
