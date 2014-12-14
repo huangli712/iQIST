@@ -198,7 +198,8 @@
      use context, only : nmat, nnmat, paux
      use context, only : ckink, matrix_ptrace
      use context, only : diag, eigs
-     use m_sector, only : max_dim_sect, nsect, sectors
+
+     use m_sect, only : max_dim_sect, nsect, sectors
 
      implicit none
 
@@ -917,8 +918,9 @@
      use context, only : grnf
      use context, only : hybf
      use context, only : sig2
-     use m_sector, only : nsect
-     use m_sector, only : sectors
+
+     use m_sect, only : nsect
+     use m_sect, only : sectors
 
      implicit none
 

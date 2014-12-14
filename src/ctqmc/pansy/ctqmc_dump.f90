@@ -486,7 +486,8 @@
      use constants, only : dp, zero, eps6, mytmp
 
      use control, only : norbs, ncfgs
-     use m_sector, only : nsect, sectors
+
+     use m_sect, only : nsect, sectors
 
      implicit none
 

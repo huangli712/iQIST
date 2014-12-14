@@ -11,8 +11,8 @@
 !!!           ctqmc_wmat module
 !!!           ctqmc_smat module
 !!!           context    module
-!!!           m_sector   module
-!!!           m_npart    module
+!!!           m_sect     module
+!!!           m_part     module
 !!! source  : ctqmc_context.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -891,11 +891,11 @@
 
 
 !!========================================================================
-!!>>> module m_sector                                                  <<<
+!!>>> module m_sect                                                    <<<
 !!========================================================================
 
 !!>>> define the data structure for good quantum numbers (GQNs) algorithm
-  module m_sector
+  module m_sect
      use constants, only : dp, zero
 
      use control, only : norbs
@@ -1229,43 +1229,43 @@
      return
   end subroutine ctqmc_make_string
 
-  end module m_sector
+  end module m_sect
 
 !!>>> m_npart: contains some key global variables and subroutines for divide
 !!>>> and conquer (npart) algorithm to speed up the trace evaluation
-  module m_npart
+  module m_part
      use constants, only : dp, zero, one
 
      use control, only : npart, mkink, beta, ncfgs
      use context, only : time_v, expt_v, type_v, flvr_v
 
-     use m_sector, only : nsect, sectors, max_dim_sect
+     use m_sect, only : nsect, sectors, max_dim_sect
 
      implicit none
 
 ! status flag for allocating memory
      integer, private :: istat
 
-! total number of matrices products
-     real(dp), public, save :: nprod = zero
-
 ! the first filled part
      integer, public, save :: ffpart = 0
 
-! how to treat each part when calculating trace
-     integer, public, save, allocatable :: isave(:,:,:)
+! total number of matrices products
+     real(dp), public, save :: nprod = zero
 
-! whether to copy this part ?
+! whether to copy this part?
      logical, public, save, allocatable :: is_cp(:,:)
 
 ! number of columns to be copied, in order to save copy time
-     integer, public, save, allocatable :: ncol_cp(:,:)
+     integer, public, save, allocatable :: nc_cp(:,:)
 
 ! the start positions of fermion operators for each part
      integer, public, save, allocatable :: ops(:)
 
 ! the end positions of fermion operators for each part
      integer, public, save, allocatable :: ope(:)
+
+! how to treat each part when calculating trace
+     integer, public, save, allocatable :: isave(:,:,:)
 
 ! saved parts of matrices product, for previous accepted configuration
      real(dp), public, save, allocatable :: saved_p(:,:,:,:)
@@ -1292,7 +1292,7 @@
 ! allocate memory
      allocate( isave(npart,nsect,2),  stat=istat )
      allocate( is_cp(npart,nsect),    stat=istat )
-     allocate( ncol_cp(npart,nsect),  stat=istat )
+     allocate( nc_cp(npart,nsect),  stat=istat )
      allocate( ops(npart),            stat=istat )
      allocate( ope(npart),            stat=istat )
 
@@ -1308,7 +1308,7 @@
 ! initialize them
      isave = 1
      is_cp = .false.
-     ncol_cp = 0
+     nc_cp = 0
      ops = 0
      ope = 0
      saved_p = zero
@@ -1323,7 +1323,7 @@
 
      if ( allocated(isave) )    deallocate(isave)
      if ( allocated(is_cp) )    deallocate(is_cp)
-     if ( allocated(ncol_cp) )  deallocate(ncol_cp)
+     if ( allocated(nc_cp) )  deallocate(nc_cp)
      if ( allocated(ops) )      deallocate(ops)
      if ( allocated(ope) )      deallocate(ope)
      if ( allocated(saved_p) )  deallocate(saved_p)
@@ -1615,7 +1615,7 @@
 ! set its save status and copy status
              isave(i,isect,1) = 0
              is_cp(i,isect) = .true.
-             ncol_cp(i,isect) = dim4
+             nc_cp(i,isect) = dim4
 
 ! multiply this part with the rest parts
              if ( i > ffpart ) then
@@ -1686,7 +1686,7 @@
          do i=1,nsect
              do j=1,npart
                  if ( is_cp(j,i) ) then
-                     saved_p(:,1:ncol_cp(j,i),j,i) = saved_n(:,1:ncol_cp(j,i),j,i)
+                     saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
                  endif ! back if ( is_cp(j,i) ) block
              enddo ! over j={1,npart} loop
          enddo ! over i={1,nsect} loop
@@ -1695,4 +1695,4 @@
      return
   end subroutine ctqmc_save_npart
 
-  end module m_npart
+  end module m_part

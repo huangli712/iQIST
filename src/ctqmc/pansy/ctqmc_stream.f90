@@ -233,8 +233,8 @@
      use context, only : symm, eimp, eigs, naux, saux
      use context, only : hybf
 
-     use m_sector ! ALL
-     use m_npart  ! ALL
+     use m_sect ! ALL
+     use m_part ! ALL
 
      implicit none
 
@@ -599,18 +599,19 @@
 
      use control ! ALL
      use context ! ALL
-     use m_sector ! ALL
-     use m_npart  ! ALL
+
+     use m_sect  ! ALL
+     use m_part  ! ALL
 
      implicit none
 
 ! local variables
 ! loop index
      integer :: i
-     integer :: ii
      integer :: j
-     integer :: jj
      integer :: k
+     integer :: m
+     integer :: n
 
 ! system time since 1970, Jan 1, used to generate the random number seed
      integer :: system_time
@@ -618,7 +619,7 @@
 ! random number seed for twist generator
      integer :: stream_seed
 
-! dummy matrices
+! real(dp) dummy matrices
      real(dp) :: mat_t1(max_dim_sect,max_dim_sect)
      real(dp) :: mat_t2(max_dim_sect,max_dim_sect)
 
@@ -774,13 +775,13 @@
 
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
-! init npart
-     nprod = zero
-     isave = 1
-     is_cp = .false.
-     ncol_cp = 0
-     ops = 0
-     ope = 0
+! init m_npart module
+     nprod   = zero
+     is_cp   = .false.
+     nc_cp   = 0
+     ops     = 0
+     ope     = 0
+     isave   = 1
      saved_p = zero
      saved_n = zero
 
@@ -788,15 +789,19 @@
 ! which are used to calculate occupation number
      do i=1,norbs
          do j=1,nsect
-             k=sectors(j)%next(i,0)
+             k = sectors(j)%next(i,0)
              if ( k == -1 ) then
-                 sectors(j)%occu(:,:,i) = zero
-                 cycle
+                 sectors(j)%occu(:,:,i) = zero; CYCLE
              endif ! back if ( k == -1 ) block
-             call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, &
-                         one,  sectors(k)%fmat(i,1)%val,            sectors(j)%ndim, &
-                               sectors(j)%fmat(i,0)%val,            sectors(k)%ndim, &
-                         zero, sectors(j)%occu(:,:,i),               sectors(j)%ndim  )
+             call dgemm( 'N', 'N', sectors(j)%ndim, &
+                                   sectors(j)%ndim, &
+                                   sectors(k)%ndim, &
+                     one, sectors(k)%fmat(i,1)%val, &
+                                   sectors(j)%ndim, &
+                          sectors(j)%fmat(i,0)%val, &
+                                   sectors(k)%ndim, &
+                      zero, sectors(j)%occu(:,:,i), &
+                                   sectors(j)%ndim )
          enddo ! over j={1,nsect} loop
      enddo ! over i={1,norbs} loop
 
@@ -805,27 +810,34 @@
      do i=1,norbs
          do j=1,norbs
              do k=1,nsect
-                 jj = sectors(k)%next(j,0)
-                 ii = sectors(k)%next(i,0)
-                 if ( ii == -1 .or. jj == -1 ) then
-                     sectors(k)%doccu(:,:,i,j) = zero
-                     cycle
-                 endif ! back if ( ii == -1 .or. jj == -1 ) block
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
-                             one,  sectors(jj)%fmat(j,1)%val,           sectors(k)%ndim,  &
-                                   sectors(k)%fmat(j,0)%val,            sectors(jj)%ndim, &
-                             zero, mat_t1,                               max_dim_sect         )
-
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
-                             one,  sectors(ii)%fmat(i,1)%val,           sectors(k)%ndim,  &
-                                   sectors(k)%fmat(i,0)%val,            sectors(ii)%ndim, &
-                             zero, mat_t2,                               max_dim_sect         )
-
-                 call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
-                             one,  mat_t2,                               max_dim_sect,        &
-                                   mat_t1,                               max_dim_sect,        &
-                             zero, sectors(k)%doccu(:,:,i,j),            sectors(k)%ndim   )
-
+                 n = sectors(k)%next(j,0)
+                 m = sectors(k)%next(i,0)
+                 if ( m == -1 .or. n == -1 ) then
+                     sectors(k)%doccu(:,:,i,j) = zero; CYCLE
+                 endif ! back if ( m == -1 .or. n == -1 ) block
+                 call dgemm( 'N', 'N', sectors(k)%ndim, &
+                                       sectors(k)%ndim, &
+                                       sectors(n)%ndim, &
+                         one, sectors(n)%fmat(j,1)%val, &
+                                       sectors(k)%ndim, &
+                              sectors(k)%fmat(j,0)%val, &
+                                       sectors(n)%ndim, &
+                            zero, mat_t1, max_dim_sect )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, &
+                                       sectors(k)%ndim, &
+                                       sectors(m)%ndim, &
+                         one, sectors(m)%fmat(i,1)%val, &
+                                       sectors(k)%ndim, &
+                              sectors(k)%fmat(i,0)%val, &
+                                       sectors(m)%ndim, &
+                            zero, mat_t2, max_dim_sect )
+                 call dgemm( 'N', 'N', sectors(k)%ndim, &
+                                       sectors(k)%ndim, &
+                                       sectors(k)%ndim, &
+                             one, mat_t2, max_dim_sect, &
+                                  mat_t1, max_dim_sect, &
+                       zero, sectors(k)%doccu(:,:,i,j), &
+                                       sectors(k)%ndim )
              enddo ! over k={1,nsect} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
@@ -862,8 +874,9 @@
 !!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
      use context ! ALL
-     use m_sector ! ALL
-     use m_npart ! ALL
+
+     use m_sect  ! ALL
+     use m_part  ! ALL
 
      implicit none
 
@@ -880,8 +893,8 @@
      call ctqmc_deallocate_memory_wmat()
      call ctqmc_deallocate_memory_smat()
 
-     call ctqmc_deallocate_memory_part()
      call ctqmc_deallocate_memory_sect()
+     call ctqmc_deallocate_memory_part()
 
      return
   end subroutine ctqmc_final_array

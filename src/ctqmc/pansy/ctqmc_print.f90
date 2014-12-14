@@ -139,7 +139,8 @@
      use context, only : rshift_tcount, rshift_accept, rshift_reject
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : paux
-     use m_npart, only : nprod
+
+     use m_part, only : nprod
 
      implicit none
 
