@@ -30,12 +30,9 @@
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
-!!!           yilin wang (email: qhwyl2006@126.com)
+!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/23/2009 by li huang
 !!!           10/20/2010 by li huang
-!!!           07/16/2014 by yilin wang
-!!!           07/19/2014 by yilin wang
-!!!           08/18/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
@@ -58,7 +55,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -261,7 +258,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -439,7 +436,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -593,7 +590,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -1070,7 +1067,7 @@
 
      use control, only : nfreq
      use context, only : ckink
-     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e, empty_s, empty_e
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
      use context, only : rmesh
 
      implicit none
@@ -1140,7 +1137,7 @@
      use stack, only : istack_push
 
      use context, only : ckink
-     use context, only : index_s, index_e, empty_s, empty_e
+     use context, only : empty_s, empty_e, index_s, index_e
 
      implicit none
 
@@ -1313,7 +1310,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
 
      implicit none
 
@@ -1483,7 +1480,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v
 
      implicit none
 
@@ -1617,7 +1614,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
 
      implicit none
 
@@ -1778,7 +1775,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, time_v
 
      implicit none
 
@@ -1943,7 +1940,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2109,7 +2106,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2269,7 +2266,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2397,7 +2394,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2522,19 +2519,20 @@
 !!========================================================================
 
 !!>>> ctqmc_make_ztrace: core subroutine of pansy
-!! (1) use good quantum numbers (GQNs) algorithm, split the total Hibert space
-!!     to small subspace, the dimension of F-matrix will be smaller.
-!! (2) use divide and conqure algorithm, split the imaginary time axis into
-!!     many parts, save the matrices products of that part, which may be used
-!!     by next Monte Carlo move.
-!! NOTE: you should carefully choose npart in order to obtain the best speedup.
+!!>>> (1) use good quantum numbers (GQNs) algorithm, split the total
+!!>>>     Hibert space to small subspace, the dimension of F-matrix will
+!!>>>     be smaller.
+!!>>> (2) use divide and conqure algorithm, split the imaginary time axis
+!!>>>     into many parts, save the matrices products of that part, which
+!!>>>     may be used by next Monte Carlo move.
+!!>>> note: you should carefully choose npart in order to obtain the
+!!>>> best speedup.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants, only : dp, zero
 
-     use control, only : mkink
      use control, only : ncfgs
-     use context, only : index_v, index_t
-     use context, only : expt_t
+     use control, only : mkink
+     use context, only : index_t, index_v, expt_t
      use context, only : diag
 
      use m_sect, only : nsect
@@ -2553,24 +2551,31 @@
 ! total number of operators for current diagram
      integer,  intent(in)  :: csize
 
+! imaginary time value of operator A, only needed in cmode = 1 or 2
+     real(dp), intent(in)  :: tau_s
+
+! imaginary time value of operator B, only needed in cmode = 1 or 2
+     real(dp), intent(in)  :: tau_e
+
 ! the calculated trace
      real(dp), intent(out) :: trace
 
-! imaginary time value of operator A, only needed in cmode = 1 or 2
-     real(dp), intent(in) :: tau_s
-
-! imaginary time value of operator B, only needed in cmode = 1 or 2
-     real(dp), intent(in) :: tau_e
-
 ! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! start index of a sector
+     integer  :: indx
+
 ! whether it forms a string
-     logical :: is_string(nsect)
+     logical  :: is_string(nsect)
 
 ! sector index of a string
-     integer :: string(csize+1, nsect)
+     integer  :: string(csize+1,nsect)
 
 ! local version of index_t
-     integer :: index_t_loc(mkink)
+     integer  :: index_t_loc(mkink)
 
 ! local version of expt_t
      real(dp) :: expt_t_loc(ncfgs)
@@ -2578,27 +2583,26 @@
 ! trace for each sector
      real(dp) :: trace_sect(nsect)
 
-! start index of a sector
-     integer :: indx
-
-! loop index
-     integer :: i, j
-
 ! copy data from index_t or index_v to index_t_loc
 ! copy data from expt_t to expt_t_loc
-     select case(cmode)
-         case(1)
+     select case (cmode)
+
+         case (1)
              index_t_loc = index_t
              expt_t_loc = expt_t(:,1)
-         case(2)
+
+         case (2)
              index_t_loc = index_v
              expt_t_loc = expt_t(:,2)
-         case(3)
+
+         case (3)
              index_t_loc = index_t
              expt_t_loc = expt_t(:,2)
-         case(4)
+
+         case (4)
              index_t_loc = index_v
              expt_t_loc = expt_t(:,2)
+
      end select
 
 ! build string for all the sectors, it will return is_string and string
@@ -2608,7 +2612,7 @@
      call ctqmc_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
 
 ! calculate the trace of each sector one by one
-! reset copy status to false, it is very important !
+! reset copy status to false, it is very important!
      is_cp = .false.
      trace_sect = zero
      trace = zero
@@ -2655,7 +2659,7 @@
 ! update diag for the calculation of atomic state probability
      diag(:,2) = diag(:,1)
 
-! transfer the final matrix product from fprod(:,:,1) to fprod(:,:,2),
+! transfer the final matrix product from prod(:,:,1) to prod(:,:,2),
 ! the latter can be used to calculate nmat and nnmat
      do i=1,nsect
          sectors(i)%prod(:,:,2) = sectors(i)%prod(:,:,1)
@@ -2881,7 +2885,7 @@
 
      use control, only : norbs, ncfgs
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : rank
 
      implicit none
