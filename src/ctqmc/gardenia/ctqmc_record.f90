@@ -1008,7 +1008,7 @@
 !!>>> ctqmc_record_vrtx: record the two-particle green's function
 !!>>> improved estimator is used to improve the accuracy
   subroutine ctqmc_record_vrtx()
-     use constants, only : dp, zero, one, two, half, pi, czi, czero
+     use constants, only : dp, zero, one, two, pi, czi, czero
 
      use control, only : isvrt
      use control, only : norbs
@@ -2487,7 +2487,6 @@
 ! dummy complex variables, used to interpolate self-energy function
      complex(dp) :: cb, ce
      complex(dp) :: sinf
-     complex(dp) :: caux
 
 ! dummy atomic states: alpha, beta, gamma
      integer  :: sa(norbs)
@@ -2587,13 +2586,12 @@
 ! calculate atomic green's function using Hubbard-I approximation
      do i=1,norbs
          do k=1,mfreq
-             caux = czero
+             ghub(k,i) = czero
              do m=1,fcounter(i)
                  ob = fv(m,i) * fv(m,i) * ( prob(fa(m,i)) + prob(fb(m,i)) )
                  cb = czi * rmesh(k) + eaux(fa(m,i)) - eaux(fb(m,i))
-                 caux = caux + ob / cb
+                 ghub(k,i) = ghub(k,i) + ob / cb
              enddo ! over m={1,fcounter(i)} loop
-             ghub(k,i) = caux
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
