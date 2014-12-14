@@ -2591,7 +2591,7 @@
              do m=1,fcounter(i)
                  ob = fv(m,i) * fv(m,i) * ( prob(fa(m,i)) + prob(fb(m,i)) )
                  cb = czi * rmesh(k) + eaux(fa(m,i)) - eaux(fb(m,i))
-                 caux = caux +  ob / cb
+                 caux = caux + ob / cb
              enddo ! over m={1,fcounter(i)} loop
              ghub(k,i) = caux
          enddo ! over k={1,mfreq} loop
@@ -2854,7 +2854,7 @@
              do m=1,fcounter(i)
                  ob = fv(m,i) * fv(m,i) * ( prob(fa(m,i)) + prob(fb(m,i)) )
                  cb = czi * rmesh(k) + eaux(fa(m,i)) - eaux(fb(m,i))
-                 ghub(k,i) = ghub(k,i) +  ob / cb
+                 ghub(k,i) = ghub(k,i) + ob / cb
              enddo ! over m={1,fcounter(i)} loop
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
