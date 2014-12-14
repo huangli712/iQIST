@@ -56,9 +56,9 @@ Advanced Test Cases For MANJUSHAKA
 * 3k2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=2.00, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
 * 3k3 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=100.0, mune=2.00, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
 
-* 3l1 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=10.00, mune=10.00, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
-* 3l2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.00, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
-* 3l3 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=100.0, mune=10.00, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
+* 3l1 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=10.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
+* 3l2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
+* 3l3 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=100.0, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
 
 * 3m1 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=10.00, mune=3.00, npart=1, GQNs (N,Sz,PS)
 * 3m2 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=40.00, mune=3.00, npart=1, GQNs (N,Sz,PS)
