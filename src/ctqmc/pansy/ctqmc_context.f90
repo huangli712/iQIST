@@ -906,6 +906,7 @@
 
 ! data structure for one F-matrix
 !-------------------------------------------------------------------------
+     private :: t_fmat
      type t_fmat
 
 ! the dimension, n x m
@@ -919,6 +920,7 @@
 
 ! data structure for one sector
 !-------------------------------------------------------------------------
+     private :: t_sector
      type t_sector
 
 ! dimension
@@ -958,9 +960,7 @@
      end type t_sector
 
 ! some global variables
-! allocating status flag
-     integer, private :: istat
-
+!-------------------------------------------------------------------------
 ! total number of sectors
      integer, public, save  :: nsect
 
@@ -977,75 +977,83 @@
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
-     public :: alloc_one_mat
-     public :: dealloc_one_mat
-     public :: alloc_one_sect
-     public :: dealloc_one_sect
-     public :: ctqmc_allocate_memory_sect
-     public :: ctqmc_deallocate_memory_sect
+     public :: ctqmc_allocate_memory_one_fmat
+     public :: ctqmc_allocate_memory_one_sect
+     public :: ctqmc_allocate_memory_sectors
+
+     public :: ctqmc_deallocate_memory_one_fmat
+     public :: ctqmc_deallocate_memory_one_sect
+     public :: ctqmc_deallocate_memory_sectors
+
      public :: ctqmc_make_string
 
   contains ! encapsulated functionality
 
-!!>>> alloc_one_mat: allocate one matrix
-  subroutine alloc_one_mat(mat)
+!!>>> ctqmc_allocate_memory_one_fmat: allocate memory for one F-matrix
+  subroutine ctqmc_allocate_memory_one_fmat(mat)
      implicit none
 
 ! external variables
+! F-matrix structure
      type (t_fmat), intent(inout) :: mat
 
+! local variables
+! status flag
+     integer :: istat
+
+! allocate memory
      allocate(mat%val(mat%n,mat%m), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_mat','can not allocate enough memory')
-     endif ! back if ( istat /=0 ) block
+         call s_print_error('ctqmc_allocate_memory_one_fmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize it
      mat%val = zero
 
      return
-  end subroutine alloc_one_mat
+  end subroutine ctqmc_allocate_memory_one_fmat
 
-!!>>> dealloc_one_mat: deallocate one matrix
-  subroutine dealloc_one_mat(mat)
+!!>>> ctqmc_allocate_memory_one_sect: allocate memory for one sector
+  subroutine ctqmc_allocate_memory_one_sect(sect)
      implicit none
 
 ! external variables
-     type (t_fmat), intent(inout) :: mat
-
-     if ( associated(mat%val) ) deallocate(mat%val)
-
-     return
-  end subroutine dealloc_one_mat
-
-!!>>> alloc_one_sect: allocate memory for one sector
-  subroutine alloc_one_sect(sect)
-     implicit none
-
-! external variables
-     type(t_sector), intent(inout) :: sect
+! sector structure
+     type (t_sector), intent(inout) :: sect
 
 ! local variables
-     integer :: i, j
+! loop index
+     integer :: i
+     integer :: j
 
-     allocate( sect%eval(sect%ndim),                                stat=istat )
-     allocate( sect%next(sect%nops,0:1),                       stat=istat )
-     allocate( sect%fmat(sect%nops,0:1),                            stat=istat )
-     allocate( sect%prod(sect%ndim,sect%ndim,2),                   stat=istat )
-     allocate( sect%occu(sect%ndim,sect%ndim,sect%nops),            stat=istat )
-     allocate( sect%doccu(sect%ndim,sect%ndim,sect%nops,sect%nops), stat=istat )
+! status flag
+     integer :: istat
+
+! allocate memory
+     allocate(sect%next(sect%nops,0:1),                 stat=istat)
+
+     allocate(sect%eval(sect%ndim),                     stat=istat)
+     allocate(sect%prod(sect%ndim,sect%ndim,2),         stat=istat)
+
+     allocate(sect%occu(sect%ndim,sect%ndim,sect%nops), stat=istat)
+     allocate(sect%doccu(sect%ndim,sect%ndim,sect%nops,sect%nops), stat=istat)
+
+     allocate(sect%fmat(sect%nops,0:1),                 stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_sect', 'can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_one_sect','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     sect%eval = zero
-     sect%next = 0
-     sect%prod = zero
-     sect%occu = zero
+     sect%next  = 0
+
+     sect%eval  = zero
+     sect%prod  = zero
+
+     sect%occu  = zero
      sect%doccu = zero
 
 ! initialize fmat one by one
@@ -1058,64 +1066,89 @@
      enddo ! over i={1,sect%nops} loop
 
      return
-  end subroutine alloc_one_sect
+  end subroutine ctqmc_allocate_memory_one_sect
 
-!!>>> dealloc_one_sect: deallocate memory for one sector
-  subroutine dealloc_one_sect(sect)
-     implicit none
-
-! external variables
-     type(t_sector), intent(inout) :: sect
-
-! local variables
-     integer :: i, j
-
-     if ( associated(sect%eval) )        deallocate(sect%eval)
-     if ( associated(sect%next) )   deallocate(sect%next)
-     if ( associated(sect%prod) )       deallocate(sect%prod)
-     if ( associated(sect%occu) )        deallocate(sect%occu)
-     if ( associated(sect%doccu) )       deallocate(sect%doccu)
-
-! deallocate fmat one by one
-     do i=1,sect%nops
-         do j=0,1
-             call dealloc_one_mat(sect%fmat(i,j))
-         enddo ! over j={0,1} loop
-     enddo ! over i={1,sect%nops} loop
-
-     return
-  end subroutine dealloc_one_sect
-
-!!>>> ctqmc_allocate_memory_sect: allocate memory for sector related variables
-  subroutine ctqmc_allocate_memory_sect()
+!!>>> ctqmc_allocate_memory_sectors: allocate memory for sector related variables
+  subroutine ctqmc_allocate_memory_sectors()
      implicit none
 
 ! local variables
+! loop index
      integer :: i
 
+! status flag
+     integer :: istat
+
 ! allocate memory
-     allocate( sectors(nsect), stat=istat )
+     allocate(sectors(nsect), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_sect','can not allocate enough memory')
+         call s_print_error('ctqmc_allocate_memory_sectors','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      do i=1,nsect
-         sectors(i)%ndim = 0
-         sectors(i)%nele = 0
-         sectors(i)%nops = norbs
+         sectors(i)%ndim   = 0
+         sectors(i)%nele   = 0
+         sectors(i)%nops   = norbs
          sectors(i)%istart = 0
-         sectors(i)%eval => null()
-         sectors(i)%next => null()
-         sectors(i)%prod => null()
-         sectors(i)%occu => null()
+
+         sectors(i)%next  => null()
+
+         sectors(i)%eval  => null()
+         sectors(i)%prod  => null()
+
+         sectors(i)%occu  => null()
          sectors(i)%doccu => null()
      enddo ! over i={1,nsect} loop
 
      return
-  end subroutine ctqmc_allocate_memory_sect
+  end subroutine ctqmc_allocate_memory_sectors
+
+!!>>> ctqmc_deallocate_memory_one_fmat: deallocate memory for one F-matrix
+  subroutine ctqmc_deallocate_memory_one_fmat(mat)
+     implicit none
+
+! external variables
+! F-matrix structure
+     type (t_fmat), intent(inout) :: mat
+
+     if ( associated(mat%val) ) deallocate(mat%val)
+
+     return
+  end subroutine ctqmc_deallocate_memory_one_fmat
+
+!!>>> ctqmc_deallocate_memory_one_sect: deallocate memory for one sector
+  subroutine ctqmc_deallocate_memory_one_sect(sect)
+     implicit none
+
+! external variables
+! sector structure
+     type(t_sector), intent(inout) :: sect
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+     if ( associated(sect%next)  ) deallocate(sect%next )
+
+     if ( associated(sect%eval)  ) deallocate(sect%eval )
+     if ( associated(sect%prod)  ) deallocate(sect%prod )
+
+     if ( associated(sect%occu)  ) deallocate(sect%occu )
+     if ( associated(sect%doccu) ) deallocate(sect%doccu)
+
+! deallocate fmat one by one
+     do i=1,sect%nops
+         do j=0,1
+             call ctqmc_deallocate_memory_one_mat(sect%fmat(i,j))
+         enddo ! over j={0,1} loop
+     enddo ! over i={1,sect%nops} loop
+
+     return
+  end subroutine ctqmc_deallocate_memory_one_sect
 
 !!>>> ctqmc_deallocate_memory_sect: deallocate memory for sector related variables
   subroutine ctqmc_deallocate_memory_sect()
@@ -1281,8 +1314,8 @@
      public :: ctqmc_allocate_memory_part
      public :: ctqmc_deallocate_memory_part
      public :: ctqmc_make_npart
-     public :: cat_sector_ztrace
      public :: ctqmc_save_npart
+     public :: cat_sector_ztrace
 
   contains ! encapsulated functionality
 
