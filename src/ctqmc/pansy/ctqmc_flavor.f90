@@ -2536,11 +2536,13 @@
      use context, only : index_v, index_t
      use context, only : expt_t
      use context, only : diag
-     use m_sector, only : nsect, sectors
-     use m_sector, only : ctqmc_make_string
-     use m_npart, only : is_cp
-     use m_npart, only : ctqmc_make_npart
-     use m_npart, only : cat_sector_ztrace
+
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+     use m_sect, only : ctqmc_make_string
+     use m_part, only : is_cp
+     use m_part, only : ctqmc_make_npart
+     use m_part, only : cat_sector_ztrace
 
      implicit none
 
@@ -2613,7 +2615,7 @@
      do i=1,nsect
          if ( .not. is_string(i) ) then
              trace_sect(i) = zero
-             sectors(i)%fprod(:,:,1) = zero
+             sectors(i)%prod(:,:,1) = zero
          else
              call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
          endif ! back if ( .not. is_string(i) ) block
@@ -2624,7 +2626,7 @@
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             diag(indx+j-1,1) = sectors(i)%fprod(j,j,1)
+             diag(indx+j-1,1) = sectors(i)%prod(j,j,1)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -2636,8 +2638,10 @@
   subroutine ctqmc_make_evolve()
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : diag
-     use m_sector, only : nsect, sectors
-     use m_npart, only : ctqmc_save_npart
+
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+     use m_part, only : ctqmc_save_npart
 
      implicit none
 
@@ -2654,7 +2658,7 @@
 ! transfer the final matrix product from fprod(:,:,1) to fprod(:,:,2),
 ! the latter can be used to calculate nmat and nnmat
      do i=1,nsect
-         sectors(i)%fprod(:,:,2) = sectors(i)%fprod(:,:,1)
+         sectors(i)%prod(:,:,2) = sectors(i)%prod(:,:,1)
      enddo ! over i={1,nsect} loop
 
 ! save the data of each part
