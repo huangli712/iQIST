@@ -1328,6 +1328,10 @@
      integer, public, save, allocatable  :: ope(:)
 
 ! how to treat each part when calculating trace
+! isave = 0: matrices product for this part has been calculated previously
+! isave = 1: this part should be recalculated, and the result must be
+!            stored in saved_p, if this Monte Caro move has been accepted.
+! isave = 2: this part is empty, we don't need to do anything with them.
      integer, public, save, allocatable  :: isave(:,:,:)
 
 ! saved parts of matrices product, for previous accepted configuration
@@ -1412,19 +1416,19 @@
 !!>>> core service subroutines                                         <<<
 !!========================================================================
 
-!!>>> ctqmc_make_npart: subroutine used to determine isave
+!!>>> cat_make_npart: subroutine used to determine isave
   subroutine cat_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
      implicit none
 
 ! external arguments
 ! mode for different Monte Carlo moves
-     integer,  intent(in)  :: cmode
+     integer, intent(in)  :: cmode
 
 ! total number of operators for current diagram
-     integer,  intent(in)  :: csize
+     integer, intent(in)  :: csize
 
 ! local version of index_t
-     integer, intent(in) :: index_t_loc(mkink)
+     integer, intent(in)  :: index_t_loc(mkink)
 
 ! imaginary time value of operator A, only valid in cmode = 1 or 2
      real(dp), intent(in) :: tau_s
@@ -1433,34 +1437,33 @@
      real(dp), intent(in) :: tau_e
 
 ! local variables
-! length of imaginary time axis for each part
-     real(dp) :: interval
-
-! number of fermion operators for each part
-     integer :: nop(npart)
+! loop index
+     integer  :: i
+     integer  :: j
 
 ! position of the operator A and operator B, index of part
      integer  :: tis
      integer  :: tie
      integer  :: tip
 
-! loop index
-     integer :: i, j
+! number of fermion operators for each part
+     integer  :: nop(npart)
 
-! init key arrays
+! length of imaginary time axis for each part
+     real(dp) :: interval
+
+! init module arrays
      nop = 0
      ops = 0
      ope = 0
-     fpart = 0
 
-! isave: how to treat each part for each alive string
-! isave = 0: matrices product for this part has been calculated previously
-! isave = 1: this part should be recalculated, and the result must be
-!            stored in saved_p, if this Monte Caro move has been accepted.
-! isave = 2: this part is empty, we don't need to do anything with them.
+     fpart = 0
 
 ! copy isave
      isave(:,:,1) = isave(:,:,2)
+
+! check the vadility of npart parameter
+     call s_assert(npart >= 1)
 
 ! case 1: recalculate all the matrices products
      if ( npart == 1 ) then
@@ -1474,8 +1477,8 @@
              isave(1,:,1) = 1
          endif ! back if ( nop(1) <= 0 ) block
 
-! case 2: use npart alogithm
-     elseif ( npart > 1 ) then
+! case 2: use divide-and-conquer alogithm
+     else if ( npart > 1 ) then
          interval = beta / real(npart)
 ! calculate number of operators for each part
          do i=1,csize
@@ -1497,7 +1500,7 @@
                  ops(i) = 1
                  do j=1,i-1
                      ops(i) = ops(i) + nop(j)
-                 enddo  ! over j={1,i-1} loop
+                 enddo ! over j={1,i-1} loop
                  ope(i) = ops(i) + nop(i) - 1
              endif  ! back if ( nop(i) > 0 ) block
          enddo  ! over i={1,npart} loop
@@ -1518,8 +1521,8 @@
                      tip = tis + 1
                      do while ( tip <= npart )
                          if ( nop(tip) > 0 ) then
-                             isave(tip,:,1) = 1;  EXIT
-                         endif
+                             isave(tip,:,1) = 1; EXIT
+                         endif ! back if ( nop(tip) > 0 ) block
                          tip = tip + 1
                      enddo ! over do while ( tip <= npart ) loop
                  endif ! back if ( tau_s >= time_v( index_t_loc( ope(tis) ) ) ) block
@@ -1562,7 +1565,7 @@
              endif ! back if ( nop(tie) > 0 ) block
 
 ! case 2B: recalculate all the matrices products
-         elseif ( cmode == 3 .or. cmode == 4 ) then
+         else if ( cmode == 3 .or. cmode == 4 ) then
              do i=1,nsect
                  do j=1,npart
                      if ( isave(j,i,1) == 0 ) then
@@ -1571,11 +1574,6 @@
                  enddo ! over j={1,npart} loop
              enddo ! over i={1,nsect} loop
          endif ! back if (cmode == 1 .or. cmode == 2) block
-
-! npart should be larger than zero
-     else
-         call s_print_error('ctqmc_make_ztrace', 'npart is small than 1, &
-                                    it should be larger than zero')
      endif ! back if ( npart == 1 ) block
 
      return
