@@ -1268,7 +1268,7 @@
              CYCLE
          endif ! back if ( .not. is_string(i) ) block
 
-! add the last sector to string, and check whether 
+! add the last sector to string, and check whether
 ! string(csize+1,i) == string(1,i)
 ! which is important for csize = 0
          string(csize+1,i) = i
