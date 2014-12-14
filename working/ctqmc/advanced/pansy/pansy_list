@@ -97,9 +97,9 @@ Advanced Test Cases For PANSY
 * 5d2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
 * 5d3 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=100.0, mune=10.0, npart=8, SOC, lambda=0.5, GQNs (N,Jz)
 
-* 5e1 // Ud=4.0, Jh=1.0, beta=10.00, mune=10.0, npart=4, GQNs (N,Sz)
-* 5e2 // Ud=4.0, Jh=1.0, beta=40.00, mune=10.0, npart=4, GQNs (N,Sz)
-* 5e3 // Ud=4.0, Jh=1.0, beta=100.0, mune=10.0, npart=8, GQNs (N,Sz)
+* 5e1 // Ud=4.0, Jh=1.0, beta=10.00, mune=10.0, npart=4, diagonal CF, GQNs (N,Sz)
+* 5e2 // Ud=4.0, Jh=1.0, beta=40.00, mune=10.0, npart=4, diagonal CF, GQNs (N,Sz)
+* 5e3 // Ud=4.0, Jh=1.0, beta=100.0, mune=10.0, npart=8, diagonal CF, GQNs (N,Sz)
 
 * 5f1 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=10.00, mune=5.00, npart=4, diagonal CF, GQNs (N,Sz,PS)
 * 5f2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=5.00, npart=4, diagonal CF, GQNs (N,Sz,PS)
