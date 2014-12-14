@@ -19,10 +19,9 @@
 !!! source  : ctqmc_record.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
-!!!           yilin wang (email: qhwyl2006@126.com)
+!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
-!!!           11/02/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
@@ -170,8 +169,7 @@
 !!>>> ctqmc_record_prob: record the probability of atomic states
   subroutine ctqmc_record_prob()
      use control, only : ncfgs
-     use context, only : csign
-     use context, only : matrix_ptrace
+     use context, only : csign, matrix_ptrace
      use context, only : prob
      use context, only : diag
 
