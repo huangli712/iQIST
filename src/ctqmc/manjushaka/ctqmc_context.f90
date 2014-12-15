@@ -1052,7 +1052,7 @@
      logical, public, save, allocatable :: is_string(:,:)
 
 ! final product of matrices multiplications, which will be used to calculate nmat
-     type(t_fmat), public, save, allocatable :: fprod(:,:)
+     type(t_fmat), public, save, allocatable :: prod(:,:)
 
 ! matrix of occupancy operator c^{\dagger}c
      type(t_fmat), public, save, allocatable :: occu(:,:)
@@ -1196,7 +1196,7 @@
      integer :: istat
 
 ! allocate them
-     allocate( fprod(nsect,2),     stat=istat )
+     allocate( prod(nsect,2),     stat=istat )
      allocate( occu(norbs,nsect),  stat=istat )
      allocate( doccu(norbs,norbs,nsect),  stat=istat )
 
@@ -1210,9 +1210,9 @@
          if ( is_trunc(i) ) cycle
 
          do j=1,2
-             fprod(i,j)%n = sectors(i)%ndim
-             fprod(i,j)%m = sectors(i)%ndim
-             call ctqmc_allocate_memory_one_fmat(fprod(i,j))
+             prod(i,j)%n = sectors(i)%ndim
+             prod(i,j)%m = sectors(i)%ndim
+             call ctqmc_allocate_memory_one_fmat(prod(i,j))
          enddo ! over j={1,2} loop
 
          do j=1,norbs
@@ -1310,15 +1310,15 @@
 
      integer :: i,j,k
 
-     if ( allocated(fprod) ) then
+     if ( allocated(prod) ) then
          do i=1,nsect
              if ( is_trunc(i) ) cycle
              do j=1,2
-                 call ctqmc_deallocate_memory_one_fmat(fprod(i,j))
+                 call ctqmc_deallocate_memory_one_fmat(prod(i,j))
              enddo ! over j={1,2} loop
          enddo ! over i={1,nsect} loop
-         deallocate(fprod)
-     endif ! back if ( allocated(fprod) ) block
+         deallocate(prod)
+     endif ! back if ( allocated(prod) ) block
 
      if ( allocated(occu) ) then
          do i=1,nsect
@@ -1673,7 +1673,7 @@
      use context, only : type_v, flvr_v, time_v, expt_v
 
      use m_sect, only : nsect, sectors, is_trunc, t_fmat
-     use m_sect, only : max_dim_sect_t, fprod
+     use m_sect, only : max_dim_sect_t, prod
      use m_sect, only : ctqmc_allocate_memory_one_fmat, ctqmc_deallocate_memory_one_fmat
 
      implicit none
@@ -2176,7 +2176,7 @@
      endif ! back if ( csize == 0 ) block
 
 ! store final product
-     fprod(string(1),1)%val = mat_r(1:dim1,1:dim1)
+     prod(string(1),1)%val = mat_r(1:dim1,1:dim1)
 
 ! calculate the trace
      trace = zero

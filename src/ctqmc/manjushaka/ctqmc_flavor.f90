@@ -2567,7 +2567,7 @@
      use context, only : expt_t, expt_v, index_t, index_v, ckink
      use context, only : matrix_ptrace, matrix_ntrace, diag
 
-     use m_sect, only : nsect, sectors, fprod
+     use m_sect, only : nsect, sectors, prod
      use m_sect, only : is_string, cat_make_string
 
      use m_part, only : is_cp, cat_make_trace, cat_make_npart
@@ -2816,7 +2816,7 @@
      do i=1,nalive_sect
          indx = sectors( orig_sect(i) )%istart
          do j=1,sectors( orig_sect(i) )%ndim
-             diag(indx+j-1,1) = fprod(orig_sect(i),1)%val(j,j)
+             diag(indx+j-1,1) = prod(orig_sect(i),1)%val(j,j)
          enddo
      enddo
 
@@ -2829,7 +2829,7 @@
      use control, only : mkink, ncfgs
      use context, only : expt_t, expt_v, index_t, index_v, diag
 
-     use m_sect, only : nsect, sectors, fprod
+     use m_sect, only : nsect, sectors, prod
      use m_sect, only : is_string, cat_make_string
 
      use m_part, only : is_cp, cat_make_trace, cat_make_npart
@@ -2891,7 +2891,7 @@
          if( .not. is_string(i,1) ) cycle
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             diag(indx+j-1,1) = fprod(i,1)%val(j,j)
+             diag(indx+j-1,1) = prod(i,1)%val(j,j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect}  loop
 
@@ -2903,7 +2903,7 @@
   subroutine ctqmc_make_evolve()
      use context, only : matrix_ptrace, matrix_ntrace, diag
 
-     use m_sect, only : nsect, sectors, is_string, fprod
+     use m_sect, only : nsect, sectors, is_string, prod
      use m_part, only : cat_save_npart
 
      implicit none
@@ -2925,7 +2925,7 @@
 ! final_product(:,:,2) the latter can be used to calculate nmat and nnmat
      do i=1,nsect
          if ( .not. is_string(i,1) ) cycle
-         fprod(i,2)%val = fprod(i,1)%val
+         prod(i,2)%val = prod(i,1)%val
      enddo ! over i={1,nsect} loop
 
  ! save the data of each part
