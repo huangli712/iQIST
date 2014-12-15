@@ -2567,8 +2567,8 @@
      use context, only : expt_t, expt_v, index_t, index_v, ckink
      use context, only : matrix_ptrace, matrix_ntrace, diag
 
-     use m_sector, only : nsect, sectors, fprod
-     use m_sector, only : is_string, ctqmc_make_string
+     use m_sect, only : nsect, sectors, fprod
+     use m_sect, only : is_string, ctqmc_make_string
 
      use m_part, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
 
@@ -2829,8 +2829,8 @@
      use control, only : mkink, ncfgs
      use context, only : expt_t, expt_v, index_t, index_v, diag
 
-     use m_sector, only : nsect, sectors, fprod
-     use m_sector, only : is_string, ctqmc_make_string
+     use m_sect, only : nsect, sectors, fprod
+     use m_sect, only : is_string, ctqmc_make_string
 
      use m_part, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
 
@@ -2903,7 +2903,7 @@
   subroutine ctqmc_make_evolve()
      use context, only : matrix_ptrace, matrix_ntrace, diag
 
-     use m_sector, only : nsect, sectors, is_string, fprod
+     use m_sect, only : nsect, sectors, is_string, fprod
      use m_part, only : ctqmc_save_npart
 
      implicit none

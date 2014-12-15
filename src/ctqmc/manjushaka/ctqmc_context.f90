@@ -11,8 +11,8 @@
 !!!           ctqmc_wmat module
 !!!           ctqmc_smat module
 !!!           context    module
-!!!           m_sector   module
-!!!           m_npart    module
+!!!           m_sect     module
+!!!           m_part     module
 !!! source  : ctqmc_context.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
@@ -949,7 +949,7 @@
   end module context
 
 !!>>> m_sector: define the data structure for good quantum numbers (GQNs) algorithm
-  module m_sector
+  module m_sect
      use constants, only : dp, zero, one, mystd, mytmp
      use control, only : itrun, myid, master
      use control, only : mkink, norbs, nmini, nmaxi
@@ -977,7 +977,7 @@
          integer :: ndim
 
 ! total number of electrons
-         integer :: nelec
+         integer :: nele
 
 ! number of fermion operators
          integer :: nops
@@ -1184,7 +1184,7 @@
 ! initialize them
      do i=1,nsect
          sectors(i)%ndim = 0
-         sectors(i)%nelec = 0
+         sectors(i)%nele = 0
          sectors(i)%nops = norbs
          sectors(i)%istart = 0
          sectors(i)%eval => null()
@@ -1344,7 +1344,7 @@
      elseif ( itrun == 2 ) then
          is_trunc = .false.
          do i=1,nsect
-             if ( sectors(i)%nelec < nmini .or. sectors(i)%nelec > nmaxi ) then
+             if ( sectors(i)%nele < nmini .or. sectors(i)%nele > nmaxi ) then
                  is_trunc(i) = .true.
              endif
          enddo ! over i={1,nsect} loop
@@ -1378,8 +1378,8 @@
                  close(mytmp)
 
                  do i=1,nsect
-                     if ( sectors(i)%nelec < nmini .or. &
-                          sectors(i)%nelec > nmaxi .or. &
+                     if ( sectors(i)%nele < nmini .or. &
+                          sectors(i)%nele > nmaxi .or. &
                           prob_sect(i) < 1e-4           ) then
 
                          is_trunc(i) = .true.
@@ -1387,7 +1387,7 @@
                  enddo ! over i={1,nsect} loop
              else
                  do i=1,nsect
-                     if ( sectors(i)%nelec < nmini .or. sectors(i)%nelec > nmaxi ) then
+                     if ( sectors(i)%nele < nmini .or. sectors(i)%nele > nmaxi ) then
                          is_trunc(i) = .true.
                      endif
                  enddo ! over i={1,nsect} loop
@@ -1618,7 +1618,7 @@
      return
   end subroutine ctqmc_make_string
 
-  end module m_sector
+  end module m_sect
 
 !!>>> containing the information for npart trace algorithm
   module m_part
@@ -1626,9 +1626,9 @@
      use control, only : npart, mkink, ncfgs, beta
      use context, only : time_v, type_v, flvr_v, expt_v
 
-     use m_sector, only : nsect, sectors, is_trunc, t_matrix
-     use m_sector, only : mdim_sect_t, fprod
-     use m_sector, only : alloc_one_mat, dealloc_one_mat
+     use m_sect, only : nsect, sectors, is_trunc, t_matrix
+     use m_sect, only : mdim_sect_t, fprod
+     use m_sect, only : alloc_one_mat, dealloc_one_mat
 
      implicit none
 

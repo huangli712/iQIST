@@ -268,7 +268,7 @@
      use context, only : symm, eimp, eigs, naux, saux
      use context, only : hybf
 
-     use m_sector
+     use m_sect
      use m_part
 
      implicit none
@@ -462,7 +462,7 @@
 
 ! read the dimension, total number of electrons, number of fermion operators,
 ! and start index of this sector
-                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nelec, &
+                 read(mytmp,*) j1, sectors(i)%ndim, sectors(i)%nele, &
                                    sectors(i)%nops, sectors(i)%istart
 
 ! allocate the memory for sectors(i)
@@ -533,7 +533,7 @@
      do i=1,nsect
          call mp_barrier()
          call mp_bcast(sectors(i)%ndim,    master)
-         call mp_bcast(sectors(i)%nelec,   master)
+         call mp_bcast(sectors(i)%nele,   master)
          call mp_bcast(sectors(i)%nops,    master)
          call mp_bcast(sectors(i)%istart,  master)
 
@@ -571,9 +571,9 @@
      do i=1,nsect
          do j=1,sectors(i)%ndim
              j1 = j1 + 1
-             sectors(i)%eval(j) = sectors(i)%eval(j) - mune * sectors(i)%nelec
+             sectors(i)%eval(j) = sectors(i)%eval(j) - mune * sectors(i)%nele
              eigs(j1) = sectors(i)%eval(j)
-             naux(j1) = sectors(i)%nelec
+             naux(j1) = sectors(i)%nele
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -608,7 +608,7 @@
 
      use control ! ALL
      use context ! ALL
-     use m_sector ! ALL
+     use m_sect ! ALL
      use m_part ! ALL
 
      implicit none
@@ -842,7 +842,7 @@
 !!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
      use context ! ALL
-     use m_sector ! ALL
+     use m_sect ! ALL
      use m_part ! ALL
 
      implicit none

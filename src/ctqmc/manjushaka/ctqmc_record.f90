@@ -332,8 +332,8 @@
      use context, only : ckink, matrix_ptrace
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
-     use m_sector, only : nsect, sectors, is_string, fprod
-     use m_sector, only : mdim_sect_t, occu, doccu
+     use m_sect, only : nsect, sectors, is_string, fprod
+     use m_sect, only : mdim_sect_t, occu, doccu
 
      implicit none
 
@@ -1552,7 +1552,7 @@
      use context, only : grnf
      use context, only : hybf
      use context, only : sig2
-     use m_sector, only : nsect, sectors, is_trunc
+     use m_sect, only : nsect, sectors, is_trunc
 
      implicit none
 

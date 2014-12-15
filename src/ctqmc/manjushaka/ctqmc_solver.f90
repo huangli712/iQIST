@@ -40,7 +40,7 @@
      use context, only : symm, naux, saux
      use context, only : gtau, grnf
      use context, only : sig2
-     use m_sector, only : ctqmc_deallocate_memory_occu
+     use m_sect, only : ctqmc_deallocate_memory_occu
      use m_part, only : ctqmc_deallocate_memory_part
 
      implicit none
@@ -532,11 +532,6 @@
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_prob(prob, naux, saux)
      endif ! back if ( myid == master ) block
-
-! write out the final probability data of sectors
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_psect()
-     endif
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
