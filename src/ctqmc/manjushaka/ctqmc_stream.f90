@@ -271,8 +271,8 @@
      use context, only : symm, eimp, eigs, naux, saux
      use context, only : hybf
 
-     use m_sect
-     use m_part
+     use m_sect ! ALL
+     use m_part ! ALL
 
      implicit none
 
@@ -281,22 +281,17 @@
      integer  :: i
      integer  :: j
      integer  :: k
-     integer  :: ii
+     integer  :: m
      integer  :: n
-
-! number of nonzero elements of F-matrix
-     integer :: nonzero
-
-! dummy integer variables
-     integer  :: j1
-     integer  :: j2
-     integer  :: j3
-
-! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
-     logical  :: exists
 
 ! version of file 'atom.cix'
      integer  :: ver
+
+! dummy integer variables
+     integer  :: j1, j2, j3, j4, j5
+
+! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
+     logical  :: exists
 
 ! dummy real variables
      real(dp) :: rtmp
@@ -327,7 +322,8 @@
 ! build initial hybridization function using self-consistent condition
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
-         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
+         hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
+         hybf(i,:,:) = hybf(i,:,:) * ( rmesh(i) - sqrt( rmesh(i)**2 + one ) )
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
@@ -420,36 +416,40 @@
 ! setup initial eigs, naux, and saux
      eigs = zero
      naux = zero
+     saux = zero
 
+! read in initial F matrix if available
+!-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
 ! inquire about file's existence
+! file atom.cix is necessary, the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
 ! find input file: atom.cix, read it
-! file atom.cix is necessary, the code can not run without it
-         if ( exists .eqv. .true. ) then
-
 ! open data file
-             open(mytmp, file='atom.cix', form='formatted', status='unknown')
+         open(mytmp, file='atom.cix', form='formatted', status='unknown')
 
 ! skip ten comment lines
-             do i=1,10
-                 read(mytmp,*)
-             enddo ! over i={1,10} loop
+         do i=1,10
+             read(mytmp,*)
+         enddo ! over i={1,10} loop
 
 ! determine whether the spin-orbital coupling effect should be considered
-             read(mytmp,*) ver, j1, j2, cssoc
-! check the version of atom.cix
-             if ( ver /= 2 ) then
-                 call s_print_error('ctqmc_selfer_init','file atom.cix is NOT the version for manjushaka')
-             endif ! back if ( ver /= 2) block
+! and check the version of atom.cix
+         read(mytmp,*) ver, i, j, cssoc
+         if ( ver /= 2 ) then
+             call s_print_error('ctqmc_selfer_init','file format of atom.cix is not correct')
+         endif ! back if ( ver /= 2) block
 
 ! skip nine comment lines
-             do i=1,9
-                 read(mytmp,*)
-             enddo ! over i={1,9} loop
+         do i=1,9
+             read(mytmp,*)
+         enddo ! over i={1,9} loop
 
 ! read the total number of sectors, maximum dimension of sectors,
 ! and average dimension of sectors
@@ -513,10 +513,6 @@
              enddo ! over i={1,nsectors} loop
 
              close(mytmp)
-         else
-             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
-         endif ! back if ( exists .eqv. .true. ) block
-
      endif ! back if ( myid == master ) block
 
 
