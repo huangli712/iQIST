@@ -6,13 +6,11 @@
 !!!           ctqmc_solver_init
 !!!           ctqmc_final_array
 !!! source  : ctqmc_stream.f90
-!!! type    : subroutine
+!!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/08/2010 by li huang
-!!!           08/29/2014 by yilin wang
-!!!           11/02/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
@@ -45,7 +43,7 @@
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
-     itrun  = 1            ! how to truncate the Hilbert space
+     itrun  = 1            ! without truncation  (1) or with N truncation    (2)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
@@ -55,9 +53,9 @@
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
      ncfgs  = 2**norbs     ! number of atomic states
-     niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
      nmini  = 0            ! minimum of occupancy number
      nmaxi  = norbs        ! maximum of occupancy number
+     niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp      ! U : average Coulomb interaction
      Uc     = 4.00_dp      ! Uc: intraorbital Coulomb interaction
@@ -121,14 +119,19 @@
              call p_get('itrun' , itrun )
 
              call p_get('nband' , nband )
-             call p_get('niter' , niter )
-             nspin = 2
-             norbs = nband * nspin
-             ncfgs = 2**norbs
-             nmini = 0
-             nmaxi = norbs
+             call p_get('nspin' , nspin )
+             call p_get('norbs' , norbs )
+             call p_get('ncfgs' , ncfgs )
              call p_get('nmini' , nmini )
              call p_get('nmaxi' , nmaxi )
+             call p_get('niter' , niter )
+
+             call p_get('U'     , U     )
+             call p_get('Uc'    , Uc    )
+             call p_get('Uv'    , Uv    )
+             call p_get('Jz'    , Jz    )
+             call p_get('Js'    , Js    )
+             call p_get('Jp'    , Jp    )
 
              call p_get('mune'  , mune  )
              call p_get('beta'  , beta  )
@@ -178,9 +181,9 @@
      call mp_bcast( nspin , master )
      call mp_bcast( norbs , master )
      call mp_bcast( ncfgs , master )
-     call mp_bcast( niter , master )
      call mp_bcast( nmini , master )
      call mp_bcast( nmaxi , master )
+     call mp_bcast( niter , master )
      call mp_barrier()
 
      call mp_bcast( U     , master )
