@@ -2816,7 +2816,7 @@
      do i=1,nalive_sect
          indx = sectors( orig_sect(i) )%istart
          do j=1,sectors( orig_sect(i) )%ndim
-             diag(indx+j-1,1) = fprod(orig_sect(i),1)%item(j,j)
+             diag(indx+j-1,1) = fprod(orig_sect(i),1)%val(j,j)
          enddo
      enddo
 
@@ -2891,7 +2891,7 @@
          if( .not. is_string(i,1) ) cycle
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             diag(indx+j-1,1) = fprod(i,1)%item(j,j)
+             diag(indx+j-1,1) = fprod(i,1)%val(j,j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect}  loop
 
@@ -2925,7 +2925,7 @@
 ! final_product(:,:,2) the latter can be used to calculate nmat and nnmat
      do i=1,nsect
          if ( .not. is_string(i,1) ) cycle
-         fprod(i,2)%item = fprod(i,1)%item
+         fprod(i,2)%val = fprod(i,1)%val
      enddo ! over i={1,nsect} loop
 
  ! save the data of each part

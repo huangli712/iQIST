@@ -16,12 +16,9 @@
 !!! source  : ctqmc_context.f90
 !!! type    : module
 !!! author  : li huang (email:huangli712@gmail.com)
-!!!         : yilin wang (email:qhwyl2006@126.com)
+!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/08/2010 by li huang
-!!!           07/19/2014 by yilin wang
-!!!           08/20/2014 by yilin wang
-!!!           11/02/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : To define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
@@ -336,7 +333,7 @@
   end module ctqmc_umat
 
 !!========================================================================
-!!>>> module ctqmc_mmat                                                 <<<
+!!>>> module ctqmc_mmat                                                <<<
 !!========================================================================
 
 !!>>> containing M-matrix and G-matrix related arrays used by continuous
@@ -948,27 +945,42 @@
 
   end module context
 
-!!>>> m_sector: define the data structure for good quantum numbers (GQNs) algorithm
+
+
+
+!!========================================================================
+!!>>> module m_sect                                                    <<<
+!!========================================================================
+
+!!>>> define the data structure for good quantum numbers (GQNs) algorithm
   module m_sect
      use constants, only : dp, zero, one, mystd, mytmp
-     use control, only : itrun, myid, master
-     use control, only : mkink, norbs, nmini, nmaxi
-     use context, only : type_v, flvr_v
-
      use mmpi
+
+     use control, only : itrun
+     use control, only : norbs, nmini, nmaxi
+     use control, only : mkink
+     use control, only : myid, master
+     use context, only : type_v, flvr_v
 
      implicit none
 
-! a matrix type
-     type :: t_matrix
+!!========================================================================
+!!>>> declare global structures                                        <<<
+!!========================================================================
 
-! dimensions
-         integer :: n, m
+! data structure for one F-matrix
+!-------------------------------------------------------------------------
+     type t_fmat
 
-! items
-         real(dp), dimension(:,:), pointer :: item => null()
+! the dimension, n x m
+         integer :: n
+         integer :: m
 
-     end type t_matrix
+! the memory space for the matrix
+         real(dp), pointer :: val(:,:)
+
+     end type t_fmat
 
  ! type sector contains all the information of a subspace of H_{loc}
      type :: t_sector
@@ -1000,7 +1012,7 @@
 ! F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
 ! fmat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
-         type(t_matrix), dimension(:,:), pointer :: fmat => null()
+         type(t_fmat), dimension(:,:), pointer :: fmat => null()
 
      end type t_sector
 
@@ -1039,13 +1051,13 @@
      logical, public, save, allocatable :: is_string(:,:)
 
 ! final product of matrices multiplications, which will be used to calculate nmat
-     type(t_matrix), public, save, allocatable :: fprod(:,:)
+     type(t_fmat), public, save, allocatable :: fprod(:,:)
 
 ! matrix of occupancy operator c^{\dagger}c
-     type(t_matrix), public, save, allocatable :: occu(:,:)
+     type(t_fmat), public, save, allocatable :: occu(:,:)
 
 ! matrix of double occupancy operator c^{\dagger}cc^{\dagger}c
-     type(t_matrix), public, save, allocatable :: doccu(:,:,:)
+     type(t_fmat), public, save, allocatable :: doccu(:,:,:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -1071,17 +1083,17 @@
      implicit none
 
 ! external variables
-     type(t_matrix), intent(inout) :: mat
+     type(t_fmat), intent(inout) :: mat
 
-     allocate( mat%item(mat%n, mat%m), stat=istat )
+     allocate( mat%val(mat%n, mat%m), stat=istat )
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('alloc_one_mat', 'can not allocate enough memory')
+         call s_print_error('alloc_one_mat','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! initialize it
-     mat%item = zero
+     mat%val = zero
 
      return
   end subroutine alloc_one_mat
@@ -1091,9 +1103,9 @@
      implicit none
 
 ! external variables
-     type(t_matrix), intent(inout) :: mat
+     type (t_fmat), intent(inout) :: mat
 
-     if ( associated(mat%item) ) deallocate(mat%item)
+     if ( associated(mat%val) ) deallocate(mat%val)
 
      return
   end subroutine dealloc_one_mat
@@ -1129,7 +1141,7 @@
          do j=0,1
              sect%fmat(i,j)%n = 0
              sect%fmat(i,j)%m = 0
-             sect%fmat(i,j)%item => null()
+             sect%fmat(i,j)%val => null()
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
 
@@ -1478,14 +1490,14 @@
              if ( is_trunc(j) ) cycle
              k=sectors(j)%next_sect(i,0)
              if ( k == -1 ) then
-                 occu(i,j)%item = zero
+                 occu(i,j)%val = zero
                  cycle
              endif ! back if ( k == -1 ) block
 
              call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(k)%ndim, &
-                         one,  sectors(k)%fmat(i,1)%item,            sectors(j)%ndim, &
-                               sectors(j)%fmat(i,0)%item,            sectors(k)%ndim, &
-                         zero, occu(i,j)%item,                       sectors(j)%ndim  )
+                         one,  sectors(k)%fmat(i,1)%val,            sectors(j)%ndim, &
+                               sectors(j)%fmat(i,0)%val,            sectors(k)%ndim, &
+                         zero, occu(i,j)%val,                       sectors(j)%ndim  )
          enddo ! over j={1,nsect} loop
      enddo ! over i={1,norbs} loop
 
@@ -1496,24 +1508,24 @@
                  jj = sectors(k)%next_sect(j,0)
                  ii = sectors(k)%next_sect(i,0)
                  if ( ii == -1 .or. jj == -1 ) then
-                     doccu(i,j,k)%item = zero
+                     doccu(i,j,k)%val = zero
                      cycle
                  endif ! back if ( ii == -1 .or. jj == -1 ) block
 
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
-                             one,  sectors(jj)%fmat(j,1)%item,           sectors(k)%ndim,  &
-                                   sectors(k)%fmat(j,0)%item,            sectors(jj)%ndim, &
+                             one,  sectors(jj)%fmat(j,1)%val,           sectors(k)%ndim,  &
+                                   sectors(k)%fmat(j,0)%val,            sectors(jj)%ndim, &
                              zero, mat_t1,                               mdim_sect_t       )
 
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
-                             one,  sectors(ii)%fmat(i,1)%item,           sectors(k)%ndim,  &
-                                   sectors(k)%fmat(i,0)%item,            sectors(ii)%ndim, &
+                             one,  sectors(ii)%fmat(i,1)%val,           sectors(k)%ndim,  &
+                                   sectors(k)%fmat(i,0)%val,            sectors(ii)%ndim, &
                              zero, mat_t2,                               mdim_sect_t       )
 
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
                              one,  mat_t2,                               mdim_sect_t,      &
                                    mat_t1,                               mdim_sect_t,      &
-                             zero, doccu(i,j,k)%item,                    sectors(k)%ndim   )
+                             zero, doccu(i,j,k)%val,                    sectors(k)%ndim   )
 
              enddo ! over k={1,nsect} loop
          enddo ! over j={1,norbs} loop
@@ -1626,7 +1638,7 @@
      use control, only : npart, mkink, ncfgs, beta
      use context, only : time_v, type_v, flvr_v, expt_v
 
-     use m_sect, only : nsect, sectors, is_trunc, t_matrix
+     use m_sect, only : nsect, sectors, is_trunc, t_fmat
      use m_sect, only : mdim_sect_t, fprod
      use m_sect, only : alloc_one_mat, dealloc_one_mat
 
@@ -1657,10 +1669,10 @@
      integer, public, save, allocatable :: ope(:)
 
 ! saved parts of matrices product, for previous configuration
-     type(t_matrix), public, save, allocatable :: saved_p(:,:)
+     type (t_fmat), public, save, allocatable :: saved_p(:,:)
 
 ! saved parts of matrices product, for new configuration
-     type(t_matrix), public, save, allocatable :: saved_n(:,:)
+     type (t_fmat), public, save, allocatable :: saved_n(:,:)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -1979,14 +1991,14 @@
 
              if ( i > ffpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim3,                &
-                              one,  saved_p(i,isect)%item, mdim_sect_t, &
+                              one,  saved_p(i,isect)%val, mdim_sect_t, &
                                     mat_r,                 mdim_sect_t, &
                               zero, mat_t,                 mdim_sect_t  )
 
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
              else
-                 mat_r(:,1:dim1) = saved_p(i,isect)%item(:,1:dim1)
+                 mat_r(:,1:dim1) = saved_p(i,isect)%val(:,1:dim1)
              endif ! back if ( i > ffpart ) block
 
 ! this part should be recalcuated
@@ -1994,7 +2006,7 @@
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
              dim4 = sectors(sect2)%ndim
-             saved_n(i,isect)%item = zero
+             saved_n(i,isect)%val = zero
 
 ! loop over all the fermion operators in this part
              counter = 0
@@ -2007,7 +2019,7 @@
                  if ( counter > 1 ) then
                      do l=1,dim4
                          do k=1,dim3
-                             mat_t(k,l) = saved_n(i,isect)%item(k,l) * expt_v(indx+k-1,index_t_loc(j))
+                             mat_t(k,l) = saved_n(i,isect)%val(k,l) * expt_v(indx+k-1,index_t_loc(j))
                          enddo ! over k={1,dim3} loop
                      enddo ! over l={1,dim4} loop
                      nprod = nprod + one
@@ -2021,9 +2033,9 @@
                  vt = type_v( index_t_loc(j) )
                  vf = flvr_v( index_t_loc(j) )
                  call dgemm( 'N', 'N', dim2, dim4, dim3,                       &
-                             one,  sectors(string(j))%fmat(vf, vt)%item, dim2, &
+                             one,  sectors(string(j))%fmat(vf, vt)%val, dim2, &
                                    mat_t,                         mdim_sect_t, &
-                             zero, saved_n(i,isect)%item,         mdim_sect_t  )
+                             zero, saved_n(i,isect)%val,         mdim_sect_t  )
 
                  nprod = nprod + one
              enddo ! over j={ops(i),ope(i)} loop
@@ -2035,14 +2047,14 @@
 ! multiply this part with the rest parts
              if ( i > ffpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim4,               &
-                             one,  saved_n(i,isect)%item, mdim_sect_t, &
+                             one,  saved_n(i,isect)%val, mdim_sect_t, &
                                    mat_r,                 mdim_sect_t, &
                              zero, mat_t,                 mdim_sect_t  )
 
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
              else
-                 mat_r(:,1:dim1) = saved_n(i,isect)%item(:,1:dim1)
+                 mat_r(:,1:dim1) = saved_n(i,isect)%val(:,1:dim1)
              endif ! back if ( i > ffpart ) block
 
          elseif ( isave(i,isect,1) == 2 ) then
@@ -2070,7 +2082,7 @@
      endif ! back if ( csize == 0 ) block
 
 ! store final product
-     fprod(string(1),1)%item = mat_r(1:dim1,1:dim1)
+     fprod(string(1),1)%val = mat_r(1:dim1,1:dim1)
 
 ! calculate the trace
      trace  = zero
@@ -2098,7 +2110,7 @@
              if ( is_trunc(i) ) cycle
              do j=1,npart
                  if ( is_cp(j,i) ) then
-                     saved_p(j,i)%item(:,1:ncol_cp(j,i)) = saved_n(j,i)%item(:,1:ncol_cp(j,i))
+                     saved_p(j,i)%val(:,1:ncol_cp(j,i)) = saved_n(j,i)%val(:,1:ncol_cp(j,i))
                  endif ! back if ( is_cp(j,i) ) block
              enddo ! over j={1,npart}  loop
          enddo ! over i={1,nsect} loop

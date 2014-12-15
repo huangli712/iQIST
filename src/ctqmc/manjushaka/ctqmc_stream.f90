@@ -500,10 +500,10 @@
                          sectors(i)%fmat(j,k)%m = sectors(i)%ndim
                          call alloc_one_mat(sectors(i)%fmat(j,k))
 ! read non-zero elements of F-matrix
-                         sectors(i)%fmat(j,k)%item = zero
+                         sectors(i)%fmat(j,k)%val = zero
                          do n=1,nonzero
                              read(mytmp, *) i1, i2, r1
-                             sectors(i)%fmat(j,k)%item(i1,i2) = r1
+                             sectors(i)%fmat(j,k)%val(i1,i2) = r1
                          enddo ! over n={1,nonzero} loop
                      enddo ! over k={0,1} loop
                  enddo ! over j={1,sectors(i)%nops} loop
@@ -556,7 +556,7 @@
                      call alloc_one_mat(sectors(i)%fmat(j,k))
                  endif ! back if ( myid /= master ) block
                  call mp_barrier()
-                 call mp_bcast(sectors(i)%fmat(j,k)%item, master)
+                 call mp_bcast(sectors(i)%fmat(j,k)%val, master)
              enddo ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
      enddo ! over i={1,nsect} loop

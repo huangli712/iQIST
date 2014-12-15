@@ -370,7 +370,7 @@
      do i=1,nsect
          if ( .not. is_string(i,2) ) cycle
          do j=1,sectors(i)%ndim
-             raux2 = raux2 + fprod(i,2)%item(j,j)
+             raux2 = raux2 + fprod(i,2)%val(j,j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -388,8 +388,8 @@
          do i=1,nsect
              if ( .not. is_string(i,2) ) cycle
              call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
-                         one,  fprod(i,2)%item,                      sectors(i)%ndim, &
-                               occu(flvr,i)%item,                    sectors(i)%ndim, &
+                         one,  fprod(i,2)%val,                      sectors(i)%ndim, &
+                               occu(flvr,i)%val,                    sectors(i)%ndim, &
                          zero, mat_t,                                mdim_sect_t      )
 
              do j=1,sectors(i)%ndim
@@ -412,8 +412,8 @@
              do j=1,nsect
                  if ( .not. is_string(j,2) ) cycle
                  call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                              one,  fprod(j,2)%item,                     sectors(j)%ndim, &
-                                    doccu(flvr,i,j)%item,                sectors(j)%ndim, &
+                              one,  fprod(j,2)%val,                     sectors(j)%ndim, &
+                                    doccu(flvr,i,j)%val,                sectors(j)%ndim, &
                               zero, mat_t,                               mdim_sect_t      )
 
                  do k=1,sectors(j)%ndim
@@ -426,8 +426,8 @@
              do j=1,nsect
                  if ( .not. is_string(j,2) ) cycle
                  call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                             one,  fprod(j,2)%item,                      sectors(j)%ndim, &
-                                   doccu(i,flvr,j)%item,                 sectors(j)%ndim, &
+                             one,  fprod(j,2)%val,                      sectors(j)%ndim, &
+                                   doccu(i,flvr,j)%val,                 sectors(j)%ndim, &
                              zero, mat_t,                                mdim_sect_t      )
 
                  do k=1,sectors(j)%ndim
@@ -1598,7 +1598,7 @@
              indx2 = sectors(kk)%istart
              do l=1,sectors(k)%ndim
                  do m=1,sectors(kk)%ndim
-                     ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))
+                     ob = sectors(k)%fmat(i,0)%val(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))
 !>>>                     if ( abs(ob) < epst ) cycle
                      do j=1,mfreq
                          cb = czi * rmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
