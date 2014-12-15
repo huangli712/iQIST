@@ -910,7 +910,6 @@
 
 ! data structure for one F-matrix
 !-------------------------------------------------------------------------
-     private :: t_fmat
      type t_fmat
 
 ! the dimension, n x m
@@ -924,7 +923,6 @@
 
 ! data structure for one sector
 !-------------------------------------------------------------------------
-     private :: t_sector
      type t_sector
 
 ! dimension
