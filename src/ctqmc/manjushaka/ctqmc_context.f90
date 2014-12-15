@@ -1045,10 +1045,10 @@
 ! probability of each sector, used to truncate high energy states
      real(dp), public, save, allocatable :: prob_sect(:)
 
-! which sectors should be truncated ?
+! which sectors should be truncated?
      logical, public, save, allocatable :: is_trunc(:)
 
-! whether it forms a string ?
+! whether it forms a string?
      logical, public, save, allocatable :: is_string(:,:)
 
 ! final product of matrices multiplications, which will be used to calculate nmat
@@ -1692,7 +1692,7 @@
      logical, public, save, allocatable :: is_cp(:,:)
 
 ! number of columns to be copied, in order to save copy time
-     integer, public, save, allocatable :: ncol_cp(:,:)
+     integer, public, save, allocatable :: nc_cp(:,:)
 
 ! the start positions of fermion operators for each part
      integer, public, save, allocatable :: ops(:)
@@ -1737,7 +1737,7 @@
 ! allocate memory
      allocate( isave(npart, nsect, 2), stat=istat )
      allocate( is_cp(npart, nsect),    stat=istat )
-     allocate( ncol_cp(npart, nsect),  stat=istat )
+     allocate( nc_cp(npart, nsect),  stat=istat )
      allocate( ops(npart),             stat=istat )
      allocate( ope(npart),             stat=istat )
      allocate( saved_p(npart, nsect),  stat=istat )
@@ -1763,7 +1763,7 @@
 
      isave = 1
      is_cp = .false.
-     ncol_cp = 0
+     nc_cp = 0
      ops = 0
      ope = 0
 
@@ -1785,7 +1785,7 @@
 
      if ( allocated(isave) )     deallocate(isave)
      if ( allocated(is_cp) )     deallocate(is_cp)
-     if ( allocated(ncol_cp) )   deallocate(ncol_cp)
+     if ( allocated(nc_cp) )   deallocate(nc_cp)
      if ( allocated(ops) )       deallocate(ops)
      if ( allocated(ope) )       deallocate(ope)
 
@@ -1998,7 +1998,7 @@
              if ( is_trunc(i) ) CYCLE
              do j=1,npart
                  if ( is_cp(j,i) ) then
-                     saved_p(j,i)%val(:,1:ncol_cp(j,i)) = saved_n(j,i)%val(:,1:ncol_cp(j,i))
+                     saved_p(j,i)%val(:,1:nc_cp(j,i)) = saved_n(j,i)%val(:,1:nc_cp(j,i))
                  endif ! back if ( is_cp(j,i) ) block
              enddo ! over j={1,npart} loop
          enddo ! over i={1,nsect} loop
@@ -2133,7 +2133,7 @@
 
              isave(i,isect,1) = 0
              is_cp(i,isect) = .true.
-             ncol_cp(i,isect) = dim4
+             nc_cp(i,isect) = dim4
 
 ! multiply this part with the rest parts
              if ( i > fpart ) then

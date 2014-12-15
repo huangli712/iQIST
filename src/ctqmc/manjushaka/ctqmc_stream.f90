@@ -472,7 +472,7 @@
 ! read the next index
              read(mytmp,*) ! skip the header
              do j=1,sectors(i)%nops
-                 read(mytmp,*) j1, sectors(i)%next(j,0), sectors(i)%next(j,1)
+                 read(mytmp,*) k, sectors(i)%next(j,0), sectors(i)%next(j,1)
              enddo ! over do j={1,sectors(i)%nops} loop
 
 ! read the eigenvalue of this sector
@@ -649,8 +649,8 @@
      use control ! ALL
      use context ! ALL
 
-     use m_sect ! ALL
-     use m_part ! ALL
+     use m_sect  ! ALL
+     use m_part  ! ALL
 
      implicit none
 
@@ -823,6 +823,8 @@
 !<     sig1    = czero
      sig2    = czero
 
+! for the other variables/arrays
+!-------------------------------------------------------------------------
 ! truncate the Hilbert space here
      call ctqmc_make_trunc()
 
@@ -835,12 +837,13 @@
 ! allocate memory for npart
      call ctqmc_allocate_memory_part()
 
+! init m_part module
      nprod = zero
-     isave = 1
      is_cp = .false.
-     ncol_cp = 0
-     ops = 0
-     ope = 0
+     nc_cp = 0
+     ops   = 0
+     ope   = 0
+     isave = 1
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
@@ -861,15 +864,6 @@
          call ctqmc_dump_htau(tmesh, htau)
      endif ! back if ( myid == master ) block
 
-! write out the current status of spin-orbit coupling
-     if ( myid == master ) then ! only master node can do it
-         if ( cssoc == 1 ) then
-             write(mystd,'(4X,a)') 'SOC calculation:  Yes'
-         else
-             write(mystd,'(4X,a)') 'SOC calculation:   No'
-         endif
-     endif
-
 ! write out the seed for random number stream, it is useful to reproduce
 ! the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
@@ -883,8 +877,9 @@
 !!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
      use context ! ALL
-     use m_sect ! ALL
-     use m_part ! ALL
+
+     use m_sect  ! ALL
+     use m_part  ! ALL
 
      implicit none
 
