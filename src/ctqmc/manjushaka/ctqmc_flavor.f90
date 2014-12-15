@@ -49,8 +49,7 @@
 
 !!>>> cat_insert_ztrace: calculate the trace ratio for insert new create
 !!>>> and destroy operators on perturbation expansion series
-  !subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
-  subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end)
+  subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
@@ -77,17 +76,8 @@
 ! imaginary time point of the new destroy operator
      real(dp), intent(in)  :: tau_end
 
-!<! ratio between old and new configurations, the determinant part
-!<     real(dp), intent(in) :: deter_ratio
-!<
-!<! a rand_num number
-!<     real(dp), intent(in) :: rand_num
-!<
-!<! transition probability p
-!<     real(dp), intent(out) :: accept_p
-!<
-!<! whether accept the move
-!<     logical, intent(out) :: pass
+! ratio between old and new configurations, the local trace part
+     real(dp), intent(out) :: trace_ratio
 
 ! local variables
 ! loop index over operators
@@ -251,16 +241,15 @@
 !-------------------------------------------------------------------------
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
-! calculate new matrix trace for the flavor part
-!<     call ctqmc_lazy_ztrace( 1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end )
+! evaluate trace_ratio
+     trace_ratio = matrix_ntrace / matrix_ptrace
 
      return
   end subroutine cat_insert_ztrace
 
 !!>>> cat_remove_ztrace: calculate the trace ratio for remove old create
 !!>>> and destroy operators on perturbation expansion series
-  !subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
-  subroutine cat_remove_ztrace(is, ie, tau_start, tau_end)
+  subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
@@ -284,17 +273,8 @@
 ! imaginary time point of the old destroy operator
      real(dp), intent(in)  :: tau_end
 
-!<! ratio between old and new configurations, the determinant part
-!<     real(dp), intent(in) :: deter_ratio
-!<
-!<! a random number
-!<     real(dp), intent(in) :: rand_num
-!<
-!<! the acceptance ratio
-!<     real(dp), intent(out) :: accept_p
-!<
-!<! whether pass
-!<     logical, intent(out) :: pass
+! ratio between old and new configurations, the local trace part
+     real(dp), intent(out) :: trace_ratio
 
 ! local variables
 ! loop index over operators
@@ -436,16 +416,15 @@
 !-------------------------------------------------------------------------
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
-! calculate new matrix trace for the flavor part
-!!     call ctqmc_lazy_ztrace( 2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end )
+! evaluate trace_ratio
+     trace_ratio = matrix_ntrace / matrix_ptrace
 
      return
   end subroutine cat_remove_ztrace
 
 !!>>> cat_lshift_ztrace: calculate the trace ratio for shift old create
 !!>>> operators on perturbation expansion series
-  !subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, deter_ratio, rand_num, accept_p, pass)
-  subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2)
+  subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, trace_ratio)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
@@ -472,17 +451,8 @@
 ! imaginary time point of the new create operator
      real(dp), intent(in)  :: tau_start2
 
-!<! ratio between old and new configurations, the determinant part
-!<     real(dp), intent(in) :: deter_ratio
-!<
-!<! a random number
-!<     real(dp), intent(in) :: rand_num
-!<
-!<! the acceptance ratio
-!<     real(dp), intent(out) :: accept_p
-!<
-!<! whether pass
-!<     logical, intent(out) :: pass
+! ratio between old and new configurations, the local trace part
+     real(dp), intent(out) :: trace_ratio
 
 ! local variables
 ! loop index over operators
@@ -597,16 +567,15 @@
 !-------------------------------------------------------------------------
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
-! calculate new matrix trace for the flavor part
-!!     call ctqmc_lazy_ztrace( 3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2 )
+! evaluate trace_ratio
+     trace_ratio = matrix_ntrace / matrix_ptrace
 
      return
   end subroutine cat_lshift_ztrace
 
 !!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy
 !!>>> operators on perturbation expansion series
-  !subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio, rand_num, accept_p, pass)
-  subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2)
+  subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, trace_ratio)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
@@ -633,17 +602,8 @@
 ! imaginary time point of the new destroy operator
      real(dp), intent(in)  :: tau_end2
 
-!<! ratio between old and new configurations, the determinant part
-!<     real(dp), intent(in) :: deter_ratio
-!<
-!<! a random number
-!<     real(dp), intent(in) :: rand_num
-!<
-!<! the acceptance ratio
-!<     real(dp), intent(out) :: accept_p
-!<
-!<! whether pass
-!<     logical, intent(out) :: pass
+! ratio between old and new configurations, the local trace part
+     real(dp), intent(out) :: trace_ratio
 
 ! local variables
 ! loop index over operators
@@ -758,8 +718,8 @@
 !-------------------------------------------------------------------------
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
-! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace( 4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2 )
+! evaluate trace_ratio
+     trace_ratio = matrix_ntrace / matrix_ptrace
 
      return
   end subroutine cat_rshift_ztrace

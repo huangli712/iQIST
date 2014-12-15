@@ -450,6 +450,9 @@
      use context, only : rshift_tcount, rshift_accept, rshift_reject
      use context, only : rank
 
+     use stack
+     use context, only : empty_v
+
      implicit none
 
 ! local variables
