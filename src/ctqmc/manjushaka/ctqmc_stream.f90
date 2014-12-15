@@ -450,7 +450,7 @@
 
 ! read the total number of sectors, maximum dimension of sectors,
 ! and average dimension of sectors
-             read(mytmp,*) nsect, mdim_sect, adim_sect
+             read(mytmp,*) nsect, max_dim_sect, ave_dim_sect
 
 ! after we know the total number of sectors, we can allocate memory
 ! for array sectors and parts
@@ -523,8 +523,8 @@
 
      call mp_bcast(cssoc,     master)
      call mp_bcast(nsect,     master)
-     call mp_bcast(mdim_sect, master)
-     call mp_bcast(adim_sect, master)
+     call mp_bcast(max_dim_sect, master)
+     call mp_bcast(ave_dim_sect, master)
 
      if ( myid /= master ) then
          call ctqmc_allocate_memory_sect()
