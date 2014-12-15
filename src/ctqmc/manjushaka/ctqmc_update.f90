@@ -50,9 +50,6 @@
      use context, only : insert_tcount, insert_accept, insert_reject
      use context, only : rank
 
-     use stack
-     use context, only : empty_v
-
      implicit none
 
 ! local variables
@@ -113,20 +110,42 @@
 ! not equal to zero
      call try_insert_flavor(flvr, fis, fie, tau_start, tau_end, ladd)
 
-! if ladd is false, we set the pass as false immediately
-     if ( ladd .eqv. .false. ) then
-         pass = .false.
-! we will determine the pass by lazy trace evalution
-     else
-! first, calculate the transition ratio between old and new configurations,
-! for the determinand part
-         call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
+!<! if ladd is false, we set the pass as false immediately
+!<     if ( ladd .eqv. .false. ) then
+!<         pass = .false.
+!<! we will determine the pass by lazy trace evalution
+!<     else
+!<! first, calculate the transition ratio between old and new configurations,
+!<! for the determinand part
+!<         call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
+!<
+!<! calculate the transition ratio between old and new configurations,
+!<! for the local trace part, by lazy trace evaluation
+!<         call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, trace_ratio)
+!<         call ctqmc_lazy_ztrace( 1, 1, 2*sum(rank) + 2, deter_ratio, spring_sfmt_stream(), p, pass, tau_start, tau_end )
+!<     endif ! back if ( ladd .eqv. .false. ) block
 
 ! calculate the transition ratio between old and new configurations,
-! for the local trace part, by lazy trace evaluation
+! for the local trace part
+     if ( ladd .eqv. .true. ) then
          call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, trace_ratio)
-         call ctqmc_lazy_ztrace( 1, 1, istack_getrest( empty_v ) + 2, deter_ratio, spring_sfmt_stream(), p, pass, tau_start, tau_end )
-     endif ! back if ( ladd .eqv. .false. ) block
+     else
+         trace_ratio = zero
+     endif ! back if ( ladd .eqv. .true. ) block
+
+! calculate the transition ratio between old and new configurations,
+! for the determinant part
+     if ( ladd .eqv. .true. ) then
+         call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
+     else
+         deter_ratio = zero
+     endif ! back if ( ladd .eqv. .true. ) block
+
+     if ( ladd .eqv. .true. ) then
+         call ctqmc_lazy_ztrace( 1, 1, 2*sum(rank) + 2, deter_ratio, spring_sfmt_stream(), p, pass, tau_start, tau_end )
+     else
+         pass = .false.
+     endif
 
 ! if the update action is accepted
      if ( pass .eqv. .true. ) then
@@ -181,9 +200,6 @@
      use context, only : ckink, csign, cnegs
      use context, only : remove_tcount, remove_accept, remove_reject
      use context, only : rank
-
-     use stack
-     use context, only : empty_v
 
      implicit none
 
@@ -257,7 +273,7 @@
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
          call cat_remove_ztrace(fis, fie, tau_start, tau_end, trace_ratio)
-         call ctqmc_lazy_ztrace( 2, 1, istack_getrest( empty_v ) - 2, deter_ratio, spring_sfmt_stream(), p, pass, tau_start, tau_end )
+         call ctqmc_lazy_ztrace( 2, 1, 2*sum(rank) - 2, deter_ratio, spring_sfmt_stream(), p, pass, tau_start, tau_end )
      endif ! back if ( lrmv .eqv. .false. ) block
 
 ! if update action is accepted
@@ -312,9 +328,6 @@
      use context, only : ckink, csign, cnegs
      use context, only : lshift_tcount, lshift_accept, lshift_reject
      use context, only : rank
-
-     use stack
-     use context, only : empty_v
 
      implicit none
 
@@ -388,7 +401,7 @@
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
          call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, trace_ratio)
-         call ctqmc_lazy_ztrace( 3, 1, istack_getrest( empty_v ), deter_ratio, spring_sfmt_stream(), p, pass, tau_start1, tau_start2 )
+         call ctqmc_lazy_ztrace( 3, 1, 2*sum(rank), deter_ratio, spring_sfmt_stream(), p, pass, tau_start1, tau_start2 )
      endif ! back if ( lshf .eqv. .false. ) block
 
 ! if update action is accepted
@@ -437,9 +450,6 @@
      use context, only : ckink, csign, cnegs
      use context, only : rshift_tcount, rshift_accept, rshift_reject
      use context, only : rank
-
-     use stack
-     use context, only : empty_v
 
      implicit none
 
@@ -513,7 +523,7 @@
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
          call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, trace_ratio)
-         call ctqmc_lazy_ztrace( 4, 1, istack_getrest( empty_v ), deter_ratio, spring_sfmt_stream(), p, pass, tau_end1, tau_end2 )
+         call ctqmc_lazy_ztrace( 4, 1, 2*sum(rank), deter_ratio, spring_sfmt_stream(), p, pass, tau_end1, tau_end2 )
      endif ! back if ( rshf .eqv. .false. ) block
 
 ! if update action is accepted
