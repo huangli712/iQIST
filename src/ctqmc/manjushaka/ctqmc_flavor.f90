@@ -31,12 +31,10 @@
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
-!!!           yilin wang (email: qhwyl2006@126.com)
+!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/23/2009 by li huang
 !!!           10/20/2010 by li huang
-!!!           08/20/2014 by li huang
-!!!           11/02/2014 by li huang
-!!!           11/11/2014 by li huang
+!!!           11/11/2014 by yilin wang
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -58,7 +56,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -267,7 +265,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -451,7 +449,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -612,7 +610,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -643,7 +641,6 @@
 
 ! whether pass
      logical, intent(out) :: pass
-
 
 ! local variables
 ! loop index over operators
@@ -1096,7 +1093,7 @@
 
      use control, only : nfreq
      use context, only : ckink
-     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e, empty_s, empty_e
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
      use context, only : rmesh
 
      implicit none
@@ -1166,7 +1163,7 @@
      use stack, only : istack_push
 
      use context, only : ckink
-     use context, only : index_s, index_e, empty_s, empty_e
+     use context, only : empty_s, empty_e, index_s, index_e
 
      implicit none
 
@@ -1339,7 +1336,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
 
      implicit none
 
@@ -1509,7 +1506,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v
 
      implicit none
 
@@ -1643,7 +1640,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
 
      implicit none
 
@@ -1804,7 +1801,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, time_v
 
      implicit none
 
@@ -1969,7 +1966,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2135,7 +2132,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2295,7 +2292,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2423,7 +2420,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2548,29 +2545,34 @@
 !!========================================================================
 
 !!>>> ctqmc_lazy_ztrace: core subroutine of manjushaka
-!! (1) use good quantum numbers (GQNs) algorithm, split the total Hibert space
-!!     to small subspace, the dimension of F-matrix will be smaller.
-!!
-!! (2) use divide and conqure algorithm, split the imaginary time axis into
-!!     many parts, save the matrices products of that part, which may be used
-!!     by next Monte Carlo move.
-!! NOTE: you should carefully choose npart in order to obtain the best speedup.
-!!
-!! (3) use lazy trace algorithm to reject some proposed moves immediately.
-!!
-!! (4) truncate the Hilbert space according to the total occupancy and the
-!!     probability of atomic eigenstates.
+!!>>> (1) use good quantum numbers (GQNs) algorithm, split the total
+!!>>>     Hibert space to small subspace, the dimension of F-matrix will
+!!>>>     be smaller.
+!!>>> (2) use divide and conqure algorithm, split the imaginary time axis
+!!>>>     into many parts, save the matrices products of that part, which
+!!>>>     may be used by next Monte Carlo move.
+!!>>> note: you should carefully choose npart in order to obtain the
+!!>>> best speedup.
+!!>>> (3) use lazy trace algorithm to reject some proposed moves immediately.
+!!>>> (4) truncate the Hilbert space according to the total occupancy and
+!!>>>     the probability of atomic eigenstates.
   subroutine ctqmc_lazy_ztrace(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
      use constants, only : dp, zero, one, epst
-     use control, only : mkink, ncfgs, beta
 
-     use context, only : expt_t, expt_v, index_t, index_v, ckink
-     use context, only : matrix_ptrace, matrix_ntrace, diag
+     use control, only : ncfgs
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink, matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, expt_t, expt_v
+     use context, only : diag
 
-     use m_sect, only : nsect, sectors, prod
-     use m_sect, only : is_string, cat_make_string
-
-     use m_part, only : is_cp, cat_make_trace, cat_make_npart
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+     use m_sect, only : prod, is_string
+     use m_sect, only : cat_make_string
+     use m_part, only : is_cp
+     use m_part, only : cat_make_npart
+     use m_part, only : cat_make_trace
 
      implicit none
 
@@ -2652,19 +2654,24 @@
 
 ! copy data from index_t or index_v to index_t_loc
 ! copy data from expt_t to expt_t_loc
-     select case(cmode)
-         case(1)
+     select case (cmode)
+
+         case (1)
              index_t_loc = index_t
              expt_t_loc = expt_t(:,1)
-         case(2)
+
+         case (2)
              index_t_loc = index_v
              expt_t_loc = expt_t(:,2)
-         case(3)
+
+         case (3)
              index_t_loc = index_t
              expt_t_loc = expt_t(:,2)
-         case(4)
+
+         case (4)
              index_t_loc = index_v
              expt_t_loc = expt_t(:,2)
+
      end select
 
 ! make propose ratio for different type of moves
@@ -2901,9 +2908,12 @@
 !!>>> ctqmc_make_evolve: used to update the operator traces of the
 !!>>> modified part
   subroutine ctqmc_make_evolve()
-     use context, only : matrix_ptrace, matrix_ntrace, diag
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : diag
 
-     use m_sect, only : nsect, sectors, is_string, prod
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+     use m_sect, only : is_string, prod
      use m_part, only : cat_save_npart
 
      implicit none
@@ -2921,14 +2931,14 @@
 ! update is_string for calculating nmat and nnmat
      is_string(:,2) = is_string(:,1)
 
-! transfer the final matrix product from final_product(:,:,1) to
-! final_product(:,:,2) the latter can be used to calculate nmat and nnmat
+! transfer the final matrix product from prod(:,:,1) to prod(:,:,2),
+! the latter can be used to calculate nmat and nnmat
      do i=1,nsect
-         if ( .not. is_string(i,1) ) cycle
+         if ( .not. is_string(i,1) ) CYCLE
          prod(i,2)%val = prod(i,1)%val
      enddo ! over i={1,nsect} loop
 
- ! save the data of each part
+! save the data of each part
      call cat_save_npart()
 
      return
@@ -3148,7 +3158,7 @@
 
      use control, only : norbs, ncfgs
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : rank
 
      implicit none

@@ -23,7 +23,6 @@
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/09/2010 by li huang
-!!!           08/20/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
@@ -559,7 +558,7 @@
      use control, only : nband, norbs
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : reflip_tcount, reflip_accept, reflip_reject
-     use context, only : index_t, index_v, flvr_v, empty_v
+     use context, only : empty_v, index_t, index_v, flvr_v
      use context, only : rank, symm
 
      implicit none
