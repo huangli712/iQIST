@@ -1548,8 +1548,8 @@
                              zero, mat_t2,                               max_dim_sect_t       )
 
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
-                             one,  mat_t2,                               mdim_sect_t,      &
-                                   mat_t1,                               mdim_sect_t,      &
+                             one,  mat_t2,                               max_dim_sect_t,      &
+                                   mat_t1,                               max_dim_sect_t,      &
                              zero, doccu(i,j,k)%val,                    sectors(k)%ndim   )
 
              enddo ! over k={1,nsect} loop
@@ -1673,7 +1673,7 @@
      use context, only : type_v, flvr_v, time_v, expt_v
 
      use m_sect, only : nsect, sectors, is_trunc, t_fmat
-     use m_sect, only : mdim_sect_t, fprod
+     use m_sect, only : max_dim_sect_t, fprod
      use m_sect, only : ctqmc_allocate_memory_one_fmat, ctqmc_deallocate_memory_one_fmat
 
      implicit none
@@ -1752,10 +1752,10 @@
      do i=1,nsect
          if ( is_trunc(i) ) cycle
          do j=1,npart
-             saved_p(j,i)%n = mdim_sect_t
-             saved_p(j,i)%m = mdim_sect_t
-             saved_n(j,i)%n = mdim_sect_t
-             saved_n(j,i)%m = mdim_sect_t
+             saved_p(j,i)%n = max_dim_sect_t
+             saved_p(j,i)%m = max_dim_sect_t
+             saved_n(j,i)%n = max_dim_sect_t
+             saved_n(j,i)%m = max_dim_sect_t
              call ctqmc_allocate_memory_one_fmat(saved_p(j,i))
              call ctqmc_allocate_memory_one_fmat(saved_n(j,i))
          enddo ! over j={1,npart} loop
@@ -2058,8 +2058,8 @@
      integer  :: counter
 
 ! real(dp) dummy matrices
-     real(dp) :: mat_r(mdim_sect_t, mdim_sect_t)
-     real(dp) :: mat_t(mdim_sect_t, mdim_sect_t)
+     real(dp) :: mat_r(max_dim_sect_t,max_dim_sect_t)
+     real(dp) :: mat_t(max_dim_sect_t,max_dim_sect_t)
 
 ! next we perform time evolution from right to left: beta <- 0
 ! initialize some arrays
@@ -2082,9 +2082,9 @@
 
              if ( i > fpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim3,                &
-                              one,  saved_p(i,isect)%val, mdim_sect_t, &
-                                    mat_r,                 mdim_sect_t, &
-                              zero, mat_t,                 mdim_sect_t  )
+                              one,  saved_p(i,isect)%val, max_dim_sect_t, &
+                                    mat_r,                 max_dim_sect_t, &
+                              zero, mat_t,                 max_dim_sect_t  )
 
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
@@ -2125,8 +2125,8 @@
                  vf = flvr_v( index_t_loc(j) )
                  call dgemm( 'N', 'N', dim2, dim4, dim3,                       &
                              one,  sectors(string(j))%fmat(vf, vt)%val, dim2, &
-                                   mat_t,                         mdim_sect_t, &
-                             zero, saved_n(i,isect)%val,         mdim_sect_t  )
+                                   mat_t,                         max_dim_sect_t, &
+                             zero, saved_n(i,isect)%val,         max_dim_sect_t  )
 
                  nprod = nprod + one
              enddo ! over j={ops(i),ope(i)} loop
@@ -2138,9 +2138,9 @@
 ! multiply this part with the rest parts
              if ( i > fpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim4,               &
-                             one,  saved_n(i,isect)%val, mdim_sect_t, &
-                                   mat_r,                 mdim_sect_t, &
-                             zero, mat_t,                 mdim_sect_t  )
+                             one,  saved_n(i,isect)%val, max_dim_sect_t, &
+                                   mat_r,                 max_dim_sect_t, &
+                             zero, mat_t,                 max_dim_sect_t  )
 
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
