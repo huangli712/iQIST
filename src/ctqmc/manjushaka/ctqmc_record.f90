@@ -1590,7 +1590,7 @@
      ghub = czero
      do k=1,nsect
          do i=1,norbs
-             kk = sectors(k)%next_sect(i,0)
+             kk = sectors(k)%next(i,0)
              if ( kk == -1 ) cycle
              if ( is_trunc(k) .and. is_trunc(kk) ) cycle
              indx1 = sectors(k)%istart

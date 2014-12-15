@@ -472,7 +472,7 @@
 ! read the next index
              read(mytmp,*) ! skip the header
              do j=1,sectors(i)%nops
-                 read(mytmp,*) j1, sectors(i)%next_sect(j,0), sectors(i)%next_sect(j,1)
+                 read(mytmp,*) j1, sectors(i)%next(j,0), sectors(i)%next(j,1)
              enddo ! over do j={1,sectors(i)%nops} loop
 
 ! read the eigenvalue of this sector
@@ -491,7 +491,7 @@
          do i=1,nsect
              do j=1,sectors(i)%nops
                  do k=0,1
-                     m = sectors(i)%next_sect(j,k)
+                     m = sectors(i)%next(j,k)
                      if ( m == -1 ) CYCLE
                      read(mytmp,*) ! skip one header line
 ! determine the dimension of F-matrix, number of non-zero elements
@@ -600,7 +600,7 @@
 ! setup barrier
          call mp_barrier()
 ! broadcast sector's data
-         call mp_bcast(sectors(i)%next_sect, master)
+         call mp_bcast(sectors(i)%next,   master)
          call mp_bcast(sectors(i)%eval,   master)
 ! setup barrier
          call mp_barrier()
@@ -613,7 +613,7 @@
      do i=1,nsect
          do j=1,sectors(i)%nops
              do k=0,1
-                 m = sectors(i)%next_sect(j,k)
+                 m = sectors(i)%next(j,k)
                  if ( m == -1 ) CYCLE
 ! setup the dimension for F-matrix and allocate memory, only for children nodes
                  if ( myid /= master ) then

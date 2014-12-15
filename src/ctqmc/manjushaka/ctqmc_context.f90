@@ -1002,10 +1002,10 @@
 ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
 ! it is -1 if goes outside of the Hilbert space,
 ! otherwise, it is the index of next sector
-         integer, dimension(:,:), pointer :: next_sect => null()
+         integer, pointer :: next(:,:)
 
 ! index of next sector, for truncating the Hilbert space of H_{loc}
-         integer, dimension(:,:), pointer :: next_sect_t => null()
+         integer, pointer :: next_t(:,:)
 
 ! the eigenvalues
          real(dp), pointer :: eval(:)
@@ -1124,8 +1124,8 @@
 
 ! allocate them
      allocate( sect%eval(sect%ndim),            stat=istat )
-     allocate( sect%next_sect(sect%nops,0:1),   stat=istat )
-     allocate( sect%next_sect_t(sect%nops,0:1), stat=istat )
+     allocate( sect%next(sect%nops,0:1),   stat=istat )
+     allocate( sect%next_t(sect%nops,0:1), stat=istat )
      allocate( sect%fmat(sect%nops,0:1),        stat=istat )
 
 ! check the status
@@ -1135,8 +1135,8 @@
 
 ! initialize them
      sect%eval = zero
-     sect%next_sect = 0
-     sect%next_sect_t = 0
+     sect%next = 0
+     sect%next_t = 0
 
 ! initialize fmat one by one
      do i=1,sect%nops
@@ -1176,8 +1176,8 @@
          sectors(i)%nops = norbs
          sectors(i)%istart = 0
          sectors(i)%eval => null()
-         sectors(i)%next_sect => null()
-         sectors(i)%next_sect_t => null()
+         sectors(i)%next => null()
+         sectors(i)%next_t => null()
          sectors(i)%fmat => null()
      enddo ! over i={1,nsect} loop
 
@@ -1264,8 +1264,8 @@
      integer :: i, j
 
      if ( associated(sect%eval) )          deallocate(sect%eval)
-     if ( associated(sect%next_sect) )     deallocate(sect%next_sect)
-     if ( associated(sect%next_sect_t) )   deallocate(sect%next_sect_t)
+     if ( associated(sect%next) )     deallocate(sect%next)
+     if ( associated(sect%next_t) )   deallocate(sect%next_t)
 
 ! deallocate fmat one by one
      if ( associated(sect%fmat) ) then
@@ -1366,7 +1366,7 @@
 ! don't truncate the Hilbert space at all
      if ( itrun == 1 ) then
          do i=1,nsect
-             sectors(i)%next_sect_t = sectors(i)%next_sect
+             sectors(i)%next_t = sectors(i)%next
          enddo ! over i={1,nsect} loop
          nsect_t = nsect
          max_dim_sect_t = max_dim_sect
@@ -1476,7 +1476,7 @@
      nsect_t = 0
      sum_dim = 0
      do i=1,nsect
-         sectors(i)%next_sect_t = -1
+         sectors(i)%next_t = -1
          if ( is_trunc(i) ) then
              cycle
          endif ! back if ( is_trunc(i) ) block
@@ -1488,10 +1488,10 @@
          nsect_t = nsect_t + 1
          do j=1,sectors(i)%nops
              do k=0,1
-                 ii = sectors(i)%next_sect(j,k)
+                 ii = sectors(i)%next(j,k)
                  if ( ii == -1 ) cycle
                  if ( .not. is_trunc(ii) ) then
-                     sectors(i)%next_sect_t(j,k) = ii
+                     sectors(i)%next_t(j,k) = ii
                  endif ! back if ( .not. is_trunc(ii) ) block
              enddo ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
@@ -1513,7 +1513,7 @@
      do i=1,norbs
          do j=1,nsect
              if ( is_trunc(j) ) cycle
-             k=sectors(j)%next_sect(i,0)
+             k=sectors(j)%next(i,0)
              if ( k == -1 ) then
                  occu(i,j)%val = zero
                  cycle
@@ -1530,8 +1530,8 @@
          do j=1,norbs
              do k=1,nsect
                  if ( is_trunc(k) ) cycle
-                 jj = sectors(k)%next_sect(j,0)
-                 ii = sectors(k)%next_sect(i,0)
+                 jj = sectors(k)%next(j,0)
+                 ii = sectors(k)%next(i,0)
                  if ( ii == -1 .or. jj == -1 ) then
                      doccu(i,j,k)%val = zero
                      cycle
@@ -1616,7 +1616,7 @@
                  string(left,i) = curr_sect_l
                  vt = type_v( index_t_loc(left) )
                  vf = flvr_v( index_t_loc(left) )
-                 next_sect_l = sectors(curr_sect_l)%next_sect_t(vf,vt)
+                 next_sect_l = sectors(curr_sect_l)%next_t(vf,vt)
                  if ( next_sect_l == -1 ) then
                      is_string(i,1) = .false.; EXIT ! finish check, exit
                  endif ! back if ( next_sect_l == -1 ) block
@@ -1626,7 +1626,7 @@
                  vt = type_v( index_t_loc(right) )
                  vf = flvr_v( index_t_loc(right) )
                  vt = mod(vt+1,2)
-                 next_sect_r = sectors(curr_sect_r)%next_sect_t(vf,vt)
+                 next_sect_r = sectors(curr_sect_r)%next_t(vf,vt)
                  if ( next_sect_r == -1 ) then
                      is_string(i,1) = .false.; EXIT ! finish check, exit
                  endif ! back if ( next_sect_r == -1 ) block
