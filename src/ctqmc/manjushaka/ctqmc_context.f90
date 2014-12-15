@@ -982,8 +982,9 @@
 
      end type t_fmat
 
- ! type sector contains all the information of a subspace of H_{loc}
-     type :: t_sector
+! data structure for one sector
+!-------------------------------------------------------------------------
+     type t_sector
 
 ! dimension
          integer :: ndim
@@ -991,14 +992,11 @@
 ! total number of electrons
          integer :: nele
 
-! number of fermion operators
+! number of fermion operators, it should be equal to norbs
          integer :: nops
 
 ! start index of this sector
          integer :: istart
-
-! eigenvalues
-         real(dp), dimension(:), pointer :: eval => null()
 
 ! next sector it points to when a fermion operator acts on this sector, F|i> --> |j>
 ! next_sector(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
@@ -1009,28 +1007,31 @@
 ! index of next sector, for truncating the Hilbert space of H_{loc}
          integer, dimension(:,:), pointer :: next_sect_t => null()
 
-! F-matrix between this sector and all other sectors
+! the eigenvalues
+         real(dp), pointer :: eval(:)
+
+! the F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
-! fmat(nops, 0:1), 0 for annihilation and 1 for creation operators, respectively
-         type(t_fmat), dimension(:,:), pointer :: fmat => null()
+! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
+         type (t_fmat), pointer :: fmat(:,:)
 
      end type t_sector
 
-! some global variables
-! status flag
-     integer, private :: istat
+!!========================================================================
+!!>>> declare global variables                                         <<<
+!!========================================================================
 
 ! total number of sectors
-     integer, public, save :: nsect
+     integer, public, save  :: nsect
 
 ! total number of sectors after truncating H_{loc}
-     integer, public, save :: nsect_t
+     integer, public, save  :: nsect_t
 
 ! maximal dimension of the sectors
-     integer, public, save :: mdim_sect
+     integer, public, save  :: mdim_sect
 
 ! maximal dimension of the sectors after truncating H_{loc}
-     integer, public, save :: mdim_sect_t
+     integer, public, save  :: mdim_sect_t
 
 ! average dimension of the sectors
      real(dp), public, save :: adim_sect
@@ -1085,6 +1086,8 @@
 ! external variables
      type(t_fmat), intent(inout) :: mat
 
+     integer :: istat
+
      allocate( mat%val(mat%n, mat%m), stat=istat )
 
 ! check the status
@@ -1118,6 +1121,7 @@
      type(t_sector), intent(inout) :: sect
 
 ! local variables
+     integer :: istat
      integer :: i, j
 
 ! allocate them
@@ -1181,6 +1185,7 @@
 
 ! local variables
      integer :: i
+     integer :: istat
 
 ! allocate memory
      allocate( sectors(nsect),      stat=istat )
@@ -1241,6 +1246,7 @@
      implicit none
 
      integer :: i,j,k
+     integer :: istat
 
 ! allocate them
      allocate( fprod(nsect,2),     stat=istat )
