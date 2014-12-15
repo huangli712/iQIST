@@ -1212,13 +1212,13 @@
          do j=1,2
              fprod(i,j)%n = sectors(i)%ndim
              fprod(i,j)%m = sectors(i)%ndim
-             call alloc_one_mat(fprod(i,j))
+             call ctqmc_allocate_memory_one_fmat(fprod(i,j))
          enddo ! over j={1,2} loop
 
          do j=1,norbs
              occu(j,i)%n = sectors(i)%ndim
              occu(j,i)%m = sectors(i)%ndim
-             call alloc_one_mat(occu(j,i))
+             call ctqmc_allocate_memory_one_fmat(occu(j,i))
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,nsect} loop
 
@@ -1228,7 +1228,7 @@
              do k=1,norbs
                  doccu(k,j,i)%n = sectors(i)%ndim
                  doccu(k,j,i)%m = sectors(i)%ndim
-                 call alloc_one_mat(doccu(k,j,i))
+                 call ctqmc_allocate_memory_one_fmat(doccu(k,j,i))
              enddo ! over k={1,norbs} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,nsect} loop

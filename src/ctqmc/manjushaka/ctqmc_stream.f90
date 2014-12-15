@@ -498,7 +498,7 @@
                          read(mytmp, *) j1, j2, j3, i1, i2, nonzero
                          sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
                          sectors(i)%fmat(j,k)%m = sectors(i)%ndim
-                         call alloc_one_mat(sectors(i)%fmat(j,k))
+                         call ctqmc_allocate_memory_one_fmat(sectors(i)%fmat(j,k))
 ! read non-zero elements of F-matrix
                          sectors(i)%fmat(j,k)%val = zero
                          do n=1,nonzero
@@ -553,7 +553,7 @@
                  if ( myid /= master ) then
                      sectors(i)%fmat(j,k)%n = sectors(ii)%ndim
                      sectors(i)%fmat(j,k)%m = sectors(i)%ndim
-                     call alloc_one_mat(sectors(i)%fmat(j,k))
+                     call ctqmc_allocate_memory_one_fmat(sectors(i)%fmat(j,k))
                  endif ! back if ( myid /= master ) block
                  call mp_barrier()
                  call mp_bcast(sectors(i)%fmat(j,k)%val, master)
