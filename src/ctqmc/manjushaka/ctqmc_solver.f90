@@ -11,8 +11,6 @@
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           06/21/2010 by li huang
-!!!           08/20/2014 by yilin wang
-!!!           11/02/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
@@ -26,7 +24,7 @@
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, mystd
 
-     use control, only : issun, isspn, isvrt, itrun
+     use control, only : issun, isspn, isvrt
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
      use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
@@ -40,6 +38,7 @@
      use context, only : symm, naux, saux
      use context, only : gtau, grnf
      use context, only : sig2
+
      use m_sect, only : ctqmc_deallocate_memory_occu
      use m_part, only : ctqmc_deallocate_memory_part
 
@@ -222,11 +221,7 @@
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
-! for dynamically truncate high energy states, the trace of saved diagramm
-! may be zero, so we don't retrieve it for itrun == 3
-     if (itrun == 1 .or. itrun == 2) then
-         call ctqmc_retrieve_status()
-     endif
+     call ctqmc_retrieve_status()
      call cpu_time(time_end)   ! record ending   time
 
 ! print the time information

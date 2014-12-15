@@ -26,7 +26,6 @@
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
-!!!           08/20/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : measure, record, and postprocess the key observables
 !!!           produced by the hybridization expansion version continuous

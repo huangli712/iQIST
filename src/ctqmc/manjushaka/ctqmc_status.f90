@@ -103,6 +103,7 @@
      use constants, only : dp, zero, epss, mytmp
      use mmpi, only : mp_bcast, mp_barrier
 
+     use control, only : itrun
      use control, only : norbs
      use control, only : mkink
      use control, only : beta
@@ -165,6 +166,10 @@
 
 ! if solver.status.dat does not exist, return parent subroutine immediately
      if ( exists .eqv. .false. ) RETURN
+
+! for dynamically truncate high energy states, the trace of saved diagramm
+! may be zero, so we don't retrieve it for itrun == 3
+     if ( itrun == 3 ) RETURN
 
 ! read solver.status.dat, only master node can do it
      if ( myid == master ) then
