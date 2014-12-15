@@ -117,15 +117,15 @@
 ! number of atomic states (= 2**norbs)
      integer, public, save :: ncfgs  = 4
 
-! maximum number of continuous time quantum Monte Carlo quantum impurity
-! solver plus dynamical mean field theory self-consistent iterations
-     integer, public, save :: niter  = 20
-
 ! the minimum number of occupancy for itrun = 2 or 3
      integer, public, save :: nmini = 0
 
 ! the maximum number of occupancy for itrun = 2 or 3
      integer, public, save :: nmaxi = 2
+
+! maximum number of continuous time quantum Monte Carlo quantum impurity
+! solver plus dynamical mean field theory self-consistent iterations
+     integer, public, save :: niter  = 20
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
