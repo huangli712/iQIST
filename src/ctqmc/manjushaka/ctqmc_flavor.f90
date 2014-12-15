@@ -2570,7 +2570,7 @@
      use m_sect, only : nsect, sectors, fprod
      use m_sect, only : is_string, ctqmc_make_string
 
-     use m_part, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
+     use m_part, only : is_cp, cat_make_trace, cat_make_npart
 
      implicit none
 
@@ -2763,7 +2763,7 @@
 
 ! determine which part has been changed due to local change of diagram
 ! it will set isave internally
-     call ctqmc_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
+     call cat_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
 
 ! sort the trace_bound to speed up the refining process
 ! here, we use simple bubble sort algorithm, because nalive_sect is usually small
@@ -2778,7 +2778,7 @@
 ! calculate the trace for one sector, this call will consume a lot of time
 ! if the dimension of fmat and expansion order is large, so we should carefully
 ! optimize it.
-         call cat_sector_ztrace(csize, string(:,orig_sect(i)), index_t_loc, expt_t_loc, trace_sect(i))
+         call cat_make_trace(csize, string(:,orig_sect(i)), index_t_loc, expt_t_loc, trace_sect(i))
 ! if this move is not accepted, refine the trace bound to see whether we can
 ! reject it before calculating the trace of all of the sectors
          if ( .not. pass ) then
@@ -2832,7 +2832,7 @@
      use m_sect, only : nsect, sectors, fprod
      use m_sect, only : is_string, ctqmc_make_string
 
-     use m_part, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
+     use m_part, only : is_cp, cat_make_trace, cat_make_npart
 
      implicit none
 
@@ -2873,14 +2873,14 @@
 
 ! determine is_save, all parts with some fermion operators should be
 ! recalculated in this case.
-     call ctqmc_make_npart(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
+     call cat_make_npart(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
 
 ! calculate the trace for all the alive sectors
      is_cp = .false.
      trace_sect = zero
      do i=1,nsect
          if ( .not. is_string(i,1) ) cycle
-         call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
+         call cat_make_trace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
      enddo ! over j={1,nsect} loop
 
      trace = sum(trace_sect)
@@ -2904,7 +2904,7 @@
      use context, only : matrix_ptrace, matrix_ntrace, diag
 
      use m_sect, only : nsect, sectors, is_string, fprod
-     use m_part, only : ctqmc_save_npart
+     use m_part, only : cat_save_npart
 
      implicit none
 
@@ -2929,7 +2929,7 @@
      enddo ! over i={1,nsect} loop
 
  ! save the data of each part
-     call ctqmc_save_npart()
+     call cat_save_npart()
 
      return
   end subroutine ctqmc_make_evolve

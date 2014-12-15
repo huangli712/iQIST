@@ -1079,6 +1079,10 @@
 
   contains ! encapsulated functionality
 
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
+
 !!>>> alloc_one_mat: allocate one mat
   subroutine alloc_one_mat(mat)
      implicit none
@@ -1638,11 +1642,20 @@
 
   end module m_sect
 
-!!>>> containing the information for npart trace algorithm
+!!========================================================================
+!!>>> module m_part                                                    <<<
+!!========================================================================
+
+!!>>> contains some key global variables and subroutines for divide and
+!!>>> conquer algorithm to speed up the trace evaluation
   module m_part
      use constants, only : dp, zero, one
-     use control, only : npart, mkink, ncfgs, beta
-     use context, only : time_v, type_v, flvr_v, expt_v
+
+     use control, only : ncfgs
+     use control, only : mkink
+     use control, only : npart
+     use control, only : beta
+     use context, only : type_v, flvr_v, time_v, expt_v
 
      use m_sect, only : nsect, sectors, is_trunc, t_fmat
      use m_sect, only : mdim_sect_t, fprod
@@ -1650,8 +1663,9 @@
 
      implicit none
 
-! status flag for allocating memory
-     integer, private :: istat
+!!========================================================================
+!!>>> declare global variables                                         <<<
+!!========================================================================
 
 ! total number of matrices products
      real(dp), public, save :: nprod = zero
@@ -1686,17 +1700,24 @@
 
      public :: ctqmc_allocate_memory_part
      public :: ctqmc_deallocate_memory_part
-     public :: ctqmc_make_npart
-     public :: cat_sector_ztrace
-     public :: ctqmc_save_npart
+
+     public :: cat_make_npart
+     public :: cat_save_npart
+     public :: cat_make_trace
 
   contains ! encapsulated functionality
+
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
 
 !!>>> ctqmc_allocate_memory_part: allocate memory for sectors related variables
   subroutine ctqmc_allocate_memory_part()
      implicit none
 
      integer :: i,j
+
+     integer :: istat
 
 ! allocate memory
      allocate( isave(npart, nsect, 2), stat=istat )
@@ -1734,6 +1755,10 @@
      return
   end subroutine ctqmc_allocate_memory_part
 
+!!========================================================================
+!!>>> deallocate memory subroutines                                    <<<
+!!========================================================================
+
 !!>>> ctqmc_deallocate_memory_part: deallocate memory for sectors related variables
   subroutine ctqmc_deallocate_memory_part()
      implicit none
@@ -1769,8 +1794,12 @@
      return
   end subroutine ctqmc_deallocate_memory_part
 
-!!>>> ctqmc_make_npart: subroutine used to determine isave
-  subroutine ctqmc_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
+!!========================================================================
+!!>>> core service subroutines                                         <<<
+!!========================================================================
+
+!!>>> cat_make_npart: subroutine used to determine isave
+  subroutine cat_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
      implicit none
 
 ! external arguments
@@ -1935,10 +1964,36 @@
      endif ! back if ( npart == 1 ) block
 
      return
-  end subroutine ctqmc_make_npart
+  end subroutine cat_make_npart
 
-!!>>> cat_sector_ztrace: calculate the trace for one sector
-  subroutine cat_sector_ztrace(csize, string, index_t_loc, expt_t_loc, trace)
+!!>>> cat_save_npart: copy data when propose has been accepted
+  subroutine cat_save_npart()
+     implicit none
+
+! loop index
+     integer :: i,j
+
+! copy save-state for all the parts
+     isave(:,:,2) = isave(:,:,1)
+
+! when npart > 1, we used the npart algorithm, save the changed
+! matrices products f moves are accepted
+     if ( npart > 1) then
+         do i=1,nsect
+             if ( is_trunc(i) ) cycle
+             do j=1,npart
+                 if ( is_cp(j,i) ) then
+                     saved_p(j,i)%val(:,1:ncol_cp(j,i)) = saved_n(j,i)%val(:,1:ncol_cp(j,i))
+                 endif ! back if ( is_cp(j,i) ) block
+             enddo ! over j={1,npart}  loop
+         enddo ! over i={1,nsect} loop
+     endif ! back if ( npart > 1 ) block
+
+     return
+  end subroutine cat_save_npart
+
+!!>>> cat_make_trace: calculate the trace for one sector
+  subroutine cat_make_trace(csize, string, index_t_loc, expt_t_loc, trace)
      implicit none
 
 ! external variables
@@ -2067,17 +2122,20 @@
              cycle
          endif ! back if ( isave(i,isect) == 0 )  block
 
-! the start sector for next part
+! setup the start sector for next part
          isect = sect1
 
      enddo ! over i={1, npart} loop
 
-! special treatment of the last time-evolution operator
+! special treatment of the last time evolution operator
      indx = sectors(string(1))%istart
+
+! no fermion operators
      if ( csize == 0 ) then
          do k=1,dim1
              mat_r(k,k) = expt_t_loc(indx+k-1)
          enddo ! over k={1,dim1} loop
+! multiply the last time evolution operator
      else
          do l=1,dim1
              do k=1,dim1
@@ -2091,38 +2149,12 @@
      fprod(string(1),1)%val = mat_r(1:dim1,1:dim1)
 
 ! calculate the trace
-     trace  = zero
+     trace = zero
      do j=1,sectors(string(1))%ndim
          trace = trace + mat_r(j,j)
      enddo ! over j={1,sectors(string(1))%ndim} loop
 
      return
-  end subroutine cat_sector_ztrace
-
-!!>>> ctqmc_save_npart: copy data when propose has been accepted
-  subroutine ctqmc_save_npart()
-     implicit none
-
-! loop index
-     integer :: i,j
-
-! copy save-state for all the parts
-     isave(:,:,2) = isave(:,:,1)
-
-! when npart > 1, we used the npart algorithm, save the changed
-! matrices products f moves are accepted
-     if ( npart > 1) then
-         do i=1,nsect
-             if ( is_trunc(i) ) cycle
-             do j=1,npart
-                 if ( is_cp(j,i) ) then
-                     saved_p(j,i)%val(:,1:ncol_cp(j,i)) = saved_n(j,i)%val(:,1:ncol_cp(j,i))
-                 endif ! back if ( is_cp(j,i) ) block
-             enddo ! over j={1,npart}  loop
-         enddo ! over i={1,nsect} loop
-     endif ! back if ( npart > 1 ) block
-
-     return
-  end subroutine ctqmc_save_npart
+  end subroutine cat_make_trace
 
   end module m_part
