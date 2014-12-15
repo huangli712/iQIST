@@ -1065,12 +1065,12 @@
 !!========================================================================
 
      public :: ctqmc_allocate_memory_one_fmat
-     public :: alloc_one_sect
+     public :: ctqmc_allocate_memory_one_sect
      public :: ctqmc_allocate_memory_sect
      public :: ctqmc_allocate_memory_occu
 
      public :: ctqmc_deallocate_memory_one_fmat
-     public :: dealloc_one_sect
+     public :: ctqmc_deallocate_memory_one_sect
      public :: ctqmc_deallocate_memory_sect
      public :: ctqmc_deallocate_memory_occu
 
@@ -1112,7 +1112,7 @@
   end subroutine ctqmc_allocate_memory_one_fmat
 
 !!>>> alloc_one_sect: allocate memory for one sector
-  subroutine alloc_one_sect(sect)
+  subroutine ctqmc_allocate_memory_one_sect(sect)
      implicit none
 
 ! external variables
@@ -1148,7 +1148,7 @@
      enddo ! over i={1,sect%nops} loop
 
      return
-  end subroutine alloc_one_sect
+  end subroutine ctqmc_allocate_memory_one_sect
 
 !!>>> ctqmc_allocate_memory_sect: allocate memory for sectors related variables
   subroutine ctqmc_allocate_memory_sect()
@@ -1254,7 +1254,7 @@
   end subroutine ctqmc_deallocate_memory_one_fmat
 
 !!>>> dealloc_one_sect: deallocate memory for one sector
-  subroutine dealloc_one_sect(sect)
+  subroutine ctqmc_deallocate_memory_one_sect(sect)
      implicit none
 
 ! external variables
@@ -1278,7 +1278,7 @@
      endif ! back if ( associated(sect%fmat) ) block
 
      return
-  end subroutine dealloc_one_sect
+  end subroutine ctqmc_deallocate_memory_one_sect
 
 !!>>> ctqmc_deallocate_memory_sect: deallocate memory for sectors related variables
   subroutine ctqmc_deallocate_memory_sect()
@@ -1290,7 +1290,7 @@
      if ( allocated(sectors) ) then
 ! first, loop over all the sectors and deallocate their memory
          do i=1,nsect
-             call dealloc_one_sect(sectors(i))
+             call ctqmc_deallocate_memory_one_sect(sectors(i))
          enddo ! over i={1,nsect} loop
 
 ! then, deallocate memory of sectors

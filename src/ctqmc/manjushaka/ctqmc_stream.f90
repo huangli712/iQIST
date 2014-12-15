@@ -466,7 +466,7 @@
                                    sectors(i)%nops, sectors(i)%istart
 
 ! allocate the memory for sectors(i)
-                 call alloc_one_sect(sectors(i))
+                 call ctqmc_allocate_memory_one_sect(sectors(i))
 
 ! read the next_sector index
                  read(mytmp,*) ! skip the header
@@ -538,7 +538,7 @@
          call mp_bcast(sectors(i)%istart,  master)
 
          if ( myid /= master ) then
-             call alloc_one_sect(sectors(i))
+             call ctqmc_allocate_memory_one_sect(sectors(i))
          endif ! back if ( myid /= master ) block
          call mp_bcast(sectors(i)%next_sect, master)
          call mp_bcast(sectors(i)%eval,      master)
