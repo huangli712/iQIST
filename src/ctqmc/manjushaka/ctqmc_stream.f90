@@ -269,7 +269,7 @@
      use context, only : hybf
 
      use m_sector
-     use m_npart
+     use m_part
 
      implicit none
 
@@ -609,7 +609,7 @@
      use control ! ALL
      use context ! ALL
      use m_sector ! ALL
-     use m_npart ! ALL
+     use m_part ! ALL
 
      implicit none
 
@@ -843,7 +843,7 @@
   subroutine ctqmc_final_array()
      use context ! ALL
      use m_sector ! ALL
-     use m_npart ! ALL
+     use m_part ! ALL
 
      implicit none
 

@@ -1621,7 +1621,7 @@
   end module m_sector
 
 !!>>> containing the information for npart trace algorithm
-  module m_npart
+  module m_part
      use constants, only : dp, zero, one
      use control, only : npart, mkink, ncfgs, beta
      use context, only : time_v, type_v, flvr_v, expt_v
@@ -2107,4 +2107,4 @@
      return
   end subroutine ctqmc_save_npart
 
-  end module m_npart
+  end module m_part

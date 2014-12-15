@@ -2570,7 +2570,7 @@
      use m_sector, only : nsect, sectors, fprod
      use m_sector, only : is_string, ctqmc_make_string
 
-     use m_npart, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
+     use m_part, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
 
      implicit none
 
@@ -2832,7 +2832,7 @@
      use m_sector, only : nsect, sectors, fprod
      use m_sector, only : is_string, ctqmc_make_string
 
-     use m_npart, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
+     use m_part, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
 
      implicit none
 
@@ -2904,7 +2904,7 @@
      use context, only : matrix_ptrace, matrix_ntrace, diag
 
      use m_sector, only : nsect, sectors, is_string, fprod
-     use m_npart, only : ctqmc_save_npart
+     use m_part, only : ctqmc_save_npart
 
      implicit none
 

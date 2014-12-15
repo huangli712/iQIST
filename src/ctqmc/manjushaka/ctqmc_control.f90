@@ -7,7 +7,6 @@
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/15/2009 by li huang
 !!!           02/23/2010 by li huang
-!!!           08/20/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum

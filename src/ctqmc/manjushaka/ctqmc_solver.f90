@@ -41,7 +41,7 @@
      use context, only : gtau, grnf
      use context, only : sig2
      use m_sector, only : ctqmc_deallocate_memory_occu
-     use m_npart, only : ctqmc_deallocate_memory_part
+     use m_part, only : ctqmc_deallocate_memory_part
 
      implicit none
 
