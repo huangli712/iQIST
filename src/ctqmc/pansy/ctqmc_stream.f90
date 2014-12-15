@@ -417,7 +417,7 @@
              read(mytmp,*) k, sectors(i)%ndim, sectors(i)%nele, sectors(i)%nops, sectors(i)%istart
 
 ! allocate the memory for sectors(i), only for master node
-             call alloc_one_sect(sectors(i))
+             call ctqmc_allocate_memory_one_sect(sectors(i))
 
 ! read the next index
              read(mytmp,*) ! skip the header
@@ -451,7 +451,7 @@
                      sectors(i)%fmat(j,k)%n = j4
                      sectors(i)%fmat(j,k)%m = j5
 ! allocate memory for F-matrix, only for master node
-                     call alloc_one_mat(sectors(i)%fmat(j,k))
+                     call ctqmc_allocate_memory_one_fmat(sectors(i)%fmat(j,k))
 ! read non-zero elements of F-matrix
                      sectors(i)%fmat(j,k)%val = zero
                      do m=1,n
@@ -546,7 +546,7 @@
          call mp_barrier()
 ! allocate memory for t_sector structure, only for children nodes
          if ( myid /= master ) then
-             call alloc_one_sect(sectors(i))
+             call ctqmc_allocate_memory_one_sect(sectors(i))
          endif ! back if ( myid /= master ) block
 ! setup barrier
          call mp_barrier()
@@ -570,7 +570,7 @@
                  if ( myid /= master ) then
                      sectors(i)%fmat(j,k)%n = sectors(m)%ndim
                      sectors(i)%fmat(j,k)%m = sectors(i)%ndim
-                     call alloc_one_mat(sectors(i)%fmat(j,k))
+                     call ctqmc_allocate_memory_one_fmat(sectors(i)%fmat(j,k))
                  endif ! back if ( myid /= master ) block
 ! setup barrier
                  call mp_barrier()
