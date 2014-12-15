@@ -2568,7 +2568,7 @@
      use context, only : matrix_ptrace, matrix_ntrace, diag
 
      use m_sect, only : nsect, sectors, fprod
-     use m_sect, only : is_string, ctqmc_make_string
+     use m_sect, only : is_string, cat_make_string
 
      use m_part, only : is_cp, cat_make_trace, cat_make_npart
 
@@ -2684,7 +2684,7 @@
 
 ! build string for all the sectors, is_string(:,1) will be
 ! modified internally
-     call ctqmc_make_string(csize, index_t_loc, string)
+     call cat_make_string(csize, index_t_loc, string)
 
 ! we can check is_string here to see whether this diagram can survive ?
 ! if not, return immediately.
@@ -2830,7 +2830,7 @@
      use context, only : expt_t, expt_v, index_t, index_v, diag
 
      use m_sect, only : nsect, sectors, fprod
-     use m_sect, only : is_string, ctqmc_make_string
+     use m_sect, only : is_string, cat_make_string
 
      use m_part, only : is_cp, cat_make_trace, cat_make_npart
 
@@ -2869,7 +2869,7 @@
 
 ! build string for all the sectors, is_string(:,1) will be
 ! modified internally
-     call ctqmc_make_string(csize, index_t_loc, string)
+     call cat_make_string(csize, index_t_loc, string)
 
 ! determine is_save, all parts with some fermion operators should be
 ! recalculated in this case.

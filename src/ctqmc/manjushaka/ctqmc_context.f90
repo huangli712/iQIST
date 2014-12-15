@@ -1074,7 +1074,7 @@
      public :: ctqmc_deallocate_memory_occu
      public :: ctqmc_make_trunc
      public :: cat_trunc_sect
-     public :: ctqmc_make_string
+     public :: cat_make_string
      public :: ctqmc_make_occu
 
   contains ! encapsulated functionality
@@ -1544,8 +1544,8 @@
      return
   end subroutine ctqmc_make_occu
 
-!!>>> ctqmc_make_string: subroutine used to build a string
-  subroutine ctqmc_make_string(csize, index_t_loc, string)
+!!>>> cat_make_string: subroutine used to build a string
+  subroutine cat_make_string(csize, index_t_loc, string)
      implicit none
 
 ! external variables
@@ -1630,15 +1630,15 @@
 ! important for csize = 0
          string(csize+1,i) = i
 
-! this case will generate a non-diagonal block, it will not contribute to trace
+! this case will generate a non-diagonal block, it will not contribute
+! to the trace
          if ( next_sect_r /= next_sect_l ) then
              is_string(i,1) = .false.
          endif ! back if ( next_sect_r /= next_sect_l ) block
-
      enddo ! over i={1,nsect} loop
 
      return
-  end subroutine ctqmc_make_string
+  end subroutine cat_make_string
 
   end module m_sect
 
@@ -1667,14 +1667,11 @@
 !!>>> declare global variables                                         <<<
 !!========================================================================
 
+! the first filled part
+     integer, public, save  :: fpart = 0
+
 ! total number of matrices products
      real(dp), public, save :: nprod = zero
-
-! the first filled part
-     integer, public, save :: ffpart = 0
-
-! how to treat each part when calculating trace
-     integer, public, save, allocatable :: isave(:,:,:)
 
 ! whether to copy this part ?
      logical, public, save, allocatable :: is_cp(:,:)
@@ -1687,6 +1684,9 @@
 
 ! the end positions of fermion operators for each part
      integer, public, save, allocatable :: ope(:)
+
+! how to treat each part when calculating trace
+     integer, public, save, allocatable :: isave(:,:,:)
 
 ! saved parts of matrices product, for previous configuration
      type (t_fmat), public, save, allocatable :: saved_p(:,:)
@@ -1730,8 +1730,8 @@
 
 ! check the status
      if ( istat /= 0 ) then
-         call s_print_error('ctqmc_allocate_memory_sect', 'can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_allocate_memory_part','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
      do i=1,nsect
@@ -1759,11 +1759,14 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> ctqmc_deallocate_memory_part: deallocate memory for sectors related variables
+!!>>> ctqmc_deallocate_memory_part: deallocate memory for part related variables
   subroutine ctqmc_deallocate_memory_part()
      implicit none
 
-     integer :: i,j
+! local variables
+! loop index
+     integer :: i
+     integer :: j
 
      if ( allocated(isave) )     deallocate(isave)
      if ( allocated(is_cp) )     deallocate(is_cp)
@@ -1804,13 +1807,13 @@
 
 ! external arguments
 ! mode for different Monte Carlo moves
-     integer,  intent(in)  :: cmode
+     integer, intent(in)  :: cmode
 
 ! total number of operators for current diagram
-     integer,  intent(in)  :: csize
+     integer, intent(in)  :: csize
 
 ! local version of index_t
-     integer, intent(in) :: index_t_loc(mkink)
+     integer, intent(in)  :: index_t_loc(mkink)
 
 ! imaginary time value of operator A, only valid in cmode = 1 or 2
      real(dp), intent(in) :: tau_s
@@ -1819,25 +1822,27 @@
      real(dp), intent(in) :: tau_e
 
 ! local variables
-! length of imaginary time axis for each part
-     real(dp) :: interval
-
-! number of fermion operators for each part
-     integer :: nop(npart)
+! loop index
+     integer  :: i
+     integer  :: j
 
 ! position of the operator A and operator B, index of part
      integer  :: tis
      integer  :: tie
      integer  :: tip
 
-! loop index
-     integer :: i, j
+! number of fermion operators for each part
+     integer  :: nop(npart)
 
-! init key arrays
+! length of imaginary time axis for each part
+     real(dp) :: interval
+
+! init module arrays
      nop = 0
      ops = 0
      ope = 0
-     ffpart = 0
+
+     fpart = 0
 
 ! isave: how to treat each part for each alive string
 ! isave = 0: matrices product for this part has been calculated previously
@@ -1853,7 +1858,7 @@
          nop(1) = csize
          ops(1) = 1
          ope(1) = csize
-         ffpart = 1
+         fpart = 1
          if ( nop(1) <= 0 ) then
              isave(1,:,1) = 2
          else
@@ -1869,9 +1874,9 @@
          enddo  ! over i={1,csize} loop
 ! if no operators in this part, ignore them
          do i=1,npart
-             if ( ffpart == 0 .and. nop(i) > 0 ) then
-                 ffpart = i
-             endif ! back if ( ffpart == 0 .and. nop(i) > 0 ) block
+             if ( fpart == 0 .and. nop(i) > 0 ) then
+                 fpart = i
+             endif ! back if ( fpart == 0 .and. nop(i) > 0 ) block
              if ( nop(i) <= 0 ) then
                  isave(i,:,1) = 2
              endif ! back if ( nop(i) <= 0 ) block
@@ -2050,7 +2055,7 @@
              dim2 = sectors(sect1)%ndim
              dim3 = sectors(sect2)%ndim
 
-             if ( i > ffpart ) then
+             if ( i > fpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim3,                &
                               one,  saved_p(i,isect)%val, mdim_sect_t, &
                                     mat_r,                 mdim_sect_t, &
@@ -2060,7 +2065,7 @@
                  nprod = nprod + one
              else
                  mat_r(:,1:dim1) = saved_p(i,isect)%val(:,1:dim1)
-             endif ! back if ( i > ffpart ) block
+             endif ! back if ( i > fpart ) block
 
 ! this part should be recalcuated
          elseif ( isave(i,isect,1) == 1 ) then
@@ -2106,7 +2111,7 @@
              ncol_cp(i,isect) = dim4
 
 ! multiply this part with the rest parts
-             if ( i > ffpart ) then
+             if ( i > fpart ) then
                  call dgemm( 'N', 'N', dim2, dim1, dim4,               &
                              one,  saved_n(i,isect)%val, mdim_sect_t, &
                                    mat_r,                 mdim_sect_t, &
@@ -2116,7 +2121,7 @@
                  nprod = nprod + one
              else
                  mat_r(:,1:dim1) = saved_n(i,isect)%val(:,1:dim1)
-             endif ! back if ( i > ffpart ) block
+             endif ! back if ( i > fpart ) block
 
          elseif ( isave(i,isect,1) == 2 ) then
              cycle
