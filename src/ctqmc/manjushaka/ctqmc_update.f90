@@ -257,7 +257,7 @@
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
          call cat_remove_ztrace(fis, fie, tau_start, tau_end, trace_ratio)
-         call ctqmc_lazy_ztrace( 2, 1, istack_getrest( empty_v ) - 2, deter_ratio, spring_sfmt_steam(), p, pass, tau_start, tau_end )
+         call ctqmc_lazy_ztrace( 2, 1, istack_getrest( empty_v ) - 2, deter_ratio, spring_sfmt_stream(), p, pass, tau_start, tau_end )
      endif ! back if ( lrmv .eqv. .false. ) block
 
 ! if update action is accepted
@@ -375,9 +375,6 @@
 ! corresponding fiso and fisn, and determine whether the operators trace is
 ! not equal to zero
      call try_lshift_flavor(flvr, fiso, fisn, tau_start1, tau_start2, lshf)
-
-! then, generate a random number
-     rand_num = spring_sfmt_stream()
 
 ! if lshf is false, we set the pass as false immediately
      if ( lshf .eqv. .false. ) then
