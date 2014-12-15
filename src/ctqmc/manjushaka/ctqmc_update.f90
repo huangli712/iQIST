@@ -83,6 +83,9 @@
 ! \tau_e, imaginary time point of the destroy operator
      real(dp) :: tau_end
 
+! ratio between old and new configurations, the local trace part
+     real(dp) :: trace_ratio
+
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
@@ -127,8 +130,7 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-         !!call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, deter_ratio, rand_num, p, pass)
-         call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end)
+         call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, trace_ratio)
          call ctqmc_lazy_ztrace( 1, 1, istack_getrest( empty_v ) + 2, deter_ratio, rand_num, p, pass, tau_start, tau_end )
      endif ! back if ( ladd .eqv. .false. ) block
 
@@ -216,6 +218,9 @@
 ! \tau_e, imaginary time point of the destroy operator
      real(dp) :: tau_end
 
+! ratio between old and new configurations, the local trace part
+     real(dp) :: trace_ratio
+
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
@@ -263,8 +268,7 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-         !!call cat_remove_ztrace(fis, fie, tau_start, tau_end, deter_ratio, rand_num, p, pass)
-         call cat_remove_ztrace(fis, fie, tau_start, tau_end)
+         call cat_remove_ztrace(fis, fie, tau_start, tau_end, trace_ratio)
          call ctqmc_lazy_ztrace( 2, 1, istack_getrest( empty_v ) - 2, deter_ratio, rand_num, p, pass, tau_start, tau_end )
      endif ! back if ( lrmv .eqv. .false. ) block
 
@@ -351,6 +355,9 @@
 ! \tau_s, imaginary time point of the new create operator
      real(dp) :: tau_start2
 
+! ratio between old and new configurations, the local trace part
+     real(dp) :: trace_ratio
+
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
@@ -398,8 +405,7 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-         !!call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, deter_ratio, rand_num, p, pass)
-         call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2)
+         call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, trace_ratio)
          call ctqmc_lazy_ztrace( 3, 1, istack_getrest( empty_v ), deter_ratio, rand_num, p, pass, tau_start1, tau_start2 )
      endif ! back if ( lshf .eqv. .false. ) block
 
@@ -480,6 +486,9 @@
 ! \tau_e, imaginary time point of the new destroy operator
      real(dp) :: tau_end2
 
+! ratio between old and new configurations, the local trace part
+     real(dp) :: trace_ratio
+
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
@@ -527,8 +536,7 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-         !!call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, deter_ratio, rand_num, p, pass)
-         call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2)
+         call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, trace_ratio)
          call ctqmc_lazy_ztrace( 4, 1, istack_getrest( empty_v ), deter_ratio, rand_num, p, pass, tau_end1, tau_end2 )
      endif ! back if ( rshf .eqv. .false. ) block
 
