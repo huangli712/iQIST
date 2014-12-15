@@ -14,7 +14,7 @@
 ! (1) without any GQNs, (2) N, (3) N,Sz, (4) N,Sz,PS, (5) N,Jz
   ictqmc : 1       
 
-! type of spin-oribt coupling (SOC)
+! type of spin-orbit coupling (SOC)
 ! (0) without, (1) with atomic SOC
   isoc   : 1
 
