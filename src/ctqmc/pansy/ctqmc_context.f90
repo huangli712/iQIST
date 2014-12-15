@@ -968,10 +968,10 @@
 ! total number of sectors
      integer, public, save  :: nsect
 
-! maximal dimension of sectors
+! maximal dimension of the sectors
      integer, public, save  :: max_dim_sect
 
-! average dimension of sectors
+! average dimension of the sectors
      real(dp), public, save :: ave_dim_sect
 
 ! array of t_sector contains all the sectors
