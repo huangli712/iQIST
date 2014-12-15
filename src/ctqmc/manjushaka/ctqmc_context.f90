@@ -1028,19 +1028,19 @@
      integer, public, save  :: nsect_t
 
 ! maximal dimension of the sectors
-     integer, public, save  :: mdim_sect
+     integer, public, save  :: max_dim_sect
 
 ! maximal dimension of the sectors after truncating H_{loc}
-     integer, public, save  :: mdim_sect_t
+     integer, public, save  :: max_dim_sect_t
 
 ! average dimension of the sectors
-     real(dp), public, save :: adim_sect
+     real(dp), public, save :: ave_dim_sect
 
 ! average dimension of the sectors after truncating H_{loc}
-     real(dp), public, save :: adim_sect_t
+     real(dp), public, save :: ave_dim_sect_t
 
-! array of t_sect contains all the sectors
-     type(t_sector), public, save, allocatable :: sectors(:)
+! array of t_sector contains all the sectors
+     type (t_sector), public, save, allocatable :: sectors(:)
 
 ! probability of each sector, used to truncate high energy states
      real(dp), public, save, allocatable :: prob_sect(:)
@@ -1369,8 +1369,8 @@
              sectors(i)%next_sect_t = sectors(i)%next_sect
          enddo ! over i={1,nsect} loop
          nsect_t = nsect
-         mdim_sect_t = mdim_sect
-         adim_sect_t = adim_sect
+         max_dim_sect_t = max_dim_sect
+         ave_dim_sect_t = ave_dim_sect
 
          if ( myid == master ) then
              write(mystd,*)
@@ -1446,18 +1446,18 @@
      if ( myid == master ) then
          if ( itrun == 1 ) then
              write(mystd,'(4X,a,i8)')    'tot_num_sect:', nsect_t
-             write(mystd,'(4X,a,i8)')    'max_dim_sect:', mdim_sect_t
-             write(mystd,'(4X,a,f8.1)')  'ave_dim_sect:', adim_sect_t
+             write(mystd,'(4X,a,i8)')    'max_dim_sect:', max_dim_sect_t
+             write(mystd,'(4X,a,f8.1)')  'ave_dim_sect:', ave_dim_sect_t
              write(mystd,*)
          elseif ( itrun == 2 .or. itrun == 3 ) then
               write(mystd,'(4X,a)') 'before truncation:'
               write(mystd,'(4X,a,i8)')    'tot_num_sect: ', nsect
-              write(mystd,'(4X,a,i8)')    'max_dim_sect: ', mdim_sect
-              write(mystd,'(4X,a,f8.1)')  'ave_dim_sect: ', adim_sect
+              write(mystd,'(4X,a,i8)')    'max_dim_sect: ', max_dim_sect
+              write(mystd,'(4X,a,f8.1)')  'ave_dim_sect: ', ave_dim_sect
               write(mystd,'(4X,a)') 'after truncation:'
               write(mystd,'(4X,a,i8)')    'tot_num_sect: ', nsect_t
-              write(mystd,'(4X,a,i8)')    'max_dim_sect: ', mdim_sect_t
-              write(mystd,'(4X,a,f8.1)')  'ave_dim_sect: ', adim_sect_t
+              write(mystd,'(4X,a,i8)')    'max_dim_sect: ', max_dim_sect_t
+              write(mystd,'(4X,a,f8.1)')  'ave_dim_sect: ', ave_dim_sect_t
               write(mystd,*)
          endif ! back if ( itrun == 1 ) block
      endif ! back if ( myid == master ) block
@@ -1472,7 +1472,7 @@
      integer :: i,j,k,ii
      integer :: sum_dim
 
-     mdim_sect_t = -1
+     max_dim_sect_t = -1
      nsect_t = 0
      sum_dim = 0
      do i=1,nsect
@@ -1480,9 +1480,9 @@
          if ( is_trunc(i) ) then
              cycle
          endif ! back if ( is_trunc(i) ) block
-         if ( mdim_sect_t < sectors(i)%ndim ) then
-             mdim_sect_t = sectors(i)%ndim
-         endif ! back if ( mdim_sect_t < sectors(i)%ndim ) block
+         if ( max_dim_sect_t < sectors(i)%ndim ) then
+             max_dim_sect_t = sectors(i)%ndim
+         endif ! back if ( max_dim_sect_t < sectors(i)%ndim ) block
 
          sum_dim = sum_dim + sectors(i)%ndim
          nsect_t = nsect_t + 1
@@ -1497,7 +1497,7 @@
          enddo ! over j={1,sectors(i)%nops} loop
      enddo ! over i={1,nsect} loop
 
-     adim_sect_t = real(sum_dim) / real(nsect_t)
+     ave_dim_sect_t = real(sum_dim) / real(nsect_t)
 
      return
   end subroutine cat_trunc_sect
@@ -1507,8 +1507,8 @@
      implicit none
 
      integer :: i,j,k,ii,jj
-     real(dp) :: mat_t1(mdim_sect_t, mdim_sect_t)
-     real(dp) :: mat_t2(mdim_sect_t, mdim_sect_t)
+     real(dp) :: mat_t1(max_dim_sect_t, max_dim_sect_t)
+     real(dp) :: mat_t2(max_dim_sect_t, max_dim_sect_t)
 
      do i=1,norbs
          do j=1,nsect
@@ -1540,12 +1540,12 @@
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(jj)%ndim, &
                              one,  sectors(jj)%fmat(j,1)%val,           sectors(k)%ndim,  &
                                    sectors(k)%fmat(j,0)%val,            sectors(jj)%ndim, &
-                             zero, mat_t1,                               mdim_sect_t       )
+                             zero, mat_t1,                               max_dim_sect_t       )
 
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(ii)%ndim, &
                              one,  sectors(ii)%fmat(i,1)%val,           sectors(k)%ndim,  &
                                    sectors(k)%fmat(i,0)%val,            sectors(ii)%ndim, &
-                             zero, mat_t2,                               mdim_sect_t       )
+                             zero, mat_t2,                               max_dim_sect_t       )
 
                  call dgemm( 'N', 'N', sectors(k)%ndim, sectors(k)%ndim, sectors(k)%ndim,  &
                              one,  mat_t2,                               mdim_sect_t,      &
