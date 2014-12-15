@@ -1762,7 +1762,7 @@
 
      enddo  ! over i={1,npart} loop
 
-! special treatment of the last time-evolution operator
+! special treatment of the last time evolution operator
      indx = sectors(string(1))%istart
 
 ! no fermion operators
@@ -1770,7 +1770,7 @@
          do k=1,dim1
              mat_r(k,k) = expt_t_loc(indx+k-1)
          enddo ! over k={1,dim1} loop
-! multiply the last time-evolution operator
+! multiply the last time evolution operator
      else
          do l=1,dim1
              do k=1,dim1
