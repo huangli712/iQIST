@@ -8,7 +8,6 @@
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/23/2009 by li huang
 !!!           02/21/2010 by li huang
-!!!           08/20/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
@@ -29,7 +28,7 @@
 
      use control, only : norbs
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
      use context, only : rank
 
      implicit none
@@ -108,8 +107,7 @@
      use control, only : mkink
      use control, only : beta
      use control, only : myid, master
-     use context, only : csign, cnegs, matrix_ntrace
-     use context, only : ckink
+     use context, only : ckink, csign, cnegs, matrix_ntrace
      use context, only : rank
 
      implicit none
