@@ -110,21 +110,6 @@
 ! not equal to zero
      call try_insert_flavor(flvr, fis, fie, tau_start, tau_end, ladd)
 
-!<! if ladd is false, we set the pass as false immediately
-!<     if ( ladd .eqv. .false. ) then
-!<         pass = .false.
-!<! we will determine the pass by lazy trace evalution
-!<     else
-!<! first, calculate the transition ratio between old and new configurations,
-!<! for the determinand part
-!<         call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
-!<
-!<! calculate the transition ratio between old and new configurations,
-!<! for the local trace part, by lazy trace evaluation
-!<         call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, trace_ratio)
-!<         call ctqmc_lazy_ztrace( 1, 1, 2*sum(rank) + 2, deter_ratio, spring_sfmt_stream(), p, pass, tau_start, tau_end )
-!<     endif ! back if ( ladd .eqv. .false. ) block
-
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part
      if ( ladd .eqv. .true. ) then
@@ -141,11 +126,13 @@
          deter_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
 
+! we will determine the pass by lazy trace evalution
+! if ladd is false, we set the pass as false immediately
      if ( ladd .eqv. .true. ) then
          call ctqmc_lazy_ztrace( 1, 1, 2*sum(rank) + 2, deter_ratio, spring_sfmt_stream(), p, pass, tau_start, tau_end )
      else
          pass = .false.
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! if the update action is accepted
      if ( pass .eqv. .true. ) then
