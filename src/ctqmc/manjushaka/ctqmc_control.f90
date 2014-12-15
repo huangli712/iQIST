@@ -59,7 +59,8 @@
 ! note: as for the kernel polynomial representation, the default dirichlet
 ! kernel is applied automatically. if you want to choose the other kernel,
 ! please check the ctqmc_make_gtau() subroutine.
-! note: isort == 4, 5, and 6 are not implemeted so far.
+! note: in the manjushaka code, isort == 4, 5, and 6 are not implemeted so
+! far, i.e., F(\tau) will not be measured.
      integer, public, save :: isort  = 1
 
 ! control flag: whether we measure the high order correlation function
@@ -67,13 +68,13 @@
 ! should be calculated:
 ! (a) isvrt is converted to a binary representation at first. for example,
 ! 10 is converted to 1010_2, 15 is converted to 1111_2, etc.
-! (b) then we examine the bits. If it is 1, then we do the calculation.
-! If it is 0, then we ignore the calculation. for example, we just use the
+! (b) then we examine the bits. if it is 1, then we do the calculation.
+! if it is 0, then we ignore the calculation. for example, we just use the
 ! second bit (from right side to left side) to represent the calculation
-! of spin-spin correlation. So, it isvrt is 10 (1010_2), we will calculate
-! spin-spin correlation function. If isvrt is 13 (1101_2), we will not
-! calculate it since the second bit is 0.
-! The following are the definitions of bit representation:
+! of spin-spin correlation function. so, if isvrt is 10 (1010_2), we will
+! calculate the spin-spin correlation function. if isvrt is 13 (1101_2),
+! we will not calculate it since the second bit is 0.
+! the following are the definitions of bit representation:
 ! if p == 1, do nothing
 ! if p == 2, calculate spin-spin correlation function
 ! if p == 3, calculate orbital-orbital correlation function
@@ -82,23 +83,26 @@
 ! if p == 6, calculate particle-particle pair susceptibility
 ! if p == 7, reserved
 ! if p == 8, reserved
+! if p == 9, reserved
 ! example:
-!     1 1 0 1 0 1 0 1
-! p = 8 7 6 5 4 3 2 1
+!     1 1 1 0 1 0 1 0 1
+! p = 9 8 7 6 5 4 3 2 1
 ! note: if p == 4 or p == 5, both the two-particle green's and vertex
 ! functions are computed, but using two different algorithms. you can not
-! set them to 1 at the same time. In order words, if you set the bit at
+! set them to 1 at the same time. in order words, if you set the bit at
 ! p == 4 to 1, then the bit at p == 5 must be 0, and vice versa.
-! note: for the lavender code, the bits at p == 2, 3, and 5 must be 0, in
-! other words, these features are not implemented so far.
+! note: if p == 4, the traditional algorithm is used. if p == 5, the
+! improved estimator for two-particle green's function is used.
+! note: for the manjushaka code, the bits at p == 2, 3, and 5 must be 0,
+! in other words, these features are not implemented so far.
      integer, public, save :: isvrt  = 1
 
-
-! the mode how to truncate the Hilbert space
+! control flag: the mode how to truncate the Hilbert space
 ! if itrun == 1, don't truncate it
 ! if itrun == 2, only truncate the occupancy number
 ! if itrun == 3, truncate both occupancy number and high energy states
      integer, public, save :: itrun  = 1
+
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! number of correlated bands
@@ -117,11 +121,12 @@
 ! solver plus dynamical mean field theory self-consistent iterations
      integer, public, save :: niter  = 20
 
-! the minimum number of occupancy for itrun = 2,3
+! the minimum number of occupancy for itrun = 2 or 3
      integer, public, save :: nmini = 0
 
-! the maximum number of occupancy for itrun = 2,3
+! the maximum number of occupancy for itrun = 2 or 3
      integer, public, save :: nmaxi = 2
+
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! maximum order for legendre polynomial
