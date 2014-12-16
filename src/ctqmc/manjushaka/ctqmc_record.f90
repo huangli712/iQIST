@@ -26,9 +26,8 @@
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang
-!!!           08/20/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
-!!! purpose : measure, record, and postprocess the key observables
+!!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
 !!! status  : unstable
@@ -304,8 +303,7 @@
 !!>>> ctqmc_record_prob: record the probability of atomic states
   subroutine ctqmc_record_prob()
      use control, only : ncfgs
-     use context, only : csign
-     use context, only : matrix_ptrace
+     use context, only : csign, matrix_ptrace
      use context, only : prob
      use context, only : diag
 
@@ -332,8 +330,10 @@
      use context, only : ckink, matrix_ptrace
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
-     use m_sector, only : nsect, sectors, is_string, fprod
-     use m_sector, only : mdim_sect_t, occu, doccu
+
+     use m_sect, only : nsect, max_dim_sect_t
+     use m_sect, only : sectors, is_string, prod
+     use m_sect, only : occu, doccu
 
      implicit none
 
@@ -357,7 +357,7 @@
      real(dp) :: cprob(ncfgs)
 
 ! dummy matrix, used to calculate nmat and nnmat
-     real(dp) :: mat_t(mdim_sect_t, mdim_sect_t)
+     real(dp) :: mat_t(max_dim_sect_t, max_dim_sect_t)
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
@@ -368,9 +368,9 @@
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
      do i=1,nsect
-         if ( .not. is_string(i,2) ) cycle
+         if ( .not. is_string(i,2) ) CYCLE
          do j=1,sectors(i)%ndim
-             raux2 = raux2 + fprod(i,2)%item(j,j)
+             raux2 = raux2 + prod(i,2)%val(j,j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -386,12 +386,15 @@
      do flvr=1,norbs
          raux1 = zero
          do i=1,nsect
-             if ( .not. is_string(i,2) ) cycle
-             call dgemm( 'N', 'N', sectors(i)%ndim, sectors(i)%ndim, sectors(i)%ndim, &
-                         one,  fprod(i,2)%item,                      sectors(i)%ndim, &
-                               occu(flvr,i)%item,                    sectors(i)%ndim, &
-                         zero, mat_t,                                mdim_sect_t      )
-
+             if ( .not. is_string(i,2) ) CYCLE
+             call dgemm( 'N', 'N', sectors(i)%ndim, &
+                                   sectors(i)%ndim, &
+                                   sectors(i)%ndim, &
+                                one, prod(i,2)%val, &
+                                   sectors(i)%ndim, &
+                                  occu(flvr,i)%val, &
+                                   sectors(i)%ndim, &
+                       zero, mat_t, max_dim_sect_t )
              do j=1,sectors(i)%ndim
                  raux1 = raux1 + mat_t(j,j)
              enddo ! over j={1,sectors(i)%ndim} loop
@@ -410,12 +413,15 @@
          do i=flvr+1,norbs
              raux1 = zero
              do j=1,nsect
-                 if ( .not. is_string(j,2) ) cycle
-                 call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                              one,  fprod(j,2)%item,                     sectors(j)%ndim, &
-                                    doccu(flvr,i,j)%item,                sectors(j)%ndim, &
-                              zero, mat_t,                               mdim_sect_t      )
-
+                 if ( .not. is_string(j,2) ) CYCLE
+                 call dgemm( 'N', 'N', sectors(j)%ndim, &
+                                       sectors(j)%ndim, &
+                                       sectors(j)%ndim, &
+                                    one, prod(j,2)%val, &
+                                       sectors(j)%ndim, &
+                                   doccu(flvr,i,j)%val, &
+                                       sectors(j)%ndim, &
+                           zero, mat_t, max_dim_sect_t )
                  do k=1,sectors(j)%ndim
                      raux1 = raux1 + mat_t(k,k)
                  enddo ! over k={1,sectors(j)%ndim} loop
@@ -425,11 +431,14 @@
              raux1 = zero
              do j=1,nsect
                  if ( .not. is_string(j,2) ) cycle
-                 call dgemm( 'N', 'N', sectors(j)%ndim, sectors(j)%ndim, sectors(j)%ndim, &
-                             one,  fprod(j,2)%item,                      sectors(j)%ndim, &
-                                   doccu(i,flvr,j)%item,                 sectors(j)%ndim, &
-                             zero, mat_t,                                mdim_sect_t      )
-
+                 call dgemm( 'N', 'N', sectors(j)%ndim, &
+                                       sectors(j)%ndim, &
+                                       sectors(j)%ndim, &
+                                    one, prod(j,2)%val, &
+                                       sectors(j)%ndim, &
+                                   doccu(i,flvr,j)%val, &
+                                       sectors(j)%ndim, &
+                           zero, mat_t, max_dim_sect_t )
                  do k=1,sectors(j)%ndim
                      raux1 = raux1 + mat_t(k,k)
                  enddo ! over k={1,sectors(j)%ndim} loop
@@ -1410,8 +1419,8 @@
 
   contains
 
-!!>>> cat_make_kernel: build the integral kernel function
-  subroutine cat_make_kernel(kdim, kern)
+!!>>> cat_make_kpm: build the integral kernel function
+  subroutine cat_make_kpm(kdim, kern)
      implicit none
 
 ! external arguments
@@ -1456,7 +1465,7 @@
      enddo ! over kcur={1,kdim} loop
 
      return
-  end subroutine cat_make_kernel
+  end subroutine cat_make_kpm
 
 !!>>> cat_make_gtau1: build impurity green's function using normal
 !!>>> representation
@@ -1482,7 +1491,7 @@
      real(dp) :: ker1(lemax)
 
 ! build kernel function at first
-     ker1 = one; call cat_make_kernel(lemax, ker1)
+     ker1 = one; call cat_make_kpm(lemax, ker1)
 
 ! reconstruct green's function
      step = real(legrd - 1) / two
@@ -1509,7 +1518,7 @@
      real(dp) :: ker2(chmax)
 
 ! build kernel function at first
-     ker2 = one; call cat_make_kernel(chmax, ker2)
+     ker2 = one; call cat_make_kpm(chmax, ker2)
 
 ! reconstruct green's function
      step = real(chgrd - 1) / two
@@ -1552,7 +1561,10 @@
      use context, only : grnf
      use context, only : hybf
      use context, only : sig2
-     use m_sector, only : nsect, sectors, is_trunc
+
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+     use m_sect, only : is_trunc
 
      implicit none
 
@@ -1563,7 +1575,7 @@
      integer  :: k
      integer  :: l
      integer  :: m
-     integer  :: kk
+     integer  :: n
 
 ! start index of sectors
      integer  :: indx1
@@ -1589,25 +1601,24 @@
 
 ! calculate atomic green's function using Hubbard-I approximation
      ghub = czero
-     do k=1,nsect
-         do i=1,norbs
-             kk = sectors(k)%next_sect(i,0)
-             if ( kk == -1 ) cycle
-             if ( is_trunc(k) .and. is_trunc(kk) ) cycle
-             indx1 = sectors(k)%istart
-             indx2 = sectors(kk)%istart
-             do l=1,sectors(k)%ndim
-                 do m=1,sectors(kk)%ndim
-                     ob = sectors(k)%fmat(i,0)%item(m,l) ** 2 * (prob(indx2+m-1) + prob(indx1+l-1))
-!>>>                     if ( abs(ob) < epst ) cycle
-                     do j=1,mfreq
-                         cb = czi * rmesh(j) + eigs(indx2+m-1) - eigs(indx1+l-1)
-                         ghub(j,i) = ghub(j,i) + ob / cb
-                     enddo  ! over j={1,mfreq} loop
-                 enddo ! over m={1,sectors(kk)%ndim} loop
-             enddo ! over l={1,sectors(k)%ndim} loop
-         enddo ! over i={1,norbs}
-     enddo ! over k={1,nsect}
+     do i=1,norbs
+         do j=1,nsect
+             l = sectors(j)%next(i,0)
+             if ( l == -1 ) CYCLE
+             if ( is_trunc(j) .and. is_trunc(l) ) CYCLE
+             indx1 = sectors(j)%istart
+             indx2 = sectors(l)%istart
+             do n=1,sectors(j)%ndim
+                 do m=1,sectors(l)%ndim
+                     ob = sectors(j)%fmat(i,0)%val(m,n) ** 2 * (prob(indx2+m-1) + prob(indx1+n-1))
+                     do k=1,mfreq
+                         cb = czi * rmesh(k) + eigs(indx2+m-1) - eigs(indx1+n-1)
+                         ghub(k,i) = ghub(k,i) + ob / cb
+                     enddo ! over k={1,mfreq} loop
+                 enddo ! over m={1,sectors(l)%ndim} loop
+             enddo ! over n={1,sectors(j)%ndim} loop
+         enddo ! over j={1,nsect} loop
+     enddo ! over i={1,norbs} loop
 
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs

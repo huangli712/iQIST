@@ -910,7 +910,6 @@
 
 ! data structure for one F-matrix
 !-------------------------------------------------------------------------
-     private :: t_fmat
      type t_fmat
 
 ! the dimension, n x m
@@ -924,7 +923,6 @@
 
 ! data structure for one sector
 !-------------------------------------------------------------------------
-     private :: t_sector
      type t_sector
 
 ! dimension
@@ -970,10 +968,10 @@
 ! total number of sectors
      integer, public, save  :: nsect
 
-! maximal dimension of sectors
+! maximal dimension of the sectors
      integer, public, save  :: max_dim_sect
 
-! average dimension of sectors
+! average dimension of the sectors
      real(dp), public, save :: ave_dim_sect
 
 ! array of t_sector contains all the sectors
@@ -1188,7 +1186,7 @@
 !!>>> core service subroutines                                         <<<
 !!========================================================================
 
-!!>>> cat_make_string: subroutine used to build a evolutional string
+!!>>> cat_make_string: subroutine used to build an evolutional string
   subroutine cat_make_string(csize, index_t_loc, is_string, string)
      implicit none
 
@@ -1247,7 +1245,7 @@
                  next_sect_l = sectors(curr_sect_l)%next(vf,vt)
                  if ( next_sect_l == -1 ) then
                      is_string(i) = .false.; EXIT ! finish check, exit
-                 endif ! back if ( next_sect_l == - 1 ) block
+                 endif ! back if ( next_sect_l == -1 ) block
                  curr_sect_l = next_sect_l
              else
                  right = right - 1
@@ -1502,8 +1500,8 @@
                      ops(i) = ops(i) + nop(j)
                  enddo ! over j={1,i-1} loop
                  ope(i) = ops(i) + nop(i) - 1
-             endif  ! back if ( nop(i) > 0 ) block
-         enddo  ! over i={1,npart} loop
+             endif ! back if ( nop(i) > 0 ) block
+         enddo ! over i={1,npart} loop
 
 ! case 2A: use some saved matrices products from previous accepted Monte Carlo move
          if ( cmode == 1 .or. cmode == 2 ) then
@@ -1592,7 +1590,7 @@
      isave(:,:,2) = isave(:,:,1)
 
 ! when npart > 1, we used the divide-and-conquer algorithm, and had to
-! save the changed matrices products when proposed moves were accepted
+! save the change matrices products when proposed moves were accepted
      if ( npart > 1 ) then
          do i=1,nsect
              do j=1,npart
@@ -1656,7 +1654,7 @@
 ! counter for fermion operators
      integer  :: counter
 
-! real(dp) dummy matrix
+! real(dp) dummy matrices
      real(dp) :: mat_r(max_dim_sect,max_dim_sect)
      real(dp) :: mat_t(max_dim_sect,max_dim_sect)
 
@@ -1764,7 +1762,7 @@
 
      enddo  ! over i={1,npart} loop
 
-! special treatment of the last time-evolution operator
+! special treatment of the last time evolution operator
      indx = sectors(string(1))%istart
 
 ! no fermion operators
@@ -1772,7 +1770,7 @@
          do k=1,dim1
              mat_r(k,k) = expt_t_loc(indx+k-1)
          enddo ! over k={1,dim1} loop
-! multiply the last time-evolution operator
+! multiply the last time evolution operator
      else
          do l=1,dim1
              do k=1,dim1
