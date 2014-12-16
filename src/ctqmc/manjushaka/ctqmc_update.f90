@@ -516,21 +516,6 @@
 ! not equal to zero
      call try_rshift_flavor(flvr, fieo, fien, tau_end1, tau_end2, rshf)
 
-!<! if rshf is false, we set the pass as false immediately
-!<     if ( rshf .eqv. .false. ) then
-!<         pass = .false.
-!<! we will determine the pass by lazy trace evalution
-!<     else
-!<! first, calculate the transition ratio between old and new configurations,
-!<! for the determinand part
-!<         call cat_rshift_detrat(flvr, cieo, tau_end1, tau_end2, deter_ratio)
-!<
-!<! calculate the transition ratio between old and new configurations,
-!<! for the local trace part, by lazy trace evaluation
-!<         call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, trace_ratio)
-!<         call ctqmc_lazy_ztrace( 4, 1, 2*sum(rank), deter_ratio, spring_sfmt_stream(), p, pass, tau_end1, tau_end2 )
-!<     endif ! back if ( rshf .eqv. .false. ) block
-
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part
      if ( rshf .eqv. .true. ) then
@@ -642,9 +627,6 @@
      real(dp) :: ratup
      real(dp) :: ratdn
 
-! a random number
-     real(dp) :: rand_num
-
 ! initialize logical variables
      pass = .false.
 
@@ -696,11 +678,8 @@
              index_t(i) = index_v(i)
          enddo ! over i={1,nsize} loop
 
-! then, generate a random number
-         rand_num = spring_sfmt_stream()
-
 ! calculate operators trace
-         call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp )
+         call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, spring_sfmt_stream(), p, pass, -1.0_dp, -1.0_dp )
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
@@ -776,11 +755,7 @@
              enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-! then, generate a random number
-             rand_num = spring_sfmt_stream()
-
-! calculate operators trace
-             call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp )
+             call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, spring_sfmt_stream(), p, pass, -1.0_dp, -1.0_dp )
 
 ! if update action is accepted
              if ( pass .eqv. .true. ) then
@@ -857,11 +832,7 @@
          enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-! then, generate a random number
-         rand_num = spring_sfmt_stream()
-
-! calculate operators trace
-         call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, rand_num, p, pass, -1.0_dp, -1.0_dp )
+         call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, spring_sfmt_stream(), p, pass, -1.0_dp, -1.0_dp )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then
