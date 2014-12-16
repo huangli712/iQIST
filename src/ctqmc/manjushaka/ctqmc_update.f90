@@ -531,20 +531,44 @@
 ! not equal to zero
      call try_rshift_flavor(flvr, fieo, fien, tau_end1, tau_end2, rshf)
 
-! if rshf is false, we set the pass as false immediately
-     if ( rshf .eqv. .false. ) then
-         pass = .false.
-! we will determine the pass by lazy trace evalution
-     else
-! first, calculate the transition ratio between old and new configurations,
-! for the determinand part
-         call cat_rshift_detrat(flvr, cieo, tau_end1, tau_end2, deter_ratio)
+!<! if rshf is false, we set the pass as false immediately
+!<     if ( rshf .eqv. .false. ) then
+!<         pass = .false.
+!<! we will determine the pass by lazy trace evalution
+!<     else
+!<! first, calculate the transition ratio between old and new configurations,
+!<! for the determinand part
+!<         call cat_rshift_detrat(flvr, cieo, tau_end1, tau_end2, deter_ratio)
+!<
+!<! calculate the transition ratio between old and new configurations,
+!<! for the local trace part, by lazy trace evaluation
+!<         call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, trace_ratio)
+!<         call ctqmc_lazy_ztrace( 4, 1, 2*sum(rank), deter_ratio, spring_sfmt_stream(), p, pass, tau_end1, tau_end2 )
+!<     endif ! back if ( rshf .eqv. .false. ) block
 
 ! calculate the transition ratio between old and new configurations,
-! for the local trace part, by lazy trace evaluation
+! for the local trace part
+     if ( rshf .eqv. .true. ) then
          call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, trace_ratio)
+     else
+         trace_ratio = zero
+     endif ! back if ( rshf .eqv. .true. ) block
+
+! calculate the transition ratio between old and new configurations,
+! for the determinant part
+     if ( rshf .eqv. .true. ) then
+         call cat_rshift_detrat(flvr, cieo, tau_end1, tau_end2, deter_ratio)
+     else
+         deter_ratio = zero
+     endif ! back if ( rshf .eqv. .true. ) block
+
+! we will determine the pass by lazy trace evalution
+! if rshf is false, we set the pass as false immediately
+     if ( rshf .eqv. .true. ) then
          call ctqmc_lazy_ztrace( 4, 1, 2*sum(rank), deter_ratio, spring_sfmt_stream(), p, pass, tau_end1, tau_end2 )
-     endif ! back if ( rshf .eqv. .false. ) block
+     else
+         rshf = .false.
+     endif ! back if ( rshf .eqv. .true. ) block
 
 ! if update action is accepted
      if ( pass .eqv. .true. ) then
