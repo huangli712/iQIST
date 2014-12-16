@@ -620,9 +620,6 @@
 ! transition probability for global spin flip
      real(dp) :: p
 
-! determiant ratio
-     real(dp) :: deter_ratio
-
 ! global flip determinant ratio
      real(dp) :: ratup
      real(dp) :: ratdn
@@ -661,7 +658,7 @@
          call cat_reflip_detrat(fdn, fup, ratdn)
 
 ! calculate the transition probability for global spin flip
-         deter_ratio = ratup * ratdn
+         p = ratup * ratdn
 
 ! make a trial swap for flvr_v
          do i=1,nsize
@@ -678,11 +675,10 @@
              index_t(i) = index_v(i)
          enddo ! over i={1,nsize} loop
 
-! calculate operators trace
-         call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, spring_sfmt_stream(), p, pass, -1.0_dp, -1.0_dp )
-
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
+         ratup = p
+         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, spring_sfmt_stream(), p, pass, -one, -one )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then
@@ -737,7 +733,7 @@
              call cat_reflip_detrat(fdn, fup, ratdn)
 
 ! calculate the transition probability for global spin flip
-             deter_ratio = ratup * ratdn
+             p = ratup * ratdn
 
 ! make a trial swap for flvr_v
              do i=1,nsize
@@ -754,8 +750,10 @@
                  index_t(i) = index_v(i)
              enddo ! over i={1,nsize} loop
 
-! calculate operators trace
-             call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, spring_sfmt_stream(), p, pass, -1.0_dp, -1.0_dp )
+! calculate the transition ratio between old and new configurations,
+! for the local trace part, by lazy trace evaluation
+             ratup = p
+             call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, spring_sfmt_stream(), p, pass, -one, -one )
 
 ! if update action is accepted
              if ( pass .eqv. .true. ) then
@@ -812,7 +810,7 @@
              call cat_reflip_detrat(fdn, fup, ratdn)
 
 ! calculate the transition probability for global spin flip
-             deter_ratio =  ratup * ratdn
+             p = p * ( ratup * ratdn )
 
          enddo ! over flvr={1,nband} loop
 
@@ -831,8 +829,10 @@
              index_t(i) = index_v(i)
          enddo ! over i={1,nsize} loop
 
-! calculate operators trace
-         call ctqmc_lazy_ztrace( 5, 3, nsize, deter_ratio, spring_sfmt_stream(), p, pass, -1.0_dp, -1.0_dp )
+! calculate the transition ratio between old and new configurations,
+! for the local trace part, by lazy trace evaluation
+         ratup = p
+         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, spring_sfmt_stream(), p, pass, -one, -one )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then
