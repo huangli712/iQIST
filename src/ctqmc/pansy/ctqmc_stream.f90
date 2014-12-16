@@ -775,7 +775,7 @@
 
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
-! init m_npart module
+! init m_part module
      nprod   = zero
      is_cp   = .false.
      nc_cp   = 0

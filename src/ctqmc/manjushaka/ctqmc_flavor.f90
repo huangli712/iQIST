@@ -31,12 +31,10 @@
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
-!!!           yilin wang (email: qhwyl2006@126.com)
+!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/23/2009 by li huang
 !!!           10/20/2010 by li huang
-!!!           08/20/2014 by li huang
-!!!           11/02/2014 by li huang
-!!!           11/11/2014 by li huang
+!!!           11/11/2014 by yilin wang
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -51,14 +49,14 @@
 
 !!>>> cat_insert_ztrace: calculate the trace ratio for insert new create
 !!>>> and destroy operators on perturbation expansion series
-  subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
+  subroutine cat_insert_ztrace(flvr, is, ie, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -78,17 +76,8 @@
 ! imaginary time point of the new destroy operator
      real(dp), intent(in)  :: tau_end
 
-! ratio between old and new configurations, the determinant part
-     real(dp), intent(in) :: deter_ratio
-
-! a rand_num number
-     real(dp), intent(in) :: rand_num
-
-! transition probability p
-     real(dp), intent(out) :: accept_p
-
-! whether accept the move
-     logical, intent(out) :: pass
+! ratio between old and new configurations, the local trace part
+     real(dp), intent(out) :: trace_ratio
 
 ! local variables
 ! loop index over operators
@@ -252,22 +241,22 @@
 !-------------------------------------------------------------------------
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
-! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace( 1, 1, nsize+1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end )
+! evaluate trace_ratio
+     trace_ratio = matrix_ntrace / matrix_ptrace
 
      return
   end subroutine cat_insert_ztrace
 
 !!>>> cat_remove_ztrace: calculate the trace ratio for remove old create
 !!>>> and destroy operators on perturbation expansion series
-  subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, deter_ratio, rand_num, accept_p, pass)
+  subroutine cat_remove_ztrace(is, ie, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -284,17 +273,8 @@
 ! imaginary time point of the old destroy operator
      real(dp), intent(in)  :: tau_end
 
-! ratio between old and new configurations, the determinant part
-     real(dp), intent(in) :: deter_ratio
-
-! a random number
-     real(dp), intent(in) :: rand_num
-
-! the acceptance ratio
-     real(dp), intent(out) :: accept_p
-
-! whether pass
-     logical, intent(out) :: pass
+! ratio between old and new configurations, the local trace part
+     real(dp), intent(out) :: trace_ratio
 
 ! local variables
 ! loop index over operators
@@ -436,22 +416,22 @@
 !-------------------------------------------------------------------------
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
-! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace( 2, 1, nsize-1, deter_ratio, rand_num, accept_p, pass, tau_start, tau_end )
+! evaluate trace_ratio
+     trace_ratio = matrix_ntrace / matrix_ptrace
 
      return
   end subroutine cat_remove_ztrace
 
 !!>>> cat_lshift_ztrace: calculate the trace ratio for shift old create
 !!>>> operators on perturbation expansion series
-  subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, deter_ratio, rand_num, accept_p, pass)
+  subroutine cat_lshift_ztrace(flvr, iso, isn, tau_start1, tau_start2, trace_ratio)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -471,18 +451,8 @@
 ! imaginary time point of the new create operator
      real(dp), intent(in)  :: tau_start2
 
-! ratio between old and new configurations, the determinant part
-     real(dp), intent(in) :: deter_ratio
-
-! a random number
-     real(dp), intent(in) :: rand_num
-
-! the acceptance ratio
-     real(dp), intent(out) :: accept_p
-
-! whether pass
-     logical, intent(out) :: pass
-
+! ratio between old and new configurations, the local trace part
+     real(dp), intent(out) :: trace_ratio
 
 ! local variables
 ! loop index over operators
@@ -597,22 +567,22 @@
 !-------------------------------------------------------------------------
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
-! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace( 3, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_start1, tau_start2 )
+! evaluate trace_ratio
+     trace_ratio = matrix_ntrace / matrix_ptrace
 
      return
   end subroutine cat_lshift_ztrace
 
 !!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy
 !!>>> operators on perturbation expansion series
-  subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio, rand_num, accept_p, pass)
+  subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, trace_ratio)
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
      use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -632,18 +602,8 @@
 ! imaginary time point of the new destroy operator
      real(dp), intent(in)  :: tau_end2
 
-! ratio between old and new configurations, the determinant part
-     real(dp), intent(in) :: deter_ratio
-
-! a random number
-     real(dp), intent(in) :: rand_num
-
-! the acceptance ratio
-     real(dp), intent(out) :: accept_p
-
-! whether pass
-     logical, intent(out) :: pass
-
+! ratio between old and new configurations, the local trace part
+     real(dp), intent(out) :: trace_ratio
 
 ! local variables
 ! loop index over operators
@@ -758,8 +718,8 @@
 !-------------------------------------------------------------------------
 ! stage 3: evaluate trace ratio
 !-------------------------------------------------------------------------
-! calculate new matrix trace for the flavor part
-     call ctqmc_lazy_ztrace( 4, 1, nsize, deter_ratio, rand_num, accept_p, pass, tau_end1, tau_end2 )
+! evaluate trace_ratio
+     trace_ratio = matrix_ntrace / matrix_ptrace
 
      return
   end subroutine cat_rshift_ztrace
@@ -1096,7 +1056,7 @@
 
      use control, only : nfreq
      use context, only : ckink
-     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e, empty_s, empty_e
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
      use context, only : rmesh
 
      implicit none
@@ -1166,7 +1126,7 @@
      use stack, only : istack_push
 
      use context, only : ckink
-     use context, only : index_s, index_e, empty_s, empty_e
+     use context, only : empty_s, empty_e, index_s, index_e
 
      implicit none
 
@@ -1339,7 +1299,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
 
      implicit none
 
@@ -1509,7 +1469,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v
 
      implicit none
 
@@ -1643,7 +1603,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
 
      implicit none
 
@@ -1804,7 +1764,7 @@
 
      use control, only : nband
      use context, only : cssoc
-     use context, only : index_v, type_v, flvr_v, time_v, time_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, time_v
 
      implicit none
 
@@ -1969,7 +1929,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2135,7 +2095,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2295,7 +2255,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2423,7 +2383,7 @@
      use control, only : ncfgs
      use control, only : beta
      use context, only : csign
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : eigs
 
      implicit none
@@ -2548,29 +2508,34 @@
 !!========================================================================
 
 !!>>> ctqmc_lazy_ztrace: core subroutine of manjushaka
-!! (1) use good quantum numbers (GQNs) algorithm, split the total Hibert space
-!!     to small subspace, the dimension of F-matrix will be smaller.
-!!
-!! (2) use divide and conqure algorithm, split the imaginary time axis into
-!!     many parts, save the matrices products of that part, which may be used
-!!     by next Monte Carlo move.
-!! NOTE: you should carefully choose npart in order to obtain the best speedup.
-!!
-!! (3) use lazy trace algorithm to reject some proposed moves immediately.
-!!
-!! (4) truncate the Hilbert space according to the total occupancy and the
-!!     probability of atomic eigenstates.
+!!>>> (1) use good quantum numbers (GQNs) algorithm, split the total
+!!>>>     Hibert space to small subspace, the dimension of F-matrix will
+!!>>>     be smaller.
+!!>>> (2) use divide and conqure algorithm, split the imaginary time axis
+!!>>>     into many parts, save the matrices products of that part, which
+!!>>>     may be used by next Monte Carlo move.
+!!>>> note: you should carefully choose npart in order to obtain the
+!!>>> best speedup.
+!!>>> (3) use lazy trace algorithm to reject some proposed moves immediately.
+!!>>> (4) truncate the Hilbert space according to the total occupancy and
+!!>>>     the probability of atomic eigenstates.
   subroutine ctqmc_lazy_ztrace(imove, cmode, csize, deter_ratio, rand_num, accept_p, pass, tau_s, tau_e)
      use constants, only : dp, zero, one, epst
-     use control, only : mkink, ncfgs, beta
 
-     use context, only : expt_t, expt_v, index_t, index_v, ckink
-     use context, only : matrix_ptrace, matrix_ntrace, diag
+     use control, only : ncfgs
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink, matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, expt_t, expt_v
+     use context, only : diag
 
-     use m_sector, only : nsect, sectors, fprod
-     use m_sector, only : is_string, ctqmc_make_string
-
-     use m_npart, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+     use m_sect, only : prod, is_string
+     use m_sect, only : cat_make_string
+     use m_part, only : is_cp
+     use m_part, only : cat_make_npart
+     use m_part, only : cat_make_trace
 
      implicit none
 
@@ -2652,19 +2617,24 @@
 
 ! copy data from index_t or index_v to index_t_loc
 ! copy data from expt_t to expt_t_loc
-     select case(cmode)
-         case(1)
+     select case (cmode)
+
+         case (1)
              index_t_loc = index_t
              expt_t_loc = expt_t(:,1)
-         case(2)
+
+         case (2)
              index_t_loc = index_v
              expt_t_loc = expt_t(:,2)
-         case(3)
+
+         case (3)
              index_t_loc = index_t
              expt_t_loc = expt_t(:,2)
-         case(4)
+
+         case (4)
              index_t_loc = index_v
              expt_t_loc = expt_t(:,2)
+
      end select
 
 ! make propose ratio for different type of moves
@@ -2684,7 +2654,7 @@
 
 ! build string for all the sectors, is_string(:,1) will be
 ! modified internally
-     call ctqmc_make_string(csize, index_t_loc, string)
+     call cat_make_string(csize, index_t_loc, string)
 
 ! we can check is_string here to see whether this diagram can survive ?
 ! if not, return immediately.
@@ -2763,7 +2733,7 @@
 
 ! determine which part has been changed due to local change of diagram
 ! it will set isave internally
-     call ctqmc_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
+     call cat_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
 
 ! sort the trace_bound to speed up the refining process
 ! here, we use simple bubble sort algorithm, because nalive_sect is usually small
@@ -2778,7 +2748,7 @@
 ! calculate the trace for one sector, this call will consume a lot of time
 ! if the dimension of fmat and expansion order is large, so we should carefully
 ! optimize it.
-         call cat_sector_ztrace(csize, string(:,orig_sect(i)), index_t_loc, expt_t_loc, trace_sect(i))
+         call cat_make_trace(csize, string(:,orig_sect(i)), index_t_loc, expt_t_loc, trace_sect(i))
 ! if this move is not accepted, refine the trace bound to see whether we can
 ! reject it before calculating the trace of all of the sectors
          if ( .not. pass ) then
@@ -2816,7 +2786,7 @@
      do i=1,nalive_sect
          indx = sectors( orig_sect(i) )%istart
          do j=1,sectors( orig_sect(i) )%ndim
-             diag(indx+j-1,1) = fprod(orig_sect(i),1)%item(j,j)
+             diag(indx+j-1,1) = prod(orig_sect(i),1)%val(j,j)
          enddo
      enddo
 
@@ -2829,10 +2799,10 @@
      use control, only : mkink, ncfgs
      use context, only : expt_t, expt_v, index_t, index_v, diag
 
-     use m_sector, only : nsect, sectors, fprod
-     use m_sector, only : is_string, ctqmc_make_string
+     use m_sect, only : nsect, sectors, prod
+     use m_sect, only : is_string, cat_make_string
 
-     use m_npart, only : is_cp, cat_sector_ztrace, ctqmc_make_npart
+     use m_part, only : is_cp, cat_make_trace, cat_make_npart
 
      implicit none
 
@@ -2869,18 +2839,18 @@
 
 ! build string for all the sectors, is_string(:,1) will be
 ! modified internally
-     call ctqmc_make_string(csize, index_t_loc, string)
+     call cat_make_string(csize, index_t_loc, string)
 
 ! determine is_save, all parts with some fermion operators should be
 ! recalculated in this case.
-     call ctqmc_make_npart(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
+     call cat_make_npart(4, csize, index_t_loc, -1.0_dp, -1.0_dp)
 
 ! calculate the trace for all the alive sectors
      is_cp = .false.
      trace_sect = zero
      do i=1,nsect
          if ( .not. is_string(i,1) ) cycle
-         call cat_sector_ztrace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
+         call cat_make_trace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
      enddo ! over j={1,nsect} loop
 
      trace = sum(trace_sect)
@@ -2891,7 +2861,7 @@
          if( .not. is_string(i,1) ) cycle
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             diag(indx+j-1,1) = fprod(i,1)%item(j,j)
+             diag(indx+j-1,1) = prod(i,1)%val(j,j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect}  loop
 
@@ -2901,10 +2871,13 @@
 !!>>> ctqmc_make_evolve: used to update the operator traces of the
 !!>>> modified part
   subroutine ctqmc_make_evolve()
-     use context, only : matrix_ptrace, matrix_ntrace, diag
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : diag
 
-     use m_sector, only : nsect, sectors, is_string, fprod
-     use m_npart, only : ctqmc_save_npart
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+     use m_sect, only : is_string, prod
+     use m_part, only : cat_save_npart
 
      implicit none
 
@@ -2921,15 +2894,15 @@
 ! update is_string for calculating nmat and nnmat
      is_string(:,2) = is_string(:,1)
 
-! transfer the final matrix product from final_product(:,:,1) to
-! final_product(:,:,2) the latter can be used to calculate nmat and nnmat
+! transfer the final matrix product from prod(:,:,1) to prod(:,:,2),
+! the latter can be used to calculate nmat and nnmat
      do i=1,nsect
-         if ( .not. is_string(i,1) ) cycle
-         fprod(i,2)%item = fprod(i,1)%item
+         if ( .not. is_string(i,1) ) CYCLE
+         prod(i,2)%val = prod(i,1)%val
      enddo ! over i={1,nsect} loop
 
- ! save the data of each part
-     call ctqmc_save_npart()
+! save the data of each part
+     call cat_save_npart()
 
      return
   end subroutine ctqmc_make_evolve
@@ -3148,7 +3121,7 @@
 
      use control, only : norbs, ncfgs
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : index_v, type_v, flvr_v, time_v, expt_t, expt_v, empty_v
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : rank
 
      implicit none

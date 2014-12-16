@@ -14,16 +14,12 @@
 !!!           ctqmc_dump_nmat
 !!!           ctqmc_dump_twop
 !!!           ctqmc_dump_pair
-!!!           ctqmc_dump_psect
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
-!!!         : yilin wang (email:qhwyl2006@126.com)
+!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
-!!!           07/19/2014 by yilin wang
-!!!           08/20/2014 by yilin wang
-!!!           11/02/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
@@ -493,6 +489,9 @@
 
      use control, only : norbs, ncfgs
 
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+
      implicit none
 
 ! external arguments
@@ -513,6 +512,9 @@
 ! number of individual spin values
      integer  :: ns
 
+! start index of sectors
+     integer  :: indx
+
 ! probability of occupation number distribution
      real(dp) :: oprob(0:norbs)
 
@@ -522,6 +524,9 @@
 
 ! probability of net spin distribution
      real(dp) :: sprob(ncfgs)
+
+! probability of sectors
+     real(dp) :: psect(nsect)
 
 ! evaluate oprob
      oprob = zero
@@ -555,6 +560,15 @@
          enddo ! over j={1,ns} loop
      enddo ! over i={1,ncfgs} loop
 
+! evaluate psect
+     psect = zero
+     do i=1,nsect
+         indx = sectors(i)%istart
+         do j=1,sectors(i)%ndim
+             psect(i) = psect(i) + prob(indx+j-1)
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
+
 ! open data file: solver.prob.dat
      open(mytmp, file='solver.prob.dat', form='formatted', status='unknown')
 
@@ -575,6 +589,12 @@
          write(mytmp,'(i6,2f12.6)') i, stmp2(i), sprob(i)
      enddo ! over i={1,ns} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
+
+     write(mytmp,'(a)') '# sector probability: index | occupy | prob'
+     do i=1,nsect
+         write(mytmp,'(i6,2f12.6)') i, real( sectors(i)%nele ), psect(i)
+     enddo ! over i={1,nsect} loop
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(psect)
 
 ! close data file
      close(mytmp)
@@ -741,7 +761,7 @@
 ! chii: \chi_{irr}(\omega, \omega', \nu)
 ! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i5,8f12.6)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
+                         write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -820,42 +840,3 @@
 
      return
   end subroutine ctqmc_dump_pair
-
-!!>>> ctqmc_dump_psect: dump the probability of each sectors of local Hamiltonian
-  subroutine ctqmc_dump_psect()
-     use constants, only : dp, zero, mytmp
-
-     use context, only : prob
-     use m_sector, only : nsect, sectors
-
-     implicit none
-
-! local variables
-! probability of sectors
-     real(dp) :: psect(nsect)
-
-! loop index
-     integer :: i,j
-
-! start index of sectors
-     integer :: indx
-
-     psect = zero
-
-     do i=1,nsect
-         indx = sectors(i)%istart
-         do j=1,sectors(i)%ndim
-             psect(i) = psect(i) + prob(indx+j-1)
-         enddo ! over j={1,sectors(i)%ndim} loop
-     enddo ! over i={1,nsect} loop
-
-! open file solver.psect.dat to write
-     open(mytmp, file='solver.psect.dat', form='formatted', status='unknown')
-     write(mytmp, '(a)') '#sector | probability | nelectron |'
-     do i=1,nsect
-         write(mytmp, '(i6, f12.6, i6)') i, psect(i), sectors(i)%nelec
-     enddo ! over i={1,nsect} loop
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_psect

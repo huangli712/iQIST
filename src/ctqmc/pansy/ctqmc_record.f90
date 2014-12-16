@@ -980,7 +980,7 @@
                          ghub(k,i) = ghub(k,i) + ob / cb
                      enddo ! over k={1,mfreq} loop
                  enddo ! over m={1,sectors(l)%ndim} loop
-             enddo  ! over n={1,sectors(j)%ndim} loop
+             enddo ! over n={1,sectors(j)%ndim} loop
          enddo ! over j={1,nsect} loop
      enddo ! over i={1,norbs} loop
 

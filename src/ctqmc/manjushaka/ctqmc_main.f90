@@ -4,8 +4,8 @@
 !!! A test program for dynamical mean field theory (DMFT) self-consistent!
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
-!!! author  : Li Huang (UNIFR, SPCLAB/IOM/CAEP)                          !
-!!!           Yilin Wang (IOP)
+!!! author  : Li Huang (at IOP/CAS & SPCLAB/IOM/CAEP & UNIFR)            !
+!!!           Yilin Wang (at IOP/CAS)                                    !
 !!! version : v2014.10.11T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on general matrix formalism  !
@@ -24,20 +24,21 @@
 !! Introduction
 !! ============
 !!
-!! The manjushaka code is a hybridization expansion version continuous time
-!! quantum Monte Carlo quantum impurity solver. It adopts the general matrix
-!! formalism, and implements the good quantum numbers (GQNs) algorithm.
-!! It implements the divide and conquer algorithm, lazy trace algorithm,
-!! and dynamically truncation of the Hilbert space algorithm. It also
-!! implements the orthogonal polynomial represention to measure very high
-!! quality of physical quantities. It can also measure two particle related
-!! physical quantities. Thus, it is a very powerful solver. You can use it
-!! to solve almost all of the 1~7 orbitals systems with general interaction,
-!! for temperature range from a few thounds Kelvin to a few Kelvin. The
-!! manjushka code also includes a mini dynamical mean field theory engine
-!! which implements the self-consistent equation for Bethe lattice in
-!! paramagnetic state. So you can use it to perform dynamical mean field
-!! theory calculations quickly. Enjoy it.
+!! The manjushaka code is a hybridization expansion version continuous
+!! time quantum Monte Carlo quantum impurity solver. It adopts the general
+!! matrix formalism, and implements the basic good quantum numbers (GQNs)
+!! algorithm. It implements the divide and conquer algorithm, lazy trace
+!! algorithm, and dynamically truncation of the Hilbert space algorithm.
+!! It also implements the orthogonal polynomial represention to measure
+!! very high quality of physical quantities. It can be used to measure
+!! two-particle related physical quantities as well. Thus, it is a very
+!! powerful quantum impurity solver. You can use it to solve almost all
+!! of the 1~7 bands (i.e., 2~14 orbitals) systems with general Coulomb
+!! interaction, for temperature range from a few thounds Kelvin to a few
+!! Kelvin. The manjushka code also includes a mini dynamical mean field
+!! theory engine which implements the self-consistent equation for Bethe
+!! lattice in paramagnetic state. So you can use it to perform dynamical
+!! mean field theory calculations quickly. Enjoy it.
 !!
 !! Usage
 !! =====
@@ -66,7 +67,6 @@
 !! solver.hub.dat
 !! solver.hist.dat
 !! solver.prob.dat
-!! solver.psect.dat
 !! solver.nmat.dat
 !! solver.twop.dat
 !! solver.pair.dat
@@ -347,9 +347,9 @@
      nspin  = I_solver%nspin
      norbs  = I_solver%norbs
      ncfgs  = I_solver%ncfgs
-     niter  = I_solver%niter
      nmini  = I_solver%nmini
      nmaxi  = I_solver%nmaxi
+     niter  = I_solver%niter
      lemax  = I_solver%lemax
      legrd  = I_solver%legrd
      chmax  = I_solver%chmax
@@ -559,9 +559,9 @@
      return
   end subroutine cat_set_eimp
 
-!!>>> cat_set_ktau: setup the kernel function
-!!>>> note: the azalea code does not support this function
-  subroutine cat_set_ktau(size_t, ktau_t)
+!!>>> cat_set_ktau: setup the screening function and its first derivates
+!!>>> note: the manjushaka code does not support this function now
+  subroutine cat_set_ktau(size_t, ktau_t, ptau_t)
      use constants, only : dp
 
      implicit none
@@ -570,11 +570,15 @@
 ! size of ktau
      integer, intent(in)  :: size_t
 
-! kernel function
+! screening function K(\tau)
      real(dp), intent(in) :: ktau_t(size_t)
+
+! first derivate of screening function K'(\tau)
+     real(dp), intent(in) :: ptau_t(size_t)
 
 ! to avoid the warning from compiler
      call s_assert( size(ktau_t) == size_t )
+     call s_assert( size(ptau_t) == size_t )
      call s_print_error('cat_set_ktau','sorry, this feature is not supported')
 
      return

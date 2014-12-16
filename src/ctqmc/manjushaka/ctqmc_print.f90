@@ -7,10 +7,9 @@
 !!! source  : ctqmc_print.f90
 !!! type    : subroutines
 !!! author  : li huang (email:huangli712@gmail.com)
-!!!           yilin wang (eamil:qhwyl2006@126.com)
+!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/15/2009 by li huang
 !!!           02/21/2010 by li huang
-!!!           08/20/2014 by yilin wang
 !!!           11/11/2014 by yilin wang
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
@@ -41,8 +40,7 @@
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
-     write(mystd,'(2X,a)') '         by yilin wang (at IOP/CAS)'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR) and yilin wang (at IOP/CAS)'
      write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)
@@ -113,11 +111,11 @@
      write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
      write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin :', nspin
      write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs :', ncfgs
+     write(mystd,'(2(4X,a,i10))')   'nmini :', nmini  , 'nmaxi :', nmaxi
      write(mystd,'(1(4X,a,i10))')   'niter :', niter
      write(mystd,'(2(4X,a,i10))')   'nffrq :', nffrq  , 'nbfrq :', nbfrq
      write(mystd,'(2(4X,a,i10))')   'nfreq :', nfreq  , 'ntime :', ntime
      write(mystd,'(2(4X,a,i10))')   'npart :', npart  , 'nflip :', nflip
-     write(mystd,'(2(4X,a,i10))')   'nmini :', nmini  , 'nmaxi :', nmaxi
 
      write(mystd,'(2(4X,a,i10))')   'ntherm:', ntherm , 'nsweep:', nsweep
      write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite
@@ -147,7 +145,8 @@
      use context, only : rshift_tcount, rshift_accept, rshift_reject
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : paux
-     use m_npart, only : nprod
+
+     use m_part, only : nprod
 
      implicit none
 
@@ -206,7 +205,8 @@
      write(mystd,'(4X,a,i10)')    'negative sign counter:', cnegs
      write(mystd,'(4X,a,f10.5)')  'averaged sign sampler:', caves / real(cstep)
 
-     write(mystd,'(4X,a,f14.1)')  'averaged matrices products:', nprod / real(cstep)
+! number of total matrices multiplication
+     write(mystd,'(4X,a,f10.5)')  'averaged matrices products:', nprod / real(cstep)
 
      return
   end subroutine ctqmc_print_runtime
