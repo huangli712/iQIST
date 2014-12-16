@@ -385,21 +385,6 @@
 ! not equal to zero
      call try_lshift_flavor(flvr, fiso, fisn, tau_start1, tau_start2, lshf)
 
-!<! if lshf is false, we set the pass as false immediately
-!<     if ( lshf .eqv. .false. ) then
-!<         pass = .false.
-!<! we will determine the pass by lazy trace evalution
-!<     else
-!<! first, calculate the transition ratio between old and new configurations,
-!<! for the determinand part
-!<         call cat_lshift_detrat(flvr, ciso, tau_start1, tau_start2, deter_ratio)
-!<
-!<! calculate the transition ratio between old and new configurations,
-!<! for the local trace part, by lazy trace evaluation
-!<         call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, trace_ratio)
-!<         call ctqmc_lazy_ztrace( 3, 1, 2*sum(rank), deter_ratio, spring_sfmt_stream(), p, pass, tau_start1, tau_start2 )
-!<     endif ! back if ( lshf .eqv. .false. ) block
-
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part
      if ( lshf .eqv. .true. ) then
