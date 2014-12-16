@@ -43,3 +43,5 @@
   nclean : 100000
   nmonte : 100
   ncarlo : 100
+
+  isort  = 2

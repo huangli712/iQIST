@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/ctqmc/manjushaka directory
+## Makefile for iqist/src/ctqmc/manjushaka directory.
 ##
 ## Usage
 ## =====
