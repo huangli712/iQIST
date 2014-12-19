@@ -937,9 +937,10 @@
 ! start index of this sector
          integer :: istart
 
-! the next sector after a fermion operator acts on this sector
-! -1: outside of the Hilbert space, otherwise, it is the index of next sector
-! next(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
+! the next sector when a fermion operator acts on the sector
+! next(nops,0:1), 0 for annihilation and 1 for creation operators,
+! respectively. -1 means it is outside the Hilbert space, otherwise, it
+! is the index of next sector
          integer, pointer  :: next(:,:)
 
 ! the eigenvalues
@@ -1109,6 +1110,8 @@
 
          sectors(i)%occu  => null()
          sectors(i)%doccu => null()
+
+         sectors(i)%fmat  => null()
      enddo ! over i={1,nsect} loop
 
      return
@@ -1137,7 +1140,7 @@
 
 ! external variables
 ! sector structure
-     type(t_sector), intent(inout) :: sect
+     type (t_sector), intent(inout) :: sect
 
 ! local variables
 ! loop index
@@ -1153,16 +1156,20 @@
      if ( associated(sect%doccu) ) deallocate(sect%doccu)
 
 ! deallocate fmat one by one
-     do i=1,sect%nops
-         do j=0,1
-             call ctqmc_deallocate_memory_one_fmat(sect%fmat(i,j))
-         enddo ! over j={0,1} loop
-     enddo ! over i={1,sect%nops} loop
+     if ( associated(sect%fmat) ) then
+         do i=1,sect%nops
+             do j=0,1
+                 call ctqmc_deallocate_memory_one_fmat(sect%fmat(i,j))
+             enddo ! over j={0,1} loop
+         enddo ! over i={1,sect%nops} loop
+         deallocate(sect%fmat)
+     endif ! back if ( associated(sect%fmat) ) block
 
      return
   end subroutine ctqmc_deallocate_memory_one_sect
 
-!!>>> ctqmc_deallocate_memory_sect: deallocate memory for sector related variables
+!!>>> ctqmc_deallocate_memory_sect: deallocate memory for sector
+!!>>> related variables
   subroutine ctqmc_deallocate_memory_sect()
      implicit none
 
