@@ -528,6 +528,15 @@
 ! probability of sectors
      real(dp) :: psect(nsect)
 
+! evaluate psect
+     psect = zero
+     do i=1,nsect
+         indx = sectors(i)%istart
+         do j=1,sectors(i)%ndim
+             psect(i) = psect(i) + prob(indx+j-1)
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
+
 ! evaluate oprob
      oprob = zero
      do i=1,ncfgs
@@ -560,15 +569,6 @@
          enddo ! over j={1,ns} loop
      enddo ! over i={1,ncfgs} loop
 
-! evaluate psect
-     psect = zero
-     do i=1,nsect
-         indx = sectors(i)%istart
-         do j=1,sectors(i)%ndim
-             psect(i) = psect(i) + prob(indx+j-1)
-         enddo ! over j={1,sectors(i)%ndim} loop
-     enddo ! over i={1,nsect} loop
-
 ! open data file: solver.prob.dat
      open(mytmp, file='solver.prob.dat', form='formatted', status='unknown')
 
@@ -577,6 +577,12 @@
      do i=1,ncfgs
          write(mytmp,'(i6,3f12.6)') i, prob(i), naux(i), saux(i)
      enddo ! over i={1,ncfgs} loop
+
+     write(mytmp,'(a)') '# sector probability: index | occupy | prob'
+     do i=1,nsect
+         write(mytmp,'(i6,2f12.6)') i, real( sectors(i)%nele ), psect(i)
+     enddo ! over i={1,nsect} loop
+     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(psect)
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
@@ -589,12 +595,6 @@
          write(mytmp,'(i6,2f12.6)') i, stmp2(i), sprob(i)
      enddo ! over i={1,ns} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
-
-     write(mytmp,'(a)') '# sector probability: index | occupy | prob'
-     do i=1,nsect
-         write(mytmp,'(i6,2f12.6)') i, real( sectors(i)%nele ), psect(i)
-     enddo ! over i={1,nsect} loop
-     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(psect)
 
 ! close data file
      close(mytmp)

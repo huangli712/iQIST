@@ -826,13 +826,13 @@
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
 ! truncate the Hilbert space here
-     call ctqmc_make_trunc()
+     call ctqmc_make_truncation()
 
 ! allocate final_product, occu, double_occu for un-truncated sectors
      call ctqmc_allocate_memory_occu()
 
 ! build occu, double_occu for un-truncated sectors
-     call ctqmc_make_occu()
+     call ctqmc_make_occupy()
 
 ! allocate memory for npart
      call ctqmc_allocate_memory_part()
