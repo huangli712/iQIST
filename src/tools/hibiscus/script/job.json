@@ -1,0 +1,41 @@
+{
+  "robot"   : "quark",
+  "machine" : "TianHe-1A",
+  "queue"   : "slurm",
+  "scratch" : "~/tmp",
+  "finish"  : "~/tmp/.stop",
+  "logdata" : "~/tmp/log.data",
+  "errdata" : "~/tmp/err.data",
+  "interval": 60,
+  "slots"   : 8,
+
+  "jobs"    : [
+  {
+      "job"    : "~/iqist/working/ctqmc/standard",
+      "ref"    : "~/iqist/working/ctqmc/ref",
+      "mpi"    : true,
+      "nprocs" : 16,
+      "exe"    : "~/iqist/bin/azalea.x",
+      "before" : null,
+      "after"  : null
+  },
+  {
+      "job"    : "~/iqist/working/ctqmc/standard",
+      "ref"    : "~/iqist/working/ctqmc/ref",
+      "mpi"    : true,
+      "nprocs" : 16,
+      "exe"    : "~/iqist/bin/begonia.x",
+      "before" : "~/iqist/bin/jasmine.x",
+      "after"  : null
+  },
+  {
+      "job"    : "~/iqist/working/ctqmc/standard",
+      "ref"    : "~/iqist/working/ctqmc/ref",
+      "mpi"    : true,
+      "nprocs" : 16,
+      "exe"    : "~/iqist/bin/pansy.x",
+      "before" : "~/iqist/bin/jasmine.x",
+      "after"  : null
+  }
+  ]
+}

@@ -29,12 +29,20 @@
 ##
 ##
 
-import os
-import sys
+#import os
+#import sys
 
-# setup the directory we want to scan
-argu = sys.argv[1:]
-if ( len(argu) > 0 ):
-    scan_dir = argu[0]
-else:
-    scan_dir = '.'
+## setup the directory we want to scan
+#argu = sys.argv[1:]
+#if ( len(argu) > 0 ):
+#    scan_dir = argu[0]
+#else:
+#    scan_dir = '.'
+
+import json
+
+with open("job.json") as json_file:
+    json_data = json.load(json_file)
+    print json_data
+    for i in json_data.keys():
+        print i, json_data[i]
