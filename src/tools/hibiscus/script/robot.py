@@ -5,15 +5,15 @@
 ## Introduction
 ## ============
 ##
-## It is a python script. The purpose of this script is to clean the dull
-## .DS_Store files for the Mac OS X filesystem.
+## It is a python script. The purpose of this script is to perform some
+## automatic tests for the ctqmc quantum impurity solvers.
 ##
 ## This script should be used by the developer only.
 ##
 ## Usage
 ## =====
 ##
-## ./clean.py directory_name
+## ./robot.py job_file
 ##
 ## Author
 ## ======
