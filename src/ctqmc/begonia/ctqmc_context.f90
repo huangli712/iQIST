@@ -370,32 +370,34 @@
 !-------------------------------------------------------------------------
 !::: sparse matrix style for op_c (Compressed Sparse Row (CSR) format) :::
 !-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_c array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_ic(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_c array
-     integer, public, save, allocatable  :: sop_jc(:,:)
-
-! a array that contains the non-zero elements for op_c matrix
-     real(dp), public, save, allocatable :: sop_c(:,:)
+!<! row index: element i of it gives the index of the element in the
+!<! sop_c array that is first non-zero element in a row i
+!<     integer, public, save, allocatable  :: sop_ic(:,:)
+!<
+!<! column index: element j of it is the number of the column that contains
+!<! the j-th element in the sop_c array
+!<     integer, public, save, allocatable  :: sop_jc(:,:)
+!<
+!<! a array that contains the non-zero elements for op_c matrix
+!<     real(dp), public, save, allocatable :: sop_c(:,:)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     type (T_spmat), public, save, allocatable :: spm_c(:)
 
 !-------------------------------------------------------------------------
 !::: sparse matrix style for op_d (Compressed Sparse Row (CSR) format) :::
 !-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_d array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_id(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_d array
-     integer, public, save, allocatable  :: sop_jd(:,:)
-
-! a array that contains the non-zero elements for op_d matrix
-     real(dp), public, save, allocatable :: sop_d(:,:)
+!<! row index: element i of it gives the index of the element in the
+!<! sop_d array that is first non-zero element in a row i
+!<     integer, public, save, allocatable  :: sop_id(:,:)
+!<
+!<! column index: element j of it is the number of the column that contains
+!<! the j-th element in the sop_d array
+!<     integer, public, save, allocatable  :: sop_jd(:,:)
+!<
+!<! a array that contains the non-zero elements for op_d matrix
+!<     real(dp), public, save, allocatable :: sop_d(:,:)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     type (T_spmat), public, save, allocatable :: spm_d(:)
 
 ! note: op_s is used to calculate matrix product trace efficiently. the
 ! final matrix product should be stored in op_s matrix
@@ -813,13 +815,21 @@
      allocate(sop_jb(nzero,npart),     stat=istat)
      allocate(sop_b(nzero,npart),      stat=istat)
 
-     allocate(sop_ic(ncfgs+1,norbs),   stat=istat)
-     allocate(sop_jc(nzero,norbs),     stat=istat)
-     allocate(sop_c(nzero,norbs),      stat=istat)
+!<     allocate(sop_ic(ncfgs+1,norbs),   stat=istat)
+!<     allocate(sop_jc(nzero,norbs),     stat=istat)
+!<     allocate(sop_c(nzero,norbs),      stat=istat)
+     allocate(spm_c(norbs), stat=istat)
+     do i=1,norbs
+         call ctqmc_new_spmat(spm_c(i))
+     enddo ! over i={1,norbs} loop
 
-     allocate(sop_id(ncfgs+1,norbs),   stat=istat)
-     allocate(sop_jd(nzero,norbs),     stat=istat)
-     allocate(sop_d(nzero,norbs),      stat=istat)
+!<     allocate(sop_id(ncfgs+1,norbs),   stat=istat)
+!<     allocate(sop_jd(nzero,norbs),     stat=istat)
+!<     allocate(sop_d(nzero,norbs),      stat=istat)
+     allocate(spm_d(norbs), stat=istat)
+     do i=1,norbs
+         call ctqmc_new_spmat(spm_d(i))
+     enddo ! over i={1,norbs} loop
 
 !<     allocate(sop_is(ncfgs+1,2),       stat=istat)
 !<     allocate(sop_js(nzero,2),         stat=istat)
@@ -866,13 +876,13 @@
      sop_jb = 0
      sop_b  = zero
 
-     sop_ic = 0
-     sop_jc = 0
-     sop_c  = zero
-
-     sop_id = 0
-     sop_jd = 0
-     sop_d  = zero
+!<     sop_ic = 0
+!<     sop_jc = 0
+!<     sop_c  = zero
+!<
+!<     sop_id = 0
+!<     sop_jd = 0
+!<     sop_d  = zero
 
 !<     sop_is = 0
 !<     sop_js = 0
@@ -1108,13 +1118,21 @@
      if ( allocated(sop_jb) )  deallocate(sop_jb)
      if ( allocated(sop_b)  )  deallocate(sop_b )
 
-     if ( allocated(sop_ic) )  deallocate(sop_ic)
-     if ( allocated(sop_jc) )  deallocate(sop_jc)
-     if ( allocated(sop_c)  )  deallocate(sop_c )
+!<     if ( allocated(sop_ic) )  deallocate(sop_ic)
+!<     if ( allocated(sop_jc) )  deallocate(sop_jc)
+!<     if ( allocated(sop_c)  )  deallocate(sop_c )
+     do i=1,norbs
+         call ctqmc_del_spmat(spm_c(i))
+     enddo ! over i={1,norbs} loop
+     if ( allocated(spm_c)  )  deallocate(spm_c)
 
-     if ( allocated(sop_id) )  deallocate(sop_id)
-     if ( allocated(sop_jd) )  deallocate(sop_jd)
-     if ( allocated(sop_d)  )  deallocate(sop_d )
+!<     if ( allocated(sop_id) )  deallocate(sop_id)
+!<     if ( allocated(sop_jd) )  deallocate(sop_jd)
+!<     if ( allocated(sop_d)  )  deallocate(sop_d )
+     do i=1,norbs
+         call ctqmc_del_spmat(spm_d(i))
+     enddo ! over i={1,norbs} loop
+     if ( allocated(spm_d)  )  deallocate(spm_d)
 
 !<     if ( allocated(sop_is) )  deallocate(sop_is)
 !<     if ( allocated(sop_js) )  deallocate(sop_js)

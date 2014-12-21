@@ -237,8 +237,7 @@
      use context, only : cssoc
      use context, only : tmesh, rmesh
      use context, only : symm, eimp, eigs, naux, saux
-     use context, only : op_c, op_d
-     use context, only : sop_c, sop_jc, sop_ic, sop_d, sop_jd, sop_id
+     use context, only : spm_c, spm_d, op_c, op_d
      use context, only : hybf
 
      implicit none
@@ -501,13 +500,13 @@
 ! convert op_c from dense-stored matrix form to row-stored sparse matrix
      do i=1,norbs
          call sp_dns_to_csr( ncfgs, ncfgs, nzero, op_c(:,:,i), &
-                             sop_c(:,i), sop_jc(:,i), sop_ic(:,i) )
+                             spm_c(i)%vv, spm_c(i)%jv, spm_c(i)%iv )
      enddo ! over i={1,norbs} loop
 
 ! convert op_d from dense-stored matrix form to row-stored sparse matrix
      do i=1,norbs
          call sp_dns_to_csr( ncfgs, ncfgs, nzero, op_d(:,:,i), &
-                             sop_d(:,i), sop_jd(:,i), sop_id(:,i) )
+                             spm_d(i)%vv, spm_d(i)%jv, spm_d(i)%iv )
      enddo ! over i={1,norbs} loop
 
 ! note: we can not deallocate op_c and op_d to release the memory at here,
@@ -702,8 +701,8 @@
 ! which are used to calculate occupation number
      do i=1,norbs
          call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                       sop_c(:,i), sop_jc(:,i), sop_ic(:,i), &
-                       sop_d(:,i), sop_jd(:,i), sop_id(:,i), &
+                       spm_c(i)%vv, spm_c(i)%jv, spm_c(i)%iv, &
+                       spm_d(i)%vv, spm_d(i)%jv, spm_d(i)%iv, &
                                       spm_t%vv, spm_t%jv, spm_t%iv )
 
          call sp_csr_cp_csr( ncfgs, nzero, spm_t%vv, spm_t%jv, spm_t%iv, &
@@ -716,12 +715,12 @@
      do i=1,norbs-1
          do j=i+1,norbs
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                           sop_c(:,i), sop_jc(:,i), sop_ic(:,i), &
-                           sop_d(:,i), sop_jd(:,i), sop_id(:,i), &
+                           spm_c(i)%vv, spm_c(i)%jv, spm_c(i)%iv, &
+                           spm_d(i)%vv, spm_d(i)%jv, spm_d(i)%iv, &
                            sop_a(:,1), sop_ja(:,1), sop_ia(:,1) )
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                           sop_c(:,j), sop_jc(:,j), sop_ic(:,j), &
-                           sop_d(:,j), sop_jd(:,j), sop_id(:,j), &
+                           spm_c(j)%vv, spm_c(j)%jv, spm_c(j)%iv, &
+                           spm_d(j)%vv, spm_d(j)%jv, spm_d(j)%iv, &
                            sop_b(:,1), sop_jb(:,1), sop_ib(:,1) )
 
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &

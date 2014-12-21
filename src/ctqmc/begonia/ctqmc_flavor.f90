@@ -2560,9 +2560,7 @@
      use context, only : isave
      use context, only : sop_a, sop_ia, sop_ja
      use context, only : sop_b, sop_ib, sop_jb
-     use context, only : sop_c, sop_ic, sop_jc
-     use context, only : sop_d, sop_id, sop_jd
-     use context, only : spm_s
+     use context, only : spm_c, spm_d, spm_s
 
      implicit none
 
@@ -2738,13 +2736,13 @@
                          if ( vt == 1 ) then ! create  operator
                              call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
-                          sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
+                          spm_c(vf)%vv, spm_c(vf)%jv, spm_c(vf)%iv, &
                                                  smm2, jmm2, imm2, &
                              sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
                          else                ! destroy operator
                              call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
-                          sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
+                          spm_d(vf)%vv, spm_d(vf)%jv, spm_d(vf)%iv, &
                                                  smm2, jmm2, imm2, &
                              sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
                          endif ! back if ( vt == 1 ) block
@@ -2881,13 +2879,13 @@
                          if ( vt == 1 ) then ! create  operator
                              call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
-                          sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
+                          spm_c(vf)%vv, spm_c(vf)%jv, spm_c(vf)%iv, &
                                                  smm2, jmm2, imm2, &
                              sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
                          else                ! destroy operator
                              call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
-                          sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
+                          spm_d(vf)%vv, spm_d(vf)%jv, spm_d(vf)%iv, &
                                                  smm2, jmm2, imm2, &
                              sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
                          endif ! back if ( vt == 1 ) block
@@ -2965,13 +2963,13 @@
                      if ( vt == 1 ) then ! create  operator
                          call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
-                      sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
+                      spm_c(vf)%vv, spm_c(vf)%jv, spm_c(vf)%iv, &
                                              smm2, jmm2, imm2, &
                          sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
                      else                ! destroy operator
                          call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
-                      sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
+                      spm_d(vf)%vv, spm_d(vf)%jv, spm_d(vf)%iv, &
                                              smm2, jmm2, imm2, &
                          sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
                      endif ! back if ( vt == 1 ) block
@@ -3044,13 +3042,13 @@
                      if ( vt == 1 ) then ! create  operator
                          call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
-                      sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
+                      spm_c(vf)%vv, spm_c(vf)%jv, spm_c(vf)%iv, &
                                              smm2, jmm2, imm2, &
                          sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
                      else                ! destroy operator
                          call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
-                      sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
+                      spm_d(vf)%vv, spm_d(vf)%jv, spm_d(vf)%iv, &
                                              smm2, jmm2, imm2, &
                          sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
                      endif ! back if ( vt == 1 ) block
