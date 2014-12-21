@@ -97,10 +97,15 @@
 ! in other words, these features are not implemented so far.
      integer, public, save :: isvrt  = 1
 
+! control flag: the fast algorithm for calculate the trace
+! if ifast == 1, use npart
+! if ifast == 2, use time evolution
+! if ifast == 3, use skip-list
+     integer, public, save :: ifast  = 1
+
 ! control flag: the mode how to truncate the Hilbert space
 ! if itrun == 1, don't truncate it
-! if itrun == 2, only truncate the occupancy number
-! if itrun == 3, truncate both occupancy number and high energy states
+! if itrun == 2, truncate high energy states
      integer, public, save :: itrun  = 1
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -116,12 +121,6 @@
 
 ! number of atomic states (= 2**norbs)
      integer, public, save :: ncfgs  = 4
-
-! the minimum number of occupancy for itrun = 2 or 3
-     integer, public, save :: nmini = 0
-
-! the maximum number of occupancy for itrun = 2 or 3
-     integer, public, save :: nmaxi = 2
 
 ! maximum number of continuous time quantum Monte Carlo quantum impurity
 ! solver plus dynamical mean field theory self-consistent iterations

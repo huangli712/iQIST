@@ -53,8 +53,6 @@
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
      ncfgs  = 2**norbs     ! number of atomic states
-     nmini  = 0            ! minimum of occupancy number
-     nmaxi  = norbs        ! maximum of occupancy number
      niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp      ! U : average Coulomb interaction
@@ -116,14 +114,13 @@
              call p_get('isbin' , isbin )
              call p_get('isort' , isort )
              call p_get('isvrt' , isvrt )
+             call p_get('ifast' , ifast )
              call p_get('itrun' , itrun )
 
              call p_get('nband' , nband )
              call p_get('nspin' , nspin )
              call p_get('norbs' , norbs )
              call p_get('ncfgs' , ncfgs )
-             call p_get('nmini' , nmini )
-             call p_get('nmaxi' , nmaxi )
              call p_get('niter' , niter )
 
              call p_get('U'     , U     )
@@ -174,6 +171,7 @@
      call mp_bcast( isbin , master )
      call mp_bcast( isort , master )
      call mp_bcast( isvrt , master )
+     call mp_bcast( ifast , master )
      call mp_bcast( itrun , master )
      call mp_barrier()
 
@@ -181,8 +179,6 @@
      call mp_bcast( nspin , master )
      call mp_bcast( norbs , master )
      call mp_bcast( ncfgs , master )
-     call mp_bcast( nmini , master )
-     call mp_bcast( nmaxi , master )
      call mp_bcast( niter , master )
      call mp_barrier()
 
@@ -832,7 +828,9 @@
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
 ! truncate the Hilbert space here
-     call ctqmc_make_truncation()
+     if ( itrun == 2 ) then
+         call ctqmc_make_truncation()
+     endif
 
 ! init m_part module
      nprod = zero
