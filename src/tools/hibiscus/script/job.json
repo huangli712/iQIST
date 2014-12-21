@@ -1,15 +1,5 @@
 {
-  "robot"   : "quark",
-  "machine" : "TianHe-1A",
-  "queue"   : "slurm",
-  "scratch" : "~/tmp",
-  "finish"  : "~/tmp/.stop",
-  "logdata" : "~/tmp/log.data",
-  "errdata" : "~/tmp/err.data",
-  "interval": 60,
-  "slots"   : 8,
-
-  "jobs"    : [
+  "jobs" : [
   {
       "job"    : "~/iqist/working/ctqmc/standard",
       "ref"    : "~/iqist/working/ctqmc/ref",
