@@ -317,6 +317,14 @@
 
      implicit none
 
+     type T_spmat
+         integer :: ndim = 0
+         integer :: nval = 0
+         integer, allocatable  :: iv(:)
+         integer, allocatable  :: jv(:)
+         real(dp), allocatable :: vv(:)
+     end type T_spmat
+
 ! auxiliary array, used to store which parts of sop_a matrix should be
 ! updated by corresponding sop_b matrix
      integer, public, save, allocatable  :: isave(:)
@@ -606,6 +614,9 @@
      public :: ctqmc_deallocate_memory_gmat
      public :: ctqmc_deallocate_memory_wmat
      public :: ctqmc_deallocate_memory_smat
+
+     public :: ctqmc_new_spmat
+     public :: ctqmc_del_spmat
 
   contains ! encapsulated functionality
 
@@ -1149,5 +1160,33 @@
 
      return
   end subroutine ctqmc_deallocate_memory_smat
+
+  subroutine ctqmc_new_spmat(spmat)
+     implicit none
+
+     type (T_spmat), intent(inout) :: spmat
+     spmat%ndim = ncfgs
+     spmat%nval = nzero
+
+     allocate(spmat%iv(spmat%ndim + 1), stat=istat)
+     allocate(spmat%jv(spmat%nval + 0), stat=istat)
+     allocate(spmat%vv(spmat%nval + 0), stat=istat)
+
+     return
+  end subroutine ctqmc_new_spmat
+
+  subroutine ctqmc_del_spmat(spmat)
+     implicit none
+
+     type (T_spmat), intent(inout) :: spmat
+
+     spmat%ndim = 0
+     spmat%nval = 0
+     if ( allocated(spmat%iv) ) deallocate(spmat%iv)
+     if ( allocated(spmat%jv) ) deallocate(spmat%jv)
+     if ( allocated(spmat%vv) ) deallocate(spmat%vv)
+
+     return
+  end subroutine ctqmc_del_spmat
 
   end module context
