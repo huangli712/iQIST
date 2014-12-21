@@ -461,10 +461,12 @@
 
 ! read each sector's information
          do i=1,nsect
-! read the dimension, total number of electrons, number of fermion
-! operators, and start index of this sector
+! read the dimension, number of fermion operators, start index of this sector,
+! total number of electrons, z component of spin momentum, z component of
+! spin-orbit momentum, and PS good quantum number
              read(mytmp,*) ! skip the header
-             read(mytmp,*) k, sectors(i)%ndim, sectors(i)%nele, sectors(i)%nops, sectors(i)%istart
+             read(mytmp,*) k, sectors(i)%ndim, sectors(i)%nops, sectors(i)%istart, &
+                        sectors(i)%nele, sectors(i)%sz, sectors(i)%jz, sectors(i)%ps
 
 ! allocate the memory for sectors(i), only for master node
              call ctqmc_allocate_memory_one_sect(sectors(i))
@@ -588,9 +590,13 @@
      do i=1,nsect
 ! broadcast sector's information
          call mp_bcast(sectors(i)%ndim,   master)
-         call mp_bcast(sectors(i)%nele,   master)
          call mp_bcast(sectors(i)%nops,   master)
          call mp_bcast(sectors(i)%istart, master)
+         call mp_bcast(sectors(i)%nele,   master)
+         call mp_bcast(sectors(i)%sz,     master)
+         call mp_bcast(sectors(i)%jz,     master)
+         call mp_bcast(sectors(i)%ps,     master)
+
 ! setup barrier
          call mp_barrier()
 ! allocate memory for t_sector structure, only for children nodes
@@ -827,15 +833,6 @@
 !-------------------------------------------------------------------------
 ! truncate the Hilbert space here
      call ctqmc_make_truncation()
-
-! allocate final_product, occu, double_occu for un-truncated sectors
-     call ctqmc_allocate_memory_occu()
-
-! build occu, double_occu for un-truncated sectors
-     call ctqmc_make_occupy()
-
-! allocate memory for npart
-     call ctqmc_allocate_memory_part()
 
 ! init m_part module
      nprod = zero

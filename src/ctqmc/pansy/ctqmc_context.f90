@@ -1718,7 +1718,7 @@
                      do k=1,dim3
                          mat_t(k,k) = expt_v(indx+k-1,index_t_loc(j))
                      enddo ! over k={1,dim3} loop
-                 endif ! back if ( counter > 1) block
+                 endif ! back if ( counter > 1 ) block
 
 ! multiply the matrix of fermion operator
                  vt = type_v( index_t_loc(j) )

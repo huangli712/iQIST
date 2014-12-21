@@ -197,7 +197,7 @@
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
 
-     use m_sect, only : nsect, max_dim_sect
+     use m_sect, only : nsect
      use m_sect, only : sectors
 
      implicit none
@@ -206,7 +206,6 @@
 ! loop index
      integer  :: i
      integer  :: j
-     integer  :: k
 
 ! loop index for flavor channel
      integer  :: flvr
@@ -220,9 +219,6 @@
 
 ! current probability for eigenstates
      real(dp) :: cprob(ncfgs)
-
-! real(dp) dummy matrix, used to calculate nmat and nnmat
-     real(dp) :: mat_t(max_dim_sect,max_dim_sect)
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs

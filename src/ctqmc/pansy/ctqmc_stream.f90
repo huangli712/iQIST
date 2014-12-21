@@ -411,10 +411,12 @@
 
 ! read each sector's information
          do i=1,nsect
-! read the dimension, total number of electrons, number of fermion
-! operators, and start index of this sector
+! read the dimension, number of fermion operators, start index of this sector,
+! total number of electrons, z component of spin momentum, z component of
+! spin-orbit momentum, and PS good quantum number
              read(mytmp,*) ! skip the header
-             read(mytmp,*) k, sectors(i)%ndim, sectors(i)%nele, sectors(i)%nops, sectors(i)%istart
+             read(mytmp,*) k, sectors(i)%ndim, sectors(i)%nops, sectors(i)%istart, &
+                        sectors(i)%nele, sectors(i)%sz, sectors(i)%jz, sectors(i)%ps
 
 ! allocate the memory for sectors(i), only for master node
              call ctqmc_allocate_memory_one_sect(sectors(i))
@@ -539,9 +541,13 @@
      do i=1,nsect
 ! broadcast sector's information
          call mp_bcast(sectors(i)%ndim,   master)
-         call mp_bcast(sectors(i)%nele,   master)
          call mp_bcast(sectors(i)%nops,   master)
          call mp_bcast(sectors(i)%istart, master)
+         call mp_bcast(sectors(i)%nele,   master)
+         call mp_bcast(sectors(i)%sz,     master)
+         call mp_bcast(sectors(i)%jz,     master)
+         call mp_bcast(sectors(i)%ps,     master)
+
 ! setup barrier
          call mp_barrier()
 ! allocate memory for t_sector structure, only for children nodes
@@ -609,19 +615,12 @@
 ! loop index
      integer :: i
      integer :: j
-     integer :: k
-     integer :: m
-     integer :: n
 
 ! system time since 1970, Jan 1, used to generate the random number seed
      integer :: system_time
 
 ! random number seed for twist generator
      integer :: stream_seed
-
-! real(dp) dummy matrices
-     real(dp) :: mat_t1(max_dim_sect,max_dim_sect)
-     real(dp) :: mat_t2(max_dim_sect,max_dim_sect)
 
 ! init random number generator
      call system_clock(system_time)
@@ -784,63 +783,6 @@
      isave   = 1
      saved_p = zero
      saved_n = zero
-
-! init op_n, < c^{\dag} c >,
-! which are used to calculate occupation number
-     do i=1,norbs
-         do j=1,nsect
-             k = sectors(j)%next(i,0)
-             if ( k == -1 ) then
-                 sectors(j)%occu(:,:,i) = zero; CYCLE
-             endif ! back if ( k == -1 ) block
-             call dgemm( 'N', 'N', sectors(j)%ndim, &
-                                   sectors(j)%ndim, &
-                                   sectors(k)%ndim, &
-                     one, sectors(k)%fmat(i,1)%val, &
-                                   sectors(j)%ndim, &
-                          sectors(j)%fmat(i,0)%val, &
-                                   sectors(k)%ndim, &
-                      zero, sectors(j)%occu(:,:,i), &
-                                   sectors(j)%ndim )
-         enddo ! over j={1,nsect} loop
-     enddo ! over i={1,norbs} loop
-
-! init op_m, < c^{\dag} c c^{\dag} c >,
-! which are used to calculate double occupation number
-     do i=1,norbs
-         do j=1,norbs
-             do k=1,nsect
-                 n = sectors(k)%next(j,0)
-                 m = sectors(k)%next(i,0)
-                 if ( m == -1 .or. n == -1 ) then
-                     sectors(k)%doccu(:,:,i,j) = zero; CYCLE
-                 endif ! back if ( m == -1 .or. n == -1 ) block
-                 call dgemm( 'N', 'N', sectors(k)%ndim, &
-                                       sectors(k)%ndim, &
-                                       sectors(n)%ndim, &
-                         one, sectors(n)%fmat(j,1)%val, &
-                                       sectors(k)%ndim, &
-                              sectors(k)%fmat(j,0)%val, &
-                                       sectors(n)%ndim, &
-                            zero, mat_t1, max_dim_sect )
-                 call dgemm( 'N', 'N', sectors(k)%ndim, &
-                                       sectors(k)%ndim, &
-                                       sectors(m)%ndim, &
-                         one, sectors(m)%fmat(i,1)%val, &
-                                       sectors(k)%ndim, &
-                              sectors(k)%fmat(i,0)%val, &
-                                       sectors(m)%ndim, &
-                            zero, mat_t2, max_dim_sect )
-                 call dgemm( 'N', 'N', sectors(k)%ndim, &
-                                       sectors(k)%ndim, &
-                                       sectors(k)%ndim, &
-                             one, mat_t2, max_dim_sect, &
-                                  mat_t1, max_dim_sect, &
-                       zero, sectors(k)%doccu(:,:,i,j), &
-                                       sectors(k)%ndim )
-             enddo ! over k={1,nsect} loop
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
