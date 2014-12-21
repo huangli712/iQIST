@@ -421,17 +421,18 @@
 !-------------------------------------------------------------------------
 !::: sparse matrix style for op_n (Compressed Sparse Row (CSR) format) :::
 !-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_n array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_in(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_n array
-     integer, public, save, allocatable  :: sop_jn(:,:)
-
-! a array that contains the non-zero elements for op_n matrix
-     real(dp), public, save, allocatable :: sop_n(:,:)
+!<! row index: element i of it gives the index of the element in the
+!<! sop_n array that is first non-zero element in a row i
+!<     integer, public, save, allocatable  :: sop_in(:,:)
+!<
+!<! column index: element j of it is the number of the column that contains
+!<! the j-th element in the sop_n array
+!<     integer, public, save, allocatable  :: sop_jn(:,:)
+!<
+!<! a array that contains the non-zero elements for op_n matrix
+!<     real(dp), public, save, allocatable :: sop_n(:,:)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     type (T_spmat), public, save, allocatable :: spm_n(:)
 
 ! note: op_m is the precomputed < c^{\dag} c c^{\dag} c > matrix, it is
 ! used to calculate impurity double occupation number (nnmat)
@@ -795,6 +796,10 @@
   subroutine ctqmc_allocate_memory_fmat()
      implicit none
 
+! loop index
+     integer :: i
+     integer :: j
+
 ! allocate memory
      allocate(isave(npart),            stat=istat)
 
@@ -818,9 +823,13 @@
      allocate(sop_js(nzero,2),         stat=istat)
      allocate(sop_s(nzero,2),          stat=istat)
 
-     allocate(sop_in(ncfgs+1,norbs),   stat=istat)
-     allocate(sop_jn(nzero,norbs),     stat=istat)
-     allocate(sop_n(nzero,norbs),      stat=istat)
+!<     allocate(sop_in(ncfgs+1,norbs),   stat=istat)
+!<     allocate(sop_jn(nzero,norbs),     stat=istat)
+!<     allocate(sop_n(nzero,norbs),      stat=istat)
+     allocate(spm_n(norbs), stat=istat)
+     do i=1,norbs
+         call ctqmc_new_spmat(spm_n(i))
+     enddo ! over i={1,norbs} loop
 
      allocate(sop_im(ncfgs+1,norbs,norbs), stat=istat)
      allocate(sop_jm(nzero,norbs,norbs),   stat=istat)
@@ -857,9 +866,9 @@
      sop_js = 0
      sop_s  = zero
 
-     sop_in = 0
-     sop_jn = 0
-     sop_n  = zero
+!<     sop_in = 0
+!<     sop_jn = 0
+!<     sop_n  = zero
 
      sop_im = 0
      sop_jm = 0
@@ -1073,6 +1082,10 @@
   subroutine ctqmc_deallocate_memory_fmat()
      implicit none
 
+! loop index
+     integer :: i
+     integer :: j
+
      if ( allocated(isave)  )  deallocate(isave )
 
      if ( allocated(sop_ia) )  deallocate(sop_ia)
@@ -1095,9 +1108,13 @@
      if ( allocated(sop_js) )  deallocate(sop_js)
      if ( allocated(sop_s)  )  deallocate(sop_s )
 
-     if ( allocated(sop_in) )  deallocate(sop_in)
-     if ( allocated(sop_jn) )  deallocate(sop_jn)
-     if ( allocated(sop_n)  )  deallocate(sop_n )
+!<     if ( allocated(sop_in) )  deallocate(sop_in)
+!<     if ( allocated(sop_jn) )  deallocate(sop_jn)
+!<     if ( allocated(sop_n)  )  deallocate(sop_n )
+     do i=1,norbs
+         call ctqmc_del_spmat(spm_n(i))
+     enddo ! over i={1,norbs} loop
+     if ( allocated(spm_n)  )  deallocate(spm_n )
 
      if ( allocated(sop_im) )  deallocate(sop_im)
      if ( allocated(sop_jm) )  deallocate(sop_jm)

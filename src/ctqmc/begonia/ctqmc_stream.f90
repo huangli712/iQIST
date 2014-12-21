@@ -541,11 +541,7 @@
      integer :: stream_seed
 
 ! dummy sparse matrix in CSR format
-     !integer :: sop_it(ncfgs+1)
-     !integer :: sop_jt(nzero)
-     !real(dp) :: sop_t(nzero)
      type (T_spmat) :: spm_t
-     call ctqmc_new_spmat(spm_t)
 
 ! init random number generator
      call system_clock(system_time)
@@ -699,6 +695,9 @@
 
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
+! allocate memory for dummy sparse matrix
+     call ctqmc_new_spmat(spm_t)
+
 ! init op_n, < c^{\dag} c >,
 ! which are used to calculate occupation number
      do i=1,norbs
@@ -708,7 +707,7 @@
                                       spm_t%vv, spm_t%jv, spm_t%iv )
 
          call sp_csr_cp_csr( ncfgs, nzero, spm_t%vv, spm_t%jv, spm_t%iv, &
-                                sop_n(:,i), sop_jn(:,i), sop_in(:,i) )
+                                spm_n(i)%vv, spm_n(i)%jv, spm_n(i)%iv )
      enddo ! over i={1,norbs} loop
 
 ! init op_m, < c^{\dag} c c^{\dag} c >,
@@ -748,6 +747,9 @@
          call sp_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
          call sp_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
      enddo ! over i={1,norbs} loop
+
+! deallocate memory for dummy sparse matrix
+     call ctqmc_del_spmat(spm_t)
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space

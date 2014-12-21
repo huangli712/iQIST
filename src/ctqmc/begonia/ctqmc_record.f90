@@ -197,7 +197,7 @@
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
      use context, only : sop_s, sop_is, sop_js
-     use context, only : sop_n, sop_in, sop_jn
+     use context, only : spm_n
      use context, only : sop_m, sop_im, sop_jm
 
      implicit none
@@ -250,7 +250,7 @@
          raux1 = zero
          call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                        sop_s(:,2), sop_js(:,2), sop_is(:,2), &
-              sop_n(:,flvr), sop_jn(:,flvr), sop_in(:,flvr), &
+              spm_n(flvr)%vv, spm_n(flvr)%jv, spm_n(flvr)%iv, &
                                       sop_t, sop_jt, sop_it )
          do i=1,ncfgs
              raux1 = raux1 + sp_csr_cp_elm( i, i, ncfgs, nzero, &
