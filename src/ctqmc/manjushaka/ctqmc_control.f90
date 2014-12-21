@@ -104,8 +104,8 @@
      integer, public, save :: ifast  = 1
 
 ! control flag: the mode how to truncate the Hilbert space
-! if itrun == 1, don't truncate it
-! if itrun == 2, truncate high energy states
+! if itrun == 0, don't truncate it
+! if itrun == 1, truncate high energy states
      integer, public, save :: itrun  = 1
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

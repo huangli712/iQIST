@@ -828,7 +828,7 @@
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
 ! truncate the Hilbert space here
-     if ( itrun == 2 ) then
+     if ( itrun == 1 ) then
          call ctqmc_make_truncation()
      endif
 
