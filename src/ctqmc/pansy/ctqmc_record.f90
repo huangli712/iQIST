@@ -238,77 +238,12 @@
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
-! check validity of raux2
-!<     if ( abs(raux2) < epss ) then
-!<         call s_print_exception('ctqmc_record_nmat()','Z trace is too small')
-!<     endif ! back if ( abs(raux2) < epss ) block
-
 ! evaluate occupation matrix: < n_i >
-! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
+     nvec = zero
+     nmat = zero
+     nnmat = zero
+
 !-------------------------------------------------------------------------
-     mat_t = zero
-     do flvr=1,norbs
-         raux1 = zero
-         do i=1,nsect
-             call dgemm( 'N', 'N', sectors(i)%ndim, &
-                                   sectors(i)%ndim, &
-                                   sectors(i)%ndim, &
-                       one, sectors(i)%prod(:,:,2), &
-                                   sectors(i)%ndim, &
-                         sectors(i)%occu(:,:,flvr), &
-                                   sectors(i)%ndim, &
-                         zero, mat_t, max_dim_sect )
-             do j=1,sectors(i)%ndim
-                 raux1 = raux1 + mat_t(j,j)
-             enddo ! over j={1,sectors(i)%ndim} loop
-         enddo ! over i={1,nsect} loop
-         nvec(flvr) = raux1 / raux2
-     enddo ! over flvr={1,norbs} loop
-
-! update nmat
-     nmat = nmat + nvec
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate double occupation matrix: < n_i n_j >
-! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
-!-------------------------------------------------------------------------
-     do flvr=1,norbs-1
-         do i=flvr+1,norbs
-             raux1 = zero
-             do j=1,nsect
-                 call dgemm( 'N', 'N', sectors(j)%ndim, &
-                                       sectors(j)%ndim, &
-                                       sectors(j)%ndim, &
-                           one, sectors(j)%prod(:,:,2), &
-                                       sectors(j)%ndim, &
-                          sectors(j)%doccu(:,:,flvr,i), &
-                                       sectors(j)%ndim, &
-                             zero, mat_t, max_dim_sect )
-                 do k=1,sectors(j)%ndim
-                     raux1 = raux1 + mat_t(k,k)
-                 enddo ! over k={1,sectors(j)%ndim} loop
-             enddo ! over j={1,nsect} loop
-             nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
-
-             raux1 = zero
-             do j=1,nsect
-                 call dgemm( 'N', 'N', sectors(j)%ndim, &
-                                       sectors(j)%ndim, &
-                                       sectors(j)%ndim, &
-                           one, sectors(j)%prod(:,:,2), &
-                                       sectors(j)%ndim, &
-                          sectors(j)%doccu(:,:,i,flvr), &
-                                       sectors(j)%ndim, &
-                             zero, mat_t, max_dim_sect )
-                 do k=1,sectors(j)%ndim
-                     raux1 = raux1 + mat_t(k,k)
-                 enddo ! over k={1,sectors(j)%ndim} loop
-             enddo ! over j={1,nsect} loop
-             nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
-         enddo ! over i={flvr+1,norbs} loop
-     enddo ! over flvr={1,norbs-1} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 ! evaluate <N^2>
 !-------------------------------------------------------------------------
      paux(6) = paux(6) + ( sum(nvec) )**2
