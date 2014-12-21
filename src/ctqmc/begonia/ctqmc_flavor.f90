@@ -2562,7 +2562,7 @@
      use context, only : sop_b, sop_ib, sop_jb
      use context, only : sop_c, sop_ic, sop_jc
      use context, only : sop_d, sop_id, sop_jd
-     use context, only : sop_s, sop_is, sop_js
+     use context, only : spm_s
 
      implicit none
 
@@ -3087,7 +3087,7 @@
 
 ! save the final matrix product to op_s
      call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
-                       sop_s(:,1), sop_js(:,1), sop_is(:,1) )
+                       spm_s(1)%vv, spm_s(1)%jv, spm_s(1)%iv )
 
      return
   end subroutine ctqmc_make_ztrace
@@ -3104,7 +3104,7 @@
      use context, only : isave
      use context, only : sop_a, sop_ia, sop_ja
      use context, only : sop_b, sop_ib, sop_jb
-     use context, only : sop_s, sop_is, sop_js
+     use context, only : spm_s
 
      implicit none
 
@@ -3130,8 +3130,8 @@
 ! transfer the final matrix product from op_s(:,1) to op_s(:,2), the
 ! latter can be used to calculate nmat and nnmat
      call sp_csr_cp_csr( ncfgs, nzero, &
-     sop_s(:,1), sop_js(:,1), sop_is(:,1), &
-     sop_s(:,2), sop_js(:,2), sop_is(:,2) )
+     spm_s(1)%vv, spm_s(1)%jv, spm_s(1)%iv, &
+     spm_s(2)%vv, spm_s(2)%jv, spm_s(2)%iv )
 
      return
   end subroutine ctqmc_make_evolve
