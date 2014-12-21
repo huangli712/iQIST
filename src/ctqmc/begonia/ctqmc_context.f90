@@ -440,17 +440,18 @@
 !-------------------------------------------------------------------------
 !::: sparse matrix style for op_m (Compressed Sparse Row (CSR) format) :::
 !-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_m array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_im(:,:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_m array
-     integer, public, save, allocatable  :: sop_jm(:,:,:)
-
-! a array that contains the non-zero elements for op_m matrix
-     real(dp), public, save, allocatable :: sop_m(:,:,:)
+!<! row index: element i of it gives the index of the element in the
+!<! sop_m array that is first non-zero element in a row i
+!<     integer, public, save, allocatable  :: sop_im(:,:,:)
+!<
+!<! column index: element j of it is the number of the column that contains
+!<! the j-th element in the sop_m array
+!<     integer, public, save, allocatable  :: sop_jm(:,:,:)
+!<
+!<! a array that contains the non-zero elements for op_m matrix
+!<     real(dp), public, save, allocatable :: sop_m(:,:,:)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     type (T_spmat), public, save, allocatable :: spm_m(:,:)
 
 ! F-matrix <alpha| f^{\dag}_{m} |beta> for create operators
      real(dp), public, save, allocatable :: op_c(:,:,:)
@@ -831,9 +832,15 @@
          call ctqmc_new_spmat(spm_n(i))
      enddo ! over i={1,norbs} loop
 
-     allocate(sop_im(ncfgs+1,norbs,norbs), stat=istat)
-     allocate(sop_jm(nzero,norbs,norbs),   stat=istat)
-     allocate(sop_m(nzero,norbs,norbs),    stat=istat)
+!<     allocate(sop_im(ncfgs+1,norbs,norbs), stat=istat)
+!<     allocate(sop_jm(nzero,norbs,norbs),   stat=istat)
+!<     allocate(sop_m(nzero,norbs,norbs),    stat=istat)
+     allocate(spm_m(norbs,norbs), stat=istat)
+     do i=1,norbs
+         do j=1,norbs
+             call ctqmc_new_spmat(spm_m(j,i))
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
 
      allocate(op_c(ncfgs,ncfgs,norbs), stat=istat)
      allocate(op_d(ncfgs,ncfgs,norbs), stat=istat)
@@ -870,9 +877,9 @@
 !<     sop_jn = 0
 !<     sop_n  = zero
 
-     sop_im = 0
-     sop_jm = 0
-     sop_m  = zero
+!<     sop_im = 0
+!<     sop_jm = 0
+!<     sop_m  = zero
 
      op_c   = zero
      op_d   = zero
@@ -1108,17 +1115,17 @@
      if ( allocated(sop_js) )  deallocate(sop_js)
      if ( allocated(sop_s)  )  deallocate(sop_s )
 
-!<     if ( allocated(sop_in) )  deallocate(sop_in)
-!<     if ( allocated(sop_jn) )  deallocate(sop_jn)
-!<     if ( allocated(sop_n)  )  deallocate(sop_n )
      do i=1,norbs
          call ctqmc_del_spmat(spm_n(i))
      enddo ! over i={1,norbs} loop
      if ( allocated(spm_n)  )  deallocate(spm_n )
 
-     if ( allocated(sop_im) )  deallocate(sop_im)
-     if ( allocated(sop_jm) )  deallocate(sop_jm)
-     if ( allocated(sop_m)  )  deallocate(sop_m )
+     do i=1,norbs
+         do j=1,norbs
+             call ctqmc_del_spmat(spm_m(j,i))
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+     if ( allocated(spm_n)  )  deallocate(spm_n )
 
      if ( allocated(op_c)   )  deallocate(op_c  )
      if ( allocated(op_d)   )  deallocate(op_d  )

@@ -729,14 +729,14 @@
                            sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
                                           spm_t%vv, spm_t%jv, spm_t%iv )
              call sp_csr_cp_csr( ncfgs, nzero, spm_t%vv, spm_t%jv, spm_t%iv, &
-                              sop_m(:,i,j), sop_jm(:,i,j), sop_im(:,i,j) )
+                              spm_m(i,j)%vv, spm_m(i,j)%jv, spm_m(i,j)%iv )
 
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
                            sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
                                           spm_t%vv, spm_t%jv, spm_t%iv )
              call sp_csr_cp_csr( ncfgs, nzero, spm_t%vv, spm_t%jv, spm_t%iv, &
-                              sop_m(:,j,i), sop_jm(:,j,i), sop_im(:,j,i) )
+                              spm_m(j,i)%vv, spm_m(j,i)%jv, spm_m(j,i)%iv )
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
 

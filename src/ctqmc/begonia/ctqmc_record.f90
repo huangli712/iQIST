@@ -197,8 +197,7 @@
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
      use context, only : sop_s, sop_is, sop_js
-     use context, only : spm_n
-     use context, only : sop_m, sop_im, sop_jm
+     use context, only : spm_n, spm_m
 
      implicit none
 
@@ -271,7 +270,7 @@
              raux1 = zero
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_s(:,2), sop_js(:,2), sop_is(:,2), &
-            sop_m(:,flvr,i), sop_jm(:,flvr,i), sop_im(:,flvr,i), &
+            spm_m(flvr,i)%vv, spm_m(flvr,i)%jv, spm_m(flvr,i)%iv, &
                                           sop_t, sop_jt, sop_it )
              do j=1,ncfgs
                  raux1 = raux1 + sp_csr_cp_elm( j, j, ncfgs, nzero, &
@@ -282,7 +281,7 @@
              raux1 = zero
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_s(:,2), sop_js(:,2), sop_is(:,2), &
-            sop_m(:,i,flvr), sop_jm(:,i,flvr), sop_im(:,i,flvr), &
+            spm_m(i,flvr)%vv, spm_m(i,flvr)%jv, spm_m(i,flvr)%iv, &
                                           sop_t, sop_jt, sop_it )
              do j=1,ncfgs
                  raux1 = raux1 + sp_csr_cp_elm( j, j, ncfgs, nzero, &
