@@ -430,7 +430,7 @@
 
              raux1 = zero
              do j=1,nsect
-                 if ( .not. is_string(j,2) ) cycle
+                 if ( .not. is_string(j,2) ) CYCLE
                  call dgemm( 'N', 'N', sectors(j)%ndim, &
                                        sectors(j)%ndim, &
                                        sectors(j)%ndim, &

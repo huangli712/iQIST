@@ -1367,7 +1367,7 @@
      implicit none
 
 ! local variables
-! loop index
+! status flag
      integer :: istat
 
 ! allocate memory
@@ -1386,11 +1386,11 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     is_cp   = .false.
-     nc_cp   = 0
-     ops     = 0
-     ope     = 0
-     isave   = 1
+     is_cp = .false.
+     nc_cp = 0
+     ops   = 0
+     ope   = 0
+     isave = 1
 
      saved_p = zero
      saved_n = zero
@@ -1411,6 +1411,7 @@
      if ( allocated(ops)     ) deallocate(ops    )
      if ( allocated(ope)     ) deallocate(ope    )
      if ( allocated(isave)   ) deallocate(isave  )
+
      if ( allocated(saved_p) ) deallocate(saved_p)
      if ( allocated(saved_n) ) deallocate(saved_n)
 
@@ -1724,7 +1725,7 @@
                      do k=1,dim3
                          mat_t(k,k) = expt_v(indx+k-1,index_t_loc(j))
                      enddo ! over k={1,dim3} loop
-                 endif ! back if ( counter > 1) block
+                 endif ! back if ( counter > 1 ) block
 
 ! multiply the matrix of fermion operator
                  vt = type_v( index_t_loc(j) )
@@ -1767,7 +1768,7 @@
 ! setup the start sector for next part
          isect = sect1
 
-     enddo  ! over i={1,npart} loop
+     enddo ! over i={1,npart} loop
 
 ! special treatment of the last time evolution operator
      indx = sectors(string(1))%istart

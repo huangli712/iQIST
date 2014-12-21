@@ -1568,7 +1568,14 @@
   subroutine cat_make_truncation()
      implicit none
 
-     integer :: i,j,k,ii
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+     integer :: m
+
+! sum of dimensions, which is used to calculate ave_dim_sect_t
      integer :: sum_dim
 
      max_dim_sect_t = -1
@@ -1576,26 +1583,31 @@
      sum_dim = 0
      do i=1,nsect
          sectors(i)%next_t = -1
+! this sector is truncated
          if ( is_trunc(i) ) then
-             cycle
+             CYCLE
          endif ! back if ( is_trunc(i) ) block
+! determine max_dim_sect_t
          if ( max_dim_sect_t < sectors(i)%ndim ) then
              max_dim_sect_t = sectors(i)%ndim
          endif ! back if ( max_dim_sect_t < sectors(i)%ndim ) block
-
+! update nsect_t and sum_dim
          sum_dim = sum_dim + sectors(i)%ndim
          nsect_t = nsect_t + 1
+! update next_t
          do j=1,sectors(i)%nops
              do k=0,1
-                 ii = sectors(i)%next(j,k)
-                 if ( ii == -1 ) cycle
-                 if ( .not. is_trunc(ii) ) then
-                     sectors(i)%next_t(j,k) = ii
-                 endif ! back if ( .not. is_trunc(ii) ) block
+                 m = sectors(i)%next(j,k)
+                 if ( m == -1 ) CYCLE
+! we have to check whether the resulting sector is truncated
+                 if ( .not. is_trunc(m) ) then
+                     sectors(i)%next_t(j,k) = m
+                 endif ! back if ( .not. is_trunc(m) ) block
              enddo ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
      enddo ! over i={1,nsect} loop
 
+! calculate ave_dim_sect_t
      ave_dim_sect_t = real(sum_dim) / real(nsect_t)
 
      return
@@ -1714,9 +1726,12 @@
      use control, only : beta
      use context, only : type_v, flvr_v, time_v, expt_v
 
-     use m_sect, only : nsect, sectors, is_trunc, t_fmat
-     use m_sect, only : max_dim_sect_t, prod
-     use m_sect, only : ctqmc_allocate_memory_one_fmat, ctqmc_deallocate_memory_one_fmat
+     use m_sect, only : t_fmat
+     use m_sect, only : nsect, max_dim_sect_t
+     use m_sect, only : sectors
+     use m_sect, only : is_trunc, prod
+     use m_sect, only : ctqmc_allocate_memory_one_fmat
+     use m_sect, only : ctqmc_deallocate_memory_one_fmat
 
      implicit none
 
@@ -1730,25 +1745,29 @@
 ! total number of matrices products
      real(dp), public, save :: nprod = zero
 
-! whether to copy this part ?
-     logical, public, save, allocatable :: is_cp(:,:)
+! whether to copy this part?
+     logical, public, save, allocatable  :: is_cp(:,:)
 
 ! number of columns to be copied, in order to save copy time
-     integer, public, save, allocatable :: nc_cp(:,:)
+     integer, public, save, allocatable  :: nc_cp(:,:)
 
 ! the start positions of fermion operators for each part
-     integer, public, save, allocatable :: ops(:)
+     integer, public, save, allocatable  :: ops(:)
 
 ! the end positions of fermion operators for each part
-     integer, public, save, allocatable :: ope(:)
+     integer, public, save, allocatable  :: ope(:)
 
 ! how to treat each part when calculating trace
-     integer, public, save, allocatable :: isave(:,:,:)
+! isave = 0: matrices product for this part has been calculated previously
+! isave = 1: this part should be recalculated, and the result must be
+!            stored in saved_p, if this Monte Caro move has been accepted.
+! isave = 2: this part is empty, we don't need to do anything with them.
+     integer, public, save, allocatable  :: isave(:,:,:)
 
-! saved parts of matrices product, for previous configuration
+! saved parts of matrices product, for previous accepted configuration
      type (t_fmat), public, save, allocatable :: saved_p(:,:)
 
-! saved parts of matrices product, for new configuration
+! saved parts of matrices product, for new proposed configuration
      type (t_fmat), public, save, allocatable :: saved_n(:,:)
 
 !!========================================================================
@@ -1768,22 +1787,27 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> ctqmc_allocate_memory_part: allocate memory for sectors related variables
+!!>>> ctqmc_allocate_memory_part: allocate memory for part related variables
   subroutine ctqmc_allocate_memory_part()
      implicit none
 
-     integer :: i,j
+! local variables
+! loop index
+     integer :: i
+     integer :: j
 
+! status flag
      integer :: istat
 
 ! allocate memory
-     allocate( isave(npart, nsect, 2), stat=istat )
-     allocate( is_cp(npart, nsect),    stat=istat )
-     allocate( nc_cp(npart, nsect),  stat=istat )
-     allocate( ops(npart),             stat=istat )
-     allocate( ope(npart),             stat=istat )
-     allocate( saved_p(npart, nsect),  stat=istat )
-     allocate( saved_n(npart, nsect),  stat=istat )
+     allocate(is_cp(npart,nsect),   stat=istat)
+     allocate(nc_cp(npart,nsect),   stat=istat)
+     allocate(ops(npart),           stat=istat)
+     allocate(ope(npart),           stat=istat)
+     allocate(isave(npart,nsect,2), stat=istat)
+
+     allocate(saved_p(npart,nsect), stat=istat)
+     allocate(saved_n(npart,nsect), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1791,8 +1815,14 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
+     is_cp = .false.
+     nc_cp = 0
+     ops   = 0
+     ope   = 0
+     isave = 1
+
      do i=1,nsect
-         if ( is_trunc(i) ) cycle
+         if ( is_trunc(i) ) CYCLE
          do j=1,npart
              saved_p(j,i)%n = max_dim_sect_t
              saved_p(j,i)%m = max_dim_sect_t
@@ -1802,12 +1832,6 @@
              call ctqmc_allocate_memory_one_fmat(saved_n(j,i))
          enddo ! over j={1,npart} loop
      enddo ! over i={1,nsect} loop
-
-     isave = 1
-     is_cp = .false.
-     nc_cp = 0
-     ops = 0
-     ope = 0
 
      return
   end subroutine ctqmc_allocate_memory_part
@@ -1825,15 +1849,15 @@
      integer :: i
      integer :: j
 
-     if ( allocated(isave) )     deallocate(isave)
-     if ( allocated(is_cp) )     deallocate(is_cp)
-     if ( allocated(nc_cp) )   deallocate(nc_cp)
-     if ( allocated(ops) )       deallocate(ops)
-     if ( allocated(ope) )       deallocate(ope)
+     if ( allocated(is_cp)   )     deallocate(is_cp  )
+     if ( allocated(nc_cp)   )     deallocate(nc_cp  )
+     if ( allocated(ops)     )     deallocate(ops    )
+     if ( allocated(ope)     )     deallocate(ope    )
+     if ( allocated(isave)   )     deallocate(isave  )
 
      if ( allocated(saved_p) ) then
          do i=1,nsect
-             if (is_trunc(i)) cycle
+             if (is_trunc(i)) CYCLE
              do j=1,npart
                  call ctqmc_deallocate_memory_one_fmat(saved_p(j,i))
              enddo ! over j={1,npart} loop
@@ -1843,7 +1867,7 @@
 
      if ( allocated(saved_n) ) then
          do i=1,nsect
-             if ( is_trunc(i) ) cycle
+             if ( is_trunc(i) ) CYCLE
              do j=1,npart
                  call ctqmc_deallocate_memory_one_fmat(saved_n(j,i))
              enddo ! over j={1,npart} loop
@@ -2121,13 +2145,13 @@
              sect2 = string(ops(i))
              dim2 = sectors(sect1)%ndim
              dim3 = sectors(sect2)%ndim
-
              if ( i > fpart ) then
-                 call dgemm( 'N', 'N', dim2, dim1, dim3,                &
-                              one,  saved_p(i,isect)%val, max_dim_sect_t, &
-                                    mat_r,                 max_dim_sect_t, &
-                              zero, mat_t,                 max_dim_sect_t  )
-
+                 call dgemm( 'N', 'N', dim2, dim1, dim3, &
+                              one, saved_p(i,isect)%val, &
+                                         max_dim_sect_t, &
+                                                  mat_r, &
+                                         max_dim_sect_t, &
+                            zero, mat_t, max_dim_sect_t )
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
              else
@@ -2135,7 +2159,7 @@
              endif ! back if ( i > fpart ) block
 
 ! this part should be recalcuated
-         elseif ( isave(i,isect,1) == 1 ) then
+         else if ( isave(i,isect,1) == 1 ) then
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
              dim4 = sectors(sect2)%ndim
@@ -2145,10 +2169,11 @@
              counter = 0
              do j=ops(i),ope(i)
                  counter = counter + 1
-                 indx = sectors(string(j  ))%istart
+                 indx = sectors(string(j)  )%istart
                  dim2 = sectors(string(j+1))%ndim
-                 dim3 = sectors(string(j  ))%ndim
+                 dim3 = sectors(string(j)  )%ndim
 
+! multiply the diagonal matrix of time evolution operator
                  if ( counter > 1 ) then
                      do l=1,dim4
                          do k=1,dim3
@@ -2163,41 +2188,48 @@
                      enddo ! over k={1,dim3} loop
                  endif ! back if ( counter > 1 ) block
 
+! multiply the matrix of fermion operator
                  vt = type_v( index_t_loc(j) )
                  vf = flvr_v( index_t_loc(j) )
-                 call dgemm( 'N', 'N', dim2, dim4, dim3,                       &
-                             one,  sectors(string(j))%fmat(vf, vt)%val, dim2, &
-                                   mat_t,                         max_dim_sect_t, &
-                             zero, saved_n(i,isect)%val,         max_dim_sect_t  )
-
+                 call dgemm( 'N', 'N', dim2, dim4, dim3, &
+                                                    one, &
+                    sectors(string(j))%fmat(vf, vt)%val, &
+                                            dim2, mat_t, &
+                                         max_dim_sect_t, &
+                             zero, saved_n(i,isect)%val, &
+                                         max_dim_sect_t )
                  nprod = nprod + one
              enddo ! over j={ops(i),ope(i)} loop
 
+! set its save status and copy status
              isave(i,isect,1) = 0
              is_cp(i,isect) = .true.
              nc_cp(i,isect) = dim4
 
 ! multiply this part with the rest parts
              if ( i > fpart ) then
-                 call dgemm( 'N', 'N', dim2, dim1, dim4,               &
-                             one,  saved_n(i,isect)%val, max_dim_sect_t, &
-                                   mat_r,                 max_dim_sect_t, &
-                             zero, mat_t,                 max_dim_sect_t  )
-
+                 call dgemm( 'N', 'N', dim2, dim1, dim4, &
+                              one, saved_n(i,isect)%val, &
+                                         max_dim_sect_t, &
+                                                  mat_r, &
+                                         max_dim_sect_t, &
+                                            zero, mat_t, &
+                                         max_dim_sect_t )
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
                  nprod = nprod + one
              else
                  mat_r(:,1:dim1) = saved_n(i,isect)%val(:,1:dim1)
              endif ! back if ( i > fpart ) block
 
-         elseif ( isave(i,isect,1) == 2 ) then
-             cycle
+! no operators in this part, do nothing
+         else if ( isave(i,isect,1) == 2 ) then
+             CYCLE
          endif ! back if ( isave(i,isect) == 0 )  block
 
 ! setup the start sector for next part
          isect = sect1
 
-     enddo ! over i={1, npart} loop
+     enddo ! over i={1,npart} loop
 
 ! special treatment of the last time evolution operator
      indx = sectors(string(1))%istart
