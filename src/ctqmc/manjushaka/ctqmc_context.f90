@@ -1040,9 +1040,6 @@
 ! which sectors should be truncated?
      logical, public, save, allocatable :: is_trunc(:)
 
-! whether it forms a string?
-     logical, public, save, allocatable :: is_string(:,:)
-
 ! array of t_sector contains all the sectors
      type (t_sector), public, save, allocatable :: sectors(:)
 
@@ -1152,9 +1149,8 @@
      integer :: istat
 
 ! allocate memory
-     allocate(sectors(nsect),     stat=istat)
-     allocate(is_trunc(nsect),    stat=istat)
-     allocate(is_string(nsect,2), stat=istat)
+     allocate(sectors(nsect),  stat=istat)
+     allocate(is_trunc(nsect), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1180,7 +1176,6 @@
      enddo ! over i={1,nsect} loop
 
      is_trunc = .false.
-     is_string = .false.
 
      return
   end subroutine ctqmc_allocate_memory_sect
@@ -1252,7 +1247,6 @@
      endif ! back if ( allocated(sectors) ) block
 
      if ( allocated(is_trunc) )  deallocate(is_trunc)
-     if ( allocated(is_string) ) deallocate(is_string)
 
      return
   end subroutine ctqmc_deallocate_memory_sect
@@ -1376,7 +1370,7 @@
   end subroutine ctqmc_make_truncation
 
 !!>>> cat_make_string: subroutine used to build an evolutional string
-  subroutine cat_make_string(csize, index_t_loc, string)
+  subroutine cat_make_string(csize, index_t_loc, is_string, string)
      implicit none
 
 ! external variables
@@ -1385,6 +1379,9 @@
 
 ! memory address index of fermion operators
      integer, intent(in)  :: index_t_loc(mkink)
+
+! whether it is a valid string?
+     logical, intent(out) :: is_string(nsect)
 
 ! string index
      integer, intent(out) :: string(csize+1,nsect)
@@ -1409,7 +1406,7 @@
      integer :: vt
 
 ! init return arrays
-     is_string(:,1) = .true.
+     is_string = .true.
      string = -1
 
 ! we build a string from right to left, that is, beta <- 0
@@ -1417,7 +1414,7 @@
 ! if find some Si==-1, cycle this sector immediately
      do i=1,nsect
          if ( is_trunc(i) ) then
-             is_string(i,1) = .false.
+             is_string(i) = .false.
          endif ! back if ( is_trunc(i) ) block
 
          curr_sect_l = i
@@ -1434,7 +1431,7 @@
                  vf = flvr_v( index_t_loc(left) )
                  next_sect_l = sectors(curr_sect_l)%next(vf,vt)
                  if ( next_sect_l == -1 ) then
-                     is_string(i,1) = .false.; EXIT ! finish check, exit
+                     is_string(i) = .false.; EXIT ! finish check, exit
                  endif ! back if ( next_sect_l == -1 ) block
                  curr_sect_l = next_sect_l
              else
@@ -1444,7 +1441,7 @@
                  vt = mod(vt+1,2)
                  next_sect_r = sectors(curr_sect_r)%next(vf,vt)
                  if ( next_sect_r == -1 ) then
-                     is_string(i,1) = .false.; EXIT ! finish check, exit
+                     is_string(i) = .false.; EXIT ! finish check, exit
                  endif ! back if ( next_sect_r == -1 ) block
                  string(right,i) = next_sect_r
                  curr_sect_r = next_sect_r
@@ -1452,9 +1449,9 @@
          enddo ! over j={1,csize} loop
 
 ! if it doesn't form a string, we cycle it, go to the next sector
-         if ( .not. is_string(i,1) ) then
+         if ( .not. is_string(i) ) then
              CYCLE
-         endif ! back if ( .not. is_string(i,1) ) block
+         endif ! back if ( .not. is_string(i) ) block
 
 ! add the last sector to string, and check whether
 ! string(csize+1,i) == string(1,i)
@@ -1464,7 +1461,7 @@
 ! this case will generate a non-diagonal block, it will not contribute
 ! to the trace
          if ( next_sect_r /= next_sect_l ) then
-             is_string(i,1) = .false.
+             is_string(i) = .false.
          endif ! back if ( next_sect_r /= next_sect_l ) block
      enddo ! over i={1,nsect} loop
 

@@ -332,7 +332,7 @@
      use context, only : diag, eigs
 
      use m_sect, only : nsect
-     use m_sect, only : sectors, is_string, prod
+     use m_sect, only : sectors, prod
 
      implicit none
 
@@ -364,9 +364,8 @@
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
      do i=1,nsect
-         if ( .not. is_string(i,2) ) CYCLE
          do j=1,sectors(i)%ndim
-             raux2 = raux2 + prod(i,2)%val(j,j)
+             raux2 = raux2 + sectors(i)%prod(j,j,2)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 

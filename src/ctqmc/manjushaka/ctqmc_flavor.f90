@@ -2574,6 +2574,9 @@
 ! local version of expt_t
      real(dp) :: expt_t_loc(ncfgs)
 
+! whether it forms a string
+     logical  :: is_string(nsect)
+
 ! a particular string begins at one sector
      integer :: string(csize+1, nsect)
 
@@ -2654,13 +2657,13 @@
 
 ! build string for all the sectors, is_string(:,1) will be
 ! modified internally
-     call cat_make_string(csize, index_t_loc, string)
+     call cat_make_string(csize, index_t_loc, is_string, string)
 
 ! we can check is_string here to see whether this diagram can survive ?
 ! if not, return immediately.
      pass = .false.
      do i=1,nsect
-         if ( is_string(i,1) ) then
+         if ( is_string(i) ) then
              pass = .true.
              EXIT
          endif ! back if ( is_string(i,1) ) block
@@ -2673,7 +2676,7 @@
 ! determine the minimal dimension for each alive string
      min_dim = 0
      do i=1,nsect
-         if ( .not. is_string(i,1) ) cycle
+         if ( .not. is_string(i) ) cycle
          min_dim(i) = sectors(i)%ndim
          do j=1,csize
              if ( min_dim(i) > sectors(string(j,i))%ndim ) then
@@ -2688,7 +2691,7 @@
      nalive_sect = 0
      orig_sect = -1
      do i=1,nsect
-         if ( .not. is_string(i,1) ) cycle
+         if ( .not. is_string(i) ) cycle
 ! find one sector which may contribute to the total trace
          nalive_sect = nalive_sect + 1
 ! calculate its trace bound
@@ -2702,7 +2705,7 @@
          indx = sectors(string(1,i))%istart
          tmp_trb = tmp_trb * expt_t_loc(indx) * min_dim(i)
 !>>>         if ( ptmp * abs(tmp_trb/matrix_ptrace) < epst ) then
-!>>>             is_string(i,1) = .false.
+!>>>             is_string(i) = .false.
 !>>>             nalive_sect = nalive_sect - 1
 !>>>             cycle
 !>>>         endif
@@ -2786,7 +2789,7 @@
      do i=1,nalive_sect
          indx = sectors( orig_sect(i) )%istart
          do j=1,sectors( orig_sect(i) )%ndim
-             diag(indx+j-1,1) = prod(orig_sect(i),1)%val(j,j)
+             diag(indx+j-1,1) = sectors( orig_sect(i) )%prod(j,j,1)
          enddo
      enddo
 
@@ -2820,6 +2823,9 @@
 ! local version of expt_t
      real(dp) :: expt_t_loc(ncfgs)
 
+! whether it forms a string
+     logical  :: is_string(nsect)
+
 ! a particular string begins at one sector
      integer :: string(csize+1, nsect)
 
@@ -2837,9 +2843,9 @@
      index_t_loc = index_v
      expt_t_loc = expt_t(:,2)
 
-! build string for all the sectors, is_string(:,1) will be
+! build string for all the sectors, is_string will be
 ! modified internally
-     call cat_make_string(csize, index_t_loc, string)
+     call cat_make_string(csize, index_t_loc, is_string, string)
 
 ! determine is_save, all parts with some fermion operators should be
 ! recalculated in this case.
@@ -2849,7 +2855,7 @@
      is_cp = .false.
      trace_sect = zero
      do i=1,nsect
-         if ( .not. is_string(i,1) ) cycle
+         if ( .not. is_string(i) ) cycle
          call cat_make_trace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
      enddo ! over j={1,nsect} loop
 
@@ -2858,10 +2864,10 @@
 ! store the diagonal elements of final product in diag(:,1)
      diag(:,1) = zero
      do i=1,nsect
-         if( .not. is_string(i,1) ) cycle
+         if( .not. is_string(i) ) cycle
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             diag(indx+j-1,1) = prod(i,1)%val(j,j)
+             diag(indx+j-1,1) = sectors(i)%prod(j,j,1)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect}  loop
 
@@ -2876,7 +2882,7 @@
 
      use m_sect, only : nsect
      use m_sect, only : sectors
-     use m_sect, only : is_string, prod
+     use m_sect, only : prod
      use m_part, only : cat_save_npart
 
      implicit none
@@ -2890,9 +2896,6 @@
 
 ! update diag for the calculation of atomic state probability
      diag(:,2) = diag(:,1)
-
-! update is_string for calculating nmat and nnmat
-     is_string(:,2) = is_string(:,1)
 
 ! transfer the final matrix product from prod(:,:,1) to prod(:,:,2),
 ! the latter can be used to calculate nmat and nnmat
