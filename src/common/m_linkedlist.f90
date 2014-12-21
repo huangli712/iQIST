@@ -105,13 +105,13 @@
 !!========================================================================
 
 ! a public variable used as a mold for transfer() subroutine
-     integer, dimension(:), allocatable :: list_d
+     integer, allocatable :: list_d(:)
 
 ! node for the linked list, it contains a pointer pointing to next node,
 ! and the integer pointer array is used to store data
      type list_t
          private
-         integer, dimension(:), pointer :: data => null()
+         integer, pointer :: data(:) => null()
          type (list_t), pointer :: next => null()
      end type list_t
 
@@ -143,7 +143,7 @@
      type (list_t), pointer :: self
 
 ! the data for the first element
-     integer, dimension(:), intent(in), optional :: data
+     integer, intent(in), optional :: data(:)
 
 ! allocate memory for linked list
      allocate(self)
@@ -204,7 +204,7 @@
      type (list_t), pointer :: self
 
 ! the data for the new element
-     integer, dimension(:), intent(in), optional :: data
+     integer, intent(in), optional :: data(:)
 
 ! local variables
 ! pointer to new node
@@ -237,7 +237,7 @@
      type (list_t), pointer :: self
 
 ! the data to be stored
-     integer, dimension(:), intent(in) :: data
+     integer, intent(in) :: data(:)
 
 ! release old memory at first
      if ( associated(self%data) ) then
@@ -263,7 +263,7 @@
      type (list_t), pointer :: self
 
 ! function value, the node's data
-     integer, dimension(:), pointer :: data
+     integer, pointer :: data(:)
 
      data => self%data
 

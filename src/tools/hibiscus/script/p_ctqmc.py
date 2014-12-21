@@ -24,7 +24,7 @@
 ## History
 ## =======
 ##
-## 12/03/2014 by li huang
+## 12/20/2014 by li huang
 ##
 ##
 
@@ -149,8 +149,7 @@ class p_ctqmc_solver(object):
         self.__p_cmp_manjushaka['isort'] = 1
         self.__p_cmp_manjushaka['isvrt'] = 1
         self.__p_cmp_manjushaka['itrun'] = 1
-        self.__p_cmp_manjushaka['nmini'] = 0
-        self.__p_cmp_manjushaka['nmaxi'] = 2
+        self.__p_cmp_manjushaka['ifast'] = 1
         self.__p_cmp_manjushaka['lemax'] = 32
         self.__p_cmp_manjushaka['legrd'] = 20001
         self.__p_cmp_manjushaka['chmax'] = 32

@@ -483,8 +483,7 @@
          integer :: isort
          integer :: isvrt
          integer :: itrun
-         integer :: nmini
-         integer :: nmaxi
+         integer :: ifast
          integer :: lemax
          integer :: legrd
          integer :: chmax
