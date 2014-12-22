@@ -337,7 +337,7 @@
 ! the j-th element in the vv array
        integer, allocatable  :: jv(:)
 
-! a array that contains the non-zero elements for op_m matrix
+! a array that contains the non-zero elements for sparse matrix
        real(dp), allocatable :: vv(:)
 
      end type T_spmat
@@ -346,8 +346,8 @@
 !::: auxiliary matrix                                                  :::
 !-------------------------------------------------------------------------
 
-! auxiliary array, used to store which parts of op_a matrix should be
-! updated by corresponding op_b matrix
+! auxiliary array, used to store which parts of spm_a matrix should be
+! updated by corresponding spm_b matrix
      integer, public, save, allocatable  :: isave(:)
 
 !-------------------------------------------------------------------------
@@ -364,28 +364,28 @@
 !::: sparse matrix style for op (Compressed Sparse Row (CSR) format)   :::
 !-------------------------------------------------------------------------
 
-! op_a and op_b are used to calculate matrix product trace efficiently.
+! spm_a and spm_b are used to calculate matrix product trace efficiently.
 ! we used them in their sparse matrix form directly, instead of defining
 ! them explicitly, in order to save memory consumption
      type (T_spmat), public, save, allocatable :: spm_a(:)
      type (T_spmat), public, save, allocatable :: spm_b(:)
 
-! op_c and op_d are F-matrix, op_c is for create operator, while op_d is
-! for destroy operator. we need to multiply a series of op_c, op_d and
-! exponent matrix to get the matrix product trace
+! spm_c and spm_d are F-matrix, spm_c is for create operator, while spm_d
+! is for destroy operator. we need to multiply a series of spm_c, spm_d
+! and exponent matrix to get the matrix product trace
      type (T_spmat), public, save, allocatable :: spm_c(:)
      type (T_spmat), public, save, allocatable :: spm_d(:)
 
-! op_s is used to calculate matrix product trace efficiently. the final
-! matrix product should be stored in op_s matrix
+! spm_s is used to calculate matrix product trace efficiently. the final
+! matrix product should be stored in spm_s matrix
      type (T_spmat), public, save, allocatable :: spm_s(:)
 
-! op_n is the precomputed < c^{\dag} c > matrix, it is used to calculate
+! spm_n is the precomputed < c^{\dag} c > matrix, it is used to calculate
 ! impurity occupation number (nmat)
      type (T_spmat), public, save, allocatable :: spm_n(:)
 
-! op_m is the precomputed < c^{\dag} c c^{\dag} c > matrix, it is used to
-! calculate impurity double occupation number (nnmat)
+! spm_m is the precomputed < c^{\dag} c c^{\dag} c > matrix, it is used
+! to calculate impurity double occupation number (nnmat)
      type (T_spmat), public, save, allocatable :: spm_m(:,:)
 
   end module ctqmc_fmat
