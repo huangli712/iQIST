@@ -237,7 +237,7 @@
      use context, only : cssoc
      use context, only : tmesh, rmesh
      use context, only : symm, eimp, eigs, naux, saux
-     use context, only : spm_c, spm_d, op_c, op_d
+     use context, only : op_c, op_d, spm_c, spm_d
      use context, only : hybf
 
      implicit none
