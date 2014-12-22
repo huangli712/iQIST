@@ -2657,7 +2657,7 @@
 ! build string for all the sectors
      call cat_make_string(csize, index_t_loc, is_string, string)
 
-! we can check is_string here to see whether this diagram can survive ?
+! we can check is_string here to see whether this diagram can survive?
 ! if not, return immediately.
      pass = .false.
      do i=1,nsect

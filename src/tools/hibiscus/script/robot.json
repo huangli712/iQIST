@@ -1,0 +1,12 @@
+{
+  "robot"   : "quark",
+  "machine" : "TianHe-1A",
+  "queue"   : "slurm",
+  "scratch" : "~/tmp",
+  "finish"  : "~/tmp/.stop",
+  "logdata" : "~/tmp/log.data",
+  "errdata" : "~/tmp/err.data",
+  "interval": 60,
+  "slots"   : 8,
+  "jobs"    : "./job.json"
+}

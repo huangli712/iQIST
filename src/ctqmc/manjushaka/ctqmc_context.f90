@@ -1325,7 +1325,6 @@
 
 # endif  /* MPI */
 
-! update the sector information
      max_dim_sect_t = -1
      nsect_t = 0
      sum_dim = 0
@@ -1350,6 +1349,7 @@
          endif ! back if ( is_trunc(i) ) block
      enddo ! over i={1,nsect} loop
 
+! calculate ave_dim_sect_t
      ave_dim_sect_t = real(sum_dim) / real(nsect_t)
 
 ! print summary of sectors after truncation
