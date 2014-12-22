@@ -104,14 +104,13 @@
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
      write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'isvrt :', isvrt
-     write(mystd,'(1(4X,a,i10))')   'itrun :', itrun 
+     write(mystd,'(2(4X,a,i10))')   'ifast :', ifast  , 'itrun :', itrun 
 
      write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
      write(mystd,'(2(4X,a,i10))')   'chmax :', chmax  , 'chgrd :', chgrd
      write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
      write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin :', nspin
      write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs :', ncfgs
-     write(mystd,'(2(4X,a,i10))')   'nmini :', nmini  , 'nmaxi :', nmaxi
      write(mystd,'(1(4X,a,i10))')   'niter :', niter
      write(mystd,'(2(4X,a,i10))')   'nffrq :', nffrq  , 'nbfrq :', nbfrq
      write(mystd,'(2(4X,a,i10))')   'nfreq :', nfreq  , 'ntime :', ntime

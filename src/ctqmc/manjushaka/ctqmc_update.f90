@@ -83,6 +83,9 @@
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
+! a random number
+     real(dp) :: rand_num
+
 ! initialize logical variables
      ladd = .false.
      pass = .false.
@@ -128,8 +131,9 @@
 
 ! we will determine the pass by lazy trace evalution
 ! if ladd is false, we set the pass as false immediately
+     rand_num = spring_sfmt_stream()
      if ( ladd .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 1, 1, 2*sum(rank) + 2, deter_ratio, spring_sfmt_stream(), p, pass, tau_start, tau_end )
+         call ctqmc_lazy_ztrace( 1, 1, 2*sum(rank) + 2, deter_ratio, rand_num, p, pass, tau_start, tau_end )
      else
          pass = .false.
      endif ! back if ( ladd .eqv. .true. ) block
@@ -221,6 +225,9 @@
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
+! a random number
+     real(dp) :: rand_num
+
 ! initialize logical variables
      lrmv = .false.
      pass = .false.
@@ -266,8 +273,9 @@
 
 ! we will determine the pass by lazy trace evalution
 ! if lrmv is false, we set the pass as false immediately
+     rand_num = spring_sfmt_stream()
      if ( lrmv .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 2, 1, 2*sum(rank) - 2, deter_ratio, spring_sfmt_stream(), p, pass, tau_start, tau_end )
+         call ctqmc_lazy_ztrace( 2, 1, 2*sum(rank) - 2, deter_ratio, rand_num, p, pass, tau_start, tau_end )
      else
          pass = .false.
      endif ! back if ( lrmv .eqv. .true. ) block
@@ -358,6 +366,9 @@
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
+! a random number
+     real(dp) :: rand_num
+
 ! initialize logical variables
      lshf = .false.
      pass = .false.
@@ -403,8 +414,9 @@
 
 ! we will determine the pass by lazy trace evalution
 ! if lshf is false, we set the pass as false immediately
+     rand_num = spring_sfmt_stream()
      if ( lshf .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 3, 1, 2*sum(rank), deter_ratio, spring_sfmt_stream(), p, pass, tau_start1, tau_start2 )
+         call ctqmc_lazy_ztrace( 3, 1, 2*sum(rank), deter_ratio, rand_num, p, pass, tau_start1, tau_start2 )
      else
          pass = .false.
      endif ! back if ( lshf .eqv. .true. ) block
@@ -489,6 +501,9 @@
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
+! a random number
+     real(dp) :: rand_num
+
 ! initialize logical variables
      rshf = .false.
      pass = .false.
@@ -534,8 +549,9 @@
 
 ! we will determine the pass by lazy trace evalution
 ! if rshf is false, we set the pass as false immediately
+     rand_num = spring_sfmt_stream()
      if ( rshf .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 4, 1, 2*sum(rank), deter_ratio, spring_sfmt_stream(), p, pass, tau_end1, tau_end2 )
+         call ctqmc_lazy_ztrace( 4, 1, 2*sum(rank), deter_ratio, rand_num, p, pass, tau_end1, tau_end2 )
      else
          rshf = .false.
      endif ! back if ( rshf .eqv. .true. ) block

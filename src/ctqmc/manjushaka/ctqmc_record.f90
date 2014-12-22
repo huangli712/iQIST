@@ -331,9 +331,8 @@
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
 
-     use m_sect, only : nsect, max_dim_sect_t
-     use m_sect, only : sectors, is_string, prod
-     use m_sect, only : occu, doccu
+     use m_sect, only : nsect
+     use m_sect, only : sectors
 
      implicit none
 
@@ -356,9 +355,6 @@
 ! current probability for eigenstates
      real(dp) :: cprob(ncfgs)
 
-! dummy matrix, used to calculate nmat and nnmat
-     real(dp) :: mat_t(max_dim_sect_t, max_dim_sect_t)
-
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
          cprob(i) = diag(i,2) / matrix_ptrace
@@ -368,85 +364,14 @@
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
      do i=1,nsect
-         if ( .not. is_string(i,2) ) CYCLE
          do j=1,sectors(i)%ndim
-             raux2 = raux2 + prod(i,2)%val(j,j)
+             raux2 = raux2 + sectors(i)%prod(j,j,2)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
-! check validity of raux2
-!<     if ( abs(raux2) < epss ) then
-!<         call s_print_exception('ctqmc_record_nmat()','Z trace is too small')
-!<     endif ! back if ( abs(raux2) < epss ) block
-
-! evaluate occupation matrix: < n_i >
-! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
-!-------------------------------------------------------------------------
-     mat_t = zero
-     do flvr=1,norbs
-         raux1 = zero
-         do i=1,nsect
-             if ( .not. is_string(i,2) ) CYCLE
-             call dgemm( 'N', 'N', sectors(i)%ndim, &
-                                   sectors(i)%ndim, &
-                                   sectors(i)%ndim, &
-                                one, prod(i,2)%val, &
-                                   sectors(i)%ndim, &
-                                  occu(flvr,i)%val, &
-                                   sectors(i)%ndim, &
-                       zero, mat_t, max_dim_sect_t )
-             do j=1,sectors(i)%ndim
-                 raux1 = raux1 + mat_t(j,j)
-             enddo ! over j={1,sectors(i)%ndim} loop
-         enddo ! over i={1,nsect} loop
-         nvec(flvr) = raux1 / raux2
-     enddo ! over flvr={1,norbs} loop
-
-! update nmat
-     nmat = nmat + nvec
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate double occupation matrix: < n_i n_j >
-! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
-!-------------------------------------------------------------------------
-     do flvr=1,norbs-1
-         do i=flvr+1,norbs
-             raux1 = zero
-             do j=1,nsect
-                 if ( .not. is_string(j,2) ) CYCLE
-                 call dgemm( 'N', 'N', sectors(j)%ndim, &
-                                       sectors(j)%ndim, &
-                                       sectors(j)%ndim, &
-                                    one, prod(j,2)%val, &
-                                       sectors(j)%ndim, &
-                                   doccu(flvr,i,j)%val, &
-                                       sectors(j)%ndim, &
-                           zero, mat_t, max_dim_sect_t )
-                 do k=1,sectors(j)%ndim
-                     raux1 = raux1 + mat_t(k,k)
-                 enddo ! over k={1,sectors(j)%ndim} loop
-             enddo ! over j={1,nsect} loop
-             nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
-
-             raux1 = zero
-             do j=1,nsect
-                 if ( .not. is_string(j,2) ) CYCLE
-                 call dgemm( 'N', 'N', sectors(j)%ndim, &
-                                       sectors(j)%ndim, &
-                                       sectors(j)%ndim, &
-                                    one, prod(j,2)%val, &
-                                       sectors(j)%ndim, &
-                                   doccu(i,flvr,j)%val, &
-                                       sectors(j)%ndim, &
-                           zero, mat_t, max_dim_sect_t )
-                 do k=1,sectors(j)%ndim
-                     raux1 = raux1 + mat_t(k,k)
-                 enddo ! over k={1,sectors(j)%ndim} loop
-             enddo ! over j={1,nsect} loop
-             nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
-         enddo ! over i={flvr+1,norbs} loop
-     enddo ! over flvr={1,norbs-1} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     nvec = zero
+     nmat = zero
+     nnmat = zero
 
 ! evaluate <N^2>
 !-------------------------------------------------------------------------

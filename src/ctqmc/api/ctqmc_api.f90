@@ -482,8 +482,8 @@
 
          integer :: isort
          integer :: isvrt
-         integer :: itrun
          integer :: ifast
+         integer :: itrun
          integer :: lemax
          integer :: legrd
          integer :: chmax
