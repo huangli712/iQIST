@@ -44,7 +44,7 @@
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
      ifast  = 1            ! npart (1) time evolution (2) skip-list (3)
-     itrun  = 0            ! without truncation  (1) or with N truncation    (2)
+     itrun  = 1            ! without truncation  (1) or with N truncation    (2)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
@@ -834,7 +834,7 @@
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
 ! truncate the Hilbert space here
-     if ( itrun == 1 ) then
+     if ( itrun == 2 ) then
          call ctqmc_make_truncation()
      endif
 
