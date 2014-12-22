@@ -341,137 +341,76 @@
 
      implicit none
 
-! auxiliary array, used to store which parts of sop_a matrix should be
-! updated by corresponding sop_b matrix
+!-------------------------------------------------------------------------
+!::: sparse matrix structure                                           :::
+!-------------------------------------------------------------------------
+
+     type T_spmat
+
+! dimension size for original matrix
+         integer :: ndim = 0
+
+! maximum number of non-zero elements
+         integer :: nval = 0
+
+! row index: element i of it gives the index of the element in the
+! vv array that is first non-zero element in a row i
+       integer, allocatable  :: iv(:)
+
+! column index: element j of it is the number of the column that contains
+! the j-th element in the vv array
+       integer, allocatable  :: jv(:)
+
+! a array that contains the non-zero elements for sparse matrix
+       real(dp), allocatable :: vv(:)
+
+     end type T_spmat
+
+!-------------------------------------------------------------------------
+!::: auxiliary matrix                                                  :::
+!-------------------------------------------------------------------------
+
+! auxiliary array, used to store which parts of spm_a matrix should be
+! updated by corresponding spm_b matrix
      integer, public, save, allocatable  :: isave(:)
 
-! note: op_a and op_b are used to calculate matrix product trace efficiently.
-! we used them in their sparse matrix form directly, instead of defining
-! them explicitly, in order to save memory consumption.
-!
 !-------------------------------------------------------------------------
-!::: sparse matrix style for op_a (Compressed Sparse Row (CSR) format) :::
+!::: dense matrix style for op                                         :::
 !-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_a array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_ia(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_a array
-     integer, public, save, allocatable  :: sop_ja(:,:)
-
-! a array that contains the non-zero elements for op_a matrix
-     real(dp), public, save, allocatable :: sop_a(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_b (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_b array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_ib(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_b array
-     integer, public, save, allocatable  :: sop_jb(:,:)
-
-! a array that contains the non-zero elements for op_b matrix
-     real(dp), public, save, allocatable :: sop_b(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! note: op_c and op_d are F-matrix, op_c is for create operator, while op_d
-! is for destroy operator. we need to multiply a series of op_c, op_d and
-! exponent matrix to get the matrix product trace.
-!
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_c (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_c array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_ic(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_c array
-     integer, public, save, allocatable  :: sop_jc(:,:)
-
-! a array that contains the non-zero elements for op_c matrix
-     real(dp), public, save, allocatable :: sop_c(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_d (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_d array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_id(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_d array
-     integer, public, save, allocatable  :: sop_jd(:,:)
-
-! a array that contains the non-zero elements for op_d matrix
-     real(dp), public, save, allocatable :: sop_d(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! note: op_s is used to calculate matrix product trace efficiently. the
-! final matrix product should be stored in op_s matrix
-!
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_s (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_s array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_is(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_s array
-     integer, public, save, allocatable  :: sop_js(:,:)
-
-! a array that contains the non-zero elements for op_s matrix
-     real(dp), public, save, allocatable :: sop_s(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! note: op_n is the precomputed < c^{\dag} c > matrix, it is used to
-! calculate impurity occupation number (nmat)
-!
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_n (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_n array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_in(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_n array
-     integer, public, save, allocatable  :: sop_jn(:,:)
-
-! a array that contains the non-zero elements for op_n matrix
-     real(dp), public, save, allocatable :: sop_n(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! note: op_m is the precomputed < c^{\dag} c c^{\dag} c > matrix, it is
-! used to calculate impurity double occupation number (nnmat)
-!
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_m (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_m array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_im(:,:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_m array
-     integer, public, save, allocatable  :: sop_jm(:,:,:)
-
-! a array that contains the non-zero elements for op_m matrix
-     real(dp), public, save, allocatable :: sop_m(:,:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! F-matrix <alpha| f^{\dag}_{m} |beta> for create operators
      real(dp), public, save, allocatable :: op_c(:,:,:)
 
 ! F-matrix <alpha| f_{m} |beta> for destroy operators
      real(dp), public, save, allocatable :: op_d(:,:,:)
+
+!-------------------------------------------------------------------------
+!::: sparse matrix style for op (Compressed Sparse Row (CSR) format)   :::
+!-------------------------------------------------------------------------
+
+! spm_a and spm_b are used to calculate matrix product trace efficiently.
+! we used them in their sparse matrix form directly, instead of defining
+! them explicitly, in order to save memory consumption
+     type (T_spmat), public, save, allocatable :: spm_a(:)
+     type (T_spmat), public, save, allocatable :: spm_b(:)
+
+! spm_c and spm_d are F-matrix, spm_c is for create operator, while spm_d
+! is for destroy operator. we need to multiply a series of spm_c, spm_d
+! and exponent matrix to get the matrix product trace
+     type (T_spmat), public, save, allocatable :: spm_c(:)
+     type (T_spmat), public, save, allocatable :: spm_d(:)
+
+! spm_s is used to calculate matrix product trace efficiently. the final
+! matrix product should be stored in spm_s matrix
+     type (T_spmat), public, save, allocatable :: spm_s(:)
+
+! spm_n is the precomputed < c^{\dag} c > matrix, it is used to calculate
+! impurity occupation number (nmat)
+     type (T_spmat), public, save, allocatable :: spm_n(:)
+
+! spm_m is the precomputed < c^{\dag} c c^{\dag} c > matrix, it is used
+! to calculate impurity double occupation number (nnmat)
+     type (T_spmat), public, save, allocatable :: spm_m(:,:)
 
   end module ctqmc_fmat
 
@@ -630,6 +569,10 @@
      public :: ctqmc_deallocate_memory_gmat
      public :: ctqmc_deallocate_memory_wmat
      public :: ctqmc_deallocate_memory_smat
+
+! declaration of module procedures: sparse matrix manipulation
+     public :: ctqmc_new_spmat
+     public :: ctqmc_del_spmat
 
   contains ! encapsulated functionality
 
