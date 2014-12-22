@@ -196,6 +196,7 @@
      use context, only : ckink, matrix_ptrace
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
+     use context, only : T_spmat, ctqmc_new_spmat, ctqmc_del_spmat
      use context, only : spm_s, spm_n, spm_m
 
      implicit none
@@ -219,9 +220,10 @@
      real(dp) :: cprob(ncfgs)
 
 ! dummy sparse matrix, used to calculate nmat and nnmat
-     integer  :: sop_it(ncfgs+1)
-     integer  :: sop_jt(nzero)
-     real(dp) :: sop_t(nzero)
+     type (T_spmat) :: spm_t
+
+! allocate memory for the dummy sparse matrix
+     call ctqmc_new_spmat(spm_t)
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
@@ -233,7 +235,7 @@
      raux2 = zero
      do i=1,ncfgs
          raux2 = raux2 + sp_csr_cp_elm( i, i, ncfgs, nzero, &
-                          spm_s(2)%vv, spm_s(2)%jv, spm_s(2)%iv )
+                     spm_s(2)%vv, spm_s(2)%jv, spm_s(2)%iv )
      enddo ! over i={1,ncfgs} loop
 
 ! check validity of raux2
@@ -246,13 +248,13 @@
 !-------------------------------------------------------------------------
      do flvr=1,norbs
          raux1 = zero
-         call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                       spm_s(2)%vv, spm_s(2)%jv, spm_s(2)%iv, &
-              spm_n(flvr)%vv, spm_n(flvr)%jv, spm_n(flvr)%iv, &
-                                      sop_t, sop_jt, sop_it )
+         call sp_csr_mm_csr(        ncfgs, ncfgs, ncfgs, nzero, &
+                         spm_s(2)%vv, spm_s(2)%jv, spm_s(2)%iv, &
+                spm_n(flvr)%vv, spm_n(flvr)%jv, spm_n(flvr)%iv, &
+                                  spm_t%vv, spm_t%jv, spm_t%iv )
          do i=1,ncfgs
              raux1 = raux1 + sp_csr_cp_elm( i, i, ncfgs, nzero, &
-                                             sop_t, sop_jt, sop_it )
+                                  spm_t%vv, spm_t%jv, spm_t%iv )
          enddo ! over i={1,ncfgs} loop
          nvec(flvr) = raux1 / raux2
      enddo ! over flvr={1,norbs} loop
@@ -267,24 +269,24 @@
      do flvr=1,norbs-1
          do i=flvr+1,norbs
              raux1 = zero
-             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                           spm_s(2)%vv, spm_s(2)%jv, spm_s(2)%iv, &
-            spm_m(flvr,i)%vv, spm_m(flvr,i)%jv, spm_m(flvr,i)%iv, &
-                                          sop_t, sop_jt, sop_it )
+             call sp_csr_mm_csr(        ncfgs, ncfgs, ncfgs, nzero, &
+                             spm_s(2)%vv, spm_s(2)%jv, spm_s(2)%iv, &
+              spm_m(flvr,i)%vv, spm_m(flvr,i)%jv, spm_m(flvr,i)%iv, &
+                                      spm_t%vv, spm_t%jv, spm_t%iv )
              do j=1,ncfgs
                  raux1 = raux1 + sp_csr_cp_elm( j, j, ncfgs, nzero, &
-                                                 sop_t, sop_jt, sop_it )
+                                      spm_t%vv, spm_t%jv, spm_t%iv )
              enddo ! over j={1,ncfgs} loop
              nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
 
              raux1 = zero
-             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                           spm_s(2)%vv, spm_s(2)%jv, spm_s(2)%iv, &
-            spm_m(i,flvr)%vv, spm_m(i,flvr)%jv, spm_m(i,flvr)%iv, &
-                                          sop_t, sop_jt, sop_it )
+             call sp_csr_mm_csr(        ncfgs, ncfgs, ncfgs, nzero, &
+                             spm_s(2)%vv, spm_s(2)%jv, spm_s(2)%iv, &
+              spm_m(i,flvr)%vv, spm_m(i,flvr)%jv, spm_m(i,flvr)%iv, &
+                                      spm_t%vv, spm_t%jv, spm_t%iv )
              do j=1,ncfgs
                  raux1 = raux1 + sp_csr_cp_elm( j, j, ncfgs, nzero, &
-                                                 sop_t, sop_jt, sop_it )
+                                      spm_t%vv, spm_t%jv, spm_t%iv )
              enddo ! over j={1,ncfgs} loop
              nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
          enddo ! over i={flvr+1,norbs} loop
@@ -329,6 +331,9 @@
 !-------------------------------------------------------------------------
      paux(1) = paux(2) + paux(3) + mune * sum(nvec)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! deallocate memory for the dummy sparse matrix
+     call ctqmc_del_spmat(spm_t)
 
      return
   end subroutine ctqmc_record_nmat
