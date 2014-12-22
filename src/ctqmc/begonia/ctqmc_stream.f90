@@ -747,8 +747,7 @@
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
 
-! reinit sparse matrix op_a (sop_a, sop_ja, sop_ia)
-! reinit sparse matrix op_b (sop_b, sop_jb, sop_ib)
+! reinit sparse matrix op_a and op_b (spm_a and spm_b)
 ! the related dense matrix should be an identity matrix
      do i=1,npart
          call sp_uni_to_csr( ncfgs, nzero, spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
