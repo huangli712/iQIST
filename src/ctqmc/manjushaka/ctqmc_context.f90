@@ -1289,7 +1289,7 @@
      integer  :: nsect_t
 
 ! maximal dimension of sectors after truncation
-     real(dp) :: max_dim_sect_t
+     integer :: max_dim_sect_t
 
 ! averaged dimension of sectors after truncation
      real(dp) :: ave_dim_sect_t
