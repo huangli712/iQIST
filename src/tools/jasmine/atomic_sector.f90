@@ -371,6 +371,9 @@
 ! the second index: the index of sector
      integer, allocatable :: sector_basis(:,:)
 
+! dummy variable
+     integer :: sum_dim
+
 ! initialize some variables
      sect_good_ntot = 0
      sect_good_sz = 0
@@ -662,7 +665,11 @@
 ! calculate the maximum and average dimensions of sectors
 !-------------------------------------------------------------------------
      max_dim_sect = maxval(ndims)
-     ave_dim_sect = real(ncfgs) / real(nsectors)
+     sum_dim = 0
+     do i=1,nsectors
+         sum_dim = sum_dim + sectors(i)%ndim
+     enddo
+     ave_dim_sect = real(sum_dim) / real(nsectors)
 
 ! dump sector information for reference
 !-------------------------------------------------------------------------
