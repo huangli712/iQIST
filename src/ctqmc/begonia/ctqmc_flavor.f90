@@ -2786,18 +2786,18 @@
              endif ! back if ( isave(i) == 1 ) block
 
 ! copy smm2 to smm1
-             call sp_csr_cp_csr(  ncfgs, nzero, &
-                              smm2, jmm2, imm2, &
-                              smm1, jmm1, imm1 )
+             call sp_csr_cp_csr( ncfgs, nzero, &
+                             smm2, jmm2, imm2, &
+                             smm1, jmm1, imm1 )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
-         call sp_dia_mm_csr(      ncfgs, nzero, &
-                                   expt_t(:,1), &
-                              smm1, jmm1, imm1, &
-                              smm2, jmm2, imm2 )
+         call sp_dia_mm_csr(     ncfgs, nzero, &
+                                  expt_t(:,1), &
+                             smm1, jmm1, imm1, &
+                             smm2, jmm2, imm2 )
 
 !-------------------------------------------------------------------------
 ! case B: partly-normal mode
@@ -2879,8 +2879,11 @@
 ! if current part need to be recalculated
              if ( isave(i) == 1 ) then
 
-! build the identity sparse matrix sop_a as a start matrix
-                 call sp_uni_to_csr( ncfgs, nzero, spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
+! build the identity sparse matrix spm_a as a start matrix
+                 call sp_uni_to_csr( ncfgs, nzero, &
+                                      spm_a(i)%vv, &
+                                      spm_a(i)%jv, &
+                                      spm_a(i)%iv )
 
 ! loop over all the matrix in this part
                  if ( nop(i) > 0 ) then
@@ -2890,49 +2893,64 @@
                          vt = type_v ( index_v(j) )
                          vf = flvr_v ( index_v(j) )
 
-! multiply sop_a matrix with time evolution operator at first, and then
-! multiply the result smm2 matrix with F matrix
-                         call sp_dia_mm_csr( ncfgs, nzero, &
+! multiply spm_a matrix with time evolution operator at first, and then
+! multiply the result smm2 matrix with F matrix (spm_c or spm_d)
+                         call sp_dia_mm_csr(     ncfgs, nzero, &
                                       expt_v( :, index_v(j) ), &
-                         spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv, &
+                                                  spm_a(i)%vv, &
+                                                  spm_a(i)%jv, &
+                                                  spm_a(i)%iv, &
                                              smm2, jmm2, imm2 )
                          if ( vt == 1 ) then ! create  operator
                              call sp_csr_mm_csr( ncfgs, ncfgs, &
-                                                     ncfgs, nzero, &
-                          spm_c(vf)%vv, spm_c(vf)%jv, spm_c(vf)%iv, &
-                                                 smm2, jmm2, imm2, &
-                             spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
+                                                 ncfgs, nzero, &
+                                                 spm_c(vf)%vv, &
+                                                 spm_c(vf)%jv, &
+                                                 spm_c(vf)%iv, &
+                                             smm2, jmm2, imm2, &
+                                                  spm_a(i)%vv, &
+                                                  spm_a(i)%jv, &
+                                                  spm_a(i)%iv )
                          else                ! destroy operator
                              call sp_csr_mm_csr( ncfgs, ncfgs, &
-                                                     ncfgs, nzero, &
-                          spm_d(vf)%vv, spm_d(vf)%jv, spm_d(vf)%iv, &
-                                                 smm2, jmm2, imm2, &
-                             spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
+                                                 ncfgs, nzero, &
+                                                 spm_d(vf)%vv, &
+                                                 spm_d(vf)%jv, &
+                                                 spm_d(vf)%iv, &
+                                             smm2, jmm2, imm2, &
+                                                  spm_a(i)%vv, &
+                                                  spm_a(i)%jv, &
+                                                  spm_a(i)%iv )
                          endif ! back if ( vt == 1 ) block
                      enddo operator_loop2 ! over j={ops(i),ope(i)} loop
                  endif ! back if ( nop(i) > 0 ) block
 
              endif ! back if ( isave(i) == 1 ) block
 
-! multiply current part (sop_a) with the rest parts (smm1), and get smm2
-             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                           spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv, &
-                                               smm1, jmm1, imm1, &
-                                               smm2, jmm2, imm2 )
+! multiply current part (spm_a) with the rest parts (smm1), and get smm2
+             call sp_csr_mm_csr( ncfgs, ncfgs, &
+                                 ncfgs, nzero, &
+                                  spm_a(i)%vv, &
+                                  spm_a(i)%jv, &
+                                  spm_a(i)%iv, &
+                             smm1, jmm1, imm1, &
+                             smm2, jmm2, imm2 )
 
 ! copy smm2 to smm1
-             call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
-                                                   smm1, jmm1, imm1 )
+             call sp_csr_cp_csr( ncfgs, nzero, &
+                             smm2, jmm2, imm2, &
+                             smm1, jmm1, imm1 )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
-         call sp_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
-                                          smm1, jmm1, imm1, &
-                                          smm2, jmm2, imm2 )
+         call sp_dia_mm_csr(     ncfgs, nzero, &
+                                  expt_t(:,2), &
+                             smm1, jmm1, imm1, &
+                             smm2, jmm2, imm2 )
 
-! reset isave, since sop_a should not be overrode by sop_b in this case.
+! reset isave, since spm_a should not be overrode by spm_b in this case.
          isave = 0
 
 !-------------------------------------------------------------------------
