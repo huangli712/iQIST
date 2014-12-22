@@ -50,14 +50,14 @@
 ! eigenvectors of hmat
      real(dp), public, save, allocatable :: evec(:,:)
 
-! F-matrix for annihilation fermion operators
-     real(dp), public, save, allocatable :: fmat(:,:,:)
-
 ! N occupany number for the atomic eigenstates
      real(dp), public, save, allocatable :: occu(:,:)
 
 ! Sz for the atomic eigenstates
      real(dp), public, save, allocatable :: spin(:,:)
+
+! F-matrix for annihilation fermion operators
+     real(dp), public, save, allocatable :: fmat(:,:,:)
 
 ! atomic Hamiltonian
      complex(dp), public, save, allocatable :: hmat(:,:)
@@ -115,9 +115,9 @@
 ! allocate memory
      allocate(eval(ncfgs),             stat=istat)
      allocate(evec(ncfgs,ncfgs),       stat=istat)
-     allocate(fmat(ncfgs,ncfgs,norbs), stat=istat)
      allocate(occu(ncfgs,ncfgs),       stat=istat)
      allocate(spin(ncfgs,ncfgs),       stat=istat)
+     allocate(fmat(ncfgs,ncfgs,norbs), stat=istat)
 
      allocate(hmat(ncfgs,ncfgs),       stat=istat)
 
@@ -129,9 +129,9 @@
 ! initialize them
      eval = zero
      evec = zero
-     fmat = zero
      occu = zero
      spin = zero
+     fmat = zero
 
      hmat = czero
 
@@ -160,9 +160,9 @@
 
      if ( allocated(eval) ) deallocate(eval)
      if ( allocated(evec) ) deallocate(evec)
-     if ( allocated(fmat) ) deallocate(fmat)
      if ( allocated(occu) ) deallocate(occu)
      if ( allocated(spin) ) deallocate(spin)
+     if ( allocated(fmat) ) deallocate(fmat)
 
      if ( allocated(hmat) ) deallocate(hmat)
 
