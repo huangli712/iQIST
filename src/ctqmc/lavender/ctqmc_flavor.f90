@@ -2548,9 +2548,9 @@
 !!>>> the computational efficiency significantly.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants, only : dp
-     use sparse, only : sparse_uni_to_csr
-     use sparse, only : sparse_csr_cp_elm, sparse_csr_cp_csr
-     use sparse, only : sparse_csr_mm_csr, sparse_dia_mm_csr
+     use sparse, only : sp_uni_to_csr
+     use sparse, only : sp_csr_cp_elm, sp_csr_cp_csr
+     use sparse, only : sp_csr_mm_csr, sp_dia_mm_csr
 
      use control, only : ncfgs, nzero
      use control, only : npart
@@ -2636,7 +2636,7 @@
      isave = 0
 
 ! build identity sparse matrix as a start matrix
-     call sparse_uni_to_csr( ncfgs, nzero, smm1, jmm1, imm1 )
+     call sp_uni_to_csr( ncfgs, nzero, smm1, jmm1, imm1 )
 
 !-------------------------------------------------------------------------
 ! case A: partly-trial mode
@@ -2719,7 +2719,7 @@
              if ( isave(i) == 1 ) then
 
 ! build the identity sparse matrix sop_b as a start matrix
-                 call sparse_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
+                 call sp_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
 
 ! loop over all the matrix in this part
                  if ( nop(i) > 0 ) then
@@ -2731,18 +2731,18 @@
 
 ! multiply sop_b matrix with time evolution operator at first, and then
 ! multiply the result smm2 matrix with F matrix
-                         call sparse_dia_mm_csr( ncfgs, nzero, &
+                         call sp_dia_mm_csr( ncfgs, nzero, &
                                       expt_v( :, index_t(j) ), &
                          sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
                                              smm2, jmm2, imm2 )
                          if ( vt == 1 ) then ! create  operator
-                             call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                             call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
                           sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
                                                  smm2, jmm2, imm2, &
                              sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
                          else                ! destroy operator
-                             call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                             call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
                           sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
                                                  smm2, jmm2, imm2, &
@@ -2752,7 +2752,7 @@
                  endif ! back if ( nop(i) > 0 ) block
 
 ! multiply current part (sop_b) with the rest parts (smm1), and get smm2
-                 call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                 call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                                sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
                                                    smm1, jmm1, imm1, &
                                                    smm2, jmm2, imm2 )
@@ -2761,7 +2761,7 @@
              else
 
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
-                 call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+                 call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                                sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
                                                    smm1, jmm1, imm1, &
                                                    smm2, jmm2, imm2 )
@@ -2770,14 +2770,14 @@
              endif ! back if ( isave(i) == 1 ) block
 
 ! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
+             call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
                                                    smm1, jmm1, imm1 )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,1), &
+         call sp_dia_mm_csr( ncfgs, nzero, expt_t(:,1), &
                                           smm1, jmm1, imm1, &
                                           smm2, jmm2, imm2 )
 
@@ -2862,7 +2862,7 @@
              if ( isave(i) == 1 ) then
 
 ! build the identity sparse matrix sop_a as a start matrix
-                 call sparse_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+                 call sp_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
 
 ! loop over all the matrix in this part
                  if ( nop(i) > 0 ) then
@@ -2874,18 +2874,18 @@
 
 ! multiply sop_a matrix with time evolution operator at first, and then
 ! multiply the result smm2 matrix with F matrix
-                         call sparse_dia_mm_csr( ncfgs, nzero, &
+                         call sp_dia_mm_csr( ncfgs, nzero, &
                                       expt_v( :, index_v(j) ), &
                          sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
                                              smm2, jmm2, imm2 )
                          if ( vt == 1 ) then ! create  operator
-                             call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                             call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
                           sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
                                                  smm2, jmm2, imm2, &
                              sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
                          else                ! destroy operator
-                             call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                             call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
                           sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
                                                  smm2, jmm2, imm2, &
@@ -2897,20 +2897,20 @@
              endif ! back if ( isave(i) == 1 ) block
 
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
-             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
                                                smm1, jmm1, imm1, &
                                                smm2, jmm2, imm2 )
 
 ! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
+             call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
                                                    smm1, jmm1, imm1 )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
+         call sp_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
                                           smm1, jmm1, imm1, &
                                           smm2, jmm2, imm2 )
 
@@ -2946,7 +2946,7 @@
          do i=1,npart
 
 ! build the identity sparse matrix sop_b as a start matrix
-             call sparse_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
+             call sp_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
 
 ! loop over all the matrix in this part
              if ( nop(i) > 0 ) then
@@ -2958,18 +2958,18 @@
 
 ! multiply sop_b matrix with time evolution operator at first, and then
 ! multiply the result smm2 matrix with F matrix
-                     call sparse_dia_mm_csr( ncfgs, nzero, &
+                     call sp_dia_mm_csr( ncfgs, nzero, &
                                   expt_v( :, index_t(j) ), &
                      sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
                                          smm2, jmm2, imm2 )
                      if ( vt == 1 ) then ! create  operator
-                         call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                         call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
                       sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
                                              smm2, jmm2, imm2, &
                          sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
                      else                ! destroy operator
-                         call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                         call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
                       sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
                                              smm2, jmm2, imm2, &
@@ -2979,20 +2979,20 @@
              endif ! back if ( nop(i) > 0 ) block
 
 ! multiply current part (sop_b) with the rest parts (smm1), and get smm2
-             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
                                                smm1, jmm1, imm1, &
                                                smm2, jmm2, imm2 )
 
 ! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
+             call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
                                                    smm1, jmm1, imm1 )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
+         call sp_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
                                           smm1, jmm1, imm1, &
                                           smm2, jmm2, imm2 )
 
@@ -3025,7 +3025,7 @@
          do i=1,npart
 
 ! build the identity sparse matrix sop_a as a start matrix
-             call sparse_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+             call sp_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
 
 ! loop over all the matrix in this part
              if ( nop(i) > 0 ) then
@@ -3037,18 +3037,18 @@
 
 ! multiply sop_a matrix with time evolution operator at first, and then
 ! multiply the result smm2 matrix with F matrix
-                     call sparse_dia_mm_csr( ncfgs, nzero, &
+                     call sp_dia_mm_csr( ncfgs, nzero, &
                                   expt_v( :, index_v(j) ), &
                      sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
                                          smm2, jmm2, imm2 )
                      if ( vt == 1 ) then ! create  operator
-                         call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                         call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
                       sop_c(:,vf), sop_jc(:,vf), sop_ic(:,vf), &
                                              smm2, jmm2, imm2, &
                          sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
                      else                ! destroy operator
-                         call sparse_csr_mm_csr( ncfgs, ncfgs, &
+                         call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
                       sop_d(:,vf), sop_jd(:,vf), sop_id(:,vf), &
                                              smm2, jmm2, imm2, &
@@ -3058,20 +3058,20 @@
              endif ! back if ( nop(i) > 0 ) block
 
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
-             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
                                                smm1, jmm1, imm1, &
                                                smm2, jmm2, imm2 )
 
 ! copy smm2 to smm1
-             call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
+             call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
                                                    smm1, jmm1, imm1 )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
-         call sparse_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
+         call sp_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
                                           smm1, jmm1, imm1, &
                                           smm2, jmm2, imm2 )
 
@@ -3080,13 +3080,13 @@
 
 ! now smm2 is the final product, we can use it to evaluate the matrix trace
      do j=1,ncfgs
-         diag(j,1) = sparse_csr_cp_elm( j, j, ncfgs, nzero, &
+         diag(j,1) = sp_csr_cp_elm( j, j, ncfgs, nzero, &
                                           smm2, jmm2, imm2 )
      enddo ! over j={1,ncfgs} loop
      trace = sum( diag(:,1) )
 
 ! save the final matrix product to op_s
-     call sparse_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
+     call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
                        sop_s(:,1), sop_js(:,1), sop_is(:,1) )
 
      return
@@ -3095,7 +3095,7 @@
 !!>>> ctqmc_make_evolve: used to update the operator traces of the
 !!>>> modified part
   subroutine ctqmc_make_evolve()
-     use sparse, only : sparse_csr_cp_csr
+     use sparse, only : sp_csr_cp_csr
 
      use control, only : ncfgs, nzero
      use control, only : npart
@@ -3115,7 +3115,7 @@
 ! transfer sop_b into sop_a if needed (cmode == 1 or cmode == 3)
      do i=1,npart
          if ( isave(i) == 1 ) then
-             call sparse_csr_cp_csr( ncfgs, nzero, &
+             call sp_csr_cp_csr( ncfgs, nzero, &
              sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
              sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
          endif ! back if ( isave(i) == 1 ) block
@@ -3129,7 +3129,7 @@
 
 ! transfer the final matrix product from op_s(:,1) to op_s(:,2), the
 ! latter can be used to calculate nmat and nnmat
-     call sparse_csr_cp_csr( ncfgs, nzero, &
+     call sp_csr_cp_csr( ncfgs, nzero, &
      sop_s(:,1), sop_js(:,1), sop_is(:,1), &
      sop_s(:,2), sop_js(:,2), sop_is(:,2) )
 

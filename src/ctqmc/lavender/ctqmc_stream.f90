@@ -254,7 +254,7 @@
 
      use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
      use mmpi, only : mp_bcast, mp_barrier
-     use sparse, only : sparse_dns_to_csr
+     use sparse, only : sp_dns_to_csr
 
      use control, only : nband, norbs, ncfgs, nzero
      use control, only : lemax, legrd, chmax, chgrd
@@ -542,13 +542,13 @@
 ! now all the processes have one copies of op_c and op_d
 ! convert op_c from dense-stored matrix form to row-stored sparse matrix
      do i=1,norbs
-         call sparse_dns_to_csr( ncfgs, ncfgs, nzero, op_c(:,:,i), &
+         call sp_dns_to_csr( ncfgs, ncfgs, nzero, op_c(:,:,i), &
                              sop_c(:,i), sop_jc(:,i), sop_ic(:,i) )
      enddo ! over i={1,norbs} loop
 
 ! convert op_d from dense-stored matrix form to row-stored sparse matrix
      do i=1,norbs
-         call sparse_dns_to_csr( ncfgs, ncfgs, nzero, op_d(:,:,i), &
+         call sp_dns_to_csr( ncfgs, ncfgs, nzero, op_d(:,:,i), &
                              sop_d(:,i), sop_jd(:,i), sop_id(:,i) )
      enddo ! over i={1,norbs} loop
 
@@ -564,7 +564,7 @@
      use constants, only : zero, czero
      use spring, only : spring_sfmt_init
      use stack, only : istack_clean, istack_push
-     use sparse, only : sparse_csr_mm_csr, sparse_csr_cp_csr, sparse_uni_to_csr
+     use sparse, only : sp_csr_mm_csr, sp_csr_cp_csr, sp_uni_to_csr
 
      use control ! ALL
      use context ! ALL
@@ -750,12 +750,12 @@
 ! init op_n, < c^{\dag} c >,
 ! which are used to calculate occupation number
      do i=1,norbs
-         call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+         call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                        sop_c(:,i), sop_jc(:,i), sop_ic(:,i), &
                        sop_d(:,i), sop_jd(:,i), sop_id(:,i), &
                                       sop_t, sop_jt, sop_it )
 
-         call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, &
+         call sp_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, &
                                 sop_n(:,i), sop_jn(:,i), sop_in(:,i) )
      enddo ! over i={1,norbs} loop
 
@@ -764,27 +764,27 @@
 ! note: here we use op_a and op_b as dummy matrix temporarily
      do i=1,norbs-1
          do j=i+1,norbs
-             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_c(:,i), sop_jc(:,i), sop_ic(:,i), &
                            sop_d(:,i), sop_jd(:,i), sop_id(:,i), &
                            sop_a(:,1), sop_ja(:,1), sop_ia(:,1) )
-             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_c(:,j), sop_jc(:,j), sop_ic(:,j), &
                            sop_d(:,j), sop_jd(:,j), sop_id(:,j), &
                            sop_b(:,1), sop_jb(:,1), sop_ib(:,1) )
 
-             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
                            sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
                                           sop_t, sop_jt, sop_it )
-             call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, &
+             call sp_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, &
                               sop_m(:,i,j), sop_jm(:,i,j), sop_im(:,i,j) )
 
-             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
                            sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
                                           sop_t, sop_jt, sop_it )
-             call sparse_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, &
+             call sp_csr_cp_csr( ncfgs, nzero, sop_t, sop_jt, sop_it, &
                               sop_m(:,j,i), sop_jm(:,j,i), sop_im(:,j,i) )
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
@@ -793,8 +793,8 @@
 ! reinit sparse matrix op_b (sop_b, sop_jb, sop_ib)
 ! the related dense matrix should be an identity matrix
      do i=1,npart
-         call sparse_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
-         call sparse_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
+         call sp_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+         call sp_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
      enddo ! over i={1,norbs} loop
 
 ! fourier transformation hybridization function from matsubara frequency

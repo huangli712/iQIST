@@ -323,7 +323,7 @@
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
      use constants, only : dp, zero
-     use sparse, only : sparse_csr_cp_elm, sparse_csr_mm_csr
+     use sparse, only : sp_csr_cp_elm, sp_csr_mm_csr
 
      use control, only : nband, norbs, ncfgs, nzero
      use control, only : U, mune, beta
@@ -368,7 +368,7 @@
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
      do i=1,ncfgs
-         raux2 = raux2 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+         raux2 = raux2 + sp_csr_cp_elm( i, i, ncfgs, nzero, &
                           sop_s(:,2), sop_js(:,2), sop_is(:,2) )
      enddo ! over i={1,ncfgs} loop
 
@@ -382,12 +382,12 @@
 !-------------------------------------------------------------------------
      do flvr=1,norbs
          raux1 = zero
-         call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+         call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                        sop_s(:,2), sop_js(:,2), sop_is(:,2), &
               sop_n(:,flvr), sop_jn(:,flvr), sop_in(:,flvr), &
                                       sop_t, sop_jt, sop_it )
          do i=1,ncfgs
-             raux1 = raux1 + sparse_csr_cp_elm( i, i, ncfgs, nzero, &
+             raux1 = raux1 + sp_csr_cp_elm( i, i, ncfgs, nzero, &
                                              sop_t, sop_jt, sop_it )
          enddo ! over i={1,ncfgs} loop
          nvec(flvr) = raux1 / raux2
@@ -403,23 +403,23 @@
      do flvr=1,norbs-1
          do i=flvr+1,norbs
              raux1 = zero
-             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_s(:,2), sop_js(:,2), sop_is(:,2), &
             sop_m(:,flvr,i), sop_jm(:,flvr,i), sop_im(:,flvr,i), &
                                           sop_t, sop_jt, sop_it )
              do j=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( j, j, ncfgs, nzero, &
+                 raux1 = raux1 + sp_csr_cp_elm( j, j, ncfgs, nzero, &
                                                  sop_t, sop_jt, sop_it )
              enddo ! over j={1,ncfgs} loop
              nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
 
              raux1 = zero
-             call sparse_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
+             call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            sop_s(:,2), sop_js(:,2), sop_is(:,2), &
             sop_m(:,i,flvr), sop_jm(:,i,flvr), sop_im(:,i,flvr), &
                                           sop_t, sop_jt, sop_it )
              do j=1,ncfgs
-                 raux1 = raux1 + sparse_csr_cp_elm( j, j, ncfgs, nzero, &
+                 raux1 = raux1 + sp_csr_cp_elm( j, j, ncfgs, nzero, &
                                                  sop_t, sop_jt, sop_it )
              enddo ! over j={1,ncfgs} loop
              nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
