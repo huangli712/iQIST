@@ -317,152 +317,76 @@
 
      implicit none
 
+!-------------------------------------------------------------------------
+!::: sparse matrix structure                                           :::
+!-------------------------------------------------------------------------
+
      type T_spmat
+
+! dimension size for original matrix
          integer :: ndim = 0
+
+! maximum number of non-zero elements
          integer :: nval = 0
-         integer, allocatable  :: iv(:)
-         integer, allocatable  :: jv(:)
-         real(dp), allocatable :: vv(:)
+
+! row index: element i of it gives the index of the element in the
+! vv array that is first non-zero element in a row i
+       integer, allocatable  :: iv(:)
+
+! column index: element j of it is the number of the column that contains
+! the j-th element in the vv array
+       integer, allocatable  :: jv(:)
+
+! a array that contains the non-zero elements for op_m matrix
+       real(dp), allocatable :: vv(:)
+
      end type T_spmat
 
-! auxiliary array, used to store which parts of sop_a matrix should be
-! updated by corresponding sop_b matrix
+!-------------------------------------------------------------------------
+!::: auxiliary matrix                                                  :::
+!-------------------------------------------------------------------------
+
+! auxiliary array, used to store which parts of op_a matrix should be
+! updated by corresponding op_b matrix
      integer, public, save, allocatable  :: isave(:)
 
-! note: op_a and op_b are used to calculate matrix product trace efficiently.
-! we used them in their sparse matrix form directly, instead of defining
-! them explicitly, in order to save memory consumption.
-!
 !-------------------------------------------------------------------------
-!::: sparse matrix style for op_a (Compressed Sparse Row (CSR) format) :::
+!::: dense matrix style for op                                         :::
 !-------------------------------------------------------------------------
-!<! row index: element i of it gives the index of the element in the
-!<! sop_a array that is first non-zero element in a row i
-!<     integer, public, save, allocatable  :: sop_ia(:,:)
-!<
-!<! column index: element j of it is the number of the column that contains
-!<! the j-th element in the sop_a array
-!<     integer, public, save, allocatable  :: sop_ja(:,:)
-!<
-!<! a array that contains the non-zero elements for op_a matrix
-!<     real(dp), public, save, allocatable :: sop_a(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     type (T_spmat), public, save, allocatable :: spm_a(:)
-
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_b (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-!<! row index: element i of it gives the index of the element in the
-!<! sop_b array that is first non-zero element in a row i
-!<     integer, public, save, allocatable  :: sop_ib(:,:)
-!<
-!<! column index: element j of it is the number of the column that contains
-!<! the j-th element in the sop_b array
-!<     integer, public, save, allocatable  :: sop_jb(:,:)
-!<
-!<! a array that contains the non-zero elements for op_b matrix
-!<     real(dp), public, save, allocatable :: sop_b(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     type (T_spmat), public, save, allocatable :: spm_b(:)
-
-! note: op_c and op_d are F-matrix, op_c is for create operator, while op_d
-! is for destroy operator. we need to multiply a series of op_c, op_d and
-! exponent matrix to get the matrix product trace.
-!
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_c (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-!<! row index: element i of it gives the index of the element in the
-!<! sop_c array that is first non-zero element in a row i
-!<     integer, public, save, allocatable  :: sop_ic(:,:)
-!<
-!<! column index: element j of it is the number of the column that contains
-!<! the j-th element in the sop_c array
-!<     integer, public, save, allocatable  :: sop_jc(:,:)
-!<
-!<! a array that contains the non-zero elements for op_c matrix
-!<     real(dp), public, save, allocatable :: sop_c(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     type (T_spmat), public, save, allocatable :: spm_c(:)
-
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_d (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-!<! row index: element i of it gives the index of the element in the
-!<! sop_d array that is first non-zero element in a row i
-!<     integer, public, save, allocatable  :: sop_id(:,:)
-!<
-!<! column index: element j of it is the number of the column that contains
-!<! the j-th element in the sop_d array
-!<     integer, public, save, allocatable  :: sop_jd(:,:)
-!<
-!<! a array that contains the non-zero elements for op_d matrix
-!<     real(dp), public, save, allocatable :: sop_d(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     type (T_spmat), public, save, allocatable :: spm_d(:)
-
-! note: op_s is used to calculate matrix product trace efficiently. the
-! final matrix product should be stored in op_s matrix
-!
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_s (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-!<! row index: element i of it gives the index of the element in the
-!<! sop_s array that is first non-zero element in a row i
-!<     integer, public, save, allocatable  :: sop_is(:,:)
-!<
-!<! column index: element j of it is the number of the column that contains
-!<! the j-th element in the sop_s array
-!<     integer, public, save, allocatable  :: sop_js(:,:)
-!<
-!<! a array that contains the non-zero elements for op_s matrix
-!<     real(dp), public, save, allocatable :: sop_s(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     type (T_spmat), public, save, allocatable :: spm_s(:)
-
-! note: op_n is the precomputed < c^{\dag} c > matrix, it is used to
-! calculate impurity occupation number (nmat)
-!
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_n (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-!<! row index: element i of it gives the index of the element in the
-!<! sop_n array that is first non-zero element in a row i
-!<     integer, public, save, allocatable  :: sop_in(:,:)
-!<
-!<! column index: element j of it is the number of the column that contains
-!<! the j-th element in the sop_n array
-!<     integer, public, save, allocatable  :: sop_jn(:,:)
-!<
-!<! a array that contains the non-zero elements for op_n matrix
-!<     real(dp), public, save, allocatable :: sop_n(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     type (T_spmat), public, save, allocatable :: spm_n(:)
-
-! note: op_m is the precomputed < c^{\dag} c c^{\dag} c > matrix, it is
-! used to calculate impurity double occupation number (nnmat)
-!
-!-------------------------------------------------------------------------
-!::: sparse matrix style for op_m (Compressed Sparse Row (CSR) format) :::
-!-------------------------------------------------------------------------
-!<! row index: element i of it gives the index of the element in the
-!<! sop_m array that is first non-zero element in a row i
-!<     integer, public, save, allocatable  :: sop_im(:,:,:)
-!<
-!<! column index: element j of it is the number of the column that contains
-!<! the j-th element in the sop_m array
-!<     integer, public, save, allocatable  :: sop_jm(:,:,:)
-!<
-!<! a array that contains the non-zero elements for op_m matrix
-!<     real(dp), public, save, allocatable :: sop_m(:,:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-     type (T_spmat), public, save, allocatable :: spm_m(:,:)
 
 ! F-matrix <alpha| f^{\dag}_{m} |beta> for create operators
      real(dp), public, save, allocatable :: op_c(:,:,:)
 
 ! F-matrix <alpha| f_{m} |beta> for destroy operators
      real(dp), public, save, allocatable :: op_d(:,:,:)
+
+!-------------------------------------------------------------------------
+!::: sparse matrix style for op (Compressed Sparse Row (CSR) format)   :::
+!-------------------------------------------------------------------------
+
+! op_a and op_b are used to calculate matrix product trace efficiently.
+! we used them in their sparse matrix form directly, instead of defining
+! them explicitly, in order to save memory consumption
+     type (T_spmat), public, save, allocatable :: spm_a(:)
+     type (T_spmat), public, save, allocatable :: spm_b(:)
+
+! op_c and op_d are F-matrix, op_c is for create operator, while op_d is
+! for destroy operator. we need to multiply a series of op_c, op_d and
+! exponent matrix to get the matrix product trace
+     type (T_spmat), public, save, allocatable :: spm_c(:)
+     type (T_spmat), public, save, allocatable :: spm_d(:)
+
+! op_s is used to calculate matrix product trace efficiently. the final
+! matrix product should be stored in op_s matrix
+     type (T_spmat), public, save, allocatable :: spm_s(:)
+
+! op_n is the precomputed < c^{\dag} c > matrix, it is used to calculate
+! impurity occupation number (nmat)
+     type (T_spmat), public, save, allocatable :: spm_n(:)
+
+! op_m is the precomputed < c^{\dag} c c^{\dag} c > matrix, it is used to
+! calculate impurity double occupation number (nnmat)
+     type (T_spmat), public, save, allocatable :: spm_m(:,:)
 
   end module ctqmc_fmat
 
@@ -622,6 +546,7 @@
      public :: ctqmc_deallocate_memory_wmat
      public :: ctqmc_deallocate_memory_smat
 
+! declaration of module procedures: sparse matrix manipulation
      public :: ctqmc_new_spmat
      public :: ctqmc_del_spmat
 
@@ -802,6 +727,7 @@
   subroutine ctqmc_allocate_memory_fmat()
      implicit none
 
+! local variables
 ! loop index
      integer :: i
      integer :: j
@@ -809,66 +735,19 @@
 ! allocate memory
      allocate(isave(npart),            stat=istat)
 
-!<     allocate(sop_ia(ncfgs+1,npart),   stat=istat)
-!<     allocate(sop_ja(nzero,npart),     stat=istat)
-!<     allocate(sop_a(nzero,npart),      stat=istat)
-     allocate(spm_a(npart), stat=istat)
-     do i=1,npart
-         call ctqmc_new_spmat(spm_a(i))
-     enddo ! over i={1,npart} loop
-
-!<     allocate(sop_ib(ncfgs+1,npart),   stat=istat)
-!<     allocate(sop_jb(nzero,npart),     stat=istat)
-!<     allocate(sop_b(nzero,npart),      stat=istat)
-     allocate(spm_b(npart), stat=istat)
-     do i=1,npart
-         call ctqmc_new_spmat(spm_b(i))
-     enddo ! over i={1,npart} loop
-
-!<     allocate(sop_ic(ncfgs+1,norbs),   stat=istat)
-!<     allocate(sop_jc(nzero,norbs),     stat=istat)
-!<     allocate(sop_c(nzero,norbs),      stat=istat)
-     allocate(spm_c(norbs), stat=istat)
-     do i=1,norbs
-         call ctqmc_new_spmat(spm_c(i))
-     enddo ! over i={1,norbs} loop
-
-!<     allocate(sop_id(ncfgs+1,norbs),   stat=istat)
-!<     allocate(sop_jd(nzero,norbs),     stat=istat)
-!<     allocate(sop_d(nzero,norbs),      stat=istat)
-     allocate(spm_d(norbs), stat=istat)
-     do i=1,norbs
-         call ctqmc_new_spmat(spm_d(i))
-     enddo ! over i={1,norbs} loop
-
-!<     allocate(sop_is(ncfgs+1,2),       stat=istat)
-!<     allocate(sop_js(nzero,2),         stat=istat)
-!<     allocate(sop_s(nzero,2),          stat=istat)
-     allocate(spm_s(2), stat=istat)
-     do i=1,2
-         call ctqmc_new_spmat(spm_s(i))
-     enddo ! over i={1,2} loop
-
-!<     allocate(sop_in(ncfgs+1,norbs),   stat=istat)
-!<     allocate(sop_jn(nzero,norbs),     stat=istat)
-!<     allocate(sop_n(nzero,norbs),      stat=istat)
-     allocate(spm_n(norbs), stat=istat)
-     do i=1,norbs
-         call ctqmc_new_spmat(spm_n(i))
-     enddo ! over i={1,norbs} loop
-
-!<     allocate(sop_im(ncfgs+1,norbs,norbs), stat=istat)
-!<     allocate(sop_jm(nzero,norbs,norbs),   stat=istat)
-!<     allocate(sop_m(nzero,norbs,norbs),    stat=istat)
-     allocate(spm_m(norbs,norbs), stat=istat)
-     do i=1,norbs
-         do j=1,norbs
-             call ctqmc_new_spmat(spm_m(j,i))
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
-
      allocate(op_c(ncfgs,ncfgs,norbs), stat=istat)
      allocate(op_d(ncfgs,ncfgs,norbs), stat=istat)
+
+     allocate(spm_a(npart),            stat=istat)
+     allocate(spm_b(npart),            stat=istat)
+
+     allocate(spm_c(norbs),            stat=istat)
+     allocate(spm_d(norbs),            stat=istat)
+
+     allocate(spm_s(  2  ),            stat=istat)
+
+     allocate(spm_n(norbs),            stat=istat)
+     allocate(spm_m(norbs,norbs),      stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -876,38 +755,34 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     isave  = 0
+     isave = 0
 
-!<     sop_ia = 0
-!<     sop_ja = 0
-!<     sop_a  = zero
-!<
-!<     sop_ib = 0
-!<     sop_jb = 0
-!<     sop_b  = zero
-!<
-!<     sop_ic = 0
-!<     sop_jc = 0
-!<     sop_c  = zero
-!<
-!<     sop_id = 0
-!<     sop_jd = 0
-!<     sop_d  = zero
+     op_c  = zero
+     op_d  = zero
 
-!<     sop_is = 0
-!<     sop_js = 0
-!<     sop_s  = zero
+     do i=1,npart
+         call ctqmc_new_spmat(spm_a(i))
+         call ctqmc_new_spmat(spm_b(i))
+     enddo ! over i={1,npart} loop
 
-!<     sop_in = 0
-!<     sop_jn = 0
-!<     sop_n  = zero
+     do i=1,norbs
+         call ctqmc_new_spmat(spm_c(i))
+         call ctqmc_new_spmat(spm_d(i))
+     enddo ! over i={1,norbs} loop
 
-!<     sop_im = 0
-!<     sop_jm = 0
-!<     sop_m  = zero
+     do i=1,2
+         call ctqmc_new_spmat(spm_s(i))
+     enddo ! over i={1,2} loop
 
-     op_c   = zero
-     op_d   = zero
+     do i=1,norbs
+         call ctqmc_new_spmat(spm_n(i))
+     enddo ! over i={1,norbs} loop
+
+     do i=1,norbs
+         do j=1,norbs
+             call ctqmc_new_spmat(spm_m(j,i))
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
 
      return
   end subroutine ctqmc_allocate_memory_fmat
@@ -1114,66 +989,46 @@
   subroutine ctqmc_deallocate_memory_fmat()
      implicit none
 
+! local variables
 ! loop index
      integer :: i
      integer :: j
 
-     if ( allocated(isave)  )  deallocate(isave )
-
-!<     if ( allocated(sop_ia) )  deallocate(sop_ia)
-!<     if ( allocated(sop_ja) )  deallocate(sop_ja)
-!<     if ( allocated(sop_a)  )  deallocate(sop_a )
      do i=1,npart
          call ctqmc_del_spmat(spm_a(i))
-     enddo ! over i={1,npart} loop
-     if ( allocated(spm_a)  )  deallocate(spm_a)
-
-!<     if ( allocated(sop_ib) )  deallocate(sop_ib)
-!<     if ( allocated(sop_jb) )  deallocate(sop_jb)
-!<     if ( allocated(sop_b)  )  deallocate(sop_b )
-     do i=1,npart
          call ctqmc_del_spmat(spm_b(i))
      enddo ! over i={1,npart} loop
-     if ( allocated(spm_b)  )  deallocate(spm_b)
 
-!<     if ( allocated(sop_ic) )  deallocate(sop_ic)
-!<     if ( allocated(sop_jc) )  deallocate(sop_jc)
-!<     if ( allocated(sop_c)  )  deallocate(sop_c )
      do i=1,norbs
          call ctqmc_del_spmat(spm_c(i))
-     enddo ! over i={1,norbs} loop
-     if ( allocated(spm_c)  )  deallocate(spm_c)
-
-!<     if ( allocated(sop_id) )  deallocate(sop_id)
-!<     if ( allocated(sop_jd) )  deallocate(sop_jd)
-!<     if ( allocated(sop_d)  )  deallocate(sop_d )
-     do i=1,norbs
          call ctqmc_del_spmat(spm_d(i))
      enddo ! over i={1,norbs} loop
-     if ( allocated(spm_d)  )  deallocate(spm_d)
 
-!<     if ( allocated(sop_is) )  deallocate(sop_is)
-!<     if ( allocated(sop_js) )  deallocate(sop_js)
-!<     if ( allocated(sop_s)  )  deallocate(sop_s )
      do i=1,2
          call ctqmc_del_spmat(spm_s(i))
      enddo ! over i={1,2} loop
-     if ( allocated(spm_s)  )  deallocate(spm_s )
 
      do i=1,norbs
          call ctqmc_del_spmat(spm_n(i))
      enddo ! over i={1,norbs} loop
-     if ( allocated(spm_n)  )  deallocate(spm_n )
 
      do i=1,norbs
          do j=1,norbs
              call ctqmc_del_spmat(spm_m(j,i))
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     if ( allocated(spm_m)  )  deallocate(spm_m )
 
-     if ( allocated(op_c)   )  deallocate(op_c  )
-     if ( allocated(op_d)   )  deallocate(op_d  )
+     if ( allocated(isave) )   deallocate(isave)
+     if ( allocated(op_c ) )   deallocate(op_c )
+     if ( allocated(op_d ) )   deallocate(op_d )
+
+     if ( allocated(spm_a) )   deallocate(spm_a)
+     if ( allocated(spm_b) )   deallocate(spm_b)
+     if ( allocated(spm_c) )   deallocate(spm_c)
+     if ( allocated(spm_d) )   deallocate(spm_d)
+     if ( allocated(spm_s) )   deallocate(spm_s)
+     if ( allocated(spm_n) )   deallocate(spm_n)
+     if ( allocated(spm_m) )   deallocate(spm_m)
 
      return
   end subroutine ctqmc_deallocate_memory_fmat
@@ -1230,27 +1085,53 @@
      return
   end subroutine ctqmc_deallocate_memory_smat
 
+!!========================================================================
+!!>>> sparse matrix manipulation subroutines                           <<<
+!!========================================================================
+
+!!>>> ctqmc_new_spmat: create a real(dp) sparse matrix with fixed size
   subroutine ctqmc_new_spmat(spmat)
      implicit none
 
+! external arguments
+! sparse matrix structure
      type (T_spmat), intent(inout) :: spmat
+
+! setup the size of sparse matrix
      spmat%ndim = ncfgs
      spmat%nval = nzero
 
+! allocate memory
      allocate(spmat%iv(spmat%ndim + 1), stat=istat)
      allocate(spmat%jv(spmat%nval + 0), stat=istat)
      allocate(spmat%vv(spmat%nval + 0), stat=istat)
 
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_new_spmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize them
+     spmat%iv = 0
+     spmat%jv = 0
+     spmat%vv = zero
+
      return
   end subroutine ctqmc_new_spmat
 
+!!>>> ctqmc_del_spmat: delete a real(dp) sparse matrix with fixed size
   subroutine ctqmc_del_spmat(spmat)
      implicit none
 
+! external arguments
+! sparse matrix structure
      type (T_spmat), intent(inout) :: spmat
 
+! reset the size of sparse matrix
      spmat%ndim = 0
      spmat%nval = 0
+
+! deallocate memory
      if ( allocated(spmat%iv) ) deallocate(spmat%iv)
      if ( allocated(spmat%jv) ) deallocate(spmat%jv)
      if ( allocated(spmat%vv) ) deallocate(spmat%vv)
