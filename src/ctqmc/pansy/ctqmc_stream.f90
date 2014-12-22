@@ -135,6 +135,9 @@
              call p_get('nmonte', nmonte)
              call p_get('ncarlo', ncarlo)
 
+             norbs = nband*nspin
+             ncfgs = 2**norbs
+
 ! destroy the parser
              call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block

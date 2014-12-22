@@ -332,7 +332,7 @@
      use context, only : diag, eigs
 
      use m_sect, only : nsect
-     use m_sect, only : sectors, prod
+     use m_sect, only : sectors
 
      implicit none
 

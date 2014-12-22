@@ -2531,7 +2531,6 @@
 
      use m_sect, only : nsect
      use m_sect, only : sectors
-     use m_sect, only : prod, is_string
      use m_sect, only : cat_make_string
      use m_part, only : is_cp
      use m_part, only : cat_make_npart
@@ -2655,8 +2654,7 @@
      end select
      ptmp = propose  *  abs(deter_ratio)
 
-! build string for all the sectors, is_string(:,1) will be
-! modified internally
+! build string for all the sectors
      call cat_make_string(csize, index_t_loc, is_string, string)
 
 ! we can check is_string here to see whether this diagram can survive ?
@@ -2676,7 +2674,7 @@
 ! determine the minimal dimension for each alive string
      min_dim = 0
      do i=1,nsect
-         if ( .not. is_string(i) ) cycle
+         if ( .not. is_string(i) ) CYCLE
          min_dim(i) = sectors(i)%ndim
          do j=1,csize
              if ( min_dim(i) > sectors(string(j,i))%ndim ) then
@@ -2691,7 +2689,10 @@
      nalive_sect = 0
      orig_sect = -1
      do i=1,nsect
-         if ( .not. is_string(i) ) cycle
+         if ( .not. is_string(i) ) then
+             sectors(i)%prod(:,:,1) = zero
+             CYCLE
+         endif
 ! find one sector which may contribute to the total trace
          nalive_sect = nalive_sect + 1
 ! calculate its trace bound
@@ -2802,8 +2803,8 @@
      use control, only : mkink, ncfgs
      use context, only : expt_t, expt_v, index_t, index_v, diag
 
-     use m_sect, only : nsect, sectors, prod
-     use m_sect, only : is_string, cat_make_string
+     use m_sect, only : nsect, sectors
+     use m_sect, only : cat_make_string
 
      use m_part, only : is_cp, cat_make_trace, cat_make_npart
 
@@ -2882,7 +2883,6 @@
 
      use m_sect, only : nsect
      use m_sect, only : sectors
-     use m_sect, only : prod
      use m_part, only : cat_save_npart
 
      implicit none
@@ -2900,8 +2900,7 @@
 ! transfer the final matrix product from prod(:,:,1) to prod(:,:,2),
 ! the latter can be used to calculate nmat and nnmat
      do i=1,nsect
-         if ( .not. is_string(i,1) ) CYCLE
-         prod(i,2)%val = prod(i,1)%val
+         sectors(i)%prod(:,:,2) = sectors(i)%prod(:,:,1)
      enddo ! over i={1,nsect} loop
 
 ! save the data of each part

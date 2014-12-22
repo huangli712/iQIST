@@ -39,9 +39,6 @@
      use context, only : gtau, grnf
      use context, only : sig2
 
-     use m_sect, only : ctqmc_deallocate_memory_occu
-     use m_part, only : ctqmc_deallocate_memory_part
-
      implicit none
 
 ! external arguments
@@ -576,10 +573,6 @@
          write(mystd,'(2X,a)') 'MANJUSHAKA >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
-
-! deallocate memory for occu and npart
-     call ctqmc_deallocate_memory_occu()
-     call ctqmc_deallocate_memory_part()
 
 ! deallocate memory
      deallocate(hist_mpi )

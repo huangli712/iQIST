@@ -956,7 +956,6 @@
   module m_sect
      use constants, only : dp, zero
 
-     use control, only : itrun
      use control, only : norbs
      use control, only : mkink
      use context, only : type_v, flvr_v
@@ -1332,22 +1331,23 @@
      sum_dim = 0
      do i=1,nsect
          if ( is_trunc(i) ) then
-             cycle
+             sectors(i)%next = -1
+         else
+             if ( max_dim_sect_t < sectors(i)%ndim ) then
+                 max_dim_sect_t = sectors(i)%ndim
+             endif ! back if ( max_dim_sect_t < sectors(i)%ndim ) block
+             sum_dim = sum_dim + sectors(i)%ndim
+             nsect_t = nsect_t + 1
+             do j=1,sectors(i)%nops
+                 do k=0,1
+                     ii = sectors(i)%next(j,k)
+                     if ( ii == -1 ) CYCLE
+                     if ( is_trunc(ii) ) then
+                         sectors(i)%next(j,k) = -1
+                     endif ! back if ( is_trunc(ii) ) block
+                 enddo ! over k={0,1} loop
+             enddo ! over j={1,sectors(i)%nops} loop
          endif ! back if ( is_trunc(i) ) block
-         if ( max_dim_sect_t < sectors(i)%ndim ) then
-             max_dim_sect_t = sectors(i)%ndim
-         endif ! back if ( max_dim_sect_t < sectors(i)%ndim ) block
-         sum_dim = sum_dim + sectors(i)%ndim
-         nsect_t = nsect_t + 1
-         do j=1,sectors(i)%nops
-             do k=0,1
-                 ii = sectors(i)%next(j,k)
-                 if ( ii == -1 ) cycle
-                 if ( is_trunc(ii) ) then
-                     sectors(i)%next(j,k) = -1
-                 endif ! back if ( is_trunc(ii) ) block
-             enddo ! over k={0,1} loop
-         enddo ! over j={1,sectors(i)%nops} loop
      enddo ! over i={1,nsect} loop
 
      ave_dim_sect_t = real(sum_dim) / real(nsect_t)
@@ -1413,10 +1413,6 @@
 ! begin with S1: F1(S1) -> S2, F2(S2) -> S3, ... , Fk(Sk) -> S1
 ! if find some Si==-1, cycle this sector immediately
      do i=1,nsect
-         if ( is_trunc(i) ) then
-             is_string(i) = .false.
-         endif ! back if ( is_trunc(i) ) block
-
          curr_sect_l = i
          curr_sect_r = i
          next_sect_l = i
@@ -1485,9 +1481,8 @@
      use control, only : beta
      use context, only : type_v, flvr_v, time_v, expt_v
 
-     use m_sect, only : nsect, sectors, is_trunc, t_fmat
-     use m_sect, only : prod
-     use m_sect, only : ctqmc_allocate_memory_one_fmat, ctqmc_deallocate_memory_one_fmat
+     use m_sect, only : nsect, max_dim_sect
+     use m_sect, only : sectors
 
      implicit none
 
@@ -1781,7 +1776,6 @@
 ! save the change matrices products when proposed moves were accepted
      if ( npart > 1 ) then
          do i=1,nsect
-             if ( is_trunc(i) ) CYCLE
              do j=1,npart
                  if ( is_cp(j,i) ) then
                      saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)

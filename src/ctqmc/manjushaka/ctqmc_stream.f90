@@ -43,7 +43,8 @@
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
-     itrun  = 1            ! without truncation  (1) or with N truncation    (2)
+     ifast  = 1            ! npart (1) time evolution (2) skip-list (3)
+     itrun  = 0            ! without truncation  (1) or with N truncation    (2)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
@@ -155,6 +156,9 @@
              call p_get('nclean', nclean)
              call p_get('nmonte', nmonte)
              call p_get('ncarlo', ncarlo)
+
+             norbs = nband*nspin
+             ncfgs = 2**norbs
 
 ! destroy the parser
              call p_destroy()
@@ -454,6 +458,7 @@
 ! after we know the total number of sectors, we can allocate memory
 ! for sectors, only for master node
          call ctqmc_allocate_memory_sect()
+         call ctqmc_allocate_memory_part()
 
 ! read each sector's information
          do i=1,nsect
@@ -577,6 +582,7 @@
 ! allocate memory for sectors, only for children nodes
      if ( myid /= master ) then
          call ctqmc_allocate_memory_sect()
+         call ctqmc_allocate_memory_part()
      endif ! back if ( myid /= master ) block
 
 ! broadcast sectors from master node to all children nodes
@@ -833,12 +839,14 @@
      endif
 
 ! init m_part module
-     nprod = zero
-     is_cp = .false.
-     nc_cp = 0
-     ops   = 0
-     ope   = 0
-     isave = 1
+     nprod   = zero
+     is_cp   = .false.
+     nc_cp   = 0
+     ops     = 0
+     ope     = 0
+     isave   = 1
+     saved_p = zero
+     saved_n = zero
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
@@ -892,6 +900,7 @@
      call ctqmc_deallocate_memory_smat()
 
      call ctqmc_deallocate_memory_sect()
+     call ctqmc_deallocate_memory_part()
 
      return
   end subroutine ctqmc_final_array
