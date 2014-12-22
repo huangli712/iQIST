@@ -2559,6 +2559,7 @@
      use context, only : diag
      use context, only : isave
      use context, only : spm_a, spm_b, spm_c, spm_d, spm_s
+     use context, only : T_spmat, ctqmc_new_spmat, ctqmc_del_spmat
 
      implicit none
 
@@ -2611,14 +2612,17 @@
      integer  :: ope(npart)
 
 ! dummy sparse matrix structure, in CSR style
-     integer  :: imm1(ncfgs+1)
-     integer  :: jmm1(nzero)
-     real(dp) :: smm1(nzero)
+     !integer  :: imm1(ncfgs+1)
+     !integer  :: jmm1(nzero)
+     !real(dp) :: smm1(nzero)
+     type (T_spmat) :: spm_x
 
 ! dummy sparse matrix structure, in CSR style
      integer  :: imm2(ncfgs+1)
      integer  :: jmm2(nzero)
      real(dp) :: smm2(nzero)
+
+     call ctqmc_new_spmat(spm_x)
 
 ! evaluate interval at first
      interval = beta / real(npart)
@@ -2632,7 +2636,7 @@
      isave = 0
 
 ! build identity sparse matrix as a start matrix
-     call sp_uni_to_csr( ncfgs, nzero, smm1, jmm1, imm1 )
+     call sp_uni_to_csr( ncfgs, nzero, spm_x%vv, spm_x%jv, spm_x%iv )
 
 !-------------------------------------------------------------------------
 ! case A: partly-trial mode
@@ -2750,7 +2754,7 @@
 ! multiply current part (sop_b) with the rest parts (smm1), and get smm2
                  call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                                spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv, &
-                                                   smm1, jmm1, imm1, &
+                                                   spm_x%vv, spm_x%jv, spm_x%iv, &
                                                    smm2, jmm2, imm2 )
 
 ! if current part no need to be recalculated
@@ -2759,7 +2763,7 @@
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
                  call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                                spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv, &
-                                                   smm1, jmm1, imm1, &
+                                                   spm_x%vv, spm_x%jv, spm_x%iv, &
                                                    smm2, jmm2, imm2 )
 
 
@@ -2767,14 +2771,14 @@
 
 ! copy smm2 to smm1
              call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
-                                                   smm1, jmm1, imm1 )
+                                                   spm_x%vv, spm_x%jv, spm_x%iv )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
          call sp_dia_mm_csr( ncfgs, nzero, expt_t(:,1), &
-                                          smm1, jmm1, imm1, &
+                                          spm_x%vv, spm_x%jv, spm_x%iv, &
                                           smm2, jmm2, imm2 )
 
 !-------------------------------------------------------------------------
@@ -2895,19 +2899,19 @@
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv, &
-                                               smm1, jmm1, imm1, &
+                                               spm_x%vv, spm_x%jv, spm_x%iv, &
                                                smm2, jmm2, imm2 )
 
 ! copy smm2 to smm1
              call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
-                                                   smm1, jmm1, imm1 )
+                                                   spm_x%vv, spm_x%jv, spm_x%iv )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
          call sp_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
-                                          smm1, jmm1, imm1, &
+                                          spm_x%vv, spm_x%jv, spm_x%iv, &
                                           smm2, jmm2, imm2 )
 
 ! reset isave, since sop_a should not be overrode by sop_b in this case.
@@ -2977,19 +2981,19 @@
 ! multiply current part (sop_b) with the rest parts (smm1), and get smm2
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv, &
-                                               smm1, jmm1, imm1, &
+                                               spm_x%vv, spm_x%jv, spm_x%iv, &
                                                smm2, jmm2, imm2 )
 
 ! copy smm2 to smm1
              call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
-                                                   smm1, jmm1, imm1 )
+                                                   spm_x%vv, spm_x%jv, spm_x%iv )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
          call sp_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
-                                          smm1, jmm1, imm1, &
+                                          spm_x%vv, spm_x%jv, spm_x%iv, &
                                           smm2, jmm2, imm2 )
 
 !-------------------------------------------------------------------------
@@ -3056,19 +3060,19 @@
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv, &
-                                               smm1, jmm1, imm1, &
+                                               spm_x%vv, spm_x%jv, spm_x%iv, &
                                                smm2, jmm2, imm2 )
 
 ! copy smm2 to smm1
              call sp_csr_cp_csr( ncfgs, nzero, smm2, jmm2, imm2, &
-                                                   smm1, jmm1, imm1 )
+                                                   spm_x%vv, spm_x%jv, spm_x%iv )
 
          enddo ! over i={1,npart} loop
 
 ! multiply the last time evolution operator with smm1, now smm2 is the
 ! final product matrix
          call sp_dia_mm_csr( ncfgs, nzero, expt_t(:,2), &
-                                          smm1, jmm1, imm1, &
+                                          spm_x%vv, spm_x%jv, spm_x%iv, &
                                           smm2, jmm2, imm2 )
 
      endif ! back if ( cmode == 1 ) block
