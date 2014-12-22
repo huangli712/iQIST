@@ -22,7 +22,7 @@
 ! (0) without, (1) diagonal, (2) non-diagonal 
   icf    : 1
 
-! type of spin-oribt coupling (SOC)
+! type of spin-orbit coupling (SOC)
 ! (0) without, (1) with atomic SOC
   isoc   : 1
 

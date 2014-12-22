@@ -43,7 +43,8 @@
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
-     itrun  = 1            ! without truncation  (1) or with N truncation    (2)
+     ifast  = 1            ! npart (1) time evolution (2) skip-list (3)
+     itrun  = 0            ! without truncation  (1) or with N truncation    (2)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
@@ -53,8 +54,6 @@
      nspin  = 2            ! number of spin projection
      norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
      ncfgs  = 2**norbs     ! number of atomic states
-     nmini  = 0            ! minimum of occupancy number
-     nmaxi  = norbs        ! maximum of occupancy number
      niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp      ! U : average Coulomb interaction
@@ -116,14 +115,13 @@
              call p_get('isbin' , isbin )
              call p_get('isort' , isort )
              call p_get('isvrt' , isvrt )
+             call p_get('ifast' , ifast )
              call p_get('itrun' , itrun )
 
              call p_get('nband' , nband )
              call p_get('nspin' , nspin )
              call p_get('norbs' , norbs )
              call p_get('ncfgs' , ncfgs )
-             call p_get('nmini' , nmini )
-             call p_get('nmaxi' , nmaxi )
              call p_get('niter' , niter )
 
              call p_get('U'     , U     )
@@ -159,6 +157,9 @@
              call p_get('nmonte', nmonte)
              call p_get('ncarlo', ncarlo)
 
+             norbs = nband*nspin
+             ncfgs = 2**norbs
+
 ! destroy the parser
              call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
@@ -174,6 +175,7 @@
      call mp_bcast( isbin , master )
      call mp_bcast( isort , master )
      call mp_bcast( isvrt , master )
+     call mp_bcast( ifast , master )
      call mp_bcast( itrun , master )
      call mp_barrier()
 
@@ -181,8 +183,6 @@
      call mp_bcast( nspin , master )
      call mp_bcast( norbs , master )
      call mp_bcast( ncfgs , master )
-     call mp_bcast( nmini , master )
-     call mp_bcast( nmaxi , master )
      call mp_bcast( niter , master )
      call mp_barrier()
 
@@ -458,13 +458,16 @@
 ! after we know the total number of sectors, we can allocate memory
 ! for sectors, only for master node
          call ctqmc_allocate_memory_sect()
+         call ctqmc_allocate_memory_part()
 
 ! read each sector's information
          do i=1,nsect
-! read the dimension, total number of electrons, number of fermion
-! operators, and start index of this sector
+! read the dimension, number of fermion operators, start index of this sector,
+! total number of electrons, z component of spin momentum, z component of
+! spin-orbit momentum, and PS good quantum number
              read(mytmp,*) ! skip the header
-             read(mytmp,*) k, sectors(i)%ndim, sectors(i)%nele, sectors(i)%nops, sectors(i)%istart
+             read(mytmp,*) k, sectors(i)%ndim, sectors(i)%nops, sectors(i)%istart, &
+                        sectors(i)%nele, sectors(i)%sz, sectors(i)%jz, sectors(i)%ps
 
 ! allocate the memory for sectors(i), only for master node
              call ctqmc_allocate_memory_one_sect(sectors(i))
@@ -579,6 +582,7 @@
 ! allocate memory for sectors, only for children nodes
      if ( myid /= master ) then
          call ctqmc_allocate_memory_sect()
+         call ctqmc_allocate_memory_part()
      endif ! back if ( myid /= master ) block
 
 ! broadcast sectors from master node to all children nodes
@@ -588,9 +592,13 @@
      do i=1,nsect
 ! broadcast sector's information
          call mp_bcast(sectors(i)%ndim,   master)
-         call mp_bcast(sectors(i)%nele,   master)
          call mp_bcast(sectors(i)%nops,   master)
          call mp_bcast(sectors(i)%istart, master)
+         call mp_bcast(sectors(i)%nele,   master)
+         call mp_bcast(sectors(i)%sz,     master)
+         call mp_bcast(sectors(i)%jz,     master)
+         call mp_bcast(sectors(i)%ps,     master)
+
 ! setup barrier
          call mp_barrier()
 ! allocate memory for t_sector structure, only for children nodes
@@ -826,24 +834,19 @@
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
 ! truncate the Hilbert space here
-     call ctqmc_make_truncation()
-
-! allocate final_product, occu, double_occu for un-truncated sectors
-     call ctqmc_allocate_memory_occu()
-
-! build occu, double_occu for un-truncated sectors
-     call ctqmc_make_occupy()
-
-! allocate memory for npart
-     call ctqmc_allocate_memory_part()
+     if ( itrun == 1 ) then
+         call ctqmc_make_truncation()
+     endif
 
 ! init m_part module
-     nprod = zero
-     is_cp = .false.
-     nc_cp = 0
-     ops   = 0
-     ope   = 0
-     isave = 1
+     nprod   = zero
+     is_cp   = .false.
+     nc_cp   = 0
+     ops     = 0
+     ope     = 0
+     isave   = 1
+     saved_p = zero
+     saved_n = zero
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
@@ -897,6 +900,7 @@
      call ctqmc_deallocate_memory_smat()
 
      call ctqmc_deallocate_memory_sect()
+     call ctqmc_deallocate_memory_part()
 
      return
   end subroutine ctqmc_final_array

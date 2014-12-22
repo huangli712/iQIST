@@ -928,14 +928,23 @@
 ! dimension
          integer :: ndim
 
-! total number of electrons
-         integer :: nele
-
 ! number of fermion operators, it should be equal to norbs
          integer :: nops
 
 ! start index of this sector
          integer :: istart
+
+! total number of electrons
+         integer :: nele
+
+! z component of spin: Sz
+         integer :: sz
+ 
+! z component of spin-orbit momentum: Jz
+         integer :: jz
+
+! PS good quantum number
+         integer :: ps
 
 ! the next sector when a fermion operator acts on the sector
 ! next(nops,0:1), 0 for annihilation and 1 for creation operators,
@@ -946,14 +955,8 @@
 ! the eigenvalues
          real(dp), pointer :: eval(:)
 
-! final products of matrices, which will be used to calculate nmat and nnmat
+! final products of matrices
          real(dp), pointer :: prod(:,:,:)
-
-! matrix of occupancy operator c^{\dagger}c
-         real(dp), pointer :: occu(:,:,:)
-
-! matrix of double occupancy operator c^{\dagger}cc^{\dagger}c
-         real(dp), pointer :: doccu(:,:,:,:)
 
 ! the F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
@@ -1046,9 +1049,6 @@
      allocate(sect%eval(sect%ndim),                     stat=istat)
      allocate(sect%prod(sect%ndim,sect%ndim,2),         stat=istat)
 
-     allocate(sect%occu(sect%ndim,sect%ndim,sect%nops), stat=istat)
-     allocate(sect%doccu(sect%ndim,sect%ndim,sect%nops,sect%nops), stat=istat)
-
      allocate(sect%fmat(sect%nops,0:1),                 stat=istat)
 
 ! check the status
@@ -1061,9 +1061,6 @@
 
      sect%eval  = zero
      sect%prod  = zero
-
-     sect%occu  = zero
-     sect%doccu = zero
 
 ! initialize fmat one by one
      do i=1,sect%nops
@@ -1099,17 +1096,17 @@
 ! initialize them
      do i=1,nsect
          sectors(i)%ndim   = 0
-         sectors(i)%nele   = 0
          sectors(i)%nops   = norbs
          sectors(i)%istart = 0
+         sectors(i)%nele   = 0
+         sectors(i)%sz     = 0
+         sectors(i)%jz     = 0
+         sectors(i)%ps     = 0
 
          sectors(i)%next  => null()
 
          sectors(i)%eval  => null()
          sectors(i)%prod  => null()
-
-         sectors(i)%occu  => null()
-         sectors(i)%doccu => null()
 
          sectors(i)%fmat  => null()
      enddo ! over i={1,nsect} loop
@@ -1151,9 +1148,6 @@
 
      if ( associated(sect%eval)  ) deallocate(sect%eval )
      if ( associated(sect%prod)  ) deallocate(sect%prod )
-
-     if ( associated(sect%occu)  ) deallocate(sect%occu )
-     if ( associated(sect%doccu) ) deallocate(sect%doccu)
 
 ! deallocate fmat one by one
      if ( associated(sect%fmat) ) then

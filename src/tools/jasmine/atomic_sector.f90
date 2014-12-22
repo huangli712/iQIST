@@ -297,7 +297,7 @@
 !!>>> a sector consists of some many-particle Fock states labeled by
 !!>>> good quantum numbers
   subroutine atomic_make_sectors()
-     use constants, only : zero
+     use constants, only : zero, two
 
      use control, only : ictqmc
      use control, only : nband, norbs, ncfgs
@@ -370,6 +370,15 @@
 ! the first index: dimension size of the sector
 ! the second index: the index of sector
      integer, allocatable :: sector_basis(:,:)
+
+! dummy variable
+     integer :: sum_dim
+
+! initialize some variables
+     sect_good_ntot = 0
+     sect_good_sz = 0
+     sect_good_jz = 0
+     sect_good_ps = 0
 
 ! allocate memory
      allocate(sector_basis(ncfgs,ncfgs))
@@ -531,6 +540,9 @@
      do i=1,nsect
          sectors(i)%ndim = ndims(i)
          sectors(i)%nele = sect_good_ntot(i)
+         sectors(i)%sz = sect_good_sz(i)
+         sectors(i)%jz = sect_good_jz(i)
+         sectors(i)%ps = sect_good_ps(i)
          sectors(i)%nops = norbs
          sectors(i)%istart = counter
          counter = counter + ndims(i)
@@ -653,7 +665,11 @@
 ! calculate the maximum and average dimensions of sectors
 !-------------------------------------------------------------------------
      max_dim_sect = maxval(ndims)
-     ave_dim_sect = real(ncfgs) / real(nsectors)
+     sum_dim = 0
+     do i=1,nsectors
+         sum_dim = sum_dim + sectors(i)%ndim
+     enddo
+     ave_dim_sect = real(sum_dim) / real(nsectors)
 
 ! dump sector information for reference
 !-------------------------------------------------------------------------

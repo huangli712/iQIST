@@ -342,13 +342,12 @@
      isbin  = I_solver%isbin
      isort  = I_solver%isort
      isvrt  = I_solver%isvrt
+     ifast  = I_solver%ifast
      itrun  = I_solver%itrun
      nband  = I_solver%nband
      nspin  = I_solver%nspin
      norbs  = I_solver%norbs
      ncfgs  = I_solver%ncfgs
-     nmini  = I_solver%nmini
-     nmaxi  = I_solver%nmaxi
      niter  = I_solver%niter
      lemax  = I_solver%lemax
      legrd  = I_solver%legrd

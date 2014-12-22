@@ -202,15 +202,24 @@
 
 ! the dimension of this sector
          integer :: ndim
-
-! total number of electrons N
-         integer :: nele
-
+ 
 ! number of fermion operators
          integer :: nops
 
 ! the start index of this sector
          integer :: istart
+
+! total number of electrons N
+         integer :: nele
+
+! z component of spin: Sz
+         integer :: sz
+ 
+! z component of spin-orbit momentum: Jz
+         integer :: jz
+
+! PS good quantum number
+         integer :: ps
 
 ! the Fock basis index of this sector
          integer, pointer  :: basis(:)
