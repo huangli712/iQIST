@@ -3157,7 +3157,6 @@
          diag(j,1) = sp_csr_cp_elm( j, j, &
                             ncfgs, nzero, &
                         smm2, jmm2, imm2 )
-
      enddo ! over j={1,ncfgs} loop
      trace = sum( diag(:,1) )
 
