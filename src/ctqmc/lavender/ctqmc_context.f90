@@ -773,39 +773,27 @@
   subroutine ctqmc_allocate_memory_fmat()
      implicit none
 
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
 ! allocate memory
      allocate(isave(npart),            stat=istat)
 
-     allocate(sop_ia(ncfgs+1,npart),   stat=istat)
-     allocate(sop_ja(nzero,npart),     stat=istat)
-     allocate(sop_a(nzero,npart),      stat=istat)
-
-     allocate(sop_ib(ncfgs+1,npart),   stat=istat)
-     allocate(sop_jb(nzero,npart),     stat=istat)
-     allocate(sop_b(nzero,npart),      stat=istat)
-
-     allocate(sop_ic(ncfgs+1,norbs),   stat=istat)
-     allocate(sop_jc(nzero,norbs),     stat=istat)
-     allocate(sop_c(nzero,norbs),      stat=istat)
-
-     allocate(sop_id(ncfgs+1,norbs),   stat=istat)
-     allocate(sop_jd(nzero,norbs),     stat=istat)
-     allocate(sop_d(nzero,norbs),      stat=istat)
-
-     allocate(sop_is(ncfgs+1,2),       stat=istat)
-     allocate(sop_js(nzero,2),         stat=istat)
-     allocate(sop_s(nzero,2),          stat=istat)
-
-     allocate(sop_in(ncfgs+1,norbs),   stat=istat)
-     allocate(sop_jn(nzero,norbs),     stat=istat)
-     allocate(sop_n(nzero,norbs),      stat=istat)
-
-     allocate(sop_im(ncfgs+1,norbs,norbs), stat=istat)
-     allocate(sop_jm(nzero,norbs,norbs),   stat=istat)
-     allocate(sop_m(nzero,norbs,norbs),    stat=istat)
-
      allocate(op_c(ncfgs,ncfgs,norbs), stat=istat)
      allocate(op_d(ncfgs,ncfgs,norbs), stat=istat)
+
+     allocate(spm_a(npart),            stat=istat)
+     allocate(spm_b(npart),            stat=istat)
+
+     allocate(spm_c(norbs),            stat=istat)
+     allocate(spm_d(norbs),            stat=istat)
+
+     allocate(spm_s(  2  ),            stat=istat)
+
+     allocate(spm_n(norbs),            stat=istat)
+     allocate(spm_m(norbs,norbs),      stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -813,38 +801,34 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     isave  = 0
+     isave = 0
 
-     sop_ia = 0
-     sop_ja = 0
-     sop_a  = zero
+     op_c  = zero
+     op_d  = zero
 
-     sop_ib = 0
-     sop_jb = 0
-     sop_b  = zero
+     do i=1,npart
+         call ctqmc_new_spmat(spm_a(i))
+         call ctqmc_new_spmat(spm_b(i))
+     enddo ! over i={1,npart} loop
 
-     sop_ic = 0
-     sop_jc = 0
-     sop_c  = zero
+     do i=1,norbs
+         call ctqmc_new_spmat(spm_c(i))
+         call ctqmc_new_spmat(spm_d(i))
+     enddo ! over i={1,norbs} loop
 
-     sop_id = 0
-     sop_jd = 0
-     sop_d  = zero
+     do i=1,2
+         call ctqmc_new_spmat(spm_s(i))
+     enddo ! over i={1,2} loop
 
-     sop_is = 0
-     sop_js = 0
-     sop_s  = zero
+     do i=1,norbs
+         call ctqmc_new_spmat(spm_n(i))
+     enddo ! over i={1,norbs} loop
 
-     sop_in = 0
-     sop_jn = 0
-     sop_n  = zero
-
-     sop_im = 0
-     sop_jm = 0
-     sop_m  = zero
-
-     op_c   = zero
-     op_d   = zero
+     do i=1,norbs
+         do j=1,norbs
+             call ctqmc_new_spmat(spm_m(j,i))
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
 
      return
   end subroutine ctqmc_allocate_memory_fmat
@@ -1063,38 +1047,50 @@
   subroutine ctqmc_deallocate_memory_fmat()
      implicit none
 
-     if ( allocated(isave)  )  deallocate(isave )
+! local variables
+! loop index
+     integer :: i
+     integer :: j
 
-     if ( allocated(sop_ia) )  deallocate(sop_ia)
-     if ( allocated(sop_ja) )  deallocate(sop_ja)
-     if ( allocated(sop_a)  )  deallocate(sop_a )
+     do i=1,npart
+         call ctqmc_del_spmat(spm_a(i))
+         call ctqmc_del_spmat(spm_b(i))
+     enddo ! over i={1,npart} loop
 
-     if ( allocated(sop_ib) )  deallocate(sop_ib)
-     if ( allocated(sop_jb) )  deallocate(sop_jb)
-     if ( allocated(sop_b)  )  deallocate(sop_b )
+     do i=1,norbs
+         call ctqmc_del_spmat(spm_c(i))
+         call ctqmc_del_spmat(spm_d(i))
+     enddo ! over i={1,norbs} loop
 
-     if ( allocated(sop_ic) )  deallocate(sop_ic)
-     if ( allocated(sop_jc) )  deallocate(sop_jc)
-     if ( allocated(sop_c)  )  deallocate(sop_c )
+     do i=1,2
+         call ctqmc_del_spmat(spm_s(i))
+     enddo ! over i={1,2} loop
 
-     if ( allocated(sop_id) )  deallocate(sop_id)
-     if ( allocated(sop_jd) )  deallocate(sop_jd)
-     if ( allocated(sop_d)  )  deallocate(sop_d )
+     do i=1,norbs
+         call ctqmc_del_spmat(spm_n(i))
+     enddo ! over i={1,norbs} loop
 
-     if ( allocated(sop_is) )  deallocate(sop_is)
-     if ( allocated(sop_js) )  deallocate(sop_js)
-     if ( allocated(sop_s)  )  deallocate(sop_s )
+     do i=1,norbs
+         do j=1,norbs
+             call ctqmc_del_spmat(spm_m(j,i))
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
 
-     if ( allocated(sop_in) )  deallocate(sop_in)
-     if ( allocated(sop_jn) )  deallocate(sop_jn)
-     if ( allocated(sop_n)  )  deallocate(sop_n )
+     if ( allocated(isave) )   deallocate(isave)
 
-     if ( allocated(sop_im) )  deallocate(sop_im)
-     if ( allocated(sop_jm) )  deallocate(sop_jm)
-     if ( allocated(sop_m)  )  deallocate(sop_m )
+     if ( allocated(op_c ) )   deallocate(op_c )
+     if ( allocated(op_d ) )   deallocate(op_d )
 
-     if ( allocated(op_c)   )  deallocate(op_c  )
-     if ( allocated(op_d)   )  deallocate(op_d  )
+     if ( allocated(spm_a) )   deallocate(spm_a)
+     if ( allocated(spm_b) )   deallocate(spm_b)
+
+     if ( allocated(spm_c) )   deallocate(spm_c)
+     if ( allocated(spm_d) )   deallocate(spm_d)
+
+     if ( allocated(spm_s) )   deallocate(spm_s)
+
+     if ( allocated(spm_n) )   deallocate(spm_n)
+     if ( allocated(spm_m) )   deallocate(spm_m)
 
      return
   end subroutine ctqmc_deallocate_memory_fmat
@@ -1150,5 +1146,59 @@
 
      return
   end subroutine ctqmc_deallocate_memory_smat
+
+!!========================================================================
+!!>>> sparse matrix manipulation subroutines                           <<<
+!!========================================================================
+
+!!>>> ctqmc_new_spmat: create a real(dp) sparse matrix with fixed size
+  subroutine ctqmc_new_spmat(spmat)
+     implicit none
+
+! external arguments
+! sparse matrix structure
+     type (T_spmat), intent(inout) :: spmat
+
+! setup the size of sparse matrix
+     spmat%ndim = ncfgs
+     spmat%nval = nzero
+
+! allocate memory
+     allocate(spmat%iv(spmat%ndim + 1), stat=istat)
+     allocate(spmat%jv(spmat%nval + 0), stat=istat)
+     allocate(spmat%vv(spmat%nval + 0), stat=istat)
+
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_new_spmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize them
+     spmat%iv = 0
+     spmat%jv = 0
+     spmat%vv = zero
+
+     return
+  end subroutine ctqmc_new_spmat
+
+!!>>> ctqmc_del_spmat: delete a real(dp) sparse matrix with fixed size
+  subroutine ctqmc_del_spmat(spmat)
+     implicit none
+
+! external arguments
+! sparse matrix structure
+     type (T_spmat), intent(inout) :: spmat
+
+! reset the size of sparse matrix
+     spmat%ndim = 0
+     spmat%nval = 0
+
+! deallocate memory
+     if ( allocated(spmat%iv) ) deallocate(spmat%iv)
+     if ( allocated(spmat%jv) ) deallocate(spmat%jv)
+     if ( allocated(spmat%vv) ) deallocate(spmat%vv)
+
+     return
+  end subroutine ctqmc_del_spmat
 
   end module context
