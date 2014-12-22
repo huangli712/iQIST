@@ -1019,14 +1019,18 @@
      enddo ! over i={1,norbs} loop
 
      if ( allocated(isave) )   deallocate(isave)
+
      if ( allocated(op_c ) )   deallocate(op_c )
      if ( allocated(op_d ) )   deallocate(op_d )
 
      if ( allocated(spm_a) )   deallocate(spm_a)
      if ( allocated(spm_b) )   deallocate(spm_b)
+
      if ( allocated(spm_c) )   deallocate(spm_c)
      if ( allocated(spm_d) )   deallocate(spm_d)
+
      if ( allocated(spm_s) )   deallocate(spm_s)
+
      if ( allocated(spm_n) )   deallocate(spm_n)
      if ( allocated(spm_m) )   deallocate(spm_m)
 
