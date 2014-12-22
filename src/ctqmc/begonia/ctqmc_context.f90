@@ -336,32 +336,34 @@
 !-------------------------------------------------------------------------
 !::: sparse matrix style for op_a (Compressed Sparse Row (CSR) format) :::
 !-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_a array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_ia(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_a array
-     integer, public, save, allocatable  :: sop_ja(:,:)
-
-! a array that contains the non-zero elements for op_a matrix
-     real(dp), public, save, allocatable :: sop_a(:,:)
+!<! row index: element i of it gives the index of the element in the
+!<! sop_a array that is first non-zero element in a row i
+!<     integer, public, save, allocatable  :: sop_ia(:,:)
+!<
+!<! column index: element j of it is the number of the column that contains
+!<! the j-th element in the sop_a array
+!<     integer, public, save, allocatable  :: sop_ja(:,:)
+!<
+!<! a array that contains the non-zero elements for op_a matrix
+!<     real(dp), public, save, allocatable :: sop_a(:,:)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     type (T_spmat), public, save, allocatable :: spm_a(:)
 
 !-------------------------------------------------------------------------
 !::: sparse matrix style for op_b (Compressed Sparse Row (CSR) format) :::
 !-------------------------------------------------------------------------
-! row index: element i of it gives the index of the element in the
-! sop_b array that is first non-zero element in a row i
-     integer, public, save, allocatable  :: sop_ib(:,:)
-
-! column index: element j of it is the number of the column that contains
-! the j-th element in the sop_b array
-     integer, public, save, allocatable  :: sop_jb(:,:)
-
-! a array that contains the non-zero elements for op_b matrix
-     real(dp), public, save, allocatable :: sop_b(:,:)
+!<! row index: element i of it gives the index of the element in the
+!<! sop_b array that is first non-zero element in a row i
+!<     integer, public, save, allocatable  :: sop_ib(:,:)
+!<
+!<! column index: element j of it is the number of the column that contains
+!<! the j-th element in the sop_b array
+!<     integer, public, save, allocatable  :: sop_jb(:,:)
+!<
+!<! a array that contains the non-zero elements for op_b matrix
+!<     real(dp), public, save, allocatable :: sop_b(:,:)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     type (T_spmat), public, save, allocatable :: spm_b(:)
 
 ! note: op_c and op_d are F-matrix, op_c is for create operator, while op_d
 ! is for destroy operator. we need to multiply a series of op_c, op_d and
@@ -807,13 +809,21 @@
 ! allocate memory
      allocate(isave(npart),            stat=istat)
 
-     allocate(sop_ia(ncfgs+1,npart),   stat=istat)
-     allocate(sop_ja(nzero,npart),     stat=istat)
-     allocate(sop_a(nzero,npart),      stat=istat)
+!<     allocate(sop_ia(ncfgs+1,npart),   stat=istat)
+!<     allocate(sop_ja(nzero,npart),     stat=istat)
+!<     allocate(sop_a(nzero,npart),      stat=istat)
+     allocate(spm_a(npart), stat=istat)
+     do i=1,npart
+         call ctqmc_new_spmat(spm_a(i))
+     enddo ! over i={1,npart} loop
 
-     allocate(sop_ib(ncfgs+1,npart),   stat=istat)
-     allocate(sop_jb(nzero,npart),     stat=istat)
-     allocate(sop_b(nzero,npart),      stat=istat)
+!<     allocate(sop_ib(ncfgs+1,npart),   stat=istat)
+!<     allocate(sop_jb(nzero,npart),     stat=istat)
+!<     allocate(sop_b(nzero,npart),      stat=istat)
+     allocate(spm_b(npart), stat=istat)
+     do i=1,npart
+         call ctqmc_new_spmat(spm_b(i))
+     enddo ! over i={1,npart} loop
 
 !<     allocate(sop_ic(ncfgs+1,norbs),   stat=istat)
 !<     allocate(sop_jc(nzero,norbs),     stat=istat)
@@ -868,14 +878,14 @@
 ! initialize them
      isave  = 0
 
-     sop_ia = 0
-     sop_ja = 0
-     sop_a  = zero
-
-     sop_ib = 0
-     sop_jb = 0
-     sop_b  = zero
-
+!<     sop_ia = 0
+!<     sop_ja = 0
+!<     sop_a  = zero
+!<
+!<     sop_ib = 0
+!<     sop_jb = 0
+!<     sop_b  = zero
+!<
 !<     sop_ic = 0
 !<     sop_jc = 0
 !<     sop_c  = zero
@@ -1110,13 +1120,21 @@
 
      if ( allocated(isave)  )  deallocate(isave )
 
-     if ( allocated(sop_ia) )  deallocate(sop_ia)
-     if ( allocated(sop_ja) )  deallocate(sop_ja)
-     if ( allocated(sop_a)  )  deallocate(sop_a )
+!<     if ( allocated(sop_ia) )  deallocate(sop_ia)
+!<     if ( allocated(sop_ja) )  deallocate(sop_ja)
+!<     if ( allocated(sop_a)  )  deallocate(sop_a )
+     do i=1,npart
+         call ctqmc_del_spmat(spm_a(i))
+     enddo ! over i={1,npart} loop
+     if ( allocated(spm_a)  )  deallocate(spm_a)
 
-     if ( allocated(sop_ib) )  deallocate(sop_ib)
-     if ( allocated(sop_jb) )  deallocate(sop_jb)
-     if ( allocated(sop_b)  )  deallocate(sop_b )
+!<     if ( allocated(sop_ib) )  deallocate(sop_ib)
+!<     if ( allocated(sop_jb) )  deallocate(sop_jb)
+!<     if ( allocated(sop_b)  )  deallocate(sop_b )
+     do i=1,npart
+         call ctqmc_del_spmat(spm_b(i))
+     enddo ! over i={1,npart} loop
+     if ( allocated(spm_b)  )  deallocate(spm_b)
 
 !<     if ( allocated(sop_ic) )  deallocate(sop_ic)
 !<     if ( allocated(sop_jc) )  deallocate(sop_jc)

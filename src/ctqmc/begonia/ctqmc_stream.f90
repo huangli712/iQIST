@@ -717,22 +717,22 @@
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            spm_c(i)%vv, spm_c(i)%jv, spm_c(i)%iv, &
                            spm_d(i)%vv, spm_d(i)%jv, spm_d(i)%iv, &
-                           sop_a(:,1), sop_ja(:,1), sop_ia(:,1) )
+                           spm_a(1)%vv, spm_a(1)%jv, spm_a(1)%iv )
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
                            spm_c(j)%vv, spm_c(j)%jv, spm_c(j)%iv, &
                            spm_d(j)%vv, spm_d(j)%jv, spm_d(j)%iv, &
-                           sop_b(:,1), sop_jb(:,1), sop_ib(:,1) )
+                           spm_b(1)%vv, spm_b(1)%jv, spm_b(1)%iv )
 
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                           sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
-                           sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
+                           spm_a(1)%vv, spm_a(1)%jv, spm_a(1)%iv, &
+                           spm_b(1)%vv, spm_b(1)%jv, spm_b(1)%iv, &
                                           spm_t%vv, spm_t%jv, spm_t%iv )
              call sp_csr_cp_csr( ncfgs, nzero, spm_t%vv, spm_t%jv, spm_t%iv, &
                               spm_m(i,j)%vv, spm_m(i,j)%jv, spm_m(i,j)%iv )
 
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                           sop_b(:,1), sop_jb(:,1), sop_ib(:,1), &
-                           sop_a(:,1), sop_ja(:,1), sop_ia(:,1), &
+                           spm_b(1)%vv, spm_b(1)%jv, spm_b(1)%iv, &
+                           spm_a(1)%vv, spm_a(1)%jv, spm_a(1)%iv, &
                                           spm_t%vv, spm_t%jv, spm_t%iv )
              call sp_csr_cp_csr( ncfgs, nzero, spm_t%vv, spm_t%jv, spm_t%iv, &
                               spm_m(j,i)%vv, spm_m(j,i)%jv, spm_m(j,i)%iv )
@@ -743,9 +743,9 @@
 ! reinit sparse matrix op_b (sop_b, sop_jb, sop_ib)
 ! the related dense matrix should be an identity matrix
      do i=1,npart
-         call sp_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
-         call sp_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
-     enddo ! over i={1,norbs} loop
+         call sp_uni_to_csr( ncfgs, nzero, spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
+         call sp_uni_to_csr( ncfgs, nzero, spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv )
+     enddo ! over i={1,npart} loop
 
 ! deallocate memory for dummy sparse matrix
      call ctqmc_del_spmat(spm_t)

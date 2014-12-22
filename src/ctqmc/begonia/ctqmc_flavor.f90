@@ -2558,9 +2558,7 @@
      use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : diag
      use context, only : isave
-     use context, only : sop_a, sop_ia, sop_ja
-     use context, only : sop_b, sop_ib, sop_jb
-     use context, only : spm_c, spm_d, spm_s
+     use context, only : spm_a, spm_b, spm_c, spm_d, spm_s
 
      implicit none
 
@@ -2717,7 +2715,7 @@
              if ( isave(i) == 1 ) then
 
 ! build the identity sparse matrix sop_b as a start matrix
-                 call sp_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
+                 call sp_uni_to_csr( ncfgs, nzero, spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv )
 
 ! loop over all the matrix in this part
                  if ( nop(i) > 0 ) then
@@ -2731,27 +2729,27 @@
 ! multiply the result smm2 matrix with F matrix
                          call sp_dia_mm_csr( ncfgs, nzero, &
                                       expt_v( :, index_t(j) ), &
-                         sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
+                         spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv, &
                                              smm2, jmm2, imm2 )
                          if ( vt == 1 ) then ! create  operator
                              call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
                           spm_c(vf)%vv, spm_c(vf)%jv, spm_c(vf)%iv, &
                                                  smm2, jmm2, imm2, &
-                             sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
+                             spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv )
                          else                ! destroy operator
                              call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
                           spm_d(vf)%vv, spm_d(vf)%jv, spm_d(vf)%iv, &
                                                  smm2, jmm2, imm2, &
-                             sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
+                             spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv )
                          endif ! back if ( vt == 1 ) block
                      enddo operator_loop1 ! over j={ops(i),ope(i)} loop
                  endif ! back if ( nop(i) > 0 ) block
 
 ! multiply current part (sop_b) with the rest parts (smm1), and get smm2
                  call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                               sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
+                               spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv, &
                                                    smm1, jmm1, imm1, &
                                                    smm2, jmm2, imm2 )
 
@@ -2760,7 +2758,7 @@
 
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
                  call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                               sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
+                               spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv, &
                                                    smm1, jmm1, imm1, &
                                                    smm2, jmm2, imm2 )
 
@@ -2860,7 +2858,7 @@
              if ( isave(i) == 1 ) then
 
 ! build the identity sparse matrix sop_a as a start matrix
-                 call sp_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+                 call sp_uni_to_csr( ncfgs, nzero, spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
 
 ! loop over all the matrix in this part
                  if ( nop(i) > 0 ) then
@@ -2874,20 +2872,20 @@
 ! multiply the result smm2 matrix with F matrix
                          call sp_dia_mm_csr( ncfgs, nzero, &
                                       expt_v( :, index_v(j) ), &
-                         sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
+                         spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv, &
                                              smm2, jmm2, imm2 )
                          if ( vt == 1 ) then ! create  operator
                              call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
                           spm_c(vf)%vv, spm_c(vf)%jv, spm_c(vf)%iv, &
                                                  smm2, jmm2, imm2, &
-                             sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+                             spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
                          else                ! destroy operator
                              call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                      ncfgs, nzero, &
                           spm_d(vf)%vv, spm_d(vf)%jv, spm_d(vf)%iv, &
                                                  smm2, jmm2, imm2, &
-                             sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+                             spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
                          endif ! back if ( vt == 1 ) block
                      enddo operator_loop2 ! over j={ops(i),ope(i)} loop
                  endif ! back if ( nop(i) > 0 ) block
@@ -2896,7 +2894,7 @@
 
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                           sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
+                           spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv, &
                                                smm1, jmm1, imm1, &
                                                smm2, jmm2, imm2 )
 
@@ -2944,7 +2942,7 @@
          do i=1,npart
 
 ! build the identity sparse matrix sop_b as a start matrix
-             call sp_uni_to_csr( ncfgs, nzero, sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
+             call sp_uni_to_csr( ncfgs, nzero, spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv )
 
 ! loop over all the matrix in this part
              if ( nop(i) > 0 ) then
@@ -2958,27 +2956,27 @@
 ! multiply the result smm2 matrix with F matrix
                      call sp_dia_mm_csr( ncfgs, nzero, &
                                   expt_v( :, index_t(j) ), &
-                     sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
+                     spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv, &
                                          smm2, jmm2, imm2 )
                      if ( vt == 1 ) then ! create  operator
                          call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
                       spm_c(vf)%vv, spm_c(vf)%jv, spm_c(vf)%iv, &
                                              smm2, jmm2, imm2, &
-                         sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
+                         spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv )
                      else                ! destroy operator
                          call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
                       spm_d(vf)%vv, spm_d(vf)%jv, spm_d(vf)%iv, &
                                              smm2, jmm2, imm2, &
-                         sop_b(:,i), sop_jb(:,i), sop_ib(:,i) )
+                         spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv )
                      endif ! back if ( vt == 1 ) block
                  enddo operator_loop3 ! over j={ops(i),ope(i)} loop
              endif ! back if ( nop(i) > 0 ) block
 
 ! multiply current part (sop_b) with the rest parts (smm1), and get smm2
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                           sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
+                           spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv, &
                                                smm1, jmm1, imm1, &
                                                smm2, jmm2, imm2 )
 
@@ -3023,7 +3021,7 @@
          do i=1,npart
 
 ! build the identity sparse matrix sop_a as a start matrix
-             call sp_uni_to_csr( ncfgs, nzero, sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+             call sp_uni_to_csr( ncfgs, nzero, spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
 
 ! loop over all the matrix in this part
              if ( nop(i) > 0 ) then
@@ -3037,27 +3035,27 @@
 ! multiply the result smm2 matrix with F matrix
                      call sp_dia_mm_csr( ncfgs, nzero, &
                                   expt_v( :, index_v(j) ), &
-                     sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
+                     spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv, &
                                          smm2, jmm2, imm2 )
                      if ( vt == 1 ) then ! create  operator
                          call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
                       spm_c(vf)%vv, spm_c(vf)%jv, spm_c(vf)%iv, &
                                              smm2, jmm2, imm2, &
-                         sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+                         spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
                      else                ! destroy operator
                          call sp_csr_mm_csr( ncfgs, ncfgs, &
                                                  ncfgs, nzero, &
                       spm_d(vf)%vv, spm_d(vf)%jv, spm_d(vf)%iv, &
                                              smm2, jmm2, imm2, &
-                         sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+                         spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
                      endif ! back if ( vt == 1 ) block
                  enddo operator_loop4 ! over j={ops(i),ope(i)} loop
              endif ! back if ( nop(i) > 0 ) block
 
 ! multiply current part (sop_a) with the rest parts (smm1), and get smm2
              call sp_csr_mm_csr( ncfgs, ncfgs, ncfgs, nzero, &
-                           sop_a(:,i), sop_ja(:,i), sop_ia(:,i), &
+                           spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv, &
                                                smm1, jmm1, imm1, &
                                                smm2, jmm2, imm2 )
 
@@ -3100,9 +3098,7 @@
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : diag
      use context, only : isave
-     use context, only : sop_a, sop_ia, sop_ja
-     use context, only : sop_b, sop_ib, sop_jb
-     use context, only : spm_s
+     use context, only : spm_a, spm_b, spm_s
 
      implicit none
 
@@ -3114,8 +3110,8 @@
      do i=1,npart
          if ( isave(i) == 1 ) then
              call sp_csr_cp_csr( ncfgs, nzero, &
-             sop_b(:,i), sop_jb(:,i), sop_ib(:,i), &
-             sop_a(:,i), sop_ja(:,i), sop_ia(:,i) )
+             spm_b(i)%vv, spm_b(i)%jv, spm_b(i)%iv, &
+             spm_a(i)%vv, spm_a(i)%jv, spm_a(i)%iv )
          endif ! back if ( isave(i) == 1 ) block
      enddo ! over i={1,npart} loop
 
