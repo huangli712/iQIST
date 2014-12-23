@@ -297,7 +297,7 @@
 !!>>> a sector consists of some many-particle Fock states labeled by
 !!>>> good quantum numbers
   subroutine atomic_make_sectors()
-     use constants, only : zero, two
+     use constants, only : zero
 
      use control, only : ictqmc
      use control, only : nband, norbs, ncfgs
@@ -424,8 +424,8 @@
 ! build PS number
              do k=1,nband
                  fock_good_ps(counter) = &
-                 fock_good_ps(counter) + &
-                 (2**k) * (bin_basis(2*k-1,counter) - bin_basis(2*k,counter))**2
+                 fock_good_ps(counter) + (2**k) * &
+                     (bin_basis(2*k-1,counter) - bin_basis(2*k,counter))**2
              enddo ! over k={1,nband} loop
          enddo ! over j={1,dim_sub_n(i)} loop
      enddo ! over i={0,norbs} loop
@@ -540,9 +540,9 @@
      do i=1,nsect
          sectors(i)%ndim = ndims(i)
          sectors(i)%nele = sect_good_ntot(i)
-         sectors(i)%sz = sect_good_sz(i)
-         sectors(i)%jz = sect_good_jz(i)
-         sectors(i)%ps = sect_good_ps(i)
+         sectors(i)%sz   = sect_good_sz(i)
+         sectors(i)%jz   = sect_good_jz(i)
+         sectors(i)%ps   = sect_good_ps(i)
          sectors(i)%nops = norbs
          sectors(i)%istart = counter
          counter = counter + ndims(i)
