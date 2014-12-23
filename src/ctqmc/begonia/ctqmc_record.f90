@@ -234,8 +234,11 @@
 ! i think it is equal to matrix_ptrace, to be checked
      raux2 = zero
      do i=1,ncfgs
-         raux2 = raux2 + sp_csr_cp_elm( i, i, ncfgs, nzero, &
-                     spm_s(2)%vv, spm_s(2)%jv, spm_s(2)%iv )
+         raux2 = raux2 + sp_csr_cp_elm( i, i, &
+                                ncfgs, nzero, &
+                                 spm_s(2)%vv, &
+                                 spm_s(2)%jv, &
+                                 spm_s(2)%iv )
      enddo ! over i={1,ncfgs} loop
 
 ! check validity of raux2

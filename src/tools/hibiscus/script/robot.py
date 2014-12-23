@@ -31,6 +31,7 @@
 
 import os
 import sys
+import time
 import json
 
 def parse_robot_json(robot_json):
@@ -49,6 +50,21 @@ def parse_jobs_json(jobs_json):
     cfg_robot = json_data["jobs"]
     return cfg_robot
 
+def write_robot_info(cfg_robot):
+    print "  Welcome to QUARK"
+    print "  >>> Starting in " + time.asctime()
+    print 
+    print "  robot name        :", cfg_robot["robot"   ]
+    print "  machine name      :", cfg_robot["machine" ]
+    print "  queue system      :", cfg_robot["queue"   ]
+    print "  scratch directory :", cfg_robot["scratch" ]
+    print "  finish signal     :", cfg_robot["finish"  ]
+    print "  log data          :", cfg_robot["logdata" ]
+    print "  err data          :", cfg_robot["errdata" ]
+    print "  time interval     :", cfg_robot["interval"]
+    print "  number of slots   :", cfg_robot["slots"   ]
+    print "  job lists         :", cfg_robot["jobs"    ]
+
 if __name__ == '__main__':
 
 # setup the robot_file we want to parse
@@ -60,17 +76,27 @@ if __name__ == '__main__':
 
 # parse the robot_file
     my_robot = parse_robot_json(robot_file)
+    write_robot_info(my_robot)
 
-# prepare the directory
+# prepare the directory: scratch
+    if not os.path.exists(my_robot["scratch"]):
+        os.makedirs(my_robot["scratch"])
 
-# prepare the files
+# prepare the directory: slots
+    for i in range(my_robot["slots"]):
+        if not os.path.exists(my_robot["scratch"] + "/slot" + str(i)):
+            os.makedirs(my_robot["scratch"] + "/slot" + str(i))
+
+# prepare the log files
+    flog = open(my_robot["logdata"],"w")
+
+# prepare the err files
+    ferr = open(my_robot["errdata"],"w")
 
 # main loop
-    while True:
+#    while True:
 
 # step 1: parse the jobs_file
 #        my_jobs = parse_jobs_json(my_robot["jobs"])
 
 # step 2: generate the sub-jobs
-
-

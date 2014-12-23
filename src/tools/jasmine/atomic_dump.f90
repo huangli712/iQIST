@@ -13,7 +13,7 @@
 !!!           atomic_dump_sector
 !!! source  : atomic_dump.f90
 !!! type    : subroutines
-!!! author  : yilin wang (email: qhwyl2006@126.com)
+!!! author  : yilin wang (email:qhwyl2006@126.com)
 !!! history : 07/09/2014 by yilin wang
 !!!           08/22/2014 by yilin wang
 !!!           10/20/2014 by li huang
@@ -229,7 +229,7 @@
 
 ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
-     write(mytmp,'(a)') '#  i | eigenvalues'
+     write(mytmp,'(a)') '# i | eigenvalues'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
@@ -269,7 +269,7 @@
 
 ! write the header
      write(mytmp,'(75a1)') dash ! dashed line
-     write(mytmp,'(a)') '#  i | j | eigenvectors | fockbasis'
+     write(mytmp,'(a)') '# i | j | eigenvectors | fockbasis'
      write(mytmp,'(75a1)') dash ! dashed line
 
 ! write the data
@@ -557,7 +557,13 @@
 ! write dimension, total electrons, next sector, eigenvalue of each sector
      do i=1,nsectors
          write(mytmp,'(a)') '# SECT_INFO: INDEX | NDIM | NOPS | ISTART | NELE | SZ | JZ | PS'
-         write(mytmp,'(11X,8i7)') i, sectors(i)%ndim, sectors(i)%nops, sectors(i)%istart, sectors(i)%nele, sectors(i)%sz, sectors(i)%jz, sectors(i)%ps
+         write(mytmp,'(11X,8i7)') i, sectors(i)%ndim,   &
+                                     sectors(i)%nops,   &
+                                     sectors(i)%istart, &
+                                     sectors(i)%nele,   &
+                                     sectors(i)%sz,     &
+                                     sectors(i)%jz,     &
+                                     sectors(i)%ps
 
 ! write next sector
          write(mytmp,'(4X,a)') '# NEXT SECTOR    F     F^{\DAGGER}'
