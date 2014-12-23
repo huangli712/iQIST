@@ -20,7 +20,7 @@
   norbs  : 14
   ncfgs  : 16384
   nmini  : 0
-  nmaxi  : 4
+  nmaxi  : 3
 
 !!>>> setup common variables for jasmine
 !!------------------------------------------------------------------------
