@@ -19,8 +19,8 @@
   nspin  : 2
   norbs  : 10
   ncfgs  : 1024
-  nmini  : 3
-  nmaxi  : 7
+  nmini  : 4
+  nmaxi  : 6
 
 !!>>> setup common variables for jasmine
 !!------------------------------------------------------------------------

@@ -13,6 +13,7 @@
   isbin  : 2
   isort  : 3
   isvrt  : 1
+  ifast  : 1
   itrun  : 1
 
 !!>>> setup common variables for quantum impurity model
@@ -22,8 +23,6 @@
   norbs  : 6
   ncfgs  : 64
   niter  : 20
-  nmini  : 0
-  nmaxi  : 6
   U      : 2.00
   Uc     : 2.00
   Uv     : 1.20
