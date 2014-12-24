@@ -2575,41 +2575,41 @@
      integer  :: string(csize+1,nsect)
 
 ! local version of index_t
-     integer  :: index_t_loc(mkink)
+     integer  :: index_loc(mkink)
 
 ! local version of expt_t
-     real(dp) :: expt_t_loc(ncfgs)
+     real(dp) :: expt_loc(ncfgs)
 
 ! trace for each sector
      real(dp) :: trace_sect(nsect)
 
-! copy data from index_t or index_v to index_t_loc
-! copy data from expt_t to expt_t_loc
+! copy data from index_t or index_v to index_loc
+! copy data from expt_t to expt_loc
      select case (cmode)
 
          case (1)
-             index_t_loc = index_t
-             expt_t_loc = expt_t(:,1)
+             index_loc = index_t
+             expt_loc = expt_t(:,1)
 
          case (2)
-             index_t_loc = index_v
-             expt_t_loc = expt_t(:,2)
+             index_loc = index_v
+             expt_loc = expt_t(:,2)
 
          case (3)
-             index_t_loc = index_t
-             expt_t_loc = expt_t(:,2)
+             index_loc = index_t
+             expt_loc = expt_t(:,2)
 
          case (4)
-             index_t_loc = index_v
-             expt_t_loc = expt_t(:,2)
+             index_loc = index_v
+             expt_loc = expt_t(:,2)
 
      end select
 
 ! build string for all the sectors, it will return is_string and string
-     call cat_make_string(csize, index_t_loc, is_string, string)
+     call cat_make_string(csize, index_loc, is_string, string)
 
 ! determine which part should be recalculated, it will modify isave internal
-     call cat_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
+     call cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
 
 ! calculate the trace of each sector one by one
 ! reset copy status to false, it is very important!
@@ -2621,7 +2621,7 @@
              trace_sect(i) = zero
              sectors(i)%prod = zero
          else
-             call cat_make_trace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
+             call cat_make_trace(csize, string(:,i), index_loc, expt_loc, trace_sect(i))
          endif ! back if ( .not. is_string(i) ) block
          trace = trace + trace_sect(i)
      enddo ! over i={1,nsect} loop

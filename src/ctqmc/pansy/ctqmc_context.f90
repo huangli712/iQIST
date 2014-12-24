@@ -1701,7 +1701,7 @@
                  vf = flvr_v( index_loc(j) )
                  call dgemm( 'N', 'N', dim2, dim4, dim3, &
                                                     one, &
-                     sectors(string(j))%fmat(vf,vt)%val, &
+                   sectors( string(j) )%fmat(vf,vt)%val, &
                                             dim2, mat_t, &
                                            max_dim_sect, &
                              zero, saved_n(:,:,i,isect), &
@@ -1740,7 +1740,7 @@
      enddo ! over i={1,npart} loop
 
 ! special treatment of the last time evolution operator
-     indx = sectors(string(1))%istart
+     indx = sectors( string(1) )%istart
 
 ! no fermion operators
      if ( csize == 0 ) then
@@ -1762,9 +1762,9 @@
 
 ! calculate the trace
      trace = zero
-     do j=1,sectors(string(1))%ndim
+     do j=1,sectors( string(1) )%ndim
          trace = trace + mat_r(j,j)
-     enddo ! over j={1,sectors(string(1))%ndim} loop
+     enddo ! over j={1,sectors( string(1) )%ndim} loop
 
      return
   end subroutine cat_make_trace
