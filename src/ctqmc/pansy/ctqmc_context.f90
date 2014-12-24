@@ -1200,6 +1200,10 @@
      integer :: i
      integer :: j
 
+! flavor and type of fermion operators
+     integer :: vf
+     integer :: vt
+
 ! sector index: from left direction
      integer :: left
      integer :: curr_sect_l
@@ -1209,10 +1213,6 @@
      integer :: right
      integer :: curr_sect_r
      integer :: next_sect_r
-
-! flavor and type of fermion operators
-     integer :: vf
-     integer :: vt
 
 ! init return arrays
      is_string = .true.
