@@ -2613,7 +2613,7 @@
 
 ! calculate the trace of each sector one by one
 ! reset copy status to false, it is very important!
-     is_cp = .false.
+     is_cp = 0
      trace_sect = zero
      trace = zero
      do i=1,nsect

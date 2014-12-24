@@ -1314,17 +1314,18 @@
 ! total number of matrices products
      real(dp), public, save :: nprod = zero
 
-! whether to copy this part?
-     logical, public, save, allocatable  :: is_cp(:,:)
-
-! number of columns to be copied, in order to save copy time
-     integer, public, save, allocatable  :: nc_cp(:,:)
-
 ! the start positions of fermion operators for each part
      integer, public, save, allocatable  :: ops(:)
 
 ! the end positions of fermion operators for each part
      integer, public, save, allocatable  :: ope(:)
+
+! whether to copy this part?
+! 1 means copy, 0 means do nothing
+     integer, public, save, allocatable  :: is_cp(:,:)
+
+! number of columns to be copied, in order to save copy time
+     integer, public, save, allocatable  :: nc_cp(:,:)
 
 ! how to treat each part when calculating trace
 ! isave = 0: matrices product for this part has been calculated previously
@@ -1365,10 +1366,10 @@
      integer :: istat
 
 ! allocate memory
-     allocate(is_cp(npart,nsect),   stat=istat)
-     allocate(nc_cp(npart,nsect),   stat=istat)
      allocate(ops(npart),           stat=istat)
      allocate(ope(npart),           stat=istat)
+     allocate(is_cp(npart,nsect),   stat=istat)
+     allocate(nc_cp(npart,nsect),   stat=istat)
      allocate(isave(npart,nsect,2), stat=istat)
 
      allocate(saved_p(max_dim_sect,max_dim_sect,npart,nsect), stat=istat)
@@ -1380,10 +1381,10 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     is_cp = .false.
-     nc_cp = 0
      ops   = 0
      ope   = 0
+     is_cp = 0
+     nc_cp = 0
      isave = 1
 
      saved_p = zero
@@ -1596,9 +1597,9 @@
      if ( npart > 1 ) then
          do i=1,nsect
              do j=1,npart
-                 if ( is_cp(j,i) ) then
+                 if ( is_cp(j,i) == 1 ) then
                      saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
-                 endif ! back if ( is_cp(j,i) ) block
+                 endif ! back if ( is_cp(j,i) == 1 ) block
              enddo ! over j={1,npart} loop
          enddo ! over i={1,nsect} loop
      endif ! back if ( npart > 1 ) block
@@ -1736,7 +1737,7 @@
 
 ! set its save status and copy status
              isave(i,isect,1) = 0
-             is_cp(i,isect) = .true.
+             is_cp(i,isect) = 1
              nc_cp(i,isect) = dim4
 
 ! multiply this part with the rest parts
