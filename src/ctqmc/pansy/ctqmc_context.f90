@@ -950,18 +950,18 @@
 ! next(nops,0) for annihilation and next(nops,1) for creation operators
 ! -1 means it is outside the Hilbert space,
 ! otherwise, it is the index of next sector
-         integer, pointer  :: next(:,:)
+         integer, allocatable  :: next(:,:)
 
 ! the eigenvalues
-         real(dp), pointer :: eval(:)
+         real(dp), allocatable :: eval(:)
 
 ! final products of matrices
-         real(dp), pointer :: prod(:,:)
+         real(dp), allocatable :: prod(:,:)
 
 ! the F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
 ! fmat(nops,0) for annihilation and fmat(nops,1) for creation operators
-         type (t_fmat), pointer :: fmat(:,:)
+         type (t_fmat), allocatable :: fmat(:,:)
 
      end type t_sector
 
@@ -1103,12 +1103,7 @@
          sectors(i)%jz     = 0
          sectors(i)%ps     = 0
 
-         sectors(i)%next  => null()
-
-         sectors(i)%eval  => null()
-         sectors(i)%prod  => null()
-
-         sectors(i)%fmat  => null()
+!<         sectors(i)%fmat  => null()
      enddo ! over i={1,nsect} loop
 
      return
@@ -1144,20 +1139,20 @@
      integer :: i
      integer :: j
 
-     if ( associated(sect%next)  ) deallocate(sect%next )
+     if ( allocated(sect%next) ) deallocate(sect%next)
 
-     if ( associated(sect%eval)  ) deallocate(sect%eval )
-     if ( associated(sect%prod)  ) deallocate(sect%prod )
+     if ( allocated(sect%eval) ) deallocate(sect%eval)
+     if ( allocated(sect%prod) ) deallocate(sect%prod)
 
 ! deallocate fmat one by one
-     if ( associated(sect%fmat) ) then
+     if ( allocated(sect%fmat) ) then
          do i=1,sect%nops
              do j=0,1
                  call ctqmc_deallocate_memory_one_fmat(sect%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,sect%nops} loop
          deallocate(sect%fmat)
-     endif ! back if ( associated(sect%fmat) ) block
+     endif ! back if ( allocated(sect%fmat) ) block
 
      return
   end subroutine ctqmc_deallocate_memory_one_sect
@@ -1642,7 +1637,7 @@
 
 ! select the first sector in the string
      isect = string(1)
-     dim1  = sectors(string(1))%ndim
+     dim1  = sectors( string(1) )%ndim
 
 ! loop over all the parts
      do i=1,npart
@@ -1677,9 +1672,9 @@
              counter = 0
              do j=ops(i),ope(i)
                  counter = counter + 1
-                 indx = sectors(string(j)  )%istart
-                 dim2 = sectors(string(j+1))%ndim
-                 dim3 = sectors(string(j)  )%ndim
+                 indx = sectors( string(j)   )%istart
+                 dim2 = sectors( string(j+1) )%ndim
+                 dim3 = sectors( string(j)   )%ndim
 
 ! multiply the diagonal matrix of time evolution operator
                  if ( counter > 1 ) then
