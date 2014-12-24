@@ -2640,14 +2640,13 @@
 !!>>> ctqmc_make_evolve: used to update the operator traces of the
 !!>>> modified part
   subroutine ctqmc_make_evolve()
+     use control, only : npart
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : diag
 
      use m_sect, only : nsect
      use m_sect, only : sectors
-!<     use m_part, only : cat_save_npart
      use m_part, only : isave, is_cp, nc_cp, saved_p, saved_n
-     use control, only : npart
 
      implicit none
 
@@ -2667,13 +2666,6 @@
      do i=1,nsect
          sectors(i)%prod(:,:,2) = sectors(i)%prod(:,:,1)
      enddo ! over i={1,nsect} loop
-
-! save the data of each part
-!<     call cat_save_npart()
-
-!! local variables
-!! loop index
-!     integer :: i
 
 ! copy save-state for all the parts
      isave(:,:,2) = isave(:,:,1)
