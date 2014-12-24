@@ -1188,7 +1188,7 @@
 !!========================================================================
 
 !!>>> cat_make_string: it is used to build a time evolution string
-  subroutine cat_make_string(csize, index_t_loc, is_string, string)
+  subroutine cat_make_string(csize, index_loc, is_string, string)
      implicit none
 
 ! external variables
@@ -1196,7 +1196,7 @@
      integer, intent(in)  :: csize
 
 ! memory address index of fermion operators
-     integer, intent(in)  :: index_t_loc(mkink)
+     integer, intent(in)  :: index_loc(mkink)
 
 ! whether it is a valid string?
      logical, intent(out) :: is_string(nsect)
@@ -1241,8 +1241,8 @@
              if ( mod(j,2) == 1 ) then
                  left = left + 1
                  string(left,i) = curr_sect_l
-                 vt = type_v( index_t_loc(left) )
-                 vf = flvr_v( index_t_loc(left) )
+                 vt = type_v( index_loc(left) )
+                 vf = flvr_v( index_loc(left) )
                  next_sect_l = sectors(curr_sect_l)%next(vf,vt)
                  if ( next_sect_l == -1 ) then
                      is_string(i) = .false.; EXIT ! finish check, exit
@@ -1250,8 +1250,8 @@
                  curr_sect_l = next_sect_l
              else
                  right = right - 1
-                 vt = type_v( index_t_loc(right) )
-                 vf = flvr_v( index_t_loc(right) )
+                 vt = type_v( index_loc(right) )
+                 vf = flvr_v( index_loc(right) )
                  vt = mod(vt+1,2)
                  next_sect_r = sectors(curr_sect_r)%next(vf,vt)
                  if ( next_sect_r == -1 ) then
@@ -1262,6 +1262,12 @@
              endif ! back if ( mod(j,2) == 1 ) block
          enddo ! over j={1,csize} loop
 
+! this case will generate a non-diagonal block, it will not contribute
+! to the trace
+         if ( next_sect_r /= next_sect_l ) then
+             is_string(i) = .false.
+         endif ! back if ( next_sect_r /= next_sect_l ) block
+
 ! if it doesn't form a string, we cycle it, go to the next sector
          if ( .not. is_string(i) ) then
              CYCLE
@@ -1271,12 +1277,6 @@
 ! string(csize+1,i) == string(1,i)
 ! which is important for csize = 0
          string(csize+1,i) = i
-
-! this case will generate a non-diagonal block, it will not contribute
-! to the trace
-         if ( next_sect_r /= next_sect_l ) then
-             is_string(i) = .false.
-         endif ! back if ( next_sect_r /= next_sect_l ) block
      enddo ! over i={1,nsect} loop
 
      return
@@ -1417,8 +1417,9 @@
 !!>>> core service subroutines                                         <<<
 !!========================================================================
 
-!!>>> cat_make_npart: subroutine used to determine isave
-  subroutine cat_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
+!!>>> cat_make_npart: it is used to determine isave, which parts should
+!!>>> be recalculated
+  subroutine cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
      implicit none
 
 ! external arguments
@@ -1429,7 +1430,7 @@
      integer, intent(in)  :: csize
 
 ! local version of index_t
-     integer, intent(in)  :: index_t_loc(mkink)
+     integer, intent(in)  :: index_loc(mkink)
 
 ! imaginary time value of operator A, only valid in cmode = 1 or 2
      real(dp), intent(in) :: tau_s
@@ -1483,7 +1484,7 @@
          interval = beta / real(npart)
 ! calculate number of operators for each part
          do i=1,csize
-             j = ceiling( time_v( index_t_loc(i) ) / interval )
+             j = ceiling( time_v( index_loc(i) ) / interval )
              nop(j) = nop(j) + 1
          enddo  ! over i={1,csize} loop
 ! if no operators in this part, ignore them
@@ -1506,7 +1507,8 @@
              endif ! back if ( nop(i) > 0 ) block
          enddo ! over i={1,npart} loop
 
-! case 2A: use some saved matrices products from previous accepted Monte Carlo move
+! case 2A: use some saved matrices products from previous accepted Monte
+! Carlo move
          if ( cmode == 1 .or. cmode == 2 ) then
 ! get the position of operator A and operator B
              tis = ceiling( tau_s / interval )
@@ -1518,7 +1520,7 @@
 ! special attention: if operator A is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
              if ( nop(tis) > 0 ) then
-                 if ( tau_s >= time_v( index_t_loc( ope(tis) ) ) ) then
+                 if ( tau_s >= time_v( index_loc( ope(tis) ) ) ) then
                      tip = tis + 1
                      do while ( tip <= npart )
                          if ( nop(tip) > 0 ) then
@@ -1526,7 +1528,7 @@
                          endif ! back if ( nop(tip) > 0 ) block
                          tip = tip + 1
                      enddo ! over do while ( tip <= npart ) loop
-                 endif ! back if ( tau_s >= time_v( index_t_loc( ope(tis) ) ) ) block
+                 endif ! back if ( tau_s >= time_v( index_loc( ope(tis) ) ) ) block
 ! for remove an operator, nop(tis) may be zero
              else
                  tip = tis + 1
@@ -1545,7 +1547,7 @@
 ! special attention: if operator B is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
              if ( nop(tie) > 0 ) then
-                 if ( tau_e >= time_v( index_t_loc( ope(tie) ) ) ) then
+                 if ( tau_e >= time_v( index_loc( ope(tie) ) ) ) then
                      tip = tie + 1
                      do while ( tip <= npart )
                          if ( nop(tip) > 0 ) then
@@ -1553,7 +1555,7 @@
                          endif ! back if ( nop(tip) > 0 ) block
                          tip = tip + 1
                      enddo ! over do while ( tip <= npart ) loop
-                 endif ! back if ( tau_e >= time_v( index_t_loc( ope(tie) ) ) ) block
+                 endif ! back if ( tau_e >= time_v( index_loc( ope(tie) ) ) ) block
 ! for remove an operator, nop(tie) may be zero
              else
                  tip = tie + 1
@@ -1608,7 +1610,7 @@
   end subroutine cat_save_npart
 
 !!>>> cat_make_trace: calculate the trace for one sector
-  subroutine cat_make_trace(csize, string, index_t_loc, expt_t_loc, trace)
+  subroutine cat_make_trace(csize, string, index_loc, expt_loc, trace)
      implicit none
 
 ! external variables
@@ -1618,11 +1620,11 @@
 ! evolutional string for this sector
      integer, intent(in)   :: string(csize+1)
 
-! address index of fermion operators
-     integer, intent(in)   :: index_t_loc(mkink)
+! memory address index of fermion operators
+     integer, intent(in)   :: index_loc(mkink)
 
 ! diagonal elements of last time-evolution matrices
-     real(dp), intent(in)  :: expt_t_loc(ncfgs)
+     real(dp), intent(in)  :: expt_loc(ncfgs)
 
 ! the calculated trace of this sector
      real(dp), intent(out) :: trace
@@ -1711,20 +1713,20 @@
                  if ( counter > 1 ) then
                      do l=1,dim4
                          do k=1,dim3
-                             mat_t(k,l) = saved_n(k,l,i,isect) * expt_v(indx+k-1,index_t_loc(j))
+                             mat_t(k,l) = saved_n(k,l,i,isect) * expt_v(indx+k-1,index_loc(j))
                          enddo ! over k={1,dim3} loop
                      enddo ! over l={1,dim4} loop
                      nprod = nprod + one
                  else
                      mat_t = zero
                      do k=1,dim3
-                         mat_t(k,k) = expt_v(indx+k-1,index_t_loc(j))
+                         mat_t(k,k) = expt_v(indx+k-1,index_loc(j))
                      enddo ! over k={1,dim3} loop
                  endif ! back if ( counter > 1 ) block
 
 ! multiply the matrix of fermion operator
-                 vt = type_v( index_t_loc(j) )
-                 vf = flvr_v( index_t_loc(j) )
+                 vt = type_v( index_loc(j) )
+                 vf = flvr_v( index_loc(j) )
                  call dgemm( 'N', 'N', dim2, dim4, dim3, &
                                                     one, &
                      sectors(string(j))%fmat(vf,vt)%val, &
@@ -1771,13 +1773,13 @@
 ! no fermion operators
      if ( csize == 0 ) then
          do k=1,dim1
-             mat_r(k,k) = expt_t_loc(indx+k-1)
+             mat_r(k,k) = expt_loc(indx+k-1)
          enddo ! over k={1,dim1} loop
 ! multiply the last time evolution operator
      else
          do l=1,dim1
              do k=1,dim1
-                 mat_r(k,l) = mat_r(k,l) * expt_t_loc(indx+k-1)
+                 mat_r(k,l) = mat_r(k,l) * expt_loc(indx+k-1)
              enddo ! over k={1,dim1} loop
          enddo ! over l={1,dim1} loop
          nprod = nprod + one
