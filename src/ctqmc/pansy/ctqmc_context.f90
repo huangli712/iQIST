@@ -1681,7 +1681,7 @@
              enddo ! over j={ops(i),ope(i)} loop
 
 ! set its save status and copy status
-             isave(i,isect,1) = 0
+!<             isave(i,isect,1) = 0
              is_cp(i,isect) = 1
              nc_cp(i,isect) = dim4
 
