@@ -135,9 +135,6 @@
              call p_get('nmonte', nmonte)
              call p_get('ncarlo', ncarlo)
 
-             norbs = nband*nspin
-             ncfgs = 2**norbs
-
 ! destroy the parser
              call p_destroy()
          endif ! back if ( exists .eqv. .true. ) block
@@ -396,7 +393,7 @@
          read(mytmp,*) ver, i, j, cssoc
          if ( ver /= 2 ) then
              call s_print_error('ctqmc_selfer_init','file format of atom.cix is not correct')
-         endif ! back if ( ver /= 2) block
+         endif ! back if ( ver /= 2 ) block
 
 ! skip nine comment lines
          do i=1,9
@@ -418,8 +415,13 @@
 ! total number of electrons, z component of spin momentum, z component of
 ! spin-orbit momentum, and PS good quantum number
              read(mytmp,*) ! skip the header
-             read(mytmp,*) k, sectors(i)%ndim, sectors(i)%nops, sectors(i)%istart, &
-                        sectors(i)%nele, sectors(i)%sz, sectors(i)%jz, sectors(i)%ps
+             read(mytmp,*) k, sectors(i)%ndim,   &
+                              sectors(i)%nops,   &
+                              sectors(i)%istart, &
+                              sectors(i)%nele,   &
+                              sectors(i)%sz,     &
+                              sectors(i)%jz,     &
+                              sectors(i)%ps
 
 ! allocate the memory for sectors(i), only for master node
              call ctqmc_allocate_memory_one_sect(sectors(i))
@@ -542,6 +544,7 @@
 
 ! broadcast data
      do i=1,nsect
+
 ! broadcast sector's information
          call mp_bcast(sectors(i)%ndim,   master)
          call mp_bcast(sectors(i)%nops,   master)
@@ -553,17 +556,22 @@
 
 ! setup barrier
          call mp_barrier()
+
 ! allocate memory for t_sector structure, only for children nodes
          if ( myid /= master ) then
              call ctqmc_allocate_memory_one_sect(sectors(i))
          endif ! back if ( myid /= master ) block
+
 ! setup barrier
          call mp_barrier()
+
 ! broadcast sector's data
          call mp_bcast(sectors(i)%next,   master)
          call mp_bcast(sectors(i)%eval,   master)
+
 ! setup barrier
          call mp_barrier()
+
      enddo ! over i={1,nsect} loop
 
 ! block until all processes have reached here
@@ -573,20 +581,27 @@
      do i=1,nsect
          do j=1,sectors(i)%nops
              do k=0,1
+
+! determine whether next sector is valid
                  m = sectors(i)%next(j,k)
                  if ( m == -1 ) CYCLE
+
 ! setup the dimension for F-matrix and allocate memory, only for children nodes
                  if ( myid /= master ) then
                      sectors(i)%fmat(j,k)%n = sectors(m)%ndim
                      sectors(i)%fmat(j,k)%m = sectors(i)%ndim
                      call ctqmc_allocate_memory_one_fmat(sectors(i)%fmat(j,k))
                  endif ! back if ( myid /= master ) block
+
 ! setup barrier
                  call mp_barrier()
+
 ! broadcast sector's F-matrix
                  call mp_bcast(sectors(i)%fmat(j,k)%val, master)
+
 ! setup barrier
                  call mp_barrier()
+
              enddo ! over k={0,1} loop
          enddo ! over j={1,sectors(i)%nops} loop
      enddo ! over i={1,nsect} loop
@@ -779,11 +794,13 @@
 !-------------------------------------------------------------------------
 ! init m_part module
      nprod   = zero
+
      is_cp   = .false.
      nc_cp   = 0
      ops     = 0
      ope     = 0
      isave   = 1
+
      saved_p = zero
      saved_n = zero
 
