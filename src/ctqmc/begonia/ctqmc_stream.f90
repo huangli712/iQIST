@@ -399,7 +399,7 @@
          read(mytmp,*) ver, i, j, cssoc
          if ( ver /= 1 ) then
              call s_print_error('ctqmc_selfer_init','file format of atom.cix is not correct')
-         endif ! back if ( ver /= 1) block
+         endif ! back if ( ver /= 1 ) block
 
 ! skip eight comment lines
          do i=1,8
