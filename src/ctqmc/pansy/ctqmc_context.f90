@@ -947,9 +947,9 @@
          integer :: ps
 
 ! the next sector when a fermion operator acts on the sector
-! next(nops,0:1), 0 for annihilation and 1 for creation operators,
-! respectively. -1 means it is outside the Hilbert space, otherwise, it
-! is the index of next sector
+! next(nops,0) for annihilation and next(nops,1) for creation operators
+! -1 means it is outside the Hilbert space,
+! otherwise, it is the index of next sector
          integer, pointer  :: next(:,:)
 
 ! the eigenvalues
@@ -960,7 +960,7 @@
 
 ! the F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
-! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
+! fmat(nops,0) for annihilation and fmat(nops,1) for creation operators
          type (t_fmat), pointer :: fmat(:,:)
 
      end type t_sector
@@ -1328,10 +1328,10 @@
      integer, public, save, allocatable  :: nc_cp(:,:)
 
 ! how to treat each part when calculating trace
-! isave = 0: matrices product for this part has been calculated previously
-! isave = 1: this part should be recalculated, and the result must be
-!            stored in saved_p, if this Monte Caro move has been accepted.
-! isave = 2: this part is empty, we don't need to do anything with them.
+! 0: matrices product for this part has been calculated previously
+! 1: this part should be recalculated, and the result must be
+!    stored in saved_p, if this Monte Caro move has been accepted.
+! 2: this part is empty, we don't need to do anything with them.
      integer, public, save, allocatable  :: isave(:,:,:)
 
 ! saved parts of matrices product, for previous accepted configuration
