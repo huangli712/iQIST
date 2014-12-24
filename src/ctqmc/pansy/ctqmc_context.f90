@@ -1348,7 +1348,7 @@
      public :: ctqmc_deallocate_memory_part
 
      public :: cat_make_npart
-     public :: cat_save_npart
+!<     public :: cat_save_npart
      public :: cat_make_trace
 
   contains ! encapsulated functionality
@@ -1401,10 +1401,10 @@
   subroutine ctqmc_deallocate_memory_part()
      implicit none
 
-     if ( allocated(is_cp)   ) deallocate(is_cp  )
-     if ( allocated(nc_cp)   ) deallocate(nc_cp  )
      if ( allocated(ops)     ) deallocate(ops    )
      if ( allocated(ope)     ) deallocate(ope    )
+     if ( allocated(is_cp)   ) deallocate(is_cp  )
+     if ( allocated(nc_cp)   ) deallocate(nc_cp  )
      if ( allocated(isave)   ) deallocate(isave  )
 
      if ( allocated(saved_p) ) deallocate(saved_p)
@@ -1582,32 +1582,32 @@
      return
   end subroutine cat_make_npart
 
-!!>>> cat_save_npart: copy data if proposed action has been accepted
-  subroutine cat_save_npart()
-     implicit none
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! copy save-state for all the parts
-     isave(:,:,2) = isave(:,:,1)
-
-! when npart > 1, we used the divide-and-conquer algorithm, and had to
-! save the change matrices products when proposed moves were accepted
-     if ( npart > 1 ) then
-         do i=1,nsect
-             do j=1,npart
-                 if ( is_cp(j,i) == 1 ) then
-                     saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
-                 endif ! back if ( is_cp(j,i) == 1 ) block
-             enddo ! over j={1,npart} loop
-         enddo ! over i={1,nsect} loop
-     endif ! back if ( npart > 1 ) block
-
-     return
-  end subroutine cat_save_npart
+!<!!>>> cat_save_npart: copy data if proposed action has been accepted
+!<  subroutine cat_save_npart()
+!<     implicit none
+!<
+!<! local variables
+!<! loop index
+!<     integer :: i
+!<     integer :: j
+!<
+!<! copy save-state for all the parts
+!<     isave(:,:,2) = isave(:,:,1)
+!<
+!<! when npart > 1, we used the divide-and-conquer algorithm, and had to
+!<! save the change matrices products when proposed moves were accepted
+!<     if ( npart > 1 ) then
+!<         do i=1,nsect
+!<             do j=1,npart
+!<                 if ( is_cp(j,i) == 1 ) then
+!<                     saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
+!<                 endif ! back if ( is_cp(j,i) == 1 ) block
+!<             enddo ! over j={1,npart} loop
+!<         enddo ! over i={1,nsect} loop
+!<     endif ! back if ( npart > 1 ) block
+!<
+!<     return
+!<  end subroutine cat_save_npart
 
 !!>>> cat_make_trace: calculate the trace for one sector
   subroutine cat_make_trace(csize, string, index_loc, expt_loc, trace)

@@ -2645,13 +2645,16 @@
 
      use m_sect, only : nsect
      use m_sect, only : sectors
-     use m_part, only : cat_save_npart
+!<     use m_part, only : cat_save_npart
+     use m_part, only : isave, is_cp, nc_cp, saved_p, saved_n
+     use control, only : npart
 
      implicit none
 
 ! local variables
 ! loop index
      integer :: i
+     integer :: j
 
 ! update the operator traces
      matrix_ptrace = matrix_ntrace
@@ -2666,7 +2669,26 @@
      enddo ! over i={1,nsect} loop
 
 ! save the data of each part
-     call cat_save_npart()
+!<     call cat_save_npart()
+
+!! local variables
+!! loop index
+!     integer :: i
+
+! copy save-state for all the parts
+     isave(:,:,2) = isave(:,:,1)
+
+! when npart > 1, we used the divide-and-conquer algorithm, and had to
+! save the change matrices products when proposed moves were accepted
+     if ( npart > 1 ) then
+         do i=1,nsect
+             do j=1,npart
+                 if ( is_cp(j,i) == 1 ) then
+                     saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
+                 endif ! back if ( is_cp(j,i) == 1 ) block
+             enddo ! over j={1,npart} loop
+         enddo ! over i={1,nsect} loop
+     endif ! back if ( npart > 1 ) block
 
      return
   end subroutine ctqmc_make_evolve
