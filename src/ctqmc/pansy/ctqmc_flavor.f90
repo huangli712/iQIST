@@ -2619,7 +2619,7 @@
      do i=1,nsect
          if ( .not. is_string(i) ) then
              trace_sect(i) = zero
-             sectors(i)%prod(:,:,1) = zero
+             sectors(i)%prod = zero
          else
              call cat_make_trace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
          endif ! back if ( .not. is_string(i) ) block
@@ -2630,7 +2630,7 @@
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             diag(indx+j-1,1) = sectors(i)%prod(j,j,1)
+             diag(indx+j-1,1) = sectors(i)%prod(j,j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -2645,7 +2645,6 @@
      use context, only : diag
 
      use m_sect, only : nsect
-     use m_sect, only : sectors
      use m_part, only : isave, is_cp, nc_cp, saved_p, saved_n
 
      implicit none
@@ -2660,12 +2659,6 @@
 
 ! update diag for the calculation of atomic state probability
      diag(:,2) = diag(:,1)
-
-! transfer the final matrix product from prod(:,:,1) to prod(:,:,2),
-! the latter can be used to calculate nmat and nnmat
-     do i=1,nsect
-         sectors(i)%prod(:,:,2) = sectors(i)%prod(:,:,1)
-     enddo ! over i={1,nsect} loop
 
 ! copy save-state for all the parts
      isave(:,:,2) = isave(:,:,1)

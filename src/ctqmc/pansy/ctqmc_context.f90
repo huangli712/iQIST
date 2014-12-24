@@ -956,7 +956,7 @@
          real(dp), pointer :: eval(:)
 
 ! final products of matrices
-         real(dp), pointer :: prod(:,:,:)
+         real(dp), pointer :: prod(:,:)
 
 ! the F-matrix between this sector and all other sectors
 ! if this sector doesn't point to some other sectors, the pointer is null
@@ -1044,12 +1044,12 @@
      integer :: istat
 
 ! allocate memory
-     allocate(sect%next(sect%nops,0:1),         stat=istat)
+     allocate(sect%next(sect%nops,0:1),       stat=istat)
 
-     allocate(sect%eval(sect%ndim),             stat=istat)
-     allocate(sect%prod(sect%ndim,sect%ndim,2), stat=istat)
+     allocate(sect%eval(sect%ndim),           stat=istat)
+     allocate(sect%prod(sect%ndim,sect%ndim), stat=istat)
 
-     allocate(sect%fmat(sect%nops,0:1),         stat=istat)
+     allocate(sect%fmat(sect%nops,0:1),       stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1758,7 +1758,7 @@
      endif ! back if ( csize == 0 ) block
 
 ! store final product
-     sectors( string(1) )%prod(:,:,1) = mat_r(1:dim1,1:dim1)
+     sectors( string(1) )%prod = mat_r(1:dim1,1:dim1)
 
 ! calculate the trace
      trace = zero
