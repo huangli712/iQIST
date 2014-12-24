@@ -205,14 +205,9 @@
 ! local variables
 ! loop index
      integer  :: i
-     integer  :: j
 
 ! loop index for flavor channel
      integer  :: flvr
-
-! dummy variables
-     real(dp) :: raux1
-     real(dp) :: raux2
 
 ! dummy array, denote as current occupation number
      real(dp) :: nvec(norbs)
@@ -224,15 +219,6 @@
      do i=1,ncfgs
          cprob(i) = diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop
-
-! evaluate raux2, it is Tr ( e^{- \beta H} )
-! i think it is equal to matrix_ptrace, to be checked
-     raux2 = zero
-     do i=1,nsect
-         do j=1,sectors(i)%ndim
-             raux2 = raux2 + sectors(i)%prod(j,j,2)
-         enddo ! over j={1,sectors(i)%ndim} loop
-     enddo ! over i={1,nsect} loop
 
 ! evaluate occupation matrix: < n_i >
      nvec = zero
