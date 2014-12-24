@@ -910,6 +910,7 @@
 
 ! data structure for one F-matrix
 !-------------------------------------------------------------------------
+     public :: t_fmat
      type t_fmat
 
 ! the dimension, n x m
@@ -923,9 +924,10 @@
 
 ! data structure for one sector
 !-------------------------------------------------------------------------
+     public :: t_sector
      type t_sector
 
-! dimension
+! number of states in this sector
          integer :: ndim
 
 ! number of fermion operators, it should be equal to norbs
@@ -939,7 +941,7 @@
 
 ! z component of spin: Sz
          integer :: sz
- 
+
 ! z component of spin-orbit momentum: Jz
          integer :: jz
 
@@ -959,8 +961,8 @@
          real(dp), allocatable :: prod(:,:)
 
 ! the F-matrix between this sector and all other sectors
-! if this sector doesn't point to some other sectors, the pointer is null
 ! fmat(nops,0) for annihilation and fmat(nops,1) for creation operators
+! if this sector doesn't point to some other sectors, it is not allocated
          type (t_fmat), allocatable :: fmat(:,:)
 
      end type t_sector
@@ -980,6 +982,13 @@
 
 ! array of t_sector contains all the sectors
      type (t_sector), public, save, allocatable :: sectors(:)
+
+!!========================================================================
+!!>>> declare private variables                                        <<<
+!!========================================================================
+
+! status flag
+     integer, private :: istat
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -1009,10 +1018,6 @@
 ! F-matrix structure
      type (t_fmat), intent(inout) :: mat
 
-! local variables
-! status flag
-     integer :: istat
-
 ! allocate memory
      allocate(mat%val(mat%n,mat%m), stat=istat)
 
@@ -1039,9 +1044,6 @@
 ! loop index
      integer :: i
      integer :: j
-
-! status flag
-     integer :: istat
 
 ! allocate memory
      allocate(sect%next(sect%nops,0:1),       stat=istat)
@@ -1080,9 +1082,6 @@
 ! local variables
 ! loop index
      integer :: i
-
-! status flag
-     integer :: istat
 
 ! allocate memory
      allocate(sectors(nsect), stat=istat)
