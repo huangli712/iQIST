@@ -1303,7 +1303,7 @@
 ! 1: this part should be recalculated, and the result must be
 !    stored in saved_p, if this Monte Caro move has been accepted.
 ! 2: this part is empty, we don't need to do anything with them.
-     integer, public, save, allocatable  :: isave(:,:,:)
+     integer, public, save, allocatable  :: isave(:,:)
 
 ! saved parts of matrices product, for previous accepted configuration
      real(dp), public, save, allocatable :: saved_p(:,:,:,:)
@@ -1340,7 +1340,7 @@
      allocate(ope(npart),           stat=istat)
      allocate(is_cp(npart,nsect),   stat=istat)
      allocate(nc_cp(npart,nsect),   stat=istat)
-     allocate(isave(npart,nsect,2), stat=istat)
+     allocate(isave(npart,2), stat=istat)
 
      allocate(saved_p(max_dim_sect,max_dim_sect,npart,nsect), stat=istat)
      allocate(saved_n(max_dim_sect,max_dim_sect,npart,nsect), stat=istat)
@@ -1432,7 +1432,7 @@
      fpart = 0
 
 ! copy isave
-     isave(:,:,1) = isave(:,:,2)
+     isave(:,1) = isave(:,2)
 
 ! check the vadility of npart parameter
      call s_assert(npart >= 1)
@@ -1444,9 +1444,9 @@
          ope(1) = csize
          fpart = 1
          if ( nop(1) <= 0 ) then
-             isave(1,:,1) = 2
+             isave(1,1) = 2
          else
-             isave(1,:,1) = 1
+             isave(1,1) = 1
          endif ! back if ( nop(1) <= 0 ) block
 
 ! case 2: use divide-and-conquer alogithm
@@ -1463,7 +1463,7 @@
                  fpart = i
              endif ! back if ( fpart == 0 .and. nop(i) > 0 ) block
              if ( nop(i) <= 0 ) then
-                 isave(i,:,1) = 2
+                 isave(i,1) = 2
              endif ! back if ( nop(i) <= 0 ) block
          enddo ! over i={1,npart} loop
 ! calculate the start and end index of operators for each part
@@ -1485,7 +1485,7 @@
              tie = ceiling( tau_e / interval )
 ! operator A:
              if ( nop(tis) > 0 ) then
-                 isave(tis,:,1) = 1
+                 isave(tis,1) = 1
              endif ! back if ( nop(tis) > 0 ) block
 ! special attention: if operator A is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
@@ -1494,7 +1494,7 @@
                      tip = tis + 1
                      do while ( tip <= npart )
                          if ( nop(tip) > 0 ) then
-                             isave(tip,:,1) = 1; EXIT
+                             isave(tip,1) = 1; EXIT
                          endif ! back if ( nop(tip) > 0 ) block
                          tip = tip + 1
                      enddo ! over do while ( tip <= npart ) loop
@@ -1504,7 +1504,7 @@
                  tip = tis + 1
                  do while ( tip <= npart )
                      if ( nop(tip) > 0 ) then
-                         isave(tip,:,1) = 1; EXIT
+                         isave(tip,1) = 1; EXIT
                      endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
                  enddo ! over do while ( tip <= npart ) loop
@@ -1512,7 +1512,7 @@
 
 ! operator B:
              if ( nop(tie) > 0 ) then
-                 isave(tie,:,1) = 1
+                 isave(tie,1) = 1
              endif ! back if ( nop(tie) > 0 ) block
 ! special attention: if operator B is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
@@ -1521,7 +1521,7 @@
                      tip = tie + 1
                      do while ( tip <= npart )
                          if ( nop(tip) > 0 ) then
-                             isave(tip,:,1) = 1; EXIT
+                             isave(tip,1) = 1; EXIT
                          endif ! back if ( nop(tip) > 0 ) block
                          tip = tip + 1
                      enddo ! over do while ( tip <= npart ) loop
@@ -1531,7 +1531,7 @@
                  tip = tie + 1
                  do while ( tip <= npart )
                      if ( nop(tip) > 0 ) then
-                         isave(tip,:,1) = 1; EXIT
+                         isave(tip,1) = 1; EXIT
                      endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
                  enddo ! over do while ( tip <= npart ) loop
@@ -1539,13 +1539,11 @@
 
 ! case 2B: recalculate all the matrices products
          else if ( cmode == 3 .or. cmode == 4 ) then
-             do i=1,nsect
                  do j=1,npart
-                     if ( isave(j,i,1) == 0 ) then
-                         isave(j,i,1) = 1
+                     if ( isave(j,1) == 0 ) then
+                         isave(j,1) = 1
                      endif ! back if ( isave(j,i,1) == 0 ) block
                  enddo ! over j={1,npart} loop
-             enddo ! over i={1,nsect} loop
          endif ! back if (cmode == 1 .or. cmode == 2) block
      endif ! back if ( npart == 1 ) block
 
@@ -1619,7 +1617,7 @@
      do i=1,npart
 
 ! this part has been calculated previously, just use its results
-         if ( isave(i,isect,1) == 0 ) then
+         if ( isave(i,1) == 0 ) then
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
              dim2 = sectors(sect1)%ndim
@@ -1638,7 +1636,7 @@
              endif ! back if ( i > fpart ) block
 
 ! this part should be recalcuated
-         else if ( isave(i,isect,1) == 1 ) then
+         else if ( isave(i,1) == 1 ) then
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
              dim4 = sectors(sect2)%ndim
@@ -1701,9 +1699,9 @@
              endif ! back if ( i > fpart ) block
 
 ! no operators in this part, do nothing
-         else if ( isave(i,isect,1) == 2 ) then
+         else if ( isave(i,1) == 2 ) then
              CYCLE
-         endif ! back if ( isave(i,isect,1) == 0 )  block
+         endif ! back if ( isave(i,1) == 0 )  block
 
 ! setup the start sector for next part
          isect = sect1

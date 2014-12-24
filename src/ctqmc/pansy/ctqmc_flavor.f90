@@ -2658,7 +2658,7 @@
      diag(:,2) = diag(:,1)
 
 ! copy save-state for all the parts
-     isave(:,:,2) = isave(:,:,1)
+     isave(:,2) = isave(:,1)
 
 ! when npart > 1, we used the divide-and-conquer algorithm, and had to
 ! save the change matrices products when proposed moves were accepted
