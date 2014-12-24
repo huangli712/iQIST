@@ -148,8 +148,8 @@ class p_ctqmc_solver(object):
         self.__p_cmp_manjushaka = self.__p_cmp_solver.copy()
         self.__p_cmp_manjushaka['isort'] = 1
         self.__p_cmp_manjushaka['isvrt'] = 1
-        self.__p_cmp_manjushaka['itrun'] = 1
         self.__p_cmp_manjushaka['ifast'] = 1
+        self.__p_cmp_manjushaka['itrun'] = 1
         self.__p_cmp_manjushaka['lemax'] = 32
         self.__p_cmp_manjushaka['legrd'] = 20001
         self.__p_cmp_manjushaka['chmax'] = 32
