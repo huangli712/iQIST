@@ -917,7 +917,7 @@
          integer :: m
 
 ! the memory space for the matrix
-         real(dp), pointer :: val(:,:)
+         real(dp), allocatable :: val(:,:)
 
      end type t_fmat
 
@@ -1067,7 +1067,6 @@
          do j=0,1
              sect%fmat(i,j)%n = 0
              sect%fmat(i,j)%m = 0
-             sect%fmat(i,j)%val => null()
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
 
@@ -1102,8 +1101,6 @@
          sectors(i)%sz     = 0
          sectors(i)%jz     = 0
          sectors(i)%ps     = 0
-
-!<         sectors(i)%fmat  => null()
      enddo ! over i={1,nsect} loop
 
      return
@@ -1121,7 +1118,7 @@
 ! F-matrix structure
      type (t_fmat), intent(inout) :: mat
 
-     if ( associated(mat%val) ) deallocate(mat%val)
+     if ( allocated(mat%val) ) deallocate(mat%val)
 
      return
   end subroutine ctqmc_deallocate_memory_one_fmat
