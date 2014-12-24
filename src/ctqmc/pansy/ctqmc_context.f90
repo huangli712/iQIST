@@ -1044,12 +1044,12 @@
      integer :: istat
 
 ! allocate memory
-     allocate(sect%next(sect%nops,0:1),                 stat=istat)
+     allocate(sect%next(sect%nops,0:1),         stat=istat)
 
-     allocate(sect%eval(sect%ndim),                     stat=istat)
-     allocate(sect%prod(sect%ndim,sect%ndim,2),         stat=istat)
+     allocate(sect%eval(sect%ndim),             stat=istat)
+     allocate(sect%prod(sect%ndim,sect%ndim,2), stat=istat)
 
-     allocate(sect%fmat(sect%nops,0:1),                 stat=istat)
+     allocate(sect%fmat(sect%nops,0:1),         stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1057,10 +1057,10 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     sect%next  = 0
+     sect%next = 0
 
-     sect%eval  = zero
-     sect%prod  = zero
+     sect%eval = zero
+     sect%prod = zero
 
 ! initialize fmat one by one
      do i=1,sect%nops
@@ -1187,7 +1187,7 @@
 !!>>> core service subroutines                                         <<<
 !!========================================================================
 
-!!>>> cat_make_string: subroutine used to build an evolutional string
+!!>>> cat_make_string: it is used to build a time evolution string
   subroutine cat_make_string(csize, index_t_loc, is_string, string)
      implicit none
 
