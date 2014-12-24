@@ -2568,9 +2568,6 @@
 ! start index of a sector
      integer  :: indx
 
-! whether it forms a string
-     logical  :: is_string(nsect)
-
 ! sector index of a string
      integer  :: string(csize+1,nsect)
 
@@ -2606,7 +2603,7 @@
      end select
 
 ! build string for all the sectors, it will return is_string and string
-     call cat_make_string(csize, index_loc, is_string, string)
+     call cat_make_string(csize, index_loc, string)
 
 ! determine which part should be recalculated, it will modify isave internal
      call cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
@@ -2617,7 +2614,7 @@
      trace_sect = zero
      trace = zero
      do i=1,nsect
-         if ( .not. is_string(i) ) then
+         if ( string(1,i) == -1 ) then
              trace_sect(i) = zero
              sectors(i)%prod = zero
          else

@@ -1179,7 +1179,7 @@
 !!========================================================================
 
 !!>>> cat_make_string: it is used to build a time evolution string
-  subroutine cat_make_string(csize, index_loc, is_string, string)
+  subroutine cat_make_string(csize, index_loc, string)
      implicit none
 
 ! external variables
@@ -1189,10 +1189,8 @@
 ! memory address index of fermion operators
      integer, intent(in)  :: index_loc(mkink)
 
-! whether it is a valid string?
-     logical, intent(out) :: is_string(nsect)
-
-! string index
+! time evolution string, i.e., sequence of sector index
+! if it is not a valid string, then all of its values should be -1
      integer, intent(out) :: string(csize+1,nsect)
 
 ! local variables
@@ -1205,69 +1203,35 @@
      integer :: vt
 
 ! sector index: from left direction
-     integer :: left
-     integer :: curr_sect_l
-     integer :: next_sect_l
-
-! sector index: from right direction
-     integer :: right
-     integer :: curr_sect_r
-     integer :: next_sect_r
+     integer :: it
+     integer :: curr_sect
+     integer :: next_sect
 
 ! init return arrays
-     is_string = .true.
      string = -1
 
 ! we build a string from right to left, that is, beta <- 0
 ! begin with S1: F1(S1) -> S2, F2(S2) -> S3, ... , Fk(Sk) -> S1
 ! if find some Si==-1, cycle this sector immediately
      do i=1,nsect
-         curr_sect_l = i
-         curr_sect_r = i
-         next_sect_l = i
-         next_sect_r = i
-         left = 0
-         right = csize + 1
+         it = 1
+         curr_sect = i
+         string(it,i) = curr_sect
          do j=1,csize
-             if ( mod(j,2) == 1 ) then
-                 left = left + 1
-                 string(left,i) = curr_sect_l
-                 vt = type_v( index_loc(left) )
-                 vf = flvr_v( index_loc(left) )
-                 next_sect_l = sectors(curr_sect_l)%next(vf,vt)
-                 if ( next_sect_l == -1 ) then
-                     is_string(i) = .false.; EXIT ! finish check, exit
-                 endif ! back if ( next_sect_l == -1 ) block
-                 curr_sect_l = next_sect_l
+             it = it + 1
+             vt = type_v( index_loc(j) )
+             vf = flvr_v( index_loc(j) )
+             next_sect = sectors(curr_sect)%next(vf,vt)
+             if ( next_sect == -1 ) then
+                 string(:,i) = -1; EXIT
              else
-                 right = right - 1
-                 vt = type_v( index_loc(right) )
-                 vf = flvr_v( index_loc(right) )
-                 vt = mod(vt+1,2)
-                 next_sect_r = sectors(curr_sect_r)%next(vf,vt)
-                 if ( next_sect_r == -1 ) then
-                     is_string(i) = .false.; EXIT ! finish check, exit
-                 endif ! back if ( next_sect_r == -1 ) block
-                 string(right,i) = next_sect_r
-                 curr_sect_r = next_sect_r
-             endif ! back if ( mod(j,2) == 1 ) block
+                 string(it,i) = next_sect
+                 curr_sect = next_sect
+             endif
          enddo ! over j={1,csize} loop
-
-! this case will generate a non-diagonal block, it will not contribute
-! to the trace
-         if ( next_sect_r /= next_sect_l ) then
-             is_string(i) = .false.
-         endif ! back if ( next_sect_r /= next_sect_l ) block
-
-! if it doesn't form a string, we cycle it, go to the next sector
-         if ( .not. is_string(i) ) then
-             CYCLE
-         endif ! back if ( .not. is_string(i) ) block
-
-! add the last sector to string, and check whether
-! string(csize+1,i) == string(1,i)
-! which is important for csize = 0
-         string(csize+1,i) = i
+         if ( string(1,i) /= string(csize+1,i) ) then
+             string(:,i) = -1
+         endif
      enddo ! over i={1,nsect} loop
 
      return
