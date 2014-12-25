@@ -1564,6 +1564,7 @@
      integer  :: sect1
      integer  :: sect2
 
+! the first part with non-zero fermion operators
      integer  :: fpart
 
 ! counter for fermion operators
@@ -1583,14 +1584,19 @@
      dim1  = sectors( string(1) )%ndim
 
 ! determine fpart
+     fpart = 0
      do i=1,npart
          if ( nop(i) > 0 ) then
              fpart = i; EXIT
          endif ! back if ( nop(i) > 0 ) block
      enddo ! over i={1,npart} loop
 
+     renew = 1
+
 ! loop over all the parts
      do i=1,npart
+
+         if ( nop(i) == 0 ) CYCLE
 
 ! this part has been calculated previously, just use its results
          if ( renew(i) == 0 ) then
