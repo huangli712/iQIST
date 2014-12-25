@@ -795,11 +795,11 @@
 ! init m_part module
      nprod   = zero
 
+     nop     = 0
      ops     = 0
      ope     = 0
-     is_cp   = 0
+     renew   = 0
      nc_cp   = 0
-     isave   = 1
 
      saved_p = zero
      saved_n = zero

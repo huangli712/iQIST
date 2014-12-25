@@ -2538,7 +2538,6 @@
      use m_sect, only : nsect
      use m_sect, only : sectors
      use m_sect, only : cat_make_string
-     use m_part, only : is_cp
      use m_part, only : cat_make_npart
      use m_part, only : cat_make_trace
 
@@ -2546,6 +2545,10 @@
 
 ! external arguments
 ! different type of Monte Carlo moves
+! if cmode = 1, partly-trial calculation, useful for ctqmc_insert_ztrace() etc
+! if cmode = 2, partly-normal calculation, not used by now
+! if cmode = 3, fully-trial calculation, useful for ctqmc_reflip_kink()
+! if cmode = 4, fully-normal calculation, useful for ctqmc_retrieve_status()
      integer,  intent(in)  :: cmode
 
 ! total number of operators for current diagram
@@ -2602,32 +2605,32 @@
 
      end select
 
-! build string for all the sectors, it will return is_string and string
+! build string for all the sectors, if the string is invalid, then its
+! elements must be -1
      call cat_make_string(csize, index_loc, string)
 
-! determine which part should be recalculated, it will modify isave internal
+! determine which part should be recalculated
      call cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
 
 ! calculate the trace of each sector one by one
-! reset copy status to false, it is very important!
-     is_cp = 0
      trace_sect = zero
-     trace = zero
      do i=1,nsect
+! invalid string, its contribution is neglected
          if ( string(1,i) == -1 ) then
              trace_sect(i) = zero
              sectors(i)%prod = zero
+! valid string, we have to calculate its contribution to trace
          else
              call cat_make_trace(csize, string(:,i), index_loc, expt_loc, trace_sect(i))
          endif ! back if ( .not. is_string(i) ) block
-         trace = trace + trace_sect(i)
      enddo ! over i={1,nsect} loop
+     trace = sum(trace_sect)
 
 ! store the diagonal elements of final product in diag(:,1)
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             diag(indx+j-1,1) = sectors(i)%prod(j,j)
+             diag(indx+j-1,1) = sectors(i)%prod(j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -2642,7 +2645,7 @@
      use context, only : diag
 
      use m_sect, only : nsect
-     use m_part, only : isave, is_cp, nc_cp, saved_p, saved_n
+     use m_part, only : renew, nc_cp, saved_p, saved_n
 
      implicit none
 
@@ -2657,20 +2660,15 @@
 ! update diag for the calculation of atomic state probability
      diag(:,2) = diag(:,1)
 
-! copy save-state for all the parts
-     isave(:,2) = isave(:,1)
-
-! when npart > 1, we used the divide-and-conquer algorithm, and had to
-! save the change matrices products when proposed moves were accepted
-     if ( npart > 1 ) then
-         do i=1,nsect
-             do j=1,npart
-                 if ( is_cp(j,i) == 1 ) then
-                     saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
-                 endif ! back if ( is_cp(j,i) == 1 ) block
-             enddo ! over j={1,npart} loop
-         enddo ! over i={1,nsect} loop
-     endif ! back if ( npart > 1 ) block
+! if we used the divide-and-conquer algorithm, then we had to save the
+! change matrices products when proposed moves were accepted
+     do i=1,nsect
+         do j=1,npart
+             if ( renew(j) == 1 ) then
+                 saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
+             endif ! back if ( renew(j) == 1 ) block
+         enddo ! over j={1,npart} loop
+     enddo ! over i={1,nsect} loop
 
      return
   end subroutine ctqmc_make_evolve
