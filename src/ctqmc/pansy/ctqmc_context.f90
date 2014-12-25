@@ -1574,8 +1574,7 @@
      real(dp) :: mat_r(max_dim_sect,max_dim_sect)
      real(dp) :: mat_t(max_dim_sect,max_dim_sect)
 
-! next we perform time evolution from left to right: 0 -> \beta
-! initialize some arrays
+! initialize dummy arrays
      mat_r = zero
      mat_t = zero
 
@@ -1591,8 +1590,7 @@
          endif ! back if ( nop(i) > 0 ) block
      enddo ! over i={1,npart} loop
 
-     renew = 1
-
+! next we perform time evolution from left to right: 0 -> \beta
 ! loop over all the parts
      do i=1,npart
 
@@ -1624,7 +1622,7 @@
              dim4 = sectors(sect2)%ndim
              saved_n(:,:,i,isect) = zero
 
-! set its save status and copy status
+! set its copy status
              nc_cp(i,isect) = dim4
 
 ! loop over all the fermion operators in this part
