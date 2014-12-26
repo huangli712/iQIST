@@ -100,7 +100,7 @@
 !!>>> information to initialize the continuous time quantum Monte Carlo
 !!>>> quantum impurity solver
   subroutine ctqmc_retrieve_status()
-     use constants, only : dp, zero, one, epss, mytmp
+     use constants, only : dp, zero, epss, mytmp
      use mmpi, only : mp_bcast, mp_barrier
 
      use control, only : norbs
@@ -250,7 +250,7 @@
 
 ! update the matrix trace for product of F matrix and time evolution operators
      i = 2 * sum(rank) ! get total number of operators
-     call ctqmc_make_ztrace(4, i, matrix_ntrace, -one, -one)
+     call ctqmc_make_ztrace(4, i, matrix_ntrace, zero, zero)
 
 ! update the operators trace
      call ctqmc_make_evolve()
