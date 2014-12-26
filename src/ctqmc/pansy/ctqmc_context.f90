@@ -1211,22 +1211,22 @@
 
 ! we try to build a string from left to right, that is, 0 -> \beta
 ! we assume the sectors are S1, S2, S3, ..., SM, and the fermion
-! operators are F1, F2, F3, F4, .... FN. Here, F1 is in \tau_1, F2
+! operators are F1, F2, F3, F4, .... FN. here, F1 is in \tau_1, F2
 ! is in \tau_2, F3 is in \tau_3, and so on, and 
 !     0 < \tau_1 < \tau_2 < \tau_3 < ... < \beta
 ! is always guaranteed. then a typical (and also valid) string must
 ! look like this:
 !     F1       F2       F3       F4       F5        FN
 ! S1 ----> S2 ----> S3 ----> S4 ----> S5 ----> ... ----> S1
-! then the sequence of sector indices is the so-called string. If some
+! then the sequence of sector indices is the so-called string. if some
 ! Si are -1 (null sector), this string is invalid. we will enforce all
 ! elements in it to be -1. it is easy to speculate that if the number
 ! of fermion operators is csize, the length of string must be csize + 1
-     SECTOR_LOOP: do i=1,nsect
+     SECTOR_SCAN_LOOP: do i=1,nsect
 ! setup starting sector
          curr_sect = i
          string(1,i) = curr_sect
-         OPERATOR_LOOP: do j=1,csize
+         OPERATOR_SCAN_LOOP: do j=1,csize
 ! determine the type and flavor of current operator
              vt = type_v( vindex(j) )
              vf = flvr_v( vindex(j) )
@@ -1235,20 +1235,20 @@
 ! meet null sector, it is an invalid string. we will try another
 ! new string
              if ( next_sect == -1 ) then
-                 string(:,i) = -1; EXIT OPERATOR_LOOP
+                 string(:,i) = -1; EXIT OPERATOR_SCAN_LOOP
 ! the string is still alive, we record the sector, and set it to
 ! the current sector
              else
                  string(j+1,i) = next_sect
                  curr_sect = next_sect
              endif ! back if ( next_sect == -1 ) block
-         enddo OPERATOR_LOOP ! over j={1,csize} loop
+         enddo OPERATOR_SCAN_LOOP ! over j={1,csize} loop
 ! we have to ensure that the first sector is the same with the last
 ! sector in this string, or else it is invalid
          if ( string(1,i) /= string(csize+1,i) ) then
              string(:,i) = -1
          endif ! back if ( string(1,i) /= string(csize+1,i) ) block
-     enddo SECTOR_LOOP ! over i={1,nsect} loop
+     enddo SECTOR_SCAN_LOOP ! over i={1,nsect} loop
 
      return
   end subroutine cat_make_string
@@ -1282,9 +1282,6 @@
 !!>>> declare global variables                                         <<<
 !!========================================================================
 
-! total number of matrices products
-     real(dp), public, save :: nprod = zero
-
 ! number of operators for each part
      integer, public, save, allocatable  :: nop(:)
 
@@ -1300,12 +1297,26 @@
 !    stored in saved_p, if this Monte Caro move has been accepted.
      integer, public, save, allocatable  :: renew(:)
 
-! 0: sync
-! 1: async
+! determine which parts of saved_p are unsafe or invalid (we just call
+! it asynchronization), and have to be updated (or synchronized) for
+! future trace calculations
+! 0: synchronous, this part of saved_p is OK
+! 1: asynchronous, this part of saved_p is invalid
+! Q: why is renew not enough? why do we need async and is_cp?
+! A: because string is not always valid. string broken is possible. at
+! that time, even renew(j) is 1, some sectors in this part will be not
+! updated successfully. of course, saved_p for them will be not updated
+! as well. so we have to mark the corresponding saved_p as wrong value.
+! this is the role of async. due to the same reason, we cann't use renew
+! to control which parts of saved_p should be updated with saved_n only.
+! so we need is_cp as well.
      integer, public, save, allocatable  :: async(:,:)
 
-! 0: do nothing
-! 1: should be copied
+! determine which parts of saved_p should be updated by the corresponding
+! parts of saved_n
+! 0: do nothing, saved_n and saved_p have the same values, or saved_n is
+!    unavailable, we can not use it to update saved_p
+! 1: saved_n will be copied to saved_p in ctqmc_make_evolve() subroutine
      integer, public, save, allocatable  :: is_cp(:,:)
 
 ! number of columns to be copied, in order to save copy time
@@ -1406,7 +1417,7 @@
 !!========================================================================
 
 !!>>> cat_make_npart: it is used to determine renew, which parts should
-!!>>> be recalculated
+!!>>> be recalculated, is_cp is also reseted in this subroutine
   subroutine cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
      implicit none
 
@@ -1447,7 +1458,7 @@
      ops = 0
      ope = 0
 
-! init global array
+! init global arrays (renew and is_cp)
      renew = 0
      is_cp = 0
 
@@ -1532,7 +1543,8 @@
      return
   end subroutine cat_make_npart
 
-!!>>> cat_make_trace: calculate the contribution to trace for a string
+!!>>> cat_make_trace: calculate the contribution to final trace for
+!!>>> a given string
   subroutine cat_make_trace(csize, string, index_loc, expt_loc, trace)
      implicit none
 
@@ -1609,6 +1621,7 @@
 ! loop over all the parts
      do i=1,npart
 
+! empty part, we just skip it
          if ( nop(i) == 0 ) CYCLE
 
 ! this part should be recalcuated
@@ -1637,7 +1650,6 @@
                              mat_t(k,l) = saved_n(k,l,i,isect) * expt_v(indx+k-1,index_loc(j))
                          enddo ! over k={1,dim3} loop
                      enddo ! over l={1,dim4} loop
-                     nprod = nprod + one
                  else
                      mat_t = zero
                      do k=1,dim3
@@ -1655,7 +1667,6 @@
                                            max_dim_sect, &
                              zero, saved_n(:,:,i,isect), &
                                            max_dim_sect )
-                 nprod = nprod + one
              enddo ! over j={ops(i),ope(i)} loop
 
 ! multiply this part with the rest parts
@@ -1668,7 +1679,6 @@
                                             zero, mat_t, &
                                            max_dim_sect )
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
-                 nprod = nprod + one
              else
                  mat_r(:,1:dim1) = saved_n(:,1:dim1,i,isect)
              endif ! back if ( i > fpart ) block
@@ -1687,7 +1697,6 @@
                                            max_dim_sect, &
                               zero, mat_t, max_dim_sect )
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
-                 nprod = nprod + one
              else
                  mat_r(:,1:dim1) = saved_p(:,1:dim1,i,isect)
              endif ! back if ( i > fpart ) block
@@ -1713,7 +1722,6 @@
                  mat_r(k,l) = mat_r(k,l) * expt_loc(indx+k-1)
              enddo ! over k={1,dim1} loop
          enddo ! over l={1,dim1} loop
-         nprod = nprod + one
      endif ! back if ( csize == 0 ) block
 
 ! calculate the trace and store the final product
