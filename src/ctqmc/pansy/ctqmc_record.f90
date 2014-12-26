@@ -189,7 +189,7 @@
 !!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
-     use constants, only : dp, zero, one
+     use constants, only : dp, zero
 
      use control, only : nband, norbs, ncfgs
      use control, only : U, mune, beta
@@ -205,6 +205,7 @@
 ! local variables
 ! loop index
      integer  :: i
+     integer  :: j
 
 ! loop index for flavor channel
      integer  :: flvr
@@ -215,15 +216,38 @@
 ! current probability for eigenstates
      real(dp) :: cprob(ncfgs)
 
-! evaluate cprob at first, it is current atomic propability
+! current probability for sectors
+     real(dp) :: sprob(nsect)
+
+
+
+! evaluate cprob at first, it is current atomic probability
      do i=1,ncfgs
          cprob(i) = diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop
 
+! evaluate sprob, it is current sector prob
+     sprob = zero
+     do i=1,nsect
+         indx = sectors(i)%istart
+         do j=1,sectors(i)%ndim
+             sprob(i) = sprob(i) + cprob(indx+j-1)
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
+
 ! evaluate occupation matrix: < n_i >
-     nvec = zero
+! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
+!-------------------------------------------------------------------------
      nmat = zero
+! this feature will not be implemented for pansy code
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate double occupation matrix: < n_i n_j >
+! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
+!-------------------------------------------------------------------------
      nnmat = zero
+! this feature will not be implemented for pansy code
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
 ! evaluate <N^2>
