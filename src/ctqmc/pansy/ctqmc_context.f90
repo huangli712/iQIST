@@ -1300,6 +1300,14 @@
 !    stored in saved_p, if this Monte Caro move has been accepted.
      integer, public, save, allocatable  :: renew(:)
 
+! 0: sync
+! 1: async
+     integer, public, save, allocatable  :: async(:,:)
+
+! 0: do nothing
+! 1: should be copied
+     integer, public, save, allocatable  :: is_cp(:,:)
+
 ! number of columns to be copied, in order to save copy time
      integer, public, save, allocatable  :: nc_cp(:,:)
 
@@ -1342,6 +1350,8 @@
      allocate(ope(npart),         stat=istat)
 
      allocate(renew(npart),       stat=istat)
+     allocate(async(npart,nsect), stat=istat)
+     allocate(is_cp(npart,nsect), stat=istat)
      allocate(nc_cp(npart,nsect), stat=istat)
 
      allocate(saved_p(max_dim_sect,max_dim_sect,npart,nsect), stat=istat)
@@ -1358,6 +1368,8 @@
      ope   = 0
 
      renew = 0
+     async = 0
+     is_cp = 0
      nc_cp = 0
 
      saved_p = zero
@@ -1379,6 +1391,8 @@
      if ( allocated(ope)     ) deallocate(ope    )
 
      if ( allocated(renew)   ) deallocate(renew  )
+     if ( allocated(async)   ) deallocate(async  )
+     if ( allocated(is_cp)   ) deallocate(is_cp  )
      if ( allocated(nc_cp)   ) deallocate(nc_cp  )
 
      if ( allocated(saved_p) ) deallocate(saved_p)
@@ -1435,6 +1449,7 @@
 
 ! init global array
      renew = 0
+     is_cp = 0
 
 ! calculate number of operators for each part
      do i=1,csize
@@ -1596,33 +1611,15 @@
 
          if ( nop(i) == 0 ) CYCLE
 
-! this part has been calculated previously, just use its results
-         if ( renew(i) == 0 ) then
-             sect1 = string(ope(i)+1)
-             sect2 = string(ops(i))
-             dim2 = sectors(sect1)%ndim
-             dim3 = sectors(sect2)%ndim
-             if ( i > fpart ) then
-                 call dgemm( 'N', 'N', dim2, dim1, dim3, &
-                              one, saved_p(:,:,i,isect), &
-                                           max_dim_sect, &
-                                                  mat_r, &
-                                           max_dim_sect, &
-                              zero, mat_t, max_dim_sect )
-                 mat_r(:,1:dim1) = mat_t(:,1:dim1)
-                 nprod = nprod + one
-             else
-                 mat_r(:,1:dim1) = saved_p(:,1:dim1,i,isect)
-             endif ! back if ( i > fpart ) block
-
 ! this part should be recalcuated
-         else
+         if ( renew(i) == 1 .or. async(i,isect) == 1 ) then
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
              dim4 = sectors(sect2)%ndim
              saved_n(:,:,i,isect) = zero
 
 ! set its copy status
+             is_cp(i,isect) = 1
              nc_cp(i,isect) = dim4
 
 ! loop over all the fermion operators in this part
@@ -1676,7 +1673,26 @@
                  mat_r(:,1:dim1) = saved_n(:,1:dim1,i,isect)
              endif ! back if ( i > fpart ) block
 
-         endif ! back if ( renew(i) == 0 )  block
+! this part has been calculated previously, just use its results
+         else
+             sect1 = string(ope(i)+1)
+             sect2 = string(ops(i))
+             dim2 = sectors(sect1)%ndim
+             dim3 = sectors(sect2)%ndim
+             if ( i > fpart ) then
+                 call dgemm( 'N', 'N', dim2, dim1, dim3, &
+                              one, saved_p(:,:,i,isect), &
+                                           max_dim_sect, &
+                                                  mat_r, &
+                                           max_dim_sect, &
+                              zero, mat_t, max_dim_sect )
+                 mat_r(:,1:dim1) = mat_t(:,1:dim1)
+                 nprod = nprod + one
+             else
+                 mat_r(:,1:dim1) = saved_p(:,1:dim1,i,isect)
+             endif ! back if ( i > fpart ) block
+
+         endif ! back if ( renew(i) == 1 )  block
 
 ! setup the start sector for next part
          isect = sect1

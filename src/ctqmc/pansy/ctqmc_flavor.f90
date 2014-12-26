@@ -2530,7 +2530,7 @@
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants, only : dp, zero
 
-     use control, only : ncfgs
+     use control, only : ncfgs, npart
      use control, only : mkink
      use context, only : index_t, index_v, expt_t
      use context, only : diag
@@ -2645,7 +2645,7 @@
      use context, only : diag
 
      use m_sect, only : nsect
-     use m_part, only : renew, nc_cp, saved_p, saved_n
+     use m_part, only : renew, async, is_cp, nc_cp, saved_p, saved_n
 
      implicit none
 
@@ -2660,13 +2660,23 @@
 ! update diag for the calculation of atomic state probability
      diag(:,2) = diag(:,1)
 
+! determine async
+     do i=1,nsect
+         do j=1,npart
+             if ( renew(j) == 1 .and. is_cp(j,i) == 0 ) then
+                 async(j,i) = 1
+             endif
+         enddo
+     enddo
+
 ! if we used the divide-and-conquer algorithm, then we had to save the
 ! change matrices products when proposed moves were accepted
      do i=1,nsect
          do j=1,npart
-             if ( renew(j) == 1 ) then
+             if ( is_cp(j,i) == 1 ) then
                  saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
-             endif ! back if ( renew(j) == 1 ) block
+                 async(j,i) = 0
+             endif ! back if ( is_cp(j,i) == 1 ) block
          enddo ! over j={1,npart} loop
      enddo ! over i={1,nsect} loop
 
