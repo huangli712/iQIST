@@ -793,8 +793,6 @@
 ! for the other variables/arrays
 !-------------------------------------------------------------------------
 ! init m_part module
-     nprod   = zero
-
      nop     = 0
      ops     = 0
      ope     = 0
