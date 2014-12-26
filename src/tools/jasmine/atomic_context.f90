@@ -191,7 +191,7 @@
          integer :: m
 
 ! the memory space for the matrix
-         real(dp), pointer :: val(:,:)
+         real(dp), allocatable :: val(:,:)
 
      end type t_fmat
 
@@ -222,26 +222,27 @@
          integer :: ps
 
 ! the Fock basis index of this sector
-         integer, pointer  :: basis(:)
+         integer, allocatable  :: basis(:)
 
 ! the next sector after a fermion operator acts on this sector
-! -1: outside of the Hilbert space, otherwise, it is the index of next sector
-! next(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-         integer, pointer  :: next(:,:)
+! next(nops,0) for annihilation and next(nops,1) for creation operators
+! -1: outside of the Hilbert space
+! otherwise, it is the index of next sector
+         integer, allocatable  :: next(:,:)
 
 ! the eigenvalues
-         real(dp), pointer :: eval(:)
+         real(dp), allocatable :: eval(:)
 
 ! the eigenvectors, since Hamiltonian must be real, then it is real as well
-         real(dp), pointer :: evec(:,:)
+         real(dp), allocatable :: evec(:,:)
 
 ! the Hamiltonian of this sector
-         complex(dp), pointer :: hmat(:,:)
+         complex(dp), allocatable :: hmat(:,:)
 
 ! the F-matrix between this sector and all other sectors
+! fmat(nops,0) for annihilation and fmat(nops,1) for creation operators
 ! if this sector doesn't point to some other sectors, the pointer is null
-! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-         type (t_fmat), pointer :: fmat(:,:)
+         type (t_fmat), allocatable :: fmat(:,:)
 
      end type t_sector
 
@@ -262,14 +263,11 @@
 !!========================================================================
 
      public :: alloc_one_fmat
-     public :: nullify_one_fmat
-     public :: dealloc_one_fmat
-
      public :: alloc_one_sector
-     public :: nullify_one_sector
-     public :: dealloc_one_sector
-
      public :: alloc_m_sector
+
+     public :: dealloc_one_fmat
+     public :: dealloc_one_sector
      public :: dealloc_m_sector
 
   contains ! encapsulated functionality
@@ -345,7 +343,6 @@
         do j=0,1
             one_sector%fmat(i,j)%n = 0
             one_sector%fmat(i,j)%m = 0
-            call nullify_one_fmat(one_sector%fmat(i,j))
         enddo ! over j={0,1} loop
      enddo ! over i={1,one_sector%nops} loop
 
@@ -357,9 +354,6 @@
      implicit none
 
 ! local variables
-! loop index
-     integer :: i
-
 ! the status flag
      integer :: istat
 
@@ -371,30 +365,12 @@
          call s_print_error('alloc_m_sector','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-! nullify each sector one by one
-     do i=1,nsectors
-         call nullify_one_sector(sectors(i))
-     enddo ! over i={1,nsectors} loop
-
      return
   end subroutine alloc_m_sector
 
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
-
-!!>>> nullify_one_fmat: nullify one fmat
-  subroutine nullify_one_fmat(one_fmat)
-     implicit none
-
-! external arguments
-! the fmat
-     type (t_fmat), intent(inout) :: one_fmat
-
-     nullify(one_fmat%val)
-
-     return
-  end subroutine nullify_one_fmat
 
 !>>> dealloc_one_fmat: deallocate one fmat
   subroutine dealloc_one_fmat(one_fmat)
@@ -404,28 +380,10 @@
 ! the fmat
      type (t_fmat), intent(inout) :: one_fmat
 
-     if ( associated(one_fmat%val) ) deallocate(one_fmat%val)
+     if ( allocated(one_fmat%val) ) deallocate(one_fmat%val)
 
      return
   end subroutine dealloc_one_fmat
-
-!!>>> nullify_one_sector: nullify one sector
-  subroutine nullify_one_sector(one_sector)
-     implicit none
-
-! external arguments
-! the sector
-     type (t_sector), intent(inout) :: one_sector
-
-     nullify(one_sector%basis)
-     nullify(one_sector%next )
-     nullify(one_sector%eval )
-     nullify(one_sector%evec )
-     nullify(one_sector%hmat )
-     nullify(one_sector%fmat )
-
-     return
-  end subroutine nullify_one_sector
 
 !!>>> dealloc_one_sector: deallocate memory for one sector
   subroutine dealloc_one_sector(one_sector)
@@ -440,20 +398,21 @@
      integer :: i
      integer :: j
 
-     if ( associated(one_sector%basis) ) deallocate(one_sector%basis)
-     if ( associated(one_sector%next)  ) deallocate(one_sector%next )
-     if ( associated(one_sector%eval)  ) deallocate(one_sector%eval )
-     if ( associated(one_sector%evec)  ) deallocate(one_sector%evec )
-     if ( associated(one_sector%hmat)  ) deallocate(one_sector%hmat )
+     if ( allocated(one_sector%basis) ) deallocate(one_sector%basis)
+     if ( allocated(one_sector%next)  ) deallocate(one_sector%next )
+     if ( allocated(one_sector%eval)  ) deallocate(one_sector%eval )
+     if ( allocated(one_sector%evec)  ) deallocate(one_sector%evec )
+     if ( allocated(one_sector%hmat)  ) deallocate(one_sector%hmat )
 
 ! deallocate fmat one by one
-     do i=1,one_sector%nops
-         do j=0,1
-             call dealloc_one_fmat(one_sector%fmat(i,j))
-         enddo ! over j={0,1} loop
-     enddo ! over i={1,one_sector%nops} loop
-
-     if ( associated(one_sector%fmat)  ) deallocate(one_sector%fmat )
+     if ( allocated(one_sector%fmat)  ) then
+         do i=1,one_sector%nops
+             do j=0,1
+                 call dealloc_one_fmat(one_sector%fmat(i,j))
+             enddo ! over j={0,1} loop
+         enddo ! over i={1,one_sector%nops} loop
+         deallocate(one_sector%fmat)
+     endif ! back if ( allocated(one_sector%fmat)  ) block
 
      return
   end subroutine dealloc_one_sector
@@ -466,13 +425,14 @@
 ! loop index
      integer :: i
 
-! deallocate memory for pointers in T_sector
+! deallocate memory for arrays in T_sector
 ! before deallocating sectors to avoid memory leak
-     do i=1,nsectors
-         call dealloc_one_sector(sectors(i))
-     enddo ! over i={1,nsectors} loop
-
-     if ( allocated(sectors) ) deallocate(sectors)
+     if ( allocated(sectors) ) then
+         do i=1,nsectors
+             call dealloc_one_sector(sectors(i))
+         enddo ! over i={1,nsectors} loop
+         deallocate(sectors)
+     endif ! back if ( allocated(sectors) ) block
 
      return
   end subroutine dealloc_m_sector
