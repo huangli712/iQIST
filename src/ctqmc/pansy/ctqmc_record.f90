@@ -191,7 +191,7 @@
   subroutine ctqmc_record_nmat()
      use constants, only : dp, zero
 
-     use control, only : nband, norbs, ncfgs
+     use control, only : norbs, ncfgs
      use control, only : U, mune, beta
      use context, only : ckink, matrix_ptrace
      use context, only : paux, nmat, nnmat
@@ -207,19 +207,18 @@
      integer  :: i
      integer  :: j
 
-! loop index for flavor channel
-     integer  :: flvr
+! start index of sectors
+     integer  :: indx
 
-! dummy array, denote as current occupation number
-     real(dp) :: nvec(norbs)
+! current occupation number and Sz
+     real(dp) :: nele
+     real(dp) :: sz
 
 ! current probability for eigenstates
      real(dp) :: cprob(ncfgs)
 
 ! current probability for sectors
      real(dp) :: sprob(nsect)
-
-
 
 ! evaluate cprob at first, it is current atomic probability
      do i=1,ncfgs
@@ -233,6 +232,21 @@
          do j=1,sectors(i)%ndim
              sprob(i) = sprob(i) + cprob(indx+j-1)
          enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
+
+! evaluate the total occupation number
+! this algorithm is somewhat rough, not very accurate
+     nele = zero
+     do i=1,nsect
+         nele = nele + sectors(i)%nele * sprob(i)
+     enddo ! over i={1,nsect} loop
+
+! evaluate the total Sz
+! this algorithm is somewhat rough, and only useful when the Sz quantum
+! number is used to generate the atom.cix
+     sz = zero
+     do i=1,nsect
+         sz = sz + sectors(i)%sz * sprob(i)
      enddo ! over i={1,nsect} loop
 
 ! evaluate occupation matrix: < n_i >
@@ -252,19 +266,17 @@
 !-------------------------------------------------------------------------
 ! evaluate <N^2>
 !-------------------------------------------------------------------------
-     paux(6) = paux(6) + ( sum(nvec) )**2
+     paux(6) = paux(6) + nele ** 2
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^1>
 !-------------------------------------------------------------------------
-     paux(5) = paux(5) + sum(nvec)
+     paux(5) = paux(5) + nele
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
 !-------------------------------------------------------------------------
-     do flvr=1,nband
-         paux(4) = paux(4) + ( nvec(flvr) - nvec(flvr+nband) )
-     enddo ! over flvr={1,nband} loop
+     paux(4) = paux(4) + sz
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate kinetic energy: ekin
@@ -286,7 +298,7 @@
 ! evaluate total energy: etot
 ! equation : E_{tot} = < H_{loc} > - T < k > + \mu N
 !-------------------------------------------------------------------------
-     paux(1) = paux(2) + paux(3) + mune * sum(nvec)
+     paux(1) = paux(2) + paux(3) + mune * nele
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
