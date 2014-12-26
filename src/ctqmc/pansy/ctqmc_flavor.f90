@@ -2523,14 +2523,14 @@
 !!>>>     Hibert space to small subspace, the dimension of F-matrix will
 !!>>>     be smaller.
 !!>>> (2) use divide and conqure algorithm, split the imaginary time axis
-!!>>>     into many parts, save the matrices products of that part, which
-!!>>>     may be used by next Monte Carlo move.
+!!>>>     into several parts, save the matrices products of each part,
+!!>>>     which may be used by next Monte Carlo move.
 !!>>> note: you should carefully choose npart in order to obtain the
 !!>>> best speedup.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants, only : dp, zero
 
-     use control, only : ncfgs, npart
+     use control, only : ncfgs
      use control, only : mkink
      use context, only : index_t, index_v, expt_t
      use context, only : diag
@@ -2581,7 +2581,7 @@
      real(dp) :: expt_loc(ncfgs)
 
 ! trace for each sector
-     real(dp) :: trace_sect(nsect)
+     real(dp) :: strace(nsect)
 
 ! copy data from index_t or index_v to index_loc
 ! copy data from expt_t to expt_loc
@@ -2605,28 +2605,31 @@
 
      end select
 
-! build string for all the sectors, if the string is invalid, then its
-! elements must be -1
+! build all possible strings for all the sectors. if one string may be
+! invalid, then all of its elements must be -1
      call cat_make_string(csize, index_loc, string)
 
-! determine which part should be recalculated
+! determine which part should be recalculated (global variables renew
+! and is_cp will be updated in this subroutine)
      call cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
 
 ! calculate the trace of each sector one by one
-     trace_sect = zero
+     strace = zero
      do i=1,nsect
 ! invalid string, its contribution is neglected
+! note: here we only check the first element of this string. it is enough
          if ( string(1,i) == -1 ) then
-             trace_sect(i) = zero
+             strace(i) = zero
              sectors(i)%prod = zero
 ! valid string, we have to calculate its contribution to trace
          else
-             call cat_make_trace(csize, string(:,i), index_loc, expt_loc, trace_sect(i))
-         endif ! back if ( .not. is_string(i) ) block
+             call cat_make_trace(csize, string(:,i), index_loc, expt_loc, strace(i))
+         endif ! back if ( string(1,i) == -1 ) block
      enddo ! over i={1,nsect} loop
-     trace = sum(trace_sect)
+     trace = sum(strace)
 
-! store the diagonal elements of final product in diag(:,1)
+! store the diagonal elements of final product in diag(:,1), which can be
+! used to calculate the atomic probability
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
@@ -2660,17 +2663,23 @@
 ! update diag for the calculation of atomic state probability
      diag(:,2) = diag(:,1)
 
-! determine async
+! even if renew(j) is 1, not all of the sectors in this part (the j-th
+! part) will be renewed. there are many reasons. one of them is the
+! broken string. anyway, at this time, we have to remind the solver that
+! the matrix products for these sectors in j-th part is unsafe. so it is
+! necessary to update async here
      do i=1,nsect
          do j=1,npart
              if ( renew(j) == 1 .and. is_cp(j,i) == 0 ) then
                  async(j,i) = 1
-             endif
-         enddo
-     enddo
+             endif ! back if ( renew(j) == 1 .and. is_cp(j,i) == 0 ) block
+         enddo ! over j={1,npart} loop
+     enddo ! over i={1,nsect} loop
 
 ! if we used the divide-and-conquer algorithm, then we had to save the
-! change matrices products when proposed moves were accepted
+! change matrices products when proposed moves were accepted. and sine
+! the matrices products are updated, we also update the corresponding
+! async variable to tell the impurity solver that these saved_p is OK
      do i=1,nsect
          do j=1,npart
              if ( is_cp(j,i) == 1 ) then
