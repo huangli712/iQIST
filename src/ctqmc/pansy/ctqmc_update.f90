@@ -668,7 +668,7 @@
          enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-         call ctqmc_make_ztrace(3, nsize, matrix_ntrace, -one, -one)
+         call ctqmc_make_ztrace(3, nsize, matrix_ntrace, zero, zero)
 
 ! evaluate the final transition ratio
          p = p * ( matrix_ntrace / matrix_ptrace )
@@ -747,7 +747,7 @@
              enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-             call ctqmc_make_ztrace(3, nsize, matrix_ntrace, -one, -one)
+             call ctqmc_make_ztrace(3, nsize, matrix_ntrace, zero, zero)
 
 ! evaluate the final transition ratio
              p = p * ( matrix_ntrace / matrix_ptrace )
@@ -830,7 +830,7 @@
          enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-         call ctqmc_make_ztrace(3, nsize, matrix_ntrace, -one, -one)
+         call ctqmc_make_ztrace(3, nsize, matrix_ntrace, zero, zero)
 
 ! evaluate the final transition ratio
          p = p * ( matrix_ntrace / matrix_ptrace )
