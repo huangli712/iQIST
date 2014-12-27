@@ -698,7 +698,7 @@
 ! for the local trace part, by lazy trace evaluation
          ratup = p
          r = spring_sfmt_stream()
-         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, r, p, pass, zeor, zero )
+         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, r, p, pass, zero, zero )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then
