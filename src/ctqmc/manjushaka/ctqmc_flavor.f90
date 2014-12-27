@@ -2592,10 +2592,10 @@
 ! minimum dimension of the sectors in valid strings
      integer  :: mindim(nsect)
 
-! a particular string begins at one sector
+! sector index of a string
      integer  :: string(csize+1,nsect)
 
-! local version of index_t/index_v
+! local version of index_t
      integer  :: index_loc(mkink)
 
 ! local version of expt_t
@@ -2641,33 +2641,39 @@
      endif ! back if ( all( string == -1 ) ) block
 
 ! calculate the trace bounds for each sector and determine the
-! number sectors which actually contribute to the total trace
-     nlive = 0
-     btrace = zero
+! number of sectors which actually contribute to the total trace
+     nlive  = 0
      living = -1
      mindim = 0
+     btrace = zero
      do i=1,nsect
+! if the string is invalid, we just skip it
          if ( string(1,i) == -1 ) then
              sectors(i)%prod = zero; CYCLE
-         endif
-! find one sector which may contribute to the total trace
-         nlive = nlive + 1
-! calculate its trace bound
-         btrace(nlive) = one
-         mindim(i) = sectors(i)%ndim
-         do j=1,csize
-             indx = sectors(string(j,i))%istart
-             btrace(nlive) = btrace(nlive) * expt_v(indx, index_loc(j))
-! determine the minimal dimension for each alive string
-             if ( mindim(i) > sectors( string(j,i) )%ndim ) then
-                 mindim(i) = sectors( string(j,i) )%ndim
-             endif
-         enddo ! over j={1,csize} loop
+! find valid string which may contribute to the total trace
+         else
+! increase the counter
+             nlive = nlive + 1
 
-! specially treatment for the last time-evolution operator
-         indx = sectors(string(1,i))%istart
-         btrace(nlive) = btrace(nlive) * expt_loc(indx) * mindim(i)
-         living(nlive) = i
+! record its index
+             living(nlive) = i
+
+! calculate its trace bound and determine the minimal dimension for
+! each alive string
+             mindim(i) = sectors(i)%ndim
+             btrace(nlive) = one
+             do j=1,csize
+                 if ( mindim(i) > sectors( string(j,i) )%ndim ) then
+                     mindim(i) = sectors( string(j,i) )%ndim
+                 endif ! back if ( mindim(i) > sectors( string(j,i) )%ndim ) block
+                 indx = sectors(string(j,i))%istart
+                 btrace(nlive) = btrace(nlive) * expt_v(indx, index_loc(j))
+             enddo ! over j={1,csize} loop
+
+! special treatment for the last time evolution operator
+             indx = sectors(string(1,i))%istart
+             btrace(nlive) = btrace(nlive) * expt_loc(indx) * mindim(i)
+         endif ! back if ( string(1,i) == -1 ) block
      enddo ! over i={1,nsect} loop
 
 ! calculate the summmation of trace bounds
