@@ -132,8 +132,9 @@
 ! we will determine the pass by lazy trace evalution
 ! if ladd is false, we set the pass as false immediately
      r = spring_sfmt_stream()
+     trace_ratio = deter_ratio * ( beta / real( ckink + 1 ) ) ** 2
      if ( ladd .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 1, 1, 2*sum(rank) + 2, deter_ratio, tau_start, tau_end, r, p, pass )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank) + 2, trace_ratio, tau_start, tau_end, r, p, pass )
      else
          pass = .false.
      endif ! back if ( ladd .eqv. .true. ) block
@@ -274,8 +275,9 @@
 ! we will determine the pass by lazy trace evalution
 ! if lrmv is false, we set the pass as false immediately
      r = spring_sfmt_stream()
+     trace_ratio = deter_ratio * ( real( ckink ) / beta ) ** 2
      if ( lrmv .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 2, 1, 2*sum(rank) - 2, deter_ratio, tau_start, tau_end, r, p, pass )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank) - 2, trace_ratio, tau_start, tau_end, r, p, pass )
      else
          pass = .false.
      endif ! back if ( lrmv .eqv. .true. ) block
@@ -415,8 +417,9 @@
 ! we will determine the pass by lazy trace evalution
 ! if lshf is false, we set the pass as false immediately
      r = spring_sfmt_stream()
+     trace_ratio = deter_ratio * one
      if ( lshf .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 3, 1, 2*sum(rank), deter_ratio, tau_start1, tau_start2, r, p, pass )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank), trace_ratio, tau_start1, tau_start2, r, p, pass )
      else
          pass = .false.
      endif ! back if ( lshf .eqv. .true. ) block
@@ -550,8 +553,9 @@
 ! we will determine the pass by lazy trace evalution
 ! if rshf is false, we set the pass as false immediately
      r = spring_sfmt_stream()
+     trace_ratio = deter_ratio * one
      if ( rshf .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 4, 1, 2*sum(rank), deter_ratio, tau_end1, tau_end2, r, p, pass )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank), trace_ratio, tau_end1, tau_end2, r, p, pass )
      else
          rshf = .false.
      endif ! back if ( rshf .eqv. .true. ) block
@@ -696,9 +700,9 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-         ratup = p
          r = spring_sfmt_stream()
-         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, zero, zero, r, p, pass )
+         ratup = p
+         call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then
@@ -772,9 +776,9 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-             ratup = p
              r = spring_sfmt_stream()
-             call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, zero, zero, r, p, pass )
+             ratup = p
+             call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
 
 ! if update action is accepted
              if ( pass .eqv. .true. ) then
@@ -852,9 +856,9 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
-         ratup = p
          r = spring_sfmt_stream()
-         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, zero, zero, r, p, pass )
+         ratup = p
+         call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then

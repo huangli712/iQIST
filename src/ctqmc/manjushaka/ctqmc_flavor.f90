@@ -2519,7 +2519,7 @@
 !!>>>     the probability of atomic eigenstates.
 !!>>> note: you should carefully choose npart in order to obtain the
 !!>>> best speedup.
-  subroutine ctqmc_lazy_ztrace(imove, cmode, csize, deter_ratio, tau_s, tau_e, r, p, pass)
+  subroutine ctqmc_lazy_ztrace(cmode, csize, ratio, tau_s, tau_e, r, p, pass)
      use constants, only : dp, zero, one, epst
 
      use control, only : ncfgs
@@ -2538,9 +2538,6 @@
      implicit none
 
 ! external arguments
-! type of Monte Carlo moves
-     integer,  intent(in)  :: imove
-
 ! mode on how to calculate trace
      integer,  intent(in)  :: cmode
 
@@ -2548,7 +2545,7 @@
      integer,  intent(in)  :: csize
 
 ! the calculated determinant ratio
-     real(dp), intent(in)  :: deter_ratio
+     real(dp), intent(in)  :: ratio
 
 ! imaginary time value of operator A, only valid in cmode = 1 or 2
      real(dp), intent(in)  :: tau_s
@@ -2579,10 +2576,6 @@
 ! maximum and minimum bounds of acceptance ratio
      real(dp) :: pmax
      real(dp) :: pmin
-     real(dp) :: ptmp
-
-! the propose ratio
-     real(dp) :: propose
 
 ! sum of trace_bound
      real(dp) :: sum_bound
@@ -2635,21 +2628,6 @@
              expt_loc = expt_t(:,2)
 
      end select
-
-! make propose ratio for different type of moves
-     select case(imove)
-
-         case(1)
-             propose = ( beta / real( ckink + 1 ) ) ** 2
-
-         case(2)
-             propose = ( real( ckink ) / beta ) ** 2
-
-         case(3:5)
-             propose = one
-
-     end select
-     ptmp = propose  *  deter_ratio
 
 ! build string for all the sectors
      call cat_make_string(csize, index_loc, string)
@@ -2714,7 +2692,7 @@
      endif ! back if ( nalive_sect == 0 ) block
 
 ! calculate the maximum bound of the acceptance ratio
-     pmax = abs(ptmp) * abs(sum_bound/matrix_ptrace)
+     pmax = abs(ratio) * abs(sum_bound/matrix_ptrace)
 
 ! check whether pmax < rand_num
 ! if it is true, reject this move immediately
@@ -2747,8 +2725,8 @@
              sum_abs_trace = sum_abs_trace + abs( strace(i) )
              sum_bound = sum_bound - btrace(i)
 ! calculate pmax and pmin
-             pmax = abs(ptmp) * abs( (sum_abs_trace + sum_bound) / matrix_ptrace )
-             pmin = abs(ptmp) * abs( (sum_abs_trace - sum_bound) / matrix_ptrace )
+             pmax = abs(ratio) * abs( (sum_abs_trace + sum_bound) / matrix_ptrace )
+             pmin = abs(ratio) * abs( (sum_abs_trace - sum_bound) / matrix_ptrace )
 ! check whether pmax < rand_num
              if ( pmax < r ) then
                  pass = .false.
@@ -2767,7 +2745,7 @@
 ! case 1: pass == .false., we haven't determined the pass
 ! case 2: pass == .true. we have determined the pass
      matrix_ntrace = sum(strace(1:nalive_sect))
-     p = ptmp * (matrix_ntrace / matrix_ptrace)
+     p = ratio * (matrix_ntrace / matrix_ptrace)
      pass = ( min(one, abs(p)) > r )
      if ( .not. pass ) then
         RETURN
