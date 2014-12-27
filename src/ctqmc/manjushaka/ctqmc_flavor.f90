@@ -2573,38 +2573,35 @@
 ! start index of a sector
      integer  :: indx
 
-! number of alive sector
-     integer  :: nalive_sect
+! number of alive sectors
+     integer  :: nlive
 
 ! maximum and minimum bounds of acceptance ratio
      real(dp) :: pmax
      real(dp) :: pmin
 
-! sum of trace_bound
-     real(dp) :: sum_bound
+! sum of btrace (trace boundary)
+     real(dp) :: sbound
 
 ! sum of absolute value of trace
-     real(dp) :: sum_abs_trace
+     real(dp) :: cumsum
 
-! temp trace bound value
-     real(dp) :: tmp_trb
+! index of the living sector
+     integer  :: living(nsect)
 
-! index of original sector
-     integer  :: orig_sect(nsect)
-
-! minimum dimension of the sectors
-     integer  :: min_dim(nsect)
+! minimum dimension of the sectors in valid strings
+     integer  :: mindim(nsect)
 
 ! a particular string begins at one sector
      integer  :: string(csize+1,nsect)
 
-! local version of index_t
+! local version of index_t/index_v
      integer  :: index_loc(mkink)
 
 ! local version of expt_t
      real(dp) :: expt_loc(ncfgs)
 
-! trace boundary
+! trace boundary for sectors
      real(dp) :: btrace(nsect)
 
 ! trace for each sector
@@ -2632,7 +2629,8 @@
 
      end select
 
-! build string for all the sectors
+! build all possible strings for all the sectors. if one string may be
+! invalid, then all of its elements must be -1
      call cat_make_string(csize, index_loc, string)
 
 ! we can verify string here to see whether this diagram can survive?
@@ -2642,48 +2640,41 @@
          pass = .false.; p = zero; RETURN
      endif ! back if ( all( string == -1 ) ) block
 
-! determine the minimal dimension for each alive string
-     min_dim = 0
-     do i=1,nsect
-         if ( string(1,i) == -1 ) CYCLE
-         min_dim(i) = sectors(i)%ndim
-         do j=1,csize
-             if ( min_dim(i) > sectors( string(j,i) )%ndim ) then
-                 min_dim(i) = sectors( string(j,i) )%ndim
-             endif
-         enddo ! over j={1,csize} loop
-     enddo ! over i={1,nsect} loop
-
 ! calculate the trace bounds for each sector and determine the
 ! number sectors which actually contribute to the total trace
+     nlive = 0
      btrace = zero
-     nalive_sect = 0
-     orig_sect = -1
+     living = -1
+     mindim = 0
      do i=1,nsect
          if ( string(1,i) == -1 ) then
              sectors(i)%prod = zero; CYCLE
          endif
 ! find one sector which may contribute to the total trace
-         nalive_sect = nalive_sect + 1
+         nlive = nlive + 1
 ! calculate its trace bound
-         tmp_trb = one
+         btrace(nlive) = one
+         mindim(i) = sectors(i)%ndim
          do j=1,csize
              indx = sectors(string(j,i))%istart
-             tmp_trb = tmp_trb * expt_v(indx, index_loc(j))
+             btrace(nlive) = btrace(nlive) * expt_v(indx, index_loc(j))
+! determine the minimal dimension for each alive string
+             if ( mindim(i) > sectors( string(j,i) )%ndim ) then
+                 mindim(i) = sectors( string(j,i) )%ndim
+             endif
          enddo ! over j={1,csize} loop
 
 ! specially treatment for the last time-evolution operator
          indx = sectors(string(1,i))%istart
-         tmp_trb = tmp_trb * expt_loc(indx) * min_dim(i)
-         btrace(nalive_sect) = tmp_trb
-         orig_sect(nalive_sect) = i
-     enddo
+         btrace(nlive) = btrace(nlive) * expt_loc(indx) * mindim(i)
+         living(nlive) = i
+     enddo ! over i={1,nsect} loop
 
 ! calculate the summmation of trace bounds
-     sum_bound = sum( btrace(1:nalive_sect) )
+     sbound = sum( btrace(1:nlive) )
 
 ! calculate the maximum bound of the acceptance ratio
-     pmax = abs(ratio) * abs(sum_bound/matrix_ptrace)
+     pmax = abs(ratio) * abs(sbound/matrix_ptrace)
 
 ! check whether pmax < r
 ! if it is true, reject this move immediately
@@ -2697,43 +2688,41 @@
 
 ! sort the btrace to speed up the refining process
 ! here, we use simple bubble sort algorithm, because nalive_sect is usually small
-     call s_sorter2( nalive_sect, btrace(1:nalive_sect), orig_sect(1:nalive_sect) )
+     call s_sorter2( nlive, btrace(1:nlive), living(1:nlive) )
 
 ! begin to refine the trace bounds
      pass = .false.
-     sum_abs_trace = zero
+     cumsum = zero
      strace = zero
-     do i=1,nalive_sect
+     do i=1,nlive
 ! calculate the trace for one sector, this call will consume a lot of time
 ! if the dimension of fmat and expansion order is large, so we should carefully
 ! optimize it.
-         call cat_make_trace(csize, string(:,orig_sect(i)), index_loc, expt_loc, strace(i))
+         call cat_make_trace(csize, string(:,living(i)), index_loc, expt_loc, strace(i))
 ! if this move is not accepted, refine the trace bound to see whether we can
 ! reject it before calculating the trace of all of the sectors
          if ( .not. pass ) then
-             sum_abs_trace = sum_abs_trace + abs( strace(i) )
-             sum_bound = sum_bound - btrace(i)
+             cumsum = cumsum + abs( strace(i) )
+             sbound = sbound - btrace(i)
 ! calculate pmax and pmin
-             pmax = abs(ratio) * abs( (sum_abs_trace + sum_bound) / matrix_ptrace )
-             pmin = abs(ratio) * abs( (sum_abs_trace - sum_bound) / matrix_ptrace )
-! check whether pmax < rand_num
+             pmax = abs(ratio) * abs( (cumsum + sbound) / matrix_ptrace )
+             pmin = abs(ratio) * abs( (cumsum - sbound) / matrix_ptrace )
+! check whether pmax < r
              if ( pmax < r ) then
-                 pass = .false.
-                 p = zero
-                 RETURN
-             endif ! back if ( pmax < rand_num ) block
+                 pass = .false.; p = zero; RETURN
+             endif ! back if ( pmax < r ) block
 ! this move is accepted, stop refining process, calculate the trace of
 ! remaining sectors to get the final result of trace.
              if ( pmin > r ) then
                  pass = .true.
-             endif ! back if ( pmin > rand_num ) block
+             endif ! back if ( pmin > r ) block
          endif ! back if ( .not. pass ) block
-     enddo ! over i={1, nalive_sect} loop
+     enddo ! over i={1,nalive_sect} loop
 
 ! if we arrive here, two cases
 ! case 1: pass == .false., we haven't determined the pass
 ! case 2: pass == .true. we have determined the pass
-     matrix_ntrace = sum(strace(1:nalive_sect))
+     matrix_ntrace = sum(strace(1:nlive))
      p = ratio * (matrix_ntrace / matrix_ptrace)
      pass = ( min(one, abs(p)) > r )
      if ( .not. pass ) then
@@ -2742,10 +2731,10 @@
 
 ! store the diagonal elements of final product in diag(:,1)
      diag(:,1) = zero
-     do i=1,nalive_sect
-         indx = sectors( orig_sect(i) )%istart
-         do j=1,sectors( orig_sect(i) )%ndim
-             diag(indx+j-1,1) = sectors( orig_sect(i) )%prod(j)
+     do i=1,nlive
+         indx = sectors( living(i) )%istart
+         do j=1,sectors( living(i) )%ndim
+             diag(indx+j-1,1) = sectors( living(i) )%prod(j)
          enddo
      enddo
 
