@@ -2737,8 +2737,8 @@
          indx = sectors( living(i) )%istart
          do j=1,sectors( living(i) )%ndim
              diag(indx+j-1,1) = sectors( living(i) )%prod(j)
-         enddo
-     enddo
+         enddo ! over j={1,sectors( living(i) )%ndim} loop
+     enddo ! over i={1,nlive} loop
 
      return
   end subroutine ctqmc_lazy_ztrace
