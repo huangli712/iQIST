@@ -850,7 +850,7 @@
 !-------------------------------------------------------------------------
 ! truncate the Hilbert space here
      if ( itrun == 2 ) then
-         call ctqmc_make_truncation()
+         call cat_trun_sector()
      endif ! back if ( itrun == 2 ) block
 
 ! init m_part module
