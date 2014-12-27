@@ -133,7 +133,7 @@
 ! if ladd is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      if ( ladd .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 1, 1, 2*sum(rank) + 2, deter_ratio, r, p, pass, tau_start, tau_end )
+         call ctqmc_lazy_ztrace( 1, 1, 2*sum(rank) + 2, deter_ratio, tau_start, tau_end, r, p, pass )
      else
          pass = .false.
      endif ! back if ( ladd .eqv. .true. ) block
@@ -275,7 +275,7 @@
 ! if lrmv is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      if ( lrmv .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 2, 1, 2*sum(rank) - 2, deter_ratio, r, p, pass, tau_start, tau_end )
+         call ctqmc_lazy_ztrace( 2, 1, 2*sum(rank) - 2, deter_ratio, tau_start, tau_end, r, p, pass )
      else
          pass = .false.
      endif ! back if ( lrmv .eqv. .true. ) block
@@ -416,7 +416,7 @@
 ! if lshf is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      if ( lshf .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 3, 1, 2*sum(rank), deter_ratio, r, p, pass, tau_start1, tau_start2 )
+         call ctqmc_lazy_ztrace( 3, 1, 2*sum(rank), deter_ratio, tau_start1, tau_start2, r, p, pass )
      else
          pass = .false.
      endif ! back if ( lshf .eqv. .true. ) block
@@ -551,7 +551,7 @@
 ! if rshf is false, we set the pass as false immediately
      r = spring_sfmt_stream()
      if ( rshf .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 4, 1, 2*sum(rank), deter_ratio, r, p, pass, tau_end1, tau_end2 )
+         call ctqmc_lazy_ztrace( 4, 1, 2*sum(rank), deter_ratio, tau_end1, tau_end2, r, p, pass )
      else
          rshf = .false.
      endif ! back if ( rshf .eqv. .true. ) block
@@ -698,7 +698,7 @@
 ! for the local trace part, by lazy trace evaluation
          ratup = p
          r = spring_sfmt_stream()
-         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, r, p, pass, zero, zero )
+         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, zero, zero, r, p, pass )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then
@@ -774,7 +774,7 @@
 ! for the local trace part, by lazy trace evaluation
              ratup = p
              r = spring_sfmt_stream()
-             call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, r, p, pass, zero, zero )
+             call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, zero, zero, r, p, pass )
 
 ! if update action is accepted
              if ( pass .eqv. .true. ) then
@@ -854,7 +854,7 @@
 ! for the local trace part, by lazy trace evaluation
          ratup = p
          r = spring_sfmt_stream()
-         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, r, p, pass, zero, zero )
+         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, zero, zero, r, p, pass )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then
