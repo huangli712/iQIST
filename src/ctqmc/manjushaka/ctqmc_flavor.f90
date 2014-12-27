@@ -2633,6 +2633,10 @@
 ! invalid, then all of its elements must be -1
      call cat_make_string(csize, index_loc, string)
 
+! determine which part should be recalculated (global variables renew
+! and is_cp will be updated in this subroutine)
+     call cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
+
 ! we can verify string here to see whether this diagram can survive?
 ! if not, return immediately.
      pass = .true.
@@ -2649,7 +2653,7 @@
      do i=1,nsect
 ! if the string is invalid, we just skip it
          if ( string(1,i) == -1 ) then
-             sectors(i)%prod = zero; CYCLE
+             CYCLE
 ! find valid string which may contribute to the total trace
          else
 ! increase the counter
@@ -2676,24 +2680,17 @@
          endif ! back if ( string(1,i) == -1 ) block
      enddo ! over i={1,nsect} loop
 
-! calculate the summmation of trace bounds
+! calculate the summmation of trace bounds and the maximum bound of the
+! acceptance ratio, and then we check whether pmax < r. if it is true,
+! reject this move immediately
      sbound = sum( btrace(1:nlive) )
-
-! calculate the maximum bound of the acceptance ratio
-     pmax = abs(ratio) * abs(sbound/matrix_ptrace)
-
-! check whether pmax < r
-! if it is true, reject this move immediately
+     pmax = abs(ratio) * abs(sbound / matrix_ptrace)
      if ( pmax < r ) then
          pass = .false.; p = zero; RETURN
      endif ! back if ( pmax < r ) block
 
-! determine which part has been changed due to local change of diagram
-! it will set isave internally
-     call cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
-
-! sort the btrace to speed up the refining process
-! here, we use simple bubble sort algorithm, because nalive_sect is usually small
+! sort the btrace to speed up the refining process. here, we use simple
+! bubble sort algorithm, because nalive_sect is usually small
      call s_sorter2( nlive, btrace(1:nlive), living(1:nlive) )
 
 ! begin to refine the trace bounds
@@ -2701,12 +2698,12 @@
      cumsum = zero
      strace = zero
      do i=1,nlive
-! calculate the trace for one sector, this call will consume a lot of time
-! if the dimension of fmat and expansion order is large, so we should carefully
-! optimize it.
+! calculate the trace for one sector, this call will consume a lot of
+! time if the dimension of fmat and expansion order is large, so we
+! should carefully optimize it.
          call cat_make_trace(csize, string(:,living(i)), index_loc, expt_loc, strace(i))
-! if this move is not accepted, refine the trace bound to see whether we can
-! reject it before calculating the trace of all of the sectors
+! if this move is not accepted, refine the trace bound to see whether
+! we can reject it before calculating the trace of all of the sectors
          if ( .not. pass ) then
              cumsum = cumsum + abs( strace(i) )
              sbound = sbound - btrace(i)
@@ -2723,17 +2720,16 @@
                  pass = .true.
              endif ! back if ( pmin > r ) block
          endif ! back if ( .not. pass ) block
-     enddo ! over i={1,nalive_sect} loop
+     enddo ! over i={1,nlive} loop
 
 ! if we arrive here, two cases
 ! case 1: pass == .false., we haven't determined the pass
 ! case 2: pass == .true. we have determined the pass
+! anyway, we have to calculate the final transition probability (p), and
+! update matrix_ntrace and pass.
      matrix_ntrace = sum(strace(1:nlive))
      p = ratio * (matrix_ntrace / matrix_ptrace)
      pass = ( min(one, abs(p)) > r )
-     if ( .not. pass ) then
-        RETURN
-     endif ! back if ( .not. pass ) block
 
 ! store the diagonal elements of final product in diag(:,1)
      diag(:,1) = zero
