@@ -38,7 +38,7 @@
   ntime  : 1024
   nflip  : 20000
   ntherm : 200000
-  nsweep : 20000000
+  nsweep : 200000000
   nwrite : 2000000
   nclean : 100000
   nmonte : 100

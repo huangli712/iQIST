@@ -140,8 +140,6 @@
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : paux
 
-     use m_part, only : nprod
-
      implicit none
 
 ! external arguments
@@ -198,9 +196,6 @@
 ! about negative sign
      write(mystd,'(4X,a,i10)')    'negative sign counter:', cnegs
      write(mystd,'(4X,a,f10.5)')  'averaged sign sampler:', caves / real(cstep)
-
-! number of total matrices multiplication
-     write(mystd,'(4X,a,f10.5)')  'averaged matrices products:', nprod / real(cstep)
 
      return
   end subroutine ctqmc_print_runtime

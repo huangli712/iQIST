@@ -556,8 +556,8 @@
 
 ! write dimension, total electrons, next sector, eigenvalue of each sector
      do i=1,nsectors
-         write(mytmp,'(a)') '# SECT_INFO: INDEX | NDIM | NOPS | ISTART | NELE | SZ | JZ | PS'
-         write(mytmp,'(11X,8i7)') i, sectors(i)%ndim,   &
+         write(mytmp,'(a)') '# SECT_INFO: INDEX | NDIM | NOPS | ISTART | NE | SZ | JZ | PS'
+         write(mytmp,'(12X,8i6)') i, sectors(i)%ndim,   &
                                      sectors(i)%nops,   &
                                      sectors(i)%istart, &
                                      sectors(i)%nele,   &
