@@ -2520,12 +2520,11 @@
 !!>>> note: you should carefully choose npart in order to obtain the
 !!>>> best speedup.
   subroutine ctqmc_lazy_ztrace(cmode, csize, ratio, tau_s, tau_e, r, p, pass)
-     use constants, only : dp, zero, one, epst
+     use constants, only : dp, zero, one
 
      use control, only : ncfgs
      use control, only : mkink
-     use control, only : beta
-     use context, only : ckink, matrix_ptrace, matrix_ntrace
+     use context, only : matrix_ptrace, matrix_ntrace
      use context, only : index_t, index_v, expt_t, expt_v
      use context, only : diag
 
@@ -2538,25 +2537,29 @@
      implicit none
 
 ! external arguments
-! mode on how to calculate trace
+! different type of Monte Carlo moves
+! if cmode = 1, partly-trial calculation, useful for ctqmc_insert_ztrace() etc
+! if cmode = 2, partly-normal calculation, not used by now
+! if cmode = 3, fully-trial calculation, useful for ctqmc_reflip_kink()
+! if cmode = 4, fully-normal calculation, useful for ctqmc_retrieve_status()
      integer,  intent(in)  :: cmode
 
 ! total number of operators for current diagram
      integer,  intent(in)  :: csize
 
-! the calculated determinant ratio
+! the calculated determinant ratio and prefactor
      real(dp), intent(in)  :: ratio
 
-! imaginary time value of operator A, only valid in cmode = 1 or 2
+! imaginary time value of operator A, only needed in cmode = 1 or 2
      real(dp), intent(in)  :: tau_s
 
-! imaginary time value of operator B, only valid in cmode = 1 or 2
+! imaginary time value of operator B, only needed in cmode = 1 or 2
      real(dp), intent(in)  :: tau_e
 
 ! random number
      real(dp), intent(in)  :: r
 
-! the acceptance ratio
+! the final transition probability
      real(dp), intent(out) :: p
 
 ! whether accept this move
@@ -2567,7 +2570,7 @@
      integer  :: i
      integer  :: j
 
-! start index of sectors
+! start index of a sector
      integer  :: indx
 
 ! number of alive sector
@@ -2604,7 +2607,7 @@
 ! trace boundary
      real(dp) :: btrace(nsect)
 
-! trace of each sector
+! trace for each sector
      real(dp) :: strace(nsect)
 
 ! copy data from index_t or index_v to index_loc
@@ -2632,17 +2635,12 @@
 ! build string for all the sectors
      call cat_make_string(csize, index_loc, string)
 
-! we can check is_string here to see whether this diagram can survive?
+! we can verify string here to see whether this diagram can survive?
 ! if not, return immediately.
-     pass = .false.
-     do i=1,nsect
-         if ( string(1,i) /= -1 ) then
-             pass = .true.; EXIT
-         endif ! back if ( is_string(i,1) ) block
-     enddo ! over i={1,nsect} loop
-     if ( .not. pass ) then
-         p = zero; RETURN
-     endif ! back if ( .not. pass ) block
+     pass = .true.
+     if ( all( string == -1 ) ) then
+         pass = .false.; p = zero; RETURN
+     endif ! back if ( all( string == -1 ) ) block
 
 ! determine the minimal dimension for each alive string
      min_dim = 0
@@ -2650,8 +2648,8 @@
          if ( string(1,i) == -1 ) CYCLE
          min_dim(i) = sectors(i)%ndim
          do j=1,csize
-             if ( min_dim(i) > sectors(string(j,i))%ndim ) then
-                 min_dim(i) = sectors(string(j,i))%ndim
+             if ( min_dim(i) > sectors( string(j,i) )%ndim ) then
+                 min_dim(i) = sectors( string(j,i) )%ndim
              endif
          enddo ! over j={1,csize} loop
      enddo ! over i={1,nsect} loop
@@ -2681,32 +2679,23 @@
          orig_sect(nalive_sect) = i
      enddo
 
-! don't find any alive string, return immediately
-     if ( nalive_sect == 0 ) then
-         pass = .false.
-         p = zero
-         RETURN
-! otherwise, calculate the summmation of trace bounds
-     else
-         sum_bound = sum( btrace(1:nalive_sect) )
-     endif ! back if ( nalive_sect == 0 ) block
+! calculate the summmation of trace bounds
+     sum_bound = sum( btrace(1:nalive_sect) )
 
 ! calculate the maximum bound of the acceptance ratio
      pmax = abs(ratio) * abs(sum_bound/matrix_ptrace)
 
-! check whether pmax < rand_num
+! check whether pmax < r
 ! if it is true, reject this move immediately
      if ( pmax < r ) then
-         pass = .false.
-         p = zero
-         RETURN
-     endif ! back if ( pmax < rand_num ) block
+         pass = .false.; p = zero; RETURN
+     endif ! back if ( pmax < r ) block
 
 ! determine which part has been changed due to local change of diagram
 ! it will set isave internally
      call cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
 
-! sort the trace_bound to speed up the refining process
+! sort the btrace to speed up the refining process
 ! here, we use simple bubble sort algorithm, because nalive_sect is usually small
      call s_sorter2( nalive_sect, btrace(1:nalive_sect), orig_sect(1:nalive_sect) )
 
