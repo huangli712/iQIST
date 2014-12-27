@@ -1728,7 +1728,7 @@
      trace = zero
      do j=1,sectors( string(1) )%ndim
          trace = trace + mat_r(j,j)
-         sectors( string(1) )%prod (j)= mat_r(j,j)
+         sectors( string(1) )%prod(j)= mat_r(j,j)
      enddo ! over j={1,sectors( string(1) )%ndim} loop
 
      return

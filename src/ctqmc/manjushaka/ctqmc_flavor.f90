@@ -2574,7 +2574,7 @@
      real(dp) :: expt_t_loc(ncfgs)
 
 ! whether it forms a string
-     logical  :: is_string(nsect)
+!<     logical  :: is_string(nsect)
 
 ! a particular string begins at one sector
      integer :: string(csize+1, nsect)
@@ -2655,13 +2655,13 @@
      ptmp = propose  *  abs(deter_ratio)
 
 ! build string for all the sectors
-     call cat_make_string(csize, index_t_loc, is_string, string)
+     call cat_make_string(csize, index_t_loc, string)
 
 ! we can check is_string here to see whether this diagram can survive?
 ! if not, return immediately.
      pass = .false.
      do i=1,nsect
-         if ( is_string(i) ) then
+         if ( string(1,i) /= -1 ) then
              pass = .true.
              EXIT
          endif ! back if ( is_string(i,1) ) block
@@ -2674,7 +2674,7 @@
 ! determine the minimal dimension for each alive string
      min_dim = 0
      do i=1,nsect
-         if ( .not. is_string(i) ) CYCLE
+         if ( string(1,i) == -1 ) CYCLE
          min_dim(i) = sectors(i)%ndim
          do j=1,csize
              if ( min_dim(i) > sectors(string(j,i))%ndim ) then
@@ -2689,8 +2689,8 @@
      nalive_sect = 0
      orig_sect = -1
      do i=1,nsect
-         if ( .not. is_string(i) ) then
-             sectors(i)%prod(:,:,1) = zero
+         if ( string(1,i) == -1 ) then
+             sectors(i)%prod = zero
              CYCLE
          endif
 ! find one sector which may contribute to the total trace
@@ -2790,7 +2790,7 @@
      do i=1,nalive_sect
          indx = sectors( orig_sect(i) )%istart
          do j=1,sectors( orig_sect(i) )%ndim
-             diag(indx+j-1,1) = sectors( orig_sect(i) )%prod(j,j,1)
+             diag(indx+j-1,1) = sectors( orig_sect(i) )%prod(j)
          enddo
      enddo
 
@@ -2825,7 +2825,7 @@
      real(dp) :: expt_t_loc(ncfgs)
 
 ! whether it forms a string
-     logical  :: is_string(nsect)
+!<     logical  :: is_string(nsect)
 
 ! a particular string begins at one sector
      integer :: string(csize+1, nsect)
@@ -2846,7 +2846,7 @@
 
 ! build string for all the sectors, is_string will be
 ! modified internally
-     call cat_make_string(csize, index_t_loc, is_string, string)
+     call cat_make_string(csize, index_t_loc, string)
 
 ! determine is_save, all parts with some fermion operators should be
 ! recalculated in this case.
@@ -2856,7 +2856,7 @@
      is_cp = .false.
      trace_sect = zero
      do i=1,nsect
-         if ( .not. is_string(i) ) cycle
+         if ( string(1,i) == -1 ) cycle
          call cat_make_trace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
      enddo ! over j={1,nsect} loop
 
@@ -2865,10 +2865,10 @@
 ! store the diagonal elements of final product in diag(:,1)
      diag(:,1) = zero
      do i=1,nsect
-         if( .not. is_string(i) ) cycle
+         if( string(1,i) == -1 ) cycle
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             diag(indx+j-1,1) = sectors(i)%prod(j,j,1)
+             diag(indx+j-1,1) = sectors(i)%prod(j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect}  loop
 
@@ -2889,7 +2889,7 @@
 
 ! local variables
 ! loop index
-     integer :: i
+!<     integer :: i
 
 ! update the operator traces
      matrix_ptrace = matrix_ntrace
@@ -2897,11 +2897,11 @@
 ! update diag for the calculation of atomic state probability
      diag(:,2) = diag(:,1)
 
-! transfer the final matrix product from prod(:,:,1) to prod(:,:,2),
-! the latter can be used to calculate nmat and nnmat
-     do i=1,nsect
-         sectors(i)%prod(:,:,2) = sectors(i)%prod(:,:,1)
-     enddo ! over i={1,nsect} loop
+!<! transfer the final matrix product from prod(:,:,1) to prod(:,:,2),
+!<! the latter can be used to calculate nmat and nnmat
+!<     do i=1,nsect
+!<         sectors(i)%prod(:,:,2) = sectors(i)%prod(:,:,1)
+!<     enddo ! over i={1,nsect} loop
 
 ! save the data of each part
      call cat_save_npart()

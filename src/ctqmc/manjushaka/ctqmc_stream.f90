@@ -839,7 +839,6 @@
      endif
 
 ! init m_part module
-     nprod   = zero
      is_cp   = .false.
      nc_cp   = 0
      ops     = 0

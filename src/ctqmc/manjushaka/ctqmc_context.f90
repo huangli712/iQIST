@@ -968,6 +968,7 @@
 
 ! data structure for one F-matrix
 !-------------------------------------------------------------------------
+     public :: t_fmat
      type t_fmat
 
 ! the dimension, n x m
@@ -975,15 +976,16 @@
          integer :: m
 
 ! the memory space for the matrix
-         real(dp), pointer :: val(:,:)
+         real(dp), allocatable :: val(:,:)
 
      end type t_fmat
 
 ! data structure for one sector
 !-------------------------------------------------------------------------
+     public :: t_sector
      type t_sector
 
-! dimension
+! number of states in this sector
          integer :: ndim
 
 ! number of fermion operators, it should be equal to norbs
@@ -997,7 +999,7 @@
 
 ! z component of spin: Sz
          integer :: sz
- 
+
 ! z component of spin-orbit momentum: Jz
          integer :: jz
 
@@ -1005,21 +1007,21 @@
          integer :: ps
 
 ! the next sector when a fermion operator acts on the sector
-! next(nops,0:1), 0 for annihilation and 1 for creation operators,
-! respectively. -1 means it is outside the Hilbert space, otherwise, it
-! is the index of next sector
-         integer, pointer  :: next(:,:)
+! next(nops,0) for annihilation and next(nops,1) for creation operators
+! -1 means it is outside the Hilbert space,
+! otherwise, it is the index of next sector
+         integer, allocatable  :: next(:,:)
 
 ! the eigenvalues
-         real(dp), pointer :: eval(:)
+         real(dp), allocatable :: eval(:)
 
 ! final products of matrices
-         real(dp), pointer :: prod(:,:,:)
+         real(dp), allocatable :: prod(:)
 
 ! the F-matrix between this sector and all other sectors
-! if this sector doesn't point to some other sectors, the pointer is null
-! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-         type (t_fmat), pointer :: fmat(:,:)
+! fmat(nops,0) for annihilation and fmat(nops,1) for creation operators
+! if this sector doesn't point to some other sectors, it is not allocated
+         type (t_fmat), allocatable :: fmat(:,:)
 
      end type t_sector
 
@@ -1043,6 +1045,13 @@
      type (t_sector), public, save, allocatable :: sectors(:)
 
 !!========================================================================
+!!>>> declare private variables                                        <<<
+!!========================================================================
+
+! status flag
+     integer, private :: istat
+
+!!========================================================================
 !!>>> declare accessibility for module routines                        <<<
 !!========================================================================
 
@@ -1054,8 +1063,8 @@
      public :: ctqmc_deallocate_memory_one_sect
      public :: ctqmc_deallocate_memory_sect
 
-     public :: ctqmc_make_truncation
      public :: cat_make_string
+     public :: ctqmc_make_truncation
 
   contains ! encapsulated functionality
 
@@ -1070,10 +1079,6 @@
 ! external variables
 ! F-matrix structure
      type (t_fmat), intent(inout) :: mat
-
-! local variables
-! status flag
-     integer :: istat
 
 ! allocate memory
      allocate(mat%val(mat%n,mat%m), stat=istat)
@@ -1102,16 +1107,13 @@
      integer :: i
      integer :: j
 
-! status flag
-     integer :: istat
-
 ! allocate memory
-     allocate(sect%next(sect%nops,0:1),                 stat=istat)
+     allocate(sect%next(sect%nops,0:1), stat=istat)
 
-     allocate(sect%eval(sect%ndim),                     stat=istat)
-     allocate(sect%prod(sect%ndim,sect%ndim,2),         stat=istat)
+     allocate(sect%eval(sect%ndim),     stat=istat)
+     allocate(sect%prod(sect%ndim),     stat=istat)
 
-     allocate(sect%fmat(sect%nops,0:1),                 stat=istat)
+     allocate(sect%fmat(sect%nops,0:1), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1119,17 +1121,16 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     sect%next  = 0
+     sect%next = 0
 
-     sect%eval  = zero
-     sect%prod  = zero
+     sect%eval = zero
+     sect%prod = zero
 
 ! initialize fmat one by one
      do i=1,sect%nops
          do j=0,1
              sect%fmat(i,j)%n = 0
              sect%fmat(i,j)%m = 0
-             sect%fmat(i,j)%val => null()
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
 
@@ -1143,9 +1144,6 @@
 ! local variables
 ! loop index
      integer :: i
-
-! status flag
-     integer :: istat
 
 ! allocate memory
      allocate(sectors(nsect),  stat=istat)
@@ -1165,15 +1163,7 @@
          sectors(i)%sz     = 0
          sectors(i)%jz     = 0
          sectors(i)%ps     = 0
-
-         sectors(i)%next  => null()
-
-         sectors(i)%eval  => null()
-         sectors(i)%prod  => null()
-
-         sectors(i)%fmat  => null()
      enddo ! over i={1,nsect} loop
-
      is_trunc = .false.
 
      return
@@ -1191,7 +1181,7 @@
 ! F-matrix structure
      type (t_fmat), intent(inout) :: mat
 
-     if ( associated(mat%val) ) deallocate(mat%val)
+     if ( allocated(mat%val) ) deallocate(mat%val)
 
      return
   end subroutine ctqmc_deallocate_memory_one_fmat
@@ -1209,20 +1199,20 @@
      integer :: i
      integer :: j
 
-     if ( associated(sect%next)  ) deallocate(sect%next )
+     if ( allocated(sect%next) ) deallocate(sect%next)
 
-     if ( associated(sect%eval)  ) deallocate(sect%eval )
-     if ( associated(sect%prod)  ) deallocate(sect%prod )
+     if ( allocated(sect%eval) ) deallocate(sect%eval)
+     if ( allocated(sect%prod) ) deallocate(sect%prod)
 
 ! deallocate fmat one by one
-     if ( associated(sect%fmat) ) then
+     if ( allocated(sect%fmat) ) then
          do i=1,sect%nops
              do j=0,1
                  call ctqmc_deallocate_memory_one_fmat(sect%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,sect%nops} loop
          deallocate(sect%fmat)
-     endif ! back if ( associated(sect%fmat) ) block
+     endif ! back if ( allocated(sect%fmat) ) block
 
      return
   end subroutine ctqmc_deallocate_memory_one_sect
@@ -1253,6 +1243,81 @@
 !!========================================================================
 !!>>> core service subroutines                                         <<<
 !!========================================================================
+
+!!>>> cat_make_string: it is used to build a time evolution string
+  subroutine cat_make_string(csize, vindex, string)
+     implicit none
+
+! external variables
+! number of fermion operators for the current diagram
+     integer, intent(in)  :: csize
+
+! memory address index of fermion operators
+     integer, intent(in)  :: vindex(mkink)
+
+! time evolution string, i.e., sequence of sector index
+! if it is not a valid string, then all of its values should be -1
+     integer, intent(out) :: string(csize+1,nsect)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! flavor and type of fermion operators
+     integer :: vf
+     integer :: vt
+
+! current sector index and next sector index
+     integer :: curr_sect
+     integer :: next_sect
+
+! init return array, we assume all of strings are invalid
+     string = -1
+
+! we try to build a string from left to right, that is, 0 -> \beta
+! we assume the sectors are S1, S2, S3, ..., SM, and the fermion
+! operators are F1, F2, F3, F4, .... FN. here, F1 is in \tau_1, F2
+! is in \tau_2, F3 is in \tau_3, and so on, and 
+!     0 < \tau_1 < \tau_2 < \tau_3 < ... < \beta
+! is always guaranteed. then a typical (and also valid) string must
+! look like this:
+!     F1       F2       F3       F4       F5        FN
+! S1 ----> S2 ----> S3 ----> S4 ----> S5 ----> ... ----> S1
+! then the sequence of sector indices is the so-called string. if some
+! Si are -1 (null sector), this string is invalid. we will enforce all
+! elements in it to be -1. it is easy to speculate that if the number
+! of fermion operators is csize, the length of string must be csize + 1
+     SECTOR_SCAN_LOOP: do i=1,nsect
+! setup starting sector
+         curr_sect = i
+         string(1,i) = curr_sect
+         OPERATOR_SCAN_LOOP: do j=1,csize
+! determine the type and flavor of current operator
+             vt = type_v( vindex(j) )
+             vf = flvr_v( vindex(j) )
+! get the next sector
+             next_sect = sectors(curr_sect)%next(vf,vt)
+! meet null sector, it is an invalid string. we will try another
+! new string
+             if ( next_sect == -1 ) then
+                 string(:,i) = -1; EXIT OPERATOR_SCAN_LOOP
+! the string is still alive, we record the sector, and set it to
+! the current sector
+             else
+                 string(j+1,i) = next_sect
+                 curr_sect = next_sect
+             endif ! back if ( next_sect == -1 ) block
+         enddo OPERATOR_SCAN_LOOP ! over j={1,csize} loop
+! we have to ensure that the first sector is the same with the last
+! sector in this string, or else it is invalid
+         if ( string(1,i) /= string(csize+1,i) ) then
+             string(:,i) = -1
+         endif ! back if ( string(1,i) /= string(csize+1,i) ) block
+     enddo SECTOR_SCAN_LOOP ! over i={1,nsect} loop
+
+     return
+  end subroutine cat_make_string
 
 !!>>> ctqmc_make_truncation: it is used to truncate the Hilbert space
 !!>>> of H_{loc} according to the probatility of atomic states
@@ -1369,101 +1434,6 @@
      return
   end subroutine ctqmc_make_truncation
 
-!!>>> cat_make_string: subroutine used to build an evolutional string
-  subroutine cat_make_string(csize, index_t_loc, is_string, string)
-     implicit none
-
-! external variables
-! number of fermion operators for the current diagram
-     integer, intent(in)  :: csize
-
-! memory address index of fermion operators
-     integer, intent(in)  :: index_t_loc(mkink)
-
-! whether it is a valid string?
-     logical, intent(out) :: is_string(nsect)
-
-! string index
-     integer, intent(out) :: string(csize+1,nsect)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! sector index: from left direction
-     integer :: left
-     integer :: curr_sect_l
-     integer :: next_sect_l
-
-! sector index: from right direction
-     integer :: right
-     integer :: curr_sect_r
-     integer :: next_sect_r
-
-! flavor and type of fermion operators
-     integer :: vf
-     integer :: vt
-
-! init return arrays
-     is_string = .true.
-     string = -1
-
-! we build a string from right to left, that is, beta <- 0
-! begin with S1: F1(S1) -> S2, F2(S2) -> S3, ... , Fk(Sk) -> S1
-! if find some Si==-1, cycle this sector immediately
-     do i=1,nsect
-         curr_sect_l = i
-         curr_sect_r = i
-         next_sect_l = i
-         next_sect_r = i
-         left = 0
-         right = csize + 1
-         do j=1,csize
-             if ( mod(j,2) == 1 ) then
-                 left = left + 1
-                 string(left,i) = curr_sect_l
-                 vt = type_v( index_t_loc(left) )
-                 vf = flvr_v( index_t_loc(left) )
-                 next_sect_l = sectors(curr_sect_l)%next(vf,vt)
-                 if ( next_sect_l == -1 ) then
-                     is_string(i) = .false.; EXIT ! finish check, exit
-                 endif ! back if ( next_sect_l == -1 ) block
-                 curr_sect_l = next_sect_l
-             else
-                 right = right - 1
-                 vt = type_v( index_t_loc(right) )
-                 vf = flvr_v( index_t_loc(right) )
-                 vt = mod(vt+1,2)
-                 next_sect_r = sectors(curr_sect_r)%next(vf,vt)
-                 if ( next_sect_r == -1 ) then
-                     is_string(i) = .false.; EXIT ! finish check, exit
-                 endif ! back if ( next_sect_r == -1 ) block
-                 string(right,i) = next_sect_r
-                 curr_sect_r = next_sect_r
-             endif ! back if ( mod(j,2) == 1 ) block
-         enddo ! over j={1,csize} loop
-
-! if it doesn't form a string, we cycle it, go to the next sector
-         if ( .not. is_string(i) ) then
-             CYCLE
-         endif ! back if ( .not. is_string(i) ) block
-
-! add the last sector to string, and check whether
-! string(csize+1,i) == string(1,i)
-! which is important for csize = 0
-         string(csize+1,i) = i
-
-! this case will generate a non-diagonal block, it will not contribute
-! to the trace
-         if ( next_sect_r /= next_sect_l ) then
-             is_string(i) = .false.
-         endif ! back if ( next_sect_r /= next_sect_l ) block
-     enddo ! over i={1,nsect} loop
-
-     return
-  end subroutine cat_make_string
-
   end module m_sect
 
 !!========================================================================
@@ -1493,20 +1463,17 @@
 ! the first filled part
      integer, public, save  :: fpart = 0
 
-! total number of matrices products
-     real(dp), public, save :: nprod = zero
-
-! whether to copy this part?
-     logical, public, save, allocatable  :: is_cp(:,:)
-
-! number of columns to be copied, in order to save copy time
-     integer, public, save, allocatable  :: nc_cp(:,:)
-
-! the start positions of fermion operators for each part
+! start index of operators for each part
      integer, public, save, allocatable  :: ops(:)
 
 ! the end positions of fermion operators for each part
      integer, public, save, allocatable  :: ope(:)
+
+! end index of operators for each part
+     logical, public, save, allocatable  :: is_cp(:,:)
+
+! number of columns to be copied, in order to save copy time
+     integer, public, save, allocatable  :: nc_cp(:,:)
 
 ! how to treat each part when calculating trace
 ! isave = 0: matrices product for this part has been calculated previously
@@ -1520,6 +1487,13 @@
 
 ! saved parts of matrices product, for new proposed configuration
      real(dp), public, save, allocatable :: saved_n(:,:,:,:)
+
+!!========================================================================
+!!>>> declare private variables                                        <<<
+!!========================================================================
+
+! status flag
+     integer, private :: istat
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -1541,10 +1515,6 @@
 !!>>> ctqmc_allocate_memory_part: allocate memory for part related variables
   subroutine ctqmc_allocate_memory_part()
      implicit none
-
-! local variables
-! loop index
-     integer :: istat
 
 ! allocate memory
      allocate(is_cp(npart,nsect),   stat=istat)
@@ -1867,7 +1837,6 @@
                                            max_dim_sect, &
                               zero, mat_t, max_dim_sect )
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
-                 nprod = nprod + one
              else
                  mat_r(:,1:dim1) = saved_p(:,1:dim1,i,isect)
              endif ! back if ( i > fpart ) block
@@ -1894,7 +1863,6 @@
                              mat_t(k,l) = saved_n(k,l,i,isect) * expt_v(indx+k-1,index_t_loc(j))
                          enddo ! over k={1,dim3} loop
                      enddo ! over l={1,dim4} loop
-                     nprod = nprod + one
                  else
                      mat_t = zero
                      do k=1,dim3
@@ -1912,7 +1880,6 @@
                                            max_dim_sect, &
                              zero, saved_n(:,:,i,isect), &
                                            max_dim_sect )
-                 nprod = nprod + one
              enddo ! over j={ops(i),ope(i)} loop
 
 ! set its save status and copy status
@@ -1930,7 +1897,6 @@
                                             zero, mat_t, &
                                            max_dim_sect )
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
-                 nprod = nprod + one
              else
                  mat_r(:,1:dim1) = saved_n(:,1:dim1,i,isect)
              endif ! back if ( i > fpart ) block
@@ -1960,17 +1926,14 @@
                  mat_r(k,l) = mat_r(k,l) * expt_t_loc(indx+k-1)
              enddo ! over k={1,dim1} loop
          enddo ! over l={1,dim1} loop
-         nprod = nprod + one
      endif ! back if ( csize == 0 ) block
 
-! store final product
-     sectors( string(1) )%prod(:,:,1) = mat_r(1:dim1,1:dim1)
-
-! calculate the trace
+! calculate the trace and store the final product
      trace = zero
-     do j=1,sectors(string(1))%ndim
+     do j=1,sectors( string(1) )%ndim
          trace = trace + mat_r(j,j)
-     enddo ! over j={1,sectors(string(1))%ndim} loop
+         sectors( string(1) )%prod(j) = mat_r(j,j)
+     enddo ! over j={1,sectors( string(1) )%ndim} loop
 
      return
   end subroutine cat_make_trace
