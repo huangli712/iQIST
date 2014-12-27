@@ -954,10 +954,12 @@
 
 !!>>> define the data structure for good quantum numbers (GQNs) algorithm
   module m_sect
-     use constants, only : dp, zero
+     use constants, only : dp, zero, eps6, mystd, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use control, only : norbs
+     use control, only : norbs, ncfgs
      use control, only : mkink
+     use control, only : myid, master
      use context, only : type_v, flvr_v
 
      implicit none
@@ -1039,7 +1041,7 @@
      real(dp), public, save :: ave_dim_sect
 
 ! which sectors should be truncated?
-     logical, public, save, allocatable :: is_trunc(:)
+     logical, public, save, allocatable :: sectoff(:)
 
 ! array of t_sector contains all the sectors
      type (t_sector), public, save, allocatable :: sectors(:)
@@ -1064,7 +1066,7 @@
      public :: ctqmc_deallocate_memory_sect
 
      public :: cat_make_string
-     public :: ctqmc_make_truncation
+     public :: cat_trun_sector
 
   contains ! encapsulated functionality
 
@@ -1147,7 +1149,7 @@
 
 ! allocate memory
      allocate(sectors(nsect),  stat=istat)
-     allocate(is_trunc(nsect), stat=istat)
+     allocate(sectoff(nsect), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1164,7 +1166,7 @@
          sectors(i)%jz     = 0
          sectors(i)%ps     = 0
      enddo ! over i={1,nsect} loop
-     is_trunc = .false.
+     sectoff = .false.
 
      return
   end subroutine ctqmc_allocate_memory_sect
@@ -1235,7 +1237,7 @@
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
 
-     if ( allocated(is_trunc) )  deallocate(is_trunc)
+     if ( allocated(sectoff) )  deallocate(sectoff)
 
      return
   end subroutine ctqmc_deallocate_memory_sect
@@ -1319,36 +1321,23 @@
      return
   end subroutine cat_make_string
 
-!!>>> ctqmc_make_truncation: it is used to truncate the Hilbert space
+!!>>> cat_trun_sector: it is used to truncate the Hilbert space
 !!>>> of H_{loc} according to the probatility of atomic states
-  subroutine ctqmc_make_truncation()
-     use constants, only : mystd, mytmp
-     use mmpi
-
-     use control, only : ncfgs
-     use control, only : myid, master
-
+  subroutine cat_trun_sector()
      implicit none
 
 ! local variables
 ! loop index
      integer  :: i
-     integer  :: ii
      integer  :: j
      integer  :: k
+     integer  :: m
 
-! dummy integer
-     integer  :: it
+! used to calculate the averaged dimension of sectors
      integer  :: sum_dim
-
-! dummy real(dp)
-     real(dp) :: rt
 
 ! file status
      logical  :: exists
-
-! probability for sector, used to do truncation
-     real(dp) :: prob_sect(nsect)
 
 ! number of sectors after truncation
      integer  :: nsect_t
@@ -1359,42 +1348,53 @@
 ! averaged dimension of sectors after truncation
      real(dp) :: ave_dim_sect_t
 
-! read file 'solver.prob.dat'
+! real(dp) dummy variable
+     real(dp) :: rt
+
+! probability for sector, used to do truncation
+     real(dp) :: sprob(nsect)
+
+! read file solver.prob.dat, only master node can do it
      if ( myid == master ) then
-         is_trunc = .false.
-         prob_sect = zero
+         sectoff = .false.
+         sprob = zero
          inquire (file = 'solver.prob.dat', exist = exists)
+! solver.prob.dat is available, we read the sector probability data
          if ( exists .eqv. .true.) then
              open(mytmp, file='solver.prob.dat', form='formatted', status='unknown')
              do i=1,ncfgs+2
                  read(mytmp,*) ! skip header
              enddo ! over i={1,ncfgs+2} loop
              do i=1,nsect
-                 read(mytmp,*) it, rt, prob_sect(i)
+                 read(mytmp,*) m, rt, sprob(i)
              enddo ! over i={1,nsect} loop
              close(mytmp)
 ! determine which sector should be truncated
              do i=1,nsect
-                 if ( prob_sect(i) < 1E-4     ) is_trunc(i) = .true.
+                 if ( sprob(i) < eps6 ) sectoff(i) = .true.
              enddo ! over i={1,nsect} loop
+! solver.prob.dat is not available, we can not do truncation
+         else
+             call s_print_exception('cat_trun_sector','sector probability data are unavailable')
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
 # if defined (MPI)
 
 ! broadcast data
-     call mp_bcast(is_trunc, master)
+     call mp_bcast(sectoff, master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
 
+! make truncation for the sectors whose sector probabilities are too low
      max_dim_sect_t = -1
      nsect_t = 0
      sum_dim = 0
      do i=1,nsect
-         if ( is_trunc(i) ) then
+         if ( sectoff(i) .eqv. .true. ) then
              sectors(i)%next = -1
          else
              if ( max_dim_sect_t < sectors(i)%ndim ) then
@@ -1404,14 +1404,14 @@
              nsect_t = nsect_t + 1
              do j=1,sectors(i)%nops
                  do k=0,1
-                     ii = sectors(i)%next(j,k)
-                     if ( ii == -1 ) CYCLE
-                     if ( is_trunc(ii) ) then
+                     m = sectors(i)%next(j,k)
+                     if ( m == -1 ) CYCLE
+                     if ( sectoff(m) .eqv. .true. ) then
                          sectors(i)%next(j,k) = -1
-                     endif ! back if ( is_trunc(ii) ) block
+                     endif ! back if ( sectoff(m) .eqv. .true. ) block
                  enddo ! over k={0,1} loop
              enddo ! over j={1,sectors(i)%nops} loop
-         endif ! back if ( is_trunc(i) ) block
+         endif ! back if ( sectoff(i) .eqv. .true. ) block
      enddo ! over i={1,nsect} loop
 
 ! calculate ave_dim_sect_t
@@ -1432,7 +1432,7 @@
      endif ! back if ( myid == master ) block
 
      return
-  end subroutine ctqmc_make_truncation
+  end subroutine cat_trun_sector
 
   end module m_sect
 

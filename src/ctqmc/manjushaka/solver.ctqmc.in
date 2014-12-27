@@ -44,4 +44,5 @@
   nmonte : 100
   ncarlo : 100
 
+  itrun = 2
   isort  = 2

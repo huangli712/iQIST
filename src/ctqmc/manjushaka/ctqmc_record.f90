@@ -1511,7 +1511,7 @@
 
      use m_sect, only : nsect
      use m_sect, only : sectors
-     use m_sect, only : is_trunc
+     use m_sect, only : sectoff
 
      implicit none
 
@@ -1552,7 +1552,7 @@
          do j=1,nsect
              l = sectors(j)%next(i,0)
              if ( l == -1 ) CYCLE
-             if ( is_trunc(j) .and. is_trunc(l) ) CYCLE
+             if ( sectoff(j) .eqv. .true. .or. sectoff(l) .eqv. .true. ) CYCLE
              indx1 = sectors(j)%istart
              indx2 = sectors(l)%istart
              do n=1,sectors(j)%ndim
