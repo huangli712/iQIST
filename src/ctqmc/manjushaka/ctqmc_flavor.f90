@@ -2573,27 +2573,6 @@
 ! start index of sectors
      integer  :: indx
 
-! a particular string begins at one sector
-     integer  :: string(csize+1,nsect)
-
-! local version of index_t
-     integer  :: index_loc(mkink)
-
-! local version of expt_t
-     real(dp) :: expt_loc(ncfgs)
-
-! minimum dimension of the sectors
-     integer  :: min_dim(nsect)
-
-! trace boundary
-     real(dp) :: trace_bound(nsect)
-
-! index of original sector
-     integer  :: orig_sect(nsect)
-
-! trace of each sector
-     real(dp) :: trace_sect(nsect)
-
 ! number of alive sector
      integer  :: nalive_sect
 
@@ -2613,6 +2592,27 @@
 
 ! temp trace bound value
      real(dp) :: tmp_trb
+
+! index of original sector
+     integer  :: orig_sect(nsect)
+
+! minimum dimension of the sectors
+     integer  :: min_dim(nsect)
+
+! a particular string begins at one sector
+     integer  :: string(csize+1,nsect)
+
+! local version of index_t
+     integer  :: index_loc(mkink)
+
+! local version of expt_t
+     real(dp) :: expt_loc(ncfgs)
+
+! trace boundary
+     real(dp) :: btrace(nsect)
+
+! trace of each sector
+     real(dp) :: strace(nsect)
 
 ! copy data from index_t or index_v to index_loc
 ! copy data from expt_t to expt_loc
@@ -2649,7 +2649,7 @@
              propose = one
 
      end select
-     ptmp = propose  *  abs(deter_ratio)
+     ptmp = propose  *  deter_ratio
 
 ! build string for all the sectors
      call cat_make_string(csize, index_loc, string)
@@ -2680,7 +2680,7 @@
 
 ! calculate the trace bounds for each sector and determine the
 ! number sectors which actually contribute to the total trace
-     trace_bound = zero
+     btrace = zero
      nalive_sect = 0
      orig_sect = -1
      do i=1,nsect
@@ -2699,7 +2699,7 @@
 ! specially treatment for the last time-evolution operator
          indx = sectors(string(1,i))%istart
          tmp_trb = tmp_trb * expt_loc(indx) * min_dim(i)
-         trace_bound(nalive_sect) = tmp_trb
+         btrace(nalive_sect) = tmp_trb
          orig_sect(nalive_sect) = i
      enddo
 
@@ -2710,11 +2710,11 @@
          RETURN
 ! otherwise, calculate the summmation of trace bounds
      else
-         sum_bound = sum( trace_bound(1:nalive_sect) )
+         sum_bound = sum( btrace(1:nalive_sect) )
      endif ! back if ( nalive_sect == 0 ) block
 
 ! calculate the maximum bound of the acceptance ratio
-     pmax = ptmp * abs(sum_bound/matrix_ptrace)
+     pmax = abs(ptmp) * abs(sum_bound/matrix_ptrace)
 
 ! check whether pmax < rand_num
 ! if it is true, reject this move immediately
@@ -2730,25 +2730,25 @@
 
 ! sort the trace_bound to speed up the refining process
 ! here, we use simple bubble sort algorithm, because nalive_sect is usually small
-     call s_sorter2( nalive_sect, trace_bound(1:nalive_sect), orig_sect(1:nalive_sect) )
+     call s_sorter2( nalive_sect, btrace(1:nalive_sect), orig_sect(1:nalive_sect) )
 
 ! begin to refine the trace bounds
      pass = .false.
      sum_abs_trace = zero
-     trace_sect = zero
+     strace = zero
      do i=1,nalive_sect
 ! calculate the trace for one sector, this call will consume a lot of time
 ! if the dimension of fmat and expansion order is large, so we should carefully
 ! optimize it.
-         call cat_make_trace(csize, string(:,orig_sect(i)), index_loc, expt_loc, trace_sect(i))
+         call cat_make_trace(csize, string(:,orig_sect(i)), index_loc, expt_loc, strace(i))
 ! if this move is not accepted, refine the trace bound to see whether we can
 ! reject it before calculating the trace of all of the sectors
          if ( .not. pass ) then
-             sum_abs_trace = sum_abs_trace + abs( trace_sect(i) )
-             sum_bound = sum_bound - trace_bound(i)
+             sum_abs_trace = sum_abs_trace + abs( strace(i) )
+             sum_bound = sum_bound - btrace(i)
 ! calculate pmax and pmin
-             pmax = ptmp * abs( (sum_abs_trace + sum_bound) / matrix_ptrace )
-             pmin = ptmp * abs( (sum_abs_trace - sum_bound) / matrix_ptrace )
+             pmax = abs(ptmp) * abs( (sum_abs_trace + sum_bound) / matrix_ptrace )
+             pmin = abs(ptmp) * abs( (sum_abs_trace - sum_bound) / matrix_ptrace )
 ! check whether pmax < rand_num
              if ( pmax < r ) then
                  pass = .false.
@@ -2766,8 +2766,8 @@
 ! if we arrive here, two cases
 ! case 1: pass == .false., we haven't determined the pass
 ! case 2: pass == .true. we have determined the pass
-     matrix_ntrace = sum(trace_sect(1:nalive_sect))
-     p = propose  *  deter_ratio * (matrix_ntrace / matrix_ptrace)
+     matrix_ntrace = sum(strace(1:nalive_sect))
+     p = ptmp * (matrix_ntrace / matrix_ptrace)
      pass = ( min(one, abs(p)) > r )
      if ( .not. pass ) then
         RETURN
@@ -2811,17 +2811,17 @@
 
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
+     integer  :: i
+     integer  :: j
 
 ! start index of a sector
-     integer :: indx
+     integer  :: indx
 
 ! sector index of a string
-     integer :: string(csize+1,nsect)
+     integer  :: string(csize+1,nsect)
 
 ! local version of index_v
-     integer :: index_loc(mkink)
+     integer  :: index_loc(mkink)
 
 ! local version of expt_t
      real(dp) :: expt_loc(ncfgs)
