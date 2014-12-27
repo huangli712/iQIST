@@ -97,10 +97,10 @@
 ! in other words, these features are not implemented so far.
      integer, public, save :: isvrt  = 1
 
-! control flag: the fast algorithm for calculate the trace
-! if ifast == 1, use npart
-! if ifast == 2, use time evolution
-! if ifast == 3, use skip-list
+! control flag: the efficient algorithm for calculate the trace
+! if ifast == 1, use divide-and-conquer algorithm (see npart as well)
+! if ifast == 2, use classic time evolution algorithm, not implemented
+! if ifast == 3, use skip listing algorithm, not implemented
      integer, public, save :: ifast  = 1
 
 ! control flag: the mode how to truncate the Hilbert space
