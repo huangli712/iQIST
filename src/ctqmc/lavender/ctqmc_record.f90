@@ -359,7 +359,7 @@
 ! allocate memory for the dummy sparse matrix
      call ctqmc_new_spmat(spm_t)
 
-! evaluate cprob at first, it is current atomic propability
+! evaluate cprob at first, it is current atomic probability
      do i=1,ncfgs
          cprob(i) = diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop

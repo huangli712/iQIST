@@ -2523,8 +2523,8 @@
 !!>>>     Hibert space to small subspace, the dimension of F-matrix will
 !!>>>     be smaller.
 !!>>> (2) use divide and conqure algorithm, split the imaginary time axis
-!!>>>     into many parts, save the matrices products of that part, which
-!!>>>     may be used by next Monte Carlo move.
+!!>>>     into several parts, save the matrices products of each part,
+!!>>>     which may be used by next Monte Carlo move.
 !!>>> note: you should carefully choose npart in order to obtain the
 !!>>> best speedup.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
@@ -2538,7 +2538,6 @@
      use m_sect, only : nsect
      use m_sect, only : sectors
      use m_sect, only : cat_make_string
-     use m_part, only : is_cp
      use m_part, only : cat_make_npart
      use m_part, only : cat_make_trace
 
@@ -2546,6 +2545,10 @@
 
 ! external arguments
 ! different type of Monte Carlo moves
+! if cmode = 1, partly-trial calculation, useful for ctqmc_insert_ztrace() etc
+! if cmode = 2, partly-normal calculation, not used by now
+! if cmode = 3, fully-trial calculation, useful for ctqmc_reflip_kink()
+! if cmode = 4, fully-normal calculation, useful for ctqmc_retrieve_status()
      integer,  intent(in)  :: cmode
 
 ! total number of operators for current diagram
@@ -2568,69 +2571,69 @@
 ! start index of a sector
      integer  :: indx
 
-! whether it forms a string
-     logical  :: is_string(nsect)
-
 ! sector index of a string
      integer  :: string(csize+1,nsect)
 
 ! local version of index_t
-     integer  :: index_t_loc(mkink)
+     integer  :: index_loc(mkink)
 
 ! local version of expt_t
-     real(dp) :: expt_t_loc(ncfgs)
+     real(dp) :: expt_loc(ncfgs)
 
 ! trace for each sector
-     real(dp) :: trace_sect(nsect)
+     real(dp) :: strace(nsect)
 
-! copy data from index_t or index_v to index_t_loc
-! copy data from expt_t to expt_t_loc
+! copy data from index_t or index_v to index_loc
+! copy data from expt_t to expt_loc
      select case (cmode)
 
          case (1)
-             index_t_loc = index_t
-             expt_t_loc = expt_t(:,1)
+             index_loc = index_t
+             expt_loc = expt_t(:,1)
 
          case (2)
-             index_t_loc = index_v
-             expt_t_loc = expt_t(:,2)
+             index_loc = index_v
+             expt_loc = expt_t(:,2)
 
          case (3)
-             index_t_loc = index_t
-             expt_t_loc = expt_t(:,2)
+             index_loc = index_t
+             expt_loc = expt_t(:,2)
 
          case (4)
-             index_t_loc = index_v
-             expt_t_loc = expt_t(:,2)
+             index_loc = index_v
+             expt_loc = expt_t(:,2)
 
      end select
 
-! build string for all the sectors, it will return is_string and string
-     call cat_make_string(csize, index_t_loc, is_string, string)
+! build all possible strings for all the sectors. if one string may be
+! invalid, then all of its elements must be -1
+     call cat_make_string(csize, index_loc, string)
 
-! determine which part should be recalculated, it will modify isave internal
-     call cat_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
+! determine which part should be recalculated (global variables renew
+! and is_cp will be updated in this subroutine)
+     call cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
 
 ! calculate the trace of each sector one by one
-! reset copy status to false, it is very important!
-     is_cp = .false.
-     trace_sect = zero
-     trace = zero
+     strace = zero
      do i=1,nsect
-         if ( .not. is_string(i) ) then
-             trace_sect(i) = zero
-             sectors(i)%prod(:,:,1) = zero
+! invalid string, its contribution is neglected
+! note: here we only check the first element of this string. it is enough
+         if ( string(1,i) == -1 ) then
+             strace(i) = zero
+             sectors(i)%prod = zero
+! valid string, we have to calculate its contribution to trace
          else
-             call cat_make_trace(csize, string(:,i), index_t_loc, expt_t_loc, trace_sect(i))
-         endif ! back if ( .not. is_string(i) ) block
-         trace = trace + trace_sect(i)
+             call cat_make_trace(csize, string(:,i), index_loc, expt_loc, strace(i))
+         endif ! back if ( string(1,i) == -1 ) block
      enddo ! over i={1,nsect} loop
+     trace = sum(strace)
 
-! store the diagonal elements of final product in diag(:,1)
+! store the diagonal elements of final product in diag(:,1), which can be
+! used to calculate the atomic probability
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             diag(indx+j-1,1) = sectors(i)%prod(j,j,1)
+             diag(indx+j-1,1) = sectors(i)%prod(j)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -2640,18 +2643,19 @@
 !!>>> ctqmc_make_evolve: used to update the operator traces of the
 !!>>> modified part
   subroutine ctqmc_make_evolve()
+     use control, only : npart
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : diag
 
      use m_sect, only : nsect
-     use m_sect, only : sectors
-     use m_part, only : cat_save_npart
+     use m_part, only : renew, async, is_cp, nc_cp, saved_p, saved_n
 
      implicit none
 
 ! local variables
 ! loop index
      integer :: i
+     integer :: j
 
 ! update the operator traces
      matrix_ptrace = matrix_ntrace
@@ -2659,14 +2663,31 @@
 ! update diag for the calculation of atomic state probability
      diag(:,2) = diag(:,1)
 
-! transfer the final matrix product from prod(:,:,1) to prod(:,:,2),
-! the latter can be used to calculate nmat and nnmat
+! even if renew(j) is 1, not all of the sectors in this part (the j-th
+! part) will be renewed. there are many reasons. one of them is the
+! broken string. anyway, at this time, we have to remind the solver that
+! the matrix products for these sectors in j-th part is unsafe. so it is
+! necessary to update async here
      do i=1,nsect
-         sectors(i)%prod(:,:,2) = sectors(i)%prod(:,:,1)
+         do j=1,npart
+             if ( renew(j) == 1 .and. is_cp(j,i) == 0 ) then
+                 async(j,i) = 1
+             endif ! back if ( renew(j) == 1 .and. is_cp(j,i) == 0 ) block
+         enddo ! over j={1,npart} loop
      enddo ! over i={1,nsect} loop
 
-! save the data of each part
-     call cat_save_npart()
+! if we used the divide-and-conquer algorithm, then we had to save the
+! change matrices products when proposed moves were accepted. and sine
+! the matrices products are updated, we also update the corresponding
+! async variable to tell the impurity solver that these saved_p is OK
+     do i=1,nsect
+         do j=1,npart
+             if ( is_cp(j,i) == 1 ) then
+                 saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
+                 async(j,i) = 0
+             endif ! back if ( is_cp(j,i) == 1 ) block
+         enddo ! over j={1,npart} loop
+     enddo ! over i={1,nsect} loop
 
      return
   end subroutine ctqmc_make_evolve
