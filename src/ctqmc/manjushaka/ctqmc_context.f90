@@ -1428,6 +1428,10 @@
          write(mystd,'(4X,a,i8)')    'tot_num_sect: ', nsect_t
          write(mystd,'(4X,a,i8)')    'max_dim_sect: ', max_dim_sect_t
          write(mystd,'(4X,a,f8.1)')  'ave_dim_sect: ', ave_dim_sect_t
+         write(mystd,'(4X,a)') 'TRUNCATED SECTORS:'
+         do i=1,nsect
+             write(mystd,'(4X,a,i4,2X,a,L2)') 'index: ', i, 'status:', .not. sectoff(i)
+         enddo ! over i={1,nsect} loop
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
