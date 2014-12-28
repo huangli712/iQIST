@@ -7,6 +7,6 @@
   "logdata" : "./tmp/log.data",
   "errdata" : "./tmp/err.data",
   "interval": 60,
-  "slots"   : 8,
+  "slots"   : 2,
   "jobs"    : "./job.json"
 }
