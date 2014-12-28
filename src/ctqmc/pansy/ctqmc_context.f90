@@ -1294,7 +1294,7 @@
 ! how to treat each part when calculating trace
 ! 0: matrices product for this part has been calculated previously
 ! 1: this part should be recalculated, and the result must be
-!    stored in saved_p, if this Monte Caro move has been accepted.
+!    stored in saved_p, if this Monte Caro move has been accepted
      integer, public, save, allocatable  :: renew(:)
 
 ! determine which parts of saved_p are unsafe or invalid (we just call
@@ -1701,7 +1701,7 @@
                  mat_r(:,1:dim1) = saved_p(:,1:dim1,i,isect)
              endif ! back if ( i > fpart ) block
 
-         endif ! back if ( renew(i) == 1 )  block
+         endif ! back if ( renew(i) == 1 .or. async(i,isect) == 1 )  block
 
 ! setup the start sector for next part
          isect = sect1
@@ -1728,7 +1728,7 @@
      trace = zero
      do j=1,sectors( string(1) )%ndim
          trace = trace + mat_r(j,j)
-         sectors( string(1) )%prod (j)= mat_r(j,j)
+         sectors( string(1) )%prod(j) = mat_r(j,j)
      enddo ! over j={1,sectors( string(1) )%ndim} loop
 
      return

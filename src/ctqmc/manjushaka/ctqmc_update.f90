@@ -71,6 +71,9 @@
 ! transition probability for insert new create and destroy operators
      real(dp) :: p
 
+! random number
+     real(dp) :: r
+
 ! \tau_s, imaginary time point of the create operator
      real(dp) :: tau_start
 
@@ -82,9 +85,6 @@
 
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
-
-! a random number
-     real(dp) :: rand_num
 
 ! initialize logical variables
      ladd = .false.
@@ -131,9 +131,10 @@
 
 ! we will determine the pass by lazy trace evalution
 ! if ladd is false, we set the pass as false immediately
-     rand_num = spring_sfmt_stream()
+     r = spring_sfmt_stream()
+     trace_ratio = deter_ratio * ( beta / real( ckink + 1 ) ) ** 2
      if ( ladd .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 1, 1, 2*sum(rank) + 2, deter_ratio, rand_num, p, pass, tau_start, tau_end )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank) + 2, trace_ratio, tau_start, tau_end, r, p, pass )
      else
          pass = .false.
      endif ! back if ( ladd .eqv. .true. ) block
@@ -166,7 +167,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_insert_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_insert_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the insert statistics
@@ -213,6 +214,9 @@
 ! transition probability for remove old create and destroy operators
      real(dp) :: p
 
+! random number
+     real(dp) :: r
+
 ! \tau_s, imaginary time point of the create operator
      real(dp) :: tau_start
 
@@ -224,9 +228,6 @@
 
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
-
-! a random number
-     real(dp) :: rand_num
 
 ! initialize logical variables
      lrmv = .false.
@@ -273,9 +274,10 @@
 
 ! we will determine the pass by lazy trace evalution
 ! if lrmv is false, we set the pass as false immediately
-     rand_num = spring_sfmt_stream()
+     r = spring_sfmt_stream()
+     trace_ratio = deter_ratio * ( real( ckink ) / beta ) ** 2
      if ( lrmv .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 2, 1, 2*sum(rank) - 2, deter_ratio, rand_num, p, pass, tau_start, tau_end )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank) - 2, trace_ratio, tau_start, tau_end, r, p, pass )
      else
          pass = .false.
      endif ! back if ( lrmv .eqv. .true. ) block
@@ -308,7 +310,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_remove_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_remove_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the remove statistics
@@ -354,6 +356,9 @@
 ! transition probability for shift old create operators
      real(dp) :: p
 
+! random number
+     real(dp) :: r
+
 ! \tau_s, imaginary time point of the old create operator
      real(dp) :: tau_start1
 
@@ -365,9 +370,6 @@
 
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
-
-! a random number
-     real(dp) :: rand_num
 
 ! initialize logical variables
      lshf = .false.
@@ -414,9 +416,10 @@
 
 ! we will determine the pass by lazy trace evalution
 ! if lshf is false, we set the pass as false immediately
-     rand_num = spring_sfmt_stream()
+     r = spring_sfmt_stream()
+     trace_ratio = deter_ratio * one
      if ( lshf .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 3, 1, 2*sum(rank), deter_ratio, rand_num, p, pass, tau_start1, tau_start2 )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank), trace_ratio, tau_start1, tau_start2, r, p, pass )
      else
          pass = .false.
      endif ! back if ( lshf .eqv. .true. ) block
@@ -443,7 +446,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_lshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_lshift_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the lshift statistics
@@ -489,6 +492,9 @@
 ! transition probability for shift old destroy operators
      real(dp) :: p
 
+! random number
+     real(dp) :: r
+
 ! \tau_e, imaginary time point of the old destroy operator
      real(dp) :: tau_end1
 
@@ -500,9 +506,6 @@
 
 ! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
-
-! a random number
-     real(dp) :: rand_num
 
 ! initialize logical variables
      rshf = .false.
@@ -549,9 +552,10 @@
 
 ! we will determine the pass by lazy trace evalution
 ! if rshf is false, we set the pass as false immediately
-     rand_num = spring_sfmt_stream()
+     r = spring_sfmt_stream()
+     trace_ratio = deter_ratio * one
      if ( rshf .eqv. .true. ) then
-         call ctqmc_lazy_ztrace( 4, 1, 2*sum(rank), deter_ratio, rand_num, p, pass, tau_end1, tau_end2 )
+         call ctqmc_lazy_ztrace( 1, 2*sum(rank), trace_ratio, tau_end1, tau_end2, r, p, pass )
      else
          rshf = .false.
      endif ! back if ( rshf .eqv. .true. ) block
@@ -578,7 +582,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_rshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_rshift_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the rshift statistics
@@ -595,7 +599,7 @@
 !!>>> ctqmc_reflip_kink: perform a global update, exchange the states
 !!>>> between spin up and spin down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
-     use constants, only : dp, one
+     use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
      use stack, only : istack_getrest
 
@@ -635,6 +639,9 @@
 
 ! transition probability for global spin flip
      real(dp) :: p
+
+! random number
+     real(dp) :: r
 
 ! global flip determinant ratio
      real(dp) :: ratup
@@ -693,8 +700,9 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
+         r = spring_sfmt_stream()
          ratup = p
-         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, spring_sfmt_stream(), p, pass, -one, -one )
+         call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then
@@ -768,8 +776,9 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
+             r = spring_sfmt_stream()
              ratup = p
-             call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, spring_sfmt_stream(), p, pass, -one, -one )
+             call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
 
 ! if update action is accepted
              if ( pass .eqv. .true. ) then
@@ -847,8 +856,9 @@
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part, by lazy trace evaluation
+         r = spring_sfmt_stream()
          ratup = p
-         call ctqmc_lazy_ztrace( 5, 3, nsize, ratup, spring_sfmt_stream(), p, pass, -one, -one )
+         call ctqmc_lazy_ztrace( 3, nsize, ratup, zero, zero, r, p, pass )
 
 ! if update action is accepted
          if ( pass .eqv. .true. ) then

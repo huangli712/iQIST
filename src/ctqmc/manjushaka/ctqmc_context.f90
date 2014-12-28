@@ -954,10 +954,12 @@
 
 !!>>> define the data structure for good quantum numbers (GQNs) algorithm
   module m_sect
-     use constants, only : dp, zero
+     use constants, only : dp, zero, eps6, mystd, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
 
-     use control, only : norbs
+     use control, only : norbs, ncfgs
      use control, only : mkink
+     use control, only : myid, master
      use context, only : type_v, flvr_v
 
      implicit none
@@ -968,6 +970,7 @@
 
 ! data structure for one F-matrix
 !-------------------------------------------------------------------------
+     public :: t_fmat
      type t_fmat
 
 ! the dimension, n x m
@@ -975,15 +978,16 @@
          integer :: m
 
 ! the memory space for the matrix
-         real(dp), pointer :: val(:,:)
+         real(dp), allocatable :: val(:,:)
 
      end type t_fmat
 
 ! data structure for one sector
 !-------------------------------------------------------------------------
+     public :: t_sector
      type t_sector
 
-! dimension
+! number of states in this sector
          integer :: ndim
 
 ! number of fermion operators, it should be equal to norbs
@@ -997,7 +1001,7 @@
 
 ! z component of spin: Sz
          integer :: sz
- 
+
 ! z component of spin-orbit momentum: Jz
          integer :: jz
 
@@ -1005,21 +1009,21 @@
          integer :: ps
 
 ! the next sector when a fermion operator acts on the sector
-! next(nops,0:1), 0 for annihilation and 1 for creation operators,
-! respectively. -1 means it is outside the Hilbert space, otherwise, it
-! is the index of next sector
-         integer, pointer  :: next(:,:)
+! next(nops,0) for annihilation and next(nops,1) for creation operators
+! -1 means it is outside the Hilbert space,
+! otherwise, it is the index of next sector
+         integer, allocatable  :: next(:,:)
 
 ! the eigenvalues
-         real(dp), pointer :: eval(:)
+         real(dp), allocatable :: eval(:)
 
 ! final products of matrices
-         real(dp), pointer :: prod(:,:,:)
+         real(dp), allocatable :: prod(:)
 
 ! the F-matrix between this sector and all other sectors
-! if this sector doesn't point to some other sectors, the pointer is null
-! fmat(nops,0:1), 0 for annihilation and 1 for creation operators, respectively
-         type (t_fmat), pointer :: fmat(:,:)
+! fmat(nops,0) for annihilation and fmat(nops,1) for creation operators
+! if this sector doesn't point to some other sectors, it is not allocated
+         type (t_fmat), allocatable :: fmat(:,:)
 
      end type t_sector
 
@@ -1037,10 +1041,17 @@
      real(dp), public, save :: ave_dim_sect
 
 ! which sectors should be truncated?
-     logical, public, save, allocatable :: is_trunc(:)
+     logical, public, save, allocatable :: sectoff(:)
 
 ! array of t_sector contains all the sectors
      type (t_sector), public, save, allocatable :: sectors(:)
+
+!!========================================================================
+!!>>> declare private variables                                        <<<
+!!========================================================================
+
+! status flag
+     integer, private :: istat
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -1054,8 +1065,8 @@
      public :: ctqmc_deallocate_memory_one_sect
      public :: ctqmc_deallocate_memory_sect
 
-     public :: ctqmc_make_truncation
      public :: cat_make_string
+     public :: cat_trun_sector
 
   contains ! encapsulated functionality
 
@@ -1070,10 +1081,6 @@
 ! external variables
 ! F-matrix structure
      type (t_fmat), intent(inout) :: mat
-
-! local variables
-! status flag
-     integer :: istat
 
 ! allocate memory
      allocate(mat%val(mat%n,mat%m), stat=istat)
@@ -1102,16 +1109,13 @@
      integer :: i
      integer :: j
 
-! status flag
-     integer :: istat
-
 ! allocate memory
-     allocate(sect%next(sect%nops,0:1),                 stat=istat)
+     allocate(sect%next(sect%nops,0:1), stat=istat)
 
-     allocate(sect%eval(sect%ndim),                     stat=istat)
-     allocate(sect%prod(sect%ndim,sect%ndim,2),         stat=istat)
+     allocate(sect%eval(sect%ndim),     stat=istat)
+     allocate(sect%prod(sect%ndim),     stat=istat)
 
-     allocate(sect%fmat(sect%nops,0:1),                 stat=istat)
+     allocate(sect%fmat(sect%nops,0:1), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1119,17 +1123,16 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     sect%next  = 0
+     sect%next = 0
 
-     sect%eval  = zero
-     sect%prod  = zero
+     sect%eval = zero
+     sect%prod = zero
 
 ! initialize fmat one by one
      do i=1,sect%nops
          do j=0,1
              sect%fmat(i,j)%n = 0
              sect%fmat(i,j)%m = 0
-             sect%fmat(i,j)%val => null()
          enddo ! over j={0,1} loop
      enddo ! over i={1,sect%nops} loop
 
@@ -1144,12 +1147,9 @@
 ! loop index
      integer :: i
 
-! status flag
-     integer :: istat
-
 ! allocate memory
      allocate(sectors(nsect),  stat=istat)
-     allocate(is_trunc(nsect), stat=istat)
+     allocate(sectoff(nsect), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1165,16 +1165,8 @@
          sectors(i)%sz     = 0
          sectors(i)%jz     = 0
          sectors(i)%ps     = 0
-
-         sectors(i)%next  => null()
-
-         sectors(i)%eval  => null()
-         sectors(i)%prod  => null()
-
-         sectors(i)%fmat  => null()
      enddo ! over i={1,nsect} loop
-
-     is_trunc = .false.
+     sectoff = .false.
 
      return
   end subroutine ctqmc_allocate_memory_sect
@@ -1191,7 +1183,7 @@
 ! F-matrix structure
      type (t_fmat), intent(inout) :: mat
 
-     if ( associated(mat%val) ) deallocate(mat%val)
+     if ( allocated(mat%val) ) deallocate(mat%val)
 
      return
   end subroutine ctqmc_deallocate_memory_one_fmat
@@ -1209,20 +1201,20 @@
      integer :: i
      integer :: j
 
-     if ( associated(sect%next)  ) deallocate(sect%next )
+     if ( allocated(sect%next) ) deallocate(sect%next)
 
-     if ( associated(sect%eval)  ) deallocate(sect%eval )
-     if ( associated(sect%prod)  ) deallocate(sect%prod )
+     if ( allocated(sect%eval) ) deallocate(sect%eval)
+     if ( allocated(sect%prod) ) deallocate(sect%prod)
 
 ! deallocate fmat one by one
-     if ( associated(sect%fmat) ) then
+     if ( allocated(sect%fmat) ) then
          do i=1,sect%nops
              do j=0,1
                  call ctqmc_deallocate_memory_one_fmat(sect%fmat(i,j))
              enddo ! over j={0,1} loop
          enddo ! over i={1,sect%nops} loop
          deallocate(sect%fmat)
-     endif ! back if ( associated(sect%fmat) ) block
+     endif ! back if ( allocated(sect%fmat) ) block
 
      return
   end subroutine ctqmc_deallocate_memory_one_sect
@@ -1245,7 +1237,7 @@
          deallocate(sectors)
      endif ! back if ( allocated(sectors) ) block
 
-     if ( allocated(is_trunc) )  deallocate(is_trunc)
+     if ( allocated(sectoff) )  deallocate(sectoff)
 
      return
   end subroutine ctqmc_deallocate_memory_sect
@@ -1254,82 +1246,155 @@
 !!>>> core service subroutines                                         <<<
 !!========================================================================
 
-!!>>> ctqmc_make_truncation: it is used to truncate the Hilbert space
+!!>>> cat_make_string: it is used to build a time evolution string
+  subroutine cat_make_string(csize, vindex, string)
+     implicit none
+
+! external variables
+! number of fermion operators for the current diagram
+     integer, intent(in)  :: csize
+
+! memory address index of fermion operators
+     integer, intent(in)  :: vindex(mkink)
+
+! time evolution string, i.e., sequence of sector index
+! if it is not a valid string, then all of its values should be -1
+     integer, intent(out) :: string(csize+1,nsect)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! flavor and type of fermion operators
+     integer :: vf
+     integer :: vt
+
+! current sector index and next sector index
+     integer :: curr_sect
+     integer :: next_sect
+
+! init return array, we assume all of strings are invalid
+     string = -1
+
+! we try to build a string from left to right, that is, 0 -> \beta
+! we assume the sectors are S1, S2, S3, ..., SM, and the fermion
+! operators are F1, F2, F3, F4, .... FN. here, F1 is in \tau_1, F2
+! is in \tau_2, F3 is in \tau_3, and so on, and 
+!     0 < \tau_1 < \tau_2 < \tau_3 < ... < \beta
+! is always guaranteed. then a typical (and also valid) string must
+! look like this:
+!     F1       F2       F3       F4       F5        FN
+! S1 ----> S2 ----> S3 ----> S4 ----> S5 ----> ... ----> S1
+! then the sequence of sector indices is the so-called string. if some
+! Si are -1 (null sector), this string is invalid. we will enforce all
+! elements in it to be -1. it is easy to speculate that if the number
+! of fermion operators is csize, the length of string must be csize + 1
+     SECTOR_SCAN_LOOP: do i=1,nsect
+! setup starting sector
+         curr_sect = i
+         string(1,i) = curr_sect
+         OPERATOR_SCAN_LOOP: do j=1,csize
+! determine the type and flavor of current operator
+             vt = type_v( vindex(j) )
+             vf = flvr_v( vindex(j) )
+! get the next sector
+             next_sect = sectors(curr_sect)%next(vf,vt)
+! meet null sector, it is an invalid string. we will try another
+! new string
+             if ( next_sect == -1 ) then
+                 string(:,i) = -1; EXIT OPERATOR_SCAN_LOOP
+! the string is still alive, we record the sector, and set it to
+! the current sector
+             else
+                 string(j+1,i) = next_sect
+                 curr_sect = next_sect
+             endif ! back if ( next_sect == -1 ) block
+         enddo OPERATOR_SCAN_LOOP ! over j={1,csize} loop
+! we have to ensure that the first sector is the same with the last
+! sector in this string, or else it is invalid
+         if ( string(1,i) /= string(csize+1,i) ) then
+             string(:,i) = -1
+         endif ! back if ( string(1,i) /= string(csize+1,i) ) block
+     enddo SECTOR_SCAN_LOOP ! over i={1,nsect} loop
+
+     return
+  end subroutine cat_make_string
+
+!!>>> cat_trun_sector: it is used to truncate the Hilbert space
 !!>>> of H_{loc} according to the probatility of atomic states
-  subroutine ctqmc_make_truncation()
-     use constants, only : mystd, mytmp
-     use mmpi
-
-     use control, only : ncfgs
-     use control, only : myid, master
-
+  subroutine cat_trun_sector()
      implicit none
 
 ! local variables
 ! loop index
      integer  :: i
-     integer  :: ii
      integer  :: j
      integer  :: k
+     integer  :: m
 
-! dummy integer
-     integer  :: it
+! used to calculate the averaged dimension of sectors
      integer  :: sum_dim
-
-! dummy real(dp)
-     real(dp) :: rt
 
 ! file status
      logical  :: exists
-
-! probability for sector, used to do truncation
-     real(dp) :: prob_sect(nsect)
 
 ! number of sectors after truncation
      integer  :: nsect_t
 
 ! maximal dimension of sectors after truncation
-     integer :: max_dim_sect_t
+     integer  :: max_dim_sect_t
 
 ! averaged dimension of sectors after truncation
      real(dp) :: ave_dim_sect_t
 
-! read file 'solver.prob.dat'
+! real(dp) dummy variable
+     real(dp) :: rt
+
+! probability for sector, used to do truncation
+     real(dp) :: sprob(nsect)
+
+! read file solver.prob.dat, only master node can do it
      if ( myid == master ) then
-         is_trunc = .false.
-         prob_sect = zero
+         sectoff = .false.
+         sprob = zero
          inquire (file = 'solver.prob.dat', exist = exists)
+! solver.prob.dat is available, we read the sector probability data
          if ( exists .eqv. .true.) then
              open(mytmp, file='solver.prob.dat', form='formatted', status='unknown')
              do i=1,ncfgs+2
                  read(mytmp,*) ! skip header
              enddo ! over i={1,ncfgs+2} loop
              do i=1,nsect
-                 read(mytmp,*) it, rt, prob_sect(i)
+                 read(mytmp,*) m, rt, sprob(i)
              enddo ! over i={1,nsect} loop
              close(mytmp)
 ! determine which sector should be truncated
              do i=1,nsect
-                 if ( prob_sect(i) < 1E-4     ) is_trunc(i) = .true.
+                 if ( sprob(i) < eps6 ) sectoff(i) = .true.
              enddo ! over i={1,nsect} loop
+! solver.prob.dat is not available, we can not do truncation
+         else
+             call s_print_exception('cat_trun_sector','sector probability data are unavailable')
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
 # if defined (MPI)
 
 ! broadcast data
-     call mp_bcast(is_trunc, master)
+     call mp_bcast(sectoff, master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
 
+! make truncation for the sectors whose sector probabilities are too low
      max_dim_sect_t = -1
      nsect_t = 0
      sum_dim = 0
      do i=1,nsect
-         if ( is_trunc(i) ) then
+         if ( sectoff(i) .eqv. .true. ) then
              sectors(i)%next = -1
          else
              if ( max_dim_sect_t < sectors(i)%ndim ) then
@@ -1339,14 +1404,14 @@
              nsect_t = nsect_t + 1
              do j=1,sectors(i)%nops
                  do k=0,1
-                     ii = sectors(i)%next(j,k)
-                     if ( ii == -1 ) CYCLE
-                     if ( is_trunc(ii) ) then
+                     m = sectors(i)%next(j,k)
+                     if ( m == -1 ) CYCLE
+                     if ( sectoff(m) .eqv. .true. ) then
                          sectors(i)%next(j,k) = -1
-                     endif ! back if ( is_trunc(ii) ) block
+                     endif ! back if ( sectoff(m) .eqv. .true. ) block
                  enddo ! over k={0,1} loop
              enddo ! over j={1,sectors(i)%nops} loop
-         endif ! back if ( is_trunc(i) ) block
+         endif ! back if ( sectoff(i) .eqv. .true. ) block
      enddo ! over i={1,nsect} loop
 
 ! calculate ave_dim_sect_t
@@ -1363,106 +1428,15 @@
          write(mystd,'(4X,a,i8)')    'tot_num_sect: ', nsect_t
          write(mystd,'(4X,a,i8)')    'max_dim_sect: ', max_dim_sect_t
          write(mystd,'(4X,a,f8.1)')  'ave_dim_sect: ', ave_dim_sect_t
+         write(mystd,'(4X,a)') 'TRUNCATED SECTORS:'
+         do i=1,nsect
+             write(mystd,'(4X,a,i4,2X,a,L2)') 'index: ', i, 'status:', .not. sectoff(i)
+         enddo ! over i={1,nsect} loop
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
      return
-  end subroutine ctqmc_make_truncation
-
-!!>>> cat_make_string: subroutine used to build an evolutional string
-  subroutine cat_make_string(csize, index_t_loc, is_string, string)
-     implicit none
-
-! external variables
-! number of fermion operators for the current diagram
-     integer, intent(in)  :: csize
-
-! memory address index of fermion operators
-     integer, intent(in)  :: index_t_loc(mkink)
-
-! whether it is a valid string?
-     logical, intent(out) :: is_string(nsect)
-
-! string index
-     integer, intent(out) :: string(csize+1,nsect)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! sector index: from left direction
-     integer :: left
-     integer :: curr_sect_l
-     integer :: next_sect_l
-
-! sector index: from right direction
-     integer :: right
-     integer :: curr_sect_r
-     integer :: next_sect_r
-
-! flavor and type of fermion operators
-     integer :: vf
-     integer :: vt
-
-! init return arrays
-     is_string = .true.
-     string = -1
-
-! we build a string from right to left, that is, beta <- 0
-! begin with S1: F1(S1) -> S2, F2(S2) -> S3, ... , Fk(Sk) -> S1
-! if find some Si==-1, cycle this sector immediately
-     do i=1,nsect
-         curr_sect_l = i
-         curr_sect_r = i
-         next_sect_l = i
-         next_sect_r = i
-         left = 0
-         right = csize + 1
-         do j=1,csize
-             if ( mod(j,2) == 1 ) then
-                 left = left + 1
-                 string(left,i) = curr_sect_l
-                 vt = type_v( index_t_loc(left) )
-                 vf = flvr_v( index_t_loc(left) )
-                 next_sect_l = sectors(curr_sect_l)%next(vf,vt)
-                 if ( next_sect_l == -1 ) then
-                     is_string(i) = .false.; EXIT ! finish check, exit
-                 endif ! back if ( next_sect_l == -1 ) block
-                 curr_sect_l = next_sect_l
-             else
-                 right = right - 1
-                 vt = type_v( index_t_loc(right) )
-                 vf = flvr_v( index_t_loc(right) )
-                 vt = mod(vt+1,2)
-                 next_sect_r = sectors(curr_sect_r)%next(vf,vt)
-                 if ( next_sect_r == -1 ) then
-                     is_string(i) = .false.; EXIT ! finish check, exit
-                 endif ! back if ( next_sect_r == -1 ) block
-                 string(right,i) = next_sect_r
-                 curr_sect_r = next_sect_r
-             endif ! back if ( mod(j,2) == 1 ) block
-         enddo ! over j={1,csize} loop
-
-! if it doesn't form a string, we cycle it, go to the next sector
-         if ( .not. is_string(i) ) then
-             CYCLE
-         endif ! back if ( .not. is_string(i) ) block
-
-! add the last sector to string, and check whether
-! string(csize+1,i) == string(1,i)
-! which is important for csize = 0
-         string(csize+1,i) = i
-
-! this case will generate a non-diagonal block, it will not contribute
-! to the trace
-         if ( next_sect_r /= next_sect_l ) then
-             is_string(i) = .false.
-         endif ! back if ( next_sect_r /= next_sect_l ) block
-     enddo ! over i={1,nsect} loop
-
-     return
-  end subroutine cat_make_string
+  end subroutine cat_trun_sector
 
   end module m_sect
 
@@ -1490,36 +1464,58 @@
 !!>>> declare global variables                                         <<<
 !!========================================================================
 
-! the first filled part
-     integer, public, save  :: fpart = 0
+! number of operators for each part
+     integer, public, save, allocatable  :: nop(:)
 
-! total number of matrices products
-     real(dp), public, save :: nprod = zero
-
-! whether to copy this part?
-     logical, public, save, allocatable  :: is_cp(:,:)
-
-! number of columns to be copied, in order to save copy time
-     integer, public, save, allocatable  :: nc_cp(:,:)
-
-! the start positions of fermion operators for each part
+! start index of operators for each part
      integer, public, save, allocatable  :: ops(:)
 
-! the end positions of fermion operators for each part
+! end index of operators for each part
      integer, public, save, allocatable  :: ope(:)
 
 ! how to treat each part when calculating trace
-! isave = 0: matrices product for this part has been calculated previously
-! isave = 1: this part should be recalculated, and the result must be
-!            stored in saved_p, if this Monte Caro move has been accepted.
-! isave = 2: this part is empty, we don't need to do anything with them.
-     integer, public, save, allocatable  :: isave(:,:,:)
+! 0: matrices product for this part has been calculated previously
+! 1: this part should be recalculated, and the result must be
+!    stored in saved_p, if this Monte Caro move has been accepted
+     integer, public, save, allocatable  :: renew(:)
+
+! determine which parts of saved_p are unsafe or invalid (we just call
+! it asynchronization), and have to be updated (or synchronized) for
+! future trace calculations
+! 0: synchronous, this part of saved_p is OK
+! 1: asynchronous, this part of saved_p is invalid
+! Q: why is renew not enough? why do we need async and is_cp?
+! A: because string is not always valid. string broken is possible. at
+! that time, even renew(j) is 1, some sectors in this part will be not
+! updated successfully. of course, saved_p for them will be not updated
+! as well. so we have to mark the corresponding saved_p as wrong value.
+! this is the role of async. due to the same reason, we cann't use renew
+! to control which parts of saved_p should be updated with saved_n only.
+! so we need is_cp as well.
+     integer, public, save, allocatable  :: async(:,:)
+
+! determine which parts of saved_p should be updated by the corresponding
+! parts of saved_n
+! 0: do nothing, saved_n and saved_p have the same values, or saved_n is
+!    unavailable, we can not use it to update saved_p
+! 1: saved_n will be copied to saved_p in ctqmc_make_evolve() subroutine
+     integer, public, save, allocatable  :: is_cp(:,:)
+
+! number of columns to be copied, in order to save copy time
+     integer, public, save, allocatable  :: nc_cp(:,:)
 
 ! saved parts of matrices product, for previous accepted configuration
      real(dp), public, save, allocatable :: saved_p(:,:,:,:)
 
 ! saved parts of matrices product, for new proposed configuration
      real(dp), public, save, allocatable :: saved_n(:,:,:,:)
+
+!!========================================================================
+!!>>> declare private variables                                        <<<
+!!========================================================================
+
+! status flag
+     integer, private :: istat
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -1529,7 +1525,6 @@
      public :: ctqmc_deallocate_memory_part
 
      public :: cat_make_npart
-     public :: cat_save_npart
      public :: cat_make_trace
 
   contains ! encapsulated functionality
@@ -1542,16 +1537,15 @@
   subroutine ctqmc_allocate_memory_part()
      implicit none
 
-! local variables
-! loop index
-     integer :: istat
-
 ! allocate memory
-     allocate(is_cp(npart,nsect),   stat=istat)
-     allocate(nc_cp(npart,nsect),   stat=istat)
-     allocate(ops(npart),           stat=istat)
-     allocate(ope(npart),           stat=istat)
-     allocate(isave(npart,nsect,2), stat=istat)
+     allocate(nop(npart),         stat=istat)
+     allocate(ops(npart),         stat=istat)
+     allocate(ope(npart),         stat=istat)
+
+     allocate(renew(npart),       stat=istat)
+     allocate(async(npart,nsect), stat=istat)
+     allocate(is_cp(npart,nsect), stat=istat)
+     allocate(nc_cp(npart,nsect), stat=istat)
 
      allocate(saved_p(max_dim_sect,max_dim_sect,npart,nsect), stat=istat)
      allocate(saved_n(max_dim_sect,max_dim_sect,npart,nsect), stat=istat)
@@ -1562,11 +1556,14 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     is_cp   = .false.
-     nc_cp   = 0
-     ops     = 0
-     ope     = 0
-     isave   = 1
+     nop   = 0
+     ops   = 0
+     ope   = 0
+
+     renew = 0
+     async = 0
+     is_cp = 0
+     nc_cp = 0
 
      saved_p = zero
      saved_n = zero
@@ -1582,11 +1579,15 @@
   subroutine ctqmc_deallocate_memory_part()
      implicit none
 
-     if ( allocated(is_cp)   ) deallocate(is_cp  )
-     if ( allocated(nc_cp)   ) deallocate(nc_cp  )
+     if ( allocated(nop)     ) deallocate(nop    )
      if ( allocated(ops)     ) deallocate(ops    )
      if ( allocated(ope)     ) deallocate(ope    )
-     if ( allocated(isave)   ) deallocate(isave  )
+
+     if ( allocated(renew)   ) deallocate(renew  )
+     if ( allocated(async)   ) deallocate(async  )
+     if ( allocated(is_cp)   ) deallocate(is_cp  )
+     if ( allocated(nc_cp)   ) deallocate(nc_cp  )
+
      if ( allocated(saved_p) ) deallocate(saved_p)
      if ( allocated(saved_n) ) deallocate(saved_n)
 
@@ -1597,8 +1598,9 @@
 !!>>> core service subroutines                                         <<<
 !!========================================================================
 
-!!>>> cat_make_npart: subroutine used to determine isave
-  subroutine cat_make_npart(cmode, csize, index_t_loc, tau_s, tau_e)
+!!>>> cat_make_npart: it is used to determine renew, which parts should
+!!>>> be recalculated, is_cp is also reseted in this subroutine
+  subroutine cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
      implicit none
 
 ! external arguments
@@ -1609,7 +1611,7 @@
      integer, intent(in)  :: csize
 
 ! local version of index_t
-     integer, intent(in)  :: index_t_loc(mkink)
+     integer, intent(in)  :: index_loc(mkink)
 
 ! imaginary time value of operator A, only valid in cmode = 1 or 2
      real(dp), intent(in) :: tau_s
@@ -1627,182 +1629,119 @@
      integer  :: tie
      integer  :: tip
 
-! number of fermion operators for each part
-     integer  :: nop(npart)
-
-! length of imaginary time axis for each part
+! length in imaginary time axis for each part
      real(dp) :: interval
 
-! init module arrays
+! evaluate interval at first
+     interval = beta / real(npart)
+
+! init key arrays
      nop = 0
      ops = 0
      ope = 0
 
-     fpart = 0
+! init global arrays (renew and is_cp)
+     renew = 0
+     is_cp = 0
 
-! copy isave
-     isave(:,:,1) = isave(:,:,2)
-
-! check the vadility of npart parameter
-     call s_assert(npart >= 1)
-
-! case 1: recalculate all the matrices products
-     if ( npart == 1 ) then
-         nop(1) = csize
-         ops(1) = 1
-         ope(1) = csize
-         fpart = 1
-         if ( nop(1) <= 0 ) then
-             isave(1,:,1) = 2
-         else
-             isave(1,:,1) = 1
-         endif ! back if ( nop(1) <= 0 ) block
-
-! case 2: use divide-and-conquer alogithm
-     else if ( npart > 1 ) then
-         interval = beta / real(npart)
 ! calculate number of operators for each part
-         do i=1,csize
-             j = ceiling( time_v( index_t_loc(i) ) / interval )
-             nop(j) = nop(j) + 1
-         enddo  ! over i={1,csize} loop
-! if no operators in this part, ignore them
-         do i=1,npart
-             if ( fpart == 0 .and. nop(i) > 0 ) then
-                 fpart = i
-             endif ! back if ( fpart == 0 .and. nop(i) > 0 ) block
-             if ( nop(i) <= 0 ) then
-                 isave(i,:,1) = 2
-             endif ! back if ( nop(i) <= 0 ) block
-         enddo ! over i={1,npart} loop
-! calculate the start and end index of operators for each part
-         do i=1,npart
-             if ( nop(i) > 0 ) then
-                 ops(i) = 1
-                 do j=1,i-1
-                     ops(i) = ops(i) + nop(j)
-                 enddo ! over j={1,i-1} loop
-                 ope(i) = ops(i) + nop(i) - 1
-             endif ! back if ( nop(i) > 0 ) block
-         enddo ! over i={1,npart} loop
+     do i=1,csize
+         j = ceiling( time_v( index_loc(i) ) / interval )
+         nop(j) = nop(j) + 1
+     enddo ! over i={1,csize} loop
 
-! case 2A: use some saved matrices products from previous accepted Monte Carlo move
-         if ( cmode == 1 .or. cmode == 2 ) then
+! calculate the start and end index of operators for each part
+     do i=1,npart
+         if ( nop(i) > 0 ) then
+             ops(i) = 1
+             do j=1,i-1
+                 ops(i) = ops(i) + nop(j)
+             enddo ! over j={1,i-1} loop
+             ope(i) = ops(i) + nop(i) - 1
+         endif ! back if ( nop(i) > 0 ) block
+     enddo ! over i={1,npart} loop
+
+! next we have to figure out which parts should be updated
+! case 1: only some parts need to be updated
+     if ( cmode == 1 .or. cmode == 2 ) then
+
 ! get the position of operator A and operator B
-             tis = ceiling( tau_s / interval )
-             tie = ceiling( tau_e / interval )
-! operator A:
-             if ( nop(tis) > 0 ) then
-                 isave(tis,:,1) = 1
-             endif ! back if ( nop(tis) > 0 ) block
+         tis = ceiling( tau_s / interval )
+         tie = ceiling( tau_e / interval )
+
+! determine the influence of operator A, which part should be recalculated
+         renew(tis) = 1
 ! special attention: if operator A is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
-             if ( nop(tis) > 0 ) then
-                 if ( tau_s >= time_v( index_t_loc( ope(tis) ) ) ) then
-                     tip = tis + 1
-                     do while ( tip <= npart )
-                         if ( nop(tip) > 0 ) then
-                             isave(tip,:,1) = 1; EXIT
-                         endif ! back if ( nop(tip) > 0 ) block
-                         tip = tip + 1
-                     enddo ! over do while ( tip <= npart ) loop
-                 endif ! back if ( tau_s >= time_v( index_t_loc( ope(tis) ) ) ) block
-! for remove an operator, nop(tis) may be zero
-             else
+         if ( nop(tis) > 0 ) then
+             if ( tau_s >= time_v( index_loc( ope(tis) ) ) ) then
                  tip = tis + 1
                  do while ( tip <= npart )
                      if ( nop(tip) > 0 ) then
-                         isave(tip,:,1) = 1; EXIT
+                         renew(tip) = 1; EXIT
                      endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
-                 enddo ! over do while ( tip <= npart ) loop
-             endif ! back if ( nop(tis) > 0 ) block
+                 enddo ! over do while loop
+             endif ! back if ( tau_s >= time_v( index_t( ope(tis) ) ) ) block
+         else
+             tip = tis + 1
+             do while ( tip <= npart )
+                 if ( nop(tip) > 0 ) then
+                     renew(tip) = 1; EXIT
+                 endif ! back if ( nop(tip) > 0 ) block
+                 tip = tip + 1
+             enddo ! over do while loop
+         endif ! back if ( nop(tis) > 0 ) block
 
-! operator B:
-             if ( nop(tie) > 0 ) then
-                 isave(tie,:,1) = 1
-             endif ! back if ( nop(tie) > 0 ) block
+! determine the influence of operator B, which part should be recalculated
+         renew(tie) = 1
 ! special attention: if operator B is on the left or right boundary, then
 ! the neighbour part should be recalculated as well
-             if ( nop(tie) > 0 ) then
-                 if ( tau_e >= time_v( index_t_loc( ope(tie) ) ) ) then
-                     tip = tie + 1
-                     do while ( tip <= npart )
-                         if ( nop(tip) > 0 ) then
-                             isave(tip,:,1) = 1; EXIT
-                         endif ! back if ( nop(tip) > 0 ) block
-                         tip = tip + 1
-                     enddo ! over do while ( tip <= npart ) loop
-                 endif ! back if ( tau_e >= time_v( index_t_loc( ope(tie) ) ) ) block
-! for remove an operator, nop(tie) may be zero
-             else
+         if ( nop(tie) > 0 ) then
+             if ( tau_e >= time_v( index_loc( ope(tie) ) ) ) then
                  tip = tie + 1
                  do while ( tip <= npart )
                      if ( nop(tip) > 0 ) then
-                         isave(tip,:,1) = 1; EXIT
+                         renew(tip) = 1; EXIT
                      endif ! back if ( nop(tip) > 0 ) block
                      tip = tip + 1
-                 enddo ! over do while ( tip <= npart ) loop
-             endif ! back if ( nop(tie) > 0 ) block
+                 enddo ! over do while loop
+             endif ! back if ( tau_e >= time_v( index_t( ope(tie) ) ) ) block
+         else
+             tip = tie + 1
+             do while ( tip <= npart )
+                 if ( nop(tip) > 0 ) then
+                     renew(tip) = 1; EXIT
+                 endif ! back if ( nop(tip) > 0 ) block
+                 tip = tip + 1
+             enddo ! over do while loop
+         endif ! back if ( nop(tie) > 0 ) block
 
-! case 2B: recalculate all the matrices products
-         else if ( cmode == 3 .or. cmode == 4 ) then
-             do i=1,nsect
-                 do j=1,npart
-                     if ( isave(j,i,1) == 0 ) then
-                         isave(j,i,1) = 1
-                     endif ! back if ( isave(j,i,1) == 0 ) block
-                 enddo ! over j={1,npart} loop
-             enddo ! over i={1,nsect} loop
-         endif ! back if (cmode == 1 .or. cmode == 2) block
-     endif ! back if ( npart == 1 ) block
+! case 2: all parts should be updated
+     else
+         renew = 1
+     endif
 
      return
   end subroutine cat_make_npart
 
-!!>>> cat_save_npart: copy data if proposed action has been accepted
-  subroutine cat_save_npart()
-     implicit none
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! copy save-state for all the parts
-     isave(:,:,2) = isave(:,:,1)
-
-! when npart > 1, we used the divide-and-conquer algorithm, and had to
-! save the change matrices products when proposed moves were accepted
-     if ( npart > 1 ) then
-         do i=1,nsect
-             do j=1,npart
-                 if ( is_cp(j,i) ) then
-                     saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
-                 endif ! back if ( is_cp(j,i) ) block
-             enddo ! over j={1,npart} loop
-         enddo ! over i={1,nsect} loop
-     endif ! back if ( npart > 1 ) block
-
-     return
-  end subroutine cat_save_npart
-
-!!>>> cat_make_trace: calculate the trace for one sector
-  subroutine cat_make_trace(csize, string, index_t_loc, expt_t_loc, trace)
+!!>>> cat_make_trace: calculate the contribution to final trace for
+!!>>> a given string
+  subroutine cat_make_trace(csize, string, index_loc, expt_loc, trace)
      implicit none
 
 ! external variables
 ! number of total fermion operators
      integer, intent(in)   :: csize
 
-! evolutional string for this sector
+! evolution string for this sector
      integer, intent(in)   :: string(csize+1)
 
-! address index of fermion operators
-     integer, intent(in)   :: index_t_loc(mkink)
+! memory address index of fermion operators
+     integer, intent(in)   :: index_loc(mkink)
 
 ! diagonal elements of last time-evolution matrices
-     real(dp), intent(in)  :: expt_t_loc(ncfgs)
+     real(dp), intent(in)  :: expt_loc(ncfgs)
 
 ! the calculated trace of this sector
      real(dp), intent(out) :: trace
@@ -1834,6 +1773,9 @@
      integer  :: sect1
      integer  :: sect2
 
+! the first part with non-zero fermion operators
+     integer  :: fpart
+
 ! counter for fermion operators
      integer  :: counter
 
@@ -1841,20 +1783,90 @@
      real(dp) :: mat_r(max_dim_sect,max_dim_sect)
      real(dp) :: mat_t(max_dim_sect,max_dim_sect)
 
-! next we perform time evolution from right to left: beta <- 0
-! initialize some arrays
+! initialize dummy arrays
      mat_r = zero
      mat_t = zero
 
 ! select the first sector in the string
      isect = string(1)
-     dim1  = sectors(string(1))%ndim
+     dim1  = sectors( string(1) )%ndim
 
+! determine fpart
+     fpart = 0
+     do i=1,npart
+         if ( nop(i) > 0 ) then
+             fpart = i; EXIT
+         endif ! back if ( nop(i) > 0 ) block
+     enddo ! over i={1,npart} loop
+
+! next we perform time evolution from left to right: 0 -> \beta
 ! loop over all the parts
      do i=1,npart
 
+! empty part, we just skip it
+         if ( nop(i) == 0 ) CYCLE
+
+! this part should be recalcuated
+         if ( renew(i) == 1 .or. async(i,isect) == 1 ) then
+             sect1 = string(ope(i)+1)
+             sect2 = string(ops(i))
+             dim4 = sectors(sect2)%ndim
+             saved_n(:,:,i,isect) = zero
+
+! set its copy status
+             is_cp(i,isect) = 1
+             nc_cp(i,isect) = dim4
+
+! loop over all the fermion operators in this part
+             counter = 0
+             do j=ops(i),ope(i)
+                 counter = counter + 1
+                 indx = sectors( string(j)   )%istart
+                 dim2 = sectors( string(j+1) )%ndim
+                 dim3 = sectors( string(j)   )%ndim
+
+! multiply the diagonal matrix of time evolution operator
+                 if ( counter > 1 ) then
+                     do l=1,dim4
+                         do k=1,dim3
+                             mat_t(k,l) = saved_n(k,l,i,isect) * expt_v(indx+k-1,index_loc(j))
+                         enddo ! over k={1,dim3} loop
+                     enddo ! over l={1,dim4} loop
+                 else
+                     mat_t = zero
+                     do k=1,dim3
+                         mat_t(k,k) = expt_v(indx+k-1,index_loc(j))
+                     enddo ! over k={1,dim3} loop
+                 endif ! back if ( counter > 1 ) block
+
+! multiply the matrix of fermion operator
+                 vt = type_v( index_loc(j) )
+                 vf = flvr_v( index_loc(j) )
+                 call dgemm( 'N', 'N', dim2, dim4, dim3, &
+                                                    one, &
+                   sectors( string(j) )%fmat(vf,vt)%val, &
+                                            dim2, mat_t, &
+                                           max_dim_sect, &
+                             zero, saved_n(:,:,i,isect), &
+                                           max_dim_sect )
+             enddo ! over j={ops(i),ope(i)} loop
+
+! multiply this part with the rest parts
+             if ( i > fpart ) then
+                 call dgemm( 'N', 'N', dim2, dim1, dim4, &
+                              one, saved_n(:,:,i,isect), &
+                                           max_dim_sect, &
+                                                  mat_r, &
+                                           max_dim_sect, &
+                                            zero, mat_t, &
+                                           max_dim_sect )
+                 mat_r(:,1:dim1) = mat_t(:,1:dim1)
+             else
+                 mat_r(:,1:dim1) = saved_n(:,1:dim1,i,isect)
+             endif ! back if ( i > fpart ) block
+
 ! this part has been calculated previously, just use its results
-         if ( isave(i,isect,1) == 0 ) then
+         else
              sect1 = string(ope(i)+1)
              sect2 = string(ops(i))
              dim2 = sectors(sect1)%ndim
@@ -1867,110 +1879,39 @@
                                            max_dim_sect, &
                               zero, mat_t, max_dim_sect )
                  mat_r(:,1:dim1) = mat_t(:,1:dim1)
-                 nprod = nprod + one
              else
                  mat_r(:,1:dim1) = saved_p(:,1:dim1,i,isect)
              endif ! back if ( i > fpart ) block
 
-! this part should be recalcuated
-         else if ( isave(i,isect,1) == 1 ) then
-             sect1 = string(ope(i)+1)
-             sect2 = string(ops(i))
-             dim4 = sectors(sect2)%ndim
-             saved_n(:,:,i,isect) = zero
-
-! loop over all the fermion operators in this part
-             counter = 0
-             do j=ops(i),ope(i)
-                 counter = counter + 1
-                 indx = sectors(string(j)  )%istart
-                 dim2 = sectors(string(j+1))%ndim
-                 dim3 = sectors(string(j)  )%ndim
-
-! multiply the diagonal matrix of time evolution operator
-                 if ( counter > 1 ) then
-                     do l=1,dim4
-                         do k=1,dim3
-                             mat_t(k,l) = saved_n(k,l,i,isect) * expt_v(indx+k-1,index_t_loc(j))
-                         enddo ! over k={1,dim3} loop
-                     enddo ! over l={1,dim4} loop
-                     nprod = nprod + one
-                 else
-                     mat_t = zero
-                     do k=1,dim3
-                         mat_t(k,k) = expt_v(indx+k-1,index_t_loc(j))
-                     enddo ! over k={1,dim3} loop
-                 endif ! back if ( counter > 1 ) block
-
-! multiply the matrix of fermion operator
-                 vt = type_v( index_t_loc(j) )
-                 vf = flvr_v( index_t_loc(j) )
-                 call dgemm( 'N', 'N', dim2, dim4, dim3, &
-                                                    one, &
-                     sectors(string(j))%fmat(vf,vt)%val, &
-                                            dim2, mat_t, &
-                                           max_dim_sect, &
-                             zero, saved_n(:,:,i,isect), &
-                                           max_dim_sect )
-                 nprod = nprod + one
-             enddo ! over j={ops(i),ope(i)} loop
-
-! set its save status and copy status
-             isave(i,isect,1) = 0
-             is_cp(i,isect) = .true.
-             nc_cp(i,isect) = dim4
-
-! multiply this part with the rest parts
-             if ( i > fpart ) then
-                 call dgemm( 'N', 'N', dim2, dim1, dim4, &
-                              one, saved_n(:,:,i,isect), &
-                                           max_dim_sect, &
-                                                  mat_r, &
-                                           max_dim_sect, &
-                                            zero, mat_t, &
-                                           max_dim_sect )
-                 mat_r(:,1:dim1) = mat_t(:,1:dim1)
-                 nprod = nprod + one
-             else
-                 mat_r(:,1:dim1) = saved_n(:,1:dim1,i,isect)
-             endif ! back if ( i > fpart ) block
-
-! no operators in this part, do nothing
-         else if ( isave(i,isect,1) == 2 ) then
-             CYCLE
-         endif ! back if ( isave(i,isect,1) == 0 )  block
+         endif ! back if ( renew(i) == 1 .or. async(i,isect) == 1 )  block
 
 ! setup the start sector for next part
          isect = sect1
-
-     enddo  ! over i={1,npart} loop
+     enddo ! over i={1,npart} loop
 
 ! special treatment of the last time evolution operator
-     indx = sectors(string(1))%istart
+     indx = sectors( string(1) )%istart
 
 ! no fermion operators
      if ( csize == 0 ) then
          do k=1,dim1
-             mat_r(k,k) = expt_t_loc(indx+k-1)
+             mat_r(k,k) = expt_loc(indx+k-1)
          enddo ! over k={1,dim1} loop
 ! multiply the last time evolution operator
      else
          do l=1,dim1
              do k=1,dim1
-                 mat_r(k,l) = mat_r(k,l) * expt_t_loc(indx+k-1)
+                 mat_r(k,l) = mat_r(k,l) * expt_loc(indx+k-1)
              enddo ! over k={1,dim1} loop
          enddo ! over l={1,dim1} loop
-         nprod = nprod + one
      endif ! back if ( csize == 0 ) block
 
-! store final product
-     sectors( string(1) )%prod(:,:,1) = mat_r(1:dim1,1:dim1)
-
-! calculate the trace
+! calculate the trace and store the final product
      trace = zero
-     do j=1,sectors(string(1))%ndim
+     do j=1,sectors( string(1) )%ndim
          trace = trace + mat_r(j,j)
-     enddo ! over j={1,sectors(string(1))%ndim} loop
+         sectors( string(1) )%prod(j) = mat_r(j,j)
+     enddo ! over j={1,sectors( string(1) )%ndim} loop
 
      return
   end subroutine cat_make_trace
