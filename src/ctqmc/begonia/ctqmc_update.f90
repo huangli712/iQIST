@@ -159,7 +159,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_insert_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_insert_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the insert statistics
@@ -295,7 +295,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_remove_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_remove_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the remove statistics
@@ -424,7 +424,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_lshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_lshift_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the lshift statistics
@@ -553,7 +553,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_rshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_rshift_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the rshift statistics

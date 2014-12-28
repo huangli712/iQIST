@@ -796,6 +796,7 @@
      nop     = 0
      ops     = 0
      ope     = 0
+
      renew   = 0
      async   = 0
      is_cp   = 0

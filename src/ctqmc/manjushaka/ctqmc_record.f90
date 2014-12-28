@@ -323,9 +323,9 @@
 !!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
-     use constants, only : dp, zero, one
+     use constants, only : dp, zero
 
-     use control, only : nband, norbs, ncfgs
+     use control, only : norbs, ncfgs
      use control, only : U, mune, beta
      use context, only : ckink, matrix_ptrace
      use context, only : paux, nmat, nnmat
@@ -340,54 +340,76 @@
 ! loop index
      integer  :: i
      integer  :: j
-     integer  :: k
 
-! loop index for flavor channel
-     integer  :: flvr
+! start index of sectors
+     integer  :: indx
 
-! dummy variables
-     real(dp) :: raux1
-     real(dp) :: raux2
-
-! dummy array, denote as current occupation number
-     real(dp) :: nvec(norbs)
+! current occupation number and Sz
+     real(dp) :: nele
+     real(dp) :: sz
 
 ! current probability for eigenstates
      real(dp) :: cprob(ncfgs)
 
-! evaluate cprob at first, it is current atomic propability
+! current probability for sectors
+     real(dp) :: sprob(nsect)
+
+! evaluate cprob at first, it is current atomic probability
      do i=1,ncfgs
          cprob(i) = diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop
 
-! evaluate raux2, it is Tr ( e^{- \beta H} )
-! i think it is equal to matrix_ptrace, to be checked
-     raux2 = zero
+! evaluate sprob, it is current sector prob
+     sprob = zero
      do i=1,nsect
+         indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
-             raux2 = raux2 + sectors(i)%prod(j,j,2)
+             sprob(i) = sprob(i) + cprob(indx+j-1)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
-     nvec = zero
+! evaluate the total occupation number
+! this algorithm is somewhat rough, not very accurate
+     nele = zero
+     do i=1,nsect
+         nele = nele + sectors(i)%nele * sprob(i)
+     enddo ! over i={1,nsect} loop
+
+! evaluate the total Sz
+! this algorithm is somewhat rough, and only useful when the Sz quantum
+! number is used to generate the atom.cix
+     sz = zero
+     do i=1,nsect
+         sz = sz + sectors(i)%sz * sprob(i)
+     enddo ! over i={1,nsect} loop
+
+! evaluate occupation matrix: < n_i >
+! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i ) / Tr ( e^{- \beta H} )
+!-------------------------------------------------------------------------
      nmat = zero
+! this feature will not be implemented for pansy code
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate double occupation matrix: < n_i n_j >
+! equation : Tr ( e^{- \beta H} c^{\dag}_i c_i c^{\dag}_j c_j ) / Tr ( e^{- \beta H} )
+!-------------------------------------------------------------------------
      nnmat = zero
+! this feature will not be implemented for pansy code
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^2>
 !-------------------------------------------------------------------------
-     paux(6) = paux(6) + ( sum(nvec) )**2
+     paux(6) = paux(6) + nele ** 2
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^1>
 !-------------------------------------------------------------------------
-     paux(5) = paux(5) + sum(nvec)
+     paux(5) = paux(5) + nele
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
 !-------------------------------------------------------------------------
-     do flvr=1,nband
-         paux(4) = paux(4) + ( nvec(flvr) - nvec(flvr+nband) )
-     enddo ! over flvr={1,nband} loop
+     paux(4) = paux(4) + sz
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate kinetic energy: ekin
@@ -409,7 +431,7 @@
 ! evaluate total energy: etot
 ! equation : E_{tot} = < H_{loc} > - T < k > + \mu N
 !-------------------------------------------------------------------------
-     paux(1) = paux(2) + paux(3) + mune * sum(nvec)
+     paux(1) = paux(2) + paux(3) + mune * nele
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
@@ -1489,7 +1511,7 @@
 
      use m_sect, only : nsect
      use m_sect, only : sectors
-     use m_sect, only : is_trunc
+     use m_sect, only : sectoff
 
      implicit none
 
@@ -1530,7 +1552,7 @@
          do j=1,nsect
              l = sectors(j)%next(i,0)
              if ( l == -1 ) CYCLE
-             if ( is_trunc(j) .and. is_trunc(l) ) CYCLE
+             if ( sectoff(j) .eqv. .true. .or. sectoff(l) .eqv. .true. ) CYCLE
              indx1 = sectors(j)%istart
              indx2 = sectors(l)%istart
              do n=1,sectors(j)%ndim
