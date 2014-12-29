@@ -16,11 +16,12 @@ GNU General Public License Version 3
 
 ### Features
 
-* Density-density interaction
-* General interaction
-* SOC interaction
-* Hubbard-Holstein model
-* Frequency-dependent interaction
+* Model
+  * Density-density interaction
+  * General interaction
+  * SOC interaction
+  * Hubbard-Holstein model
+  * Frequency-dependent interaction
 
 * Orthogonal polynomial representation
 * Kernel polynomial representation
