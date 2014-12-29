@@ -14,6 +14,39 @@ v0.4.0
 
 GNU General Public License Version 3
 
+### Features
+
+* Density-density interaction
+* General interaction
+* SOC interaction
+* Hubbard-Holstein model
+* Frequency-dependent interaction
+
+* Orthogonal polynomial representation
+* Kernel polynomial representation
+* Improved estimator for self-energy
+
+
+* Single-particle Green's function
+* Single-particle Green's function
+* Two-particle correlation function
+* Local irreducible vertex function
+* Self-energy function
+* Histogram of perturbation expansion order
+* Kinetic and potential energies
+* (Double) occupation numbers, magnetic moment
+* Atomic state probability
+* Spin-spin correlation function
+* Orbital-orbital correlation function
+* Autocorrelation function and autocorrelation time
+
+* Divide-and-conquer algorithm
+* Sparse matrix multiplication
+* Good quantum numbers
+* Skip listing trick
+* Lazy trace evaluation
+* Dynamical truncation approximation
+
 ### Installation
 * Full Installation
 ```sh
