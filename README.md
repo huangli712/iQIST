@@ -95,7 +95,7 @@ Enjoy it!
 
 If you want to know more about the compiling system implemented in the iQIST, please read the manual carefully.
 
-### Document
+### Documentation
 
 see iQIST/doc/manual/ug.pdf (We are sorry. Currently this manual is far away from completeness).
 
