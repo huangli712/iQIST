@@ -18,35 +18,50 @@ GNU General Public License Version 3
 
 * Model
   * Density-density interaction
-  * General interaction
-  * SOC interaction
+  * General interaction (Slater or Kanamori scheme)
+  * SOC interaction and crystal field splitting
   * Hubbard-Holstein model
   * Frequency-dependent interaction
-
-* Orthogonal polynomial representation
-* Kernel polynomial representation
-* Improved estimator for self-energy
-
-
-* Single-particle Green's function
-* Single-particle Green's function
-* Two-particle correlation function
-* Local irreducible vertex function
-* Self-energy function
-* Histogram of perturbation expansion order
-* Kinetic and potential energies
-* (Double) occupation numbers, magnetic moment
-* Atomic state probability
-* Spin-spin correlation function
-* Orbital-orbital correlation function
-* Autocorrelation function and autocorrelation time
-
-* Divide-and-conquer algorithm
-* Sparse matrix multiplication
-* Good quantum numbers
-* Skip listing trick
-* Lazy trace evaluation
-* Dynamical truncation approximation
+* Measurement tricks
+  * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
+  * Kernel polynomial representation
+  * Improved estimator for self-energy
+* Observables
+  * Single-particle Green's function in imaginary time space
+  * Single-particle Green's function in matsubara frequency space
+  * Two-particle correlation function in matsubara frequency space
+  * Local irreducible vertex function in matsubara frequency space
+  * Pair susceptibility in matsubara frequency space
+  * Self-energy function in matsubara frequency space
+  * Histogram of perturbation expansion order
+  * Kinetic and potential energies
+  * (Double) occupation numbers, magnetic moment
+  * Atomic state probability
+  * Spin-spin correlation function
+  * Orbital-orbital correlation function
+  * Autocorrelation function and autocorrelation time
+* Fast algorithms
+  * Segment algorithm for density-density interaction
+  * Divide-and-conquer algorithm
+  * Sparse matrix multiplication
+  * Good quantum numbers (N, Sz, Jz, PS)
+  * Skip listing trick
+  * Lazy trace evaluation
+  * Dynamical truncation approximation
+* Parallelism
+  * MPI
+* API
+  * Python binding
+  * Input file generator by Python
+  * Fortran binding
+* Preprocessing
+  * Atomic eigenvalue problem solver
+* Postprocessing
+  * Maximum entropy method
+  * Stochastic analytical continuation
+  * Kramers-Kronig transformation
+  * Pade approximation
+  * Polynomial fitting for self-energy function
 
 ### Installation
 * Full Installation
@@ -69,7 +84,7 @@ $ cd ../../bin
 $ ./setup.sh
 ```
 
-Enjoy it! 
+Enjoy it!
 
 If you want to know more about the compiling system implemented in the iQIST, please read the manual carefully.
 
@@ -96,7 +111,7 @@ arXiv:1409.7573 (2014)
 ### Contact
 
 ```sh
-Li Huang 
+Li Huang
 Department of Physics, Fribourg University, Switzerland
 email: huangli712 at gmail.com
 ```
@@ -106,6 +121,6 @@ or
 ```sh
 Yilin Wang
 Institute of Physics, Chinese Academy of Sciences, Beijing, PRC
-email: qhwyl2006 at 126.com 
+email: qhwyl2006 at 126.com
 ```
 
