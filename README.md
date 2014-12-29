@@ -17,11 +17,11 @@ GNU General Public License Version 3
 ### Features
 
 * Model
-  * Density-density interaction
-  * General interaction (Slater or Kanamori scheme)
-  * SOC interaction and crystal field splitting
-  * Hubbard-Holstein model
-  * Frequency-dependent interaction
+    * Density-density interaction
+    * General interaction (Slater or Kanamori scheme)
+    * SOC interaction and crystal field splitting
+    * Hubbard-Holstein model
+    * Frequency-dependent interaction
 
 * Measurement tricks
   * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
