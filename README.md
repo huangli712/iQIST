@@ -24,51 +24,51 @@ GNU General Public License Version 3
     * Frequency-dependent interaction
 
 * Measurement tricks
-  * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
-  * Kernel polynomial representation
-  * Improved estimator for self-energy
+    * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
+    * Kernel polynomial representation
+    * Improved estimator for self-energy
 
 * Observables
-  * Single-particle Green's function in imaginary time space
-  * Single-particle Green's function in matsubara frequency space
-  * Two-particle correlation function in matsubara frequency space
-  * Local irreducible vertex function in matsubara frequency space
-  * Pair susceptibility in matsubara frequency space
-  * Self-energy function in matsubara frequency space
-  * Histogram of perturbation expansion order
-  * Kinetic and potential energies
-  * (Double) occupation numbers, magnetic moment
-  * Atomic state probability
-  * Spin-spin correlation function
-  * Orbital-orbital correlation function
-  * Autocorrelation function and autocorrelation time
+    * Single-particle Green's function in imaginary time space
+    * Single-particle Green's function in matsubara frequency space
+    * Two-particle correlation function in matsubara frequency space
+    * Local irreducible vertex function in matsubara frequency space
+    * Pair susceptibility in matsubara frequency space
+    * Self-energy function in matsubara frequency space
+    * Histogram of perturbation expansion order
+    * Kinetic and potential energies
+    * (Double) occupation numbers, magnetic moment
+    * Atomic state probability
+    * Spin-spin correlation function
+    * Orbital-orbital correlation function
+    * Autocorrelation function and autocorrelation time
 
 * Fast algorithms
-  * Segment algorithm for density-density interaction
-  * Divide-and-conquer algorithm
-  * Sparse matrix multiplication
-  * Good quantum numbers (N, Sz, Jz, PS)
-  * Skip listing trick
-  * Lazy trace evaluation
-  * Dynamical truncation approximation
+    * Segment algorithm for density-density interaction
+    * Divide-and-conquer algorithm
+    * Sparse matrix multiplication
+    * Good quantum numbers (N, Sz, Jz, PS)
+    * Skip listing trick
+    * Lazy trace evaluation
+    * Dynamical truncation approximation
 
 * Parallelism
-  * MPI
+    * MPI
 
 * API
-  * Python binding
-  * Input file generator by Python
-  * Fortran binding
+    * Python binding
+    * Input file generator by Python
+    * Fortran binding
 
 * Preprocessing
-  * Atomic eigenvalue problem solver
+    * Atomic eigenvalue problem solver
 
 * Postprocessing
-  * Maximum entropy method
-  * Stochastic analytical continuation
-  * Kramers-Kronig transformation
-  * Pade approximation
-  * Polynomial fitting for self-energy function
+    * Maximum entropy method
+    * Stochastic analytical continuation
+    * Kramers-Kronig transformation
+    * Pade approximation
+    * Polynomial fitting for self-energy function
 
 ### Installation
 * Full Installation
