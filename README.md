@@ -22,10 +22,12 @@ GNU General Public License Version 3
   * SOC interaction and crystal field splitting
   * Hubbard-Holstein model
   * Frequency-dependent interaction
+
 * Measurement tricks
   * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
   * Kernel polynomial representation
   * Improved estimator for self-energy
+
 * Observables
   * Single-particle Green's function in imaginary time space
   * Single-particle Green's function in matsubara frequency space
@@ -40,6 +42,7 @@ GNU General Public License Version 3
   * Spin-spin correlation function
   * Orbital-orbital correlation function
   * Autocorrelation function and autocorrelation time
+
 * Fast algorithms
   * Segment algorithm for density-density interaction
   * Divide-and-conquer algorithm
@@ -48,14 +51,18 @@ GNU General Public License Version 3
   * Skip listing trick
   * Lazy trace evaluation
   * Dynamical truncation approximation
+
 * Parallelism
   * MPI
+
 * API
   * Python binding
   * Input file generator by Python
   * Fortran binding
+
 * Preprocessing
   * Atomic eigenvalue problem solver
+
 * Postprocessing
   * Maximum entropy method
   * Stochastic analytical continuation
