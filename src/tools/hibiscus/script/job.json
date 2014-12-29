@@ -1,30 +1,48 @@
 {
   "jobs" : [
   {
-      "job"    : "~/iqist/working/ctqmc/standard",
+      "job"    : "/Users/fancy/Swiss/iqist/working/ctqmc/standard/1a",
       "ref"    : "~/iqist/working/ctqmc/ref",
       "mpi"    : true,
       "nprocs" : 16,
-      "exe"    : "~/iqist/bin/azalea.x",
+      "exe"    : "/Users/fancy/Swiss/iqist/bin/azalea.x",
       "before" : null,
       "after"  : null
   },
   {
-      "job"    : "~/iqist/working/ctqmc/standard",
-      "ref"    : "~/iqist/working/ctqmc/ref",
+      "job"    : "/Users/fancy/Swiss/iqist/working/ctqmc/standard/1b",
+      "ref"    : "/Users/fancy/Swiss/iqist/working/ctqmc/ref",
       "mpi"    : true,
       "nprocs" : 16,
-      "exe"    : "~/iqist/bin/begonia.x",
-      "before" : "~/iqist/bin/jasmine.x",
+      "exe"    : "/Users/fancy/Swiss/iqist/bin/azalea.x",
+      "before" : null,
       "after"  : null
   },
   {
-      "job"    : "~/iqist/working/ctqmc/standard",
-      "ref"    : "~/iqist/working/ctqmc/ref",
+      "job"    : "/Users/fancy/Swiss/iqist/working/ctqmc/standard/1c",
+      "ref"    : "/Users/fancy/Swiss/iqist/working/ctqmc/ref",
       "mpi"    : true,
       "nprocs" : 16,
-      "exe"    : "~/iqist/bin/pansy.x",
-      "before" : "~/iqist/bin/jasmine.x",
+      "exe"    : "/Users/fancy/Swiss/iqist/bin/azalea.x",
+      "before" : null,
+      "after"  : null
+  },
+  {
+      "job"    : "/Users/fancy/Swiss/iqist/working/ctqmc/standard/1d",
+      "ref"    : "/Users/fancy/Swiss/iqist/working/ctqmc/ref",
+      "mpi"    : true,
+      "nprocs" : 16,
+      "exe"    : "/Users/fancy/Swiss/iqist/bin/azalea.x",
+      "before" : null,
+      "after"  : null
+  },
+  {
+      "job"    : "/Users/fancy/Swiss/iqist/working/ctqmc/standard/1e",
+      "ref"    : "/Users/fancy/Swiss/iqist/working/ctqmc/ref",
+      "mpi"    : true,
+      "nprocs" : 16,
+      "exe"    : "/Users/fancy/Swiss/iqist/bin/azalea.x",
+      "before" : null,
       "after"  : null
   }
   ]
