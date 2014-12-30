@@ -1,6 +1,622 @@
 \chapter{PARAMETERS}
-\section{isscf}
+\section{solver.ctqmc.in and solver.hfqmc.in}
 
+In this section, we will introduce all of the parameters which can be used in the solver.ctqmc.in (for {\azalea}, {\gardenia}, {\narcissus}, {\begonia}, {\lavender}, {\pansy}, and {\manjushaka} components) and solver.hfqmc.in (for {\daisy} component) files. For more information, the uses can also refer to the comments in corresponding ctqmc\_control.f90 file.
+
+\subsection{Jp}
+{\color{red}DEFINITION:} Strength of pair-hopping term in the interaction term.
+
+{\color{green}DATATYPE:} real(dp).
+
+{\color{blue}DEFAULT:} 0.0\_dp.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{Js}
+{\color{red}DEFINITION:} Streangth of spin-flip term in the interaction term.
+
+{\color{green}DATATYPE:} real(dp).
+
+{\color{blue}DEFAULT:} 0.0\_dp.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{Jz}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} real(dp).
+
+{\color{blue}DEFAULT:} 0.0\_dp.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{U}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} real(dp).
+
+{\color{blue}DEFAULT:} 4.0\_dp.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{Uc}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} real(dp).
+
+{\color{blue}DEFAULT:} 4.0\_dp.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{Uv}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} real(dp).
+
+{\color{blue}DEFAULT:} 4.0\_dp.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{alpha}
+{\color{red}DEFINITION:} Mixing parameter $\alpha$, used to mix the old and new self-energy function to produce a newer one.
+
+{\color{green}DATATYPE:} real(dp).
+
+{\color{blue}DEFAULT:} 0.7\_dp.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:} $\Sigma_{\text{new}} = \alpha \Sigma_{\text{new}} + (1.0 - \alpha) \Sigma_{\text{old}}$
+
+{\color{olive}COMMENT:} If you have trouble in obtaining convergence, you can decrease it to 0.5\_dp or even 0.2\_dp.
+
+\subsection{beta}
+{\color{red}DEFINITION:} Inversion of temperature $\beta (= 1.0 / \text{T})$. Its unit is eV$^{-1}$.
+
+{\color{green}DATATYPE:} real(dp).
+
+{\color{blue}DEFAULT:} 8.0\_dp
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:} The real temperature is 11604.505008098/$\beta$ Kelvin.
+
+\subsection{chgrd}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{chmax}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{ifast}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\manjushaka}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{isbin}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{isort}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{isscf}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{isscr}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\narcissus}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{isspn}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{issun}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{isvrt}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{itrun}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\manjushaka}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{lc}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} real(dp).
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\narcissus}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{legrd}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:}
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{lemax}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{mfreq}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:} 8193.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{mkink}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:} 1024.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{mstep}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\daisy}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{mune}
+{\color{red}DEFINITION:} Chemical potential or Fermi level $\mu$.
+
+{\color{green}DATATYPE:} real(dp)
+
+{\color{blue}DEFAULT:} 2.0\_dp.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:} For single-band Hubbard mode, the half-filling condition is $\mu = U/2.0$.
+
+\subsection{nband}
+{\color{red}DEFINITION:} Number of bands ($N_{\text{band}}$).
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:} 1
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:} In {\iqist}, when we say nband, we always do not consider the freedom of spin. So for $d-$electron system, it should be a five-band model (nband = 5), while for $f-$electron, it should be a seven-band model (nband = 7).
+
+\subsection{nbfrq}
+{\color{red}DEFINITION:} Number of bosonic frequencies.
+
+{\color{green}DATATYPE:} integer
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{ncarlo}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{ncfgs}
+{\color{red}DEFINITION:} Number of atomic configurations $N_{\text{cfgs}}$.
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:} 4.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:} ncfgs = $2^{\text{norbs}}$.
+
+{\color{olive}COMMENT:} Attention, the ncfgs should be consistent with nband, norbs, and nspin. The {\iqist} will not check the 
+correctness of them.
+
+\subsection{nclean}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{nffrq}
+{\color{red}DEFINITION:} Number of fermionic frequencies.
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{nflip}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{nfreq}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{niter}
+{\color{red}DEFINITION:} Number of DMFT self-consistent iterations.
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:} 20.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{nmonte}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{norbs}
+{\color{red}DEFINITION:} Number of orbitals ($N_{\text{orbs}}$).
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:} 2.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{npart}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:} 4.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{nsing}
+{\color{red}DEFINITION:} Number of Ising auxiliary fields.
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\daisy}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{nspin}
+{\color{red}DEFINITION:} Number of spin projections.
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:} 2.
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:} DO NOT MODIFY IT. IT MUST BE 2 ALWAYS.
+
+\subsection{nsweep}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{ntherm}
+{\color{red}DEFINITION:} Number of thermalization (warmup) steps.
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{ntime}
+{\color{red}DEFINITION:} Number of time slices.
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} ALL.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{nwrite}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:}
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{nzero}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\begonia} and {\lavender}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{part}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} integer.
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\begonia}, {\lavender}, {\pansy}, and {\manjushaka}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\subsection{wc}
+{\color{red}DEFINITION:}
+
+{\color{green}DATATYPE:} real(dp)
+
+{\color{blue}DEFAULT:}
+
+{\color{brown}COMPONENT:} Only for {\narcissus}.
+
+{\color{purple}BEHAVIOR:}
+
+{\color{olive}COMMENT:}
+
+\section{entropy.in and sac.in}
+\subsection{ainit}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -13,7 +629,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{issun}
+\subsection{beta}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -26,7 +642,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{isspn}
+\subsection{devia}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -39,7 +655,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{isbin}
+\subsection{eta1}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -52,7 +668,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{isort}
+\subsection{eta2}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -65,7 +681,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{isvrt}
+\subsection{legrd}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -78,7 +694,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{isscr}
+\subsection{lemax}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -91,7 +707,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nband}
+\subsection{ltype}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -104,7 +720,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nspin}
+\subsection{nalph}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -117,7 +733,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{norbs}
+\subsection{nband}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -130,7 +746,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{ncfgs}
+\subsection{ndump}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -143,7 +759,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nzero}
+\subsection{ngamm}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -156,7 +772,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nvect}
+\subsection{ngrid}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -169,7 +785,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nhmat}
+\subsection{niter}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -182,7 +798,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nfmat}
+\subsection{norbs}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -195,7 +811,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{niter}
+\subsection{nstep}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -208,7 +824,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{U}
+\subsection{ntime}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -221,7 +837,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{Uc}
+\subsection{ntune}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -234,7 +850,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{Uv}
+\subsection{ntype}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -247,7 +863,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{Jz}
+\subsection{nwarm}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -260,7 +876,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{Js}
+\subsection{nwmax}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -273,7 +889,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{Jp}
+\subsection{ratio}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -286,7 +902,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{lc}
+\subsection{sigma}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -299,7 +915,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{wc}
+\subsection{wstep}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -312,7 +928,8 @@
 
 {\color{olive}COMMENT:}
 
-\section{mune}
+\section{atom.config.in}
+\subsection{Jh}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -325,7 +942,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{beta}
+\subsection{Jp}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -338,7 +955,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{part}
+\subsection{Js}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -351,7 +968,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{alpha}
+\subsection{Jz}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -364,7 +981,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{lemax}
+\subsection{Uc}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -377,7 +994,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{legrd}
+\subsection{Ud}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -390,7 +1007,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{chmax}
+\subsection{Uv}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -403,7 +1020,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{chgrd}
+\subsection{ibasis}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -416,7 +1033,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{mkink}
+\subsection{icf}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -429,7 +1046,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{mfreq}
+\subsection{ictqmc}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -442,7 +1059,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{mstep}
+\subsection{icu}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -455,7 +1072,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nffrq}
+\subsection{isoc}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -468,7 +1085,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nbfrq}
+\subsection{lambda}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -481,7 +1098,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nfreq}
+\subsection{mune}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -494,7 +1111,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nsing}
+\subsection{nband}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -507,7 +1124,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{ntime}
+\subsection{ncfgs}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -520,7 +1137,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nleja}
+\subsection{nmaxi}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -533,7 +1150,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{npart}
+\subsection{nmini}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -546,7 +1163,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{nflip}
+\subsection{norbs}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
@@ -559,72 +1176,7 @@
 
 {\color{olive}COMMENT:}
 
-\section{ntherm}
-{\color{red}DEFINITION:}
-
-{\color{green}DATATYPE:}
-
-{\color{blue}DEFAULT:}
-
-{\color{brown}COMPONENT:}
-
-{\color{purple}BEHAVIOR:}
-
-{\color{olive}COMMENT:}
-
-\section{nsweep}
-{\color{red}DEFINITION:}
-
-{\color{green}DATATYPE:}
-
-{\color{blue}DEFAULT:}
-
-{\color{brown}COMPONENT:}
-
-{\color{purple}BEHAVIOR:}
-
-{\color{olive}COMMENT:}
-
-\section{nwrite}
-{\color{red}DEFINITION:}
-
-{\color{green}DATATYPE:}
-
-{\color{blue}DEFAULT:}
-
-{\color{brown}COMPONENT:}
-
-{\color{purple}BEHAVIOR:}
-
-{\color{olive}COMMENT:}
-
-\section{nclean}
-{\color{red}DEFINITION:}
-
-{\color{green}DATATYPE:}
-
-{\color{blue}DEFAULT:}
-
-{\color{brown}COMPONENT:}
-
-{\color{purple}BEHAVIOR:}
-
-{\color{olive}COMMENT:}
-
-\section{nmonte}
-{\color{red}DEFINITION:}
-
-{\color{green}DATATYPE:}
-
-{\color{blue}DEFAULT:}
-
-{\color{brown}COMPONENT:}
-
-{\color{purple}BEHAVIOR:}
-
-{\color{olive}COMMENT:}
-
-\section{ncarlo}
+\subsection{nspin}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:}
