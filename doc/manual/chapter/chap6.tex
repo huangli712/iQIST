@@ -10,27 +10,27 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{blue}DEFAULT:} 0.0\_dp.
 
-{\color{brown}COMPONENT:} ALL.
+{\color{brown}COMPONENT:} ALL, except for {\daisy}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} Actually, this parameter is not used by the code internally. It will be outputted by the impurity solver as a reference.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} NONE.
 
 \subsection{Js}
-{\color{red}DEFINITION:} Streangth of spin-flip term in the interaction term.
+{\color{red}DEFINITION:} Strength of spin-flip term in the interaction term.
 
 {\color{green}DATATYPE:} real(dp).
 
 {\color{blue}DEFAULT:} 0.0\_dp.
 
-{\color{brown}COMPONENT:} ALL.
+{\color{brown}COMPONENT:} ALL, except for {\daisy}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} Actually, this parameter is not used by the code internally. It will be outputted by the impurity solver as a reference.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} NONE.
 
 \subsection{Jz}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Hund's exchange coupling constant.
 
 {\color{green}DATATYPE:} real(dp).
 
@@ -38,25 +38,25 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{brown}COMPONENT:} ALL.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} In the {\azalea}, {\gardenia}, {\narcissus}, and {\daisy} codes, it is used to build the Coulomb interaction matrix. However, in the {\begonia}, {\lavender}, {\pansy}, and {\manjushaka} codes, this parameter is not used internally. It will be outputted by the impurity solver as a reference.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} As for single-band model, $J_z = J_s = J_p = 0.0$. The condition $U_c = U_v - 2J_{z}$ should be always fulfilled.
 
 \subsection{U}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Averaged Coulomb interaction.
 
 {\color{green}DATATYPE:} real(dp).
 
 {\color{blue}DEFAULT:} 4.0\_dp.
 
-{\color{brown}COMPONENT:} ALL.
+{\color{brown}COMPONENT:} ALL, except for {\daisy}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} Actually, this parameter is not used by the code internally. It will be outputted by the impurity solver as a reference.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} Usually, we let $U = U_c$.
 
 \subsection{Uc}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Inter-orbital Coulomb interaction.
 
 {\color{green}DATATYPE:} real(dp).
 
@@ -64,22 +64,22 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{brown}COMPONENT:} ALL.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} In the {\azalea}, {\gardenia}, {\narcissus}, and {\daisy} codes, it is used to build the Coulomb interaction matrix. However, in the {\begonia}, {\lavender}, {\pansy}, and {\manjushaka} codes, this parameter is not used internally. It will be outputted by the impurity solver as a reference.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} The condition $U_c = U_v - 2J_{z}$ should be always fulfilled.
 
 \subsection{Uv}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Intra-orbital Coulomb interaction.
 
 {\color{green}DATATYPE:} real(dp).
 
 {\color{blue}DEFAULT:} 4.0\_dp.
 
-{\color{brown}COMPONENT:} ALL.
+{\color{brown}COMPONENT:} ALL, except for {\daisy}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} Actually, this parameter is not used by the code internally. It will be outputted by the impurity solver as a reference.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} The condition $U_c = U_v - 2J_{z}$ should be always fulfilled.
 
 \subsection{alpha}
 {\color{red}DEFINITION:} Mixing parameter $\alpha$, used to mix the old and new self-energy function to produce a newer one.
@@ -92,7 +92,7 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{purple}BEHAVIOR:} $\Sigma_{\text{new}} = \alpha \Sigma_{\text{new}} + (1.0 - \alpha) \Sigma_{\text{old}}$
 
-{\color{olive}COMMENT:} If you have trouble in obtaining convergence, you can decrease it to 0.5\_dp or even 0.2\_dp.
+{\color{olive}COMMENT:} If you have trouble in obtaining convergence, you can decrease it to 0.5\_dp or even 0.2\_dp. If you are doing one-shot calculation (isscf = 1), this parameter is useless. 
 
 \subsection{beta}
 {\color{red}DEFINITION:} Inversion of temperature $\beta (= 1.0 / \text{T})$. Its unit is eV$^{-1}$.
@@ -103,72 +103,112 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{brown}COMPONENT:} ALL.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} The impurity solver will use it to determine the system temperature.
 
 {\color{olive}COMMENT:} The real temperature is 11604.505008098/$\beta$ Kelvin.
 
 \subsection{chgrd}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Number of linear grid points in [-1,1].
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 20001.
 
 {\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} The second kind Chebyshev orthogonal polynomials are defined in a linear grid in [-1,1]. And the number of grid points are controlled by this parameter.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} Only when isort = 3 or isort = 6 this parameter is useful. The 20001 is an optimal value for chgrd. It is not suggested to modified it. 
+
+As for the applications of orthogonal polynomials in CT-QMC impurity solver, please refer to Phys. Rev. B 84. 075145 (2011) and Phys. Rev. B 85, 205106 (2012). 
 
 \subsection{chmax}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} The maximum allowable expansion order for the second kind Chebyshev orthogonal polynomials. It must be greater than 2.
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 32.
 
 {\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} The parameter is used as a cutoff to limit the maximum expansion order for the second kind Chebyshev orthogonal polynomials.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} Only when isort = 3 or isort = 6 this parameter is useful. How to choose a suitable chmax parameters is a tricky job. If chmax is too small, the calculated results won't be accurate. If chmax is too large, the so-called Gibbs oscillation will occur dramatically. According to our experiences, 32 or 48 may be a reasonable choice. There is no upper limit. But the larger chmax, the heavier computational burden. 
+
+As for the applications of orthogonal polynomials in CT-QMC impurity solver, please refer to Phys. Rev. B 84. 075145 (2011) and Phys. Rev. B 85, 205106 (2012).
 
 \subsection{ifast}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Key control flag. It is used to select the suitable algorithm to calculate the operator trace. 
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 1.
 
 {\color{brown}COMPONENT:} Only for {\manjushaka}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} There are three possible values for ifast parameter so far:
+\begin{itemize}
+\item ifast = 1, the divide-and-conquer algorithm will be used. At this time, you have to adjust npart parameter carefully to obtain good computational efficiency.
+\item ifast = 2, the classic time evolution algorithm will be used. WARNING: this algorithm is not implemented in the public version. We are sorry for that.
+\item ifast = 3, the skip listing algorithm will be used. WARNING: this algorithm is not implemented in the public version. We are sorry for that.
+\end{itemize}
 
-{\color{olive}COMMENT:}
+All in all, now only ifast = 1 is valid. Even you set ifast = 2 or ifast = 3, {\manjushaka} code will still use the divide-and-conquer algorithm to calculate the operator trace.
+
+{\color{olive}COMMENT:} In the {\manjushaka} code, the Lazy trace evaluation trick is always used.
+
+As for the divide-and-conquer algorithm and the classic time evolution algorithm, please refer to Emanuel Gull's PhD thesis. As for the skip listing algorithm, please refer to Phys. Rev. B. 90 075149 (2014).
 
 \subsection{isbin}
-{\color{red}DEFINITION:}
+\begin{figure}
+\centering
+\includegraphics[scale=0.20]{figure/flow.eps}
+\caption{The four running modes for quantum impurity solvers.\label{fig:flow}}
+\end{figure}
+{\color{red}DEFINITION:} Key control flag. It is used to determine whether we need to use the data binning mode.
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 2.
 
 {\color{brown}COMPONENT:} ALL.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} There are three possible values for isbin parameter so far:
+\begin{itemize}
+\item isbin = 1, normal mode.
+\item isbin = 2, data binning mode.
+\end{itemize}
+When the impurity solver is in the data binning mode, the current iteration number (iter, it is a internal variable) will be fixed to 999, nsweep and nwrite parameters will be increased by a factor of ten. The imaginary-time Green's function $G(\tau)$ will be outputted periodically to solver.green.bin.X files (where X denotes the index of data bins, from 1 to nsweep/nwrite), instead of solver.green.dat file. The post-processing tools will be used to deal with these files to do analytical continuation calculation.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} From the combinations of isscf and isbin parameters, we can reach the following four running modes:
+\begin{itemize}
+\item A: isscf = 1, isbin = 1. The impurity solver is called only once. No DMFT self-consistent calculation. No data binning mode.
+\item B: isscf = 2, isbin = 1. The impurity solves is called periodically in the DMFT self-consistent calculation. Once the convergence is reached, the calculation will be stopped. No data binning mode.   
+\item C: isscf = 1, isbin = 2. The impurity solver is called only once in the data binning mode. No DMFT self-consistent calculation.
+\item D: isscf = 2, isbin = 2. The impurity solves is called periodically in the DMFT self-consistent calculation. During the iterations, the impurity solver is in normal mode. After the convergence is reached, the impurity solver will be called once again. But at this time, the data binning mode is activated automatically.
+\end{itemize}
+
+Please see Fig.~\ref{fig:flow} for a intuitive view of the four running modes. If we want to perform LDA + DMFT calculations, mode A will be a good choice. Mode B is often used to solve model Hamiltonians iteratively and quickly to judge whether the results are reasonable. Once the results are reasonable and what we expect, and we want more accurate data, then we can use mode C. Mode D can be viewed as a combination of mode B and mode C, it is seldom used.
 
 \subsection{isort}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Key control flag. It is used to determine whether we should use the orthogonal polynomials trick to improve the accuracy and suppress the numerical noises.
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 1.
 
 {\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} There are six possible values for isort parameter so far:
+\begin{itemize}
+\item isort = 1, the standard method is used to measure $G(\tau)$.
+\item isort = 2, the Legendre orthogonal polynomials trick is used to measure $G(\tau)$.
+\item isort = 3, the Chebyshev orthogonal polynomials trick is used to measure $G(\tau)$.
+\item isort = 4, the standard method is used to measure $G(\tau)$ and $F(\tau)$
+\item isort = 5, the Legendre orthogonal polynomials trick is used to measure $G(\tau)$ and $F(\tau)$.
+\item isort = 6, the Chebyshev orthogonal polynomials trick is used to measure $G(\tau)$ and $F(\tau)$.
+\end{itemize}
+Here $G(\tau)$ is the imaginary-time Green's function and $F(\tau)$ auxiliary imaginary-time function which can be used to calculate $\Sigma(i\omega_n)$ analytically\footnote{Only when the Coulomb interaction matrix is density-density type, and {\gardenia} or {\narcissus} component is used.}.
 
 {\color{olive}COMMENT:}
 
@@ -177,11 +217,15 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 2.
 
 {\color{brown}COMPONENT:} ALL.
 
 {\color{purple}BEHAVIOR:}
+\begin{itemize}
+\item isscf = 1,
+\item isscf = 2,
+\end{itemize}
 
 {\color{olive}COMMENT:}
 
@@ -190,11 +234,18 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 1.
 
 {\color{brown}COMPONENT:} Only for {\narcissus}.
 
 {\color{purple}BEHAVIOR:}
+\begin{itemize}
+\item isscr = 1
+\item isscr = 2
+\item isscr = 3
+\item isscr = 4
+\item isscr = 99
+\end{itemize}
 
 {\color{olive}COMMENT:}
 
@@ -203,11 +254,15 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 1.
 
 {\color{brown}COMPONENT:} ALL.
 
 {\color{purple}BEHAVIOR:}
+\begin{itemize}
+\item isspn = 1,
+\item isspn = 2,
+\end{itemize}
 
 {\color{olive}COMMENT:}
 
@@ -216,11 +271,15 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 2.
 
 {\color{brown}COMPONENT:} ALL.
 
 {\color{purple}BEHAVIOR:}
+\begin{itemize}
+\item issun = 1,
+\item issun = 2,
+\end{itemize}
 
 {\color{olive}COMMENT:}
 
@@ -238,15 +297,19 @@ In this section, we will introduce all of the parameters which can be used in th
 {\color{olive}COMMENT:}
 
 \subsection{itrun}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Key control flag. It is used to control which scheme should be used to truncate the Hilbert space.
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 1
 
 {\color{brown}COMPONENT:} Only for {\manjushaka}.
 
 {\color{purple}BEHAVIOR:}
+\begin{itemize}
+\item itrun = 1,
+\item itrun = 2,
+\end{itemize}
 
 {\color{olive}COMMENT:}
 
@@ -255,7 +318,7 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{green}DATATYPE:} real(dp).
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 1.0\_dp
 
 {\color{brown}COMPONENT:} Only for {\narcissus}.
 
@@ -266,9 +329,9 @@ In this section, we will introduce all of the parameters which can be used in th
 \subsection{legrd}
 {\color{red}DEFINITION:}
 
-{\color{green}DATATYPE:}
+{\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 20001
 
 {\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
 
@@ -281,7 +344,7 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 32.
 
 {\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
 
@@ -303,13 +366,13 @@ In this section, we will introduce all of the parameters which can be used in th
 {\color{olive}COMMENT:}
 
 \subsection{mkink}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Maximum allowable diagrammatic perturbation order in the continuous-time quantum Monte Carlo algorithm.
 
 {\color{green}DATATYPE:} integer.
 
 {\color{blue}DEFAULT:} 1024.
 
-{\color{brown}COMPONENT:} ALL.
+{\color{brown}COMPONENT:} ALL, except for {\daisy}.
 
 {\color{purple}BEHAVIOR:}
 
@@ -359,7 +422,7 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{green}DATATYPE:} integer
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 4.
 
 {\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
 
@@ -412,7 +475,7 @@ correctness of them.
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 32.
 
 {\color{brown}COMPONENT:} ALL.
 
@@ -425,7 +488,7 @@ correctness of them.
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 2000.
 
 {\color{brown}COMPONENT:} ALL.
 
@@ -438,7 +501,7 @@ correctness of them.
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 128.
 
 {\color{brown}COMPONENT:} ALL.
 
@@ -592,11 +655,11 @@ correctness of them.
 \subsection{part}
 {\color{red}DEFINITION:}
 
-{\color{green}DATATYPE:} integer.
+{\color{green}DATATYPE:} real(dp).
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 0.5\_dp
 
-{\color{brown}COMPONENT:} Only for {\begonia}, {\lavender}, {\pansy}, and {\manjushaka}.
+{\color{brown}COMPONENT:} ALL.
 
 {\color{purple}BEHAVIOR:}
 
@@ -607,7 +670,7 @@ correctness of them.
 
 {\color{green}DATATYPE:} real(dp)
 
-{\color{blue}DEFAULT:}
+{\color{blue}DEFAULT:} 1.0\_dp
 
 {\color{brown}COMPONENT:} Only for {\narcissus}.
 
