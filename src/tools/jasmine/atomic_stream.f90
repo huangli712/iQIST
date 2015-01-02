@@ -29,7 +29,7 @@
      use constants, only : dp, mytmp
      use parser, only : p_create, p_destroy, p_parse, p_get
 
-     use control ! ALL
+     use m_cntr ! ALL
 
      implicit none
 
@@ -127,7 +127,7 @@
   subroutine atomic_check_config()
      use constants, only : zero, mystd
 
-     use control ! ALL
+     use m_cntr ! ALL
 
 ! local variables
 ! status flag for whether all of the parameters are OK
@@ -293,7 +293,7 @@
      use, intrinsic :: iso_fortran_env, only : iostat_end
      use constants, only : dp, zero, mytmp
 
-     use control, only : norbs
+     use m_cntr, only : norbs
      use m_spmat, only : cmat
 
      implicit none
@@ -339,7 +339,7 @@
   subroutine atomic_read_emat()
      use constants, only : dp, zero, mytmp
 
-     use control, only : norbs
+     use m_cntr, only : norbs
      use m_spmat, only : emat
 
      implicit none
@@ -384,7 +384,7 @@
   subroutine atomic_read_tmat()
      use constants, only : dp, zero, mytmp
 
-     use control, only : norbs
+     use m_cntr, only : norbs
      use m_spmat, only : tmat
 
      implicit none
@@ -433,10 +433,10 @@
   subroutine atomic_make_spmat()
      use constants, only : two, czero
 
-     use control, only : ibasis
-     use control, only : icu, icf, isoc
-     use control, only : nband
-     use control, only : lambda
+     use m_cntr, only : ibasis
+     use m_cntr, only : icu, icf, isoc
+     use m_cntr, only : nband
+     use m_cntr, only : lambda
      use m_spmat, only : cmat, smat
 
      implicit none
@@ -504,7 +504,7 @@
 
 !!>>> atomic_make_fock: make Fock basis for the full Hilbert space
   subroutine atomic_make_fock()
-     use control, only : norbs, ncfgs
+     use m_cntr, only : norbs, ncfgs
      use m_full, only : dim_sub_n, bin_basis, dec_basis, ind_basis
 
      implicit none
@@ -566,9 +566,9 @@
   subroutine atomic_make_natural()
      use constants, only : dp, czero, mystd
 
-     use control, only : ibasis
-     use control, only : icu, icf, isoc
-     use control, only : norbs
+     use m_cntr, only : ibasis
+     use m_cntr, only : icu, icf, isoc
+     use m_cntr, only : norbs
      use m_spmat, only : umat, tmat
 
      implicit none
@@ -670,8 +670,8 @@
 !!>>> atomic_2natural_case1: make natural basis for no crystal field or
 !!>>> diagonal crystal field, without spin-orbital coupling
   subroutine atomic_2natural_case1()
-     use control, only : norbs
-     use control, only : mune
+     use m_cntr, only : norbs
+     use m_cntr, only : mune
      use m_spmat, only : cmat, emat, tmat
 
      implicit none
@@ -701,8 +701,8 @@
   subroutine atomic_2natural_case2()
      use constants, only : dp
 
-     use control, only : nband, norbs
-     use control, only : mune
+     use m_cntr, only : nband, norbs
+     use m_cntr, only : mune
      use m_spmat, only : cmat, emat, tmat
 
      implicit none
@@ -768,8 +768,8 @@
   subroutine atomic_2natural_case3()
      use constants, only : dp
 
-     use control, only : norbs
-     use control, only : mune
+     use m_cntr, only : norbs
+     use m_cntr, only : mune
      use m_spmat, only : emat, smat, tmat
 
      implicit none
@@ -808,8 +808,8 @@
   subroutine atomic_2natural_case4()
      use constants, only : dp, eps6
 
-     use control, only : norbs
-     use control, only : mune
+     use m_cntr, only : norbs
+     use m_cntr, only : mune
      use m_spmat, only : cmat, smat, emat, tmat
 
      implicit none
