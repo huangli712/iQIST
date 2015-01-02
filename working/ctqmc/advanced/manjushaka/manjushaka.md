@@ -1,13 +1,8 @@
-
-
-
 Interacting Quantum Impurity Solver Toolkit
 ===========================================
 
 Advanced Test Cases For MANJUSHAKA
 ==================================
-
-
 
 1. 3 band model
 ---------------
@@ -92,7 +87,6 @@ Advanced Test Cases For MANJUSHAKA
 * 3t2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=6.00, npart=4, GQNs (N,Sz,PS), Chebyshev polynomial
 * 3t3 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=100.0, mune=6.00, npart=4, GQNs (N,Sz,PS), Chebyshev polynomial
 
-
 2. 5 band model
 ---------------
 
@@ -144,8 +138,6 @@ Advanced Test Cases For MANJUSHAKA
 * 5l2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz), itrun=2, nmini=4, nmaxi=6
 * 5l3 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=100.0, mune=10.0, npart=8, SOC, lambda=0.5, GQNs (N,Jz), itrun=2, nmini=4, nmaxi=6
 
-
-
 3. 7 band model
 ---------------
 
@@ -164,4 +156,3 @@ Advanced Test Cases For MANJUSHAKA
 * 7d1 // Ud=4.0, Jh=1.0, beta=10.00, mune=1.50, npart=4, diagonal CF, SOC, lambda=0.5, GQNs (N), itrun=1, nmini=0, nmaxi=3
 * 7d2 // Ud=4.0, Jh=1.0, beta=40.00, mune=1.50, npart=4, diagonal CF, SOC, lambda=0.5, GQNs (N), itrun=1, nmini=0, nmaxi=3
 * 7d3 // Ud=4.0, Jh=1.0, beta=100.0, mune=1.50, npart=8, diagonal CF, SOC, lambda=0.5, GQNs (N), itrun=1, nmini=0, nmaxi=3
-
