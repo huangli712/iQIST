@@ -118,7 +118,7 @@ In this section, we will introduce all of the parameters which can be used in th
 
 {\color{purple}BEHAVIOR:} The second kind Chebyshev orthogonal polynomials are defined in a linear grid in [-1,1]. And the number of grid points are controlled by this parameter.
 
-{\color{olive}COMMENT:} Only when isort = 3 or isort = 6 this parameter is useful. The 20001 is an optimal value for chgrd. It is not suggested to modified it. 
+{\color{olive}COMMENT:} Only when isort = 3 or isort = 6 this parameter is useful. The 20001 is an optimal value for chgrd. It is not suggested to modified it. About the isort parameter, please refer to Sec.~\ref{subsec:isort}.
 
 As for the applications of orthogonal polynomials in CT-QMC impurity solver, please refer to Phys. Rev. B 84. 075145 (2011) and Phys. Rev. B 85, 205106 (2012). 
 
@@ -133,7 +133,7 @@ As for the applications of orthogonal polynomials in CT-QMC impurity solver, ple
 
 {\color{purple}BEHAVIOR:} The parameter is used as a cutoff to limit the maximum expansion order for the second kind Chebyshev orthogonal polynomials.
 
-{\color{olive}COMMENT:} Only when isort = 3 or isort = 6 this parameter is useful. How to choose a suitable chmax parameters is a tricky job. If chmax is too small, the calculated results won't be accurate. If chmax is too large, the so-called Gibbs oscillation will occur dramatically. According to our experiences, 32 or 48 may be a reasonable choice. There is no upper limit. But the larger chmax, the heavier computational burden. 
+{\color{olive}COMMENT:} Only when isort = 3 or isort = 6 this parameter is useful. How to choose a suitable chmax parameters is a tricky job. If chmax is too small, the calculated results won't be accurate. If chmax is too large, the so-called Gibbs oscillation will occur dramatically. According to our experiences, 32 or 48 may be a reasonable choice. There is no upper limit. But the larger chmax, the heavier computational burden. About the isort parameter, please refer to Sec.~\ref{subsec:isort}.
 
 As for the applications of orthogonal polynomials in CT-QMC impurity solver, please refer to Phys. Rev. B 84. 075145 (2011) and Phys. Rev. B 85, 205106 (2012).
 
@@ -190,7 +190,7 @@ When the impurity solver is in the data binning mode, the current iteration numb
 
 Please see Fig.~\ref{fig:flow} for a intuitive view of the four running modes. If we want to perform LDA + DMFT calculations, mode A will be a good choice. Mode B is often used to solve model Hamiltonians iteratively and quickly to judge whether the results are reasonable. Once the results are reasonable and what we expect, and we want more accurate data, then we can use mode C. Mode D can be viewed as a combination of mode B and mode C, it is seldom used.
 
-\subsection{isort}
+\subsection{isort\label{subsec:isort}}
 {\color{red}DEFINITION:} Key control flag. It is used to determine whether we should use the orthogonal polynomials trick to improve the accuracy and suppress the numerical noises.
 
 {\color{green}DATATYPE:} integer.
@@ -212,7 +212,7 @@ Here $G(\tau)$ is the imaginary-time Green's function and $F(\tau)$ auxiliary im
 
 {\color{olive}COMMENT:}
 
-\subsection{isscf}
+\subsection{isscf\label{subsec:isscf}}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:} integer.
@@ -229,7 +229,7 @@ Here $G(\tau)$ is the imaginary-time Green's function and $F(\tau)$ auxiliary im
 
 {\color{olive}COMMENT:}
 
-\subsection{isscr}
+\subsection{isscr\label{subsec:isscr}}
 {\color{red}DEFINITION:}
 
 {\color{green}DATATYPE:} integer.
@@ -301,46 +301,57 @@ Here $G(\tau)$ is the imaginary-time Green's function and $F(\tau)$ auxiliary im
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:} 1
+{\color{blue}DEFAULT:} 1.
 
 {\color{brown}COMPONENT:} Only for {\manjushaka}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} There are two possible values for itrun parameter so far:
 \begin{itemize}
-\item itrun = 1,
-\item itrun = 2,
+\item itrun = 1, no truncation.
+\item itrun = 2, those atomic states with low probability ($P_{\Gamma} < 1.0E-6$) will be truncated for next DMFT iteration.
 \end{itemize}
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} This feature is experimental. Please check your calculated results carefully if you used the truncation approximation. To perform the truncation, the {\manjushaka} will read the solver.prob.dat file at first to get the probability data. So if this file is not available, the truncation will not be done.
+
+To perform truncation over occupation number, you should use the {\jasmine} component to generate suitable atom.cix file.
 
 \subsection{lc}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} It is a model parameter for Hubbard-Holstein model or dynamical screening effect. The exact definition of lc depends on the value of isscr parameter.
 
 {\color{green}DATATYPE:} real(dp).
 
-{\color{blue}DEFAULT:} 1.0\_dp
+{\color{blue}DEFAULT:} 1.0\_dp.
 
 {\color{brown}COMPONENT:} Only for {\narcissus}.
 
 {\color{purple}BEHAVIOR:}
+\begin{itemize}
+\item if isscr = 1, no meaning.
+\item if isscr = 2, the $\lambda$ parameter in the Hubbard-Holstein model.
+\item if isscr = 3, the $\lambda$ parameter in the plasmon-pole model for dynamical screening effect.
+\item if isscr = 4, the $\alpha$ parameter in the ohmic model for dynamical screening effect.
+\item if isscr = 99, shift for the chemical potential and Coulomb interaction (when we consider the dynamical screening effect in the LDA + DMFT calculations for realistic materials). You can obtain this value from the output of {\hibiscus}/toolbox/makescr.x.
+\end{itemize}
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} Only when isscr $> 1$, it matters. As for the isscr parameter, please refer to Sec.~\ref{subsec:isscr}. About CT-QMC algorithm for Hubbard-Holstein model, please refer to Phys. Rev. Lett 99, 146404 (2007). About dynamical screening effect, plasmon-pole model, and ohmic mode, please refer to Phys. Rev. Lett. 104, 146401 (2010).
 
 \subsection{legrd}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Number of linear grid points in [-1,1].
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:} 20001
+{\color{blue}DEFAULT:} 20001.
 
 {\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} The Legendre orthogonal polynomials are defined in a linear grid in [-1,1]. And the number of grid points are controlled by this parameter.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} Only when isort = 2 or isort = 5 this parameter is useful. The 20001 is an optimal value for legrd. It is not suggested to modified it. About the isort parameter, please refer to Sec.~\ref{subsec:isort}.
+
+As for the applications of orthogonal polynomials in CT-QMC impurity solver, please refer to Phys. Rev. B 84. 075145 (2011) and Phys. Rev. B 85, 205106 (2012). 
 
 \subsection{lemax}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} The maximum allowable expansion order for the Legendre orthogonal polynomials. It must be greater than 2.
 
 {\color{green}DATATYPE:} integer.
 
@@ -348,22 +359,25 @@ Here $G(\tau)$ is the imaginary-time Green's function and $F(\tau)$ auxiliary im
 
 {\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} The parameter is used as a cutoff to limit the maximum expansion order for the Legendre orthogonal polynomials.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} Only when isort = 2 or isort = 5 this parameter is useful. How to choose a suitable lemax parameters is a tricky job. If lemax is too small, the calculated results won't be accurate. If lemax is too large, the so-called Gibbs oscillation will occur dramatically. According to our experiences, 32 or 48 may be a reasonable choice. It is worthy to emphasis that due to the limitation of implementation, lemax must be less than 50. About the isort parameter, please refer to Sec.~\ref{subsec:isort}.
+
+As for the applications of orthogonal polynomials in CT-QMC impurity solver, please refer to Phys. Rev. B 84. 075145 (2011) and Phys. Rev. B 85, 205106 (2012).
+
 
 \subsection{mfreq}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Number of matsubara frequency points.
 
 {\color{green}DATATYPE:} integer.
 
-{\color{blue}DEFAULT:} 8193.
+{\color{blue}DEFAULT:} 8193 ($ = 2^{13} + 1)$.
 
 {\color{brown}COMPONENT:} ALL.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} The $G(i\omega_n)$, $\mathcal{G}(i\omega_n)$, $\Sigma(i\omega_n)$, and $\Delta(i\omega_n)$ are all defined in this matsubara frequency grid.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} It is an optimal value. Please do not modify it.
 
 \subsection{mkink}
 {\color{red}DEFINITION:} Maximum allowable diagrammatic perturbation order in the continuous-time quantum Monte Carlo algorithm.
@@ -376,7 +390,7 @@ Here $G(\tau)$ is the imaginary-time Green's function and $F(\tau)$ auxiliary im
 
 {\color{purple}BEHAVIOR:}
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} It is an optimal value. Please do not modify it.
 
 \subsection{mstep}
 {\color{red}DEFINITION:}
@@ -419,16 +433,23 @@ Here $G(\tau)$ is the imaginary-time Green's function and $F(\tau)$ auxiliary im
 
 \subsection{nbfrq}
 {\color{red}DEFINITION:} Number of bosonic frequencies.
-
-{\color{green}DATATYPE:} integer
+ 
+{\color{green}DATATYPE:} integer.
 
 {\color{blue}DEFAULT:} 4.
 
 {\color{brown}COMPONENT:} Only for {\gardenia}, {\narcissus}, {\lavender}, and {\manjushaka}.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} The two-particle Green's function $\chi(i\omega,i\omega',i\nu)$ and vertex function $\mathcal{F}(i\omega,i\omega',i\nu)$ have three frequency indices where $\omega$ and $\omega'$ are fermionic frequencies, and $\nu$ bosonic frequency:
+\begin{equation}
+\nu_n = \frac{2n\pi}{\beta}
+\end{equation}
+\begin{equation}
+\omega_n = \frac{(2n + 1)\pi}{\beta}
+\end{equation}
+The nbfrq parameter is used to define and generate $\nu_n$ bosonic mesh. The corresponding $\omega_n$ fermionic mesh is defined by nffrq parameter.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} Usually nbfrq is small ( but nbfrq $> 0$ ), since the computational burden for two-particle quantities is extremely heavy.
 
 \subsection{ncarlo}
 {\color{red}DEFINITION:}
@@ -479,9 +500,16 @@ correctness of them.
 
 {\color{brown}COMPONENT:} ALL.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} The two-particle Green's function $\chi(i\omega,i\omega',i\nu)$ and vertex function $\mathcal{F}(i\omega,i\omega',i\nu)$ have three frequency indices where $\omega$ and $\omega'$ are fermionic frequencies, and $\nu$ bosonic frequency:
+\begin{equation}
+\nu_n = \frac{2n\pi}{\beta}
+\end{equation}
+\begin{equation}
+\omega_n = \frac{(2n + 1)\pi}{\beta}
+\end{equation}
+The nffrq parameter is used to define and generate $\omega_n$ fermionic mesh. The corresponding $\nu_n$ bosonic mesh is defined by nbfrq parameter.
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} Usually nffrq is small ( but nffrq $> 0$ ), since the computational burden for two-particle quantities is extremely heavy.
 
 \subsection{nflip}
 {\color{red}DEFINITION:}
@@ -653,7 +681,7 @@ correctness of them.
 {\color{olive}COMMENT:}
 
 \subsection{part}
-{\color{red}DEFINITION:}
+{\color{red}DEFINITION:} Hopping paramter $t$ in the Hubbard model
 
 {\color{green}DATATYPE:} real(dp).
 
@@ -661,9 +689,9 @@ correctness of them.
 
 {\color{brown}COMPONENT:} ALL.
 
-{\color{purple}BEHAVIOR:}
+{\color{purple}BEHAVIOR:} This parameter is only used to initialize the initial hybridization function $\Delta(i\omega)$ and calculate new hybridization function through the self-consistent condition ($\Delta = t^2 G$, for bethe lattice).
 
-{\color{olive}COMMENT:}
+{\color{olive}COMMENT:} This parameter has influences on the results only when isscf = 2. About the isscf parameter, please refer to Sec.~\ref{subsec:isscf}.
 
 \subsection{wc}
 {\color{red}DEFINITION:}
