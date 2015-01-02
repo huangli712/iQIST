@@ -1,13 +1,8 @@
-
-
-
 Interacting Quantum Impurity Solver Toolkit
 ===========================================
 
 Advanced Test Cases For PANSY
 =============================
-
-
 
 1. 3 band model
 ---------------
@@ -75,8 +70,6 @@ Advanced Test Cases For PANSY
 * 3p1 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=10.00, mune=2.00, npart=16, SOC, lambda=0.5, GQNs (N,Jz)
 * 3p2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=2.00, npart=16, SOC, lambda=0.5, GQNs (N,Jz)
 * 3p3 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=100.0, mune=2.00, npart=16, SOC, lambda=0.5, GQNs (N,Jz)
-
-
 
 2. 5 band model
 ---------------
