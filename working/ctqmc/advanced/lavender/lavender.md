@@ -1,5 +1,5 @@
 Interacting Quantum Impurity Solver Toolkit
 ===========================================
 
-Advanced Test Cases For NARCISSUS
-=================================
+Advanced Test Cases For LAVENDER
+================================
