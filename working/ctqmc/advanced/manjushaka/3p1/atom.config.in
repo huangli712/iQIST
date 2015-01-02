@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 3p1/atom.config.in
-!!! solver  : manjushaka
+!!! solver  : MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------
