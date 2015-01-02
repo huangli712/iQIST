@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 1c/atom.config.in
-!!! solver  : begonia, lavender, pansy and manjushaka
+!!! solver  : BEGONIA, LAVENDER, PANSY, and MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------

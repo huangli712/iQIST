@@ -5,7 +5,7 @@ do
     cd $i
     echo "job directory:"
     pwd
-    sed -i 's///g' atom.config.in
+    sed -i '' 's/begonia, lavender, pansy and manjushaka/BEGONIA, LAVENDER, PANSY, and MANJUSHAKA/g' atom.config.in
     echo ''
     cd ..
 done
