@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 3h2/solver.ctqmc.in
-!!! solver  : pansy
+!!! solver  : PANSY
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------

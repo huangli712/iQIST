@@ -5,7 +5,7 @@ do
     cd $i
     echo "job directory:"
     pwd
-    sed -i '' 's/manjushaka/MANJUSHAKA/g' solver.ctqmc.in
+    sed -i '' 's/pansy/PANSY/g' atom.config.in
     echo ''
     cd ..
 done
