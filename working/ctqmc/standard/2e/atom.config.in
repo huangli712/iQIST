@@ -2,7 +2,7 @@
 !!! source  : 2e/atom.config.in
 !!! solver  : BEGONIA, LAVENDER, PANSY, and MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
-!!! author  : yilin wang (qhwyl2006@126.com)
+!!! author  : yilin wang (email:qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------
 
 !!>>> setup general control flags
