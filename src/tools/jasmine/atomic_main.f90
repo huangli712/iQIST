@@ -70,7 +70,7 @@
   program atomic_main
      use constants, only : mystd
 
-     use control, only : ictqmc
+     use m_cntr, only : ictqmc
      use m_full, only : alloc_m_full_basis
      use m_full, only : dealloc_m_full_basis
      use m_spmat, only : alloc_m_spmat
@@ -202,7 +202,7 @@
   subroutine cat_init_atomic(I_solver)
      use japi, only : T_jasmine
 
-     use control ! ALL
+     use m_cntr ! ALL
      use m_full, only : alloc_m_full_basis
      use m_spmat, only : alloc_m_spmat
 
@@ -291,7 +291,7 @@
   subroutine cat_exec_atomic()
      use constants, only : mystd
 
-     use control, only : ictqmc
+     use m_cntr, only : ictqmc
 
      implicit none
 

@@ -123,7 +123,7 @@
 
 !!>>> atomic_make_gsz: make Sz quantum number for each orbital
   subroutine atomic_make_gsz(good_sz)
-     use control, only : norbs
+     use m_cntr, only : norbs
 
      implicit none
 
@@ -149,7 +149,7 @@
 
 !>>> atomic_make_gjz: make Jz quantum number for each orbital
   subroutine atomic_make_gjz(good_jz)
-     use control, only : nband, norbs
+     use m_cntr, only : nband, norbs
 
      implicit none
 
@@ -360,8 +360,8 @@
   subroutine atomic_make_umatK()
      use constants, only : dp, zero, czero
 
-     use control, only : norbs
-     use control, only : Uc, Uv, Jz, Js, Jp
+     use m_cntr, only : norbs
+     use m_cntr, only : Uc, Uv, Jz, Js, Jp
      use m_spmat, only : umat
 
      implicit none
@@ -449,8 +449,8 @@
   subroutine atomic_make_umatS()
      use constants, only : dp, zero, half
 
-     use control, only : nband, norbs
-     use control, only : Ud, Jh
+     use m_cntr, only : nband, norbs
+     use m_cntr, only : Ud, Jh
      use m_spmat, only : umat
 
      implicit none
@@ -689,7 +689,7 @@
   subroutine atomic_make_tmat_c2r(tmat_c2r)
      use constants, only : dp, czero, cone, czi
 
-     use control, only : nband, norbs
+     use m_cntr, only : nband, norbs
 
      implicit none
 
@@ -797,7 +797,7 @@
   subroutine atomic_make_tmat_r2c(tmat_r2c)
      use constants, only : dp, czero
 
-     use control, only : norbs
+     use m_cntr, only : norbs
 
 ! external arguments
 ! the transformation matrix from real orbitals to complex orbitals
@@ -820,7 +820,7 @@
   subroutine atomic_make_tmat_c2j(tmat_c2j)
      use constants, only : dp, czero
 
-     use control, only : nband, norbs
+     use m_cntr, only : nband, norbs
 
      implicit none
 
@@ -974,7 +974,7 @@
   subroutine atomic_tran_umat(amtrx, umat, umat_t)
      use constants, only : dp, czero, epst
 
-     use control, only : norbs
+     use m_cntr, only : norbs
 
      implicit none
 

@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : jasmine
-!!! program : control    module
+!!! program : m_cntr     module
 !!! source  : atomic_control.f90
 !!! type    : module
 !!! author  : yilin wang (email:qhwyl2006@126.com)
@@ -13,7 +13,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-  module control
+  module m_cntr
      use constants, only : dp
 
      implicit none
@@ -113,4 +113,4 @@
 ! SOC strength
      real(dp), public, save :: lambda= 0.0_dp
 
-  end module control
+  end module m_cntr

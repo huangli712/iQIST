@@ -1,8 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 5g3/solver.ctqmc.in
-!!! solver  : pansy
+!!! solver  : PANSY
 !!! purpose : to test ctqmc impurity solver
-!!! author  : yilin wang (qhwyl2006@126.com)
+!!! author  : yilin wang (email:qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------
 
 !!>>> setup general control flags

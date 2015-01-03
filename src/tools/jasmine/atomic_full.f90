@@ -20,7 +20,7 @@
 !!>>> atomic_make_ffmat: make F-matrix for annihilation operators in
 !!>>> full Hilbert space case
   subroutine atomic_make_ffmat()
-     use control, only : norbs, ncfgs
+     use m_cntr, only : norbs, ncfgs
      use m_full, only : dec_basis, ind_basis
      use m_full, only : fmat, evec
 
@@ -66,7 +66,7 @@
   subroutine atomic_make_foccu()
      use constants, only : zero, one
 
-     use control, only : norbs, ncfgs
+     use m_cntr, only : norbs, ncfgs
      use m_full, only : bin_basis
      use m_full, only : occu, evec
 
@@ -100,7 +100,7 @@
   subroutine atomic_make_fspin()
      use constants, only: zero, half
 
-     use control, only : norbs, ncfgs
+     use m_cntr, only : norbs, ncfgs
      use m_full, only : bin_basis
      use m_full, only : spin, evec
 
@@ -135,7 +135,7 @@
   subroutine atomic_make_fhmat()
      use constants, only : one, czero, epst
 
-     use control, only : norbs, ncfgs
+     use m_cntr, only : norbs, ncfgs
      use m_full, only : bin_basis, dec_basis, ind_basis
      use m_full, only : hmat
      use m_spmat, only : emat, umat
