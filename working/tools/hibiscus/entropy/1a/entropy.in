@@ -7,16 +7,16 @@
 
 !!>>> setup general control flags
 !!------------------------------------------------------------------------
- ntime = 129
- nwmax = 400
- niter = 20
- ntune = 16
- nstep = 3000
- nband = 2
- norbs = 4
- ntype = 1
- ainit = 1200.
- devia = 0.001
- beta  = 10.00
- sigma = 1.600
- wstep = 0.040
+  ntime = 129
+  nwmax = 400
+  niter = 20
+  ntune = 16
+  nstep = 3000
+  nband = 2
+  norbs = 4
+  ntype = 1
+  ainit = 1200.
+  devia = 0.001
+  beta  = 10.00
+  sigma = 1.600
+  wstep = 0.040
