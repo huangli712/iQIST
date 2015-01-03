@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 2a/solver.ctqmc.in
-!!! solver  : ALL
+!!! solver  : GARDENIA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : li huang (email:huangli712@gmail.com)
 !!!-----------------------------------------------------------------------
@@ -11,6 +11,7 @@
   issun  : 2
   isspn  : 1
   isbin  : 2
+  isort  : 2
 
 !!>>> setup common variables for quantum impurity model
 !!------------------------------------------------------------------------
