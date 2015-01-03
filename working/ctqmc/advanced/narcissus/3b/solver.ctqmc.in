@@ -1,51 +1,56 @@
-==========================================================================
-NARCISSUS: continuous time quantum Monte Carlo quantum impurity solver
-==========================================================================
-2            ! non-self-consistent (1) or self-consistent mode (2)
-2            ! without symmetry    (1) or with symmetry   mode (2)
-1            ! spin projection, PM (1) or AFM             mode (2)
-2            ! without binning     (1) or with binning    mode (2)
-1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
-1            ! without vertex      (1) or with vertex function (2)
-4            ! normal (1) or holstein-hubbard (2) or plasmon pole (3) or ohmic model (4)
---------------------------------------------------------------------------
-1            ! number of bands
-2            ! number of spin projection
-2            ! number of orbitals (= nband * nspin)
-4            ! number of atomic states
-20           ! maximum number of DMFT + CTQMC self-consistent iterations
---------------------------------------------------------------------------
-8.00         ! U : average Coulomb interaction
-8.00         ! Uc: intraorbital Coulomb interaction
-8.00         ! Uv: interorbital Coulomb interaction, Uv = Uc-2*Jz for t2g system
-0.00         ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
-0.00         ! Js: spin-flip term
-0.00         ! Jp: pair-hopping term
-1.25         ! lc: strength of screening effect
-2.00         ! wc: screening frequency
---------------------------------------------------------------------------
-4.00         ! chemical potential or fermi level
-50.0         ! inversion of temperature
-1.00         ! coupling parameter t for Hubbard model
-0.70         ! mixing parameter for self-consistent engine
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-32           ! maximum order for legendre polynomial
-20001        ! number of mesh points for legendre polynomial
-32           ! maximum order for chebyshev polynomial
-20001        ! number of mesh points for chebyshev polynomial
---------------------------------------------------------------------------
-1024         ! maximum perturbation expansions order
-8193         ! maximum number of matsubara frequency
---------------------------------------------------------------------------
-32           ! number of matsubara frequency for the two-particle green's function
-8            ! number of bosonic frequncy for the two-particle green's function
-128          ! maximum number of matsubara frequency sampling by quantum impurity solver
-1024         ! number of time slice
-20000        ! flip period for spin up and spin down states
-200000       ! maximum number of thermalization steps
-200000000    ! maximum number of quantum Monte Carlo sampling steps
-20000000     ! output period
-100000       ! clean update period
-100          ! how often to sampling the gmat and nmat
-100          ! how often to sampling the gtau and prob
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+!!!-----------------------------------------------------------------------
+!!! source  : 3b/solver.ctqmc.in
+!!! solver  : NARCISSUS
+!!! purpose : to test ctqmc impurity solver
+!!! author  : li huang (email:huangli712@gmail.com)
+!!!-----------------------------------------------------------------------
+
+!!>>> setup general control flags
+!!------------------------------------------------------------------------
+  isscf  : 2
+  issun  : 2
+  isspn  : 1
+  isbin  : 2
+  isort  : 1
+  isvrt  : 1
+  isscr  : 4
+
+!!>>> setup common variables for quantum impurity model
+!!------------------------------------------------------------------------
+  nband  : 1
+  nspin  : 2
+  norbs  : 2
+  ncfgs  : 4
+  niter  : 20
+  U      : 8.00
+  Uc     : 8.00
+  Uv     : 8.00
+  Jz     : 0.00
+  Js     : 0.00
+  Jp     : 0.00
+  lc     : 1.25
+  wc     : 2.00
+  mune   : 4.00
+  beta   : 50.0
+  part   : 1.00
+  alpha  : 0.70
+
+!!>>> setup common variables for quantum impurity solver
+!!------------------------------------------------------------------------
+  lemax  : 32
+  legrd  : 20001
+  chmax  : 32
+  chgrd  : 20001
+  mkink  : 1024
+  mfreq  : 8193
+  nffrq  : 32
+  nbfrq  : 8
+  nfreq  : 128
+  ntime  : 1024
+  nflip  : 20000
+  ntherm : 200000
+  nsweep : 200000000
+  nwrite : 20000000
+  nclean : 100000
+  nmonte : 100
+  ncarlo : 100
