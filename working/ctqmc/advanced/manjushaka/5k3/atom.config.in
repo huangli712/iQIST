@@ -1,8 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 5k3/atom.config.in
-!!! solver  : manjushaka
+!!! solver  : MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
-!!! author  : yilin wang (qhwyl2006@126.com)
+!!! author  : yilin wang (email:qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------
 
 !!>>> setup general control flags
