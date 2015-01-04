@@ -1,18 +1,22 @@
+!!!-----------------------------------------------------------------------
+!!! source  : 1a/entropy.in
+!!! solver  : HIBISCUS/entropy
+!!! purpose : to test maximum entropy method code
+!!! author  : li huang (email:huangli712@gmail.com)
+!!!-----------------------------------------------------------------------
+
+!!>>> setup general control flags
 !!------------------------------------------------------------------------
-!!>>> entropy.in: config parameters for maximum entropy method code
-!!------------------------------------------------------------------------
- ntime = 129    ! number of imaginary time slice
- nwmax = 400    ! number of frequency point on half axis
- niter = 20     ! number of cycles for maximum entropy method
- ntune = 16     ! number of smooth runs for maximum entropy method
- nstep = 3000   ! number of annealing steps per maximum entropy method cycle
- nband = 2      ! number of bands
- norbs = 4      ! number of orbitals
- ntype = 1      ! type of default model, if ntype = 0, gaussion type, if ntype = 1, flat type
-!!------------------------------------------------------------------------
- ainit = 1200.  ! initial alpha parameter
- devia = 0.001  ! it is the deviation from the green's function
- beta  = 10.00  ! inversion of real temperature
- sigma = 1.600  ! gauss broadening parameter
- wstep = 0.040  ! frequency step, used to build the frequency mesh
-!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ntime = 129
+  nwmax = 400
+  niter = 20
+  ntune = 16
+  nstep = 3000
+  nband = 2
+  norbs = 4
+  ntype = 1
+  ainit = 1200.
+  devia = 0.001
+  beta  = 10.00
+  sigma = 1.600
+  wstep = 0.040

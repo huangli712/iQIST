@@ -1,13 +1,8 @@
-
-
-
 Interacting Quantum Impurity Solver Toolkit
 ===========================================
 
 JASMINE Test Cases 
 ==================
-
-
 
 1. 1 band model
 ---------------

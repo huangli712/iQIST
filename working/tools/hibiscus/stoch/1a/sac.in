@@ -1,22 +1,26 @@
+!!!-----------------------------------------------------------------------
+!!! source  : 1a/sac.in
+!!! solver  : HIBISCUS/stoch
+!!! purpose : to test stochastic analytical continuation code
+!!! author  : li huang (email:huangli712@gmail.com)
+!!!-----------------------------------------------------------------------
+
+!!>>> setup general control flags
 !!------------------------------------------------------------------------
-!!>>> sai.in: config parameters for stochastic analytic continuation code
-!!------------------------------------------------------------------------
- ntime = 1024       ! number of imaginary time slice
- nwmax = 400        ! number of frequency point on half axis
- ngrid = 10001      ! number of slice of x in [0,1]
- ngamm = 1024       ! number of r_{\gamma} and a_{\gamma}
- nalph = 1          ! number of alpha parameter used in parallel tempering
- nwarm = 2000       ! maximum number of thermalization steps
- nstep = 200000     ! maximum number of quantum Monte Carlo sampling steps
- ndump = 2000       ! output period for stochastic analytic continuation code
- ltype = 2          ! measurement scheme
- lemax = 64         ! maximum number of legendre polynomial
- legrd = 20001      ! number of mesh points for legendre polynomial
-!!------------------------------------------------------------------------
- ainit = 1.000      ! initial alpha parameter
- ratio = 2.000      ! \alpha_(p+1) / \alpha_p = R
- beta  = 8.000      ! inversion of real temperature
- eta1  = 0.005      ! lorentz broadening parameter \eta_1
- sigma = 0.000      ! gauss broadening parameter
- wstep = 0.020      ! frequency step, used to build the real frequency mesh
-!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ntime = 1024
+  nwmax = 400
+  ngrid = 10001
+  ngamm = 1024
+  nalph = 1
+  nwarm = 2000
+  nstep = 200000
+  ndump = 2000
+  ltype = 2
+  lemax = 64
+  legrd = 20001
+  ainit = 1.000
+  ratio = 2.000
+  beta  = 8.000
+  eta1  = 0.005
+  sigma = 0.000
+  wstep = 0.020
