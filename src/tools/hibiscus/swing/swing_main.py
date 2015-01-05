@@ -277,10 +277,8 @@ if __name__ == '__main__':
     # is no bound in that direction.
     #
     # maxfun: maximum number of function evaluations.
-    print "hehe"
-    (gweigh, fmin, dinf) = optimize.fmin_l_bfgs_b(swing_cchi, gweigh, approx_grad=1, bounds=abounds, maxfun=maxsteps,
+    (gweigh, fmin, dinf) = optimize.fmin_l_bfgs_b(swing_cchi, gweigh, approx_grad=1, factr = 1000, bounds=abounds, maxfun=maxsteps,
         args=(vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg, om, rfun, rfunc, expand, ders, alphas, gpos, poles))
-    print "hehe"
 
     # dump the final self-energy function on real axis, please refer to
     # sigr.out file
