@@ -42,7 +42,6 @@ def swing_cchi(gweigh, vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg,
                om, rfun, rfunc, expand, ders, alphas, gpos, poles):
     """ to calculate the \chi, using eq.(117) and eq.(118)
     """
-
     # define expand_sig
     expand_sig = ones(len(expand), dtype=float)
     expand_sig[2] = 100

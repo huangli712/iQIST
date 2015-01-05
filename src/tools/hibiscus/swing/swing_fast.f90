@@ -1,7 +1,6 @@
 !-------------------------------------------------------------------------
-! project : hibiscus
-! program : constants  module
-!           fchi
+! project : hibiscus/swing
+! program : fchi
 !           matsum
 !           kramskron
 ! source  : swing_fast.f90
