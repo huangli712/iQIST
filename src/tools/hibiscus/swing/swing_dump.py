@@ -1,5 +1,41 @@
 #!/usr/bin/env python
-""" this module provide basis dump function for hibiscus code """
+
+##
+##
+## Introduction
+## ============
+##
+## It is a python script. The purpose of this script is provide the basic
+## writing functions for the swing code. Now it implements the following
+## python functions/classes:
+##
+##     def swing_print_header
+##     def swing_print_footer
+##     def swing_dump_hist
+##     def swing_dump_keys
+##     def swing_dump_sigr
+##     def swing_dump_gaus
+##     def swing_dump_siom
+##     def swing_dump_sres
+##
+## Usage
+## =====
+##
+## Sorry, it can not be invoked manually.
+##
+## Author
+## ======
+##
+## This python script is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 12/20/2014 by li huang
+##
+##
 
 from scipy import *
 from scipy import interpolate
