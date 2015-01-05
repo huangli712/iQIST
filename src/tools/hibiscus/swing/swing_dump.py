@@ -40,51 +40,51 @@
 from scipy import *
 from scipy import interpolate
 
-# print the running header to the screen
 def swing_print_header():
-    """ to display the header for hibiscus code """
+    """ to display the header for the hibiscus/swing code to the screen
+    """
 
-    print '  HIBISCUS'
+    print '  HIBISCUS/swing'
     print '  >>> A Stochastic Analytic Continuation Code for Self-Energy Data'
     print
 
-    print '  version: 2011.08.18T            '
-    print '  develop: by li huang, CAEP & IOP'
-    print '  support: huangli712@yahoo.com.cn'
-    print '  license: GPL2 and later versions'
+    print '  Version: 2014.10.11T'
+    print '  Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+    print '  Support: huangli712@gmail.com'
+    print '  License: GNU General Public License version 3'
     print
 
-# print the final footer to the screen
 def swing_print_footer(tot_time):
-    """ to display the footer for hibiscus code """
+    """ to display the footer for the hibiscus/swing code to the screen
+    """
 
-    print '  HIBISCUS >>> total time spent:', tot_time, 's'
+    print '  HIBISCUS/swing >>> total time spent:', tot_time, 's'
 
-    print '  HIBISCUS >>> I am tired and want to go to bed. Bye!'
-    print '  HIBISCUS >>> ending'
+    print '  HIBISCUS/swing >>> I am tired and want to go to bed. Bye!'
+    print '  HIBISCUS/swing >>> happy ending'
 
-# dump the historic command to hist.dat file
 def swing_dump_hist(argv):
-    """ to record the command history """
+    """ to record the command history in hist.dat file
+    """
 
-    fs = open('hist.dat', 'a')
+    fs = open('hist.dat','a')
     for cmd in argv:
         print >> fs, cmd,
     print >> fs
+    fs.close()
 
-# dump the parameter list and explanations to the screen
 def swing_dump_keys(params):
-    """ to display the parameter lists """
+    """ to display the parameter lists to the screen
+    """
 
     print '  HIBISCUS >>> parameters list:'
     for var in params.keys():
         print '%s %-8s %s %-6s %s' % ('   ', var, ':', params[var][0], params[var][1])
     print
 
-# calculate dynamically the self-energy function on real axis, and then
-# write them into the sigr.out file
 def swing_dump_sigr(om, vary, fixed, gweigh, gwfix, rfunc, sinfty):
-    """ dump the final self-energy function in real axis """
+    """ dump the final self-energy function in real axis
+    """
 
     # zsum is used to store the self-energy function on real axis
     zsum = []
@@ -117,17 +117,17 @@ def swing_dump_sigr(om, vary, fixed, gweigh, gwfix, rfunc, sinfty):
         sig_im = interpolate.splev(new_om[im], spl_im, der=0)
         print >> fs, '%6d %16.8f %16.8f %16.8f' % (im, new_om[im], sig_re, sig_im)
 
-# dump the positions and weights for modified gaussians over iterations
 def swing_dump_gaus(it, gpos, gweigh):
-    """ dump the modified gaussian function and their weights """
+    """ dump the modified gaussian function and their weights
+    """
 
     fs = open('gaus.'+str(it), 'w')
     for i in range(len(gweigh)):
         print >> fs, '%4d %16.8f %16.8f' % (i, gpos[i], gweigh[i])
 
-# dump the evaluated self-energy function on matsubara axis
 def swing_dump_siom(it, iom, vary, fixed, gweigh, gwfix, ifunr, ifuni):
-    """ dump the fitted self-energy function in matsubara axis """
+    """ dump the fitted self-energy function in matsubara axis
+    """
 
     fs = open('siom.'+str(it), 'w')
     for im in range(len(iom)):
@@ -138,9 +138,9 @@ def swing_dump_siom(it, iom, vary, fixed, gweigh, gwfix, ifunr, ifuni):
             gc += (ifunr[fixed[i]-1,im] + 1j * ifuni[fixed[i]-1,im]) * gwfix[i]
         print >> fs, '%16.8f %16.8f %16.8f' % (iom[im], gc.real, gc.imag)
 
-# dump the evaluated self-energy function on real axis
 def swing_dump_sres(it, om, vary, fixed, gweigh, gwfix, rfunc):
-    """ dump the fitted self-energy function in real axis """
+    """ dump the fitted self-energy function in real axis
+    """
 
     fs = open('sres.'+str(it), 'w')
     for im in range(len(om)):
