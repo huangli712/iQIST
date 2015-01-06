@@ -93,6 +93,9 @@
 ##    on scipy 0.14.0 and numpy 1.7.0 only. So for the older versions of
 ##    scipy and numpy, we can not guarantee that it can work always.
 ##
+##    To run this code, please use 'make' command to build the dynamical
+##    library swing_fast.so at first.
+##
 ## Author
 ## ======
 ##
