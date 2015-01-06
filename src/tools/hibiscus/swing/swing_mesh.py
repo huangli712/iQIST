@@ -1,12 +1,41 @@
 #!/usr/bin/env python
-""" this module is used to build logarithm and tan mesh """
+
+##
+##
+## Introduction
+## ============
+##
+## It is a python script. The purpose of this script is build logarithm
+## and tan mesh for the swing code. Now it implements the following
+## python functions/classes:
+##
+##     def swing_ltan_mesh
+##     def swing_make_mesh
+##
+## Usage
+## =====
+##
+## Sorry, it can not be invoked manually.
+##
+## Author
+## ======
+##
+## This python script is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 12/20/2014 by li huang
+##
+##
 
 from scipy import *
 
-# build core logarithm and tan mesh
 def swing_ltan_mesh(N, x0, x1, x2):
-    """ build logarithm and tan mesh, core function """
-
+    """ build logarithm and tan mesh
+    """
     eta = log(x1 / x0) / (x2 / x1 - 1)
     N1 = int((1 + eta * N) / (1 + eta) + 0.5)
     if (N1 > N - 2): N1 = N - 2
@@ -30,11 +59,10 @@ def swing_ltan_mesh(N, x0, x1, x2):
 
     return om
 
-# build the symmetric logarithm and tan mesh
 def swing_make_mesh(N, x0, x1, x2):
     """ for building mesh which is logarithmic at small frequency and tan
-    at large frequency. mesh is symmetric around zero frequency """
-
+        at large frequency. mesh is symmetric around zero frequency
+    """
     N2 = N / 2
     om1 = swing_ltan_mesh(N2, x0, x1, x2)
 
