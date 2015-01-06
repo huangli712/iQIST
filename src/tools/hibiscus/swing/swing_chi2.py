@@ -1,17 +1,47 @@
 #!/usr/bin/env python
-""" this module is used to calculate the chi """
+
+##
+##
+## Introduction
+## ============
+##
+## It is a python script. The purpose of this script is calculate the
+## functional which should be minimized. It implements the following
+## python functions/classes:
+##
+##     def swing_cchi
+##
+## Usage
+## =====
+##
+## Sorry, it can not be invoked manually.
+##
+## Author
+## ======
+##
+## This python script is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 12/20/2014 by li huang
+##
+##
 
 from scipy import *
+
 from swing_fast import *
 from swing_dump import *
 
 # variables in global namespace, counter
 globalc = 0
 
-# calculate the \chi, using eq.(117) and eq.(118)
-def swing_cchi(gweigh, vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg, om, rfun, rfunc, expand, ders, alphas, gpos, poles):
-    """ calculate the chi """
-
+def swing_cchi(gweigh, vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg,
+               om, rfun, rfunc, expand, ders, alphas, gpos, poles):
+    """ to calculate the \chi, using eq.(117) and eq.(118)
+    """
     # define expand_sig
     expand_sig = ones(len(expand), dtype=float)
     expand_sig[2] = 100
@@ -20,7 +50,8 @@ def swing_cchi(gweigh, vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg, om, rf
 
     # calculate chi2 and chi4, which is very time-consuming, so we try to
     # implement this function by fortran language
-    (chi2, chi4, nrm) = fchi(gweigh, vary, gwfix, fixed, sqmc, ifunr, ifuni, ders, expand, expand_sig)
+    (chi2, chi4, nrm) = fchi(gweigh, vary, gwfix, fixed, sqmc, ifunr,
+                             ifuni, ders, expand, expand_sig)
 
     # calculate chi3
     nrm /= intg
@@ -41,8 +72,12 @@ def swing_cchi(gweigh, vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg, om, rf
         # current iteration number
         it = globalc / global_print
 
-        # print the chi values
-        print '%s %3d' % ('  HIBISCUS >>> iter:', it)
+        # print the chi values, when it is converged, chi2 should be less
+        # than 1.0_dp.
+        # when the python script is terminated, but chi2 is too large, we
+        # can increase maxsteps, or decrease factr in fmin_l_bfgs_b, and
+        # then rerun the python script.
+        print '%s %3d' % ('  HIBISCUS/swing >>> iter:', it)
         print '%s %12.8f %s %12.8f' % ('    chi2:', chi2, 'chi3:', alphas[0]*chi3)
         print '%s %12.8f %s %12.8f' % ('    chi4:', alphas[1]*chi4, 'chi5:', chi5)
         print

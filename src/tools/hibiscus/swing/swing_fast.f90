@@ -1,7 +1,6 @@
 !-------------------------------------------------------------------------
-! project : hibiscus
-! program : constants  module
-!           fchi
+! project : hibiscus/swing
+! program : fchi
 !           matsum
 !           kramskron
 ! source  : swing_fast.f90
@@ -18,53 +17,15 @@
 ! comment :
 !-------------------------------------------------------------------------
 
-  module constants
-     implicit none
-
-!=========================================================================
-!>>> integer constants: numerical precision                            <<<
-!=========================================================================
-
-! single precision
-     integer, public, parameter :: sp    = 4
-
-! double precision
-     integer, public, parameter :: dp    = 8
-
-!=========================================================================
-!>>> real constants: numerical constants                               <<<
-!=========================================================================
-
-! well-known $\pi$
-     real(dp), public, parameter :: pi   = 3.141592653589793238462643383279
-
-! 0.0 in double precision form
-     real(dp), public, parameter :: zero = 0.0
-
-! 1.0 in double precision form
-     real(dp), public, parameter :: one  = 1.0
-
-! 2.0 in double precision form
-     real(dp), public, parameter :: two  = 2.0
-
-! 0.5 in double precision form
-     real(dp), public, parameter :: half = 0.5
-
-! $\epsilon$ in double precision form
-     real(dp), public, parameter :: eps6 = 1.0E-6
-     real(dp), public, parameter :: eps8 = 1.0E-8
-     real(dp), public, parameter :: epst = 1.0E-10
-     real(dp), public, parameter :: epss = 1.0E-12
-
-  end module constants
-
 !>>> calculate \chi partly
   subroutine fchi( chi2, chi4, nrm, gweigh, vary, gwfix, fixed, &
                    sqmc, ifunr, ifuni, ders, expand, expand_sig,&
                    nvary, nfix, nal, nom, nds )
-     use constants
-
      implicit none
+
+     integer, parameter :: dp = kind(1.0d0)
+     real(dp), parameter :: zero = 0.0_dp
+     real(dp), parameter :: half = 0.5_dp
 
 ! external arguments
      integer, intent(in)   :: nvary, nfix, nal, nom, nds
@@ -141,9 +102,9 @@
 !>>> which is used to calculate the high frequency self-energy function
 ! on matsubara axis
   subroutine matsum(gr, gi, En, iom, x0, dh, wb, nom, nx)
-     use constants
-
      implicit none
+     integer, parameter :: dp = kind(1.0d0)
+     real(dp), parameter :: zero = 0.0_dp
 
 ! external arguments
      integer, intent(in)   :: nom
@@ -189,9 +150,10 @@
 
 !>>> calculate the kramas-kronig transformation, please refer to eq.(116)
   subroutine kramskron(Frc, om, F0, wb, x0, dhx, En, nom, nx)
-     use constants
-
      implicit none
+     integer, parameter :: dp = kind(1.0d0)
+     real(dp), parameter :: zero = 0.0_dp
+     real(dp), parameter :: pi   = 3.141592653589793238462643383279_dp
 
 ! external arguments
      integer, intent(in)  :: nom

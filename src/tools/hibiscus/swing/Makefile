@@ -8,7 +8,7 @@
 ## Usage
 ## =====
 ##
-## 'make' or 'make clean'
+## 'make', 'make clean', 'make clean-dat' or 'make clean-all'
 ##
 ## Author
 ## ======
@@ -20,7 +20,7 @@
 ## History
 ## =======
 ##
-## 09/30/2014 by li huang
+## 01/05/2015 by li huang
 ##
 ##
 
@@ -28,8 +28,7 @@ default: all
 
 all: exe
 
-exe: swing-fast
-swing-fast:
+exe:
 	f2py -c --fcompiler=intelem --f90flags="-O3 -xHost" swing_fast.f90 -m swing_fast
 
 clean:
