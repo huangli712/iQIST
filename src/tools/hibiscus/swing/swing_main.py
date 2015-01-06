@@ -234,8 +234,8 @@ if __name__ == '__main__':
         if abs(x0) > lcut:
             gpos.append(x0)
 
-    # creat real-frequency mesh, it is not a linear mesh, but a logarithm
-    # and tan mesh
+    # creat real-frequency mesh, it is not a linear mesh, but a symmetric
+    # logarithm and tan mesh
     (om, dh) = swing_make_mesh(N0, a0, b0, L0)
 
     # create matsubara mesh
@@ -304,6 +304,10 @@ if __name__ == '__main__':
     # minimization routine is called, the well known L-BFGS-B algorithm
     # is used, which is included in scipy.optimize package
     #
+    # please pay attention to the chi2 in the output log. it should be
+    # less than 1. If it is large than 1 when the code is terminated,
+    # please increase maxsteps and decrease factr, and run it again.
+    #
     # approx_grad: bool, whether to approximate the gradient numerically
     #
     # bounds: list, (min, max) pairs for each element in x, defining the
@@ -312,12 +316,12 @@ if __name__ == '__main__':
     #
     # maxfun: maximum number of function evaluations.
     (gweigh, fmin, dinf) = optimize.fmin_l_bfgs_b(swing_cchi, gweigh, 
-        approx_grad=1, factr = 1000, bounds=abounds, maxfun=maxsteps,
-        args=(vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg, om, 
-        rfun, rfunc, expand, ders, alphas, gpos, poles))
+       approx_grad=True, factr=1000, bounds=abounds, maxfun=maxsteps,
+       args=(vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg, om, 
+             rfun, rfunc, expand, ders, alphas, gpos, poles))
 
     # dump the final self-energy function on real axis, please refer to
-    # sigr.out file
+    # sigr.out and sigr_linear.out file
     swing_dump_sigr(om, vary, fixed, gweigh, gwfix, rfunc, sinfty)
 
     # record the end time

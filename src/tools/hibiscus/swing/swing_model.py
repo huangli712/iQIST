@@ -38,6 +38,9 @@
 ## Author
 ## ======
 ##
+## The original code was developed by K. Haule
+## see http://hauleweb.rutgers.edu/downloads/
+##
 ## This python script is designed, created, implemented, and maintained by
 ##
 ## Li Huang // email: huangli712@gmail.com
