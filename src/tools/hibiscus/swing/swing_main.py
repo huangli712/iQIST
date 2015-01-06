@@ -117,7 +117,7 @@ if __name__ == '__main__':
         'b0'      : [0.5,       '# frequency mesh parameter'],
         'rps'     : [1,         '# the lowest lorentzian is usualy at pi*T. this factor can bring it closer to zero.'],
         'maxsteps': [9999,      '# maximum number of function evaluations in minimization routine'],
-        }
+    }
 
     # from command line
     arguments = sys.argv[1:]
@@ -277,8 +277,10 @@ if __name__ == '__main__':
     # is no bound in that direction.
     #
     # maxfun: maximum number of function evaluations.
-    (gweigh, fmin, dinf) = optimize.fmin_l_bfgs_b(swing_cchi, gweigh, approx_grad=1, factr = 1000, bounds=abounds, maxfun=maxsteps,
-        args=(vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg, om, rfun, rfunc, expand, ders, alphas, gpos, poles))
+    (gweigh, fmin, dinf) = optimize.fmin_l_bfgs_b(swing_cchi, gweigh, 
+        approx_grad=1, factr = 1000, bounds=abounds, maxfun=maxsteps,
+        args=(vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg, om, 
+        rfun, rfunc, expand, ders, alphas, gpos, poles))
 
     # dump the final self-energy function on real axis, please refer to
     # sigr.out file
