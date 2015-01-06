@@ -5,7 +5,7 @@
 ## HIBISCUS/swing @ iQIST
 ##
 ## version: v2014.10.11T
-## status : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK 
+## status : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK
 ##
 ## Introduction
 ## ============
@@ -24,13 +24,17 @@
 ##
 ## The options can be as follows:
 ##    -sig filename
-##      mandatory, input self-energy on imaginary axis
+##      mandatory, input self-energy on imaginary axis (default:Sig.out)
 ##
 ##    -nom number
-##      mandatory, number of matsubara points used
+##      mandatory, number of matsubara points used (default:100)
 ##
 ##    -beta float
-##      mandatory, inverse temperature
+##      mandatory, inverse temperature (default:100.0)
+##
+##    -FL bool
+##      mandatory, low energy expansion of a Fermi liquid of Mott
+##      insulator (default:True)
 ##
 ##    -poles [[y0,A0,B0],[y1,A1,B1],...]
 ##      optional, poles of self-energy determined from spectral function,
@@ -47,9 +51,9 @@
 ##
 ##    -wexp float:[1-2]
 ##      optional, wexp^i is position where basis functions are
-##      peaked (default:1.6)
+##      peaked (default:1.5)
 ##
-##    -ifit number[3-..]
+##    -ifit number[4-..]
 ##      optional, low energy fit, number of matsubara points used to fit
 ##      the low energy expansion
 ##
@@ -60,6 +64,10 @@
 ##    -alpha4 float[0-1]
 ##      optional, weight for the low energy expansion in the functional
 ##      to be minimized (default:0.001)
+##
+##    -maxsteps number
+##      optional, maximum number of function evaluations in minimization
+##      routine (default:400000)
 ##
 ## The possible output files are as follows:
 ##    sigr.out
@@ -79,8 +87,17 @@
 ##    gaus.nnn
 ##      current configuration for gaussians (nnn counts every 40000 steps)
 ##
+## Comment: 
+##    In order to run this code properly, you need to ensure scipy and
+##    numpy were correctly installed on your system. This code was tested
+##    on scipy 0.14.0 and numpy 1.7.0 only. So for the older versions of
+##    scipy and numpy, we can not guarantee that it can work always.
+##
 ## Author
 ## ======
+##
+## The original code was developed by K. Haule
+## see http://hauleweb.rutgers.edu/downloads/
 ##
 ## This python script is designed, created, implemented, and maintained by
 ##
@@ -120,7 +137,7 @@ if __name__ == '__main__':
         'lcut'    : [0.0,       '# the lowest frequency lorentzian position'],
         'beta'    : [100.,      '# inverse temperature'],
         'b'       : [0.8,       '# b parameter to determin family of basis functions'],
-        'Ng'      : [15,        '# number of basis functions'],
+        'Ng'      : [12,        '# number of basis functions'],
         'wexp'    : [1.5,       '# wexp^i is position where basis functions are peaked'],
         'ifit'    : [4,         '# number of matsubara points used to fit the low energy expansion'],
         'alpha3'  : [0.01,      '# weight for the normalization in functional to be minimized'],
@@ -133,7 +150,7 @@ if __name__ == '__main__':
         'a0'      : [5e-3,      '# frequency mesh start'],
         'b0'      : [0.5,       '# frequency mesh parameter'],
         'rps'     : [1,         '# the lowest lorentzian is usualy at pi*T. this factor can bring it closer to zero.'],
-        'maxsteps': [9999,      '# maximum number of function evaluations in minimization routine'],
+        'maxsteps': [400000,    '# maximum number of function evaluations in minimization routine'],
     }
 
     # from command line
