@@ -1,80 +1,97 @@
 #!/usr/bin/env python
-"""
---------------------------------------------------------------------------
 
-  Swing
-  v2011.08.18T
-
-  intro:
-    this code is used to continue self-energy analytically from imaginary
-  axis to real axis. this algorithm is invented by K. Haule, please refer
-  to original paper:
-    Phys. Rev. B, 81, 195107
-  this code is written by K. Haule, and modified by lihuang, any question,
-  please contact with me (huangli712@yahoo.com.cn)
-
---------------------------------------------------------------------------
-
-  input:
-    -sig filename
-        mandatory, input self-energy on imaginary axis
-
-    -nom number
-        mandatory, number of matsubara points used
-
-    -beta float
-        mandatory, inverse temperature
-
-    -poles [[y0,A0,B0],[y1,A1,B1],...]
-        optional, poles of self-energy determined from spectral function,
-        poles will be forced at y0,y1,... this is achieved by contribution
-        to chi2+= Al/((x_i-yl)**2+w_i*Bl) where x_i are positions and w_i
-        weights of lorentzians to be determined
-
-    -b float:[0-1]
-        optional, basis functions, b parameter to determin family of basis
-        functions (default:0.8)
-
-    -Ng number
-        optional, number of basis functions (default:12)
-
-    -wexp float:[1-2]
-        optional, wexp^i is position where basis functions are
-        peaked (default:1.6)
-
-    -ifit number[3-..]
-        optional, low energy fit, number of matsubara points used to fit
-        the low energy expansion
-
-    -alpha3 float[0-1]
-        optional, weight for the normalization in functional to be
-        minimized (default:0.01)
-
-    -alpha4 float[0-1]
-        optional, weight for the low energy expansion in the functional to
-        be minimized (default:0.001)
-
---------------------------------------------------------------------------
-
-  output:
-    sigr.out
-        final self-energy function on real axis
-
-    sigr_linear.out
-        final self-energy function on fine real axis
-        it is used to interface with sunset code
-
-    siom.nnn
-        current function on imaginary axis (nnn counts every 40000 steps)
-
-    sres.nnn
-        current analytic continuation to real axis (nnn counts every 40000 steps)
-
-    gaus.nnn
-        current configuration for gaussians (nnn counts every 40000 steps)
-
---------------------------------------------------------------------------
-"""
+##
+##
+## HIBISCUS/swing @ iQIST
+##
+## version: v2014.10.11T
+## status : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK 
+##
+## Introduction
+## ============
+##
+## This code is used to continue self-energy analytically from imaginary
+## axis to real axis. This algorithm is invented by K. Haule, please refer
+## to original paper: Phys. Rev. B 81, 195107 (2010).
+##
+## This code was written by K. Haule originally. And then we adapted this
+## code such that it can be used with the iQIST software package.
+##
+## Usage
+## =====
+##
+## python swing_main.py [options]
+##
+## The options can be as follows:
+##    -sig filename
+##      mandatory, input self-energy on imaginary axis
+##
+##    -nom number
+##      mandatory, number of matsubara points used
+##
+##    -beta float
+##      mandatory, inverse temperature
+##
+##    -poles [[y0,A0,B0],[y1,A1,B1],...]
+##      optional, poles of self-energy determined from spectral function,
+##      poles will be forced at y0,y1,... this is achieved by contribution
+##      to chi2+= Al/((x_i-yl)**2+w_i*Bl) where x_i are positions and w_i
+##      weights of lorentzians to be determined
+##
+##    -b float:[0-1]
+##      optional, basis functions, b parameter to determin family of basis
+##      functions (default:0.8)
+##
+##    -Ng number
+##      optional, number of basis functions (default:12)
+##
+##    -wexp float:[1-2]
+##      optional, wexp^i is position where basis functions are
+##      peaked (default:1.6)
+##
+##    -ifit number[3-..]
+##      optional, low energy fit, number of matsubara points used to fit
+##      the low energy expansion
+##
+##    -alpha3 float[0-1]
+##      optional, weight for the normalization in functional to be
+##      minimized (default:0.01)
+##
+##    -alpha4 float[0-1]
+##      optional, weight for the low energy expansion in the functional
+##      to be minimized (default:0.001)
+##
+## The possible output files are as follows:
+##    sigr.out
+##      final self-energy function on real axis
+##
+##    sigr_linear.out
+##      final self-energy function on fine real axis, it is used to
+##      interface with LDA + DMFT code
+##
+##    siom.nnn
+##      current function on imaginary axis (nnn counts every 40000 steps)
+##
+##    sres.nnn
+##      current analytic continuation to real axis (nnn counts every
+##      40000 steps)
+##
+##    gaus.nnn
+##      current configuration for gaussians (nnn counts every 40000 steps)
+##
+## Author
+## ======
+##
+## This python script is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 01/06/2015 by li huang
+##
+##
 
 import sys
 import time
