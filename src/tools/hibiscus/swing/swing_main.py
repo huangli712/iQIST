@@ -4,7 +4,7 @@
 ##
 ## HIBISCUS/swing @ iQIST
 ##
-## version: v2014.10.11T
+## version: v2015.01.06T
 ## status : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK
 ##
 ## Introduction

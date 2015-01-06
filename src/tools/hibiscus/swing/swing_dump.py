@@ -49,7 +49,7 @@ def swing_print_header():
     print '  HIBISCUS/swing'
     print '  >>> A Stochastic Analytic Continuation Code for Self-Energy Data'
     print
-    print '  Version: 2014.10.11T'
+    print '  Version: 2015.01.06T'
     print '  Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
     print '  Support: huangli712@gmail.com'
     print '  License: GNU General Public License version 3'
