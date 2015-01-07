@@ -35,7 +35,7 @@ class p_atomic_solver(object):
 
         typical usage:
             # import this module
-            from p_atomic import *
+            from u_atomic import *
 
             # create an instance
             p = p_atomic_solver()
