@@ -4,7 +4,7 @@ Interacting Quantum Impurity Solver Toolkit
 Advanced Test Cases For BEGONIA
 ===============================
 
-2. 3 band model
+1. 3 band model
 ---------------
 
 * 3a1 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=10.00, mune=3.00, npart=4
