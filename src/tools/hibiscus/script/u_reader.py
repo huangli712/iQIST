@@ -177,4 +177,5 @@ if __name__ == '__main__':
 
     norbs = 2
     ntime = 1024
-    (tmesh, gtau) = iqistReader.get_green(norbs,ntime)
+    (tmesh, gtau) = iqistReader.get_green(norbs, ntime, "solver.green.bin.10")
+    print gtau[:,1,1]
