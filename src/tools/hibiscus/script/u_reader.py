@@ -68,30 +68,64 @@ class iqistReader(object):
         pass
 
     @staticmethod
-    def get_hybri():
-        """ try to read the solver.hybri.dat file to return the imaginary
-            time hybridization function \Delta(\tau) data
-        """
-        pass
-
-    @staticmethod
-    def get_hyb():
-        """ try to read the solver.hyb.dat file to return the matsubara
-            hybridization function \Delta(i\omega) data
-        """
-        pass
-
-    @staticmethod
     def get_weiss():
         """ try to read the solver.weiss.dat file to return the imaginary
             time Weiss's function \mathcal{G}(\tau) data
         """
-        pass
+        if fileName is not None:
+            f = open(fileName,"r")
+        else:
+            f = open("solver.weiss.dat","r")
+
+        nband = norbs / 2
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        wtau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
+        for i in range(nband):
+            for j in range(ntime):
+                spl = f.readline().split()
+                tmesh[j] = float( spl[2] )
+                wtau[j,i,i] = float( spl[3] )
+                wtau[j,i+nband,i+nband] = float( spl[4] )
+
+        f.close()
+
+        return (tmesh, wtau)
 
     @staticmethod
     def get_wss():
         """ try to read the solver.wss.dat file to return the matsubara
             Weiss's function \mathcal{G}(i\omega) data
+        """
+        pass
+
+    @staticmethod
+    def get_hybri():
+        """ try to read the solver.hybri.dat file to return the imaginary
+            time hybridization function \Delta(\tau) data
+        """
+        if fileName is not None:
+            f = open(fileName,"r")
+        else:
+            f = open("solver.hybri.dat","r")
+
+        nband = norbs / 2
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        htau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
+        for i in range(nband):
+            for j in range(ntime):
+                spl = f.readline().split()
+                tmesh[j] = float( spl[2] )
+                htau[j,i,i] = float( spl[3] )
+                htau[j,i+nband,i+nband] = float( spl[4] )
+
+        f.close()
+
+        return (tmesh, htau)
+
+    @staticmethod
+    def get_hyb():
+        """ try to read the solver.hyb.dat file to return the matsubara
+            hybridization function \Delta(i\omega) data
         """
         pass
 
