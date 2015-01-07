@@ -5,7 +5,7 @@
 !!! is necessary for the self-energy function analytical continuation    !
 !!! code (hibiscus/swing)                                                !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2014.10.11T                                               !
+!!! version : v2015.01.06T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : any question, please contact with huangli712@gmail.com     !
 !!!=========+=========+=========+=========+=========+=========+=========+!
@@ -110,7 +110,7 @@
      write(mystd,'(2X,a)') '>>> Making mean value and standard deviation for self-energy function'
      write(mystd,*) ! print blank line
 
-     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2015.01.06T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'

@@ -4,11 +4,11 @@ The iQIST software package includes several quantum impurity solvers which imple
 
 ### WARNING
 
-The iQIST is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results in any peer-reviewed journal.
+The iQIST is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
 
 ### Version
 
-v0.4.0
+v0.4.6 @ 2015.01.06T(alpha)
 
 ### License
 

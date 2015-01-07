@@ -1,39 +1,34 @@
-!-------------------------------------------------------------------------
-! project : hibiscus/swing
-! program : fchi
-!           matsum
-!           kramskron
-! source  : swing_fast.f90
-! type    : module & subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 01/10/2011 by li huang
-!           01/26/2011 by li huang
-! purpose : define the numerical and physical constants for swing code
-!           implement several time-consuming subroutines to accelerate
-!           the swing code
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : hibiscus/swing
+!!! program : fchi
+!!!           matsum
+!!!           kramskron
+!!! source  : swing_fast.f90
+!!! type    : subroutines
+!!! author  : li huang (email:huangli712@gmail.com)
+!!! history : 01/10/2011 by li huang
+!!!           01/26/2011 by li huang
+!!!           01/06/2015 by li huang
+!!! purpose : implement several time-consuming subroutines to accelerate
+!!!           the hibiscus/swing code
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> calculate \chi partly
+!!>>> fchi: calculate \chi partly
   subroutine fchi( chi2, chi4, nrm, gweigh, vary, gwfix, fixed, &
                    sqmc, ifunr, ifuni, ders, expand, expand_sig,&
                    nvary, nfix, nal, nom, nds )
      implicit none
 
-     integer, parameter :: dp = kind(1.0d0)
+! local parameters
+     integer, parameter  :: dp = kind(1.0d0)
      real(dp), parameter :: zero = 0.0_dp
      real(dp), parameter :: half = 0.5_dp
 
 ! external arguments
      integer, intent(in)   :: nvary, nfix, nal, nom, nds
-
-     real(dp), intent(out) :: chi2
-     real(dp), intent(out) :: chi4
-     real(dp), intent(out) :: nrm
-
+     real(dp), intent(out) :: chi2, chi4, nrm
      real(dp), intent(in)  :: gweigh(nvary)
      real(dp), intent(in)  :: vary(nvary)
      real(dp), intent(in)  :: gwfix(nfix)
@@ -45,11 +40,11 @@
      real(dp), intent(in)  :: expand(nds)
      real(dp), intent(in)  :: expand_sig(nds)
 
-!f2py integer intent(hide), depend(gweigh)  :: nvary=shape(gweigh,0)
-!f2py integer intent(hide), depend(gwfix)   :: nfix=shape(gwfix,0)
-!f2py integer intent(hide), depend(sqmc)    :: nom=shape(sqmc,0)
-!f2py integer intent(hide), depend(ifunr)   :: nal=shape(ifunr,0)
-!f2py integer intent(hide), depend(expand)  :: nds=shape(expand,0)
+!f2py integer intent(hide), depend(gweigh) :: nvary=shape(gweigh,0)
+!f2py integer intent(hide), depend(gwfix)  :: nfix=shape(gwfix,0)
+!f2py integer intent(hide), depend(sqmc)   :: nom=shape(sqmc,0)
+!f2py integer intent(hide), depend(ifunr)  :: nal=shape(ifunr,0)
+!f2py integer intent(hide), depend(expand) :: nds=shape(expand,0)
 
 ! local varibales
      integer  :: i
@@ -87,7 +82,6 @@
      do i=1,nfix
          tders = tders + ders(fixed(i),:) * gwfix(i)
      enddo ! over i={1,nfix} loop
-
      chi4 = zero
      do i=1,nds
          chi4 = chi4 + ( ( tders(i) - expand(i) ) / expand_sig(i) )**2
@@ -99,28 +93,26 @@
      return
   end subroutine fchi
 
-!>>> which is used to calculate the high frequency self-energy function
-! on matsubara axis
+!!>>> matsum: which is used to calculate the high frequency self-energy
+!!>>> function on matsubara axis
   subroutine matsum(gr, gi, En, iom, x0, dh, wb, nom, nx)
      implicit none
-     integer, parameter :: dp = kind(1.0d0)
+
+! local parameters
+     integer, parameter  :: dp = kind(1.0d0)
      real(dp), parameter :: zero = 0.0_dp
 
 ! external arguments
-     integer, intent(in)   :: nom
-     integer, intent(in)   :: nx
-
-     real(dp), intent(out) :: gr(nom)
-     real(dp), intent(out) :: gi(nom)
-
+     integer, intent(in)   :: nom, nx
+     real(dp), intent(out) :: gr(nom), gi(nom)
      real(dp), intent(in)  :: En
      real(dp), intent(in)  :: iom(nom)
      real(dp), intent(in)  :: x0(nx)
      real(dp), intent(in)  :: dh(nx)
      real(dp), intent(in)  :: wb(nx)
 
-!f2py integer intent(hide), depend(iom)  :: nom=shape(iom,0)
-!f2py integer intent(hide), depend(x0)   :: nx=shape(x0,0)
+!f2py integer intent(hide), depend(iom) :: nom=shape(iom,0)
+!f2py integer intent(hide), depend(x0)  :: nx=shape(x0,0)
 
 ! local variables
      integer  :: i
@@ -148,25 +140,25 @@
      return
   end subroutine matsum
 
-!>>> calculate the kramas-kronig transformation, please refer to eq.(116)
+!!>>> kramskron: calculate the kramas-kronig transformation, please refer
+!!>>> to eq.(116)
   subroutine kramskron(Frc, om, F0, wb, x0, dhx, En, nom, nx)
      implicit none
-     integer, parameter :: dp = kind(1.0d0)
+
+! local parameters
+     integer, parameter  :: dp = kind(1.0d0)
      real(dp), parameter :: zero = 0.0_dp
      real(dp), parameter :: pi   = 3.141592653589793238462643383279_dp
 
 ! external arguments
-     integer, intent(in)  :: nom
-     integer, intent(in)  :: nx
-
-     complex(dp), intent(out) :: frc(nom)
-
+     integer, intent(in)  :: nom, nx
      real(dp), intent(in) :: En
      real(dp), intent(in) :: om(nom)
      real(dp), intent(in) :: F0(nom)
      real(dp), intent(in) :: wb(nx)
      real(dp), intent(in) :: x0(nx)
      real(dp), intent(in) :: dhx(nx)
+     complex(dp), intent(out) :: frc(nom)
 
 !f2py integer intent(hide), depend(om)  :: nom=shape(om,0)
 !f2py integer intent(hide), depend(x0)  :: nx=shape(x0,0)

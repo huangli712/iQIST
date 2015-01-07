@@ -1,80 +1,117 @@
 #!/usr/bin/env python
-"""
---------------------------------------------------------------------------
 
-  Swing
-  v2011.08.18T
-
-  intro:
-    this code is used to continue self-energy analytically from imaginary
-  axis to real axis. this algorithm is invented by K. Haule, please refer
-  to original paper:
-    Phys. Rev. B, 81, 195107
-  this code is written by K. Haule, and modified by lihuang, any question,
-  please contact with me (huangli712@yahoo.com.cn)
-
---------------------------------------------------------------------------
-
-  input:
-    -sig filename
-        mandatory, input self-energy on imaginary axis
-
-    -nom number
-        mandatory, number of matsubara points used
-
-    -beta float
-        mandatory, inverse temperature
-
-    -poles [[y0,A0,B0],[y1,A1,B1],...]
-        optional, poles of self-energy determined from spectral function,
-        poles will be forced at y0,y1,... this is achieved by contribution
-        to chi2+= Al/((x_i-yl)**2+w_i*Bl) where x_i are positions and w_i
-        weights of lorentzians to be determined
-
-    -b float:[0-1]
-        optional, basis functions, b parameter to determin family of basis
-        functions (default:0.8)
-
-    -Ng number
-        optional, number of basis functions (default:12)
-
-    -wexp float:[1-2]
-        optional, wexp^i is position where basis functions are
-        peaked (default:1.6)
-
-    -ifit number[3-..]
-        optional, low energy fit, number of matsubara points used to fit
-        the low energy expansion
-
-    -alpha3 float[0-1]
-        optional, weight for the normalization in functional to be
-        minimized (default:0.01)
-
-    -alpha4 float[0-1]
-        optional, weight for the low energy expansion in the functional to
-        be minimized (default:0.001)
-
---------------------------------------------------------------------------
-
-  output:
-    sigr.out
-        final self-energy function on real axis
-
-    sigr_linear.out
-        final self-energy function on fine real axis
-        it is used to interface with sunset code
-
-    siom.nnn
-        current function on imaginary axis (nnn counts every 40000 steps)
-
-    sres.nnn
-        current analytic continuation to real axis (nnn counts every 40000 steps)
-
-    gaus.nnn
-        current configuration for gaussians (nnn counts every 40000 steps)
-
---------------------------------------------------------------------------
-"""
+##
+##
+## HIBISCUS/swing @ iQIST
+##
+## version: v2015.01.06T
+## status : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK
+##
+## Introduction
+## ============
+##
+## This code is used to continue self-energy analytically from imaginary
+## axis to real axis. This algorithm is invented by K. Haule, please refer
+## to original paper: Phys. Rev. B 81, 195107 (2010).
+##
+## This code was written by K. Haule originally. And then we adapted this
+## code such that it can be used with the iQIST software package.
+##
+## Usage
+## =====
+##
+## python swing_main.py [options]
+##
+## The options can be as follows:
+##    -sig filename
+##      mandatory, input self-energy on imaginary axis (default:Sig.out)
+##
+##    -nom number
+##      mandatory, number of matsubara points used (default:100)
+##
+##    -beta float
+##      mandatory, inverse temperature (default:100.0)
+##
+##    -FL bool
+##      mandatory, low energy expansion of a Fermi liquid of Mott
+##      insulator (default:True)
+##
+##    -poles [[y0,A0,B0],[y1,A1,B1],...]
+##      optional, poles of self-energy determined from spectral function,
+##      poles will be forced at y0,y1,... this is achieved by contribution
+##      to chi2+= Al/((x_i-yl)**2+w_i*Bl) where x_i are positions and w_i
+##      weights of lorentzians to be determined
+##
+##    -b float:[0-1]
+##      optional, basis functions, b parameter to determin family of basis
+##      functions (default:0.8)
+##
+##    -Ng number
+##      optional, number of basis functions (default:12)
+##
+##    -wexp float:[1-2]
+##      optional, wexp^i is position where basis functions are
+##      peaked (default:1.5)
+##
+##    -ifit number[4-..]
+##      optional, low energy fit, number of matsubara points used to fit
+##      the low energy expansion
+##
+##    -alpha3 float[0-1]
+##      optional, weight for the normalization in functional to be
+##      minimized (default:0.01)
+##
+##    -alpha4 float[0-1]
+##      optional, weight for the low energy expansion in the functional
+##      to be minimized (default:0.001)
+##
+##    -maxsteps number
+##      optional, maximum number of function evaluations in minimization
+##      routine (default:400000)
+##
+## The possible output files are as follows:
+##    sigr.out
+##      final self-energy function on real axis
+##
+##    sigr_linear.out
+##      final self-energy function on fine real axis, it is used to
+##      interface with LDA + DMFT code
+##
+##    siom.nnn
+##      current function on imaginary axis (nnn counts every 40000 steps)
+##
+##    sres.nnn
+##      current analytic continuation to real axis (nnn counts every
+##      40000 steps)
+##
+##    gaus.nnn
+##      current configuration for gaussians (nnn counts every 40000 steps)
+##
+## Comment: 
+##    In order to run this code properly, you need to ensure scipy and
+##    numpy were correctly installed on your system. This code was tested
+##    on scipy 0.14.0 and numpy 1.7.0 only. So for the older versions of
+##    scipy and numpy, we can not guarantee that it can work always.
+##
+##    To run this code, please use 'make' command to build the dynamical
+##    library swing_fast.so at first.
+##
+## Author
+## ======
+##
+## The original code was developed by K. Haule
+## see http://hauleweb.rutgers.edu/downloads/
+##
+## This python script is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 01/06/2015 by li huang
+##
+##
 
 import sys
 import time
@@ -103,7 +140,7 @@ if __name__ == '__main__':
         'lcut'    : [0.0,       '# the lowest frequency lorentzian position'],
         'beta'    : [100.,      '# inverse temperature'],
         'b'       : [0.8,       '# b parameter to determin family of basis functions'],
-        'Ng'      : [15,        '# number of basis functions'],
+        'Ng'      : [12,        '# number of basis functions'],
         'wexp'    : [1.5,       '# wexp^i is position where basis functions are peaked'],
         'ifit'    : [4,         '# number of matsubara points used to fit the low energy expansion'],
         'alpha3'  : [0.01,      '# weight for the normalization in functional to be minimized'],
@@ -116,8 +153,8 @@ if __name__ == '__main__':
         'a0'      : [5e-3,      '# frequency mesh start'],
         'b0'      : [0.5,       '# frequency mesh parameter'],
         'rps'     : [1,         '# the lowest lorentzian is usualy at pi*T. this factor can bring it closer to zero.'],
-        'maxsteps': [9999,      '# maximum number of function evaluations in minimization routine'],
-        }
+        'maxsteps': [400000,    '# maximum number of function evaluations in minimization routine'],
+    }
 
     # from command line
     arguments = sys.argv[1:]
@@ -200,8 +237,8 @@ if __name__ == '__main__':
         if abs(x0) > lcut:
             gpos.append(x0)
 
-    # creat real-frequency mesh, it is not a linear mesh, but a logarithm
-    # and tan mesh
+    # creat real-frequency mesh, it is not a linear mesh, but a symmetric
+    # logarithm and tan mesh
     (om, dh) = swing_make_mesh(N0, a0, b0, L0)
 
     # create matsubara mesh
@@ -270,6 +307,10 @@ if __name__ == '__main__':
     # minimization routine is called, the well known L-BFGS-B algorithm
     # is used, which is included in scipy.optimize package
     #
+    # please pay attention to the chi2 in the output log. it should be
+    # less than 1. If it is large than 1 when the code is terminated,
+    # please increase maxsteps and decrease factr, and run it again.
+    #
     # approx_grad: bool, whether to approximate the gradient numerically
     #
     # bounds: list, (min, max) pairs for each element in x, defining the
@@ -277,11 +318,13 @@ if __name__ == '__main__':
     # is no bound in that direction.
     #
     # maxfun: maximum number of function evaluations.
-    (gweigh, fmin, dinf) = optimize.fmin_l_bfgs_b(swing_cchi, gweigh, approx_grad=1, factr = 1000, bounds=abounds, maxfun=maxsteps,
-        args=(vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg, om, rfun, rfunc, expand, ders, alphas, gpos, poles))
+    (gweigh, fmin, dinf) = optimize.fmin_l_bfgs_b(swing_cchi, gweigh, 
+       approx_grad=True, factr=1000, bounds=abounds, maxfun=maxsteps,
+       args=(vary, gwfix, fixed, sqmc, ifunr, ifuni, iom, intg, om, 
+             rfun, rfunc, expand, ders, alphas, gpos, poles))
 
     # dump the final self-energy function on real axis, please refer to
-    # sigr.out file
+    # sigr.out and sigr_linear.out file
     swing_dump_sigr(om, vary, fixed, gweigh, gwfix, rfunc, sinfty)
 
     # record the end time
