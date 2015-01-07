@@ -58,6 +58,7 @@
 !! solver.grn.dat
 !! solver.hybri.dat
 !! solver.hyb.dat
+!! solver.weiss.dat
 !! solver.wss.dat
 !! solver.sgm.dat
 !! solver.hub.dat
