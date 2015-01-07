@@ -45,28 +45,28 @@ csml:
 exe: cssl csml makedos makescr maketau makeups makekra makesig makestd makechi
 
 makedos: makedos.o
-	$(LINKER) $(objects) makedos.o -o mdos $(LFLAGS) $(LIBS)
+	$(LINKER) makedos.o $(objects) -o mdos $(LFLAGS) $(LIBS)
 
 makescr: makescr.o
-	$(LINKER) $(objects) makescr.o -o mscr $(LFLAGS) $(LIBS)
+	$(LINKER) makescr.o $(objects) -o mscr $(LFLAGS) $(LIBS)
 
 maketau: maketau.o
-	$(LINKER) $(objects) maketau.o -o mtau $(LFLAGS) $(LIBS)
+	$(LINKER) maketau.o $(objects) -o mtau $(LFLAGS) $(LIBS)
 
 makeups: makeups.o
-	$(LINKER) $(objects) makeups.o -o mups $(LFLAGS) $(LIBS)
+	$(LINKER) makeups.o $(objects) -o mups $(LFLAGS) $(LIBS)
 
 makekra: makekra.o
-	$(LINKER) $(objects) makekra.o -o mkra $(LFLAGS) $(LIBS)
+	$(LINKER) makekra.o $(objects) -o mkra $(LFLAGS) $(LIBS)
 
 makesig: makesig.o
-	$(LINKER) $(objects) makesig.o -o msig $(LFLAGS) $(LIBS)
+	$(LINKER) makesig.o $(objects) -o msig $(LFLAGS) $(LIBS)
 
 makestd: makestd.o
-	$(LINKER) $(objects) makestd.o -o mstd $(LFLAGS) $(LIBS)
+	$(LINKER) makestd.o $(objects) -o mstd $(LFLAGS) $(LIBS)
 
 makechi: makechi.o
-	$(LINKER) $(objects) makechi.o -o mchi $(LFLAGS) $(LIBS)
+	$(LINKER) makechi.o $(objects) -o mchi $(LFLAGS) $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
