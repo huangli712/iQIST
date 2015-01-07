@@ -22,6 +22,7 @@
 ##
 ## For Mac OS X system, the grammar for sed is (we don't generate backup)
 ##     sed -i '' ...
+##
 ## However, for Linux-based system, the grammar for sed is
 ##     sed -i ...
 ##
