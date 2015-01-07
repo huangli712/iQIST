@@ -1,5 +1,56 @@
 #!/usr/bin/env python
-""" this module is used to defined the basis function for different model """
+
+##
+##
+## Introduction
+## ============
+##
+## It is a python script. The purpose of this script is define the basis
+## functions for different models (Fermi liquid case and Mott insulator
+## case). Now it implements the following python functions/classes:
+##
+##     def fparab
+##
+##     class lowEnergyFermiLiquid
+##     ---> def Fun
+##     ---> def Func
+##     ---> def Matsubara
+##     ---> def RealParts
+##
+##     class lowEnergyInsulator
+##     ---> def Fun
+##     ---> def Funr
+##     ---> def Func
+##     ---> def Matsubara
+##     ---> def RealParts
+##
+##     class highEnergy
+##     ---> def F0
+##     ---> def Func
+##     ---> def Matsubara
+##     ---> def RealParts
+##
+## Usage
+## =====
+##
+## Sorry, it can not be invoked manually.
+##
+## Author
+## ======
+##
+## The original code was developed by K. Haule
+## see http://hauleweb.rutgers.edu/downloads/
+##
+## This python script is designed, created, implemented, and maintained by
+##
+## Li Huang // email: huangli712@gmail.com
+##
+## History
+## =======
+##
+## 12/20/2014 by li huang
+##
+##
 
 from scipy import *
 from scipy import optimize
@@ -11,19 +62,19 @@ from swing_dump import *
 from swing_mesh import *
 
 def fparab(par, x, data):
-    """ the fitting function for self-energy, please refer to eq.(113) """
-
+    """ the fitting function for self-energy, please refer to eq.(113)
+    """
     chi2 = 0
     for i in range(len(x)):
         chi2 += ( (par[0] + x[i]*par[1] + x[i]**2*par[2]) - data[i] )**2
     return chi2
 
 class lowEnergyFermiLiquid(object):
-    """ low energy model for fermi liquid system """
-
+    """ low energy model for Fermi liquid system
+    """
     def __init__(self, ifit, iom0, isig, p0, valueAtUnity=0.05):
-        """ find out the fitting parameters """
-
+        """ find out the fitting parameters
+        """
         # fetch matsubara axis
         xfit = iom0[0:ifit]
 
@@ -56,18 +107,18 @@ class lowEnergyFermiLiquid(object):
         self.pf = sqrt(2.)*self.a2**2*self.p0**(3/4.) / (2*pi*(2+self.a0*self.a2*sqrt(self.p0)))
 
     def Fun(self, x):
-        """ the polynomial function, please refer to eq.(115) """
-
+        """ the polynomial function, please refer to eq.(115)
+        """
         return self.pf*(self.a0 + self.a1*x + 0.5*self.a2*x**2) / (1 + self.p0*(self.a2*x/2)**4)
 
     def Func(self, om):
-        """ the polynomial function, please refer to eq.(115) """
-
+        """ the polynomial function, please refer to eq.(115)
+        """
         return array([self.Fun(x) for x in om])
         
     def Matsubara(self, iom):
-        """ evaluate self-energy at matsubara axis """
-
+        """ evaluate self-energy at matsubara axis
+        """
         gm = 1/self.a2
         (x0, dh0) = swing_make_mesh(500, 1e-5*gm, 300*gm, gm)
         F0 = array([self.Fun(x) for x in x0])
@@ -93,8 +144,8 @@ class lowEnergyFermiLiquid(object):
         return (array(F0r), array(F0i), weigh0)
     
     def RealParts(self, om):
-        """ evaluate self-energy at real axis """
-
+        """ evaluate self-energy at real axis
+        """
         gm = 1/self.expan_i[2]
         (x0, dh0) = swing_make_mesh(500, 1e-5*gm, 300*gm, gm)
         F0 = array([self.Fun(x) for x in x0])
@@ -115,11 +166,11 @@ class lowEnergyFermiLiquid(object):
         return (Frc, ders)
 
 class lowEnergyInsulator(object):
-    """ low energy model for mott insulator system """
-
+    """ low energy model for mott insulator system
+    """
     def __init__(self, ifit, iom0, isig, width):
-        """ find out the fitting parameters """
-
+        """ find out the fitting parameters
+        """
         # fetch matsubara axis
         xfit = iom0[0:ifit]
 
@@ -139,21 +190,21 @@ class lowEnergyInsulator(object):
         self.width = width
 
     def Fun(self, x):
-        """ the polynomial function, please refer to eq.(115) """
-
+        """ the polynomial function, please refer to eq.(115)
+        """
         return (self.width/pi)/(x**2 + self.width**2)
 
     def Funr(self, x):
         return 1/(x + self.width*1j)
 
     def Func(self, om):
-        """ the polynomial function, please refer to eq.(115) """
-
+        """ the polynomial function, please refer to eq.(115)
+        """
         return array([self.Fun(x) for x in om])
 
     def Matsubara(self, iom):
-        """ evaluate self-energy at matsubara axis """
-
+        """ evaluate self-energy at matsubara axis
+        """
         F00 = self.Fun(0.0)
         weigh0 = abs(self.expan_i[0])/(pi*F00)
 
@@ -164,8 +215,8 @@ class lowEnergyInsulator(object):
         return (F0r, array(F0i), weigh0)
     
     def RealParts(self, om):
-        """ evaluate self-energy at real axis """
-
+        """ evaluate self-energy at real axis
+        """
         Frc = array([self.Funr(x) for x in om])
         dersr = [0.0, 1/self.width**2, 0.0]
         dersi = [-1/self.width, 0.0, 2/self.width**3]
@@ -173,23 +224,23 @@ class lowEnergyInsulator(object):
         return (Frc, ders)
 
 class highEnergy(object):
-    """ high energy model for self-energy function """
-
+    """ high energy model for self-energy function
+    """
     def __init__(self, b_, pos_):
         self.b = b_
         self.pos = pos_
 
     def F0(self, om, En):
-        """ define modified gaussians """
-
+        """ define modified gaussians
+        """
         if (En*om > 0):
             return 1./(self.b*abs(En)*sqrt(pi))*exp(-self.b**2/4.-(log(om/En)/self.b)**2)    
         else:
             return 0.0
 
     def Func(self, om):
-        """ calculate all the gaussians """
-
+        """ calculate all the gaussians
+        """
         F=[]
         for i in range(len(self.pos)):
             En = self.pos[i]
@@ -197,8 +248,8 @@ class highEnergy(object):
         return F
         
     def Matsubara(self, iom):
-        """ calculate functions on imaginary axis """
-
+        """ calculate functions on imaginary axis
+        """
         Funcr=[]
         Funci=[]
         for i in range(len(self.pos)):
@@ -219,8 +270,8 @@ class highEnergy(object):
         return (Funcr, Funci)
 
     def RealParts(self, om):
-        """ calculate functions on real axis """
-
+        """ calculate functions on real axis
+        """
         Func=[]
         derivs=[]
         for i in range(len(self.pos)):

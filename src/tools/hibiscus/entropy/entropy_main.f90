@@ -7,7 +7,7 @@
 !!! Carlo (CT-QMC) or Hirsch-Fye quantum Monte Carlo (HF-QMC) quantum    !
 !!! impurity solver                                                      !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2014.10.11T                                               !
+!!! version : v2015.01.06T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : the code is originally written by                          !
 !!!           Anders W. Sandvik                                          !

@@ -4,7 +4,7 @@
 !!! This tool is used to calculate Gaussian broadening for density of    !
 !!! states, which can be used to compare with PES and XAS experiments    !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2014.10.11T                                               !
+!!! version : v2015.01.06T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : any question, please contact with huangli712@gmail.com     !
 !!!=========+=========+=========+=========+=========+=========+=========+!
@@ -106,7 +106,7 @@
      write(mystd,'(2X,a)') '>>> Making ultraviolet photoemission spectra'
      write(mystd,*) ! print blank line
 
-     write(mystd,'(2X,a)') 'Version: 2014.10.11T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2015.01.06T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
