@@ -37,11 +37,28 @@ class iqistReader(object):
     """
 
     @staticmethod
-    def get_green():
+    def get_green(norbs, ntime, fileName = None):
         """ try to read the solver.green.dat or solver.green.bin.nnn file
             to return the imaginary time Green's function G(\tau) data
         """
-        pass
+        if fileName is not None:
+            f = open(fileName,"r")
+        else:
+            f = open("solver.green.dat","r")
+
+        nband = norbs / 2
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        gtau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
+        for i in range(nband):
+            for j in range(ntime):
+                spl = f.readline().split()
+                tmesh[j] = float( spl[2] )
+                gtau[j,i,i] = float( spl[3] )
+                gtau[j,i+nband,i+nband] = float( spl[4] )
+
+        f.close()
+
+        return (tmesh, gtau)
 
     @staticmethod
     def get_grn():
@@ -157,3 +174,7 @@ class iqistReader(object):
 
 if __name__ == '__main__':
     print "hehe"
+
+    norbs = 2
+    ntime = 1024
+    (tmesh, gtau) = iqistReader.get_green(norbs,ntime)
