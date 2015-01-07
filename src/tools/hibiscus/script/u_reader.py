@@ -65,6 +65,13 @@ class iqistReader(object):
         pass
 
     @staticmethod
+    def get_weiss():
+        """ try to read the solver.weiss.dat file to return the imaginary
+            time Weiss's function \mathcal{G}(\tau) data
+        """
+        pass
+
+    @staticmethod
     def get_wss():
         """ try to read the solver.wss.dat file to return the matsubara
             Weiss's function \mathcal{G}(i\omega) data
