@@ -221,16 +221,49 @@ class iqistReader(object):
     @staticmethod
     def get_hub(norbs, mfreq, fileName = None):
         """ try to read the solver.hub.dat file to return the matsubara
-            Hubbard-I self-energy function \Sigma_{hub}(i\omega) data
+            Hubbard-I self-energy function \Sigma_{hub}(i\omega) data and
+            Green's function data
         """
-        pass
+        if fileName is None:
+            f = open("solver.hub.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        rmesh = numpy.zeros((mfreq), dtype = numpy.float)
+        ghub = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
+        shub = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
+        for i in range(norbs):
+            for j in range(mfreq):
+                spl = f.readline().split()
+                rmesh[j] = float( spl[1] )
+                ghub[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
+                shub[j,i,i] = float( spl[4] ) + 1j * float( spl[5] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (rmesh, ghub, shub)
 
     @staticmethod
-    def get_hist():
+    def get_hist(mkink, fileName = None):
         """ try to read the solver.hist.dat file to return the histogram
             data for diagrammatic perturbation expansion
         """
-        pass
+        if fileName is None:
+            f = open("solver.hist.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        hist = numpy.zeros((mkink), dtype = numpy.float)
+        f.readline() # skip one comment line
+        for i in range(mkink):
+            spl = f.readline().split()
+            hist[i] = float( spl[2] )
+
+        f.close()
+
+        return hist
 
     @staticmethod
     def get_prob():
@@ -294,11 +327,16 @@ if __name__ == '__main__':
     norbs = 2
     ntime = 1024
     mfreq = 8193
+    mkink = 1024
     #(tmesh, gtau) = iqistReader.get_green(norbs, ntime, "solver.green.bin.10")
     #print gtau[:,1,1]
     #(rmesh, grnf) = iqistReader.get_grn(norbs, mfreq)
     #print grnf[:,0,0]
     #(rmesh, hybf) = iqistReader.get_hyb(norbs, mfreq, "solver.grn.dat")
     #print hybf[:,1,1]
-    (rmesh, sig2) = iqistReader.get_sgm(norbs, mfreq)
-    print sig2[:,1,1]
+    #(rmesh, sig2) = iqistReader.get_sgm(norbs, mfreq)
+    #print sig2[:,1,1]
+    #(rmesh, ghub, shub) = iqistReader.get_hub(norbs, mfreq)
+    #print ghub[:,1,1]
+    hist = iqistReader.get_hist(mkink)
+    print hist
