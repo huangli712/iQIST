@@ -273,11 +273,33 @@ class iqistReader(object):
         pass
 
     @staticmethod
-    def get_nmat():
+    def get_nmat(norbs, fileName = None):
         """ try to read the solver.nmat.dat file to return the occupation
             number <N_i> and double occupation number <N_i N_j> data
         """
-        pass
+        if fileName is None:
+            f = open("solver.nmat.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        nmat = numpy.zeros((norbs), dtype = numpy.float)
+        nnmat = numpy.zeros((norbs,norbs), dtype = numpy.complex)
+        f.readline() # skip one comment line
+        for i in range(norbs):
+            spl = f.readline().split()
+            nmat[i] = float( spl[1] )
+        f.readline() # skip four lines
+        f.readline()
+        f.readline()
+        f.readline()
+        for i in range(norbs):
+            for j in range(norbs):
+                spl = f.readline().split()
+                nnmat[i,j] = float( spl[2] )
+
+        f.close()
+
+        return (nmat, nnmat)
 
     @staticmethod
     def get_schi():
@@ -356,6 +378,9 @@ if __name__ == '__main__':
     #print ghub[:,1,1]
     #hist = iqistReader.get_hist(mkink)
     #print hist
-    (tmesh, ktau, ptau) = iqistReader.get_kernel(ntime)
-    print tmesh
-    print ktau
+    #(tmesh, ktau, ptau) = iqistReader.get_kernel(ntime)
+    #print tmesh
+    #print ktau
+    #(nmat, nnmat) = iqistReader.get_nmat(norbs)
+    #print nmat
+    #print nnmat
