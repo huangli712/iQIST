@@ -266,11 +266,35 @@ class iqistReader(object):
         return hist
 
     @staticmethod
-    def get_prob():
+    def get_prob(ncfgs, nsect = 0, fileName = None):
         """ try to read the solver.prob.dat file to return the atomic
             state probability P_{\Gamma} data
         """
-        pass
+        if fileName is None:
+            f = open("solver.prob.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        prob = numpy.zeros((ncfgs), dtype = numpy.float)
+        f.readline() # skip one comment line
+        # read atomic state probability (prob)
+        for i in range(ncfgs):
+            spl = f.readline().split()
+            prob[i] = float( spl[1] )
+        if nsect > 0:
+            sprob = numpy.zeros((nsect), dtype = numpy.float)
+            f.readline() # skip one comment line
+            # read sector probability (sprob)
+            for j in range(nsect):
+                spl = f.readline().split()
+                sprob[j] = float( spl[2] )
+
+        f.close()
+
+        if nsect > 0:
+            return (prob, sprob)
+        else:
+            return prob
 
     @staticmethod
     def get_nmat(norbs, fileName = None):
@@ -285,6 +309,7 @@ class iqistReader(object):
         nmat = numpy.zeros((norbs), dtype = numpy.float)
         nnmat = numpy.zeros((norbs,norbs), dtype = numpy.complex)
         f.readline() # skip one comment line
+        # read nmat
         for i in range(norbs):
             spl = f.readline().split()
             nmat[i] = float( spl[1] )
@@ -292,6 +317,7 @@ class iqistReader(object):
         f.readline()
         f.readline()
         f.readline()
+        # read nnmat
         for i in range(norbs):
             for j in range(norbs):
                 spl = f.readline().split()
@@ -302,11 +328,36 @@ class iqistReader(object):
         return (nmat, nnmat)
 
     @staticmethod
-    def get_schi():
+    def get_schi(nband, ntime, fileName = None):
         """ try to read the solver.schi.dat file to return the spin-spin
             correlation function <S_z(0) S_z(\tau)> data
         """
-        pass
+        if fileName is None:
+            f = open("solver.schi.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        schi = numpy.zeros((ntime), dtype = numpy.float)
+        sschi = numpy.zeros((ntime,nband), dtype = numpy.float)
+        # read sschi
+        for i in range(nband):
+            f.readline() # skip one comment line
+            for j in range(ntime):
+                spl = f.readline().split()
+                sschi[j,i] = float( spl[1] )
+            f.readline() # skip two blank lines
+            f.readline()
+        f.readline() # skip one comment line
+        # read schi
+        for i in range(ntime):
+            spl = f.readline().split()
+            tmesh[i] = float( spl[0] )
+            schi[i] = float( spl[1] )
+
+        f.close()
+
+        return (schi, sschi)
 
     @staticmethod
     def get_ochi():
@@ -366,6 +417,7 @@ if __name__ == '__main__':
     ntime = 1024
     mfreq = 8193
     mkink = 1024
+    ncfgs = 4
     #(tmesh, gtau) = iqistReader.get_green(norbs, ntime, "solver.green.bin.10")
     #print gtau[:,1,1]
     #(rmesh, grnf) = iqistReader.get_grn(norbs, mfreq)
@@ -384,3 +436,5 @@ if __name__ == '__main__':
     #(nmat, nnmat) = iqistReader.get_nmat(norbs)
     #print nmat
     #print nnmat
+    #prob, sprob = iqistReader.get_prob(ncfgs, 3)
+    #print prob, sprob
