@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 3c2/solver.ctqmc.in
-!!! solver  : begonia
+!!! solver  : BEGONIA
 !!! purpose : to test ctqmc impurity solver
 !!! purpose : to test ctqmc impurity solver
 !!!-----------------------------------------------------------------------
