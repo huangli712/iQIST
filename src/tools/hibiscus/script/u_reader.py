@@ -24,7 +24,7 @@
 ## History
 ## =======
 ##
-## 01/07/2015 by li huang
+## 01/08/2015 by li huang
 ##
 ##
 
@@ -41,10 +41,10 @@ class iqistReader(object):
         """ try to read the solver.green.dat or solver.green.bin.nnn file
             to return the imaginary time Green's function G(\tau) data
         """
-        if fileName is not None:
-            f = open(fileName,"r")
-        else:
+        if fileName is None:
             f = open("solver.green.dat","r")
+        else:
+            f = open(fileName,"r")
 
         nband = norbs / 2
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
@@ -55,27 +55,48 @@ class iqistReader(object):
                 tmesh[j] = float( spl[2] )
                 gtau[j,i,i] = float( spl[3] )
                 gtau[j,i+nband,i+nband] = float( spl[4] )
+            f.readline() # skip two blank lines
+            f.readline()
 
         f.close()
 
         return (tmesh, gtau)
 
     @staticmethod
-    def get_grn():
+    def get_grn(norbs, mfreq, fileName = None):
         """ try to read the solver.grn.dat file to return the matsubara
             Green's function G(i\omega) data
         """
-        pass
+        if fileName is None:
+            f = open("solver.grn.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        nband = norbs / 2
+        rmesh = numpy.zeros((mfreq), dtype = numpy.float)
+        grnf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
+        for i in range(nband):
+            for j in range(mfreq):
+                spl = f.readline().split()
+                rmesh[j] = float( spl[1] )
+                grnf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
+                grnf[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (rmesh, grnf)
 
     @staticmethod
-    def get_weiss():
+    def get_weiss(norbs, ntime, fileName = None):
         """ try to read the solver.weiss.dat file to return the imaginary
             time Weiss's function \mathcal{G}(\tau) data
         """
-        if fileName is not None:
-            f = open(fileName,"r")
-        else:
+        if fileName is None:
             f = open("solver.weiss.dat","r")
+        else:
+            f = open(fileName,"r")
 
         nband = norbs / 2
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
@@ -86,27 +107,48 @@ class iqistReader(object):
                 tmesh[j] = float( spl[2] )
                 wtau[j,i,i] = float( spl[3] )
                 wtau[j,i+nband,i+nband] = float( spl[4] )
+            f.readline() # skip two blank lines
+            f.readline()
 
         f.close()
 
         return (tmesh, wtau)
 
     @staticmethod
-    def get_wss():
+    def get_wss(norbs, mfreq, fileName = None):
         """ try to read the solver.wss.dat file to return the matsubara
             Weiss's function \mathcal{G}(i\omega) data
         """
-        pass
+        if fileName is None:
+            f = open("solver.wss.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        nband = norbs / 2
+        rmesh = numpy.zeros((mfreq), dtype = numpy.float)
+        wssf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
+        for i in range(nband):
+            for j in range(mfreq):
+                spl = f.readline().split()
+                rmesh[j] = float( spl[1] )
+                wssf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
+                wssf[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (rmesh, wssf)
 
     @staticmethod
-    def get_hybri():
+    def get_hybri(norbs, ntime, fileName = None):
         """ try to read the solver.hybri.dat file to return the imaginary
             time hybridization function \Delta(\tau) data
         """
-        if fileName is not None:
-            f = open(fileName,"r")
-        else:
+        if fileName is None:
             f = open("solver.hybri.dat","r")
+        else:
+            f = open(fileName,"r")
 
         nband = norbs / 2
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
@@ -117,27 +159,67 @@ class iqistReader(object):
                 tmesh[j] = float( spl[2] )
                 htau[j,i,i] = float( spl[3] )
                 htau[j,i+nband,i+nband] = float( spl[4] )
+            f.readline() # skip two blank lines
+            f.readline()
 
         f.close()
 
         return (tmesh, htau)
 
     @staticmethod
-    def get_hyb():
+    def get_hyb(norbs, mfreq, fileName = None):
         """ try to read the solver.hyb.dat file to return the matsubara
             hybridization function \Delta(i\omega) data
         """
-        pass
+        if fileName is None:
+            f = open("solver.hyb.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        nband = norbs / 2
+        rmesh = numpy.zeros((mfreq), dtype = numpy.float)
+        hybf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
+        for i in range(nband):
+            for j in range(mfreq):
+                spl = f.readline().split()
+                rmesh[j] = float( spl[1] )
+                hybf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
+                hybf[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (rmesh, hybf)
 
     @staticmethod
-    def get_sgm():
+    def get_sgm(norbs, mfreq, fileName = None):
         """ try to read the solver.sgm.dat file to return the matsubara
             self-energy function \Sigma(i\omega) data
         """
-        pass
+        if fileName is None:
+            f = open("solver.sgm.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        nband = norbs / 2
+        rmesh = numpy.zeros((mfreq), dtype = numpy.float)
+        sig2 = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
+        for i in range(nband):
+            for j in range(mfreq):
+                spl = f.readline().split()
+                rmesh[j] = float( spl[1] )
+                sig2[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
+                sig2[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (rmesh, sig2)
 
     @staticmethod
-    def get_hub():
+    def get_hub(norbs, mfreq, fileName = None):
         """ try to read the solver.hub.dat file to return the matsubara
             Hubbard-I self-energy function \Sigma_{hub}(i\omega) data
         """
@@ -211,5 +293,12 @@ if __name__ == '__main__':
 
     norbs = 2
     ntime = 1024
-    (tmesh, gtau) = iqistReader.get_green(norbs, ntime, "solver.green.bin.10")
-    print gtau[:,1,1]
+    mfreq = 8193
+    #(tmesh, gtau) = iqistReader.get_green(norbs, ntime, "solver.green.bin.10")
+    #print gtau[:,1,1]
+    #(rmesh, grnf) = iqistReader.get_grn(norbs, mfreq)
+    #print grnf[:,0,0]
+    #(rmesh, hybf) = iqistReader.get_hyb(norbs, mfreq, "solver.grn.dat")
+    #print hybf[:,1,1]
+    (rmesh, sig2) = iqistReader.get_sgm(norbs, mfreq)
+    print sig2[:,1,1]
