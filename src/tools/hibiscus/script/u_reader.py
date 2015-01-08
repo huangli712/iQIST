@@ -33,7 +33,23 @@ import sys
 import numpy
 
 class iqistReader(object):
-    """
+    """ This class provide a few static methods which are used to extract
+        the data from the ouput files of ctqmc impurity solvers and hfqmc
+        impurity solver.
+
+        typical usage:
+        # import this module
+        from u_reader import *
+
+        # setup parameters
+        norbs = 2
+        ntime = 1024
+        mfreq = 8193
+
+        # read the data
+        (tmesh, gtau) = iqistReader.get_green(norbs, ntime)
+        (tmesh, gbin) = iqistReader.get_green(norbs, ntime, "solver.green.bin.10")
+        (rmesh, grnf) = iqistReader.get_grn(norbs, mfreq)
     """
 
     @staticmethod
@@ -501,32 +517,3 @@ class iqistReader(object):
         f.close()
 
         return (tmesh, ktau, ptau)
-
-if __name__ == '__main__':
-    print "hehe"
-
-    norbs = 2
-    ntime = 1024
-    mfreq = 8193
-    mkink = 1024
-    ncfgs = 4
-    #(tmesh, gtau) = iqistReader.get_green(norbs, ntime, "solver.green.bin.10")
-    #print gtau[:,1,1]
-    #(rmesh, grnf) = iqistReader.get_grn(norbs, mfreq)
-    #print grnf[:,0,0]
-    #(rmesh, hybf) = iqistReader.get_hyb(norbs, mfreq, "solver.grn.dat")
-    #print hybf[:,1,1]
-    #(rmesh, sig2) = iqistReader.get_sgm(norbs, mfreq)
-    #print sig2[:,1,1]
-    #(rmesh, ghub, shub) = iqistReader.get_hub(norbs, mfreq)
-    #print ghub[:,1,1]
-    #hist = iqistReader.get_hist(mkink)
-    #print hist
-    #(tmesh, ktau, ptau) = iqistReader.get_kernel(ntime)
-    #print tmesh
-    #print ktau
-    #(nmat, nnmat) = iqistReader.get_nmat(norbs)
-    #print nmat
-    #print nnmat
-    #prob, sprob = iqistReader.get_prob(ncfgs, 3)
-    #print prob, sprob
