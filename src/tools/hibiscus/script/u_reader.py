@@ -360,25 +360,97 @@ class iqistReader(object):
         return (schi, sschi)
 
     @staticmethod
-    def get_ochi():
+    def get_ochi(norbs, ntime, fileName = None):
         """ try to read the solver.ochi.dat file to return the orbital-
             orbital correlation function <N_i(0) N_j(\tau)> data
         """
-        pass
+        if fileName is None:
+            f = open("solver.ochi.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        ochi = numpy.zeros((ntime), dtype = numpy.float)
+        oochi = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
+        # read oochi
+        for i in range(norbs):
+            for j in range(norbs):
+                f.readline() # skip one comment line
+                for k in range(ntime):
+                    spl = f.readline().split()
+                    oochi[k,j,i] = float( spl[1] )
+            f.readline() # skip two blank lines
+            f.readline()
+        f.readline() # skip one comment line
+        # read ochi
+        for i in range(ntime):
+            spl = f.readline().split()
+            tmesh[i] = float( spl[0] )
+            ochi[i] = float( spl[1] )
+
+        f.close()
+
+        return (ochi, oochi)
 
     @staticmethod
-    def get_twop():
+    def get_twop(norbs, nffrq, nbfrq, fileName = None):
         """ try to read the solver.twop.dat file to return the two-particle
             Green's function data
         """
-        pass
+        if fileName is None:
+            f = open("solver.twop.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        g2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        f2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        for m in range(norbs):
+            for n in range(n):
+                for k in range(nbfrq):
+                    f.readline() # skip three comment lines
+                    f.readline()
+                    f.readline()
+                    for j in range(nffrq):
+                        for i in range(nffrq):
+                            spl = f.readline().split()
+                            g2[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
+                            g2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
+                            f2[i,j,k,n,m] = float( spl[8] ) + 1j * float( spl[9] )
+                            f2[i,j,k,m,n] = float( spl[8] ) + 1j * float( spl[9] )
+
+        f.cloes()
+
+        return (g2, f2)
 
     @staticmethod
-    def get_vrtx():
+    def get_vrtx(norbs, nffrq, nbfrq, fileName = None):
         """ try to read the solver.vrtx.dat file to return the two-particle
             Green's function data
         """
-        pass
+        if fileName is None:
+            f = open("solver.vrtx.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        g2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        f2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        for m in range(norbs):
+            for n in range(n):
+                for k in range(nbfrq):
+                    f.readline() # skip three comment lines
+                    f.readline()
+                    f.readline()
+                    for j in range(nffrq):
+                        for i in range(nffrq):
+                            spl = f.readline().split()
+                            g2[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
+                            g2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
+                            f2[i,j,k,n,m] = float( spl[8] ) + 1j * float( spl[9] )
+                            f2[i,j,k,m,n] = float( spl[8] ) + 1j * float( spl[9] )
+
+        f.cloes()
+
+        return (g2, f2)
 
     @staticmethod
     def get_pair():
