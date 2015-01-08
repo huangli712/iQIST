@@ -315,11 +315,27 @@ class iqistReader(object):
         pass
 
     @staticmethod
-    def get_kernel():
+    def get_kernel(ntime, fileName = None):
         """ try to read the solver.kernel.dat file to return the screening
-            function K(\tau)
+            function K(\tau) and its first derivates
         """
-        pass
+        if fileName is None:
+            f = open("solver.kernel.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        ktau = numpy.zeros((ntime), dtype = numpy.float)
+        ptau = numpy.zeros((ntime), dtype = numpy.float)
+        for i in range(ntime):
+            spl = f.readline().split()
+            tmesh[i] = float( spl[1] )
+            ktau[i] = float( spl[2] )
+            ptau[i] = float( spl[3] )
+
+        f.close()
+
+        return (tmesh, ktau, ptau)
 
 if __name__ == '__main__':
     print "hehe"
@@ -338,5 +354,8 @@ if __name__ == '__main__':
     #print sig2[:,1,1]
     #(rmesh, ghub, shub) = iqistReader.get_hub(norbs, mfreq)
     #print ghub[:,1,1]
-    hist = iqistReader.get_hist(mkink)
-    print hist
+    #hist = iqistReader.get_hist(mkink)
+    #print hist
+    (tmesh, ktau, ptau) = iqistReader.get_kernel(ntime)
+    print tmesh
+    print ktau
