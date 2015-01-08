@@ -453,11 +453,31 @@ class iqistReader(object):
         return (g2, f2)
 
     @staticmethod
-    def get_pair():
+    def get_pair(norbs, nffrq, nbfrq, fileName = None):
         """ try to read the solver.pair.dat file to return the pair
             susceptibility data
         """
-        pass
+        if fileName is None:
+            f = open("solver.pair.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        p2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        for m in range(norbs):
+            for n in range(n):
+                for k in range(nbfrq):
+                    f.readline() # skip three comment lines
+                    f.readline()
+                    f.readline()
+                    for j in range(nffrq):
+                        for i in range(nffrq):
+                            spl = f.readline().split()
+                            p2[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
+                            p2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
+
+        f.cloes()
+
+        return p2
 
     @staticmethod
     def get_kernel(ntime, fileName = None):
