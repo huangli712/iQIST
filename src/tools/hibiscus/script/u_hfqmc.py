@@ -36,7 +36,7 @@ class p_hfqmc_solver(object):
 
         typical usage:
             # import this module
-            from p_hfqmc import *
+            from u_hfqmc import *
 
             # create an instance
             p = p_hfqmc_solver('daisy')
