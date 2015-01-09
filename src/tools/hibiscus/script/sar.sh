@@ -7,7 +7,7 @@
 ##
 ## It is a shell script. The purpose of this script is to scan a file or
 ## directory, and then replace some characters with given characters. So
-## we name it as sar.sh (Scan and Replace). We can use it to preprocess
+## we name it as sar.sh (Scan And Replace). We can use it to preprocess
 ## the atom.config.in files in iqist/working/ctqmc/standard directory.
 ##
 ## This script should be used by the developer only.
@@ -22,6 +22,7 @@
 ##
 ## For Mac OS X system, the grammar for sed is (we don't generate backup)
 ##     sed -i '' ...
+##
 ## However, for Linux-based system, the grammar for sed is
 ##     sed -i ...
 ##

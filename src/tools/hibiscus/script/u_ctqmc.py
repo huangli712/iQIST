@@ -36,7 +36,7 @@ class p_ctqmc_solver(object):
 
         typical usage:
             # import this module
-            from p_ctqmc import *
+            from u_ctqmc import *
 
             # create an instance
             p = p_ctqmc_solver('manjushaka')
