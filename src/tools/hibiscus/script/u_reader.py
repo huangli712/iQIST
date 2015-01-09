@@ -33,7 +33,23 @@ import sys
 import numpy
 
 class iqistReader(object):
-    """
+    """ This class provide a few static methods which are used to extract
+        the data from the ouput files of ctqmc impurity solvers and hfqmc
+        impurity solver.
+
+        typical usage:
+        # import this module
+        from u_reader import *
+
+        # setup parameters
+        norbs = 2
+        ntime = 1024
+        mfreq = 8193
+
+        # read the data
+        (tmesh, gtau) = iqistReader.get_green(norbs, ntime)
+        (tmesh, gbin) = iqistReader.get_green(norbs, ntime, "solver.green.bin.10")
+        (rmesh, grnf) = iqistReader.get_grn(norbs, mfreq)
     """
 
     @staticmethod
@@ -266,11 +282,35 @@ class iqistReader(object):
         return hist
 
     @staticmethod
-    def get_prob():
+    def get_prob(ncfgs, nsect = 0, fileName = None):
         """ try to read the solver.prob.dat file to return the atomic
             state probability P_{\Gamma} data
         """
-        pass
+        if fileName is None:
+            f = open("solver.prob.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        prob = numpy.zeros((ncfgs), dtype = numpy.float)
+        f.readline() # skip one comment line
+        # read atomic state probability (prob)
+        for i in range(ncfgs):
+            spl = f.readline().split()
+            prob[i] = float( spl[1] )
+        if nsect > 0:
+            sprob = numpy.zeros((nsect), dtype = numpy.float)
+            f.readline() # skip one comment line
+            # read sector probability (sprob)
+            for j in range(nsect):
+                spl = f.readline().split()
+                sprob[j] = float( spl[2] )
+
+        f.close()
+
+        if nsect > 0:
+            return (prob, sprob)
+        else:
+            return prob
 
     @staticmethod
     def get_nmat(norbs, fileName = None):
@@ -285,6 +325,7 @@ class iqistReader(object):
         nmat = numpy.zeros((norbs), dtype = numpy.float)
         nnmat = numpy.zeros((norbs,norbs), dtype = numpy.complex)
         f.readline() # skip one comment line
+        # read nmat
         for i in range(norbs):
             spl = f.readline().split()
             nmat[i] = float( spl[1] )
@@ -292,6 +333,7 @@ class iqistReader(object):
         f.readline()
         f.readline()
         f.readline()
+        # read nnmat
         for i in range(norbs):
             for j in range(norbs):
                 spl = f.readline().split()
@@ -302,39 +344,156 @@ class iqistReader(object):
         return (nmat, nnmat)
 
     @staticmethod
-    def get_schi():
+    def get_schi(nband, ntime, fileName = None):
         """ try to read the solver.schi.dat file to return the spin-spin
             correlation function <S_z(0) S_z(\tau)> data
         """
-        pass
+        if fileName is None:
+            f = open("solver.schi.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        schi = numpy.zeros((ntime), dtype = numpy.float)
+        sschi = numpy.zeros((ntime,nband), dtype = numpy.float)
+        # read sschi
+        for i in range(nband):
+            f.readline() # skip one comment line
+            for j in range(ntime):
+                spl = f.readline().split()
+                sschi[j,i] = float( spl[1] )
+            f.readline() # skip two blank lines
+            f.readline()
+        f.readline() # skip one comment line
+        # read schi
+        for i in range(ntime):
+            spl = f.readline().split()
+            tmesh[i] = float( spl[0] )
+            schi[i] = float( spl[1] )
+
+        f.close()
+
+        return (schi, sschi)
 
     @staticmethod
-    def get_ochi():
+    def get_ochi(norbs, ntime, fileName = None):
         """ try to read the solver.ochi.dat file to return the orbital-
             orbital correlation function <N_i(0) N_j(\tau)> data
         """
-        pass
+        if fileName is None:
+            f = open("solver.ochi.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        tmesh = numpy.zeros((ntime), dtype = numpy.float)
+        ochi = numpy.zeros((ntime), dtype = numpy.float)
+        oochi = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
+        # read oochi
+        for i in range(norbs):
+            for j in range(norbs):
+                f.readline() # skip one comment line
+                for k in range(ntime):
+                    spl = f.readline().split()
+                    oochi[k,j,i] = float( spl[1] )
+            f.readline() # skip two blank lines
+            f.readline()
+        f.readline() # skip one comment line
+        # read ochi
+        for i in range(ntime):
+            spl = f.readline().split()
+            tmesh[i] = float( spl[0] )
+            ochi[i] = float( spl[1] )
+
+        f.close()
+
+        return (ochi, oochi)
 
     @staticmethod
-    def get_twop():
+    def get_twop(norbs, nffrq, nbfrq, fileName = None):
         """ try to read the solver.twop.dat file to return the two-particle
             Green's function data
         """
-        pass
+        if fileName is None:
+            f = open("solver.twop.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        g2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        f2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        for m in range(norbs):
+            for n in range(n):
+                for k in range(nbfrq):
+                    f.readline() # skip three comment lines
+                    f.readline()
+                    f.readline()
+                    for j in range(nffrq):
+                        for i in range(nffrq):
+                            spl = f.readline().split()
+                            g2[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
+                            g2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
+                            f2[i,j,k,n,m] = float( spl[8] ) + 1j * float( spl[9] )
+                            f2[i,j,k,m,n] = float( spl[8] ) + 1j * float( spl[9] )
+
+        f.cloes()
+
+        return (g2, f2)
 
     @staticmethod
-    def get_vrtx():
+    def get_vrtx(norbs, nffrq, nbfrq, fileName = None):
         """ try to read the solver.vrtx.dat file to return the two-particle
             Green's function data
         """
-        pass
+        if fileName is None:
+            f = open("solver.vrtx.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        g2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        f2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        for m in range(norbs):
+            for n in range(n):
+                for k in range(nbfrq):
+                    f.readline() # skip three comment lines
+                    f.readline()
+                    f.readline()
+                    for j in range(nffrq):
+                        for i in range(nffrq):
+                            spl = f.readline().split()
+                            g2[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
+                            g2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
+                            f2[i,j,k,n,m] = float( spl[8] ) + 1j * float( spl[9] )
+                            f2[i,j,k,m,n] = float( spl[8] ) + 1j * float( spl[9] )
+
+        f.cloes()
+
+        return (g2, f2)
 
     @staticmethod
-    def get_pair():
+    def get_pair(norbs, nffrq, nbfrq, fileName = None):
         """ try to read the solver.pair.dat file to return the pair
             susceptibility data
         """
-        pass
+        if fileName is None:
+            f = open("solver.pair.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        p2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
+        for m in range(norbs):
+            for n in range(n):
+                for k in range(nbfrq):
+                    f.readline() # skip three comment lines
+                    f.readline()
+                    f.readline()
+                    for j in range(nffrq):
+                        for i in range(nffrq):
+                            spl = f.readline().split()
+                            p2[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
+                            p2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
+
+        f.cloes()
+
+        return p2
 
     @staticmethod
     def get_kernel(ntime, fileName = None):
@@ -358,29 +517,3 @@ class iqistReader(object):
         f.close()
 
         return (tmesh, ktau, ptau)
-
-if __name__ == '__main__':
-    print "hehe"
-
-    norbs = 2
-    ntime = 1024
-    mfreq = 8193
-    mkink = 1024
-    #(tmesh, gtau) = iqistReader.get_green(norbs, ntime, "solver.green.bin.10")
-    #print gtau[:,1,1]
-    #(rmesh, grnf) = iqistReader.get_grn(norbs, mfreq)
-    #print grnf[:,0,0]
-    #(rmesh, hybf) = iqistReader.get_hyb(norbs, mfreq, "solver.grn.dat")
-    #print hybf[:,1,1]
-    #(rmesh, sig2) = iqistReader.get_sgm(norbs, mfreq)
-    #print sig2[:,1,1]
-    #(rmesh, ghub, shub) = iqistReader.get_hub(norbs, mfreq)
-    #print ghub[:,1,1]
-    #hist = iqistReader.get_hist(mkink)
-    #print hist
-    #(tmesh, ktau, ptau) = iqistReader.get_kernel(ntime)
-    #print tmesh
-    #print ktau
-    #(nmat, nnmat) = iqistReader.get_nmat(norbs)
-    #print nmat
-    #print nnmat
