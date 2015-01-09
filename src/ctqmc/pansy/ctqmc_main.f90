@@ -56,9 +56,10 @@
 !! solver.green.bin.*
 !! solver.green.dat
 !! solver.grn.dat
+!! solver.weiss.dat
+!! solver.wss.dat
 !! solver.hybri.dat
 !! solver.hyb.dat
-!! solver.wss.dat
 !! solver.sgm.dat
 !! solver.hub.dat
 !! solver.hist.dat

@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 3t3/solver.ctqmc.in
-!!! solver  : lavender
+!!! solver  : LAVENDER
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------

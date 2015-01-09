@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 3h2/solver.ctqmc.in
-!!! solver  : begonia
+!!! solver  : BEGONIA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------
