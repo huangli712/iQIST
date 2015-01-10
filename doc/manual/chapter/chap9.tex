@@ -1,16 +1,37 @@
 \chapter{{\iqist} IN ACTION}
+You may have learnt a lot about \iqist from the previous chapters. In this chapter, we will show you how to do calculations using \iqist through many case studies. Before this, we presume that you have successfully installed \iqist package in your systems, and the install directory is /opt/iqist, and the directory /opt/iqist/bin has been added to the PATH environment variable.
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ export PATH=/opt/iqist/bin:\$PATH }}
+
+If you are new to \iqist, please follow the tutorials to learn step by step. We believe that you will have become a master of \iqist after finishing all the tutorials. If you have been familiar with \iqist, there is no need to start from the beginning, you can choose some cases with your intesets to learn directly.
+
 \section{Basic applications}
 \subsection{Hello {\iqist}!}
-The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
-\begin{verbatim}
-    import mpi4py
-    import pyiqist as iqist
-    ...
-    iqist.api.init_ctqmc(myid = 0, num_procs = 10)
-    iqist.api.exec_ctqmc(iter = 20)
-    iqist.api.stop_ctqmc()
-\end{verbatim}
-When the computations are finished, one can also collect and analyze the calculated results with Python scripts. Using these APIs, the users enjoy more freedom to design and implement very complex computational procedures and to adapt them to their own requirements.
+We first use the \azalea component to solve the half-filled single band Hubbard model on the Bethe lattice self-consistently. Due to the density-density Coulomb interaction form in this model, we can use the \azalea component based on the segment picture. Let's start the journey!
+
+\underline{Step 1: create a working directory, for example, iqsit\_test maybe a good choice.}
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ mkdir iqist\_test }}
+
+change directory into iqist\_test:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ cd iqist\_test }}
+
+create a new directory t911:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ mkdir t911 }}
+
+and change directory into t911:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ cd iqist\_test }}
+
+now, the current directory is iqist\_test/t911.
+
+\underline{step 2: prepare input file solver.ctqmc.in}
+
+In the directory /opt/iqist/tutor/t911, we have prepared the input file solver.ctqmc.in for \azalea, please copy it to the current directory.
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ cp /opt/iqist/tutor/t911/solver.ctqmc.in .}}
 
 \subsection{Mott metal-insulator transition}
 The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
