@@ -1,16 +1,12 @@
 \chapter{{\iqist} IN ACTION}
 \section{Basic applications}
 \subsection{Hello {\iqist}!}
-The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
-\begin{verbatim}
-    import mpi4py
-    import pyiqist as iqist
-    ...
-    iqist.api.init_ctqmc(myid = 0, num_procs = 10)
-    iqist.api.exec_ctqmc(iter = 20)
-    iqist.api.stop_ctqmc()
-\end{verbatim}
-When the computations are finished, one can also collect and analyze the calculated results with Python scripts. Using these APIs, the users enjoy more freedom to design and implement very complex computational procedures and to adapt them to their own requirements.
+We first use the \azalea component to solve the half-filled single band Hubbard model on the Bethe lattice self-consistently. Due to the density-density Coulomb interaction form in this model, we can use the \azalea component based on the segment picture. Let's start the journey!
+
+\underline{Step 1: create a working directory, for example, iqsit\_test maybe a good choice.}
+
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ mkdir iqist\_test }}
 
 \subsection{Mott metal-insulator transition}
 The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
