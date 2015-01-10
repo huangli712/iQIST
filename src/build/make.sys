@@ -62,7 +62,7 @@
 ## FPP
 ## ---
 ##
-## Speify whether the fortran preprocessor (FPP) is used. It must be enabled
+## Specify whether the fortran preprocessor (FPP) is used. It must be enabled
 ## or else the iqist can not be compiled correctly.
 ##
 ## CPP
@@ -74,8 +74,8 @@
 ## GPROF
 ## -----
 ##
-## Speify whether the code profiling should be done. If it is enabled, then
-## when the code is finished, a gmon.out file will be generated. You can
+## Specify whether the code profiling should be done. If it is enabled, then
+## after the code is finished, a gmon.out file will be generated. You can
 ## use the gprof tool to analyze the runtime information and find out the
 ## hotspot of the code. It is not wise to enable it to build a production
 ## code, because it will decrease the efficiency greatly.
