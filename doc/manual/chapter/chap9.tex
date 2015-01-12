@@ -58,6 +58,19 @@ Here, we explain some key control parameters:
   \item nmonte = ncarlo = 100, period for measurement of physical quantites
 \end{itemize}
 
+\underline{Step 3: run\azalea to do calculation}
+
+In this case, we use 8 CPU cores to run azalea.x, you can adjust it according to your computer resources, and of course, you can also just use 1 CPU core to run azalea.x in sequential mode.
+
+For example, use 8 CPU cores to run azalea.x in parallel mode:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ nohup mpiexec -n 8 azalea.x < /dev/null> out.dat &}}
+
+and use 1 CPU core to run azalea.x in sequential mode:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ nohup azalea.x < /dev/null> out.dat &}}
+
+
 \subsection{Mott metal-insulator transition}
 The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
 \begin{verbatim}
