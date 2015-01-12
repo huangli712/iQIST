@@ -33,7 +33,48 @@ In the directory /opt/iqist/tutor/t911, we have prepared the input file solver.c
 
 \noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ cp /opt/iqist/tutor/t911/solver.ctqmc.in .}}
 
-Please refer to section and section for the details of the format of solver.ctqmc.in and all the control parameters. 
+Here, we explain some key control parameters:
+\begin{itemize}
+  \item isscf = 2, self-consistent calculation
+  \item issun = 2, symmetrize orbital
+  \item isspn = 1, symmetrize spin
+  \item isbin = 2, use data binning mode
+  \item nband = 1, one band in this model
+  \item nspin = 2, two projections of spin (up and down)
+  \item norbs = 2, number of orbitals including spin
+  \item ncfgs = 4, number of atomic configurations
+  \item niter = 20, maximal of self-consistent iterations
+  \item $U$ = $U_{c}$ = $U_{v}$ = 2.0, Coulomb interaction strength
+  \item $J_{z}$ = $J_{s}$ = $J_{p}$ = 0.0, Hund's rule exchange strength
+  \item mune = 1.0, chemical potential
+  \item beta = 40.0, inversion of temperature ($\beta=\frac{1}{K_{B}T}$)
+  \item part = 0.50, hopping parameters among nearest neighbours
+  \item mkink = 1024, maximal diagram expansion order 
+  \item ntime = 1024, number of points for imaginary-time mesh
+  \item nflip = 2000, period for flipping spin
+  \item nsweep = 20,000,000, total times of Monte Carlo sampling
+  \item nwrite = 2,000,000, period for output
+  \item nclean = 100,000, period for clean operation
+  \item nmonte = ncarlo = 100, period for measurement of physical quantites
+\end{itemize}
+
+\underline{Step 3: run\azalea to do calculation}
+
+In this case, we use 8 CPU cores to run azalea.x, you can adjust it according to your computer resources, and of course, you can also just use 1 CPU core to run azalea.x in sequential mode.
+
+For example, use 8 CPU cores to run azalea.x in parallel mode:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ nohup mpiexec -n 8 azalea.x < /dev/null > out.dat \&}}
+
+and use 1 CPU core to run azalea.x in sequential mode:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ nohup azalea.x < /dev/null > out.dat \&}}
+
+\underline{Step 4: monitor the status of\azalea}
+
+\underline{Step 5: analyze the calculation results}
+
+
 \subsection{Mott metal-insulator transition}
 The users can not only execute the components of the $i$QIST software package directly, but also invoke them in their own programs. To achieve this, we provide simple application programming interfaces (APIs) for most of the components in the $i$QIST software package in the Fortran, C, C++, and Python languages. With these well-defined APIs, one can easily setup, start, and stop the CT-HYB impurity solvers. For example, one can use the following Python script fragment to start the CT-HYB impurity solver:
 \begin{verbatim}
