@@ -508,14 +508,14 @@
 ! spin flip term
                      if ( ( aband == gband ) .and. ( bband == dband ) ) then
                          if ( ( aspin /= gspin ) .and. ( bspin /= dspin ) .and. ( aspin /= bspin ) ) then
-                             dtmp = dtmp - hund(aband,gband,2)
+                             dtmp = dtmp - hund(aband,bband,2)
                          endif ! back if ( ( aspin /= gspin ) .and. ( bspin /= dspin ) .and. ( aspin /= bspin ) ) block
                      endif ! back if ( ( aband == gband ) .and. ( bband == dband ) ) block
 
 ! pair hopping term
                      if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) then
                          if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) then
-                             dtmp = dtmp + hund(aband,gband,2)
+                             dtmp = dtmp + hund(aband,gband,3)
                          endif ! back if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) block
                      endif ! back if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) block
 
@@ -624,7 +624,7 @@
 
          enddo ! over betta={1,norbs} loop
      enddo ! over alpha={1,norbs} loop
-     umat = half * umat
+     !umat = half * umat
 
 ! deallocate memory
      if ( allocated(gaunt) )         deallocate(gaunt)
