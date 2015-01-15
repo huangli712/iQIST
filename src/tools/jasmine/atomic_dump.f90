@@ -190,7 +190,7 @@
          do j=1,norbs
              do k=1,norbs
                  do l=1,norbs
-                     if ( real( umat(i,j,k,l) ) > epst ) then
+                     if ( abs( umat(i,j,k,l) ) > epst ) then
                          write(mytmp,'(4i6,2f16.8)') i, j, k, l, umat(i,j,k,l)
                      endif ! back if ( real( umat(i,j,k,l) ) > epst ) block
                  enddo ! over l={1,norbs} loop
