@@ -225,6 +225,7 @@
      use context, only : tmesh, rmesh
      use context, only : symm, eimp
      use context, only : hybf
+     use context, only : uumat
 
      implicit none
 
@@ -343,6 +344,43 @@
      call mp_barrier()
 
 # endif  /* MPI */
+
+! read in uumat if avaiable
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
+
+! inquire about file's existence
+         inquire (file = 'solver.umat.in', exist = exists)
+
+! find input file: solver.umat.in, read it
+         if ( exists .eqv. .true. ) then
+! read in uumat from solver.umat.in
+             open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
+             do i=1,norbs
+                 do j=1,norbs
+                     read(mytmp,*) r1,r2,uumat(i,j) 
+                 enddo ! over i={1,norbs} loop
+             enddo ! over i={1,norbs} loop
+             close(mytmp)
+          else
+! calculate two-index pair interaction, uumat
+              call ctqmc_make_uumat(uumat)
+         endif ! back if ( exists .eqv. .true. ) block
+
+     endif ! back if ( myid == master ) block
+
+! broadcast uumat from master node to all children nodes
+# if defined (MPI)
+
+! broadcast data
+     call mp_bcast(uumat, master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif  /* MPI */
+
 
      return
   end subroutine ctqmc_selfer_init
@@ -491,11 +529,6 @@
 ! the persistency of self-energy function
 !<     sig1    = czero
      sig2    = czero
-
-! for the other variables/arrays
-!-------------------------------------------------------------------------
-! calculate two-index pair interaction, uumat
-     call ctqmc_make_uumat(uumat)
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
