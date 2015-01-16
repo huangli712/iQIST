@@ -624,7 +624,7 @@
 
          enddo ! over betta={1,norbs} loop
      enddo ! over alpha={1,norbs} loop
-     !umat = half * umat
+     umat = half * umat
 
 ! deallocate memory
      if ( allocated(gaunt) )         deallocate(gaunt)
