@@ -156,14 +156,18 @@
 
 !!>>> atomic_dump_umat: write onsite Coulomb interaction matrix
   subroutine atomic_dump_umat()
-     use constants, only : epst, mytmp
+     use constants, only : dp, zero, two, epst, mytmp
 
-     use m_cntr, only : norbs
+     use m_cntr, only : icu
+     use m_cntr, only : nband, norbs
      use m_spmat, only : umat
 
      implicit none
 
 ! local variables
+! two index umat
+     real(dp) :: umat_t(norbs,norbs)
+
 ! loop index
      integer :: i
      integer :: j
@@ -192,9 +196,67 @@
                  do l=1,norbs
                      if ( abs( umat(i,j,k,l) ) > epst ) then
                          write(mytmp,'(4i6,2f16.8)') i, j, k, l, umat(i,j,k,l)
-                     endif ! back if ( real( umat(i,j,k,l) ) > epst ) block
+                     endif ! back if ( abs( umat(i,j,k,l) ) > epst ) block
                  enddo ! over l={1,norbs} loop
              enddo ! over k={1,norbs} loop
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+! get two index umat
+     umat_t = zero
+
+! Kanamori type
+     if ( icu == 1 .or. icu == 3 ) then
+         do i=1,norbs
+             do j=i+1,norbs         
+                 umat_t(i,j) = real(umat(i,j,j,i)) 
+                 umat_t(j,i) = umat_t(i,j)
+             enddo ! over j={i+1,norbs} loop
+         enddo ! over i={1,norbs} loop
+! Slater type
+     elseif ( icu == 2 ) then
+         do i=1,norbs
+             do j=i+1,norbs
+                 if ( mod(i,2) == mod(j,2) ) then
+                     umat_t(i,j) = two * real(umat(i,j,j,i) - umat(i,j,i,j))
+                 else
+                     umat_t(i,j) = two * real(umat(i,j,j,i))
+                 endif  ! back if ( mod(i,2) == mod(j,2) ) block
+                 umat_t(j,i) = umat_t(i,j)
+             enddo ! over j={i+1,norbs} loop
+         enddo ! over i={1,norbs} loop
+     endif ! back if ( icu == 1 ) block
+
+! open file atom.umat.dat to write
+     open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
+
+! write the header
+     write(mytmp,'(75a1)') dash ! dashed line
+     write(mytmp,'(a)') '# i | j | umat'
+     write(mytmp,'(75a1)') dash ! dashed line
+
+! write the data, only the non-zero elements are outputed
+! note: we do not change the spin sequence here
+     do i=1,norbs
+         if ( i <= nband ) then
+             k = 2*i-1
+         else
+             k = 2*(i-nband)
+         endif ! back if ( i <= nband ) block
+
+         do j=1,norbs
+             if ( j <= nband ) then
+                 l = 2*j-1
+             else
+                 l = 2*(j-nband)
+             endif ! back if ( j <= nband ) block
+
+             if ( abs( umat_t(k,l) ) > epst ) then
+                 write(mytmp,'(2i6,f16.8)') i, j, umat_t(k,l)
+             endif ! back if ( abs( umat_t(k,l) ) > epst ) block
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
