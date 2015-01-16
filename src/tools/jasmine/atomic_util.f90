@@ -610,7 +610,6 @@
                      dspin = mod(delta,2)
                      gspin = mod(gamma,2)
 
-                     !if ( ( alpha == betta ) .or. ( delta == gamma ) ) CYCLE
                      if ( ( aband + bband ) /= ( dband + gband ) ) CYCLE
                      if ( ( aspin /= gspin ) .or. ( bspin /= dspin ) ) CYCLE
 
