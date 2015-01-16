@@ -576,6 +576,27 @@
      return
   end subroutine cat_set_ktau
 
+!!>>> cat_set_uumat: setup the Coulomb interaction matrix
+!!>>> note: the lavender code does not support this function now
+  subroutine cat_set_uumat(size_t, uumat_t)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! size of uumat
+     integer, intent(in)  :: size_t
+
+! Coulomb interaction matrix
+     real(dp), intent(in) :: uumat_t(size_t)
+
+! to avoid the warning from compiler
+     call s_assert( size(uumat_t) == size_t )
+     call s_print_error('cat_set_uumat','sorry, this feature is not supported')
+
+     return
+  end subroutine cat_set_uumat
+
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
