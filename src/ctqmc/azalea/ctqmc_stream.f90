@@ -357,6 +357,11 @@
          if ( exists .eqv. .true. ) then
 ! read in uumat from solver.umat.in
              open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
+! skip three header lines
+             read(mytmp,*) 
+             read(mytmp,*) 
+             read(mytmp,*) 
+
              do i=1,norbs
                  do j=1,norbs
                      read(mytmp,*) r1,r2,uumat(i,j) 
