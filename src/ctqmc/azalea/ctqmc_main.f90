@@ -42,6 +42,7 @@
 !! =====
 !!
 !! solver.ctqmc.in (optional)
+!! solver.umat.in (optional)
 !! solver.eimp.in (optional)
 !! solver.hyb.in (optional)
 !!
