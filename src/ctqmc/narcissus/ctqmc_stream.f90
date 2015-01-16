@@ -488,6 +488,12 @@
 
 # endif  /* MPI */
 
+! FINAL STEP
+!-------------------------------------------------------------------------
+! shift the Coulomb interaction matrix and chemical potential if retarded
+! interaction or the so-called dynamical screening effect is considered
+     call ctqmc_make_shift(uumat)
+
      return
   end subroutine ctqmc_selfer_init
 
