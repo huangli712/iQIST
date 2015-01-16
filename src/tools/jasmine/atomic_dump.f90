@@ -254,9 +254,7 @@
                  l = 2*(j-nband)
              endif ! back if ( j <= nband ) block
 
-             if ( abs( umat_t(k,l) ) > epst ) then
-                 write(mytmp,'(2i6,f16.8)') i, j, umat_t(k,l)
-             endif ! back if ( abs( umat_t(k,l) ) > epst ) block
+             write(mytmp,'(2i6,f16.8)') i, j, umat_t(k,l)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
