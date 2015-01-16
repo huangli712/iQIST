@@ -165,14 +165,14 @@
      implicit none
 
 ! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+     integer  :: l
+
 ! two index umat
      real(dp) :: umat_t(norbs,norbs)
-
-! loop index
-     integer :: i
-     integer :: j
-     integer :: k
-     integer :: l
 
 ! used to draw a dashed line
      character (len=1) :: dash(75)
@@ -233,13 +233,8 @@
 ! open file atom.umat.dat to write
      open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
 
-! write the header
-     write(mytmp,'(75a1)') dash ! dashed line
-     write(mytmp,'(a)') '# i | j | umat'
-     write(mytmp,'(75a1)') dash ! dashed line
-
-! write the data, only the non-zero elements are outputed
-! note: we do not change the spin sequence here
+! write the data, all of the elements are outputed
+! note: we have to change the spin sequence here
      do i=1,norbs
          if ( i <= nband ) then
              k = 2*i-1
