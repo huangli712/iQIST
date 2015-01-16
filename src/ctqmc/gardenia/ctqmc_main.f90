@@ -578,6 +578,33 @@
      return
   end subroutine cat_set_ktau
 
+!!>>> cat_set_uumat: setup the Coulomb interaction matrix
+  subroutine cat_set_uumat(size_t, uumat_t)
+     use constants, only : dp
+
+     use control, only : norbs
+     use context, only : uumat
+
+     implicit none
+
+! external arguments
+! size of uumat
+     integer, intent(in)  :: size_t
+
+! Coulomb interaction matrix
+     real(dp), intent(in) :: uumat_t(size_t)
+
+! check whether size_t is correct
+     if ( size_t /= size(uumat) ) then
+         call s_print_error('cat_set_uumat','wrong dimension size of uumat_t')
+     endif ! back if ( size_t /= size(uumat) ) block
+
+! copy data
+     uumat = reshape(uumat_t,(/norbs,norbs/))
+
+     return
+  end subroutine cat_set_uumat
+
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
      use constants, only : dp
