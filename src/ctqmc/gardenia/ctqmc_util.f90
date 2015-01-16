@@ -306,7 +306,7 @@
 
 ! external arguments
 ! Coulomb interaction matrix
-     real(dp), intent(out) :: uumat(norbs, norbs)
+     real(dp), intent(out) :: uumat(norbs,norbs)
 
 ! local variables
 ! loop index
