@@ -368,7 +368,7 @@
                  enddo ! over i={1,norbs} loop
              enddo ! over i={1,norbs} loop
              close(mytmp)
-          else
+         else
 ! calculate two-index pair interaction, uumat
               call ctqmc_make_uumat(uumat)
          endif ! back if ( exists .eqv. .true. ) block
