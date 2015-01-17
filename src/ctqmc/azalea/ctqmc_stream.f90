@@ -223,7 +223,7 @@
      use control, only : beta, part
      use control, only : myid, master
      use context, only : tmesh, rmesh
-     use context, only : symm, eimp
+     use context, only : symm, eimp, uumat
      use context, only : hybf
      use context, only : uumat
 
@@ -234,8 +234,10 @@
      integer  :: i
      integer  :: j
      integer  :: k
+     integer  :: l
 
-! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
+! used to check whether the input file (solver.hyb.in or solver.eimp.in
+! or solver.umat.in) exists
      logical  :: exists
 
 ! dummy real variables
@@ -345,7 +347,10 @@
 
 # endif  /* MPI */
 
-! read in uumat if avaiable
+! calculate two-index Coulomb interaction, uumat
+     call ctqmc_make_uumat(uumat)
+
+! read in two-index Coulomb interaction if available
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
@@ -355,24 +360,17 @@
 
 ! find input file: solver.umat.in, read it
          if ( exists .eqv. .true. ) then
-! read in uumat from solver.umat.in
+! read in Coulomb interaction matrix from solver.umat.in
              open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
-! skip three header lines
-             read(mytmp,*) 
-             read(mytmp,*) 
-             read(mytmp,*) 
-
              do i=1,norbs
                  do j=1,norbs
-                     read(mytmp,*) r1,r2,uumat(i,j) 
-                 enddo ! over i={1,norbs} loop
+                     read(mytmp,*) k, l, rtmp
+                     uumat(k,l) = rtmp
+                 enddo ! over j={1,norbs} loop
              enddo ! over i={1,norbs} loop
              close(mytmp)
-         else
-! calculate two-index pair interaction, uumat
-              call ctqmc_make_uumat(uumat)
-         endif ! back if ( exists .eqv. .true. ) block
 
+         endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
 ! broadcast uumat from master node to all children nodes
@@ -385,7 +383,6 @@
      call mp_barrier()
 
 # endif  /* MPI */
-
 
      return
   end subroutine ctqmc_selfer_init
@@ -535,6 +532,8 @@
 !<     sig1    = czero
      sig2    = czero
 
+! for the other variables/arrays
+!-------------------------------------------------------------------------
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
      call ctqmc_four_hybf(hybf, htau)

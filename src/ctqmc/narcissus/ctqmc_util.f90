@@ -7,6 +7,7 @@
 !!!           ctqmc_four_htau
 !!!           ctqmc_four_hybf
 !!!           ctqmc_make_uumat
+!!!           ctqmc_make_shift
 !!!           ctqmc_make_state
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
@@ -403,18 +404,16 @@
 !!>>> ctqmc_make_uumat: to build general U interaction matrix: uumat, using
 !!>>> my own style
   subroutine ctqmc_make_uumat(uumat)
-     use constants, only : dp, zero, two
+     use constants, only : dp, zero
 
-     use control, only : isscr
      use control, only : nband, norbs
-     use control, only : Uc, Jz, lc, wc
-     use control, only : mune
+     use control, only : Uc, Jz
 
      implicit none
 
 ! external arguments
 ! Coulomb interaction matrix
-     real(dp), intent(out) :: uumat(norbs, norbs)
+     real(dp), intent(out) :: uumat(norbs,norbs)
 
 ! local variables
 ! loop index
@@ -423,14 +422,59 @@
      integer  :: k
      integer  :: m
 
-! control flag, whether the shift for chemical potential is loaded already
-     integer, save :: touch = 0
+! dummy u vector
+     real(dp) :: ut(nband*(norbs-1))
+
+! initialize it
+     uumat = zero
+
+! calculate it
+     k = 0
+     do i=1,norbs-1
+         do j=i+1,norbs
+             k = k + 1
+             if ( i <= nband .and. j > nband ) then
+                 m = j - nband
+                 if ( m == i ) then
+                     ut(k) = Uc
+                 else
+                     ut(k) = Uc - 2.0_dp * Jz
+                 endif ! back if ( m == i ) block
+             else
+                 ut(k) = Uc - 3.0_dp * Jz
+             endif ! back if ( i <= nband .and. j > nband ) block
+
+             uumat(i,j) = ut(k)
+             uumat(j,i) = ut(k)
+         enddo ! over j={i+1,norbs} loop
+     enddo ! over i={1,norbs-1} loop
+
+     return
+  end subroutine ctqmc_make_uumat
+
+!!>>> ctqmc_make_shift: to shift the Coulomb interaction matrix and the
+!!>>> chemical potential if retarded interaction is considered
+  subroutine ctqmc_make_shift(uumat)
+     use constants, only : dp, zero, two
+
+     use control, only : isscr
+     use control, only : norbs
+     use control, only : lc, wc
+     use control, only : mune
+
+     implicit none
+
+! external arguments
+! Coulomb interaction matrix
+     real(dp), intent(inout) :: uumat(norbs,norbs)
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
 
 ! Coulomb interaction shift introduced by dynamical screening effect
      real(dp) :: shift
-
-! dummy u vector
-     real(dp) :: ut(nband*(norbs-1))
 
 ! evaluate Coulomb interaction shift
      select case ( isscr )
@@ -452,38 +496,19 @@
 
      end select
 
-! initialize it
-     uumat = zero
-
-! calculate it
-     k = 0
+! shift the Coulomb interaction matrix (skip the diagonal elements)
      do i=1,norbs-1
          do j=i+1,norbs
-             k = k + 1
-             if ( i <= nband .and. j > nband ) then
-                 m = j - nband
-                 if ( m == i ) then
-                     ut(k) = Uc
-                 else
-                     ut(k) = Uc - 2.0_dp * Jz
-                 endif ! back if ( m == i ) block
-             else
-                 ut(k) = Uc - 3.0_dp * Jz
-             endif ! back if ( i <= nband .and. j > nband ) block
-
-             uumat(i,j) = ut(k) - shift
-             uumat(j,i) = ut(k) - shift
+             uumat(i,j) = uumat(i,j) - shift
+             uumat(j,i) = uumat(j,i) - shift
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
 
 ! shift chemical potential as a byproduct
-     if ( touch == 0 ) then
-         mune = mune - shift / two
-         touch = 1 ! shut down the chemical potential shift
-     endif ! back if ( touch == 0 ) block
+     mune = mune - shift / two
 
      return
-  end subroutine ctqmc_make_uumat
+  end subroutine ctqmc_make_shift
 
 !!========================================================================
 !!>>> atomic state converter                                           <<<

@@ -227,6 +227,12 @@
          lpass = .false.
      endif ! back if ( nband <= 0 ) block
 
+     if ( nband >= 5 .and. ictqmc == 1 ) then
+         write(mystd,'(2X,a)') 'ERROR: when number of bands is larger than 4, direct diagonalization is NOT supported!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( nband >= 5 .and. ictqmc == 1 ) block
+
 ! check nspin
      if ( nspin /= 2 ) then
          write(mystd,'(2X,a)') 'ERROR: number of spin projections must be 2!'

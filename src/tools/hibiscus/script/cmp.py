@@ -5,15 +5,15 @@
 ## Introduction
 ## ============
 ##
-## It is a python script. The purpose of this script is to compare the output
-## files between two cases when testing solvers.
+## It is a python script. The purpose of this script is to compare the
+## output files between two cases when testing solvers.
 ##
 ## This script should be used by the developer only.
 ##
 ## Usage
 ## =====
 ##
-## ./cmp.py  directory_of_case_A  directory_of_case_B
+## ./cmp.py  directory_of_case_A directory_of_case_B
 ##
 ## Author
 ## ======
@@ -32,6 +32,7 @@
 import sys
 import os
 import numpy as np
+
 from u_reader import *
 
 def get_control(filename):
@@ -41,20 +42,24 @@ def get_control(filename):
     f = open(filename,'r')
     lines = [elm.strip() for elm in f.readlines()]
     f.close()
+
     for elm in lines:
         if elm.startswith('norbs'):
             norbs = int( elm.split(':')[1] )
+
         if elm.startswith('ntime'):
             ntime = int( elm.split(':')[1] )
+
         if elm.startswith('mfreq'):
             mfreq = int( elm.split(':')[1] )
+
         if elm.startswith('mkink'):
             mkink = int( elm.split(':')[1] )
+
     return (norbs, ntime, mfreq, mkink)
 
 def print_result(case, func, diff, eps):
     """ print the results of comparing
-
     """
     if diff < eps:
         print case, func, "diff: %10.6f  eps: %10.6f  PASS" % (diff, eps)
