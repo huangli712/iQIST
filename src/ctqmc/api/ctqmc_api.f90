@@ -510,6 +510,7 @@
      public :: set_symm
      public :: set_eimp
      public :: set_ktau
+     public :: set_uumat
 
      public :: get_grnf
      public :: get_sigf
@@ -707,6 +708,27 @@
 
      return
   end subroutine set_ktau
+
+!!>>> set_uumat: setup the Coulomb interaction matrix
+  subroutine set_uumat(size_t, uumat_t)
+     implicit none
+
+! external arguments
+! size of uumat
+     integer, intent(in)  :: size_t
+
+! Coulomb interaction matrix
+     real(dp), intent(in) :: uumat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) uumat_t
+!F2PY depend(size_t) uumat_t
+
+     call cat_set_uumat(size_t, uumat_t)
+
+     return
+  end subroutine set_uumat
 
 !!>>> get_grnf: extract the impurity green's function
   subroutine get_grnf(size_t, grnf_t)
