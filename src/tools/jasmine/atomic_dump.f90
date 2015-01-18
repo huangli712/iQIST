@@ -165,9 +165,6 @@
      implicit none
 
 ! local variables
-! two index umat
-     real(dp) :: umat_t(norbs,norbs)
-
 ! loop index
      integer  :: i
      integer  :: j
