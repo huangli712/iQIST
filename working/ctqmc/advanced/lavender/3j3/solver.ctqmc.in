@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 3j3/solver.ctqmc.in
-!!! solver  : MANJUSHAKA
+!!! solver  : lavender
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------
@@ -13,8 +13,6 @@
   isbin  : 2
   isort  : 1
   isvrt  : 1
-  ifast  : 1
-  itrun  : 1
 
 !!>>> setup common variables for quantum impurity model
 !!------------------------------------------------------------------------
@@ -23,6 +21,7 @@
   norbs  : 6
   ncfgs  : 64
   niter  : 20
+  nzero  : 1024
   U      : 2.00
   Uc     : 2.00
   Uv     : 1.20
