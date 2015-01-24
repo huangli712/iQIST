@@ -2520,7 +2520,7 @@
 !!>>> note: you should carefully choose npart in order to obtain the
 !!>>> best speedup.
   subroutine ctqmc_lazy_ztrace(cmode, csize, ratio, tau_s, tau_e, r, p, pass)
-     use constants, only : dp, zero, one
+     use constants, only : dp, zero, one, epst
 
      use control, only : ncfgs
      use control, only : mkink
@@ -2677,6 +2677,10 @@
 ! special treatment for the last time evolution operator
              indx = sectors(string(1,i))%istart
              btrace(nlive) = btrace(nlive) * expt_loc(indx) * mindim(i)
+             if ( abs(ratio) * abs(btrace(nlive)/matrix_ptrace) < 1E-8 ) then
+                 string(1,i) = -1
+                 nlive = nlive - 1
+             endif
          endif ! back if ( string(1,i) == -1 ) block
      enddo ! over i={1,nsect} loop
 
