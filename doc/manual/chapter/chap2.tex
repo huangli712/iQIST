@@ -15,13 +15,11 @@ The downloaded {\iqist} software package is likely a compressed file with zip or
 \noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ tar xvfz iqist.tar.gz.}}
 
 \section{Direcrory structures}
-
-\begin{figure}[htpb]
+\begin{figure}[ht]
 \centering
-\includegraphics[scale=0.28]{figure/dir.eps}
+\includegraphics[scale=0.6]{figure/dir.pdf}
 \caption{The directory structure of {\iqist} software package.\label{fig:dir}}
 \end{figure}
-
 The directory structure of the {\iqist} software package is shown in Fig.~\ref{fig:dir}.
 
 COPYING: GNU General Public License Version 3.
@@ -174,9 +172,52 @@ Specify the external libraries. Now the {\iqist} software package depends on LAP
 Specify the external mpi libraries for fortran binding. It is useful when you are compiling the python application programming interface using f2py (pyiqist and pydaisy). The f2py will automatically use the 'bare' intel fortran compiler (ifort) to link and generate the python modules (*.so). If you do not specify MPIL, then the python modules will not work properly. 
 
 \section{Build full {\iqist} at one step}
-After a few minutes (depending on the performance of compiling platform), the {\iqist} is ready for use. Note that all of the executable programs will be copied into the iqist/bin directory automatically. Please add this directory into the system environment variable PATH.
+Please change your current directory to iqist/src/build, and then enter the following command:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ make all}}
+
+After a few minutes (depending on the performance of compiling platform), the {\iqist} is ready for use. Note that all of the executable programs will not be copied into the iqist/bin directory automatically. Please change your current directory to iqist/bin, and then enter the following command:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ ./setup.sh}}
+
+Finally, do not forget to add this directory into the system environment variable PATH.
+
+\section{Build common library}
+
+Almost all of the components depend on CSSL and CSML, so you have to build them at first. Please change your current directory to iqist/src/build, and then enter the following command:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ make common}}
+
+Or you can change your current directory to iqist/src/common, and then enter the following command:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ make}}
+
+\section{Build application programming interface}
+
+All of the CT-QMC impurity solvers components depend on the application programming interface (api), so you have to build it before you start to build individual CT-QMC impurity solver. Please change your current directory to iqist/src/build, and then enter the following command:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ make api}}
+
+Or you can change your current directory to iqist/src/ctqmc/api, and then enter the following command:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ make}}
+
 \section{Build quantum impurity solvers}
+
+If you only want to build the quantum impurity solvers only, it is so easy. Please change your current directory to iqist/src/build, and then enter the following command:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ make solver}}
+
+If you only want to build a specific quantum impurity solver, such as azalea, please enter the following commands:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ make azalea}}
+
+Or you can change your current directory to iqist/src/ctqmc/azalea, and then enter the following command:
+
+\noindent\colorbox{pink}{\parbox[r]{\linewidth}{\quad \$ make}}
+
+
 \section{Build auxiliary tools}
+\section{Build library for Fortran}
+\section{Build module for Python}
 \section{Build documents}
-\section{Build library}
-\section{Build application programming interfaces}
