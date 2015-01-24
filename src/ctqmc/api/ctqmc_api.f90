@@ -30,7 +30,7 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro (keep F2PY macro disable).
+!! Activate the API macro (keep MPY macro disable).
 !!
 !! 2. compile api
 !! --------------
@@ -59,7 +59,7 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro and F2PY macro at the same time.
+!! Activate the API macro and MPY macro at the same time.
 !!
 !! 2. compile api
 !! --------------
@@ -327,7 +327,7 @@
 ! note: now f2py does not support derived types, so we have to comment
 ! out them when f2py is used.
 
-# if !defined (F2PY)
+# if !defined (MPY)
 
 ! define type T_mpi, which is used to describe the mpi environment
      public :: T_mpi
@@ -493,7 +493,7 @@
          integer :: npart
      end type T_general_manjushaka
 
-# endif  /* F2PY */
+# endif  /* MPY */
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -549,7 +549,7 @@
      return
   end subroutine solver_status
 
-# if !defined (F2PY)
+# if !defined (MPY)
 
 !!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> fortran version
@@ -568,7 +568,7 @@
      return
   end subroutine init_ctqmc
 
-# else   /* F2PY */
+# else   /* MPY */
 
 !!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> python version
@@ -591,7 +591,7 @@
      return
   end subroutine init_ctqmc
 
-# endif  /* F2PY */
+# endif  /* MPY */
 
 !!>>> exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine exec_ctqmc(iter)
