@@ -28,7 +28,7 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro (keep F2PY macro disable).
+!! Activate the API macro (keep MPY macro disable).
 !!
 !! 2. compile the hfqmc component
 !! ------------------------------
@@ -51,7 +51,7 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro and F2PY macro at the same time.
+!! Activate the API macro and MPY macro at the same time.
 !!
 !! 2. compile the hfqmc component
 !! ------------------------------
@@ -282,7 +282,7 @@
 ! note: now f2py does not support derived types, so we have to comment
 ! out them when f2py is used.
 
-# if !defined (F2PY)
+# if !defined (MPY)
 
 ! define type T_mpi, which is used to describe the mpi environment
      public :: T_mpi
@@ -324,7 +324,7 @@
          real(dp) :: alpha
      end type T_daisy
 
-# endif  /* F2PY */
+# endif  /* MPY */
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -379,7 +379,7 @@
      return
   end subroutine solver_status
 
-# if !defined (F2PY)
+# if !defined (MPY)
 
 !!>>> init_hfqmc: initialize the hfqmc quantum impurity solver
 !!>>> fortran version
@@ -398,7 +398,7 @@
      return
   end subroutine init_hfqmc
 
-# else   /* F2PY */
+# else   /* MPY */
 
 !!>>> init_hfqmc: initialize the hfqmc quantum impurity solver
 !!>>> python version
@@ -421,7 +421,7 @@
      return
   end subroutine init_hfqmc
 
-# endif  /* F2PY */
+# endif  /* MPY */
 
 !!>>> exec_hfqmc: execute the hfqmc quantum impurity solver
   subroutine exec_hfqmc(iter)
