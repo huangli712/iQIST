@@ -44,14 +44,15 @@ ctqmc.init_ctqmc(pyalps.mpi.rank, pyalps.mpi.size)
 mfreq = 8193
 norbs = 2
 size_t = mfreq * norbs * norbs
-grnf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
+hybf = numpy.zeros((mfreq*norbs*norbs), dtype = numpy.complex)
 print size_t
-grnf = ctqmc.get_grnf(size_t)
+#ctqmc.set_hybf(size_t, hybf)
+uumat = numpy.zeros(4, dtype = numpy.float)
+ctqmc.set_uumat(4, uumat)
 sys.exit(-1)
 
 for i in range(1):
     ctqmc.exec_ctqmc(i+1)
-
 
 ctqmc.stop_ctqmc()
 pyalps.mpi.world.barrier()
