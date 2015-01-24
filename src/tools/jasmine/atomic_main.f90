@@ -195,7 +195,7 @@
 
 # endif  /* API */
 
-# if !defined (F2PY)
+# if !defined (MPY)
 
 !!>>> cat_init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> fortran version
@@ -254,7 +254,7 @@
      return
   end subroutine cat_init_atomic
 
-# else   /* F2PY */
+# else   /* MPY */
 
 !!>>> cat_init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> python version
@@ -285,7 +285,7 @@
      return
   end subroutine cat_init_atomic
 
-# endif  /* F2PY */
+# endif  /* MPY */
 
 !!>>> cat_exec_atomic: execute the atomic eigenvalue problem solver
   subroutine cat_exec_atomic()
