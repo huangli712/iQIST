@@ -64,7 +64,7 @@ hfqmc-lib: $(objects)
 	$(ARCHIVER) libhfqmc.a $(objects)
 
 f2py:
-	fpp -P -DF2PY hfqmc_api.f90 > hfqmc_api_py.f90
+	fpp -P -DMPY hfqmc_api.f90 > hfqmc_api_py.f90
 
 pydaisy: f2py lib
 	f2py -c --fcompiler=intelem hfqmc_api_py.f90 -m pydaisy -L. -lhfqmc -lMM $(MPIL) $(LIBS)
