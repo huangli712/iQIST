@@ -8,7 +8,7 @@
 !!>>> setup general control flags
 !!------------------------------------------------------------------------
   ibasis : 1
-  ictqmc : 2
+  ictqmc : 1
   icu    : 1
   icf    : 2
   isoc   : 1
