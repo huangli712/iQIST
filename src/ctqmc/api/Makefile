@@ -37,7 +37,7 @@ all: build_mod
 build_mod: $(mod)
 
 f2py:
-	fpp -P -DF2PY ctqmc_api.f90 > ctqmc_api_py.f90
+	fpp -P -DMPY ctqmc_api.f90 > ctqmc_api_py.f90
 
 libctqmc:
 	cp ../azalea/libctqmc.a .
