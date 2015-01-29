@@ -8,16 +8,22 @@
      type (T_mpi) :: I_mpi
      type (T_segment_azalea) :: I_solver
 
-     integer :: size_t, i
-     integer :: mfreq, norbs
+     integer :: i
+     integer :: mfreq
+     integer :: norbs
+     integer :: size_t
+
+! hybridization function and green's function
      complex(dp), allocatable :: hybf(:)
      complex(dp), allocatable :: grnf(:)
      complex(dp), allocatable :: grnf_s(:)
 
-! allocate memory
-     mfreq = 8193
-     norbs = 2
+! setup parameters
+     mfreq = 8193 ! number of matsubara frequency points
+     norbs = 2    ! number of orbitals
      size_t = mfreq * norbs * norbs
+
+! allocate memory
      allocate(hybf(size_t))
      allocate(grnf(size_t))
      allocate(grnf_s(size_t))
@@ -64,17 +70,20 @@
      I_solver%part  = 0.50
      I_solver%alpha = 0.50
 
+! init ctqmc impurity solver
      call init_ctqmc(I_mpi, I_solver)
 
-     do i = 1,20
+! try to implement the DMFT self-consistent loop
+     do i=1,20
          call exec_ctqmc(i)
          call get_grnf(size_t, grnf)
          hybf = 0.25 * grnf
          call set_hybf(size_t, hybf)
          print *, 'MAX_ERROR:', maxval(abs(grnf - grnf_s))
          grnf_s = (grnf + grnf_s)/2.0
-     enddo
+     enddo ! over i={1,20} loop
 
+! stop ctqmc impurity solver
      call stop_ctqmc()
 
 ! blocks until all processes have reached this routine
