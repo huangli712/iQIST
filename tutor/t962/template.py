@@ -4,27 +4,27 @@ import sys
 import numpy
 import pyalps.mpi
 
-#from pyiqist import api as ctqmc
-
 # modify sys.path
 sys.path.append('../../src/tools/hibiscus/script/')
 
 # import the writer for ctqmc configuration file
 from u_ctqmc import *
 
+# import iqist software package
+from pyiqist import api as ctqmc
+
 # check the status of ctqmc impurity solver
-#if ctqmc.solver_id() == 101:
-#    if pyalps.mpi.rank == 0 : 
-#        print "Hello world! This is the AZALEA code"
-#else:
-#    if pyalps.mpi.rank == 0 : 
-#        print "Where is the AZALEA code"
-#    sys.exit(-1)
-#
-#if ctqmc.solver_status() != 1 :
-#    print "I am sorry. This ctqmc impurity solver is not ready."
-#    sys.exit(-1)
-#pyalps.mpi.world.barrier()
+if ctqmc.solver_id() == 101:
+    if pyalps.mpi.rank == 0 : 
+        print "Hello world! This is the AZALEA code"
+else:
+    if pyalps.mpi.rank == 0 : 
+        print "Where is the AZALEA code"
+    sys.exit(-1)
+if ctqmc.solver_status() != 1 :
+    print "I am sorry. This ctqmc impurity solver is not ready."
+    sys.exit(-1)
+pyalps.mpi.world.barrier()
 
 # prepare the input file
 if pyalps.mpi.rank == 0:
