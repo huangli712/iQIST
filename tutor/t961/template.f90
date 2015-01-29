@@ -1,7 +1,7 @@
-
   program test
      use api
      use mmpi
+     use constants, only : dp
 
      implicit none
 
@@ -13,6 +13,14 @@
      complex(dp), allocatable :: hybf(:)
      complex(dp), allocatable :: grnf(:)
      complex(dp), allocatable :: grnf_s(:)
+
+! allocate memory
+     mfreq = 8193
+     norbs = 2
+     size_t = mfreq * norbs * norbs
+     allocate(hybf(size_t))
+     allocate(grnf(size_t))
+     allocate(grnf_s(size_t))
 
 ! initialize the mpi execution environment
      call mp_init()
@@ -58,18 +66,12 @@
 
      call init_ctqmc(I_mpi, I_solver)
 
-     mfreq = 8193
-     norbs = 2
-     size_t = mfreq * norbs * norbs
-     allocate(hybf(size_t))
-     allocate(grnf(size_t))
-     allocate(grnf_s(size_t))
      do i = 1,20
          call exec_ctqmc(i)
          call get_grnf(size_t, grnf)
          hybf = 0.25 * grnf
          call set_hybf(size_t, hybf)
-         print *, maxval(abs(grnf - grnf_s))
+         print *, 'MAX_ERROR:', maxval(abs(grnf - grnf_s))
          grnf_s = (grnf + grnf_s)/2.0
      enddo
 
@@ -80,5 +82,10 @@
 
 ! terminates mpi execution environment
      call mp_finalize()
+
+! deallocate memory
+     deallocate(hybf)
+     deallocate(grnf)
+     deallocate(grnf_s)
 
   end program test

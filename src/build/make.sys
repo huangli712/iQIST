@@ -55,9 +55,9 @@
 ## enabled, what you can obtain is a library and you can write python or
 ## fortran codes to use it, instead of a standard executable program. In
 ## default it is disabled. If only the API macro is defined, the Fortran
-## API will be generated. If both the API and F2PY macros are defined, the
+## API will be generated. If both the API and MPY macros are defined, the
 ## Python API and (slightly different) Fortran API will be generated. If
-## only the F2PY macro is defined, it is invalid.
+## only the MPY macro is defined, it is invalid.
 ##
 ## FPP
 ## ---
@@ -168,7 +168,7 @@ ARCHIVER = ar -ruv
 #-------------------------------------------------------------------------
 MPI    = -DMPI
 OMP    = #-openmp
-API    = #-DAPI -DF2PY
+API    = -DAPI -DMPY
 FPP    = -fpp
 CPP    = $(FPP) $(MPI) $(OMP) $(API)
 

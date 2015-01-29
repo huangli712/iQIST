@@ -61,7 +61,7 @@ atomic-lib: $(objects)
 	$(ARCHIVER) libatomic.a $(objects)
 
 f2py:
-	fpp -P -DF2PY atomic_api.f90 > atomic_api_py.f90
+	fpp -P -DMPY atomic_api.f90 > atomic_api_py.f90
 
 pyjasmine: f2py lib
 	f2py -c --fcompiler=intelem atomic_api_py.f90 -m pyjasmine -L. -latomic -lMM $(LIBS)

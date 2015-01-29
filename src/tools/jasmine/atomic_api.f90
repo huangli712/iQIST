@@ -28,7 +28,7 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro (keep F2PY macro disable).
+!! Activate the API macro (keep MPY macro disable).
 !!
 !! 2. compile the jasmine component
 !! --------------------------------
@@ -51,7 +51,7 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro and F2PY macro at the same time.
+!! Activate the API macro and MPY macro at the same time.
 !!
 !! 2. generate pyjasmine.so
 !! ------------------------
@@ -170,7 +170,7 @@
 ! note: now f2py does not support derived types, so we have to comment
 ! out them when f2py is used.
 
-# if !defined (F2PY)
+# if !defined (MPY)
 
 ! define type T_jasmine, which is used to describe the control parameters
 ! for the jasmine code
@@ -201,7 +201,7 @@
          real(dp) :: lambda
      end type T_jasmine
 
-# endif  /* F2PY */
+# endif  /* MPY */
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -213,7 +213,7 @@
 
   contains ! encapsulated functionality
 
-# if !defined (F2PY)
+# if !defined (MPY)
 
 !!>>> init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> fortran version
@@ -229,7 +229,7 @@
      return
   end subroutine init_atomic
 
-# else   /* F2PY */
+# else   /* MPY */
 
 !!>>> init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> python version
@@ -241,7 +241,7 @@
      return
   end subroutine init_atomic
 
-# endif  /* F2PY */
+# endif  /* MPY */
 
 !!>>> exec_atomic: execute the atomic eigenvalue problem solver
   subroutine exec_atomic()
