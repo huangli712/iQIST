@@ -22,3 +22,4 @@
 ### Library mode
 * t961: Call iQIST from Fortran code
 * t962: Call iQIST from Python script
+* t963: Call iQIST/daisy from Python script
