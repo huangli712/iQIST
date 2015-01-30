@@ -168,7 +168,7 @@ ARCHIVER = ar -ruv
 #-------------------------------------------------------------------------
 MPI    = -DMPI
 OMP    = #-openmp
-API    = -DAPI -DMPY
+API    = #-DAPI -DMPY
 FPP    = -fpp
 CPP    = $(FPP) $(MPI) $(OMP) $(API)
 
