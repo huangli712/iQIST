@@ -9,28 +9,40 @@ from mpi4py import MPI
 # modify sys.path
 sys.path.append('../../src/tools/hibiscus/script/')
 
-# import the writer for ctqmc configuration file
-from u_ctqmc import *
+# import the writer for hfqmc configuration file
+from u_hfqmc import *
 
 # modify sys.path
-sys.path.append('../../src/ctqmc/api/')
+sys.path.append('../../src/hfqmc/daisy/')
 
 # import iqist software package
-from pyiqist import api as ctqmc
+from pydaisy import dapi as hfqmc
+
+def do_dmft_loop(mfreq, norbs, grnf):
+    size_t = mfreq * norbs
+    rmesh = numpy.zeros(mfreq, dtype = numpy.float)
+    for i in range(mfreq):
+        rmesh[i] = (2 * i + 1.0) * numpy.pi / 10.0
+    grnf_t = numpy.reshape(grnf, (mfreq, norbs), order = 'F')
+    wssf_t = grnf_t * 0.0
+    for i in range(norbs):
+        for j in range(mfreq):
+            wssf_t[j,i] = 1.0 / (1j * rmesh[j] - 0.25 * grnf_t[j,i])
+    return numpy.reshape(wssf_t, size_t, order = 'F')
 
 # get mpi communicator
 comm = MPI.COMM_WORLD
 
-# check the status of ctqmc impurity solver
-if ctqmc.solver_id() == 101:
+# check the status of hfqmc impurity solver
+if hfqmc.solver_id() == 901:
     if comm.rank == 0 : 
-        print "Hello world! This is the AZALEA code."
+        print "Hello world! This is the DAISY code."
 else:
     if comm.rank == 0 : 
-        print "Where is the AZALEA code?"
+        print "Where is the DAISY code?"
     sys.exit(-1)
-if ctqmc.solver_status() != 1 :
-    print "I am sorry. This ctqmc impurity solver is not ready."
+if hfqmc.solver_status() != 1 :
+    print "I am sorry. This hfqmc impurity solver is not ready."
     sys.exit(-1)
 
 # mpi barrier
@@ -39,15 +51,15 @@ comm.Barrier()
 # prepare the input file
 if comm.rank == 0:
     # create an instance
-    p = p_ctqmc_solver('azalea')
+    p = p_hfqmc_solver('daisy')
 
     # setup the parameters
-    p.setp(isscf = 1, isbin = 1, niter = 20, U = 4.0, Uc = 4.0, Uv = 4.0, mune = 2.0, beta = 10.0)
+    p.setp(isscf = 1, isbin = 1, Uc = 4.0, mune = 2.0, beta = 10.0)
 
     # verify the parameters
     p.check()
 
-    # generate the solver.ctqmc.in file
+    # generate the solver.hfqmc.in file
     p.write()
 
     # destroy the instance
@@ -59,31 +71,31 @@ comm.Barrier()
 # setup parameters
 mfreq = 8193 # number of matsubara frequency points
 norbs = 2    # number of orbitals
-niter = 20   # number of iterations
-size_t = mfreq * norbs * norbs
+niter = 4    # number of iterations
+size_t = mfreq * norbs
 
 # allocate memory
-hybf = numpy.zeros(size_t, dtype = numpy.complex)
-grnf = numpy.zeros(size_t, dtype = numpy.complex)
-grnf_s = numpy.zeros(size_t, dtype = numpy.complex)
+wssf = numpy.zeros(size_t, dtype = numpy.complex, order = 'F')
+grnf = numpy.zeros(size_t, dtype = numpy.complex, order = 'F')
+grnf_s = numpy.zeros(size_t, dtype = numpy.complex, order = 'F')
 
-# init ctqmc impurity solver
-ctqmc.init_ctqmc(comm.rank, comm.size)
+# init hfqmc impurity solver
+hfqmc.init_hfqmc(comm.rank, comm.size)
 
 # try to implement the DMFT self-consistent loop
 for i in range(niter):
-    ctqmc.exec_ctqmc(i+1)
-    grnf = ctqmc.get_grnf(size_t)
-    hybf = 0.25 * grnf
-    ctqmc.set_hybf(size_t, hybf)
+    hfqmc.exec_hfqmc(i+1)
+    grnf = hfqmc.get_grnf(size_t)
+    wssf = do_dmft_loop(mfreq, norbs, grnf)
+    hfqmc.set_wssf(size_t, wssf)
     print 'MAX_ERROR:', (numpy.absolute(grnf - grnf_s)).max()
     grnf_s = (grnf + grnf_s)/2.0
 
-# stop ctqmc impurity solver
-ctqmc.stop_ctqmc()
+# stop hfqmc impurity solver
+hfqmc.stop_hfqmc()
 
 # mpi barrier
 comm.Barrier()
 
 # deallocate memory
-del hybf, grnf, grnf_s
+del wssf, grnf, grnf_s
