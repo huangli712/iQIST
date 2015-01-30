@@ -778,10 +778,10 @@
 
 ! external arguments
 ! size of nmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! occupation number
-     real(dp), intent(out) :: nmat_t(size_t)
+     real(8), intent(out) :: nmat_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
