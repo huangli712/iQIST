@@ -48,15 +48,27 @@ if comm.rank == 0:
     del p
 comm.Barrier()
 
-ctqmc.init_ctqmc(comm.rank, comm.size)
-
-#for i in range(1):
-#    ctqmc.exec_ctqmc(i+1)
-#ctqmc.stop_ctqmc()
-#comm.Barrier()
-
 norbs = 2
 mfreq = 8193
+size_t = mfreq * norbs * norbs
+hybf = numpy.zeros(size_t, dtype = numpy.complex)
+grnf = numpy.zeros(size_t, dtype = numpy.complex)
+grnf_s = numpy.zeros(size_t, dtype = numpy.complex)
+
+ctqmc.init_ctqmc(comm.rank, comm.size)
+
+for i in range(20):
+    ctqmc.exec_ctqmc(i+1)
+    grnf = ctqmc.get_grnf(size_t)
+    hybf = 0.25 * grnf
+    ctqmc.set_hybf(size_t, hybf)
+    print 'MAX_ERROR:', (numpy.absolute(grnf - grnf_s)).max()
+    grnf_s = (grnf + grnf_s)/2.0
+
+ctqmc.stop_ctqmc()
+
+comm.Barrier()
+
 
 #size_t = norbs * norbs
 #nnmat = ctqmc.get_nnmat(size_t)
@@ -85,9 +97,21 @@ mfreq = 8193
 #print uumat
 #ctqmc.set_uumat(size_t, uumat)
 
-size_t = norbs
-eimp = numpy.zeros((norbs), dtype = numpy.float)
-eimp = eimp - 1.0
-print eimp
-ctqmc.set_eimp(size_t, eimp)
-sys.exit(-1)
+#size_t = norbs
+#eimp = numpy.zeros((norbs), dtype = numpy.float)
+#eimp = eimp - 1.0
+#print eimp
+#ctqmc.set_eimp(size_t, eimp)
+
+#size_t = norbs
+#symm = numpy.zeros((norbs), dtype = numpy.int)
+#symm = symm + 5
+#print symm
+#ctqmc.set_symm(size_t, symm)
+
+#size_t = mfreq * norbs * norbs
+#hybf = numpy.zeros((mfreq, norbs, norbs), dtype = numpy.complex)
+#hybf = hybf + 6.0
+#hybf = numpy.reshape(hybf, (size_t))
+#print hybf
+#ctqmc.set_hybf(size_t, hybf)
