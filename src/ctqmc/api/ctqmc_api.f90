@@ -223,7 +223,7 @@
 !! ---------------------
 !!
 !! Here we can use the pyalps.mpi package or mpi4py package to provide
-!! the mpi support, such as.
+!! the mpi support, such as,
 !!
 !! import pyalps.mpi
 !!
