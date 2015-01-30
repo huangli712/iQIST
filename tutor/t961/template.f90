@@ -11,6 +11,7 @@
      integer :: i
      integer :: mfreq
      integer :: norbs
+     integer :: niter
      integer :: size_t
 
 ! hybridization function and green's function
@@ -21,6 +22,7 @@
 ! setup parameters
      mfreq = 8193 ! number of matsubara frequency points
      norbs = 2    ! number of orbitals
+     niter = 20   ! number of iterations
      size_t = mfreq * norbs * norbs
 
 ! allocate memory
@@ -39,8 +41,8 @@
 
 ! setup I_solver
      I_solver%isscf  = 1
-     I_solver%issun  = 1
-     I_solver%isspn  = 2
+     I_solver%issun  = 2
+     I_solver%isspn  = 1
      I_solver%isbin  = 1
      I_solver%nband  = 1
      I_solver%nspin  = 2
@@ -74,14 +76,14 @@
      call init_ctqmc(I_mpi, I_solver)
 
 ! try to implement the DMFT self-consistent loop
-     do i=1,20
+     do i=1,niter
          call exec_ctqmc(i)
          call get_grnf(size_t, grnf)
          hybf = 0.25 * grnf
          call set_hybf(size_t, hybf)
          print *, 'MAX_ERROR:', maxval(abs(grnf - grnf_s))
          grnf_s = (grnf + grnf_s)/2.0
-     enddo ! over i={1,20} loop
+     enddo ! over i={1,niter} loop
 
 ! stop ctqmc impurity solver
      call stop_ctqmc()
