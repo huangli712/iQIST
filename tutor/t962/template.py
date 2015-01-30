@@ -49,12 +49,17 @@ if comm.rank == 0:
 comm.Barrier()
 
 ctqmc.init_ctqmc(comm.rank, comm.size)
-a = ctqmc.get_grnf(8193 * 2 * 2)
-print type(a[0])
-print a
-sys.exit(-1)
 
-for i in range(1):
-    ctqmc.exec_ctqmc(i+1)
-ctqmc.stop_ctqmc()
-comm.Barrier()
+#for i in range(1):
+#    ctqmc.exec_ctqmc(i+1)
+#ctqmc.stop_ctqmc()
+#comm.Barrier()
+
+norbs = 2
+mfreq = 8193
+
+size_t = norbs * norbs
+nnmat = ctqmc.get_nnmat(size_t)
+print type(nnmat[0])
+print nnmat
+sys.exit(-1)
