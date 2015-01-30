@@ -24,14 +24,16 @@ comm = MPI.COMM_WORLD
 # check the status of ctqmc impurity solver
 if ctqmc.solver_id() == 101:
     if comm.rank == 0 : 
-        print "Hello world! This is the AZALEA code"
+        print "Hello world! This is the AZALEA code."
 else:
     if comm.rank == 0 : 
-        print "Where is the AZALEA code"
+        print "Where is the AZALEA code?"
     sys.exit(-1)
 if ctqmc.solver_status() != 1 :
     print "I am sorry. This ctqmc impurity solver is not ready."
     sys.exit(-1)
+
+# mpi barrier
 comm.Barrier()
 
 # prepare the input file
@@ -50,6 +52,8 @@ if comm.rank == 0:
 
     # destroy the instance
     del p
+
+# mpi barrier
 comm.Barrier()
 
 # setup parameters
@@ -78,53 +82,8 @@ for i in range(niter):
 # stop ctqmc impurity solver
 ctqmc.stop_ctqmc()
 
+# mpi barrier
 comm.Barrier()
 
 # deallocate memory
 del hybf, grnf, grnf_s
-
-#size_t = norbs * norbs
-#nnmat = ctqmc.get_nnmat(size_t)
-#print type(nnmat[0])
-#print nnmat
-
-#size_t = norbs
-#nmat = ctqmc.get_nmat(size_t)
-#print type(nmat[0])
-#print nmat
-
-#size_t = mfreq * norbs * norbs
-#sigf = ctqmc.get_sigf(size_t)
-#print type(sigf[0])
-#print sigf
-
-#size_t = mfreq * norbs * norbs
-#grnf = ctqmc.get_grnf(size_t)
-#print type(grnf[0])
-#print grnf
-
-#size_t = norbs * norbs
-#uumat = numpy.zeros((norbs,norbs), dtype = numpy.float)
-#uumat = uumat + 4.0
-#uumat = numpy.reshape(uumat, (size_t))
-#print uumat
-#ctqmc.set_uumat(size_t, uumat)
-
-#size_t = norbs
-#eimp = numpy.zeros((norbs), dtype = numpy.float)
-#eimp = eimp - 1.0
-#print eimp
-#ctqmc.set_eimp(size_t, eimp)
-
-#size_t = norbs
-#symm = numpy.zeros((norbs), dtype = numpy.int)
-#symm = symm + 5
-#print symm
-#ctqmc.set_symm(size_t, symm)
-
-#size_t = mfreq * norbs * norbs
-#hybf = numpy.zeros((mfreq, norbs, norbs), dtype = numpy.complex)
-#hybf = hybf + 6.0
-#hybf = numpy.reshape(hybf, (size_t))
-#print hybf
-#ctqmc.set_hybf(size_t, hybf)
