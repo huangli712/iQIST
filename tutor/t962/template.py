@@ -12,9 +12,13 @@ sys.path.append('../../src/tools/hibiscus/script/')
 # import the writer for ctqmc configuration file
 from u_ctqmc import *
 
+# modify sys.path
+sys.path.append('../../src/ctqmc/api/')
+
 # import iqist software package
 from pyiqist import api as ctqmc
 
+# get mpi communicator
 comm = MPI.COMM_WORLD
 
 # check the status of ctqmc impurity solver
@@ -36,7 +40,7 @@ if comm.rank == 0:
     p = p_ctqmc_solver('azalea')
 
     # setup the parameters
-    p.setp(isscf = 2, isbin = 1, niter = 20, U = 4.0, Uc = 4.0, Uv = 4.0, mune = 2.0, beta = 10.0)
+    p.setp(isscf = 1, isbin = 1, niter = 20, U = 4.0, Uc = 4.0, Uv = 4.0, mune = 2.0, beta = 10.0)
 
     # verify the parameters
     p.check()
@@ -48,15 +52,21 @@ if comm.rank == 0:
     del p
 comm.Barrier()
 
-norbs = 2
-mfreq = 8193
+# setup parameters
+mfreq = 8193 # number of matsubara frequency points
+norbs = 2    # number of orbitals
+niter = 20   # number of iterations
 size_t = mfreq * norbs * norbs
+
+# allocate memory
 hybf = numpy.zeros(size_t, dtype = numpy.complex)
 grnf = numpy.zeros(size_t, dtype = numpy.complex)
 grnf_s = numpy.zeros(size_t, dtype = numpy.complex)
 
+# init ctqmc impurity solver
 ctqmc.init_ctqmc(comm.rank, comm.size)
 
+# try to implement the DMFT self-consistent loop
 for i in range(20):
     ctqmc.exec_ctqmc(i+1)
     grnf = ctqmc.get_grnf(size_t)
@@ -65,10 +75,13 @@ for i in range(20):
     print 'MAX_ERROR:', (numpy.absolute(grnf - grnf_s)).max()
     grnf_s = (grnf + grnf_s)/2.0
 
+# stop ctqmc impurity solver
 ctqmc.stop_ctqmc()
 
 comm.Barrier()
 
+# deallocate memory
+del hybf, grnf, grnf_s
 
 #size_t = norbs * norbs
 #nnmat = ctqmc.get_nnmat(size_t)
