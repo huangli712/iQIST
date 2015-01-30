@@ -757,10 +757,10 @@
 
 ! external arguments
 ! size of sigf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! self-energy function
-     complex(dp), intent(out) :: sigf_t(size_t)
+     complex(8), intent(out) :: sigf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
