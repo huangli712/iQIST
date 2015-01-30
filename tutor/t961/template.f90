@@ -48,7 +48,7 @@
      I_solver%nspin  = 2
      I_solver%norbs  = 2
      I_solver%ncfgs  = 4
-     I_solver%niter  = 20
+     I_solver%niter  = 1
      I_solver%mkink  = 1024
      I_solver%mfreq  = 8193
      I_solver%nfreq  = 128
