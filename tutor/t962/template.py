@@ -2,7 +2,9 @@
 
 import sys
 import numpy
-import pyalps.mpi
+
+# import mpi support
+from mpi4py import MPI
 
 # modify sys.path
 sys.path.append('../../src/tools/hibiscus/script/')
@@ -13,21 +15,23 @@ from u_ctqmc import *
 # import iqist software package
 from pyiqist import api as ctqmc
 
+comm = MPI.COMM_WORLD
+
 # check the status of ctqmc impurity solver
 if ctqmc.solver_id() == 101:
-    if pyalps.mpi.rank == 0 : 
+    if comm.rank == 0 : 
         print "Hello world! This is the AZALEA code"
 else:
-    if pyalps.mpi.rank == 0 : 
+    if comm.rank == 0 : 
         print "Where is the AZALEA code"
     sys.exit(-1)
 if ctqmc.solver_status() != 1 :
     print "I am sorry. This ctqmc impurity solver is not ready."
     sys.exit(-1)
-pyalps.mpi.world.barrier()
+comm.Barrier()
 
 # prepare the input file
-if pyalps.mpi.rank == 0:
+if comm.rank == 0:
     # create an instance
     p = p_ctqmc_solver('azalea')
 
@@ -42,15 +46,10 @@ if pyalps.mpi.rank == 0:
 
     # destroy the instance
     del p
-pyalps.mpi.world.barrier()
+comm.Barrier()
 
-sys.exit(-1)
-
-
-ctqmc.init_ctqmc(pyalps.mpi.rank, pyalps.mpi.size)
-
-for i in range(2):
+ctqmc.init_ctqmc(comm.rank, comm.size)
+for i in range(10):
     ctqmc.exec_ctqmc(i+1)
-print 'hdh'
-#ctqmc.stop_ctqmc()
-#pyalps.mpi.world.barrier()
+ctqmc.stop_ctqmc()
+comm.Barrier()
