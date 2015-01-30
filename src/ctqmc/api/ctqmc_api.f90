@@ -624,10 +624,10 @@
 
 ! external arguments
 ! size of hybf
-     integer, intent(in)     :: size_t
+     integer, intent(in)    :: size_t
 
 ! hybridization function
-     complex(dp), intent(in) :: hybf_t(size_t)
+     complex(8), intent(in) :: hybf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -666,10 +666,10 @@
 
 ! external arguments
 ! size of eimp
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! impurity energy level
-     real(dp), intent(in) :: eimp_t(size_t)
+     real(8), intent(in) :: eimp_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
