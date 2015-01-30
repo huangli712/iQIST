@@ -68,9 +68,13 @@ mfreq = 8193
 #print type(nmat[0])
 #print nmat
 
-size_t = mfreq * norbs * norbs
-sigf = ctqmc.get_sigf(size_t)
-print type(sigf[0])
-print sigf
+#size_t = mfreq * norbs * norbs
+#sigf = ctqmc.get_sigf(size_t)
+#print type(sigf[0])
+#print sigf
 
+size_t = mfreq * norbs * norbs
+grnf = ctqmc.get_grnf(size_t)
+print type(grnf[0])
+print grnf
 sys.exit(-1)
