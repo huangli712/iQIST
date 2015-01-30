@@ -280,6 +280,19 @@
 !!
 !! hfqmc.stop_hfqmc()
 !!
+!! Examples
+!! ========
+!!
+!! Fortran version
+!! ---------------
+!!
+!! N/A.
+!!
+!! Python version
+!! --------------
+!!
+!! see iqist/tutor/t963/template.py.
+!!
 !! FAQ
 !! ===
 !!
