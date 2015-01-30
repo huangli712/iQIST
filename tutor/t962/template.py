@@ -58,8 +58,14 @@ ctqmc.init_ctqmc(comm.rank, comm.size)
 norbs = 2
 mfreq = 8193
 
-size_t = norbs * norbs
-nnmat = ctqmc.get_nnmat(size_t)
-print type(nnmat[0])
-print nnmat
+#size_t = norbs * norbs
+#nnmat = ctqmc.get_nnmat(size_t)
+#print type(nnmat[0])
+#print nnmat
+
+size_t = norbs
+nmat = ctqmc.get_nmat(size_t)
+print type(nmat[0])
+print nmat
+
 sys.exit(-1)
