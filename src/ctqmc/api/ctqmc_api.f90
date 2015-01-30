@@ -251,7 +251,7 @@
 !! You have to setup the parameters for the ctqmc impurity solver, and
 !! write them down to the 'solver.ctqmc.in' file. Now you can do that
 !! manually. On the other hand, we provide a powerful Python module to
-!! facilitate this work (see src/tools/hibiscus/script/p_ctqmc.py).
+!! facilitate this work (see src/tools/hibiscus/script/u_ctqmc.py).
 !!
 !! 4. init the ctqmc impurity solver
 !! ---------------------------------
