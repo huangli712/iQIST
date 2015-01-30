@@ -740,7 +740,6 @@
 
 ! impurity green's function
      complex(dp), intent(out) :: grnf_t(size_t)
-     !!double complex, intent(out) :: grnf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
