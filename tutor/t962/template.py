@@ -49,7 +49,12 @@ if comm.rank == 0:
 comm.Barrier()
 
 ctqmc.init_ctqmc(comm.rank, comm.size)
-for i in range(10):
+a = ctqmc.get_grnf(8193 * 2 * 2)
+print type(a[0])
+print a
+sys.exit(-1)
+
+for i in range(1):
     ctqmc.exec_ctqmc(i+1)
 ctqmc.stop_ctqmc()
 comm.Barrier()
