@@ -15,10 +15,13 @@ from u_hfqmc import *
 # modify sys.path
 sys.path.append('../../src/hfqmc/daisy/')
 
-# import iqist software package
+# import daisy software package
 from pydaisy import dapi as hfqmc
 
 def do_dmft_loop(mfreq, norbs, grnf):
+    """ implement the DMFT self-consistent condition for bethe lattice
+        t = 0.5, beta = 10.0, half-filling case
+    """
     size_t = mfreq * norbs
     rmesh = numpy.zeros(mfreq, dtype = numpy.float)
     for i in range(mfreq):
@@ -71,7 +74,7 @@ comm.Barrier()
 # setup parameters
 mfreq = 8193 # number of matsubara frequency points
 norbs = 2    # number of orbitals
-niter = 4    # number of iterations
+niter = 20   # number of iterations
 size_t = mfreq * norbs
 
 # allocate memory
