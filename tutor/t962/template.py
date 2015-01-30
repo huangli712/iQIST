@@ -42,7 +42,7 @@ if comm.rank == 0:
     p = p_ctqmc_solver('azalea')
 
     # setup the parameters
-    p.setp(isscf = 1, isbin = 1, niter = 20, U = 4.0, Uc = 4.0, Uv = 4.0, mune = 2.0, beta = 10.0)
+    p.setp(isscf = 1, isbin = 1, U = 4.0, Uc = 4.0, Uv = 4.0, mune = 2.0, beta = 10.0)
 
     # verify the parameters
     p.check()
