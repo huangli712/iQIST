@@ -67,7 +67,7 @@ grnf_s = numpy.zeros(size_t, dtype = numpy.complex)
 ctqmc.init_ctqmc(comm.rank, comm.size)
 
 # try to implement the DMFT self-consistent loop
-for i in range(20):
+for i in range(niter):
     ctqmc.exec_ctqmc(i+1)
     grnf = ctqmc.get_grnf(size_t)
     hybf = 0.25 * grnf
