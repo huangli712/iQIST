@@ -29,7 +29,7 @@ if comm.rank == 0:
     p = p_atomic_solver()
 
     # setup the parameters
-    p.setp(ibasis = 2, Uv = 2.0, icu = 2)
+    p.setp(nband = 2, ictqmc = 3, icu = 1, Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0)
 
     # verify the parameters
     p.check()
@@ -43,9 +43,16 @@ if comm.rank == 0:
 # mpi barrier
 comm.Barrier()
 
-atomic.init_atomic()
-atomic.exec_atomic()
-atomic.stop_atomic()
+# only the master node can do this job
+if comm.rank == 0:
+    # init the atomic eigenvalue problem solver
+    atomic.init_atomic()
+
+    # execute the atomic eigenvalue problem solver
+    atomic.exec_atomic()
+
+    # stop the atomic eigenvalue problem solver
+    atomic.stop_atomic()
 
 # mpi barrier
 comm.Barrier()
