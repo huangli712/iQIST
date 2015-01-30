@@ -78,10 +78,16 @@ mfreq = 8193
 #print type(grnf[0])
 #print grnf
 
-size_t = norbs * norbs
-uumat = numpy.zeros((norbs,norbs), dtype = numpy.float)
-uumat = uumat + 4.0
-uumat = numpy.reshape(uumat, (size_t))
-print uumat
-ctqmc.set_uumat(size_t, uumat)
+#size_t = norbs * norbs
+#uumat = numpy.zeros((norbs,norbs), dtype = numpy.float)
+#uumat = uumat + 4.0
+#uumat = numpy.reshape(uumat, (size_t))
+#print uumat
+#ctqmc.set_uumat(size_t, uumat)
+
+size_t = norbs
+eimp = numpy.zeros((norbs), dtype = numpy.float)
+eimp = eimp - 1.0
+print eimp
+ctqmc.set_eimp(size_t, eimp)
 sys.exit(-1)
