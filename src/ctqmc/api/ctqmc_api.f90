@@ -715,10 +715,10 @@
 
 ! external arguments
 ! size of uumat
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! Coulomb interaction matrix
-     real(dp), intent(in) :: uumat_t(size_t)
+     real(8), intent(in) :: uumat_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
