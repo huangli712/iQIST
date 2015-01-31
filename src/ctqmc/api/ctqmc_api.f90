@@ -122,8 +122,8 @@
 !! type (T_segment_azalea) :: I_solver ! define I_solver
 !! ...
 !! I_solver%isscf  = 1  ! setup I_solver
-!! I_solver%issun  = 1
-!! I_solver%isspn  = 2
+!! I_solver%issun  = 2
+!! I_solver%isspn  = 1
 !! I_solver%isbin  = 1
 !! I_solver%nband  = 1
 !! I_solver%nspin  = 2
@@ -222,64 +222,120 @@
 !! 1. import mpi support
 !! ---------------------
 !!
+!! Here we can use the pyalps.mpi package or mpi4py package to provide
+!! the mpi support, such as,
+!!
 !! import pyalps.mpi
 !!
-!! We are not sure whether mpi4py will work. But pyalps.mpi always works.
-!! This code will also start the mpi running environment implicitly.
+!! or
+!!
+!! from mpi4py import MPI
+!!
+!! We recommend to use the mpi4py package since it is included in the
+!! scipy package already. The above code will also start the mpi running
+!! environment implicitly.
 !!
 !! 2. import pyiqist
 !! -----------------
 !!
-!! import pyiqist
+!! from pyiqist import api as ctqmc
+!!
+!! You have to ensure that the pyiqist package is in the sys.path. For
+!! example, you can use the following code to modify sys.path
+!!
+!! sys.path.append('../../src/ctqmc/api/')
 !!
 !! 3. configure the ctqmc impurity solver
 !! --------------------------------------
 !!
 !! You have to setup the parameters for the ctqmc impurity solver, and
-!! write them down to the 'solver.ctqmc.in' file. Now you must do that
-!! manually. In the future we will provide a Python module to facilitate
-!! this work (see src/tools/hibiscus/script/p_ctqmc.py).
+!! write them down to the 'solver.ctqmc.in' file. Now you can do that
+!! manually. On the other hand, we provide a powerful Python module to
+!! facilitate this work (see src/tools/hibiscus/script/u_ctqmc.py).
 !!
 !! 4. init the ctqmc impurity solver
 !! ---------------------------------
 !!
-!! pyiqist.api.init_ctqmc(my_id, num_procs)
+!! ctqmc.init_ctqmc(my_id, num_procs)
 !!
 !! Here my_id means the rank for current process, and num_procs means
-!! number of processes.
+!! number of processes. If you are using the mpi4py package to provide
+!! mpi support, then you can use the following code to init the ctqmc
+!! impurity solver.
+!!
+!! comm = MPI.COMM_WORLD
+!! ctqmc.init_ctqmc(comm.rank, comm.size)
 !!
 !! 5. setup hybf, symm, eimp, and ktau
 !! -----------------------------------
 !!
-!! This step has not been tested yet. I am sorry.
+!! For examples:
+!!
+!! mfreq = 8193
+!! norbs = 2
+!! size_t = mfreq * norbs * norbs
+!! hybf = numpy.zeros(size_t, dtype = numpy.complex, order = 'F')
+!! ...
+!! ctqmc.set_hybf(size_t, hybf)
+!!
+!! Note: We strongly recommend to select the fortran rule to manage the
+!! array memory.
+!!
+!! Note: This step is optional, because the ctqmc will provide default
+!! values for hybf, symm, eimp, and ktau or read them from external
+!! disk files.
 !!
 !! 6. start the ctqmc impurity solver
 !! ----------------------------------
 !!
-!! pyiqist.api.exec_ctqmc(i)
+!! ctqmc.exec_ctqmc(i)
 !!
 !! Here i is the current iteration number.
 !!
 !! 7. retrieve the calculated results
 !! ----------------------------------
 !!
-!! This step has not been tested yet. I am sorry.
+!! For examples:
+!!
+!! size_t = norbs
+!! nmat = ctqmc.get_nmat(size_t)
+!! print nmat
+!!
+!! size_t = mfreq * norbs * norbs
+!! grnf = ctqmc.get_grnf(size_t)
+!! grnf = numpy.reshape(grnf, (mfreq, norbs, norbs), order = 'F')
+!!
+!! Note: You have to pay attention to the array order when you try to use
+!! numpy.reshape() to convert a 1-D array to a 3-D array.
 !!
 !! 8. close the ctqmc impurity solver
 !! ----------------------------------
 !!
-!! pyiqist.api.stop_ctqmc()
+!! ctqmc.stop_ctqmc()
+!!
+!! Examples
+!! ========
+!!
+!! Fortran version
+!! ---------------
+!!
+!! see iqist/tutor/t961/template.f90.
+!!
+!! Python version
+!! --------------
+!!
+!! see iqist/tutor/t962/template.py.
 !!
 !! FAQ
 !! ===
 !!
-!! Question:
-!! ---------
+!! Question
+!! --------
 !!
 !! Can we change the ctqmc impurity solver at runtime?
 !!
-!! Answer:
-!! -------
+!! Answer
+!! ------
 !!
 !! No. You can not change the ctqmc impurity solver dynamically. Once
 !! the pyiqist.so is generated, the ctqmc impurity solver is determined.
@@ -624,10 +680,10 @@
 
 ! external arguments
 ! size of hybf
-     integer, intent(in)     :: size_t
+     integer, intent(in)    :: size_t
 
 ! hybridization function
-     complex(dp), intent(in) :: hybf_t(size_t)
+     complex(8), intent(in) :: hybf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -666,10 +722,10 @@
 
 ! external arguments
 ! size of eimp
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! impurity energy level
-     real(dp), intent(in) :: eimp_t(size_t)
+     real(8), intent(in) :: eimp_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -689,13 +745,13 @@
 
 ! external arguments
 ! size of ktau
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! screening function K(\tau)
-     real(dp), intent(in) :: ktau_t(size_t)
+     real(8), intent(in) :: ktau_t(size_t)
 
 ! first derivates of screening function K'(\tau)
-     real(dp), intent(in) :: ptau_t(size_t)
+     real(8), intent(in) :: ptau_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -715,10 +771,10 @@
 
 ! external arguments
 ! size of uumat
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! Coulomb interaction matrix
-     real(dp), intent(in) :: uumat_t(size_t)
+     real(8), intent(in) :: uumat_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -736,10 +792,10 @@
 
 ! external arguments
 ! size of grnf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! impurity green's function
-     complex(dp), intent(out) :: grnf_t(size_t)
+     complex(8), intent(out) :: grnf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -757,10 +813,10 @@
 
 ! external arguments
 ! size of sigf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! self-energy function
-     complex(dp), intent(out) :: sigf_t(size_t)
+     complex(8), intent(out) :: sigf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -778,10 +834,10 @@
 
 ! external arguments
 ! size of nmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! occupation number
-     real(dp), intent(out) :: nmat_t(size_t)
+     real(8), intent(out) :: nmat_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -799,10 +855,10 @@
 
 ! external arguments
 ! size of nnmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! double occupation number
-     real(dp), intent(out) :: nnmat_t(size_t)
+     real(8), intent(out) :: nnmat_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
