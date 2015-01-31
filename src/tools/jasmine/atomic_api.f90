@@ -121,35 +121,53 @@
 !! 1. import pyjasmine
 !! -------------------
 !!
-!! import pyjasmine
+!! from pyjasmine import japi as atomic
+!!
+!! You have to ensure that the pyjasmine package is in the sys.path. For
+!! example, you can use the following code to modify sys.path
+!!
+!! sys.path.append('../../src/tools/jasmine/')
 !!
 !! 2. configure the atomic eigenvalue problem solver
 !! -------------------------------------------------
 !!
 !! You have to setup the key parameters for the atomic eigenvalue problem
-!! solver, and write them down to the 'atom.config.in' file. Now you must
-!! do that manually. In the future we will provide a Python module to
-!! facilitate this work (see src/tools/hibiscus/script/p_atomic.py).
+!! solver, and write them down to the 'atom.config.in' file. Now you can
+!! do that manually. On the other hand, we provide a useful Python module
+!! to facilitate this work (see src/tools/hibiscus/script/u_atomic.py).
 !!
 !! 3. init the atomic eigenvalue problem solver
 !! --------------------------------------------
 !!
-!! pyjasmine.japi.init_atomic() # there is no parameter for init_atomic()
+!! atomic.init_atomic() # there is no parameter for init_atomic()
 !!
 !! 4. start the atomic eigenvalue problem solver
 !! ---------------------------------------------
 !!
-!! pyjasmine.japi.exec_atomic()
+!! atomic.exec_atomic()
 !!
 !! 5. close the atomic eigenvalue problem solver
 !! ---------------------------------------------
 !!
-!! pyjasmine.japi.stop_atomic()
+!! atomic.stop_atomic()
 !!
 !! 6. access the computational results
 !! -----------------------------------
 !!
-!! You have to write your Python codes manually to access the results.
+!! You have to write your own Python codes to access the results.
+!!
+!! Examples
+!! ========
+!!
+!! Fortran version
+!! ---------------
+!!
+!! N/A.
+!!
+!! Python version
+!! --------------
+!!
+!! see iqist/tutor/t964/template.py.
 !!
 !!
 

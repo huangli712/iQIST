@@ -1,5 +1,15 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.5.2 @ 67b5561 // Jan 31, 2015
+
+* Update the input files in tutor directory.
+* Add t961, t962, t963, t964 directories, and tutor.md file in the tutor directory.
+* Rename F2PY flag to MPY flag to avoid potential conflict.
+* Correct some typos in working/advanced/begonia and working/advanced/lavender directories.
+* Fix bugs/comments in ctqmc\_api.f90, hfqmc\_api.f90, and atomic\_api.f90.
+* Now the Python API and Fortran API work.
+* Update the manual.
+
 ### v0.5.1 @ 222982c // Jan 16, 2015
 
 * Add solver.umat.in support for the azalea, gardenia, and narcissus codes.

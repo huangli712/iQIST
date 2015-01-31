@@ -100,8 +100,8 @@
 !! type (T_daisy) :: I_solver ! define I_solver
 !! ...
 !! I_solver%isscf  = 1  ! setup I_solver
-!! I_solver%issun  = 1
-!! I_solver%isspn  = 2
+!! I_solver%issun  = 2
+!! I_solver%isspn  = 1
 !! I_solver%isbin  = 1
 !! I_solver%nband  = 1
 !! I_solver%nspin  = 2
@@ -189,53 +189,109 @@
 !! 1. import mpi support
 !! ---------------------
 !!
+!! Here we can use the pyalps.mpi package or mpi4py package to provide
+!! the mpi support, such as,
+!!
 !! import pyalps.mpi
 !!
-!! We are not sure whether mpi4py will work. But pyalps.mpi always works.
-!! This code will also start the mpi running environment implicitly.
+!! or
+!!
+!! from mpi4py import MPI
+!!
+!! We recommend to use the mpi4py package since it is included in the
+!! scipy package already. The above code will also start the mpi running
+!! environment implicitly.
 !!
 !! 2. import pydaisy
 !! -----------------
 !!
-!! import pydaisy
+!! from pydaisy import dapi as hfqmc
+!!
+!! You have to ensure that the pydaisy package is in the sys.path. For
+!! example, you can use the following code to modify sys.path
+!!
+!! sys.path.append('../../src/hfqmc/daisy/')
 !!
 !! 3. configure the hfqmc impurity solver
 !! --------------------------------------
 !!
 !! You have to setup the parameters for the hfqmc impurity solver, and
-!! write them down to the 'solver.hfqmc.in' file. Now you must do that
-!! manually. In the future we will provide a Python module to facilitate
-!! this work (see src/tools/hibiscus/script/p_hfqmc.py).
+!! write them down to the 'solver.hfqmc.in' file. Now you can do that
+!! manually. On the other hand, we provide a powerful Python module to
+!! facilitate this work (see src/tools/hibiscus/script/u_hfqmc.py).
 !!
 !! 4. init the hfqmc impurity solver
 !! ---------------------------------
 !!
-!! pydaisy.dapi.init_hfqmc(my_id, num_procs)
+!! hfqmc.init_hfqmc(my_id, num_procs)
 !!
 !! Here my_id means the rank for current process, and num_procs means
-!! number of processes.
+!! number of processes. If you are using the mpi4py package to provide
+!! mpi support, then you can use the following code to init the hfqmc
+!! impurity solver.
+!!
+!! comm = MPI.COMM_WORLD
+!! hfqmc.init_hfqmc(comm.rank, comm.size)
 !!
 !! 5. setup wssf, symm, eimp, and ktau
 !! -----------------------------------
 !!
-!! This step has not been tested yet. I am sorry.
+!! For examples:
+!!
+!! mfreq = 8193
+!! norbs = 2
+!! size_t = mfreq * norbs
+!! wssf = numpy.zeros(size_t, dtype = numpy.complex, order = 'F')
+!! ...
+!! hfqmc.set_wssf(size_t, wssf)
+!!
+!! Note: We strongly recommend to select the fortran rule to manage the
+!! array memory.
+!!
+!! Note: This step is optional, because the hfqmc will provide default
+!! values for wssf, symm, eimp, and ktau or read them from external
+!! disk files.
 !!
 !! 6. start the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! pydaisy.dapi.exec_hfqmc(i)
+!! hfqmc.exec_hfqmc(i)
 !!
 !! Here i is the current iteration number.
 !!
 !! 7. retrieve the calculated results
 !! ----------------------------------
 !!
-!! This step has not been tested yet. I am sorry.
+!! For examples:
+!!
+!! size_t = norbs
+!! nmat = hfqmc.get_nmat(size_t)
+!! print nmat
+!!
+!! size_t = mfreq * norbs
+!! grnf = hfqmc.get_grnf(size_t)
+!! grnf = numpy.reshape(grnf, (mfreq, norbs), order = 'F')
+!!
+!! Note: You have to pay attention to the array order when you try to use
+!! numpy.reshape() to convert a 1-D array to a 2-D array.
 !!
 !! 8. close the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! pydaisy.dapi.stop_hfqmc()
+!! hfqmc.stop_hfqmc()
+!!
+!! Examples
+!! ========
+!!
+!! Fortran version
+!! ---------------
+!!
+!! N/A.
+!!
+!! Python version
+!! --------------
+!!
+!! see iqist/tutor/t963/template.py.
 !!
 !! FAQ
 !! ===
@@ -454,10 +510,10 @@
 
 ! external arguments
 ! size of wssf
-     integer, intent(in)     :: size_t
+     integer, intent(in)    :: size_t
 
 ! bath weiss's function
-     complex(dp), intent(in) :: wssf_t(size_t)
+     complex(8), intent(in) :: wssf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -496,10 +552,10 @@
 
 ! external arguments
 ! size of eimp
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! impurity energy level
-     real(dp), intent(in) :: eimp_t(size_t)
+     real(8), intent(in) :: eimp_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -519,13 +575,13 @@
 
 ! external arguments
 ! size of ktau
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! screening function K(\tau)
-     real(dp), intent(in) :: ktau_t(size_t)
+     real(8), intent(in) :: ktau_t(size_t)
 
 ! first derivates of screening function K'(\tau)
-     real(dp), intent(in) :: ptau_t(size_t)
+     real(8), intent(in) :: ptau_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -545,10 +601,10 @@
 
 ! external arguments
 ! size of grnf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! impurity green's function
-     complex(dp), intent(out) :: grnf_t(size_t)
+     complex(8), intent(out) :: grnf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -566,10 +622,10 @@
 
 ! external arguments
 ! size of sigf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! self-energy function
-     complex(dp), intent(out) :: sigf_t(size_t)
+     complex(8), intent(out) :: sigf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -587,10 +643,10 @@
 
 ! external arguments
 ! size of nmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! occupation number
-     real(dp), intent(out) :: nmat_t(size_t)
+     real(8), intent(out) :: nmat_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -608,10 +664,10 @@
 
 ! external arguments
 ! size of nnmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! double occupation number
-     real(dp), intent(out) :: nnmat_t(size_t)
+     real(8), intent(out) :: nnmat_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t

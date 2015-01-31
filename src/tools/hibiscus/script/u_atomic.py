@@ -42,7 +42,7 @@ class p_atomic_solver(object):
 
             # setup the parameters
             p.setp(ibasis = 2, Uv = 2.0)
-            p.setp(icu = 30)
+            p.setp(icu = 30) # invalid parameter
             p.setp(icu = 1)
             p.setp()
 
