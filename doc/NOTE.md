@@ -1,132 +1,47 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-The iQIST software package includes several quantum impurity solvers which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm and Hirsch-Fye quantum Monte Carlo algorithm, and corresponding preprocessing and postprocessing tools.
-
 ### WARNING
 
-The iQIST is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
-
-### Version
-
-v0.5.2 @ 2015.01.06T(alpha)
-
-### License
-
-GNU General Public License Version 3
-
-### Features
-
-* Model
-    * Density-density interaction
-    * General interaction (Slater or Kanamori scheme)
-    * SOC interaction and crystal field splitting
-    * Hubbard-Holstein model
-    * Frequency-dependent interaction
-
-* Measurement tricks
-    * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
-    * Kernel polynomial representation
-    * Improved estimator for self-energy
-
-* Observables
-    * Single-particle Green's function in imaginary time space
-    * Single-particle Green's function in matsubara frequency space
-    * Two-particle correlation function in matsubara frequency space
-    * Local irreducible vertex function in matsubara frequency space
-    * Pair susceptibility in matsubara frequency space
-    * Self-energy function in matsubara frequency space
-    * Histogram of perturbation expansion order
-    * Kinetic and potential energies
-    * (Double) occupation numbers, magnetic moment
-    * Atomic state probability
-    * Spin-spin correlation function
-    * Orbital-orbital correlation function
-    * Autocorrelation function and autocorrelation time
-
-* Fast algorithms
-    * Segment algorithm for density-density interaction
-    * Divide-and-conquer algorithm
-    * Sparse matrix multiplication
-    * Good quantum numbers (N, Sz, Jz, PS)
-    * Skip listing trick
-    * Lazy trace evaluation
-    * Dynamical truncation approximation
-
-* Parallelism
-    * MPI
-
-* API
-    * Python binding
-    * Input file generator by Python
-    * Fortran binding
-
-* Preprocessing
-    * Atomic eigenvalue problem solver
-
-* Postprocessing
-    * Maximum entropy method
-    * Stochastic analytical continuation
-    * Kramers-Kronig transformation
-    * Pade approximation
-    * Polynomial fitting for self-energy function
+The user manual for iQIST is far away from completeness. So please DO NOT READ manual/ug.pdf now. We are really sorry for that. Though the user manual is not ready, you can still find some useful information/tips in the following places.
 
 ### Installation
-* Full Installation
-```sh
-$ cd iqist/src/build
-$ editor make.sys
-$ make all
-$ cd ../../bin
-$ ./setup.sh
-```
 
-* Partial Installation
-```sh
-$ cd iqist/src/build
-$ editor make.sys
-$ make common
-$ make api
-$ make component (component could be azalea, gardenia, narcissus, etc.)
-$ cd ../../bin
-$ ./setup.sh
-```
+see the comments in iqist/src/build/make.sys and iqist/src/build/Makefile.
 
-Enjoy it!
+### CTQMC quantum impurity solver
 
-If you want to know more about the compiling system implemented in the iQIST, please read the manual carefully.
+see the comments in iqist/src/ctqmc/xxx/ctqmc\_control.f90, here xxx means 'azalea', 'gardenia', 'narcissus', 'begonia', 'lavender', 'pansy', and 'manjushaka'.
 
-### Documentation
+### HFQMC quantum impurity solver
 
-see iQIST/doc/manual/ug.pdf (We are sorry. Currently this manual is far away from completeness).
+see the comments in iqist/src/hfqmc/daisy/hfqmc\_control.f90.
 
-### Development
+### The JASMINE component
 
-The iQIST software package is developed and maintained by the iQIST Developer Team.
+see the comments in iqist/src/tools/jasmine/atomic\_control.f90.
 
-Find a bug? Want to contribute? Want new features? Great! Please contact with us as soon as possible.
+### The HIBISCUS/entropy component
 
-### Reference
+see the comments in iqist/src/tools/hibiscus/entropy/entropy\_control.f90.
 
-If you are using iQIST to do some studies and would like to publish your great works, it would be really appreciated if you can cite the following paper:
+### The HIBISCUS/script component
 
-```sh
-iQIST: An open source continuous-time quantum Monte Carlo impurity solver toolkit
-Li Huang, Yilin Wang, Zi Yang Meng, Liang Du, Philipp Werner and Xi Dai
-arXiv:1409.7573 (2014)
-```
+see the comments in the scripts.
 
-### Contact
+### The HIBISCUS/stoch component
 
-```sh
-Li Huang
-Department of Physics, Fribourg University, Switzerland
-email: huangli712 at gmail.com
-```
+see the comments in iqist/src/tools/hibiscus/stoch/sac\_control.f90.
 
-or
+### The HIBISCUS/swing component
 
-```sh
-Yilin Wang
-Institute of Physics, Chinese Academy of Sciences, Beijing, PRC
-email: qhwyl2006 at 126.com
-```
+see the comments in iqist/src/tools/hibiscus/swing/swing\_main.py.
+
+### Application programming interface
+
+see the comments in iqist/src/ctqmc/api/ctqmc\_api.f90, iqist/src/hfqmc/daisy/hfqmc\_api.f90, and iqist/src/tools/jasmine/atomic\_api.f90
+
+### Examples
+
+benchmark examples: see iqist/working.
+
+tutorial examples: see iqist/tutor.
