@@ -79,7 +79,7 @@
 !!>>> real variables                                                   <<<
 !!========================================================================
 
-! the following parameters are useful when icu = 1
+! the following parameters are useful when icu = 1 or icu = 3
 ! intraorbital Coulomb interaction
      real(dp), public, save :: Uc    = 2.0_dp
 

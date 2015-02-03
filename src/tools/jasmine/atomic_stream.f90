@@ -185,7 +185,7 @@
          write(mystd,'(2X,a)') 'ERROR: icu must be 1 or 2 or 3!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( icu < 1 .or. icu > 2 ) block
+     endif ! back if ( icu < 1 .or. icu > 3 ) block
 
      if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) then
          write(mystd,'(2X,a)') 'ERROR: only support Slater-Cordon type Coulomb interaction for 5- or 7-band system!'
@@ -193,12 +193,11 @@
          lpass = .false.
      endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
 
-     if ( icu == 3 .and. nband /= 5 .and. nband /= 7 ) then
-         write(mystd,'(2X,a)') 'ERROR: only support anisotropic Hund rule exchange for 5- or 7-band system!'
+     if ( icu == 3 .and. nband /= 5 ) then
+         write(mystd,'(2X,a)') 'ERROR: only support anisotropic Hunds rule exchange in Kanamori type Coulomb interaction for 5-band system!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
-
+     endif ! back if ( icu == 3 .and. nband /= 5 ) block
 
 ! check icf
      if ( icf < 0 .or. icf > 2 ) then
@@ -510,7 +509,7 @@
 ! Slater-Cordon parameters type
 ! it is defined on complex orbital basis
          call atomic_make_umatS()
-     endif ! back if ( icu == 1 ) block
+     endif ! back if ( icu == 1 .or. icu == 3 ) block
 
      return
   end subroutine atomic_make_spmat
