@@ -2677,10 +2677,6 @@
 ! special treatment for the last time evolution operator
              indx = sectors(string(1,i))%istart
              btrace(nlive) = btrace(nlive) * expt_loc(indx) * mindim(i)
-             if ( abs(ratio) * abs(btrace(nlive)/matrix_ptrace) < 1E-8 ) then
-                 string(1,i) = -1
-                 nlive = nlive - 1
-             endif
          endif ! back if ( string(1,i) == -1 ) block
      enddo ! over i={1,nsect} loop
 
