@@ -399,6 +399,12 @@
 ! for anisotropic Hund's rule coupling
      if ( icu == 3 ) then
          if ( nband == 5 ) then
+! J(dxy,dxz) = J(dxy,dyz) = J(dxz,dyz) = J(dxz,dx2) = J(dyz,dx2) = 3/49 * F^2 + 20/441 * F^4
+! J(dxy,dz2) = J(dx2,dz2) = 4/49 * F^2 + 15/441 * F^4
+! J(dxz,dz2) = J(dyz,dz2) = 1/49 * F^2 + 30/441 * F^4
+! J(dxy,dx2) = 35/441 * F^4
+! the averaged Hund's rule coupling is J_{ave} = 5/98 * (F^2 + F^4) 
+! and F^4 = 0.625 * F^2.
              ff2 = (98.0 * jzsp) / (1.625 * 5.0)
              ff4 = 0.625 * ff2
              jj1 = 3.0 / 49.0 * ff2 + 20.0 / 441.0 * ff4
@@ -406,7 +412,7 @@
              jj3 = 1.0 / 49.0 * ff2 + 30.0 / 441.0 * ff4
              jj4 = 35.0 / 441.0 * ff4
              
-! orbital order: (1) dz2, (2) dxz, (3) dyz, (4) dx2, (5) dxy
+! orbital order is: (1) dz2, (2) dxz, (3) dyz, (4) dx2, (5) dxy
              hund(2,3,:) = jj1;   hund(3,2,:) = jj1
              hund(2,5,:) = jj1;   hund(5,2,:) = jj1
              hund(3,5,:) = jj1;   hund(5,3,:) = jj1
