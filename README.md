@@ -8,7 +8,7 @@ The iQIST is still in heavy development. The codes are extremely unstable. Some 
 
 ### Version
 
-v0.5.2 @ 2015.01.06T(alpha)
+v0.5.3 @ 2015.01.06T(beta)
 
 ### License
 

@@ -66,29 +66,29 @@ JASMINE Test Cases
 
 * 5a // Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0, GQNs (N) 
 
-* 5b // Ud = 4.0, JH = 1.0, GQNs (N) 
+* 5b // Ud = 4.0, Jh = 1.0, NO GQNs 
 
-* 5c // Ud = 4.0, JH = 1.0, SOC, lambda = 0.50, GQNs (N) 
+* 5c // Ud = 4.0, Jh = 1.0, SOC, lambda = 0.50, NO GQNs 
 
-* 5d // Ud = 4.0, JH = 1.0, GQNs (N,Sz) 
+* 5d // Ud = 4.0, Jh = 1.0, GQNs (N,Sz) 
 
 * 5e // Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0, GQNs (N,Sz,PS)
  
-* 5f // Ud = 4.0, JH = 1.0, SOC, lambda = 0.50, GQNs (N,Jz) 
+* 5f // Ud = 4.0, Jh = 1.0, SOC, lambda = 0.50, GQNs (N,Jz) 
 
-* 5g // Ud = 4.0, JH = 1.0, diagonal CF, SOC, lambda = 0.50, GQNs (N) 
+* 5g // Ud = 4.0, Jh = 1.0, diagonal CF, SOC, lambda = 0.50, GQNs (N) 
 
-* 5h // Ud = 4.0, JH = 1.0, CF, SOC, GQNs (N), make natural basis outside 
+* 5h // Ud = 4.0, Jh = 1.0, CF, SOC, GQNs (N), make natural basis outside 
 
-* 5i // Ud = 4.0, JH = 1.0, non-diagonal CF, GQNs (N,Sz) 
+* 5i // Ud = 4.0, Jh = 1.0, non-diagonal CF, GQNs (N,Sz) 
 
-* 5j // Ud = 4.0, JH = 1.0, non-diagonal CF, GQNs (N,Sz), make natural basis outside 
+* 5j // Ud = 4.0, Jh = 1.0, non-diagonal CF, GQNs (N,Sz), make natural basis outside 
 
-* 5k // Ud = 4.0, JH = 1.0, diagonal CF, SOC, lambda = 0.50, GQNs (N), nmini=3, nmaxi=7
+* 5k // Ud = 4.0, Jh = 1.0, diagonal CF, SOC, lambda = 0.50, GQNs (N), nmini=3, nmaxi=7
 
 5. 7 band model
 ---------------
 
-* 7a // Ud = 4.0, JH = 1.0, GQNs (N,Sz), nmini=0, nmaxi=5
+* 7a // Ud = 4.0, Jh = 1.0, GQNs (N,Sz), nmini=0, nmaxi=5
 
-* 7b // Ud = 4.0, JH = 1.0, SOC, lambda = 0.50, GQNs (N,Jz), nmini=0, nmaxi=5
+* 7b // Ud = 4.0, Jh = 1.0, SOC, lambda = 0.50, GQNs (N,Jz), nmini=0, nmaxi=5

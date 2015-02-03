@@ -1,5 +1,9 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.5.3 @ ab08c42 // Feb 02, 2015
+
+* Remove the chinese directory in doc.
+
 ### v0.5.2 @ 67b5561 // Jan 31, 2015
 
 * Update the input files in tutor directory.
