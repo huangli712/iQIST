@@ -2520,7 +2520,7 @@
 !!>>> note: you should carefully choose npart in order to obtain the
 !!>>> best speedup.
   subroutine ctqmc_lazy_ztrace(cmode, csize, ratio, tau_s, tau_e, r, p, pass)
-     use constants, only : dp, zero, one, epst
+     use constants, only : dp, zero, one
 
      use control, only : ncfgs
      use control, only : mkink

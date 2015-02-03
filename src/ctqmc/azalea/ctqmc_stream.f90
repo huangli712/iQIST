@@ -225,7 +225,6 @@
      use context, only : tmesh, rmesh
      use context, only : symm, eimp, uumat
      use context, only : hybf
-     use context, only : uumat
 
      implicit none
 
