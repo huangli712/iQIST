@@ -1,6 +1,6 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-Note: The tasks listed in this file is only for discussion. If you have suggestions or comments, please tell us. Thanks.
+Note: The tasks listed in this file are only for discussion. If you have suggestions or comments, please tell us. Thanks.
 
 ## Priority of tasks
 
@@ -21,8 +21,8 @@ Note: The tasks listed in this file is only for discussion. If you have suggesti
 ## List st of current tasks
 
 * design the logo for iQIST (Critical)
-* finish the truncation approximation for the CT-HYB codes (Critical)
-* clean the implementation of measurement of two-particle green's function (Critical)
+* verify the truncation approximation for the CT-HYB codes (Critical)
+* verify the measurement of two-particle green's function (Critical)
 * implement the Skip listing algorithm for the CT-HYB codes (Major)
 * implement the FastTrace/LazyTrace algorithm for the CT-HYB codes (Major)
 * implement the time evolution algorithm for the CT-HYB codes (Major)
