@@ -6,6 +6,7 @@
 !!!           atomic_make_gjz
 !!!           atomic_make_gaunt5
 !!!           atomic_make_gaunt7
+!!!           atomic_make_hund
 !!!           atomic_make_umatK
 !!!           atomic_make_umatS
 !!!           atomic_make_smat3
@@ -351,6 +352,87 @@
      return
   end subroutine atomic_make_gaunt7
 
+!!>>> atomic_make_hund: make the Hund's rule coupling matrix
+  subroutine atomic_make_hund(hund)
+     use constants, only : dp, zero
+   
+     use m_cntr, only : icu
+     use m_cntr, only : nband
+     use m_cntr, only : Jz, Js, Jp
+
+! external arguments
+! Hund's rule coupling matrix
+     real(dp) :: hund(nband,nband,3)
+ 
+! local variables
+! dummy variables
+     real(dp) :: jzsp(3)
+     real(dp) :: ff2(3)
+     real(dp) :: ff4(3)
+     real(dp) :: jj1(3)
+     real(dp) :: jj2(3)
+     real(dp) :: jj3(3)
+     real(dp) :: jj4(3)
+
+! loop index
+     integer :: i
+     integer :: j
+
+! initialize hund to be zero
+     hund = zero
+
+! set jzsp 
+     jzsp(1) = Jz
+     jzsp(2) = Js
+     jzsp(3) = Jp
+
+! for isotropic Hund's rule coupling
+     if ( icu == 1 ) then
+         hund(:,:,1) = Jz
+         hund(:,:,2) = Js
+         hund(:,:,3) = Jp
+         do i=1,nband
+             hund(i,i,:) = zero
+         enddo
+     endif ! back if ( icu == 1 ) block
+
+! for anisotropic Hund's rule coupling
+     if ( icu == 3 ) then
+         if ( nband == 5 ) then
+! J(dxy,dxz) = J(dxy,dyz) = J(dxz,dyz) = J(dxz,dx2) = J(dyz,dx2) = 3/49 * F^2 + 20/441 * F^4
+! J(dxy,dz2) = J(dx2,dz2) = 4/49 * F^2 + 15/441 * F^4
+! J(dxz,dz2) = J(dyz,dz2) = 1/49 * F^2 + 30/441 * F^4
+! J(dxy,dx2) = 35/441 * F^4
+! the averaged Hund's rule coupling is J_{ave} = 5/98 * (F^2 + F^4) 
+! and F^4 = 0.625 * F^2.
+             ff2 = (98.0 * jzsp) / (1.625 * 5.0)
+             ff4 = 0.625 * ff2
+             jj1 = 3.0 / 49.0 * ff2 + 20.0 / 441.0 * ff4
+             jj2 = 4.0 / 49.0 * ff2 + 15.0 / 441.0 * ff4
+             jj3 = 1.0 / 49.0 * ff2 + 30.0 / 441.0 * ff4
+             jj4 = 35.0 / 441.0 * ff4
+             
+! orbital order is: (1) dz2, (2) dxz, (3) dyz, (4) dx2, (5) dxy
+             hund(2,3,:) = jj1;   hund(3,2,:) = jj1
+             hund(2,5,:) = jj1;   hund(5,2,:) = jj1
+             hund(3,5,:) = jj1;   hund(5,3,:) = jj1
+             hund(2,4,:) = jj1;   hund(4,2,:) = jj1
+             hund(3,4,:) = jj1;   hund(4,3,:) = jj1
+                                                  
+             hund(1,4,:) = jj2;   hund(4,1,:) = jj2
+             hund(1,5,:) = jj2;   hund(5,1,:) = jj2
+                                                 
+             hund(1,2,:) = jj3;   hund(2,1,:) = jj3
+             hund(1,3,:) = jj3;   hund(3,1,:) = jj3
+                                                  
+             hund(4,5,:) = jj4;   hund(5,4,:) = jj4
+         else 
+             call s_print_error('atomic_make_hund','not implemented!')
+         endif    
+     endif ! back if ( icu == 3 ) block
+
+  end subroutine atomic_make_hund
+
 !!========================================================================
 !!>>> determine Coulomb interaction matrix                             <<<
 !!========================================================================
@@ -358,15 +440,18 @@
 !!>>> atomic_make_umatK: make Coulomb interaction U according to Kanamori
 !!>>> parameterized Hamiltonian
   subroutine atomic_make_umatK()
-     use constants, only : dp, zero, czero
+     use constants, only : dp, zero, czero, two
 
-     use m_cntr, only : norbs
-     use m_cntr, only : Uc, Uv, Jz, Js, Jp
+     use m_cntr, only : nband, norbs
+     use m_cntr, only : Uc
      use m_spmat, only : umat
 
      implicit none
 
 ! local varibales
+! Hund's rule matrix
+     real(dp) :: hund(nband,nband,3)
+
 ! orbital index
      integer  :: alpha, betta
      integer  :: delta, gamma
@@ -379,6 +464,12 @@
 
 ! dummy variables
      real(dp) :: dtmp
+
+! initialize hund to zero
+     hund = zero
+
+! build Hund's rule coupling matrix
+     call atomic_make_hund(hund)
 
 ! initialize umat to zero
      umat = czero
@@ -409,28 +500,28 @@
 ! interorbital Coulomb interaction
                      if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
                          if ( aband /= bband ) then
-                             dtmp = dtmp + Uv
+                             dtmp = dtmp + (Uc - two * hund(aband,bband,1))
                          endif ! back if ( aband /= bband ) block
                      endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
 
 ! Hund's exchange interaction
                      if ( ( alpha == gamma ) .and. ( betta == delta ) ) then
                          if ( ( aband /= bband ) .and. ( aspin == bspin ) ) then
-                             dtmp = dtmp - Jz
+                             dtmp = dtmp - hund(aband,bband,1)
                          endif ! back if ( ( aband /= bband ) .and. ( aspin == bspin ) ) block
                      endif ! back if ( ( alpha == gamma ) .and. ( betta == delta ) ) block
 
 ! spin flip term
                      if ( ( aband == gband ) .and. ( bband == dband ) ) then
                          if ( ( aspin /= gspin ) .and. ( bspin /= dspin ) .and. ( aspin /= bspin ) ) then
-                             dtmp = dtmp - Js
+                             dtmp = dtmp - hund(aband,bband,2)
                          endif ! back if ( ( aspin /= gspin ) .and. ( bspin /= dspin ) .and. ( aspin /= bspin ) ) block
                      endif ! back if ( ( aband == gband ) .and. ( bband == dband ) ) block
 
 ! pair hopping term
                      if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) then
                          if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) then
-                             dtmp = dtmp + Jp
+                             dtmp = dtmp + hund(aband,gband,3)
                          endif ! back if ( ( aspin /= bspin ) .and. ( dspin /= gspin ) .and. ( aspin == gspin ) ) block
                      endif ! back if ( ( aband == bband ) .and. ( dband == gband ) .and. ( aband /= dband ) ) block
 

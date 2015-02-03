@@ -225,6 +225,7 @@
      use context, only : tmesh, rmesh
      use context, only : symm, eimp, uumat
      use context, only : hybf
+     use context, only : uumat
 
      implicit none
 
@@ -359,7 +360,6 @@
 
 ! find input file: solver.umat.in, read it
          if ( exists .eqv. .true. ) then
-
 ! read in Coulomb interaction matrix from solver.umat.in
              open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
              do i=1,norbs

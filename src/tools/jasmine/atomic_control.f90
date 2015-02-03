@@ -37,8 +37,9 @@
      integer, public, save :: ictqmc = 1
 
 ! control flag: type of Coulomb interaction U
-! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp)
+! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp), isotropic Hund's rule coupling
 ! 2: Slater-Cordon parameters (Ud, Jh => F0, F2, F4, F6)
+! 3: Kanamori parameters (Uc, Uv, Jz, Js, Jp), anisotropic Hund's rule coupling
      integer, public, save :: icu    = 1
 
 ! control flag: type of crystal field (CF)
