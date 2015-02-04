@@ -8,6 +8,12 @@ The user manual for iQIST is far away from completeness. So please DO NOT READ m
 
 see the comments in iqist/src/build/make.sys and iqist/src/build/Makefile.
 
+### File Format
+
+for the file formats of solver.ctqmc.in, atom.config.in, entropy.in, and sac.in, see the comments in iqist/src/common/m\_parser.f90.
+
+for the file formats of solver.xxx.dat, see the codes in ctqmc\_dump.f90.
+
 ### CTQMC quantum impurity solver
 
 see the comments in iqist/src/ctqmc/xxx/ctqmc\_control.f90, here xxx means 'azalea', 'gardenia', 'narcissus', 'begonia', 'lavender', 'pansy', and 'manjushaka'.

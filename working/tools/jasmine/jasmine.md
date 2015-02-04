@@ -66,9 +66,9 @@ JASMINE Test Cases
 
 * 5a // Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0, GQNs (N) 
 
-* 5b // Ud = 4.0, Jh = 1.0, NO GQNs 
+* 5b // Ud = 4.0, Jh = 1.0, GQNs (N) 
 
-* 5c // Ud = 4.0, Jh = 1.0, SOC, lambda = 0.50, NO GQNs 
+* 5c // Ud = 4.0, Jh = 1.0, SOC, lambda = 0.50, GQNs (N)
 
 * 5d // Ud = 4.0, Jh = 1.0, GQNs (N,Sz) 
 
