@@ -209,10 +209,10 @@
      umat_t = zero
 
 ! Kanamori type
-     if ( icu == 1 ) then
+     if ( icu == 1 .or. icu == 3 ) then
          do i=1,norbs
-             do j=i+1,norbs
-                 umat_t(i,j) = real(umat(i,j,j,i))
+             do j=i+1,norbs         
+                 umat_t(i,j) = real(umat(i,j,j,i)) 
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop

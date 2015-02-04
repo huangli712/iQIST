@@ -181,17 +181,23 @@
      endif ! back if ( ictqmc == 5 .and. isoc == 1 .and. icf /= 0 ) block
 
 ! check icu
-     if ( icu < 1 .or. icu > 2 ) then
-         write(mystd,'(2X,a)') 'ERROR: icu must be 1 or 2!'
+     if ( icu < 1 .or. icu > 3 ) then
+         write(mystd,'(2X,a)') 'ERROR: icu must be 1 or 2 or 3!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( icu < 1 .or. icu > 2 ) block
+     endif ! back if ( icu < 1 .or. icu > 3 ) block
 
      if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) then
          write(mystd,'(2X,a)') 'ERROR: only support Slater-Cordon type Coulomb interaction for 5- or 7-band system!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
+
+     if ( icu == 3 .and. nband /= 5 ) then
+         write(mystd,'(2X,a)') 'ERROR: only support anisotropic Hunds rule exchange in Kanamori type Coulomb interaction for 5-band system!'
+         write(mystd,*)
+         lpass = .false.
+     endif ! back if ( icu == 3 .and. nband /= 5 ) block
 
 ! check icf
      if ( icf < 0 .or. icf > 2 ) then
@@ -495,7 +501,7 @@
      endif ! back if ( ibasis == 1 ) block
 
 ! make Coulomb interaction U
-     if ( icu == 1 ) then
+     if ( icu == 1 .or. icu == 3 ) then
 ! Kanamori parameters type
 ! it is defined on real orbital basis
          call atomic_make_umatK()
@@ -503,7 +509,7 @@
 ! Slater-Cordon parameters type
 ! it is defined on complex orbital basis
          call atomic_make_umatS()
-     endif ! back if ( icu == 1 ) block
+     endif ! back if ( icu == 1 .or. icu == 3 ) block
 
      return
   end subroutine atomic_make_spmat
@@ -656,11 +662,11 @@
 ! for Kanamori parameters Coulomb interaction U, since it is defined at
 ! real orbital basis, we first need to transfrom umat from real orbital
 ! basis to complex orbital basis
-         if ( icu == 1 ) then
+         if ( icu == 1 .or. icu == 3 ) then
              call atomic_make_tmat_r2c(tmat_r2c)
              call atomic_tran_umat(tmat_r2c, umat, umat_tmp)
              umat = umat_tmp
-         endif ! back if ( icu == 1 ) block
+         endif ! back if ( icu == 1 .or. icu == 3 ) block
      endif ! back if ( isoc == 0 ) block
 
 ! finally, transform umat from original basis to natural basis
