@@ -37,8 +37,9 @@
      integer, public, save :: ictqmc = 1
 
 ! control flag: type of Coulomb interaction U
-! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp)
+! 1: Kanamori parameters (Uc, Uv, Jz, Js, Jp), isotropic Hund's rule coupling
 ! 2: Slater-Cordon parameters (Ud, Jh => F0, F2, F4, F6)
+! 3: Kanamori parameters (Uc, Uv, Jz, Js, Jp), anisotropic Hund's rule coupling
      integer, public, save :: icu    = 1
 
 ! control flag: type of crystal field (CF)
@@ -78,7 +79,7 @@
 !!>>> real variables                                                   <<<
 !!========================================================================
 
-! the following parameters are useful when icu = 1
+! the following parameters are useful when icu = 1 or icu = 3
 ! intraorbital Coulomb interaction
      real(dp), public, save :: Uc    = 2.0_dp
 
