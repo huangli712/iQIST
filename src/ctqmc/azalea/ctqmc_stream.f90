@@ -359,6 +359,7 @@
 
 ! find input file: solver.umat.in, read it
          if ( exists .eqv. .true. ) then
+
 ! read in Coulomb interaction matrix from solver.umat.in
              open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
              do i=1,norbs
