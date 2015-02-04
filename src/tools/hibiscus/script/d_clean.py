@@ -13,7 +13,7 @@
 ## Usage
 ## =====
 ##
-## ./clean.py directory_name
+## ./d_clean.py directory_name
 ##
 ## Author
 ## ======

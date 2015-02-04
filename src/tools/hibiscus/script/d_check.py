@@ -13,7 +13,7 @@
 ## Usage
 ## =====
 ##
-## ./check.py file_name
+## ./d_check.py file_name
 ##
 ## Author
 ## ======
