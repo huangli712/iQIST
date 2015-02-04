@@ -362,7 +362,7 @@
 
 ! external arguments
 ! Hund's rule coupling matrix
-     real(dp) :: hund(nband,nband,3)
+     real(dp), intent(out) :: hund(nband,nband,3)
  
 ! local variables
 ! dummy variables
