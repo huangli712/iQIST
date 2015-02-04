@@ -1,5 +1,10 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.5.4 @ 3ac57c2 // Feb 04, 2015
+
+* Add icu = 3 in the jasmine code. See comments in the atomic\_control.f90 file.
+* Add ROADMAP.md file.
+
 ### v0.5.3 @ ab08c42 // Feb 02, 2015
 
 * Remove the chinese directory in doc.
