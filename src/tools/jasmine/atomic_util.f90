@@ -355,7 +355,7 @@
 !!>>> atomic_make_hund: make the Hund's rule coupling matrix
   subroutine atomic_make_hund(hund)
      use constants, only : dp, zero
-   
+
      use m_cntr, only : icu
      use m_cntr, only : nband
      use m_cntr, only : Jz, Js, Jp
@@ -363,25 +363,25 @@
 ! external arguments
 ! Hund's rule coupling matrix
      real(dp), intent(out) :: hund(nband,nband,3)
- 
+
 ! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
 ! dummy variables
-     real(dp) :: jzsp(3)
      real(dp) :: ff2(3)
      real(dp) :: ff4(3)
      real(dp) :: jj1(3)
      real(dp) :: jj2(3)
      real(dp) :: jj3(3)
      real(dp) :: jj4(3)
-
-! loop index
-     integer :: i
-     integer :: j
+     real(dp) :: jzsp(3)
 
 ! initialize hund to be zero
      hund = zero
 
-! set jzsp 
+! set jzsp
      jzsp(1) = Jz
      jzsp(2) = Js
      jzsp(3) = Jp
@@ -403,7 +403,7 @@
 ! J(dxy,dz2) = J(dx2,dz2) = 4/49 * F^2 + 15/441 * F^4
 ! J(dxz,dz2) = J(dyz,dz2) = 1/49 * F^2 + 30/441 * F^4
 ! J(dxy,dx2) = 35/441 * F^4
-! the averaged Hund's rule coupling is J_{ave} = 5/98 * (F^2 + F^4) 
+! the averaged Hund's rule coupling is J_{ave} = 5/98 * (F^2 + F^4)
 ! and F^4 = 0.625 * F^2.
              ff2 = (98.0 * jzsp) / (1.625 * 5.0)
              ff4 = 0.625 * ff2
@@ -411,24 +411,24 @@
              jj2 = 4.0 / 49.0 * ff2 + 15.0 / 441.0 * ff4
              jj3 = 1.0 / 49.0 * ff2 + 30.0 / 441.0 * ff4
              jj4 = 35.0 / 441.0 * ff4
-             
+
 ! orbital order is: (1) dz2, (2) dxz, (3) dyz, (4) dx2, (5) dxy
              hund(2,3,:) = jj1;   hund(3,2,:) = jj1
              hund(2,5,:) = jj1;   hund(5,2,:) = jj1
              hund(3,5,:) = jj1;   hund(5,3,:) = jj1
              hund(2,4,:) = jj1;   hund(4,2,:) = jj1
              hund(3,4,:) = jj1;   hund(4,3,:) = jj1
-                                                  
+
              hund(1,4,:) = jj2;   hund(4,1,:) = jj2
              hund(1,5,:) = jj2;   hund(5,1,:) = jj2
-                                                 
+
              hund(1,2,:) = jj3;   hund(2,1,:) = jj3
              hund(1,3,:) = jj3;   hund(3,1,:) = jj3
-                                                  
+
              hund(4,5,:) = jj4;   hund(5,4,:) = jj4
-         else 
+         else
              call s_print_error('atomic_make_hund','not implemented!')
-         endif    
+         endif ! back if ( nband == 5 ) block
      endif ! back if ( icu == 3 ) block
 
   end subroutine atomic_make_hund
@@ -440,7 +440,7 @@
 !!>>> atomic_make_umatK: make Coulomb interaction U according to Kanamori
 !!>>> parameterized Hamiltonian
   subroutine atomic_make_umatK()
-     use constants, only : dp, zero, czero, two
+     use constants, only : dp, zero, two, czero
 
      use m_cntr, only : nband, norbs
      use m_cntr, only : Uc
@@ -449,9 +449,6 @@
      implicit none
 
 ! local varibales
-! Hund's rule matrix
-     real(dp) :: hund(nband,nband,3)
-
 ! orbital index
      integer  :: alpha, betta
      integer  :: delta, gamma
@@ -464,6 +461,9 @@
 
 ! dummy variables
      real(dp) :: dtmp
+
+! Hund's rule matrix
+     real(dp) :: hund(nband,nband,3)
 
 ! initialize hund to zero
      hund = zero
