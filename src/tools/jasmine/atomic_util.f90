@@ -365,18 +365,18 @@
      real(dp), intent(out) :: hund(nband,nband,3)
  
 ! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
 ! dummy variables
-     real(dp) :: jzsp(3)
      real(dp) :: ff2(3)
      real(dp) :: ff4(3)
      real(dp) :: jj1(3)
      real(dp) :: jj2(3)
      real(dp) :: jj3(3)
      real(dp) :: jj4(3)
-
-! loop index
-     integer :: i
-     integer :: j
+     real(dp) :: jzsp(3)
 
 ! initialize hund to be zero
      hund = zero
@@ -428,7 +428,7 @@
              hund(4,5,:) = jj4;   hund(5,4,:) = jj4
          else 
              call s_print_error('atomic_make_hund','not implemented!')
-         endif    
+         endif ! back if ( nband == 5 ) block
      endif ! back if ( icu == 3 ) block
 
   end subroutine atomic_make_hund
@@ -440,7 +440,7 @@
 !!>>> atomic_make_umatK: make Coulomb interaction U according to Kanamori
 !!>>> parameterized Hamiltonian
   subroutine atomic_make_umatK()
-     use constants, only : dp, zero, czero, two
+     use constants, only : dp, zero, two, czero
 
      use m_cntr, only : nband, norbs
      use m_cntr, only : Uc
@@ -449,9 +449,6 @@
      implicit none
 
 ! local varibales
-! Hund's rule matrix
-     real(dp) :: hund(nband,nband,3)
-
 ! orbital index
      integer  :: alpha, betta
      integer  :: delta, gamma
@@ -464,6 +461,9 @@
 
 ! dummy variables
      real(dp) :: dtmp
+
+! Hund's rule matrix
+     real(dp) :: hund(nband,nband,3)
 
 ! initialize hund to zero
      hund = zero

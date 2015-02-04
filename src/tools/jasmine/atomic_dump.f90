@@ -228,7 +228,7 @@
                  umat_t(j,i) = umat_t(i,j)
              enddo ! over j={i+1,norbs} loop
          enddo ! over i={1,norbs} loop
-     endif ! back if ( icu == 1 ) block
+     endif ! back if ( icu == 1 .or. icu == 3 ) block
 
 ! open file atom.umat.dat to write
      open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
