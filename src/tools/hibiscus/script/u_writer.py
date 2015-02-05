@@ -24,7 +24,7 @@
 ## History
 ## =======
 ##
-## 02/04/2015 by li huang
+## 02/05/2015 by li huang
 ##
 ##
 
@@ -73,12 +73,12 @@ class iqistWriter(object):
         nband = norbs / 2
         for i in range(nband):
             for j in range(mfreq):
-                print >> f, '%6d %16.8f %16.8f %16.8f %16.8f %16.8f' % 
-                ( i+1, rmesh[j], hybf[j,i,i].real, hybf[j,i,i].imag, 
-                                       hybf[j,i+nband,i+nband].real, 
+                print >> f, '%6d %16.8f %16.8f %16.8f %16.8f %16.8f' % \
+                ( i+1, rmesh[j], hybf[j,i,i].real, hybf[j,i,i].imag,   \
+                                       hybf[j,i+nband,i+nband].real,   \
                                        hybf[j,i+nband,i+nband].imag )
-                print >> f
-                print >> f
+            print >> f
+            print >> f
 
         f.close()
 
@@ -95,11 +95,11 @@ class iqistWriter(object):
         nband = norbs / 2
         for i in range(nband):
             for j in range(mfreq):
-                print >> f, '%6d %16.8f %16.8f %16.8f %16.8f %16.8f' % 
-                    ( i+1, rmesh[j], wssf[j,i].real, wssf[j,i].imag, 
+                print >> f, '%6d %16.8f %16.8f %16.8f %16.8f %16.8f' % \
+                    ( i+1, rmesh[j], wssf[j,i].real, wssf[j,i].imag,   \
                          wssf[j,i+nband].real, wssf[j,i+nband].imag )
-                print >> f
-                print >> f
+            print >> f
+            print >> f
 
         f.close()
 
@@ -109,7 +109,7 @@ class iqistWriter(object):
             solver.eimp.in file
         """
         if fileName is None:
-            f = open("solver.eimp.dat","w")
+            f = open("solver.eimp.in","w")
         else:
             f = open(fileName,"w")
 
