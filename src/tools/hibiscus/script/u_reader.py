@@ -421,7 +421,7 @@ class iqistReader(object):
         g2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         f2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         for m in range(norbs):
-            for n in range(n):
+            for n in range(m):
                 for k in range(nbfrq):
                     f.readline() # skip three comment lines
                     f.readline()
@@ -451,7 +451,7 @@ class iqistReader(object):
         g2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         f2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         for m in range(norbs):
-            for n in range(n):
+            for n in range(m):
                 for k in range(nbfrq):
                     f.readline() # skip three comment lines
                     f.readline()
@@ -480,7 +480,7 @@ class iqistReader(object):
 
         p2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         for m in range(norbs):
-            for n in range(n):
+            for n in range(m):
                 for k in range(nbfrq):
                     f.readline() # skip three comment lines
                     f.readline()
