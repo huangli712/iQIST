@@ -38,7 +38,8 @@ class iqistWriter(object):
         impurity solver.
 
         Why do we need this class? Because sometimes it is not convenient
-        to call the Python API for iQIST directly.
+        to call the Python API for iQIST directly. Using this class, we
+        can ensure the input file format is correct.
 
         typical usage:
         # import this module
