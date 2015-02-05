@@ -15,7 +15,7 @@
 ## Usage
 ## =====
 ##
-## ./sar.sh
+## ./d_sar.sh
 ##
 ## Before you start to use this shell script, you have to check and edit
 ## carefully the string pattern.

@@ -13,7 +13,7 @@
 ## Usage
 ## =====
 ##
-## ./trailing.sh file_name
+## ./d_trailing.sh file_name
 ##
 ## Author
 ## ======

@@ -13,7 +13,7 @@
 ## Usage
 ## =====
 ##
-## ./cmp.py  directory_of_case_A directory_of_case_B
+## ./d_cmp.py  directory_of_case_A directory_of_case_B
 ##
 ## Author
 ## ======
