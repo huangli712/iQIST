@@ -434,7 +434,7 @@ class iqistReader(object):
                             f2[i,j,k,n,m] = float( spl[8] ) + 1j * float( spl[9] )
                             f2[i,j,k,m,n] = float( spl[8] ) + 1j * float( spl[9] )
 
-        f.cloes()
+        f.close()
 
         return (g2, f2)
 
@@ -464,7 +464,7 @@ class iqistReader(object):
                             f2[i,j,k,n,m] = float( spl[8] ) + 1j * float( spl[9] )
                             f2[i,j,k,m,n] = float( spl[8] ) + 1j * float( spl[9] )
 
-        f.cloes()
+        f.close()
 
         return (g2, f2)
 
@@ -491,7 +491,7 @@ class iqistReader(object):
                             p2[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
                             p2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
 
-        f.cloes()
+        f.close()
 
         return p2
 
