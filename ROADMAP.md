@@ -35,7 +35,6 @@ Note: The tasks listed in this file are only for discussion. If you have suggest
 * design and implement the measurement of local entanglement entropy (Minor)
 * design and implement the measurement of autocorrelation function and autocorrelation time (Minor)
 * design and implement the Suwa-Todo algorithm (Minor)
-* design and implement u\_writer.py (similar to u\_reader.py) (Trivial)
 
 ## List of future tasks
 
