@@ -421,7 +421,7 @@ class iqistReader(object):
         g2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         f2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         for m in range(norbs):
-            for n in range(n):
+            for n in range(m+1):
                 for k in range(nbfrq):
                     f.readline() # skip three comment lines
                     f.readline()
@@ -433,8 +433,10 @@ class iqistReader(object):
                             g2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
                             f2[i,j,k,n,m] = float( spl[8] ) + 1j * float( spl[9] )
                             f2[i,j,k,m,n] = float( spl[8] ) + 1j * float( spl[9] )
+                    f.readline() # skip two blank lines
+                    f.readline()
 
-        f.cloes()
+        f.close()
 
         return (g2, f2)
 
@@ -451,7 +453,7 @@ class iqistReader(object):
         g2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         f2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         for m in range(norbs):
-            for n in range(n):
+            for n in range(m+1):
                 for k in range(nbfrq):
                     f.readline() # skip three comment lines
                     f.readline()
@@ -463,8 +465,10 @@ class iqistReader(object):
                             g2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
                             f2[i,j,k,n,m] = float( spl[8] ) + 1j * float( spl[9] )
                             f2[i,j,k,m,n] = float( spl[8] ) + 1j * float( spl[9] )
+                    f.readline() # skip two blank lines
+                    f.readline()
 
-        f.cloes()
+        f.close()
 
         return (g2, f2)
 
@@ -480,7 +484,7 @@ class iqistReader(object):
 
         p2 = numpy.zeros((nffrq,nffrq,nbfrq,norbs,norbs), dtype = numpy.complex)
         for m in range(norbs):
-            for n in range(n):
+            for n in range(m+1):
                 for k in range(nbfrq):
                     f.readline() # skip three comment lines
                     f.readline()
@@ -490,8 +494,10 @@ class iqistReader(object):
                             spl = f.readline().split()
                             p2[i,j,k,n,m] = float( spl[2] ) + 1j * float( spl[3] )
                             p2[i,j,k,m,n] = float( spl[2] ) + 1j * float( spl[3] )
+                    f.readline() # skip two blank lines
+                    f.readline()
 
-        f.cloes()
+        f.close()
 
         return p2
 
