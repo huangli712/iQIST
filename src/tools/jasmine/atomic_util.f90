@@ -367,7 +367,6 @@
 ! local variables
 ! loop index
      integer  :: i
-     integer  :: j
 
 ! dummy variables
      real(dp) :: ff2(3)
@@ -393,7 +392,7 @@
          hund(:,:,3) = Jp
          do i=1,nband
              hund(i,i,:) = zero
-         enddo
+         enddo ! over i={1,nband} loop
      endif ! back if ( icu == 1 ) block
 
 ! for anisotropic Hund's rule coupling
