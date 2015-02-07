@@ -1,5 +1,16 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.5.5 @ 797ace8 // Feb 05, 2015
+
+* Rename check.py to d\_check.py, fix the comment.
+* Rename clean.py to d\_clean.py, fix the comment.
+* Reanme cmp.py to d\_cmp.py, fix the comment.
+* Rename sar.sh to d\_sar.sh, fix the comment.
+* Reanme trailing.sh to d\_trailing.sh, fix the comment.
+* Add and implement u\_writer.py.
+* Fix some deadly bugs in u\_reader.py
+* Fix the comments in ctqmc\_main.f90, include solver.anydos.in
+
 ### v0.5.4 @ 3ac57c2 // Feb 04, 2015
 
 * Add icu = 3 in the jasmine code. See comments in the atomic\_control.f90 file.
@@ -31,8 +42,8 @@
 ### v0.5.0 @ e182bbf // Jan 16, 2015
 
 * Add cmp.py file in the iqist/src/tools/hibiscus/script directory.
-* Fix small bug in the jasmine code
-* Add solver.umat.in output in the jasmine code
+* Fix small bug in the jasmine code.
+* Add solver.umat.in output in the jasmine code.
 
 ### v0.4.9 @ 7a31b3c // Jan 09, 2015
 

@@ -146,6 +146,7 @@ class iqistWriter(object):
         else:
             f = open(fileName,"w")
 
+        print >> f, '%s %16.8f %s %16.8f' % ( '# u shift:', 2.0 * ptau[0], '  mu shift:', ptau[0] )
         for i in range(ntime):
             print >> f, '%16.8f %16.8f %16.8f' % ( tmesh[i], ktau[i], ptau[i] )
 
