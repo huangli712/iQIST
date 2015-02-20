@@ -939,7 +939,7 @@
      allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
      allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
 
-! calculate g2aux: see Eq.(52) in Phys. Rev. B 89, 235128 (2014)
+! calculate g2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
          call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
 
@@ -1055,7 +1055,7 @@
 ! calculate prefactor: pref
      call ctqmc_make_pref()
 
-! calculate g2aux and h2aux: see Eq.(52) in Phys. Rev. B 89, 235128 (2014)
+! calculate g2aux and h2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
          call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
 
@@ -1172,7 +1172,7 @@
      allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
      allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
 
-! calculate g2aux: see Eq.(52) in Phys. Rev. B 89, 235128 (2014)
+! calculate g2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
          call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
 
