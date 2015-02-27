@@ -36,7 +36,8 @@
 !! --------------
 !!
 !! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory.
+!! command in the src/build directory, or use the 'make' command in the
+!! src/api directory.
 !!
 !! 3. compile the ctqmc component
 !! ------------------------------
@@ -51,7 +52,7 @@
 !!
 !! If everything is OK, you will find the libctqmc.a file in the ctqmc
 !! component folder (for example, src/ctqmc/azalea directory). Please copy
-!! it (together with the api.mod) to your own directory. That's all.
+!! it (together with src/api/api.mod) to your own directory. That's all.
 !!
 !! How to build the Python API
 !! ===========================
@@ -65,7 +66,8 @@
 !! --------------
 !!
 !! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory. This step is mandatory.
+!! command in the src/build directory, or use the 'make' command in the
+!! src/api directory.
 !!
 !! 3. compile the ctqmc component
 !! ------------------------------
@@ -75,19 +77,19 @@
 !! library mode, i.e., you must use 'make lib' (in the src/ctqmc/azalea
 !! directory) or 'make azalea-lib' (in the src/build directory), etc.
 !!
-!! 4. edit src/ctqmc/api/Makefile
-!! ------------------------------
+!! 4. edit src/api/Makefile
+!! ------------------------
 !!
-!! check the target 'ctqmc', the original action is as follows:
-!!     cp ../azalea/libctqmc.a .
+!! check the target 'libctqmc', the original action is as follows:
+!!     cp ../ctqmc/azalea/libctqmc.a .
 !! If you want to use the other ctqmc components, instead of azalea, you
 !! have to change the directory. BE CAREFUL!
 !!
 !! 5. generate pyiqist.so
 !! ----------------------
 !!
-!! In the src/ctqmc/api directory, just input 'make pyiqist' command and
-!! wait. At last you will get the pyiqist.so which is what you need.
+!! In the src/api directory, just input 'make pyiqist' command and wait.
+!! At last you will get the pyiqist.so which is what you need.
 !!
 !! Usage (Fortran version)
 !! =======================
@@ -243,7 +245,7 @@
 !! You have to ensure that the pyiqist package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/ctqmc/api/')
+!! sys.path.append('../../src/api/')
 !!
 !! 3. configure the ctqmc impurity solver
 !! --------------------------------------
