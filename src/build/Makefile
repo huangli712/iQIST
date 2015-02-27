@@ -278,10 +278,10 @@ clean-common:
 
 # targets for api: api
 api:
-	cd ../ctqmc/api/; pwd; make
+	cd ../api/; pwd; make
 
 clean-api:
-	cd ../ctqmc/api/; pwd; make clean
+	cd ../api/; pwd; make clean
 
 # targets for doc: doc
 doc:
