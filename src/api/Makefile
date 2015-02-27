@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/ctqmc/api directory.
+## Makefile for iqist/src/api directory.
 ##
 ## Usage
 ## =====
@@ -28,7 +28,7 @@
 
 include ../build/make.sys
 
-mod = ctqmc_api.o
+mod = ctqmc_api.o hfqmc_api.o atomic_api.o
 
 default: all
 
@@ -38,15 +38,29 @@ build_mod: $(mod)
 
 f2py:
 	fpp -P -DMPY ctqmc_api.f90 > ctqmc_api_py.f90
+	fpp -P -DMPY hfqmc_api.f90 > hfqmc_api_py.f90
+	fpp -P -DMPY atomic_api.f90 > atomic_api_py.f90
 
 libctqmc:
-	cp ../azalea/libctqmc.a .
+	cp ../ctqmc/azalea/libctqmc.a .
+
+libhfqmc:
+	cp ../hfqmc/daisy/libhfqmc.a .
+
+libatomic:
+	cp ../tools/jasmine/libatomic.a .
 
 libMM:
-	cp ../../common/libMM.a .
+	cp ../common/libMM.a .
 
 pyiqist: f2py libctqmc libMM
 	f2py -c --fcompiler=intelem ctqmc_api_py.f90 -m pyiqist -L. -lctqmc -lMM $(MPIL) $(LIBS)
+
+pydaisy: f2py libhfqmc libMM
+	f2py -c --fcompiler=intelem hfqmc_api_py.f90 -m pydaisy -L. -lhfqmc -lMM $(MPIL) $(LIBS)
+
+pyjasmine: f2py libatomic libMM
+	f2py -c --fcompiler=intelem atomic_api_py.f90 -m pyjasmine -L. -latomic -lMM $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -56,8 +70,12 @@ clean:
 	rm -f *.o
 	rm -f *.so
 	rm -f libctqmc.a
+	rm -f libhfqmc.a
+	rm -f libatomic.a
 	rm -f libMM.a
 	rm -f ctqmc_api_py.f90
+	rm -f hfqmc_api_py.f90
+	rm -f atomic_api_py.f90
 
 clean-dat:
 	rm -f *.dat
