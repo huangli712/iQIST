@@ -20,13 +20,13 @@
 ## History
 ## =======
 ##
-## 11/11/2014 by li huang
+## 02/28/2015 by li huang
 ##
 ##
 
 .SUFFIXES: .f90
 
-include ../../build/make.sys
+include ../build/make.sys
 
 mod = ctqmc_api.o
 
