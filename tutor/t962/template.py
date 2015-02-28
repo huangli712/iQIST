@@ -13,7 +13,7 @@ sys.path.append('../../src/tools/hibiscus/script/')
 from u_ctqmc import *
 
 # modify sys.path
-sys.path.append('../../src/ctqmc/api/')
+sys.path.append('../../src/api/')
 
 # import iqist software package
 from pyiqist import api as ctqmc
