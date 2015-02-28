@@ -20,7 +20,7 @@
 ## History
 ## =======
 ##
-## 09/21/2014 by li huang
+## 02/28/2015 by li huang
 ##
 ##
 
@@ -42,7 +42,9 @@ default: all
 
 all: exe
 
-api: atomic_api.o
+api:
+	cp ../../api/japi.mod .
+	cp ../../api/atomic_api.o .
 
 cssl:
 	cp ../../common/libMM.a .
@@ -52,19 +54,16 @@ csml:
 	cp ../../common/parser.mod .
 	cp ../../common/linkedlist.mod .
 
+touch:
+	touch atomic_main.f90
+
 exe: api cssl csml atomic-exe
 atomic-exe: $(objects)
 	$(LINKER) $(objects) -o atomic $(LFLAGS) $(LIBS)
 
-lib: api cssl csml atomic-lib
+lib: api cssl csml touch atomic-lib
 atomic-lib: $(objects)
 	$(ARCHIVER) libatomic.a $(objects)
-
-f2py:
-	fpp -P -DMPY atomic_api.f90 > atomic_api_py.f90
-
-pyjasmine: f2py lib
-	f2py -c --fcompiler=intelem atomic_api_py.f90 -m pyjasmine -L. -latomic -lMM $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -72,11 +71,9 @@ pyjasmine: f2py lib
 clean:
 	rm -f *.mod
 	rm -f *.o
-	rm -f *.so
 	rm -f atomic
 	rm -f libatomic.a
 	rm -f libMM.a
-	rm -f atomic_api_py.f90
 
 clean-dat:
 	rm -f *.cix

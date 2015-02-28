@@ -20,7 +20,7 @@
 ## History
 ## =======
 ##
-## 09/21/2014 by li huang
+## 02/28/2015 by li huang
 ##
 ##
 
@@ -44,8 +44,8 @@ default: all
 all: exe
 
 api:
-	cp ../api/api.mod .
-	cp ../api/ctqmc_api.o .
+	cp ../../api/api.mod .
+	cp ../../api/ctqmc_api.o .
 
 cssl:
 	cp ../../common/libMM.a .
@@ -58,11 +58,14 @@ csml:
 	cp ../../common/parser.mod .
 	cp ../../common/linkedlist.mod .
 
+touch:
+	touch ctqmc_main.f90
+
 exe: api cssl csml ctqmc-exe
 ctqmc-exe: $(objects)
 	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
 
-lib: api cssl csml ctqmc-lib
+lib: api cssl csml touch ctqmc-lib
 ctqmc-lib: $(objects)
 	$(ARCHIVER) libctqmc.a $(objects)
 

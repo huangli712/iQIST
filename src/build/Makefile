@@ -58,7 +58,7 @@
 ## History
 ## =======
 ##
-## 11/10/2014 by li huang
+## 02/28/2015 by li huang
 ##
 ##
 
@@ -72,12 +72,15 @@ help:
 	@echo '     help-more         print full usage information                   '
 	@echo
 	@echo '     all               build all components, apis, and documents, etc '
+	@echo '     lib               build all components as libs                   '
 	@echo '     clean             clean all directories                          '
 	@echo
-	@echo '     solver            build all ctqmc and hfqmc impurity solvers     '
+	@echo '     solver            build all ctqmc and hfqmc components           '
+	@echo '     solver-lib        build all ctqmc and hfqmc components as libs   '
 	@echo '     clean-solver      clean objects for impurity solvers             '
 	@echo
-	@echo '     tool              build auxiliary tools                          '
+	@echo '     tool              build auxiliary tool components                '
+	@echo '     tool-lib          build auxiliary tool components as libs        '
 	@echo '     clean-tool        clean objects for auxiliary tools              '
 	@echo
 	@echo '     other             build documents                                '
@@ -142,6 +145,9 @@ help-more:
 # all-in-one building target
 all: common api solver tool other
 
+# all-in-one building target (lib mode)
+lib: common api solver-lib tool-lib other
+
 # all-in-one cleaning target
 clean: clean-common clean-api clean-solver clean-tool clean-other
 
@@ -151,13 +157,19 @@ solver: common api \
         begonia lavender \
         pansy manjushaka \
         daisy
+solver-lib: common api \
+	    azalea-lib gardenia-lib narcissus-lib \
+	    begonia-lib lavender-lib \
+	    pansy-lib manjushaka-lib \
+	    daisy-lib
 clean-solver: clean-azalea clean-gardenia clean-narcissus \
               clean-begonia clean-lavender \
               clean-pansy clean-manjushaka \
               clean-daisy
 
 # targets for tool
-tool: common jasmine hibiscus
+tool: common api jasmine hibiscus
+tool-lib: common api jasmine-lib hibiscus
 clean-tool: clean-jasmine clean-hibiscus
 
 # targets for other
@@ -266,10 +278,10 @@ clean-common:
 
 # targets for api: api
 api:
-	cd ../ctqmc/api/; pwd; make
+	cd ../api/; pwd; make
 
 clean-api:
-	cd ../ctqmc/api/; pwd; make clean
+	cd ../api/; pwd; make clean
 
 # targets for doc: doc
 doc:
