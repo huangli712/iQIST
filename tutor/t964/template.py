@@ -12,7 +12,7 @@ sys.path.append('../../src/tools/hibiscus/script/')
 from u_atomic import *
 
 # modify sys.path
-sys.path.append('../../src/tools/jasmine/')
+sys.path.append('../../src/api/')
 
 # import jasmine software package
 from pyjasmine import japi as atomic
