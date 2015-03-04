@@ -767,6 +767,11 @@
 
 ! dump the necessary files
 !-------------------------------------------------------------------------
+! write out the hybridization function in matsubara frequency axis
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_hybf(rmesh, hybf)
+     endif ! back if ( myid == master ) block
+
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)
