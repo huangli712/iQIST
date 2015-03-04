@@ -287,7 +287,8 @@
 ! dummy integer variables
      integer  :: j1, j2, j3, j4, j5
 
-! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
+! used to check whether the input file (solver.hyb.in or solver.eimp.in
+! or atom.cix) exists
      logical  :: exists
 
 ! dummy real variables
@@ -350,11 +351,6 @@
              close(mytmp)
 
          endif ! back if ( exists .eqv. .true. ) block
-     endif ! back if ( myid == master ) block
-
-! write out the hybridization function
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hybf(rmesh, hybf)
      endif ! back if ( myid == master ) block
 
 ! since the hybridization function may be updated in master node, it is
@@ -880,6 +876,11 @@
 
 ! dump the necessary files
 !-------------------------------------------------------------------------
+! write out the hybridization function in matsubara frequency axis
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_hybf(rmesh, hybf)
+     endif ! back if ( myid == master ) block
+
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)
