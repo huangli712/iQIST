@@ -1173,6 +1173,8 @@
      allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
 
 ! calculate g2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP DO PRIVATE (flvr, is, ie, maux, w2n, w1n, caux1, caux2)
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
          call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
 
@@ -1190,8 +1192,10 @@
          enddo ! over is={1,rank(flvr)} loop
 
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+!$OMP END DO
 
 ! calculate ps_re and ps_im
+!$OMP DO PRIVATE (f1, f2, cmeas, wbn, w4n, w3n, w2n, w1n)
      CTQMC_ORBIT1_LOOP: do f1=1,norbs
          CTQMC_ORBIT2_LOOP: do f2=1,f1
 
@@ -1214,6 +1218,8 @@
 
          enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
      enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
+!$OMP END DO
+!$OMP END PARALLEL
 
 ! deallocate memory
      deallocate( g2aux )
