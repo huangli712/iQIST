@@ -340,11 +340,6 @@
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
-! write out the hybridization function
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hybf(rmesh, hybf)
-     endif ! back if ( myid == master ) block
-
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
 # if defined (MPI)
@@ -466,11 +461,6 @@
                  call s_print_error('ctqmc_selfer_init','solver.ktau.in does not exist')
              endif ! back if ( isscr == 99 ) block
          endif ! back if ( exists .eqv. .true. ) block
-     endif ! back if ( myid == master ) block
-
-! write out the screening function and its derivates
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_ktau(tmesh, ktau, ptau)
      endif ! back if ( myid == master ) block
 
 ! since the screening function and its derivates may be updated in master
@@ -683,9 +673,19 @@
 
 ! dump the necessary files
 !-------------------------------------------------------------------------
+! write out the hybridization function in matsubara frequency axis
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_hybf(rmesh, hybf)
+     endif ! back if ( myid == master ) block
+
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)
+     endif ! back if ( myid == master ) block
+
+! write out the screening function and its derivates
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_ktau(tmesh, ktau, ptau)
      endif ! back if ( myid == master ) block
 
 ! write out the seed for random number stream, it is useful to reproduce
