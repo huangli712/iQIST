@@ -19,6 +19,7 @@
 !!!           ctqmc_symm_grnf
 !!!           ctqmc_smth_sigf   <<<---
 !!!           ctqmc_make_gtau   <<<---
+!!!           ctqmc_make_prod   <<<---
 !!!           ctqmc_make_hub1   <<<---
 !!! source  : ctqmc_record.f90
 !!! type    : subroutines
@@ -477,13 +478,12 @@
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
-     use constants, only : dp, two, pi, czi, czero
+     use constants, only : dp, czero
 
      use control, only : isvrt
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
      use context, only : g2_re, g2_im
      use context, only : rank
      use context, only : mmat
@@ -511,17 +511,13 @@
 ! used to store the element of mmat matrix
      real(dp) :: maux
 
-! imaginary time for start and end points
-     real(dp) :: taus
-     real(dp) :: taue
-
 ! dummy complex(dp) variables, used to calculate the g2_re and g2_im
      complex(dp) :: cmeas
 
 ! dummy complex(dp) arrays, used to store the intermediate results
      complex(dp), allocatable :: g2aux(:,:,:)
-     complex(dp), allocatable :: caux1(:)
-     complex(dp), allocatable :: caux2(:)
+     complex(dp), allocatable :: caux1(:,:)
+     complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
      call s_assert( btest(isvrt, 3) .and. .not. btest(isvrt, 4) )
@@ -533,31 +529,20 @@
      allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
 
 ! allocate memory for caux1 and caux2, and then initialize them
-     allocate( caux1(nfaux) ); caux1 = czero
-     allocate( caux2(nfaux) ); caux2 = czero
+     allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
+     allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
 
+! calculate g2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+         call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
 
-! get imaginary time value for segments
          do is=1,rank(flvr)
-             taus = time_s( index_s(is, flvr), flvr )
-
              do ie=1,rank(flvr)
-                 taue = time_e( index_e(ie, flvr), flvr )
 
-! get matrix element from mmat
                  maux = mmat(ie, is, flvr)
-
-! calculate g2aux
-                 caux1 = exp(+two * czi * pi * taue / beta)
-                 caux2 = exp(-two * czi * pi * taus / beta)
-                 call s_cumprod_z(nfaux, caux1, caux1)
-                 call s_cumprod_z(nfaux, caux2, caux2)
-                 caux1 = caux1 * exp(-(nffrq + 1) * czi * pi * taue / beta)
-                 caux2 = caux2 * exp(+(nffrq + 1) * czi * pi * taus / beta)
                  do w2n=1,nfaux
                      do w1n=1,nfaux
-                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
                      enddo ! over w1n={1,nfaux} loop
                  enddo ! over w2n={1,nfaux} loop
 
@@ -600,13 +585,12 @@
 
 !!>>> ctqmc_record_pair: record the particle-particle pair susceptibility
   subroutine ctqmc_record_pair()
-     use constants, only : dp, two, pi, czi, czero
+     use constants, only : dp, czero
 
      use control, only : isvrt
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
      use context, only : ps_re, ps_im
      use context, only : rank
      use context, only : mmat
@@ -634,17 +618,13 @@
 ! used to store the element of mmat matrix
      real(dp) :: maux
 
-! imaginary time for start and end points
-     real(dp) :: taus
-     real(dp) :: taue
-
 ! dummy complex(dp) variables, used to calculate the ps_re and ps_im
      complex(dp) :: cmeas
 
 ! dummy complex(dp) arrays, used to store the intermediate results
      complex(dp), allocatable :: g2aux(:,:,:)
-     complex(dp), allocatable :: caux1(:)
-     complex(dp), allocatable :: caux2(:)
+     complex(dp), allocatable :: caux1(:,:)
+     complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
      call s_assert( btest(isvrt, 5) )
@@ -656,31 +636,20 @@
      allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
 
 ! allocate memory for caux1 and caux2, and then initialize them
-     allocate( caux1(nfaux) ); caux1 = czero
-     allocate( caux2(nfaux) ); caux2 = czero
+     allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
+     allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
 
+! calculate g2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+         call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
 
-! get imaginary time value for segments
          do is=1,rank(flvr)
-             taus = time_s( index_s(is, flvr), flvr )
-
              do ie=1,rank(flvr)
-                 taue = time_e( index_e(ie, flvr), flvr )
 
-! get matrix element from mmat
                  maux = mmat(ie, is, flvr)
-
-! calculate g2aux
-                 caux1 = exp(+two * czi * pi * taue / beta)
-                 caux2 = exp(-two * czi * pi * taus / beta)
-                 call s_cumprod_z(nfaux, caux1, caux1)
-                 call s_cumprod_z(nfaux, caux2, caux2)
-                 caux1 = caux1 * exp(-(nffrq + 1) * czi * pi * taue / beta)
-                 caux2 = caux2 * exp(+(nffrq + 1) * czi * pi * taus / beta)
                  do w2n=1,nfaux
                      do w1n=1,nfaux
-                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w1n) * caux2(w2n)
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
                      enddo ! over w1n={1,nfaux} loop
                  enddo ! over w2n={1,nfaux} loop
 
@@ -1521,6 +1490,66 @@
      return
   end subroutine cat_make_gtau3
   end subroutine ctqmc_make_gtau
+
+!!========================================================================
+!!>>> build auxiliary two-particle related variables                   <<<
+!!========================================================================
+
+!!>>> ctqmc_make_prod: try to calculate the product of matsubara
+!!>>> frequency exponents exp(i \omega_n \tau)
+  subroutine ctqmc_make_prod(flvr, nfaux, mrank, caux1, caux2)
+     use constants, only : dp, two, pi, czi
+
+     use control, only : nffrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
+
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in) :: flvr
+
+! combination of nffrq and nbfrq
+     integer, intent(in) :: nfaux
+
+! maximum number of operators in different flavor channels
+     integer, intent(in) :: mrank
+
+! matsubara frequency exponents for create operators
+     complex(dp), intent(out) :: caux1(nfaux,mrank)
+
+! matsubara frequency exponents for destroy operators
+     complex(dp), intent(out) :: caux2(nfaux,mrank)
+
+! local variables
+! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
+! imaginary time for start and end points
+     real(dp) :: taus
+     real(dp) :: taue
+
+! for create operators
+     do is=1,rank(flvr)
+         taus = time_s( index_s(is, flvr), flvr )
+         caux1(:,is) = exp(-two * czi * pi * taus / beta)
+         call s_cumprod_z(nfaux, caux1(:,is), caux1(:,is))
+         caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * czi * pi * taus / beta)
+     enddo ! over is={1,rank(flvr)} loop
+
+! for destroy operators
+     do ie=1,rank(flvr)
+         taue = time_e( index_e(ie, flvr), flvr )
+         caux2(:,ie) = exp(+two * czi * pi * taue / beta)
+         call s_cumprod_z(nfaux, caux2(:,ie), caux2(:,ie))
+         caux2(:,ie) = caux2(:,ie) * exp(-(nffrq + 1) * czi * pi * taue / beta)
+     enddo ! over ie={1,rank(flvr)} loop
+
+     return
+  end subroutine ctqmc_make_prod
 
 !!========================================================================
 !!>>> build self-energy function                                       <<<

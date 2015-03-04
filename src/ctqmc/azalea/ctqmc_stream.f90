@@ -288,11 +288,6 @@
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
 
-! write out the hybridization function
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hybf(rmesh, hybf)
-     endif ! back if ( myid == master ) block
-
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
 # if defined (MPI)
@@ -548,6 +543,11 @@
 
 ! dump the necessary files
 !-------------------------------------------------------------------------
+! write out the hybridization function in matsubara frequency axis
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_hybf(rmesh, hybf)
+     endif ! back if ( myid == master ) block
+
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)

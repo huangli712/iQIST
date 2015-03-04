@@ -13,7 +13,7 @@ sys.path.append('../../src/tools/hibiscus/script/')
 from u_hfqmc import *
 
 # modify sys.path
-sys.path.append('../../src/hfqmc/daisy/')
+sys.path.append('../../src/api/')
 
 # import daisy software package
 from pydaisy import dapi as hfqmc

@@ -1,5 +1,20 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.5.6 @ 8f7d00f // Feb 28, 2015
+
+* Modify jasmine/atomic\_util.f90, remove unused variables.
+* Add script/d\_archive.sh shell script.
+* Fix a format bug in script/u\_writer.py.
+* Modify ctqmc\_record.f90 in gardenia, narcissus, lavender, and manjushaka.
+* Improve the computational efficiency for two-particle quantities.
+* Improve the compiling system, add 'lib' target.
+* Move src/ctqmc/api to src/api.
+* Move jasmine/atomic\_api.f90 to src/api.
+* Move daisy/hfqmc\_api.f90 to src/api.
+* Update the compiling system to support new api directory.
+* Add src/app directory.
+* Update the tutor/t961-t964, fix path bug.
+
 ### v0.5.5 @ 797ace8 // Feb 05, 2015
 
 * Rename check.py to d\_check.py, fix the comment.
@@ -8,8 +23,8 @@
 * Rename sar.sh to d\_sar.sh, fix the comment.
 * Reanme trailing.sh to d\_trailing.sh, fix the comment.
 * Add and implement u\_writer.py.
-* Fix some deadly bugs in u\_reader.py
-* Fix the comments in ctqmc\_main.f90, include solver.anydos.in
+* Fix some deadly bugs in u\_reader.py.
+* Fix the comments in ctqmc\_main.f90, include solver.anydos.in.
 
 ### v0.5.4 @ 3ac57c2 // Feb 04, 2015
 

@@ -30,7 +30,14 @@
 !!
 !! Activate the API macro (keep MPY macro disable).
 !!
-!! 2. compile the jasmine component
+!! 2. compile api
+!! --------------
+!!
+!! Please compile api (this directory) again. You can use the 'make api'
+!! command in the src/build directory, or use the 'make' command in the
+!! src/api directory.
+!!
+!! 3. compile the jasmine component
 !! --------------------------------
 !!
 !! Please compile the desired jasmine component again. You have to clean it
@@ -38,12 +45,12 @@
 !! library mode, i.e., you must use 'make lib' (in the src/tools/jasmine
 !! directory) or 'make jasmine-lib' (in the src/build directory), etc.
 !!
-!! 3. get what you need
+!! 4. get what you need
 !! --------------------
 !!
 !! If everything is OK, you will find the libatomic.a file in the jasmine
 !! component folder (for example, src/tools/jasmine directory). Please copy
-!! it (together with the japi.mod) to your own directory. That's all.
+!! it (together with src/api/japi.mod) to your own directory. That's all.
 !!
 !! How to build the Python API
 !! ===========================
@@ -53,11 +60,26 @@
 !!
 !! Activate the API macro and MPY macro at the same time.
 !!
-!! 2. generate pyjasmine.so
+!! 2. compile api
+!! --------------
+!!
+!! Please compile api (this directory) again. You can use the 'make api'
+!! command in the src/build directory, or use the 'make' command in the
+!! src/api directory.
+!!
+!! 3. compile the jasmine component
+!! --------------------------------
+!!
+!! Please compile the desired jasmine component again. You have to clean it
+!! at first, and then compile it. Noted that you have to compile it in the
+!! library mode, i.e., you must use 'make lib' (in the src/tools/jasmine
+!! directory) or 'make jasmine-lib' (in the src/build directory), etc.
+!!
+!! 4. generate pyjasmine.so
 !! ------------------------
 !!
-!! In the src/tools/jasmine directory, just input 'make pyjasmine' command
-!! and wait. At last you will get the pyjasmine.so which is what you need.
+!! In the src/api directory, just input 'make pyjasmine' command and wait.
+!! At last you will get the pyjasmine.so which is what you need.
 !!
 !! Usage (Fortran version)
 !! =======================
@@ -126,7 +148,7 @@
 !! You have to ensure that the pyjasmine package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/tools/jasmine/')
+!! sys.path.append('../../src/api/')
 !!
 !! 2. configure the atomic eigenvalue problem solver
 !! -------------------------------------------------

@@ -97,11 +97,6 @@
          call ctqmc_dump_wtau(tmesh, wtau)
      endif ! back if ( myid == master ) block
 
-! write out the new hybridization function
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hybf(rmesh, hybf)
-     endif ! back if ( myid == master ) block
-
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') 'GARDENIA >>> DMFT hybridization function is updated'

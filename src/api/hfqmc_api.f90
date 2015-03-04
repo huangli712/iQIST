@@ -30,7 +30,14 @@
 !!
 !! Activate the API macro (keep MPY macro disable).
 !!
-!! 2. compile the hfqmc component
+!! 2. compile api
+!! --------------
+!!
+!! Please compile api (this directory) again. You can use the 'make api'
+!! command in the src/build directory, or use the 'make' command in the
+!! src/api directory.
+!!
+!! 3. compile the hfqmc component
 !! ------------------------------
 !!
 !! Please compile the desired hfqmc component again. You have to clean it
@@ -38,12 +45,12 @@
 !! library mode, i.e., you must use 'make lib' (in the src/hfqmc/daisy
 !! directory) or 'make daisy-lib' (in the src/build directory), etc.
 !!
-!! 3. get what you need
+!! 4. get what you need
 !! --------------------
 !!
 !! If everything is OK, you will find the libhfqmc.a file in the hfqmc
 !! component folder (for example, src/hfqmc/daisy directory). Please copy
-!! it (together with the dapi.mod) to your own directory. That's all.
+!! it (together with src/api/dapi.mod) to your own directory. That's all.
 !!
 !! How to build the Python API
 !! ===========================
@@ -53,7 +60,14 @@
 !!
 !! Activate the API macro and MPY macro at the same time.
 !!
-!! 2. compile the hfqmc component
+!! 2. compile api
+!! --------------
+!!
+!! Please compile api (this directory) again. You can use the 'make api'
+!! command in the src/build directory, or use the 'make' command in the
+!! src/api directory.
+!!
+!! 3. compile the hfqmc component
 !! ------------------------------
 !!
 !! Please compile the desired hfqmc component again. You have to clean it
@@ -61,11 +75,11 @@
 !! library mode, i.e., you must use 'make lib' (in the src/hfqmc/daisy
 !! directory) or 'make daisy-lib' (in the src/build directory), etc.
 !!
-!! 3. generate pydaisy.so
+!! 4. generate pydaisy.so
 !! ----------------------
 !!
-!! In the src/hfqmc/daisy directory, just input 'make pydaisy' command and
-!! wait. At last you will get the pydaisy.so which is what you need.
+!! In the src/api directory, just input 'make pydaisy' command and wait.
+!! At last you will get the pydaisy.so which is what you need.
 !!
 !! Usage (Fortran version)
 !! =======================
@@ -210,7 +224,7 @@
 !! You have to ensure that the pydaisy package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/hfqmc/daisy/')
+!! sys.path.append('../../src/api/')
 !!
 !! 3. configure the hfqmc impurity solver
 !! --------------------------------------
@@ -296,13 +310,13 @@
 !! FAQ
 !! ===
 !!
-!! Question:
-!! ---------
+!! Question
+!! --------
 !!
 !! Can we change the hfqmc impurity solver at runtime?
 !!
-!! Answer:
-!! -------
+!! Answer
+!! ------
 !!
 !! No. You can not change the hfqmc impurity solver dynamically. Once
 !! the pydaisy.so is generated, the hfqmc impurity solver is determined.
