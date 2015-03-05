@@ -685,7 +685,7 @@
 
 ! write out the screening function and its derivates
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_ktau(tmesh, ktau, ptau)
+         call ctqmc_dump_ktau(tmesh, ktau, ptau, ksed, psed)
      endif ! back if ( myid == master ) block
 
 ! write out the seed for random number stream, it is useful to reproduce

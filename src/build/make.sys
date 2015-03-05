@@ -45,8 +45,8 @@
 ## ---
 ##
 ## Specify whether OpenMP is enable. If you want to disable it, please
-## comment it out. In default it is disabled. So far OpenMP was not used
-## by any components.
+## comment it out. In default it is disabled. So far OpenMP was used by
+## some components to speedup the measurements of two-particle quantities
 ##
 ## API
 ## ---
@@ -142,7 +142,7 @@
 ## using f2py (pyiqist and pydaisy). The f2py will automatically use the
 ## 'bare' intel fortran compiler (ifort) to link and generate the python
 ## modules (*.so). If you do not specify MPIL, then the python modules
-## will not work properly. 
+## will not work properly.
 ##
 ## Author
 ## ======
