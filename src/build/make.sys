@@ -45,8 +45,8 @@
 ## ---
 ##
 ## Specify whether OpenMP is enable. If you want to disable it, please
-## comment it out. In default it is disabled. So far OpenMP was not used
-## by any components.
+## comment it out. In default it is disabled. So far OpenMP was used by
+## some components to speedup the measurements of two-particle quantities
 ##
 ## API
 ## ---
