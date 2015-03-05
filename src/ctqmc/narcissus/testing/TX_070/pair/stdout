@@ -1,0 +1,311 @@
+Disk quotas for user huangl (uid 12050): 
+     Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
+server1:/export/home
+                   342G    506G   5723G           1084k       0       0        
+  NARCISSUS
+  >>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver
+ 
+  Version: 2015.01.06T (built at 17:53:14 Feb 06 2015)
+  Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)
+  Support: huangli712@gmail.com
+  License: GNU General Public License version 3
+ 
+  NARCISSUS >>> start running at 18: 5:13 Feb  6 2015
+  NARCISSUS >>> parallelism: Yes >>> processors:   8
+ 
+  NARCISSUS >>> parameters list:
+    isscr :        99
+    isscf :         1    isbin :         2
+    issun :         2    isspn :         1
+    isort :         1    isvrt :        32
+    lemax :        32    legrd :     20001
+    chmax :        32    chgrd :     20001
+    mkink :      1024    mfreq :      1024
+    nband :         1    nspin :         2
+    norbs :         2    ncfgs :         4
+    niter :        20    nfreq :       128
+    nffrq :       128    nbfrq :         1
+    ntime :      1024    nflip :     20000
+    ntherm:    200000    nsweep:  20000000
+    nclean:    100000    nwrite:   2000000
+    nmonte:        10    ncarlo:        10
+    U     :   3.65282    Uc    :   3.65282
+    Js    :   0.00000    Uv    :   3.65282
+    Jp    :   0.00000    Jz    :   0.00000
+    lc    :   0.42010    wc    :   1.00000
+    mune  :   0.42769    beta  :  20.00000
+    part  :   0.50000    temp  : 580.22525
+ 
+  NARCISSUS >>> DMFT iter:999 <<< BINNING
+  NARCISSUS >>> CTQMC quantum impurity solver running
+    nband :         1    Uc    :   3.65282
+    nspin :         2    Jz    :   0.00000
+ 
+    quantum impurity solver initializing
+    seed:  836528083
+    time:     0.067s
+ 
+    quantum impurity solver retrieving
+    time:     0.000s
+ 
+    quantum impurity solver warmming
+    time:     0.322s
+ 
+    quantum impurity solver sampling
+ 
+  NARCISSUS >>> iter:999 sweep:  20000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.25808    epot :   0.03545
+    ekin :  -0.29353    <Sz> :  -0.00293
+    <N1> :   0.69980    <N2> :   0.51767
+    insert kink statistics:
+    count:   8999873   2322617   6677256
+    ratio:   1.00000   0.25807   0.74193
+    remove kink statistics:
+    count:   8999123   2322614   6676509
+    ratio:   1.00000   0.25809   0.74191
+    lshift kink statistics:
+    count:   1000042    464897    535145
+    ratio:   1.00000   0.46488   0.53512
+    rshift kink statistics:
+    count:   1000962    465606    535356
+    ratio:   1.00000   0.46516   0.53484
+    global flip statistics:
+    count:      1000      1000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 24 m 38.70 s in current iteration.
+    >>> used time: 24 m 38.70 s in total iteration.
+ 
+  NARCISSUS >>> iter:999 sweep:  40000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.25789    epot :   0.03541
+    ekin :  -0.29330    <Sz> :  -0.00249
+    <N1> :   0.69990    <N2> :   0.51777
+    insert kink statistics:
+    count:  17997347   4642476  13354871
+    ratio:   1.00000   0.25795   0.74205
+    remove kink statistics:
+    count:  18000306   4642470  13357836
+    ratio:   1.00000   0.25791   0.74209
+    lshift kink statistics:
+    count:   2001889    930379   1071510
+    ratio:   1.00000   0.46475   0.53525
+    rshift kink statistics:
+    count:   2000458    930611   1069847
+    ratio:   1.00000   0.46520   0.53480
+    global flip statistics:
+    count:      2000      2000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 23 m 48.42 s in current iteration.
+    >>> used time: 48 m 27.12 s in total iteration.
+ 
+  NARCISSUS >>> iter:999 sweep:  60000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.25790    epot :   0.03541
+    ekin :  -0.29332    <Sz> :  -0.00227
+    <N1> :   0.69992    <N2> :   0.51783
+    insert kink statistics:
+    count:  27001503   6963161  20038342
+    ratio:   1.00000   0.25788   0.74212
+    remove kink statistics:
+    count:  26996239   6963153  20033086
+    ratio:   1.00000   0.25793   0.74207
+    lshift kink statistics:
+    count:   3002948   1395037   1607911
+    ratio:   1.00000   0.46456   0.53544
+    rshift kink statistics:
+    count:   2999310   1394534   1604776
+    ratio:   1.00000   0.46495   0.53505
+    global flip statistics:
+    count:      3000      3000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 23 m 54.29 s in current iteration.
+    >>> used time:  1 h 12 m 21.41 s in total iteration.
+ 
+  NARCISSUS >>> iter:999 sweep:  80000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.25788    epot :   0.03544
+    ekin :  -0.29332    <Sz> :  -0.00203
+    <N1> :   0.69994    <N2> :   0.51786
+    insert kink statistics:
+    count:  36000025   9284855  26715170
+    ratio:   1.00000   0.25791   0.74209
+    remove kink statistics:
+    count:  35996642   9284851  26711791
+    ratio:   1.00000   0.25794   0.74206
+    lshift kink statistics:
+    count:   4003776   1860821   2142955
+    ratio:   1.00000   0.46477   0.53523
+    rshift kink statistics:
+    count:   3999557   1859947   2139610
+    ratio:   1.00000   0.46504   0.53496
+    global flip statistics:
+    count:      4000      4000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 23 m 34.32 s in current iteration.
+    >>> used time:  1 h 35 m 55.74 s in total iteration.
+ 
+  NARCISSUS >>> iter:999 sweep: 100000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.25796    epot :   0.03544
+    ekin :  -0.29340    <Sz> :  -0.00093
+    <N1> :   0.69993    <N2> :   0.51786
+    insert kink statistics:
+    count:  45001639  11606736  33394903
+    ratio:   1.00000   0.25792   0.74208
+    remove kink statistics:
+    count:  44993838  11606733  33387105
+    ratio:   1.00000   0.25796   0.74204
+    lshift kink statistics:
+    count:   5004685   2325887   2678798
+    ratio:   1.00000   0.46474   0.53526
+    rshift kink statistics:
+    count:   4999838   2325663   2674175
+    ratio:   1.00000   0.46515   0.53485
+    global flip statistics:
+    count:      5000      5000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 23 m 39.17 s in current iteration.
+    >>> used time:  1 h 59 m 34.90 s in total iteration.
+ 
+  NARCISSUS >>> iter:999 sweep: 120000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.25798    epot :   0.03545
+    ekin :  -0.29343    <Sz> :  -0.00106
+    <N1> :   0.69986    <N2> :   0.51775
+    insert kink statistics:
+    count:  53999815  13930221  40069594
+    ratio:   1.00000   0.25797   0.74203
+    remove kink statistics:
+    count:  53995811  13930217  40065594
+    ratio:   1.00000   0.25799   0.74201
+    lshift kink statistics:
+    count:   6004781   2791005   3213776
+    ratio:   1.00000   0.46480   0.53520
+    rshift kink statistics:
+    count:   5999593   2791457   3208136
+    ratio:   1.00000   0.46527   0.53473
+    global flip statistics:
+    count:      6000      6000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 23 m 44.83 s in current iteration.
+    >>> used time:  2 h 23 m 19.74 s in total iteration.
+ 
+  NARCISSUS >>> iter:999 sweep: 140000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.25794    epot :   0.03546
+    ekin :  -0.29340    <Sz> :  -0.00164
+    <N1> :   0.69991    <N2> :   0.51783
+    insert kink statistics:
+    count:  62998656  16250978  46747678
+    ratio:   1.00000   0.25796   0.74204
+    remove kink statistics:
+    count:  62995707  16250975  46744732
+    ratio:   1.00000   0.25797   0.74203
+    lshift kink statistics:
+    count:   7006190   3255390   3750800
+    ratio:   1.00000   0.46464   0.53536
+    rshift kink statistics:
+    count:   6999447   3255607   3743840
+    ratio:   1.00000   0.46512   0.53488
+    global flip statistics:
+    count:      7000      7000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 23 m 56.02 s in current iteration.
+    >>> used time:  2 h 47 m 15.76 s in total iteration.
+ 
+  NARCISSUS >>> iter:999 sweep: 160000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.25789    epot :   0.03545
+    ekin :  -0.29334    <Sz> :  -0.00181
+    <N1> :   0.69997    <N2> :   0.51791
+    insert kink statistics:
+    count:  71997213  18570849  53426364
+    ratio:   1.00000   0.25794   0.74206
+    remove kink statistics:
+    count:  71999773  18570842  53428931
+    ratio:   1.00000   0.25793   0.74207
+    lshift kink statistics:
+    count:   8005165   3719854   4285311
+    ratio:   1.00000   0.46468   0.53532
+    rshift kink statistics:
+    count:   7997849   3718914   4278935
+    ratio:   1.00000   0.46499   0.53501
+    global flip statistics:
+    count:      8000      8000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 23 m 51.49 s in current iteration.
+    >>> used time:  3 h 11 m  7.25 s in total iteration.
+ 
+  NARCISSUS >>> iter:999 sweep: 180000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.25788    epot :   0.03544
+    ekin :  -0.29332    <Sz> :  -0.00164
+    <N1> :   0.69997    <N2> :   0.51791
+    insert kink statistics:
+    count:  80993682  20891304  60102378
+    ratio:   1.00000   0.25794   0.74206
+    remove kink statistics:
+    count:  81002233  20891298  60110935
+    ratio:   1.00000   0.25791   0.74209
+    lshift kink statistics:
+    count:   9004987   4184677   4820310
+    ratio:   1.00000   0.46471   0.53529
+    rshift kink statistics:
+    count:   8999098   4185378   4813720
+    ratio:   1.00000   0.46509   0.53491
+    global flip statistics:
+    count:      9000      9000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 23 m 49.88 s in current iteration.
+    >>> used time:  3 h 34 m 57.14 s in total iteration.
+ 
+  NARCISSUS >>> iter:999 sweep: 200000000 of  200000000
+    auxiliary system observables:
+    etot :  -0.25785    epot :   0.03542
+    ekin :  -0.29327    <Sz> :  -0.00116
+    <N1> :   0.70001    <N2> :   0.51796
+    insert kink statistics:
+    count:  89991317  23209098  66782219
+    ratio:   1.00000   0.25790   0.74210
+    remove kink statistics:
+    count:  90004797  23209093  66795704
+    ratio:   1.00000   0.25787   0.74213
+    lshift kink statistics:
+    count:  10005121   4648812   5356309
+    ratio:   1.00000   0.46464   0.53536
+    rshift kink statistics:
+    count:   9998765   4649119   5349646
+    ratio:   1.00000   0.46497   0.53503
+    global flip statistics:
+    count:     10000     10000         0
+    ratio:   1.00000   1.00000   0.00000
+    >>> quantum impurity solver status: binned
+    >>> quantum impurity solver status: normal
+    >>> used time: 23 m 38.81 s in current iteration.
+    >>> used time:  3 h 58 m 35.95 s in total iteration.
+ 
+  NARCISSUS >>> CTQMC quantum impurity solver shutdown
+ 
+  NARCISSUS >>> total time spent:  14316.49s
+ 
+  NARCISSUS >>> I am tired and want to go to bed. Bye!
+  NARCISSUS >>> happy ending at 22: 3:49 Feb  6 2015

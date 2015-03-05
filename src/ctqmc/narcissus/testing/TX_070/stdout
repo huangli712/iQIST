@@ -1,0 +1,2356 @@
+Disk quotas for user huangl (uid 12050): 
+     Filesystem  blocks   quota   limit   grace   files   quota   limit   grace
+server1i:/export/home
+                   347G    506G   5723G           1117k       0       0        
+LE :: LDA + EDMFT
+Ver.2014/06/17D (accelerated by mpi + scipy.weave)
+Developed by Li HUANG (li.huang@unifr.ch)
+Department of Physics, Fribourg University, Switzerland
+
+>>> Starting in Thu Jan 22 12:36:02 2015
+>>> Using 8 processors, current rank is 0
+
+>>> Listing parameters:
+    Onsite Hund exchange interaction           :     J :   0.0
+    Onsite Coulomb interaction                 :     U : 3.65281809061
+    Renormalization factor for Hamiltonian     :     Z : 0.629867541391
+    Mixing parameter                           : alpha :   0.5
+    Inverse temperature                        :  beta :  20.0
+    dmft (1), dmft + u(w) (2), edmft (3)       :  dmft :     3
+    Chemical potential                         :  mune :   1.6
+    Number of bands                            : nband :     1
+    Number of bosonic frequencies              : nbfrq :  1024
+    Number of fermionic frequencies            : nffrq :  1024
+    Maximum iteration number                   : niter :    40
+    Number of k-points along x axis            : nkpts :   216
+    Number of orbitals                         : norbs :     2
+    Number of imaginary time points            : ntime :  1024
+    Impurity occupation number                 : occup :   0.7
+    zero (1), FLL         (2), KAV   (3)       :  sedc :     1
+    impurity mune (1), lattice mune (2)        :  semu :     1
+    Whether start from scratch                 : start :  True
+    Whether enforce symmetrization (PH)        : sy_ph : False
+    Whether enforce symmetrization (PM)        : sy_pm :  True
+
+>>> Create class instance (lat, loc, dmft, solver) ...
+    status: OK    time: 0.01s
+
+>>> Build mesh (tmesh, fmesh, bmesh) ...
+    status: OK    time: 0.0s
+
+>>> Build hamiltonian (hk, vk, eimp, umat) ...
+    status: OK    time: 0.05s
+
+>>> Reload iteration variables (sloc, ploc, slat, plat) ...
+    status: OK    time: 0.0s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 1  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.7  curr_mune: 1.6
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.6s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.21s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.13s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 9.66656e-11 
+1 1e-06 0 
+2 1e-06 0 
+3 1e-06 0 
+4 1e-06 0 
+5 1e-06 0 
+6 1e-06 0 
+7 1e-06 0 
+8 1e-06 0 
+9 1e-06 0 
+... *** etc *** ...
+1023 0 -9.66656e-11 
+
+(effective) U matrix with 2 orbitals: 
+0 3.65282 
+3.65282 0 
+(effective) chemical potential with 2 orbitals: 
+1.51441 1.51441 
+
+local configuration: 
+0 empty
+1 empty
+
+process 4 starting simulation
+process 6 starting simulation
+the hybridization function is: 
+0 -0.000204575 -0.000204575 
+1 -0.000225861 -0.000225861 
+2 -0.000212305 -0.000212305 
+3 -0.000210054 -0.000210054 
+4 -0.000209837 -0.000209837 
+5 -0.00021025 -0.00021025 
+6 -0.000210921 -0.000210921 
+7 -0.000211718 -0.000211718 
+8 -0.000212586 -0.000212586 
+9 -0.000213498 -0.000213498 
+... *** etc *** ...
+1023 -0.369233 -0.369233 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 1 starting simulation
+process 3 starting simulation
+process 7 starting simulation
+process 2 starting simulation
+process 5 starting simulation
+rare event, duplicate: 19.1933
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1206.56s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.82s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 1   g_err: 0.519818119604   s_err: 2.39490063691   p_err: 0.0228246053977
+    status: OK    time: 0.04s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.03s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 2  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0200000000002s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 1.02863717362  curr_mune: 1.27136282638
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.21s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.22s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 14.33s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+process 7 starting simulation
+the retarded interaction function and derivative are: 
+0 0 0.051281 
+1 0.000969167 0.0479072 
+2 0.00187477 0.0447763 
+3 0.00272141 0.0418712 
+4 0.00351332 0.0391751 
+5 0.00425444 0.0366723 
+6 0.00494839 0.0343482 
+7 0.00559855 0.0321895 
+8 0.00620801 0.0301836 
+9 0.00677967 0.0283195 
+... *** etc *** ...
+1023 0 -0.051281 
+
+(effective) U matrix with 2 orbitals: 
+0 3.55026 
+3.55026 0 
+(effective) chemical potential with 2 orbitals: 
+1.18577 1.18577 
+
+local configuration: 
+0 empty
+1 empty
+
+process 3 starting simulation
+process 1 starting simulation
+process 2 starting simulation
+process 4 starting simulation
+process 5 starting simulation
+the hybridization function is: 
+0 -0.207205 -0.207205 
+1 -0.196292 -0.196292 
+2 -0.186431 -0.186431 
+3 -0.177271 -0.177271 
+4 -0.16867 -0.16867 
+5 -0.160498 -0.160498 
+6 -0.1527 -0.1527 
+7 -0.145259 -0.145259 
+8 -0.138181 -0.138181 
+9 -0.131467 -0.131467 
+... *** etc *** ...
+1023 -0.162233 -0.162233 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 6 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1151.32s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.48s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 2   g_err: 0.144301401127   s_err: 0.713504754712   p_err: 0.01355285979
+    status: OK    time: 0.04s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0300000000002s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 3  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.00999999999976s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.99094809783  curr_mune: 0.980414728549
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.12s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.21s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 14.16s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.0613786 
+1 0.00116319 0.0576615 
+2 0.00225629 0.0542046 
+3 0.00328419 0.0509893 
+4 0.00425145 0.0479976 
+5 0.00516227 0.0452128 
+6 0.00602054 0.0426193 
+7 0.00682986 0.0402027 
+8 0.00759356 0.0379499 
+9 0.00831472 0.0358492 
+... *** etc *** ...
+1023 0 -0.0613786 
+
+(effective) U matrix with 2 orbitals: 
+0 3.53006 
+3.53006 0 
+(effective) chemical potential with 2 orbitals: 
+0.894821 0.894821 
+
+local configuration: 
+0 empty
+1 empty
+
+process 3 starting simulation
+process 6 starting simulation
+process 1 starting simulation
+process 2 starting simulation
+the hybridization function is: 
+0 -0.220497 -0.220497 
+1 -0.209226 -0.209226 
+2 -0.198777 -0.198777 
+3 -0.188958 -0.188958 
+4 -0.179698 -0.179698 
+5 -0.170926 -0.170926 
+6 -0.162604 -0.162604 
+7 -0.154711 -0.154711 
+8 -0.147236 -0.147236 
+9 -0.140166 -0.140166 
+... *** etc *** ...
+1023 -0.14894 -0.14894 
+
+process 7 starting simulation
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 5 starting simulation
+process 4 starting simulation
+rare event, duplicate: 3.47424
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1136.26s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.7s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 3   g_err: 0.311664855272   s_err: 0.686089287343   p_err: 0.0499765400246
+    status: OK    time: 0.0500000000002s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0300000000002s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 4  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.00999999999976s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.960156156935  curr_mune: 0.720258571614
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.67s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.22s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 14.29s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.0892497 
+1 0.00169944 0.0846548 
+2 0.00331197 0.0803555 
+3 0.00484318 0.0763317 
+4 0.00629825 0.0725633 
+5 0.00768199 0.0690319 
+6 0.00899887 0.0657204 
+7 0.010253 0.0626128 
+8 0.0114483 0.0596946 
+9 0.0125883 0.0569525 
+... *** etc *** ...
+1023 0 -0.0892497 
+
+(effective) U matrix with 2 orbitals: 
+0 3.47432 
+3.47432 0 
+(effective) chemical potential with 2 orbitals: 
+0.634665 0.634665 
+
+local configuration: 
+0 empty
+1 empty
+
+the hybridization function is: 
+0 -0.233264 -0.233264 
+1 -0.221474 -0.221474 
+2 -0.210474 -0.210474 
+3 -0.200129 -0.200129 
+4 -0.190391 -0.190391 
+5 -0.181204 -0.181204 
+6 -0.172531 -0.172531 
+7 -0.164342 -0.164342 
+8 -0.156616 -0.156616 
+9 -0.149329 -0.149329 
+... *** etc *** ...
+1023 -0.136174 -0.136174 
+
+process 1 starting simulation
+process 7 starting simulation
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 3 starting simulation
+process 4 starting simulation
+process 2 starting simulation
+process 5 starting simulation
+process 6 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1153.18s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.73s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 4   g_err: 0.510891681995   s_err: 0.834525247209   p_err: 0.148125105413
+    status: OK    time: 0.0500000000002s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 5  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0199999999995s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.894094486691  curr_mune: 0.526164084923
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 3.29s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.2s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.09s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+process 7 starting simulation
+process 2 starting simulation
+the retarded interaction function and derivative are: 
+0 0 0.134293 
+1 0.00256391 0.128059 
+2 0.00500954 0.122189 
+3 0.00734381 0.116662 
+4 0.00957316 0.111452 
+5 0.0117036 0.106538 
+6 0.0137407 0.1019 
+7 0.0156896 0.0975194 
+8 0.0175553 0.0933784 
+9 0.0193422 0.0894616 
+... *** etc *** ...
+1023 0 -0.134293 
+
+(effective) U matrix with 2 orbitals: 
+0 3.38423 
+3.38423 0 
+(effective) chemical potential with 2 orbitals: 
+0.440571 0.440571 
+
+local configuration: 
+0 empty
+1 empty
+
+process 5 starting simulation
+process 6 starting simulation
+process 1 starting simulation
+process 3 starting simulation
+the hybridization function is: 
+0 -0.245596 -0.245596 
+1 -0.233788 -0.233788 
+2 -0.222675 -0.222675 
+3 -0.212205 -0.212205 
+4 -0.202369 -0.202369 
+5 -0.19313 -0.19313 
+6 -0.184452 -0.184452 
+7 -0.176298 -0.176298 
+8 -0.168635 -0.168635 
+9 -0.16143 -0.16143 
+... *** etc *** ...
+1023 -0.123841 -0.123841 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 4 starting simulation
+rare event, duplicate: 5.69875
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1187.15s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.61s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 5   g_err: 0.497387655993   s_err: 0.675040263913   p_err: 0.23764760858
+    status: OK    time: 0.04s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 6  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.04s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.815290225393  curr_mune: 0.410873859531
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 3.41s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.2s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.17s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.168429 
+1 0.00321509 0.160552 
+2 0.00628059 0.153123 
+3 0.009205 0.146112 
+4 0.0119962 0.139493 
+5 0.0146616 0.133238 
+6 0.0172081 0.127324 
+7 0.0196421 0.121729 
+8 0.0219697 0.116431 
+9 0.0241965 0.111412 
+... *** etc *** ...
+1023 0 -0.168429 
+
+(effective) U matrix with 2 orbitals: 
+0 3.31596 
+3.31596 0 
+(effective) chemical potential with 2 orbitals: 
+0.32528 0.32528 
+
+local configuration: 
+0 empty
+1 empty
+
+process 1 starting simulation
+process 5 starting simulation
+process 6 starting simulation
+the hybridization function is: 
+0 -0.253415 -0.253415 
+1 -0.242009 -0.242009 
+2 -0.231313 -0.231313 
+3 -0.221257 -0.221257 
+4 -0.21182 -0.21182 
+5 -0.202961 -0.202961 
+6 -0.19464 -0.19464 
+7 -0.186823 -0.186823 
+8 -0.179477 -0.179477 
+9 -0.172573 -0.172573 
+... *** etc *** ...
+1023 -0.116023 -0.116023 
+
+process 4 starting simulation
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 7 starting simulation
+process 2 starting simulation
+process 3 starting simulation
+rare event, duplicate: 16.5191
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1213.2s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.56s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 6   g_err: 0.367942198984   s_err: 0.464053974856   p_err: 0.235887361225
+    status: OK    time: 0.0500000000002s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0199999999995s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 7  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0100000000002s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.758575785039  curr_mune: 0.352298074491
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.78s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.2s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.34s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.1867 
+1 0.00356057 0.177637 
+2 0.00694906 0.169091 
+3 0.0101753 0.16103 
+4 0.0132484 0.153421 
+5 0.0161769 0.146235 
+6 0.0189688 0.139443 
+7 0.0216316 0.13302 
+8 0.0241723 0.126943 
+9 0.0265973 0.121189 
+... *** etc *** ...
+1023 0 -0.1867 
+
+(effective) U matrix with 2 orbitals: 
+0 3.27942 
+3.27942 0 
+(effective) chemical potential with 2 orbitals: 
+0.266705 0.266705 
+
+local configuration: 
+0 empty
+1 empty
+
+the hybridization function is: 
+0 -0.257256 -0.257256 
+1 -0.246565 -0.246565 
+2 -0.236416 -0.236416 
+3 -0.226839 -0.226839 
+4 -0.217857 -0.217857 
+5 -0.209449 -0.209449 
+6 -0.201575 -0.201575 
+7 -0.194195 -0.194195 
+8 -0.187267 -0.187267 
+9 -0.180753 -0.180753 
+... *** etc *** ...
+1023 -0.112182 -0.112182 
+
+process 6 starting simulation
+process 1 starting simulation
+process 5 starting simulation
+process 7 starting simulation
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 3 starting simulation
+process 2 starting simulation
+process 4 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1211.92s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.669999999998s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 7   g_err: 0.238707453337   s_err: 0.289932230464   p_err: 0.20381409498
+    status: OK    time: 0.0500000000011s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 8  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0100000000002s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.726399641904  curr_mune: 0.325898432587
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.9s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.209999999999s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.15s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.197028 
+1 0.00375457 0.187164 
+2 0.00732193 0.17787 
+3 0.0107129 0.169111 
+4 0.0139375 0.160849 
+5 0.0170052 0.153053 
+6 0.0199248 0.145691 
+7 0.0227045 0.138735 
+8 0.0253519 0.13216 
+9 0.0278743 0.12594 
+... *** etc *** ...
+1023 0 -0.197028 
+
+(effective) U matrix with 2 orbitals: 
+0 3.25876 
+3.25876 0 
+(effective) chemical potential with 2 orbitals: 
+0.240305 0.240305 
+
+local configuration: 
+0 empty
+1 empty
+
+process 7 starting simulation
+process 5 starting simulation
+process 6 starting simulation
+process 4 starting simulation
+process 1 starting simulation
+the hybridization function is: 
+0 -0.25914 -0.25914 
+1 -0.248853 -0.248853 
+2 -0.239159 -0.239159 
+3 -0.230044 -0.230044 
+4 -0.221514 -0.221514 
+5 -0.213525 -0.213525 
+6 -0.206036 -0.206036 
+7 -0.199004 -0.199004 
+8 -0.192392 -0.192392 
+9 -0.186168 -0.186168 
+... *** etc *** ...
+1023 -0.110297 -0.110297 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 2 starting simulation
+process 3 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1210.91s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.660000000002s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 8   g_err: 0.13775097049   s_err: 0.171277199522   p_err: 0.168973461329
+    status: OK    time: 0.0499999999993s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 9  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0199999999986s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.710887578484  curr_mune: 0.315010854103
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.59s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.210000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.32s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+process 7 starting simulation
+the retarded interaction function and derivative are: 
+0 0 0.203408 
+1 0.00387402 0.19301 
+2 0.00755075 0.18322 
+3 0.0110417 0.173999 
+4 0.0143577 0.165309 
+5 0.0175086 0.157115 
+6 0.020504 0.149383 
+7 0.0233524 0.142083 
+8 0.0260621 0.135186 
+9 0.0286407 0.128668 
+... *** etc *** ...
+1023 0 -0.203408 
+
+(effective) U matrix with 2 orbitals: 
+0 3.246 
+3.246 0 
+(effective) chemical potential with 2 orbitals: 
+0.229417 0.229417 
+
+local configuration: 
+0 empty
+1 empty
+
+the hybridization function is: 
+0 -0.260257 -0.260257 
+1 -0.250172 -0.250172 
+2 -0.240727 -0.240727 
+3 -0.231888 -0.231888 
+4 -0.223649 -0.223649 
+5 -0.21595 -0.21595 
+6 -0.208736 -0.208736 
+7 -0.201962 -0.201962 
+8 -0.19559 -0.19559 
+9 -0.189587 -0.189587 
+... *** etc *** ...
+1023 -0.109181 -0.109181 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 1 starting simulation
+process 3 starting simulation
+process 5 starting simulation
+process 2 starting simulation
+process 6 starting simulation
+process 4 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1211.07s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.470000000001s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 9   g_err: 0.0715605548774   s_err: 0.09626563063   p_err: 0.109553180745
+    status: OK    time: 0.0399999999991s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 10  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0100000000002s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.704582217999  curr_mune: 0.310428636104
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.14s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.210000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.49s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.206818 
+1 0.00393736 0.196084 
+2 0.00767113 0.185984 
+3 0.0112133 0.176477 
+4 0.0145751 0.167523 
+5 0.0177669 0.159084 
+6 0.0207985 0.151127 
+7 0.023679 0.143619 
+8 0.0264169 0.136532 
+9 0.02902 0.129837 
+... *** etc *** ...
+1023 0 -0.206818 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23918 
+3.23918 0 
+(effective) chemical potential with 2 orbitals: 
+0.224835 0.224835 
+
+local configuration: 
+0 empty
+1 empty
+
+process 4 starting simulation
+process 3 starting simulation
+process 2 starting simulation
+process 6 starting simulation
+the hybridization function is: 
+0 -0.260884 -0.260884 
+1 -0.251022 -0.251022 
+2 -0.241797 -0.241797 
+3 -0.233161 -0.233161 
+4 -0.225102 -0.225102 
+5 -0.217562 -0.217562 
+6 -0.21049 -0.21049 
+7 -0.203846 -0.203846 
+8 -0.197595 -0.197595 
+9 -0.191709 -0.191709 
+... *** etc *** ...
+1023 -0.108553 -0.108553 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 7 starting simulation
+process 1 starting simulation
+process 5 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.36s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.480000000001s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 10   g_err: 0.0344656308945   s_err: 0.0560416436079   p_err: 0.0414839724671
+    status: OK    time: 0.0399999999991s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 11  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0100000000002s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.702183249186  curr_mune: 0.308245386918
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.11s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.210000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.49s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.20799 
+1 0.00395835 0.197062 
+2 0.00770948 0.186785 
+3 0.0112657 0.177116 
+4 0.0146385 0.168014 
+5 0.0178386 0.159441 
+6 0.020876 0.15136 
+7 0.0237599 0.14374 
+8 0.0264991 0.13655 
+9 0.0291017 0.129763 
+... *** etc *** ...
+1023 0 -0.20799 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23684 
+3.23684 0 
+(effective) chemical potential with 2 orbitals: 
+0.222652 0.222652 
+
+local configuration: 
+0 empty
+1 empty
+
+the hybridization function is: 
+0 -0.261391 -0.261391 
+1 -0.251622 -0.251622 
+2 -0.242514 -0.242514 
+3 -0.233998 -0.233998 
+4 -0.226053 -0.226053 
+5 -0.218613 -0.218613 
+6 -0.21163 -0.21163 
+7 -0.205064 -0.205064 
+8 -0.198885 -0.198885 
+9 -0.193067 -0.193067 
+... *** etc *** ...
+1023 -0.108046 -0.108046 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 6 starting simulation
+process 4 starting simulation
+process 1 starting simulation
+process 3 starting simulation
+process 7 starting simulation
+process 5 starting simulation
+process 2 starting simulation
+rare event, duplicate: 18.3979
+rare event, duplicate: 15.5764
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.27s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.67s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 11   g_err: 0.0164232161466   s_err: 0.0657129129064   p_err: 0.04625092611
+    status: OK    time: 0.0499999999993s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 12  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.701308050504  curr_mune: 0.306937336414
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.95s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.210000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.36s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.209228 
+1 0.00398132 0.198176 
+2 0.00775309 0.187784 
+3 0.0113278 0.17801 
+4 0.0147171 0.168811 
+5 0.0179319 0.160149 
+6 0.0209823 0.151987 
+7 0.0238778 0.144292 
+8 0.0266271 0.137034 
+9 0.0292385 0.130183 
+... *** etc *** ...
+1023 0 -0.209228 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23436 
+3.23436 0 
+(effective) chemical potential with 2 orbitals: 
+0.221344 0.221344 
+
+local configuration: 
+0 empty
+1 empty
+
+the hybridization function is: 
+0 -0.261632 -0.261632 
+1 -0.251975 -0.251975 
+2 -0.242983 -0.242983 
+3 -0.234567 -0.234567 
+4 -0.226702 -0.226702 
+5 -0.219325 -0.219325 
+6 -0.212391 -0.212391 
+7 -0.205865 -0.205865 
+8 -0.19972 -0.19972 
+9 -0.193933 -0.193933 
+... *** etc *** ...
+1023 -0.107806 -0.107806 
+
+process 2 starting simulation
+process 6 starting simulation
+process 4 starting simulation
+process 1 starting simulation
+process 5 starting simulation
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 3 starting simulation
+process 7 starting simulation
+rare event, duplicate: 0.941667
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1211.53s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.780000000001s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 12   g_err: 0.00818198291302   s_err: 0.0846862150036   p_err: 0.0114218205689
+    status: OK    time: 0.0399999999991s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 13  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0200000000004s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.701045761316  curr_mune: 0.305891575098
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.5s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.200000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.48s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.209523 
+1 0.00398646 0.198407 
+2 0.00776217 0.187957 
+3 0.0113397 0.17813 
+4 0.0147309 0.168883 
+5 0.0179467 0.160177 
+6 0.0209973 0.151975 
+7 0.0238921 0.144244 
+8 0.0266402 0.136953 
+9 0.0292497 0.130073 
+... *** etc *** ...
+1023 0 -0.209523 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23377 
+3.23377 0 
+(effective) chemical potential with 2 orbitals: 
+0.220298 0.220298 
+
+local configuration: 
+0 empty
+1 empty
+
+the hybridization function is: 
+0 -0.261825 -0.261825 
+1 -0.25229 -0.25229 
+2 -0.243368 -0.243368 
+3 -0.234993 -0.234993 
+4 -0.227152 -0.227152 
+5 -0.219793 -0.219793 
+6 -0.212876 -0.212876 
+7 -0.206369 -0.206369 
+8 -0.200246 -0.200246 
+9 -0.194481 -0.194481 
+... *** etc *** ...
+1023 -0.107612 -0.107612 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 5 starting simulation
+process 3 starting simulation
+process 2 starting simulation
+process 6 starting simulation
+process 4 starting simulation
+process 1 starting simulation
+process 7 starting simulation
+rare event, duplicate: 4.39094
+rare event, duplicate: 11.1715
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1206.86s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.450000000001s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 13   g_err: 0.00447473258645   s_err: 0.0432469364037   p_err: 0.0121241694063
+    status: OK    time: 0.0499999999993s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 14  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.700707930023  curr_mune: 0.305183645075
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.14s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.209999999999s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.51s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.20921 
+1 0.00398003 0.198064 
+2 0.00774877 0.187588 
+3 0.0113189 0.177738 
+4 0.0147022 0.168471 
+5 0.0179098 0.159748 
+6 0.0209518 0.151531 
+7 0.0238378 0.143787 
+8 0.0265768 0.136485 
+9 0.0291771 0.129596 
+... *** etc *** ...
+1023 0 -0.20921 
+
+(effective) U matrix with 2 orbitals: 
+0 3.2344 
+3.2344 0 
+(effective) chemical potential with 2 orbitals: 
+0.21959 0.21959 
+
+local configuration: 
+0 empty
+1 empty
+
+the hybridization function is: 
+0 -0.262035 -0.262035 
+1 -0.252547 -0.252547 
+2 -0.243637 -0.243637 
+3 -0.235269 -0.235269 
+4 -0.227437 -0.227437 
+5 -0.220092 -0.220092 
+6 -0.213194 -0.213194 
+7 -0.206707 -0.206707 
+8 -0.2006 -0.2006 
+9 -0.194849 -0.194849 
+... *** etc *** ...
+1023 -0.107402 -0.107402 
+
+process 3 starting simulation
+process 1 starting simulation
+process 4 starting simulation
+process 5 starting simulation
+process 2 starting simulation
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 6 starting simulation
+process 7 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.13s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.459999999999s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 14   g_err: 0.00222723829955   s_err: 0.0412357997437   p_err: 0.0331102858679
+    status: OK    time: 0.0400000000009s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0299999999988s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 15  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.700615875716  curr_mune: 0.304567769358
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.13s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.200000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.52s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.210056 
+1 0.00399625 0.198878 
+2 0.00778059 0.188371 
+3 0.0113657 0.178491 
+4 0.0147635 0.169196 
+5 0.017985 0.160446 
+6 0.0210404 0.152204 
+7 0.0239393 0.144436 
+8 0.0266908 0.137111 
+9 0.0293032 0.1302 
+... *** etc *** ...
+1023 0 -0.210056 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23271 
+3.23271 0 
+(effective) chemical potential with 2 orbitals: 
+0.218974 0.218974 
+
+local configuration: 
+0 empty
+1 empty
+
+process 4 starting simulation
+process 2 starting simulation
+process 3 starting simulation
+process 5 starting simulation
+process 6 starting simulation
+process 1 starting simulation
+the hybridization function is: 
+0 -0.26231 -0.26231 
+1 -0.252769 -0.252769 
+2 -0.243814 -0.243814 
+3 -0.235412 -0.235412 
+4 -0.227562 -0.227562 
+5 -0.220211 -0.220211 
+6 -0.213314 -0.213314 
+7 -0.206832 -0.206832 
+8 -0.200735 -0.200735 
+9 -0.194994 -0.194994 
+... *** etc *** ...
+1023 -0.107127 -0.107127 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 7 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.05s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.459999999999s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 15   g_err: 0.00176228817968   s_err: 0.138578843858   p_err: 0.0045392063532
+    status: OK    time: 0.0400000000009s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0299999999988s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 16  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.700558054857  curr_mune: 0.304009714502
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.12s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.200000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.53s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.209942 
+1 0.00399395 0.198756 
+2 0.00777584 0.188242 
+3 0.0113584 0.178357 
+4 0.0147535 0.169058 
+5 0.0179722 0.160304 
+6 0.0210248 0.15206 
+7 0.0239209 0.144291 
+8 0.0266696 0.136965 
+9 0.0292791 0.130054 
+... *** etc *** ...
+1023 0 -0.209942 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23293 
+3.23293 0 
+(effective) chemical potential with 2 orbitals: 
+0.218416 0.218416 
+
+local configuration: 
+0 empty
+1 empty
+
+process 1 starting simulation
+process 4 starting simulation
+process 3 starting simulation
+process 5 starting simulation
+process 6 starting simulation
+the hybridization function is: 
+0 -0.26211 -0.26211 
+1 -0.252732 -0.252732 
+2 -0.243868 -0.243868 
+3 -0.235511 -0.235511 
+4 -0.227673 -0.227673 
+5 -0.220321 -0.220321 
+6 -0.21342 -0.21342 
+7 -0.206936 -0.206936 
+8 -0.20084 -0.20084 
+9 -0.195103 -0.195103 
+... *** etc *** ...
+1023 -0.107327 -0.107327 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 7 starting simulation
+process 2 starting simulation
+rare event, duplicate: 18.1071
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1206.89s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.460000000003s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 16   g_err: 0.000884486188977   s_err: 0.0651093188636   p_err: 0.0200021383706
+    status: OK    time: 0.0399999999972s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 17  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.010000000002s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.700374506742  curr_mune: 0.30363520776
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.11s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.219999999998s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.5s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.21044 
+1 0.00400354 0.199239 
+2 0.00779474 0.188711 
+3 0.0113863 0.178812 
+4 0.0147902 0.1695 
+5 0.0180174 0.160733 
+6 0.0210783 0.152476 
+7 0.0239825 0.144695 
+8 0.0267389 0.137358 
+9 0.0293559 0.130435 
+... *** etc *** ...
+1023 0 -0.21044 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23194 
+3.23194 0 
+(effective) chemical potential with 2 orbitals: 
+0.218042 0.218042 
+
+local configuration: 
+0 empty
+1 empty
+
+process 2 starting simulation
+process 6 starting simulation
+process 1 starting simulation
+process 4 starting simulation
+process 3 starting simulation
+process 5 starting simulation
+the hybridization function is: 
+0 -0.262278 -0.262278 
+1 -0.252894 -0.252894 
+2 -0.243977 -0.243977 
+3 -0.235566 -0.235566 
+4 -0.227691 -0.227691 
+5 -0.220324 -0.220324 
+6 -0.213427 -0.213427 
+7 -0.206961 -0.206961 
+8 -0.200889 -0.200889 
+9 -0.195176 -0.195176 
+... *** etc *** ...
+1023 -0.107159 -0.107159 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 7 starting simulation
+rare event, duplicate: 9.89874
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.18s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.459999999999s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 17   g_err: 0.00072524585537   s_err: 0.156570775269   p_err: 0.0143859325268
+    status: OK    time: 0.0500000000029s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 18  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.700271506739  curr_mune: 0.303363701021
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.12s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.200000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.48s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.210791 
+1 0.00401034 0.199583 
+2 0.0078082 0.189049 
+3 0.0114063 0.179143 
+4 0.0148166 0.169824 
+5 0.0180501 0.161051 
+6 0.0211171 0.152788 
+7 0.0240273 0.144999 
+8 0.0267896 0.137655 
+9 0.0294124 0.130726 
+... *** etc *** ...
+1023 0 -0.210791 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23123 
+3.23123 0 
+(effective) chemical potential with 2 orbitals: 
+0.21777 0.21777 
+
+local configuration: 
+0 empty
+1 empty
+
+process 5 starting simulation
+process 2 starting simulation
+process 6 starting simulation
+process 1 starting simulation
+process 3 starting simulation
+the hybridization function is: 
+0 -0.262441 -0.262441 
+1 -0.252902 -0.252902 
+2 -0.243952 -0.243952 
+3 -0.235559 -0.235559 
+4 -0.227721 -0.227721 
+5 -0.220384 -0.220384 
+6 -0.213501 -0.213501 
+7 -0.207035 -0.207035 
+8 -0.200952 -0.200952 
+9 -0.195223 -0.195223 
+... *** etc *** ...
+1023 -0.106997 -0.106997 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 7 starting simulation
+process 4 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.16s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.469999999998s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 18   g_err: 0.00083120707785   s_err: 0.0241429411051   p_err: 0.026726190809
+    status: OK    time: 0.0500000000029s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 19  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.70007609089  curr_mune: 0.30328761013
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.13s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.200000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.5s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.210134 
+1 0.00399757 0.198935 
+2 0.00778285 0.18841 
+3 0.0113686 0.178514 
+4 0.0147667 0.169204 
+5 0.0179881 0.160441 
+6 0.0210433 0.152187 
+7 0.0239418 0.144408 
+8 0.0266927 0.137073 
+9 0.0293042 0.130153 
+... *** etc *** ...
+1023 0 -0.210134 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23255 
+3.23255 0 
+(effective) chemical potential with 2 orbitals: 
+0.217694 0.217694 
+
+local configuration: 
+0 empty
+1 empty
+
+process 2 starting simulation
+process 6 starting simulation
+process 4 starting simulation
+process 1 starting simulation
+the hybridization function is: 
+0 -0.262476 -0.262476 
+1 -0.25292 -0.25292 
+2 -0.243975 -0.243975 
+3 -0.235588 -0.235588 
+4 -0.227751 -0.227751 
+5 -0.22041 -0.22041 
+6 -0.213519 -0.213519 
+7 -0.207043 -0.207043 
+8 -0.200952 -0.200952 
+9 -0.195218 -0.195218 
+... *** etc *** ...
+1023 -0.106961 -0.106961 
+
+process 3 starting simulation
+process 5 starting simulation
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 7 starting simulation
+rare event, duplicate: 6.54874
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.33s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.459999999999s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 19   g_err: 0.000597703543695   s_err: 0.0151839491375   p_err: 0.00188128421683
+    status: OK    time: 0.0400000000009s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0299999999988s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 20  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.700099057896  curr_mune: 0.303188552235
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.11s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.200000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.44s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.210181 
+1 0.00399848 0.19898 
+2 0.00778463 0.188454 
+3 0.0113712 0.178557 
+4 0.0147701 0.169246 
+5 0.0179924 0.160482 
+6 0.0210484 0.152227 
+7 0.0239476 0.144447 
+8 0.0266992 0.137111 
+9 0.0293115 0.130191 
+... *** etc *** ...
+1023 0 -0.210181 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23246 
+3.23246 0 
+(effective) chemical potential with 2 orbitals: 
+0.217595 0.217595 
+
+local configuration: 
+0 empty
+1 empty
+
+process 5 starting simulation
+process 3 starting simulation
+process 1 starting simulation
+process 2 starting simulation
+process 6 starting simulation
+process 4 starting simulation
+the hybridization function is: 
+0 -0.262511 -0.262511 
+1 -0.252958 -0.252958 
+2 -0.244 -0.244 
+3 -0.235601 -0.235601 
+4 -0.227758 -0.227758 
+5 -0.220417 -0.220417 
+6 -0.213531 -0.213531 
+7 -0.207063 -0.207063 
+8 -0.200979 -0.200979 
+9 -0.195251 -0.195251 
+... *** etc *** ...
+1023 -0.106927 -0.106927 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 7 starting simulation
+rare event, duplicate: 10.8576
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.11s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.459999999999s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 20   g_err: 0.000468087586317   s_err: 0.041455663241   p_err: 0.0014838456666
+    status: OK    time: 0.0499999999993s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 21  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.700048620643  curr_mune: 0.303139931591
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.12s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.200000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.43s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.210144 
+1 0.00399775 0.198943 
+2 0.00778317 0.188416 
+3 0.011369 0.178517 
+4 0.0147671 0.169205 
+5 0.0179886 0.16044 
+6 0.0210437 0.152184 
+7 0.0239422 0.144404 
+8 0.0266929 0.137069 
+9 0.0293044 0.130148 
+... *** etc *** ...
+1023 0 -0.210144 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23253 
+3.23253 0 
+(effective) chemical potential with 2 orbitals: 
+0.217546 0.217546 
+
+local configuration: 
+0 empty
+1 empty
+
+the hybridization function is: 
+0 -0.2624 -0.2624 
+1 -0.252905 -0.252905 
+2 -0.243983 -0.243983 
+3 -0.235604 -0.235604 
+4 -0.227769 -0.227769 
+5 -0.220429 -0.220429 
+6 -0.213541 -0.213541 
+7 -0.20707 -0.20707 
+8 -0.200983 -0.200983 
+9 -0.195254 -0.195254 
+... *** etc *** ...
+1023 -0.107038 -0.107038 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 4 starting simulation
+process 5 starting simulation
+process 3 starting simulation
+process 1 starting simulation
+process 2 starting simulation
+process 6 starting simulation
+process 7 starting simulation
+rare event, duplicate: 9.45016
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.29s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.459999999999s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 21   g_err: 0.000597340774351   s_err: 0.0257996847195   p_err: 0.000521400506402
+    status: OK    time: 0.0499999999993s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 22  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.010000000002s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.699995332595  curr_mune: 0.303144598996
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.11s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.210000000003s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.48s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.210148 
+1 0.00399781 0.198945 
+2 0.00778323 0.188415 
+3 0.011369 0.178514 
+4 0.0147671 0.1692 
+5 0.0179884 0.160433 
+6 0.0210434 0.152175 
+7 0.0239416 0.144393 
+8 0.0266921 0.137055 
+9 0.0293033 0.130132 
+... *** etc *** ...
+1023 0 -0.210148 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23252 
+3.23252 0 
+(effective) chemical potential with 2 orbitals: 
+0.217551 0.217551 
+
+local configuration: 
+0 empty
+1 empty
+
+process 5 starting simulation
+process 3 starting simulation
+process 1 starting simulation
+process 2 starting simulation
+the hybridization function is: 
+0 -0.262356 -0.262356 
+1 -0.252883 -0.252883 
+2 -0.243965 -0.243965 
+3 -0.235584 -0.235584 
+4 -0.227746 -0.227746 
+5 -0.220407 -0.220407 
+6 -0.213524 -0.213524 
+7 -0.20706 -0.20706 
+8 -0.200982 -0.200982 
+9 -0.19526 -0.19526 
+... *** etc *** ...
+1023 -0.107082 -0.107082 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 6 starting simulation
+process 4 starting simulation
+process 7 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1206.81s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.460000000003s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 22   g_err: 0.000671842707352   s_err: 0.141119162595   p_err: 0.0144063782215
+    status: OK    time: 0.0399999999972s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0300000000025s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 23  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.700023823489  curr_mune: 0.303120775507
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.13s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.200000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.48s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.210505 
+1 0.00400472 0.199295 
+2 0.00779694 0.18876 
+3 0.0113894 0.178853 
+4 0.014794 0.169534 
+5 0.0180218 0.16076 
+6 0.0210832 0.152497 
+7 0.0239877 0.14471 
+8 0.0267443 0.137367 
+9 0.0293615 0.130439 
+... *** etc *** ...
+1023 0 -0.210505 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23181 
+3.23181 0 
+(effective) chemical potential with 2 orbitals: 
+0.217527 0.217527 
+
+local configuration: 
+0 empty
+1 empty
+
+process 5 starting simulation
+process 3 starting simulation
+process 1 starting simulation
+the hybridization function is: 
+0 -0.262127 -0.262127 
+1 -0.252824 -0.252824 
+2 -0.243994 -0.243994 
+3 -0.235651 -0.235651 
+4 -0.227815 -0.227815 
+5 -0.220461 -0.220461 
+6 -0.213559 -0.213559 
+7 -0.207076 -0.207076 
+8 -0.200982 -0.200982 
+9 -0.195248 -0.195248 
+... *** etc *** ...
+1023 -0.10731 -0.10731 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 4 starting simulation
+process 6 starting simulation
+process 2 starting simulation
+process 7 starting simulation
+rare event, duplicate: 8.74115
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.44s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.459999999999s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 23   g_err: 0.00058035769016   s_err: 0.032094759542   p_err: 0.00790070276096
+    status: OK    time: 0.0499999999993s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0200000000004s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 24  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.700002647417  curr_mune: 0.30311812809
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.13s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.200000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.5s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.210698 
+1 0.00400847 0.199485 
+2 0.00780436 0.188946 
+3 0.0114005 0.179037 
+4 0.0148086 0.169714 
+5 0.0180399 0.160937 
+6 0.0211047 0.152671 
+7 0.0240125 0.14488 
+8 0.0267725 0.137533 
+9 0.0293929 0.130602 
+... *** etc *** ...
+1023 0 -0.210698 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23142 
+3.23142 0 
+(effective) chemical potential with 2 orbitals: 
+0.217525 0.217525 
+
+local configuration: 
+0 empty
+1 empty
+
+process 4 starting simulation
+process 6 starting simulation
+process 2 starting simulation
+process 1 starting simulation
+process 5 starting simulation
+process 3 starting simulation
+the hybridization function is: 
+0 -0.262235 -0.262235 
+1 -0.252887 -0.252887 
+2 -0.244021 -0.244021 
+3 -0.235652 -0.235652 
+4 -0.227802 -0.227802 
+5 -0.220442 -0.220442 
+6 -0.213538 -0.213538 
+7 -0.207055 -0.207055 
+8 -0.200963 -0.200963 
+9 -0.19523 -0.19523 
+... *** etc *** ...
+1023 -0.107203 -0.107203 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 7 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.19s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.459999999999s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 24   g_err: 0.000620702748197   s_err: 0.0261227583562   p_err: 0.0265988579474
+    status: OK    time: 0.0400000000009s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0299999999988s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 25  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.699988103515  curr_mune: 0.303130024575
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.13s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.200000000001s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 13.47s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.210041 
+1 0.00399572 0.198838 
+2 0.00777907 0.188309 
+3 0.0113628 0.178409 
+4 0.0147588 0.169096 
+5 0.0179781 0.16033 
+6 0.0210311 0.152073 
+7 0.0239274 0.144292 
+8 0.0266759 0.136956 
+9 0.0292851 0.130035 
+... *** etc *** ...
+1023 0 -0.210041 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23274 
+3.23274 0 
+(effective) chemical potential with 2 orbitals: 
+0.217537 0.217537 
+
+local configuration: 
+0 empty
+1 empty
+
+process 3 starting simulation
+process 4 starting simulation
+process 6 starting simulation
+process 2 starting simulation
+process 1 starting simulation
+process 5 starting simulation
+the hybridization function is: 
+0 -0.262135 -0.262135 
+1 -0.252816 -0.252816 
+2 -0.243983 -0.243983 
+3 -0.235642 -0.235642 
+4 -0.227814 -0.227814 
+5 -0.220469 -0.220469 
+6 -0.213573 -0.213573 
+7 -0.207095 -0.207095 
+8 -0.201002 -0.201002 
+9 -0.195266 -0.195266 
+... *** etc *** ...
+1023 -0.107303 -0.107303 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 7 starting simulation
+rare event, duplicate: 18.1071
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1207.25s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.52s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 25   g_err: 0.000501428642105   s_err: 0.0561159052599   p_err: 0.000364036313032
+    status: OK    time: 0.0500000000029s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0399999999972s
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : current => 26  maximum => 40
+------------------------------------------------------------
+
+>>> Adjust the double counting term (sedc) ...
+    curr_sedc: 0.0  mode_sedc: 1
+    status: OK    time: 0.0s
+
+>>> Adjust the chemical potential (mune) ...
+    curr_occu: 0.69989428446  curr_mune: 0.303235740115
+    status: OK    time: 0.0s
+
+>>> Build lattice variables (glat, wlat) ...
+    status: OK    time: 2.02s
+
+>>> Build local variables (gloc, wloc, sloc, ploc, bloc, uloc) ...
+    status: OK    time: 0.23s
+
+>>> Build dmft variables (hybf, htau, ktau, ptau) ...
+    status: OK    time: 15.0s
+
+>>> Launch quantum impurity solver (alps::cthyb) ...
+... Quantum Impurity Solver START ...
+Warning::parameter U_MATRIX defined, ignoring parameter U
+Warning::parameter MU_VECTOR defined, ignoring parameter MU
+the retarded interaction function and derivative are: 
+0 0 0.21005 
+1 0.0039959 0.198848 
+2 0.00777944 0.188319 
+3 0.0113634 0.17842 
+4 0.0147596 0.169107 
+5 0.0179791 0.160341 
+6 0.0210323 0.152085 
+7 0.0239288 0.144305 
+8 0.0266776 0.136969 
+9 0.0292871 0.130048 
+... *** etc *** ...
+1023 0 -0.21005 
+
+(effective) U matrix with 2 orbitals: 
+0 3.23272 
+3.23272 0 
+(effective) chemical potential with 2 orbitals: 
+0.217642 0.217642 
+
+local configuration: 
+0 empty
+1 empty
+
+the hybridization function is: 
+0 -0.262238 -0.262238 
+1 -0.252878 -0.252878 
+2 -0.243991 -0.243991 
+3 -0.235609 -0.235609 
+4 -0.227757 -0.227757 
+5 -0.220406 -0.220406 
+6 -0.21352 -0.21352 
+7 -0.207059 -0.207059 
+8 -0.200989 -0.200989 
+9 -0.195276 -0.195276 
+... *** etc *** ...
+1023 -0.107199 -0.107199 
+
+Hybridization Expansion Simulation CT-HYB
+Part of the ALPS DMFT Project
+Usage requires citation of the ALPS CT-HYB paper and the ALPS paper
+Refer to the documentation for more information.
+process 0 starting simulation
+process 5 starting simulation
+process 3 starting simulation
+process 4 starting simulation
+process 6 starting simulation
+process 2 starting simulation
+process 1 starting simulation
+process 7 starting simulation
+... Quantum Impurity Solver STOP ...
+    status: OK    time: 1071.04s
+
+>>> Rebuild local variables (cloc, wloc, ploc, gloc, sloc) ...
+    status: OK    time: 0.52s
+
+>>> Check and Mix local variables (sloc, ploc) ...
+    curr_iter: 26   g_err: 0.000487716558907   s_err: 0.0909703764882   p_err: 0.0161971486778
+    status: OK    time: 0.0400000000009s
+
+>>> Apply self-consistent equation (slat, plat) ...
+    status: OK    time: 0.0399999999972s
+
+>>> Congratulations! The convergence is obtained.
+
+------------------------------------------------------------
+>>> LDA + EDMFT ITER : Finished
+------------------------------------------------------------
+>>> Ending in Thu Jan 22 21:27:35 2015

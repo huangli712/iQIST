@@ -1,0 +1,19 @@
+part = 1.0
+beta = 50.0
+Uc = 8.0
+Jz = 0.0
+nband = 1
+norbs = 2
+nspin = 2
+ncfgs = 4
+mune = 4.0
+wc = 14.0
+lc = 5.9161
+
+isbin = 1
+isscf = 2
+niter = 20
+isscr = 3
+isort = 1
+nmonte = 10
+ncarlo = 10
