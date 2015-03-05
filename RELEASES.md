@@ -1,5 +1,13 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.5.7 @ 966e5ba // Mar 05, 2015
+
+* Add OpenMP support for the measurements of two-particle quantities.
+* Adjust the file format for solver.kernel.dat.
+* Adjust the output for hybridization function.
+* Fix the u\_reader.py to support new file format of solver.kernel.dat.
+* Fix typo in makescr.f90 and comment in make.sys.
+
 ### v0.5.6 @ 8f7d00f // Feb 28, 2015
 
 * Modify jasmine/atomic\_util.f90, remove unused variables.

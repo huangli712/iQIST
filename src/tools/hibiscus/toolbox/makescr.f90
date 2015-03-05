@@ -20,7 +20,7 @@
 !! code, we assume that K(\tau) is degenerated for multi-orbital system.
 !!
 !! The W(\omega) data are often obtained by the cRPA calculations. This
-!! feature are unfortunately not included in the iQIST software package.
+!! feature is unfortunately not included in the iQIST software package.
 !!
 !! In order to be compatible with the narcissus code, you have to rename
 !! the output file (i.e., scr.tau.dat) to solver.ktau.in.
