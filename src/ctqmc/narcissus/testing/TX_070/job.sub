@@ -1,9 +1,0 @@
-#!/bin/sh
-#$ -N lda_edmft
-#$ -S /bin/bash
-#$ -cwd
-#$ -j y
-#$ -o stdout
-#$ -pe orte 8
-
-mpiexec -n $NSLOTS ./lda_edmft.py
