@@ -65,6 +65,12 @@
 ## Specify whether the fortran preprocessor (FPP) is used. It must be enabled
 ## or else the iqist can not be compiled correctly.
 ##
+## PIC
+## ---
+## 
+## Generate position independent code, for the purpose of dynamic link. It 
+## must be enabled to compile python API.
+## 
 ## CPP
 ## ---
 ##
@@ -168,9 +174,10 @@ ARCHIVER = ar -ruv
 #-------------------------------------------------------------------------
 MPI    = -DMPI
 OMP    = #-openmp
-API    = #-DAPI -DMPY
+API    = -DAPI -DMPY
 FPP    = -fpp
-CPP    = $(FPP) $(MPI) $(OMP) $(API)
+PIC    = -fPIC
+CPP    = $(FPP) $(MPI) $(OMP) $(API) $(PIC)
 
 # machine tuning options, just for my laptop: iris system
 #-------------------------------------------------------------------------
@@ -189,10 +196,10 @@ LFLAGS = -static -Wl,-no_pie $(OMP) $(GPROF)
 #-------------------------------------------------------------------------
 LIBS   = -L. -llapack -lblas #-lguide
 LIBS   = -L. -llapack -lgoto #-lguide
-LIBS   = -lmkl_intel_lp64 -lmkl_core -lmkl_sequential
+LIBS   = -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lmkl_def
 LIBS   = -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
 
 # mpi library, just for fortran
 #-------------------------------------------------------------------------
 MPIL   = -L/usr/local/openmpi/lib -lmpi_mpifh
-MPIL   = -L/usr/local/mpich/lib -lfmpich -lmpichf90
+MPIL   = -L/usr/local/mpich/lib -lmpich -lfmpich -lmpichf90
