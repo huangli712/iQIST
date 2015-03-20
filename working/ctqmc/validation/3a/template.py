@@ -7,13 +7,13 @@ import numpy
 from mpi4py import MPI
 
 # modify sys.path
-sys.path.append('../../src/tools/hibiscus/script/')
+sys.path.append('../../../../src/tools/hibiscus/script/')
 
 # import the writer for ctqmc configuration file
 from u_ctqmc import *
 
 # modify sys.path
-sys.path.append('../../src/api/')
+sys.path.append('../../../../src/api/')
 
 # import iqist software package
 from pyiqist import api as ctqmc
@@ -22,12 +22,12 @@ from pyiqist import api as ctqmc
 comm = MPI.COMM_WORLD
 
 # check the status of ctqmc impurity solver
-if ctqmc.solver_id() == 101:
+if ctqmc.solver_id() == 201:
     if comm.rank == 0 : 
-        print "Hello world! This is the AZALEA code."
+        print "Hello world! This is the BEGONIA code."
 else:
     if comm.rank == 0 : 
-        print "Where is the AZALEA code?"
+        print "Where is the BEGONIA code?"
     sys.exit(-1)
 if ctqmc.solver_status() != 1 :
     print "I am sorry. This ctqmc impurity solver is not ready."
@@ -39,10 +39,10 @@ comm.Barrier()
 # prepare the input file
 if comm.rank == 0:
     # create an instance
-    p = p_ctqmc_solver('azalea')
+    p = p_ctqmc_solver('begonia')
 
     # setup the parameters
-    p.setp(isscf = 1, isbin = 1, U = 4.0, Uc = 4.0, Uv = 4.0, mune = 2.0, beta = 10.0)
+    p.setp(isscf = 1, isbin = 1, nband = 2, norbs = 4, ncfgs = 16, mune = 3.5, part = 1.0, beta = 50.0)
 
     # verify the parameters
     p.check()
@@ -58,7 +58,7 @@ comm.Barrier()
 
 # setup parameters
 mfreq = 8193 # number of matsubara frequency points
-norbs = 2    # number of orbitals
+norbs = 4    # number of orbitals
 niter = 20   # number of iterations
 size_t = mfreq * norbs * norbs
 
