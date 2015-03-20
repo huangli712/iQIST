@@ -1,6 +1,7 @@
 isscf = 2
 isbin = 1
 part = 1.0
-beta = 35
+beta = 35.0
 Uc = 4.0
 mune = 2.0
+nsweep = 200000000

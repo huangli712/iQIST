@@ -4,3 +4,4 @@ part = 1.0
 beta = 100
 Uc = 0.0
 mune = 0.0
+nsweep = 200000000
