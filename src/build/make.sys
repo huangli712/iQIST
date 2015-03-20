@@ -65,12 +65,6 @@
 ## Specify whether the fortran preprocessor (FPP) is used. It must be enabled
 ## or else the iqist can not be compiled correctly.
 ##
-## PIC
-## ---
-## 
-## Generate position independent code, for the purpose of dynamic link. It 
-## must be enabled to compile python API.
-## 
 ## CPP
 ## ---
 ##
@@ -110,8 +104,10 @@
 ## '-xHost' enables the compiler to generate the most suitable code for the
 ## current computer architecture. '-unroll-aggressive' means using aggressive
 ## method to unroll the loop structures. '-align all' means to align the
-## arrays, structures, etc. Please modify them only if you are an expert of
-## Intel Fortran Compiler and you know what you are doing.
+## arrays, structures, etc. '-fPIC' means to generate position independent
+## code  for the purpose of dynamic link. It should be enabled to compile
+## the python API. Please modify them only if you are an expert of the Intel
+## Fortran Compiler and you know what you are doing.
 ##
 ## MARCH
 ## -----
@@ -174,17 +170,16 @@ ARCHIVER = ar -ruv
 #-------------------------------------------------------------------------
 MPI    = -DMPI
 OMP    = #-openmp
-API    = -DAPI -DMPY
+API    = #-DAPI -DMPY
 FPP    = -fpp
-PIC    = -fPIC
-CPP    = $(FPP) $(MPI) $(OMP) $(API) $(PIC)
+CPP    = $(FPP) $(MPI) $(OMP) $(API)
 
 # machine tuning options, just for my laptop: iris system
 #-------------------------------------------------------------------------
 GPROF  = #-pg
 CHECK  = -warn all #-check all -traceback -g
 CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
-LEVEL  = -O3 -xHost -unroll-aggressive -align all
+LEVEL  = -O3 -xHost -unroll-aggressive -align all -fPIC
 MARCH  = -march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2
 
 # flags for compiler and linker
@@ -196,10 +191,10 @@ LFLAGS = -static -Wl,-no_pie $(OMP) $(GPROF)
 #-------------------------------------------------------------------------
 LIBS   = -L. -llapack -lblas #-lguide
 LIBS   = -L. -llapack -lgoto #-lguide
-LIBS   = -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lmkl_def
+LIBS   = -lmkl_intel_lp64 -lmkl_core -lmkl_sequential
 LIBS   = -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
 
 # mpi library, just for fortran
 #-------------------------------------------------------------------------
 MPIL   = -L/usr/local/openmpi/lib -lmpi_mpifh
-MPIL   = -L/usr/local/mpich/lib -lmpich -lfmpich -lmpichf90
+MPIL   = -L/usr/local/mpich/lib -lfmpich -lmpichf90
