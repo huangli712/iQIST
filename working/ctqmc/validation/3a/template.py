@@ -60,6 +60,7 @@ if comm.rank == 0:
     p.setp(isscf = 1, issun = 1, isbin = 1)
     p.setp(nband = 2, norbs = 4, ncfgs = 16)
     p.setp(mune = 3.5, part = 1.0, beta = 50.0)
+    p.setp(nsweep = 200000000)
 
     # verify the parameters
     p.check()

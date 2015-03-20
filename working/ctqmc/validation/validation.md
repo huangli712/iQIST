@@ -7,6 +7,8 @@ Validation Cases
 1. 1 band model
 ---------------
 
+Impurity solver: azalea, gardenia, narcissus
+ 
 Reference: Phys. Rev. Lett. 97, 076405 (2006), Fig. 3
 
 * 1a // U = 5.0, J = 0.0, beta = 100., mune = 2.50, part = 1.00
@@ -19,6 +21,8 @@ Reference: Phys. Rev. Lett. 97, 076405 (2006), Fig. 3
 
 2. 1 band model
 ---------------
+
+Impurity solver: azalea, gardenia, narcissus
 
 Reference: Phys. Rev. B 76, 235123 (2007), Fig. 3, Fig. 4, Fig. 5, Fig. 6
 
@@ -43,7 +47,10 @@ Reference: Phys. Rev. B 76, 235123 (2007), Fig. 3, Fig. 4, Fig. 5, Fig. 6
 3. 2 band model
 ---------------
 
+Impurity solver: begonia, lavender, pansy, manjushaka
 
-* 3a // U = 1.0, J = 0.0, beta = 8.00, mune = 2.50
+Reference: Phys. Rev. B 74, 155107 (2006), Fig. 11, Fig. 12
 
-* 3b // U = 1.0, J = 0.0, beta = 80.0, mune = 2.50
+* 3a // U = 4.0, J = 1.0, beta = 50.0, mune = 3.50, part = 1.0/2.0
+
+* 3b // U = 6.0, J = 1.5, beta = 50.0, mune = 5.25, part = 1.0/2.0
