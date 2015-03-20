@@ -8,7 +8,7 @@ Validation Cases
 ---------------
 
 Impurity solver: azalea, gardenia, narcissus
- 
+
 Reference: Phys. Rev. Lett. 97, 076405 (2006), Fig. 3
 
 * 1a // U = 5.0, J = 0.0, beta = 100., mune = 2.50, part = 1.00

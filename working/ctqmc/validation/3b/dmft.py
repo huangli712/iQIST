@@ -38,10 +38,10 @@ comm = MPI.COMM_WORLD
 
 # check the status of ctqmc impurity solver
 if ctqmc.solver_id() == 201:
-    if comm.rank == 0 : 
+    if comm.rank == 0 :
         print "Hello world! This is the BEGONIA code."
 else:
-    if comm.rank == 0 : 
+    if comm.rank == 0 :
         print "Where is the BEGONIA code?"
     sys.exit(-1)
 if ctqmc.solver_status() != 1 :
