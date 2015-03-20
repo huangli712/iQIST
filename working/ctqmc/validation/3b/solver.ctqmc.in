@@ -1,9 +1,0 @@
-isscf   : 1
-ncfgs   : 16
-norbs   : 4
-nband   : 2
-beta    : 50.0
-part    : 1.0
-mune    : 5.25
-issun   : 1
-isbin   : 1
