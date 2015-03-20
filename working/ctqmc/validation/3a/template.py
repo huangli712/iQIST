@@ -18,6 +18,21 @@ sys.path.append('../../../../src/api/')
 # import iqist software package
 from pyiqist import api as ctqmc
 
+def do_dmft_loop(mfreq, norbs, grnf):
+    """ implement the DMFT self-consistent condition for bethe lattice
+        t1 = 1.0, t2 = 2.0, half-filling case
+    """
+    size_t = mfreq * norbs * norbs
+    grnf_t = numpy.reshape(grnf, (mfreq, norbs, norbs), order = 'F')
+    hybf_t = grnf_t * 0.0
+    part_1 = 1.0
+    part_2 = 2.0
+    hybf_t[:,0,0] = grnf_t[:,0,0] * part_1 * part_1 # band 1, spin up
+    hybf_t[:,1,1] = grnf_t[:,1,1] * part_2 * part_2 # band 2, spin up
+    hybf_t[:,2,2] = grnf_t[:,2,2] * part_1 * part_1 # band 1, spin dn
+    hybf_t[:,3,3] = grnf_t[:,3,3] * part_2 * part_2 # band 2, spin dn
+    return numpy.reshape(hybf_t, size_t, order = 'F')
+
 # get mpi communicator
 comm = MPI.COMM_WORLD
 
@@ -42,7 +57,9 @@ if comm.rank == 0:
     p = p_ctqmc_solver('begonia')
 
     # setup the parameters
-    p.setp(isscf = 1, isbin = 1, nband = 2, norbs = 4, ncfgs = 16, mune = 3.5, part = 1.0, beta = 50.0)
+    p.setp(isscf = 1, issun = 1, isbin = 1)
+    p.setp(nband = 2, norbs = 4, ncfgs = 16)
+    p.setp(mune = 3.5, part = 1.0, beta = 50.0)
 
     # verify the parameters
     p.check()
@@ -74,7 +91,7 @@ ctqmc.init_ctqmc(comm.rank, comm.size)
 for i in range(niter):
     ctqmc.exec_ctqmc(i+1)
     grnf = ctqmc.get_grnf(size_t)
-    hybf = 0.25 * grnf
+    hybf = do_dmft_loop(mfreq, norbs, grnf)
     ctqmc.set_hybf(size_t, hybf)
     print 'MAX_ERROR:', (numpy.absolute(grnf - grnf_s)).max()
     grnf_s = (grnf + grnf_s)/2.0
