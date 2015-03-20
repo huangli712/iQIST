@@ -23,10 +23,10 @@ comm = MPI.COMM_WORLD
 
 # check the status of ctqmc impurity solver
 if ctqmc.solver_id() == 101:
-    if comm.rank == 0 : 
+    if comm.rank == 0 :
         print "Hello world! This is the AZALEA code."
 else:
-    if comm.rank == 0 : 
+    if comm.rank == 0 :
         print "Where is the AZALEA code?"
     sys.exit(-1)
 if ctqmc.solver_status() != 1 :
