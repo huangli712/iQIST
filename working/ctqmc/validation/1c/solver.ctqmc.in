@@ -1,3 +1,10 @@
+!!!-----------------------------------------------------------------------
+!!! source  : 1c/solver.ctqmc.in
+!!! solver  : AZALEA
+!!! purpose : to test ctqmc impurity solver
+!!! author  : li huang (email:huangli712@gmail.com)
+!!!-----------------------------------------------------------------------
+
 isscf = 2
 isbin = 1
 part = 1.0
