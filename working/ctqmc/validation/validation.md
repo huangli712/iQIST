@@ -51,6 +51,6 @@ Impurity solver: begonia, lavender, pansy, manjushaka
 
 Reference: Phys. Rev. B 74, 155107 (2006), Fig. 11, Fig. 12
 
-* 3a // U = 4.0, J = 1.0, beta = 50.0, mune = 3.50, part = 1.0/2.0
+* 3a // U = 4.0, J = 1.0, beta = 50.0, mune = 3.50, part = 1.0 (N) or 2.0 (W)
 
-* 3b // U = 6.0, J = 1.5, beta = 50.0, mune = 5.25, part = 1.0/2.0
+* 3b // U = 6.0, J = 1.5, beta = 50.0, mune = 5.25, part = 1.0 (N) or 2.0 (W)
