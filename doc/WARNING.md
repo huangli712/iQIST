@@ -44,7 +44,7 @@ see the comments in iqist/src/tools/hibiscus/swing/swing\_main.py.
 
 ### Application programming interface
 
-see the comments in iqist/src/ctqmc/api/ctqmc\_api.f90, iqist/src/hfqmc/daisy/hfqmc\_api.f90, and iqist/src/tools/jasmine/atomic\_api.f90
+see the comments in iqist/src/api/ctqmc\_api.f90, iqist/src/api/hfqmc\_api.f90, and iqist/src/api/atomic\_api.f90
 
 ### Examples
 

@@ -7,27 +7,42 @@ import numpy
 from mpi4py import MPI
 
 # modify sys.path
-sys.path.append('../../src/tools/hibiscus/script/')
+sys.path.append('../../../../src/tools/hibiscus/script/')
 
 # import the writer for ctqmc configuration file
 from u_ctqmc import *
 
 # modify sys.path
-sys.path.append('../../src/api/')
+sys.path.append('../../../../src/api/')
 
 # import iqist software package
 from pyiqist import api as ctqmc
+
+def do_dmft_loop(mfreq, norbs, grnf):
+    """ implement the DMFT self-consistent condition for bethe lattice
+        t1 = 1.0, t2 = 2.0, half-filling case
+    """
+    size_t = mfreq * norbs * norbs
+    grnf_t = numpy.reshape(grnf, (mfreq, norbs, norbs), order = 'F')
+    hybf_t = grnf_t * 0.0
+    part_1 = 1.0
+    part_2 = 2.0
+    hybf_t[:,0,0] = grnf_t[:,0,0] * part_1 * part_1 # band 1, spin up
+    hybf_t[:,1,1] = grnf_t[:,1,1] * part_2 * part_2 # band 2, spin up
+    hybf_t[:,2,2] = grnf_t[:,2,2] * part_1 * part_1 # band 1, spin dn
+    hybf_t[:,3,3] = grnf_t[:,3,3] * part_2 * part_2 # band 2, spin dn
+    return numpy.reshape(hybf_t, size_t, order = 'F')
 
 # get mpi communicator
 comm = MPI.COMM_WORLD
 
 # check the status of ctqmc impurity solver
-if ctqmc.solver_id() == 101:
+if ctqmc.solver_id() == 201:
     if comm.rank == 0 :
-        print "Hello world! This is the AZALEA code."
+        print "Hello world! This is the BEGONIA code."
 else:
     if comm.rank == 0 :
-        print "Where is the AZALEA code?"
+        print "Where is the BEGONIA code?"
     sys.exit(-1)
 if ctqmc.solver_status() != 1 :
     print "I am sorry. This ctqmc impurity solver is not ready."
@@ -39,10 +54,13 @@ comm.Barrier()
 # prepare the input file
 if comm.rank == 0:
     # create an instance
-    p = p_ctqmc_solver('azalea')
+    p = p_ctqmc_solver('begonia')
 
     # setup the parameters
-    p.setp(isscf = 1, isbin = 1, U = 4.0, Uc = 4.0, Uv = 4.0, mune = 2.0, beta = 10.0)
+    p.setp(isscf = 1, issun = 1, isbin = 1)
+    p.setp(nband = 2, norbs = 4, ncfgs = 16)
+    p.setp(mune = 3.5, part = 1.0, beta = 50.0)
+    p.setp(nsweep = 200000000)
 
     # verify the parameters
     p.check()
@@ -58,7 +76,7 @@ comm.Barrier()
 
 # setup parameters
 mfreq = 8193 # number of matsubara frequency points
-norbs = 2    # number of orbitals
+norbs = 4    # number of orbitals
 niter = 20   # number of iterations
 size_t = mfreq * norbs * norbs
 
@@ -74,7 +92,7 @@ ctqmc.init_ctqmc(comm.rank, comm.size)
 for i in range(niter):
     ctqmc.exec_ctqmc(i+1)
     grnf = ctqmc.get_grnf(size_t)
-    hybf = 0.25 * grnf
+    hybf = do_dmft_loop(mfreq, norbs, grnf)
     ctqmc.set_hybf(size_t, hybf)
     print 'MAX_ERROR:', (numpy.absolute(grnf - grnf_s)).max()
     grnf_s = (grnf + grnf_s)/2.0

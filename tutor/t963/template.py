@@ -38,10 +38,10 @@ comm = MPI.COMM_WORLD
 
 # check the status of hfqmc impurity solver
 if hfqmc.solver_id() == 901:
-    if comm.rank == 0 : 
+    if comm.rank == 0 :
         print "Hello world! This is the DAISY code."
 else:
-    if comm.rank == 0 : 
+    if comm.rank == 0 :
         print "Where is the DAISY code?"
     sys.exit(-1)
 if hfqmc.solver_status() != 1 :
