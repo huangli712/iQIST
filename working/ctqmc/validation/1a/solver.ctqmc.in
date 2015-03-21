@@ -1,6 +1,14 @@
+!!!-----------------------------------------------------------------------
+!!! source  : 1a/solver.ctqmc.in
+!!! solver  : AZALEA
+!!! purpose : to test ctqmc impurity solver
+!!! author  : li huang (email:huangli712@gmail.com)
+!!!-----------------------------------------------------------------------
+
 isscf = 2
 isbin = 1
 part = 1.0
 beta = 100
 Uc = 5.0
 mune = 2.5
+nsweep = 200000000
