@@ -44,6 +44,8 @@ Reference: Phys. Rev. B 76, 235123 (2007), Fig. 3, Fig. 4, Fig. 5, Fig. 6
 
 * 2i // U = 4.0, J = 0.0, beta = 50.0, mune = 2.00, part = 1.00
 
+* 2j // U = 4.0, J = 0.0, beta = 10.0, mune = 2.00, part = 1.00
+
 3. 2 band model
 ---------------
 
