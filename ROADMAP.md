@@ -18,7 +18,7 @@ Note: The tasks listed in this file are only for discussion. If you have suggest
 * maintain/sync the repo (Minor)
 * reply the questions from iQIST users (Minor)
 
-## List st of current tasks
+## List of current tasks
 
 * design the logo for iQIST (Critical)
 * verify the truncation approximation for the CT-HYB codes (Critical)
