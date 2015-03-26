@@ -2555,7 +2555,7 @@
      use control, only : mune
      use control, only : myid, master
      use context, only : rmesh
-     use context, only : prob
+     use context, only : prob, nmat
      use context, only : eimp, uumat
      use context, only : grnf
      use context, only : hybf
@@ -2583,6 +2583,7 @@
 ! dummy real variables, used to interpolate self-energy function
      real(dp) :: ob, oe
      real(dp) :: d0, d1
+     real(dp) :: shift
 
 ! dummy complex variables, used to interpolate self-energy function
      complex(dp) :: cb, ce
@@ -2611,6 +2612,11 @@
 ! atomic green's function and self-energy function in Hubbard-I approximation
      complex(dp) :: ghub(mfreq,norbs)
      complex(dp) :: shub(mfreq,norbs)
+
+! unshift the Coulomb interaction and chemical potential if the retarded
+! interaction is used
+     call ctqmc_eval_shift(shift)
+     call ctqmc_make_shift(uumat, -one)
 
 ! build atomic basis set, we do not order them according to their
 ! occupation numbers
@@ -2699,6 +2705,7 @@
      do i=1,norbs
          do k=1,mfreq
              shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
+             shub(k,i) = shub(k,i) - sum(nmat) * shift
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
