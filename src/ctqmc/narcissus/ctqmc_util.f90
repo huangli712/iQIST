@@ -493,7 +493,7 @@
 
 !!>>> ctqmc_make_shift: to shift the Coulomb interaction matrix and the
 !!>>> chemical potential if retarded interaction is considered
-  subroutine ctqmc_make_shift(uumat)
+  subroutine ctqmc_make_shift(uumat, ssign)
      use constants, only : dp, two
 
      use control, only : norbs
@@ -505,6 +505,9 @@
 ! Coulomb interaction matrix
      real(dp), intent(inout) :: uumat(norbs,norbs)
 
+! sign for the shift, it should be 1.0_dp or -1.0_dp
+     real(dp), intent(in)    :: ssign
+
 ! local variables
 ! loop index
      integer  :: i
@@ -515,6 +518,10 @@
 
 ! evaluate the shift at first
      call ctqmc_eval_shift(shift)
+
+! multiple the shift with sign
+     call s_assert( abs(ssign) == 1.0_dp )
+     shift = shift * ssign
 
 ! shift the Coulomb interaction matrix (skip the diagonal elements)
      do i=1,norbs-1
