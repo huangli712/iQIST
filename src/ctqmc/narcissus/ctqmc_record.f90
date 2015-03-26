@@ -2731,6 +2731,7 @@
          call s_inv_z(norbs, gaux)
          do i=1,norbs
              sig2(k,i,i) = czi * rmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
+             sig2(k,i,i) = sig2(k,i,i) - sum(nmat) * shift
          enddo ! over i={1,norbs} loop
      enddo ! over k={1,nfreq} loop
 !-------------------------------------------------------------------------
