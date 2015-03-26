@@ -494,11 +494,9 @@
 !!>>> ctqmc_make_shift: to shift the Coulomb interaction matrix and the
 !!>>> chemical potential if retarded interaction is considered
   subroutine ctqmc_make_shift(uumat)
-     use constants, only : dp, zero, two
+     use constants, only : dp, two
 
-     use control, only : isscr
      use control, only : norbs
-     use control, only : lc, wc
      use control, only : mune
 
      implicit none
@@ -515,6 +513,8 @@
 ! Coulomb interaction shift introduced by dynamical screening effect
      real(dp) :: shift
 
+! evaluate the shift at first
+     call ctqmc_eval_shift(shift)
 
 ! shift the Coulomb interaction matrix (skip the diagonal elements)
      do i=1,norbs-1
@@ -541,6 +541,8 @@
 
      implicit none
 
+! external arguments
+! the shift value for U and mune
      real(dp), intent(out) :: shift
 
 ! evaluate Coulomb interaction shift
