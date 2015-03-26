@@ -482,7 +482,7 @@
 !-------------------------------------------------------------------------
 ! shift the Coulomb interaction matrix and chemical potential if retarded
 ! interaction or the so-called dynamical screening effect is considered
-     call ctqmc_make_shift(uumat)
+     call ctqmc_make_shift(uumat, one)
 
      return
   end subroutine ctqmc_selfer_init
