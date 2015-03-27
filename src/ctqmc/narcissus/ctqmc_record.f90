@@ -2845,6 +2845,7 @@
 
 ! dummy real variables, used to build atomic green's function
      real(dp) :: ob
+     real(dp) :: shift
 
 ! dummy complex variables, used to build atomic green's function
      complex(dp) :: cb
@@ -2881,6 +2882,10 @@
 ! atomic green's function and self-energy function in Hubbard-I approximation
      complex(dp) :: ghub(mfreq,norbs)
      complex(dp) :: shub(mfreq,norbs)
+
+! evaluate the shift for the Coulomb interaction and chemical potential
+! if the retarded interaction is used
+     call ctqmc_eval_shift(shift)
 
 ! build atomic basis set, we do not order them according to their
 ! occupation numbers
@@ -2969,6 +2974,7 @@
      do i=1,norbs
          do k=1,mfreq
              shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
+             shub(k,i) = shub(k,i) - nmat(i) * shift
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
