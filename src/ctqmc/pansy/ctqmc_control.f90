@@ -77,6 +77,7 @@
 
 ! number of matsubara frequency sampling by continuous time quantum Monte
 ! Carlo quantum impurity solver
+!
 ! note: the rest (mfreq - nfreq + 1 points) values are evaluated by using
 ! Hubbard-I approximation
      integer, public, save :: nfreq  = 128
@@ -86,28 +87,36 @@
      integer, public, save :: ntime  = 1024
 
 ! number of parts that the imaginary time axis is split
+!
 ! note: all operators in the imaginary time axis are grouped into npart
 ! parts according to their time values, in each Monte Carlo steps, only
 ! those changed parts are carefully dealt with, not all the parts.
+!
 ! note: 2\sqrt{3 <k> nband} ~ 4\sqrt{3 <k> nband} may be the optimal value
-! for npart to achieve maximum performance
+! for npart to achieve maximum performance.
      integer, public, save :: npart  = 4
 
 ! flip period for spin up and spin down states
+!
 ! note: care must be taken to prevent the system from being trapped in a
 ! state which breaks a symmetry of local hamiltonian when it should not
 ! be. to avoid unphysical trapping, we introduce "flip" moves, which
 ! exchange the operators corresponding, for example, to up and down spins
 ! in a given orbital.
+!
 ! note: in this code, nowadays the following flip schemes are supported
 !     if cflip = 1, flip inter-orbital spins randomly;
 !     if cflip = 2, flip intra-orbital spins one by one;
 !     if cflip = 3, flip intra-orbital spins globally.
+! here cflip is an internal variable.
+!
 ! note: we use the sign of nflip to control flip schemes
 !     if nflip = 0, means infinite long period to do flip
 !     if nflip > 0, combine cflip = 2 (80%) and cflip = 3 (20%)
 !     if nflip < 0, combine cflip = 1 (80%) and cflip = 3 (20%)
+!
 ! note: if nflip /= 0, the absolute value of nflip is the flip period
+!
 ! note: when cflip = 1, the symmetry of all orbitals must be taken into
 ! consideration, otherwise the code may be trapped by a deadlock.
      integer, public, save :: nflip  = 20000
@@ -135,7 +144,8 @@
 !!========================================================================
 
 ! note: U, Uc, Uv, Jz, Js, and Jp are not used by this quantum impurity
-! solver actually. we keep them here is just for reference
+! solver actually. we keep them here is just for reference.
+
 ! average Coulomb interaction
      real(dp), public, save :: U     = 4.00_dp
 
@@ -157,6 +167,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! chemical potential or fermi level
+!
 ! note: it should/can be replaced with eimp
      real(dp), public, save :: mune  = 2.00_dp
 
