@@ -111,6 +111,7 @@
              call p_get('isspn' , isspn )
              call p_get('isbin' , isbin )
              call p_get('isort' , isort )
+             call p_get('issus' , issus )
              call p_get('isvrt' , isvrt )
 
              call p_get('nband' , nband )
@@ -165,6 +166,7 @@
      call mp_bcast( isspn , master )
      call mp_bcast( isbin , master )
      call mp_bcast( isort , master )
+     call mp_bcast( issus , master )
      call mp_bcast( isvrt , master )
      call mp_barrier()
 
