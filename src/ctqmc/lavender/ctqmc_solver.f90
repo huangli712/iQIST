@@ -23,7 +23,7 @@
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, mystd
 
-     use control, only : issun, isspn, isvrt
+     use control, only : issun, isspn, issus, isvrt
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
      use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
@@ -302,19 +302,24 @@
              endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
 ! record nothing
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
+                 CONTINUE
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) block
+
+! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
                  CONTINUE
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) block
 
 ! record the two-particle green's function
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
                  call ctqmc_record_twop()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
 
 ! record the particle-particle pair susceptibility
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
                  call ctqmc_record_pair()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
