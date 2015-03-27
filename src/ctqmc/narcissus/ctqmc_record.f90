@@ -2547,7 +2547,7 @@
 !!>>> impurity green's function can be obtained by using dyson's equation
 !!>>> finally
   subroutine ctqmc_make_hub1()
-     use constants, only : dp, zero, one, czi, czero
+     use constants, only : dp, zero, one, two, czi, czero
 
      use control, only : norbs, ncfgs
      use control, only : mfreq
@@ -2613,10 +2613,9 @@
      complex(dp) :: ghub(mfreq,norbs)
      complex(dp) :: shub(mfreq,norbs)
 
-! unshift the Coulomb interaction and chemical potential if the retarded
-! interaction is used
+! evaluate the shift for the Coulomb interaction and chemical potential
+! if the retarded interaction is used
      call ctqmc_eval_shift(shift)
-     call ctqmc_make_shift(uumat, -one)
 
 ! build atomic basis set, we do not order them according to their
 ! occupation numbers
@@ -2705,7 +2704,7 @@
      do i=1,norbs
          do k=1,mfreq
              shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
-             shub(k,i) = shub(k,i) - sum(nmat) * shift
+             shub(k,i) = shub(k,i) - nmat(i) * shift
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
@@ -2731,7 +2730,7 @@
          call s_inv_z(norbs, gaux)
          do i=1,norbs
              sig2(k,i,i) = czi * rmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
-             sig2(k,i,i) = sig2(k,i,i) - sum(nmat) * shift
+             sig2(k,i,i) = sig2(k,i,i) - shift / two
          enddo ! over i={1,norbs} loop
      enddo ! over k={1,nfreq} loop
 !-------------------------------------------------------------------------
@@ -2796,6 +2795,7 @@
          gaux = czero
          do i=1,norbs
              gaux(i,i) = czi * rmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
+             gaux(i,i) = gaux(i,i) - shift / two
          enddo ! over i={1,norbs} loop
          call s_inv_z(norbs, gaux)
          grnf(k,:,:) = gaux
