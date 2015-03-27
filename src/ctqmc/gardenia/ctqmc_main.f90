@@ -340,6 +340,7 @@
      isspn  = I_solver%isspn
      isbin  = I_solver%isbin
      isort  = I_solver%isort
+     issus  = I_solver%issus
      isvrt  = I_solver%isvrt
      nband  = I_solver%nband
      nspin  = I_solver%nspin
