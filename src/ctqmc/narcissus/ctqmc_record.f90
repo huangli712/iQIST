@@ -2820,7 +2820,7 @@
      use control, only : mune, beta
      use control, only : myid, master
      use context, only : tmesh, rmesh
-     use context, only : prob
+     use context, only : prob, nmat
      use context, only : eimp, uumat
      use context, only : gtau, ftau, grnf, frnf
      use context, only : sig2
