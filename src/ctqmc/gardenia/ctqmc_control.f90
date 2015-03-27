@@ -6,7 +6,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/15/2009 by li huang
 !!!           02/23/2010 by li huang
-!!!           09/09/2014 by li huang
+!!!           03/27/2015 by li huang
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -57,24 +57,52 @@
 ! energy function, or else we use ctqmc_make_hub2().
 ! note: as for the kernel polynomial representation, the default dirichlet
 ! kernel is applied automatically. if you want to choose the other kernel,
-! please check the ctqmc_make_gtau() subroutine.
+! please check the ctqmc_make_gtau() subroutine in ctqmc_record.f90.
      integer, public, save :: isort  = 1
+
+! control flag: whether we measure the charge or spin susceptibility
+! we just use the following algorithm to judge which susceptibility should
+! be calculated:
+! (a) issus is converted to a binary representation at first. for example,
+! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
+! (b) then we examine the bits. if it is 1, then we do the calculation.
+! if it is 0, then we ignore the calculation. for example, we just use the
+! second bit (from right side to left side) to represent the calculation
+! of spin-spin correlation function. so, if issus is 10_10 (1010_2), we
+! will calculate the spin-spin correlation function. if issus is 13_10
+! (1101_2), we will not calculate it since the second bit is 0.
+! the following are the definitions of bit representation:
+! if p == 1, do nothing
+! if p == 2, calculate spin-spin correlation function (time space)
+! if p == 3, calculate orbital-orbital correlation function (time space)
+! if p == 4, calculate spin-spin correlation function (frequency space)
+! if p == 5, calculate orbital-orbital correlation function (frequency space)
+! if p == 6, reserved
+! if p == 7, reserved
+! if p == 8, reserved
+! if p == 9, reserved
+! example:
+!   ( 1 1 1 0 1 0 1 0 1)_2
+! p = 9 8 7 6 5 4 3 2 1
+! note: p = 4 and p = 5 are not implemented so far.
+     integer, public, save :: issus  = 1
 
 ! control flag: whether we measure the high order correlation function
 ! we just use the following algorithm to judge which correlation function
 ! should be calculated:
 ! (a) isvrt is converted to a binary representation at first. for example,
-! 10 is converted to 1010_2, 15 is converted to 1111_2, etc.
+! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
 ! (b) then we examine the bits. if it is 1, then we do the calculation.
 ! if it is 0, then we ignore the calculation. for example, we just use the
 ! second bit (from right side to left side) to represent the calculation
-! of spin-spin correlation function. so, if isvrt is 10 (1010_2), we will
-! calculate the spin-spin correlation function. if isvrt is 13 (1101_2),
-! we will not calculate it since the second bit is 0.
+! of spin-spin correlation function. so, if issus is 10_10 (1010_2), we
+! will calculate the spin-spin correlation function. if issus is 13_10
+! (1101_2), we will not calculate it since the second bit is 0.
 ! the following are the definitions of bit representation:
+
+ 
+ 
 ! if p == 1, do nothing
-! if p == 2, calculate spin-spin correlation function
-! if p == 3, calculate orbital-orbital correlation function
 ! if p == 4, calculate both two-particle green's function and vertex function
 ! if p == 5, calculate both two-particle green's function and vertex function
 ! if p == 6, calculate particle-particle pair susceptibility
