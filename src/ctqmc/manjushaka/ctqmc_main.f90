@@ -343,6 +343,7 @@
      isspn  = I_solver%isspn
      isbin  = I_solver%isbin
      isort  = I_solver%isort
+     issus  = I_solver%issus
      isvrt  = I_solver%isvrt
      ifast  = I_solver%ifast
      itrun  = I_solver%itrun
