@@ -367,34 +367,33 @@
 !!>>> reducing final results                                           <<<
 !!========================================================================
 
-! special considerations for prob and grnf, since for children processes,
-! caves may be different
-     prob = prob / real(caves); grnf = grnf / real(caves)
-
 ! collect the histogram data from hist to hist_mpi
      call ctqmc_reduce_hist(hist_mpi)
 
 ! collect the probability data from prob to prob_mpi
+     prob = prob / real(caves)
      call ctqmc_reduce_prob(prob_mpi)
 
 ! collect the (double) occupation matrix data from nmat to nmat_mpi, and
 ! from nnmat to nnmat_mpi
+     nmat = nmat / real(caves); nnmat = nnmat / real(caves)
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
      call ctqmc_reduce_gtau(gtau_mpi)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
+     grnf = grnf / real(caves)
      call ctqmc_reduce_grnf(grnf_mpi)
 
 ! update original data and calculate the averages simultaneously
      hist = hist_mpi
      prob = prob_mpi * real(ncarlo)
 
-     nmat = nmat_mpi * real(nmonte) / real(nsweep)
+     nmat = nmat_mpi * real(nmonte)
      do m=1,norbs
          do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte) / real(nsweep)
+             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte)
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
