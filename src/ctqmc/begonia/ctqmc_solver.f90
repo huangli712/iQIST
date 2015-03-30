@@ -47,8 +47,6 @@
 ! loop index
      integer  :: i
      integer  :: j
-     integer  :: m
-     integer  :: n
 
 ! status flag
      integer  :: istat
