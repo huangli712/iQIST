@@ -452,12 +452,15 @@
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
      prob  = prob_mpi  * real(ncarlo)
+
      nmat  = nmat_mpi  * real(nmonte)
      nnmat = nnmat_mpi * real(nmonte)
+
      g2_re = g2_re_mpi * real(nmonte)
      g2_im = g2_im_mpi * real(nmonte)
      ps_re = ps_re_mpi * real(nmonte)
      ps_im = ps_im_mpi * real(nmonte)
+
      gtau  = gtau_mpi  * real(ncarlo)
      grnf  = grnf_mpi  * real(nmonte)
 
