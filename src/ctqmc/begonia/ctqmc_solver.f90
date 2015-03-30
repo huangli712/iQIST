@@ -367,28 +367,30 @@
      call ctqmc_reduce_hist(hist_mpi)
 
 ! collect the probability data from prob to prob_mpi
-     prob = prob / real(caves)
+     prob  = prob  / real(caves)
      call ctqmc_reduce_prob(prob_mpi)
 
-! collect the (double) occupation matrix data from nmat to nmat_mpi, and
-! from nnmat to nnmat_mpi
-     nmat = nmat / real(caves); nnmat = nnmat / real(caves)
+! collect the occupation matrix data from nmat to nmat_mpi
+! collect the double occupation matrix data from nnmat to nnmat_mpi
+     nmat  = nmat  / real(caves)
+     nnmat = nnmat / real(caves)
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
-     gtau = gtau / real(caves)
+     gtau  = gtau  / real(caves)
      call ctqmc_reduce_gtau(gtau_mpi)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
-     grnf = grnf / real(caves)
+     grnf  = grnf  / real(caves)
      call ctqmc_reduce_grnf(grnf_mpi)
 
 ! update original data and calculate the averages simultaneously
-     hist = hist_mpi
-     prob = prob_mpi * real(ncarlo)
-     nmat = nmat_mpi * real(nmonte); nnmat = nnmat_mpi * real(nmonte)
-     gtau = gtau_mpi * real(ncarlo)
-     grnf = grnf_mpi * real(nmonte)
+     hist  = hist_mpi
+     prob  = prob_mpi  * real(ncarlo)
+     nmat  = nmat_mpi  * real(nmonte)
+     nnmat = nnmat_mpi * real(nmonte)
+     gtau  = gtau_mpi  * real(ncarlo)
+     grnf  = grnf_mpi  * real(nmonte)
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
