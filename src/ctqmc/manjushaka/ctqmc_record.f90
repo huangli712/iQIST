@@ -49,6 +49,7 @@
      use control, only : lemax, legrd, chmax, chgrd
      use control, only : ntime
      use control, only : beta
+     use context, only : csign
      use context, only : index_s, index_e, time_s, time_e
      use context, only : ppleg, qqche
      use context, only : rank
@@ -127,7 +128,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -174,7 +175,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -222,7 +223,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -328,7 +329,7 @@
 
      use control, only : norbs, ncfgs
      use control, only : U, mune, beta
-     use context, only : ckink, matrix_ptrace
+     use context, only : ckink, csign, matrix_ptrace
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
 
@@ -400,23 +401,23 @@
 
 ! evaluate <N^2>
 !-------------------------------------------------------------------------
-     paux(6) = paux(6) + nele ** 2
+     paux(6) = paux(6) + csign * nele ** 2
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^1>
 !-------------------------------------------------------------------------
-     paux(5) = paux(5) + nele
+     paux(5) = paux(5) + csign * nele
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
 !-------------------------------------------------------------------------
-     paux(4) = paux(4) + sz
+     paux(4) = paux(4) + csign * sz
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate kinetic energy: ekin
 ! equation : -T < k >
 !-------------------------------------------------------------------------
-     paux(3) = paux(3) - real(ckink * norbs) / beta
+     paux(3) = paux(3) - csign * real(ckink * norbs) / beta
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate potential energy: epot
@@ -425,7 +426,7 @@
 ! note: here U denotes as energy zero point
 !-------------------------------------------------------------------------
      do i=1,ncfgs
-         paux(2) = paux(2) + cprob(i) * ( eigs(i) + U )
+         paux(2) = paux(2) + csign * cprob(i) * ( eigs(i) + U )
      enddo ! over i={1,ncfgs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -446,6 +447,7 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
+     use context, only : csign
      use context, only : g2_re, g2_im
      use context, only : rank
      use context, only : mmat
@@ -531,8 +533,8 @@
                          if ( f1 == f2 ) then
                              cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
-                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) * csign / beta
+                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) * csign / beta
                      enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
                  enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
@@ -559,6 +561,7 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
+     use context, only : csign
      use context, only : ps_re, ps_im
      use context, only : rank
      use context, only : mmat
@@ -644,8 +647,8 @@
                          if ( f1 /= f2 ) then
                              cmeas = cmeas + g2aux(w1n,w4n,f1) * g2aux(nffrq-w2n+1,nffrq-w3n+1,f2)
                          endif ! back if ( f1 == f2 ) block
-                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
-                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) * csign / beta
+                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) * csign / beta
                      enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
                  enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
