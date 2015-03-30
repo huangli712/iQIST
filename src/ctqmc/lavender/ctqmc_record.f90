@@ -485,7 +485,7 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
-     use context, only : csign 
+     use context, only : csign
      use context, only : g2_re, g2_im
      use context, only : rank
      use context, only : mmat
