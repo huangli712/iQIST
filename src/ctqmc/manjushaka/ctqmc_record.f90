@@ -1541,7 +1541,7 @@
   subroutine ctqmc_make_hub1()
      use constants, only : dp, zero, one, czi, czero, eps6
 
-     use control, only : norbs, ncfgs
+     use control, only : norbs
      use control, only : mfreq
      use control, only : nfreq
      use control, only : mune
