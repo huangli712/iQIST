@@ -387,8 +387,10 @@
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
      prob  = prob_mpi  * real(ncarlo) / real(nsweep)
+
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
+
      gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
      grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
 
