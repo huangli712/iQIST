@@ -287,14 +287,12 @@
          call ctqmc_reduce_hist(hist_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
+         gtau = gtau / real(caves)
          call ctqmc_reduce_gtau(gtau_mpi)
+         gtau = gtau * real(caves)
 
 ! gtau_mpi need to be scaled properly before written
-         do m=1,norbs
-             do n=1,ntime
-                 gtau_mpi(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(cstep)
-             enddo ! over n={1,ntime} loop
-         enddo ! over m={1,norbs} loop
+         gtau_mpi = gtau_mpi * real(ncarlo)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
@@ -380,6 +378,7 @@
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
+     gtau = gtau / real(caves)
      call ctqmc_reduce_gtau(gtau_mpi)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
@@ -389,25 +388,9 @@
 ! update original data and calculate the averages simultaneously
      hist = hist_mpi
      prob = prob_mpi * real(ncarlo)
-
-     nmat = nmat_mpi * real(nmonte)
-     do m=1,norbs
-         do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             grnf(:,n,m) = grnf_mpi(:,n,m) * real(nmonte)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
+     nmat = nmat_mpi * real(nmonte); nnmat = nnmat_mpi * real(nmonte)
+     gtau = gtau_mpi * real(ncarlo)
+     grnf = grnf_mpi * real(nmonte)
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
