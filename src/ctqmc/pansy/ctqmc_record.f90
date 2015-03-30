@@ -42,6 +42,7 @@
      use control, only : norbs
      use control, only : ntime
      use control, only : beta
+     use context, only : csign
      use context, only : index_s, index_e, time_s, time_e
      use context, only : rank
      use context, only : mmat
@@ -89,7 +90,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -193,7 +194,7 @@
 
      use control, only : norbs, ncfgs
      use control, only : U, mune, beta
-     use context, only : ckink, matrix_ptrace
+     use context, only : ckink, csign, matrix_ptrace
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
 
@@ -265,23 +266,23 @@
 
 ! evaluate <N^2>
 !-------------------------------------------------------------------------
-     paux(6) = paux(6) + nele ** 2
+     paux(6) = paux(6) + csign * nele ** 2
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^1>
 !-------------------------------------------------------------------------
-     paux(5) = paux(5) + nele
+     paux(5) = paux(5) + csign * nele
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
 !-------------------------------------------------------------------------
-     paux(4) = paux(4) + sz
+     paux(4) = paux(4) + csign * sz
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate kinetic energy: ekin
 ! equation : -T < k >
 !-------------------------------------------------------------------------
-     paux(3) = paux(3) - real(ckink * norbs) / beta
+     paux(3) = paux(3) - csign * real(ckink * norbs) / beta
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate potential energy: epot
@@ -290,7 +291,7 @@
 ! note: here U denotes as energy zero point
 !-------------------------------------------------------------------------
      do i=1,ncfgs
-         paux(2) = paux(2) + cprob(i) * ( eigs(i) + U )
+         paux(2) = paux(2) + csign * cprob(i) * ( eigs(i) + U )
      enddo ! over i={1,ncfgs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
