@@ -539,18 +539,21 @@
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
      prob  = prob_mpi  * real(ncarlo) / real(nsweep)
+
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
      schi  = schi_mpi  * real(nmonte) / real(nsweep)
      sschi = sschi_mpi * real(nmonte) / real(nsweep)
      ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
      oochi = oochi_mpi * real(nmonte) / real(nsweep)
+
      g2_re = g2_re_mpi * real(nmonte) / real(nsweep)
      g2_im = g2_im_mpi * real(nmonte) / real(nsweep)
      h2_re = h2_re_mpi * real(nmonte) / real(nsweep)
      h2_im = h2_im_mpi * real(nmonte) / real(nsweep)
      ps_re = ps_re_mpi * real(nmonte) / real(nsweep)
      ps_im = ps_im_mpi * real(nmonte) / real(nsweep)
+
      gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
      ftau  = ftau_mpi  * real(ncarlo) / real(nsweep)
      grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
