@@ -89,7 +89,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -105,7 +105,7 @@
                  endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
-                 gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux * csign
+                 gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
