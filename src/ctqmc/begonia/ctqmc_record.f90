@@ -41,6 +41,7 @@
      use control, only : norbs
      use control, only : ntime
      use control, only : beta
+     use context, only : csign
      use context, only : index_s, index_e, time_s, time_e
      use context, only : rank
      use context, only : mmat
@@ -104,7 +105,7 @@
                  endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
-                 gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
+                 gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux * csign
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
