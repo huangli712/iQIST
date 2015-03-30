@@ -135,7 +135,7 @@
 !!>>> ctqmc_print_runtime: print the runtime information, including physical
 !!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
-     use constants, only : one, half, mystd
+     use constants, only : dp, one, half, mystd
 
      use control, only : nsweep, nmonte
      use context, only : cnegs, caves
@@ -156,18 +156,18 @@
      integer, intent(in) :: cstep
 
 ! local variables
-! integer dummy variables
-     integer :: istat
+! real(dp) dummy variables
+     real(dp) :: raux
 
 ! about iteration number
      write(mystd,'(2X,a,i3,2(a,i10))') 'MANJUSHAKA >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
 
 ! about auxiliary physical observables
-     istat = cstep / nmonte
+     raux = real(caves) / nmonte
      write(mystd,'(4X,a)')        'auxiliary system observables:'
-     write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / istat, 'epot :', paux(2) / istat
-     write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / istat, '<Sz> :', paux(4) / istat
-     write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / istat, '<N2> :', paux(6) / istat
+     write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / raux, 'epot :', paux(2) / raux
+     write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / raux, '<Sz> :', paux(4) / raux
+     write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / raux, '<N2> :', paux(6) / raux
 
 ! about insert action
      if ( insert_tcount <= half ) insert_tcount = -one ! if insert is disable
