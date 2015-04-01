@@ -1,5 +1,12 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.5.9 @ 2dc7288 // Apr 01, 2015
+
+* Fix the sign problems in the measurement.
+* Redefine the behavior of control variable: isvrt.
+* Introduce new control variable: issus.
+* Fix a bug in the calculation of self-energy function for narcissus code.
+
 ### v0.5.8 @ 68ab89d // Mar 24, 2015
 
 * Add working/ctqmc/validation directory.
