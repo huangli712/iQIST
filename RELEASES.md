@@ -1,5 +1,10 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.5.8 @ 68ab89d // Mar 24, 2015
+
+* Add working/ctqmc/validation directory.
+* Improve build/make.sys, add 'fPIC' option.
+
 ### v0.5.7 @ 966e5ba // Mar 05, 2015
 
 * Add OpenMP support for the measurements of two-particle quantities.

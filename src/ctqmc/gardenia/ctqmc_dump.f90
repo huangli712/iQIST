@@ -630,7 +630,7 @@
   subroutine ctqmc_dump_schi(schi, sschi)
      use constants, only : dp, mytmp
 
-     use control, only : isvrt
+     use control, only : issus
      use control, only : nband
      use control, only : ntime
      use context, only : tmesh
@@ -649,8 +649,9 @@
      integer :: i
      integer :: j
 
-! check if we need to dump spin-spin correlation function data
-     if ( .not. btest(isvrt, 1) ) RETURN
+! check if we need to dump the spin-spin correlation function data
+! to solver.schi.dat
+     if ( .not. btest(issus, 1) ) RETURN
 
 ! open data file: solver.schi.dat
      open(mytmp, file='solver.schi.dat', form='formatted', status='unknown')
@@ -689,7 +690,7 @@
   subroutine ctqmc_dump_ochi(ochi, oochi)
      use constants, only : dp, mytmp
 
-     use control, only : isvrt
+     use control, only : issus
      use control, only : norbs
      use control, only : ntime
      use context, only : tmesh
@@ -709,8 +710,9 @@
      integer :: j
      integer :: k
 
-! check if we need to dump orbital-orbital correlation function data
-     if ( .not. btest(isvrt, 2) ) RETURN
+! check if we need to dump the orbital-orbital correlation function data
+! to solver.ochi.dat
+     if ( .not. btest(issus, 2) ) RETURN
 
 ! open data file: solver.ochi.dat
      open(mytmp, file='solver.ochi.dat', form='formatted', status='unknown')
@@ -798,9 +800,9 @@
 ! two-particle green's function, connected part
      complex(dp) :: chii
 
-! check if we need to dump two-particle green's function and vertex
+! check if we need to dump the two-particle green's function and vertex
 ! function data to solver.twop.dat
-     if ( .not. btest(isvrt, 3) ) RETURN
+     if ( .not. btest(isvrt, 1) ) RETURN
 
 ! open data file: solver.twop.dat
      open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
@@ -932,9 +934,9 @@
 ! two-particle green's function, connected part
      complex(dp) :: chii
 
-! check if we need to dump two-particle green's function and vertex
+! check if we need to dump the two-particle green's function and vertex
 ! function data to solver.vrtx.dat
-     if ( .not. btest(isvrt, 4) ) RETURN
+     if ( .not. btest(isvrt, 2) ) RETURN
 
 ! build frnf at first: F = G \Sigma
 ! in principle, F should be measured during the Monte Carlo procedure
@@ -1058,9 +1060,9 @@
      integer :: it
      integer :: jt
 
-! check if we need to dump particle-particle pair susceptibility
+! check if we need to dump the particle-particle pair susceptibility
 ! to solver.pair.dat
-     if ( .not. btest(isvrt, 5) ) RETURN
+     if ( .not. btest(isvrt, 3) ) RETURN
 
 ! open data file: solver.pair.dat
      open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')

@@ -24,7 +24,7 @@
 ## History
 ## =======
 ##
-## 12/20/2014 by li huang
+## 03/28/2015 by li huang
 ##
 ##
 
@@ -100,6 +100,7 @@ class p_ctqmc_solver(object):
         # __p_cmp_gardenia: the official parameter dict for gardenia
         self.__p_cmp_gardenia = self.__p_cmp_solver.copy()
         self.__p_cmp_gardenia['isort'] = 1
+        self.__p_cmp_gardenia['issus'] = 1
         self.__p_cmp_gardenia['isvrt'] = 1
         self.__p_cmp_gardenia['lemax'] = 32
         self.__p_cmp_gardenia['legrd'] = 20001
@@ -111,6 +112,7 @@ class p_ctqmc_solver(object):
         # __p_cmp_narcissus: the official parameter dict for narcissus
         self.__p_cmp_narcissus = self.__p_cmp_solver.copy()
         self.__p_cmp_narcissus['isort'] = 1
+        self.__p_cmp_narcissus['issus'] = 1
         self.__p_cmp_narcissus['isvrt'] = 1
         self.__p_cmp_narcissus['isscr'] = 1
         self.__p_cmp_narcissus['lemax'] = 32
@@ -130,6 +132,7 @@ class p_ctqmc_solver(object):
         # __p_cmp_lavender: the official parameter dict for lavender
         self.__p_cmp_lavender = self.__p_cmp_solver.copy()
         self.__p_cmp_lavender['isort'] = 1
+        self.__p_cmp_lavender['issus'] = 1
         self.__p_cmp_lavender['isvrt'] = 1
         self.__p_cmp_lavender['nzero'] = 128
         self.__p_cmp_lavender['lemax'] = 32
@@ -147,6 +150,7 @@ class p_ctqmc_solver(object):
         # __p_cmp_manjushaka: the official parameter dict for manjushaka
         self.__p_cmp_manjushaka = self.__p_cmp_solver.copy()
         self.__p_cmp_manjushaka['isort'] = 1
+        self.__p_cmp_manjushaka['issus'] = 1
         self.__p_cmp_manjushaka['isvrt'] = 1
         self.__p_cmp_manjushaka['ifast'] = 1
         self.__p_cmp_manjushaka['itrun'] = 1

@@ -6,7 +6,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/15/2009 by li huang
 !!!           02/23/2010 by li huang
-!!!           08/07/2014 by li huang
+!!!           03/27/2015 by li huang
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -76,6 +76,7 @@
 
 ! number of matsubara frequency sampling by continuous time quantum Monte
 ! Carlo quantum impurity solver
+!
 ! note: the rest (mfreq - nfreq + 1 points) values are evaluated by using
 ! Hubbard-I approximation
      integer, public, save :: nfreq  = 128
@@ -85,20 +86,26 @@
      integer, public, save :: ntime  = 1024
 
 ! flip period for spin up and spin down states
+!
 ! note: care must be taken to prevent the system from being trapped in a
 ! state which breaks a symmetry of local hamiltonian when it should not
 ! be. to avoid unphysical trapping, we introduce "flip" moves, which
 ! exchange the operators corresponding, for example, to up and down spins
 ! in a given orbital.
+!
 ! note: in this code, nowadays the following flip schemes are supported
 !     if cflip = 1, flip inter-orbital spins randomly;
 !     if cflip = 2, flip intra-orbital spins one by one;
 !     if cflip = 3, flip intra-orbital spins globally.
+! here cflip is an internal variable.
+!
 ! note: we use the sign of nflip to control flip schemes
 !     if nflip = 0, means infinite long period to do flip
 !     if nflip > 0, combine cflip = 2 (80%) and cflip = 3 (20%)
 !     if nflip < 0, combine cflip = 1 (80%) and cflip = 3 (20%)
+!
 ! note: if nflip /= 0, the absolute value of nflip is the flip period
+!
 ! note: when cflip = 1, the symmetry of all orbitals must be taken into
 ! consideration, otherwise the code may be trapped by a deadlock.
      integer, public, save :: nflip  = 20000
@@ -146,6 +153,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! chemical potential or fermi level
+!
 ! note: it should/can be replaced with eimp
      real(dp), public, save :: mune  = 2.00_dp
 

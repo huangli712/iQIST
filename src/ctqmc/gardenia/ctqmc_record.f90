@@ -731,7 +731,7 @@
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
 
-     use control, only : isvrt
+     use control, only : issus
      use control, only : nband, norbs
      use control, only : ntime
      use context, only : tmesh
@@ -756,7 +756,7 @@
      real(dp) :: oaux(norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 1) )
+     call s_assert( btest(issus, 1) )
 
      TIME_LOOP: do i=1,ntime
 
@@ -807,7 +807,7 @@
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
 
-     use control, only : isvrt
+     use control, only : issus
      use control, only : norbs
      use control, only : ntime
      use context, only : tmesh
@@ -837,7 +837,7 @@
      real(dp) :: oaux(ntime,norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 2) )
+     call s_assert( btest(issus, 2) )
 
 ! calculate ochi
      oaux = zero
@@ -927,7 +927,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 3) .and. .not. btest(isvrt, 4) )
+     call s_assert( btest(isvrt, 1) .and. .not. btest(isvrt, 2) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
@@ -1043,7 +1043,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 4) .and. .not. btest(isvrt, 3) )
+     call s_assert( btest(isvrt, 2) .and. .not. btest(isvrt, 1) )
 
 ! evaluate nfaux, determine the size of g2aux and h2aux
      nfaux = nffrq + nbfrq - 1
@@ -1172,7 +1172,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 5) )
+     call s_assert( btest(isvrt, 3) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1

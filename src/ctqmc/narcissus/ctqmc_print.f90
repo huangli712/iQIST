@@ -99,10 +99,11 @@
      implicit none
 
      write(mystd,'(2X,a)') 'NARCISSUS >>> parameters list:'
-     write(mystd,'(1(4X,a,i10))')   'isscr :', isscr
+
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
-     write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'isvrt :', isvrt
+     write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'issus :', issus
+     write(mystd,'(2(4X,a,i10))')   'isvrt :', isvrt  , 'isscr :', isscr
 
      write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
      write(mystd,'(2(4X,a,i10))')   'chmax :', chmax  , 'chgrd :', chgrd

@@ -23,7 +23,7 @@
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, one, mystd
 
-     use control, only : issun, isspn, isort, isvrt
+     use control, only : issun, isspn, isort, issus, isvrt
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
      use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
@@ -48,8 +48,6 @@
 ! loop index
      integer  :: i
      integer  :: j
-     integer  :: m
-     integer  :: n
 
 ! status flag
      integer  :: istat
@@ -357,40 +355,45 @@
                  call ctqmc_record_gtau()
              endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
+! record the auxiliary correlation function, F(\tau)
+             if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
+                 call ctqmc_record_ftau()
+             endif ! back if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) block
+
+! record nothing
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
+                 CONTINUE
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) block
+
+! record the spin-spin correlation function
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) then
+                 call ctqmc_record_schi()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) block
+
+! record the orbital-orbital correlation function
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) then
+                 call ctqmc_record_ochi()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) block
+
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
                  CONTINUE
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) block
 
-! record the spin-spin correlation function
+! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
-                 call ctqmc_record_schi()
+                 call ctqmc_record_twop()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
 
-! record the orbital-orbital correlation function
+! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
-                 call ctqmc_record_ochi()
+                 call ctqmc_record_vrtx()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
 
-! record the two-particle green's function
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
-                 call ctqmc_record_twop()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
-
-! record the two-particle green's function
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) then
-                 call ctqmc_record_vrtx()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 4) ) block
-
 ! record the particle-particle pair susceptibility
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
                  call ctqmc_record_pair()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) block
-
-! record the auxiliary correlation function, F(\tau)
-             if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
-                 call ctqmc_record_ftau()
-             endif ! back if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
@@ -414,11 +417,7 @@
          call ctqmc_reduce_gtau(gtau_mpi)
 
 ! gtau_mpi need to be scaled properly before written
-         do m=1,norbs
-             do n=1,ntime
-                 gtau_mpi(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(cstep)
-             enddo ! over n={1,ntime} loop
-         enddo ! over m={1,norbs} loop
+         gtau_mpi = gtau_mpi * real(ncarlo) / real(cstep)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
@@ -497,26 +496,28 @@
 ! collect the probability data from prob to prob_mpi
      call ctqmc_reduce_prob(prob_mpi)
 
-! collect the (double) occupation matrix data from nmat to nmat_mpi, and
-! from nnmat to nnmat_mpi
+! collect the occupation matrix data from nmat to nmat_mpi
+! collect the double occupation matrix data from nnmat to nnmat_mpi
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
-! collect the spin-spin correlation function data from schi to schi_mpi,
-! from sschi to sschi_mpi
+! collect the spin-spin correlation function data from schi to schi_mpi
+! collect the spin-spin correlation function data from sschi to sschi_mpi
      call ctqmc_reduce_schi(schi_mpi, sschi_mpi)
 
-! collect the orbital-orbital correlation function data from ochi to
-! ochi_mpi, from oochi to oochi_mpi
+! collect the orbital-orbital correlation function data from ochi to ochi_mpi
+! collect the orbital-orbital correlation function data from oochi to oochi_mpi
      call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
 
-! collect the two-particle green's function from g2_re to g2_re_mpi, etc.
+! collect the two-particle green's function from g2_re to g2_re_mpi
+! collect the two-particle green's function from g2_im to g2_im_mpi
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
-! collect the two-particle green's function from h2_re to h2_re_mpi, etc.
+! collect the two-particle green's function from h2_re to h2_re_mpi
+! collect the two-particle green's function from h2_im to h2_im_mpi
      call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
 
-! collect the particle-particle pair susceptibility from ps_re to
-! ps_re_mpi, etc.
+! collect the pair susceptibility from ps_re to ps_re_mpi
+! collect the pair susceptibility from ps_im to ps_im_mpi
      call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
@@ -529,68 +530,26 @@
      call ctqmc_reduce_grnf(grnf_mpi)
 
 ! update original data and calculate the averages simultaneously
-     hist = hist_mpi
-     prob = prob_mpi * real(ncarlo) / real(nsweep)
+     hist  = hist_mpi
+     prob  = prob_mpi  * real(ncarlo) / real(nsweep)
 
-     nmat = nmat_mpi * real(nmonte) / real(nsweep)
-     do m=1,norbs
-         do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
+     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
+     nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
+     schi  = schi_mpi  * real(nmonte) / real(nsweep)
+     sschi = sschi_mpi * real(nmonte) / real(nsweep)
+     ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
+     oochi = oochi_mpi * real(nmonte) / real(nsweep)
 
-     schi = schi_mpi * real(nmonte) / real(nsweep)
-     do m=1,nband
-         do n=1,ntime
-             sschi(n,m) = sschi_mpi(n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,nband} loop
+     g2_re = g2_re_mpi * real(nmonte) / real(nsweep)
+     g2_im = g2_im_mpi * real(nmonte) / real(nsweep)
+     h2_re = h2_re_mpi * real(nmonte) / real(nsweep)
+     h2_im = h2_im_mpi * real(nmonte) / real(nsweep)
+     ps_re = ps_re_mpi * real(nmonte) / real(nsweep)
+     ps_im = ps_im_mpi * real(nmonte) / real(nsweep)
 
-     ochi = ochi_mpi * real(nmonte) / real(nsweep)
-     do m=1,norbs
-         do n=1,norbs
-             oochi(:,n,m) = oochi_mpi(:,n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             g2_re(:,:,:,n,m) = g2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-             g2_im(:,:,:,n,m) = g2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             h2_re(:,:,:,n,m) = h2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-             h2_im(:,:,:,n,m) = h2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             ps_re(:,:,:,n,m) = ps_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-             ps_im(:,:,:,n,m) = ps_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             ftau(:,n,m) = ftau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             grnf(:,n,m) = grnf_mpi(:,n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
+     gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
+     ftau  = ftau_mpi  * real(ncarlo) / real(nsweep)
+     grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy

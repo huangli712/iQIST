@@ -48,6 +48,7 @@
      use control, only : lemax, legrd, chmax, chgrd
      use control, only : ntime
      use control, only : beta
+     use context, only : csign
      use context, only : index_s, index_e, time_s, time_e
      use context, only : ppleg, qqche
      use context, only : rank
@@ -126,7 +127,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -173,7 +174,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -221,7 +222,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -328,7 +329,7 @@
 
      use control, only : nband, norbs, ncfgs, nzero
      use control, only : U, mune, beta
-     use context, only : ckink, matrix_ptrace
+     use context, only : ckink, csign, matrix_ptrace
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
      use context, only : T_spmat, ctqmc_new_spmat, ctqmc_del_spmat
@@ -398,7 +399,7 @@
      enddo ! over flvr={1,norbs} loop
 
 ! update nmat
-     nmat = nmat + nvec
+     nmat = nmat + csign * nvec
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate double occupation matrix: < n_i n_j >
@@ -415,7 +416,7 @@
                  raux1 = raux1 + sp_csr_cp_elm( j, j, ncfgs, nzero, &
                                       spm_t%vv, spm_t%jv, spm_t%iv )
              enddo ! over j={1,ncfgs} loop
-             nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
+             nnmat(flvr,i) = nnmat(flvr,i) + csign * raux1 / raux2
 
              raux1 = zero
              call sp_csr_mm_csr(        ncfgs, ncfgs, ncfgs, nzero, &
@@ -426,32 +427,32 @@
                  raux1 = raux1 + sp_csr_cp_elm( j, j, ncfgs, nzero, &
                                       spm_t%vv, spm_t%jv, spm_t%iv )
              enddo ! over j={1,ncfgs} loop
-             nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
+             nnmat(i,flvr) = nnmat(i,flvr) + csign * raux1 / raux2
          enddo ! over i={flvr+1,norbs} loop
      enddo ! over flvr={1,norbs-1} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^2>
 !-------------------------------------------------------------------------
-     paux(6) = paux(6) + ( sum(nvec) )**2
+     paux(6) = paux(6) + csign * ( sum(nvec) )**2
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^1>
 !-------------------------------------------------------------------------
-     paux(5) = paux(5) + sum(nvec)
+     paux(5) = paux(5) + csign * sum(nvec)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
 !-------------------------------------------------------------------------
      do flvr=1,nband
-         paux(4) = paux(4) + ( nvec(flvr) - nvec(flvr+nband) )
+         paux(4) = paux(4) + csign * ( nvec(flvr) - nvec(flvr+nband) )
      enddo ! over flvr={1,nband} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate kinetic energy: ekin
 ! equation : -T < k >
 !-------------------------------------------------------------------------
-     paux(3) = paux(3) - real(ckink * norbs) / beta
+     paux(3) = paux(3) - csign * real(ckink * norbs) / beta
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate potential energy: epot
@@ -460,7 +461,7 @@
 ! note: here U denotes as energy zero point
 !-------------------------------------------------------------------------
      do i=1,ncfgs
-         paux(2) = paux(2) + cprob(i) * ( eigs(i) + U )
+         paux(2) = paux(2) + csign * cprob(i) * ( eigs(i) + U )
      enddo ! over i={1,ncfgs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -484,6 +485,7 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
+     use context, only : csign
      use context, only : g2_re, g2_im
      use context, only : rank
      use context, only : mmat
@@ -520,7 +522,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 3) .and. .not. btest(isvrt, 4) )
+     call s_assert( btest(isvrt, 1) .and. .not. btest(isvrt, 2) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
@@ -569,8 +571,8 @@
                          if ( f1 == f2 ) then
                              cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
-                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) * csign / beta
+                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) * csign / beta
                      enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
                  enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
@@ -597,6 +599,7 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
+     use context, only : csign
      use context, only : ps_re, ps_im
      use context, only : rank
      use context, only : mmat
@@ -633,7 +636,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 5) )
+     call s_assert( btest(isvrt, 3) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
@@ -682,8 +685,8 @@
                          if ( f1 /= f2 ) then
                              cmeas = cmeas + g2aux(w1n,w4n,f1) * g2aux(nffrq-w2n+1,nffrq-w3n+1,f2)
                          endif ! back if ( f1 == f2 ) block
-                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
-                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) * csign / beta
+                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) * csign / beta
                      enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
                  enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
