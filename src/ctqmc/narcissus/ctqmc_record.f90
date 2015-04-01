@@ -731,7 +731,7 @@
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
 
-     use control, only : isvrt
+     use control, only : issus
      use control, only : nband, norbs
      use control, only : ntime
      use context, only : tmesh
@@ -756,7 +756,7 @@
      real(dp) :: oaux(norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 1) )
+     call s_assert( btest(issus, 1) )
 
      TIME_LOOP: do i=1,ntime
 
@@ -807,7 +807,7 @@
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
 
-     use control, only : isvrt
+     use control, only : issus
      use control, only : norbs
      use control, only : ntime
      use context, only : tmesh
@@ -837,7 +837,7 @@
      real(dp) :: oaux(ntime,norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 2) )
+     call s_assert( btest(issus, 2) )
 
 ! calculate ochi
      oaux = zero
@@ -927,7 +927,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 3) .and. .not. btest(isvrt, 4) )
+     call s_assert( btest(isvrt, 1) .and. .not. btest(isvrt, 2) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
@@ -1043,7 +1043,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 4) .and. .not. btest(isvrt, 3) )
+     call s_assert( btest(isvrt, 2) .and. .not. btest(isvrt, 1) )
 
 ! evaluate nfaux, determine the size of g2aux and h2aux
      nfaux = nffrq + nbfrq - 1
@@ -1172,7 +1172,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 5) )
+     call s_assert( btest(isvrt, 3) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
@@ -2547,7 +2547,7 @@
 !!>>> impurity green's function can be obtained by using dyson's equation
 !!>>> finally
   subroutine ctqmc_make_hub1()
-     use constants, only : dp, zero, one, czi, czero
+     use constants, only : dp, zero, one, two, czi, czero
 
      use control, only : norbs, ncfgs
      use control, only : mfreq
@@ -2555,7 +2555,7 @@
      use control, only : mune
      use control, only : myid, master
      use context, only : rmesh
-     use context, only : prob
+     use context, only : prob, nmat
      use context, only : eimp, uumat
      use context, only : grnf
      use context, only : hybf
@@ -2583,6 +2583,7 @@
 ! dummy real variables, used to interpolate self-energy function
      real(dp) :: ob, oe
      real(dp) :: d0, d1
+     real(dp) :: shift
 
 ! dummy complex variables, used to interpolate self-energy function
      complex(dp) :: cb, ce
@@ -2611,6 +2612,10 @@
 ! atomic green's function and self-energy function in Hubbard-I approximation
      complex(dp) :: ghub(mfreq,norbs)
      complex(dp) :: shub(mfreq,norbs)
+
+! evaluate the shift for the Coulomb interaction and chemical potential
+! if the retarded interaction is used
+     call ctqmc_eval_shift(shift)
 
 ! build atomic basis set, we do not order them according to their
 ! occupation numbers
@@ -2699,6 +2704,7 @@
      do i=1,norbs
          do k=1,mfreq
              shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
+             shub(k,i) = shub(k,i) - nmat(i) * shift
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
@@ -2724,6 +2730,7 @@
          call s_inv_z(norbs, gaux)
          do i=1,norbs
              sig2(k,i,i) = czi * rmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
+             sig2(k,i,i) = sig2(k,i,i) - shift / two
          enddo ! over i={1,norbs} loop
      enddo ! over k={1,nfreq} loop
 !-------------------------------------------------------------------------
@@ -2788,6 +2795,7 @@
          gaux = czero
          do i=1,norbs
              gaux(i,i) = czi * rmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
+             gaux(i,i) = gaux(i,i) - shift / two
          enddo ! over i={1,norbs} loop
          call s_inv_z(norbs, gaux)
          grnf(k,:,:) = gaux
@@ -2812,7 +2820,7 @@
      use control, only : mune, beta
      use control, only : myid, master
      use context, only : tmesh, rmesh
-     use context, only : prob
+     use context, only : prob, nmat
      use context, only : eimp, uumat
      use context, only : gtau, ftau, grnf, frnf
      use context, only : sig2
@@ -2837,6 +2845,7 @@
 
 ! dummy real variables, used to build atomic green's function
      real(dp) :: ob
+     real(dp) :: shift
 
 ! dummy complex variables, used to build atomic green's function
      complex(dp) :: cb
@@ -2873,6 +2882,10 @@
 ! atomic green's function and self-energy function in Hubbard-I approximation
      complex(dp) :: ghub(mfreq,norbs)
      complex(dp) :: shub(mfreq,norbs)
+
+! evaluate the shift for the Coulomb interaction and chemical potential
+! if the retarded interaction is used
+     call ctqmc_eval_shift(shift)
 
 ! build atomic basis set, we do not order them according to their
 ! occupation numbers
@@ -2961,6 +2974,7 @@
      do i=1,norbs
          do k=1,mfreq
              shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
+             shub(k,i) = shub(k,i) - nmat(i) * shift
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 

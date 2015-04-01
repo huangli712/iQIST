@@ -6,7 +6,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 01/07/2014 by li huang
 !!!           01/11/2014 by li huang
-!!!           11/11/2014 by li huang
+!!!           03/27/2015 by li huang
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
 !!!           quantum Monte Carlo impurity solver
@@ -466,6 +466,7 @@
          character(len=10) :: solver_name = 'GARDENIA'
 
          integer :: isort
+         integer :: issus
          integer :: isvrt
          integer :: lemax
          integer :: legrd
@@ -482,6 +483,7 @@
          character(len=10) :: solver_name = 'NARCISSUS'
 
          integer :: isort
+         integer :: issus
          integer :: isvrt
          integer :: isscr
          integer :: lemax
@@ -512,6 +514,7 @@
          character(len=10) :: solver_name = 'LAVENDER'
 
          integer :: isort
+         integer :: issus
          integer :: isvrt
          integer :: nzero
          integer :: lemax
@@ -539,6 +542,7 @@
          character(len=10) :: solver_name = 'MANJUSHAKA'
 
          integer :: isort
+         integer :: issus
          integer :: isvrt
          integer :: ifast
          integer :: itrun

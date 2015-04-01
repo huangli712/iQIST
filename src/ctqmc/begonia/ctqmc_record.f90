@@ -41,6 +41,7 @@
      use control, only : norbs
      use control, only : ntime
      use control, only : beta
+     use context, only : csign
      use context, only : index_s, index_e, time_s, time_e
      use context, only : rank
      use context, only : mmat
@@ -88,7 +89,7 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
@@ -193,7 +194,7 @@
 
      use control, only : nband, norbs, ncfgs, nzero
      use control, only : U, mune, beta
-     use context, only : ckink, matrix_ptrace
+     use context, only : ckink, csign, matrix_ptrace
      use context, only : paux, nmat, nnmat
      use context, only : diag, eigs
      use context, only : T_spmat, ctqmc_new_spmat, ctqmc_del_spmat
@@ -263,7 +264,7 @@
      enddo ! over flvr={1,norbs} loop
 
 ! update nmat
-     nmat = nmat + nvec
+     nmat = nmat + csign * nvec
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate double occupation matrix: < n_i n_j >
@@ -280,7 +281,7 @@
                  raux1 = raux1 + sp_csr_cp_elm( j, j, ncfgs, nzero, &
                                       spm_t%vv, spm_t%jv, spm_t%iv )
              enddo ! over j={1,ncfgs} loop
-             nnmat(flvr,i) = nnmat(flvr,i) + raux1 / raux2
+             nnmat(flvr,i) = nnmat(flvr,i) + csign * raux1 / raux2
 
              raux1 = zero
              call sp_csr_mm_csr(        ncfgs, ncfgs, ncfgs, nzero, &
@@ -291,32 +292,32 @@
                  raux1 = raux1 + sp_csr_cp_elm( j, j, ncfgs, nzero, &
                                       spm_t%vv, spm_t%jv, spm_t%iv )
              enddo ! over j={1,ncfgs} loop
-             nnmat(i,flvr) = nnmat(i,flvr) + raux1 / raux2
+             nnmat(i,flvr) = nnmat(i,flvr) + csign * raux1 / raux2
          enddo ! over i={flvr+1,norbs} loop
      enddo ! over flvr={1,norbs-1} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^2>
 !-------------------------------------------------------------------------
-     paux(6) = paux(6) + ( sum(nvec) )**2
+     paux(6) = paux(6) + csign * ( sum(nvec) )**2
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^1>
 !-------------------------------------------------------------------------
-     paux(5) = paux(5) + sum(nvec)
+     paux(5) = paux(5) + csign * sum(nvec)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate spin magnetization: < Sz >
 !-------------------------------------------------------------------------
      do flvr=1,nband
-         paux(4) = paux(4) + ( nvec(flvr) - nvec(flvr+nband) )
+         paux(4) = paux(4) + csign * ( nvec(flvr) - nvec(flvr+nband) )
      enddo ! over flvr={1,nband} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate kinetic energy: ekin
 ! equation : -T < k >
 !-------------------------------------------------------------------------
-     paux(3) = paux(3) - real(ckink * norbs) / beta
+     paux(3) = paux(3) - csign * real(ckink * norbs) / beta
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate potential energy: epot
@@ -325,7 +326,7 @@
 ! note: here U denotes as energy zero point
 !-------------------------------------------------------------------------
      do i=1,ncfgs
-         paux(2) = paux(2) + cprob(i) * ( eigs(i) + U )
+         paux(2) = paux(2) + csign * cprob(i) * ( eigs(i) + U )
      enddo ! over i={1,ncfgs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

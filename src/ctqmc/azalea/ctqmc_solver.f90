@@ -48,8 +48,6 @@
 ! loop index
      integer  :: i
      integer  :: j
-     integer  :: m
-     integer  :: n
 
 ! status flag
      integer  :: istat
@@ -297,11 +295,7 @@
          call ctqmc_reduce_gtau(gtau_mpi)
 
 ! gtau_mpi need to be scaled properly before written
-         do m=1,norbs
-             do n=1,ntime
-                 gtau_mpi(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(cstep)
-             enddo ! over n={1,ntime} loop
-         enddo ! over m={1,norbs} loop
+         gtau_mpi = gtau_mpi * real(ncarlo) / real(cstep)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
@@ -380,8 +374,8 @@
 ! collect the probability data from prob to prob_mpi
      call ctqmc_reduce_prob(prob_mpi)
 
-! collect the (double) occupation matrix data from nmat to nmat_mpi, and
-! from nnmat to nnmat_mpi
+! collect the occupation matrix data from nmat to nmat_mpi
+! collect the double occupation matrix data from nnmat to nnmat_mpi
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
@@ -391,27 +385,14 @@
      call ctqmc_reduce_grnf(grnf_mpi)
 
 ! update original data and calculate the averages simultaneously
-     hist = hist_mpi
-     prob = prob_mpi * real(ncarlo) / real(nsweep)
+     hist  = hist_mpi
+     prob  = prob_mpi  * real(ncarlo) / real(nsweep)
 
-     nmat = nmat_mpi * real(nmonte) / real(nsweep)
-     do m=1,norbs
-         do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
+     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
+     nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
 
-     do m=1,norbs
-         do n=1,norbs
-             gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             grnf(:,n,m) = grnf_mpi(:,n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
+     gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
+     grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy

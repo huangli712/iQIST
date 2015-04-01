@@ -6,7 +6,7 @@
 !!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 09/15/2009 by li huang
 !!!           02/23/2010 by li huang
-!!!           11/06/2014 by li huang
+!!!           03/27/2015 by li huang
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -53,47 +53,87 @@
 ! if isort == 4, use normal representation to measure G(\tau) and F(\tau)
 ! if isort == 5, use legendre polynomial to measure G(\tau) and F(\tau)
 ! if isort == 6, use chebyshev polynomial (the second kind) to measure G(\tau) and F(\tau)
+!
 ! note: if isort \in [1,3], we use ctqmc_make_hub1() to calculate the self
 ! energy function, or else we use ctqmc_make_hub2().
+!
 ! note: as for the kernel polynomial representation, the default dirichlet
 ! kernel is applied automatically. if you want to choose the other kernel,
-! please check the ctqmc_make_gtau() subroutine.
+! please check the ctqmc_make_gtau() subroutine in ctqmc_record.f90.
+!
 ! note: in the lavender code, isort == 4, 5, and 6 are not implemeted so
 ! far, i.e., F(\tau) will not be measured.
      integer, public, save :: isort  = 1
+
+! control flag: whether we measure the charge or spin susceptibility
+! we just use the following algorithm to judge which susceptibility should
+! be calculated:
+! (a) issus is converted to a binary representation at first. for example,
+! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
+!
+! (b) then we examine the bits. if it is 1, then we do the calculation.
+! if it is 0, then we ignore the calculation. for example, we just use the
+! second bit (from right side to left side) to represent the calculation
+! of spin-spin correlation function. so, if issus is 10_10 (1010_2), we
+! will calculate the spin-spin correlation function. if issus is 13_10
+! (1101_2), we will not calculate it since the second bit is 0.
+!
+! the following are the definitions of bit representation:
+! if p == 1, do nothing
+! if p == 2, calculate spin-spin correlation function (time space)
+! if p == 3, calculate orbital-orbital correlation function (time space)
+! if p == 4, calculate spin-spin correlation function (frequency space)
+! if p == 5, calculate orbital-orbital correlation function (frequency space)
+! if p == 6, reserved
+! if p == 7, reserved
+! if p == 8, reserved
+! if p == 9, reserved
+!
+! example:
+!   ( 1 1 1 0 1 0 1 0 1)_2
+! p = 9 8 7 6 5 4 3 2 1
+!
+! note: p = 2, 3, 4, and 5 are not implemented so far.
+     integer, public, save :: issus  = 1
 
 ! control flag: whether we measure the high order correlation function
 ! we just use the following algorithm to judge which correlation function
 ! should be calculated:
 ! (a) isvrt is converted to a binary representation at first. for example,
-! 10 is converted to 1010_2, 15 is converted to 1111_2, etc.
+! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
+!
 ! (b) then we examine the bits. if it is 1, then we do the calculation.
 ! if it is 0, then we ignore the calculation. for example, we just use the
 ! second bit (from right side to left side) to represent the calculation
-! of spin-spin correlation function. so, if isvrt is 10 (1010_2), we will
-! calculate the spin-spin correlation function. if isvrt is 13 (1101_2),
-! we will not calculate it since the second bit is 0.
+! of two-particle green's function. so, if isvrt is 10_10 (1010_2), we
+! will calculate the two-particle green's function. if isvrt is 13_10
+! (1101_2), we will not calculate it since the second bit is 0.
+!
 ! the following are the definitions of bit representation:
 ! if p == 1, do nothing
-! if p == 2, calculate spin-spin correlation function
-! if p == 3, calculate orbital-orbital correlation function
-! if p == 4, calculate both two-particle green's function and vertex function
-! if p == 5, calculate both two-particle green's function and vertex function
-! if p == 6, calculate particle-particle pair susceptibility
+! if p == 2, calculate two-particle green's function and vertex function
+! if p == 3, calculate two-particle green's function and vertex function
+! if p == 4, calculate particle-particle pair susceptibility
+! if p == 5, reserved
+! if p == 6, reserved
 ! if p == 7, reserved
 ! if p == 8, reserved
 ! if p == 9, reserved
+!
 ! example:
-!     1 1 1 0 1 0 1 0 1
+!   ( 1 1 1 0 1 0 1 0 1)_2
 ! p = 9 8 7 6 5 4 3 2 1
-! note: if p == 4 or p == 5, both the two-particle green's and vertex
+!
+! note: if p == 2 or p == 3, both the two-particle green's and vertex
 ! functions are computed, but using two different algorithms. you can not
 ! set them to 1 at the same time. in order words, if you set the bit at
-! p == 4 to 1, then the bit at p == 5 must be 0, and vice versa.
-! note: if p == 4, the traditional algorithm is used. if p == 5, the
+! p == 2 to 1, then the bit at p == 3 must be 0, and vice versa.
+!
+! note: if p == 2, the traditional algorithm is used. if p == 3, the
 ! improved estimator for two-particle green's function is used.
-! note: for the lavender code, the bits at p == 2, 3, and 5 must be 0, in
-! other words, these features are not implemented so far.
+!
+! note: for the lavender code, the bit at p == 3 must be 0, i.e., this
+! feature is not implemented so far.
      integer, public, save :: isvrt  = 1
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -149,6 +189,7 @@
 
 ! number of matsubara frequency sampling by continuous time quantum Monte
 ! Carlo quantum impurity solver
+!
 ! note: the rest (mfreq - nfreq + 1 points) values are evaluated by using
 ! Hubbard-I approximation
      integer, public, save :: nfreq  = 128
@@ -158,28 +199,36 @@
      integer, public, save :: ntime  = 1024
 
 ! number of parts that the imaginary time axis is split
+!
 ! note: all operators in the imaginary time axis are grouped into npart
 ! parts according to their time values, in each Monte Carlo steps, only
 ! those changed parts are carefully dealt with, not all the parts.
+!
 ! note: 2\sqrt{3 <k> nband} ~ 4\sqrt{3 <k> nband} may be the optimal value
-! for npart to achieve maximum performance
+! for npart to achieve maximum performance.
      integer, public, save :: npart  = 4
 
 ! flip period for spin up and spin down states
+!
 ! note: care must be taken to prevent the system from being trapped in a
 ! state which breaks a symmetry of local hamiltonian when it should not
 ! be. to avoid unphysical trapping, we introduce "flip" moves, which
 ! exchange the operators corresponding, for example, to up and down spins
 ! in a given orbital.
+!
 ! note: in this code, nowadays the following flip schemes are supported
 !     if cflip = 1, flip inter-orbital spins randomly;
 !     if cflip = 2, flip intra-orbital spins one by one;
 !     if cflip = 3, flip intra-orbital spins globally.
+! here cflip is an internal variable.
+!
 ! note: we use the sign of nflip to control flip schemes
 !     if nflip = 0, means infinite long period to do flip
 !     if nflip > 0, combine cflip = 2 (80%) and cflip = 3 (20%)
 !     if nflip < 0, combine cflip = 1 (80%) and cflip = 3 (20%)
+!
 ! note: if nflip /= 0, the absolute value of nflip is the flip period
+!
 ! note: when cflip = 1, the symmetry of all orbitals must be taken into
 ! consideration, otherwise the code may be trapped by a deadlock.
      integer, public, save :: nflip  = 20000
@@ -197,11 +246,13 @@
      integer, public, save :: nclean = 100000
 
 ! how often to sampling the gmat and paux (nmat and nnmat)
+!
 ! note: the measure periods for schi, sschi, ochi, oochi, g2_re, g2_im,
 ! h2_re, h2_im, ps_re, and ps_im are also controlled by nmonte parameter.
      integer, public, save :: nmonte = 10
 
 ! how often to sampling the gtau and prob
+!
 ! note: the measure period for ftau is also controlled by ncarlo parameter.
      integer, public, save :: ncarlo = 10
 
@@ -210,7 +261,8 @@
 !!========================================================================
 
 ! note: U, Uc, Uv, Jz, Js, and Jp are not used by this quantum impurity
-! solver actually. we keep them here is just for reference
+! solver actually. we keep them here is just for reference.
+
 ! average Coulomb interaction
      real(dp), public, save :: U     = 4.00_dp
 
@@ -232,6 +284,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! chemical potential or fermi level
+!
 ! note: it should/can be replaced with eimp
      real(dp), public, save :: mune  = 2.00_dp
 

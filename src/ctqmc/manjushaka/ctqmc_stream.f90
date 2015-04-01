@@ -42,9 +42,10 @@
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
+     issus  = 1            ! without suscept.    (1) or with susceptibility  (2)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
      ifast  = 1            ! divide-and-conquer  (1) or time evolution       (2) or skip listing method  (3)
-     itrun  = 1            ! without truncation  (1) or with N truncation    (2)
+     itrun  = 1            ! without truncation  (1) or with smart truncat.  (2)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
@@ -114,6 +115,7 @@
              call p_get('isspn' , isspn )
              call p_get('isbin' , isbin )
              call p_get('isort' , isort )
+             call p_get('issus' , issus )
              call p_get('isvrt' , isvrt )
              call p_get('ifast' , ifast )
              call p_get('itrun' , itrun )
@@ -171,6 +173,7 @@
      call mp_bcast( isspn , master )
      call mp_bcast( isbin , master )
      call mp_bcast( isort , master )
+     call mp_bcast( issus , master )
      call mp_bcast( isvrt , master )
      call mp_bcast( ifast , master )
      call mp_bcast( itrun , master )

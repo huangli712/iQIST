@@ -23,7 +23,7 @@
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, mystd
 
-     use control, only : issun, isspn, isvrt
+     use control, only : issun, isspn, issus, isvrt
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
      use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
@@ -48,8 +48,6 @@
 ! loop index
      integer  :: i
      integer  :: j
-     integer  :: m
-     integer  :: n
 
 ! status flag
      integer  :: istat
@@ -302,19 +300,24 @@
              endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
 ! record nothing
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
+                 CONTINUE
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) block
+
+! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
                  CONTINUE
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) block
 
 ! record the two-particle green's function
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
                  call ctqmc_record_twop()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
 
 ! record the particle-particle pair susceptibility
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
                  call ctqmc_record_pair()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 5) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
@@ -335,14 +338,12 @@
          call ctqmc_reduce_hist(hist_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
+         gtau = gtau / real(caves)
          call ctqmc_reduce_gtau(gtau_mpi)
+         gtau = gtau * real(caves)
 
 ! gtau_mpi need to be scaled properly before written
-         do m=1,norbs
-             do n=1,ntime
-                 gtau_mpi(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(cstep)
-             enddo ! over n={1,ntime} loop
-         enddo ! over m={1,norbs} loop
+         gtau_mpi = gtau_mpi * real(ncarlo)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
@@ -415,69 +416,53 @@
 !!>>> reducing final results                                           <<<
 !!========================================================================
 
-! special considerations for prob and grnf, since for children processes,
-! caves may be different
-     prob = prob / real(caves); grnf = grnf / real(caves)
-
 ! collect the histogram data from hist to hist_mpi
      call ctqmc_reduce_hist(hist_mpi)
 
 ! collect the probability data from prob to prob_mpi
+     prob  = prob  / real(caves)
      call ctqmc_reduce_prob(prob_mpi)
 
-! collect the (double) occupation matrix data from nmat to nmat_mpi, and
-! from nnmat to nnmat_mpi
+! collect the occupation matrix data from nmat to nmat_mpi
+! collect the double occupation matrix data from nnmat to nnmat_mpi
+     nmat  = nmat  / real(caves)
+     nnmat = nnmat / real(caves)
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
-! collect the two-particle green's function from g2_re to g2_re_mpi, etc.
+! collect the two-particle green's function from g2_re to g2_re_mpi
+! collect the two-particle green's function from g2_im to g2_im_mpi
+     g2_re = g2_re / real(caves)
+     g2_im = g2_im / real(caves)
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
-! collect the particle-particle pair susceptibility from ps_re to
-! ps_re_mpi, etc.
+! collect the pair susceptibility from ps_re to ps_re_mpi
+! collect the pair susceptibility from ps_im to ps_im_mpi
+     ps_re = ps_re / real(caves)
+     ps_im = ps_im / real(caves)
      call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
+     gtau  = gtau  / real(caves)
      call ctqmc_reduce_gtau(gtau_mpi)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
+     grnf  = grnf  / real(caves)
      call ctqmc_reduce_grnf(grnf_mpi)
 
 ! update original data and calculate the averages simultaneously
-     hist = hist_mpi
-     prob = prob_mpi * real(ncarlo)
+     hist  = hist_mpi
+     prob  = prob_mpi  * real(ncarlo)
 
-     nmat = nmat_mpi * real(nmonte) / real(nsweep)
-     do m=1,norbs
-         do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
+     nmat  = nmat_mpi  * real(nmonte)
+     nnmat = nnmat_mpi * real(nmonte)
 
-     do m=1,norbs
-         do n=1,norbs
-             g2_re(:,:,:,n,m) = g2_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-             g2_im(:,:,:,n,m) = g2_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
+     g2_re = g2_re_mpi * real(nmonte)
+     g2_im = g2_im_mpi * real(nmonte)
+     ps_re = ps_re_mpi * real(nmonte)
+     ps_im = ps_im_mpi * real(nmonte)
 
-     do m=1,norbs
-         do n=1,norbs
-             ps_re(:,:,:,n,m) = ps_re_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-             ps_im(:,:,:,n,m) = ps_im_mpi(:,:,:,n,m) * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             gtau(:,n,m) = gtau_mpi(:,n,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
-
-     do m=1,norbs
-         do n=1,norbs
-             grnf(:,n,m) = grnf_mpi(:,n,m) * real(nmonte)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
+     gtau  = gtau_mpi  * real(ncarlo)
+     grnf  = grnf_mpi  * real(nmonte)
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy

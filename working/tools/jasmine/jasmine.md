@@ -55,7 +55,7 @@ JASMINE Test Cases
 
 * 3i // Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0, diagonal CF, GQNs (N,Sz,PS) 
 
-* 3j // Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0, SOC, lambda = 0.50, GQNs (N,Jz)
+* 3j // Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0, mune=2.00, SOC, lambda = 0.50, GQNs (N,Jz)
  
 * 3k // Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0, diagonal CF, SOC, lambda = 0.50, GQNs (N) 
 

@@ -12,6 +12,7 @@
   isspn  : 2
   isbin  : 2
   isort  : 1
+  issus  : 1
   isvrt  : 1
   ifast  : 1
   itrun  : 2

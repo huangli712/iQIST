@@ -674,9 +674,9 @@
 ! two-particle green's function, connected part
      complex(dp) :: chii
 
-! check if we need to dump two-particle green's function and vertex
+! check if we need to dump the two-particle green's function and vertex
 ! function data to solver.twop.dat
-     if ( .not. btest(isvrt, 3) ) RETURN
+     if ( .not. btest(isvrt, 1) ) RETURN
 
 ! open data file: solver.twop.dat
      open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
@@ -782,9 +782,9 @@
      integer :: it
      integer :: jt
 
-! check if we need to dump particle-particle pair susceptibility
+! check if we need to dump the particle-particle pair susceptibility
 ! to solver.pair.dat
-     if ( .not. btest(isvrt, 5) ) RETURN
+     if ( .not. btest(isvrt, 3) ) RETURN
 
 ! open data file: solver.pair.dat
      open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')

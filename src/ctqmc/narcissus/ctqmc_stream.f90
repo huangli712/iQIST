@@ -41,6 +41,7 @@
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
+     issus  = 1            ! without suscept.    (1) or with susceptibility  (2)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
      isscr  = 1            ! normal (1) or holstein-hubbard (2) or plasmon pole (3) or ohmic model (4)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -113,6 +114,7 @@
              call p_get('isspn' , isspn )
              call p_get('isbin' , isbin )
              call p_get('isort' , isort )
+             call p_get('issus' , issus )
              call p_get('isvrt' , isvrt )
              call p_get('isscr' , isscr )
 
@@ -170,6 +172,7 @@
      call mp_bcast( isspn , master )
      call mp_bcast( isbin , master )
      call mp_bcast( isort , master )
+     call mp_bcast( issus , master )
      call mp_bcast( isvrt , master )
      call mp_bcast( isscr , master )
      call mp_barrier()
@@ -482,7 +485,7 @@
 !-------------------------------------------------------------------------
 ! shift the Coulomb interaction matrix and chemical potential if retarded
 ! interaction or the so-called dynamical screening effect is considered
-     call ctqmc_make_shift(uumat)
+     call ctqmc_make_shift(uumat, one)
 
      return
   end subroutine ctqmc_selfer_init

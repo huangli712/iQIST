@@ -12,6 +12,7 @@
   isspn  : 1
   isbin  : 1
   isort  : 2
+  issus  : 1
   isvrt  : 4
 
 !!>>> setup common variables for quantum impurity model
