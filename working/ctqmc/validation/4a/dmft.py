@@ -24,25 +24,20 @@ def do_dmft_loop(mfreq, norbs, grnf):
     """
     size_t = mfreq * norbs * norbs
     grnf_t = numpy.reshape(grnf, (mfreq, norbs, norbs), order = 'F')
-    hybf_t = grnf_t * 0.0
-    part_1 = 1.0
-    part_2 = 2.0
-    hybf_t[:,0,0] = grnf_t[:,0,0] * part_1 * part_1 # band 1, spin up
-    hybf_t[:,1,1] = grnf_t[:,1,1] * part_2 * part_2 # band 2, spin up
-    hybf_t[:,2,2] = grnf_t[:,2,2] * part_1 * part_1 # band 1, spin dn
-    hybf_t[:,3,3] = grnf_t[:,3,3] * part_2 * part_2 # band 2, spin dn
+    part = 0.25
+    hybf_t = grnf_t * part * part
     return numpy.reshape(hybf_t, size_t, order = 'F')
 
 # get mpi communicator
 comm = MPI.COMM_WORLD
 
 # check the status of ctqmc impurity solver
-if ctqmc.solver_id() == 201:
+if ctqmc.solver_id() == 102:
     if comm.rank == 0 :
-        print "Hello world! This is the BEGONIA code."
+        print "Hello world! This is the GARDENIA code."
 else:
     if comm.rank == 0 :
-        print "Where is the BEGONIA code?"
+        print "Where is the GARDENIA code?"
     sys.exit(-1)
 if ctqmc.solver_status() != 1 :
     print "I am sorry. This ctqmc impurity solver is not ready."
@@ -51,33 +46,12 @@ if ctqmc.solver_status() != 1 :
 # mpi barrier
 comm.Barrier()
 
-# prepare the input file
-if comm.rank == 0:
-    # create an instance
-    p = p_ctqmc_solver('begonia')
-
-    # setup the parameters
-    p.setp(isscf = 1, issun = 1, isbin = 1)
-    p.setp(nband = 2, norbs = 4, ncfgs = 16)
-    p.setp(mune = 3.5, part = 1.0, beta = 50.0)
-    p.setp(nsweep = 200000000)
-
-    # verify the parameters
-    p.check()
-
-    # generate the solver.ctqmc.in file
-    p.write()
-
-    # destroy the instance
-    del p
-
-# mpi barrier
-comm.Barrier()
-
 # setup parameters
 mfreq = 8193 # number of matsubara frequency points
-norbs = 4    # number of orbitals
+norbs = 6    # number of orbitals
 niter = 20   # number of iterations
+mune  = 1.0  # initial chemical potential
+occup = 2.0  # required occupation number
 size_t = mfreq * norbs * norbs
 
 # allocate memory
@@ -85,20 +59,66 @@ hybf = numpy.zeros(size_t, dtype = numpy.complex)
 grnf = numpy.zeros(size_t, dtype = numpy.complex)
 grnf_s = numpy.zeros(size_t, dtype = numpy.complex)
 
-# init ctqmc impurity solver
-ctqmc.init_ctqmc(comm.rank, comm.size)
+# mpi barrier
+comm.Barrier()
 
 # try to implement the DMFT self-consistent loop
 for i in range(niter):
-    ctqmc.exec_ctqmc(i+1)
-    grnf = ctqmc.get_grnf(size_t)
-    hybf = do_dmft_loop(mfreq, norbs, grnf)
-    ctqmc.set_hybf(size_t, hybf)
-    print 'MAX_ERROR:', (numpy.absolute(grnf - grnf_s)).max()
-    grnf_s = (grnf + grnf_s)/2.0
 
-# stop ctqmc impurity solver
-ctqmc.stop_ctqmc()
+    # prepare the input file
+    if comm.rank == 0:
+        # create an instance
+        p = p_ctqmc_solver('gardenia')
+
+        # setup the parameters
+        p.setp(isscf = 1, isbin = 1, issus = 2)
+        p.setp(nband = 3, norbs = 6, ncfgs = 64)
+        p.setp(Uc = 1.0, Uv = 0.5, Jz = 0.25)
+        p.setp(mune = mune, part = 0.25, beta = 200.0)
+        p.setp(nsweep = 20000000, nmonte = 50, ncarlo = 50)
+
+        # verify the parameters
+        p.check()
+
+        # generate the solver.ctqmc.in file
+        p.write()
+
+        # destroy the instance
+        del p
+
+    # mpi barrier
+    comm.Barrier()
+
+    # init ctqmc impurity solver
+    ctqmc.init_ctqmc(comm.rank, comm.size)
+
+    # setup hybridization function
+    # for the first iteration, we just use the default value
+    if i > 0: ctqmc.set_hybf(size_t, hybf)
+
+    # exec ctqmc impurity solver
+    ctqmc.exec_ctqmc(i+1)
+
+    # get green's function
+    grnf = ctqmc.get_grnf(size_t)
+
+    # get new hybridization function
+    hybf = do_dmft_loop(mfreq, norbs, grnf)
+
+    # get occupation number
+    nmat = ctqmc.get_nmat(norbs)
+
+    # calculate new chemical potential
+    mune = mune + 0.3 * float( occup - sum(nmat) )
+
+    # convergence analysis
+    grnf_s = (grnf + grnf_s) / 2.0
+    if comm.rank == 0:
+        print 'MAX_ERROR:', (numpy.absolute(grnf - grnf_s)).max()
+        print 'curr_mune:', mune, 'curr_occu:', sum(nmat), 'need_occu:', occup
+
+    # stop ctqmc impurity solver
+    ctqmc.stop_ctqmc()
 
 # mpi barrier
 comm.Barrier()
