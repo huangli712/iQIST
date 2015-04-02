@@ -20,7 +20,6 @@ from pyiqist import api as ctqmc
 
 def do_dmft_loop(mfreq, norbs, grnf):
     """ implement the DMFT self-consistent condition for bethe lattice
-        t1 = 1.0, t2 = 2.0, half-filling case
     """
     size_t = mfreq * norbs * norbs
     grnf_t = numpy.reshape(grnf, (mfreq, norbs, norbs), order = 'F')
