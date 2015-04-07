@@ -1,5 +1,9 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.6.0 @ aa24237 // Apr 03, 2015
+
+* Update working/ctqmc/validation directory, add more examples.
+
 ### v0.5.9 @ 2dc7288 // Apr 01, 2015
 
 * Fix the sign problems in the measurement.
