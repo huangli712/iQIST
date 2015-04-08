@@ -1,4 +1,8 @@
 
+### make.sys
+
+see make.sys.mac_standard
+
 ### make.sys.mac_standard
 
 Machine   : MacBook Pro
