@@ -19,7 +19,7 @@
 !!
 !! In this module, we define such a data structure (sunu) which is used
 !! to represent very large float number. We overload the basic arithmetic
-!! operations such +/-/*/\/ for it. Due to the performance issue, we do
+!! operations such +,-,*,/ for it. Due to the performance issue, we do
 !! not use it now. But it may be useful in the other fields.
 !!
 !! Usage
