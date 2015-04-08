@@ -189,6 +189,9 @@ LFLAGS = -static -Wl,-no_pie $(OMP) $(GPROF)
 
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------
+LIBS   = -L. -llapack -lblas #-lguide
+LIBS   = -L. -llapack -lgoto #-lguide
+LIBS   = -lmkl_intel_lp64 -lmkl_core -lmkl_sequential
 LIBS   = -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
 
 # mpi library, just for fortran
