@@ -162,36 +162,35 @@
 
 # fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
-F90    = mpif90
+F90    = /apps/openmpi183/bin/mpif90
 LINKER = $(F90)
 ARCHIVER = ar -ruv
 
 # fortran preprocessor options, common setting
 #-------------------------------------------------------------------------
 MPI    = -DMPI
-OMP    = #-openmp
+OMP    = #-fopenmp
 API    = #-DAPI -DMPY
-FPP    = -cpp 
+FPP    = -cpp
 CPP    = $(FPP) $(MPI) $(OMP) $(API)
 
 # machine tuning options, just for my laptop: iris system
 #-------------------------------------------------------------------------
-GPROF  = #-pg
-CHECK  = #-warn all #-check all -traceback -g
-CDUMP  = #-vec-report2 -openmp-report2 -nogen-interfaces
-LEVEL  = -O3 #-xHost -unroll-aggressive -align all -fPIC
-MARCH  = #-march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2
+GPROF  = #
+CHECK  = -Wall #-pedantic -fbacktrace -fcheck=all -g
+CDUMP  = #
+LEVEL  = -O3 -fPIC
+MARCH  = -mavx
 
 # flags for compiler and linker
 #-------------------------------------------------------------------------
 FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MARCH) $(GPROF)
-LFLAGS =  $(OMP) $(GPROF)
+LFLAGS = $(OMP) $(GPROF)
 
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------
-LIBS   = -L{MKLROOT}/lin/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential
+LIBS   = -L/home/lihuang/nobackup/backup/lapack -llapack -lblas
 
 # mpi library, just for fortran
 #-------------------------------------------------------------------------
-#MPIL   = -L/usr/local/openmpi/lib -lmpi_mpifh
-#MPIL   = -L/usr/local/mpich/lib -lfmpich -lmpichf90
+MPIL   = -L/apps/openmpi183/lib/ -lmpi_mpifh

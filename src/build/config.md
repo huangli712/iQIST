@@ -54,3 +54,19 @@ Software  : Linux kernel 2.6.32-431
             Intel Fortran Compiler 13.1.1
             Netlib LAPACK/BLAS 3.4.2
             Python 2.7.3
+
+### make.sys.linux_gfortran
+
+Machine   : Linux cluster
+
+Processor : 2.0 GHz Intel Xeon E5-2620
+
+Memory    : 32 GB
+
+Software  : Linux kernel 2.6.32-431
+            OpenMPI 1.8.3
+            GNU gfortran 4.8.2
+            Netlib LAPACK/BLAS 3.4.2
+            Python 2.7.3
+
+
