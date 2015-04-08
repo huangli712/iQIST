@@ -162,7 +162,7 @@
 
 # fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
-F90    = mpif90
+F90    = /usr/local/openmpi/bin/mpif90
 LINKER = $(F90)
 ARCHIVER = ar -ruv
 
@@ -189,7 +189,7 @@ LFLAGS = -static -Wl,-no_pie $(OMP) $(GPROF)
 
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------
-LIBS   = -framework Accelerate
+LIBS   = -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
 
 # mpi library, just for fortran
 #-------------------------------------------------------------------------
