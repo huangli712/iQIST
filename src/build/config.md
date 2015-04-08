@@ -69,4 +69,22 @@ Software  : Linux kernel 2.6.32-431
             Netlib LAPACK/BLAS 3.4.2
             Python 2.7.3
 
+### make.sys.tianhe_standard
 
+Machine   : TianHe-1 supercomputer
+
+Processor :
+
+Memory    :
+
+Software  :
+
+### make.sys.tianhe_openblas
+
+Machine   : TianHe-1 supercomputer
+
+Processor :
+
+Memory    :
+
+Software  :
