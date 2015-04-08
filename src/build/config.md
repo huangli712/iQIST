@@ -40,3 +40,17 @@ Software  : OS X 10.8.5
             Intel Fortran Compiler 13.0.0
             Intel Math Kernel Library 11.0
             Python 2.7.4
+
+### make.sys.linux_standard
+
+Machine   : Linux cluster
+
+Processor : 2.0 GHz Intel Xeon E5-2620
+
+Memory    : 32 GB
+
+Software  : Linux kernel 2.6.32-431
+            OpenMPI 1.6.4
+            Intel Fortran Compiler 13.1.1
+            Netlib LAPACK/BLAS 3.4.2
+            Python 2.7.3

@@ -179,18 +179,18 @@ CPP    = $(FPP) $(MPI) $(OMP) $(API)
 GPROF  = #-pg
 CHECK  = -warn all #-check all -traceback -g
 CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
-LEVEL  = -O3 -xHost -unroll-aggressive -align all #-fPIC
+LEVEL  = -O3 -xHost -unroll-aggressive -align all -fPIC
 MARCH  = -march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2
 
 # flags for compiler and linker
 #-------------------------------------------------------------------------
 FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MARCH) $(GPROF)
-LFLAGS =  $(OMP) $(GPROF)
+LFLAGS = $(OMP) $(GPROF)
 
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------
-LIBS   = -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lmkl_def
+LIBS   = -L/home/lihuang/nobackup/backup/lapack -llapack -lblas
 
 # mpi library, just for fortran
 #-------------------------------------------------------------------------
-#MPIL   = -L/home/soft/openmpi-intel/lib -lmpi_mpifh
+MPIL   = -L/apps/openmpi16/lib/ -lmpi_f90
