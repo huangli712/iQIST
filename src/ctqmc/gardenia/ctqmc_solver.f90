@@ -574,8 +574,10 @@
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
      schi  = schi_mpi  * real(nmonte) / real(nsweep)
      sschi = sschi_mpi * real(nmonte) / real(nsweep)
+     ssfom = ssfom_mpi * real(nmonte) / real(nsweep)
      ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
      oochi = oochi_mpi * real(nmonte) / real(nsweep)
+     oofom = oofom_mpi * real(nmonte) / real(nsweep)
 
      g2_re = g2_re_mpi * real(nmonte) / real(nsweep)
      g2_im = g2_im_mpi * real(nmonte) / real(nsweep)
