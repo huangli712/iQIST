@@ -398,6 +398,16 @@
                  call ctqmc_record_ochi()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) block
 
+! record the spin-spin correlation function
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) then
+                 call ctqmc_record_sfom()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) block
+
+! record the orbital-orbital correlation function
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) then
+                 call ctqmc_record_ofom()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) block
+
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
                  CONTINUE
