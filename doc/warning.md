@@ -6,7 +6,7 @@ The user manual for iQIST is far away from completeness. So please DO NOT READ m
 
 ### Installation
 
-see the comments in iqist/src/build/make.sys and iqist/src/build/Makefile.
+see the comments in iqist/src/build/make.sys, iqist/src/build/make.md, and iqist/src/build/Makefile.
 
 ### File Format
 
