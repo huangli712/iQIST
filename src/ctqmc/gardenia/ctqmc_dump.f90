@@ -689,6 +689,7 @@
   end subroutine ctqmc_dump_schi
 
   subroutine ctqmc_dump_sfom()
+     call s_print_error('ctqmc_dump_sfom','in debug mode')
   end subroutine ctqmc_dump_sfom
 
 !!>>> ctqmc_dump_ochi: write out the orbital-orbital correlation function
@@ -755,6 +756,7 @@
   end subroutine ctqmc_dump_ochi
 
   subroutine ctqmc_dump_ofom()
+     call s_print_error('ctqmc_dump_ofom','in debug mode')
   end subroutine ctqmc_dump_ofom
 
 !!>>> ctqmc_dump_twop: write out the two-particle green's function and
