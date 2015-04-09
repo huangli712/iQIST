@@ -77,18 +77,26 @@ Software  : Linux kernel 2.6.32-431
 
 Machine   : TianHe-1 supercomputer
 
-Processor :
+Processor : 2.93 GHz Intel Xeon X5670
 
-Memory    :
+Memory    : 23 GB
 
-Software  :
+Software  : Linux kernel 2.6.32-358
+            MPICH 3.0.4
+            Intel Fortran Compiler 13.0.0
+            Intel Math Kernel Library 11.0
+            Python 2.6.6
 
 ### make.sys.tianhe_openblas
 
 Machine   : TianHe-1 supercomputer
 
-Processor :
+Processor : 2.93 GHz Intel Xeon X5670
 
-Memory    :
+Memory    : 23 GB
 
-Software  :
+Software  : Linux kernel 2.6.32-358
+            MPICH 3.0.4
+            Intel Fortran Compiler 13.0.0
+            OpenBlas 0.2.3
+            Python 2.6.6
