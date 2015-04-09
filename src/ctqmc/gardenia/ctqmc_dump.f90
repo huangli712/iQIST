@@ -13,7 +13,9 @@
 !!!           ctqmc_dump_prob
 !!!           ctqmc_dump_nmat
 !!!           ctqmc_dump_schi
+!!!           ctqmc_dump_sfom
 !!!           ctqmc_dump_ochi
+!!!           ctqmc_dump_ofom
 !!!           ctqmc_dump_twop
 !!!           ctqmc_dump_vrtx
 !!!           ctqmc_dump_pair
@@ -686,6 +688,9 @@
      return
   end subroutine ctqmc_dump_schi
 
+  subroutine ctqmc_dump_sfom()
+  end subroutine ctqmc_dump_sfom
+
 !!>>> ctqmc_dump_ochi: write out the orbital-orbital correlation function
   subroutine ctqmc_dump_ochi(ochi, oochi)
      use constants, only : dp, mytmp
@@ -748,6 +753,9 @@
 
      return
   end subroutine ctqmc_dump_ochi
+
+  subroutine ctqmc_dump_ofom()
+  end subroutine ctqmc_dump_ofom
 
 !!>>> ctqmc_dump_twop: write out the two-particle green's function and
 !!>>> full (reducible) vertex function
