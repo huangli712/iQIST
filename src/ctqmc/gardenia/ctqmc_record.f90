@@ -892,7 +892,7 @@
   end subroutine ctqmc_record_ochi
 
   subroutine ctqmc_record_ofom()
-     call s_print_error('ctqmc_record_sfom','in debug mode')
+     call s_print_error('ctqmc_record_ofom','in debug mode')
   end subroutine ctqmc_record_ofom
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
