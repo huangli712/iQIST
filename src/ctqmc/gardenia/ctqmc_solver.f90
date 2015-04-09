@@ -535,11 +535,15 @@
 
 ! collect the spin-spin correlation function data from schi to schi_mpi
 ! collect the spin-spin correlation function data from sschi to sschi_mpi
+! collect the spin-spin correlation function data from ssfom to ssfom_mpi
      call ctqmc_reduce_schi(schi_mpi, sschi_mpi)
+     call ctqmc_reduce_sfom()
 
 ! collect the orbital-orbital correlation function data from ochi to ochi_mpi
 ! collect the orbital-orbital correlation function data from oochi to oochi_mpi
+! collect the orbital-orbital correlation function data from oofom to oofom_mpi
      call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
+     call ctqmc_reduce_ofom()
 
 ! collect the two-particle green's function from g2_re to g2_re_mpi
 ! collect the two-particle green's function from g2_im to g2_im_mpi
