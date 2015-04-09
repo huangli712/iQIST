@@ -648,14 +648,16 @@
          call ctqmc_dump_nmat(nmat, nnmat)
      endif ! back if ( myid == master ) block
 
-! write out the final spin-spin correlation function data, schi and sschi
+! write out the final spin-spin correlation function data, schi, sschi, and ssfom
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_schi(schi, sschi)
+         call ctqmc_dump_sfom()
      endif ! back if ( myid == master ) block
 
-! write out the final orbital-orbital correlation function data, ochi and oochi
+! write out the final orbital-orbital correlation function data, ochi, oochi, and oofom
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_ochi(ochi, oochi)
+         call ctqmc_dump_ofom()
      endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, g2_re and g2_im
