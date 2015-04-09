@@ -1,5 +1,9 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.6.1 @ d536991 // Apr 09, 2015
+
+* Add several templates for make.sys.
+
 ### v0.6.0 @ aa24237 // Apr 03, 2015
 
 * Update working/ctqmc/validation directory, add more examples.
