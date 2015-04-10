@@ -537,13 +537,13 @@
 ! collect the spin-spin correlation function data from sschi to sschi_mpi
 ! collect the spin-spin correlation function data from ssfom to ssfom_mpi
      call ctqmc_reduce_schi(schi_mpi, sschi_mpi)
-     call ctqmc_reduce_sfom()
+     call ctqmc_reduce_sfom(          ssfom_mpi)
 
 ! collect the orbital-orbital correlation function data from ochi to ochi_mpi
 ! collect the orbital-orbital correlation function data from oochi to oochi_mpi
 ! collect the orbital-orbital correlation function data from oofom to oofom_mpi
      call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
-     call ctqmc_reduce_ofom()
+     call ctqmc_reduce_ofom(          oofom_mpi)
 
 ! collect the two-particle green's function from g2_re to g2_re_mpi
 ! collect the two-particle green's function from g2_im to g2_im_mpi
@@ -651,13 +651,13 @@
 ! write out the final spin-spin correlation function data, schi, sschi, and ssfom
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_schi(schi, sschi)
-         call ctqmc_dump_sfom()
+         call ctqmc_dump_sfom(      ssfom)
      endif ! back if ( myid == master ) block
 
 ! write out the final orbital-orbital correlation function data, ochi, oochi, and oofom
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_ochi(ochi, oochi)
-         call ctqmc_dump_ofom()
+         call ctqmc_dump_ofom(      oofom)
      endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, g2_re and g2_im
