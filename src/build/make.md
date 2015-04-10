@@ -1,3 +1,6 @@
+# Summary of make.sys templates
+
+Here we provide a summary list for several make.sys templates. Please choose a suitable one and modify it to satisfy your requirements. Don't forget to use it to override the default make.sys.
 
 ### make.sys
 
@@ -5,7 +8,7 @@ see make.sys.mac_standard
 
 ### make.sys.mac_standard
 
-Machine   : MacBook Pro
+Machine   : MacBook Pro 2012
 
 Processor : 2.3 GHz Intel Core i7
 
@@ -19,7 +22,7 @@ Software  : OS X 10.8.5
 
 ### make.sys.mac_veclib
 
-Machine   : MacBook Pro
+Machine   : MacBook Pro 2012
 
 Processor : 2.3 GHz Intel Core i7
 
@@ -33,7 +36,7 @@ Software  : OS X 10.8.5
 
 ### make.sys.mac_openmpi
 
-Machine   : MacBook Pro
+Machine   : MacBook Pro 2012
 
 Processor : 2.3 GHz Intel Core i7
 
@@ -47,11 +50,11 @@ Software  : OS X 10.8.5
 
 ### make.sys.linux_standard
 
-Machine   : Linux cluster
+Machine   : Linux cluster (master node)
 
 Processor : 2.0 GHz Intel Xeon E5-2620
 
-Memory    : 32 GB
+Memory    : 32 GB RAM
 
 Software  : Linux kernel 2.6.32-431
             OpenMPI 1.6.4
@@ -61,11 +64,11 @@ Software  : Linux kernel 2.6.32-431
 
 ### make.sys.linux_gfortran
 
-Machine   : Linux cluster
+Machine   : Linux cluster (master node)
 
 Processor : 2.0 GHz Intel Xeon E5-2620
 
-Memory    : 32 GB
+Memory    : 32 GB RAM
 
 Software  : Linux kernel 2.6.32-431
             OpenMPI 1.8.3
@@ -75,11 +78,11 @@ Software  : Linux kernel 2.6.32-431
 
 ### make.sys.tianhe_standard
 
-Machine   : TianHe-1 supercomputer
+Machine   : TianHe-1 supercomputer (login node)
 
 Processor : 2.93 GHz Intel Xeon X5670
 
-Memory    : 23 GB
+Memory    : 23 GB RAM
 
 Software  : Linux kernel 2.6.32-358
             MPICH 3.0.4
@@ -89,11 +92,11 @@ Software  : Linux kernel 2.6.32-358
 
 ### make.sys.tianhe_openblas
 
-Machine   : TianHe-1 supercomputer
+Machine   : TianHe-1 supercomputer (login node)
 
 Processor : 2.93 GHz Intel Xeon X5670
 
-Memory    : 23 GB
+Memory    : 23 GB RAM
 
 Software  : Linux kernel 2.6.32-358
             MPICH 3.0.4

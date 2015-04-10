@@ -189,7 +189,7 @@ LFLAGS = $(OMP) $(GPROF)
 
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------
-LIBS   = -L/home/lihuang/nobackup/backup/lapack -llapack -lblas
+LIBS   = -L/home/lihuang/lapack -llapack -lblas
 
 # mpi library, just for fortran
 #-------------------------------------------------------------------------
