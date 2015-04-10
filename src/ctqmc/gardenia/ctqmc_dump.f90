@@ -794,8 +794,50 @@
      return
   end subroutine ctqmc_dump_ochi
 
-  subroutine ctqmc_dump_ofom()
-     call s_print_error('ctqmc_dump_ofom','in debug mode')
+!!>>> ctqmc_dump_ofom: write out the orbital-orbital correlation function
+  subroutine ctqmc_dump_ofom(oofom)
+     use constants, only : dp, two, pi, mytmp
+
+     use control, only : issus
+     use control, only : norbs
+     use control, only : nbfrq
+     use control, only : beta
+
+     implicit none
+
+! external arguments
+! orbital-orbital correlation function: \chi^{c}_{ij} (i\omega), orbital-resolved
+     real(dp), intent(in) :: oofom(nbfrq,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+     integer :: k
+
+! check if we need to dump the orbital-orbital correlation function data
+! to solver.ofom.dat
+     if ( .not. btest(issus, 4) ) RETURN
+
+! open data file: solver.ofom.dat
+     open(mytmp, file='solver.ofom.dat', form='formatted', status='unknown')
+
+! write it
+     do k=1,norbs
+         do j=1,norbs
+             write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
+             do i=1,nbfrq
+                 write(mytmp,'(2f12.6)') two * pi * float(i - 1) / beta, oofom(i,j,k)
+             enddo ! over i={1,nbfrq} loop
+             write(mytmp,*) ! write empty lines
+             write(mytmp,*)
+         enddo ! over j={1,norbs} loop
+     enddo ! over k={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
   end subroutine ctqmc_dump_ofom
 
 !!>>> ctqmc_dump_twop: write out the two-particle green's function and
