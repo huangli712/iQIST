@@ -1548,8 +1548,44 @@
      return
   end subroutine ctqmc_reduce_schi
 
-  subroutine ctqmc_reduce_sfom()
-     call s_print_error('ctqmc_reduce_sfom','in debug mode')
+!!>>> ctqmc_reduce_sfom: reduce the ssfom from all children processes
+  subroutine ctqmc_reduce_sfom(ssfom_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : nband
+     use control, only : nbfrq
+     use control, only : nprocs
+     use context, only : ssfom
+
+     implicit none
+
+! external arguments
+! spin-spin correlation function, orbital-resolved
+     real(dp), intent(out) :: ssfom_mpi(nbfrq,nband)
+
+! initialize ssfom_mpi
+     ssfom_mpi = zero
+
+! build ssfom_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(ssfom, ssfom_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     ssfom_mpi = ssfom
+
+# endif /* MPI */
+
+! calculate the average
+     ssfom_mpi = ssfom_mpi / real(nprocs)
+
+     return
   end subroutine ctqmc_reduce_sfom
 
 !!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from all children processes
