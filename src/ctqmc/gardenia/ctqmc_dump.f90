@@ -688,8 +688,47 @@
      return
   end subroutine ctqmc_dump_schi
 
-  subroutine ctqmc_dump_sfom()
-     call s_print_error('ctqmc_dump_sfom','in debug mode')
+!!>>> ctqmc_dump_sfom: write out the spin-spin correlation function
+  subroutine ctqmc_dump_sfom(ssfom)
+     use constants, only : dp, two, pi, mytmp
+
+     use control, only : issus
+     use control, only : nband
+     use control, only : nbfrq
+     use control, only : beta
+
+     implicit none
+
+! external arguments
+! spin-spin correlation function: \chi^{s}_{i} (i\omega), orbital-resolved
+     real(dp), intent(in) :: ssfom(nbfrq,nband)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! check if we need to dump the spin-spin correlation function data
+! to solver.sfom.dat
+     if ( .not. btest(issus, 3) ) RETURN
+
+! open data file: solver.sfom.dat
+     open(mytmp, file='solver.sfom.dat', form='formatted', status='unknown')
+
+! write it
+     do j=1,nband
+         write(mytmp,'(a,i6)') '# flvr:', j
+         do i=1,nbfrq
+             write(mytmp,'(2f12.6)') two * pi * float(i - 1) / beta, ssfom(i,j)
+         enddo ! over i={1,nbfrq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over j={1,nband} loop
+
+! close data file
+     close(mytmp)
+
+     return
   end subroutine ctqmc_dump_sfom
 
 !!>>> ctqmc_dump_ochi: write out the orbital-orbital correlation function
