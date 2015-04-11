@@ -968,6 +968,10 @@
                  ds = exp(czi * time_s(index_s(i, f1), f1))
                  de = exp(czi * time_e(index_e(i, f1), f1))
                  do j=2,nbfrq
+                     wm = wm + dw
+                     cs = cs * ds
+                     ce = ce * de
+                     oofom(j,f2,f1) = oofom(j,f2,f1) + real( ( ce - cs ) / (czi * wm) )
                  enddo ! over j={2,nbfrq} loop
              enddo ! over i={1,rank(f1)} loop
          enddo ! over f2={1,norbs} loop
