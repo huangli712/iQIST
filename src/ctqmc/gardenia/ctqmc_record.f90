@@ -896,6 +896,7 @@
 
      use control, only : issus
      use control, only : norbs
+     use control, only : nbfrq
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
      use context, only : rank, stts
@@ -966,6 +967,8 @@
                  ce = cone
                  ds = exp(czi * time_s(index_s(i, f1), f1))
                  de = exp(czi * time_e(index_e(i, f1), f1))
+                 do j=2,nbfrq
+                 enddo ! over j={2,nbfrq} loop
              enddo ! over i={1,rank(f1)} loop
          enddo ! over f2={1,norbs} loop
      enddo ! over f1={1,norbs} loop
