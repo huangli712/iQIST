@@ -893,11 +893,23 @@
 
   subroutine ctqmc_record_ofom()
      use control, only : issus
+     use control, only : norbs
+     use context, only : stts
 
      implicit none
 
+! local variables
+     integer :: f1
+     integer :: f2
+
 ! check whether there is conflict
      call s_assert( btest(issus, 4) )
+
+     do f1=1,norbs
+         do f2=1,norbs
+             if ( stts(f2) /= 2 .or. stts(f2) /= 3 ) CYCLE
+         enddo ! over f2={1,norbs} loop
+     enddo ! over f1={1,norbs} loop
 
      return
   end subroutine ctqmc_record_ofom
