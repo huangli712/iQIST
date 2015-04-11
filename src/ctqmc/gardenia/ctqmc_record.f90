@@ -892,7 +892,14 @@
   end subroutine ctqmc_record_ochi
 
   subroutine ctqmc_record_ofom()
-!<     call s_print_error('ctqmc_record_ofom','in debug mode')
+     use control, only : issus
+
+     implicit none
+
+! check whether there is conflict
+     call s_assert( btest(issus, 4) )
+
+     return
   end subroutine ctqmc_record_ofom
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
