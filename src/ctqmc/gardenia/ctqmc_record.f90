@@ -892,22 +892,70 @@
   end subroutine ctqmc_record_ochi
 
   subroutine ctqmc_record_ofom()
+     use constants, only : dp, zero
+
      use control, only : issus
      use control, only : norbs
-     use context, only : stts
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
+     use context, only : oofom
 
      implicit none
 
 ! local variables
-     integer :: f1
-     integer :: f2
+     integer  :: flvr
+     integer  :: f1
+     integer  :: f2
+     integer  :: i
+
+     real(dp) :: ts
+     real(dp) :: te
+
+! total length of segments
+     real(dp) :: sgmt(norbs)
 
 ! check whether there is conflict
      call s_assert( btest(issus, 4) )
 
+     do flvr=1,norbs
+
+! case 1: null occupation
+         if      ( stts(flvr) == 0 ) then
+             sgmt(flvr) = zero
+
+! case 2: partial occupation, segment scheme
+         else if ( stts(flvr) == 1 ) then
+             sgmt(flvr) = zero
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 3: partial occupation, anti-segment scheme
+         else if ( stts(flvr) == 2 ) then
+             sgmt(flvr) = beta
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 4: full occupation
+         else if ( stts(flvr) == 3 ) then
+             sgmt(flvr) = beta
+
+         endif ! back if ( stts(flvr) == 0 ) block
+
+     enddo ! over flvr={1,norbs} loop
+
      do f1=1,norbs
          do f2=1,norbs
              if ( stts(f2) /= 2 .or. stts(f2) /= 3 ) CYCLE
+             oofom(1,f2,f1) = oofom(1,f2,f1) + sgmt(f1)
+             do i=1,rank(f1)
+             enddo ! over i={1,rank(f1)} loop
          enddo ! over f2={1,norbs} loop
      enddo ! over f1={1,norbs} loop
 
