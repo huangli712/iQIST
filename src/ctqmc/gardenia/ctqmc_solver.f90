@@ -33,7 +33,7 @@
      use control, only : myid, master
      use context, only : tmesh, rmesh
      use context, only : hist, prob
-     use context, only : nmat, nnmat, schi, sschi, ochi, oochi
+     use context, only : nmat, nnmat, schi, sschi, ssfom, ochi, oochi, oofom
      use context, only : g2_re, g2_im, h2_re, h2_im, ps_re, ps_im
      use context, only : symm
      use context, only : gtau, ftau, grnf
@@ -93,11 +93,17 @@
 ! spin-spin correlation function, orbital-resolved, for mpi case
      real(dp), allocatable :: sschi_mpi(:,:)
 
+! spin-spin correlation function, orbital-resolved, for mpi case
+     real(dp), allocatable :: ssfom_mpi(:,:)
+
 ! orbital-orbital correlation function, totally-averaged, for mpi case
      real(dp), allocatable :: ochi_mpi(:)
 
 ! orbital-orbital correlation function, orbital-resolved, for mpi case
      real(dp), allocatable :: oochi_mpi(:,:,:)
+
+! orbital-orbital correlation function, orbital-resolved, for mpi case
+     real(dp), allocatable :: oofom_mpi(:,:,:)
 
 ! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
@@ -157,12 +163,22 @@
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+     allocate(ssfom_mpi(nbfrq,nband),      stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
      allocate(ochi_mpi(ntime),             stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      allocate(oochi_mpi(ntime,norbs,norbs),stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(oofom_mpi(nbfrq,norbs,norbs),stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -382,6 +398,16 @@
                  call ctqmc_record_ochi()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) block
 
+! record the spin-spin correlation function
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) then
+                 call ctqmc_record_sfom()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) block
+
+! record the orbital-orbital correlation function
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) then
+                 call ctqmc_record_ofom()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) block
+
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
                  CONTINUE
@@ -509,11 +535,15 @@
 
 ! collect the spin-spin correlation function data from schi to schi_mpi
 ! collect the spin-spin correlation function data from sschi to sschi_mpi
+! collect the spin-spin correlation function data from ssfom to ssfom_mpi
      call ctqmc_reduce_schi(schi_mpi, sschi_mpi)
+     call ctqmc_reduce_sfom(          ssfom_mpi)
 
 ! collect the orbital-orbital correlation function data from ochi to ochi_mpi
 ! collect the orbital-orbital correlation function data from oochi to oochi_mpi
+! collect the orbital-orbital correlation function data from oofom to oofom_mpi
      call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
+     call ctqmc_reduce_ofom(          oofom_mpi)
 
 ! collect the two-particle green's function from g2_re to g2_re_mpi
 ! collect the two-particle green's function from g2_im to g2_im_mpi
@@ -544,8 +574,10 @@
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
      schi  = schi_mpi  * real(nmonte) / real(nsweep)
      sschi = sschi_mpi * real(nmonte) / real(nsweep)
+     ssfom = ssfom_mpi * real(nmonte) / real(nsweep)
      ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
      oochi = oochi_mpi * real(nmonte) / real(nsweep)
+     oofom = oofom_mpi * real(nmonte) / real(nsweep)
 
      g2_re = g2_re_mpi * real(nmonte) / real(nsweep)
      g2_im = g2_im_mpi * real(nmonte) / real(nsweep)
@@ -616,14 +648,16 @@
          call ctqmc_dump_nmat(nmat, nnmat)
      endif ! back if ( myid == master ) block
 
-! write out the final spin-spin correlation function data, schi and sschi
+! write out the final spin-spin correlation function data, schi, sschi, and ssfom
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_schi(schi, sschi)
+         call ctqmc_dump_sfom(      ssfom)
      endif ! back if ( myid == master ) block
 
-! write out the final orbital-orbital correlation function data, ochi and oochi
+! write out the final orbital-orbital correlation function data, ochi, oochi, and oofom
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_ochi(ochi, oochi)
+         call ctqmc_dump_ofom(      oofom)
      endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, g2_re and g2_im
@@ -682,8 +716,10 @@
      deallocate(nnmat_mpi)
      deallocate(schi_mpi )
      deallocate(sschi_mpi)
+     deallocate(ssfom_mpi)
      deallocate(ochi_mpi )
      deallocate(oochi_mpi)
+     deallocate(oofom_mpi)
      deallocate(g2_re_mpi)
      deallocate(g2_im_mpi)
      deallocate(h2_re_mpi)

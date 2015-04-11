@@ -7,7 +7,9 @@
 !!!           ctqmc_record_prob
 !!!           ctqmc_record_nmat
 !!!           ctqmc_record_schi
+!!!           ctqmc_record_sfom
 !!!           ctqmc_record_ochi
+!!!           ctqmc_record_ofom
 !!!           ctqmc_record_twop
 !!!           ctqmc_record_vrtx
 !!!           ctqmc_record_pair <<<---
@@ -18,7 +20,9 @@
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_nmat
 !!!           ctqmc_reduce_schi
+!!!           ctqmc_reduce_sfom
 !!!           ctqmc_reduce_ochi
+!!!           ctqmc_reduce_ofom
 !!!           ctqmc_reduce_twop
 !!!           ctqmc_reduce_vrtx
 !!!           ctqmc_reduce_pair <<<---
@@ -802,6 +806,10 @@
      return
   end subroutine ctqmc_record_schi
 
+  subroutine ctqmc_record_sfom()
+!<     call s_print_error('ctqmc_record_sfom','in debug mode')
+  end subroutine ctqmc_record_sfom
+
 !!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
   subroutine ctqmc_record_ochi()
      use constants, only : dp, zero
@@ -882,6 +890,10 @@
 
      return
   end subroutine ctqmc_record_ochi
+
+  subroutine ctqmc_record_ofom()
+!<     call s_print_error('ctqmc_record_ofom','in debug mode')
+  end subroutine ctqmc_record_ofom
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
@@ -1536,6 +1548,46 @@
      return
   end subroutine ctqmc_reduce_schi
 
+!!>>> ctqmc_reduce_sfom: reduce the ssfom from all children processes
+  subroutine ctqmc_reduce_sfom(ssfom_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : nband
+     use control, only : nbfrq
+     use control, only : nprocs
+     use context, only : ssfom
+
+     implicit none
+
+! external arguments
+! spin-spin correlation function, orbital-resolved
+     real(dp), intent(out) :: ssfom_mpi(nbfrq,nband)
+
+! initialize ssfom_mpi
+     ssfom_mpi = zero
+
+! build ssfom_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(ssfom, ssfom_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     ssfom_mpi = ssfom
+
+# endif /* MPI */
+
+! calculate the average
+     ssfom_mpi = ssfom_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_sfom
+
 !!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from all children processes
   subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
      use constants, only : dp, zero
@@ -1582,6 +1634,46 @@
 
      return
   end subroutine ctqmc_reduce_ochi
+
+!!>>> ctqmc_reduce_ofom: reduce the oofom from all children processes
+  subroutine ctqmc_reduce_ofom(oofom_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nbfrq
+     use control, only : nprocs
+     use context, only : oofom
+
+     implicit none
+
+! external arguments
+! orbital-orbital correlation function, orbital-resolved
+     real(dp), intent(out) :: oofom_mpi(nbfrq,norbs,norbs)
+
+! initialize oofom_mpi
+     oofom_mpi = zero
+
+! build oofom_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(oofom, oofom_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     oofom_mpi = oofom
+
+# endif /* MPI */
+
+! calculate the average
+     oofom_mpi = oofom_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_ofom
 
 !!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from all
 !!>>> children processes

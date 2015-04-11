@@ -1,0 +1,6 @@
+isscf = 1
+isbin = 1
+issus = 24
+nband = 2
+norbs = 4
+ncfgs = 16
