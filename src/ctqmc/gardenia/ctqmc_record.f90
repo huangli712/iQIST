@@ -908,6 +908,7 @@
      integer  :: f1
      integer  :: f2
      integer  :: i
+     integer  :: j
 
      real(dp) :: ts
      real(dp) :: te
@@ -952,7 +953,7 @@
 
      do f1=1,norbs
          do f2=1,norbs
-             if ( stts(f2) /= 2 .or. stts(f2) /= 3 ) CYCLE
+             if ( stts(f2) /= 2 .and. stts(f2) /= 3 ) CYCLE
              oofom(1,f2,f1) = oofom(1,f2,f1) + sgmt(f1)
              do i=1,rank(f1)
              enddo ! over i={1,rank(f1)} loop
