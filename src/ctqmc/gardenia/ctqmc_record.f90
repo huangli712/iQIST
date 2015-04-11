@@ -892,7 +892,7 @@
   end subroutine ctqmc_record_ochi
 
   subroutine ctqmc_record_ofom()
-     use constants, only : dp, zero, two, pi, czi, cone
+     use constants, only : dp, zero, two, pi, czi, cone, czero
 
      use control, only : issus
      use control, only : norbs
@@ -960,6 +960,7 @@
          do f2=1,norbs
              if ( stts(f2) /= 2 .and. stts(f2) /= 3 ) CYCLE
              oofom(1,f2,f1) = oofom(1,f2,f1) + sgmt(f1)
+             if ( nbfrq == 1 ) CYCLE
              do i=1,rank(f1)
                  wm = zero
                  dw = two * pi / beta
