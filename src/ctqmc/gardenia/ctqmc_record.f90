@@ -892,7 +892,7 @@
   end subroutine ctqmc_record_ochi
 
   subroutine ctqmc_record_ofom()
-     use constants, only : dp, zero
+     use constants, only : dp, zero, two, pi, czi, cone
 
      use control, only : issus
      use control, only : norbs
@@ -915,6 +915,10 @@
 
 ! total length of segments
      real(dp) :: sgmt(norbs)
+
+     real(dp) :: dw, wm
+     complex(dp) :: cs, ce
+     complex(dp) :: ds, de
 
 ! check whether there is conflict
      call s_assert( btest(issus, 4) )
@@ -956,6 +960,12 @@
              if ( stts(f2) /= 2 .and. stts(f2) /= 3 ) CYCLE
              oofom(1,f2,f1) = oofom(1,f2,f1) + sgmt(f1)
              do i=1,rank(f1)
+                 wm = zero
+                 dw = two * pi / beta
+                 cs = cone
+                 ce = cone
+                 ds = exp(czi * time_s(index_s(i, f1), f1))
+                 de = exp(czi * time_e(index_e(i, f1), f1))
              enddo ! over i={1,rank(f1)} loop
          enddo ! over f2={1,norbs} loop
      enddo ! over f1={1,norbs} loop
