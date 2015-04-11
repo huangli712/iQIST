@@ -234,11 +234,17 @@
 ! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, orbital-resolved
      real(dp), public, save, allocatable :: sschi(:,:)
 
+! spin-spin correlation function: \chi^{s}_{i} (i\omega), orbital-resolved
+     real(dp), public, save, allocatable :: ssfom(:,:)
+
 ! orbital-orbital correlation function: < N(0) N(\tau) >, totally-averaged
      real(dp), public, save, allocatable :: ochi(:)
 
 ! orbital-orbital correlation function: < N(0) N(\tau) >, orbital-resolved
      real(dp), public, save, allocatable :: oochi(:,:,:)
+
+! orbital-orbital correlation function: \chi^{c}_{ij} (i\omega), orbital-resolved
+     real(dp), public, save, allocatable :: oofom(:,:,:)
 
 ! used to calculate two-particle green's function, real part
      real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
@@ -552,8 +558,10 @@
      allocate(nnmat(norbs,norbs), stat=istat)
      allocate(schi(ntime),        stat=istat)
      allocate(sschi(ntime,nband), stat=istat)
+     allocate(ssfom(nbfrq,nband), stat=istat)
      allocate(ochi(ntime),        stat=istat)
      allocate(oochi(ntime,norbs,norbs), stat=istat)
+     allocate(oofom(nbfrq,norbs,norbs), stat=istat)
 
      allocate(g2_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(g2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
@@ -577,8 +585,10 @@
      nnmat = zero
      schi  = zero
      sschi = zero
+     ssfom = zero
      ochi  = zero
      oochi = zero
+     oofom = zero
 
      g2_re = zero
      g2_im = zero
@@ -792,8 +802,10 @@
      if ( allocated(nnmat) )   deallocate(nnmat)
      if ( allocated(schi)  )   deallocate(schi )
      if ( allocated(sschi) )   deallocate(sschi)
+     if ( allocated(ssfom) )   deallocate(ssfom)
      if ( allocated(ochi)  )   deallocate(ochi )
      if ( allocated(oochi) )   deallocate(oochi)
+     if ( allocated(oofom) )   deallocate(oofom)
 
      if ( allocated(g2_re) )   deallocate(g2_re)
      if ( allocated(g2_im) )   deallocate(g2_im)

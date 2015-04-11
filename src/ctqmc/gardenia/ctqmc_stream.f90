@@ -541,10 +541,12 @@
 ! init spin-spin correlation function
      schi    = zero
      sschi   = zero
+     ssfom   = zero
 
 ! init orbital-orbital correlation function
      ochi    = zero
      oochi   = zero
+     oofom   = zero
 
 ! init two-particle green's function
      g2_re   = zero
