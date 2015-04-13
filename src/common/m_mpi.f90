@@ -7,6 +7,7 @@
 !!! history : 08/09/2006 by li huang
 !!!           02/27/2010 by li huang
 !!!           07/09/2014 by li huang
+!!!           04/13/2015 by li huang
 !!! purpose : define my own mpi calls, inspired by famous quantum espresso
 !!!           code. we note that the original mpi interfaces/subroutines
 !!!           are rather complicated for newbies, thus we try to wrap the
@@ -16,7 +17,9 @@
 !!! comment : this module has been tested under the following environment:
 !!!               mpich1    1.2.7p1
 !!!               mpich2    1.2.1p1
+!!!               mpich     3.0.3, 3.0.4, 3.1.4
 !!!               mvapich2  1.2.0p1
+!!!               openmpi   1.6.4, 1.7.1, 1.8.3
 !!!               intel mpi 3.2.0
 !!!-----------------------------------------------------------------------
 
