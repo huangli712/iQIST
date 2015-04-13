@@ -4,9 +4,9 @@ Here we provide a summary list for several make.sys templates. Please choose a s
 
 ### make.sys
 
-see make.sys.mac_standard
+see template/macos/make.sys.standard
 
-### make.sys.mac_standard
+### template/macos/make.sys.standard
 
 Machine   : MacBook Pro 2012
 
@@ -20,7 +20,7 @@ Software  : OS X 10.8.5
             Intel Math Kernel Library 11.0
             Python 2.7.4
 
-### make.sys.mac_veclib
+### template/macos/make.sys.veclib
 
 Machine   : MacBook Pro 2012
 
@@ -34,7 +34,7 @@ Software  : OS X 10.8.5
             Apple Accelerate/vecLib framework
             Python 2.7.4
 
-### make.sys.mac_openmpi
+### template/macos/make.sys.openmpi
 
 Machine   : MacBook Pro 2012
 
@@ -48,7 +48,7 @@ Software  : OS X 10.8.5
             Intel Math Kernel Library 11.0
             Python 2.7.4
 
-### make.sys.mac_nompi
+### template/macos/make.sys.nompi
 
 Machine   : MacBook Pro 2012
 
@@ -61,7 +61,7 @@ Software  : OS X 10.8.5
             Intel Math Kernel Library 11.0
             Python 2.7.4
 
-### make.sys.linux_standard
+### template/linux/make.sys.standard
 
 Machine   : Linux cluster (master node)
 
@@ -75,7 +75,7 @@ Software  : Linux kernel 2.6.32-431
             Netlib LAPACK/BLAS 3.4.2
             Python 2.7.3
 
-### make.sys.linux_gfortran
+### template/linux/make.sys.gfortran
 
 Machine   : Linux cluster (master node)
 
@@ -89,7 +89,7 @@ Software  : Linux kernel 2.6.32-431
             Netlib LAPACK/BLAS 3.4.2
             Python 2.7.3
 
-### make.sys.tianhe_standard
+### template/tianhe/make.sys.standard
 
 Machine   : TianHe-1 supercomputer (login node)
 
@@ -103,7 +103,7 @@ Software  : Linux kernel 2.6.32-358
             Intel Math Kernel Library 11.0
             Python 2.6.6
 
-### make.sys.tianhe_openblas
+### template/tianhe/make.sys.openblas
 
 Machine   : TianHe-1 supercomputer (login node)
 
