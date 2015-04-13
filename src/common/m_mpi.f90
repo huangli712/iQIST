@@ -5043,12 +5043,13 @@
      public :: mp_info
 
 !!>>> synchronics operations
-
-! manually block until all processes reach
      public :: mp_barrier
 
 !!>>> broadcasting operations
      public :: mp_bcast
+
+!!>>> allreducing operations
+     public :: mp_allreduce
 
   contains
 
@@ -5086,6 +5087,17 @@
 
          return
      end subroutine mp_bcast
+
+!!========================================================================
+!!>>> MPI collective operations: allreducing                           <<<
+!!========================================================================
+
+!!>>> mp_allreduce: reduce sth. from all processes
+     subroutine mp_allreduce()
+         implicit none
+
+         return
+     end subroutine mp_allreduce
 
   end module mmpi
 
