@@ -5054,6 +5054,21 @@
 !!>>> broadcasting operations
      public :: mp_bcast
 
+!!>>> gathering operations
+     public :: mp_gather
+
+!!>>> gatherving operations
+     public :: mp_gatherv
+
+!!>>> allgathering operations
+     public :: mp_allgather
+
+!!>>> allgatherving operations
+     public :: mp_allgatherv
+
+!!>>> reducing operations
+     public :: mp_reduce
+
 !!>>> allreducing operations
      public :: mp_allreduce
 
@@ -5107,6 +5122,7 @@
 
          return
      end subroutine mp_comm_size
+
 !!========================================================================
 !!>>> MPI barrier operations                                           <<<
 !!========================================================================
@@ -5128,6 +5144,193 @@
 
          return
      end subroutine mp_bcast
+
+!!========================================================================
+!!>>> MPI collective operations : gathering                            <<<
+!!========================================================================
+
+!!>>> mp_gather_int1: gather integer data from every processes to rank 0
+     subroutine mp_gather_int1(send, data, root, gid)
+         implicit none
+
+! external arguments
+         integer, intent(in) :: send(:)
+         integer, intent(inout) :: data(:)
+
+         integer, intent(in) :: root
+         integer, optional, intent(in) :: gid
+
+! set current communicator
+         if ( present(gid) .eqv. .true. ) then
+             group = gid
+         else
+             group = MPI_COMM_WORLD
+         endif ! back if ( present(gid) .eqv. .true. ) block
+
+! barrier until all processes reach here
+         call mp_barrier(group)
+
+! setup element count
+         isize = size(send)
+
+! invoke related mpi subroutines
+         call MPI_GATHER(send, isize, mpi_mint, data, isize, mpi_mint, root, group, ierror)
+
+! handler for return code
+         call mp_error('mp_gather_int1', ierror)
+
+         return
+     end subroutine mp_gather_int1
+
+!!========================================================================
+!!>>> MPI collective operations : gatherving                           <<<
+!!========================================================================
+
+!!>>> mp_gatherv_int1: gather integer data from every processes to rank 0
+     subroutine mp_gatherv_int1(send, data, recv, disp, root, gid)
+         implicit none
+
+! external arguments
+         integer, intent(in) :: send(:)
+         integer, intent(inout) :: data(:)
+
+         integer, intent(in) :: recv(:)
+         integer, intent(in) :: disp(:)
+
+         integer, intent(in) :: root
+         integer, optional, intent(in) :: gid
+
+! set current communicator
+         if ( present(gid) .eqv. .true. ) then
+             group = gid
+         else
+             group = MPI_COMM_WORLD
+         endif ! back if ( present(gid) .eqv. .true. ) block
+
+! barrier until all processes reach here
+         call mp_barrier(group)
+
+! setup element count
+         isize = size(send)
+
+! invoke related mpi subroutines
+         call MPI_GATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, root, group, ierror)
+
+! handler for return code
+         call mp_error('mp_gatherv_int1', ierror)
+
+         return
+     end subroutine mp_gatherv_int1
+
+!!========================================================================
+!!>>> MPI collective operations: allgathering                          <<<
+!!========================================================================
+
+!!>>> mp_allgather_int1: gather integer data from all processes and then
+! redistribute it to all processes
+     subroutine mp_allgather_int1(send, data, gid)
+         implicit none
+
+! external arguments
+         integer, intent(in) :: send(:)
+         integer, intent(inout) :: data(:)
+
+         integer, optional, intent(in) :: gid
+
+! set current communicator
+         if ( present(gid) .eqv. .true. ) then
+             group = gid
+         else
+             group = MPI_COMM_WORLD
+         endif ! back if ( present(gid) .eqv. .true. ) block
+
+! barrier until all processes reach here
+         call mp_barrier(group)
+
+! setup element count
+         isize = size(send)
+
+! invoke related mpi subroutines
+         call MPI_ALLGATHER(send, isize, mpi_mint, data, isize, mpi_mint, group, ierror)
+
+! handler for return code
+         call mp_error('mp_allgather_int1', ierror)
+
+         return
+     end subroutine mp_allgather_int1
+
+!!========================================================================
+!!>>> MPI collective operations: allgatherving                         <<<
+!!========================================================================
+
+!!>>> mp_allgatherv_int1: gather integer data from all processes and then
+! redistribute it to all processes
+     subroutine mp_allgatherv_int1(send, data, recv, disp, gid)
+         implicit none
+
+! external arguments
+         integer, intent(in) :: send(:)
+         integer, intent(inout) :: data(:)
+
+         integer, intent(in) :: recv(:)
+         integer, intent(in) :: disp(:)
+
+         integer, optional, intent(in) :: gid
+
+! set current communicator
+         if ( present(gid) .eqv. .true. ) then
+             group = gid
+         else
+             group = MPI_COMM_WORLD
+         endif ! back if ( present(gid) .eqv. .true. ) block
+
+! barrier until all processes reach here
+         call mp_barrier(group)
+
+! setup element count
+         isize = size(send)
+
+! invoke related mpi subroutines
+         call MPI_ALLGATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, group, ierror)
+
+! handler for return code
+         call mp_error('mp_allgatherv_int1', ierror)
+
+         return
+     end subroutine mp_allgatherv_int1
+
+!!========================================================================
+!!>>> MPI collective operations: reducing                              <<<
+!!========================================================================
+
+!!>>> mp_reduce_int: reduce 1 integer from all processes
+     subroutine mp_reduce_int(source, data, root, gid)
+         implicit none
+
+! external arguments
+         integer, intent(in) :: source
+         integer, intent(inout) :: data
+         integer, intent(in) :: root
+         integer, optional, intent(in) :: gid
+
+! set current communicator
+         if ( present(gid) .eqv. .true. ) then
+             group = gid
+         else
+             group = MPI_COMM_WORLD
+         endif ! back if ( present(gid) .eqv. .true. ) block
+
+! barrier until all processes reach here
+         call mp_barrier(group)
+
+! invoke related mpi subroutines
+         call MPI_REDUCE(source, data, 1, mpi_mint, mpi_sum, root, group, ierror)
+
+! handler for return code
+         call mp_error('mp_reduce_int', ierror)
+
+         return
+     end subroutine mp_reduce_int
 
 !!========================================================================
 !!>>> MPI collective operations: allreducing                           <<<
