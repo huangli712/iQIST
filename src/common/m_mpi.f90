@@ -5042,6 +5042,12 @@
 !!>>> mpi information operation
      public :: mp_info
 
+!!>>> mpi environment operation
+     public :: mp_init
+     public :: mp_finalize
+     public :: mp_comm_rank
+     public :: mp_comm_size
+
 !!>>> synchronics operations
      public :: mp_barrier
 
@@ -5066,6 +5072,41 @@
          return
      end subroutine mp_info
 
+!!========================================================================
+!!>>> MPI initialize and finalize operations                           <<<
+!!========================================================================
+
+!!>>> mp_init: initialize mpi environment
+     subroutine mp_init()
+         implicit none
+
+         return
+     end subroutine mp_init
+
+!!>>> mp_finalize: finalize mpi environment
+     subroutine mp_finalize()
+         implicit none
+
+         return
+     end subroutine mp_finalize
+
+!!========================================================================
+!!>>> MPI setup operations                                             <<<
+!!========================================================================
+
+!!>>> mp_comm_rank: determine the rank of the current process
+     subroutine mp_comm_rank()
+         implicit none
+
+         return
+     end subroutine mp_comm_rank
+
+!!>>> mp_comm_size: evaluate the number of processes in current communicator
+     subroutine mp_comm_size()
+         implicit none
+
+         return
+     end subroutine mp_comm_size
 !!========================================================================
 !!>>> MPI barrier operations                                           <<<
 !!========================================================================
