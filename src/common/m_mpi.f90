@@ -5042,6 +5042,11 @@
 !!>>> mpi information operation
      public :: mp_info
 
+!!>>> synchronics operations
+
+! manually block until all processes reach
+     public :: mp_barrier
+
   contains
 
 !!========================================================================
@@ -5056,6 +5061,17 @@
 
          return
      end subroutine mp_info
+
+!!========================================================================
+!!>>> MPI barrier operations                                           <<<
+!!========================================================================
+
+!!>>> mp_barrier: blocks until all process have reached this routine
+     subroutine mp_barrier()
+         implicit none
+
+         return
+     end subroutine mp_barrier
 
   end module mmpi
 
