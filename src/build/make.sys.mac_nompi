@@ -162,7 +162,7 @@
 
 # fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
-F90    = ifort #mpif90
+F90    = ifort
 LINKER = $(F90)
 ARCHIVER = ar -ruv
 
@@ -170,7 +170,7 @@ ARCHIVER = ar -ruv
 #-------------------------------------------------------------------------
 MPI    = #-DMPI
 OMP    = #-openmp
-API    = -DAPI -DMPY
+API    = #-DAPI -DMPY
 FPP    = -fpp
 CPP    = $(FPP) $(MPI) $(OMP) $(API)
 
@@ -193,4 +193,4 @@ LIBS   = -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
 
 # mpi library, just for fortran
 #-------------------------------------------------------------------------
-MPIL   = -L/usr/local/mpich/lib -lfmpich -lmpichf90
+MPIL   = #-L/usr/local/mpich/lib -lfmpich -lmpichf90
