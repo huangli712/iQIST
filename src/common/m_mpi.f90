@@ -5047,6 +5047,9 @@
 ! manually block until all processes reach
      public :: mp_barrier
 
+!!>>> broadcasting operations
+     public :: mp_bcast
+
   contains
 
 !!========================================================================
@@ -5072,6 +5075,17 @@
 
          return
      end subroutine mp_barrier
+
+!!========================================================================
+!!>>> MPI collective operations: broadcasting                          <<<
+!!========================================================================
+
+!!>>> mp_bcast: broadcasts sth. from the process with rank "root"
+     subroutine mp_bcast()
+         implicit none
+
+         return
+     end subroutine mp_bcast
 
   end module mmpi
 
