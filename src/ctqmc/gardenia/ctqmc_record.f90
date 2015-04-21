@@ -892,7 +892,93 @@
   end subroutine ctqmc_record_ochi
 
   subroutine ctqmc_record_ofom()
-!<     call s_print_error('ctqmc_record_ofom','in debug mode')
+     use constants, only : dp, zero, two, pi, czi, cone, czero
+
+     use control, only : issus
+     use control, only : norbs
+     use control, only : nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
+     use context, only : oofom
+
+     implicit none
+
+! local variables
+     integer  :: flvr
+     integer  :: f1
+     integer  :: f2
+     integer  :: i
+     integer  :: j
+
+     real(dp) :: ts
+     real(dp) :: te
+
+! total length of segments
+     real(dp) :: sgmt(norbs)
+
+     real(dp) :: dw, wm
+     complex(dp) :: cs, ce
+     complex(dp) :: ds, de
+
+! check whether there is conflict
+     call s_assert( btest(issus, 4) )
+
+     do flvr=1,norbs
+
+! case 1: null occupation
+         if      ( stts(flvr) == 0 ) then
+             sgmt(flvr) = zero
+
+! case 2: partial occupation, segment scheme
+         else if ( stts(flvr) == 1 ) then
+             sgmt(flvr) = zero
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 3: partial occupation, anti-segment scheme
+         else if ( stts(flvr) == 2 ) then
+             sgmt(flvr) = beta
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 4: full occupation
+         else if ( stts(flvr) == 3 ) then
+             sgmt(flvr) = beta
+
+         endif ! back if ( stts(flvr) == 0 ) block
+
+     enddo ! over flvr={1,norbs} loop
+
+     do f1=1,norbs
+         do f2=1,norbs
+             if ( stts(f2) /= 2 .and. stts(f2) /= 3 ) CYCLE
+             oofom(1,f2,f1) = oofom(1,f2,f1) + sgmt(f1)
+             if ( nbfrq == 1 ) CYCLE
+             do i=1,rank(f1)
+                 wm = zero
+                 dw = two * pi / beta
+                 cs = cone
+                 ce = cone
+                 ds = exp(czi * time_s(index_s(i, f1), f1))
+                 de = exp(czi * time_e(index_e(i, f1), f1))
+                 do j=2,nbfrq
+                     wm = wm + dw
+                     cs = cs * ds
+                     ce = ce * de
+                     oofom(j,f2,f1) = oofom(j,f2,f1) + real( ( ce - cs ) / (czi * wm) )
+                 enddo ! over j={2,nbfrq} loop
+             enddo ! over i={1,rank(f1)} loop
+         enddo ! over f2={1,norbs} loop
+     enddo ! over f1={1,norbs} loop
+
+     return
   end subroutine ctqmc_record_ofom
 
 !!>>> ctqmc_record_twop: record the two-particle green's function

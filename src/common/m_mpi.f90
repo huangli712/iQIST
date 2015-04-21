@@ -7,6 +7,7 @@
 !!! history : 08/09/2006 by li huang
 !!!           02/27/2010 by li huang
 !!!           07/09/2014 by li huang
+!!!           04/13/2015 by li huang
 !!! purpose : define my own mpi calls, inspired by famous quantum espresso
 !!!           code. we note that the original mpi interfaces/subroutines
 !!!           are rather complicated for newbies, thus we try to wrap the
@@ -16,7 +17,9 @@
 !!! comment : this module has been tested under the following environment:
 !!!               mpich1    1.2.7p1
 !!!               mpich2    1.2.1p1
+!!!               mpich     3.0.3, 3.0.4, 3.1.4
 !!!               mvapich2  1.2.0p1
+!!!               openmpi   1.6.4, 1.7.1, 1.8.3
 !!!               intel mpi 3.2.0
 !!!-----------------------------------------------------------------------
 
@@ -5039,6 +5042,36 @@
 !!>>> mpi information operation
      public :: mp_info
 
+!!>>> mpi environment operation
+     public :: mp_init
+     public :: mp_finalize
+     public :: mp_comm_rank
+     public :: mp_comm_size
+
+!!>>> synchronics operations
+     public :: mp_barrier
+
+!!>>> broadcasting operations
+     public :: mp_bcast
+
+!!>>> gathering operations
+     public :: mp_gather
+
+!!>>> gatherving operations
+     public :: mp_gatherv
+
+!!>>> allgathering operations
+     public :: mp_allgather
+
+!!>>> allgatherving operations
+     public :: mp_allgatherv
+
+!!>>> reducing operations
+     public :: mp_reduce
+
+!!>>> allreducing operations
+     public :: mp_allreduce
+
   contains
 
 !!========================================================================
@@ -5053,6 +5086,132 @@
 
          return
      end subroutine mp_info
+
+!!========================================================================
+!!>>> MPI initialize and finalize operations                           <<<
+!!========================================================================
+
+!!>>> mp_init: initialize mpi environment
+     subroutine mp_init()
+         implicit none
+
+         return
+     end subroutine mp_init
+
+!!>>> mp_finalize: finalize mpi environment
+     subroutine mp_finalize()
+         implicit none
+
+         return
+     end subroutine mp_finalize
+
+!!========================================================================
+!!>>> MPI setup operations                                             <<<
+!!========================================================================
+
+!!>>> mp_comm_rank: determine the rank of the current process
+     subroutine mp_comm_rank()
+         implicit none
+
+         return
+     end subroutine mp_comm_rank
+
+!!>>> mp_comm_size: evaluate the number of processes in current communicator
+     subroutine mp_comm_size()
+         implicit none
+
+         return
+     end subroutine mp_comm_size
+
+!!========================================================================
+!!>>> MPI barrier operations                                           <<<
+!!========================================================================
+
+!!>>> mp_barrier: blocks until all process have reached this routine
+     subroutine mp_barrier()
+         implicit none
+
+         return
+     end subroutine mp_barrier
+
+!!========================================================================
+!!>>> MPI collective operations: broadcasting                          <<<
+!!========================================================================
+
+!!>>> mp_bcast: broadcasts sth. from the process with rank "root"
+     subroutine mp_bcast()
+         implicit none
+
+         return
+     end subroutine mp_bcast
+
+!!========================================================================
+!!>>> MPI collective operations : gathering                            <<<
+!!========================================================================
+
+!!>>> mp_gather_int1: gather sth. from every processes to rank 0
+     subroutine mp_gather()
+         implicit none
+
+         return
+     end subroutine mp_gather
+
+!!========================================================================
+!!>>> MPI collective operations : gatherving                           <<<
+!!========================================================================
+
+!!>>> mp_gatherv: gather sth. from every processes to rank 0
+     subroutine mp_gatherv()
+         implicit none
+
+         return
+     end subroutine mp_gatherv
+
+!!========================================================================
+!!>>> MPI collective operations: allgathering                          <<<
+!!========================================================================
+
+!!>>> mp_allgather: gather sth. from all processes and then redistribute
+!!>>> it to all processes
+     subroutine mp_allgather()
+         implicit none
+
+         return
+     end subroutine mp_allgather
+
+!!========================================================================
+!!>>> MPI collective operations: allgatherving                         <<<
+!!========================================================================
+
+!!>>> mp_allgatherv: gather sth. from all processes and then redistribute
+!!>>> it to all processes
+     subroutine mp_allgatherv()
+         implicit none
+
+         return
+     end subroutine mp_allgatherv
+
+!!========================================================================
+!!>>> MPI collective operations: reducing                              <<<
+!!========================================================================
+
+!!>>> mp_reduce: reduce sth. from all processes
+     subroutine mp_reduce()
+         implicit none
+
+         return
+     end subroutine mp_reduce
+
+!!========================================================================
+!!>>> MPI collective operations: allreducing                           <<<
+!!========================================================================
+
+!!>>> mp_allreduce: reduce sth. from all processes
+     subroutine mp_allreduce()
+         implicit none
+
+         return
+     end subroutine mp_allreduce
 
   end module mmpi
 
