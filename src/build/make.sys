@@ -177,10 +177,10 @@ CPP    = $(FPP) $(MPI) $(OMP) $(API)
 # machine tuning options, just for my laptop: iris system
 #-------------------------------------------------------------------------
 GPROF  = #-p
-CHECK  = -Wall -Wunused -Wextra -pedantic -fbacktrace -fcheck=all -g
+CHECK  = -Wall -Wunused #-fbacktrace -fcheck=all -g
 CDUMP  = -fopt-info
-LEVEL  = -Ofast -funroll-all-loops -faggressive-loop-optimizations -fPIC
-MARCH  = -msse4 -fassociative-math
+LEVEL  = -Ofast -faggressive-loop-optimizations -fassociative-math -fPIC
+MARCH  = -msse4
 
 # flags for compiler and linker
 #-------------------------------------------------------------------------
