@@ -762,6 +762,7 @@
 ! check whether there is conflict
      call s_assert( btest(issus, 1) )
 
+     sz1_s = zero; sz2_s = zero
      TIME_LOOP: do i=1,ntime
 
 ! obtain occupation status
@@ -848,7 +849,7 @@
      call s_assert( btest(issus, 2) )
 
 ! calculate ochi
-     oaux = zero
+     oaux = zero; nt_s = zero; nz_s = zero
      TIME_LOOP: do i=1,ntime
 
 ! obtain occupation status
@@ -892,7 +893,7 @@
   end subroutine ctqmc_record_ochi
 
   subroutine ctqmc_record_ofom()
-     use constants, only : dp, zero, two, pi, czi, cone, czero
+     use constants, only : dp, zero, two, pi, czi, cone
 
      use control, only : issus
      use control, only : norbs
