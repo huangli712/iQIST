@@ -2312,7 +2312,7 @@
                  i = kcur - 1
                  curr = kdim + 1
                  raux = pi * i / curr
-                 kern(kcur) = ( (curr-i) * cos(raux) + sin(raux) * cotan(pi/curr) ) / curr
+                 kern(kcur) = ( (curr-i) * cos(raux) + sin(raux) / tan(pi/curr) ) / curr
 
 ! Lorentz mode
              case (2)
