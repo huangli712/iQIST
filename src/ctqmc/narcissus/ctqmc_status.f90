@@ -22,7 +22,7 @@
 !!>>> information for the continuous time quantum Monte Carlo quantum
 !!>>> impurity solver
   subroutine ctqmc_save_status()
-     use constants, only : dp, mytmp
+     use constants, only : mytmp
 
      use control, only : norbs
      use context, only : index_s, index_e, time_s, time_e

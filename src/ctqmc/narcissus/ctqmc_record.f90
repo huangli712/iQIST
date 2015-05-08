@@ -758,6 +758,7 @@
 ! check whether there is conflict
      call s_assert( btest(issus, 1) )
 
+     sz1_s = zero; sz2_s = zero
      TIME_LOOP: do i=1,ntime
 
 ! obtain occupation status
@@ -840,7 +841,7 @@
      call s_assert( btest(issus, 2) )
 
 ! calculate ochi
-     oaux = zero
+     oaux = zero; nt_s = zero; nz_s = zero
      TIME_LOOP: do i=1,ntime
 
 ! obtain occupation status
@@ -2758,6 +2759,7 @@
 
 ! step A: for the imaginary part
 ! determine the intermediate region [nfreq+1,start] at first
+         start = 0
          do k=nfreq+1,mfreq
              start = k
              d0 = aimag( shub(k,i) - cb ) / ( rmesh(k) - ob )

@@ -517,11 +517,10 @@
      real(dp) :: shift
 
 ! evaluate the shift at first
-     call ctqmc_eval_shift(shift)
+     shift = 0.0_dp; call ctqmc_eval_shift(shift)
 
 ! multiple the shift with sign
-     call s_assert( abs(ssign) == 1.0_dp )
-     shift = shift * ssign
+     call s_assert( abs(ssign) == 1.0_dp ); shift = shift * ssign
 
 ! shift the Coulomb interaction matrix (skip the diagonal elements)
      do i=1,norbs-1
