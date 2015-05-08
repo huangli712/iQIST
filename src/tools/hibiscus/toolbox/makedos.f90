@@ -114,28 +114,28 @@
 ! setup necessary parameters
      write(mystd,'(2X,a)')   'Number of frequency points (default = 400):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nw
+     read (*,*) nw
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Number of k points (default = 200):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nk
+     read (*,*) nk
      write(mystd,*)
      nk3 = (nk+1)**3
 
      write(mystd,'(2X,a)')   'Hopping parameter t (default = 1.0):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,  *  ) part
+     read (*,*) part
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Energy window, maximum value (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,  *  ) emax
+     read (*,*) emax
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Energy window, minimum value (default =-10.0):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,  *  ) emin
+     read (*,*) emin
      write(mystd,*)
 
 ! check the parameters
