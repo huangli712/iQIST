@@ -44,7 +44,7 @@
 !!
 
   program makesig
-     use constants, only : dp, zero, one, two, pi, czero, cone, czi, mystd, mytmp
+     use constants, only : dp, zero, one, two, pi, czero, czi, mystd, mytmp
 
      implicit none
 
