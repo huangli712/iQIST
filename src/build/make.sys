@@ -163,6 +163,7 @@
 # fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
 F90    = mpifort
+F2PY   = f2py-2.7
 LINKER = $(F90)
 ARCHIVER = ar -ruv
 
