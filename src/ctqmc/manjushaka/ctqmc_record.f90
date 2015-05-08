@@ -1539,7 +1539,7 @@
 !!>>> impurity green's function can be obtained by using dyson's equation
 !!>>> finally
   subroutine ctqmc_make_hub1()
-     use constants, only : dp, zero, one, czi, czero, eps6
+     use constants, only : dp, zero, one, czi, czero
 
      use control, only : norbs
      use control, only : mfreq
@@ -1667,6 +1667,7 @@
 
 ! step A: for the imaginary part
 ! determine the intermediate region [nfreq+1,start] at first
+         start = 0
          do k=nfreq+1,mfreq
              start = k
              d0 = aimag( shub(k,i) - cb ) / ( rmesh(k) - ob )
