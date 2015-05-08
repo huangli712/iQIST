@@ -2577,10 +2577,10 @@
      real(dp), intent(out) :: trace
 
 ! imaginary time value of operator A, only valid in cmode = 1 or 2
-     real(dp), intent(in), optional :: tau_s
+     real(dp), intent(in)  :: tau_s
 
 ! imaginary time value of operator B, only valid in cmode = 1 or 2
-     real(dp), intent(in), optional :: tau_e
+     real(dp), intent(in)  :: tau_e
 
 ! local variables
 ! loop index
