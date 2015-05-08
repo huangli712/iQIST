@@ -309,7 +309,7 @@
      do i=1,N32-1
          temp = ieor( pt32(i-1), ishft( pt32(i-1), -30 ) )
          temp = 1812433253_int64 * temp + i
-         pt32(i) = ibits( temp, 0, 32 )
+         pt32(i) = int( ibits( temp, 0, 32 ), kind = int32 )
      enddo ! over i={1,N32-1} loop
 
 ! check period of random number generator
