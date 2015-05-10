@@ -90,17 +90,17 @@
 ! setup necessary parameters
      write(mystd,'(2X,a)')   'Number of bands (default = 1):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nband
+     read (*,*) nband
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Number of time slices (default = 1024):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') ntime
+     read (*,*) ntime
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,  *  ) beta
+     read (*,*) beta
      write(mystd,*)
 
 ! check the parameters

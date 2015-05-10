@@ -594,7 +594,7 @@
 ! integer vector Y
      integer, intent(inout) :: iy(n)
 
-     iy = ix * (one - alpha) + iy * alpha
+     iy = int( real(ix) * (one - alpha) + real(iy) * alpha )
 
      return
   end subroutine s_mix_i

@@ -26,7 +26,7 @@
 
 !!>>> atomic_config: read config parameters from file atom.config.in
   subroutine atomic_config()
-     use constants, only : dp, mytmp
+     use constants, only : dp
      use parser, only : p_create, p_destroy, p_parse, p_get
 
      use m_cntr ! ALL
@@ -194,7 +194,8 @@
      endif ! back if ( icu == 2 .and. nband /= 5 .and. nband /= 7 ) block
 
      if ( icu == 3 .and. nband /= 5 ) then
-         write(mystd,'(2X,a)') 'ERROR: only support anisotropic Hunds rule exchange in Kanamori type Coulomb interaction for 5-band system!'
+         write(mystd,'(2X,a)') 'ERROR: only support anisotropic Hunds &
+             & rule exchange in Kanamori type Coulomb interaction for 5-band system!'
          write(mystd,*)
          lpass = .false.
      endif ! back if ( icu == 3 .and. nband /= 5 ) block
@@ -576,7 +577,7 @@
 !!>>> atomic_make_natural: make natural basis, on which the impurity
 !!>>> energy matrix is diagonal
   subroutine atomic_make_natural()
-     use constants, only : dp, czero, mystd
+     use constants, only : dp, czero
 
      use m_cntr, only : ibasis
      use m_cntr, only : icu, icf, isoc

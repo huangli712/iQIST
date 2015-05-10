@@ -4,7 +4,7 @@ Here we provide a summary list for several make.sys templates. Please choose a s
 
 ### make.sys
 
-see template/macos/make.sys.standard
+see template/macos/make.sys.gfortran
 
 ### template/macos/make.sys.standard
 
@@ -60,6 +60,20 @@ Software  : OS X 10.8.5
             Intel Fortran Compiler 13.0.0
             Intel Math Kernel Library 11.0
             Python 2.7.4
+
+### template/macos/make.sys.gfortran
+
+Machine   : MacBook Pro Retina 2013
+
+Processor : 2.4 GHz Intel Core i7
+
+Memory    : 8 GB 1600 MHz DDR3
+
+Software  : OS X 10.10.3
+            MPICH 3.1.4
+            GNU gfortran 5.1.0
+            Apple Accelerate/vecLib framework
+            Python 2.7.6
 
 ### template/linux/make.sys.standard
 

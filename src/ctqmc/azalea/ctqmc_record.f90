@@ -1126,6 +1126,7 @@
 
 ! step A: for the imaginary part
 ! determine the intermediate region [nfreq+1,start] at first
+         start = 0
          do k=nfreq+1,mfreq
              start = k
              d0 = aimag( shub(k,i) - cb ) / ( rmesh(k) - ob )

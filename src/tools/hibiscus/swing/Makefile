@@ -20,16 +20,19 @@
 ## History
 ## =======
 ##
-## 01/05/2015 by li huang
+## 05/08/2015 by li huang
 ##
 ##
+
+include ../../../build/make.sys
 
 default: all
 
 all: exe
 
 exe:
-	f2py -c --fcompiler=intelem --f90flags="-O3 -xHost" swing_fast.f90 -m swing_fast
+	$(F2PY) -c --f90exec=$(F90) swing_fast.f90 -m swing_fast
+	rm -fr *.dSYM
 
 clean:
 	rm -f *.so

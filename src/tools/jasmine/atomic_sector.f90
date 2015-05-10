@@ -106,9 +106,9 @@
 
 !!>>> atomic_make_shmat: make Hamiltonian for each sector one by one
   subroutine atomic_make_shmat()
-     use constants, only : dp, one, epst, czero
+     use constants, only : one, epst, czero
 
-     use m_cntr, only : norbs, ncfgs
+     use m_cntr, only : norbs
      use m_full, only : bin_basis, dec_basis, ind_basis
      use m_spmat, only : emat, umat
      use m_sector, only : nsectors, sectors
@@ -580,7 +580,7 @@
                      endif ! back if ( k == 1 .and. bin_basis(j,ibasis) == 0 ) block
                  enddo ! over l={1,sectors(i)%ndim} loop
 
-                 if ( can == .true. ) then
+                 if ( can .eqv. .true. ) then
                      select case (ictqmc)
                          case (2)
                              if ( k == 1 ) then

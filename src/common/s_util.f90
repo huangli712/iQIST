@@ -584,11 +584,11 @@
      real(dp) :: msec, nsec
 
 ! run time for current iteration
-     mday = time_iter / 86400
+     mday = int( time_iter / 86400 )
      msec = time_iter - 86400 * mday
-     mhou = msec / 3600
+     mhou = int( msec / 3600 )
      msec = msec - 3600 * mhou
-     mmin = msec / 60
+     mmin = int( msec / 60 )
      msec = msec - 60 * mmin
 
      write(mystd,'(4X, ">>> used time: ")', advance = 'no')
@@ -610,11 +610,11 @@
      write(mystd,'("in current iteration.")')
 
 ! run time for total iteration
-     nday = time_niter / 86400
+     nday = int( time_niter / 86400 )
      nsec = time_niter - 86400 * nday
-     nhou = nsec / 3600
+     nhou = int( nsec / 3600 )
      nsec = nsec - 3600 * nhou
-     nmin = nsec / 60
+     nmin = int( nsec / 60 )
      nsec = nsec - 60 * nmin
 
      write(mystd,'(4X, ">>> used time: ")', advance = 'no')

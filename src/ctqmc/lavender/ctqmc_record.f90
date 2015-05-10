@@ -1416,7 +1416,7 @@
                  i = kcur - 1
                  curr = kdim + 1
                  raux = pi * i / curr
-                 kern(kcur) = ( (curr-i) * cos(raux) + sin(raux) * cotan(pi/curr) ) / curr
+                 kern(kcur) = ( (curr-i) * cos(raux) + sin(raux) / tan(pi/curr) ) / curr
 
 ! Lorentz mode
              case (2)
@@ -1720,6 +1720,7 @@
 
 ! step A: for the imaginary part
 ! determine the intermediate region [nfreq+1,start] at first
+         start = 0
          do k=nfreq+1,mfreq
              start = k
              d0 = aimag( shub(k,i) - cb ) / ( rmesh(k) - ob )

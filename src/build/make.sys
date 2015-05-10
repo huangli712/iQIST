@@ -156,41 +156,42 @@
 ## History
 ## =======
 ##
-## 11/10/2014 by li huang
+## 05/07/2015 by li huang
 ##
 ##
 
 # fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
-F90    = mpif90
+F90    = mpifort
+F2PY   = f2py-2.7
 LINKER = $(F90)
 ARCHIVER = ar -ruv
 
 # fortran preprocessor options, common setting
 #-------------------------------------------------------------------------
 MPI    = -DMPI
-OMP    = #-openmp
+OMP    = #-fopenmp
 API    = #-DAPI -DMPY
-FPP    = -fpp
+FPP    = -cpp
 CPP    = $(FPP) $(MPI) $(OMP) $(API)
 
 # machine tuning options, just for my laptop: iris system
 #-------------------------------------------------------------------------
-GPROF  = #-pg
-CHECK  = -warn all #-check all -traceback -g
-CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
-LEVEL  = -O3 -xHost -unroll-aggressive -align all -fPIC
-MARCH  = -march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2
+GPROF  = #-p
+CHECK  = -Wall -Wunused -Wextra #-fbacktrace -fcheck=all -g
+CDUMP  = -fopt-info
+LEVEL  = -Ofast -faggressive-loop-optimizations -fassociative-math -fPIC
+MARCH  = -msse4
 
 # flags for compiler and linker
 #-------------------------------------------------------------------------
 FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MARCH) $(GPROF)
-LFLAGS = -static -Wl,-no_pie $(OMP) $(GPROF)
+LFLAGS = $(OMP) $(GPROF)
 
 # linear algebra library, lapack and blas
 #-------------------------------------------------------------------------
-LIBS   = -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
+LIBS   = -framework Accelerate
 
 # mpi library, just for fortran
 #-------------------------------------------------------------------------
-MPIL   = -L/usr/local/mpich/lib -lfmpich -lmpichf90
+MPIL   = -L/opt/local/mpich/lib -lfmpich -lmpichf90

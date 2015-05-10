@@ -730,7 +730,7 @@
      do i=1,ndim
          cres = cres * dcmplx( wr(i), wi(i) )
      enddo ! over i={1,ndim} loop
-     ddet = cres
+     ddet = real(cres)
 
 ! deallocate memory
      if ( allocated(ipiv) ) deallocate(ipiv)

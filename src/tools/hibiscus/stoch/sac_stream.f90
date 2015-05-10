@@ -126,7 +126,7 @@
 !!>>> sac_make_init1: initialize the stochastic analytic continuation
 !!>>> code, input original imaginary time data and related mesh
   subroutine sac_make_init1()
-     use constants, only : dp, eps6, mytmp
+     use constants, only : eps6, mytmp
      use mmpi, only : mp_bcast, mp_barrier
 
      use control, only : ntime

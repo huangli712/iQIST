@@ -119,18 +119,18 @@
 ! setup necessary parameters
      write(mystd,'(2X,a)')   'Number of bands (default = 1):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nband
+     read (*,*) nband
      write(mystd,*)
      norbs = nband * nspin
 
      write(mystd,'(2X,a)')   'Number of matsubara frequency points (default = 8193):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nfreq
+     read (*,*) nfreq
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Number of data bins (default = 1):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nbins
+     read (*,*) nbins
      write(mystd,*)
 
 ! check the parameters
