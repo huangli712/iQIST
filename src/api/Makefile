@@ -20,7 +20,7 @@
 ## History
 ## =======
 ##
-## 02/28/2015 by li huang
+## 05/10/2015 by li huang
 ##
 ##
 
@@ -54,14 +54,16 @@ libMM:
 	cp ../common/libMM.a .
 
 pyiqist: f2py libctqmc libMM
-	$(F2PY) -c --f90exec=$(F2PYC) -m pyiqist -L. -lctqmc -lMM --link-lapack_opt ctqmc_api_py.f90
+	$(F2PY) -c --f90exec=$(F2PYC) -m pyiqist -L. -lctqmc -lMM $(F2PYL) ctqmc_api_py.f90
 	rm -fr *.dSYM
 
 pydaisy: f2py libhfqmc libMM
-	f2py -c --fcompiler=intelem hfqmc_api_py.f90 -m pydaisy -L. -lhfqmc -lMM $(MPIL) $(LIBS)
+	$(F2PY) -c --f90exec=$(F2PYC) -m pydaisy -L. -lhfqmc -lMM $(F2PYL) hfqmc_api_py.f90
+	rm -fr *.dSYM
 
 pyjasmine: f2py libatomic libMM
-	f2py -c --fcompiler=intelem atomic_api_py.f90 -m pyjasmine -L. -latomic -lMM $(LIBS)
+	$(F2PY) -c --f90exec=$(F2PYC) -m pyjasmine -L. -latomic -lMM $(F2PYL) atomic_api_py.f90
+	rm -fr *.dSYM
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
