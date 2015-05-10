@@ -44,7 +44,7 @@
 !!
 
   program makesig
-     use constants, only : dp, zero, one, two, pi, czero, cone, czi, mystd, mytmp
+     use constants, only : dp, zero, one, two, pi, czero, czi, mystd, mytmp
 
      implicit none
 
@@ -119,27 +119,27 @@
 ! setup necessary parameters
      write(mystd,'(2X,a)')   'Number of orbitals (default = 2):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nq
+     read (*,*) nq
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Number of selected frequency points in matsubara mesh (default = 256):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nmesh
+     read (*,*) nmesh
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Number of frequency points in real axis (default = 1000):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') ngrid
+     read (*,*) ngrid
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Number of frequency points for original self-energy (default = 8193):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nfreq
+     read (*,*) nfreq
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,  *  ) beta
+     read (*,*) beta
      write(mystd,*)
 
 ! check the parameters

@@ -27,7 +27,7 @@
 
 !!>>> sac_make_grid: build wgrid and xgrid, very dense grids
   subroutine sac_make_grid(wgrid, xgrid)
-     use constants, only : dp, zero, one, two, half
+     use constants, only : dp, zero, one, half
 
      use control, only : nwmax, ngrid
      use control, only : sigma, wstep
@@ -381,7 +381,7 @@
 !!>>> sac_make_hamil1: calculate hamiltonian: H_C
 !!>>> please refer to equation (35)
   subroutine sac_make_hamil1(hc, hh)
-     use constants, only : dp, zero
+     use constants, only : dp
 
      use control, only : ntime
      use context, only : tmesh

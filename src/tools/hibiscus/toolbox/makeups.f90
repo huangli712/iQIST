@@ -115,22 +115,22 @@
 ! setup necessary parameters
      write(mystd,'(2X,a)')   'Number of orbitals (default = 2):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nq
+     read (*,*) nq
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Number of frequency points (default = 400):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nw
+     read (*,*) nw
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,  *  ) beta
+     read (*,*) beta
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Broadening parameter (default = 0.30):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,  *  ) gamm
+     read (*,*) gamm
      write(mystd,*)
 
 ! check the parameters

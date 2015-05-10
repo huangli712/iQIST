@@ -604,7 +604,6 @@
      use stack, only : istack_getrest
 
      use control, only : nband, norbs
-     use context, only : matrix_ptrace, matrix_ntrace
      use context, only : reflip_tcount, reflip_accept, reflip_reject
      use context, only : empty_v, index_t, index_v, flvr_v
      use context, only : rank, symm

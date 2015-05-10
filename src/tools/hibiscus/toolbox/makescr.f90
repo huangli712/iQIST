@@ -128,37 +128,37 @@
      write(mystd,'(2X,a)')   '  model : 2, plasmon pole model'
      write(mystd,'(2X,a)')   '  model : 3, ohmic model'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') model
+     read (*,*) model
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Number of time slices (default = 1024):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') ntime
+     read (*,*) ntime
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Number of frequency points (default = 400):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') nfreq
+     read (*,*) nfreq
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Number of cutoff frequency points (default = 400):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,'(i)') ncut
+     read (*,*) ncut
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Inversion of temperature (default = 10.0):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,  *  ) beta
+     read (*,*) beta
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Experienced parameter for screening function lc (default = 0.625):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,  *  ) lc
+     read (*,*) lc
      write(mystd,*)
 
      write(mystd,'(2X,a)')   'Experienced parameter for screening function wc (default = 4.000):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (mystd,  *  ) wc
+     read (*,*) wc
      write(mystd,*)
 
 ! check the parameters
