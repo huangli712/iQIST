@@ -416,7 +416,7 @@
 ! only the non-zero elements are included in the atom.cix, but we do not
 ! know how many non-zero elements there are
          ATOM_CIX_PARSER: do
-             read(mytmp, *, iostat = istat) k, j, i, rtmp
+             read(mytmp,*,iostat = istat) k, j, i, rtmp
              if ( istat == iostat_end ) then
                  EXIT ATOM_CIX_PARSER
              else
