@@ -36,7 +36,7 @@ all: build_mod
 
 build_mod: $(mod)
 
-f2py:
+preprocess:
 	cpp -E -DMPY ctqmc_api.f90 > ctqmc_api_py.f90
 	cpp -E -DMPY hfqmc_api.f90 > hfqmc_api_py.f90
 	cpp -E -DMPY atomic_api.f90 > atomic_api_py.f90
@@ -53,15 +53,15 @@ libatomic:
 libMM:
 	cp ../common/libMM.a .
 
-pyiqist: f2py libctqmc libMM
+pyiqist: preprocess libctqmc libMM
 	$(F2PY) -c --f90exec=$(F2PYC) -m pyiqist -L. -lctqmc -lMM $(F2PYL) ctqmc_api_py.f90
 	rm -fr *.dSYM
 
-pydaisy: f2py libhfqmc libMM
+pydaisy: preprocess libhfqmc libMM
 	$(F2PY) -c --f90exec=$(F2PYC) -m pydaisy -L. -lhfqmc -lMM $(F2PYL) hfqmc_api_py.f90
 	rm -fr *.dSYM
 
-pyjasmine: f2py libatomic libMM
+pyjasmine: preprocess libatomic libMM
 	$(F2PY) -c --f90exec=$(F2PYC) -m pyjasmine -L. -latomic -lMM $(F2PYL) atomic_api_py.f90
 	rm -fr *.dSYM
 
