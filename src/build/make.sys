@@ -164,6 +164,7 @@
 #-------------------------------------------------------------------------
 F90    = mpifort
 F2PY   = f2py-2.7
+F2PYC  = mpifort
 LINKER = $(F90)
 ARCHIVER = ar -ruv
 
@@ -171,7 +172,7 @@ ARCHIVER = ar -ruv
 #-------------------------------------------------------------------------
 MPI    = -DMPI
 OMP    = #-fopenmp
-API    = #-DAPI -DMPY
+API    = -DAPI -DMPY
 FPP    = -cpp
 CPP    = $(FPP) $(MPI) $(OMP) $(API)
 
@@ -180,7 +181,7 @@ CPP    = $(FPP) $(MPI) $(OMP) $(API)
 GPROF  = #-p
 CHECK  = -Wall -Wunused -Wextra #-fbacktrace -fcheck=all -g
 CDUMP  = -fopt-info
-LEVEL  = -Ofast -faggressive-loop-optimizations -fassociative-math -fPIC
+LEVEL  = -Ofast -fno-tree-pre -faggressive-loop-optimizations -fPIC
 MARCH  = -msse4
 
 # flags for compiler and linker
