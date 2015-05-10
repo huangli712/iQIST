@@ -19,33 +19,40 @@
 ## Requirements
 ## ============
 ##
-## * Operation system: 
-##   --- Linux
-##   --- Mac OS X
+## Operation system
+## ----------------
+## * Linux
+## * Mac OS X
 ##
-## * Fortran compiler:
-##   --- Intel Fortran Compiler
-##   --- GNU gfortran
+## Fortran compiler
+## ----------------
+## * Intel Fortran Compiler
+## * GNU gfortran
 ##
-## * Linear algebra library:
-##   --- OpenBLAS
-##   --- Intel Math Kernel Library
-##   --- Reference implementation at Netlib
-##   --- Apple Accelerate/vecLib framework
+## Linear algebra library
+## ----------------------
+## * OpenBLAS
+## * Intel Math Kernel Library
+## * Reference implementation at Netlib
+## * Apple Accelerate/vecLib framework
 ##
-## * MPI environment
-##   --- MPICH
-##   --- Openmpi
+## MPI environment
+## ---------------
+## * MPICH
+## * Openmpi
 ##
-## * OpenMP environment
-##   --- Optional
+## OpenMP environment
+## ------------------
+## * Optional
 ##
-## * Python environment
-##   --- numpy, scipy, matplotlib, mpi4py, f2py
+## Python environment
+## ------------------
+## * numpy, scipy, matplotlib, mpi4py, f2py
 ##
-## * LaTeX environment
-##   --- MacTeX
-##   --- TeXlive
+## LaTeX environment
+## -----------------
+## * MacTeX
+## * TeXlive
 ##
 ## Though it is not mandatory, we still strongly recommend to update the
 ## above software components on your systems to the latest versions.
@@ -56,23 +63,36 @@
 ## F90
 ## ---
 ##
-## The Fortran compiler. Both the parallel and sequential fortran compilers
-## are supported. So it can be 'mpif90', 'mpifort', 'ifort', or 'gfortran',
-## and so on. Note that only the Intel fortran compiler and GNU gfortran
-## compiler were tested. And we recommend to use the latest version of Intel
-## fortran compiler (i.e, Intel Fortran Composer XE 2013 or Intel Parallel
-## Studio 2015).
+## The Fortran compiler. The parallel and sequential fortran compilers are
+## both supported. Note that only the Intel fortran compiler and the GNU
+## gfortran compiler were tested. And we recommend to use the very latest
+## version of Intel fortran compiler (i.e, Intel Fortran Composer XE 2013
+## or Intel Parallel Studio 2015).
+##
+## Possible opinions:
+## * mpif90
+## * mpifort
+## * mpiifort
+## * ifort
+## * gfortran
+## * and so on. 
 ##
 ## LINKER
 ## ------
 ##
 ## Linker. Here it should be the same with compiler. Do not change it.
 ##
+## Possible opinions:
+## * $(F90)
+##
 ## ARCHIVER
 ## --------
 ##
 ## Archiver. It is used to pack the objects into a library. Do not modify
 ## it for ever.
+##
+## Possible opinions:
+## * 'ar -ruv'
 ##
 ## MPI
 ## ---
@@ -81,12 +101,21 @@
 ## please comment it out with '#' symbol and then setup F90 to 'ifort' or
 ## 'gfortran'. We strongly suggest to compile the MPI parallelized codes.
 ##
+## Possible opinions:
+## * -DMPI
+##
 ## OMP
 ## ---
 ##
 ## Specify whether OpenMP is enable. If you want to disable it, please
 ## comment it out. In default it is disabled. So far OpenMP was used by
-## some components to speedup the measurements of two-particle quantities.
+## some ctqmc components to speedup the measurements of some selected
+## two-particle quantities.
+##
+## Possible opinions:
+## * -openmp
+## * -fopenmp
+##
 ## Note that if you are using the Intel fortran compiler, this opinion
 ## should be '-openmp'. On the other hand, if the GNU gfortran compiler
 ## is used, this opinion should be '-fopenmp'.
@@ -97,19 +126,30 @@
 ## Specify whether we want to obtain a library version of iqist. If it is
 ## enabled, what you can obtain is a library and you can write python or
 ## fortran codes to use it, instead of a standard executable program. In
-## default it is disabled. If only the API macro is defined, the Fortran
-## API will be generated. If both the API and MPY macros are defined, the
-## Python API and (a slightly different) Fortran API will be generated. If
-## only the MPY macro is defined, it is invalid.
+## default it is disabled.
+##
+## Possible opinions:
+## * -DAPI
+## * -DMPY
+##
+## If only the API macro is defined, the Fortran API will be generated.
+## If both the API and MPY macros are defined, the Python API and the
+## (slightly different) Fortran API will be generated. If only the MPY
+## macro is defined, it is invalid.
 ##
 ## FPP
 ## ---
 ##
-## Specify whether the fortran preprocessor (FPP) is used. It must be enabled
-## or else the iqist can not be compiled correctly. Note that if you are
-## using the Intel fortran compiler, the opinion should be '-fpp'. On the
-## other hand, if the GNU gfortran compiler is used, this opinion should
-## be '-cpp'.
+## Specify whether the fortran preprocessor (FPP) is used. It has to be
+## enabled or else the iqist can not be compiled correctly.
+##
+## Possible opinions:
+## * -fpp
+## * -cpp
+##
+## Note that if you are using the Intel fortran compiler, this opinion
+## should be '-fpp'. On the other hand, if the GNU gfortran compiler is
+## used, this opinion should be '-cpp'.
 ##
 ## CPP
 ## ---
@@ -117,44 +157,79 @@
 ## Collection of preprocessor directives. Do not modify it unless you are
 ## an expert of iqist.
 ##
+## Possible opinions:
+## * $(FPP)
+## * $(MPI)
+## * $(OMP)
+## * $(API)
+## 
+## Note that the '$(FPP)' opinion is necessary.
+##
 ## GPROF
 ## -----
 ##
 ## Specify whether the code profiling should be done. If it is enabled,
-## then after the code is finished, a gmon.out file will be generated. You
-## can use the gprof tool to analyze the runtime information and figure
-## out the hotspot of the code. It is not wise to enable it to build a
-## production code, because it will decrease the efficiency greatly.
+## then after the code is finished, a gmon.out file will be generated.
+## Then you can use the gprof tool to analyze the runtime information and
+## figure out the hotspot of the code. It is not a good idea to enable it
+## to build a production code, because it will decrease the efficiency
+## greatly.
+##
+## Possible opinions:
+## * -p
+## * -pg
+##
+## Note the '-p' opinion is useful for the GNU gfortran compiler, while
+## the '-pg' opinion is useful for the Intel fortran compiler.
 ##
 ## CHECK
 ## -----
 ##
 ## Used to specify what types of check should be done.
 ##
-## If you are using the Intel fortran compiler, '-warn all' means the check
-## is done in compiling. '-check all' means the check will be done in running.
-## '-traceback' enable us to track the exact position (line number and file
-## name) where the error occurs. '-g' enable the compiler to generate debug
-## information and embed them into the final program. Note that '-check all',
-## '-traceback', and '-g' opinions will decrease the efficiency greatly.
+## Possible opinions:
+## * -warn all
+## * -check all
+## * -traceback
+## * -g
+## * -Wall -Wunused -Wextra
+## * -fcheck=all
+## * -fbacktrace
 ##
-## If you are using the GNU gfortran compiler, '-Wall' will enable most
-## warning messages. '-Wunused' will enable all -Wunused- warnings, such
-## as -Wunused-parameter, etc. '-Wextra' will print some extra warnings.
-## '-fbacktrace' will produce a backtrace when a runtime error is encountered.
-## '-fcheck=all' will specify all runtime checks are to be performed. '-g' enable the compiler to generate debug
-## information and embed them into the final program.
+## If you are using the Intel fortran compiler, the '-warn all' opinion
+## means the check is done in compiling. The '-check all' opinion means
+## the check will be done in running. The '-traceback' opinion enables
+## us to track the exact position (line number and file name) where the
+## error occurs. The '-g' opinion enables the compiler to generate debug
+## information and embed them into the final program. Note that all of
+## the '-check all', '-traceback', and '-g' opinions will decrease the
+## efficiency greatly.
+##
+## If you are using the GNU gfortran compiler, the '-Wall' opinion will
+## enable most warning messages. The '-Wunused' opinion will enable all
+## -Wunused- warnings, such the as the '-Wunused-parameter' opinion, etc.
+## The '-Wextra' opinion will print some extra warnings (sometimes they
+## are unwanted). The '-fcheck=all' opinion will specify that all of the
+## runtime checks are to be performed. The '-fbacktrace' opinion will
+## produce a backtrace when a runtime error is encountered. Finally, the
+## '-g' opinion will enable the compiler to generate debug information
+## and embed them into the final program.
 ##
 ## CDUMP
 ## -----
 ##
-## Specify whether the compiler will output useful optimization information
-## in compiling.
+## Specify whether the fortran compiler will output useful optimization
+## information during the compiling process.
+##
+## Possible opinions:
 ##
 ## LEVEL
 ## -----
 ##
-## Collection of optimization opinions. '-O3' means the highest optimization.
+## Collection of optimization opinions.
+##
+## Possible opinions:
+## '-O3' means the highest optimization.
 ## '-xHost' enables the compiler to generate the most suitable code for the
 ## current computer architecture. '-unroll-aggressive' means using aggressive
 ## method to unroll the loop structures. '-align all' means to align the
