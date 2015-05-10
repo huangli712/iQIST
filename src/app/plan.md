@@ -1,2 +1,7 @@
-we are going to implement the LDA + DMFT, (ladder) dual fermion, and dynamical vertex approximation here
-see iqist/ROADMAP.md
+We are going to implement the following projects under this directory:
+
+* LDA + DMFT
+* (ladder) dual fermion
+* Dynamical vertex approximation
+
+See iqist/ROADMAP.md for more details.
