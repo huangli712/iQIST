@@ -20,7 +20,7 @@
 ## History
 ## =======
 ##
-## 02/28/2015 by li huang
+## 05/10/2015 by li huang
 ##
 ##
 
@@ -36,10 +36,10 @@ all: build_mod
 
 build_mod: $(mod)
 
-f2py:
-	fpp -P -DMPY ctqmc_api.f90 > ctqmc_api_py.f90
-	fpp -P -DMPY hfqmc_api.f90 > hfqmc_api_py.f90
-	fpp -P -DMPY atomic_api.f90 > atomic_api_py.f90
+preprocess:
+	cpp -E -DMPY ctqmc_api.f90 > ctqmc_api_py.f90
+	cpp -E -DMPY hfqmc_api.f90 > hfqmc_api_py.f90
+	cpp -E -DMPY atomic_api.f90 > atomic_api_py.f90
 
 libctqmc:
 	cp ../ctqmc/azalea/libctqmc.a .
@@ -53,14 +53,17 @@ libatomic:
 libMM:
 	cp ../common/libMM.a .
 
-pyiqist: f2py libctqmc libMM
-	f2py -c --fcompiler=intelem ctqmc_api_py.f90 -m pyiqist -L. -lctqmc -lMM $(MPIL) $(LIBS)
+pyiqist: preprocess libctqmc libMM
+	$(F2PY) -c --f90exec=$(F2PYC) -m pyiqist -L. -lctqmc -lMM $(F2PYL) ctqmc_api_py.f90
+	rm -fr *.dSYM
 
-pydaisy: f2py libhfqmc libMM
-	f2py -c --fcompiler=intelem hfqmc_api_py.f90 -m pydaisy -L. -lhfqmc -lMM $(MPIL) $(LIBS)
+pydaisy: preprocess libhfqmc libMM
+	$(F2PY) -c --f90exec=$(F2PYC) -m pydaisy -L. -lhfqmc -lMM $(F2PYL) hfqmc_api_py.f90
+	rm -fr *.dSYM
 
-pyjasmine: f2py libatomic libMM
-	f2py -c --fcompiler=intelem atomic_api_py.f90 -m pyjasmine -L. -latomic -lMM $(LIBS)
+pyjasmine: preprocess libatomic libMM
+	$(F2PY) -c --f90exec=$(F2PYC) -m pyjasmine -L. -latomic -lMM $(F2PYL) atomic_api_py.f90
+	rm -fr *.dSYM
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
