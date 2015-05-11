@@ -1,4 +1,3 @@
-
 ##
 ##
 ## Introduction
@@ -472,13 +471,14 @@
 ## 05/11/2015 by li huang
 ##
 ##
-# fortran compiler, linker, and archiver
+
+# Fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
 F90    = mpif90
 LINKER = $(F90)
 ARCHIVER = ar -ruv
 
-# fortran preprocessor options, common setting
+# Fortran preprocessor options
 #-------------------------------------------------------------------------
 MPI    = -DMPI
 OMP    = #-openmp
@@ -486,7 +486,7 @@ API    = #-DAPI -DMPY
 FPP    = -fpp
 CPP    = $(FPP) $(MPI) $(OMP) $(API)
 
-# machine tuning options, just for my laptop: iris system
+# Machine tuning options
 #-------------------------------------------------------------------------
 GPROF  = #-pg
 CHECK  = -warn all #-check all -traceback -g
@@ -494,15 +494,17 @@ CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
 LEVEL  = -O3 -xHost -unroll-aggressive -align all -fPIC
 MARCH  = -march=core2 # core2 corei7 corei7-avx core-avx-i core-avx2
 
-# flags for compiler and linker
+# Flags for fortran compiler and linker
 #-------------------------------------------------------------------------
-FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MARCH) $(GPROF) 
+FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MARCH) $(GPROF)
 LFLAGS = $(OMP) $(GPROF)
 
-# linear algebra library, lapack and blas
+# External linear algebra library
 #-------------------------------------------------------------------------
 LIBS   = -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lmkl_def
 
-# mpi library, just for fortran
+# F2py tools configuration
 #-------------------------------------------------------------------------
-MPIL   = -L/vol-th/software/mpi/mpi-intel2013/lib -lmpich -lfmpich -lmpichf90 -lmpl
+F2PY   = f2py
+F2PYC  = $(F90)
+F2PYL  = $(LIBS)
