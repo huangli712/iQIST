@@ -1,4 +1,3 @@
-
 ##
 ##
 ## Introduction
@@ -472,6 +471,7 @@
 ## 05/11/2015 by li huang
 ##
 ##
+
 # Fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
 F90    = mpifort
