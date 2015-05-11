@@ -4,7 +4,7 @@ Here we provide a summary list for several make.sys templates. Please choose a s
 
 ### make.sys
 
-see template/macos/make.sys.gfortran
+See template/macos/make.sys.gfortran. PLEASE REPLACE IT WITH YOUR OWN VERSION.
 
 ### template/macos/make.sys.standard
 
