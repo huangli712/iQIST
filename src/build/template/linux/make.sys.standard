@@ -174,7 +174,7 @@
 ## * $(MPI)
 ## * $(OMP)
 ## * $(API)
-## 
+##
 ## Note that the '$(FPP)' option is necessary.
 ##
 ## GPROF
@@ -251,7 +251,7 @@
 ## source file.
 ##
 ## If you are using the GNU gfortran compiler, the '-fopt-info' option
-## enables all optimization info dumps on stderr. 
+## enables all optimization info dumps on stderr.
 ##
 ## LEVEL
 ## -----
@@ -360,7 +360,7 @@
 ## SSE4.1 and SSE4.2 built-in functions and code generation.
 ##
 ## Note that you could simply cat a file (/proc/cpuinfo) on Linux and then
-## glean a lot of information about the CPU. On Mac OS X, you can look at 
+## glean a lot of information about the CPU. On Mac OS X, you can look at
 ## "About This Mac", or do a "sysctl -a hw" and try to look at relevant
 ## information in the output.
 ##

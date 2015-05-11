@@ -1,4 +1,3 @@
-
 ##
 ##
 ## Introduction
@@ -174,7 +173,7 @@
 ## * $(MPI)
 ## * $(OMP)
 ## * $(API)
-## 
+##
 ## Note that the '$(FPP)' option is necessary.
 ##
 ## GPROF
@@ -251,7 +250,7 @@
 ## source file.
 ##
 ## If you are using the GNU gfortran compiler, the '-fopt-info' option
-## enables all optimization info dumps on stderr. 
+## enables all optimization info dumps on stderr.
 ##
 ## LEVEL
 ## -----
@@ -360,7 +359,7 @@
 ## SSE4.1 and SSE4.2 built-in functions and code generation.
 ##
 ## Note that you could simply cat a file (/proc/cpuinfo) on Linux and then
-## glean a lot of information about the CPU. On Mac OS X, you can look at 
+## glean a lot of information about the CPU. On Mac OS X, you can look at
 ## "About This Mac", or do a "sysctl -a hw" and try to look at relevant
 ## information in the output.
 ##
@@ -472,13 +471,14 @@
 ## 05/11/2015 by li huang
 ##
 ##
-# fortran compiler, linker, and archiver
+
+# Fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
 F90    = /apps/openmpi183/bin/mpif90
 LINKER = $(F90)
 ARCHIVER = ar -ruv
 
-# fortran preprocessor options, common setting
+# Fortran preprocessor options
 #-------------------------------------------------------------------------
 MPI    = -DMPI
 OMP    = #-fopenmp
@@ -486,23 +486,25 @@ API    = #-DAPI -DMPY
 FPP    = -cpp
 CPP    = $(FPP) $(MPI) $(OMP) $(API)
 
-# machine tuning options, just for my laptop: iris system
+# Machine tuning options
 #-------------------------------------------------------------------------
-GPROF  = #
-CHECK  = -Wall #-pedantic -fbacktrace -fcheck=all -g
-CDUMP  = #
-LEVEL  = -O3 -fPIC
+GPROF  = #-p
+CHECK  = -Wall -Wunused -Wextra #-fbacktrace -fcheck=all -g
+CDUMP  = -fopt-info
+LEVEL  = -Ofast -faggressive-loop-optimizations -fno-tree-pre -fPIC
 MARCH  = -mavx
 
-# flags for compiler and linker
+# Flags for fortran compiler and linker
 #-------------------------------------------------------------------------
 FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MARCH) $(GPROF)
 LFLAGS = $(OMP) $(GPROF)
 
-# linear algebra library, lapack and blas
+# External linear algebra library
 #-------------------------------------------------------------------------
 LIBS   = -L/home/lihuang/lapack -llapack -lblas
 
-# mpi library, just for fortran
+# F2py tools configuration
 #-------------------------------------------------------------------------
-MPIL   = -L/apps/openmpi183/lib/ -lmpi_mpifh
+F2PY   = f2py
+F2PYC  = $(F90)
+F2PYL  = $(LIBS)
