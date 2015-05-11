@@ -16,8 +16,8 @@
 ## designed for my own hardware and software environment only. Please
 ## check it and improve it before starting to compile your iqist code.
 ##
-## Requirements
-## ============
+## Prerequisites
+## =============
 ##
 ## Operation system
 ## ----------------
@@ -34,7 +34,7 @@
 ## * OpenBLAS
 ## * Intel Math Kernel Library
 ## * Reference implementation at Netlib
-## * Apple Accelerate/vecLib framework
+## * Apple Accelerate framework
 ##
 ## MPI environment
 ## ---------------
@@ -47,7 +47,7 @@
 ##
 ## Python environment
 ## ------------------
-## * numpy, scipy, matplotlib, mpi4py, f2py
+## * numpy, scipy, f2py, mpi4py, matplotlib
 ##
 ## LaTeX environment
 ## -----------------
@@ -70,12 +70,12 @@
 ## or Intel Parallel Studio 2015).
 ##
 ## Possible opinions:
+##
 ## * mpif90
 ## * mpifort
 ## * mpiifort
 ## * ifort
 ## * gfortran
-## * and so on. 
 ##
 ## LINKER
 ## ------
@@ -83,6 +83,7 @@
 ## Linker. Here it should be the same with compiler. Do not change it.
 ##
 ## Possible opinions:
+##
 ## * $(F90)
 ##
 ## ARCHIVER
@@ -92,7 +93,8 @@
 ## it for ever.
 ##
 ## Possible opinions:
-## * 'ar -ruv'
+##
+## * ar -ruv
 ##
 ## MPI
 ## ---
@@ -102,6 +104,7 @@
 ## 'gfortran'. We strongly suggest to compile the MPI parallelized codes.
 ##
 ## Possible opinions:
+##
 ## * -DMPI
 ##
 ## OMP
@@ -113,6 +116,7 @@
 ## two-particle quantities.
 ##
 ## Possible opinions:
+##
 ## * -openmp
 ## * -fopenmp
 ##
@@ -124,11 +128,12 @@
 ## ---
 ##
 ## Specify whether we want to obtain a library version of iqist. If it is
-## enabled, what you can obtain is a library and you can write python or
-## fortran codes to use it, instead of a standard executable program. In
+## enabled, what you can obtain is a library (and you can write python or
+## fortran codes to use it), instead of a standard executable program. In
 ## default it is disabled.
 ##
 ## Possible opinions:
+##
 ## * -DAPI
 ## * -DMPY
 ##
@@ -144,6 +149,7 @@
 ## enabled or else the iqist can not be compiled correctly.
 ##
 ## Possible opinions:
+##
 ## * -fpp
 ## * -cpp
 ##
@@ -158,6 +164,7 @@
 ## an expert of iqist.
 ##
 ## Possible opinions:
+##
 ## * $(FPP)
 ## * $(MPI)
 ## * $(OMP)
@@ -176,6 +183,7 @@
 ## greatly.
 ##
 ## Possible opinions:
+##
 ## * -p
 ## * -pg
 ##
@@ -188,6 +196,7 @@
 ## Used to specify what types of check should be done.
 ##
 ## Possible opinions:
+##
 ## * -warn all
 ## * -check all
 ## * -traceback
@@ -207,7 +216,7 @@
 ##
 ## If you are using the GNU gfortran compiler, the '-Wall' opinion will
 ## enable most warning messages. The '-Wunused' opinion will enable all
-## -Wunused- warnings, such the as the '-Wunused-parameter' opinion, etc.
+## -Wunused- warnings, such as the '-Wunused-parameter' opinion, etc.
 ## The '-Wextra' opinion will print some extra warnings (sometimes they
 ## are unwanted). The '-fcheck=all' opinion will specify that all of the
 ## runtime checks are to be performed. The '-fbacktrace' opinion will
@@ -223,20 +232,64 @@
 ##
 ## Possible opinions:
 ##
+## * -vec-report2
+## * -openmp-report2
+## * -nogen-interfaces
+## * -fopt-info
+##
+## If you are using the Intel fortran compiler, the '-vec-report2' opinion
+## tells the vectorizer to report on vectorized and non-vectorized loops.
+## The '-openmp-report2' opinion controls the openmp parallelizer's level
+## of diagnostic messages. Here number 2 is the level of openmp diagnostic
+## messages to display. The '-nogen-interfaces' opinion ask the compiler
+## to do not generate an interface block for each routine defined in the
+## source file.
+##
+## If you are using the GNU gfortran compiler, the '-fopt-info' opinion
+## enables all optimization info dumps on stderr. 
+##
 ## LEVEL
 ## -----
 ##
 ## Collection of optimization opinions.
 ##
 ## Possible opinions:
-## '-O3' means the highest optimization.
-## '-xHost' enables the compiler to generate the most suitable code for the
-## current computer architecture. '-unroll-aggressive' means using aggressive
-## method to unroll the loop structures. '-align all' means to align the
-## arrays, structures, etc. '-fPIC' means to generate position independent
-## code  for the purpose of dynamic link. It should be enabled to compile
-## the python API. Please modify them only if you are an expert of the Intel
-## Fortran Compiler and you know what you are doing.
+##
+## * -O3
+## * -xHost
+## * -unroll-aggressive
+## * -align all
+## * -fPIC
+## * -Ofast
+## * -faggressive-loop-optimizations
+## * -fno-tree-pre
+##
+## If you are using the Intel fortran compiler, the '-O3' opinion means
+## the highest optimization. The '-xHost' opinion enables the compiler
+## to try to generate the most suitable code for the current computer
+## architecture. The '-unroll-aggressive' opinion means using aggressive
+## method to unroll the loop structures. The '-align all' opinion means
+## to align the arrays, structures, etc. The '-fPIC' opinion means to
+## generate position independent code for the purpose of dynamic link.
+## It should be enabled to compile the python API. Please modify them
+## only if you are an expert of the Intel fortran compiler and you know
+## what you are doing.
+##
+## If you are using the GNU gfortran compiler, the '-Ofast' opinion means
+## to optimize the code for speed disregarding exact standards compliance.
+## The '-faggressive-loop-optimizations' opinion aggressively optimizes
+## loops using language constraints. The '-fno-tree-pre' opinion will
+## disable the SSA-PRE optimization on trees. In general, if the '-O2',
+## '-O3', or '-Ofast' opinions are actived, the '-ftree-pre' opinion will
+## be included automatically. However, based on some benchmark results,
+## we found that the SSA-PRE optimization on trees would lead to strange
+## runtime behaviors (we used the GNU gfortran 5.1.0). So, we decide to
+## close the SSA-PRE optimization on trees explicitly, that is the reason
+## why we need the '-fno-tree-pre' opinion. The '-fPIC' opinion means to
+## generate position independent code for the purpose of dynamic link.
+## It should be enabled to compile the python API. Please modify them
+## only if you are an expert of the GNU gfortran compiler and you know
+## what you are doing.
 ##
 ## MARCH
 ## -----
