@@ -1,5 +1,9 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.6.2 @ 53c8b61 // May 11, 2015
+
+* Now the iQIST is compatible with the GNU gfortran compiler.
+
 ### v0.6.1 @ d536991 // Apr 09, 2015
 
 * Add several templates for make.sys.

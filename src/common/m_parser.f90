@@ -264,7 +264,7 @@
 
 ! read one line from the input file until we meet the end-of-file (EOF)
 ! flag, the line content is stored in string
-         read(mytmp, '(a100)', iostat = istat) string
+         read(mytmp,'(a100)',iostat = istat) string
          if ( istat == iostat_end ) then
              EXIT FILE_PARSING
          else ! it is not the end
@@ -516,11 +516,11 @@
                      write(mystd,'(a)') 'parser: p_get_vec, wrong number of vector'
                      STOP
                  endif ! back if ( offset == 0 ) block
-                 read (str_value(q+1:q+offset-1), '(I10)') int_aux
+                 read (str_value(q+1:q+offset-1),'(I10)') int_aux
                  out_value(p) = int_aux
                  q = q + offset
              enddo ! over p={1,nsize-1} loop
-             read(str_value(q+1:), '(I10)') int_aux
+             read(str_value(q+1:),'(I10)') int_aux
              out_value(nsize) = int_aux
 
          type is (logical)          ! for logical
@@ -531,11 +531,11 @@
                      write(mystd,'(a)') 'parser: p_get_vec, wrong number of vector'
                      STOP
                  endif ! back if ( offset == 0 ) block
-                 read (str_value(q+1:q+offset-1), '(L4)') bool_aux
+                 read (str_value(q+1:q+offset-1),'(L4)') bool_aux
                  out_value(p) = bool_aux
                  q = q + offset
              enddo ! over p={1,nsize-1} loop
-             read(str_value(q+1:), '(L4)') bool_aux
+             read(str_value(q+1:),'(L4)') bool_aux
              out_value(nsize) = bool_aux
 
          type is (real(dp))         ! for double precision number
@@ -546,11 +546,11 @@
                      write(mystd,'(a)') 'parser: p_get_vec, wrong number of vector'
                      STOP
                  endif ! back if ( offset == 0 ) block
-                 read (str_value(q+1:q+offset-1), '(F16.8)') real_aux
+                 read (str_value(q+1:q+offset-1),'(F16.8)') real_aux
                  out_value(p) = real_aux
                  q = q + offset
              enddo ! over p={1,nsize-1} loop
-             read(str_value(q+1:), '(F16.8)') real_aux
+             read(str_value(q+1:),'(F16.8)') real_aux
              out_value(nsize) = real_aux
 
          type is (character(len=*)) ! for character

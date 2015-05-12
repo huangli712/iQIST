@@ -31,7 +31,7 @@ default: all
 all: exe
 
 exe:
-	$(F2PY) -c --f90exec=$(F90) swing_fast.f90 -m swing_fast
+	$(F2PY) -c --f90exec=$(F2PYC) swing_fast.f90 -m swing_fast
 	rm -fr *.dSYM
 
 clean:
