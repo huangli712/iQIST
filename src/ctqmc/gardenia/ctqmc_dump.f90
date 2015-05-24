@@ -652,6 +652,8 @@
      do i=1,norbs
          write(mytmp,'(i6,2f12.6)') i, lmat(i), rmat(i)
      enddo ! over i={1,norbs} loop
+     write(mytmp,'(a6,f12.6)') 'l_sum', sum( lmat )
+     write(mytmp,'(a6,f12.6)') 'r_sum', sum( rmat )
 
      write(mytmp,'(a)') '# < k_l k_r > data:'
      do i=1,norbs
@@ -659,6 +661,7 @@
              write(mytmp,'(2i6,f12.6)') i, j, lrmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
+     write(mytmp,'(a6,f12.6)') 'rlsum', sum( lrmat )
 
 ! close data file
      close(mytmp)
