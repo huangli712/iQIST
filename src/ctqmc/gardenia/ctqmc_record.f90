@@ -734,7 +734,53 @@
   end subroutine ctqmc_record_nmat
 
   subroutine ctqmc_record_lmat()
+     use constants, only : dp, zero, one, two
+
+     use control, only : norbs
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : lmat, rmat, lrmat
+     use context, only : rank
+
      implicit none
+
+     integer  :: flvr
+     integer  :: i
+
+     real(dp) :: ts
+     real(dp) :: te
+
+     real(dp) :: kl(norbs)
+     real(dp) :: kr(norbs)
+
+     kl = zero
+     kr = zero
+
+     do flvr=1,norbs
+         do i=1,rank(flvr)
+             ts = time_s(index_s(i, flvr), flvr)
+             te = time_e(index_e(i, flvr), flvr)
+             if ( ts < beta / two ) then
+                 kl(flvr) = kl(flvr) + one
+             else
+                 kr(flvr) = kr(flvr) + one
+             endif
+             if ( te < beta / two ) then
+                 kl(flvr) = kl(flvr) + one
+             else
+                 kr(flvr) = kr(flvr) + one
+             endif
+         enddo ! over i={1,rank(flvr)} loop
+     enddo ! over flvr={1,norbs} loop
+
+     lmat = lmat + kl
+     rmat = rmat + kr
+
+     do flvr=1,norbs
+         do i=1,norbs
+             lrmat(i,flvr) = lrmat(i,flvr) + kl(i) * kr(flvr)
+         enddo ! over i={1,norbs} loop
+     enddo ! over flvr={1,norbs} loop
 
      return
   end subroutine ctqmc_record_lmat
