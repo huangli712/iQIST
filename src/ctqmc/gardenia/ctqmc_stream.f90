@@ -538,6 +538,10 @@
      nmat    = zero
      nnmat   = zero
 
+     lmat    = zero
+     rmat    = zero
+     lrmat   = zero
+
 ! init spin-spin correlation function
      schi    = zero
      sschi   = zero
