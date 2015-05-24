@@ -1596,6 +1596,12 @@
      return
   end subroutine ctqmc_reduce_nmat
 
+  subroutine ctqmc_reduce_lmat()
+     implicit none
+
+     return
+  end subroutine ctqmc_reduce_lmat
+
 !!>>> ctqmc_reduce_schi: reduce the schi and sschi from all children processes
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
      use constants, only : dp, zero
