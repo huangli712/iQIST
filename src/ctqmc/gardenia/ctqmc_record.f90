@@ -1642,8 +1642,49 @@
      return
   end subroutine ctqmc_reduce_nmat
 
-  subroutine ctqmc_reduce_lmat()
+  subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : lmat, rmat, lrmat
+
      implicit none
+
+! external arguments
+     real(dp), intent(out) :: lmat_mpi(norbs)
+     real(dp), intent(out) :: rmat_mpi(norbs)
+     real(dp), intent(out) :: lrmat_mpi(norbs,norbs)
+
+! initialize lmat_mpi, rmat_mpi, and lrmat_mpi
+     lmat_mpi = zero
+     rmat_mpi = zero
+     lrmat_mpi = zero
+
+! build lmat_mpi, rmat_mpi, and lrmat_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(lmat, lmat_mpi)
+     call mp_allreduce(rmat, rmat_mpi)
+     call mp_allreduce(lrmat, lrmat_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     lmat_mpi = lmat
+     rmat_mpi = rmat
+     lrmat_mpi = lrmat
+
+# endif /* MPI */
+
+! calculate the average
+     lmat_mpi = lmat_mpi / real(nprocs)
+     rmat_mpi = rmat_mpi / real(nprocs)
+     lrmat_mpi = lrmat_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_lmat
