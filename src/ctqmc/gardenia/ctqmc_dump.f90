@@ -643,6 +643,22 @@
      integer :: i
      integer :: j
 
+! open data file: solver.lmat.dat
+     open(mytmp, file='solver.lmat.dat', form='formatted', status='unknown')
+
+     write(mytmp,'(a)') '# < k_l > < k_r > data:'
+     do i=1,norbs
+         write(mytmp,'(i6,2f12.6)') i, lmat(i), rmat(i)
+     enddo ! over i={1,norbs} loop
+     write(mytmp,'(a)') '# < k_l k_r > data:'
+     do i=1,norbs
+         do j=1,norbs
+             write(mytmp,'(2i6,f12.6)') i, j, lrmat(i,j)
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
 
      return
   end subroutine ctqmc_dump_lmat
