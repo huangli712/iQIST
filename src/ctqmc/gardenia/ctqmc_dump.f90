@@ -629,6 +629,14 @@
      return
   end subroutine ctqmc_dump_nmat
 
+  subroutine ctqmc_dump_lmat(lmat, rmat, lrmat)
+     use constants, only : dp, mytmp
+
+     implicit none
+
+     return
+  end subroutine ctqmc_dump_lmat
+
 !!>>> ctqmc_dump_schi: write out the spin-spin correlation function
   subroutine ctqmc_dump_schi(schi, sschi)
      use constants, only : dp, mytmp
