@@ -636,10 +636,12 @@
 
      implicit none
 
+! external arguments
      real(dp), intent(in) :: lmat(norbs)
      real(dp), intent(in) :: rmat(norbs)
      real(dp), intent(in) :: lrmat(norbs,norbs)
 
+! local variables
      integer :: i
      integer :: j
 
@@ -650,6 +652,7 @@
      do i=1,norbs
          write(mytmp,'(i6,2f12.6)') i, lmat(i), rmat(i)
      enddo ! over i={1,norbs} loop
+
      write(mytmp,'(a)') '# < k_l k_r > data:'
      do i=1,norbs
          do j=1,norbs
