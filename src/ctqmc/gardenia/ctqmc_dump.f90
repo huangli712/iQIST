@@ -632,7 +632,17 @@
   subroutine ctqmc_dump_lmat(lmat, rmat, lrmat)
      use constants, only : dp, mytmp
 
+     use control, only : norbs
+
      implicit none
+
+     real(dp), intent(in) :: lmat(norbs)
+     real(dp), intent(in) :: rmat(norbs)
+     real(dp), intent(in) :: lrmat(norbs,norbs)
+
+     integer :: i
+     integer :: j
+
 
      return
   end subroutine ctqmc_dump_lmat
