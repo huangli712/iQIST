@@ -12,6 +12,7 @@
 !!!           ctqmc_dump_hist
 !!!           ctqmc_dump_prob
 !!!           ctqmc_dump_nmat
+!!!           ctqmc_dump_lmat
 !!!           ctqmc_dump_schi
 !!!           ctqmc_dump_sfom
 !!!           ctqmc_dump_ochi
