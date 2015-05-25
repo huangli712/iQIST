@@ -1,6 +1,5 @@
 issus = 32
 isscf = 1
-isbin = 1
-Uc = 4.0
-mu = 2.0
+Uc = 1.0
+mune = 0.5
 beta = 100.0
