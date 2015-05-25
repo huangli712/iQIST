@@ -737,6 +737,7 @@
   subroutine ctqmc_record_lmat()
      use constants, only : dp, zero, one, two
 
+     use control, only : issus
      use control, only : norbs
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
@@ -761,6 +762,9 @@
 
 ! number of operators at right half axis for the current configuration
      real(dp) :: kr(norbs)
+
+! check whether there is conflict
+     call s_assert( btest(issus, 5) )
 
 ! init k_l and k_r
      kl = zero
