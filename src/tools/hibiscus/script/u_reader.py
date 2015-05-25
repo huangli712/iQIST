@@ -24,7 +24,7 @@
 ## History
 ## =======
 ##
-## 03/04/2015 by li huang
+## 05/25/2015 by li huang
 ##
 ##
 
@@ -315,7 +315,7 @@ class iqistReader(object):
     @staticmethod
     def get_nmat(norbs, fileName = None):
         """ try to read the solver.nmat.dat file to return the occupation
-            number <N_i> and double occupation number <N_i N_j> data
+            number < N_i > and double occupation number < N_i N_j > data
         """
         if fileName is None:
             f = open("solver.nmat.dat","r")
@@ -344,9 +344,41 @@ class iqistReader(object):
         return (nmat, nnmat)
 
     @staticmethod
+    def get_lmat(norbs, fileName = None):
+        """ try to read the solver.lmat.dat file to return the fidelity
+            susceptibility data: < k_l >, < k_r >, and < k_l k_r >
+        """
+        if fileName is None:
+            f = open("solver.lmat.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        lmat = numpy.zeros((norbs), dtype = numpy.float)
+        rmat = numpy.zeros((norbs), dtype = numpy.float)
+        lrmat = numpy.zeros((norbs,norbs), dtype = numpy.complex)
+        f.readline() # skip one comment line
+        # read lmat and rmat
+        for i in range(norbs):
+            spl = f.readline().split()
+            lmat[i] = float( spl[1] )
+            rmat[i] = float( spl[2] )
+        f.readline() # skip three lines
+        f.readline()
+        f.readline()
+        # read lrmat
+        for i in range(norbs):
+            for j in range(norbs):
+                spl = f.readline().split()
+                lrmat[i,j] = float( spl[2] )
+
+        f.close()
+
+        return (lmat, rmat, lrmat)
+
+    @staticmethod
     def get_schi(nband, ntime, fileName = None):
         """ try to read the solver.schi.dat file to return the spin-spin
-            correlation function <S_z(0) S_z(\tau)> data
+            correlation function < S_z(0) S_z(\tau) > data
         """
         if fileName is None:
             f = open("solver.schi.dat","r")
@@ -378,7 +410,7 @@ class iqistReader(object):
     @staticmethod
     def get_ochi(norbs, ntime, fileName = None):
         """ try to read the solver.ochi.dat file to return the orbital-
-            orbital correlation function <N_i(0) N_j(\tau)> data
+            orbital correlation function < N_i(0) N_j(\tau) > data
         """
         if fileName is None:
             f = open("solver.ochi.dat","r")
