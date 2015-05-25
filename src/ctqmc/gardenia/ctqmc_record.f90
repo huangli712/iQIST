@@ -733,6 +733,7 @@
      return
   end subroutine ctqmc_record_nmat
 
+!!>>> ctqmc_record_lmat: record the fidelity susceptibility
   subroutine ctqmc_record_lmat()
      use constants, only : dp, zero, one, two
 
@@ -744,38 +745,51 @@
 
      implicit none
 
-     integer  :: flvr
+! local variables
+! loop index over segments
      integer  :: i
 
+! loop index for flavor channel
+     integer  :: flvr
+
+! imaginary time for start and end points
      real(dp) :: ts
      real(dp) :: te
 
+! number of operators at left half axis for the current configuration
      real(dp) :: kl(norbs)
+
+! number of operators at right half axis for the current configuration
      real(dp) :: kr(norbs)
 
+! init k_l and k_r
      kl = zero
      kr = zero
 
+! loop over flavors and segments to calculate k_l and k_r
      do flvr=1,norbs
          do i=1,rank(flvr)
              ts = time_s(index_s(i, flvr), flvr)
-             te = time_e(index_e(i, flvr), flvr)
              if ( ts < beta / two ) then
                  kl(flvr) = kl(flvr) + one
              else
                  kr(flvr) = kr(flvr) + one
-             endif
+             endif ! back if ( ts < beta / two ) block
+
+             te = time_e(index_e(i, flvr), flvr)
              if ( te < beta / two ) then
                  kl(flvr) = kl(flvr) + one
              else
                  kr(flvr) = kr(flvr) + one
-             endif
+             endif ! back if ( te < beta / two ) block
          enddo ! over i={1,rank(flvr)} loop
      enddo ! over flvr={1,norbs} loop
 
+! add contribution to < k_l > and < k_r >
      lmat = lmat + kl
      rmat = rmat + kr
 
+! add contribution to < k_l k_r >
      do flvr=1,norbs
          do i=1,norbs
              lrmat(i,flvr) = lrmat(i,flvr) + kl(i) * kr(flvr)
