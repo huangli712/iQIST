@@ -677,6 +677,7 @@
   subroutine ctqmc_dump_lmat(lmat, rmat, lrmat)
      use constants, only : dp, mytmp
 
+     use control, only : issus
      use control, only : norbs
 
      implicit none
@@ -695,6 +696,10 @@
 ! loop index
      integer :: i
      integer :: j
+
+! check if we need to dump the fidelity susceptibility data
+! to solver.lmat.dat
+     if ( .not. btest(issus, 5) ) RETURN
 
 ! open data file: solver.lmat.dat
      open(mytmp, file='solver.lmat.dat', form='formatted', status='unknown')
