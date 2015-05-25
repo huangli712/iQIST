@@ -1656,6 +1656,7 @@
      return
   end subroutine ctqmc_reduce_nmat
 
+!!>>> ctqmc_reduce_lmat: reduce the lmat, rmat, and lrmat from all children processes
   subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -1667,8 +1668,13 @@
      implicit none
 
 ! external arguments
+! number of operators at left half axis
      real(dp), intent(out) :: lmat_mpi(norbs)
+
+! number of operators at right half axis
      real(dp), intent(out) :: rmat_mpi(norbs)
+
+! used to evaluate fidelity susceptibility
      real(dp), intent(out) :: lrmat_mpi(norbs,norbs)
 
 ! initialize lmat_mpi, rmat_mpi, and lrmat_mpi
