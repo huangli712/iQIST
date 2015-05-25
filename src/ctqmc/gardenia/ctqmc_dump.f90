@@ -629,6 +629,7 @@
      return
   end subroutine ctqmc_dump_nmat
 
+!!>>> ctqmc_dump_lmat: write out the fidelity susceptibility
   subroutine ctqmc_dump_lmat(lmat, rmat, lrmat)
      use constants, only : dp, mytmp
 
@@ -637,17 +638,24 @@
      implicit none
 
 ! external arguments
+! number of operators at left half axis, < k_l >
      real(dp), intent(in) :: lmat(norbs)
+
+! number of operators at right half axis, < k_r >
      real(dp), intent(in) :: rmat(norbs)
+
+! used to evaluate fidelity susceptibility, < k_l k_r >
      real(dp), intent(in) :: lrmat(norbs,norbs)
 
 ! local variables
+! loop index
      integer :: i
      integer :: j
 
 ! open data file: solver.lmat.dat
      open(mytmp, file='solver.lmat.dat', form='formatted', status='unknown')
 
+! write it
      write(mytmp,'(a)') '# < k_l > < k_r > data:'
      do i=1,norbs
          write(mytmp,'(i6,2f12.6)') i, lmat(i), rmat(i)
@@ -661,7 +669,8 @@
              write(mytmp,'(2i6,f12.6)') i, j, lrmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'rlsum', sum( lrmat )
+     write(mytmp,'(a6,f12.6)') 'lrsum', sum( lrmat )
+     write(mytmp,'(a6,f12.6)') 'fidel', sum( lrmat ) - sum( lmat ) * sum( rmat )
 
 ! close data file
      close(mytmp)

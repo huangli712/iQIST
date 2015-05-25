@@ -11,7 +11,7 @@ norbs = 2      # number of orbitals
 width = 4.0    # bandwidth
 beta  = 100.   # inversion temperature
 step  = 0.0    # energy step
-V     = 0.7    # hybridization strength 
+V     = 0.9    # hybridization strength 
 
 # real axis
 wmesh = numpy.zeros(2*nfreq + 1, numpy.float)
