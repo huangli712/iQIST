@@ -1,0 +1,7 @@
+issus = 32
+isscf = 1
+isbin = 1
+Uc = 4.0
+beta = 100.0
+mu = 2.0
+#nsweep = 10000000
