@@ -228,8 +228,13 @@
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
 
+! number of operators at left half axis, < k_l >
      real(dp), public, save, allocatable :: lmat(:)
+
+! number of operators at right half axis, < k_r >
      real(dp), public, save, allocatable :: rmat(:)
+
+! used to evaluate fidelity susceptibility, < k_l k_r >
      real(dp), public, save, allocatable :: lrmat(:,:)
 
 ! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, totally-averaged

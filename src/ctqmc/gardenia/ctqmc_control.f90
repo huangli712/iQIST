@@ -81,7 +81,7 @@
 ! if p == 3, calculate orbital-orbital correlation function (time space)
 ! if p == 4, calculate spin-spin correlation function (frequency space)
 ! if p == 5, calculate orbital-orbital correlation function (frequency space)
-! if p == 6, calculate fidelity susceptibility
+! if p == 6, calculate fidelity susceptibility matrix
 ! if p == 7, reserved
 ! if p == 8, reserved
 ! if p == 9, reserved
