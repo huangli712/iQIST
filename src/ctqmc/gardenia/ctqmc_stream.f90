@@ -538,6 +538,7 @@
      nmat    = zero
      nnmat   = zero
 
+! init fidelity susceptibility array
      lmat    = zero
      rmat    = zero
      lrmat   = zero
