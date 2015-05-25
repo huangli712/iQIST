@@ -69,8 +69,11 @@
 !! solver.hist.dat
 !! solver.prob.dat
 !! solver.nmat.dat
+!! solver.lmat.dat
 !! solver.schi.dat
+!! solver.sfom.dat
 !! solver.ochi.dat
+!! solver.ofom.dat
 !! solver.twop.dat
 !! solver.vrtx.dat
 !! solver.pair.dat
