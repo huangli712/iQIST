@@ -89,8 +89,13 @@
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
 
+! number of operators at left half axis, for mpi case
      real(dp), allocatable :: lmat_mpi(:)
+
+! number of operators at right half axis, for mpi case
      real(dp), allocatable :: rmat_mpi(:)
+
+! used to evaluate fidelity susceptibility, for mpi case
      real(dp), allocatable :: lrmat_mpi(:,:)
 
 ! spin-spin correlation function, totally-averaged, for mpi case
@@ -429,6 +434,7 @@
                  call ctqmc_record_ofom()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) block
 
+! record the fidelity susceptibility
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) then
                  call ctqmc_record_lmat()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) block
@@ -558,6 +564,9 @@
 ! collect the double occupation matrix data from nnmat to nnmat_mpi
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
+! collect the fidelity susceptibility data from lmat to lmat_mpi
+! collect the fidelity susceptibility data from rmat to rmat_mpi
+! collect the fidelity susceptibility data from lrmat to lrmat_mpi
      call ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi)
 
 ! collect the spin-spin correlation function data from schi to schi_mpi
@@ -678,6 +687,7 @@
          call ctqmc_dump_nmat(nmat, nnmat)
      endif ! back if ( myid == master ) block
 
+! write out the final fidelity susceptibility data, lmat, rmat, and lrmat
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_lmat(lmat, rmat, lrmat)
      endif ! back if ( myid == master ) block
