@@ -5,5 +5,5 @@ nband = 2
 nspin = 2
 norbs = 4
 ncfgs = 16
-mune = 3.0
+mune = 2.6
 beta = 25.0
