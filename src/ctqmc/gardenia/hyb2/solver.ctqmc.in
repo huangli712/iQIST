@@ -1,0 +1,9 @@
+issus = 32
+isscf = 1
+isbin = 1
+nband = 2
+nspin = 2
+norbs = 4
+ncfgs = 16
+mune = 3.0
+beta = 25.0
