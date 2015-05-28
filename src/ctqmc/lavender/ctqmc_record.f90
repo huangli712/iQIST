@@ -5,6 +5,7 @@
 !!!           ctqmc_record_hist
 !!!           ctqmc_record_prob
 !!!           ctqmc_record_nmat
+!!!           ctqmc_record_lmat
 !!!           ctqmc_record_twop
 !!!           ctqmc_record_pair <<<---
 !!!           ctqmc_reduce_gtau
@@ -12,6 +13,7 @@
 !!!           ctqmc_reduce_hist
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_lmat
 !!!           ctqmc_reduce_twop
 !!!           ctqmc_reduce_pair <<<---
 !!!           ctqmc_symm_nmat
@@ -477,6 +479,77 @@
      return
   end subroutine ctqmc_record_nmat
 
+!!>>> ctqmc_record_lmat: record the fidelity susceptibility
+  subroutine ctqmc_record_lmat()
+     use constants, only : dp, zero, one, two
+
+     use control, only : issus
+     use control, only : norbs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : lmat, rmat, lrmat
+     use context, only : rank
+
+     implicit none
+
+! local variables
+! loop index over segments
+     integer  :: i
+
+! loop index for flavor channel
+     integer  :: flvr
+
+! imaginary time for start and end points
+     real(dp) :: ts
+     real(dp) :: te
+
+! number of operators at left half axis for the current configuration
+     real(dp) :: kl(norbs)
+
+! number of operators at right half axis for the current configuration
+     real(dp) :: kr(norbs)
+
+! check whether there is conflict
+     call s_assert( btest(issus, 5) )
+
+! init k_l and k_r
+     kl = zero
+     kr = zero
+
+! loop over flavors and segments to calculate k_l and k_r
+     do flvr=1,norbs
+         do i=1,rank(flvr)
+             ts = time_s(index_s(i, flvr), flvr)
+             if ( ts < beta / two ) then
+                 kl(flvr) = kl(flvr) + one
+             else
+                 kr(flvr) = kr(flvr) + one
+             endif ! back if ( ts < beta / two ) block
+
+             te = time_e(index_e(i, flvr), flvr)
+             if ( te < beta / two ) then
+                 kl(flvr) = kl(flvr) + one
+             else
+                 kr(flvr) = kr(flvr) + one
+             endif ! back if ( te < beta / two ) block
+         enddo ! over i={1,rank(flvr)} loop
+     enddo ! over flvr={1,norbs} loop
+
+! add contribution to < k_l > and < k_r >
+     lmat = lmat + kl * csign
+     rmat = rmat + kr * csign
+
+! add contribution to < k_l k_r >
+     do flvr=1,norbs
+         do i=1,norbs
+             lrmat(i,flvr) = lrmat(i,flvr) + kl(i) * kr(flvr) * csign
+         enddo ! over i={1,norbs} loop
+     enddo ! over flvr={1,norbs} loop
+
+     return
+  end subroutine ctqmc_record_lmat
+
 !!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
      use constants, only : dp, czero
@@ -912,6 +985,59 @@
 
      return
   end subroutine ctqmc_reduce_nmat
+
+!!>>> ctqmc_reduce_lmat: reduce the lmat, rmat, and lrmat from all children processes
+  subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : lmat, rmat, lrmat
+
+     implicit none
+
+! external arguments
+! number of operators at left half axis
+     real(dp), intent(out) :: lmat_mpi(norbs)
+
+! number of operators at right half axis
+     real(dp), intent(out) :: rmat_mpi(norbs)
+
+! used to evaluate fidelity susceptibility
+     real(dp), intent(out) :: lrmat_mpi(norbs,norbs)
+
+! initialize lmat_mpi, rmat_mpi, and lrmat_mpi
+     lmat_mpi = zero
+     rmat_mpi = zero
+     lrmat_mpi = zero
+
+! build lmat_mpi, rmat_mpi, and lrmat_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(lmat, lmat_mpi)
+     call mp_allreduce(rmat, rmat_mpi)
+     call mp_allreduce(lrmat, lrmat_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     lmat_mpi = lmat
+     rmat_mpi = rmat
+     lrmat_mpi = lrmat
+
+# endif /* MPI */
+
+! calculate the average
+     lmat_mpi = lmat_mpi / real(nprocs)
+     rmat_mpi = rmat_mpi / real(nprocs)
+     lrmat_mpi = lrmat_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_lmat
 
 !!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from all
 !!>>> children processes
