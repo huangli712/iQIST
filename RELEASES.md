@@ -1,5 +1,15 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.6.3 @ be5ed32 // May 29, 2015
+
+* Add fidelity susceptibility support for gardenia.
+* Add fidelity susceptibility support for narcissus.
+* Add fidelity susceptibility support for lavender.
+* Add fidelity susceptibility support for manjushaka.
+* Add fidelity susceptibility support for script/u\_reader.py
+
+As for fidelity susceptibility, please refer to arXiv:1502.06969
+
 ### v0.6.2 @ 53c8b61 // May 11, 2015
 
 * Now the iQIST is compatible with the GNU gfortran compiler.
