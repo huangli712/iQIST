@@ -6,8 +6,11 @@
 !!!           ctqmc_record_hist
 !!!           ctqmc_record_prob
 !!!           ctqmc_record_nmat
+!!!           ctqmc_record_lmat
 !!!           ctqmc_record_schi
+!!!           ctqmc_record_sfom
 !!!           ctqmc_record_ochi
+!!!           ctqmc_record_ofom
 !!!           ctqmc_record_twop
 !!!           ctqmc_record_vrtx
 !!!           ctqmc_record_pair <<<---
@@ -17,8 +20,11 @@
 !!!           ctqmc_reduce_hist
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_lmat
 !!!           ctqmc_reduce_schi
+!!!           ctqmc_reduce_sfom
 !!!           ctqmc_reduce_ochi
+!!!           ctqmc_reduce_ofom
 !!!           ctqmc_reduce_twop
 !!!           ctqmc_reduce_vrtx
 !!!           ctqmc_reduce_pair <<<---
@@ -727,6 +733,76 @@
      return
   end subroutine ctqmc_record_nmat
 
+!!>>> ctqmc_record_lmat: record the fidelity susceptibility
+  subroutine ctqmc_record_lmat()
+     use constants, only : dp, zero, one, two
+
+     use control, only : issus
+     use control, only : norbs
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : lmat, rmat, lrmat
+     use context, only : rank
+
+     implicit none
+
+! local variables
+! loop index over segments
+     integer  :: i
+
+! loop index for flavor channel
+     integer  :: flvr
+
+! imaginary time for start and end points
+     real(dp) :: ts
+     real(dp) :: te
+
+! number of operators at left half axis for the current configuration
+     real(dp) :: kl(norbs)
+
+! number of operators at right half axis for the current configuration
+     real(dp) :: kr(norbs)
+
+! check whether there is conflict
+     call s_assert( btest(issus, 5) )
+
+! init k_l and k_r
+     kl = zero
+     kr = zero
+
+! loop over flavors and segments to calculate k_l and k_r
+     do flvr=1,norbs
+         do i=1,rank(flvr)
+             ts = time_s(index_s(i, flvr), flvr)
+             if ( ts < beta / two ) then
+                 kl(flvr) = kl(flvr) + one
+             else
+                 kr(flvr) = kr(flvr) + one
+             endif ! back if ( ts < beta / two ) block
+
+             te = time_e(index_e(i, flvr), flvr)
+             if ( te < beta / two ) then
+                 kl(flvr) = kl(flvr) + one
+             else
+                 kr(flvr) = kr(flvr) + one
+             endif ! back if ( te < beta / two ) block
+         enddo ! over i={1,rank(flvr)} loop
+     enddo ! over flvr={1,norbs} loop
+
+! add contribution to < k_l > and < k_r >
+     lmat = lmat + kl
+     rmat = rmat + kr
+
+! add contribution to < k_l k_r >
+     do flvr=1,norbs
+         do i=1,norbs
+             lrmat(i,flvr) = lrmat(i,flvr) + kl(i) * kr(flvr)
+         enddo ! over i={1,norbs} loop
+     enddo ! over flvr={1,norbs} loop
+
+     return
+  end subroutine ctqmc_record_lmat
+
 !!>>> ctqmc_record_schi: record the spin-spin correlation function
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
@@ -802,6 +878,10 @@
 
      return
   end subroutine ctqmc_record_schi
+
+  subroutine ctqmc_record_sfom()
+!<     call s_print_error('ctqmc_record_sfom','in debug mode')
+  end subroutine ctqmc_record_sfom
 
 !!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
   subroutine ctqmc_record_ochi()
@@ -883,6 +963,96 @@
 
      return
   end subroutine ctqmc_record_ochi
+
+  subroutine ctqmc_record_ofom()
+     use constants, only : dp, zero, two, pi, czi, cone
+
+     use control, only : issus
+     use control, only : norbs
+     use control, only : nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank, stts
+     use context, only : oofom
+
+     implicit none
+
+! local variables
+     integer  :: flvr
+     integer  :: f1
+     integer  :: f2
+     integer  :: i
+     integer  :: j
+
+     real(dp) :: ts
+     real(dp) :: te
+
+! total length of segments
+     real(dp) :: sgmt(norbs)
+
+     real(dp) :: dw, wm
+     complex(dp) :: cs, ce
+     complex(dp) :: ds, de
+
+! check whether there is conflict
+     call s_assert( btest(issus, 4) )
+
+     do flvr=1,norbs
+
+! case 1: null occupation
+         if      ( stts(flvr) == 0 ) then
+             sgmt(flvr) = zero
+
+! case 2: partial occupation, segment scheme
+         else if ( stts(flvr) == 1 ) then
+             sgmt(flvr) = zero
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 3: partial occupation, anti-segment scheme
+         else if ( stts(flvr) == 2 ) then
+             sgmt(flvr) = beta
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 4: full occupation
+         else if ( stts(flvr) == 3 ) then
+             sgmt(flvr) = beta
+
+         endif ! back if ( stts(flvr) == 0 ) block
+
+     enddo ! over flvr={1,norbs} loop
+
+     do f1=1,norbs
+         do f2=1,norbs
+             if ( stts(f2) /= 2 .and. stts(f2) /= 3 ) CYCLE
+             oofom(1,f2,f1) = oofom(1,f2,f1) + sgmt(f1)
+             if ( nbfrq == 1 ) CYCLE
+             do i=1,rank(f1)
+                 wm = zero
+                 dw = two * pi / beta
+                 cs = cone
+                 ce = cone
+                 ds = exp(czi * time_s(index_s(i, f1), f1))
+                 de = exp(czi * time_e(index_e(i, f1), f1))
+                 do j=2,nbfrq
+                     wm = wm + dw
+                     cs = cs * ds
+                     ce = ce * de
+                     oofom(j,f2,f1) = oofom(j,f2,f1) + real( ( ce - cs ) / (czi * wm) )
+                 enddo ! over j={2,nbfrq} loop
+             enddo ! over i={1,rank(f1)} loop
+         enddo ! over f2={1,norbs} loop
+     enddo ! over f1={1,norbs} loop
+
+     return
+  end subroutine ctqmc_record_ofom
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
   subroutine ctqmc_record_twop()
@@ -1490,6 +1660,59 @@
      return
   end subroutine ctqmc_reduce_nmat
 
+!!>>> ctqmc_reduce_lmat: reduce the lmat, rmat, and lrmat from all children processes
+  subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : lmat, rmat, lrmat
+
+     implicit none
+
+! external arguments
+! number of operators at left half axis
+     real(dp), intent(out) :: lmat_mpi(norbs)
+
+! number of operators at right half axis
+     real(dp), intent(out) :: rmat_mpi(norbs)
+
+! used to evaluate fidelity susceptibility
+     real(dp), intent(out) :: lrmat_mpi(norbs,norbs)
+
+! initialize lmat_mpi, rmat_mpi, and lrmat_mpi
+     lmat_mpi = zero
+     rmat_mpi = zero
+     lrmat_mpi = zero
+
+! build lmat_mpi, rmat_mpi, and lrmat_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(lmat, lmat_mpi)
+     call mp_allreduce(rmat, rmat_mpi)
+     call mp_allreduce(lrmat, lrmat_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     lmat_mpi = lmat
+     rmat_mpi = rmat
+     lrmat_mpi = lrmat
+
+# endif /* MPI */
+
+! calculate the average
+     lmat_mpi = lmat_mpi / real(nprocs)
+     rmat_mpi = rmat_mpi / real(nprocs)
+     lrmat_mpi = lrmat_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_lmat
+
 !!>>> ctqmc_reduce_schi: reduce the schi and sschi from all children processes
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
      use constants, only : dp, zero
@@ -1537,6 +1760,46 @@
      return
   end subroutine ctqmc_reduce_schi
 
+!!>>> ctqmc_reduce_sfom: reduce the ssfom from all children processes
+  subroutine ctqmc_reduce_sfom(ssfom_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : nband
+     use control, only : nbfrq
+     use control, only : nprocs
+     use context, only : ssfom
+
+     implicit none
+
+! external arguments
+! spin-spin correlation function, orbital-resolved
+     real(dp), intent(out) :: ssfom_mpi(nbfrq,nband)
+
+! initialize ssfom_mpi
+     ssfom_mpi = zero
+
+! build ssfom_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(ssfom, ssfom_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     ssfom_mpi = ssfom
+
+# endif /* MPI */
+
+! calculate the average
+     ssfom_mpi = ssfom_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_sfom
+
 !!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from all children processes
   subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
      use constants, only : dp, zero
@@ -1583,6 +1846,46 @@
 
      return
   end subroutine ctqmc_reduce_ochi
+
+!!>>> ctqmc_reduce_ofom: reduce the oofom from all children processes
+  subroutine ctqmc_reduce_ofom(oofom_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nbfrq
+     use control, only : nprocs
+     use context, only : oofom
+
+     implicit none
+
+! external arguments
+! orbital-orbital correlation function, orbital-resolved
+     real(dp), intent(out) :: oofom_mpi(nbfrq,norbs,norbs)
+
+! initialize oofom_mpi
+     oofom_mpi = zero
+
+! build oofom_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(oofom, oofom_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     oofom_mpi = oofom
+
+# endif /* MPI */
+
+! calculate the average
+     oofom_mpi = oofom_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_ofom
 
 !!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from all
 !!>>> children processes
