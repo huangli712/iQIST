@@ -63,6 +63,7 @@
 !! solver.hist.dat
 !! solver.prob.dat
 !! solver.nmat.dat
+!! solver.lmat.dat
 !! solver.twop.dat
 !! solver.pair.dat
 !! solver.status.dat

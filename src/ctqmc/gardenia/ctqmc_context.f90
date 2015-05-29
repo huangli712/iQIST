@@ -228,6 +228,15 @@
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
 
+! number of operators at left half axis, < k_l >
+     real(dp), public, save, allocatable :: lmat(:)
+
+! number of operators at right half axis, < k_r >
+     real(dp), public, save, allocatable :: rmat(:)
+
+! used to evaluate fidelity susceptibility, < k_l k_r >
+     real(dp), public, save, allocatable :: lrmat(:,:)
+
 ! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, totally-averaged
      real(dp), public, save, allocatable :: schi(:)
 
@@ -556,6 +565,9 @@
 
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(lmat(norbs),        stat=istat)
+     allocate(rmat(norbs),        stat=istat)
+     allocate(lrmat(norbs,norbs), stat=istat)
      allocate(schi(ntime),        stat=istat)
      allocate(sschi(ntime,nband), stat=istat)
      allocate(ssfom(nbfrq,nband), stat=istat)
@@ -583,6 +595,9 @@
 
      nmat  = zero
      nnmat = zero
+     lmat  = zero
+     rmat  = zero
+     lrmat = zero
      schi  = zero
      sschi = zero
      ssfom = zero
@@ -800,6 +815,9 @@
 
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(lmat)  )   deallocate(lmat )
+     if ( allocated(rmat)  )   deallocate(rmat )
+     if ( allocated(lrmat) )   deallocate(lrmat)
      if ( allocated(schi)  )   deallocate(schi )
      if ( allocated(sschi) )   deallocate(sschi)
      if ( allocated(ssfom) )   deallocate(ssfom)

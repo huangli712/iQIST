@@ -273,6 +273,15 @@
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
 
+! number of operators at left half axis, < k_l >
+     real(dp), public, save, allocatable :: lmat(:)
+
+! number of operators at right half axis, < k_r >
+     real(dp), public, save, allocatable :: rmat(:)
+
+! used to evaluate fidelity susceptibility, < k_l k_r >
+     real(dp), public, save, allocatable :: lrmat(:,:)
+
 ! used to calculate two-particle green's function, real part
      real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
 
@@ -705,6 +714,9 @@
 
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(lmat(norbs),        stat=istat)
+     allocate(rmat(norbs),        stat=istat)
+     allocate(lrmat(norbs,norbs), stat=istat)
 
      allocate(g2_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(g2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
@@ -724,6 +736,9 @@
 
      nmat  = zero
      nnmat = zero
+     lmat  = zero
+     rmat  = zero
+     lrmat = zero
 
      g2_re = zero
      g2_im = zero
@@ -1015,6 +1030,9 @@
 
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(lmat)  )   deallocate(lmat )
+     if ( allocated(rmat)  )   deallocate(rmat )
+     if ( allocated(lrmat) )   deallocate(lrmat)
 
      if ( allocated(g2_re) )   deallocate(g2_re)
      if ( allocated(g2_im) )   deallocate(g2_im)
