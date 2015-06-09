@@ -784,6 +784,11 @@
      nmat    = zero
      nnmat   = zero
 
+! init fidelity susceptibility array
+     lmat    = zero
+     rmat    = zero
+     lrmat   = zero
+
 ! init two-particle green's function
      g2_re   = zero
      g2_im   = zero
