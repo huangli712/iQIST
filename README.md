@@ -120,7 +120,7 @@ arXiv:1409.7573 (2014)
 ```sh
 Li Huang
 Department of Physics, Fribourg University, Switzerland
-email: huangli712 at gmail.com
+email: lihuang.dmft at gmail.com
 ```
 
 or
