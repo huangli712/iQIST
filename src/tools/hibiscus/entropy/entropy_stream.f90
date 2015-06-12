@@ -5,7 +5,7 @@
 !!!           entropy_make_init2
 !!! source  : entropy_stream.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/08/2011 by li huang
 !!!           01/26/2011 by li huang
 !!!           11/17/2014 by li huang

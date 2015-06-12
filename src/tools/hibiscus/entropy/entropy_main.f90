@@ -13,7 +13,7 @@
 !!!           Anders W. Sandvik                                          !
 !!!           Akademi University, Finland, email:asandvik@ra.abo.fi      !
 !!!           and modified by li huang using fortran 90 language         !
-!!!           any question, please contact with huangli712@gmail.com     !
+!!!           any question, please contact with lihuang.dmft@gmail.com   !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
 !!

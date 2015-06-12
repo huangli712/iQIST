@@ -4,7 +4,7 @@
 !!!           sac_dump_aprob
 !!! source  : sac_dump.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/08/2011 by li huang
 !!!           12/14/2011 by li huang
 !!!           11/18/2014 by li huang

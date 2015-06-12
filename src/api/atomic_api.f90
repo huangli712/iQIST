@@ -3,7 +3,7 @@
 !!! program : japi
 !!! source  : atomic_api.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/29/2014 by li huang
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for atomic eigenvalue
