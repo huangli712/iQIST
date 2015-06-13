@@ -3,7 +3,7 @@
 !!! program : linkedlist
 !!! source  : m_linkedlist.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/23/2014 by li huang
 !!! purpose : this purpose of this module is to implement a typical and

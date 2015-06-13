@@ -8,7 +8,7 @@
 !!!           s_write_message
 !!! source  : s_error.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang
 !!!           07/08/2014 by li huang
 !!!           07/23/2014 by li huang
