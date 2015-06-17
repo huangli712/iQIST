@@ -7,7 +7,7 @@
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2015.01.06T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
-!!! comment : any question, please contact with huangli712@gmail.com     !
+!!! comment : any question, please contact with lihuang.dmft@gmail.com   !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
 !!

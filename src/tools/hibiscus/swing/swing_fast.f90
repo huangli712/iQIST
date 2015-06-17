@@ -5,7 +5,7 @@
 !!!           kramskron
 !!! source  : swing_fast.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/10/2011 by li huang
 !!!           01/26/2011 by li huang
 !!!           01/06/2015 by li huang

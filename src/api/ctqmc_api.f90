@@ -3,7 +3,7 @@
 !!! program : api
 !!! source  : ctqmc_api.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/07/2014 by li huang
 !!!           01/11/2014 by li huang
 !!!           03/27/2015 by li huang

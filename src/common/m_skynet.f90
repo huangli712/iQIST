@@ -3,7 +3,7 @@
 !!! program : skynet
 !!! source  : m_skynet.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 04/30/2010 by li huang
 !!!           07/09/2014 by li huang
 !!! purpose : this module is used to overload/define the basic arithmetic

@@ -23,7 +23,7 @@
 !!!           ctqmc_dump_pair
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           08/23/2010 by li huang
 !!!           10/13/2014 by li huang

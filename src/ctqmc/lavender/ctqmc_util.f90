@@ -6,7 +6,7 @@
 !!!           ctqmc_four_hybf
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang
 !!!           06/22/2010 by li huang
 !!!           11/06/2014 by li huang

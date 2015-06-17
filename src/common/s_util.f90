@@ -15,7 +15,7 @@
 !!!           s_time_analyzer
 !!! source  : s_util.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/14/2014 by li huang
 !!!           08/21/2014 by li huang

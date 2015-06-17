@@ -6,7 +6,7 @@
 !!!           ctqmc_print_runtime
 !!! source  : ctqmc_print.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang
 !!!           02/21/2010 by li huang
 !!!           08/13/2014 by li huang
@@ -40,7 +40,7 @@
 
      write(mystd,'(2X,a)') 'Version: 2015.01.06T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
-     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)
 

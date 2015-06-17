@@ -15,7 +15,7 @@
 !!!           sac_make_kernel
 !!! source  : sac_toolbox.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang
 !!!           12/13/2011 by li huang
 !!!           11/20/2014 by li huang

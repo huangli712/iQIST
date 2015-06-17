@@ -3,7 +3,7 @@
 !!! program : hfqmc_impurity_solver
 !!! source  : hfqmc_solver.f90
 !!! type    : subroutine
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/05/2006 by li huang
 !!!           08/25/2010 by li huang
 !!!           12/08/2014 by li huang
