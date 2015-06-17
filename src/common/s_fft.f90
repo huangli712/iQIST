@@ -5,7 +5,7 @@
 !!!           s_fft_backward
 !!! source  : s_fft.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/27/2014 by li huang
 !!! purpose : these subroutines are used to do fast fourier transformation

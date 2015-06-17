@@ -4,7 +4,7 @@
 !!!           s_int_simpson
 !!! source  : s_integrator.f90
 !!! type    : functions
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/20/2014 by li huang
 !!! purpose : these subroutines are used to do numerical integration with
 !!!           composite trapezoid or composite simpson algorithms.

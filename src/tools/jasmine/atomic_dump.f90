@@ -386,7 +386,7 @@
      write(mytmp,'(a)') '# File    : atom.cix'
      write(mytmp,'(a)') '# Format  : v1.3, designed for BEGONIA and LAVENDER'
      write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
-     write(mytmp,'(a)') '# Support : any problem, please contact me: huangli712@gmail.com'
+     write(mytmp,'(a)') '# Support : any problem, please contact me: lihuang.dmft@gmail.com'
      write(mytmp,*)
      write(mytmp,*)
 
@@ -587,7 +587,7 @@
      write(mytmp,'(a)') '# File    : atom.cix'
      write(mytmp,'(a)') '# Format  : v2.3, designed for PANSY and MANJUSHAKA'
      write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
-     write(mytmp,'(a)') '# Support : any problem, please contact me: huangli712@gmail.com'
+     write(mytmp,'(a)') '# Support : any problem, please contact me: lihuang.dmft@gmail.com'
      write(mytmp,*)
      write(mytmp,*)
 

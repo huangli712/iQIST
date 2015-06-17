@@ -5,7 +5,7 @@
 !!!           sac_make_init2
 !!! source  : sac_stream.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/08/2011 by li huang
 !!!           01/09/2011 by li huang
 !!!           11/19/2014 by li huang

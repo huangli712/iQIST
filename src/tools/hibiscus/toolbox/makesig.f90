@@ -6,7 +6,7 @@
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!! version : v2015.01.06T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
-!!! comment : any question, please contact with huangli712@gmail.com     !
+!!! comment : any question, please contact with lihuang.dmft@gmail.com   !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
 !!
@@ -112,7 +112,7 @@
 
      write(mystd,'(2X,a)') 'Version: 2015.01.06T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
-     write(mystd,'(2X,a)') 'Support: huangli712@gmail.com'
+     write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*) ! print blank line
 

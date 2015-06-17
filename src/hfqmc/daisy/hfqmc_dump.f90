@@ -10,7 +10,7 @@
 !!!           hfqmc_dump_quas
 !!! source  : hfqmc_dump.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 12/23/2009 by li huang
 !!!           03/08/2010 by li huang
 !!!           12/06/2014 by li huang

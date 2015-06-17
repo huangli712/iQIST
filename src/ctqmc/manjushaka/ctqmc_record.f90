@@ -25,7 +25,7 @@
 !!!           ctqmc_make_hub1   <<<---
 !!! source  : ctqmc_record.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/16/2009 by li huang
 !!!           09/29/2010 by li huang

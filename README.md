@@ -112,7 +112,7 @@ If you are using iQIST to do some studies and would like to publish your great w
 ```sh
 iQIST: An open source continuous-time quantum Monte Carlo impurity solver toolkit
 Li Huang, Yilin Wang, Zi Yang Meng, Liang Du, Philipp Werner and Xi Dai
-arXiv:1409.7573 (2014)
+Computer Physics Communications 195, 140 (2015) or arXiv:1409.7573 (2014)
 ```
 
 ### Contact
@@ -120,7 +120,7 @@ arXiv:1409.7573 (2014)
 ```sh
 Li Huang
 Department of Physics, Fribourg University, Switzerland
-email: huangli712 at gmail.com
+email: lihuang.dmft at gmail.com
 ```
 
 or

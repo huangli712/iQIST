@@ -3,7 +3,7 @@
 !!! program : mmpi
 !!! source  : m_mpi.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 08/09/2006 by li huang
 !!!           02/27/2010 by li huang
 !!!           07/09/2014 by li huang
