@@ -2,7 +2,7 @@
 !!! source  : 3d/solver.ctqmc.in
 !!! solver  : NARCISSUS
 !!! purpose : to test ctqmc impurity solver
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!-----------------------------------------------------------------------
 
 !!>>> setup general control flags

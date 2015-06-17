@@ -6,7 +6,7 @@
 !!!           ctqmc_dmft_anydos
 !!! source  : ctqmc_dmft.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang
 !!!           01/13/2010 by li huang
 !!!           09/09/2014 by li huang

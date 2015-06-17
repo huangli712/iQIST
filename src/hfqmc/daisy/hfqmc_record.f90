@@ -10,7 +10,7 @@
 !!!           hfqmc_reduce_nmat
 !!! source  : hfqmc_record.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/07/2006 by li huang
 !!!           08/25/2010 by li huang
 !!!           12/06/2014 by li huang

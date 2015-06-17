@@ -3,7 +3,7 @@
 !!! program : parser
 !!! source  : m_parser.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang
 !!!           07/26/2014 by li huang
 !!!           08/19/2014 by li huang

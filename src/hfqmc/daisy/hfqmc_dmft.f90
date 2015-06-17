@@ -6,7 +6,7 @@
 !!!           hfqmc_dmft_abethe
 !!! source  : hfqmc_dmft.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 12/27/2005 by li huang
 !!!           03/26/2010 by li huang
 !!!           12/06/2014 by li huang

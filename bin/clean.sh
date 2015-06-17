@@ -18,7 +18,7 @@
 ##
 ## This shell script is designed, created, implemented, and maintained by
 ##
-## Li Huang // email: huangli712@gmail.com
+## Li Huang // email: lihuang.dmft@gmail.com
 ##
 ## History
 ## =======

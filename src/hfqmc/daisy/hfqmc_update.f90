@@ -9,7 +9,7 @@
 !!!           cat_clear_update
 !!! source  : hfqmc_update.f90
 !!! type    : subroutines
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/06/2006 by li huang
 !!!           03/28/2010 by li huang
 !!!           12/06/2014 by li huang

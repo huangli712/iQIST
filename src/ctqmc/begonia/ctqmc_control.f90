@@ -3,7 +3,7 @@
 !!! program : control    module
 !!! source  : ctqmc_control.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang
 !!!           02/23/2010 by li huang
 !!!           03/27/2015 by li huang

@@ -2,7 +2,7 @@
 !!! source  : 5e/solver.hfqmc.in
 !!! solver  : DAISY
 !!! purpose : to test hfqmc impurity solver
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!-----------------------------------------------------------------------
 
 !!>>> setup general control flags

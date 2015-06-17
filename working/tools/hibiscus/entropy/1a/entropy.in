@@ -2,7 +2,7 @@
 !!! source  : 1a/entropy.in
 !!! solver  : HIBISCUS/entropy
 !!! purpose : to test maximum entropy method code
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!-----------------------------------------------------------------------
 
 !!>>> setup general control flags

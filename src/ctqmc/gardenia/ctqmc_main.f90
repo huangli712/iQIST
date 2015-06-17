@@ -8,7 +8,7 @@
 !!! version : v2015.01.06T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on segment picture formalism !
-!!!           any question, please contact with huangli712@gmail.com     !
+!!!           any question, please contact with lihuang.dmft@gmail.com   !
 !!!=========+=========+=========+=========+=========+=========+=========+!
 
 !!

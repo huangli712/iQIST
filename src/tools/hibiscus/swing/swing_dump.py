@@ -31,7 +31,7 @@
 ##
 ## This python script is designed, created, implemented, and maintained by
 ##
-## Li Huang // email: huangli712@gmail.com
+## Li Huang // email: lihuang.dmft@gmail.com
 ##
 ## History
 ## =======
@@ -51,7 +51,7 @@ def swing_print_header():
     print
     print '  Version: 2015.01.06T'
     print '  Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
-    print '  Support: huangli712@gmail.com'
+    print '  Support: lihuang.dmft@gmail.com'
     print '  License: GNU General Public License version 3'
     print
 

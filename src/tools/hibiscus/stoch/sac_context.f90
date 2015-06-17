@@ -3,7 +3,7 @@
 !!! program : context    module
 !!! source  : sac_context.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/08/2011 by li huang
 !!!           01/10/2011 by li huang
 !!!           11/18/2014 by li huang

@@ -3,7 +3,7 @@
 !!! program : sparse
 !!! source  : m_sparse.f90
 !!! type    : module
-!!! author  : li huang (email:huangli712@gmail.com)
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/01/2010 by li huang
 !!!           07/09/2014 by li huang
 !!!           12/21/2014 by li huang
