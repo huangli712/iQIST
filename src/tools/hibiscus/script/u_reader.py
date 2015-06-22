@@ -355,7 +355,7 @@ class iqistReader(object):
 
         lmat = numpy.zeros((norbs), dtype = numpy.float)
         rmat = numpy.zeros((norbs), dtype = numpy.float)
-        lrmat = numpy.zeros((norbs,norbs), dtype = numpy.complex)
+        lrmat = numpy.zeros((norbs,norbs), dtype = numpy.float)
         f.readline() # skip one comment line
         # read lmat and rmat
         for i in range(norbs):
