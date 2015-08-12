@@ -228,6 +228,9 @@
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
 
+     real(dp), public, save, allocatable :: kmat(:)
+     real(dp), public, save, allocatable :: kkmat(:,:)
+
 ! number of operators at left half axis, < k_l >
      real(dp), public, save, allocatable :: lmat(:)
 
@@ -565,6 +568,8 @@
 
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(kmat(norbs),        stat=istat)
+     allocate(kkmat(norbs,norbs), stat=istat)
      allocate(lmat(norbs),        stat=istat)
      allocate(rmat(norbs),        stat=istat)
      allocate(lrmat(norbs,norbs), stat=istat)
@@ -595,6 +600,8 @@
 
      nmat  = zero
      nnmat = zero
+     kmat  = zero
+     kkmat = zero
      lmat  = zero
      rmat  = zero
      lrmat = zero
@@ -815,6 +822,8 @@
 
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(kmat)  )   deallocate(kmat )
+     if ( allocated(kkmat) )   deallocate(kkmat)
      if ( allocated(lmat)  )   deallocate(lmat )
      if ( allocated(rmat)  )   deallocate(rmat )
      if ( allocated(lrmat) )   deallocate(lrmat)
