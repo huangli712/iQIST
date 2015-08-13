@@ -586,6 +586,10 @@
 ! collect the double occupation matrix data from nnmat to nnmat_mpi
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
+! collect the < k^2 > - < k >^2 data from kmat to kmat_mpi
+! collect the < k^2 > - < k >^2 data from kkmat to kkmat_mpi
+     call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi)
+
 ! collect the fidelity susceptibility data from lmat to lmat_mpi
 ! collect the fidelity susceptibility data from rmat to rmat_mpi
 ! collect the fidelity susceptibility data from lrmat to lrmat_mpi
@@ -630,6 +634,8 @@
 
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
+     kmat  = kmat_mpi  * real(nmonte) / real(nsweep)
+     kkmat = kkmat_mpi * real(nmonte) / real(nsweep)
      lmat  = lmat_mpi  * real(nmonte) / real(nsweep)
      rmat  = rmat_mpi  * real(nmonte) / real(nsweep)
      lrmat = lrmat_mpi * real(nmonte) / real(nsweep)
