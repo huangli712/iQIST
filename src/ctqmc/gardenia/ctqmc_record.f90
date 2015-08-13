@@ -735,6 +735,7 @@
      return
   end subroutine ctqmc_record_nmat
 
+!!>>> ctqmc_record_kmat: record the < k^2 > - < k >^2
   subroutine ctqmc_record_kmat()
      use constants, only : dp
 
@@ -745,12 +746,16 @@
 
      implicit none
 
+! local variables
+! loop index for flavor channel
      integer :: i
      integer :: j
 
 ! check whether there is conflict
      call s_assert( btest(issus, 5) )
 
+! rank means the number of operator pairs,
+! so we have to multiply it with two
      do i=1,norbs
          kmat(i) = kmat(i) + rank(i) * 2.0_dp
      enddo ! over i={1,norbs} loop
