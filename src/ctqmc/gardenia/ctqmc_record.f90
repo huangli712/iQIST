@@ -6,6 +6,7 @@
 !!!           ctqmc_record_hist
 !!!           ctqmc_record_prob
 !!!           ctqmc_record_nmat
+!!!           ctqmc_record_kmat
 !!!           ctqmc_record_lmat
 !!!           ctqmc_record_schi
 !!!           ctqmc_record_sfom
@@ -20,6 +21,7 @@
 !!!           ctqmc_reduce_hist
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_kmat
 !!!           ctqmc_reduce_lmat
 !!!           ctqmc_reduce_schi
 !!!           ctqmc_reduce_sfom
