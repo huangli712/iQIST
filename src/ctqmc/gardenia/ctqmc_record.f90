@@ -736,6 +736,30 @@
   end subroutine ctqmc_record_nmat
 
   subroutine ctqmc_record_kmat()
+     use control, only : issus
+     use control, only : norbs
+     use context, only : kmat, kkmat
+     use context, only : rank 
+
+     implicit none
+
+     integer :: i
+     integer :: j
+
+! check whether there is conflict
+     call s_assert( btest(issus, 5) )
+
+     do i=1,norbs
+         kmat(i) = kmat(i) + rank(i)
+     enddo ! over i={1,norbs} loop
+
+     do i=1,norbs
+         do j=1,norbs
+             kkmat(i,j) = kkmat(i,j) + rank(i) * rank(j)
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+     return
   end subroutine ctqmc_record_kmat
 
 !!>>> ctqmc_record_lmat: record the fidelity susceptibility
