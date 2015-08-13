@@ -735,6 +735,9 @@
      return
   end subroutine ctqmc_record_nmat
 
+  subroutine ctqmc_record_kmat()
+  end subroutine ctqmc_record_kmat
+
 !!>>> ctqmc_record_lmat: record the fidelity susceptibility
   subroutine ctqmc_record_lmat()
      use constants, only : dp, zero, one, two
