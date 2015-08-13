@@ -715,6 +715,11 @@
          call ctqmc_dump_nmat(nmat, nnmat)
      endif ! back if ( myid == master ) block
 
+! write out the final < k^2 > - < k >^2 data, kmat and kkmat
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_kmat(kmat, kkmat)
+     endif ! back if ( myid == master ) block
+
 ! write out the final fidelity susceptibility data, lmat, rmat, and lrmat
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_lmat(lmat, rmat, lrmat)
@@ -786,6 +791,8 @@
      deallocate(prob_mpi )
      deallocate(nmat_mpi )
      deallocate(nnmat_mpi)
+     deallocate(kmat_mpi )
+     deallocate(kkmat_mpi)
      deallocate(lmat_mpi )
      deallocate(rmat_mpi )
      deallocate(lrmat_mpi)
