@@ -630,8 +630,8 @@
      return
   end subroutine ctqmc_dump_nmat
 
-!!>>> ctqmc_dump_kmat: write out the fidelity susceptibility
-  subroutine ctqmc_dump_kmat(lmat, rmat, lrmat)
+!!>>> ctqmc_dump_kmat: write out the <k> and <k^2>
+  subroutine ctqmc_dump_kmat(kmat, kkmat)
      use constants, only : dp, mytmp
 
      use control, only : issus
