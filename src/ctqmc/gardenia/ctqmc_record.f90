@@ -766,7 +766,7 @@
      real(dp) :: kr(norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 5) )
+     call s_assert( btest(issus, 6) )
 
 ! init k_l and k_r
      kl = zero
