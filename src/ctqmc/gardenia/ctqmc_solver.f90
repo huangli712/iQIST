@@ -90,6 +90,12 @@
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
 
+! number of operators, for mpi case
+     real(dp), allocatable :: kmat_mpi(:)
+
+! square of number of operators, for mpi case
+     real(dp), allocatable :: kkmat_mpi(:,:)
+
 ! number of operators at left half axis, for mpi case
      real(dp), allocatable :: lmat_mpi(:)
 
@@ -161,6 +167,16 @@
      endif ! back if ( istat /= 0 ) block
 
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(kmat_mpi(norbs),             stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(kkmat_mpi(norbs,norbs),      stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -435,10 +451,15 @@
                  call ctqmc_record_ofom()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) block
 
-! record the fidelity susceptibility
+! record the < k^2 > - < k >^2
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) then
-                 call ctqmc_record_lmat()
+                 call ctqmc_record_kmat()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) block
+
+! record the fidelity susceptibility
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) then
+                 call ctqmc_record_lmat()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) block
 
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
