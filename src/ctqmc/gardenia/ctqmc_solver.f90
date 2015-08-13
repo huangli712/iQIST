@@ -34,6 +34,7 @@
      use context, only : tmesh, rmesh
      use context, only : hist, prob
      use context, only : nmat, nnmat
+     use context, only : kmat, kkmat
      use context, only : lmat, rmat, lrmat
      use context, only : schi, sschi, ssfom, ochi, oochi, oofom
      use context, only : g2_re, g2_im, h2_re, h2_im, ps_re, ps_im
