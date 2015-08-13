@@ -630,7 +630,7 @@
      return
   end subroutine ctqmc_dump_nmat
 
-!!>>> ctqmc_dump_kmat: write out the <k> and <k^2>
+!!>>> ctqmc_dump_kmat: write out the < k > and < k^2 >
   subroutine ctqmc_dump_kmat(kmat, kkmat)
      use constants, only : dp, mytmp
 
@@ -640,43 +640,39 @@
      implicit none
 
 ! external arguments
-! number of operators at left half axis, < k_l >
-     real(dp), intent(in) :: lmat(norbs)
+! number of operators, < k >
+     real(dp), intent(in) :: kmat(norbs)
 
-! number of operators at right half axis, < k_r >
-     real(dp), intent(in) :: rmat(norbs)
-
-! used to evaluate fidelity susceptibility, < k_l k_r >
-     real(dp), intent(in) :: lrmat(norbs,norbs)
+! square of number of operators, < k^2 >
+     real(dp), intent(in) :: kkmat(norbs,norbs)
 
 ! local variables
 ! loop index
      integer :: i
      integer :: j
 
-! check if we need to dump the fidelity susceptibility data
-! to solver.lmat.dat
+! check if we need to dump the < k > and < k^2 > data
+! to solver.kmat.dat
      if ( .not. btest(issus, 5) ) RETURN
 
-! open data file: solver.lmat.dat
-     open(mytmp, file='solver.lmat.dat', form='formatted', status='unknown')
+! open data file: solver.kmat.dat
+     open(mytmp, file='solver.kmat.dat', form='formatted', status='unknown')
 
 ! write it
-     write(mytmp,'(a)') '# < k_l > < k_r > data:'
+     write(mytmp,'(a)') '# <  k  > data:'
      do i=1,norbs
-         write(mytmp,'(i6,2f12.6)') i, lmat(i), rmat(i)
+         write(mytmp,'(i6,1f12.6)') i, kmat(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'l_sum', sum( lmat )
-     write(mytmp,'(a6,f12.6)') 'r_sum', sum( rmat )
+     write(mytmp,'(a6,f12.6)') 'k_sum', sum( kmat )
 
-     write(mytmp,'(a)') '# < k_l k_r > data:'
+     write(mytmp,'(a)') '# < k^2 > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,f12.6)') i, j, lrmat(i,j)
+             write(mytmp,'(2i6,f12.6)') i, j, kkmat(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'lrsum', sum( lrmat )
-     write(mytmp,'(a6,f12.6)') 'fidel', sum( lrmat ) - sum( lmat ) * sum( rmat )
+     write(mytmp,'(a6,f12.6)') 'kksum', sum( kkmat )
+     write(mytmp,'(a6,f12.6)') 'fidel', sum( kkmat ) - sum( kmat ) * sum( kmat )
 
 ! close data file
      close(mytmp)
