@@ -736,10 +736,12 @@
   end subroutine ctqmc_record_nmat
 
   subroutine ctqmc_record_kmat()
+     use constants, only : dp
+
      use control, only : issus
      use control, only : norbs
      use context, only : kmat, kkmat
-     use context, only : rank 
+     use context, only : rank
 
      implicit none
 
@@ -750,12 +752,12 @@
      call s_assert( btest(issus, 5) )
 
      do i=1,norbs
-         kmat(i) = kmat(i) + rank(i)
+         kmat(i) = kmat(i) + rank(i) * 2.0_dp
      enddo ! over i={1,norbs} loop
 
      do i=1,norbs
          do j=1,norbs
-             kkmat(i,j) = kkmat(i,j) + rank(i) * rank(j)
+             kkmat(i,j) = kkmat(i,j) + rank(i) * rank(j) * 4.0_dp
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
