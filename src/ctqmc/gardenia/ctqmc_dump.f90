@@ -706,7 +706,7 @@
 
 ! check if we need to dump the fidelity susceptibility data
 ! to solver.lmat.dat
-     if ( .not. btest(issus, 5) ) RETURN
+     if ( .not. btest(issus, 6) ) RETURN
 
 ! open data file: solver.lmat.dat
      open(mytmp, file='solver.lmat.dat', form='formatted', status='unknown')
