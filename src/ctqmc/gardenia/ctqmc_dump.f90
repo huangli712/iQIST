@@ -672,7 +672,7 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
      write(mytmp,'(a6,f12.6)') 'kksum', sum( kkmat )
-     write(mytmp,'(a6,f12.6)') 'fidel', sum( kkmat ) - sum( kmat ) * sum( kmat )
+     write(mytmp,'(a6,f12.6)') 'final', sum( kkmat ) - sum( kmat ) * ( sum( kmat ) + 1.0_dp )
 
 ! close data file
      close(mytmp)

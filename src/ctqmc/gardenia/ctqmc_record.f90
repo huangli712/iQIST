@@ -754,7 +754,7 @@
 ! check whether there is conflict
      call s_assert( btest(issus, 5) )
 
-! rank means the number of operator pairs,
+! since rank means the number of operator pairs,
 ! so we have to multiply it with two
      do i=1,norbs
          kmat(i) = kmat(i) + rank(i) * 2.0_dp
