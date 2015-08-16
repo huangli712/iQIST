@@ -784,6 +784,10 @@
      nmat    = zero
      nnmat   = zero
 
+! init < k^2 > - < k >^2 array
+     kmat    = zero
+     kkmat   = zero
+
 ! init fidelity susceptibility array
      lmat    = zero
      rmat    = zero
