@@ -1,4 +1,6 @@
-We are going to implement the following projects under this directory:
+# iQIST (Interacting Quantum Impurity Solver Toolkit)
+
+We are going to implement the following applications under this directory:
 
 * LDA + DMFT
 * (ladder) dual fermion
