@@ -5,7 +5,8 @@
 !!! source  : s_integrator.f90
 !!! type    : functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/20/2014 by li huang
+!!! history : 09/20/2014 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : these subroutines are used to do numerical integration with
 !!!           composite trapezoid or composite simpson algorithms.
 !!! status  : unstable

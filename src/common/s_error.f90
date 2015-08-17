@@ -9,9 +9,8 @@
 !!! source  : s_error.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/15/2009 by li huang
-!!!           07/08/2014 by li huang
-!!!           07/23/2014 by li huang
+!!! history : 09/15/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : these subroutines are used to display the (error/exception/
 !!!           normal) messages in the console, and then STOP or CONTINUE
 !!!           the code according to the error level.
