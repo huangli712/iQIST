@@ -26,7 +26,7 @@ GNU General Public License Version 3
 * Measurement tricks
     * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
     * Kernel polynomial representation
-    * Improved estimator for self-energy
+    * Improved estimator for self-energy function
 
 * Observables
     * Single-particle Green's function in imaginary time space
@@ -39,21 +39,22 @@ GNU General Public License Version 3
     * Kinetic and potential energies
     * (Double) occupation numbers, magnetic moment
     * Atomic state probability
-    * Spin-spin correlation function
-    * Orbital-orbital correlation function
-    * Autocorrelation function and autocorrelation time
+    * Spin-spin correlation function in imaginary time space
+    * Orbital-orbital correlation function in imaginary time space
+    * Fidelity susceptibility
+    * <k^2> - <k>^2 - <k>
 
 * Fast algorithms
     * Segment algorithm for density-density interaction
     * Divide-and-conquer algorithm
     * Sparse matrix multiplication
     * Good quantum numbers (N, Sz, Jz, PS)
-    * Skip listing trick
     * Lazy trace evaluation
     * Dynamical truncation approximation
 
 * Parallelism
     * MPI
+    * OpenMP (for the measurement of two-particle quantities)
 
 * API
     * Python binding
@@ -119,7 +120,7 @@ Computer Physics Communications 195, 140 (2015) or arXiv:1409.7573 (2014)
 
 ```sh
 Li Huang
-Department of Physics, Fribourg University, Switzerland
+Institute of Materials, Chinese Academy of Engineering Physics, Sichuan, PRC
 email: lihuang.dmft at gmail.com
 ```
 
