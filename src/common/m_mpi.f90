@@ -4,10 +4,8 @@
 !!! source  : m_mpi.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 08/09/2006 by li huang
-!!!           02/27/2010 by li huang
-!!!           07/09/2014 by li huang
-!!!           04/13/2015 by li huang
+!!! history : 08/09/2006 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : define my own mpi calls, inspired by famous quantum espresso
 !!!           code. we note that the original mpi interfaces/subroutines
 !!!           are rather complicated for newbies, thus we try to wrap the
