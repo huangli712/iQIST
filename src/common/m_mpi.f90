@@ -619,28 +619,28 @@
 !!>>> mpi_bcast subroutines
      public :: mp_bcast
      interface mp_bcast
-         module procedure mp_bcast_bool
+         module procedure mp_bcast_bool0
          module procedure mp_bcast_bool1
          module procedure mp_bcast_bool2
          module procedure mp_bcast_bool3
          module procedure mp_bcast_bool4
          module procedure mp_bcast_bool5
 
-         module procedure mp_bcast_int
+         module procedure mp_bcast_int0
          module procedure mp_bcast_int1
          module procedure mp_bcast_int2
          module procedure mp_bcast_int3
          module procedure mp_bcast_int4
          module procedure mp_bcast_int5
 
-         module procedure mp_bcast_rdp
+         module procedure mp_bcast_rdp0
          module procedure mp_bcast_rdp1
          module procedure mp_bcast_rdp2
          module procedure mp_bcast_rdp3
          module procedure mp_bcast_rdp4
          module procedure mp_bcast_rdp5
 
-         module procedure mp_bcast_cdp
+         module procedure mp_bcast_cdp0
          module procedure mp_bcast_cdp1
          module procedure mp_bcast_cdp2
          module procedure mp_bcast_cdp3
@@ -739,21 +739,21 @@
 !!>>> mpi_reduce subroutines
      public :: mp_reduce
      interface mp_reduce
-         module procedure mp_reduce_int
+         module procedure mp_reduce_int0
          module procedure mp_reduce_int1
          module procedure mp_reduce_int2
          module procedure mp_reduce_int3
          module procedure mp_reduce_int4
          module procedure mp_reduce_int5
 
-         module procedure mp_reduce_rdp
+         module procedure mp_reduce_rdp0
          module procedure mp_reduce_rdp1
          module procedure mp_reduce_rdp2
          module procedure mp_reduce_rdp3
          module procedure mp_reduce_rdp4
          module procedure mp_reduce_rdp5
 
-         module procedure mp_reduce_cdp
+         module procedure mp_reduce_cdp0
          module procedure mp_reduce_cdp1
          module procedure mp_reduce_cdp2
          module procedure mp_reduce_cdp3
@@ -764,21 +764,21 @@
 !!>>> mpi_allreduce subroutines
      public :: mp_allreduce
      interface mp_allreduce
-         module procedure mp_allreduce_int
+         module procedure mp_allreduce_int0
          module procedure mp_allreduce_int1
          module procedure mp_allreduce_int2
          module procedure mp_allreduce_int3
          module procedure mp_allreduce_int4
          module procedure mp_allreduce_int5
 
-         module procedure mp_allreduce_rdp
+         module procedure mp_allreduce_rdp0
          module procedure mp_allreduce_rdp1
          module procedure mp_allreduce_rdp2
          module procedure mp_allreduce_rdp3
          module procedure mp_allreduce_rdp4
          module procedure mp_allreduce_rdp5
 
-         module procedure mp_allreduce_cdp
+         module procedure mp_allreduce_cdp0
          module procedure mp_allreduce_cdp1
          module procedure mp_allreduce_cdp2
          module procedure mp_allreduce_cdp3
