@@ -3799,8 +3799,8 @@
 !!>>> MPI collective operations: reducing                              <<<
 !!========================================================================
 
-!!>>> mp_reduce_int: reduce 1 integer from all processes
-     subroutine mp_reduce_int(source, data, root, gid)
+!!>>> mp_reduce_int0: reduce 1 integer from all processes
+     subroutine mp_reduce_int0(source, data, root, gid)
          implicit none
 
 ! external arguments
@@ -3823,10 +3823,10 @@
          call MPI_REDUCE(source, data, 1, mpi_mint, mpi_sum, root, group, ierror)
 
 ! handler for return code
-         call mp_error('mp_reduce_int', ierror)
+         call mp_error('mp_reduce_int0', ierror)
 
          return
-     end subroutine mp_reduce_int
+     end subroutine mp_reduce_int0
 
 !!>>> mp_reduce_int1: reduce integer vector from all processes
      subroutine mp_reduce_int1(source, data, root, gid)
@@ -3988,8 +3988,8 @@
          return
      end subroutine mp_reduce_int5
 
-!!>>> mp_reduce_rdp: reduce 1 real(dp) from all processes
-     subroutine mp_reduce_rdp(source, data, root, gid)
+!!>>> mp_reduce_rdp0: reduce 1 real(dp) from all processes
+     subroutine mp_reduce_rdp0(source, data, root, gid)
          implicit none
 
 ! external arguments
@@ -4012,10 +4012,10 @@
          call MPI_REDUCE(source, data, 1, mpi_dreal, mpi_sum, root, group, ierror)
 
 ! handler for return code
-         call mp_error('mp_reduce_rdp', ierror)
+         call mp_error('mp_reduce_rdp0', ierror)
 
          return
-     end subroutine mp_reduce_rdp
+     end subroutine mp_reduce_rdp0
 
 !!>>> mp_reduce_rdp1: reduce real(dp) vector from all processes
      subroutine mp_reduce_rdp1(source, data, root, gid)
@@ -4177,8 +4177,8 @@
          return
      end subroutine mp_reduce_rdp5
 
-!!>>> mp_reduce_cdp: reduce 1 complex(dp) from all processes
-     subroutine mp_reduce_cdp(source, data, root, gid)
+!!>>> mp_reduce_cdp0: reduce 1 complex(dp) from all processes
+     subroutine mp_reduce_cdp0(source, data, root, gid)
          implicit none
 
 ! external arguments
@@ -4204,7 +4204,7 @@
          call mp_error('mp_reduce_cdp', ierror)
 
          return
-     end subroutine mp_reduce_cdp
+     end subroutine mp_reduce_cdp0
 
 !!>>> mp_reduce_cdp1: reduce complex(dp) vector from all processes
      subroutine mp_reduce_cdp1(source, data, root, gid)
