@@ -1526,8 +1526,8 @@
          return
      end subroutine mp_bcast_rdp5
 
-!!>>> mp_bcast_cdp: broadcasts complex from the process with rank "root"
-     subroutine mp_bcast_cdp(data, root, gid)
+!!>>> mp_bcast_cdp0: broadcasts complex from the process with rank "root"
+     subroutine mp_bcast_cdp0(data, root, gid)
          implicit none
 
 ! external arguments
@@ -1549,10 +1549,10 @@
          call MPI_BCAST(data, 1, mpi_dcmplx, root, group, ierror)
 
 ! handler for return code
-         call mp_error('mp_bcast_cdp', ierror)
+         call mp_error('mp_bcast_cdp0', ierror)
 
          return
-     end subroutine mp_bcast_cdp
+     end subroutine mp_bcast_cdp0
 
 !!>>> mp_bcast_cdp1: broadcasts complex(:) from the process with rank "root"
      subroutine mp_bcast_cdp1(data, root, gid)
