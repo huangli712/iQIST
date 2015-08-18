@@ -159,6 +159,9 @@
 ! istat: status code for mpi subroutines
      integer, private :: istat
 
+! opera: default operator
+     integer, private :: opera
+
 ! group: default communicator
      integer, private :: group
 
@@ -3893,14 +3896,22 @@
 !!========================================================================
 
 !!>>> mp_reduce_int0: reduce 1 integer from all processes
-     subroutine mp_reduce_int0(source, data, root, gid)
+     subroutine mp_reduce_int0(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          integer, intent(in) :: source
          integer, intent(inout) :: data
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -3913,7 +3924,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, 1, mpi_mint, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, 1, mpi_mint, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int0', ierror)
@@ -3922,14 +3933,22 @@
      end subroutine mp_reduce_int0
 
 !!>>> mp_reduce_int1: reduce integer vector from all processes
-     subroutine mp_reduce_int1(source, data, root, gid)
+     subroutine mp_reduce_int1(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          integer, intent(in) :: source(:)
          integer, intent(inout) :: data(:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -3945,7 +3964,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_mint, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_mint, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int1', ierror)
@@ -3954,14 +3973,22 @@
      end subroutine mp_reduce_int1
 
 !!>>> mp_reduce_int2: reduce integer matrix from all processes
-     subroutine mp_reduce_int2(source, data, root, gid)
+     subroutine mp_reduce_int2(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          integer, intent(in) :: source(:,:)
          integer, intent(inout) :: data(:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -3977,7 +4004,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_mint, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_mint, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int2', ierror)
@@ -3986,14 +4013,22 @@
      end subroutine mp_reduce_int2
 
 !!>>> mp_reduce_int3: reduce integer matrix from all processes
-     subroutine mp_reduce_int3(source, data, root, gid)
+     subroutine mp_reduce_int3(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          integer, intent(in) :: source(:,:,:)
          integer, intent(inout) :: data(:,:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4009,7 +4044,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_mint, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_mint, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int3', ierror)
@@ -4018,14 +4053,22 @@
      end subroutine mp_reduce_int3
 
 !!>>> mp_reduce_int4: reduce integer matrix from all processes
-     subroutine mp_reduce_int4(source, data, root, gid)
+     subroutine mp_reduce_int4(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          integer, intent(in) :: source(:,:,:,:)
          integer, intent(inout) :: data(:,:,:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4041,7 +4084,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_mint, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_mint, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int4', ierror)
@@ -4050,14 +4093,22 @@
      end subroutine mp_reduce_int4
 
 !!>>> mp_reduce_int5: reduce integer matrix from all processes
-     subroutine mp_reduce_int5(source, data, root, gid)
+     subroutine mp_reduce_int5(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          integer, intent(in) :: source(:,:,:,:,:)
          integer, intent(inout) :: data(:,:,:,:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4073,7 +4124,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_mint, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_mint, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int5', ierror)
@@ -4082,14 +4133,22 @@
      end subroutine mp_reduce_int5
 
 !!>>> mp_reduce_rdp0: reduce 1 real(dp) from all processes
-     subroutine mp_reduce_rdp0(source, data, root, gid)
+     subroutine mp_reduce_rdp0(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          real(dp), intent(in) :: source
          real(dp), intent(inout) :: data
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4102,7 +4161,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, 1, mpi_dreal, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, 1, mpi_dreal, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp0', ierror)
@@ -4111,14 +4170,22 @@
      end subroutine mp_reduce_rdp0
 
 !!>>> mp_reduce_rdp1: reduce real(dp) vector from all processes
-     subroutine mp_reduce_rdp1(source, data, root, gid)
+     subroutine mp_reduce_rdp1(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          real(dp), intent(in) :: source(:)
          real(dp), intent(inout) :: data(:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4134,7 +4201,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dreal, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_dreal, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp1', ierror)
@@ -4143,14 +4210,22 @@
      end subroutine mp_reduce_rdp1
 
 !!>>> mp_reduce_rdp2: reduce real(dp) matrix from all processes
-     subroutine mp_reduce_rdp2(source, data, root, gid)
+     subroutine mp_reduce_rdp2(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          real(dp), intent(in) :: source(:,:)
          real(dp), intent(inout) :: data(:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4166,7 +4241,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dreal, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_dreal, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp2', ierror)
@@ -4175,14 +4250,22 @@
      end subroutine mp_reduce_rdp2
 
 !!>>> mp_reduce_rdp3: reduce real(dp) matrix from all processes
-     subroutine mp_reduce_rdp3(source, data, root, gid)
+     subroutine mp_reduce_rdp3(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          real(dp), intent(in) :: source(:,:,:)
          real(dp), intent(inout) :: data(:,:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4198,7 +4281,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dreal, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_dreal, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp3', ierror)
@@ -4207,14 +4290,22 @@
      end subroutine mp_reduce_rdp3
 
 !!>>> mp_reduce_rdp4: reduce real(dp) matrix from all processes
-     subroutine mp_reduce_rdp4(source, data, root, gid)
+     subroutine mp_reduce_rdp4(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          real(dp), intent(in) :: source(:,:,:,:)
          real(dp), intent(inout) :: data(:,:,:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4230,7 +4321,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dreal, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_dreal, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp4', ierror)
@@ -4239,14 +4330,22 @@
      end subroutine mp_reduce_rdp4
 
 !!>>> mp_reduce_rdp5: reduce real(dp) matrix from all processes
-     subroutine mp_reduce_rdp5(source, data, root, gid)
+     subroutine mp_reduce_rdp5(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          real(dp), intent(in) :: source(:,:,:,:,:)
          real(dp), intent(inout) :: data(:,:,:,:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4262,7 +4361,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dreal, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_dreal, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp5', ierror)
@@ -4271,14 +4370,22 @@
      end subroutine mp_reduce_rdp5
 
 !!>>> mp_reduce_cdp0: reduce 1 complex(dp) from all processes
-     subroutine mp_reduce_cdp0(source, data, root, gid)
+     subroutine mp_reduce_cdp0(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          complex(dp), intent(in) :: source
          complex(dp), intent(inout) :: data
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4291,7 +4398,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, 1, mpi_dcmplx, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, 1, mpi_dcmplx, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp0', ierror)
@@ -4300,14 +4407,22 @@
      end subroutine mp_reduce_cdp0
 
 !!>>> mp_reduce_cdp1: reduce complex(dp) vector from all processes
-     subroutine mp_reduce_cdp1(source, data, root, gid)
+     subroutine mp_reduce_cdp1(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          complex(dp), intent(in) :: source(:)
          complex(dp), intent(inout) :: data(:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4323,7 +4438,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dcmplx, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_dcmplx, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp1', ierror)
@@ -4332,14 +4447,22 @@
      end subroutine mp_reduce_cdp1
 
 !!>>> mp_reduce_cdp2: reduce complex(dp) matrix from all processes
-     subroutine mp_reduce_cdp2(source, data, root, gid)
+     subroutine mp_reduce_cdp2(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          complex(dp), intent(in) :: source(:,:)
          complex(dp), intent(inout) :: data(:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4355,7 +4478,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dcmplx, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_dcmplx, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp2', ierror)
@@ -4364,14 +4487,22 @@
      end subroutine mp_reduce_cdp2
 
 !!>>> mp_reduce_cdp3: reduce complex(dp) matrix from all processes
-     subroutine mp_reduce_cdp3(source, data, root, gid)
+     subroutine mp_reduce_cdp3(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          complex(dp), intent(in) :: source(:,:,:)
          complex(dp), intent(inout) :: data(:,:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4387,7 +4518,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dcmplx, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_dcmplx, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp3', ierror)
@@ -4396,14 +4527,22 @@
      end subroutine mp_reduce_cdp3
 
 !!>>> mp_reduce_cdp4: reduce complex(dp) matrix from all processes
-     subroutine mp_reduce_cdp4(source, data, root, gid)
+     subroutine mp_reduce_cdp4(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          complex(dp), intent(in) :: source(:,:,:,:)
          complex(dp), intent(inout) :: data(:,:,:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4419,7 +4558,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dcmplx, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_dcmplx, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp4', ierror)
@@ -4428,14 +4567,22 @@
      end subroutine mp_reduce_cdp4
 
 !!>>> mp_reduce_cdp5: reduce complex(dp) matrix from all processes
-     subroutine mp_reduce_cdp5(source, data, root, gid)
+     subroutine mp_reduce_cdp5(source, data, root, mop, gid)
          implicit none
 
 ! external arguments
          complex(dp), intent(in) :: source(:,:,:,:,:)
          complex(dp), intent(inout) :: data(:,:,:,:,:)
          integer, intent(in) :: root
+         integer, optional, intent(in) :: mop
          integer, optional, intent(in) :: gid
+
+! set current operator
+         if ( present(mop) .eqv. .true. ) then
+             opera = mop
+         else
+             opera = MPI_SUM
+         endif ! back if ( present(mop) .eqv. .true. ) block
 
 ! set current communicator
          if ( present(gid) .eqv. .true. ) then
@@ -4451,7 +4598,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dcmplx, mpi_sum, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, mpi_dcmplx, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp5', ierror)
@@ -4483,7 +4630,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, 1, mpi_mint, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, 1, mpi_mint, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int0', ierror)
@@ -4514,7 +4661,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_mint, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_mint, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int1', ierror)
@@ -4545,7 +4692,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_mint, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_mint, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int2', ierror)
@@ -4576,7 +4723,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_mint, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_mint, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int3', ierror)
@@ -4607,7 +4754,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_mint, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_mint, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int4', ierror)
@@ -4638,7 +4785,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_mint, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_mint, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int5', ierror)
@@ -4666,7 +4813,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, 1, mpi_dreal, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, 1, mpi_dreal, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp0', ierror)
@@ -4697,7 +4844,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp1', ierror)
@@ -4728,7 +4875,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp2', ierror)
@@ -4759,7 +4906,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp3', ierror)
@@ -4790,7 +4937,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp4', ierror)
@@ -4821,7 +4968,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp5', ierror)
@@ -4849,7 +4996,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, 1, mpi_dcmplx, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, 1, mpi_dcmplx, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp0', ierror)
@@ -4880,7 +5027,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp1', ierror)
@@ -4911,7 +5058,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp2', ierror)
@@ -4942,7 +5089,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp3', ierror)
@@ -4973,7 +5120,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp4', ierror)
@@ -5004,7 +5151,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, mpi_sum, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp5', ierror)
