@@ -4201,7 +4201,7 @@
          call MPI_REDUCE(source, data, 1, mpi_dcmplx, mpi_sum, root, group, ierror)
 
 ! handler for return code
-         call mp_error('mp_reduce_cdp', ierror)
+         call mp_error('mp_reduce_cdp0', ierror)
 
          return
      end subroutine mp_reduce_cdp0
