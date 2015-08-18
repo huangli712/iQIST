@@ -1070,8 +1070,8 @@
 !!>>> MPI collective operations: broadcasting                          <<<
 !!========================================================================
 
-!!>>> mp_bcast_bool: broadcasts bool from the process with rank "root"
-     subroutine mp_bcast_bool(data, root, gid)
+!!>>> mp_bcast_bool0: broadcasts bool from the process with rank "root"
+     subroutine mp_bcast_bool0(data, root, gid)
          implicit none
 
 ! external arguments
@@ -1093,10 +1093,10 @@
          call MPI_BCAST(data, 1, mpi_log, root, group, ierror)
 
 ! handler for return code
-         call mp_error('mp_bcast_bool', ierror)
+         call mp_error('mp_bcast_bool0', ierror)
 
          return
-     end subroutine mp_bcast_bool
+     end subroutine mp_bcast_bool0
 
 !!>>> mp_bcast_bool1: broadcasts bool(:) from the process with rank "root"
      subroutine mp_bcast_bool1(data, root, gid)
@@ -1160,8 +1160,8 @@
          return
      end subroutine mp_bcast_bool2
 
-!!>>> mp_bcast_int: broadcasts int from the process with rank "root"
-     subroutine mp_bcast_int(data, root, gid)
+!!>>> mp_bcast_int0: broadcasts int from the process with rank "root"
+     subroutine mp_bcast_int0(data, root, gid)
          implicit none
 
 ! external arguments
@@ -1183,10 +1183,10 @@
          call MPI_BCAST(data, 1, mpi_mint, root, group, ierror)
 
 ! handler for return code
-         call mp_error('mp_bcast_int', ierror)
+         call mp_error('mp_bcast_int0', ierror)
 
          return
-     end subroutine mp_bcast_int
+     end subroutine mp_bcast_int0
 
 !!>>> mp_bcast_int1: broadcasts int(:) from the process with rank "root"
      subroutine mp_bcast_int1(data, root, gid)
