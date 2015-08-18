@@ -1343,8 +1343,8 @@
          return
      end subroutine mp_bcast_int5
 
-!!>>> mp_bcast_rdp: broadcasts real from the process with rank "root"
-     subroutine mp_bcast_rdp(data, root, gid)
+!!>>> mp_bcast_rdp0: broadcasts real from the process with rank "root"
+     subroutine mp_bcast_rdp0(data, root, gid)
          implicit none
 
 ! external arguments
@@ -1366,10 +1366,10 @@
          call MPI_BCAST(data, 1, mpi_dreal, root, group, ierror)
 
 ! handler for return code
-         call mp_error('mp_bcast_rdp', ierror)
+         call mp_error('mp_bcast_rdp0', ierror)
 
          return
-     end subroutine mp_bcast_rdp
+     end subroutine mp_bcast_rdp0
 
 !!>>> mp_bcast_rdp1: broadcasts real(:) from the process with rank "root"
      subroutine mp_bcast_rdp1(data, root, gid)
