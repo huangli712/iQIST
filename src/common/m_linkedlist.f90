@@ -4,8 +4,8 @@
 !!! source  : m_linkedlist.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 07/10/2014 by li huang
-!!!           07/23/2014 by li huang
+!!! history : 07/10/2014 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : this purpose of this module is to implement a typical and
 !!!           useful data structure --- linked list. it is a generic
 !!!           linked list, capable of storing arbitrary data.

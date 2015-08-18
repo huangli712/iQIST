@@ -23,7 +23,8 @@
 ## History
 ## =======
 ##
-## 11/10/2014 by li huang
+## 11/10/2014 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -38,14 +39,14 @@ function mln {
     fi
 }
 
-# loop over the ct-qmc components
+# loop over the ctqmc components
 for component in azalea gardenia narcissus begonia lavender pansy manjushaka
 do
     dir=$(echo ../src/ctqmc/$component/ctqmc)
     mln $dir $component
 done
 
-# loop over the hf-qmc components
+# loop over the hfqmc components
 for component in daisy
 do
     dir=$(echo ../src/hfqmc/$component/hfqmc)

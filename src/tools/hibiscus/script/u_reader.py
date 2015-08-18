@@ -24,7 +24,7 @@
 ## History
 ## =======
 ##
-## 05/25/2015 by li huang
+## 08/15/2015 by li huang
 ##
 ##
 
@@ -344,6 +344,35 @@ class iqistReader(object):
         return (nmat, nnmat)
 
     @staticmethod
+    def get_kmat(norbs, fileName = None):
+        """ try to read the solver.kmat.dat file to return the required
+            perturbation order data: < k > and < k^2 >
+        """
+        if fileName is None:
+            f = open("solver.kmat.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        kmat = numpy.zeros((norbs), dtype = numpy.float)
+        kkmat = numpy.zeros((norbs,norbs), dtype = numpy.float)
+        f.readline() # skip one comment line
+        # read kmat
+        for i in range(norbs):
+            spl = f.readline().split()
+            kmat[i] = float( spl[1] )
+        f.readline() # skip two lines
+        f.readline()
+        # read kkmat
+        for i in range(norbs):
+            for j in range(norbs):
+                spl = f.readline().split()
+                kkmat[i,j] = float( spl[2] )
+
+        f.close()
+
+        return (kmat, kkmat)
+
+    @staticmethod
     def get_lmat(norbs, fileName = None):
         """ try to read the solver.lmat.dat file to return the fidelity
             susceptibility data: < k_l >, < k_r >, and < k_l k_r >
@@ -355,7 +384,7 @@ class iqistReader(object):
 
         lmat = numpy.zeros((norbs), dtype = numpy.float)
         rmat = numpy.zeros((norbs), dtype = numpy.float)
-        lrmat = numpy.zeros((norbs,norbs), dtype = numpy.complex)
+        lrmat = numpy.zeros((norbs,norbs), dtype = numpy.float)
         f.readline() # skip one comment line
         # read lmat and rmat
         for i in range(norbs):

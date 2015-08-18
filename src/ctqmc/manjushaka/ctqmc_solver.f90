@@ -34,6 +34,7 @@
      use context, only : tmesh, rmesh
      use context, only : hist, prob
      use context, only : nmat, nnmat
+     use context, only : kmat, kkmat
      use context, only : lmat, rmat, lrmat
      use context, only : g2_re, g2_im, ps_re, ps_im
      use context, only : symm, naux, saux
@@ -88,6 +89,12 @@
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
 
+! number of operators, for mpi case
+     real(dp), allocatable :: kmat_mpi(:)
+
+! square of number of operators, for mpi case
+     real(dp), allocatable :: kkmat_mpi(:,:)
+
 ! number of operators at left half axis, for mpi case
      real(dp), allocatable :: lmat_mpi(:)
 
@@ -132,6 +139,16 @@
      endif ! back if ( istat /= 0 ) block
 
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(kmat_mpi(norbs),             stat=istat)
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+     allocate(kkmat_mpi(norbs,norbs),      stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -330,10 +347,15 @@
                  CONTINUE
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) block
 
-! record the fidelity susceptibility
+! record the < k^2 > - < k >^2
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) then
-                 call ctqmc_record_lmat()
+                 call ctqmc_record_kmat()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) block
+
+! record the fidelity susceptibility
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) then
+                 call ctqmc_record_lmat()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) block
 
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
@@ -460,6 +482,12 @@
      nnmat = nnmat / real(caves)
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
+! collect the < k^2 > - < k >^2 data from kmat to kmat_mpi
+! collect the < k^2 > - < k >^2 data from kkmat to kkmat_mpi
+     kmat  = kmat  / real(caves)
+     kkmat = kkmat / real(caves)
+     call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi)
+
 ! collect the fidelity susceptibility data from lmat to lmat_mpi
 ! collect the fidelity susceptibility data from rmat to rmat_mpi
 ! collect the fidelity susceptibility data from lrmat to lrmat_mpi
@@ -494,6 +522,8 @@
 
      nmat  = nmat_mpi  * real(nmonte)
      nnmat = nnmat_mpi * real(nmonte)
+     kmat  = kmat_mpi  * real(nmonte)
+     kkmat = kkmat_mpi * real(nmonte)
      lmat  = lmat_mpi  * real(nmonte)
      rmat  = rmat_mpi  * real(nmonte)
      lrmat = lrmat_mpi * real(nmonte)
@@ -556,6 +586,11 @@
          call ctqmc_dump_nmat(nmat, nnmat)
      endif ! back if ( myid == master ) block
 
+! write out the final < k^2 > - < k >^2 data, kmat and kkmat
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_kmat(kmat, kkmat)
+     endif ! back if ( myid == master ) block
+
 ! write out the final fidelity susceptibility data, lmat, rmat, and lrmat
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_lmat(lmat, rmat, lrmat)
@@ -610,6 +645,8 @@
      deallocate(prob_mpi )
      deallocate(nmat_mpi )
      deallocate(nnmat_mpi)
+     deallocate(kmat_mpi )
+     deallocate(kkmat_mpi)
      deallocate(lmat_mpi )
      deallocate(rmat_mpi )
      deallocate(lrmat_mpi)

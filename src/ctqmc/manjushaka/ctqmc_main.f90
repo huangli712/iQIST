@@ -70,6 +70,7 @@
 !! solver.hist.dat
 !! solver.prob.dat
 !! solver.nmat.dat
+!! solver.kmat.dat
 !! solver.lmat.dat
 !! solver.twop.dat
 !! solver.pair.dat

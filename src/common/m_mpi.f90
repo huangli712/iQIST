@@ -4,10 +4,8 @@
 !!! source  : m_mpi.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 08/09/2006 by li huang
-!!!           02/27/2010 by li huang
-!!!           07/09/2014 by li huang
-!!!           04/13/2015 by li huang
+!!! history : 08/09/2006 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : define my own mpi calls, inspired by famous quantum espresso
 !!!           code. we note that the original mpi interfaces/subroutines
 !!!           are rather complicated for newbies, thus we try to wrap the
@@ -235,7 +233,7 @@
 !!>>> broadcasting operations
 
 ! broadcasting bool
-     private :: mp_bcast_bool
+     private :: mp_bcast_bool0
 
 ! broadcasting bool(:)
      private :: mp_bcast_bool1
@@ -243,8 +241,17 @@
 ! broadcasting bool(:,:)
      private :: mp_bcast_bool2
 
+! broadcasting bool(:,:,:)
+     private :: mp_bcast_bool3
+
+! broadcasting bool(:,:,:,:)
+     private :: mp_bcast_bool4
+
+! broadcasting bool(:,:,:,:,:)
+     private :: mp_bcast_bool5
+
 ! broadcasting int
-     private :: mp_bcast_int
+     private :: mp_bcast_int0
 
 ! broadcasting int(:)
      private :: mp_bcast_int1
@@ -262,7 +269,7 @@
      private :: mp_bcast_int5
 
 ! broadcasting real
-     private :: mp_bcast_rdp
+     private :: mp_bcast_rdp0
 
 ! broadcasting real(:)
      private :: mp_bcast_rdp1
@@ -280,7 +287,7 @@
      private :: mp_bcast_rdp5
 
 ! broadcasting complex
-     private :: mp_bcast_cdp
+     private :: mp_bcast_cdp0
 
 ! broadcasting complex(:)
      private :: mp_bcast_cdp1
@@ -488,7 +495,7 @@
 !!>>> reducing operations
 
 ! readucing int
-     private :: mp_reduce_int
+     private :: mp_reduce_int0
 
 ! reducing int(:)
      private :: mp_reduce_int1
@@ -506,7 +513,7 @@
      private :: mp_reduce_int5
 
 ! reducing real
-     private :: mp_reduce_rdp
+     private :: mp_reduce_rdp0
 
 ! reducing real(:)
      private :: mp_reduce_rdp1
@@ -524,7 +531,7 @@
      private :: mp_reduce_rdp5
 
 ! reducing complex
-     private :: mp_reduce_cdp
+     private :: mp_reduce_cdp0
 
 ! reducing complex(:)
      private :: mp_reduce_cdp1
@@ -544,7 +551,7 @@
 !!>>> allreducing operations
 
 ! allreducing int
-     private :: mp_allreduce_int
+     private :: mp_allreduce_int0
 
 ! allreducing int(:)
      private :: mp_allreduce_int1
@@ -562,7 +569,7 @@
      private :: mp_allreduce_int5
 
 ! allreducing real
-     private :: mp_allreduce_rdp
+     private :: mp_allreduce_rdp0
 
 ! allreducing real(:)
      private :: mp_allreduce_rdp1
@@ -580,7 +587,7 @@
      private :: mp_allreduce_rdp5
 
 ! allreducing complex
-     private :: mp_allreduce_cdp
+     private :: mp_allreduce_cdp0
 
 ! allreducing complex(:)
      private :: mp_allreduce_cdp1
@@ -615,6 +622,9 @@
          module procedure mp_bcast_bool
          module procedure mp_bcast_bool1
          module procedure mp_bcast_bool2
+         module procedure mp_bcast_bool3
+         module procedure mp_bcast_bool4
+         module procedure mp_bcast_bool5
 
          module procedure mp_bcast_int
          module procedure mp_bcast_int1

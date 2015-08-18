@@ -64,6 +64,7 @@
 !! solver.hist.dat
 !! solver.prob.dat
 !! solver.nmat.dat
+!! solver.kmat.dat
 !! solver.lmat.dat
 !! solver.schi.dat
 !! solver.sfom.dat

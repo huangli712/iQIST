@@ -5,6 +5,7 @@
 !!!           ctqmc_record_hist
 !!!           ctqmc_record_prob
 !!!           ctqmc_record_nmat
+!!!           ctqmc_record_kmat
 !!!           ctqmc_record_lmat
 !!!           ctqmc_record_twop
 !!!           ctqmc_record_pair <<<---
@@ -13,6 +14,7 @@
 !!!           ctqmc_reduce_hist
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_kmat
 !!!           ctqmc_reduce_lmat
 !!!           ctqmc_reduce_twop
 !!!           ctqmc_reduce_pair <<<---
@@ -479,6 +481,41 @@
      return
   end subroutine ctqmc_record_nmat
 
+!!>>> ctqmc_record_kmat: record the < k^2 > - < k >^2
+  subroutine ctqmc_record_kmat()
+     use constants, only : dp
+
+     use control, only : issus
+     use control, only : norbs
+     use context, only : csign
+     use context, only : kmat, kkmat
+     use context, only : rank
+
+     implicit none
+
+! local variables
+! loop index for flavor channel
+     integer :: i
+     integer :: j
+
+! check whether there is conflict
+     call s_assert( btest(issus, 5) )
+
+! since rank means the number of operator pairs,
+! so we have to multiply it with two
+     do i=1,norbs
+         kmat(i) = kmat(i) + rank(i) * 2.0_dp * csign
+     enddo ! over i={1,norbs} loop
+
+     do i=1,norbs
+         do j=1,norbs
+             kkmat(i,j) = kkmat(i,j) + rank(i) * rank(j) * 4.0_dp * csign
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine ctqmc_record_kmat
+
 !!>>> ctqmc_record_lmat: record the fidelity susceptibility
   subroutine ctqmc_record_lmat()
      use constants, only : dp, zero, one, two
@@ -511,7 +548,7 @@
      real(dp) :: kr(norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 5) )
+     call s_assert( btest(issus, 6) )
 
 ! init k_l and k_r
      kl = zero
@@ -985,6 +1022,52 @@
 
      return
   end subroutine ctqmc_reduce_nmat
+
+!!>>> ctqmc_reduce_kmat: reduce the kmat and kkmat from all children processes
+  subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : kmat, kkmat
+
+     implicit none
+
+! external arguments
+! number of operators
+     real(dp), intent(out) :: kmat_mpi(norbs)
+
+! square of number of operators
+     real(dp), intent(out) :: kkmat_mpi(norbs,norbs)
+
+! initialize kmat_mpi and kkmat_mpi
+     kmat_mpi = zero
+     kkmat_mpi = zero
+
+! build kmat_mpi and kkmat_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(kmat, kmat_mpi)
+     call mp_allreduce(kkmat, kkmat_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     kmat_mpi = kmat
+     kkmat_mpi = kkmat
+
+# endif /* MPI */
+
+! calculate the average
+     kmat_mpi = kmat_mpi / real(nprocs)
+     kkmat_mpi = kkmat_mpi / real(nprocs)
+
+     return
+  end subroutine ctqmc_reduce_kmat
 
 !!>>> ctqmc_reduce_lmat: reduce the lmat, rmat, and lrmat from all children processes
   subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi)

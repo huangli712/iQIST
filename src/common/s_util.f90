@@ -16,11 +16,8 @@
 !!! source  : s_util.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 07/10/2014 by li huang
-!!!           07/14/2014 by li huang
-!!!           08/21/2014 by li huang
-!!!           10/10/2014 by li huang
-!!!           11/02/2014 by yilin wang
+!!! history : 07/10/2014 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : these subroutines are used to provide some useful facilities
 !!!           including string manipulation, date time information, etc.
 !!! status  : unstable
@@ -593,15 +590,15 @@
 
      write(mystd,'(4X, ">>> used time: ")', advance = 'no')
      if ( mday > 0 ) then
-         write(mystd,'(i2, " d ")', advance = 'no') mday
+         write(mystd,'(i2  , " d ")', advance = 'no') mday
      endif ! back if ( mday > 0 ) block
 
      if ( mhou > 0 ) then
-         write(mystd,'(i2, " h ")', advance = 'no') mhou
+         write(mystd,'(i2  , " h ")', advance = 'no') mhou
      endif ! back if ( mhou > 0 ) block
 
      if ( mmin > 0 ) then
-         write(mystd,'(i2, " m ")', advance = 'no') mmin
+         write(mystd,'(i2  , " m ")', advance = 'no') mmin
      endif ! back if ( mmin > 0 ) block
 
      if ( msec > 0 ) then
@@ -619,15 +616,15 @@
 
      write(mystd,'(4X, ">>> used time: ")', advance = 'no')
      if ( nday > 0 ) then
-         write(mystd,'(i2, " d ")', advance = 'no') nday
+         write(mystd,'(i2  , " d ")', advance = 'no') nday
      endif ! back if ( nday > 0 ) block
 
      if ( nhou > 0 ) then
-         write(mystd,'(i2, " h ")', advance = 'no') nhou
+         write(mystd,'(i2  , " h ")', advance = 'no') nhou
      endif ! back if ( nhou > 0 ) block
 
      if ( nmin > 0 ) then
-         write(mystd,'(i2, " m ")', advance = 'no') nmin
+         write(mystd,'(i2  , " m ")', advance = 'no') nmin
      endif ! back if ( nmin > 0 ) block
 
      if ( nsec > 0 ) then
