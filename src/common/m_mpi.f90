@@ -124,17 +124,17 @@
 !!>>> declare mpi constants (datatypes)                                <<<
 !!========================================================================
 
-! mpi_log: datatype, boolean
-     integer, private, parameter :: mpi_log    = MPI_LOGICAL
+! m_log: datatype, boolean
+     integer, private, parameter :: m_log = MPI_LOGICAL
 
-! mpi_mint: datatype, integer
-     integer, private, parameter :: mpi_mint   = MPI_INTEGER
+! m_int: datatype, integer
+     integer, private, parameter :: m_int = MPI_INTEGER
 
-! mpi_dreal: datatype, double precision float
-     integer, private, parameter :: mpi_dreal  = MPI_DOUBLE_PRECISION
+! m_rdp: datatype, double precision float
+     integer, private, parameter :: m_rdp = MPI_DOUBLE_PRECISION
 
-! mpi_dcmplx: datatype, double precision complex
-     integer, private, parameter :: mpi_dcmplx = MPI_DOUBLE_COMPLEX
+! m_cdp: datatype, double precision complex
+     integer, private, parameter :: m_cdp = MPI_DOUBLE_COMPLEX
 
 !!========================================================================
 !!>>> declare common constants                                         <<<
@@ -1093,7 +1093,7 @@
          call mp_barrier(group)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, 1, mpi_log, root, group, ierror)
+         call MPI_BCAST(data, 1, m_log, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_bool0', ierror)
@@ -1124,7 +1124,7 @@
          isize = size(data)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, isize, mpi_log, root, group, ierror)
+         call MPI_BCAST(data, isize, m_log, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_bool1', ierror)
@@ -1155,7 +1155,7 @@
          isize = size(data)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, isize, mpi_log, root, group, ierror)
+         call MPI_BCAST(data, isize, m_log, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_bool2', ierror)
@@ -1186,7 +1186,7 @@
          isize = size(data)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, isize, mpi_log, root, group, ierror)
+         call MPI_BCAST(data, isize, m_log, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_bool3', ierror)
@@ -1217,7 +1217,7 @@
          isize = size(data)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, isize, mpi_log, root, group, ierror)
+         call MPI_BCAST(data, isize, m_log, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_bool4', ierror)
@@ -1248,7 +1248,7 @@
          isize = size(data)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, isize, mpi_log, root, group, ierror)
+         call MPI_BCAST(data, isize, m_log, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_bool5', ierror)
@@ -1276,7 +1276,7 @@
          call mp_barrier(group)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, 1, mpi_mint, root, group, ierror)
+         call MPI_BCAST(data, 1, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_int0', ierror)
@@ -1307,7 +1307,7 @@
          isize = size(data)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, isize, mpi_mint, root, group, ierror)
+         call MPI_BCAST(data, isize, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_int1', ierror)
@@ -1338,7 +1338,7 @@
          isize = size(data)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, isize, mpi_mint, root, group, ierror)
+         call MPI_BCAST(data, isize, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_int2', ierror)
@@ -1369,7 +1369,7 @@
          isize = size(data)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, isize, mpi_mint, root, group, ierror)
+         call MPI_BCAST(data, isize, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_int3', ierror)
@@ -1400,7 +1400,7 @@
          isize = size(data)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, isize, mpi_mint, root, group, ierror)
+         call MPI_BCAST(data, isize, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_int4', ierror)
@@ -1431,7 +1431,7 @@
          isize = size(data)
 
 ! invoke realted MPI subroutines
-         call MPI_BCAST(data, isize, mpi_mint, root, group, ierror)
+         call MPI_BCAST(data, isize, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_int5', ierror)
@@ -1459,7 +1459,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, 1, mpi_dreal, root, group, ierror)
+         call MPI_BCAST(data, 1, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_rdp0', ierror)
@@ -1490,7 +1490,7 @@
          isize = size(data)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, isize, mpi_dreal, root, group, ierror)
+         call MPI_BCAST(data, isize, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_rdp1', ierror)
@@ -1521,7 +1521,7 @@
          isize = size(data)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, isize, mpi_dreal, root, group, ierror)
+         call MPI_BCAST(data, isize, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_rdp2', ierror)
@@ -1552,7 +1552,7 @@
          isize = size(data)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, isize, mpi_dreal, root, group, ierror)
+         call MPI_BCAST(data, isize, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_rdp3', ierror)
@@ -1583,7 +1583,7 @@
          isize = size(data)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, isize, mpi_dreal, root, group, ierror)
+         call MPI_BCAST(data, isize, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_rdp4', ierror)
@@ -1614,7 +1614,7 @@
          isize = size(data)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, isize, mpi_dreal, root, group, ierror)
+         call MPI_BCAST(data, isize, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_rdp5', ierror)
@@ -1642,7 +1642,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, 1, mpi_dcmplx, root, group, ierror)
+         call MPI_BCAST(data, 1, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_cdp0', ierror)
@@ -1673,7 +1673,7 @@
          isize = size(data)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, isize, mpi_dcmplx, root, group, ierror)
+         call MPI_BCAST(data, isize, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_cdp1', ierror)
@@ -1704,7 +1704,7 @@
          isize = size(data)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, isize, mpi_dcmplx, root, group, ierror)
+         call MPI_BCAST(data, isize, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_cdp2', ierror)
@@ -1735,7 +1735,7 @@
          isize = size(data)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, isize, mpi_dcmplx, root, group, ierror)
+         call MPI_BCAST(data, isize, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_cdp3', ierror)
@@ -1766,7 +1766,7 @@
          isize = size(data)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, isize, mpi_dcmplx, root, group, ierror)
+         call MPI_BCAST(data, isize, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_cdp4', ierror)
@@ -1797,7 +1797,7 @@
          isize = size(data)
 
 ! invoke related mpi subroutines
-         call MPI_BCAST(data, isize, mpi_dcmplx, root, group, ierror)
+         call MPI_BCAST(data, isize, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_bcast_cdp5', ierror)
@@ -1834,7 +1834,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_mint, data, isize, mpi_mint, root, group, ierror)
+         call MPI_GATHER(send, isize, m_int, data, isize, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_int1', ierror)
@@ -1867,7 +1867,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_mint, data, isize, mpi_mint, root, group, ierror)
+         call MPI_GATHER(send, isize, m_int, data, isize, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_int2', ierror)
@@ -1900,7 +1900,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_mint, data, isize, mpi_mint, root, group, ierror)
+         call MPI_GATHER(send, isize, m_int, data, isize, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_int3', ierror)
@@ -1933,7 +1933,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_mint, data, isize, mpi_mint, root, group, ierror)
+         call MPI_GATHER(send, isize, m_int, data, isize, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_int4', ierror)
@@ -1966,7 +1966,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_mint, data, isize, mpi_mint, root, group, ierror)
+         call MPI_GATHER(send, isize, m_int, data, isize, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_int5', ierror)
@@ -1999,7 +1999,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_dreal, data, isize, mpi_dreal, root, group, ierror)
+         call MPI_GATHER(send, isize, m_rdp, data, isize, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_rdp1', ierror)
@@ -2032,7 +2032,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_dreal, data, isize, mpi_dreal, root, group, ierror)
+         call MPI_GATHER(send, isize, m_rdp, data, isize, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_rdp2', ierror)
@@ -2065,7 +2065,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_dreal, data, isize, mpi_dreal, root, group, ierror)
+         call MPI_GATHER(send, isize, m_rdp, data, isize, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_rdp3', ierror)
@@ -2098,7 +2098,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_dreal, data, isize, mpi_dreal, root, group, ierror)
+         call MPI_GATHER(send, isize, m_rdp, data, isize, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_rdp4', ierror)
@@ -2131,7 +2131,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_dreal, data, isize, mpi_dreal, root, group, ierror)
+         call MPI_GATHER(send, isize, m_rdp, data, isize, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_rdp5', ierror)
@@ -2164,7 +2164,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_dcmplx, data, isize, mpi_dcmplx, root, group, ierror)
+         call MPI_GATHER(send, isize, m_cdp, data, isize, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_cdp1', ierror)
@@ -2197,7 +2197,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_dcmplx, data, isize, mpi_dcmplx, root, group, ierror)
+         call MPI_GATHER(send, isize, m_cdp, data, isize, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_cdp2', ierror)
@@ -2230,7 +2230,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_dcmplx, data, isize, mpi_dcmplx, root, group, ierror)
+         call MPI_GATHER(send, isize, m_cdp, data, isize, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_cdp3', ierror)
@@ -2263,7 +2263,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_dcmplx, data, isize, mpi_dcmplx, root, group, ierror)
+         call MPI_GATHER(send, isize, m_cdp, data, isize, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_cdp4', ierror)
@@ -2296,7 +2296,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHER(send, isize, mpi_dcmplx, data, isize, mpi_dcmplx, root, group, ierror)
+         call MPI_GATHER(send, isize, m_cdp, data, isize, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gather_cdp5', ierror)
@@ -2336,7 +2336,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_int, data, recv, disp, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_int1', ierror)
@@ -2372,7 +2372,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_int, data, recv, disp, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_int2', ierror)
@@ -2408,7 +2408,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_int, data, recv, disp, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_int3', ierror)
@@ -2444,7 +2444,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_int, data, recv, disp, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_int4', ierror)
@@ -2480,7 +2480,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_int, data, recv, disp, m_int, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_int5', ierror)
@@ -2516,7 +2516,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_dreal, data, recv, disp, mpi_dreal, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_rdp, data, recv, disp, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_rdp1', ierror)
@@ -2552,7 +2552,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_dreal, data, recv, disp, mpi_dreal, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_rdp, data, recv, disp, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_rdp2', ierror)
@@ -2588,7 +2588,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_dreal, data, recv, disp, mpi_dreal, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_rdp, data, recv, disp, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_rdp3', ierror)
@@ -2624,7 +2624,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_dreal, data, recv, disp, mpi_dreal, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_rdp, data, recv, disp, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_rdp4', ierror)
@@ -2660,7 +2660,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_dreal, data, recv, disp, mpi_dreal, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_rdp, data, recv, disp, m_rdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_rdp5', ierror)
@@ -2696,7 +2696,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_dcmplx, data, recv, disp, mpi_dcmplx, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_cdp, data, recv, disp, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_cdp1', ierror)
@@ -2732,7 +2732,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_dcmplx, data, recv, disp, mpi_dcmplx, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_cdp, data, recv, disp, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_cdp2', ierror)
@@ -2768,7 +2768,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_dcmplx, data, recv, disp, mpi_dcmplx, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_cdp, data, recv, disp, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_cdp3', ierror)
@@ -2804,7 +2804,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_dcmplx, data, recv, disp, mpi_dcmplx, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_cdp, data, recv, disp, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_cdp4', ierror)
@@ -2840,7 +2840,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_GATHERV(send, isize, mpi_dcmplx, data, recv, disp, mpi_dcmplx, root, group, ierror)
+         call MPI_GATHERV(send, isize, m_cdp, data, recv, disp, m_cdp, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_gatherv_cdp5', ierror)
@@ -2877,7 +2877,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_mint, data, isize, mpi_mint, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_int, data, isize, m_int, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_int1', ierror)
@@ -2910,7 +2910,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_mint, data, isize, mpi_mint, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_int, data, isize, m_int, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_int2', ierror)
@@ -2943,7 +2943,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_mint, data, isize, mpi_mint, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_int, data, isize, m_int, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_int3', ierror)
@@ -2976,7 +2976,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_mint, data, isize, mpi_mint, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_int, data, isize, m_int, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_int4', ierror)
@@ -3009,7 +3009,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_mint, data, isize, mpi_mint, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_int, data, isize, m_int, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_int5', ierror)
@@ -3042,7 +3042,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_dreal, data, isize, mpi_dreal, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_rdp, data, isize, m_rdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_rdp1', ierror)
@@ -3075,7 +3075,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_dreal, data, isize, mpi_dreal, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_rdp, data, isize, m_rdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_rdp2', ierror)
@@ -3108,7 +3108,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_dreal, data, isize, mpi_dreal, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_rdp, data, isize, m_rdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_rdp3', ierror)
@@ -3141,7 +3141,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_dreal, data, isize, mpi_dreal, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_rdp, data, isize, m_rdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_rdp4', ierror)
@@ -3174,7 +3174,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_dreal, data, isize, mpi_dreal, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_rdp, data, isize, m_rdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_rdp5', ierror)
@@ -3207,7 +3207,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_dcmplx, data, isize, mpi_dcmplx, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_cdp, data, isize, m_cdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_cdp1', ierror)
@@ -3240,7 +3240,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_dcmplx, data, isize, mpi_dcmplx, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_cdp, data, isize, m_cdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_cdp2', ierror)
@@ -3273,7 +3273,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_dcmplx, data, isize, mpi_dcmplx, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_cdp, data, isize, m_cdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_cdp3', ierror)
@@ -3306,7 +3306,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_dcmplx, data, isize, mpi_dcmplx, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_cdp, data, isize, m_cdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_cdp4', ierror)
@@ -3339,7 +3339,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHER(send, isize, mpi_dcmplx, data, isize, mpi_dcmplx, group, ierror)
+         call MPI_ALLGATHER(send, isize, m_cdp, data, isize, m_cdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgather_cdp5', ierror)
@@ -3379,7 +3379,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_int, data, recv, disp, m_int, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_int1', ierror)
@@ -3415,7 +3415,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_int, data, recv, disp, m_int, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_int2', ierror)
@@ -3451,7 +3451,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_int, data, recv, disp, m_int, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_int3', ierror)
@@ -3487,7 +3487,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_int, data, recv, disp, m_int, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_int4', ierror)
@@ -3523,7 +3523,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_mint, data, recv, disp, mpi_mint, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_int, data, recv, disp, m_int, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_int5', ierror)
@@ -3559,7 +3559,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_dreal, data, recv, disp, mpi_dreal, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_rdp, data, recv, disp, m_rdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_rdp1', ierror)
@@ -3595,7 +3595,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_dreal, data, recv, disp, mpi_dreal, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_rdp, data, recv, disp, m_rdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_rdp2', ierror)
@@ -3631,7 +3631,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_dreal, data, recv, disp, mpi_dreal, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_rdp, data, recv, disp, m_rdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_rdp3', ierror)
@@ -3667,7 +3667,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_dreal, data, recv, disp, mpi_dreal, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_rdp, data, recv, disp, m_rdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_rdp4', ierror)
@@ -3703,7 +3703,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_dreal, data, recv, disp, mpi_dreal, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_rdp, data, recv, disp, m_rdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_rdp5', ierror)
@@ -3739,7 +3739,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_dcmplx, data, recv, disp, mpi_dcmplx, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_cdp, data, recv, disp, m_cdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_cdp1', ierror)
@@ -3775,7 +3775,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_dcmplx, data, recv, disp, mpi_dcmplx, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_cdp, data, recv, disp, m_cdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_cdp2', ierror)
@@ -3811,7 +3811,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_dcmplx, data, recv, disp, mpi_dcmplx, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_cdp, data, recv, disp, m_cdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_cdp3', ierror)
@@ -3847,7 +3847,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_dcmplx, data, recv, disp, mpi_dcmplx, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_cdp, data, recv, disp, m_cdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_cdp4', ierror)
@@ -3883,7 +3883,7 @@
          isize = size(send)
 
 ! invoke related mpi subroutines
-         call MPI_ALLGATHERV(send, isize, mpi_dcmplx, data, recv, disp, mpi_dcmplx, group, ierror)
+         call MPI_ALLGATHERV(send, isize, m_cdp, data, recv, disp, m_cdp, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allgatherv_cdp5', ierror)
@@ -3924,7 +3924,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, 1, mpi_mint, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, 1, m_int, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int0', ierror)
@@ -3964,7 +3964,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_mint, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_int, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int1', ierror)
@@ -4004,7 +4004,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_mint, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_int, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int2', ierror)
@@ -4044,7 +4044,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_mint, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_int, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int3', ierror)
@@ -4084,7 +4084,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_mint, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_int, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int4', ierror)
@@ -4124,7 +4124,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_mint, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_int, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_int5', ierror)
@@ -4161,7 +4161,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, 1, mpi_dreal, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, 1, m_rdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp0', ierror)
@@ -4201,7 +4201,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dreal, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_rdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp1', ierror)
@@ -4241,7 +4241,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dreal, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_rdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp2', ierror)
@@ -4281,7 +4281,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dreal, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_rdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp3', ierror)
@@ -4321,7 +4321,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dreal, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_rdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp4', ierror)
@@ -4361,7 +4361,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dreal, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_rdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_rdp5', ierror)
@@ -4398,7 +4398,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, 1, mpi_dcmplx, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, 1, m_cdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp0', ierror)
@@ -4438,7 +4438,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dcmplx, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_cdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp1', ierror)
@@ -4478,7 +4478,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dcmplx, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_cdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp2', ierror)
@@ -4518,7 +4518,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dcmplx, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_cdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp3', ierror)
@@ -4558,7 +4558,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dcmplx, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_cdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp4', ierror)
@@ -4598,7 +4598,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_REDUCE(source, data, isize, mpi_dcmplx, opera, root, group, ierror)
+         call MPI_REDUCE(source, data, isize, m_cdp, opera, root, group, ierror)
 
 ! handler for return code
          call mp_error('mp_reduce_cdp5', ierror)
@@ -4638,7 +4638,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, 1, mpi_mint, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, 1, m_int, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int0', ierror)
@@ -4677,7 +4677,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_mint, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_int, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int1', ierror)
@@ -4716,7 +4716,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_mint, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_int, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int2', ierror)
@@ -4755,7 +4755,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_mint, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_int, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int3', ierror)
@@ -4794,7 +4794,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_mint, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_int, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int4', ierror)
@@ -4833,7 +4833,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_mint, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_int, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_int5', ierror)
@@ -4869,7 +4869,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, 1, mpi_dreal, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, 1, m_rdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp0', ierror)
@@ -4908,7 +4908,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_rdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp1', ierror)
@@ -4947,7 +4947,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_rdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp2', ierror)
@@ -4986,7 +4986,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_rdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp3', ierror)
@@ -5025,7 +5025,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_rdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp4', ierror)
@@ -5064,7 +5064,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dreal, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_rdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_rdp5', ierror)
@@ -5100,7 +5100,7 @@
          call mp_barrier(group)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, 1, mpi_dcmplx, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, 1, m_cdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp0', ierror)
@@ -5139,7 +5139,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_cdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp1', ierror)
@@ -5178,7 +5178,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_cdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp2', ierror)
@@ -5217,7 +5217,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_cdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp3', ierror)
@@ -5256,7 +5256,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_cdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp4', ierror)
@@ -5295,7 +5295,7 @@
          isize = size(source)
 
 ! invoke related mpi subroutines
-         call MPI_ALLREDUCE(source, data, isize, mpi_dcmplx, opera, group, ierror)
+         call MPI_ALLREDUCE(source, data, isize, m_cdp, opera, group, ierror)
 
 ! handler for return code
          call mp_error('mp_allreduce_cdp5', ierror)
