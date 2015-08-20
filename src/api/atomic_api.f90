@@ -8,7 +8,7 @@
 !!!           08/17/2015 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for atomic eigenvalue
-!!!           problem solver
+!!!           problem solver.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
