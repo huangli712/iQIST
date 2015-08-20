@@ -45,7 +45,7 @@ default: all
 all: exe
 
 api:
-	cp ../../api/api.mod .
+	cp ../../api/capi.mod .
 	cp ../../api/ctqmc_api.o .
 
 cssl:
