@@ -443,12 +443,12 @@
   end subroutine ctqmc_reduce_grnf
 
 !!>>> ctqmc_reduce_hist: reduce the hist from all children processes
-  subroutine ctqmc_reduce_hist(hist_mpi)
+  subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce, mp_barrier, mpi_max
 
      use control, only : mkink
-     use control, only : nprocs
+     use control, only : nprocs, myid
      use context, only : hist
 
      implicit none
@@ -456,9 +456,11 @@
 ! external arguments
 ! histogram for perturbation expansion series
      real(dp), intent(out) :: hist_mpi(mkink)
+     real(dp), intent(out) :: hist_err(mkink)
 
 ! initialize hist_mpi
      hist_mpi = zero
+     hist_err = zero
 
 ! build hist_mpi, collect data from all children processes
 # if defined (MPI)
@@ -477,6 +479,17 @@
 
 ! calculate the average
      hist_mpi = hist_mpi / real(nprocs)
+
+! build hist_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(hist - hist_mpi), hist_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_hist

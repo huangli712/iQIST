@@ -75,6 +75,7 @@
 
 ! histogram for perturbation expansion series, for mpi case
      real(dp), allocatable :: hist_mpi(:)
+     real(dp), allocatable :: hist_err(:)
 
 ! probability of atomic states, for mpi case
      real(dp), allocatable :: prob_mpi(:)
@@ -93,6 +94,7 @@
 
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
+     allocate(hist_err(mkink),             stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -288,7 +290,7 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-         call ctqmc_reduce_hist(hist_mpi)
+         call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
          call ctqmc_reduce_gtau(gtau_mpi)
@@ -311,7 +313,7 @@
 
 ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_dump_hist(hist_mpi)
+             call ctqmc_dump_hist(hist_mpi, hist_err)
          endif ! back if ( myid == master ) block
 
 ! write out the impurity green's function, gtau_mpi
@@ -368,7 +370,7 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-     call ctqmc_reduce_hist(hist_mpi)
+     call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the probability data from prob to prob_mpi
      call ctqmc_reduce_prob(prob_mpi)
@@ -430,7 +432,7 @@
 
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hist(hist)
+         call ctqmc_dump_hist(hist, hist_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final probability data, prob
@@ -479,6 +481,7 @@
 
 ! deallocate memory
      deallocate(hist_mpi )
+     deallocate(hist_err )
      deallocate(prob_mpi )
      deallocate(nmat_mpi )
      deallocate(nnmat_mpi)
