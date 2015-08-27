@@ -431,7 +431,7 @@
 !!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
 !!>>> hamiltonian matrix
   subroutine ctqmc_dump_prob(prob, prob_err)
-     use constants, only : dp, zero, half, mytmp
+     use constants, only : dp, zero, one, half, mytmp
 
      use control, only : nband, norbs, ncfgs
 
@@ -448,13 +448,13 @@
      integer  :: j
 
 ! occupation number of eigenstates
-     integer  :: noccs(ncfgs)
+     real(dp) :: noccs(ncfgs)
 
 ! net spin of eigenstates
-     integer  :: soccs(ncfgs)
+     real(dp) :: soccs(ncfgs)
 
 ! atomic basis sets
-     integer  :: basis(ncfgs,norbs)
+     real(dp) :: basis(ncfgs,norbs)
 
 ! probability of occupation number distribution
      real(dp) :: oprob(0:norbs)
@@ -467,9 +467,9 @@
      do i=1,ncfgs
          do j=1,norbs
              if ( btest(i-1,j-1) .eqv. .true. ) then
-                 basis(i,j) = 1
+                 basis(i,j) = one
              else
-                 basis(i,j) = 0
+                 basis(i,j) = zero
              endif ! back if ( btest(i-1,j-1) .eqv. .true. ) block
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
@@ -481,20 +481,20 @@
 
 ! build net spin for eigenstates
      do i=1,ncfgs
-         soccs(i) = ( sum( basis(i,1:nband) ) - sum( basis(i,nband+1:norbs) ) )
+         soccs(i) = sum( basis(i,1:nband) ) - sum( basis(i,nband+1:norbs) )
      enddo ! over i={1,ncfgs} loop
 
 ! evaluate oprob
      oprob = zero
      do i=1,ncfgs
-         j = noccs(i)
+         j = int( noccs(i) )
          oprob(j) = oprob(j) + prob(i)
      enddo ! over i={1,ncfgs} loop
 
 ! evaluate sprob
      sprob = zero
      do i=1,ncfgs
-         j = soccs(i)
+         j = int( soccs(i) )
          sprob(j) = sprob(j) + prob(i)
      enddo ! over i={1,ncfgs} loop
 
@@ -504,7 +504,7 @@
 ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(i6,4f12.6)') i, prob(i), real(noccs(i)), real(soccs(i)) * half, prob_err(i)
+         write(mytmp,'(i6,4f12.6)') i, prob(i), noccs(i), soccs(i) * half, prob_err(i)
      enddo ! over i={1,ncfgs} loop
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
