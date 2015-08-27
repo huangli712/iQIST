@@ -163,10 +163,10 @@
 
 !!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
 !!>>> frequency space
-  subroutine ctqmc_dump_grnf(rmesh, grnf)
+  subroutine ctqmc_dump_grnf(rmesh, grnf, grnf_err)
      use constants, only : dp, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
 
      implicit none
@@ -177,6 +177,7 @@
 
 ! impurity green's function
      complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
+     complex(dp), intent(in) :: grnf_err(mfreq,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -187,17 +188,17 @@
      open(mytmp, file='solver.grn.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                                   real(grnf(j,i,i)), &
                                  aimag(grnf(j,i,i)), &
-                      real(grnf(j,i+nband,i+nband)), &
-                     aimag(grnf(j,i+nband,i+nband))
+                              real(grnf_err(j,i,i)), &
+                             aimag(grnf_err(j,i,i))
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
