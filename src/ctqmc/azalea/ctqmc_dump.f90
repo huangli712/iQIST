@@ -430,7 +430,7 @@
 
 !!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
 !!>>> hamiltonian matrix
-  subroutine ctqmc_dump_prob(prob)
+  subroutine ctqmc_dump_prob(prob, prob_err)
      use constants, only : dp, zero, half, mytmp
 
      use control, only : nband, norbs, ncfgs
@@ -440,6 +440,7 @@
 ! external arguments
 ! probability data of eigenstates
      real(dp), intent(in) :: prob(ncfgs)
+     real(dp), intent(in) :: prob_err(ncfgs)
 
 ! local variables
 ! loop index
@@ -503,7 +504,7 @@
 ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(i6,3f12.6)') i, prob(i), real(noccs(i)), real(soccs(i)) * half
+         write(mytmp,'(i6,4f12.6)') i, prob(i), real(noccs(i)), real(soccs(i)) * half, prob_err(i)
      enddo ! over i={1,ncfgs} loop
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
