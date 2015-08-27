@@ -322,12 +322,7 @@
 
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
-             if ( iter /= 999 ) then
-                 call ctqmc_dump_gtau(tmesh, gtau_mpi, gtau_err)
-             else
-                 call ctqmc_dump_gbin(cstep / nwrite, tmesh, gtau_mpi)
-                 write(mystd,'(4X,a)') '>>> quantum impurity solver status: binned'
-             endif ! back if ( iter /= 999 ) block
+             call ctqmc_dump_gtau(tmesh, gtau_mpi, gtau_err)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
