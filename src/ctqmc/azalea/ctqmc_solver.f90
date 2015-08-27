@@ -83,9 +83,11 @@
 
 ! impurity occupation number matrix, for mpi case
      real(dp), allocatable :: nmat_mpi(:)
+     real(dp), allocatable :: nmat_err(:)
 
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
+     real(dp), allocatable :: nnmat_err(:,:)
 
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
@@ -109,11 +111,13 @@
      endif ! back if ( istat /= 0 ) block
 
      allocate(nmat_mpi(norbs),             stat=istat)
+     allocate(nmat_err(norbs),             stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
+     allocate(nnmat_err(norbs,norbs),      stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -380,7 +384,7 @@
 
 ! collect the occupation matrix data from nmat to nmat_mpi
 ! collect the double occupation matrix data from nnmat to nnmat_mpi
-     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
      call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
@@ -394,7 +398,9 @@
      prob_err  = prob_err  * real(ncarlo) / real(nsweep)
 
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
+     nmat_err  = nmat_err  * real(nmonte) / real(nsweep)
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
+     nnmat_err = nnmat_err * real(nmonte) / real(nsweep)
 
      gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
      gtau_err  = gtau_err  * real(ncarlo) / real(nsweep)
@@ -415,6 +421,7 @@
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_nmat(symm, nmat)
+         call ctqmc_symm_nmat(symm, nmat_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (gtau) over spin or over bands
@@ -450,7 +457,7 @@
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_nmat(nmat, nnmat)
+         call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
@@ -493,7 +500,9 @@
      deallocate(prob_mpi )
      deallocate(prob_err )
      deallocate(nmat_mpi )
+     deallocate(nmat_err )
      deallocate(nnmat_mpi)
+     deallocate(nnmat_err)
      deallocate(gtau_mpi )
      deallocate(gtau_err )
      deallocate(grnf_mpi )
