@@ -534,9 +534,9 @@
   end subroutine ctqmc_reduce_hist
 
 !!>>> ctqmc_reduce_prob: reduce the prob from all children processes
-  subroutine ctqmc_reduce_prob(prob_mpi)
+  subroutine ctqmc_reduce_prob(prob_mpi, prob_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce, mp_barrier, mpi_max
 
      use control, only : ncfgs
      use control, only : nprocs
@@ -547,9 +547,11 @@
 ! external arguments
 ! probability of atomic states
      real(dp), intent(out) :: prob_mpi(ncfgs)
+     real(dp), intent(out) :: prob_err(ncfgs)
 
 ! initialize prob_mpi
      prob_mpi = zero
+     prob_err = zero
 
 ! build prob_mpi, collect data from all children processes
 # if defined (MPI)
@@ -568,6 +570,17 @@
 
 ! calculate the average
      prob_mpi = prob_mpi / real(nprocs)
+
+! build prob_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(prob - prob_mpi), prob_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_prob
