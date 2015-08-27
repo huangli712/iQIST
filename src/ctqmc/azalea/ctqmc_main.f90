@@ -51,7 +51,6 @@
 !! ======
 !!
 !! terminal output
-!! solver.green.bin.*
 !! solver.green.dat
 !! solver.grn.dat
 !! solver.weiss.dat
