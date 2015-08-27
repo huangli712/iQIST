@@ -69,7 +69,7 @@ ctqmc-exe: $(exe_obj)
 
 lib: api cssl csml ctqmc-lib
 ctqmc-lib: $(lib_obj)
-	$(ARCHIVER) libctqmc.a $(objects)
+	$(ARCHIVER) libctqmc.a $(lib_obj)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
