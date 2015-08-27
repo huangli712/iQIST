@@ -416,9 +416,9 @@
   end subroutine ctqmc_reduce_gtau
 
 !!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
-  subroutine ctqmc_reduce_grnf(grnf_mpi)
+  subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp, czero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce, mp_barrier, mpi_max
 
      use control, only : norbs
      use control, only : mfreq
@@ -430,9 +430,11 @@
 ! external arguments
 ! impurity green's function
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
+     complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
 
 ! initialize grnf_mpi
      grnf_mpi = czero
+     grnf_err = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
@@ -451,6 +453,17 @@
 
 ! calculate the average
      grnf_mpi = grnf_mpi / real(nprocs)
+
+! build grnf_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(grnf - grnf_mpi, grnf_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_grnf

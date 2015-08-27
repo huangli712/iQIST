@@ -92,6 +92,7 @@
 
 ! impurity green's function, matsubara frequency axis, for mpi case
      complex(dp), allocatable :: grnf_mpi(:,:,:)
+     complex(dp), allocatable :: grnf_err(:,:,:)
 
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
@@ -122,6 +123,7 @@
      endif ! back if ( istat /= 0 ) block
 
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -382,7 +384,7 @@
      call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
-     call ctqmc_reduce_grnf(grnf_mpi)
+     call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
@@ -394,6 +396,7 @@
      gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
      gtau_err  = gtau_err  * real(ncarlo) / real(nsweep)
      grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
+     grnf_err  = grnf_err  * real(nmonte) / real(nsweep)
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
@@ -420,6 +423,7 @@
 ! symmetrize the impurity green's function (grnf) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, grnf)
+         call ctqmc_symm_grnf(symm, grnf_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity self-energy function (sig2) over spin or over bands
@@ -453,7 +457,7 @@
 
 ! write out the final impurity green's function data, grnf
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_grnf(rmesh, grnf)
+         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final self-energy function data, sig2
@@ -489,6 +493,7 @@
      deallocate(gtau_mpi )
      deallocate(gtau_err )
      deallocate(grnf_mpi )
+     deallocate(grnf_err )
 
      return
   end subroutine ctqmc_impurity_solver
