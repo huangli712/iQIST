@@ -38,7 +38,7 @@ default: all
 all: exe
 
 api:
-	cp ../../src/api/api.mod .
+	cp ../../src/api/capi.mod .
 	cp ../../src/ctqmc/azalea/libctqmc.a .
 
 cssl:
