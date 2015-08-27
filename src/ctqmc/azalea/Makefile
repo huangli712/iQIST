@@ -41,8 +41,8 @@ CAPI = ctqmc_api.o
 CLIB = libMM.a
 
 objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3)
-exe_obj = $(objects) $(main) $(CAPI) $(CLIB)
-lib_obj = $(objects) $(open) $(CAPI) $(CLIB)
+exe_obj = $(objects) $(main) $(CLIB)
+lib_obj = $(objects) $(open) $(CAPI)
 
 default: all
 
