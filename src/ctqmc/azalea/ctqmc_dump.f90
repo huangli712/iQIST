@@ -31,10 +31,10 @@
 
 !!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
 !!>>> time space
-  subroutine ctqmc_dump_gtau(tmesh, gtau)
+  subroutine ctqmc_dump_gtau(tmesh, gtau, gtau_err)
      use constants, only : dp, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
 
      implicit none
@@ -45,6 +45,7 @@
 
 ! impurity green's function
      real(dp), intent(in) :: gtau(ntime,norbs,norbs)
+     real(dp), intent(in) :: gtau_err(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -53,21 +54,23 @@
 
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
+     real(dp) :: gaux_err(ntime,norbs,norbs)
 
 ! evaluate gaux first
      call ctqmc_make_gtau(gtau, gaux)
+     call ctqmc_make_gtau(gtau_err, gaux_err)
 
 ! open data file: solver.green.dat
      open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux_err(j,i,i)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)

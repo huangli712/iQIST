@@ -363,9 +363,9 @@
 !!========================================================================
 
 !!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
-  subroutine ctqmc_reduce_gtau(gtau_mpi)
+  subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce, mp_barrier, mpi_max
 
      use control, only : norbs
      use control, only : ntime
@@ -377,9 +377,11 @@
 ! external arguments
 ! impurity green's function
      real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
+     real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
 
 ! initialize gtau_mpi
      gtau_mpi = zero
+     gtau_err = zero
 
 ! build gtau_mpi, collect data from all children processes
 # if defined (MPI)
@@ -398,6 +400,17 @@
 
 ! calculate the average
      gtau_mpi = gtau_mpi / real(nprocs)
+
+! build gtau_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(gtau - gtau_mpi), gtau_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_gtau
@@ -448,7 +461,7 @@
      use mmpi, only : mp_allreduce, mp_barrier, mpi_max
 
      use control, only : mkink
-     use control, only : nprocs, myid
+     use control, only : nprocs
      use context, only : hist
 
      implicit none

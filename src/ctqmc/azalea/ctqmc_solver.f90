@@ -88,6 +88,7 @@
 
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
+     real(dp), allocatable :: gtau_err(:,:,:)
 
 ! impurity green's function, matsubara frequency axis, for mpi case
      complex(dp), allocatable :: grnf_mpi(:,:,:)
@@ -115,6 +116,7 @@
      endif ! back if ( istat /= 0 ) block
 
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
+     allocate(gtau_err(ntime,norbs,norbs), stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -293,10 +295,11 @@
          call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
-         call ctqmc_reduce_gtau(gtau_mpi)
+         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
 ! gtau_mpi need to be scaled properly before written
          gtau_mpi = gtau_mpi * real(ncarlo) / real(cstep)
+         gtau_err = gtau_err * real(ncarlo) / real(cstep)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
@@ -305,6 +308,7 @@
 ! symmetrize the impurity green's function over spin or over bands
          if ( issun == 2 .or. isspn == 1 ) then
              call ctqmc_symm_gtau(symm, gtau_mpi)
+             call ctqmc_symm_gtau(symm, gtau_err)
          endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 !!========================================================================
@@ -319,7 +323,7 @@
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
              if ( iter /= 999 ) then
-                 call ctqmc_dump_gtau(tmesh, gtau_mpi)
+                 call ctqmc_dump_gtau(tmesh, gtau_mpi, gtau_err)
              else
                  call ctqmc_dump_gbin(cstep / nwrite, tmesh, gtau_mpi)
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: binned'
@@ -380,7 +384,7 @@
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
-     call ctqmc_reduce_gtau(gtau_mpi)
+     call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
      call ctqmc_reduce_grnf(grnf_mpi)
@@ -393,6 +397,7 @@
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
 
      gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
+     gtau_err  = gtau_err  * real(ncarlo) / real(nsweep)
      grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
 
 ! build atomic green's function and self-energy function using improved
@@ -414,6 +419,7 @@
 ! symmetrize the impurity green's function (gtau) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, gtau)
+         call ctqmc_symm_gtau(symm, gtau_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (grnf) over spin or over bands
@@ -447,7 +453,7 @@
 
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_gtau(tmesh, gtau)
+         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, grnf
@@ -486,6 +492,7 @@
      deallocate(nmat_mpi )
      deallocate(nnmat_mpi)
      deallocate(gtau_mpi )
+     deallocate(gtau_err )
      deallocate(grnf_mpi )
 
      return
