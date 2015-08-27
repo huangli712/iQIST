@@ -417,7 +417,7 @@
 
 !!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
-     use constants, only : dp, czero
+     use constants, only : dp, zero, czero, czi
      use mmpi, only : mp_allreduce, mp_barrier, mpi_max
 
      use control, only : norbs
@@ -431,6 +431,16 @@
 ! impurity green's function
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
      complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
+
+! local variables
+     real(dp), allocatable :: re_err(:,:,:)
+     real(dp), allocatable :: im_err(:,:,:)
+
+     allocate(re_err(mfreq,norbs,norbs))
+     allocate(im_err(mfreq,norbs,norbs))
+
+     re_err = zero
+     im_err = zero
 
 ! initialize grnf_mpi
      grnf_mpi = czero
@@ -458,12 +468,15 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(grnf - grnf_mpi, grnf_err, mpi_max)
+     call mp_allreduce(abs( real(grnf - grnf_mpi)), re_err, mpi_max)
+     call mp_allreduce(abs(aimag(grnf - grnf_mpi)), im_err, mpi_max)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+     grnf_err = re_err + im_err * czi
 
      return
   end subroutine ctqmc_reduce_grnf
