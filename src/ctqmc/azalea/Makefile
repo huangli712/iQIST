@@ -36,9 +36,13 @@ lev1 = ctqmc_flavor.o ctqmc_update.o
 lev2 = ctqmc_record.o ctqmc_status.o ctqmc_stream.o ctqmc_util.o
 lev3 = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
-MAPI = ctqmc_api.o libMM.a
+open = ctqmc_open.o
+CAPI = ctqmc_api.o
+CLIB = libMM.a
 
-objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(main) $(MAPI)
+objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3)
+exe_obj = $(objects) $(main) $(CAPI) $(CLIB)
+lib_obj = $(objects) $(open) $(CAPI) $(CLIB)
 
 default: all
 
@@ -59,15 +63,12 @@ csml:
 	cp ../../common/parser.mod .
 	cp ../../common/linkedlist.mod .
 
-touch:
-	touch ctqmc_main.f90
-
 exe: api cssl csml ctqmc-exe
-ctqmc-exe: $(objects)
-	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
+ctqmc-exe: $(exe_obj)
+	$(LINKER) $(exe_obj) -o ctqmc $(LFLAGS) $(LIBS)
 
-lib: api cssl csml touch ctqmc-lib
-ctqmc-lib: $(objects)
+lib: api cssl csml ctqmc-lib
+ctqmc-lib: $(lib_obj)
 	$(ARCHIVER) libctqmc.a $(objects)
 
 .f90.o:

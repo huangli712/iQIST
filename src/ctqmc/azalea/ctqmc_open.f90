@@ -38,7 +38,7 @@
      return
   end subroutine cat_solver_status
 
-# if !defined (MPY)
+# if !defined (PYAPI)
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> fortran version
@@ -118,7 +118,7 @@
      return
   end subroutine cat_init_ctqmc
 
-# else   /* MPY */
+# else   /* PYAPI */
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> python version
@@ -167,7 +167,7 @@
      return
   end subroutine cat_init_ctqmc
 
-# endif  /* MPY */
+# endif  /* PYAPI */
 
 !!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
