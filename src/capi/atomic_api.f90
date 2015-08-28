@@ -13,6 +13,187 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! This module can provide a light weight interface (i.e., application
+!! programming interface, API) for Fortran/Python language to the atomic
+!! eigenvalue problem solver. The user can use it to access the jasmine
+!! code.
+!!
+!! How to build the Fortran API
+!! ============================
+!!
+!! 1. edit src/build/make.sys
+!! --------------------------
+!!
+!! Activate the API macro (keep MPY macro disable).
+!!
+!! 2. compile api
+!! --------------
+!!
+!! Please compile api (this directory) again. You can use the 'make api'
+!! command in the src/build directory, or use the 'make' command in the
+!! src/api directory.
+!!
+!! 3. compile the jasmine component
+!! --------------------------------
+!!
+!! Please compile the desired jasmine component again. You have to clean it
+!! at first, and then compile it. Noted that you have to compile it in the
+!! library mode, i.e., you must use 'make lib' (in the src/tools/jasmine
+!! directory) or 'make jasmine-lib' (in the src/build directory), etc.
+!!
+!! 4. get what you need
+!! --------------------
+!!
+!! If everything is OK, you will find the libatomic.a file in the jasmine
+!! component folder (for example, src/tools/jasmine directory). Please copy
+!! it (together with src/api/japi.mod) to your own directory. That's all.
+!!
+!! How to build the Python API
+!! ===========================
+!!
+!! 1. edit src/build/make.sys
+!! --------------------------
+!!
+!! Activate the API macro and MPY macro at the same time.
+!!
+!! 2. compile api
+!! --------------
+!!
+!! Please compile api (this directory) again. You can use the 'make api'
+!! command in the src/build directory, or use the 'make' command in the
+!! src/api directory.
+!!
+!! 3. compile the jasmine component
+!! --------------------------------
+!!
+!! Please compile the desired jasmine component again. You have to clean it
+!! at first, and then compile it. Noted that you have to compile it in the
+!! library mode, i.e., you must use 'make lib' (in the src/tools/jasmine
+!! directory) or 'make jasmine-lib' (in the src/build directory), etc.
+!!
+!! 4. generate pyjasmine.so
+!! ------------------------
+!!
+!! In the src/api directory, just input 'make pyjasmine' command and wait.
+!! At last you will get the pyjasmine.so which is what you need.
+!!
+!! Usage (Fortran version)
+!! =======================
+!!
+!! In the following, we will use an example to show you how to use api to
+!! control the jasmine code. When you want to compile your code, you have
+!! to ensure that japi.mod and libatomic.a are in correct PATH. Or else
+!! the compiler will complain that it can not find them.
+!!
+!! 1. import api support
+!! ---------------------
+!!
+!! use japi
+!!
+!! 2. create T_jasmine
+!! -------------------
+!!
+!! type (T_jasmine) :: I_solver ! define I_solver
+!! ...
+!! I_solver%ibasis = 1  ! setup I_solver
+!! I_solver%ictqmc = 1
+!! ...
+!! I_solver%Uc     = 4.0
+!! I_solver%Uv     = 4.0
+!! I_solver%Jz     = 0.0
+!! I_solver%Js     = 0.0
+!! I_solver%Jp     = 0.0
+!! ...
+!!
+!! Note: Every parameter for the atomic eigenvalue problem solver must be
+!! initialized here.
+!!
+!! 3. init the atomic eigenvalue problem solver
+!! --------------------------------------------
+!!
+!! call init_atomic(I_solver)
+!!
+!! 4. start the atomic eigenvalue problem solver
+!! ---------------------------------------------
+!!
+!! call exec_atomic()
+!!
+!! 5. close the atomic eigenvalue problem solver
+!! ---------------------------------------------
+!!
+!! call stop_atomic()
+!!
+!! 6. access the computational results
+!! -----------------------------------
+!!
+!! You have to write your fortran codes manually to access the results.
+!!
+!! Usage (Python version)
+!! ======================
+!!
+!! In the following, we will use an example to show you how to use api to
+!! control the jasmine code. When you want to run your Python code, you
+!! have to ensure that pyjasmine.so is in correct PATH. Or else the Python
+!! will complain that it can not find iqist.
+!!
+!! 1. import pyjasmine
+!! -------------------
+!!
+!! from pyjasmine import japi as atomic
+!!
+!! You have to ensure that the pyjasmine package is in the sys.path. For
+!! example, you can use the following code to modify sys.path
+!!
+!! sys.path.append('../../src/api/')
+!!
+!! 2. configure the atomic eigenvalue problem solver
+!! -------------------------------------------------
+!!
+!! You have to setup the key parameters for the atomic eigenvalue problem
+!! solver, and write them down to the 'atom.config.in' file. Now you can
+!! do that manually. On the other hand, we provide a useful Python module
+!! to facilitate this work (see src/tools/hibiscus/script/u_atomic.py).
+!!
+!! 3. init the atomic eigenvalue problem solver
+!! --------------------------------------------
+!!
+!! atomic.init_atomic() # there is no parameter for init_atomic()
+!!
+!! 4. start the atomic eigenvalue problem solver
+!! ---------------------------------------------
+!!
+!! atomic.exec_atomic()
+!!
+!! 5. close the atomic eigenvalue problem solver
+!! ---------------------------------------------
+!!
+!! atomic.stop_atomic()
+!!
+!! 6. access the computational results
+!! -----------------------------------
+!!
+!! You have to write your own Python codes to access the results.
+!!
+!! Examples
+!! ========
+!!
+!! Fortran version
+!! ---------------
+!!
+!! N/A.
+!!
+!! Python version
+!! --------------
+!!
+!! see iqist/tutor/t964/template.py.
+!!
+!!
+
   module japi
      implicit none
 
