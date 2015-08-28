@@ -278,11 +278,11 @@ clean-common:
 	cd ../common/; pwd; make clean
 
 # targets for api: api
-api:
-	cd ../api/; pwd; make
+capi:
+	cd ../capi/; pwd; make
 
-clean-api:
-	cd ../api/; pwd; make clean
+clean-capi:
+	cd ../capi/; pwd; make clean
 
 # targets for doc: doc
 doc:
