@@ -87,7 +87,7 @@ $ ./setup.sh
 $ cd iqist/src/build
 $ editor make.sys
 $ make common
-$ make api
+$ make capi
 $ make component (component could be azalea, gardenia, narcissus, etc.)
 $ cd ../../bin
 $ ./setup.sh
@@ -98,7 +98,7 @@ $ ./setup.sh
 $ cd iqist/src/build
 $ editor make.sys
 $ make common
-$ make api
+$ make capi
 $ make component-lib (component could be azalea, gardenia, narcissus, etc.)
 $ cd ../../bin
 $ ./setup.sh
@@ -109,7 +109,7 @@ $ ./setup.sh
 $ cd iqist/src/build
 $ editor make.sys
 $ make common
-$ make api
+$ make capi
 $ make component-pylib (component could be azalea, gardenia, narcissus, etc.)
 $ cd ../../bin
 $ ./setup.sh
