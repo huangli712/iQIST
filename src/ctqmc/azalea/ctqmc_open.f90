@@ -220,7 +220,7 @@
      integer, intent(in)     :: size_t
 
 ! hybridization function
-     complex(dp), intent(in) :: hybf_t(size_t)
+     complex(8), intent(in) :: hybf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -280,7 +280,7 @@
      integer, intent(in)  :: size_t
 
 ! impurity level
-     real(dp), intent(in) :: eimp_t(size_t)
+     real(8), intent(in) :: eimp_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -310,10 +310,10 @@
      integer, intent(in)  :: size_t
 
 ! screening function K(\tau)
-     real(dp), intent(in) :: ktau_t(size_t)
+     real(8), intent(in) :: ktau_t(size_t)
 
 ! first derivate of screening function K'(\tau)
-     real(dp), intent(in) :: ptau_t(size_t)
+     real(8), intent(in) :: ptau_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -344,7 +344,7 @@
      integer, intent(in)  :: size_t
 
 ! Coulomb interaction matrix
-     real(dp), intent(in) :: uumat_t(size_t)
+     real(8), intent(in) :: uumat_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -377,7 +377,7 @@
      integer, intent(in)      :: size_t
 
 ! impurity green's function
-     complex(dp), intent(out) :: grnf_t(size_t)
+     complex(8), intent(out) :: grnf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -410,7 +410,7 @@
      integer, intent(in)      :: size_t
 
 ! self-energy function
-     complex(dp), intent(out) :: sigf_t(size_t)
+     complex(8), intent(out) :: sigf_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -442,7 +442,7 @@
      integer, intent(in)   :: size_t
 
 ! occupation number
-     real(dp), intent(out) :: nmat_t(size_t)
+     real(8), intent(out) :: nmat_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
@@ -474,7 +474,7 @@
      integer, intent(in)   :: size_t
 
 ! double occupation number
-     real(dp), intent(out) :: nnmat_t(size_t)
+     real(8), intent(out) :: nnmat_t(size_t)
 
 ! declare f2py directives
 !F2PY intent(in) size_t
