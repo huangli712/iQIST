@@ -153,8 +153,8 @@ help-more:
 	@echo '     common-lib        build csml modules and cssl library  '
 	@echo '     clean-common      clean common directory               '
 	@echo
-	@echo '     doc               generate document                    '
-	@echo '     doc-lib           generate document                    '
+	@echo '     doc               generate documents                   '
+	@echo '     doc-lib           generate documents                   '
 	@echo '     clean-doc         clean doc directory                  '
 
 # all-in-one building target
