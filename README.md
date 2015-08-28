@@ -8,7 +8,7 @@ The iQIST is still in heavy development. The codes are extremely unstable. Some 
 
 ### Version
 
-v0.6.4 @ 2015.01.06T (beta)
+v0.6.4 @ 2015.01.06T (devel)
 
 ### License
 
@@ -42,7 +42,7 @@ GNU General Public License Version 3
     * Spin-spin correlation function in imaginary time space
     * Orbital-orbital correlation function in imaginary time space
     * Fidelity susceptibility
-    * <k^2> - <k>^2 - <k>
+    * kinetic energy fluctuation <k^2> - <k>^2 - <k>
 
 * Fast algorithms
     * Segment algorithm for density-density interaction
@@ -70,6 +70,7 @@ GNU General Public License Version 3
     * Kramers-Kronig transformation
     * Pade approximation
     * Polynomial fitting for self-energy function
+    * etc.
 
 ### Installation
 * Full Installation
@@ -88,6 +89,28 @@ $ editor make.sys
 $ make common
 $ make api
 $ make component (component could be azalea, gardenia, narcissus, etc.)
+$ cd ../../bin
+$ ./setup.sh
+```
+
+* Generate Fortran Library
+```sh
+$ cd iqist/src/build
+$ editor make.sys
+$ make common
+$ make api
+$ make component-lib (component could be azalea, gardenia, narcissus, etc.)
+$ cd ../../bin
+$ ./setup.sh
+```
+
+* Generate Python Module
+```sh
+$ cd iqist/src/build
+$ editor make.sys
+$ make common
+$ make api
+$ make component-pylib (component could be azalea, gardenia, narcissus, etc.)
 $ cd ../../bin
 $ ./setup.sh
 ```
@@ -120,7 +143,7 @@ Computer Physics Communications 195, 140 (2015) or arXiv:1409.7573 (2014)
 
 ```sh
 Li Huang
-Institute of Materials, Chinese Academy of Engineering Physics, Sichuan, PRC
+Institute of Materials, China Academy of Engineering Physics, Sichuan, PRC
 email: lihuang.dmft at gmail.com
 ```
 
