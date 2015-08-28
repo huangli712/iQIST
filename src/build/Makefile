@@ -85,7 +85,7 @@ help:
 	@echo '     clean-tool        clean objects for auxiliary tools              '
 	@echo
 	@echo '     other             build documents                                '
-	@echo '     other-lib         do nothing                                     '
+	@echo '     other-lib         build documents                                '
 	@echo '     clean-other       clean doc directories                          '
 
 help-more:
@@ -161,7 +161,7 @@ help-more:
 all: capi common solver tool other
 
 # all-in-one building target (lib mode)
-lib: capi common solver-lib tool-lib other-lib
+lib: capi-lib common-lib solver-lib tool-lib other-lib
 
 # all-in-one cleaning target
 clean: clean-capi clean-common clean-solver clean-tool clean-other
@@ -172,7 +172,7 @@ solver: capi common \
         begonia lavender \
         pansy manjushaka \
         daisy
-solver-lib: capi common \
+solver-lib: capi-lib common-lib \
 	    azalea-lib gardenia-lib narcissus-lib \
 	    begonia-lib lavender-lib \
 	    pansy-lib manjushaka-lib \
@@ -185,12 +185,12 @@ clean-solver: clean-capi clean-common \
 
 # targets for tool
 tool: capi common jasmine hibiscus
-tool-lib: capi common jasmine-lib hibiscus
+tool-lib: capi-lib common-lib jasmine-lib hibiscus-lib
 clean-tool: clean-capi clean-common clean-jasmine clean-hibiscus
 
 # targets for other
 other: doc
-other-lib:
+other-lib: doc-lib
 clean-other: clean-doc
 
 # targets for ctqmc codes: segment version (azalea, gardenia, narcissus)
@@ -310,6 +310,9 @@ clean-jasmine:
 hibiscus:
 	cd ../tools/hibiscus/; pwd; make
 
+hibiscus-lib:
+	cd ../tools/hibiscus/; pwd; make
+
 clean-hibiscus:
 	cd ../tools/hibiscus/; pwd; make clean
 
@@ -317,11 +320,17 @@ clean-hibiscus:
 capi:
 	cd ../capi/; pwd; make
 
+capi-lib:
+	cd ../capi/; pwd; make
+
 clean-capi:
 	cd ../capi/; pwd; make clean
 
 # targets for common: common
 common:
+	cd ../common/; pwd; make
+
+common-lib:
 	cd ../common/; pwd; make
 
 clean-common:
