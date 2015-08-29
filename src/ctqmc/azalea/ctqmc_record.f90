@@ -484,6 +484,10 @@
 ! construct the final grnf_err
      grnf_err = re_err + im_err * czi
 
+! deallocate memory
+     deallocate(re_err)
+     deallocate(im_err)
+
      return
   end subroutine ctqmc_reduce_grnf
 
