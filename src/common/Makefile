@@ -52,7 +52,6 @@ clean:
 
 clean-dat:
 	rm -f *.dat
-	rm -f *.bin.*
 	rm -f *.out
 
 clean-all: clean clean-dat
