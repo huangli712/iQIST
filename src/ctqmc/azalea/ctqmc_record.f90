@@ -365,7 +365,8 @@
 !!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier, mpi_max
+     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : ntime
@@ -379,7 +380,7 @@
      real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
 
-! initialize gtau_mpi
+! initialize gtau_mpi and gtau_err
      gtau_mpi = zero
      gtau_err = zero
 
@@ -418,7 +419,8 @@
 !!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp, zero, czero, czi
-     use mmpi, only : mp_allreduce, mp_barrier, mpi_max
+     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : mfreq
@@ -433,16 +435,19 @@
      complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
 
 ! local variables
+! used to store the real and imaginary parts of impurity green's function
      real(dp), allocatable :: re_err(:,:,:)
      real(dp), allocatable :: im_err(:,:,:)
 
+! allocate memory
      allocate(re_err(mfreq,norbs,norbs))
      allocate(im_err(mfreq,norbs,norbs))
 
+! initialize re_err and im_err 
      re_err = zero
      im_err = zero
 
-! initialize grnf_mpi
+! initialize grnf_mpi and grnf_err
      grnf_mpi = czero
      grnf_err = czero
 
@@ -476,6 +481,7 @@
 
 # endif /* MPI */
 
+! construct the final grnf_err
      grnf_err = re_err + im_err * czi
 
      return
