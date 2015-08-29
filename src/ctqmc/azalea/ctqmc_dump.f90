@@ -423,7 +423,7 @@
 
 !!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
 !!>>> hamiltonian matrix
-  subroutine ctqmc_dump_prob(prob, prob_err)
+  subroutine ctqmc_dump_prob(prob, perr)
      use constants, only : dp, zero, one, half, mytmp
 
      use control, only : nband, norbs, ncfgs
@@ -433,7 +433,7 @@
 ! external arguments
 ! probability data of eigenstates
      real(dp), intent(in) :: prob(ncfgs)
-     real(dp), intent(in) :: prob_err(ncfgs)
+     real(dp), intent(in) :: perr(ncfgs)
 
 ! local variables
 ! loop index
@@ -497,18 +497,18 @@
 ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(i6,4f12.6)') i, prob(i), noccs(i), soccs(i) * half, prob_err(i)
+         write(mytmp,'(i6,4f12.6)') i, prob(i), noccs(i), soccs(i) * half, perr(i)
      enddo ! over i={1,ncfgs} loop
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
-         write(mytmp,'(i6,2f12.6)') i+1, real(i), oprob(i)
+         write(mytmp,'(i6,2f12.6)') i + 1, real(i), oprob(i)
      enddo ! over i={0,norbs} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(oprob)
 
      write(mytmp,'(a)') '# spin probability: index | spin | prob'
      do i=-nband,nband
-         write(mytmp,'(i6,2f12.6)') i+nband+1, i*half, sprob(i)
+         write(mytmp,'(i6,2f12.6)') i + nband + 1, i * half, sprob(i)
      enddo ! over i={-nband,nband} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
 
