@@ -100,36 +100,17 @@
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
      allocate(hist_err(mkink),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(prob_mpi(ncfgs),             stat=istat)
      allocate(prob_err(ncfgs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(nmat_mpi(norbs),             stat=istat)
      allocate(nmat_err(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
      allocate(nnmat_err(norbs,norbs),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
      allocate(gtau_err(ntime,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
      allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
+
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -393,18 +374,18 @@
      call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
-     hist  = hist_mpi
+     hist  = hist_mpi  * one
      prob  = prob_mpi  * real(ncarlo) / real(nsweep)
-     prob_err  = prob_err  * real(ncarlo) / real(nsweep)
-
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
-     nmat_err  = nmat_err  * real(nmonte) / real(nsweep)
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
-     nnmat_err = nnmat_err * real(nmonte) / real(nsweep)
-
      gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
-     gtau_err  = gtau_err  * real(ncarlo) / real(nsweep)
      grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
+
+     hist_err  = hist_err  * one
+     prob_err  = prob_err  * real(ncarlo) / real(nsweep)
+     nmat_err  = nmat_err  * real(nmonte) / real(nsweep)
+     nnmat_err = nnmat_err * real(nmonte) / real(nsweep)
+     gtau_err  = gtau_err  * real(ncarlo) / real(nsweep)
      grnf_err  = grnf_err  * real(nmonte) / real(nsweep)
 
 ! build atomic green's function and self-energy function using improved
