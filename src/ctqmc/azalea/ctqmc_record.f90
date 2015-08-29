@@ -596,7 +596,8 @@
 !!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier, mpi_max
+     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -613,9 +614,10 @@
      real(dp), intent(out) :: nnmat_mpi(norbs,norbs)
      real(dp), intent(out) :: nnmat_err(norbs,norbs)
 
-! initialize nmat_mpi and nnmat_mpi
+! initialize nmat_mpi and nnmat_mpi, nmat_err and nnmat_err
      nmat_mpi = zero
      nnmat_mpi = zero
+
      nmat_err = zero
      nnmat_err = zero
 
