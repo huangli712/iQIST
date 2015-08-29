@@ -163,7 +163,7 @@
 
 !!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
 !!>>> frequency space
-  subroutine ctqmc_dump_grnf(rmesh, grnf, grnf_err)
+  subroutine ctqmc_dump_grnf(rmesh, grnf, gerr)
      use constants, only : dp, mytmp
 
      use control, only : norbs
@@ -177,7 +177,7 @@
 
 ! impurity green's function
      complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
-     complex(dp), intent(in) :: grnf_err(mfreq,norbs,norbs)
+     complex(dp), intent(in) :: gerr(mfreq,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -191,10 +191,8 @@
      do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                  real(grnf(j,i,i)), &
-                                 aimag(grnf(j,i,i)), &
-                              real(grnf_err(j,i,i)), &
-                             aimag(grnf_err(j,i,i))
+              real(grnf(j,i,i)), aimag(grnf(j,i,i)), &
+              real(gerr(j,i,i)), aimag(gerr(j,i,i))
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
