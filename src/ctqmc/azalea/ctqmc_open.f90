@@ -1,28 +1,27 @@
 !!!-----------------------------------------------------------------------
 !!! project : azalea
 !!! program : cat_solver_id
-!!!           cat_solver_status
+!!!           cat_solver_status <<<---
 !!!           cat_init_ctqmc
 !!!           cat_exec_ctqmc
-!!!           cat_stop_ctqmc
+!!!           cat_stop_ctqmc    <<<---
 !!!           cat_set_hybf
 !!!           cat_set_symm
 !!!           cat_set_eimp
 !!!           cat_set_ktau
-!!!           cat_set_uumat
+!!!           cat_set_uumat     <<<---
 !!!           cat_get_grnf
 !!!           cat_get_sigf
 !!!           cat_get_nmat
-!!!           cat_get_nnmat
+!!!           cat_get_nnmat     <<<---
 !!! source  : ctqmc_open.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 08/12/2015 by li huang (created)
 !!!           08/17/2015 by li huang (last modified)
-!!! purpose : dump key observables produced by the hybridization expansion
-!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!!!           impurity solver and dynamical mean field theory (DMFT) self
-!!!           -consistent engine to disk files
+!!! purpose : to provide necessary application programming interface for
+!!!           the hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
