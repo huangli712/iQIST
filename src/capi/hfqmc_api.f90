@@ -153,7 +153,7 @@
 !! integer :: size_t
 !! complex(dp) :: wssf(size_t)
 !! ...
-!! call cat_set_wssf(size_t, wssf) ! setup bath weiss's function: hybf
+!! call cat_set_wssf(size_t, wssf) ! setup bath weiss's function: wssf
 !!
 !! Note: This step is optional, because the hfqmc will provide default
 !! values for wssf, symm, eimp, and ktau or read them from external
