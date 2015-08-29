@@ -17,8 +17,9 @@
 !! =======
 !!
 !! If you want to obtain an executable program, please go to src/build/,
-!! open make.sys and comment out the API flag. On the contrary, if you
-!! want to compile azalea as a library, please activate the API flag.
+!! type 'make azalea' command in the terminal. On the contrary, if you
+!! want to compile azalea as a library, please use 'make azalea-lib'. If
+!! you want to obtain a python module, please use 'make azalea-pylib'.
 !!
 !! Introduction
 !! ============
