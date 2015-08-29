@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/api directory.
+## Makefile for iqist/src/capi directory.
 ##
 ## Usage
 ## =====
