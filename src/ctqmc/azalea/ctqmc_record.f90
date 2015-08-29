@@ -443,7 +443,7 @@
      allocate(re_err(mfreq,norbs,norbs))
      allocate(im_err(mfreq,norbs,norbs))
 
-! initialize re_err and im_err 
+! initialize re_err and im_err
      re_err = zero
      im_err = zero
 
