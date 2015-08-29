@@ -30,27 +30,27 @@
 !!
 !! Setup the compiling environment correctly.
 !!
-!! 2. compile api
-!! --------------
+!! 2. compile capi and common
+!! --------------------------
 !!
-!! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory, or use the 'make' command in the
-!! src/api directory.
+!! Please compile capi and common at first. You can type the 'make capi'
+!! and 'make common' commands in the src/build directory, or use the 'make'
+!! command in the src/capi and src/common directories.
 !!
 !! 3. compile the hfqmc component
 !! ------------------------------
 !!
-!! Please compile the desired hfqmc component again. You have to clean it
-!! at first, and then compile it. Noted that you have to compile it in the
-!! library mode, i.e., you must use 'make lib' (in the src/hfqmc/daisy
-!! directory) or 'make daisy-lib' (in the src/build directory), etc.
+!! Noted that you have to compile it in the library mode, i.e., you must
+!! use 'make lib' in the src/hfqmc/daisy directory or 'make daisy-lib'
+!! in the src/build directory.
 !!
 !! 4. get what you need
 !! --------------------
 !!
 !! If everything is OK, you will find the libhfqmc.a file in the hfqmc
 !! component folder (for example, src/hfqmc/daisy directory). Please copy
-!! it (together with src/api/dapi.mod) to your own directory. That's all.
+!! it (together with src/capi/dapi.mod and src/common/libMM.a) to your own
+!! directory. That's all.
 !!
 !! How to build the Python API
 !! ===========================
@@ -58,36 +58,36 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro and MPY macro at the same time.
+!! Setup the compiling environment correctly.
 !!
-!! 2. compile api
-!! --------------
+!! 2. compile capi and common
+!! --------------------------
 !!
-!! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory, or use the 'make' command in the
-!! src/api directory.
+!! Please compile capi and common at first. You can type the 'make capi'
+!! and 'make common' commands in the src/build directory, or use the 'make'
+!! command in the src/capi and src/common directories.
 !!
 !! 3. compile the hfqmc component
 !! ------------------------------
 !!
-!! Please compile the desired hfqmc component again. You have to clean it
-!! at first, and then compile it. Noted that you have to compile it in the
-!! library mode, i.e., you must use 'make lib' (in the src/hfqmc/daisy
-!! directory) or 'make daisy-lib' (in the src/build directory), etc.
+!! Noted that you have to compile it in the python library mode, i.e.,
+!! you have to type 'make pylib' in the src/hfqmc/daisy directory or
+!! 'make daisy-pylib' in the src/build directory.
 !!
-!! 4. generate pydaisy.so
-!! ----------------------
+!! 4. get what you need
+!! --------------------
 !!
-!! In the src/api directory, just input 'make pydaisy' command and wait.
-!! At last you will get the pydaisy.so which is what you need.
+!! If everything is OK, you will find the pydaisy.so file in the hfqmc
+!! component folder (for example, src/hfqmc/daisy directory). Please
+!! copy it to your own directory. That's all.
 !!
 !! Usage (Fortran version)
 !! =======================
 !!
 !! In the following, we will use daisy code as an example to show how to
 !! use api to control it. When you want to compile your code, you have to
-!! ensure that dapi.mod and libhfqmc.a are in correct PATH. Or else the
-!! compiler will complain that it can not find them.
+!! ensure that dapi.mod, libMM.a and libhfqmc.a are in correct PATH. Or
+!! else the compiler will complain that it can not find them.
 !!
 !! 1. import api support
 !! ---------------------
@@ -104,7 +104,7 @@
 !! call mp_comm_size(I_mpi%nprocs) ! init I_mpi structure
 !!
 !! Note: The above codes need MPI support. Namely, you have to import the
-!! mpi support explicitly.
+!! mpi support explicitly, such as,
 !!
 !! use mmpi ! import mpi support
 !!
@@ -143,7 +143,7 @@
 !! 4. init the hfqmc impurity solver
 !! ---------------------------------
 !!
-!! call init_hfqmc(I_mpi, I_solver)
+!! call cat_init_hfqmc(I_mpi, I_solver)
 !!
 !! 5. setup wssf, symm, eimp, and ktau
 !! -----------------------------------
@@ -153,7 +153,7 @@
 !! integer :: size_t
 !! complex(dp) :: wssf(size_t)
 !! ...
-!! call set_wssf(size_t, wssf) ! setup bath weiss's function: hybf
+!! call cat_set_wssf(size_t, wssf) ! setup bath weiss's function: hybf
 !!
 !! Note: This step is optional, because the hfqmc will provide default
 !! values for wssf, symm, eimp, and ktau or read them from external
@@ -162,7 +162,7 @@
 !! 6. start the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! call exec_hfqmc(i)
+!! call cat_exec_hfqmc(i)
 !!
 !! Here i is the current iteration number.
 !!
@@ -170,22 +170,22 @@
 !! ----------------------------------
 !!
 !! Through this api, the user can only access the sigf (i.e., self-energy
-!! function), grnf (i.e., impurity Green's function) directly, nmat (i.e.,
-!! impurity occupation number), and nnmat (i.e., double occupation number)
-!! via this api. As for the other physical observables, the user should
-!! check the other output files generated by iqist.
+!! function), grnf (i.e., impurity Green's function), nmat (i.e., impurity
+!! occupation number), and nnmat (i.e., double occupation number). As for
+!! the other physical observables, the user should parse the other output
+!! files generated by iqist.
 !!
 !! integer :: size_t
 !! complex(dp) :: grnf(size_t)
-!! call get_grnf(size_t, grnf)
+!! call cat_get_grnf(size_t, grnf)
 !!
 !! 8. close the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! call stop_hfqmc()
+!! call cat_stop_hfqmc()
 !!
 !! 9. finalize the mpi environment
-!! --------------------------------
+!! -------------------------------
 !!
 !! call mp_barrier()
 !! call mp_finalize()
@@ -219,7 +219,7 @@
 !! 2. import pydaisy
 !! -----------------
 !!
-!! from pydaisy import dapi as hfqmc
+!! import pydaisy
 !!
 !! You have to ensure that the pydaisy package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
@@ -237,7 +237,7 @@
 !! 4. init the hfqmc impurity solver
 !! ---------------------------------
 !!
-!! hfqmc.init_hfqmc(my_id, num_procs)
+!! pydaisy.cat_init_hfqmc(my_id, num_procs)
 !!
 !! Here my_id means the rank for current process, and num_procs means
 !! number of processes. If you are using the mpi4py package to provide
@@ -245,7 +245,7 @@
 !! impurity solver.
 !!
 !! comm = MPI.COMM_WORLD
-!! hfqmc.init_hfqmc(comm.rank, comm.size)
+!! pydaisy.cat_init_hfqmc(comm.rank, comm.size)
 !!
 !! 5. setup wssf, symm, eimp, and ktau
 !! -----------------------------------
@@ -257,10 +257,10 @@
 !! size_t = mfreq * norbs
 !! wssf = numpy.zeros(size_t, dtype = numpy.complex, order = 'F')
 !! ...
-!! hfqmc.set_wssf(size_t, wssf)
+!! pydaisy.cat_set_wssf(size_t, wssf)
 !!
 !! Note: We strongly recommend to select the fortran rule to manage the
-!! array memory.
+!! numpy array memory.
 !!
 !! Note: This step is optional, because the hfqmc will provide default
 !! values for wssf, symm, eimp, and ktau or read them from external
@@ -269,7 +269,7 @@
 !! 6. start the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! hfqmc.exec_hfqmc(i)
+!! pydaisy.cat_exec_hfqmc(i)
 !!
 !! Here i is the current iteration number.
 !!
@@ -279,11 +279,11 @@
 !! For examples:
 !!
 !! size_t = norbs
-!! nmat = hfqmc.get_nmat(size_t)
+!! nmat = pydaisy.cat_get_nmat(size_t)
 !! print nmat
 !!
 !! size_t = mfreq * norbs
-!! grnf = hfqmc.get_grnf(size_t)
+!! grnf = pydaisy.cat_get_grnf(size_t)
 !! grnf = numpy.reshape(grnf, (mfreq, norbs), order = 'F')
 !!
 !! Note: You have to pay attention to the array order when you try to use
@@ -292,7 +292,7 @@
 !! 8. close the hfqmc impurity solver
 !! ----------------------------------
 !!
-!! hfqmc.stop_hfqmc()
+!! pydaisy.cat_stop_hfqmc()
 !!
 !! Examples
 !! ========
@@ -321,7 +321,7 @@
 !! No. You can not change the hfqmc impurity solver dynamically. Once
 !! the pydaisy.so is generated, the hfqmc impurity solver is determined.
 !! If you want to change the hfqmc impurity solver, you must regenerate
-!! the pydaisy.so file at first.
+!! the pydaisy.so file from scratch.
 !!
 !!
 
