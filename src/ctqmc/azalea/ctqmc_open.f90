@@ -26,6 +26,10 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> status query subroutines                                         <<<
+!!========================================================================
+
 !!>>> cat_solver_id: return the solver identity
   subroutine cat_solver_id(I_solver_id)
      use capi, only : solver_id_azalea
@@ -64,6 +68,10 @@
 
      return
   end subroutine cat_solver_status
+
+!!========================================================================
+!!>>> flow control subroutines                                         <<<
+!!========================================================================
 
 # if !defined (PYAPI)
 
@@ -232,10 +240,12 @@
      return
   end subroutine cat_stop_ctqmc
 
+!!========================================================================
+!!>>> data setter subroutines                                          <<<
+!!========================================================================
+
 !!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : hybf
@@ -244,7 +254,7 @@
 
 ! external arguments
 ! size of hybf
-     integer, intent(in)     :: size_t
+     integer, intent(in)    :: size_t
 
 ! hybridization function
      complex(8), intent(in) :: hybf_t(size_t)
@@ -296,15 +306,13 @@
 
 !!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
-     use constants, only : dp
-
      use context, only : eimp
 
      implicit none
 
 ! external arguments
 ! size of eimp
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! impurity level
      real(8), intent(in) :: eimp_t(size_t)
@@ -328,13 +336,11 @@
 !!>>> cat_set_ktau: setup the screening function and its first derivates
 !!>>> note: the azalea code does not support this function now
   subroutine cat_set_ktau(size_t, ktau_t, ptau_t)
-     use constants, only : dp
-
      implicit none
 
 ! external arguments
 ! size of ktau
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! screening function K(\tau)
      real(8), intent(in) :: ktau_t(size_t)
@@ -359,8 +365,6 @@
 
 !!>>> cat_set_uumat: setup the Coulomb interaction matrix
   subroutine cat_set_uumat(size_t, uumat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : uumat
 
@@ -368,7 +372,7 @@
 
 ! external arguments
 ! size of uumat
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! Coulomb interaction matrix
      real(8), intent(in) :: uumat_t(size_t)
@@ -389,10 +393,12 @@
      return
   end subroutine cat_set_uumat
 
+!!========================================================================
+!!>>> data getter subroutines                                          <<<
+!!========================================================================
+
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : grnf
@@ -401,7 +407,7 @@
 
 ! external arguments
 ! size of grnf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! impurity green's function
      complex(8), intent(out) :: grnf_t(size_t)
@@ -424,8 +430,6 @@
 
 !!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : sig2
@@ -434,7 +438,7 @@
 
 ! external arguments
 ! size of sigf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! self-energy function
      complex(8), intent(out) :: sigf_t(size_t)
@@ -457,8 +461,6 @@
 
 !!>>> cat_get_nmat: extract the occupation number
   subroutine cat_get_nmat(size_t, nmat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : nmat
 
@@ -466,7 +468,7 @@
 
 ! external arguments
 ! size of nmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! occupation number
      real(8), intent(out) :: nmat_t(size_t)
@@ -489,8 +491,6 @@
 
 !!>>> cat_get_nnmat: extract the double occupation number
   subroutine cat_get_nnmat(size_t, nnmat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : nnmat
 
@@ -498,7 +498,7 @@
 
 ! external arguments
 ! size of nnmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! double occupation number
      real(8), intent(out) :: nnmat_t(size_t)
