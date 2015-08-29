@@ -382,7 +382,7 @@
 
 !!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
 !!>>> perturbation expansion series
-  subroutine ctqmc_dump_hist(hist, hist_err)
+  subroutine ctqmc_dump_hist(hist, herr)
      use constants, only : dp, mytmp
 
      use control, only : mkink
@@ -392,7 +392,7 @@
 ! external arguments
 ! histogram data
      real(dp), intent(in) :: hist(mkink)
-     real(dp), intent(in) :: hist_err(mkink)
+     real(dp), intent(in) :: herr(mkink)
 
 ! local variables
 ! loop index
@@ -400,11 +400,11 @@
 
 ! scaled histogram data
      real(dp) :: haux(mkink)
-     real(dp) :: haux_err(mkink)
+     real(dp) :: htmp(mkink)
 
-! evaluate haux at first
+! evaluate haux and htmp at first
      haux = hist / sum(hist)
-     haux_err = hist_err / sum(hist)
+     htmp = herr / sum(hist)
 
 ! open data file: solver.hist.dat
      open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
@@ -412,7 +412,7 @@
 ! write it
      write(mytmp,'(a)') '# histogram: order | count | percent'
      do i=1,mkink
-         write(mytmp,'(i6,i12,2f12.6)') i, int( hist(i) ), haux(i), haux_err(i)
+         write(mytmp,'(i6,i12,2f12.6)') i, int( hist(i) ), haux(i), htmp(i)
      enddo ! over i={1,mkink} loop
 
 ! close data file
