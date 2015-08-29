@@ -29,29 +29,29 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro (keep MPY macro disable).
+!! Setup the compiling environment correctly.
 !!
-!! 2. compile api
-!! --------------
+!! 2. compile capi and common
+!! --------------------------
 !!
-!! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory, or use the 'make' command in the
-!! src/api directory.
+!! Please compile capi and common at first. You can type the 'make capi'
+!! and 'make common' commands in the src/build directory, or use the 'make'
+!! command in the src/capi and src/common directories.
 !!
 !! 3. compile the jasmine component
 !! --------------------------------
 !!
-!! Please compile the desired jasmine component again. You have to clean it
-!! at first, and then compile it. Noted that you have to compile it in the
-!! library mode, i.e., you must use 'make lib' (in the src/tools/jasmine
-!! directory) or 'make jasmine-lib' (in the src/build directory), etc.
+!! Noted that you have to compile it in the library mode, i.e., you must
+!! use 'make lib' in the src/tools/jasmine directory or 'make jasmine-lib'
+!! in the src/build directory.
 !!
 !! 4. get what you need
 !! --------------------
 !!
 !! If everything is OK, you will find the libatomic.a file in the jasmine
 !! component folder (for example, src/tools/jasmine directory). Please copy
-!! it (together with src/api/japi.mod) to your own directory. That's all.
+!! it (together with src/capi/japi.mod and src/common/libMM.a) to your own
+!! directory. That's all.
 !!
 !! How to build the Python API
 !! ===========================
@@ -59,36 +59,36 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro and MPY macro at the same time.
+!! Setup the compiling environment correctly.
 !!
-!! 2. compile api
-!! --------------
+!! 2. compile capi and common
+!! --------------------------
 !!
-!! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory, or use the 'make' command in the
-!! src/api directory.
+!! Please compile capi and common at first. You can type the 'make capi'
+!! and 'make common' commands in the src/build directory, or use the 'make'
+!! command in the src/capi and src/common directories.
 !!
 !! 3. compile the jasmine component
 !! --------------------------------
 !!
-!! Please compile the desired jasmine component again. You have to clean it
-!! at first, and then compile it. Noted that you have to compile it in the
-!! library mode, i.e., you must use 'make lib' (in the src/tools/jasmine
-!! directory) or 'make jasmine-lib' (in the src/build directory), etc.
+!! Noted that you have to compile it in the python library mode, i.e.,
+!! you have to type 'make pylib' in the src/tools/jasmine director or
+!! 'make jasmine-pylib' in the src/build directory.
 !!
-!! 4. generate pyjasmine.so
-!! ------------------------
+!! 4. get what you need
+!! --------------------
 !!
-!! In the src/api directory, just input 'make pyjasmine' command and wait.
-!! At last you will get the pyjasmine.so which is what you need.
+!! If everything is OK, you will find the pyjasmine.so file in the jasmine
+!! component folder (for example, src/tools/jasmine directory). Please
+!! copy it to your own directory. That's all.
 !!
 !! Usage (Fortran version)
 !! =======================
 !!
 !! In the following, we will use an example to show you how to use api to
 !! control the jasmine code. When you want to compile your code, you have
-!! to ensure that japi.mod and libatomic.a are in correct PATH. Or else
-!! the compiler will complain that it can not find them.
+!! to ensure that japi.mod, libMM.a and libatomic.a are in correct PATH. Or
+!! else the compiler will complain that it can not find them.
 !!
 !! 1. import api support
 !! ---------------------
@@ -116,17 +116,17 @@
 !! 3. init the atomic eigenvalue problem solver
 !! --------------------------------------------
 !!
-!! call init_atomic(I_solver)
+!! call cat_init_atomic(I_solver)
 !!
 !! 4. start the atomic eigenvalue problem solver
 !! ---------------------------------------------
 !!
-!! call exec_atomic()
+!! call cat_exec_atomic()
 !!
 !! 5. close the atomic eigenvalue problem solver
 !! ---------------------------------------------
 !!
-!! call stop_atomic()
+!! call cat_stop_atomic()
 !!
 !! 6. access the computational results
 !! -----------------------------------
@@ -144,12 +144,12 @@
 !! 1. import pyjasmine
 !! -------------------
 !!
-!! from pyjasmine import japi as atomic
+!! import pyjasmine
 !!
 !! You have to ensure that the pyjasmine package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/api/')
+!! sys.path.append('../../src/capi/')
 !!
 !! 2. configure the atomic eigenvalue problem solver
 !! -------------------------------------------------
@@ -162,17 +162,17 @@
 !! 3. init the atomic eigenvalue problem solver
 !! --------------------------------------------
 !!
-!! atomic.init_atomic() # there is no parameter for init_atomic()
+!! pyjasmine.cat_init_atomic() # there is no parameter for cat_init_atomic()
 !!
 !! 4. start the atomic eigenvalue problem solver
 !! ---------------------------------------------
 !!
-!! atomic.exec_atomic()
+!! pyjasmine.cat_exec_atomic()
 !!
 !! 5. close the atomic eigenvalue problem solver
 !! ---------------------------------------------
 !!
-!! atomic.stop_atomic()
+!! pyjasmine.cat_stop_atomic()
 !!
 !! 6. access the computational results
 !! -----------------------------------
