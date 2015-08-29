@@ -216,7 +216,7 @@
      use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
      use mmpi, only : mp_bcast, mp_barrier
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta, part
@@ -273,15 +273,14 @@
 
 ! read in hybridization function from solver.hyb.in
              open(mytmp, file='solver.hyb.in', form='formatted', status='unknown')
-             do i=1,nband
+             do i=1,norbs
                  do j=1,mfreq
                      read(mytmp,*) k, rtmp, r1, i1, r2, i2
-                     hybf(j,i,i) = dcmplx(r1,i1)             ! spin up part
-                     hybf(j,i+nband,i+nband) = dcmplx(r2,i2) ! spin dn part
+                     hybf(j,i,i) = dcmplx(r1,i1)
                  enddo ! over j={1,mfreq} loop
                  read(mytmp,*) ! skip two lines
                  read(mytmp,*)
-             enddo ! over i={1,nband} loop
+             enddo ! over i={1,norbs} loop
              close(mytmp)
 
          endif ! back if ( exists .eqv. .true. ) block
