@@ -28,7 +28,7 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro (keep MPY macro disable).
+!! Setup the compiling environment correctly.
 !!
 !! 2. compile api
 !! --------------
