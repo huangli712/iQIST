@@ -37,6 +37,7 @@ lev2 = ctqmc_record.o ctqmc_status.o ctqmc_stream.o ctqmc_util.o
 lev3 = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
 open = ctqmc_open.o
+
 CAPI = ctqmc_api.o
 CLIB = libMM.a
 
@@ -49,8 +50,8 @@ default: all
 all: exe
 
 api:
-	cp ../../api/capi.mod .
-	cp ../../api/ctqmc_api.o .
+	cp ../../capi/capi.mod .
+	cp ../../capi/ctqmc_api.o .
 
 cssl:
 	cp ../../common/libMM.a .
