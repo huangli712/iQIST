@@ -72,7 +72,7 @@
 !! --------------------------------
 !!
 !! Noted that you have to compile it in the python library mode, i.e.,
-!! you have to type 'make pylib' in the src/tools/jasmine director or
+!! you have to type 'make pylib' in the src/tools/jasmine directory or
 !! 'make jasmine-pylib' in the src/build directory.
 !!
 !! 4. get what you need
@@ -156,7 +156,7 @@
 !!
 !! You have to setup the key parameters for the atomic eigenvalue problem
 !! solver, and write them down to the 'atom.config.in' file. Now you can
-!! do that manually. On the other hand, we provide a useful Python module
+!! do that manually. On the other hand, we provide a powerful Python module
 !! to facilitate this work (see src/tools/hibiscus/script/u_atomic.py).
 !!
 !! 3. init the atomic eigenvalue problem solver
