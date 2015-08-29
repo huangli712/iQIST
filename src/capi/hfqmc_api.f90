@@ -224,7 +224,7 @@
 !! You have to ensure that the pydaisy package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/api/')
+!! sys.path.append('../../src/capi/')
 !!
 !! 3. configure the hfqmc impurity solver
 !! --------------------------------------
