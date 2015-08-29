@@ -128,24 +128,6 @@
 ## should be '-openmp'. On the other hand, if the GNU gfortran compiler
 ## is used, this option should be '-fopenmp'.
 ##
-## API
-## ---
-##
-## Specify whether we want to obtain a library version of iQIST. If it is
-## enabled, what you can obtain is a library (and you can write python or
-## fortran codes to use it), instead of a standard executable program. In
-## default it is disabled.
-##
-## Possible options:
-##
-## * -DAPI
-## * -DMPY
-##
-## If only the API macro is defined, the Fortran API will be generated.
-## If both the API and MPY macros are defined, the Python API and the
-## (slightly different) Fortran API will be generated. If only the MPY
-## macro is defined, it is invalid.
-##
 ## FPP
 ## ---
 ##
@@ -172,7 +154,6 @@
 ## * $(FPP)
 ## * $(MPI)
 ## * $(OMP)
-## * $(API)
 ##
 ## Note that the '$(FPP)' option is necessary.
 ##
@@ -483,9 +464,8 @@ ARCHIVER = ar -ruv
 #-------------------------------------------------------------------------
 MPI    = #-DMPI
 OMP    = #-openmp
-API    = #-DAPI -DMPY
 FPP    = -fpp
-CPP    = $(FPP) $(MPI) $(OMP) $(API)
+CPP    = $(FPP) $(MPI) $(OMP)
 
 # Machine tuning options
 #-------------------------------------------------------------------------
