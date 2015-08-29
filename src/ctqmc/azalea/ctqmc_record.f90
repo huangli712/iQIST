@@ -490,7 +490,8 @@
 !!>>> ctqmc_reduce_hist: reduce the hist from all children processes
   subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier, mpi_max
+     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : mkink
      use control, only : nprocs
@@ -503,7 +504,7 @@
      real(dp), intent(out) :: hist_mpi(mkink)
      real(dp), intent(out) :: hist_err(mkink)
 
-! initialize hist_mpi
+! initialize hist_mpi and hist_err
      hist_mpi = zero
      hist_err = zero
 
@@ -542,7 +543,8 @@
 !!>>> ctqmc_reduce_prob: reduce the prob from all children processes
   subroutine ctqmc_reduce_prob(prob_mpi, prob_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier, mpi_max
+     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : ncfgs
      use control, only : nprocs
@@ -555,7 +557,7 @@
      real(dp), intent(out) :: prob_mpi(ncfgs)
      real(dp), intent(out) :: prob_err(ncfgs)
 
-! initialize prob_mpi
+! initialize prob_mpi and prob_err
      prob_mpi = zero
      prob_err = zero
 
