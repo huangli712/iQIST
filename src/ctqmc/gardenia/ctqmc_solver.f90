@@ -519,18 +519,18 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-     call ctqmc_reduce_hist(hist_mpi)
+     call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the probability data from prob to prob_mpi
-     call ctqmc_reduce_prob(prob_mpi)
+     call ctqmc_reduce_prob(prob_mpi, prob_err)
 
 ! collect the occupation matrix data from nmat to nmat_mpi
 ! collect the double occupation matrix data from nnmat to nnmat_mpi
-     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
 
 ! collect the < k^2 > - < k >^2 data from kmat to kmat_mpi
 ! collect the < k^2 > - < k >^2 data from kkmat to kkmat_mpi
-     call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi)
+     call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
 
 ! collect the fidelity susceptibility data from lmat to lmat_mpi
 ! collect the fidelity susceptibility data from rmat to rmat_mpi
