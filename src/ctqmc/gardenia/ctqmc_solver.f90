@@ -571,6 +571,7 @@
      call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
+! average value section
      hist  = hist_mpi  * one
      prob  = prob_mpi  * real(ncarlo) / real(nsweep)
 
@@ -599,6 +600,29 @@
      ftau  = ftau_mpi  * real(ncarlo) / real(nsweep)
      grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
 
+! update original data and calculate the averages simultaneously
+! error bar section
+     hist_err  = hist_err  * one
+     prob_err  = prob_err  * real(ncarlo) / real(nsweep)
+
+     nmat_err  = nmat_err  * real(nmonte) / real(nsweep)
+     nnmat_err = nnmat_err * real(nmonte) / real(nsweep)
+     kmat_err  = kmat_err  * real(nmonte) / real(nsweep)
+     kkmat_err = kkmat_err * real(nmonte) / real(nsweep)
+     lmat_err  = lmat_err  * real(nmonte) / real(nsweep)
+     rmat_err  = rmat_err  * real(nmonte) / real(nsweep)
+     lrmat_err = lrmat_err * real(nmonte) / real(nsweep)
+     schi_err  = schi_err  * real(nmonte) / real(nsweep)
+     sschi_err = sschi_err * real(nmonte) / real(nsweep)
+     ssfom_err = ssfom_err * real(nmonte) / real(nsweep)
+     ochi_err  = ochi_err  * real(nmonte) / real(nsweep)
+     oochi_err = oochi_err * real(nmonte) / real(nsweep)
+     oofom_err = oofom_err * real(nmonte) / real(nsweep)
+
+     gtau_err  = gtau_err  * real(ncarlo) / real(nsweep)
+     ftau_err  = ftau_err  * real(ncarlo) / real(nsweep)
+     grnf_err  = grnf_err  * real(nmonte) / real(nsweep)
+
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
 ! function between low frequency QMC data and high frequency Hubbard-I
@@ -621,16 +645,19 @@
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_nmat(symm, nmat)
+         call ctqmc_symm_nmat(symm, nmat_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (gtau) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, gtau)
+         call ctqmc_symm_gtau(symm, gtau_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (grnf) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, grnf)
+         call ctqmc_symm_grnf(symm, grnf_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity self-energy function (sig2) over spin or over bands
@@ -644,39 +671,39 @@
 
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hist(hist)
+         call ctqmc_dump_hist(hist, hist_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final probability data, prob
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_prob(prob)
+         call ctqmc_dump_prob(prob, prob_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_nmat(nmat, nnmat)
+         call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final < k^2 > - < k >^2 data, kmat and kkmat
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_kmat(kmat, kkmat)
+         call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final fidelity susceptibility data, lmat, rmat, and lrmat
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_lmat(lmat, rmat, lrmat)
+         call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final spin-spin correlation function data, schi, sschi, and ssfom
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_schi(schi, sschi)
-         call ctqmc_dump_sfom(      ssfom)
+         call ctqmc_dump_schi(schi, sschi, schi_err, sschi_err)
+         call ctqmc_dump_sfom(ssfom, ssfom_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final orbital-orbital correlation function data, ochi, oochi, and oofom
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_ochi(ochi, oochi)
-         call ctqmc_dump_ofom(      oofom)
+         call ctqmc_dump_ochi(ochi, oochi, ochi_err, oochi_err)
+         call ctqmc_dump_ofom(oofom, oofom_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, g2_re and g2_im
@@ -696,12 +723,12 @@
 
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_gtau(tmesh, gtau)
+         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, grnf
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_grnf(rmesh, grnf)
+         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final self-energy function data, sig2
@@ -730,20 +757,35 @@
 
 ! deallocate memory
      deallocate(hist_mpi )
+     deallocate(hist_err )
      deallocate(prob_mpi )
+     deallocate(prob_err )
      deallocate(nmat_mpi )
+     deallocate(nmat_err )
      deallocate(nnmat_mpi)
+     deallocate(nnmat_err)
      deallocate(kmat_mpi )
+     deallocate(kmat_err )
      deallocate(kkmat_mpi)
+     deallocate(kkmat_err)
      deallocate(lmat_mpi )
+     deallocate(lmat_err )
      deallocate(rmat_mpi )
+     deallocate(rmat_err )
      deallocate(lrmat_mpi)
+     deallocate(lrmat_err)
      deallocate(schi_mpi )
+     deallocate(schi_err )
      deallocate(sschi_mpi)
+     deallocate(sschi_err)
      deallocate(ssfom_mpi)
+     deallocate(ssfom_err)
      deallocate(ochi_mpi )
+     deallocate(ochi_err )
      deallocate(oochi_mpi)
+     deallocate(oochi_err)
      deallocate(oofom_mpi)
+     deallocate(oofom_err)
      deallocate(g2_re_mpi)
      deallocate(g2_im_mpi)
      deallocate(h2_re_mpi)
@@ -751,8 +793,11 @@
      deallocate(ps_re_mpi)
      deallocate(ps_im_mpi)
      deallocate(gtau_mpi )
+     deallocate(gtau_err )
      deallocate(ftau_mpi )
+     deallocate(ftau_err )
      deallocate(grnf_mpi )
+     deallocate(grnf_err )
 
      return
   end subroutine ctqmc_impurity_solver
