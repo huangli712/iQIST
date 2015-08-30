@@ -860,7 +860,7 @@
   end subroutine ctqmc_dump_ochi
 
 !!>>> ctqmc_dump_ofom: write out the orbital-orbital correlation function
-  subroutine ctqmc_dump_ofom(oofom)
+  subroutine ctqmc_dump_ofom(oofom, ooerr)
      use constants, only : dp, two, pi, mytmp
 
      use control, only : issus
@@ -873,6 +873,7 @@
 ! external arguments
 ! orbital-orbital correlation function: \chi^{c}_{ij} (i\omega), orbital-resolved
      real(dp), intent(in) :: oofom(nbfrq,norbs,norbs)
+     real(dp), intent(in) :: ooerr(nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -892,7 +893,7 @@
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
              do i=1,nbfrq
-                 write(mytmp,'(2f12.6)') two * pi * float(i - 1) / beta, oofom(i,j,k)
+                 write(mytmp,'(3f12.6)') two * pi * float(i - 1) / beta, oofom(i,j,k), ooerr(i,j,k)
              enddo ! over i={1,nbfrq} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
