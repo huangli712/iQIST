@@ -687,7 +687,7 @@
   end subroutine ctqmc_dump_lmat
 
 !!>>> ctqmc_dump_schi: write out the spin-spin correlation function
-  subroutine ctqmc_dump_schi(schi, sschi)
+  subroutine ctqmc_dump_schi(schi, sschi, serr, sserr)
      use constants, only : dp, mytmp
 
      use control, only : issus
@@ -700,9 +700,11 @@
 ! external arguments
 ! spin-spin correlation function data, < Sz(0) Sz(\tau) >, totally-averaged
      real(dp), intent(in) :: schi(ntime)
+     real(dp), intent(in) :: serr(ntime)
 
 ! spin-spin correlation function data, < Sz(0) Sz(\tau) >, orbital-resolved
      real(dp), intent(in) :: sschi(ntime,nband)
+     real(dp), intent(in) :: sserr(ntime,nband)
 
 ! local variables
 ! loop index
@@ -720,7 +722,7 @@
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,ntime
-             write(mytmp,'(2f12.6)') tmesh(i), sschi(i,j)
+             write(mytmp,'(3f12.6)') tmesh(i), sschi(i,j), sserr(i,j)
          enddo ! over i={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -728,14 +730,15 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), schi(i) / real(nband)
+         write(mytmp,'(3f12.6)') tmesh(i), schi(i) / real(nband), serr(i) / real(nband)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), sum( sschi(i,:) ) / real(nband)
+         write(mytmp,'(3f12.6)') tmesh(i), sum( sschi(i,:) ) / real(nband), &
+                                           sum( sserr(i,:) ) / real(nband)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
@@ -747,7 +750,7 @@
   end subroutine ctqmc_dump_schi
 
 !!>>> ctqmc_dump_sfom: write out the spin-spin correlation function
-  subroutine ctqmc_dump_sfom(ssfom)
+  subroutine ctqmc_dump_sfom(ssfom, sserr)
      use constants, only : dp, two, pi, mytmp
 
      use control, only : issus
@@ -760,6 +763,7 @@
 ! external arguments
 ! spin-spin correlation function: \chi^{s}_{i} (i\omega), orbital-resolved
      real(dp), intent(in) :: ssfom(nbfrq,nband)
+     real(dp), intent(in) :: sserr(nbfrq,nband)
 
 ! local variables
 ! loop index
@@ -777,7 +781,7 @@
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,nbfrq
-             write(mytmp,'(2f12.6)') two * pi * float(i - 1) / beta, ssfom(i,j)
+             write(mytmp,'(3f12.6)') two * pi * float(i - 1) / beta, ssfom(i,j), sserr(i,j)
          enddo ! over i={1,nbfrq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -790,7 +794,7 @@
   end subroutine ctqmc_dump_sfom
 
 !!>>> ctqmc_dump_ochi: write out the orbital-orbital correlation function
-  subroutine ctqmc_dump_ochi(ochi, oochi)
+  subroutine ctqmc_dump_ochi(ochi, oochi, oerr, ooerr)
      use constants, only : dp, mytmp
 
      use control, only : issus
@@ -803,9 +807,11 @@
 ! external arguments
 ! orbital-orbital correlation function data, < N(0) N(\tau) >, totally-averaged
      real(dp), intent(in) :: ochi(ntime)
+     real(dp), intent(in) :: oerr(ntime)
 
 ! orbital-orbital correlation function data, < N(0) N(\tau) >, orbital-resolved
      real(dp), intent(in) :: oochi(ntime,norbs,norbs)
+     real(dp), intent(in) :: ooerr(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -825,7 +831,7 @@
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
              do i=1,ntime
-                 write(mytmp,'(2f12.6)') tmesh(i), oochi(i,j,k)
+                 write(mytmp,'(3f12.6)') tmesh(i), oochi(i,j,k), ooerr(i,j,k)
              enddo ! over i={1,ntime} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
@@ -834,14 +840,15 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), ochi(i) / real(norbs)
+         write(mytmp,'(3f12.6)') tmesh(i), ochi(i) / real(norbs), oerr(i) / real(norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), sum( oochi(i,:,:) ) / real(norbs * norbs)
+         write(mytmp,'(3f12.6)') tmesh(i), sum( oochi(i,:,:) ) / real(norbs * norbs), &
+                                           sum( ooerr(i,:,:) ) / real(norbs * norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
