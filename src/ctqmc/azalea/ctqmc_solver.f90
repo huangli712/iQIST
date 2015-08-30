@@ -374,17 +374,24 @@
      call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
+! average value section
      hist  = hist_mpi  * one
      prob  = prob_mpi  * real(ncarlo) / real(nsweep)
+
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
+
      gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
      grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
 
+! update original data and calculate the averages simultaneously
+! error bar section
      hist_err  = hist_err  * one
      prob_err  = prob_err  * real(ncarlo) / real(nsweep)
+
      nmat_err  = nmat_err  * real(nmonte) / real(nsweep)
      nnmat_err = nnmat_err * real(nmonte) / real(nsweep)
+
      gtau_err  = gtau_err  * real(ncarlo) / real(nsweep)
      grnf_err  = grnf_err  * real(nmonte) / real(nsweep)
 
