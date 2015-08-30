@@ -374,8 +374,6 @@
 
 !!>>> cat_set_uumat: setup the Coulomb interaction matrix
   subroutine cat_set_uumat(size_t, uumat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : uumat
 
@@ -383,10 +381,15 @@
 
 ! external arguments
 ! size of uumat
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! Coulomb interaction matrix
-     real(dp), intent(in) :: uumat_t(size_t)
+     real(8), intent(in) :: uumat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) uumat_t
+!F2PY depend(size_t) uumat_t
 
 ! check whether size_t is correct
      if ( size_t /= size(uumat) ) then
@@ -399,10 +402,12 @@
      return
   end subroutine cat_set_uumat
 
+!!========================================================================
+!!>>> data getter subroutines                                          <<<
+!!========================================================================
+
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : grnf
@@ -411,10 +416,15 @@
 
 ! external arguments
 ! size of grnf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! impurity green's function
-     complex(dp), intent(out) :: grnf_t(size_t)
+     complex(8), intent(out) :: grnf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) grnf_t
+!F2PY depend(size_t) grnf_t
 
 ! check whether size_t is correct
      if ( size_t /= size(grnf) ) then
@@ -429,8 +439,6 @@
 
 !!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : sig2
@@ -439,10 +447,15 @@
 
 ! external arguments
 ! size of sigf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! self-energy function
-     complex(dp), intent(out) :: sigf_t(size_t)
+     complex(8), intent(out) :: sigf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) sigf_t
+!F2PY depend(size_t) sigf_t
 
 ! check whether size_t is correct
      if ( size_t /= size(sig2) ) then
@@ -457,8 +470,6 @@
 
 !!>>> cat_get_nmat: extract the occupation number
   subroutine cat_get_nmat(size_t, nmat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : nmat
 
@@ -466,10 +477,15 @@
 
 ! external arguments
 ! size of nmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! occupation number
-     real(dp), intent(out) :: nmat_t(size_t)
+     real(8), intent(out) :: nmat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) nmat_t
+!F2PY depend(size_t) nmat_t
 
 ! check whether size_t is correct
      if ( size_t /= size(nmat) ) then
@@ -484,8 +500,6 @@
 
 !!>>> cat_get_nnmat: extract the double occupation number
   subroutine cat_get_nnmat(size_t, nnmat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : nnmat
 
@@ -493,10 +507,15 @@
 
 ! external arguments
 ! size of nnmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! double occupation number
-     real(dp), intent(out) :: nnmat_t(size_t)
+     real(8), intent(out) :: nnmat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) nnmat_t
+!F2PY depend(size_t) nnmat_t
 
 ! check whether size_t is correct
      if ( size_t /= size(nnmat) ) then
