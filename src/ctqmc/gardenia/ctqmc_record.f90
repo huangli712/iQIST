@@ -1948,9 +1948,10 @@
   end subroutine ctqmc_reduce_lmat
 
 !!>>> ctqmc_reduce_schi: reduce the schi and sschi from all children processes
-  subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
+  subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : nband
      use control, only : ntime
@@ -1962,13 +1963,18 @@
 ! external arguments
 ! spin-spin correlation function, totally-averaged
      real(dp), intent(out) :: schi_mpi(ntime)
+     real(dp), intent(out) :: schi_err(ntime)
 
 ! spin-spin correlation function, orbital-resolved
      real(dp), intent(out) :: sschi_mpi(ntime,nband)
+     real(dp), intent(out) :: sschi_err(ntime,nband)
 
-! initialize schi_mpi and sschi_mpi
+! initialize schi_mpi and sschi_mpi, schi_err and sschi_err
      schi_mpi = zero
      sschi_mpi = zero
+
+     schi_err = zero
+     sschi_err = zero
 
 ! build schi_mpi and sschi_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1990,6 +1996,18 @@
 ! calculate the average
      schi_mpi = schi_mpi / real(nprocs)
      sschi_mpi = sschi_mpi / real(nprocs)
+
+! build schi_err and sschi_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(schi - schi_mpi), schi_err, mpi_max)
+     call mp_allreduce(abs(sschi - sschi_mpi), sschi_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_schi
