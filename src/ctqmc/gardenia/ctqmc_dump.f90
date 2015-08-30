@@ -599,11 +599,11 @@
      integer  :: j
 
 ! final value and corresponding error
-     real(dp) :: f_kin
+     real(dp) :: f_val
      real(dp) :: f_err
 
-! calculate f_kin and f_err
-     f_kin = sum( kkmat ) - sum( kmat ) * ( one * sum( kmat ) + one )
+! calculate f_val and f_err
+     f_val = sum( kkmat ) - sum( kmat ) * ( one * sum( kmat ) + one )
      f_err = sum( kkerr ) - sum( kerr ) * ( two * sum( kmat ) + one )
 
 ! check if we need to dump the < k > and < k^2 > data
@@ -627,7 +627,7 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
      write(mytmp,'(a6,2f12.6)') 'kksum', sum( kkmat ), sum( kkerr )
-     write(mytmp,'(a6,2f12.6)') 'final', f_kin, f_err
+     write(mytmp,'(a6,2f12.6)') 'final', f_val, f_err
 
 ! close data file
      close(mytmp)
@@ -659,8 +659,16 @@
 
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
+     integer  :: i
+     integer  :: j
+
+! final value and corresponding error
+     real(dp) :: f_val
+     real(dp) :: f_err
+
+! calculate f_val and f_err
+     f_val = sum( lrmat ) - sum( lmat ) * sum( rmat )
+     f_err = sum( lrerr ) - sum( rmat ) * sum( lerr ) - sum( lmat ) * sum( rerr )
 
 ! check if we need to dump the fidelity susceptibility data
 ! to solver.lmat.dat
@@ -684,8 +692,7 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
      write(mytmp,'(a6,2f12.6)') 'lrsum', sum( lrmat ), sum( lrerr )
-     write(mytmp,'(a6,2f12.6)') 'fidel', sum( lrmat ) - sum( lmat ) * sum( rmat ), &
-                                         sum( lrerr ) - sum( rmat ) * sum( lerr ) - sum( lmat ) * sum( rerr )
+     write(mytmp,'(a6,2f12.6)') 'fidel', f_val, f_err
 
 ! close data file
      close(mytmp)
