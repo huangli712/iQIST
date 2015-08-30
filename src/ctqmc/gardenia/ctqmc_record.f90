@@ -1873,7 +1873,7 @@
   end subroutine ctqmc_reduce_kmat
 
 !!>>> ctqmc_reduce_lmat: reduce the lmat, rmat, and lrmat from all children processes
-  subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi)
+  subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
      use mmpi, only : mpi_max
@@ -1887,17 +1887,25 @@
 ! external arguments
 ! number of operators at left half axis
      real(dp), intent(out) :: lmat_mpi(norbs)
+     real(dp), intent(out) :: lmat_err(norbs)
 
 ! number of operators at right half axis
      real(dp), intent(out) :: rmat_mpi(norbs)
+     real(dp), intent(out) :: rmat_err(norbs)
 
 ! used to evaluate fidelity susceptibility
      real(dp), intent(out) :: lrmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: lrmat_err(norbs,norbs)
 
 ! initialize lmat_mpi, rmat_mpi, and lrmat_mpi
+! initialize lmat_err, rmat_err, and lrmat_err
      lmat_mpi = zero
      rmat_mpi = zero
      lrmat_mpi = zero
+
+     lmat_err = zero
+     rmat_err = zero
+     lrmat_err = zero
 
 ! build lmat_mpi, rmat_mpi, and lrmat_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1922,6 +1930,19 @@
      lmat_mpi = lmat_mpi / real(nprocs)
      rmat_mpi = rmat_mpi / real(nprocs)
      lrmat_mpi = lrmat_mpi / real(nprocs)
+
+! build lmat_err, rmat_err, and lrmat_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(lmat - lmat_mpi), lmat_err, mpi_max)
+     call mp_allreduce(abs(rmat - rmat_mpi), rmat_err, mpi_max)
+     call mp_allreduce(abs(lrmat - lrmat_mpi), lrmat_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_lmat
