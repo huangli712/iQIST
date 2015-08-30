@@ -199,24 +199,19 @@
      allocate(oochi_err(ntime,norbs,norbs),stat=istat)
      allocate(oofom_mpi(nbfrq,norbs,norbs),stat=istat)
      allocate(oofom_err(nbfrq,norbs,norbs),stat=istat)
-
      allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-
      allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-
      allocate(h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-
      allocate(h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-
      allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-
      allocate(ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
-
+     allocate(gtau_err(ntime,norbs,norbs), stat=istat)
      allocate(ftau_mpi(ntime,norbs,norbs), stat=istat)
-
+     allocate(ftau_err(ntime,norbs,norbs), stat=istat)
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
+
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -447,13 +442,14 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-         call ctqmc_reduce_hist(hist_mpi)
+         call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
-         call ctqmc_reduce_gtau(gtau_mpi)
+         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
 ! gtau_mpi need to be scaled properly before written
          gtau_mpi = gtau_mpi * real(ncarlo) / real(cstep)
+         gtau_err = gtau_err * real(ncarlo) / real(cstep)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
@@ -462,6 +458,7 @@
 ! symmetrize the impurity green's function over spin or over bands
          if ( issun == 2 .or. isspn == 1 ) then
              call ctqmc_symm_gtau(symm, gtau_mpi)
+             call ctqmc_symm_gtau(symm, gtau_err)
          endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 !!========================================================================
