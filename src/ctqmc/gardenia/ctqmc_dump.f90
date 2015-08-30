@@ -784,8 +784,16 @@
 
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
+     integer  :: i
+     integer  :: j
+
+! bosonic frequency mesh
+     real(dp) :: bmesh(nbfrq)
+
+! build bmesh
+     do i=1,nbfrq
+         bmesh(i) = two * pi * float( i - 1 ) / beta
+     enddo ! over i={1,nbfrq} loop
 
 ! check if we need to dump the spin-spin correlation function data
 ! to solver.sfom.dat
@@ -798,8 +806,7 @@
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,nbfrq
-             write(mytmp,'(3f12.6)') two * pi * float(i - 1) / beta, &
-                                     ssfom(i,j), sserr(i,j)
+             write(mytmp,'(3f12.6)') bmesh(i), ssfom(i,j), sserr(i,j)
          enddo ! over i={1,nbfrq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -902,6 +909,14 @@
      integer :: j
      integer :: k
 
+! bosonic frequency mesh
+     real(dp) :: bmesh(nbfrq)
+
+! build bmesh
+     do i=1,nbfrq
+         bmesh(i) = two * pi * float( i - 1 ) / beta
+     enddo ! over i={1,nbfrq} loop
+
 ! check if we need to dump the orbital-orbital correlation function data
 ! to solver.ofom.dat
      if ( .not. btest(issus, 4) ) RETURN
@@ -914,8 +929,7 @@
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
              do i=1,nbfrq
-                 write(mytmp,'(3f12.6)') two * pi * float(i - 1) / beta, &
-                                         oofom(i,j,k), ooerr(i,j,k)
+                 write(mytmp,'(3f12.6)') bmesh(i), oofom(i,j,k), ooerr(i,j,k)
              enddo ! over i={1,nbfrq} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
