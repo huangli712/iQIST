@@ -1,6 +1,7 @@
 
-  subroutine test()
-  end subroutine test
+!!========================================================================
+!!>>> status query subroutines                                         <<<
+!!========================================================================
 
 !!>>> cat_solver_id: return the solver identity
   subroutine cat_solver_id(I_solver_id)
