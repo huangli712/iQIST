@@ -744,15 +744,18 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), schi(i) / real(nband), serr(i) / real(nband)
+         write(mytmp,'(3f12.6)') tmesh(i), &
+                                 schi(i) / real(nband), &
+                                 serr(i) / real(nband)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), sum( sschi(i,:) ) / real(nband), &
-                                           sum( sserr(i,:) ) / real(nband)
+         write(mytmp,'(3f12.6)') tmesh(i), &
+                                 sum( sschi(i,:) ) / real(nband), &
+                                 sum( sserr(i,:) ) / real(nband)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
@@ -795,7 +798,8 @@
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,nbfrq
-             write(mytmp,'(3f12.6)') two * pi * float(i - 1) / beta, ssfom(i,j), sserr(i,j)
+             write(mytmp,'(3f12.6)') two * pi * float(i - 1) / beta, &
+                                     ssfom(i,j), sserr(i,j)
          enddo ! over i={1,nbfrq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -854,15 +858,18 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), ochi(i) / real(norbs), oerr(i) / real(norbs)
+         write(mytmp,'(3f12.6)') tmesh(i), &
+                                 ochi(i) / real(norbs), &
+                                 oerr(i) / real(norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), sum( oochi(i,:,:) ) / real(norbs * norbs), &
-                                           sum( ooerr(i,:,:) ) / real(norbs * norbs)
+         write(mytmp,'(3f12.6)') tmesh(i), &
+                                 sum( oochi(i,:,:) ) / real(norbs * norbs), &
+                                 sum( ooerr(i,:,:) ) / real(norbs * norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
@@ -907,7 +914,8 @@
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
              do i=1,nbfrq
-                 write(mytmp,'(3f12.6)') two * pi * float(i - 1) / beta, oofom(i,j,k), ooerr(i,j,k)
+                 write(mytmp,'(3f12.6)') two * pi * float(i - 1) / beta, &
+                                         oofom(i,j,k), ooerr(i,j,k)
              enddo ! over i={1,nbfrq} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
