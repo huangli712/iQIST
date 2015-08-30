@@ -5,7 +5,7 @@
 
 !!>>> cat_solver_id: return the solver identity
   subroutine cat_solver_id(I_solver_id)
-     use api, only : solver_id_gardenia
+     use capi, only : solver_id_gardenia
 
      implicit none
 
