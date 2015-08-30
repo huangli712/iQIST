@@ -549,9 +549,9 @@
      do i=1,norbs
          write(mytmp,'(i6,2f12.6)') i, nmat(i), nerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sup', sum( nmat(1:nband) ), sum( nerr(1:nband) )
+     write(mytmp,'(a6,2f12.6)') 'sdn', sum( nmat(nband+1:norbs) ), sum( nerr(nband+1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sum', sum( nmat(1:norbs) ), sum( nerr(1:norbs) )
 
      write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
