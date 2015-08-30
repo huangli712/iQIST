@@ -1,3 +1,30 @@
+!!!-----------------------------------------------------------------------
+!!! project : gardenia
+!!! program : cat_solver_id
+!!!           cat_solver_status <<<---
+!!!           cat_init_ctqmc
+!!!           cat_exec_ctqmc
+!!!           cat_stop_ctqmc    <<<---
+!!!           cat_set_hybf
+!!!           cat_set_symm
+!!!           cat_set_eimp
+!!!           cat_set_ktau
+!!!           cat_set_uumat     <<<---
+!!!           cat_get_grnf
+!!!           cat_get_sigf
+!!!           cat_get_nmat
+!!!           cat_get_nnmat     <<<---
+!!! source  : ctqmc_open.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 08/12/2015 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
+!!! purpose : to provide necessary application programming interface for
+!!!           the hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !!========================================================================
 !!>>> status query subroutines                                         <<<
@@ -13,6 +40,9 @@
 ! solver identity
      integer, intent(out) :: I_solver_id
 
+! declare f2py directives
+!F2PY intent(out) I_solver_id
+
      I_solver_id = solver_id_gardenia
 
      return
@@ -20,13 +50,16 @@
 
 !!>>> cat_solver_status: return the solver status
   subroutine cat_solver_status(I_solver_status)
-     use api, only : solver_is_ready_gardenia
+     use capi, only : solver_is_ready_gardenia
 
      implicit none
 
 ! external arguments
 ! solver status
      integer, intent(out) :: I_solver_status
+
+! declare f2py directives
+!F2PY intent(out) I_solver_status
 
      I_solver_status = solver_is_ready_gardenia
      if ( I_solver_status == 0 ) then
@@ -36,12 +69,16 @@
      return
   end subroutine cat_solver_status
 
-# if !defined (MPY)
+!!========================================================================
+!!>>> flow control subroutines                                         <<<
+!!========================================================================
+
+# if !defined (PYAPI)
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use api, only : T_mpi, T_segment_gardenia
+     use capi, only : T_mpi, T_segment_gardenia
 
      use control ! ALL
 
@@ -125,7 +162,7 @@
      return
   end subroutine cat_init_ctqmc
 
-# else   /* MPY */
+# else   /* PYAPI */
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> python version
@@ -140,6 +177,10 @@
 
 ! number of processors
      integer, intent(in) :: num_procs
+
+! declare f2py directives
+!F2PY intent(in) my_id
+!F2PY intent(in) num_procs
 
 ! initialize mpi envirnoment
      myid = my_id
@@ -170,7 +211,7 @@
      return
   end subroutine cat_init_ctqmc
 
-# endif  /* MPY */
+# endif  /* PYAPI */
 
 !!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
@@ -179,6 +220,9 @@
 ! external arguments
 ! current iteration number
      integer, intent(in) :: iter
+
+! declare f2py directives
+!F2PY intent(in) iter
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
@@ -205,10 +249,12 @@
      return
   end subroutine cat_stop_ctqmc
 
+!!========================================================================
+!!>>> data setter subroutines                                          <<<
+!!========================================================================
+
 !!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : hybf
@@ -217,10 +263,15 @@
 
 ! external arguments
 ! size of hybf
-     integer, intent(in)     :: size_t
+     integer, intent(in)    :: size_t
 
 ! hybridization function
-     complex(dp), intent(in) :: hybf_t(size_t)
+     complex(8), intent(in) :: hybf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) hybf_t
+!F2PY depend(size_t) hybf_t
 
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
@@ -246,6 +297,11 @@
 ! symmetry vector
      integer, intent(in) :: symm_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) symm_t
+!F2PY depend(size_t) symm_t
+
 ! check whether size_t is correct
      if ( size_t /= size(symm) ) then
          call s_print_error('cat_set_symm','wrong dimension size of symm_t')
@@ -259,18 +315,21 @@
 
 !!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
-     use constants, only : dp
-
      use context, only : eimp
 
      implicit none
 
 ! external arguments
 ! size of eimp
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! impurity level
-     real(dp), intent(in) :: eimp_t(size_t)
+     real(8), intent(in) :: eimp_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) eimp_t
+!F2PY depend(size_t) eimp_t
 
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
