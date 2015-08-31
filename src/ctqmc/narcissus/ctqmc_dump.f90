@@ -620,8 +620,8 @@
   end subroutine ctqmc_dump_nmat
 
 !!>>> ctqmc_dump_kmat: write out the < k > and < k^2 >
-  subroutine ctqmc_dump_kmat(kmat, kkmat)
-     use constants, only : dp, mytmp
+  subroutine ctqmc_dump_kmat(kmat, kkmat, kerr, kkerr)
+     use constants, only : dp, one, two, mytmp
 
      use control, only : issus
      use control, only : norbs
@@ -631,14 +631,24 @@
 ! external arguments
 ! number of operators, < k >
      real(dp), intent(in) :: kmat(norbs)
+     real(dp), intent(in) :: kerr(norbs)
 
 ! square of number of operators, < k^2 >
      real(dp), intent(in) :: kkmat(norbs,norbs)
+     real(dp), intent(in) :: kkerr(norbs,norbs)
 
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
+     integer  :: i
+     integer  :: j
+
+! final value and corresponding error
+     real(dp) :: f_val
+     real(dp) :: f_err
+
+! calculate f_val and f_err
+     f_val = sum( kkmat ) - sum( kmat ) * ( one * sum( kmat ) + one )
+     f_err = sum( kkerr ) - sum( kerr ) * ( two * sum( kmat ) + one )
 
 ! check if we need to dump the < k > and < k^2 > data
 ! to solver.kmat.dat
@@ -650,18 +660,18 @@
 ! write it
      write(mytmp,'(a)') '# <  k  > data:'
      do i=1,norbs
-         write(mytmp,'(i6,1f12.6)') i, kmat(i)
+         write(mytmp,'(i6,2f12.6)') i, kmat(i), kerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'k_sum', sum( kmat )
+     write(mytmp,'(a6,2f12.6)') 'k_sum', sum( kmat ), sum( kerr )
 
      write(mytmp,'(a)') '# < k^2 > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,f12.6)') i, j, kkmat(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, kkmat(i,j), kkerr(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'kksum', sum( kkmat )
-     write(mytmp,'(a6,f12.6)') 'final', sum( kkmat ) - sum( kmat ) * ( sum( kmat ) + 1.0_dp )
+     write(mytmp,'(a6,2f12.6)') 'kksum', sum( kkmat ), sum( kkerr )
+     write(mytmp,'(a6,2f12.6)') 'final', f_val, f_err
 
 ! close data file
      close(mytmp)
