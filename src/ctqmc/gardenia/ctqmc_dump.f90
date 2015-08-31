@@ -905,9 +905,9 @@
 
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
-     integer :: k
+     integer  :: i
+     integer  :: j
+     integer  :: k
 
 ! bosonic frequency mesh
      real(dp) :: bmesh(nbfrq)
