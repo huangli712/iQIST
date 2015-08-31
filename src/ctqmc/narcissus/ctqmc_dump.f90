@@ -863,7 +863,7 @@
   end subroutine ctqmc_dump_sfom
 
 !!>>> ctqmc_dump_ochi: write out the orbital-orbital correlation function
-  subroutine ctqmc_dump_ochi(ochi, oochi)
+  subroutine ctqmc_dump_ochi(ochi, oochi, oerr, ooerr)
      use constants, only : dp, mytmp
 
      use control, only : issus
@@ -876,9 +876,11 @@
 ! external arguments
 ! orbital-orbital correlation function data, < N(0) N(\tau) >, totally-averaged
      real(dp), intent(in) :: ochi(ntime)
+     real(dp), intent(in) :: oerr(ntime)
 
 ! orbital-orbital correlation function data, < N(0) N(\tau) >, orbital-resolved
      real(dp), intent(in) :: oochi(ntime,norbs,norbs)
+     real(dp), intent(in) :: ooerr(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -898,7 +900,7 @@
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
              do i=1,ntime
-                 write(mytmp,'(2f12.6)') tmesh(i), oochi(i,j,k)
+                 write(mytmp,'(3f12.6)') tmesh(i), oochi(i,j,k), ooerr(i,j,k)
              enddo ! over i={1,ntime} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
@@ -907,14 +909,18 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), ochi(i) / real(norbs)
+         write(mytmp,'(3f12.6)') tmesh(i), &
+                                 ochi(i) / real(norbs), &
+                                 oerr(i) / real(norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), sum( oochi(i,:,:) ) / real(norbs * norbs)
+         write(mytmp,'(3f12.6)') tmesh(i), &
+                                 sum( oochi(i,:,:) ) / real(norbs * norbs), &
+                                 sum( ooerr(i,:,:) ) / real(norbs * norbs)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
@@ -926,7 +932,7 @@
   end subroutine ctqmc_dump_ochi
 
 !!>>> ctqmc_dump_ofom: write out the orbital-orbital correlation function
-  subroutine ctqmc_dump_ofom(oofom)
+  subroutine ctqmc_dump_ofom(oofom, ooerr)
      use constants, only : dp, two, pi, mytmp
 
      use control, only : issus
@@ -939,12 +945,21 @@
 ! external arguments
 ! orbital-orbital correlation function: \chi^{c}_{ij} (i\omega), orbital-resolved
      real(dp), intent(in) :: oofom(nbfrq,norbs,norbs)
+     real(dp), intent(in) :: ooerr(nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
-     integer :: k
+     integer  :: i
+     integer  :: j
+     integer  :: k
+
+! bosonic frequency mesh
+     real(dp) :: bmesh(nbfrq)
+
+! build bmesh
+     do i=1,nbfrq
+         bmesh(i) = two * pi * float( i - 1 ) / beta
+     enddo ! over i={1,nbfrq} loop
 
 ! check if we need to dump the orbital-orbital correlation function data
 ! to solver.ofom.dat
@@ -958,7 +973,7 @@
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
              do i=1,nbfrq
-                 write(mytmp,'(2f12.6)') two * pi * float(i - 1) / beta, oofom(i,j,k)
+                 write(mytmp,'(3f12.6)') bmesh(i), oofom(i,j,k), ooerr(i,j,k)
              enddo ! over i={1,nbfrq} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
