@@ -1564,9 +1564,10 @@
   end subroutine ctqmc_reduce_ftau
 
 !!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
-  subroutine ctqmc_reduce_grnf(grnf_mpi)
-     use constants, only : dp, czero
+  subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+     use constants, only : dp, zero, czero, czi
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : mfreq
@@ -1578,9 +1579,24 @@
 ! external arguments
 ! impurity green's function
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
+     complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
 
-! initialize grnf_mpi
+! local variables
+! used to store the real and imaginary parts of impurity green's function
+     real(dp), allocatable :: re_err(:,:,:)
+     real(dp), allocatable :: im_err(:,:,:)
+
+! allocate memory
+     allocate(re_err(mfreq,norbs,norbs))
+     allocate(im_err(mfreq,norbs,norbs))
+
+! initialize re_err and im_err
+     re_err = zero
+     im_err = zero
+
+! initialize grnf_mpi and grnf_err
      grnf_mpi = czero
+     grnf_err = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1600,13 +1616,33 @@
 ! calculate the average
      grnf_mpi = grnf_mpi / real(nprocs)
 
+! build grnf_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs( real(grnf - grnf_mpi)), re_err, mpi_max)
+     call mp_allreduce(abs(aimag(grnf - grnf_mpi)), im_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! construct the final grnf_err
+     grnf_err = re_err + im_err * czi
+
+! deallocate memory
+     deallocate(re_err)
+     deallocate(im_err)
+
      return
   end subroutine ctqmc_reduce_grnf
 
 !!>>> ctqmc_reduce_hist: reduce the hist from all children processes
-  subroutine ctqmc_reduce_hist(hist_mpi)
+  subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : mkink
      use control, only : nprocs
@@ -1617,9 +1653,11 @@
 ! external arguments
 ! histogram for perturbation expansion series
      real(dp), intent(out) :: hist_mpi(mkink)
+     real(dp), intent(out) :: hist_err(mkink)
 
-! initialize hist_mpi
+! initialize hist_mpi and hist_err
      hist_mpi = zero
+     hist_err = zero
 
 ! build hist_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1638,6 +1676,17 @@
 
 ! calculate the average
      hist_mpi = hist_mpi / real(nprocs)
+
+! build hist_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(hist - hist_mpi), hist_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_hist
