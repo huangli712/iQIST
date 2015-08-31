@@ -40,10 +40,10 @@
 
 !!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
 !!>>> time space
-  subroutine ctqmc_dump_gtau(tmesh, gtau)
+  subroutine ctqmc_dump_gtau(tmesh, gtau, gerr)
      use constants, only : dp, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
 
      implicit none
@@ -54,6 +54,7 @@
 
 ! impurity green's function
      real(dp), intent(in) :: gtau(ntime,norbs,norbs)
+     real(dp), intent(in) :: gerr(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -62,21 +63,23 @@
 
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
+     real(dp) :: gtmp(ntime,norbs,norbs)
 
-! evaluate gaux first
+! evaluate gaux and gtmp at first
      call ctqmc_make_gtau(tmesh, gtau, gaux)
+     call ctqmc_make_gtau(tmesh, gerr, gtmp)
 
 ! open data file: solver.green.dat
      open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gtmp(j,i,i)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -87,9 +90,9 @@
 !!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_wtau(tmesh, wtau)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
 
      implicit none
@@ -110,13 +113,13 @@
      open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), wtau(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), zero
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
