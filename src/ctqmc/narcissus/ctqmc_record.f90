@@ -1745,9 +1745,10 @@
   end subroutine ctqmc_reduce_prob
 
 !!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
-  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -1758,13 +1759,18 @@
 ! external arguments
 ! occupation number matrix
      real(dp), intent(out) :: nmat_mpi(norbs)
+     real(dp), intent(out) :: nmat_err(norbs)
 
 ! double occupation number matrix
      real(dp), intent(out) :: nnmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: nnmat_err(norbs,norbs)
 
-! initialize nmat_mpi and nnmat_mpi
+! initialize nmat_mpi and nnmat_mpi, nmat_err and nnmat_err
      nmat_mpi = zero
      nnmat_mpi = zero
+
+     nmat_err = zero
+     nnmat_err = zero
 
 ! build nmat_mpi and nnmat_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1787,13 +1793,26 @@
      nmat_mpi = nmat_mpi / real(nprocs)
      nnmat_mpi = nnmat_mpi / real(nprocs)
 
+! build nmat_err and nnmat_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(nmat - nmat_mpi), nmat_err, mpi_max)
+     call mp_allreduce(abs(nnmat - nnmat_mpi), nnmat_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
      return
   end subroutine ctqmc_reduce_nmat
 
 !!>>> ctqmc_reduce_kmat: reduce the kmat and kkmat from all children processes
-  subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi)
+  subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -1804,13 +1823,18 @@
 ! external arguments
 ! number of operators
      real(dp), intent(out) :: kmat_mpi(norbs)
+     real(dp), intent(out) :: kmat_err(norbs)
 
 ! square of number of operators
      real(dp), intent(out) :: kkmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: kkmat_err(norbs,norbs)
 
-! initialize kmat_mpi and kkmat_mpi
+! initialize kmat_mpi and kkmat_mpi, kmat_err and kkmat_err
      kmat_mpi = zero
      kkmat_mpi = zero
+
+     kmat_err = zero
+     kkmat_err = zero
 
 ! build kmat_mpi and kkmat_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1832,6 +1856,18 @@
 ! calculate the average
      kmat_mpi = kmat_mpi / real(nprocs)
      kkmat_mpi = kkmat_mpi / real(nprocs)
+
+! build kmat_err and kkmat_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(kmat - kmat_mpi), kmat_err, mpi_max)
+     call mp_allreduce(abs(kkmat - kkmat_mpi), kkmat_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_kmat
