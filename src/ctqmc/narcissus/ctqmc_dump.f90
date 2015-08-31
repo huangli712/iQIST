@@ -210,59 +210,6 @@
      return
   end subroutine ctqmc_dump_ktau
 
-!!>>> ctqmc_dump_gbin: write out impurity green's function in imaginary
-!!>>> time space (generated in binning mode)
-  subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
-     use constants, only : dp, mytmp
-
-     use control, only : nband, norbs
-     use control, only : ntime
-
-     implicit none
-
-! external arguments
-! current bin index, integer representation
-     integer, intent(in)  :: ibin
-
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
-! impurity green's function
-     real(dp), intent(in) :: gtau(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! scaled impurity green's function
-     real(dp) :: gaux(ntime,norbs,norbs)
-
-! current bin index, string representation
-     character(len=10) :: sbin
-
-! evaluate gaux first
-     call ctqmc_make_gtau(tmesh, gtau, gaux)
-
-! open data file: solver.green.bin.x
-     write(sbin,'(i10)') ibin ! convert ibin to sbin
-     open(mytmp, file='solver.green.bin.'//trim(adjustl(sbin)), form='formatted', status='unknown')
-
-! write it
-     do i=1,nband
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
-         enddo ! over j={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,nband} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_gbin
-
 !!========================================================================
 !!>>> dump data on matsubara frequency axis                            <<<
 !!========================================================================
