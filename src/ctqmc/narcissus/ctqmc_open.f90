@@ -224,6 +224,9 @@
 ! current iteration number
      integer, intent(in) :: iter
 
+! declare f2py directives
+!F2PY intent(in) iter
+
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
      call ctqmc_impurity_solver(iter)
@@ -249,6 +252,10 @@
      return
   end subroutine cat_stop_ctqmc
 
+!!========================================================================
+!!>>> data setter subroutines                                          <<<
+!!========================================================================
+
 !!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
      use constants, only : dp
@@ -261,10 +268,15 @@
 
 ! external arguments
 ! size of hybf
-     integer, intent(in)     :: size_t
+     integer, intent(in)    :: size_t
 
 ! hybridization function
-     complex(dp), intent(in) :: hybf_t(size_t)
+     complex(8), intent(in) :: hybf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) hybf_t
+!F2PY depend(size_t) hybf_t
 
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
