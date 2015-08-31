@@ -745,7 +745,7 @@
   end subroutine ctqmc_dump_lmat
 
 !!>>> ctqmc_dump_schi: write out the spin-spin correlation function
-  subroutine ctqmc_dump_schi(schi, sschi)
+  subroutine ctqmc_dump_schi(schi, sschi, serr, sserr)
      use constants, only : dp, mytmp
 
      use control, only : issus
@@ -758,9 +758,11 @@
 ! external arguments
 ! spin-spin correlation function data, < Sz(0) Sz(\tau) >, totally-averaged
      real(dp), intent(in) :: schi(ntime)
+     real(dp), intent(in) :: serr(ntime)
 
 ! spin-spin correlation function data, < Sz(0) Sz(\tau) >, orbital-resolved
      real(dp), intent(in) :: sschi(ntime,nband)
+     real(dp), intent(in) :: sserr(ntime,nband)
 
 ! local variables
 ! loop index
@@ -778,7 +780,7 @@
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,ntime
-             write(mytmp,'(2f12.6)') tmesh(i), sschi(i,j)
+             write(mytmp,'(3f12.6)') tmesh(i), sschi(i,j), sserr(i,j)
          enddo ! over i={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -786,14 +788,18 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), schi(i) / real(nband)
+         write(mytmp,'(3f12.6)') tmesh(i), &
+                                 schi(i) / real(nband), &
+                                 serr(i) / real(nband)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(2f12.6)') tmesh(i), sum( sschi(i,:) ) / real(nband)
+         write(mytmp,'(3f12.6)') tmesh(i), &
+                                 sum( sschi(i,:) ) / real(nband), &
+                                 sum( sserr(i,:) ) / real(nband)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
@@ -805,7 +811,7 @@
   end subroutine ctqmc_dump_schi
 
 !!>>> ctqmc_dump_sfom: write out the spin-spin correlation function
-  subroutine ctqmc_dump_sfom(ssfom)
+  subroutine ctqmc_dump_sfom(ssfom, sserr)
      use constants, only : dp, two, pi, mytmp
 
      use control, only : issus
@@ -818,11 +824,20 @@
 ! external arguments
 ! spin-spin correlation function: \chi^{s}_{i} (i\omega), orbital-resolved
      real(dp), intent(in) :: ssfom(nbfrq,nband)
+     real(dp), intent(in) :: sserr(nbfrq,nband)
 
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
+     integer  :: i
+     integer  :: j
+
+! bosonic frequency mesh
+     real(dp) :: bmesh(nbfrq)
+
+! build bmesh
+     do i=1,nbfrq
+         bmesh(i) = two * pi * float( i - 1 ) / beta
+     enddo ! over i={1,nbfrq} loop
 
 ! check if we need to dump the spin-spin correlation function data
 ! to solver.sfom.dat
@@ -835,7 +850,7 @@
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,nbfrq
-             write(mytmp,'(2f12.6)') two * pi * float(i - 1) / beta, ssfom(i,j)
+             write(mytmp,'(3f12.6)') bmesh(i), ssfom(i,j), sserr(i,j)
          enddo ! over i={1,nbfrq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
