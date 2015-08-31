@@ -680,7 +680,7 @@
   end subroutine ctqmc_dump_kmat
 
 !!>>> ctqmc_dump_lmat: write out the fidelity susceptibility
-  subroutine ctqmc_dump_lmat(lmat, rmat, lrmat)
+  subroutine ctqmc_dump_lmat(lmat, rmat, lrmat, lerr, rerr, lrerr)
      use constants, only : dp, mytmp
 
      use control, only : issus
@@ -691,17 +691,28 @@
 ! external arguments
 ! number of operators at left half axis, < k_l >
      real(dp), intent(in) :: lmat(norbs)
+     real(dp), intent(in) :: lerr(norbs)
 
 ! number of operators at right half axis, < k_r >
      real(dp), intent(in) :: rmat(norbs)
+     real(dp), intent(in) :: rerr(norbs)
 
 ! used to evaluate fidelity susceptibility, < k_l k_r >
      real(dp), intent(in) :: lrmat(norbs,norbs)
+     real(dp), intent(in) :: lrerr(norbs,norbs)
 
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
+     integer  :: i
+     integer  :: j
+
+! final value and corresponding error
+     real(dp) :: f_val
+     real(dp) :: f_err
+
+! calculate f_val and f_err
+     f_val = sum( lrmat ) - sum( lmat ) * sum( rmat )
+     f_err = sum( lrerr ) - sum( rmat ) * sum( lerr ) - sum( lmat ) * sum( rerr )
 
 ! check if we need to dump the fidelity susceptibility data
 ! to solver.lmat.dat
@@ -713,19 +724,19 @@
 ! write it
      write(mytmp,'(a)') '# < k_l > < k_r > data:'
      do i=1,norbs
-         write(mytmp,'(i6,2f12.6)') i, lmat(i), rmat(i)
+         write(mytmp,'(i6,4f12.6)') i, lmat(i), rmat(i), lerr(i), rerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'l_sum', sum( lmat )
-     write(mytmp,'(a6,f12.6)') 'r_sum', sum( rmat )
+     write(mytmp,'(a6,2f12.6)') 'l_sum', sum( lmat ), sum( lerr )
+     write(mytmp,'(a6,2f12.6)') 'r_sum', sum( rmat ), sum( rerr )
 
      write(mytmp,'(a)') '# < k_l k_r > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,f12.6)') i, j, lrmat(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, lrmat(i,j), lrerr(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'lrsum', sum( lrmat )
-     write(mytmp,'(a6,f12.6)') 'fidel', sum( lrmat ) - sum( lmat ) * sum( rmat )
+     write(mytmp,'(a6,2f12.6)') 'lrsum', sum( lrmat ), sum( lrerr )
+     write(mytmp,'(a6,2f12.6)') 'fidel', f_val, f_err
 
 ! close data file
      close(mytmp)
