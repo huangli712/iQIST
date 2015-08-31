@@ -258,8 +258,6 @@
 
 !!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : hybf
@@ -315,18 +313,16 @@
 
 !!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
-     use constants, only : dp
-
      use context, only : eimp
 
      implicit none
 
 ! external arguments
 ! size of eimp
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! impurity level
-     real(dp), intent(in) :: eimp_t(size_t)
+     real(8), intent(in) :: eimp_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
@@ -341,21 +337,19 @@
 
 !!>>> cat_set_ktau: setup the screening function and its first derivates
   subroutine cat_set_ktau(size_t, ktau_t, ptau_t)
-     use constants, only : dp
-
      use context, only : ktau, ptau
 
      implicit none
 
 ! external arguments
 ! size of ktau
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! screening function K(\tau)
-     real(dp), intent(in) :: ktau_t(size_t)
+     real(8), intent(in) :: ktau_t(size_t)
 
 ! first derivate of screening function K'(\tau)
-     real(dp), intent(in) :: ptau_t(size_t)
+     real(8), intent(in) :: ptau_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(ktau) ) then
@@ -375,8 +369,6 @@
 
 !!>>> cat_set_uumat: setup the Coulomb interaction matrix
   subroutine cat_set_uumat(size_t, uumat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : uumat
 
@@ -384,10 +376,10 @@
 
 ! external arguments
 ! size of uumat
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! Coulomb interaction matrix
-     real(dp), intent(in) :: uumat_t(size_t)
+     real(8), intent(in) :: uumat_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(uumat) ) then
@@ -402,8 +394,6 @@
 
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : grnf
@@ -412,10 +402,10 @@
 
 ! external arguments
 ! size of grnf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! impurity green's function
-     complex(dp), intent(out) :: grnf_t(size_t)
+     complex(8), intent(out) :: grnf_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(grnf) ) then
