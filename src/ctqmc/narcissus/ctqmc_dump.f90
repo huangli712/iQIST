@@ -130,9 +130,9 @@
 !!>>> ctqmc_dump_htau: write out hybridization function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_htau(tmesh, htau)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
 
      implicit none
@@ -153,13 +153,13 @@
      open(mytmp, file='solver.hybri.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), htau(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), zero
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
