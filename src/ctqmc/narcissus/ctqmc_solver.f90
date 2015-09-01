@@ -135,6 +135,7 @@
      real(dp), allocatable :: oofom_mpi(:,:,:)
      real(dp), allocatable :: oofom_err(:,:,:)
 
+! note: for the two-particle quantities, we don't measure the error bars
 ! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
 
@@ -167,121 +168,48 @@
 
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(hist_err(mkink),             stat=istat)
      allocate(prob_mpi(ncfgs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(prob_err(ncfgs),             stat=istat)
      allocate(nmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(nmat_err(norbs),             stat=istat)
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(nnmat_err(norbs,norbs),      stat=istat)
      allocate(kmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(kmat_err(norbs),             stat=istat)
      allocate(kkmat_mpi(norbs,norbs),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(kkmat_err(norbs,norbs),      stat=istat)
      allocate(lmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(lmat_err(norbs),             stat=istat)
      allocate(rmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(rmat_err(norbs),             stat=istat)
      allocate(lrmat_mpi(norbs,norbs),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(lrmat_err(norbs,norbs),      stat=istat)
      allocate(schi_mpi(ntime),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(schi_err(ntime),             stat=istat)
      allocate(sschi_mpi(ntime,nband),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(sschi_err(ntime,nband),      stat=istat)
      allocate(ssfom_mpi(nbfrq,nband),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(ssfom_err(nbfrq,nband),      stat=istat)
      allocate(ochi_mpi(ntime),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(ochi_err(ntime),             stat=istat)
      allocate(oochi_mpi(ntime,norbs,norbs),stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(oochi_err(ntime,norbs,norbs),stat=istat)
      allocate(oofom_mpi(nbfrq,norbs,norbs),stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(oofom_err(nbfrq,norbs,norbs),stat=istat)
      allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(gtau_err(ntime,norbs,norbs), stat=istat)
      allocate(ftau_mpi(ntime,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(ftau_err(ntime,norbs,norbs), stat=istat)
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
+
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -506,13 +434,14 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-         call ctqmc_reduce_hist(hist_mpi)
+         call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
-         call ctqmc_reduce_gtau(gtau_mpi)
+         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
 ! gtau_mpi need to be scaled properly before written
          gtau_mpi = gtau_mpi * real(ncarlo) / real(cstep)
+         gtau_err = gtau_err * real(ncarlo) / real(cstep)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
@@ -521,6 +450,7 @@
 ! symmetrize the impurity green's function over spin or over bands
          if ( issun == 2 .or. isspn == 1 ) then
              call ctqmc_symm_gtau(symm, gtau_mpi)
+             call ctqmc_symm_gtau(symm, gtau_err)
          endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 !!========================================================================
