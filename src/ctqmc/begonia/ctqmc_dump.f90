@@ -3,7 +3,6 @@
 !!! program : ctqmc_dump_gtau
 !!!           ctqmc_dump_wtau
 !!!           ctqmc_dump_htau
-!!!           ctqmc_dump_gbin
 !!!           ctqmc_dump_grnf
 !!!           ctqmc_dump_wssf
 !!!           ctqmc_dump_hybf
@@ -15,9 +14,8 @@
 !!! source  : ctqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/16/2009 by li huang
-!!!           08/23/2010 by li huang
-!!!           11/04/2014 by li huang
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -32,10 +30,10 @@
 
 !!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
 !!>>> time space
-  subroutine ctqmc_dump_gtau(tmesh, gtau)
+  subroutine ctqmc_dump_gtau(tmesh, gtau, gerr)
      use constants, only : dp, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
 
      implicit none
@@ -46,6 +44,7 @@
 
 ! impurity green's function
      real(dp), intent(in) :: gtau(ntime,norbs,norbs)
+     real(dp), intent(in) :: gerr(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -54,21 +53,23 @@
 
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
+     real(dp) :: gtmp(ntime,norbs,norbs)
 
-! evaluate gaux first
+! evaluate gaux and gtmp at first
      call ctqmc_make_gtau(gtau, gaux)
+     call ctqmc_make_gtau(gerr, gtmp)
 
 ! open data file: solver.green.dat
      open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gtmp(j,i,i)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -79,9 +80,9 @@
 !!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_wtau(tmesh, wtau)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
 
      implicit none
