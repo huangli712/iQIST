@@ -40,6 +40,9 @@
 ! solver identity
      integer, intent(out) :: I_solver_id
 
+! declare f2py directives
+!F2PY intent(out) I_solver_id
+
      I_solver_id = solver_id_begonia
 
      return
@@ -47,13 +50,16 @@
 
 !!>>> cat_solver_status: return the solver status
   subroutine cat_solver_status(I_solver_status)
-     use api, only : solver_is_ready_begonia
+     use capi, only : solver_is_ready_begonia
 
      implicit none
 
 ! external arguments
 ! solver status
      integer, intent(out) :: I_solver_status
+
+! declare f2py directives
+!F2PY intent(out) I_solver_status
 
      I_solver_status = solver_is_ready_begonia
      if ( I_solver_status == 0 ) then
@@ -63,12 +69,16 @@
      return
   end subroutine cat_solver_status
 
-# if !defined (MPY)
+!!========================================================================
+!!>>> flow control subroutines                                         <<<
+!!========================================================================
+
+# if !defined (PYAPI)
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use api, only : T_mpi, T_general_begonia
+     use capi, only : T_mpi, T_general_begonia
 
      use control ! ALL
 
@@ -145,7 +155,7 @@
      return
   end subroutine cat_init_ctqmc
 
-# else   /* MPY */
+# else   /* PYAPI */
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> python version
@@ -160,6 +170,10 @@
 
 ! number of processors
      integer, intent(in) :: num_procs
+
+! declare f2py directives
+!F2PY intent(in) my_id
+!F2PY intent(in) num_procs
 
 ! initialize mpi envirnoment
      myid = my_id
@@ -190,7 +204,7 @@
      return
   end subroutine cat_init_ctqmc
 
-# endif  /* MPY */
+# endif  /* PYAPI */
 
 !!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
@@ -199,6 +213,9 @@
 ! external arguments
 ! current iteration number
      integer, intent(in) :: iter
+
+! declare f2py directives
+!F2PY intent(in) iter
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
@@ -225,10 +242,12 @@
      return
   end subroutine cat_stop_ctqmc
 
+!!========================================================================
+!!>>> data setter subroutines                                          <<<
+!!========================================================================
+
 !!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : hybf
@@ -237,10 +256,15 @@
 
 ! external arguments
 ! size of hybf
-     integer, intent(in)     :: size_t
+     integer, intent(in)    :: size_t
 
 ! hybridization function
-     complex(dp), intent(in) :: hybf_t(size_t)
+     complex(8), intent(in) :: hybf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) hybf_t
+!F2PY depend(size_t) hybf_t
 
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
@@ -266,6 +290,11 @@
 ! symmetry vector
      integer, intent(in) :: symm_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) symm_t
+!F2PY depend(size_t) symm_t
+
 ! check whether size_t is correct
      if ( size_t /= size(symm) ) then
          call s_print_error('cat_set_symm','wrong dimension size of symm_t')
@@ -279,18 +308,21 @@
 
 !!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
-     use constants, only : dp
-
      use context, only : eimp
 
      implicit none
 
 ! external arguments
 ! size of eimp
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! impurity level
-     real(dp), intent(in) :: eimp_t(size_t)
+     real(8), intent(in) :: eimp_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) eimp_t
+!F2PY depend(size_t) eimp_t
 
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
@@ -306,19 +338,24 @@
 !!>>> cat_set_ktau: setup the screening function and its first derivates
 !!>>> note: the begonia code does not support this function now
   subroutine cat_set_ktau(size_t, ktau_t, ptau_t)
-     use constants, only : dp
-
      implicit none
 
 ! external arguments
 ! size of ktau
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! screening function K(\tau)
-     real(dp), intent(in) :: ktau_t(size_t)
+     real(8), intent(in) :: ktau_t(size_t)
 
 ! first derivate of screening function K'(\tau)
-     real(dp), intent(in) :: ptau_t(size_t)
+     real(8), intent(in) :: ptau_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) ktau_t
+!F2PY intent(in) ptau_t
+!F2PY depend(size_t) ktau_t
+!F2PY depend(size_t) ptau_t
 
 ! to avoid the warning from compiler
      call s_assert( size(ktau_t) == size_t )
@@ -331,16 +368,19 @@
 !!>>> cat_set_uumat: setup the Coulomb interaction matrix
 !!>>> note: the begonia code does not support this function now
   subroutine cat_set_uumat(size_t, uumat_t)
-     use constants, only : dp
-
      implicit none
 
 ! external arguments
 ! size of uumat
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! Coulomb interaction matrix
-     real(dp), intent(in) :: uumat_t(size_t)
+     real(8), intent(in) :: uumat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) uumat_t
+!F2PY depend(size_t) uumat_t
 
 ! to avoid the warning from compiler
      call s_assert( size(uumat_t) == size_t )
@@ -349,10 +389,12 @@
      return
   end subroutine cat_set_uumat
 
+!!========================================================================
+!!>>> data getter subroutines                                          <<<
+!!========================================================================
+
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : grnf
@@ -379,8 +421,6 @@
 
 !!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : sig2
@@ -407,8 +447,6 @@
 
 !!>>> cat_get_nmat: extract the occupation number
   subroutine cat_get_nmat(size_t, nmat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : nmat
 
@@ -434,8 +472,6 @@
 
 !!>>> cat_get_nnmat: extract the double occupation number
   subroutine cat_get_nnmat(size_t, nnmat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : nnmat
 
