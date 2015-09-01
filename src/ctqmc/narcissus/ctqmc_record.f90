@@ -2067,9 +2067,10 @@
   end subroutine ctqmc_reduce_sfom
 
 !!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from all children processes
-  subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
+  subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : ntime
@@ -2081,13 +2082,18 @@
 ! external arguments
 ! orbital-orbital correlation function, totally-averaged
      real(dp), intent(out) :: ochi_mpi(ntime)
+     real(dp), intent(out) :: ochi_err(ntime)
 
 ! orbital-orbital correlation function, orbital-resolved
      real(dp), intent(out) :: oochi_mpi(ntime,norbs,norbs)
+     real(dp), intent(out) :: oochi_err(ntime,norbs,norbs)
 
-! initialize ochi_mpi and oochi_mpi
+! initialize ochi_mpi and oochi_mpi, ochi_err and oochi_err
      ochi_mpi = zero
      oochi_mpi = zero
+
+     ochi_err = zero
+     oochi_err = zero
 
 ! build ochi_mpi and oochi_mpi, collect data from all children processes
 # if defined (MPI)
@@ -2109,6 +2115,18 @@
 ! calculate the average
      ochi_mpi = ochi_mpi / real(nprocs)
      oochi_mpi = oochi_mpi / real(nprocs)
+
+! build ochi_err and oochi_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(ochi - ochi_mpi), ochi_err, mpi_max)
+     call mp_allreduce(abs(oochi - oochi_mpi), oochi_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_ochi
