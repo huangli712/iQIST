@@ -8,9 +8,8 @@
 !!! source  : ctqmc_solver.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/16/2009 by li huang
-!!!           06/21/2010 by li huang
-!!!           11/07/2014 by li huang
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
@@ -21,7 +20,7 @@
 !!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
-     use constants, only : dp, zero, mystd
+     use constants, only : dp, zero, one, mystd
 
      use control, only : issun, isspn, issus, isvrt
      use control, only : nband, nspin, norbs, ncfgs
@@ -78,30 +77,39 @@
 
 ! histogram for perturbation expansion series, for mpi case
      real(dp), allocatable :: hist_mpi(:)
+     real(dp), allocatable :: hist_err(:)
 
 ! probability of atomic states, for mpi case
      real(dp), allocatable :: prob_mpi(:)
+     real(dp), allocatable :: prob_err(:)
 
 ! impurity occupation number matrix, for mpi case
      real(dp), allocatable :: nmat_mpi(:)
+     real(dp), allocatable :: nmat_err(:)
 
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
+     real(dp), allocatable :: nnmat_err(:,:)
 
 ! number of operators, for mpi case
      real(dp), allocatable :: kmat_mpi(:)
+     real(dp), allocatable :: kmat_err(:)
 
 ! square of number of operators, for mpi case
      real(dp), allocatable :: kkmat_mpi(:,:)
+     real(dp), allocatable :: kkmat_err(:,:)
 
 ! number of operators at left half axis, for mpi case
      real(dp), allocatable :: lmat_mpi(:)
+     real(dp), allocatable :: lmat_err(:)
 
 ! number of operators at right half axis, for mpi case
      real(dp), allocatable :: rmat_mpi(:)
+     real(dp), allocatable :: rmat_err(:)
 
 ! used to evaluate fidelity susceptibility, for mpi case
      real(dp), allocatable :: lrmat_mpi(:,:)
+     real(dp), allocatable :: lrmat_err(:,:)
 
 ! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
@@ -117,82 +125,40 @@
 
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
+     real(dp), allocatable :: gtau_err(:,:,:)
 
 ! impurity green's function, matsubara frequency axis, for mpi case
      complex(dp), allocatable :: grnf_mpi(:,:,:)
+     complex(dp), allocatable :: grnf_err(:,:,:)
 
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(hist_err(mkink),             stat=istat)
      allocate(prob_mpi(ncfgs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(prob_err(ncfgs),             stat=istat)
      allocate(nmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(nmat_err(norbs),             stat=istat)
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(nnmat_err(norbs,norbs),      stat=istat)
      allocate(kmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(kmat_err(norbs),             stat=istat)
      allocate(kkmat_mpi(norbs,norbs),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(kkmat_err(norbs,norbs),      stat=istat)
      allocate(lmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(lmat_err(norbs),             stat=istat)
      allocate(rmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(rmat_err(norbs),             stat=istat)
      allocate(lrmat_mpi(norbs,norbs),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(lrmat_err(norbs,norbs),      stat=istat)
      allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(gtau_err(ntime,norbs,norbs), stat=istat)
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
+
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -387,15 +353,16 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-         call ctqmc_reduce_hist(hist_mpi)
+         call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
          gtau = gtau / real(caves)
-         call ctqmc_reduce_gtau(gtau_mpi)
+         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
          gtau = gtau * real(caves)
 
 ! gtau_mpi need to be scaled properly before written
          gtau_mpi = gtau_mpi * real(ncarlo)
+         gtau_err = gtau_err * real(ncarlo)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
