@@ -1951,6 +1951,7 @@
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : nband
      use control, only : ntime
@@ -2012,9 +2013,10 @@
   end subroutine ctqmc_reduce_schi
 
 !!>>> ctqmc_reduce_sfom: reduce the ssfom from all children processes
-  subroutine ctqmc_reduce_sfom(ssfom_mpi)
+  subroutine ctqmc_reduce_sfom(ssfom_mpi, ssfom_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : nband
      use control, only : nbfrq
@@ -2026,9 +2028,11 @@
 ! external arguments
 ! spin-spin correlation function, orbital-resolved
      real(dp), intent(out) :: ssfom_mpi(nbfrq,nband)
+     real(dp), intent(out) :: ssfom_err(nbfrq,nband)
 
-! initialize ssfom_mpi
+! initialize ssfom_mpi and ssfom_err
      ssfom_mpi = zero
+     ssfom_err = zero
 
 ! build ssfom_mpi, collect data from all children processes
 # if defined (MPI)
@@ -2047,6 +2051,17 @@
 
 ! calculate the average
      ssfom_mpi = ssfom_mpi / real(nprocs)
+
+! build ssfom_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(ssfom - ssfom_mpi), ssfom_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_sfom
