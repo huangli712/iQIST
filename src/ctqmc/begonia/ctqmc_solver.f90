@@ -409,16 +409,19 @@
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_nmat(symm, nmat)
+         call ctqmc_symm_nmat(symm, nmat_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (gtau) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, gtau)
+         call ctqmc_symm_gtau(symm, gtau_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (grnf) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, grnf)
+         call ctqmc_symm_grnf(symm, grnf_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity self-energy function (sig2) over spin or over bands
@@ -432,27 +435,27 @@
 
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hist(hist)
+         call ctqmc_dump_hist(hist, hist_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final probability data, prob
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_prob(prob, naux, saux)
+         call ctqmc_dump_prob(prob, naux, saux, prob_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_nmat(nmat, nnmat)
+         call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_gtau(tmesh, gtau)
+         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, grnf
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_grnf(rmesh, grnf)
+         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final self-energy function data, sig2
@@ -481,11 +484,17 @@
 
 ! deallocate memory
      deallocate(hist_mpi )
+     deallocate(hist_err )
      deallocate(prob_mpi )
+     deallocate(prob_err )
      deallocate(nmat_mpi )
+     deallocate(nmat_err )
      deallocate(nnmat_mpi)
+     deallocate(nnmat_err)
      deallocate(gtau_mpi )
+     deallocate(gtau_err )
      deallocate(grnf_mpi )
+     deallocate(grnf_err )
 
      return
   end subroutine ctqmc_impurity_solver
