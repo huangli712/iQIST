@@ -371,6 +371,7 @@
 ! symmetrize the impurity green's function over spin or over bands
          if ( issun == 2 .or. isspn == 1 ) then
              call ctqmc_symm_gtau(symm, gtau_mpi)
+             call ctqmc_symm_gtau(symm, gtau_err)
          endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 !!========================================================================
@@ -384,12 +385,7 @@
 
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
-             if ( iter /= 999 ) then
-                 call ctqmc_dump_gtau(tmesh, gtau_mpi)
-             else
-                 call ctqmc_dump_gbin(cstep / nwrite, tmesh, gtau_mpi)
-                 write(mystd,'(4X,a)') '>>> quantum impurity solver status: binned'
-             endif ! back if ( iter /= 999 ) block
+             call ctqmc_dump_gtau(tmesh, gtau_mpi, gtau_err)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
@@ -436,11 +432,11 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-     call ctqmc_reduce_hist(hist_mpi)
+     call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the probability data from prob to prob_mpi
      prob  = prob  / real(caves)
-     call ctqmc_reduce_prob(prob_mpi)
+     call ctqmc_reduce_prob(prob_mpi, prob_err)
 
 ! collect the occupation matrix data from nmat to nmat_mpi
 ! collect the double occupation matrix data from nnmat to nnmat_mpi
