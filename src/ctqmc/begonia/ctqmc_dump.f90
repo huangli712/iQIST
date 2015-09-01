@@ -363,10 +363,8 @@
      do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                    real(ghub(j,i)), &
-                                   aimag(ghub(j,i)), &
-                                    real(shub(j,i)), &
-                                   aimag(shub(j,i))
+                  real(ghub(j,i)), aimag(ghub(j,i)), &
+                  real(shub(j,i)), aimag(shub(j,i))
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
