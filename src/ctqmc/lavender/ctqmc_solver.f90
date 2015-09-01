@@ -91,26 +91,27 @@
      real(dp), allocatable :: nnmat_mpi(:,:)
      real(dp), allocatable :: nnmat_err(:,:)
 
-! number of operators, for mpi case
+! number of operators < k >, for mpi case
      real(dp), allocatable :: kmat_mpi(:)
      real(dp), allocatable :: kmat_err(:)
 
-! square of number of operators, for mpi case
+! square of number of operators < k^2 >, for mpi case
      real(dp), allocatable :: kkmat_mpi(:,:)
      real(dp), allocatable :: kkmat_err(:,:)
 
-! number of operators at left half axis, for mpi case
+! number of operators at left half axis < k_l >, for mpi case
      real(dp), allocatable :: lmat_mpi(:)
      real(dp), allocatable :: lmat_err(:)
 
-! number of operators at right half axis, for mpi case
+! number of operators at right half axis < k_r >, for mpi case
      real(dp), allocatable :: rmat_mpi(:)
      real(dp), allocatable :: rmat_err(:)
 
-! used to evaluate fidelity susceptibility, for mpi case
+! used to evaluate fidelity susceptibility < k_l k_r >, for mpi case
      real(dp), allocatable :: lrmat_mpi(:,:)
      real(dp), allocatable :: lrmat_err(:,:)
 
+! note: for the two-particle quantities, we don't measure the error bars
 ! used to measure two-particle green's function, real part, for mpi case
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
 
