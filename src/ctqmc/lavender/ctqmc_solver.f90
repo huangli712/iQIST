@@ -380,7 +380,7 @@
 
 ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_dump_hist(hist_mpi)
+             call ctqmc_dump_hist(hist_mpi, hist_err)
          endif ! back if ( myid == master ) block
 
 ! write out the impurity green's function, gtau_mpi
@@ -479,7 +479,8 @@
      call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
-     hist  = hist_mpi
+! average value section
+     hist  = hist_mpi  * one
      prob  = prob_mpi  * real(ncarlo)
 
      nmat  = nmat_mpi  * real(nmonte)
@@ -497,6 +498,22 @@
 
      gtau  = gtau_mpi  * real(ncarlo)
      grnf  = grnf_mpi  * real(nmonte)
+
+! update original data and calculate the averages simultaneously
+! error bar section
+     hist_err  = hist_err  * one
+     prob_err  = prob_err  * real(ncarlo)
+
+     nmat_err  = nmat_err  * real(nmonte)
+     nnmat_err = nnmat_err * real(nmonte)
+     kmat_err  = kmat_err  * real(nmonte)
+     kkmat_err = kkmat_err * real(nmonte)
+     lmat_err  = lmat_err  * real(nmonte)
+     rmat_err  = rmat_err  * real(nmonte)
+     lrmat_err = lrmat_err * real(nmonte)
+
+     gtau_err  = gtau_err  * real(ncarlo)
+     grnf_err  = grnf_err  * real(nmonte)
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
