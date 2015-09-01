@@ -2132,9 +2132,10 @@
   end subroutine ctqmc_reduce_ochi
 
 !!>>> ctqmc_reduce_ofom: reduce the oofom from all children processes
-  subroutine ctqmc_reduce_ofom(oofom_mpi)
+  subroutine ctqmc_reduce_ofom(oofom_mpi, oofom_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nbfrq
@@ -2146,9 +2147,11 @@
 ! external arguments
 ! orbital-orbital correlation function, orbital-resolved
      real(dp), intent(out) :: oofom_mpi(nbfrq,norbs,norbs)
+     real(dp), intent(out) :: oofom_err(nbfrq,norbs,norbs)
 
-! initialize oofom_mpi
+! initialize oofom_mpi and oofom_err
      oofom_mpi = zero
+     oofom_err = zero
 
 ! build oofom_mpi, collect data from all children processes
 # if defined (MPI)
@@ -2167,6 +2170,17 @@
 
 ! calculate the average
      oofom_mpi = oofom_mpi / real(nprocs)
+
+! build oofom_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(oofom - oofom_mpi), oofom_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine ctqmc_reduce_ofom
