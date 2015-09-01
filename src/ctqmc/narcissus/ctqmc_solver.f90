@@ -554,13 +554,13 @@
      call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
-     call ctqmc_reduce_gtau(gtau_mpi)
+     call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
 ! collect the auxiliary correlation function from ftau to ftau_mpi
-     call ctqmc_reduce_ftau(ftau_mpi)
+     call ctqmc_reduce_ftau(ftau_mpi, ftau_err)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
-     call ctqmc_reduce_grnf(grnf_mpi)
+     call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
