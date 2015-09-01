@@ -20,7 +20,7 @@
 !!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
-     use constants, only : dp, zero, mystd
+     use constants, only : dp, zero, one, mystd
 
      use control, only : issun, isspn
      use control, only : nband, nspin, norbs, ncfgs
