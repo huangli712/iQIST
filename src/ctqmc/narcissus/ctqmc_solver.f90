@@ -563,7 +563,8 @@
      call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
-     hist  = hist_mpi
+! average value section
+     hist  = hist_mpi  * one
      prob  = prob_mpi  * real(ncarlo) / real(nsweep)
 
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
@@ -590,6 +591,29 @@
      gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
      ftau  = ftau_mpi  * real(ncarlo) / real(nsweep)
      grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
+
+! update original data and calculate the averages simultaneously
+! error bar section
+     hist_err  = hist_err  * one
+     prob_err  = prob_err  * real(ncarlo) / real(nsweep)
+
+     nmat_err  = nmat_err  * real(nmonte) / real(nsweep)
+     nnmat_err = nnmat_err * real(nmonte) / real(nsweep)
+     kmat_err  = kmat_err  * real(nmonte) / real(nsweep)
+     kkmat_err = kkmat_err * real(nmonte) / real(nsweep)
+     lmat_err  = lmat_err  * real(nmonte) / real(nsweep)
+     rmat_err  = rmat_err  * real(nmonte) / real(nsweep)
+     lrmat_err = lrmat_err * real(nmonte) / real(nsweep)
+     schi_err  = schi_err  * real(nmonte) / real(nsweep)
+     sschi_err = sschi_err * real(nmonte) / real(nsweep)
+     ssfom_err = ssfom_err * real(nmonte) / real(nsweep)
+     ochi_err  = ochi_err  * real(nmonte) / real(nsweep)
+     oochi_err = oochi_err * real(nmonte) / real(nsweep)
+     oofom_err = oofom_err * real(nmonte) / real(nsweep)
+
+     gtau_err  = gtau_err  * real(ncarlo) / real(nsweep)
+     ftau_err  = ftau_err  * real(ncarlo) / real(nsweep)
+     grnf_err  = grnf_err  * real(nmonte) / real(nsweep)
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
