@@ -20,7 +20,8 @@
 ## History
 ## =======
 ##
-## 02/28/2015 by li huang
+## 02/28/2015 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -35,17 +36,22 @@ lev1 = ctqmc_flavor.o ctqmc_update.o
 lev2 = ctqmc_record.o ctqmc_status.o ctqmc_stream.o ctqmc_util.o
 lev3 = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
-MAPI = ctqmc_api.o libMM.a
+open = ctqmc_open.o
 
-objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(main) $(MAPI)
+CAPI = ctqmc_api.o
+CLIB = libMM.a
+
+objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3)
+exe_obj = $(objects) $(main) $(CLIB)
+lib_obj = $(objects) $(open) $(CAPI)
 
 default: all
 
 all: exe
 
 api:
-	cp ../../api/api.mod .
-	cp ../../api/ctqmc_api.o .
+	cp ../../capi/capi.mod .
+	cp ../../capi/ctqmc_api.o .
 
 cssl:
 	cp ../../common/libMM.a .
@@ -59,16 +65,18 @@ csml:
 	cp ../../common/parser.mod .
 	cp ../../common/linkedlist.mod .
 
-touch:
-	touch ctqmc_main.f90
-
 exe: api cssl csml ctqmc-exe
-ctqmc-exe: $(objects)
-	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
+ctqmc-exe: $(exe_obj)
+	$(LINKER) $(exe_obj) -o ctqmc $(LFLAGS) $(LIBS)
 
-lib: api cssl csml touch ctqmc-lib
-ctqmc-lib: $(objects)
-	$(ARCHIVER) libctqmc.a $(objects)
+lib: api cssl csml ctqmc-lib
+ctqmc-lib: $(lib_obj)
+	$(ARCHIVER) libctqmc.a $(lib_obj)
+
+pylib: lib
+	cpp -E -DPYAPI ctqmc_open.f90 > ctqmc_open_py.f90
+	$(F2PY) -c --f90exec=$(F2PYC) -m pyiqist -L. -lctqmc -lMM $(F2PYL) ctqmc_open_py.f90
+	rm -fr *.dSYM ctqmc_open_py.f90
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -76,13 +84,13 @@ ctqmc-lib: $(objects)
 clean:
 	rm -f *.mod
 	rm -f *.o
+	rm -f *.so
 	rm -f ctqmc
 	rm -f libctqmc.a
 	rm -f libMM.a
 
 clean-dat:
 	rm -f *.dat
-	rm -f *.bin.*
 	rm -f *.out
 
 clean-all: clean clean-dat
