@@ -1,9 +1,38 @@
-  subroutine test()
-  end subroutine test
+!!!-----------------------------------------------------------------------
+!!! project : begonia
+!!! program : cat_solver_id
+!!!           cat_solver_status <<<---
+!!!           cat_init_ctqmc
+!!!           cat_exec_ctqmc
+!!!           cat_stop_ctqmc    <<<---
+!!!           cat_set_hybf
+!!!           cat_set_symm
+!!!           cat_set_eimp
+!!!           cat_set_ktau
+!!!           cat_set_uumat     <<<---
+!!!           cat_get_grnf
+!!!           cat_get_sigf
+!!!           cat_get_nmat
+!!!           cat_get_nnmat     <<<---
+!!! source  : ctqmc_open.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 08/12/2015 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
+!!! purpose : to provide necessary application programming interface for
+!!!           the hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
+
+!!========================================================================
+!!>>> status query subroutines                                         <<<
+!!========================================================================
 
 !!>>> cat_solver_id: return the solver identity
   subroutine cat_solver_id(I_solver_id)
-     use api, only : solver_id_begonia
+     use capi, only : solver_id_begonia
 
      implicit none
 
