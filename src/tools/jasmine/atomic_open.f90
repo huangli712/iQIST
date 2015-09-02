@@ -14,7 +14,7 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-# if !defined (MPY)
+# if !defined (PYAPI)
 
 !!>>> cat_init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> fortran version
@@ -73,7 +73,7 @@
      return
   end subroutine cat_init_atomic
 
-# else   /* MPY */
+# else   /* PYAPI */
 
 !!>>> cat_init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> python version
@@ -104,7 +104,7 @@
      return
   end subroutine cat_init_atomic
 
-# endif  /* MPY */
+# endif  /* PYAPI */
 
 !!>>> cat_exec_atomic: execute the atomic eigenvalue problem solver
   subroutine cat_exec_atomic()
@@ -153,7 +153,7 @@
      write(mystd,*)
 
 ! make natural basis
-     write(mystd,'(2X,a)') "make natural eigenbasis"
+     write(mystd,'(2X,a)') 'make natural eigenbasis'
      call atomic_make_natural()
      write(mystd,*)
 
