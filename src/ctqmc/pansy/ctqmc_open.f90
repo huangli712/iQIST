@@ -40,6 +40,9 @@
 ! solver identity
      integer, intent(out) :: I_solver_id
 
+! declare f2py directives
+!F2PY intent(out) I_solver_id
+
      I_solver_id = solver_id_pansy
 
      return
@@ -55,6 +58,9 @@
 ! solver status
      integer, intent(out) :: I_solver_status
 
+! declare f2py directives
+!F2PY intent(out) I_solver_status
+
      I_solver_status = solver_is_ready_pansy
      if ( I_solver_status == 0 ) then
          call s_print_error('cat_solver_status','sorry, the current solver is not ready!')
@@ -62,6 +68,10 @@
 
      return
   end subroutine cat_solver_status
+
+!!========================================================================
+!!>>> flow control subroutines                                         <<<
+!!========================================================================
 
 # if !defined (PYAPI)
 
@@ -160,6 +170,10 @@
 ! number of processors
      integer, intent(in) :: num_procs
 
+! declare f2py directives
+!F2PY intent(in) my_id
+!F2PY intent(in) num_procs
+
 ! initialize mpi envirnoment
      myid = my_id
      nprocs = num_procs
@@ -199,6 +213,9 @@
 ! current iteration number
      integer, intent(in) :: iter
 
+! declare f2py directives
+!F2PY intent(in) iter
+
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
      call ctqmc_impurity_solver(iter)
@@ -224,6 +241,10 @@
      return
   end subroutine cat_stop_ctqmc
 
+!!========================================================================
+!!>>> data setter subroutines                                          <<<
+!!========================================================================
+
 !!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
      use control, only : norbs
@@ -238,6 +259,11 @@
 
 ! hybridization function
      complex(8), intent(in) :: hybf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) hybf_t
+!F2PY depend(size_t) hybf_t
 
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
@@ -263,6 +289,11 @@
 ! symmetry vector
      integer, intent(in) :: symm_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) symm_t
+!F2PY depend(size_t) symm_t
+
 ! check whether size_t is correct
      if ( size_t /= size(symm) ) then
          call s_print_error('cat_set_symm','wrong dimension size of symm_t')
@@ -286,6 +317,11 @@
 
 ! impurity level
      real(8), intent(in) :: eimp_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) eimp_t
+!F2PY depend(size_t) eimp_t
 
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
@@ -313,6 +349,13 @@
 ! first derivate of screening function K'(\tau)
      real(8), intent(in) :: ptau_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) ktau_t
+!F2PY intent(in) ptau_t
+!F2PY depend(size_t) ktau_t
+!F2PY depend(size_t) ptau_t
+
 ! to avoid the warning from compiler
      call s_assert( size(ktau_t) == size_t )
      call s_assert( size(ptau_t) == size_t )
@@ -333,12 +376,21 @@
 ! Coulomb interaction matrix
      real(8), intent(in) :: uumat_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) uumat_t
+!F2PY depend(size_t) uumat_t
+
 ! to avoid the warning from compiler
      call s_assert( size(uumat_t) == size_t )
      call s_print_error('cat_set_uumat','sorry, this feature is not supported')
 
      return
   end subroutine cat_set_uumat
+
+!!========================================================================
+!!>>> data getter subroutines                                          <<<
+!!========================================================================
 
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
@@ -354,6 +406,11 @@
 
 ! impurity green's function
      complex(8), intent(out) :: grnf_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) grnf_t
+!F2PY depend(size_t) grnf_t
 
 ! check whether size_t is correct
      if ( size_t /= size(grnf) ) then
@@ -381,6 +438,11 @@
 ! self-energy function
      complex(8), intent(out) :: sigf_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) sigf_t
+!F2PY depend(size_t) sigf_t
+
 ! check whether size_t is correct
      if ( size_t /= size(sig2) ) then
          call s_print_error('cat_get_sigf','wrong dimension size of sigf_t')
@@ -406,6 +468,11 @@
 ! occupation number
      real(8), intent(out) :: nmat_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) nmat_t
+!F2PY depend(size_t) nmat_t
+
 ! check whether size_t is correct
      if ( size_t /= size(nmat) ) then
          call s_print_error('cat_get_nmat','wrong dimension size of nmat_t')
@@ -430,6 +497,11 @@
 
 ! double occupation number
      real(8), intent(out) :: nnmat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) nnmat_t
+!F2PY depend(size_t) nnmat_t
 
 ! check whether size_t is correct
      if ( size_t /= size(nnmat) ) then
