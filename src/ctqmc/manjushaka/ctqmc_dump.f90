@@ -385,6 +385,46 @@
 !!>>> dump data of physical observables                                <<<
 !!========================================================================
 
+!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
+!!>>> perturbation expansion series
+  subroutine ctqmc_dump_hist(hist, herr)
+     use constants, only : dp, mytmp
+
+     use control, only : mkink
+
+     implicit none
+
+! external arguments
+! histogram data
+     real(dp), intent(in) :: hist(mkink)
+     real(dp), intent(in) :: herr(mkink)
+
+! local variables
+! loop index
+     integer  :: i
+
+! scaled histogram data
+     real(dp) :: haux(mkink)
+     real(dp) :: htmp(mkink)
+
+! evaluate haux and htmp at first
+     haux = hist / sum(hist)
+     htmp = herr / sum(hist)
+
+! open data file: solver.hist.dat
+     open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
+
+! write it
+     write(mytmp,'(a)') '# histogram: order | count | percent'
+     do i=1,mkink
+         write(mytmp,'(i6,i12,2f12.6)') i, int( hist(i) ), haux(i), htmp(i)
+     enddo ! over i={1,mkink} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_hist
 
 !!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
 !!>>> hamiltonian matrix
@@ -508,7 +548,7 @@
 
 !!>>> ctqmc_dump_nmat: write out the occupation matrix and double
 !!>>> occupation matrix
-  subroutine ctqmc_dump_nmat(nmat, nnmat)
+  subroutine ctqmc_dump_nmat(nmat, nnmat, nerr, nnerr)
      use constants, only : dp, mytmp
 
      use control, only : nband, norbs
@@ -518,9 +558,11 @@
 ! external arguments
 ! occupation matrix data
      real(dp), intent(in) :: nmat(norbs)
+     real(dp), intent(in) :: nerr(norbs)
 
 ! double occupation matrix data
      real(dp), intent(in) :: nnmat(norbs,norbs)
+     real(dp), intent(in) :: nnerr(norbs,norbs)
 
 ! local variables
 ! loop index
@@ -533,16 +575,16 @@
 ! write it
      write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i6,f12.6)') i, nmat(i)
+         write(mytmp,'(i6,2f12.6)') i, nmat(i), nerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sup', sum( nmat(1:nband) ), sum( nerr(1:nband) )
+     write(mytmp,'(a6,2f12.6)') 'sdn', sum( nmat(nband+1:norbs) ), sum( nerr(nband+1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sum', sum( nmat(1:norbs) ), sum( nerr(1:norbs) )
 
      write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,f12.6)') i, j, nnmat(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, nnmat(i,j), nnerr(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
@@ -553,8 +595,8 @@
   end subroutine ctqmc_dump_nmat
 
 !!>>> ctqmc_dump_kmat: write out the < k > and < k^2 >
-  subroutine ctqmc_dump_kmat(kmat, kkmat)
-     use constants, only : dp, mytmp
+  subroutine ctqmc_dump_kmat(kmat, kkmat, kerr, kkerr)
+     use constants, only : dp, one, two, mytmp
 
      use control, only : issus
      use control, only : norbs
@@ -564,14 +606,24 @@
 ! external arguments
 ! number of operators, < k >
      real(dp), intent(in) :: kmat(norbs)
+     real(dp), intent(in) :: kerr(norbs)
 
 ! square of number of operators, < k^2 >
      real(dp), intent(in) :: kkmat(norbs,norbs)
+     real(dp), intent(in) :: kkerr(norbs,norbs)
 
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
+     integer  :: i
+     integer  :: j
+
+! final value and corresponding error
+     real(dp) :: f_val
+     real(dp) :: f_err
+
+! calculate f_val and f_err
+     f_val = sum( kkmat ) - sum( kmat ) * ( one * sum( kmat ) + one )
+     f_err = sum( kkerr ) - sum( kerr ) * ( two * sum( kmat ) + one )
 
 ! check if we need to dump the < k > and < k^2 > data
 ! to solver.kmat.dat
@@ -583,18 +635,18 @@
 ! write it
      write(mytmp,'(a)') '# <  k  > data:'
      do i=1,norbs
-         write(mytmp,'(i6,1f12.6)') i, kmat(i)
+         write(mytmp,'(i6,2f12.6)') i, kmat(i), kerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'k_sum', sum( kmat )
+     write(mytmp,'(a6,2f12.6)') 'k_sum', sum( kmat ), sum( kerr )
 
      write(mytmp,'(a)') '# < k^2 > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,f12.6)') i, j, kkmat(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, kkmat(i,j), kkerr(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'kksum', sum( kkmat )
-     write(mytmp,'(a6,f12.6)') 'final', sum( kkmat ) - sum( kmat ) * ( sum( kmat ) + 1.0_dp )
+     write(mytmp,'(a6,2f12.6)') 'kksum', sum( kkmat ), sum( kkerr )
+     write(mytmp,'(a6,2f12.6)') 'final', f_val, f_err
 
 ! close data file
      close(mytmp)
@@ -603,7 +655,7 @@
   end subroutine ctqmc_dump_kmat
 
 !!>>> ctqmc_dump_lmat: write out the fidelity susceptibility
-  subroutine ctqmc_dump_lmat(lmat, rmat, lrmat)
+  subroutine ctqmc_dump_lmat(lmat, rmat, lrmat, lerr, rerr, lrerr)
      use constants, only : dp, mytmp
 
      use control, only : issus
@@ -614,17 +666,28 @@
 ! external arguments
 ! number of operators at left half axis, < k_l >
      real(dp), intent(in) :: lmat(norbs)
+     real(dp), intent(in) :: lerr(norbs)
 
 ! number of operators at right half axis, < k_r >
      real(dp), intent(in) :: rmat(norbs)
+     real(dp), intent(in) :: rerr(norbs)
 
 ! used to evaluate fidelity susceptibility, < k_l k_r >
      real(dp), intent(in) :: lrmat(norbs,norbs)
+     real(dp), intent(in) :: lrerr(norbs,norbs)
 
 ! local variables
 ! loop index
-     integer :: i
-     integer :: j
+     integer  :: i
+     integer  :: j
+
+! final value and corresponding error
+     real(dp) :: f_val
+     real(dp) :: f_err
+
+! calculate f_val and f_err
+     f_val = sum( lrmat ) - sum( lmat ) * sum( rmat )
+     f_err = sum( lrerr ) - sum( rmat ) * sum( lerr ) - sum( lmat ) * sum( rerr )
 
 ! check if we need to dump the fidelity susceptibility data
 ! to solver.lmat.dat
@@ -636,19 +699,19 @@
 ! write it
      write(mytmp,'(a)') '# < k_l > < k_r > data:'
      do i=1,norbs
-         write(mytmp,'(i6,2f12.6)') i, lmat(i), rmat(i)
+         write(mytmp,'(i6,4f12.6)') i, lmat(i), rmat(i), lerr(i), rerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'l_sum', sum( lmat )
-     write(mytmp,'(a6,f12.6)') 'r_sum', sum( rmat )
+     write(mytmp,'(a6,2f12.6)') 'l_sum', sum( lmat ), sum( lerr )
+     write(mytmp,'(a6,2f12.6)') 'r_sum', sum( rmat ), sum( rerr )
 
      write(mytmp,'(a)') '# < k_l k_r > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,f12.6)') i, j, lrmat(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, lrmat(i,j), lrerr(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'lrsum', sum( lrmat )
-     write(mytmp,'(a6,f12.6)') 'fidel', sum( lrmat ) - sum( lmat ) * sum( rmat )
+     write(mytmp,'(a6,2f12.6)') 'lrsum', sum( lrmat ), sum( lrerr )
+     write(mytmp,'(a6,2f12.6)') 'fidel', f_val, f_err
 
 ! close data file
      close(mytmp)
