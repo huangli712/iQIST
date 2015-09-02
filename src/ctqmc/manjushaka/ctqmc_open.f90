@@ -271,6 +271,11 @@
 ! hybridization function
      complex(8), intent(in) :: hybf_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) hybf_t
+!F2PY depend(size_t) hybf_t
+
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
          call s_print_error('cat_set_hybf','wrong dimension size of hybf_t')
@@ -295,6 +300,11 @@
 ! symmetry vector
      integer, intent(in) :: symm_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) symm_t
+!F2PY depend(size_t) symm_t
+
 ! check whether size_t is correct
      if ( size_t /= size(symm) ) then
          call s_print_error('cat_set_symm','wrong dimension size of symm_t')
@@ -318,6 +328,11 @@
 
 ! impurity level
      real(8), intent(in) :: eimp_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) eimp_t
+!F2PY depend(size_t) eimp_t
 
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
@@ -345,6 +360,13 @@
 ! first derivate of screening function K'(\tau)
      real(8), intent(in) :: ptau_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) ktau_t
+!F2PY intent(in) ptau_t
+!F2PY depend(size_t) ktau_t
+!F2PY depend(size_t) ptau_t
+
 ! to avoid the warning from compiler
      call s_assert( size(ktau_t) == size_t )
      call s_assert( size(ptau_t) == size_t )
@@ -365,12 +387,21 @@
 ! Coulomb interaction matrix
      real(8), intent(in) :: uumat_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(in) uumat_t
+!F2PY depend(size_t) uumat_t
+
 ! to avoid the warning from compiler
      call s_assert( size(uumat_t) == size_t )
      call s_print_error('cat_set_uumat','sorry, this feature is not supported')
 
      return
   end subroutine cat_set_uumat
+
+!!========================================================================
+!!>>> data getter subroutines                                          <<<
+!!========================================================================
 
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
