@@ -1,7 +1,18 @@
-
-
-  subroutine test
-  end subroutine test
+!!!-----------------------------------------------------------------------
+!!! project : jasmine
+!!! program : cat_init_atomic
+!!!           cat_exec_atomic
+!!!           cat_stop_atomic
+!!! source  : atomic_open.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 08/12/2015 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
+!!! purpose : to provide necessary application programming interface for
+!!!           the atomic eigenvalue problem solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 # if !defined (MPY)
 
