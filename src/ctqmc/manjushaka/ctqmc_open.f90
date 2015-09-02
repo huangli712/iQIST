@@ -32,7 +32,7 @@
 
 !!>>> cat_solver_id: return the solver identity
   subroutine cat_solver_id(I_solver_id)
-     use api, only : solver_id_manjushaka
+     use capi, only : solver_id_manjushaka
 
      implicit none
 
@@ -47,7 +47,7 @@
 
 !!>>> cat_solver_status: return the solver status
   subroutine cat_solver_status(I_solver_status)
-     use api, only : solver_is_ready_manjushaka
+     use capi, only : solver_is_ready_manjushaka
 
      implicit none
 
@@ -63,12 +63,12 @@
      return
   end subroutine cat_solver_status
 
-# if !defined (MPY)
+# if !defined (PYAPI)
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use api, only : T_mpi, T_general_manjushaka
+     use capi, only : T_mpi, T_general_manjushaka
 
      use control ! ALL
 
@@ -155,7 +155,7 @@
      return
   end subroutine cat_init_ctqmc
 
-# else   /* MPY */
+# else   /* PYAPI */
 
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> python version
@@ -200,7 +200,7 @@
      return
   end subroutine cat_init_ctqmc
 
-# endif  /* MPY */
+# endif  /* PYAPI */
 
 !!>>> cat_exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine cat_exec_ctqmc(iter)
@@ -237,8 +237,6 @@
 
 !!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : hybf
@@ -247,10 +245,10 @@
 
 ! external arguments
 ! size of hybf
-     integer, intent(in)     :: size_t
+     integer, intent(in)    :: size_t
 
 ! hybridization function
-     complex(dp), intent(in) :: hybf_t(size_t)
+     complex(8), intent(in) :: hybf_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(hybf) ) then
@@ -289,18 +287,16 @@
 
 !!>>> cat_set_eimp: setup the impurity level
   subroutine cat_set_eimp(size_t, eimp_t)
-     use constants, only : dp
-
      use context, only : eimp
 
      implicit none
 
 ! external arguments
 ! size of eimp
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! impurity level
-     real(dp), intent(in) :: eimp_t(size_t)
+     real(8), intent(in) :: eimp_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(eimp) ) then
@@ -316,19 +312,17 @@
 !!>>> cat_set_ktau: setup the screening function and its first derivates
 !!>>> note: the manjushaka code does not support this function now
   subroutine cat_set_ktau(size_t, ktau_t, ptau_t)
-     use constants, only : dp
-
      implicit none
 
 ! external arguments
 ! size of ktau
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! screening function K(\tau)
-     real(dp), intent(in) :: ktau_t(size_t)
+     real(8), intent(in) :: ktau_t(size_t)
 
 ! first derivate of screening function K'(\tau)
-     real(dp), intent(in) :: ptau_t(size_t)
+     real(8), intent(in) :: ptau_t(size_t)
 
 ! to avoid the warning from compiler
      call s_assert( size(ktau_t) == size_t )
@@ -341,16 +335,14 @@
 !!>>> cat_set_uumat: setup the Coulomb interaction matrix
 !!>>> note: the manjushaka code does not support this function now
   subroutine cat_set_uumat(size_t, uumat_t)
-     use constants, only : dp
-
      implicit none
 
 ! external arguments
 ! size of uumat
-     integer, intent(in)  :: size_t
+     integer, intent(in) :: size_t
 
 ! Coulomb interaction matrix
-     real(dp), intent(in) :: uumat_t(size_t)
+     real(8), intent(in) :: uumat_t(size_t)
 
 ! to avoid the warning from compiler
      call s_assert( size(uumat_t) == size_t )
@@ -361,8 +353,6 @@
 
 !!>>> cat_get_grnf: extract the impurity green's function
   subroutine cat_get_grnf(size_t, grnf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : grnf
@@ -371,10 +361,10 @@
 
 ! external arguments
 ! size of grnf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! impurity green's function
-     complex(dp), intent(out) :: grnf_t(size_t)
+     complex(8), intent(out) :: grnf_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(grnf) ) then
@@ -389,8 +379,6 @@
 
 !!>>> cat_get_sigf: extract the self-energy function
   subroutine cat_get_sigf(size_t, sigf_t)
-     use constants, only : dp
-
      use control, only : norbs
      use control, only : mfreq
      use context, only : sig2
@@ -399,10 +387,10 @@
 
 ! external arguments
 ! size of sigf
-     integer, intent(in)      :: size_t
+     integer, intent(in)     :: size_t
 
 ! self-energy function
-     complex(dp), intent(out) :: sigf_t(size_t)
+     complex(8), intent(out) :: sigf_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(sig2) ) then
@@ -417,8 +405,6 @@
 
 !!>>> cat_get_nmat: extract the occupation number
   subroutine cat_get_nmat(size_t, nmat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : nmat
 
@@ -426,10 +412,10 @@
 
 ! external arguments
 ! size of nmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! occupation number
-     real(dp), intent(out) :: nmat_t(size_t)
+     real(8), intent(out) :: nmat_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(nmat) ) then
@@ -444,8 +430,6 @@
 
 !!>>> cat_get_nnmat: extract the double occupation number
   subroutine cat_get_nnmat(size_t, nnmat_t)
-     use constants, only : dp
-
      use control, only : norbs
      use context, only : nnmat
 
@@ -453,10 +437,10 @@
 
 ! external arguments
 ! size of nnmat
-     integer, intent(in)   :: size_t
+     integer, intent(in)  :: size_t
 
 ! double occupation number
-     real(dp), intent(out) :: nnmat_t(size_t)
+     real(8), intent(out) :: nnmat_t(size_t)
 
 ! check whether size_t is correct
      if ( size_t /= size(nnmat) ) then
