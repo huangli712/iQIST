@@ -548,7 +548,7 @@
 
 !!>>> ctqmc_dump_nmat: write out the occupation matrix and double
 !!>>> occupation matrix
-  subroutine ctqmc_dump_nmat(nmat, nnmat)
+  subroutine ctqmc_dump_nmat(nmat, nnmat, nerr, nnerr)
      use constants, only : dp, mytmp
 
      use control, only : nband, norbs
@@ -558,9 +558,11 @@
 ! external arguments
 ! occupation matrix data
      real(dp), intent(in) :: nmat(norbs)
+     real(dp), intent(in) :: nerr(norbs)
 
 ! double occupation matrix data
      real(dp), intent(in) :: nnmat(norbs,norbs)
+     real(dp), intent(in) :: nnerr(norbs,norbs)
 
 ! local variables
 ! loop index
@@ -573,16 +575,16 @@
 ! write it
      write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i6,f12.6)') i, nmat(i)
+         write(mytmp,'(i6,2f12.6)') i, nmat(i), nerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sup', sum( nmat(1:nband) ), sum( nerr(1:nband) )
+     write(mytmp,'(a6,2f12.6)') 'sdn', sum( nmat(nband+1:norbs) ), sum( nerr(nband+1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sum', sum( nmat(1:norbs) ), sum( nerr(1:norbs) )
 
      write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,f12.6)') i, j, nnmat(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, nnmat(i,j), nnerr(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
