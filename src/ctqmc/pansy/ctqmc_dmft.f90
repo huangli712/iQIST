@@ -8,9 +8,8 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
-!!! history : 09/16/2009 by li huang
-!!!           01/13/2010 by li huang
-!!!           11/11/2014 by yilin wang
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : the self-consistent engine for dynamical mean field theory
 !!!           (DMFT) simulation. it is only suitable for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
