@@ -166,6 +166,220 @@
 !!>>> dump data on matsubara frequency axis                            <<<
 !!========================================================================
 
+!!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
+!!>>> frequency space
+  subroutine ctqmc_dump_grnf(rmesh, grnf, gerr)
+     use constants, only : dp, mytmp
+
+     use control, only : norbs
+     use control, only : mfreq
+
+     implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(mfreq)
+
+! impurity green's function
+     complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
+     complex(dp), intent(in) :: gerr(mfreq,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.grn.dat
+     open(mytmp, file='solver.grn.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,mfreq
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
+              real(grnf(j,i,i)), aimag(grnf(j,i,i)), &
+              real(gerr(j,i,i)), aimag(gerr(j,i,i))
+         enddo ! over j={1,mfreq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_grnf
+
+!!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara
+!!>>> frequency space
+  subroutine ctqmc_dump_wssf(rmesh, wssf)
+     use constants, only : dp, zero, mytmp
+
+     use control, only : norbs
+     use control, only : mfreq
+
+     implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(mfreq)
+
+! bath weiss's function
+     complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.wss.dat
+     open(mytmp, file='solver.wss.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,mfreq
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
+              real(wssf(j,i,i)), aimag(wssf(j,i,i)), &
+                                         zero, zero
+         enddo ! over j={1,mfreq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_wssf
+
+!!>>> ctqmc_dump_hybf: write out hybridization function in matsubara
+!!>>> frequency space
+  subroutine ctqmc_dump_hybf(rmesh, hybf)
+     use constants, only : dp, zero, mytmp
+
+     use control, only : norbs
+     use control, only : mfreq
+
+     implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(mfreq)
+
+! hybridization function
+     complex(dp), intent(in) :: hybf(mfreq,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.hyb.dat
+     open(mytmp, file='solver.hyb.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,mfreq
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
+              real(hybf(j,i,i)), aimag(hybf(j,i,i)), &
+                                         zero, zero
+         enddo ! over j={1,mfreq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_hybf
+
+!!>>> ctqmc_dump_sigf: write out self-energy function in matsubara
+!!>>> frequency space
+  subroutine ctqmc_dump_sigf(rmesh, sigf)
+     use constants, only : dp, zero, mytmp
+
+     use control, only : norbs
+     use control, only : mfreq
+
+     implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(mfreq)
+
+! self-energy function
+     complex(dp), intent(in) :: sigf(mfreq,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.sgm.dat
+     open(mytmp, file='solver.sgm.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,mfreq
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
+              real(sigf(j,i,i)), aimag(sigf(j,i,i)), &
+                                         zero, zero
+         enddo ! over j={1,mfreq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_sigf
+
+!!>>> ctqmc_dump_hub1: write out impurity green's function and self-energy
+!!>>> function obtained by hubbard-I approximation in matsubara frequency
+!!>>> space
+  subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
+     use constants, only : dp, mytmp
+
+     use control, only : norbs
+     use control, only : mfreq
+
+     implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(mfreq)
+
+! impurity green's function by hubbard-I approximation
+     complex(dp), intent(in) :: ghub(mfreq,norbs)
+
+! self-energy function by hubbard-I approximation
+     complex(dp), intent(in) :: shub(mfreq,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.hub.dat
+     open(mytmp, file='solver.hub.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,mfreq
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
+                  real(ghub(j,i)), aimag(ghub(j,i)), &
+                  real(shub(j,i)), aimag(shub(j,i))
+         enddo ! over j={1,mfreq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_hub1
 
 !!========================================================================
 !!>>> dump data of physical observables                                <<<
