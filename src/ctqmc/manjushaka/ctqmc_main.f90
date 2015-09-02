@@ -4,7 +4,7 @@
 !!! A test program for dynamical mean field theory (DMFT) self-consistent!
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
-!!! author  : Li Huang (at IOP/CAS & SPCLAB/IOM/CAEP & UNIFR)            !
+!!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
 !!!           Yilin Wang (at IOP/CAS)                                    !
 !!! version : v2015.01.06T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
@@ -272,10 +272,3 @@
 # endif  /* MPI */
 
   end program ctqmc_main
-
-# endif  /* API */
-
-
-
-
-
