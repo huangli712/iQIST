@@ -3,7 +3,6 @@
 !!! program : ctqmc_dump_gtau
 !!!           ctqmc_dump_wtau
 !!!           ctqmc_dump_htau
-!!!           ctqmc_dump_gbin
 !!!           ctqmc_dump_grnf
 !!!           ctqmc_dump_wssf
 !!!           ctqmc_dump_hybf
@@ -16,9 +15,8 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
-!!! history : 09/16/2009 by li huang
-!!!           08/23/2010 by li huang
-!!!           11/11/2014 by yilin wang
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -31,184 +29,6 @@
 !!>>> dump data on imaginary time axis                                 <<<
 !!========================================================================
 
-!!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
-!!>>> time space
-  subroutine ctqmc_dump_gtau(tmesh, gtau)
-     use constants, only : dp, mytmp
-
-     use control, only : nband, norbs
-     use control, only : ntime
-
-     implicit none
-
-! external arguments
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
-! impurity green's function
-     real(dp), intent(in) :: gtau(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! scaled impurity green's function
-     real(dp) :: gaux(ntime,norbs,norbs)
-
-! evaluate gaux first
-     call ctqmc_make_gtau(gtau, gaux)
-
-! open data file: solver.green.dat
-     open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
-
-! write it
-     do i=1,nband
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
-         enddo ! over j={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,nband} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_gtau
-
-!!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
-!!>>> time space
-  subroutine ctqmc_dump_wtau(tmesh, wtau)
-     use constants, only : dp, mytmp
-
-     use control, only : nband, norbs
-     use control, only : ntime
-
-     implicit none
-
-! external arguments
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
-! bath weiss's function
-     real(dp), intent(in) :: wtau(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.weiss.dat
-     open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
-
-! write it
-     do i=1,nband
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), wtau(j,i+nband,i+nband)
-         enddo ! over j={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,nband} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_wtau
-
-!!>>> ctqmc_dump_htau: write out hybridization function in imaginary
-!!>>> time space
-  subroutine ctqmc_dump_htau(tmesh, htau)
-     use constants, only : dp, mytmp
-
-     use control, only : nband, norbs
-     use control, only : ntime
-
-     implicit none
-
-! external arguments
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
-! hybridization function
-     real(dp), intent(in) :: htau(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.hybri.dat
-     open(mytmp, file='solver.hybri.dat', form='formatted', status='unknown')
-
-! write it
-     do i=1,nband
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), htau(j,i+nband,i+nband)
-         enddo ! over j={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,nband} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_htau
-
-!!>>> ctqmc_dump_gbin: write out impurity green's function in imaginary
-!!>>> time space (generated in binning mode)
-  subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
-     use constants, only : dp, mytmp
-
-     use control, only : nband, norbs
-     use control, only : ntime
-
-     implicit none
-
-! external arguments
-! current bin index, integer representation
-     integer, intent(in)  :: ibin
-
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
-! impurity green's function
-     real(dp), intent(in) :: gtau(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! scaled impurity green's function
-     real(dp) :: gaux(ntime,norbs,norbs)
-
-! current bin index, string representation
-     character(len=10) :: sbin
-
-! evaluate gaux first
-     call ctqmc_make_gtau(gtau, gaux)
-
-! open data file: solver.green.bin.x
-     write(sbin,'(i10)') ibin ! convert ibin to sbin
-     open(mytmp, file='solver.green.bin.'//trim(adjustl(sbin)), form='formatted', status='unknown')
-
-! write it
-     do i=1,nband
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
-         enddo ! over j={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,nband} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_gbin
 
 !!========================================================================
 !!>>> dump data on matsubara frequency axis                            <<<
