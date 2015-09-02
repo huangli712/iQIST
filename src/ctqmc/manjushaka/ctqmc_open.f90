@@ -418,6 +418,11 @@
 ! impurity green's function
      complex(8), intent(out) :: grnf_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) grnf_t
+!F2PY depend(size_t) grnf_t
+
 ! check whether size_t is correct
      if ( size_t /= size(grnf) ) then
          call s_print_error('cat_get_grnf','wrong dimension size of grnf_t')
@@ -444,6 +449,11 @@
 ! self-energy function
      complex(8), intent(out) :: sigf_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) sigf_t
+!F2PY depend(size_t) sigf_t
+
 ! check whether size_t is correct
      if ( size_t /= size(sig2) ) then
          call s_print_error('cat_get_sigf','wrong dimension size of sigf_t')
@@ -469,6 +479,11 @@
 ! occupation number
      real(8), intent(out) :: nmat_t(size_t)
 
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) nmat_t
+!F2PY depend(size_t) nmat_t
+
 ! check whether size_t is correct
      if ( size_t /= size(nmat) ) then
          call s_print_error('cat_get_nmat','wrong dimension size of nmat_t')
@@ -493,6 +508,11 @@
 
 ! double occupation number
      real(8), intent(out) :: nnmat_t(size_t)
+
+! declare f2py directives
+!F2PY intent(in) size_t
+!F2PY intent(out) nnmat_t
+!F2PY depend(size_t) nnmat_t
 
 ! check whether size_t is correct
      if ( size_t /= size(nnmat) ) then
