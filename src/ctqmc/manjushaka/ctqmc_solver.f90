@@ -481,6 +481,7 @@
      call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
+! average value section
      hist  = hist_mpi  * one
      prob  = prob_mpi  * real(ncarlo)
 
@@ -500,6 +501,22 @@
      gtau  = gtau_mpi  * real(ncarlo)
      grnf  = grnf_mpi  * real(nmonte)
 
+! update original data and calculate the averages simultaneously
+! error bar section
+     hist_err  = hist_err  * one
+     prob_err  = prob_err  * real(ncarlo)
+
+     nmat_err  = nmat_err  * real(nmonte)
+     nnmat_err = nnmat_err * real(nmonte)
+     kmat_err  = kmat_err  * real(nmonte)
+     kkmat_err = kkmat_err * real(nmonte)
+     lmat_err  = lmat_err  * real(nmonte)
+     rmat_err  = rmat_err  * real(nmonte)
+     lrmat_err = lrmat_err * real(nmonte)
+
+     gtau_err  = gtau_err  * real(ncarlo)
+     grnf_err  = grnf_err  * real(nmonte)
+
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
 ! function between low frequency QMC data and high frequency Hubbard-I
@@ -514,16 +531,19 @@
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_nmat(symm, nmat)
+         call ctqmc_symm_nmat(symm, nmat_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (gtau) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, gtau)
+         call ctqmc_symm_gtau(symm, gtau_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (grnf) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, grnf)
+         call ctqmc_symm_grnf(symm, grnf_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity self-energy function (sig2) over spin or over bands
@@ -537,17 +557,17 @@
 
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hist(hist)
+         call ctqmc_dump_hist(hist, hist_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final probability data, prob
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_prob(prob, naux, saux)
+         call ctqmc_dump_prob(prob, naux, saux, prob_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_nmat(nmat, nnmat)
+         call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final < k^2 > - < k >^2 data, kmat and kkmat
