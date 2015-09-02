@@ -385,43 +385,6 @@
 !!>>> dump data of physical observables                                <<<
 !!========================================================================
 
-!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
-!!>>> perturbation expansion series
-  subroutine ctqmc_dump_hist(hist)
-     use constants, only : dp, mytmp
-
-     use control, only : mkink
-
-     implicit none
-
-! external arguments
-! histogram data
-     real(dp), intent(in) :: hist(mkink)
-
-! local variables
-! loop index
-     integer  :: i
-
-! scaled histogram data
-     real(dp) :: haux(mkink)
-
-! evaluate haux at first
-     haux = hist / sum(hist)
-
-! open data file: solver.hist.dat
-     open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
-
-! write it
-     write(mytmp,'(a)') '# histogram: order | count | percent'
-     do i=1,mkink
-         write(mytmp,'(i6,i12,f12.6)') i, int( hist(i) ), haux(i)
-     enddo ! over i={1,mkink} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_hist
 
 !!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
 !!>>> hamiltonian matrix
