@@ -626,20 +626,31 @@
 
 ! deallocate memory
      deallocate(hist_mpi )
+     deallocate(hist_err )
      deallocate(prob_mpi )
+     deallocate(prob_err )
      deallocate(nmat_mpi )
+     deallocate(nmat_err )
      deallocate(nnmat_mpi)
+     deallocate(nnmat_err)
      deallocate(kmat_mpi )
+     deallocate(kmat_err )
      deallocate(kkmat_mpi)
+     deallocate(kkmat_err)
      deallocate(lmat_mpi )
+     deallocate(lmat_err )
      deallocate(rmat_mpi )
+     deallocate(rmat_err )
      deallocate(lrmat_mpi)
+     deallocate(lrmat_err)
      deallocate(g2_re_mpi)
      deallocate(g2_im_mpi)
      deallocate(ps_re_mpi)
      deallocate(ps_im_mpi)
      deallocate(gtau_mpi )
+     deallocate(gtau_err )
      deallocate(grnf_mpi )
+     deallocate(grnf_err )
 
      return
   end subroutine ctqmc_impurity_solver
