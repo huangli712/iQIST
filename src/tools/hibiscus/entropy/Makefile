@@ -20,7 +20,8 @@
 ## History
 ## =======
 ##
-## 09/30/2014 by li huang
+## 09/30/2014 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -32,9 +33,10 @@ modc = entropy_control.o entropy_context.o
 core = entropy_stream.o entropy_toolbox.o entropy_update.o
 dump = entropy_dump.o entropy_print.o
 main = entropy_main.o
-MAPI = libMM.a
 
-objects = $(modc) $(core) $(dump) $(main) $(MAPI)
+CLIB = libMM.a
+
+objects = $(modc) $(core) $(dump) $(main) $(CLIB)
 
 default: all
 
@@ -65,7 +67,6 @@ clean:
 
 clean-dat:
 	rm -f *.dat
-	rm -f *.bin
 	rm -f *.out
 
 clean-all: clean clean-dat
