@@ -436,27 +436,27 @@
 
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hist(hist)
+         call ctqmc_dump_hist(hist, hist_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final probability data, prob
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_prob(prob, naux, saux)
+         call ctqmc_dump_prob(prob, naux, saux, prob_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_nmat(nmat, nnmat)
+         call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_gtau(tmesh, gtau)
+         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, grnf
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_grnf(rmesh, grnf)
+         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final self-energy function data, sig2
