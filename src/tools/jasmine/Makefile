@@ -68,12 +68,18 @@ lib: api cssl csml atomic-lib
 atomic-lib: $(lib_obj)
 	$(ARCHIVER) libatomic.a $(lib_obj)
 
+pylib: lib
+	cpp -E -DPYAPI atomic_open.f90 > atomic_open_py.f90
+	$(F2PY) -c --f90exec=$(F2PYC) -m pyjasmine -L. -latomic -lMM $(F2PYL) atomic_open_py.f90
+	rm -fr *.dSYM atomic_open_py.f90
+
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
 
 clean:
 	rm -f *.mod
 	rm -f *.o
+	rm -f *.so
 	rm -f atomic
 	rm -f libatomic.a
 	rm -f libMM.a
@@ -81,7 +87,6 @@ clean:
 clean-dat:
 	rm -f *.cix
 	rm -f *.dat
-	rm -f *.bin.*
 	rm -f *.out
 
 clean-all: clean clean-dat
