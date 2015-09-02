@@ -383,7 +383,7 @@
 
 !!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
 !!>>> perturbation expansion series
-  subroutine ctqmc_dump_hist(hist)
+  subroutine ctqmc_dump_hist(hist, herr)
      use constants, only : dp, mytmp
 
      use control, only : mkink
@@ -393,6 +393,7 @@
 ! external arguments
 ! histogram data
      real(dp), intent(in) :: hist(mkink)
+     real(dp), intent(in) :: herr(mkink)
 
 ! local variables
 ! loop index
@@ -400,9 +401,11 @@
 
 ! scaled histogram data
      real(dp) :: haux(mkink)
+     real(dp) :: htmp(mkink)
 
-! evaluate haux at first
+! evaluate haux and htmp at first
      haux = hist / sum(hist)
+     htmp = herr / sum(hist)
 
 ! open data file: solver.hist.dat
      open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
@@ -410,7 +413,7 @@
 ! write it
      write(mytmp,'(a)') '# histogram: order | count | percent'
      do i=1,mkink
-         write(mytmp,'(i6,i12,f12.6)') i, int( hist(i) ), haux(i)
+         write(mytmp,'(i6,i12,2f12.6)') i, int( hist(i) ), haux(i), htmp(i)
      enddo ! over i={1,mkink} loop
 
 ! close data file
@@ -421,7 +424,7 @@
 
 !!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
 !!>>> hamiltonian matrix
-  subroutine ctqmc_dump_prob(prob, naux, saux)
+  subroutine ctqmc_dump_prob(prob, naux, saux, perr)
      use constants, only : dp, zero, eps6, mytmp
 
      use control, only : norbs, ncfgs
@@ -434,6 +437,7 @@
 ! external arguments
 ! probability data of eigenstates
      real(dp), intent(in) :: prob(ncfgs)
+     real(dp), intent(in) :: perr(ncfgs)
 
 ! occupation number of eigenstates
      real(dp), intent(in) :: naux(ncfgs)
@@ -464,13 +468,16 @@
 
 ! probability of sectors
      real(dp) :: psect(nsect)
+     real(dp) :: pserr(nsect)
 
 ! evaluate psect
      psect = zero
+     pserr = zero
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
              psect(i) = psect(i) + prob(indx+j-1)
+             pserr(i) = pserr(i) + perr(indx+j-1)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -512,18 +519,18 @@
 ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(i6,3f12.6)') i, prob(i), naux(i), saux(i)
+         write(mytmp,'(i6,4f12.6)') i, prob(i), naux(i), saux(i), perr(i)
      enddo ! over i={1,ncfgs} loop
 
      write(mytmp,'(a)') '# sector probability: index | occupy | prob'
      do i=1,nsect
-         write(mytmp,'(i6,2f12.6)') i, real( sectors(i)%nele ), psect(i)
+         write(mytmp,'(i6,3f12.6)') i, real( sectors(i)%nele ), psect(i), pserr(i)
      enddo ! over i={1,nsect} loop
-     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(psect)
+     write(mytmp,'(a6,12X,2f12.6)') 'sum', sum(psect), sum(pserr)
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
-         write(mytmp,'(i6,2f12.6)') i+1, real(i), oprob(i)
+         write(mytmp,'(i6,2f12.6)') i + 1, real(i), oprob(i)
      enddo ! over i={0,norbs} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(oprob)
 
