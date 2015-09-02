@@ -485,11 +485,17 @@
 
 ! deallocate memory
      deallocate(hist_mpi )
+     deallocate(hist_err )
      deallocate(prob_mpi )
+     deallocate(prob_err )
      deallocate(nmat_mpi )
+     deallocate(nmat_err )
      deallocate(nnmat_mpi)
+     deallocate(nnmat_err)
      deallocate(gtau_mpi )
+     deallocate(gtau_err )
      deallocate(grnf_mpi )
+     deallocate(grnf_err )
 
      return
   end subroutine ctqmc_impurity_solver
