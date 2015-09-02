@@ -572,12 +572,12 @@
 
 ! write out the final < k^2 > - < k >^2 data, kmat and kkmat
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_kmat(kmat, kkmat)
+         call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final fidelity susceptibility data, lmat, rmat, and lrmat
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_lmat(lmat, rmat, lrmat)
+         call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, g2_re and g2_im
@@ -592,12 +592,12 @@
 
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_gtau(tmesh, gtau)
+         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, grnf
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_grnf(rmesh, grnf)
+         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final self-energy function data, sig2
