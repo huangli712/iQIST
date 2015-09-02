@@ -275,15 +275,16 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-         call ctqmc_reduce_hist(hist_mpi)
+         call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
          gtau = gtau / real(caves)
-         call ctqmc_reduce_gtau(gtau_mpi)
+         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
          gtau = gtau * real(caves)
 
 ! gtau_mpi need to be scaled properly before written
          gtau_mpi = gtau_mpi * real(ncarlo)
+         gtau_err = gtau_err * real(ncarlo)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
@@ -292,6 +293,7 @@
 ! symmetrize the impurity green's function over spin or over bands
          if ( issun == 2 .or. isspn == 1 ) then
              call ctqmc_symm_gtau(symm, gtau_mpi)
+             call ctqmc_symm_gtau(symm, gtau_err)
          endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 !!========================================================================
@@ -300,17 +302,12 @@
 
 ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_dump_hist(hist_mpi)
+             call ctqmc_dump_hist(hist_mpi, hist_err)
          endif ! back if ( myid == master ) block
 
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
-             if ( iter /= 999 ) then
-                 call ctqmc_dump_gtau(tmesh, gtau_mpi)
-             else
-                 call ctqmc_dump_gbin(cstep / nwrite, tmesh, gtau_mpi)
-                 write(mystd,'(4X,a)') '>>> quantum impurity solver status: binned'
-             endif ! back if ( iter /= 999 ) block
+             call ctqmc_dump_gtau(tmesh, gtau_mpi, gtau_err)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
@@ -357,25 +354,25 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-     call ctqmc_reduce_hist(hist_mpi)
+     call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the probability data from prob to prob_mpi
      prob  = prob  / real(caves)
-     call ctqmc_reduce_prob(prob_mpi)
+     call ctqmc_reduce_prob(prob_mpi, prob_err)
 
 ! collect the occupation matrix data from nmat to nmat_mpi
 ! collect the double occupation matrix data from nnmat to nnmat_mpi
      nmat  = nmat  / real(caves)
      nnmat = nnmat / real(caves)
-     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
      gtau  = gtau  / real(caves)
-     call ctqmc_reduce_gtau(gtau_mpi)
+     call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
      grnf  = grnf  / real(caves)
-     call ctqmc_reduce_grnf(grnf_mpi)
+     call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
      hist  = hist_mpi
