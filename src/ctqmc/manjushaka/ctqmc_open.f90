@@ -40,6 +40,9 @@
 ! solver identity
      integer, intent(out) :: I_solver_id
 
+! declare f2py directives
+!F2PY intent(out) I_solver_id
+
      I_solver_id = solver_id_manjushaka
 
      return
@@ -55,6 +58,9 @@
 ! solver status
      integer, intent(out) :: I_solver_status
 
+! declare f2py directives
+!F2PY intent(out) I_solver_status
+
      I_solver_status = solver_is_ready_manjushaka
      if ( I_solver_status == 0 ) then
          call s_print_error('cat_solver_status','sorry, the current solver is not ready!')
@@ -62,6 +68,10 @@
 
      return
   end subroutine cat_solver_status
+
+!!========================================================================
+!!>>> flow control subroutines                                         <<<
+!!========================================================================
 
 # if !defined (PYAPI)
 
@@ -171,6 +181,10 @@
 ! number of processors
      integer, intent(in) :: num_procs
 
+! declare f2py directives
+!F2PY intent(in) my_id
+!F2PY intent(in) num_procs
+
 ! initialize mpi envirnoment
      myid = my_id
      nprocs = num_procs
@@ -210,6 +224,9 @@
 ! current iteration number
      integer, intent(in) :: iter
 
+! declare f2py directives
+!F2PY intent(in) iter
+
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
      call ctqmc_impurity_solver(iter)
@@ -234,6 +251,10 @@
 
      return
   end subroutine cat_stop_ctqmc
+
+!!========================================================================
+!!>>> data setter subroutines                                          <<<
+!!========================================================================
 
 !!>>> cat_set_hybf: setup the hybridization function
   subroutine cat_set_hybf(size_t, hybf_t)
