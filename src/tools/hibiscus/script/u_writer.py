@@ -24,7 +24,8 @@
 ## History
 ## =======
 ##
-## 02/05/2015 by li huang
+## 02/05/2015 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -71,13 +72,10 @@ class iqistWriter(object):
         else:
             f = open(fileName,"w")
 
-        nband = norbs / 2
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(mfreq):
                 print >> f, '%6d %16.8f %16.8f %16.8f %16.8f %16.8f' % \
-                ( i+1, rmesh[j], hybf[j,i,i].real, hybf[j,i,i].imag,   \
-                                       hybf[j,i+nband,i+nband].real,   \
-                                       hybf[j,i+nband,i+nband].imag )
+                ( i+1, rmesh[j], hybf[j,i,i].real, hybf[j,i,i].imag, 0.0, 0.0 )
             print >> f
             print >> f
 
@@ -93,12 +91,10 @@ class iqistWriter(object):
         else:
             f = open(fileName,"w")
 
-        nband = norbs / 2
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(mfreq):
                 print >> f, '%6d %16.8f %16.8f %16.8f %16.8f %16.8f' % \
-                    ( i+1, rmesh[j], wssf[j,i].real, wssf[j,i].imag,   \
-                         wssf[j,i+nband].real, wssf[j,i+nband].imag )
+                ( i+1, rmesh[j], wssf[j,i].real, wssf[j,i].imag, 0.0, 0.0 )
             print >> f
             print >> f
 
