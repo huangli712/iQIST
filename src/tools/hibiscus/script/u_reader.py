@@ -469,8 +469,8 @@ class iqistReader(object):
                 for k in range(ntime):
                     spl = f.readline().split()
                     oochi[k,j,i] = float( spl[1] )
-            f.readline() # skip two blank lines
-            f.readline()
+                f.readline() # skip two blank lines
+                f.readline()
         f.readline() # skip one comment line
         # read ochi
         for i in range(ntime):
@@ -481,6 +481,33 @@ class iqistReader(object):
         f.close()
 
         return (tmesh, ochi, oochi)
+
+    @staticmethod
+    def get_ofom(norbs, nbfrq, fileName = None):
+        """ try to read the solver.ofom.dat file to return the orbital-
+            orbital correlation function data
+        """
+        if fileName is None:
+            f = open("solver.ofom.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        bmesh = numpy.zeros((nbfrq), dtype = numpy.float)
+        oofom = numpy.zeros((nbfrq,norbs,norbs), dtype = numpy.float)
+        # read oofom
+        for i in range(norbs):
+            for j in range(norbs):
+                f.readline() # skip one comment line
+                for k in range(nbfrq):
+                    spl = f.readline().split()
+                    bmesh[k] = float( spl[0] )
+                    oofom[k,j,i] = float( spl[1] )
+                f.readline() # skip two blank lines
+                f.readline()
+
+        f.close()
+
+        return (bmesh, oofom)
 
     @staticmethod
     def get_twop(norbs, nffrq, nbfrq, fileName = None):
