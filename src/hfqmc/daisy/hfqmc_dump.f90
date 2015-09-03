@@ -2,7 +2,6 @@
 !!! project : daisy
 !!! program : hfqmc_dump_gtau
 !!!           hfqmc_dump_wtau
-!!!           hfqmc_dump_gbin
 !!!           hfqmc_dump_grnf
 !!!           hfqmc_dump_wssf
 !!!           hfqmc_dump_sigf
@@ -11,9 +10,8 @@
 !!! source  : hfqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 12/23/2009 by li huang
-!!!           03/08/2010 by li huang
-!!!           12/06/2014 by li huang
+!!! history : 12/23/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : To dump key observables produced by the Hirsch-Fye quantum
 !!!           Monte Carlo (HFQMC) quantum impurity solver and dynamical
 !!!           mean field theory (DMFT) self-consistent engine to files
@@ -27,10 +25,10 @@
 
 !!>>> hfqmc_dump_gtau: write out impurity green's function in imaginary
 !!>>> time space
-  subroutine hfqmc_dump_gtau(tmesh, gtau)
+  subroutine hfqmc_dump_gtau(tmesh, gtau, gerr)
      use constants, only : dp, one, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
      use control, only : beta
 
@@ -42,6 +40,7 @@
 
 ! impurity green's function
      real(dp), intent(in) :: gtau(ntime,norbs)
+     real(dp), intent(in) :: gerr(ntime,norbs)
 
 ! local variables
 ! loop index
@@ -52,14 +51,14 @@
      open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -gtau(j,i), -gtau(j,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -gtau(j,i), gerr(j,i)
          enddo ! over j={1,ntime} loop
-         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, gtau(1,i)-one, gtau(1,i+nband)-one
+         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, gtau(1,i)-one, gerr(1,i)
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
