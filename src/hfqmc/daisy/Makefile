@@ -20,7 +20,8 @@
 ## History
 ## =======
 ##
-## 02/28/2015 by li huang
+## 02/28/2015 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -35,9 +36,14 @@ lev1 = hfqmc_update.o
 lev2 = hfqmc_record.o hfqmc_stream.o hfqmc_util.o
 lev3 = hfqmc_dump.o hfqmc_print.o
 main = hfqmc_main.o
-MAPI = hfqmc_api.o libMM.a
+open = hfqmc_open.o
 
-objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(main) $(MAPI)
+CAPI = hfqmc_api.o
+CLIB = libMM.a
+
+objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3)
+exe_obj = $(objects) $(main) $(CLIB)
+lib_obj = $(objects) $(open) $(CAPI)
 
 default: all
 
