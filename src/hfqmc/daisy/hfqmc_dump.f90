@@ -141,7 +141,7 @@
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
                   real(grnf(j,i)), aimag(grnf(j,i)), &
-                                         zero, zero  &
+                                         zero, zero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
