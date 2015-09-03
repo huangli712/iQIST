@@ -50,8 +50,8 @@ default: all
 all: exe
 
 api:
-	cp ../../api/dapi.mod .
-	cp ../../api/hfqmc_api.o .
+	cp ../../capi/dapi.mod .
+	cp ../../capi/hfqmc_api.o .
 
 cssl:
 	cp ../../common/libMM.a .
@@ -62,9 +62,6 @@ csml:
 	cp ../../common/spring.mod .
 	cp ../../common/parser.mod .
 	cp ../../common/linkedlist.mod .
-
-touch:
-	touch hfqmc_main.f90
 
 exe: api cssl csml hfqmc-exe
 hfqmc-exe: $(objects)
