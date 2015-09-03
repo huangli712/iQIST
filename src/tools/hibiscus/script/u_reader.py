@@ -424,6 +424,32 @@ class iqistReader(object):
         return (tmesh, schi, sschi)
 
     @staticmethod
+    def get_sfom(nband, nbfrq, fileName = None):
+        """ try to read the solver.sfom.dat file to return the spin-spin
+            correlation function data
+        """
+        if fileName is None:
+            f = open("solver.sfom.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        bmesh = numpy.zeros((nbfrq), dtype = numpy.float)
+        ssfom = numpy.zeros((nbfrq,nband), dtype = numpy.float)
+        # read ssfom
+        for i in range(nband):
+            f.readline() # skip one comment line
+            for j in range(nbfrq):
+                spl = f.readline().split()
+                bmesh[j] = float( spl[0] )
+                ssfom[j,i] = float( spl[1] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (bmesh, ssfom)
+
+    @staticmethod
     def get_ochi(norbs, ntime, fileName = None):
         """ try to read the solver.ochi.dat file to return the orbital-
             orbital correlation function < N_i(0) N_j(\tau) > data
