@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : azalea
+!!! project : daisy
 !!! program : cat_solver_id
 !!!           cat_solver_status <<<---
 !!!           cat_init_hfqmc
@@ -13,14 +13,14 @@
 !!!           cat_get_sigf
 !!!           cat_get_nmat
 !!!           cat_get_nnmat     <<<---
-!!! source  : ctqmc_open.f90
+!!! source  : hfqmc_open.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 08/12/2015 by li huang (created)
 !!!           08/17/2015 by li huang (last modified)
 !!! purpose : to provide necessary application programming interface for
-!!!           the hybridization expansion version continuous time quantum
-!!!           Monte Carlo (CTQMC) quantum impurity solver
+!!!           the Hirsch-Fye quantum Monte Carlo (HFQMC) quantum impurity
+!!!           solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
