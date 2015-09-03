@@ -108,55 +108,6 @@
      return
   end subroutine hfqmc_dump_wtau
 
-!!>>> hfqmc_dump_gbin: write out impurity green's function in imaginary
-!!>>> time space (binning mode)
-  subroutine hfqmc_dump_gbin(ibin, tmesh, gtau)
-     use constants, only : dp, one, mytmp
-
-     use control, only : nband, norbs
-     use control, only : ntime
-     use control, only : beta
-
-     implicit none
-
-! external arguments
-! current bin index, integer representation
-     integer, intent(in)  :: ibin
-
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
-! impurity green's function
-     real(dp), intent(in) :: gtau(ntime,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! current bin index, string representation
-     character(len=10) :: sbin
-
-! open data file: solver.green.bin.x
-     write(sbin,'(i10)') ibin ! convert ibin to sbin
-     open(mytmp, file='solver.green.bin.'//trim(adjustl(sbin)), form='formatted', status='unknown')
-
-! write it
-     do i=1,nband
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -gtau(j,i), -gtau(j,i+nband)
-         enddo ! over j={1,ntime} loop
-         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, gtau(1,i)-one, gtau(1,i+nband)-one
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,nband} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine hfqmc_dump_gbin
-
 !!========================================================================
 !!>>> dump data on matsubara frequency axis                            <<<
 !!========================================================================
