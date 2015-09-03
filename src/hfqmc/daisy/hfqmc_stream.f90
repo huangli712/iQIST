@@ -8,9 +8,8 @@
 !!! source  : hfqmc_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/07/2006 by li huang
-!!!           03/26/2010 by li huang
-!!!           12/06/2014 by li huang
+!!! history : 01/07/2006 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : initialize and finalize the Hirsch-Fye quantum Monte Carlo
 !!!           (HFQMC) quantum impurity solver and dynamical mean field
 !!!           theory (DMFT) self-consistent engine
@@ -185,7 +184,7 @@
      use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
      use mmpi, only : mp_bcast, mp_barrier
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta
@@ -241,15 +240,14 @@
 
 ! read in bath weiss's function from solver.wss.in
              open(mytmp, file='solver.wss.in', form='formatted', status='unknown')
-             do i=1,nband
+             do i=1,norbs
                  do j=1,mfreq
                      read(mytmp,*) k, rtmp, r1, i1, r2, i2
-                     wssf(j,i) = dcmplx(r1,i1)       ! spin up part
-                     wssf(j,i+nband) = dcmplx(r2,i2) ! spin dn part
+                     wssf(j,i) = dcmplx(r1,i1)
                  enddo ! over j={1,mfreq} loop
                  read(mytmp,*) ! skip two lines
                  read(mytmp,*)
-             enddo ! over i={1,nband} loop
+             enddo ! over i={1,norbs} loop
              close(mytmp)
 
          endif ! back if ( exists .eqv. .true. ) block
