@@ -69,9 +69,9 @@
 !!>>> hfqmc_dump_wtau: write out bath weiss's function in imaginary
 !!>>> time space
   subroutine hfqmc_dump_wtau(tmesh, wtau)
-     use constants, only : dp, one, mytmp
+     use constants, only : dp, zero, one, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
      use control, only : beta
 
@@ -93,14 +93,14 @@
      open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -wtau(j,i), -wtau(j,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -wtau(j,i), zero
          enddo ! over j={1,ntime} loop
-         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, wtau(1,i)-one, wtau(1,i+nband)-one
+         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, wtau(1,i)-one, zero
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
