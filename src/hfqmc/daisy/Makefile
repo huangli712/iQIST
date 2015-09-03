@@ -64,12 +64,12 @@ csml:
 	cp ../../common/linkedlist.mod .
 
 exe: api cssl csml hfqmc-exe
-hfqmc-exe: $(objects)
-	$(LINKER) $(objects) -o hfqmc $(LFLAGS) $(LIBS)
+hfqmc-exe: $(exe_obj)
+	$(LINKER) $(exe_obj) -o hfqmc $(LFLAGS) $(LIBS)
 
-lib: api cssl csml touch hfqmc-lib
-hfqmc-lib: $(objects)
-	$(ARCHIVER) libhfqmc.a $(objects)
+lib: api cssl csml hfqmc-lib
+hfqmc-lib: $(lib_obj)
+	$(ARCHIVER) libhfqmc.a $(lib_obj)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -77,13 +77,13 @@ hfqmc-lib: $(objects)
 clean:
 	rm -f *.mod
 	rm -f *.o
+	rm -f *.so
 	rm -f hfqmc
 	rm -f libhfqmc.a
 	rm -f libMM.a
 
 clean-dat:
 	rm -f *.dat
-	rm -f *.bin.*
 	rm -f *.out
 
 clean-all: clean clean-dat
