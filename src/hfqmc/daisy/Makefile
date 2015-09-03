@@ -71,6 +71,11 @@ lib: api cssl csml hfqmc-lib
 hfqmc-lib: $(lib_obj)
 	$(ARCHIVER) libhfqmc.a $(lib_obj)
 
+pylib: lib
+	cpp -E -DPYAPI hfqmc_open.f90 > hfqmc_open_py.f90
+	$(F2PY) -c --f90exec=$(F2PYC) -m pydaisy -L. -lhfqmc -lMM $(F2PYL) hfqmc_open_py.f90
+	rm -fr *.dSYM hfqmc_open_py.f90
+
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
 
