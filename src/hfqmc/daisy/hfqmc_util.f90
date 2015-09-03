@@ -8,9 +8,8 @@
 !!! source  : hfqmc_fourier.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 12/28/2005 by li huang
-!!!           03/26/2010 by li huang
-!!!           12/08/2014 by li huang
+!!! history : 12/28/2005 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : perform forward fourier transformation (\tau to \omega) and
 !!!           backward fourier transformation (\omega to \tau))
 !!! status  : unstable
