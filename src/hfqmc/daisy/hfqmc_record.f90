@@ -11,9 +11,8 @@
 !!! source  : hfqmc_record.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/07/2006 by li huang
-!!!           08/25/2010 by li huang
-!!!           12/06/2014 by li huang
+!!! history : 01/07/2006 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : To build impurity green's function, bath weiss's function
 !!!           and self-energy function in matsubara frequency space. some
 !!!           auxiliary subroutines, such as symmetrizing and smoothing
@@ -328,9 +327,10 @@
   end subroutine hfqmc_make_nmat
 
 !!>>> hfqmc_reduce_gtau: reduce the gtau from all children processes
-  subroutine hfqmc_reduce_gtau(gtau_mpi)
+  subroutine hfqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : ntime
@@ -342,9 +342,11 @@
 ! external arguments
 ! impurity green's function
      real(dp), intent(out) :: gtau_mpi(ntime,norbs)
+     real(dp), intent(out) :: gtau_err(ntime,norbs)
 
-! initialize gtau_mpi
+! initialize gtau_mpi and gtau_err
      gtau_mpi = zero
+     gtau_err = zero
 
 ! build gtau_mpi, collect data from all children processes
 # if defined (MPI)
@@ -363,6 +365,17 @@
 
 ! calculate the average
      gtau_mpi = gtau_mpi / real(nprocs)
+
+! build gtau_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(gtau - gtau_mpi), gtau_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine hfqmc_reduce_gtau
