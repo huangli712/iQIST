@@ -157,9 +157,9 @@
 !!>>> hfqmc_dump_wssf: write out bath weiss's function in matsubara
 !!>>> frequency space
   subroutine hfqmc_dump_wssf(rmesh, wssf)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
 
      implicit none
@@ -180,17 +180,15 @@
      open(mytmp, file='solver.wss.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                    real(wssf(j,i)), &
-                                   aimag(wssf(j,i)), &
-                              real(wssf(j,i+nband)), &
-                             aimag(wssf(j,i+nband))
+                  real(wssf(j,i)), aimag(wssf(j,i)), &
+                                         zero, zero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
