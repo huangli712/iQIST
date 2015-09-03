@@ -63,15 +63,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
         gtau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(ntime):
                 spl = f.readline().split()
                 tmesh[j] = float( spl[2] )
                 gtau[j,i,i] = float( spl[3] )
-                gtau[j,i+nband,i+nband] = float( spl[4] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -89,15 +87,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         rmesh = numpy.zeros((mfreq), dtype = numpy.float)
         grnf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(mfreq):
                 spl = f.readline().split()
                 rmesh[j] = float( spl[1] )
                 grnf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
-                grnf[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -115,15 +111,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
         wtau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(ntime):
                 spl = f.readline().split()
                 tmesh[j] = float( spl[2] )
                 wtau[j,i,i] = float( spl[3] )
-                wtau[j,i+nband,i+nband] = float( spl[4] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -141,15 +135,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         rmesh = numpy.zeros((mfreq), dtype = numpy.float)
         wssf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(mfreq):
                 spl = f.readline().split()
                 rmesh[j] = float( spl[1] )
                 wssf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
-                wssf[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -167,15 +159,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
         htau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(ntime):
                 spl = f.readline().split()
                 tmesh[j] = float( spl[2] )
                 htau[j,i,i] = float( spl[3] )
-                htau[j,i+nband,i+nband] = float( spl[4] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -193,15 +183,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         rmesh = numpy.zeros((mfreq), dtype = numpy.float)
         hybf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(mfreq):
                 spl = f.readline().split()
                 rmesh[j] = float( spl[1] )
                 hybf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
-                hybf[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -219,15 +207,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         rmesh = numpy.zeros((mfreq), dtype = numpy.float)
         sig2 = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(mfreq):
                 spl = f.readline().split()
                 rmesh[j] = float( spl[1] )
                 sig2[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
-                sig2[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -435,7 +421,7 @@ class iqistReader(object):
 
         f.close()
 
-        return (schi, sschi)
+        return (tmesh, schi, sschi)
 
     @staticmethod
     def get_ochi(norbs, ntime, fileName = None):
@@ -468,7 +454,7 @@ class iqistReader(object):
 
         f.close()
 
-        return (ochi, oochi)
+        return (tmesh, ochi, oochi)
 
     @staticmethod
     def get_twop(norbs, nffrq, nbfrq, fileName = None):
