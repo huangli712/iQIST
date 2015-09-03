@@ -317,7 +317,7 @@
 !!>>> hfqmc_solver_init: initialize the Hirsch-Fye quantum Monte Carlo
 !!>>> quantum impurity solver
   subroutine hfqmc_solver_init()
-     use constants, only : dp, zero, one, two, half, czero
+     use constants, only : dp, zero, one, two, half
      use spring, only : spring_sfmt_init, spring_sfmt_stream
 
      use control, only : nband, norbs

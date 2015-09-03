@@ -85,8 +85,6 @@
 !!>>> hfqmc_make_accept: core subroutine, to update the auxiliary ising
 !!>>> like fields and the green's function matrix
   subroutine hfqmc_make_accept(n, m, cstep)
-     use constants, only : dp
-
      use control, only : mstep
      use control, only : ntime
      use control, only : nclean
