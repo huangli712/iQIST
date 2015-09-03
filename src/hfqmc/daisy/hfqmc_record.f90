@@ -381,9 +381,10 @@
   end subroutine hfqmc_reduce_gtau
 
 !!>>> hfqmc_reduce_nmat: reduce the nnmat from all children processes
-  subroutine hfqmc_reduce_nmat(nnmat_mpi)
+  subroutine hfqmc_reduce_nmat(nnmat_mpi, nnmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -394,9 +395,11 @@
 ! external arguments
 ! double occupation number matrix
      real(dp), intent(out) :: nnmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: nnerr_mpi(norbs,norbs)
 
-! initialize nnmat_mpi
+! initialize nnmat_mpi and nnmat_err
      nnmat_mpi = zero
+     nnmat_err = zero
 
 ! build nnmat_mpi, collect data from all children processes
 # if defined (MPI)
@@ -415,6 +418,17 @@
 
 ! calculate the average
      nnmat_mpi = nnmat_mpi / real(nprocs)
+
+! build nnmat_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(abs(nnmat - nnmat_mpi), nnmat_err, mpi_max)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
 
      return
   end subroutine hfqmc_reduce_nmat
