@@ -395,7 +395,7 @@
 ! external arguments
 ! double occupation number matrix
      real(dp), intent(out) :: nnmat_mpi(norbs,norbs)
-     real(dp), intent(out) :: nnerr_mpi(norbs,norbs)
+     real(dp), intent(out) :: nnmat_err(norbs,norbs)
 
 ! initialize nnmat_mpi and nnmat_err
      nnmat_mpi = zero
