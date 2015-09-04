@@ -274,7 +274,7 @@
                  do ibin=1,nbins
                      err(j,i) = err(j,i) + ( grn_bin(j,i,ibin) - grn(j,i) )**2
                  enddo ! over ibin={1,nbins} loop
-                 err(j,i) = sqrt( err(j,i) / real( nbins - 1 ) )
+                 err(j,i) = sqrt( err(j,i) / real( ( nbins - 1 ) * nbins ) )
              enddo ! over j={1,ntime} loop
          enddo ! over i={1,norbs} loop
      endif ! back if ( ctqmc == 3 .or. ctqmc == 4 ) block
