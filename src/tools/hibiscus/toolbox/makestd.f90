@@ -51,14 +51,7 @@
      implicit none
 
 ! local control parameters
-! number of bands
-     integer  :: nband = 1
-
-! number of spin orientation
-! note: do not modify it
-     integer  :: nspin = 2
-
-! number of orbitals, norbs = nspin * nband
+! number of orbitals
      integer  :: norbs = 2
 
 ! number of matsubara frequency points
@@ -117,11 +110,10 @@
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   'Number of bands (default = 1):'
+     write(mystd,'(2X,a)')   'Number of orbitals (default = 2):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (*,*) nband
+     read (*,*) norbs
      write(mystd,*)
-     norbs = nband * nspin
 
      write(mystd,'(2X,a)')   'Number of matsubara frequency points (default = 8193):'
      write(mystd,'(2X,a,$)') '>>> '
@@ -134,7 +126,7 @@
      write(mystd,*)
 
 ! check the parameters
-     call s_assert2( nband > 0 .and. nband < 8, 'wrong number of bands' )
+     call s_assert2( norbs > 0 .and. norbs < 15, 'wrong number of bands' )
      call s_assert2( nfreq > 0, 'wrong number of matsubara frequency points' )
      call s_assert2( nbins > 0, 'wrong number of data bins' )
 
@@ -185,16 +177,13 @@
          open(mytmp, file='solver.sgm.dat.'//trim(adjustl(sbin)), form='formatted', status='unknown')
 
 ! read self-energy function data
-         do i=1,nband
+         do i=1,norbs
              do j=1,nfreq
-                 read(mytmp,*) itmp, msh(j), sre_bin(j,i,ibin), &
-                                             sim_bin(j,i,ibin), &
-                                       sre_bin(j,i+nband,ibin), &
-                                       sim_bin(j,i+nband,ibin)
+                 read(mytmp,*) itmp, msh(j), sre_bin(j,i,ibin), sim_bin(j,i,ibin)
              enddo ! over j={1,nfreq} loop
              read(mytmp,*) ! skip two lines
              read(mytmp,*)
-         enddo ! over i={1,nband} loop
+         enddo ! over i={1,norbs} loop
 
 ! close solver.sgm.dat file
          close(mytmp)
