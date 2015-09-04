@@ -14,24 +14,18 @@
 !! Introduction
 !! ============
 !!
-!! The maketau code is often used to convert file solver.green.bin.*
+!! The maketau code is often used to convert file solver.green.dat.*
 !! or solver.green.dat to tau.grn.dat, prepare necessary input data for
 !! the hibiscus/entropy or hibiscus/stoch codes.
 !!
-!! About solver.green.bin.* files:
-!! In order to obtain solver.green.bin.* files, you have to active the
-!! data binning mode of the ctqmc impurity solver, i.e., you have to
-!! set isbin to 2 in the solver.ctqmc.in file, and then execute the
-!! calculations.
-!!
-!! About ctqmc control parameter:
-!! In general, when ctqmc == 1 or 2, then the output file is suitable for
-!! the hibiscus/entropy code. When ctqmc == 3 or 4, then the output file
-!! is suitable for the hibiscus/stoch code.
+!! About solver.green.dat.* files:
+!! In order to obtain solver.green.dat.* files, you have to run the
+!! ctqmc/hfqmc codes for several times, and rename the solver.green.dat
+!! file to solver.green.dat.* file manually.
 !!
 !! About nskip control parameter:
-!! If ctqmc == 1 or 2, then nskip must be 1. If ctqmc == 3 or 4, then
-!! nskip couble be positive integer. Be careful, nskip can not be any
+!! If ctqmc == 2 or 4, then nskip must be 1. If ctqmc == 1 or 3, then
+!! nskip could be positive integer. Be careful, nskip can not be any
 !! integer. Notice that mod(ntime - 1, nskip) must be 0, or else the
 !! obtained tau.grn.dat should be wrong.
 !!
@@ -43,7 +37,7 @@
 !! Input
 !! =====
 !!
-!! solver.green.dat or solver.green.bin.* (necessary)
+!! solver.green.dat or solver.green.dat.* (necessary)
 !!
 !! Output
 !! ======
@@ -63,14 +57,7 @@
      implicit none
 
 ! local control parameters
-! number of bands
-     integer  :: nband = 1
-
-! number of spin orientation
-! note: do not modify it
-     integer  :: nspin = 2
-
-! number of orbitals, norbs = nspin * nband
+! number of orbitals
      integer  :: norbs = 2
 
 ! number of time slices, 129 or 1024, in [0, \beta]
@@ -136,11 +123,10 @@
      write(mystd,*) ! print blank line
 
 ! setup necessary parameters
-     write(mystd,'(2X,a)')   'Number of bands (default = 1):'
+     write(mystd,'(2X,a)')   'Number of orbitals (default = 2):'
      write(mystd,'(2X,a,$)') '>>> '
-     read (*,*) nband
+     read (*,*) norbs
      write(mystd,*)
-     norbs = nband * nspin
 
      write(mystd,'(2X,a)')   'Number of time slices (default = 129 or 1024):'
      write(mystd,'(2X,a,$)') '>>> '
@@ -172,7 +158,7 @@
      write(mystd,*)
 
 ! check the parameters
-     call s_assert2( nband > 0 .and. nband < 8, 'wrong number of bands' )
+     call s_assert2( norbs > 0 .and. norbs < 15, 'wrong number of orbitals' )
      call s_assert2( ntime > 0, 'wrong number of time slices' )
      call s_assert2( nbins > 0, 'wrong number of data bins' )
      call s_assert2( ctqmc > 0 .and. ctqmc < 5, 'wrong file type' )
@@ -218,13 +204,13 @@
          open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
 
 ! read green's function data
-         do i=1,nband
+         do i=1,norbs
              do j=1,ntime
-                 read(mytmp,*) itmp, jtmp, rtmp, grn(j,i), grn(j,i+nband)
+                 read(mytmp,*) itmp, jtmp, rtmp, grn(j,i), err(j,i)
              enddo ! over j={1,ntime} loop
              read(mytmp,*) ! skip two lines
              read(mytmp,*)
-         enddo ! over i={1,nband} loop
+         enddo ! over i={1,norbs} loop
 
 ! close solver.green.dat file
          close(mytmp)
@@ -244,24 +230,24 @@
 ! convert ibin to sbin
              write(sbin,'(i10)') ibin
 
-! inquire file status: solver.green.bin.ibin
-             inquire (file = 'solver.green.bin.'//trim(adjustl(sbin)), exist = exists)
+! inquire file status: solver.green.dat.ibin
+             inquire (file = 'solver.green.dat.'//trim(adjustl(sbin)), exist = exists)
              if ( exists .eqv. .false. ) then
-                 call s_print_error('maketau','file solver.green.bin does not exist')
+                 call s_print_error('maketau','file solver.green.dat.* does not exist')
              endif ! back if ( exists .eqv. .false. ) block
 
 ! open solver.green.bin file
-             write(mystd,'(2X,a,i4)') 'Reading solver.green.bin ...', ibin
-             open(mytmp, file='solver.green.bin.'//trim(adjustl(sbin)), form='formatted', status='unknown')
+             write(mystd,'(2X,a,i4)') 'Reading solver.green.dat ...', ibin
+             open(mytmp, file='solver.green.dat.'//trim(adjustl(sbin)), form='formatted', status='unknown')
 
 ! read green's function data
-             do i=1,nband
+             do i=1,norbs
                  do j=1,ntime
-                     read(mytmp,*) itmp, jtmp, rtmp, grn_bin(j,i,ibin), grn_bin(j,i+nband,ibin)
+                     read(mytmp,*) itmp, jtmp, rtmp, grn_bin(j,i,ibin)
                  enddo ! over j={1,ntime} loop
                  read(mytmp,*) ! skip two lines
                  read(mytmp,*)
-             enddo ! over i={1,nband} loop
+             enddo ! over i={1,norbs} loop
 
 ! close solver.green.bin file
              close(mytmp)
@@ -273,11 +259,6 @@
 
 ! ensure grn_bin is positive
          grn_bin = abs(grn_bin)
-
-! postprocess the data bin
-         do ibin=nbins,2,-1
-             grn_bin(:,:,ibin) = grn_bin(:,:,ibin) * real(ibin) - grn_bin(:,:,ibin-1) * real(ibin-1)
-         enddo ! over ibin={nbins,2} loop
 
 ! calculate averaged green's function
          grn = zero
@@ -298,18 +279,6 @@
          enddo ! over i={1,norbs} loop
      endif ! back if ( ctqmc == 3 .or. ctqmc == 4 ) block
 
-! special treatment for ctqmc quantum impurity solver
-     if ( ctqmc == 1 ) then
-! smooth original data using bezier curves
-         call make_bezier(ntime, norbs, tau, grn)
-
-! interpolte green's function to new mesh using cubic spline
-         call make_spline(ntime, norbs, beta, tau, grn)
-
-! fix ntime, size of new mesh
-         ntime = 129
-     endif ! back if ( ctqmc == 1 ) block
-
 ! open tau.grn.dat file, which is used as the input for the
 ! hibiscus/entropy or hibiscus/stoch codes
      write(mystd,'(2X,a)') 'Writing tau.grn.dat ...'
@@ -317,15 +286,15 @@
      open(mytmp, file='tau.grn.dat', form='formatted', status='unknown')
 
 ! write out data
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime,nskip
-             write(mytmp,'(5f16.8)') tau(j), grn(j,i), err(j,i), grn(j,i+nband), err(j,i+nband)
+             write(mytmp,'(3f16.8)') tau(j), grn(j,i), err(j,i)
          enddo ! over j={1,ntime} loop
 
 ! write two blank lines
          write(mytmp,*)
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close tau.grn.dat file
      close(mytmp)
@@ -342,175 +311,3 @@
      deallocate(grn_bin)
 
   end program maketau
-
-!!>>> make_bezier: smooth orginal green's function using bezier curves
-  subroutine make_bezier(ntime, norbs, tau, grn)
-     use constants, only : dp, zero, one
-
-     implicit none
-
-! external arguments
-! number of imaginary time points
-     integer, intent(in) :: ntime
-
-! number of orbitals
-     integer, intent(in) :: norbs
-
-! imaginary time mesh
-     real(dp), intent(inout) :: tau(ntime)
-
-! green's function data
-     real(dp), intent(inout) :: grn(ntime,norbs)
-
-! local variables
-! loop index
-     integer  :: i, j, m
-
-! intervals
-     real(dp) :: dt, t
-
-! current tau(i) and grn(i)
-     real(dp) :: x, y
-
-! dummy copy for tau and grn
-     real(dp) :: tau_(ntime)
-     real(dp) :: grn_(ntime)
-
-! to store Bernstein polynomials
-     real(dp) :: bern(ntime)
-
-     dt = one / real(ntime - 1)
-
-     do m=1,norbs
-         do j=1,ntime
-             t = dt * real(j - 1)
-             x = zero
-             y = zero
-
-! to evaluate Bernstein polynomials
-             call s_bezier(ntime-1, t, bern)
-             do i=1,ntime
-                 y = y + grn(i,m) * bern(i)
-             enddo ! over i={1,ntime} loop
-
-! to evaluate Bernstein polynomials
-             call s_bezier(ntime-1, t, bern)
-             do i=1,ntime
-                 x = x + tau(i)   * bern(i)
-             enddo ! over i={1,ntime} loop
-
-! save x and y to tau_ and grn_ respectively
-             tau_(j) = x
-             grn_(j) = y
-         enddo ! over j={1,ntime} loop
-         grn(:,m) = grn_
-     enddo ! over m={1,norbs} loop
-     tau = tau_
-
-     return
-  end subroutine make_bezier
-
-!!>>> make_spline: spline green's function from old mesh to new mesh
-!!>>> this size of old mesh is ntime, however, the size of new mesh
-!!>>> is fixed to ntau (129).
-  subroutine make_spline(ntime, norbs, beta, tau, grn)
-     use constants, only : dp, zero
-
-     implicit none
-
-! local parameters
-! predefined mesh size
-     integer, parameter   :: ntau = 129
-
-! external arguments
-! number of imaginary time points
-     integer, intent(in)  :: ntime
-
-! number of orbitals
-     integer, intent(in)  :: norbs
-
-! inversion of temperature
-     real(dp), intent(in) :: beta
-
-! imaginary time mesh
-     real(dp), intent(inout) :: tau(ntime)
-
-! green's function data
-     real(dp), intent(inout) :: grn(ntime,norbs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! used to calculate 2nd derivates
-     real(dp) :: startu, startd, deltau
-
-! dummy imaginary time mesh
-     real(dp) :: tau_t(ntau)
-
-! dummy green's function data
-     real(dp) :: grn_t(ntau,norbs)
-
-! 2nd derivates of green's function
-     real(dp) :: d2y(ntime)
-     real(dp) :: g2d(ntime,norbs)
-
-! external function, used to perform cubic spline interpolation
-     procedure( real(dp) ) :: s_spl_funct
-
-! calculate deltau
-     deltau = beta / real( ntime - 1 )
-
-! build new imaginary mesh
-     call s_linspace_d(zero, beta, ntau, tau_t)
-
-! calculate 2nd derivates of old green's function
-     do i=1,norbs
-
-! calculate first-order derivate of \Delta(0): startu
-         startu = (-25.0_dp * grn(1,       i) +                    &
-                    48.0_dp * grn(2,       i) -                    &
-                    36.0_dp * grn(3,       i) +                    &
-                    16.0_dp * grn(4,       i) -                    &
-                     3.0_dp * grn(5,       i)) / 12.0_dp / deltau
-
-! calculate first-order derivate of \Delta(\beta): startd
-         startd = ( 25.0_dp * grn(ntime-0, i) -                    &
-                    48.0_dp * grn(ntime-1, i) +                    &
-                    36.0_dp * grn(ntime-2, i) -                    &
-                    16.0_dp * grn(ntime-3, i) +                    &
-                     3.0_dp * grn(ntime-4, i)) / 12.0_dp / deltau
-
-! reinitialize d2y to zero
-         d2y = zero
-
-! call the service layer
-         call s_spl_deriv2(ntime, tau, grn(:,i), startu, startd, d2y)
-
-! copy the results to g2d
-         g2d(:,i) = d2y
-
-     enddo ! over i={1,norbs} loop
-
-! perform cubic spline interpolation to obtain new green's function
-     do i=1,norbs
-         do j=1,ntau
-             grn_t(j,i) = s_spl_funct(ntime, tau, grn(:,i), g2d(:,i), tau_t(j))
-         enddo ! over j={1,ntau} loop
-     enddo ! over i={1,norbs} loop
-
-! overwrite the old imaginary time mesh
-     do i=1,ntau
-         tau(i) = tau_t(i)
-     enddo ! over i={1,ntau} loop
-
-! overwrite the old green's function data
-     do i=1,norbs
-         do j=1,ntau
-             grn(j,i) = grn_t(j,i)
-         enddo ! over j={1,ntau} loop
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine make_spline
