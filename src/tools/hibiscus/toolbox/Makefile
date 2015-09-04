@@ -20,7 +20,8 @@
 ## History
 ## =======
 ##
-## 10/02/2014 by li huang
+## 10/02/2014 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -28,9 +29,9 @@
 
 include ../../../build/make.sys
 
-MAPI = libMM.a
+CLIB = libMM.a
 
-objects = $(MAPI)
+objects = $(CLIB)
 
 default: all
 
@@ -85,5 +86,6 @@ clean-dat:
 	rm -f kra.*
 	rm -f sig.*
 	rm -f std.*
+	rm -f *.dat
 
 clean-all: clean clean-dat
