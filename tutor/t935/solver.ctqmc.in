@@ -49,6 +49,6 @@
   ntherm : 200000
   nsweep : 20000000
   nwrite : 2000000
-  nclean : 10000
+  nclean : 100000
   nmonte : 100
   ncarlo : 100

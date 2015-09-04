@@ -7,10 +7,10 @@
 
 !!>>> setup general control flags
 !!------------------------------------------------------------------------
-  isscf  : 1
+  isscf  : 2
   issun  : 2
   isspn  : 1
-  isbin  : 2
+  isbin  : 1
 
 !!>>> setup common variables for quantum impurity model
 !!------------------------------------------------------------------------
@@ -38,7 +38,7 @@
   ntime  : 1024
   nflip  : 20000
   ntherm : 200000
-  nsweep : 200000000
+  nsweep : 20000000
   nwrite : 2000000
   nclean : 100000
   nmonte : 100
