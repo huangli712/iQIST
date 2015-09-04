@@ -20,7 +20,8 @@
 ## History
 ## =======
 ##
-## 01/24/2015 by li huang
+## 01/24/2015 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -29,16 +30,17 @@
 include ../../src/build/make.sys
 
 main = template.o
-MAPI = libctqmc.a libMM.a
 
-objects = $(main) $(MAPI)
+CLIB = libctqmc.a libMM.a
+
+objects = $(main) $(CLIB)
 
 default: all
 
 all: exe
 
 api:
-	cp ../../src/api/capi.mod .
+	cp ../../src/capi/capi.mod .
 	cp ../../src/ctqmc/azalea/libctqmc.a .
 
 cssl:
@@ -64,7 +66,6 @@ clean:
 
 clean-dat:
 	rm -f *.dat
-	rm -f *.bin.*
 	rm -f *.out
 
 clean-all: clean clean-dat
