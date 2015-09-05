@@ -1459,7 +1459,6 @@
   subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : ntime
@@ -1499,12 +1498,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(gtau - gtau_mpi), gtau_err, mpi_max)
+     call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_gtau
@@ -1513,7 +1517,6 @@
   subroutine ctqmc_reduce_ftau(ftau_mpi, ftau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : ntime
@@ -1553,12 +1556,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(ftau - ftau_mpi), ftau_err, mpi_max)
+     call mp_allreduce((ftau - ftau_mpi)**2, ftau_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_ftau
@@ -1567,7 +1575,6 @@
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp, zero, czero, czi
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : mfreq
@@ -1620,13 +1627,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs( real(grnf - grnf_mpi)), re_err, mpi_max)
-     call mp_allreduce(abs(aimag(grnf - grnf_mpi)), im_err, mpi_max)
+     call mp_allreduce(( real(grnf - grnf_mpi))**2, re_err)
+     call mp_allreduce((aimag(grnf - grnf_mpi))**2, im_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         re_err = sqrt( re_err / real( nprocs * ( nprocs - 1 ) ) )
+         im_err = sqrt( im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
 ! construct the final grnf_err
      grnf_err = re_err + im_err * czi
@@ -1642,7 +1655,6 @@
   subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : mkink
      use control, only : nprocs
@@ -1681,12 +1693,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(hist - hist_mpi), hist_err, mpi_max)
+     call mp_allreduce((hist - hist_mpi)**2, hist_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         hist_err = sqrt( hist_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_hist
@@ -1695,7 +1712,6 @@
   subroutine ctqmc_reduce_prob(prob_mpi, prob_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : ncfgs
      use control, only : nprocs
@@ -1734,12 +1750,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(prob - prob_mpi), prob_err, mpi_max)
+     call mp_allreduce((prob - prob_mpi)**2, prob_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         prob_err = sqrt( prob_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_prob
@@ -1748,7 +1769,6 @@
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -1797,13 +1817,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(nmat - nmat_mpi), nmat_err, mpi_max)
-     call mp_allreduce(abs(nnmat - nnmat_mpi), nnmat_err, mpi_max)
+     call mp_allreduce((nmat - nmat_mpi)**2, nmat_err)
+     call mp_allreduce((nnmat - nnmat_mpi)**2, nnmat_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         nmat_err = sqrt( nmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         nnmat_err = sqrt( nnmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_nmat
@@ -1812,7 +1838,6 @@
   subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -1861,13 +1886,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(kmat - kmat_mpi), kmat_err, mpi_max)
-     call mp_allreduce(abs(kkmat - kkmat_mpi), kkmat_err, mpi_max)
+     call mp_allreduce((kmat - kmat_mpi)**2, kmat_err)
+     call mp_allreduce((kkmat - kkmat_mpi)**2, kkmat_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         kkmat_err = sqrt( kkmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_kmat
@@ -1876,7 +1907,6 @@
   subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -1935,14 +1965,21 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(lmat - lmat_mpi), lmat_err, mpi_max)
-     call mp_allreduce(abs(rmat - rmat_mpi), rmat_err, mpi_max)
-     call mp_allreduce(abs(lrmat - lrmat_mpi), lrmat_err, mpi_max)
+     call mp_allreduce((lmat - lmat_mpi)**2, lmat_err)
+     call mp_allreduce((rmat - rmat_mpi)**2, rmat_err)
+     call mp_allreduce((lrmat - lrmat_mpi)**2, lrmat_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         lmat_err = sqrt( lmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         rmat_err = sqrt( rmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         lrmat_err = sqrt( lrmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_lmat
@@ -1951,7 +1988,6 @@
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : nband
      use control, only : ntime
@@ -2001,13 +2037,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(schi - schi_mpi), schi_err, mpi_max)
-     call mp_allreduce(abs(sschi - sschi_mpi), sschi_err, mpi_max)
+     call mp_allreduce((schi - schi_mpi)**2, schi_err)
+     call mp_allreduce((sschi - sschi_mpi)**2, sschi_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         schi_err = sqrt( schi_err / real( nprocs * ( nprocs - 1 ) ) )
+         sschi_err = sqrt( sschi_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_schi
@@ -2016,7 +2058,6 @@
   subroutine ctqmc_reduce_sfom(ssfom_mpi, ssfom_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : nband
      use control, only : nbfrq
@@ -2056,12 +2097,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(ssfom - ssfom_mpi), ssfom_err, mpi_max)
+     call mp_allreduce((ssfom - ssfom_mpi)**2, ssfom_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         ssfom_err = sqrt( ssfom_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_sfom
@@ -2070,7 +2116,6 @@
   subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : ntime
@@ -2120,13 +2165,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(ochi - ochi_mpi), ochi_err, mpi_max)
-     call mp_allreduce(abs(oochi - oochi_mpi), oochi_err, mpi_max)
+     call mp_allreduce((ochi - ochi_mpi)**2, ochi_err)
+     call mp_allreduce((oochi - oochi_mpi)**2, oochi_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         ochi_err = sqrt( ochi_err / real( nprocs * ( nprocs - 1 ) ) )
+         oochi_err = sqrt( oochi_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_ochi
@@ -2135,7 +2186,6 @@
   subroutine ctqmc_reduce_ofom(oofom_mpi, oofom_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nbfrq
@@ -2175,12 +2225,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(oofom - oofom_mpi), oofom_err, mpi_max)
+     call mp_allreduce((oofom - oofom_mpi)**2, oofom_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         oofom_err = sqrt( oofom_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_ofom
