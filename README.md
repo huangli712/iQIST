@@ -10,7 +10,7 @@ Sometimes the latest commit will not be compiled correctly. So, please download 
 
 ### Version
 
-v0.6.4 @ 2015.01.06T (devel)
+v0.6.5 @ 2015.01.06T (devel)
 
 ### License
 
