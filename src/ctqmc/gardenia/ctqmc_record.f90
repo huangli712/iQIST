@@ -1712,7 +1712,6 @@
   subroutine ctqmc_reduce_prob(prob_mpi, prob_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : ncfgs
      use control, only : nprocs
@@ -1751,12 +1750,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(prob - prob_mpi), prob_err, mpi_max)
+     call mp_allreduce((prob - prob_mpi)**2, prob_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         prob_err = sqrt( prob_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_prob
