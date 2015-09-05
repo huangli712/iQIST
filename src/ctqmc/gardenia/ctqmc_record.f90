@@ -1575,7 +1575,6 @@
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp, zero, czero, czi
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : mfreq
@@ -1628,13 +1627,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs( real(grnf - grnf_mpi)), re_err, mpi_max)
-     call mp_allreduce(abs(aimag(grnf - grnf_mpi)), im_err, mpi_max)
+     call mp_allreduce(( real(grnf - grnf_mpi))**2, re_err)
+     call mp_allreduce((aimag(grnf - grnf_mpi))**2, im_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         re_err = sqrt( re_err / real( nprocs * ( nprocs - 1 ) ) )
+         im_err = sqrt( im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
 ! construct the final grnf_err
      grnf_err = re_err + im_err * czi
