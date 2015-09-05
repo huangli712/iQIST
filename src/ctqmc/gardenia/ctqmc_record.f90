@@ -1517,7 +1517,6 @@
   subroutine ctqmc_reduce_ftau(ftau_mpi, ftau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : ntime
@@ -1557,12 +1556,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(ftau - ftau_mpi), ftau_err, mpi_max)
+     call mp_allreduce((ftau - ftau_mpi)**2, ftau_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_ftau
