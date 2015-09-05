@@ -1988,7 +1988,6 @@
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : nband
      use control, only : ntime
@@ -2038,13 +2037,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(schi - schi_mpi), schi_err, mpi_max)
-     call mp_allreduce(abs(sschi - sschi_mpi), sschi_err, mpi_max)
+     call mp_allreduce((schi - schi_mpi)**2, schi_err)
+     call mp_allreduce((sschi - sschi_mpi)**2, sschi_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         schi_err = sqrt( schi_err / real( nprocs * ( nprocs - 1 ) ) )
+         sschi_err = sqrt( sschi_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_schi
