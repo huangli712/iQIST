@@ -1498,7 +1498,7 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((gtau**2 - gtau_mpi**2), gtau_err)
+     call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
 
 ! block until all processes have reached here
      call mp_barrier()
