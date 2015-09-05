@@ -1,6 +1,6 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-### v0.6.5 @ 0816e25 // Sep 06, 2015
+### v0.6.5 @ 90793f1 // Sep 06, 2015
 
 * Add error bars support in azalea.
 * Add error bars support in begonia.
