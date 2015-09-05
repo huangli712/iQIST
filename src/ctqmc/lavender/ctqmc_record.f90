@@ -822,7 +822,6 @@
   subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : ntime
@@ -862,12 +861,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(gtau - gtau_mpi), gtau_err, mpi_max)
+     call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_gtau
@@ -876,7 +880,6 @@
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp, zero, czero, czi
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : mfreq
@@ -929,13 +932,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs( real(grnf - grnf_mpi)), re_err, mpi_max)
-     call mp_allreduce(abs(aimag(grnf - grnf_mpi)), im_err, mpi_max)
+     call mp_allreduce(( real(grnf - grnf_mpi))**2, re_err)
+     call mp_allreduce((aimag(grnf - grnf_mpi))**2, im_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         re_err = sqrt( re_err / real( nprocs * ( nprocs - 1 ) ) )
+         im_err = sqrt( im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
 ! construct the final grnf_err
      grnf_err = re_err + im_err * czi
@@ -951,7 +960,6 @@
   subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : mkink
      use control, only : nprocs
@@ -990,12 +998,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(hist - hist_mpi), hist_err, mpi_max)
+     call mp_allreduce((hist - hist_mpi)**2, hist_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         hist_err = sqrt( hist_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_hist
@@ -1004,7 +1017,6 @@
   subroutine ctqmc_reduce_prob(prob_mpi, prob_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : ncfgs
      use control, only : nprocs
@@ -1043,12 +1055,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(prob - prob_mpi), prob_err, mpi_max)
+     call mp_allreduce((prob - prob_mpi)**2, prob_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         prob_err = sqrt( prob_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_prob
@@ -1057,7 +1074,6 @@
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -1106,13 +1122,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(nmat - nmat_mpi), nmat_err, mpi_max)
-     call mp_allreduce(abs(nnmat - nnmat_mpi), nnmat_err, mpi_max)
+     call mp_allreduce((nmat - nmat_mpi)**2, nmat_err)
+     call mp_allreduce((nnmat - nnmat_mpi)**2, nnmat_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         nmat_err = sqrt( nmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         nnmat_err = sqrt( nnmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_nmat
@@ -1121,7 +1143,6 @@
   subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -1170,13 +1191,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(kmat - kmat_mpi), kmat_err, mpi_max)
-     call mp_allreduce(abs(kkmat - kkmat_mpi), kkmat_err, mpi_max)
+     call mp_allreduce((kmat - kmat_mpi)**2, kmat_err)
+     call mp_allreduce((kkmat - kkmat_mpi)**2, kkmat_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         kkmat_err = sqrt( kkmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_kmat
@@ -1185,7 +1212,6 @@
   subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -1244,14 +1270,21 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(lmat - lmat_mpi), lmat_err, mpi_max)
-     call mp_allreduce(abs(rmat - rmat_mpi), rmat_err, mpi_max)
-     call mp_allreduce(abs(lrmat - lrmat_mpi), lrmat_err, mpi_max)
+     call mp_allreduce((lmat - lmat_mpi)**2, lmat_err)
+     call mp_allreduce((rmat - rmat_mpi)**2, rmat_err)
+     call mp_allreduce((lrmat - lrmat_mpi)**2, lrmat_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         lmat_err = sqrt( lmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         rmat_err = sqrt( rmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         lrmat_err = sqrt( lrmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_lmat
