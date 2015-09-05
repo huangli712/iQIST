@@ -1838,7 +1838,6 @@
   subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : nprocs
@@ -1887,13 +1886,19 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(kmat - kmat_mpi), kmat_err, mpi_max)
-     call mp_allreduce(abs(kkmat - kkmat_mpi), kkmat_err, mpi_max)
+     call mp_allreduce((kmat - kmat_mpi)**2, kmat_err)
+     call mp_allreduce((kkmat - kkmat_mpi)**2, kkmat_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         kkmat_err = sqrt( kkmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_kmat
