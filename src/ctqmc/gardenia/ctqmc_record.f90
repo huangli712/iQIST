@@ -1459,7 +1459,6 @@
   subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
-     use mmpi, only : mpi_max
 
      use control, only : norbs
      use control, only : ntime
@@ -1499,12 +1498,17 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(abs(gtau - gtau_mpi), gtau_err, mpi_max)
+     call mp_allreduce((gtau**2 - gtau_mpi**2), gtau_err)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_gtau
