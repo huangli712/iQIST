@@ -13,10 +13,10 @@ sys.path.append('../../../../src/tools/hibiscus/script/')
 from u_ctqmc import *
 
 # modify sys.path
-sys.path.append('../../../../src/api/')
+sys.path.append('../../../../src/ctqmc/begonia/')
 
 # import iqist software package
-from pyiqist import api as ctqmc
+import pyiqist as ctqmc
 
 def do_dmft_loop(mfreq, norbs, grnf):
     """ implement the DMFT self-consistent condition for bethe lattice
@@ -37,14 +37,14 @@ def do_dmft_loop(mfreq, norbs, grnf):
 comm = MPI.COMM_WORLD
 
 # check the status of ctqmc impurity solver
-if ctqmc.solver_id() == 201:
+if ctqmc.cat_solver_id() == 201:
     if comm.rank == 0 :
         print "Hello world! This is the BEGONIA code."
 else:
     if comm.rank == 0 :
         print "Where is the BEGONIA code?"
     sys.exit(-1)
-if ctqmc.solver_status() != 1 :
+if ctqmc.cat_solver_status() != 1 :
     print "I am sorry. This ctqmc impurity solver is not ready."
     sys.exit(-1)
 
@@ -86,19 +86,19 @@ grnf = numpy.zeros(size_t, dtype = numpy.complex)
 grnf_s = numpy.zeros(size_t, dtype = numpy.complex)
 
 # init ctqmc impurity solver
-ctqmc.init_ctqmc(comm.rank, comm.size)
+ctqmc.cat_init_ctqmc(comm.rank, comm.size)
 
 # try to implement the DMFT self-consistent loop
 for i in range(niter):
-    ctqmc.exec_ctqmc(i+1)
-    grnf = ctqmc.get_grnf(size_t)
+    ctqmc.cat_exec_ctqmc(i+1)
+    grnf = ctqmc.cat_get_grnf(size_t)
     hybf = do_dmft_loop(mfreq, norbs, grnf)
-    ctqmc.set_hybf(size_t, hybf)
+    ctqmc.cat_set_hybf(size_t, hybf)
     print 'MAX_ERROR:', (numpy.absolute(grnf - grnf_s)).max()
     grnf_s = (grnf + grnf_s)/2.0
 
 # stop ctqmc impurity solver
-ctqmc.stop_ctqmc()
+ctqmc.cat_stop_ctqmc()
 
 # mpi barrier
 comm.Barrier()

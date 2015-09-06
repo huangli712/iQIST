@@ -6,9 +6,8 @@
 !!! source  : entropy_print.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/08/2011 by li huang
-!!!           01/26/2011 by li huang
-!!!           11/17/2014 by li huang
+!!! history : 01/08/2011 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : provide printing infrastructure for classic maximum entropy
 !!!           method code
 !!! status  : very unstable

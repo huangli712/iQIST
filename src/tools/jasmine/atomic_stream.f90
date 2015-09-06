@@ -15,9 +15,8 @@
 !!! source  : atomic_stream.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!!           10/27/2014 by li huang
+!!! history : 07/09/2014 by yilin wang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : read input data from the external files, make the Fock basis
 !!!           and natural basis, etc.
 !!! status  : unstable

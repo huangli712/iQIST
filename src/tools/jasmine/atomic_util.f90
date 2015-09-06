@@ -22,9 +22,8 @@
 !!! source  : atomic_util.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!!           10/23/2014 by li huang
+!!! history : 07/09/2014 by yilin wang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : provide the utility subroutines for the atomic eigenvalue
 !!!           problem solver, such as the Dirac algebra, calculations of
 !!!           gaunt coefficients and Coulomb interaction matrices, etc.

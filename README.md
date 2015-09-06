@@ -6,9 +6,11 @@ The iQIST software package includes several quantum impurity solvers which imple
 
 The iQIST is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
 
+Sometimes the latest commit will not be compiled correctly. So, please download the released version of iQIST which has an unique version tag.
+
 ### Version
 
-v0.6.4 @ 2015.01.06T (beta)
+v0.6.5 @ 2015.01.06T (devel)
 
 ### License
 
@@ -37,12 +39,14 @@ GNU General Public License Version 3
     * Self-energy function in matsubara frequency space
     * Histogram of perturbation expansion order
     * Kinetic and potential energies
-    * (Double) occupation numbers, magnetic moment
+    * Orbital occupation numbers
+    * Double occupation numbers
+    * Magnetic moment
     * Atomic state probability
     * Spin-spin correlation function in imaginary time space
     * Orbital-orbital correlation function in imaginary time space
     * Fidelity susceptibility
-    * <k^2> - <k>^2 - <k>
+    * kinetic energy fluctuation <k^2> - <k>^2 - <k>
 
 * Fast algorithms
     * Segment algorithm for density-density interaction
@@ -70,8 +74,10 @@ GNU General Public License Version 3
     * Kramers-Kronig transformation
     * Pade approximation
     * Polynomial fitting for self-energy function
+    * Many tools and scripts, etc.
 
 ### Installation
+
 * Full Installation
 ```sh
 $ cd iqist/src/build
@@ -85,9 +91,31 @@ $ ./setup.sh
 ```sh
 $ cd iqist/src/build
 $ editor make.sys
+$ make capi
 $ make common
-$ make api
 $ make component (component could be azalea, gardenia, narcissus, etc.)
+$ cd ../../bin
+$ ./setup.sh
+```
+
+* Build Fortran Library
+```sh
+$ cd iqist/src/build
+$ editor make.sys
+$ make capi
+$ make common
+$ make component-lib (component could be azalea, gardenia, narcissus, etc.)
+$ cd ../../bin
+$ ./setup.sh
+```
+
+* Build Python Module
+```sh
+$ cd iqist/src/build
+$ editor make.sys
+$ make capi
+$ make common
+$ make component-pylib (component could be azalea, gardenia, narcissus, etc.)
 $ cd ../../bin
 $ ./setup.sh
 ```
@@ -120,7 +148,7 @@ Computer Physics Communications 195, 140 (2015) or arXiv:1409.7573 (2014)
 
 ```sh
 Li Huang
-Institute of Materials, Chinese Academy of Engineering Physics, Sichuan, PRC
+Institute of Materials, China Academy of Engineering Physics, Sichuan, PRC
 email: lihuang.dmft at gmail.com
 ```
 

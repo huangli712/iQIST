@@ -4,9 +4,8 @@
 !!! source  : hfqmc_solver.f90
 !!! type    : subroutine
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/05/2006 by li huang
-!!!           08/25/2010 by li huang
-!!!           12/08/2014 by li huang
+!!! history : 01/05/2006 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : it is a mature parallel implemention of the famous Hirsch
 !!!           -Fye quantum Monte Carlo algorithm, which is used to solve
 !!!           the multi-orbital Anderson impurity model as usually. we
@@ -86,9 +85,11 @@
 
 ! double occupation number, for mpi case
      real(dp), allocatable :: osum(:,:)
+     real(dp), allocatable :: oerr(:,:)
 
 ! sum of green's function over numprocs processes, for mpi case
      real(dp), allocatable :: gsum(:,:)
+     real(dp), allocatable :: gerr(:,:)
 
 ! the summed up green's function matrix
      real(dp), allocatable :: tmat(:,:,:)
@@ -101,12 +102,14 @@
 
 ! allocate memory
      allocate(osum(norbs,norbs),       stat=istat)
+     allocate(oerr(norbs,norbs),       stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
 ! allocate memory
      allocate(gsum(ntime,norbs),       stat=istat)
+     allocate(gerr(ntime,norbs),       stat=istat)
      if ( istat /= 0 ) then
          call s_print_error('hfqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -328,7 +331,7 @@
              enddo ! over m={1,norbs} loop
 
 ! collect the impurity green's function data from gtau to gsum
-             call hfqmc_reduce_gtau(gsum)
+             call hfqmc_reduce_gtau(gsum, gerr)
 
          endif ! back if ( mod(nstep, nfast) == 0  .and. nstep > 0 ) block
 
@@ -338,11 +341,13 @@
 
 ! to deal with and finalize the impurity green's function
              call hfqmc_make_symm(symm, gsum)
+             call hfqmc_make_symm(symm, gerr)
 
 ! gsum need to be scaled properly before written
              do m=1,norbs
                  do n=1,ntime
                      gsum(n,m) = gsum(n,m) * real(ncarlo) / real(nstep)
+                     gerr(n,m) = gerr(n,m) * real(ncarlo) / real(nstep)
                  enddo ! over n={1,ntime} loop
              enddo ! over m={1,norbs} loop
 
@@ -354,12 +359,7 @@
 
 ! write out the impurity green's function, gsum
              if ( myid == master ) then ! only master node can do it
-                 if ( iter /= 999 ) then
-                     call hfqmc_dump_gtau(tmesh, gsum)
-                 else
-                     call hfqmc_dump_gbin(nstep/nfast, tmesh, gsum)
-                     write(mystd,'(4X,a)') '>>> quantum impurity solver status: binned'
-                 endif ! back if ( iter /= 999 ) block
+                 call hfqmc_dump_gtau(tmesh, gsum, gerr)
              endif ! back if ( myid == master ) block
 
          endif ! back if ( mod(nstep, nfast) == 0  .and. nstep > 0 ) block
@@ -391,24 +391,27 @@
 !!========================================================================
 
 ! collect the (double) occupation matrix data from nnmat to osum
-     call hfqmc_reduce_nmat(osum)
+     call hfqmc_reduce_nmat(osum, oerr)
 
 ! collect the impurity green's function data from gtau to gsum
-     call hfqmc_reduce_gtau(gsum)
+     call hfqmc_reduce_gtau(gsum, gerr)
 
 ! symmetrize the impurity green's function (gsum) over spin or over bands
      call hfqmc_make_symm(symm, gsum)
+     call hfqmc_make_symm(symm, gerr)
 
 ! update original data and calculate the averages simultaneously
      do m=1,norbs
          do n=1,ntime
              gtau(n,m) = gsum(n,m) * real(ncarlo) / real(nsweep)
+             gerr(n,m) = gerr(n,m) * real(ncarlo) / real(nsweep)
          enddo ! over n={1,ntime} loop
      enddo ! over m={1,norbs} loop
 
      do m=1,norbs
          do n=1,norbs
              nnmat(n,m) = osum(n,m) * real(ncarlo) / real( nsweep * ntime )
+              oerr(n,m) = oerr(n,m) * real(ncarlo) / real( nsweep * ntime )
          enddo ! over n={1,norbs} loop
      enddo ! over m={1,norbs} loop
 
@@ -421,7 +424,7 @@
 
 ! write out the final green's function to file, only for master node
      if ( myid == master ) then
-         call hfqmc_dump_gtau(tmesh, gtau)
+         call hfqmc_dump_gtau(tmesh, gtau, gerr)
      endif ! back if ( myid == master ) block
 
 ! write out impurity green's function to disk file
@@ -441,7 +444,7 @@
 
 ! write out occupation number to disk file
      if ( myid == master ) then ! only master node can do it
-         call hfqmc_dump_nmat(nmat, nnmat)
+         call hfqmc_dump_nmat(nmat, nnmat, gerr(1,:), oerr)
      endif ! back if ( myid == master ) block
 
 ! print the footer of Hirsch-Fye quantum Monte Carlo quantum impurity solver
@@ -453,7 +456,9 @@
 ! deallocate memory
      deallocate(msum)
      deallocate(osum)
+     deallocate(oerr)
      deallocate(gsum)
+     deallocate(gerr)
 
      deallocate(tmat)
 

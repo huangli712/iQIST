@@ -18,7 +18,7 @@
 ## ./d_sar.sh
 ##
 ## Before you start to use this shell script, you have to check and edit
-## carefully the string pattern.
+## carefully the string match pattern.
 ##
 ## For Mac OS X system, the grammar for sed is (we don't generate backup)
 ##     sed -i '' ...
@@ -36,10 +36,12 @@
 ## History
 ## =======
 ##
-## 01/03/2015 by li huang
+## 01/03/2015 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
+# please FIX 'AAA', 'aaa' and file_name in line 52
 for i in *
 do
     echo "current directory:"

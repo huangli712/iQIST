@@ -8,9 +8,8 @@
 !!! source  : ctqmc_solver.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/16/2009 by li huang
-!!!           06/21/2010 by li huang
-!!!           11/04/2014 by li huang
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
@@ -21,7 +20,7 @@
 !!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
   subroutine ctqmc_impurity_solver(iter)
-     use constants, only : dp, zero, mystd
+     use constants, only : dp, zero, one, mystd
 
      use control, only : issun, isspn
      use control, only : nband, nspin, norbs, ncfgs
@@ -75,49 +74,42 @@
 
 ! histogram for perturbation expansion series, for mpi case
      real(dp), allocatable :: hist_mpi(:)
+     real(dp), allocatable :: hist_err(:)
 
 ! probability of atomic states, for mpi case
      real(dp), allocatable :: prob_mpi(:)
+     real(dp), allocatable :: prob_err(:)
 
 ! impurity occupation number matrix, for mpi case
      real(dp), allocatable :: nmat_mpi(:)
+     real(dp), allocatable :: nmat_err(:)
 
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
+     real(dp), allocatable :: nnmat_err(:,:)
 
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
+     real(dp), allocatable :: gtau_err(:,:,:)
 
 ! impurity green's function, matsubara frequency axis, for mpi case
      complex(dp), allocatable :: grnf_mpi(:,:,:)
+     complex(dp), allocatable :: grnf_err(:,:,:)
 
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(hist_err(mkink),             stat=istat)
      allocate(prob_mpi(ncfgs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(prob_err(ncfgs),             stat=istat)
      allocate(nmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(nmat_err(norbs),             stat=istat)
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(nnmat_err(norbs,norbs),      stat=istat)
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif ! back if ( istat /= 0 ) block
-
+     allocate(gtau_err(ntime,norbs,norbs), stat=istat)
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
+
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
@@ -282,15 +274,16 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-         call ctqmc_reduce_hist(hist_mpi)
+         call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
          gtau = gtau / real(caves)
-         call ctqmc_reduce_gtau(gtau_mpi)
+         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
          gtau = gtau * real(caves)
 
 ! gtau_mpi need to be scaled properly before written
          gtau_mpi = gtau_mpi * real(ncarlo)
+         gtau_err = gtau_err * real(ncarlo)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
@@ -299,6 +292,7 @@
 ! symmetrize the impurity green's function over spin or over bands
          if ( issun == 2 .or. isspn == 1 ) then
              call ctqmc_symm_gtau(symm, gtau_mpi)
+             call ctqmc_symm_gtau(symm, gtau_err)
          endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 !!========================================================================
@@ -307,17 +301,12 @@
 
 ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_dump_hist(hist_mpi)
+             call ctqmc_dump_hist(hist_mpi, hist_err)
          endif ! back if ( myid == master ) block
 
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
-             if ( iter /= 999 ) then
-                 call ctqmc_dump_gtau(tmesh, gtau_mpi)
-             else
-                 call ctqmc_dump_gbin(cstep / nwrite, tmesh, gtau_mpi)
-                 write(mystd,'(4X,a)') '>>> quantum impurity solver status: binned'
-             endif ! back if ( iter /= 999 ) block
+             call ctqmc_dump_gtau(tmesh, gtau_mpi, gtau_err)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
@@ -364,28 +353,29 @@
 !!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-     call ctqmc_reduce_hist(hist_mpi)
+     call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the probability data from prob to prob_mpi
      prob  = prob  / real(caves)
-     call ctqmc_reduce_prob(prob_mpi)
+     call ctqmc_reduce_prob(prob_mpi, prob_err)
 
 ! collect the occupation matrix data from nmat to nmat_mpi
 ! collect the double occupation matrix data from nnmat to nnmat_mpi
      nmat  = nmat  / real(caves)
      nnmat = nnmat / real(caves)
-     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
      gtau  = gtau  / real(caves)
-     call ctqmc_reduce_gtau(gtau_mpi)
+     call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
      grnf  = grnf  / real(caves)
-     call ctqmc_reduce_grnf(grnf_mpi)
+     call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
-     hist  = hist_mpi
+! average value section
+     hist  = hist_mpi  * one
      prob  = prob_mpi  * real(ncarlo)
 
      nmat  = nmat_mpi  * real(nmonte)
@@ -393,6 +383,17 @@
 
      gtau  = gtau_mpi  * real(ncarlo)
      grnf  = grnf_mpi  * real(nmonte)
+
+! update original data and calculate the averages simultaneously
+! error bar section
+     hist_err  = hist_err  * one
+     prob_err  = prob_err  * real(ncarlo)
+
+     nmat_err  = nmat_err  * real(nmonte)
+     nnmat_err = nnmat_err * real(nmonte)
+
+     gtau_err  = gtau_err  * real(ncarlo)
+     grnf_err  = grnf_err  * real(nmonte)
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
@@ -408,16 +409,19 @@
 ! symmetrize the occupation number matrix (nmat) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_nmat(symm, nmat)
+         call ctqmc_symm_nmat(symm, nmat_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (gtau) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, gtau)
+         call ctqmc_symm_gtau(symm, gtau_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity green's function (grnf) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, grnf)
+         call ctqmc_symm_grnf(symm, grnf_err)
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity self-energy function (sig2) over spin or over bands
@@ -431,27 +435,27 @@
 
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hist(hist)
+         call ctqmc_dump_hist(hist, hist_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final probability data, prob
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_prob(prob, naux, saux)
+         call ctqmc_dump_prob(prob, naux, saux, prob_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_nmat(nmat, nnmat)
+         call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_gtau(tmesh, gtau)
+         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, grnf
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_grnf(rmesh, grnf)
+         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final self-energy function data, sig2
@@ -480,11 +484,17 @@
 
 ! deallocate memory
      deallocate(hist_mpi )
+     deallocate(hist_err )
      deallocate(prob_mpi )
+     deallocate(prob_err )
      deallocate(nmat_mpi )
+     deallocate(nmat_err )
      deallocate(nnmat_mpi)
+     deallocate(nnmat_err)
      deallocate(gtau_mpi )
+     deallocate(gtau_err )
      deallocate(grnf_mpi )
+     deallocate(grnf_err )
 
      return
   end subroutine ctqmc_impurity_solver

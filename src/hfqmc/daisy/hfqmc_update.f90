@@ -10,9 +10,8 @@
 !!! source  : hfqmc_update.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/06/2006 by li huang
-!!!           03/28/2010 by li huang
-!!!           12/06/2014 by li huang
+!!! history : 01/06/2006 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : To provide the core subroutines for Hirsch-Fye quantum Monte
 !!!           Carlo quantum impurity solver: to calculate the transition
 !!!           probability, to wrap the green's function matrix, to update
@@ -86,8 +85,6 @@
 !!>>> hfqmc_make_accept: core subroutine, to update the auxiliary ising
 !!>>> like fields and the green's function matrix
   subroutine hfqmc_make_accept(n, m, cstep)
-     use constants, only : dp
-
      use control, only : mstep
      use control, only : ntime
      use control, only : nclean

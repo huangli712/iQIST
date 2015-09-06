@@ -5,9 +5,8 @@
 !!! source  : ctqmc_status.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/23/2009 by li huang
-!!!           02/21/2010 by li huang
-!!!           11/08/2014 by li huang
+!!! history : 09/23/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
 !!!           for hybridization expansion version continuous time quantum

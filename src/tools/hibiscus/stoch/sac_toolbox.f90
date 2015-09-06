@@ -16,9 +16,8 @@
 !!! source  : sac_toolbox.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 10/01/2008 by li huang
-!!!           12/13/2011 by li huang
-!!!           11/20/2014 by li huang
+!!! history : 10/01/2008 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : to provide utility functions and subroutines for stochastic
 !!!           analytic continuation code
 !!! status  : unstable

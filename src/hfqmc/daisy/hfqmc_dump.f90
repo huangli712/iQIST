@@ -2,18 +2,15 @@
 !!! project : daisy
 !!! program : hfqmc_dump_gtau
 !!!           hfqmc_dump_wtau
-!!!           hfqmc_dump_gbin
 !!!           hfqmc_dump_grnf
 !!!           hfqmc_dump_wssf
 !!!           hfqmc_dump_sigf
 !!!           hfqmc_dump_nmat
-!!!           hfqmc_dump_quas
 !!! source  : hfqmc_dump.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 12/23/2009 by li huang
-!!!           03/08/2010 by li huang
-!!!           12/06/2014 by li huang
+!!! history : 12/23/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : To dump key observables produced by the Hirsch-Fye quantum
 !!!           Monte Carlo (HFQMC) quantum impurity solver and dynamical
 !!!           mean field theory (DMFT) self-consistent engine to files
@@ -27,10 +24,10 @@
 
 !!>>> hfqmc_dump_gtau: write out impurity green's function in imaginary
 !!>>> time space
-  subroutine hfqmc_dump_gtau(tmesh, gtau)
+  subroutine hfqmc_dump_gtau(tmesh, gtau, gerr)
      use constants, only : dp, one, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
      use control, only : beta
 
@@ -42,6 +39,7 @@
 
 ! impurity green's function
      real(dp), intent(in) :: gtau(ntime,norbs)
+     real(dp), intent(in) :: gerr(ntime,norbs)
 
 ! local variables
 ! loop index
@@ -52,14 +50,14 @@
      open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -gtau(j,i), -gtau(j,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -gtau(j,i), gerr(j,i)
          enddo ! over j={1,ntime} loop
-         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, gtau(1,i)-one, gtau(1,i+nband)-one
+         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, gtau(1,i)-one, gerr(1,i)
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -70,9 +68,9 @@
 !!>>> hfqmc_dump_wtau: write out bath weiss's function in imaginary
 !!>>> time space
   subroutine hfqmc_dump_wtau(tmesh, wtau)
-     use constants, only : dp, one, mytmp
+     use constants, only : dp, zero, one, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
      use control, only : beta
 
@@ -94,69 +92,20 @@
      open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -wtau(j,i), -wtau(j,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -wtau(j,i), zero
          enddo ! over j={1,ntime} loop
-         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, wtau(1,i)-one, wtau(1,i+nband)-one
+         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, wtau(1,i)-one, zero
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
 
      return
   end subroutine hfqmc_dump_wtau
-
-!!>>> hfqmc_dump_gbin: write out impurity green's function in imaginary
-!!>>> time space (binning mode)
-  subroutine hfqmc_dump_gbin(ibin, tmesh, gtau)
-     use constants, only : dp, one, mytmp
-
-     use control, only : nband, norbs
-     use control, only : ntime
-     use control, only : beta
-
-     implicit none
-
-! external arguments
-! current bin index, integer representation
-     integer, intent(in)  :: ibin
-
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
-! impurity green's function
-     real(dp), intent(in) :: gtau(ntime,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! current bin index, string representation
-     character(len=10) :: sbin
-
-! open data file: solver.green.bin.x
-     write(sbin,'(i10)') ibin ! convert ibin to sbin
-     open(mytmp, file='solver.green.bin.'//trim(adjustl(sbin)), form='formatted', status='unknown')
-
-! write it
-     do i=1,nband
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), -gtau(j,i), -gtau(j,i+nband)
-         enddo ! over j={1,ntime} loop
-         write(mytmp,'(2i6,3f12.6)') i, ntime+1, beta, gtau(1,i)-one, gtau(1,i+nband)-one
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,nband} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine hfqmc_dump_gbin
 
 !!========================================================================
 !!>>> dump data on matsubara frequency axis                            <<<
@@ -165,9 +114,9 @@
 !!>>> hfqmc_dump_grnf: write out impurity green's function in matsubara
 !!>>> frequency space
   subroutine hfqmc_dump_grnf(rmesh, grnf)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
 
      implicit none
@@ -188,17 +137,15 @@
      open(mytmp, file='solver.grn.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                    real(grnf(j,i)), &
-                                   aimag(grnf(j,i)), &
-                              real(grnf(j,i+nband)), &
-                             aimag(grnf(j,i+nband))
+                  real(grnf(j,i)), aimag(grnf(j,i)), &
+                                         zero, zero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -209,9 +156,9 @@
 !!>>> hfqmc_dump_wssf: write out bath weiss's function in matsubara
 !!>>> frequency space
   subroutine hfqmc_dump_wssf(rmesh, wssf)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
 
      implicit none
@@ -232,17 +179,15 @@
      open(mytmp, file='solver.wss.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                    real(wssf(j,i)), &
-                                   aimag(wssf(j,i)), &
-                              real(wssf(j,i+nband)), &
-                             aimag(wssf(j,i+nband))
+                  real(wssf(j,i)), aimag(wssf(j,i)), &
+                                         zero, zero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -253,9 +198,9 @@
 !!>>> hfqmc_dump_sigf: write out self-energy function in matsubara
 !!>>> frequency space
   subroutine hfqmc_dump_sigf(rmesh, sigf)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
 
      implicit none
@@ -276,17 +221,15 @@
      open(mytmp, file='solver.sgm.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                    real(sigf(j,i)), &
-                                   aimag(sigf(j,i)), &
-                              real(sigf(j,i+nband)), &
-                             aimag(sigf(j,i+nband))
+                  real(sigf(j,i)), aimag(sigf(j,i)), &
+                                         zero, zero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -300,7 +243,7 @@
 
 !!>>> hfqmc_dump_nmat: write out the occupation matrix and double
 !!>>> occupation matrix
-  subroutine hfqmc_dump_nmat(nmat, nnmat)
+  subroutine hfqmc_dump_nmat(nmat, nnmat, nerr, nnerr)
      use constants, only : dp, mytmp
 
      use control, only : nband, norbs
@@ -310,9 +253,11 @@
 ! external arguments
 ! occupation matrix data
      real(dp), intent(in) :: nmat(norbs)
+     real(dp), intent(in) :: nerr(norbs)
 
 ! double occupation matrix data
      real(dp), intent(in) :: nnmat(norbs,norbs)
+     real(dp), intent(in) :: nnerr(norbs,norbs)
 
 ! local variables
 ! loop index
@@ -325,16 +270,16 @@
 ! write it
      write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i6,f12.6)') i, nmat(i)
+         write(mytmp,'(i6,2f12.6)') i, nmat(i), nerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sup', sum( nmat(1:nband) ), sum( nerr(1:nband) )
+     write(mytmp,'(a6,2f12.6)') 'sdn', sum( nmat(nband+1:norbs) ), sum( nerr(nband+1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sum', sum( nmat(1:norbs) ), sum( nerr(1:norbs) )
 
      write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,f12.6)') i, j, nnmat(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, nnmat(i,j), nnerr(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 

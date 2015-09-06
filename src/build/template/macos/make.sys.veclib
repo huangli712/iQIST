@@ -14,7 +14,7 @@
 ##
 ## Be careful! This file may be not suitable for your situation. It is
 ## designed for my own hardware and software environment only. Please
-## check and improve it before starting to compile your iqist code.
+## check and improve it before starting to compile your iQIST code.
 ##
 ## Prerequisites
 ## =============
@@ -128,29 +128,11 @@
 ## should be '-openmp'. On the other hand, if the GNU gfortran compiler
 ## is used, this option should be '-fopenmp'.
 ##
-## API
-## ---
-##
-## Specify whether we want to obtain a library version of iqist. If it is
-## enabled, what you can obtain is a library (and you can write python or
-## fortran codes to use it), instead of a standard executable program. In
-## default it is disabled.
-##
-## Possible options:
-##
-## * -DAPI
-## * -DMPY
-##
-## If only the API macro is defined, the Fortran API will be generated.
-## If both the API and MPY macros are defined, the Python API and the
-## (slightly different) Fortran API will be generated. If only the MPY
-## macro is defined, it is invalid.
-##
 ## FPP
 ## ---
 ##
 ## Specify whether the fortran preprocessor (FPP) is used. It has to be
-## enabled or else the iqist can not be compiled correctly.
+## enabled or else the iQIST can not be compiled correctly.
 ##
 ## Possible options:
 ##
@@ -165,14 +147,13 @@
 ## ---
 ##
 ## Collection of preprocessor directives. Do not modify it unless you are
-## an expert of iqist.
+## an expert of iQIST.
 ##
 ## Possible options:
 ##
 ## * $(FPP)
 ## * $(MPI)
 ## * $(OMP)
-## * $(API)
 ##
 ## Note that the '$(FPP)' option is necessary.
 ##
@@ -397,7 +378,7 @@
 ## LIBS
 ## ----
 ##
-## Specify the external libraries. Now the iqist software package depends
+## Specify the external libraries. Now the iQIST software package depends
 ## on LAPACK and BLAS heavily. To achieve good performance, the highly
 ## optimized LAPACK and BLAS implementations are essential. Here we want
 ## to recommend the OpenBLAS and Intel MKL.
@@ -411,7 +392,7 @@
 ## Here we provide three typical choices. (1) In the Mac OS X system, we
 ## can use the Apple Accelerate framework. (2) We use the home-built BLAS
 ## and LAPACK libraries. Please pay attention to the path. You have to
-## modify it to fit your software environment. (3) We link the iqist code
+## modify it to fit your software environment. (3) We link the iQIST code
 ## with the Intel MKL. Please pay attention to the path and the library's
 ## name. You have to modify them to fit your software environment. Please
 ## see the documentaion about Intel MKL for more details.
@@ -420,7 +401,7 @@
 ## ----
 ##
 ## Specify the command tool for the f2py package which is used to generate
-## the python interface for the iqist code.
+## the python interface for the iQIST code.
 ##
 ## Possible options:
 ##
@@ -435,7 +416,7 @@
 ## -----
 ##
 ## Specify the fortran compiler used by the f2py tool. In general, it is
-## the same with the fortran compiler we used to compile the iqist code.
+## the same with the fortran compiler we used to compile the iQIST code.
 ## Do not modify them unless you know what you are doing.
 ##
 ## Possible options:
@@ -483,9 +464,8 @@ ARCHIVER = ar -ruv
 #-------------------------------------------------------------------------
 MPI    = -DMPI
 OMP    = #-openmp
-API    = #-DAPI -DMPY
 FPP    = -fpp
-CPP    = $(FPP) $(MPI) $(OMP) $(API)
+CPP    = $(FPP) $(MPI) $(OMP)
 
 # Machine tuning options
 #-------------------------------------------------------------------------

@@ -20,7 +20,8 @@
 ## History
 ## =======
 ##
-## 09/30/2014 by li huang
+## 09/30/2014 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -32,9 +33,10 @@ modc = sac_control.o sac_context.o
 core = sac_stream.o sac_toolbox.o sac_update.o sac_record.o
 dump = sac_dump.o sac_print.o
 main = sac_main.o
-MAPI = libMM.a
 
-objects = $(modc) $(core) $(dump) $(main) $(MAPI)
+CLIB = libMM.a
+
+objects = $(modc) $(core) $(dump) $(main) $(CLIB)
 
 default: all
 
@@ -65,7 +67,6 @@ clean:
 
 clean-dat:
 	rm -f *.dat
-	rm -f *.bin
 	rm -f *.out
 
 clean-all: clean clean-dat

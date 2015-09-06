@@ -4,9 +4,8 @@
 !!! source  : sac_control.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/08/2011 by li huang
-!!!           01/10/2011 by li huang
-!!!           11/18/2014 by li huang
+!!! history : 01/08/2011 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : define global control parameters for stochastic analytic
 !!!           continuation code
 !!! status  : unstable

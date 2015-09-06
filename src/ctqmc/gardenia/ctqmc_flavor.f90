@@ -22,9 +22,8 @@
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/23/2009 by li huang
-!!!           02/27/2010 by li huang
-!!!           09/10/2014 by li huang
+!!! history : 09/23/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.

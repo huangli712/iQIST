@@ -31,7 +31,6 @@ Note: The tasks listed in this file are only for discussion. If you have suggest
 * Reconstruct the parquet code (Major)
 * Reconstruct the hibiscus/entropy code (Major)
 * Improve the CSSL and CSML (Minor)
-* Improve the python API for iQIST (Minor)
 * Design and implement the measurement of local entanglement entropy (Minor)
 * Design and implement the measurement of autocorrelation function and autocorrelation time (Minor)
 * Design and implement the Suwa-Todo algorithm (Minor)

@@ -13,10 +13,10 @@ sys.path.append('../../src/tools/hibiscus/script/')
 from u_hfqmc import *
 
 # modify sys.path
-sys.path.append('../../src/api/')
+sys.path.append('../../src/hfqmc/daisy/')
 
 # import daisy software package
-from pydaisy import dapi as hfqmc
+from pydaisy import *
 
 def do_dmft_loop(mfreq, norbs, grnf):
     """ implement the DMFT self-consistent condition for bethe lattice
@@ -37,14 +37,14 @@ def do_dmft_loop(mfreq, norbs, grnf):
 comm = MPI.COMM_WORLD
 
 # check the status of hfqmc impurity solver
-if hfqmc.solver_id() == 901:
+if cat_solver_id() == 901:
     if comm.rank == 0 :
         print "Hello world! This is the DAISY code."
 else:
     if comm.rank == 0 :
         print "Where is the DAISY code?"
     sys.exit(-1)
-if hfqmc.solver_status() != 1 :
+if cat_solver_status() != 1 :
     print "I am sorry. This hfqmc impurity solver is not ready."
     sys.exit(-1)
 
@@ -83,19 +83,19 @@ grnf = numpy.zeros(size_t, dtype = numpy.complex, order = 'F')
 grnf_s = numpy.zeros(size_t, dtype = numpy.complex, order = 'F')
 
 # init hfqmc impurity solver
-hfqmc.init_hfqmc(comm.rank, comm.size)
+cat_init_hfqmc(comm.rank, comm.size)
 
 # try to implement the DMFT self-consistent loop
 for i in range(niter):
-    hfqmc.exec_hfqmc(i+1)
-    grnf = hfqmc.get_grnf(size_t)
+    cat_exec_hfqmc(i+1)
+    grnf = cat_get_grnf(size_t)
     wssf = do_dmft_loop(mfreq, norbs, grnf)
-    hfqmc.set_wssf(size_t, wssf)
+    cat_set_wssf(size_t, wssf)
     print 'MAX_ERROR:', (numpy.absolute(grnf - grnf_s)).max()
     grnf_s = (grnf + grnf_s)/2.0
 
 # stop hfqmc impurity solver
-hfqmc.stop_hfqmc()
+cat_stop_hfqmc()
 
 # mpi barrier
 comm.Barrier()

@@ -13,23 +13,23 @@ sys.path.append('../../src/tools/hibiscus/script/')
 from u_ctqmc import *
 
 # modify sys.path
-sys.path.append('../../src/api/')
+sys.path.append('../../src/ctqmc/azalea/')
 
 # import iqist software package
-from pyiqist import api as ctqmc
+from pyiqist import *
 
 # get mpi communicator
 comm = MPI.COMM_WORLD
 
 # check the status of ctqmc impurity solver
-if ctqmc.solver_id() == 101:
+if cat_solver_id() == 101:
     if comm.rank == 0 :
         print "Hello world! This is the AZALEA code."
 else:
     if comm.rank == 0 :
         print "Where is the AZALEA code?"
     sys.exit(-1)
-if ctqmc.solver_status() != 1 :
+if cat_solver_status() != 1 :
     print "I am sorry. This ctqmc impurity solver is not ready."
     sys.exit(-1)
 
@@ -68,19 +68,19 @@ grnf = numpy.zeros(size_t, dtype = numpy.complex)
 grnf_s = numpy.zeros(size_t, dtype = numpy.complex)
 
 # init ctqmc impurity solver
-ctqmc.init_ctqmc(comm.rank, comm.size)
+cat_init_ctqmc(comm.rank, comm.size)
 
 # try to implement the DMFT self-consistent loop
 for i in range(niter):
-    ctqmc.exec_ctqmc(i+1)
-    grnf = ctqmc.get_grnf(size_t)
+    cat_exec_ctqmc(i+1)
+    grnf = cat_get_grnf(size_t)
     hybf = 0.25 * grnf
-    ctqmc.set_hybf(size_t, hybf)
+    cat_set_hybf(size_t, hybf)
     print 'MAX_ERROR:', (numpy.absolute(grnf - grnf_s)).max()
     grnf_s = (grnf + grnf_s)/2.0
 
 # stop ctqmc impurity solver
-ctqmc.stop_ctqmc()
+cat_stop_ctqmc()
 
 # mpi barrier
 comm.Barrier()

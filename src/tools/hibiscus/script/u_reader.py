@@ -24,7 +24,8 @@
 ## History
 ## =======
 ##
-## 08/15/2015 by li huang
+## 08/15/2015 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -62,15 +63,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
         gtau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(ntime):
                 spl = f.readline().split()
                 tmesh[j] = float( spl[2] )
                 gtau[j,i,i] = float( spl[3] )
-                gtau[j,i+nband,i+nband] = float( spl[4] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -88,15 +87,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         rmesh = numpy.zeros((mfreq), dtype = numpy.float)
         grnf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(mfreq):
                 spl = f.readline().split()
                 rmesh[j] = float( spl[1] )
                 grnf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
-                grnf[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -114,15 +111,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
         wtau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(ntime):
                 spl = f.readline().split()
                 tmesh[j] = float( spl[2] )
                 wtau[j,i,i] = float( spl[3] )
-                wtau[j,i+nband,i+nband] = float( spl[4] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -140,15 +135,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         rmesh = numpy.zeros((mfreq), dtype = numpy.float)
         wssf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(mfreq):
                 spl = f.readline().split()
                 rmesh[j] = float( spl[1] )
                 wssf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
-                wssf[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -166,15 +159,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         tmesh = numpy.zeros((ntime), dtype = numpy.float)
         htau = numpy.zeros((ntime,norbs,norbs), dtype = numpy.float)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(ntime):
                 spl = f.readline().split()
                 tmesh[j] = float( spl[2] )
                 htau[j,i,i] = float( spl[3] )
-                htau[j,i+nband,i+nband] = float( spl[4] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -192,15 +183,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         rmesh = numpy.zeros((mfreq), dtype = numpy.float)
         hybf = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(mfreq):
                 spl = f.readline().split()
                 rmesh[j] = float( spl[1] )
                 hybf[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
-                hybf[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -218,15 +207,13 @@ class iqistReader(object):
         else:
             f = open(fileName,"r")
 
-        nband = norbs / 2
         rmesh = numpy.zeros((mfreq), dtype = numpy.float)
         sig2 = numpy.zeros((mfreq,norbs,norbs), dtype = numpy.complex)
-        for i in range(nband):
+        for i in range(norbs):
             for j in range(mfreq):
                 spl = f.readline().split()
                 rmesh[j] = float( spl[1] )
                 sig2[j,i,i] = float( spl[2] ) + 1j * float( spl[3] )
-                sig2[j,i+nband,i+nband] = float( spl[4] ) + 1j * float( spl[5] )
             f.readline() # skip two blank lines
             f.readline()
 
@@ -434,7 +421,33 @@ class iqistReader(object):
 
         f.close()
 
-        return (schi, sschi)
+        return (tmesh, schi, sschi)
+
+    @staticmethod
+    def get_sfom(nband, nbfrq, fileName = None):
+        """ try to read the solver.sfom.dat file to return the spin-spin
+            correlation function data
+        """
+        if fileName is None:
+            f = open("solver.sfom.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        bmesh = numpy.zeros((nbfrq), dtype = numpy.float)
+        ssfom = numpy.zeros((nbfrq,nband), dtype = numpy.float)
+        # read ssfom
+        for i in range(nband):
+            f.readline() # skip one comment line
+            for j in range(nbfrq):
+                spl = f.readline().split()
+                bmesh[j] = float( spl[0] )
+                ssfom[j,i] = float( spl[1] )
+            f.readline() # skip two blank lines
+            f.readline()
+
+        f.close()
+
+        return (bmesh, ssfom)
 
     @staticmethod
     def get_ochi(norbs, ntime, fileName = None):
@@ -456,8 +469,8 @@ class iqistReader(object):
                 for k in range(ntime):
                     spl = f.readline().split()
                     oochi[k,j,i] = float( spl[1] )
-            f.readline() # skip two blank lines
-            f.readline()
+                f.readline() # skip two blank lines
+                f.readline()
         f.readline() # skip one comment line
         # read ochi
         for i in range(ntime):
@@ -467,7 +480,34 @@ class iqistReader(object):
 
         f.close()
 
-        return (ochi, oochi)
+        return (tmesh, ochi, oochi)
+
+    @staticmethod
+    def get_ofom(norbs, nbfrq, fileName = None):
+        """ try to read the solver.ofom.dat file to return the orbital-
+            orbital correlation function data
+        """
+        if fileName is None:
+            f = open("solver.ofom.dat","r")
+        else:
+            f = open(fileName,"r")
+
+        bmesh = numpy.zeros((nbfrq), dtype = numpy.float)
+        oofom = numpy.zeros((nbfrq,norbs,norbs), dtype = numpy.float)
+        # read oofom
+        for i in range(norbs):
+            for j in range(norbs):
+                f.readline() # skip one comment line
+                for k in range(nbfrq):
+                    spl = f.readline().split()
+                    bmesh[k] = float( spl[0] )
+                    oofom[k,j,i] = float( spl[1] )
+                f.readline() # skip two blank lines
+                f.readline()
+
+        f.close()
+
+        return (bmesh, oofom)
 
     @staticmethod
     def get_twop(norbs, nffrq, nbfrq, fileName = None):

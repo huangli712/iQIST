@@ -6,9 +6,8 @@
 !!! source  : sac_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/08/2011 by li huang
-!!!           01/09/2011 by li huang
-!!!           11/19/2014 by li huang
+!!! history : 01/08/2011 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : initialize the stochastic analytic continuation code
 !!! status  : unstable
 !!! comment :

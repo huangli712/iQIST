@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! source  : atom.config.in
+!!! source  : 5j/atom.config.in
 !!! solver  : JASMINE
 !!! purpose : to test the atomic solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)
