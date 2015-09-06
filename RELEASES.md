@@ -1,5 +1,36 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.6.5 @ 90793f1 // Sep 06, 2015
+
+* Add error bars support in azalea.
+* Add error bars support in begonia.
+* Add error bars support in gardenia.
+* Add error bars support in lavender.
+* Add error bars support in manjushaka.
+* Add error bars support in narcissus.
+* Add error bars support in pansy.
+* Add error bars support in daisy.
+* Re-design the Python and Fortran APIs.
+* Re-design the output file format.
+* Improve hibiscus to be compatible with the new file formats.
+* Fix a serious bug in hibiscus/toolbox/maketau.f90
+* Refine the examples/tutorials.
+* Improve the code style
+
+WARNING:
+
+The file formats, Python and Fortran APIS are not compatible with the previous.
+Especially, the solver.hyb.in files generated using the previous iQIST are not
+valid for the current version.
+
+### v0.6.4 @ 0816e25 // Aug 17, 2015
+
+* Add <k^2> - <k>^2 support for gardenia.
+* Add <k^2> - <k>^2 support for narcissus.
+* Add <k^2> - <k>^2 support for lavender.
+* Add <k^2> - <k>^2 support for manjushaka.
+* Add <k^2> - <k>^2 support for script/u\_reader.py
+
 ### v0.6.3 @ be5ed32 // May 29, 2015
 
 * Add fidelity susceptibility support for gardenia.

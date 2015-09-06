@@ -6,8 +6,8 @@
 !!! source  : s_fft.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 07/10/2014 by li huang
-!!!           07/27/2014 by li huang
+!!! history : 07/10/2014 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : these subroutines are used to do fast fourier transformation
 !!!           for green's or hybridization functions.
 !!! status  : unstable

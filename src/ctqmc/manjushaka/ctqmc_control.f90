@@ -5,9 +5,8 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
-!!! history : 09/15/2009 by li huang
-!!!           02/23/2010 by li huang
-!!!           11/11/2014 by yilin wang
+!!! history : 09/15/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -85,8 +84,8 @@
 ! if p == 3, calculate orbital-orbital correlation function (time space)
 ! if p == 4, calculate spin-spin correlation function (frequency space)
 ! if p == 5, calculate orbital-orbital correlation function (frequency space)
-! if p == 6, calculate fidelity susceptibility matrix
-! if p == 7, reserved
+! if p == 6, calculate < k^2 > - < k >^2
+! if p == 7, calculate fidelity susceptibility matrix
 ! if p == 8, reserved
 ! if p == 9, reserved
 !

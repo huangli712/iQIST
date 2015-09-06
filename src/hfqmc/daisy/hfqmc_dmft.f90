@@ -7,9 +7,8 @@
 !!! source  : hfqmc_dmft.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 12/27/2005 by li huang
-!!!           03/26/2010 by li huang
-!!!           12/06/2014 by li huang
+!!! history : 12/27/2005 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : the self-consistent engine for dynamical mean field theory
 !!!           (DMFT) simulation. it is only suitable for Hirsch-Fye
 !!!           quantum Monte Carlo (HFQMC) quantum impurity solver plus

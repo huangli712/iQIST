@@ -4,9 +4,8 @@
 !!! source  : m_sparse.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 02/01/2010 by li huang
-!!!           07/09/2014 by li huang
-!!!           12/21/2014 by li huang
+!!! history : 02/01/2010 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : the purpose of this module is to implement important sparse
 !!!           matrix/vector operations, including matrix multiplication,
 !!!           format conversion, etc. the internal format of sparse matrix

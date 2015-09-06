@@ -6,9 +6,8 @@
 !!! source  : atomic_print.f90
 !!! type    : subroutines
 !!! author  : yilin wang (email:qhwyl2006@126.com)
-!!! history : 07/09/2014 by yilin wang
-!!!           08/22/2014 by yilin wang
-!!!           10/20/2014 by li huang
+!!! history : 07/09/2014 by yilin wang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : provide printing infrastructure for the atomic eigenvalue
 !!!           problem solver
 !!! status  : unstable
@@ -31,7 +30,6 @@
 
      write(mystd,'(2X,a)') 'Version: 2015.01.06T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by yilin wang (at IOP/CAS)'
-     write(mystd,'(2X,a)') '         by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: qhwyl2006@126.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)

@@ -189,15 +189,14 @@
      open(mytmp, file='solver.sgm.dat', form='formatted', status='unknown')
 
 ! read in self-energy function
-     do i=1,nq/2
+     do i=1,nq
          do j=1,nfreq
              read(mytmp,*) k, r, r1, r2, r3, r4
-             sigmaw(j,i)      = dcmplx(r1,r2)
-             sigmaw(j,i+nq/2) = dcmplx(r3,r4)
+             sigmaw(j,i) = dcmplx(r1,r2)
          enddo ! over j={1,nfreq} loop
          read(mytmp,*) ! skip two blank lines
          read(mytmp,*)
-     enddo ! over i={1,nq/2} loop
+     enddo ! over i={1,nq} loop
 
 ! close data file
      close(mytmp)

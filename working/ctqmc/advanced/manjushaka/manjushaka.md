@@ -1,11 +1,11 @@
-Interacting Quantum Impurity Solver Toolkit
-===========================================
+iQIST (Interacting Quantum Impurity Solver Toolkit)
+===================================================
 
 Advanced Test Cases For MANJUSHAKA
 ==================================
 
-1. 3 band model
----------------
+3 band model
+------------
 
 * 3a1 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=10.00, mune=3.00, npart=4, GQNs (N,Sz,PS)
 * 3a2 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=40.00, mune=3.00, npart=4, GQNs (N,Sz,PS)
@@ -87,8 +87,8 @@ Advanced Test Cases For MANJUSHAKA
 * 3t2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=6.00, npart=4, GQNs (N,Sz,PS), Chebyshev polynomial
 * 3t3 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=100.0, mune=6.00, npart=4, GQNs (N,Sz,PS), Chebyshev polynomial
 
-2. 5 band model
----------------
+5 band model
+------------
 
 * 5a1 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=10.00, mune=5.00, npart=4, GQNs (N,Sz,PS)
 * 5a2 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=40.00, mune=5.00, npart=4, GQNs (N,Sz,PS)
@@ -138,8 +138,8 @@ Advanced Test Cases For MANJUSHAKA
 * 5l2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz), itrun=2, nmini=4, nmaxi=6
 * 5l3 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=100.0, mune=10.0, npart=8, SOC, lambda=0.5, GQNs (N,Jz), itrun=2, nmini=4, nmaxi=6
 
-3. 7 band model
----------------
+7 band model
+------------
 
 * 7a1 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=10.00, mune=14.00, npart=8,  SOC, lambda=0.5, GQNs (N,Jz), itrun=1, nmini=6, nmaxi=8
 * 7a2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=14.00, npart=8,  SOC, lambda=0.5, GQNs (N,Jz), itrun=1, nmini=6, nmaxi=8

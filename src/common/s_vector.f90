@@ -28,9 +28,8 @@
 !!! source  : s_vector.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 07/10/2014 by li huang
-!!!           07/24/2014 by li huang
-!!!           11/16/2014 by li huang
+!!! history : 07/10/2014 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : these subroutines are designed for vectors or arrays. They
 !!!           can be used to manipulate grid and mesh, to generate the
 !!!           Legendre polynomial and Chebyshev polynomial, etc.

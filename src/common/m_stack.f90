@@ -4,9 +4,8 @@
 !!! source  : m_stack.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/14/2009 by li huang
-!!!           07/09/2014 by li huang
-!!!           07/30/2014 by li huang
+!!! history : 09/14/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a stack-type (LIFO)
 !!!           data structure in fortran version.
 !!! status  : unstable

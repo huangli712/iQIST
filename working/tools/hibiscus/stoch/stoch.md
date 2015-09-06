@@ -1,10 +1,11 @@
-Interacting Quantum Impurity Solver Toolkit
-===========================================
+iQIST (Interacting Quantum Impurity Solver Toolkit)
+===================================================
 
 HIBISCUS/stoch Test Cases
 =========================
 
-1. 1 band model
+1 band model
+------------
 
 * 1a // ntime = 1024, nwmax = 400, ngrid = 10001, ngamm = 1024, nalph = 1, beta = 8.0, ltype = 2
 

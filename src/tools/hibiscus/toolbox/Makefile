@@ -20,7 +20,8 @@
 ## History
 ## =======
 ##
-## 10/02/2014 by li huang
+## 10/02/2014 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -28,9 +29,9 @@
 
 include ../../../build/make.sys
 
-MAPI = libMM.a
+CLIB = libMM.a
 
-objects = $(MAPI)
+objects = $(CLIB)
 
 default: all
 
@@ -44,28 +45,28 @@ csml:
 
 exe: cssl csml makedos makescr maketau makeups makekra makesig makestd makechi
 
-makedos: makedos.o
+makedos: cssl csml makedos.o
 	$(LINKER) makedos.o $(objects) -o mdos $(LFLAGS) $(LIBS)
 
-makescr: makescr.o
+makescr: cssl csml makescr.o
 	$(LINKER) makescr.o $(objects) -o mscr $(LFLAGS) $(LIBS)
 
-maketau: maketau.o
+maketau: cssl csml maketau.o
 	$(LINKER) maketau.o $(objects) -o mtau $(LFLAGS) $(LIBS)
 
-makeups: makeups.o
+makeups: cssl csml makeups.o
 	$(LINKER) makeups.o $(objects) -o mups $(LFLAGS) $(LIBS)
 
-makekra: makekra.o
+makekra: cssl csml makekra.o
 	$(LINKER) makekra.o $(objects) -o mkra $(LFLAGS) $(LIBS)
 
-makesig: makesig.o
+makesig: cssl csml makesig.o
 	$(LINKER) makesig.o $(objects) -o msig $(LFLAGS) $(LIBS)
 
-makestd: makestd.o
+makestd: cssl csml makestd.o
 	$(LINKER) makestd.o $(objects) -o mstd $(LFLAGS) $(LIBS)
 
-makechi: makechi.o
+makechi: cssl csml makechi.o
 	$(LINKER) makechi.o $(objects) -o mchi $(LFLAGS) $(LIBS)
 
 .f90.o:
@@ -85,5 +86,6 @@ clean-dat:
 	rm -f kra.*
 	rm -f sig.*
 	rm -f std.*
+	rm -f *.dat
 
 clean-all: clean clean-dat

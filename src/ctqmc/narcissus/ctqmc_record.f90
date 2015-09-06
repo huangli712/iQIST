@@ -6,6 +6,7 @@
 !!!           ctqmc_record_hist
 !!!           ctqmc_record_prob
 !!!           ctqmc_record_nmat
+!!!           ctqmc_record_kmat
 !!!           ctqmc_record_lmat
 !!!           ctqmc_record_schi
 !!!           ctqmc_record_sfom
@@ -20,6 +21,7 @@
 !!!           ctqmc_reduce_hist
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_kmat
 !!!           ctqmc_reduce_lmat
 !!!           ctqmc_reduce_schi
 !!!           ctqmc_reduce_sfom
@@ -42,9 +44,8 @@
 !!! source  : ctqmc_record.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/16/2009 by li huang
-!!!           09/29/2010 by li huang
-!!!           12/11/2014 by li huang
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -733,6 +734,40 @@
      return
   end subroutine ctqmc_record_nmat
 
+!!>>> ctqmc_record_kmat: record the < k^2 > - < k >^2
+  subroutine ctqmc_record_kmat()
+     use constants, only : dp
+
+     use control, only : issus
+     use control, only : norbs
+     use context, only : kmat, kkmat
+     use context, only : rank
+
+     implicit none
+
+! local variables
+! loop index for flavor channel
+     integer :: i
+     integer :: j
+
+! check whether there is conflict
+     call s_assert( btest(issus, 5) )
+
+! since rank means the number of operator pairs,
+! so we have to multiply it with two
+     do i=1,norbs
+         kmat(i) = kmat(i) + rank(i) * 2.0_dp
+     enddo ! over i={1,norbs} loop
+
+     do i=1,norbs
+         do j=1,norbs
+             kkmat(i,j) = kkmat(i,j) + rank(i) * rank(j) * 4.0_dp
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine ctqmc_record_kmat
+
 !!>>> ctqmc_record_lmat: record the fidelity susceptibility
   subroutine ctqmc_record_lmat()
      use constants, only : dp, zero, one, two
@@ -764,7 +799,7 @@
      real(dp) :: kr(norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 5) )
+     call s_assert( btest(issus, 6) )
 
 ! init k_l and k_r
      kl = zero
@@ -879,8 +914,9 @@
      return
   end subroutine ctqmc_record_schi
 
+! TODO
   subroutine ctqmc_record_sfom()
-!<     call s_print_error('ctqmc_record_sfom','in debug mode')
+     call s_print_error('ctqmc_record_sfom','in debug mode')
   end subroutine ctqmc_record_sfom
 
 !!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
@@ -964,6 +1000,7 @@
      return
   end subroutine ctqmc_record_ochi
 
+! TODO
   subroutine ctqmc_record_ofom()
      use constants, only : dp, zero, two, pi, czi, cone
 
@@ -993,6 +1030,8 @@
      real(dp) :: dw, wm
      complex(dp) :: cs, ce
      complex(dp) :: ds, de
+
+     call s_print_error('ctqmc_record_ofom','in debug mode')
 
 ! check whether there is conflict
      call s_assert( btest(issus, 4) )
@@ -1417,7 +1456,7 @@
 !!========================================================================
 
 !!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
-  subroutine ctqmc_reduce_gtau(gtau_mpi)
+  subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -1431,9 +1470,11 @@
 ! external arguments
 ! impurity green's function
      real(dp), intent(out) :: gtau_mpi(ntime,norbs,norbs)
+     real(dp), intent(out) :: gtau_err(ntime,norbs,norbs)
 
-! initialize gtau_mpi
+! initialize gtau_mpi and gtau_err
      gtau_mpi = zero
+     gtau_err = zero
 
 ! build gtau_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1453,11 +1494,27 @@
 ! calculate the average
      gtau_mpi = gtau_mpi / real(nprocs)
 
+! build gtau_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine ctqmc_reduce_gtau
 
 !!>>> ctqmc_reduce_ftau: reduce the ftau from all children processes
-  subroutine ctqmc_reduce_ftau(ftau_mpi)
+  subroutine ctqmc_reduce_ftau(ftau_mpi, ftau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -1471,9 +1528,11 @@
 ! external arguments
 ! auxiliary correlation function, F(\tau)
      real(dp), intent(out) :: ftau_mpi(ntime,norbs,norbs)
+     real(dp), intent(out) :: ftau_err(ntime,norbs,norbs)
 
-! initialize ftau_mpi
+! initialize ftau_mpi and ftau_err
      ftau_mpi = zero
+     ftau_err = zero
 
 ! build ftau_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1493,12 +1552,28 @@
 ! calculate the average
      ftau_mpi = ftau_mpi / real(nprocs)
 
+! build ftau_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((ftau - ftau_mpi)**2, ftau_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         ftau_err = sqrt( ftau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine ctqmc_reduce_ftau
 
 !!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
-  subroutine ctqmc_reduce_grnf(grnf_mpi)
-     use constants, only : dp, czero
+  subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+     use constants, only : dp, zero, czero, czi
      use mmpi, only : mp_allreduce, mp_barrier
 
      use control, only : norbs
@@ -1511,9 +1586,24 @@
 ! external arguments
 ! impurity green's function
      complex(dp), intent(out) :: grnf_mpi(mfreq,norbs,norbs)
+     complex(dp), intent(out) :: grnf_err(mfreq,norbs,norbs)
 
-! initialize grnf_mpi
+! local variables
+! used to store the real and imaginary parts of impurity green's function
+     real(dp), allocatable :: re_err(:,:,:)
+     real(dp), allocatable :: im_err(:,:,:)
+
+! allocate memory
+     allocate(re_err(mfreq,norbs,norbs))
+     allocate(im_err(mfreq,norbs,norbs))
+
+! initialize re_err and im_err
+     re_err = zero
+     im_err = zero
+
+! initialize grnf_mpi and grnf_err
      grnf_mpi = czero
+     grnf_err = czero
 
 ! build grnf_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1533,11 +1623,36 @@
 ! calculate the average
      grnf_mpi = grnf_mpi / real(nprocs)
 
+! build grnf_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(( real(grnf - grnf_mpi))**2, re_err)
+     call mp_allreduce((aimag(grnf - grnf_mpi))**2, im_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         re_err = sqrt( re_err / real( nprocs * ( nprocs - 1 ) ) )
+         im_err = sqrt( im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+! construct the final grnf_err
+     grnf_err = re_err + im_err * czi
+
+! deallocate memory
+     deallocate(re_err)
+     deallocate(im_err)
+
      return
   end subroutine ctqmc_reduce_grnf
 
 !!>>> ctqmc_reduce_hist: reduce the hist from all children processes
-  subroutine ctqmc_reduce_hist(hist_mpi)
+  subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -1550,9 +1665,11 @@
 ! external arguments
 ! histogram for perturbation expansion series
      real(dp), intent(out) :: hist_mpi(mkink)
+     real(dp), intent(out) :: hist_err(mkink)
 
-! initialize hist_mpi
+! initialize hist_mpi and hist_err
      hist_mpi = zero
+     hist_err = zero
 
 ! build hist_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1572,11 +1689,27 @@
 ! calculate the average
      hist_mpi = hist_mpi / real(nprocs)
 
+! build hist_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((hist - hist_mpi)**2, hist_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         hist_err = sqrt( hist_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine ctqmc_reduce_hist
 
 !!>>> ctqmc_reduce_prob: reduce the prob from all children processes
-  subroutine ctqmc_reduce_prob(prob_mpi)
+  subroutine ctqmc_reduce_prob(prob_mpi, prob_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -1589,9 +1722,11 @@
 ! external arguments
 ! probability of atomic states
      real(dp), intent(out) :: prob_mpi(ncfgs)
+     real(dp), intent(out) :: prob_err(ncfgs)
 
-! initialize prob_mpi
+! initialize prob_mpi and prob_err
      prob_mpi = zero
+     prob_err = zero
 
 ! build prob_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1611,11 +1746,27 @@
 ! calculate the average
      prob_mpi = prob_mpi / real(nprocs)
 
+! build prob_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((prob - prob_mpi)**2, prob_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         prob_err = sqrt( prob_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine ctqmc_reduce_prob
 
 !!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
-  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+  subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -1628,13 +1779,18 @@
 ! external arguments
 ! occupation number matrix
      real(dp), intent(out) :: nmat_mpi(norbs)
+     real(dp), intent(out) :: nmat_err(norbs)
 
 ! double occupation number matrix
      real(dp), intent(out) :: nnmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: nnmat_err(norbs,norbs)
 
-! initialize nmat_mpi and nnmat_mpi
+! initialize nmat_mpi and nnmat_mpi, nmat_err and nnmat_err
      nmat_mpi = zero
      nnmat_mpi = zero
+
+     nmat_err = zero
+     nnmat_err = zero
 
 ! build nmat_mpi and nnmat_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1657,11 +1813,98 @@
      nmat_mpi = nmat_mpi / real(nprocs)
      nnmat_mpi = nnmat_mpi / real(nprocs)
 
+! build nmat_err and nnmat_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((nmat - nmat_mpi)**2, nmat_err)
+     call mp_allreduce((nnmat - nnmat_mpi)**2, nnmat_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         nmat_err = sqrt( nmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         nnmat_err = sqrt( nnmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine ctqmc_reduce_nmat
 
+!!>>> ctqmc_reduce_kmat: reduce the kmat and kkmat from all children processes
+  subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : kmat, kkmat
+
+     implicit none
+
+! external arguments
+! number of operators
+     real(dp), intent(out) :: kmat_mpi(norbs)
+     real(dp), intent(out) :: kmat_err(norbs)
+
+! square of number of operators
+     real(dp), intent(out) :: kkmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: kkmat_err(norbs,norbs)
+
+! initialize kmat_mpi and kkmat_mpi, kmat_err and kkmat_err
+     kmat_mpi = zero
+     kkmat_mpi = zero
+
+     kmat_err = zero
+     kkmat_err = zero
+
+! build kmat_mpi and kkmat_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(kmat, kmat_mpi)
+     call mp_allreduce(kkmat, kkmat_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     kmat_mpi = kmat
+     kkmat_mpi = kkmat
+
+# endif /* MPI */
+
+! calculate the average
+     kmat_mpi = kmat_mpi / real(nprocs)
+     kkmat_mpi = kkmat_mpi / real(nprocs)
+
+! build kmat_err and kkmat_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((kmat - kmat_mpi)**2, kmat_err)
+     call mp_allreduce((kkmat - kkmat_mpi)**2, kkmat_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         kmat_err = sqrt( kmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         kkmat_err = sqrt( kkmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+     return
+  end subroutine ctqmc_reduce_kmat
+
 !!>>> ctqmc_reduce_lmat: reduce the lmat, rmat, and lrmat from all children processes
-  subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi)
+  subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -1674,17 +1917,25 @@
 ! external arguments
 ! number of operators at left half axis
      real(dp), intent(out) :: lmat_mpi(norbs)
+     real(dp), intent(out) :: lmat_err(norbs)
 
 ! number of operators at right half axis
      real(dp), intent(out) :: rmat_mpi(norbs)
+     real(dp), intent(out) :: rmat_err(norbs)
 
 ! used to evaluate fidelity susceptibility
      real(dp), intent(out) :: lrmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: lrmat_err(norbs,norbs)
 
 ! initialize lmat_mpi, rmat_mpi, and lrmat_mpi
+! initialize lmat_err, rmat_err, and lrmat_err
      lmat_mpi = zero
      rmat_mpi = zero
      lrmat_mpi = zero
+
+     lmat_err = zero
+     rmat_err = zero
+     lrmat_err = zero
 
 ! build lmat_mpi, rmat_mpi, and lrmat_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1710,11 +1961,31 @@
      rmat_mpi = rmat_mpi / real(nprocs)
      lrmat_mpi = lrmat_mpi / real(nprocs)
 
+! build lmat_err, rmat_err, and lrmat_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((lmat - lmat_mpi)**2, lmat_err)
+     call mp_allreduce((rmat - rmat_mpi)**2, rmat_err)
+     call mp_allreduce((lrmat - lrmat_mpi)**2, lrmat_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         lmat_err = sqrt( lmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         rmat_err = sqrt( rmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         lrmat_err = sqrt( lrmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine ctqmc_reduce_lmat
 
 !!>>> ctqmc_reduce_schi: reduce the schi and sschi from all children processes
-  subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi)
+  subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -1728,13 +1999,18 @@
 ! external arguments
 ! spin-spin correlation function, totally-averaged
      real(dp), intent(out) :: schi_mpi(ntime)
+     real(dp), intent(out) :: schi_err(ntime)
 
 ! spin-spin correlation function, orbital-resolved
      real(dp), intent(out) :: sschi_mpi(ntime,nband)
+     real(dp), intent(out) :: sschi_err(ntime,nband)
 
-! initialize schi_mpi and sschi_mpi
+! initialize schi_mpi and sschi_mpi, schi_err and sschi_err
      schi_mpi = zero
      sschi_mpi = zero
+
+     schi_err = zero
+     sschi_err = zero
 
 ! build schi_mpi and sschi_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1757,11 +2033,29 @@
      schi_mpi = schi_mpi / real(nprocs)
      sschi_mpi = sschi_mpi / real(nprocs)
 
+! build schi_err and sschi_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((schi - schi_mpi)**2, schi_err)
+     call mp_allreduce((sschi - sschi_mpi)**2, sschi_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         schi_err = sqrt( schi_err / real( nprocs * ( nprocs - 1 ) ) )
+         sschi_err = sqrt( sschi_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine ctqmc_reduce_schi
 
 !!>>> ctqmc_reduce_sfom: reduce the ssfom from all children processes
-  subroutine ctqmc_reduce_sfom(ssfom_mpi)
+  subroutine ctqmc_reduce_sfom(ssfom_mpi, ssfom_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -1775,9 +2069,11 @@
 ! external arguments
 ! spin-spin correlation function, orbital-resolved
      real(dp), intent(out) :: ssfom_mpi(nbfrq,nband)
+     real(dp), intent(out) :: ssfom_err(nbfrq,nband)
 
-! initialize ssfom_mpi
+! initialize ssfom_mpi and ssfom_err
      ssfom_mpi = zero
+     ssfom_err = zero
 
 ! build ssfom_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1797,11 +2093,27 @@
 ! calculate the average
      ssfom_mpi = ssfom_mpi / real(nprocs)
 
+! build ssfom_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((ssfom - ssfom_mpi)**2, ssfom_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         ssfom_err = sqrt( ssfom_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine ctqmc_reduce_sfom
 
 !!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from all children processes
-  subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi)
+  subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -1815,13 +2127,18 @@
 ! external arguments
 ! orbital-orbital correlation function, totally-averaged
      real(dp), intent(out) :: ochi_mpi(ntime)
+     real(dp), intent(out) :: ochi_err(ntime)
 
 ! orbital-orbital correlation function, orbital-resolved
      real(dp), intent(out) :: oochi_mpi(ntime,norbs,norbs)
+     real(dp), intent(out) :: oochi_err(ntime,norbs,norbs)
 
-! initialize ochi_mpi and oochi_mpi
+! initialize ochi_mpi and oochi_mpi, ochi_err and oochi_err
      ochi_mpi = zero
      oochi_mpi = zero
+
+     ochi_err = zero
+     oochi_err = zero
 
 ! build ochi_mpi and oochi_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1844,11 +2161,29 @@
      ochi_mpi = ochi_mpi / real(nprocs)
      oochi_mpi = oochi_mpi / real(nprocs)
 
+! build ochi_err and oochi_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((ochi - ochi_mpi)**2, ochi_err)
+     call mp_allreduce((oochi - oochi_mpi)**2, oochi_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         ochi_err = sqrt( ochi_err / real( nprocs * ( nprocs - 1 ) ) )
+         oochi_err = sqrt( oochi_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine ctqmc_reduce_ochi
 
 !!>>> ctqmc_reduce_ofom: reduce the oofom from all children processes
-  subroutine ctqmc_reduce_ofom(oofom_mpi)
+  subroutine ctqmc_reduce_ofom(oofom_mpi, oofom_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -1862,9 +2197,11 @@
 ! external arguments
 ! orbital-orbital correlation function, orbital-resolved
      real(dp), intent(out) :: oofom_mpi(nbfrq,norbs,norbs)
+     real(dp), intent(out) :: oofom_err(nbfrq,norbs,norbs)
 
-! initialize oofom_mpi
+! initialize oofom_mpi and oofom_err
      oofom_mpi = zero
+     oofom_err = zero
 
 ! build oofom_mpi, collect data from all children processes
 # if defined (MPI)
@@ -1883,6 +2220,22 @@
 
 ! calculate the average
      oofom_mpi = oofom_mpi / real(nprocs)
+
+! build oofom_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((oofom - oofom_mpi)**2, oofom_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         oofom_err = sqrt( oofom_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine ctqmc_reduce_ofom

@@ -4,9 +4,8 @@
 !!! source  : entropy_control.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/08/2011 by li huang
-!!!           01/26/2011 by li huang
-!!!           11/17/2014 by li huang
+!!! history : 01/08/2011 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : define global control parameters for classic maximum entropy
 !!!           method code
 !!! status  : unstable

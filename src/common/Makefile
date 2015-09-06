@@ -20,7 +20,8 @@
 ## History
 ## =======
 ##
-## 09/18/2014 by li huang
+## 09/18/2014 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -51,7 +52,6 @@ clean:
 
 clean-dat:
 	rm -f *.dat
-	rm -f *.bin.*
 	rm -f *.out
 
 clean-all: clean clean-dat

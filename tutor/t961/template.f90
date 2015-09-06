@@ -1,5 +1,5 @@
   program test
-     use api
+     use capi
      use mmpi
      use constants, only : dp
 
@@ -73,20 +73,20 @@
      I_solver%alpha = 0.50
 
 ! init ctqmc impurity solver
-     call init_ctqmc(I_mpi, I_solver)
+     call cat_init_ctqmc(I_mpi, I_solver)
 
 ! try to implement the DMFT self-consistent loop
      do i=1,niter
-         call exec_ctqmc(i)
-         call get_grnf(size_t, grnf)
+         call cat_exec_ctqmc(i)
+         call cat_get_grnf(size_t, grnf)
          hybf = 0.25 * grnf
-         call set_hybf(size_t, hybf)
+         call cat_set_hybf(size_t, hybf)
          print *, 'MAX_ERROR:', maxval(abs(grnf - grnf_s))
          grnf_s = (grnf + grnf_s)/2.0
      enddo ! over i={1,niter} loop
 
 ! stop ctqmc impurity solver
-     call stop_ctqmc()
+     call cat_stop_ctqmc()
 
 ! blocks until all processes have reached this routine
      call mp_barrier()

@@ -1,15 +1,14 @@
 !!!-----------------------------------------------------------------------
-!!! project : lilac
-!!! program : api
+!!! project : CAPI (Common Application Programming Interface)
+!!! program : capi
 !!! source  : ctqmc_api.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/07/2014 by li huang
-!!!           01/11/2014 by li huang
-!!!           03/27/2015 by li huang
+!!! history : 01/07/2014 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
-!!!           quantum Monte Carlo impurity solver
+!!!           quantum Monte Carlo impurity solver.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -30,29 +29,29 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro (keep MPY macro disable).
+!! Setup the compiling environment correctly.
 !!
-!! 2. compile api
-!! --------------
+!! 2. compile capi and common
+!! --------------------------
 !!
-!! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory, or use the 'make' command in the
-!! src/api directory.
+!! Please compile capi and common at first. You can type the 'make capi'
+!! and 'make common' commands in the src/build directory, or use the 'make'
+!! command in the src/capi and src/common directories.
 !!
 !! 3. compile the ctqmc component
 !! ------------------------------
 !!
-!! Please compile the desired ctqmc component again. You have to clean it
-!! at first, and then compile it. Noted that you have to compile it in the
-!! library mode, i.e., you must use 'make lib' (in the src/ctqmc/azalea
-!! directory) or 'make azalea-lib' (in the src/build directory), etc.
+!! Noted that you have to compile it in the library mode, i.e., you must
+!! use 'make lib' in the src/ctqmc/azalea directory or 'make azalea-lib'
+!! in the src/build directory.
 !!
 !! 4. get what you need
 !! --------------------
 !!
 !! If everything is OK, you will find the libctqmc.a file in the ctqmc
 !! component folder (for example, src/ctqmc/azalea directory). Please copy
-!! it (together with src/api/api.mod) to your own directory. That's all.
+!! it (together with src/capi/capi.mod and src/common/libMM.a) to your own
+!! directory. That's all.
 !!
 !! How to build the Python API
 !! ===========================
@@ -60,49 +59,41 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro and MPY macro at the same time.
+!! Setup the compiling environment correctly.
 !!
-!! 2. compile api
-!! --------------
+!! 2. compile capi and common
+!! --------------------------
 !!
-!! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory, or use the 'make' command in the
-!! src/api directory.
+!! Please compile capi and common at first. You can type the 'make capi'
+!! and 'make common' commands in the src/build directory, or use the 'make'
+!! command in the src/capi and src/common directories.
 !!
 !! 3. compile the ctqmc component
 !! ------------------------------
 !!
-!! Please compile the desired ctqmc component again. You have to clean it
-!! at first, and then compile it. Noted that you have to compile it in the
-!! library mode, i.e., you must use 'make lib' (in the src/ctqmc/azalea
-!! directory) or 'make azalea-lib' (in the src/build directory), etc.
+!! Noted that you have to compile it in the python library mode, i.e.,
+!! you have to type 'make pylib' in the src/ctqmc/azalea directory or
+!! 'make azalea-pylib' in the src/build directory.
 !!
-!! 4. edit src/api/Makefile
-!! ------------------------
+!! 4. get what you need
+!! --------------------
 !!
-!! check the target 'libctqmc', the original action is as follows:
-!!     cp ../ctqmc/azalea/libctqmc.a .
-!! If you want to use the other ctqmc components, instead of azalea, you
-!! have to change the directory. BE CAREFUL!
-!!
-!! 5. generate pyiqist.so
-!! ----------------------
-!!
-!! In the src/api directory, just input 'make pyiqist' command and wait.
-!! At last you will get the pyiqist.so which is what you need.
+!! If everything is OK, you will find the pyiqist.so file in the ctqmc
+!! component folder (for example, src/ctqmc/azalea directory). Please
+!! copy it to your own directory. That's all.
 !!
 !! Usage (Fortran version)
 !! =======================
 !!
 !! In the following, we will use azalea code as an example to show how to
 !! use api to control it. When you want to compile your code, you have to
-!! ensure that api.mod and libctqmc.a are in correct PATH. Or else the
-!! compiler will complain that it can not find them.
+!! ensure that capi.mod, libMM.a and libctqmc.a are in correct PATH. Or
+!! else the compiler will complain that it can not find them.
 !!
 !! 1. import api support
 !! ---------------------
 !!
-!! use api
+!! use capi
 !!
 !! 2. create T_mpi
 !! ---------------
@@ -114,7 +105,7 @@
 !! call mp_comm_size(I_mpi%nprocs) ! init I_mpi structure
 !!
 !! Note: The above codes need MPI support. Namely, you have to import the
-!! mpi support explicitly.
+!! mpi support explicitly, such as,
 !!
 !! use mmpi ! import mpi support
 !!
@@ -164,7 +155,7 @@
 !! 4. init the ctqmc impurity solver
 !! ---------------------------------
 !!
-!! call init_ctqmc(I_mpi, I_solver)
+!! call cat_init_ctqmc(I_mpi, I_solver)
 !!
 !! 5. setup hybf, symm, eimp, and ktau
 !! -----------------------------------
@@ -174,7 +165,7 @@
 !! integer :: size_t
 !! complex(dp) :: hybf(size_t)
 !! ...
-!! call set_hybf(size_t, hybf) ! setup hybridization function: hybf
+!! call cat_set_hybf(size_t, hybf) ! setup hybridization function: hybf
 !!
 !! Note: This step is optional, because the ctqmc will provide default
 !! values for hybf, symm, eimp, and ktau or read them from external
@@ -183,7 +174,7 @@
 !! 6. start the ctqmc impurity solver
 !! ----------------------------------
 !!
-!! call exec_ctqmc(i)
+!! call cat_exec_ctqmc(i)
 !!
 !! Here i is the current iteration number.
 !!
@@ -191,22 +182,22 @@
 !! ----------------------------------
 !!
 !! Through this api, the user can only access the sigf (i.e., self-energy
-!! function), grnf (i.e., impurity Green's function) directly, nmat (i.e.,
-!! impurity occupation number), and nnmat (i.e., double occupation number)
-!! via this api. As for the other physical observables, the user should
-!! check the other output files generated by iqist.
+!! function), grnf (i.e., impurity Green's function), nmat (i.e., impurity
+!! occupation number), and nnmat (i.e., double occupation number). As for
+!! the other physical observables, the user should parse the other output
+!! files generated by iqist.
 !!
 !! integer :: size_t
 !! complex(dp) :: grnf(size_t)
-!! call get_grnf(size_t, grnf)
+!! call cat_get_grnf(size_t, grnf)
 !!
 !! 8. close the ctqmc impurity solver
 !! ----------------------------------
 !!
-!! call stop_ctqmc()
+!! call cat_stop_ctqmc()
 !!
 !! 9. finalize the mpi environment
-!! --------------------------------
+!! -------------------------------
 !!
 !! call mp_barrier()
 !! call mp_finalize()
@@ -240,12 +231,12 @@
 !! 2. import pyiqist
 !! -----------------
 !!
-!! from pyiqist import api as ctqmc
+!! import pyiqist
 !!
 !! You have to ensure that the pyiqist package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/api/')
+!! sys.path.append('../../src/capi/')
 !!
 !! 3. configure the ctqmc impurity solver
 !! --------------------------------------
@@ -258,7 +249,7 @@
 !! 4. init the ctqmc impurity solver
 !! ---------------------------------
 !!
-!! ctqmc.init_ctqmc(my_id, num_procs)
+!! pyiqist.cat_init_ctqmc(my_id, num_procs)
 !!
 !! Here my_id means the rank for current process, and num_procs means
 !! number of processes. If you are using the mpi4py package to provide
@@ -266,7 +257,7 @@
 !! impurity solver.
 !!
 !! comm = MPI.COMM_WORLD
-!! ctqmc.init_ctqmc(comm.rank, comm.size)
+!! pyiqist.cat_init_ctqmc(comm.rank, comm.size)
 !!
 !! 5. setup hybf, symm, eimp, and ktau
 !! -----------------------------------
@@ -278,10 +269,10 @@
 !! size_t = mfreq * norbs * norbs
 !! hybf = numpy.zeros(size_t, dtype = numpy.complex, order = 'F')
 !! ...
-!! ctqmc.set_hybf(size_t, hybf)
+!! pyiqist.cat_set_hybf(size_t, hybf)
 !!
 !! Note: We strongly recommend to select the fortran rule to manage the
-!! array memory.
+!! numpy array memory.
 !!
 !! Note: This step is optional, because the ctqmc will provide default
 !! values for hybf, symm, eimp, and ktau or read them from external
@@ -290,7 +281,7 @@
 !! 6. start the ctqmc impurity solver
 !! ----------------------------------
 !!
-!! ctqmc.exec_ctqmc(i)
+!! pyiqist.cat_exec_ctqmc(i)
 !!
 !! Here i is the current iteration number.
 !!
@@ -300,11 +291,11 @@
 !! For examples:
 !!
 !! size_t = norbs
-!! nmat = ctqmc.get_nmat(size_t)
+!! nmat = pyiqist.cat_get_nmat(size_t)
 !! print nmat
 !!
 !! size_t = mfreq * norbs * norbs
-!! grnf = ctqmc.get_grnf(size_t)
+!! grnf = pyiqist.cat_get_grnf(size_t)
 !! grnf = numpy.reshape(grnf, (mfreq, norbs, norbs), order = 'F')
 !!
 !! Note: You have to pay attention to the array order when you try to use
@@ -313,7 +304,7 @@
 !! 8. close the ctqmc impurity solver
 !! ----------------------------------
 !!
-!! ctqmc.stop_ctqmc()
+!! pyiqist.cat_stop_ctqmc()
 !!
 !! Examples
 !! ========
@@ -342,11 +333,11 @@
 !! No. You can not change the ctqmc impurity solver dynamically. Once
 !! the pyiqist.so is generated, the ctqmc impurity solver is determined.
 !! If you want to change the ctqmc impurity solver, you must regenerate
-!! the pyiqist.so file at first.
+!! the pyiqist.so file from scratch.
 !!
 !!
 
-  module api
+  module capi
      implicit none
 
 !!========================================================================
@@ -382,11 +373,6 @@
 !!>>> declare global data structure                                    <<<
 !!========================================================================
 
-! note: now f2py does not support derived types, so we have to comment
-! out them when f2py is used.
-
-# if !defined (MPY)
-
 ! define type T_mpi, which is used to describe the mpi environment
      public :: T_mpi
      type :: T_mpi
@@ -398,11 +384,11 @@
          integer :: cy
      end type T_mpi
 
-! define type T_solver, which is used to describe the generic abstract
-! ctqmc impurity solver
+! define type T_generic_solver, which is used to describe the generic
+! abstract ctqmc impurity solver
 ! note: it can not be used directly
-     private :: T_solver
-     type :: T_solver
+     private :: T_generic_solver
+     type :: T_generic_solver
          integer :: isscf
          integer :: issun
          integer :: isspn
@@ -434,13 +420,13 @@
          real(dp) :: beta
          real(dp) :: part
          real(dp) :: alpha
-     end type T_solver
+     end type T_generic_solver
 
 ! define type T_segment_solver, which is used to describe the ctqmc
 ! impurity solver which based on segment representation
 ! note: it can not be used directly
      private :: T_segment_solver
-     type, extends (T_solver) :: T_segment_solver
+     type, extends (T_generic_solver) :: T_segment_solver
          character(len=10) :: solver_type = 'SEGMENT'
      end type T_segment_solver
 
@@ -448,7 +434,7 @@
 ! impurity solver which based on general matrix formulation
 ! note: it can not be used directly
      private :: T_general_solver
-     type, extends (T_solver) :: T_general_solver
+     type, extends (T_generic_solver) :: T_general_solver
          character(len=10) :: solver_type = 'GENERAL'
      end type T_general_solver
 
@@ -555,325 +541,4 @@
          integer :: npart
      end type T_general_manjushaka
 
-# endif  /* MPY */
-
-!!========================================================================
-!!>>> declare accessibility for module routines                        <<<
-!!========================================================================
-
-     public :: solver_id
-     public :: solver_status
-
-     public :: init_ctqmc
-     public :: exec_ctqmc
-     public :: stop_ctqmc
-
-     public :: set_hybf
-     public :: set_symm
-     public :: set_eimp
-     public :: set_ktau
-     public :: set_uumat
-
-     public :: get_grnf
-     public :: get_sigf
-     public :: get_nmat
-     public :: get_nnmat
-
-  contains ! encapsulated functionality
-
-!!>>> solver_id: return the solver identity
-  subroutine solver_id(I_solver_id)
-     implicit none
-
-! external arguments
-! solver identity
-     integer, intent(out) :: I_solver_id
-
-! declare f2py directives
-!F2PY intent(out) I_solver_id
-     call cat_solver_id(I_solver_id)
-
-     return
-  end subroutine solver_id
-
-!!>>> solver_status: return the solver status
-  subroutine solver_status(I_solver_status)
-     implicit none
-
-! external arguments
-! solver status
-     integer, intent(out) :: I_solver_status
-
-! declare f2py directives
-!F2PY intent(out) I_solver_status
-     call cat_solver_status(I_solver_status)
-
-     return
-  end subroutine solver_status
-
-# if !defined (MPY)
-
-!!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
-!!>>> fortran version
-  subroutine init_ctqmc(I_mpi, I_solver)
-     implicit none
-
-! external arguments
-! type structure of mpi
-     class(*), intent(in) :: I_mpi
-
-! type structure of generic solver
-     class(*), intent(in) :: I_solver
-
-     call cat_init_ctqmc(I_mpi, I_solver)
-
-     return
-  end subroutine init_ctqmc
-
-# else   /* MPY */
-
-!!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
-!!>>> python version
-  subroutine init_ctqmc(my_id, num_procs)
-     implicit none
-
-! external arguments
-! id for current process
-     integer, intent(in) :: my_id
-
-! number of processors
-     integer, intent(in) :: num_procs
-
-! declare f2py directives
-!F2PY intent(in) my_id
-!F2PY intent(in) num_procs
-
-     call cat_init_ctqmc(my_id, num_procs)
-
-     return
-  end subroutine init_ctqmc
-
-# endif  /* MPY */
-
-!!>>> exec_ctqmc: execute the ctqmc quantum impurity solver
-  subroutine exec_ctqmc(iter)
-     implicit none
-
-! external arguments
-! current iteration number
-     integer, intent(in) :: iter
-
-! declare f2py directives
-!F2PY intent(in) iter
-
-     call cat_exec_ctqmc(iter)
-
-     return
-  end subroutine exec_ctqmc
-
-!!>>> stop_ctqmc: stop the ctqmc quantum impurity solver
-  subroutine stop_ctqmc()
-     implicit none
-
-     call cat_stop_ctqmc()
-
-     return
-  end subroutine stop_ctqmc
-
-!!>>> set_hybf: setup the impurity hybridization function
-  subroutine set_hybf(size_t, hybf_t)
-     implicit none
-
-! external arguments
-! size of hybf
-     integer, intent(in)    :: size_t
-
-! hybridization function
-     complex(8), intent(in) :: hybf_t(size_t)
-
-! declare f2py directives
-!F2PY intent(in) size_t
-!F2PY intent(in) hybf_t
-!F2PY depend(size_t) hybf_t
-
-     call cat_set_hybf(size_t, hybf_t)
-
-     return
-  end subroutine set_hybf
-
-!!>>> set_symm: setup the symmetry vector
-  subroutine set_symm(size_t, symm_t)
-     implicit none
-
-! external arguments
-! size of symm
-     integer, intent(in) :: size_t
-
-! symmetry vector
-     integer, intent(in) :: symm_t(size_t)
-
-! declare f2py directives
-!F2PY intent(in) size_t
-!F2PY intent(in) symm_t
-!F2PY depend(size_t) symm_t
-
-     call cat_set_symm(size_t, symm_t)
-
-     return
-  end subroutine set_symm
-
-!!>>> set_eimp: setup the impurity energy level
-  subroutine set_eimp(size_t, eimp_t)
-     implicit none
-
-! external arguments
-! size of eimp
-     integer, intent(in) :: size_t
-
-! impurity energy level
-     real(8), intent(in) :: eimp_t(size_t)
-
-! declare f2py directives
-!F2PY intent(in) size_t
-!F2PY intent(in) eimp_t
-!F2PY depend(size_t) eimp_t
-
-     call cat_set_eimp(size_t, eimp_t)
-
-     return
-  end subroutine set_eimp
-
-!!>>> set_ktau: setup the screening function and its first derivates for
-!!>>> the dynamical screening effect
-!!>>> note: only the narcissus code will implement the cat_set_ktau()
-  subroutine set_ktau(size_t, ktau_t, ptau_t)
-     implicit none
-
-! external arguments
-! size of ktau
-     integer, intent(in) :: size_t
-
-! screening function K(\tau)
-     real(8), intent(in) :: ktau_t(size_t)
-
-! first derivates of screening function K'(\tau)
-     real(8), intent(in) :: ptau_t(size_t)
-
-! declare f2py directives
-!F2PY intent(in) size_t
-!F2PY intent(in) ktau_t
-!F2PY intent(in) ptau_t
-!F2PY depend(size_t) ktau_t
-!F2PY depend(size_t) ptau_t
-
-     call cat_set_ktau(size_t, ktau_t, ptau_t)
-
-     return
-  end subroutine set_ktau
-
-!!>>> set_uumat: setup the Coulomb interaction matrix
-  subroutine set_uumat(size_t, uumat_t)
-     implicit none
-
-! external arguments
-! size of uumat
-     integer, intent(in) :: size_t
-
-! Coulomb interaction matrix
-     real(8), intent(in) :: uumat_t(size_t)
-
-! declare f2py directives
-!F2PY intent(in) size_t
-!F2PY intent(in) uumat_t
-!F2PY depend(size_t) uumat_t
-
-     call cat_set_uumat(size_t, uumat_t)
-
-     return
-  end subroutine set_uumat
-
-!!>>> get_grnf: extract the impurity green's function
-  subroutine get_grnf(size_t, grnf_t)
-     implicit none
-
-! external arguments
-! size of grnf
-     integer, intent(in)     :: size_t
-
-! impurity green's function
-     complex(8), intent(out) :: grnf_t(size_t)
-
-! declare f2py directives
-!F2PY intent(in) size_t
-!F2PY intent(out) grnf_t
-!F2PY depend(size_t) grnf_t
-
-     call cat_get_grnf(size_t, grnf_t)
-
-     return
-  end subroutine get_grnf
-
-!!>>> get_sigf: extract the self-energy function
-  subroutine get_sigf(size_t, sigf_t)
-     implicit none
-
-! external arguments
-! size of sigf
-     integer, intent(in)     :: size_t
-
-! self-energy function
-     complex(8), intent(out) :: sigf_t(size_t)
-
-! declare f2py directives
-!F2PY intent(in) size_t
-!F2PY intent(out) sigf_t
-!F2PY depend(size_t) sigf_t
-
-     call cat_get_sigf(size_t, sigf_t)
-
-     return
-  end subroutine get_sigf
-
-!!>>> get_nmat: extract the occupation number
-  subroutine get_nmat(size_t, nmat_t)
-     implicit none
-
-! external arguments
-! size of nmat
-     integer, intent(in)  :: size_t
-
-! occupation number
-     real(8), intent(out) :: nmat_t(size_t)
-
-! declare f2py directives
-!F2PY intent(in) size_t
-!F2PY intent(out) nmat_t
-!F2PY depend(size_t) nmat_t
-
-     call cat_get_nmat(size_t, nmat_t)
-
-     return
-  end subroutine get_nmat
-
-!!>>> get_nnmat: extract the double occupation number
-  subroutine get_nnmat(size_t, nnmat_t)
-     implicit none
-
-! external arguments
-! size of nnmat
-     integer, intent(in)  :: size_t
-
-! double occupation number
-     real(8), intent(out) :: nnmat_t(size_t)
-
-! declare f2py directives
-!F2PY intent(in) size_t
-!F2PY intent(out) nnmat_t
-!F2PY depend(size_t) nnmat_t
-
-     call cat_get_nnmat(size_t, nnmat_t)
-
-     return
-  end subroutine get_nnmat
-
-  end module api
+  end module capi

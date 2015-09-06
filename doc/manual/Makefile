@@ -3,12 +3,12 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/doc/guide directory.
+## Makefile for iqist/doc/manual directory.
 ##
 ## Usage
 ## =====
 ##
-## 'make' or 'make clean'
+## 'make fast' or 'make full' or 'make clean'
 ##
 ## Author
 ## ======
@@ -20,7 +20,8 @@
 ## History
 ## =======
 ##
-## 10/06/2014 by li huang
+## 10/06/2014 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 

@@ -6,9 +6,8 @@
 !!! source  : s_spline.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 07/10/2014 by li huang
-!!!           07/27/2014 by li huang
-!!!           10/10/2014 by li huang
+!!! history : 07/10/2014 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : these subroutines are used to do cubic spline interpolation.
 !!! status  : unstable
 !!! comment :
@@ -198,8 +197,8 @@
      klo = floor(x/h) + 1
      khi = klo + 1
 
-! note: we do not need to check khi here, since x can not reach right boundary
-! and left boundary either all
+! note: we do not need to check khi here, since x can not reach right
+! boundary and left boundary either all
 !<     if ( khi > xdim ) then
 !<         klo = xdim - 1
 !<         khi = xdim

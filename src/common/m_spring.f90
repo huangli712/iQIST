@@ -4,9 +4,8 @@
 !!! source  : m_spring.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/03/2008 by li huang
-!!!           12/21/2008 by li huang
-!!!           07/23/2014 by li huang
+!!! history : 01/03/2008 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : the purpose of this module is to define several modern, fast
 !!!           highly reliable, ease-to-use, and state-of-the-art pseudo-
 !!!           random number generators, which are essential in massively

@@ -4,8 +4,8 @@
 !!! source  : m_skynet.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 04/30/2010 by li huang
-!!!           07/09/2014 by li huang
+!!! history : 04/30/2010 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : this module is used to overload/define the basic arithmetic
 !!!           operations for very large exponent numbers
 !!! status  : unstable
