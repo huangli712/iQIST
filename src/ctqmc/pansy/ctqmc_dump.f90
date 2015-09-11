@@ -3,7 +3,6 @@
 !!! program : ctqmc_dump_gtau
 !!!           ctqmc_dump_wtau
 !!!           ctqmc_dump_htau
-!!!           ctqmc_dump_gbin
 !!!           ctqmc_dump_grnf
 !!!           ctqmc_dump_wssf
 !!!           ctqmc_dump_hybf
@@ -16,9 +15,8 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
-!!! history : 09/16/2009 by li huang
-!!!           08/23/2010 by li huang
-!!!           11/11/2014 by yilin wang
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -33,10 +31,10 @@
 
 !!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
 !!>>> time space
-  subroutine ctqmc_dump_gtau(tmesh, gtau)
+  subroutine ctqmc_dump_gtau(tmesh, gtau, gerr)
      use constants, only : dp, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
 
      implicit none
@@ -47,6 +45,7 @@
 
 ! impurity green's function
      real(dp), intent(in) :: gtau(ntime,norbs,norbs)
+     real(dp), intent(in) :: gerr(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -55,21 +54,23 @@
 
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
+     real(dp) :: gtmp(ntime,norbs,norbs)
 
-! evaluate gaux first
+! evaluate gaux and gtmp at first
      call ctqmc_make_gtau(gtau, gaux)
+     call ctqmc_make_gtau(gerr, gtmp)
 
 ! open data file: solver.green.dat
      open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gtmp(j,i,i)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -80,9 +81,9 @@
 !!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_wtau(tmesh, wtau)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
 
      implicit none
@@ -103,13 +104,13 @@
      open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), wtau(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), zero
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -120,9 +121,9 @@
 !!>>> ctqmc_dump_htau: write out hybridization function in imaginary
 !!>>> time space
   subroutine ctqmc_dump_htau(tmesh, htau)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
 
      implicit none
@@ -143,13 +144,13 @@
      open(mytmp, file='solver.hybri.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), htau(j,i+nband,i+nband)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), zero
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -157,69 +158,16 @@
      return
   end subroutine ctqmc_dump_htau
 
-!!>>> ctqmc_dump_gbin: write out impurity green's function in imaginary
-!!>>> time space (generated in binning mode)
-  subroutine ctqmc_dump_gbin(ibin, tmesh, gtau)
-     use constants, only : dp, mytmp
-
-     use control, only : nband, norbs
-     use control, only : ntime
-
-     implicit none
-
-! external arguments
-! current bin index, integer representation
-     integer, intent(in)  :: ibin
-
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
-! impurity green's function
-     real(dp), intent(in) :: gtau(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! scaled impurity green's function
-     real(dp) :: gaux(ntime,norbs,norbs)
-
-! current bin index, string representation
-     character(len=10) :: sbin
-
-! evaluate gaux first
-     call ctqmc_make_gtau(gtau, gaux)
-
-! open data file: solver.green.bin.x
-     write(sbin,'(i10)') ibin ! convert ibin to sbin
-     open(mytmp, file='solver.green.bin.'//trim(adjustl(sbin)), form='formatted', status='unknown')
-
-! write it
-     do i=1,nband
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gaux(j,i+nband,i+nband)
-         enddo ! over j={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,nband} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_gbin
-
 !!========================================================================
 !!>>> dump data on matsubara frequency axis                            <<<
 !!========================================================================
 
 !!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
 !!>>> frequency space
-  subroutine ctqmc_dump_grnf(rmesh, grnf)
+  subroutine ctqmc_dump_grnf(rmesh, grnf, gerr)
      use constants, only : dp, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
 
      implicit none
@@ -230,6 +178,7 @@
 
 ! impurity green's function
      complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
+     complex(dp), intent(in) :: gerr(mfreq,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -240,17 +189,15 @@
      open(mytmp, file='solver.grn.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                  real(grnf(j,i,i)), &
-                                 aimag(grnf(j,i,i)), &
-                      real(grnf(j,i+nband,i+nband)), &
-                     aimag(grnf(j,i+nband,i+nband))
+              real(grnf(j,i,i)), aimag(grnf(j,i,i)), &
+              real(gerr(j,i,i)), aimag(gerr(j,i,i))
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -261,9 +208,9 @@
 !!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara
 !!>>> frequency space
   subroutine ctqmc_dump_wssf(rmesh, wssf)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
 
      implicit none
@@ -284,17 +231,15 @@
      open(mytmp, file='solver.wss.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                  real(wssf(j,i,i)), &
-                                 aimag(wssf(j,i,i)), &
-                      real(wssf(j,i+nband,i+nband)), &
-                     aimag(wssf(j,i+nband,i+nband))
+              real(wssf(j,i,i)), aimag(wssf(j,i,i)), &
+                                         zero, zero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -305,9 +250,9 @@
 !!>>> ctqmc_dump_hybf: write out hybridization function in matsubara
 !!>>> frequency space
   subroutine ctqmc_dump_hybf(rmesh, hybf)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
 
      implicit none
@@ -328,17 +273,15 @@
      open(mytmp, file='solver.hyb.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                  real(hybf(j,i,i)), &
-                                 aimag(hybf(j,i,i)), &
-                      real(hybf(j,i+nband,i+nband)), &
-                     aimag(hybf(j,i+nband,i+nband))
+              real(hybf(j,i,i)), aimag(hybf(j,i,i)), &
+                                         zero, zero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -349,9 +292,9 @@
 !!>>> ctqmc_dump_sigf: write out self-energy function in matsubara
 !!>>> frequency space
   subroutine ctqmc_dump_sigf(rmesh, sigf)
-     use constants, only : dp, mytmp
+     use constants, only : dp, zero, mytmp
 
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : mfreq
 
      implicit none
@@ -372,17 +315,15 @@
      open(mytmp, file='solver.sgm.dat', form='formatted', status='unknown')
 
 ! write it
-     do i=1,nband
+     do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                  real(sigf(j,i,i)), &
-                                 aimag(sigf(j,i,i)), &
-                      real(sigf(j,i+nband,i+nband)), &
-                     aimag(sigf(j,i+nband,i+nband))
+              real(sigf(j,i,i)), aimag(sigf(j,i,i)), &
+                                         zero, zero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
-     enddo ! over i={1,nband} loop
+     enddo ! over i={1,norbs} loop
 
 ! close data file
      close(mytmp)
@@ -423,10 +364,8 @@
      do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                                    real(ghub(j,i)), &
-                                   aimag(ghub(j,i)), &
-                                    real(shub(j,i)), &
-                                   aimag(shub(j,i))
+                  real(ghub(j,i)), aimag(ghub(j,i)), &
+                  real(shub(j,i)), aimag(shub(j,i))
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -444,7 +383,7 @@
 
 !!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
 !!>>> perturbation expansion series
-  subroutine ctqmc_dump_hist(hist)
+  subroutine ctqmc_dump_hist(hist, herr)
      use constants, only : dp, mytmp
 
      use control, only : mkink
@@ -454,6 +393,7 @@
 ! external arguments
 ! histogram data
      real(dp), intent(in) :: hist(mkink)
+     real(dp), intent(in) :: herr(mkink)
 
 ! local variables
 ! loop index
@@ -461,9 +401,11 @@
 
 ! scaled histogram data
      real(dp) :: haux(mkink)
+     real(dp) :: htmp(mkink)
 
-! evaluate haux at first
+! evaluate haux and htmp at first
      haux = hist / sum(hist)
+     htmp = herr / sum(hist)
 
 ! open data file: solver.hist.dat
      open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
@@ -471,7 +413,7 @@
 ! write it
      write(mytmp,'(a)') '# histogram: order | count | percent'
      do i=1,mkink
-         write(mytmp,'(i6,i12,f12.6)') i, int( hist(i) ), haux(i)
+         write(mytmp,'(i6,i12,2f12.6)') i, int( hist(i) ), haux(i), htmp(i)
      enddo ! over i={1,mkink} loop
 
 ! close data file
@@ -482,7 +424,7 @@
 
 !!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
 !!>>> hamiltonian matrix
-  subroutine ctqmc_dump_prob(prob, naux, saux)
+  subroutine ctqmc_dump_prob(prob, naux, saux, perr)
      use constants, only : dp, zero, eps6, mytmp
 
      use control, only : norbs, ncfgs
@@ -495,6 +437,7 @@
 ! external arguments
 ! probability data of eigenstates
      real(dp), intent(in) :: prob(ncfgs)
+     real(dp), intent(in) :: perr(ncfgs)
 
 ! occupation number of eigenstates
      real(dp), intent(in) :: naux(ncfgs)
@@ -525,13 +468,16 @@
 
 ! probability of sectors
      real(dp) :: psect(nsect)
+     real(dp) :: pserr(nsect)
 
 ! evaluate psect
      psect = zero
+     pserr = zero
      do i=1,nsect
          indx = sectors(i)%istart
          do j=1,sectors(i)%ndim
              psect(i) = psect(i) + prob(indx+j-1)
+             pserr(i) = pserr(i) + perr(indx+j-1)
          enddo ! over j={1,sectors(i)%ndim} loop
      enddo ! over i={1,nsect} loop
 
@@ -573,18 +519,18 @@
 ! write it
      write(mytmp,'(a)') '# state probability: index | prob | occupy | spin'
      do i=1,ncfgs
-         write(mytmp,'(i6,3f12.6)') i, prob(i), naux(i), saux(i)
+         write(mytmp,'(i6,4f12.6)') i, prob(i), naux(i), saux(i), perr(i)
      enddo ! over i={1,ncfgs} loop
 
      write(mytmp,'(a)') '# sector probability: index | occupy | prob'
      do i=1,nsect
-         write(mytmp,'(i6,2f12.6)') i, real( sectors(i)%nele ), psect(i)
+         write(mytmp,'(i6,3f12.6)') i, real( sectors(i)%nele ), psect(i), pserr(i)
      enddo ! over i={1,nsect} loop
-     write(mytmp,'(a6,12X,f12.6)') 'sum', sum(psect)
+     write(mytmp,'(a6,12X,2f12.6)') 'sum', sum(psect), sum(pserr)
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
-         write(mytmp,'(i6,2f12.6)') i+1, real(i), oprob(i)
+         write(mytmp,'(i6,2f12.6)') i + 1, real(i), oprob(i)
      enddo ! over i={0,norbs} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(oprob)
 
@@ -602,7 +548,7 @@
 
 !!>>> ctqmc_dump_nmat: write out the occupation matrix and double
 !!>>> occupation matrix
-  subroutine ctqmc_dump_nmat(nmat, nnmat)
+  subroutine ctqmc_dump_nmat(nmat, nnmat, nerr, nnerr)
      use constants, only : dp, mytmp
 
      use control, only : nband, norbs
@@ -612,9 +558,11 @@
 ! external arguments
 ! occupation matrix data
      real(dp), intent(in) :: nmat(norbs)
+     real(dp), intent(in) :: nerr(norbs)
 
 ! double occupation matrix data
      real(dp), intent(in) :: nnmat(norbs,norbs)
+     real(dp), intent(in) :: nnerr(norbs,norbs)
 
 ! local variables
 ! loop index
@@ -627,16 +575,16 @@
 ! write it
      write(mytmp,'(a)') '#   < n_i >   data:'
      do i=1,norbs
-         write(mytmp,'(i6,f12.6)') i, nmat(i)
+         write(mytmp,'(i6,2f12.6)') i, nmat(i), nerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,f12.6)') 'sup', sum( nmat(1:nband) )
-     write(mytmp,'(a6,f12.6)') 'sdn', sum( nmat(nband+1:norbs) )
-     write(mytmp,'(a6,f12.6)') 'sum', sum( nmat(1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sup', sum( nmat(1:nband) ), sum( nerr(1:nband) )
+     write(mytmp,'(a6,2f12.6)') 'sdn', sum( nmat(nband+1:norbs) ), sum( nerr(nband+1:norbs) )
+     write(mytmp,'(a6,2f12.6)') 'sum', sum( nmat(1:norbs) ), sum( nerr(1:norbs) )
 
      write(mytmp,'(a)') '# < n_i n_j > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,f12.6)') i, j, nnmat(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, nnmat(i,j), nnerr(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 

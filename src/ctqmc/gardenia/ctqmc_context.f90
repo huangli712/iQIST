@@ -13,9 +13,8 @@
 !!! source  : ctqmc_context.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/16/2009 by li huang
-!!!           06/08/2010 by li huang
-!!!           09/07/2014 by li huang
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : To define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -227,6 +226,12 @@
 
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
+
+! number of operators, < k >
+     real(dp), public, save, allocatable :: kmat(:)
+
+! square of number of operators, < k^2 >
+     real(dp), public, save, allocatable :: kkmat(:,:)
 
 ! number of operators at left half axis, < k_l >
      real(dp), public, save, allocatable :: lmat(:)
@@ -565,6 +570,8 @@
 
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(kmat(norbs),        stat=istat)
+     allocate(kkmat(norbs,norbs), stat=istat)
      allocate(lmat(norbs),        stat=istat)
      allocate(rmat(norbs),        stat=istat)
      allocate(lrmat(norbs,norbs), stat=istat)
@@ -595,6 +602,8 @@
 
      nmat  = zero
      nnmat = zero
+     kmat  = zero
+     kkmat = zero
      lmat  = zero
      rmat  = zero
      lrmat = zero
@@ -815,6 +824,8 @@
 
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(kmat)  )   deallocate(kmat )
+     if ( allocated(kkmat) )   deallocate(kkmat)
      if ( allocated(lmat)  )   deallocate(lmat )
      if ( allocated(rmat)  )   deallocate(rmat )
      if ( allocated(lrmat) )   deallocate(lrmat)

@@ -3,10 +3,10 @@
 !!! program : api
 !!! source  : ctqmc_api.f90
 !!! type    : module
-!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! author  : li huang (email:huangli712@gmail.com)
 !!! history : 01/07/2014 by li huang
 !!!           01/11/2014 by li huang
-!!!           03/27/2015 by li huang
+!!!           11/11/2014 by li huang
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
 !!!           quantum Monte Carlo impurity solver
@@ -30,14 +30,13 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro (keep MPY macro disable).
+!! Activate the API macro (keep 1 macro disable).
 !!
 !! 2. compile api
 !! --------------
 !!
 !! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory, or use the 'make' command in the
-!! src/api directory.
+!! command in the src/build directory.
 !!
 !! 3. compile the ctqmc component
 !! ------------------------------
@@ -52,7 +51,7 @@
 !!
 !! If everything is OK, you will find the libctqmc.a file in the ctqmc
 !! component folder (for example, src/ctqmc/azalea directory). Please copy
-!! it (together with src/api/api.mod) to your own directory. That's all.
+!! it (together with the api.mod) to your own directory. That's all.
 !!
 !! How to build the Python API
 !! ===========================
@@ -60,14 +59,13 @@
 !! 1. edit src/build/make.sys
 !! --------------------------
 !!
-!! Activate the API macro and MPY macro at the same time.
+!! Activate the API macro and 1 macro at the same time.
 !!
 !! 2. compile api
 !! --------------
 !!
 !! Please compile api (this directory) again. You can use the 'make api'
-!! command in the src/build directory, or use the 'make' command in the
-!! src/api directory.
+!! command in the src/build directory. This step is mandatory.
 !!
 !! 3. compile the ctqmc component
 !! ------------------------------
@@ -77,19 +75,19 @@
 !! library mode, i.e., you must use 'make lib' (in the src/ctqmc/azalea
 !! directory) or 'make azalea-lib' (in the src/build directory), etc.
 !!
-!! 4. edit src/api/Makefile
-!! ------------------------
+!! 4. edit src/ctqmc/api/Makefile
+!! ------------------------------
 !!
-!! check the target 'libctqmc', the original action is as follows:
-!!     cp ../ctqmc/azalea/libctqmc.a .
+!! check the target 'ctqmc', the original action is as follows:
+!!     cp ../azalea/libctqmc.a .
 !! If you want to use the other ctqmc components, instead of azalea, you
 !! have to change the directory. BE CAREFUL!
 !!
 !! 5. generate pyiqist.so
 !! ----------------------
 !!
-!! In the src/api directory, just input 'make pyiqist' command and wait.
-!! At last you will get the pyiqist.so which is what you need.
+!! In the src/ctqmc/api directory, just input 'make pyiqist' command and
+!! wait. At last you will get the pyiqist.so which is what you need.
 !!
 !! Usage (Fortran version)
 !! =======================
@@ -245,7 +243,7 @@
 !! You have to ensure that the pyiqist package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/api/')
+!! sys.path.append('../../src/ctqmc/api/')
 !!
 !! 3. configure the ctqmc impurity solver
 !! --------------------------------------
@@ -385,177 +383,7 @@
 ! note: now f2py does not support derived types, so we have to comment
 ! out them when f2py is used.
 
-# if !defined (MPY)
 
-! define type T_mpi, which is used to describe the mpi environment
-     public :: T_mpi
-     type :: T_mpi
-         integer :: nprocs
-         integer :: myid
-         integer :: master
-         integer :: cid
-         integer :: cx
-         integer :: cy
-     end type T_mpi
-
-! define type T_solver, which is used to describe the generic abstract
-! ctqmc impurity solver
-! note: it can not be used directly
-     private :: T_solver
-     type :: T_solver
-         integer :: isscf
-         integer :: issun
-         integer :: isspn
-         integer :: isbin
-         integer :: nband
-         integer :: nspin
-         integer :: norbs
-         integer :: ncfgs
-         integer :: niter
-         integer :: mkink
-         integer :: mfreq
-         integer :: nfreq
-         integer :: ntime
-         integer :: nflip
-         integer :: ntherm
-         integer :: nsweep
-         integer :: nwrite
-         integer :: nclean
-         integer :: nmonte
-         integer :: ncarlo
-
-         real(dp) :: U
-         real(dp) :: Uc
-         real(dp) :: Uv
-         real(dp) :: Jz
-         real(dp) :: Js
-         real(dp) :: Jp
-         real(dp) :: mune
-         real(dp) :: beta
-         real(dp) :: part
-         real(dp) :: alpha
-     end type T_solver
-
-! define type T_segment_solver, which is used to describe the ctqmc
-! impurity solver which based on segment representation
-! note: it can not be used directly
-     private :: T_segment_solver
-     type, extends (T_solver) :: T_segment_solver
-         character(len=10) :: solver_type = 'SEGMENT'
-     end type T_segment_solver
-
-! define type T_general_solver, which is used to describe the ctqmc
-! impurity solver which based on general matrix formulation
-! note: it can not be used directly
-     private :: T_general_solver
-     type, extends (T_solver) :: T_general_solver
-         character(len=10) :: solver_type = 'GENERAL'
-     end type T_general_solver
-
-! define type T_segment_azalea, which is used to describe the ctqmc
-! impurity solver code azalea
-     public :: T_segment_azalea
-     type, extends (T_segment_solver) :: T_segment_azalea
-         character(len=10) :: solver_name = 'AZALEA'
-     end type T_segment_azalea
-
-! define type T_segment_gardenia, which is used to describe the ctqmc
-! impurity solver code gardenia
-     public :: T_segment_gardenia
-     type, extends (T_segment_solver) :: T_segment_gardenia
-         character(len=10) :: solver_name = 'GARDENIA'
-
-         integer :: isort
-         integer :: issus
-         integer :: isvrt
-         integer :: lemax
-         integer :: legrd
-         integer :: chmax
-         integer :: chgrd
-         integer :: nffrq
-         integer :: nbfrq
-     end type T_segment_gardenia
-
-! define type T_segment_narcissus, which is used to describe the ctqmc
-! impurity solver code narcissus
-     public :: T_segment_narcissus
-     type, extends (T_segment_solver) :: T_segment_narcissus
-         character(len=10) :: solver_name = 'NARCISSUS'
-
-         integer :: isort
-         integer :: issus
-         integer :: isvrt
-         integer :: isscr
-         integer :: lemax
-         integer :: legrd
-         integer :: chmax
-         integer :: chgrd
-         integer :: nffrq
-         integer :: nbfrq
-
-         real(dp) :: lc
-         real(dp) :: wc
-     end type T_segment_narcissus
-
-! define type T_general_begonia, which is used to describe the ctqmc
-! impurity solver code begonia
-     public :: T_general_begonia
-     type, extends (T_general_solver) :: T_general_begonia
-         character(len=10) :: solver_name = 'BEGONIA'
-
-         integer :: nzero
-         integer :: npart
-     end type T_general_begonia
-
-! define type T_general_lavender, which is used to describe the ctqmc
-! impurity solver code lavender
-     public :: T_general_lavender
-     type, extends (T_general_solver) :: T_general_lavender
-         character(len=10) :: solver_name = 'LAVENDER'
-
-         integer :: isort
-         integer :: issus
-         integer :: isvrt
-         integer :: nzero
-         integer :: lemax
-         integer :: legrd
-         integer :: chmax
-         integer :: chgrd
-         integer :: nffrq
-         integer :: nbfrq
-         integer :: npart
-     end type T_general_lavender
-
-! define type T_general_pansy, which is used to describe the ctqmc
-! impurity solver code pansy
-     public :: T_general_pansy
-     type, extends (T_general_solver) :: T_general_pansy
-         character(len=10) :: solver_name = 'PANSY'
-
-         integer :: npart
-     end type T_general_pansy
-
-! define type T_general_manjushaka, which is used to describe the ctqmc
-! impurity solver code manjushaka
-     public :: T_general_manjushaka
-     type, extends (T_general_solver) :: T_general_manjushaka
-         character(len=10) :: solver_name = 'MANJUSHAKA'
-
-         integer :: isort
-         integer :: issus
-         integer :: isvrt
-         integer :: ifast
-         integer :: itrun
-         integer :: lemax
-         integer :: legrd
-         integer :: chmax
-         integer :: chgrd
-         integer :: nffrq
-         integer :: nbfrq
-         integer :: npart
-     end type T_general_manjushaka
-
-# endif  /* MPY */
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -611,26 +439,7 @@
      return
   end subroutine solver_status
 
-# if !defined (MPY)
 
-!!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
-!!>>> fortran version
-  subroutine init_ctqmc(I_mpi, I_solver)
-     implicit none
-
-! external arguments
-! type structure of mpi
-     class(*), intent(in) :: I_mpi
-
-! type structure of generic solver
-     class(*), intent(in) :: I_solver
-
-     call cat_init_ctqmc(I_mpi, I_solver)
-
-     return
-  end subroutine init_ctqmc
-
-# else   /* MPY */
 
 !!>>> init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> python version
@@ -653,7 +462,7 @@
      return
   end subroutine init_ctqmc
 
-# endif  /* MPY */
+
 
 !!>>> exec_ctqmc: execute the ctqmc quantum impurity solver
   subroutine exec_ctqmc(iter)

@@ -1,11 +1,11 @@
-Interacting Quantum Impurity Solver Toolkit
-===========================================
+iQIST (Interacting Quantum Impurity Solver Toolkit)
+===================================================
 
 Standard Test Cases
 ===================
 
-1. 1 band model
----------------
+1 band model
+------------
 
 * 1a // U = 1.0, J = 0.0, beta = 8.00, mune = 0.50
 
@@ -59,8 +59,8 @@ Standard Test Cases
 
 * 1z // U = 4.0, J = 0.0, beta = 10.0, mune = 5.00
 
-2. 2 band model
----------------
+2 band model
+------------
 
 * 2a // U = 1.0, J = 0.0, beta = 8.00, mune = 1.50
 
@@ -82,8 +82,8 @@ Standard Test Cases
 
 * 2j // U = 6.0, J = 0.0, beta = 80.0, mune = 9.00
 
-3. 3 band model
----------------
+3 band model
+------------
 
 * 3a // U = 1.0, J = 0.0, beta = 8.00, mune = 2.50
 
@@ -105,8 +105,8 @@ Standard Test Cases
 
 * 3j // U = 6.0, J = 0.0, beta = 80.0, mune = 15.0
 
-4. 2 band model
----------------
+2 band model
+------------
 
 * 4a // U = 1.0, J = 0.2, beta = 8.00, mune = 1.00
 
@@ -128,8 +128,8 @@ Standard Test Cases
 
 * 4j // U = 6.0, J = 1.0, beta = 80.0, mune = 6.50
 
-5. 3 band model
----------------
+3 band model
+------------
 
 * 5a // U = 1.0, J = 0.2, beta = 8.00, mune = 1.50
 

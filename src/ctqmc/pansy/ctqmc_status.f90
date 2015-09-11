@@ -6,9 +6,8 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!           yilin wang (email:qhwyl2006@126.com)
-!!! history : 09/23/2009 by li huang
-!!!           02/21/2010 by li huang
-!!!           11/11/2014 by yilin wang
+!!! history : 09/23/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
 !!!           for hybridization expansion version continuous time quantum
@@ -180,14 +179,14 @@
 
 ! read in key data
          do i=1,norbs
-             read(mytmp, '(a14,i4)') chr, i1
+             read(mytmp,'(a14,i4)') chr, i1
 
-             read(mytmp, '(a14,i4)') chr, ckink
+             read(mytmp,'(a14,i4)') chr, ckink
              do j=1,ckink
                  read(mytmp,*) i1, j1, tau_s(j, i)
              enddo ! over j={1,ckink} loop
 
-             read(mytmp, '(a14,i4)') chr, ckink
+             read(mytmp,'(a14,i4)') chr, ckink
              do j=1,ckink
                  read(mytmp,*) i1, j1, tau_e(j, i)
              enddo ! over j={1,ckink} loop

@@ -6,9 +6,8 @@
 !!! source  : entropy_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/08/2011 by li huang
-!!!           01/26/2011 by li huang
-!!!           11/17/2014 by li huang
+!!! history : 01/08/2011 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : initialize the classic maximum entropy method code
 !!! status  : unstable
 !!! comment :
@@ -113,7 +112,7 @@
      use constants, only : dp, one, eps6, mytmp
      use mmpi, only : mp_bcast, mp_barrier
 
-     use control, only : ntime, nband, norbs, ntype
+     use control, only : ntime, norbs, ntype
      use control, only : devia
      use control, only : myid, master
 
@@ -153,32 +152,27 @@
 ! read in imaginary time function from tau.grn.dat
          open(mytmp, file = 'tau.grn.dat', form='formatted', status = 'unknown')
 
-         do i=1,nband
+         do i=1,norbs
              do j=1,ntime
 ! read in data
-                 read(mytmp,*) tmesh(j), G_qmc(j,i), G_dev(j,i), &
-                             G_qmc(j,i+nband), G_dev(j,i+nband)
+                 read(mytmp,*) tmesh(j), G_qmc(j,i), G_dev(j,i)
 
 ! deal with error bar data
-! it is based gaussian model
+! it is based on gaussian model
                  if( ntype == 0 ) then
-                     G_dev(j,i)       = G_dev(j,i)       * devia
-                     G_dev(j,i+nband) = G_dev(j,i+nband) * devia
-! it is based flat model
+                     G_dev(j,i) = G_dev(j,i) * devia
+! it is based on flat model
                  else
-                     G_dev(j,i)       = devia
-                     G_dev(j,i+nband) = devia
+                     G_dev(j,i) = devia
                  endif ! back if ( ntype == 0 ) block
                  if ( abs(G_dev(j,i)) < eps6 ) then
-                     G_dev(j,i)       = eps6
-                     G_dev(j,i+nband) = eps6
+                     G_dev(j,i) = eps6
                  endif ! back if ( abs(G_dev(j,i)) < eps6 ) block
-                 G_dev(j,i)       = one / G_dev(j,i)**2
-                 G_dev(j,i+nband) = one / G_dev(j,i+nband)**2
+                 G_dev(j,i) = one / G_dev(j,i)**2
              enddo ! over j={1,ntime} loop
              read(mytmp,*) ! skip two lines
              read(mytmp,*)
-         enddo ! over i={1,nband} loop
+         enddo ! over i={1,norbs} loop
 
 ! close data file
          close(mytmp)

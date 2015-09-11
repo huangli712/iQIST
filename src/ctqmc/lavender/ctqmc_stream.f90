@@ -8,9 +8,8 @@
 !!! source  : ctqmc_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 09/16/2009 by li huang
-!!!           06/08/2010 by li huang
-!!!           11/08/2014 by li huang
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -259,7 +258,7 @@
      use mmpi, only : mp_bcast, mp_barrier
      use sparse, only : sp_dns_to_csr
 
-     use control, only : nband, norbs, ncfgs, nzero
+     use control, only : norbs, ncfgs, nzero
      use control, only : lemax, legrd, chmax, chgrd
      use control, only : mfreq
      use control, only : ntime
@@ -338,15 +337,14 @@
 
 ! read in hybridization function from solver.hyb.in
              open(mytmp, file='solver.hyb.in', form='formatted', status='unknown')
-             do i=1,nband
+             do i=1,norbs
                  do j=1,mfreq
                      read(mytmp,*) k, rtmp, r1, i1, r2, i2
-                     hybf(j,i,i) = dcmplx(r1,i1)             ! spin up part
-                     hybf(j,i+nband,i+nband) = dcmplx(r2,i2) ! spin dn part
+                     hybf(j,i,i) = dcmplx(r1,i1)
                  enddo ! over j={1,mfreq} loop
                  read(mytmp,*) ! skip two lines
                  read(mytmp,*)
-             enddo ! over i={1,nband} loop
+             enddo ! over i={1,norbs} loop
              close(mytmp)
 
          endif ! back if ( exists .eqv. .true. ) block
@@ -685,6 +683,10 @@
 ! init occupation number array
      nmat    = zero
      nnmat   = zero
+
+! init < k^2 > - < k >^2 array
+     kmat    = zero
+     kkmat   = zero
 
 ! init fidelity susceptibility array
      lmat    = zero

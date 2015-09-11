@@ -6,9 +6,8 @@
 !!! source  : entropy_update.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/09/2011 by li huang
-!!!           01/26/2011 by li huang
-!!!           11/18/2014 by li huang
+!!! history : 01/09/2011 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : to provide basic subroutines (in other words, elementary
 !!!           updating subroutines) for classic maximum entropy method
 !!!           code

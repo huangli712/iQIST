@@ -13,10 +13,10 @@ sys.path.append('../../../../src/tools/hibiscus/script/')
 from u_ctqmc import *
 
 # modify sys.path
-sys.path.append('../../../../src/api/')
+sys.path.append('../../../../src/ctqmc/gardenia/')
 
 # import iqist software package
-from pyiqist import api as ctqmc
+import pyiqist as ctqmc
 
 def do_dmft_loop(mfreq, norbs, grnf):
     """ implement the DMFT self-consistent condition for bethe lattice
@@ -31,14 +31,14 @@ def do_dmft_loop(mfreq, norbs, grnf):
 comm = MPI.COMM_WORLD
 
 # check the status of ctqmc impurity solver
-if ctqmc.solver_id() == 102:
+if ctqmc.cat_solver_id() == 102:
     if comm.rank == 0 :
         print "Hello world! This is the GARDENIA code."
 else:
     if comm.rank == 0 :
         print "Where is the GARDENIA code?"
     sys.exit(-1)
-if ctqmc.solver_status() != 1 :
+if ctqmc.cat_solver_status() != 1 :
     print "I am sorry. This ctqmc impurity solver is not ready."
     sys.exit(-1)
 
@@ -89,23 +89,23 @@ for i in range(niter):
     comm.Barrier()
 
     # init ctqmc impurity solver
-    ctqmc.init_ctqmc(comm.rank, comm.size)
+    ctqmc.cat_init_ctqmc(comm.rank, comm.size)
 
     # setup hybridization function
     # for the first iteration, we just use the default value
-    if i > 0: ctqmc.set_hybf(size_t, hybf)
+    if i > 0: ctqmc.cat_set_hybf(size_t, hybf)
 
     # exec ctqmc impurity solver
-    ctqmc.exec_ctqmc(i+1)
+    ctqmc.cat_exec_ctqmc(i+1)
 
     # get green's function
-    grnf = ctqmc.get_grnf(size_t)
+    grnf = ctqmc.cat_get_grnf(size_t)
 
     # get new hybridization function
     hybf = do_dmft_loop(mfreq, norbs, grnf)
 
     # get occupation number
-    nmat = ctqmc.get_nmat(norbs)
+    nmat = ctqmc.cat_get_nmat(norbs)
 
     # calculate new chemical potential
     mune = mune + 0.3 * float( occup - sum(nmat) )
@@ -117,7 +117,7 @@ for i in range(niter):
         print 'curr_mune:', mune, 'curr_occu:', sum(nmat), 'need_occu:', occup
 
     # stop ctqmc impurity solver
-    ctqmc.stop_ctqmc()
+    ctqmc.cat_stop_ctqmc()
 
 # mpi barrier
 comm.Barrier()

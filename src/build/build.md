@@ -1,4 +1,4 @@
-# Summary of make.sys templates
+# iQIST (Interacting Quantum Impurity Solver Toolkit)
 
 Here we provide a summary list for several make.sys templates. Please choose a suitable one and modify it to satisfy your requirements. Don't forget to use it to override the default make.sys.
 

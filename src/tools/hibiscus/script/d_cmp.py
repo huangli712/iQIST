@@ -25,7 +25,8 @@
 ## History
 ## =======
 ##
-## 01/12/2015 by Yilin Wang
+## 01/12/2015 by yilin wang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 
@@ -62,11 +63,12 @@ def print_result(case, func, diff, eps):
     """ print the results of comparing
     """
     if diff < eps:
-        print case, func, "diff: %10.6f  eps: %10.6f  PASS" % (diff, eps)
+        print case, func, "diff: %10.6f  eps: %10.6f  PASSED" % (diff, eps)
     else:
-        print case, func, "diff: %10.6f  eps: %10.6f  FAIL" % (diff, eps)
+        print case, func, "diff: %10.6f  eps: %10.6f  FAILED" % (diff, eps)
  
 if __name__ == '__main__':
+
     # set the tolerance for the average relative error
     hist_eps = 1E-2
     gtau_eps = 1E-2
@@ -74,8 +76,8 @@ if __name__ == '__main__':
     sigf_eps = 1E-2
 
     # just compare a few points of low frequency for grnf and sigf
-    ngrnf = 50
-    nsigf = 10
+    NGF = 50
+    NSF = 10
 
     # a is the case to be checked, b is the base case 
     dir_a, dir_b = sys.argv[1], sys.argv[2]
@@ -107,11 +109,11 @@ if __name__ == '__main__':
         # compare grnf
         _, grnf_a = iqistReader.get_grn(norbs, mfreq, os.path.join(dir_case_a,'solver.grn.dat'))
         _, grnf_b = iqistReader.get_grn(norbs, mfreq, os.path.join(dir_case_b,'solver.grn.dat'))
-        diff = 2.0 * np.sum(np.abs(grnf_a[0:ngrnf,:,:] - grnf_b[0:ngrnf,:,:])) / np.sum(np.abs(grnf_a[0:ngrnf,:,:] + grnf_b[0:ngrnf,:,:])) 
+        diff = 2.0 * np.sum(np.abs(grnf_a[0:NGF,:,:] - grnf_b[0:NGF,:,:])) / np.sum(np.abs(grnf_a[0:NGF,:,:] + grnf_b[0:NGF,:,:])) 
         print_result(elm, 'grnf', diff, grnf_eps)
 
         # compare sigf
         _, sigf_a = iqistReader.get_sgm(norbs, mfreq, os.path.join(dir_case_a,'solver.sgm.dat'))
         _, sigf_b = iqistReader.get_sgm(norbs, mfreq, os.path.join(dir_case_b,'solver.sgm.dat'))
-        diff = 2.0 * np.sum(np.abs(sigf_a[0:nsigf,:,:] - sigf_b[0:nsigf,:,:])) / np.sum(np.abs(sigf_a[0:nsigf,:,:] + sigf_b[0:nsigf,:,:]))
+        diff = 2.0 * np.sum(np.abs(sigf_a[0:NSF,:,:] - sigf_b[0:NSF,:,:])) / np.sum(np.abs(sigf_a[0:NSF,:,:] + sigf_b[0:NSF,:,:]))
         print_result(elm, 'sigf', diff, sigf_eps)

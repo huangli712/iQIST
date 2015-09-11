@@ -20,7 +20,8 @@
 ## History
 ## =======
 ##
-## 05/08/2015 by li huang
+## 05/08/2015 by li huang (created)
+## 08/17/2015 by li huang (last modified)
 ##
 ##
 

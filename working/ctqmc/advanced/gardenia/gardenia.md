@@ -1,11 +1,11 @@
-Interacting Quantum Impurity Solver Toolkit
-===========================================
+iQIST (Interacting Quantum Impurity Solver Toolkit)
+===================================================
 
 Advanced Test Cases For GARDENIA
 ================================
 
-1. 1 band model
----------------
+1 band model
+------------
 
 * 1a // U = 1.0, J = 0.0, beta = 8.00, mune = 0.50, isort = 2
 
@@ -17,8 +17,8 @@ Advanced Test Cases For GARDENIA
 
 * 1q // U = 6.0, J = 0.0, beta = 8.00, mune = 3.00, isort = 6
 
-2. 2 band model
----------------
+2 band model
+------------
 
 * 2a // U = 1.0, J = 0.0, beta = 8.00, mune = 1.50, isort = 2
 
@@ -30,8 +30,8 @@ Advanced Test Cases For GARDENIA
 
 * 2i // U = 6.0, J = 0.0, beta = 8.00, mune = 9.00, isort = 6
 
-3. 3 band model
----------------
+3 band model
+------------
 
 * 3a // U = 1.0, J = 0.0, beta = 8.00, mune = 2.50, isort = 2
 
@@ -43,8 +43,8 @@ Advanced Test Cases For GARDENIA
 
 * 3i // U = 6.0, J = 0.0, beta = 8.00, mune = 15.0, isort = 6
 
-4. 2 band model
----------------
+2 band model
+------------
 
 * 4a // U = 1.0, J = 0.2, beta = 8.00, mune = 1.00, isort = 2
 
@@ -56,8 +56,8 @@ Advanced Test Cases For GARDENIA
 
 * 4i // U = 6.0, J = 1.0, beta = 8.00, mune = 6.50, isort = 6
 
-5. 3 band model
----------------
+3 band model
+------------
 
 * 5a // U = 1.0, J = 0.2, beta = 8.00, mune = 1.50, isort = 2
 

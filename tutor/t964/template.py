@@ -12,10 +12,10 @@ sys.path.append('../../src/tools/hibiscus/script/')
 from u_atomic import *
 
 # modify sys.path
-sys.path.append('../../src/api/')
+sys.path.append('../../src/tools/jasmine/')
 
 # import jasmine software package
-from pyjasmine import japi as atomic
+from pyjasmine import *
 
 # get mpi communicator
 comm = MPI.COMM_WORLD
@@ -46,13 +46,13 @@ comm.Barrier()
 # only the master node can do this job
 if comm.rank == 0:
     # init the atomic eigenvalue problem solver
-    atomic.init_atomic()
+    cat_init_atomic()
 
     # execute the atomic eigenvalue problem solver
-    atomic.exec_atomic()
+    cat_exec_atomic()
 
     # stop the atomic eigenvalue problem solver
-    atomic.stop_atomic()
+    cat_stop_atomic()
 
 # mpi barrier
 comm.Barrier()

@@ -11,9 +11,8 @@
 !!! source  : hfqmc_record.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!! history : 01/07/2006 by li huang
-!!!           08/25/2010 by li huang
-!!!           12/06/2014 by li huang
+!!! history : 01/07/2006 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
 !!! purpose : To build impurity green's function, bath weiss's function
 !!!           and self-energy function in matsubara frequency space. some
 !!!           auxiliary subroutines, such as symmetrizing and smoothing
@@ -328,7 +327,7 @@
   end subroutine hfqmc_make_nmat
 
 !!>>> hfqmc_reduce_gtau: reduce the gtau from all children processes
-  subroutine hfqmc_reduce_gtau(gtau_mpi)
+  subroutine hfqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -342,9 +341,11 @@
 ! external arguments
 ! impurity green's function
      real(dp), intent(out) :: gtau_mpi(ntime,norbs)
+     real(dp), intent(out) :: gtau_err(ntime,norbs)
 
-! initialize gtau_mpi
+! initialize gtau_mpi and gtau_err
      gtau_mpi = zero
+     gtau_err = zero
 
 ! build gtau_mpi, collect data from all children processes
 # if defined (MPI)
@@ -364,11 +365,27 @@
 ! calculate the average
      gtau_mpi = gtau_mpi / real(nprocs)
 
+! build gtau_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((gtau - gtau_mpi)**2, gtau_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         gtau_err = sqrt( gtau_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
      return
   end subroutine hfqmc_reduce_gtau
 
 !!>>> hfqmc_reduce_nmat: reduce the nnmat from all children processes
-  subroutine hfqmc_reduce_nmat(nnmat_mpi)
+  subroutine hfqmc_reduce_nmat(nnmat_mpi, nnmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
 
@@ -381,9 +398,11 @@
 ! external arguments
 ! double occupation number matrix
      real(dp), intent(out) :: nnmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: nnmat_err(norbs,norbs)
 
-! initialize nnmat_mpi
+! initialize nnmat_mpi and nnmat_err
      nnmat_mpi = zero
+     nnmat_err = zero
 
 ! build nnmat_mpi, collect data from all children processes
 # if defined (MPI)
@@ -402,6 +421,22 @@
 
 ! calculate the average
      nnmat_mpi = nnmat_mpi / real(nprocs)
+
+! build nnmat_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((nnmat - nnmat_mpi)**2, nnmat_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         nnmat_err = sqrt( nnmat_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
 
      return
   end subroutine hfqmc_reduce_nmat
