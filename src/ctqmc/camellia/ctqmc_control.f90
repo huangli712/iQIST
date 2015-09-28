@@ -19,21 +19,21 @@
 
      implicit none
 
-!=========================================================================
-!>>> integer variables                                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> integer variables                                                <<<
+!!========================================================================
 
 ! control flag: running mode
 ! if isscf == 1, one-shot non-self-consistent scheme, used in local density
 ! approximation plus dynamical mean field theory case
 ! if isscf == 2, self-consistent scheme, used in normal model hamiltonian
 ! plus dynamical mean field theory case
-     integer, public, save :: isscf  = 1
+     integer, public, save :: isscf  = 2
 
 ! control flag: symmetry of bands
 ! if issun == 1, the bands are not symmetrized
 ! if issun == 2, the bands are symmetrized according to symmetry matrix
-     integer, public, save :: issun  = 1
+     integer, public, save :: issun  = 2
 
 ! control flag: symmetry of spin orientation
 ! if isspn == 1, enforce spin up = spin down
@@ -43,18 +43,96 @@
 ! control flag: impurity green's function binning mode
 ! if isbin == 1, without binning mode
 ! if isbin == 2, with binning mode
-     integer, public, save :: isbin  = 1
+     integer, public, save :: isbin  = 2
 
 ! control flag: apply orthogonal polynomial representation to perform measurement
-! if isort == 1, using normal representation to measure G(\tau)
-! if isort == 2, using legendre polynomial to measure G(\tau)
-! if isort == 3, using chebyshev polynomial (the second kind) to measure G(\tau)
+! if isort == 1, use normal representation to measure G(\tau)
+! if isort == 2, use legendre polynomial to measure G(\tau)
+! if isort == 3, use chebyshev polynomial (the second kind) to measure G(\tau)
+! if isort == 4, use normal representation to measure G(\tau) and F(\tau)
+! if isort == 5, use legendre polynomial to measure G(\tau) and F(\tau)
+! if isort == 6, use chebyshev polynomial (the second kind) to measure G(\tau) and F(\tau)
+!
+! note: if isort \in [1,3], we use ctqmc_make_hub1() to calculate the self
+! energy function, or else we use ctqmc_make_hub2().
+!
+! note: as for the kernel polynomial representation, the default dirichlet
+! kernel is applied automatically. if you want to choose the other kernel,
+! please check the ctqmc_make_gtau() subroutine in ctqmc_record.f90.
+!
+! note: in the lavender code, isort == 4, 5, and 6 are not implemeted so
+! far, i.e., F(\tau) will not be measured.
      integer, public, save :: isort  = 1
 
+! control flag: whether we measure the charge or spin susceptibility
+! we just use the following algorithm to judge which susceptibility should
+! be calculated:
+! (a) issus is converted to a binary representation at first. for example,
+! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
+!
+! (b) then we examine the bits. if it is 1, then we do the calculation.
+! if it is 0, then we ignore the calculation. for example, we just use the
+! second bit (from right side to left side) to represent the calculation
+! of spin-spin correlation function. so, if issus is 10_10 (1010_2), we
+! will calculate the spin-spin correlation function. if issus is 13_10
+! (1101_2), we will not calculate it since the second bit is 0.
+!
+! the following are the definitions of bit representation:
+! if p == 1, do nothing
+! if p == 2, calculate spin-spin correlation function (time space)
+! if p == 3, calculate orbital-orbital correlation function (time space)
+! if p == 4, calculate spin-spin correlation function (frequency space)
+! if p == 5, calculate orbital-orbital correlation function (frequency space)
+! if p == 6, calculate < k^2 > - < k >^2
+! if p == 7, calculate fidelity susceptibility matrix
+! if p == 8, reserved
+! if p == 9, reserved
+!
+! example:
+!   ( 1 1 1 0 1 0 1 0 1)_2
+! p = 9 8 7 6 5 4 3 2 1
+!
+! note: p = 2, 3, 4, and 5 are not implemented so far.
+     integer, public, save :: issus  = 1
+
 ! control flag: whether we measure the high order correlation function
-! if isvrt == 1, false, do not care about it
-! if isvrt == 2, true, just do it
-! note: so far only the spin-spin correlation function is supported
+! we just use the following algorithm to judge which correlation function
+! should be calculated:
+! (a) isvrt is converted to a binary representation at first. for example,
+! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
+!
+! (b) then we examine the bits. if it is 1, then we do the calculation.
+! if it is 0, then we ignore the calculation. for example, we just use the
+! second bit (from right side to left side) to represent the calculation
+! of two-particle green's function. so, if isvrt is 10_10 (1010_2), we
+! will calculate the two-particle green's function. if isvrt is 13_10
+! (1101_2), we will not calculate it since the second bit is 0.
+!
+! the following are the definitions of bit representation:
+! if p == 1, do nothing
+! if p == 2, calculate two-particle green's function and vertex function
+! if p == 3, calculate two-particle green's function and vertex function
+! if p == 4, calculate particle-particle pair susceptibility
+! if p == 5, reserved
+! if p == 6, reserved
+! if p == 7, reserved
+! if p == 8, reserved
+! if p == 9, reserved
+!
+! example:
+!   ( 1 1 1 0 1 0 1 0 1)_2
+! p = 9 8 7 6 5 4 3 2 1
+!
+! note: if p == 2 or p == 3, both the two-particle green's and vertex
+! functions are computed, but using two different algorithms. you can not
+! set them to 1 at the same time. in order words, if you set the bit at
+! p == 2 to 1, then the bit at p == 3 must be 0, and vice versa.
+!
+! note: if p == 2, the traditional algorithm is used. if p == 3, the
+! improved estimator for two-particle green's function is used.
+!
+! note: for the lavender code, the bit at p == 3 must be 0, i.e., this
+! feature is not implemented so far.
      integer, public, save :: isvrt  = 1
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
