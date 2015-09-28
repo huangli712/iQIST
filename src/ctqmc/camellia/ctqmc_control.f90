@@ -180,8 +180,15 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+! number of matsubara frequency for the two-particle green's function
+     integer, public, save :: nffrq  = 32
+
+! number of bosonic frequncy for the two-particle green's function
+     integer, public, save :: nbfrq  = 8
+
 ! number of matsubara frequency sampling by continuous time quantum Monte
 ! Carlo quantum impurity solver
+!
 ! note: the rest (mfreq - nfreq + 1 points) values are evaluated by using
 ! Hubbard-I approximation
      integer, public, save :: nfreq  = 128
@@ -198,21 +205,28 @@
      integer, public, save :: nleja  = 64
 
 ! flip period for spin up and spin down states
+!
 ! note: care must be taken to prevent the system from being trapped in a
 ! state which breaks a symmetry of local hamiltonian when it should not
 ! be. to avoid unphysical trapping, we introduce "flip" moves, which
 ! exchange the operators corresponding, for example, to up and down spins
 ! in a given orbital.
+!
 ! note: in this code, nowadays the following flip schemes are supported
 !     if cflip = 1, flip inter-orbital spins randomly;
 !     if cflip = 2, flip intra-orbital spins one by one;
 !     if cflip = 3, flip intra-orbital spins globally.
+! here cflip is an internal variable.
+!
 ! note: we use the sign of nflip to control flip schemes
 !     if nflip = 0, means infinite long period to do flip
 !     if nflip > 0, combine cflip = 2 (80%) and cflip = 3 (20%)
 !     if nflip < 0, combine cflip = 1 (80%) and cflip = 3 (20%)
+!
 ! note: if nflip /= 0, the absolute value of nflip is the flip period
-! note: when cflip = 1, the symmetry of orbitals must be taken into consideration
+!
+! note: when cflip = 1, the symmetry of all orbitals must be taken into
+! consideration, otherwise the code may be trapped by a deadlock.
      integer, public, save :: nflip  = 20000
 
 ! maximum number of thermalization steps
@@ -227,18 +241,24 @@
 ! clean update period for quantum impurity solver
      integer, public, save :: nclean = 100000
 
-! how often to sampling the gmat and paux (nmat and nnmat, schi and sschi)
+! how often to sampling the gmat and paux (nmat and nnmat)
+!
+! note: the measure periods for schi, sschi, ochi, oochi, g2_re, g2_im,
+! h2_re, h2_im, ps_re, and ps_im are also controlled by nmonte parameter.
      integer, public, save :: nmonte = 10
 
 ! how often to sampling the gtau and prob
+!
+! note: the measure period for ftau is also controlled by ncarlo parameter.
      integer, public, save :: ncarlo = 10
 
-!=========================================================================
-!>>> real variables                                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> real variables                                                   <<<
+!!========================================================================
 
 ! note: U, Uc, Uv, Jz, Js, and Jp are not used by this quantum impurity
-! solver actually. we keep them here is just for reference
+! solver actually. we keep them here is just for reference.
+
 ! average Coulomb interaction
      real(dp), public, save :: U     = 4.00_dp
 
@@ -257,8 +277,11 @@
 ! pair-hopping term
      real(dp), public, save :: Jp    = 0.00_dp
 
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 ! chemical potential or fermi level
-! note: it should be replaced with eimp
+!
+! note: it should/can be replaced with eimp
      real(dp), public, save :: mune  = 2.00_dp
 
 ! inversion of temperature
@@ -270,9 +293,9 @@
 ! mixing parameter for dynamical mean field theory self-consistent engine
      real(dp), public, save :: alpha = 0.70_dp
 
-!=========================================================================
-!>>> MPI related common variables                                      <<<
-!=========================================================================
+!!========================================================================
+!!>>> MPI related common variables                                     <<<
+!!========================================================================
 
 ! number of processors: default value 1
      integer, public, save :: nprocs = 1
