@@ -49,8 +49,34 @@ default: all
 
 all: exe
 
-ctqmc: $(objects)
-	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
+api:
+	cp ../../capi/capi.mod .
+	cp ../../capi/ctqmc_api.o .
+
+cssl:
+	cp ../../common/libMM.a .
+
+csml:
+	cp ../../common/constants.mod .
+	cp ../../common/mmpi.mod .
+	cp ../../common/sparse.mod .
+	cp ../../common/spring.mod .
+	cp ../../common/stack.mod .
+	cp ../../common/parser.mod .
+	cp ../../common/linkedlist.mod .
+
+exe: api cssl csml ctqmc-exe
+ctqmc-exe: $(exe_obj)
+	$(LINKER) $(exe_obj) -o ctqmc $(LFLAGS) $(LIBS)
+
+lib: api cssl csml ctqmc-lib
+ctqmc-lib: $(lib_obj)
+	$(ARCHIVER) libctqmc.a $(lib_obj)
+
+pylib: lib
+	cpp -E -DPYAPI ctqmc_open.f90 > ctqmc_open_py.f90
+	$(F2PY) -c --f90exec=$(F2PYC) -m pyiqist -L. -lctqmc -lMM $(F2PYL) ctqmc_open_py.f90
+	rm -fr *.dSYM ctqmc_open_py.f90
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -58,11 +84,13 @@ ctqmc: $(objects)
 clean:
 	rm -f *.mod
 	rm -f *.o
+	rm -f *.so
 	rm -f ctqmc
+	rm -f libctqmc.a
+	rm -f libMM.a
 
 clean-dat:
 	rm -f *.dat
-	rm -f *.bin.*
 	rm -f *.out
 
 clean-all: clean clean-dat
