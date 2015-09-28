@@ -1,48 +1,36 @@
-!-------------------------------------------------------------------------
-! project : pansy
-! program : ctqmc_core module
-!           ctqmc_clur module
-!           ctqmc_flvr module
-!           ctqmc_umat module
-!           ctqmc_fmat module
-!           ctqmc_mmat module
-!           ctqmc_gmat module
-!           ctqmc_wmat module
-!           ctqmc_smat module
-!           context    module
-! source  : ctqmc_context.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/17/2009 by li huang
-!           09/19/2009 by li huang
-!           09/20/2009 by li huang
-!           09/21/2009 by li huang
-!           09/22/2009 by li huang
-!           09/27/2009 by li huang
-!           11/01/2009 by li huang
-!           11/10/2009 by li huang
-!           11/18/2009 by li huang
-!           12/01/2009 by li huang
-!           12/05/2009 by li huang
-!           02/21/2010 by li huang
-!           02/23/2010 by li huang
-!           06/08/2010 by li huang
-! purpose : define the key data structure and global arrays/variables for
-!           hybridization expansion version continuous time quantum Monte
-!           Carlo (CTQMC) quantum impurity solver and dynamical mean field
-!           theory (DMFT) self-consistent engine
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : camellia
+!!! program : ctqmc_core module
+!!!           ctqmc_clur module
+!!!           ctqmc_flvr module
+!!!           ctqmc_mesh module
+!!!           ctqmc_meat module
+!!!           ctqmc_umat module
+!!!           ctqmc_fmat module
+!!!           ctqmc_mmat module
+!!!           ctqmc_gmat module
+!!!           ctqmc_wmat module
+!!!           ctqmc_smat module
+!!!           context    module
+!!! source  : ctqmc_context.f90
+!!! type    : module
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
+!!! purpose : To define the key data structure and global arrays/variables
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
+!!!           mean field theory (DMFT) self-consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!=========================================================================
-!>>> module ctqmc_core                                                 <<<
-!=========================================================================
-!>>> containing core (internal) variables used by continuous time quantum
-! Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_core                                                <<<
+!!========================================================================
+
+!!>>> containing core (internal) variables used by continuous time quantum
+!!>>> Monte Carlo quantum impurity solver
   module ctqmc_core
      use constants, only : dp, zero
 
@@ -59,6 +47,12 @@
 
 ! averaged sign values, used to measure the sign problem
      integer, public, save  :: caves = 0
+
+! current status of spin-orbital coupling
+! if cssoc = 0, no spin-orbital coupling,
+! if cssoc = 1, atomic spin-orbital coupling
+! note: this variable is determined by atom.cix, do not setup it manually
+     integer, public, save  :: cssoc = 0
 
 !-------------------------------------------------------------------------
 !::: core variables: real, matrix trace                                :::
@@ -137,14 +131,15 @@
 
   end module ctqmc_core
 
-!=========================================================================
-!>>> module ctqmc_clur                                                 <<<
-!=========================================================================
-!>>> containing perturbation expansion series related arrays (colour part)
-! used by continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_clur                                                <<<
+!!========================================================================
+
+!!>>> containing perturbation expansion series related arrays (colour part)
+!!>>> used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_clur
      use constants, only : dp
-     use stack
+     use stack, only : istack, istack_create, istack_destroy
 
      implicit none
 
@@ -174,14 +169,15 @@
 
   end module ctqmc_clur
 
-!=========================================================================
-!>>> module ctqmc_flvr                                                 <<<
-!=========================================================================
-!>>> containing perturbation expansion series related arrays (flavor part)
-! used by continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_flvr                                                <<<
+!!========================================================================
+
+!!>>> containing perturbation expansion series related arrays (flavor part)
+!!>>> used by continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_flvr
      use constants, only : dp
-     use stack
+     use stack, only : istack, istack_create, istack_destroy
 
      implicit none
 
