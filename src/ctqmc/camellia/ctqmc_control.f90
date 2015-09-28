@@ -149,14 +149,8 @@
 ! number of atomic states (= 2**norbs)
      integer, public, save :: ncfgs  = 4
 
-! number of selected eigenvectors (maximum value is ncfgs, minimum value is 1)
-     integer, public, save :: nvect  = 4
-
-! maximum allowed number of non-zero elements in H-matrix
-     integer, public, save :: nhmat  = 128
-
 ! maximum allowed number of non-zero elements in F-matrix
-     integer, public, save :: nfmat  = 128
+     integer, public, save :: nzero  = 128
 
 ! maximum number of continuous time quantum Monte Carlo quantum impurity
 ! solver plus dynamical mean field theory self-consistent iterations
@@ -195,6 +189,9 @@
 ! number of imaginary time slice sampling by continuous time quantum Monte
 ! Carlo quantum impurity solver
      integer, public, save :: ntime  = 1024
+
+! number of selected eigenvectors (maximum value is ncfgs, minimum value is 1)
+     integer, public, save :: nvect  = 4
 
 ! maximum number of real leja points. the real leja points are used in the
 ! newton interpolation to evaluate exp( -\tau H ) |v> efficiently
