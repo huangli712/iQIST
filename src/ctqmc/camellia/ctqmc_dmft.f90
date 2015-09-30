@@ -86,21 +86,21 @@
 ! space to imaginary time space
      call ctqmc_four_hybf(wssf, wtau)
 
-! write out the new bath weiss's function
+! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_wssf(rmesh, wssf)
-     endif
+     endif ! back if ( myid == master ) block
 
-! write out the new hybridization function
+! write out the new bath weiss's function in imaginary time axis
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hybf(rmesh, hybf)
-     endif
+         call ctqmc_dump_wtau(tmesh, wtau)
+     endif ! back if ( myid == master ) block
 
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'PANSY >>> DMFT hybridization function is updated'
+         write(mystd,'(2X,a)') 'CAMELLIA >>> DMFT hybridization function is updated'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(htmp)
@@ -108,11 +108,15 @@
      return
   end subroutine ctqmc_dmft_selfer
 
-!>>> check the convergence of self-energy function
+!!>>> ctqmc_dmft_conver: check the convergence of self-energy function
   subroutine ctqmc_dmft_conver(iter, convergence)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, eps8, mystd
+
+     use control, only : norbs, niter
+     use control, only : mfreq
+     use control, only : alpha
+     use control, only : myid, master
+     use context, only : sig1, sig2
 
      implicit none
 
@@ -156,44 +160,28 @@
      convergence = ( ( seps <= eps8 ) .and. ( iter >= minit ) )
 
 ! update sig1
-     sig1 = sig1 * (one - alpha) + sig2 * alpha
+     call s_mix_z(size(sig1), sig2, sig1, one - alpha)
 
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(3(2X,a,i3))') 'PANSY >>> cur_iter:', iter, 'min_iter:', minit, 'max_iter:', niter
-         write(mystd,'(2(2X,a,E10.4))') 'PANSY >>> sig_curr:', seps, 'eps_curr:', eps8
-         write(mystd,'( (2X,a,L1))') 'PANSY >>> self-consistent iteration convergence is ', convergence
+         write(mystd,'(3(2X,a,i3))') 'CAMELLIA >>> cur_iter:', iter, 'min_iter:', minit, 'max_iter:', niter
+         write(mystd,'(2(2X,a,E12.4))') 'CAMELLIA >>> sig_curr:', seps, 'eps_curr:', eps8
+         write(mystd,'( (2X,a,L1))') 'CAMELLIA >>> self-consistent iteration convergence is ', convergence
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine ctqmc_dmft_conver
 
-!>>> complex(dp) version, mixing two vectors using linear mixing algorithm
-  subroutine ctqmc_dmft_mixer(vec1, vec2)
-     use constants
-     use control
-
-     implicit none
-
-! external arguments
-! older green/weiss/sigma function in input
-     complex(dp), intent(inout) :: vec1(mfreq,norbs,norbs)
-
-! newer green/weiss/sigma function in input, newest in output
-     complex(dp), intent(inout) :: vec2(mfreq,norbs,norbs)
-
-! linear mixing scheme
-     vec2 = vec1 * (one - alpha) + vec2 * alpha
-
-     return
-  end subroutine ctqmc_dmft_mixer
-
-!>>> self-consistent conditions, bethe lattice, semicircular density of
-! states, force a paramagnetic order, equal bandwidth
+!!>>> ctqmc_dmft_bethe: dmft self-consistent conditions, bethe lattice,
+!!>>> semicircular density of states, force a paramagnetic order, equal
+!!>>> band width
   subroutine ctqmc_dmft_bethe(hybf, grnf)
-     use constants
-     use control
+     use constants, only : dp
+
+     use control, only : norbs
+     use control, only : mfreq
+     use control, only : part
 
      implicit none
 
