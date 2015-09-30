@@ -435,11 +435,12 @@
 
   end module ctqmc_fmat
 
-!=========================================================================
-!>>> module ctqmc_mmat                                                 <<<
-!=========================================================================
-!>>> containing M-matrix and G-matrix related arrays used by continuous
-! time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_mmat                                                <<<
+!!========================================================================
+
+!!>>> containing M-matrix and G-matrix related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
   module ctqmc_mmat
      use constants, only : dp
 
@@ -465,11 +466,12 @@
 
   end module ctqmc_mmat
 
-!=========================================================================
-!>>> module ctqmc_gmat                                                 <<<
-!=========================================================================
-!>>> containing green's function matrix related arrays used by continuous
-! time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_gmat                                                <<<
+!!========================================================================
+
+!!>>> containing green's function matrix related arrays used by continuous
+!!>>> time quantum Monte Carlo quantum impurity solver
   module ctqmc_gmat
      use constants, only : dp
 
@@ -483,11 +485,13 @@
 
   end module ctqmc_gmat
 
-!=========================================================================
-!>>> module ctqmc_wmat                                                 <<<
-!=========================================================================
-!>>> containing weiss's function and hybridization function matrix related
-! arrays used by continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_wmat                                                <<<
+!!========================================================================
+
+!!>>> containing weiss's function and hybridization function matrix related
+!!>>> arrays used by continuous time quantum Monte Carlo quantum impurity
+!!>>> solver
   module ctqmc_wmat
      use constants, only : dp
 
@@ -510,11 +514,12 @@
 
   end module ctqmc_wmat
 
-!=========================================================================
-!>>> module ctqmc_smat                                                 <<<
-!=========================================================================
-!>>> containing self-energy function matrix related arrays used by
-! continuous time quantum Monte Carlo quantum impurity solver
+!!========================================================================
+!!>>> module ctqmc_smat                                                <<<
+!!========================================================================
+
+!!>>> containing self-energy function matrix related arrays used by
+!!>>> continuous time quantum Monte Carlo quantum impurity solver
   module ctqmc_smat
      use constants, only : dp
 
@@ -528,10 +533,11 @@
 
   end module ctqmc_smat
 
-!=========================================================================
-!>>> module context                                                    <<<
-!=========================================================================
-!>>> containing memory management subroutines and define global variables
+!!========================================================================
+!!>>> module context                                                   <<<
+!!========================================================================
+
+!!>>> containing memory management subroutines and define global variables
   module context
      use constants
      use control
@@ -539,23 +545,33 @@
      use ctqmc_core
      use ctqmc_clur
      use ctqmc_flvr
-
+     use ctqmc_mesh
+     use ctqmc_meat
      use ctqmc_umat
      use ctqmc_fmat
      use ctqmc_mmat
-
      use ctqmc_gmat
      use ctqmc_wmat
      use ctqmc_smat
 
      implicit none
 
+!!========================================================================
+!!>>> declare global variables                                         <<<
+!!========================================================================
+
 ! status flag
      integer, private :: istat
+
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
 ! declaration of module procedures: allocate memory
      public :: ctqmc_allocate_memory_clur
      public :: ctqmc_allocate_memory_flvr
+     public :: ctqmc_allocate_memory_mesh
+     public :: ctqmc_allocate_memory_meat
      public :: ctqmc_allocate_memory_umat
      public :: ctqmc_allocate_memory_fmat
      public :: ctqmc_allocate_memory_mmat
@@ -566,6 +582,8 @@
 ! declaration of module procedures: deallocate memory
      public :: ctqmc_deallocate_memory_clur
      public :: ctqmc_deallocate_memory_flvr
+     public :: ctqmc_deallocate_memory_mesh
+     public :: ctqmc_deallocate_memory_meat
      public :: ctqmc_deallocate_memory_umat
      public :: ctqmc_deallocate_memory_fmat
      public :: ctqmc_deallocate_memory_mmat
@@ -573,54 +591,58 @@
      public :: ctqmc_deallocate_memory_wmat
      public :: ctqmc_deallocate_memory_smat
 
-     contains
+! declaration of module procedures: sparse matrix manipulation
+     public :: ctqmc_new_spmat
+     public :: ctqmc_del_spmat
 
-!=========================================================================
-!>>> allocate memory subroutines                                       <<<
-!=========================================================================
+  contains ! encapsulated functionality
 
-!>>> allocate memory for clur-related variables
-     subroutine ctqmc_allocate_memory_clur()
-         implicit none
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
+
+!!>>> ctqmc_allocate_memory_clur: allocate memory for clur-related variables
+  subroutine ctqmc_allocate_memory_clur()
+     implicit none
 
 ! loop index
-         integer :: i
+     integer :: i
 
 ! allocate memory
-         allocate(index_s(mkink,norbs),     stat=istat)
-         allocate(index_e(mkink,norbs),     stat=istat)
+     allocate(index_s(mkink,norbs),     stat=istat)
+     allocate(index_e(mkink,norbs),     stat=istat)
 
-         allocate(time_s(mkink,norbs),      stat=istat)
-         allocate(time_e(mkink,norbs),      stat=istat)
+     allocate(time_s(mkink,norbs),      stat=istat)
+     allocate(time_e(mkink,norbs),      stat=istat)
 
-         allocate(exp_s(nfreq,mkink,norbs), stat=istat)
-         allocate(exp_e(nfreq,mkink,norbs), stat=istat)
+     allocate(exp_s(nfreq,mkink,norbs), stat=istat)
+     allocate(exp_e(nfreq,mkink,norbs), stat=istat)
 
-         allocate(empty_s(norbs),           stat=istat)
-         allocate(empty_e(norbs),           stat=istat)
+     allocate(empty_s(norbs),           stat=istat)
+     allocate(empty_e(norbs),           stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_clur','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         index_s = 0
-         index_e = 0
+     index_s = 0
+     index_e = 0
 
-         time_s  = zero
-         time_e  = zero
+     time_s  = zero
+     time_e  = zero
 
-         exp_s   = czero
-         exp_e   = czero
+     exp_s   = czero
+     exp_e   = czero
 
-         do i=1,norbs
-             empty_s(i) = istack_create(mkink)
-             empty_e(i) = istack_create(mkink) 
-         enddo ! over i={1,norbs} loop
+     do i=1,norbs
+         call istack_create(empty_s(i), mkink)
+         call istack_create(empty_e(i), mkink)
+     enddo ! over i={1,norbs} loop
 
-         return
-     end subroutine ctqmc_allocate_memory_clur
+     return
+  end subroutine ctqmc_allocate_memory_clur
 
 !>>> allocate memory for flvr-related variables
      subroutine ctqmc_allocate_memory_flvr()
