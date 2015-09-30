@@ -1080,43 +1080,48 @@
      return
   end subroutine ctqmc_deallocate_memory_umat
 
-!>>> deallocate memory for fmat-related variables
-     subroutine ctqmc_deallocate_memory_fmat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_fmat: deallocate memory for fmat-related variables
+  subroutine ctqmc_deallocate_memory_fmat()
+     implicit none
 
-         if ( allocated(sop_ic) )  deallocate(sop_ic)
-         if ( allocated(sop_jc) )  deallocate(sop_jc)
-         if ( allocated(sop_c)  )  deallocate(sop_c )
+! local variables
+! loop index
+     integer :: i
+     integer :: j
 
-         if ( allocated(sop_id) )  deallocate(sop_id)
-         if ( allocated(sop_jd) )  deallocate(sop_jd)
-         if ( allocated(sop_d)  )  deallocate(sop_d )
+     if ( allocated(sop_ic) )  deallocate(sop_ic)
+     if ( allocated(sop_jc) )  deallocate(sop_jc)
+     if ( allocated(sop_c)  )  deallocate(sop_c )
 
-         if ( allocated(sop_is) )  deallocate(sop_is)
-         if ( allocated(sop_js) )  deallocate(sop_js)
-         if ( allocated(sop_s)  )  deallocate(sop_s )
+     if ( allocated(sop_id) )  deallocate(sop_id)
+     if ( allocated(sop_jd) )  deallocate(sop_jd)
+     if ( allocated(sop_d)  )  deallocate(sop_d )
 
-         if ( allocated(sop_in) )  deallocate(sop_in)
-         if ( allocated(sop_jn) )  deallocate(sop_jn)
-         if ( allocated(sop_n)  )  deallocate(sop_n )
+     if ( allocated(sop_is) )  deallocate(sop_is)
+     if ( allocated(sop_js) )  deallocate(sop_js)
+     if ( allocated(sop_s)  )  deallocate(sop_s )
 
-         if ( allocated(sop_im) )  deallocate(sop_im)
-         if ( allocated(sop_jm) )  deallocate(sop_jm)
-         if ( allocated(sop_m)  )  deallocate(sop_m )
+     if ( allocated(sop_in) )  deallocate(sop_in)
+     if ( allocated(sop_jn) )  deallocate(sop_jn)
+     if ( allocated(sop_n)  )  deallocate(sop_n )
 
-         if ( allocated(sop_ih) )  deallocate(sop_ih)
-         if ( allocated(sop_jh) )  deallocate(sop_jh)
-         if ( allocated(sop_h)  )  deallocate(sop_h )
+     if ( allocated(sop_im) )  deallocate(sop_im)
+     if ( allocated(sop_jm) )  deallocate(sop_jm)
+     if ( allocated(sop_m)  )  deallocate(sop_m )
 
-         if ( allocated(vmat)   )  deallocate(vmat  )
-         if ( allocated(wmat)   )  deallocate(wmat  )
-         if ( allocated(hmat)   )  deallocate(hmat  )
+     if ( allocated(sop_ih) )  deallocate(sop_ih)
+     if ( allocated(sop_jh) )  deallocate(sop_jh)
+     if ( allocated(sop_h)  )  deallocate(sop_h )
 
-         if ( allocated(op_c)   )  deallocate(op_c  )
-         if ( allocated(op_d)   )  deallocate(op_d  )
+     if ( allocated(vmat)   )  deallocate(vmat  )
+     if ( allocated(wmat)   )  deallocate(wmat  )
+     if ( allocated(hmat)   )  deallocate(hmat  )
 
-         return
-     end subroutine ctqmc_deallocate_memory_fmat
+     if ( allocated(op_c)   )  deallocate(op_c  )
+     if ( allocated(op_d)   )  deallocate(op_d  )
+
+     return
+  end subroutine ctqmc_deallocate_memory_fmat
 
 !>>> deallocate memory for mmat-related variables
      subroutine ctqmc_deallocate_memory_mmat()
