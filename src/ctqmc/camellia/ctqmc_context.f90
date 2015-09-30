@@ -1062,44 +1062,23 @@
      return
   end subroutine ctqmc_deallocate_memory_meat
 
-!>>> deallocate memory for umat-related variables
-     subroutine ctqmc_deallocate_memory_umat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_umat: deallocate memory for umat-related variables
+  subroutine ctqmc_deallocate_memory_umat()
+     implicit none
 
-         if ( allocated(hist)  )   deallocate(hist )
-         if ( allocated(rank)  )   deallocate(rank )
+     if ( allocated(rank)  )   deallocate(rank )
 
-         if ( allocated(symm)  )   deallocate(symm )
+     if ( allocated(diag)  )   deallocate(diag )
 
-         if ( allocated(eimp)  )   deallocate(eimp )
-         if ( allocated(eigs)  )   deallocate(eigs )
-         if ( allocated(naux)  )   deallocate(naux )
-         if ( allocated(saux)  )   deallocate(saux )
+     if ( allocated(symm)  )   deallocate(symm )
 
-         if ( allocated(prob)  )   deallocate(prob )
-         if ( allocated(paux)  )   deallocate(paux )
-         if ( allocated(schi)  )   deallocate(schi )
-         if ( allocated(nmat)  )   deallocate(nmat )
+     if ( allocated(eimp)  )   deallocate(eimp )
+     if ( allocated(eigs)  )   deallocate(eigs )
+     if ( allocated(naux)  )   deallocate(naux )
+     if ( allocated(saux)  )   deallocate(saux )
 
-         if ( allocated(sschi) )   deallocate(sschi)
-         if ( allocated(nnmat) )   deallocate(nnmat)
-         if ( allocated(ddmat) )   deallocate(ddmat)
-
-         if ( allocated(ppleg) )   deallocate(ppleg)
-         if ( allocated(qqche) )   deallocate(qqche)
-
-         if ( allocated(pmesh) )   deallocate(pmesh)
-         if ( allocated(qmesh) )   deallocate(qmesh)
-
-         if ( allocated(tmesh) )   deallocate(tmesh)
-         if ( allocated(rmesh) )   deallocate(rmesh)
-
-         if ( allocated(cmesh) )   deallocate(cmesh)
-
-         if ( allocated(unity) )   deallocate(unity)
-
-         return
-     end subroutine ctqmc_deallocate_memory_umat
+     return
+  end subroutine ctqmc_deallocate_memory_umat
 
 !>>> deallocate memory for fmat-related variables
      subroutine ctqmc_deallocate_memory_fmat()
