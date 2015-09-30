@@ -323,6 +323,10 @@
 ! current perturbation expansion order for different flavor channel
      integer,  public, save, allocatable :: rank(:)
 
+! diagonal elements of current matrix product of flavor part
+! it is used to calculate the probability of eigenstates
+     real(dp), public, save, allocatable :: diag(:,:)
+
 !-------------------------------------------------------------------------
 !::: input data variables                                              :::
 !-------------------------------------------------------------------------
@@ -340,18 +344,8 @@
 
 ! total spin for the eigenstates of local hamiltonian matrix
      real(dp), public, save, allocatable :: saux(:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
-
-
-
-
-
-! diagonal elements of current matrix product of flavor part
-! it is used to calculate the probability of eigenstates
-     real(dp), public, save, allocatable :: ddmat(:,:)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 
