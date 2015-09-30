@@ -999,26 +999,68 @@
      return
   end subroutine ctqmc_deallocate_memory_clur
 
-!>>> deallocate memory for flvr-related variables
-     subroutine ctqmc_deallocate_memory_flvr()
-         implicit none
+!!>>> ctqmc_deallocate_memory_flvr: deallocate memory for flvr-related variables
+  subroutine ctqmc_deallocate_memory_flvr()
+     implicit none
 
-         call istack_destroy(empty_v)
+     call istack_destroy(empty_v)
 
-         if ( allocated(index_t) ) deallocate(index_t)
-         if ( allocated(index_v) ) deallocate(index_v)
+     if ( allocated(index_t) ) deallocate(index_t)
+     if ( allocated(index_v) ) deallocate(index_v)
 
-         if ( allocated(type_v)  ) deallocate(type_v )
-         if ( allocated(flvr_v)  ) deallocate(flvr_v )
+     if ( allocated(type_v)  ) deallocate(type_v )
+     if ( allocated(flvr_v)  ) deallocate(flvr_v )
 
-         if ( allocated(time_v)  ) deallocate(time_v )
+     if ( allocated(time_v)  ) deallocate(time_v )
 
-         if ( allocated(expt_t)  ) deallocate(expt_t )
-         if ( allocated(expt_v)  ) deallocate(expt_v )
-         if ( allocated(expt_z)  ) deallocate(expt_z )
+     if ( allocated(expt_t)  ) deallocate(expt_t )
+     if ( allocated(expt_v)  ) deallocate(expt_v )
+     if ( allocated(expt_z)  ) deallocate(expt_z )
 
-         return
-     end subroutine ctqmc_deallocate_memory_flvr
+     return
+  end subroutine ctqmc_deallocate_memory_flvr
+
+!!>>> ctqmc_deallocate_memory_mesh: deallocate memory for mesh-related variables
+  subroutine ctqmc_deallocate_memory_mesh()
+     implicit none
+
+     if ( allocated(tmesh) )   deallocate(tmesh)
+     if ( allocated(rmesh) )   deallocate(rmesh)
+
+     if ( allocated(pmesh) )   deallocate(pmesh)
+     if ( allocated(qmesh) )   deallocate(qmesh)
+
+     if ( allocated(ppleg) )   deallocate(ppleg)
+     if ( allocated(qqche) )   deallocate(qqche)
+
+     return
+  end subroutine ctqmc_deallocate_memory_mesh
+
+!!>>> ctqmc_deallocate_memory_meat: deallocate memory for meat-related variables
+  subroutine ctqmc_deallocate_memory_meat()
+     implicit none
+
+     if ( allocated(hist)  )   deallocate(hist )
+
+     if ( allocated(paux)  )   deallocate(paux )
+     if ( allocated(prob)  )   deallocate(prob )
+
+     if ( allocated(nmat)  )   deallocate(nmat )
+     if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(kmat)  )   deallocate(kmat )
+     if ( allocated(kkmat) )   deallocate(kkmat)
+     if ( allocated(lmat)  )   deallocate(lmat )
+     if ( allocated(rmat)  )   deallocate(rmat )
+     if ( allocated(lrmat) )   deallocate(lrmat)
+
+     if ( allocated(g2_re) )   deallocate(g2_re)
+     if ( allocated(g2_im) )   deallocate(g2_im)
+
+     if ( allocated(ps_re) )   deallocate(ps_re)
+     if ( allocated(ps_im) )   deallocate(ps_im)
+
+     return
+  end subroutine ctqmc_deallocate_memory_meat
 
 !>>> deallocate memory for umat-related variables
      subroutine ctqmc_deallocate_memory_umat()
