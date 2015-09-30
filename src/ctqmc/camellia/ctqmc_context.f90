@@ -605,6 +605,7 @@
   subroutine ctqmc_allocate_memory_clur()
      implicit none
 
+! local variables
 ! loop index
      integer :: i
 
@@ -976,6 +977,7 @@
   subroutine ctqmc_deallocate_memory_clur()
      implicit none
 
+! local variables
 ! loop index
      integer :: i
 
@@ -1089,90 +1091,149 @@
      integer :: i
      integer :: j
 
-     if ( allocated(sop_ic) )  deallocate(sop_ic)
-     if ( allocated(sop_jc) )  deallocate(sop_jc)
-     if ( allocated(sop_c)  )  deallocate(sop_c )
+     call ctqmc_del_spmat(spm_h)
 
-     if ( allocated(sop_id) )  deallocate(sop_id)
-     if ( allocated(sop_jd) )  deallocate(sop_jd)
-     if ( allocated(sop_d)  )  deallocate(sop_d )
+     do i=1,norbs
+         call ctqmc_del_spmat(spm_c(i))
+         call ctqmc_del_spmat(spm_d(i))
+     enddo ! over i={1,norbs} loop
 
-     if ( allocated(sop_is) )  deallocate(sop_is)
-     if ( allocated(sop_js) )  deallocate(sop_js)
-     if ( allocated(sop_s)  )  deallocate(sop_s )
+     do i=1,2
+         call ctqmc_del_spmat(spm_s(i))
+     enddo ! over i={1,2} loop
 
-     if ( allocated(sop_in) )  deallocate(sop_in)
-     if ( allocated(sop_jn) )  deallocate(sop_jn)
-     if ( allocated(sop_n)  )  deallocate(sop_n )
+     do i=1,norbs
+         call ctqmc_del_spmat(spm_n(i))
+     enddo ! over i={1,norbs} loop
 
-     if ( allocated(sop_im) )  deallocate(sop_im)
-     if ( allocated(sop_jm) )  deallocate(sop_jm)
-     if ( allocated(sop_m)  )  deallocate(sop_m )
-
-     if ( allocated(sop_ih) )  deallocate(sop_ih)
-     if ( allocated(sop_jh) )  deallocate(sop_jh)
-     if ( allocated(sop_h)  )  deallocate(sop_h )
+     do i=1,norbs
+         do j=1,norbs
+             call ctqmc_del_spmat(spm_m(j,i))
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
 
      if ( allocated(vmat)   )  deallocate(vmat  )
      if ( allocated(wmat)   )  deallocate(wmat  )
      if ( allocated(hmat)   )  deallocate(hmat  )
 
-     if ( allocated(op_c)   )  deallocate(op_c  )
-     if ( allocated(op_d)   )  deallocate(op_d  )
+     if ( allocated(op_c ) )   deallocate(op_c )
+     if ( allocated(op_d ) )   deallocate(op_d )
+
+     if ( allocated(spm_c) )   deallocate(spm_c)
+     if ( allocated(spm_d) )   deallocate(spm_d)
+
+     if ( allocated(spm_s) )   deallocate(spm_s)
+
+     if ( allocated(spm_n) )   deallocate(spm_n)
+     if ( allocated(spm_m) )   deallocate(spm_m)
 
      return
   end subroutine ctqmc_deallocate_memory_fmat
 
-!>>> deallocate memory for mmat-related variables
-     subroutine ctqmc_deallocate_memory_mmat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_mmat: deallocate memory for mmat-related variables
+  subroutine ctqmc_deallocate_memory_mmat()
+     implicit none
 
-         if ( allocated(lspace) )  deallocate(lspace)
-         if ( allocated(rspace) )  deallocate(rspace)
+     if ( allocated(lspace) )  deallocate(lspace)
+     if ( allocated(rspace) )  deallocate(rspace)
 
-         if ( allocated(mmat)   )  deallocate(mmat  )
+     if ( allocated(mmat)   )  deallocate(mmat  )
 
-         if ( allocated(lsaves) )  deallocate(lsaves)
-         if ( allocated(rsaves) )  deallocate(rsaves)
+     if ( allocated(lsaves) )  deallocate(lsaves)
+     if ( allocated(rsaves) )  deallocate(rsaves)
 
-         if ( allocated(gmat)   )  deallocate(gmat  )
+     if ( allocated(gmat)   )  deallocate(gmat  )
 
-         return
-     end subroutine ctqmc_deallocate_memory_mmat
+     return
+  end subroutine ctqmc_deallocate_memory_mmat
 
-!>>> deallocate memory for gmat-related variables
-     subroutine ctqmc_deallocate_memory_gmat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_gmat: deallocate memory for gmat-related variables
+  subroutine ctqmc_deallocate_memory_gmat()
+     implicit none
 
-         if ( allocated(gtau) )    deallocate(gtau)
+     if ( allocated(gtau) )    deallocate(gtau)
 
-         if ( allocated(grnf) )    deallocate(grnf)
+     if ( allocated(grnf) )    deallocate(grnf)
 
-         return
-     end subroutine ctqmc_deallocate_memory_gmat
+     return
+  end subroutine ctqmc_deallocate_memory_gmat
 
-!>>> deallocate memory for wmat-related variables
-     subroutine ctqmc_deallocate_memory_wmat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_wmat: deallocate memory for wmat-related variables
+  subroutine ctqmc_deallocate_memory_wmat()
+     implicit none
 
-         if ( allocated(wtau) )    deallocate(wtau)
-         if ( allocated(htau) )    deallocate(htau)
-         if ( allocated(hsed) )    deallocate(hsed)
+     if ( allocated(wtau) )    deallocate(wtau)
+     if ( allocated(htau) )    deallocate(htau)
+     if ( allocated(hsed) )    deallocate(hsed)
 
-         if ( allocated(wssf) )    deallocate(wssf)
-         if ( allocated(hybf) )    deallocate(hybf)
+     if ( allocated(wssf) )    deallocate(wssf)
+     if ( allocated(hybf) )    deallocate(hybf)
 
-         return
-     end subroutine ctqmc_deallocate_memory_wmat
+     return
+  end subroutine ctqmc_deallocate_memory_wmat
 
-!>>> deallocate memory for smat-related variables
-     subroutine ctqmc_deallocate_memory_smat()
-         implicit none
+!!>>> ctqmc_deallocate_memory_smat: deallocate memory for smat-related variables
+  subroutine ctqmc_deallocate_memory_smat()
+     implicit none
 
-         if ( allocated(sig1) )    deallocate(sig1)
-         if ( allocated(sig2) )    deallocate(sig2)
+     if ( allocated(sig1) )    deallocate(sig1)
+     if ( allocated(sig2) )    deallocate(sig2)
 
-         return
-     end subroutine ctqmc_deallocate_memory_smat
+     return
+  end subroutine ctqmc_deallocate_memory_smat
+
+!!========================================================================
+!!>>> sparse matrix manipulation subroutines                           <<<
+!!========================================================================
+
+!!>>> ctqmc_new_spmat: create a real(dp) sparse matrix with fixed size
+  subroutine ctqmc_new_spmat(spmat)
+     implicit none
+
+! external arguments
+! sparse matrix structure
+     type (T_spmat), intent(inout) :: spmat
+
+! setup the size of sparse matrix
+     spmat%ndim = ncfgs
+     spmat%nval = nzero
+
+! allocate memory
+     allocate(spmat%iv(spmat%ndim + 1), stat=istat)
+     allocate(spmat%jv(spmat%nval + 0), stat=istat)
+     allocate(spmat%vv(spmat%nval + 0), stat=istat)
+
+! check the status
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_new_spmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
+
+! initialize them
+     spmat%iv = 0
+     spmat%jv = 0
+     spmat%vv = zero
+
+     return
+  end subroutine ctqmc_new_spmat
+
+!!>>> ctqmc_del_spmat: delete a real(dp) sparse matrix with fixed size
+  subroutine ctqmc_del_spmat(spmat)
+     implicit none
+
+! external arguments
+! sparse matrix structure
+     type (T_spmat), intent(inout) :: spmat
+
+! reset the size of sparse matrix
+     spmat%ndim = 0
+     spmat%nval = 0
+
+! deallocate memory
+     if ( allocated(spmat%iv) ) deallocate(spmat%iv)
+     if ( allocated(spmat%jv) ) deallocate(spmat%jv)
+     if ( allocated(spmat%vv) ) deallocate(spmat%vv)
+
+     return
+  end subroutine ctqmc_del_spmat
 
   end module context
