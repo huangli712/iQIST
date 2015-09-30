@@ -384,39 +384,39 @@
 !!>>> dump data of physical observables                                <<<
 !!========================================================================
 
-!>>> write out the Monte Carlo sampling histogram for perturbation expansion series
-  subroutine ctqmc_dump_hist(hist)
-     use constants
-     use control
+!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
+!!>>> perturbation expansion series
+  subroutine ctqmc_dump_hist(hist, herr)
+     use constants, only : dp, mytmp
+
+     use control, only : mkink
 
      implicit none
 
 ! external arguments
 ! histogram data
-     integer, intent(in) :: hist(mkink)
+     real(dp), intent(in) :: hist(mkink)
+     real(dp), intent(in) :: herr(mkink)
 
 ! local variables
 ! loop index
      integer  :: i
 
-! dummy variables
-     real(dp) :: raux
-
 ! scaled histogram data
      real(dp) :: haux(mkink)
+     real(dp) :: htmp(mkink)
 
-! evaluate haux at first
-     raux = real( sum(hist) )
-     do i=1,mkink
-         haux(i) = real( hist(i) ) / raux
-     enddo ! over i={1,mkink} loop
+! evaluate haux and htmp at first
+     haux = hist / sum(hist)
+     htmp = herr / sum(hist)
 
 ! open data file: solver.hist.dat
      open(mytmp, file='solver.hist.dat', form='formatted', status='unknown')
 
 ! write it
+     write(mytmp,'(a)') '# histogram: order | count | percent'
      do i=1,mkink
-         write(mytmp,'(i5,i12,f12.6)') i, hist(i), haux(i)
+         write(mytmp,'(i6,i12,2f12.6)') i, int( hist(i) ), haux(i), htmp(i)
      enddo ! over i={1,mkink} loop
 
 ! close data file
