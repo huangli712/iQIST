@@ -864,140 +864,140 @@
      return
   end subroutine ctqmc_allocate_memory_fmat
 
-!>>> allocate memory for mmat-related variables
-     subroutine ctqmc_allocate_memory_mmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_mmat: allocate memory for mmat-related variables
+  subroutine ctqmc_allocate_memory_mmat()
+     implicit none
 
 ! allocate memory
-         allocate(lspace(mkink,norbs),     stat=istat)
-         allocate(rspace(mkink,norbs),     stat=istat)
+     allocate(lspace(mkink,norbs),     stat=istat)
+     allocate(rspace(mkink,norbs),     stat=istat)
 
-         allocate(mmat(mkink,mkink,norbs), stat=istat)
+     allocate(mmat(mkink,mkink,norbs), stat=istat)
 
-         allocate(lsaves(nfreq,norbs),     stat=istat)
-         allocate(rsaves(nfreq,norbs),     stat=istat)
+     allocate(lsaves(nfreq,norbs),     stat=istat)
+     allocate(rsaves(nfreq,norbs),     stat=istat)
 
-         allocate(gmat(nfreq,norbs,norbs), stat=istat)
+     allocate(gmat(nfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_mmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         lspace = zero
-         rspace = zero
+     lspace = zero
+     rspace = zero
 
-         mmat   = zero
+     mmat   = zero
 
-         lsaves = czero
-         rsaves = czero
+     lsaves = czero
+     rsaves = czero
 
-         gmat   = czero
+     gmat   = czero
 
-         return
-     end subroutine ctqmc_allocate_memory_mmat
+     return
+  end subroutine ctqmc_allocate_memory_mmat
 
-!>>> allocate memory for gmat-related variables
-     subroutine ctqmc_allocate_memory_gmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_gmat: allocate memory for gmat-related variables
+  subroutine ctqmc_allocate_memory_gmat()
+     implicit none
 
 ! allocate memory
-         allocate(gtau(ntime,norbs,norbs), stat=istat)
+     allocate(gtau(ntime,norbs,norbs), stat=istat)
 
-         allocate(grnf(mfreq,norbs,norbs), stat=istat)
+     allocate(grnf(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_gmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         gtau = zero
+     gtau = zero
 
-         grnf = czero
+     grnf = czero
 
-         return
-     end subroutine ctqmc_allocate_memory_gmat
+     return
+  end subroutine ctqmc_allocate_memory_gmat
 
-!>>> allocate memory for wmat-related variables
-     subroutine ctqmc_allocate_memory_wmat()
-         implicit none
+!!>>> ctqmc_allocate_memory_wmat: allocate memory for wmat-related variables
+  subroutine ctqmc_allocate_memory_wmat()
+     implicit none
 
 ! allocate memory
-         allocate(wtau(ntime,norbs,norbs), stat=istat)
-         allocate(htau(ntime,norbs,norbs), stat=istat)
-         allocate(hsed(ntime,norbs,norbs), stat=istat)
+     allocate(wtau(ntime,norbs,norbs), stat=istat)
+     allocate(htau(ntime,norbs,norbs), stat=istat)
+     allocate(hsed(ntime,norbs,norbs), stat=istat)
 
-         allocate(wssf(mfreq,norbs,norbs), stat=istat)
-         allocate(hybf(mfreq,norbs,norbs), stat=istat)
+     allocate(wssf(mfreq,norbs,norbs), stat=istat)
+     allocate(hybf(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_wmat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         wtau = zero
-         htau = zero
-         hsed = zero
+     wtau = zero
+     htau = zero
+     hsed = zero
 
-         wssf = czero
-         hybf = czero
+     wssf = czero
+     hybf = czero
 
-         return
-     end subroutine ctqmc_allocate_memory_wmat
+     return
+  end subroutine ctqmc_allocate_memory_wmat
 
-!>>> allocate memory for smat-related variables
-     subroutine ctqmc_allocate_memory_smat()
-         implicit none
+!!>>> ctqmc_allocate_memory_smat: allocate memory for smat-related variables
+  subroutine ctqmc_allocate_memory_smat()
+     implicit none
 
 ! allocate memory
-         allocate(sig1(mfreq,norbs,norbs), stat=istat)
-         allocate(sig2(mfreq,norbs,norbs), stat=istat)
+     allocate(sig1(mfreq,norbs,norbs), stat=istat)
+     allocate(sig2(mfreq,norbs,norbs), stat=istat)
 
 ! check the status
-         if ( istat /= 0 ) then
-             call ctqmc_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
-         endif
+     if ( istat /= 0 ) then
+         call s_print_error('ctqmc_allocate_memory_smat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-         sig1 = czero
-         sig2 = czero
+     sig1 = czero
+     sig2 = czero
 
-         return
-     end subroutine ctqmc_allocate_memory_smat
+     return
+  end subroutine ctqmc_allocate_memory_smat
 
-!=========================================================================
-!>>> deallocate memory subroutines                                     <<<
-!=========================================================================
+!!========================================================================
+!!>>> deallocate memory subroutines                                    <<<
+!!========================================================================
 
-!>>> deallocate memory for clur-related variables
-     subroutine ctqmc_deallocate_memory_clur()
-         implicit none
+!!>>> ctqmc_deallocate_memory_clur: deallocate memory for clur-related variables
+  subroutine ctqmc_deallocate_memory_clur()
+     implicit none
 
 ! loop index
-         integer :: i
+     integer :: i
 
-         do i=1,norbs
-             call istack_destroy(empty_s(i))
-             call istack_destroy(empty_e(i))
-         enddo ! over i={1,norbs} loop
+     do i=1,norbs
+         call istack_destroy(empty_s(i))
+         call istack_destroy(empty_e(i))
+     enddo ! over i={1,norbs} loop
 
-         if ( allocated(index_s) ) deallocate(index_s)
-         if ( allocated(index_e) ) deallocate(index_e)
+     if ( allocated(index_s) ) deallocate(index_s)
+     if ( allocated(index_e) ) deallocate(index_e)
 
-         if ( allocated(time_s)  ) deallocate(time_s )
-         if ( allocated(time_e)  ) deallocate(time_e )
+     if ( allocated(time_s)  ) deallocate(time_s )
+     if ( allocated(time_e)  ) deallocate(time_e )
 
-         if ( allocated(exp_s)   ) deallocate(exp_s  )
-         if ( allocated(exp_e)   ) deallocate(exp_e  )
+     if ( allocated(exp_s)   ) deallocate(exp_s  )
+     if ( allocated(exp_e)   ) deallocate(exp_e  )
 
-         if ( allocated(empty_s) ) deallocate(empty_s)
-         if ( allocated(empty_e) ) deallocate(empty_e)
+     if ( allocated(empty_s) ) deallocate(empty_s)
+     if ( allocated(empty_e) ) deallocate(empty_e)
 
-         return
-     end subroutine ctqmc_deallocate_memory_clur
+     return
+  end subroutine ctqmc_deallocate_memory_clur
 
 !>>> deallocate memory for flvr-related variables
      subroutine ctqmc_deallocate_memory_flvr()
