@@ -308,71 +308,96 @@
                  call ctqmc_record_gtau()
              endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
+! record nothing
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
+                 CONTINUE
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) block
+
+! record the < k^2 > - < k >^2
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) then
+                 call ctqmc_record_kmat()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) block
+
+! record the fidelity susceptibility
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) then
+                 call ctqmc_record_lmat()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) block
+
+! record nothing
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
+                 CONTINUE
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) block
+
+! record the two-particle green's function
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
+                 call ctqmc_record_twop()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
+
+! record the particle-particle pair susceptibility
+             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
+                 call ctqmc_record_pair()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
+
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
-!=========================================================================
-!>>> reporting quantum impurity solver                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> reporting quantum impurity solver                                <<<
+!!========================================================================
 
 ! it is time to write out the statistics results
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_runtime(iter, cstep)
          endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> reducing immediate results                                        <<<
-!=========================================================================
+!!========================================================================
+!!>>> reducing immediate results                                       <<<
+!!========================================================================
 
 ! collect the histogram data from hist to hist_mpi
-         call ctqmc_reduce_hist(hist_mpi)
+         call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
-         call ctqmc_reduce_gtau(gtau_mpi)
+         gtau = gtau / real(caves)
+         call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
+         gtau = gtau * real(caves)
 
-!=========================================================================
-!>>> symmetrizing immediate results                                    <<<
-!=========================================================================
+! gtau_mpi need to be scaled properly before written
+         gtau_mpi = gtau_mpi * real(ncarlo)
+         gtau_err = gtau_err * real(ncarlo)
+
+!!========================================================================
+!!>>> symmetrizing immediate results                                   <<<
+!!========================================================================
 
 ! symmetrize the impurity green's function over spin or over bands
          if ( issun == 2 .or. isspn == 1 ) then
              call ctqmc_symm_gtau(symm, gtau_mpi)
-         endif
+             call ctqmc_symm_gtau(symm, gtau_err)
+         endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
-!=========================================================================
-!>>> writing immediate results                                         <<<
-!=========================================================================
+!!========================================================================
+!!>>> writing immediate results                                        <<<
+!!========================================================================
 
 ! write out the histogram data, hist_mpi
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_dump_hist(hist_mpi)
-         endif
-
-! gtau_mpi need to be scaled properly before written
-         do m=1,norbs
-             do n=1,ntime
-                 gtau_mpi(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(cstep)
-             enddo ! over n={1,ntime} loop
-         enddo ! over m={1,norbs} loop
+             call ctqmc_dump_hist(hist_mpi, hist_err)
+         endif ! back if ( myid == master ) block
 
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
-             if ( iter /= 999 ) then
-                 call ctqmc_dump_gtau(tmesh, gtau_mpi)
-             else
-                 call ctqmc_dump_gbin(cstep / nwrite, tmesh, gtau_mpi)
-                 write(mystd,'(4X,a)') '>>> quantum impurity solver status: binned'
-             endif ! back if ( iter /= 999 ) block
+             call ctqmc_dump_gtau(tmesh, gtau_mpi, gtau_err)
          endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> checking quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> checking quantum impurity solver                                 <<<
+!!========================================================================
 
          call ctqmc_diagram_checking(cflag)
 
-!=========================================================================
-!>>> timing quantum impurity solver                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> timing quantum impurity solver                                   <<<
+!!========================================================================
 
 ! record ending time for this iteration
          call cpu_time(time_end)
@@ -384,28 +409,28 @@
 
 ! print out the result
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_time_analyzer(time_iter, time_niter)
+             call s_time_analyzer(time_iter, time_niter)
              write(mystd,*)
-         endif
+         endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> escaping quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> escaping quantum impurity solver                                 <<<
+!!========================================================================
 
 ! if the quantum impurity solver is out of control or reaches convergence
          if ( cflag == 99 .or. cflag == 100 ) then
              EXIT CTQMC_MAIN_ITERATION ! jump out the iteration
-         endif
+         endif ! back if ( cflag == 99 .or. cflag == 100 ) block
 
      enddo CTQMC_MAIN_ITERATION ! over i={1,nsweep} loop
 
-!=========================================================================
-!>>> ending main iteration                                             <<<
-!=========================================================================
+!!========================================================================
+!!>>> ending main iteration                                            <<<
+!!========================================================================
 
-!=========================================================================
-!>>> reducing final results                                            <<<
-!=========================================================================
+!!========================================================================
+!!>>> reducing final results                                           <<<
+!!========================================================================
 
 ! special considerations for prob and grnf, since for children processes,
 ! caves may be different
