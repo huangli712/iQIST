@@ -76,69 +76,93 @@
      real(dp) :: time_niter
 
 ! histogram for perturbation expansion series, for mpi case
-     integer, allocatable  :: hist_mpi(:)
-
-! spin-spin correlation function, totally-averaged, for mpi case
-     real(dp), allocatable :: schi_mpi(:)
-
-! impurity occupation number matrix, for mpi case
-     real(dp), allocatable :: nmat_mpi(:)
+     real(dp), allocatable :: hist_mpi(:)
+     real(dp), allocatable :: hist_err(:)
 
 ! probability of atomic states, for mpi case
      real(dp), allocatable :: prob_mpi(:)
+     real(dp), allocatable :: prob_err(:)
 
-! spin-spin correlation function, orbital-resolved, for mpi case
-     real(dp), allocatable :: sschi_mpi(:,:)
+! impurity occupation number matrix, for mpi case
+     real(dp), allocatable :: nmat_mpi(:)
+     real(dp), allocatable :: nmat_err(:)
 
 ! impurity double occupation number matrix, for mpi case
      real(dp), allocatable :: nnmat_mpi(:,:)
+     real(dp), allocatable :: nnmat_err(:,:)
+
+! number of operators < k >, for mpi case
+     real(dp), allocatable :: kmat_mpi(:)
+     real(dp), allocatable :: kmat_err(:)
+
+! square of number of operators < k^2 >, for mpi case
+     real(dp), allocatable :: kkmat_mpi(:,:)
+     real(dp), allocatable :: kkmat_err(:,:)
+
+! number of operators at left half axis < k_l >, for mpi case
+     real(dp), allocatable :: lmat_mpi(:)
+     real(dp), allocatable :: lmat_err(:)
+
+! number of operators at right half axis < k_r >, for mpi case
+     real(dp), allocatable :: rmat_mpi(:)
+     real(dp), allocatable :: rmat_err(:)
+
+! used to evaluate fidelity susceptibility < k_l k_r >, for mpi case
+     real(dp), allocatable :: lrmat_mpi(:,:)
+     real(dp), allocatable :: lrmat_err(:,:)
+
+! note: for the two-particle quantities, we don't measure the error bars
+! used to measure two-particle green's function, real part, for mpi case
+     real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
+
+! used to measure two-particle green's function, imaginary part, for mpi case
+     real(dp), allocatable :: g2_im_mpi(:,:,:,:,:)
+
+! used to measure particle-particle pair susceptibility, real part, for mpi case
+     real(dp), allocatable :: ps_re_mpi(:,:,:,:,:)
+
+! used to measure particle-particle pair susceptibility, imaginary part, for mpi case
+     real(dp), allocatable :: ps_im_mpi(:,:,:,:,:)
 
 ! impurity green's function, imaginary time axis, for mpi case
      real(dp), allocatable :: gtau_mpi(:,:,:)
+     real(dp), allocatable :: gtau_err(:,:,:)
 
 ! impurity green's function, matsubara frequency axis, for mpi case
      complex(dp), allocatable :: grnf_mpi(:,:,:)
+     complex(dp), allocatable :: grnf_err(:,:,:)
 
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
-     if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
-
-     allocate(schi_mpi(ntime),             stat=istat)
-     if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
-
-     allocate(nmat_mpi(norbs),             stat=istat)
-     if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
-
+     allocate(hist_err(mkink),             stat=istat)
      allocate(prob_mpi(ncfgs),             stat=istat)
-     if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
-
-     allocate(sschi_mpi(ntime,nband),      stat=istat)
-     if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
-
+     allocate(prob_err(ncfgs),             stat=istat)
+     allocate(nmat_mpi(norbs),             stat=istat)
+     allocate(nmat_err(norbs),             stat=istat)
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
-     if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
-
+     allocate(nnmat_err(norbs,norbs),      stat=istat)
+     allocate(kmat_mpi(norbs),             stat=istat)
+     allocate(kmat_err(norbs),             stat=istat)
+     allocate(kkmat_mpi(norbs,norbs),      stat=istat)
+     allocate(kkmat_err(norbs,norbs),      stat=istat)
+     allocate(lmat_mpi(norbs),             stat=istat)
+     allocate(lmat_err(norbs),             stat=istat)
+     allocate(rmat_mpi(norbs),             stat=istat)
+     allocate(rmat_err(norbs),             stat=istat)
+     allocate(lrmat_mpi(norbs,norbs),      stat=istat)
+     allocate(lrmat_err(norbs,norbs),      stat=istat)
+     allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
-     if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
-
+     allocate(gtau_err(ntime,norbs,norbs), stat=istat)
      allocate(grnf_mpi(mfreq,norbs,norbs), stat=istat)
+     allocate(grnf_err(mfreq,norbs,norbs), stat=istat)
+
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_impurity_solver','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_impurity_solver','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! setup cstep
      cstep = 0
@@ -155,29 +179,29 @@
      if ( iter == 999 ) then
          nsweep = nsweep * 10
          nwrite = nwrite * 10
-     endif
+     endif ! back if ( iter == 999 ) block
 
-!=========================================================================
-!>>> starting quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> starting quantum impurity solver                                 <<<
+!!========================================================================
 
 ! print the header of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'PANSY >>> CTQMC quantum impurity solver running'
+         write(mystd,'(2X,a)') 'CAMELLIA >>> CTQMC quantum impurity solver running'
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nband :', nband, 'Uc    :', Uc
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nspin :', nspin, 'Jz    :', Jz
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> initializing quantum impurity solver                              <<<
-!=========================================================================
+!!========================================================================
+!!>>> initializing quantum impurity solver                             <<<
+!!========================================================================
 
 ! init the continuous time quantum Monte Carlo quantum impurity solver
 ! setup the key variables
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver initializing'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_solver_init()
@@ -187,11 +211,11 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> retrieving quantum impurity solver                                <<<
-!=========================================================================
+!!========================================================================
+!!>>> retrieving quantum impurity solver                               <<<
+!!========================================================================
 
 ! init the continuous time quantum Monte Carlo quantum impurity solver further
 ! retrieving the time series information produced by previous running
