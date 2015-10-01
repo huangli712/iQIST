@@ -432,74 +432,89 @@
 !!>>> reducing final results                                           <<<
 !!========================================================================
 
-! special considerations for prob and grnf, since for children processes,
-! caves may be different
-     prob = prob / real(caves); grnf = grnf / real(caves)
-
 ! collect the histogram data from hist to hist_mpi
-     call ctqmc_reduce_hist(hist_mpi)
-
-! collect the spin-spin correlation function data from schi to schi_mpi,
-! from sschi to sschi_mpi
-     call ctqmc_reduce_schi(schi_mpi, sschi_mpi)
-
-! collect the (double) occupation matrix data from nmat to nmat_mpi, from
-! nnmat to nnmat_mpi
-     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi)
+     call ctqmc_reduce_hist(hist_mpi, hist_err)
 
 ! collect the probability data from prob to prob_mpi
-     call ctqmc_reduce_prob(prob_mpi)
+     prob  = prob  / real(caves)
+     call ctqmc_reduce_prob(prob_mpi, prob_err)
+
+! collect the occupation matrix data from nmat to nmat_mpi
+! collect the double occupation matrix data from nnmat to nnmat_mpi
+     nmat  = nmat  / real(caves)
+     nnmat = nnmat / real(caves)
+     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
+
+! collect the < k^2 > - < k >^2 data from kmat to kmat_mpi
+! collect the < k^2 > - < k >^2 data from kkmat to kkmat_mpi
+     kmat  = kmat  / real(caves)
+     kkmat = kkmat / real(caves)
+     call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
+
+! collect the fidelity susceptibility data from lmat to lmat_mpi
+! collect the fidelity susceptibility data from rmat to rmat_mpi
+! collect the fidelity susceptibility data from lrmat to lrmat_mpi
+     lmat  = lmat  / real(caves)
+     rmat  = rmat  / real(caves)
+     lrmat = lrmat / real(caves)
+     call ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
+
+! collect the two-particle green's function from g2_re to g2_re_mpi
+! collect the two-particle green's function from g2_im to g2_im_mpi
+     g2_re = g2_re / real(caves)
+     g2_im = g2_im / real(caves)
+     call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
+
+! collect the pair susceptibility from ps_re to ps_re_mpi
+! collect the pair susceptibility from ps_im to ps_im_mpi
+     ps_re = ps_re / real(caves)
+     ps_im = ps_im / real(caves)
+     call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
 ! collect the impurity green's function data from gtau to gtau_mpi
-     call ctqmc_reduce_gtau(gtau_mpi)
+     gtau  = gtau  / real(caves)
+     call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
 ! collect the impurity green's function data from grnf to grnf_mpi
-     call ctqmc_reduce_grnf(grnf_mpi)
+     grnf  = grnf  / real(caves)
+     call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
-     hist  = hist_mpi
-
-     schi  = schi_mpi  * real(nmonte) / real(nsweep)
-     nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
+! average value section
+     hist  = hist_mpi  * one
      prob  = prob_mpi  * real(ncarlo)
 
-     do m=1,nband
-         do n=1,ntime
-             sschi(n,m) = sschi_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,nband} loop
+     nmat  = nmat_mpi  * real(nmonte)
+     nnmat = nnmat_mpi * real(nmonte)
+     kmat  = kmat_mpi  * real(nmonte)
+     kkmat = kkmat_mpi * real(nmonte)
+     lmat  = lmat_mpi  * real(nmonte)
+     rmat  = rmat_mpi  * real(nmonte)
+     lrmat = lrmat_mpi * real(nmonte)
 
-     do m=1,norbs
-         do n=1,norbs
-             nnmat(n,m) = nnmat_mpi(n,m)   * real(nmonte) / real(nsweep)
-         enddo ! over n={1,norbs} loop
-     enddo ! over m={1,norbs} loop
+     g2_re = g2_re_mpi * real(nmonte)
+     g2_im = g2_im_mpi * real(nmonte)
+     ps_re = ps_re_mpi * real(nmonte)
+     ps_im = ps_im_mpi * real(nmonte)
 
-     do m=1,norbs
-         do n=1,ntime
-             gtau(n,m,m) = gtau_mpi(n,m,m) * real(ncarlo) / real(nsweep)
-         enddo ! over n={1,ntime} loop
-     enddo ! over m={1,norbs} loop
+     gtau  = gtau_mpi  * real(ncarlo)
+     grnf  = grnf_mpi  * real(nmonte)
 
-     do m=1,norbs
-         do n=1,nfreq
-             grnf(n,m,m) = grnf_mpi(n,m,m) * real(nmonte)
-         enddo ! over n={1,nfreq} loop
-     enddo ! over m={1,norbs} loop
+! update original data and calculate the averages simultaneously
+! error bar section
+     hist_err  = hist_err  * one
+     prob_err  = prob_err  * real(ncarlo)
 
-!=========================================================================
-!>>> symmetrizing final results                                        <<<
-!=========================================================================
+     nmat_err  = nmat_err  * real(nmonte)
+     nnmat_err = nnmat_err * real(nmonte)
+     kmat_err  = kmat_err  * real(nmonte)
+     kkmat_err = kkmat_err * real(nmonte)
+     lmat_err  = lmat_err  * real(nmonte)
+     rmat_err  = rmat_err  * real(nmonte)
+     lrmat_err = lrmat_err * real(nmonte)
 
-! symmetrize the occupation number matrix (nmat) over spin or over bands
-     if ( issun == 2 .or. isspn == 1 ) then
-         call ctqmc_symm_nmat(symm, nmat)
-     endif
-
-! symmetrize the impurity green's function (gtau) over spin or over bands
-     if ( issun == 2 .or. isspn == 1 ) then
-         call ctqmc_symm_gtau(symm, gtau)
-     endif
+     gtau_err  = gtau_err  * real(ncarlo)
+     grnf_err  = grnf_err  * real(nmonte)
 
 ! build atomic green's function and self-energy function using improved
 ! Hubbard-I approximation, and then make interpolation for self-energy
@@ -508,83 +523,133 @@
 ! using dyson's equation finally
      call ctqmc_make_hub1()
 
+!!========================================================================
+!!>>> symmetrizing final results                                       <<<
+!!========================================================================
+
+! symmetrize the occupation number matrix (nmat) over spin or over bands
+     if ( issun == 2 .or. isspn == 1 ) then
+         call ctqmc_symm_nmat(symm, nmat)
+         call ctqmc_symm_nmat(symm, nmat_err)
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
+
+! symmetrize the impurity green's function (gtau) over spin or over bands
+     if ( issun == 2 .or. isspn == 1 ) then
+         call ctqmc_symm_gtau(symm, gtau)
+         call ctqmc_symm_gtau(symm, gtau_err)
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
+
 ! symmetrize the impurity green's function (grnf) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, grnf)
-     endif
+         call ctqmc_symm_grnf(symm, grnf_err)
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! symmetrize the impurity self-energy function (sig2) over spin or over bands
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_grnf(symm, sig2)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
-!=========================================================================
-!>>> writing final results                                             <<<
-!=========================================================================
+!!========================================================================
+!!>>> writing final results                                            <<<
+!!========================================================================
 
 ! write out the final histogram data, hist
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hist(hist)
-     endif
-
-! write out the final spin-spin correlation function data, schi and sschi
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_schi(schi, sschi)
-     endif
-
-! write out the final (double) occupation matrix data, nmat and nnmat
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_nmat(nmat, nnmat)
-     endif
+         call ctqmc_dump_hist(hist, hist_err)
+     endif ! back if ( myid == master ) block
 
 ! write out the final probability data, prob
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_prob(prob, naux, saux)
-     endif
+         call ctqmc_dump_prob(prob, naux, saux, prob_err)
+     endif ! back if ( myid == master ) block
+
+! write out the final (double) occupation matrix data, nmat and nnmat
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
+     endif ! back if ( myid == master ) block
+
+! write out the final < k^2 > - < k >^2 data, kmat and kkmat
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
+     endif ! back if ( myid == master ) block
+
+! write out the final fidelity susceptibility data, lmat, rmat, and lrmat
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
+     endif ! back if ( myid == master ) block
+
+! write out the final two-particle green's function data, g2_re and g2_im
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_twop(g2_re, g2_im)
+     endif ! back if ( myid == master ) block
+
+! write out the final particle-particle pair susceptibility data, ps_re and ps_im
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_pair(ps_re, ps_im)
+     endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_gtau(tmesh, gtau)
-     endif
+         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
+     endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, grnf
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_grnf(rmesh, grnf)
-     endif
+         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
+     endif ! back if ( myid == master ) block
 
 ! write out the final self-energy function data, sig2
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_sigf(rmesh, sig2)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> saving quantum impurity solver                                    <<<
-!=========================================================================
+!!========================================================================
+!!>>> saving quantum impurity solver                                   <<<
+!!========================================================================
 
 ! save the perturbation expansion series information to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> finishing quantum impurity solver                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> finishing quantum impurity solver                                <<<
+!!========================================================================
 
 ! print the footer of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'PANSY >>> CTQMC quantum impurity solver shutdown'
+         write(mystd,'(2X,a)') 'CAMELLIA >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
-     deallocate(hist_mpi)
-     deallocate(schi_mpi)
-     deallocate(nmat_mpi)
-     deallocate(prob_mpi)
-     deallocate(gtau_mpi)
-     deallocate(grnf_mpi)
-     deallocate(sschi_mpi)
+     deallocate(hist_mpi )
+     deallocate(hist_err )
+     deallocate(prob_mpi )
+     deallocate(prob_err )
+     deallocate(nmat_mpi )
+     deallocate(nmat_err )
      deallocate(nnmat_mpi)
+     deallocate(nnmat_err)
+     deallocate(kmat_mpi )
+     deallocate(kmat_err )
+     deallocate(kkmat_mpi)
+     deallocate(kkmat_err)
+     deallocate(lmat_mpi )
+     deallocate(lmat_err )
+     deallocate(rmat_mpi )
+     deallocate(rmat_err )
+     deallocate(lrmat_mpi)
+     deallocate(lrmat_err)
+     deallocate(g2_re_mpi)
+     deallocate(g2_im_mpi)
+     deallocate(ps_re_mpi)
+     deallocate(ps_im_mpi)
+     deallocate(gtau_mpi )
+     deallocate(gtau_err )
+     deallocate(grnf_mpi )
+     deallocate(grnf_err )
 
      return
   end subroutine ctqmc_impurity_solver
