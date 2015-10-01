@@ -221,7 +221,7 @@
 ! retrieving the time series information produced by previous running
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver retrieving'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_retrieve_status()
@@ -231,17 +231,17 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> warmming quantum impurity solver                                  <<<
-!=========================================================================
+!!========================================================================
+!!>>> warmming quantum impurity solver                                 <<<
+!!========================================================================
 
 ! warmup the continuous time quantum Monte Carlo quantum impurity solver,
 ! in order to achieve equilibrium state
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver warmming'
-     endif
+     endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_diagram_warmming()
@@ -251,17 +251,17 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
-!=========================================================================
-!>>> beginning main iteration                                          <<<
-!=========================================================================
+!!========================================================================
+!!>>> beginning main iteration                                         <<<
+!!========================================================================
 
 ! start simulation
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver sampling'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
      CTQMC_MAIN_ITERATION: do i=1, nsweep, nwrite
 
@@ -270,9 +270,9 @@
 
          CTQMC_DUMP_ITERATION: do j=1, nwrite
 
-!=========================================================================
-!>>> sampling perturbation expansion series                            <<<
-!=========================================================================
+!!========================================================================
+!!>>> sampling perturbation expansion series                           <<<
+!!========================================================================
 
 ! increase cstep by 1
              cstep = cstep + 1
@@ -280,38 +280,33 @@
 ! sampling the perturbation expansion feynman diagrams randomly
              call ctqmc_diagram_sampling(cstep)
 
-!=========================================================================
-!>>> sampling the physical observables                                 <<<
-!=========================================================================
+!!========================================================================
+!!>>> sampling the physical observables                                <<<
+!!========================================================================
 
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
-
-! record the spin-spin correlation function, \chi(\tau)
-             if ( mod(cstep, nmonte) == 0 .and. isvrt >= 2 ) then
-                 call ctqmc_record_schi()
-             endif
 
 ! record the impurity (double) occupation number matrix and other
 ! auxiliary physical observables
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the impurity green's function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_grnf()
-             endif
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the probability of eigenstates
              if ( mod(cstep, ncarlo) == 0 ) then
                  call ctqmc_record_prob()
-             endif
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
 ! record the impurity green's function in imaginary time space
              if ( mod(cstep, ncarlo) == 0 ) then
                  call ctqmc_record_gtau()
-             endif
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
          enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
 
