@@ -50,7 +50,6 @@
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
@@ -238,7 +237,6 @@
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
@@ -405,7 +403,6 @@
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
@@ -550,7 +547,6 @@
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use control, only : ncfgs
      use control, only : beta
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
@@ -1891,7 +1887,6 @@
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_pop
 
-     use control, only : ncfgs
      use control, only : beta
      use context, only : csign
      use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
@@ -2040,7 +2035,6 @@
      use constants, only : dp, zero
      use stack, only : istack_getrest, istack_push
 
-     use control, only : ncfgs
      use control, only : beta
      use context, only : csign
      use context, only : empty_v, index_v, time_v, expt_t, expt_v
@@ -2191,7 +2185,6 @@
      use constants, only : dp, zero
      use stack, only : istack_getrest
 
-     use control, only : ncfgs
      use control, only : beta
      use context, only : csign
      use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
@@ -2310,7 +2303,6 @@
      use constants, only : dp, zero
      use stack, only : istack_getrest
 
-     use control, only : ncfgs
      use control, only : beta
      use context, only : csign
      use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
@@ -2802,38 +2794,47 @@
 
 !>>> used to update the operator traces of the modified part
   subroutine ctqmc_make_evolve()
-     use control
-     use context
+     use sparse, only : sp_csr_cp_csr
 
-     use sparse
+     use control, only : ncfgs, nzero
+     use control, only : npart
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : diag
+     use context, only : isave
+     use context, only : spm_a, spm_b, spm_s
 
      implicit none
 
 ! update the operator traces
      matrix_ptrace = matrix_ntrace
 
-! update ddmat for the calculation of atomic state probability
-     ddmat(:,2) = ddmat(:,1)
+! update diag for the calculation of atomic state probability
+     diag(:,2) = diag(:,1)
 
-! transfer the final matrix product from op_s(:,1) to op_s(:,2), the
+! transfer the final matrix product from spm_s(1) to spm_s(2), the
 ! latter can be used to calculate nmat and nnmat
-     call sparse_csr_cp_csr(                               ncfgs, nfmat, &
-                                   sop_s(:,1), sop_js(:,1), sop_is(:,1), &
-                                   sop_s(:,2), sop_js(:,2), sop_is(:,2) )
+     call sp_csr_cp_csr( ncfgs, nzero, &
+                          spm_s(1)%vv, &
+                          spm_s(1)%jv, &
+                          spm_s(1)%iv, &
+                          spm_s(2)%vv, &
+                          spm_s(2)%jv, &
+                          spm_s(2)%iv )
 
      return
   end subroutine ctqmc_make_evolve
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to look up in the flavor       <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to look up in the flavor      <<<
+!!========================================================================
 
-!>>> to determine whether there exists an operator whose imaginary time is
-! equal to time
+!!>>> ctqmc_make_equate: to determine whether there exists an operator
+!!>>> whose imaginary time is equal to time
   subroutine ctqmc_make_equate(flvr, time, have)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -2860,24 +2861,24 @@
 ! check creators, if meet it, return 1
          if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) then
              have = 1; EXIT
-         endif
+         endif ! back if ( abs( time_s( index_s(i, flvr), flvr ) - time ) < epss ) block
 
 ! check destroyers, if meet it, return 2
          if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) then
              have = 2; EXIT
-         endif
+         endif ! back if ( abs( time_e( index_e(i, flvr), flvr ) - time ) < epss ) block
 
      enddo ! over i={1,ckink} loop
 
      return
   end subroutine ctqmc_make_equate
 
-!>>> determine index address of operators in the flavor part using
-! bisection algorithm
+!!>>> ctqmc_make_search: determine index address of operators in the
+!!>>> flavor part using bisection algorithm
   subroutine ctqmc_make_search(addr, ndim, time)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+
+     use context, only : index_v, time_v
 
      implicit none
 
@@ -2907,11 +2908,11 @@
 
 ! look up the ordered table using bisection algorithm
      do while ( khi - klo > 1 )
-         k = (khi + klo) / 2 
+         k = (khi + klo) / 2
          if ( time_v( index_v(k) ) > time ) then
-             khi = k 
+             khi = k
          else
-             klo = k 
+             klo = k
          endif ! back if ( time_v( index_v(k) ) > time ) block
      enddo ! over do while loop
 
@@ -2925,18 +2926,20 @@
      return
   end subroutine ctqmc_make_search
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to build colour and flavor     <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to build colour and flavor    <<<
+!!========================================================================
 
-!>>> generate perturbation expansion series for the colour (determinant)
-! part, it should be synchronized with the flavor part
+!!>>> ctqmc_make_colour: generate perturbation expansion series for the
+!!>>> colour (determinant) part, it should be synchronized with the
+!!>>> flavor part
   subroutine ctqmc_make_colour(flvr, kink)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : rank
 
      implicit none
 
@@ -2963,7 +2966,7 @@
      time = time * beta
 
 ! sort time series
-     call ctqmc_time_sorter(2*kink, time)
+     call s_sorter(2*kink, time)
 
 ! insert new operators into the colour part
      do i=1,kink
@@ -2977,13 +2980,14 @@
      return
   end subroutine ctqmc_make_colour
 
-!>>> generate perturbation expansion series for the flavor (operator trace)
-! part, it should be synchronized with the colour part.
-! note: ctqmc_make_colour() must be called beforehand
+!!>>> ctqmc_make_flavor: generate perturbation expansion series for the
+!!>>> flavor (operator trace) part, it should be synchronized with the
+!!>>> colour part.
+!!>>> note: ctqmc_make_colour() must be called beforehand
   subroutine ctqmc_make_flavor(flvr, kink)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -3022,18 +3026,20 @@
      return
   end subroutine ctqmc_make_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to show the colour and flavor  <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to show the colour and flavor <<<
+!!========================================================================
 
-!>>> display operators information (include colour and flavor parts) on
-! the screen, only used to debug the code
+!!>>> ctqmc_make_display: display operators information (include colour
+!!>>> and flavor parts) on the screen, only used to debug the code
   subroutine ctqmc_make_display(show_type)
-     use constants
-     use control
-     use context
+     use constants, only : mystd
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : norbs
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
+     use context, only : rank
 
      implicit none
 
