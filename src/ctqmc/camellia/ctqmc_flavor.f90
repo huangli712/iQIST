@@ -2459,12 +2459,14 @@
 !!>>> the computational efficiency significantly.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants, only : dp, zero, two
+     use sparse, only : sp_csr_mv_vec, sp_dns_to_csr
+     use leja, only : leja_dsymv 
 
-     use control, only : nvect, nzero
+     use control, only : ncfgs, nzero, nvect
      use control, only : beta, U
-     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
-     use context, only : hmat, vmat, wmat
-     use context, only : diag
+     use context, only : index_t, index_v, type_v, flvr_v, expt_t, expt_v
+     use context, only : diag, eigs
+     use context, only : vmat, wmat, hmat
      use context, only : spm_c, spm_d, spm_s
 
      implicit none
