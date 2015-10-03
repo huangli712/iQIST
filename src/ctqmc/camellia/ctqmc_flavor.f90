@@ -2695,7 +2695,7 @@
                      call sparse_csr_mv_vec( ncfgs, ncfgs, nzero, &
                                                     spm_c(vf)%vv, &
                                                     spm_c(vf)%jv, &
-                                                    sop_c(vf)%iv, &
+                                                    spm_c(vf)%iv, &
                                                       mvec, lvec )
                  else                ! destroy operator
                      call sparse_csr_mv_vec( ncfgs, ncfgs, nzero, &
@@ -2754,8 +2754,8 @@
              rexp = zero
          enddo EIGENVEC_LOOP2 ! over i={1,nvect} loop
 
-! convert the final matrix product (hmat) to op_s
-         call sparse_dns_to_csr( ncfgs, ncfgs, nfmat, hmat, sop_s(:,1), sop_js(:,1), sop_is(:,1) )
+! convert the final matrix product (hmat) to spm_s
+         call sp_dns_to_csr( ncfgs, ncfgs, nzero, hmat, spm_s(1)%vv, spm_s(1)%jv, spm_s(1)%iv )
 
 ! evaluate ddmat, it is just the diagonal elements of hmat matrix
          do j=1,nvect
