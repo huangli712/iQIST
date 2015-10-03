@@ -2779,16 +2779,15 @@
      return
   end subroutine ctqmc_make_ztrace
 
-!>>> used to update the operator traces of the modified part
+!!>>> ctqmc_make_evolve: used to update the operator traces of the
+!!>>> modified part
   subroutine ctqmc_make_evolve()
      use sparse, only : sp_csr_cp_csr
 
      use control, only : ncfgs, nzero
-     use control, only : npart
      use context, only : matrix_ptrace, matrix_ntrace
      use context, only : diag
-     use context, only : isave
-     use context, only : spm_a, spm_b, spm_s
+     use context, only : spm_s
 
      implicit none
 
