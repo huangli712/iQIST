@@ -544,14 +544,16 @@
      return
   end subroutine cat_lshift_ztrace
 
-!>>> calculate the trace ratio for shift old destroy operators
-! on perturbation expansion series
+!!>>> cat_rshift_ztrace: calculate the trace ratio for shift old destroy
+!!>>> operators on perturbation expansion series
   subroutine cat_rshift_ztrace(flvr, ieo, ien, tau_end1, tau_end2, trace_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_gettop, istack_getter
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : empty_v, index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
 
      implicit none
 
@@ -580,6 +582,9 @@
 ! memory address for old and new destroy operators
      integer  :: ae
 
+! index address for old destroy operator
+     integer  :: ieo_t
+
 ! total number of operators
      integer  :: nsize
 
@@ -602,7 +607,7 @@
 ! stage 1: shift old destroy operator, trial step
 !-------------------------------------------------------------------------
 ! get memory address for destroy operator
-     ae = istack_getter( empty_v, istack_gettop( empty_v ) - 0 )
+     call istack_getter( empty_v, istack_gettop( empty_v ) - 0, ae )
 
 ! store basic data for new destroy operator
      time_v(ae) = tau_end2
@@ -640,32 +645,37 @@
 ! makes a copy of time and type, and changes time evolution operator
      if ( ien < nsize ) then
          t_next = time_v( index_t(ien+1) ) - time_v( index_t(ien) )
-         ae = istack_getter( empty_v, istack_gettop( empty_v ) - 1 )
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 1, ae )
          time_v(ae) = time_v( index_t(ien+1) )
          flvr_v(ae) = flvr_v( index_t(ien+1) )
          type_v(ae) = type_v( index_t(ien+1) )
-         expt_v(ae) = t_next
          index_t(ien+1) = ae
+         expt_v(ae) = t_next
      endif ! back if ( ien < nsize ) block
 
 ! the operator closest to the old place needs to be changed as well
      if ( ieo < nsize .and. ieo /= ien ) then
-         if ( ieo == 1 ) then
-             t_prev = time_v( index_t(ieo) ) - zero
+         if ( ieo > ien ) then
+             ieo_t = ieo + 1
          else
-             t_prev = time_v( index_t(ieo) ) - time_v( index_t(ieo-1) )
-         endif ! back if ( ieo == 1 ) block
-         ae = istack_getter( empty_v, istack_gettop( empty_v ) - 2 )
-         time_v(ae) = time_v( index_t(ieo) )
-         flvr_v(ae) = flvr_v( index_t(ieo) )
-         type_v(ae) = type_v( index_t(ieo) )
+             ieo_t = ieo
+         endif ! back if ( ieo > ien ) block
+         if ( ieo_t == 1 ) then
+             t_prev = time_v( index_t(ieo_t) ) - zero
+         else
+             t_prev = time_v( index_t(ieo_t) ) - time_v( index_t(ieo_t-1) )
+         endif ! back if ( ieo_t == 1 ) block
+         call istack_getter( empty_v, istack_gettop( empty_v ) - 2, ae )
+         time_v(ae) = time_v( index_t(ieo_t) )
+         flvr_v(ae) = flvr_v( index_t(ieo_t) )
+         type_v(ae) = type_v( index_t(ieo_t) )
+         index_t(ieo_t) = ae
          expt_v(ae) = t_prev
-         index_t(ieo) = ae
      endif ! back if ( ieo < nsize .and. ieo /= ien ) block
 
 ! update the final time evolution operator
-     t_next = beta - time_v( index_t(nsize) )
-     expt_t(1) = t_next
+     t_next = time_v( index_t(nsize) )
+     expt_t(1) = beta - t_next
 
 !-------------------------------------------------------------------------
 ! stage 3: evaluate trace ratio
@@ -679,19 +689,20 @@
      return
   end subroutine cat_rshift_ztrace
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series A             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series A            <<<
+!!========================================================================
 
-!>>> generate create and destroy operators for selected flavor channel
-! randomly, and then determinte their index address for the colour
-! (determinant) part
+!!>>> try_insert_colour: generate create and destroy operators for selected
+!!>>> flavor channel randomly, and then determinte their index address for
+!!>>> the colour (determinant) part
   subroutine try_insert_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -738,7 +749,7 @@
 ! we need to ensure tau_start is not equal to tau_end
          if ( abs( tau_start - tau_end ) < epss ) then
              have = 99
-         endif
+         endif ! back if ( abs( tau_start - tau_end ) < epss ) block
      enddo destroyer ! over do while loop
 
 ! determine the new position (index address, is) of tau_start in time_s
@@ -753,7 +764,7 @@
                  i = i + 1
              enddo ! over do while loop
              is = i
-         endif
+         endif ! back if      ( tau_start < time_s(index_s(1,     flvr), flvr) ) block
      endif ! back if ( ckink > 0 ) block
 
 ! determine the new position (index address, ie) of tau_end in time_e
@@ -768,13 +779,13 @@
                  i = i + 1
              enddo ! over do while loop
              ie = i
-         endif
+         endif ! back if      ( tau_end < time_e(index_e(1,     flvr), flvr) ) block
      endif ! back if ( ckink > 0 ) block
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
-         call ctqmc_print_error('try_insert_colour','tau_start is equal to tau_end')
-     endif
+         call s_print_error('try_insert_colour','tau_start is equal to tau_end')
+     endif ! back if ( abs( tau_start - tau_end ) < epss ) block
 
      return
   end subroutine try_insert_colour
