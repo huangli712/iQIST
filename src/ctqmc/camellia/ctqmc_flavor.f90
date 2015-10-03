@@ -2570,17 +2570,17 @@
 ! calculate the product of f matrix of create or destroy operator and a
 ! propagated state using sparse matrix-vector operation
                  if ( vt == 1 ) then ! create operator
-                     call sparse_csr_mv_vec( ncfgs, ncfgs, nzero, &
-                                                    spm_c(vf)%vv, &
-                                                    spm_c(vf)%jv, &
-                                                    spm_c(vf)%iv, &
-                                                      mvec, lvec )
+                     call sp_csr_mv_vec( ncfgs, ncfgs, nzero, &
+                                                spm_c(vf)%vv, &
+                                                spm_c(vf)%jv, &
+                                                spm_c(vf)%iv, &
+                                                  mvec, lvec )
                  else                ! destroy operator
-                     call sparse_csr_mv_vec( ncfgs, ncfgs, nzero, &
-                                                    spm_d(vf)%vv, &
-                                                    spm_d(vf)%jv, &
-                                                    spm_d(vf)%iv, &
-                                                      mvec, lvec )
+                     call sp_csr_mv_vec( ncfgs, ncfgs, nzero, &
+                                                spm_d(vf)%vv, &
+                                                spm_d(vf)%jv, &
+                                                spm_d(vf)%iv, &
+                                                  mvec, lvec )
                  endif ! back if ( vt == 1 ) block
 
 ! scale the propagated state to overcome the divergence problem
@@ -2637,7 +2637,8 @@
          enddo EIGENVEC_LOOP1 ! over i={1,nvect} loop
 
 ! convert the final matrix product (hmat) to spm_s
-         call sp_dns_to_csr( ncfgs, ncfgs, nzero, hmat, spm_s(1)%vv, spm_s(1)%jv, spm_s(1)%iv )
+         call sp_dns_to_csr( ncfgs, ncfgs, nzero, hmat, &
+                 spm_s(1)%vv, spm_s(1)%jv, spm_s(1)%iv )
 
 ! evaluate diag, it is just the diagonal elements of hmat matrix
          do j=1,nvect
@@ -2692,17 +2693,17 @@
 ! calculate the product of f matrix of create or destroy operator and a
 ! propagated state using sparse matrix-vector operation
                  if ( vt == 1 ) then ! create operator
-                     call sparse_csr_mv_vec( ncfgs, ncfgs, nzero, &
-                                                    spm_c(vf)%vv, &
-                                                    spm_c(vf)%jv, &
-                                                    spm_c(vf)%iv, &
-                                                      mvec, lvec )
+                     call sp_csr_mv_vec( ncfgs, ncfgs, nzero, &
+                                                spm_c(vf)%vv, &
+                                                spm_c(vf)%jv, &
+                                                spm_c(vf)%iv, &
+                                                  mvec, lvec )
                  else                ! destroy operator
-                     call sparse_csr_mv_vec( ncfgs, ncfgs, nzero, &
-                                                    spm_d(vf)%vv, &
-                                                    spm_d(vf)%jv, &
-                                                    spm_d(vf)%iv, &
-                                                      mvec, lvec )
+                     call sp_csr_mv_vec( ncfgs, ncfgs, nzero, &
+                                                spm_d(vf)%vv, &
+                                                spm_d(vf)%jv, &
+                                                spm_d(vf)%iv, &
+                                                  mvec, lvec )
                  endif ! back if ( vt == 1 ) block
 
 ! scale the propagated state to overcome the divergence problem
@@ -2755,24 +2756,25 @@
          enddo EIGENVEC_LOOP2 ! over i={1,nvect} loop
 
 ! convert the final matrix product (hmat) to spm_s
-         call sp_dns_to_csr( ncfgs, ncfgs, nzero, hmat, spm_s(1)%vv, spm_s(1)%jv, spm_s(1)%iv )
+         call sp_dns_to_csr( ncfgs, ncfgs, nzero, hmat, &
+                 spm_s(1)%vv, spm_s(1)%jv, spm_s(1)%iv )
 
 ! evaluate ddmat, it is just the diagonal elements of hmat matrix
          do j=1,nvect
-             ddmat(j,1) = hmat(j,j)
+             diag(j,1) = hmat(j,j)
          enddo ! over j={1,nvect} loop
 
 ! consider the correction to shifted energy base point
 ! note: if csize = 0, it is not necessary to correct ddmat
          if ( csize > 0 ) then
              dtau = expt_v ( index_v(1) )
-             ddmat(1:nvect,1) = ddmat(1:nvect,1) * exp( ( beta / two - dtau ) * U )
+             diag(1:nvect,1) = diag(1:nvect,1) * exp( ( beta / two - dtau ) * U )
          endif ! back if ( csize > 0 ) block
 
      endif ! back if ( cmode == 1 ) block
 
 ! now we evaluate the final matrix trace
-     trace = sum( ddmat( 1:nvect, 1 ) )
+     trace = sum( diag( 1:nvect, 1 ) )
 
      return
   end subroutine ctqmc_make_ztrace
