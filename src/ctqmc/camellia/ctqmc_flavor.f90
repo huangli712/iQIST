@@ -2034,13 +2034,16 @@
      return
   end subroutine cat_insert_flavor
 
-!>>> remove old create and destroy operators in the flavor part
+!!>>> cat_remove_flavor: remove old create and destroy operators in the
+!!>>> flavor part
   subroutine cat_remove_flavor(is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_push
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : empty_v, index_v, time_v, expt_t, expt_v
 
      implicit none
 
@@ -2169,13 +2172,13 @@
 ! please refer to try_remove_flavor().
      if ( tau_start < tau_end ) then
          ae = ae + 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 ! it is assumed that destroy operator is removed at first, so as should be
 ! adjusted if needed
      if ( tau_start > tau_end ) then
          as = as - 1
-     endif
+     endif ! back if ( tau_start > tau_end ) block
 
 ! evaluate csign, TO BE CHECKED
      csign = csign * ( 1 - 2 * mod( nsize - ae + nsize - as + 1, 2 ) )
@@ -2183,13 +2186,15 @@
      return
   end subroutine cat_remove_flavor
 
-!>>> shift the old create operator in the flavor part
+!!>>> cat_lshift_flavor: shift the old create operator in the flavor part
   subroutine cat_lshift_flavor(flvr, iso, isn, tau_start2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
 
      implicit none
 
@@ -2211,6 +2216,9 @@
 
 ! memory address for old and new create operators
      integer  :: as
+
+! index address for old create operator
+     integer  :: iso_t
 
 ! total number of operators
      integer  :: nsize
@@ -2270,18 +2278,23 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( iso < nsize .and. iso /= isn ) then
-         if ( iso == 1 ) then
-             t_prev = time_v( index_v(iso) ) - zero
+         if ( iso > isn ) then
+             iso_t = iso + 1
          else
-             t_prev = time_v( index_v(iso) ) - time_v( index_v(iso-1) )
-         endif ! back if ( iso == 1 ) block
-         as = index_v(iso)
+             iso_t = iso
+         endif ! back if ( iso > isn ) block
+         if ( iso_t == 1 ) then
+             t_prev = time_v( index_v(iso_t) ) - zero
+         else
+             t_prev = time_v( index_v(iso_t) ) - time_v( index_v(iso_t-1) )
+         endif ! back if ( iso_t == 1 ) block
+         as = index_v(iso_t)
          expt_v(as) = t_prev
      endif ! back if ( iso < nsize .and. iso /= isn ) block
 
 ! update the final time evolution operator
-     t_next = beta - time_v( index_v(nsize) )
-     expt_t(2) = t_next
+     t_next = time_v( index_v(nsize) )
+     expt_t(2) = beta - t_next
 
 !-------------------------------------------------------------------------
 ! stage 3: deal with sign problem
@@ -2292,13 +2305,15 @@
      return
   end subroutine cat_lshift_flavor
 
-!>>> shift the old destroy operator in the flavor part
+!!>>> cat_rshift_flavor: shift the old destroy operator in the flavor part
   subroutine cat_rshift_flavor(flvr, ieo, ien, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
 
      implicit none
 
@@ -2320,6 +2335,9 @@
 
 ! memory address for old and new destroy operators
      integer  :: ae
+
+! index address for old destroy operator
+     integer  :: ieo_t
 
 ! total number of operators
      integer  :: nsize
@@ -2379,18 +2397,23 @@
 
 ! the operator closest to the old place needs to be changed as well
      if ( ieo < nsize .and. ieo /= ien ) then
-         if ( ieo == 1 ) then
-             t_prev = time_v( index_v(ieo) ) - zero
+         if ( ieo > ien ) then
+             ieo_t = ieo + 1
          else
-             t_prev = time_v( index_v(ieo) ) - time_v( index_v(ieo-1) )
-         endif ! back if ( ieo == 1 ) block
-         ae = index_v(ieo)
+             ieo_t = ieo
+         endif ! back if ( ieo > ien ) block
+         if ( ieo_t == 1 ) then
+             t_prev = time_v( index_v(ieo_t) ) - zero
+         else
+             t_prev = time_v( index_v(ieo_t) ) - time_v( index_v(ieo_t-1) )
+         endif ! back if ( ieo_t == 1 ) block
+         ae = index_v(ieo_t)
          expt_v(ae) = t_prev
      endif ! back if ( ieo < nsize .and. ieo /= ien ) block
 
 ! update the final time evolution operator
-     t_next = beta - time_v( index_v(nsize) )
-     expt_t(2) = t_next
+     t_next = time_v( index_v(nsize) )
+     expt_t(2) = beta - t_next
 
 !-------------------------------------------------------------------------
 ! stage 3: deal with sign problem
@@ -2401,44 +2424,47 @@
      return
   end subroutine cat_rshift_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: utility subroutines to calculate trace             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: utility subroutines to calculate trace            <<<
+!!========================================================================
 
-!>>> core subroutine of pansy
-! used to evaluate the operator traces by real leja points method.
-! how to deal with the operator traces is the most important problem of
-! the general version hybridization expansion continuous time quantum
-! Monte Carlo impurity solver. since this subroutine should be called
-! for about one thousand millions times in one DMFT loop, so its execution
-! efficiency is our focus.
-!
-! in general, in each quantum Monte Carlo step, we need to multiply all f
-! matrices and related time evolution operators together, and then evaluate
-! the matrix trace. this method is very very inefficient for multiorbitals
-! systems, in which the dimension of f matrix increasing exponently, and
-! for low temperature (large \beta) and weak interaction (small U) systems,
-! in which the perturbation orders is so large, i.e, the number of matrix
-! we need to store and multiply is very large.
-!
-! in order to overcome the problem, we try the following strategies. at
-! first, the occupation number basis is used instead of the traditional
-! eigenbasis. in occupation number basis, the sparsity of f matrix is very
-! good. the matrix element of f matrix we need to manipulate and store is
-! rare. the computational burden is relieved largely. second, the real leja
-! points algorithm is adopted to calculate the time evolution operator
-! times a state: w = exp( -t H ) v. it is an iteration algorithm, and the
-! number of real leja points, required to reach convergence, is very small
-! (normally 64 is good enough). so we can calculate the propagated state w
-! very efficient. the third, highly optimized sparse matrix-vector operation
-! is used to calculate the product of f matrix and propagated w state, to
-! obtain a new state w'. finally, we truncate the hilbert space, only the
-! ground states and a few exciting states are retained. it is so astonished
-! that this approximation is rather accurate when the system temperature
-! is low enough than bandwidth.
-!
-! according to our benchmark, this algorithm can improve the efficiency
-! significantly.
+!!>>> ctqmc_make_ztrace: core subroutine of camellia
+!!>>> used to evaluate the operator traces by real leja points method.
+!!>>> how to deal with the operator traces is the most important problem
+!!>>> of the general matrix version hybridization expansion continuous
+!!>>> time quantum Monte Carlo impurity solver. since this subroutine
+!!>>> should be called for about one thousand millions times in one DMFT
+!!>>> loop, so its execution efficiency is our focus.
+!!
+!!>>> in general, in each quantum Monte Carlo step, we need to multiply
+!!>>> all f-matrices and related time evolution operators together, and
+!!>>> then evaluate the matrix trace. this method is very very inefficient
+!!>>> for multi-orbitals systems, in which the dimension of the f-matrix
+!!>>> increasing exponently, and for low temperature (large \beta) and
+!!>>> weak interaction (small U) systems, in which the perturbation orders
+!!>>> is so large, i.e., the number of matrices that we need to store and
+!!>>> multiply is very large.
+!!
+!!>>> in order to overcome this problem, we try the following strategies.
+!!>>> at first, the occupation number basis is chosen instead of the
+!!>>> traditional eigenbasis. in occupation number basis, the sparsity of
+!!>>> f-matrix is very good. the matrix element of f-matrix we need to
+!!>>> manipulate and store is rare. the computational burden is relieved
+!!>>> largely. second, the real leja points algorithm is selected to
+!!>>> calculate the time evolution operator times a propagated state:
+!!>>> w = exp( -t H ) v. it is an iteration algorithm, and the number of
+!!>>> real leja points, required to reach convergence, is very small
+!!>>> (normally 64 is good enough). so we can calculate the propagated
+!!>>> state w very efficient. the third, highly optimized sparse matrix
+!!>>> -vector operation is used to calculate the product of f-matrix and
+!!>>> the propagated w state, to obtain a new state w'. finally, we can
+!!>>> truncate the hilbert space, only the ground states and a few exciting
+!!>>> states are retained. it is so astonished that this approximation is
+!!>>> rather accurate when the system temperature is low enough than the
+!!>>> bandwidth.
+!!
+!!>>> according to our extensive benchmarks, this algorithm can improve
+!!>>> the computational efficiency significantly.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants
      use control
