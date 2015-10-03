@@ -2458,13 +2458,13 @@
 !!>>> according to our extensive benchmarks, this algorithm can improve
 !!>>> the computational efficiency significantly.
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, two
 
-     use leja
-     use sparse
-     use stack
+     use control, only : nvect
+     use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
+     use context, only : hmat, vmat, wmat
+     use context, only : diag
+     use context, only : spm_c, spm_d
 
      implicit none
 
