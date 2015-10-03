@@ -2483,10 +2483,10 @@
      real(dp), intent(out) :: trace
 
 ! imaginary time value of operator A, only valid in cmode = 1 or 2
-     real(dp), intent(in), optional :: tau_s
+     real(dp), intent(in)  :: tau_s
 
 ! imaginary time value of operator B, only valid in cmode = 1 or 2
-     real(dp), intent(in), optional :: tau_e
+     real(dp), intent(in)  :: tau_e
 
 ! local variables
 ! loop index
@@ -2517,25 +2517,6 @@
 ! immediate propagated states
      real(dp) :: mvec(ncfgs)
 
-! check the validity of tau_s and tau_e
-     if ( cmode == 1 .or. cmode == 2 ) then
-         if ( present(tau_s) .eqv. .true. ) then
-             if ( tau_s < zero .or. tau_s > beta ) then
-                 call ctqmc_print_error('ctqmc_make_ztrace','tau_s is out of range')
-             endif
-         else
-             call ctqmc_print_error('ctqmc_make_ztrace','tau_s is null')
-         endif ! back if ( present(tau_s) .eqv. .true. ) block
-
-         if ( present(tau_e) .eqv. .true. ) then
-             if ( tau_e < zero .or. tau_e > beta ) then
-                 call ctqmc_print_error('ctqmc_make_ztrace','tau_e is out of range')
-             endif
-         else
-             call ctqmc_print_error('ctqmc_make_ztrace','tau_e is null')
-         endif ! back if ( present(tau_e) .eqv. .true. ) block
-     endif ! back if ( cmode == 1 .or. cmode == 2 ) block
-
 ! init raux and rexp
      raux = zero
      rexp = zero
@@ -2545,8 +2526,8 @@
 ! hamiltonian matrix in it any more, please refer to ctqmc_selfer_init()
      hmat(1:nvect,1:nvect) = zero
 
-! reset ddmat to zero
-     ddmat(1:nvect,1) = zero
+! reset diag to zero
+     diag(1:nvect,1) = zero
 
 !-------------------------------------------------------------------------
 ! case A: partly-trial or fully-trial mode
@@ -2589,14 +2570,16 @@
 ! calculate the product of f matrix of create or destroy operator and a
 ! propagated state using sparse matrix-vector operation
                  if ( vt == 1 ) then ! create operator
-                     call sparse_csr_mv_vec( ncfgs, ncfgs, nfmat, &
-                                                     sop_c(:,vf), &
-                                      sop_jc(:,vf), sop_ic(:,vf), &
+                     call sparse_csr_mv_vec( ncfgs, ncfgs, nzero, &
+                                                    spm_c(vf)%vv, &
+                                                    spm_c(vf)%jv, &
+                                                    spm_c(vf)%iv, &
                                                       mvec, lvec )
                  else                ! destroy operator
-                     call sparse_csr_mv_vec( ncfgs, ncfgs, nfmat, &
-                                                     sop_d(:,vf), &
-                                      sop_jd(:,vf), sop_id(:,vf), &
+                     call sparse_csr_mv_vec( ncfgs, ncfgs, nzero, &
+                                                    spm_d(vf)%vv, &
+                                                    spm_d(vf)%jv, &
+                                                    spm_d(vf)%iv, &
                                                       mvec, lvec )
                  endif ! back if ( vt == 1 ) block
 
@@ -2653,19 +2636,19 @@
              rexp = zero
          enddo EIGENVEC_LOOP1 ! over i={1,nvect} loop
 
-! convert the final matrix product (hmat) to op_s
-         call sparse_dns_to_csr( ncfgs, ncfgs, nfmat, hmat, sop_s(:,1), sop_js(:,1), sop_is(:,1) )
+! convert the final matrix product (hmat) to spm_s
+         call sp_dns_to_csr( ncfgs, ncfgs, nzero, hmat, spm_s(1)%vv, spm_s(1)%jv, spm_s(1)%iv )
 
-! evaluate ddmat, it is just the diagonal elements of hmat matrix
+! evaluate diag, it is just the diagonal elements of hmat matrix
          do j=1,nvect
-             ddmat(j,1) = hmat(j,j)
+             diag(j,1) = hmat(j,j)
          enddo ! over j={1,nvect} loop
 
 ! consider the correction to shifted energy base point
-! note: if csize = 0, it is not necessary to correct ddmat
+! note: if csize = 0, it is not necessary to correct diag
          if ( csize > 0 ) then
              dtau = expt_v ( index_t(1) )
-             ddmat(1:nvect,1) = ddmat(1:nvect,1) * exp( ( beta / two - dtau ) * U )
+             diag(1:nvect,1) = diag(1:nvect,1) * exp( ( beta / two - dtau ) * U )
          endif ! back if ( csize > 0 ) block
 
 !-------------------------------------------------------------------------
@@ -2709,14 +2692,16 @@
 ! calculate the product of f matrix of create or destroy operator and a
 ! propagated state using sparse matrix-vector operation
                  if ( vt == 1 ) then ! create operator
-                     call sparse_csr_mv_vec( ncfgs, ncfgs, nfmat, &
-                                                     sop_c(:,vf), &
-                                      sop_jc(:,vf), sop_ic(:,vf), &
+                     call sparse_csr_mv_vec( ncfgs, ncfgs, nzero, &
+                                                    spm_c(vf)%vv, &
+                                                    spm_c(vf)%jv, &
+                                                    sop_c(vf)%iv, &
                                                       mvec, lvec )
                  else                ! destroy operator
-                     call sparse_csr_mv_vec( ncfgs, ncfgs, nfmat, &
-                                                     sop_d(:,vf), &
-                                      sop_jd(:,vf), sop_id(:,vf), &
+                     call sparse_csr_mv_vec( ncfgs, ncfgs, nzero, &
+                                                    spm_d(vf)%vv, &
+                                                    spm_d(vf)%jv, &
+                                                    spm_d(vf)%iv, &
                                                       mvec, lvec )
                  endif ! back if ( vt == 1 ) block
 
