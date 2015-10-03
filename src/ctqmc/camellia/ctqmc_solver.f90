@@ -834,21 +834,23 @@
      return
   end subroutine ctqmc_diagram_checking
 
-!>>> testing subroutine, please active it on ctqmc_diagram_sampling()
+!!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
+!!>>> on ctqmc_diagram_sampling() subroutine
   subroutine ctqmc_impurity_tester()
-     use constants
-     use control
-     use context
+     use constants ! ALL
+
+     use control   ! ALL
+     use context   ! ALL
 
      implicit none
 
 !-------------------------------------------------------------------------
-! insert your debug code here
+! please insert your debug code here
 !-------------------------------------------------------------------------
 
      call ctqmc_make_display(1)
      call ctqmc_make_display(2)
-     call ctqmc_print_error('ctqmc_impurity_tester','in debug mode')
+     call s_print_error('ctqmc_impurity_tester','in debug mode')
 
      return
   end subroutine ctqmc_impurity_tester
