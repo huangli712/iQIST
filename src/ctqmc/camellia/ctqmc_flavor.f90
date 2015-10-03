@@ -2461,10 +2461,11 @@
      use constants, only : dp, zero, two
 
      use control, only : nvect
+     use control, only : beta, U
      use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : hmat, vmat, wmat
      use context, only : diag
-     use context, only : spm_c, spm_d
+     use context, only : spm_c, spm_d, spm_s
 
      implicit none
 
