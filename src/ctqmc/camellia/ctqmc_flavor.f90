@@ -1133,11 +1133,15 @@
      return
   end subroutine cat_remove_colour
 
-!>>> update the perturbation expansion series for lshift an old create
-! operators in the colour part actually
+!!>>> cat_lshift_colour: update the perturbation expansion series for
+!!>>> lshift an old create operators in the colour part actually
   subroutine cat_lshift_colour(flvr, iso, isn, tau_start)
-     use constants
-     use context
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, time_s, exp_s
+     use context, only : rmesh
 
      implicit none
 
@@ -1188,11 +1192,15 @@
      return
   end subroutine cat_lshift_colour
 
-!>>> update the perturbation expansion series for rshift an old destroy
-! operators in the colour part actually
+!!>>> cat_rshift_colour: update the perturbation expansion series for
+!!>>> rshift an old destroy operators in the colour part actually
   subroutine cat_rshift_colour(flvr, ieo, ien, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_e, time_e, exp_e
+     use context, only : rmesh
 
      implicit none
 
@@ -1243,18 +1251,20 @@
      return
   end subroutine cat_rshift_colour
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series C             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series C            <<<
+!!========================================================================
 
-!>>> determine index addresses for the new create and destroy operators in
-! the flavor part, and then determine whether they can be inserted diagrammatically
+!!>>> try_insert_flavor: determine index addresses for the new create and
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> they can be inserted diagrammatically
   subroutine try_insert_flavor(flvr, is, ie, tau_start, tau_end, ladd)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
 
      implicit none
 
@@ -1323,10 +1333,10 @@
              i = 1
              do while ( time_v( index_v(i) ) < tau_start )
                  i = i + 1
-             enddo
+             enddo ! over do while loop
              is = i
          endif ! back if ( tau_start < time_v( index_v(1) ) ) block
-     endif ! over if ( nsize > 0 ) block
+     endif ! back if ( nsize > 0 ) block
 
 ! determine ie
      ie = 1
@@ -1339,26 +1349,32 @@
              i = 1
              do while ( time_v( index_v(i) ) < tau_end )
                  i = i + 1
-             enddo
+             enddo ! over do while loop
              ie = i
          endif ! back if ( tau_end < time_v( index_v(1) ) ) block
-     endif ! over if ( nsize > 0 ) block
+     endif ! back if ( nsize > 0 ) block
 
 ! adjust ie further, since we insert create operator firstly, and then
 ! insert destroy operator
      if ( tau_start < tau_end ) then
          ie = ie + 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine ladd, whether we can get them ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         ladd = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pis and pie
      pis = is
      pie = ie
      if ( tau_start > tau_end ) then
          pis = pis + 1
-     endif
+     endif ! back if ( tau_start > tau_end ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1400,9 +1416,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 2 ) then
-                 ladd = .true.
-                 RETURN
-             endif
+                 ladd = .true.; RETURN
+             endif ! back if ( idead == nsize + 2 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
