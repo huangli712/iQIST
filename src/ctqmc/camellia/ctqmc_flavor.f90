@@ -2460,7 +2460,7 @@
   subroutine ctqmc_make_ztrace(cmode, csize, trace, tau_s, tau_e)
      use constants, only : dp, zero, two
 
-     use control, only : nvect
+     use control, only : nvect, nzero
      use control, only : beta, U
      use context, only : index_t, index_v, type_v, flvr_v, time_v, expt_t, expt_v
      use context, only : hmat, vmat, wmat
