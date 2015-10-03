@@ -1,58 +1,35 @@
-!-------------------------------------------------------------------------
-! project : pansy
-! program : ctqmc_insert_kink
-!           ctqmc_remove_kink
-!           ctqmc_lshift_kink
-!           ctqmc_rshift_kink
-!           ctqmc_reflip_kink
-!           ctqmc_reload_kink <<<---
-!           cat_insert_matrix
-!           cat_remove_matrix
-!           cat_lshift_matrix
-!           cat_rshift_matrix
-!           cat_reflip_matrix
-!           cat_reload_matrix <<<---
-!           cat_insert_detrat
-!           cat_remove_detrat
-!           cat_lshift_detrat
-!           cat_rshift_detrat
-!           cat_reflip_detrat <<<---
-! source  : ctqmc_update.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/24/2009 by li huang
-!           09/26/2009 by li huang
-!           09/30/2009 by li huang
-!           10/02/2009 by li huang
-!           10/25/2009 by li huang
-!           10/29/2009 by li huang
-!           11/02/2009 by li huang
-!           11/08/2009 by li huang
-!           11/17/2009 by li huang
-!           11/20/2009 by li huang
-!           11/24/2009 by li huang
-!           11/27/2009 by li huang
-!           11/30/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/26/2009 by li huang
-!           01/05/2010 by li huang
-!           02/27/2010 by li huang
-!           03/22/2010 by li huang
-!           06/09/2010 by li huang
-! purpose : provide basic infrastructure (elementary updating subroutines)
-!           for hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver.
-!           the following subroutines mainly deal with the \mathscr{M}
-!           matrix: mmat, and \mathscr{G} matrix: gmat.
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : pansy
+!!! program : ctqmc_insert_kink
+!!!           ctqmc_remove_kink
+!!!           ctqmc_lshift_kink
+!!!           ctqmc_rshift_kink
+!!!           ctqmc_reflip_kink
+!!!           ctqmc_reload_kink <<<---
+!!!           cat_insert_matrix
+!!!           cat_remove_matrix
+!!!           cat_lshift_matrix
+!!!           cat_rshift_matrix
+!!!           cat_reflip_matrix
+!!!           cat_reload_matrix <<<---
+!!!           cat_insert_detrat
+!!!           cat_remove_detrat
+!!!           cat_lshift_detrat
+!!!           cat_rshift_detrat
+!!!           cat_reflip_detrat <<<---
+!!! source  : ctqmc_update.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
+!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           for hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver.
+!!!           the following subroutines mainly deal with the \mathscr{M}
+!!!           matrix: mmat, and \mathscr{G} matrix: gmat.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !-------------------------------------------------------------------------
 !>>> driver layer: updating perturbation expansion series              <<<
@@ -96,7 +73,7 @@
 ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part 
+! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
 ! initialize logical variables
@@ -110,12 +87,12 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == mkink ) then
-!<         call ctqmc_print_exception('ctqmc_insert_kink','can not insert any operators')
+!<         call s_print_exception('ctqmc_insert_kink','can not insert any operators')
          insert_tcount = insert_tcount + one
          insert_reject = insert_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == mkink ) block
 
 ! randomly generate tau_start and tau_end at selected flvr channel, and
 ! then determine index address cis and cie for them
@@ -132,7 +109,7 @@
          call cat_insert_ztrace(flvr, fis, fie, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -140,7 +117,7 @@
          call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( ladd .eqv. .true. ) block
 
 ! calculate the transition probability for insert new create and destroy operators
      p = deter_ratio * trace_ratio * ( beta / real( ckink + 1 ) ) ** 2
@@ -176,7 +153,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_insert_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_insert_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the insert statistics
@@ -228,7 +205,7 @@
 ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part 
+! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
 ! initialize logical variables
@@ -242,12 +219,12 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_remove_kink','can not remove any operators')
+!<         call s_print_exception('ctqmc_remove_kink','can not remove any operators')
          remove_tcount = remove_tcount + one
          remove_reject = remove_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! randomly generate cis and cie at selected flvr channel, and then determine
 ! tau_start and tau_end for them
@@ -264,7 +241,7 @@
          call cat_remove_ztrace(fis, fie, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( lrmv .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -272,7 +249,7 @@
          call cat_remove_detrat(flvr, cis, cie, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( lrmv .eqv. .true. ) block
 
 ! calculate the transition probability for remove old create and destroy operators
      p = deter_ratio * trace_ratio * ( real( ckink ) / beta ) ** 2
@@ -308,7 +285,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_remove_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_remove_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the remove statistics
@@ -374,7 +351,7 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_lshift_kink','can not lshift any operators')
+!<         call s_print_exception('ctqmc_lshift_kink','can not lshift any operators')
          lshift_tcount = lshift_tcount + one
          lshift_reject = lshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
@@ -434,7 +411,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_lshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_lshift_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the lshift statistics
@@ -500,7 +477,7 @@
 ! destroy operators ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_rshift_kink','can not rshift any operators')
+!<         call s_print_exception('ctqmc_rshift_kink','can not rshift any operators')
          rshift_tcount = rshift_tcount + one
          rshift_reject = rshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
@@ -560,7 +537,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call ctqmc_print_exception('ctqmc_rshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_rshift_kink', 'csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the rshift statistics
@@ -630,7 +607,7 @@
 
 ! not need to perform global flip if there are no operators at all
      if ( nsize == 0 ) then
-!<         call ctqmc_print_exception('ctqmc_reflip_kink','can not reflip any operators')
+!<         call s_print_exception('ctqmc_reflip_kink','can not reflip any operators')
          reflip_tcount = reflip_tcount + one
          reflip_reject = reflip_reject + one
          RETURN
@@ -709,7 +686,7 @@
              enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<             call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<             call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
          endif ! back if ( pass .eqv. .true. ) block
 
@@ -792,7 +769,7 @@
                  enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<                 call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<                 call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
              endif ! back if ( pass .eqv. .true. ) block
 
@@ -882,7 +859,7 @@
              enddo ! over i={1,nsize} loop
 
 ! print exception information
-!<             call ctqmc_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
+!<             call s_print_exception('ctqmc_reflip_kink','quantum impurity solver refuse to reflip')
 
          endif ! back if ( pass .eqv. .true. ) block
 
@@ -1954,11 +1931,15 @@
      return
   end subroutine cat_rshift_detrat
 
-!>>> calculate the determinant ratio for global spin flip
+!!>>> cat_reflip_detrat: calculate the determinant ratio for global
+!!>>> spin flip
   subroutine cat_reflip_detrat(up, dn, ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
+     use context, only : mmat
 
      implicit none
 
@@ -1974,10 +1955,10 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
-! loop index over segments
+! loop index over operators
      integer  :: i
      integer  :: j
 
@@ -1987,7 +1968,7 @@
 ! status flag
      integer  :: istat
 
-! imaginary time for start and end points
+! imaginary time for create and destroy operators
      real(dp) :: tau_start
      real(dp) :: tau_end
 
@@ -2009,8 +1990,8 @@
      allocate(Dmm(kaux,kaux), stat=istat)
      allocate(Tmm(kaux,kaux), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('cat_reflip_detrat','can not allocate enough memory')
-     endif
+         call s_print_error('cat_reflip_detrat','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! init Dmm and Tmm matrix
      Dmm = zero
@@ -2033,7 +2014,7 @@
      call dgemm('N', 'N', kaux, kaux, kaux, one, Dmm, kaux, mmat(1:kaux, 1:kaux, up), kaux, zero, Tmm, kaux)
 
 ! calculate the determinant of Tmm, it is the desired ratio
-     call ctqmc_dmat_det(kaux, Tmm, ratio)
+     call s_det_d(kaux, Tmm, ratio)
 
 ! deallocate memory
      deallocate(Dmm)
