@@ -29,7 +29,7 @@
 
 include ../../build/make.sys
 
-modc = ctqmc_control.o ctqmc_context.o
+modc = mod_leja.o ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
 core = ctqmc_solver.o
 lev1 = ctqmc_flavor.o ctqmc_update.o
