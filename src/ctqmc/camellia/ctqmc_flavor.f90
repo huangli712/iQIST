@@ -1009,17 +1009,20 @@
      return
   end subroutine try_rshift_colour
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series B             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series B            <<<
+!!========================================================================
 
-!>>> update the perturbation expansion series for insert new create and
-! destroy operators in the colour part actually
+!!>>> cat_insert_colour: update the perturbation expansion series for
+!!>>> insert new create and destroy operators in the colour part actually
   subroutine cat_insert_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use context
+     use constants, only : dp
+     use stack, only : istack_pop
 
-     use stack
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rmesh
 
      implicit none
 
@@ -1049,9 +1052,9 @@
      real(dp) :: xs
      real(dp) :: xe
 
-! get memory address for is and ie 
-     as = istack_pop( empty_s(flvr) )
-     ae = istack_pop( empty_e(flvr) )
+! get memory address for is and ie
+     call istack_pop( empty_s(flvr), as )
+     call istack_pop( empty_e(flvr), ae )
 
 ! shift index_s and index_e to create two empty rooms for as and ae
      do i=ckink,is,-1
@@ -1082,13 +1085,13 @@
      return
   end subroutine cat_insert_colour
 
-!>>> update the perturbation expansion series for remove old create and
-! destroy operators in the colour part actually
+!!>>> cat_remove_colour: update the perturbation expansion series for
+!!>>> remove old create and destroy operators in the colour part actually
   subroutine cat_remove_colour(flvr, is, ie)
-     use constants
-     use context
+     use stack, only : istack_push
 
-     use stack
+     use context, only : ckink
+     use context, only : empty_s, empty_e, index_s, index_e
 
      implicit none
 
