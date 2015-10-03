@@ -1425,14 +1425,16 @@
      return
   end subroutine try_insert_flavor
 
-!>>> determine index addresses for the new create and destroy operators in
-! the flavor part, and then determine whether they can be inserted diagrammatically
+!!>>> try_remove_flavor: determine index addresses for the new create and
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> they can be inserted diagrammatically
   subroutine try_remove_flavor(is, ie, tau_start, tau_end, lrmv)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
 
-     use stack
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : empty_v, index_v, type_v, flvr_v
 
      implicit none
 
@@ -1504,17 +1506,23 @@
 ! remove destroy operator
      if ( tau_start < tau_end ) then
          ie = ie - 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine lrmv, whether we can kick off them ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         lrmv = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pis and pie
      pis = is
      pie = ie
      if ( tau_start < tau_end ) then
          pie = pie + 1
-     endif
+     endif ! back if ( tau_start < tau_end ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1542,9 +1550,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize ) then
-                 lrmv = .true.
-                 RETURN
-             endif
+                 lrmv = .true.; RETURN
+             endif ! back if ( idead == nsize ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1552,12 +1559,16 @@
      return
   end subroutine try_remove_flavor
 
-!>>> determine index addresses for the old and new create operators in the
-! flavor part, and then determine whether it can be shifted diagrammatically
+!!>>> try_lshift_flavor: determine index addresses for the old and new
+!!>>> create operators in the flavor part, and then determine whether it
+!!>>> can be shifted diagrammatically
   subroutine try_lshift_flavor(flvr, iso, isn, tau_start1, tau_start2, lshf)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
+
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v
 
      implicit none
 
@@ -1622,7 +1633,7 @@
 !<     enddo ! over do while loop
 !<     iso = i
      call ctqmc_make_search( iso, nsize, tau_start1 )
-     
+
 ! determine isn
      isn = 1
      if ( nsize > 0 ) then
@@ -1642,11 +1653,17 @@
 ! adjust isn further
      if ( tau_start1 < tau_start2 ) then
          isn = isn - 1
-     endif
+     endif ! back if ( tau_start1 < tau_start2 ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine lshf, whether we can shift it ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         lshf = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate piso and pisn
      piso = iso
      pisn = isn
@@ -1654,7 +1671,7 @@
          pisn = pisn + 1
      else
          piso = piso + 1
-     endif
+     endif ! back if ( tau_start1 < tau_start2 ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1674,7 +1691,6 @@
 
 ! meet the old create operator
                  if      ( i == piso ) then
-                     counter = counter - 1
                      idead = idead + 1
 ! meet the new create operator
                  else if ( i == pisn ) then
@@ -1695,9 +1711,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 1 ) then
-                 lshf = .true.
-                 RETURN
-             endif
+                 lshf = .true.; RETURN
+             endif ! back if ( idead == nsize + 1 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1705,12 +1720,16 @@
      return
   end subroutine try_lshift_flavor
 
-!>>> determine index addresses for the old and new destroy operators in the
-! flavor part, and then determine whether it can be shifted diagrammatically
+!!>>> try_rshift_flavor: determine index addresses for the old and new
+!!>>> destroy operators in the flavor part, and then determine whether
+!!>>> it can be shifted diagrammatically
   subroutine try_rshift_flavor(flvr, ieo, ien, tau_end1, tau_end2, rshf)
-     use constants
-     use control
-     use context
+     use constants, only : dp
+     use stack, only : istack_getrest
+
+     use control, only : nband
+     use context, only : cssoc
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, time_v
 
      implicit none
 
@@ -1795,11 +1814,17 @@
 ! adjust ien further
      if ( tau_end1 < tau_end2 ) then
          ien = ien - 1
-     endif
+     endif ! back if ( tau_end1 < tau_end2 ) block
 
 !-------------------------------------------------------------------------
 ! stage 2: determine rshf, whether we can shift it ?
 !-------------------------------------------------------------------------
+! for the spin-orbital coupling case, we can not lookup the operators
+! series quickly
+     if ( cssoc == 1 ) then
+         rshf = .true.; RETURN
+     endif ! back if ( cssoc == 1 ) block
+
 ! evaluate pieo and pien
      pieo = ieo
      pien = ien
@@ -1807,7 +1832,7 @@
          pien = pien + 1
      else
          pieo = pieo + 1
-     endif
+     endif ! back if ( tau_end1 < tau_end2 ) block
 
 ! loop over all the subspace
      do m=0,nband
@@ -1827,7 +1852,6 @@
 
 ! meet the old destroy operator
                  if      ( i == pieo ) then
-                     counter = counter - 1
                      idead = idead + 1
 ! meet the new destroy operator
                  else if ( i == pien ) then
@@ -1848,9 +1872,8 @@
 ! once current subspace can survive, in order to save computational time,
 ! we return immediately, no need to deal with the rest subspaces
              if ( idead == nsize + 1 ) then
-                 rshf = .true.
-                 RETURN
-             endif
+                 rshf = .true.; RETURN
+             endif ! back if ( idead == nsize + 1 ) block
 
          enddo ! over n={0,nband} loop
      enddo ! over m={0,nband} loop
@@ -1858,17 +1881,20 @@
      return
   end subroutine try_rshift_flavor
 
-!-------------------------------------------------------------------------
-!>>> service layer: update perturbation expansion series D             <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update perturbation expansion series D            <<<
+!!========================================================================
 
-!>>> insert new create and destroy operators in the flavor part
+!!>>> cat_insert_flavor: insert new create and destroy operators in the
+!!>>> flavor part
   subroutine cat_insert_flavor(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use stack, only : istack_getrest, istack_pop
 
-     use stack
+     use control, only : ncfgs
+     use control, only : beta
+     use context, only : csign
+     use context, only : empty_v, index_v, type_v, flvr_v, time_v, expt_t, expt_v
 
      implicit none
 
@@ -1910,7 +1936,7 @@
      nsize = istack_getrest( empty_v )
 
 ! get memory address for create operator
-     as = istack_pop( empty_v )
+     call istack_pop( empty_v, as )
 
 ! store basic data for new create operator
      time_v(as) = tau_start
@@ -1937,7 +1963,7 @@
          t_next = beta - time_v( index_v(is) )
      else
          t_next = time_v( index_v(is+1) ) - time_v( index_v(is) )
-     endif ! back if ( is == nsize +1 ) block
+     endif ! back if ( is == nsize + 1 ) block
 
 ! update the expt_v and expt_t, matrix of time evolution operator
 ! if is == nsize + 1, index_v(is+1) is not indexed (i.e, equal to 0),
@@ -1958,7 +1984,7 @@
      nsize = istack_getrest( empty_v )
 
 ! get memory address for destroy operator
-     ae = istack_pop( empty_v )
+     call istack_pop( empty_v, ae )
 
 ! store basic data for new destroy operator
      time_v(ae) = tau_end
@@ -1985,7 +2011,7 @@
          t_next = beta - time_v( index_v(ie) )
      else
          t_next = time_v( index_v(ie+1) ) - time_v( index_v(ie) )
-     endif ! back if ( ie == nsize +1 ) block
+     endif ! back if ( ie == nsize + 1 ) block
 
 ! update the expt_v and expt_t, matrix of time evolution operator
 ! if ie == nsize + 1, index_v(ie+1) is not indexed (i.e, equal to 0),
