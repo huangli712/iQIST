@@ -835,15 +835,17 @@
      return
   end subroutine try_remove_colour
 
-!>>> select index address isn for selected flavor channel randomly, and
-! then determine its imaginary time points, shift it randomly, and then
-! evaluate its final index address for the colour (determinant) part
+!!>>> try_lshift_colour: select index address isn for selected flavor
+!!>>> channel randomly, and then determine its imaginary time points,
+!!>>> shift it randomly, and then evaluate its final index address for
+!!>>> the colour (determinant) part
   subroutine try_lshift_colour(flvr, iso, isn, tau_start1, tau_start2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
 
      implicit none
 
@@ -920,15 +922,17 @@
      return
   end subroutine try_lshift_colour
 
-!>>> select index address ien for selected flavor channel randomly, and
-! then determine its imaginary time points, shift it randomly, and then
-! evaluate its final index address for the colour (determinant) part
+!!>>> try_rshift_colour: select index address ien for selected flavor
+!!>>> channel randomly, and then determine its imaginary time points,
+!!>>> shift it randomly, and then evaluate its final index address for
+!!>>> the colour (determinant) part
   subroutine try_rshift_colour(flvr, ieo, ien, tau_end1, tau_end2)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_e, time_e
 
      implicit none
 
