@@ -790,15 +790,15 @@
      return
   end subroutine try_insert_colour
 
-!>>> select index address is and ie for selected flavor channel randomly,
-! and then determine their imaginary time points for the colour
-! (determinant) part
+!!>>> try_remove_colour: select index address is and ie for selected
+!!>>> flavor channel randomly, and then determine their imaginary time
+!!>>> points for the colour (determinant) part
   subroutine try_remove_colour(flvr, is, ie, tau_start, tau_end)
-     use constants
-     use control
-     use context
+     use constants, only : dp, epss
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
@@ -829,8 +829,8 @@
 
 ! check the validity of tau_start and tau_end
      if ( abs( tau_start - tau_end ) < epss ) then
-         call ctqmc_print_error('try_remove_colour','tau_start is equal to tau_end')
-     endif
+         call s_print_error('try_remove_colour','tau_start is equal to tau_end')
+     endif ! back if ( abs( tau_start - tau_end ) < epss ) block
 
      return
   end subroutine try_remove_colour
