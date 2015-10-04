@@ -1,62 +1,62 @@
-!-------------------------------------------------------------------------
-! project : pansy
-! program : ctqmc_record_gtau
-!           ctqmc_record_grnf
-!           ctqmc_record_hist
-!           ctqmc_record_nmat
-!           ctqmc_record_schi
-!           ctqmc_record_prob <<<---
-!           ctqmc_reduce_gtau
-!           ctqmc_reduce_grnf
-!           ctqmc_reduce_hist
-!           ctqmc_reduce_nmat
-!           ctqmc_reduce_schi
-!           ctqmc_reduce_prob <<<---
-!           ctqmc_symm_nmat
-!           ctqmc_symm_gtau
-!           ctqmc_symm_grnf
-!           ctqmc_smth_sigf   <<<---
-!           ctqmc_make_gtau
-!           ctqmc_make_hub1
-! source  : ctqmc_record.f90
-! type    : subroutine
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/16/2009 by li huang
-!           09/18/2009 by li huang
-!           09/20/2009 by li huang
-!           09/25/2009 by li huang
-!           09/27/2009 by li huang
-!           10/29/2009 by li huang
-!           11/01/2009 by li huang
-!           11/03/2009 by li huang
-!           11/10/2009 by li huang
-!           11/19/2009 by li huang
-!           11/30/2009 by li huang
-!           12/06/2009 by li huang
-!           12/09/2009 by li huang
-!           12/18/2009 by li huang
-!           12/22/2009 by li huang
-!           12/26/2009 by li huang
-!           12/29/2009 by li huang
-!           01/14/2010 by li huang
-!           02/01/2010 by li huang
-!           02/24/2010 by li huang
-!           02/27/2010 by li huang
-!           09/29/2010 by li huang
-! purpose : measure, record, and postprocess the key observables produced
-!           by the hybridization expansion version continuous time quantum
-!           Monte Carlo (CTQMC) quantum impurity solver
-! input   :
-! output  :
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : camellia
+!!! program : ctqmc_record_gtau
+!!!           ctqmc_record_grnf
+!!!           ctqmc_record_hist
+!!!           ctqmc_record_prob
+!!!           ctqmc_record_nmat
+!!!           ctqmc_record_kmat
+!!!           ctqmc_record_lmat
+!!!           ctqmc_record_twop
+!!!           ctqmc_record_pair <<<---
+!!!           ctqmc_reduce_gtau
+!!!           ctqmc_reduce_grnf
+!!!           ctqmc_reduce_hist
+!!!           ctqmc_reduce_prob
+!!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_kmat
+!!!           ctqmc_reduce_lmat
+!!!           ctqmc_reduce_twop
+!!!           ctqmc_reduce_pair <<<---
+!!!           ctqmc_symm_nmat
+!!!           ctqmc_symm_gtau
+!!!           ctqmc_symm_grnf
+!!!           ctqmc_smth_sigf   <<<---
+!!!           ctqmc_make_gtau   <<<---
+!!!           ctqmc_make_prod   <<<---
+!!!           ctqmc_make_hub1   <<<---
+!!! source  : ctqmc_record.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 09/16/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
+!!! purpose : measure, record, and postprocess the important observables
+!!!           produced by the hybridization expansion version continuous
+!!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
-!>>> record the impurity green's function in imaginary time axis
+!!========================================================================
+!!>>> measure physical observables                                     <<<
+!!========================================================================
+
+!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
+!!>>> time axis
   subroutine ctqmc_record_gtau()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, two, pi
+
+     use control, only : isort
+     use control, only : norbs
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : ntime
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : ppleg, qqche
+     use context, only : rank
+     use context, only : mmat
+     use context, only : gtau
 
      implicit none
 
@@ -94,13 +94,13 @@
 ! select measurement method
      select case ( isort )
 
-         case (1)
+         case (1, 4)
              call cat_record_gtau1()
 
-         case (2)
+         case (2, 5)
              call cat_record_gtau2()
 
-         case (3)
+         case (3, 6)
              call cat_record_gtau3()
 
      end select
@@ -109,7 +109,8 @@
 
   contains
 
-!>>> record impurity green's function using normal representation
+!!>>> cat_record_gtau1: record impurity green's function using normal
+!!>>> representation
   subroutine cat_record_gtau1()
      implicit none
 
@@ -129,12 +130,12 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! determine index for imaginary time
                  curr = nint( dtau * step ) + 1
@@ -142,7 +143,7 @@
 ! special tricks for the first point and the last point
                  if ( curr == 1 .or. curr == ntime ) then
                      maux = two * maux
-                 endif
+                 endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
                  gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
@@ -155,7 +156,8 @@
      return
   end subroutine cat_record_gtau1
 
-!>>> record impurity green's function using legendre polynomial representation
+!!>>> cat_record_gtau2: record impurity green's function using legendre
+!!>>> polynomial representation
   subroutine cat_record_gtau2()
      implicit none
 
@@ -175,12 +177,12 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -202,7 +204,8 @@
      return
   end subroutine cat_record_gtau2
 
-!>>> record impurity green's function using chebyshev polynomial representation
+!!>>> cat_record_gtau3: record impurity green's function using chebyshev
+!!>>> polynomial representation
   subroutine cat_record_gtau3()
      implicit none
 
@@ -222,12 +225,12 @@
                  dtau = taue - taus
 
 ! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
+                 maux = mmat(ie, is, flvr) * sign(one, dtau) * csign
 
 ! adjust dtau, keep it stay in (zero, beta)
                  if ( dtau < zero ) then
                      dtau = dtau + beta
-                 endif
+                 endif ! back if ( dtau < zero ) block
 
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
@@ -250,11 +253,14 @@
   end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
-!>>> record the impurity green's function in matsubara frequency space
+!!>>> ctqmc_record_grnf: record the impurity green's function in matsubara
+!!>>> frequency space
   subroutine ctqmc_record_grnf()
-     use constants
-     use control
-     use context
+     use control, only : norbs
+     use control, only : nfreq
+     use context, only : csign
+     use context, only : gmat
+     use context, only : grnf
 
      implicit none
 
@@ -266,8 +272,6 @@
      integer :: flvr
 
 ! note: only the first nfreq points of grnf are modified
-! we enforce csign equal to 1, the influence of sign problem is unclear so far
-!<     csign = 1
      do flvr=1,norbs
          do ifrq=1,nfreq
              grnf(ifrq, flvr, flvr) = grnf(ifrq, flvr, flvr) + csign * gmat(ifrq, flvr, flvr)
@@ -277,9 +281,13 @@
      return
   end subroutine ctqmc_record_grnf
 
-!>>> record the histogram of perturbation expansion series
+!!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
   subroutine ctqmc_record_hist()
-     use context
+     use constants, only : one
+
+     use control, only : mkink
+     use context, only : ckink, csign, caves
+     use context, only : hist
 
      implicit none
 
@@ -288,16 +296,36 @@
 
 ! note: if ckink == 0, we record its count in hist(mkink)
      if ( ckink > 0 ) then
-         hist(ckink) = hist(ckink) + 1
+         hist(ckink) = hist(ckink) + one
      else
-         hist(mkink) = hist(mkink) + 1
-     endif
+         hist(mkink) = hist(mkink) + one
+     endif ! back if ( ckink > 0 ) block
 
      return
   end subroutine ctqmc_record_hist
 
-!>>> record the occupation matrix, double occupation matrix, and auxiliary
-! physical observables simulataneously
+!!>>> ctqmc_record_prob: record the probability of atomic states
+  subroutine ctqmc_record_prob()
+     use control, only : ncfgs
+     use context, only : csign, matrix_ptrace
+     use context, only : prob
+     use context, only : diag
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+
+     do i=1,ncfgs
+         prob(i) = prob(i) + csign * diag(i,2) / matrix_ptrace
+     enddo ! over i={1,ncfgs} loop
+
+     return
+  end subroutine ctqmc_record_prob
+
+!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
+!!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
      use constants
      use control
@@ -332,7 +360,7 @@
 
 ! evaluate cprob at first, it is current atomic propability
      do i=1,ncfgs
-         cprob(i) = ddmat(i,2) / matrix_ptrace
+         cprob(i) = diag(i,2) / matrix_ptrace
      enddo ! over i={1,ncfgs} loop
 
 ! evaluate raux2, it is Tr ( e^{- \beta H} )
@@ -428,35 +456,343 @@
      return
   end subroutine ctqmc_record_nmat
 
-!>>> record the spin-spin correlation function
-  subroutine ctqmc_record_schi()
-     use constants
-     use control
-     use context
+!!>>> ctqmc_record_kmat: record the < k^2 > - < k >^2
+  subroutine ctqmc_record_kmat()
+     use constants, only : dp
 
-     implicit none
-
-     return
-  end subroutine ctqmc_record_schi
-
-!>>> record the probability of atomic states
-  subroutine ctqmc_record_prob()
-     use constants
-     use control
-     use context
+     use control, only : issus
+     use control, only : norbs
+     use context, only : csign
+     use context, only : kmat, kkmat
+     use context, only : rank
 
      implicit none
 
 ! local variables
-! loop index
+! loop index for flavor channel
      integer :: i
+     integer :: j
 
-     do i=1,ncfgs
-         prob(i) = prob(i) + csign * ddmat(i,2) / matrix_ptrace
-     enddo ! over i={1,ncfgs} loop
+! check whether there is conflict
+     call s_assert( btest(issus, 5) )
+
+! since rank means the number of operator pairs,
+! so we have to multiply it with two
+     do i=1,norbs
+         kmat(i) = kmat(i) + rank(i) * 2.0_dp * csign
+     enddo ! over i={1,norbs} loop
+
+     do i=1,norbs
+         do j=1,norbs
+             kkmat(i,j) = kkmat(i,j) + rank(i) * rank(j) * 4.0_dp * csign
+         enddo ! over j={1,norbs} loop
+     enddo ! over i={1,norbs} loop
 
      return
-  end subroutine ctqmc_record_prob
+  end subroutine ctqmc_record_kmat
+
+!!>>> ctqmc_record_lmat: record the fidelity susceptibility
+  subroutine ctqmc_record_lmat()
+     use constants, only : dp, zero, one, two
+
+     use control, only : issus
+     use control, only : norbs
+     use control, only : beta
+     use context, only : csign
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : lmat, rmat, lrmat
+     use context, only : rank
+
+     implicit none
+
+! local variables
+! loop index over segments
+     integer  :: i
+
+! loop index for flavor channel
+     integer  :: flvr
+
+! imaginary time for start and end points
+     real(dp) :: ts
+     real(dp) :: te
+
+! number of operators at left half axis for the current configuration
+     real(dp) :: kl(norbs)
+
+! number of operators at right half axis for the current configuration
+     real(dp) :: kr(norbs)
+
+! check whether there is conflict
+     call s_assert( btest(issus, 6) )
+
+! init k_l and k_r
+     kl = zero
+     kr = zero
+
+! loop over flavors and segments to calculate k_l and k_r
+     do flvr=1,norbs
+         do i=1,rank(flvr)
+             ts = time_s(index_s(i, flvr), flvr)
+             if ( ts < beta / two ) then
+                 kl(flvr) = kl(flvr) + one
+             else
+                 kr(flvr) = kr(flvr) + one
+             endif ! back if ( ts < beta / two ) block
+
+             te = time_e(index_e(i, flvr), flvr)
+             if ( te < beta / two ) then
+                 kl(flvr) = kl(flvr) + one
+             else
+                 kr(flvr) = kr(flvr) + one
+             endif ! back if ( te < beta / two ) block
+         enddo ! over i={1,rank(flvr)} loop
+     enddo ! over flvr={1,norbs} loop
+
+! add contribution to < k_l > and < k_r >
+     lmat = lmat + kl * csign
+     rmat = rmat + kr * csign
+
+! add contribution to < k_l k_r >
+     do flvr=1,norbs
+         do i=1,norbs
+             lrmat(i,flvr) = lrmat(i,flvr) + kl(i) * kr(flvr) * csign
+         enddo ! over i={1,norbs} loop
+     enddo ! over flvr={1,norbs} loop
+
+     return
+  end subroutine ctqmc_record_lmat
+
+!!>>> ctqmc_record_twop: record the two-particle green's function
+  subroutine ctqmc_record_twop()
+     use constants, only : dp, czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : csign
+     use context, only : g2_re, g2_im
+     use context, only : rank
+     use context, only : mmat
+
+     implicit none
+
+! local variables
+! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+     integer  :: flvr
+
+! loop index for frequency
+     integer  :: nfaux
+     integer  :: wbn
+     integer  :: w1n
+     integer  :: w2n
+     integer  :: w3n
+     integer  :: w4n
+
+! used to store the element of mmat matrix
+     real(dp) :: maux
+
+! dummy complex(dp) variables, used to calculate the g2_re and g2_im
+     complex(dp) :: cmeas
+
+! dummy complex(dp) arrays, used to store the intermediate results
+     complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: caux1(:,:)
+     complex(dp), allocatable :: caux2(:,:)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 1) .and. .not. btest(isvrt, 2) )
+
+! evaluate nfaux, determine the size of g2aux
+     nfaux = nffrq + nbfrq - 1
+
+! allocate memory for g2aux and then initialize it
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+
+! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
+     allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
+
+! calculate g2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP DO PRIVATE (flvr, is, ie, maux, w2n, w1n, caux1, caux2)
+     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+         call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
+
+         do is=1,rank(flvr)
+             do ie=1,rank(flvr)
+
+                 maux = mmat(ie, is, flvr)
+                 do w2n=1,nfaux
+                     do w1n=1,nfaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+!$OMP END DO
+
+! calculate g2_re and g2_im
+!$OMP DO PRIVATE (f1, f2, cmeas, wbn, w4n, w3n, w2n, w1n)
+     CTQMC_ORBIT1_LOOP: do f1=1,norbs
+         CTQMC_ORBIT2_LOOP: do f2=1,f1
+
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+                         w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
+
+                         cmeas = g2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
+                         if ( f1 == f2 ) then
+                             cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
+                         endif ! back if ( f1 == f2 ) block
+                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) * csign / beta
+                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) * csign / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+
+         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
+     enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
+!$OMP END DO
+!$OMP END PARALLEL
+
+! deallocate memory
+     deallocate( g2aux )
+     deallocate( caux1 )
+     deallocate( caux2 )
+
+     return
+  end subroutine ctqmc_record_twop
+
+!!>>> ctqmc_record_pair: record the particle-particle pair susceptibility
+  subroutine ctqmc_record_pair()
+     use constants, only : dp, czero
+
+     use control, only : isvrt
+     use control, only : norbs
+     use control, only : nffrq, nbfrq
+     use control, only : beta
+     use context, only : csign
+     use context, only : ps_re, ps_im
+     use context, only : rank
+     use context, only : mmat
+
+     implicit none
+
+! local variables
+! loop indices for start and end points
+     integer  :: is
+     integer  :: ie
+
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+     integer  :: flvr
+
+! loop index for frequency
+     integer  :: nfaux
+     integer  :: wbn
+     integer  :: w1n
+     integer  :: w2n
+     integer  :: w3n
+     integer  :: w4n
+
+! used to store the element of mmat matrix
+     real(dp) :: maux
+
+! dummy complex(dp) variables, used to calculate the ps_re and ps_im
+     complex(dp) :: cmeas
+
+! dummy complex(dp) arrays, used to store the intermediate results
+     complex(dp), allocatable :: g2aux(:,:,:)
+     complex(dp), allocatable :: caux1(:,:)
+     complex(dp), allocatable :: caux2(:,:)
+
+! check whether there is conflict
+     call s_assert( btest(isvrt, 3) )
+
+! evaluate nfaux, determine the size of g2aux
+     nfaux = nffrq + nbfrq - 1
+
+! allocate memory for g2aux and then initialize it
+     allocate( g2aux(nfaux, nfaux, norbs) ); g2aux = czero
+
+! allocate memory for caux1 and caux2, and then initialize them
+     allocate( caux1(nfaux, maxval(rank)) ); caux1 = czero
+     allocate( caux2(nfaux, maxval(rank)) ); caux2 = czero
+
+! calculate g2aux: see Eq. (52) in Phys. Rev. B 89, 235128 (2014)
+!$OMP PARALLEL DEFAULT(SHARED)
+!$OMP DO PRIVATE (flvr, is, ie, maux, w2n, w1n, caux1, caux2)
+     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
+         call ctqmc_make_prod(flvr, nfaux, maxval(rank), caux1, caux2)
+
+         do is=1,rank(flvr)
+             do ie=1,rank(flvr)
+
+                 maux = mmat(ie, is, flvr)
+                 do w2n=1,nfaux
+                     do w1n=1,nfaux
+                         g2aux(w1n,w2n,flvr) = g2aux(w1n,w2n,flvr) + maux * caux1(w2n,is) * caux2(w1n,ie)
+                     enddo ! over w1n={1,nfaux} loop
+                 enddo ! over w2n={1,nfaux} loop
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
+!$OMP END DO
+
+! calculate ps_re and ps_im
+!$OMP DO PRIVATE (f1, f2, cmeas, wbn, w4n, w3n, w2n, w1n)
+     CTQMC_ORBIT1_LOOP: do f1=1,norbs
+         CTQMC_ORBIT2_LOOP: do f2=1,f1
+
+             CTQMC_BOSONF_LOOP: do wbn=1,nbfrq
+
+                 CTQMC_FERMI1_LOOP: do w2n=1,nffrq
+                     CTQMC_FERMI2_LOOP: do w3n=1,nffrq
+                         w1n = w2n + wbn - 1; w4n = w3n + wbn - 1
+
+                         cmeas = czero
+                         if ( f1 /= f2 ) then
+                             cmeas = cmeas + g2aux(w1n,w4n,f1) * g2aux(nffrq-w2n+1,nffrq-w3n+1,f2)
+                         endif ! back if ( f1 == f2 ) block
+                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) * csign / beta
+                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) * csign / beta
+                     enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
+                 enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
+
+             enddo CTQMC_BOSONF_LOOP ! over wbn={1,nbfrq} loop
+
+         enddo CTQMC_ORBIT2_LOOP ! over f2={1,f1} loop
+     enddo CTQMC_ORBIT1_LOOP ! over f1={1,norbs} loop
+!$OMP END DO
+!$OMP END PARALLEL
+
+! deallocate memory
+     deallocate( g2aux )
+     deallocate( caux1 )
+     deallocate( caux2 )
+
+     return
+  end subroutine ctqmc_record_pair
+
+!!========================================================================
+!!>>> reduce physical observables                                      <<<
+!!========================================================================
 
 !>>> reduce the gtau from all children processes
   subroutine ctqmc_reduce_gtau(gtau_mpi)
@@ -1182,14 +1518,14 @@
 ! calculate atomic self-energy function using dyson's equation
      do i=1,norbs
          do k=1,mfreq
-             shub(k,i) = cmesh(k) + mune - eimp(i) - one / ghub(k,i)
+             shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
 ! dump the ghub and shub, only for reference, only the master node can do it
      if ( myid == master ) then
          call ctqmc_dump_hub1(rmesh, ghub, shub)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! build self-energy function at low frequency region
 !-------------------------------------------------------------------------
@@ -1205,9 +1541,9 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
      do k=1,nfreq
          gaux = grnf(k,:,:)
-         call ctqmc_zmat_inv(norbs, gaux)
+         call s_inv_z(norbs, gaux)
          do i=1,norbs
-             sig2(k,i,i) = cmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
+             sig2(k,i,i) = czi * rmesh(k) + mune - eimp(i) - gaux(i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
      enddo ! over k={1,nfreq} loop
 !-------------------------------------------------------------------------
@@ -1233,15 +1569,19 @@
          cb = cb / real(5)
          ob = rmesh(nfreq-2)
 
-! for the imaginary part
+! step A: for the imaginary part
 ! determine the intermediate region [nfreq+1,start] at first
+         start = 0
          do k=nfreq+1,mfreq
              start = k
              d0 = aimag( shub(k,i) - cb ) / ( rmesh(k) - ob )
              d1 = aimag( shub(k,i) - shub(k-1,i) ) / ( rmesh(k) - rmesh(k-1) )
              if ( abs( d0 - d1 ) < 0.02_dp ) EXIT
          enddo ! over k={nfreq+1,mfreq} loop
-         if ( start - nfreq < 32 ) start = nfreq + 32
+
+! we just constrain start \in [nfreq + 32, nfreq + 128]
+         if ( start - nfreq <  32 ) start = nfreq +  32
+         if ( start - nfreq > 128 ) start = nfreq + 128
 
          ce = shub(start,i)
          oe = rmesh(start)
@@ -1256,7 +1596,7 @@
              sig2(k,i,i) = dcmplx( zero, aimag( shub(k,i) ) )
          enddo ! over k={start+1,mfreq} loop
 
-! for the real part
+! step B: for the real part
          sinf = shub(mfreq,i)
          do k=nfreq+1,mfreq
              sig2(k,i,i) = sig2(k,i,i) + real(sinf) + ( ob / rmesh(k) )**2 * real( cb - sinf )
@@ -1268,9 +1608,9 @@
      do k=1,mfreq
          gaux = czero
          do i=1,norbs
-             gaux(i,i) = cmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
+             gaux(i,i) = czi * rmesh(k) + mune - eimp(i) - sig2(k,i,i) - hybf(k,i,i)
          enddo ! over i={1,norbs} loop
-         call ctqmc_zmat_inv(norbs, gaux)
+         call s_inv_z(norbs, gaux)
          grnf(k,:,:) = gaux
      enddo ! over k={1,mfreq} loop
 
