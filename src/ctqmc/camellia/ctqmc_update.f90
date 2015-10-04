@@ -437,13 +437,16 @@
      return
   end subroutine ctqmc_lshift_kink
 
-!>>> shift old destroy operators in the perturbation expansion series
+!!>>> ctqmc_rshift_kink: shift old destroy operators in the perturbation
+!!>>> expansion series
   subroutine ctqmc_rshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, csign, cnegs
+     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : rank
 
      implicit none
 
@@ -475,7 +478,7 @@
 ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part 
+! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
 ! initialize logical variables
@@ -494,7 +497,7 @@
          rshift_reject = rshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first, we select cieo randomly, and then obtain tau_end1. according
 ! to the existing operators, we determine tau_end2 and related index cien
@@ -511,7 +514,7 @@
          call cat_rshift_ztrace(flvr, fieo, fien, tau_end1, tau_end2, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( rshf .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -519,7 +522,7 @@
          call cat_rshift_detrat(flvr, cieo, tau_end1, tau_end2, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( rshf .eqv. .true. ) block
 
 ! calculate the transition probability for shift old destroy operators
      p = deter_ratio * trace_ratio
@@ -549,7 +552,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_rshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_rshift_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the rshift statistics
