@@ -31,17 +31,22 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!-------------------------------------------------------------------------
-!>>> driver layer: updating perturbation expansion series              <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> driver layer: updating perturbation expansion series             <<<
+!!========================================================================
 
-!>>> insert new create and destroy operators in the perturbation expansion series
+!!>>> ctqmc_insert_kink: insert new create and destroy operators in the
+!!>>> perturbation expansion series
   subroutine ctqmc_insert_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink, csign, cnegs
+     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : rank
 
      implicit none
 
@@ -167,13 +172,17 @@
      return
   end subroutine ctqmc_insert_kink
 
-!>>> remove old create and destroy operators in the perturbation expansion series
+!!>>> ctqmc_remove_kink: remove old create and destroy operators in the
+!!>>> perturbation expansion series
   subroutine ctqmc_remove_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use control, only : beta
+     use context, only : ckink, csign, cnegs
+     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : rank
 
      implicit none
 
@@ -299,13 +308,16 @@
      return
   end subroutine ctqmc_remove_kink
 
-!>>> shift old create operators in the perturbation expansion series
+!!>>> ctqmc_lshift_kink: shift old create operators in the perturbation
+!!>>> expansion series
   subroutine ctqmc_lshift_kink()
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one
+     use spring, only : spring_sfmt_stream
 
-     use spring
+     use control, only : norbs
+     use context, only : ckink, csign, cnegs
+     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : rank
 
      implicit none
 
@@ -337,7 +349,7 @@
 ! ratio between old and new configurations, the local trace part
      real(dp) :: trace_ratio
 
-! ratio between old and new configurations, the determinant part 
+! ratio between old and new configurations, the determinant part
      real(dp) :: deter_ratio
 
 ! initialize logical variables
@@ -356,7 +368,7 @@
          lshift_reject = lshift_reject + one
          if ( csign < 0 )  cnegs = cnegs + 1
          RETURN
-     endif
+     endif ! back if ( ckink == 0 ) block
 
 ! at first, we select ciso randomly, and then obtain tau_start1. according
 ! to the existing operators, we determine tau_start2 and related index cisn
@@ -373,7 +385,7 @@
          call cat_lshift_ztrace(flvr, fiso, fisn, tau_start1, tau_start2, trace_ratio)
      else
          trace_ratio = zero
-     endif
+     endif ! back if ( lshf .eqv. .true. ) block
 
 ! calculate the transition ratio between old and new configurations,
 ! for the determinant part
@@ -381,7 +393,7 @@
          call cat_lshift_detrat(flvr, ciso, tau_start1, tau_start2, deter_ratio)
      else
          deter_ratio = zero
-     endif
+     endif ! back if ( lshf .eqv. .true. ) block
 
 ! calculate the transition probability for shift old create operators
      p = deter_ratio * trace_ratio
@@ -395,7 +407,7 @@
 ! update the flavor part of perturbation expansion series
          call cat_lshift_flavor(flvr, fiso, fisn, tau_start2)
 
-! update the mmat matrix and gmat matrix, respectively, 
+! update the mmat matrix and gmat matrix, respectively,
 ! cat_lshift_colour() subroutine is invoked internally to update the colour
 ! part of perturbation expansion series
          call cat_lshift_matrix(flvr, ciso, cisn, tau_start1, tau_start2, deter_ratio)
@@ -411,7 +423,7 @@
 ! record negative sign
      if ( csign < 0 ) then
          cnegs = cnegs + 1
-!<         call s_print_exception('ctqmc_lshift_kink', 'csign is negative')
+!<         call s_print_exception('ctqmc_lshift_kink','csign is negative')
      endif ! back if ( csign < 0 ) block
 
 ! update the lshift statistics
@@ -1681,11 +1693,12 @@
      return
   end subroutine cat_reload_matrix
 
-!-------------------------------------------------------------------------
-!>>> service layer: evaluate the determinant ratio                     <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: evaluate the determinant ratio                    <<<
+!!========================================================================
 
-!>>> calculate the determinant ratio for insert new create and destroy operators
+!!>>> cat_insert_detrat: calculate the determinant ratio for insert new
+!!>>> create and destroy operators
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      use constants
      use control
@@ -1708,7 +1721,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1729,7 +1742,7 @@
              lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end + beta)
          else
              lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end)
-         endif
+         endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end   ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
@@ -1738,7 +1751,7 @@
              rvec(j) = -ctqmc_make_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr) + beta)
          else
              rvec(j) =  ctqmc_make_htau(flvr, tau_start - time_e(index_e(j, flvr), flvr))
-         endif
+         endif ! back if ( tau_start < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
 ! calculate deter_ratio by cubic spline interpolation
@@ -1746,7 +1759,7 @@
          deter_ratio =  ctqmc_make_htau(flvr, tau_start - tau_end)
      else
          deter_ratio = -ctqmc_make_htau(flvr, tau_start - tau_end + beta)
-     endif
+     endif ! back if ( tau_start > tau_end ) block
 
 ! calculate lspace and rspace
      do i=1,ckink
@@ -1770,9 +1783,12 @@
      return
   end subroutine cat_insert_detrat
 
-!>>> calculate the determinant ratio for remove old create and destroy operators
+!!>>> cat_remove_detrat: calculate the determinant ratio for remove old
+!!>>> create and destroy operators
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
-     use context
+     use constants, only : dp
+
+     use context, only : mmat
 
      implicit none
 
@@ -1793,7 +1809,8 @@
      return
   end subroutine cat_remove_detrat
 
-!>>> calculate the determinant ratio for shift old create operators
+!!>>> cat_lshift_detrat: calculate the determinant ratio for shift old
+!!>>> create operators
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
      use constants
      use control
@@ -1819,7 +1836,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external    :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1836,7 +1853,7 @@
              rvec(i) = -ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr) + beta)
          else
              rvec(i) =  ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr))
-         endif
+         endif ! back if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate lvec by cubic spline interpolation
@@ -1845,7 +1862,7 @@
              lvec(j) = -ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr) + beta)
          else
              lvec(j) =  ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr))
-         endif
+         endif ! back if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust rvec
