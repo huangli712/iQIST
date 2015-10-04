@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : pansy
+!!! project : camellia
 !!! program : ctqmc_insert_kink
 !!!           ctqmc_remove_kink
 !!!           ctqmc_lshift_kink
@@ -1610,11 +1610,16 @@
      return
   end subroutine cat_reflip_matrix
 
-!>>> global update the mmat matrix and gmat matrix from scratch
+!!>>> cat_reload_matrix: global update the mmat matrix and gmat matrix
+!!>>> from scratch
   subroutine cat_reload_matrix(flvr)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rank
+     use context, only : mmat, gmat
 
      implicit none
 
@@ -1624,7 +1629,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1668,7 +1673,7 @@
      enddo ! over j={1,kaux} loop
 
 ! now we obtain dmat matrix, while what we need is its inversion
-     call ctqmc_dmat_inv(kaux, mmat(1:kaux, 1:kaux, flvr))
+     call s_inv_d(kaux, mmat(1:kaux, 1:kaux, flvr))
 
 ! reset gmat matrix
      gmat(:, flvr, flvr) = czero
@@ -1695,9 +1700,13 @@
 !!>>> cat_insert_detrat: calculate the determinant ratio for insert new
 !!>>> create and destroy operators
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : lspace, rspace, mmat
 
      implicit none
 
@@ -1807,9 +1816,13 @@
 !!>>> cat_lshift_detrat: calculate the determinant ratio for shift old
 !!>>> create operators
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_e, time_e
+     use context, only : mmat
 
      implicit none
 
@@ -1874,11 +1887,16 @@
      return
   end subroutine cat_lshift_detrat
 
-!>>> calculate the determinant ratio for shift old destroy operators
+!!>>> cat_rshift_detrat: calculate the determinant ratio for shift old
+!!>>> destroy operators
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one
+
+     use control, only : mkink
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, time_s
+     use context, only : mmat
 
      implicit none
 
@@ -1900,7 +1918,7 @@
 
 ! external functions
 ! used to interpolate the hybridization function
-     real(dp), external    :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1917,7 +1935,7 @@
              lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
          else
              lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1)
-         endif
+         endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
@@ -1926,7 +1944,7 @@
              rvec(j) = -ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
          else
              rvec(j) =  ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2)
-         endif
+         endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust lvec
@@ -1937,7 +1955,7 @@
 ! calculate final determinant ratio
      deter_ratio = one
      do i=1,ckink
-         deter_ratio = deter_ratio + mmat(addr, i, flvr) * lvec(i) 
+         deter_ratio = deter_ratio + mmat(addr, i, flvr) * lvec(i)
      enddo ! over i={1,ckink} loop
 
      return
