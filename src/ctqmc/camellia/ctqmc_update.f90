@@ -653,13 +653,11 @@
 ! make a trial swap for flvr_v
          do i=1,nsize
              if ( flvr_v ( index_v(i) ) == fup ) then
-                 flvr_v ( index_v(i) ) = fdn
-                 CYCLE
-             endif
+                 flvr_v ( index_v(i) ) = fdn; CYCLE
+             endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
              if ( flvr_v ( index_v(i) ) == fdn ) then
-                 flvr_v ( index_v(i) ) = fup
-                 CYCLE
-             endif
+                 flvr_v ( index_v(i) ) = fup; CYCLE
+             endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
          enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -668,7 +666,7 @@
          enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-         call ctqmc_make_ztrace(3, nsize, matrix_ntrace)
+         call ctqmc_make_ztrace(3, nsize, matrix_ntrace, one, one)
 
 ! evaluate the final transition ratio
          p = p * ( matrix_ntrace / matrix_ptrace )
@@ -694,13 +692,11 @@
 ! recover the original status of flvr_v
              do i=1,nsize
                  if ( flvr_v ( index_v(i) ) == fup ) then
-                     flvr_v ( index_v(i) ) = fdn
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fdn; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                  if ( flvr_v ( index_v(i) ) == fdn ) then
-                     flvr_v ( index_v(i) ) = fup
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fup; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
              enddo ! over i={1,nsize} loop
 
 ! print exception information
@@ -736,13 +732,11 @@
 ! make a trial swap for flvr_v
              do i=1,nsize
                  if ( flvr_v ( index_v(i) ) == fup ) then
-                     flvr_v ( index_v(i) ) = fdn
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fdn; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                  if ( flvr_v ( index_v(i) ) == fdn ) then
-                     flvr_v ( index_v(i) ) = fup
-                     CYCLE
-                 endif
+                     flvr_v ( index_v(i) ) = fup; CYCLE
+                 endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
              enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -751,7 +745,7 @@
              enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-             call ctqmc_make_ztrace(3, nsize, matrix_ntrace)
+             call ctqmc_make_ztrace(3, nsize, matrix_ntrace, one, one)
 
 ! evaluate the final transition ratio
              p = p * ( matrix_ntrace / matrix_ptrace )
@@ -777,13 +771,11 @@
 ! recover the original status of flvr_v
                  do i=1,nsize
                      if ( flvr_v ( index_v(i) ) == fup ) then
-                         flvr_v ( index_v(i) ) = fdn
-                         CYCLE
-                     endif
+                         flvr_v ( index_v(i) ) = fdn; CYCLE
+                     endif ! back if ( flvr_v ( index_v(i) ) == fup ) block
                      if ( flvr_v ( index_v(i) ) == fdn ) then
-                         flvr_v ( index_v(i) ) = fup
-                         CYCLE
-                     endif
+                         flvr_v ( index_v(i) ) = fup; CYCLE
+                     endif ! back if ( flvr_v ( index_v(i) ) == fdn ) block
                  enddo ! over i={1,nsize} loop
 
 ! print exception information
@@ -827,7 +819,7 @@
                  flvr_v ( index_v(i) ) = flvr + nband
              else
                  flvr_v ( index_v(i) ) = flvr - nband
-             endif
+             endif ! back if ( flvr <= nband ) block
          enddo ! over i={1,nsize} loop
 
 ! make a copy of index_v, index_t is need by ctqmc_make_ztrace()
@@ -836,7 +828,7 @@
          enddo ! over i={1,nsize} loop
 
 ! calculate operators trace
-         call ctqmc_make_ztrace(3, nsize, matrix_ntrace)
+         call ctqmc_make_ztrace(3, nsize, matrix_ntrace, one, one)
 
 ! evaluate the final transition ratio
          p = p * ( matrix_ntrace / matrix_ptrace )
@@ -873,7 +865,7 @@
                      flvr_v ( index_v(i) ) = flvr + nband
                  else
                      flvr_v ( index_v(i) ) = flvr - nband
-                 endif
+                 endif ! back if ( flvr <= nband ) block
              enddo ! over i={1,nsize} loop
 
 ! print exception information
