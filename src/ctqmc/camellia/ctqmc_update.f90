@@ -886,10 +886,11 @@
      return
   end subroutine ctqmc_reflip_kink
 
-!>>> global update all operators in the perturbation expansion series
+!!>>> ctqmc_reload_kink: global update all operators in the perturbation
+!!>>> expansion series
   subroutine ctqmc_reload_kink()
-     use control
-     use context
+     use control, only : norbs
+     use context, only : rank
 
      implicit none
 
@@ -911,16 +912,20 @@
      return
   end subroutine ctqmc_reload_kink
 
-!-------------------------------------------------------------------------
-!>>> service layer: update M and G matrices                            <<<
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> service layer: update M and G matrices                           <<<
+!!========================================================================
 
-!>>> update the mmat matrix and gmat matrix for insert new create and
-! destroy operators
+!!>>> cat_insert_matrix: update the mmat matrix and gmat matrix for insert
+!!>>> new create and destroy operators
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, one, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, exp_s, exp_e
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -983,7 +988,7 @@
              mmat(i, j+1, flvr) = mmat(i, j, flvr)
          enddo ! over i={1,ie-1} loop
      enddo ! over j={ckink,is,-1} loop
- 
+
      do j=1,is-1
          do i=ckink,ie,-1
              mmat(i+1, j, flvr) = mmat(i, j, flvr)
@@ -1040,12 +1045,16 @@
      return
   end subroutine cat_insert_matrix
 
-!>>> update the mmat matrix and gmat matrix for remove old create and
-! destroy operators
+!!>>> cat_remove_matrix: update the mmat matrix and gmat matrix for remove
+!!>>> old create and destroy operators
   subroutine cat_remove_matrix(flvr, is, ie)
-     use constants
-     use control
-     use context
+     use constants, only : dp, one, czero
+
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, exp_s, exp_e
+     use context, only : lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -1083,14 +1092,14 @@
      do k=1,nfreq
          gmat(k, flvr, flvr) = gmat(k, flvr, flvr) + lsaves(k, flvr) * rsaves(k, flvr) * p
      enddo ! over k={1,nfreq} loop
-     
+
 ! update mmat matrix
      p = one / mmat(ie, is, flvr) ! we redefine p here
      do j=1,ckink
          do i=1,ckink
              if ( i /= ie .and. j /= is ) then
                  mmat(i, j, flvr) = mmat(i, j, flvr) - mmat(i, is, flvr) * mmat(ie, j, flvr) * p
-             endif
+             endif ! back if ( i /= ie .and. j /= is ) block
          enddo ! over i={1,ckink} loop
      enddo ! over j={1,ckink} loop
 
@@ -1130,11 +1139,18 @@
      return
   end subroutine cat_remove_matrix
 
-!>>> update the mmat matrix and gmat matrix for shift old create operators
+!!>>> cat_lshift_matrix: update the mmat matrix and gmat matrix for shift
+!!>>> old create operators
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : mkink
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_e, exp_s, exp_e
+     use context, only : rmesh
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -1158,7 +1174,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1212,7 +1228,7 @@
              rvec(i) = -ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr) + beta)
          else
              rvec(i) =  ctqmc_make_htau(flvr, tau_start1 - time_e(index_e(i, flvr), flvr))
-         endif
+         endif ! back if ( tau_start1 < time_e(index_e(i, flvr), flvr) ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate lvec by cubic spline interpolation
@@ -1221,7 +1237,7 @@
              lvec(j) = -ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr) + beta)
          else
              lvec(j) =  ctqmc_make_htau(flvr, tau_start2 - time_e(index_e(j, flvr), flvr))
-         endif
+         endif ! back if ( tau_start2 < time_e(index_e(j, flvr), flvr) ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust rvec
@@ -1250,7 +1266,7 @@
          enddo ! over i={1,ckink} loop
      enddo ! over j={1,ckink} loop
 
-! shufle rows if time order changed because of move
+! shuffle rows if time order changed because of move
      if ( isn /= iso ) then
          rs = rspace(iso, flvr)
          do i=1,ckink
@@ -1293,7 +1309,7 @@
          do k=1,nfreq
              lsaves(k, flvr) = lsaves(k, flvr) +         exp_e(k, index_e(i, flvr), flvr)   * lspace(i, flvr)
              rsaves(k, flvr) = rsaves(k, flvr) + dconjg( exp_s(k, index_s(i, flvr), flvr) ) * rspace(i, flvr)
-         enddo ! over k={1,nfreq} loop 
+         enddo ! over k={1,nfreq} loop
      enddo ! over i={1,ckink} loop
 
      do k=1,nfreq
