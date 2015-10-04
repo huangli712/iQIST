@@ -1331,11 +1331,18 @@
      return
   end subroutine cat_lshift_matrix
 
-!>>> update the mmat matrix and gmat matrix for shift old destroy operators
+!!>>> cat_rshift_matrix: update the mmat matrix and gmat matrix for shift
+!!>>> old destroy operators
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
-     use constants
-     use control
-     use context
+     use constants, only : dp, zero, czero
+
+     use control, only : mkink
+     use control, only : nfreq
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, exp_s, exp_e
+     use context, only : rmesh
+     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
 
      implicit none
 
@@ -1359,7 +1366,7 @@
 
 ! external arguments
 ! used to interpolate the hybridization function
-     real(dp), external :: ctqmc_make_htau
+     procedure( real(dp) ) :: ctqmc_make_htau
 
 ! local variables
 ! loop index over operators
@@ -1413,7 +1420,7 @@
              lvec(i) = -ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1 + beta)
          else
              lvec(i) =  ctqmc_make_htau(flvr, time_s(index_s(i, flvr), flvr) - tau_end1)
-         endif
+         endif ! back if ( time_s(index_s(i, flvr), flvr) < tau_end1 ) block
      enddo ! over i={1,ckink} loop
 
 ! calculate rvec by cubic spline interpolation
@@ -1422,7 +1429,7 @@
              rvec(j) = -ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2 + beta)
          else
              rvec(j) =  ctqmc_make_htau(flvr, time_s(index_s(j, flvr), flvr) - tau_end2)
-         endif
+         endif ! back if ( time_s(index_s(j, flvr), flvr) < tau_end2 ) block
      enddo ! over j={1,ckink} loop
 
 ! adjust lvec
@@ -1451,7 +1458,7 @@
          enddo ! over i={1,ckink} loop
      enddo ! over j={1,ckink} loop
 
-! shufle columns if time order changed because of move
+! shuffle columns if time order changed because of move
      if ( ien /= ieo ) then
          ls = lspace(ieo, flvr)
          do i=1,ckink
@@ -1494,7 +1501,7 @@
          do k=1,nfreq
              lsaves(k, flvr) = lsaves(k, flvr) +         exp_e(k, index_e(i, flvr), flvr)   * lspace(i, flvr)
              rsaves(k, flvr) = rsaves(k, flvr) + dconjg( exp_s(k, index_s(i, flvr), flvr) ) * rspace(i, flvr)
-         enddo ! over k={1,nfreq} loop 
+         enddo ! over k={1,nfreq} loop
      enddo ! over i={1,ckink} loop
 
      do k=1,nfreq
