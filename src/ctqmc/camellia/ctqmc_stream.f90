@@ -349,24 +349,18 @@
 
 ! read in hybridization function from solver.hyb.in
              open(mytmp, file='solver.hyb.in', form='formatted', status='unknown')
-             do i=1,nband
+             do i=1,norbs
                  do j=1,mfreq
                      read(mytmp,*) k, rtmp, r1, i1, r2, i2
-                     hybf(j,i,i) = dcmplx(r1,i1)             ! spin up part
-                     hybf(j,i+nband,i+nband) = dcmplx(r2,i2) ! spin dn part
+                     hybf(j,i,i) = dcmplx(r1,i1)
                  enddo ! over j={1,mfreq} loop
                  read(mytmp,*) ! skip two lines
                  read(mytmp,*)
-             enddo ! over i={1,nband} loop
+             enddo ! over i={1,norbs} loop
              close(mytmp)
 
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
-
-! write out the hybridization function
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hybf(rmesh, hybf)
-     endif
 
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
@@ -441,71 +435,95 @@
          exists = .false.
 
 ! inquire about file's existence
+! file atom.cix is necessary, the code can not run without it
          inquire (file = 'atom.cix', exist = exists)
+         if ( exists .eqv. .false. ) then
+             call s_print_error('ctqmc_selfer_init','file atom.cix does not exist')
+         endif ! back if ( exists .eqv. .false. ) block
 
 ! find input file: atom.cix, read it
-! file atom.cix is necessary, the code can not run without it
-         if ( exists .eqv. .true. ) then
-
 ! open data file
-             open(mytmp, file='atom.cix', form='formatted', status='unknown')
+         open(mytmp, file='atom.cix', form='formatted', status='unknown')
+
+! skip ten comment lines
+         do i=1,10
+             read(mytmp,*)
+         enddo ! over i={1,10} loop
+
+! determine whether the spin-orbital coupling effect should be considered
+! and check the version of atom.cix
+         read(mytmp,*) ver, i, j, cssoc
+         if ( ver /= 1 ) then
+             call s_print_error('ctqmc_selfer_init','file format of atom.cix is not correct')
+         endif ! back if ( ver /= 1 ) block
+
+! skip eight comment lines
+         do i=1,8
+             read(mytmp,*)
+         enddo ! over i={1,8} loop
 
 ! read in eigenvalues for local hamiltonian matrix from atom.cix
-             read(mytmp,*) ! skip one line
-             do i=1,ncfgs
-                 read(mytmp,*) k, eigs(i), naux(i), saux(i)
-             enddo ! over i={1,ncfgs} loop
+         do i=1,ncfgs
+             read(mytmp,*) k, eigs(i), naux(i), saux(i)
+         enddo ! over i={1,ncfgs} loop
+
+! skip three comment lines
+         do i=1,3
+             read(mytmp,*)
+         enddo ! over i={1,3} loop
 
 ! read in F matrix from atom.cix
-             read(mytmp,*) ! skip one line
-             do i=1,norbs
-                 do j=1,ncfgs
-                     do k=1,ncfgs
-                         read(mytmp,*) j1, j2, j3, op_d(k,j,i)
-                     enddo ! over k={1,ncfgs} loop
-                 enddo ! over j={1,ncfgs} loop
-             enddo ! over i={1,norbs} loop
+! only the non-zero elements are included in the atom.cix, but we do not
+! know how many non-zero elements there are
+         ATOM_CIX_PARSER: do
+             read(mytmp,*,iostat = istat) k, j, i, rtmp
+             if ( istat == iostat_end ) then
+                 EXIT ATOM_CIX_PARSER
+             else
+                 op_d(k,j,i) = rtmp
+             endif ! back if ( istat == iostat_end ) block
+         enddo ATOM_CIX_PARSER ! over do loop
 
 ! read in local hamiltonian matrix from atom.cix
-             read(mytmp,*) ! skip one line
-             do i=1,ncfgs
-                 do j=1,ncfgs
-                     read(mytmp,*) j1, j2, hmat(j,i)
-                 enddo ! over j={1,ncfgs} loop
-             enddo ! over i={1,ncfgs} loop
+         read(mytmp,*) ! skip one line
+         do i=1,ncfgs
+             do j=1,ncfgs
+                 read(mytmp,*) j1, j2, hmat(j,i)
+             enddo ! over j={1,ncfgs} loop
+         enddo ! over i={1,ncfgs} loop
 
 ! read in eigenvectors for local hamiltonian matrix from atom.cix
-             read(mytmp,*) ! skip one line
-             do i=1,ncfgs
-                 do j=1,ncfgs
-                     read(mytmp,*) j1, j2, vmat(j,i)
-                 enddo ! over j={1,ncfgs} loop
-             enddo ! over i={1,ncfgs} loop
+         read(mytmp,*) ! skip one line
+         do i=1,ncfgs
+             do j=1,ncfgs
+                 read(mytmp,*) j1, j2, vmat(j,i)
+             enddo ! over j={1,ncfgs} loop
+         enddo ! over i={1,ncfgs} loop
 
 ! close data file
-             close(mytmp)
+         close(mytmp)
 
 ! add the contribution from chemical potential to eigenvalues
-!<             do i=1,ncfgs
-!<                 eigs(i) = eigs(i) - mune * naux(i)
-!<             enddo ! over i={1,ncfgs} loop
+         do i=1,ncfgs
+             eigs(i) = eigs(i) - mune * naux(i)
+         enddo ! over i={1,ncfgs} loop
 
 ! substract the eigenvalues zero point, here we store the eigen energy
 ! zero point in U
-             r1 = minval(eigs)
-             r2 = maxval(eigs)
-             U  = r1 + one ! here we choose the minimum as zero point
-             do i=1,ncfgs
-                 eigs(i) = eigs(i) - U
-             enddo ! over i={1,ncfgs} loop
+         r1 = minval(eigs)
+         r2 = maxval(eigs)
+         U  = r1 + one ! here we choose the minimum as zero point
+         do i=1,ncfgs
+             eigs(i) = eigs(i) - U
+         enddo ! over i={1,ncfgs} loop
 
-! check eigs
+! check validity of eigs
 ! note: \infity - \infity is undefined, which return NaN
-             do i=1,ncfgs
-                 if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
-                     call ctqmc_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
-                 endif
-             enddo ! over i={1,ncfgs} loop
+         do i=1,ncfgs
+             if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
+                 call s_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
+             endif
+         enddo ! over i={1,ncfgs} loop
 
 ! check whether hmat is a real symmetric matrix
              do i=1,ncfgs-1
