@@ -269,6 +269,7 @@
      use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
      use mmpi, only : mp_bcast, mp_barrier
      use sparse, only : sp_dns_to_csr
+     use leja, only : leja_build_spmat
 
      use control, only : norbs, ncfgs, nzero
      use control, only : lemax, legrd, chmax, chgrd
@@ -644,7 +645,7 @@
      use constants, only : zero, czero
      use spring, only : spring_sfmt_init
      use stack, only : istack_clean, istack_push
-     use sparse, only : sp_csr_mm_csr, sp_csr_cp_csr, sp_uni_to_csr
+     use sparse, only : sp_dns_to_csr
 
      use control ! ALL
      use context ! ALL
