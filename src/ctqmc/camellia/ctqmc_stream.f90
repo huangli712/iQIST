@@ -22,6 +22,7 @@
 !!>>> Carlo quantum impurity solver and dynamical mean field theory kernel
   subroutine ctqmc_config()
      use parser, only : p_create, p_parse, p_get, p_destroy
+     use leja, only : leja_setup_param
      use mmpi, only : mp_bcast, mp_barrier
 
      use control ! ALL
@@ -225,16 +226,17 @@
 # endif  /* MPI */
 
 ! init the real leja points algorithm
-     call leja_setup_param(ncfgs, nhmat, nleja)
+     call leja_setup_param(ncfgs, nzero, nleja)
 
      return
   end subroutine ctqmc_config
 
-!>>> allocate memory for global variables and then initialize them
+!!>>> ctqmc_setup_array: allocate memory for global variables and then
+!!>>> initialize them
   subroutine ctqmc_setup_array()
-     use context
+     use leja, only : leja_setup_array
 
-     use leja
+     use context ! ALL
 
      implicit none
 
@@ -245,6 +247,8 @@
      call ctqmc_allocate_memory_clur()
      call ctqmc_allocate_memory_flvr()
 
+     call ctqmc_allocate_memory_mesh()
+     call ctqmc_allocate_memory_meat()
      call ctqmc_allocate_memory_umat()
      call ctqmc_allocate_memory_fmat()
      call ctqmc_allocate_memory_mmat()
@@ -256,17 +260,28 @@
      return
   end subroutine ctqmc_setup_array
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity
-! solver plus dynamical mean field theory self-consistent engine
+!!>>> ctqmc_selfer_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver plus dynamical mean field theory
+!!>>> self-consistent engine
   subroutine ctqmc_selfer_init()
-     use constants
-     use control
-     use context
+     use, intrinsic :: iso_fortran_env, only : iostat_end
 
-     use leja
-     use sparse
+     use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
+     use mmpi, only : mp_bcast, mp_barrier
+     use sparse, only : sp_dns_to_csr
 
-     use mmpi
+     use control, only : norbs, ncfgs, nzero
+     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : U
+     use control, only : mune, beta, part
+     use control, only : myid, master
+     use context, only : cssoc
+     use context, only : tmesh, rmesh, pmesh, qmesh, ppleg, qqche
+     use context, only : symm, eimp, eigs, naux, saux
+     use context, only : op_c, op_d, spm_c, spm_d
+     use context, only : hybf
 
      implicit none
 
@@ -276,75 +291,20 @@
      integer  :: j
      integer  :: k
 
-! dummy integer variables
-     integer  :: j1, j2, j3
+! version of file 'atom.cix'
+     integer  :: ver
 
-! used to check whether the input file (solver.hyb.in or solver.eimp.in) exists
+! file status flag
+     integer  :: istat
+
+! used to check whether the input file (solver.hyb.in or solver.eimp.in
+! or atom.cix) exists
      logical  :: exists
 
 ! dummy real variables
      real(dp) :: rtmp
      real(dp) :: r1, r2
      real(dp) :: i1, i2
-
-! build identity: unity
-     unity = czero
-     do i=1,norbs
-         unity(i,i) = cone
-     enddo ! over i={1,norbs} loop
-
-! build mesh for legendre polynomial in [-1,1]
-     do i=1,legrd
-         pmesh(i) = real(i - 1) * two / real(legrd - 1) - one
-     enddo ! over i={1,legrd} loop
-
-! build mesh for chebyshev polynomial in [-1,1]
-     do i=1,chgrd
-         qmesh(i) = real(i - 1) * two / real(chgrd - 1) - one
-     enddo ! over i={1,chgrd} loop
-
-! build imaginary time tau mesh: tmesh
-     do i=1,ntime
-         tmesh(i) = zero + ( beta - zero ) / real(ntime - 1) * real(i - 1)
-     enddo ! over i={1,ntime} loop
-
-! build matsubara frequency mesh: rmesh
-     do j=1,mfreq
-         rmesh(j) = ( two * real(j - 1) + one ) * ( pi / beta )
-     enddo ! over j={1,mfreq} loop
-
-! build matsubara frequency mesh: cmesh
-     do k=1,mfreq
-         cmesh(k) = czi * ( two * real(k - 1) + one ) * ( pi / beta )
-     enddo ! over k={1,mfreq} loop
-
-! build legendre polynomial in [-1,1]
-     if ( lemax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','lemax must be larger than 2')
-     endif
-
-     do i=1,legrd
-         ppleg(i,1) = one
-         ppleg(i,2) = pmesh(i)
-         do j=3,lemax
-             k = j - 1
-             ppleg(i,j) = ( real(2*k-1) * pmesh(i) * ppleg(i,j-1) - real(k-1) * ppleg(i,j-2) ) / real(k)
-         enddo ! over j={3,lemax} loop
-     enddo ! over i={1,legrd} loop
-
-! build chebyshev polynomial in [-1,1]
-! note: it is second kind chebyshev polynomial
-     if ( chmax <= 2 ) then
-         call ctqmc_print_error('ctqmc_selfer_init','chmax must be larger than 2')
-     endif
-
-     do i=1,chgrd
-         qqche(i,1) = one
-         qqche(i,2) = two * qmesh(i)
-         do j=3,chmax
-             qqche(i,j) = two * qmesh(i) * qqche(i,j-1) - qqche(i,j-2)
-         enddo ! over j={3,chmax} loop
-     enddo ! over i={1,chgrd} loop
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
