@@ -522,89 +522,99 @@
          do i=1,ncfgs
              if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) then
                  call s_print_error('ctqmc_selfer_init','NaN error, please adjust the zero base of eigs')
-             endif
+             endif ! back if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) block
          enddo ! over i={1,ncfgs} loop
 
 ! check whether hmat is a real symmetric matrix
-             do i=1,ncfgs-1
-                 do j=i,ncfgs
-                     if ( hmat(i,j) /= hmat(j,i) ) then
-                         call ctqmc_print_error('ctqmc_selfer_init','hmat is not a real symmetric matrix')
-                     endif
-                 enddo ! over j={i,ncfgs} loop
-             enddo ! over i={1,ncfgs-1} loop
-
-! calculate op_c from op_d
-             do i=1,norbs
-                 op_c(:,:,i) = transpose( op_d(:,:,i) )
-             enddo ! over i={1,norbs} loop
+         do i=1,ncfgs-1
+             do j=i,ncfgs
+                 if ( hmat(i,j) /= hmat(j,i) ) then
+                     call s_print_error('ctqmc_selfer_init','hmat is not a real symmetric matrix')
+                 endif ! back if ( hmat(i,j) /= hmat(j,i) ) block
+             enddo ! over j={i,ncfgs} loop
+         enddo ! over i={1,ncfgs-1} loop
 
 ! calculate wmat from vmat, vmat = A, wmat = A^{T}
-             wmat = transpose( vmat )
+         wmat = transpose( vmat )
 
-         else
-             call ctqmc_print_error('ctqmc_selfer_init','file atom.cix does not exist')
-         endif ! back if ( exists .eqv. .true. ) block
+! calculate op_c from op_d
+         do i=1,norbs
+             op_c(:,:,i) = transpose( op_d(:,:,i) )
+         enddo ! over i={1,norbs} loop
      endif ! back if ( myid == master ) block
 
-! broadcast U, hmat, vmat, wmat, op_c, op_d, et al from master node to all children nodes
+! broadcast U, op_c, op_d, eigs, naux, and saux from master node to all children nodes
 # if defined (MPI)
 
 ! broadcast data
-     call mp_bcast(U,    master)
+     call mp_bcast(U,     master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 ! broadcast data
-     call mp_bcast(hmat, master)
+     call mp_bcast(op_c,  master)
+     call mp_bcast(op_d,  master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 ! broadcast data
-     call mp_bcast(vmat, master)
-     call mp_bcast(wmat, master)
+     call mp_bcast(eigs,  master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 ! broadcast data
-     call mp_bcast(op_c, master)
-     call mp_bcast(op_d, master)
+     call mp_bcast(naux,  master)
+     call mp_bcast(saux,  master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 ! broadcast data
-     call mp_bcast(eigs, master)
+     call mp_bcast(cssoc, master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 ! broadcast data
-     call mp_bcast(naux, master)
-     call mp_bcast(saux, master)
+     call mp_bcast(hmat,  master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+! broadcast data
+     call mp_bcast(vmat,  master)
+     call mp_bcast(wmat,  master)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # endif  /* MPI */
 
-! now all the processes have one copies of hmat
-! convert hmat from dense-stored matrix form to row-stored sparse matrix
-     call sparse_dns_to_csr( ncfgs, ncfgs, nhmat, hmat, sop_h, sop_jh, sop_ih )
-
 ! now all the processes have one copies of op_c and op_d
 ! convert op_c from dense-stored matrix form to row-stored sparse matrix
      do i=1,norbs
-         call sparse_dns_to_csr( ncfgs, ncfgs, nfmat, op_c(:,:,i), sop_c(:,i), sop_jc(:,i), sop_ic(:,i) )
+         call sp_dns_to_csr( ncfgs, ncfgs, nzero, &
+                                     op_c(:,:,i), &
+                                     spm_c(i)%vv, &
+                                     spm_c(i)%jv, &
+                                     spm_c(i)%iv )
      enddo ! over i={1,norbs} loop
 
 ! convert op_d from dense-stored matrix form to row-stored sparse matrix
      do i=1,norbs
-         call sparse_dns_to_csr( ncfgs, ncfgs, nfmat, op_d(:,:,i), sop_d(:,i), sop_jd(:,i), sop_id(:,i) )
+         call sp_dns_to_csr( ncfgs, ncfgs, nzero, &
+                                     op_d(:,:,i), &
+                                     spm_d(i)%vv, &
+                                     spm_d(i)%jv, &
+                                     spm_d(i)%iv )
      enddo ! over i={1,norbs} loop
+
+! now all the processes have one copies of hmat
+! convert hmat from dense-stored matrix form to row-stored sparse matrix
+     call sp_dns_to_csr( ncfgs, ncfgs, nzero, hmat, spm_h%vv, spm_h%jv, spm_h%iv )
 
 ! now we rotate op_c and op_d matrix from occupation number basis to eigen basis
 ! they are necessary in the calculations of (double) occupation numbers
@@ -620,7 +630,7 @@
      enddo ! over i={1,norbs} loop
 
 ! prepare necessary data for real leja points algorithm
-     call leja_build_spmat(ncfgs, nhmat, -sop_h, sop_jh, sop_ih)
+     call leja_build_spmat(ncfgs, nzero, -spm_h%vv, spm_h%jv, spm_h%iv)
 
 ! note: we can not deallocate op_c and op_d to release the memory at here,
 ! since op_d is still used at ctqmc_make_hub1() subroutine
@@ -628,15 +638,16 @@
      return
   end subroutine ctqmc_selfer_init
 
-!>>> initialize the continuous time quantum Monte Carlo quantum impurity solver
+!!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
+!!>>> Carlo quantum impurity solver
   subroutine ctqmc_solver_init()
-     use constants
-     use control
-     use context
+     use constants, only : zero, czero
+     use spring, only : spring_sfmt_init
+     use stack, only : istack_clean, istack_push
+     use sparse, only : sp_csr_mm_csr, sp_csr_cp_csr, sp_uni_to_csr
 
-     use stack
-     use sparse
-     use spring
+     use control ! ALL
+     use context ! ALL
 
      implicit none
 
@@ -661,19 +672,21 @@
 ! allocate memory
      allocate(raux(ncfgs,ncfgs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_solver_init','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_solver_init','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
      allocate(taux(ncfgs,ncfgs), stat=istat)
      if ( istat /= 0 ) then
-         call ctqmc_print_error('ctqmc_solver_init','can not allocate enough memory')
-     endif
+         call s_print_error('ctqmc_solver_init','can not allocate enough memory')
+     endif ! back if ( istat /= 0 ) block
 
 ! init random number generator
      call system_clock(system_time)
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
+! for stack data structure
+!-------------------------------------------------------------------------
 ! init empty_s and empty_e stack structure
      do i=1,norbs
          call istack_clean( empty_s(i) )
@@ -693,6 +706,16 @@
          call istack_push( empty_v, j )
      enddo ! over j={mkink,1} loop
 
+! for integer variables
+!-------------------------------------------------------------------------
+! init global variables
+     ckink   = 0
+     csign   = 1
+     cnegs   = 0
+     caves   = 0
+
+! for real variables
+!-------------------------------------------------------------------------
 ! init statistics variables
      insert_tcount = zero
      insert_accept = zero
@@ -714,18 +737,8 @@
      reflip_accept = zero
      reflip_reject = zero
 
-! init global variables
-     ckink   = 0
-     csign   = 1
-     cnegs   = 0
-     caves   = 0
-
-! init hist  array
-     hist    = 0
-
-! init rank  array
-     rank    = 0
-
+! for integer arrays
+!-------------------------------------------------------------------------
 ! init index array
      index_s = 0
      index_e = 0
@@ -739,26 +752,47 @@
 ! init flvr  array
      flvr_v  = 1
 
+! init rank  array
+     rank    = 0
+
+! for real arrays
+!-------------------------------------------------------------------------
 ! init time  array
      time_s  = zero
      time_e  = zero
 
      time_v  = zero
 
-! init probability for atomic states
-     prob    = zero
-     ddmat   = zero
+! init hist  array
+     hist    = zero
 
 ! init auxiliary physical observables
      paux    = zero
 
-! init spin-spin correlation function
-     schi    = zero
-     sschi   = zero
+! init probability for atomic states
+     prob    = zero
+     diag    = zero
 
 ! init occupation number array
      nmat    = zero
      nnmat   = zero
+
+! init < k^2 > - < k >^2 array
+     kmat    = zero
+     kkmat   = zero
+
+! init fidelity susceptibility array
+     lmat    = zero
+     rmat    = zero
+     lrmat   = zero
+
+! init two-particle green's function
+     g2_re   = zero
+     g2_im   = zero
+
+! init particle-particle pair susceptibility
+     ps_re   = zero
+     ps_im   = zero
 
 ! init M-matrix related array
      mmat    = zero
@@ -788,6 +822,8 @@
      matrix_ntrace = sum( expt_z )
      matrix_ptrace = sum( expt_z )
 
+! for complex arrays
+!-------------------------------------------------------------------------
 ! init exponent array exp_s and exp_e
      exp_s   = czero
      exp_e   = czero
@@ -809,11 +845,13 @@
 !<     sig1    = czero
      sig2    = czero
 
+! for the other variables/arrays
+!-------------------------------------------------------------------------
 ! init op_n, < c^{\dag} c >,
 ! which are used to calculate occupation number
      do i=1,norbs
          call dgemm('N', 'N', ncfgs, ncfgs, ncfgs, one, op_c(:,:,i), ncfgs, op_d(:,:,i), ncfgs, zero, hmat, ncfgs)
-         call sparse_dns_to_csr( ncfgs, ncfgs, nfmat, hmat, sop_n(:,i), sop_jn(:,i), sop_in(:,i) )
+         call sp_dns_to_csr( ncfgs, ncfgs, nzero, hmat, spm_n(i)%vv, spm_n(i)%jv, spm_n(i)%iv )
      enddo ! over i={1,norbs} loop
      hmat    = zero ! do not forget to reset it
 
@@ -825,38 +863,45 @@
              call dgemm('N', 'N', ncfgs, ncfgs, ncfgs, one, op_c(:,:,i), ncfgs, op_d(:,:,i), ncfgs, zero, raux, ncfgs)
              call dgemm('N', 'N', ncfgs, ncfgs, ncfgs, one, op_c(:,:,j), ncfgs, op_d(:,:,j), ncfgs, zero, taux, ncfgs)
              call dgemm('N', 'N', ncfgs, ncfgs, ncfgs, one, raux, ncfgs, taux, ncfgs, zero, hmat, ncfgs)
-             call sparse_dns_to_csr( ncfgs, ncfgs, nfmat, hmat, sop_m(:,i,j), sop_jm(:,i,j), sop_im(:,i,j) )
+             call sp_dns_to_csr( ncfgs, ncfgs, nzero, hmat, spm_m(i,j)%vv, spm_m(i,j)%jv, spm_m(i,j)%iv )
 
              call dgemm('N', 'N', ncfgs, ncfgs, ncfgs, one, op_c(:,:,j), ncfgs, op_d(:,:,j), ncfgs, zero, raux, ncfgs)
              call dgemm('N', 'N', ncfgs, ncfgs, ncfgs, one, op_c(:,:,i), ncfgs, op_d(:,:,i), ncfgs, zero, taux, ncfgs)
              call dgemm('N', 'N', ncfgs, ncfgs, ncfgs, one, raux, ncfgs, taux, ncfgs, zero, hmat, ncfgs)
-             call sparse_dns_to_csr( ncfgs, ncfgs, nfmat, hmat, sop_m(:,j,i), sop_jm(:,j,i), sop_im(:,j,i) )
+             call sp_dns_to_csr( ncfgs, ncfgs, nzero, hmat, spm_m(j,i)%vv, spm_m(j,i)%jv, spm_m(j,i)%iv )
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
      hmat    = zero ! do not forget to reset it
 
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
-     call ctqmc_fourier_hybf(hybf, htau)
+     call ctqmc_four_hybf(hybf, htau)
 
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then
          call ctqmc_symm_gtau(symm, htau)
-     endif
+     endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
      call ctqmc_make_hsed(tmesh, htau, hsed)
 
+! dump the necessary files
+!-------------------------------------------------------------------------
+! write out the hybridization function in matsubara frequency axis
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_hybf(rmesh, hybf)
+     endif ! back if ( myid == master ) block
+
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(tmesh, htau)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! write out the seed for random number stream, it is useful to reproduce
 ! the calculation process once fatal error occurs.
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i11)') 'seed:', stream_seed
-     endif
+     endif ! back if ( myid == master ) block
 
 ! deallocate memory
      deallocate(raux)
@@ -865,11 +910,12 @@
      return
   end subroutine ctqmc_solver_init
 
-!>>> garbage collection for this program, please refer to ctqmc_setup_array
+!!>>> ctqmc_final_array: garbage collection for this program, please refer
+!!>>> to ctqmc_setup_array
   subroutine ctqmc_final_array()
-     use context
+     use leja, only : leja_final_array
 
-     use leja
+     use context ! ALL
 
      implicit none
 
@@ -880,6 +926,8 @@
      call ctqmc_deallocate_memory_clur()
      call ctqmc_deallocate_memory_flvr()
 
+     call ctqmc_deallocate_memory_mesh()
+     call ctqmc_deallocate_memory_meat()
      call ctqmc_deallocate_memory_umat()
      call ctqmc_deallocate_memory_fmat()
      call ctqmc_deallocate_memory_mmat()
