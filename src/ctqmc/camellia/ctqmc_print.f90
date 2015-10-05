@@ -1,26 +1,21 @@
-!-------------------------------------------------------------------------
-! project : pansy
-! program : ctqmc_print_header
-!           ctqmc_print_footer
-!           ctqmc_print_summary
-!           ctqmc_print_runtime
-!           ctqmc_print_error
-!           ctqmc_print_exception
-! source  : ctqmc_print.f90
-! type    : subroutines
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 09/15/2009 by li huang
-!           09/20/2009 by li huang
-!           12/01/2009 by li huang
-!           02/21/2010 by li huang
-! purpose : provide printing infrastructure for hybridization expansion
-!           version continuous time quantum Monte Carlo (CTQMC) quantum
-!           impurity solver
-! input   :
-! output  :
-! status  : very unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : camellia
+!!! program : ctqmc_print_header
+!!!           ctqmc_print_footer
+!!!           ctqmc_print_summary
+!!!           ctqmc_print_runtime
+!!! source  : ctqmc_print.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 09/15/2009 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
+!!! purpose : provide printing infrastructure for hybridization expansion
+!!!           version continuous time quantum Monte Carlo (CTQMC) quantum
+!!!           impurity solver and dynamical mean field theory (DMFT) self
+!!!           -consistent engine
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
 !>>> print the startup information for continuous time quantum Monte Carlo
 ! quantum impurity solver plus dynamical mean field theory self-consistent
@@ -188,51 +183,3 @@
 
      return
   end subroutine ctqmc_print_runtime
-
-!>>> print the error information and STOP the program
-  subroutine ctqmc_print_error(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! error message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'fatal error occurred in ', sub, ': ', msg
-
-! TERMINATE THE PROGRAM
-!-------------------------------------------------------------------------
-     STOP
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine ctqmc_print_error
-
-!>>> print normal runtime exceptional information, and continue
-  subroutine ctqmc_print_exception(sub, msg)
-     use constants
-
-     implicit none
-
-! external arguments
-! subroutine name
-     character(len=*), intent(in) :: sub
-
-! exception message
-     character(len=*), intent(in) :: msg
-
-! print error information
-     write(mystd,'(2X,4a)') 'runtime exception occurred in ', sub, ': ', msg
-
-! CONTINUE/PAUSE THE PROGRAM
-!-------------------------------------------------------------------------
-     CONTINUE ! OR PAUSE
-!-------------------------------------------------------------------------
-
-     return
-  end subroutine ctqmc_print_exception
