@@ -134,6 +134,7 @@
 !!>>> observables and statistic data, only for reference
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : dp, one, half, mystd
+     use leja, only : leja_trace_count
 
      use control, only : nsweep, nmonte
      use context, only : cnegs, caves
