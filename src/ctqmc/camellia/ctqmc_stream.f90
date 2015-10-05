@@ -280,7 +280,7 @@
      use context, only : cssoc
      use context, only : tmesh, rmesh, pmesh, qmesh, ppleg, qqche
      use context, only : symm, eimp, eigs, naux, saux
-     use context, only : op_c, op_d, spm_c, spm_d
+     use context, only : hmat, vmat, wmat, op_c, op_d, spm_c, spm_d, spm_h
      use context, only : hybf
 
      implicit none
@@ -288,7 +288,7 @@
 ! local variables
 ! loop index
      integer  :: i
-     integer  :: j
+     integer  :: j, j1, j2
      integer  :: k
 
 ! version of file 'atom.cix'
