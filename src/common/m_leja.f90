@@ -1,18 +1,16 @@
-!-------------------------------------------------------------------------
-! project : pansy@fantasy
-! program : leja       module
-! source  : mod_leja.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 11/20/2011 by li huang
-!           11/21/2011 by li huang
-!           11/22/2011 by li huang
-!           11/23/2011 by li huang
-! purpose : calculate the product of time evolution operator and propagated
-!           state using Newton interpolation and real leja points method.
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : CSML (Common Service Modules Library)
+!!! program : leja       module
+!!! source  : m_leja.f90
+!!! type    : module
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 11/20/2011 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
+!!! purpose : calculate the product of time evolution operator and propagated
+!!!           state using Newton interpolation and real leja points method.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
 
   module leja
      implicit none
