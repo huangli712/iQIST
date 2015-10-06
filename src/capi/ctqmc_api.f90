@@ -515,6 +515,26 @@
          integer :: npart
      end type T_general_lavender
 
+! define type T_general_camellia, which is used to describe the ctqmc
+! impurity solver code camellia
+     public :: T_general_camellia
+     type, extends (T_general_solver) :: T_general_camellia
+         character(len=10) :: solver_name = 'CAMELLIA'
+
+         integer :: isort
+         integer :: issus
+         integer :: isvrt
+         integer :: nzero
+         integer :: lemax
+         integer :: legrd
+         integer :: chmax
+         integer :: chgrd
+         integer :: nffrq
+         integer :: nbfrq
+         integer :: nvect
+         integer :: nleja
+     end type T_general_camellia
+
 ! define type T_general_pansy, which is used to describe the ctqmc
 ! impurity solver code pansy
      public :: T_general_pansy
