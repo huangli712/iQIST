@@ -121,6 +121,11 @@ help-more:
 	@echo '     lavender-pylib    build lavender library for Python    '
 	@echo '     clean-lavender    clean lavender directory             '
 	@echo
+	@echo '     camellia          build camellia code                  '
+	@echo '     camellia-lib      build camellia library for Fortran   '
+	@echo '     camellia-pylib    build camellia library for Python    '
+	@echo '     clean-camellia    clean camellia directory             '
+	@echo
 	@echo '     pansy             build pansy code                     '
 	@echo '     pansy-lib         build pansy library for Fortran      '
 	@echo '     pansy-pylib       build pansy library for Python       '
