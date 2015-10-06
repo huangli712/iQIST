@@ -60,7 +60,7 @@
 ! kernel is applied automatically. if you want to choose the other kernel,
 ! please check the ctqmc_make_gtau() subroutine in ctqmc_record.f90.
 !
-! note: in the lavender code, isort == 4, 5, and 6 are not implemeted so
+! note: in the camellia code, isort == 4, 5, and 6 are not implemeted so
 ! far, i.e., F(\tau) will not be measured.
      integer, public, save :: isort  = 1
 
@@ -131,7 +131,7 @@
 ! note: if p == 2, the traditional algorithm is used. if p == 3, the
 ! improved estimator for two-particle green's function is used.
 !
-! note: for the lavender code, the bit at p == 3 must be 0, i.e., this
+! note: for the camellia code, the bit at p == 3 must be 0, i.e., this
 ! feature is not implemented so far.
      integer, public, save :: isvrt  = 1
 
