@@ -29,7 +29,7 @@
 
 include ../../build/make.sys
 
-modc = mod_leja.o ctqmc_control.o ctqmc_context.o
+modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
 core = ctqmc_solver.o
 lev1 = ctqmc_flavor.o ctqmc_update.o
@@ -64,6 +64,7 @@ csml:
 	cp ../../common/stack.mod .
 	cp ../../common/parser.mod .
 	cp ../../common/linkedlist.mod .
+	cp ../../common/leja.mod .
 
 exe: api cssl csml ctqmc-exe
 ctqmc-exe: $(exe_obj)
