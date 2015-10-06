@@ -21,7 +21,8 @@
 !! This module can provide a light weight interface (i.e., application
 !! programming interface, API) for Fortran/Python language to the ctqmc
 !! quantum impurity solver. The user can use it to access the azalea,
-!! gardenia, narcissus, begonia, lavender, pansy, and manjushaka codes.
+!! gardenia, narcissus, begonia, lavender, camellia, pansy and manjushaka
+!! codes.
 !!
 !! How to build the Fortran API
 !! ============================
@@ -357,8 +358,9 @@
      integer, public, parameter :: solver_id_narcissus      = 103
      integer, public, parameter :: solver_id_begonia        = 201
      integer, public, parameter :: solver_id_lavender       = 202
-     integer, public, parameter :: solver_id_pansy          = 301
-     integer, public, parameter :: solver_id_manjushaka     = 302
+     integer, public, parameter :: solver_id_camellia       = 301
+     integer, public, parameter :: solver_id_pansy          = 401
+     integer, public, parameter :: solver_id_manjushaka     = 402
 
 ! solver status, 1 means ready, 0 means not ready
      integer, public, parameter :: solver_is_ready_azalea     = 1
@@ -366,6 +368,7 @@
      integer, public, parameter :: solver_is_ready_narcissus  = 1
      integer, public, parameter :: solver_is_ready_begonia    = 1
      integer, public, parameter :: solver_is_ready_lavender   = 1
+     integer, public, parameter :: solver_is_ready_camellia   = 1
      integer, public, parameter :: solver_is_ready_pansy      = 1
      integer, public, parameter :: solver_is_ready_manjushaka = 1
 
