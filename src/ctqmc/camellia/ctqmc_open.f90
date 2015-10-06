@@ -43,14 +43,14 @@
 ! declare f2py directives
 !F2PY intent(out) I_solver_id
 
-     I_solver_id = solver_id_lavender
+     I_solver_id = solver_id_camellia
 
      return
   end subroutine cat_solver_id
 
 !!>>> cat_solver_status: return the solver status
   subroutine cat_solver_status(I_solver_status)
-     use capi, only : solver_is_ready_lavender
+     use capi, only : solver_is_ready_camellia
 
      implicit none
 
@@ -61,7 +61,7 @@
 ! declare f2py directives
 !F2PY intent(out) I_solver_status
 
-     I_solver_status = solver_is_ready_lavender
+     I_solver_status = solver_is_ready_camellia
      if ( I_solver_status == 0 ) then
          call s_print_error('cat_solver_status','sorry, the current solver is not ready!')
      endif ! back if ( I_solver_status == 0 ) block
@@ -78,7 +78,7 @@
 !!>>> cat_init_ctqmc: initialize the ctqmc quantum impurity solver
 !!>>> fortran version
   subroutine cat_init_ctqmc(I_mpi, I_solver)
-     use capi, only : T_mpi, T_general_lavender
+     use capi, only : T_mpi, T_general_camellia
 
      use control ! ALL
 
@@ -89,7 +89,7 @@
      type (T_mpi), intent(in) :: I_mpi
 
 ! type structure of generic solver
-     type (T_general_lavender), intent(in) :: I_solver
+     type (T_general_camellia), intent(in) :: I_solver
 
 ! setup I_mpi
      nprocs = I_mpi%nprocs
@@ -123,7 +123,8 @@
      nbfrq  = I_solver%nbfrq
      nfreq  = I_solver%nfreq
      ntime  = I_solver%ntime
-     npart  = I_solver%npart
+     nvect  = I_solver%nvect
+     nleja  = I_solver%nleja
      nflip  = I_solver%nflip
      ntherm = I_solver%ntherm
      nsweep = I_solver%nsweep
@@ -345,7 +346,7 @@
   end subroutine cat_set_eimp
 
 !!>>> cat_set_ktau: setup the screening function and its first derivates
-!!>>> note: the lavender code does not support this function now
+!!>>> note: the camellia code does not support this function now
   subroutine cat_set_ktau(size_t, ktau_t, ptau_t)
      implicit none
 
@@ -375,7 +376,7 @@
   end subroutine cat_set_ktau
 
 !!>>> cat_set_uumat: setup the Coulomb interaction matrix
-!!>>> note: the lavender code does not support this function now
+!!>>> note: the camellia code does not support this function now
   subroutine cat_set_uumat(size_t, uumat_t)
      implicit none
 
