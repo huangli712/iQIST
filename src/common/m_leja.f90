@@ -17,9 +17,47 @@
 !! Introduction
 !! ============
 !!
+!! In this module, we implement the Newton interpolation algorithm based
+!! on real Leja points to calculate the following expression:
+!!
+!! | \psi > = exp ( - H t) | \psi_0 >
+!!
+!! Here H is real symmetric matrix, t the time, | \psi_0 > the initial
+!! state, and | \psi > ths final state.
+!!
+!! It is a iteration algorithm. So sometimes it is not easy to obtain
+!! a converged solution, especially when t is large. Now this module is
+!! used by the camellia code only.
 !!
 !! Usage
 !! =====
+!!
+!! 1. setup necessary parameters
+!! -----------------------------
+!!
+!! call leja_setup_param(...)
+!!
+!! 2. allocate memory
+!! ------------------
+!!
+!! call leja_setup_array(...)
+!!
+!! 3. build the H matrix
+!! ---------------------
+!!
+!! call leja_build_spmat(...)
+!!
+!! Note: the H matrix is stored and manipulated using CSR format.
+!!
+!! 4. do time evolution
+!! --------------------
+!!
+!! call leja_dsymv(...)
+!!
+!! 5. deallocate memory
+!! --------------------
+!!
+!! call leja_final_array(...)
 !!
 !!
 
