@@ -413,7 +413,7 @@
 
 ! spm_h (hmat) is the local hamiltonian matrix in fock space, it is used
 ! to calculate exp(tH) |v> by real leja points method
-     type (T_spmat), public, save, allocatable :: spm_h
+     type (T_spmat), public, save              :: spm_h
 
 ! spm_c and spm_d are F-matrix, spm_c is for create operator, while spm_d
 ! is for destroy operator. we need to multiply a series of spm_c, spm_d
