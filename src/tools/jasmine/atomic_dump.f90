@@ -417,7 +417,9 @@
          write(mytmp,'(75a1)') dash ! dashed line
          do i=1,ncfgs
              do j=1,ncfgs
-                 write(mytmp,'(2i10,f20.10)') i, j, evec(i,j)
+                 if ( abs( evec(i,j) ) > epst ) then
+                     write(mytmp,'(2i10,f20.10)') i, j, evec(i,j)
+                 endif ! back if ( abs( evec(i,j) ) > epst ) block
              enddo ! over j={1,ncfgs} loop
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ictqmc == 0 ) block
@@ -430,7 +432,9 @@
          write(mytmp,'(75a1)') dash ! dashed line
          do i=1,ncfgs
              do j=1,ncfgs
-                 write(mytmp,'(2i10,f20.10)') i, j, real( hmat(i,j) )
+                 if ( abs( hmat(i,j) ) > epst ) then
+                     write(mytmp,'(2i10,f20.10)') i, j, real( hmat(i,j) )
+                 endif ! back if ( abs( hmat(i,j) ) > epst ) block
              enddo ! over j={1,ncfgs} loop
          enddo ! over i={1,ncfgs} loop
      endif ! back if ( ictqmc == 0 ) block
