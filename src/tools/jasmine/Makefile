@@ -88,5 +88,6 @@ clean-dat:
 	rm -f *.cix
 	rm -f *.dat
 	rm -f *.out
+	rm -f solver.umat.in
 
 clean-all: clean clean-dat
