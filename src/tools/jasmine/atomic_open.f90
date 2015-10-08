@@ -160,6 +160,11 @@
 ! call the drivers to perform different tasks
      select case(ictqmc)
 
+! task 0: diagonalize the atomic Hamiltonian in full Hilbert space
+         case (0)
+             write(mystd,'(2X,a)') 'start full diagonalization'
+             call atomic_f_driver()
+
 ! task 1: diagonalize the atomic Hamiltonian in full Hilbert space
          case (1)
              write(mystd,'(2X,a)') 'start full diagonalization'

@@ -28,7 +28,8 @@
      integer, public, save :: ibasis = 1
 
 ! control flag: type of atomic Hamiltonian matrix diagonalization
-! 1: direct diagonalization in full Hilbert space
+! 0: direct diagonalization in full Hilbert space (for camellia code)
+! 1: direct diagonalization in full Hilbert space (for begonia and lavender codes)
 ! 2: good quantum numbers: N
 ! 3: good quantum numbers: N, Sz
 ! 4: good quantum numbers: N, Sz, PS
