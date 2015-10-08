@@ -473,6 +473,30 @@
              read(mytmp,*)
          enddo ! over i={1,3} loop
 
+! read in eigenvectors for local hamiltonian matrix from atom.cix
+         do i=1,ncfgs
+             do j=1,ncfgs
+                 read(mytmp,*) j1, j2, vmat(j,i)
+             enddo ! over j={1,ncfgs} loop
+         enddo ! over i={1,ncfgs} loop
+
+! skip three comment lines
+         do i=1,3
+             read(mytmp,*)
+         enddo ! over i={1,3} loop
+
+! read in local hamiltonian matrix from atom.cix
+         do i=1,ncfgs
+             do j=1,ncfgs
+                 read(mytmp,*) j1, j2, hmat(j,i)
+             enddo ! over j={1,ncfgs} loop
+         enddo ! over i={1,ncfgs} loop
+
+! skip three comment lines
+         do i=1,3
+             read(mytmp,*)
+         enddo ! over i={1,3} loop
+
 ! read in F matrix from atom.cix
 ! only the non-zero elements are included in the atom.cix, but we do not
 ! know how many non-zero elements there are
@@ -484,22 +508,6 @@
                  op_d(k,j,i) = rtmp
              endif ! back if ( istat == iostat_end ) block
          enddo ATOM_CIX_PARSER ! over do loop
-
-! read in local hamiltonian matrix from atom.cix
-         read(mytmp,*) ! skip one line
-         do i=1,ncfgs
-             do j=1,ncfgs
-                 read(mytmp,*) j1, j2, hmat(j,i)
-             enddo ! over j={1,ncfgs} loop
-         enddo ! over i={1,ncfgs} loop
-
-! read in eigenvectors for local hamiltonian matrix from atom.cix
-         read(mytmp,*) ! skip one line
-         do i=1,ncfgs
-             do j=1,ncfgs
-                 read(mytmp,*) j1, j2, vmat(j,i)
-             enddo ! over j={1,ncfgs} loop
-         enddo ! over i={1,ncfgs} loop
 
 ! close data file
          close(mytmp)
@@ -526,6 +534,9 @@
              endif ! back if ( isnan( exp( - beta * eigs(i) ) - exp( - beta * eigs(i) ) ) ) block
          enddo ! over i={1,ncfgs} loop
 
+! calculate wmat from vmat, vmat = A, wmat = A^{T}
+         wmat = transpose( vmat )
+
 ! check whether hmat is a real symmetric matrix
          do i=1,ncfgs-1
              do j=i,ncfgs
@@ -534,9 +545,6 @@
                  endif ! back if ( hmat(i,j) /= hmat(j,i) ) block
              enddo ! over j={i,ncfgs} loop
          enddo ! over i={1,ncfgs-1} loop
-
-! calculate wmat from vmat, vmat = A, wmat = A^{T}
-         wmat = transpose( vmat )
 
 ! calculate op_c from op_d
          do i=1,norbs
