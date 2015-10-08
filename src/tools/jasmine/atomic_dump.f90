@@ -352,7 +352,7 @@
      use m_cntr, only : Uc, Uv, Js, Jp, Jz
      use m_cntr, only : Ud, Jh
      use m_cntr, only : mune, lambda
-     use m_full, only : eval, occu, spin, fmat
+     use m_full, only : eval, evec, occu, spin, fmat, hmat
 
      implicit none
 
