@@ -413,7 +413,7 @@
 ! only for the camellia code
      if ( ictqmc == 0 ) then
          write(mytmp,'(75a1)') dash ! dashed line
-         write(mytmp,'(a)') '# EIGENVECTORS: ALPHA | BETA | VALUE'
+         write(mytmp,'(a)') '# EIGENVECTORS: ALPHA | BETA | EVEC'
          write(mytmp,'(75a1)') dash ! dashed line
          do i=1,ncfgs
              do j=1,ncfgs
@@ -426,7 +426,7 @@
 ! only for the camellia code
      if ( ictqmc == 0 ) then
          write(mytmp,'(75a1)') dash ! dashed line
-         write(mytmp,'(a)') '# HAMILTONIAN: ALPHA | BETA | VALUE'
+         write(mytmp,'(a)') '# HAMILTONIAN: ALPHA | BETA | HMAT'
          write(mytmp,'(75a1)') dash ! dashed line
          do i=1,ncfgs
              do j=1,ncfgs
