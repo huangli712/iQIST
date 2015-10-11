@@ -509,6 +509,7 @@
   subroutine ctqmc_allocate_memory_clur()
      implicit none
 
+! local variables
 ! loop index
      integer :: i
 
@@ -816,6 +817,7 @@
   subroutine ctqmc_deallocate_memory_clur()
      implicit none
 
+! local variables
 ! loop index
      integer :: i
 
