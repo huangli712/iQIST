@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! project : begonia
+!!! project : camellia
 !!! program : ctqmc_core module
 !!!           ctqmc_clur module
 !!!           ctqmc_flvr module
@@ -199,11 +199,15 @@
 ! imaginary time \tau for create and destroy operators
      real(dp), public, save, allocatable :: time_v(:)
 
-! exp(-H\tau), exponent matrix for local hamiltonian multiply \tau (the last point)
-     real(dp), public, save, allocatable :: expt_t(:,:)
+! imaginary time interval \delta \tau (the last point)
+     real(dp), public, save, allocatable :: expt_t(:)
 
-! exp(-H\tau), exponent matrix for local hamiltonian multiply \tau
-     real(dp), public, save, allocatable :: expt_v(:,:)
+! imaginary time interval \delta \tau
+     real(dp), public, save, allocatable :: expt_v(:)
+
+! exp(-H\beta), exponent matrix for local hamiltonian multiply \beta
+! it is used to calculate the partition function
+     real(dp), public, save, allocatable :: expt_z(:)
 
   end module ctqmc_flvr
 
@@ -223,6 +227,18 @@
 
 ! real matsubara frequency mesh
      real(dp), public, save, allocatable :: rmesh(:)
+
+! interval [-1,1] on which legendre polynomial is defined
+     real(dp), public, save, allocatable :: pmesh(:)
+
+! interval [-1,1] on which chebyshev polynomial is defined
+     real(dp), public, save, allocatable :: qmesh(:)
+
+! legendre polynomial defined on [-1,1]
+     real(dp), public, save, allocatable :: ppleg(:,:)
+
+! chebyshev polynomial defined on [-1,1]
+     real(dp), public, save, allocatable :: qqche(:,:)
 
   end module ctqmc_mesh
 
@@ -259,6 +275,33 @@
 
 ! impurity double occupation number matrix, < n_i n_j >
      real(dp), public, save, allocatable :: nnmat(:,:)
+
+! number of operators, < k >
+     real(dp), public, save, allocatable :: kmat(:)
+
+! square of number of operators, < k^2 >
+     real(dp), public, save, allocatable :: kkmat(:,:)
+
+! number of operators at left half axis, < k_l >
+     real(dp), public, save, allocatable :: lmat(:)
+
+! number of operators at right half axis, < k_r >
+     real(dp), public, save, allocatable :: rmat(:)
+
+! used to evaluate fidelity susceptibility, < k_l k_r >
+     real(dp), public, save, allocatable :: lrmat(:,:)
+
+! used to calculate two-particle green's function, real part
+     real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
+
+! used to calculate two-particle green's function, imaginary part
+     real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
+
+! particle-particle pair susceptibility, real part
+     real(dp), public, save, allocatable :: ps_re(:,:,:,:,:)
+
+! particle-particle pair susceptibility, imaginary part
+     real(dp), public, save, allocatable :: ps_im(:,:,:,:,:)
 
   end module ctqmc_meat
 
@@ -345,9 +388,14 @@
 !::: auxiliary matrix                                                  :::
 !-------------------------------------------------------------------------
 
-! auxiliary array, used to store which parts of spm_a matrix should be
-! updated by corresponding spm_b matrix
-     integer, public, save, allocatable  :: isave(:)
+! eigenvectors of local hamiltonian matrix
+     real(dp), public, save, allocatable :: vmat(:,:)
+
+! transposed eigenvectors of local hamiltonian matrix
+     real(dp), public, save, allocatable :: wmat(:,:)
+
+! local hamiltonian matrix
+     real(dp), public, save, allocatable :: hmat(:,:)
 
 !-------------------------------------------------------------------------
 !::: dense matrix style for op                                         :::
@@ -363,11 +411,9 @@
 !::: sparse matrix style for op (Compressed Sparse Row (CSR) format)   :::
 !-------------------------------------------------------------------------
 
-! spm_a and spm_b are used to calculate matrix product trace efficiently.
-! we used them in their sparse matrix form directly, instead of defining
-! them explicitly, in order to save memory consumption
-     type (T_spmat), public, save, allocatable :: spm_a(:)
-     type (T_spmat), public, save, allocatable :: spm_b(:)
+! spm_h (hmat) is the local hamiltonian matrix in fock space, it is used
+! to calculate exp(tH) |v> by real leja points method
+     type (T_spmat), public, save, allocatable :: spm_h
 
 ! spm_c and spm_d are F-matrix, spm_c is for create operator, while spm_d
 ! is for destroy operator. we need to multiply a series of spm_c, spm_d
@@ -612,8 +658,9 @@
 
      allocate(time_v(mkink),       stat=istat)
 
-     allocate(expt_t(ncfgs,  4  ), stat=istat)
-     allocate(expt_v(ncfgs,mkink), stat=istat)
+     allocate(expt_t(  2  ),       stat=istat)
+     allocate(expt_v(mkink),       stat=istat)
+     allocate(expt_z(ncfgs),       stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -631,6 +678,7 @@
 
      expt_t  = zero
      expt_v  = zero
+     expt_z  = zero
 
      call istack_create(empty_v, mkink)
 
@@ -645,6 +693,12 @@
      allocate(tmesh(ntime),       stat=istat)
      allocate(rmesh(mfreq),       stat=istat)
 
+     allocate(pmesh(legrd),       stat=istat)
+     allocate(qmesh(chgrd),       stat=istat)
+
+     allocate(ppleg(legrd,lemax), stat=istat)
+     allocate(qqche(chgrd,chmax), stat=istat)
+
 ! check the status
      if ( istat /= 0 ) then
          call s_print_error('ctqmc_allocate_memory_mesh','can not allocate enough memory')
@@ -653,6 +707,12 @@
 ! initialize them
      tmesh = zero
      rmesh = zero
+
+     pmesh = zero
+     qmesh = zero
+
+     ppleg = zero
+     qqche = zero
 
      return
   end subroutine ctqmc_allocate_memory_mesh
@@ -669,6 +729,16 @@
 
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(kmat(norbs),        stat=istat)
+     allocate(kkmat(norbs,norbs), stat=istat)
+     allocate(lmat(norbs),        stat=istat)
+     allocate(rmat(norbs),        stat=istat)
+     allocate(lrmat(norbs,norbs), stat=istat)
+
+     allocate(g2_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(g2_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_re(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+     allocate(ps_im(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -683,6 +753,16 @@
 
      nmat  = zero
      nnmat = zero
+     kmat  = zero
+     kkmat = zero
+     lmat  = zero
+     rmat  = zero
+     lrmat = zero
+
+     g2_re = zero
+     g2_im = zero
+     ps_re = zero
+     ps_im = zero
 
      return
   end subroutine ctqmc_allocate_memory_meat
@@ -733,13 +813,12 @@
      integer :: j
 
 ! allocate memory
-     allocate(isave(npart),            stat=istat)
+     allocate(vmat(ncfgs,ncfgs),       stat=istat)
+     allocate(wmat(ncfgs,ncfgs),       stat=istat)
+     allocate(hmat(ncfgs,ncfgs),       stat=istat)
 
      allocate(op_c(ncfgs,ncfgs,norbs), stat=istat)
      allocate(op_d(ncfgs,ncfgs,norbs), stat=istat)
-
-     allocate(spm_a(npart),            stat=istat)
-     allocate(spm_b(npart),            stat=istat)
 
      allocate(spm_c(norbs),            stat=istat)
      allocate(spm_d(norbs),            stat=istat)
@@ -755,15 +834,14 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     isave = 0
+     vmat  = zero
+     wmat  = zero
+     hmat  = zero
 
      op_c  = zero
      op_d  = zero
 
-     do i=1,npart
-         call ctqmc_new_spmat(spm_a(i))
-         call ctqmc_new_spmat(spm_b(i))
-     enddo ! over i={1,npart} loop
+     call ctqmc_new_spmat(spm_h)
 
      do i=1,norbs
          call ctqmc_new_spmat(spm_c(i))
@@ -939,6 +1017,7 @@
 
      if ( allocated(expt_t)  ) deallocate(expt_t )
      if ( allocated(expt_v)  ) deallocate(expt_v )
+     if ( allocated(expt_z)  ) deallocate(expt_z )
 
      return
   end subroutine ctqmc_deallocate_memory_flvr
@@ -949,6 +1028,12 @@
 
      if ( allocated(tmesh) )   deallocate(tmesh)
      if ( allocated(rmesh) )   deallocate(rmesh)
+
+     if ( allocated(pmesh) )   deallocate(pmesh)
+     if ( allocated(qmesh) )   deallocate(qmesh)
+
+     if ( allocated(ppleg) )   deallocate(ppleg)
+     if ( allocated(qqche) )   deallocate(qqche)
 
      return
   end subroutine ctqmc_deallocate_memory_mesh
@@ -964,6 +1049,17 @@
 
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
+     if ( allocated(kmat)  )   deallocate(kmat )
+     if ( allocated(kkmat) )   deallocate(kkmat)
+     if ( allocated(lmat)  )   deallocate(lmat )
+     if ( allocated(rmat)  )   deallocate(rmat )
+     if ( allocated(lrmat) )   deallocate(lrmat)
+
+     if ( allocated(g2_re) )   deallocate(g2_re)
+     if ( allocated(g2_im) )   deallocate(g2_im)
+
+     if ( allocated(ps_re) )   deallocate(ps_re)
+     if ( allocated(ps_im) )   deallocate(ps_im)
 
      return
   end subroutine ctqmc_deallocate_memory_meat
@@ -995,10 +1091,7 @@
      integer :: i
      integer :: j
 
-     do i=1,npart
-         call ctqmc_del_spmat(spm_a(i))
-         call ctqmc_del_spmat(spm_b(i))
-     enddo ! over i={1,npart} loop
+     call ctqmc_del_spmat(spm_h)
 
      do i=1,norbs
          call ctqmc_del_spmat(spm_c(i))
@@ -1019,13 +1112,12 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
-     if ( allocated(isave) )   deallocate(isave)
+     if ( allocated(vmat)   )  deallocate(vmat  )
+     if ( allocated(wmat)   )  deallocate(wmat  )
+     if ( allocated(hmat)   )  deallocate(hmat  )
 
      if ( allocated(op_c ) )   deallocate(op_c )
      if ( allocated(op_d ) )   deallocate(op_d )
-
-     if ( allocated(spm_a) )   deallocate(spm_a)
-     if ( allocated(spm_b) )   deallocate(spm_b)
 
      if ( allocated(spm_c) )   deallocate(spm_c)
      if ( allocated(spm_d) )   deallocate(spm_d)

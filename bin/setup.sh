@@ -40,7 +40,7 @@ function mln {
 }
 
 # loop over the ctqmc components
-for component in azalea gardenia narcissus begonia lavender pansy manjushaka
+for component in azalea gardenia narcissus begonia lavender camellia pansy manjushaka
 do
     dir=$(echo ../src/ctqmc/$component/ctqmc)
     mln $dir $component

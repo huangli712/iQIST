@@ -121,6 +121,11 @@ help-more:
 	@echo '     lavender-pylib    build lavender library for Python    '
 	@echo '     clean-lavender    clean lavender directory             '
 	@echo
+	@echo '     camellia          build camellia code                  '
+	@echo '     camellia-lib      build camellia library for Fortran   '
+	@echo '     camellia-pylib    build camellia library for Python    '
+	@echo '     clean-camellia    clean camellia directory             '
+	@echo
 	@echo '     pansy             build pansy code                     '
 	@echo '     pansy-lib         build pansy library for Fortran      '
 	@echo '     pansy-pylib       build pansy library for Python       '
@@ -170,16 +175,19 @@ clean: clean-capi clean-common clean-solver clean-tool clean-other
 solver: capi common \
         azalea gardenia narcissus \
         begonia lavender \
+        camellia \
         pansy manjushaka \
         daisy
 solver-lib: capi-lib common-lib \
 	    azalea-lib gardenia-lib narcissus-lib \
 	    begonia-lib lavender-lib \
+            camellia-lib \
 	    pansy-lib manjushaka-lib \
 	    daisy-lib
 clean-solver: clean-capi clean-common \
               clean-azalea clean-gardenia clean-narcissus \
               clean-begonia clean-lavender \
+              clean-camellia \
               clean-pansy clean-manjushaka \
               clean-daisy
 
@@ -254,6 +262,19 @@ lavender-pylib:
 
 clean-lavender:
 	cd ../ctqmc/lavender/; pwd; make clean
+
+# targets for ctqmc codes: general version (camellia)
+camellia:
+	cd ../ctqmc/camellia/; pwd; make
+
+camellia-lib:
+	cd ../ctqmc/camellia/; pwd; make lib
+
+camellia-pylib:
+	cd ../ctqmc/camellia/; pwd; make pylib
+
+clean-camellia:
+	cd ../ctqmc/camellia/; pwd; make clean
 
 # targets for ctqmc codes: general version (pansy, manjushaka)
 pansy:

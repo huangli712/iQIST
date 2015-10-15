@@ -16,7 +16,7 @@ For the file formats of solver.xxx.dat, see the codes in ctqmc\_dump.f90.
 
 ### CTQMC quantum impurity solver
 
-See the comments in iqist/src/ctqmc/xxx/ctqmc\_control.f90, here xxx means 'azalea', 'gardenia', 'narcissus', 'begonia', 'lavender', 'pansy', and 'manjushaka'.
+See the comments in iqist/src/ctqmc/xxx/ctqmc\_control.f90, here xxx means 'azalea', 'gardenia', 'narcissus', 'begonia', 'lavender', 'camellia', 'pansy', and 'manjushaka'.
 
 ### HFQMC quantum impurity solver
 
