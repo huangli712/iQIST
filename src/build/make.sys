@@ -463,16 +463,10 @@ ARCHIVER = ar -ruv
 # Fortran preprocessor options
 #-------------------------------------------------------------------------
 MPI    = -DMPI
-<<<<<<< HEAD
 OMP    = #-openmp
 API    = #-DAPI -DMPY
 FPP    = -fpp
 CPP    = $(FPP) $(MPI) $(OMP) $(API)
-=======
-OMP    = #-fopenmp
-FPP    = -cpp
-CPP    = $(FPP) $(MPI) $(OMP)
->>>>>>> 7c8e7fe4b7cddaecc4169ab3068a16f713aecff6
 
 # Machine tuning options
 #-------------------------------------------------------------------------
