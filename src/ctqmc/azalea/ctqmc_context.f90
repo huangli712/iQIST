@@ -200,10 +200,10 @@
 ! paux(2) : potential engrgy, Epot
 ! paux(3) : kinetic energy, Ekin
 ! paux(4) : magnetic moment, < Sz >
-! paux(5) : average of occupation, < N > = < N1 >
-! paux(6) : average of occupation square, < N^2 >
-! paux(7) : K = current perturbation expansion order X 2, <K^3>
-! paux(8) : K = current perturbation expansion order X 2, <K^4>
+! paux(5) : average of occupation, < N > = < N^1 > = < N1 >
+! paux(6) : average of occupation square, < N^2 > = < N2 >
+! paux(7) : K = current perturbation expansion order X 2, < K^3 > = < K3 >
+! paux(8) : K = current perturbation expansion order X 2, < K^4 > = < K4 >
      real(dp), public, save, allocatable :: paux(:)
 
 ! probability of eigenstates of local hamiltonian matrix
