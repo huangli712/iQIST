@@ -27,7 +27,7 @@
 
 .SUFFIXES: .f90
 
-include ../../../build/make.sys
+include ../../../../build/make.sys
 
 CLIB = libMM.a
 
@@ -38,10 +38,10 @@ default: all
 all: exe
 
 cssl:
-	cp ../../../common/libMM.a .
+	cp ../../../base/libMM.a .
 
 csml:
-	cp ../../../common/constants.mod .
+	cp ../../../base/constants.mod .
 
 exe: cssl csml makedos makescr maketau makeups makekra makesig makestd makechi
 
