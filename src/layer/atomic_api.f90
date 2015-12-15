@@ -149,7 +149,7 @@
 !! You have to ensure that the pyjasmine package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/layer/')
+!! sys.path.append('../../src/tools/jasmine/')
 !!
 !! 2. configure the atomic eigenvalue problem solver
 !! -------------------------------------------------
