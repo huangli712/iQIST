@@ -237,7 +237,7 @@
 !! You have to ensure that the pyiqist package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/layer/')
+!! sys.path.append('../../src/ctqmc/azalea/')
 !!
 !! 3. configure the ctqmc impurity solver
 !! --------------------------------------
