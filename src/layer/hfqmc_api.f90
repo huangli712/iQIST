@@ -224,7 +224,7 @@
 !! You have to ensure that the pydaisy package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/layer/')
+!! sys.path.append('../../src/hfqmc/daisy/')
 !!
 !! 3. configure the hfqmc impurity solver
 !! --------------------------------------
