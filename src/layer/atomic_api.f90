@@ -26,54 +26,54 @@
 !! How to build the Fortran API
 !! ============================
 !!
-!! 1. edit src/build/make.sys
-!! --------------------------
+!! 1. edit iqist/build/make.sys
+!! ----------------------------
 !!
 !! Setup the compiling environment correctly.
 !!
-!! 2. compile capi and common
-!! --------------------------
+!! 2. compile base and layer
+!! -------------------------
 !!
-!! Please compile capi and common at first. You can type the 'make capi'
-!! and 'make common' commands in the src/build directory, or use the 'make'
-!! command in the src/capi and src/common directories.
+!! Please compile base and layer at first. You can type the 'make base'
+!! and 'make layer' commands in the iqist/build directory, or use the
+!! 'make' command in the src/base and src/layer directories.
 !!
 !! 3. compile the jasmine component
 !! --------------------------------
 !!
 !! Noted that you have to compile it in the library mode, i.e., you must
 !! use 'make lib' in the src/tools/jasmine directory or 'make jasmine-lib'
-!! in the src/build directory.
+!! in the iqist/build directory.
 !!
 !! 4. get what you need
 !! --------------------
 !!
 !! If everything is OK, you will find the libatomic.a file in the jasmine
 !! component folder (for example, src/tools/jasmine directory). Please copy
-!! it (together with src/capi/japi.mod and src/common/libMM.a) to your own
+!! it (together with src/layer/japi.mod and src/base/libMM.a) to your own
 !! directory. That's all.
 !!
 !! How to build the Python API
 !! ===========================
 !!
-!! 1. edit src/build/make.sys
-!! --------------------------
+!! 1. edit iqist/build/make.sys
+!! ----------------------------
 !!
 !! Setup the compiling environment correctly.
 !!
-!! 2. compile capi and common
-!! --------------------------
+!! 2. compile base and layer
+!! -------------------------
 !!
-!! Please compile capi and common at first. You can type the 'make capi'
-!! and 'make common' commands in the src/build directory, or use the 'make'
-!! command in the src/capi and src/common directories.
+!! Please compile base and layer at first. You can type the 'make base'
+!! and 'make layer' commands in the iqist/build directory, or use the
+!! 'make' command in the src/base and src/layer directories.
 !!
 !! 3. compile the jasmine component
 !! --------------------------------
 !!
 !! Noted that you have to compile it in the python library mode, i.e.,
 !! you have to type 'make pylib' in the src/tools/jasmine directory or
-!! 'make jasmine-pylib' in the src/build directory.
+!! 'make jasmine-pylib' in the iqist/build directory.
 !!
 !! 4. get what you need
 !! --------------------
@@ -149,7 +149,7 @@
 !! You have to ensure that the pyjasmine package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/capi/')
+!! sys.path.append('../../src/layer/')
 !!
 !! 2. configure the atomic eigenvalue problem solver
 !! -------------------------------------------------
