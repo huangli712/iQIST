@@ -27,7 +27,7 @@
 
 .SUFFIXES: .f90
 
-include ../../build/make.sys
+include ../../../build/make.sys
 
 modc = hfqmc_control.o hfqmc_context.o
 dmft = hfqmc_dmft.o
@@ -50,18 +50,18 @@ default: all
 all: exe
 
 api:
-	cp ../../capi/dapi.mod .
-	cp ../../capi/hfqmc_api.o .
+	cp ../../layer/dapi.mod .
+	cp ../../layer/hfqmc_api.o .
 
 cssl:
-	cp ../../common/libMM.a .
+	cp ../../base/libMM.a .
 
 csml:
-	cp ../../common/constants.mod .
-	cp ../../common/mmpi.mod .
-	cp ../../common/spring.mod .
-	cp ../../common/parser.mod .
-	cp ../../common/linkedlist.mod .
+	cp ../../base/constants.mod .
+	cp ../../base/mmpi.mod .
+	cp ../../base/spring.mod .
+	cp ../../base/parser.mod .
+	cp ../../base/linkedlist.mod .
 
 exe: api cssl csml hfqmc-exe
 hfqmc-exe: $(exe_obj)
