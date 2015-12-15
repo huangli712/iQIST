@@ -80,43 +80,39 @@ GNU General Public License Version 3
 
 * Full Installation
 ```sh
-$ cd iqist/src/build
+$ cd iqist/build
 $ editor make.sys
 $ make all
-$ cd ../../bin
 $ ./setup.sh
 ```
 
 * Partial Installation
 ```sh
-$ cd iqist/src/build
+$ cd iqist/build
 $ editor make.sys
-$ make capi
-$ make common
+$ make base
+$ make layer
 $ make component (component could be azalea, gardenia, narcissus, etc.)
-$ cd ../../bin
 $ ./setup.sh
 ```
 
 * Build Fortran Library
 ```sh
-$ cd iqist/src/build
+$ cd iqist/build
 $ editor make.sys
-$ make capi
-$ make common
+$ make base
+$ make layer
 $ make component-lib (component could be azalea, gardenia, narcissus, etc.)
-$ cd ../../bin
 $ ./setup.sh
 ```
 
 * Build Python Module
 ```sh
-$ cd iqist/src/build
+$ cd iqist/build
 $ editor make.sys
-$ make capi
-$ make common
+$ make base
+$ make layer
 $ make component-pylib (component could be azalea, gardenia, narcissus, etc.)
-$ cd ../../bin
 $ ./setup.sh
 ```
 
