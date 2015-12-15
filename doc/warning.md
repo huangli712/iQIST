@@ -6,13 +6,13 @@ The user manual for iQIST is far away from completeness. So please DO NOT READ m
 
 ### Installation
 
-See the comments in iqist/src/build/make.sys, iqist/src/build/build.md, and iqist/src/build/Makefile.
+See the comments in iqist/build/make.sys, iqist/build/build.md, and iqist/build/Makefile.
 
 ### File Format
 
-For the file formats of solver.ctqmc.in, atom.config.in, entropy.in, and sac.in, see the comments in iqist/src/common/m\_parser.f90.
+For the file formats of solver.ctqmc.in, atom.config.in, entropy.in, and sac.in, see the comments in iqist/src/base/m\_parser.f90.
 
-For the file formats of solver.xxx.dat, see the codes in ctqmc\_dump.f90.
+For the file formats of solver.xxx.dat, see the codes in iqist/src/ctqmc/xxx/ctqmc\_dump.f90.
 
 ### CTQMC quantum impurity solver
 
@@ -44,7 +44,7 @@ See the comments in iqist/src/tools/hibiscus/swing/swing\_main.py.
 
 ### Application programming interface
 
-See the comments in iqist/src/capi/ctqmc\_api.f90, iqist/src/capi/hfqmc\_api.f90, and iqist/src/capi/atomic\_api.f90
+See the comments in iqist/src/layer/ctqmc\_api.f90, iqist/src/layer/hfqmc\_api.f90, and iqist/src/layer/atomic\_api.f90
 
 ### Examples
 
