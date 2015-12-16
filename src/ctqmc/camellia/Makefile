@@ -50,8 +50,8 @@ default: all
 all: exe
 
 api:
-	cp ../../layer/capi.mod .
-	cp ../../layer/ctqmc_api.o .
+	cp ../../capi/capi.mod .
+	cp ../../capi/ctqmc_api.o .
 
 cssl:
 	cp ../../base/libMM.a .
