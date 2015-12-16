@@ -581,7 +581,7 @@
 !!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
-     use constants, only : dp, zero
+     use constants, only : dp, zero, two
 
      use control, only : nband, norbs
      use control, only : beta
