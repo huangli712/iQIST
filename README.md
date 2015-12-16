@@ -91,7 +91,7 @@ $ ./setup.sh
 $ cd iqist/build
 $ editor make.sys
 $ make base
-$ make layer
+$ make capi
 $ make component (component could be azalea, gardenia, narcissus, etc.)
 $ ./setup.sh
 ```
@@ -101,7 +101,7 @@ $ ./setup.sh
 $ cd iqist/build
 $ editor make.sys
 $ make base
-$ make layer
+$ make capi
 $ make component-lib (component could be azalea, gardenia, narcissus, etc.)
 $ ./setup.sh
 ```
@@ -111,7 +111,7 @@ $ ./setup.sh
 $ cd iqist/build
 $ editor make.sys
 $ make base
-$ make layer
+$ make capi
 $ make component-pylib (component could be azalea, gardenia, narcissus, etc.)
 $ ./setup.sh
 ```
@@ -122,7 +122,7 @@ If you want to know more about the compiling system implemented in the iQIST, pl
 
 ### Documentation
 
-see iQIST/doc/manual/ug.pdf (We are sorry. Currently this manual is far away from completeness).
+see iQIST/doc/manual/ug.pdf (We are sorry. Currently this manual is far away from completeness, so we remove it temporally from the release).
 
 ### Development
 
