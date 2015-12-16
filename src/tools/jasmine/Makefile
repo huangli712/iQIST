@@ -49,8 +49,8 @@ default: all
 all: exe
 
 api:
-	cp ../../layer/japi.mod .
-	cp ../../layer/atomic_api.o .
+	cp ../../capi/japi.mod .
+	cp ../../capi/atomic_api.o .
 
 cssl:
 	cp ../../base/libMM.a .
