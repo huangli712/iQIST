@@ -1,6 +1,6 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-### v0.6.6 @ b81ee6c // Dec 16, 2015
+### v0.6.6 @ 9e0bf1b // Dec 16, 2015
 
 * Add camellia component. BUT IT DOES NOT WORK PROPERLY. DON'T USE IT!
 * Add kurtosis and skewness features in azalea.
