@@ -202,8 +202,9 @@
 ! paux(4) : magnetic moment, < Sz >
 ! paux(5) : average of occupation, < N > = < N^1 > = < N1 >
 ! paux(6) : average of occupation square, < N^2 > = < N2 >
-! paux(7) : K = current perturbation expansion order X 2, < K^3 > = < K3 >
-! paux(8) : K = current perturbation expansion order X 2, < K^4 > = < K4 >
+! paux(7) : K = current perturbation expansion order X 2, < K^2 > = < K2 >
+! paux(8) : K = current perturbation expansion order X 2, < K^3 > = < K3 >
+! paux(9) : K = current perturbation expansion order X 2, < K^4 > = < K4 >
      real(dp), public, save, allocatable :: paux(:)
 
 ! probability of eigenstates of local hamiltonian matrix
@@ -480,7 +481,7 @@
 ! allocate memory
      allocate(hist(mkink),        stat=istat)
 
-     allocate(paux(  8  ),        stat=istat)
+     allocate(paux(  9  ),        stat=istat)
      allocate(prob(ncfgs),        stat=istat)
 
      allocate(nmat(norbs),        stat=istat)
