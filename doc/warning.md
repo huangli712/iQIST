@@ -2,7 +2,7 @@
 
 ### WARNING
 
-The user manual for iQIST is far away from completeness. So please DO NOT READ manual/ug.pdf now. We are really sorry for that. Though the user manual is not ready, you can still find some useful information/tips in the following places.
+The user manual for iQIST is far away from completeness. So we don't release it together with the source codes. In the future, we would like to publish it using the Gitbook. We are really sorry for that. Though the user manual is not ready, you can still find some useful information/tips in the following places.
 
 ### Installation
 
@@ -44,7 +44,7 @@ See the comments in iqist/src/tools/hibiscus/swing/swing\_main.py.
 
 ### Application programming interface
 
-See the comments in iqist/src/layer/ctqmc\_api.f90, iqist/src/layer/hfqmc\_api.f90, and iqist/src/layer/atomic\_api.f90
+See the comments in iqist/src/capi/ctqmc\_api.f90, iqist/src/capi/hfqmc\_api.f90, and iqist/src/capi/atomic\_api.f90
 
 ### Examples
 
