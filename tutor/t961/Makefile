@@ -40,7 +40,7 @@ default: all
 all: exe
 
 api:
-	cp ../../src/layer/capi.mod .
+	cp ../../src/capi/capi.mod .
 	cp ../../src/ctqmc/azalea/libctqmc.a .
 
 cssl:
