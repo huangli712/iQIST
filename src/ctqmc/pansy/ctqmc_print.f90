@@ -161,6 +161,8 @@
      write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / raux, 'epot :', paux(2) / raux
      write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / raux, '<Sz> :', paux(4) / raux
      write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / raux, '<N2> :', paux(6) / raux
+     write(mystd,'(2(4X,a,f10.5))') '<K2> :', paux(7) / istat, '<K3> :', paux(8) / istat
+     write(mystd,'(1(4X,a,f10.5))') '<K4> :', paux(9) / istat
 
 ! about insert action
      if ( insert_tcount <= half ) insert_tcount = -one ! if insert is disable
