@@ -31,12 +31,12 @@
 !!
 !! Setup the compiling environment correctly.
 !!
-!! 2. compile base and layer
-!! -------------------------
+!! 2. compile base and capi
+!! ------------------------
 !!
-!! Please compile base and layer at first. You can type the 'make base'
-!! and 'make layer' commands in the iqist/build directory, or use the
-!! 'make' command in the src/base and src/layer directories.
+!! Please compile base and capi at first. You can type the 'make base'
+!! and 'make capi' commands in the iqist/build directory, or use the
+!! 'make' command in the src/base and src/capi directories.
 !!
 !! 3. compile the jasmine component
 !! --------------------------------
@@ -50,7 +50,7 @@
 !!
 !! If everything is OK, you will find the libatomic.a file in the jasmine
 !! component folder (for example, src/tools/jasmine directory). Please copy
-!! it (together with src/layer/japi.mod and src/base/libMM.a) to your own
+!! it (together with src/capi/japi.mod and src/base/libMM.a) to your own
 !! directory. That's all.
 !!
 !! How to build the Python API
@@ -61,12 +61,12 @@
 !!
 !! Setup the compiling environment correctly.
 !!
-!! 2. compile base and layer
-!! -------------------------
+!! 2. compile base and capi
+!! ------------------------
 !!
-!! Please compile base and layer at first. You can type the 'make base'
-!! and 'make layer' commands in the iqist/build directory, or use the
-!! 'make' command in the src/base and src/layer directories.
+!! Please compile base and capi at first. You can type the 'make base'
+!! and 'make capi' commands in the iqist/build directory, or use the
+!! 'make' command in the src/base and src/capi directories.
 !!
 !! 3. compile the jasmine component
 !! --------------------------------

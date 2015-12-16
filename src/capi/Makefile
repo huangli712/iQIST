@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/layer directory.
+## Makefile for iqist/src/capi directory.
 ##
 ## Usage
 ## =====
