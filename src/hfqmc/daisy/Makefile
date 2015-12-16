@@ -50,8 +50,8 @@ default: all
 all: exe
 
 api:
-	cp ../../layer/dapi.mod .
-	cp ../../layer/hfqmc_api.o .
+	cp ../../capi/dapi.mod .
+	cp ../../capi/hfqmc_api.o .
 
 cssl:
 	cp ../../base/libMM.a .
