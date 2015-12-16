@@ -150,12 +150,12 @@ help-more:
 	@echo '     hibiscus-lib      build hibiscus code                  '
 	@echo '     clean-hibiscus    clean hibiscus directory             '
 	@echo
-	@echo '     layer             generate capi library                '
-	@echo '     layer-lib         generate capi library                '
-	@echo '     clean-layer       clean layer directory                '
+	@echo '     capi              build capi library                   '
+	@echo '     capi-lib          build capi library                   '
+	@echo '     clean-capi        clean capi directory                 '
 	@echo
-	@echo '     base              build csml modules and cssl library  '
-	@echo '     base-lib          build csml modules and cssl library  '
+	@echo '     base              build base library                   '
+	@echo '     base-lib          build base library                   '
 	@echo '     clean-base        clean base directory                 '
 	@echo
 	@echo '     doc               generate documents                   '
@@ -163,28 +163,28 @@ help-more:
 	@echo '     clean-doc         clean doc directory                  '
 
 # all-in-one building target
-all: base layer solver tool other
+all: base capi solver tool other
 
 # all-in-one building target (lib mode)
-lib: base-lib layer-lib solver-lib tool-lib other-lib
+lib: base-lib capi-lib solver-lib tool-lib other-lib
 
 # all-in-one cleaning target
-clean: clean-base clean-layer clean-solver clean-tool clean-other
+clean: clean-base clean-capi clean-solver clean-tool clean-other
 
 # targets for solver
-solver: base layer \
+solver: base capi \
         azalea gardenia narcissus \
         begonia lavender \
         camellia \
         pansy manjushaka \
         daisy
-solver-lib: base-lib layer-lib \
+solver-lib: base-lib capi-lib \
 	    azalea-lib gardenia-lib narcissus-lib \
 	    begonia-lib lavender-lib \
             camellia-lib \
 	    pansy-lib manjushaka-lib \
 	    daisy-lib
-clean-solver: clean-base clean-layer \
+clean-solver: clean-base clean-capi \
               clean-azalea clean-gardenia clean-narcissus \
               clean-begonia clean-lavender \
               clean-camellia \
@@ -192,9 +192,9 @@ clean-solver: clean-base clean-layer \
               clean-daisy
 
 # targets for tool
-tool: base layer jasmine hibiscus
-tool-lib: base-lib layer-lib jasmine-lib hibiscus-lib
-clean-tool: clean-base clean-layer clean-jasmine clean-hibiscus
+tool: base capi jasmine hibiscus
+tool-lib: base-lib capi-lib jasmine-lib hibiscus-lib
+clean-tool: clean-base clean-capi clean-jasmine clean-hibiscus
 
 # targets for other
 other: doc
@@ -337,15 +337,15 @@ hibiscus-lib:
 clean-hibiscus:
 	cd ../src/tools/hibiscus/; pwd; make clean
 
-# targets for layer: layer
-layer:
-	cd ../src/layer/; pwd; make
+# targets for capi: capi
+capi:
+	cd ../src/capi/; pwd; make
 
-layer-lib:
-	cd ../src/layer/; pwd; make
+capi-lib:
+	cd ../src/capi/; pwd; make
 
-clean-layer:
-	cd ../src/layer/; pwd; make clean
+clean-capi:
+	cd ../src/capi/; pwd; make clean
 
 # targets for base: base
 base:
