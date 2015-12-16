@@ -10,7 +10,7 @@ Sometimes the latest commit will not be compiled correctly. So, please download 
 
 ### Version
 
-v0.6.5 @ 2015.01.06T (devel)
+v0.6.6 @ 2015.01.06T (devel)
 
 ### License
 
@@ -38,6 +38,7 @@ GNU General Public License Version 3
     * Pair susceptibility in matsubara frequency space
     * Self-energy function in matsubara frequency space
     * Histogram of perturbation expansion order
+    * Kurtosis and skewness of perturbation expansion order
     * Kinetic and potential energies
     * Orbital occupation numbers
     * Double occupation numbers
