@@ -143,11 +143,11 @@
      endif ! back if ( ibasis < 1 .or. ibasis > 2 ) block
 
 ! check ictqmc
-     if ( ictqmc < 1 .or. ictqmc > 5 ) then
-         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 1, 2, 3, 4, 5!'
+     if ( ictqmc < 0 .or. ictqmc > 5 ) then
+         write(mystd,'(2X,a)') 'ERROR: ictqmc must be one of 0, 1, 2, 3, 4, 5!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( ictqmc < 1 .or. ictqmc > 5 ) block
+     endif ! back if ( ictqmc < 0 .or. ictqmc > 5 ) block
 
      if ( ictqmc == 3 .and. isoc == 1 ) then
          write(mystd,'(2X,a)') 'ERROR: GQNs (N,Sz) algorithm is NOT supported for SOC case!'
@@ -226,11 +226,11 @@
          lpass = .false.
      endif ! back if ( nband <= 0 ) block
 
-     if ( nband >= 5 .and. ictqmc == 1 ) then
+     if ( nband >= 5 .and. ictqmc <= 1 ) then
          write(mystd,'(2X,a)') 'ERROR: when number of bands is larger than 4, direct diagonalization is NOT supported!'
          write(mystd,*)
          lpass = .false.
-     endif ! back if ( nband >= 5 .and. ictqmc == 1 ) block
+     endif ! back if ( nband >= 5 .and. ictqmc <= 1 ) block
 
 ! check nspin
      if ( nspin /= 2 ) then

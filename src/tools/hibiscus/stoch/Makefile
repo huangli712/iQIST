@@ -27,7 +27,7 @@
 
 .SUFFIXES: .f90
 
-include ../../../build/make.sys
+include ../../../../build/make.sys
 
 modc = sac_control.o sac_context.o
 core = sac_stream.o sac_toolbox.o sac_update.o sac_record.o
@@ -43,14 +43,14 @@ default: all
 all: exe
 
 cssl:
-	cp ../../../common/libMM.a .
+	cp ../../../base/libMM.a .
 
 csml:
-	cp ../../../common/constants.mod .
-	cp ../../../common/mmpi.mod .
-	cp ../../../common/spring.mod .
-	cp ../../../common/parser.mod .
-	cp ../../../common/linkedlist.mod .
+	cp ../../../base/constants.mod .
+	cp ../../../base/mmpi.mod .
+	cp ../../../base/spring.mod .
+	cp ../../../base/parser.mod .
+	cp ../../../base/linkedlist.mod .
 
 exe: cssl csml sac-exe
 sac-exe: $(objects)

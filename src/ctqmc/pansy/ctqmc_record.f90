@@ -189,7 +189,7 @@
 !!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
-     use constants, only : dp, zero
+     use constants, only : dp, zero, two
 
      use control, only : norbs, ncfgs
      use control, only : U, mune, beta
@@ -261,6 +261,21 @@
 !-------------------------------------------------------------------------
      nnmat = zero
 ! this feature will not be implemented for pansy code
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^4>
+!-------------------------------------------------------------------------
+     paux(9) = paux(9) + ( ckink * two )**4
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^3>
+!-------------------------------------------------------------------------
+     paux(8) = paux(8) + ( ckink * two )**3
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^2>
+!-------------------------------------------------------------------------
+     paux(7) = paux(7) + ( ckink * two )**2
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^2>

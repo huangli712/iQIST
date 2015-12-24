@@ -27,7 +27,7 @@
 
 .SUFFIXES: .f90
 
-include ../../build/make.sys
+include ../../../build/make.sys
 
 modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
@@ -54,16 +54,16 @@ api:
 	cp ../../capi/ctqmc_api.o .
 
 cssl:
-	cp ../../common/libMM.a .
+	cp ../../base/libMM.a .
 
 csml:
-	cp ../../common/constants.mod .
-	cp ../../common/mmpi.mod .
-	cp ../../common/sparse.mod .
-	cp ../../common/spring.mod .
-	cp ../../common/stack.mod .
-	cp ../../common/parser.mod .
-	cp ../../common/linkedlist.mod .
+	cp ../../base/constants.mod .
+	cp ../../base/mmpi.mod .
+	cp ../../base/sparse.mod .
+	cp ../../base/spring.mod .
+	cp ../../base/stack.mod .
+	cp ../../base/parser.mod .
+	cp ../../base/linkedlist.mod .
 
 exe: api cssl csml ctqmc-exe
 ctqmc-exe: $(exe_obj)

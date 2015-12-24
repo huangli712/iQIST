@@ -2,17 +2,17 @@
 
 ### WARNING
 
-The user manual for iQIST is far away from completeness. So please DO NOT READ manual/ug.pdf now. We are really sorry for that. Though the user manual is not ready, you can still find some useful information/tips in the following places.
+The user manual for iQIST is far away from completeness. So we don't release it together with the source codes. In the future, we would like to publish it using the Gitbook. We are really sorry for that. Though the user manual is not ready, you can still find some useful information/tips in the following places.
 
 ### Installation
 
-See the comments in iqist/src/build/make.sys, iqist/src/build/build.md, and iqist/src/build/Makefile.
+See the comments in iqist/build/make.sys, iqist/build/build.md, and iqist/build/Makefile.
 
 ### File Format
 
-For the file formats of solver.ctqmc.in, atom.config.in, entropy.in, and sac.in, see the comments in iqist/src/common/m\_parser.f90.
+For the file formats of solver.ctqmc.in, atom.config.in, entropy.in, and sac.in, see the comments in iqist/src/base/m\_parser.f90.
 
-For the file formats of solver.xxx.dat, see the codes in ctqmc\_dump.f90.
+For the file formats of solver.xxx.dat, see the codes in iqist/src/ctqmc/xxx/ctqmc\_dump.f90.
 
 ### CTQMC quantum impurity solver
 

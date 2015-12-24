@@ -27,7 +27,7 @@
 
 .SUFFIXES: .f90
 
-include ../build/make.sys
+include ../../build/make.sys
 
 mod = ctqmc_api.o hfqmc_api.o atomic_api.o
 

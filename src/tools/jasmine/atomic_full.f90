@@ -19,6 +19,7 @@
 !!>>> atomic_make_ffmat: make F-matrix for annihilation operators in
 !!>>> full Hilbert space case
   subroutine atomic_make_ffmat()
+     use m_cntr, only : ictqmc
      use m_cntr, only : norbs, ncfgs
      use m_full, only : dec_basis, ind_basis
      use m_full, only : fmat, evec
@@ -53,9 +54,11 @@
      enddo ! over i={1,norbs} loop
 
 ! rotate fmat from Fock basis to the atomic eigenvector basis
-     do i=1,norbs
-         call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
-     enddo ! over i={1,norbs} loop
+     if ( ictqmc == 1 ) then
+         do i=1,norbs
+             call atomic_tran_repr_real(ncfgs, fmat(:,:,i), evec)
+         enddo ! over i={1,norbs} loop
+     endif ! back if ( ictqmc == 1 ) block
 
      return
   end subroutine atomic_make_ffmat

@@ -150,41 +150,41 @@ help-more:
 	@echo '     hibiscus-lib      build hibiscus code                  '
 	@echo '     clean-hibiscus    clean hibiscus directory             '
 	@echo
-	@echo '     capi              generate capi library                '
-	@echo '     capi-lib          generate capi library                '
+	@echo '     capi              build capi library                   '
+	@echo '     capi-lib          build capi library                   '
 	@echo '     clean-capi        clean capi directory                 '
 	@echo
-	@echo '     common            build csml modules and cssl library  '
-	@echo '     common-lib        build csml modules and cssl library  '
-	@echo '     clean-common      clean common directory               '
+	@echo '     base              build base library                   '
+	@echo '     base-lib          build base library                   '
+	@echo '     clean-base        clean base directory                 '
 	@echo
 	@echo '     doc               generate documents                   '
 	@echo '     doc-lib           generate documents                   '
 	@echo '     clean-doc         clean doc directory                  '
 
 # all-in-one building target
-all: capi common solver tool other
+all: base capi solver tool other
 
 # all-in-one building target (lib mode)
-lib: capi-lib common-lib solver-lib tool-lib other-lib
+lib: base-lib capi-lib solver-lib tool-lib other-lib
 
 # all-in-one cleaning target
-clean: clean-capi clean-common clean-solver clean-tool clean-other
+clean: clean-base clean-capi clean-solver clean-tool clean-other
 
 # targets for solver
-solver: capi common \
+solver: base capi \
         azalea gardenia narcissus \
         begonia lavender \
         camellia \
         pansy manjushaka \
         daisy
-solver-lib: capi-lib common-lib \
+solver-lib: base-lib capi-lib \
 	    azalea-lib gardenia-lib narcissus-lib \
 	    begonia-lib lavender-lib \
             camellia-lib \
 	    pansy-lib manjushaka-lib \
 	    daisy-lib
-clean-solver: clean-capi clean-common \
+clean-solver: clean-base clean-capi \
               clean-azalea clean-gardenia clean-narcissus \
               clean-begonia clean-lavender \
               clean-camellia \
@@ -192,9 +192,9 @@ clean-solver: clean-capi clean-common \
               clean-daisy
 
 # targets for tool
-tool: capi common jasmine hibiscus
-tool-lib: capi-lib common-lib jasmine-lib hibiscus-lib
-clean-tool: clean-capi clean-common clean-jasmine clean-hibiscus
+tool: base capi jasmine hibiscus
+tool-lib: base-lib capi-lib jasmine-lib hibiscus-lib
+clean-tool: clean-base clean-capi clean-jasmine clean-hibiscus
 
 # targets for other
 other: doc
@@ -203,166 +203,166 @@ clean-other: clean-doc
 
 # targets for ctqmc codes: segment version (azalea, gardenia, narcissus)
 azalea:
-	cd ../ctqmc/azalea/; pwd; make
+	cd ../src/ctqmc/azalea/; pwd; make
 
 azalea-lib:
-	cd ../ctqmc/azalea/; pwd; make lib
+	cd ../src/ctqmc/azalea/; pwd; make lib
 
 azalea-pylib:
-	cd ../ctqmc/azalea/; pwd; make pylib
+	cd ../src/ctqmc/azalea/; pwd; make pylib
 
 clean-azalea:
-	cd ../ctqmc/azalea/; pwd; make clean
+	cd ../src/ctqmc/azalea/; pwd; make clean
 
 gardenia:
-	cd ../ctqmc/gardenia/; pwd; make
+	cd ../src/ctqmc/gardenia/; pwd; make
 
 gardenia-lib:
-	cd ../ctqmc/gardenia/; pwd; make lib
+	cd ../src/ctqmc/gardenia/; pwd; make lib
 
 gardenia-pylib:
-	cd ../ctqmc/gardenia/; pwd; make pylib
+	cd ../src/ctqmc/gardenia/; pwd; make pylib
 
 clean-gardenia:
-	cd ../ctqmc/gardenia/; pwd; make clean
+	cd ../src/ctqmc/gardenia/; pwd; make clean
 
 narcissus:
-	cd ../ctqmc/narcissus/; pwd; make
+	cd ../src/ctqmc/narcissus/; pwd; make
 
 narcissus-lib:
-	cd ../ctqmc/narcissus/; pwd; make lib
+	cd ../src/ctqmc/narcissus/; pwd; make lib
 
 narcissus-pylib:
-	cd ../ctqmc/narcissus/; pwd; make pylib
+	cd ../src/ctqmc/narcissus/; pwd; make pylib
 
 clean-narcissus:
-	cd ../ctqmc/narcissus/; pwd; make clean
+	cd ../src/ctqmc/narcissus/; pwd; make clean
 
 # targets for ctqmc codes: general version (begonia, lavender)
 begonia:
-	cd ../ctqmc/begonia/; pwd; make
+	cd ../src/ctqmc/begonia/; pwd; make
 
 begonia-lib:
-	cd ../ctqmc/begonia/; pwd; make lib
+	cd ../src/ctqmc/begonia/; pwd; make lib
 
 begonia-pylib:
-	cd ../ctqmc/begonia/; pwd; make pylib
+	cd ../src/ctqmc/begonia/; pwd; make pylib
 
 clean-begonia:
-	cd ../ctqmc/begonia/; pwd; make clean
+	cd ../src/ctqmc/begonia/; pwd; make clean
 
 lavender:
-	cd ../ctqmc/lavender/; pwd; make
+	cd ../src/ctqmc/lavender/; pwd; make
 
 lavender-lib:
-	cd ../ctqmc/lavender/; pwd; make lib
+	cd ../src/ctqmc/lavender/; pwd; make lib
 
 lavender-pylib:
-	cd ../ctqmc/lavender/; pwd; make pylib
+	cd ../src/ctqmc/lavender/; pwd; make pylib
 
 clean-lavender:
-	cd ../ctqmc/lavender/; pwd; make clean
+	cd ../src/ctqmc/lavender/; pwd; make clean
 
 # targets for ctqmc codes: general version (camellia)
 camellia:
-	cd ../ctqmc/camellia/; pwd; make
+	cd ../src/ctqmc/camellia/; pwd; make
 
 camellia-lib:
-	cd ../ctqmc/camellia/; pwd; make lib
+	cd ../src/ctqmc/camellia/; pwd; make lib
 
 camellia-pylib:
-	cd ../ctqmc/camellia/; pwd; make pylib
+	cd ../src/ctqmc/camellia/; pwd; make pylib
 
 clean-camellia:
-	cd ../ctqmc/camellia/; pwd; make clean
+	cd ../src/ctqmc/camellia/; pwd; make clean
 
 # targets for ctqmc codes: general version (pansy, manjushaka)
 pansy:
-	cd ../ctqmc/pansy/; pwd; make
+	cd ../src/ctqmc/pansy/; pwd; make
 
 pansy-lib:
-	cd ../ctqmc/pansy/; pwd; make lib
+	cd ../src/ctqmc/pansy/; pwd; make lib
 
 pansy-pylib:
-	cd ../ctqmc/pansy/; pwd; make pylib
+	cd ../src/ctqmc/pansy/; pwd; make pylib
 
 clean-pansy:
-	cd ../ctqmc/pansy/; pwd; make clean
+	cd ../src/ctqmc/pansy/; pwd; make clean
 
 manjushaka:
-	cd ../ctqmc/manjushaka/; pwd; make
+	cd ../src/ctqmc/manjushaka/; pwd; make
 
 manjushaka-lib:
-	cd ../ctqmc/manjushaka/; pwd; make lib
+	cd ../src/ctqmc/manjushaka/; pwd; make lib
 
 manjushaka-pylib:
-	cd ../ctqmc/manjushaka/; pwd; make pylib
+	cd ../src/ctqmc/manjushaka/; pwd; make pylib
 
 clean-manjushaka:
-	cd ../ctqmc/manjushaka/; pwd; make clean
+	cd ../src/ctqmc/manjushaka/; pwd; make clean
 
 # targets for hfqmc codes: daisy
 daisy:
-	cd ../hfqmc/daisy/; pwd; make
+	cd ../src/hfqmc/daisy/; pwd; make
 
 daisy-lib:
-	cd ../hfqmc/daisy/; pwd; make lib
+	cd ../src/hfqmc/daisy/; pwd; make lib
 
 daisy-pylib:
-	cd ../hfqmc/daisy/; pwd; make pylib
+	cd ../src/hfqmc/daisy/; pwd; make pylib
 
 clean-daisy:
-	cd ../hfqmc/daisy/; pwd; make clean
+	cd ../src/hfqmc/daisy/; pwd; make clean
 
 # targets for atomic codes: jasmine
 jasmine:
-	cd ../tools/jasmine/; pwd; make
+	cd ../src/tools/jasmine/; pwd; make
 
 jasmine-lib:
-	cd ../tools/jasmine/; pwd; make lib
+	cd ../src/tools/jasmine/; pwd; make lib
 
 jasmine-pylib:
-	cd ../tools/jasmine/; pwd; make pylib
+	cd ../src/tools/jasmine/; pwd; make pylib
 
 clean-jasmine:
-	cd ../tools/jasmine/; pwd; make clean
+	cd ../src/tools/jasmine/; pwd; make clean
 
 # targets for toolkit codes: hibiscus
 hibiscus:
-	cd ../tools/hibiscus/; pwd; make
+	cd ../src/tools/hibiscus/; pwd; make
 
 hibiscus-lib:
-	cd ../tools/hibiscus/; pwd; make
+	cd ../src/tools/hibiscus/; pwd; make
 
 clean-hibiscus:
-	cd ../tools/hibiscus/; pwd; make clean
+	cd ../src/tools/hibiscus/; pwd; make clean
 
 # targets for capi: capi
 capi:
-	cd ../capi/; pwd; make
+	cd ../src/capi/; pwd; make
 
 capi-lib:
-	cd ../capi/; pwd; make
+	cd ../src/capi/; pwd; make
 
 clean-capi:
-	cd ../capi/; pwd; make clean
+	cd ../src/capi/; pwd; make clean
 
-# targets for common: common
-common:
-	cd ../common/; pwd; make
+# targets for base: base
+base:
+	cd ../src/base/; pwd; make
 
-common-lib:
-	cd ../common/; pwd; make
+base-lib:
+	cd ../src/base/; pwd; make
 
-clean-common:
-	cd ../common/; pwd; make clean
+clean-base:
+	cd ../src/base/; pwd; make clean
 
 # targets for doc: doc
 doc:
-	cd ../../doc/manual/; pwd; make full
+	cd ../doc/manual/; pwd; make full
 
 doc-lib:
-	cd ../../doc/manual/; pwd; make full
+	cd ../doc/manual/; pwd; make full
 
 clean-doc:
-	cd ../../doc/manual/; pwd; make clean
+	cd ../doc/manual/; pwd; make clean
