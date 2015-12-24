@@ -10,7 +10,7 @@ Sometimes the latest commit will not be compiled correctly. So, please download 
 
 ### Version
 
-v0.6.5 @ 2015.01.06T (devel)
+v0.6.6 @ 2015.01.06T (devel)
 
 ### License
 
@@ -38,6 +38,7 @@ GNU General Public License Version 3
     * Pair susceptibility in matsubara frequency space
     * Self-energy function in matsubara frequency space
     * Histogram of perturbation expansion order
+    * Kurtosis and skewness of perturbation expansion order
     * Kinetic and potential energies
     * Orbital occupation numbers
     * Double occupation numbers
@@ -80,43 +81,39 @@ GNU General Public License Version 3
 
 * Full Installation
 ```sh
-$ cd iqist/src/build
+$ cd iqist/build
 $ editor make.sys
 $ make all
-$ cd ../../bin
 $ ./setup.sh
 ```
 
 * Partial Installation
 ```sh
-$ cd iqist/src/build
+$ cd iqist/build
 $ editor make.sys
+$ make base
 $ make capi
-$ make common
 $ make component (component could be azalea, gardenia, narcissus, etc.)
-$ cd ../../bin
 $ ./setup.sh
 ```
 
 * Build Fortran Library
 ```sh
-$ cd iqist/src/build
+$ cd iqist/build
 $ editor make.sys
+$ make base
 $ make capi
-$ make common
 $ make component-lib (component could be azalea, gardenia, narcissus, etc.)
-$ cd ../../bin
 $ ./setup.sh
 ```
 
 * Build Python Module
 ```sh
-$ cd iqist/src/build
+$ cd iqist/build
 $ editor make.sys
+$ make base
 $ make capi
-$ make common
 $ make component-pylib (component could be azalea, gardenia, narcissus, etc.)
-$ cd ../../bin
 $ ./setup.sh
 ```
 
@@ -126,7 +123,7 @@ If you want to know more about the compiling system implemented in the iQIST, pl
 
 ### Documentation
 
-see iQIST/doc/manual/ug.pdf (We are sorry. Currently this manual is far away from completeness).
+see iQIST/doc/manual/ug.pdf (We are sorry. Currently this manual is far away from completeness, so we remove it temporally from the release).
 
 ### Development
 

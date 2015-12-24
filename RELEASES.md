@@ -1,5 +1,20 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+### v0.6.6 @ 9e0bf1b // Dec 16, 2015
+
+* Add camellia component. BUT IT DOES NOT WORK PROPERLY. DON'T USE IT!
+* Add kurtosis and skewness features in azalea.
+* Add kurtosis and skewness features in begonia.
+* Add kurtosis and skewness features in camellia.
+* Add kurtosis and skewness features in gardenia.
+* Add kurtosis and skewness features in lavender.
+* Add kurtosis and skewness features in manjushaka.
+* Add kurtosis and skewness features in narcissus.
+* Add kurtosis and skewness features in pansy.
+* Remove doc/manual. In the future, the documents will be published in Gitbook.
+* The building system is modified. And the build directory is moved to the iqist directory.
+* Remove iqist/bin directory, and the shell scripts are copied into iqist/build.
+
 ### v0.6.5 @ 90793f1 // Sep 06, 2015
 
 * Add error bars support in azalea.

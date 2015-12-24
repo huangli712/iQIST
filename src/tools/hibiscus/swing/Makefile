@@ -25,7 +25,7 @@
 ##
 ##
 
-include ../../../build/make.sys
+include ../../../../build/make.sys
 
 default: all
 

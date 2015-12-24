@@ -205,7 +205,7 @@
 !!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
 !!>>> matrix, and auxiliary physical observables simulataneously
   subroutine ctqmc_record_nmat()
-     use constants, only : dp, zero
+     use constants, only : dp, zero, two
 
      use control, only : nband, norbs
      use control, only : beta
@@ -316,6 +316,21 @@
 
          nnmat(flvr,:) = nnmat(flvr,:) + ovlp(flvr,:) / beta
      enddo ! over flvr={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^4>
+!-------------------------------------------------------------------------
+     paux(9) = paux(9) + ( ckink * two )**4
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^3>
+!-------------------------------------------------------------------------
+     paux(8) = paux(8) + ( ckink * two )**3
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^2>
+!-------------------------------------------------------------------------
+     paux(7) = paux(7) + ( ckink * two )**2
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <N^2>

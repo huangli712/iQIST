@@ -27,7 +27,7 @@
 
 .SUFFIXES: .f90
 
-include ../../../build/make.sys
+include ../../../../build/make.sys
 
 modc = entropy_control.o entropy_context.o
 core = entropy_stream.o entropy_toolbox.o entropy_update.o
@@ -43,14 +43,14 @@ default: all
 all: exe
 
 cssl:
-	cp ../../../common/libMM.a .
+	cp ../../../base/libMM.a .
 
 csml:
-	cp ../../../common/constants.mod .
-	cp ../../../common/mmpi.mod .
-	cp ../../../common/spring.mod .
-	cp ../../../common/parser.mod .
-	cp ../../../common/linkedlist.mod .
+	cp ../../../base/constants.mod .
+	cp ../../../base/mmpi.mod .
+	cp ../../../base/spring.mod .
+	cp ../../../base/parser.mod .
+	cp ../../../base/linkedlist.mod .
 
 exe: cssl csml entropy-exe
 entropy-exe: $(objects)

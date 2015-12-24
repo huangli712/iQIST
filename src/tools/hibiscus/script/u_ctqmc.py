@@ -144,6 +144,21 @@ class p_ctqmc_solver(object):
         self.__p_cmp_lavender['nbfrq'] = 8
         self.__p_cmp_lavender['npart'] = 4
 
+        # __p_cmp_camellia: the official parameter dict for camellia
+        self.__p_cmp_camellia = self.__p_cmp_solver.copy()
+        self.__p_cmp_camellia['isort'] = 1
+        self.__p_cmp_camellia['issus'] = 1
+        self.__p_cmp_camellia['isvrt'] = 1
+        self.__p_cmp_camellia['nzero'] = 128
+        self.__p_cmp_camellia['lemax'] = 32
+        self.__p_cmp_camellia['legrd'] = 20001
+        self.__p_cmp_camellia['chmax'] = 32
+        self.__p_cmp_camellia['chgrd'] = 20001
+        self.__p_cmp_camellia['nffrq'] = 32
+        self.__p_cmp_camellia['nbfrq'] = 8
+        self.__p_cmp_camellia['nvect'] = 4
+        self.__p_cmp_camellia['nleja'] = 64
+
         # __p_cmp_pansy: the official parameter dict for pansy
         self.__p_cmp_pansy = self.__p_cmp_solver.copy()
         self.__p_cmp_pansy['npart'] = 4
@@ -189,6 +204,10 @@ class p_ctqmc_solver(object):
 
             if case ('lavender'):
                 self.__p_cmp = self.__p_cmp_lavender.copy()
+                break
+
+            if case ('camellia'):
+                self.__p_cmp = self.__p_cmp_camellia.copy()
                 break
 
             if case ('pansy'):

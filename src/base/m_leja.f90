@@ -1,25 +1,72 @@
-!-------------------------------------------------------------------------
-! project : pansy@fantasy
-! program : leja       module
-! source  : mod_leja.f90
-! type    : module
-! author  : li huang (email:huangli712@yahoo.com.cn)
-! history : 11/20/2011 by li huang
-!           11/21/2011 by li huang
-!           11/22/2011 by li huang
-!           11/23/2011 by li huang
-! purpose : calculate the product of time evolution operator and propagated
-!           state using Newton interpolation and real leja points method.
-! status  : unstable
-! comment :
-!-------------------------------------------------------------------------
+!!!-----------------------------------------------------------------------
+!!! project : CSML (Common Service Modules Library)
+!!! program : leja       module
+!!! source  : m_leja.f90
+!!! type    : module
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 11/20/2011 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
+!!! purpose : calculate the product of time evolution operator and propagated
+!!!           state using Newton interpolation and real leja points method.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! In this module, we implement the Newton interpolation algorithm based
+!! on real Leja points to calculate the following expression:
+!!
+!! | \psi > = exp ( - H t) | \psi_0 >
+!!
+!! Here H is real symmetric matrix, t the time, | \psi_0 > the initial
+!! state, and | \psi > ths final state.
+!!
+!! It is a iteration algorithm. So sometimes it is not easy to obtain
+!! a converged solution, especially when t is large. Now this module is
+!! used by the camellia code only.
+!!
+!! Usage
+!! =====
+!!
+!! 1. setup necessary parameters
+!! -----------------------------
+!!
+!! call leja_setup_param(...)
+!!
+!! 2. allocate memory
+!! ------------------
+!!
+!! call leja_setup_array(...)
+!!
+!! 3. build the H matrix
+!! ---------------------
+!!
+!! call leja_build_spmat(...)
+!!
+!! Note: the H matrix is stored and manipulated using CSR format.
+!!
+!! 4. do time evolution
+!! --------------------
+!!
+!! call leja_dsymv(...)
+!!
+!! 5. deallocate memory
+!! --------------------
+!!
+!! call leja_final_array(...)
+!!
+!!
 
   module leja
      implicit none
 
-!-------------------------------------------------------------------------
-!::: declare global parameters (integer type)                          :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global parameters (integer type)                         <<<
+!!========================================================================
 
 ! dp: number precision, double precision for reals
      integer, private, parameter :: dp = kind(1.0d0)
@@ -27,9 +74,9 @@
 ! mystd: device descriptor, console output
      integer, private, parameter :: mystd = 6
 
-!-------------------------------------------------------------------------
-!::: declare global parameters (real type)                             :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare global parameters (real type)                            <<<
+!!========================================================================
 
 ! 0.0 in double precision form
      real(dp), private, parameter :: zero = 0.0_dp
@@ -52,9 +99,9 @@
 ! golden section number
      real(dp), private, parameter :: gamma= 0.61803398874989490_dp
 
-!-------------------------------------------------------------------------
-!::: declare common variables for real leja points algorithm           :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare common variables for real leja points algorithm          <<<
+!!========================================================================
 
 ! status flag
      integer, private :: istat
@@ -97,9 +144,9 @@
      real(dp), private, save :: ceta  = zero
      real(dp), private, save :: gamm  = zero
 
-!-------------------------------------------------------------------------
-!::: declare common arrays for real leja points algorithm              :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare common arrays for real leja points algorithm             <<<
+!!========================================================================
 
 ! real leja points \xi
      real(dp), private, allocatable, save :: lvec(:)
@@ -121,9 +168,9 @@
      integer, private, allocatable, save  :: lop_jh(:)
      real(dp), private, allocatable, save :: lop_h(:)
 
-!-------------------------------------------------------------------------
-!::: declare accessibility for module routines                         :::
-!-------------------------------------------------------------------------
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
      public  :: leja_setup_param
 
@@ -149,7 +196,7 @@
 
   contains ! encapsulated functionality
 
-!>>> setup key parameters for real leja points algorithm
+!!>>> leja_setup_param: setup key parameters for real leja points algorithm
   subroutine leja_setup_param(nc, nh, nl)
      implicit none
 
@@ -185,7 +232,7 @@
      return
   end subroutine leja_setup_param
 
-!>>> allocate memory for module variables
+!!>>> leja_setup_array: allocate memory for module variables
   subroutine leja_setup_array()
      implicit none
 
@@ -222,7 +269,7 @@
      return
   end subroutine leja_setup_array
 
-!>>> deallocate memory for module variables
+!!>>> leja_final_array: deallocate memory for module variables
   subroutine leja_final_array()
      implicit none
 
@@ -241,7 +288,7 @@
      return
   end subroutine leja_final_array
 
-!>>> setup h matrix, which is in sparse matrix style
+!!>>> leja_build_spmat: setup h matrix, which is in sparse matrix style
   subroutine leja_build_spmat(nc, nh, Th, Tjh, Tih)
      implicit none
 
@@ -279,7 +326,7 @@
      return
   end subroutine leja_build_spmat
 
-!>>> to dump the runtime counter information for real leja points algorithm
+!!>>> leja_trace_count: to dump the runtime counter information for real leja points algorithm
   subroutine leja_trace_count()
      implicit none
 
@@ -294,7 +341,7 @@
      return
   end subroutine leja_trace_count
 
-!>>> to reset the runtime counter for real leja points algorithm
+!!>>> leja_reset_count: to reset the runtime counter for real leja points algorithm
   subroutine leja_reset_count()
      implicit none
 
@@ -305,8 +352,8 @@
      return
   end subroutine leja_reset_count
 
-!>>> to calculate w = exp( dt h ) v using newton interpolation and real
-! leja points method, in which h is a symmetrix matrix
+!!>>> leja_dsymv: to calculate w = exp( dt h ) v using newton interpolation
+!!>>> and real leja points method, in which h is a symmetrix matrix
   subroutine leja_dsymv(dt, vvec, wvec)
      implicit none
 
@@ -410,7 +457,7 @@
      return
   end subroutine leja_dsymv
 
-!>>> evaluate real leja points
+!!>>> leja_make_lejas: evaluate real leja points
   subroutine leja_make_lejas()
      implicit none
 
@@ -489,8 +536,8 @@
      return
   end subroutine leja_make_lejas
 
-!>>> estimate the numerical distribution range of eigenvalues for the 
-! underlying matrix by the Gersghorin's theorem
+!!>>> leja_make_gersh: estimate the numerical distribution range of
+!!>>> eigenvalues for the underlying matrix by the Gersghorin's theorem
   subroutine leja_make_gersh()
      implicit none
 
@@ -541,7 +588,7 @@
      return
   end subroutine leja_make_gersh
 
-!>>> subroutine used by leja_make_lejas() subroutine
+!!>>> getmax: subroutine used by leja_make_lejas() subroutine
   subroutine getmax(x0, x1, xmax, fmax, x, n)
      implicit none
 
@@ -580,7 +627,7 @@
      return
   end subroutine getmax
 
-!>>> function used by leja_make_lejas() subroutine
+!!>>> getflj: function used by leja_make_lejas() subroutine
   real(dp) &
   function getflj(n, x, t) result(value)
      implicit none
@@ -595,7 +642,7 @@
      return
   end function getflj
 
-!>>> this function returns the element H(i,j) of matrix H
+!!>>> csrelm: this function returns the element H(i,j) of matrix H
   real(dp) &
   function csrelm(i, j) result(elm)
      implicit none
@@ -633,7 +680,7 @@
      return
   end function csrelm
 
-!>>> computes q = p_{m}(H)w using newton interpolation and real leja points
+!!>>> newton: computes q = p_{m}(H)w using newton interpolation and real leja points
   subroutine newton(deny, wvec, qvec)
      implicit none
 
@@ -680,8 +727,8 @@
      return
   end subroutine newton
 
-!>>> to return the divided differences for the newton interpolation of
-! \phi(tH) up to degree M
+!!>>> divdif: to return the divided differences for the newton interpolation of
+!!>>> \phi(tH) up to degree M
   subroutine divdif(curr)
      implicit none
 
@@ -712,7 +759,7 @@
      return
   end subroutine divdif
 
-!>>> perform sparse matrix-vector operation: v = H x + y
+!!>>> dsspmv: perform sparse matrix-vector operation: v = H x + y
   subroutine dsspmv(x, y, v)
      implicit none
 

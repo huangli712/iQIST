@@ -342,17 +342,17 @@
   end subroutine atomic_dump_feigvec
 
 !!>>> atomic_dump_fcix: write atom.cix file which are only compatible with
-!!>>> the BEGONIA and LAVENDER components
+!!>>> the CAMELLIA, BEGONIA and LAVENDER components
   subroutine atomic_dump_fcix()
      use constants, only : epst, mytmp
 
-     use m_cntr, only : icu, icf, isoc
+     use m_cntr, only : ictqmc, icu, icf, isoc
      use m_cntr, only : nband, nspin, norbs, ncfgs
      use m_cntr, only : nmini, nmaxi
      use m_cntr, only : Uc, Uv, Js, Jp, Jz
      use m_cntr, only : Ud, Jh
      use m_cntr, only : mune, lambda
-     use m_full, only : eval, occu, spin, fmat
+     use m_full, only : eval, evec, occu, spin, fmat, hmat
 
      implicit none
 
@@ -383,7 +383,8 @@
 ! write the header
      write(mytmp,'(a)') '# WARNING : DO NOT MODIFY THIS FILE MANUALLY!'
      write(mytmp,'(a)') '# File    : atom.cix'
-     write(mytmp,'(a)') '# Format  : v1.3, designed for BEGONIA and LAVENDER'
+     if ( ictqmc == 0 ) write(mytmp,'(a)') '# Format  : v1.3, designed for CAMELLIA'
+     if ( ictqmc == 1 ) write(mytmp,'(a)') '# Format  : v1.3, designed for BEGONIA and LAVENDER'
      write(mytmp,'(a)') '# Built   : by JASMINE code at '//date_time_string
      write(mytmp,'(a)') '# Support : any problem, please contact me: lihuang.dmft@gmail.com'
      write(mytmp,*)
@@ -407,6 +408,36 @@
      do i=1,ncfgs
          write(mytmp,'(i10,3f20.10)') i, eval(i), occu(i,i), spin(i,i)
      enddo ! over i={1,ncfgs} loop
+
+! write eigenvectors
+! only for the camellia code
+     if ( ictqmc == 0 ) then
+         write(mytmp,'(75a1)') dash ! dashed line
+         write(mytmp,'(a)') '# EIGENVECTORS: ALPHA | BETA | EVEC'
+         write(mytmp,'(75a1)') dash ! dashed line
+         do i=1,ncfgs
+             do j=1,ncfgs
+                 if ( abs( evec(i,j) ) > epst ) then
+                     write(mytmp,'(2i10,f20.10)') i, j, evec(i,j)
+                 endif ! back if ( abs( evec(i,j) ) > epst ) block
+             enddo ! over j={1,ncfgs} loop
+         enddo ! over i={1,ncfgs} loop
+     endif ! back if ( ictqmc == 0 ) block
+
+! write local hamiltonian
+! only for the camellia code
+     if ( ictqmc == 0 ) then
+         write(mytmp,'(75a1)') dash ! dashed line
+         write(mytmp,'(a)') '# HAMILTONIAN: ALPHA | BETA | HMAT'
+         write(mytmp,'(75a1)') dash ! dashed line
+         do i=1,ncfgs
+             do j=1,ncfgs
+                 if ( abs( hmat(i,j) ) > epst ) then
+                     write(mytmp,'(2i10,f20.10)') i, j, real( hmat(i,j) )
+                 endif ! back if ( abs( hmat(i,j) ) > epst ) block
+             enddo ! over j={1,ncfgs} loop
+         enddo ! over i={1,ncfgs} loop
+     endif ! back if ( ictqmc == 0 ) block
 
 ! write F-matrix
 ! for non-soc case, the spin order of CTQMC is like up, up, up, dn, dn, dn
