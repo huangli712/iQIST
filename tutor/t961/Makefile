@@ -27,7 +27,7 @@
 
 .SUFFIXES: .f90
 
-include ../../src/build/make.sys
+include ../../build/make.sys
 
 main = template.o
 
@@ -44,11 +44,11 @@ api:
 	cp ../../src/ctqmc/azalea/libctqmc.a .
 
 cssl:
-	cp ../../src/common/libMM.a .
+	cp ../../src/base/libMM.a .
 
 csml:
-	cp ../../src/common/constants.mod .
-	cp ../../src/common/mmpi.mod .
+	cp ../../src/base/constants.mod .
+	cp ../../src/base/mmpi.mod .
 
 exe: api cssl csml main-exe
 main-exe: $(objects)

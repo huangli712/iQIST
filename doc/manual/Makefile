@@ -30,14 +30,10 @@ default: all
 all: fast
 
 fast:
-	xelatex ug
+	@echo "TO_BE_DONE"
 
 full:
-	xelatex ug
-	bibtex ug
-	xelatex ug
-	xelatex ug
+	@echo "TO_BE_DONE"
 
 clean:
-	rm -f *.aux *.bbl *.blg *.lof *.log *.lot *.out *.toc
-	rm -fr chapter/*.aux
+	@echo "TO_BE_DONE"

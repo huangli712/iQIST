@@ -27,7 +27,7 @@
 
 .SUFFIXES: .f90
 
-include ../../build/make.sys
+include ../../../build/make.sys
 
 modc = atomic_control.o atomic_context.o
 core = atomic_driver.o
@@ -53,12 +53,12 @@ api:
 	cp ../../capi/atomic_api.o .
 
 cssl:
-	cp ../../common/libMM.a .
+	cp ../../base/libMM.a .
 
 csml:
-	cp ../../common/constants.mod .
-	cp ../../common/parser.mod .
-	cp ../../common/linkedlist.mod .
+	cp ../../base/constants.mod .
+	cp ../../base/parser.mod .
+	cp ../../base/linkedlist.mod .
 
 exe: api cssl csml atomic-exe
 atomic-exe: $(exe_obj)
@@ -88,5 +88,6 @@ clean-dat:
 	rm -f *.cix
 	rm -f *.dat
 	rm -f *.out
+	rm -f solver.umat.in
 
 clean-all: clean clean-dat
