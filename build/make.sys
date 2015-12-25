@@ -464,9 +464,8 @@ ARCHIVER = ar -ruv
 #-------------------------------------------------------------------------
 MPI    = -DMPI
 OMP    = #-openmp
-API    = #-DAPI -DMPY
 FPP    = -fpp
-CPP    = $(FPP) $(MPI) $(OMP) $(API)
+CPP    = $(FPP) $(MPI) $(OMP)
 
 # Machine tuning options
 #-------------------------------------------------------------------------
