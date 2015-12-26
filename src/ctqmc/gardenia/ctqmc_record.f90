@@ -1001,6 +1001,7 @@
 
 ! loop index over times
      integer  :: itau
+     integer  :: tt
 
 ! loop index for flavor channel
      integer  :: i
@@ -1010,9 +1011,14 @@
      call s_assert( btest(issus, 1) )
 
 ! <Sz(\tau)Sz(0)> = \sum_{a,b} (n_{a,up}n_{b,up} + n_{a,dn}n_{b,dn} - n_{a,up}n_{b,dn} - n_{a,dn}n_{b,up})
-     do itau=1,ntime
+     do tt=0,ntime,16
 ! calculate <n_{i}(\tau)*n_{j}(0)>
          ntn0 = zero
+         if ( tt==0 ) then
+             itau=1
+         else
+             itau=tt 
+         endif
          call ctqmc_make_ntn0(tmesh(itau),ntn0) 
 ! calculate sschi
          do i=1,nband
