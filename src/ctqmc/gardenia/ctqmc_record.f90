@@ -908,8 +908,10 @@
      do flvr=1,norbs
          if (stts(flvr) == 1 .or. stts(flvr) == 2) then 
 ! shift the time for all kinks
-             time_s2(index_s2(:,flvr),flvr) = time_s2(index_s2(:,flvr),flvr) + tau
-             time_e2(index_e2(:,flvr),flvr) = time_e2(index_e2(:,flvr),flvr) + tau
+             do i=1,rank(flvr)
+                 time_s2(index_s2(i,flvr),flvr) = time_s2(index_s2(i,flvr),flvr) + tau
+                 time_e2(index_e2(i,flvr),flvr) = time_e2(index_e2(i,flvr),flvr) + tau
+             enddo
 ! determine the creation operators whether to exceed beta
              ns = 0
              do i=rank(flvr),1,-1
@@ -935,13 +937,13 @@
                  index_tt = 0
                  index_tt(1:ns) = index_s2(rank(flvr)-ns+1:rank(flvr), flvr)
                  index_tt(ns+1:rank(flvr)) = index_s2(1:rank(flvr)-ns,flvr)
-                 index_s2(:,flvr) = index_tt
+                 index_s2(1:rank(flvr),flvr) = index_tt(1:rank(flvr))
              endif
              if ( ne > 0 ) then
                  index_tt = 0
                  index_tt(1:ne) = index_e2(rank(flvr)-ne+1:rank(flvr), flvr)
                  index_tt(ne+1:rank(flvr)) = index_e2(1:rank(flvr)-ne, flvr)
-                 index_e2(:,flvr) = index_tt
+                 index_e2(1:rank(flvr),flvr) = index_tt(1:rank(flvr))
              endif
          endif  ! back if (stts(flvr) == 1 .or. stts(flvr) == 2) block
 
