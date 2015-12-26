@@ -893,7 +893,6 @@
 ! loop index
      integer :: flvr
      integer :: i
-     integer :: is,ie
 
 ! init ntn0 to zero
      ntn0 = zero
@@ -912,19 +911,19 @@
              time_s2(index_s2(:,flvr),flvr) = time_s2(index_s2(:,flvr),flvr) + tau
              time_e2(index_e2(:,flvr),flvr) = time_e2(index_e2(:,flvr),flvr) + tau
 ! determine the creation operators whether to exceed beta
-             do is=rank(flvr),1,-1
-                 if ( .not. (time_s2(index_s2(is, flvr), flvr) > beta) ) EXIT
-                 time_s2(index_s2(is,flvr),flvr) = time_s2(index_s2(is,flvr),flvr) - beta
+             ns = 0
+             do i=rank(flvr),1,-1
+                 if ( .not. (time_s2(index_s2(i,flvr), flvr) > beta) ) EXIT
+                 ns = ns + 1
+                 time_s2(index_s2(i,flvr),flvr) = time_s2(index_s2(i,flvr),flvr) - beta
              enddo             
-! number of creation operators exceeding beta
-             ns = rank(flvr) - is
 ! determine the annihilation operators whether to exceed beta
-             do ie=rank(flvr),1,-1
-                 if ( .not. (time_e2(index_e2(ie,flvr),flvr) > beta) ) EXIT
-                 time_e2(index_e2(ie,flvr),flvr) = time_e2(index_e2(ie,flvr),flvr) - beta
+             ne = 0
+             do i=rank(flvr),1,-1
+                 if ( .not. (time_e2(index_e2(i,flvr),flvr) > beta) ) EXIT
+                 ne = ne + 1
+                 time_e2(index_e2(i,flvr),flvr) = time_e2(index_e2(i,flvr),flvr) - beta
              enddo             
-! number of creation operators exceeding beta
-             ne = rank(flvr) - ie
 ! determine whether stts has been changed
              if ( ssts2(flvr) == 1 .and. ne > 0 ) then
                  if (ns /= ne) ssts2(flvr) = 2  
@@ -934,14 +933,14 @@
 ! shift index_s2 and index_e2
              if ( ns > 0 ) then
                  index_tt = 0
-                 index_tt(1:ns) = index_s2(is+1:rank(flvr), flvr)
-                 index_tt(ns+1:rank(flvr)) = index_s2(1:is,flvr)
+                 index_tt(1:ns) = index_s2(rank(flvr)-ns+1:rank(flvr), flvr)
+                 index_tt(ns+1:rank(flvr)) = index_s2(1:rank(flvr)-ns,flvr)
                  index_s2(:,flvr) = index_tt
              endif
              if ( ne > 0 ) then
                  index_tt = 0
-                 index_tt(1:ne) = index_e2(ie+1:rank(flvr), flvr)
-                 index_tt(ne+1:rank(flvr)) = index_e2(1:ie, flvr)
+                 index_tt(1:ne) = index_e2(rank(flvr)-ne+1:rank(flvr), flvr)
+                 index_tt(ne+1:rank(flvr)) = index_e2(1:rank(flvr)-ne, flvr)
                  index_e2(:,flvr) = index_tt
              endif
          endif  ! back if (stts(flvr) == 1 .or. stts(flvr) == 2) block
