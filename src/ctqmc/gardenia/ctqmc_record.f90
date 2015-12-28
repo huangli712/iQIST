@@ -1001,7 +1001,6 @@
 
 ! loop index over times
      integer  :: itau
-     integer  :: tt
 
 ! loop index for flavor channel
      integer  :: i
@@ -1011,14 +1010,9 @@
      call s_assert( btest(issus, 1) )
 
 ! <Sz(\tau)Sz(0)> = \sum_{a,b} (n_{a,up}n_{b,up} + n_{a,dn}n_{b,dn} - n_{a,up}n_{b,dn} - n_{a,dn}n_{b,up})
-     do tt=0,ntime,16
+     do itau=1,ntime
 ! calculate <n_{i}(\tau)*n_{j}(0)>
          ntn0 = zero
-         if ( tt==0 ) then
-             itau=1
-         else
-             itau=tt 
-         endif
          call ctqmc_make_ntn0(tmesh(itau),ntn0) 
 ! calculate sschi
          do i=1,nband
@@ -1045,7 +1039,7 @@
 
      use control, only : beta
      use control, only : issus
-     use control, only : nband, norbs
+     use control, only : norbs
      use control, only : ntime
      use context, only : tmesh, ochi, oochi
 
@@ -1059,23 +1053,18 @@
      integer  :: itau
      integer  :: i
      integer  :: j
-     
-     real(dp) :: oaux
 
 ! check whether there is conflict
      call s_assert( btest(issus, 2) )
 
-! <n_{a}n_{b}> = (n_{a,up}n_{b,up} + n_{a,dn}n_{b,dn} + n_{a,up}n_{b,dn} + n_{a,dn}n_{b,up}) 
-     oaux = zero
-     do itau=1,ntime 
+     do itau=1,ntime
 ! calculate <n_{i}(\tau)*n_{j}(0)>
          ntn0 = zero
          call ctqmc_make_ntn0(tmesh(itau),ntn0) 
-         do i=1,nband
-             do j=1,nband
-                 oaux = ( ntn0(i,j) + ntn0(i+nband,j+nband) + ntn0(i,j+nband) + ntn0(i+nband,j) ) / beta 
-                 oochi(itau,i,j) = oochi(itau,i,j) + oaux
-                 ochi(itau) = ochi(itau) + oaux
+         do i=1,norbs
+             do j=1,norbs
+                 oochi(itau,i,j) = oochi(itau,i,j) + ntn0(i,j) / beta
+                 ochi(itau) = ochi(itau) + ntn0(i,j) / beta
              enddo
          enddo 
      enddo
