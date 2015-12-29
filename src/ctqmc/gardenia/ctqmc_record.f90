@@ -1049,8 +1049,10 @@
 ! <n_{i}(\tau)*n_{j}(0)>
      real(dp) :: ntn0(norbs,norbs)
 
-! loop index for flavor channel
+! loop index for imaginary time
      integer  :: itau
+
+! loop index for flavor channel
      integer  :: i
      integer  :: j
 
