@@ -1069,7 +1069,7 @@
                  ochi(itau) = ochi(itau) + ntn0(i,j) / beta
              enddo
          enddo 
-     enddo
+     enddo ! over itau={1,ntime} loop
 
      return
   end subroutine ctqmc_record_ochi
