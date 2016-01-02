@@ -1,8 +1,8 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-### v0.6.6 @ 9e0bf1b // Dec 16, 2015
+## v0.6.6 @ 9e0bf1b // Dec 16, 2015
 
-* Add camellia component. BUT IT DOES NOT WORK PROPERLY. DON'T USE IT!
+* Add camellia component. **BUT IT DOES NOT WORK PROPERLY. DON'T USE IT!**
 * Add kurtosis and skewness features in azalea.
 * Add kurtosis and skewness features in begonia.
 * Add kurtosis and skewness features in camellia.
@@ -13,9 +13,9 @@
 * Add kurtosis and skewness features in pansy.
 * Remove doc/manual. In the future, the documents will be published in Gitbook.
 * The building system is modified. And the build directory is moved to the iqist directory.
-* Remove iqist/bin directory, and the shell scripts are copied into iqist/build.
+* Remove iqist/bin directory, and the shell scripts are copied into iqist/build and renamed.
 
-### v0.6.5 @ 90793f1 // Sep 06, 2015
+## v0.6.5 @ 90793f1 // Sep 06, 2015
 
 * Add error bars support in azalea.
 * Add error bars support in begonia.
@@ -32,13 +32,11 @@
 * Refine the examples/tutorials.
 * Improve the code style
 
-WARNING:
-
-The file formats, Python and Fortran APIS are not compatible with the previous.
+> WARNING: The file formats, Python and Fortran APIS are **NOT** compatible with the previous.
 Especially, the solver.hyb.in files generated using the previous iQIST are not
 valid for the current version.
 
-### v0.6.4 @ 0816e25 // Aug 17, 2015
+## v0.6.4 @ 0816e25 // Aug 17, 2015
 
 * Add <k^2> - <k>^2 support for gardenia.
 * Add <k^2> - <k>^2 support for narcissus.
@@ -46,7 +44,7 @@ valid for the current version.
 * Add <k^2> - <k>^2 support for manjushaka.
 * Add <k^2> - <k>^2 support for script/u\_reader.py
 
-### v0.6.3 @ be5ed32 // May 29, 2015
+## v0.6.3 @ be5ed32 // May 29, 2015
 
 * Add fidelity susceptibility support for gardenia.
 * Add fidelity susceptibility support for narcissus.
@@ -56,31 +54,31 @@ valid for the current version.
 
 As for fidelity susceptibility, please refer to arXiv:1502.06969
 
-### v0.6.2 @ 53c8b61 // May 11, 2015
+## v0.6.2 @ 53c8b61 // May 11, 2015
 
 * Now the iQIST is compatible with the GNU gfortran compiler.
 
-### v0.6.1 @ d536991 // Apr 09, 2015
+## v0.6.1 @ d536991 // Apr 09, 2015
 
 * Add several templates for make.sys.
 
-### v0.6.0 @ aa24237 // Apr 03, 2015
+## v0.6.0 @ aa24237 // Apr 03, 2015
 
 * Update working/ctqmc/validation directory, add more examples.
 
-### v0.5.9 @ 2dc7288 // Apr 01, 2015
+## v0.5.9 @ 2dc7288 // Apr 01, 2015
 
 * Fix the sign problems in the measurement.
 * Redefine the behavior of control variable: isvrt.
 * Introduce new control variable: issus.
 * Fix a bug in the calculation of self-energy function for narcissus code.
 
-### v0.5.8 @ 68ab89d // Mar 24, 2015
+## v0.5.8 @ 68ab89d // Mar 24, 2015
 
 * Add working/ctqmc/validation directory.
 * Improve build/make.sys, add 'fPIC' option.
 
-### v0.5.7 @ 966e5ba // Mar 05, 2015
+## v0.5.7 @ 966e5ba // Mar 05, 2015
 
 * Add OpenMP support for the measurements of two-particle quantities.
 * Adjust the file format for solver.kernel.dat.
@@ -88,7 +86,7 @@ As for fidelity susceptibility, please refer to arXiv:1502.06969
 * Fix the u\_reader.py to support new file format of solver.kernel.dat.
 * Fix typo in makescr.f90 and comment in make.sys.
 
-### v0.5.6 @ 8f7d00f // Feb 28, 2015
+## v0.5.6 @ 8f7d00f // Feb 28, 2015
 
 * Modify jasmine/atomic\_util.f90, remove unused variables.
 * Add script/d\_archive.sh shell script.
@@ -103,7 +101,7 @@ As for fidelity susceptibility, please refer to arXiv:1502.06969
 * Add src/app directory.
 * Update the tutor/t961-t964, fix path bug.
 
-### v0.5.5 @ 797ace8 // Feb 05, 2015
+## v0.5.5 @ 797ace8 // Feb 05, 2015
 
 * Rename check.py to d\_check.py, fix the comment.
 * Rename clean.py to d\_clean.py, fix the comment.
@@ -114,16 +112,16 @@ As for fidelity susceptibility, please refer to arXiv:1502.06969
 * Fix some deadly bugs in u\_reader.py.
 * Fix the comments in ctqmc\_main.f90, include solver.anydos.in.
 
-### v0.5.4 @ 3ac57c2 // Feb 04, 2015
+## v0.5.4 @ 3ac57c2 // Feb 04, 2015
 
 * Add icu = 3 in the jasmine code. See comments in the atomic\_control.f90 file.
 * Add ROADMAP.md file.
 
-### v0.5.3 @ ab08c42 // Feb 02, 2015
+## v0.5.3 @ ab08c42 // Feb 02, 2015
 
 * Remove the chinese directory in doc.
 
-### v0.5.2 @ 67b5561 // Jan 31, 2015
+## v0.5.2 @ 67b5561 // Jan 31, 2015
 
 * Update the input files in tutor directory.
 * Add t961, t962, t963, t964 directories, and tutor.md file in the tutor directory.
@@ -133,7 +131,7 @@ As for fidelity susceptibility, please refer to arXiv:1502.06969
 * Now the Python API and Fortran API work.
 * Update the manual.
 
-### v0.5.1 @ 222982c // Jan 16, 2015
+## v0.5.1 @ 222982c // Jan 16, 2015
 
 * Add solver.umat.in support for the azalea, gardenia, and narcissus codes.
 * Reconstruct the ctqmc\_make\_uumat() for the narcissus code.
@@ -142,16 +140,16 @@ As for fidelity susceptibility, please refer to arXiv:1502.06969
 * Modify all of the ctqmc\_main.f90 files, implement the cat\_set\_uumat() subroutine.
 * Improve the comments.
 
-### v0.5.0 @ e182bbf // Jan 16, 2015
+## v0.5.0 @ e182bbf // Jan 16, 2015
 
 * Add cmp.py file in the iqist/src/tools/hibiscus/script directory.
 * Fix small bug in the jasmine code.
 * Add solver.umat.in output in the jasmine code.
 
-### v0.4.9 @ 7a31b3c // Jan 09, 2015
+## v0.4.9 @ 7a31b3c // Jan 09, 2015
 
 * Add u\_ready.py file in the iqist/src/tools/hibiscus/script directory.
 
-### v0.4.8 @ 66a3e72 // Jan 08, 2015
+## v0.4.8 @ 66a3e72 // Jan 08, 2015
 
 * The benchmark files in the iqist/working directory are ready.
