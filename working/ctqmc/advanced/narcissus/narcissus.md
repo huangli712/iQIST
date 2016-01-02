@@ -1,11 +1,8 @@
-iQIST (Interacting Quantum Impurity Solver Toolkit)
-===================================================
+# iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-Advanced Test Cases For NARCISSUS
-=================================
+## Advanced Test Cases For NARCISSUS
 
-dynamical screening effect, plasmon pole model
-----------------------------------------------
+### dynamical screening effect, plasmon pole model
 
 * 1a // U = 10.0, J = 0.0, mune = 5.0, beta = 50.0, isscr = 3, lc = 2.50, wc = 3.00
 
@@ -17,8 +14,7 @@ dynamical screening effect, plasmon pole model
 
 * 1e // U = 10.0, J = 0.0, mune = 5.0, beta = 50.0, isscr = 3, lc = 3.60, wc = 3.00
 
-dynamical screening effect, plasmon pole model
-----------------------------------------------
+### dynamical screening effect, plasmon pole model
 
 * 2a // U = 8.00, J = 0.00, mune = 4.00, beta = 50.0, isscr = 3, lc = 1.581139, wc = 1.00
 
@@ -30,8 +26,7 @@ dynamical screening effect, plasmon pole model
 
 * 2e // U = 8.00, J = 0.00, mune = 4.00, beta = 50.0, isscr = 3, lc = 6.324555, wc = 16.00
 
-dynamical screening effect, ohmic model
----------------------------------------
+### dynamical screening effect, ohmic model
 
 * 3a // U = 8.00, J = 0.00, mune = 4.00, beta = 50.0, isscr = 4, lc = 2.50, wc = 1.00
 
@@ -43,8 +38,7 @@ dynamical screening effect, ohmic model
 
 * 3e // U = 8.00, J = 0.00, mune = 4.00, beta = 50.0, isscr = 4, lc = 0.15625, wc = 16.00
 
-Hubbard-Holstein model
-----------------------
+### Hubbard-Holstein model
 
 * 4a // U = 6.00, J = 0.00, mune = 3.00, beta = 400.0, isscr = 2, lc = 0.00, wc = 0.20
 

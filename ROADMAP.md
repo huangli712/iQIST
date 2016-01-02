@@ -12,7 +12,7 @@ Note: The tasks listed in this file are only for discussion. If you have suggest
 
 ## List of routine tasks
 
-* Write the user manual (Critical)
+* Write the user manual (**Critical**)
 * Benchmark the codes repeatedly (Major)
 * Polish the codes and improve the code style (Minor)
 * Maintain/sync the repo (Minor)
@@ -20,9 +20,8 @@ Note: The tasks listed in this file are only for discussion. If you have suggest
 
 ## List of current tasks
 
-* Design the logo for iQIST (Critical)
-* Verify the truncation approximation for the CT-HYB codes (Critical)
-* Verify the measurement of two-particle green's function (Critical)
+* Verify the truncation approximation for the CT-HYB codes (**Critical**)
+* Verify the measurement of two-particle green's function (**Critical**)
 * Implement the Skip listing algorithm for the CT-HYB codes (Major)
 * Implement the FastTrace/LazyTrace algorithm for the CT-HYB codes (Major)
 * Implement the time evolution algorithm for the CT-HYB codes (Major)
@@ -37,9 +36,9 @@ Note: The tasks listed in this file are only for discussion. If you have suggest
 
 ## List of future tasks
 
-* Design and implement a charge fully self-consistent LDA + DMFT code (Critical)
-* Design and implement a postprosses toolbox for the LDA + DMFT code (Critical)
-* Design and implement a preprocess toolbox for the LDA + DMFT code (Critical)
+* Design and implement a charge fully self-consistent DFT + DMFT code (**Critical**)
+* Design and implement a postprosses toolbox for the DFT + DMFT code (**Critical**)
+* Design and implement a preprocess toolbox for the DFT + DMFT code (**Critical**)
 * Design and implement a dual fermion/dual boson code (Major)
 * Design and implement a projective quantum Monte Carlo code (Major)
 * Explore new algorithms/tricks to accelerate the CT-HYB codes (Major)

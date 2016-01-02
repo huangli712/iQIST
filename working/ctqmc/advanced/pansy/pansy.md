@@ -1,11 +1,8 @@
-iQIST (Interacting Quantum Impurity Solver Toolkit)
-===================================================
+# iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-Advanced Test Cases For PANSY
-=============================
+## Advanced Test Cases For PANSY
 
-3 band model
-------------
+### 3 band model
 
 * 3a1 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=10.00, mune=3.00, npart=4, GQNs (N,Sz,PS)
 * 3a2 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=40.00, mune=3.00, npart=4, GQNs (N,Sz,PS)
@@ -71,8 +68,7 @@ Advanced Test Cases For PANSY
 * 3p2 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=2.00, npart=16, SOC, lambda=0.5, GQNs (N,Jz)
 * 3p3 // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=100.0, mune=2.00, npart=16, SOC, lambda=0.5, GQNs (N,Jz)
 
-5 band model
-------------
+### 5 band model
 
 * 5a1 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=10.00, mune=5.00, npart=4, GQNs (N,Sz,PS)
 * 5a2 // Uc=2.0, Uv=1.2, Jz=0.4, Js=0.4, Jp=0.4, beta=40.00, mune=5.00, npart=4, GQNs (N,Sz,PS)

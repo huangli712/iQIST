@@ -1,11 +1,8 @@
-iQIST (Interacting Quantum Impurity Solver Toolkit)
-===================================================
+# iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-JASMINE Test Cases 
-==================
+## JASMINE Test Cases 
 
-1 band model
-------------
+### 1 band model
 
 * 1a // Uc = 4.0, Uv = 4.0, Jz = 0.0, Js = 0.0, Jp = 0.0, NO GQNs 
 
@@ -15,8 +12,7 @@ JASMINE Test Cases
 
 * 1d // Uc = 4.0, Uv = 4.0, Jz = 0.0, Js = 0.0, Jp = 0.0, GQNs (N,Sz,PS) 
 
-2 band model
-------------
+### 2 band model
 
 * 2a // Uc = 4.0, Uv = 4.0, Jz = 0.0, Js = 0.0, Jp = 0.0, NO GQNs 
 
@@ -34,8 +30,7 @@ JASMINE Test Cases
 
 * 2h // Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0, diagonal CF, GQNs (N,Sz,PS) 
 
-3 band model
-------------
+### 3 band model
 
 * 3a // Uc = 4.0, Uv = 4.0, Jz = 0.0, Js = 0.0, Jp = 0.0, NO GQNs 
 
@@ -61,8 +56,7 @@ JASMINE Test Cases
 
 * 3l // Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0, diagonal CF, SOC, lambda = 0.50, GQNs (N), nmini=2, nmaxi=4
 
-5 band model
-------------
+### 5 band model
 
 * 5a // Uc = 4.0, Uv = 2.0, Jz = 1.0, Js = 1.0, Jp = 1.0, GQNs (N) 
 
@@ -86,8 +80,7 @@ JASMINE Test Cases
 
 * 5k // Ud = 4.0, Jh = 1.0, diagonal CF, SOC, lambda = 0.50, GQNs (N), nmini=3, nmaxi=7
 
-7 band model
-------------
+### 7 band model
 
 * 7a // Ud = 4.0, Jh = 1.0, GQNs (N,Sz), nmini=0, nmaxi=5
 
