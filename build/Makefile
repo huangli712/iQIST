@@ -184,11 +184,6 @@ tool: base capi jasmine hibiscus
 tool-lib: base-lib capi-lib jasmine-lib hibiscus-lib
 clean-tool: clean-base clean-capi clean-jasmine clean-hibiscus
 
-# targets for other
-other: doc
-other-lib: doc-lib
-clean-other: clean-doc
-
 # targets for ctqmc codes: segment version (azalea, gardenia, narcissus)
 azalea:
 	cd ../src/ctqmc/azalea/; pwd; make
