@@ -2,6 +2,7 @@
 
 ## v0.6.7
 
+* Remove ROADMAP.md
 
 ## v0.6.6 @ 9e0bf1b // Dec 16, 2015
 
@@ -35,7 +36,7 @@
 * Refine the examples/tutorials.
 * Improve the code style
 
-> WARNING: 
+> WARNING:
 
 > The file formats, Python and Fortran APIS are **NOT** compatible with the previous. Especially, the solver.hyb.in files generated using the previous iQIST are not valid for the current version.
 
