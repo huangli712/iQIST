@@ -30,20 +30,15 @@
 ##
 ## 'make tool'
 ##
-## 5. build documents
-## ------------------
-##
-## 'make other'
-##
-## 6. build specified code
+## 5. build specified code
 ## -----------------------
 ##
 ## 'make xxx'
 ##
-## here xxx is the code name, please input 'make help-more' to obtain more
+## here xxx is the code name, please type 'make help-more' to obtain more
 ## information about the possible values of xxx
 ##
-## 7. clean the directories
+## 6. clean the directories
 ## ------------------------
 ##
 ## 'make clean'
@@ -59,7 +54,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 02/13/2016 by li huang (last modified)
 ##
 ##
 
@@ -83,10 +78,6 @@ help:
 	@echo '     tool              build auxiliary tool components                '
 	@echo '     tool-lib          build auxiliary tool components as libs        '
 	@echo '     clean-tool        clean objects for auxiliary tools              '
-	@echo
-	@echo '     other             build documents                                '
-	@echo '     other-lib         build documents                                '
-	@echo '     clean-other       clean doc directories                          '
 
 help-more:
 	@echo '  Interacting Quantum Impurity Solver Toolkit Building System'
