@@ -2,7 +2,8 @@
 
 ## v0.6.7
 
-* Remove ROADMAP.md
+* Remove ROADMAP.md.
+* Remove iqist/doc directory.
 
 ## v0.6.6 @ 9e0bf1b // Dec 16, 2015
 
