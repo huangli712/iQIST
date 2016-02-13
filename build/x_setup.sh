@@ -11,7 +11,7 @@
 ## Usage
 ## =====
 ##
-## ./setup.sh
+## ./x_setup.sh
 ##
 ## Author
 ## ======
@@ -29,7 +29,7 @@
 ##
 
 # define my own ln function
-function mln {
+function make_link {
     name=$(echo $2 | tr '[:lower:]' '[:upper:]')
     if [ -e "$1" ]
     then
@@ -43,36 +43,36 @@ function mln {
 for component in azalea gardenia narcissus begonia lavender camellia pansy manjushaka
 do
     dir=$(echo ../src/ctqmc/$component/ctqmc)
-    mln $dir $component
+    make_link $dir $component
 done
 
 # loop over the hfqmc components
 for component in daisy
 do
     dir=$(echo ../src/hfqmc/$component/hfqmc)
-    mln $dir $component
+    make_link $dir $component
 done
 
 # loop over the jasmine components
 for component in jasmine
 do
     dir=$(echo ../src/tools/jasmine/atomic)
-    mln $dir $component
+    make_link $dir $component
 done
 
 # loop over the hibiscus components
 for component in entropy
 do
     dir=$(echo ../src/tools/hibiscus/entropy/$component)
-    mln $dir $component
+    make_link $dir $component
 done
 for component in sac
 do
     dir=$(echo ../src/tools/hibiscus/stoch/$component)
-    mln $dir $component
+    make_link $dir $component
 done
 for component in mchi mdos mkra mscr msig mstd mtau mups
 do
     dir=$(echo ../src/tools/hibiscus/toolbox/$component)
-    mln $dir $component
+    make_link $dir $component
 done
