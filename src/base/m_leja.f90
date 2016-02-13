@@ -6,8 +6,9 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 11/20/2011 by li huang (created)
 !!!           08/17/2015 by li huang (last modified)
-!!! purpose : calculate the product of time evolution operator and propagated
-!!!           state using Newton interpolation and real leja points method.
+!!! purpose : the purpose of this module is to calculate the product of
+!!!           time evolution operator and propagated state using Newton
+!!!           interpolation and real leja points method.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -23,9 +24,9 @@
 !! | \psi > = exp ( - H t) | \psi_0 >
 !!
 !! Here H is real symmetric matrix, t the time, | \psi_0 > the initial
-!! state, and | \psi > ths final state.
+!! state, and | \psi > the final state.
 !!
-!! It is a iteration algorithm. So sometimes it is not easy to obtain
+!! It is an iteration algorithm. So sometimes it is not easy to obtain
 !! a converged solution, especially when t is large. Now this module is
 !! used by the camellia code only.
 !!
