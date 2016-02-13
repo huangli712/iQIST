@@ -342,13 +342,3 @@ base-lib:
 
 clean-base:
 	cd ../src/base/; pwd; make clean
-
-# targets for doc: doc
-doc:
-	cd ../doc/manual/; pwd; make full
-
-doc-lib:
-	cd ../doc/manual/; pwd; make full
-
-clean-doc:
-	cd ../doc/manual/; pwd; make clean
