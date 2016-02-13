@@ -27,6 +27,8 @@
 !! --------------------
 !!
 !! use constants
+!! implicit none
+!!
 !! real(dp) :: A
 !! A = one
 !!
@@ -34,6 +36,8 @@
 !! ----------------
 !!
 !! use constants, only : dp, one
+!! implicit none
+!!
 !! real(dp) :: A
 !! A = one
 !!
