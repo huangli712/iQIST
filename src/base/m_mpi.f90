@@ -71,9 +71,9 @@
 !! 3. broadcast data
 !! -----------------
 !!
-!! real(dp) :: real_data(:,:,:)
-!! integer :: int_data(:)
-!! complex(dp) :: cmplx_data(:,:,:,:)
+!! real(dp), allocatable :: real_data(:,:,:)
+!! integer, allocatable :: int_data(:)
+!! complex(dp), allocatable :: cmplx_data(:,:,:,:)
 !!
 !! call mp_bcast(real_data, master)
 !! call mp_bcast(int_data, master)
@@ -84,8 +84,8 @@
 !! 4. all-reduce data
 !! ------------------
 !!
-!! real(dp) :: real_data(:)
-!! real(dp) :: real_data_mpi(:)
+!! real(dp), allocatable :: real_data(:)
+!! real(dp), allocatable :: real_data_mpi(:)
 !!
 !! call mp_allreduce(real_data, real_data_mpi) ! all-readuce data
 !! real_data = real_data_mpi / number_of_processes ! calculate the average
