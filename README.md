@@ -1,16 +1,10 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-The iQIST software package includes several quantum impurity solvers which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm and Hirsch-Fye quantum Monte Carlo algorithm, and corresponding preprocessing and postprocessing tools.
-
-## WARNING
-
-The iQIST is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
-
-Sometimes the latest commit will not be compiled correctly. So, please download the released version of iQIST which has an unique version tag.
+The iQIST software package includes several quantum impurity solvers which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm (CT-HYB) and Hirsch-Fye quantum Monte Carlo algorithm (HF-QMC), and corresponding preprocessing and postprocessing tools.
 
 ## Version
 
-v0.6.6 @ 2015.01.06T (devel)
+v0.6.7 @ 2016.02.13T (devel)
 
 ## License
 
@@ -47,7 +41,7 @@ GNU General Public License Version 3
     * Spin-spin correlation function in imaginary time space
     * Orbital-orbital correlation function in imaginary time space
     * Fidelity susceptibility
-    * kinetic energy fluctuation <k^2> - <k>^2 - <k>
+    * kinetic energy fluctuation
 
 * Fast algorithms
     * Segment algorithm for density-density interaction
@@ -61,7 +55,7 @@ GNU General Public License Version 3
     * MPI
     * OpenMP (for the measurement of two-particle quantities)
 
-* API
+* Application programming interfaces
     * Python binding
     * Input file generator by Python
     * Fortran binding
@@ -71,15 +65,20 @@ GNU General Public License Version 3
 
 * Postprocessing
     * Maximum entropy method
-    * Stochastic analytical continuation
+    * Stochastic analytical continuation method
     * Kramers-Kronig transformation
     * Pade approximation
     * Polynomial fitting for self-energy function
     * Many tools and scripts, etc.
 
+> NOTE:
+
+> The iQIST is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
+
 ## Installation
 
-* Full Installation
+* Full installation
+
 ```sh
 $ cd iqist/build
 $ editor make.sys
@@ -87,43 +86,64 @@ $ make all
 $ ./x_setup.sh
 ```
 
-* Partial Installation
+* Partial installation
+
 ```sh
 $ cd iqist/build
 $ editor make.sys
 $ make base
 $ make capi
-$ make component (component could be azalea, gardenia, narcissus, etc.)
+$ make component
 $ ./x_setup.sh
 ```
 
-* Build Fortran Library
+* Build Fortran library
+
 ```sh
 $ cd iqist/build
 $ editor make.sys
 $ make base
 $ make capi
-$ make component-lib (component could be azalea, gardenia, narcissus, etc.)
+$ make component-lib
 $ ./x_setup.sh
 ```
 
-* Build Python Module
+* Build Python module
+
 ```sh
 $ cd iqist/build
 $ editor make.sys
 $ make base
 $ make capi
-$ make component-pylib (component could be azalea, gardenia, narcissus, etc.)
+$ make component-pylib
 $ ./x_setup.sh
 ```
+
+> NOTE:
+
+> 1. 'iqist' is the directory where the iQIST software package is uncompressed.
+
+> 2. 'editor' could be any ascii text editor which you prefer.
+
+> 3. 'component' could be azalea, gardenia, narcissus, begonia, etc.
+
+> 4. Type 'make help-more' in the terminal for more details.
+
+> 5. Sometimes the latest commit will not be compiled correctly. So, please download the released version of the iQIST software package which should have an unique version tag.
 
 Enjoy it!
 
-If you want to know more about the compiling system implemented in the iQIST, please read the manual carefully.
+If you want to know more about the compiling system implemented in the iQIST, please read the reference manual carefully.
 
 ## Documentation
 
-see iQIST/doc/manual/ug.pdf (We are sorry. Currently this manual is far away from completeness, so we remove it temporally from the release).
+We provide a comprehensive reference manual for the iQIST software package via the Gitbook. Please go to:
+
+```sh
+https://www.gitbook.com/book/huangli712/iqist/
+```
+
+for more details.
 
 ## Development
 
@@ -133,7 +153,7 @@ Find a bug? Want to contribute? Want new features? Great! Please contact with us
 
 ## Reference
 
-If you are using iQIST to do some studies and would like to publish your great works, it would be really appreciated if you can cite the following paper:
+If you are using the iQIST software package to do some studies and would like to publish your great works, it would be really appreciated if you can cite the following paper:
 
 ```sh
 iQIST: An open source continuous-time quantum Monte Carlo impurity solver toolkit
