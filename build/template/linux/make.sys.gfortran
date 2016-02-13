@@ -33,7 +33,7 @@
 ## ----------------------
 ## * OpenBLAS
 ## * Intel Math Kernel Library
-## * Reference implementation at Netlib
+## * Reference implementations for BLAS and LAPACK at Netlib
 ## * Apple Accelerate framework
 ##
 ## MPI environment
@@ -48,11 +48,6 @@
 ## Python environment
 ## ------------------
 ## * numpy, scipy, f2py, mpi4py, matplotlib
-##
-## LaTeX environment
-## -----------------
-## * MacTeX
-## * TeXlive
 ##
 ## Though it is not mandatory, we still strongly recommend to update the
 ## above software components on your systems to the latest versions.
@@ -450,7 +445,7 @@
 ## =======
 ##
 ## 05/11/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 02/13/2016 by li huang (last modified)
 ##
 ##
 
