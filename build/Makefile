@@ -317,6 +317,9 @@ hibiscus:
 hibiscus-lib:
 	cd ../src/tools/hibiscus/; pwd; make
 
+hibiscus-pylib:
+	cd ../src/tools/hibiscus/; pwd; make
+
 clean-hibiscus:
 	cd ../src/tools/hibiscus/; pwd; make clean
 
