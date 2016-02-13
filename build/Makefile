@@ -139,6 +139,7 @@ help-more:
 	@echo
 	@echo '     hibiscus          build hibiscus code                  '
 	@echo '     hibiscus-lib      build hibiscus code                  '
+	@echo '     hibiscus-pylib    build hibiscus code                  '
 	@echo '     clean-hibiscus    clean hibiscus directory             '
 	@echo
 	@echo '     capi              build capi library                   '
@@ -148,10 +149,6 @@ help-more:
 	@echo '     base              build base library                   '
 	@echo '     base-lib          build base library                   '
 	@echo '     clean-base        clean base directory                 '
-	@echo
-	@echo '     doc               generate documents                   '
-	@echo '     doc-lib           generate documents                   '
-	@echo '     clean-doc         clean doc directory                  '
 
 # all-in-one building target
 all: base capi solver tool other
