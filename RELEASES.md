@@ -4,6 +4,7 @@
 
 * Remove ROADMAP.md.
 * Remove iqist/doc directory.
+* The building system is updated.
 
 ## v0.6.6 @ 9e0bf1b // Dec 16, 2015
 
