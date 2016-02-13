@@ -151,13 +151,13 @@ help-more:
 	@echo '     clean-base        clean base directory                 '
 
 # all-in-one building target
-all: base capi solver tool other
+all: base capi solver tool
 
 # all-in-one building target (lib mode)
-lib: base-lib capi-lib solver-lib tool-lib other-lib
+lib: base-lib capi-lib solver-lib tool-lib
 
 # all-in-one cleaning target
-clean: clean-base clean-capi clean-solver clean-tool clean-other
+clean: clean-base clean-capi clean-solver clean-tool
 
 # targets for solver
 solver: base capi \
