@@ -1,5 +1,8 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+## v0.6.7
+
+
 ## v0.6.6 @ 9e0bf1b // Dec 16, 2015
 
 * Add camellia component. **BUT IT DOES NOT WORK PROPERLY. DON'T USE IT!**
@@ -32,9 +35,9 @@
 * Refine the examples/tutorials.
 * Improve the code style
 
-> WARNING: The file formats, Python and Fortran APIS are **NOT** compatible with the previous.
-Especially, the solver.hyb.in files generated using the previous iQIST are not
-valid for the current version.
+> WARNING: 
+
+> The file formats, Python and Fortran APIS are **NOT** compatible with the previous. Especially, the solver.hyb.in files generated using the previous iQIST are not valid for the current version.
 
 ## v0.6.4 @ 0816e25 // Aug 17, 2015
 

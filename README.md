@@ -133,7 +133,7 @@ $ ./x_setup.sh
 
 Enjoy it!
 
-If you want to know more about the compiling system implemented in the iQIST, please read the reference manual carefully.
+If you want to know more about the compiling system implemented in the iQIST software package, please read the reference manual carefully.
 
 ## Documentation
 
