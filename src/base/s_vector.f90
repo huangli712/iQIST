@@ -683,8 +683,8 @@
 ! the legendre polynomials obey the three term recurrence relation known
 ! as Bonnet’s recursion formula:
 !     $P_0(x) = 1$
-!     P_1(x) = x$
-!     $(n+1) P_{n+1}(x) = (2n+1) x P_n(x) - n P_{n-1}(x)$
+!     $P_1(x) = x$
+!     $(n+1) P_{n+1}(x) = (2n+1) P_n(x) - n P_{n-1}(x)$
      do i=1,legrd
          ppleg(i,1) = one
          ppleg(i,2) = pmesh(i)
@@ -698,7 +698,7 @@
   end subroutine s_legendre
 
 !!>>> s_chebyshev: build chebyshev polynomial in [-1,1]
-!!>>> note: it is second kind chebyshev polynomial
+!!>>> note: it is the second kind chebyshev polynomial
   subroutine s_chebyshev(chmax, chgrd, qmesh, qqche)
      use constants, only : dp, one, two
 
@@ -791,11 +791,11 @@
 
 ! check the range of input variables
      if ( lmax < 0 .or. lmax > 50 ) then
-         call s_print_error('s_sbess_jn','lmax is out of range')
+         call s_print_error('s_sbessel','lmax is out of range')
      endif ! back if ( lmax < 0 .or. lmax > 50 ) block
 
      if ( x < zero .or. x > 1.0E5 ) then
-         call s_print_error('s_sbess_jn','x is out of range')
+         call s_print_error('s_sbessel','x is out of range')
      endif ! back if ( x < zero .or. x > 1.0E5 ) block
 
 ! treat x << 1
@@ -899,8 +899,11 @@
 
 ! the bernstein polynomials are assumed to be based on [0,1].
 ! the formula is:
+!
 !    B(N,I)(X) = [N!/(I!*(N-I)!)] * (1-X)**(N-I) * X**I
+!
 ! first values:
+!
 !    B(0,0)(X) = 1
 !    B(1,0)(X) =      1-X
 !    B(1,1)(X) =                X
@@ -916,12 +919,15 @@
 !    B(4,2)(X) = 6 * (1-X)**2 * X**2
 !    B(4,3)(X) = 4 * (1-X)    * X**3
 !    B(4,4)(X) =                X**4
+!
 ! special values:
+!
 !    B(N,I)(X) has a unique maximum value at X = I/N.
 !    B(N,I)(X) has an I-fold zero at 0 and and N-I fold zero at 1.
 !    B(N,I)(1/2) = C(N,K) / 2**N
 !    for a fixed X and N, the polynomials add up to 1:
 !    sum ( 0 <= I <= N ) B(N,I)(X) = 1
+!
      if ( n == 0 ) then
          bern(0) = one
 
