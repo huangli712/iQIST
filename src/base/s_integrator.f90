@@ -41,6 +41,7 @@
 !!
 !! procedure( real(dp) ) :: s_int_trapezoid
 !! procedure( real(dp) ) :: f
+!! real(dp) :: val
 !!
 !! val = s_int_trapezoid(f, a, b, n)
 !!
@@ -49,6 +50,7 @@
 !!
 !! procedure( real(dp) ) :: s_int_simpson
 !! procedure( real(dp) ) :: f
+!! real(dp) :: val
 !!
 !! val = s_int_simpson(f, a, b, n)
 !!
@@ -69,7 +71,7 @@
      real(dp), intent(in) :: b
 
 ! external function, it means the integrand
-     real(dp) :: f
+     procedure( real(dp) ) :: f
 
 ! local variables
 ! loop index
@@ -114,7 +116,7 @@
      real(dp), intent(in) :: b
 
 ! external function, it means the integrand
-     real(dp) :: f
+     procedure( real(dp) ) :: f
 
 ! local variables
 ! loop index
