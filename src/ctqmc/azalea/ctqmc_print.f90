@@ -4,6 +4,7 @@
 !!!           ctqmc_print_footer
 !!!           ctqmc_print_summary
 !!!           ctqmc_print_runtime
+!!!           ctqmc_print_it_info
 !!! source  : ctqmc_print.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -200,3 +201,24 @@
 
      return
   end subroutine ctqmc_print_runtime
+
+!!>>> ctqmc_print_it_info:
+  subroutine ctqmc_print_it_info(iter)
+     use constants, only : mystd
+
+     use control, only : cname
+
+     implicit none
+
+! external arguments
+! current iteration number
+     integer, intent(in) :: iter
+
+     if ( iter /= 999 ) then
+         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< SELFING'
+     else
+         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< BINNING'
+     endif ! back if ( iter /= 999 ) block
+
+     return
+  end subroutine ctqmc_print_it_info
