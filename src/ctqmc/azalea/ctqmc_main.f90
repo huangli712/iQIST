@@ -105,12 +105,10 @@
 !!
 
   program ctqmc_main
-     use constants, only : mystd
      use mmpi, only : mp_init, mp_finalize
      use mmpi, only : mp_comm_rank, mp_comm_size
      use mmpi, only : mp_barrier
 
-     use control, only : cname
      use control, only : isscf, isbin
      use control, only : niter
      use control, only : nprocs, myid, master
@@ -175,7 +173,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< SELFING'
+             call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
@@ -198,7 +196,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< SELFING'
+             call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
@@ -230,7 +228,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< BINNING'
+             call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
 ! accumulate the quantum Monte Carlo data
