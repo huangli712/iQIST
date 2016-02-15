@@ -5,7 +5,7 @@
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2015.01.06T                                               !
+!!! version : v2016.02.13T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on segment picture formalism !
 !!!           any question, please contact with lihuang.dmft@gmail.com   !
@@ -16,7 +16,7 @@
 !! WARNING
 !! =======
 !!
-!! If you want to obtain an executable program, please go to src/build/,
+!! If you want to obtain an executable program, please go to iqist/build/,
 !! type 'make azalea' command in the terminal. On the contrary, if you
 !! want to compile azalea as a library, please use 'make azalea-lib'.
 !! If you want to obtain a python module, please use 'make azalea-pylib'.
@@ -100,7 +100,7 @@
 !! Documents
 !! =========
 !!
-!! For more details, please go to iqist/doc/manual directory.
+!! For more details, please see the on line reference manual.
 !!
 !!
 
@@ -110,6 +110,7 @@
      use mmpi, only : mp_comm_rank, mp_comm_size
      use mmpi, only : mp_barrier
 
+     use control, only : cname
      use control, only : isscf, isbin
      use control, only : niter
      use control, only : nprocs, myid, master
@@ -174,7 +175,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'AZALEA >>> DMFT iter:', iter, ' <<< SELFING'
+             write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< SELFING'
          endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
@@ -187,7 +188,8 @@
 !-------------------------------------------------------------------------
 ! it is suitable for lattice model hamiltonian plus dynamical mean field
 ! theory calculation
-     DMFT_CTQMC_ITERATION: do iter=1,niter
+     DMFT_CTQMC_ITERATION: &
+     do iter=1,niter
 
 ! check the running mode
          if ( isscf == 1 ) then
@@ -196,7 +198,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'AZALEA >>> DMFT iter:', iter, ' <<< SELFING'
+             write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< SELFING'
          endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
@@ -228,7 +230,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'AZALEA >>> DMFT iter:', iter, ' <<< BINNING'
+             write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< BINNING'
          endif ! back if ( myid == master ) block
 
 ! accumulate the quantum Monte Carlo data
