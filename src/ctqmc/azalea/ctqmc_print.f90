@@ -206,7 +206,7 @@
      return
   end subroutine ctqmc_print_runtime
 
-!!>>> ctqmc_print_it_info:
+!!>>> ctqmc_print_it_info: print the iteration information to the screen
   subroutine ctqmc_print_it_info(iter)
      use constants, only : mystd
 
@@ -218,6 +218,8 @@
 ! current iteration number
      integer, intent(in) :: iter
 
+! according to the value of iter, we can judge whether the impurity solver
+! is in the binning mode.
      if ( iter /= 999 ) then
          write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< SELFING'
      else
