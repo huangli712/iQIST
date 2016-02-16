@@ -4,6 +4,7 @@
 !!!           ctqmc_print_footer
 !!!           ctqmc_print_summary
 !!!           ctqmc_print_runtime
+!!!           ctqmc_print_it_info
 !!! source  : ctqmc_print.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -23,6 +24,7 @@
   subroutine ctqmc_print_header()
      use constants, only : mystd
 
+     use control, only : cname
      use control, only : nprocs
 
      implicit none
@@ -33,25 +35,25 @@
 ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a)') 'GARDENIA'
+     write(mystd,'(2X,a)') cname
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2015.01.06T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2016.02.13T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'GARDENIA >>> start running at '//date_time_string
+     write(mystd,'(2X,a)') cname//' >>> start running at '//date_time_string
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') 'GARDENIA >>> parallelism: Yes >>> processors:', nprocs
+     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: Yes >>> processors:', nprocs
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') 'GARDENIA >>> parallelism: No  >>> processors:', 1
+     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: No  >>> processors:', 1
 
 # endif  /* MPI */
 
