@@ -901,26 +901,34 @@
              if ( oaux(m,f1) > zero ) then
 ! n - m + ntime \in [ntime - m + 1, ntime]
                  do n=1,m
-                     schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1) - oaux(n,f1+nband)
-                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1) - oaux(n,f1+nband)
+                     schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1)
+                     schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1+nband)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1+nband)
                  enddo ! over n={1,m} loop
 ! n - m \in [1, ntime - m]
                  do n=m+1,ntime
-                     schi(n-m) = schi(n-m) + oaux(n,f1) - oaux(n,f1+nband)
-                     sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1) - oaux(n,f1+nband)
+                     schi(n-m) = schi(n-m) + oaux(n,f1)
+                     schi(n-m) = schi(n-m) - oaux(n,f1+nband)
+                     sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1)
+                     sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1+nband)
                  enddo ! over n={m+1,ntime} loop
              endif ! back if ( oaux(m,f1) > zero ) block
 
              if ( oaux(m,f1+nband) > zero ) then ! oaux(m,f1+nband) = one
 ! n - m + ntime \in [ntime - m + 1, ntime]
                  do n=1,m
-                     schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1+nband) - oaux(n,f1)
-                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1+nband) - oaux(n,f1)
+                     schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1+nband)
+                     schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1+nband)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1)
                  enddo ! over n={1,m} loop
 ! n - m \in [1, ntime - m]
                  do n=m+1,ntime
-                     schi(n-m) = schi(n-m) + oaux(n,f1+nband) - oaux(n,f1)
-                     sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1+nband) - oaux(n,f1)
+                     schi(n-m) = schi(n-m) + oaux(n,f1+nband)
+                     schi(n-m) = schi(n-m) - oaux(n,f1)
+                     sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1+nband)
+                     sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1)
                  enddo ! over n={m+1,ntime} loop
              endif ! back if ( oaux(m,f1+nband) > zero ) block
          enddo ! over i={1,num_try} loop
@@ -928,82 +936,6 @@
 
      return
   end subroutine ctqmc_record_schi
-
-!!>>> ctqmc_record_schi: record the spin-spin correlation function
-  subroutine ctqmc_record_schi_old()
-     use constants, only : dp, zero
-
-     use control, only : issus
-     use control, only : nband, norbs
-     use control, only : ntime
-     use context, only : tmesh
-     use context, only : schi, sschi
-
-     implicit none
-
-! local variables
-! loop index over segments
-     integer  :: i
-
-! loop index for flavor channel
-     integer  :: flvr
-
-! Sz(0) and Sz(\tau)
-     real(dp) :: sz1_s
-     real(dp) :: sz2_s
-     real(dp) :: sz1_i(nband)
-     real(dp) :: sz2_i(nband)
-
-! used to record occupations for current flavor channel and time
-     real(dp) :: oaux(norbs)
-
-! check whether there is conflict
-     call s_assert( btest(issus, 1) )
-
-     sz1_s = zero; sz2_s = zero
-     TIME_LOOP: do i=1,ntime
-
-! obtain occupation status
-         oaux = zero
-         do flvr=1,norbs
-             call ctqmc_spin_counter(flvr, tmesh(i), oaux(flvr))
-         enddo ! over flvr={1,norbs} loop
-
-! calculate schi
-! evaluate Sz(\tau)
-         sz2_s = zero
-         do flvr=1,nband
-             sz2_s = sz2_s + oaux(flvr) - oaux(flvr+nband)
-         enddo ! over flvr={1,nband} loop
-
-! evaluate Sz(0)
-         if ( i == 1 ) then
-             sz1_s = sz2_s
-         endif ! back if ( i == 1 ) block
-
-! sum up the contribution to schi
-         schi(i) = schi(i) + sz1_s * sz2_s
-
-! calculate sschi
-         BAND_LOOP: do flvr=1,nband
-
-! evaluate Sz(\tau)
-             sz2_i(flvr) = oaux(flvr) - oaux(flvr+nband)
-
-! evaluate Sz(0)
-             if ( i == 1 ) then
-                 sz1_i(flvr) = sz2_i(flvr)
-             endif ! back if ( i == 1 ) block
-
-! sum up the contribution to sschi
-             sschi(i,flvr) = sschi(i,flvr) + sz1_i(flvr) * sz2_i(flvr)
-
-         enddo BAND_LOOP ! over flvr={1,nband} loop
-
-     enddo TIME_LOOP ! over i={1,ntime} loop
-
-     return
-  end subroutine ctqmc_record_schi_old
 
   subroutine ctqmc_record_sfom()
      call s_print_error('ctqmc_record_sfom','in debug mode')
