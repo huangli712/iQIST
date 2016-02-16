@@ -209,7 +209,7 @@
 ! note: K = current perturbation expansion order X 2. The < K2 >, < K3 >,
 ! and < K4 > can be used to calculate the skewness and kurtosis of the
 ! perturbation expansion order. Of course, < K1 > is essential. It can be
-! calculated from Ekin. 
+! calculated from Ekin.
      real(dp), public, save, allocatable :: paux(:)
 
 ! probability of eigenstates of local hamiltonian matrix
