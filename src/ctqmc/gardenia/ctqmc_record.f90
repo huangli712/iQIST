@@ -45,7 +45,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           02/16/2016 by li huang (last modified)
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -873,8 +873,8 @@
 ! local variables
 ! loop index over times
      integer  :: i
-     integer  :: n
      integer  :: m
+     integer  :: n
 
 ! loop index for flavor channel
      integer  :: f1
@@ -961,8 +961,8 @@
 ! local variables
 ! loop index over times
      integer  :: i
-     integer  :: n
      integer  :: m
+     integer  :: n
 
 ! loop index for flavor channel
      integer  :: f1
