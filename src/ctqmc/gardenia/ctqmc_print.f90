@@ -68,6 +68,8 @@
   subroutine ctqmc_print_footer()
      use constants, only : dp, mystd
 
+     use control, only : cname
+
      implicit none
 
 ! string for current date and time
@@ -82,11 +84,11 @@
 ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a,f10.2,a)') 'GARDENIA >>> total time spent:', tot_time, 's'
+     write(mystd,'(2X,a,f10.2,a)') cname//' >>> total time spent:', tot_time, 's'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'GARDENIA >>> I am tired and want to go to bed. Bye!'
-     write(mystd,'(2X,a)') 'GARDENIA >>> happy ending at '//date_time_string
+     write(mystd,'(2X,a)') cname//' >>> I am tired and want to go to bed. Bye!'
+     write(mystd,'(2X,a)') cname//' >>> happy ending at '//date_time_string
 
      return
   end subroutine ctqmc_print_footer
@@ -99,7 +101,7 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') 'GARDENIA >>> parameters list:'
+     write(mystd,'(2X,a)') cname//' >>> parameters list:'
 
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
@@ -135,6 +137,7 @@
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : one, half, mystd
 
+     use control, only : cname
      use control, only : nsweep, nmonte
      use context, only : insert_tcount, insert_accept, insert_reject
      use context, only : remove_tcount, remove_accept, remove_reject
@@ -158,7 +161,7 @@
      integer :: istat
 
 ! about iteration number
-     write(mystd,'(2X,a,i3,2(a,i10))') 'GARDENIA >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
+     write(mystd,'(2X,a,i3,2(a,i10))') cname//' >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
 
 ! about auxiliary physical observables
      istat = cstep / nmonte
@@ -166,8 +169,8 @@
      write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / istat, 'epot :', paux(2) / istat
      write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / istat, '<Sz> :', paux(4) / istat
      write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / istat, '<N2> :', paux(6) / istat
-     write(mystd,'(2(4X,a,f10.5))') '<K2> :', paux(7) / istat, '<K3> :', paux(8) / istat
-     write(mystd,'(1(4X,a,f10.5))') '<K4> :', paux(9) / istat
+     write(mystd,'(2(4X,a,e10.5))') '<K2> :', paux(7) / istat, '<K3> :', paux(8) / istat
+     write(mystd,'(1(4X,a,e10.5))') '<K4> :', paux(9) / istat
 
 ! about insert action
      if ( insert_tcount <= half ) insert_tcount = -one ! if insert is disable
