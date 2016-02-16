@@ -856,6 +856,7 @@
 !!>>> ctqmc_record_schi: record the spin-spin correlation function
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
      use control, only : issus
      use control, only : nband, norbs
@@ -865,71 +866,77 @@
 
      implicit none
 
+! local parameters
+! number of internal loop
+     integer, parameter :: num_try = 16
+
 ! local variables
-! loop index over segments
+! loop index over times
      integer  :: i
+     integer  :: m
+     integer  :: n
 
 ! loop index for flavor channel
-     integer  :: flvr
-
-! Sz(0) and Sz(\tau)
-     real(dp) :: sz1_s
-     real(dp) :: sz2_s
-     real(dp) :: sz1_i(nband)
-     real(dp) :: sz2_i(nband)
+     integer  :: f1
 
 ! used to record occupations for current flavor channel and time
-     real(dp) :: oaux(norbs)
+     real(dp) :: oaux(ntime,norbs)
 
 ! check whether there is conflict
      call s_assert( btest(issus, 1) )
 
-     sz1_s = zero; sz2_s = zero
+! calculate oaux, obtain occupation status
+     oaux = zero
      TIME_LOOP: do i=1,ntime
-
-! obtain occupation status
-         oaux = zero
-         do flvr=1,norbs
-             call ctqmc_spin_counter(flvr, tmesh(i), oaux(flvr))
-         enddo ! over flvr={1,norbs} loop
-
-! calculate schi
-! evaluate Sz(\tau)
-         sz2_s = zero
-         do flvr=1,nband
-             sz2_s = sz2_s + oaux(flvr) - oaux(flvr+nband)
-         enddo ! over flvr={1,nband} loop
-
-! evaluate Sz(0)
-         if ( i == 1 ) then
-             sz1_s = sz2_s
-         endif ! back if ( i == 1 ) block
-
-! sum up the contribution to schi
-         schi(i) = schi(i) + sz1_s * sz2_s
-
-! calculate sschi
-         BAND_LOOP: do flvr=1,nband
-
-! evaluate Sz(\tau)
-             sz2_i(flvr) = oaux(flvr) - oaux(flvr+nband)
-
-! evaluate Sz(0)
-             if ( i == 1 ) then
-                 sz1_i(flvr) = sz2_i(flvr)
-             endif ! back if ( i == 1 ) block
-
-! sum up the contribution to sschi
-             sschi(i,flvr) = sschi(i,flvr) + sz1_i(flvr) * sz2_i(flvr)
-
-         enddo BAND_LOOP ! over flvr={1,nband} loop
-
+         do f1=1,norbs
+             call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
+         enddo ! over f1={1,norbs} loop
      enddo TIME_LOOP ! over i={1,ntime} loop
+     oaux = oaux / real(num_try)
+
+! calculate schi and sschi
+     do f1=1,nband
+         do i=1,num_try
+             m = ceiling( spring_sfmt_stream() * ntime )
+             if ( oaux(m,f1) > zero ) then
+! n - m + ntime \in [ntime - m + 1, ntime]
+                 do n=1,m
+                     schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1)
+                     schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1+nband)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1+nband)
+                 enddo ! over n={1,m} loop
+! n - m \in [1, ntime - m]
+                 do n=m+1,ntime
+                     schi(n-m) = schi(n-m) + oaux(n,f1)
+                     schi(n-m) = schi(n-m) - oaux(n,f1+nband)
+                     sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1)
+                     sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1+nband)
+                 enddo ! over n={m+1,ntime} loop
+             endif ! back if ( oaux(m,f1) > zero ) block
+
+             if ( oaux(m,f1+nband) > zero ) then ! oaux(m,f1+nband) = one
+! n - m + ntime \in [ntime - m + 1, ntime]
+                 do n=1,m
+                     schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1+nband)
+                     schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1+nband)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1)
+                 enddo ! over n={1,m} loop
+! n - m \in [1, ntime - m]
+                 do n=m+1,ntime
+                     schi(n-m) = schi(n-m) + oaux(n,f1+nband)
+                     schi(n-m) = schi(n-m) - oaux(n,f1)
+                     sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1+nband)
+                     sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1)
+                 enddo ! over n={m+1,ntime} loop
+             endif ! back if ( oaux(m,f1+nband) > zero ) block
+         enddo ! over i={1,num_try} loop
+     enddo ! over f1={1,nband} loop
 
      return
   end subroutine ctqmc_record_schi
 
-! TODO
   subroutine ctqmc_record_sfom()
      call s_print_error('ctqmc_record_sfom','in debug mode')
   end subroutine ctqmc_record_sfom
@@ -952,18 +959,14 @@
      integer, parameter :: num_try = 16
 
 ! local variables
-! loop index over segments
+! loop index over times
      integer  :: i
-     integer  :: n
      integer  :: m
+     integer  :: n
 
 ! loop index for flavor channel
      integer  :: f1
      integer  :: f2
-
-! N(0) and N(\tau)
-     real(dp) :: nt_s
-     real(dp) :: nz_s
 
 ! used to record occupations for current flavor channel and time
      real(dp) :: oaux(ntime,norbs)
@@ -971,29 +974,16 @@
 ! check whether there is conflict
      call s_assert( btest(issus, 2) )
 
-! calculate ochi
-     oaux = zero; nt_s = zero; nz_s = zero
+! calculate oaux, obtain occupation status
+     oaux = zero
      TIME_LOOP: do i=1,ntime
-
-! obtain occupation status
          do f1=1,norbs
              call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
          enddo ! over f1={1,norbs} loop
-
-! evaluate N(\tau)
-         nt_s = sum( oaux(i,:) )
-
-! evaluate N(0)
-         if ( i == 1 ) then
-             nz_s = nt_s
-         endif ! back if ( i == 1 ) block
-
-! sum up the contribution to ochi
-         ochi(i) = ochi(i) + nz_s * nt_s
-
      enddo TIME_LOOP ! over i={1,ntime} loop
+     oaux = oaux / real(num_try)
 
-! calculate oochi
+! calculate ochi and oochi
      do f1=1,norbs
          do f2=1,norbs
              do i=1,num_try
@@ -1001,11 +991,13 @@
                  if ( oaux(m,f2) > zero ) then
 ! n - m + ntime \in [ntime - m + 1, ntime]
                      do n=1,m
-                         oochi(n-m+ntime,f2,f1) = oochi(n-m+ntime,f2,f1) + oaux(n,f1) / real(num_try)
+                         ochi(n-m+ntime) = ochi(n-m+ntime) + oaux(n,f1)
+                         oochi(n-m+ntime,f2,f1) = oochi(n-m+ntime,f2,f1) + oaux(n,f1)
                      enddo ! over n={1,m} loop
 ! n - m \in [1, ntime - m]
                      do n=m+1,ntime
-                         oochi(n-m,f2,f1) = oochi(n-m,f2,f1) + oaux(n,f1) / real(num_try)
+                         ochi(n-m) = ochi(n-m) + oaux(n,f1)
+                         oochi(n-m,f2,f1) = oochi(n-m,f2,f1) + oaux(n,f1)
                      enddo ! over n={m+1,ntime} loop
                  endif ! back if ( oaux(m,f2) > zero ) block
              enddo ! over i={1,num_try} loop
@@ -1015,97 +1007,8 @@
      return
   end subroutine ctqmc_record_ochi
 
-! TODO
   subroutine ctqmc_record_ofom()
-     use constants, only : dp, zero, two, pi, czi, cone
-
-     use control, only : issus
-     use control, only : norbs
-     use control, only : nbfrq
-     use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : rank, stts
-     use context, only : oofom
-
-     implicit none
-
-! local variables
-     integer  :: flvr
-     integer  :: f1
-     integer  :: f2
-     integer  :: i
-     integer  :: j
-
-     real(dp) :: ts
-     real(dp) :: te
-
-! total length of segments
-     real(dp) :: sgmt(norbs)
-
-     real(dp) :: dw, wm
-     complex(dp) :: cs, ce
-     complex(dp) :: ds, de
-
      call s_print_error('ctqmc_record_ofom','in debug mode')
-
-! check whether there is conflict
-     call s_assert( btest(issus, 4) )
-
-     do flvr=1,norbs
-
-! case 1: null occupation
-         if      ( stts(flvr) == 0 ) then
-             sgmt(flvr) = zero
-
-! case 2: partial occupation, segment scheme
-         else if ( stts(flvr) == 1 ) then
-             sgmt(flvr) = zero
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 3: partial occupation, anti-segment scheme
-         else if ( stts(flvr) == 2 ) then
-             sgmt(flvr) = beta
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 4: full occupation
-         else if ( stts(flvr) == 3 ) then
-             sgmt(flvr) = beta
-
-         endif ! back if ( stts(flvr) == 0 ) block
-
-     enddo ! over flvr={1,norbs} loop
-
-     do f1=1,norbs
-         do f2=1,norbs
-             if ( stts(f2) /= 2 .and. stts(f2) /= 3 ) CYCLE
-             oofom(1,f2,f1) = oofom(1,f2,f1) + sgmt(f1)
-             if ( nbfrq == 1 ) CYCLE
-             do i=1,rank(f1)
-                 wm = zero
-                 dw = two * pi / beta
-                 cs = cone
-                 ce = cone
-                 ds = exp(czi * time_s(index_s(i, f1), f1))
-                 de = exp(czi * time_e(index_e(i, f1), f1))
-                 do j=2,nbfrq
-                     wm = wm + dw
-                     cs = cs * ds
-                     ce = ce * de
-                     oofom(j,f2,f1) = oofom(j,f2,f1) + real( ( ce - cs ) / (czi * wm) )
-                 enddo ! over j={2,nbfrq} loop
-             enddo ! over i={1,rank(f1)} loop
-         enddo ! over f2={1,norbs} loop
-     enddo ! over f1={1,norbs} loop
-
-     return
   end subroutine ctqmc_record_ofom
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
