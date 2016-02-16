@@ -892,33 +892,45 @@
              call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
          enddo ! over f1={1,norbs} loop
      enddo TIME_LOOP ! over i={1,ntime} loop
+     oaux = oaux / real(num_try)
 
 ! calculate schi and sschi
      do f1=1,nband
          do i=1,num_try
              m = ceiling( spring_sfmt_stream() * ntime )
+             if ( oaux(m,f1) > zero ) then
 ! n - m + ntime \in [ntime - m + 1, ntime]
-             do n=1,m
-                 schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1) * oaux(m,f1) / real(num_try)
-                 schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1+nband) * oaux(m,f1+nband) / real(num_try)
-                 schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1) * oaux(m,f1+nband) / real(num_try)
-                 schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1+nband) * oaux(m,f1) / real(num_try)
-                 sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1) * oaux(m,f1) / real(num_try)
-                 sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1+nband) * oaux(m,f1+nband) / real(num_try)
-                 sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1) * oaux(m,f1+nband) / real(num_try)
-                 sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1+nband) * oaux(m,f1) / real(num_try)
-             enddo ! over n={1,m} loop
+                 do n=1,m
+                     schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1)
+                     schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1+nband)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1+nband)
+                 enddo ! over n={1,m} loop
 ! n - m \in [1, ntime - m]
-             do n=m+1,ntime
-                 schi(n-m) = schi(n-m) + oaux(n,f1) * oaux(m,f1) / real(num_try)
-                 schi(n-m) = schi(n-m) + oaux(n,f1+nband) * oaux(m,f1+nband) / real(num_try)
-                 schi(n-m) = schi(n-m) - oaux(n,f1) * oaux(m,f1+nband) / real(num_try)
-                 schi(n-m) = schi(n-m) - oaux(n,f1+nband) * oaux(m,f1) / real(num_try)
-                 sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1) * oaux(m,f1) / real(num_try)
-                 sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1+nband) * oaux(m,f1+nband) / real(num_try)
-                 sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1) * oaux(m,f1+nband) / real(num_try)
-                 sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1+nband) * oaux(m,f1) / real(num_try)
-             enddo ! over n={m+1,ntime} loop
+                 do n=m+1,ntime
+                     schi(n-m) = schi(n-m) + oaux(n,f1)
+                     schi(n-m) = schi(n-m) - oaux(n,f1+nband)
+                     sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1)
+                     sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1+nband)
+                 enddo ! over n={m+1,ntime} loop
+             endif ! back if ( oaux(m,f1) > zero ) block
+
+             if ( oaux(m,f1+nband) > zero ) then ! oaux(m,f1+nband) = one
+! n - m + ntime \in [ntime - m + 1, ntime]
+                 do n=1,m
+                     schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1+nband)
+                     schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1+nband)
+                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1)
+                 enddo ! over n={1,m} loop
+! n - m \in [1, ntime - m]
+                 do n=m+1,ntime
+                     schi(n-m) = schi(n-m) + oaux(n,f1+nband)
+                     schi(n-m) = schi(n-m) - oaux(n,f1)
+                     sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1+nband)
+                     sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1)
+                 enddo ! over n={m+1,ntime} loop
+             endif ! back if ( oaux(m,f1+nband) > zero ) block
          enddo ! over i={1,num_try} loop
      enddo ! over f1={1,nband} loop
 
@@ -969,6 +981,7 @@
              call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
          enddo ! over f1={1,norbs} loop
      enddo TIME_LOOP ! over i={1,ntime} loop
+     oaux = oaux / real(num_try)
 
 ! calculate ochi and oochi
      do f1=1,norbs
@@ -978,13 +991,13 @@
                  if ( oaux(m,f2) > zero ) then
 ! n - m + ntime \in [ntime - m + 1, ntime]
                      do n=1,m
-                         ochi(n-m+ntime) = ochi(n-m+ntime) + oaux(n,f1) / real(num_try)
-                         oochi(n-m+ntime,f2,f1) = oochi(n-m+ntime,f2,f1) + oaux(n,f1) / real(num_try)
+                         ochi(n-m+ntime) = ochi(n-m+ntime) + oaux(n,f1)
+                         oochi(n-m+ntime,f2,f1) = oochi(n-m+ntime,f2,f1) + oaux(n,f1)
                      enddo ! over n={1,m} loop
 ! n - m \in [1, ntime - m]
                      do n=m+1,ntime
-                         ochi(n-m) = ochi(n-m) + oaux(n,f1) / real(num_try)
-                         oochi(n-m,f2,f1) = oochi(n-m,f2,f1) + oaux(n,f1) / real(num_try)
+                         ochi(n-m) = ochi(n-m) + oaux(n,f1)
+                         oochi(n-m,f2,f1) = oochi(n-m,f2,f1) + oaux(n,f1)
                      enddo ! over n={m+1,ntime} loop
                  endif ! back if ( oaux(m,f2) > zero ) block
              enddo ! over i={1,num_try} loop
