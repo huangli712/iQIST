@@ -41,7 +41,6 @@
 !!!           ctqmc_make_prod   <<<---
 !!!           ctqmc_make_hub1
 !!!           ctqmc_make_hub2   <<<---
-!!!           ctqmc_make_ntn0   
 !!! source  : ctqmc_record.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -854,135 +853,6 @@
      return
   end subroutine ctqmc_record_lmat
 
-!!>>> ctqmc_make_ntn0: calculate <n_{i}(\tau)*n_{j}(0)>
-  subroutine ctqmc_make_ntn0(tau, ntn0)
-     use constants, only : dp, zero
-     use control, only : norbs, mkink, beta
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : stts, rank
-
-! external arguments
-! the time point at which ntn0 will be calculated  
-     real(dp), intent(in) :: tau
-
-! the calculated ntn0
-     real(dp), intent(out) :: ntn0(norbs,norbs)
-
-! local variables
-! local copy of ssts
-     integer :: ssts2(norbs)
-
-! local copy of index_s, index_e
-     integer :: index_s2(mkink,norbs) 
-     integer :: index_e2(mkink,norbs) 
-
-! temporary index
-     integer :: index_tt(mkink) 
-
-! local copy of time_s, time_e
-     real(dp) :: time_s2(mkink,norbs)
-     real(dp) :: time_e2(mkink,norbs)
-
-! dummy variable for calculating overlaps
-     real(dp) :: oaux(norbs)
-     real(dp) :: tau_start, tau_end
-
-! number of creation and annihilation operators exceeding beta
-     integer :: ns,ne
-
-! loop index
-     integer :: flvr
-     integer :: i
-
-! init ntn0 to zero
-     ntn0 = zero
-
-! make copies
-     index_s2 = index_s
-     index_e2 = index_e
-     time_s2  = time_s 
-     time_e2  = time_e 
-     ssts2    = stts
-
-! loop each flavor
-     do flvr=1,norbs
-         if (stts(flvr) == 1 .or. stts(flvr) == 2) then 
-! shift the time for all kinks
-             do i=1,rank(flvr)
-                 time_s2(index_s2(i,flvr),flvr) = time_s2(index_s2(i,flvr),flvr) + tau
-                 time_e2(index_e2(i,flvr),flvr) = time_e2(index_e2(i,flvr),flvr) + tau
-             enddo
-! determine the creation operators whether to exceed beta
-             ns = 0
-             do i=rank(flvr),1,-1
-                 if ( .not. (time_s2(index_s2(i,flvr), flvr) > beta) ) EXIT
-                 ns = ns + 1
-                 time_s2(index_s2(i,flvr),flvr) = time_s2(index_s2(i,flvr),flvr) - beta
-             enddo             
-! determine the annihilation operators whether to exceed beta
-             ne = 0
-             do i=rank(flvr),1,-1
-                 if ( .not. (time_e2(index_e2(i,flvr),flvr) > beta) ) EXIT
-                 ne = ne + 1
-                 time_e2(index_e2(i,flvr),flvr) = time_e2(index_e2(i,flvr),flvr) - beta
-             enddo             
-! determine whether stts has been changed
-             if ( ssts2(flvr) == 1 .and. ne > 0 ) then
-                 if (ns /= ne) ssts2(flvr) = 2  
-             elseif ( ssts2(flvr) == 2 .and. ns > 0 ) then
-                 if (ns /= ne) ssts2(flvr) = 1  
-             endif
-! shift index_s2 and index_e2
-             if ( ns > 0 ) then
-                 index_tt = 0
-                 index_tt(1:ns) = index_s2(rank(flvr)-ns+1:rank(flvr), flvr)
-                 index_tt(ns+1:rank(flvr)) = index_s2(1:rank(flvr)-ns,flvr)
-                 index_s2(1:rank(flvr),flvr) = index_tt(1:rank(flvr))
-             endif
-             if ( ne > 0 ) then
-                 index_tt = 0
-                 index_tt(1:ne) = index_e2(rank(flvr)-ne+1:rank(flvr), flvr)
-                 index_tt(ne+1:rank(flvr)) = index_e2(1:rank(flvr)-ne, flvr)
-                 index_e2(1:rank(flvr),flvr) = index_tt(1:rank(flvr))
-             endif
-         endif  ! back if (stts(flvr) == 1 .or. stts(flvr) == 2) block
-
-! evaluate the overlap between the original diagram and the shifted diagram
-! for segment case
-         if (ssts2(flvr) == 1) then
-             do i=1,rank(flvr)
-                 tau_start = time_s2(index_s2(i,flvr),flvr)
-                 tau_end   = time_e2(index_e2(i,flvr),flvr)
-                 call ctqmc_make_overlap(0, tau_start, tau_end, oaux)
-                 ntn0(flvr,:) = ntn0(flvr,:) + oaux
-             enddo
-! for anti-segment case
-         elseif (ssts2(flvr) == 2) then
-! the head part
-             tau_end = time_e2(index_e2(1,flvr),flvr)
-             call ctqmc_make_overlap(0, zero, tau_end, oaux)
-             ntn0(flvr,:) = ntn0(flvr,:) + oaux
-! the tail part
-             tau_start = time_s2(index_s2(rank(flvr),flvr),flvr)
-             call ctqmc_make_overlap(0, tau_start, beta, oaux)
-             ntn0(flvr,:) = ntn0(flvr,:) + oaux
-! other parts
-             do i=1,rank(flvr)-1
-                 tau_start = time_s2(index_s2(i,flvr),flvr)
-                 tau_end   = time_e2(index_e2(i+1,flvr),flvr)
-                 call ctqmc_make_overlap(0, tau_start, tau_end, oaux)
-                 ntn0(flvr,:) = ntn0(flvr,:) + oaux
-             enddo
-! for full case
-         elseif (ssts2(flvr) == 3) then
-             call ctqmc_make_overlap(0, zero, beta, oaux)
-             ntn0(flvr,:) = ntn0(flvr,:) + oaux
-         endif  ! back if (ssts2(flvr) == 1) block
-     enddo  ! over flvr={1,norbs} loop 
- 
-     return
-  end subroutine ctqmc_make_ntn0
-
 !!>>> ctqmc_record_schi: record the spin-spin correlation function
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
@@ -1004,41 +874,8 @@
 ! loop index over times
      integer  :: it
 
-! non equal-time density-density correlator: < n_{i}(\tau) n_{j}(0) >
-     real(dp) :: ntn0(norbs,norbs)
-
 ! check whether there is conflict
      call s_assert( btest(issus, 1) )
-
-!
-! Here is the algorithm we are using:
-!     < Sz(\tau)Sz(0) > = \sum_{a,b} (
-!                        < n_{a,up} n_{b,up} > +
-!                        < n_{a,dn} n_{b,dn} > -
-!                        < n_{a,up} n_{b,dn} > -
-!                        < n_{a,dn} n_{b,up} > )
-!
-     do it=1,ntime
-
-! calculate < n_{i}(\tau) n_{j}(0) >
-         ntn0 = zero
-         call ctqmc_make_ntn0(tmesh(it),ntn0)
-
-! calculate sschi
-         do i=1,nband
-             sschi(it,i) = sschi(it,i) + ( ntn0(i,i) + ntn0(i+nband,i+nband) ) / beta
-             sschi(it,i) = sschi(it,i) - ( ntn0(i,i+nband) + ntn0(i+nband,i) ) / beta
-         enddo ! over i={1,nband} loop
-
-! calculate schi
-         do i=1,nband
-             do j=1,nband
-                 schi(it) = schi(it) + ( ntn0(i,j) + ntn0(i+nband,j+nband) ) / beta
-                 schi(it) = schi(it) - ( ntn0(i,j+nband) + ntn0(i+nband,j) ) / beta
-             enddo ! over j={1,nband} loop
-         enddo ! over i={1,nband} loop
-
-     enddo ! over it={1,ntime} loop
 
      return
   end subroutine ctqmc_record_schi
@@ -1050,45 +887,64 @@
 !!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
   subroutine ctqmc_record_ochi()
      use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
      use control, only : issus
      use control, only : norbs
      use control, only : ntime
-     use control, only : beta
      use context, only : tmesh
      use context, only : ochi, oochi
 
      implicit none
 
+! local parameters
+! number of internal loop
+     integer, parameter :: num_try = 16
+
 ! local variables
-! loop index for flavor channel
-     integer  :: i
-     integer  :: j
-
 ! loop index over times
-     integer  :: it
+     integer  :: i
+     integer  :: n
+     integer  :: m
 
-! non equal-time density-density correlator: < n_{i}(\tau) n_{j}(0) >
-     real(dp) :: ntn0(norbs,norbs)
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+
+! used to record occupations for current flavor channel and time
+     real(dp) :: oaux(ntime,norbs)
 
 ! check whether there is conflict
      call s_assert( btest(issus, 2) )
 
-     do it=1,ntime
+! calculate oaux, obtain occupation status
+     oaux = zero
+     TIME_LOOP: do i=1,ntime
+         do f1=1,norbs
+             call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
+         enddo ! over f1={1,norbs} loop
+     enddo TIME_LOOP ! over i={1,ntime} loop
 
-! calculate < n_{i}(\tau) n_{j}(0) >
-         ntn0 = zero
-         call ctqmc_make_ntn0(tmesh(it),ntn0)
-
-! calculate ochi and oochi using their definitions
-         do j=1,norbs
-             do i=1,norbs
-                 oochi(it,i,j) = oochi(it,i,j) + ntn0(i,j) / beta
-                 ochi(it) = ochi(it) + ntn0(i,j) / beta
-             enddo ! over i={1,norbs} loop
-         enddo ! over j={1,norbs} loop
-
-     enddo ! over it={1,ntime} loop
+! calculate ochi and oochi
+     do f1=1,norbs
+         do f2=1,norbs
+             do i=1,num_try
+                 m = ceiling( spring_sfmt_stream() * ntime )
+                 if ( oaux(m,f2) > zero ) then
+! n - m + ntime \in [ntime - m + 1, ntime]
+                     do n=1,m
+                         ochi(n-m+ntime) = ochi(n-m+ntime) + oaux(n,f1) / real(num_try)
+                         oochi(n-m+ntime,f2,f1) = oochi(n-m+ntime,f2,f1) + oaux(n,f1) / real(num_try)
+                     enddo ! over n={1,m} loop
+! n - m \in [1, ntime - m]
+                     do n=m+1,ntime
+                         ochi(n-m) = ochi(n-m) + oaux(n,f1) / real(num_try)
+                         oochi(n-m,f2,f1) = oochi(n-m,f2,f1) + oaux(n,f1) / real(num_try)
+                     enddo ! over n={m+1,ntime} loop
+                 endif ! back if ( oaux(m,f2) > zero ) block
+             enddo ! over i={1,num_try} loop
+         enddo ! over f2={1,norbs} loop
+     enddo ! over f1={1,norbs} loop
 
      return
   end subroutine ctqmc_record_ochi
