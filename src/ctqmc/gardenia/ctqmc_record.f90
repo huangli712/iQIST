@@ -987,48 +987,62 @@
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
 
-     use control, only : issus, beta
+     use control, only : issus
      use control, only : nband, norbs
      use control, only : ntime
+     use control, only : beta
      use context, only : tmesh
      use context, only : schi, sschi
 
      implicit none
 
 ! local variables
-! <n_{i}(\tau)*n_{j}(0)>
-     real(dp) :: ntn0(norbs,norbs)
-
-! loop index over times
-     integer  :: itau
-
 ! loop index for flavor channel
      integer  :: i
      integer  :: j
 
+! loop index over times
+     integer  :: it
+
+! non equal-time density-density correlator: < n_{i}(\tau) n_{j}(0) >
+     real(dp) :: ntn0(norbs,norbs)
+
 ! check whether there is conflict
      call s_assert( btest(issus, 1) )
 
-! <Sz(\tau)Sz(0)> = \sum_{a,b} (n_{a,up}n_{b,up} + n_{a,dn}n_{b,dn} - n_{a,up}n_{b,dn} - n_{a,dn}n_{b,up})
-     do itau=1,ntime
-! calculate <n_{i}(\tau)*n_{j}(0)>
+!
+! Here is the algorithm we are using:
+!     < Sz(\tau)Sz(0) > = \sum_{a,b} (
+!                        < n_{a,up} n_{b,up} > +
+!                        < n_{a,dn} n_{b,dn} > -
+!                        < n_{a,up} n_{b,dn} > -
+!                        < n_{a,dn} n_{b,up} > )
+!
+     do it=1,ntime
+
+! calculate < n_{i}(\tau) n_{j}(0) >
          ntn0 = zero
-         call ctqmc_make_ntn0(tmesh(itau),ntn0) 
+         call ctqmc_make_ntn0(tmesh(it),ntn0)
+
 ! calculate sschi
          do i=1,nband
-             sschi(itau,i) = sschi(itau,i) + ( ntn0(i,i) + ntn0(i+nband,i+nband) - ntn0(i,i+nband) - ntn0(i+nband,i) ) / beta
-         enddo 
+             sschi(it,i) = sschi(it,i) + ( ntn0(i,i) + ntn0(i+nband,i+nband) ) / beta
+             sschi(it,i) = sschi(it,i) - ( ntn0(i,i+nband) + ntn0(i+nband,i) ) / beta
+         enddo ! over i={1,nband} loop
+
+! calculate schi
          do i=1,nband
              do j=1,nband
-                 schi(itau) = schi(itau)   + ( ntn0(i,j) + ntn0(i+nband,j+nband) - ntn0(i,j+nband) - ntn0(i+nband,j) ) / beta
-             enddo
-         enddo 
-     enddo ! over itau={1,ntime} loop
+                 schi(it) = schi(it) + ( ntn0(i,j) + ntn0(i+nband,j+nband) ) / beta
+                 schi(it) = schi(it) - ( ntn0(i,j+nband) + ntn0(i+nband,j) ) / beta
+             enddo ! over j={1,nband} loop
+         enddo ! over i={1,nband} loop
+
+     enddo ! over it={1,ntime} loop
 
      return
   end subroutine ctqmc_record_schi
 
-! TODO
   subroutine ctqmc_record_sfom()
      call s_print_error('ctqmc_record_sfom','in debug mode')
   end subroutine ctqmc_record_sfom
@@ -1037,134 +1051,50 @@
   subroutine ctqmc_record_ochi()
      use constants, only : dp, zero
 
-     use control, only : beta
      use control, only : issus
      use control, only : norbs
      use control, only : ntime
-     use context, only : tmesh, ochi, oochi
+     use control, only : beta
+     use context, only : tmesh
+     use context, only : ochi, oochi
 
      implicit none
 
 ! local variables
-! <n_{i}(\tau)*n_{j}(0)>
-     real(dp) :: ntn0(norbs,norbs)
-
-! loop index for imaginary time
-     integer  :: itau
-
 ! loop index for flavor channel
      integer  :: i
      integer  :: j
 
+! loop index over times
+     integer  :: it
+
+! non equal-time density-density correlator: < n_{i}(\tau) n_{j}(0) >
+     real(dp) :: ntn0(norbs,norbs)
+
 ! check whether there is conflict
      call s_assert( btest(issus, 2) )
 
-     do itau=1,ntime
-! calculate <n_{i}(\tau)*n_{j}(0)>
+     do it=1,ntime
+
+! calculate < n_{i}(\tau) n_{j}(0) >
          ntn0 = zero
-         call ctqmc_make_ntn0(tmesh(itau),ntn0) 
-         do i=1,norbs
-             do j=1,norbs
-                 oochi(itau,i,j) = oochi(itau,i,j) + ntn0(i,j) / beta
-                 ochi(itau) = ochi(itau) + ntn0(i,j) / beta
-             enddo
-         enddo 
-     enddo ! over itau={1,ntime} loop
+         call ctqmc_make_ntn0(tmesh(it),ntn0)
+
+! calculate ochi and oochi using their definitions
+         do j=1,norbs
+             do i=1,norbs
+                 oochi(it,i,j) = oochi(it,i,j) + ntn0(i,j) / beta
+                 ochi(it) = ochi(it) + ntn0(i,j) / beta
+             enddo ! over i={1,norbs} loop
+         enddo ! over j={1,norbs} loop
+
+     enddo ! over it={1,ntime} loop
 
      return
   end subroutine ctqmc_record_ochi
 
-! TODO
   subroutine ctqmc_record_ofom()
-     use constants, only : dp, zero, two, pi, czi, cone
-
-     use control, only : issus
-     use control, only : norbs
-     use control, only : nbfrq
-     use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : rank, stts
-     use context, only : oofom
-
-     implicit none
-
-! local variables
-     integer  :: flvr
-     integer  :: f1
-     integer  :: f2
-     integer  :: i
-     integer  :: j
-
-     real(dp) :: ts
-     real(dp) :: te
-
-! total length of segments
-     real(dp) :: sgmt(norbs)
-
-     real(dp) :: dw, wm
-     complex(dp) :: cs, ce
-     complex(dp) :: ds, de
-
      call s_print_error('ctqmc_record_ofom','in debug mode')
-
-! check whether there is conflict
-     call s_assert( btest(issus, 4) )
-
-     do flvr=1,norbs
-
-! case 1: null occupation
-         if      ( stts(flvr) == 0 ) then
-             sgmt(flvr) = zero
-
-! case 2: partial occupation, segment scheme
-         else if ( stts(flvr) == 1 ) then
-             sgmt(flvr) = zero
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 3: partial occupation, anti-segment scheme
-         else if ( stts(flvr) == 2 ) then
-             sgmt(flvr) = beta
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 4: full occupation
-         else if ( stts(flvr) == 3 ) then
-             sgmt(flvr) = beta
-
-         endif ! back if ( stts(flvr) == 0 ) block
-
-     enddo ! over flvr={1,norbs} loop
-
-     do f1=1,norbs
-         do f2=1,norbs
-             if ( stts(f2) /= 2 .and. stts(f2) /= 3 ) CYCLE
-             oofom(1,f2,f1) = oofom(1,f2,f1) + sgmt(f1)
-             if ( nbfrq == 1 ) CYCLE
-             do i=1,rank(f1)
-                 wm = zero
-                 dw = two * pi / beta
-                 cs = cone
-                 ce = cone
-                 ds = exp(czi * time_s(index_s(i, f1), f1))
-                 de = exp(czi * time_e(index_e(i, f1), f1))
-                 do j=2,nbfrq
-                     wm = wm + dw
-                     cs = cs * ds
-                     ce = ce * de
-                     oofom(j,f2,f1) = oofom(j,f2,f1) + real( ( ce - cs ) / (czi * wm) )
-                 enddo ! over j={2,nbfrq} loop
-             enddo ! over i={1,rank(f1)} loop
-         enddo ! over f2={1,norbs} loop
-     enddo ! over f1={1,norbs} loop
-
-     return
   end subroutine ctqmc_record_ofom
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
