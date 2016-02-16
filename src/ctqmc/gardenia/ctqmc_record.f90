@@ -856,26 +856,71 @@
 !!>>> ctqmc_record_schi: record the spin-spin correlation function
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
+     use spring, only : spring_sfmt_stream
 
      use control, only : issus
      use control, only : nband, norbs
      use control, only : ntime
-     use control, only : beta
      use context, only : tmesh
      use context, only : schi, sschi
 
      implicit none
 
-! local variables
-! loop index for flavor channel
-     integer  :: i
-     integer  :: j
+! local parameters
+! number of internal loop
+     integer, parameter :: num_try = 16
 
+! local variables
 ! loop index over times
-     integer  :: it
+     integer  :: i
+     integer  :: n
+     integer  :: m
+
+! loop index for flavor channel
+     integer  :: f1
+
+! used to record occupations for current flavor channel and time
+     real(dp) :: oaux(ntime,norbs)
 
 ! check whether there is conflict
      call s_assert( btest(issus, 1) )
+
+! calculate oaux, obtain occupation status
+     oaux = zero
+     TIME_LOOP: do i=1,ntime
+         do f1=1,norbs
+             call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
+         enddo ! over f1={1,norbs} loop
+     enddo TIME_LOOP ! over i={1,ntime} loop
+
+! calculate schi and sschi
+     do f1=1,nband
+         do i=1,num_try
+             m = ceiling( spring_sfmt_stream() * ntime )
+! n - m + ntime \in [ntime - m + 1, ntime]
+             do n=1,m
+                 schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1) * oaux(m,f1) / real(num_try)
+                 schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1+nband) * oaux(m,f1+nband) / real(num_try)
+                 schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1) * oaux(m,f1+nband) / real(num_try)
+                 schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1+nband) * oaux(m,f1) / real(num_try)
+                 sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1) * oaux(m,f1) / real(num_try)
+                 sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1+nband) * oaux(m,f1+nband) / real(num_try)
+                 sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1) * oaux(m,f1+nband) / real(num_try)
+                 sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1+nband) * oaux(m,f1) / real(num_try)
+             enddo ! over n={1,m} loop
+! n - m \in [1, ntime - m]
+             do n=m+1,ntime
+                 schi(n-m) = schi(n-m) + oaux(n,f1) * oaux(m,f1) / real(num_try)
+                 schi(n-m) = schi(n-m) + oaux(n,f1+nband) * oaux(m,f1+nband) / real(num_try)
+                 schi(n-m) = schi(n-m) - oaux(n,f1) * oaux(m,f1+nband) / real(num_try)
+                 schi(n-m) = schi(n-m) - oaux(n,f1+nband) * oaux(m,f1) / real(num_try)
+                 sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1) * oaux(m,f1) / real(num_try)
+                 sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1+nband) * oaux(m,f1+nband) / real(num_try)
+                 sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1) * oaux(m,f1+nband) / real(num_try)
+                 sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1+nband) * oaux(m,f1) / real(num_try)
+             enddo ! over n={m+1,ntime} loop
+         enddo ! over i={1,num_try} loop
+     enddo ! over f1={1,nband} loop
 
      return
   end subroutine ctqmc_record_schi
