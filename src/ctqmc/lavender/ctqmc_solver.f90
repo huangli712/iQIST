@@ -22,6 +22,7 @@
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, one, mystd
 
+     use control, only : cname
      use control, only : issun, isspn, issus, isvrt
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
@@ -187,7 +188,7 @@
 
 ! print the header of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'LAVENDER >>> CTQMC quantum impurity solver running'
+         write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nband :', nband, 'Uc    :', Uc
          write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nspin :', nspin, 'Jz    :', Jz
          write(mystd,*)
@@ -619,7 +620,7 @@
 
 ! print the footer of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'LAVENDER >>> CTQMC quantum impurity solver shutdown'
+         write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
