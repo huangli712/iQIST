@@ -34,7 +34,7 @@
 !! Usage
 !! =====
 !!
-!! # ./entropy or bin/entropy.x
+!! # ./entropy or build/entropy.x
 !!
 !! Input
 !! =====

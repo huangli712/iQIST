@@ -32,7 +32,7 @@
 !! Usage
 !! =====
 !!
-!! # ./mtau or bin/mtau.x
+!! # ./mtau or build/mtau.x
 !!
 !! Input
 !! =====

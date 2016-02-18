@@ -24,7 +24,7 @@
 !! Usage
 !! =====
 !!
-!! # ./msig or bin/msig.x
+!! # ./msig or build/msig.x
 !!
 !! Input
 !! =====

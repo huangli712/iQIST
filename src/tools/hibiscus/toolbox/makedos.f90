@@ -22,7 +22,7 @@
 !! Usage
 !! =====
 !!
-!! # ./mdos or bin/mdos.x
+!! # ./mdos or build/mdos.x
 !!
 !! Input
 !! =====

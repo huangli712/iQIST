@@ -26,7 +26,7 @@
 !! Usage
 !! =====
 !!
-!! # ./mstd or bin/mstd.x
+!! # ./mstd or build/mstd.x
 !!
 !! Input
 !! =====

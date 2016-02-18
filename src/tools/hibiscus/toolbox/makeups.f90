@@ -37,7 +37,7 @@
 !! Usage
 !! =====
 !!
-!! # ./mups or bin/mups.x
+!! # ./mups or build/mups.x
 !!
 !! Input
 !! =====

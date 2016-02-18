@@ -25,7 +25,7 @@
 !! Usage
 !! =====
 !!
-!! # ./mchi or bin/mchi.x
+!! # ./mchi or build/mchi.x
 !!
 !! Input
 !! =====

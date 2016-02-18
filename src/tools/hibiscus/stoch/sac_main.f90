@@ -32,7 +32,7 @@
 !! Usage
 !! =====
 !!
-!! # ./sac or bin/sac.x
+!! # ./sac or build/sac.x
 !!
 !! Input
 !! =====

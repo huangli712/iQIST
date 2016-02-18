@@ -30,7 +30,7 @@
 !! Usage
 !! =====
 !!
-!! # ./mkra or bin/mkra.x
+!! # ./mkra or build/mkra.x
 !!
 !! Input
 !! =====

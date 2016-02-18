@@ -28,7 +28,7 @@
 !! Usage
 !! =====
 !!
-!! # ./mscr or bin/mscr.x
+!! # ./mscr or build/mscr.x
 !!
 !! Input
 !! =====
