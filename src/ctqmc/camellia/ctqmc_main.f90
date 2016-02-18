@@ -5,7 +5,7 @@
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2015.01.06T                                               !
+!!! version : v2016.02.13T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on general matrix formalism  !
 !!!           and real leja points algorithm                             !
@@ -17,7 +17,7 @@
 !! WARNING
 !! =======
 !!
-!! If you want to obtain an executable program, please go to src/build/,
+!! If you want to obtain an executable program, please go to iqist/build/,
 !! type 'make camellia' command in the terminal. On the contrary, if you
 !! want to compile camellia as a library, please use 'make camellia-lib'.
 !! If you want to obtain a python module, please use 'make camellia-pylib'.
@@ -30,7 +30,7 @@
 !! matrix formalism, and implements many useful and advanced features.
 !! Especially, the real leja points algorithm is used to evaluate the
 !! matrix trace efficiently and it is suitable for 5-band systems. So
-!! it is somewhat less efficient then the begonia code. It can be used as
+!! it is somewhat less efficient than the begonia code. It can be used as
 !! a standard to benchmark the other ctqmc impurity solvers. The current
 !! camellia code also includes a mini dynamical mean field theory engine
 !! which implements the self-consistent equation for Bethe lattice in
@@ -107,12 +107,11 @@
 !! Documents
 !! =========
 !!
-!! For more details, please go to iqist/doc/manual directory.
+!! For more details, please see the on line reference manual.
 !!
 !!
 
   program ctqmc_main
-     use constants, only : mystd
      use mmpi, only : mp_init, mp_finalize
      use mmpi, only : mp_comm_rank, mp_comm_size
      use mmpi, only : mp_barrier
@@ -181,7 +180,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'CAMELLIA >>> DMFT iter:', iter, ' <<< SELFING'
+             call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
@@ -194,7 +193,8 @@
 !-------------------------------------------------------------------------
 ! it is suitable for lattice model hamiltonian plus dynamical mean field
 ! theory calculation
-     DMFT_CTQMC_ITERATION: do iter=1,niter
+     DMFT_CTQMC_ITERATION: &
+     do iter=1,niter
 
 ! check the running mode
          if ( isscf == 1 ) then
@@ -203,7 +203,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'CAMELLIA >>> DMFT iter:', iter, ' <<< SELFING'
+             call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
@@ -235,7 +235,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'CAMELLIA >>> DMFT iter:', iter, ' <<< BINNING'
+             call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
 ! accumulate the quantum Monte Carlo data
