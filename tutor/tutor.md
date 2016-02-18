@@ -2,30 +2,30 @@
 
 ## Basic applications
 
-* t911: Hello iQIST!
-* t912: Mott metal-insulator transition
+* t11: Hello iQIST!
+* t12: Mott metal-insulator transition
 
 ## Advanced applications I: Complex systems
 
-* t921: General Coulomb interaction
-* t922: Spin-orbital coupling
-* t923: Crystal field splitting
-* t924: Retarded interaction and dynamical screening effect
+* t21: General Coulomb interaction
+* t22: Spin-orbital coupling
+* t23: Crystal field splitting
+* t24: Retarded interaction and dynamical screening effect
 
 ## Advanced applications II: Accurate measurement of physical observables
 
-* t932: Data binning mode
-* t935: Spin-spin correlation function and orbital-orbital correlation function
-* t936: Two-particle Green's function and vertex function
+* t32: Data binning mode
+* t35: Spin-spin correlation function and orbital-orbital correlation function
+* t36: Two-particle Green's function and vertex function
 
 ## Advanced applications III: post-processing procedures
 
-* t941: Analytical continuation for imaginary-time Green's function
-* t942: Analytical continuation for Matsubara self-energy function
+* t41: Analytical continuation for imaginary-time Green's function
+* t42: Analytical continuation for Matsubara self-energy function
 
 ## Library mode
 
-* t961: Call iQIST from Fortran code
-* t962: Call iQIST from Python script
-* t963: Call iQIST/daisy from Python script
-* t964: Call iQIST/jasmine from Python script
+* t61: Call iQIST from Fortran code
+* t62: Call iQIST from Python script
+* t63: Call iQIST/daisy from Python script
+* t64: Call iQIST/jasmine from Python script
