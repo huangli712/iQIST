@@ -5,7 +5,7 @@
 !!! engine plus classical Hirsch-Fye quantum Monte Carlo (HFQMC) quantum !
 !!! impurity solver                                                      !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2015.01.06T                                               !
+!!! version : v2016.02.13T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : any question, please contact with lihuang.dmft@gmail.com   !
 !!!=========+=========+=========+=========+=========+=========+=========+!
@@ -15,7 +15,7 @@
 !! WARNING
 !! =======
 !!
-!! If you want to obtain an executable program, please go to src/build/,
+!! If you want to obtain an executable program, please go to iqist/build/,
 !! type 'make daisy' command in the terminal. On the contrary, if you
 !! want to compile daisy as a library, please use 'make daisy-lib'.
 !! If you want to obtain a python module, please use 'make daisy-pylib'.
@@ -92,12 +92,11 @@
 !! Documents
 !! =========
 !!
-!! For more details, please go to iqist/doc/manual directory.
+!! For more details, please see the on line reference manual.
 !!
 !!
 
   program hfqmc_main
-     use constants, only : mystd
      use mmpi, only : mp_init, mp_finalize
      use mmpi, only : mp_comm_rank, mp_comm_size
      use mmpi, only : mp_barrier
@@ -166,7 +165,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'DAISY >>> DMFT iter:', iter, ' <<< SELFING'
+             call hfqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
 ! call the Hirsch-Fye quantum Monte Carlo quantum impurity solver, to
@@ -179,7 +178,8 @@
 !-------------------------------------------------------------------------
 ! it is suitable for lattice model hamiltonian plus dynamical mean field
 ! theory calculation
-     DMFT_HFQMC_ITERATION: do iter=1,niter
+     DMFT_HFQMC_ITERATION: &
+     do iter=1,niter
 
 ! check the running mode
          if ( isscf == 1 ) then
@@ -188,7 +188,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'DAISY >>> DMFT iter:', iter, ' <<< SELFING'
+             call hfqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
 ! call the Hirsch-Fye quantum Monte Carlo quantum impurity solver, to
@@ -220,7 +220,7 @@
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
-             write(mystd,'(2X,a,i3,a)') 'DAISY >>> DMFT iter:', iter, ' <<< BINNING'
+             call hfqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
 ! accumulate the quantum Monte Carlo data
