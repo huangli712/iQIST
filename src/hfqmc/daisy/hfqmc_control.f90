@@ -22,7 +22,7 @@
 !!>>> character variables                                              <<<
 !!========================================================================
 
-! the code name of the current ctqmc impurity solver
+! the code name of the current hfqmc impurity solver
      character(len = 05), public, save :: cname = 'DAISY'
 
 !!========================================================================
