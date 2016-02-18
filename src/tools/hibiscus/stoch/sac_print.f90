@@ -34,7 +34,7 @@
      write(mystd,'(2X,a)') '>>> A Stochastic Analytic Continuation Code for Imaginary Time Data'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2015.01.06T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2016.02.13T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'

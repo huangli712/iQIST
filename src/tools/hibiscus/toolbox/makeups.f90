@@ -4,7 +4,7 @@
 !!! This tool is used to calculate Gaussian broadening for density of    !
 !!! states, which can be used to compare with PES and XAS experiments    !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2015.01.06T                                               !
+!!! version : v2016.02.13T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : any question, please contact with lihuang.dmft@gmail.com   !
 !!!=========+=========+=========+=========+=========+=========+=========+!
@@ -53,7 +53,7 @@
 !! Documents
 !! =========
 !!
-!! For more details, please go to iqist/doc/manual directory.
+!! For more details, please see the on line reference manual.
 !!
 !!
 

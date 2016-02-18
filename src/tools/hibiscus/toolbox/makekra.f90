@@ -4,7 +4,7 @@
 !!! This tool is used to perform kramers-kronig transformation for the   !
 !!! imaginary part of matsubara green's function                         !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2015.01.06T                                               !
+!!! version : v2016.02.13T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : any question, please contact with lihuang.dmft@gmail.com   !
 !!!=========+=========+=========+=========+=========+=========+=========+!
@@ -45,7 +45,7 @@
 !! Documents
 !! =========
 !!
-!! For more details, please go to iqist/doc/manual directory.
+!! For more details, please see the on line reference manual.
 !!
 !!
 
@@ -94,7 +94,7 @@
      write(mystd,'(2X,a)') '>>> Making kramer-kronig transformation for matsubara green''s function'
      write(mystd,*) ! print blank line
 
-     write(mystd,'(2X,a)') 'Version: 2015.01.06T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2016.02.13T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
