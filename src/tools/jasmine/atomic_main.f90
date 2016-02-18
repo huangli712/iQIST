@@ -17,7 +17,7 @@
 !! WARNING
 !! =======
 !!
-!! If you want to obtain an executable program, please go to src/build/,
+!! If you want to obtain an executable program, please go to iqist/build/,
 !! type 'make jasmine' command in the terminal. On the contrary, if you
 !! want to compile jasmine as a library, please use 'make jasmine-lib'.
 !! If you want to obtain a python module, please use 'make jasmine-pylib'.
