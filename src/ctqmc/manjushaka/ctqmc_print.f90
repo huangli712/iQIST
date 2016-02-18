@@ -4,6 +4,7 @@
 !!!           ctqmc_print_footer
 !!!           ctqmc_print_summary
 !!!           ctqmc_print_runtime
+!!!           ctqmc_print_it_info
 !!! source  : ctqmc_print.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -24,6 +25,7 @@
   subroutine ctqmc_print_header()
      use constants, only : mystd
 
+     use control, only : cname
      use control, only : nprocs
 
      implicit none
@@ -34,25 +36,25 @@
 ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a)') 'MANJUSHAKA'
+     write(mystd,'(2X,a)') cname
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2015.01.06T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2016.02.13T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR) and yilin wang (at IOP/CAS)'
      write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'MANJUSHAKA >>> start running at '//date_time_string
+     write(mystd,'(2X,a)') cname//' >>> start running at '//date_time_string
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') 'MANJUSHAKA >>> parallelism: Yes >>> processors:', nprocs
+     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: Yes >>> processors:', nprocs
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') 'MANJUSHAKA >>> parallelism: No  >>> processors:', 1
+     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: No  >>> processors:', 1
 
 # endif  /* MPI */
 
@@ -66,6 +68,8 @@
 !!>>> theory self-consistent engine
   subroutine ctqmc_print_footer()
      use constants, only : dp, mystd
+
+     use control, only : cname
 
      implicit none
 
@@ -81,11 +85,11 @@
 ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a,f10.2,a)') 'MANJUSHAKA >>> total time spent:', tot_time, 's'
+     write(mystd,'(2X,a,f10.2,a)') cname//' >>> total time spent:', tot_time, 's'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'MANJUSHAKA >>> I am tired and want to go to bed. Bye!'
-     write(mystd,'(2X,a)') 'MANJUSHAKA >>> happy ending at '//date_time_string
+     write(mystd,'(2X,a)') cname//' >>> I am tired and want to go to bed. Bye!'
+     write(mystd,'(2X,a)') cname//' >>> happy ending at '//date_time_string
 
      return
   end subroutine ctqmc_print_footer
@@ -98,7 +102,7 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') 'MANJUSHAKA >>> parameters list:'
+     write(mystd,'(2X,a)') cname//' >>> parameters list:'
 
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
@@ -136,6 +140,7 @@
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : dp, one, half, mystd
 
+     use control, only : cname
      use control, only : nsweep, nmonte
      use context, only : cnegs, caves
      use context, only : insert_tcount, insert_accept, insert_reject
@@ -159,7 +164,7 @@
      real(dp) :: raux
 
 ! about iteration number
-     write(mystd,'(2X,a,i3,2(a,i10))') 'MANJUSHAKA >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
+     write(mystd,'(2X,a,i3,2(a,i10))') cname//' >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
 
 ! about auxiliary physical observables
      raux = real(caves) / nmonte
@@ -167,8 +172,8 @@
      write(mystd,'(2(4X,a,f10.5))') 'etot :', paux(1) / raux, 'epot :', paux(2) / raux
      write(mystd,'(2(4X,a,f10.5))') 'ekin :', paux(3) / raux, '<Sz> :', paux(4) / raux
      write(mystd,'(2(4X,a,f10.5))') '<N1> :', paux(5) / raux, '<N2> :', paux(6) / raux
-     write(mystd,'(2(4X,a,f10.5))') '<K2> :', paux(7) / raux, '<K3> :', paux(8) / raux
-     write(mystd,'(1(4X,a,f10.5))') '<K4> :', paux(9) / raux
+     write(mystd,'(2(4X,a,e10.5))') '<K2> :', paux(7) / raux, '<K3> :', paux(8) / raux
+     write(mystd,'(1(4X,a,e10.5))') '<K4> :', paux(9) / raux
 
 ! about insert action
      if ( insert_tcount <= half ) insert_tcount = -one ! if insert is disable
@@ -206,3 +211,26 @@
 
      return
   end subroutine ctqmc_print_runtime
+
+!!>>> ctqmc_print_it_info: print the iteration information to the screen
+  subroutine ctqmc_print_it_info(iter)
+     use constants, only : mystd
+
+     use control, only : cname
+
+     implicit none
+
+! external arguments
+! current iteration number
+     integer, intent(in) :: iter
+
+! according to the value of iter, we can judge whether the impurity solver
+! is in the binning mode.
+     if ( iter /= 999 ) then
+         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< SELFING'
+     else
+         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< BINNING'
+     endif ! back if ( iter /= 999 ) block
+
+     return
+  end subroutine ctqmc_print_it_info
