@@ -5,7 +5,7 @@
 !!!           hfqmc_fourier_nderiv
 !!!           hfqmc_fourier_forward
 !!!           hfqmc_fourier_backward
-!!! source  : hfqmc_fourier.f90
+!!! source  : hfqmc_util.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 12/28/2005 by li huang (created)
