@@ -51,7 +51,7 @@
 !! Documents
 !! =========
 !!
-!! For more details, please go to iqist/doc/manual directory.
+!! For more details, please see the on line reference manual.
 !!
 !!
 
@@ -111,7 +111,8 @@
 ! prepare necessary data for classic maximum entropy method code
      call entropy_make_init2(tmesh, wmesh, model, fnorm, fkern)
 
-     ENTROPY_BAND_LOOP: do i=1,norbs
+     ENTROPY_BAND_LOOP: &
+     do i=1,norbs
 
 ! write out helpful information
          if ( myid == master ) then ! only master node can do it
