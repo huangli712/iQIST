@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/tutor/t961 directory.
+## Makefile for iqist/tutor/t61 directory.
 ##
 ## Usage
 ## =====

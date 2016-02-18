@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
-!!! source  : t921/atom.config.in
-!!! solver  : BEGONIA
+!!! source  : t21/atom.config.in
+!!! solver  : JASMINE
 !!! purpose : for tutorial
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------
