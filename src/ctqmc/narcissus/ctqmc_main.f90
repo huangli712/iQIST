@@ -42,7 +42,7 @@
 !! Usage
 !! =====
 !!
-!! # ./ctqmc or bin/narcissus.x
+!! # ./ctqmc or build/narcissus.x
 !!
 !! Input
 !! =====

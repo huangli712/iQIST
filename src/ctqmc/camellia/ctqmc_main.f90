@@ -40,7 +40,7 @@
 !! Usage
 !! =====
 !!
-!! # ./ctqmc or bin/camellia.x
+!! # ./ctqmc or build/camellia.x
 !!
 !! Input
 !! =====

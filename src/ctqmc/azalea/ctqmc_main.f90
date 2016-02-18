@@ -37,7 +37,7 @@
 !! Usage
 !! =====
 !!
-!! # ./ctqmc or bin/azalea.x
+!! # ./ctqmc or build/azalea.x
 !!
 !! Input
 !! =====

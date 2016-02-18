@@ -38,7 +38,7 @@
 !! Usage
 !! =====
 !!
-!! # ./ctqmc or bin/gardenia.x
+!! # ./ctqmc or build/gardenia.x
 !!
 !! Input
 !! =====

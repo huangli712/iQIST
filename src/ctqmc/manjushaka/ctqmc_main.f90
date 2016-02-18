@@ -44,7 +44,7 @@
 !! Usage
 !! =====
 !!
-!! # ./ctqmc or bin/manjushaka.x
+!! # ./ctqmc or build/manjushaka.x
 !!
 !! Input
 !! =====

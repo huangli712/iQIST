@@ -40,7 +40,7 @@
 !! Usage
 !! =====
 !!
-!! # ./ctqmc or bin/pansy.x
+!! # ./ctqmc or build/pansy.x
 !!
 !! Input
 !! =====

@@ -37,7 +37,7 @@
 !! Usage
 !! =====
 !!
-!! # ./ctqmc or bin/lavender.x
+!! # ./ctqmc or build/lavender.x
 !!
 !! Input
 !! =====

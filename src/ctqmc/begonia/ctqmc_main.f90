@@ -38,7 +38,7 @@
 !! Usage
 !! =====
 !!
-!! # ./ctqmc or bin/begonia.x
+!! # ./ctqmc or build/begonia.x
 !!
 !! Input
 !! =====
