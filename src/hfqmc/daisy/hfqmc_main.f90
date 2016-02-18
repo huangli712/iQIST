@@ -37,7 +37,7 @@
 !! Usage
 !! =====
 !!
-!! # ./hfqmc or bin/daisy.x
+!! # ./hfqmc or build/daisy.x
 !!
 !! Input
 !! =====
