@@ -23,6 +23,7 @@
   subroutine hfqmc_dmft_selfer()
      use constants, only : dp, zero, one, czero, mystd
 
+     use control, only : cname
      use control, only : norbs
      use control, only : mfreq
      use control, only : ntime
@@ -136,7 +137,7 @@
 
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'DAISY >>> DMFT bath weiss function is updated'
+         write(mystd,'(2X,a)') cname//' >>> DMFT bath weiss function is updated'
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
@@ -154,6 +155,7 @@
   subroutine hfqmc_dmft_conver(iter, convergence)
      use constants, only : dp, one, half, eps8, mystd
 
+     use control, only : cname
      use control, only : niter
      use control, only : alpha
      use control, only : myid, master
@@ -193,9 +195,9 @@
 
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(3(2X,a,i3))') 'DAISY >>> cur_iter:', iter, 'min_iter:', minit, 'max_iter:', niter
-         write(mystd,'(2(2X,a,E12.4))') 'DAISY >>> sig_curr:', seps, 'eps_curr:', eps8
-         write(mystd,'( (2X,a,L1))') 'DAISY >>> self-consistent iteration convergence is ', convergence
+         write(mystd,'(3(2X,a,i3))') cname//' >>> cur_iter:', iter, 'min_iter:', minit, 'max_iter:', niter
+         write(mystd,'(2(2X,a,E12.4))') cname//' >>> sig_curr:', seps, 'eps_curr:', eps8
+         write(mystd,'( (2X,a,L1))') cname//' >>> self-consistent iteration convergence is ', convergence
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
