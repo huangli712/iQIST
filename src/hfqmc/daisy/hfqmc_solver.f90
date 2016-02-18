@@ -21,6 +21,7 @@
      use constants, only : dp, zero, one, mystd
      use spring, only : spring_sfmt_stream
 
+     use control, only : cname
      use control, only : isscf
      use control, only : norbs
      use control, only : mstep
@@ -207,7 +208,7 @@
 
 ! print main iteration information, only for master node
      if ( myid == master ) then
-         write(mystd,'(2X,a)') 'DAISY >>> HFQMC quantum impurity solver running'
+         write(mystd,'(2X,a)') cname//' >>> HFQMC quantum impurity solver running'
      endif ! back if ( myid == master ) block
 
 !!========================================================================
@@ -449,7 +450,7 @@
 
 ! print the footer of Hirsch-Fye quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') 'DAISY >>> HFQMC quantum impurity solver shutdown'
+         write(mystd,'(2X,a)') cname//' >>> HFQMC quantum impurity solver shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
