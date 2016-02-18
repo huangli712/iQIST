@@ -21,6 +21,7 @@
   subroutine hfqmc_print_header()
      use constants, only : mystd
 
+     use control, only : cname
      use control, only : nprocs
 
      implicit none
@@ -31,25 +32,25 @@
 ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a)') 'DAISY'
+     write(mystd,'(2X,a)') cname
      write(mystd,'(2X,a)') '>>> A DMFT Engine With Hirsch-Fye Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: 2015.01.06T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: 2016.02.13T '//'(built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
      write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
      write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'DAISY >>> start running at '//date_time_string
+     write(mystd,'(2X,a)') cname//' >>> start running at '//date_time_string
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') 'DAISY >>> parallelism: Yes >>> processors:', nprocs
+     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: Yes >>> processors:', nprocs
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') 'DAISY >>> parallelism: No  >>> processors:', 1
+     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: No  >>> processors:', 1
 
 # endif  /* MPI */
 
@@ -63,6 +64,8 @@
 !!>>> field theory self-consistent engine
   subroutine hfqmc_print_footer()
      use constants, only : dp, mystd
+
+     use control, only : cname
 
      implicit none
 
@@ -78,11 +81,11 @@
 ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a,f10.2,a)') 'DAISY >>> total time spent:', tot_time, 's'
+     write(mystd,'(2X,a,f10.2,a)') cname//' >>> total time spent:', tot_time, 's'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'DAISY >>> I am tired and want to go to bed. Bye!'
-     write(mystd,'(2X,a)') 'DAISY >>> happy ending at '//date_time_string
+     write(mystd,'(2X,a)') cname//' >>> I am tired and want to go to bed. Bye!'
+     write(mystd,'(2X,a)') cname//' >>> happy ending at '//date_time_string
 
      return
   end subroutine hfqmc_print_footer
@@ -95,7 +98,7 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') 'DAISY >>> parameters list:'
+     write(mystd,'(2X,a)') cname//' >>> parameters list:'
 
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
      write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
@@ -117,11 +120,12 @@
      return
   end subroutine hfqmc_print_summary
 
-!!>>> ctqmc_print_runtime: print the runtime information, including the
+!!>>> hfqmc_print_runtime: print the runtime information, including the
 !!>>> iteration messages and statistic data, only for reference
   subroutine hfqmc_print_runtime(iter, nstep, accept, reject, tcount)
      use constants, only : dp, one, mystd
 
+     use control, only : cname
      use control, only : norbs
      use control, only : nsweep
      use context, only : ktep
@@ -149,7 +153,7 @@
      integer :: i
 
 ! about iteration number
-     write(mystd,'(2X,a,i3,2(a,i10))') 'DAISY >>> iter:', iter, ' sweep:', nstep, ' of ', nsweep
+     write(mystd,'(2X,a,i3,2(a,i10))') cname//' >>> iter:', iter, ' sweep:', nstep, ' of ', nsweep
 
 ! about update action
      write(mystd,'(4X,a)')        'hfqmc sampling statistics:'
@@ -161,3 +165,26 @@
 
      return
   end subroutine hfqmc_print_runtime
+
+!!>>> hfqmc_print_it_info: print the iteration information to the screen
+  subroutine hfqmc_print_it_info(iter)
+     use constants, only : mystd
+
+     use control, only : cname
+
+     implicit none
+
+! external arguments
+! current iteration number
+     integer, intent(in) :: iter
+
+! according to the value of iter, we can judge whether the impurity solver
+! is in the binning mode.
+     if ( iter /= 999 ) then
+         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< SELFING'
+     else
+         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< BINNING'
+     endif ! back if ( iter /= 999 ) block
+
+     return
+  end subroutine hfqmc_print_it_info
