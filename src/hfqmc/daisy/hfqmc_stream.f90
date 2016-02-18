@@ -82,6 +82,7 @@
          if ( exists .eqv. .true. ) then
 ! create the file parser
              call p_create()
+
 ! parse the config file
              call p_parse('solver.hfqmc.in')
 
