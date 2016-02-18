@@ -37,7 +37,7 @@
 !! Usage
 !! =====
 !!
-!! # ./atomic or bin/jasmine.x
+!! # ./atomic or build/jasmine.x
 !!
 !! Input
 !! =====
