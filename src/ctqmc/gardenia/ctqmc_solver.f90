@@ -1066,7 +1066,7 @@
 
      implicit none
 
-     if ( nsweep/nwrite < 10000 ) RETURN
+     if ( nsweep/nwrite < 100 ) RETURN
 
      write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
 
