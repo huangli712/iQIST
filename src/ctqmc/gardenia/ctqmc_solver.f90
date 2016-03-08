@@ -1094,6 +1094,8 @@
      enddo ! over i={1,norbs} loop
      write(mytmp,*)
      write(mytmp,*)
+     if ( cstep == nsweep ) rewind(mytmp)
+
      close(mytmp)
 
      write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
