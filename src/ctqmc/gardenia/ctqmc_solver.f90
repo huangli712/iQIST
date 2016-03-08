@@ -1062,7 +1062,10 @@
   subroutine ctqmc_diagram_plotting(iter, cstep)
      use constants, only : mystd, mytmp
 
+     use control, only : norbs
      use control, only : nwrite, nsweep
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : rank
 
      implicit none
 
