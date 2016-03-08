@@ -39,6 +39,29 @@ num_orbs = 2
 max_pair = 100
 
 time_s = numpy.zeros((max_pair,num_orbs,num_diag,num_iter), dtype = numpy.float)
+time_e = numpy.zeros((max_pair,num_orbs,num_diag,num_iter), dtype = numpy.float)
+rank_t = numpy.zeros((num_orbs,num_diag,num_iter), dtype = numpy.int)
 
 f = open('solver.diag.dat', 'r')
+for iter in range(num_iter):
+    for diag in range(num_diag):
+        line = f.readline()
+        print line
+        line = f.readline()
+        print line
+        for orbs in range(num_orbs):
+            line = f.readline().split()
+            rank_t[orbs,diag,iter] = int(line[4])
+            print line
+            for pair in range( rank_t[orbs,diag,iter] ):
+                line = f.readline().split()
+                time_s[pair,orbs,diag,iter] = float(line[1]) 
+                time_e[pair,orbs,diag,iter] = float(line[2])
+                print line
+        line = f.readline()
+        print line
+        line = f.readline()
+        print line
+        print iter, num_iter
+        sys.exit(-1)
 f.close()
