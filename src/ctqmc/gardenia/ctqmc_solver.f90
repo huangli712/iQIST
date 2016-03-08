@@ -1062,9 +1062,14 @@
   subroutine ctqmc_diagram_plotting()
      use constants, only : mystd
 
+     use control, only : nwrite, nsweep
+
      implicit none
 
+     if ( nsweep/nwrite < 10000 ) RETURN
+
      write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
+
      return
   end subroutine ctqmc_diagram_plotting
 
