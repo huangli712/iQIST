@@ -1,1 +1,2 @@
-nwrite = 10000
+isscf = 1 
+nwrite = 1000000

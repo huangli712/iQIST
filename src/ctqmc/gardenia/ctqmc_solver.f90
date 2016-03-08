@@ -1059,6 +1059,15 @@
      return
   end subroutine ctqmc_diagram_checking
 
+  subroutine ctqmc_diagram_plotting()
+     use constants, only : mystd
+
+     implicit none
+
+     write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
+     return
+  end subroutine ctqmc_diagram_plotting
+
 !!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
 !!>>> on ctqmc_diagram_sampling() subroutine
   subroutine ctqmc_impurity_tester()
