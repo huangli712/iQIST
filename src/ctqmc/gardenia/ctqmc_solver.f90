@@ -5,6 +5,7 @@
 !!!           ctqmc_diagram_sampling
 !!!           ctqmc_diagram_templing
 !!!           ctqmc_diagram_checking
+!!!           ctqmc_diagram_plotting
 !!!           ctqmc_impurity_tester
 !!! source  : ctqmc_solver.f90
 !!! type    : subroutines
@@ -480,7 +481,13 @@
 !!>>> checking quantum impurity solver                                 <<<
 !!========================================================================
 
+! check the status at first
          call ctqmc_diagram_checking(cflag)
+
+! write out the diagram configuration
+         if ( myid == master ) then
+             call ctqmc_diagram_plotting()
+         endif ! back if ( myid == master ) block
 
 !!========================================================================
 !!>>> timing quantum impurity solver                                   <<<
