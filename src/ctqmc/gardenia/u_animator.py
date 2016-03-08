@@ -32,6 +32,13 @@
 import sys
 import numpy
 
+num_iter = 20
+num_diag = 200
+num_band = 1
+num_orbs = 2
+max_pair = 100
+
+time_s = numpy.zeros((max_pair,num_orbs,num_diag,num_iter), dtype = numpy.float)
+
 f = open('solver.diag.dat', 'r')
-print 'ff'
 f.close()
