@@ -1082,6 +1082,8 @@
      write(siter,'(i10)') iter ! convert iter to siter
      open(mytmp, file='solver.diag.dat.'//trim(adjustl(siter)), position='append')
      write(mytmp,'(2(2X,a5,i4))') 'iter:', iter, 'diag:', cstep/nwrite
+     write(mytmp,*)
+     write(mytmp,*)
      close(mytmp)
 
      write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
