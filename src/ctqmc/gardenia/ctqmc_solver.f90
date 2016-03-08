@@ -1090,7 +1090,7 @@
      write(mytmp,'(2(2X,a5,i4))') 'iter:', iter, 'diag:', cstep/nwrite
      do i=1,norbs
          do j=1,rank(i)
-             write(mytmp,*) time_s( index_s(j, i), i ), time_e( index_e(j, i), i )
+             write(mytmp,'(2f16.8)') time_s( index_s(j, i), i ), time_e( index_e(j, i), i )
          enddo ! over j={1,rank(i)} loop
      enddo ! over i={1,norbs} loop
      write(mytmp,*)
