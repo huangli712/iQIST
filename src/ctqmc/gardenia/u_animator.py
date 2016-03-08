@@ -5,14 +5,15 @@
 ## Introduction
 ## ============
 ##
-## It is a python script. The purpose of this script is generate essential
-## input file (solver.ctqmc.in) for the quantum impurity solver components.
-## Note that you can not use it to control these codes.
+## It is a python script. The purpose of this script is to generate the
+## animation movie using the data contained in the solver.diag.dat.
 ##
 ## Usage
 ## =====
 ##
-## see the document string
+## edit the configuration parameter, and then
+##
+## ./u_animator.py movie.mp4
 ##
 ## Author
 ## ======
@@ -32,27 +33,38 @@
 import sys
 import numpy
 import matplotlib
-matplotlib.use('TKAgg')
-#matplotlib.use("pdf") # setup backend
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.animation as ani
 
-sel_iter = 1
+# configuration parameter
+# you have to fix them carefully before you try to execute this script
+zero = 0.0      # zero constant
+beta = 8.00     # inverse temperature (it = beta)
+#               #
+sel_iter = 0    # which animation movie is produced (0 <= it <= num_iter - 1)
+num_iter = 20   # number of animation movies (it = niter)
+num_diag = 200  # number of frames per animation (it = nsweep / nwrite) 
+num_orbs = 2    # number of orbitals (it = norbs)
+max_pair = 128  # maximum number of operator pairs per orbital
 
-num_iter = 20
-num_diag = 200
-num_band = 1
-num_orbs = 2
-max_pair = 100
-zero = 0.0
-beta = 8.00
-cmap = ['red','green','purple']
+# setup colormap
+# we use colors to distinguish the operators of various orbitals
+cmap = ['red','green','blue','purple','magenta','cyan','yellow']
 
+# creator operators (x points)
 time_s = numpy.zeros((max_pair,num_orbs,num_diag,num_iter), dtype = numpy.float)
+
+# destroy operators (x points)
 time_e = numpy.zeros((max_pair,num_orbs,num_diag,num_iter), dtype = numpy.float)
+
+# y points (its elements are all zero)
 time_z = numpy.zeros((max_pair,num_orbs,num_diag,num_iter), dtype = numpy.float)
+
+# numboer of operator pairs
 rank_t = numpy.zeros((num_orbs,num_diag,num_iter), dtype = numpy.int)
 
+# read the data
 f = open('solver.diag.dat', 'r')
 for iter in range(num_iter):
     for diag in range(num_diag):
@@ -61,46 +73,63 @@ for iter in range(num_iter):
         for orbs in range(num_orbs):
             line = f.readline().split()
             rank_t[orbs,diag,iter] = int(line[4])
+            if rank_t[orbs,diag,iter] >= max_pair: 
+                print 'ERR: max_pair is too small'
+                sys.exit(-1)
             for pair in range( rank_t[orbs,diag,iter] ):
                 line = f.readline().split()
                 time_s[pair,orbs,diag,iter] = float(line[1]) 
                 time_e[pair,orbs,diag,iter] = float(line[2])
         line = f.readline()
         line = f.readline()
-        #print iter, num_iter
 f.close()
 
+# create the figure
 fig = plt.figure()
-time_text = plt.text(zero, 0.5, '', fontsize = 18)
-plt.text(zero-0.1, -0.5, r'0', fontsize = 18)
-plt.text(beta-0.1, -0.5, r'$\beta$', fontsize = 18)
+
+# setup static imagine objects
 plt.gca().set_aspect(2.0)
 plt.gca().set_yticks([])
+plt.text(zero-0.1, -0.5, r'0', fontsize = 18)
+plt.text(beta-0.1, -0.5, r'$\beta$', fontsize = 18)
 plt.plot([zero,zero],[-0.2,0.2], color = 'black', lw = 5)
 plt.plot([beta,beta],[-0.2,0.2], color = 'black', lw = 5)
 plt.plot([zero,beta],[-0.0,0.0], '--', color = 'black', lw = 1)
 
-iter = sel_iter
-def update_figure(diag):
-    print 'diag:', diag
-    for orbs in range(num_orbs):
-        pair = rank_t[orbs,diag,iter]
-        lines[2*orbs+0].set_data(time_s[0:pair,orbs,diag,iter], time_z[0:pair,orbs,diag,iter])
-        lines[2*orbs+1].set_data(time_e[0:pair,orbs,diag,iter], time_z[0:pair,orbs,diag,iter])
-        print 'orbs:', orbs, 'pair:', pair
-        print 'c--->', time_s[0:pair,orbs,diag,iter]
-        print 'd--->', time_e[0:pair,orbs,diag,iter]
-    lines[2*num_orbs].set_text('snapshot: ' + str(diag))
-    print ''
-    return lines
-
+# build the dynamic imagine objects
 lines = []
 for orbs in range(num_orbs):
     c_l, = plt.plot([], [], 'o', ms = 8, mfc = cmap[orbs], mec = cmap[orbs], mew = 2, alpha = 0.8)
     lines.append(c_l)
     d_l, = plt.plot([], [], 'o', ms = 8, mfc = 'white',    mec = cmap[orbs], mew = 2, alpha = 0.8)
     lines.append(d_l)
+time_text = plt.text(zero, 0.5, '', fontsize = 18)
 lines.append(time_text)
 
-line_ani = ani.FuncAnimation(fig, update_figure, num_diag, interval=500, repeat = False, blit=True)
-line_ani.save('im.mp4')
+# select which movie should be produced
+iter = sel_iter
+
+# draw the figure
+def draw_fig(diag):
+    print 'diag:', diag
+    for orbs in range(num_orbs):
+        pair = rank_t[orbs,diag,iter]
+        print 'orbs:', orbs, 'pair:', pair
+        lines[2*orbs+0].set_data(time_s[0:pair,orbs,diag,iter], time_z[0:pair,orbs,diag,iter])
+        lines[2*orbs+1].set_data(time_e[0:pair,orbs,diag,iter], time_z[0:pair,orbs,diag,iter])
+    lines[2*num_orbs].set_text('snapshot: ' + str(diag))
+    print ''
+    return lines
+
+# produce the animation
+movie = ani.FuncAnimation(fig, draw_fig, num_diag, interval=500, blit=True)
+
+# setup the filename we want to use
+argu = sys.argv[1:]
+if ( len(argu) > 0 ):
+    mov_name = argu[0]
+else:
+    mov_name = 'diag.mp4'
+
+# save the movie file
+movie.save(mov_name)
