@@ -486,7 +486,7 @@
 
 ! write out the diagram configuration
          if ( myid == master ) then
-             call ctqmc_diagram_plotting()
+             call ctqmc_diagram_plotting(iter, cstep)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
@@ -1059,14 +1059,30 @@
      return
   end subroutine ctqmc_diagram_checking
 
-  subroutine ctqmc_diagram_plotting()
-     use constants, only : mystd
+  subroutine ctqmc_diagram_plotting(iter, cstep)
+     use constants, only : mystd, mytmp
 
      use control, only : nwrite, nsweep
 
      implicit none
 
+! external arguments
+! current self-consistent iteration number
+     integer, intent(in) :: iter
+
+! current QMC sweeping steps
+     integer, intent(in) :: cstep
+
+! local variables
+! current bin index, string representation
+     character(len=10) :: siter
+
      if ( nsweep/nwrite < 100 ) RETURN
+
+     write(siter,'(i10)') iter ! convert iter to siter
+     open(mytmp, file='solver.diag.dat.'//trim(adjustl(siter)), position='append')
+     write(mytmp,'(2(2X,a5,i4))') 'iter:', iter, 'diag:', cstep/nwrite
+     close(mytmp)
 
      write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
 
