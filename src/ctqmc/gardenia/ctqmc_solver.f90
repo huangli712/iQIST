@@ -484,7 +484,7 @@
 ! check the status at first
          call ctqmc_diagram_checking(cflag)
 
-! write out the diagram configuration
+! write out the snapshat for the current diagram configuration
          if ( myid == master ) then
              call ctqmc_diagram_plotting(iter, cstep)
          endif ! back if ( myid == master ) block
@@ -1059,6 +1059,8 @@
      return
   end subroutine ctqmc_diagram_checking
 
+!!>>> ctqmc_diagram_plotting: write out a snapshot for the current diagram
+!!>>> configuration, the results can be used to make a dynamical video.
   subroutine ctqmc_diagram_plotting(iter, cstep)
      use constants, only : mystd, mytmp
 
@@ -1078,26 +1080,39 @@
      integer, intent(in) :: cstep
 
 ! local variables
+! loop index for the flavor
      integer :: i
+
+! loop index for the operator pair
      integer :: j
 
+! setup the internal criterion
      if ( nsweep/nwrite < 100 ) RETURN
 
+! write the snapshot
+! open data file: solver.diag.dat
      open(mytmp, file='solver.diag.dat', form='formatted', status='unknown', position='append')
+
+! write diagram info
      write(mytmp,'(2(a,i4))') '>> cur_iter:', iter, ' tot_iter:', niter
      write(mytmp,'(2(a,i4))') '>> cur_diag:', cstep/nwrite, ' tot_diag:', nsweep/nwrite
+
+! write the position of operators
      do i=1,norbs
          write(mytmp,'(2(a,i4))') '# flvr:', i, ' rank:', rank(i)
          do j=1,rank(i)
              write(mytmp,'(i4,2f16.8)') i, time_s( index_s(j, i), i ), time_e( index_e(j, i), i )
          enddo ! over j={1,rank(i)} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,*)
-     write(mytmp,*)
-     if ( cstep == nsweep ) rewind(mytmp)
 
+! write two blank lines
+     write(mytmp,*)
+     write(mytmp,*)
+
+! close data file
      close(mytmp)
 
+! write the message to the terminal
      write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
 
      return
