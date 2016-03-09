@@ -15,6 +15,8 @@
 ##
 ## ./u_animator.py movie.mp4
 ##
+## Here movie.mp4 is the output file. We can use the VLC to play it.
+##
 ## Author
 ## ======
 ##
