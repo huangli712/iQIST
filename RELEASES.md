@@ -5,7 +5,10 @@
 * Remove ROADMAP.md.
 * Remove iqist/doc directory.
 * The building system is updated, remove support for doc target.
+* The official reference manual is released at Gitbook.
 * Fix the file format of solver.hist.dat.
+* Add script/u_animator.py which can produce movie using the solver.diag.dat file.
+* Now the impurity solvers can output the solver.diag.dat file.
 * Improve the code styles, fix many typos in comments.
 
 ## v0.6.6 @ 9e0bf1b // Dec 16, 2015
