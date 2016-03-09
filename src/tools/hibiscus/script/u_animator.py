@@ -50,7 +50,7 @@ max_pair = 128  # maximum number of operator pairs per orbital
 
 # setup colormap
 # we use colors to distinguish the operators of various orbitals
-cmap = ['red','green','blue','purple','magenta','cyan','yellow']
+cmap = ['red','green','blue','purple','magenta','cyan','yellow','tan','darkkhaki','maroon','teal','plum','violet','crimson']
 
 # creator operators (x points)
 time_s = numpy.zeros((max_pair,num_orbs,num_diag,num_iter), dtype = numpy.float)
@@ -115,8 +115,8 @@ def draw_fig(diag):
     for orbs in range(num_orbs):
         pair = rank_t[orbs,diag,iter]
         print 'orbs:', orbs, 'pair:', pair
-        lines[2*orbs+0].set_data(time_s[0:pair,orbs,diag,iter], time_z[0:pair,orbs,diag,iter])
-        lines[2*orbs+1].set_data(time_e[0:pair,orbs,diag,iter], time_z[0:pair,orbs,diag,iter])
+        lines[2*orbs+0].set_data(time_s[0:pair,orbs,diag,iter], time_z[0:pair,orbs,diag,iter]+0.1)
+        lines[2*orbs+1].set_data(time_e[0:pair,orbs,diag,iter], time_z[0:pair,orbs,diag,iter]-0.1)
     lines[2*num_orbs].set_text('snapshot: ' + str(diag))
     print ''
     return lines
