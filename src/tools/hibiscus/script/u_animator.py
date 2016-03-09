@@ -11,11 +11,12 @@
 ## Usage
 ## =====
 ##
-## edit the configuration parameter, and then
+## edit the configuration parameter carefully, and then
 ##
 ## ./u_animator.py movie.mp4
 ##
-## Here movie.mp4 is the output file. We can use the VLC to play it.
+## Here movie.mp4 is the output file. We can use the VLC to play it. If you
+## don't supply any filename, the default output should be diag.mp4.
 ##
 ## Author
 ## ======
@@ -52,7 +53,8 @@ max_pair = 128  # maximum number of operator pairs per orbital
 
 # setup colormap
 # we use colors to distinguish the operators of various orbitals
-cmap = ['red','green','blue','purple','magenta','cyan','yellow','tan','darkkhaki','maroon','teal','plum','violet','crimson']
+#cmap = ['red','green','blue','purple','magenta','cyan','yellow','tan','darkkhaki','maroon','teal','plum','violet','crimson']
+cmap = ['red','sienna','tan','orange','darkkhaki','greenyellow','green','teal','skyblue','slategrey','blue','purple','magenta','hotpink']
 
 # creator operators (x points)
 time_s = numpy.zeros((max_pair,num_orbs,num_diag,num_iter), dtype = numpy.float)
@@ -90,13 +92,18 @@ f.close()
 fig = plt.figure()
 
 # setup static imagine objects
+# sometimes you have to adjust the below parameters to obtain a better visualization
 plt.gca().set_aspect(2.0)
 plt.gca().set_yticks([])
-plt.text(zero-0.1, -0.5, r'0', fontsize = 18)
-plt.text(beta-0.1, -0.5, r'$\beta$', fontsize = 18)
-plt.plot([zero,zero],[-0.2,0.2], color = 'black', lw = 5)
-plt.plot([beta,beta],[-0.2,0.2], color = 'black', lw = 5)
-plt.plot([zero,beta],[-0.0,0.0], '--', color = 'black', lw = 1)
+plt.axis([zero, beta, -0.2, 0.2])
+plt.text(zero-0.1, 0.3, r'0', fontsize = 18)
+plt.text(beta-0.1, 0.3, r'$\beta$', fontsize = 18)
+plt.plot([zero,zero], [-0.2,0.2], color = 'black', lw = 5)
+plt.plot([beta,beta], [-0.2,0.2], color = 'black', lw = 5)
+plt.plot([zero,beta], [-0.0,0.0], '--', color = 'black', lw = 1)
+for orbs in range(num_orbs):
+    plt.plot([orbs*beta/num_orbs], [-0.8], 'o', ms = 8, mfc = cmap[orbs], mec = cmap[orbs], mew = 2, clip_on = False)
+    plt.plot([orbs*beta/num_orbs], [-1.0], 'o', ms = 8, mfc = 'white',    mec = cmap[orbs], mew = 2, clip_on = False)
 
 # build the dynamic imagine objects
 lines = []
@@ -105,7 +112,7 @@ for orbs in range(num_orbs):
     lines.append(c_l)
     d_l, = plt.plot([], [], 'o', ms = 8, mfc = 'white',    mec = cmap[orbs], mew = 2, alpha = 0.8)
     lines.append(d_l)
-time_text = plt.text(zero, 0.5, '', fontsize = 18)
+time_text = plt.text(zero, 0.6, '', fontsize = 18)
 lines.append(time_text)
 
 # select which movie should be produced
@@ -119,7 +126,7 @@ def draw_fig(diag):
         print 'orbs:', orbs, 'pair:', pair
         lines[2*orbs+0].set_data(time_s[0:pair,orbs,diag,iter], time_z[0:pair,orbs,diag,iter]+0.1)
         lines[2*orbs+1].set_data(time_e[0:pair,orbs,diag,iter], time_z[0:pair,orbs,diag,iter]-0.1)
-    lines[2*num_orbs].set_text('snapshot: ' + str(diag))
+    lines[2*num_orbs].set_text('snapshot: ' + str(diag) + '/' + str(num_diag))
     print ''
     return lines
 
