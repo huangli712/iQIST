@@ -41,7 +41,7 @@
   chgrd  : 20001
   mkink  : 1024
   mfreq  : 8193
-  nffrq  : 32
+  nffrq  : 128
   nbfrq  : 2
   nfreq  : 128
   ntime  : 1024
