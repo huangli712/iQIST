@@ -1008,7 +1008,26 @@
   end subroutine ctqmc_record_ochi
 
   subroutine ctqmc_record_ofom()
+     use constants, only : dp, zero
+
+     use control, only : norbs
+
+     implicit none
+
+     integer :: i
+     integer :: j
+     real(dp) :: oaux(norbs)
+
+     do i=1,norbs
+         call ctqmc_spin_counter(i, zero, oaux(i))
+         do j=1,i
+             if ( oaux(j) > zero ) then
+             endif
+         enddo
+     enddo
      call s_print_error('ctqmc_record_ofom','in debug mode')
+
+     return
   end subroutine ctqmc_record_ofom
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
