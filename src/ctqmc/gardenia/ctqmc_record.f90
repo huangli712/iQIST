@@ -944,7 +944,7 @@
      use constants, only : dp, zero, two, pi, czi
 
      use control, only : issus
-     use control, only : nband
+     use control, only : nband, norbs
      use control, only : nbfrq
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
