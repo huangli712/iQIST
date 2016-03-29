@@ -1008,24 +1008,49 @@
   end subroutine ctqmc_record_ochi
 
   subroutine ctqmc_record_ofom()
-     use constants, only : dp, zero
+     use constants, only : dp, zero, one, two, pi, czi
 
      use control, only : norbs
+     use control, only : nbfrq
+     use control, only : beta
+     use context, only : oofom, rank, index_s, index_e, time_s, time_e
 
      implicit none
 
      integer :: i
      integer :: j
-     real(dp) :: oaux(norbs)
+     integer :: it, iw
+     real(dp) :: taus, taue, wm, dw, oaux(norbs)
+     complex(dp) :: a_exp_s, a_exp_e, dexp_s, dexp_e
 
      do i=1,norbs
          call ctqmc_spin_counter(i, zero, oaux(i))
          do j=1,i
              if ( oaux(j) > zero ) then
+
+!  nnw_re[0]+= segment_density(i)*beta_;//length of segments
+                 do it=1,rank(i)
+                     taus = time_s( index_s(it, i), i )
+                     taue = time_e( index_e(it, i), i )
+
+                     wm = zero
+                     dw = two * pi / beta
+                     a_exp_s = one
+                     a_exp_e = one
+                     dexp_s = exp(czi*dw*taus)
+                     dexp_e = exp(czi*dw*taue)
+
+                     do iw=1,nbfrq
+                         wm = wm + dw
+                         a_exp_s = a_exp_s * dexp_s
+                         a_exp_e = a_exp_e * dexp_e
+                         oofom(iw,j,i) = oofom(iw,j,i) + real( (a_exp_e-a_exp_s) / (czi*wm) )
+                     enddo
+                 enddo
              endif
          enddo
      enddo
-     call s_print_error('ctqmc_record_ofom','in debug mode')
+     !!call s_print_error('ctqmc_record_ofom','in debug mode')
 
      return
   end subroutine ctqmc_record_ofom
