@@ -3,4 +3,6 @@ isbin = 1
 Uc = 4.0
 mune = 2.0
 beta = 45.0
-issus = 20
+issus = 16
+nbfrq = 48
+nsweep = 8000000
