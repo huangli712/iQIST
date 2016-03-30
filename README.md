@@ -15,7 +15,7 @@ GNU General Public License Version 3
 * Model
     * Density-density interaction
     * General interaction (Slater or Kanamori scheme)
-    * SOC interaction and crystal field splitting
+    * Spin-orbital coupling and crystal field splitting
     * Hubbard-Holstein model
     * Frequency-dependent interaction
 
@@ -39,9 +39,11 @@ GNU General Public License Version 3
     * Magnetic moment
     * Atomic state probability
     * Spin-spin correlation function in imaginary time space
+    * Spin-spin correlation function in matsubara frequency space
     * Orbital-orbital correlation function in imaginary time space
+    * Orbital-orbital correlation function in matsubara frequency space
     * Fidelity susceptibility
-    * kinetic energy fluctuation
+    * Kinetic energy fluctuation
 
 * Fast algorithms
     * Segment algorithm for density-density interaction
