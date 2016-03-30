@@ -1098,7 +1098,7 @@
 
 ! calculate ochi and oochi
      do f1=1,norbs
-         do f2=1,f1
+         do f2=1,norbs
              do i=1,num_try
                  m = ceiling( spring_sfmt_stream() * ntime )
                  if ( oaux(m,f2) > zero ) then
@@ -1114,10 +1114,7 @@
                      enddo ! over n={m+1,ntime} loop
                  endif ! back if ( oaux(m,f2) > zero ) block
              enddo ! over i={1,num_try} loop
-             if ( f1 /= f2 ) then ! consider the symmetry
-                 oochi(:,f1,f2) = oochi(:,f2,f1)
-             endif ! back if ( f1 /= f2 ) block
-         enddo ! over f2={1,f1} loop
+         enddo ! over f2={1,norbs} loop
      enddo ! over f1={1,norbs} loop
 
      return
