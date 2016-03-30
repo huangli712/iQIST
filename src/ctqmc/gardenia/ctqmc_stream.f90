@@ -610,7 +610,6 @@
 ! fourier transformation hybridization function from matsubara frequency
 ! space to imaginary time space
      call ctqmc_four_hybf(hybf, htau)
-     htau = -0.5_dp
 
 ! symmetrize the hybridization function on imaginary time axis if needed
      if ( issun == 2 .or. isspn == 1 ) then
