@@ -869,6 +869,7 @@
 
 ! local parameters
 ! number of internal loop
+! if you want to obtain more accurate results, please increase it
      integer, parameter :: num_try = 16
 
 ! local variables
@@ -941,7 +942,7 @@
 !!>>> ctqmc_record_sfom: record the spin-spin correlation function
 !!>>> matsubara frequency version
   subroutine ctqmc_record_sfom()
-     use constants, only : dp, zero, two, pi, czi
+     use constants, only : dp, zero, one, two, pi, czi
 
      use control, only : issus
      use control, only : nband, norbs
@@ -994,10 +995,13 @@
      enddo ! over i={1,norbs} loop
 
 ! calculate ssfom, it must be real
-! Sz(t)Sz(0) = ( nu(t) - nd(t) ) * ( nu(0) - nd(0) )
+! < Sz(t)Sz(0) > = < ( nu(t) - nd(t) ) * ( nu(0) - nd(0) ) >
      do f1=1,nband
          f2 = f1 + nband
-         if ( oaux(f1) > zero ) then
+! the contribution from oaux(f1) = one and oaux(f2) = one is zero
+! the contribution from oaux(f1) = zero and oaux(f2) = zero is also zero
+! here oaux(f1) = one; oaux(f2) = zero
+         if ( oaux(f1) > zero .and. oaux(f2) < one ) then
 ! + nu(t)nu(0) term
              do it=1,rank(f1)
                  taus = time_s( index_s(it, f1), f1 )
@@ -1018,9 +1022,10 @@
                  call s_cumprod_z(nbfrq, expe, expe)
                  ssfom(:,f1) = ssfom(:,f1) - real( ( expe - exps ) / mesh )
              enddo ! over do it={1,rank(f2)} loop
-         endif ! back if ( oaux(f1) > zero ) block
+         endif ! back if ( oaux(f1) > zero .and. oaux(f2) < one ) block
 
-         if ( oaux(f2) > zero ) then
+! here oaux(f2) = one; oaux(f1) = zero
+         if ( oaux(f2) > zero .and. oaux(f1) < one ) then
 ! - nu(t)nd(0) term
              do it=1,rank(f1)
                  taus = time_s( index_s(it, f1), f1 )
@@ -1041,7 +1046,7 @@
                  call s_cumprod_z(nbfrq, expe, expe)
                  ssfom(:,f1) = ssfom(:,f1) + real( ( expe - exps ) / mesh )
              enddo ! over do it={1,rank(f2)} loop
-         endif ! back if ( oaux(f2) > zero ) block
+         endif ! back if ( oaux(f2) > zero .and. oaux(f1) < one ) block
      enddo ! over f1={1,nband} loop
 
      return
@@ -1063,6 +1068,7 @@
 
 ! local parameters
 ! number of internal loop
+! if you want to obtain more accurate results, please increase it
      integer, parameter :: num_try = 16
 
 ! local variables
@@ -1092,7 +1098,7 @@
 
 ! calculate ochi and oochi
      do f1=1,norbs
-         do f2=1,norbs
+         do f2=1,f1
              do i=1,num_try
                  m = ceiling( spring_sfmt_stream() * ntime )
                  if ( oaux(m,f2) > zero ) then
@@ -1108,7 +1114,10 @@
                      enddo ! over n={m+1,ntime} loop
                  endif ! back if ( oaux(m,f2) > zero ) block
              enddo ! over i={1,num_try} loop
-         enddo ! over f2={1,norbs} loop
+             if ( f1 /= f2 ) then ! consider the symmetry
+                 oochi(:,f1,f2) = oochi(:,f2,f1)
+             endif ! back if ( f1 /= f2 ) block
+         enddo ! over f2={1,f1} loop
      enddo ! over f1={1,norbs} loop
 
      return
@@ -1186,7 +1195,7 @@
              if ( f1 /= f2 ) then ! consider the symmetry
                  oofom(:,f1,f2) = oofom(:,f2,f1)
              endif ! back if ( f1 /= f2 ) block
-         enddo ! over f2={1,norbs} loop
+         enddo ! over f2={1,f1} loop
      enddo ! over f1={1,norbs} loop
 
      return
