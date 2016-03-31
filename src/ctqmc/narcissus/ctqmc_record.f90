@@ -854,6 +854,7 @@
   end subroutine ctqmc_record_lmat
 
 !!>>> ctqmc_record_schi: record the spin-spin correlation function
+!!>>> imaginary-time version
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
@@ -868,6 +869,7 @@
 
 ! local parameters
 ! number of internal loop
+! if you want to obtain more accurate results, please increase it
      integer, parameter :: num_try = 16
 
 ! local variables
@@ -937,11 +939,121 @@
      return
   end subroutine ctqmc_record_schi
 
+!!>>> ctqmc_record_sfom: record the spin-spin correlation function
+!!>>> matsubara frequency version
   subroutine ctqmc_record_sfom()
-     call s_print_error('ctqmc_record_sfom','in debug mode')
+     use constants, only : dp, zero, one, two, pi, czi
+
+     use control, only : issus
+     use control, only : nband, norbs
+     use control, only : nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : ssfom
+     use context, only : rank
+
+     implicit none
+
+! local variables
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+
+! loop index for operators
+     integer  :: it
+
+! imaginary time for start and end points
+     real(dp) :: taus
+     real(dp) :: taue
+
+! the first bosonic frequency
+     complex(dp) :: dw
+
+! used to record occupations for current flavor channel at \tau = 0
+     real(dp) :: oaux(norbs)
+
+! bosonic frequency mesh
+     complex(dp) :: mesh(nbfrq)
+
+! matsubara frequency exponents for create operators
+     complex(dp) :: exps(nbfrq)
+
+! matsubara frequency exponents for destroy operators
+     complex(dp) :: expe(nbfrq)
+
+! check whether there is conflict
+     call s_assert( btest(issus, 3) )
+
+! build bosonic frequency mesh
+     dw = czi * two * pi / beta
+     mesh = dw
+     call s_cumsum_z(nbfrq, mesh, mesh)
+
+! calculate oaux, obtain occupation status
+     do f1=1,norbs
+         call ctqmc_spin_counter(f1, zero, oaux(f1))
+     enddo ! over i={1,norbs} loop
+
+! calculate ssfom, it must be real
+! < Sz(t)Sz(0) > = < ( nu(t) - nd(t) ) * ( nu(0) - nd(0) ) >
+     do f1=1,nband
+         f2 = f1 + nband
+! the contribution from oaux(f1) = one and oaux(f2) = one is zero
+! the contribution from oaux(f1) = zero and oaux(f2) = zero is also zero
+! here oaux(f1) = one; oaux(f2) = zero
+         if ( oaux(f1) > zero .and. oaux(f2) < one ) then
+! + nu(t)nu(0) term
+             do it=1,rank(f1)
+                 taus = time_s( index_s(it, f1), f1 )
+                 taue = time_e( index_e(it, f1), f1 )
+                 exps = exp( dw * taus )
+                 expe = exp( dw * taue )
+                 call s_cumprod_z(nbfrq, exps, exps)
+                 call s_cumprod_z(nbfrq, expe, expe)
+                 ssfom(:,f1) = ssfom(:,f1) + real( ( expe - exps ) / mesh )
+             enddo ! over do it={1,rank(f1)} loop
+! - nd(t)nu(0) term
+             do it=1,rank(f2)
+                 taus = time_s( index_s(it, f2), f2 )
+                 taue = time_e( index_e(it, f2), f2 )
+                 exps = exp( dw * taus )
+                 expe = exp( dw * taue )
+                 call s_cumprod_z(nbfrq, exps, exps)
+                 call s_cumprod_z(nbfrq, expe, expe)
+                 ssfom(:,f1) = ssfom(:,f1) - real( ( expe - exps ) / mesh )
+             enddo ! over do it={1,rank(f2)} loop
+         endif ! back if ( oaux(f1) > zero .and. oaux(f2) < one ) block
+
+! here oaux(f2) = one; oaux(f1) = zero
+         if ( oaux(f2) > zero .and. oaux(f1) < one ) then
+! - nu(t)nd(0) term
+             do it=1,rank(f1)
+                 taus = time_s( index_s(it, f1), f1 )
+                 taue = time_e( index_e(it, f1), f1 )
+                 exps = exp( dw * taus )
+                 expe = exp( dw * taue )
+                 call s_cumprod_z(nbfrq, exps, exps)
+                 call s_cumprod_z(nbfrq, expe, expe)
+                 ssfom(:,f1) = ssfom(:,f1) - real( ( expe - exps ) / mesh )
+             enddo ! over do it={1,rank(f1)} loop
+! + nd(t)nd(0) term
+             do it=1,rank(f2)
+                 taus = time_s( index_s(it, f2), f2 )
+                 taue = time_e( index_e(it, f2), f2 )
+                 exps = exp( dw * taus )
+                 expe = exp( dw * taue )
+                 call s_cumprod_z(nbfrq, exps, exps)
+                 call s_cumprod_z(nbfrq, expe, expe)
+                 ssfom(:,f1) = ssfom(:,f1) + real( ( expe - exps ) / mesh )
+             enddo ! over do it={1,rank(f2)} loop
+         endif ! back if ( oaux(f2) > zero .and. oaux(f1) < one ) block
+     enddo ! over f1={1,nband} loop
+
+     return
   end subroutine ctqmc_record_sfom
 
 !!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
+!!>>> imaginary-time version
   subroutine ctqmc_record_ochi()
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
@@ -956,6 +1068,7 @@
 
 ! local parameters
 ! number of internal loop
+! if you want to obtain more accurate results, please increase it
      integer, parameter :: num_try = 16
 
 ! local variables
@@ -1007,8 +1120,82 @@
      return
   end subroutine ctqmc_record_ochi
 
+!!>>> ctqmc_record_ofom: record the orbital-orbital correlation function
+!!>>> matsubara frequency version
   subroutine ctqmc_record_ofom()
-     call s_print_error('ctqmc_record_ofom','in debug mode')
+     use constants, only : dp, zero, two, pi, czi
+
+     use control, only : issus
+     use control, only : norbs
+     use control, only : nbfrq
+     use control, only : beta
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : oofom
+     use context, only : rank
+
+     implicit none
+
+! local variables
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+
+! loop index for operators
+     integer  :: it
+
+! imaginary time for start and end points
+     real(dp) :: taus
+     real(dp) :: taue
+
+! the first bosonic frequency
+     complex(dp) :: dw
+
+! used to record occupations for current flavor channel at \tau = 0
+     real(dp) :: oaux(norbs)
+
+! bosonic frequency mesh
+     complex(dp) :: mesh(nbfrq)
+
+! matsubara frequency exponents for create operators
+     complex(dp) :: exps(nbfrq)
+
+! matsubara frequency exponents for destroy operators
+     complex(dp) :: expe(nbfrq)
+
+! check whether there is conflict
+     call s_assert( btest(issus, 4) )
+
+! build bosonic frequency mesh
+     dw = czi * two * pi / beta
+     mesh = dw
+     call s_cumsum_z(nbfrq, mesh, mesh)
+
+! calculate oaux, obtain occupation status
+     do f1=1,norbs
+         call ctqmc_spin_counter(f1, zero, oaux(f1))
+     enddo ! over i={1,norbs} loop
+
+! calculate oofom, it must be real
+     do f1=1,norbs
+         do f2=1,f1
+             if ( oaux(f2) > zero ) then
+                 do it=1,rank(f1)
+                     taus = time_s( index_s(it, f1), f1 )
+                     taue = time_e( index_e(it, f1), f1 )
+                     exps = exp( dw * taus )
+                     expe = exp( dw * taue )
+                     call s_cumprod_z(nbfrq, exps, exps)
+                     call s_cumprod_z(nbfrq, expe, expe)
+                     oofom(:,f2,f1) = oofom(:,f2,f1) + real( ( expe - exps ) / mesh )
+                 enddo ! over do it={1,rank(f1)} loop
+             endif ! back if ( oaux(f2) > zero ) block
+             if ( f1 /= f2 ) then ! consider the symmetry
+                 oofom(:,f1,f2) = oofom(:,f2,f1)
+             endif ! back if ( f1 /= f2 ) block
+         enddo ! over f2={1,f1} loop
+     enddo ! over f1={1,norbs} loop
+
+     return
   end subroutine ctqmc_record_ofom
 
 !!>>> ctqmc_record_twop: record the two-particle green's function
