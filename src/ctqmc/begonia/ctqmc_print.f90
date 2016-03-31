@@ -36,7 +36,7 @@
      call s_time_builder(date_time_string)
 
      write(mystd,'(2X,a)') cname
-     write(mystd,'(2X,a)') '>>> A DMFT Engine With Continuous Time Quantum Monte Carlo Impurity Solver'
+     write(mystd,'(2X,a)') '>>> A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'Version: 2016.02.13T '//'(built at '//__TIME__//" "//__DATE__//')'
