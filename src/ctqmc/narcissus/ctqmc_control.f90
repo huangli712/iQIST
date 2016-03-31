@@ -98,8 +98,6 @@
 ! example:
 !   ( 1 1 1 0 1 0 1 0 1)_2
 ! p = 9 8 7 6 5 4 3 2 1
-!
-! note: p = 4 and p = 5 are not implemented so far.
      integer, public, save :: issus  = 1
 
 ! control flag: whether we measure the high order correlation function
