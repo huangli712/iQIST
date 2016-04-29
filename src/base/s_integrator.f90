@@ -71,7 +71,7 @@
      real(dp), intent(in) :: b
 
 ! external function, it means the integrand
-     procedure( real(dp) ) :: f
+     real(dp), external   :: f
 
 ! local variables
 ! loop index
@@ -116,7 +116,7 @@
      real(dp), intent(in) :: b
 
 ! external function, it means the integrand
-     procedure( real(dp) ) :: f
+     real(dp), external   :: f
 
 ! local variables
 ! loop index
