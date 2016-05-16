@@ -310,7 +310,7 @@ class iqistReader(object):
             f = open(fileName,"r")
 
         nmat = numpy.zeros((norbs), dtype = numpy.float)
-        nnmat = numpy.zeros((norbs,norbs), dtype = numpy.complex)
+        nnmat = numpy.zeros((norbs,norbs), dtype = numpy.float)
         f.readline() # skip one comment line
         # read nmat
         for i in range(norbs):
