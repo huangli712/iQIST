@@ -277,6 +277,11 @@
              call hfqmc_print_runtime(iter, nstep, accept, reject, tcount)
          endif ! back if ( mod(nstep, nfast) == 0 .and. nstep > 0 .and. myid == master ) block
 
+! print out QMC config information, only for master node
+         if ( mod(nstep, nfast) == 0 .and. nstep > 0 .and. myid == master ) then
+             call hfqmc_print_diagram(iter, nstep, nfast)
+         endif ! back if ( mod(nstep, nfast) == 0 .and. nstep > 0 .and. myid == master ) block
+
 ! sampling the physical observables
 !-------------------------------------------------------------------------
 ! measure the green's function

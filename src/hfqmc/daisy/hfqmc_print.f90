@@ -4,6 +4,8 @@
 !!!           hfqmc_print_footer
 !!!           hfqmc_print_summary
 !!!           hfqmc_print_runtime
+!!!           hfqmc_print_it_info
+!!!           hfqmc_print_diagram
 !!! source  : hfqmc_print.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -188,3 +190,63 @@
 
      return
   end subroutine hfqmc_print_it_info
+
+!!>>> hfqmc_diagram_plotting: write out a snapshot for the current diagram
+!!>>> configuration, the results can be used to make a dynamical video.
+  subroutine hfqmc_print_diagram(iter, nstep, nfast)
+     use constants, only : mystd, mytmp, zero, one
+
+     use control, only : niter
+     use control, only : nsing, ntime, nsweep
+     use context, only : imat
+
+     implicit none
+
+! external arguments
+! current iteration number
+     integer, intent(in) :: iter
+
+! current QMC effective sweep count
+     integer, intent(in) :: nstep
+
+! internal fast cycle numbers, used to control the size of data bins
+     integer, intent(in) :: nfast
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! write the snapshot
+! open data file: solver.diag.dat
+     open(mytmp, file='solver.diag.dat', form='formatted', status='unknown', position='append')
+
+! write diagram info
+     write(mytmp,'(2(a,i4))') '>> cur_iter:', iter, ' tot_iter:', niter
+     write(mytmp,'(2(a,i4))') '>> cur_diag:', nstep/nfast, ' tot_diag:', nsweep/nfast
+
+! write the position of operators
+     do i=1,ntime
+         write(mytmp,'(i4)', advance = 'no') i
+         do j=1,nsing
+             if ( imat(i,j) > zero ) then
+                 write(mytmp,'(f5.1)', advance = 'no') +one
+             else
+                 write(mytmp,'(f5.1)', advance = 'no') -one
+             endif ! back if ( imat(i,j) > zero ) block
+         enddo ! over j={1,nsing} loop
+         write(mytmp,*)
+     enddo ! over i={1,ntime} loop
+
+! write two blank lines
+     write(mytmp,*)
+     write(mytmp,*)
+
+! close data file
+     close(mytmp)
+
+! write the message to the terminal
+     write(mystd,'(4X,a)') '>>> quantum impurity solver config: saving'
+
+     return
+  end subroutine hfqmc_print_diagram
