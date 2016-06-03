@@ -319,7 +319,7 @@
 ! check the status at first
          call ctqmc_diagram_checking(cflag)
 
-! write out the snapshat for the current diagram configuration
+! write out the snapshot for the current diagram configuration
          if ( myid == master ) then
              call ctqmc_diagram_plotting(iter, cstep)
          endif ! back if ( myid == master ) block
