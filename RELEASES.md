@@ -8,7 +8,8 @@
 * The official reference manual is released at Gitbook.
 * Fix the file format of solver.hist.dat.
 * Add script/u_animator.py which can produce movie using the solver.diag.dat file.
-* Now the impurity solvers can output the solver.diag.dat file.
+* Now the CT-QMC impurity solvers can output the solver.diag.dat file.
+* Now the HF-QMC impurity solver can output the solver.diag.dat file.
 * Optimize the algorithm for the calculation of spin-spin correlation function (time space)
 * Optimize the algorithm for the calculation of orbital-orbital correlation function (time space)
 * Implement the measurement of spin-spin correlation function (matsubara space)
