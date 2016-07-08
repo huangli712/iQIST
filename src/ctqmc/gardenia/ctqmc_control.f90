@@ -89,7 +89,7 @@
 ! if p == 5, calculate orbital-orbital correlation function (frequency space)
 ! if p == 6, calculate < k^2 > - < k >^2
 ! if p == 7, calculate fidelity susceptibility matrix
-! if p == 8, reserved
+! if p == 8, calculate < S^n_z >, powers of local magnetization
 ! if p == 9, reserved
 !
 ! example:
