@@ -13,6 +13,7 @@
 !!!           ctqmc_dump_nmat
 !!!           ctqmc_dump_kmat
 !!!           ctqmc_dump_lmat
+!!!           ctqmc_dump_szpw
 !!!           ctqmc_dump_schi
 !!!           ctqmc_dump_sfom
 !!!           ctqmc_dump_ochi
@@ -705,6 +706,11 @@
 
      return
   end subroutine ctqmc_dump_lmat
+
+  subroutine ctqmc_dump_szpw()
+     use constants, only : dp, mytmp
+
+  end subroutine ctqmc_dump_szpw
 
 !!>>> ctqmc_dump_schi: write out the spin-spin correlation function
   subroutine ctqmc_dump_schi(schi, sschi, serr, sserr)
