@@ -546,6 +546,9 @@
      rmat    = zero
      lrmat   = zero
 
+! init powers of local magnetization array
+     szpow   = zero
+
 ! init spin-spin correlation function
      schi    = zero
      sschi   = zero
