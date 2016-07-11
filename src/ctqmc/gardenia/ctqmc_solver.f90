@@ -415,6 +415,11 @@
                  call ctqmc_record_lmat()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) block
 
+! record the powers of local magnetization
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 7) ) then
+                 call ctqmc_record_szpw()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 7) ) block
+
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
                  CONTINUE
