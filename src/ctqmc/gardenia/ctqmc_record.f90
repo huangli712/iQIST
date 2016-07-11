@@ -855,6 +855,14 @@
      return
   end subroutine ctqmc_record_lmat
 
+  subroutine ctqmc_record_szpw()
+     use constants, only : dp
+
+     implicit none
+
+     return
+  end subroutine ctqmc_record_szpw
+
 !!>>> ctqmc_record_schi: record the spin-spin correlation function
 !!>>> imaginary-time version
   subroutine ctqmc_record_schi()
