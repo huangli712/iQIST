@@ -194,6 +194,8 @@
      allocate(rmat_err(norbs),             stat=istat)
      allocate(lrmat_mpi(norbs,norbs),      stat=istat)
      allocate(lrmat_err(norbs,norbs),      stat=istat)
+     allocate(szpow_mpi(  4  ,norbs),      stat=istat)
+     allocate(szpow_err(  4  ,norbs),      stat=istat)
      allocate(schi_mpi(ntime),             stat=istat)
      allocate(schi_err(ntime),             stat=istat)
      allocate(sschi_mpi(ntime,nband),      stat=istat)
