@@ -557,6 +557,9 @@
 ! collect the fidelity susceptibility data from lrmat to lrmat_mpi
      call ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
 
+! collect the powers of local magnetization data from szpow to szpow_mpi
+     call ctqmc_reduce_szpw(szpow_mpi, szpow_err)
+
 ! collect the spin-spin correlation function data from schi to schi_mpi
 ! collect the spin-spin correlation function data from sschi to sschi_mpi
 ! collect the spin-spin correlation function data from ssfom to ssfom_mpi
@@ -602,6 +605,7 @@
      lmat  = lmat_mpi  * real(nmonte) / real(nsweep)
      rmat  = rmat_mpi  * real(nmonte) / real(nsweep)
      lrmat = lrmat_mpi * real(nmonte) / real(nsweep)
+     szpow = szpow_mpi * real(nmonte) / real(nsweep)
      schi  = schi_mpi  * real(nmonte) / real(nsweep)
      sschi = sschi_mpi * real(nmonte) / real(nsweep)
      ssfom = ssfom_mpi * real(nmonte) / real(nsweep)
@@ -632,6 +636,7 @@
      lmat_err  = lmat_err  * real(nmonte) / real(nsweep)
      rmat_err  = rmat_err  * real(nmonte) / real(nsweep)
      lrmat_err = lrmat_err * real(nmonte) / real(nsweep)
+     szpow_err = szpow_err * real(nmonte) / real(nsweep)
      schi_err  = schi_err  * real(nmonte) / real(nsweep)
      sschi_err = sschi_err * real(nmonte) / real(nsweep)
      ssfom_err = ssfom_err * real(nmonte) / real(nsweep)
