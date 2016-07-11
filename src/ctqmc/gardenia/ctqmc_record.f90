@@ -861,6 +861,12 @@
      implicit none
 
 ! local variables
+! loop index over times
+     integer  :: i
+
+! loop index for flavor channel
+     integer  :: f1
+
 ! used to record occupations for current flavor channel and time
      real(dp) :: oaux(ntime,norbs)
 
