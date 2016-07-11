@@ -719,6 +719,11 @@
          call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
      endif ! back if ( myid == master ) block
 
+! write out the final powers of local magnetization data, szpow
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_szpw(szpow, szpow_err)
+     endif ! back if ( myid == master ) block
+
 ! write out the final spin-spin correlation function data, schi, sschi, and ssfom
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_schi(schi, sschi, schi_err, sschi_err)
