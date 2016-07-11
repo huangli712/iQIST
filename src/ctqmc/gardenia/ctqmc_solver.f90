@@ -37,6 +37,7 @@
      use context, only : nmat, nnmat
      use context, only : kmat, kkmat
      use context, only : lmat, rmat, lrmat
+     use context, only : szpow
      use context, only : schi, sschi, ssfom, ochi, oochi, oofom
      use context, only : g2_re, g2_im, h2_re, h2_im, ps_re, ps_im
      use context, only : symm
@@ -114,6 +115,10 @@
 ! used to evaluate fidelity susceptibility < k_l k_r >, for mpi case
      real(dp), allocatable :: lrmat_mpi(:,:)
      real(dp), allocatable :: lrmat_err(:,:)
+
+! powers of local magnetization, for mpi case
+     real(dp), allocatable :: szpow_mpi(:,:)
+     real(dp), allocatable :: szpow_err(:,:)
 
 ! spin-spin correlation function, totally-averaged, for mpi case
      real(dp), allocatable :: schi_mpi(:)
