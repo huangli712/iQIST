@@ -860,6 +860,21 @@
 
      implicit none
 
+! local variables
+! used to record occupations for current flavor channel and time
+     real(dp) :: oaux(ntime,norbs)
+
+! check whether there is conflict
+     call s_assert( btest(issus, 7) )
+
+! calculate oaux, obtain occupation status
+     oaux = zero
+     TIME_LOOP: do i=1,ntime
+         do f1=1,norbs
+             call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
+         enddo ! over f1={1,norbs} loop
+     enddo TIME_LOOP ! over i={1,ntime} loop
+
      return
   end subroutine ctqmc_record_szpw
 
