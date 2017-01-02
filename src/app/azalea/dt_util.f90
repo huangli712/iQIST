@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           10/15/2017 by li huang (last modified)
+!!!           01/02/2018 by li huang (last modified)
 !!! purpose :
 !!! status  : unstable
 !!! comment :
@@ -27,7 +27,7 @@
 !!
 !! @sub cat_fill_l
 !!
-!! try to fill G(\nu + \omega) by G(\nu)
+!! try to fill G(\nu + \omega) by G(\nu), momentum-independent version
 !!
   subroutine cat_fill_l(gin, gout, shift)
      use constants, only : dp
@@ -77,7 +77,7 @@
 !!
 !! @sub cat_fill_k
 !!
-!! try to fill G(\nu + \omega, K) by G(\nu, K)
+!! try to fill G(\nu + \omega, K) by G(\nu, K), momentum-dependent version
 !!
   subroutine cat_fill_k(gin, gout, shift)
      use constants, only : dp
@@ -281,7 +281,7 @@
 !!========================================================================
 
 !!
-!! @cat_dia_1d
+!! @sub cat_dia_1d
 !!
 !! calculate the two-particle bubble diagram, 1d version
 !!
@@ -339,7 +339,7 @@
   end subroutine cat_dia_1d
 
 !!
-!! @cat_dia_2d
+!! @sub cat_dia_2d
 !!
 !! calculate the two-particle bubble diagram, 2d version
 !!
@@ -397,7 +397,7 @@
   end subroutine cat_dia_2d
 
 !!
-!! @cat_dia_3d
+!! @sub cat_dia_3d
 !!
 !! calculate the two-particle bubble diagram, 3d version
 !!
