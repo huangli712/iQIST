@@ -24,7 +24,7 @@
 ## =======
 ##
 ## 11/10/2014 by li huang (created)
-## 02/13/2016 by li huang (last modified)
+## 01/13/2017 by li huang (last modified)
 ##
 ##
 
@@ -40,16 +40,9 @@ function make_link {
 }
 
 # loop over the ctqmc components
-for component in azalea gardenia narcissus begonia lavender camellia pansy manjushaka
+for component in azalea gardenia narcissus lavender manjushaka
 do
     dir=$(echo ../src/ctqmc/$component/ctqmc)
-    make_link $dir $component
-done
-
-# loop over the hfqmc components
-for component in daisy
-do
-    dir=$(echo ../src/hfqmc/$component/hfqmc)
     make_link $dir $component
 done
 
