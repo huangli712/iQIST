@@ -27,5 +27,4 @@
 
 * t61: Call iQIST from Fortran code
 * t62: Call iQIST from Python script
-* t63: Call iQIST/daisy from Python script
-* t64: Call iQIST/jasmine from Python script
+* t63: Call iQIST/jasmine from Python script
