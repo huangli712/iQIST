@@ -54,7 +54,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 02/13/2016 by li huang (last modified)
+## 01/13/2017 by li huang (last modified)
 ##
 ##
 
@@ -71,8 +71,8 @@ help:
 	@echo '     lib               build all components as libs                   '
 	@echo '     clean             clean all directories                          '
 	@echo
-	@echo '     solver            build all ctqmc and hfqmc components           '
-	@echo '     solver-lib        build all ctqmc and hfqmc components as libs   '
+	@echo '     solver            build all ctqmc components                     '
+	@echo '     solver-lib        build all ctqmc components as libs             '
 	@echo '     clean-solver      clean objects for impurity solvers             '
 	@echo
 	@echo '     tool              build auxiliary tool components                '
@@ -102,35 +102,15 @@ help-more:
 	@echo '     narcissus-pylib   build narcissus library for Python   '
 	@echo '     clean-narcissus   clean narcissus directory            '
 	@echo
-	@echo '     begonia           build begonia code                   '
-	@echo '     begonia-lib       build begonia library for Fortran    '
-	@echo '     begonia-pylib     build begonia library for Python     '
-	@echo '     clean-begonia     clean begonia directory              '
-	@echo
 	@echo '     lavender          build lavender code                  '
 	@echo '     lavender-lib      build lavender library for Fortran   '
 	@echo '     lavender-pylib    build lavender library for Python    '
 	@echo '     clean-lavender    clean lavender directory             '
 	@echo
-	@echo '     camellia          build camellia code                  '
-	@echo '     camellia-lib      build camellia library for Fortran   '
-	@echo '     camellia-pylib    build camellia library for Python    '
-	@echo '     clean-camellia    clean camellia directory             '
-	@echo
-	@echo '     pansy             build pansy code                     '
-	@echo '     pansy-lib         build pansy library for Fortran      '
-	@echo '     pansy-pylib       build pansy library for Python       '
-	@echo '     clean-pansy       clean pansy directory                '
-	@echo
 	@echo '     manjushaka        build manjushaka code                '
 	@echo '     manjushaka-lib    build manjushaka library for Fortran '
 	@echo '     manjushaka-pylib  build manjushaka library for Python  '
 	@echo '     clean-manjushaka  clean manjushaka directory           '
-	@echo
-	@echo '     daisy             build daisy code                     '
-	@echo '     daisy-lib         build daisy library for Fortran      '
-	@echo '     daisy-pylib       build daisy library for Python       '
-	@echo '     clean-daisy       clean daisy directory                '
 	@echo
 	@echo '     jasmine           build jasmine code                   '
 	@echo '     jasmine-lib       build jasmine library for Fortran    '
@@ -160,24 +140,9 @@ lib: base-lib capi-lib solver-lib tool-lib
 clean: clean-base clean-capi clean-solver clean-tool
 
 # targets for solver
-solver: base capi \
-        azalea gardenia narcissus \
-        begonia lavender \
-        camellia \
-        pansy manjushaka \
-        daisy
-solver-lib: base-lib capi-lib \
-	    azalea-lib gardenia-lib narcissus-lib \
-	    begonia-lib lavender-lib \
-            camellia-lib \
-	    pansy-lib manjushaka-lib \
-	    daisy-lib
-clean-solver: clean-base clean-capi \
-              clean-azalea clean-gardenia clean-narcissus \
-              clean-begonia clean-lavender \
-              clean-camellia \
-              clean-pansy clean-manjushaka \
-              clean-daisy
+solver: base capi azalea gardenia narcissus lavender manjushaka
+solver-lib: base-lib capi-lib azalea-lib gardenia-lib narcissus-lib lavender-lib manjushaka-lib
+clean-solver: clean-base clean-capi clean-azalea clean-gardenia clean-narcissus clean-lavender clean-manjushaka
 
 # targets for tool
 tool: base capi jasmine hibiscus
@@ -221,19 +186,7 @@ narcissus-pylib:
 clean-narcissus:
 	cd ../src/ctqmc/narcissus/; pwd; make clean
 
-# targets for ctqmc codes: general version (begonia, lavender)
-begonia:
-	cd ../src/ctqmc/begonia/; pwd; make
-
-begonia-lib:
-	cd ../src/ctqmc/begonia/; pwd; make lib
-
-begonia-pylib:
-	cd ../src/ctqmc/begonia/; pwd; make pylib
-
-clean-begonia:
-	cd ../src/ctqmc/begonia/; pwd; make clean
-
+# targets for ctqmc codes: general version (lavender)
 lavender:
 	cd ../src/ctqmc/lavender/; pwd; make
 
@@ -246,32 +199,7 @@ lavender-pylib:
 clean-lavender:
 	cd ../src/ctqmc/lavender/; pwd; make clean
 
-# targets for ctqmc codes: general version (camellia)
-camellia:
-	cd ../src/ctqmc/camellia/; pwd; make
-
-camellia-lib:
-	cd ../src/ctqmc/camellia/; pwd; make lib
-
-camellia-pylib:
-	cd ../src/ctqmc/camellia/; pwd; make pylib
-
-clean-camellia:
-	cd ../src/ctqmc/camellia/; pwd; make clean
-
-# targets for ctqmc codes: general version (pansy, manjushaka)
-pansy:
-	cd ../src/ctqmc/pansy/; pwd; make
-
-pansy-lib:
-	cd ../src/ctqmc/pansy/; pwd; make lib
-
-pansy-pylib:
-	cd ../src/ctqmc/pansy/; pwd; make pylib
-
-clean-pansy:
-	cd ../src/ctqmc/pansy/; pwd; make clean
-
+# targets for ctqmc codes: general version (manjushaka)
 manjushaka:
 	cd ../src/ctqmc/manjushaka/; pwd; make
 
@@ -283,19 +211,6 @@ manjushaka-pylib:
 
 clean-manjushaka:
 	cd ../src/ctqmc/manjushaka/; pwd; make clean
-
-# targets for hfqmc codes: daisy
-daisy:
-	cd ../src/hfqmc/daisy/; pwd; make
-
-daisy-lib:
-	cd ../src/hfqmc/daisy/; pwd; make lib
-
-daisy-pylib:
-	cd ../src/hfqmc/daisy/; pwd; make pylib
-
-clean-daisy:
-	cd ../src/hfqmc/daisy/; pwd; make clean
 
 # targets for atomic codes: jasmine
 jasmine:
