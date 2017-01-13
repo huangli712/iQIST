@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 05/10/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 01/13/2017 by li huang (last modified)
 ##
 ##
 
@@ -29,7 +29,7 @@
 
 include ../../build/make.sys
 
-mod = ctqmc_api.o hfqmc_api.o atomic_api.o
+mod = ctqmc_api.o atomic_api.o
 
 default: all
 
