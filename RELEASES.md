@@ -1,6 +1,6 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-## v0.6.7
+## v0.6.7 @ c14fdc4 // Jan 13, 2017
 
 * Remove ROADMAP.md.
 * Remove iqist/doc directory.
