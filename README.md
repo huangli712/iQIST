@@ -1,10 +1,10 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-The iQIST software package includes several quantum impurity solvers which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm (CT-HYB) and Hirsch-Fye quantum Monte Carlo algorithm (HF-QMC), and corresponding preprocessing and postprocessing tools.
+The iQIST software package includes several quantum impurity solvers which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm (CT-HYB), and corresponding preprocessing and postprocessing tools.
 
 ## Version
 
-v0.6.7 @ 2016.02.13T (devel)
+v0.6.8 @ 2017.02.13T (devel)
 
 ## License
 
@@ -75,7 +75,7 @@ GNU General Public License Version 3
 
 > NOTE:
 
-> The iQIST is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
+> The iQIST is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed or removed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
 
 ## Installation
 
@@ -127,7 +127,7 @@ $ ./x_setup.sh
 
 > 2. 'editor' could be any ascii text editor which you prefer.
 
-> 3. 'component' could be azalea, gardenia, narcissus, begonia, etc.
+> 3. 'component' could be azalea, gardenia, narcissus, lavender, etc.
 
 > 4. Type 'make help-more' in the terminal for more details.
 
@@ -167,7 +167,7 @@ Computer Physics Communications 195, 140 (2015) or arXiv:1409.7573 (2014)
 
 ```sh
 Li Huang
-Institute of Materials, China Academy of Engineering Physics, Sichuan, PRC
+Institute of Materials, China Academy of Engineering Physics, Sichuan Jiangyou, PRC
 email: lihuang.dmft at gmail.com
 ```
 
