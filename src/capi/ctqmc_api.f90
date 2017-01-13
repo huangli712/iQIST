@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/07/2014 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/13/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
 !!!           quantum Monte Carlo impurity solver.
@@ -21,8 +21,7 @@
 !! This module can provide a light weight interface (i.e., application
 !! programming interface, API) for Fortran/Python language to the ctqmc
 !! quantum impurity solver. The user can use it to access the azalea,
-!! gardenia, narcissus, begonia, lavender, camellia, pansy and manjushaka
-!! codes.
+!! gardenia, narcissus, lavender, and manjushaka codes.
 !!
 !! How to build the Fortran API
 !! ============================
@@ -356,20 +355,14 @@
      integer, public, parameter :: solver_id_azalea         = 101
      integer, public, parameter :: solver_id_gardenia       = 102
      integer, public, parameter :: solver_id_narcissus      = 103
-     integer, public, parameter :: solver_id_begonia        = 201
-     integer, public, parameter :: solver_id_lavender       = 202
-     integer, public, parameter :: solver_id_camellia       = 301
-     integer, public, parameter :: solver_id_pansy          = 401
-     integer, public, parameter :: solver_id_manjushaka     = 402
+     integer, public, parameter :: solver_id_lavender       = 201
+     integer, public, parameter :: solver_id_manjushaka     = 301
 
 ! solver status, 1 means ready, 0 means not ready
      integer, public, parameter :: solver_is_ready_azalea     = 1
      integer, public, parameter :: solver_is_ready_gardenia   = 1
      integer, public, parameter :: solver_is_ready_narcissus  = 1
-     integer, public, parameter :: solver_is_ready_begonia    = 1
      integer, public, parameter :: solver_is_ready_lavender   = 1
-     integer, public, parameter :: solver_is_ready_camellia   = 1
-     integer, public, parameter :: solver_is_ready_pansy      = 1
      integer, public, parameter :: solver_is_ready_manjushaka = 1
 
 !!========================================================================
@@ -486,16 +479,6 @@
          real(dp) :: wc
      end type T_segment_narcissus
 
-! define type T_general_begonia, which is used to describe the ctqmc
-! impurity solver code begonia
-     public :: T_general_begonia
-     type, extends (T_general_solver) :: T_general_begonia
-         character(len=10) :: solver_name = 'BEGONIA'
-
-         integer :: nzero
-         integer :: npart
-     end type T_general_begonia
-
 ! define type T_general_lavender, which is used to describe the ctqmc
 ! impurity solver code lavender
      public :: T_general_lavender
@@ -514,35 +497,6 @@
          integer :: nbfrq
          integer :: npart
      end type T_general_lavender
-
-! define type T_general_camellia, which is used to describe the ctqmc
-! impurity solver code camellia
-     public :: T_general_camellia
-     type, extends (T_general_solver) :: T_general_camellia
-         character(len=10) :: solver_name = 'CAMELLIA'
-
-         integer :: isort
-         integer :: issus
-         integer :: isvrt
-         integer :: nzero
-         integer :: lemax
-         integer :: legrd
-         integer :: chmax
-         integer :: chgrd
-         integer :: nffrq
-         integer :: nbfrq
-         integer :: nvect
-         integer :: nleja
-     end type T_general_camellia
-
-! define type T_general_pansy, which is used to describe the ctqmc
-! impurity solver code pansy
-     public :: T_general_pansy
-     type, extends (T_general_solver) :: T_general_pansy
-         character(len=10) :: solver_name = 'PANSY'
-
-         integer :: npart
-     end type T_general_pansy
 
 ! define type T_general_manjushaka, which is used to describe the ctqmc
 ! impurity solver code manjushaka
