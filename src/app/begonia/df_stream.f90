@@ -1,4 +1,4 @@
-
+! parse input files, readin data
 
   subroutine df_config()
      implicit none
