@@ -41,6 +41,7 @@ CLIB = libMM.a
 
 objects = $(modc) $(dual) $(core) $(lev1) $(lev2) $(lev3)
 exe_obj = $(objects) $(main) $(CLIB)
+lib_obj = $(objects)
 
 default: all
 
