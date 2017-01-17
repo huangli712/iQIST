@@ -1,21 +1,42 @@
 
   subroutine df_run()
+     implicit none
+
+     return
   end subroutine df_run
 
-  subroutine cat_dual_wssf()
-  end subroutine cat_dual_wssf
+  subroutine df_dual_wssf()
+     implicit none
 
-  subroutine cat_dual_grnf()
-  end subroutine cat_dual_grnf()
+     return
+  end subroutine df_dual_wssf
 
-  subroutine cat_dual_sigf()
-  end subroutine cat_dual_sigf
+  subroutine df_dual_grnf()
+     implicit none
 
-  subroutine cat_latt_grnf()
-  end subroutine cat_latt_grnf
+     return
+  end subroutine df_dual_grnf()
 
-  subroutine cat_latt_sigf()
-  end subroutine cat_latt_sigf
+  subroutine df_dual_sigf()
+     implicit none
 
-  subroutine cat_full_vert()
-  end subroutine cat_full_vert
+     return
+  end subroutine df_dual_sigf
+
+  subroutine df_latt_grnf()
+     implicit none
+
+     return
+  end subroutine df_latt_grnf
+
+  subroutine df_latt_sigf()
+     implicit none
+
+     return
+  end subroutine df_latt_sigf
+
+  subroutine df_full_vert()
+     implicit none
+
+     return
+  end subroutine df_full_vert

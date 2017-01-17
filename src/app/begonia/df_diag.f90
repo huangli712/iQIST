@@ -1,6 +1,12 @@
 
   subroutine df_diagram()
+     implicit none
+
+     return
   end subroutine df_diagram
 
-  subroutine cat_bubble()
-  subroutine cat_bubble
+  subroutine df_bubble()
+     implicit none
+
+     return
+  subroutine df_bubble
