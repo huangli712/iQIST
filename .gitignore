@@ -21,10 +21,9 @@ atom.cix
 test.py
 test.f90
 ctqmc_open_py.f90
-hfqmc_open_py.f90
 atomic_open_py.f90
+src/app/begonia/df
 src/ctqmc/*/ctqmc
-src/hfqmc/*/hfqmc
 src/tools/hibiscus/entropy/entropy
 src/tools/hibiscus/stoch/sac
 src/tools/hibiscus/toolbox/mchi
