@@ -15,7 +15,7 @@
      implicit none
 
      return
-  end subroutine df_dual_grnf()
+  end subroutine df_dual_grnf
 
   subroutine df_dual_sigf()
      implicit none
