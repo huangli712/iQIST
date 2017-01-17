@@ -6,4 +6,5 @@
 
      implicit none
 
+     print *, 'Hello World!'
   end program df_main
