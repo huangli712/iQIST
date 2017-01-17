@@ -1,13 +1,13 @@
 ! calculate resulting observables
 
-  subroutine df_sp_susc()
+  subroutine df_spin_susc()
      implicit none
 
      return
-  end subroutine df_sp_susc
+  end subroutine df_spin_susc
 
-  subroutine df_ch_susc()
+  subroutine df_char_susc()
      implicit none
 
      return
-  end subroutine df_ch_susc
+  end subroutine df_char_susc
