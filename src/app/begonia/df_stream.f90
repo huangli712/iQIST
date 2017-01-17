@@ -12,6 +12,12 @@
      return
   end subroutine df_setup_array
 
+  subroutine df_vertex_init()
+     implicit none
+
+     return
+  end subroutine df_vertex_init
+
   subroutine df_final_array()
      implicit none
 
