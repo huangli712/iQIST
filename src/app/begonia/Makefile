@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/ctqmc/azalea directory.
+## Makefile for iqist/src/app/begonia directory.
 ##
 ## Usage
 ## =====
@@ -20,8 +20,8 @@
 ## History
 ## =======
 ##
-## 02/28/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 01/17/2017 by li huang (created)
+## 01/17/2017 by li huang (last modified)
 ##
 ##
 
@@ -29,16 +29,14 @@
 
 include ../../../build/make.sys
 
-modc = ctqmc_control.o ctqmc_context.o
-dmft = ctqmc_dmft.o
-core = ctqmc_solver.o
-lev1 = ctqmc_flavor.o ctqmc_update.o
-lev2 = ctqmc_record.o ctqmc_status.o ctqmc_stream.o ctqmc_util.o
-lev3 = ctqmc_dump.o ctqmc_print.o
-main = ctqmc_main.o
-open = ctqmc_open.o
+modc = df_control.o df_context.o
+dual = df_diag.o
+core = df_core.o
+lev1 = df_solver.o df_susc.o
+lev2 = df_stream.o df_util.o
+lev3 = df_dump.o df_print.o
+main = df_main.o
 
-CAPI = ctqmc_api.o
 CLIB = libMM.a
 
 objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3)
