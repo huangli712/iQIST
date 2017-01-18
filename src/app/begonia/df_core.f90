@@ -5,11 +5,23 @@
      return
   end subroutine df_run
 
-  subroutine df_dual_wssf()
+  subroutine df_dmft_grnf()
      implicit none
 
      return
-  end subroutine df_dual_wssf
+  end subroutine df_dmft_grnf
+  
+  subroutine df_dmft_sigf()
+     implicit none
+
+     return
+  end subroutine df_dmft_sigf
+
+  subroutine df_dmft_hybf()
+     implicit none
+
+     return
+  end subroutine df_dmft_hybf
 
   subroutine df_dual_grnf()
      implicit none
@@ -22,6 +34,12 @@
 
      return
   end subroutine df_dual_sigf
+
+  subroutine df_dual_wssf()
+     implicit none
+
+     return
+  end subroutine df_dual_wssf
 
   subroutine df_latt_grnf()
      implicit none
