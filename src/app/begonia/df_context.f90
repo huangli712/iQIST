@@ -16,6 +16,7 @@
 ! dmft hybridization function
      complex(dp), public, save, allocatable :: dmft_h(:,:)
 
+
 !! dual variables
 ! dual green's function
      complex(dp), public, save, allocatable :: dual_g(:,:,:)
@@ -29,10 +30,10 @@
 
 !! lattice variables
 ! lattice green's function
-     complex(dp), public, save, allocatable :: latt_g(:,:)
+     complex(dp), public, save, allocatable :: latt_g(:,:,:)
 
 ! lattice self-energy function
-     complex(dp), public, save, allocatable :: latt_s(:,:)
+     complex(dp), public, save, allocatable :: latt_s(:,:,:)
 
 
 !! vertex variables
@@ -58,6 +59,9 @@
      allocate(dual_s(nkpts,nffrq,norbs), stat=istat)
      allocate(dual_b(nkpts,nffrq,norbs), stat=istat)
 
+     allocate(latt_g(nkpts,nffrq,norbs), stat=istat)
+     allocate(latt_s(nkpts,nffrq,norbs), stat=istat)
+
      allocate(vertex_d(nffrq,nffrq,nbfrq,norbs), stat=istat)
      allocate(vertex_m(nffrq,nffrq,nbfrq,norbs), stat=istat)
 
@@ -72,6 +76,9 @@
      dual_g = czero
      dual_s = czero
      dual_b = czero
+
+     latt_g = czero
+     latt_s = czero
 
      vertex_d = czero
      vertex_m = czero
@@ -89,6 +96,9 @@
      if ( allocated(dual_g) ) deallocate(dual_g)
      if ( allocated(dual_s) ) deallocate(dual_s)
      if ( allocated(dual_b) ) deallocate(dual_b)
+
+     if ( allocated(latt_g) ) deallocate(latt_g)
+     if ( allocated(latt_s) ) deallocate(latt_s)
 
      if ( allocated(vertex_d) ) deallocate(vertex_d)
      if ( allocated(vertex_m) ) deallocate(vertex_m)
