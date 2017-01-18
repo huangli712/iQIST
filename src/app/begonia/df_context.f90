@@ -61,6 +61,10 @@
   subroutine df_deallocate_memory()
      implicit none
 
+     if ( allocated(dmft_g), stat=istat )
+     if ( allocated(dmft_s), stat=istat )
+     if ( allocated(dmft_h), stat=istat )
+
      return
   end subroutine df_deallocate_memory
 
