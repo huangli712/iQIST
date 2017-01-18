@@ -46,7 +46,8 @@
      real(dp), public, save :: part  = 0.50_dp
 
 ! mixing parameter for dynamical mean field theory self-consistent engine
-     real(dp), public, save :: alpha = 0.70_dp
+     real(dp), public, save :: bsmix = 0.70_dp
+     real(dp), public, save :: dfmix = 0.70_dp
 
 !!========================================================================
 !!>>> MPI related common variables                                     <<<
