@@ -43,6 +43,18 @@
   subroutine df_allocate_memory()
      implicit none
 
+     allocate(dmft_g(nffrq,norbs), stat=istat)
+     allocate(dmft_s(nffrq,norbs), stat=istat)
+     allocate(dmft_h(nffrq,norbs), stat=istat)
+
+     if ( istat /= 0 ) then
+         call s_print_error('df_allocate_memory','can not allocate enough memory')
+     endif
+
+     dmft_g = czero
+     dmft_s = czero
+     dmft_h = czero
+
      return
   end subroutine df_allocate_memory
 
