@@ -12,11 +12,23 @@
      return
   end subroutine df_setup_array
 
-  subroutine df_dmfvar_init()
+  subroutine df_dmfter_init()
      implicit none
 
      return
-  end subroutine df_dmfvar_init
+  end subroutine df_dmfter_init
+
+  subroutine df_latter_init()
+     implicit none
+
+     return
+  end subroutine df_latter_init
+
+  subroutine df_mesher_init()
+     implicit none
+
+     return
+  end subroutine df_mesher_init
 
   subroutine df_vertex_init()
      implicit none
