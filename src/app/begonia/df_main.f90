@@ -39,6 +39,8 @@
 
      call df_vertex_init()
 
+     call df_run()
+
      call df_final_array()
 
      if ( myid == master ) then
