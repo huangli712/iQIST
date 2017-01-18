@@ -30,6 +30,11 @@
 ! number of bosonic frequncy for the two-particle green's function
      integer, public, save :: nbfrq  = 8
 
+     integer, public, save :: nkp_x  = 2
+     integer, public, save :: nkp_y  = 2
+     integer, public, save :: nkp_z  = 2
+     integer, public, save :: nkpts  = 8
+
 !!========================================================================
 !!>>> real variables                                                   <<<
 !!========================================================================

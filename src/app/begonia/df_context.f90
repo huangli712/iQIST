@@ -19,13 +19,13 @@
 
 !! dual variables
 ! dual green's function
-     complex(dp), public, save, allocatable :: dual_g(:,:)
+     complex(dp), public, save, allocatable :: dual_g(:,:,:)
 
 ! dual self-energy function
-     complex(dp), public, save, allocatable :: dual_s(:,:)
+     complex(dp), public, save, allocatable :: dual_s(:,:,:)
 
 ! dual bare green's function
-     complex(dp), public, save, allocatable :: dual_b(:,:)
+     complex(dp), public, save, allocatable :: dual_b(:,:,:)
 
 
 !! lattice variables
