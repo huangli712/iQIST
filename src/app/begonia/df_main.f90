@@ -22,6 +22,29 @@
 
 # endif  /* MPI */
 
+
+     if ( myid == master ) then
+         call df_print_header()
+     endif
+
+     call df_config()
+
+     if ( myid == master ) then
+         call df_print_summary()
+     endif
+
+     call df_setup_array()
+
+     call df_dmfvar_init()
+
+     call df_vertex_init()
+
+     call df_final_array()
+
+     if ( myid == master ) then
+         call df_print_footer()
+     endif
+
 ! finalize mpi envirnoment
 # if defined (MPI)
 
@@ -33,5 +56,4 @@
 
 # endif  /* MPI */
 
-     print *, 'Hello World!'
   end program df_main
