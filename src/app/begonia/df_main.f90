@@ -22,7 +22,6 @@
 
 # endif  /* MPI */
 
-
      if ( myid == master ) then
          call df_print_header()
      endif
