@@ -35,8 +35,9 @@
 
      call df_setup_array()
 
-     call df_dmfvar_init()
-
+     call df_mesher_init()
+     call df_latter_init()
+     call df_dmfter_init()
      call df_vertex_init()
 
      call df_run()
