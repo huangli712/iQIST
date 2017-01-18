@@ -9,7 +9,7 @@
 !!========================================================================
 
 ! the code name of the current ctqmc impurity solver
-     character(len = 06), public, save :: cname = 'BEGONIA'
+     character(len = 07), public, save :: cname = 'BEGONIA'
 
 !!========================================================================
 !!>>> integer variables                                                <<<
