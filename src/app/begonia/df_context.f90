@@ -1,6 +1,6 @@
 
   module df_context
-     use constants, only : dp
+     use constants
 
      use df_control
 
@@ -61,9 +61,9 @@
   subroutine df_deallocate_memory()
      implicit none
 
-     if ( allocated(dmft_g), stat=istat )
-     if ( allocated(dmft_s), stat=istat )
-     if ( allocated(dmft_h), stat=istat )
+     if ( allocated(dmft_g) ) deallocate(dmft_g)
+     if ( allocated(dmft_s) ) deallocate(dmft_s)
+     if ( allocated(dmft_h) ) deallocate(dmft_h)
 
      return
   end subroutine df_deallocate_memory
