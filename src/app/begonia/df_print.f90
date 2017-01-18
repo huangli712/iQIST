@@ -1,7 +1,42 @@
 
 
   subroutine df_print_header()
+     use constants, only : mystd
+
+     use df_control, only : cname
+     use df_control, only : nprocs
+
      implicit none
+
+! string for current date and time
+     character (len = 20) :: date_time_string
+
+! obtain current date and time
+     call s_time_builder(date_time_string)
+
+     write(mystd,'(2X,a)') cname
+     write(mystd,'(2X,a)') '>>> A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
+     write(mystd,*)
+
+     write(mystd,'(2X,a)') 'Version: 2016.02.13T '//'(built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+     write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
+     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
+     write(mystd,*)
+
+     write(mystd,'(2X,a)') cname//' >>> start running at '//date_time_string
+
+# if defined (MPI)
+
+     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: Yes >>> processors:', nprocs
+
+# else   /* MPI */
+
+     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: No  >>> processors:', 1
+
+# endif  /* MPI */
+
+     write(mystd,*)
 
      return
   end subroutine df_print_header
