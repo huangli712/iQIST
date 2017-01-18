@@ -1,4 +1,22 @@
 
+  subroutine df_dump_dmft_grnf()
+     implicit none
+
+     return
+  end subroutine df_dump_dmft_grnf
+
+  subroutine df_dump_dmft_sigf()
+     implicit none
+
+     return
+  end subroutine df_dump_dmft_sigf
+
+  subroutine df_dump_dmft_hybf()
+     implicit none
+
+     return
+  end subroutine df_dump_dmft_hybf
+
   subroutine df_dump_dual_grnf()
      implicit none
 
