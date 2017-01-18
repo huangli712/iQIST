@@ -35,6 +35,14 @@
 ! lattice self-energy function
      complex(dp), public, save, allocatable :: latt_s(:,:)
 
+
+!! vertex variables
+! density vertex
+     complex(dp), public, save, allocatable :: vertex_d(:,:,:,:)
+
+! magnetic vertex
+     complex(dp), public, save, allocatable :: vertex_m(:,:,:,:)
+
      public :: df_allocate_memory
      public :: df_deallocate_memory
 
@@ -47,6 +55,9 @@
      allocate(dmft_s(nffrq,norbs), stat=istat)
      allocate(dmft_h(nffrq,norbs), stat=istat)
 
+     allocate(vertex_d(nffrq,nffrq,nbfrq,norbs), stat=istat)
+     allocate(vertex_m(nffrq,nffrq,nbfrq,norbs), stat=istat)
+
      if ( istat /= 0 ) then
          call s_print_error('df_allocate_memory','can not allocate enough memory')
      endif
@@ -54,6 +65,9 @@
      dmft_g = czero
      dmft_s = czero
      dmft_h = czero
+
+     vertex_d = czero
+     vertex_m = czero
 
      return
   end subroutine df_allocate_memory
@@ -64,6 +78,9 @@
      if ( allocated(dmft_g) ) deallocate(dmft_g)
      if ( allocated(dmft_s) ) deallocate(dmft_s)
      if ( allocated(dmft_h) ) deallocate(dmft_h)
+
+     if ( allocated(vertex_d) ) deallocate(vertex_d)
+     if ( allocated(vertex_m) ) deallocate(vertex_m)
 
      return
   end subroutine df_deallocate_memory
