@@ -8,7 +8,7 @@
 !!>>> character variables                                              <<<
 !!========================================================================
 
-! the code name of the current ctqmc impurity solver
+! the code name of the current dual fermion framework
      character(len = 07), public, save :: cname = 'BEGONIA'
 
 !!========================================================================
