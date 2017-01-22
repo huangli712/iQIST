@@ -1,4 +1,11 @@
+
+!!========================================================================
+!!>>> module df_dmft                                                   <<<
+!!========================================================================
+
   module df_dmft
+     use constants, only : dp
+
      implicit none
 
 !! dmft variables
@@ -13,7 +20,13 @@
 
   end module df_dmft
 
+!!========================================================================
+!!>>> module df_dual                                                   <<<
+!!========================================================================
+
   module df_dual
+     use constants, only : dp
+
      implicit none
 
 !! dual variables
@@ -28,7 +41,13 @@
 
   end module df_dual
 
+!!========================================================================
+!!>>> module df_latt                                                   <<<
+!!========================================================================
+
   module df_latt
+     use constants, only : dp
+
      implicit none
 
 !! lattice variables
@@ -40,39 +59,66 @@
 
   end module df_latt
 
+!!========================================================================
+!!>>> module df_vert                                                   <<<
+!!========================================================================
+
   module df_vert
+     use constants, only : dp
+
      implicit none
 
 !! vertex variables
 ! density vertex
-     complex(dp), public, save, allocatable :: vertex_d(:,:,:,:)
+     complex(dp), public, save, allocatable :: vert_d(:,:,:,:)
 
 ! magnetic vertex
-     complex(dp), public, save, allocatable :: vertex_m(:,:,:,:)
+     complex(dp), public, save, allocatable :: vert_m(:,:,:,:)
 
   end module df_vert
+
+!!========================================================================
+!!>>> module df_context                                                <<<
+!!========================================================================
 
   module df_context
      use constants
 
      use df_control
 
+     use df_dmft
+     use df_dual
+     use df_latt
+     use df_vert
+
+!!========================================================================
+!!>>> declare global variables                                         <<<
+!!========================================================================
+
+! status flag
      integer, private :: istat
 
+!!========================================================================
+!!>>> declare accessibility for module routines                        <<<
+!!========================================================================
 
+! declaration of module procedures: allocate memory
+     public :: df_allocate_memory_dmft
+     public :: df_allocate_memory_dual
+     public :: df_allocate_memory_latt
+     public :: df_allocate_memory_vert
 
+! declaration of module procedures: deallocate memory
+     public :: df_deallocate_memory_dmft
+     public :: df_deallocate_memory_dual
+     public :: df_deallocate_memory_latt
+     public :: df_deallocate_memory_vert
 
+  contains ! encapsulated functionality
 
-
-
-
-
-
-
-     public :: df_allocate_memory
-     public :: df_deallocate_memory
-
-  contains
+!!========================================================================
+!!>>> allocate memory subroutines                                      <<<
+!!========================================================================
 
   subroutine df_allocate_memory()
      implicit none
@@ -111,6 +157,10 @@
 
      return
   end subroutine df_allocate_memory
+
+!!========================================================================
+!!>>> deallocate memory subroutines                                    <<<
+!!========================================================================
 
   subroutine df_deallocate_memory()
      implicit none
