@@ -16,15 +16,39 @@
   module df_dual
      implicit none
 
+!! dual variables
+! dual green's function
+     complex(dp), public, save, allocatable :: dual_g(:,:,:)
+
+! dual self-energy function
+     complex(dp), public, save, allocatable :: dual_s(:,:,:)
+
+! dual bare green's function
+     complex(dp), public, save, allocatable :: dual_b(:,:,:)
+
   end module df_dual
 
   module df_latt
      implicit none
 
+!! lattice variables
+! lattice green's function
+     complex(dp), public, save, allocatable :: latt_g(:,:,:)
+
+! lattice self-energy function
+     complex(dp), public, save, allocatable :: latt_s(:,:,:)
+
   end module df_latt
 
   module df_vert
      implicit none
+
+!! vertex variables
+! density vertex
+     complex(dp), public, save, allocatable :: vertex_d(:,:,:,:)
+
+! magnetic vertex
+     complex(dp), public, save, allocatable :: vertex_m(:,:,:,:)
 
   end module df_vert
 
@@ -38,31 +62,12 @@
 
 
 
-!! dual variables
-! dual green's function
-     complex(dp), public, save, allocatable :: dual_g(:,:,:)
-
-! dual self-energy function
-     complex(dp), public, save, allocatable :: dual_s(:,:,:)
-
-! dual bare green's function
-     complex(dp), public, save, allocatable :: dual_b(:,:,:)
 
 
-!! lattice variables
-! lattice green's function
-     complex(dp), public, save, allocatable :: latt_g(:,:,:)
-
-! lattice self-energy function
-     complex(dp), public, save, allocatable :: latt_s(:,:,:)
 
 
-!! vertex variables
-! density vertex
-     complex(dp), public, save, allocatable :: vertex_d(:,:,:,:)
 
-! magnetic vertex
-     complex(dp), public, save, allocatable :: vertex_m(:,:,:,:)
+
 
      public :: df_allocate_memory
      public :: df_deallocate_memory
