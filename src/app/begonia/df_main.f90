@@ -34,10 +34,10 @@
 
      call df_setup_array()
 
-     call df_mesher_init()
-     call df_latter_init()
-     call df_dmfter_init()
-     call df_vertex_init()
+     call df_mesh_init()
+     call df_latt_init()
+     call df_dmft_init()
+     call df_vert_init()
 
      call df_run()
 
