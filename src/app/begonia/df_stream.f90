@@ -44,7 +44,15 @@
   end subroutine df_vert_init
 
   subroutine df_final_array()
+     use df_context ! ALL
+
      implicit none
+
+! deallocate memory for df_context module
+     call df_deallocate_memory_dmft()
+     call df_deallocate_memory_dual()
+     call df_deallocate_memory_latt()
+     call df_deallocate_memory_vert()
 
      return
   end subroutine df_final_array
