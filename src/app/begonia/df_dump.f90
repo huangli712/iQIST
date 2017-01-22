@@ -1,37 +1,33 @@
 
-  subroutine df_dump_dmft_grnf()
-     implicit none
+  subroutine df_dump_dmft_grnf(rmesh, grnf)
+     use constants, only : dp, zero, mytmp
 
-     use constants, only : dp, mytmp
-
-     use control, only : norbs
-     use control, only : mfreq
+     use df_control, only : norbs
+     use df_control, only : nffrq
 
      implicit none
 
 ! external arguments
 ! matsubara frequency mesh
-     real(dp), intent(in)    :: rmesh(mfreq)
+     real(dp), intent(in)    :: rmesh(nffrq)
 
 ! impurity green's function
-     complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
-     complex(dp), intent(in) :: gerr(mfreq,norbs,norbs)
+     complex(dp), intent(in) :: grnf(nffrq,norbs)
 
 ! local variables
 ! loop index
      integer :: i
      integer :: j
 
-! open data file: solver.grn.dat
-     open(mytmp, file='solver.grn.dat', form='formatted', status='unknown')
+! open data file: df.dmft_g.dat
+     open(mytmp, file='df.dmft_g.dat', form='formatted', status='unknown')
 
 ! write it
      do i=1,norbs
-         do j=1,mfreq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-              real(grnf(j,i,i)), aimag(grnf(j,i,i)), &
-              real(gerr(j,i,i)), aimag(gerr(j,i,i))
-         enddo ! over j={1,mfreq} loop
+         do j=1,nffrq
+             write(mytmp,'(i6,5f16.8)') &
+                 i, rmesh(j), real(grnf(j,i)), aimag(grnf(j,i)), zero, zero
+         enddo ! over j={1,nffrq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
      enddo ! over i={1,norbs} loop
