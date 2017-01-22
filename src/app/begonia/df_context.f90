@@ -1,10 +1,5 @@
-
-  module df_context
-     use constants
-
-     use df_control
-
-     integer, private :: istat
+  module df_dmft
+     implicit none
 
 !! dmft variables
 ! dmft green's function
@@ -15,6 +10,32 @@
 
 ! dmft hybridization function
      complex(dp), public, save, allocatable :: dmft_h(:,:)
+
+  end module df_dmft
+
+  module df_dual
+     implicit none
+
+  end module df_dual
+
+  module df_latt
+     implicit none
+
+  end module df_latt
+
+  module df_vert
+     implicit none
+
+  end module df_vert
+
+  module df_context
+     use constants
+
+     use df_control
+
+     integer, private :: istat
+
+
 
 
 !! dual variables
