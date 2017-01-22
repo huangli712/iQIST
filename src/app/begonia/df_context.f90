@@ -127,33 +127,13 @@
      allocate(dmft_s(nffrq,norbs), stat=istat)
      allocate(dmft_h(nffrq,norbs), stat=istat)
 
-     allocate(dual_g(nkpts,nffrq,norbs), stat=istat)
-     allocate(dual_s(nkpts,nffrq,norbs), stat=istat)
-     allocate(dual_b(nkpts,nffrq,norbs), stat=istat)
-
-     allocate(latt_g(nkpts,nffrq,norbs), stat=istat)
-     allocate(latt_s(nkpts,nffrq,norbs), stat=istat)
-
-     allocate(vertex_d(nffrq,nffrq,nbfrq,norbs), stat=istat)
-     allocate(vertex_m(nffrq,nffrq,nbfrq,norbs), stat=istat)
-
      if ( istat /= 0 ) then
-         call s_print_error('df_allocate_memory','can not allocate enough memory')
+         call s_print_error('df_allocate_memory_dmft','can not allocate enough memory')
      endif
 
      dmft_g = czero
      dmft_s = czero
      dmft_h = czero
-
-     dual_g = czero
-     dual_s = czero
-     dual_b = czero
-
-     latt_g = czero
-     latt_s = czero
-
-     vertex_d = czero
-     vertex_m = czero
 
      return
   end subroutine df_allocate_memory_dmft
@@ -161,37 +141,17 @@
   subroutine df_allocate_memory_dual()
      implicit none
 
-     allocate(dmft_g(nffrq,norbs), stat=istat)
-     allocate(dmft_s(nffrq,norbs), stat=istat)
-     allocate(dmft_h(nffrq,norbs), stat=istat)
-
      allocate(dual_g(nkpts,nffrq,norbs), stat=istat)
      allocate(dual_s(nkpts,nffrq,norbs), stat=istat)
      allocate(dual_b(nkpts,nffrq,norbs), stat=istat)
 
-     allocate(latt_g(nkpts,nffrq,norbs), stat=istat)
-     allocate(latt_s(nkpts,nffrq,norbs), stat=istat)
-
-     allocate(vertex_d(nffrq,nffrq,nbfrq,norbs), stat=istat)
-     allocate(vertex_m(nffrq,nffrq,nbfrq,norbs), stat=istat)
-
      if ( istat /= 0 ) then
-         call s_print_error('df_allocate_memory','can not allocate enough memory')
+         call s_print_error('df_allocate_memory_dual','can not allocate enough memory')
      endif
-
-     dmft_g = czero
-     dmft_s = czero
-     dmft_h = czero
 
      dual_g = czero
      dual_s = czero
      dual_b = czero
-
-     latt_g = czero
-     latt_s = czero
-
-     vertex_d = czero
-     vertex_m = czero
 
      return
   end subroutine df_allocate_memory_dual
