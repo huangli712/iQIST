@@ -224,19 +224,8 @@
   subroutine df_deallocate_memory_vert()
      implicit none
 
-     if ( allocated(dmft_g) ) deallocate(dmft_g)
-     if ( allocated(dmft_s) ) deallocate(dmft_s)
-     if ( allocated(dmft_h) ) deallocate(dmft_h)
-
-     if ( allocated(dual_g) ) deallocate(dual_g)
-     if ( allocated(dual_s) ) deallocate(dual_s)
-     if ( allocated(dual_b) ) deallocate(dual_b)
-
-     if ( allocated(latt_g) ) deallocate(latt_g)
-     if ( allocated(latt_s) ) deallocate(latt_s)
-
-     if ( allocated(vertex_d) ) deallocate(vertex_d)
-     if ( allocated(vertex_m) ) deallocate(vertex_m)
+     if ( allocated(vert_d) ) deallocate(vert_d)
+     if ( allocated(vert_m) ) deallocate(vert_m)
 
      return
   end subroutine df_deallocate_memory_vert
