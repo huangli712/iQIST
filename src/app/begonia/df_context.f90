@@ -192,7 +192,7 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-  subroutine df_deallocate_memory()
+  subroutine df_deallocate_memory_dmft()
      implicit none
 
      if ( allocated(dmft_g) ) deallocate(dmft_g)
@@ -210,6 +210,66 @@
      if ( allocated(vertex_m) ) deallocate(vertex_m)
 
      return
-  end subroutine df_deallocate_memory
+  end subroutine df_deallocate_memory_dmft
+
+  subroutine df_deallocate_memory_dual()
+     implicit none
+
+     if ( allocated(dmft_g) ) deallocate(dmft_g)
+     if ( allocated(dmft_s) ) deallocate(dmft_s)
+     if ( allocated(dmft_h) ) deallocate(dmft_h)
+
+     if ( allocated(dual_g) ) deallocate(dual_g)
+     if ( allocated(dual_s) ) deallocate(dual_s)
+     if ( allocated(dual_b) ) deallocate(dual_b)
+
+     if ( allocated(latt_g) ) deallocate(latt_g)
+     if ( allocated(latt_s) ) deallocate(latt_s)
+
+     if ( allocated(vertex_d) ) deallocate(vertex_d)
+     if ( allocated(vertex_m) ) deallocate(vertex_m)
+
+     return
+  end subroutine df_deallocate_memory_dual
+
+  subroutine df_deallocate_memory_latt()
+     implicit none
+
+     if ( allocated(dmft_g) ) deallocate(dmft_g)
+     if ( allocated(dmft_s) ) deallocate(dmft_s)
+     if ( allocated(dmft_h) ) deallocate(dmft_h)
+
+     if ( allocated(dual_g) ) deallocate(dual_g)
+     if ( allocated(dual_s) ) deallocate(dual_s)
+     if ( allocated(dual_b) ) deallocate(dual_b)
+
+     if ( allocated(latt_g) ) deallocate(latt_g)
+     if ( allocated(latt_s) ) deallocate(latt_s)
+
+     if ( allocated(vertex_d) ) deallocate(vertex_d)
+     if ( allocated(vertex_m) ) deallocate(vertex_m)
+
+     return
+  end subroutine df_deallocate_memory_latt
+
+  subroutine df_deallocate_memory_vert()
+     implicit none
+
+     if ( allocated(dmft_g) ) deallocate(dmft_g)
+     if ( allocated(dmft_s) ) deallocate(dmft_s)
+     if ( allocated(dmft_h) ) deallocate(dmft_h)
+
+     if ( allocated(dual_g) ) deallocate(dual_g)
+     if ( allocated(dual_s) ) deallocate(dual_s)
+     if ( allocated(dual_b) ) deallocate(dual_b)
+
+     if ( allocated(latt_g) ) deallocate(latt_g)
+     if ( allocated(latt_s) ) deallocate(latt_s)
+
+     if ( allocated(vertex_d) ) deallocate(vertex_d)
+     if ( allocated(vertex_m) ) deallocate(vertex_m)
+
+     return
+  end subroutine df_deallocate_memory_vert
 
   end module df_context
