@@ -2,6 +2,9 @@
   subroutine df_run()
      implicit none
 
+     do df_it=1,ndfit
+     enddo
+
      return
   end subroutine df_run
 

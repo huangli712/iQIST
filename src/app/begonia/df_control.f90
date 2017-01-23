@@ -35,6 +35,9 @@
      integer, public, save :: nkp_z  = 2
      integer, public, save :: nkpts  = 8
 
+     integer, public, save :: ndfit  = 100
+     integer, public, save :: nbsit  = 100
+
 !!========================================================================
 !!>>> real variables                                                   <<<
 !!========================================================================
