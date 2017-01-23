@@ -39,11 +39,17 @@
 
      open(mytmp, file = 'df.dmft_g.in', form = 'formatted', status = 'unknown')
      do i=1,nffrq
+         read(mytmp,*) r1, r2, c1, c2
+         dmft_g(i,1) = dcmplx(c1, c2)
+         dmft_g(i,2) = dcmplx(c1, c2)
      enddo ! over i={1,nffrq} loop
      close(mytmp)
 
      open(mytmp, file = 'df.dmft_h.in', form = 'formatted', status = 'unknown')
      do i=1,nffrq
+         read(mytmp,*) r1, r2, c1, c2
+         dmft_h(i,1) = dcmplx(c1, c2)
+         dmft_h(i,2) = dcmplx(c1, c2)
      enddo ! over i={1,nffrq} loop
      close(mytmp)
 
