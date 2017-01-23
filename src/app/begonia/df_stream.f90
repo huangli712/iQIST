@@ -33,7 +33,18 @@
 
      implicit none
 
+     integer  :: i
+     real(dp) :: r1, r2
+     real(dp) :: c1, c2
+
      open(mytmp, file = 'df.dmft_g.in', form = 'formatted', status = 'unknown')
+     do i=1,nffrq
+     enddo ! over i={1,nffrq} loop
+     close(mytmp)
+
+     open(mytmp, file = 'df.dmft_h.in', form = 'formatted', status = 'unknown')
+     do i=1,nffrq
+     enddo ! over i={1,nffrq} loop
      close(mytmp)
 
      return
