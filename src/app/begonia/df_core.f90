@@ -2,8 +2,27 @@
   subroutine df_run()
      implicit none
 
+     integer :: df_it
+     integer :: bs_it
+
+     call df_dual_wssf()
      do df_it=1,ndfit
+         call df_bubble()
+
+         do bs_it=1,nbsit
+             call df_full_vert()
+         enddo
+
+         call df_diagram()
+         call df_dual_sigf()
+         call df_dual_grnf()
      enddo
+     call df_latt_grnf()
+     call df_latt_sigf()
+
+     call df_dmft_grnf()
+     call df_dmft_sigf()
+     call df_dmft_hybf()
 
      return
   end subroutine df_run
