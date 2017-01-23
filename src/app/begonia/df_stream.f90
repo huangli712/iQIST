@@ -1,6 +1,12 @@
 ! parse input files, readin data
   subroutine df_config()
+     use df_control
+
      implicit none
+
+! only for debug
+     nffrq = 16
+     nbfrq = 7
 
      return
   end subroutine df_config
