@@ -77,8 +77,41 @@
      return
   end subroutine df_dump_dmft_sigf
 
-  subroutine df_dump_dmft_hybf()
+  subroutine df_dump_dmft_hybf(rmesh, hybf)
+     use constants, only : dp, zero, mytmp
+
+     use df_control, only : norbs
+     use df_control, only : nffrq
+
      implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(nffrq)
+
+! impurity hybridization function
+     complex(dp), intent(in) :: hybf(nffrq,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: df.dmft_h.dat
+     open(mytmp, file='df.dmft_h.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,nffrq
+             write(mytmp,'(i6,5f16.8)') &
+                 i, rmesh(j), real(hybf(j,i)), aimag(hybf(j,i)), zero, zero
+         enddo ! over j={1,nffrq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
 
      return
   end subroutine df_dump_dmft_hybf
