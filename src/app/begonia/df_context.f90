@@ -70,10 +70,10 @@
 
 !! vertex variables
 ! density vertex
-     complex(dp), public, save, allocatable :: vert_d(:,:,:,:)
+     complex(dp), public, save, allocatable :: vert_d(:,:,:)
 
 ! magnetic vertex
-     complex(dp), public, save, allocatable :: vert_m(:,:,:,:)
+     complex(dp), public, save, allocatable :: vert_m(:,:,:)
 
   end module df_vert
 
@@ -175,8 +175,8 @@
   subroutine df_allocate_memory_vert()
      implicit none
 
-     allocate(vert_d(nffrq,nffrq,nbfrq,norbs), stat=istat)
-     allocate(vert_m(nffrq,nffrq,nbfrq,norbs), stat=istat)
+     allocate(vert_d(nffrq,nffrq,nbfrq), stat=istat)
+     allocate(vert_m(nffrq,nffrq,nbfrq), stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('df_allocate_memory_vert','can not allocate enough memory')
