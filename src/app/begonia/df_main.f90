@@ -35,8 +35,9 @@
      call df_setup_array()
 
      call df_mesh_init()
-     call df_latt_init()
      call df_dmft_init()
+     call df_dual_init()
+     call df_latt_init()
      call df_vert_init()
 
      call df_run()
