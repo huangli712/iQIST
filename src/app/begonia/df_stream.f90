@@ -64,13 +64,26 @@
      enddo ! over i={1,nffrq} loop
      close(mytmp)
 
-! read in vertex function
+! read in vertex function, density channel
      open(mytmp, file = 'df.vert_d.in', form = 'formatted', status = 'unknown')
      do i=1,nbfrq
          do if1=1,nffrq
              do if2=1,nffrq
                  read(mytmp,*) r1, r2, c1, c2, d1, d2, v1, v2
                  vert_d(if2,if1,i) = dcmplx(v1, v2)
+             enddo ! over if2={1,nffrq} loop
+             read(mytmp,*) ! skip one line
+         enddo ! over if1={1,nffrq} loop
+     enddo ! over i={1,nbfrq} loop
+     close(mytmp)
+
+! read in vertex function, magentic channel
+     open(mytmp, file = 'df.vert_m.in', form = 'formatted', status = 'unknown')
+     do i=1,nbfrq
+         do if1=1,nffrq
+             do if2=1,nffrq
+                 read(mytmp,*) r1, r2, c1, c2, d1, d2, v1, v2
+                 vert_m(if2,if1,i) = dcmplx(v1, v2)
              enddo
              read(mytmp,*) ! skip one line
          enddo
