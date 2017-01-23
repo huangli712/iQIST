@@ -40,8 +40,11 @@
      implicit none
 
      integer  :: i
+     integer  :: if1, if2
      real(dp) :: r1, r2
      real(dp) :: c1, c2
+     real(dp) :: d1, d2
+     real(dp) :: v1, v2
 
 ! read in impurity green's function
      open(mytmp, file = 'df.dmft_g.in', form = 'formatted', status = 'unknown')
@@ -62,6 +65,17 @@
      close(mytmp)
 
 ! read in vertex function
+     open(mytmp, file = 'df.vert_d.in', form = 'formatted', status = 'unknown')
+     do i=1,nbfrq
+         do if1=1,nffrq
+             do if2=1,nffrq
+                 read(mytmp,*) r1, r2, c1, c2, d1, d2, v1, v2
+                 vert_d(i,if1,if2) = dcmplx(v1,v2)
+             enddo
+             read(mytmp,*) ! skip one line
+         enddo
+     enddo
+     close(mytmp)
 
      return
   end subroutine df_dmft_init
