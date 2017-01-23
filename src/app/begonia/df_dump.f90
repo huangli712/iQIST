@@ -38,8 +38,41 @@
      return
   end subroutine df_dump_dmft_grnf
 
-  subroutine df_dump_dmft_sigf()
+  subroutine df_dump_dmft_sigf(rmesh, sigf)
+     use constants, only : dp, zero, mytmp
+
+     use df_control, only : norbs
+     use df_control, only : nffrq
+
      implicit none
+
+! external arguments
+! matsubara frequency mesh
+     real(dp), intent(in)    :: rmesh(nffrq)
+
+! impurity self-energy function
+     complex(dp), intent(in) :: sigf(nffrq,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: df.dmft_s.dat
+     open(mytmp, file='df.dmft_s.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,nffrq
+             write(mytmp,'(i6,5f16.8)') &
+                 i, rmesh(j), real(sigf(j,i)), aimag(sigf(j,i)), zero, zero
+         enddo ! over j={1,nffrq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
 
      return
   end subroutine df_dump_dmft_sigf
