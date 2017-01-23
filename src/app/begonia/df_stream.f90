@@ -70,7 +70,7 @@
          do if1=1,nffrq
              do if2=1,nffrq
                  read(mytmp,*) r1, r2, c1, c2, d1, d2, v1, v2
-                 vert_d(i,if1,if2) = dcmplx(v1,v2)
+                 vert_d(if2,if1,i) = dcmplx(v1, v2)
              enddo
              read(mytmp,*) ! skip one line
          enddo
