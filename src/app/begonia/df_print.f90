@@ -70,7 +70,15 @@
   end subroutine df_print_footer
 
   subroutine df_print_summary()
+     use constants, only : mystd, ev2k
+
+     use df_control ! ALL
+
      implicit none
+
+     write(mystd,'(2X,a)') cname//' >>> parameters list:'
+
+     write(mystd,*)
 
      return
   end subroutine df_print_summary

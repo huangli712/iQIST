@@ -25,17 +25,23 @@
      return
   end subroutine df_mesh_init
 
-  subroutine df_latt_init()
-     implicit none
-
-     return
-  end subroutine df_latt_init
-
   subroutine df_dmft_init()
      implicit none
 
      return
   end subroutine df_dmft_init
+
+  subroutine df_dual_init()
+     implicit none
+
+     return
+  end subroutine df_dual_init
+
+  subroutine df_latt_init()
+     implicit none
+
+     return
+  end subroutine df_latt_init
 
   subroutine df_vert_init()
      implicit none
