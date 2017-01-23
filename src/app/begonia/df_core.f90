@@ -26,6 +26,9 @@
      call df_dmft_sigf()
      call df_dmft_hybf()
 
+     call df_spin_susc()
+     call df_char_susc()
+
      return
   end subroutine df_run
 
