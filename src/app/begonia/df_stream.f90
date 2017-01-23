@@ -26,7 +26,15 @@
   end subroutine df_mesh_init
 
   subroutine df_dmft_init()
+     use constants, only : dp, mytmp
+
+     use df_control
+     use df_context
+
      implicit none
+
+     open(mytmp, file = 'df.dmft_g.in', form = 'formatted', status = 'unknown')
+     close(mytmp)
 
      return
   end subroutine df_dmft_init
