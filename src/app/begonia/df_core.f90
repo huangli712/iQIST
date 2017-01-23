@@ -1,5 +1,7 @@
 
   subroutine df_run()
+     use df_control, only : ndfit, nbsit
+
      implicit none
 
      integer :: df_it
