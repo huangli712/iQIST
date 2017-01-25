@@ -1,10 +1,10 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-The iQIST software package includes several quantum impurity solvers which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm (CT-HYB), and corresponding preprocessing and postprocessing tools.
+The iQIST software package contains several quantum impurity solvers which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm (CT-HYB), and corresponding preprocessing and postprocessing tools.
 
 ## Version
 
-v0.6.8 @ 2017.02.13T (devel)
+v0.6.8 @ 2017.01.25D (devel)
 
 ## License
 
@@ -12,7 +12,7 @@ GNU General Public License Version 3
 
 ## Features
 
-* Model
+* Quantum impurity model
     * Density-density interaction
     * General interaction (Slater or Kanamori scheme)
     * Spin-orbital coupling and crystal field splitting
@@ -24,7 +24,7 @@ GNU General Public License Version 3
     * Kernel polynomial representation
     * Improved estimator for self-energy function
 
-* Observables
+* Physical observables
     * Single-particle Green's function in imaginary time space
     * Single-particle Green's function in matsubara frequency space
     * Two-particle correlation function in matsubara frequency space
@@ -37,6 +37,7 @@ GNU General Public License Version 3
     * Orbital occupation numbers
     * Double occupation numbers
     * Magnetic moment
+    * Binder cumulant
     * Atomic state probability
     * Spin-spin correlation function in imaginary time space
     * Spin-spin correlation function in matsubara frequency space
@@ -45,7 +46,7 @@ GNU General Public License Version 3
     * Fidelity susceptibility
     * Kinetic energy fluctuation
 
-* Fast algorithms
+* Advanced algorithms
     * Segment algorithm for density-density interaction
     * Divide-and-conquer algorithm
     * Sparse matrix multiplication
@@ -58,14 +59,14 @@ GNU General Public License Version 3
     * OpenMP (for the measurement of two-particle quantities)
 
 * Application programming interfaces
+    * Fortran binding
     * Python binding
     * Input file generator by Python
-    * Fortran binding
 
-* Preprocessing
+* Preprocessing tools
     * Atomic eigenvalue problem solver
 
-* Postprocessing
+* Postprocessing tools
     * Maximum entropy method
     * Stochastic analytical continuation method
     * Kramers-Kronig transformation
@@ -127,7 +128,7 @@ $ ./x_setup.sh
 
 > 2. 'editor' could be any ascii text editor which you prefer.
 
-> 3. 'component' could be azalea, gardenia, narcissus, lavender, etc.
+> 3. 'component' could be gardenia, narcissus, lavender, etc.
 
 > 4. Type 'make help-more' in the terminal for more details.
 
