@@ -54,7 +54,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 01/13/2017 by li huang (last modified)
+## 01/25/2017 by li huang (last modified)
 ##
 ##
 
@@ -67,7 +67,7 @@ help:
 	@echo '     help              print short usage information                  '
 	@echo '     help-more         print full usage information                   '
 	@echo
-	@echo '     all               build all components, apis, and documents, etc '
+	@echo '     all               build all components, apis, and tools, etc     '
 	@echo '     lib               build all components as libs                   '
 	@echo '     clean             clean all directories                          '
 	@echo
@@ -86,11 +86,6 @@ help-more:
 	@echo '  targets:'
 	@echo '     help              print short usage information        '
 	@echo '     help-more         print full usage information         '
-	@echo
-	@echo '     azalea            build azalea code                    '
-	@echo '     azalea-lib        build azalea library for Fortran     '
-	@echo '     azalea-pylib      build azalea library for Python      '
-	@echo '     clean-azalea      clean azalea directory               '
 	@echo
 	@echo '     gardenia          build gardenia code                  '
 	@echo '     gardenia-lib      build gardenia library for Fortran   '
@@ -140,28 +135,16 @@ lib: base-lib capi-lib solver-lib tool-lib
 clean: clean-base clean-capi clean-solver clean-tool
 
 # targets for solver
-solver: base capi azalea gardenia narcissus lavender manjushaka
-solver-lib: base-lib capi-lib azalea-lib gardenia-lib narcissus-lib lavender-lib manjushaka-lib
-clean-solver: clean-base clean-capi clean-azalea clean-gardenia clean-narcissus clean-lavender clean-manjushaka
+solver: base capi gardenia narcissus lavender manjushaka
+solver-lib: base-lib capi-lib gardenia-lib narcissus-lib lavender-lib manjushaka-lib
+clean-solver: clean-base clean-capi clean-gardenia clean-narcissus clean-lavender clean-manjushaka
 
 # targets for tool
 tool: base capi jasmine hibiscus
 tool-lib: base-lib capi-lib jasmine-lib hibiscus-lib
 clean-tool: clean-base clean-capi clean-jasmine clean-hibiscus
 
-# targets for ctqmc codes: segment version (azalea, gardenia, narcissus)
-azalea:
-	cd ../src/ctqmc/azalea/; pwd; make
-
-azalea-lib:
-	cd ../src/ctqmc/azalea/; pwd; make lib
-
-azalea-pylib:
-	cd ../src/ctqmc/azalea/; pwd; make pylib
-
-clean-azalea:
-	cd ../src/ctqmc/azalea/; pwd; make clean
-
+# targets for ctqmc codes: segment version (gardenia, narcissus)
 gardenia:
 	cd ../src/ctqmc/gardenia/; pwd; make
 
