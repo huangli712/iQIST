@@ -276,7 +276,8 @@ Possible options:
 
 > Sometimes you have to specify correct path for it. In the Mac OS X system, the path for f2py may be:
 
->```
+>
+```
 /System/Library/Frameworks/Python.framework/Versions/Current/Extras/bin/f2py
 ```
 
