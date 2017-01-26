@@ -19,12 +19,13 @@
 !! ============
 !!
 !! This implementation of generic linked list in fortran 90 was taken from
-!! Jason R. Blevins's code (journal: ACM Fortran Forum 28(3), 2-7, 2009;
-!! website: http://jblevins.org/research/generic-list). Of course, we have
-!! adapted the original code to fulfill our requirement. This linked list
-!! is capable of storing data of an any type by using the generic programming
-!! techniques. To access the data stored in the nodes, we have to use the
-!! intrinsic transfer() subroutine.
+!! Jason R. Blevins's code 
+!!     journal: ACM Fortran Forum 28(3), 2-7, 2009;
+!!     website: http://jblevins.org/research/generic-list.
+!! Of course, we have adapted the original code to fulfill our requirement.
+!! This linked list is capable of storing data of an any type by using the
+!! generic programming techniques. To access the data stored in the nodes,
+!! we have to use the intrinsic transfer() subroutine.
 !!
 !! Usage
 !! =====
