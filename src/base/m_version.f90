@@ -21,17 +21,23 @@
 !! Usage
 !! =====
 !!
-!! use version, only : __version__
+!! use version, only : FULL_VER
 !! implicit none
 !!
-!! print *, __version__
+!! print *, FULL_VER
 !!
 !!
 
   module version
      implicit none
 
-! version string
-     character (len=20), public, parameter :: __version__ = 'v0.6.8 @ 2017.01.26D'
+! version string: version number + date info.
+     character (len=20), public, parameter :: FULL_VER = 'v0.6.8 @ 2017.01.26D'
+
+! version string: only version number
+     character (len=06), public, parameter :: CURR_VER = 'v0.6.8'
+
+! version string: only date info.
+     character (len=11), public, parameter :: DATE_VER = '2017.01.26D'
 
   end module version
