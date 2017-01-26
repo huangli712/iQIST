@@ -519,20 +519,20 @@
 
 ! external arguments
 ! output date and time
-     character (len=20), intent(out) :: date_time_string
+     character(len=20), intent(out) :: date_time_string
 
 ! local variables
 ! used to extract data from a standard fortran call: date_and_time()
      integer :: date_time(8)
 
 ! string for current date
-     character (len=12) :: cdate
+     character(len=12) :: cdate
 
 ! string for current time
-     character (len=08) :: ctime
+     character(len=08) :: ctime
 
 ! month array
-     character (len=03) :: months(12)
+     character(len=03) :: months(12)
 
 ! init the month array
      months( 1) = 'Jan'; months( 2) = 'Feb'; months( 3) = 'Mar'
@@ -544,8 +544,8 @@
      call date_and_time(values = date_time)
 
 ! convert date and time from integer to string
-     write (cdate,'(1X,a3,1X,i2,1X,i4)') months(date_time(2)), date_time(3), date_time(1)
-     write (ctime,'(i2,":",i2,":",i2)') date_time(5), date_time(6), date_time(7)
+     write(cdate,'(1X,a3,1X,i2,1X,i4)') months(date_time(2)), date_time(3), date_time(1)
+     write(ctime,'(i2,":",i2,":",i2)') date_time(5), date_time(6), date_time(7)
 
 ! build final output string by concating them
      date_time_string = ctime // cdate
