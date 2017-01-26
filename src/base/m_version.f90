@@ -46,5 +46,5 @@
   module version
      implicit none
 
-     character, public, parameter :: CURR_VERSION
+     character (len=20), public, parameter :: __version__ = 'v0.6.8 @ 2017.01.26D'
   end module version
