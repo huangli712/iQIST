@@ -174,16 +174,16 @@
 
 ! data structure for the items in config/input files: key-value pair
      type data_t
-         logical             :: is_valid
-         character(len = 32) :: str_key
-         character(len = 32) :: str_value
+         logical           :: is_valid
+         character(len=32) :: str_key
+         character(len=32) :: str_value
      end type data_t
 
 ! pointer for the data_t structure
-     type (data_t), pointer  :: data_ptr => null()
+     type(data_t), pointer :: data_ptr => null()
 
 ! pointer for the list_t structure
-     type (list_t), pointer  :: list_ptr => null()
+     type(list_t), pointer :: list_ptr => null()
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -237,7 +237,7 @@
 
 ! external arguments
 ! filename for the input/config file
-     character(len = *), intent(in) :: in_file
+     character(len=*), intent(in) :: in_file
 
 ! local variables
 ! loop index
@@ -363,10 +363,10 @@
 
 ! external arguments
 ! string representation for the key of key-value pair
-     character(len = *), intent(in) :: in_key
+     character(len=*), intent(in) :: in_key
 
 ! polymorphic object for the value of key-value pair
-     class(*), intent(inout)        :: out_value
+     class(*), intent(inout)      :: out_value
 
 ! local variables
 ! loop index
@@ -376,10 +376,10 @@
      logical :: found
 
 ! string representation for the key
-     character(len = 32) :: str_key
+     character(len=32) :: str_key
 
 ! string representation for the value
-     character(len = 32) :: str_value
+     character(len=32) :: str_value
 
 ! pointer for the linked list data structure
      type(list_t), pointer :: curr => null()
@@ -441,13 +441,13 @@
 
 ! external arguments
 ! size of out_value
-     integer, intent(in)            :: nsize
+     integer, intent(in)          :: nsize
 
 ! string representation for the key of key-value pair
-     character(len = *), intent(in) :: in_key
+     character(len=*), intent(in) :: in_key
 
 ! polymorphic object for the value of key-value pair
-     class(*), intent(inout)        :: out_value(nsize)
+     class(*), intent(inout)      :: out_value(nsize)
 
 ! local variables
 ! loop index, and used to tokenize the string
@@ -464,10 +464,10 @@
      logical  :: found
 
 ! string representation for the key
-     character(len = 32) :: str_key
+     character(len=32) :: str_key
 
 ! string representation for the value
-     character(len = 32) :: str_value
+     character(len=32) :: str_value
 
 ! pointer for the linked list data structure
      type(list_t), pointer :: curr => null()
