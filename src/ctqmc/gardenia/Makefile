@@ -63,6 +63,7 @@ csml:
 	cp ../../base/stack.mod .
 	cp ../../base/parser.mod .
 	cp ../../base/linkedlist.mod .
+	cp ../../base/version.mod .
 
 exe: api cssl csml ctqmc-exe
 ctqmc-exe: $(exe_obj)
