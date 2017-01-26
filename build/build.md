@@ -318,7 +318,7 @@ Processor : 2.3 GHz Intel Core i7
 
 Memory    : 8 GB 1600 MHz DDR3
 
-Software  : 
+Software  :
 
 ```
 Mac OS X 10.8.5
@@ -336,7 +336,7 @@ Processor : 2.3 GHz Intel Core i7
 
 Memory    : 8 GB 1600 MHz DDR3
 
-Software  : 
+Software  :
 
 ```
 Mac OS X 10.8.5
@@ -354,7 +354,7 @@ Processor : 2.3 GHz Intel Core i7
 
 Memory    : 8 GB 1600 MHz DDR3
 
-Software  : 
+Software  :
 
 ```
 Mac OS X 10.8.5
@@ -372,7 +372,7 @@ Processor : 2.3 GHz Intel Core i7
 
 Memory    : 8 GB 1600 MHz DDR3
 
-Software  : 
+Software  :
 
 ```
 Mac OS X 10.8.5
@@ -389,7 +389,7 @@ Processor : 2.4 GHz Intel Core i7
 
 Memory    : 8 GB 1600 MHz DDR3
 
-Software  : 
+Software  :
 
 ```
 Mac OS X 10.10.3
@@ -407,7 +407,7 @@ Processor : 2.0 GHz Intel Xeon E5-2620
 
 Memory    : 32 GB RAM
 
-Software  : 
+Software  :
 
 ```
 Linux kernel 2.6.32-431
@@ -425,7 +425,7 @@ Processor : 2.0 GHz Intel Xeon E5-2620
 
 Memory    : 32 GB RAM
 
-Software  : 
+Software  :
 
 ```
 Linux kernel 2.6.32-431
@@ -443,7 +443,7 @@ Processor : 2.93 GHz Intel Xeon X5670
 
 Memory    : 23 GB RAM
 
-Software  : 
+Software  :
 
 ```
 Linux kernel 2.6.32-358
@@ -461,7 +461,7 @@ Processor : 2.93 GHz Intel Xeon X5670
 
 Memory    : 23 GB RAM
 
-Software  : 
+Software  :
 
 ```
 Linux kernel 2.6.32-358
