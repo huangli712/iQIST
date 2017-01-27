@@ -49,9 +49,9 @@
 !! --------------------
 !!
 !! If everything is OK, you will find the libctqmc.a file in the ctqmc
-!! component folder (for example, src/ctqmc/azalea directory). Please copy
-!! it (together with src/capi/capi.mod and src/base/libMM.a) to your own
-!! directory. That's all.
+!! component folder (for example, src/ctqmc/gardenia directory). Please
+!! copy it (together with src/capi/capi.mod and src/base/libMM.a) to your
+!! own directory. That's all.
 !!
 !! How to build the Python API
 !! ===========================
@@ -72,22 +72,22 @@
 !! ------------------------------
 !!
 !! Noted that you have to compile it in the python library mode, i.e.,
-!! you have to type 'make pylib' in the src/ctqmc/azalea directory or
-!! 'make azalea-pylib' in the iqist/build directory.
+!! you have to type 'make pylib' in the src/ctqmc/gardenia directory or
+!! 'make gardenia-pylib' in the iqist/build directory.
 !!
 !! 4. get what you need
 !! --------------------
 !!
 !! If everything is OK, you will find the pyiqist.so file in the ctqmc
-!! component folder (for example, src/ctqmc/azalea directory). Please
+!! component folder (for example, src/ctqmc/gardenia directory). Please
 !! copy it to your own directory. That's all.
 !!
 !! Usage (Fortran version)
 !! =======================
 !!
-!! In the following, we will use azalea code as an example to show how to
-!! use api to control it. When you want to compile your code, you have to
-!! ensure that capi.mod, libMM.a and libctqmc.a are in correct PATH. Or
+!! In the following, we will use gardenia code as an example to show how
+!! to use api to control it. When you want to compile your code, you have
+!! to ensure that capi.mod, libMM.a and libctqmc.a are in correct PATH. Or
 !! else the compiler will complain that it can not find them.
 !!
 !! 1. import api support
@@ -109,10 +109,10 @@
 !!
 !! use mmpi ! import mpi support
 !!
-!! 3. create T_segment_azalea
-!! --------------------------
+!! 3. create T_segment_gardenia
+!! ----------------------------
 !!
-!! type (T_segment_azalea) :: I_solver ! define I_solver
+!! type (T_segment_gardenia) :: I_solver ! define I_solver
 !! ...
 !! I_solver%isscf  = 1  ! setup I_solver
 !! I_solver%issun  = 2
@@ -135,6 +135,8 @@
 !! I_solver%nmonte = 100
 !! I_solver%ncarlo = 100
 !!
+!! ...
+!!
 !! I_solver%U     = 4.0
 !! I_solver%Uc    = 4.0
 !! I_solver%Uv    = 4.0
@@ -146,8 +148,10 @@
 !! I_solver%part  = 0.50
 !! I_solver%alpha = 0.50
 !!
-!! Note: If you want to use the other solvers, instead of the azalea code,
-!! please choose suitable solver type.
+!! ...
+!!
+!! Note: If you want to use the other solvers, instead of the gardenia
+!! code, please choose suitable solver type.
 !!
 !! Note: Every parameter for quantum impurity solver must be initialized
 !! here, or else the solver will not work properly.
@@ -207,10 +211,10 @@
 !! Usage (Python version)
 !! ======================
 !!
-!! In the following, we will use azalea code as an example to show how to
-!! use api to control it. When you want to run your Python code, you have
-!! to ensure that pyiqist.so is in correct PATH. Or else the Python will
-!! complain that it can not find iqist.
+!! In the following, we will use gardenia code as an example to show how
+!! to use api to control it. When you want to run your Python code, you
+!! have to ensure that pyiqist.so is in correct PATH. Or else the Python
+!! will complain that it can not find iqist.
 !!
 !! 1. import mpi support
 !! ---------------------
@@ -236,7 +240,7 @@
 !! You have to ensure that the pyiqist package is in the sys.path. For
 !! example, you can use the following code to modify sys.path
 !!
-!! sys.path.append('../../src/ctqmc/azalea/')
+!! sys.path.append('../../src/ctqmc/gardenia/')
 !!
 !! 3. configure the ctqmc impurity solver
 !! --------------------------------------
