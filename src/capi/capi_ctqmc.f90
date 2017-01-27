@@ -42,7 +42,7 @@
 !! ------------------------------
 !!
 !! Noted that you have to compile it in the library mode, i.e., you must
-!! use 'make lib' in the src/ctqmc/azalea directory or 'make azalea-lib'
+!! use 'make lib' in the src/ctqmc/gardenia directory or 'make gardenia-lib'
 !! in the iqist/build directory.
 !!
 !! 4. get what you need
