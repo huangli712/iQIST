@@ -356,14 +356,12 @@
 !!========================================================================
 
 ! solver identity
-     integer, public, parameter :: solver_id_azalea         = 101
-     integer, public, parameter :: solver_id_gardenia       = 102
-     integer, public, parameter :: solver_id_narcissus      = 103
+     integer, public, parameter :: solver_id_gardenia       = 101
+     integer, public, parameter :: solver_id_narcissus      = 102
      integer, public, parameter :: solver_id_lavender       = 201
      integer, public, parameter :: solver_id_manjushaka     = 301
 
 ! solver status, 1 means ready, 0 means not ready
-     integer, public, parameter :: solver_is_ready_azalea     = 1
      integer, public, parameter :: solver_is_ready_gardenia   = 1
      integer, public, parameter :: solver_is_ready_narcissus  = 1
      integer, public, parameter :: solver_is_ready_lavender   = 1
@@ -437,13 +435,6 @@
      type, extends (T_generic_solver) :: T_general_solver
          character(len=10) :: solver_type = 'GENERAL'
      end type T_general_solver
-
-! define type T_segment_azalea, which is used to describe the ctqmc
-! impurity solver code azalea
-     public :: T_segment_azalea
-     type, extends (T_segment_solver) :: T_segment_azalea
-         character(len=10) :: solver_name = 'AZALEA'
-     end type T_segment_azalea
 
 ! define type T_segment_gardenia, which is used to describe the ctqmc
 ! impurity solver code gardenia
