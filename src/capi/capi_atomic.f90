@@ -1,11 +1,11 @@
 !!!-----------------------------------------------------------------------
 !!! project : CAPI (Common Application Programming Interface)
 !!! program : japi
-!!! source  : atomic_api.f90
+!!! source  : capi_atomic.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/29/2014 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/27/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for atomic eigenvalue
 !!!           problem solver.

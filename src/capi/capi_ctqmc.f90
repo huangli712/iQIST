@@ -1,11 +1,11 @@
 !!!-----------------------------------------------------------------------
 !!! project : CAPI (Common Application Programming Interface)
 !!! program : capi
-!!! source  : ctqmc_api.f90
+!!! source  : capi_ctqmc.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/07/2014 by li huang (created)
-!!!           01/13/2017 by li huang (last modified)
+!!!           01/27/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
 !!!           quantum Monte Carlo impurity solver.
@@ -20,8 +20,8 @@
 !!
 !! This module can provide a light weight interface (i.e., application
 !! programming interface, API) for Fortran/Python language to the ctqmc
-!! quantum impurity solver. The user can use it to access the azalea,
-!! gardenia, narcissus, lavender, and manjushaka codes.
+!! quantum impurity solver. The user can use it to access the gardenia,
+!! narcissus, lavender, and manjushaka codes.
 !!
 !! How to build the Fortran API
 !! ============================
