@@ -620,7 +620,7 @@
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
-     call ctqmc_make_hsed(tmesh, htau, hsed)
+     call ctqmc_eval_hsed(tmesh, htau, hsed)
 
 ! dump the necessary files
 !-------------------------------------------------------------------------
