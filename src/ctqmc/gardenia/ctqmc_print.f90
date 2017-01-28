@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/28/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -30,6 +30,7 @@
 
      implicit none
 
+! local variables
 ! string for current date and time
      character (len = 20) :: date_time_string
 
@@ -73,6 +74,7 @@
 
      implicit none
 
+! local variables
 ! string for current date and time
      character (len = 20) :: date_time_string
 
