@@ -1,137 +1,22 @@
 !!!-----------------------------------------------------------------------
 !!! project : gardenia
-!!! program : ctqmc_make_htau
-!!!           ctqmc_make_hsed
-!!!           ctqmc_four_htau
+!!! program : ctqmc_four_htau
 !!!           ctqmc_four_hybf
+!!!           ctqmc_eval_htau
+!!!           ctqmc_eval_hsed
 !!!           ctqmc_make_uumat
 !!!           ctqmc_make_state
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/28/2015 by li huang (last modified)
 !!! purpose : to provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
-
-!!========================================================================
-!!>>> cubic spline interpolation                                       <<<
-!!========================================================================
-
-!! To provide cubic spline subroutines and wrapper functions to interpolate
-!! the hybridization function in imaginary-time axis.
-
-!!>>> ctqmc_make_htau: evaluate the matrix elements for mmat matrix using
-!!>>> cubic spline interpolation
-  function ctqmc_make_htau(flvr, dtau) result(val)
-     use constants, only : dp
-
-     use control, only : ntime
-     use context, only : tmesh
-     use context, only : htau, hsed
-
-     implicit none
-
-! external arguments
-! current flavor channel
-     integer, intent(in)  :: flvr
-
-! delta imaginary time
-     real(dp), intent(in) :: dtau
-
-! external functions
-! internal interpolation engine
-     procedure( real(dp) ) :: s_spl_funct
-
-! local variables
-! return value
-     real(dp) :: val
-
-     val = s_spl_funct(ntime, tmesh, htau(:, flvr, flvr), hsed(:, flvr, flvr), dtau)
-
-     return
-  end function ctqmc_make_htau
-
-!!>>> ctqmc_make_hsed: calculate the second order derivates of hybridization
-!!>>> function on imaginary time space
-  subroutine ctqmc_make_hsed(tmesh, htau, hsed)
-     use constants, only : dp, zero
-
-     use control, only : norbs
-     use control, only : ntime
-     use control, only : beta
-
-     implicit none
-
-! external arguments
-! imaginary time axis
-     real(dp), intent(in)  :: tmesh(ntime)
-
-! hybridization function on imaginary time axis
-     real(dp), intent(in)  :: htau(ntime,norbs,norbs)
-
-! second order derivates of hybridization function
-     real(dp), intent(out) :: hsed(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! first derivate at start point
-     real(dp) :: startu
-
-! first derivate at end   point
-     real(dp) :: startd
-
-! \delta \tau
-     real(dp) :: deltau
-
-! second-order derivates
-     real(dp) :: d2y(ntime)
-
-! calculate deltau
-     deltau = beta / real(ntime - 1)
-
-! initialize hsed
-     hsed = zero
-
-! calculate it
-     do j=1,norbs
-         do i=1,norbs
-
-! calculate first-order derivate of \Delta(0): startu
-             startu = (-25.0_dp*htau(1,       i, j) +                    &
-                        48.0_dp*htau(2,       i, j) -                    &
-                        36.0_dp*htau(3,       i, j) +                    &
-                        16.0_dp*htau(4,       i, j) -                    &
-                         3.0_dp*htau(5,       i, j)) / 12.0_dp / deltau
-
-! calculate first-order derivate of \Delta(\beta): startd
-             startd = ( 25.0_dp*htau(ntime-0, i, j) -                    &
-                        48.0_dp*htau(ntime-1, i, j) +                    &
-                        36.0_dp*htau(ntime-2, i, j) -                    &
-                        16.0_dp*htau(ntime-3, i, j) +                    &
-                         3.0_dp*htau(ntime-4, i, j)) / 12.0_dp / deltau
-
-! reinitialize d2y to zero
-             d2y = zero
-
-! call the service layer
-             call s_spl_deriv2(ntime, tmesh, htau(:,i,j), startu, startd, d2y)
-
-! copy the results to hsed
-             hsed(:,i,j) = d2y
-
-         enddo ! over i={1,norbs} loop
-     enddo ! over j={1,norbs} loop
-
-     return
-  end subroutine ctqmc_make_hsed
 
 !!========================================================================
 !!>>> fast fourier transformation                                      <<<
@@ -283,6 +168,121 @@
 
      return
   end subroutine ctqmc_four_hybf
+
+!!========================================================================
+!!>>> cubic spline interpolation                                       <<<
+!!========================================================================
+
+!! To provide cubic spline subroutines and wrapper functions to interpolate
+!! the hybridization function in imaginary-time axis.
+
+!!>>> ctqmc_eval_htau: evaluate the matrix elements for mmat matrix using
+!!>>> cubic spline interpolation
+  function ctqmc_eval_htau(flvr, dtau) result(val)
+     use constants, only : dp
+
+     use control, only : ntime
+     use context, only : tmesh
+     use context, only : htau, hsed
+
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in)  :: flvr
+
+! delta imaginary time
+     real(dp), intent(in) :: dtau
+
+! external functions
+! internal interpolation engine
+     procedure( real(dp) ) :: s_spl_funct
+
+! local variables
+! return value
+     real(dp) :: val
+
+     val = s_spl_funct(ntime, tmesh, htau(:, flvr, flvr), hsed(:, flvr, flvr), dtau)
+
+     return
+  end function ctqmc_eval_htau
+
+!!>>> ctqmc_eval_hsed: calculate the second order derivates of hybridization
+!!>>> function on imaginary time space
+  subroutine ctqmc_eval_hsed(tmesh, htau, hsed)
+     use constants, only : dp, zero
+
+     use control, only : norbs
+     use control, only : ntime
+     use control, only : beta
+
+     implicit none
+
+! external arguments
+! imaginary time axis
+     real(dp), intent(in)  :: tmesh(ntime)
+
+! hybridization function on imaginary time axis
+     real(dp), intent(in)  :: htau(ntime,norbs,norbs)
+
+! second order derivates of hybridization function
+     real(dp), intent(out) :: hsed(ntime,norbs,norbs)
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! first derivate at start point
+     real(dp) :: startu
+
+! first derivate at end   point
+     real(dp) :: startd
+
+! \delta \tau
+     real(dp) :: deltau
+
+! second-order derivates
+     real(dp) :: d2y(ntime)
+
+! calculate deltau
+     deltau = beta / real(ntime - 1)
+
+! initialize hsed
+     hsed = zero
+
+! calculate it
+     do j=1,norbs
+         do i=1,norbs
+
+! calculate first-order derivate of \Delta(0): startu
+             startu = (-25.0_dp*htau(1,       i, j) +                    &
+                        48.0_dp*htau(2,       i, j) -                    &
+                        36.0_dp*htau(3,       i, j) +                    &
+                        16.0_dp*htau(4,       i, j) -                    &
+                         3.0_dp*htau(5,       i, j)) / 12.0_dp / deltau
+
+! calculate first-order derivate of \Delta(\beta): startd
+             startd = ( 25.0_dp*htau(ntime-0, i, j) -                    &
+                        48.0_dp*htau(ntime-1, i, j) +                    &
+                        36.0_dp*htau(ntime-2, i, j) -                    &
+                        16.0_dp*htau(ntime-3, i, j) +                    &
+                         3.0_dp*htau(ntime-4, i, j)) / 12.0_dp / deltau
+
+! reinitialize d2y to zero
+             d2y = zero
+
+! call the service layer
+             call s_spl_deriv2(ntime, tmesh, htau(:,i,j), startu, startd, d2y)
+
+! copy the results to hsed
+             hsed(:,i,j) = d2y
+
+         enddo ! over i={1,norbs} loop
+     enddo ! over j={1,norbs} loop
+
+     return
+  end subroutine ctqmc_eval_hsed
 
 !!========================================================================
 !!>>> Coulomb interaction matrix                                       <<<
