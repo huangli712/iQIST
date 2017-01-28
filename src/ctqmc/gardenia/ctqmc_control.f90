@@ -33,7 +33,7 @@
 ! control flag: running mode
 ! if isscf == 1, one-shot non-self-consistent scheme, used in local density
 ! approximation plus dynamical mean field theory case
-! if isscf == 2, self-consistent scheme, used in normal model hamiltonian
+! if isscf == 2, self-consistent scheme, used in standard model hamiltonian
 ! plus dynamical mean field theory case
      integer, public, save :: isscf  = 2
 
