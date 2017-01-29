@@ -5,20 +5,20 @@
 !!!           cat_lshift_ztrace
 !!!           cat_rshift_ztrace
 !!!           cat_reswap_ztrace  <<<---
-!!!           cat_insert_segment
-!!!           cat_remove_segment
-!!!           cat_lshift_segment
-!!!           cat_rshift_segment
-!!!           cat_reswap_segment <<<---
-!!!           ctqmc_make_flavor1
-!!!           ctqmc_make_flavor2
-!!!           ctqmc_make_flavor3
-!!!           ctqmc_make_flavor4 <<<---
-!!!           ctqmc_spin_counter <<<---
-!!!           ctqmc_make_overlap
-!!!           ctqmc_make_compare <<<---
-!!!           ctqmc_make_segment
-!!!           ctqmc_make_display <<<---
+!!!           cat_insert_action
+!!!           cat_remove_action
+!!!           cat_lshift_action
+!!!           cat_rshift_action
+!!!           cat_reswap_action  <<<---
+!!!           cat_insert_flavor
+!!!           cat_remove_flavor
+!!!           cat_lshift_flavor
+!!!           cat_rshift_flavor  <<<---
+!!!           ctqmc_chck_segment <<<---
+!!!           ctqmc_eval_segment
+!!!           ctqmc_comp_segment <<<---
+!!!           ctqmc_make_diagram
+!!!           ctqmc_disp_diagram <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
