@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/29/2017 by li huang (last modified)
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
 !!!           for hybridization expansion version continuous time quantum
@@ -101,8 +101,8 @@
      integer  :: j
 
 ! dummy integer variables
-     integer  :: i1
-     integer  :: j1
+     integer  :: m
+     integer  :: n
 
 ! used to check whether the input file (solver.status.dat) exists
      logical  :: exists
@@ -156,17 +156,17 @@
 
 ! read in key data
          do i=1,norbs
-             read(mytmp,'(a14,i4)') chr, i1
+             read(mytmp,'(a14,i4)') chr, m
              read(mytmp,'(a14,i4)') chr, cstat
 
              read(mytmp,'(a14,i4)') chr, ckink
              do j=1,ckink
-                 read(mytmp,*) i1, j1, tau_s(j, i)
+                 read(mytmp,*) m, n, tau_s(j, i)
              enddo ! over j={1,ckink} loop
 
              read(mytmp,'(a14,i4)') chr, ckink
              do j=1,ckink
-                 read(mytmp,*) i1, j1, tau_e(j, i)
+                 read(mytmp,*) m, n, tau_e(j, i)
              enddo ! over j={1,ckink} loop
 
              read(mytmp,*) ! skip two lines
@@ -212,9 +212,7 @@
 
 ! restore all the segments or anti-segments
      do i=1,norbs
-
-! segment scheme
-         if ( stts(i) == 1 ) then
+         if ( stts(i) == 1 ) then ! segment scheme
              do j=1,rank(i)
                  ckink = j - 1 ! update ckink simultaneously
                  call cat_insert_detrat(i, tau_s(j, i), tau_e(j, i), deter_ratio)
@@ -222,8 +220,7 @@
              enddo ! over j={1,rank(i)} loop
          endif ! back if ( stts(i) == 1 ) block
 
-! anti-segment scheme
-         if ( stts(i) == 2 ) then
+         if ( stts(i) == 2 ) then ! anti-segment scheme
              do j=1,rank(i)-1
                  ckink = j - 1 ! update ckink simultaneously
                  call cat_insert_detrat(i, tau_s(j, i), tau_e(j+1, i), deter_ratio)
@@ -232,8 +229,7 @@
              ckink = rank(i) - 1
              call cat_insert_detrat(i, tau_s(ckink+1, i), tau_e(1, i), deter_ratio)
              call cat_insert_matrix(i, ckink+1, 1, tau_s(ckink+1, i), tau_e(1, i), deter_ratio)
-         endif ! back if ( stts(i) == 1 ) block
-
+         endif ! back if ( stts(i) == 2 ) block
      enddo ! over i={1,norbs} loop
 
      return
