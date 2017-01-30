@@ -1335,6 +1335,10 @@
      return
   end subroutine ctqmc_dump_pair
 
+!!========================================================================
+!!>>> dump data of auxiliary information                               <<<
+!!========================================================================
+
 !!>>> ctqmc_dump_diag: write out a snapshot for the current diagram
 !!>>> configuration, the results can be used to make a dynamical video.
   subroutine ctqmc_dump_diag(iter, cstep)
@@ -1363,7 +1367,7 @@
      integer :: j
 
 ! setup the internal criterion
-     if ( nsweep/nwrite < 100 ) RETURN
+     if ( nsweep / nwrite < 100 ) RETURN
 
 ! write the snapshot
 ! open data file: solver.diag.dat
