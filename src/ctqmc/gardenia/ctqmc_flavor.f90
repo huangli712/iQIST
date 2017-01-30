@@ -13,12 +13,11 @@
 !!!           cat_insert_flavor
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
-!!!           cat_rshift_flavor  <<<---
-!!!           ctqmc_chck_segment <<<---
-!!!           ctqmc_eval_segment
-!!!           ctqmc_comp_segment <<<---
-!!!           ctqmc_make_diagram
-!!!           ctqmc_disp_diagram <<<---
+!!!           cat_rshift_flavor  
+!!!           cat_reswap_flavor  <<<---
+!!!           cat_occupy_status  <<<---
+!!!           cat_ovlp_segment
+!!!           cat_ovlp_segments  <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
