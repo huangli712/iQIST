@@ -36,7 +36,7 @@
 !!========================================================================
 
 !!>>> cat_insert_action: update the perturbation expansion series for
-!!>>> inserting new segment or anti-segment
+!!>>> insert new segment or anti-segment
   subroutine cat_insert_action(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
      use stack, only : istack_pop
@@ -108,7 +108,7 @@
   end subroutine cat_insert_action
 
 !!>>> cat_remove_action: update the perturbation expansion series for
-!!>>> removing old segment or anti-segment
+!!>>> remove old segment or anti-segment
   subroutine cat_remove_action(flvr, is, ie)
      use stack, only : istack_push
 
@@ -156,7 +156,7 @@
   end subroutine cat_remove_action
 
 !!>>> cat_lshift_action: update the perturbation expansion series for
-!!>>> left shifting old segment or anti-segment
+!!>>> left shift old segment or anti-segment
   subroutine cat_lshift_action(flvr, iso, isn, tau_start)
      use constants, only : dp
 
@@ -215,7 +215,7 @@
   end subroutine cat_lshift_action
 
 !!>>> cat_rshift_action: update the perturbation expansion series for
-!!>>> right shifting old segment or anti-segment
+!!>>> right shift old segment or anti-segment
   subroutine cat_rshift_action(flvr, ieo, ien, tau_end)
      use constants, only : dp
 
@@ -274,7 +274,7 @@
   end subroutine cat_rshift_action
 
 !!>>> cat_reswap_action: update the perturbation expansion series for
-!!>>> swapping segment and anti-segment
+!!>>> swap segment and anti-segment
   subroutine cat_reswap_action(flvr)
      use constants, only : dp
 
