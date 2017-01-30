@@ -5,7 +5,6 @@
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! version : v2016.02.13T                                               !
 !!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
 !!! comment : this impurity solver is based on segment picture formalism !
 !!!           any question, please contact with lihuang.dmft@gmail.com   !
@@ -28,7 +27,7 @@
 !! quantum Monte Carlo quantum impurity solver. It adopts the segment
 !! picture, and implements many useful features, such as the orthogonal
 !! polynomial representation and the measurement of two-particle Green's
-!! function, etc. So it is a bit less efficient than the azalea code. And
+!! function, etc. So it is a bit less efficient than the bare code. And
 !! it can be used as a standard to benchmark the other ctqmc impurity
 !! solvers. The gardenia code also includes a mini dynamical mean field
 !! theory engine which implements the self-consistent equation for Bethe
@@ -66,6 +65,7 @@
 !! solver.nmat.dat
 !! solver.kmat.dat
 !! solver.lmat.dat
+!! solver.szpw.dat
 !! solver.schi.dat
 !! solver.sfom.dat
 !! solver.ochi.dat
@@ -73,6 +73,7 @@
 !! solver.twop.dat
 !! solver.vrtx.dat
 !! solver.pair.dat
+!! solver.diag.dat
 !! solver.status.dat
 !! etc.
 !!
