@@ -31,9 +31,289 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> service layer: update perturbation expansion series              <<<
+!!========================================================================
 
+!!>>> cat_insert_action: update the perturbation expansion series for
+!!>>> inserting new segment or anti-segment
+  subroutine cat_insert_action(flvr, is, ie, tau_start, tau_end)
+     use constants, only : dp
+     use stack, only : istack_pop
 
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : rmesh
 
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in)  :: flvr
+
+! index address for insert new segment or anti-segment
+     integer, intent(in)  :: is
+     integer, intent(in)  :: ie
+
+! imaginary time \tau_s for start point
+     real(dp), intent(in) :: tau_start
+
+! imaginary time \tau_e for end   point
+     real(dp), intent(in) :: tau_end
+
+! local variables
+! loop index over segments and frequencies
+     integer  :: i
+
+! memory address for new start and end points
+     integer  :: as
+     integer  :: ae
+
+! dummy variables, \tau_s * \omega and \tau_e * \omega
+     real(dp) :: xs
+     real(dp) :: xe
+
+! get memory address for is and ie
+     call istack_pop( empty_s(flvr), as )
+     call istack_pop( empty_e(flvr), ae )
+
+! shift index_s and index_e to create two empty rooms for as and ae
+     do i=ckink,is,-1
+         index_s(i+1, flvr) = index_s(i, flvr)
+     enddo ! over i={ckink,is,-1} loop
+
+     do i=ckink,ie,-1
+         index_e(i+1, flvr) = index_e(i, flvr)
+     enddo ! over i={ckink,ie,-1} loop
+
+! update index_s and index_e at is and ie by as and ae, respectively
+     index_s(is, flvr) = as
+     index_e(ie, flvr) = ae
+
+! update time_s and time_e, record new imaginary time points
+     time_s(as, flvr) = tau_start
+     time_e(ae, flvr) = tau_end
+
+! update exp_s and exp_e, record new exponent values
+     do i=1,nfreq
+         xs = rmesh(i) * tau_start
+         exp_s(i, as, flvr) = dcmplx( cos(xs), sin(xs) )
+
+         xe = rmesh(i) * tau_end
+         exp_e(i, ae, flvr) = dcmplx( cos(xe), sin(xe) )
+     enddo ! over i={1,nfreq} loop
+
+     return
+  end subroutine cat_insert_action
+
+!!>>> cat_remove_segment: update the perturbation expansion series for
+!!>>> remove old segment or anti-segment
+  subroutine cat_remove_segment(flvr, is, ie)
+     use stack, only : istack_push
+
+     use context, only : ckink
+     use context, only : empty_s, empty_e, index_s, index_e
+
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in) :: flvr
+
+! index address for remove old segment or anti-segment
+     integer, intent(in) :: is
+     integer, intent(in) :: ie
+
+! local variables
+! loop index over segments
+     integer :: i
+
+! memory address for old start and end points
+     integer :: as
+     integer :: ae
+
+! get memory address for is and ie
+     as = index_s(is, flvr)
+     ae = index_e(ie, flvr)
+
+! push the memory address back to the empty_s and empty_e stacks
+     call istack_push( empty_s(flvr), as )
+     call istack_push( empty_e(flvr), ae )
+
+! remove the unused index from index_s and index_e
+     do i=is,ckink-1
+         index_s(i, flvr) = index_s(i+1, flvr)
+     enddo ! over i={is,ckink-1} loop
+     index_s(ckink, flvr) = 0
+
+     do i=ie,ckink-1
+         index_e(i, flvr) = index_e(i+1, flvr)
+     enddo ! over i={ie,ckink-1} loop
+     index_e(ckink, flvr) = 0
+
+     return
+  end subroutine cat_remove_segment
+
+!!>>> cat_lshift_segment: update the perturbation expansion series for
+!!>>> left shift old segment or anti-segment
+  subroutine cat_lshift_segment(flvr, iso, isn, tau_start)
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, time_s, exp_s
+     use context, only : rmesh
+
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in)  :: flvr
+
+! index address for lshift old segment or anti-segment
+     integer, intent(in)  :: iso
+     integer, intent(in)  :: isn
+
+! imaginary time \tau_s for start point (the new one)
+     real(dp), intent(in) :: tau_start
+
+! local variables
+! loop index over segments and frequencies
+     integer  :: i
+
+! memory address for new start point
+     integer  :: as
+
+! dummy variables, \tau_s * \omega
+     real(dp) :: xs
+
+! get memory address for iso
+     as = index_s(iso, flvr)
+
+! update index_s
+     do i=iso,ckink-1
+         index_s(i, flvr) = index_s(i+1, flvr)
+     enddo ! over i={iso,ckink-1} loop
+     index_s(ckink, flvr) = 0
+
+     do i=ckink-1,isn,-1
+         index_s(i+1, flvr) = index_s(i, flvr)
+     enddo ! over i={ckink-1,isn,-1} loop
+     index_s(isn, flvr) = as
+
+! update time_s, record new imaginary time point
+     time_s(as, flvr) = tau_start
+
+! update exp_s, record new exponent values
+     do i=1,nfreq
+         xs = rmesh(i) * tau_start
+         exp_s(i, as, flvr) = dcmplx( cos(xs), sin(xs) )
+     enddo ! over i={1,nfreq} loop
+
+     return
+  end subroutine cat_lshift_segment
+
+!!>>> cat_rshift_segment: update the perturbation expansion series for
+!!>>> right shift old segment or anti-segment
+  subroutine cat_rshift_segment(flvr, ieo, ien, tau_end)
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_e, time_e, exp_e
+     use context, only : rmesh
+
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in)  :: flvr
+
+! index address for rshift old segment or anti-segment
+     integer, intent(in)  :: ieo
+     integer, intent(in)  :: ien
+
+! imaginary time \tau_e for end   point (the new one)
+     real(dp), intent(in) :: tau_end
+
+! local variables
+! loop index over segments and frequencies
+     integer  :: i
+
+! memory address for new end   point
+     integer  :: ae
+
+! dummy variables, \tau_e * \omega
+     real(dp) :: xe
+
+! get memory address for ieo
+     ae = index_e(ieo, flvr)
+
+! update index_e
+     do i=ieo,ckink-1
+         index_e(i, flvr) = index_e(i+1, flvr)
+     enddo ! over i={ieo,ckink-1} loop
+     index_e(ckink, flvr) = 0
+
+     do i=ckink-1,ien,-1
+         index_e(i+1, flvr) = index_e(i, flvr)
+     enddo ! over i={ckink-1,ien,-1} loop
+     index_e(ien, flvr) = ae
+
+! update time_e, record new imaginary time point
+     time_e(ae, flvr) = tau_end
+
+! update exp_e, record new exponent values
+     do i=1,nfreq
+         xe = rmesh(i) * tau_end
+         exp_e(i, ae, flvr) = dcmplx( cos(xe), sin(xe) )
+     enddo ! over i={1,nfreq} loop
+
+     return
+  end subroutine cat_rshift_segment
+
+!!>>> cat_reswap_segment: update the perturbation expansion series for
+!!>>> swap segment and anti-segment
+  subroutine cat_reswap_segment(flvr)
+     use constants, only : dp
+
+     use control, only : nfreq
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
+
+     implicit none
+
+! external arguments
+! current flavor channel
+     integer, intent(in)  :: flvr
+
+! local variables
+! loop index over segments
+     integer  :: i
+
+! dummy time_s and time_e
+     real(dp) :: time_t
+
+! dummy exp_s and exp_e
+     complex(dp) :: exp_t(nfreq)
+
+! swap time_s and time_e
+     do i=1,ckink
+         time_t = time_s(index_s(i, flvr), flvr)
+         time_s(index_s(i, flvr), flvr) = time_e(index_e(i, flvr), flvr)
+         time_e(index_e(i, flvr), flvr) = time_t
+     enddo ! over i={1,ckink} loop
+
+! swap exp_s and exp_e
+     do i=1,ckink
+         exp_t = exp_s(:, index_s(i, flvr), flvr)
+         exp_s(:, index_s(i, flvr), flvr) = exp_e(:, index_e(i, flvr), flvr)
+         exp_e(:, index_e(i, flvr), flvr) = exp_t
+     enddo ! over i={1,ckink} loop
+
+     return
+  end subroutine cat_reswap_segment
 
 !!========================================================================
 !!>>> service layer: evaluate ztrace ratio                             <<<
@@ -568,290 +848,6 @@
 
      return
   end subroutine cat_reswap_ztrace
-
-!!========================================================================
-!!>>> service layer: update perturbation expansion series              <<<
-!!========================================================================
-
-!!>>> cat_insert_segment: update the perturbation expansion series for
-!!>>> insert new segment or anti-segment
-  subroutine cat_insert_segment(flvr, is, ie, tau_start, tau_end)
-     use constants, only : dp
-     use stack, only : istack_pop
-
-     use control, only : nfreq
-     use context, only : ckink
-     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
-     use context, only : rmesh
-
-     implicit none
-
-! external arguments
-! current flavor channel
-     integer, intent(in)  :: flvr
-
-! index address for insert new segment or anti-segment
-     integer, intent(in)  :: is
-     integer, intent(in)  :: ie
-
-! imaginary time \tau_s for start point
-     real(dp), intent(in) :: tau_start
-
-! imaginary time \tau_e for end   point
-     real(dp), intent(in) :: tau_end
-
-! local variables
-! loop index over segments and frequencies
-     integer  :: i
-
-! memory address for new start and end points
-     integer  :: as
-     integer  :: ae
-
-! dummy variables, \tau_s * \omega and \tau_e * \omega
-     real(dp) :: xs
-     real(dp) :: xe
-
-! get memory address for is and ie
-     call istack_pop( empty_s(flvr), as )
-     call istack_pop( empty_e(flvr), ae )
-
-! shift index_s and index_e to create two empty rooms for as and ae
-     do i=ckink,is,-1
-         index_s(i+1, flvr) = index_s(i, flvr)
-     enddo ! over i={ckink,is,-1} loop
-
-     do i=ckink,ie,-1
-         index_e(i+1, flvr) = index_e(i, flvr)
-     enddo ! over i={ckink,ie,-1} loop
-
-! update index_s and index_e at is and ie by as and ae, respectively
-     index_s(is, flvr) = as
-     index_e(ie, flvr) = ae
-
-! update time_s and time_e, record new imaginary time points
-     time_s(as, flvr) = tau_start
-     time_e(ae, flvr) = tau_end
-
-! update exp_s and exp_e, record new exponent values
-     do i=1,nfreq
-         xs = rmesh(i) * tau_start
-         exp_s(i, as, flvr) = dcmplx( cos(xs), sin(xs) )
-
-         xe = rmesh(i) * tau_end
-         exp_e(i, ae, flvr) = dcmplx( cos(xe), sin(xe) )
-     enddo ! over i={1,nfreq} loop
-
-     return
-  end subroutine cat_insert_segment
-
-!!>>> cat_remove_segment: update the perturbation expansion series for
-!!>>> remove old segment or anti-segment
-  subroutine cat_remove_segment(flvr, is, ie)
-     use stack, only : istack_push
-
-     use context, only : ckink
-     use context, only : empty_s, empty_e, index_s, index_e
-
-     implicit none
-
-! external arguments
-! current flavor channel
-     integer, intent(in) :: flvr
-
-! index address for remove old segment or anti-segment
-     integer, intent(in) :: is
-     integer, intent(in) :: ie
-
-! local variables
-! loop index over segments
-     integer :: i
-
-! memory address for old start and end points
-     integer :: as
-     integer :: ae
-
-! get memory address for is and ie
-     as = index_s(is, flvr)
-     ae = index_e(ie, flvr)
-
-! push the memory address back to the empty_s and empty_e stacks
-     call istack_push( empty_s(flvr), as )
-     call istack_push( empty_e(flvr), ae )
-
-! remove the unused index from index_s and index_e
-     do i=is,ckink-1
-         index_s(i, flvr) = index_s(i+1, flvr)
-     enddo ! over i={is,ckink-1} loop
-     index_s(ckink, flvr) = 0
-
-     do i=ie,ckink-1
-         index_e(i, flvr) = index_e(i+1, flvr)
-     enddo ! over i={ie,ckink-1} loop
-     index_e(ckink, flvr) = 0
-
-     return
-  end subroutine cat_remove_segment
-
-!!>>> cat_lshift_segment: update the perturbation expansion series for
-!!>>> left shift old segment or anti-segment
-  subroutine cat_lshift_segment(flvr, iso, isn, tau_start)
-     use constants, only : dp
-
-     use control, only : nfreq
-     use context, only : ckink
-     use context, only : index_s, time_s, exp_s
-     use context, only : rmesh
-
-     implicit none
-
-! external arguments
-! current flavor channel
-     integer, intent(in)  :: flvr
-
-! index address for lshift old segment or anti-segment
-     integer, intent(in)  :: iso
-     integer, intent(in)  :: isn
-
-! imaginary time \tau_s for start point (the new one)
-     real(dp), intent(in) :: tau_start
-
-! local variables
-! loop index over segments and frequencies
-     integer  :: i
-
-! memory address for new start point
-     integer  :: as
-
-! dummy variables, \tau_s * \omega
-     real(dp) :: xs
-
-! get memory address for iso
-     as = index_s(iso, flvr)
-
-! update index_s
-     do i=iso,ckink-1
-         index_s(i, flvr) = index_s(i+1, flvr)
-     enddo ! over i={iso,ckink-1} loop
-     index_s(ckink, flvr) = 0
-
-     do i=ckink-1,isn,-1
-         index_s(i+1, flvr) = index_s(i, flvr)
-     enddo ! over i={ckink-1,isn,-1} loop
-     index_s(isn, flvr) = as
-
-! update time_s, record new imaginary time point
-     time_s(as, flvr) = tau_start
-
-! update exp_s, record new exponent values
-     do i=1,nfreq
-         xs = rmesh(i) * tau_start
-         exp_s(i, as, flvr) = dcmplx( cos(xs), sin(xs) )
-     enddo ! over i={1,nfreq} loop
-
-     return
-  end subroutine cat_lshift_segment
-
-!!>>> cat_rshift_segment: update the perturbation expansion series for
-!!>>> right shift old segment or anti-segment
-  subroutine cat_rshift_segment(flvr, ieo, ien, tau_end)
-     use constants, only : dp
-
-     use control, only : nfreq
-     use context, only : ckink
-     use context, only : index_e, time_e, exp_e
-     use context, only : rmesh
-
-     implicit none
-
-! external arguments
-! current flavor channel
-     integer, intent(in)  :: flvr
-
-! index address for rshift old segment or anti-segment
-     integer, intent(in)  :: ieo
-     integer, intent(in)  :: ien
-
-! imaginary time \tau_e for end   point (the new one)
-     real(dp), intent(in) :: tau_end
-
-! local variables
-! loop index over segments and frequencies
-     integer  :: i
-
-! memory address for new end   point
-     integer  :: ae
-
-! dummy variables, \tau_e * \omega
-     real(dp) :: xe
-
-! get memory address for ieo
-     ae = index_e(ieo, flvr)
-
-! update index_e
-     do i=ieo,ckink-1
-         index_e(i, flvr) = index_e(i+1, flvr)
-     enddo ! over i={ieo,ckink-1} loop
-     index_e(ckink, flvr) = 0
-
-     do i=ckink-1,ien,-1
-         index_e(i+1, flvr) = index_e(i, flvr)
-     enddo ! over i={ckink-1,ien,-1} loop
-     index_e(ien, flvr) = ae
-
-! update time_e, record new imaginary time point
-     time_e(ae, flvr) = tau_end
-
-! update exp_e, record new exponent values
-     do i=1,nfreq
-         xe = rmesh(i) * tau_end
-         exp_e(i, ae, flvr) = dcmplx( cos(xe), sin(xe) )
-     enddo ! over i={1,nfreq} loop
-
-     return
-  end subroutine cat_rshift_segment
-
-!!>>> cat_reswap_segment: update the perturbation expansion series for
-!!>>> swap segment and anti-segment
-  subroutine cat_reswap_segment(flvr)
-     use constants, only : dp
-
-     use control, only : nfreq
-     use context, only : ckink
-     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
-
-     implicit none
-
-! external arguments
-! current flavor channel
-     integer, intent(in)  :: flvr
-
-! local variables
-! loop index over segments
-     integer  :: i
-
-! dummy time_s and time_e
-     real(dp) :: time_t
-
-! dummy exp_s and exp_e
-     complex(dp) :: exp_t(nfreq)
-
-! swap time_s and time_e
-     do i=1,ckink
-         time_t = time_s(index_s(i, flvr), flvr)
-         time_s(index_s(i, flvr), flvr) = time_e(index_e(i, flvr), flvr)
-         time_e(index_e(i, flvr), flvr) = time_t
-     enddo ! over i={1,ckink} loop
-
-! swap exp_s and exp_e
-     do i=1,ckink
-         exp_t = exp_s(:, index_s(i, flvr), flvr)
-         exp_s(:, index_s(i, flvr), flvr) = exp_e(:, index_e(i, flvr), flvr)
-         exp_e(:, index_e(i, flvr), flvr) = exp_t
-     enddo ! over i={1,ckink} loop
-
-     return
-  end subroutine cat_reswap_segment
 
 !!========================================================================
 !!>>> service layer: make segments from perturbation expansion series  <<<
@@ -2040,13 +2036,13 @@
 ! build segments or anti-segments
      if ( anti .eqv. .false. ) then
          do i=1,kink
-             call cat_insert_segment( flvr, i, i, time(2*i-1), time(2*i) )
+             call cat_insert_action( flvr, i, i, time(2*i-1), time(2*i) )
              ckink = i
          enddo ! over i={1,kink} loop
          stts(flvr) = 1
      else
          do i=1,kink
-             call cat_insert_segment( flvr, i, i, time(2*i), time(2*i-1) )
+             call cat_insert_action( flvr, i, i, time(2*i), time(2*i-1) )
              ckink = i
          enddo ! over i={1,kink} loop
          stts(flvr) = 2

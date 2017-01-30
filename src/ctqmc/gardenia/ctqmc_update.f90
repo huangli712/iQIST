@@ -127,7 +127,7 @@
      enddo ! over j={1,ckink+1} loop
 
 ! update the perturbation expansion series
-     call cat_insert_segment(flvr, is, ie, tau_start, tau_end)
+     call cat_insert_action(flvr, is, ie, tau_start, tau_end)
 
 ! update gmat matrix
      lsaves(:, flvr) = czero

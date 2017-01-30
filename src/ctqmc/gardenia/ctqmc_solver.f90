@@ -1215,7 +1215,7 @@
      if ( pass .eqv. .true. ) then
 
 ! update the mmat matrix and gmat matrix, respectively,
-! cat_insert_segment() subroutine is invoked internally to update the
+! cat_insert_action() subroutine is invoked internally to update the
 ! perturbation expansion series
          call cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
 
