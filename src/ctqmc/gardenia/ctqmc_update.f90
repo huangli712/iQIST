@@ -606,7 +606,7 @@
      endif ! back if ( ien /= ieo ) block
 
 ! update the perturbation expansion series
-     call cat_rshift_segment(flvr, ieo, ien, tau_end2)
+     call cat_rshift_action(flvr, ieo, ien, tau_end2)
 
 ! update gmat matrix
      lsaves(:, flvr) = czero

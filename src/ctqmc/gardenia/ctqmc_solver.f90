@@ -1539,7 +1539,7 @@
      if ( pass .eqv. .true. ) then
 
 ! update the mmat matrix and gmat matrix, respectively,
-! cat_rshift_segment() subroutine is invoked internally to update the
+! cat_rshift_action() subroutine is invoked internally to update the
 ! perturbation expansion series
          call cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
 
