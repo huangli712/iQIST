@@ -1417,7 +1417,7 @@
 ! at first, we select iso randomly, and then obtain tau_start1. according
 ! to the existing segments, we determine tau_start2 and related index isn,
 ! finally ring is evaluated.
-     call ctqmc_make_flavor3(flvr, iso, isn, ring, tau_start1, tau_start2)
+     call cat_lshift_flavor(flvr, iso, isn, ring, tau_start1, tau_start2)
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part
