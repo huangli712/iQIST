@@ -662,7 +662,7 @@
              do i=1,rank(flvr)
                  ts = time_s(index_s(i, flvr), flvr)
                  te = time_e(index_e(i, flvr), flvr)
-                 call ctqmc_make_overlap(flvr, ts, te, oaux)
+                 call cat_ovlp_segments(flvr, ts, te, oaux)
                  ovlp(flvr,:) = ovlp(flvr,:) + oaux
              enddo ! over i={1,rank(flvr)} loop
 
@@ -673,21 +673,21 @@
              do i=1,rank(flvr)-1
                  ts = time_s(index_s(i,   flvr), flvr)
                  te = time_e(index_e(i+1, flvr), flvr)
-                 call ctqmc_make_overlap(flvr, ts, te, oaux)
+                 call cat_ovlp_segments(flvr, ts, te, oaux)
                  ovlp(flvr,:) = ovlp(flvr,:) + oaux
              enddo ! over i={1,rank(flvr)-1} loop
 
              te = time_e(index_e(1, flvr), flvr)
-             call ctqmc_make_overlap(flvr, zero, te, oaux)
+             call cat_ovlp_segments(flvr, zero, te, oaux)
              ovlp(flvr,:) = ovlp(flvr,:) + oaux
 
              ts = time_s(index_s(rank(flvr), flvr), flvr)
-             call ctqmc_make_overlap(flvr, ts, beta, oaux)
+             call cat_ovlp_segments(flvr, ts, beta, oaux)
              ovlp(flvr,:) = ovlp(flvr,:) + oaux
 
 ! case 4: full occupation
          else if ( stts(flvr) == 3 ) then
-             call ctqmc_make_overlap(flvr, zero, beta, oaux)
+             call cat_ovlp_segments(flvr, zero, beta, oaux)
              ovlp(flvr,:) = oaux
 
          endif ! back if ( stts(flvr) == 0 ) block
