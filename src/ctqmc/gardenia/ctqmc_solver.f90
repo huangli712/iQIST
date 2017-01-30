@@ -1329,7 +1329,7 @@
      if ( pass .eqv. .true. ) then
 
 ! update the mmat matrix and gmat matrix, respectively,
-! cat_remove_segment() subroutine is invoked internally to update the
+! cat_remove_action() subroutine is invoked internally to update the
 ! perturbation expansion series
          call cat_remove_matrix(flvr, is, ie)
 

@@ -237,7 +237,7 @@
      enddo ! over j={1,is-1} loop
 
 ! update the perturbation expansion series
-     call cat_remove_segment(flvr, is, ie)
+     call cat_remove_action(flvr, is, ie)
 
 ! only for debug
 !<     do i=1,ckink
