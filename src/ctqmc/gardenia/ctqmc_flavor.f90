@@ -2063,9 +2063,9 @@
      return
   end subroutine cat_make_segments
 
-!!>>> ctqmc_make_display: display segment information on the screen, only
+!!>>> cat_disp_segments: display segment information on the screen, only
 !!>>> used to debug the code
-  subroutine ctqmc_make_display(show_type)
+  subroutine cat_disp_segments(show_type)
      use constants, only : mystd
 
      use control, only : norbs
@@ -2135,4 +2135,4 @@
      endif ! back if ( show_type == 1 ) block
 
      return
-  end subroutine ctqmc_make_display
+  end subroutine cat_disp_segments
