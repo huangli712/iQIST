@@ -345,7 +345,7 @@
   end subroutine ctqmc_make_uumat
 
 !!========================================================================
-!!>>> atomic state converter                                           <<<
+!!>>> atomic eigenstate converter                                      <<<
 !!========================================================================
 
 !!>>> ctqmc_make_state: convert current atomic state array into a decimal
