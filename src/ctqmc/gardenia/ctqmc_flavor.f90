@@ -1760,14 +1760,21 @@
      return
   end subroutine cat_rshift_flavor
 
+!!>>> cat_reswap_flavor: to do nothing
+  subroutine cat_reswap_flavor()
+     implicit none
+
+     return
+  end subroutine cat_reswap_flavor
+
 !!========================================================================
 !!>>> service layer: calculate occupation status for current flavor    <<<
 !!========================================================================
 
-!!>>> ctqmc_spin_counter: evaluate the occupation status for current
+!!>>> cat_occupy_status: evaluate the occupation status for current
 !!>>> flavor channel and time, which can be used to calculate spin-spin
 !!>>> correlation function
-  subroutine ctqmc_spin_counter(flvr, curr, occu)
+  subroutine cat_occupy_status(flvr, curr, occu)
      use constants, only : dp, zero, one
 
      use context, only : index_s, index_e, time_s, time_e
@@ -1836,7 +1843,7 @@
      end select FLAVOR_SWITCHER
 
      return
-  end subroutine ctqmc_spin_counter
+  end subroutine cat_occupy_status
 
 !!========================================================================
 !!>>> service layer: calculate overlap between segments                <<<

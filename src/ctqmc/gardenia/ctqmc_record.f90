@@ -898,7 +898,7 @@
      saux = zero
      TIME_LOOP: do i=1,ntime
          do f1=1,norbs
-             call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
+             call cat_occupy_status(f1, tmesh(i), oaux(i,f1))
          enddo ! over f1={1,norbs} loop
 
          do f2=1,nband
@@ -977,7 +977,7 @@
      oaux = zero
      TIME_LOOP: do i=1,ntime
          do f1=1,norbs
-             call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
+             call cat_occupy_status(f1, tmesh(i), oaux(i,f1))
          enddo ! over f1={1,norbs} loop
      enddo TIME_LOOP ! over i={1,ntime} loop
      oaux = oaux / real(num_try)
@@ -1077,7 +1077,7 @@
 
 ! calculate oaux, obtain occupation status
      do f1=1,norbs
-         call ctqmc_spin_counter(f1, zero, oaux(f1))
+         call cat_occupy_status(f1, zero, oaux(f1))
      enddo ! over i={1,norbs} loop
 
 ! calculate ssfom, it must be real
@@ -1177,7 +1177,7 @@
      oaux = zero
      TIME_LOOP: do i=1,ntime
          do f1=1,norbs
-             call ctqmc_spin_counter(f1, tmesh(i), oaux(i,f1))
+             call cat_occupy_status(f1, tmesh(i), oaux(i,f1))
          enddo ! over f1={1,norbs} loop
      enddo TIME_LOOP ! over i={1,ntime} loop
      oaux = oaux / real(num_try)
@@ -1258,7 +1258,7 @@
 
 ! calculate oaux, obtain occupation status
      do f1=1,norbs
-         call ctqmc_spin_counter(f1, zero, oaux(f1))
+         call cat_occupy_status(f1, zero, oaux(f1))
      enddo ! over i={1,norbs} loop
 
 ! calculate oofom, it must be real
@@ -3303,7 +3303,7 @@
 
 ! calculate normal contribution
              do clur=1,norbs
-                 call ctqmc_spin_counter(clur, time_e( index_e(it, flvr), flvr ), occu)
+                 call cat_occupy_status(clur, time_e( index_e(it, flvr), flvr ), occu)
                  pref(it,flvr) = pref(it,flvr) + half * ( uumat(flvr,clur) + uumat(clur,flvr) ) * occu
              enddo ! over clur={1,norbs} loop
          enddo ! over it={1,rank(flvr)} loop
