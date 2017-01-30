@@ -1899,9 +1899,9 @@
      return
   end subroutine cat_ovlp_segment_
 
-!!>>> ctqmc_make_overlap: calculate the delta segment overlaps between
+!!>>> cat_ovlp_segments: calculate the delta segment overlaps between
 !!>>> current flavor channel and other flavor channels
-  subroutine ctqmc_make_overlap(flvr, tau_start, tau_end, ovlp)
+  subroutine cat_ovlp_segments(flvr, tau_start, tau_end, ovlp)
      use constants, only : dp, zero
 
      use control, only : norbs
@@ -1994,7 +1994,7 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine ctqmc_make_overlap
+  end subroutine cat_ovlp_segments
 
 !!========================================================================
 !!>>> service layer: utility subroutines to test segment algorithm     <<<
