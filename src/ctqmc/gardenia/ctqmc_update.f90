@@ -12,12 +12,13 @@
 !!!           cat_lshift_detrat
 !!!           cat_rshift_detrat
 !!!           cat_reswap_detrat
-!!!           cat_reflip_detrat <<<---
+!!!           cat_reflip_detrat
+!!!           cat_reload_detrat <<<---
 !!! source  : ctqmc_update.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/30/2017 by li huang (last modified)
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -1304,3 +1305,10 @@
 
      return
   end subroutine cat_reflip_detrat
+
+!!>>> cat_reload_detrat: to do nothing
+  subroutine cat_reload_detrat()
+     implicit none
+
+     return
+  end subroutine cat_reload_detrat
