@@ -4,20 +4,20 @@
 !!!           cat_remove_action
 !!!           cat_lshift_action
 !!!           cat_rshift_action
-!!!           cat_reswap_action  <<<---
+!!!           cat_reswap_action <<<---
 !!!           cat_insert_ztrace
 !!!           cat_remove_ztrace
 !!!           cat_lshift_ztrace
 !!!           cat_rshift_ztrace
-!!!           cat_reswap_ztrace  <<<---
+!!!           cat_reswap_ztrace <<<---
 !!!           cat_insert_flavor
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
 !!!           cat_rshift_flavor
-!!!           cat_reswap_flavor  <<<---
-!!!           cat_occupy_status  <<<---
+!!!           cat_reswap_flavor <<<---
+!!!           cat_occupy_status <<<---
 !!!           cat_ovlp_segment_
-!!!           cat_ovlp_segments  <<<---
+!!!           cat_ovlp_segments <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -1995,142 +1995,3 @@
 
      return
   end subroutine cat_ovlp_segments
-
-!!========================================================================
-!!>>> service layer: utility subroutines to test segment algorithm     <<<
-!!========================================================================
-
-!!>>> ctqmc_make_segment: generate segments or anti-segments for the
-!!>>> specified flavor channel randomly, only used to debug the code
-  subroutine ctqmc_make_segment(flvr, kink, anti)
-     use constants, only : dp
-     use spring, only : spring_sfmt_stream
-
-     use control, only : beta
-     use context, only : ckink
-     use context, only : rank, stts
-
-     implicit none
-
-! external arguments
-! current flavor channel
-     integer, intent(in) :: flvr
-
-! number of segments (operator pair)
-     integer, intent(in) :: kink
-
-! whether it is an anti-segment configuration
-     logical, intent(in) :: anti
-
-! local variables
-! loop index
-     integer  :: i
-
-! data for imaginary time \tau
-     real(dp) :: time(2*kink)
-
-! generate 2*kink random numbers range from 0 to 1
-     do i=1,2*kink
-         time(i) = spring_sfmt_stream()
-     enddo ! over i={1,2*kink} loop
-
-! scale time from [0,1] to [0, beta]
-     time = time * beta
-
-! sort time series
-     call s_sorter(2*kink, time)
-
-! build segments or anti-segments
-     if ( anti .eqv. .false. ) then
-         do i=1,kink
-             call cat_insert_action( flvr, i, i, time(2*i-1), time(2*i) )
-             ckink = i
-         enddo ! over i={1,kink} loop
-         stts(flvr) = 1
-     else
-         do i=1,kink
-             call cat_insert_action( flvr, i, i, time(2*i), time(2*i-1) )
-             ckink = i
-         enddo ! over i={1,kink} loop
-         stts(flvr) = 2
-     endif ! back if ( anti .eqv. .false. ) block
-
-! update the rank
-     rank(flvr) = ckink
-
-     return
-  end subroutine ctqmc_make_segment
-
-!!>>> ctqmc_make_display: display segment information on the screen, only
-!!>>> used to debug the code
-  subroutine ctqmc_make_display(show_type)
-     use constants, only : mystd
-
-     use control, only : norbs
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : rank, stts
-
-     implicit none
-
-! external arguments
-! output style
-     integer, intent(in) :: show_type
-
-! local variables
-! loop index over orbitals
-     integer :: i
-
-! loop index over segments or anti-segments
-     integer :: j
-
-! apply normal display mode
-     if ( show_type == 1 ) then
-         do i=1,norbs
-             write(mystd,'(4X,a,i4)') '# flavor:', i
-             write(mystd,'(4X,a,i4)') '# status:', stts(i)
-
-             write(mystd,'(4X,a,i4)') '# time_s data:', rank(i)
-             do j=1,rank(i)
-                 write(mystd,'(4X,2i4,f12.6)') i, j, time_s(index_s(j, i), i)
-             enddo ! over j={1,rank(i)} loop
-
-             write(mystd,'(4X,a,i4)') '# time_e data:', rank(i)
-             do j=1,rank(i)
-                 write(mystd,'(4X,2i4,f12.6)') i, j, time_e(index_e(j, i), i)
-             enddo ! over j={1,rank(i)} loop
-
-             write(mystd,*) ! write empty lines
-             write(mystd,*)
-         enddo ! over i={1,norbs} loop
-
-! apply compat display mode
-     else
-         do i=1,norbs
-             write(mystd,'(4X,a,i4)') '# flavor:', i
-             write(mystd,'(4X,a,i4)') '# status:', stts(i)
-
-             write(mystd,'(4X,a,i4)') '# time_s and time_e data:', rank(i)
-             if      ( stts(i) == 0 ) then
-                 write(mystd,'(4X,a)') '--->>> null occupation'
-             else if ( stts(i) == 1 ) then
-                 write(mystd,'(4X,a)') '--->>>      tau_s       tau_e'
-                 do j=1,rank(i)
-                     write(mystd,'(4X,2i4,2f12.6)') i, j, time_s(index_s(j, i), i), time_e(index_e(j, i), i)
-                 enddo ! over j={1,rank(i)} loop
-             else if ( stts(i) == 2 ) then
-                 write(mystd,'(4X,a)') '--->>>      tau_e       tau_s'
-                 do j=1,rank(i)
-                     write(mystd,'(4X,2i4,2f12.6)') i, j, time_e(index_e(j, i), i), time_s(index_s(j, i), i)
-                 enddo ! over j={1,rank(i)} loop
-             else if ( stts(i) == 3 ) then
-                 write(mystd,'(4X,a)') '--->>> full occupation'
-             endif ! back if      ( stts(i) == 0 ) block
-
-             write(mystd,*) ! write empty lines
-             write(mystd,*)
-         enddo ! over i={1,norbs} loop
-
-     endif ! back if ( show_type == 1 ) block
-
-     return
-  end subroutine ctqmc_make_display
