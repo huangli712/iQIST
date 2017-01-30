@@ -273,9 +273,9 @@
      return
   end subroutine cat_rshift_action
 
-!!>>> cat_reswap_segment: update the perturbation expansion series for
-!!>>> swap segment and anti-segment
-  subroutine cat_reswap_segment(flvr)
+!!>>> cat_reswap_action: update the perturbation expansion series for
+!!>>> swapping segment and anti-segment
+  subroutine cat_reswap_action(flvr)
      use constants, only : dp
 
      use control, only : nfreq
@@ -313,7 +313,7 @@
      enddo ! over i={1,ckink} loop
 
      return
-  end subroutine cat_reswap_segment
+  end subroutine cat_reswap_action
 
 !!========================================================================
 !!>>> service layer: evaluate ztrace ratio                             <<<

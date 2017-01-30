@@ -669,7 +669,7 @@
      end select
 
 ! swap time_s, time_e, exp_s, and exp_e
-     call cat_reswap_segment(flvr)
+     call cat_reswap_action(flvr)
 
 ! regenerate mmat and gmat matrix if need
      if ( ckink > 0 ) then
