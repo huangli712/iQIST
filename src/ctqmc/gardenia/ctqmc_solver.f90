@@ -1519,7 +1519,7 @@
 ! at first, we select ieo randomly, and then obtain tau_end1. according
 ! to the existing segments, we determine tau_end2 and related index ien,
 ! finally ring is evaluated.
-     call ctqmc_make_flavor4(flvr, ieo, ien, ring, tau_end1, tau_end2)
+     call cat_rshift_flavor(flvr, ieo, ien, ring, tau_end1, tau_end2)
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part
