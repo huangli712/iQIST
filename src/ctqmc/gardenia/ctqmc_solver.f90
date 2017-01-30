@@ -1437,7 +1437,7 @@
      if ( pass .eqv. .true. ) then
 
 ! update the mmat matrix and gmat matrix, respectively,
-! cat_lshift_segment() subroutine is invoked internally to update the
+! cat_lshift_action() subroutine is invoked internally to update the
 ! perturbation expansion series
          call cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
 

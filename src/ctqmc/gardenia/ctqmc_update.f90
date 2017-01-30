@@ -414,7 +414,7 @@
      endif ! back if ( isn /= iso ) block
 
 ! update the perturbation expansion series
-     call cat_lshift_segment(flvr, iso, isn, tau_start2)
+     call cat_lshift_action(flvr, iso, isn, tau_start2)
 
 ! update gmat matrix
      lsaves(:, flvr) = czero

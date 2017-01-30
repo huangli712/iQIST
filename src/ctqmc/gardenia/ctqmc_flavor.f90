@@ -155,9 +155,9 @@
      return
   end subroutine cat_remove_action
 
-!!>>> cat_lshift_segment: update the perturbation expansion series for
+!!>>> cat_lshift_action: update the perturbation expansion series for
 !!>>> left shift old segment or anti-segment
-  subroutine cat_lshift_segment(flvr, iso, isn, tau_start)
+  subroutine cat_lshift_action(flvr, iso, isn, tau_start)
      use constants, only : dp
 
      use control, only : nfreq
@@ -212,7 +212,7 @@
      enddo ! over i={1,nfreq} loop
 
      return
-  end subroutine cat_lshift_segment
+  end subroutine cat_lshift_action
 
 !!>>> cat_rshift_segment: update the perturbation expansion series for
 !!>>> right shift old segment or anti-segment
