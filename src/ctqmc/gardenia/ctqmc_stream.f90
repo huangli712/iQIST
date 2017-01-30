@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/30/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -478,29 +478,12 @@
 ! for real variables
 !-------------------------------------------------------------------------
 ! init statistics variables
-     insert_tcount = zero
-     insert_accept = zero
-     insert_reject = zero
-
-     remove_tcount = zero
-     remove_accept = zero
-     remove_reject = zero
-
-     lshift_tcount = zero
-     lshift_accept = zero
-     lshift_reject = zero
-
-     rshift_tcount = zero
-     rshift_accept = zero
-     rshift_reject = zero
-
-     reswap_tcount = zero
-     reswap_accept = zero
-     reswap_reject = zero
-
-     reflip_tcount = zero
-     reflip_accept = zero
-     reflip_reject = zero
+     insert_tcount = zero; insert_accept = zero; insert_reject = zero
+     remove_tcount = zero; remove_accept = zero; remove_reject = zero
+     lshift_tcount = zero; lshift_accept = zero; lshift_reject = zero
+     rshift_tcount = zero; rshift_accept = zero; rshift_reject = zero
+     reswap_tcount = zero; reswap_accept = zero; reswap_reject = zero
+     reflip_tcount = zero; reflip_accept = zero; reflip_reject = zero
 
 ! for integer arrays
 !-------------------------------------------------------------------------
