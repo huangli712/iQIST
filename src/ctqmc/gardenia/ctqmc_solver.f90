@@ -1187,7 +1187,7 @@
 ! valid, if tau_start is valid, then determine tau_end, tau_max, is, and
 ! ie consistently, and set ladd to .true., if tau_start is not valid, then
 ! set ladd to .false.
-     call ctqmc_make_flavor1(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
+     call cat_insert_flavor(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part
