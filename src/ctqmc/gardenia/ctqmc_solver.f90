@@ -1309,7 +1309,7 @@
 ! at first determine anti and is randomly, then tau_start is obtained by
 ! is. and then ie, tau_end, and tau_max are evaluated carefully according
 ! to is and ie
-     call ctqmc_make_flavor2(flvr, is, ie, anti, tau_start, tau_end, tau_max)
+     call cat_remove_flavor(flvr, is, ie, anti, tau_start, tau_end, tau_max)
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part
