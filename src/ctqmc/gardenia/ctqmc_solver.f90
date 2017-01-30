@@ -860,6 +860,10 @@
      return
   end subroutine ctqmc_impurity_tester
 
+!!========================================================================
+!!>>> service layer: updating perturbation expansion series 1          <<<
+!!========================================================================
+
 !!>>> ctqmc_diagram_warmming: perform thermalization or warmup on the
 !!>>> perturbation expansion series to achieve thermodynamics stable
 !!>>> equilibrium state
@@ -1110,7 +1114,7 @@
   end subroutine ctqmc_diagram_checking
 
 !!========================================================================
-!!>>> driver layer: updating perturbation expansion series             <<<
+!!>>> service layer: updating perturbation expansion series 2          <<<
 !!========================================================================
 
 !!>>> ctqmc_insert_kink: insert new segment or anti-segment in the
