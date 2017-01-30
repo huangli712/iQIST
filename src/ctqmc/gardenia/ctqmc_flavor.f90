@@ -13,16 +13,16 @@
 !!!           cat_insert_flavor
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
-!!!           cat_rshift_flavor  
+!!!           cat_rshift_flavor
 !!!           cat_reswap_flavor  <<<---
 !!!           cat_occupy_status  <<<---
-!!!           cat_ovlp_segment
+!!!           cat_ovlp_segment_
 !!!           cat_ovlp_segments  <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           01/30/2017 by li huang (last modified)
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -30,6 +30,10 @@
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+
+
+
 
 !!========================================================================
 !!>>> service layer: evaluate ztrace ratio                             <<<
