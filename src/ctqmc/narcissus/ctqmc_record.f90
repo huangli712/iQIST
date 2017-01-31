@@ -2175,6 +2175,63 @@
      return
   end subroutine ctqmc_reduce_lmat
 
+!!>>> ctqmc_reduce_szpw: reduce the szpow from all children processes
+  subroutine ctqmc_reduce_szpw(szpow_mpi, szpow_err)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce, mp_barrier
+
+     use control, only : norbs
+     use control, only : nprocs
+     use context, only : szpow
+
+     implicit none
+
+! external arguments
+! powers of local magnetization, orbital-resolved
+     real(dp), intent(out) :: szpow_mpi(4,norbs)
+     real(dp), intent(out) :: szpow_err(4,norbs)
+
+! initialize szpow_mpi and szpow_err
+     szpow_mpi = zero
+     szpow_err = zero
+
+! build szpow_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(szpow, szpow_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     szpow_mpi = szpow
+
+# endif /* MPI */
+
+! calculate the average
+     szpow_mpi = szpow_mpi / real(nprocs)
+
+! build szpow_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((szpow - szpow_mpi)**2, szpow_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         szpow_err = sqrt( szpow_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+     return
+  end subroutine ctqmc_reduce_szpw
+
 !!>>> ctqmc_reduce_schi: reduce the schi and sschi from all children processes
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
      use constants, only : dp, zero
