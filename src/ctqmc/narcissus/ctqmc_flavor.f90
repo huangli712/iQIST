@@ -1432,9 +1432,9 @@
      return
   end subroutine cat_remove_flavor
 
-!!>>> ctqmc_make_flavor3: determine \tau_s1 and \tau_s2 for lshift old
+!!>>> cat_lshift_flavor: determine \tau_s1 and \tau_s2 for lshift old
 !!>>> segment or anti-segment
-  subroutine ctqmc_make_flavor3(flvr, iso, isn, ring, tau_start1, tau_start2)
+  subroutine cat_lshift_flavor(flvr, iso, isn, ring, tau_start1, tau_start2)
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
 
@@ -1594,7 +1594,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
-  end subroutine ctqmc_make_flavor3
+  end subroutine cat_lshift_flavor
 
 !!>>> ctqmc_make_flavor4: determine \tau_e1 and \tau_e2 for rshift old
 !!>>> segment or anti-segment
