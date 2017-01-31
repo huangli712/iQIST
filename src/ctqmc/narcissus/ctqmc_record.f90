@@ -3299,27 +3299,27 @@
 ! contribution from create operators
              dtau = time_s( index_s(it, flvr), flvr ) - time
              if ( dtau >= zero ) then
-                 call ctqmc_make_wkernel(2, +dtau, daux)
+                 call cat_weight_kernel(2, +dtau, daux)
                  iret = iret + daux
              else
-                 call ctqmc_make_wkernel(2, -dtau, daux)
+                 call cat_weight_kernel(2, -dtau, daux)
                  iret = iret - daux
              endif ! back if ( dtau >= zero ) block
 
 ! contribution from destroy operators
              dtau = time_e( index_e(it, flvr), flvr ) - time
              if ( dtau >= zero ) then
-                 call ctqmc_make_wkernel(2, +dtau, daux)
+                 call cat_weight_kernel(2, +dtau, daux)
                  iret = iret - daux
              else
-                 call ctqmc_make_wkernel(2, -dtau, daux)
+                 call cat_weight_kernel(2, -dtau, daux)
                  iret = iret + daux
              endif ! back if ( dtau >= zero ) block
          enddo ! over it={1,rank(flvr)} loop
      enddo ! over flvr={1,norbs} loop
 
 ! add additional term
-     call ctqmc_make_wkernel(2, zero, daux)
+     call cat_weight_kernel(2, zero, daux)
      iret = -iret - two * daux
 
      return
