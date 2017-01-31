@@ -6,7 +6,7 @@
      implicit none
 
      type (T_mpi) :: I_mpi
-     type (T_segment_azalea) :: I_solver
+     type (T_segment_gardenia) :: I_solver
 
      integer :: i
      integer :: mfreq
@@ -44,13 +44,22 @@
      I_solver%issun  = 2
      I_solver%isspn  = 1
      I_solver%isbin  = 1
+     I_solver%isort  = 1
+     I_solver%issus  = 1
+     I_solver%isvrt  = 1
      I_solver%nband  = 1
      I_solver%nspin  = 2
      I_solver%norbs  = 2
      I_solver%ncfgs  = 4
      I_solver%niter  = 1
+     I_solver%lemax  = 32
+     I_solver%legrd  = 20001
+     I_solver%chmax  = 32
+     I_solver%chgrd  = 20001
      I_solver%mkink  = 1024
      I_solver%mfreq  = 8193
+     I_solver%nffrq  = 32
+     I_solver%nbfrq  = 8
      I_solver%nfreq  = 128
      I_solver%ntime  = 1024
      I_solver%nflip  = 10000
