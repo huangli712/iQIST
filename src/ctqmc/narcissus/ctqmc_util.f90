@@ -516,7 +516,7 @@
      real(dp) :: shift
 
 ! evaluate the shift at first
-     shift = 0.0_dp; call ctqmc_eval_shift(shift)
+     shift = 0.0_dp; call ctqmc_prep_shift(shift)
 
 ! multiple the shift with sign
      call s_assert( abs(ssign) == 1.0_dp ); shift = shift * ssign
