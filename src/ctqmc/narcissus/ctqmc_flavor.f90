@@ -1596,9 +1596,9 @@
      return
   end subroutine cat_lshift_flavor
 
-!!>>> ctqmc_make_flavor4: determine \tau_e1 and \tau_e2 for rshift old
+!!>>> cat_rshift_flavor: determine \tau_e1 and \tau_e2 for rshift old
 !!>>> segment or anti-segment
-  subroutine ctqmc_make_flavor4(flvr, ieo, ien, ring, tau_end1, tau_end2)
+  subroutine cat_rshift_flavor(flvr, ieo, ien, ring, tau_end1, tau_end2)
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
 
@@ -1758,7 +1758,14 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
-  end subroutine ctqmc_make_flavor4
+  end subroutine cat_rshift_flavor
+
+!!>>> cat_reswap_flavor: to do nothing
+  subroutine cat_reswap_flavor()
+     implicit none
+
+     return
+  end subroutine cat_reswap_flavor
 
 !!========================================================================
 !!>>> service layer: calculate occupation status for current flavor    <<<
