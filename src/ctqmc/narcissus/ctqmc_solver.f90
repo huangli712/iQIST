@@ -504,7 +504,7 @@
 
 ! write out the snapshot for the current diagram configuration
          if ( myid == master ) then
-             call ctqmc_diagram_plotting(iter, cstep)
+             call ctqmc_dump_diag(iter, cstep)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
