@@ -810,6 +810,8 @@
      deallocate(rmat_err )
      deallocate(lrmat_mpi)
      deallocate(lrmat_err)
+     deallocate(szpow_mpi)
+     deallocate(szpow_err)
      deallocate(schi_mpi )
      deallocate(schi_err )
      deallocate(sschi_mpi)
