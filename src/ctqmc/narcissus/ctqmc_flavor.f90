@@ -111,9 +111,9 @@
      return
   end subroutine cat_insert_action
 
-!!>>> cat_remove_segment: update the perturbation expansion series for
+!!>>> cat_remove_action: update the perturbation expansion series for
 !!>>> remove old segment or anti-segment
-  subroutine cat_remove_segment(flvr, is, ie)
+  subroutine cat_remove_action(flvr, is, ie)
      use stack, only : istack_push
 
      use context, only : ckink
@@ -157,7 +157,7 @@
      index_e(ckink, flvr) = 0
 
      return
-  end subroutine cat_remove_segment
+  end subroutine cat_remove_action
 
 !!>>> cat_lshift_segment: update the perturbation expansion series for
 !!>>> left shift old segment or anti-segment
