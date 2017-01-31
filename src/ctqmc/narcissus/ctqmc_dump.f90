@@ -752,6 +752,54 @@
      return
   end subroutine ctqmc_dump_lmat
 
+!!>>> ctqmc_dump_schi: write out the powers of local magnetization
+  subroutine ctqmc_dump_szpw(szpow, szerr)
+     use constants, only : dp, mytmp
+
+     use control, only : issus
+     use control, only : nband, norbs
+
+     implicit none
+
+! external arguments
+! powers of local magnetization
+     real(dp), intent(in) :: szpow(4,norbs)
+     real(dp), intent(in) :: szerr(4,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! check if we need to dump the powers of local magnetization data
+! to solver.szpw.dat
+     if ( .not. btest(issus, 7) ) RETURN
+
+! open data file: solver.szpw.dat
+     open(mytmp, file='solver.szpw.dat', form='formatted', status='unknown')
+
+! write it
+     do j=1,nband
+         write(mytmp,'(a,i6)') '# flvr:', j
+         do i=1,4
+             write(mytmp,'(i4,2f12.6)') i, szpow(i,j), szerr(i,j)
+         enddo ! over i={1,4} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over j={1,nband} loop
+     write(mytmp,'(a,i6)') '# flvr:', 8888
+     do i=1,4
+         write(mytmp,'(i4,2f12.6)') i, szpow(i,nband+1), szerr(i,nband+1)
+     enddo ! over i={1,4} loop
+     write(mytmp,*) ! write empty lines
+     write(mytmp,*)
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_szpw
+
 !!>>> ctqmc_dump_schi: write out the spin-spin correlation function
   subroutine ctqmc_dump_schi(schi, sschi, serr, sserr)
      use constants, only : dp, mytmp
