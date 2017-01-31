@@ -4,7 +4,7 @@ The iQIST software package contains several quantum impurity solvers which imple
 
 ## Version
 
-v0.6.8 @ 2017.01.25D (devel)
+v0.6.8 @ 2017.01.31D (devel)
 
 ## License
 
