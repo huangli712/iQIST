@@ -405,7 +405,7 @@
      call cat_weight_factor(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by new create and destroy operator
-     call ctqmc_make_wkernel(1, dtau,   se_scr)
+     call cat_weight_kernel(1, dtau,   se_scr)
 
 ! evaluate total weight factor (screening part)
      scr = ts_scr - te_scr - se_scr
@@ -539,7 +539,7 @@
      call cat_weight_factor(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by old create and destroy operator
-     call ctqmc_make_wkernel(1, dtau,   se_scr)
+     call cat_weight_kernel(1, dtau,   se_scr)
 
 ! evaluate total weight factor (screening part)
      scr = ts_scr - te_scr + se_scr
@@ -683,7 +683,7 @@
      call cat_weight_factor(tau_start2, ts2_scr)
 
 ! calculate the extra weight factor contributed by old and new create operator
-     call ctqmc_make_wkernel(1, dtau,   ts12_scr)
+     call cat_weight_kernel(1, dtau,   ts12_scr)
 
 ! evaluate total weight factor (screening part)
      scr = ts2_scr - ts1_scr - ts12_scr
@@ -826,7 +826,7 @@
      call cat_weight_factor(tau_end2, te2_scr)
 
 ! calculate the extra weight factor contributed by old and new destroy operator
-     call ctqmc_make_wkernel(1, dtau, te12_scr)
+     call cat_weight_kernel(1, dtau, te12_scr)
 
 ! evaluate total weight factor (screening part)
      scr = te1_scr - te2_scr - te12_scr
@@ -1890,9 +1890,9 @@
              ts = time_s(index_s(j, i), i)
              if ( ts == tau ) CYCLE ! meet myself
              if ( ts < tau ) then
-                 call ctqmc_make_wkernel(1, tau - ts, cur)
+                 call cat_weight_kernel(1, tau - ts, cur)
              else
-                 call ctqmc_make_wkernel(1, ts - tau, cur)
+                 call cat_weight_kernel(1, ts - tau, cur)
              endif ! back if ( ts < tau ) block
              scr = scr + cur
          enddo ! over j={1,rank(i)} loop
@@ -1904,9 +1904,9 @@
              te = time_e(index_e(j, i), i)
              if ( te == tau ) CYCLE ! meet myself
              if ( te < tau ) then
-                 call ctqmc_make_wkernel(1, tau - te, cur)
+                 call cat_weight_kernel(1, tau - te, cur)
              else
-                 call ctqmc_make_wkernel(1, te - tau, cur)
+                 call cat_weight_kernel(1, te - tau, cur)
              endif ! back if ( te < tau ) block
              scr = scr - cur
          enddo ! over j={1,rank(i)} loop
