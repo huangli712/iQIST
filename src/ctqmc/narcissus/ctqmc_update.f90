@@ -639,6 +639,13 @@
      return
   end subroutine cat_rshift_matrix
 
+!!>>> cat_reswap_matrix: to do nothing
+  subroutine cat_reswap_matrix()
+     implicit none
+
+     return
+  end subroutine cat_reswap_matrix
+
 !!>>> cat_reflip_matrix: global flip the time_s, time_e, mmat matrix, gmat
 !!>>> matrix, and other related global variables between spin up and spin
 !!>>> down states. it is used to avoid trapped by unphysical phase
