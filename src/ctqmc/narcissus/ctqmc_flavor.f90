@@ -2188,13 +2188,13 @@
 ! build segments or anti-segments
      if ( anti .eqv. .false. ) then
          do i=1,kink
-             call cat_insert_segment( flvr, i, i, time(2*i-1), time(2*i) )
+             call cat_insert_action( flvr, i, i, time(2*i-1), time(2*i) )
              ckink = i
          enddo ! over i={1,kink} loop
          stts(flvr) = 1
      else
          do i=1,kink
-             call cat_insert_segment( flvr, i, i, time(2*i), time(2*i-1) )
+             call cat_insert_action( flvr, i, i, time(2*i), time(2*i-1) )
              ckink = i
          enddo ! over i={1,kink} loop
          stts(flvr) = 2
