@@ -809,6 +809,26 @@
      return
   end subroutine ctqmc_impurity_solver
 
+!!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
+!!>>> on ctqmc_diagram_sampling() subroutine
+  subroutine ctqmc_impurity_tester()
+     use constants ! ALL
+
+     use control   ! ALL
+     use context   ! ALL
+
+     implicit none
+
+!-------------------------------------------------------------------------
+! please insert your debug code here
+!-------------------------------------------------------------------------
+
+     call ctqmc_make_display(2)
+     call s_print_error('ctqmc_impurity_tester','in debug mode')
+
+     return
+  end subroutine ctqmc_impurity_tester
+
 !!>>> ctqmc_diagram_warmming: perform thermalization or warmup on the
 !!>>> perturbation expansion series to achieve thermodynamics stable
 !!>>> equilibrium state
@@ -997,26 +1017,6 @@
 
      return
   end subroutine ctqmc_diagram_checking
-
-!!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
-!!>>> on ctqmc_diagram_sampling() subroutine
-  subroutine ctqmc_impurity_tester()
-     use constants ! ALL
-
-     use control   ! ALL
-     use context   ! ALL
-
-     implicit none
-
-!-------------------------------------------------------------------------
-! please insert your debug code here
-!-------------------------------------------------------------------------
-
-     call ctqmc_make_display(2)
-     call s_print_error('ctqmc_impurity_tester','in debug mode')
-
-     return
-  end subroutine ctqmc_impurity_tester
 
 !!========================================================================
 !!>>> driver layer: updating perturbation expansion series             <<<
