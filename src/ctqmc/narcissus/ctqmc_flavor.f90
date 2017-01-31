@@ -358,24 +358,24 @@
      if ( anti .eqv. .false. ) then
          if ( tau_start < tau_end ) then
              dtau = tau_end - tau_start
-             call ctqmc_make_overlap(flvr, tau_start, tau_end, ovlp)
+             call cat_ovlp_segments(flvr, tau_start, tau_end, ovlp)
 ! the new segment winds around the circle
          else
              dtau = beta - tau_start + tau_end - zero
-             call ctqmc_make_overlap(flvr, zero, tau_end, ovlp1)
-             call ctqmc_make_overlap(flvr, tau_start, beta, ovlp2)
+             call cat_ovlp_segments(flvr, zero, tau_end, ovlp1)
+             call cat_ovlp_segments(flvr, tau_start, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start < tau_end ) block
 ! for anti-segment case
      else
          if ( tau_start > tau_end ) then
              dtau = tau_start - tau_end
-             call ctqmc_make_overlap(flvr, tau_end, tau_start, ovlp)
+             call cat_ovlp_segments(flvr, tau_end, tau_start, ovlp)
 ! the new anti-segment winds around the circle
          else
              dtau = tau_start - zero + beta - tau_end
-             call ctqmc_make_overlap(flvr, zero, tau_start, ovlp1)
-             call ctqmc_make_overlap(flvr, tau_end, beta, ovlp2)
+             call cat_ovlp_segments(flvr, zero, tau_start, ovlp1)
+             call cat_ovlp_segments(flvr, tau_end, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start > tau_end ) block
      endif ! back if ( anti .eqv. .false. ) block
@@ -492,24 +492,24 @@
 ! for segment case
          if ( tau_start < tau_end ) then
              dtau = tau_end - tau_start
-             call ctqmc_make_overlap(flvr, tau_start, tau_end, ovlp)
+             call cat_ovlp_segments(flvr, tau_start, tau_end, ovlp)
 ! the selected segment winds around the circle
          else
              dtau = beta - tau_start + tau_end - zero
-             call ctqmc_make_overlap(flvr, zero, tau_end, ovlp1)
-             call ctqmc_make_overlap(flvr, tau_start, beta, ovlp2)
+             call cat_ovlp_segments(flvr, zero, tau_end, ovlp1)
+             call cat_ovlp_segments(flvr, tau_start, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start < tau_end ) block
 ! for anti-segment case
      else
          if ( tau_start > tau_end ) then
              dtau = tau_start - tau_end
-             call ctqmc_make_overlap(flvr, tau_end, tau_start, ovlp)
+             call cat_ovlp_segments(flvr, tau_end, tau_start, ovlp)
 ! the selected anti-segment winds around the circle
          else
              dtau = tau_start - zero + beta - tau_end
-             call ctqmc_make_overlap(flvr, zero, tau_start, ovlp1)
-             call ctqmc_make_overlap(flvr, tau_end, beta, ovlp2)
+             call cat_ovlp_segments(flvr, zero, tau_start, ovlp1)
+             call cat_ovlp_segments(flvr, tau_end, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start > tau_end ) block
      endif ! back if ( anti .eqv. .false. ) block
@@ -627,25 +627,25 @@
 ! stretch the segment
          if ( tau_start1 > tau_start2 ) then
              dtau = tau_start1 - tau_start2
-             call ctqmc_make_overlap(flvr, tau_start2, tau_start1, ovlp)
+             call cat_ovlp_segments(flvr, tau_start2, tau_start1, ovlp)
 ! shrink the segment
          else
              dtau = tau_start2 - tau_start1
-             call ctqmc_make_overlap(flvr, tau_start1, tau_start2, ovlp)
+             call cat_ovlp_segments(flvr, tau_start1, tau_start2, ovlp)
          endif ! back if ( tau_start1 > tau_start2 ) block
 ! it does wind around the circle
      else
 ! shrink the segment
          if ( tau_start1 > tau_start2 ) then
              dtau = beta - tau_start1 + tau_start2 - zero
-             call ctqmc_make_overlap(flvr, zero, tau_start2, ovlp1)
-             call ctqmc_make_overlap(flvr, tau_start1, beta, ovlp2)
+             call cat_ovlp_segments(flvr, zero, tau_start2, ovlp1)
+             call cat_ovlp_segments(flvr, tau_start1, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
 ! stretch the segment
          else
              dtau = tau_start1 - zero + beta - tau_start2
-             call ctqmc_make_overlap(flvr, zero, tau_start1, ovlp1)
-             call ctqmc_make_overlap(flvr, tau_start2, beta, ovlp2)
+             call cat_ovlp_segments(flvr, zero, tau_start1, ovlp1)
+             call cat_ovlp_segments(flvr, tau_start2, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_start1 > tau_start2 ) block
      endif ! back if ( ring .eqv. .false. ) block
@@ -770,25 +770,25 @@
 ! shrink the segment
          if ( tau_end1 > tau_end2 ) then
              dtau = tau_end1 - tau_end2
-             call ctqmc_make_overlap(flvr, tau_end2, tau_end1, ovlp)
+             call cat_ovlp_segments(flvr, tau_end2, tau_end1, ovlp)
 ! stretch the segment
          else
              dtau = tau_end2 - tau_end1
-             call ctqmc_make_overlap(flvr, tau_end1, tau_end2, ovlp)
+             call cat_ovlp_segments(flvr, tau_end1, tau_end2, ovlp)
          endif ! back if ( tau_end1 > tau_end2 ) block
 ! it does wind around the circle
      else
 ! stretch the segment
          if ( tau_end1 > tau_end2 ) then
              dtau = beta - tau_end1 + tau_end2 - zero
-             call ctqmc_make_overlap(flvr, zero, tau_end2, ovlp1)
-             call ctqmc_make_overlap(flvr, tau_end1, beta, ovlp2)
+             call cat_ovlp_segments(flvr, zero, tau_end2, ovlp1)
+             call cat_ovlp_segments(flvr, tau_end1, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
 ! shrink the segment
          else
              dtau = tau_end1 - zero + beta - tau_end2
-             call ctqmc_make_overlap(flvr, zero, tau_end1, ovlp1)
-             call ctqmc_make_overlap(flvr, tau_end2, beta, ovlp2)
+             call cat_ovlp_segments(flvr, zero, tau_end1, ovlp1)
+             call cat_ovlp_segments(flvr, tau_end2, beta, ovlp2)
              ovlp = ovlp1 + ovlp2
          endif ! back if ( tau_end1 > tau_end2 ) block
      endif ! back if ( ring .eqv. .false. ) block
@@ -1835,9 +1835,9 @@
 !!>>> service layer: calculate overlap between segments                <<<
 !!========================================================================
 
-!!>>> ctqmc_make_overlap: calculate the delta segment overlaps between
+!!>>> cat_ovlp_segments: calculate the delta segment overlaps between
 !!>>> current flavor channel and other flavor channels
-  subroutine ctqmc_make_overlap(flvr, tau_start, tau_end, ovlp)
+  subroutine cat_ovlp_segments(flvr, tau_start, tau_end, ovlp)
      use constants, only : dp, zero
 
      use control, only : norbs
@@ -1930,7 +1930,7 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine ctqmc_make_overlap
+  end subroutine cat_ovlp_segments
 
 !!>>> ctqmc_make_compare: compare two segments, and calculate their overlap
   subroutine ctqmc_make_compare(ts0, te0, ts1, te1, cover)
