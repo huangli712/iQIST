@@ -16,10 +16,10 @@
 !!!           cat_rshift_flavor
 !!!           cat_reswap_flavor <<<---
 !!!           cat_occupy_status <<<---
+!!!           cat_weight_factor
+!!!           cat_weight_kernel <<<---
 !!!           cat_ovlp_segment_
 !!!           cat_ovlp_segments <<<---
-!!!           ctqmc_make_wscreen
-!!!           ctqmc_make_wkernel <<<---
 !!!           cat_make_segments
 !!!           cat_disp_segments <<<---
 !!! source  : ctqmc_flavor.f90
