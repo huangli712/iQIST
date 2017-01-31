@@ -855,6 +855,90 @@
      return
   end subroutine ctqmc_record_lmat
 
+!!>>> ctqmc_record_szpw: record the powers of local magnetization
+  subroutine ctqmc_record_szpw()
+     use constants, only : dp, zero
+
+     use control, only : issus
+     use control, only : nband, norbs
+     use control, only : ntime
+     use control, only : beta
+     use context, only : tmesh
+     use context, only : szpow
+
+     implicit none
+
+! local variables
+! loop index over times
+     integer  :: i
+
+! loop index for flavor channel
+     integer  :: f1
+     integer  :: f2
+
+! \delta \tau
+     real(dp) :: step
+
+! integral of Sz(\tau), in order words:
+!     sint = 1/\beta \int^{\beta}_0 Sz(\tau) d\tau
+     real(dp) :: sint
+
+! used to record occupations for current flavor channel and time
+     real(dp) :: oaux(ntime,norbs)
+
+! orbital-resolved Sz(\tau)
+     real(dp) :: saux(ntime,nband)
+
+! check whether there is conflict
+     call s_assert( btest(issus, 7) )
+
+! calculate oaux, obtain occupation status
+! calculate saux, obtain Sz(\tau)
+     oaux = zero
+     saux = zero
+     TIME_LOOP: do i=1,ntime
+         do f1=1,norbs
+             call cat_occupy_status(f1, tmesh(i), oaux(i,f1))
+         enddo ! over f1={1,norbs} loop
+
+         do f2=1,nband
+             saux(i,f2) = oaux(i,f2) - oaux(i,f2+nband)
+         enddo ! over f2={1,nband} loop
+     enddo TIME_LOOP ! over i={1,ntime} loop
+
+! accumulate szpow(1:4,1:nband)
+! calculate \delta \tau
+     step = ( tmesh(2) - tmesh(1) ) / 2.0
+     BAND_LOOP: do f2=1,nband
+! calculate sint using trapezoid algorithm 
+         sint = zero
+         do i=1,ntime-1
+             sint = sint + ( saux(i,f2) + saux(i+1,f2) ) * step
+         enddo ! over i={1,ntime-1} loop
+         sint = sint / beta
+! record the data
+         szpow(1,f2) = szpow(1,f2) + sint**1.0
+         szpow(2,f2) = szpow(2,f2) + sint**2.0
+         szpow(3,f2) = szpow(3,f2) + sint**3.0
+         szpow(4,f2) = szpow(4,f2) + sint**4.0
+     enddo BAND_LOOP ! over f2={1,nband} loop
+
+! accumulate szpow(1:4,nband+1)
+! here we consider the contribution from all flavors
+     sint = zero
+     do i=1,ntime-1
+         sint = sint + ( sum( saux(i,:) ) + sum( saux(i+1,:) ) ) * step
+     enddo ! over i={1,ntime-1} loop
+     sint = sint / beta
+! record the data
+     szpow(1,nband+1) = szpow(1,nband+1) + sint**1.0
+     szpow(2,nband+1) = szpow(2,nband+1) + sint**2.0
+     szpow(3,nband+1) = szpow(3,nband+1) + sint**3.0
+     szpow(4,nband+1) = szpow(4,nband+1) + sint**4.0
+
+     return
+  end subroutine ctqmc_record_szpw
+
 !!>>> ctqmc_record_schi: record the spin-spin correlation function
 !!>>> imaginary-time version
   subroutine ctqmc_record_schi()
