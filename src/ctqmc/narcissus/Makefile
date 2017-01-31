@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 01/27/2017 by li huang (last modified)
 ##
 ##
 
@@ -38,7 +38,7 @@ lev3 = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
 open = ctqmc_open.o
 
-CAPI = ctqmc_api.o
+CAPI = capi_ctqmc.o
 CLIB = libMM.a
 
 objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3)
@@ -51,7 +51,7 @@ all: exe
 
 api:
 	cp ../../capi/capi.mod .
-	cp ../../capi/ctqmc_api.o .
+	cp ../../capi/capi_ctqmc.o .
 
 cssl:
 	cp ../../base/libMM.a .
@@ -63,6 +63,7 @@ csml:
 	cp ../../base/stack.mod .
 	cp ../../base/parser.mod .
 	cp ../../base/linkedlist.mod .
+	cp ../../base/version.mod .
 
 exe: api cssl csml ctqmc-exe
 ctqmc-exe: $(exe_obj)
