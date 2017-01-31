@@ -9,7 +9,7 @@
 !!!           ctqmc_make_uumat
 !!!           ctqmc_make_state
 !!!           ctqmc_make_shift
-!!!           ctqmc_eval_shift
+!!!           ctqmc_prep_shift
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -453,7 +453,7 @@
   end subroutine ctqmc_make_uumat
 
 !!========================================================================
-!!>>> atomic state converter                                           <<<
+!!>>> atomic eigenstate converter                                      <<<
 !!========================================================================
 
 !!>>> ctqmc_make_state: convert current atomic state array into a decimal
@@ -535,9 +535,9 @@
      return
   end subroutine ctqmc_make_shift
 
-!!>>> ctqmc_eval_shift: evaluate the shift for the Coulomb interaction and
+!!>>> ctqmc_prep_shift: evaluate the shift for the Coulomb interaction and
 !!>>> the chemical potential. in fact, shift = 2 K'(\tau = 0)
-  subroutine ctqmc_eval_shift(shift)
+  subroutine ctqmc_prep_shift(shift)
      use constants, only : dp, zero, two
 
      use control, only : isscr
@@ -572,4 +572,4 @@
      end select
 
      return
-  end subroutine ctqmc_eval_shift
+  end subroutine ctqmc_prep_shift
