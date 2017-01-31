@@ -1942,7 +1942,7 @@
 
 ! external functions
 ! used to interpolate screening function
-     procedure( real(dp) ) :: ctqmc_make_ktau
+     procedure( real(dp) ) :: ctqmc_eval_ktau
 
      SCREENING_SWITCHER: select case ( isscr )
 
@@ -1983,7 +1983,7 @@
 
 ! realistic materials
          case (99)
-             cur = ctqmc_make_ktau(typ, tau)
+             cur = ctqmc_eval_ktau(typ, tau)
 
      end select SCREENING_SWITCHER
 
