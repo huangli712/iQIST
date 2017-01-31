@@ -39,9 +39,9 @@
 !!>>> service layer: update perturbation expansion series              <<<
 !!========================================================================
 
-!!>>> cat_insert_segment: update the perturbation expansion series for
+!!>>> cat_insert_action: update the perturbation expansion series for
 !!>>> insert new segment or anti-segment
-  subroutine cat_insert_segment(flvr, is, ie, tau_start, tau_end)
+  subroutine cat_insert_action(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
      use stack, only : istack_pop
 
@@ -109,7 +109,7 @@
      enddo ! over i={1,nfreq} loop
 
      return
-  end subroutine cat_insert_segment
+  end subroutine cat_insert_action
 
 !!>>> cat_remove_segment: update the perturbation expansion series for
 !!>>> remove old segment or anti-segment
