@@ -1138,7 +1138,7 @@
 ! valid, if tau_start is valid, then determine tau_end, tau_max, is, and
 ! ie consistently, and set ladd to .true., if tau_start is not valid, then
 ! set ladd to .false.
-     call ctqmc_make_flavor1(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
+     call cat_insert_flavor(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part
@@ -1166,7 +1166,7 @@
      if ( pass .eqv. .true. ) then
 
 ! update the mmat matrix and gmat matrix, respectively,
-! cat_insert_segment() subroutine is invoked internally to update the
+! cat_insert_action() subroutine is invoked internally to update the
 ! perturbation expansion series
          call cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
 
@@ -1260,7 +1260,7 @@
 ! at first determine anti and is randomly, then tau_start is obtained by
 ! is. and then ie, tau_end, and tau_max are evaluated carefully according
 ! to is and ie
-     call ctqmc_make_flavor2(flvr, is, ie, anti, tau_start, tau_end, tau_max)
+     call cat_remove_flavor(flvr, is, ie, anti, tau_start, tau_end, tau_max)
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part
@@ -1280,7 +1280,7 @@
      if ( pass .eqv. .true. ) then
 
 ! update the mmat matrix and gmat matrix, respectively,
-! cat_remove_segment() subroutine is invoked internally to update the
+! cat_remove_action() subroutine is invoked internally to update the
 ! perturbation expansion series
          call cat_remove_matrix(flvr, is, ie)
 
