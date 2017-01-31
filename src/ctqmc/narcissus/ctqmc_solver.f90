@@ -860,6 +860,10 @@
      return
   end subroutine ctqmc_impurity_tester
 
+!!========================================================================
+!!>>> service layer: updating perturbation expansion series 1          <<<
+!!========================================================================
+
 !!>>> ctqmc_diagram_warmming: perform thermalization or warmup on the
 !!>>> perturbation expansion series to achieve thermodynamics stable
 !!>>> equilibrium state
