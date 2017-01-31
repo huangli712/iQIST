@@ -2278,4 +2278,4 @@
      endif ! back if ( show_type == 1 ) block
 
      return
-  end subroutine cat_disp_segment
+  end subroutine cat_disp_segments
