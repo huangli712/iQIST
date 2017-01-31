@@ -20,8 +20,8 @@
 !!!           cat_ovlp_segments <<<---
 !!!           ctqmc_make_wscreen
 !!!           ctqmc_make_wkernel <<<---
-!!!           ctqmc_make_segment
-!!!           ctqmc_make_display <<<---
+!!!           cat_make_segments
+!!!           cat_disp_segments <<<---
 !!! source  : ctqmc_flavor.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
