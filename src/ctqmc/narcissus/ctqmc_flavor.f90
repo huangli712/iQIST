@@ -277,6 +277,13 @@
      return
   end subroutine cat_rshift_action
 
+!!>>> cat_reswap_action: to do nothing
+  subroutine cat_reswap_action()
+     implicit none
+
+     return
+  end subroutine cat_reswap_action
+
 !!========================================================================
 !!>>> service layer: evaluate ztrace ratio                             <<<
 !!========================================================================
