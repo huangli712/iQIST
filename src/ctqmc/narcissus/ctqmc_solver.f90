@@ -36,6 +36,7 @@
      use control, only : mkink, mfreq
      use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
      use control, only : Uc, Jz
+     use control, only : beta
      use control, only : myid, master
      use context, only : tmesh, rmesh
      use context, only : hist, prob
@@ -344,7 +345,13 @@
              cstep = cstep + 1
 
 ! sampling the perturbation expansion feynman diagrams randomly
-             call ctqmc_diagram_sampling(cstep)
+! ctqmc_diagram_sampling() is suitable for low temperature region, while
+! ctqmc_diagram_templing() is suitable for extreme high temperature region
+             if ( beta > one ) then
+                 call ctqmc_diagram_sampling(cstep)
+             else
+                 call ctqmc_diagram_sampling(cstep)
+             endif ! back if ( beta > one ) block
 
 !!========================================================================
 !!>>> sampling the physical observables                                <<<
@@ -413,6 +420,11 @@
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) then
                  call ctqmc_record_lmat()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) block
+
+! record the powers of local magnetization
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 7) ) then
+                 call ctqmc_record_szpw()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 7) ) block
 
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
