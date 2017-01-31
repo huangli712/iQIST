@@ -128,7 +128,7 @@
      enddo ! over j={1,ckink+1} loop
 
 ! update the perturbation expansion series
-     call cat_insert_segment(flvr, is, ie, tau_start, tau_end)
+     call cat_insert_action(flvr, is, ie, tau_start, tau_end)
 
 ! update gmat matrix
      lsaves(:, flvr) = czero
@@ -238,7 +238,7 @@
      enddo ! over j={1,is-1} loop
 
 ! update the perturbation expansion series
-     call cat_remove_segment(flvr, is, ie)
+     call cat_remove_action(flvr, is, ie)
 
 ! only for debug
 !<     do i=1,ckink
@@ -415,7 +415,7 @@
      endif ! back if ( isn /= iso ) block
 
 ! update the perturbation expansion series
-     call cat_lshift_segment(flvr, iso, isn, tau_start2)
+     call cat_lshift_action(flvr, iso, isn, tau_start2)
 
 ! update gmat matrix
      lsaves(:, flvr) = czero
@@ -607,7 +607,7 @@
      endif ! back if ( ien /= ieo ) block
 
 ! update the perturbation expansion series
-     call cat_rshift_segment(flvr, ieo, ien, tau_end2)
+     call cat_rshift_action(flvr, ieo, ien, tau_end2)
 
 ! update gmat matrix
      lsaves(:, flvr) = czero
