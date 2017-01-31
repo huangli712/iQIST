@@ -563,6 +563,9 @@
 ! collect the fidelity susceptibility data from lrmat to lrmat_mpi
      call ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
 
+! collect the powers of local magnetization data from szpow to szpow_mpi
+     call ctqmc_reduce_szpw(szpow_mpi, szpow_err)
+
 ! collect the spin-spin correlation function data from schi to schi_mpi
 ! collect the spin-spin correlation function data from sschi to sschi_mpi
 ! collect the spin-spin correlation function data from ssfom to ssfom_mpi
