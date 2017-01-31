@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 3b/atom.config.in
-!!! solver  : BEGONIA, LAVENDER, PANSY, and MANJUSHAKA
+!!! solver  : LAVENDER and MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------
