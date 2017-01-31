@@ -235,6 +235,9 @@
 ! used to evaluate fidelity susceptibility, < k_l k_r >
      real(dp), public, save, allocatable :: lrmat(:,:)
 
+! powers of the local magnetization < S^n_z>, used to calculate Binder cumulant
+     real(dp), public, save, allocatable :: szpow(:,:)
+
 ! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, totally-averaged
      real(dp), public, save, allocatable :: schi(:)
 
@@ -581,6 +584,7 @@
      allocate(lmat(norbs),        stat=istat)
      allocate(rmat(norbs),        stat=istat)
      allocate(lrmat(norbs,norbs), stat=istat)
+     allocate(szpow(  4  ,norbs), stat=istat)
      allocate(schi(ntime),        stat=istat)
      allocate(sschi(ntime,nband), stat=istat)
      allocate(ssfom(nbfrq,nband), stat=istat)
@@ -613,6 +617,7 @@
      lmat  = zero
      rmat  = zero
      lrmat = zero
+     szpow = zero
      schi  = zero
      sschi = zero
      ssfom = zero
@@ -844,6 +849,7 @@
      if ( allocated(lmat)  )   deallocate(lmat )
      if ( allocated(rmat)  )   deallocate(rmat )
      if ( allocated(lrmat) )   deallocate(lrmat)
+     if ( allocated(szpow) )   deallocate(szpow)
      if ( allocated(schi)  )   deallocate(schi )
      if ( allocated(sschi) )   deallocate(sschi)
      if ( allocated(ssfom) )   deallocate(ssfom)
