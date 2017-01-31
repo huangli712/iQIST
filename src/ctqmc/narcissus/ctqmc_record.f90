@@ -3520,7 +3520,7 @@
 
 ! evaluate the shift for the Coulomb interaction and chemical potential
 ! if the retarded interaction is used
-     call ctqmc_eval_shift(shift)
+     call ctqmc_prep_shift(shift)
 
 ! build atomic basis set, we do not order them according to their
 ! occupation numbers
@@ -3791,7 +3791,7 @@
 
 ! evaluate the shift for the Coulomb interaction and chemical potential
 ! if the retarded interaction is used
-     call ctqmc_eval_shift(shift)
+     call ctqmc_prep_shift(shift)
 
 ! build atomic basis set, we do not order them according to their
 ! occupation numbers
