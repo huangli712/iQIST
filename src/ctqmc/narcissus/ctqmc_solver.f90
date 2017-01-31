@@ -121,6 +121,10 @@
      real(dp), allocatable :: lrmat_mpi(:,:)
      real(dp), allocatable :: lrmat_err(:,:)
 
+! powers of local magnetization, for mpi case
+     real(dp), allocatable :: szpow_mpi(:,:)
+     real(dp), allocatable :: szpow_err(:,:)
+
 ! spin-spin correlation function, totally-averaged, for mpi case
      real(dp), allocatable :: schi_mpi(:)
      real(dp), allocatable :: schi_err(:)
@@ -195,6 +199,8 @@
      allocate(rmat_err(norbs),             stat=istat)
      allocate(lrmat_mpi(norbs,norbs),      stat=istat)
      allocate(lrmat_err(norbs,norbs),      stat=istat)
+     allocate(szpow_mpi(  4  ,norbs),      stat=istat)
+     allocate(szpow_err(  4  ,norbs),      stat=istat)
      allocate(schi_mpi(ntime),             stat=istat)
      allocate(schi_err(ntime),             stat=istat)
      allocate(sschi_mpi(ntime,nband),      stat=istat)
