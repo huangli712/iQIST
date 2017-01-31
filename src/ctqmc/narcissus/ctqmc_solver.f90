@@ -823,7 +823,7 @@
 ! please insert your debug code here
 !-------------------------------------------------------------------------
 
-     call ctqmc_make_display(2)
+     call cat_disp_segments(2)
      call s_print_error('ctqmc_impurity_tester','in debug mode')
 
      return
