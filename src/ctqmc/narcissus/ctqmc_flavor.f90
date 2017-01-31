@@ -1915,11 +1915,11 @@
      return
   end subroutine cat_weight_factor
 
-!!>>> ctqmc_make_wkernel: used to calculate K(\tau), i.e., the screening
+!!>>> cat_weight_kernel: used to calculate K(\tau), i.e., the screening
 !!>>> function for extra weight factor
 !!>>> note: this subroutine can be used to calculate K'(\tau) as well.
 !!>>> you should use the 'typ' parameter to control it
-  subroutine ctqmc_make_wkernel(typ, tau, cur)
+  subroutine cat_weight_kernel(typ, tau, cur)
      use constants, only : dp, zero, one, two, pi
 
      use control, only : isscr
@@ -1988,7 +1988,7 @@
      end select SCREENING_SWITCHER
 
      return
-  end subroutine ctqmc_make_wkernel
+  end subroutine cat_weight_kernel
 
 !!========================================================================
 !!>>> service layer: calculate overlap between segments                <<<
