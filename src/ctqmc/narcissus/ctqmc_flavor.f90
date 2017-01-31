@@ -850,12 +850,12 @@
   end subroutine cat_reswap_ztrace
 
 !!========================================================================
-!!>>> service layer: make segments from perturbation expansion series  <<<
+!!>>> service layer: make segments for perturbation expansion series   <<<
 !!========================================================================
 
-!!>>> ctqmc_make_flavor1: determine \tau_s, \tau_e and \tau_max for insert
+!!>>> cat_insert_flavor: determine \tau_s, \tau_e and \tau_max for insert
 !!>>> new segment or anti-segment
-  subroutine ctqmc_make_flavor1(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
+  subroutine cat_insert_flavor(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
      use constants, only : dp, zero, half
      use spring, only : spring_sfmt_stream
 
@@ -1221,7 +1221,7 @@
      endif ! back if ( anti .eqv. .false. ) block
 
      return
-  end subroutine ctqmc_make_flavor1
+  end subroutine cat_insert_flavor
 
 !!>>> ctqmc_make_flavor2: determine \tau_s, \tau_e and \tau_max for remove
 !!>>> old segment or anti-segment
