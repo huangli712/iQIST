@@ -2103,7 +2103,7 @@
                  ts = time_s(index_s(j, i), i)
                  te = time_e(index_e(j, i), i)
                  if ( ts > tau_end ) EXIT
-                 call ctqmc_make_compare( tau_start, tau_end, ts, te, raux )
+                 call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
                  ovlp(i) = ovlp(i) + raux
              enddo ! over j={1,rank(i)} loop
 
@@ -2112,13 +2112,13 @@
 ! deal with the first segment (header)
              ts = zero
              te = time_e(index_e(1, i), i)
-             call ctqmc_make_compare( tau_start, tau_end, ts, te, raux )
+             call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
              ovlp(i) = ovlp(i) + raux
 
 ! deal with the last segment (tailer)
              ts = time_s(index_s(rank(i), i), i)
              te = beta
-             call ctqmc_make_compare( tau_start, tau_end, ts, te, raux )
+             call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
              ovlp(i) = ovlp(i) + raux
 
 ! loop through all the other segments
@@ -2126,7 +2126,7 @@
                  ts = time_s(index_s(j  , i), i)
                  te = time_e(index_e(j+1, i), i)
                  if ( ts > tau_end ) EXIT
-                 call ctqmc_make_compare( tau_start, tau_end, ts, te, raux )
+                 call cat_ovlp_segment_( tau_start, tau_end, ts, te, raux )
                  ovlp(i) = ovlp(i) + raux
              enddo ! over j={1,rank(i)-1} loop
 
