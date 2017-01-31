@@ -611,6 +611,7 @@
      lmat  = lmat_mpi  * real(nmonte) / real(nsweep)
      rmat  = rmat_mpi  * real(nmonte) / real(nsweep)
      lrmat = lrmat_mpi * real(nmonte) / real(nsweep)
+     szpow = szpow_mpi * real(nmonte) / real(nsweep)
      schi  = schi_mpi  * real(nmonte) / real(nsweep)
      sschi = sschi_mpi * real(nmonte) / real(nsweep)
      ssfom = ssfom_mpi * real(nmonte) / real(nsweep)
@@ -641,6 +642,7 @@
      lmat_err  = lmat_err  * real(nmonte) / real(nsweep)
      rmat_err  = rmat_err  * real(nmonte) / real(nsweep)
      lrmat_err = lrmat_err * real(nmonte) / real(nsweep)
+     szpow_err = szpow_err * real(nmonte) / real(nsweep)
      schi_err  = schi_err  * real(nmonte) / real(nsweep)
      sschi_err = sschi_err * real(nmonte) / real(nsweep)
      ssfom_err = ssfom_err * real(nmonte) / real(nsweep)
@@ -721,6 +723,11 @@
 ! write out the final fidelity susceptibility data, lmat, rmat, and lrmat
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
+     endif ! back if ( myid == master ) block
+
+! write out the final powers of local magnetization data, szpow
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_szpw(szpow, szpow_err)
      endif ! back if ( myid == master ) block
 
 ! write out the final spin-spin correlation function data, schi, sschi, and ssfom
