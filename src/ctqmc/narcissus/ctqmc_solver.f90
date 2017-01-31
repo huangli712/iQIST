@@ -1510,6 +1510,13 @@
      return
   end subroutine ctqmc_rshift_kink
 
+!!>>> ctqmc_reswap_kink: to do nothing
+  subroutine ctqmc_reswap_kink()
+     implicit none
+
+     return
+  end subroutine ctqmc_reswap_kink
+
 !!>>> ctqmc_reflip_kink: perform a global update, exchange the states
 !!>>> between spin up and spin down, it maybe useful for magnetic systems
   subroutine ctqmc_reflip_kink(cflip)
