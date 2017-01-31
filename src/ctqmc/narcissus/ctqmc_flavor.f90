@@ -1851,7 +1851,7 @@
 
 !!>>> cat_weight_factor: used to calculate the extra weight factor given
 !!>>> by an exponential of correlators of noninteracting boson operators
-  subroutine ctqmc_make_wscreen(tau, scr)
+  subroutine cat_weight_factor(tau, scr)
      use constants, only : dp, zero
 
      use control, only : norbs
@@ -1913,7 +1913,7 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine ctqmc_make_wscreen
+  end subroutine cat_weight_factor
 
 !!>>> ctqmc_make_wkernel: used to calculate K(\tau), i.e., the screening
 !!>>> function for extra weight factor
