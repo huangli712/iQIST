@@ -1090,6 +1090,13 @@
      return
   end subroutine cat_rshift_detrat
 
+!!>>> cat_reswap_detrat: to do nothing
+  subroutine cat_reswap_detrat()
+     implicit none
+
+     return
+  end subroutine cat_reswap_detrat
+
 !!>>> cat_reflip_detrat: calculate the determinant ratio for global
 !!>>> spin flip
   subroutine cat_reflip_detrat(up, dn, ratio)
