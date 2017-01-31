@@ -665,13 +665,13 @@
      endif ! back if ( issun == 2 .or. isspn == 1 ) block
 
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
-     call ctqmc_make_hsed(tmesh, htau, hsed)
+     call ctqmc_eval_hsed(tmesh, htau, hsed)
 
 ! calculate the 2nd-derivates of ktau, which is used in spline subroutines
-     call ctqmc_make_ksed(tmesh, ktau, ksed)
+     call ctqmc_eval_ksed(tmesh, ktau, ksed)
 
 ! calculate the 2nd-derivates of ptau, which is used in spline subroutines
-     call ctqmc_make_ksed(tmesh, ptau, psed)
+     call ctqmc_eval_ksed(tmesh, ptau, psed)
 
 ! dump the necessary files
 !-------------------------------------------------------------------------
