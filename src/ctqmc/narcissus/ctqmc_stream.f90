@@ -541,25 +541,11 @@
 ! for real variables
 !-------------------------------------------------------------------------
 ! init statistics variables
-     insert_tcount = zero
-     insert_accept = zero
-     insert_reject = zero
-
-     remove_tcount = zero
-     remove_accept = zero
-     remove_reject = zero
-
-     lshift_tcount = zero
-     lshift_accept = zero
-     lshift_reject = zero
-
-     rshift_tcount = zero
-     rshift_accept = zero
-     rshift_reject = zero
-
-     reflip_tcount = zero
-     reflip_accept = zero
-     reflip_reject = zero
+     insert_tcount = zero; insert_accept = zero; insert_reject = zero
+     remove_tcount = zero; remove_accept = zero; remove_reject = zero
+     lshift_tcount = zero; lshift_accept = zero; lshift_reject = zero
+     rshift_tcount = zero; rshift_accept = zero; rshift_reject = zero
+     reflip_tcount = zero; reflip_accept = zero; reflip_reject = zero
 
 ! for integer arrays
 !-------------------------------------------------------------------------
@@ -604,6 +590,9 @@
      lmat    = zero
      rmat    = zero
      lrmat   = zero
+
+! init powers of local magnetization array
+     szpow   = zero
 
 ! init spin-spin correlation function
      schi    = zero
