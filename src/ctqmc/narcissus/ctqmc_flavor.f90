@@ -216,7 +216,7 @@
      enddo ! over i={1,nfreq} loop
 
      return
-  end subroutine cat_lshift_segment
+  end subroutine cat_lshift_action
 
 !!>>> cat_rshift_segment: update the perturbation expansion series for
 !!>>> right shift old segment or anti-segment
