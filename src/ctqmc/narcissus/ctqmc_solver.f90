@@ -967,6 +967,13 @@
      return
   end subroutine ctqmc_diagram_sampling
 
+!!>>> ctqmc_diagram_templing: to do nothing
+  subroutine ctqmc_diagram_templing()
+     implicit none
+
+     return
+  end subroutine ctqmc_diagram_templing
+
 !!>>> ctqmc_diagram_checking: checking whether the quantum impurity solver
 !!>>> is consistent internally
   subroutine ctqmc_diagram_checking(cflag)
@@ -1054,7 +1061,7 @@
   end subroutine ctqmc_diagram_checking
 
 !!========================================================================
-!!>>> driver layer: updating perturbation expansion series             <<<
+!!>>> service layer: updating perturbation expansion series 2          <<<
 !!========================================================================
 
 !!>>> ctqmc_insert_kink: insert new segment or anti-segment in the
