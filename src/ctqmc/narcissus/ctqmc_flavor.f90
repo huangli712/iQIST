@@ -1849,7 +1849,7 @@
 !!>>> service layer: calculate extra weight facot for screening effect <<<
 !!========================================================================
 
-!!>>> ctqmc_make_wscreen: used to calculate the extra weight factor given
+!!>>> cat_weight_factor: used to calculate the extra weight factor given
 !!>>> by an exponential of correlators of noninteracting boson operators
   subroutine ctqmc_make_wscreen(tau, scr)
      use constants, only : dp, zero
