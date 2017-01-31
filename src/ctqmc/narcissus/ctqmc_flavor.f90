@@ -1846,6 +1846,151 @@
   end subroutine cat_occupy_status
 
 !!========================================================================
+!!>>> service layer: calculate extra weight facot for screening effect <<<
+!!========================================================================
+
+!!>>> ctqmc_make_wscreen: used to calculate the extra weight factor given
+!!>>> by an exponential of correlators of noninteracting boson operators
+  subroutine ctqmc_make_wscreen(tau, scr)
+     use constants, only : dp, zero
+
+     use control, only : norbs
+     use context, only : rank
+     use context, only : index_s, index_e, time_s, time_e
+
+     implicit none
+
+! external arguments
+! current imaginary time point
+     real(dp), intent(in)  :: tau
+
+! exponential factor introduced by dynamical screening effect
+     real(dp), intent(out) :: scr
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! imaginary time, start point
+     real(dp) :: ts
+
+! imaginary time, end point
+     real(dp) :: te
+
+! dummy real(dp) variables, used to store exponential factor
+     real(dp) :: cur
+
+! init scr
+     scr = zero
+
+! loop over create operator
+     do i=1,norbs
+         do j=1,rank(i)
+             ts = time_s(index_s(j, i), i)
+             if ( ts == tau ) CYCLE ! meet myself
+             if ( ts < tau ) then
+                 call ctqmc_make_wkernel(1, tau - ts, cur)
+             else
+                 call ctqmc_make_wkernel(1, ts - tau, cur)
+             endif ! back if ( ts < tau ) block
+             scr = scr + cur
+         enddo ! over j={1,rank(i)} loop
+     enddo ! over i={1,norbs} loop
+
+! loop over destroy operator
+     do i=1,norbs
+         do j=1,rank(i)
+             te = time_e(index_e(j, i), i)
+             if ( te == tau ) CYCLE ! meet myself
+             if ( te < tau ) then
+                 call ctqmc_make_wkernel(1, tau - te, cur)
+             else
+                 call ctqmc_make_wkernel(1, te - tau, cur)
+             endif ! back if ( te < tau ) block
+             scr = scr - cur
+         enddo ! over j={1,rank(i)} loop
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine ctqmc_make_wscreen
+
+!!>>> ctqmc_make_wkernel: used to calculate K(\tau), i.e., the screening
+!!>>> function for extra weight factor
+!!>>> note: this subroutine can be used to calculate K'(\tau) as well.
+!!>>> you should use the 'typ' parameter to control it
+  subroutine ctqmc_make_wkernel(typ, tau, cur)
+     use constants, only : dp, zero, one, two, pi
+
+     use control, only : isscr
+     use control, only : lc, wc
+     use control, only : beta
+
+     implicit none
+
+! external arguments
+! control the computational type
+! if typ = 1, to calculate K(\tau), i.e., ktau
+! if typ = 2, to calculate K'(\tau), i.e., ptau
+     integer, intent(in)   :: typ
+
+! imaginary time
+     real(dp), intent(in)  :: tau
+
+! result value
+     real(dp), intent(out) :: cur
+
+! external functions
+! used to interpolate screening function
+     procedure( real(dp) ) :: ctqmc_make_ktau
+
+     SCREENING_SWITCHER: select case ( isscr )
+
+! normal model
+         case (1)
+             if ( typ == 2 ) then
+                 cur = zero
+             else
+                 cur = zero
+             endif ! back if ( typ == 2 ) block
+
+! holstein-hubbard model
+         case (2)
+             if ( typ == 2 ) then
+                 cur = -wc * exp(wc * (beta - tau)) + wc * exp(wc * tau)
+             else
+                 cur = exp(wc * (beta - tau)) + exp(wc * tau)
+             endif ! back if ( typ == 2 ) block
+
+! plasmon pole model
+         case (3)
+             if ( typ == 2 ) then
+                 cur = (lc / wc)**2 / sinh(beta * wc / two)
+                 cur = cur * sinh(beta * wc / two - tau * wc) * wc
+             else
+                 cur = (lc / wc)**2 / sinh(beta * wc / two)
+                 cur = cur * ( cosh(beta * wc / two) - cosh(beta * wc / two - tau * wc) )
+             endif ! back if ( typ == 2 ) block
+
+! ohmic model
+         case (4)
+             if ( typ == 2 ) then
+                 cur = lc * wc * cos(pi * tau / beta)
+                 cur = cur / (one + beta * wc * sin(pi * tau / beta) / pi)
+             else
+                 cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
+             endif ! back if ( typ == 2 ) block
+
+! realistic materials
+         case (99)
+             cur = ctqmc_make_ktau(typ, tau)
+
+     end select SCREENING_SWITCHER
+
+     return
+  end subroutine ctqmc_make_wkernel
+
+!!========================================================================
 !!>>> service layer: calculate overlap between segments                <<<
 !!========================================================================
 
@@ -1995,151 +2140,6 @@
 
      return
   end subroutine ctqmc_make_compare
-
-!!========================================================================
-!!>>> service layer: calculate extra weight facot for screening effect <<<
-!!========================================================================
-
-!!>>> ctqmc_make_wscreen: used to calculate the extra weight factor given
-!!>>> by an exponential of correlators of noninteracting boson operators
-  subroutine ctqmc_make_wscreen(tau, scr)
-     use constants, only : dp, zero
-
-     use control, only : norbs
-     use context, only : rank
-     use context, only : index_s, index_e, time_s, time_e
-
-     implicit none
-
-! external arguments
-! current imaginary time point
-     real(dp), intent(in)  :: tau
-
-! exponential factor introduced by dynamical screening effect
-     real(dp), intent(out) :: scr
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! imaginary time, start point
-     real(dp) :: ts
-
-! imaginary time, end point
-     real(dp) :: te
-
-! dummy real(dp) variables, used to store exponential factor
-     real(dp) :: cur
-
-! init scr
-     scr = zero
-
-! loop over create operator
-     do i=1,norbs
-         do j=1,rank(i)
-             ts = time_s(index_s(j, i), i)
-             if ( ts == tau ) CYCLE ! meet myself
-             if ( ts < tau ) then
-                 call ctqmc_make_wkernel(1, tau - ts, cur)
-             else
-                 call ctqmc_make_wkernel(1, ts - tau, cur)
-             endif ! back if ( ts < tau ) block
-             scr = scr + cur
-         enddo ! over j={1,rank(i)} loop
-     enddo ! over i={1,norbs} loop
-
-! loop over destroy operator
-     do i=1,norbs
-         do j=1,rank(i)
-             te = time_e(index_e(j, i), i)
-             if ( te == tau ) CYCLE ! meet myself
-             if ( te < tau ) then
-                 call ctqmc_make_wkernel(1, tau - te, cur)
-             else
-                 call ctqmc_make_wkernel(1, te - tau, cur)
-             endif ! back if ( te < tau ) block
-             scr = scr - cur
-         enddo ! over j={1,rank(i)} loop
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine ctqmc_make_wscreen
-
-!!>>> ctqmc_make_wkernel: used to calculate K(\tau), i.e., the screening
-!!>>> function for extra weight factor
-!!>>> note: this subroutine can be used to calculate K'(\tau) as well.
-!!>>> you should use the 'typ' parameter to control it
-  subroutine ctqmc_make_wkernel(typ, tau, cur)
-     use constants, only : dp, zero, one, two, pi
-
-     use control, only : isscr
-     use control, only : lc, wc
-     use control, only : beta
-
-     implicit none
-
-! external arguments
-! control the computational type
-! if typ = 1, to calculate K(\tau), i.e., ktau
-! if typ = 2, to calculate K'(\tau), i.e., ptau
-     integer, intent(in)   :: typ
-
-! imaginary time
-     real(dp), intent(in)  :: tau
-
-! result value
-     real(dp), intent(out) :: cur
-
-! external functions
-! used to interpolate screening function
-     procedure( real(dp) ) :: ctqmc_make_ktau
-
-     SCREENING_SWITCHER: select case ( isscr )
-
-! normal model
-         case (1)
-             if ( typ == 2 ) then
-                 cur = zero
-             else
-                 cur = zero
-             endif ! back if ( typ == 2 ) block
-
-! holstein-hubbard model
-         case (2)
-             if ( typ == 2 ) then
-                 cur = -wc * exp(wc * (beta - tau)) + wc * exp(wc * tau)
-             else
-                 cur = exp(wc * (beta - tau)) + exp(wc * tau)
-             endif ! back if ( typ == 2 ) block
-
-! plasmon pole model
-         case (3)
-             if ( typ == 2 ) then
-                 cur = (lc / wc)**2 / sinh(beta * wc / two)
-                 cur = cur * sinh(beta * wc / two - tau * wc) * wc
-             else
-                 cur = (lc / wc)**2 / sinh(beta * wc / two)
-                 cur = cur * ( cosh(beta * wc / two) - cosh(beta * wc / two - tau * wc) )
-             endif ! back if ( typ == 2 ) block
-
-! ohmic model
-         case (4)
-             if ( typ == 2 ) then
-                 cur = lc * wc * cos(pi * tau / beta)
-                 cur = cur / (one + beta * wc * sin(pi * tau / beta) / pi)
-             else
-                 cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
-             endif ! back if ( typ == 2 ) block
-
-! realistic materials
-         case (99)
-             cur = ctqmc_make_ktau(typ, tau)
-
-     end select SCREENING_SWITCHER
-
-     return
-  end subroutine ctqmc_make_wkernel
 
 !!========================================================================
 !!>>> service layer: utility subroutines to test segment algorithm     <<<
