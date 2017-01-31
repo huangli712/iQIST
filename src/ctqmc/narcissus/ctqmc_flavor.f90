@@ -399,10 +399,10 @@
      if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by new create operator
-     call ctqmc_make_wscreen(tau_start, ts_scr)
+     call cat_weight_factor(tau_start, ts_scr)
 
 ! calculate the extra weight factor contributed by new destroy operator
-     call ctqmc_make_wscreen(tau_end,   te_scr)
+     call cat_weight_factor(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by new create and destroy operator
      call ctqmc_make_wkernel(1, dtau,   se_scr)
@@ -533,10 +533,10 @@
      if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by old create operator
-     call ctqmc_make_wscreen(tau_start, ts_scr)
+     call cat_weight_factor(tau_start, ts_scr)
 
 ! calculate the extra weight factor contributed by old destroy operator
-     call ctqmc_make_wscreen(tau_end,   te_scr)
+     call cat_weight_factor(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by old create and destroy operator
      call ctqmc_make_wkernel(1, dtau,   se_scr)
@@ -677,10 +677,10 @@
      if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by old create operator
-     call ctqmc_make_wscreen(tau_start1, ts1_scr)
+     call cat_weight_factor(tau_start1, ts1_scr)
 
 ! calculate the extra weight factor contributed by new create operator
-     call ctqmc_make_wscreen(tau_start2, ts2_scr)
+     call cat_weight_factor(tau_start2, ts2_scr)
 
 ! calculate the extra weight factor contributed by old and new create operator
      call ctqmc_make_wkernel(1, dtau,   ts12_scr)
@@ -820,10 +820,10 @@
      if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by old destroy operator
-     call ctqmc_make_wscreen(tau_end1, te1_scr)
+     call cat_weight_factor(tau_end1, te1_scr)
 
 ! calculate the extra weight factor contributed by new destroy operator
-     call ctqmc_make_wscreen(tau_end2, te2_scr)
+     call cat_weight_factor(tau_end2, te2_scr)
 
 ! calculate the extra weight factor contributed by old and new destroy operator
      call ctqmc_make_wkernel(1, dtau, te12_scr)
