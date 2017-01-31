@@ -1368,7 +1368,7 @@
 ! at first, we select iso randomly, and then obtain tau_start1. according
 ! to the existing segments, we determine tau_start2 and related index isn,
 ! finally ring is evaluated.
-     call ctqmc_make_flavor3(flvr, iso, isn, ring, tau_start1, tau_start2)
+     call cat_lshift_flavor(flvr, iso, isn, ring, tau_start1, tau_start2)
 
 ! calculate the transition ratio between old and new configurations,
 ! for the local trace part
@@ -1388,7 +1388,7 @@
      if ( pass .eqv. .true. ) then
 
 ! update the mmat matrix and gmat matrix, respectively,
-! cat_lshift_segment() subroutine is invoked internally to update the
+! cat_lshift_action() subroutine is invoked internally to update the
 ! perturbation expansion series
          call cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
 
