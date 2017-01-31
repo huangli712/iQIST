@@ -2145,9 +2145,9 @@
 !!>>> service layer: utility subroutines to test segment algorithm     <<<
 !!========================================================================
 
-!!>>> ctqmc_make_segment: generate segments or anti-segments for the
+!!>>> cat_make_segments: generate segments or anti-segments for the
 !!>>> specified flavor channel randomly, only used to debug the code
-  subroutine ctqmc_make_segment(flvr, kink, anti)
+  subroutine cat_make_segments(flvr, kink, anti)
      use constants, only : dp
      use spring, only : spring_sfmt_stream
 
@@ -2204,7 +2204,7 @@
      rank(flvr) = ckink
 
      return
-  end subroutine ctqmc_make_segment
+  end subroutine cat_make_segments
 
 !!>>> cat_disp_segments: display segment information on the screen, only
 !!>>> used to debug the code
