@@ -1994,6 +1994,56 @@
 !!>>> service layer: calculate overlap between segments                <<<
 !!========================================================================
 
+!!>>> cat_ovlp_segment_: compare two segments, and calculate their overlap
+  subroutine cat_ovlp_segment_(ts0, te0, ts1, te1, cover)
+     use constants, only : dp, zero
+
+     implicit none
+
+! external arguments
+! segment 1, ts0 < te0 should be certified beforehand
+     real(dp), intent(in)  :: ts0, te0
+
+! segment 2, ts1 < te1 should be certified beforehand
+     real(dp), intent(in)  :: ts1, te1
+
+! the overlap length for segment1 and segment2
+     real(dp), intent(out) :: cover
+
+! local variables
+! left boundary
+     real(dp) :: lb
+
+! right boundary
+     real(dp) :: rb
+
+! init cover
+     cover = zero
+
+! determine left boundary, choose a larger value
+     if ( ts0 < ts1 ) then
+         lb = ts1
+     else
+         lb = ts0
+     endif ! back if ( ts0 < ts1 ) block
+
+! determine right boundary, choose a smaller value
+     if ( te0 < te1 ) then
+         rb = te0
+     else
+         rb = te1
+     endif ! back if ( te0 < te1 ) block
+
+! compare left boundary and right boundary
+     if ( lb < rb ) then
+         cover = rb - lb
+     else
+         cover = zero
+     endif ! back if ( lb < rb ) block
+
+     return
+  end subroutine cat_ovlp_segment_
+
 !!>>> cat_ovlp_segments: calculate the delta segment overlaps between
 !!>>> current flavor channel and other flavor channels
   subroutine cat_ovlp_segments(flvr, tau_start, tau_end, ovlp)
@@ -2090,56 +2140,6 @@
 
      return
   end subroutine cat_ovlp_segments
-
-!!>>> ctqmc_make_compare: compare two segments, and calculate their overlap
-  subroutine ctqmc_make_compare(ts0, te0, ts1, te1, cover)
-     use constants, only : dp, zero
-
-     implicit none
-
-! external arguments
-! segment 1, ts0 < te0 should be certified beforehand
-     real(dp), intent(in)  :: ts0, te0
-
-! segment 2, ts1 < te1 should be certified beforehand
-     real(dp), intent(in)  :: ts1, te1
-
-! the overlap length for segment1 and segment2
-     real(dp), intent(out) :: cover
-
-! local variables
-! left boundary
-     real(dp) :: lb
-
-! right boundary
-     real(dp) :: rb
-
-! init cover
-     cover = zero
-
-! determine left boundary, choose a larger value
-     if ( ts0 < ts1 ) then
-         lb = ts1
-     else
-         lb = ts0
-     endif ! back if ( ts0 < ts1 ) block
-
-! determine right boundary, choose a smaller value
-     if ( te0 < te1 ) then
-         rb = te0
-     else
-         rb = te1
-     endif ! back if ( te0 < te1 ) block
-
-! compare left boundary and right boundary
-     if ( lb < rb ) then
-         cover = rb - lb
-     else
-         cover = zero
-     endif ! back if ( lb < rb ) block
-
-     return
-  end subroutine ctqmc_make_compare
 
 !!========================================================================
 !!>>> service layer: utility subroutines to test segment algorithm     <<<
