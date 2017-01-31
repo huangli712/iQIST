@@ -1223,9 +1223,9 @@
      return
   end subroutine cat_insert_flavor
 
-!!>>> ctqmc_make_flavor2: determine \tau_s, \tau_e and \tau_max for remove
+!!>>> cat_remove_flavor: determine \tau_s, \tau_e and \tau_max for remove
 !!>>> old segment or anti-segment
-  subroutine ctqmc_make_flavor2(flvr, is, ie, anti, tau_start, tau_end, tau_max)
+  subroutine cat_remove_flavor(flvr, is, ie, anti, tau_start, tau_end, tau_max)
      use constants, only : dp, zero, half
      use spring, only : spring_sfmt_stream
 
@@ -1430,7 +1430,7 @@
      endif ! back if ( anti .eqv. .false. ) block
 
      return
-  end subroutine ctqmc_make_flavor2
+  end subroutine cat_remove_flavor
 
 !!>>> ctqmc_make_flavor3: determine \tau_s1 and \tau_s2 for lshift old
 !!>>> segment or anti-segment
