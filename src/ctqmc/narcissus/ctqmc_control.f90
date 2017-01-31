@@ -33,7 +33,7 @@
 ! control flag: running mode
 ! if isscf == 1, one-shot non-self-consistent scheme, used in local density
 ! approximation plus dynamical mean field theory case
-! if isscf == 2, self-consistent scheme, used in normal model hamiltonian
+! if isscf == 2, self-consistent scheme, used in standard model hamiltonian
 ! plus dynamical mean field theory case
      integer, public, save :: isscf  = 2
 
@@ -92,7 +92,7 @@
 ! if p == 5, calculate orbital-orbital correlation function (frequency space)
 ! if p == 6, calculate < k^2 > - < k >^2
 ! if p == 7, calculate fidelity susceptibility matrix
-! if p == 8, reserved
+! if p == 8, calculate < S^n_z >, powers of local magnetization
 ! if p == 9, reserved
 !
 ! example:
