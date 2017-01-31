@@ -13,10 +13,11 @@
 !!!           cat_insert_flavor
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
-!!!           cat_rshift_flavor <<<---
-!!!           ctqmc_spin_counter <<<---
-!!!           ctqmc_make_overlap
-!!!           ctqmc_make_compare <<<---
+!!!           cat_rshift_flavor
+!!!           cat_reswap_flavor <<<---
+!!!           cat_occupy_status <<<---
+!!!           cat_ovlp_segment_
+!!!           cat_ovlp_segments <<<---
 !!!           ctqmc_make_wscreen
 !!!           ctqmc_make_wkernel <<<---
 !!!           ctqmc_make_segment
