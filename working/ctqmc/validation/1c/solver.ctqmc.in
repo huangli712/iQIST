@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 1c/solver.ctqmc.in
-!!! solver  : AZALEA
+!!! solver  : GARDENIA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!-----------------------------------------------------------------------

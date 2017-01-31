@@ -4,7 +4,7 @@
 
 ### 1 band model
 
-Impurity solver: azalea, gardenia, narcissus
+Impurity solver: gardenia, narcissus
 
 Reference: Phys. Rev. Lett. 97, 076405 (2006), Fig. 3
 
@@ -18,7 +18,7 @@ Reference: Phys. Rev. Lett. 97, 076405 (2006), Fig. 3
 
 ### 1 band model
 
-Impurity solver: azalea, gardenia, narcissus
+Impurity solver: gardenia, narcissus
 
 Reference: Phys. Rev. B 76, 235123 (2007), Fig. 3, Fig. 4, Fig. 5, Fig. 6
 
