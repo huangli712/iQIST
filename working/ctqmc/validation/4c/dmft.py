@@ -31,7 +31,7 @@ def do_dmft_loop(mfreq, norbs, grnf):
 comm = MPI.COMM_WORLD
 
 # check the status of ctqmc impurity solver
-if ctqmc.cat_solver_id() == 102:
+if ctqmc.cat_solver_id() == 101:
     if comm.rank == 0 :
         print "Hello world! This is the GARDENIA code."
 else:
