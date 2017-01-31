@@ -13,7 +13,7 @@ sys.path.append('../../../../src/tools/hibiscus/script/')
 from u_ctqmc import *
 
 # modify sys.path
-sys.path.append('../../../../src/ctqmc/begonia/')
+sys.path.append('../../../../src/ctqmc/lavender/')
 
 # import iqist software package
 import pyiqist as ctqmc
@@ -39,10 +39,10 @@ comm = MPI.COMM_WORLD
 # check the status of ctqmc impurity solver
 if ctqmc.cat_solver_id() == 201:
     if comm.rank == 0 :
-        print "Hello world! This is the BEGONIA code."
+        print "Hello world! This is the LAVENDER code."
 else:
     if comm.rank == 0 :
-        print "Where is the BEGONIA code?"
+        print "Where is the LAVENDER code?"
     sys.exit(-1)
 if ctqmc.cat_solver_status() != 1 :
     print "I am sorry. This ctqmc impurity solver is not ready."
@@ -54,7 +54,7 @@ comm.Barrier()
 # prepare the input file
 if comm.rank == 0:
     # create an instance
-    p = p_ctqmc_solver('begonia')
+    p = p_ctqmc_solver('lavender')
 
     # setup the parameters
     p.setp(isscf = 1, issun = 1, isbin = 1)
