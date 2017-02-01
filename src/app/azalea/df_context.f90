@@ -99,6 +99,7 @@
 
      use df_control
 
+     use df_mesh
      use df_dmft
      use df_dual
      use df_latt
