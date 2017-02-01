@@ -64,7 +64,6 @@
          enddo ! over j={1,nkp_y} loop
      enddo ! over i={1,nkp_x} loop     
      call s_assert(k == nkpts)
-     print *, k, nkpts
 
      return
   end subroutine df_mesh_init
