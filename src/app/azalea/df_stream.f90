@@ -167,6 +167,7 @@
      integer :: i
      integer :: j
      integer :: k
+     real(dp) :: raux
 
      do i=1,norbs
          do j=1,nffrq
@@ -177,6 +178,12 @@
              enddo ! over k={1,nkpts} loop
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
+
+     raux = zero
+     do j=1,nffrq
+         raux = raux + abs(sum(dual_b(:,j,:)))/float(nkpts)/2.0
+     enddo
+     print *, raux/float(nffrq)
 
      return
   end subroutine df_dual_init
