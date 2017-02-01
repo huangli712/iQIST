@@ -132,7 +132,7 @@
   end subroutine df_dmft_init
 
   subroutine df_latt_init()
-     use constants, only : dp
+     use constants, only : dp, one
 
      use df_control
      use df_context
@@ -156,7 +156,27 @@
   end subroutine df_latt_init
 
   subroutine df_dual_init()
+     use constants, only : dp 
+
+     use df_control
+     use df_context
+
      implicit none
+
+! local variables
+     integer :: i
+     integer :: j
+     integer :: k
+
+     do i=1,norbs
+         do j=1,nffrq
+             do k=1,nkpts
+                 dual_b(k,j,i) = latt_g(k,j,i) - dmft_g(j,i) 
+                 dual_g(k,j,i) = dual_b(k,j,i)
+                 dual_s(k,j,i) = czero
+             enddo ! over k={1,nkpts} loop
+         enddo ! over j={1,nffrq} loop
+     enddo ! over i={1,norbs} loop
 
      return
   end subroutine df_dual_init
