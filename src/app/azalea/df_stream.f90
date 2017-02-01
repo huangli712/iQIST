@@ -1,5 +1,7 @@
 ! parse input files, readin data
   subroutine df_config()
+     use constants, only : dp
+
      use df_control
 
      implicit none
@@ -7,6 +9,8 @@
 ! only for debug
      nffrq = 16
      nbfrq = 7
+
+     part  = 1.0_dp 
 
      return
   end subroutine df_config
@@ -36,6 +40,8 @@
 
 ! local variables
      integer :: i
+     integer :: j
+     integer :: k
 
      do i=1,nkp_x
          kx(i) = (two * pi) * float(i - 1)/ float(nkp_x)
@@ -48,6 +54,17 @@
      do i=1,nkp_z
          kz(i) = (two * pi) * float(i - 1)/ float(nkp_z)
      enddo ! over i={1,nkp_z} loop
+
+! build a 2d lattice
+     k = 0
+     do i=1,nkp_x
+         do j=1,nkp_y
+             k = k + 1
+             ek(k) = -two * part * ( cos( kx(i) ) + cos( ky(j) ) )
+         enddo ! over j={1,nkp_y} loop
+     enddo ! over i={1,nkp_x} loop     
+     call s_assert(k == nkpts)
+     print *, k, nkpts
 
      return
   end subroutine df_mesh_init
