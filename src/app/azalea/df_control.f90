@@ -30,12 +30,12 @@
 ! number of bosonic frequncy for the two-particle green's function
      integer, public, save :: nbfrq  = 8
 
-     integer, public, save :: nkp_x  = 2
-     integer, public, save :: nkp_y  = 2
-     integer, public, save :: nkp_z  = 2
+     integer, public, save :: nkp_x  = 8
+     integer, public, save :: nkp_y  = 8
+     integer, public, save :: nkp_z  = 8
 
 ! number of k-points
-     integer, public, save :: nkpts  = 8
+     integer, public, save :: nkpts  = 64
 
 ! number of dual fermion iteration
      integer, public, save :: ndfit  = 100

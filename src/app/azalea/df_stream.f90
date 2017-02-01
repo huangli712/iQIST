@@ -27,7 +27,20 @@
   end subroutine df_setup_array
 
   subroutine df_mesh_init()
+     use constants, only : dp, two, pi
+
+     use df_control
+     use df_context
+
      implicit none
+
+! local variables
+     integer :: i
+
+     do i=1,nkp_x
+         kx(i) = (two * pi) * float(i - 1)/ float(nkp_x)
+         print *, i, kx(i)
+     enddo
 
      return
   end subroutine df_mesh_init
