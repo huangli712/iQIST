@@ -10,6 +10,8 @@
      real(dp), public, save, allocatable :: ky(:)
      real(dp), public, save, allocatable :: kz(:)
 
+     real(dp), public, save, allocatable :: ek(:)
+
   end module df_mesh
 
 !!========================================================================
@@ -142,6 +144,7 @@
      allocate(kx(nkp_x), stat=istat)
      allocate(ky(nkp_y), stat=istat)
      allocate(kz(nkp_z), stat=istat)
+     allocate(ek(nkpts), stat=istat)
 
      if ( istat /= 0 ) then
          call s_print_error('df_allocate_memory_mesh','can not allocate enough memory')
@@ -150,6 +153,7 @@
      kx = zero
      ky = zero
      kz = zero
+     ek = zero
 
   end subroutine df_allocate_memory_mesh
 
@@ -231,6 +235,7 @@
      if ( allocated(kx) ) deallocate(kx)
      if ( allocated(ky) ) deallocate(ky)
      if ( allocated(kz) ) deallocate(kz)
+     if ( allocated(ek) ) deallocate(ek)
 
      return
   end subroutine df_deallocate_memory_mesh
