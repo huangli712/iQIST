@@ -39,6 +39,7 @@
 
      implicit none
 
+! local variables
      integer  :: i
      integer  :: if1, if2
      real(dp) :: r1, r2

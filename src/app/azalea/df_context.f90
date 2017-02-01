@@ -1,5 +1,19 @@
 
 !!========================================================================
+!!>>> module df_mesh                                                   <<<
+!!========================================================================
+
+  module df_mesh
+     use constants, only : dp
+
+     real(dp), public, save, allocatable :: kx(:)
+     real(dp), public, save, allocatable :: ky(:)
+     real(dp), public, save, allocatable :: kz(:)
+     real(dp), public, save, allocatable :: kmesh(:)
+
+  end module df_mesh
+
+!!========================================================================
 !!>>> module df_dmft                                                   <<<
 !!========================================================================
 
