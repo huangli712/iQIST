@@ -39,8 +39,17 @@
 
      do i=1,nkp_x
          kx(i) = (two * pi) * float(i - 1)/ float(nkp_x)
-         print *, i, kx(i)
-     enddo
+     enddo ! over i={1,nkp_x} loop
+
+     do i=1,nkp_y
+         ky(i) = (two * pi) * float(i - 1)/ float(nkp_y)
+         print *, i, ky(i)
+     enddo ! over i={1,nkp_y} loop
+
+     do i=1,nkp_z
+         kz(i) = (two * pi) * float(i - 1)/ float(nkp_z)
+         print *, i, kz(i)
+     enddo ! over i={1,nkp_z} loop
 
      return
   end subroutine df_mesh_init
