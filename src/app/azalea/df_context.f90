@@ -3,12 +3,12 @@
 !!>>> module df_dmft                                                   <<<
 !!========================================================================
 
+!! dmft variables
   module df_dmft
      use constants, only : dp
 
      implicit none
 
-!! dmft variables
 ! dmft green's function
      complex(dp), public, save, allocatable :: dmft_g(:,:)
 
@@ -24,12 +24,12 @@
 !!>>> module df_dual                                                   <<<
 !!========================================================================
 
+!! dual variables
   module df_dual
      use constants, only : dp
 
      implicit none
 
-!! dual variables
 ! dual green's function
      complex(dp), public, save, allocatable :: dual_g(:,:,:)
 
@@ -45,12 +45,12 @@
 !!>>> module df_latt                                                   <<<
 !!========================================================================
 
+!! lattice variables
   module df_latt
      use constants, only : dp
 
      implicit none
 
-!! lattice variables
 ! lattice green's function
      complex(dp), public, save, allocatable :: latt_g(:,:,:)
 
@@ -63,12 +63,12 @@
 !!>>> module df_vert                                                   <<<
 !!========================================================================
 
+!! vertex variables
   module df_vert
      use constants, only : dp
 
      implicit none
 
-!! vertex variables
 ! density vertex
      complex(dp), public, save, allocatable :: vert_d(:,:,:)
 

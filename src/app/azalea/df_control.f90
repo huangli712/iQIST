@@ -9,7 +9,7 @@
 !!========================================================================
 
 ! the code name of the current dual fermion framework
-     character(len = 07), public, save :: cname = 'BEGONIA'
+     character(len = 06), public, save :: cname = 'AZALEA'
 
 !!========================================================================
 !!>>> integer variables                                                <<<
@@ -33,9 +33,14 @@
      integer, public, save :: nkp_x  = 2
      integer, public, save :: nkp_y  = 2
      integer, public, save :: nkp_z  = 2
+
+! number of k-points
      integer, public, save :: nkpts  = 8
 
+! number of dual fermion iteration
      integer, public, save :: ndfit  = 100
+
+! number of BSE iteration
      integer, public, save :: nbsit  = 100
 
 !!========================================================================
