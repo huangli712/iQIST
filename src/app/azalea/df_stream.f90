@@ -17,6 +17,7 @@
      implicit none
 
 ! allocate memory for df_context module
+     call df_allocate_memory_mesh()
      call df_allocate_memory_dmft()
      call df_allocate_memory_dual()
      call df_allocate_memory_latt()
@@ -118,6 +119,7 @@
      implicit none
 
 ! deallocate memory for df_context module
+     call df_deallocate_memory_mesh()
      call df_deallocate_memory_dmft()
      call df_deallocate_memory_dual()
      call df_deallocate_memory_latt()
