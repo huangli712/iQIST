@@ -9,7 +9,6 @@
      real(dp), public, save, allocatable :: kx(:)
      real(dp), public, save, allocatable :: ky(:)
      real(dp), public, save, allocatable :: kz(:)
-     real(dp), public, save, allocatable :: kmesh(:)
 
   end module df_mesh
 
@@ -117,12 +116,14 @@
 !!========================================================================
 
 ! declaration of module procedures: allocate memory
+     public :: df_allocate_memory_mesh
      public :: df_allocate_memory_dmft
      public :: df_allocate_memory_dual
      public :: df_allocate_memory_latt
      public :: df_allocate_memory_vert
 
 ! declaration of module procedures: deallocate memory
+     public :: df_deallocate_memory_mesh
      public :: df_deallocate_memory_dmft
      public :: df_deallocate_memory_dual
      public :: df_deallocate_memory_latt
@@ -133,6 +134,23 @@
 !!========================================================================
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
+
+  subroutine df_allocate_memory_mesh()
+     implicit none
+
+     allocate(kx(nkp_x), stat=istat)
+     allocate(ky(nkp_y), stat=istat)
+     allocate(kz(nkp_z), stat=istat)
+
+     if ( istat /= 0 ) then
+         call s_print_error('df_allocate_memory_mesh','can not allocate enough memory')
+     endif
+
+     kx = zero
+     ky = zero
+     kz = zero
+
+  end subroutine df_allocate_memory_mesh
 
   subroutine df_allocate_memory_dmft()
      implicit none
@@ -205,6 +223,16 @@
 !!========================================================================
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
+
+  subroutine df_deallocate_memory_mesh()
+     implicit none
+
+     if ( allocated(kx) ) deallocate(kx)
+     if ( allocated(ky) ) deallocate(ky)
+     if ( allocated(kz) ) deallocate(kz)
+
+     return
+  end subroutine df_deallocate_memory_mesh
 
   subroutine df_deallocate_memory_dmft()
      implicit none
