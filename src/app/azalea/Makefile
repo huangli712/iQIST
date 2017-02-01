@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/app/begonia directory.
+## Makefile for iqist/src/app/azalea directory.
 ##
 ## Usage
 ## =====
@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 01/17/2017 by li huang (created)
-## 01/17/2017 by li huang (last modified)
+## 02/01/2017 by li huang (last modified)
 ##
 ##
 
@@ -55,6 +55,7 @@ csml:
 	cp ../../base/mmpi.mod .
 	cp ../../base/parser.mod .
 	cp ../../base/linkedlist.mod .
+	cp ../../base/version.mod .
 
 exe: cssl csml df-exe
 df-exe: $(exe_obj)
