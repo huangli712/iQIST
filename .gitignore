@@ -22,7 +22,7 @@ test.py
 test.f90
 ctqmc_open_py.f90
 atomic_open_py.f90
-src/app/begonia/df
+src/app/azalea/df
 src/ctqmc/*/ctqmc
 src/tools/hibiscus/entropy/entropy
 src/tools/hibiscus/stoch/sac
