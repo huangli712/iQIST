@@ -139,6 +139,19 @@
 
      implicit none
 
+! local variables
+     integer :: i
+     integer :: j
+     integer :: k
+
+     do i=1,norbs
+         do j=1,nffrq
+             do k=1,nkpts
+                 latt_g(k,j,i) = one / ( one / dmft_g(j,i) + dmft_h(j,i) - ek(k) ) 
+             enddo ! over k={1,nkpts} loop
+         enddo ! over j={1,nffrq} loop
+     enddo ! over i={1,norbs} loop
+
      return
   end subroutine df_latt_init
 
