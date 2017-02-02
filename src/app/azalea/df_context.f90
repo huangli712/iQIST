@@ -248,6 +248,9 @@
      if ( allocated(kz) ) deallocate(kz)
      if ( allocated(ek) ) deallocate(ek)
 
+     if ( allocated(fmesh) ) deallocate(fmesh)
+     if ( allocated(bmesh) ) deallocate(bmesh)
+
      return
   end subroutine df_deallocate_memory_mesh
 
