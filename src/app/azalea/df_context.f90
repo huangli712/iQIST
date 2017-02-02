@@ -10,6 +10,7 @@
      real(dp), public, save, allocatable :: ky(:)
      real(dp), public, save, allocatable :: kz(:)
 
+! band dispersion
      real(dp), public, save, allocatable :: ek(:)
 
   end module df_mesh
