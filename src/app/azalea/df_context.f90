@@ -150,6 +150,9 @@
      allocate(kz(nkp_z), stat=istat)
      allocate(ek(nkpts), stat=istat)
 
+     allocate(fmesh(nffrq), stat=istat)
+     allocate(bmesh(nbfrq), stat=istat)
+
      if ( istat /= 0 ) then
          call s_print_error('df_allocate_memory_mesh','can not allocate enough memory')
      endif
@@ -159,6 +162,10 @@
      kz = zero
      ek = zero
 
+     fmesh = zero
+     bmesh = zero
+
+     return
   end subroutine df_allocate_memory_mesh
 
   subroutine df_allocate_memory_dmft()
