@@ -4,30 +4,41 @@
 
      implicit none
 
-     integer :: df_it
-     integer :: bs_it
+!<     integer :: df_it
+!<     integer :: bs_it
+!<
+!<     call df_dual_wssf()
+!<     do df_it=1,ndfit
+!<         call df_bubble()
+!<
+!<         do bs_it=1,nbsit
+!<             call df_full_vert()
+!<         enddo
+!<
+!<         call df_diagram()
+!<         call df_dual_sigf()
+!<         call df_dual_grnf()
+!<     enddo
+!<     call df_latt_grnf()
+!<     call df_latt_sigf()
+!<
+!<     call df_dmft_grnf()
+!<     call df_dmft_sigf()
+!<     call df_dmft_hybf()
+!<
+!<     call df_spin_susc()
+!<     call df_char_susc()
 
-     call df_dual_wssf()
-     do df_it=1,ndfit
-         call df_bubble()
+     integer :: i
+     integer :: j
+     integer :: k
 
-         do bs_it=1,nbsit
-             call df_full_vert()
-         enddo
-
-         call df_diagram()
-         call df_dual_sigf()
-         call df_dual_grnf()
-     enddo
-     call df_latt_grnf()
-     call df_latt_sigf()
-
-     call df_dmft_grnf()
-     call df_dmft_sigf()
-     call df_dmft_hybf()
-
-     call df_spin_susc()
-     call df_char_susc()
+     DF_LOOP: do i=1,ndfit
+         Q_LOOP: do j=1,nbfrq
+             K_LOOP: k=1,nkpts
+             enddo
+         enddo Q_LOOP
+     enddo DF_LOOP
 
      return
   end subroutine df_run
