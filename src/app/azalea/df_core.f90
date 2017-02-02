@@ -38,7 +38,7 @@
      DF_LOOP: do i=1,ndfit
          Q_LOOP: do j=1,nbfrq
              K_LOOP: k=1,nkpts
-             enddo
+             enddo K_LOOP
          enddo Q_LOOP
      enddo DF_LOOP
 
