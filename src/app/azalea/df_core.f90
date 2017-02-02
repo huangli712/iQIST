@@ -3,6 +3,7 @@
      use constants
 
      use df_control
+     use df_context
 
      implicit none
 
@@ -15,10 +16,11 @@
          write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', i
 
          Q_LOOP: do j=2,nbfrq-1
-             write(mystd,'(2X,A,I3)') 'Bosonic Frequency:', j
+             write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', bmesh(j)
 
              K_LOOP: do k=1,nkpts
              enddo K_LOOP
+
          enddo Q_LOOP
 
          write(mystd,*)
