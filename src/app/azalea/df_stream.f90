@@ -66,9 +66,11 @@
      call s_assert(k == nkpts)
 
      do i=1,nffrq
+         fmesh(i) = (two * i - one - nffrq) * pi / beta
      enddo ! over i={1,nffrq} loop
 
      do i=1,nbfrq
+         bmesh(i) = (two * i - one - nbfrq) * pi / beta
      enddo ! over i={1,nbfrq} loop
 
      return
