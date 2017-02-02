@@ -1,6 +1,8 @@
 
   subroutine df_run()
-     use df_control, only : ndfit, nbsit
+     use constants
+
+     use df_control
 
      implicit none
 
