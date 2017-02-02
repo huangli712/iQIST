@@ -53,7 +53,7 @@
      real(dp), public, save :: mune  = 2.00_dp
 
 ! inversion of temperature
-     real(dp), public, save :: beta  = 8.00_dp
+     real(dp), public, save :: beta  = 1.00_dp
 
 ! coupling parameter t for Hubbard model
      real(dp), public, save :: part  = 0.50_dp
