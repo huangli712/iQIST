@@ -6,40 +6,22 @@
 
      implicit none
 
-!<     integer :: df_it
-!<     integer :: bs_it
-!<
-!<     call df_dual_wssf()
-!<     do df_it=1,ndfit
-!<         call df_bubble()
-!<
-!<         do bs_it=1,nbsit
-!<             call df_full_vert()
-!<         enddo
-!<
-!<         call df_diagram()
-!<         call df_dual_sigf()
-!<         call df_dual_grnf()
-!<     enddo
-!<     call df_latt_grnf()
-!<     call df_latt_sigf()
-!<
-!<     call df_dmft_grnf()
-!<     call df_dmft_sigf()
-!<     call df_dmft_hybf()
-!<
-!<     call df_spin_susc()
-!<     call df_char_susc()
-
+! local variables
      integer :: i
      integer :: j
      integer :: k
 
      DF_LOOP: do i=1,ndfit
-         Q_LOOP: do j=1,nbfrq
+         write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', i
+
+         Q_LOOP: do j=2,nbfrq-1
+             write(mystd,'(2X,A,I3)') 'Bosonic Frequency:', j
+
              K_LOOP: do k=1,nkpts
              enddo K_LOOP
          enddo Q_LOOP
+
+         write(mystd,*)
      enddo DF_LOOP
 
      return

@@ -13,6 +13,9 @@
 ! band dispersion
      real(dp), public, save, allocatable :: ek(:)
 
+     real(dp), public, save, allocatable :: fmesh(:)
+     real(dp), public, save, allocatable :: bmesh(:)
+
   end module df_mesh
 
 !!========================================================================

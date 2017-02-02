@@ -38,10 +38,10 @@
      integer, public, save :: nkpts  = 64
 
 ! number of dual fermion iteration
-     integer, public, save :: ndfit  = 100
+     integer, public, save :: ndfit  = 1
 
 ! number of BSE iteration
-     integer, public, save :: nbsit  = 100
+     integer, public, save :: nbsit  = 10
 
 !!========================================================================
 !!>>> real variables                                                   <<<
