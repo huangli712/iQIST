@@ -59,14 +59,14 @@ csml:
 
 exe: cssl csml df-exe
 df-exe: $(exe_obj)
-	$(LINKER) $(exe_obj) -o df $(LFLAGS) $(LIBS)
+	$(LINKER) $(exe_obj) -o df $(LFLAGS) $(LIBS) -L/opt/local/lib/ -lfftw3
 
 lib: cssl csml df-lib
 df-lib: $(lib_obj)
 	$(ARCHIVER) libdf.a $(lib_obj)
 
 .f90.o:
-	$(F90) $(FFLAGS) $*.f90
+	$(F90) -I/opt/local/include $(FFLAGS) $*.f90
 
 clean:
 	rm -f *.mod
