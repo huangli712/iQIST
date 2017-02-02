@@ -17,6 +17,11 @@
 
          Q_LOOP: do j=2,nbfrq-1
              write(mystd,'(2X,A,F12.6)') 'Bosonic Frequency:', bmesh(j)
+             if ( abs(bmesh(j) - zero) < epss ) then
+                 call df_static_bubble()
+             else
+                 call df_bubble()
+             endif
 
              K_LOOP: do k=1,nkpts
              enddo K_LOOP
