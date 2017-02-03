@@ -22,9 +22,9 @@
          print *, i, fmesh(i)
          gk = dual_g(:,i,1)
          gr = czero
-         call df_fft_forward(gk, gr)
+         call df_fft2d(+1, nkp_x, nkp_y, gk, gr)
          gr = gr * gr
-         call df_fft_backward(gr, gk)
+         call df_fft2d(-1, nkp_x, nkp_y, gr, gk)
          print *, gk / float(nkpts*nkpts)
          print *
      enddo
