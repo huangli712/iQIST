@@ -33,7 +33,7 @@
      return
   end subroutine df_static_bubble
 
-  subroutine df_bubble()
+  subroutine df_bubble(bubble, w)
      use constants
 
      use df_control
@@ -41,6 +41,16 @@
 
      implicit none
 
-     print *, 'dynamic'
+! external arguments
+     real(dp), intent(in) :: w
+     complex(dp), intent(out) :: bubble(nkpts,nffrq,norbs)
+
+! local variables
+     integer :: i
+     integer :: j
+
+     complex(dp) :: gk(nkpts)
+     complex(dp) :: gr(nkpts)
+
      return
   end subroutine df_bubble
