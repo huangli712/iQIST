@@ -1,7 +1,4 @@
 
-  subroutine df_util()
-  end subroutine df_util
-
   subroutine df_fft_forward(gk, gr)
      use iso_c_binding
 
