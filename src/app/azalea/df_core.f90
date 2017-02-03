@@ -25,7 +25,7 @@
              if ( abs(w - zero) < epss ) then
                  call df_static_bubble(bubble, w)
              else
-                 call df_bubble()
+                 call df_bubble(bubble, w)
              endif
 
              K_LOOP: do k=1,nkpts
