@@ -52,5 +52,8 @@
      complex(dp) :: gk(nkpts)
      complex(dp) :: gr(nkpts)
 
+     print *, fmesh
+     print *, bmesh
+     STOP
      return
   end subroutine df_bubble
