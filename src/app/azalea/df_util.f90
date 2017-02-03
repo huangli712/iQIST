@@ -1,5 +1,5 @@
 
-  subroutine df_fft1d(op, nx, ny, fin, fout)
+  subroutine df_fft1d(op, nx, fin, fout)
      use iso_c_binding
      use constants
 
@@ -12,10 +12,9 @@
 ! external arguments
      integer, intent(in) :: op
      integer, intent(in) :: nx
-     integer, intent(in) :: ny
 
-     complex(dp), intent(inout) :: fin(nx,ny)
-     complex(dp), intent(inout) :: fout(nx,ny)
+     complex(dp), intent(inout) :: fin(nx)
+     complex(dp), intent(inout) :: fout(nx)
 
 ! local variables
      type(c_ptr) :: plan
@@ -23,10 +22,10 @@
      select case (op)
 
          case (+1)
-             plan = fftw_plan_dft_2d(nx, ny, fin, fout, FFTW_FORWARD, FFTW_ESTIMATE)
+             plan = fftw_plan_dft_1d(nx, fin, fout, FFTW_FORWARD, FFTW_ESTIMATE)
 
          case (-1)
-             plan = fftw_plan_dft_2d(nx, ny, fin, fout, FFTW_BACKWARD, FFTW_ESTIMATE)
+             plan = fftw_plan_dft_1d(nx, fin, fout, FFTW_BACKWARD, FFTW_ESTIMATE)
 
          case default
              STOP
