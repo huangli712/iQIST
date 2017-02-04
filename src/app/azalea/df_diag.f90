@@ -87,7 +87,6 @@
      enddo ! over i={1,norbs} loop
      bubble = bubble / real(nkpts * nkpts * beta)
 
-     STOP
      return
   end subroutine df_bubble
 
