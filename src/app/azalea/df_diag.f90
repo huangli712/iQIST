@@ -64,7 +64,7 @@
              else if ( fw < fmesh(  1  ) ) then
                  gs(:,j,i) = czero
              else
-                 call cat_search_fmesh(fw, k)
+                 k = ceiling( (fw * beta / pi + nffrq + one) / two )
                  gs(:,j,i) = dual_g(:,k,i)
              endif
          enddo ! over j={1,nffrq} loop
@@ -83,24 +83,12 @@
              gr = gr1 * gr2
              call df_fft2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
              bubble(:,j,i) = -gk
+             print *, fmesh(j)
+             print *, gk/real(nkpts*nkpts)
          enddo ! over j={1,nffrq} loop
+         STOP
      enddo ! over i={1,norbs} loop
      bubble = bubble / real(nkpts * nkpts * beta)
 
      return
   end subroutine df_bubble
-
-  subroutine cat_search_fmesh(w, ind)
-     use constants
-
-     use df_control
-
-     implicit none
-
-     integer, intent(out) :: ind
-     real(dp), intent(in) :: w
-
-     ind = ceiling( (w * beta / pi + nffrq + one) / two )
-
-     return
-  end subroutine cat_search_fmesh
