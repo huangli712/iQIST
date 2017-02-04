@@ -83,10 +83,7 @@
              gr = gr1 * gr2
              call df_fft2d(-1, nkp_x, nkp_y, gr, gk) ! gr -> gk
              bubble(:,j,i) = -gk
-             print *, fmesh(j)
-             print *, gk/real(nkpts*nkpts)
          enddo ! over j={1,nffrq} loop
-         STOP
      enddo ! over i={1,norbs} loop
      bubble = bubble / real(nkpts * nkpts * beta)
 

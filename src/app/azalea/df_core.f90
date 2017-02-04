@@ -14,6 +14,7 @@
 
      real(dp) :: w
      complex(dp), allocatable :: bubble(:,:,:)
+
      allocate(bubble(nkpts,nffrq,norbs))
 
      DF_LOOP: do i=1,ndfit
