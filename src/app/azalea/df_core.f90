@@ -17,11 +17,15 @@
      complex(dp), allocatable :: bubbleM(:,:)
      complex(dp), allocatable :: vertexM(:,:)
      complex(dp), allocatable :: vertexD(:,:)
+     complex(dp), allocatable :: gammaM(:,:)
+     complex(dp), allocatable :: gammaD(:,:)
 
      allocate(bubble(nkpts,nffrq,norbs))
      allocate(bubbleM(nffrq,nffrq))
      allocate(vertexM(nffrq,nffrq))
      allocate(vertexD(nffrq,nffrq))
+     allocate(gammaM(nffrq,nffrq))
+     allocate(gammaD(nffrq,nffrq))
 
      DF_LOOP: do i=1,ndfit
          write(mystd,'(2X,A,I3)') 'Ladder Dual Fermion Iteration:', i
@@ -37,12 +41,15 @@
 
              vertexM = vert_m(:,:,j)
              vertexD = vert_d(:,:,j)
-             K_LOOP: do k=1,nkpts
-                 call s_diag_z(nffrq, bubble(k,:,1), bubbleM)
-                 call df_bse_solver(bubbleM, vertexM)
-             enddo K_LOOP
 
+             K_LOOP: do k=1,nkpts
+                 print *, 'K:', k
+                 call s_diag_z(nffrq, bubble(k,:,1), bubbleM)
+                 call df_bse_solver(bubbleM, vertexM, gammaM)
+                 call df_bse_solver(bubbleM, vertexD, gammaD)
+             enddo K_LOOP
          enddo Q_LOOP
+         STOP
 
          write(mystd,*)
      enddo DF_LOOP
@@ -51,6 +58,8 @@
      deallocate(bubbleM)
      deallocate(vertexM)
      deallocate(vertexD)
+     deallocate(gammaM)
+     deallocate(gammaD)
 
      return
   end subroutine df_run

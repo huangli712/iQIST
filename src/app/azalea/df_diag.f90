@@ -59,13 +59,11 @@
      do i=1,norbs
          do j=1,nffrq
              fw = fmesh(j) + w
-             if      ( fw > fmesh(nffrq) ) then
-                 gs(:,j,i) = czero
-             else if ( fw < fmesh(  1  ) ) then
-                 gs(:,j,i) = czero
-             else
-                 k = ceiling( (fw * beta / pi + nffrq + one) / two )
+             k = floor( (fw * beta / pi + nffrq + one) / two + 0.5 )
+             if ( k >= 1 .and. k <= nffrq ) then
                  gs(:,j,i) = dual_g(:,k,i)
+             else
+                 gs(:,j,i) = czero
              endif
          enddo ! over j={1,nffrq} loop
      enddo ! over i={1,norbs} loop
