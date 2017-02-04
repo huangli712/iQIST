@@ -39,6 +39,7 @@
              vertexD = vert_d(:,:,j)
              K_LOOP: do k=1,nkpts
                  call s_diag_z(nffrq, bubble(k,:,1), bubbleM)
+                 call df_bse_solver(bubbleM, vertexM)
              enddo K_LOOP
 
          enddo Q_LOOP
