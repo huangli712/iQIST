@@ -1,4 +1,4 @@
-# iQIST (Interacting Quantum Impurity Solver Toolkit)
+# $$i$$QIST (Interacting Quantum Impurity Solver Toolkit)
 
 The iQIST software package contains several quantum impurity solvers which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm (CT-HYB), and corresponding preprocessing and postprocessing tools.
 
