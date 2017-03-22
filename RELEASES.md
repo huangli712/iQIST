@@ -58,7 +58,7 @@
 * Improve the code style
 
 > WARNING:
-
+>
 > The file formats, Python and Fortran APIS are **NOT** compatible with the previous. Especially, the solver.hyb.in files generated using the previous iQIST are not valid for the current version.
 
 ## v0.6.4 @ 0816e25 // Aug 17, 2015
