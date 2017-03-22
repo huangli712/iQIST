@@ -74,6 +74,7 @@ GNU General Public License Version 3
     * Many tools and scripts, etc.
 
 > NOTE:
+>
 > The iQIST software package is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed or removed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
 
 ## Installation
