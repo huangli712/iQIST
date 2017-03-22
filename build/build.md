@@ -38,7 +38,7 @@ The make.sys file is the key component of the building system. You have to modif
 
 ### F90
 
-The Fortran compiler. The parallel and sequential fortran compilers are both supported. Note that only the Intel fortran compiler and the GNU gfortran compiler were tested. And we recommend to use the very latest version of Intel fortran compiler (i.e, Intel Fortran Composer XE 2013 or Intel Parallel Studio 2015).
+The Fortran compiler. Both the parallel and sequential fortran compilers are supported. Note that only the Intel fortran compiler and the GNU gfortran compiler were tested. And we recommend to use the very latest version of Intel fortran compiler (i.e, Intel Fortran Composer XE 2013 or Intel Parallel Studio 2015).
 
 Possible options:
 
@@ -62,7 +62,7 @@ Possible options:
 
 ### ARCHIVER
 
-Archiver. It is used to pack the objects into a library. Do not modify it for ever.
+Archiver. It is used to pack the binary objects into a library. Do not modify it for ever.
 
 Possible options:
 
@@ -304,7 +304,7 @@ In general, the '$(LIBS)' option works quite well. But when you are working on t
 
 ## Templates
 
-Here we provide a summary list for several make.sys templates. Please choose a suitable one and modify it to satisfy your requirements. Don't forget to use it to override the default make.sys.
+Here we provide a summary list for several make.sys templates. Please choose a suitable one and modify it to satisfy your requirements. Don't forget to use it to overwrite the default make.sys.
 
 ### make.sys
 
