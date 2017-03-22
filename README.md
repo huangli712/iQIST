@@ -12,19 +12,13 @@ GNU General Public License Version 3
 
 ## Features
 
-* Quantum impurity model
+* The quantum impurity models could have the following terms
     * Density-density interaction
     * General interaction (Slater or Kanamori scheme)
     * Spin-orbital coupling and crystal field splitting
-    * Hubbard-Holstein model
-    * Frequency-dependent interaction
+    * Frequency-dependent interaction (Hubbard-Holstein model)
 
-* Measurement tricks
-    * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
-    * Kernel polynomial representation
-    * Improved estimator for self-energy function
-
-* Physical observables
+* The following physical observables could be measured
     * Single-particle Green's function in imaginary time space
     * Single-particle Green's function in matsubara frequency space
     * Two-particle correlation function in matsubara frequency space
@@ -46,7 +40,12 @@ GNU General Public License Version 3
     * Fidelity susceptibility
     * Kinetic energy fluctuation
 
-* Advanced algorithms
+* The following measurement tricks are supported
+    * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
+    * Kernel polynomial representation
+    * Improved estimator for self-energy function
+
+* The following optimized algorithms are adopted
     * Segment algorithm for density-density interaction
     * Divide-and-conquer algorithm
     * Sparse matrix multiplication
@@ -54,19 +53,19 @@ GNU General Public License Version 3
     * Lazy trace evaluation
     * Dynamical truncation approximation
 
-* Parallelism
+* The quantum impurity solvers are all parallelized
     * MPI
     * OpenMP (for the measurement of two-particle quantities)
 
-* Application programming interfaces
+* The application programming interfaces are provided
     * Fortran binding
     * Python binding
     * Input file generator by Python
 
-* Preprocessing tools
+* The preprocessing tools are provided
     * Atomic eigenvalue problem solver
 
-* Postprocessing tools
+* The postprocessing tools are provided
     * Maximum entropy method
     * Stochastic analytical continuation method
     * Kramers-Kronig transformation
@@ -76,7 +75,7 @@ GNU General Public License Version 3
 
 > NOTE:
 
-> The iQIST is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed or removed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
+> The iQIST software package is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed or removed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
 
 ## Installation
 
@@ -128,7 +127,7 @@ $ ./x_setup.sh
 
 > 2. 'editor' could be any ascii text editor which you prefer.
 
-> 3. 'component' could be gardenia, narcissus, lavender, etc.
+> 3. 'component' could be gardenia, narcissus, manjushaka, etc.
 
 > 4. Type 'make help-more' in the terminal for more details.
 
