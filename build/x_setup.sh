@@ -24,7 +24,7 @@
 ## =======
 ##
 ## 11/10/2014 by li huang (created)
-## 01/26/2017 by li huang (last modified)
+## 03/22/2017 by li huang (last modified)
 ##
 ##
 
@@ -40,7 +40,7 @@ function make_link {
 }
 
 # loop over the ctqmc components
-for component in gardenia narcissus lavender manjushaka
+for component in gardenia narcissus manjushaka
 do
     dir=$(echo ../src/ctqmc/$component/ctqmc)
     make_link $dir $component
