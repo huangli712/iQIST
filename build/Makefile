@@ -54,7 +54,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 01/25/2017 by li huang (last modified)
+## 03/22/2017 by li huang (last modified)
 ##
 ##
 
@@ -97,11 +97,6 @@ help-more:
 	@echo '     narcissus-pylib   build narcissus library for Python   '
 	@echo '     clean-narcissus   clean narcissus directory            '
 	@echo
-	@echo '     lavender          build lavender code                  '
-	@echo '     lavender-lib      build lavender library for Fortran   '
-	@echo '     lavender-pylib    build lavender library for Python    '
-	@echo '     clean-lavender    clean lavender directory             '
-	@echo
 	@echo '     manjushaka        build manjushaka code                '
 	@echo '     manjushaka-lib    build manjushaka library for Fortran '
 	@echo '     manjushaka-pylib  build manjushaka library for Python  '
@@ -135,16 +130,16 @@ lib: base-lib capi-lib solver-lib tool-lib
 clean: clean-base clean-capi clean-solver clean-tool
 
 # targets for solver
-solver: base capi gardenia narcissus lavender manjushaka
-solver-lib: base-lib capi-lib gardenia-lib narcissus-lib lavender-lib manjushaka-lib
-clean-solver: clean-base clean-capi clean-gardenia clean-narcissus clean-lavender clean-manjushaka
+solver: base capi gardenia narcissus manjushaka
+solver-lib: base-lib capi-lib gardenia-lib narcissus-lib manjushaka-lib
+clean-solver: clean-base clean-capi clean-gardenia clean-narcissus clean-manjushaka
 
 # targets for tool
 tool: base capi jasmine hibiscus
 tool-lib: base-lib capi-lib jasmine-lib hibiscus-lib
 clean-tool: clean-base clean-capi clean-jasmine clean-hibiscus
 
-# targets for ctqmc codes: segment version (gardenia, narcissus)
+# targets for ctqmc codes: segment version (gardenia)
 gardenia:
 	cd ../src/ctqmc/gardenia/; pwd; make
 
@@ -157,6 +152,7 @@ gardenia-pylib:
 clean-gardenia:
 	cd ../src/ctqmc/gardenia/; pwd; make clean
 
+# targets for ctqmc codes: segment version (narcissus)
 narcissus:
 	cd ../src/ctqmc/narcissus/; pwd; make
 
@@ -168,19 +164,6 @@ narcissus-pylib:
 
 clean-narcissus:
 	cd ../src/ctqmc/narcissus/; pwd; make clean
-
-# targets for ctqmc codes: general version (lavender)
-lavender:
-	cd ../src/ctqmc/lavender/; pwd; make
-
-lavender-lib:
-	cd ../src/ctqmc/lavender/; pwd; make lib
-
-lavender-pylib:
-	cd ../src/ctqmc/lavender/; pwd; make pylib
-
-clean-lavender:
-	cd ../src/ctqmc/lavender/; pwd; make clean
 
 # targets for ctqmc codes: general version (manjushaka)
 manjushaka:
