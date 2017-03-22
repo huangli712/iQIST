@@ -122,15 +122,15 @@ $ ./x_setup.sh
 ```
 
 > NOTE:
-
+>
 > 1. 'iqist' is the directory where the iQIST software package is uncompressed.
-
+>
 > 2. 'editor' could be any ascii text editor which you prefer.
-
+>
 > 3. 'component' could be gardenia, narcissus, manjushaka, etc.
-
+>
 > 4. Type 'make help-more' in the terminal for more details.
-
+>
 > 5. Sometimes the latest commit will not be compiled correctly. So, please download the released version of the iQIST software package which should have an unique version tag.
 
 Enjoy it!
