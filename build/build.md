@@ -434,39 +434,3 @@ GNU gfortran 4.8.2
 Netlib LAPACK/BLAS 3.4.2
 Python 2.7.3
 ```
-
-### template/tianhe/make.sys.standard
-
-Machine   : TianHe-1 supercomputer (login node)
-
-Processor : 2.93 GHz Intel Xeon X5670
-
-Memory    : 23 GB RAM
-
-Software  :
-
-```
-Linux kernel 2.6.32-358
-MPICH 3.0.4
-Intel Fortran Compiler 13.0.0
-Intel Math Kernel Library 11.0
-Python 2.6.6
-```
-
-### template/tianhe/make.sys.openblas
-
-Machine   : TianHe-1 supercomputer (login node)
-
-Processor : 2.93 GHz Intel Xeon X5670
-
-Memory    : 23 GB RAM
-
-Software  :
-
-```
-Linux kernel 2.6.32-358
-MPICH 3.0.4
-Intel Fortran Compiler 13.0.0
-OpenBLAS 0.2.3
-Python 2.6.6
-```
