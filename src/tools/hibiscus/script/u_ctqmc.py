@@ -5,8 +5,8 @@
 ## Introduction
 ## ============
 ##
-## It is a python script. The purpose of this script is generate essential
-## input file (solver.ctqmc.in) for the quantum impurity solver components.
+## It is a python script. The purpose of it is to generate essential input
+## file (solver.ctqmc.in) for various quantum impurity solver components.
 ## Note that you can not use it to control these codes.
 ##
 ## Usage
@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 03/24/2017 by li huang (last modified)
 ##
 ##
 
@@ -95,9 +95,6 @@ class p_ctqmc_solver(object):
             'alpha'  : 0.70    ,
         }
 
-        # __p_cmp_azalea: the official parameter dict for azalea
-        self.__p_cmp_azalea = self.__p_cmp_solver.copy()
-
         # __p_cmp_gardenia: the official parameter dict for gardenia
         self.__p_cmp_gardenia = self.__p_cmp_solver.copy()
         self.__p_cmp_gardenia['isort'] = 1
@@ -125,44 +122,6 @@ class p_ctqmc_solver(object):
         self.__p_cmp_narcissus['lc'] = 1.00
         self.__p_cmp_narcissus['wc'] = 1.00
 
-        # __p_cmp_begonia: the official parameter dict for begonia
-        self.__p_cmp_begonia = self.__p_cmp_solver.copy()
-        self.__p_cmp_begonia['nzero'] = 128
-        self.__p_cmp_begonia['npart'] = 4
-
-        # __p_cmp_lavender: the official parameter dict for lavender
-        self.__p_cmp_lavender = self.__p_cmp_solver.copy()
-        self.__p_cmp_lavender['isort'] = 1
-        self.__p_cmp_lavender['issus'] = 1
-        self.__p_cmp_lavender['isvrt'] = 1
-        self.__p_cmp_lavender['nzero'] = 128
-        self.__p_cmp_lavender['lemax'] = 32
-        self.__p_cmp_lavender['legrd'] = 20001
-        self.__p_cmp_lavender['chmax'] = 32
-        self.__p_cmp_lavender['chgrd'] = 20001
-        self.__p_cmp_lavender['nffrq'] = 32
-        self.__p_cmp_lavender['nbfrq'] = 8
-        self.__p_cmp_lavender['npart'] = 4
-
-        # __p_cmp_camellia: the official parameter dict for camellia
-        self.__p_cmp_camellia = self.__p_cmp_solver.copy()
-        self.__p_cmp_camellia['isort'] = 1
-        self.__p_cmp_camellia['issus'] = 1
-        self.__p_cmp_camellia['isvrt'] = 1
-        self.__p_cmp_camellia['nzero'] = 128
-        self.__p_cmp_camellia['lemax'] = 32
-        self.__p_cmp_camellia['legrd'] = 20001
-        self.__p_cmp_camellia['chmax'] = 32
-        self.__p_cmp_camellia['chgrd'] = 20001
-        self.__p_cmp_camellia['nffrq'] = 32
-        self.__p_cmp_camellia['nbfrq'] = 8
-        self.__p_cmp_camellia['nvect'] = 4
-        self.__p_cmp_camellia['nleja'] = 64
-
-        # __p_cmp_pansy: the official parameter dict for pansy
-        self.__p_cmp_pansy = self.__p_cmp_solver.copy()
-        self.__p_cmp_pansy['npart'] = 4
-
         # __p_cmp_manjushaka: the official parameter dict for manjushaka
         self.__p_cmp_manjushaka = self.__p_cmp_solver.copy()
         self.__p_cmp_manjushaka['isort'] = 1
@@ -186,32 +145,12 @@ class p_ctqmc_solver(object):
 
         # config __p_cmp according to the selected solver
         for case in switch( solver.lower() ):
-            if case ('azalea'):
-                self.__p_cmp = self.__p_cmp_azalea.copy()
-                break
-
             if case ('gardenia'):
                 self.__p_cmp = self.__p_cmp_gardenia.copy()
                 break
 
             if case ('narcissus'):
                 self.__p_cmp = self.__p_cmp_narcissus.copy()
-                break
-
-            if case ('begonia'):
-                self.__p_cmp = self.__p_cmp_begonia.copy()
-                break
-
-            if case ('lavender'):
-                self.__p_cmp = self.__p_cmp_lavender.copy()
-                break
-
-            if case ('camellia'):
-                self.__p_cmp = self.__p_cmp_camellia.copy()
-                break
-
-            if case ('pansy'):
-                self.__p_cmp = self.__p_cmp_pansy.copy()
                 break
 
             if case ('manjushaka'):
