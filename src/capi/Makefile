@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 05/10/2015 by li huang (created)
-## 01/26/2017 by li huang (last modified)
+## 03/24/2017 by li huang (last modified)
 ##
 ##
 
@@ -29,7 +29,7 @@
 
 include ../../build/make.sys
 
-mod = capi_atomic.o capi_ctqmc.o
+mod = i_atomic.o i_ctqmc.o
 
 default: all
 
