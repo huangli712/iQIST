@@ -190,7 +190,7 @@
 !! Python version
 !! --------------
 !!
-!! see iqist/tutor/t964/template.py.
+!! see iqist/tutor/t63/template.py.
 !!
 !!
 
