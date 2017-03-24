@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : t21/solver.ctqmc.in
-!!! solver  : LAVENDER
+!!! solver  : MANJUSHAKA
 !!! purpose : for tutorial
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------
@@ -18,7 +18,6 @@
   nspin  : 2
   norbs  : 4
   ncfgs  : 16
-  nzero  : 256
   niter  : 20
   U      : 4.00
   Uc     : 4.00
