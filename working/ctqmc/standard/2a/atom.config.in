@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 2a/atom.config.in
-!!! solver  : BEGONIA, LAVENDER, PANSY, and MANJUSHAKA
+!!! solver  : MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)
 !!!-----------------------------------------------------------------------
@@ -8,7 +8,7 @@
 !!>>> setup general control flags
 !!------------------------------------------------------------------------
   ibasis : 1
-  ictqmc : 1
+  ictqmc : 3
   icu    : 1
   icf    : 0
   isoc   : 0
