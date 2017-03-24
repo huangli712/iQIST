@@ -1,11 +1,11 @@
 !!!-----------------------------------------------------------------------
 !!! project : CAPI (Common Application Programming Interface)
 !!! program : capi
-!!! source  : capi_ctqmc.f90
+!!! source  : i_ctqmc.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/07/2014 by li huang (created)
-!!!           01/27/2017 by li huang (last modified)
+!!!           03/24/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
 !!!           quantum Monte Carlo impurity solver.
@@ -21,7 +21,7 @@
 !! This module can provide a light weight interface (i.e., application
 !! programming interface, API) for Fortran/Python language to the ctqmc
 !! quantum impurity solver. The user can use it to access the gardenia,
-!! narcissus, lavender, and manjushaka codes.
+!! narcissus, and manjushaka codes.
 !!
 !! How to build the Fortran API
 !! ============================
@@ -316,12 +316,12 @@
 !! Fortran version
 !! ---------------
 !!
-!! see iqist/tutor/t961/template.f90.
+!! see iqist/tutor/t61/template.f90.
 !!
 !! Python version
 !! --------------
 !!
-!! see iqist/tutor/t962/template.py.
+!! see iqist/tutor/t62/template.py.
 !!
 !! FAQ
 !! ===
@@ -358,13 +358,11 @@
 ! solver identity
      integer, public, parameter :: solver_id_gardenia       = 101
      integer, public, parameter :: solver_id_narcissus      = 102
-     integer, public, parameter :: solver_id_lavender       = 201
-     integer, public, parameter :: solver_id_manjushaka     = 301
+     integer, public, parameter :: solver_id_manjushaka     = 201
 
 ! solver status, 1 means ready, 0 means not ready
      integer, public, parameter :: solver_is_ready_gardenia   = 1
      integer, public, parameter :: solver_is_ready_narcissus  = 1
-     integer, public, parameter :: solver_is_ready_lavender   = 1
      integer, public, parameter :: solver_is_ready_manjushaka = 1
 
 !!========================================================================
@@ -473,25 +471,6 @@
          real(dp) :: lc
          real(dp) :: wc
      end type T_segment_narcissus
-
-! define type T_general_lavender, which is used to describe the ctqmc
-! impurity solver code lavender
-     public :: T_general_lavender
-     type, extends (T_general_solver) :: T_general_lavender
-         character(len=10) :: solver_name = 'LAVENDER'
-
-         integer :: isort
-         integer :: issus
-         integer :: isvrt
-         integer :: nzero
-         integer :: lemax
-         integer :: legrd
-         integer :: chmax
-         integer :: chgrd
-         integer :: nffrq
-         integer :: nbfrq
-         integer :: npart
-     end type T_general_lavender
 
 ! define type T_general_manjushaka, which is used to describe the ctqmc
 ! impurity solver code manjushaka
