@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 01/27/2017 by li huang (last modified)
+## 03/24/2017 by li huang (last modified)
 ##
 ##
 
@@ -38,7 +38,7 @@ lev3 = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
 open = ctqmc_open.o
 
-CAPI = capi_ctqmc.o
+CAPI = i_ctqmc.o
 CLIB = libMM.a
 
 objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3)
@@ -51,7 +51,7 @@ all: exe
 
 api:
 	cp ../../capi/capi.mod .
-	cp ../../capi/capi_ctqmc.o .
+	cp ../../capi/i_ctqmc.o .
 
 cssl:
 	cp ../../base/libMM.a .
