@@ -44,7 +44,7 @@ Reference: Phys. Rev. B 76, 235123 (2007), Fig. 3, Fig. 4, Fig. 5, Fig. 6
 
 ### 2 band model
 
-Impurity solver: lavender, manjushaka
+Impurity solver: manjushaka
 
 Reference: Phys. Rev. B 74, 155107 (2006), Fig. 11, Fig. 12
 
