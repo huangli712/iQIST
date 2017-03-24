@@ -5,8 +5,8 @@
 ## Introduction
 ## ============
 ##
-## It is a python script. The purpose of this script is provide an easy-
-## to-use interface to read in and analyze the output data of the quantum
+## It is a python script. The purpose of it is to provide an easy-to-use
+## interface to read in and analyze the output data of various quantum
 ## impurity solver components.
 ##
 ## Usage
@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 08/15/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 03/24/2017 by li huang (last modified)
 ##
 ##
 
@@ -35,8 +35,7 @@ import numpy
 
 class iqistReader(object):
     """ This class provide a few static methods which are used to extract
-        the data from the ouput files of ctqmc impurity solvers and hfqmc
-        impurity solver.
+        the data from the ouput files of various ctqmc impurity solvers.
 
         typical usage:
         # import this module
