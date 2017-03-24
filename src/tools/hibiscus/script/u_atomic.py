@@ -5,9 +5,9 @@
 ## Introduction
 ## ============
 ##
-## It is a python script. The purpose of this script is generate essential
-## input file (atom.config.in) for the jasmine code. Note that you can not
-## use it to control the jasmine code.
+## It is a python script. The purpose of it is to generate essential input
+## file (atom.config.in) for the jasmine code. Note that you can not use
+## it to control the jasmine code.
 ##
 ## Usage
 ## =====
@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 12/02/2014 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 03/24/2017 by li huang (last modified)
 ##
 ##
 
