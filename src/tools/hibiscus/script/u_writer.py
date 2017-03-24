@@ -5,8 +5,8 @@
 ## Introduction
 ## ============
 ##
-## It is a python script. The purpose of this script is provide an easy-
-## to-use interface to write/dump necessary input files for the quantum
+## It is a python script. The purpose of it is to provide an easy-to-use
+## interface to write/dump necessary input files for various quantum
 ## impurity solver components.
 ##
 ## Usage
@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 02/05/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 03/24/2017 by li huang (last modified)
 ##
 ##
 
@@ -35,12 +35,13 @@ import numpy
 
 class iqistWriter(object):
     """ This class provide a few static methods which are used to write
-        the necessary input data for the ctqmc impurity solvers and hfqmc
-        impurity solver.
+        the necessary input data for various ctqmc impurity solvers.
 
-        Why do we need this class? Because sometimes it is not convenient
-        to call the Python API for iQIST directly. Using this class, we
-        can ensure the input file format is correct.
+        Why do we need this class? 
+
+        Because sometimes it is not convenient to call the Python API for
+        iQIST directly. Using this class, we can ensure that the input
+        file format is correct.
 
         typical usage:
         # import this module
@@ -56,7 +57,6 @@ class iqistWriter(object):
 
         # write the data
         iqistWriter.out_hyb(norbs, mfreq, rmesh, hybf)
-        iqistWriter.out_wss(norbs, mfreq, rmesh, wssf)
         iqistWriter.out_eimp(norbs, symm, eimp)
         iqistWriter.out_umat(norbs, umat)
         iqistWriter.out_ktau(ntime, tmesh, ktau, ptau)
@@ -82,28 +82,9 @@ class iqistWriter(object):
         f.close()
 
     @staticmethod
-    def out_wss(norbs, mfreq, rmesh, wssf, fileName = None):
-        """ try to write the bath weiss's function to the solver.wss.in
-            file, only suitable for the hfqmc impurity solver
-        """
-        if fileName is None:
-            f = open("solver.wss.in","w")
-        else:
-            f = open(fileName,"w")
-
-        for i in range(norbs):
-            for j in range(mfreq):
-                print >> f, '%6d %16.8f %16.8f %16.8f %16.8f %16.8f' % \
-                ( i+1, rmesh[j], wssf[j,i].real, wssf[j,i].imag, 0.0, 0.0 )
-            print >> f
-            print >> f
-
-        f.close()
-
-    @staticmethod
     def out_eimp(norbs, symm, eimp, fileName = None):
         """ try to write the impurity levels and symmetry vector to the
-            solver.eimp.in file
+            solver.eimp.in file, only suitable for the ctqmc impurity solver
         """
         if fileName is None:
             f = open("solver.eimp.in","w")
