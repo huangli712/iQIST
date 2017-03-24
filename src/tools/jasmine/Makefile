@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 03/24/2017 by li huang (last modified)
 ##
 ##
 
@@ -37,7 +37,7 @@ lev3 = atomic_dump.o atomic_print.o
 main = atomic_main.o
 open = atomic_open.o
 
-CAPI = atomic_api.o
+CAPI = i_atomic.o
 CLIB = libMM.a
 
 objects = $(modc) $(core) $(lev1) $(lev2) $(lev3)
@@ -50,7 +50,7 @@ all: exe
 
 api:
 	cp ../../capi/japi.mod .
-	cp ../../capi/atomic_api.o .
+	cp ../../capi/i_atomic.o .
 
 cssl:
 	cp ../../base/libMM.a .
@@ -59,6 +59,7 @@ csml:
 	cp ../../base/constants.mod .
 	cp ../../base/parser.mod .
 	cp ../../base/linkedlist.mod .
+	cp ../../base/version.mod .
 
 exe: api cssl csml atomic-exe
 atomic-exe: $(exe_obj)
