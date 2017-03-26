@@ -51,7 +51,7 @@ Possible options:
 * gfortran
 
 > NOTE:
-
+>
 > The internal compiler used by mpif90, mpifort, or mpiifort must be ifort or gfortran.
 
 ### LINKER
@@ -88,7 +88,7 @@ Possible options:
 * -fopenmp
 
 > NOTE:
-
+>
 > If you are using the Intel fortran compiler, this option should be '-openmp'. On the other hand, if the GNU gfortran compiler is used, this option should be '-fopenmp'.
 
 ### FPP
@@ -101,7 +101,7 @@ Possible options:
 * -cpp
 
 > NOTE:
-
+>
 > If you are using the Intel fortran compiler, this option should be '-fpp'. On the other hand, if the GNU gfortran compiler is used, this option should be '-cpp'.
 
 ### CPP
@@ -115,7 +115,7 @@ Possible options:
 * $(OMP)
 
 > NOTE:
-
+>
 > The '$(FPP)' option is necessary.
 
 ### GPROF
@@ -128,7 +128,7 @@ Possible options:
 * -pg
 
 > NOTE:
-
+>
 > The '-p' option is useful for the GNU gfortran compiler, while the '-pg' option is useful for the Intel fortran compiler.
 
 ### CHECK
@@ -225,7 +225,7 @@ The '-msse3' option supports the Intel MMX, SSE, SSE2 and SSE3 built -in functio
 The '-msse4' option supports the Intel MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1 and SSE4.2 built-in functions and code generation.
 
 > NOTE:
-
+>
 > You could simply cat a file (/proc/cpuinfo) on Linux and then glean a lot of information about the CPU. On Mac OS X, you can look at "About This Mac", or do a "sysctl -a hw" and try to look at relevant information in the output.
 
 ### FFLAGS
@@ -275,14 +275,14 @@ Possible options:
 * f2py
 
 > NOTE:
-
+>
 > Sometimes you have to specify correct path for it. In the Mac OS X system, the path for f2py may be:
-
+>
 >
 ```
 /System/Library/Frameworks/Python.framework/Versions/Current/Extras/bin/f2py
 ```
-
+>
 > You need to specify it here.
 
 ### F2PYC
@@ -310,27 +310,9 @@ Here we provide a summary list for several make.sys templates. Please choose a s
 
 ### make.sys
 
-See template/macos/make.sys.gfortran. **PLEASE REPLACE IT WITH YOUR OWN VERSION**.
+See template/make.sys.gfortran. **PLEASE REPLACE IT WITH YOUR OWN VERSION**.
 
-### template/macos/make.sys.standard
-
-Machine   : MacBook Pro 2012
-
-Processor : 2.3 GHz Intel Core i7
-
-Memory    : 8 GB 1600 MHz DDR3
-
-Software  :
-
-```
-Mac OS X 10.8.5
-MPICH 3.0.3
-Intel Fortran Compiler 13.0.0
-Intel Math Kernel Library 11.0
-Python 2.7.4
-```
-
-### template/macos/make.sys.veclib
+### template/macos/make.sys.ifort
 
 Machine   : MacBook Pro 2012
 
@@ -343,41 +325,6 @@ Software  :
 ```
 Mac OS X 10.8.5
 MPICH 3.0.3
-Intel Fortran Compiler 13.0.0
-Apple Accelerate/vecLib framework
-Python 2.7.4
-```
-
-### template/macos/make.sys.openmpi
-
-Machine   : MacBook Pro 2012
-
-Processor : 2.3 GHz Intel Core i7
-
-Memory    : 8 GB 1600 MHz DDR3
-
-Software  :
-
-```
-Mac OS X 10.8.5
-OpenMPI 1.7.1
-Intel Fortran Compiler 13.0.0
-Intel Math Kernel Library 11.0
-Python 2.7.4
-```
-
-### template/macos/make.sys.nompi
-
-Machine   : MacBook Pro 2012
-
-Processor : 2.3 GHz Intel Core i7
-
-Memory    : 8 GB 1600 MHz DDR3
-
-Software  :
-
-```
-Mac OS X 10.8.5
 Intel Fortran Compiler 13.0.0
 Intel Math Kernel Library 11.0
 Python 2.7.4
@@ -399,40 +346,4 @@ MPICH 3.1.4
 GNU gfortran 5.1.0
 Apple Accelerate/vecLib framework
 Python 2.7.6
-```
-
-### template/linux/make.sys.standard
-
-Machine   : Linux cluster (master node)
-
-Processor : 2.0 GHz Intel Xeon E5-2620
-
-Memory    : 32 GB RAM
-
-Software  :
-
-```
-Linux kernel 2.6.32-431
-OpenMPI 1.6.4
-Intel Fortran Compiler 13.1.1
-Netlib LAPACK/BLAS 3.4.2
-Python 2.7.3
-```
-
-### template/linux/make.sys.gfortran
-
-Machine   : Linux cluster (master node)
-
-Processor : 2.0 GHz Intel Xeon E5-2620
-
-Memory    : 32 GB RAM
-
-Software  :
-
-```
-Linux kernel 2.6.32-431
-OpenMPI 1.8.3
-GNU gfortran 4.8.2
-Netlib LAPACK/BLAS 3.4.2
-Python 2.7.3
 ```
