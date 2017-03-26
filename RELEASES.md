@@ -56,63 +56,37 @@
 * Fix a serious bug in hibiscus/toolbox/maketau.f90
 * Refine the examples/tutorials.
 * Improve the code style
-
-> WARNING:
->
-> The file formats, Python and Fortran APIS are **NOT** compatible with the previous. Especially, the solver.hyb.in files generated using the previous iQIST are not valid for the current version.
-
-## v0.6.4 @ 0816e25 // Aug 17, 2015
-
 * Add <k^2> - <k>^2 support for gardenia.
 * Add <k^2> - <k>^2 support for narcissus.
 * Add <k^2> - <k>^2 support for lavender.
 * Add <k^2> - <k>^2 support for manjushaka.
 * Add <k^2> - <k>^2 support for script/u\_reader.py
-
-## v0.6.3 @ be5ed32 // May 29, 2015
-
 * Add fidelity susceptibility support for gardenia.
 * Add fidelity susceptibility support for narcissus.
 * Add fidelity susceptibility support for lavender.
 * Add fidelity susceptibility support for manjushaka.
 * Add fidelity susceptibility support for script/u\_reader.py
-
-As for fidelity susceptibility, please refer to arXiv:1502.06969
-
-## v0.6.2 @ 53c8b61 // May 11, 2015
-
 * Now the iQIST is compatible with the GNU gfortran compiler.
-
-## v0.6.1 @ d536991 // Apr 09, 2015
-
 * Add several templates for make.sys.
+
+> WARNING:
+>
+> The file formats, Python and Fortran APIS are **NOT** compatible with the previous. Especially, the solver.hyb.in files generated using the previous iQIST are not valid for the current version.
 
 ## v0.6.0 @ aa24237 // Apr 03, 2015
 
 * Update working/ctqmc/validation directory, add more examples.
-
-## v0.5.9 @ 2dc7288 // Apr 01, 2015
-
 * Fix the sign problems in the measurement.
 * Redefine the behavior of control variable: isvrt.
 * Introduce new control variable: issus.
 * Fix a bug in the calculation of self-energy function for narcissus code.
-
-## v0.5.8 @ 68ab89d // Mar 24, 2015
-
 * Add working/ctqmc/validation directory.
 * Improve build/make.sys, add 'fPIC' option.
-
-## v0.5.7 @ 966e5ba // Mar 05, 2015
-
 * Add OpenMP support for the measurements of two-particle quantities.
 * Adjust the file format for solver.kernel.dat.
 * Adjust the output for hybridization function.
 * Fix the u\_reader.py to support new file format of solver.kernel.dat.
 * Fix typo in makescr.f90 and comment in make.sys.
-
-## v0.5.6 @ 8f7d00f // Feb 28, 2015
-
 * Modify jasmine/atomic\_util.f90, remove unused variables.
 * Add script/d\_archive.sh shell script.
 * Fix a format bug in script/u\_writer.py.
