@@ -24,9 +24,6 @@
 * Implement the measurement of spin-spin correlation function (matsubara space)
 * Implement the measurement of orbital-orbital correlation function (matsubara space)
 * Improve the code styles, fix many typos in comments.
-
-## v0.6.6 @ 9e0bf1b // Dec 16, 2015
-
 * Add camellia component. **BUT IT DOES NOT WORK PROPERLY. DON'T USE IT!**
 * Add kurtosis and skewness features in azalea.
 * Add kurtosis and skewness features in begonia.
