@@ -44,13 +44,11 @@ The Fortran compiler. Both the parallel and sequential fortran compilers are sup
 
 Possible options:
 
-```
 * mpif90
 * mpifort
 * mpiifort
 * ifort
 * gfortran
-```
 
 > NOTE:
 >
