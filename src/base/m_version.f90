@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/26/2017 by li huang (created)
-!!!           01/31/2017 by li huang (last modified)
+!!!           03/27/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a version string.
 !!! status  : unstable
 !!! comment :
@@ -39,5 +39,14 @@
 
 ! version string: only date info.
      character(len=11), public, parameter :: DATE_VER = '2017.01.31D'
+
+! version string: author info.
+     character(len=46), public, parameter :: AUTH_STR = 'by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
+
+! version string: email info.
+     character(len=22), public, parameter :: MAIL_STR = 'lihuang.dmft@gmail.com'
+
+! version string: license info.
+     character(len=36), public, parameter :: GPL3_STR = 'GNU General Public License version 3'
 
   end module version
