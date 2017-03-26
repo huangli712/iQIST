@@ -25,14 +25,16 @@ The make.sys file is the key component of the building system. You have to modif
 * Openmpi
 
 ### OpenMP environment
-* Optional
+* (Optional)
 
 ### Python environment
-* numpy, scipy, f2py, mpi4py, matplotlib
+* (Optional) numpy, scipy, f2py, mpi4py, matplotlib
 
 > NOTE:
 >
-> Though it is not mandatory, we still strongly recommend to update the above software components on your systems to the latest versions.
+> 1. Though it is not mandatory, we still strongly recommend to update the above software components on your systems to the latest versions.
+>
+> 2. The OpenMP and Python environments are optional.
 
 ## Explanations
 
