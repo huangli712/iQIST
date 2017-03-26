@@ -312,7 +312,7 @@ Here we provide a summary list for several make.sys templates. Please choose a s
 
 See template/make.sys.gfortran. **PLEASE REPLACE IT WITH YOUR OWN VERSION**.
 
-### template/macos/make.sys.ifort
+### template/make.sys.ifort
 
 Machine   : MacBook Pro 2012
 
@@ -330,7 +330,7 @@ Intel Math Kernel Library 11.0
 Python 2.7.4
 ```
 
-### template/macos/make.sys.gfortran
+### template/make.sys.gfortran
 
 Machine   : MacBook Pro Retina 2013
 
