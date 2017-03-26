@@ -66,10 +66,6 @@
 * Now the iQIST is compatible with the GNU gfortran compiler.
 * Add several templates for make.sys.
 
-> WARNING:
->
-> The file formats, Python and Fortran APIS are **NOT** compatible with the previous. Especially, the solver.hyb.in files generated using the previous iQIST are not valid for the current version.
-
 ## v0.6.0 @ aa24237 // Apr 03, 2015
 
 * Update working/ctqmc/validation directory, add more examples.
