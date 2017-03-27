@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/29/2014 by li huang (created)
-!!!           03/24/2017 by li huang (last modified)
+!!!           03/27/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for atomic eigenvalue
 !!!           problem solver.
