@@ -5,7 +5,7 @@
 !!!           s_linspace_z
 !!!           s_sum_i
 !!!           s_sum_d
-!!1           s_sum_z
+!!!           s_sum_z
 !!!           s_cumsum_i
 !!!           s_cumsum_d
 !!!           s_cumsum_z
