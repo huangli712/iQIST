@@ -1014,4 +1014,58 @@
   end subroutine cat_make_ftau3
   end subroutine ctqmc_make_ftau
 
+!!========================================================================
+!!>>> build prefactor for improved estimator                           <<<
+!!========================================================================
+
+!!>>> ctqmc_make_iret: to calculate the integral I(\tau_end) which is very
+!!>>> important when retarded interaction is included
+  subroutine ctqmc_make_iret()
+     implicit none
+
+     call s_print_error('ctqmc_make_iret','sorry, this feature is not implemented')
+
+     return
+  end subroutine ctqmc_make_iret
+
+!!>>> ctqmc_make_pref: to calculate the prefactor used by the improved
+!!>>> estimator for self-energy function and vertex function
+  subroutine ctqmc_make_pref()
+     use constants, only : dp, zero, half
+
+     use control, only : norbs
+     use context, only : index_e, time_e
+     use context, only : rank, pref, uumat
+
+     implicit none
+
+! local variables
+! loop index for start and end points
+     integer  :: it
+
+! loop index for flavor channel
+     integer  :: flvr
+
+! loop index for colour channel
+     integer  :: clur
+
+! occupation number at \tau_end
+     real(dp) :: occu
+
+     do flvr=1,norbs
+         do it=1,rank(flvr)
+
+! reset the prefactor
+             pref(it,flvr) = zero
+
+! calculate normal contribution
+             do clur=1,norbs
+                 call cat_occupy_status(clur, time_e( index_e(it, flvr), flvr ), occu)
+                 pref(it,flvr) = pref(it,flvr) + half * ( uumat(flvr,clur) + uumat(clur,flvr) ) * occu
+             enddo ! over clur={1,norbs} loop
+         enddo ! over it={1,rank(flvr)} loop
+     enddo ! over flvr={1,norbs} loop
+
+     return
+  end subroutine ctqmc_make_pref
 
