@@ -388,3 +388,233 @@
 
      return
   end subroutine ctqmc_make_state
+
+!!========================================================================
+!!>>> symmetrize physical observables                                  <<<
+!!========================================================================
+
+!!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
+  subroutine ctqmc_symm_nmat(symm, nmat)
+     use constants, only : dp, zero, two
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+
+     implicit none
+
+! external arguments
+! symmetry vector
+     integer, intent(in) :: symm(norbs)
+
+! occupation number
+     real(dp), intent(inout) :: nmat(norbs)
+
+! local variables
+! loop index over bands
+     integer  :: ibnd
+     integer  :: jbnd
+
+! dummy variables
+     real(dp) :: raux
+
+! histogram vector
+! note: it is NOT the global one
+     integer  :: hist(norbs)
+
+! build histogram
+     hist = 0
+     do ibnd=1,norbs
+         hist(symm(ibnd)) = hist(symm(ibnd)) + 1
+     enddo ! over ibnd={1,norbs} loop
+
+! perform symmetrization for those orbitals which symm index are identity
+     if ( issun == 2 ) then
+         do ibnd=1,norbs
+             if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
+                 raux = zero
+
+                 do jbnd=1,norbs                ! gather the data
+                     if ( symm(jbnd) == ibnd ) then
+                         raux = raux + nmat(jbnd)
+                     endif ! back if ( symm(jbnd) == ibnd ) block
+                 enddo ! over jbnd={1,norbs} loop
+
+                 raux = raux / real(hist(ibnd)) ! calculate average value
+
+                 do jbnd=1,norbs                ! setup it
+                     if ( symm(jbnd) == ibnd ) then
+                         nmat(jbnd) = raux
+                     endif ! back if ( symm(jbnd) == ibnd ) block
+                 enddo ! over jbnd={1,norbs} loop
+             endif ! back if ( hist(ibnd) > 0 ) block
+         enddo ! over ibnd={1,norbs} loop
+     endif ! back if ( issun == 2 ) block
+
+! symmetrize nmat over spin
+     if ( isspn == 1 ) then
+         do jbnd=1,nband
+             raux = ( nmat(jbnd) + nmat(jbnd+nband) ) / two
+             nmat(jbnd) = raux
+             nmat(jbnd+nband) = raux
+         enddo ! over jbnd={1,nband} loop
+     endif ! back if ( isspn == 1 ) block
+
+     return
+  end subroutine ctqmc_symm_nmat
+
+!!>>> ctqmc_symm_gtau: symmetrize the gtau according to symm vector
+!!>>> only the diagonal elements are taken into considerations
+  subroutine ctqmc_symm_gtau(symm, gtau)
+     use constants, only : dp, zero, two
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : ntime
+
+     implicit none
+
+! external arguments
+! symmetry vector
+     integer, intent(in) :: symm(norbs)
+
+! impurity green's function
+     real(dp), intent(inout) :: gtau(ntime,norbs,norbs)
+
+! local variables
+! loop index over bands
+     integer  :: ibnd
+     integer  :: jbnd
+
+! loop index over imaginary-time points
+     integer  :: ktau
+
+! dummy variables
+     real(dp) :: raux
+
+! histogram vector
+! note: it is NOT the global one
+     integer  :: hist(norbs)
+
+! build histogram
+     hist = 0
+     do ibnd=1,norbs
+         hist(symm(ibnd)) = hist(symm(ibnd)) + 1
+     enddo ! over ibnd={1,norbs} loop
+
+! perform symmetrization for those orbitals which symm index are identity
+     if ( issun == 2 ) then
+         do ktau=1,ntime
+             do ibnd=1,norbs
+                 if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
+                     raux = zero
+
+                     do jbnd=1,norbs                ! gather the data
+                         if ( symm(jbnd) == ibnd ) then
+                             raux = raux + gtau(ktau,jbnd,jbnd)
+                         endif ! back if ( symm(jbnd) == ibnd ) block
+                     enddo ! over jbnd={1,norbs} loop
+
+                     raux = raux / real(hist(ibnd)) ! calculate average value
+
+                     do jbnd=1,norbs                ! setup it
+                         if ( symm(jbnd) == ibnd ) then
+                             gtau(ktau,jbnd,jbnd) = raux
+                         endif ! back if ( symm(jbnd) == ibnd ) block
+                     enddo ! over jbnd={1,norbs} loop
+                 endif ! back if ( hist(ibnd) > 0 ) block
+             enddo ! over ibnd={1,norbs} loop
+         enddo ! over ktau={1,ntime} loop
+     endif ! back if ( issun == 2 ) block
+
+! symmetrize gtau over spin
+     if ( isspn == 1 ) then
+         do ktau=1,ntime
+             do jbnd=1,nband
+                 raux = ( gtau(ktau,jbnd,jbnd) + gtau(ktau,jbnd+nband,jbnd+nband) ) / two
+                 gtau(ktau,jbnd,jbnd) = raux
+                 gtau(ktau,jbnd+nband,jbnd+nband) = raux
+             enddo ! over jbnd={1,nband} loop
+         enddo ! over ktau={1,ntime} loop
+     endif ! back if ( isspn == 1 ) block
+
+     return
+  end subroutine ctqmc_symm_gtau
+
+!!>>> ctqmc_symm_grnf: symmetrize the grnf according to symm vector
+!!>>> only the diagonal elements are taken into considerations
+  subroutine ctqmc_symm_grnf(symm, grnf)
+     use constants, only : dp, two, czero
+
+     use control, only : issun, isspn
+     use control, only : nband, norbs
+     use control, only : mfreq
+
+     implicit none
+
+! external arguments
+! symmetry vector
+     integer, intent(in) :: symm(norbs)
+
+! impurity green's function
+     complex(dp), intent(inout) :: grnf(mfreq,norbs,norbs)
+
+! local variables
+! loop index over bands
+     integer :: ibnd
+     integer :: jbnd
+
+! loop index over matsubara frequencies
+     integer :: kfrq
+
+! dummy variables
+     complex(dp) :: caux
+
+! histogram vector
+! note: it is NOT the global one
+     integer :: hist(norbs)
+
+! build histogram
+     hist = 0
+     do ibnd=1,norbs
+         hist(symm(ibnd)) = hist(symm(ibnd)) + 1
+     enddo ! over ibnd={1,norbs} loop
+
+! perform symmetrization for those orbitals which symm index are identity
+     if ( issun == 2 ) then
+         do kfrq=1,mfreq
+             do ibnd=1,norbs
+                 if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
+                     caux = czero
+
+                     do jbnd=1,norbs                ! gather the data
+                         if ( symm(jbnd) == ibnd ) then
+                             caux = caux + grnf(kfrq,jbnd,jbnd)
+                         endif ! back if ( symm(jbnd) == ibnd ) block
+                     enddo ! over jbnd={1,norbs} loop
+
+                     caux = caux / real(hist(ibnd)) ! calculate average value
+
+                     do jbnd=1,norbs                ! setup it
+                         if ( symm(jbnd) == ibnd ) then
+                             grnf(kfrq,jbnd,jbnd) = caux
+                         endif ! back if ( symm(jbnd) == ibnd ) block
+                     enddo ! over jbnd={1,norbs} loop
+                 endif ! back if ( hist(ibnd) > 0 ) block
+             enddo ! over ibnd={1,norbs} loop
+         enddo ! over kfrq={1,mfreq} loop
+     endif ! back if ( issun == 2 ) block
+
+! symmetrize grnf over spin
+     if ( isspn == 1 ) then
+         do kfrq=1,mfreq
+             do jbnd=1,nband
+                 caux = ( grnf(kfrq,jbnd,jbnd) + grnf(kfrq,jbnd+nband,jbnd+nband) ) / two
+                 grnf(kfrq,jbnd,jbnd) = caux
+                 grnf(kfrq,jbnd+nband,jbnd+nband) = caux
+             enddo ! over jbnd={1,nband} loop
+         enddo ! over kfrq={1,mfreq} loop
+     endif ! back if ( isspn == 1 ) block
+
+     return
+  end subroutine ctqmc_symm_grnf
+
