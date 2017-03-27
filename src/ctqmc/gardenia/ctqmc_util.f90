@@ -1,15 +1,15 @@
 !!!-----------------------------------------------------------------------
 !!! project : gardenia
 !!! program : ctqmc_four_htau
-!!!           ctqmc_four_hybf
+!!!           ctqmc_four_hybf   <<<---
 !!!           ctqmc_eval_htau
-!!!           ctqmc_eval_hsed
-!!!           ctqmc_make_uumat
-!!!           ctqmc_make_state
+!!!           ctqmc_eval_hsed   <<<---
 !!!           ctqmc_symm_nmat
 !!!           ctqmc_symm_gtau
-!!!           ctqmc_symm_grnf
+!!!           ctqmc_symm_grnf   <<<---
 !!!           ctqmc_smth_sigf   <<<---
+!!!           ctqmc_make_uumat  <<<---
+!!!           ctqmc_make_state  <<<---
 !!!           ctqmc_make_gtau
 !!!           ctqmc_make_ftau   <<<---
 !!!           ctqmc_make_iret
@@ -21,7 +21,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           01/28/2017 by li huang (last modified)
+!!!           03/28/2017 by li huang (last modified)
 !!! purpose : to provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -296,100 +296,6 @@
   end subroutine ctqmc_eval_hsed
 
 !!========================================================================
-!!>>> Coulomb interaction matrix                                       <<<
-!!========================================================================
-
-!! note: do not support spin-flip and pair-hopping term so far.
-!!
-!! note: only Uc and Jz are need, the other Coulomb interaction parameters
-!! are used as backup
-
-!!>>> ctqmc_make_uumat: to build general U interaction matrix: uumat, using
-!!>>> my own style
-  subroutine ctqmc_make_uumat(uumat)
-     use constants, only : dp, zero
-
-     use control, only : nband, norbs
-     use control, only : Uc, Jz
-
-     implicit none
-
-! external arguments
-! Coulomb interaction matrix
-     real(dp), intent(out) :: uumat(norbs,norbs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-     integer  :: k
-     integer  :: m
-
-! dummy u vector
-     real(dp) :: ut(nband*(norbs-1))
-
-! initialize it
-     uumat = zero
-
-! calculate it
-     k = 0
-     do i=1,norbs-1
-         do j=i+1,norbs
-             k = k + 1
-             if ( i <= nband .and. j > nband ) then
-                 m = j - nband
-                 if ( m == i ) then
-                     ut(k) = Uc
-                 else
-                     ut(k) = Uc - 2.0_dp * Jz
-                 endif ! back if ( m == i ) block
-             else
-                 ut(k) = Uc - 3.0_dp * Jz
-             endif ! back if ( i <= nband .and. j > nband ) block
-
-             uumat(i,j) = ut(k)
-             uumat(j,i) = ut(k)
-         enddo ! over j={i+1,norbs} loop
-     enddo ! over i={1,norbs-1} loop
-
-     return
-  end subroutine ctqmc_make_uumat
-
-!!========================================================================
-!!>>> atomic eigenstate converter                                      <<<
-!!========================================================================
-
-!!>>> ctqmc_make_state: convert current atomic state array into a decimal
-!!>>> number (state index)
-  subroutine ctqmc_make_state(norbs, pstat, state)
-     implicit none
-
-! external arguments
-! index of atomic state
-     integer, intent(out) :: pstat
-
-! number of orbitals
-     integer, intent(in)  :: norbs
-
-! atomic state array
-     integer, intent(in)  :: state(norbs)
-
-! local variables
-! loop index
-     integer :: i
-
-! init pstat
-     pstat = 1
-
-! evaluate pstat, for example, 0101 = 0*2^0 + 1*2^1 + 0*2^2 + 1*2^3 = 10
-     do i=1,norbs
-         if ( state(i) > 0 ) pstat = pstat + ishft(1, i-1)
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine ctqmc_make_state
-
-!!========================================================================
 !!>>> symmetrize physical observables                                  <<<
 !!========================================================================
 
@@ -618,6 +524,10 @@
      return
   end subroutine ctqmc_symm_grnf
 
+!!========================================================================
+!!>>> smooth physical observables                                      <<<
+!!========================================================================
+
 !!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
 !!>>> frequency region
   subroutine ctqmc_smth_sigf(sigf)
@@ -689,6 +599,100 @@
 
      return
   end subroutine ctqmc_smth_sigf
+
+!!========================================================================
+!!>>> Coulomb interaction matrix                                       <<<
+!!========================================================================
+
+!! note: do not support spin-flip and pair-hopping term so far.
+!!
+!! note: only Uc and Jz are need, the other Coulomb interaction parameters
+!! are used as backup
+
+!!>>> ctqmc_make_uumat: to build general U interaction matrix: uumat, using
+!!>>> my own style
+  subroutine ctqmc_make_uumat(uumat)
+     use constants, only : dp, zero
+
+     use control, only : nband, norbs
+     use control, only : Uc, Jz
+
+     implicit none
+
+! external arguments
+! Coulomb interaction matrix
+     real(dp), intent(out) :: uumat(norbs,norbs)
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+     integer  :: m
+
+! dummy u vector
+     real(dp) :: ut(nband*(norbs-1))
+
+! initialize it
+     uumat = zero
+
+! calculate it
+     k = 0
+     do i=1,norbs-1
+         do j=i+1,norbs
+             k = k + 1
+             if ( i <= nband .and. j > nband ) then
+                 m = j - nband
+                 if ( m == i ) then
+                     ut(k) = Uc
+                 else
+                     ut(k) = Uc - 2.0_dp * Jz
+                 endif ! back if ( m == i ) block
+             else
+                 ut(k) = Uc - 3.0_dp * Jz
+             endif ! back if ( i <= nband .and. j > nband ) block
+
+             uumat(i,j) = ut(k)
+             uumat(j,i) = ut(k)
+         enddo ! over j={i+1,norbs} loop
+     enddo ! over i={1,norbs-1} loop
+
+     return
+  end subroutine ctqmc_make_uumat
+
+!!========================================================================
+!!>>> atomic eigenstate converter                                      <<<
+!!========================================================================
+
+!!>>> ctqmc_make_state: convert current atomic state array into a decimal
+!!>>> number (state index)
+  subroutine ctqmc_make_state(norbs, pstat, state)
+     implicit none
+
+! external arguments
+! index of atomic state
+     integer, intent(out) :: pstat
+
+! number of orbitals
+     integer, intent(in)  :: norbs
+
+! atomic state array
+     integer, intent(in)  :: state(norbs)
+
+! local variables
+! loop index
+     integer :: i
+
+! init pstat
+     pstat = 1
+
+! evaluate pstat, for example, 0101 = 0*2^0 + 1*2^1 + 0*2^2 + 1*2^3 = 10
+     do i=1,norbs
+         if ( state(i) > 0 ) pstat = pstat + ishft(1, i-1)
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine ctqmc_make_state
 
 !!========================================================================
 !!>>> postprocess physical observables                                 <<<
