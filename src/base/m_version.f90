@@ -31,14 +31,17 @@
   module version
      implicit none
 
-! version string: version number + date info.
+! version string: version number + date info. + status info.
      character(len=20), public, parameter :: FULL_VER = 'v0.6.8 @ 2017.01.31D'
 
 ! version string: only version number
      character(len=06), public, parameter :: CURR_VER = 'v0.6.8'
 
 ! version string: only date info.
-     character(len=11), public, parameter :: DATE_VER = '2017.01.31D'
+     character(len=11), public, parameter :: DATE_VER = '2017.01.31'
+
+! version string: only status info., D means devel, T testing, R released.
+     character(len=01), public, parameter :: STAT_VER = 'D'
 
 ! version string: author info.
      character(len=46), public, parameter :: AUTH_STR = 'by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
