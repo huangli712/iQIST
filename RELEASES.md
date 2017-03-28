@@ -7,6 +7,7 @@
 * Remove camellia component.
 * Remove pansy component.
 * Remove lavender component.
+* Remove many unused codes in hibiscus component.
 * Update the compiling system.
 
 ## v0.6.7 @ c14fdc4 // Jan 13, 2017
