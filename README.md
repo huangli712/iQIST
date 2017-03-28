@@ -66,11 +66,6 @@ GNU General Public License Version 3
     * Atomic eigenvalue problem solver
 
 * The postprocessing tools are provided
-    * Maximum entropy method
-    * Stochastic analytical continuation method
-    * Kramers-Kronig transformation
-    * Pade approximation
-    * Polynomial fitting for self-energy function
     * Many tools and scripts, etc.
 
 > NOTE:
