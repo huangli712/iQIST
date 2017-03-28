@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 08/12/2015 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           03/29/2017 by li huang (last modified)
 !!! purpose : to provide necessary application programming interface for
 !!!           the atomic eigenvalue problem solver
 !!! status  : unstable
@@ -19,7 +19,7 @@
 !!>>> cat_init_atomic: initialize the atomic eigenvalue problem solver
 !!>>> fortran version
   subroutine cat_init_atomic(I_solver)
-     use japi, only : T_jasmine
+     use capi, only : T_jasmine
 
      use m_cntr ! ALL
      use m_full, only : alloc_m_full_basis
