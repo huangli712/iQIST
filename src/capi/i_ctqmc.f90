@@ -5,10 +5,11 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/07/2014 by li huang (created)
-!!!           03/27/2017 by li huang (last modified)
+!!!           03/29/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
-!!!           quantum Monte Carlo impurity solver.
+!!!           quantum Monte Carlo impurity solver and atomic eigenvalue
+!!!           problem solver.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -163,5 +164,34 @@
          integer :: nbfrq
          integer :: npart
      end type T_general_manjushaka
+
+! define type T_jasmine, which is used to describe the atomic eigenvalue
+! problem solver jasmine
+     public :: T_jasmine
+     type :: T_jasmine
+         integer :: ibasis
+         integer :: ictqmc
+         integer :: icu
+         integer :: icf
+         integer :: isoc
+
+         integer :: nband
+         integer :: nspin
+         integer :: norbs
+         integer :: ncfgs
+
+         integer :: nmini
+         integer :: nmaxi
+
+         real(dp) :: Uc
+         real(dp) :: Uv
+         real(dp) :: Jz
+         real(dp) :: Js
+         real(dp) :: Jp
+         real(dp) :: Ud
+         real(dp) :: Jh
+         real(dp) :: mune
+         real(dp) :: lambda
+     end type T_jasmine
 
   end module capi
