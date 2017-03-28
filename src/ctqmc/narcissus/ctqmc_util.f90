@@ -1,31 +1,31 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
 !!! program : ctqmc_four_htau
-!!!           ctqmc_four_hybf
+!!!           ctqmc_four_hybf  <<<---
 !!!           ctqmc_eval_htau
-!!!           ctqmc_eval_hsed
+!!!           ctqmc_eval_hsed  <<<---
 !!!           ctqmc_eval_ktau
-!!!           ctqmc_eval_ksed
-!!!           ctqmc_make_uumat
-!!!           ctqmc_make_state
-!!!           ctqmc_make_shift
-!!!           ctqmc_prep_shift
+!!!           ctqmc_eval_ksed  <<<---
 !!!           ctqmc_symm_nmat
 !!!           ctqmc_symm_gtau
-!!!           ctqmc_symm_grnf
-!!!           ctqmc_smth_sigf   <<<---
+!!!           ctqmc_symm_grnf  <<<---
+!!!           ctqmc_smth_sigf  <<<---
+!!!           ctqmc_make_uumat <<<---
+!!!           ctqmc_make_state <<<---
+!!!           ctqmc_make_shift
+!!!           ctqmc_prep_shift <<<---
 !!!           ctqmc_make_gtau
-!!!           ctqmc_make_ftau   <<<---
+!!!           ctqmc_make_ftau  <<<---
 !!!           ctqmc_make_iret
-!!!           ctqmc_make_pref   <<<---
-!!!           ctqmc_make_prod   <<<---
+!!!           ctqmc_make_pref  <<<---
+!!!           ctqmc_make_prod  <<<---
 !!!           ctqmc_make_hub1
-!!!           ctqmc_make_hub2   <<<---
+!!!           ctqmc_make_hub2  <<<---
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           01/28/2017 by li huang (last modified)
+!!!           03/28/2017 by li huang (last modified)
 !!! purpose : to provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -299,6 +299,10 @@
      return
   end subroutine ctqmc_eval_hsed
 
+!!========================================================================
+!!>>> cubic spline interpolation                                       <<<
+!!========================================================================
+
 !! To provide cubic spline subroutines and wrapper functions to interpolate
 !! the retarded interaction integrated function (i.e., screening function)
 !! in imaginary-time axis.
@@ -402,188 +406,6 @@
 
      return
   end subroutine ctqmc_eval_ksed
-
-!!========================================================================
-!!>>> Coulomb interaction matrix                                       <<<
-!!========================================================================
-
-!! note: do not support spin-flip and pair-hopping term so far.
-!!
-!! note: only Uc and Jz are need, the other Coulomb interaction parameters
-!! are used as backup
-
-!!>>> ctqmc_make_uumat: to build general U interaction matrix: uumat, using
-!!>>> my own style
-  subroutine ctqmc_make_uumat(uumat)
-     use constants, only : dp, zero
-
-     use control, only : nband, norbs
-     use control, only : Uc, Jz
-
-     implicit none
-
-! external arguments
-! Coulomb interaction matrix
-     real(dp), intent(out) :: uumat(norbs,norbs)
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-     integer  :: k
-     integer  :: m
-
-! dummy u vector
-     real(dp) :: ut(nband*(norbs-1))
-
-! initialize it
-     uumat = zero
-
-! calculate it
-     k = 0
-     do i=1,norbs-1
-         do j=i+1,norbs
-             k = k + 1
-             if ( i <= nband .and. j > nband ) then
-                 m = j - nband
-                 if ( m == i ) then
-                     ut(k) = Uc
-                 else
-                     ut(k) = Uc - 2.0_dp * Jz
-                 endif ! back if ( m == i ) block
-             else
-                 ut(k) = Uc - 3.0_dp * Jz
-             endif ! back if ( i <= nband .and. j > nband ) block
-
-             uumat(i,j) = ut(k)
-             uumat(j,i) = ut(k)
-         enddo ! over j={i+1,norbs} loop
-     enddo ! over i={1,norbs-1} loop
-
-     return
-  end subroutine ctqmc_make_uumat
-
-!!========================================================================
-!!>>> atomic eigenstate converter                                      <<<
-!!========================================================================
-
-!!>>> ctqmc_make_state: convert current atomic state array into a decimal
-!!>>> number (state index)
-  subroutine ctqmc_make_state(norbs, pstat, state)
-     implicit none
-
-! external arguments
-! index of atomic state
-     integer, intent(out) :: pstat
-
-! number of orbitals
-     integer, intent(in)  :: norbs
-
-! atomic state array
-     integer, intent(in)  :: state(norbs)
-
-! local variables
-! loop index
-     integer :: i
-
-! init pstat
-     pstat = 1
-
-! evaluate pstat, for example, 0101 = 0*2^0 + 1*2^1 + 0*2^2 + 1*2^3 = 10
-     do i=1,norbs
-         if ( state(i) > 0 ) pstat = pstat + ishft(1, i-1)
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine ctqmc_make_state
-
-!!========================================================================
-!!>>> auxiliary subroutines for retarded interaction                   <<<
-!!========================================================================
-
-!!>>> ctqmc_make_shift: to shift the Coulomb interaction matrix and the
-!!>>> chemical potential if retarded interaction is considered
-  subroutine ctqmc_make_shift(uumat, ssign)
-     use constants, only : dp, two
-
-     use control, only : norbs
-     use control, only : mune
-
-     implicit none
-
-! external arguments
-! Coulomb interaction matrix
-     real(dp), intent(inout) :: uumat(norbs,norbs)
-
-! sign for the shift, it should be 1.0_dp or -1.0_dp
-     real(dp), intent(in)    :: ssign
-
-! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-
-! Coulomb interaction shift introduced by dynamical screening effect
-     real(dp) :: shift
-
-! evaluate the shift at first
-     shift = 0.0_dp; call ctqmc_prep_shift(shift)
-
-! multiple the shift with sign
-     call s_assert( abs(ssign) == 1.0_dp ); shift = shift * ssign
-
-! shift the Coulomb interaction matrix (skip the diagonal elements)
-     do i=1,norbs-1
-         do j=i+1,norbs
-             uumat(i,j) = uumat(i,j) - shift
-             uumat(j,i) = uumat(j,i) - shift
-         enddo ! over j={i+1,norbs} loop
-     enddo ! over i={1,norbs-1} loop
-
-! shift chemical potential as a byproduct
-     mune = mune - shift / two
-
-     return
-  end subroutine ctqmc_make_shift
-
-!!>>> ctqmc_prep_shift: evaluate the shift for the Coulomb interaction and
-!!>>> the chemical potential. in fact, shift = 2 K'(\tau = 0)
-  subroutine ctqmc_prep_shift(shift)
-     use constants, only : dp, zero, two
-
-     use control, only : isscr
-     use control, only : lc, wc
-     use context, only : ptau
-
-     implicit none
-
-! external arguments
-! the shift value for U and mune
-     real(dp), intent(out) :: shift
-
-! evaluate Coulomb interaction shift
-     select case ( isscr )
-
-         case (1)
-             shift = zero               ! normal model, recover azalea
-
-         case (2)
-             shift = two * lc * lc / wc ! holstein-hubbard model
-
-         case (3)
-             shift = two * lc * lc / wc ! plasmon pole model
-
-         case (4)
-             shift = two * lc * wc      ! ohmic model
-
-         case (99)
-             shift = lc                 ! realistic materials
-             call s_assert( shift /= ptau(1) )
-
-     end select
-
-     return
-  end subroutine ctqmc_prep_shift
 
 !!========================================================================
 !!>>> symmetrize physical observables                                  <<<
@@ -814,6 +636,10 @@
      return
   end subroutine ctqmc_symm_grnf
 
+!!========================================================================
+!!>>> smooth physical observables                                      <<<
+!!========================================================================
+
 !!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
 !!>>> frequency region
   subroutine ctqmc_smth_sigf(sigf)
@@ -885,6 +711,188 @@
 
      return
   end subroutine ctqmc_smth_sigf
+
+!!========================================================================
+!!>>> Coulomb interaction matrix                                       <<<
+!!========================================================================
+
+!! note: do not support spin-flip and pair-hopping term so far.
+!!
+!! note: only Uc and Jz are need, the other Coulomb interaction parameters
+!! are used as backup
+
+!!>>> ctqmc_make_uumat: to build general U interaction matrix: uumat, using
+!!>>> my own style
+  subroutine ctqmc_make_uumat(uumat)
+     use constants, only : dp, zero
+
+     use control, only : nband, norbs
+     use control, only : Uc, Jz
+
+     implicit none
+
+! external arguments
+! Coulomb interaction matrix
+     real(dp), intent(out) :: uumat(norbs,norbs)
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+     integer  :: m
+
+! dummy u vector
+     real(dp) :: ut(nband*(norbs-1))
+
+! initialize it
+     uumat = zero
+
+! calculate it
+     k = 0
+     do i=1,norbs-1
+         do j=i+1,norbs
+             k = k + 1
+             if ( i <= nband .and. j > nband ) then
+                 m = j - nband
+                 if ( m == i ) then
+                     ut(k) = Uc
+                 else
+                     ut(k) = Uc - 2.0_dp * Jz
+                 endif ! back if ( m == i ) block
+             else
+                 ut(k) = Uc - 3.0_dp * Jz
+             endif ! back if ( i <= nband .and. j > nband ) block
+
+             uumat(i,j) = ut(k)
+             uumat(j,i) = ut(k)
+         enddo ! over j={i+1,norbs} loop
+     enddo ! over i={1,norbs-1} loop
+
+     return
+  end subroutine ctqmc_make_uumat
+
+!!========================================================================
+!!>>> atomic eigenstate converter                                      <<<
+!!========================================================================
+
+!!>>> ctqmc_make_state: convert current atomic state array into a decimal
+!!>>> number (state index)
+  subroutine ctqmc_make_state(norbs, pstat, state)
+     implicit none
+
+! external arguments
+! index of atomic state
+     integer, intent(out) :: pstat
+
+! number of orbitals
+     integer, intent(in)  :: norbs
+
+! atomic state array
+     integer, intent(in)  :: state(norbs)
+
+! local variables
+! loop index
+     integer :: i
+
+! init pstat
+     pstat = 1
+
+! evaluate pstat, for example, 0101 = 0*2^0 + 1*2^1 + 0*2^2 + 1*2^3 = 10
+     do i=1,norbs
+         if ( state(i) > 0 ) pstat = pstat + ishft(1, i-1)
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine ctqmc_make_state
+
+!!========================================================================
+!!>>> auxiliary subroutines for retarded interaction                   <<<
+!!========================================================================
+
+!!>>> ctqmc_make_shift: to shift the Coulomb interaction matrix and the
+!!>>> chemical potential if retarded interaction is considered
+  subroutine ctqmc_make_shift(uumat, ssign)
+     use constants, only : dp, two
+
+     use control, only : norbs
+     use control, only : mune
+
+     implicit none
+
+! external arguments
+! Coulomb interaction matrix
+     real(dp), intent(inout) :: uumat(norbs,norbs)
+
+! sign for the shift, it should be 1.0_dp or -1.0_dp
+     real(dp), intent(in)    :: ssign
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! Coulomb interaction shift introduced by dynamical screening effect
+     real(dp) :: shift
+
+! evaluate the shift at first
+     shift = 0.0_dp; call ctqmc_prep_shift(shift)
+
+! multiple the shift with sign
+     call s_assert( abs(ssign) == 1.0_dp ); shift = shift * ssign
+
+! shift the Coulomb interaction matrix (skip the diagonal elements)
+     do i=1,norbs-1
+         do j=i+1,norbs
+             uumat(i,j) = uumat(i,j) - shift
+             uumat(j,i) = uumat(j,i) - shift
+         enddo ! over j={i+1,norbs} loop
+     enddo ! over i={1,norbs-1} loop
+
+! shift chemical potential as a byproduct
+     mune = mune - shift / two
+
+     return
+  end subroutine ctqmc_make_shift
+
+!!>>> ctqmc_prep_shift: evaluate the shift for the Coulomb interaction and
+!!>>> the chemical potential. in fact, shift = 2 K'(\tau = 0)
+  subroutine ctqmc_prep_shift(shift)
+     use constants, only : dp, zero, two
+
+     use control, only : isscr
+     use control, only : lc, wc
+     use context, only : ptau
+
+     implicit none
+
+! external arguments
+! the shift value for U and mune
+     real(dp), intent(out) :: shift
+
+! evaluate Coulomb interaction shift
+     select case ( isscr )
+
+         case (1)
+             shift = zero               ! normal model, recover azalea
+
+         case (2)
+             shift = two * lc * lc / wc ! holstein-hubbard model
+
+         case (3)
+             shift = two * lc * lc / wc ! plasmon pole model
+
+         case (4)
+             shift = two * lc * wc      ! ohmic model
+
+         case (99)
+             shift = lc                 ! realistic materials
+             call s_assert( shift /= ptau(1) )
+
+     end select
+
+     return
+  end subroutine ctqmc_prep_shift
 
 !!========================================================================
 !!>>> postprocess physical observables                                 <<<
