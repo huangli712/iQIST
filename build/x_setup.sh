@@ -24,7 +24,7 @@
 ## =======
 ##
 ## 11/10/2014 by li huang (created)
-## 03/22/2017 by li huang (last modified)
+## 03/29/2017 by li huang (last modified)
 ##
 ##
 
@@ -54,17 +54,7 @@ do
 done
 
 # loop over the hibiscus components
-for component in entropy
-do
-    dir=$(echo ../src/tools/hibiscus/entropy/$component)
-    make_link $dir $component
-done
-for component in sac
-do
-    dir=$(echo ../src/tools/hibiscus/stoch/$component)
-    make_link $dir $component
-done
-for component in mchi mdos mkra mscr msig mstd mtau mups
+for component in mchi mdos mscr
 do
     dir=$(echo ../src/tools/hibiscus/toolbox/$component)
     make_link $dir $component
