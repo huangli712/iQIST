@@ -192,9 +192,8 @@
          call ctqmc_print_header()
      endif ! back if ( myid == master ) block
 
-! setup the important parameters for continuous time quantum Monte Carlo
-! quantum impurity solver and dynamical mean field theory self-consistent
-! engine
+! setup the parameters for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
      call ctqmc_config()
 
 ! allocate memory and initialize
