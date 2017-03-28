@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           01/28/2017 by li huang (last modified)
+!!!           03/28/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -23,7 +23,9 @@
 !!>>> mean field theory self-consistent engine
   subroutine ctqmc_print_header()
      use constants, only : mystd
+
      use version, only : FULL_VER
+     use version, only : AUTH_STR, MAIL_STR, GPL3_STR
 
      use control, only : cname
      use control, only : nprocs
@@ -42,9 +44,9 @@
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'Version: '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop: by li huang (at IOP/CAS & SPCLab/CAEP & UNIFR)'
-     write(mystd,'(2X,a)') 'Support: lihuang.dmft@gmail.com'
-     write(mystd,'(2X,a)') 'License: GNU General Public License version 3'
+     write(mystd,'(2X,a)') 'Develop: '//AUTH_STR
+     write(mystd,'(2X,a)') 'Support: '//MAIL_STR
+     write(mystd,'(2X,a)') 'License: '//GPL3_STR
      write(mystd,*)
 
      write(mystd,'(2X,a)') cname//' >>> start running at '//date_time_string
