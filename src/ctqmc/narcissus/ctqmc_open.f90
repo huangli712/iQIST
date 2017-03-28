@@ -151,16 +151,16 @@
          call ctqmc_print_header()
      endif ! back if ( myid == master ) block
 
-! print out runtime parameters in summary, only for check
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_print_summary()
-     endif ! back if ( myid == master ) block
-
 ! allocate memory and initialize
      call ctqmc_setup_array()
 
 ! prepare initial hybridization function, init self-consistent iteration
      call ctqmc_selfer_init()
+
+! print out runtime parameters in summary, only for check
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_summary()
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine cat_init_ctqmc
@@ -195,21 +195,20 @@
          call ctqmc_print_header()
      endif ! back if ( myid == master ) block
 
-! setup the important parameters for continuous time quantum Monte Carlo
-! quantum impurity solver and dynamical mean field theory self-consistent
-! engine
+! setup the parameters for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
      call ctqmc_config()
-
-! print out runtime parameters in summary, only for check
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_print_summary()
-     endif ! back if ( myid == master ) block
 
 ! allocate memory and initialize
      call ctqmc_setup_array()
 
 ! prepare initial hybridization function, init self-consistent iteration
      call ctqmc_selfer_init()
+
+! print out runtime parameters in summary, only for check
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_summary()
+     endif ! back if ( myid == master ) block
 
      return
   end subroutine cat_init_ctqmc
