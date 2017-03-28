@@ -43,7 +43,7 @@
      write(mystd,'(2X,a)') '>>> A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: '//FULL_VER //' (built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Version: '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: '//AUTH_STR
      write(mystd,'(2X,a)') 'Support: '//MAIL_STR
      write(mystd,'(2X,a)') 'License: '//GPL3_STR
