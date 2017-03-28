@@ -2,10 +2,10 @@
 !!! project : narcissus
 !!! program : ctqmc_impurity_solver
 !!!           ctqmc_impurity_tester
-!!!           ctqmc_diagram_warmming
-!!!           ctqmc_diagram_sampling
-!!!           ctqmc_diagram_templing
-!!!           ctqmc_diagram_checking
+!!!           ctqmc_warmup_diag
+!!!           ctqmc_sample_diag
+!!!           ctqmc_temper_diag
+!!!           ctqmc_verify_diag
 !!!           ctqmc_insert_kink
 !!!           ctqmc_remove_kink
 !!!           ctqmc_lshift_kink
@@ -17,13 +17,17 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           01/28/2017 by li huang (last modified)
+!!!           03/28/2017 by li huang (last modified)
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
+
+!!========================================================================
+!!>>> core subroutines for quantum impurity solver                     <<<
+!!========================================================================
 
 !!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
 !!>>> continuous time quantum Monte Carlo quantum impurity solver
@@ -311,7 +315,7 @@
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
-     call ctqmc_diagram_warmming()
+     call ctqmc_warmup_diag()
      call cpu_time(time_end)   ! record ending   time
 
 ! print the time information
@@ -345,12 +349,12 @@
              cstep = cstep + 1
 
 ! sampling the perturbation expansion feynman diagrams randomly
-! ctqmc_diagram_sampling() is suitable for low temperature region, while
-! ctqmc_diagram_templing() is suitable for extreme high temperature region
+! ctqmc_sample_diag() is suitable for low temperature region, while
+! ctqmc_temper_diag() is suitable for extreme high temperature region
              if ( beta > one ) then
-                 call ctqmc_diagram_sampling(cstep)
+                 call ctqmc_sample_diag(cstep)
              else
-                 call ctqmc_diagram_sampling(cstep)
+                 call ctqmc_sample_diag(cstep)
              endif ! back if ( beta > one ) block
 
 !!========================================================================
@@ -500,7 +504,7 @@
 !!========================================================================
 
 ! check the status at first
-         call ctqmc_diagram_checking(cflag)
+         call ctqmc_verify_diag(cflag)
 
 ! write out the snapshot for the current diagram configuration
          if ( myid == master ) then
@@ -840,8 +844,12 @@
      return
   end subroutine ctqmc_impurity_solver
 
+!!========================================================================
+!!>>> debug layer                                                      <<<
+!!========================================================================
+
 !!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
-!!>>> on ctqmc_diagram_sampling() subroutine
+!!>>> on ctqmc_sample_diag() subroutine
   subroutine ctqmc_impurity_tester()
      use constants ! ALL
 
@@ -864,10 +872,10 @@
 !!>>> service layer: updating perturbation expansion series 1          <<<
 !!========================================================================
 
-!!>>> ctqmc_diagram_warmming: perform thermalization or warmup on the
+!!>>> ctqmc_warmup_diag: perform thermalization or warmup on the
 !!>>> perturbation expansion series to achieve thermodynamics stable
 !!>>> equilibrium state
-  subroutine ctqmc_diagram_warmming()
+  subroutine ctqmc_warmup_diag()
      use constants, only : zero
 
      use control, only : ntherm
@@ -885,7 +893,7 @@
 
 ! warm up the diagram series
      do i=1,ntherm
-         call ctqmc_diagram_sampling(i)
+         call ctqmc_sample_diag(i)
      enddo ! over i={1,ntherm} loop
 
 ! reinit statistics variables
@@ -910,11 +918,10 @@
      reflip_reject = zero
 
      return
-  end subroutine ctqmc_diagram_warmming
+  end subroutine ctqmc_warmup_diag
 
-!!>>> ctqmc_diagram_sampling: visit the perturbation expansion diagrams
-!!>>> randomly
-  subroutine ctqmc_diagram_sampling(cstep)
+!!>>> ctqmc_sample_diag: visit the perturbation expansion diagrams randomly
+  subroutine ctqmc_sample_diag(cstep)
      use constants, only : dp
      use spring, only : spring_sfmt_stream
 
@@ -965,18 +972,18 @@
      endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
 
      return
-  end subroutine ctqmc_diagram_sampling
+  end subroutine ctqmc_sample_diag
 
-!!>>> ctqmc_diagram_templing: to do nothing
-  subroutine ctqmc_diagram_templing()
+!!>>> ctqmc_temper_diag: to do nothing
+  subroutine ctqmc_temper_diag()
      implicit none
 
      return
-  end subroutine ctqmc_diagram_templing
+  end subroutine ctqmc_temper_diag
 
-!!>>> ctqmc_diagram_checking: checking whether the quantum impurity solver
-!!>>> is consistent internally
-  subroutine ctqmc_diagram_checking(cflag)
+!!>>> ctqmc_verify_diag: checking whether the quantum impurity solver is
+!!>>> consistent internally
+  subroutine ctqmc_verify_diag(cflag)
      use constants, only : mystd
 
      use control, only : norbs
@@ -1049,7 +1056,7 @@
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: error?'
                  write(mystd,'(4X,a)') '>>> please check the status file: solver.status.dat'
                  call ctqmc_save_status()
-                 call s_print_error('ctqmc_diagram_checking','unknown fatal error occur')
+                 call s_print_error('ctqmc_verify_diag','unknown fatal error occur')
              else
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: normal'
              endif ! back if ( cflag == 99 ) block
@@ -1058,7 +1065,7 @@
      endif ! back if ( cflag == 1 ) block
 
      return
-  end subroutine ctqmc_diagram_checking
+  end subroutine ctqmc_verify_diag
 
 !!========================================================================
 !!>>> service layer: updating perturbation expansion series 2          <<<
