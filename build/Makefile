@@ -54,7 +54,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 03/22/2017 by li huang (last modified)
+## 03/30/2017 by li huang (last modified)
 ##
 ##
 
@@ -86,11 +86,6 @@ help-more:
 	@echo '  targets:'
 	@echo '     help              print short usage information        '
 	@echo '     help-more         print full usage information         '
-	@echo
-	@echo '     gardenia          build gardenia code                  '
-	@echo '     gardenia-lib      build gardenia library for Fortran   '
-	@echo '     gardenia-pylib    build gardenia library for Python    '
-	@echo '     clean-gardenia    clean gardenia directory             '
 	@echo
 	@echo '     narcissus         build narcissus code                 '
 	@echo '     narcissus-lib     build narcissus library for Fortran  '
@@ -130,27 +125,14 @@ lib: base-lib capi-lib solver-lib tool-lib
 clean: clean-base clean-capi clean-solver clean-tool
 
 # targets for solver
-solver: base capi gardenia narcissus manjushaka
-solver-lib: base-lib capi-lib gardenia-lib narcissus-lib manjushaka-lib
-clean-solver: clean-base clean-capi clean-gardenia clean-narcissus clean-manjushaka
+solver: base capi narcissus manjushaka
+solver-lib: base-lib capi-lib narcissus-lib manjushaka-lib
+clean-solver: clean-base clean-capi clean-narcissus clean-manjushaka
 
 # targets for tool
 tool: base capi jasmine hibiscus
 tool-lib: base-lib capi-lib jasmine-lib hibiscus-lib
 clean-tool: clean-base clean-capi clean-jasmine clean-hibiscus
-
-# targets for ctqmc codes: segment version (gardenia)
-gardenia:
-	cd ../src/ctqmc/gardenia/; pwd; make
-
-gardenia-lib:
-	cd ../src/ctqmc/gardenia/; pwd; make lib
-
-gardenia-pylib:
-	cd ../src/ctqmc/gardenia/; pwd; make pylib
-
-clean-gardenia:
-	cd ../src/ctqmc/gardenia/; pwd; make clean
 
 # targets for ctqmc codes: segment version (narcissus)
 narcissus:
