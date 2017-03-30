@@ -6,7 +6,7 @@
      implicit none
 
      type (T_mpi) :: I_mpi
-     type (T_segment_gardenia) :: I_solver
+     type (T_segment_narcissus) :: I_solver
 
      integer :: i
      integer :: mfreq
@@ -47,6 +47,7 @@
      I_solver%isort  = 1
      I_solver%issus  = 1
      I_solver%isvrt  = 1
+     I_solver%isscr  = 1
      I_solver%nband  = 1
      I_solver%nspin  = 2
      I_solver%norbs  = 2
@@ -76,6 +77,8 @@
      I_solver%Jz    = 0.0
      I_solver%Js    = 0.0
      I_solver%Jp    = 0.0
+     I_solver%lc    = 0.0
+     I_solver%wc    = 0.0
      I_solver%mune  = 2.0
      I_solver%beta  = 10.0
      I_solver%part  = 0.50
