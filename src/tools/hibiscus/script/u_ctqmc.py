@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 03/24/2017 by li huang (last modified)
+## 03/30/2017 by li huang (last modified)
 ##
 ##
 
@@ -44,7 +44,7 @@ class p_ctqmc_solver(object):
 
             # setup the parameters
             p.setp(isscf = 2, isort = 1, nsweep = 10000000)
-            p.setp(mune = 2.0, nmaxi = 10)
+            p.setp(mune = 2.0)
             p.setp()
             p.setp(isscf = 1)
 
@@ -95,18 +95,6 @@ class p_ctqmc_solver(object):
             'alpha'  : 0.70    ,
         }
 
-        # __p_cmp_gardenia: the official parameter dict for gardenia
-        self.__p_cmp_gardenia = self.__p_cmp_solver.copy()
-        self.__p_cmp_gardenia['isort'] = 1
-        self.__p_cmp_gardenia['issus'] = 1
-        self.__p_cmp_gardenia['isvrt'] = 1
-        self.__p_cmp_gardenia['lemax'] = 32
-        self.__p_cmp_gardenia['legrd'] = 20001
-        self.__p_cmp_gardenia['chmax'] = 32
-        self.__p_cmp_gardenia['chgrd'] = 20001
-        self.__p_cmp_gardenia['nffrq'] = 32
-        self.__p_cmp_gardenia['nbfrq'] = 8
-
         # __p_cmp_narcissus: the official parameter dict for narcissus
         self.__p_cmp_narcissus = self.__p_cmp_solver.copy()
         self.__p_cmp_narcissus['isort'] = 1
@@ -145,10 +133,6 @@ class p_ctqmc_solver(object):
 
         # config __p_cmp according to the selected solver
         for case in switch( solver.lower() ):
-            if case ('gardenia'):
-                self.__p_cmp = self.__p_cmp_gardenia.copy()
-                break
-
             if case ('narcissus'):
                 self.__p_cmp = self.__p_cmp_narcissus.copy()
                 break
