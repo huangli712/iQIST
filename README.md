@@ -15,8 +15,9 @@ GNU General Public License Version 3
 * The quantum impurity models could have the following terms
     * Density-density interaction
     * General interaction (Slater or Kanamori scheme)
-    * Spin-orbital coupling and crystal field splitting
-    * Frequency-dependent interaction (Hubbard-Holstein model)
+    * Spin-orbital coupling
+    * Crystal field splitting
+    * Frequency-dependent interaction
 
 * The following physical observables could be measured
     * Single-particle Green's function in imaginary time space
@@ -48,7 +49,6 @@ GNU General Public License Version 3
 * The following optimized algorithms are adopted
     * Segment algorithm for density-density interaction
     * Divide-and-conquer algorithm
-    * Sparse matrix multiplication
     * Good quantum numbers (N, Sz, Jz, PS)
     * Lazy trace evaluation
     * Dynamical truncation approximation
@@ -122,7 +122,7 @@ $ ./x_setup.sh
 >
 > 2. 'editor' could be any ascii text editor which you prefer.
 >
-> 3. 'component' could be gardenia, narcissus, manjushaka, etc.
+> 3. 'component' could be narcissus, manjushaka, etc.
 >
 > 4. Type 'make help-more' in the terminal for more details.
 >
