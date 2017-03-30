@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/07/2014 by li huang (created)
-!!!           03/29/2017 by li huang (last modified)
+!!!           03/30/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a generic and robust
 !!!           application programming interface (API) for continuous-time
 !!!           quantum Monte Carlo impurity solver and atomic eigenvalue
@@ -29,12 +29,10 @@
 !!========================================================================
 
 ! solver identity
-     integer, public, parameter :: solver_id_gardenia       = 101
-     integer, public, parameter :: solver_id_narcissus      = 102
+     integer, public, parameter :: solver_id_narcissus      = 101
      integer, public, parameter :: solver_id_manjushaka     = 201
 
 ! solver status, 1 means ready, 0 means not ready
-     integer, public, parameter :: solver_is_ready_gardenia   = 1
      integer, public, parameter :: solver_is_ready_narcissus  = 1
      integer, public, parameter :: solver_is_ready_manjushaka = 1
 
@@ -106,23 +104,6 @@
      type, extends (T_generic_solver) :: T_general_solver
          character(len=10) :: solver_type = 'GENERAL'
      end type T_general_solver
-
-! define type T_segment_gardenia, which is used to describe the ctqmc
-! impurity solver code gardenia
-     public :: T_segment_gardenia
-     type, extends (T_segment_solver) :: T_segment_gardenia
-         character(len=10) :: solver_name = 'GARDENIA'
-
-         integer :: isort
-         integer :: issus
-         integer :: isvrt
-         integer :: lemax
-         integer :: legrd
-         integer :: chmax
-         integer :: chgrd
-         integer :: nffrq
-         integer :: nbfrq
-     end type T_segment_gardenia
 
 ! define type T_segment_narcissus, which is used to describe the ctqmc
 ! impurity solver code narcissus
