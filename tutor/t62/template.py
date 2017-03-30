@@ -13,7 +13,7 @@ sys.path.append('../../src/tools/hibiscus/script/')
 from u_ctqmc import *
 
 # modify sys.path
-sys.path.append('../../src/ctqmc/gardenia/')
+sys.path.append('../../src/ctqmc/narcissus/')
 
 # import iqist software package
 from pyiqist import *
@@ -24,10 +24,10 @@ comm = MPI.COMM_WORLD
 # check the status of ctqmc impurity solver
 if cat_solver_id() == 101:
     if comm.rank == 0 :
-        print "Hello world! This is the GARDENIA code."
+        print "Hello world! This is the NARCISSUS code."
 else:
     if comm.rank == 0 :
-        print "Where is the GARDENIA code?"
+        print "Where is the NARCISSUS code?"
     sys.exit(-1)
 if cat_solver_status() != 1 :
     print "I am sorry. This ctqmc impurity solver is not ready."
@@ -39,7 +39,7 @@ comm.Barrier()
 # prepare the input file
 if comm.rank == 0:
     # create an instance
-    p = p_ctqmc_solver('gardenia')
+    p = p_ctqmc_solver('narcissus')
 
     # setup the parameters
     p.setp(isscf = 1, isbin = 1, U = 4.0, Uc = 4.0, Uv = 4.0, mune = 2.0, beta = 10.0)
