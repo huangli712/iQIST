@@ -264,7 +264,7 @@ Possible options:
 * -L/home/lihuang/lapack -llapack -lblas
 * -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
 
-Here we provide three typical choices. (1) In the Mac OS X system, we can use the Apple Accelerate framework. (2) We use the home-built BLAS and LAPACK libraries. Please pay attention to the path. You have to modify it to fit your software environment. (3) We link the iQIST code with the Intel MKL. Please pay attention to the path and the library's name. You have to modify them to fit your software environment. Please see the documentation about Intel MKL for more details.
+Here we provide three typical choices. (1) In the Mac OS X system, we can use the Apple Accelerate framework. (2) We use the home-built BLAS and LAPACK libraries. Please pay attention to the path. You have to modify it to meet your software environment. (3) We link the iQIST code with the Intel MKL. Please pay attention to the path and the library's name. You have to modify them to meet your software environment. Please see the documentation about Intel MKL for more details.
 
 ### F2PY
 
