@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 01/24/2015 by li huang (created)
-## 01/31/2017 by li huang (last modified)
+## 03/30/2017 by li huang (last modified)
 ##
 ##
 
@@ -41,7 +41,7 @@ all: exe
 
 api:
 	cp ../../src/capi/capi.mod .
-	cp ../../src/ctqmc/gardenia/libctqmc.a .
+	cp ../../src/ctqmc/narcissus/libctqmc.a .
 
 cssl:
 	cp ../../src/base/libMM.a .
