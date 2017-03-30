@@ -7,6 +7,7 @@
 * Remove camellia component.
 * Remove pansy component.
 * Remove lavender component.
+* Remove gardenia component.
 * Remove many unused codes in hibiscus component.
 * Update the compiling system.
 
