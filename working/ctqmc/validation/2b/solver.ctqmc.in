@@ -1,6 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! source  : 2b/solver.ctqmc.in
-!!! solver  : GARDENIA
+!!! solver  : NARCISSUS
 !!! purpose : to test ctqmc impurity solver
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!!-----------------------------------------------------------------------
