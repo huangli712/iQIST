@@ -4,7 +4,7 @@
 
 ### 1 band model
 
-Impurity solver: gardenia, narcissus
+Impurity solver: narcissus
 
 Reference: Phys. Rev. Lett. 97, 076405 (2006), Fig. 3
 
@@ -18,7 +18,7 @@ Reference: Phys. Rev. Lett. 97, 076405 (2006), Fig. 3
 
 ### 1 band model
 
-Impurity solver: gardenia, narcissus
+Impurity solver: narcissus
 
 Reference: Phys. Rev. B 76, 235123 (2007), Fig. 3, Fig. 4, Fig. 5, Fig. 6
 
@@ -54,9 +54,9 @@ Reference: Phys. Rev. B 74, 155107 (2006), Fig. 11, Fig. 12
 
 ### 3 band model
 
-Impurity solver: gardenia, narcissus
+Impurity solver: narcissus
 
-Reference: arXiv: 1503.08164, Fig. 1(b) and (c)
+Reference: Phys. Rev. Lett. 115, 247001 (2015), Fig. 1(b) and (c)
 
 * 4a // U = 1.0, J = 0.25, beta = 200.0, part = 0.25, occupy = 2.0
 
