@@ -37,21 +37,3 @@
 * 3d // U = 8.00, J = 0.00, mune = 4.00, beta = 50.0, isscr = 4, lc = 0.3125, wc = 8.00
 
 * 3e // U = 8.00, J = 0.00, mune = 4.00, beta = 50.0, isscr = 4, lc = 0.15625, wc = 16.00
-
-### Hubbard-Holstein model
-
-* 4a // U = 6.00, J = 0.00, mune = 3.00, beta = 400.0, isscr = 2, lc = 0.00, wc = 0.20
-
-* 4b // U = 6.00, J = 0.00, mune = 3.00, beta = 400.0, isscr = 2, lc = 0.20, wc = 0.20
-
-* 4c // U = 6.00, J = 0.00, mune = 3.00, beta = 400.0, isscr = 2, lc = 0.40, wc = 0.20
-
-* 4d // U = 6.00, J = 0.00, mune = 3.00, beta = 400.0, isscr = 2, lc = 0.60, wc = 0.20
-
-* 4e // U = 4.00, J = 0.00, mune = 2.00, beta = 400.0, isscr = 2, lc = 0.00, wc = 0.20
-
-* 4f // U = 4.00, J = 0.00, mune = 2.00, beta = 400.0, isscr = 2, lc = 0.20, wc = 0.20
-
-* 4g // U = 4.00, J = 0.00, mune = 2.00, beta = 400.0, isscr = 2, lc = 0.40, wc = 0.20
-
-* 4h // U = 4.00, J = 0.00, mune = 2.00, beta = 400.0, isscr = 2, lc = 0.60, wc = 0.20
