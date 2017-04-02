@@ -80,7 +80,6 @@ GNU General Public License Version 3
 $ cd iqist/build
 $ editor make.sys
 $ make all
-$ ./x_setup.sh
 ```
 
 * Partial installation
@@ -91,7 +90,6 @@ $ editor make.sys
 $ make base
 $ make capi
 $ make component
-$ ./x_setup.sh
 ```
 
 * Build Fortran library
@@ -102,7 +100,6 @@ $ editor make.sys
 $ make base
 $ make capi
 $ make component-lib
-$ ./x_setup.sh
 ```
 
 * Build Python module
@@ -113,7 +110,6 @@ $ editor make.sys
 $ make base
 $ make capi
 $ make component-pylib
-$ ./x_setup.sh
 ```
 
 > NOTE:
