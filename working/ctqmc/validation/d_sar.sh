@@ -42,14 +42,14 @@
 ##
 
 # please FIX 'AAA', 'aaa' and file_name in line 52
-for i in 2*
+for i in 4*
 do
     echo "current directory:"
     pwd
     cd $i
     echo "job directory:"
     pwd
-    sed -i '' 's/GARDENIA/NARCISSUS/g' solver.ctqmc.in
+    sed -i '' 's/gardenia/narcissus/g' *.py
     echo ''
     cd ..
 done
