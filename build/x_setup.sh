@@ -36,6 +36,9 @@ function make_link {
         echo "[$name]: found"
         ln -fs $1 $2.x
         echo "[$name]: setup OK"
+    else
+        echo "[$name]: not found"
+        echo "[$name]: setup FAILED"
     fi
 }
 
