@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! source  : 3d2/atom.config.in
+!!! source  : 3d/atom.config.in
 !!! solver  : MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)

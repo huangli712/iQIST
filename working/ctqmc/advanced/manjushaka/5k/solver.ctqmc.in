@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! source  : 5k2/solver.ctqmc.in
+!!! source  : 5k/solver.ctqmc.in
 !!! solver  : MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)
