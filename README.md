@@ -1,10 +1,10 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-The iQIST software package contains several state-of-the-art quantum impurity solvers, which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm (CT-HYB), and corresponding preprocessing and postprocessing tools.
+The iQIST software package contains several state-of-the-art quantum impurity solvers, which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm, and some auxiliary tools.
 
 ## Version
 
-v0.6.8 @ 2017.01.31D (devel)
+v0.7.0 @ 2017.01.31D (devel)
 
 ## License
 
@@ -17,12 +17,12 @@ GNU General Public License Version 3
     * General interaction (Slater or Kanamori scheme)
     * Spin-orbital coupling
     * Crystal field splitting
-    * Frequency-dependent interaction
+    * Frequency-dependent Coulomb interaction
 
 * The following physical observables could be measured
     * Single-particle Green's function in imaginary time space
     * Single-particle Green's function in matsubara frequency space
-    * Two-particle correlation function in matsubara frequency space
+    * Two-particle Green's function in matsubara frequency space
     * Local irreducible vertex function in matsubara frequency space
     * Pair susceptibility in matsubara frequency space
     * Self-energy function in matsubara frequency space
@@ -57,11 +57,6 @@ GNU General Public License Version 3
     * MPI
     * OpenMP (for the measurement of two-particle quantities)
 
-* The application programming interfaces are provided
-    * Fortran binding
-    * Python binding
-    * Input file generator by Python
-
 * The preprocessing tools are provided
     * Atomic eigenvalue problem solver
 
@@ -88,28 +83,7 @@ $ make all
 $ cd iqist/build
 $ editor make.sys
 $ make base
-$ make capi
 $ make component
-```
-
-* Build Fortran library
-
-```sh
-$ cd iqist/build
-$ editor make.sys
-$ make base
-$ make capi
-$ make component-lib
-```
-
-* Build Python module
-
-```sh
-$ cd iqist/build
-$ editor make.sys
-$ make base
-$ make capi
-$ make component-pylib
 ```
 
 > NOTE:
@@ -126,17 +100,11 @@ $ make component-pylib
 
 Enjoy it!
 
-If you want to know more about the compiling system implemented in the iQIST software package, please read the reference manual carefully.
+If you want to know more about the compiling system implemented in the iQIST software package, please read the [reference manual](https://www.gitbook.com/book/huangli712/iqist/) carefully.
 
 ## Documentation
 
-We provide a comprehensive reference manual for the iQIST software package via the Gitbook. Please go to:
-
-```sh
-https://www.gitbook.com/book/huangli712/iqist/
-```
-
-for more details.
+We provide a comprehensive [reference manual](https://www.gitbook.com/book/huangli712/iqist/) for the iQIST software package via the Gitbook.
 
 ## Development
 
