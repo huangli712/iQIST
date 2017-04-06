@@ -6,7 +6,7 @@ import sys
 from mpi4py import MPI
 
 # modify sys.path
-sys.path.append('../../src/tools/hibiscus/script/')
+sys.path.append('../../src/tools/hibiscus/')
 
 # import the writer for atomic configuration file
 from u_atomic import *
