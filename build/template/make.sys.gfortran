@@ -31,7 +31,7 @@
 ## =======
 ##
 ## 05/11/2015 by li huang (created)
-## 01/26/2017 by li huang (last modified)
+## 04/06/2017 by li huang (last modified)
 ##
 ##
 
@@ -64,9 +64,3 @@ LFLAGS = $(OMP) $(GPROF)
 # External linear algebra library
 #-------------------------------------------------------------------------
 LIBS   = -framework Accelerate
-
-# F2py tools configuration
-#-------------------------------------------------------------------------
-F2PY   = /opt/local/bin/f2py-2.7
-F2PYC  = $(F90)
-F2PYL  = --link-lapack_opt
