@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! source  : 3f/solver.ctqmc.in
+!!! source  : 3t/solver.ctqmc.in
 !!! solver  : MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)
@@ -9,9 +9,9 @@
 !!------------------------------------------------------------------------
   isscf  : 2
   issun  : 2
-  isspn  : 2
+  isspn  : 1
   isbin  : 2
-  isort  : 1
+  isort  : 3
   issus  : 1
   isvrt  : 1
   ifast  : 1
@@ -48,7 +48,7 @@
   nfreq  : 128
   ntime  : 1024
   npart  : 4
-  nflip  : 0
+  nflip  : 200000
   ntherm : 2000000
   nsweep : 20000000
   nwrite : 2000000
