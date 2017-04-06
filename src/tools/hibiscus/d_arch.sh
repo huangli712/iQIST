@@ -18,7 +18,7 @@
 ## Usage
 ## =====
 ##
-## ./d_archive.sh
+## ./d_arch.sh
 ##
 ## Author
 ## ======
@@ -31,7 +31,7 @@
 ## =======
 ##
 ## 02/06/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 04/06/2017 by li huang (last modified)
 ##
 ##
 
