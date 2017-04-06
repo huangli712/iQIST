@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! source  : 5d/atom.config.in
+!!! source  : 5k/atom.config.in
 !!! solver  : MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)
@@ -19,8 +19,8 @@
   nspin  : 2
   norbs  : 10
   ncfgs  : 1024
-  nmini  : 0
-  nmaxi  : 10
+  nmini  : 4
+  nmaxi  : 6
 
 !!>>> setup common variables for jasmine
 !!------------------------------------------------------------------------

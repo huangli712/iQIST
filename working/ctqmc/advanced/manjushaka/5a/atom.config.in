@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! source  : 5k/atom.config.in
+!!! source  : 5b/atom.config.in
 !!! solver  : MANJUSHAKA
 !!! purpose : to test ctqmc impurity solver
 !!! author  : yilin wang (email:qhwyl2006@126.com)
@@ -8,10 +8,10 @@
 !!>>> setup general control flags
 !!------------------------------------------------------------------------
   ibasis : 1
-  ictqmc : 5
+  ictqmc : 4
   icu    : 1
   icf    : 0
-  isoc   : 1
+  isoc   : 0
 
 !!>>> setup common variables for jasmine
 !!------------------------------------------------------------------------
@@ -19,8 +19,8 @@
   nspin  : 2
   norbs  : 10
   ncfgs  : 1024
-  nmini  : 4
-  nmaxi  : 6
+  nmini  : 0
+  nmaxi  : 10
 
 !!>>> setup common variables for jasmine
 !!------------------------------------------------------------------------
@@ -31,5 +31,5 @@
   Jp     : 0.80
   Ud     : 0.00
   Jh     : 0.00
-  lambda : 0.50
+  lambda : 0.00
   mune   : 0.00
