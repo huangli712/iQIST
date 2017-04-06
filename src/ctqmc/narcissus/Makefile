@@ -8,7 +8,7 @@
 ## Usage
 ## =====
 ##
-## 'make', 'make lib', 'make clean', 'make clean-dat' or 'make clean-all'
+## 'make', 'make clean', 'make clean-dat' or 'make clean-all'
 ##
 ## Author
 ## ======
@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 04/06/2017 by li huang (last modified)
+## 04/07/2017 by li huang (last modified)
 ##
 ##
 
@@ -38,8 +38,7 @@ lev3 = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
 mlib = libMM.a
 
-objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3)
-exe_obj = $(objects) $(main) $(mlib)
+objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(main) $(mlib)
 
 default: all
 
@@ -57,8 +56,8 @@ csml:
 	cp ../../base/linkedlist.mod .
 	cp ../../base/version.mod .
 
-exe: cssl csml $(exe_obj)
-	$(LINKER) $(exe_obj) -o ctqmc $(LFLAGS) $(LIBS)
+exe: cssl csml $(objects)
+	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
