@@ -3,7 +3,7 @@
 ## Introduction
 ## ============
 ##
-## Makefile for iqist/src/tools/hibiscus/script directory.
+## Makefile for iqist/src/tools/hibiscus directory.
 ##
 ## Usage
 ## =====
@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 11/03/2014 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 04/06/2017 by li huang (last modified)
 ##
 ##
 
