@@ -13,7 +13,13 @@
 ## Usage
 ## =====
 ##
-## ./d_trailing.sh file_name
+## ./d_trim.sh file_name
+##
+## For Mac OS X system, the grammar for sed is (we don't generate backup)
+##     sed -i '' ...
+##
+## However, for Linux-based system, the grammar for sed is
+##     sed -i ...
 ##
 ## Author
 ## ======
@@ -26,7 +32,7 @@
 ## =======
 ##
 ## 11/13/2014 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 04/06/2017 by li huang (last modified)
 ##
 ##
 
