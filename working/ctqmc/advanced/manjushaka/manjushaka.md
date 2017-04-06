@@ -18,17 +18,17 @@
 
 ### 5 band model
 
-* 5b 5a // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, GQNs (N,Sz,PS)
+* 5a // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, GQNs (N,Sz,PS)
 
-* 5c 5b // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, diagonal CF, GQNs (N,Sz,PS)
+* 5b // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, diagonal CF, GQNs (N,Sz,PS)
 
-* 5d 5c // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
+* 5c // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz)
 
-* 5k 5d // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz), itrun=1, nmini=4, nmaxi=6
+* 5d // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz), itrun=1, nmini=4, nmaxi=6
 
-* 5l 5e // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz), itrun=2, nmini=4, nmaxi=6
+* 5e // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, SOC, lambda=0.5, GQNs (N,Jz), itrun=2, nmini=4, nmaxi=6
 
-* 5e 5f // Ud=4.0, Jh=1.0, beta=40.00, mune=10.0, npart=4, diagonal CF, GQNs (N,Sz)
+* 5f // Ud=4.0, Jh=1.0, beta=40.00, mune=10.0, npart=4, diagonal CF, GQNs (N,Sz)
 
 ### 7 band model
 
