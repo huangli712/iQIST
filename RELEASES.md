@@ -1,6 +1,6 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-## v0.6.8 (in progress)
+## v0.7.0 (in progress)
 
 * Remove azalea component.
 * Remove begonia component.
@@ -8,8 +8,13 @@
 * Remove pansy component.
 * Remove lavender component.
 * Remove gardenia component.
+* Remove daisy component.
+* Remove application programming interfaces.
 * Remove many unused codes in hibiscus component.
-* Update the compiling system.
+* Clean testing cases.
+* Clean tutorial files.
+* Update the build system.
+* Improve the code style and comments
 
 ## v0.6.7 @ c14fdc4 // Jan 13, 2017
 
