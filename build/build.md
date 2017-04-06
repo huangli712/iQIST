@@ -28,7 +28,7 @@ The make.sys file is the key component of the building system. You have to modif
 * (Optional)
 
 ### Python environment
-* (Optional) numpy, scipy, f2py, mpi4py, matplotlib
+* (Optional) numpy, scipy, matplotlib
 
 > NOTE:
 >
