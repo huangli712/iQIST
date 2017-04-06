@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 08/15/2015 by li huang (created)
-## 03/24/2017 by li huang (last modified)
+## 04/06/2017 by li huang (last modified)
 ##
 ##
 
@@ -48,14 +48,13 @@ class iqistReader(object):
 
         # read the data
         (tmesh, gtau) = iqistReader.get_green(norbs, ntime)
-        (tmesh, gbin) = iqistReader.get_green(norbs, ntime, "solver.green.bin.10")
         (rmesh, grnf) = iqistReader.get_grn(norbs, mfreq)
     """
 
     @staticmethod
     def get_green(norbs, ntime, fileName = None):
-        """ try to read the solver.green.dat or solver.green.bin.nnn file
-            to return the imaginary time Green's function G(\tau) data
+        """ try to read the solver.green.dat file to return the imaginary
+            time Green's function G(\tau) data
         """
         if fileName is None:
             f = open("solver.green.dat","r")
