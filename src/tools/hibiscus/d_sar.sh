@@ -8,7 +8,7 @@
 ## It is a shell script. The purpose of this script is to scan a file or
 ## directory, and then replace some characters with given characters. So
 ## we name it as sar.sh (Scan And Replace). We can use it to preprocess
-## the atom.config.in files in iqist/working/ctqmc/standard directory.
+## many atom.config.in or solver.ctqmc.in files at the same time.
 ##
 ## This script should be used by the developer only.
 ##
@@ -37,7 +37,7 @@
 ## =======
 ##
 ## 01/03/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 04/06/2017 by li huang (last modified)
 ##
 ##
 
