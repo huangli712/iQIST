@@ -2,7 +2,7 @@
 
 ## Advanced Test Cases For MANJUSHAKA
 
-### 3 band model
+### 3-band model
 
 * 3a // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=6.00, npart=4, GQNs (N,Sz,PS)
 
@@ -16,7 +16,7 @@
 
 * 3f // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=6.00, npart=4, GQNs (N,Sz,PS), Chebyshev polynomial
 
-### 5 band model
+### 5-band model
 
 * 5a // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=10.0, npart=4, GQNs (N,Sz,PS)
 
@@ -30,7 +30,7 @@
 
 * 5f // Ud=4.0, Jh=1.0, beta=40.00, mune=10.0, npart=4, diagonal CF, GQNs (N,Sz)
 
-### 7 band model
+### 7-band model
 
 * 7a // Uc=4.0, Uv=2.4, Jz=0.8, Js=0.8, Jp=0.8, beta=40.00, mune=14.00, npart=8,  SOC, lambda=0.5, GQNs (N,Jz), itrun=1, nmini=6, nmaxi=8
 
