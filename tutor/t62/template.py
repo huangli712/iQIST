@@ -7,7 +7,7 @@ import numpy
 from mpi4py import MPI
 
 # modify sys.path
-sys.path.append('../../src/tools/hibiscus/script/')
+sys.path.append('../../src/tools/hibiscus/')
 
 # import the writer for ctqmc configuration file
 from u_ctqmc import *
