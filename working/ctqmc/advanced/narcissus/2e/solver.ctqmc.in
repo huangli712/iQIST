@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! source  : 3e/solver.ctqmc.in
+!!! source  : 2e/solver.ctqmc.in
 !!! solver  : NARCISSUS
 !!! purpose : to test ctqmc impurity solver
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
