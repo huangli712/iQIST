@@ -30,9 +30,7 @@ default: all
 all:
 
 clean:
-	rm -fr *.o
 	rm -fr *.pyc
-	rm -fr *.so
 
 clean-dat:
 	rm -fr *.dat
