@@ -1,5 +1,5 @@
 !!!-----------------------------------------------------------------------
-!!! source  : t12/u15/solver.ctqmc.in
+!!! source  : t12/solver.ctqmc.in
 !!! solver  : NARCISSUS
 !!! purpose : for tutorial
 !!! author  : yilin wang (email:qhwyl2006@126.com)
@@ -19,13 +19,13 @@
   norbs  : 2
   ncfgs  : 4
   niter  : 20
-  U      : 1.50
-  Uc     : 1.50
-  Uv     : 1.50
+  U      : 1.00
+  Uc     : 1.00
+  Uv     : 1.00
   Jz     : 0.00
   Js     : 0.00
   Jp     : 0.00
-  mune   : 0.75
+  mune   : 0.50
   beta   : 40.0
   part   : 0.50
   alpha  : 0.70
