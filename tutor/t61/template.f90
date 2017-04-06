@@ -77,8 +77,6 @@
      I_solver%Jz    = 0.0
      I_solver%Js    = 0.0
      I_solver%Jp    = 0.0
-     I_solver%lc    = 0.0
-     I_solver%wc    = 0.0
      I_solver%mune  = 2.0
      I_solver%beta  = 10.0
      I_solver%part  = 0.50
