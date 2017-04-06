@@ -13,7 +13,7 @@
 ##
 ## edit the configuration parameter carefully, and then
 ##
-## ./u_animator.py movie.mp4
+## ./u_movie.py movie.mp4
 ##
 ## Here movie.mp4 is the output file. We can use the VLC to play it. If you
 ## don't supply any filename, the default output should be diag.mp4.
@@ -29,7 +29,7 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 08/17/2015 by li huang (last modified)
+## 04/06/2017 by li huang (last modified)
 ##
 ##
 
