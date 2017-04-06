@@ -266,44 +266,6 @@ Possible options:
 
 Here we provide three typical choices. (1) In the Mac OS X system, we can use the Apple Accelerate framework. (2) We use the home-built BLAS and LAPACK libraries. Please pay attention to the path. You have to modify it to meet your software environment. (3) We link the iQIST code with the Intel MKL. Please pay attention to the path and the library's name. You have to modify them to meet your software environment. Please see the documentation about Intel MKL for more details.
 
-### F2PY
-
-Specify the command tool for the f2py package which is used to generate the python interface for the iQIST code.
-
-Possible options:
-
-* f2py
-
-> NOTE:
->
-> Sometimes you have to specify correct path for it. In the Mac OS X system, the path for f2py may be:
->
->
-```
-/System/Library/Frameworks/Python.framework/Versions/Current/Extras/bin/f2py
-```
->
-> You need to specify it here.
-
-### F2PYC
-
-Specify the fortran compiler used by the f2py tool. In general, it is the same with the fortran compiler we used to compile the iQIST code. Do not modify them unless you know what you are doing.
-
-Possible options:
-
-* $(F90)
-
-### F2PYL
-
-Specify the linear algebra library used by the f2py tool to generate the python modules.
-
-Possible options:
-
-* $(LIBS)
-* --link-lapack_opt
-
-In general, the '$(LIBS)' option works quite well. But when you are working on the Mac OS X system and using the Apple Accelerate framework as the linear algebra library, you have to use the '--link-lapack_opt' option. As for the details, please check the f2py's documentation.
-
 ## Templates
 
 Here we provide a summary list for several make.sys templates. Please choose a suitable one and modify it to satisfy your requirements. Don't forget to use it to overwrite the default make.sys.
