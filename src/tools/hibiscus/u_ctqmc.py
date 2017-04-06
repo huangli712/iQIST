@@ -7,7 +7,7 @@
 ##
 ## It is a python script. The purpose of it is to generate essential input
 ## file (solver.ctqmc.in) for various quantum impurity solver components.
-## Note that you can not use it to control these codes.
+## Note that you can not use it to control these codes directly.
 ##
 ## Usage
 ## =====
@@ -25,7 +25,7 @@
 ## =======
 ##
 ## 03/28/2015 by li huang (created)
-## 03/30/2017 by li huang (last modified)
+## 04/06/2017 by li huang (last modified)
 ##
 ##
 
@@ -107,8 +107,6 @@ class p_ctqmc_solver(object):
         self.__p_cmp_narcissus['chgrd'] = 20001
         self.__p_cmp_narcissus['nffrq'] = 32
         self.__p_cmp_narcissus['nbfrq'] = 8
-        self.__p_cmp_narcissus['lc'] = 1.00
-        self.__p_cmp_narcissus['wc'] = 1.00
 
         # __p_cmp_manjushaka: the official parameter dict for manjushaka
         self.__p_cmp_manjushaka = self.__p_cmp_solver.copy()
