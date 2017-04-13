@@ -13,7 +13,7 @@
 * Remove many unused codes in hibiscus component.
 * Clean testing cases.
 * Clean tutorial files.
-* Update the build system.
+* Update the building system.
 * Improve the code style and comments
 
 ## v0.6.7 @ c14fdc4 // Jan 13, 2017
