@@ -1,6 +1,6 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-The iQIST software package contains several state-of-the-art quantum impurity solvers, which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm, and some auxiliary tools.
+The iQIST software package contains several state-of-the-art quantum impurity solvers which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm, auxiliary tools, libraries and some applications.
 
 ## Version
 
