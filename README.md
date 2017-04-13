@@ -1,5 +1,9 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
+> WARNING:
+>
+> The iQIST software package is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed or removed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
+
 The iQIST software package contains several state-of-the-art quantum impurity solvers which implement the hybridization expansion continuous-time quantum Monte Carlo algorithm, auxiliary tools, libraries and some applications.
 
 ## Version
@@ -23,8 +27,6 @@ GNU General Public License Version 3
     * One-particle Green's function in imaginary time space
     * One-particle Green's function in matsubara frequency space
     * Two-particle Green's function in matsubara frequency space
-    * Local irreducible vertex function in matsubara frequency space
-    * Pair susceptibility in matsubara frequency space
     * Self-energy function in matsubara frequency space
     * Spin-spin correlation function in imaginary time space
     * Spin-spin correlation function in matsubara frequency space
@@ -44,7 +46,7 @@ GNU General Public License Version 3
     * Kinetic energy fluctuation
 
 * The following measurement tricks are supported
-    * Orthogonal polynomial representation (Legendre polynomial)
+    * Orthogonal polynomial representation
     * Improved estimator for self-energy function
 
 * The following optimized algorithms are adopted
@@ -61,10 +63,6 @@ GNU General Public License Version 3
 * Many tools are provided
     * Atomic eigenvalue problem solver
     * Some users-oriented and developers-oriented scripts, etc.
-
-> NOTE:
->
-> The iQIST software package is still in heavy development. The codes are extremely unstable. Some features are still experimental. Everything could be changed or removed in the future release. We can not guarantee that it is bug free. So be careful when you are using it and verify your data again and again before you submit your calculated results to any peer-reviewed journal.
 
 ## Installation
 
@@ -85,19 +83,7 @@ $ make base
 $ make component
 ```
 
-> NOTE:
->
-> 1. 'iqist' is the directory where the iQIST software package is uncompressed.
->
-> 2. 'editor' could be any ascii text editor which you prefer.
->
-> 3. 'component' could be narcissus, manjushaka, etc.
->
-> 4. Type 'make help-more' in the terminal for more details.
->
-> 5. Sometimes the latest commit will not be compiled correctly. So, please download the released version of the iQIST software package which should have an unique version tag.
-
-Enjoy it!
+Here 'iqist' is the directory where the iQIST software package is uncompressed, 'editor' could be any ascii text editor which you prefer, 'component' could be narcissus, manjushaka, etc. Please type 'make help-more' in the terminal for more details. Sometimes the latest commit will not be compiled correctly. So, please download the released version of the iQIST software package which should have an unique version tag.
 
 If you want to know more about the building system implemented in the iQIST software package, please read the online [reference manual](https://www.gitbook.com/book/huangli712/iqist/) carefully.
 
