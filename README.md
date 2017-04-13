@@ -1,6 +1,6 @@
 # iQIST (Interacting Quantum Impurity Solver Toolkit)
 
-The iQIST software package contains several state-of-the-art quantum impurity solvers which implement the hybridization expansion version continuous-time quantum Monte Carlo algorithm, auxiliary tools, libraries and some applications.
+The iQIST software package contains several state-of-the-art quantum impurity solvers which implement the hybridization expansion continuous-time quantum Monte Carlo algorithm, auxiliary tools, libraries and some applications.
 
 ## Version
 
@@ -15,35 +15,36 @@ GNU General Public License Version 3
 * The quantum impurity models could have the following terms
     * Density-density interaction
     * General interaction (Slater or Kanamori scheme)
+    * Frequency-dependent Coulomb interaction
     * Spin-orbital coupling
     * Crystal field splitting
-    * Frequency-dependent Coulomb interaction
 
-* The following physical observables could be measured
-    * Single-particle Green's function in imaginary time space
-    * Single-particle Green's function in matsubara frequency space
+* The following physical observables could be measured either directly or indirectly
+    * One-particle Green's function in imaginary time space
+    * One-particle Green's function in matsubara frequency space
     * Two-particle Green's function in matsubara frequency space
     * Local irreducible vertex function in matsubara frequency space
     * Pair susceptibility in matsubara frequency space
     * Self-energy function in matsubara frequency space
-    * Histogram of perturbation expansion order
-    * Kurtosis and skewness of perturbation expansion order
-    * Kinetic and potential energies
-    * Orbital occupation numbers
-    * Double occupation numbers
-    * Magnetic moment
-    * Binder cumulant
-    * Atomic state probability
     * Spin-spin correlation function in imaginary time space
     * Spin-spin correlation function in matsubara frequency space
     * Orbital-orbital correlation function in imaginary time space
     * Orbital-orbital correlation function in matsubara frequency space
+    * Histogram of perturbation expansion order
+    * Kurtosis of perturbation expansion order
+    * Skewness of perturbation expansion order
+    * Kinetic energy
+    * Potential energy
+    * Orbital occupation numbers
+    * Double occupation numbers
+    * Local magnetic moment
+    * Binder cumulant
+    * Atomic state probability
     * Fidelity susceptibility
     * Kinetic energy fluctuation
 
 * The following measurement tricks are supported
-    * Orthogonal polynomial representation (Legendre and Chebyshev polynomials)
-    * Kernel polynomial representation
+    * Orthogonal polynomial representation (Legendre polynomial)
     * Improved estimator for self-energy function
 
 * The following optimized algorithms are adopted
@@ -53,15 +54,13 @@ GNU General Public License Version 3
     * Lazy trace evaluation
     * Dynamical truncation approximation
 
-* The quantum impurity solvers are all parallelized
+* The quantum impurity solvers are parallelized
     * MPI
-    * OpenMP (for the measurement of two-particle quantities)
+    * OpenMP
 
-* The preprocessing tools are provided
+* Many tools are provided
     * Atomic eigenvalue problem solver
-
-* The postprocessing tools are provided
-    * Many tools and scripts, etc.
+    * Some users-oriented and developers-oriented scripts, etc.
 
 > NOTE:
 >
@@ -100,11 +99,11 @@ $ make component
 
 Enjoy it!
 
-If you want to know more about the compiling system implemented in the iQIST software package, please read the [reference manual](https://www.gitbook.com/book/huangli712/iqist/) carefully.
+If you want to know more about the building system implemented in the iQIST software package, please read the online [reference manual](https://www.gitbook.com/book/huangli712/iqist/) carefully.
 
 ## Documentation
 
-We provide a comprehensive [reference manual](https://www.gitbook.com/book/huangli712/iqist/) for the iQIST software package via the Gitbook.
+We provide a comprehensive online [reference manual](https://www.gitbook.com/book/huangli712/iqist/) for the iQIST software package via the Gitbook.
 
 ## Development
 
