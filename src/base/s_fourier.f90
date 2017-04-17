@@ -3,7 +3,7 @@
 !!! program : s_fft_tails
 !!!           s_fft_forward
 !!!           s_fft_backward
-!!! source  : s_fft.f90
+!!! source  : s_fourier.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
