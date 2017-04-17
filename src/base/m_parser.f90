@@ -34,7 +34,7 @@
 !!    ! this is a comment line
 !!
 !!    nband = 4 # this is in line comment
-!!    norbs = 8 ! this in line comment
+!!    norbs = 8 ! this is in line comment
 !!
 !! 2. it is not case sensitive.
 !!
