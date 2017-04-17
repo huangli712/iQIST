@@ -4,7 +4,7 @@
 !!!           s_chebyshev
 !!!           s_sbessel
 !!!           s_bezier
-!!! source  : s_vector.f90
+!!! source  : s_function.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
