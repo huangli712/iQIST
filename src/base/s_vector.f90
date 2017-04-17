@@ -248,67 +248,6 @@
 !!>>> prod operations                                                  <<<
 !!========================================================================
 
-!!>>> s_prod_i: return the product of an integer array
-  subroutine s_prod_i(n, v, vprod)
-     implicit none
-
-! external arguments
-! size of array v
-     integer, intent(in)  :: n
-
-! product of array v
-     integer, intent(out) :: vprod
-
-! input integer array
-     integer, intent(in)  :: v(n)
-
-     vprod = product(v)
-
-     return
-  end subroutine s_prod_i
-
-!!>>> s_prod_d: return the product of a real(dp) array
-  subroutine s_prod_d(n, v, vprod)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! size of array v
-     integer, intent(in)   :: n
-
-! product of array v
-     real(dp), intent(out) :: vprod
-
-! input real(dp) array
-     real(dp), intent(in)  :: v(n)
-
-     vprod = product(v)
-
-     return
-  end subroutine s_prod_d
-
-!!>>> s_prod_z: return the product of a complex(dp) array
-  subroutine s_prod_z(n, v, vprod)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! size of array v
-     integer, intent(in)      :: n
-
-! product of array v
-     complex(dp), intent(out) :: vprod
-
-! input complex(dp) array
-     complex(dp), intent(in)  :: v(n)
-
-     vprod = product(v)
-
-     return
-  end subroutine s_prod_z
-
 !!>>> s_cumprod_i: return the cumproduct of an integer array
   subroutine s_cumprod_i(n, v, vprod)
      implicit none
