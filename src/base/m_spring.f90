@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/03/2008 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/17/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define several modern, fast
 !!!           highly reliable, ease-to-use, and state-of-the-art pseudo-
 !!!           random number generators, which are essential in massively
@@ -65,68 +65,65 @@
 !!========================================================================
 
 ! kind types for 32-bit signed integers
-     integer, private, parameter :: int32  = selected_int_kind( 9)
+     integer, private, parameter :: i32 = selected_int_kind( 9)
 
 ! kind types for 64-bit signed integers
-     integer, private, parameter :: int64  = selected_int_kind(18)
-
-! kind types for ieee 754/IEC 60559 single precision reals
-     integer, private, parameter :: ieee32 = selected_real_kind( 6,  37)
+     integer, private, parameter :: i64 = selected_int_kind(18)
 
 ! kind types for ieee 754/IEC 60559 double precision reals
-     integer, private, parameter :: ieee64 = selected_real_kind(15, 307)
+     integer, private, parameter :: dpr = selected_real_kind(15, 307)
 
 !!========================================================================
 !!>>> declare common parameters for MT19937 generator                  <<<
 !!========================================================================
 
 ! period parameters
-     integer(int32), private, parameter :: N = 624_int32
+     integer(i32), private, parameter :: N = 624_i32
 
 ! period parameters
-     integer(int32), private, parameter :: M = 397_int32
+     integer(i32), private, parameter :: M = 397_i32
 
 !!========================================================================
 !!>>> declare common parameters for SFMT generator                     <<<
 !!========================================================================
 
 ! Mersenne Exponent. the period of the sequence is a multiple of 2^{ME}-1
-     integer(int32), private, parameter :: ME  = 19937
+     integer(i32), private, parameter :: ME  = 19937
 
 ! SFMT has an internal state array of 128-bit integers, and NS is its size.
-     integer(int32), private, parameter :: NS  = ME / 128 + 1
+     integer(i32), private, parameter :: NS  = ME / 128 + 1
 
 ! N32 is the size of internal state array when regarded as an array of 32-bit integers
-     integer(int32), private, parameter :: N32 = NS * 4
+     integer(i32), private, parameter :: N32 = NS * 4
 
 ! N64 is the size of internal state array when regarded as an array of 64-bit integers
-     integer(int32), private, parameter :: N64 = NS * 2
+     integer(i32), private, parameter :: N64 = NS * 2
 
 ! a parity check vector which certificate the period of 2^{ME}
-     integer(int32), private, parameter :: parity(0:3) = (/1, 0, 0, 331998852/)
+     integer(i32), private, parameter :: parity(0:3) = (/1, 0, 0, 331998852/)
 
 !!========================================================================
 !!>>> declare common variables for MT19937 generator                   <<<
 !!========================================================================
 
 ! states pointer, if mti == -1, itialization is necessary
-     integer(int32), private, save :: mti = -1
+     integer(i32), private, save :: mti = -1
 
 ! states array for twist generator
-     integer(int64), private, save :: mt(0:N-1)
+     integer(i64), private, save :: mt(0:N-1)
 
 !!========================================================================
 !!>>> declare common variables for SFMT generator                      <<<
 !!========================================================================
 
 ! index counter to the 32-bit internal state array
-     integer(int32), private, save :: idx = -1
+     integer(i32), private, save :: idx = -1
 
 ! the 32-bit integer pointer to the 128-bit internal state array
-     integer(int32), private, save :: pt32(0:N32-1)
+     integer(i32), private, save :: pt32(0:N32-1)
 
 ! the 64-bit integer pointer to the 128-bit internal state array
-     integer(int64), private, save :: pt64(0:N64-1)
+     integer(i64), private, save :: pt64(0:N64-1)
 
 !!========================================================================
 !!>>> declare accessibility for module routines                        <<<
@@ -158,7 +155,7 @@
 
 ! external arguments
 ! seed for random number generator
-     integer(int32), intent(in) :: seed
+     integer(i32), intent(in) :: seed
 
 ! local variables
 ! loop index
@@ -170,7 +167,7 @@
 ! set the seed using values suggested by Matsumoto & Nishimura, using
 ! a generator by Knuth. See original source for details
      do i=1,N-1
-         mt(i) = iand(4294967295_int64,1812433253_int64*ieor(mt(i-1),ishft(mt(i-1),-30_int64))+i)
+         mt(i) = iand(4294967295_i64,1812433253_i64*ieor(mt(i-1),ishft(mt(i-1),-30_i64))+i)
      enddo ! over i={1,N-1} loop
 
      mti = N
@@ -185,14 +182,14 @@
 
 ! local parameters
 ! pre-calculated to avoid division below
-     real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967296.0_ieee64
+     real(dpr), parameter :: factor = 1.0_dpr / 4294967296.0_dpr
 
 ! local variables
 ! return type
-     real(ieee64) :: r
+     real(dpr) :: r
 
 ! compute it
-     r = (real(spring_mt_source(),ieee64) + 0.5_ieee64) * factor
+     r = (real(spring_mt_source(),dpr) + 0.5_dpr) * factor
 
      return
   end function spring_mt_stream
@@ -205,14 +202,14 @@
 
 ! local parameters
 ! pre-calculated to avoid division below
-     real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967295.0_ieee64
+     real(dpr), parameter :: factor = 1.0_dpr / 4294967295.0_dpr
 
 ! local variables
 ! return type
-     real(ieee64) :: r
+     real(dpr) :: r
 
 ! compute it
-     r = real(spring_mt_source(),ieee64) * factor
+     r = real(spring_mt_source(),dpr) * factor
 
      return
   end function spring_mt_string
@@ -223,41 +220,41 @@
      implicit none
 
 ! local parameters
-     integer(int64), parameter :: MAGIC(0:1) = (/ 0_int64, -1727483681_int64 /)
+     integer(i64), parameter :: MAGIC(0:1) = (/ 0_i64, -1727483681_i64 /)
 
 ! period parameters
-     integer(int64), parameter :: UPPER_MASK =  2147483648_int64
-     integer(int64), parameter :: LOWER_MASK =  2147483647_int64
+     integer(i64), parameter :: UPPER_MASK =  2147483648_i64
+     integer(i64), parameter :: LOWER_MASK =  2147483647_i64
 
 ! tempering parameters
-     integer(int64), parameter :: TEMPERING_B = -1658038656_int64
-     integer(int64), parameter :: TEMPERING_C =  -272236544_int64
+     integer(i64), parameter :: TEMPERING_B = -1658038656_i64
+     integer(i64), parameter :: TEMPERING_C =  -272236544_i64
 
 ! local variables
 ! return type
-     integer(int64) :: r
+     integer(i64) :: r
 
 ! loop index
-     integer(int32) :: k
+     integer(i32) :: k
 
 ! generate N words at a time
      if ( mti >= N ) then
 ! the value -1 acts as a flag saying that the seed has not been set.
-         if ( mti == -1 ) call spring_mt_init(4357_int32)
+         if ( mti == -1 ) call spring_mt_init(4357_i32)
 
 ! fill the mt array
          do k=0,N-M-1
              r = ior(iand(mt(k),UPPER_MASK),iand(mt(k+1),LOWER_MASK))
-             mt(k) = ieor(ieor(mt(k + M),ishft(r,-1_int64)),MAGIC(iand(r,1_int64)))
+             mt(k) = ieor(ieor(mt(k + M),ishft(r,-1_i64)),MAGIC(iand(r,1_i64)))
          enddo ! over k={0,N-M-1} loop
 
          do k=N-M,N-2
              r = ior(iand(mt(k),UPPER_MASK),iand(mt(k+1),LOWER_MASK))
-             mt(k) = ieor(ieor(mt(k + (M - N)),ishft(r,-1_int64)),MAGIC(iand(r,1_int64)))
+             mt(k) = ieor(ieor(mt(k + (M - N)),ishft(r,-1_i64)),MAGIC(iand(r,1_i64)))
          enddo ! over k={N-M,N-2} loop
 
          r = ior(iand(mt(N-1),UPPER_MASK),iand(mt(0),LOWER_MASK))
-         mt(N-1) = ieor(ieor(mt(M-1),ishft(r,-1)),MAGIC(iand(r,1_int64)))
+         mt(N-1) = ieor(ieor(mt(M-1),ishft(r,-1)),MAGIC(iand(r,1_i64)))
 
 ! start using the array from first element
          mti = 0
@@ -268,8 +265,8 @@
      mti = mti + 1
 
      r = ieor(r,ishft(r,-11))
-     r = iand(4294967295_int64,ieor(r,iand(ishft(r, 7),TEMPERING_B)))
-     r = iand(4294967295_int64,ieor(r,iand(ishft(r,15),TEMPERING_C)))
+     r = iand(4294967295_i64,ieor(r,iand(ishft(r, 7),TEMPERING_B)))
+     r = iand(4294967295_i64,ieor(r,iand(ishft(r,15),TEMPERING_C)))
      r = ieor(r,ishft(r,-18))
 
      return
@@ -286,7 +283,7 @@
 
 ! external arguments
 ! seed for random number generator
-     integer(int32), intent(in) :: seed
+     integer(i32), intent(in) :: seed
 
 ! local variables
 ! loop index
@@ -297,8 +294,8 @@
      integer :: inner = 0
 
 ! dummy variables
-     integer(int32) :: work
-     integer(int64) :: temp
+     integer(i32) :: work
+     integer(i64) :: temp
 
 ! setup idx
      idx = N32
@@ -307,8 +304,8 @@
      pt32(0) = seed
      do i=1,N32-1
          temp = ieor( pt32(i-1), ishft( pt32(i-1), -30 ) )
-         temp = 1812433253_int64 * temp + i
-         pt32(i) = int( ibits( temp, 0, 32 ), kind = int32 )
+         temp = 1812433253_i64 * temp + i
+         pt32(i) = int( ibits( temp, 0, 32 ), kind = i32 )
      enddo ! over i={1,N32-1} loop
 
 ! check period of random number generator
@@ -338,7 +335,7 @@
      do i=0,N64-1
          pt64(i) = pt32(i*2 + 1)
          temp = pt32(i*2)
-         temp = iand(temp, 4294967295_int64)
+         temp = iand(temp, 4294967295_i64)
          pt64(i) = ior(ishft(pt64(i), 32), temp)
      enddo ! over i={0,N64-1} loop
 
@@ -351,14 +348,14 @@
 
 ! local parameters
 ! pre-calculated to avoid division below
-     real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967296.0_ieee64
+     real(dpr), parameter :: factor = 1.0_dpr / 4294967296.0_dpr
 
 ! local variables
 ! return type
-     real(ieee64) :: r
+     real(dpr) :: r
 
 ! compute it
-     r = (real(spring_sfmt_source(),ieee64) + 0.5_ieee64) * factor
+     r = (real(spring_sfmt_source(),dpr) + 0.5_dpr) * factor
 
      return
   end function spring_sfmt_stream
@@ -369,14 +366,14 @@
 
 ! local parameters
 ! pre-calculated to avoid division below
-     real(ieee64), parameter :: factor = 1.0_ieee64 / 4294967295.0_ieee64
+     real(dpr), parameter :: factor = 1.0_dpr / 4294967295.0_dpr
 
 ! local variables
 ! return type
-     real(ieee64) :: r
+     real(dpr) :: r
 
 ! compute it
-     r = real(spring_sfmt_source(),ieee64) * factor
+     r = real(spring_sfmt_source(),dpr) * factor
 
      return
   end function spring_sfmt_string
@@ -388,7 +385,7 @@
 
 ! local variables
 ! return type
-     integer(int64) :: r
+     integer(i64) :: r
 
      if ( idx >= N32 ) then
          call spring_sfmt_kernel()
@@ -415,11 +412,11 @@
 ! loop index
      integer :: i
 
-     integer(int64) :: r1Top
-     integer(int64) :: r1Btm
+     integer(i64) :: r1Top
+     integer(i64) :: r1Btm
 
-     integer(int64) :: r2Top
-     integer(int64) :: r2Btm
+     integer(i64) :: r2Top
+     integer(i64) :: r2Btm
 
      r1Btm = pt64(N64 - 4)
      r1Top = pt64(N64 - 3)
@@ -458,27 +455,27 @@
      implicit none
 
 ! external arguments
-     integer(int64), intent(in) :: aTop
-     integer(int64), intent(in) :: aBtm
+     integer(i64), intent(in) :: aTop
+     integer(i64), intent(in) :: aBtm
 
-     integer(int64), intent(in) :: bTop
-     integer(int64), intent(in) :: bBtm
+     integer(i64), intent(in) :: bTop
+     integer(i64), intent(in) :: bBtm
 
-     integer(int64), intent(in) :: cTop
-     integer(int64), intent(in) :: cBtm
+     integer(i64), intent(in) :: cTop
+     integer(i64), intent(in) :: cBtm
 
-     integer(int64), intent(in) :: dTop
-     integer(int64), intent(in) :: dBtm
+     integer(i64), intent(in) :: dTop
+     integer(i64), intent(in) :: dBtm
 
-     integer(int64), intent(out) :: rTop
-     integer(int64), intent(out) :: rBtm
+     integer(i64), intent(out) :: rTop
+     integer(i64), intent(out) :: rBtm
 
 ! local variables
-     integer(int64) :: xTop
-     integer(int64) :: xBtm
+     integer(i64) :: xTop
+     integer(i64) :: xBtm
 
-     integer(int64) :: yTop
-     integer(int64) :: yBtm
+     integer(i64) :: yTop
+     integer(i64) :: yBtm
 
      xTop = ior(ishft(aTop, 8), ishft(aBtm, -56))
      xBtm = ishft(aBtm, 8)
@@ -489,14 +486,14 @@
      rBtm = ieor(aBtm, xBtm)
      rTop = ieor(aTop, xTop)
 
-     rBtm = ieor(rBtm, iand(ishft(bBtm, -11), 8667995624701935_int64))
-     rTop = ieor(rTop, iand(ishft(bTop, -11), 9007156306837503_int64))
+     rBtm = ieor(rBtm, iand(ishft(bBtm, -11), 8667995624701935_i64))
+     rTop = ieor(rTop, iand(ishft(bTop, -11), 9007156306837503_i64))
 
      rBtm = ieor(rBtm, yBtm)
      rTop = ieor(rTop, yTop)
 
-     rBtm = ieor(rBtm, ishft(iand(dBtm, 70364449226751_int64), 18))
-     rTop = ieor(rTop, ishft(iand(dTop, 70364449226751_int64), 18))
+     rBtm = ieor(rBtm, ishft(iand(dBtm, 70364449226751_i64), 18))
+     rTop = ieor(rTop, ishft(iand(dTop, 70364449226751_i64), 18))
 
      return
   end subroutine spring_sfmt_core
