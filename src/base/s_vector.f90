@@ -1,7 +1,6 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
 !!! program : s_linspace_d
-!!!           s_logspace_d
 !!!           s_linspace_z
 !!!           s_cumsum_i
 !!!           s_cumsum_d
@@ -35,7 +34,6 @@
 !! ------------------
 !!
 !! subroutine s_linspace_d(...)
-!! subroutine s_logspace_d(...)
 !! subroutine s_linspace_z(...)
 !!
 !! 2. sum of vector
@@ -101,32 +99,6 @@
 
      return
   end subroutine s_linspace_d
-
-!!>>> s_logspace_d: create a log mesh x in interval [xmin, xmax], real(dp) version
-  subroutine s_logspace_d(xmin, xmax, n, x)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! left boundary
-     real(dp), intent(in)  :: xmin
-
-! right boundary
-     real(dp), intent(in)  :: xmax
-
-! size of array x
-     integer,  intent(in)  :: n
-
-! output array, containing the linear mesh
-     real(dp), intent(out) :: x(n)
-
-! we can use the s_linspace_d() subroutine
-     call s_linspace_d(log10(xmin), log10(xmax), n, x)
-     x = 10.0_dp**x
-
-     return
-  end subroutine s_logspace_d
 
 !!>>> s_linspace_z: create a linear mesh x in interval [xmin, xmax], complex(dp) version
   subroutine s_linspace_z(xmin, xmax, n, x)
