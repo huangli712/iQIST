@@ -1,6 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : CSSL (Common Service Subroutines Library)
-!!! program : s_linspace_d
+!!! program : s_linspace_i
+!!!           s_linspace_d
 !!!           s_linspace_z
 !!!           s_cumsum_i
 !!!           s_cumsum_d
@@ -33,6 +34,7 @@
 !! 1. mesh generation
 !! ------------------
 !!
+!! subroutine s_linspace_i(...)
 !! subroutine s_linspace_d(...)
 !! subroutine s_linspace_z(...)
 !!
@@ -69,6 +71,36 @@
 !!========================================================================
 !!>>> mesh generation                                                  <<<
 !!========================================================================
+
+!!>>> s_linspace_i: create a linear mesh x in interval [xmin, xmax], integer version
+  subroutine s_linspace_i(xmin, xmax, n, x)
+     use constants, only : dp
+
+     implicit none
+
+! external arguments
+! left boundary
+     integer, intent(in)  :: xmin
+
+! right boundary
+     integer, intent(in)  :: xmax
+
+! size of array x
+     integer, intent(in)  :: n
+
+! output array, containing the linear mesh
+     integer, intent(out) :: x(n)
+
+! local variables
+! loop index
+     integer :: i
+
+     do i=1,n
+         x(i) = ( xmax - xmin ) * real(i - 1, dp) / real(n - 1, dp) + xmin
+     enddo ! over i={1,n} loop
+
+     return
+  end subroutine s_linspace_i
 
 !!>>> s_linspace_d: create a linear mesh x in interval [xmin, xmax], real(dp) version
   subroutine s_linspace_d(xmin, xmax, n, x)
