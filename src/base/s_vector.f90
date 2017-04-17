@@ -3,15 +3,9 @@
 !!! program : s_linspace_d
 !!!           s_logspace_d
 !!!           s_linspace_z
-!!!           s_sum_i
-!!!           s_sum_d
-!!!           s_sum_z
 !!!           s_cumsum_i
 !!!           s_cumsum_d
 !!!           s_cumsum_z
-!!!           s_prod_i
-!!!           s_prod_d
-!!!           s_prod_z
 !!!           s_cumprod_i
 !!!           s_cumprod_d
 !!!           s_cumprod_z
@@ -21,18 +15,13 @@
 !!!           s_mix_i
 !!!           s_mix_d
 !!!           s_mix_z
-!!!           s_legendre
-!!!           s_chebyshev
-!!!           s_sbessel
-!!!           s_bezier
 !!! source  : s_vector.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
-!!! purpose : these subroutines are designed for vectors or arrays. They
-!!!           can be used to manipulate grid and mesh, to generate the
-!!!           Legendre polynomial and Chebyshev polynomial, etc.
+!!!           04/17/2017 by li huang (last modified)
+!!! purpose : these subroutines are designed for vectors or arrays. they
+!!!           can be used to manipulate grid and mesh.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -52,20 +41,12 @@
 !! 2. sum of vector
 !! ----------------
 !!
-!! subroutine s_sum_i(...)
-!! subroutine s_sum_d(...)
-!! subroutine s_sum_z(...)
-!!
 !! subroutine s_cumsum_i(...)
 !! subroutine s_cumsum_d(...)
 !! subroutine s_cumsum_z(...)
 !!
 !! 3. product of vector
 !! --------------------
-!!
-!! subroutine s_prod_i(...)
-!! subroutine s_prod_d(...)
-!! subroutine s_prod_z(...)
 !!
 !! subroutine s_cumprod_i(...)
 !! subroutine s_cumprod_d(...)
@@ -84,22 +65,6 @@
 !! subroutine s_mix_i(...)
 !! subroutine s_mix_d(...)
 !! subroutine s_mix_z(...)
-!!
-!! 6. orthogonal polynomial
-!! ------------------------
-!!
-!! subroutine s_legendre(...)
-!! subroutine s_chebyshev(...)
-!!
-!! 7. spheric Bessel function
-!! --------------------------
-!!
-!! subroutine s_sbessel(...)
-!!
-!! 8. bernstein polynomial
-!! -----------------------
-!!
-!! subroutine s_bezier(...)
 !!
 !!
 
@@ -196,67 +161,6 @@
 !!========================================================================
 !!>>> sum operations                                                   <<<
 !!========================================================================
-
-!!>>> s_sum_i: return the sum of an integer array
-  subroutine s_sum_i(n, v, vsum)
-     implicit none
-
-! external arguments
-! size of array v
-     integer, intent(in)  :: n
-
-! sum of array v
-     integer, intent(out) :: vsum
-
-! input integer array
-     integer, intent(in)  :: v(n)
-
-     vsum = sum(v)
-
-     return
-  end subroutine s_sum_i
-
-!!>>> s_sum_d: return the sum of a real(dp) array
-  subroutine s_sum_d(n, v, vsum)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! size of array v
-     integer, intent(in)   :: n
-
-! sum of array v
-     real(dp), intent(out) :: vsum
-
-! input real(dp) array
-     real(dp), intent(in)  :: v(n)
-
-     vsum = sum(v)
-
-     return
-  end subroutine s_sum_d
-
-!!>>> s_sum_z: return the sum of a complex(dp) array
-  subroutine s_sum_z(n, v, vsum)
-     use constants, only : dp
-
-     implicit none
-
-! external arguments
-! size of array v
-     integer, intent(in)      :: n
-
-! sum of array v
-     complex(dp), intent(out) :: vsum
-
-! input complex(dp) array
-     complex(dp), intent(in)  :: v(n)
-
-     vsum = sum(v)
-
-     return
-  end subroutine s_sum_z
 
 !!>>> s_cumsum_i: return the cumsum of an integer array
   subroutine s_cumsum_i(n, v, vsum)

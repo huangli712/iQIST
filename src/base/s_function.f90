@@ -1,3 +1,86 @@
+!!!-----------------------------------------------------------------------
+!!! project : CSSL (Common Service Subroutines Library)
+!!! program : s_legendre
+!!!           s_chebyshev
+!!!           s_sbessel
+!!!           s_bezier
+!!! source  : s_vector.f90
+!!! type    : subroutines
+!!! author  : li huang (email:lihuang.dmft@gmail.com)
+!!! history : 07/10/2014 by li huang (created)
+!!!           08/17/2015 by li huang (last modified)
+!!! purpose : these subroutines are designed for vectors or arrays. They
+!!!           can be used to manipulate grid and mesh, to generate the
+!!!           Legendre polynomial and Chebyshev polynomial, etc.
+!!! status  : unstable
+!!! comment :
+!!!-----------------------------------------------------------------------
+
+!!
+!!
+!! Introduction
+!! ============
+!!
+!! 1. mesh generation
+!! ------------------
+!!
+!! subroutine s_linspace_d(...)
+!! subroutine s_logspace_d(...)
+!! subroutine s_linspace_z(...)
+!!
+!! 2. sum of vector
+!! ----------------
+!!
+!! subroutine s_sum_i(...)
+!! subroutine s_sum_d(...)
+!! subroutine s_sum_z(...)
+!!
+!! subroutine s_cumsum_i(...)
+!! subroutine s_cumsum_d(...)
+!! subroutine s_cumsum_z(...)
+!!
+!! 3. product of vector
+!! --------------------
+!!
+!! subroutine s_prod_i(...)
+!! subroutine s_prod_d(...)
+!! subroutine s_prod_z(...)
+!!
+!! subroutine s_cumprod_i(...)
+!! subroutine s_cumprod_d(...)
+!! subroutine s_cumprod_z(...)
+!!
+!! 4. swap two vectors
+!! -------------------
+!!
+!! subroutine s_swap_i(...)
+!! subroutine s_swap_d(...)
+!! subroutine s_swap_z(...)
+!!
+!! 5. linear mixing for vectors
+!! ----------------------------
+!!
+!! subroutine s_mix_i(...)
+!! subroutine s_mix_d(...)
+!! subroutine s_mix_z(...)
+!!
+!! 6. orthogonal polynomial
+!! ------------------------
+!!
+!! subroutine s_legendre(...)
+!! subroutine s_chebyshev(...)
+!!
+!! 7. spheric Bessel function
+!! --------------------------
+!!
+!! subroutine s_sbessel(...)
+!!
+!! 8. bernstein polynomial
+!! -----------------------
+!!
+!! subroutine s_bezier(...)
+!!
+!!
 
 !!========================================================================
 !!>>> Legendre and Chebyshev polynomials                               <<<
