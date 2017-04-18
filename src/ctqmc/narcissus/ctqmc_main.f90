@@ -31,10 +31,10 @@
 
 ! local variables
 ! loop index
-     integer :: iter
+     integer :: iter = 1
 
 ! convergence flag
-     logical :: convergence
+     logical :: conv = .false.
 
 ! initialize mpi envirnoment
 # if defined (MPI)
@@ -97,13 +97,12 @@
          call ctqmc_dmft_selfer()
 
 ! check convergence for dynamical mean field theory iteration
-         convergence = .false.
-         call ctqmc_dmft_conver(iter, convergence)
+         call ctqmc_dmft_conver(iter, conv)
 
 ! now convergence is achieved
-         if ( convergence .eqv. .true. ) then
+         if ( conv .eqv. .true. ) then
              EXIT DMFT_SC_CYCLE ! jump out the iteration
-         endif ! back if ( convergence .eqv. .true. ) block
+         endif ! back if ( conv .eqv. .true. ) block
 
      enddo DMFT_SC_CYCLE ! over iter={1,niter} loop
 
