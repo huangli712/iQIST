@@ -15,17 +15,17 @@
   PROGRAM CTQMC_MAIN !                                                 <<<
 !!========================================================================
 
-     use mmpi, only : mp_init
-     use mmpi, only : mp_finalize
-     use mmpi, only : mp_barrier
-     use mmpi, only : mp_comm_rank
-     use mmpi, only : mp_comm_size
+     use mmpi, only : mp_init       ! init mpi environment
+     use mmpi, only : mp_finalize   ! finalize mpi environment
+     use mmpi, only : mp_barrier    ! barrier to synchronize the data
+     use mmpi, only : mp_comm_rank  ! get index of current process
+     use mmpi, only : mp_comm_size  ! get number of processes
 
-     use control, only : isscf
-     use control, only : niter
-     use control, only : nprocs
-     use control, only : myid
-     use control, only : master
+     use control, only : isscf      ! self-consistent calculation mode
+     use control, only : niter      ! number of self-consistent iteration
+     use control, only : nprocs     ! number of processes
+     use control, only : myid       ! index of current process
+     use control, only : master     ! index of master process
 
      implicit none
 
@@ -81,7 +81,7 @@
 ! it is suitable for local density approximation plus dynamical mean field
 ! theory calculation
 !-------------------------------------------------------------------------
-     if ( isscf == 1 .and. isbin == 1 ) then
+     if ( isscf == 1 ) then
 
 ! set the iter number
          iter = niter
@@ -95,7 +95,7 @@
 ! build the impurity green's function and self-energy function
          call ctqmc_impurity_solver(iter)
 
-     endif ! back if ( isscf == 1 .and. isbin == 1 ) block
+     endif ! back if ( isscf == 1 ) block
 
 !-------------------------------------------------------------------------
 ! case B: self-consistent mode
@@ -103,13 +103,10 @@
 ! it is suitable for lattice model hamiltonian plus dynamical mean field
 ! theory calculation
 !-------------------------------------------------------------------------
+     if ( isscf == 2 ) then
+
      DMFT_CTQMC_ITERATION: &
      do iter=1,niter
-
-! check the running mode
-         if ( isscf == 1 ) then
-             EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif ! back if ( isscf == 1 ) block
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
@@ -135,25 +132,7 @@
 
      enddo DMFT_CTQMC_ITERATION ! over iter={1,niter} loop
 
-!-------------------------------------------------------------------------
-! case C: binner mode
-!-------------------------------------------------------------------------
-! perform quantum Monte Carlo data binning
-!-------------------------------------------------------------------------
-     if ( isbin == 2 ) then
-
-! set the iter number
-         iter = 999
-
-! write the iter to screen
-         if ( myid == master ) then ! only master node can do it
-             call ctqmc_print_it_info(iter)
-         endif ! back if ( myid == master ) block
-
-! accumulate the quantum Monte Carlo data
-         call ctqmc_impurity_solver(iter)
-
-     endif ! back if ( isbin == 2 ) block
+     endif ! back if ( isscf == 2 ) block
 
 !!========================================================================
 !!>>> DMFT ITERATION END                                               <<<
