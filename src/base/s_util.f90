@@ -17,7 +17,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to provide some useful facilities
 !!!           including string manipulation, date time information, etc.
 !!! status  : unstable
@@ -73,7 +73,11 @@
 !!>>> assertion checker                                                <<<
 !!========================================================================
 
-!!>>> s_assert: fortran version of assert
+!!
+!! @sub s_assert
+!!
+!! fortran version of assert
+!!
   subroutine s_assert(condition)
      implicit none
 
@@ -89,8 +93,12 @@
      return
   end subroutine s_assert
 
-!!>>> s_assert2: fortran version of assert, additional message will be
-!!>>> presented for further analysis
+!!
+!! @sub s_assert2
+!!
+!! fortran version of assert, additional message will be presented for
+!! further analysis
+!!
   subroutine s_assert2(condition, message)
      implicit none
 
@@ -113,8 +121,11 @@
 !!>>> sort algorithm                                                   <<<
 !!========================================================================
 
-!!>>> s_sorter: using bubble sort algorithm to sort a real dataset, the
-!!>>> slowest algorithm
+!!
+!! @sub s_sorter
+!!
+!! using bubble algorithm to sort a real dataset, it is the slowest
+!!
   subroutine s_sorter(nsize, list)
      use constants, only : dp
 
@@ -153,8 +164,12 @@
      return
   end subroutine s_sorter
 
-!!>>> s_sorter2: using bubble sort algorithm to sort a real list and its
-!!>>> index according to the descending order of the list
+!!
+!! @sub s_sorter2
+!!
+!! using bubble algorithm to sort a real list and its index according to
+!! the descending order of the list
+!!
   subroutine s_sorter2(nsize, list, indx)
      use constants, only : dp
 
@@ -198,7 +213,11 @@
      return
   end subroutine s_sorter2
 
-!!>>> s_qsorter: sets up for the quick sort recursive method
+!!
+!! @sub s_qsorter
+!!
+!! sets up for the quick sort recursive method
+!!
   subroutine s_qsorter(nsize, list)
      use constants, only : dp
 
@@ -217,9 +236,12 @@
      return
   end subroutine s_qsorter
 
-!!>>> s_qscorer: this is the actually recursive portion of the
-!!>>> quicksort algorithm
-!!>>> note: do not call it directly, please use s_qsorter() insteadly
+!!
+!! @sub s_qscorer
+!!
+!! this is the actually recursive portion of the quicksort algorithm,
+!! do not call it directly, please use s_qsorter() insteadly
+!!
   recursive &
   subroutine s_qscorer(pstart, pend, nsize, list)
      use constants, only : dp
@@ -306,7 +328,11 @@
 !!>>> combination algebra                                              <<<
 !!========================================================================
 
-!!>>> s_combination: calculate combination algebra
+!!
+!! @sub s_combination
+!!
+!! calculate combination algebra
+!!
   subroutine s_combination(ntiny, nlarg, value)
      use constants, only : dp, one
 
@@ -360,7 +386,11 @@
 !!>>> string manipulation                                              <<<
 !!========================================================================
 
-!!>>> s_str_upcase: returns string 's' in uppercase
+!!
+!! @sub s_str_upcase
+!!
+!! returns string 's' in uppercase
+!!
   subroutine s_str_upcase(s)
      implicit none
 
@@ -387,7 +417,11 @@
      return
   end subroutine s_str_upcase
 
-!!>>> s_str_lowcase: returns string 's' in lowercase
+!!
+!! @sub s_str_lowcase
+!!
+!! returns string 's' in lowercase
+!!
   subroutine s_str_lowcase(s)
      implicit none
 
@@ -414,7 +448,11 @@
      return
   end subroutine s_str_lowcase
 
-!!>>> s_str_count: return the number of times a substring occurs
+!!
+!! @sub s_str_count
+!!
+!! return the number of times a substring occurs
+!!
   subroutine s_str_count(string, substr, count)
      implicit none
 
@@ -445,8 +483,12 @@
      return
   end subroutine s_str_count
 
-!!>>> s_str_compress: return a copy of an input string with all whitespace
-!!>>> (spaces and tabs) removed.
+!!
+!! @sub s_str_compress
+!!
+!! return a copy of an input string with all whitespace (spaces and tabs)
+!! is removed
+!!
   subroutine s_str_compress(string)
      implicit none
 
@@ -512,8 +554,11 @@
 !!>>> date and time manipulation                                       <<<
 !!========================================================================
 
-!!>>> s_time_builder: returns a string containing date and time in human
-!!>>> readable format
+!!
+!! @sub s_time_builder
+!!
+!! returns a string containing date and time in human readable format
+!!
   subroutine s_time_builder(date_time_string)
      implicit none
 
@@ -553,8 +598,12 @@
      return
   end subroutine s_time_builder
 
-!!>>> s_time_analyzer: used to print the iteration timing information about
-!!>>> continuous time quantum Monte Carlo quantum impurity solver.
+!!
+!! @sub s_time_analyzer
+!!
+!! used to print the iteration timing information about continuous time
+!! quantum Monte Carlo quantum impurity solver
+!!
   subroutine s_time_analyzer(time_iter, time_niter)
      use constants, only : dp, mystd
 
