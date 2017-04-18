@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to do fast fourier transformation
 !!!           for green's or hybridization functions.
 !!! status  : unstable
@@ -35,7 +35,11 @@
 !!
 !!
 
-!!>>> s_fft_tails: calculate high frequency tails using K. Haule's trick
+!!
+!! @sub s_fft_tails
+!!
+!! calculate high frequency tails using K. Haule's trick
+!!
   subroutine s_fft_tails(rtail, mfreq, rmesh, green)
      use constants, only : dp, zero, one
 
@@ -86,8 +90,12 @@
      return
   end subroutine s_fft_tails
 
-!!>>> s_fft_forward: fourier from imaginary time space forward to
-!!>>> matsubara frequency space using linear fourier algorithm
+!!
+!! @sub s_fft_forward
+!!
+!! fourier from imaginary time space forward to matsubara frequency space
+!! using linear fourier algorithm
+!!
   subroutine s_fft_forward(ntime, tmesh, ftau, mfreq, rmesh, fmat)
      use constants, only : dp, zero
 
@@ -146,8 +154,11 @@
      return
   end subroutine s_fft_forward
 
-!!>>> s_fft_backward: fourier from matsubara frequency space backward to
-!!>>> imaginary time space
+!!
+!! @sub s_fft_backward
+!!
+!! fourier from matsubara frequency space backward to imaginary time space
+!!
   subroutine s_fft_backward(mfreq, rmesh, fmat, ntime, tmesh, ftau, beta)
      use constants, only : dp, zero, two, half, pi
 
