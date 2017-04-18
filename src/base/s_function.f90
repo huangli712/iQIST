@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           04/17/2017 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to generate some auxiliary
 !!!           functions, such as the Legendre orthogonal polynomial and
 !!!           Chebyshev orthogonal polynomial, Bessel function, etc.
@@ -43,7 +43,11 @@
 !!>>> Legendre and Chebyshev polynomials                               <<<
 !!========================================================================
 
-!!>>> s_legendre: build legendre polynomial in [-1,1]
+!!
+!! @sub s_legendre
+!!
+!! build legendre polynomial in [-1,1]
+!!
   subroutine s_legendre(lemax, legrd, pmesh, ppleg)
      use constants, only : dp, one
 
@@ -90,8 +94,11 @@
      return
   end subroutine s_legendre
 
-!!>>> s_chebyshev: build chebyshev polynomial in [-1,1]
-!!>>> note: it is the second kind chebyshev polynomial
+!!
+!! @sub s_chebyshev
+!!
+!! build the second kind chebyshev polynomial in [-1,1]
+!!
   subroutine s_chebyshev(chmax, chgrd, qmesh, qqche)
      use constants, only : dp, one, two
 
@@ -140,8 +147,12 @@
 !!>>> spherical Bessel functions                                       <<<
 !!========================================================================
 
-!!>>> s_sbessel: computes the spherical Bessel functions of the first
-!!>>> kind, j_l(x), for argument x and l=0,1,\ldots,l_{max}.
+!!
+!! @sub s_sbessel
+!!
+!! computes the spherical Bessel functions of the first kind, j_l(x), for
+!! argument x and l=0,1,\ldots,l_{max}.
+!!
   subroutine s_sbessel(lmax, x, jl)
      use constants, only : dp, zero, one, two, eps8
 
@@ -267,7 +278,11 @@
 !!>>> Bernstein polynomials                                            <<<
 !!========================================================================
 
-!!>>> s_bezier: to evaluates the bernstein polynomials at a point x
+!!
+!! @sub s_bezier
+!!
+!! to evaluates the bernstein polynomials at a point x
+!!
   subroutine s_bezier(n, x, bern)
      use constants, only : dp, one
 
