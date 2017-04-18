@@ -18,8 +18,9 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_setup_param: setup key parameters for continuous time quantum Monte
-!!>>> Carlo quantum impurity solver and dynamical mean field theory kernel
+!!>>> @ctqmc_setup_param
+!!>>> setup key parameters for continuous time quantum Monte Carlo quantum
+!!>>> impurity solver and dynamical mean field theory kernel
   subroutine ctqmc_setup_param()
      use parser, only : p_create, p_parse, p_get, p_destroy
      use mmpi, only : mp_bcast, mp_barrier
