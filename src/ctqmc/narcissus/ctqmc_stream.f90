@@ -1,8 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
-!!! program : ctqmc_config
+!!! program : ctqmc_setup_param
 !!!           ctqmc_setup_array
-!!!           ctqmc_selfer_init
+!!!           ctqmc_setup_model
 !!!           ctqmc_solver_init
 !!!           ctqmc_final_array
 !!! source  : ctqmc_stream.f90
@@ -18,9 +18,9 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_config: setup key parameters for continuous time quantum Monte
+!!>>> ctqmc_setup_param: setup key parameters for continuous time quantum Monte
 !!>>> Carlo quantum impurity solver and dynamical mean field theory kernel
-  subroutine ctqmc_config()
+  subroutine ctqmc_setup_param()
      use parser, only : p_create, p_parse, p_get, p_destroy
      use mmpi, only : mp_bcast, mp_barrier
 
@@ -226,7 +226,7 @@
 # endif  /* MPI */
 
      return
-  end subroutine ctqmc_config
+  end subroutine ctqmc_setup_param
 
 !!>>> ctqmc_setup_array: allocate memory for global variables and then
 !!>>> initialize them
