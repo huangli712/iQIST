@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           01/30/2017 by li huang (last modified)
+!!!           04/18/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -229,8 +229,8 @@
      return
   end subroutine ctqmc_setup_param
 
-!!>>> ctqmc_setup_array: allocate memory for global variables and then
-!!>>> initialize them
+!!>>> @ctqmc_setup_array
+!!>>> allocate memory for global variables and then initialize them
   subroutine ctqmc_setup_array()
      use context ! ALL
 
