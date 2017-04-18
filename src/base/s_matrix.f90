@@ -42,7 +42,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to encapsulate some important and
 !!!           frequently used linear algebra operations.
 !!! status  : unstable
@@ -154,7 +154,11 @@
 !!>>> matrix construction: build zeros/ones/any matrix                 <<<
 !!========================================================================
 
-!!>>> s_zeros_i: build an integer matrix with all elements are zero
+!!
+!! @sub s_zeros_i
+!!
+!! build an integer matrix with all elements are zero
+!!
   subroutine s_zeros_i(n, A)
      implicit none
 
@@ -170,7 +174,11 @@
      return
   end subroutine s_zeros_i
 
-!!>>> s_zeros_d: build a real(dp) matrix with all elements are zero
+!!
+!! @sub s_zeros_d
+!!
+!! build a real(dp) matrix with all elements are zero
+!!
   subroutine s_zeros_d(n, A)
      use constants, only : dp, zero
 
@@ -188,7 +196,11 @@
      return
   end subroutine s_zeros_d
 
-!!>>> s_zeros_z: build a complex(dp) matrix with all elements are zero
+!!
+!! @sub s_zeros_z
+!!
+!! build a complex(dp) matrix with all elements are zero
+!!
   subroutine s_zeros_z(n, A)
      use constants, only : dp, czero
 
@@ -206,7 +218,11 @@
      return
   end subroutine s_zeros_z
 
-!!>>> s_ones_i: build an integer matrix with all elements are one
+!!
+!! @sub s_ones_i
+!!
+!! build an integer matrix with all elements are one
+!!
   subroutine s_ones_i(n, A)
      implicit none
 
@@ -222,7 +238,11 @@
      return
   end subroutine s_ones_i
 
-!!>>> s_ones_d: build a real(dp) matrix with all elements are one
+!!
+!! @sub s_ones_d
+!!
+!! build a real(dp) matrix with all elements are one
+!!
   subroutine s_ones_d(n, A)
      use constants, only : dp, one
 
@@ -240,7 +260,11 @@
      return
   end subroutine s_ones_d
 
-!!>>> s_ones_z: build a complex(dp) matrix with all elements are one
+!!
+!! @sub s_ones_z
+!!
+!! build a complex(dp) matrix with all elements are one
+!!
   subroutine s_ones_z(n, A)
      use constants, only : dp, cone
 
@@ -258,7 +282,11 @@
      return
   end subroutine s_ones_z
 
-!!>>> s_any_i: build an integer matrix with all elements are given by i
+!!
+!! @sub s_any_i
+!!
+!! build an integer matrix with all elements are given by i
+!!
   subroutine s_any_i(n, i, A)
      implicit none
 
@@ -277,7 +305,11 @@
      return
   end subroutine s_any_i
 
-!!>>> s_any_d: build a real(dp) matrix with all elements are given by d
+!!
+!! @sub s_any_d
+!!
+!! build a real(dp) matrix with all elements are given by d
+!!
   subroutine s_any_d(n, d, A)
      use constants, only : dp
 
@@ -298,7 +330,11 @@
      return
   end subroutine s_any_d
 
-!!>>> s_any_z: build a complex(dp) matrix with all elements are given by z
+!!
+!! @sub s_any_z
+!!
+!! build a complex(dp) matrix with all elements are given by z
+!!
   subroutine s_any_z(n, z, A)
      use constants, only : dp
 
@@ -323,7 +359,11 @@
 !!>>> matrix construction: build diagonal matrix                       <<<
 !!========================================================================
 
-!!>>> s_eye_i: build integer matrix with ones on the diagonal and zeros elsewhere.
+!!
+!! @sub s_eye_i
+!!
+!! build integer matrix with ones on the diagonal and zeros elsewhere
+!!
   subroutine s_eye_i(n, k, A)
      implicit none
 
@@ -351,7 +391,11 @@
      return
   end subroutine s_eye_i
 
-!!>>> s_eye_d: build real(dp) matrix with ones on the diagonal and zeros elsewhere.
+!!
+!! @sub s_eye_d
+!!
+!! build real(dp) matrix with ones on the diagonal and zeros elsewhere
+!!
   subroutine s_eye_d(n, k, A)
      use constants, only : dp, zero, one
 
@@ -381,7 +425,11 @@
      return
   end subroutine s_eye_d
 
-!!>>> s_eye_z: build complex(dp) matrix with ones on the diagonal and zeros elsewhere.
+!!
+!! @sub s_eye_z
+!!
+!! build complex(dp) matrix with ones on the diagonal and zeros elsewhere
+!!
   subroutine s_eye_z(n, k, A)
      use constants, only : dp, czero, cone
 
@@ -411,7 +459,11 @@
      return
   end subroutine s_eye_z
 
-!!>>> s_identity_i: build integer identity matrix
+!!
+!! @sub s_identity_i
+!!
+!! build integer identity matrix
+!!
   subroutine s_identity_i(n, A)
      implicit none
 
@@ -434,7 +486,11 @@
      return
   end subroutine s_identity_i
 
-!!>>> s_identity_d: build real(dp) identity matrix
+!!
+!! @sub s_identity_d
+!!
+!! build real(dp) identity matrix
+!!
   subroutine s_identity_d(n, A)
      use constants, only : dp, zero, one
 
@@ -459,7 +515,11 @@
      return
   end subroutine s_identity_d
 
-!!>>> s_identity_z: build complex(dp) identity matrix
+!!
+!! @sub s_identity_z
+!!
+!! build complex(dp) identity matrix
+!!
   subroutine s_identity_z(n, A)
      use constants, only : dp, czero, cone
 
@@ -484,7 +544,11 @@
      return
   end subroutine s_identity_z
 
-!!>>> s_diag_i: build integer diagonal matrix from a vector
+!!
+!! @sub s_diag_i
+!!
+!! build integer diagonal matrix from a vector
+!!
   subroutine s_diag_i(n, v, A)
      implicit none
 
@@ -510,7 +574,11 @@
      return
   end subroutine s_diag_i
 
-!!>>> s_diag_d: build real(dp) diagonal matrix from a vector
+!!
+!! @sub s_diag_d
+!!
+!! build real(dp) diagonal matrix from a vector
+!!
   subroutine s_diag_d(n, v, A)
      use constants, only : dp, zero
 
@@ -538,7 +606,11 @@
      return
   end subroutine s_diag_d
 
-!!>>> s_diag_z: build complex(dp) diagonal matrix from a vector
+!!
+!! @sub s_diag_z
+!!
+!! build complex(dp) diagonal matrix from a vector
+!!
   subroutine s_diag_z(n, v, A)
      use constants, only : dp, czero
 
@@ -570,7 +642,11 @@
 !!>>> matrix query: return matrix's trace or determinant               <<<
 !!========================================================================
 
-!!>>> s_trace_d: return trace for a real(dp) array
+!!
+!! @sub s_trace_d
+!!
+!! return trace for a real(dp) array
+!!
   subroutine s_trace_d(n, A, tr)
      use constants, only : dp, zero
 
@@ -598,7 +674,11 @@
      return
   end subroutine s_trace_d
 
-!!>>> s_trace_z: return trace for a complex(dp) array
+!!
+!! @sub s_trace_z
+!!
+!! return trace for a complex(dp) array
+!!
   subroutine s_trace_z(n, A, tr)
      use constants, only : dp, czero
 
@@ -626,7 +706,11 @@
      return
   end subroutine s_trace_z
 
-!!>>> s_det_d: calculate the determinant of a real(dp) matrix
+!!
+!! @sub s_det_d
+!!
+!! calculate the determinant of a real(dp) matrix
+!!
   subroutine s_det_d(ndim, dmat, ddet)
      use constants, only : dp, one, cone
 
@@ -742,7 +826,11 @@
      return
   end subroutine s_det_d
 
-!!>>> s_det_z: calculate the determinant of a complex(dp) matrix
+!!
+!! @sub s_det_z
+!!
+!! calculate the determinant of a complex(dp) matrix
+!!
   subroutine s_det_z(ndim, zmat, zdet)
      use constants, only : dp, cone
 
@@ -802,7 +890,11 @@
 !!>>> matrix manipulation: calculate matrix's inversion                <<<
 !!========================================================================
 
-!!>>> s_inv_d: invert real(dp) matrix using lapack subroutines
+!!
+!! @sub s_inv_d
+!!
+!! invert real(dp) matrix using lapack subroutines
+!!
   subroutine s_inv_d(ndim, dmat)
      use constants, only : dp
 
@@ -852,7 +944,11 @@
      return
   end subroutine s_inv_d
 
-!!>>> s_inv_z: invert complex(dp) matrix using lapack subroutines
+!!
+!! @sub s_inv_z
+!!
+!! invert complex(dp) matrix using lapack subroutines
+!!
   subroutine s_inv_z(ndim, zmat)
      use constants, only : dp
 
@@ -906,8 +1002,12 @@
 !!>>> matrix manipulation: solve eigenvalues and eigenvectors problem  <<<
 !!========================================================================
 
-!!>>> s_eig_dg: diagonalize a general real(dp) matrix and return eigenvalues
-!!>>> and eigenvectors
+!!
+!! @sub s_eig_dg
+!!
+!! diagonalize a general real(dp) matrix and return its eigenvalues and
+!! eigenvectors
+!!
   subroutine s_eig_dg(ldim, ndim, amat, eval, evec)
      use constants, only : dp, zero
 
@@ -989,8 +1089,12 @@
      return
   end subroutine s_eig_dg
 
-!!>>> s_eig_zg: diagonalize a general complex(dp) matrix and return eigenvalues
-!!>>> and eigenvectors
+!!
+!! @sub s_eig_zg
+!!
+!! diagonalize a general complex(dp) matrix and return its eigenvalues
+!! and eigenvectors
+!!
   subroutine s_eig_zg(ldim, ndim, zmat, zeig, zvec)
      use constants, only : dp, czero
 
@@ -1068,7 +1172,11 @@
      return
   end subroutine s_eig_zg
 
-!!>>> s_eigvals_dg: diagonalize a general real(dp) matrix and return eigenvalues only
+!!
+!! @sub s_eigvals_dg
+!!
+!! diagonalize a general real(dp) matrix and return its eigenvalues only
+!!
   subroutine s_eigvals_dg(ldim, ndim, amat, eval)
      use constants, only : dp, zero
 
@@ -1151,7 +1259,11 @@
      return
   end subroutine s_eigvals_dg
 
-!!>>> s_eigvals_zg: diagonalize a general complex(dp) matrix and return eigenvalues only
+!!
+!! @sub s_eigvals_zg
+!!
+!! diagonalize a general complex(dp) matrix and return its eigenvalues only
+!!
   subroutine s_eigvals_zg(ldim, ndim, zmat, zeig)
      use constants, only : dp, czero
 
@@ -1228,7 +1340,11 @@
      return
   end subroutine s_eigvals_zg
 
-!!>>> s_eig_sy: computes all eigenvalues and eigenvectors of real symmetric matrix
+!!
+!! @sub s_eig_sy
+!!
+!! computes all eigenvalues and eigenvectors of real symmetric matrix
+!!
   subroutine s_eig_sy(ldim, ndim, amat, eval, evec)
      use constants, only : dp, zero
 
@@ -1290,7 +1406,11 @@
      return
   end subroutine s_eig_sy
 
-!!>>> s_eig_he: computes all eigenvalues and eigenvectors of complex Hermitian matrix
+!!
+!! @sub s_eig_he
+!!
+!! computes all eigenvalues and eigenvectors of complex Hermitian matrix
+!!
   subroutine s_eig_he(ldim, ndim, amat, eval, evec)
      use constants, only : dp, zero
 
@@ -1358,7 +1478,11 @@
      return
   end subroutine s_eig_he
 
-!!>>> s_eigvals_sy: computes all eigenvalues of real symmetric matrix
+!!
+!! @sub s_eigvals_sy
+!!
+!! computes all eigenvalues of real symmetric matrix
+!!
   subroutine s_eigvals_sy(ldim, ndim, amat, eval)
      use constants, only : dp, zero
 
@@ -1422,7 +1546,11 @@
      return
   end subroutine s_eigvals_sy
 
-!!>>> s_eigvals_he: computes all eigenvalues of complex Hermitian matrix
+!!
+!! @sub s_eigvals_he
+!!
+!! computes all eigenvalues of complex Hermitian matrix
+!!
   subroutine s_eigvals_he(ldim, ndim, amat, eval)
      use constants, only : dp, zero
 
@@ -1496,7 +1624,11 @@
 !!>>> matrix manipulation: solve linear equations                      <<<
 !!========================================================================
 
-!!>>> s_solve_dg: solve linear system AX = B, real(dp) general version
+!!
+!! @sub s_solve_dg
+!!
+!! solve linear system AX = B, real(dp) general version
+!!
   subroutine s_solve_dg(n, nrhs, A, B)
      use constants, only : dp
 
@@ -1547,7 +1679,11 @@
      return
   end subroutine s_solve_dg
 
-!!>>> s_solve_zg: solve linear system AX = B, complex(dp) general version
+!!
+!! @sub s_solve_zg
+!!
+!! solve linear system AX = B, complex(dp) general version
+!!
   subroutine s_solve_zg(n, nrhs, A, B)
      use constants, only : dp
 
@@ -1598,7 +1734,11 @@
      return
   end subroutine s_solve_zg
 
-!!>>> s_solve_sy: solve linear system AX = B, real(dp) symmetric version
+!!
+!! @sub s_solve_sy
+!!
+!! solve linear system AX = B, real(dp) symmetric version
+!!
   subroutine s_solve_sy(n, nrhs, A, B)
      use constants, only : dp
 
@@ -1654,7 +1794,11 @@
      return
   end subroutine s_solve_sy
 
-!!>>> s_solve_he: solve linear system AX = B, complex(dp) Hermitian version
+!!
+!! @sub s_solve_he
+!!
+!! solve linear system AX = B, complex(dp) Hermitian version
+!!
   subroutine s_solve_he(n, nrhs, A, B)
      use constants, only : dp
 
@@ -1714,9 +1858,13 @@
 !!>>> matrix manipulation: singular values decomposition               <<<
 !!========================================================================
 
-!!>>> s_svd_dg: perform the singular values decomposition for a general
-!!>>> real(dp) m-by-n matrix A, where A = U * SIGMA * transpose(V), return
-!!>>> its left vectors, right vectors, and singular values
+!!
+!! @sub s_svd_dg
+!!
+!! perform the singular values decomposition for a general real(dp) m-by-n
+!! matrix A, where A = U * SIGMA * transpose(V), return its left vectors,
+!! right vectors, and singular values
+!!
   subroutine s_svd_dg(m, n, min_mn, amat, umat, svec, vmat)
      use constants, only : dp
  
@@ -1780,9 +1928,13 @@
      return
   end subroutine s_svd_dg
 
-!!>>> s_svd_zg: perform the singular values decomposition for a general
-!!>>> complex(dp) m-by-n matrix A, where A = U * SIGMA * conjugate-transpose(V),
-!!>>> return its left vectors, right vectors, and singular values
+!!
+!! @sub s_svd_zg
+!!
+!! perform the singular values decomposition for a general complex(dp)
+!! m-by-n matrix A, where A = U * SIGMA * conjugate-transpose(V), return
+!! its left vectors, right vectors, and singular values
+!!
   subroutine s_svd_zg(m, n, min_mn, amat, umat, svec, vmat)
      use constants, only : dp
  
