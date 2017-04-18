@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           03/28/2017 by li huang (last modified)
+!!!           04/18/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -25,7 +25,9 @@
      use constants, only : mystd
 
      use version, only : FULL_VER
-     use version, only : AUTH_STR, MAIL_STR, GPL3_STR
+     use version, only : AUTH_VER
+     use version, only : MAIL_VER
+     use version, only : GPL3_VER
 
      use control, only : cname
      use control, only : nprocs
@@ -44,9 +46,9 @@
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'Version: '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop: '//AUTH_STR
-     write(mystd,'(2X,a)') 'Support: '//MAIL_STR
-     write(mystd,'(2X,a)') 'License: '//GPL3_STR
+     write(mystd,'(2X,a)') 'Develop: '//AUTH_VER
+     write(mystd,'(2X,a)') 'Support: '//MAIL_VER
+     write(mystd,'(2X,a)') 'License: '//GPL3_VER
      write(mystd,*)
 
      write(mystd,'(2X,a)') cname//' >>> start running at '//date_time_string
