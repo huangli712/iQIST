@@ -75,7 +75,7 @@
 !!>>> DMFT ITERATION BEGIN                                             <<<
 !!========================================================================
 
-     DMFT_CTQMC_ITERATION: &
+     DMFT_SC_CYCLE: &
      do iter=1,niter
 
 ! write the iter to screen
@@ -87,6 +87,11 @@
 ! build the impurity green's function and self-energy function
          call ctqmc_impurity_solver(iter)
 
+! check the self-consistent mode
+         if ( isscf == 1 ) then
+             EXIT DMFT_SC_CYCLE ! jump out the iteration
+         endif ! back if ( isscf == 1 ) block
+
 ! call the self-consistent engine for dynamical mean field theory, to build
 ! the bath weiss's function and hybridization function
          call ctqmc_dmft_selfer()
@@ -97,10 +102,10 @@
 
 ! now convergence is achieved
          if ( convergence .eqv. .true. ) then
-             EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
+             EXIT DMFT_SC_CYCLE ! jump out the iteration
          endif ! back if ( convergence .eqv. .true. ) block
 
-     enddo DMFT_CTQMC_ITERATION ! over iter={1,niter} loop
+     enddo DMFT_SC_CYCLE ! over iter={1,niter} loop
 
 !!========================================================================
 !!>>> DMFT ITERATION END                                               <<<
