@@ -6,7 +6,7 @@
 !!! type    : functions
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/20/2014 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to do numerical integration with
 !!!           composite trapezoid or composite simpson algorithms.
 !!! status  : unstable
@@ -56,7 +56,11 @@
 !!
 !!
 
-!!>>> s_int_trapezoid: numerical integration with trapezoid algorithm
+!!
+!! @fun s_int_trapezoid
+!!
+!! numerical integration with trapezoid algorithm
+!!
   function s_int_trapezoid(f, a, b, n) result(val)
      use constants, only : dp, zero, two
 
@@ -101,7 +105,11 @@
      return
   end function s_int_trapezoid
 
-!!>>> s_int_simpson: numerical integration with simpson algorithm
+!!
+!! @fun s_int_simpson
+!!
+!! numerical integration with simpson algorithm
+!!
   function s_int_simpson(f, a, b, n) result(val)
      use constants, only : dp, zero
 
