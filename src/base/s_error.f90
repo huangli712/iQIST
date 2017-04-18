@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to display the (error/exception/
 !!!           normal) messages in the console, and then STOP or CONTINUE
 !!!           the code according to the error level.
@@ -39,7 +39,11 @@
 !!
 !!
 
-!!>>> s_print_error: print the error information and STOP the program
+!!
+!! @sub s_print_error
+!!
+!! print the error information and STOP the program
+!!
   subroutine s_print_error(sub, msg)
      implicit none
 
@@ -61,7 +65,11 @@
      return
   end subroutine s_print_error
 
-!!>>> s_write_error: write the error information and STOP the program
+!!
+!! @sub s_write_error
+!!
+!! write the error information and STOP the program
+!!
   subroutine s_write_error(sub, msg, file_unit)
      implicit none
 
@@ -86,7 +94,11 @@
      return
   end subroutine s_write_error
 
-!!>>> s_print_exception: print normal runtime exceptional information, and continue
+!!
+!! @sub s_print_exception
+!!
+!! print normal runtime exceptional information, and continue
+!!
   subroutine s_print_exception(sub, msg)
      implicit none
 
@@ -108,7 +120,11 @@
      return
   end subroutine s_print_exception
 
-!!>>> s_write_exception: write normal runtime exceptional information, and continue
+!!
+!! @sub s_write_exception
+!!
+!! write normal runtime exceptional information, and continue
+!!
   subroutine s_write_exception(sub, msg, file_unit)
      implicit none
 
@@ -133,7 +149,11 @@
      return
   end subroutine s_write_exception
 
-!!>>> s_print_message: print normal runtime message to the console
+!!
+!! @sub s_print_message
+!!
+!! print normal runtime message to the console
+!!
   subroutine s_print_message(sub, msg)
      implicit none
 
@@ -150,7 +170,11 @@
      return
   end subroutine s_print_message
 
-!!>>> s_write_message: write normal runtime message to the console
+!!
+!! @sub s_write_message
+!!
+!! write normal runtime message to the console
+!!
   subroutine s_write_message(sub, msg, file_unit)
      implicit none
 
