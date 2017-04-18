@@ -15,17 +15,17 @@
   PROGRAM CTQMC_MAIN !                                                 <<<
 !!========================================================================
 
-     use mmpi, only : mp_init       ! init mpi environment
-     use mmpi, only : mp_finalize   ! finalize mpi environment
-     use mmpi, only : mp_barrier    ! barrier to synchronize the data
-     use mmpi, only : mp_comm_rank  ! get index of current process
-     use mmpi, only : mp_comm_size  ! get number of processes
+     use mmpi, only : mp_init      ! init mpi environment
+     use mmpi, only : mp_finalize  ! finalize mpi environment
+     use mmpi, only : mp_barrier   ! barrier to synchronize the data
+     use mmpi, only : mp_comm_rank ! get index of current process
+     use mmpi, only : mp_comm_size ! get number of processes
 
-     use control, only : isscf      ! self-consistent calculation mode
-     use control, only : niter      ! number of self-consistent iteration
-     use control, only : nprocs     ! number of processes
-     use control, only : myid       ! index of current process
-     use control, only : master     ! index of master process
+     use control, only : isscf     ! self-consistent calculation mode
+     use control, only : niter     ! number of self-consistent iteration
+     use control, only : nprocs    ! number of processes
+     use control, only : myid      ! index of current process
+     use control, only : master    ! index of master process
 
      implicit none
 
@@ -75,36 +75,6 @@
 !!>>> DMFT ITERATION BEGIN                                             <<<
 !!========================================================================
 
-!-------------------------------------------------------------------------
-! case A: one-shot non-self-consistent mode
-!-------------------------------------------------------------------------
-! it is suitable for local density approximation plus dynamical mean field
-! theory calculation
-!-------------------------------------------------------------------------
-     if ( isscf == 1 ) then
-
-! set the iter number
-         iter = niter
-
-! write the iter to screen
-         if ( myid == master ) then ! only master node can do it
-             call ctqmc_print_it_info(iter)
-         endif ! back if ( myid == master ) block
-
-! call the continuous time quantum Monte Carlo quantum impurity solver, to
-! build the impurity green's function and self-energy function
-         call ctqmc_impurity_solver(iter)
-
-     endif ! back if ( isscf == 1 ) block
-
-!-------------------------------------------------------------------------
-! case B: self-consistent mode
-!-------------------------------------------------------------------------
-! it is suitable for lattice model hamiltonian plus dynamical mean field
-! theory calculation
-!-------------------------------------------------------------------------
-     if ( isscf == 2 ) then
-
      DMFT_CTQMC_ITERATION: &
      do iter=1,niter
 
@@ -131,8 +101,6 @@
          endif ! back if ( convergence .eqv. .true. ) block
 
      enddo DMFT_CTQMC_ITERATION ! over iter={1,niter} loop
-
-     endif ! back if ( isscf == 2 ) block
 
 !!========================================================================
 !!>>> DMFT ITERATION END                                               <<<
