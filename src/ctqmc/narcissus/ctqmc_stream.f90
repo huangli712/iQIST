@@ -251,10 +251,10 @@
      return
   end subroutine ctqmc_setup_array
 
-!!>>> ctqmc_selfer_init: initialize the continuous time quantum Monte
-!!>>> Carlo quantum impurity solver plus dynamical mean field theory
-!!>>> self-consistent engine
-  subroutine ctqmc_selfer_init()
+!!>>> @ctqmc_setup_model
+!!>>> setup impurity model for continuous time quantum Monte Carlo quantum
+!!>>> impurity solver and dynamical mean field theory kernel
+  subroutine ctqmc_setup_model()
      use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
      use mmpi, only : mp_bcast, mp_barrier
 
@@ -488,7 +488,7 @@
      call ctqmc_make_shift(uumat, one)
 
      return
-  end subroutine ctqmc_selfer_init
+  end subroutine ctqmc_setup_model
 
 !!>>> ctqmc_solver_init: initialize the continuous time quantum Monte
 !!>>> Carlo quantum impurity solver
