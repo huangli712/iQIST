@@ -19,7 +19,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           04/17/2017 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : these subroutines are designed for vectors or arrays. they
 !!!           can be used to manipulate grid and mesh.
 !!! status  : unstable
@@ -72,7 +72,11 @@
 !!>>> mesh generation                                                  <<<
 !!========================================================================
 
-!!>>> s_linspace_i: create a linear mesh x in interval [xmin, xmax], integer version
+!!
+!! @sub s_linspace_i
+!!
+!! create a linear mesh x in interval [xmin, xmax], integer version
+!!
   subroutine s_linspace_i(xmin, xmax, n, x)
      use constants, only : dp
 
@@ -102,7 +106,11 @@
      return
   end subroutine s_linspace_i
 
-!!>>> s_linspace_d: create a linear mesh x in interval [xmin, xmax], real(dp) version
+!!
+!! @sub s_linspace_d
+!!
+!! create a linear mesh x in interval [xmin, xmax], real(dp) version
+!!
   subroutine s_linspace_d(xmin, xmax, n, x)
      use constants, only : dp
 
@@ -132,7 +140,11 @@
      return
   end subroutine s_linspace_d
 
-!!>>> s_linspace_z: create a linear mesh x in interval [xmin, xmax], complex(dp) version
+!!
+!! @sub s_linspace_z
+!!
+!! create a linear mesh x in interval [xmin, xmax], complex(dp) version
+!!
   subroutine s_linspace_z(xmin, xmax, n, x)
      use constants, only : dp
 
@@ -166,7 +178,11 @@
 !!>>> sum operations                                                   <<<
 !!========================================================================
 
-!!>>> s_cumsum_i: return the cumsum of an integer array
+!!
+!! @sub s_cumsum_i
+!!
+!! return the cumsum of an integer array
+!!
   subroutine s_cumsum_i(n, v, vsum)
      implicit none
 
@@ -192,7 +208,11 @@
      return
   end subroutine s_cumsum_i
 
-!!>>> s_cumsum_d: return the cumsum of a real(dp) array
+!!
+!! @sub s_cumsum_d
+!!
+!! return the cumsum of a real(dp) array
+!!
   subroutine s_cumsum_d(n, v, vsum)
      use constants, only : dp
 
@@ -220,7 +240,11 @@
      return
   end subroutine s_cumsum_d
 
-!!>>> s_cumsum_z: return the cumsum of a complex(dp) array
+!!
+!! @sub s_cumsum_z
+!!
+!! return the cumsum of a complex(dp) array
+!!
   subroutine s_cumsum_z(n, v, vsum)
      use constants, only : dp
 
@@ -252,7 +276,11 @@
 !!>>> prod operations                                                  <<<
 !!========================================================================
 
-!!>>> s_cumprod_i: return the cumproduct of an integer array
+!!
+!! @sub s_cumprod_i
+!!
+!! return the cumproduct of an integer array
+!!
   subroutine s_cumprod_i(n, v, vprod)
      implicit none
 
@@ -278,7 +306,11 @@
      return
   end subroutine s_cumprod_i
 
-!!>>> s_cumprod_d: return the cumproduct of a real(dp) array
+!!
+!! @sub s_cumprod_d
+!!
+!! return the cumproduct of a real(dp) array
+!!
   subroutine s_cumprod_d(n, v, vprod)
      use constants, only : dp
 
@@ -306,7 +338,11 @@
      return
   end subroutine s_cumprod_d
 
-!!>>> s_cumprod_z: return the cumproduct of a complex(dp) array
+!!
+!! @sub s_cumprod_z
+!!
+!! return the cumproduct of a complex(dp) array
+!!
   subroutine s_cumprod_z(n, v, vprod)
      use constants, only : dp
 
@@ -338,7 +374,11 @@
 !!>>> swap operations                                                  <<<
 !!========================================================================
 
-!!>>> s_swap_i: exchange two integer vectors
+!!
+!! @sub s_swap_i
+!!
+!! exchange two integer vectors
+!!
   subroutine s_swap_i(n, ix, iy)
      implicit none
 
@@ -363,7 +403,11 @@
      return
   end subroutine s_swap_i
 
-!!>>> s_swap_d: exchange two real(dp) vectors
+!!
+!! @sub s_swap_d
+!!
+!! exchange two real(dp) vectors
+!!
   subroutine s_swap_d(n, dx, dy)
      use constants, only : dp
 
@@ -390,7 +434,11 @@
      return
   end subroutine s_swap_d
 
-!!>>> s_swap_z: exchange two complex(dp) vectors
+!!
+!! @sub s_swap_z
+!!
+!! exchange two complex(dp) vectors
+!!
   subroutine s_swap_z(n, zx, zy)
      use constants, only : dp
 
@@ -421,7 +469,11 @@
 !!>>> mix operations                                                   <<<
 !!========================================================================
 
-!!>>> s_mix_i: linear mixing for two integer vectors
+!!
+!! @sub s_mix_i
+!!
+!! linear mixing for two integer vectors
+!!
   subroutine s_mix_i(n, ix, iy, alpha)
      use constants, only : dp, one
 
@@ -445,7 +497,11 @@
      return
   end subroutine s_mix_i
 
-!!>>> s_mix_d: linear mixing for two real(dp) vectors
+!!
+!! @sub s_mix_d
+!!
+!! linear mixing for two real(dp) vectors
+!!
   subroutine s_mix_d(n, dx, dy, alpha)
      use constants, only : dp, one
 
@@ -469,7 +525,11 @@
      return
   end subroutine s_mix_d
 
-!!>>> s_mix_z: linear mixing for two complex(dp) vectors
+!!
+!! @sub s_mix_z
+!!
+!! linear mixing for two complex(dp) vectors
+!!
   subroutine s_mix_z(n, zx, zy, alpha)
      use constants, only : dp, one
 
