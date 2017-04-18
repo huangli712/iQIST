@@ -50,23 +50,24 @@
 
 # endif  /* MPI */
 
-! print the running header for continuous time quantum Monte Carlo quantum
-! impurity solver and dynamical mean field theory self-consistent engine
+! print the welcome message, only for check 
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
      endif ! back if ( myid == master ) block
 
 ! setup the parameters for continuous time quantum Monte Carlo quantum
 ! impurity solver and dynamical mean field theory self-consistent engine
-     call ctqmc_config()
+     call ctqmc_setup_param()
 
-! allocate memory and initialize
+! allocate memory spaces for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
      call ctqmc_setup_array()
 
-! prepare initial hybridization function, init self-consistent iteration
-     call ctqmc_selfer_init()
+! setup the Hamiltonian for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
+     call ctqmc_setup_model()
 
-! print out runtime parameters in summary, only for check
+! print the runtime parameters, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
      endif ! back if ( myid == master ) block
@@ -78,7 +79,7 @@
      DMFT_SC_CYCLE: &
      do iter=1,niter
 
-! write the iter to screen
+! write the iter to screen, only for check
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
@@ -93,7 +94,7 @@
          endif ! back if ( isscf == 1 ) block
 
 ! call the self-consistent engine for dynamical mean field theory, to build
-! the bath weiss's function and hybridization function
+! the bath weiss's function and new hybridization function
          call ctqmc_dmft_selfer()
 
 ! check convergence for dynamical mean field theory iteration
@@ -110,11 +111,11 @@
 !!>>> DMFT ITERATION END                                               <<<
 !!========================================================================
 
-! deallocate memory and finalize
+! deallocate memory spaces for continuous time quantum Monte Carlo quantum
+! impurity solver and dynamical mean field theory self-consistent engine
      call ctqmc_final_array()
 
-! print the footer for continuous time quantum Monte Carlo quantum impurity
-! solver and dynamical mean field theory self-consistent engine
+! print the ending message, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_footer()
      endif ! back if ( myid == master ) block
