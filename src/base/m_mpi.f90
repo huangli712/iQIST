@@ -5663,7 +5663,11 @@
          return
      end subroutine mp_allreduce_cdp1
 
-!!>>> mp_allreduce_cdp2: reduce complex(dp) matrix from all processes
+!!
+!! @sub mp_allreduce_cdp2
+!!
+!! reduce complex(dp) matrix from all processes
+!!
      subroutine mp_allreduce_cdp2(source, data, mop, gid)
          implicit none
 
@@ -5702,7 +5706,11 @@
          return
      end subroutine mp_allreduce_cdp2
 
-!!>>> mp_allreduce_cdp3: reduce complex(dp) matrix from all processes
+!!
+!! @sub mp_allreduce_cdp3
+!!
+!! reduce complex(dp) matrix from all processes
+!!
      subroutine mp_allreduce_cdp3(source, data, mop, gid)
          implicit none
 
@@ -5741,7 +5749,11 @@
          return
      end subroutine mp_allreduce_cdp3
 
-!!>>> mp_allreduce_cdp4: reduce complex(dp) matrix from all processes
+!!
+!! @sub mp_allreduce_cdp4
+!!
+!! reduce complex(dp) matrix from all processes
+!!
      subroutine mp_allreduce_cdp4(source, data, mop, gid)
          implicit none
 
@@ -5780,7 +5792,11 @@
          return
      end subroutine mp_allreduce_cdp4
 
-!!>>> mp_allreduce_cdp5: reduce complex(dp) matrix from all processes
+!!
+!! @sub mp_allreduce_cdp5
+!!
+!! reduce complex(dp) matrix from all processes
+!!
      subroutine mp_allreduce_cdp5(source, data, mop, gid)
          implicit none
 
@@ -5823,7 +5839,11 @@
 !!>>> MPI handler for return code                                      <<<
 !!========================================================================
 
-!!>>> mp_error: deal with the return code of MPI subroutine
+!!
+!! @sub mp_error
+!!
+!! deal with the return code of MPI subroutine
+!!
 # define STR_ERR_COMM      'invalid communicator in mpi call.'
 # define STR_ERR_COUNT     'invalid count in mpi call.'
 # define STR_ERR_TYPE      'invalid datatype in mpi call.'
@@ -5988,7 +6008,11 @@
 !!>>> MPI information operations                                       <<<
 !!========================================================================
 
-!!>>> mp_info: return the current information about mpi environment
+!!
+!! @sub mp_info
+!!
+!! return the current information about mpi environment
+!!
      subroutine mp_info()
          implicit none
 
@@ -6001,7 +6025,11 @@
 !!>>> MPI initialize and finalize operations                           <<<
 !!========================================================================
 
-!!>>> mp_init: initialize mpi environment
+!!
+!! @sub mp_init
+!!
+!! initialize mpi environment
+!!
      subroutine mp_init()
          implicit none
 
