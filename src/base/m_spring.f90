@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 01/03/2008 by li huang (created)
-!!!           04/17/2017 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define several modern, fast
 !!!           highly reliable, ease-to-use, and state-of-the-art pseudo-
 !!!           random number generators, which are essential in massively
@@ -149,7 +149,11 @@
 !!>>> MT19937 random number generator subroutines                      <<<
 !!========================================================================
 
-!!>>> spring_mt_init: initializes the MT19937 generator with "seed"
+!!
+!! @sub spring_mt_init
+!!
+!! initializes the MT19937 generator with "seed"
+!!
   subroutine spring_mt_init(seed)
      implicit none
 
@@ -175,8 +179,12 @@
      return
   end subroutine spring_mt_init
 
-!!>>> spring_mt_stream: obtain a psuedo random real number in the range
-!!>>> (0,1), i.e., a number greater than 0 and less than 1
+!!
+!! @fun spring_mt_stream
+!!
+!! obtain a psuedo random real number in the range (0,1), i.e., a number
+!! greater than 0 and less than 1
+!!
   function spring_mt_stream() result(r)
      implicit none
 
@@ -194,9 +202,12 @@
      return
   end function spring_mt_stream
 
-!!>>> spring_mt_string: obtain a psuedo random real number in the range
-!!>>> [0,1], i.e., a number greater than or equal to 0 and less than or
-!!>>> equal to 1
+!!
+!! @fun spring_mt_string
+!!
+!! obtain a psuedo random real number in the range [0,1], i.e., a number
+!! greater than or equal to 0 and less than or equal to 1
+!!
   function spring_mt_string() result(r)
      implicit none
 
@@ -214,8 +225,11 @@
      return
   end function spring_mt_string
 
-!!>>> spring_mt_source: obtain the next 64-bit integer in the psuedo
-!!>>> random sequence
+!!
+!! @fun spring_mt_source
+!!
+!! obtain the next 64-bit integer in the psuedo random sequence
+!!
   function spring_mt_source() result(r)
      implicit none
 
@@ -276,8 +290,12 @@
 !!>>> SFMT random number generator subroutines                         <<<
 !!========================================================================
 
-!!>>> spring_sfmt_init: this function initializes the internal state array
-!!>>> with a 32-bit integer seed
+!!
+!! @sub spring_sfmt_init
+!!
+!! this function initializes the internal state array with a 32-bit
+!! integer seed
+!!
   subroutine spring_sfmt_init(seed)
      implicit none
 
@@ -342,7 +360,11 @@
      return
   end subroutine spring_sfmt_init
 
-!!>>> spring_sfmt_stream: generates a pseudo random number on (0,1)
+!!
+!! @fun spring_sfmt_stream
+!!
+!! generates a pseudo random number on (0,1)
+!!
   function spring_sfmt_stream() result(r)
      implicit none
 
@@ -360,7 +382,11 @@
      return
   end function spring_sfmt_stream
 
-!!>>> spring_sfmt_string: generates a pseudo random number on [0,1]
+!!
+!! @fun spring_sfmt_string
+!!
+!! generates a pseudo random number on [0,1]
+!!
   function spring_sfmt_string() result(r)
      implicit none
 
@@ -378,8 +404,11 @@
      return
   end function spring_sfmt_string
 
-!!>>> spring_sfmt_source: this function generates and returns 32-bit
-!!>>> pseudo random number
+!!
+!! @fun spring_sfmt_source
+!!
+!! this function generates and returns 32-bit pseudo random number
+!!
   function spring_sfmt_source() result(r)
      implicit none
 
@@ -403,8 +432,11 @@
      return
   end function spring_sfmt_source
 
-!!>>> spring_sfmt_kernel: this function fills the internal state array with
-!!>>> pseudo random integers
+!!
+!! @sub spring_sfmt_kernel
+!!
+!! this fills the internal state array with pseudo random integers
+!!
   subroutine spring_sfmt_kernel()
      implicit none
 
@@ -450,7 +482,11 @@
      return
   end subroutine spring_sfmt_kernel
 
-!!>>> spring_sfmt_core: this function represents the recursion formula
+!!
+!! @sub spring_sfmt_core
+!!
+!! this represents the recursion formula
+!!
   subroutine spring_sfmt_core(rTop, rBtm, aTop, aBtm, bTop, bBtm, cTop, cBtm, dTop, dBtm)
      implicit none
 
