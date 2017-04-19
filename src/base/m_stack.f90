@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/14/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to define a stack-type (LIFO)
 !!!           data structure in fortran version.
 !!! status  : unstable
@@ -207,7 +207,11 @@
 
   contains ! encapsulated functionality
 
-!!>>> istack_create: create and initialize an integer type stack
+!!
+!! @sub istack_create
+!!
+!! create and initialize an integer type stack
+!!
   subroutine istack_create(s, n)
      implicit none
 

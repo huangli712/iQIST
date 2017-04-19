@@ -1867,7 +1867,7 @@
 !!
   subroutine s_svd_dg(m, n, min_mn, amat, umat, svec, vmat)
      use constants, only : dp
- 
+
      implicit none
 
 ! external arguments
@@ -1900,7 +1900,7 @@
      integer :: info
 
 ! length of work array, lwork >= max(1, 3 * min_mn + max(m,n), 5 * min_mn)
-     integer :: lwork 
+     integer :: lwork
 
 ! workspace array
      real(dp), allocatable :: work(:)
@@ -1937,7 +1937,7 @@
 !!
   subroutine s_svd_zg(m, n, min_mn, amat, umat, svec, vmat)
      use constants, only : dp
- 
+
      implicit none
 
 ! external arguments
@@ -1970,7 +1970,7 @@
      integer :: info
 
 ! length of work array, lwork >= max(1, 2 * min_mn + max(m,n))
-     integer :: lwork 
+     integer :: lwork
 
 ! workspace arrays
      complex(dp), allocatable :: work(:)
