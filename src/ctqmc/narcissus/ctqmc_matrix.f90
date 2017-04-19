@@ -841,8 +841,11 @@
 !!>>> service layer: evaluate the determinant ratio                    <<<
 !!========================================================================
 
-!!>>> cat_insert_detrat: calculate the determinant ratio for insert new
-!!>>> segment or anti-segment
+!!
+!! @sub cat_insert_detrat
+!!
+!! calculate the determinant ratio for insert new segment or anti-segment
+!!
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero
 
@@ -931,8 +934,11 @@
      return
   end subroutine cat_insert_detrat
 
-!!>>> cat_remove_detrat: calculate the determinant ratio for remove old
-!!>>> segment or anti-segment
+!!
+!! @sub cat_remove_detrat
+!!
+!! calculate the determinant ratio for remove old segment or anti-segment
+!!
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
      use constants, only : dp
 
@@ -957,8 +963,12 @@
      return
   end subroutine cat_remove_detrat
 
-!!>>> cat_lshift_detrat: calculate the determinant ratio for left shift
-!!>>> old segment or anti-segment
+!!
+!! @sub cat_lshift_detrat
+!!
+!! calculate the determinant ratio for left shift old segment
+!! or anti-segment
+!!
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, one
 
@@ -1031,8 +1041,12 @@
      return
   end subroutine cat_lshift_detrat
 
-!!>>> cat_rshift_detrat: calculate the determinant ratio for right shift
-!!>>> old segment or anti-segment
+!!
+!! @sub cat_rshift_detrat
+!!
+!! calculate the determinant ratio for right shift old segment
+!! or anti-segment
+!!
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp, one
 
@@ -1104,13 +1118,6 @@
 
      return
   end subroutine cat_rshift_detrat
-
-!!>>> cat_reswap_detrat: to do nothing
-  subroutine cat_reswap_detrat()
-     implicit none
-
-     return
-  end subroutine cat_reswap_detrat
 
 !!>>> cat_reflip_detrat: calculate the determinant ratio for global
 !!>>> spin flip
