@@ -1746,7 +1746,11 @@
          return
      end subroutine mp_bcast_rdp5
 
-!!>>> mp_bcast_cdp0: broadcasts complex from the process with rank "root"
+!!
+!! @sub mp_bcast_cdp0
+!!
+!! broadcasts complex from the process with rank "root"
+!!
      subroutine mp_bcast_cdp0(data, root, gid)
          implicit none
 
@@ -1774,7 +1778,11 @@
          return
      end subroutine mp_bcast_cdp0
 
-!!>>> mp_bcast_cdp1: broadcasts complex(:) from the process with rank "root"
+!!
+!! @sub mp_bcast_cdp1
+!!
+!! broadcasts complex(:) from the process with rank "root"
+!!
      subroutine mp_bcast_cdp1(data, root, gid)
          implicit none
 
@@ -1805,7 +1813,11 @@
          return
      end subroutine mp_bcast_cdp1
 
-!!>>> mp_bcast_cdp2: broadcasts complex2 from the process with rank "root"
+!!
+!! @sub mp_bcast_cdp2
+!!
+!! broadcasts complex2 from the process with rank "root"
+!!
      subroutine mp_bcast_cdp2(data, root, gid)
          implicit none
 
@@ -1836,7 +1848,11 @@
          return
      end subroutine mp_bcast_cdp2
 
-!!>>> mp_bcast_cdp3: broadcasts complex3 from the process with rank "root"
+!!
+!! @sub mp_bcast_cdp3
+!!
+!! broadcasts complex3 from the process with rank "root"
+!!
      subroutine mp_bcast_cdp3(data, root, gid)
          implicit none
 
@@ -1867,7 +1883,11 @@
          return
      end subroutine mp_bcast_cdp3
 
-!!>>> mp_bcast_cdp4: broadcasts complex4 from the process with rank "root"
+!!
+!! @sub mp_bcast_cdp4
+!!
+!! broadcasts complex4 from the process with rank "root"
+!!
      subroutine mp_bcast_cdp4(data, root, gid)
          implicit none
 
@@ -1898,7 +1918,11 @@
          return
      end subroutine mp_bcast_cdp4
 
-!!>>> mp_bcast_cdp5: broadcasts complex5 from the process with rank "root"
+!!
+!! @sub mp_bcast_cdp5
+!!
+!! broadcasts complex5 from the process with rank "root"
+!!
      subroutine mp_bcast_cdp5(data, root, gid)
          implicit none
 
