@@ -4846,7 +4846,11 @@
          return
      end subroutine mp_reduce_cdp0
 
-!!>>> mp_reduce_cdp1: reduce complex(dp) vector from all processes
+!!
+!! @sub mp_reduce_cdp1
+!!
+!! reduce complex(dp) vector from all processes
+!!
      subroutine mp_reduce_cdp1(source, data, root, mop, gid)
          implicit none
 
@@ -4886,7 +4890,11 @@
          return
      end subroutine mp_reduce_cdp1
 
-!!>>> mp_reduce_cdp2: reduce complex(dp) matrix from all processes
+!!
+!! @sub mp_reduce_cdp2
+!!
+!! reduce complex(dp) matrix from all processes
+!!
      subroutine mp_reduce_cdp2(source, data, root, mop, gid)
          implicit none
 
@@ -4926,7 +4934,11 @@
          return
      end subroutine mp_reduce_cdp2
 
-!!>>> mp_reduce_cdp3: reduce complex(dp) matrix from all processes
+!!
+!! @sub mp_reduce_cdp3
+!!
+!! reduce complex(dp) matrix from all processes
+!!
      subroutine mp_reduce_cdp3(source, data, root, mop, gid)
          implicit none
 
@@ -4966,7 +4978,11 @@
          return
      end subroutine mp_reduce_cdp3
 
-!!>>> mp_reduce_cdp4: reduce complex(dp) matrix from all processes
+!!
+!! @sub mp_reduce_cdp4
+!!
+!! reduce complex(dp) matrix from all processes
+!!
      subroutine mp_reduce_cdp4(source, data, root, mop, gid)
          implicit none
 
@@ -5006,7 +5022,11 @@
          return
      end subroutine mp_reduce_cdp4
 
-!!>>> mp_reduce_cdp5: reduce complex(dp) matrix from all processes
+!!
+!! @sub mp_reduce_cdp5
+!!
+!! reduce complex(dp) matrix from all processes
+!!
      subroutine mp_reduce_cdp5(source, data, root, mop, gid)
          implicit none
 
@@ -5050,7 +5070,11 @@
 !!>>> MPI collective operations: allreducing                           <<<
 !!========================================================================
 
-!!>>> mp_allreduce_int0: reduce 1 integer from all processes
+!!
+!! @sub mp_allreduce_int0
+!!
+!! reduce 1 integer from all processes
+!!
      subroutine mp_allreduce_int0(source, data, mop, gid)
          implicit none
 
