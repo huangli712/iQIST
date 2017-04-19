@@ -358,8 +358,11 @@
      return
   end subroutine ctqmc_insert_kink
 
-!!>>> ctqmc_remove_kink: remove old segment or anti-segment in the
-!!>>> perturbation expansion series
+!!
+!! @sub ctqmc_remove_kink
+!!
+!! remove old segment or anti-segment in the perturbation expansion series
+!!
   subroutine ctqmc_remove_kink()
      use constants, only : dp, one
      use spring, only : spring_sfmt_stream
@@ -472,8 +475,11 @@
      return
   end subroutine ctqmc_remove_kink
 
-!!>>> ctqmc_lshift_kink: left shift old segment or anti-segment in the
-!!>>> perturbation expansion series
+!!
+!! @sub ctqmc_lshift_kink
+!!
+!! left shift old segment or anti-segment in the perturbation expansion series
+!!
   subroutine ctqmc_lshift_kink()
      use constants, only : dp, one
      use spring, only : spring_sfmt_stream
@@ -574,8 +580,11 @@
      return
   end subroutine ctqmc_lshift_kink
 
-!!>>> ctqmc_rshift_kink: right shift old segment or anti-segment in the
-!!>>> perturbation expansion series
+!!
+!! @sub ctqmc_rshift_kink
+!!
+!! right shift old segment or anti-segment in the perturbation expansion series
+!!
   subroutine ctqmc_rshift_kink()
      use constants, only : dp, one
      use spring, only : spring_sfmt_stream
@@ -676,8 +685,12 @@
      return
   end subroutine ctqmc_rshift_kink
 
-!!>>> ctqmc_reflip_kink: perform a global update, exchange the states
-!!>>> between spin up and spin down, it maybe useful for magnetic systems
+!!
+!! @sub ctqmc_reflip_kink
+!!
+!! perform a global update, exchange the states between spin up and spin
+!! down, it maybe useful for magnetic systems
+!!
   subroutine ctqmc_reflip_kink(cflip)
      use constants, only : dp, one
      use spring, only : spring_sfmt_stream
@@ -856,8 +869,12 @@
      return
   end subroutine ctqmc_reflip_kink
 
-!!>>> ctqmc_reload_kink: global update all segments or anti-segments in
-!!>>> the perturbation expansion series
+!!
+!! @sub ctqmc_reload_kink
+!!
+!! global update all segments or anti-segments in the perturbation
+!! expansion series
+!!
   subroutine ctqmc_reload_kink()
      use control, only : norbs
      use context, only : rank
