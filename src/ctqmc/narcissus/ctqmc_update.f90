@@ -8,14 +8,13 @@
 !!!           ctqmc_remove_kink
 !!!           ctqmc_lshift_kink
 !!!           ctqmc_rshift_kink
-!!!           ctqmc_reswap_kink
 !!!           ctqmc_reflip_kink
 !!!           ctqmc_reload_kink
 !!! source  : ctqmc_solver.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           03/28/2017 by li huang (last modified)
+!!!           04/20/2017 by li huang (last modified)
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
@@ -671,13 +670,6 @@
 
      return
   end subroutine ctqmc_rshift_kink
-
-!!>>> ctqmc_reswap_kink: to do nothing
-  subroutine ctqmc_reswap_kink()
-     implicit none
-
-     return
-  end subroutine ctqmc_reswap_kink
 
 !!>>> ctqmc_reflip_kink: perform a global update, exchange the states
 !!>>> between spin up and spin down, it maybe useful for magnetic systems
