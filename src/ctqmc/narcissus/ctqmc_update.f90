@@ -2,7 +2,6 @@
 !!! project : narcissus
 !!! program : ctqmc_warmup_diag
 !!!           ctqmc_sample_diag
-!!!           ctqmc_temper_diag
 !!!           ctqmc_verify_diag
 !!!           ctqmc_insert_kink
 !!!           ctqmc_remove_kink
@@ -26,9 +25,12 @@
 !!>>> service layer: updating perturbation expansion series 1          <<<
 !!========================================================================
 
-!!>>> ctqmc_warmup_diag: perform thermalization or warmup on the
-!!>>> perturbation expansion series to achieve thermodynamics stable
-!!>>> equilibrium state
+!!
+!! @sub ctqmc_warmup_diag
+!!
+!! perform thermalization or warmup on the perturbation expansion series
+!! to achieve thermodynamics stable equilibrium state
+!!
   subroutine ctqmc_warmup_diag()
      use constants, only : zero
 
@@ -74,7 +76,11 @@
      return
   end subroutine ctqmc_warmup_diag
 
-!!>>> ctqmc_sample_diag: visit the perturbation expansion diagrams randomly
+!!
+!! @sub ctqmc_sample_diag
+!!
+!! visit the perturbation expansion diagrams randomly
+!!
   subroutine ctqmc_sample_diag(cstep)
      use constants, only : dp
      use spring, only : spring_sfmt_stream
@@ -127,13 +133,6 @@
 
      return
   end subroutine ctqmc_sample_diag
-
-!!>>> ctqmc_temper_diag: to do nothing
-  subroutine ctqmc_temper_diag()
-     implicit none
-
-     return
-  end subroutine ctqmc_temper_diag
 
 !!>>> ctqmc_verify_diag: checking whether the quantum impurity solver is
 !!>>> consistent internally
