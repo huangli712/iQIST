@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : this purpose of this module is to implement a typical and
 !!!           useful data structure --- linked list. it is a generic
 !!!           linked list, capable of storing arbitrary data.
@@ -134,8 +134,12 @@
 
   contains ! encapsulated functionality
 
-!!>>> list_init: initialize a head node [self] for a list and optionally
-!!>>> store the provided data
+!!
+!! @sub list_init
+!!
+!! initialize a head node [self] for a list and optionally store the
+!! provided data
+!!
   subroutine list_init(self, data)
      implicit none
 
@@ -161,7 +165,11 @@
      return
   end subroutine list_init
 
-!!>>> list_free: free the entire list and all data, beginning at node [self]
+!!
+!! @sub list_free
+!!
+!! free the entire list and all data, beginning at node [self]
+!!
   subroutine list_free(self)
      implicit none
 
@@ -196,7 +204,11 @@
      return
   end subroutine list_free
 
-!!>>> list_insert: insert a node containing data (optional) after node [self]
+!!
+!! @sub list_insert
+!!
+!! insert a node containing data (optional) after node [self]
+!!
   subroutine list_insert(self, data)
      implicit none
 
@@ -229,7 +241,11 @@
      return
   end subroutine list_insert
 
-!!>>> list_put: store the encoded data in list node [self]
+!!
+!! @sub list_put
+!!
+!! store the encoded data in list node [self]
+!!
   subroutine list_put(self, data)
      implicit none
 
@@ -255,7 +271,11 @@
      return
   end subroutine list_put
 
-!!>>> list_get: return the data stored in the node [self]
+!!
+!! @fun list_get
+!!
+!! return the data stored in the node [self]
+!!
   function list_get(self) result(data)
      implicit none
 
@@ -287,9 +307,12 @@
      return
   end function list_next
 
-!!>>> list_count: count the number of nodes in the list [self]
-!!>>> In fact, this function can be used to return the number of nodes
-!!>>> after a given node
+!!
+!! @fun list_count
+!!
+!! count the number of nodes in the list [self], in fact, this function
+!! can be used to return the number of nodes after a given node
+!!
   function list_count(self) result(counter)
      implicit none
 
