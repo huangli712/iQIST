@@ -6167,7 +6167,11 @@
 !!>>> MPI collective operations: reducing                              <<<
 !!========================================================================
 
-!!>>> mp_reduce: reduce sth. from all processes
+!!
+!! @sub mp_reduce
+!!
+!! reduce sth. from all processes
+!!
      subroutine mp_reduce()
          implicit none
 
@@ -6178,7 +6182,11 @@
 !!>>> MPI collective operations: allreducing                           <<<
 !!========================================================================
 
-!!>>> mp_allreduce: reduce sth. from all processes
+!!
+!! @sub mp_allreduce
+!!
+!! reduce sth. from all processes
+!!
      subroutine mp_allreduce()
          implicit none
 
