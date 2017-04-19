@@ -5110,7 +5110,11 @@
          return
      end subroutine mp_allreduce_int0
 
-!!>>> mp_allreduce_int1: reduce integer vector from all processes
+!!
+!! @sub mp_allreduce_int1
+!!
+!! reduce integer vector from all processes
+!!
      subroutine mp_allreduce_int1(source, data, mop, gid)
          implicit none
 
@@ -5149,7 +5153,11 @@
          return
      end subroutine mp_allreduce_int1
 
-!!>>> mp_allreduce_int2: reduce integer matrix from all processes
+!!
+!! @sub mp_allreduce_int2
+!!
+!! reduce integer matrix from all processes
+!!
      subroutine mp_allreduce_int2(source, data, mop, gid)
          implicit none
 
@@ -5188,7 +5196,11 @@
          return
      end subroutine mp_allreduce_int2
 
-!!>>> mp_allreduce_int3: reduce integer matrix from all processes
+!!
+!! @sub mp_allreduce_int3
+!!
+!! reduce integer matrix from all processes
+!!
      subroutine mp_allreduce_int3(source, data, mop, gid)
          implicit none
 
@@ -5227,7 +5239,11 @@
          return
      end subroutine mp_allreduce_int3
 
-!!>>> mp_allreduce_int4: reduce integer matrix from all processes
+!!
+!! @sub mp_allreduce_int4
+!!
+!! reduce integer matrix from all processes
+!!
      subroutine mp_allreduce_int4(source, data, mop, gid)
          implicit none
 
@@ -5266,7 +5282,11 @@
          return
      end subroutine mp_allreduce_int4
 
-!!>>> mp_allreduce_int5: reduce integer matrix from all processes
+!!
+!! @sub mp_allreduce_int5
+!!
+!! reduce integer matrix from all processes
+!!
      subroutine mp_allreduce_int5(source, data, mop, gid)
          implicit none
 
@@ -5305,7 +5325,11 @@
          return
      end subroutine mp_allreduce_int5
 
-!!>>> mp_allreduce_rdp0: reduce 1 real(dp) from all processes
+!!
+!! @sub mp_allreduce_rdp0
+!!
+!! reduce 1 real(dp) from all processes
+!!
      subroutine mp_allreduce_rdp0(source, data, mop, gid)
          implicit none
 
@@ -5341,7 +5365,11 @@
          return
      end subroutine mp_allreduce_rdp0
 
-!!>>> mp_allreduce_rdp1: reduce real(dp) vector from all processes
+!!
+!! @sub mp_allreduce_rdp1
+!!
+!! reduce real(dp) vector from all processes
+!!
      subroutine mp_allreduce_rdp1(source, data, mop, gid)
          implicit none
 
@@ -5380,7 +5408,11 @@
          return
      end subroutine mp_allreduce_rdp1
 
-!!>>> mp_allreduce_rdp2: reduce real(dp) matrix from all processes
+!!
+!! @sub mp_allreduce_rdp2
+!!
+!! reduce real(dp) matrix from all processes
+!!
      subroutine mp_allreduce_rdp2(source, data, mop, gid)
          implicit none
 
@@ -5419,7 +5451,11 @@
          return
      end subroutine mp_allreduce_rdp2
 
-!!>>> mp_allreduce_rdp3: reduce real(dp) matrix from all processes
+!!
+!! @sub mp_allreduce_rdp3
+!!
+!! reduce real(dp) matrix from all processes
+!!
      subroutine mp_allreduce_rdp3(source, data, mop, gid)
          implicit none
 
@@ -5458,7 +5494,11 @@
          return
      end subroutine mp_allreduce_rdp3
 
-!!>>> mp_allreduce_rdp4: reduce real(dp) matrix from all processes
+!!
+!! @sub mp_allreduce_rdp4
+!!
+!! reduce real(dp) matrix from all processes
+!!
      subroutine mp_allreduce_rdp4(source, data, mop, gid)
          implicit none
 
@@ -5497,7 +5537,11 @@
          return
      end subroutine mp_allreduce_rdp4
 
-!!>>> mp_allreduce_rdp5: reduce real(dp) matrix from all processes
+!!
+!! @sub mp_allreduce_rdp5
+!!
+!! reduce real(dp) matrix from all processes
+!!
      subroutine mp_allreduce_rdp5(source, data, mop, gid)
          implicit none
 
@@ -5536,7 +5580,11 @@
          return
      end subroutine mp_allreduce_rdp5
 
-!!>>> mp_allreduce_cdp0: reduce 1 complex(dp) from all processes
+!!
+!! @sub mp_allreduce_cdp0
+!!
+!! reduce 1 complex(dp) from all processes
+!!
      subroutine mp_allreduce_cdp0(source, data, mop, gid)
          implicit none
 
@@ -5572,7 +5620,11 @@
          return
      end subroutine mp_allreduce_cdp0
 
-!!>>> mp_allreduce_cdp1: reduce complex(dp) vector from all processes
+!!
+!! @sub mp_allreduce_cdp1
+!!
+!! reduce complex(dp) vector from all processes
+!!
      subroutine mp_allreduce_cdp1(source, data, mop, gid)
          implicit none
 
