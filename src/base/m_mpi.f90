@@ -6036,7 +6036,11 @@
          return
      end subroutine mp_init
 
-!!>>> mp_finalize: finalize mpi environment
+!!
+!! @sub mp_finalize
+!!
+!! finalize mpi environment
+!!
      subroutine mp_finalize()
          implicit none
 
@@ -6047,14 +6051,22 @@
 !!>>> MPI setup operations                                             <<<
 !!========================================================================
 
-!!>>> mp_comm_rank: determine the rank of the current process
+!!
+!! @sub mp_comm_rank
+!!
+!! determine the rank of the current process
+!!
      subroutine mp_comm_rank()
          implicit none
 
          return
      end subroutine mp_comm_rank
 
-!!>>> mp_comm_size: evaluate the number of processes in current communicator
+!!
+!! @sub mp_comm_size
+!!
+!! evaluate the number of processes in current communicator
+!!
      subroutine mp_comm_size()
          implicit none
 
@@ -6065,7 +6077,11 @@
 !!>>> MPI barrier operations                                           <<<
 !!========================================================================
 
-!!>>> mp_barrier: blocks until all process have reached this routine
+!!
+!! @sub mp_barrier
+!!
+!! blocks until all process have reached this routine
+!!
      subroutine mp_barrier()
          implicit none
 
@@ -6076,7 +6092,11 @@
 !!>>> MPI collective operations: broadcasting                          <<<
 !!========================================================================
 
-!!>>> mp_bcast: broadcasts sth. from the process with rank "root"
+!!
+!! @sub mp_bcast
+!!
+!! broadcasts sth. from the process with rank "root"
+!!
      subroutine mp_bcast()
          implicit none
 
@@ -6087,7 +6107,11 @@
 !!>>> MPI collective operations : gathering                            <<<
 !!========================================================================
 
-!!>>> mp_gather_int1: gather sth. from every processes to rank 0
+!!
+!! @sub mp_gather_int1
+!!
+!! gather sth. from every processes to rank 0
+!!
      subroutine mp_gather()
          implicit none
 
@@ -6098,7 +6122,11 @@
 !!>>> MPI collective operations : gatherving                           <<<
 !!========================================================================
 
-!!>>> mp_gatherv: gather sth. from every processes to rank 0
+!!
+!! @sub mp_gatherv
+!!
+!! gather sth. from every processes to rank 0
+!!
      subroutine mp_gatherv()
          implicit none
 
@@ -6109,8 +6137,11 @@
 !!>>> MPI collective operations: allgathering                          <<<
 !!========================================================================
 
-!!>>> mp_allgather: gather sth. from all processes and then redistribute
-!!>>> it to all processes
+!!
+!! @sub mp_allgather
+!!
+!! gather sth. from all processes and then redistribute it to all processes
+!!
      subroutine mp_allgather()
          implicit none
 
@@ -6121,8 +6152,11 @@
 !!>>> MPI collective operations: allgatherving                         <<<
 !!========================================================================
 
-!!>>> mp_allgatherv: gather sth. from all processes and then redistribute
-!!>>> it to all processes
+!!
+!! @sub mp_allgatherv
+!!
+!! gather sth. from all processes and then redistribute it to all processes
+!!
      subroutine mp_allgatherv()
          implicit none
 
