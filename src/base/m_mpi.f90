@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 08/09/2006 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : define my own mpi calls, inspired by famous quantum espresso
 !!!           code. we note that the original mpi interfaces/subroutines
 !!!           are rather complicated for newbies, thus we try to wrap the
@@ -795,7 +795,11 @@
 !!>>> MPI information operations                                       <<<
 !!========================================================================
 
-!!>>> mp_info: return the current information about mpi environment
+!!
+!! @sub mp_info
+!!
+!! return the current information about mpi environment
+!!
      subroutine mp_info()
          implicit none
 
@@ -818,7 +822,11 @@
 !!>>> MPI initialize and finalize operations                           <<<
 !!========================================================================
 
-!!>>> mp_init: initialize mpi environment
+!!
+!! @sub mp_init
+!!
+!! initialize mpi environment
+!!
      subroutine mp_init()
          implicit none
 
@@ -831,7 +839,11 @@
          return
      end subroutine mp_init
 
-!!>>> mp_finalize: finalize mpi environment
+!!
+!! @sub mp_finalize
+!!
+!! finalize mpi environment
+!!
      subroutine mp_finalize()
          implicit none
 
@@ -848,7 +860,11 @@
 !!>>> MPI setup operations                                             <<<
 !!========================================================================
 
-!!>>> mp_comm_rank: determine the rank of the current process
+!!
+!! @sub mp_comm_rank
+!!
+!! determine the rank of the current process
+!!
      subroutine mp_comm_rank(myid, gid)
          implicit none
 
@@ -872,7 +888,11 @@
          return
      end subroutine mp_comm_rank
 
-!!>>> mp_comm_size: evaluate the number of processes in current communicator
+!!
+!! @sub mp_comm_size
+!!
+!! evaluate the number of processes in current communicator
+!!
      subroutine mp_comm_size(nprocs, gid)
          implicit none
 
@@ -896,7 +916,11 @@
          return
      end subroutine mp_comm_size
 
-!!>>> mp_processor: determine the current workstation's name
+!!
+!! @sub mp_processor
+!!
+!! determine the current workstation's name
+!!
      subroutine mp_processor(workstation)
          implicit none
 
@@ -916,7 +940,11 @@
 !!>>> MPI cartesian topology operations                                <<<
 !!========================================================================
 
-!!>>> mp_dims_create: creates a division of processors in a cartesian grid
+!!
+!! @sub mp_dims_create
+!!
+!! creates a division of processors in a cartesian grid
+!!
      subroutine mp_dims_create(nprocs, dims)
          implicit none
 
@@ -933,7 +961,11 @@
          return
      end subroutine mp_dims_create
 
-!!>>> mp_cart_create: makes a new communicator to which topology is cartesian
+!!
+!! @sub mp_cart_create
+!!
+!! makes a new communicator to which topology is cartesian
+!!
      subroutine mp_cart_create(dims)
          implicit none
 
@@ -950,7 +982,11 @@
          return
      end subroutine mp_cart_create
 
-!!>>> mp_cart_coords: determines process coords in cartesian topology
+!!
+!! @sub mp_cart_coords
+!!
+!! determines process coords in cartesian topology
+!!
      subroutine mp_cart_coords(myid, cx, cy)
          implicit none
 
@@ -976,7 +1012,11 @@
          return
      end subroutine mp_cart_coords
 
-!!>>> mp_comm_split_row: creates new communicators based on colors and keys
+!!
+!! @sub mp_comm_split_row
+!!
+!! creates new communicators based on colors and keys
+!!
      subroutine mp_comm_split_row(color, key)
          implicit none
 
@@ -994,7 +1034,11 @@
          return
      end subroutine mp_comm_split_row
 
-!!>>> mp_comm_split_col: creates new communicators based on colors and keys
+!!
+!! @sub mp_comm_split_col
+!!
+!! creates new communicators based on colors and keys
+!!
      subroutine mp_comm_split_col(color, key)
          implicit none
 
@@ -1016,7 +1060,11 @@
 !!>>> MPI barrier operations                                           <<<
 !!========================================================================
 
-!!>>> mp_barrier: blocks until all process have reached this routine
+!!
+!! @sub mp_barrier
+!!
+!! blocks until all process have reached this routine
+!!
      subroutine mp_barrier(gid)
          implicit none
 
@@ -1043,7 +1091,11 @@
 !!>>> MPI time operations                                              <<<
 !!========================================================================
 
-!!>>> mp_wtime: returns an elapsed time on the calling processor
+!!
+!! @sub mp_wtime
+!!
+!! returns an elapsed time on the calling processor
+!!
      subroutine mp_wtime(time)
          implicit none
 
@@ -1073,7 +1125,11 @@
 !!>>> MPI collective operations: broadcasting                          <<<
 !!========================================================================
 
-!!>>> mp_bcast_log0: broadcasts bool from the process with rank "root"
+!!
+!! @sub mp_bcast_log0
+!!
+!! broadcasts bool from the process with rank "root"
+!!
      subroutine mp_bcast_log0(data, root, gid)
          implicit none
 
@@ -1101,7 +1157,11 @@
          return
      end subroutine mp_bcast_log0
 
-!!>>> mp_bcast_log1: broadcasts bool(:) from the process with rank "root"
+!!
+!! @sub mp_bcast_log1
+!!
+!! broadcasts bool(:) from the process with rank "root"
+!!
      subroutine mp_bcast_log1(data, root, gid)
          implicit none
 
@@ -1132,7 +1192,11 @@
          return
      end subroutine mp_bcast_log1
 
-!!>>> mp_bcast_log2: broadcasts bool2 from the process with rank "root"
+!!
+!! @sub mp_bcast_log2
+!!
+!! broadcasts bool2 from the process with rank "root"
+!!
      subroutine mp_bcast_log2(data, root, gid)
          implicit none
 
@@ -1163,7 +1227,11 @@
          return
      end subroutine mp_bcast_log2
 
-!!>>> mp_bcast_log3: broadcasts bool3 from the process with rank "root"
+!!
+!! @sub mp_bcast_log3
+!!
+!! broadcasts bool3 from the process with rank "root"
+!!
      subroutine mp_bcast_log3(data, root, gid)
          implicit none
 
@@ -1194,7 +1262,11 @@
          return
      end subroutine mp_bcast_log3
 
-!!>>> mp_bcast_log4: broadcasts bool4 from the process with rank "root"
+!!
+!! @sub mp_bcast_log4
+!!
+!! broadcasts bool4 from the process with rank "root"
+!!
      subroutine mp_bcast_log4(data, root, gid)
          implicit none
 
@@ -1225,7 +1297,11 @@
          return
      end subroutine mp_bcast_log4
 
-!!>>> mp_bcast_log5: broadcasts bool5 from the process with rank "root"
+!!
+!! @sub mp_bcast_log5
+!!
+!! broadcasts bool5 from the process with rank "root"
+!!
      subroutine mp_bcast_log5(data, root, gid)
          implicit none
 
@@ -1256,7 +1332,11 @@
          return
      end subroutine mp_bcast_log5
 
-!!>>> mp_bcast_int0: broadcasts int from the process with rank "root"
+!!
+!! @sub mp_bcast_int0
+!!
+!! broadcasts int from the process with rank "root"
+!!
      subroutine mp_bcast_int0(data, root, gid)
          implicit none
 
@@ -1284,7 +1364,11 @@
          return
      end subroutine mp_bcast_int0
 
-!!>>> mp_bcast_int1: broadcasts int(:) from the process with rank "root"
+!!
+!! @sub mp_bcast_int1
+!!
+!! broadcasts int(:) from the process with rank "root"
+!!
      subroutine mp_bcast_int1(data, root, gid)
          implicit none
 
@@ -1315,7 +1399,11 @@
          return
      end subroutine mp_bcast_int1
 
-!!>>> mp_bcast_int2: broadcasts int2 from the process with rank "root"
+!!
+!! @sub mp_bcast_int2
+!!
+!! broadcasts int2 from the process with rank "root"
+!!
      subroutine mp_bcast_int2(data, root, gid)
          implicit none
 
@@ -1346,7 +1434,11 @@
          return
      end subroutine mp_bcast_int2
 
-!!>>> mp_bcast_int3: broadcasts int3 from the process with rank "root"
+!!
+!! @sub mp_bcast_int3
+!!
+!! broadcasts int3 from the process with rank "root"
+!!
      subroutine mp_bcast_int3(data, root, gid)
          implicit none
 
@@ -1377,7 +1469,11 @@
          return
      end subroutine mp_bcast_int3
 
-!!>>> mp_bcast_int4: broadcasts int4 from the process with rank "root"
+!!
+!! @sub mp_bcast_int4
+!!
+!! broadcasts int4 from the process with rank "root"
+!!
      subroutine mp_bcast_int4(data, root, gid)
          implicit none
 
@@ -1408,7 +1504,11 @@
          return
      end subroutine mp_bcast_int4
 
-!!>>> mp_bcast_int5: broadcasts int5 from the process with rank "root"
+!!
+!! @sub mp_bcast_int5
+!!
+!! broadcasts int5 from the process with rank "root"
+!!
      subroutine mp_bcast_int5(data, root, gid)
          implicit none
 
@@ -1439,7 +1539,11 @@
          return
      end subroutine mp_bcast_int5
 
-!!>>> mp_bcast_rdp0: broadcasts real from the process with rank "root"
+!!
+!! @sub mp_bcast_rdp0
+!!
+!! broadcasts real from the process with rank "root"
+!!
      subroutine mp_bcast_rdp0(data, root, gid)
          implicit none
 
@@ -1467,7 +1571,11 @@
          return
      end subroutine mp_bcast_rdp0
 
-!!>>> mp_bcast_rdp1: broadcasts real(:) from the process with rank "root"
+!!
+!! @sub mp_bcast_rdp1
+!!
+!! broadcasts real(:) from the process with rank "root"
+!!
      subroutine mp_bcast_rdp1(data, root, gid)
          implicit none
 
@@ -1498,7 +1606,11 @@
          return
      end subroutine mp_bcast_rdp1
 
-!!>>> mp_bcast_rdp2: broadcasts real2 from the process with rank "root"
+!!
+!! @sub mp_bcast_rdp2
+!!
+!! broadcasts real2 from the process with rank "root"
+!!
      subroutine mp_bcast_rdp2(data, root, gid)
          implicit none
 
@@ -1529,7 +1641,11 @@
          return
      end subroutine mp_bcast_rdp2
 
-!!>>> mp_bcast_rdp3: broadcasts real3 from the process with rank "root"
+!!
+!! @sub mp_bcast_rdp3
+!!
+!! broadcasts real3 from the process with rank "root"
+!!
      subroutine mp_bcast_rdp3(data, root, gid)
          implicit none
 
@@ -1560,7 +1676,11 @@
          return
      end subroutine mp_bcast_rdp3
 
-!!>>> mp_bcast_rdp4: broadcasts real4 from the process with rank "root"
+!!
+!! @sub mp_bcast_rdp4
+!!
+!! broadcasts real4 from the process with rank "root"
+!!
      subroutine mp_bcast_rdp4(data, root, gid)
          implicit none
 
@@ -1591,7 +1711,11 @@
          return
      end subroutine mp_bcast_rdp4
 
-!!>>> mp_bcast_rdp5: broadcasts real5 from the process with rank "root"
+!!
+!! @sub mp_bcast_rdp5
+!!
+!! broadcasts real5 from the process with rank "root"
+!!
      subroutine mp_bcast_rdp5(data, root, gid)
          implicit none
 
