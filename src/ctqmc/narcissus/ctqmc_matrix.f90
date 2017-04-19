@@ -4,7 +4,6 @@
 !!!           cat_remove_matrix
 !!!           cat_lshift_matrix
 !!!           cat_rshift_matrix
-!!!           cat_reswap_matrix
 !!!           cat_reflip_matrix
 !!!           cat_reload_matrix <<<---
 !!!           cat_insert_detrat
@@ -18,7 +17,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           01/30/2017 by li huang (last modified)
+!!!           04/20/2017 by li huang (last modified)
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -32,8 +31,12 @@
 !!>>> service layer: update M and G matrices                           <<<
 !!========================================================================
 
-!!>>> cat_insert_matrix: update the mmat matrix and gmat matrix for insert
-!!>>> new segment or anti-segment
+!!
+!! @sub cat_insert_matrix
+!!
+!! update the mmat matrix and gmat matrix for insert new segment
+!! or anti-segment
+!!
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero, one, czero
 
@@ -161,8 +164,12 @@
      return
   end subroutine cat_insert_matrix
 
-!!>>> cat_remove_matrix: update the mmat matrix and gmat matrix for remove
-!!>>> old segment or anti-segment
+!!
+!! @sub cat_remove_matrix
+!!
+!! update the mmat matrix and gmat matrix for remove old segment
+!! or anti-segment
+!!
   subroutine cat_remove_matrix(flvr, is, ie)
      use constants, only : dp, one, czero
 
@@ -255,8 +262,12 @@
      return
   end subroutine cat_remove_matrix
 
-!!>>> cat_lshift_matrix: update the mmat matrix and gmat matrix for left
-!!>>> shift old segment or anti-segment
+!!
+!! @sub cat_lshift_matrix
+!!
+!! update the mmat matrix and gmat matrix for left shift old segment
+!! or anti-segment
+!!
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, zero, czero
 
@@ -447,8 +458,12 @@
      return
   end subroutine cat_lshift_matrix
 
-!!>>> cat_rshift_matrix: update the mmat matrix and gmat matrix for right
-!!>>> shift old segment or anti-segment
+!!
+!! @sub cat_rshift_matrix
+!!
+!! update the mmat matrix and gmat matrix for right shift old segment
+!! or anti-segment
+!!
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp, zero, czero
 
@@ -639,16 +654,13 @@
      return
   end subroutine cat_rshift_matrix
 
-!!>>> cat_reswap_matrix: to do nothing
-  subroutine cat_reswap_matrix()
-     implicit none
-
-     return
-  end subroutine cat_reswap_matrix
-
-!!>>> cat_reflip_matrix: global flip the time_s, time_e, mmat matrix, gmat
-!!>>> matrix, and other related global variables between spin up and spin
-!!>>> down states. it is used to avoid trapped by unphysical phase
+!!
+!! @sub cat_reflip_matrix
+!!
+!! global flip the time_s, time_e, mmat matrix, gmat matrix, and other
+!! related global variables between spin up and spin down states. it is
+!! used to avoid trapped by unphysical phase
+!!
   subroutine cat_reflip_matrix(fup, fdn, kmax)
      use stack, only : istack, istack_create, istack_copyer, istack_destroy
 
@@ -739,8 +751,11 @@
      return
   end subroutine cat_reflip_matrix
 
-!!>>> cat_reload_matrix: global update the mmat matrix and gmat matrix
-!!>>> from scratch
+!!
+!! @sub cat_reload_matrix
+!!
+!! global update the mmat matrix and gmat matrix from scratch
+!!
   subroutine cat_reload_matrix(flvr)
      use constants, only : dp, zero, czero
 
