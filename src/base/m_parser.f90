@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : this purpose of this module is to implement a generic and
 !!!           flexible config/input file reader and analyzer.
 !!! status  : unstable
@@ -201,7 +201,11 @@
 
   contains ! encapsulated functionality
 
-!!>>> p_create: init the linked list structure and insert a fake element
+!!
+!! @sub p_create
+!!
+!! init the linked list structure and insert a fake element
+!!
   subroutine p_create()
      implicit none
 
@@ -219,7 +223,11 @@
      return
   end subroutine p_create
 
-!!>>> p_destroy: free the linked list data structure
+!!
+!! @sub p_destroy
+!!
+!! free the linked list data structure
+!!
   subroutine p_destroy()
      implicit none
 
@@ -228,8 +236,12 @@
      return
   end subroutine p_destroy
 
-!!>>> p_parse: parse the input/config file, and store the key-value pairs
-!!>>> to the linked list data structure
+!!
+!! @sub p_parse
+!!
+!! parse the input/config file, and store the key-value pairs to the
+!! linked list data structure
+!!
   subroutine p_parse(in_file)
      use, intrinsic :: iso_fortran_env, only : iostat_end
 
@@ -356,8 +368,12 @@
      return
   end subroutine p_parse
 
-!!>>> p_get: retrieve the key-value pair from the linked list data structure
-!!>>> here value is a single object
+!!
+!! @sub p_get
+!!
+!! retrieve the key-value pair from the linked list data structure here
+!! value is a single object
+!!
   subroutine p_get(in_key, out_value)
      implicit none
 
@@ -434,8 +450,12 @@
      return
   end subroutine p_get
 
-!!>>> p_get_vec: retrieve the key-value pair from the linked list data structure
-!!>>> here value is a array instead of single object
+!!
+!! @sub p_get_vec
+!!
+!! retrieve the key-value pair from the linked list data structure here
+!! value is a array instead of single object
+!!
   subroutine p_get_vec(in_key, out_value, nsize)
      implicit none
 
