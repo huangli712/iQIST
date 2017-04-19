@@ -3879,8 +3879,12 @@
          return
      end subroutine mp_allgatherv_int5
 
-!!>>> mp_allgatherv_rdp1: gather real(dp) data from all processes and then
-! redistribute it to all processes
+!!
+!! @sub mp_allgatherv_rdp1
+!!
+!! gather real(dp) data from all processes and then redistribute it to
+!! all processes
+!!
      subroutine mp_allgatherv_rdp1(send, data, recv, disp, gid)
          implicit none
 
@@ -3915,8 +3919,12 @@
          return
      end subroutine mp_allgatherv_rdp1
 
-!!>>> mp_allgatherv_rdp2: gather real(dp) data from all processes and then
-! redistribute it to all processes
+!!
+!! @sub mp_allgatherv_rdp2
+!!
+!! gather real(dp) data from all processes and then redistribute it to
+!! all processes
+!!
      subroutine mp_allgatherv_rdp2(send, data, recv, disp, gid)
          implicit none
 
@@ -3951,8 +3959,12 @@
          return
      end subroutine mp_allgatherv_rdp2
 
-!!>>> mp_allgatherv_rdp3: gather real(dp) data from all processes and then
-! redistribute it to all processes
+!!
+!! @sub mp_allgatherv_rdp3
+!!
+!! gather real(dp) data from all processes and then redistribute it to
+!! all processes
+!!
      subroutine mp_allgatherv_rdp3(send, data, recv, disp, gid)
          implicit none
 
@@ -3987,8 +3999,12 @@
          return
      end subroutine mp_allgatherv_rdp3
 
-!!>>> mp_allgatherv_rdp4: gather real(dp) data from all processes and then
-! redistribute it to all processes
+!!
+!! @sub mp_allgatherv_rdp4
+!!
+!! gather real(dp) data from all processes and then redistribute it to
+!! all processes
+!!
      subroutine mp_allgatherv_rdp4(send, data, recv, disp, gid)
          implicit none
 
@@ -4023,8 +4039,12 @@
          return
      end subroutine mp_allgatherv_rdp4
 
-!!>>> mp_allgatherv_rdp5: gather real(dp) data from all processes and then
-! redistribute it to all processes
+!!
+!! @sub mp_allgatherv_rdp5
+!!
+!! gather real(dp) data from all processes and then redistribute it to
+!! all processes
+!!
      subroutine mp_allgatherv_rdp5(send, data, recv, disp, gid)
          implicit none
 
@@ -4059,8 +4079,12 @@
          return
      end subroutine mp_allgatherv_rdp5
 
-!!>>> mp_allgatherv_cdp1: gather complex(dp) data from all processes and then
-! redistribute it to all processes
+!!
+!! @sub mp_allgatherv_cdp1
+!!
+!! gather complex(dp) data from all processes and then redistribute it to
+!! all processes
+!!
      subroutine mp_allgatherv_cdp1(send, data, recv, disp, gid)
          implicit none
 
@@ -4095,8 +4119,12 @@
          return
      end subroutine mp_allgatherv_cdp1
 
-!!>>> mp_allgatherv_cdp2: gather complex(dp) data from all processes and then
-! redistribute it to all processes
+!!
+!! @sub mp_allgatherv_cdp2
+!!
+!! gather complex(dp) data from all processes and then redistribute it to
+!! all processes
+!!
      subroutine mp_allgatherv_cdp2(send, data, recv, disp, gid)
          implicit none
 
@@ -4131,8 +4159,12 @@
          return
      end subroutine mp_allgatherv_cdp2
 
-!!>>> mp_allgatherv_cdp3: gather complex(dp) data from all processes and then
-! redistribute it to all processes
+!!
+!! @sub mp_allgatherv_cdp3
+!!
+!! gather complex(dp) data from all processes and then redistribute it to
+!! all processes
+!!
      subroutine mp_allgatherv_cdp3(send, data, recv, disp, gid)
          implicit none
 
@@ -4167,8 +4199,12 @@
          return
      end subroutine mp_allgatherv_cdp3
 
-!!>>> mp_allgatherv_cdp4: gather complex(dp) data from all processes and then
-! redistribute it to all processes
+!!
+!! @sub mp_allgatherv_cdp4
+!!
+!! gather complex(dp) data from all processes and then redistribute it to
+!! all processes
+!!
      subroutine mp_allgatherv_cdp4(send, data, recv, disp, gid)
          implicit none
 
@@ -4203,8 +4239,12 @@
          return
      end subroutine mp_allgatherv_cdp4
 
-!!>>> mp_allgatherv_cdp5: gather complex(dp) data from all processes and then
-! redistribute it to all processes
+!!
+!! @sub mp_allgatherv_cdp5
+!!
+!! gather complex(dp) data from all processes and then redistribute it to
+!! all processes
+!!
      subroutine mp_allgatherv_cdp5(send, data, recv, disp, gid)
          implicit none
 
@@ -4243,7 +4283,11 @@
 !!>>> MPI collective operations: reducing                              <<<
 !!========================================================================
 
-!!>>> mp_reduce_int0: reduce 1 integer from all processes
+!!
+!! @sub mp_reduce_int0
+!!
+!! reduce 1 integer from all processes
+!!
      subroutine mp_reduce_int0(source, data, root, mop, gid)
          implicit none
 
@@ -4280,7 +4324,11 @@
          return
      end subroutine mp_reduce_int0
 
-!!>>> mp_reduce_int1: reduce integer vector from all processes
+!!
+!! @sub mp_reduce_int1
+!!
+!! reduce integer vector from all processes
+!!
      subroutine mp_reduce_int1(source, data, root, mop, gid)
          implicit none
 
@@ -4320,7 +4368,11 @@
          return
      end subroutine mp_reduce_int1
 
-!!>>> mp_reduce_int2: reduce integer matrix from all processes
+!!
+!! @sub mp_reduce_int2
+!!
+!! reduce integer matrix from all processes
+!!
      subroutine mp_reduce_int2(source, data, root, mop, gid)
          implicit none
 
@@ -4360,7 +4412,11 @@
          return
      end subroutine mp_reduce_int2
 
-!!>>> mp_reduce_int3: reduce integer matrix from all processes
+!!
+!! @sub mp_reduce_int3
+!!
+!! reduce integer matrix from all processes
+!!
      subroutine mp_reduce_int3(source, data, root, mop, gid)
          implicit none
 
@@ -4400,7 +4456,11 @@
          return
      end subroutine mp_reduce_int3
 
-!!>>> mp_reduce_int4: reduce integer matrix from all processes
+!!
+!! @sub mp_reduce_int4
+!!
+!! reduce integer matrix from all processes
+!!
      subroutine mp_reduce_int4(source, data, root, mop, gid)
          implicit none
 
@@ -4440,7 +4500,11 @@
          return
      end subroutine mp_reduce_int4
 
-!!>>> mp_reduce_int5: reduce integer matrix from all processes
+!!
+!! @sub mp_reduce_int5
+!!
+!! reduce integer matrix from all processes
+!!
      subroutine mp_reduce_int5(source, data, root, mop, gid)
          implicit none
 
@@ -4480,7 +4544,11 @@
          return
      end subroutine mp_reduce_int5
 
-!!>>> mp_reduce_rdp0: reduce 1 real(dp) from all processes
+!!
+!! @sub mp_reduce_rdp0
+!!
+!! reduce 1 real(dp) from all processes
+!!
      subroutine mp_reduce_rdp0(source, data, root, mop, gid)
          implicit none
 
@@ -4517,7 +4585,11 @@
          return
      end subroutine mp_reduce_rdp0
 
-!!>>> mp_reduce_rdp1: reduce real(dp) vector from all processes
+!!
+!! @sub mp_reduce_rdp1
+!!
+!! reduce real(dp) vector from all processes
+!!
      subroutine mp_reduce_rdp1(source, data, root, mop, gid)
          implicit none
 
@@ -4557,7 +4629,11 @@
          return
      end subroutine mp_reduce_rdp1
 
-!!>>> mp_reduce_rdp2: reduce real(dp) matrix from all processes
+!!
+!! @sub mp_reduce_rdp2
+!!
+!! reduce real(dp) matrix from all processes
+!!
      subroutine mp_reduce_rdp2(source, data, root, mop, gid)
          implicit none
 
@@ -4597,7 +4673,11 @@
          return
      end subroutine mp_reduce_rdp2
 
-!!>>> mp_reduce_rdp3: reduce real(dp) matrix from all processes
+!!
+!! @sub mp_reduce_rdp3
+!!
+!! reduce real(dp) matrix from all processes
+!!
      subroutine mp_reduce_rdp3(source, data, root, mop, gid)
          implicit none
 
@@ -4637,7 +4717,11 @@
          return
      end subroutine mp_reduce_rdp3
 
-!!>>> mp_reduce_rdp4: reduce real(dp) matrix from all processes
+!!
+!! @sub mp_reduce_rdp4
+!!
+!! reduce real(dp) matrix from all processes
+!!
      subroutine mp_reduce_rdp4(source, data, root, mop, gid)
          implicit none
 
@@ -4677,7 +4761,11 @@
          return
      end subroutine mp_reduce_rdp4
 
-!!>>> mp_reduce_rdp5: reduce real(dp) matrix from all processes
+!!
+!! @sub mp_reduce_rdp5
+!!
+!! reduce real(dp) matrix from all processes
+!!
      subroutine mp_reduce_rdp5(source, data, root, mop, gid)
          implicit none
 
@@ -4717,7 +4805,11 @@
          return
      end subroutine mp_reduce_rdp5
 
-!!>>> mp_reduce_cdp0: reduce 1 complex(dp) from all processes
+!!
+!! @sub mp_reduce_cdp0
+!!
+!! reduce 1 complex(dp) from all processes
+!!
      subroutine mp_reduce_cdp0(source, data, root, mop, gid)
          implicit none
 
