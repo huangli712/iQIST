@@ -1108,7 +1108,11 @@
          return
      end subroutine mp_wtime
 
-!!>>> mp_wtick: returns the resolution of MPI_Wtime
+!!
+!! @sub mp_wtick
+!!
+!! returns the resolution of MPI_Wtime
+!!
      subroutine mp_wtick(tick)
          implicit none
 
