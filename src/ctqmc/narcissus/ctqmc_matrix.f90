@@ -1119,8 +1119,11 @@
      return
   end subroutine cat_rshift_detrat
 
-!!>>> cat_reflip_detrat: calculate the determinant ratio for global
-!!>>> spin flip
+!!
+!! @sub cat_reflip_detrat
+!!
+!! calculate the determinant ratio for global spin flip
+!!
   subroutine cat_reflip_detrat(up, dn, ratio)
      use constants, only : dp, zero, one
 
@@ -1211,7 +1214,11 @@
      return
   end subroutine cat_reflip_detrat
 
-!!>>> cat_reload_detrat: to do nothing
+!!
+!! @sub cat_reload_detrat
+!!
+!! to do nothing
+!!
   subroutine cat_reload_detrat()
      implicit none
 
