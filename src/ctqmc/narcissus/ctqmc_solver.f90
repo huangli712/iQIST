@@ -18,8 +18,12 @@
 !!>>> core subroutines for quantum impurity solver                     <<<
 !!========================================================================
 
-!!>>> ctqmc_impurity_solver: core engine for hybridization expansion version
-!!>>> continuous time quantum Monte Carlo quantum impurity solver
+!!
+!! @sub ctqmc_impurity_solver
+!!
+!! core engine for hybridization expansion version continuous time quantum
+!! Monte Carlo quantum impurity solver
+!!
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, one, mystd
 
@@ -837,8 +841,12 @@
 !!>>> debug layer                                                      <<<
 !!========================================================================
 
-!!>>> ctqmc_impurity_tester: testing subroutine, please try to active it
-!!>>> on ctqmc_sample_diag() subroutine
+!!
+!! @sub ctqmc_impurity_tester
+!!
+!! testing subroutine, please try to active it on the ctqmc_sample_diag()
+!! subroutine
+!!
   subroutine ctqmc_impurity_tester()
      use constants ! ALL
 
