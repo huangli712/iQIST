@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 02/01/2010 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/19/2017 by li huang (last modified)
 !!! purpose : the purpose of this module is to implement important sparse
 !!!           matrix/vector operations, including matrix multiplication,
 !!!           format conversion, etc. the internal format of sparse matrix
@@ -174,8 +174,11 @@
 
   contains ! encapsulated functionality
 
-!!>>> sp_format_csrdns: converts a row-stored sparse matrix into a
-!!>>> densely stored one
+!!
+!! @sub sp_format_csrdns
+!!
+!! converts a row-stored sparse matrix into a densely stored one
+!!
   subroutine sp_format_csrdns(nrow, ncol, nmax, a, ja, ia, dns)
      implicit none
 
@@ -222,8 +225,11 @@
      return
   end subroutine sp_format_csrdns
 
-!!>>> sp_format_csrdns_z: converts a row-stored sparse matrix into a
-!!>>> densely stored one
+!!
+!! @sub sp_format_csrdns_z
+!!
+!! converts a row-stored sparse matrix into a densely stored one
+!!
   subroutine sp_format_csrdns_z(nrow, ncol, nmax, sa, ja, ia, dns)
      implicit none
 
@@ -270,8 +276,12 @@
      return
   end subroutine sp_format_csrdns_z
 
-!!>>> sp_format_dnscsr: converts a densely stored matrix into a row
-!!>>> orientied compactly sparse matrix
+!!
+!! @sub sp_format_dnscsr
+!!
+!! converts a densely stored matrix into a row orientied compactly
+!! sparse matrix
+!!
   subroutine sp_format_dnscsr(nrow, ncol, nmax, dns, a, ja, ia)
      implicit none
 
@@ -324,8 +334,12 @@
      return
   end subroutine sp_format_dnscsr
 
-!!>>> sp_format_dnscsr_z: converts a densely stored matrix into a row
-!!>>> orientied compactly sparse matrix
+!!
+!! @sub sp_format_dnscsr_z
+!!
+!! converts a densely stored matrix into a row orientied compactly
+!! sparse matrix
+!!
   subroutine sp_format_dnscsr_z(nrow, ncol, nmax, dns, sa, ja, ia)
      implicit none
 
@@ -378,8 +392,12 @@
      return
   end subroutine sp_format_dnscsr_z
 
-!!>>> sp_format_unicsr: converts a densely stored identity matrix into
-!!>>> a row orientied compactly sparse matrix
+!!
+!! @sub sp_format_unicsr
+!!
+!! converts a densely stored identity matrix into a row orientied
+!! compactly sparse matrix
+!!
   subroutine sp_format_unicsr(nrow, nmax, a, ja, ia)
      implicit none
 
@@ -418,8 +436,12 @@
      return
   end subroutine sp_format_unicsr
 
-!!>>> sp_format_unicsr_z: converts a densely stored identity matrix
-!!>>> into a row orientied compactly sparse matrix
+!!
+!! @sub sp_format_unicsr_z
+!!
+!! converts a densely stored identity matrix into a row orientied
+!! compactly sparse matrix
+!!
   subroutine sp_format_unicsr_z(nrow, nmax, sa, ja, ia)
      implicit none
 
@@ -460,8 +482,11 @@
      return
   end subroutine sp_format_unicsr_z
 
-!!>>> sp_matrix_copyer: copy data between two row orientied compactly
-!!>>> sparse matrices
+!!
+!! @sub sp_matrix_copyer
+!!
+!! copy data between two row orientied compactly sparse matrices
+!!
   subroutine sp_matrix_copyer(nrow, nmax, a, ja, ia, b, jb, ib)
      implicit none
 
@@ -502,8 +527,11 @@
      return
   end subroutine sp_matrix_copyer
 
-!!>>> sp_matrix_copyer_z: copy data between two row orientied compactly
-!!>>> sparse matrices
+!!
+!! @sub sp_matrix_copyer_z
+!!
+!! copy data between two row orientied compactly sparse matrices
+!!
   subroutine sp_matrix_copyer_z(nrow, nmax, sa, ja, ia, sb, jb, ib)
      implicit none
 
@@ -544,8 +572,11 @@
      return
   end subroutine sp_matrix_copyer_z
 
-!!>>> sp_matrix_getter: this function returns the element a(i,j) of
-!!>>> matrix a
+!!
+!! @fun sp_matrix_getter
+!!
+!! this function returns the element a(i,j) of matrix a
+!!
   real(dp) &
   function sp_matrix_getter(i, j, nrow, nmax, a, ja, ia) result(elm)
      implicit none
@@ -596,8 +627,11 @@
      return
   end function sp_matrix_getter
 
-!!>>> sp_matrix_getter_z: this function returns the element sa(i,j) of
-!!>>> matrix sa
+!!
+!! @fun sp_matrix_getter_z
+!!
+!! this function returns the element sa(i,j) of matrix sa
+!!
   complex(dp) &
   function sp_matrix_getter_z(i, j, nrow, nmax, sa, ja, ia) result(elm)
      implicit none
@@ -648,8 +682,11 @@
      return
   end function sp_matrix_getter_z
 
-!!>>> sp_matmul_amuvec: multiplies a matrix by a vector using the dot
-!!>>> product form
+!!
+!! @sub sp_matmul_amuvec
+!!
+!! multiplies a matrix by a vector using the dot product form
+!!
   subroutine sp_matmul_amuvec(nrow, ncol, nmax, a, ja, ia, x, y)
      implicit none
 
@@ -693,8 +730,11 @@
      return
   end subroutine sp_matmul_amuvec
 
-!!>>> sp_matmul_amuvec_z: multiplies a matrix by a vector using the
-!!>>> dot product form
+!!
+!! @sub sp_matmul_amuvec_z
+!!
+!! multiplies a matrix by a vector using the dot product form
+!!
   subroutine sp_matmul_amuvec_z(nrow, ncol, nmax, sa, ja, ia, sx, sy)
      implicit none
 
@@ -738,7 +778,11 @@
      return
   end subroutine sp_matmul_amuvec_z
 
-!!>>> sp_matmul_amumat: performs the matrix by matrix product C = A * B
+!!
+!! @sub sp_matmul_amumat
+!!
+!! performs the matrix by matrix product C = A * B
+!!
   subroutine sp_matmul_amumat(nrow, ndim, ncol, nmax, a, ja, ia, b, jb, ib, c, jc, ic)
      implicit none
 
@@ -834,7 +878,11 @@
      return
   end subroutine sp_matmul_amumat
 
-!!>>> sp_matmul_amumat_z: performs the matrix by matrix product C = A * B
+!!
+!! @sub sp_matmul_amumat_z
+!!
+!! performs the matrix by matrix product C = A * B
+!!
   subroutine sp_matmul_amumat_z(nrow, ndim, ncol, nmax, sa, ja, ia, sb, jb, ib, sc, jc, ic)
      implicit none
 
@@ -930,7 +978,11 @@
      return
   end subroutine sp_matmul_amumat_z
 
-!!>>> sp_matmul_amudia: performs the matrix by matrix product B = A * Diag
+!!
+!! @sub sp_matmul_amudia
+!!
+!! performs the matrix by matrix product B = A * Diag
+!!
   subroutine sp_matmul_amudia(nrow, nmax, a, ja, ia, diag, b, jb, ib)
      implicit none
 
@@ -989,7 +1041,11 @@
      return
   end subroutine sp_matmul_amudia
 
-!!>>> sp_matmul_amudia_z: performs the matrix by matrix product B = A * Diag
+!!
+!! @sub sp_matmul_amudia_z
+!!
+!! performs the matrix by matrix product B = A * Diag
+!!
   subroutine sp_matmul_amudia_z(nrow, nmax, sa, ja, ia, diag, sb, jb, ib)
      implicit none
 
@@ -1048,7 +1104,11 @@
      return
   end subroutine sp_matmul_amudia_z
 
-!!>>> sp_matmul_diamua: performs the matrix by matrix product B = Diag * A
+!!
+!! @sub sp_matmul_diamua
+!!
+!! performs the matrix by matrix product B = Diag * A
+!!
   subroutine sp_matmul_diamua(nrow, nmax, diag, a, ja, ia, b, jb, ib)
      implicit none
 
@@ -1107,7 +1167,11 @@
      return
   end subroutine sp_matmul_diamua
 
-!!>>> sp_matmul_diamua_z: performs the matrix by matrix product B = Diag * A
+!!
+!! @sub sp_matmul_diamua_z
+!!
+!! performs the matrix by matrix product B = Diag * A
+!!
   subroutine sp_matmul_diamua_z(nrow, nmax, diag, sa, ja, ia, sb, jb, ib)
      implicit none
 
