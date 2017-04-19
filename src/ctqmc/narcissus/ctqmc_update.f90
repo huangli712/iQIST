@@ -134,8 +134,11 @@
      return
   end subroutine ctqmc_sample_diag
 
-!!>>> ctqmc_verify_diag: checking whether the quantum impurity solver is
-!!>>> consistent internally
+!!
+!! @sub ctqmc_verify_diag
+!!
+!! checking whether the quantum impurity solver is consistent internally
+!!
   subroutine ctqmc_verify_diag(cflag)
      use constants, only : mystd
 
@@ -224,8 +227,11 @@
 !!>>> service layer: updating perturbation expansion series 2          <<<
 !!========================================================================
 
-!!>>> ctqmc_insert_kink: insert new segment or anti-segment in the
-!!>>> perturbation expansion series
+!!
+!! @sub ctqmc_insert_kink
+!!
+!! insert new segment or anti-segment in the perturbation expansion series
+!!
   subroutine ctqmc_insert_kink()
      use constants, only : dp, zero, one
      use spring, only : spring_sfmt_stream
