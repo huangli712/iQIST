@@ -238,7 +238,11 @@
      return
   end subroutine istack_create
 
-!!>>> gstack_create: create and initialize a generic type stack
+!!
+!! @sub gstack_create
+!!
+!! create and initialize a generic type stack
+!!
   subroutine gstack_create(s, t, n)
      implicit none
 
@@ -280,7 +284,11 @@
      return
   end subroutine gstack_create
 
-!!>>> istack_clean: reset the integer type stack, clean all its elements
+!!
+!! @sub istack_clean
+!!
+!! reset the integer type stack, clean all its elements
+!!
   subroutine istack_clean(s)
      implicit none
 
@@ -294,7 +302,11 @@
      return
   end subroutine istack_clean
 
-!!>>> gstack_clean: reset the generic type stack, clean all its elements
+!!
+!! @sub gstack_clean
+!!
+!! reset the generic type stack, clean all its elements
+!!
   subroutine gstack_clean(s)
      implicit none
 
@@ -308,7 +320,11 @@
      return
   end subroutine gstack_clean
 
-!!>>> istack_destroy: destroy and finalize an integer type stack
+!!
+!! @sub istack_destroy
+!!
+!! destroy and finalize an integer type stack
+!!
   subroutine istack_destroy(s)
      implicit none
 
@@ -325,7 +341,11 @@
      return
   end subroutine istack_destroy
 
-!!>>> gstack_destroy: destroy and finalize a generic type stack
+!!
+!! @sub gstack_destroy
+!!
+!! destroy and finalize a generic type stack
+!!
   subroutine gstack_destroy(s)
      implicit none
 
@@ -342,7 +362,11 @@
      return
   end subroutine gstack_destroy
 
-!!>>> istack_copyer: copy an istack object to another
+!!
+!! @sub istack_copyer
+!!
+!! copy an istack object to another
+!!
   subroutine istack_copyer(sa, sb)
      implicit none
 
@@ -366,7 +390,11 @@
      return
   end subroutine istack_copyer
 
-!!>>> gstack_copyer: copy an gstack object to another
+!!
+!! @sub gstack_copyer
+!!
+!! copy an gstack object to another
+!!
   subroutine gstack_copyer(sa, sb)
      implicit none
 
@@ -414,7 +442,11 @@
      return
   end subroutine gstack_copyer
 
-!!>>> istack_setter: update the item's value of stack at specified position
+!!
+!! @sub istack_setter
+!!
+!! update the item's value of stack at specified position
+!!
   subroutine istack_setter(s, pos, item)
      implicit none
 
@@ -438,7 +470,11 @@
      return
   end subroutine istack_setter
 
-!!>>> gstack_setter: update the item's value of stack at specified position
+!!
+!! @sub gstack_setter
+!!
+!! update the item's value of stack at specified position
+!!
   subroutine gstack_setter(s, pos, item)
      implicit none
 
@@ -486,7 +522,11 @@
      return
   end subroutine gstack_setter
 
-!!>>> istack_getter: return the item's value of stack at specified position
+!!
+!! @sub istack_getter
+!!
+!! return the item's value of stack at specified position
+!!
   subroutine istack_getter(s, pos, item)
      implicit none
 
@@ -510,7 +550,11 @@
      return
   end subroutine istack_getter
 
-!!>>> gstack_getter: return the item's value of stack at specified position
+!!
+!! @sub gstack_getter
+!!
+!! return the item's value of stack at specified position
+!!
   subroutine gstack_getter(s, pos, item)
      implicit none
 
@@ -558,7 +602,11 @@
      return
   end subroutine gstack_getter
 
-!!>>> istack_push: push item on top of stack
+!!
+!! @sub istack_push
+!!
+!! push item on top of stack
+!!
   subroutine istack_push(s, item)
      implicit none
 
@@ -580,7 +628,11 @@
      return
   end subroutine istack_push
 
-!!>>> gstack_push: push item on top of stack
+!!
+!! @sub gstack_push
+!!
+!! push item on top of stack
+!!
   subroutine gstack_push(s, item)
      implicit none
 
@@ -626,7 +678,11 @@
      return
   end subroutine gstack_push
 
-!!>>> istack_pop: pop off item from the top of stack
+!!
+!! @sub istack_pop
+!!
+!! pop off item from the top of stack
+!!
   subroutine istack_pop(s, item)
      implicit none
 
@@ -648,7 +704,11 @@
      return
   end subroutine istack_pop
 
-!!>>> gstack_pop: pop off item from the top of stack
+!!
+!! @sub gstack_pop
+!!
+!! pop off item from the top of stack
+!!
   subroutine gstack_pop(s, item)
      implicit none
 
@@ -694,7 +754,11 @@
      return
   end subroutine gstack_pop
 
-!!>>> istack_display: display the top item in the stack without pop it off
+!!
+!! @sub istack_display
+!!
+!! display the top item in the stack without pop it off
+!!
   subroutine istack_display(s, item)
      implicit none
 
@@ -715,7 +779,11 @@
      return
   end subroutine istack_display
 
-!!>>> gstack_display: display the top item in the stack without pop it off
+!!
+!! @sub gstack_display
+!!
+!! display the top item in the stack without pop it off
+!!
   subroutine gstack_display(s, item)
      implicit none
 
@@ -760,8 +828,12 @@
      return
   end subroutine gstack_display
 
-!!>>> istack_gettop: return the top position of the stack, i.e, the number
-!!>>> of items stored in the stack currently
+!!
+!! @fun istack_gettop
+!!
+!! return the top position of the stack, i.e, the number of items stored
+!! in the stack currently
+!!
   integer &
   function istack_gettop(s) result (t)
      implicit none
@@ -775,8 +847,12 @@
      return
   end function istack_gettop
 
-!!>>> gstack_gettop: return the top position of the stack, i.e, the number
-!!>>> of items stored in the stack currently
+!!
+!! @fun gstack_gettop
+!!
+!! return the top position of the stack, i.e, the number of items stored
+!! in the stack currently
+!!
   integer &
   function gstack_gettop(s) result (t)
      implicit none
@@ -790,7 +866,11 @@
      return
   end function gstack_gettop
 
-!!>>> istack_getrest: return the number of empty sites of the stack
+!!
+!! @fun istack_getrest
+!!
+!! return the number of empty sites of the stack
+!!
   integer &
   function istack_getrest(s) result (r)
      implicit none
@@ -804,7 +884,11 @@
      return
   end function istack_getrest
 
-!!>>> gstack_getrest: return the number of empty sites of the stack
+!!
+!! @fun gstack_getrest
+!!
+!! return the number of empty sites of the stack
+!!
   integer &
   function gstack_getrest(s) result (r)
      implicit none
@@ -818,7 +902,11 @@
      return
   end function gstack_getrest
 
-!!>>> istack_getsize: return the actual capacity of the stack
+!!
+!! @fun istack_getsize
+!!
+!! return the actual capacity of the stack
+!!
   integer &
   function istack_getsize(s) result (n)
      implicit none
@@ -832,7 +920,11 @@
      return
   end function istack_getsize
 
-!!>>> gstack_getsize: return the actual capacity of the stack
+!!
+!! @fun gstack_getsize
+!!
+!! return the actual capacity of the stack
+!!
   integer &
   function gstack_getsize(s) result (n)
      implicit none
@@ -846,7 +938,11 @@
      return
   end function gstack_getsize
 
-!!>>> istack_isfull: check whether the stack is full of items
+!!
+!! @fun istack_isfull
+!!
+!! check whether the stack is full of items
+!!
   logical &
   function istack_isfull(s) result (b)
      implicit none
@@ -860,7 +956,11 @@
      return
   end function istack_isfull
 
-!!>>> gstack_isfull: check whether the stack is full of items
+!!
+!! @fun gstack_isfull
+!!
+!! check whether the stack is full of items
+!!
   logical &
   function gstack_isfull(s) result (b)
      implicit none
@@ -874,7 +974,11 @@
      return
   end function gstack_isfull
 
-!!>>> istack_isempty: check whether the stack is empty
+!!
+!! @fun istack_isempty
+!!
+!! check whether the stack is empty
+!!
   logical &
   function istack_isempty(s) result (b)
      implicit none
@@ -888,7 +992,11 @@
      return
   end function istack_isempty
 
-!!>>> gstack_isempty: check whether the stack is empty
+!!
+!! @fun gstack_isempty
+!!
+!! check whether the stack is empty
+!!
   logical &
   function gstack_isempty(s) result (b)
      implicit none
