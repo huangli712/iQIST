@@ -1336,7 +1336,11 @@
      return
   end subroutine ctqmc_record_ofom
 
-!!>>> ctqmc_record_twop: record the two-particle green's function
+!!
+!! @sub ctqmc_record_twop
+!!
+!! record the two-particle green's function
+!!
   subroutine ctqmc_record_twop()
      use constants, only : dp, czero
 
@@ -1449,8 +1453,12 @@
      return
   end subroutine ctqmc_record_twop
 
-!!>>> ctqmc_record_vrtx: record the two-particle green's function
-!!>>> improved estimator is used to improve the accuracy
+!!
+!! @sub ctqmc_record_vrtx
+!!
+!! record the two-particle green's function improved estimator is used to
+!! improve the accuracy
+!!
   subroutine ctqmc_record_vrtx()
      use constants, only : dp, czero
 
@@ -1581,7 +1589,11 @@
      return
   end subroutine ctqmc_record_vrtx
 
-!!>>> ctqmc_record_pair: record the particle-particle pair susceptibility
+!!
+!! @sub ctqmc_record_pair
+!!
+!! record the particle-particle pair susceptibility
+!!
   subroutine ctqmc_record_pair()
      use constants, only : dp, czero
 
@@ -1698,7 +1710,11 @@
 !!>>> reduce physical observables                                      <<<
 !!========================================================================
 
-!!>>> ctqmc_reduce_gtau: reduce the gtau from all children processes
+!!
+!! @sub ctqmc_reduce_gtau
+!!
+!! reduce the gtau from all children processes
+!!
   subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -1756,7 +1772,11 @@
      return
   end subroutine ctqmc_reduce_gtau
 
-!!>>> ctqmc_reduce_ftau: reduce the ftau from all children processes
+!!
+!! @sub ctqmc_reduce_ftau
+!!
+!! reduce the ftau from all children processes
+!!
   subroutine ctqmc_reduce_ftau(ftau_mpi, ftau_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -1814,7 +1834,11 @@
      return
   end subroutine ctqmc_reduce_ftau
 
-!!>>> ctqmc_reduce_grnf: reduce the grnf from all children processes
+!!
+!! @sub ctqmc_reduce_grnf
+!!
+!! reduce the grnf from all children processes
+!!
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp, zero, czero, czi
      use mmpi, only : mp_allreduce, mp_barrier
@@ -1894,7 +1918,11 @@
      return
   end subroutine ctqmc_reduce_grnf
 
-!!>>> ctqmc_reduce_hist: reduce the hist from all children processes
+!!
+!! @sub ctqmc_reduce_hist
+!!
+!! reduce the hist from all children processes
+!!
   subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -1951,7 +1979,11 @@
      return
   end subroutine ctqmc_reduce_hist
 
-!!>>> ctqmc_reduce_prob: reduce the prob from all children processes
+!!
+!! @sub ctqmc_reduce_prob
+!!
+!! reduce the prob from all children processes
+!!
   subroutine ctqmc_reduce_prob(prob_mpi, prob_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2008,7 +2040,11 @@
      return
   end subroutine ctqmc_reduce_prob
 
-!!>>> ctqmc_reduce_nmat: reduce the nmat and nnmat from all children processes
+!!
+!! @sub ctqmc_reduce_nmat
+!!
+!! reduce the nmat and nnmat from all children processes
+!!
   subroutine ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2077,7 +2113,11 @@
      return
   end subroutine ctqmc_reduce_nmat
 
-!!>>> ctqmc_reduce_kmat: reduce the kmat and kkmat from all children processes
+!!
+!! @sub ctqmc_reduce_kmat
+!!
+!! reduce the kmat and kkmat from all children processes
+!!
   subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2146,7 +2186,11 @@
      return
   end subroutine ctqmc_reduce_kmat
 
-!!>>> ctqmc_reduce_lmat: reduce the lmat, rmat, and lrmat from all children processes
+!!
+!! @sub ctqmc_reduce_lmat
+!!
+!! reduce the lmat, rmat, and lrmat from all children processes
+!!
   subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2227,7 +2271,11 @@
      return
   end subroutine ctqmc_reduce_lmat
 
-!!>>> ctqmc_reduce_szpw: reduce the szpow from all children processes
+!!
+!! @sub ctqmc_reduce_szpw
+!!
+!! reduce the szpow from all children processes
+!!
   subroutine ctqmc_reduce_szpw(szpow_mpi, szpow_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2284,7 +2332,11 @@
      return
   end subroutine ctqmc_reduce_szpw
 
-!!>>> ctqmc_reduce_schi: reduce the schi and sschi from all children processes
+!!
+!! @sub ctqmc_reduce_schi
+!!
+!! reduce the schi and sschi from all children processes
+!!
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2354,7 +2406,11 @@
      return
   end subroutine ctqmc_reduce_schi
 
-!!>>> ctqmc_reduce_sfom: reduce the ssfom from all children processes
+!!
+!! @sub ctqmc_reduce_sfom
+!!
+!! reduce the ssfom from all children processes
+!!
   subroutine ctqmc_reduce_sfom(ssfom_mpi, ssfom_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2412,7 +2468,11 @@
      return
   end subroutine ctqmc_reduce_sfom
 
-!!>>> ctqmc_reduce_ochi: reduce the ochi and oochi from all children processes
+!!
+!! @sub ctqmc_reduce_ochi
+!! 
+!! reduce the ochi and oochi from all children processes
+!!
   subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2482,7 +2542,11 @@
      return
   end subroutine ctqmc_reduce_ochi
 
-!!>>> ctqmc_reduce_ofom: reduce the oofom from all children processes
+!!
+!! @sub ctqmc_reduce_ofom
+!!
+!! reduce the oofom from all children processes
+!!
   subroutine ctqmc_reduce_ofom(oofom_mpi, oofom_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2540,8 +2604,11 @@
      return
   end subroutine ctqmc_reduce_ofom
 
-!!>>> ctqmc_reduce_twop: reduce the g2_re_mpi and g2_im_mpi from all
-!!>>> children processes
+!!
+!! @sub ctqmc_reduce_twop
+!!
+!! reduce the g2_re_mpi and g2_im_mpi from all children processes
+!!
   subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2588,8 +2655,11 @@
      return
   end subroutine ctqmc_reduce_twop
 
-!!>>> ctqmc_reduce_vrtx: reduce the h2_re_mpi and h2_im_mpi from all
-!!>>> children processes
+!!
+!! @sub ctqmc_reduce_vrtx
+!!
+!! reduce the h2_re_mpi and h2_im_mpi from all children processes
+!!
   subroutine ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2636,8 +2706,11 @@
      return
   end subroutine ctqmc_reduce_vrtx
 
-!!>>> ctqmc_reduce_pair: reduce the ps_re_mpi and ps_im_mpi from all
-!!>>> children processes
+!!
+!! @sub ctqmc_reduce_pair
+!!
+!! reduce the ps_re_mpi and ps_im_mpi from all children processes
+!!
   subroutine ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
