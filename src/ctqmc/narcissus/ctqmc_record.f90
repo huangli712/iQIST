@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           03/28/2017 by li huang (last modified)
+!!!           04/20/2017 by li huang (last modified)
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -48,8 +48,11 @@
 !!>>> measure physical observables                                     <<<
 !!========================================================================
 
-!!>>> ctqmc_record_gtau: record the impurity green's function in imaginary
-!!>>> time axis
+!!
+!! @sub ctqmc_record_gtau
+!!
+!! record the impurity green's function in imaginary time axis
+!!
   subroutine ctqmc_record_gtau()
      use constants, only : dp, zero, one, two, pi
 
@@ -115,8 +118,11 @@
 
   contains
 
-!!>>> cat_record_gtau1: record impurity green's function using normal
-!!>>> representation
+!!
+!! @sub cat_record_gtau1
+!!
+!! record impurity green's function using normal representation
+!!
   subroutine cat_record_gtau1()
      implicit none
 
@@ -162,8 +168,11 @@
      return
   end subroutine cat_record_gtau1
 
-!!>>> cat_record_gtau2: record impurity green's function using legendre
-!!>>> polynomial representation
+!!
+!! @sub cat_record_gtau2
+!!
+!! record impurity green's function using legendre polynomial representation
+!!
   subroutine cat_record_gtau2()
      implicit none
 
@@ -210,8 +219,11 @@
      return
   end subroutine cat_record_gtau2
 
-!!>>> cat_record_gtau3: record impurity green's function using chebyshev
-!!>>> polynomial representation
+!!
+!! @sub cat_record_gtau3
+!!
+!! record impurity green's function using chebyshev polynomial representation
+!!
   subroutine cat_record_gtau3()
      implicit none
 
@@ -259,8 +271,11 @@
   end subroutine cat_record_gtau3
   end subroutine ctqmc_record_gtau
 
-!!>>> ctqmc_record_ftau: record the auxiliary correlation function in
-!!>>> imaginary time axis, F(\tau)
+!!
+!! @sub ctqmc_record_ftau
+!!
+!! record the auxiliary correlation function in imaginary time axis, F(\tau)
+!!
   subroutine ctqmc_record_ftau()
      use constants, only : dp, zero, one, two, pi
 
@@ -326,8 +341,11 @@
 
   contains
 
-!!>>> cat_record_ftau1: record auxiliary correlation function using normal
-!!>>> representation
+!!
+!! @sub cat_record_ftau1
+!!
+!! record auxiliary correlation function using normal representation
+!!
   subroutine cat_record_ftau1()
      implicit none
 
