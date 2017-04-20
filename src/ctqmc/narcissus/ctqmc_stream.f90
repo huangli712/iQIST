@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/18/2017 by li huang (last modified)
+!!!           04/20/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -19,7 +19,7 @@
 !!!-----------------------------------------------------------------------
 
 !!
-!! @ctqmc_setup_param
+!! @sub ctqmc_setup_param
 !!
 !! setup key parameters for continuous time quantum Monte Carlo quantum
 !! impurity solver and dynamical mean field theory kernel
@@ -232,8 +232,11 @@
      return
   end subroutine ctqmc_setup_param
 
-!!>>> @ctqmc_setup_array
-!!>>> allocate memory for global variables and then initialize them
+!!
+!! @sub ctqmc_setup_array
+!!
+!! allocate memory for global variables and then initialize them
+!!
   subroutine ctqmc_setup_array()
      use context ! ALL
 
@@ -254,9 +257,12 @@
      return
   end subroutine ctqmc_setup_array
 
-!!>>> @ctqmc_setup_model
-!!>>> setup impurity model for continuous time quantum Monte Carlo quantum
-!!>>> impurity solver and dynamical mean field theory kernel
+!!
+!! @sub ctqmc_setup_model
+!!
+!! setup impurity model for continuous time quantum Monte Carlo quantum
+!! impurity solver and dynamical mean field theory kernel
+!!
   subroutine ctqmc_setup_model()
      use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
      use mmpi, only : mp_bcast, mp_barrier
@@ -493,9 +499,12 @@
      return
   end subroutine ctqmc_setup_model
 
-!!>>> @ctqmc_solver_init
-!!>>> initialize the key variables for continuous time quantum Monte Carlo
-!!>>> quantum impurity solver
+!!
+!! @sub ctqmc_solver_init
+!!
+!! initialize the key variables for continuous time quantum Monte Carlo
+!! quantum impurity solver
+!!
   subroutine ctqmc_solver_init()
      use constants, only : zero, czero
      use spring, only : spring_sfmt_init
@@ -704,8 +713,11 @@
      return
   end subroutine ctqmc_solver_init
 
-!!>>> @ctqmc_final_array
-!!>>> garbage collection for this code, please refer to ctqmc_setup_array
+!!
+!! @sub ctqmc_final_array
+!!
+!! garbage collection for this code, please refer to ctqmc_setup_array
+!!
   subroutine ctqmc_final_array()
      use context ! ALL
 
