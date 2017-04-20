@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           04/18/2017 by li huang (last modified)
+!!!           04/20/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -18,9 +18,13 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_print_header: print the startup information for continuous
-!!>>> time quantum Monte Carlo quantum impurity solver plus dynamical
-!!>>> mean field theory self-consistent engine
+!!
+!! @sub ctqmc_print_header
+!!
+!! print the startup information for continuous time quantum Monte Carlo
+!! quantum impurity solver plus dynamical mean field theory
+!! self-consistent engine
+!!
   subroutine ctqmc_print_header()
      use constants, only : mystd
 
@@ -68,9 +72,13 @@
      return
   end subroutine ctqmc_print_header
 
-!!>>> ctqmc_print_footer: print the ending information for continuous time
-!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
-!!>>> theory self-consistent engine
+!!
+!! @sub ctqmc_print_footer
+!!
+!! print the ending information for continuous time quantum Monte Carlo
+!! quantum impurity solver plus dynamical mean field theory
+!! self-consistent engine
+!!
   subroutine ctqmc_print_footer()
      use constants, only : dp, mystd
 
@@ -100,7 +108,11 @@
      return
   end subroutine ctqmc_print_footer
 
-!!>>> ctqmc_print_summary: print the running parameters, only for reference
+!!
+!! @sub ctqmc_print_summary
+!!
+!! print the running parameters, only for reference
+!!
   subroutine ctqmc_print_summary()
      use constants, only : mystd, ev2k
 
@@ -140,8 +152,12 @@
      return
   end subroutine ctqmc_print_summary
 
-!!>>> ctqmc_print_runtime: print the runtime information, including physical
-!!>>> observables and statistic data, only for reference
+!!
+!! @sub ctqmc_print_runtime
+!!
+!! print the runtime information, including physical observables and
+!! statistic data, only for reference
+!!
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : one, half, mystd
 
@@ -212,7 +228,11 @@
      return
   end subroutine ctqmc_print_runtime
 
-!!>>> ctqmc_print_it_info: print the iteration information to the screen
+!!
+!! @sub ctqmc_print_it_info
+!!
+!! print the iteration information to the screen
+!!
   subroutine ctqmc_print_it_info(iter)
      use constants, only : mystd
 
