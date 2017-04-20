@@ -395,8 +395,11 @@
      return
   end subroutine cat_record_ftau1
 
-!!>>> cat_record_ftau2: record auxiliary correlation function using
-!!>>> legendre polynomial representation
+!!
+!! @sub cat_record_ftau2
+!!
+!! record auxiliary correlation function using legendre polynomial representation
+!!
   subroutine cat_record_ftau2()
      implicit none
 
@@ -446,8 +449,11 @@
      return
   end subroutine cat_record_ftau2
 
-!!>>> cat_record_ftau3: record auxiliary correlation function using
-!!>>> chebyshev polynomial representation
+!!
+!! @sub cat_record_ftau3
+!!
+!! record auxiliary correlation function using chebyshev polynomial representation
+!!
   subroutine cat_record_ftau3()
      implicit none
 
@@ -498,8 +504,11 @@
   end subroutine cat_record_ftau3
   end subroutine ctqmc_record_ftau
 
-!!>>> ctqmc_record_grnf: record the impurity green's function in matsubara
-!!>>> frequency space
+!!
+!! @sub ctqmc_record_grnf
+!!
+!! record the impurity green's function in matsubara frequency space
+!!
   subroutine ctqmc_record_grnf()
      use control, only : norbs
      use control, only : nfreq
@@ -525,7 +534,11 @@
      return
   end subroutine ctqmc_record_grnf
 
-!!>>> ctqmc_record_hist: record the histogram of perturbation expansion series
+!!
+!! @sub ctqmc_record_hist
+!!
+!! record the histogram of perturbation expansion series
+!!
   subroutine ctqmc_record_hist()
      use constants, only : one
 
@@ -545,7 +558,11 @@
      return
   end subroutine ctqmc_record_hist
 
-!!>>> ctqmc_record_prob: record the probability of atomic states
+!!
+!! @sub ctqmc_record_prob
+!!
+!! record the probability of atomic states
+!!
   subroutine ctqmc_record_prob()
      use constants, only : one
 
@@ -587,8 +604,12 @@
      return
   end subroutine ctqmc_record_prob
 
-!!>>> ctqmc_record_nmat: record the occupation matrix, double occupation
-!!>>> matrix, and auxiliary physical observables simulataneously
+!!
+!! @sub ctqmc_record_nmat
+!!
+!! record the occupation matrix, double occupation matrix, and auxiliary
+!! physical observables simulataneously
+!!
   subroutine ctqmc_record_nmat()
      use constants, only : dp, zero, two
 
@@ -758,7 +779,11 @@
      return
   end subroutine ctqmc_record_nmat
 
-!!>>> ctqmc_record_kmat: record the < k^2 > - < k >^2
+!!
+!! @sub ctqmc_record_kmat
+!!
+!! record the < k^2 > - < k >^2
+!!
   subroutine ctqmc_record_kmat()
      use constants, only : dp
 
@@ -792,7 +817,11 @@
      return
   end subroutine ctqmc_record_kmat
 
-!!>>> ctqmc_record_lmat: record the fidelity susceptibility
+!!
+!! @sub ctqmc_record_lmat
+!!
+!! record the fidelity susceptibility
+!!
   subroutine ctqmc_record_lmat()
      use constants, only : dp, zero, one, two
 
@@ -862,7 +891,11 @@
      return
   end subroutine ctqmc_record_lmat
 
-!!>>> ctqmc_record_szpw: record the powers of local magnetization
+!!
+!! @sub ctqmc_record_szpw
+!!
+!! record the powers of local magnetization
+!!
   subroutine ctqmc_record_szpw()
      use constants, only : dp, zero
 
@@ -946,8 +979,11 @@
      return
   end subroutine ctqmc_record_szpw
 
-!!>>> ctqmc_record_schi: record the spin-spin correlation function
-!!>>> imaginary-time version
+!!
+!! @sub ctqmc_record_schi
+!!
+!! record the spin-spin correlation function imaginary-time version
+!!
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
@@ -1032,8 +1068,11 @@
      return
   end subroutine ctqmc_record_schi
 
-!!>>> ctqmc_record_sfom: record the spin-spin correlation function
-!!>>> matsubara frequency version
+!!
+!! @sub ctqmc_record_sfom
+!!
+!! record the spin-spin correlation function matsubara frequency version
+!!
   subroutine ctqmc_record_sfom()
      use constants, only : dp, zero, one, two, pi, czi
 
@@ -1145,8 +1184,11 @@
      return
   end subroutine ctqmc_record_sfom
 
-!!>>> ctqmc_record_ochi: record the orbital-orbital correlation function
-!!>>> imaginary-time version
+!!
+!! @sub ctqmc_record_ochi
+!!
+!! record the orbital-orbital correlation function imaginary-time version
+!!
   subroutine ctqmc_record_ochi()
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
@@ -1213,8 +1255,11 @@
      return
   end subroutine ctqmc_record_ochi
 
-!!>>> ctqmc_record_ofom: record the orbital-orbital correlation function
-!!>>> matsubara frequency version
+!!
+!! @sub ctqmc_record_ofom
+!!
+!! record the orbital-orbital correlation function matsubara frequency version
+!!
   subroutine ctqmc_record_ofom()
      use constants, only : dp, zero, two, pi, czi
 
