@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           01/29/2017 by li huang (last modified)
+!!!           04/20/2017 by li huang (last modified)
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
 !!!           for hybridization expansion version continuous time quantum
@@ -17,9 +17,12 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_save_status: save the current perturbation expansion series
-!!>>> information for the continuous time quantum Monte Carlo quantum
-!!>>> impurity solver
+!!
+!! @sub ctqmc_save_status
+!!
+!! save the current perturbation expansion series information for the
+!! continuous time quantum Monte Carlo quantum impurity solver
+!!
   subroutine ctqmc_save_status()
      use constants, only : mytmp
 
@@ -79,9 +82,12 @@
      return
   end subroutine ctqmc_save_status
 
-!!>>> ctqmc_retrieve_status: retrieve the perturbation expansion series
-!!>>> information to initialize the continuous time quantum Monte Carlo
-!!>>> quantum impurity solver
+!!
+!! @sub ctqmc_retrieve_status
+!!
+!! retrieve the perturbation expansion series information to initialize
+!! the continuous time quantum Monte Carlo quantum impurity solver
+!!
   subroutine ctqmc_retrieve_status()
      use constants, only : dp, zero, mytmp
      use mmpi, only : mp_bcast, mp_barrier
