@@ -13,7 +13,7 @@
 !!!           cat_reswap_detrat
 !!!           cat_reflip_detrat
 !!!           cat_reload_detrat <<<---
-!!! source  : ctqmc_update.f90
+!!! source  : ctqmc_hybmat.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
