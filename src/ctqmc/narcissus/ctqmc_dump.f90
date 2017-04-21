@@ -27,7 +27,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           01/28/2017 by li huang (last modified)
+!!!           04/21/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -40,8 +40,11 @@
 !!>>> dump data on imaginary time axis                                 <<<
 !!========================================================================
 
-!!>>> ctqmc_dump_gtau: write out impurity green's function in imaginary
-!!>>> time space
+!!
+!! @sub ctqmc_dump_gtau
+!!
+!! write out impurity green's function in imaginary time space
+!!
   subroutine ctqmc_dump_gtau(tmesh, gtau, gerr)
      use constants, only : dp, mytmp
 
@@ -89,8 +92,11 @@
      return
   end subroutine ctqmc_dump_gtau
 
-!!>>> ctqmc_dump_wtau: write out bath weiss's function in imaginary
-!!>>> time space
+!!
+!! @sub ctqmc_dump_wtau
+!!
+!! write out bath weiss's function in imaginary time space
+!!
   subroutine ctqmc_dump_wtau(tmesh, wtau)
      use constants, only : dp, zero, mytmp
 
@@ -129,8 +135,11 @@
      return
   end subroutine ctqmc_dump_wtau
 
-!!>>> ctqmc_dump_htau: write out hybridization function in imaginary
-!!>>> time space
+!!
+!! @sub ctqmc_dump_htau
+!!
+!! write out hybridization function in imaginary time space
+!!
   subroutine ctqmc_dump_htau(tmesh, htau)
      use constants, only : dp, zero, mytmp
 
@@ -169,8 +178,11 @@
      return
   end subroutine ctqmc_dump_htau
 
-!!>>> ctqmc_dump_ktau: write out screening function and its derivates in
-!!>>> imaginary time space
+!!
+!! @sub ctqmc_dump_ktau
+!!
+!! write out screening function and its derivates in imaginary time space
+!!
   subroutine ctqmc_dump_ktau(tmesh, ktau, ptau, ksed, psed)
      use constants, only : dp, mytmp
 
