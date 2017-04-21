@@ -171,12 +171,6 @@
 ! number of mesh points for legendre polynomial in [-1,1] range
      integer, public, save :: legrd  = 20001
 
-! maximum order for chebyshev polynomial
-     integer, public, save :: chmax  = 32
-
-! number of mesh points for chebyshev polynomial in [-1,1] range
-     integer, public, save :: chgrd  = 20001
-
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! maximum perturbation expansion order
