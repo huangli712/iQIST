@@ -864,13 +864,6 @@
      return
   end subroutine cat_rshift_ztrace
 
-!!>>> cat_reswap_ztrace: to do nothing
-  subroutine cat_reswap_ztrace()
-     implicit none
-
-     return
-  end subroutine cat_reswap_ztrace
-
 !!========================================================================
 !!>>> service layer: make segments for perturbation expansion series   <<<
 !!========================================================================
