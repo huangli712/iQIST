@@ -66,7 +66,28 @@
 ! if isort == 2, use legendre orthogonal polynomial representation
      integer, public, save :: isort  = 1
 
-! control flag
+! control flag: define which physical observables should be measured
+! we just use the following algorithm to judge which quantity should
+! be calculated:
+! (a) isobs is converted to a binary representation at first. for example,
+! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc
+!
+! (b) then we examine the bits. if it is 1, then we do the calculation.
+! if it is 0, then we ignore the calculation. for example, we just use the
+! second bit (from right side to left side) to represent the calculation
+! of kinetic energy fluctuation. so, if isobs is 10_10 (1010_2), we
+! will calculate the kinetic energy fluctuation. if isobs is 13_10
+! (1101_2), we will not calculate it since the second bit is 0.
+!
+! the following are the definitions of bit representation:
+! if p == 1, do nothing
+! if p == 2, calculate kinetic energy fluctuation < k^2 > - < k >^2
+! if p == 3, calculate fidelity susceptibility
+! if p == 4, calculate < S^n_z >, powers of local magnetization
+!
+! example:
+!   ( 1 1 1 0 1 0 1 0 1)_2
+! p = 9 8 7 6 5 4 3 2 1
      integer, public, save :: isobs  = 1
 
 ! control flag: whether we measure the charge or spin susceptibility
