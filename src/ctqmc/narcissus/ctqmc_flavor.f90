@@ -294,8 +294,12 @@
 !!>>> service layer: evaluate ztrace ratio                             <<<
 !!========================================================================
 
-!!>>> cat_insert_ztrace: calculate the trace ratio for insert new segment
-!!>>> or anti-segment on perturbation expansion series
+!!
+!! @sub cat_insert_ztrace
+!!
+!! calculate the trace ratio for insert new segment or anti-segment on
+!! perturbation expansion series
+!!
   subroutine cat_insert_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero, one
 
@@ -428,8 +432,12 @@
      return
   end subroutine cat_insert_ztrace
 
-!!>>> cat_remove_ztrace: calculate the trace ratio for remove old segment
-!!>>> or anti-segment on perturbation expansion series
+!!
+!! @sub cat_remove_ztrace
+!!
+!! calculate the trace ratio for remove old segment or anti-segment on
+!! perturbation expansion series
+!!
   subroutine cat_remove_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero, one
 
@@ -562,8 +570,12 @@
      return
   end subroutine cat_remove_ztrace
 
-!!>>> cat_lshift_ztrace: calculate the trace ratio for left shift old
-!!>>> segment or anti-segment on perturbation expansion series
+!!
+!! @sub cat_lshift_ztrace
+!!
+!! calculate the trace ratio for left shift old segment or anti-segment
+!! on perturbation expansion series
+!!
   subroutine cat_lshift_ztrace(flvr, ring, tau_start1, tau_start2, trace_ratio)
      use constants, only : dp, zero, one
 
@@ -705,8 +717,12 @@
      return
   end subroutine cat_lshift_ztrace
 
-!!>>> cat_rshift_ztrace: calculate the trace ratio for right shift old
-!!>>> segment or anti-segment on perturbation expansion series
+!!
+!! @sub cat_rshift_ztrace
+!!
+!! calculate the trace ratio for right shift old segment or anti-segment
+!! on perturbation expansion series
+!!
   subroutine cat_rshift_ztrace(flvr, ring, tau_end1, tau_end2, trace_ratio)
      use constants, only : dp, zero, one
 
