@@ -55,23 +55,10 @@
 ! if isbin == 2, with binning mode
      integer, public, save :: isbin  = 2
 
-! control flag: apply orthogonal polynomial representation to perform measurement
-! if isort == 1, use normal representation to measure G(\tau)
-! if isort == 2, use legendre polynomial to measure G(\tau)
-! if isort == 3, use chebyshev polynomial (the second kind) to measure G(\tau)
-! if isort == 4, use normal representation to measure G(\tau) and F(\tau)
-! if isort == 5, use legendre polynomial to measure G(\tau) and F(\tau)
-! if isort == 6, use chebyshev polynomial (the second kind) to measure G(\tau) and F(\tau)
-!
-! note: if isort \in [1,3], we use ctqmc_make_hub1() to calculate the self
-! energy function, or else we use ctqmc_make_hub2().
-!
-! note: isort \in [4, 5, 6] is not compatible with isscr = 2. in other
-! words, you can not set isort = 4, 5, or 6 when isscr = 2.
-!
-! note: as for the kernel polynomial representation, the default dirichlet
-! kernel is applied automatically. if you want to choose the other kernel,
-! please check the ctqmc_make_gtau() subroutine in ctqmc_record.f90.
+! control flag: which representation should be used to do measurement
+! if isort == 1, use standard representation
+! if isort == 2, use legendre orthogonal polynomial representation
+! if isort == 3, reserved
      integer, public, save :: isort  = 1
 
 ! control flag: whether we measure the charge or spin susceptibility
