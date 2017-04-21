@@ -868,8 +868,12 @@
 !!>>> service layer: make segments for perturbation expansion series   <<<
 !!========================================================================
 
-!!>>> cat_insert_flavor: determine \tau_s, \tau_e and \tau_max for insert
-!!>>> new segment or anti-segment
+!!
+!! @sub cat_insert_flavor
+!!
+!! determine \tau_s, \tau_e and \tau_max for insert new segment
+!! or anti-segment
+!!
   subroutine cat_insert_flavor(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
      use constants, only : dp, zero, half
      use spring, only : spring_sfmt_stream
@@ -1238,8 +1242,12 @@
      return
   end subroutine cat_insert_flavor
 
-!!>>> cat_remove_flavor: determine \tau_s, \tau_e and \tau_max for remove
-!!>>> old segment or anti-segment
+!!
+!! @sub cat_remove_flavor
+!!
+!! determine \tau_s, \tau_e and \tau_max for remove old segment
+!! or anti-segment
+!!
   subroutine cat_remove_flavor(flvr, is, ie, anti, tau_start, tau_end, tau_max)
      use constants, only : dp, zero, half
      use spring, only : spring_sfmt_stream
@@ -1447,8 +1455,11 @@
      return
   end subroutine cat_remove_flavor
 
-!!>>> cat_lshift_flavor: determine \tau_s1 and \tau_s2 for lshift old
-!!>>> segment or anti-segment
+!!
+!! @sub cat_lshift_flavor
+!!
+!! determine \tau_s1 and \tau_s2 for lshift old segment or anti-segment
+!!
   subroutine cat_lshift_flavor(flvr, iso, isn, ring, tau_start1, tau_start2)
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
@@ -1611,8 +1622,11 @@
      return
   end subroutine cat_lshift_flavor
 
-!!>>> cat_rshift_flavor: determine \tau_e1 and \tau_e2 for rshift old
-!!>>> segment or anti-segment
+!!
+!! @sub cat_rshift_flavor
+!!
+!! determine \tau_e1 and \tau_e2 for rshift old segment or anti-segment
+!!
   subroutine cat_rshift_flavor(flvr, ieo, ien, ring, tau_end1, tau_end2)
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
