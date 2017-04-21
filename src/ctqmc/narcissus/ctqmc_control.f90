@@ -138,32 +138,11 @@
 ! p = 9 8 7 6 5 4 3 2 1
      integer, public, save :: isvrt  = 1
 
-! control flag: hamiltonian model need to be solved
-! if isscr == 1, normal model
-! if isscr == 2, holstein-hubbard model
-! if isscr == 3, dynamic screening, palsmon pole model
-! if isscr == 4, dynamic screening, ohmic model
+! control flag: define whether the Coulomb interaction U is dynamical
+! if isscr == 1, static model
+! if isscr == 2, dynamic screening, palsmon pole model
+! if isscr == 3, dynamic screening, ohmic model
 ! if isscr ==99, dynamic screening, realistic materials
-!
-! note: when isscr == 1, lc and wc are ignored. when isscr == 2, lc means
-! the electron-phonon coupling constant \lambda, and wc phonon vibration
-! frequency \omega_{0}. when isscr == 3, lc and wc just mean the control
-! parameters \lambda and \omega^{'}, respectively. when isscr == 4, lc
-! and wc just mean the control parameters \alpha and \omega_{c}, respectively.
-! when isscr == 99, wc is ignored and lc means the shift for interaction
-! matrix and chemical potential.
-!
-! note: when isscr = 1, 3, 4, or 99, you can use the combination of improved
-! estimator and orthogonal polynomial technology to measure G and \Sigma.
-! in other words, in such cases, isort can be any values (isort \in [1,6]).
-! on the other hand, when isscr = 2, the orthogonal polynomial technology
-! is useful as well (G is accurate), but the improved estimator for \Sigma
-! and vertex function does not work any more! so in this case, you can not
-! setup isort to 4, 5, or 6.
-!
-! note: isscr = 2 is not compatible with the p = 3 bit of isvrt. so if you
-! want to study the two-particle green's function and vertex function of
-! the holstein-hubbard model, you can only set the p = 2 bit of isvrt.
      integer, public, save :: isscr  = 1
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -295,6 +274,10 @@
 ! pair-hopping term
      real(dp), public, save :: Jp    = 0.00_dp
 
+! when isscr == 1, lc and wc are ignored. 
+! when isscr == 2, lc and wc just mean the control parameters \lambda and \omega^{'}, respectively. 
+! when isscr == 3, lc and wc just mean the control parameters \alpha and \omega_{c}, respectively.
+! when isscr == 99, wc is ignored and lc means the shift for interaction matrix and chemical potential.
 ! strength of dynamical screening effect ( or electron-phonon coupling )
      real(dp), public, save :: lc    = 1.00_dp
 
