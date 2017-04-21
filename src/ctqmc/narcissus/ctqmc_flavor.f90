@@ -1793,9 +1793,12 @@
 !!>>> service layer: calculate occupation status for current flavor    <<<
 !!========================================================================
 
-!!>>> cat_occupy_status: evaluate the occupation status for current
-!!>>> flavor channel and time, which can be used to calculate spin-spin
-!!>>> correlation function
+!!
+!! @sub cat_occupy_status
+!!
+!! evaluate the occupation status for current flavor channel and time,
+!! which can be used to calculate spin-spin correlation function
+!!
   subroutine cat_occupy_status(flvr, curr, occu)
      use constants, only : dp, zero, one
 
@@ -1871,8 +1874,12 @@
 !!>>> service layer: calculate extra weight facot for screening effect <<<
 !!========================================================================
 
-!!>>> cat_weight_factor: used to calculate the extra weight factor given
-!!>>> by an exponential of correlators of noninteracting boson operators
+!!
+!! @sub cat_weight_factor
+!!
+!! used to calculate the extra weight factor given by an exponential of
+!! correlators of noninteracting boson operators
+!!
   subroutine cat_weight_factor(tau, scr)
      use constants, only : dp, zero
 
@@ -1937,10 +1944,13 @@
      return
   end subroutine cat_weight_factor
 
-!!>>> cat_weight_kernel: used to calculate K(\tau), i.e., the screening
-!!>>> function for extra weight factor
-!!>>> note: this subroutine can be used to calculate K'(\tau) as well.
-!!>>> you should use the 'typ' parameter to control it
+!!
+!! @sub cat_weight_kernel
+!!
+!! used to calculate K(\tau), i.e., the screening function for extra
+!! weight factor. this subroutine can be used to calculate K'(\tau)
+!! as well. you should use the 'typ' parameter to control it
+!!
   subroutine cat_weight_kernel(typ, tau, cur)
      use constants, only : dp, zero, one, two, pi
 
@@ -2016,7 +2026,11 @@
 !!>>> service layer: calculate overlap between segments                <<<
 !!========================================================================
 
-!!>>> cat_ovlp_segment_: compare two segments, and calculate their overlap
+!!
+!! @sub cat_ovlp_segment_
+!!
+!! compare two segments, and calculate their overlap
+!!
   subroutine cat_ovlp_segment_(ts0, te0, ts1, te1, cover)
      use constants, only : dp, zero
 
@@ -2066,8 +2080,12 @@
      return
   end subroutine cat_ovlp_segment_
 
-!!>>> cat_ovlp_segments: calculate the delta segment overlaps between
-!!>>> current flavor channel and other flavor channels
+!!
+!! @sub cat_ovlp_segments
+!!
+!! calculate the delta segment overlaps between current flavor channel
+!! and other flavor channels
+!!
   subroutine cat_ovlp_segments(flvr, tau_start, tau_end, ovlp)
      use constants, only : dp, zero
 
@@ -2167,8 +2185,12 @@
 !!>>> service layer: utility subroutines to test segment algorithm     <<<
 !!========================================================================
 
-!!>>> cat_make_segments: generate segments or anti-segments for the
-!!>>> specified flavor channel randomly, only used to debug the code
+!!
+!! @sub cat_make_segments
+!!
+!! generate segments or anti-segments for the specified flavor channel
+!! randomly, only used to debug the code
+!!
   subroutine cat_make_segments(flvr, kink, anti)
      use constants, only : dp
      use spring, only : spring_sfmt_stream
@@ -2228,8 +2250,11 @@
      return
   end subroutine cat_make_segments
 
-!!>>> cat_disp_segments: display segment information on the screen, only
-!!>>> used to debug the code
+!!
+!! @sub cat_disp_segments
+!!
+!! display segment information on the screen, only used to debug the code
+!!
   subroutine cat_disp_segments(show_type)
      use constants, only : mystd
 
