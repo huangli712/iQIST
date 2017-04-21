@@ -1789,13 +1789,6 @@
      return
   end subroutine cat_rshift_flavor
 
-!!>>> cat_reswap_flavor: to do nothing
-  subroutine cat_reswap_flavor()
-     implicit none
-
-     return
-  end subroutine cat_reswap_flavor
-
 !!========================================================================
 !!>>> service layer: calculate occupation status for current flavor    <<<
 !!========================================================================
