@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/21/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -23,31 +23,34 @@
 !!>>> character variables                                              <<<
 !!========================================================================
 
-! the code name of the current ctqmc impurity solver
+! the code name of the current quantum impurity solver
      character(len = 09), public, save :: cname = 'NARCISSUS'
 
 !!========================================================================
 !!>>> integer variables                                                <<<
 !!========================================================================
 
-! control flag: running mode
-! if isscf == 1, one-shot non-self-consistent scheme, used in local density
-! approximation plus dynamical mean field theory case
-! if isscf == 2, self-consistent scheme, used in standard model hamiltonian
-! plus dynamical mean field theory case
+! control flag: define the running scheme of the code
+! if isscf == 1, one-shot non-self-consistent scheme, usually used in the
+! density functional theory plus dynamical mean field theory case or used
+! to solve the quantum impurity model
+! if isscf == 2, self-consistent scheme, used in the dynamical mean field
+! theory case. the code implements a dynamical mean field self-consistent
+! loop for solving the hubbard model in the bethe lattice
      integer, public, save :: isscf  = 2
 
-! control flag: symmetry of bands
-! if issun == 1, the bands are not symmetrized
-! if issun == 2, the bands are symmetrized according to symmetry matrix
-     integer, public, save :: issun  = 2
+! control flag: define symmetry of the model (band part)
+! if isbnd == 1, the bands are not symmetrized
+! if isbnd == 2, the bands are symmetrized according to symmetry matrix
+     integer, public, save :: isbnd  = 2
 
-! control flag: symmetry of spin orientation
+! control flag: define symmetry of the model (spin part)
 ! if isspn == 1, enforce spin up = spin down
 ! if isspn == 2, let spin up and spin down states evolve independently
      integer, public, save :: isspn  = 1
 
-! control flag: impurity green's function binning mode
+! control flag: define how to accumulate original data for the imaginary
+! time impurity green's function G(\tau)
 ! if isbin == 1, without binning mode
 ! if isbin == 2, with binning mode
      integer, public, save :: isbin  = 2
