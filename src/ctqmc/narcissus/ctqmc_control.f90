@@ -49,17 +49,25 @@
 ! if isspn == 2, let spin up and spin down states evolve independently
      integer, public, save :: isspn  = 1
 
-! control flag: define how to accumulate original data for the imaginary
-! time impurity green's function G(\tau)
+! control flag: define how to accumulate data for the imaginary-time
+! impurity green's function G(\tau)
 ! if isbin == 1, without binning mode
 ! if isbin == 2, with binning mode
      integer, public, save :: isbin  = 2
 
-! control flag: which representation should be used to do measurement
+! control flag: define whether the worm algorithm should be used to do
+! the measurement
+! if iswor == 1, without worm algorithm
+! if iswor == 2, with worm algorithm
+     integer, public, save :: iswor  = 1
+
+! control flag: define which basis should be used to do the measurement
 ! if isort == 1, use standard representation
 ! if isort == 2, use legendre orthogonal polynomial representation
-! if isort == 3, reserved
      integer, public, save :: isort  = 1
+
+! control flag
+     integer, public, save :: isobs  = 1
 
 ! control flag: whether we measure the charge or spin susceptibility
 ! we just use the following algorithm to judge which susceptibility should
