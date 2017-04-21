@@ -228,8 +228,11 @@
 !!>>> dump data on matsubara frequency axis                            <<<
 !!========================================================================
 
-!!>>> ctqmc_dump_grnf: write out impurity green's function in matsubara
-!!>>> frequency space
+!!
+!! @sub ctqmc_dump_grnf
+!!
+!! write out impurity green's function in matsubara frequency space
+!!
   subroutine ctqmc_dump_grnf(rmesh, grnf, gerr)
      use constants, only : dp, mytmp
 
@@ -271,8 +274,11 @@
      return
   end subroutine ctqmc_dump_grnf
 
-!!>>> ctqmc_dump_wssf: write out bath weiss's function in matsubara
-!!>>> frequency space
+!!
+!! @sub ctqmc_dump_wssf
+!!
+!! write out bath weiss's function in matsubara frequency space
+!!
   subroutine ctqmc_dump_wssf(rmesh, wssf)
      use constants, only : dp, zero, mytmp
 
@@ -313,8 +319,11 @@
      return
   end subroutine ctqmc_dump_wssf
 
-!!>>> ctqmc_dump_hybf: write out hybridization function in matsubara
-!!>>> frequency space
+!!
+!! @sub ctqmc_dump_hybf
+!!
+!! write out hybridization function in matsubara frequency space
+!!
   subroutine ctqmc_dump_hybf(rmesh, hybf)
      use constants, only : dp, zero, mytmp
 
@@ -355,8 +364,11 @@
      return
   end subroutine ctqmc_dump_hybf
 
-!!>>> ctqmc_dump_sigf: write out self-energy function in matsubara
-!!>>> frequency space
+!!
+!! @sub ctqmc_dump_sigf
+!!
+!! write out self-energy function in matsubara frequency space
+!!
   subroutine ctqmc_dump_sigf(rmesh, sigf)
      use constants, only : dp, zero, mytmp
 
@@ -397,9 +409,12 @@
      return
   end subroutine ctqmc_dump_sigf
 
-!!>>> ctqmc_dump_hub1: write out impurity green's function and self-energy
-!!>>> function obtained by hubbard-I approximation in matsubara frequency
-!!>>> space
+!!
+!! @sub ctqmc_dump_hub1
+!!
+!! write out impurity green's function and self-energy function obtained
+!! by hubbard-I approximation in matsubara frequency space
+!!
   subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
      use constants, only : dp, mytmp
 
@@ -447,8 +462,12 @@
 !!>>> dump data of physical observables                                <<<
 !!========================================================================
 
-!!>>> ctqmc_dump_hist: write out the Monte Carlo sampling histogram for
-!!>>> perturbation expansion series
+!!
+!! @sub ctqmc_dump_hist
+!!
+!! write out the Monte Carlo sampling histogram for perturbation expansion
+!! series
+!!
   subroutine ctqmc_dump_hist(hist, herr)
      use constants, only : dp, mytmp
 
@@ -494,8 +513,11 @@
      return
   end subroutine ctqmc_dump_hist
 
-!!>>> ctqmc_dump_prob: write out the probability of eigenstates of local
-!!>>> hamiltonian matrix
+!!
+!! @sub ctqmc_dump_prob
+!!
+!! write out the probability of eigenstates of local hamiltonian matrix
+!!
   subroutine ctqmc_dump_prob(prob, perr)
      use constants, only : dp, zero, one, half, mytmp
 
@@ -591,8 +613,11 @@
      return
   end subroutine ctqmc_dump_prob
 
-!!>>> ctqmc_dump_nmat: write out the occupation matrix and double
-!!>>> occupation matrix
+!!
+!! @sub ctqmc_dump_nmat
+!!
+!! write out the occupation matrix and double occupation matrix
+!!
   subroutine ctqmc_dump_nmat(nmat, nnmat, nerr, nnerr)
      use constants, only : dp, mytmp
 
@@ -639,7 +664,11 @@
      return
   end subroutine ctqmc_dump_nmat
 
-!!>>> ctqmc_dump_kmat: write out the < k > and < k^2 >
+!!
+!! @sub ctqmc_dump_kmat
+!!
+!! write out the < k > and < k^2 >
+!!
   subroutine ctqmc_dump_kmat(kmat, kkmat, kerr, kkerr)
      use constants, only : dp, one, two, mytmp
 
@@ -699,7 +728,11 @@
      return
   end subroutine ctqmc_dump_kmat
 
-!!>>> ctqmc_dump_lmat: write out the fidelity susceptibility
+!!
+!! @sub ctqmc_dump_lmat
+!!
+!! write out the fidelity susceptibility
+!!
   subroutine ctqmc_dump_lmat(lmat, rmat, lrmat, lerr, rerr, lrerr)
      use constants, only : dp, mytmp
 
@@ -764,7 +797,11 @@
      return
   end subroutine ctqmc_dump_lmat
 
-!!>>> ctqmc_dump_schi: write out the powers of local magnetization
+!!
+!! @sub ctqmc_dump_schi
+!!
+!! write out the powers of local magnetization
+!!
   subroutine ctqmc_dump_szpw(szpow, szerr)
      use constants, only : dp, mytmp
 
@@ -812,7 +849,11 @@
      return
   end subroutine ctqmc_dump_szpw
 
-!!>>> ctqmc_dump_schi: write out the spin-spin correlation function
+!!
+!! @sub ctqmc_dump_schi
+!!
+!! write out the spin-spin correlation function
+!!
   subroutine ctqmc_dump_schi(schi, sschi, serr, sserr)
      use constants, only : dp, mytmp
 
@@ -874,7 +915,11 @@
      return
   end subroutine ctqmc_dump_schi
 
-!!>>> ctqmc_dump_sfom: write out the spin-spin correlation function
+!!
+!! @sub ctqmc_dump_sfom
+!!
+!! write out the spin-spin correlation function
+!!
   subroutine ctqmc_dump_sfom(ssfom, sserr)
      use constants, only : dp, two, pi, mytmp
 
@@ -926,7 +971,11 @@
      return
   end subroutine ctqmc_dump_sfom
 
-!!>>> ctqmc_dump_ochi: write out the orbital-orbital correlation function
+!!
+!! @sub ctqmc_dump_ochi
+!!
+!! write out the orbital-orbital correlation function
+!!
   subroutine ctqmc_dump_ochi(ochi, oochi, oerr, ooerr)
      use constants, only : dp, mytmp
 
@@ -991,7 +1040,11 @@
      return
   end subroutine ctqmc_dump_ochi
 
-!!>>> ctqmc_dump_ofom: write out the orbital-orbital correlation function
+!!
+!! @sub ctqmc_dump_ofom
+!!
+!! write out the orbital-orbital correlation function
+!!
   subroutine ctqmc_dump_ofom(oofom, ooerr)
      use constants, only : dp, two, pi, mytmp
 
@@ -1046,8 +1099,12 @@
      return
   end subroutine ctqmc_dump_ofom
 
-!!>>> ctqmc_dump_twop: write out the two-particle green's function and
-!!>>> full (reducible) vertex function
+!!
+!! @sub ctqmc_dump_twop
+!!
+!! write out the two-particle green's function and full (reducible)
+!! vertex function
+!!
   subroutine ctqmc_dump_twop(g2_re, g2_im)
      use constants, only : dp, czero, mytmp
 
@@ -1174,9 +1231,12 @@
      return
   end subroutine ctqmc_dump_twop
 
-!!>>> ctqmc_dump_vrtx: write out the two-particle green's function and
-!!>>> full (reducible) vertex function, the improved estimator was used
-!!>>> to improve the accuracy
+!!
+!! @sub ctqmc_dump_vrtx
+!!
+!! write out the two-particle green's function and full (reducible) vertex
+!! function, the improved estimator was used to improve the accuracy
+!!
   subroutine ctqmc_dump_vrtx(h2_re, h2_im)
      use constants, only : dp, czero, mytmp
 
@@ -1326,7 +1386,11 @@
      return
   end subroutine ctqmc_dump_vrtx
 
-!!>>> ctqmc_dump_pair: write out the particle-particle pair susceptibility
+!!
+!! @sub ctqmc_dump_pair
+!!
+!! write out the particle-particle pair susceptibility
+!!
   subroutine ctqmc_dump_pair(ps_re, ps_im)
      use constants, only : dp, mytmp
 
@@ -1395,8 +1459,12 @@
 !!>>> dump data of auxiliary information                               <<<
 !!========================================================================
 
-!!>>> ctqmc_dump_diag: write out a snapshot for the current diagram
-!!>>> configuration, the results can be used to make a dynamical video.
+!!
+!! @sub ctqmc_dump_diag
+!!
+!! write out a snapshot for the current diagram configuration, the results
+!! can be used to make a dynamical video.
+!!
   subroutine ctqmc_dump_diag(iter, cstep)
      use constants, only : mystd, mytmp
 
