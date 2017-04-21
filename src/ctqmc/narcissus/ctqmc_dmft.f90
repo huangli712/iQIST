@@ -8,7 +8,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
+!!!           04/21/2017 by li huang (last modified)
 !!! purpose : the self-consistent engine for dynamical mean field theory
 !!!           (DMFT) simulation. it is only suitable for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
@@ -17,9 +17,12 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_dmft_selfer: the self-consistent engine for continuous time
-!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
-!!>>> theory simulation
+!!
+!! @sub ctqmc_dmft_selfer
+!!
+!! the self-consistent engine for continuous time quantum Monte Carlo
+!! quantum impurity solver plus dynamical mean field theory simulation
+!!
   subroutine ctqmc_dmft_selfer()
      use constants, only : dp, one, half, czi, mystd
 
@@ -109,7 +112,11 @@
      return
   end subroutine ctqmc_dmft_selfer
 
-!!>>> ctqmc_dmft_conver: check the convergence of self-energy function
+!!
+!! @sub ctqmc_dmft_conver
+!!
+!! check the convergence of self-energy function
+!!
   subroutine ctqmc_dmft_conver(iter, convergence)
      use constants, only : dp, zero, one, two, eps8, mystd
 
@@ -175,9 +182,12 @@
      return
   end subroutine ctqmc_dmft_conver
 
-!!>>> ctqmc_dmft_bethe: dmft self-consistent conditions, bethe lattice,
-!!>>> semicircular density of states, force a paramagnetic order, equal
-!!>>> band width
+!!
+!! @sub ctqmc_dmft_bethe
+!!
+!! dmft self-consistent conditions, bethe lattice, semicircular density
+!! of states, force a paramagnetic order, equal band width
+!!
   subroutine ctqmc_dmft_bethe(hybf, grnf)
      use constants, only : dp
 
@@ -208,9 +218,13 @@
      return
   end subroutine ctqmc_dmft_bethe
 
-!!>>> ctqmc_dmft_anydos: dmft self-consistent conditions, general density
-!!>>> of states, calculate the new hybridization function by using hilbert
-!!>>> transformation and numerical integration
+!!
+!! @sub ctqmc_dmft_anydos
+!!
+!! dmft self-consistent conditions, general density of states, calculate
+!! the new hybridization function by using hilbert transformation and
+!! numerical integration
+!!
   subroutine ctqmc_dmft_anydos(hybf, grnf, sigf)
      use constants, only : dp, zero, czi, czero, mytmp
      use mmpi, only : mp_bcast, mp_barrier
