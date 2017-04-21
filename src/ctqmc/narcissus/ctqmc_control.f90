@@ -90,9 +90,9 @@
 ! p = 9 8 7 6 5 4 3 2 1
      integer, public, save :: isobs  = 1
 
-! control flag: whether we measure the charge or spin susceptibility
-! we just use the following algorithm to judge which susceptibility should
-! be calculated:
+! control flag: define whether we should measure the charge or spin
+! susceptibility. we just use the following algorithm to judge which
+! susceptibility should be calculated:
 ! (a) issus is converted to a binary representation at first. for example,
 ! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
 !
@@ -109,10 +109,6 @@
 ! if p == 3, calculate orbital-orbital correlation function (time space)
 ! if p == 4, calculate spin-spin correlation function (frequency space)
 ! if p == 5, calculate orbital-orbital correlation function (frequency space)
-! if p == 6, calculate < k^2 > - < k >^2
-! if p == 7, calculate fidelity susceptibility matrix
-! if p == 8, calculate < S^n_z >, powers of local magnetization
-! if p == 9, reserved
 !
 ! example:
 !   ( 1 1 1 0 1 0 1 0 1)_2
