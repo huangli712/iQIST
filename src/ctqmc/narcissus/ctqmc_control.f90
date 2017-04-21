@@ -115,9 +115,9 @@
 ! p = 9 8 7 6 5 4 3 2 1
      integer, public, save :: issus  = 1
 
-! control flag: whether we measure the high order correlation function
-! we just use the following algorithm to judge which correlation function
-! should be calculated:
+! control flag: define whether we should measure the two-particle green's
+! functions. we just use the following algorithm to judge which correlation
+! function should be calculated:
 ! (a) isvrt is converted to a binary representation at first. for example,
 ! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
 !
@@ -131,32 +131,11 @@
 ! the following are the definitions of bit representation:
 ! if p == 1, do nothing
 ! if p == 2, calculate two-particle green's function and vertex function
-! if p == 3, calculate two-particle green's function and vertex function
-! if p == 4, calculate particle-particle pair susceptibility
-! if p == 5, reserved
-! if p == 6, reserved
-! if p == 7, reserved
-! if p == 8, reserved
-! if p == 9, reserved
+! if p == 3, calculate particle-particle pair susceptibility
 !
 ! example:
 !   ( 1 1 1 0 1 0 1 0 1)_2
 ! p = 9 8 7 6 5 4 3 2 1
-!
-! note: if p == 2 or p == 3, both the two-particle green's and vertex
-! functions are computed, but using two different algorithms. you can not
-! set them to 1 at the same time. in order words, if you set the bit at
-! p == 2 to 1, then the bit at p == 3 must be 0, and vice versa.
-!
-! note: if p == 2, the traditional algorithm is used. if p == 3, the
-! improved estimator for two-particle green's function is used.
-!
-! note: the isvrt parameter has nothing to do with the isort parameter,
-! but when p = 3 bit is set to be 1, the prefactor for improved estimator
-! (please see 'pref' in ctqmc_context.f90) should be calculated and used
-! to improve the computational accuracy. on the other hand, if isort >= 4,
-! the same prefactor will be calculated as well. you can not setup isscr
-! = 2 at this time.
      integer, public, save :: isvrt  = 1
 
 ! control flag: hamiltonian model need to be solved
