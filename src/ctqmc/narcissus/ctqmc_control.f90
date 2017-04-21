@@ -263,14 +263,18 @@
 ! pair-hopping term
      real(dp), public, save :: Jp    = 0.00_dp
 
-! when isscr == 1, lc and wc are ignored. 
-! when isscr == 2, lc and wc just mean the control parameters \lambda and \omega^{'}, respectively. 
-! when isscr == 3, lc and wc just mean the control parameters \alpha and \omega_{c}, respectively.
-! when isscr == 99, wc is ignored and lc means the shift for interaction matrix and chemical potential.
-! strength of dynamical screening effect ( or electron-phonon coupling )
+! strength of dynamical screening effect
+! when isscr == 01, lc is ignored
+! when isscr == 02, lc just means the control parameter \lambda 
+! when isscr == 03, lc just means the control parameter \alpha
+! when isscr == 99, lc just means the shift for interaction matrix
      real(dp), public, save :: lc    = 1.00_dp
 
-! screening frequency ( or frequency for einstein phonons )
+! screening frequency
+! when isscr == 01, wc is ignored. 
+! when isscr == 02, wc just means the control parameter \omega^{'}
+! when isscr == 03, wc just means the control parameter \omega_{c}
+! when isscr == 99, wc just means the shift for chemical potential
      real(dp), public, save :: wc    = 1.00_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
