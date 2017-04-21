@@ -3,18 +3,15 @@
 !!! program : cat_insert_action
 !!!           cat_remove_action
 !!!           cat_lshift_action
-!!!           cat_rshift_action
-!!!           cat_reswap_action <<<---
+!!!           cat_rshift_action <<<---
 !!!           cat_insert_ztrace
 !!!           cat_remove_ztrace
 !!!           cat_lshift_ztrace
-!!!           cat_rshift_ztrace
-!!!           cat_reswap_ztrace <<<---
+!!!           cat_rshift_ztrace <<<---
 !!!           cat_insert_flavor
 !!!           cat_remove_flavor
 !!!           cat_lshift_flavor
-!!!           cat_rshift_flavor
-!!!           cat_reswap_flavor <<<---
+!!!           cat_rshift_flavor <<<---
 !!!           cat_occupy_status <<<---
 !!!           cat_weight_factor
 !!!           cat_weight_kernel <<<---
@@ -292,13 +289,6 @@
 
      return
   end subroutine cat_rshift_action
-
-!!>>> cat_reswap_action: to do nothing
-  subroutine cat_reswap_action()
-     implicit none
-
-     return
-  end subroutine cat_reswap_action
 
 !!========================================================================
 !!>>> service layer: evaluate ztrace ratio                             <<<
