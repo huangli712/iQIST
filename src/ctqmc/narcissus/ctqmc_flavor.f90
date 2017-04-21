@@ -26,7 +26,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           01/30/2017 by li huang (last modified)
+!!!           04/21/2017 by li huang (last modified)
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver.
@@ -39,8 +39,12 @@
 !!>>> service layer: update perturbation expansion series              <<<
 !!========================================================================
 
-!!>>> cat_insert_action: update the perturbation expansion series for
-!!>>> insert new segment or anti-segment
+!!
+!! @sub cat_insert_action
+!!
+!! update the perturbation expansion series for insert new segment
+!! or anti-segment
+!!
   subroutine cat_insert_action(flvr, is, ie, tau_start, tau_end)
      use constants, only : dp
      use stack, only : istack_pop
@@ -111,8 +115,12 @@
      return
   end subroutine cat_insert_action
 
-!!>>> cat_remove_action: update the perturbation expansion series for
-!!>>> remove old segment or anti-segment
+!!
+!! @sub cat_remove_action
+!!
+!! update the perturbation expansion series for remove old segment
+!! or anti-segment
+!!
   subroutine cat_remove_action(flvr, is, ie)
      use stack, only : istack_push
 
@@ -159,8 +167,12 @@
      return
   end subroutine cat_remove_action
 
-!!>>> cat_lshift_action: update the perturbation expansion series for
-!!>>> left shift old segment or anti-segment
+!!
+!! @sub cat_lshift_action
+!!
+!! update the perturbation expansion series for left shift old segment
+!! or anti-segment
+!!
   subroutine cat_lshift_action(flvr, iso, isn, tau_start)
      use constants, only : dp
 
@@ -218,8 +230,12 @@
      return
   end subroutine cat_lshift_action
 
-!!>>> cat_rshift_action: update the perturbation expansion series for
-!!>>> right shift old segment or anti-segment
+!!
+!! @sub cat_rshift_action
+!!
+!! update the perturbation expansion series for right shift old segment
+!! or anti-segment
+!!
   subroutine cat_rshift_action(flvr, ieo, ien, tau_end)
      use constants, only : dp
 
