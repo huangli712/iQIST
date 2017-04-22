@@ -70,9 +70,17 @@
 !!
      integer, public, save :: isscr  = 1
 
-! control flag: define symmetry of the model (band part)
-! if isbnd == 1, the bands are not symmetrized
-! if isbnd == 2, the bands are symmetrized according to symmetry matrix
+!!
+!! @var isbnd
+!!
+!! control flag, define symmetry of the model (band part)
+!!
+!! if isbnd == 1:
+!!     the bands are not symmetrized
+!!
+!! if isbnd == 2:
+!!     the bands are symmetrized according to symmetry matrix
+!!
      integer, public, save :: isbnd  = 2
 
 ! control flag: define symmetry of the model (spin part)
