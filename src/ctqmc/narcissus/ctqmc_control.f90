@@ -51,11 +51,23 @@
 !!
      integer, public, save :: isscf  = 2
 
-! control flag: define whether the Coulomb interaction U is dynamical
-! if isscr == 1, static model
-! if isscr == 2, dynamic screening, palsmon pole model
-! if isscr == 3, dynamic screening, ohmic model
-! if isscr ==99, dynamic screening, realistic materials
+!!
+!! @var isscr
+!!
+!! control flag, define whether the Coulomb interaction U is dynamic
+!!
+!! if isscr == 1:
+!!     static interaction
+!!
+!! if isscr == 2:
+!!     dynamic interaction, for palsmon pole model
+!!
+!! if isscr == 3
+!!     dynamic interaction, for ohmic model
+!!
+!! if isscr ==99
+!!     dynamic interaction, for realistic materials
+!!
      integer, public, save :: isscr  = 1
 
 ! control flag: define symmetry of the model (band part)
