@@ -196,6 +196,7 @@
 !!     bit is 0 we will not calculate it
 !!
 !! the following are the definitions of bit representation:
+!!
 !! if p == 1:
 !!     do nothing
 !!
@@ -214,6 +215,7 @@
 !! example:
 !!   ( 1 1 1 0 1 0 1 0 1)_2
 !! p = 9 8 7 6 5 4 3 2 1
+!!
      integer, public, save :: issus  = 1
 
 ! control flag: define whether we should measure the two-particle green's
@@ -241,7 +243,11 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! number of correlated bands
+!!
+!! @var nband
+!!
+!! number of correlated bands
+!!
      integer, public, save :: nband  = 1
 
 ! number of spin projection
