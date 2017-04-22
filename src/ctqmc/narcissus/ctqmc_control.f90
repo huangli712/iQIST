@@ -96,10 +96,18 @@
 !!
      integer, public, save :: isspn  = 1
 
-! control flag: define how to accumulate data for the imaginary-time
-! impurity green's function G(\tau)
-! if isbin == 1, without binning mode
-! if isbin == 2, with binning mode
+!!
+!! @var isbin
+!!
+!! control flag, define how to accumulate the imaginary-time impurity
+!! green's function G(\tau) data
+!!
+!! if isbin == 1:
+!!     without data binning mode
+!!
+!! if isbin == 2:
+!!     with data binning mode
+!!
      integer, public, save :: isbin  = 2
 
 ! control flag: define whether the worm algorithm should be used to do
