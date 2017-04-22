@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           04/21/2017 by li huang (last modified)
+!!!           04/22/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -23,20 +23,32 @@
 !!>>> character variables                                              <<<
 !!========================================================================
 
-! the code name of the current quantum impurity solver
+!!
+!! @var cname
+!!
+!! the code name of the current quantum impurity solver
+!!
      character(len = 09), public, save :: cname = 'NARCISSUS'
 
 !!========================================================================
 !!>>> integer variables                                                <<<
 !!========================================================================
 
-! control flag: define the running scheme of the code
-! if isscf == 1, one-shot non-self-consistent scheme, usually used in the
-! density functional theory plus dynamical mean field theory case or used
-! to solve the quantum impurity model
-! if isscf == 2, self-consistent scheme, used in the dynamical mean field
-! theory case. the code implements a dynamical mean field self-consistent
-! loop for solving the hubbard model in the bethe lattice
+!!
+!! @var isscf
+!!
+!! control flag, define the running scheme of the code
+!!
+!! if isscf == 1:
+!!     one-shot non-self-consistent scheme, usually used in the density
+!!     functional theory plus dynamical mean field theory case or used
+!!     to solve the quantum impurity model
+!!
+!! if isscf == 2:
+!!     self-consistent scheme, used in the dynamical mean field theory
+!!     case. the code implements a dynamical mean field self-consistent
+!!     loop for solving the hubbard model in the bethe lattice
+!!
      integer, public, save :: isscf  = 2
 
 ! control flag: define whether the Coulomb interaction U is dynamical
