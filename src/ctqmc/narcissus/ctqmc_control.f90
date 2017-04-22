@@ -175,11 +175,16 @@
 !!
      integer, public, save :: isobs  = 1
 
-! control flag: define whether we should measure the charge or spin
-! susceptibility. we just use the following algorithm to judge which
-! susceptibility should be calculated:
-! (a) issus is converted to a binary representation at first. for example,
-! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
+!!
+!! @var issus
+!!
+!! control flag, it is used to tell the code whether we should calculate
+!! the charge or spin susceptibility. we just use the following rules to
+!! make a judgement:
+!!
+!! rule 1:
+!!     issus is firstly converted to a binary representation. for example,
+!!     10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc
 !
 ! (b) then we examine the bits. if it is 1, then we do the calculation.
 ! if it is 0, then we ignore the calculation. for example, we just use the
