@@ -83,9 +83,17 @@
 !!
      integer, public, save :: isbnd  = 2
 
-! control flag: define symmetry of the model (spin part)
-! if isspn == 1, enforce spin up = spin down
-! if isspn == 2, let spin up and spin down states evolve independently
+!!
+!! @var isspn
+!!
+!! control flag, define symmetry of the model (spin part)
+!!
+!! if isspn == 1:
+!!     enforce spin up = spin down
+!!
+!! if isspn == 2:
+!!     let spin up and spin down states evolve independently
+!!
      integer, public, save :: isspn  = 1
 
 ! control flag: define how to accumulate data for the imaginary-time
