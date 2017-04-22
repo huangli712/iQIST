@@ -218,13 +218,19 @@
 !!
      integer, public, save :: issus  = 1
 
-! control flag: define whether we should measure the two-particle green's
+!!
+!! @var isvrt
+!!
+!! control flag, define whether we should measure the two-particle green's
 ! functions. we just use the following algorithm to judge which correlation
 ! function should be calculated:
-! (a) isvrt is converted to a binary representation at first. for example,
-! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
-!
-! (b) then we examine the bits. if it is 1, then we do the calculation.
+!!
+!! rule 1:
+!! isvrt is converted to a binary representation at first. for example,
+!! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
+!!
+!! rule 2:
+!! then we examine the bits. if it is 1, then we do the calculation.
 ! if it is 0, then we ignore the calculation. for example, we just use the
 ! second bit (from right side to left side) to represent the calculation
 ! of two-particle green's function. so, if isvrt is 10_10 (1010_2), we
@@ -235,10 +241,11 @@
 ! if p == 1, do nothing
 ! if p == 2, calculate two-particle green's function and vertex function
 ! if p == 3, calculate particle-particle pair susceptibility
-!
-! example:
-!   ( 1 1 1 0 1 0 1 0 1)_2
-! p = 9 8 7 6 5 4 3 2 1
+!!
+!! example:
+!!   ( 1 1 1 0 1 0 1 0 1)_2
+!! p = 9 8 7 6 5 4 3 2 1
+!!
      integer, public, save :: isvrt  = 1
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
