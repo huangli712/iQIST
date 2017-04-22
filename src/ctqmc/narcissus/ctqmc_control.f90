@@ -221,9 +221,9 @@
 !!
 !! @var isvrt
 !!
-!! control flag, define whether we should measure the two-particle green's
-! functions. we just use the following algorithm to judge which correlation
-! function should be calculated:
+!! control flag, it is used to tell the code whether we should measure
+!! the two-particle green's functions. we just use the following rules
+!! to judge:
 !!
 !! rule 1:
 !! isvrt is converted to a binary representation at first. for example,
