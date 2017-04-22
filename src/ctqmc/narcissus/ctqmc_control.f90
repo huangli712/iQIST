@@ -250,17 +250,34 @@
 !!
      integer, public, save :: nband  = 1
 
-! number of spin projection
+!!
+!! @var nspin
+!!
+!! number of spin projection
+!!
      integer, public, save :: nspin  = 2
 
-! number of correlated orbitals (= nband * nspin)
+!!
+!! @var norbs
+!!
+!! number of correlated orbitals (= nband * nspin)
+!!
      integer, public, save :: norbs  = 2
 
-! number of atomic states (= 2**norbs)
+!!
+!! @var ncfgs
+!!
+!! number of atomic states (= 2**norbs)
+!!
      integer, public, save :: ncfgs  = 4
 
-! maximum number of continuous time quantum Monte Carlo quantum impurity
-! solver plus dynamical mean field theory self-consistent iterations
+!!
+!! @var niter
+!!
+!! maximum number of self-consistent iterations for the continuous time
+!! quantum Monte Carlo quantum impurity solver plus dynamical mean field
+!! theory calculation
+!!
      integer, public, save :: niter  = 20
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
