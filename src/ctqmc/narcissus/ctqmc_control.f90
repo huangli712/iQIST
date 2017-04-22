@@ -96,10 +96,17 @@
 !!
      integer, public, save :: isspn  = 1
 
-! control flag: define whether the worm algorithm should be used to do
-! the measurement
-! if iswor == 1, without worm algorithm
-! if iswor == 2, with worm algorithm
+!!
+!! @var iswor
+!!
+!! control flag, define which algorithm should be used to do measurement
+!!
+!! if iswor == 1:
+!!     without worm algorithm, fast but unreliable
+!!
+!! if iswor == 2
+!!     with worm algorithm, slow but reliable
+!!
      integer, public, save :: iswor  = 1
 
 !!
