@@ -123,9 +123,17 @@
 !!
      integer, public, save :: isbin  = 2
 
-! control flag: define which basis should be used to do the measurement
-! if isort == 1, use standard representation
-! if isort == 2, use legendre orthogonal polynomial representation
+!!
+!! @var isort
+!!
+!! control flag, define which basis should be used to do measurement
+!!
+!! if isort == 1:
+!!     use standard representation
+!!
+!! if isort == 2
+!!     use legendre orthogonal polynomial representation
+!!
      integer, public, save :: isort  = 1
 
 ! control flag: define which physical observables should be measured
