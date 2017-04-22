@@ -96,6 +96,12 @@
 !!
      integer, public, save :: isspn  = 1
 
+! control flag: define whether the worm algorithm should be used to do
+! the measurement
+! if iswor == 1, without worm algorithm
+! if iswor == 2, with worm algorithm
+     integer, public, save :: iswor  = 1
+
 !!
 !! @var isbin
 !!
@@ -109,12 +115,6 @@
 !!     with data binning mode
 !!
      integer, public, save :: isbin  = 2
-
-! control flag: define whether the worm algorithm should be used to do
-! the measurement
-! if iswor == 1, without worm algorithm
-! if iswor == 2, with worm algorithm
-     integer, public, save :: iswor  = 1
 
 ! control flag: define which basis should be used to do the measurement
 ! if isort == 1, use standard representation
