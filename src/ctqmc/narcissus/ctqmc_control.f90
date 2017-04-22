@@ -194,17 +194,26 @@
 !!     if issus is 10_10 (1010_2), we will try to calculate the spin-spin
 !!     correlation function. if issus is 13_10 (1101_2), since the second
 !!     bit is 0 we will not calculate it
-!
-! the following are the definitions of bit representation:
-! if p == 1, do nothing
-! if p == 2, calculate spin-spin correlation function (time space)
-! if p == 3, calculate orbital-orbital correlation function (time space)
-! if p == 4, calculate spin-spin correlation function (frequency space)
-! if p == 5, calculate orbital-orbital correlation function (frequency space)
-!
-! example:
-!   ( 1 1 1 0 1 0 1 0 1)_2
-! p = 9 8 7 6 5 4 3 2 1
+!!
+!! the following are the definitions of bit representation:
+!! if p == 1:
+!!     do nothing
+!!
+!! if p == 2:
+!!     calculate spin-spin correlation function (time space)
+!!
+!! if p == 3:
+!!     calculate orbital-orbital correlation function (time space)
+!!
+!! if p == 4:
+!!     calculate spin-spin correlation function (frequency space)
+!!
+!! if p == 5:
+!!     calculate orbital-orbital correlation function (frequency space)
+!!
+!! example:
+!!   ( 1 1 1 0 1 0 1 0 1)_2
+!! p = 9 8 7 6 5 4 3 2 1
      integer, public, save :: issus  = 1
 
 ! control flag: define whether we should measure the two-particle green's
