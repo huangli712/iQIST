@@ -153,7 +153,7 @@
 !!     to represent the calculation of kinetic energy fluctuation. so, if
 !!     isobs is 10_10 (1010_2), we will try to compute the kinetic energy
 !!     fluctuation. if isobs is 13_10 (1101_2), we will not calculate it
-!!     since the second bit is 0.
+!!     since the second bit is 0
 !!
 !! the following are the definitions of bit representation:
 !!
@@ -185,13 +185,15 @@
 !! rule 1:
 !!     issus is firstly converted to a binary representation. for example,
 !!     10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc
-!
-! (b) then we examine the bits. if it is 1, then we do the calculation.
-! if it is 0, then we ignore the calculation. for example, we just use the
-! second bit (from right side to left side) to represent the calculation
-! of spin-spin correlation function. so, if issus is 10_10 (1010_2), we
-! will calculate the spin-spin correlation function. if issus is 13_10
-! (1101_2), we will not calculate it since the second bit is 0.
+!!
+!! rule 2:
+!!     then we examine the bits one by one. if it is 1, then we try to do
+!!     the calculation. if it is 0, then we ignore the calculation. for
+!!     example, we just use the second bit (from right side to left side)
+!!     to represent the calculation of spin-spin correlation function. so,
+!!     if issus is 10_10 (1010_2), we will try to calculate the spin-spin
+!!     correlation function. if issus is 13_10 (1101_2), since the second
+!!     bit is 0 we will not calculate it
 !
 ! the following are the definitions of bit representation:
 ! if p == 1, do nothing
