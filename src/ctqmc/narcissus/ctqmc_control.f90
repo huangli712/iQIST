@@ -410,10 +410,18 @@
 !!
      integer, public, save :: nclean = 100000
 
-! how often to sampling the physical observables
+!!
+!! @var nmonte
+!!
+!! how often to sampling the physical observables
+!!
      integer, public, save :: nmonte = 10
 
-! how often to sampling the physical observables
+!!
+!! @var ncarlo
+!!
+!! how often to sampling the physical observables
+!!
      integer, public, save :: ncarlo = 10
 
 !!========================================================================
