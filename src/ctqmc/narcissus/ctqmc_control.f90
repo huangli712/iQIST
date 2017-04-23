@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           04/23/2017 by li huang (last modified)
+!!!           04/24/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -322,7 +322,7 @@
 !!
 !! @var mfreq
 !!
-!! maximum number of matsubara frequency point
+!! maximum number of matsubara frequency points
 !!
      integer, public, save :: mfreq  = 8193
 
@@ -331,31 +331,31 @@
 !!
 !! @var nffrq
 !!
-!! number of matsubara frequency for the two-particle green's function
+!! number of matsubara frequencies for the two-particle green's function
 !!
      integer, public, save :: nffrq  = 32
 
 !!
 !! @var nbfrq
 !!
-!! number of bosonic frequncy for the two-particle green's function
+!! number of bosonic frequncies for the two-particle green's function
 !!
      integer, public, save :: nbfrq  = 8
 
 !!
 !! @var nfreq
 !!
-!! number of matsubara frequency sampling by continuous time quantum Monte
-!! Carlo quantum impurity solver. note that the rest (mfreq - nfreq + 1
-!! points) values should be evaluated by using the Hubbard-I approximation
+!! number of matsubara frequencies sampling by continuous time quantum
+!! Monte Carlo quantum impurity solver. then the values for other points
+!! should be evaluated by using the Hubbard-I approximation
 !!
      integer, public, save :: nfreq  = 128
 
 !!
 !! @var ntime
 !!
-!! number of imaginary time slice sampling by continuous time quantum Monte
-!! Carlo quantum impurity solver
+!! number of imaginary time slices sampling by continuous time quantum
+!! Monte Carlo quantum impurity solver
 !!
      integer, public, save :: ntime  = 1024
 
@@ -367,15 +367,16 @@
 !! symmetry of local hamiltonian when it should not be. to avoid this
 !! unphysical trapping, we introduce "flip" moves, which exchange the
 !! operators corresponding, for example, to up and down spins in a given
-!! orbital. if nflip /= 0, the absolute value of nflip is the flip period 
+!! orbital. note that nflip could be negative. if nflip /= 0, then the
+!! absolute value of nflip is the flip period 
 !!
 !! in this code, nowadays the following flip schemes are supported:
 !!
-!! if nflip > 0:
-!!     flip intra-orbital spins one by one
-!!
 !! if nflip = 0:
 !!     means infinite long period to do flip
+!!
+!! if nflip > 0:
+!!     flip intra-orbital spins one by one
 !!
 !! if nflip < 0:
 !!     flip intra-orbital spins globally
