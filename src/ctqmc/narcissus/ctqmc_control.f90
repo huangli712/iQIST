@@ -479,21 +479,33 @@
 !!     lc is ignored
 !!
 !! if isscr == 02:
-!!     lc just means the control parameter \lambda 
+!!     lc just means the model parameter \lambda 
 !!
 !! if isscr == 03:
-!!     lc just means the control parameter \alpha
+!!     lc just means the model parameter \alpha
 !!
 !! if isscr == 99
 !!     lc just means the shift for interaction matrix
 !!
      real(dp), public, save :: lc    = 1.00_dp
 
-! screening frequency
-! when isscr == 01, wc is ignored. 
-! when isscr == 02, wc just means the control parameter \omega^{'}
-! when isscr == 03, wc just means the control parameter \omega_{c}
-! when isscr == 99, wc just means the shift for chemical potential
+!!
+!! @var wc
+!!
+!! screening frequency. its meaning depends on isscr
+!!
+!! if isscr == 01:
+!!     wc is ignored
+!!
+!! if isscr == 02:
+!!     wc just means the model parameter \omega^{'}
+!!
+!! if isscr == 03
+!!     wc just means the model parameter \omega_{c}
+!!
+!! if isscr == 99:
+!!     wc just means the shift for chemical potential
+!!
      real(dp), public, save :: wc    = 1.00_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
