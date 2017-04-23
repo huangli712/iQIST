@@ -14,8 +14,8 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           08/17/2015 by li huang (last modified)
-!!! purpose : To define the key data structure and global arrays/variables
+!!!           04/24/2017 by li huang (last modified)
+!!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
 !!!           mean field theory (DMFT) self-consistent engine
@@ -27,8 +27,12 @@
 !!>>> module ctqmc_core                                                <<<
 !!========================================================================
 
-!!>>> containing core (internal) variables used by continuous time quantum
-!!>>> Monte Carlo quantum impurity solver
+!!
+!! @mod ctqmc_core
+!!
+!! containing core (internal) variables used by continuous time quantum
+!! Monte Carlo quantum impurity solver
+!!
   module ctqmc_core
      use constants, only : dp, zero
 
