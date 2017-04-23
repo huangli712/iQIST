@@ -68,8 +68,12 @@
 !::: core variables: real, insert action counter                       :::
 !-------------------------------------------------------------------------
 
-! insert kink (operators pair) statistics: total insert count
-     real(dp), public, save :: insert_tcount = zero
+!!
+!! @var ins_t
+!!
+!! insert kink (operators pair) statistics: total insert count
+!!
+     real(dp), public, save :: ins_t = zero
 
 ! insert kink (operators pair) statistics: total accepted insert count
      real(dp), public, save :: insert_accept = zero
