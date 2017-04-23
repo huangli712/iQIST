@@ -456,10 +456,18 @@
 !!
      real(dp), public, save :: Jz    = 0.00_dp
 
-! spin-flip term
+!!
+!! @var Js
+!!
+!! spin-flip term
+!!
      real(dp), public, save :: Js    = 0.00_dp
 
-! pair-hopping term
+!!
+!! @var Jp
+!!
+!! pair-hopping term
+!!
      real(dp), public, save :: Jp    = 0.00_dp
 
 ! strength of dynamical screening effect
