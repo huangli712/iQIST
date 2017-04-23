@@ -45,11 +45,23 @@
 !!
      integer, public, save  :: ckink = 0
 
-! current status for current flavor channel, used to sync with stts vector
-! cstat = 0 : null occupation case
-! cstat = 1 : partial occupation case, segment scheme
-! cstat = 2 : partial occupation case, anti-segment scheme
-! cstat = 3 : full occupation case
+!!
+!! @var cstat
+!!
+!! current status for the current flavor, used to sync with stts vector
+!!
+!! if cstat = 0:
+!!     it means null occupation case
+!!
+!! if cstat = 1:
+!!     it means partial occupation case, segment scheme
+!!
+!! if cstat = 2:
+!!     it means partial occupation case, anti-segment scheme
+!!
+!! if cstat = 3:
+!!     it means full occupation case
+!!
      integer, public, save  :: cstat = 0
 
 !-------------------------------------------------------------------------
