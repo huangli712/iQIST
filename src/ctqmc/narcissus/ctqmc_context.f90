@@ -38,7 +38,11 @@
 
      implicit none
 
-! current perturbation expansion order
+!!
+!! @var ckink
+!!
+!! current perturbation expansion order
+!!
      integer, public, save  :: ckink = 0
 
 ! current status for current flavor channel, used to sync with stts vector
