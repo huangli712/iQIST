@@ -132,8 +132,12 @@
 !!
      real(dp), public, save :: lsh_a = zero
 
-! lshift kink (operators pair) statistics: total rejected lshift count
-     real(dp), public, save :: lshift_reject = zero
+!!
+!! @var lsh_r
+!!
+!! lshift kink (operators pair) statistics: total rejected lshift count
+!!
+     real(dp), public, save :: lsh_r = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, rshift action counter                       :::
