@@ -142,13 +142,25 @@
 !!>>> real constants: physical constants                               <<<
 !!========================================================================
 
-! conversion factor from eV to kelvin
+!!
+!! @var ev2k
+!!
+!! conversion factor from eV to kelvin
+!!
      real(dp), public, parameter :: ev2k = 11604.505008098_dp
 
-! conversion factor from Rydberg to eV
+!!
+!! @var ry2e
+!!
+!! conversion factor from Rydberg to eV
+!!
      real(dp), public, parameter :: ry2e = 13.605698066_dp
 
-! conversion factor from Hartree to eV
+!!
+!! @var ha2e
+!!
+!! conversion factor from Hartree to eV
+!!
      real(dp), public, parameter :: ha2e = 27.2113825435_dp
 
 !!========================================================================
