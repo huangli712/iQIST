@@ -389,10 +389,18 @@
 !!
      integer, public, save :: ntherm = 200000
 
-! maximum number of quantum Monte Carlo sampling steps
+!!
+!! @var nsweep
+!!
+!! maximum number of quantum Monte Carlo sampling steps
+!!
      integer, public, save :: nsweep = 20000000
 
-! output period for quantum impurity solver
+!!
+!! @var nwrite
+!!
+!! output period for quantum impurity solver
+!!
      integer, public, save :: nwrite = 2000000
 
 ! clean update period for quantum impurity solver
