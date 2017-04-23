@@ -510,18 +510,32 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! chemical potential or fermi level
-!
-! note: it should/can be replaced with eimp
+!!
+!! @var mune
+!!
+!! chemical potential or fermi level
+!!
      real(dp), public, save :: mune  = 2.00_dp
 
-! inversion of temperature
+!!
+!! @var beta
+!!
+!! inversion of temperature
+!!
      real(dp), public, save :: beta  = 8.00_dp
 
-! coupling parameter t for Hubbard model
+!!
+!! @var part 
+!!
+!! coupling parameter t for Hubbard model
+!!
      real(dp), public, save :: part  = 0.50_dp
 
-! mixing parameter for dynamical mean field theory self-consistent engine
+!!
+!! @var alpha
+!!
+!! mixing parameter for dynamical mean field theory self-consistent engine
+!!
      real(dp), public, save :: alpha = 0.70_dp
 
 !!========================================================================
