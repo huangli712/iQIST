@@ -100,8 +100,12 @@
 !!
      real(dp), public, save :: rmv_t = zero
 
-! remove kink (operators pair) statistics: total accepted remove count
-     real(dp), public, save :: remove_accept = zero
+!!
+!! @var rmv_a
+!!
+!! remove kink (operators pair) statistics: total accepted remove count
+!!
+     real(dp), public, save :: rmv_a = zero
 
 ! remove kink (operators pair) statistics: total rejected remove count
      real(dp), public, save :: remove_reject = zero
