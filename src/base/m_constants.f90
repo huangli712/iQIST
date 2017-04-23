@@ -93,22 +93,46 @@
 !!>>> real constants: numerical constants                              <<<
 !!========================================================================
 
-! well-known $\pi$
+!!
+!! @var pi
+!!
+!! well-known $\pi$
+!!
      real(dp), public, parameter :: pi   = 3.141592653589793238462643383279_dp
 
-! 0.0 in double precision form
+!!
+!! @var zero
+!!
+!! 0.0 in double precision form
+!!
      real(dp), public, parameter :: zero = 0.0_dp
 
-! 1.0 in double precision form
+!!
+!! @var one
+!!
+!! 1.0 in double precision form
+!!
      real(dp), public, parameter :: one  = 1.0_dp
 
-! 2.0 in double precision form
+!!
+!! @var two
+!!
+!! 2.0 in double precision form
+!!
      real(dp), public, parameter :: two  = 2.0_dp
 
-! 0.5 in double precision form
+!!
+!! @var half
+!!
+!! 0.5 in double precision form
+!!
      real(dp), public, parameter :: half = 0.5_dp
 
-! $\epsilon$ in double precision form
+!!
+!! @var epsx
+!!
+!! $\epsilon$ in double precision form
+!!
      real(dp), public, parameter :: eps6 = 1.0E-6
      real(dp), public, parameter :: eps8 = 1.0E-8
      real(dp), public, parameter :: epst = 1.0E-10
