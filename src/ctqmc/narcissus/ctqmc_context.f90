@@ -93,8 +93,12 @@
 !::: core variables: real, remove action counter                       :::
 !-------------------------------------------------------------------------
 
-! remove kink (operators pair) statistics: total remove count
-     real(dp), public, save :: remove_tcount = zero
+!!
+!! @var rmv_t
+!!
+!! remove kink (operators pair) statistics: total remove count
+!!
+     real(dp), public, save :: rmv_t = zero
 
 ! remove kink (operators pair) statistics: total accepted remove count
      real(dp), public, save :: remove_accept = zero
