@@ -167,13 +167,25 @@
 !!>>> complex constants: numerical constants                           <<<
 !!========================================================================
 
-! complex unit, i
+!!
+!! @var czi
+!!
+!! complex unit, i
+!!
      complex(dp), public, parameter :: czi   = dcmplx(0.0_dp, 1.0_dp)
 
-! complex unit, 1
+!!
+!! @var cone
+!!
+!! complex unit, 1
+!!
      complex(dp), public, parameter :: cone  = dcmplx(1.0_dp, 0.0_dp)
 
-! complex unit, 0
+!!
+!! @var czero
+!!
+!! complex unit, 0
+!!
      complex(dp), public, parameter :: czero = dcmplx(0.0_dp, 0.0_dp)
 
   end module constants
