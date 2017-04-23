@@ -428,16 +428,32 @@
 !!>>> real variables                                                   <<<
 !!========================================================================
 
-! average Coulomb interaction
+!!
+!! @var U
+!!
+!! average Coulomb interaction
+!!
      real(dp), public, save :: U     = 4.00_dp
 
-! intraorbital Coulomb interaction
+!!
+!! @var Uc
+!!
+!! intraorbital Coulomb interaction
+!!
      real(dp), public, save :: Uc    = 4.00_dp
 
-! interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
+!!
+!! @var Uv
+!!
+!! interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
+!!
      real(dp), public, save :: Uv    = 4.00_dp
 
-! Hund's exchange interaction in z axis (Jz = Js = Jp = J)
+!!
+!! @var Jz
+!!
+!! Hund's exchange interaction in z axis (Jz = Js = Jp = J)
+!!
      real(dp), public, save :: Jz    = 0.00_dp
 
 ! spin-flip term
