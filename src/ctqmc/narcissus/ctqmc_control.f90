@@ -382,7 +382,11 @@
 !!
      integer, public, save :: nflip  = 20000
 
-! maximum number of thermalization steps
+!!
+!! @var ntherm
+!!
+!! maximum number of thermalization steps
+!!
      integer, public, save :: ntherm = 200000
 
 ! maximum number of quantum Monte Carlo sampling steps
