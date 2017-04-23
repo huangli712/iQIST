@@ -470,11 +470,23 @@
 !!
      real(dp), public, save :: Jp    = 0.00_dp
 
-! strength of dynamical screening effect
-! when isscr == 01, lc is ignored
-! when isscr == 02, lc just means the control parameter \lambda 
-! when isscr == 03, lc just means the control parameter \alpha
-! when isscr == 99, lc just means the shift for interaction matrix
+!!
+!! @var lc
+!!
+!! strength of dynamical screening effect. its meaning depends on isscr
+!!
+!! if isscr == 01:
+!!     lc is ignored
+!!
+!! if isscr == 02:
+!!     lc just means the control parameter \lambda 
+!!
+!! if isscr == 03:
+!!     lc just means the control parameter \alpha
+!!
+!! if isscr == 99
+!!     lc just means the shift for interaction matrix
+!!
      real(dp), public, save :: lc    = 1.00_dp
 
 ! screening frequency
