@@ -351,8 +351,12 @@
 !!
      integer, public, save :: nfreq  = 128
 
-! number of imaginary time slice sampling by continuous time quantum Monte
-! Carlo quantum impurity solver
+!!
+!! @var ntime
+!!
+!! number of imaginary time slice sampling by continuous time quantum Monte
+!! Carlo quantum impurity solver
+!!
      integer, public, save :: ntime  = 1024
 
 ! flip period for spin up and spin down states
