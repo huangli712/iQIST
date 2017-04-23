@@ -403,7 +403,11 @@
 !!
      integer, public, save :: nwrite = 2000000
 
-! clean update period for quantum impurity solver
+!!
+!! @var nclean
+!!
+!! clean update period for quantum impurity solver
+!!
      integer, public, save :: nclean = 100000
 
 ! how often to sampling the physical observables
