@@ -83,11 +83,11 @@
      real(dp), public, save :: ins_a = zero
 
 !!
-!!
+!! @var ins_r
 !!
 !! insert kink (operators pair) statistics: total rejected insert count
 !!
-     real(dp), public, save :: insert_reject = zero
+     real(dp), public, save :: ins_r = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, remove action counter                       :::
