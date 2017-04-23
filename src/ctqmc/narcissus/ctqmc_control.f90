@@ -312,25 +312,43 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! maximum perturbation expansion order
+!!
+!! @var mkink
+!!
+!! maximum perturbation expansion order
+!!
      integer, public, save :: mkink  = 1024
 
-! maximum number of matsubara frequency point
+!!
+!! @var mfreq
+!!
+!! maximum number of matsubara frequency point
+!!
      integer, public, save :: mfreq  = 8193
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! number of matsubara frequency for the two-particle green's function
+!!
+!! @var nffrq
+!!
+!! number of matsubara frequency for the two-particle green's function
+!!
      integer, public, save :: nffrq  = 32
 
-! number of bosonic frequncy for the two-particle green's function
+!!
+!! @var nbfrq
+!!
+!! number of bosonic frequncy for the two-particle green's function
+!!
      integer, public, save :: nbfrq  = 8
 
-! number of matsubara frequency sampling by continuous time quantum Monte
-! Carlo quantum impurity solver
-!
-! note: the rest (mfreq - nfreq + 1 points) values are evaluated by using
-! Hubbard-I approximation
+!!
+!! @var nfreq
+!!
+!! number of matsubara frequency sampling by continuous time quantum Monte
+!! Carlo quantum impurity solver. note that the rest (mfreq - nfreq + 1
+!! points) values should be evaluated by using the Hubbard-I approximation
+!!
      integer, public, save :: nfreq  = 128
 
 ! number of imaginary time slice sampling by continuous time quantum Monte
