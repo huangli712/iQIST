@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           01/26/2017 by li huang (last modified)
+!!!           04/24/2017 by li huang (last modified)
 !!! purpose : this module is to provide the definition of some (selected)
 !!!           numerical and physical constants.
 !!! status  : stable
@@ -50,23 +50,43 @@
 !!>>> integer constants: numerical precision                           <<<
 !!========================================================================
 
-! single precision
+!!
+!! @var sp
+!!
+!! used to define single precision float number
+!!
      integer, public, parameter :: sp    = kind(1.0)
 
-! double precision
+!!
+!! @var dp
+!!
+!! used to define double precision float number
+!!
      integer, public, parameter :: dp    = kind(1.0d0)
 
 !!========================================================================
 !!>>> integer constants: file unit handler                             <<<
 !!========================================================================
 
-! standard console output
+!!
+!! @var mystd
+!!
+!! file unit for standard console output
+!!
      integer, public, parameter :: mystd = 6
 
-! log file out
+!!
+!! @var myout
+!!
+!! file unit for log information
+!!
      integer, public, parameter :: myout = 99
 
-! common file output
+!!
+!! @var mytmp
+!!
+!! file unit for common output
+!!
      integer, public, parameter :: mytmp = 100
 
 !!========================================================================
