@@ -174,13 +174,13 @@
      real(dp), public, save, allocatable :: pmesh(:)
 
 ! interval [-1,1] on which chebyshev polynomial is defined
-     real(dp), public, save, allocatable :: qmesh(:)
+     !!real(dp), public, save, allocatable :: qmesh(:)
 
 ! legendre polynomial defined on [-1,1]
      real(dp), public, save, allocatable :: ppleg(:,:)
 
 ! chebyshev polynomial defined on [-1,1]
-     real(dp), public, save, allocatable :: qqche(:,:)
+     !!real(dp), public, save, allocatable :: qqche(:,:)
 
   end module ctqmc_mesh
 
@@ -548,10 +548,10 @@
      allocate(rmesh(mfreq),       stat=istat)
 
      allocate(pmesh(legrd),       stat=istat)
-     allocate(qmesh(chgrd),       stat=istat)
+     !!allocate(qmesh(chgrd),       stat=istat)
 
      allocate(ppleg(legrd,lemax), stat=istat)
-     allocate(qqche(chgrd,chmax), stat=istat)
+     !!allocate(qqche(chgrd,chmax), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -563,10 +563,10 @@
      rmesh = zero
 
      pmesh = zero
-     qmesh = zero
+     !!qmesh = zero
 
      ppleg = zero
-     qqche = zero
+     !!qqche = zero
 
      return
   end subroutine ctqmc_allocate_memory_mesh
@@ -829,10 +829,10 @@
      if ( allocated(rmesh) )   deallocate(rmesh)
 
      if ( allocated(pmesh) )   deallocate(pmesh)
-     if ( allocated(qmesh) )   deallocate(qmesh)
+     !!if ( allocated(qmesh) )   deallocate(qmesh)
 
      if ( allocated(ppleg) )   deallocate(ppleg)
-     if ( allocated(qqche) )   deallocate(qqche)
+     !!if ( allocated(qqche) )   deallocate(qqche)
 
      return
   end subroutine ctqmc_deallocate_memory_mesh
