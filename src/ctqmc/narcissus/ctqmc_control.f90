@@ -49,7 +49,7 @@
 !!     case. the code implements a dynamical mean field self-consistent
 !!     loop for solving the hubbard model in the bethe lattice
 !!
-     integer, public, save :: isscf  = 2
+     integer, public, save :: isscf  = 1
 
 !!
 !! @var isscr
