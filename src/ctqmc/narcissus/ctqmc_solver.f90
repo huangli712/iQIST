@@ -28,31 +28,33 @@
      use constants, only : dp, zero, one, mystd
 
      use control, only : cname
-     use control, only : isbnd
-     use control, only : isspn
-     use control, only : isobs
-     use control, only : issus
-     use control, only : isvrt
-     use control, only : nband
-     use control, only : nspin
-     use control, only : norbs
+     use control, only : isbnd, isspn
+     use control, only : isobs, issus, isvrt
+     use control, only : nband, nspin, norbs
      use control, only : ncfgs
      use control, only : mkink, mfreq
      use control, only : nffrq, nbfrq, ntime
-     use control, only : nsweep, nwrite, nmonte, ncarlo
+     use control, only : nsweep, nwrite
+     use control, only : nmonte, ncarlo
      use control, only : Uc, Jz
      use control, only : beta
      use control, only : myid, master
+
      use context, only : tmesh, rmesh
-     use context, only : hist, prob
+     use context, only : hist
+     use context, only : prob
      use context, only : nmat, nnmat
      use context, only : kmat, kkmat
      use context, only : lmat, rmat, lrmat
      use context, only : szpow
-     use context, only : schi, sschi, ssfom, ochi, oochi, oofom
-     use context, only : g2_re, g2_im, h2_re, h2_im, ps_re, ps_im
+     use context, only : schi, sschi, ssfom
+     use context, only : ochi, oochi, oofom
+     use context, only : g2_re, g2_im
+     use context, only : h2_re, h2_im
+     use context, only : ps_re, ps_im
      use context, only : symm
-     use context, only : gtau, ftau, grnf
+     use context, only : gtau, ftau
+     use context, only : grnf
      use context, only : sig2
 
      implicit none
