@@ -416,19 +416,19 @@
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 0) ) block
 
 ! record the < k^2 > - < k >^2
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) then
                  call ctqmc_record_kmat()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) block
 
 ! record the fidelity susceptibility
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 2) ) then
                  call ctqmc_record_lmat()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 2) ) block
 
 ! record the powers of local magnetization
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 7) ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 3) ) then
                  call ctqmc_record_szpw()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 7) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 3) ) block
 
 
 
