@@ -369,9 +369,9 @@
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the probability of eigenstates
-             if ( mod(cstep, ncarlo) == 0 ) then
+             if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_prob()
-             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the impurity green's function in imaginary time space
              if ( mod(cstep, ncarlo) == 0 ) then
