@@ -328,13 +328,6 @@
      implicit none
 
 !!
-!! @var hist
-!!
-!! histogram for perturbation expansion series
-!!
-     real(dp), public, save, allocatable :: hist(:)
-
-!!
 !! @var paux
 !!
 !! auxiliary physical observables, it is a vector with size = 9
@@ -355,6 +348,13 @@
 !! calculated from Ekin.
 !!
      real(dp), public, save, allocatable :: paux(:)
+
+!!
+!! @var hist
+!!
+!! histogram for perturbation expansion series
+!!
+     real(dp), public, save, allocatable :: hist(:)
 
 !!
 !! @var prob
@@ -946,19 +946,19 @@
      implicit none
 
 ! allocate memory
-     allocate(hist(mkink),        stat=istat)
-
      allocate(paux(  9  ),        stat=istat)
+     allocate(hist(mkink),        stat=istat)
      allocate(prob(ncfgs),        stat=istat)
-
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
+
      allocate(kmat(norbs),        stat=istat)
      allocate(kkmat(norbs,norbs), stat=istat)
      allocate(lmat(norbs),        stat=istat)
      allocate(rmat(norbs),        stat=istat)
      allocate(lrmat(norbs,norbs), stat=istat)
      allocate(szpow(  4  ,norbs), stat=istat)
+
      allocate(schi(ntime),        stat=istat)
      allocate(sschi(ntime,nband), stat=istat)
      allocate(ssfom(nbfrq,nband), stat=istat)
@@ -979,19 +979,19 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     hist  = zero
-
      paux  = zero
+     hist  = zero
      prob  = zero
-
      nmat  = zero
      nnmat = zero
+
      kmat  = zero
      kkmat = zero
      lmat  = zero
      rmat  = zero
      lrmat = zero
      szpow = zero
+
      schi  = zero
      sschi = zero
      ssfom = zero
@@ -1093,7 +1093,11 @@
      return
   end subroutine ctqmc_allocate_memory_mmat
 
-!!>>> ctqmc_allocate_memory_gmat: allocate memory for gmat-related variables
+!!
+!! @sub ctqmc_allocate_memory_gmat
+!!
+!! allocate memory for gmat-related variables
+!!
   subroutine ctqmc_allocate_memory_gmat()
      implicit none
 
@@ -1119,7 +1123,11 @@
      return
   end subroutine ctqmc_allocate_memory_gmat
 
-!!>>> ctqmc_allocate_memory_wmat: allocate memory for wmat-related variables
+!!
+!! @sub ctqmc_allocate_memory_wmat
+!!
+!! allocate memory for wmat-related variables
+!!
   subroutine ctqmc_allocate_memory_wmat()
      implicit none
 
@@ -1147,7 +1155,11 @@
      return
   end subroutine ctqmc_allocate_memory_wmat
 
-!!>>> ctqmc_allocate_memory_smat: allocate memory for smat-related variables
+!!
+!! @sub ctqmc_allocate_memory_smat
+!!
+!! allocate memory for smat-related variables
+!!
   subroutine ctqmc_allocate_memory_smat()
      implicit none
 
@@ -1171,7 +1183,11 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> ctqmc_deallocate_memory_clur: deallocate memory for clur-related variables
+!!
+!! @sub ctqmc_deallocate_memory_clur
+!!
+!! deallocate memory for clur-related variables
+!!
   subroutine ctqmc_deallocate_memory_clur()
      implicit none
 
@@ -1199,7 +1215,11 @@
      return
   end subroutine ctqmc_deallocate_memory_clur
 
-!!>>> ctqmc_deallocate_memory_mesh: deallocate memory for mesh-related variables
+!!
+!! @sub ctqmc_deallocate_memory_mesh
+!!
+!! deallocate memory for mesh-related variables
+!!
   subroutine ctqmc_deallocate_memory_mesh()
      implicit none
 
@@ -1212,7 +1232,11 @@
      return
   end subroutine ctqmc_deallocate_memory_mesh
 
-!!>>> ctqmc_deallocate_memory_meat: deallocate memory for meat-related variables
+!!
+!! @sub ctqmc_deallocate_memory_meat
+!!
+!! deallocate memory for meat-related variables
+!!
   subroutine ctqmc_deallocate_memory_meat()
      implicit none
 
