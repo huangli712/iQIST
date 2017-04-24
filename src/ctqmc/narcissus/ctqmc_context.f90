@@ -209,16 +209,32 @@
 
      implicit none
 
-! memory address index for the imaginary time \tau_s
+!!
+!! @var index_s
+!!
+!! memory address index for the imaginary time \tau_s
+!!
      integer, public, save, allocatable :: index_s(:,:)
 
-! memory address index for the imaginary time \tau_e
+!!
+!! @var index_e
+!!
+!! memory address index for the imaginary time \tau_e
+!!
      integer, public, save, allocatable :: index_e(:,:)
 
-! imaginary time \tau_s of create  operators
+!!
+!! @var time_s
+!!
+!! imaginary time \tau_s of create operators
+!!
      real(dp), public, save, allocatable :: time_s(:,:)
 
-! imaginary time \tau_e of destroy operators
+!!
+!! @var time_e
+!!
+!! imaginary time \tau_e of destroy operators
+!!
      real(dp), public, save, allocatable :: time_e(:,:)
 
 ! exp(i\omega t), s means create  operators
