@@ -728,19 +728,40 @@
 
      implicit none
 
-! bath weiss's function, in imaginary time axis, matrix form
+!!
+!! @var wtau
+!!
+!! bath weiss's function in imaginary time axis
+!!
      real(dp), public, save, allocatable    :: wtau(:,:,:)
 
-! bath weiss's function, in matsubara frequency axis, matrix form
+!!
+!! @var wssf
+!!
+!! bath weiss's function in matsubara frequency axis
+!!
      complex(dp), public, save, allocatable :: wssf(:,:,:)
 
-! hybridization function, in imaginary time axis, matrix form
+!!
+!! @var htau
+!!
+!! hybridization function in imaginary time axis
+!!
      real(dp), public, save, allocatable    :: htau(:,:,:)
 
-! hybridization function, in matsubara frequency axis, matrix form
+!!
+!! @var hybf
+!!
+!! hybridization function in matsubara frequency axis
+!!
      complex(dp), public, save, allocatable :: hybf(:,:,:)
 
-! second order derivates for hybridization function, used to interpolate htau
+!!
+!! @var hsed
+!!
+!! second order derivates for hybridization function, it should be used
+!! to interpolate htau
+!!
      real(dp), public, save, allocatable    :: hsed(:,:,:)
 
   end module ctqmc_wmat
