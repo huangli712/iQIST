@@ -979,8 +979,8 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     paux  = zero
      hist  = zero
+     paux  = zero
      prob  = zero
      nmat  = zero
      nnmat = zero
