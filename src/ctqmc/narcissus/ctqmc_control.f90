@@ -81,7 +81,7 @@
 !! if isbnd == 2:
 !!     the bands are symmetrized according to symmetry matrix
 !!
-     integer, public, save :: isbnd  = 2
+     integer, public, save :: isbnd  = 1
 
 !!
 !! @var isspn
