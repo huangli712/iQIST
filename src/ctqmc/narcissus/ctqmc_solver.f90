@@ -28,14 +28,18 @@
      use constants, only : dp, zero, one, mystd
 
      use control, only : cname               ! code name
+     use control, only : isscf               ! control running scheme
+     use control, only : isscr               ! control dynamic interaction
      use control, only : isbnd, isspn        ! control symmetry
+     use control, only : iswor, isbin, isort ! control measurement tricks
      use control, only : isobs, issus, isvrt ! control physical observables
-     use control, only : nband, norbs        ! size of model hamiltonian
-     use control, only : ncfgs               ! size of hilbert space
-     use control, only : mkink, mfreq        ! perturbation expansion order
-     use control, only : nffrq, nbfrq, ntime ! matsubara frequency and time
+     use control, only : nband, norbs, ncfgs ! size of model hamiltonian
+     use control, only : mkink               ! perturbation expansion order
+     use control, only : mfreq               ! matsubara frequency
+     use control, only : nffrq, nbfrq        ! fermionic and bosonic frequencies
+     use control, only : ntime               ! imaginary time
      use control, only : nsweep, nwrite      ! monte carlo sampling
-     use control, only : nmonte, ncarlo      ! interval for sampling
+     use control, only : nmonte, ncarlo      ! interval for monte carlo sampling
      use control, only : myid, master        ! mpi
 
      use context, only : tmesh, rmesh        ! frequency and time meshes
