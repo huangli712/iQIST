@@ -148,7 +148,7 @@
 !!
 !! rshift kink (operators pair) statistics: total rshift count
 !!
-     real(dp), public, save :: rshift_tcount = zero
+     real(dp), public, save :: rsh_t = zero
 
 ! rshift kink (operators pair) statistics: total accepted rshift count
      real(dp), public, save :: rshift_accept = zero
