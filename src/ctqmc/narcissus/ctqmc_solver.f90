@@ -321,7 +321,7 @@
      endif ! back if ( myid == master ) block
 
 !!========================================================================
-!!>>> warmming quantum impurity solver                                 <<<
+!!>>> warming quantum impurity solver                                  <<<
 !!========================================================================
 
 ! warmup the continuous time quantum Monte Carlo quantum impurity solver,
@@ -360,7 +360,7 @@
          do j=1,nwrite
 
 !!========================================================================
-!!>>> sampling perturbation expansion series                           <<<
+!!>>> visiting perturbation expansion series                           <<<
 !!========================================================================
 
 ! increase cstep by 1
@@ -370,13 +370,13 @@
              call ctqmc_walking(cstep)
 
 !!========================================================================
-!!>>> sampling the physical observables                                <<<
+!!>>> sampling the physical observables 1                              <<<
 !!========================================================================
 
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
 
-! record
+! record the auxiliary physical observables
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_paux()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
@@ -386,15 +386,9 @@
                  call ctqmc_record_prob()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the impurity (double) occupation number matrix and other
-! auxiliary physical observables
+! record the impurity (double) occupation number matrix
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat()
-             endif ! back if ( mod(cstep, nmonte) == 0 ) block
-
-! record the impurity green's function in matsubara frequency space
-             if ( mod(cstep, nmonte) == 0 ) then
-                 call ctqmc_record_grnf()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the impurity green's function in imaginary time space
@@ -405,6 +399,11 @@
 ! record the auxiliary correlation function, F(\tau)
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_ftau()
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
+
+! record the impurity green's function in matsubara frequency space
+             if ( mod(cstep, nmonte) == 0 ) then
+                 call ctqmc_record_grnf()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record nothing
