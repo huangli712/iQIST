@@ -328,6 +328,13 @@
      implicit none
 
 !!
+!! @var hist
+!!
+!! histogram for perturbation expansion series
+!!
+     real(dp), public, save, allocatable :: hist(:)
+
+!!
 !! @var paux
 !!
 !! auxiliary physical observables, it is a vector with size = 9
@@ -348,13 +355,6 @@
 !! calculated from Ekin.
 !!
      real(dp), public, save, allocatable :: paux(:)
-
-!!
-!! @var hist
-!!
-!! histogram for perturbation expansion series
-!!
-     real(dp), public, save, allocatable :: hist(:)
 
 !!
 !! @var prob
