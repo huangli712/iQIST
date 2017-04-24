@@ -482,16 +482,32 @@
 !!
      real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
 
-! used to calculate two-particle green's function, real part
+!!
+!! @var h2_re
+!!
+!! used to calculate two-particle green's function, real part
+!!
      real(dp), public, save, allocatable :: h2_re(:,:,:,:,:)
 
-! used to calculate two-particle green's function, imaginary part
+!!
+!! @var h2_im
+!!
+!! used to calculate two-particle green's function, imaginary part
+!!
      real(dp), public, save, allocatable :: h2_im(:,:,:,:,:)
 
-! particle-particle pair susceptibility, real part
+!!
+!! @var ps_re
+!!
+!! particle-particle pair susceptibility, real part
+!!
      real(dp), public, save, allocatable :: ps_re(:,:,:,:,:)
 
-! particle-particle pair susceptibility, imaginary part
+!!
+!! @var ps_im
+!!
+!! particle-particle pair susceptibility, imaginary part
+!!
      real(dp), public, save, allocatable :: ps_im(:,:,:,:,:)
 
   end module ctqmc_meat
