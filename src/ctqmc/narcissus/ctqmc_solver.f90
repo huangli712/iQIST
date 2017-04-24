@@ -370,7 +370,7 @@
              call ctqmc_walking(cstep)
 
 !!========================================================================
-!!>>> sampling the physical observables 1                              <<<
+!!>>> sampling the physical observables 1 (always)                     <<<
 !!========================================================================
 
 ! record the histogram for perturbation expansion series
@@ -396,7 +396,7 @@
                  call ctqmc_record_gtau()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the auxiliary correlation function, F(\tau)
+! record the auxiliary correlation function to calculate self-energy function
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_ftau()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
@@ -405,6 +405,10 @@
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_grnf()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
+
+!!========================================================================
+!!>>> sampling the physical observables 2 (optional)                   <<<
+!!========================================================================
 
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
