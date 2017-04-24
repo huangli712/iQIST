@@ -770,17 +770,29 @@
 !!>>> module ctqmc_smat                                                <<<
 !!========================================================================
 
-!!>>> containing self-energy function matrix related arrays used by
-!!>>> continuous time quantum Monte Carlo quantum impurity solver
+!!
+!! @mod ctqmc_smat
+!!
+!! containing self-energy function matrix related arrays used by
+!! continuous time quantum Monte Carlo quantum impurity solver
+!!
   module ctqmc_smat
      use constants, only : dp
 
      implicit none
 
-! self-energy function, in matsubara frequency axis, matrix form
+!!
+!! @var sig1
+!!
+!! self-energy function in matsubara frequency axis
+!!
      complex(dp), public, save, allocatable :: sig1(:,:,:)
 
-! self-energy function, in matsubara frequency axis, matrix form
+!!
+!! @var sig2
+!!
+!! self-energy function in matsubara frequency axis
+!!
      complex(dp), public, save, allocatable :: sig2(:,:,:)
 
   end module ctqmc_smat
