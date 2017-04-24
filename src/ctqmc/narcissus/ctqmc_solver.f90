@@ -59,7 +59,7 @@
      implicit none
 
 ! external arguments
-! current self-consistent iteration number
+! current iteration number for self-consistent cycle
      integer, intent(in) :: iter
 
 ! local variables
@@ -73,7 +73,7 @@
 ! current QMC sweeping steps
      integer  :: cstep
 
-! control flag, whether the solver is checked periodically
+! control flag, whether the solver should be checked periodically
 ! cflag = 0  , do not check the quantum impurity solver
 ! cflag = 1  , check the quantum impurity solver periodically
 ! cflag = 99 , the quantum impurity solver is out of control
@@ -92,9 +92,13 @@
 ! time consuming by total iteration
      real(dp) :: time_niter
 
-! histogram for perturbation expansion series, for mpi case
+! histogram for perturbation expansion series
      real(dp), allocatable :: hist_mpi(:)
      real(dp), allocatable :: hist_err(:)
+
+! auxiliary physical observables
+     real(dp), allocatable :: paux_mpi(:)
+     real(dp), allocatable :: paux_err(:)
 
 ! probability of atomic states, for mpi case
      real(dp), allocatable :: prob_mpi(:)
