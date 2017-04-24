@@ -237,10 +237,18 @@
 !!
      real(dp), public, save, allocatable :: time_e(:,:)
 
-! exp(i\omega t), s means create  operators
+!!
+!! @var exp_s
+!!
+!! exp(i\omega t), s means create operators
+!!
      complex(dp), public, save, allocatable :: exp_s(:,:,:)
 
-! exp(i\omega t), e means destroy operators
+!!
+!! @var exp_e
+!!
+!! exp(i\omega t), e means destroy operators
+!!
      complex(dp), public, save, allocatable :: exp_e(:,:,:)
 
 ! container for the empty (unoccupied) memory address index
