@@ -282,23 +282,30 @@
 
      implicit none
 
-! imaginary time mesh
+!!
+!! @var tmesh
+!!
+!! imaginary time mesh
+!!
      real(dp), public, save, allocatable :: tmesh(:)
 
-! real matsubara frequency mesh
+!!
+!! @var rmesh
+!!
+!! real matsubara frequency mesh
+!!
      real(dp), public, save, allocatable :: rmesh(:)
 
-! interval [-1,1] on which legendre polynomial is defined
+!!
+!! @var pmesh
+!!
+!! interval [-1,1] on which legendre polynomial is defined
+!!
      real(dp), public, save, allocatable :: pmesh(:)
 
-! interval [-1,1] on which chebyshev polynomial is defined
-     !!real(dp), public, save, allocatable :: qmesh(:)
-
+!!
 ! legendre polynomial defined on [-1,1]
      real(dp), public, save, allocatable :: ppleg(:,:)
-
-! chebyshev polynomial defined on [-1,1]
-     !!real(dp), public, save, allocatable :: qqche(:,:)
 
   end module ctqmc_mesh
 
