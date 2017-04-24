@@ -30,7 +30,7 @@
      use control, only : cname               ! code name
      use control, only : isbnd, isspn        ! control symmetry
      use control, only : isobs, issus, isvrt ! control physical observables
-     use control, only : nband, nspin, norbs ! size of model hamiltonian
+     use control, only : nband, norbs        ! size of model hamiltonian
      use control, only : ncfgs               ! size of hilbert space
      use control, only : mkink, mfreq        ! perturbation expansion order
      use control, only : nffrq, nbfrq, ntime ! matsubara frequency and time
@@ -263,8 +263,8 @@
 ! print the header of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
-         write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nband :', nband, 'Uc    :', Uc
-         write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nspin :', nspin, 'Jz    :', Jz
+         write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nband :', nband, 'nsweep :', nsweep
+         write(mystd,'(4X,a,i10,4X,a,f10.5)') 'ncfgs :', ncfgs, 'nwrite :', nwrite
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
