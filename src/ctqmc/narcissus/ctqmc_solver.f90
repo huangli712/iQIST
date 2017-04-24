@@ -349,13 +349,7 @@
              cstep = cstep + 1
 
 ! sampling the perturbation expansion feynman diagrams randomly
-! ctqmc_sample_diag() is suitable for low temperature region, while
-! ctqmc_temper_diag() is suitable for extreme high temperature region
-             if ( beta > one ) then
-                 call ctqmc_sample_diag(cstep)
-             else
-                 call ctqmc_sample_diag(cstep)
-             endif ! back if ( beta > one ) block
+             call ctqmc_sample_diag(cstep)
 
 !!========================================================================
 !!>>> sampling the physical observables                                <<<
