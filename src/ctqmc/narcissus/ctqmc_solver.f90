@@ -357,6 +357,7 @@
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
 
+! record
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_paux()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
