@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           04/19/2017 by li huang (last modified)
+!!!           04/24/2017 by li huang (last modified)
 !!! purpose : this purpose of this module is to implement a typical and
 !!!           useful data structure --- linked list. it is a generic
 !!!           linked list, capable of storing arbitrary data.
@@ -19,7 +19,7 @@
 !! ============
 !!
 !! This implementation of generic linked list in fortran 90 was taken from
-!! Jason R. Blevins's code 
+!! Jason R. Blevins's code
 !!     journal: ACM Fortran Forum 28(3), 2-7, 2009;
 !!     website: http://jblevins.org/research/generic-list.
 !! Of course, we have adapted the original code to fulfill our requirement.
