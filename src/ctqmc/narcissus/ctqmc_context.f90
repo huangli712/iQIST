@@ -161,7 +161,8 @@
 !! @var rsh_r
 !!
 !! rshift kink (operators pair) statistics: total rejected rshift count
-     real(dp), public, save :: rshift_reject = zero
+!!
+     real(dp), public, save :: rsh_r = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, reflip action counter                       :::
