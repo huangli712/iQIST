@@ -946,8 +946,8 @@
      implicit none
 
 ! allocate memory
-     allocate(paux(  9  ),        stat=istat)
      allocate(hist(mkink),        stat=istat)
+     allocate(paux(  9  ),        stat=istat)
      allocate(prob(ncfgs),        stat=istat)
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
