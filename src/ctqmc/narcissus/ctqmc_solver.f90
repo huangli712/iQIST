@@ -357,6 +357,13 @@
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
 
+             call ctqmc_record_paux()
+
+! record the probability of eigenstates
+             if ( mod(cstep, nmonte) == 0 ) then
+                 call ctqmc_record_prob()
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
+
 ! record the impurity (double) occupation number matrix and other
 ! auxiliary physical observables
              if ( mod(cstep, nmonte) == 0 ) then
@@ -366,11 +373,6 @@
 ! record the impurity green's function in matsubara frequency space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_grnf()
-             endif ! back if ( mod(cstep, nmonte) == 0 ) block
-
-! record the probability of eigenstates
-             if ( mod(cstep, nmonte) == 0 ) then
-                 call ctqmc_record_prob()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the impurity green's function in imaginary time space
