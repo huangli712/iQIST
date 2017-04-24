@@ -197,6 +197,7 @@
      allocate(nmat_err(norbs),             stat=istat)
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
      allocate(nnmat_err(norbs,norbs),      stat=istat)
+
      allocate(kmat_mpi(norbs),             stat=istat)
      allocate(kmat_err(norbs),             stat=istat)
      allocate(kkmat_mpi(norbs,norbs),      stat=istat)
@@ -209,6 +210,7 @@
      allocate(lrmat_err(norbs,norbs),      stat=istat)
      allocate(szpow_mpi(  4  ,norbs),      stat=istat)
      allocate(szpow_err(  4  ,norbs),      stat=istat)
+
      allocate(schi_mpi(ntime),             stat=istat)
      allocate(schi_err(ntime),             stat=istat)
      allocate(sschi_mpi(ntime,nband),      stat=istat)
@@ -221,12 +223,14 @@
      allocate(oochi_err(ntime,norbs,norbs),stat=istat)
      allocate(oofom_mpi(nbfrq,norbs,norbs),stat=istat)
      allocate(oofom_err(nbfrq,norbs,norbs),stat=istat)
+
      allocate(g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
      allocate(ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs), stat=istat)
+
      allocate(gtau_mpi(ntime,norbs,norbs), stat=istat)
      allocate(gtau_err(ntime,norbs,norbs), stat=istat)
      allocate(ftau_mpi(ntime,norbs,norbs), stat=istat)
