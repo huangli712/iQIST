@@ -1240,19 +1240,19 @@
   subroutine ctqmc_deallocate_memory_meat()
      implicit none
 
-     if ( allocated(hist)  )   deallocate(hist )
-
      if ( allocated(paux)  )   deallocate(paux )
+     if ( allocated(hist)  )   deallocate(hist )
      if ( allocated(prob)  )   deallocate(prob )
-
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
+
      if ( allocated(kmat)  )   deallocate(kmat )
      if ( allocated(kkmat) )   deallocate(kkmat)
      if ( allocated(lmat)  )   deallocate(lmat )
      if ( allocated(rmat)  )   deallocate(rmat )
      if ( allocated(lrmat) )   deallocate(lrmat)
      if ( allocated(szpow) )   deallocate(szpow)
+
      if ( allocated(schi)  )   deallocate(schi )
      if ( allocated(sschi) )   deallocate(sschi)
      if ( allocated(ssfom) )   deallocate(ssfom)
@@ -1270,7 +1270,11 @@
      return
   end subroutine ctqmc_deallocate_memory_meat
 
-!!>>> ctqmc_deallocate_memory_umat: deallocate memory for umat-related variables
+!!
+!! @sub ctqmc_deallocate_memory_umat
+!!
+!! deallocate memory for umat-related variables
+!!
   subroutine ctqmc_deallocate_memory_umat()
      implicit none
 
