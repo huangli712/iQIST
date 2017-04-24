@@ -160,23 +160,22 @@
      real(dp), allocatable :: oofom_mpi(:,:,:)
      real(dp), allocatable :: oofom_err(:,:,:)
 
-! note: for the two-particle quantities, we don't measure the error bars
-! used to measure two-particle green's function, real part, for mpi case
+! used to measure two-particle green's function, real part
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
 
-! used to measure two-particle green's function, imaginary part, for mpi case
+! used to measure two-particle green's function, imaginary part
      real(dp), allocatable :: g2_im_mpi(:,:,:,:,:)
 
-! used to measure two-particle green's function, real part, for mpi case
+! used to measure two-particle green's function, real part
      real(dp), allocatable :: h2_re_mpi(:,:,:,:,:)
 
-! used to measure two-particle green's function, imaginary part, for mpi case
+! used to measure two-particle green's function, imaginary part
      real(dp), allocatable :: h2_im_mpi(:,:,:,:,:)
 
-! used to measure particle-particle pair susceptibility, real part, for mpi case
+! used to measure p-p pairing susceptibility, real part
      real(dp), allocatable :: ps_re_mpi(:,:,:,:,:)
 
-! used to measure particle-particle pair susceptibility, imaginary part, for mpi case
+! used to measure p-p pairing susceptibility, imaginary part
      real(dp), allocatable :: ps_im_mpi(:,:,:,:,:)
 
 ! impurity green's function, imaginary time axis, for mpi case
