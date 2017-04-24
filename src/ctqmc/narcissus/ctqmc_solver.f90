@@ -267,8 +267,16 @@
 ! print the header of continuous time quantum Monte Carlo quantum impurity solver
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
-         write(mystd,'(4X,a,i10,4X,a,f10.5)') 'nband :', nband, 'nsweep :', nsweep
-         write(mystd,'(4X,a,i10,4X,a,f10.5)') 'ncfgs :', ncfgs, 'nwrite :', nwrite
+         write(mystd,'(4X,a,i2)') 'self-consistent scheme  :', isscf
+         write(mystd,'(4X,a,i2)') 'dynamic interaction     :', isscr
+         write(mystd,'(4X,a,i2)') 'symmetry (band)         :', isbnd
+         write(mystd,'(4X,a,i2)') 'symmetry (spin)         :', isspn
+         write(mystd,'(4X,a,i2)') 'worm algorithm          :', iswor
+         write(mystd,'(4X,a,i2)') 'data binning            :', isbin
+         write(mystd,'(4X,a,i2)') 'advanced basis          :', isort
+         write(mystd,'(4X,a,i2)') 'fidelity susceptibility :', isobs
+         write(mystd,'(4X,a,i2)') 'sp/ch susceptibility    :', issus
+         write(mystd,'(4X,a,i2)') 'two-particle quantities :', isvrt
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
