@@ -150,10 +150,17 @@
 !!
      real(dp), public, save :: rsh_t = zero
 
-! rshift kink (operators pair) statistics: total accepted rshift count
-     real(dp), public, save :: rshift_accept = zero
+!!
+!! @var rsh_a
+!!
+!! rshift kink (operators pair) statistics: total accepted rshift count
+!!
+     real(dp), public, save :: rsh_a = zero
 
-! rshift kink (operators pair) statistics: total rejected rshift count
+!!
+!! @var rsh_r
+!!
+!! rshift kink (operators pair) statistics: total rejected rshift count
      real(dp), public, save :: rshift_reject = zero
 
 !-------------------------------------------------------------------------
