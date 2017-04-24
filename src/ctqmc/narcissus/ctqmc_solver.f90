@@ -430,11 +430,14 @@
                  call ctqmc_record_szpw()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 3) ) block
 
+!!========================================================================
+!!>>> sampling the physical observables 3 (optional)                   <<<
+!!========================================================================
 
-
-
-
-
+! record nothing
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
+                 CONTINUE
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) block
 
 ! record the spin-spin correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) then
