@@ -1055,7 +1055,11 @@
      return
   end subroutine ctqmc_allocate_memory_umat
 
-!!>>> ctqmc_allocate_memory_mmat: allocate memory for mmat-related variables
+!!
+!! @sub ctqmc_allocate_memory_mmat
+!!
+!! allocate memory for mmat-related variables
+!!
   subroutine ctqmc_allocate_memory_mmat()
      implicit none
 
