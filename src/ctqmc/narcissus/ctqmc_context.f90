@@ -271,8 +271,12 @@
 !!>>> module ctqmc_mesh                                                <<<
 !!========================================================================
 
-!!>>> containing mesh related arrays used by continuous time quantum Monte
-!!>>> Carlo quantum impurity solver
+!!
+!! @var ctqmc_mesh
+!!
+!! containing mesh related arrays used by continuous time quantum Monte
+!! Carlo quantum impurity solver
+!!
   module ctqmc_mesh
      use constants, only : dp
 
