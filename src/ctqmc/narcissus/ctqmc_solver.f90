@@ -350,12 +350,14 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-     CTQMC_MAIN_ITERATION: do i=1, nsweep, nwrite
+     CTQMC_MAIN_SWEEP: &
+     do i=1,nsweep,nwrite
 
 ! record start time
          call cpu_time(time_begin)
 
-         CTQMC_DUMP_ITERATION: do j=1, nwrite
+         CTQMC_FAST_SWEEP: &
+         do j=1,nwrite
 
 !!========================================================================
 !!>>> sampling perturbation expansion series                           <<<
@@ -465,7 +467,7 @@
                  call ctqmc_record_pair()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
 
-         enddo CTQMC_DUMP_ITERATION ! over j={1,nwrite} loop
+         enddo CTQMC_FAST_SWEEP ! over j={1,nwrite} loop
 
 !!========================================================================
 !!>>> reporting quantum impurity solver                                <<<
@@ -553,7 +555,7 @@
              EXIT CTQMC_MAIN_ITERATION ! jump out the iteration
          endif ! back if ( cflag == 99 .or. cflag == 100 ) block
 
-     enddo CTQMC_MAIN_ITERATION ! over i={1,nsweep} loop
+     enddo CTQMC_MAIN_SWEEP ! over i={1,nsweep} loop
 
 !!========================================================================
 !!>>> ending main iteration                                            <<<
