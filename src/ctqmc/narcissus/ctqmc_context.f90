@@ -316,8 +316,12 @@
 !!>>> module ctqmc_meat                                                <<<
 !!========================================================================
 
-!!>>> containing physical observables related arrays used by continuous
-!!>>> time quantum Monte Carlo quantum impurity solver
+!!
+!! @mod ctqmc_meat
+!!
+!! containing physical observables related arrays used by continuous time
+!! quantum Monte Carlo quantum impurity solver
+!!
   module ctqmc_meat !!>>> To tell you a truth, meat means MEAsuremenT
      use constants, only : dp
 
