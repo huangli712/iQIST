@@ -121,7 +121,7 @@
 !! if isbin == 2:
 !!     with data binning mode
 !!
-     integer, public, save :: isbin  = 2
+     integer, public, save :: isbin  = 1
 
 !!
 !! @var isort
