@@ -308,7 +308,7 @@
 !!
 !! legendre polynomial defined on [-1,1]
 !!
-     real(dp), public, save, allocatable :: ppleg(:,:)
+     real(dp), public, save, allocatable :: rep_l(:,:)
 
   end module ctqmc_mesh
 
