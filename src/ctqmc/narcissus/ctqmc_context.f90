@@ -622,22 +622,46 @@
 
      implicit none
 
-! helper matrix for evaluating M & G matrices
+!!
+!! @var lspace
+!!
+!! helper matrix for evaluating M & G matrices
+!!
      real(dp), public, save, allocatable    :: lspace(:,:)
 
-! helper matrix for evaluating M & G matrices
+!!
+!! @var rspace
+!!
+!! helper matrix for evaluating M & G matrices
+!!
      real(dp), public, save, allocatable    :: rspace(:,:)
 
-! M matrix, $ \mathscr{M} $
+!!
+!! @var mmat
+!!
+!! M matrix, $ \mathscr{M} $
+!!
      real(dp), public, save, allocatable    :: mmat(:,:,:)
 
-! helper matrix for evaluating G matrix
+!!
+!! @var lsaves
+!!
+!! helper matrix for evaluating G matrix
+!!
      complex(dp), public, save, allocatable :: lsaves(:,:)
 
-! helper matrix for evaluating G matrix
+!!
+!! @var rsaves
+!!
+!! helper matrix for evaluating G matrix
+!!
      complex(dp), public, save, allocatable :: rsaves(:,:)
 
-! G matrix, $ \mathscr{G} $
+!!
+!! @var gmat
+!!
+!! G matrix, $ \mathscr{G} $
+!!
      complex(dp), public, save, allocatable :: gmat(:,:,:)
 
   end module ctqmc_mmat
