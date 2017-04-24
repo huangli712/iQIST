@@ -185,8 +185,9 @@
 !!
 !! @var rfl_r
 !!
-! reflip kink (operators pair) statistics: total rejected reflip count
-     real(dp), public, save :: reflip_reject = zero
+!! reflip kink (operators pair) statistics: total rejected reflip count
+!!
+     real(dp), public, save :: rfl_r = zero
 
   end module ctqmc_core
 
