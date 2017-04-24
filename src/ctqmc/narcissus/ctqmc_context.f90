@@ -272,7 +272,7 @@
 !!========================================================================
 
 !!
-!! @var ctqmc_mesh
+!! @mod ctqmc_mesh
 !!
 !! containing mesh related arrays used by continuous time quantum Monte
 !! Carlo quantum impurity solver
@@ -671,7 +671,7 @@
 !!========================================================================
 
 !!
-!! @var ctqmc_gmat
+!! @mod ctqmc_gmat
 !!
 !! containing green's function matrix related arrays used by continuous
 !! time quantum Monte Carlo quantum impurity solver
