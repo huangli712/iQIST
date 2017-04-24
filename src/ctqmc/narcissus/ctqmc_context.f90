@@ -1240,8 +1240,8 @@
   subroutine ctqmc_deallocate_memory_meat()
      implicit none
 
-     if ( allocated(paux)  )   deallocate(paux )
      if ( allocated(hist)  )   deallocate(hist )
+     if ( allocated(paux)  )   deallocate(paux )
      if ( allocated(prob)  )   deallocate(prob )
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
