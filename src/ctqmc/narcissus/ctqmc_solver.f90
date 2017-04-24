@@ -100,39 +100,39 @@
      real(dp), allocatable :: paux_mpi(:)
      real(dp), allocatable :: paux_err(:)
 
-! probability of atomic states, for mpi case
+! probability of atomic eigenstates
      real(dp), allocatable :: prob_mpi(:)
      real(dp), allocatable :: prob_err(:)
 
-! impurity occupation number matrix, for mpi case
+! impurity occupation number matrix
      real(dp), allocatable :: nmat_mpi(:)
      real(dp), allocatable :: nmat_err(:)
 
-! impurity double occupation number matrix, for mpi case
+! impurity double occupation number matrix
      real(dp), allocatable :: nnmat_mpi(:,:)
      real(dp), allocatable :: nnmat_err(:,:)
 
-! number of operators < k >, for mpi case
+! number of operators < k >
      real(dp), allocatable :: kmat_mpi(:)
      real(dp), allocatable :: kmat_err(:)
 
-! square of number of operators < k^2 >, for mpi case
+! square of number of operators < k^2 >
      real(dp), allocatable :: kkmat_mpi(:,:)
      real(dp), allocatable :: kkmat_err(:,:)
 
-! number of operators at left half axis < k_l >, for mpi case
+! number of operators at left half axis < k_l >
      real(dp), allocatable :: lmat_mpi(:)
      real(dp), allocatable :: lmat_err(:)
 
-! number of operators at right half axis < k_r >, for mpi case
+! number of operators at right half axis < k_r >
      real(dp), allocatable :: rmat_mpi(:)
      real(dp), allocatable :: rmat_err(:)
 
-! used to evaluate fidelity susceptibility < k_l k_r >, for mpi case
+! used to evaluate fidelity susceptibility < k_l k_r >
      real(dp), allocatable :: lrmat_mpi(:,:)
      real(dp), allocatable :: lrmat_err(:,:)
 
-! powers of local magnetization, for mpi case
+! powers of local magnetization
      real(dp), allocatable :: szpow_mpi(:,:)
      real(dp), allocatable :: szpow_err(:,:)
 
