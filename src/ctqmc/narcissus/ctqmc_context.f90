@@ -556,25 +556,53 @@
 !::: input data variables                                              :::
 !-------------------------------------------------------------------------
 
-! symmetry properties for correlated orbitals
+!!
+!! @var symm
+!!
+!! symmetry properties for correlated orbitals
+!!
      integer,  public, save, allocatable :: symm(:)
 
-! impurity level for correlated orbitals
+!!
+!! @var eimp
+!!
+!! impurity level for correlated orbitals
+!!
      real(dp), public, save, allocatable :: eimp(:)
 
-! screening function, used to measure dynamical screening effect, K(\tau)
+!!
+!! @var ktau
+!!
+!! screening function, used to determine dynamic interaction, K(\tau)
+!!
      real(dp), public, save, allocatable :: ktau(:)
 
-! second order derivates for the screening function, K''(\tau)
+!!
+!! @var ksed
+!!
+!! second order derivates for the screening function, K''(\tau)
+!!
      real(dp), public, save, allocatable :: ksed(:)
 
-! first  order derivates for the screening function, K'(\tau)
+!!
+!! @var ptau
+!!
+!! first order derivates for the screening function, K'(\tau)
+!!
      real(dp), public, save, allocatable :: ptau(:)
 
-! second order derivates for ptau, K'''(\tau)
+!!
+!! @var psed
+!!
+!! second order derivates for ptau, K'''(\tau)
+!!
      real(dp), public, save, allocatable :: psed(:)
 
-! reduced Coulomb interaction matrix, two-index version
+!!
+!! @var uumat
+!!
+!! reduced Coulomb interaction matrix, two-index version
+!!
      real(dp), public, save, allocatable :: uumat(:,:)
 
   end module ctqmc_umat
