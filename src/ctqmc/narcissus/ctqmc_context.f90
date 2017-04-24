@@ -516,8 +516,12 @@
 !!>>> module ctqmc_umat                                                <<<
 !!========================================================================
 
-!!>>> containing auxiliary arrays used by continuous time quantum Monte
-!!>>> Carlo quantum impurity solver
+!!
+!! @mod ctqmc_umat
+!!
+!! containing auxiliary arrays used by continuous time quantum Monte
+!! Carlo quantum impurity solver
+!!
   module ctqmc_umat
      use constants, only : dp
 
@@ -527,13 +531,25 @@
 !::: ctqmc status variables                                            :::
 !-------------------------------------------------------------------------
 
-! current perturbation expansion order for different flavor channel
+!!
+!! @var rank
+!!
+!! current perturbation expansion order for different flavor channel
+!!
      integer,  public, save, allocatable :: rank(:)
 
-! current occupation status for different flavor channel
+!!
+!! @var stts
+!!
+!! current occupation status for different flavor channel
+!!
      integer,  public, save, allocatable :: stts(:)
 
-! prefactor for improved estimator
+!!
+!! @var pref
+!!
+!! prefactor for improved estimator for self-energy
+!!
      real(dp), public, save, allocatable :: pref(:,:)
 
 !-------------------------------------------------------------------------
