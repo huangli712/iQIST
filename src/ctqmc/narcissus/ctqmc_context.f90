@@ -436,16 +436,36 @@
 !!
      real(dp), public, save, allocatable :: sschi(:,:)
 
-! spin-spin correlation function: \chi^{s}_{i} (i\omega), orbital-resolved
+!!
+!! @var ssfom
+!!
+!! spin-spin correlation function: \chi^{s}_{i} (i\omega),
+!! orbital-resolved
+!!
      real(dp), public, save, allocatable :: ssfom(:,:)
 
-! orbital-orbital correlation function: < N(0) N(\tau) >, totally-averaged
+!!
+!! @var ochi
+!!
+!! orbital-orbital correlation function: < N(0) N(\tau) >,
+!! totally-averaged
+!!
      real(dp), public, save, allocatable :: ochi(:)
 
-! orbital-orbital correlation function: < N(0) N(\tau) >, orbital-resolved
+!!
+!! @var oochi
+!!
+!! orbital-orbital correlation function: < N(0) N(\tau) >,
+!! orbital-resolved
+!!
      real(dp), public, save, allocatable :: oochi(:,:,:)
 
-! orbital-orbital correlation function: \chi^{c}_{ij} (i\omega), orbital-resolved
+!!
+!! @var oofom
+!!
+!! orbital-orbital correlation function: \chi^{c}_{ij} (i\omega),
+!! orbital-resolved
+!!
      real(dp), public, save, allocatable :: oofom(:,:,:)
 
 ! used to calculate two-particle green's function, real part
