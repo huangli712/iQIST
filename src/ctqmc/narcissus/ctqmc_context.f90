@@ -356,37 +356,84 @@
 !!
      real(dp), public, save, allocatable :: paux(:)
 
-! probability of eigenstates of local hamiltonian matrix
+!!
+!! @var prob
+!!
+!! probability of eigenstates of local hamiltonian matrix
+!!
      real(dp), public, save, allocatable :: prob(:)
 
-! impurity occupation number, < n_i >
+!!
+!! @var nmat
+!!
+!! impurity occupation number, < n_i >
+!!
      real(dp), public, save, allocatable :: nmat(:)
 
-! impurity double occupation number matrix, < n_i n_j >
+!!
+!! @var nnmat
+!!
+!! impurity double occupation number matrix, < n_i n_j >
+!!
      real(dp), public, save, allocatable :: nnmat(:,:)
 
-! number of operators, < k >
+!!
+!! @var kmat
+!!
+!! number of operators, < k >
+!!
      real(dp), public, save, allocatable :: kmat(:)
 
-! square of number of operators, < k^2 >
+!!
+!! @var kkmat
+!!
+!! square of number of operators, < k^2 >
+!!
      real(dp), public, save, allocatable :: kkmat(:,:)
 
-! number of operators at left half axis, < k_l >
+!!
+!! @var lmat
+!!
+!! number of operators at left half axis, < k_l >
+!!
      real(dp), public, save, allocatable :: lmat(:)
 
-! number of operators at right half axis, < k_r >
+!!
+!! @var rmat
+!!
+!! number of operators at right half axis, < k_r >
+!!
      real(dp), public, save, allocatable :: rmat(:)
 
-! used to evaluate fidelity susceptibility, < k_l k_r >
+!!
+!! @var lrmat
+!!
+!! used to evaluate fidelity susceptibility, < k_l k_r >
+!!
      real(dp), public, save, allocatable :: lrmat(:,:)
 
-! powers of the local magnetization < S^n_z>, used to calculate Binder cumulant
+!!
+!! @var szpow
+!!
+!! powers of the local magnetization < S^n_z>, used to calculate the
+!! Binder cumulant
+!!
      real(dp), public, save, allocatable :: szpow(:,:)
 
-! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, totally-averaged
+!!
+!! @var schi
+!!
+!! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc},
+!! totally-averaged
+!!
      real(dp), public, save, allocatable :: schi(:)
 
-! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc}, orbital-resolved
+!!
+!! @var sschi
+!!
+!! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc},
+!! orbital-resolved
+!!
      real(dp), public, save, allocatable :: sschi(:,:)
 
 ! spin-spin correlation function: \chi^{s}_{i} (i\omega), orbital-resolved
