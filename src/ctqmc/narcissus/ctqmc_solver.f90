@@ -470,18 +470,13 @@
 
 ! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
-                 call ctqmc_record_twop()
+                 call ctqmc_record_vrtx()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) block
 
-! record the two-particle green's function
+! record the particle-particle pairing susceptibility
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) then
-                 call ctqmc_record_vrtx()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
-
-! record the particle-particle pair susceptibility
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) then
                  call ctqmc_record_pair()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 3) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
 
          enddo CTQMC_FAST_SWEEP ! over j={1,nwrite} loop
 

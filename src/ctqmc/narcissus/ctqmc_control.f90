@@ -247,7 +247,7 @@
 !!     calculate two-particle green's function and vertex function
 !!
 !! if p == 3:
-!!     calculate particle-particle pair susceptibility
+!!     calculate particle-particle pairing susceptibility
 !!
 !! example:
 !!   ( 1 1 1 0 1 0 1 0 1)_2
