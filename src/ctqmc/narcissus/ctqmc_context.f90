@@ -611,8 +611,12 @@
 !!>>> module ctqmc_mmat                                                <<<
 !!========================================================================
 
-!!>>> containing M-matrix and G-matrix related arrays used by continuous
-!!>>> time quantum Monte Carlo quantum impurity solver
+!!
+!! @mod ctqmc_mmat
+!!
+!! containing M-matrix and G-matrix related arrays used by continuous
+!! time quantum Monte Carlo quantum impurity solver
+!!
   module ctqmc_mmat
      use constants, only : dp
 
