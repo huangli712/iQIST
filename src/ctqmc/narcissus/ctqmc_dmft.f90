@@ -51,7 +51,7 @@
 ! effective chemical potential
      real(dp) :: qmune
 
-! dummy hybridization function, in matsubara frequency axis, matrix form
+! dummy hybridization function in matsubara frequency axis
      complex(dp), allocatable :: htmp(:,:,:)
 
 ! allocate memory
@@ -63,7 +63,9 @@
 ! initialize htmp
      htmp = hybf
 
-! calculate new hybridization function using self-consistent condition
+! calculate new hybridization function using self-consistent condition.
+! here we consider a Hubbard model on a bethe lattice. you can replace
+! it with your own self-consistent condition
      call ctqmc_dmft_bethe(hybf, grnf)
 
 ! mixing new and old hybridization function: htmp and hybf
