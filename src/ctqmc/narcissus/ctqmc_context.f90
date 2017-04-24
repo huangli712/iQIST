@@ -801,7 +801,11 @@
 !!>>> module context                                                   <<<
 !!========================================================================
 
-!!>>> containing memory management subroutines and define global variables
+!!
+!! @mod context
+!!
+!! containing memory management subroutines and init all global variables
+!!
   module context
      use constants
      use control
