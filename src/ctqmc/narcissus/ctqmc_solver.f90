@@ -367,7 +367,7 @@
              cstep = cstep + 1
 
 ! sampling the perturbation expansion feynman diagrams randomly
-             call ctqmc_sample_diag(cstep)
+             call ctqmc_walking(cstep)
 
 !!========================================================================
 !!>>> sampling the physical observables                                <<<
@@ -552,7 +552,7 @@
 
 ! if the quantum impurity solver is out of control or reaches convergence
          if ( cflag == 99 .or. cflag == 100 ) then
-             EXIT CTQMC_MAIN_ITERATION ! jump out the iteration
+             EXIT CTQMC_MAIN_SWEEP ! jump out the iteration
          endif ! back if ( cflag == 99 .or. cflag == 100 ) block
 
      enddo CTQMC_MAIN_SWEEP ! over i={1,nsweep} loop
