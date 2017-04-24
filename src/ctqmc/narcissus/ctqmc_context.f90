@@ -143,7 +143,11 @@
 !::: core variables: real, rshift action counter                       :::
 !-------------------------------------------------------------------------
 
-! rshift kink (operators pair) statistics: total rshift count
+!!
+!! @var rsh_t
+!!
+!! rshift kink (operators pair) statistics: total rshift count
+!!
      real(dp), public, save :: rshift_tcount = zero
 
 ! rshift kink (operators pair) statistics: total accepted rshift count

@@ -142,7 +142,7 @@
 !! control flag, it is used to tell the code which physical observables
 !! should be measured. we just use the following rules to judge:
 !!
-!! rule 1: 
+!! rule 1:
 !!     isobs is firstly converted to a binary representation. for example,
 !!     10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc
 !!
@@ -368,7 +368,7 @@
 !! unphysical trapping, we introduce "flip" moves, which exchange the
 !! operators corresponding, for example, to up and down spins in a given
 !! orbital. note that nflip could be negative. if nflip /= 0, then the
-!! absolute value of nflip is the flip period 
+!! absolute value of nflip is the flip period
 !!
 !! in this code, nowadays the following flip schemes are supported:
 !!
@@ -480,7 +480,7 @@
 !!     lc is ignored
 !!
 !! if isscr == 02:
-!!     lc just means the model parameter \lambda 
+!!     lc just means the model parameter \lambda
 !!
 !! if isscr == 03:
 !!     lc just means the model parameter \alpha
@@ -526,7 +526,7 @@
      real(dp), public, save :: beta  = 8.00_dp
 
 !!
-!! @var part 
+!! @var part
 !!
 !! coupling parameter t for Hubbard model
 !!
