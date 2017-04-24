@@ -374,14 +374,14 @@
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the impurity green's function in imaginary time space
-             if ( mod(cstep, ncarlo) == 0 ) then
+             if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_gtau()
-             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the auxiliary correlation function, F(\tau)
-             if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) then
+             if ( mod(cstep, ncarlo) == 0 ) then
                  call ctqmc_record_ftau()
-             endif ! back if ( mod(cstep, ncarlo) == 0 .and. isort >= 4 ) block
+             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
 
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
