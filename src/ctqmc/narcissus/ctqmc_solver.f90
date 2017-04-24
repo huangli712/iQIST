@@ -379,9 +379,9 @@
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the auxiliary correlation function, F(\tau)
-             if ( mod(cstep, ncarlo) == 0 ) then
+             if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_ftau()
-             endif ! back if ( mod(cstep, ncarlo) == 0 ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
