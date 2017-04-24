@@ -532,7 +532,7 @@
 !!========================================================================
 
 ! check the status at first
-         call ctqmc_verify_diag(cflag)
+         call ctqmc_warning(cflag)
 
 ! write out the snapshot for the current diagram configuration
          if ( myid == master ) then
