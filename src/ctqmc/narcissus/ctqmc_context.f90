@@ -297,14 +297,17 @@
      real(dp), public, save, allocatable :: rmesh(:)
 
 !!
-!! @var pmesh
+!! @var lmesh
 !!
 !! interval [-1,1] on which legendre polynomial is defined
 !!
-     real(dp), public, save, allocatable :: pmesh(:)
+     real(dp), public, save, allocatable :: lmesh(:)
 
 !!
-! legendre polynomial defined on [-1,1]
+!! @var rep_l
+!!
+!! legendre polynomial defined on [-1,1]
+!!
      real(dp), public, save, allocatable :: ppleg(:,:)
 
   end module ctqmc_mesh
