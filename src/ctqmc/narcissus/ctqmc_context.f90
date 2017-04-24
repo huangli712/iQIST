@@ -717,9 +717,12 @@
 !!>>> module ctqmc_wmat                                                <<<
 !!========================================================================
 
-!!>>> containing weiss's function and hybridization function matrix related
-!!>>> arrays used by continuous time quantum Monte Carlo quantum impurity
-!!>>> solver
+!!
+!! @mod ctqmc_wmat
+!!
+!! containing weiss's function and hybridization function related arrays
+!! used by continuous time quantum Monte Carlo quantum impurity solver
+!!
   module ctqmc_wmat
      use constants, only : dp
 
