@@ -195,11 +195,17 @@
 !!>>> module ctqmc_clur                                                <<<
 !!========================================================================
 
-!!>>> containing perturbation expansion series related arrays (colour part)
-!!>>> used by continuous time quantum Monte Carlo quantum impurity solver
+!!
+!! @mod ctqmc_clur
+!!
+!! containing perturbation expansion series related arrays (colour part)
+!! used by continuous time quantum Monte Carlo quantum impurity solver
+!!
   module ctqmc_clur
      use constants, only : dp
-     use stack, only : istack, istack_create, istack_destroy
+     use stack, only : istack
+     use stack, only : istack_create
+     use stack, only : istack_destroy
 
      implicit none
 
