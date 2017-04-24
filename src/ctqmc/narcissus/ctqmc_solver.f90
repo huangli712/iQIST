@@ -44,8 +44,9 @@
 
      use context, only : tmesh, rmesh        ! frequency and time meshes
      use context, only : hist                ! histogram
-     use context, only : prob                ! probability
-     use context, only : nmat, nnmat         ! occupation
+     use context, only : paux                ! auxiliary physical observables
+     use context, only : prob                ! atomic eigenstate probability
+     use context, only : nmat, nnmat         ! occupation and double occupation
      use context, only : kmat, kkmat         ! kinetic energy fluctuation
      use context, only : lmat, rmat, lrmat   ! fidelity susceptibility
      use context, only : szpow               ! binder cumulant
