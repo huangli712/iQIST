@@ -178,15 +178,15 @@
 ! used to measure p-p pairing susceptibility, imaginary part
      real(dp), allocatable :: ps_im_mpi(:,:,:,:,:)
 
-! impurity green's function, imaginary time axis, for mpi case
+! impurity green's function in imaginary time axis
      real(dp), allocatable :: gtau_mpi(:,:,:)
      real(dp), allocatable :: gtau_err(:,:,:)
 
-! auxiliary correlation function, imaginary time axis, for mpi case
+! auxiliary correlation function in imaginary time axis
      real(dp), allocatable :: ftau_mpi(:,:,:)
      real(dp), allocatable :: ftau_err(:,:,:)
 
-! impurity green's function, matsubara frequency axis, for mpi case
+! impurity green's function in matsubara frequency axis
      complex(dp), allocatable :: grnf_mpi(:,:,:)
      complex(dp), allocatable :: grnf_err(:,:,:)
 
