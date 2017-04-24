@@ -907,7 +907,11 @@
      return
   end subroutine ctqmc_allocate_memory_clur
 
-!!>>> ctqmc_allocate_memory_mesh: allocate memory for mesh-related variables
+!!
+!! @sub ctqmc_allocate_memory_mesh
+!!
+!! allocate memory for mesh-related variables
+!!
   subroutine ctqmc_allocate_memory_mesh()
      implicit none
 
