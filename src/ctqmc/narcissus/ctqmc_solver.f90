@@ -37,7 +37,6 @@
      use control, only : nsweep, nwrite      ! monte carlo sampling
      use control, only : nmonte, ncarlo      ! interval for sampling
      use control, only : Uc, Jz              ! coulomb and hund's interaction
-     use control, only : beta                ! system temperature
      use control, only : myid, master        ! mpi
 
      use context, only : tmesh, rmesh        ! frequency and time meshes
