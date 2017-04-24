@@ -699,10 +699,15 @@
 !! @var grnf
 !!
 !! impurity green's function in matsubara frequency axis
+!!
      complex(dp), public, save, allocatable :: grnf(:,:,:)
 
-! auxiliary correlation function, in matsubara frequency axis
-! used to measure self-energy function, F(i\omega)
+!!
+!! @var frnf
+!!
+!! auxiliary correlation function in matsubara frequency axis, used to
+!! measure self-energy function, F(i\omega)
+!!
      complex(dp), public, save, allocatable :: frnf(:,:,:)
 
   end module ctqmc_gmat
