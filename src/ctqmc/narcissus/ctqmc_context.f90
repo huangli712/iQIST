@@ -48,7 +48,7 @@
 !!
 !! @var cstat
 !!
-!! current status for the current flavor, used to sync with stts vector
+!! status indicator for the current flavor, used to sync with stts vector
 !!
 !! if cstat = 0:
 !!     it means null occupation case
