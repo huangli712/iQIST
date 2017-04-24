@@ -508,10 +508,10 @@
 !!========================================================================
 
 ! symmetrize the impurity green's function over spin or over bands
-         if ( issun == 2 .or. isspn == 1 ) then
+         if ( isbnd == 2 .or. isspn == 2 ) then
              call ctqmc_symm_gtau(symm, gtau_mpi)
              call ctqmc_symm_gtau(symm, gtau_err)
-         endif ! back if ( issun == 2 .or. isspn == 1 ) block
+         endif ! back if ( isbnd == 2 .or. isspn == 2 ) block
 
 !!========================================================================
 !!>>> writing immediate results                                        <<<
