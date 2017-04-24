@@ -89,10 +89,10 @@
 !! control flag, define symmetry of the model (spin part)
 !!
 !! if isspn == 1:
-!!     enforce spin up = spin down
+!!     let spin up and spin down states evolve independently
 !!
 !! if isspn == 2:
-!!     let spin up and spin down states evolve independently
+!!     enforce spin up = spin down
 !!
      integer, public, save :: isspn  = 1
 
