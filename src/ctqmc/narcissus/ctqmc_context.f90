@@ -859,7 +859,11 @@
 !!>>> allocate memory subroutines                                      <<<
 !!========================================================================
 
-!!>>> ctqmc_allocate_memory_clur: allocate memory for clur-related variables
+!!
+!! @sub ctqmc_allocate_memory_clur
+!!
+!! allocate memory for clur-related variables
+!!
   subroutine ctqmc_allocate_memory_clur()
      implicit none
 
