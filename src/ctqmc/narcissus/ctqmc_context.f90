@@ -468,10 +468,18 @@
 !!
      real(dp), public, save, allocatable :: oofom(:,:,:)
 
-! used to calculate two-particle green's function, real part
+!!
+!! @var g2_re
+!!
+!! used to calculate two-particle green's function, real part
+!!
      real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
 
-! used to calculate two-particle green's function, imaginary part
+!!
+!! @var g2_im
+!!
+!! used to calculate two-particle green's function, imaginary part
+!!
      real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
 
 ! used to calculate two-particle green's function, real part
