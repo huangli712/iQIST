@@ -920,7 +920,6 @@
      allocate(rmesh(mfreq),       stat=istat)
 
      allocate(lmesh(legrd),       stat=istat)
-
      allocate(rep_l(legrd,lemax), stat=istat)
 
 ! check the status
@@ -932,11 +931,8 @@
      tmesh = zero
      rmesh = zero
 
-     pmesh = zero
-     !!qmesh = zero
-
-     ppleg = zero
-     !!qqche = zero
+     lmesh = zero
+     rep_l = zero
 
      return
   end subroutine ctqmc_allocate_memory_mesh
