@@ -459,6 +459,10 @@
                  call ctqmc_record_ofom()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) block
 
+!!========================================================================
+!!>>> sampling the physical observables 4 (optional)                   <<<
+!!========================================================================
+
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
                  CONTINUE
