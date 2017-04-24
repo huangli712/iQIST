@@ -27,35 +27,35 @@
   subroutine ctqmc_impurity_solver(iter)
      use constants, only : dp, zero, one, mystd
 
-     use control, only : cname
-     use control, only : isbnd, isspn
-     use control, only : isobs, issus, isvrt
-     use control, only : nband, nspin, norbs
-     use control, only : ncfgs
-     use control, only : mkink, mfreq
-     use control, only : nffrq, nbfrq, ntime
-     use control, only : nsweep, nwrite
-     use control, only : nmonte, ncarlo
-     use control, only : Uc, Jz
-     use control, only : beta
-     use control, only : myid, master
+     use control, only : cname               ! code name
+     use control, only : isbnd, isspn        ! control symmetry
+     use control, only : isobs, issus, isvrt ! control physical observables
+     use control, only : nband, nspin, norbs ! size of model hamiltonian
+     use control, only : ncfgs               ! size of hilbert space
+     use control, only : mkink, mfreq        ! perturbation expansion order
+     use control, only : nffrq, nbfrq, ntime ! matsubara frequency and time
+     use control, only : nsweep, nwrite      ! monte carlo sampling
+     use control, only : nmonte, ncarlo      ! interval for sampling
+     use control, only : Uc, Jz              ! coulomb and hund's interaction
+     use control, only : beta                ! system temperature
+     use control, only : myid, master        ! mpi
 
-     use context, only : tmesh, rmesh
-     use context, only : hist
-     use context, only : prob
-     use context, only : nmat, nnmat
-     use context, only : kmat, kkmat
-     use context, only : lmat, rmat, lrmat
-     use context, only : szpow
-     use context, only : schi, sschi, ssfom
-     use context, only : ochi, oochi, oofom
-     use context, only : g2_re, g2_im
-     use context, only : h2_re, h2_im
-     use context, only : ps_re, ps_im
-     use context, only : symm
-     use context, only : gtau, ftau
-     use context, only : grnf
-     use context, only : sig2
+     use context, only : tmesh, rmesh        ! frequency and time meshes
+     use context, only : hist                ! histogram
+     use context, only : prob                ! probability
+     use context, only : nmat, nnmat         ! occupation
+     use context, only : kmat, kkmat         ! kinetic energy fluctuation
+     use context, only : lmat, rmat, lrmat   ! fidelity susceptibility
+     use context, only : szpow               ! binder cumulant
+     use context, only : schi, sschi, ssfom  ! spin susceptibility
+     use context, only : ochi, oochi, oofom  ! charge susceptibility
+     use context, only : g2_re, g2_im        ! two-particle green's function
+     use context, only : h2_re, h2_im        ! two-particle green's function
+     use context, only : ps_re, ps_im        ! pairing susceptibility
+     use context, only : symm                ! symmetry
+     use context, only : gtau, ftau          ! imaginary time green's function
+     use context, only : grnf                ! matsubara green's function
+     use context, only : sig2                ! self-energy function
 
      implicit none
 
