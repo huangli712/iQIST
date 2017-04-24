@@ -919,11 +919,9 @@
      allocate(tmesh(ntime),       stat=istat)
      allocate(rmesh(mfreq),       stat=istat)
 
-     allocate(pmesh(legrd),       stat=istat)
-     !!allocate(qmesh(chgrd),       stat=istat)
+     allocate(lmesh(legrd),       stat=istat)
 
-     allocate(ppleg(legrd,lemax), stat=istat)
-     !!allocate(qqche(chgrd,chmax), stat=istat)
+     allocate(rep_l(legrd,lemax), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
