@@ -28,10 +28,18 @@
      use constants, only : dp, zero, one, mystd
 
      use control, only : cname
-     use control, only : isbnd, isspn, isobs, issus, isvrt
-     use control, only : nband, nspin, norbs, ncfgs
+     use control, only : isbnd
+     use control, only : isspn
+     use control, only : isobs
+     use control, only : issus
+     use control, only : isvrt
+     use control, only : nband
+     use control, only : nspin
+     use control, only : norbs
+     use control, only : ncfgs
      use control, only : mkink, mfreq
-     use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
+     use control, only : nffrq, nbfrq, ntime
+     use control, only : nsweep, nwrite, nmonte, ncarlo
      use control, only : Uc, Jz
      use control, only : beta
      use control, only : myid, master
