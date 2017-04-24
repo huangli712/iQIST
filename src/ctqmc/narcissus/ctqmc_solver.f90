@@ -411,9 +411,30 @@
 !!========================================================================
 
 ! record nothing
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
+             if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 0) ) then
                  CONTINUE
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) block
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 0) ) block
+
+! record the < k^2 > - < k >^2
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) then
+                 call ctqmc_record_kmat()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) block
+
+! record the fidelity susceptibility
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) then
+                 call ctqmc_record_lmat()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) block
+
+! record the powers of local magnetization
+             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 7) ) then
+                 call ctqmc_record_szpw()
+             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 7) ) block
+
+
+
+
+
+
 
 ! record the spin-spin correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) then
@@ -434,21 +455,6 @@
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) then
                  call ctqmc_record_ofom()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) block
-
-! record the < k^2 > - < k >^2
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) then
-                 call ctqmc_record_kmat()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 5) ) block
-
-! record the fidelity susceptibility
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) then
-                 call ctqmc_record_lmat()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 6) ) block
-
-! record the powers of local magnetization
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 7) ) then
-                 call ctqmc_record_szpw()
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 7) ) block
 
 ! record nothing
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
