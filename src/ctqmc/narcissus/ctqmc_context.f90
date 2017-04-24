@@ -937,7 +937,11 @@
      return
   end subroutine ctqmc_allocate_memory_mesh
 
-!!>>> ctqmc_allocate_memory_meat: allocate memory for meat-related variables
+!!
+!! @sub ctqmc_allocate_memory_meat
+!!
+!! allocate memory for meat-related variables
+!!
   subroutine ctqmc_allocate_memory_meat()
      implicit none
 
@@ -1005,7 +1009,11 @@
      return
   end subroutine ctqmc_allocate_memory_meat
 
-!!>>> ctqmc_allocate_memory_umat: allocate memory for umat-related variables
+!!
+!! @sub ctqmc_allocate_memory_umat
+!!
+!! allocate memory for umat-related variables
+!!
   subroutine ctqmc_allocate_memory_umat()
      implicit none
 
