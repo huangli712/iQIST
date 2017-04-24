@@ -168,8 +168,12 @@
 !::: core variables: real, reflip action counter                       :::
 !-------------------------------------------------------------------------
 
-! reflip kink (operators pair) statistics: total reflip count
-     real(dp), public, save :: reflip_tcount = zero
+!!
+!! @var rfl_t
+!!
+!! reflip kink (operators pair) statistics: total reflip count
+!!
+     real(dp), public, save :: rfl_t = zero
 
 ! reflip kink (operators pair) statistics: total accepted reflip count
      real(dp), public, save :: reflip_accept = zero
