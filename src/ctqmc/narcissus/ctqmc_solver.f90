@@ -500,8 +500,8 @@
          call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
 ! gtau_mpi need to be scaled properly before written
-         gtau_mpi = gtau_mpi * real(ncarlo) / real(cstep)
-         gtau_err = gtau_err * real(ncarlo) / real(cstep)
+         gtau_mpi = gtau_mpi * real(nmonte) / real(cstep)
+         gtau_err = gtau_err * real(nmonte) / real(cstep)
 
 !!========================================================================
 !!>>> symmetrizing immediate results                                   <<<
