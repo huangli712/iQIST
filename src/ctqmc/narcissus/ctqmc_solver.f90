@@ -331,7 +331,7 @@
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
-     call ctqmc_warmup_diag()
+     call ctqmc_warming()
      call cpu_time(time_end)   ! record ending   time
 
 ! print the time information
