@@ -28,7 +28,7 @@
      use constants, only : dp, zero, one, mystd
 
      use control, only : cname
-     use control, only : issun, isspn, isort, issus, isvrt
+     use control, only : isbnd, isspn, isobs, issus, isvrt
      use control, only : nband, nspin, norbs, ncfgs
      use control, only : mkink, mfreq
      use control, only : nffrq, nbfrq, ntime, nsweep, nwrite, nmonte, ncarlo
