@@ -73,12 +73,15 @@
   end subroutine ctqmc_record_hist
 
   subroutine ctqmc_record_paux()
+     implicit none
+
+     return
   end subroutine ctqmc_record_paux
 
 !!
 !! @sub ctqmc_record_prob
 !!
-!! record the probability of atomic states
+!! record the probability of atomic eigenstates
 !!
   subroutine ctqmc_record_prob()
      use constants, only : one
@@ -93,13 +96,13 @@
 ! current flavor channel
      integer :: flvr
 
-! atomic state index
+! atomic eigenstate index
      integer :: pstat
 
-! current atomic state for segment representation
+! current atomic eigenstate for segment representation
      integer :: state(norbs)
 
-! generate current atomic state
+! generate current atomic eigenstate
      do flvr=1,norbs
          select case ( stts(flvr) )
 
@@ -112,7 +115,7 @@
          end select
      enddo ! over flvr={1,norbs} loop
 
-! convert atomic state array to index
+! convert atomic eigenstate array to index
      call ctqmc_make_state(norbs, pstat, state)
 
 ! accumulate the data
