@@ -1,35 +1,35 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
-!!! program : ctqmc_record_gtau
-!!!           ctqmc_record_ftau
-!!!           ctqmc_record_grnf
-!!!           ctqmc_record_hist
+!!! program : ctqmc_record_hist
 !!!           ctqmc_record_paux
 !!!           ctqmc_record_prob
-!!!           ctqmc_record_nmat
+!!!           ctqmc_record_nmat <<<---
+!!!           ctqmc_record_gtau
+!!!           ctqmc_record_ftau
+!!!           ctqmc_record_grnf <<<---
 !!!           ctqmc_record_kmat
 !!!           ctqmc_record_lmat
-!!!           ctqmc_record_szpw
+!!!           ctqmc_record_szpw <<<---
 !!!           ctqmc_record_schi
 !!!           ctqmc_record_sfom
 !!!           ctqmc_record_ochi
-!!!           ctqmc_record_ofom
+!!!           ctqmc_record_ofom <<<---
 !!!           ctqmc_record_twop
 !!!           ctqmc_record_pair <<<---
-!!!           ctqmc_reduce_gtau
-!!!           ctqmc_reduce_ftau
-!!!           ctqmc_reduce_grnf
 !!!           ctqmc_reduce_hist
 !!!           ctqmc_reduce_paux
 !!!           ctqmc_reduce_prob
-!!!           ctqmc_reduce_nmat
+!!!           ctqmc_reduce_nmat <<<---
+!!!           ctqmc_reduce_gtau
+!!!           ctqmc_reduce_ftau
+!!!           ctqmc_reduce_grnf <<<---
 !!!           ctqmc_reduce_kmat
 !!!           ctqmc_reduce_lmat
-!!!           ctqmc_reduce_szpw
+!!!           ctqmc_reduce_szpw <<<---
 !!!           ctqmc_reduce_schi
 !!!           ctqmc_reduce_sfom
 !!!           ctqmc_reduce_ochi
-!!!           ctqmc_reduce_ofom
+!!!           ctqmc_reduce_ofom <<<---
 !!!           ctqmc_reduce_twop
 !!!           ctqmc_reduce_pair <<<---
 !!! source  : ctqmc_record.f90
