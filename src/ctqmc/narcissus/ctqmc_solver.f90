@@ -709,7 +709,8 @@
 !!>>> finishing quantum impurity solver                                <<<
 !!========================================================================
 
-! print the footer of continuous time quantum Monte Carlo quantum impurity solver
+! print the footer of continuous time quantum Monte Carlo quantum impurity
+! solver. to tell the user it is done
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
@@ -718,12 +719,22 @@
 ! deallocate memory
      deallocate(hist_mpi )
      deallocate(hist_err )
+     deallocate(paux_mpi )
+     deallocate(paux_err )
      deallocate(prob_mpi )
      deallocate(prob_err )
      deallocate(nmat_mpi )
      deallocate(nmat_err )
      deallocate(nnmat_mpi)
      deallocate(nnmat_err)
+
+     deallocate(gtau_mpi )
+     deallocate(gtau_err )
+     deallocate(ftau_mpi )
+     deallocate(ftau_err )
+     deallocate(grnf_mpi )
+     deallocate(grnf_err )
+
      deallocate(kmat_mpi )
      deallocate(kmat_err )
      deallocate(kkmat_mpi)
@@ -736,6 +747,7 @@
      deallocate(lrmat_err)
      deallocate(szpow_mpi)
      deallocate(szpow_err)
+
      deallocate(schi_mpi )
      deallocate(schi_err )
      deallocate(sschi_mpi)
@@ -748,18 +760,13 @@
      deallocate(oochi_err)
      deallocate(oofom_mpi)
      deallocate(oofom_err)
+
      deallocate(g2_re_mpi)
      deallocate(g2_im_mpi)
      deallocate(h2_re_mpi)
      deallocate(h2_im_mpi)
      deallocate(ps_re_mpi)
      deallocate(ps_im_mpi)
-     deallocate(gtau_mpi )
-     deallocate(gtau_err )
-     deallocate(ftau_mpi )
-     deallocate(ftau_err )
-     deallocate(grnf_mpi )
-     deallocate(grnf_err )
 
      return
   end subroutine ctqmc_impurity_solver
