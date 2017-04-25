@@ -309,7 +309,7 @@
 !! on perturbation expansion series
 !!
   subroutine cat_insert_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
-     use constants, only : dp, zero, one
+     use constants, only : dp, zero
 
      use control, only : isscr
      use control, only : norbs
@@ -436,15 +436,14 @@
 !!
 !! @sub cat_remove_ztrace
 !!
-!! calculate the trace ratio for remove old segment or anti-segment on
-!! perturbation expansion series
+!! calculate the trace ratio for removing old segment or anti-segment
+!! on perturbation expansion series
 !!
   subroutine cat_remove_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
-     use constants, only : dp, zero, one
+     use constants, only : dp, zero
 
      use control, only : isscr
      use control, only : norbs
-     use control, only : lc, wc
      use control, only : mune, beta
      use context, only : eimp, uumat
 
@@ -558,12 +557,6 @@
 
 ! evaluate total weight factor (screening part)
      scr = ts_scr - te_scr + cd_scr
-
-! additional weight factor (phonon part)
-     if ( isscr == 2 ) then
-         scr = scr + ( exp( beta * wc ) + one )
-         scr = scr * ( lc / wc ) * ( lc / wc ) / ( one - exp( beta * wc ) )
-     endif ! back if ( isscr == 2 ) block
 
 ! evaluate the final exponent factor
      trace_ratio = trace_ratio * exp(-scr)
