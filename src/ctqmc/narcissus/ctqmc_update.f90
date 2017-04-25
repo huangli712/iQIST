@@ -130,7 +130,8 @@
 
      use control, only : norbs
      use control, only : myid, master
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : rank, stts
 
      implicit none
@@ -144,7 +145,7 @@
      integer :: i
      integer :: j
 
-     if ( cflag == 1 ) then
+     if ( cflag == 1 ) then ! if cflag /= 1, nothing to do
 
 ! check perturbation expansion order
          do i=1,norbs
@@ -195,10 +196,10 @@
 ! write the results, only master node can do it
          if ( myid == master ) then
              if ( cflag == 99 ) then
-                 write(mystd,'(4X,a)') '>>> quantum impurity solver status: error?'
+                 write(mystd,'(4X,a)') '>>> quantum impurity solver status: fatel error'
                  write(mystd,'(4X,a)') '>>> please check the status file: solver.status.dat'
                  call ctqmc_save_status()
-                 call s_print_error('ctqmc_verify_diag','unknown fatal error occur')
+                 call s_print_error('ctqmc_warning','unknown fatal error occur')
              else
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: normal'
              endif ! back if ( cflag == 99 ) block
