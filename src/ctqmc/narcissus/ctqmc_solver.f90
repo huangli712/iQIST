@@ -567,8 +567,7 @@
 
 ! collect data from all children processes
      call ctqmc_reduce_hist(hist_mpi, hist_err)
-
-     call ctqmc_reduce_prob(prob_mpi, prob_err)
+     call ctqmc_reduce_paux(paux_mpi, paux_err)
 
      call ctqmc_reduce_prob(prob_mpi, prob_err)
 
