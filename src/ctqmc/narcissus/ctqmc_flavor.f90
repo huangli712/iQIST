@@ -171,7 +171,7 @@
 !!
 !! @sub cat_lshift_action
 !!
-!! update the perturbation expansion series for left shift old segment
+!! update the perturbation expansion series for left shifting old segment
 !! or anti-segment
 !!
   subroutine cat_lshift_action(flvr, iso, isn, tau_start)
@@ -179,7 +179,9 @@
 
      use control, only : nfreq
      use context, only : ckink
-     use context, only : index_s, time_s, exp_s
+     use context, only : index_s
+     use context, only : time_s
+     use context, only : exp_s
      use context, only : rmesh
 
      implicit none
