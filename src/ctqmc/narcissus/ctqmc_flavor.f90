@@ -236,7 +236,7 @@
 !!
 !! @sub cat_rshift_action
 !!
-!! update the perturbation expansion series for right shift old segment
+!! update the perturbation expansion series for right shifting old segment
 !! or anti-segment
 !!
   subroutine cat_rshift_action(flvr, ieo, ien, tau_end)
@@ -244,7 +244,9 @@
 
      use control, only : nfreq
      use context, only : ckink
-     use context, only : index_e, time_e, exp_e
+     use context, only : index_e
+     use context, only : time_e
+     use context, only : exp_e
      use context, only : rmesh
 
      implicit none
@@ -303,15 +305,14 @@
 !!
 !! @sub cat_insert_ztrace
 !!
-!! calculate the trace ratio for insert new segment or anti-segment on
-!! perturbation expansion series
+!! calculate the trace ratio for inserting new segment or anti-segment
+!! on perturbation expansion series
 !!
   subroutine cat_insert_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
      use constants, only : dp, zero, one
 
      use control, only : isscr
      use control, only : norbs
-     use control, only : lc, wc
      use control, only : mune, beta
      use context, only : eimp, uumat
 
@@ -353,7 +354,7 @@
      real(dp) :: te_scr
 
 ! weight factor contributed by new create and destroy operator
-     real(dp) :: se_scr
+     real(dp) :: cd_scr
 
 ! segment overlap between flvr and other else flavors
      real(dp) :: ovlp(norbs)
@@ -420,11 +421,11 @@
 ! calculate the extra weight factor contributed by new destroy operator
      call cat_weight_factor(tau_end,   te_scr)
 
-! calculate the extra weight factor contributed by new create and destroy operator
-     call cat_weight_kernel(1, dtau,   se_scr)
+! calculate the extra weight factor contributed by new create and destroy operators
+     call cat_weight_kernel(1, dtau,   cd_scr)
 
 ! evaluate total weight factor (screening part)
-     scr = ts_scr - te_scr - se_scr
+     scr = ts_scr - te_scr - cd_scr
 
 ! additional weight factor (phonon part)
      if ( isscr == 2 ) then
@@ -491,7 +492,7 @@
      real(dp) :: te_scr
 
 ! weight factor contributed by old create and destroy operator
-     real(dp) :: se_scr
+     real(dp) :: cd_scr
 
 ! segment overlap between flvr and other else flavors
      real(dp) :: ovlp(norbs)
@@ -559,10 +560,10 @@
      call cat_weight_factor(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by old create and destroy operator
-     call cat_weight_kernel(1, dtau,   se_scr)
+     call cat_weight_kernel(1, dtau,   cd_scr)
 
 ! evaluate total weight factor (screening part)
-     scr = ts_scr - te_scr + se_scr
+     scr = ts_scr - te_scr + cd_scr
 
 ! additional weight factor (phonon part)
      if ( isscr == 2 ) then
