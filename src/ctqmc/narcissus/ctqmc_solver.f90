@@ -672,77 +672,53 @@
 !!>>> writing final results                                            <<<
 !!========================================================================
 
-! write out the final histogram data, hist
+! write out the final data to external files
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist, hist_err)
-     endif ! back if ( myid == master ) block
 
-! write out the final probability data, prob
-     if ( myid == master ) then ! only master node can do it
+! write out the final auxiliary physical observables data
+         call ctqmc_dump_paux(paux, paux_err)
+
+! write out the final probability data
          call ctqmc_dump_prob(prob, prob_err)
-     endif ! back if ( myid == master ) block
 
 ! write out the final (double) occupation matrix data, nmat and nnmat
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
-     endif ! back if ( myid == master ) block
 
 ! write out the final < k^2 > - < k >^2 data, kmat and kkmat
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
-     endif ! back if ( myid == master ) block
 
 ! write out the final fidelity susceptibility data, lmat, rmat, and lrmat
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
-     endif ! back if ( myid == master ) block
 
 ! write out the final powers of local magnetization data, szpow
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_szpw(szpow, szpow_err)
-     endif ! back if ( myid == master ) block
 
 ! write out the final spin-spin correlation function data, schi, sschi, and ssfom
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_schi(schi, sschi, schi_err, sschi_err)
          call ctqmc_dump_sfom(ssfom, ssfom_err)
-     endif ! back if ( myid == master ) block
 
 ! write out the final orbital-orbital correlation function data, ochi, oochi, and oofom
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_ochi(ochi, oochi, ochi_err, oochi_err)
          call ctqmc_dump_ofom(oofom, oofom_err)
-     endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, g2_re and g2_im
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_twop(g2_re, g2_im)
-     endif ! back if ( myid == master ) block
 
 ! write out the final two-particle green's function data, h2_re and h2_im
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_vrtx(h2_re, h2_im)
-     endif ! back if ( myid == master ) block
 
 ! write out the final particle-particle pair susceptibility data, ps_re and ps_im
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_pair(ps_re, ps_im)
-     endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, gtau
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
-     endif ! back if ( myid == master ) block
 
 ! write out the final impurity green's function data, grnf
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
-     endif ! back if ( myid == master ) block
 
 ! write out the final self-energy function data, sig2
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_sigf(rmesh, sig2)
-     endif ! back if ( myid == master ) block
 
 !!========================================================================
 !!>>> saving quantum impurity solver                                   <<<
