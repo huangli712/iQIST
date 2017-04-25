@@ -853,7 +853,7 @@
 !!
 !! @sub cat_insert_flavor
 !!
-!! determine \tau_s, \tau_e and \tau_max for insert new segment
+!! determine \tau_s, \tau_e and \tau_max for inserting new segment
 !! or anti-segment
 !!
   subroutine cat_insert_flavor(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
