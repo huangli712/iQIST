@@ -335,11 +335,11 @@
      endif ! back if ( pass .eqv. .true. ) block
 
 ! update the insert statistics
-     insert_tcount = insert_tcount + one
+     ins_t = ins_t + one
      if ( pass .eqv. .true. ) then
-         insert_accept = insert_accept + one
+         ins_a = ins_a + one
      else
-         insert_reject = insert_reject + one
+         ins_r = ins_r + one
      endif ! back if ( pass .eqv. .true. ) block
 
      return
