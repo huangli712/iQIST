@@ -472,7 +472,7 @@
 !! record the auxiliary correlation function in imaginary time axis, F(\tau)
 !!
   subroutine ctqmc_record_ftau()
-     use constants, only : dp, zero, one, two, pi
+     use constants, only : dp, zero, one, two
 
      use control, only : isort
      use control, only : norbs
