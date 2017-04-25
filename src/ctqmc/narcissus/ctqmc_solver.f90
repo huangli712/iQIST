@@ -78,9 +78,9 @@
      integer  :: cstep
 
 ! control flag, whether the solver should be checked periodically
-! cflag = 0  , do not check the quantum impurity solver
-! cflag = 1  , check the quantum impurity solver periodically
-! cflag = 99 , the quantum impurity solver is out of control
+! cflag = 0 , do not check the quantum impurity solver
+! cflag = 1 , check the quantum impurity solver periodically
+! cflag = 99, the quantum impurity solver is out of control
      integer  :: cflag
 
 ! starting time
