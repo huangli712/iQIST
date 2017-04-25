@@ -653,28 +653,20 @@
 !!>>> symmetrizing final results                                       <<<
 !!========================================================================
 
-! symmetrize the occupation number matrix (nmat) over spin or over bands
-     if ( isbnd == 2 .or. isspn == 2 ) then
-         call ctqmc_symm_nmat(symm, nmat)
-         call ctqmc_symm_nmat(symm, nmat_err)
-     endif ! back if ( isbnd == 2 .or. isspn == 1 ) block
+! symmetrize the occupation number matrix over spin or over bands
+     call ctqmc_symm_nmat(symm, nmat)
+     call ctqmc_symm_nmat(symm, nmat_err)
 
-! symmetrize the impurity green's function (gtau) over spin or over bands
-     if ( isbnd == 2 .or. isspn == 2 ) then
-         call ctqmc_symm_gtau(symm, gtau)
-         call ctqmc_symm_gtau(symm, gtau_err)
-     endif ! back if ( isbnd == 2 .or. isspn == 1 ) block
+! symmetrize the impurity green's function over spin or over bands
+     call ctqmc_symm_gtau(symm, gtau)
+     call ctqmc_symm_gtau(symm, gtau_err)
 
-! symmetrize the impurity green's function (grnf) over spin or over bands
-     if ( isbnd == 2 .or. isspn == 2 ) then
-         call ctqmc_symm_grnf(symm, grnf)
-         call ctqmc_symm_grnf(symm, grnf_err)
-     endif ! back if ( isbnd == 2 .or. isspn == 1 ) block
+! symmetrize the impurity green's function over spin or over bands
+     call ctqmc_symm_grnf(symm, grnf)
+     call ctqmc_symm_grnf(symm, grnf_err)
 
-! symmetrize the impurity self-energy function (sig2) over spin or over bands
-     if ( isbnd == 2 .or. isspn == 2 ) then
-         call ctqmc_symm_grnf(symm, sig2)
-     endif ! back if ( isbnd == 2 .or. isspn == 1 ) block
+! symmetrize the self-energy function over spin or over bands
+     call ctqmc_symm_grnf(symm, sig2)
 
 !!========================================================================
 !!>>> writing final results                                            <<<
