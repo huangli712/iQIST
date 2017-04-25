@@ -772,14 +772,13 @@
   end subroutine ctqmc_impurity_solver
 
 !!========================================================================
-!!>>> debug layer                                                      <<<
+!!>>> debug subroutines for quantum impurity solver                    <<<
 !!========================================================================
 
 !!
 !! @sub ctqmc_impurity_tester
 !!
-!! testing subroutine, please try to active it on the ctqmc_sample_diag()
-!! subroutine
+!! debug subroutine, please try to active it on the ctqmc_walking()
 !!
   subroutine ctqmc_impurity_tester()
      use constants ! ALL
