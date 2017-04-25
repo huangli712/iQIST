@@ -682,9 +682,9 @@
      use constants, only : dp, one
      use spring, only : spring_sfmt_stream
 
-     use control, only : nband, norbs
+     use control, only : nband
      use context, only : rfl_t, rfl_a, rfl_r
-     use context, only : rank, symm
+     use context, only : rank
 
      implicit none
 
