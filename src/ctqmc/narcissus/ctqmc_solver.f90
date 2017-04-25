@@ -512,7 +512,7 @@
 
 ! write out the impurity green's function, gtau_mpi
          if ( myid == master ) then ! only master node can do it
-             call ctqmc_dump_gtau(tmesh, gtau_mpi, gtau_err)
+             call ctqmc_dump_gtau(gtau_mpi, gtau_err)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
