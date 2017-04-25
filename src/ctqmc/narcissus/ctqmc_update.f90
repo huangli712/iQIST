@@ -14,9 +14,9 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
 !!!           04/25/2017 by li huang (last modified)
-!!! purpose : the main subroutine for the hybridization expansion version
+!!! purpose : basic update actions for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!!!           solver
+!!!           solver. they are called by ctqmc_impurity_solver()
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
