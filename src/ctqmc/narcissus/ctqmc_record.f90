@@ -329,9 +329,6 @@
 ! loop index for legendre polynomial
      integer  :: fleg
 
-! loop index for chebyshev polynomial
-     integer  :: fche
-
 ! index for imaginary time \tau
      integer  :: curr
 
