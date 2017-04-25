@@ -1069,7 +1069,7 @@
 !!
 !! @sub cat_rshift_detrat
 !!
-!! calculate the determinant ratio for right shift old segment
+!! calculate the determinant ratio for right shifting old segment
 !! or anti-segment
 !!
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
@@ -1078,7 +1078,8 @@
      use control, only : mkink
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, time_s
+     use context, only : index_s
+     use context, only : time_s
      use context, only : mmat
 
      implicit none
