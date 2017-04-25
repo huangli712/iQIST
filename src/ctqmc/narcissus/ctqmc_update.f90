@@ -721,47 +721,6 @@
 ! initialize transition probability
      p = one
 
-     if ( cflip == 1 ) then
-! determine fup and fdn, and fup /= fdn
-         fup = ceiling( spring_sfmt_stream() * norbs )
-         do while ( .true. )
-             fdn = ceiling( spring_sfmt_stream() * norbs )
-             if ( fup /= fdn .and. symm(fup) == symm(fdn) ) EXIT
-         enddo ! over do while loop
-
-! calculate the transition ratio between old and new configurations,
-! for the determinant part, spin up case
-         call cat_reflip_detrat(fup, fdn, ratup)
-
-! calculate the transition ratio between old and new configurations,
-! for the determinant part, spin dn case
-         call cat_reflip_detrat(fdn, fup, ratdn)
-
-! calculate the transition probability for global spin flip
-         p = ratup * ratdn
-
-! determine pass, using important sampling algorithm (metropolis algorithm)
-         pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
-
-! if update action is accepted
-         if ( pass .eqv. .true. ) then
-
-! get maximum rank order in spin up and spin down states
-             kmax = max( rank(fup), rank(fdn) )
-
-! swap global variables between spin up and spin down states
-             call cat_reflip_matrix(fup, fdn, kmax)
-
-         endif ! back if ( pass .eqv. .true. ) block
-
-! update the reflip statistics
-         rfl_t = rfl_t + one
-         if ( pass .eqv. .true. ) then
-             rfl_a = rfl_a + one
-         else
-             rfl_r = rfl_r + one
-         endif ! back if ( pass .eqv. .true. ) block
-
      else if ( cflip == 2 ) then ! cflip = 2, local flip
          do flvr=1,nband
 
