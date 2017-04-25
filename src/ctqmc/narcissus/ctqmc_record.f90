@@ -72,6 +72,11 @@
      return
   end subroutine ctqmc_record_hist
 
+!!
+!! @sub ctqmc_record_paux
+!!
+!! record some auxiliary physical observables
+!!
   subroutine ctqmc_record_paux()
      implicit none
 
