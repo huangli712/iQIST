@@ -456,7 +456,7 @@
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
                  CTQMC_FLALEG_LOOP: do fleg=1,lemax
-                     dtau = sqrt(two * fleg - 1) * ppleg(curr,fleg)
+                     dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                      gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
                  enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
 
