@@ -565,59 +565,37 @@
 !!>>> reducing final results                                           <<<
 !!========================================================================
 
-! collect the histogram data from hist to hist_mpi
+! collect data from all children processes
      call ctqmc_reduce_hist(hist_mpi, hist_err)
 
-! collect the probability data from prob to prob_mpi
      call ctqmc_reduce_prob(prob_mpi, prob_err)
 
-! collect the occupation matrix data from nmat to nmat_mpi
-! collect the double occupation matrix data from nnmat to nnmat_mpi
+     call ctqmc_reduce_prob(prob_mpi, prob_err)
+
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
 
-! collect the < k^2 > - < k >^2 data from kmat to kmat_mpi
-! collect the < k^2 > - < k >^2 data from kkmat to kkmat_mpi
      call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
 
-! collect the fidelity susceptibility data from lmat to lmat_mpi
-! collect the fidelity susceptibility data from rmat to rmat_mpi
-! collect the fidelity susceptibility data from lrmat to lrmat_mpi
      call ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
 
-! collect the powers of local magnetization data from szpow to szpow_mpi
      call ctqmc_reduce_szpw(szpow_mpi, szpow_err)
 
-! collect the spin-spin correlation function data from schi to schi_mpi
-! collect the spin-spin correlation function data from sschi to sschi_mpi
-! collect the spin-spin correlation function data from ssfom to ssfom_mpi
      call ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
      call ctqmc_reduce_sfom(ssfom_mpi, ssfom_err)
 
-! collect the orbital-orbital correlation function data from ochi to ochi_mpi
-! collect the orbital-orbital correlation function data from oochi to oochi_mpi
-! collect the orbital-orbital correlation function data from oofom to oofom_mpi
      call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
      call ctqmc_reduce_ofom(oofom_mpi, oofom_err)
 
-! collect the two-particle green's function from g2_re to g2_re_mpi
-! collect the two-particle green's function from g2_im to g2_im_mpi
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
 
-! collect the two-particle green's function from h2_re to h2_re_mpi
-! collect the two-particle green's function from h2_im to h2_im_mpi
      call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
 
-! collect the pair susceptibility from ps_re to ps_re_mpi
-! collect the pair susceptibility from ps_im to ps_im_mpi
      call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
-! collect the impurity green's function data from gtau to gtau_mpi
      call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
-! collect the auxiliary correlation function from ftau to ftau_mpi
      call ctqmc_reduce_ftau(ftau_mpi, ftau_err)
 
-! collect the impurity green's function data from grnf to grnf_mpi
      call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
