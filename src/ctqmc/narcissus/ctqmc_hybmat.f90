@@ -33,7 +33,7 @@
 !!
 !! @sub cat_insert_matrix
 !!
-!! update the mmat matrix and gmat matrix for insert new segment
+!! update the mmat matrix and gmat matrix for inserting new segment
 !! or anti-segment
 !!
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
@@ -42,8 +42,11 @@
      use control, only : nfreq
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, index_e, exp_s, exp_e
-     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
+     use context, only : index_s, index_e
+     use context, only : exp_s, exp_e
+     use context, only : lspace, rspace
+     use context, only : lsaves, rsaves
+     use context, only : mmat, gmat
 
      implicit none
 
