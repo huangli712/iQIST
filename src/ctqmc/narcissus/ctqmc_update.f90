@@ -227,7 +227,7 @@
      use control, only : mkink
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : insert_tcount, insert_accept, insert_reject
+     use context, only : ins_t, ins_a, ins_r
      use context, only : rank, stts
 
      implicit none
