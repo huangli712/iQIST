@@ -646,20 +646,8 @@
      oochi_err = oochi_err * real(nmonte) / real(nsweep)
      oofom_err = oofom_err * real(nmonte) / real(nsweep)
 
-! build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make interpolation for self-energy
-! function between low frequency QMC data and high frequency Hubbard-I
-! approximation data, the impurity green's function can be obtained by
-! using dyson's equation finally
-     if ( isort <= 3 ) then
-         call ctqmc_make_hub1()
-! build atomic green's function and self-energy function using improved
-! Hubbard-I approximation, and then make forward fourier transformation
-! for impurity green's function and auxiliary correlation function. then
-! the final self-energy function is obtained by analytical formula
-     else
-         call ctqmc_make_hub2()
-     endif ! back if ( isort <= 3 ) block
+! try to evaluate the impurity green's function and self-energy function
+     call ctqmc_make_hub2()
 
 !!========================================================================
 !!>>> symmetrizing final results                                       <<<
