@@ -552,10 +552,10 @@
 
 ! if the quantum impurity solver is out of control
          if ( cflag == 99 ) then
-             EXIT CTQMC_MAIN_SWEEP ! jump out the iteration
+             EXIT MC_SWEEP ! jump out the iteration
          endif ! back if ( cflag == 99 ) block
 
-     enddo CTQMC_MAIN_SWEEP ! over i={1,nsweep} loop
+     enddo MC_SWEEP ! over i={1,nsweep} loop
 
 !!========================================================================
 !!>>> ending main iteration                                            <<<
