@@ -421,17 +421,11 @@
 ! calculate the extra weight factor contributed by new destroy operator
      call cat_weight_factor(tau_end,   te_scr)
 
-! calculate the extra weight factor contributed by new create and destroy operators
+! calculate the extra weight factor contributed by new create and destroy operator
      call cat_weight_kernel(1, dtau,   cd_scr)
 
 ! evaluate total weight factor (screening part)
      scr = ts_scr - te_scr - cd_scr
-
-! additional weight factor (phonon part)
-     if ( isscr == 2 ) then
-         scr = scr + ( exp( beta * wc ) + one )
-         scr = scr * ( lc / wc ) * ( lc / wc ) / ( one - exp( beta * wc ) )
-     endif ! back if ( isscr == 2 ) block
 
 ! evaluate the final exponent factor
      trace_ratio = trace_ratio * exp(+scr)
