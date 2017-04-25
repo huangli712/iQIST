@@ -49,6 +49,251 @@
 !!========================================================================
 
 !!
+!! @sub ctqmc_record_hist
+!!
+!! record the histogram of perturbation expansion series
+!!
+  subroutine ctqmc_record_hist()
+     use constants, only : one
+
+     use control, only : mkink
+     use context, only : ckink
+     use context, only : hist
+
+     implicit none
+
+! note: if ckink == 0, we record its count in hist(mkink)
+     if ( ckink > 0 ) then
+         hist(ckink) = hist(ckink) + one
+     else
+         hist(mkink) = hist(mkink) + one
+     endif ! back if ( ckink > 0 ) block
+
+     return
+  end subroutine ctqmc_record_hist
+
+!!
+!! @sub ctqmc_record_prob
+!!
+!! record the probability of atomic states
+!!
+  subroutine ctqmc_record_prob()
+     use constants, only : one
+
+     use control, only : norbs
+     use context, only : prob
+     use context, only : stts
+
+     implicit none
+
+! local variables
+! current flavor channel
+     integer :: flvr
+
+! atomic state index
+     integer :: pstat
+
+! current atomic state for segment representation
+     integer :: state(norbs)
+
+! generate current atomic state
+     do flvr=1,norbs
+         select case ( stts(flvr) )
+
+             case (0:1)
+                 state(flvr) = 0
+
+             case (2:3)
+                 state(flvr) = 1
+
+         end select
+     enddo ! over flvr={1,norbs} loop
+
+! convert atomic state array to index
+     call ctqmc_make_state(norbs, pstat, state)
+
+! accumulate the data
+     prob(pstat) = prob(pstat) + one
+
+     return
+  end subroutine ctqmc_record_prob
+
+!!
+!! @sub ctqmc_record_nmat
+!!
+!! record the occupation matrix, double occupation matrix, and auxiliary
+!! physical observables simulataneously
+!!
+  subroutine ctqmc_record_nmat()
+     use constants, only : dp, zero, two
+
+     use control, only : nband, norbs
+     use control, only : beta
+     use context, only : ckink
+     use context, only : index_s, index_e, time_s, time_e
+     use context, only : paux, nmat, nnmat
+     use context, only : rank, stts, uumat
+
+     implicit none
+
+! local variables
+! loop index over segments
+     integer  :: i
+
+! loop index for flavor channel
+     integer  :: flvr
+
+! imaginary time for start and end points
+     real(dp) :: ts
+     real(dp) :: te
+
+! total length of segments
+     real(dp) :: sgmt(norbs)
+
+! used to record overlaps between two segments
+     real(dp) :: oaux(norbs)
+     real(dp) :: ovlp(norbs,norbs)
+
+! evaluate occupation matrix: < n_i >
+!-------------------------------------------------------------------------
+     do flvr=1,norbs
+
+! case 1: null occupation
+         if      ( stts(flvr) == 0 ) then
+             sgmt(flvr) = zero
+
+! case 2: partial occupation, segment scheme
+         else if ( stts(flvr) == 1 ) then
+             sgmt(flvr) = zero
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 3: partial occupation, anti-segment scheme
+         else if ( stts(flvr) == 2 ) then
+             sgmt(flvr) = beta
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 4: full occupation
+         else if ( stts(flvr) == 3 ) then
+             sgmt(flvr) = beta
+
+         endif ! back if ( stts(flvr) == 0 ) block
+
+         nmat(flvr) = nmat(flvr) + sgmt(flvr) / beta
+     enddo ! over flvr={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate double occupation matrix: < n_i n_j >
+!-------------------------------------------------------------------------
+     do flvr=1,norbs
+
+! case 1: null occupation
+         if      ( stts(flvr) == 0 ) then
+             ovlp(flvr,:) = zero
+
+! case 2: partial occupation, segment scheme
+         else if ( stts(flvr) == 1 ) then
+             ovlp(flvr,:) = zero
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 call cat_ovlp_segments(flvr, ts, te, oaux)
+                 ovlp(flvr,:) = ovlp(flvr,:) + oaux
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 3: partial occupation, anti-segment scheme
+! pay special attention to the head and tail parts
+         else if ( stts(flvr) == 2 ) then
+             ovlp(flvr,:) = zero
+             do i=1,rank(flvr)-1
+                 ts = time_s(index_s(i,   flvr), flvr)
+                 te = time_e(index_e(i+1, flvr), flvr)
+                 call cat_ovlp_segments(flvr, ts, te, oaux)
+                 ovlp(flvr,:) = ovlp(flvr,:) + oaux
+             enddo ! over i={1,rank(flvr)-1} loop
+
+             te = time_e(index_e(1, flvr), flvr)
+             call cat_ovlp_segments(flvr, zero, te, oaux)
+             ovlp(flvr,:) = ovlp(flvr,:) + oaux
+
+             ts = time_s(index_s(rank(flvr), flvr), flvr)
+             call cat_ovlp_segments(flvr, ts, beta, oaux)
+             ovlp(flvr,:) = ovlp(flvr,:) + oaux
+
+! case 4: full occupation
+         else if ( stts(flvr) == 3 ) then
+             call cat_ovlp_segments(flvr, zero, beta, oaux)
+             ovlp(flvr,:) = oaux
+
+         endif ! back if ( stts(flvr) == 0 ) block
+
+         nnmat(flvr,:) = nnmat(flvr,:) + ovlp(flvr,:) / beta
+     enddo ! over flvr={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^4>
+!-------------------------------------------------------------------------
+     paux(9) = paux(9) + ( ckink * two )**4
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^3>
+!-------------------------------------------------------------------------
+     paux(8) = paux(8) + ( ckink * two )**3
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <K^2>
+!-------------------------------------------------------------------------
+     paux(7) = paux(7) + ( ckink * two )**2
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^2>
+!-------------------------------------------------------------------------
+     paux(6) = paux(6) + ( sum(sgmt) / beta )**2
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate <N^1>
+!-------------------------------------------------------------------------
+     paux(5) = paux(5) + sum(sgmt) / beta
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate spin magnetization: < Sz >
+!-------------------------------------------------------------------------
+     do flvr=1,nband
+         paux(4) = paux(4) + ( sgmt(flvr) - sgmt(flvr+nband) ) / beta
+     enddo ! over flvr={1,nband} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate kinetic energy: ekin
+! equation : -T < k >
+!-------------------------------------------------------------------------
+     paux(3) = paux(3) - real(ckink * norbs) / beta
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate potential energy: epot
+!-------------------------------------------------------------------------
+     do flvr=1,norbs
+         do i=1,flvr
+             paux(2) = paux(2) + uumat(flvr,i) * ovlp(flvr,i) / beta
+         enddo ! over i={1,flvr} loop
+     enddo ! over flvr={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! evaluate total energy: etot
+!-------------------------------------------------------------------------
+     paux(1) = paux(2) + paux(3)
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+     return
+  end subroutine ctqmc_record_nmat
+
+!!
 !! @sub ctqmc_record_gtau
 !!
 !! record the impurity green's function in imaginary time axis
@@ -533,251 +778,6 @@
 
      return
   end subroutine ctqmc_record_grnf
-
-!!
-!! @sub ctqmc_record_hist
-!!
-!! record the histogram of perturbation expansion series
-!!
-  subroutine ctqmc_record_hist()
-     use constants, only : one
-
-     use control, only : mkink
-     use context, only : ckink
-     use context, only : hist
-
-     implicit none
-
-! note: if ckink == 0, we record its count in hist(mkink)
-     if ( ckink > 0 ) then
-         hist(ckink) = hist(ckink) + one
-     else
-         hist(mkink) = hist(mkink) + one
-     endif ! back if ( ckink > 0 ) block
-
-     return
-  end subroutine ctqmc_record_hist
-
-!!
-!! @sub ctqmc_record_prob
-!!
-!! record the probability of atomic states
-!!
-  subroutine ctqmc_record_prob()
-     use constants, only : one
-
-     use control, only : norbs
-     use context, only : prob
-     use context, only : stts
-
-     implicit none
-
-! local variables
-! current flavor channel
-     integer :: flvr
-
-! atomic state index
-     integer :: pstat
-
-! current atomic state for segment representation
-     integer :: state(norbs)
-
-! generate current atomic state
-     do flvr=1,norbs
-         select case ( stts(flvr) )
-
-             case (0:1)
-                 state(flvr) = 0
-
-             case (2:3)
-                 state(flvr) = 1
-
-         end select
-     enddo ! over flvr={1,norbs} loop
-
-! convert atomic state array to index
-     call ctqmc_make_state(norbs, pstat, state)
-
-! accumulate the data
-     prob(pstat) = prob(pstat) + one
-
-     return
-  end subroutine ctqmc_record_prob
-
-!!
-!! @sub ctqmc_record_nmat
-!!
-!! record the occupation matrix, double occupation matrix, and auxiliary
-!! physical observables simulataneously
-!!
-  subroutine ctqmc_record_nmat()
-     use constants, only : dp, zero, two
-
-     use control, only : nband, norbs
-     use control, only : beta
-     use context, only : ckink
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : paux, nmat, nnmat
-     use context, only : rank, stts, uumat
-
-     implicit none
-
-! local variables
-! loop index over segments
-     integer  :: i
-
-! loop index for flavor channel
-     integer  :: flvr
-
-! imaginary time for start and end points
-     real(dp) :: ts
-     real(dp) :: te
-
-! total length of segments
-     real(dp) :: sgmt(norbs)
-
-! used to record overlaps between two segments
-     real(dp) :: oaux(norbs)
-     real(dp) :: ovlp(norbs,norbs)
-
-! evaluate occupation matrix: < n_i >
-!-------------------------------------------------------------------------
-     do flvr=1,norbs
-
-! case 1: null occupation
-         if      ( stts(flvr) == 0 ) then
-             sgmt(flvr) = zero
-
-! case 2: partial occupation, segment scheme
-         else if ( stts(flvr) == 1 ) then
-             sgmt(flvr) = zero
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 3: partial occupation, anti-segment scheme
-         else if ( stts(flvr) == 2 ) then
-             sgmt(flvr) = beta
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 4: full occupation
-         else if ( stts(flvr) == 3 ) then
-             sgmt(flvr) = beta
-
-         endif ! back if ( stts(flvr) == 0 ) block
-
-         nmat(flvr) = nmat(flvr) + sgmt(flvr) / beta
-     enddo ! over flvr={1,norbs} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate double occupation matrix: < n_i n_j >
-!-------------------------------------------------------------------------
-     do flvr=1,norbs
-
-! case 1: null occupation
-         if      ( stts(flvr) == 0 ) then
-             ovlp(flvr,:) = zero
-
-! case 2: partial occupation, segment scheme
-         else if ( stts(flvr) == 1 ) then
-             ovlp(flvr,:) = zero
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 call cat_ovlp_segments(flvr, ts, te, oaux)
-                 ovlp(flvr,:) = ovlp(flvr,:) + oaux
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 3: partial occupation, anti-segment scheme
-! pay special attention to the head and tail parts
-         else if ( stts(flvr) == 2 ) then
-             ovlp(flvr,:) = zero
-             do i=1,rank(flvr)-1
-                 ts = time_s(index_s(i,   flvr), flvr)
-                 te = time_e(index_e(i+1, flvr), flvr)
-                 call cat_ovlp_segments(flvr, ts, te, oaux)
-                 ovlp(flvr,:) = ovlp(flvr,:) + oaux
-             enddo ! over i={1,rank(flvr)-1} loop
-
-             te = time_e(index_e(1, flvr), flvr)
-             call cat_ovlp_segments(flvr, zero, te, oaux)
-             ovlp(flvr,:) = ovlp(flvr,:) + oaux
-
-             ts = time_s(index_s(rank(flvr), flvr), flvr)
-             call cat_ovlp_segments(flvr, ts, beta, oaux)
-             ovlp(flvr,:) = ovlp(flvr,:) + oaux
-
-! case 4: full occupation
-         else if ( stts(flvr) == 3 ) then
-             call cat_ovlp_segments(flvr, zero, beta, oaux)
-             ovlp(flvr,:) = oaux
-
-         endif ! back if ( stts(flvr) == 0 ) block
-
-         nnmat(flvr,:) = nnmat(flvr,:) + ovlp(flvr,:) / beta
-     enddo ! over flvr={1,norbs} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate <K^4>
-!-------------------------------------------------------------------------
-     paux(9) = paux(9) + ( ckink * two )**4
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate <K^3>
-!-------------------------------------------------------------------------
-     paux(8) = paux(8) + ( ckink * two )**3
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate <K^2>
-!-------------------------------------------------------------------------
-     paux(7) = paux(7) + ( ckink * two )**2
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate <N^2>
-!-------------------------------------------------------------------------
-     paux(6) = paux(6) + ( sum(sgmt) / beta )**2
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate <N^1>
-!-------------------------------------------------------------------------
-     paux(5) = paux(5) + sum(sgmt) / beta
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate spin magnetization: < Sz >
-!-------------------------------------------------------------------------
-     do flvr=1,nband
-         paux(4) = paux(4) + ( sgmt(flvr) - sgmt(flvr+nband) ) / beta
-     enddo ! over flvr={1,nband} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate kinetic energy: ekin
-! equation : -T < k >
-!-------------------------------------------------------------------------
-     paux(3) = paux(3) - real(ckink * norbs) / beta
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate potential energy: epot
-!-------------------------------------------------------------------------
-     do flvr=1,norbs
-         do i=1,flvr
-             paux(2) = paux(2) + uumat(flvr,i) * ovlp(flvr,i) / beta
-         enddo ! over i={1,flvr} loop
-     enddo ! over flvr={1,norbs} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-! evaluate total energy: etot
-!-------------------------------------------------------------------------
-     paux(1) = paux(2) + paux(3)
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-     return
-  end subroutine ctqmc_record_nmat
 
 !!
 !! @sub ctqmc_record_kmat
