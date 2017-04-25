@@ -473,7 +473,7 @@
 
      use control, only : norbs
      use context, only : ckink, cstat
-     use context, only : lshift_tcount, lshift_accept, lshift_reject
+     use context, only : lsh_t, lsh_a, lsh_r
      use context, only : rank, stts
 
      implicit none
