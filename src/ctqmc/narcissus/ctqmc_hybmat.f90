@@ -10,19 +10,18 @@
 !!!           cat_remove_detrat
 !!!           cat_lshift_detrat
 !!!           cat_rshift_detrat
-!!!           cat_reswap_detrat
 !!!           cat_reflip_detrat
 !!!           cat_reload_detrat <<<---
 !!! source  : ctqmc_hybmat.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/20/2017 by li huang (last modified)
+!!!           04/25/2017 by li huang (last modified)
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
-!!!           Monte Carlo (CTQMC) quantum impurity solver.
-!!!           the following subroutines mainly deal with the \mathscr{M}
-!!!           matrix: mmat, and \mathscr{G} matrix: gmat.
+!!!           Monte Carlo (CTQMC) quantum impurity solver. the following
+!!!           subroutines mainly deal with the \mathscr{M} matrix: mmat,
+!!!           and \mathscr{G} matrix: gmat
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
