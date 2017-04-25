@@ -623,7 +623,7 @@
 ! anti-segments ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call s_print_exception('ctqmc_rshift_kink','can not rshift any segments')
+         call s_print_exception('ctqmc_rshift_kink','can not rshift any segments')
          rsh_t = rsh_t + one
          rsh_r = rsh_r + one
          RETURN
