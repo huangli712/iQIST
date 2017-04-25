@@ -487,7 +487,9 @@
 ! collect the impurity green's function data from gtau to gtau_mpi
          call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
 
-! gtau_mpi need to be scaled properly before written
+! the data need to be scaled properly before written
+         hist_mpi = hist_mpi * one
+         hist_err = hist_err * one
          gtau_mpi = gtau_mpi * real(nmonte) / real(cstep)
          gtau_err = gtau_err * real(nmonte) / real(cstep)
 
@@ -496,10 +498,8 @@
 !!========================================================================
 
 ! symmetrize the impurity green's function over spin or over bands
-         if ( isbnd == 2 .or. isspn == 2 ) then
-             call ctqmc_symm_gtau(symm, gtau_mpi)
-             call ctqmc_symm_gtau(symm, gtau_err)
-         endif ! back if ( isbnd == 2 .or. isspn == 2 ) block
+         call ctqmc_symm_gtau(symm, gtau_mpi)
+         call ctqmc_symm_gtau(symm, gtau_err)
 
 !!========================================================================
 !!>>> writing immediate results                                        <<<
