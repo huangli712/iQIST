@@ -1872,7 +1872,8 @@
 
      use control, only : norbs
      use context, only : rank
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
 
      implicit none
 
@@ -1904,11 +1905,12 @@
      do i=1,norbs
          do j=1,rank(i)
              ts = time_s(index_s(j, i), i)
-             if ( ts == tau ) CYCLE ! meet myself
-             if ( ts < tau ) then
+             if      ( ts < tau ) then
                  call cat_weight_kernel(1, tau - ts, cur)
-             else
+             else if ( ts > tau ) then
                  call cat_weight_kernel(1, ts - tau, cur)
+             else
+                 CYCLE ! meet myself
              endif ! back if ( ts < tau ) block
              scr = scr + cur
          enddo ! over j={1,rank(i)} loop
@@ -1918,11 +1920,12 @@
      do i=1,norbs
          do j=1,rank(i)
              te = time_e(index_e(j, i), i)
-             if ( te == tau ) CYCLE ! meet myself
-             if ( te < tau ) then
+             if      ( te < tau ) then
                  call cat_weight_kernel(1, tau - te, cur)
-             else
+             else if ( te > tau ) then
                  call cat_weight_kernel(1, te - tau, cur)
+             else
+                 CYCLE ! meet myself
              endif ! back if ( te < tau ) block
              scr = scr - cur
          enddo ! over j={1,rank(i)} loop
