@@ -63,11 +63,11 @@
   end subroutine ctqmc_warming
 
 !!
-!! @sub ctqmc_sample_diag
+!! @sub ctqmc_walking
 !!
 !! visit the perturbation expansion diagrams randomly
 !!
-  subroutine ctqmc_sample_diag(cstep)
+  subroutine ctqmc_walking(cstep)
      use constants, only : dp
      use spring, only : spring_sfmt_stream
 
@@ -118,7 +118,7 @@
      endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
 
      return
-  end subroutine ctqmc_sample_diag
+  end subroutine ctqmc_walking
 
 !!
 !! @sub ctqmc_verify_diag
