@@ -862,7 +862,8 @@
 
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : stts
 
      implicit none
