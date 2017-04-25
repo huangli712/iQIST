@@ -57,17 +57,17 @@
      ins_a = zero
      ins_r = zero
 
-     remove_t = zero
-     remove_a = zero
-     remove_r = zero
+     rmv_t = zero
+     rmv_a = zero
+     rmv_r = zero
 
-     lshift_t = zero
-     lshift_a = zero
-     lshift_r = zero
+     lsh_t = zero
+     lsh_a = zero
+     lsh_r = zero
 
-     rshift_t = zero
-     rshift_a = zero
-     rshift_r = zero
+     rsh_t = zero
+     rsh_a = zero
+     rsh_r = zero
 
      reflip_t = zero
      reflip_a = zero
