@@ -571,6 +571,10 @@
      call ctqmc_reduce_prob(prob_mpi, prob_err)
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
 
+     call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
+     call ctqmc_reduce_ftau(ftau_mpi, ftau_err)
+     call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
+
      call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
      call ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
      call ctqmc_reduce_szpw(szpow_mpi, szpow_err)
@@ -582,12 +586,6 @@
 
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi, h2_re_mpi, h2_im_mpi)
      call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
-
-     call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
-
-     call ctqmc_reduce_ftau(ftau_mpi, ftau_err)
-
-     call ctqmc_reduce_grnf(grnf_mpi, grnf_err)
 
 ! update original data and calculate the averages simultaneously
 ! average value section
