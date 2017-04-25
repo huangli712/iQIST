@@ -307,7 +307,7 @@
 
      use control, only : isort
      use control, only : norbs
-     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
