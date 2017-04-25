@@ -530,11 +530,11 @@
 
      use control, only : isort
      use control, only : norbs
-     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : ppleg, qqche
+     use context, only : rep_l
      use context, only : rank, pref
      use context, only : mmat
      use context, only : ftau
