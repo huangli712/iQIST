@@ -49,29 +49,29 @@
 
 ! warm up the diagram series
      do i=1,ntherm
-         call ctqmc_sample_diag(i)
+         call ctqmc_walking(i)
      enddo ! over i={1,ntherm} loop
 
 ! reinit statistics variables
-     insert_tcount = zero
-     insert_accept = zero
-     insert_reject = zero
+     ins_t = zero
+     ins_a = zero
+     ins_r = zero
 
-     remove_tcount = zero
-     remove_accept = zero
-     remove_reject = zero
+     remove_t = zero
+     remove_a = zero
+     remove_r = zero
 
-     lshift_tcount = zero
-     lshift_accept = zero
-     lshift_reject = zero
+     lshift_t = zero
+     lshift_a = zero
+     lshift_r = zero
 
-     rshift_tcount = zero
-     rshift_accept = zero
-     rshift_reject = zero
+     rshift_t = zero
+     rshift_a = zero
+     rshift_r = zero
 
-     reflip_tcount = zero
-     reflip_accept = zero
-     reflip_reject = zero
+     reflip_t = zero
+     reflip_a = zero
+     reflip_r = zero
 
      return
   end subroutine ctqmc_warming
