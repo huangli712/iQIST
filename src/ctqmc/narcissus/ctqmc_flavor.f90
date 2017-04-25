@@ -2242,7 +2242,8 @@
      use constants, only : mystd
 
      use control, only : norbs
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : rank, stts
 
      implicit none
@@ -2290,12 +2291,16 @@
              else if ( stts(i) == 1 ) then
                  write(mystd,'(4X,a)') '--->>>      tau_s       tau_e'
                  do j=1,rank(i)
-                     write(mystd,'(4X,2i4,2f12.6)') i, j, time_s(index_s(j, i), i), time_e(index_e(j, i), i)
+                     write(mystd,'(4X,2i4)',advance='no') i, j
+                     write(mystd,'(1f12.6)',advance='no') time_s(index_s(j, i), i)
+                     write(mystd,'(1f12.6)')              time_e(index_e(j, i), i)
                  enddo ! over j={1,rank(i)} loop
              else if ( stts(i) == 2 ) then
                  write(mystd,'(4X,a)') '--->>>      tau_e       tau_s'
                  do j=1,rank(i)
-                     write(mystd,'(4X,2i4,2f12.6)') i, j, time_e(index_e(j, i), i), time_s(index_s(j, i), i)
+                     write(mystd,'(4X,2i4)',advance='no') i, j
+                     write(mystd,'(1f12.6)',advance='no') time_e(index_e(j, i), i)
+                     write(mystd,'(1f12.6)')              time_s(index_s(j, i), i)
                  enddo ! over j={1,rank(i)} loop
              else if ( stts(i) == 3 ) then
                  write(mystd,'(4X,a)') '--->>> full occupation'
