@@ -23,11 +23,11 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           04/21/2017 by li huang (last modified)
+!!!           04/25/2017 by li huang (last modified)
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
-!!!           Monte Carlo (CTQMC) quantum impurity solver.
-!!!           the following subroutines deal with the operators traces only.
+!!!           Monte Carlo (CTQMC) quantum impurity solver. the following
+!!!           subroutines deal with the operators traces only.
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -39,7 +39,7 @@
 !!
 !! @sub cat_insert_action
 !!
-!! update the perturbation expansion series for insert new segment
+!! update the perturbation expansion series for inserting new segment
 !! or anti-segment
 !!
   subroutine cat_insert_action(flvr, is, ie, tau_start, tau_end)
@@ -48,7 +48,10 @@
 
      use control, only : nfreq
      use context, only : ckink
-     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : empty_s, empty_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : exp_s, exp_e
      use context, only : rmesh
 
      implicit none
@@ -115,14 +118,15 @@
 !!
 !! @sub cat_remove_action
 !!
-!! update the perturbation expansion series for remove old segment
+!! update the perturbation expansion series for removing old segment
 !! or anti-segment
 !!
   subroutine cat_remove_action(flvr, is, ie)
      use stack, only : istack_push
 
      use context, only : ckink
-     use context, only : empty_s, empty_e, index_s, index_e
+     use context, only : empty_s, empty_e
+     use context, only : index_s, index_e
 
      implicit none
 
