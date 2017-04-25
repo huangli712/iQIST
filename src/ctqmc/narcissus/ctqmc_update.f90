@@ -26,12 +26,12 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_warmup_diag
+!! @sub ctqmc_warming
 !!
 !! perform thermalization or warmup on the perturbation expansion series
 !! to achieve thermodynamics stable equilibrium state
 !!
-  subroutine ctqmc_warmup_diag()
+  subroutine ctqmc_warming()
      use constants, only : zero
 
      use control, only : ntherm
@@ -74,7 +74,7 @@
      reflip_reject = zero
 
      return
-  end subroutine ctqmc_warmup_diag
+  end subroutine ctqmc_warming
 
 !!
 !! @sub ctqmc_sample_diag
