@@ -557,11 +557,11 @@
      endif ! back if ( pass .eqv. .true. ) block
 
 ! update the lshift statistics
-     lshift_tcount = lshift_tcount + one
+     lsh_t = lsh_t + one
      if ( pass .eqv. .true. ) then
-         lshift_accept = lshift_accept + one
+         lsh_a = lsh_a + one
      else
-         lshift_reject = lshift_reject + one
+         lsh_r = lsh_r + one
      endif ! back if ( pass .eqv. .true. ) block
 
      return
