@@ -69,9 +69,9 @@
      rsh_a = zero
      rsh_r = zero
 
-     reflip_t = zero
-     reflip_a = zero
-     reflip_r = zero
+     rfl_t = zero
+     rfl_a = zero
+     rfl_r = zero
 
      return
   end subroutine ctqmc_warming
