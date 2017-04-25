@@ -683,7 +683,7 @@
      use spring, only : spring_sfmt_stream
 
      use control, only : nband, norbs
-     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : rfl_t, rfl_a, rfl_r
      use context, only : rank, symm
 
      implicit none
