@@ -794,11 +794,11 @@
              endif ! back if ( pass .eqv. .true. ) block
 
 ! update the reflip statistics
-             reflip_tcount = reflip_tcount + one
+             rfl_t = rfl_t + one
              if ( pass .eqv. .true. ) then
-                 reflip_accept = reflip_accept + one
+                 rfl_a = rfl_a + one
              else
-                 reflip_reject = reflip_reject + one
+                 rfl_r = rfl_r + one
              endif ! back if ( pass .eqv. .true. ) block
 
          enddo ! over flvr={1,nband} loop
