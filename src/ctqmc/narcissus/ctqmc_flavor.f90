@@ -1966,9 +1966,9 @@
 ! used to interpolate screening function
      procedure( real(dp) ) :: ctqmc_eval_ktau
 
-     SCREENING_SWITCHER: select case ( isscr )
+     DYNAMIC_MODEL: select case ( isscr )
 
-! normal model
+! static interaction
          case (1)
              if ( typ == 2 ) then
                  cur = zero
@@ -1976,16 +1976,8 @@
                  cur = zero
              endif ! back if ( typ == 2 ) block
 
-! holstein-hubbard model
+! dynamic interaction, plasmon pole model
          case (2)
-             if ( typ == 2 ) then
-                 cur = -wc * exp(wc * (beta - tau)) + wc * exp(wc * tau)
-             else
-                 cur = exp(wc * (beta - tau)) + exp(wc * tau)
-             endif ! back if ( typ == 2 ) block
-
-! plasmon pole model
-         case (3)
              if ( typ == 2 ) then
                  cur = (lc / wc)**2 / sinh(beta * wc / two)
                  cur = cur * sinh(beta * wc / two - tau * wc) * wc
@@ -1994,8 +1986,8 @@
                  cur = cur * ( cosh(beta * wc / two) - cosh(beta * wc / two - tau * wc) )
              endif ! back if ( typ == 2 ) block
 
-! ohmic model
-         case (4)
+! dynamic interaction, ohmic model
+         case (3)
              if ( typ == 2 ) then
                  cur = lc * wc * cos(pi * tau / beta)
                  cur = cur / (one + beta * wc * sin(pi * tau / beta) / pi)
@@ -2003,11 +1995,11 @@
                  cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
              endif ! back if ( typ == 2 ) block
 
-! realistic materials
+! dynamic interaction, realistic materials
          case (99)
              cur = ctqmc_eval_ktau(typ, tau)
 
-     end select SCREENING_SWITCHER
+     end select DYNAMIC_MODEL
 
      return
   end subroutine cat_weight_kernel
