@@ -688,8 +688,7 @@
          call ctqmc_dump_ochi(ochi, oochi, ochi_err, oochi_err)
          call ctqmc_dump_ofom(oofom, oofom_err)
 
-         call ctqmc_dump_twop(g2_re, g2_im)
-         call ctqmc_dump_vrtx(h2_re, h2_im)
+         call ctqmc_dump_twop(g2_re, g2_im, h2_re, h2_im)
          call ctqmc_dump_pair(ps_re, ps_im)
 
          call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
