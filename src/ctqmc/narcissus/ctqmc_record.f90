@@ -94,6 +94,13 @@
 ! loop index for flavor channel
      integer  :: flvr
 
+! total length of segments
+     real(dp) :: sgmt(norbs)
+
+! used to record overlaps between two segments
+     real(dp) :: oaux(norbs)
+     real(dp) :: ovlp(norbs,norbs)
+
 ! evaluate <K^4>
 !-------------------------------------------------------------------------
      paux(9) = paux(9) + ( ckink * two )**4
