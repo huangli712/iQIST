@@ -646,60 +646,6 @@
 
      return
   end subroutine cat_record_ftau2
-
-!!
-!! @sub cat_record_ftau3
-!!
-!! record auxiliary correlation function using chebyshev polynomial representation
-!!
-  subroutine cat_record_ftau3()
-     implicit none
-
-! calculate prefactor: pref
-     call ctqmc_make_pref()
-
-! evaluate step at first
-     step = real(chgrd - 1) / two
-
-     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-
-! get imaginary time value for segments
-         do is=1,rank(flvr)
-             taus = time_s( index_s(is, flvr), flvr )
-
-             do ie=1,rank(flvr)
-                 taue = time_e( index_e(ie, flvr), flvr )
-
-! evaluate dtau
-                 dtau = taue - taus
-
-! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau) * pref(ie,flvr)
-
-! adjust dtau, keep it stay in (zero, beta)
-                 if ( dtau < zero ) then
-                     dtau = dtau + beta
-                 endif ! back if ( dtau < zero ) block
-
-! convert dtau in [0,\beta] to daux in [0,2]
-                 daux = two * dtau / beta
-
-! determine index for chebyshev polynomial interval
-                 curr = nint( daux * step ) + 1
-
-! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
-                 CTQMC_FLACHE_LOOP: do fche=1,chmax
-                     dtau = (two / pi) * sqrt(one - (daux - one)**2) * qqche(curr,fche)
-                     ftau(fche, flvr, flvr) = ftau(fche, flvr, flvr) - maux * dtau
-                 enddo CTQMC_FLACHE_LOOP ! over fche={1,chmax} loop
-
-             enddo ! over ie={1,rank(flvr)} loop
-         enddo ! over is={1,rank(flvr)} loop
-
-     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
-
-     return
-  end subroutine cat_record_ftau3
   end subroutine ctqmc_record_ftau
 
 !!
