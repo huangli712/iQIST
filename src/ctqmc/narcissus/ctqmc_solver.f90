@@ -590,6 +590,7 @@
 ! update original data and calculate the averages simultaneously
 ! average value section
      hist  = hist_mpi  * one
+     paux  = paux_mpi  * real(nmonte) / real(nsweep)
      prob  = prob_mpi  * real(nmonte) / real(nsweep)
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
@@ -622,6 +623,7 @@
 ! update original data and calculate the averages simultaneously
 ! error bar section
      hist_err  = hist_err  * one
+     paux_err  = paux_err  * real(nmonte) / real(nsweep)
      prob_err  = prob_err  * real(nmonte) / real(nsweep)
      nmat_err  = nmat_err  * real(nmonte) / real(nsweep)
      nnmat_err = nnmat_err * real(nmonte) / real(nsweep)
