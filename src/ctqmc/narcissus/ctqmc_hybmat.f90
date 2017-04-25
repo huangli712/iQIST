@@ -269,7 +269,7 @@
 !!
 !! @sub cat_lshift_matrix
 !!
-!! update the mmat matrix and gmat matrix for left shift old segment
+!! update the mmat matrix and gmat matrix for left shifting old segment
 !! or anti-segment
 !!
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
@@ -279,9 +279,13 @@
      use control, only : nfreq
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, index_e, time_e, exp_s, exp_e
+     use context, only : index_s, index_e
+     use context, only : time_e
+     use context, only : exp_s, exp_e
      use context, only : rmesh
-     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
+     use context, only : lspace, rspace
+     use context, only : lsaves, rsaves
+     use context, only : mmat, gmat
 
      implicit none
 
@@ -465,7 +469,7 @@
 !!
 !! @sub cat_rshift_matrix
 !!
-!! update the mmat matrix and gmat matrix for right shift old segment
+!! update the mmat matrix and gmat matrix for right shifting old segment
 !! or anti-segment
 !!
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
@@ -475,9 +479,13 @@
      use control, only : nfreq
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, index_e, time_s, exp_s, exp_e
+     use context, only : index_s, index_e
+     use context, only : time_s
+     use context, only : exp_s, exp_e
      use context, only : rmesh
-     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
+     use context, only : lspace, rspace
+     use context, only : lsaves, rsaves
+     use context, only : mmat, gmat
 
      implicit none
 
