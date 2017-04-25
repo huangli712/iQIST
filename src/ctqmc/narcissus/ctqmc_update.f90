@@ -282,8 +282,8 @@
      ckink = rank(flvr)
      if ( ckink == mkink ) then
 !<         call s_print_exception('ctqmc_insert_kink','can not insert any segments')
-         insert_tcount = insert_tcount + one
-         insert_reject = insert_reject + one
+         ins_t = ins_t + one
+         ins_r = ins_r + one
          RETURN
      endif ! back if ( ckink == mkink ) block
 
