@@ -35,11 +35,11 @@
      use constants, only : zero
 
      use control, only : ntherm
-     use context, only : insert_tcount, insert_accept, insert_reject
-     use context, only : remove_tcount, remove_accept, remove_reject
-     use context, only : lshift_tcount, lshift_accept, lshift_reject
-     use context, only : rshift_tcount, rshift_accept, rshift_reject
-     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : ins_t, ins_a, ins_r
+     use context, only : rmv_t, rmv_a, rmv_r
+     use context, only : lsh_t, lsh_a, lsh_r
+     use context, only : rsh_t, rsh_a, rsh_r
+     use context, only : reflip_t, reflip_a, reflip_r
 
      implicit none
 
