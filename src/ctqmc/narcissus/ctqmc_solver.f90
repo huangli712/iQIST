@@ -683,11 +683,8 @@
          call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
          call ctqmc_dump_szpw(szpow, szpow_err)
 
-! write out the final spin-spin correlation function data, schi, sschi, and ssfom
          call ctqmc_dump_schi(schi, sschi, schi_err, sschi_err)
          call ctqmc_dump_sfom(ssfom, ssfom_err)
-
-! write out the final orbital-orbital correlation function data, ochi, oochi, and oofom
          call ctqmc_dump_ochi(ochi, oochi, ochi_err, oochi_err)
          call ctqmc_dump_ofom(oofom, oofom_err)
 
