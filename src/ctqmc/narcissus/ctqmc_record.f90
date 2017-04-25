@@ -78,7 +78,21 @@
 !! record some auxiliary physical observables
 !!
   subroutine ctqmc_record_paux()
+     use constants, only : two
+
+     use control, only : nband, norbs
+     use control, only : beta
+     use context, only : ckink
+     use context, only : paux
+
      implicit none
+
+! local variables
+! loop index over segments
+     integer  :: i
+
+! loop index for flavor channel
+     integer  :: flvr
 
 ! evaluate <K^4>
 !-------------------------------------------------------------------------
