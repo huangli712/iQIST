@@ -662,11 +662,11 @@
      endif ! back if ( pass .eqv. .true. ) block
 
 ! update the rshift statistics
-     rshift_tcount = rshift_tcount + one
+     rsh_t = rsh_t + one
      if ( pass .eqv. .true. ) then
-         rshift_accept = rshift_accept + one
+         rsh_a = rsh_a + one
      else
-         rshift_reject = rshift_reject + one
+         rsh_r = rsh_r + one
      endif ! back if ( pass .eqv. .true. ) block
 
      return
