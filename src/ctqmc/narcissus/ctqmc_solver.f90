@@ -139,27 +139,27 @@
      real(dp), allocatable :: szpow_mpi(:,:)
      real(dp), allocatable :: szpow_err(:,:)
 
-! spin-spin correlation function, totally-averaged
+! totally-averaged spin-spin correlation function
      real(dp), allocatable :: schi_mpi(:)
      real(dp), allocatable :: schi_err(:)
 
-! spin-spin correlation function, orbital-resolved
+! orbital-resolved spin-spin correlation function
      real(dp), allocatable :: sschi_mpi(:,:)
      real(dp), allocatable :: sschi_err(:,:)
 
-! spin-spin correlation function, orbital-resolved
+! orbital-resolved spin-spin correlation function
      real(dp), allocatable :: ssfom_mpi(:,:)
      real(dp), allocatable :: ssfom_err(:,:)
 
-! orbital-orbital correlation function, totally-averaged
+! totally-averaged orbital-orbital correlation function
      real(dp), allocatable :: ochi_mpi(:)
      real(dp), allocatable :: ochi_err(:)
 
-! orbital-orbital correlation function, orbital-resolved
+! orbital-resolved orbital-orbital correlation function
      real(dp), allocatable :: oochi_mpi(:,:,:)
      real(dp), allocatable :: oochi_err(:,:,:)
 
-! orbital-orbital correlation function, orbital-resolved
+! orbital-resolved orbital-orbital correlation function
      real(dp), allocatable :: oofom_mpi(:,:,:)
      real(dp), allocatable :: oofom_err(:,:,:)
 
