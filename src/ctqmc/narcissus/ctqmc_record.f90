@@ -4,6 +4,7 @@
 !!!           ctqmc_record_ftau
 !!!           ctqmc_record_grnf
 !!!           ctqmc_record_hist
+!!!           ctqmc_record_paux
 !!!           ctqmc_record_prob
 !!!           ctqmc_record_nmat
 !!!           ctqmc_record_kmat
@@ -14,12 +15,12 @@
 !!!           ctqmc_record_ochi
 !!!           ctqmc_record_ofom
 !!!           ctqmc_record_twop
-!!!           ctqmc_record_vrtx
 !!!           ctqmc_record_pair <<<---
 !!!           ctqmc_reduce_gtau
 !!!           ctqmc_reduce_ftau
 !!!           ctqmc_reduce_grnf
 !!!           ctqmc_reduce_hist
+!!!           ctqmc_reduce_paux
 !!!           ctqmc_reduce_prob
 !!!           ctqmc_reduce_nmat
 !!!           ctqmc_reduce_kmat
@@ -30,13 +31,12 @@
 !!!           ctqmc_reduce_ochi
 !!!           ctqmc_reduce_ofom
 !!!           ctqmc_reduce_twop
-!!!           ctqmc_reduce_vrtx
 !!!           ctqmc_reduce_pair <<<---
 !!! source  : ctqmc_record.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/20/2017 by li huang (last modified)
+!!!           04/26/2017 by li huang (last modified)
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
