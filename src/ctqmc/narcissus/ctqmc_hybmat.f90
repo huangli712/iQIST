@@ -960,7 +960,8 @@
 !!
 !! @sub cat_remove_detrat
 !!
-!! calculate the determinant ratio for remove old segment or anti-segment
+!! calculate the determinant ratio for removing old segment
+!! or anti-segment
 !!
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
      use constants, only : dp
@@ -989,7 +990,7 @@
 !!
 !! @sub cat_lshift_detrat
 !!
-!! calculate the determinant ratio for left shift old segment
+!! calculate the determinant ratio for left shifting old segment
 !! or anti-segment
 !!
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
@@ -998,7 +999,8 @@
      use control, only : mkink
      use control, only : beta
      use context, only : ckink
-     use context, only : index_e, time_e
+     use context, only : index_e
+     use context, only : time_e
      use context, only : mmat
 
      implicit none
