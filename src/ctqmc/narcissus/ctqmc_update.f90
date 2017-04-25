@@ -766,7 +766,7 @@
 
 ! case 2: cflip = 2, global flip
 !-------------------------------------------------------------------------
-     else 
+     else
          do flvr=1,nband
 
 ! get fup and fdn
