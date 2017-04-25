@@ -72,6 +72,9 @@
      return
   end subroutine ctqmc_record_hist
 
+  subroutine ctqmc_record_paux()
+  end subroutine ctqmc_record_paux
+
 !!
 !! @sub ctqmc_record_prob
 !!
