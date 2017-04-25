@@ -578,7 +578,7 @@
 
      use control, only : norbs
      use context, only : ckink, cstat
-     use context, only : rshift_tcount, rshift_accept, rshift_reject
+     use context, only : rsh_t, rsh_a, rsh_r
      use context, only : rank, stts
 
      implicit none
