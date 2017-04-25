@@ -408,8 +408,8 @@
      ckink = rank(flvr)
      if ( ckink == 0 ) then
 !<         call s_print_exception('ctqmc_remove_kink','can not remove any segments')
-         remove_tcount = remove_tcount + one
-         remove_reject = remove_reject + one
+         rmv_t = rmv_t + one
+         rmv_r = rmv_r + one
          RETURN
      endif ! back if ( ckink == 0 ) block
 
