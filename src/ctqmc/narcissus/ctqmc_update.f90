@@ -452,11 +452,11 @@
      endif ! back if ( pass .eqv. .true. ) block
 
 ! update the remove statistics
-     remove_tcount = remove_tcount + one
+     rmv_t = rmv_t + one
      if ( pass .eqv. .true. ) then
-         remove_accept = remove_accept + one
+         rmv_a = rmv_a + one
      else
-         remove_reject = remove_reject + one
+         rmv_r = rmv_r + one
      endif ! back if ( pass .eqv. .true. ) block
 
      return
