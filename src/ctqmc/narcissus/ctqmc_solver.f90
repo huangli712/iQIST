@@ -675,23 +675,12 @@
 ! write out the final data to external files
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist, hist_err)
-
-! write out the final auxiliary physical observables data
          call ctqmc_dump_paux(paux, paux_err)
-
-! write out the final probability data
          call ctqmc_dump_prob(prob, prob_err)
-
-! write out the final (double) occupation matrix data, nmat and nnmat
          call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
 
-! write out the final < k^2 > - < k >^2 data, kmat and kkmat
          call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
-
-! write out the final fidelity susceptibility data, lmat, rmat, and lrmat
          call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
-
-! write out the final powers of local magnetization data, szpow
          call ctqmc_dump_szpw(szpow, szpow_err)
 
 ! write out the final spin-spin correlation function data, schi, sschi, and ssfom
@@ -711,14 +700,10 @@
 ! write out the final particle-particle pair susceptibility data, ps_re and ps_im
          call ctqmc_dump_pair(ps_re, ps_im)
 
-! write out the final impurity green's function data, gtau
          call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
-
-! write out the final impurity green's function data, grnf
          call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
-
-! write out the final self-energy function data, sig2
          call ctqmc_dump_sigf(rmesh, sig2)
+     endif ! back if ( myid == master ) block
 
 !!========================================================================
 !!>>> saving quantum impurity solver                                   <<<
