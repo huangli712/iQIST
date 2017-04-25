@@ -679,6 +679,10 @@
          call ctqmc_dump_prob(prob, prob_err)
          call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
 
+         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
+         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
+         call ctqmc_dump_sigf(rmesh, sig2)
+
          call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
          call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
          call ctqmc_dump_szpw(szpow, szpow_err)
@@ -690,10 +694,6 @@
 
          call ctqmc_dump_twop(g2_re, g2_im, h2_re, h2_im)
          call ctqmc_dump_pair(ps_re, ps_im)
-
-         call ctqmc_dump_gtau(tmesh, gtau, gtau_err)
-         call ctqmc_dump_grnf(rmesh, grnf, grnf_err)
-         call ctqmc_dump_sigf(rmesh, sig2)
      endif ! back if ( myid == master ) block
 
 !!========================================================================
