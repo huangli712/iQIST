@@ -466,7 +466,7 @@
                  call ctqmc_record_pair()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
 
-         enddo CTQMC_FAST_SWEEP ! over j={1,nwrite} loop
+         enddo MC_BLOCK ! over j={1,nwrite} loop
 
 !!========================================================================
 !!>>> reporting quantum impurity solver                                <<<
