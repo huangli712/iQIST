@@ -311,7 +311,7 @@
      use control, only : ntime
      use control, only : beta
      use context, only : index_s, index_e, time_s, time_e
-     use context, only : ppleg, qqche
+     use context, only : rep_l
      use context, only : rank
      use context, only : mmat
      use context, only : gtau
