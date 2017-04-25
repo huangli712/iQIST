@@ -536,6 +536,8 @@
 ! calculate timing information
          time_cur = time_end - time_begin
          time_sum = time_sum + time_cur
+
+! reset timer
          time_begin = time_end
 
 ! print out the result
@@ -548,10 +550,10 @@
 !!>>> escaping quantum impurity solver                                 <<<
 !!========================================================================
 
-! if the quantum impurity solver is out of control or reaches convergence
-         if ( cflag == 99 .or. cflag == 100 ) then
+! if the quantum impurity solver is out of control
+         if ( cflag == 99 ) then
              EXIT CTQMC_MAIN_SWEEP ! jump out the iteration
-         endif ! back if ( cflag == 99 .or. cflag == 100 ) block
+         endif ! back if ( cflag == 99 ) block
 
      enddo CTQMC_MAIN_SWEEP ! over i={1,nsweep} loop
 
