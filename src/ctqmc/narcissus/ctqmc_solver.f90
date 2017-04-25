@@ -453,13 +453,8 @@
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) block
 
 !!========================================================================
-!!>>> sampling the physical observables 4 (optional)                   <<<
+!!>>> sampling the physical observables 5 (optional)                   <<<
 !!========================================================================
-
-! record nothing
-             if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) then
-                 CONTINUE
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 0) ) block
 
 ! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
