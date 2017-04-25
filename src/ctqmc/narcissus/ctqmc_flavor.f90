@@ -1228,7 +1228,7 @@
 !!
 !! @sub cat_remove_flavor
 !!
-!! determine \tau_s, \tau_e and \tau_max for remove old segment
+!! determine \tau_s, \tau_e and \tau_max for removing old segment
 !! or anti-segment
 !!
   subroutine cat_remove_flavor(flvr, is, ie, anti, tau_start, tau_end, tau_max)
@@ -1237,7 +1237,8 @@
 
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : stts
 
      implicit none
@@ -1441,7 +1442,7 @@
 !!
 !! @sub cat_lshift_flavor
 !!
-!! determine \tau_s1 and \tau_s2 for lshift old segment or anti-segment
+!! determine \tau_s1 and \tau_s2 for lshifting old segment or anti-segment
 !!
   subroutine cat_lshift_flavor(flvr, iso, isn, ring, tau_start1, tau_start2)
      use constants, only : dp, zero
@@ -1449,7 +1450,8 @@
 
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : stts
 
      implicit none
@@ -1608,7 +1610,7 @@
 !!
 !! @sub cat_rshift_flavor
 !!
-!! determine \tau_e1 and \tau_e2 for rshift old segment or anti-segment
+!! determine \tau_e1 and \tau_e2 for rshifting old segment or anti-segment
 !!
   subroutine cat_rshift_flavor(flvr, ieo, ien, ring, tau_end1, tau_end2)
      use constants, only : dp, zero
@@ -1616,7 +1618,8 @@
 
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : stts
 
      implicit none
@@ -1780,12 +1783,13 @@
 !! @sub cat_occupy_status
 !!
 !! evaluate the occupation status for current flavor channel and time,
-!! which can be used to calculate spin-spin correlation function
+!! which can be used to calculate the spin-spin correlation function
 !!
   subroutine cat_occupy_status(flvr, curr, occu)
      use constants, only : dp, zero, one
 
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : rank, stts
 
      implicit none
