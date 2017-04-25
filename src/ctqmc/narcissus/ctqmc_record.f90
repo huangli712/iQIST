@@ -84,6 +84,7 @@
      use control, only : beta
      use context, only : ckink
      use context, only : paux
+     use context, only : uumat
 
      implicit none
 
