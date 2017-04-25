@@ -410,13 +410,8 @@
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 !!========================================================================
-!!>>> sampling the physical observables 2 (optional)                   <<<
+!!>>> sampling the physical observables 3 (optional)                   <<<
 !!========================================================================
-
-! record nothing
-             if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 0) ) then
-                 CONTINUE
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 0) ) block
 
 ! record the < k^2 > - < k >^2
              if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) then
@@ -434,13 +429,8 @@
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 3) ) block
 
 !!========================================================================
-!!>>> sampling the physical observables 3 (optional)                   <<<
+!!>>> sampling the physical observables 4 (optional)                   <<<
 !!========================================================================
-
-! record nothing
-             if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) then
-                 CONTINUE
-             endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 0) ) block
 
 ! record the spin-spin correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) then
