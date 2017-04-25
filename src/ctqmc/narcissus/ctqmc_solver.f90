@@ -263,13 +263,15 @@
 !!>>> starting quantum impurity solver                                 <<<
 !!========================================================================
 
-! print the header of continuous time quantum Monte Carlo quantum impurity solver
+! print the header of continuous time quantum Monte Carlo quantum impurity
+! solver. it contains important information about the control parameters
+! of the solver
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
          write(mystd,'(4X,a,i2)') 'self-consistent scheme  :', isscf
          write(mystd,'(4X,a,i2)') 'dynamic interaction     :', isscr
-         write(mystd,'(4X,a,i2)') 'symmetry (band)         :', isbnd
-         write(mystd,'(4X,a,i2)') 'symmetry (spin)         :', isspn
+         write(mystd,'(4X,a,i2)') 'symmetry (band part)    :', isbnd
+         write(mystd,'(4X,a,i2)') 'symmetry (spin part)    :', isspn
          write(mystd,'(4X,a,i2)') 'worm algorithm          :', iswor
          write(mystd,'(4X,a,i2)') 'data binning            :', isbin
          write(mystd,'(4X,a,i2)') 'advanced basis          :', isort
@@ -283,8 +285,8 @@
 !!>>> initializing quantum impurity solver                             <<<
 !!========================================================================
 
-! init the continuous time quantum Monte Carlo quantum impurity solver
-! setup the key variables
+! init the continuous time quantum Monte Carlo quantum impurity solver,
+! the key variables and arrays should be prepared here
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver initializing'
      endif ! back if ( myid == master ) block
@@ -303,8 +305,8 @@
 !!>>> retrieving quantum impurity solver                               <<<
 !!========================================================================
 
-! init the continuous time quantum Monte Carlo quantum impurity solver further
-! retrieving the time series information produced by previous running
+! init the continuous time quantum Monte Carlo quantum impurity solver
+! further, retrieving the time series information produced by previous run
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver retrieving'
      endif ! back if ( myid == master ) block
@@ -323,7 +325,7 @@
 !!>>> warming quantum impurity solver                                  <<<
 !!========================================================================
 
-! warmup the continuous time quantum Monte Carlo quantum impurity solver,
+! warmup the continuous time quantum Monte Carlo quantum impurity solver
 ! in order to achieve equilibrium state
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver warmming'
@@ -349,14 +351,12 @@
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
-     CTQMC_MAIN_SWEEP: &
-     do i=1,nsweep,nwrite
+     MC_SWEEP: do i=1,nsweep,nwrite
 
 ! record start time
          call cpu_time(time_begin)
 
-         CTQMC_FAST_SWEEP: &
-         do j=1,nwrite
+         MC_BLOCK: do j=1,nwrite
 
 !!========================================================================
 !!>>> visiting perturbation expansion series                           <<<
@@ -389,6 +389,10 @@
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
+
+!!========================================================================
+!!>>> sampling the physical observables 2 (always)                     <<<
+!!========================================================================
 
 ! record the impurity green's function in imaginary time space
              if ( mod(cstep, nmonte) == 0 ) then
