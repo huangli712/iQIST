@@ -674,11 +674,17 @@
 !! used to avoid trapped by unphysical phase
 !!
   subroutine cat_reflip_matrix(fup, fdn, kmax)
-     use stack, only : istack, istack_create, istack_copyer, istack_destroy
+     use stack, only : istack
+     use stack, only : istack_create
+     use stack, only : istack_copyer
+     use stack, only : istack_destroy
 
      use control, only : mkink
      use control, only : nfreq
-     use context, only : empty_s, empty_e, index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : empty_s, empty_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : exp_s, exp_e
      use context, only : rank, stts
      use context, only : gmat
 
