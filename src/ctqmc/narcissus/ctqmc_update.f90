@@ -721,7 +721,9 @@
 ! initialize transition probability
      p = one
 
-     else if ( cflip == 2 ) then ! cflip = 2, local flip
+! case 1: cflip = 1, local flip
+!-------------------------------------------------------------------------
+     if ( cflip == 1 ) then
          do flvr=1,nband
 
 ! get fup and fdn
@@ -762,7 +764,9 @@
 
          enddo ! over flvr={1,nband} loop
 
-     else if ( cflip == 3 ) then ! cflip = 3, global flip
+! case 2: cflip = 2, global flip
+!-------------------------------------------------------------------------
+     else 
          do flvr=1,nband
 
 ! get fup and fdn
