@@ -121,11 +121,11 @@
   end subroutine ctqmc_walking
 
 !!
-!! @sub ctqmc_verify_diag
+!! @sub ctqmc_warning
 !!
 !! checking whether the quantum impurity solver is consistent internally
 !!
-  subroutine ctqmc_verify_diag(cflag)
+  subroutine ctqmc_warning(cflag)
      use constants, only : mystd
 
      use control, only : norbs
@@ -207,7 +207,7 @@
      endif ! back if ( cflag == 1 ) block
 
      return
-  end subroutine ctqmc_verify_diag
+  end subroutine ctqmc_warning
 
 !!========================================================================
 !!>>> service layer: updating perturbation expansion series 2          <<<
