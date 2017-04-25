@@ -624,8 +624,8 @@
      ckink = rank(flvr)
      if ( ckink == 0 ) then
 !<         call s_print_exception('ctqmc_rshift_kink','can not rshift any segments')
-         rshift_tcount = rshift_tcount + one
-         rshift_reject = rshift_reject + one
+         rsh_t = rsh_t + one
+         rsh_r = rsh_r + one
          RETURN
      endif ! back if ( ckink == 0 ) block
 
