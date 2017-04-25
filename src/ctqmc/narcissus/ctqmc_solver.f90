@@ -42,7 +42,6 @@
      use control, only : nmonte, ncarlo      ! interval for monte carlo sampling
      use control, only : myid, master        ! mpi environment
 
-     use context, only : tmesh, rmesh        ! frequency and time meshes
      use context, only : hist                ! histogram
      use context, only : paux                ! auxiliary physical observables
      use context, only : prob                ! atomic eigenstate probability
