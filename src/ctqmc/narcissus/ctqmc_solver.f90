@@ -568,27 +568,19 @@
 ! collect data from all children processes
      call ctqmc_reduce_hist(hist_mpi, hist_err)
      call ctqmc_reduce_paux(paux_mpi, paux_err)
-
      call ctqmc_reduce_prob(prob_mpi, prob_err)
-
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
 
      call ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
-
      call ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
-
      call ctqmc_reduce_szpw(szpow_mpi, szpow_err)
 
      call ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
      call ctqmc_reduce_sfom(ssfom_mpi, ssfom_err)
-
      call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
      call ctqmc_reduce_ofom(oofom_mpi, oofom_err)
 
-     call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
-
-     call ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
-
+     call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi, h2_re_mpi, h2_im_mpi)
      call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
 
      call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
