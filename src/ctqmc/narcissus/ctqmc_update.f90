@@ -357,7 +357,7 @@
      use control, only : norbs
      use control, only : beta
      use context, only : ckink, cstat
-     use context, only : remove_tcount, remove_accept, remove_reject
+     use context, only : rmv_t, rmv_a, rmv_r
      use context, only : rank, stts
 
      implicit none
