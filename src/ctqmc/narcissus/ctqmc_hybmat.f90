@@ -779,7 +779,9 @@
 
      use control, only : nfreq
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : exp_s, exp_e
      use context, only : rank
      use context, only : mmat, gmat
 
@@ -862,7 +864,8 @@
 !!
 !! @sub cat_insert_detrat
 !!
-!! calculate the determinant ratio for insert new segment or anti-segment
+!! calculate the determinant ratio for inserting new segment
+!! or anti-segment
 !!
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero
@@ -870,8 +873,10 @@
      use control, only : mkink
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : lspace, rspace, mmat
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : lspace, rspace
+     use context, only : mmat
 
      implicit none
 
