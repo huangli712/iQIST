@@ -1,19 +1,19 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
-!!! program : ctqmc_warmup_diag
-!!!           ctqmc_sample_diag
-!!!           ctqmc_verify_diag
+!!! program : ctqmc_warming
+!!!           ctqmc_walking
+!!!           ctqmc_warning
 !!!           ctqmc_insert_kink
 !!!           ctqmc_remove_kink
 !!!           ctqmc_lshift_kink
 !!!           ctqmc_rshift_kink
 !!!           ctqmc_reflip_kink
 !!!           ctqmc_reload_kink
-!!! source  : ctqmc_solver.f90
+!!! source  : ctqmc_update.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/20/2017 by li huang (last modified)
+!!!           04/25/2017 by li huang (last modified)
 !!! purpose : the main subroutine for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver
