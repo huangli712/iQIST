@@ -590,16 +590,21 @@
 ! update original data and calculate the averages simultaneously
 ! average value section
      hist  = hist_mpi  * one
-     prob  = prob_mpi  * real(ncarlo) / real(nsweep)
-
+     prob  = prob_mpi  * real(nmonte) / real(nsweep)
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
+
+     gtau  = gtau_mpi  * real(nmonte) / real(nsweep)
+     ftau  = ftau_mpi  * real(nmonte) / real(nsweep)
+     grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
+
      kmat  = kmat_mpi  * real(nmonte) / real(nsweep)
      kkmat = kkmat_mpi * real(nmonte) / real(nsweep)
      lmat  = lmat_mpi  * real(nmonte) / real(nsweep)
      rmat  = rmat_mpi  * real(nmonte) / real(nsweep)
      lrmat = lrmat_mpi * real(nmonte) / real(nsweep)
      szpow = szpow_mpi * real(nmonte) / real(nsweep)
+
      schi  = schi_mpi  * real(nmonte) / real(nsweep)
      sschi = sschi_mpi * real(nmonte) / real(nsweep)
      ssfom = ssfom_mpi * real(nmonte) / real(nsweep)
@@ -613,10 +618,6 @@
      h2_im = h2_im_mpi * real(nmonte) / real(nsweep)
      ps_re = ps_re_mpi * real(nmonte) / real(nsweep)
      ps_im = ps_im_mpi * real(nmonte) / real(nsweep)
-
-     gtau  = gtau_mpi  * real(ncarlo) / real(nsweep)
-     ftau  = ftau_mpi  * real(ncarlo) / real(nsweep)
-     grnf  = grnf_mpi  * real(nmonte) / real(nsweep)
 
 ! update original data and calculate the averages simultaneously
 ! error bar section
