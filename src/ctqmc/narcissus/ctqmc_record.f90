@@ -352,9 +352,6 @@
 ! interval for imaginary time slice
      real(dp) :: step
 
-!! record impurity green's function using normal representation
-!! record impurity green's function using legendre polynomial representation
-
 ! evaluate step at first
      if ( isort == 1 ) step = real(ntime - 1) / beta
      if ( isort == 2 ) step = real(legrd - 1) / two
@@ -379,32 +376,44 @@
                      dtau = dtau + beta
                  endif ! back if ( dtau < zero ) block
 
-                 if ( isort == 1 ) then
+!-------------------------------------------------------------------------
+! using normal representation
+!-------------------------------------------------------------------------
+                 STD_BLOCK: if ( isort == 1 ) then
+
 ! determine index for imaginary time
-                 curr = nint( dtau * step ) + 1
+                     curr = nint( dtau * step ) + 1
 
 ! special tricks for the first point and the last point
-                 if ( curr == 1 .or. curr == ntime ) then
-                     maux = two * maux
-                 endif ! back if ( curr == 1 .or. curr == ntime ) block
+                     if ( curr == 1 .or. curr == ntime ) then
+                         maux = two * maux
+                     endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
-                 gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
-                 endif ! back if ( isort == 1 ) block
+                     gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
 
-                 if ( isort == 2 ) then
+                 endif STD_BLOCK ! back if ( isort == 1 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!-------------------------------------------------------------------------
+! using legendre polynomial representation
+!-------------------------------------------------------------------------
+                 LEG_BLOCK: if ( isort == 2 ) then
+
 ! convert dtau in [0,\beta] to daux in [0,2]
-                 daux = two * dtau / beta
+                     daux = two * dtau / beta
 
 ! determine index for legendre polynomial interval
-                 curr = nint( daux * step ) + 1
+                     curr = nint( daux * step ) + 1
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
-                 CTQMC_FLALEG_LOOP: do fleg=1,lemax
-                     dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
-                     gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
-                 enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
-                 endif ! back if ( isort == 2 ) block
+                     CTQMC_FLALEG_LOOP: do fleg=1,lemax
+                         dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
+                         gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
+                     enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
+
+                 endif LEG_BLOCK ! back if ( isort == 2 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
