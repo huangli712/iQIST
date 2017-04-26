@@ -483,6 +483,7 @@
 
 ! evaluate step at first
      step = real(ntime - 1) / beta
+     step = real(legrd - 1) / two
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -524,32 +525,6 @@
 !-------------------------------------------------------------------------
 ! using legendre polynomial representation
 !-------------------------------------------------------------------------
-! calculate prefactor: pref
-     call ctqmc_make_pref()
-
-! evaluate step at first
-     step = real(legrd - 1) / two
-
-     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-
-! get imaginary time value for segments
-         do is=1,rank(flvr)
-             taus = time_s( index_s(is, flvr), flvr )
-
-             do ie=1,rank(flvr)
-                 taue = time_e( index_e(ie, flvr), flvr )
-
-! evaluate dtau
-                 dtau = taue - taus
-
-! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau) * pref(ie,flvr)
-
-! adjust dtau, keep it stay in (zero, beta)
-                 if ( dtau < zero ) then
-                     dtau = dtau + beta
-                 endif ! back if ( dtau < zero ) block
-
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
 
