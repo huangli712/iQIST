@@ -352,13 +352,8 @@
 ! interval for imaginary time slice
      real(dp) :: step
 
-!!
-!! @sub cat_record_gtau1
-!!
 !! record impurity green's function using normal representation
-!!
-  subroutine cat_record_gtau1()
-     implicit none
+!! record impurity green's function using legendre polynomial representation
 
 ! evaluate step at first
      step = real(ntime - 1) / beta
@@ -399,16 +394,6 @@
 
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
-     return
-  end subroutine cat_record_gtau1
-
-!!
-!! @sub cat_record_gtau2
-!!
-!! record impurity green's function using legendre polynomial representation
-!!
-  subroutine cat_record_gtau2()
-     implicit none
 
 ! evaluate step at first
      step = real(legrd - 1) / two
@@ -450,8 +435,6 @@
 
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
-     return
-  end subroutine cat_record_gtau2
   end subroutine ctqmc_record_gtau
 
 !!
