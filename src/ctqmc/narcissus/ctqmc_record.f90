@@ -124,7 +124,7 @@
 !! record some auxiliary physical observables
 !!
   subroutine ctqmc_record_paux()
-     use constants, only : dp, two
+     use constants, only : dp, zero, two
 
      use control, only : nband, norbs
      use control, only : beta
