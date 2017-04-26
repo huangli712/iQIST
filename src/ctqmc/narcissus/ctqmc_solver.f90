@@ -567,8 +567,8 @@
 
 ! collect data from all children processes
      call ctqmc_reduce_hist(hist_mpi, hist_err)
-     call ctqmc_reduce_paux(paux_mpi, paux_err)
      call ctqmc_reduce_prob(prob_mpi, prob_err)
+     call ctqmc_reduce_paux(paux_mpi, paux_err)
      call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
 
      call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
@@ -590,8 +590,8 @@
 ! update original data and calculate the averages simultaneously
 ! average value section
      hist  = hist_mpi  * one
-     paux  = paux_mpi  * real(nmonte) / real(nsweep)
      prob  = prob_mpi  * real(nmonte) / real(nsweep)
+     paux  = paux_mpi  * real(nmonte) / real(nsweep)
      nmat  = nmat_mpi  * real(nmonte) / real(nsweep)
      nnmat = nnmat_mpi * real(nmonte) / real(nsweep)
 
@@ -623,8 +623,8 @@
 ! update original data and calculate the averages simultaneously
 ! error bar section
      hist_err  = hist_err  * one
-     paux_err  = paux_err  * real(nmonte) / real(nsweep)
      prob_err  = prob_err  * real(nmonte) / real(nsweep)
+     paux_err  = paux_err  * real(nmonte) / real(nsweep)
      nmat_err  = nmat_err  * real(nmonte) / real(nsweep)
      nnmat_err = nnmat_err * real(nmonte) / real(nsweep)
 
@@ -675,8 +675,8 @@
 ! write out the final data to external files
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hist(hist, hist_err)
-         call ctqmc_dump_paux(paux, paux_err)
          call ctqmc_dump_prob(prob, prob_err)
+         call ctqmc_dump_paux(paux, paux_err)
          call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
 
          call ctqmc_dump_gtau(gtau, gtau_err)
@@ -719,10 +719,10 @@
 ! deallocate memory
      deallocate(hist_mpi )
      deallocate(hist_err )
-     deallocate(paux_mpi )
-     deallocate(paux_err )
      deallocate(prob_mpi )
      deallocate(prob_err )
+     deallocate(paux_mpi )
+     deallocate(paux_err )
      deallocate(nmat_mpi )
      deallocate(nmat_err )
      deallocate(nnmat_mpi)
