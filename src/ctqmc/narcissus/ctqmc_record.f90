@@ -148,6 +148,39 @@
      real(dp) :: oaux(norbs)
      real(dp) :: ovlp(norbs,norbs)
 
+! prepare sgmt
+     do flvr=1,norbs
+
+! case 1: null occupation
+         if      ( stts(flvr) == 0 ) then
+             sgmt(flvr) = zero
+
+! case 2: partial occupation, segment scheme
+         else if ( stts(flvr) == 1 ) then
+             sgmt(flvr) = zero
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 3: partial occupation, anti-segment scheme
+         else if ( stts(flvr) == 2 ) then
+             sgmt(flvr) = beta
+             do i=1,rank(flvr)
+                 ts = time_s(index_s(i, flvr), flvr)
+                 te = time_e(index_e(i, flvr), flvr)
+                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
+             enddo ! over i={1,rank(flvr)} loop
+
+! case 4: full occupation
+         else if ( stts(flvr) == 3 ) then
+             sgmt(flvr) = beta
+
+         endif ! back if ( stts(flvr) == 0 ) block
+
+     enddo ! over flvr={1,norbs} loop
+
 ! evaluate <K^4>
      paux(9) = paux(9) + ( ckink * two )**4
 
@@ -180,6 +213,11 @@
 
 ! evaluate total energy: etot
      paux(1) = paux(2) + paux(3)
+
+! evaluate occupation matrix: < n_i >
+     do flvr=1,norbs
+         nmat(flvr) = nmat(flvr) + sgmt(flvr) / beta
+     enddo ! over flvr={1,norbs} loop
 
      return
   end subroutine ctqmc_record_paux
@@ -220,41 +258,7 @@
      real(dp) :: oaux(norbs)
      real(dp) :: ovlp(norbs,norbs)
 
-! evaluate occupation matrix: < n_i >
-!-------------------------------------------------------------------------
-     do flvr=1,norbs
 
-! case 1: null occupation
-         if      ( stts(flvr) == 0 ) then
-             sgmt(flvr) = zero
-
-! case 2: partial occupation, segment scheme
-         else if ( stts(flvr) == 1 ) then
-             sgmt(flvr) = zero
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) + abs( te - ts )
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 3: partial occupation, anti-segment scheme
-         else if ( stts(flvr) == 2 ) then
-             sgmt(flvr) = beta
-             do i=1,rank(flvr)
-                 ts = time_s(index_s(i, flvr), flvr)
-                 te = time_e(index_e(i, flvr), flvr)
-                 sgmt(flvr) = sgmt(flvr) - abs( ts - te )
-             enddo ! over i={1,rank(flvr)} loop
-
-! case 4: full occupation
-         else if ( stts(flvr) == 3 ) then
-             sgmt(flvr) = beta
-
-         endif ! back if ( stts(flvr) == 0 ) block
-
-         nmat(flvr) = nmat(flvr) + sgmt(flvr) / beta
-     enddo ! over flvr={1,norbs} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate double occupation matrix: < n_i n_j >
 !-------------------------------------------------------------------------
