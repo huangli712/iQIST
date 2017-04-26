@@ -356,7 +356,8 @@
 !! record impurity green's function using legendre polynomial representation
 
 ! evaluate step at first
-     step = real(ntime - 1) / beta
+     if ( isort == 1 ) step = real(ntime - 1) / beta
+     if ( isort == 2 ) step = real(legrd - 1) / two
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -394,30 +395,6 @@
 
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
-
-! evaluate step at first
-     step = real(legrd - 1) / two
-
-     CTQMC_FLAVOR_LOOP: do flvr=1,norbs
-
-! get imaginary time value for segments
-         do is=1,rank(flvr)
-             taus = time_s( index_s(is, flvr), flvr )
-
-             do ie=1,rank(flvr)
-                 taue = time_e( index_e(ie, flvr), flvr )
-
-! evaluate dtau
-                 dtau = taue - taus
-
-! get matrix element from mmat, pay special attention to the sign of dtau
-                 maux = mmat(ie, is, flvr) * sign(one, dtau)
-
-! adjust dtau, keep it stay in (zero, beta)
-                 if ( dtau < zero ) then
-                     dtau = dtau + beta
-                 endif ! back if ( dtau < zero ) block
-
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
 
@@ -430,11 +407,7 @@
                      gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
                  enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
 
-             enddo ! over ie={1,rank(flvr)} loop
-         enddo ! over is={1,rank(flvr)} loop
-
-     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
-
+     return
   end subroutine ctqmc_record_gtau
 
 !!
