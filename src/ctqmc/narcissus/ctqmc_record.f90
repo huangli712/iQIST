@@ -474,13 +474,9 @@
 ! interval for imaginary time slice
      real(dp) :: step
 
-  contains
-
-!!
-!! @sub cat_record_ftau1
-!!
-!! record auxiliary correlation function using normal representation
-!!
+!-------------------------------------------------------------------------
+! using normal representation
+!-------------------------------------------------------------------------
   subroutine cat_record_ftau1()
      implicit none
 
@@ -530,11 +526,9 @@
      return
   end subroutine cat_record_ftau1
 
-!!
-!! @sub cat_record_ftau2
-!!
-!! record auxiliary correlation function using legendre polynomial representation
-!!
+!-------------------------------------------------------------------------
+! using legendre polynomial representation
+!-------------------------------------------------------------------------
   subroutine cat_record_ftau2()
      implicit none
 
