@@ -280,7 +280,8 @@
 !!
 !! @sub ctqmc_record_nmat
 !!
-!! record the occupation matrix, double occupation matrix
+!! record the occupation matrix, double occupation matrix. note that it is
+!! a empty subroutine. all features are implemented in ctqmc_record_paux()
 !!
   subroutine ctqmc_record_nmat()
      implicit none
