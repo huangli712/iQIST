@@ -352,21 +352,6 @@
 ! interval for imaginary time slice
      real(dp) :: step
 
-! select measurement method
-     select case ( isort )
-
-         case (1)
-             call cat_record_gtau1()
-
-         case (2)
-             call cat_record_gtau2()
-
-     end select
-
-     return
-
-  contains
-
 !!
 !! @sub cat_record_gtau1
 !!
