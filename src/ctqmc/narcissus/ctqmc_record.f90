@@ -474,10 +474,6 @@
 ! interval for imaginary time slice
      real(dp) :: step
 
-!-------------------------------------------------------------------------
-! using normal representation
-!-------------------------------------------------------------------------
-
 ! calculate prefactor: pref
      call ctqmc_make_pref()
 
@@ -506,8 +502,9 @@
                      dtau = dtau + beta
                  endif ! back if ( dtau < zero ) block
 
-
-
+!-------------------------------------------------------------------------
+! using normal representation
+!-------------------------------------------------------------------------
 
 ! determine index for imaginary time
                  curr = nint( dtau * step ) + 1
@@ -523,6 +520,7 @@
 !-------------------------------------------------------------------------
 ! using legendre polynomial representation
 !-------------------------------------------------------------------------
+
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
 
