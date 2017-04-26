@@ -73,6 +73,52 @@
   end subroutine ctqmc_record_hist
 
 !!
+!! @sub ctqmc_record_prob
+!!
+!! record the probability of atomic eigenstates
+!!
+  subroutine ctqmc_record_prob()
+     use constants, only : one
+
+     use control, only : norbs
+     use context, only : prob
+     use context, only : stts
+
+     implicit none
+
+! local variables
+! current flavor channel
+     integer :: flvr
+
+! atomic eigenstate index
+     integer :: pstat
+
+! current atomic eigenstate for segment representation
+     integer :: state(norbs)
+
+! generate current atomic eigenstate
+     do flvr=1,norbs
+         select case ( stts(flvr) )
+
+             case (0:1)
+                 state(flvr) = 0
+
+             case (2:3)
+                 state(flvr) = 1
+
+         end select
+     enddo ! over flvr={1,norbs} loop
+
+! convert atomic eigenstate array to index
+     call ctqmc_make_state(norbs, pstat, state)
+
+! accumulate the data
+     prob(pstat) = prob(pstat) + one
+
+     return
+  end subroutine ctqmc_record_prob
+
+!!
 !! @sub ctqmc_record_paux
 !!
 !! record some auxiliary physical observables
@@ -156,52 +202,6 @@
 
      return
   end subroutine ctqmc_record_paux
-
-!!
-!! @sub ctqmc_record_prob
-!!
-!! record the probability of atomic eigenstates
-!!
-  subroutine ctqmc_record_prob()
-     use constants, only : one
-
-     use control, only : norbs
-     use context, only : prob
-     use context, only : stts
-
-     implicit none
-
-! local variables
-! current flavor channel
-     integer :: flvr
-
-! atomic eigenstate index
-     integer :: pstat
-
-! current atomic eigenstate for segment representation
-     integer :: state(norbs)
-
-! generate current atomic eigenstate
-     do flvr=1,norbs
-         select case ( stts(flvr) )
-
-             case (0:1)
-                 state(flvr) = 0
-
-             case (2:3)
-                 state(flvr) = 1
-
-         end select
-     enddo ! over flvr={1,norbs} loop
-
-! convert atomic eigenstate array to index
-     call ctqmc_make_state(norbs, pstat, state)
-
-! accumulate the data
-     prob(pstat) = prob(pstat) + one
-
-     return
-  end subroutine ctqmc_record_prob
 
 !!
 !! @sub ctqmc_record_nmat
