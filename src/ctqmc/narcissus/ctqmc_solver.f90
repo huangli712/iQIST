@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/25/2017 by li huang (last modified)
+!!!           04/26/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are the most important subroutines
@@ -43,8 +43,8 @@
      use control, only : myid, master        ! mpi environment
 
      use context, only : hist                ! histogram
-     use context, only : paux                ! auxiliary physical observables
      use context, only : prob                ! atomic eigenstate probability
+     use context, only : paux                ! auxiliary physical observables
      use context, only : nmat, nnmat         ! occupation and double occupation
      use context, only : kmat, kkmat         ! kinetic energy fluctuation
      use context, only : lmat, rmat, lrmat   ! fidelity susceptibility
@@ -98,13 +98,13 @@
      real(dp), allocatable :: hist_mpi(:)
      real(dp), allocatable :: hist_err(:)
 
-! auxiliary physical observables
-     real(dp), allocatable :: paux_mpi(:)
-     real(dp), allocatable :: paux_err(:)
-
 ! probability of atomic eigenstates
      real(dp), allocatable :: prob_mpi(:)
      real(dp), allocatable :: prob_err(:)
+
+! auxiliary physical observables
+     real(dp), allocatable :: paux_mpi(:)
+     real(dp), allocatable :: paux_err(:)
 
 ! impurity occupation number matrix
      real(dp), allocatable :: nmat_mpi(:)
@@ -195,10 +195,10 @@
 ! allocate memory
      allocate(hist_mpi(mkink),             stat=istat)
      allocate(hist_err(mkink),             stat=istat)
-     allocate(paux_mpi(  9  ),             stat=istat)
-     allocate(paux_err(  9  ),             stat=istat)
      allocate(prob_mpi(ncfgs),             stat=istat)
      allocate(prob_err(ncfgs),             stat=istat)
+     allocate(paux_mpi(  9  ),             stat=istat)
+     allocate(paux_err(  9  ),             stat=istat)
      allocate(nmat_mpi(norbs),             stat=istat)
      allocate(nmat_err(norbs),             stat=istat)
      allocate(nnmat_mpi(norbs,norbs),      stat=istat)
@@ -374,14 +374,14 @@
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
 
-! record the auxiliary physical observables
-             if ( mod(cstep, nmonte) == 0 ) then
-                 call ctqmc_record_paux()
-             endif ! back if ( mod(cstep, nmonte) == 0 ) block
-
 ! record the probability of eigenstates
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_prob()
+             endif ! back if ( mod(cstep, nmonte) == 0 ) block
+
+! record the auxiliary physical observables
+             if ( mod(cstep, nmonte) == 0 ) then
+                 call ctqmc_record_paux()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
 ! record the impurity (double) occupation number matrix
