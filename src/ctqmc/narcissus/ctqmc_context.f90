@@ -14,7 +14,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/24/2017 by li huang (last modified)
+!!!           04/26/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -335,6 +335,13 @@
      real(dp), public, save, allocatable :: hist(:)
 
 !!
+!! @var prob
+!!
+!! probability of eigenstates of local hamiltonian matrix
+!!
+     real(dp), public, save, allocatable :: prob(:)
+
+!!
 !! @var paux
 !!
 !! auxiliary physical observables, it is a vector with size = 9
@@ -355,13 +362,6 @@
 !! calculated from Ekin.
 !!
      real(dp), public, save, allocatable :: paux(:)
-
-!!
-!! @var prob
-!!
-!! probability of eigenstates of local hamiltonian matrix
-!!
-     real(dp), public, save, allocatable :: prob(:)
 
 !!
 !! @var nmat
@@ -947,8 +947,8 @@
 
 ! allocate memory
      allocate(hist(mkink),        stat=istat)
-     allocate(paux(  9  ),        stat=istat)
      allocate(prob(ncfgs),        stat=istat)
+     allocate(paux(  9  ),        stat=istat)
      allocate(nmat(norbs),        stat=istat)
      allocate(nnmat(norbs,norbs), stat=istat)
 
@@ -980,8 +980,8 @@
 
 ! initialize them
      hist  = zero
-     paux  = zero
      prob  = zero
+     paux  = zero
      nmat  = zero
      nnmat = zero
 
@@ -1241,8 +1241,8 @@
      implicit none
 
      if ( allocated(hist)  )   deallocate(hist )
-     if ( allocated(paux)  )   deallocate(paux )
      if ( allocated(prob)  )   deallocate(prob )
+     if ( allocated(paux)  )   deallocate(paux )
      if ( allocated(nmat)  )   deallocate(nmat )
      if ( allocated(nnmat) )   deallocate(nnmat)
 
