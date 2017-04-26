@@ -141,6 +141,10 @@
 ! loop index for flavor channel
      integer  :: flvr
 
+! imaginary time for start and end points
+     real(dp) :: ts
+     real(dp) :: te
+
 ! total length of segments
      real(dp) :: sgmt(norbs)
 
@@ -247,18 +251,12 @@
 ! loop index for flavor channel
      integer  :: flvr
 
-! imaginary time for start and end points
-     real(dp) :: ts
-     real(dp) :: te
-
 ! total length of segments
      real(dp) :: sgmt(norbs)
 
 ! used to record overlaps between two segments
      real(dp) :: oaux(norbs)
      real(dp) :: ovlp(norbs,norbs)
-
-
 
 ! evaluate double occupation matrix: < n_i n_j >
 !-------------------------------------------------------------------------
