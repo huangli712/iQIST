@@ -121,8 +121,8 @@
 !!
 !! @sub ctqmc_record_paux
 !!
-!! record some auxiliary physical observables. the occupation number and
-!! double occupation number are measured at the same time in order to
+!! record some auxiliary physical observables. the occupation matrix and
+!! double occupation matrix are measured at the same time in order to
 !! improve the computational efficiency
 !!
   subroutine ctqmc_record_paux()
