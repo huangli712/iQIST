@@ -1,8 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
 !!! program : ctqmc_record_hist
-!!!           ctqmc_record_paux
 !!!           ctqmc_record_prob
+!!!           ctqmc_record_paux
 !!!           ctqmc_record_nmat <<<---
 !!!           ctqmc_record_gtau
 !!!           ctqmc_record_ftau
@@ -17,8 +17,8 @@
 !!!           ctqmc_record_twop
 !!!           ctqmc_record_pair <<<---
 !!!           ctqmc_reduce_hist
-!!!           ctqmc_reduce_paux
 !!!           ctqmc_reduce_prob
+!!!           ctqmc_reduce_paux
 !!!           ctqmc_reduce_nmat <<<---
 !!!           ctqmc_reduce_gtau
 !!!           ctqmc_reduce_ftau
