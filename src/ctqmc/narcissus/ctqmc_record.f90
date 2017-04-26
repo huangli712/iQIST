@@ -437,7 +437,8 @@
      use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : rep_l
      use context, only : rank, pref
      use context, only : mmat
