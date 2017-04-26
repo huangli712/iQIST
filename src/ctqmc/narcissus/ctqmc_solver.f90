@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/26/2017 by li huang (last modified)
+!!!           04/27/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are the most important subroutines
@@ -264,7 +264,6 @@
 
 ! print the header of continuous time quantum Monte Carlo quantum impurity
 ! solver. it contains important information about the control parameters
-! of the solver
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
          write(mystd,'(4X,a,i2)') 'self-consistent scheme  :', isscf

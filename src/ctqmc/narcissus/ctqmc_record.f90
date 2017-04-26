@@ -586,7 +586,7 @@
 !!
 !! @sub ctqmc_record_kmat
 !!
-!! record the < k^2 > - < k >^2
+!! record the kinetic energy fluctuation < k^2 > - < k >^2
 !!
   subroutine ctqmc_record_kmat()
      use constants, only : dp
