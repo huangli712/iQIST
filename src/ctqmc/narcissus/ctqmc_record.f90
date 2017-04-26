@@ -478,8 +478,8 @@
      call ctqmc_make_pref()
 
 ! evaluate step at first
-     step = real(ntime - 1) / beta
-     step = real(legrd - 1) / two
+     if ( isort == 1 ) step = real(ntime - 1) / beta
+     if ( isort == 2 ) step = real(legrd - 1) / two
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -505,17 +505,21 @@
 !-------------------------------------------------------------------------
 ! using normal representation
 !-------------------------------------------------------------------------
+                 STD_BLOCK: if ( isort == 1 ) then
 
 ! determine index for imaginary time
-                 curr = nint( dtau * step ) + 1
+                     curr = nint( dtau * step ) + 1
 
 ! special tricks for the first point and the last point
-                 if ( curr == 1 .or. curr == ntime ) then
-                     maux = two * maux
-                 endif ! back if ( curr == 1 .or. curr == ntime ) block
+                     if ( curr == 1 .or. curr == ntime ) then
+                         maux = two * maux
+                     endif ! back if ( curr == 1 .or. curr == ntime ) block
 
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
-                 ftau(curr, flvr, flvr) = ftau(curr, flvr, flvr) - maux
+                     ftau(curr, flvr, flvr) = ftau(curr, flvr, flvr) - maux
+
+                 endif STD_BLOCK ! back if ( isort == 1 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
 ! using legendre polynomial representation
