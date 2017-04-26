@@ -129,6 +129,8 @@
      use control, only : nband, norbs
      use control, only : beta
      use context, only : ckink
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : paux, nmat, nnmat
      use context, only : rank, stts, uumat
 
@@ -238,7 +240,6 @@
      use control, only : nband, norbs
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, index_e, time_s, time_e
 
      implicit none
 
