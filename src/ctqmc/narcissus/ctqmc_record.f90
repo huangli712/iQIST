@@ -474,22 +474,6 @@
 ! interval for imaginary time slice
      real(dp) :: step
 
-! select measurement method
-     select case ( isort )
-
-         case (4)
-             call cat_record_ftau1()
-
-         case (5)
-             call cat_record_ftau2()
-
-         case (6)
-             call cat_record_ftau3()
-
-     end select
-
-     return
-
   contains
 
 !!
