@@ -529,9 +529,6 @@
 !-------------------------------------------------------------------------
 ! using legendre polynomial representation
 !-------------------------------------------------------------------------
-  subroutine cat_record_ftau2()
-     implicit none
-
 ! calculate prefactor: pref
      call ctqmc_make_pref()
 
@@ -576,7 +573,6 @@
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
      return
-  end subroutine cat_record_ftau2
   end subroutine ctqmc_record_ftau
 
 !!
