@@ -792,7 +792,7 @@
 !!
 !! @sub ctqmc_record_schi
 !!
-!! record the spin-spin correlation function imaginary-time version
+!! record the spin-spin correlation function in imaginary-time axis
 !!
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
