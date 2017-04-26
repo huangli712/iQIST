@@ -280,8 +280,7 @@
 !!
 !! @sub ctqmc_record_nmat
 !!
-!! record the occupation matrix, double occupation matrix, and auxiliary
-!! physical observables simulataneously
+!! record the occupation matrix, double occupation matrix
 !!
   subroutine ctqmc_record_nmat()
      implicit none
