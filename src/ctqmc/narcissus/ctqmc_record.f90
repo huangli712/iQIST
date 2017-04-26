@@ -284,27 +284,7 @@
 !! physical observables simulataneously
 !!
   subroutine ctqmc_record_nmat()
-     use constants, only : dp, zero, two
-
-     use control, only : nband, norbs
-     use control, only : beta
-     use context, only : ckink
-
      implicit none
-
-! local variables
-! loop index over segments
-     integer  :: i
-
-! loop index for flavor channel
-     integer  :: flvr
-
-! total length of segments
-     real(dp) :: sgmt(norbs)
-
-! used to record overlaps between two segments
-     real(dp) :: oaux(norbs)
-     real(dp) :: ovlp(norbs,norbs)
 
      return
   end subroutine ctqmc_record_nmat
