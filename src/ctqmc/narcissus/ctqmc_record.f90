@@ -315,7 +315,8 @@
      use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : rep_l
      use context, only : rank
      use context, only : mmat
@@ -354,14 +355,11 @@
 ! select measurement method
      select case ( isort )
 
-         case (1, 4)
+         case (1)
              call cat_record_gtau1()
 
-         case (2, 5)
+         case (2)
              call cat_record_gtau2()
-
-         case (3, 6)
-             call cat_record_gtau3()
 
      end select
 
