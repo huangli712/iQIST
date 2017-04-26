@@ -699,12 +699,13 @@
 !!
 !! @sub ctqmc_record_szpw
 !!
-!! record the powers of local magnetization
+!! record the powers of local magnetization which will be used to compute
+!! the binder cumulant
 !!
   subroutine ctqmc_record_szpw()
      use constants, only : dp, zero
 
-     use control, only : issus
+     use control, only : isobs
      use control, only : nband, norbs
      use control, only : ntime
      use control, only : beta
@@ -735,7 +736,7 @@
      real(dp) :: saux(ntime,nband)
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 7) )
+     call s_assert( btest(isobs, 3) )
 
 ! calculate oaux, obtain occupation status
 ! calculate saux, obtain Sz(\tau)
