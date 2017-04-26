@@ -426,7 +426,8 @@
 !!
 !! @sub ctqmc_record_ftau
 !!
-!! record the auxiliary correlation function in imaginary time axis, F(\tau)
+!! record the auxiliary correlation function in imaginary time axis,
+!! F(\tau). latter, we will use it to compute the self-energy function
 !!
   subroutine ctqmc_record_ftau()
      use constants, only : dp, zero, one, two
