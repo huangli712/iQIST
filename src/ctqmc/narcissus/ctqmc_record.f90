@@ -379,6 +379,7 @@
                      dtau = dtau + beta
                  endif ! back if ( dtau < zero ) block
 
+                 if ( isort == 1 ) then
 ! determine index for imaginary time
                  curr = nint( dtau * step ) + 1
 
@@ -389,12 +390,9 @@
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
                  gtau(curr, flvr, flvr) = gtau(curr, flvr, flvr) - maux
+                 endif ! back if ( isort == 1 ) block
 
-             enddo ! over ie={1,rank(flvr)} loop
-         enddo ! over is={1,rank(flvr)} loop
-
-     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
-
+                 if ( isort == 2 ) then
 ! convert dtau in [0,\beta] to daux in [0,2]
                  daux = two * dtau / beta
 
@@ -406,6 +404,12 @@
                      dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                      gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
                  enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
+                 endif ! back if ( isort == 2 ) block
+
+             enddo ! over ie={1,rank(flvr)} loop
+         enddo ! over is={1,rank(flvr)} loop
+
+     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
      return
   end subroutine ctqmc_record_gtau
