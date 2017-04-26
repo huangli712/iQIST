@@ -506,6 +506,9 @@
                      dtau = dtau + beta
                  endif ! back if ( dtau < zero ) block
 
+
+
+
 ! determine index for imaginary time
                  curr = nint( dtau * step ) + 1
 
@@ -516,11 +519,6 @@
 
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
                  ftau(curr, flvr, flvr) = ftau(curr, flvr, flvr) - maux
-
-             enddo ! over ie={1,rank(flvr)} loop
-         enddo ! over is={1,rank(flvr)} loop
-
-     enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 
 !-------------------------------------------------------------------------
 ! using legendre polynomial representation
@@ -536,6 +534,7 @@
                      dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                      ftau(fleg, flvr, flvr) = ftau(fleg, flvr, flvr) - maux * dtau
                  enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
+
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
