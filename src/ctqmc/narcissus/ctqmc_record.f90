@@ -629,10 +629,11 @@
   subroutine ctqmc_record_lmat()
      use constants, only : dp, zero, one, two
 
-     use control, only : issus
+     use control, only : isobs
      use control, only : norbs
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : lmat, rmat, lrmat
      use context, only : rank
 
@@ -656,7 +657,7 @@
      real(dp) :: kr(norbs)
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 6) )
+     call s_assert( btest(isobs, 2) )
 
 ! init k_l and k_r
      kl = zero
