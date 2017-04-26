@@ -187,78 +187,6 @@
 
      enddo ! over flvr={1,norbs} loop
 
-! evaluate <K^4>
-     paux(9) = paux(9) + ( ckink * two )**4
-
-! evaluate <K^3>
-     paux(8) = paux(8) + ( ckink * two )**3
-
-! evaluate <K^2>
-     paux(7) = paux(7) + ( ckink * two )**2
-
-! evaluate <N^2>
-     paux(6) = paux(6) + ( sum(sgmt) / beta )**2
-
-! evaluate <N^1>
-     paux(5) = paux(5) + sum(sgmt) / beta
-
-! evaluate spin magnetization: < Sz >
-     do flvr=1,nband
-         paux(4) = paux(4) + ( sgmt(flvr) - sgmt(flvr+nband) ) / beta
-     enddo ! over flvr={1,nband} loop
-
-! evaluate kinetic energy: ekin
-     paux(3) = paux(3) - real(ckink * norbs) / beta
-
-! evaluate potential energy: epot
-     do flvr=1,norbs
-         do i=1,flvr
-             paux(2) = paux(2) + uumat(flvr,i) * ovlp(flvr,i) / beta
-         enddo ! over i={1,flvr} loop
-     enddo ! over flvr={1,norbs} loop
-
-! evaluate total energy: etot
-     paux(1) = paux(2) + paux(3)
-
-! evaluate occupation matrix: < n_i >
-     do flvr=1,norbs
-         nmat(flvr) = nmat(flvr) + sgmt(flvr) / beta
-     enddo ! over flvr={1,norbs} loop
-
-     return
-  end subroutine ctqmc_record_paux
-
-!!
-!! @sub ctqmc_record_nmat
-!!
-!! record the occupation matrix, double occupation matrix, and auxiliary
-!! physical observables simulataneously
-!!
-  subroutine ctqmc_record_nmat()
-     use constants, only : dp, zero, two
-
-     use control, only : nband, norbs
-     use control, only : beta
-     use context, only : ckink
-
-     implicit none
-
-! local variables
-! loop index over segments
-     integer  :: i
-
-! loop index for flavor channel
-     integer  :: flvr
-
-! total length of segments
-     real(dp) :: sgmt(norbs)
-
-! used to record overlaps between two segments
-     real(dp) :: oaux(norbs)
-     real(dp) :: ovlp(norbs,norbs)
-
-! evaluate double occupation matrix: < n_i n_j >
-!-------------------------------------------------------------------------
      do flvr=1,norbs
 
 ! case 1: null occupation
@@ -301,9 +229,82 @@
 
          endif ! back if ( stts(flvr) == 0 ) block
 
+     enddo ! over flvr={1,norbs} loop
+
+! evaluate <K^4>
+     paux(9) = paux(9) + ( ckink * two )**4
+
+! evaluate <K^3>
+     paux(8) = paux(8) + ( ckink * two )**3
+
+! evaluate <K^2>
+     paux(7) = paux(7) + ( ckink * two )**2
+
+! evaluate <N^2>
+     paux(6) = paux(6) + ( sum(sgmt) / beta )**2
+
+! evaluate <N^1>
+     paux(5) = paux(5) + sum(sgmt) / beta
+
+! evaluate spin magnetization: < Sz >
+     do flvr=1,nband
+         paux(4) = paux(4) + ( sgmt(flvr) - sgmt(flvr+nband) ) / beta
+     enddo ! over flvr={1,nband} loop
+
+! evaluate kinetic energy: ekin
+     paux(3) = paux(3) - real(ckink * norbs) / beta
+
+! evaluate potential energy: epot
+     do flvr=1,norbs
+         do i=1,flvr
+             paux(2) = paux(2) + uumat(flvr,i) * ovlp(flvr,i) / beta
+         enddo ! over i={1,flvr} loop
+     enddo ! over flvr={1,norbs} loop
+
+! evaluate total energy: etot
+     paux(1) = paux(2) + paux(3)
+
+! evaluate occupation matrix: < n_i >
+     do flvr=1,norbs
+         nmat(flvr) = nmat(flvr) + sgmt(flvr) / beta
+     enddo ! over flvr={1,norbs} loop
+
+! evaluate double occupation matrix: < n_i n_j >
+     do flvr=1,norbs
          nnmat(flvr,:) = nnmat(flvr,:) + ovlp(flvr,:) / beta
      enddo ! over flvr={1,norbs} loop
-!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+     return
+  end subroutine ctqmc_record_paux
+
+!!
+!! @sub ctqmc_record_nmat
+!!
+!! record the occupation matrix, double occupation matrix, and auxiliary
+!! physical observables simulataneously
+!!
+  subroutine ctqmc_record_nmat()
+     use constants, only : dp, zero, two
+
+     use control, only : nband, norbs
+     use control, only : beta
+     use context, only : ckink
+
+     implicit none
+
+! local variables
+! loop index over segments
+     integer  :: i
+
+! loop index for flavor channel
+     integer  :: flvr
+
+! total length of segments
+     real(dp) :: sgmt(norbs)
+
+! used to record overlaps between two segments
+     real(dp) :: oaux(norbs)
+     real(dp) :: ovlp(norbs,norbs)
 
      return
   end subroutine ctqmc_record_nmat
