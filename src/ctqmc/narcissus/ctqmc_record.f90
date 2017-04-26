@@ -591,7 +591,7 @@
   subroutine ctqmc_record_kmat()
      use constants, only : dp
 
-     use control, only : issus
+     use control, only : isobs
      use control, only : norbs
      use context, only : kmat, kkmat
      use context, only : rank
@@ -604,7 +604,7 @@
      integer :: j
 
 ! check whether there is conflict
-     call s_assert( btest(issus, 5) )
+     call s_assert( btest(isobs, 1) )
 
 ! since rank means the number of operator pairs,
 ! so we have to multiply it with two
