@@ -524,19 +524,22 @@
 !-------------------------------------------------------------------------
 ! using legendre polynomial representation
 !-------------------------------------------------------------------------
+                 LEG_BLOCK: if ( isort == 2 ) then
 
 ! convert dtau in [0,\beta] to daux in [0,2]
-                 daux = two * dtau / beta
+                     daux = two * dtau / beta
 
 ! determine index for legendre polynomial interval
-                 curr = nint( daux * step ) + 1
+                     curr = nint( daux * step ) + 1
 
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
-                 CTQMC_FLALEG_LOOP: do fleg=1,lemax
-                     dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
-                     ftau(fleg, flvr, flvr) = ftau(fleg, flvr, flvr) - maux * dtau
-                 enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
+                     CTQMC_FLALEG_LOOP: do fleg=1,lemax
+                         dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
+                         ftau(fleg, flvr, flvr) = ftau(fleg, flvr, flvr) - maux * dtau
+                     enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
 
+                 endif LEG_BLOCK ! back if ( isort == 2 ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
              enddo ! over ie={1,rank(flvr)} loop
          enddo ! over is={1,rank(flvr)} loop
