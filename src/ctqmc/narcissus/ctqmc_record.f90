@@ -121,7 +121,9 @@
 !!
 !! @sub ctqmc_record_paux
 !!
-!! record some auxiliary physical observables
+!! record some auxiliary physical observables. the occupation number and
+!! double occupation number are measured at the same time in order to
+!! improve the computational efficiency
 !!
   subroutine ctqmc_record_paux()
      use constants, only : dp, zero, two
@@ -154,8 +156,10 @@
      real(dp) :: oaux(norbs)
      real(dp) :: ovlp(norbs,norbs)
 
-! prepare sgmt
-     do flvr=1,norbs
+!-------------------------------------------------------------------------
+! prepare sgmt array
+!-------------------------------------------------------------------------
+     SGMT_BLOCK: do flvr=1,norbs
 
 ! case 1: null occupation
          if      ( stts(flvr) == 0 ) then
@@ -185,9 +189,13 @@
 
          endif ! back if ( stts(flvr) == 0 ) block
 
-     enddo ! over flvr={1,norbs} loop
+     enddo SGMT_BLOCK ! over flvr={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-     do flvr=1,norbs
+!-------------------------------------------------------------------------
+! prepare ovlp matrix
+!-------------------------------------------------------------------------
+     OVLP_BLOCK: do flvr=1,norbs
 
 ! case 1: null occupation
          if      ( stts(flvr) == 0 ) then
@@ -229,7 +237,8 @@
 
          endif ! back if ( stts(flvr) == 0 ) block
 
-     enddo ! over flvr={1,norbs} loop
+     enddo OVLP_BLOCK ! over flvr={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! evaluate <K^4>
      paux(9) = paux(9) + ( ckink * two )**4
