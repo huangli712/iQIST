@@ -7,8 +7,8 @@
 !!!           ctqmc_final_array <<<---
 !!!           ctqmc_input_hybf_
 !!!           ctqmc_input_eimp_
-!!!           ctqmc_input_ktau_
-!!!           ctqmc_input_uumat <<<---
+!!!           ctqmc_input_umat_
+!!!           ctqmc_input_ktau_ <<<---
 !!! source  : ctqmc_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -308,43 +308,6 @@
 
 
 
-! calculate two-index Coulomb interaction, uumat
-     call ctqmc_make_uumat(uumat)
-
-! read in two-index Coulomb interaction if available
-!-------------------------------------------------------------------------
-     if ( myid == master ) then ! only master node can do it
-         exists = .false.
-
-! inquire about file's existence
-         inquire (file = 'solver.umat.in', exist = exists)
-
-! find input file: solver.umat.in, read it
-         if ( exists .eqv. .true. ) then
-
-! read in Coulomb interaction matrix from solver.umat.in
-             open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
-             do i=1,norbs
-                 do j=1,norbs
-                     read(mytmp,*) k, l, rtmp
-                     uumat(k,l) = rtmp
-                 enddo ! over j={1,norbs} loop
-             enddo ! over i={1,norbs} loop
-             close(mytmp)
-
-         endif ! back if ( exists .eqv. .true. ) block
-     endif ! back if ( myid == master ) block
-
-! broadcast uumat from master node to all children nodes
-# if defined (MPI)
-
-! broadcast data
-     call mp_bcast(uumat, master)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# endif  /* MPI */
 
 ! setup initial ktau
      ktau = zero
@@ -762,3 +725,47 @@
 # endif  /* MPI */
 
   end subroutine ctqmc_input_eimp_
+
+  subroutine ctqmc_input_umat_()
+! calculate two-index Coulomb interaction, uumat
+     call ctqmc_make_uumat(uumat)
+
+! read in two-index Coulomb interaction if available
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
+
+! inquire about file's existence
+         inquire (file = 'solver.umat.in', exist = exists)
+
+! find input file: solver.umat.in, read it
+         if ( exists .eqv. .true. ) then
+
+! read in Coulomb interaction matrix from solver.umat.in
+             open(mytmp, file='solver.umat.in', form='formatted', status='unknown')
+             do i=1,norbs
+                 do j=1,norbs
+                     read(mytmp,*) k, l, rtmp
+                     uumat(k,l) = rtmp
+                 enddo ! over j={1,norbs} loop
+             enddo ! over i={1,norbs} loop
+             close(mytmp)
+
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+
+! broadcast uumat from master node to all children nodes
+# if defined (MPI)
+
+! broadcast data
+     call mp_bcast(uumat, master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif  /* MPI */
+
+  end subroutine ctqmc_input_umat_
+
+  subroutine ctqmc_input_ktau_()
+  end subroutine ctqmc_input_ktau_
