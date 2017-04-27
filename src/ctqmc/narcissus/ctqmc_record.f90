@@ -756,7 +756,7 @@
 ! calculate \delta \tau
      step = ( tmesh(2) - tmesh(1) ) / 2.0
      BAND_LOOP: do f2=1,nband
-! calculate sint using trapezoid algorithm 
+! calculate sint using trapezoid algorithm
          sint = zero
          do i=1,ntime-1
              sint = sint + ( saux(i,f2) + saux(i+1,f2) ) * step
@@ -1072,7 +1072,7 @@
 !!
 !! @sub ctqmc_record_ofom
 !!
-!! record the orbital-orbital correlation function 
+!! record the orbital-orbital correlation function
 !! in matsubara frequency axis
 !!
   subroutine ctqmc_record_ofom()
@@ -1681,7 +1681,8 @@
 !!
   subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : ntime
@@ -1743,7 +1744,8 @@
 !!
   subroutine ctqmc_reduce_ftau(ftau_mpi, ftau_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : ntime
@@ -2239,7 +2241,7 @@
 
 !!
 !! @sub ctqmc_reduce_ochi
-!! 
+!!
 !! reduce the ochi and oochi from all children processes
 !!
   subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
