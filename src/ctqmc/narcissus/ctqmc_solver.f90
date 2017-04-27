@@ -290,7 +290,7 @@
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
-     call ctqmc_solver_init()
+     call ctqmc_reset_array()
      call cpu_time(time_end)   ! record ending   time
 
 ! print the time information
