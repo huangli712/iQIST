@@ -256,7 +256,7 @@
 
      use control, only : mfreq
      use control, only : beta
-     use context, only : tmesh, rmesh
+     use context, only : tmesh, rmesh, lmesh, rep_l
 
      implicit none
 
