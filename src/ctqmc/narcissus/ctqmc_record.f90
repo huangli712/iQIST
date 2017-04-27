@@ -1169,7 +1169,8 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
-     use context, only : g2_re, g2_im, h2_re, h2_im
+     use context, only : g2_re, g2_im
+     use context, only : h2_re, h2_im
      use context, only : rank, pref
      use context, only : mmat
 
@@ -1207,7 +1208,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 2) .and. .not. btest(isvrt, 1) )
+     call s_assert( btest(isvrt, 1) )
 
 ! evaluate nfaux, determine the size of g2aux and h2aux
      nfaux = nffrq + nbfrq - 1
