@@ -275,10 +275,6 @@
 ! build legendre polynomial in [-1,1]
      call s_legendre(lemax, legrd, pmesh, ppleg)
 
-! build chebyshev polynomial in [-1,1]
-! note: it is second kind chebyshev polynomial
-     call s_chebyshev(chmax, chgrd, qmesh, qqche)
-
      return
   end subroutine ctqmc_setup_model
 
