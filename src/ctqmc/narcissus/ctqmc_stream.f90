@@ -694,9 +694,11 @@
   end subroutine ctqmc_input_umat_
 
   subroutine ctqmc_input_ktau_()
-     use constants, only : zero, one
+     use constants, only : zero, one, mytmp
 
-     use context, only : ptau, uumat
+     use control, only : ntime
+     use control, only : myid, master
+     use context, only : ktau, ptau, uumat
 
      implicit none
 
