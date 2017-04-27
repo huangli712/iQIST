@@ -151,8 +151,6 @@
 
              call p_get('lemax' , lemax )
              call p_get('legrd' , legrd )
-             call p_get('chmax' , chmax )
-             call p_get('chgrd' , chgrd )
 
              call p_get('mkink' , mkink )
              call p_get('mfreq' , mfreq )
