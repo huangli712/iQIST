@@ -1548,7 +1548,6 @@
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
-     use control, only : ncfgs
      use control, only : nprocs
      use context, only : paux
 
