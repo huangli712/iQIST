@@ -546,6 +546,7 @@
      use constants, only : dp, one, two, mytmp
 
      use control, only : norbs
+     use control, only : mfreq
      use control, only : part
      use control, only : myid, master
      use context, only : rmesh
