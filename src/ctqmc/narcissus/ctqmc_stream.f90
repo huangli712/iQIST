@@ -306,8 +306,10 @@
 !!
   subroutine ctqmc_reset_array()
      use constants, only : zero, czero
+
      use spring, only : spring_sfmt_init
-     use stack, only : istack_clean, istack_push
+     use stack, only : istack_clean
+     use stack, only : istack_push
 
      use control ! ALL
      use context ! ALL
@@ -330,8 +332,28 @@
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
-! for stack data structure
+! ctqmc_core module
 !-------------------------------------------------------------------------
+! init global variables
+     ckink   = 0
+     cstat   = 0
+
+! init statistics variables
+     ins_t = zero; ins_a = zero; ins_r = zero
+     rmv_t = zero; rmv_a = zero; rmv_r = zero
+     lsh_t = zero; lsh_a = zero; lsh_r = zero
+     rsh_t = zero; rsh_a = zero; rsh_r = zero
+     rfl_t = zero; rfl_a = zero; rfl_r = zero
+
+
+
+
+
+
+
+
+
+
 ! init empty_s and empty_e stack structure
      do i=1,norbs
          call istack_clean( empty_s(i) )
@@ -346,19 +368,9 @@
      enddo ! over i={1,norbs} loop
 
 ! for integer variables
-!-------------------------------------------------------------------------
-! init global variables
-     ckink   = 0
-     cstat   = 0
 
-! for real variables
-!-------------------------------------------------------------------------
-! init statistics variables
-     ins_t = zero; ins_a = zero; ins_r = zero
-     rmv_t = zero; rmv_a = zero; rmv_r = zero
-     lsh_t = zero; lsh_a = zero; lsh_r = zero
-     rsh_t = zero; rsh_a = zero; rsh_r = zero
-     rfl_t = zero; rfl_a = zero; rfl_r = zero
+
+
 
 ! for integer arrays
 !-------------------------------------------------------------------------
