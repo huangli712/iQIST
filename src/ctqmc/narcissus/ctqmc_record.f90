@@ -1296,7 +1296,7 @@
 !!
 !! @sub ctqmc_record_pair
 !!
-!! record the particle-particle pair susceptibility
+!! record the particle-particle pairing susceptibility
 !!
   subroutine ctqmc_record_pair()
      use constants, only : dp, czero
@@ -1341,7 +1341,7 @@
      complex(dp), allocatable :: caux2(:,:)
 
 ! check whether there is conflict
-     call s_assert( btest(isvrt, 3) )
+     call s_assert( btest(isvrt, 2) )
 
 ! evaluate nfaux, determine the size of g2aux
      nfaux = nffrq + nbfrq - 1
