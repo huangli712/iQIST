@@ -26,7 +26,7 @@
 !!
 !! @var cname
 !!
-!! the code name of the current quantum impurity solver
+!! code name of the current quantum impurity solver
 !!
      character(len = 09), public, save :: cname = 'NARCISSUS'
 
@@ -73,7 +73,7 @@
 !!
 !! @var isbnd
 !!
-!! control flag, define symmetry of the model (band part)
+!! control flag, define symmetry of the impurity model (band part)
 !!
 !! if isbnd == 1:
 !!     the bands are not symmetrized
@@ -86,7 +86,7 @@
 !!
 !! @var isspn
 !!
-!! control flag, define symmetry of the model (spin part)
+!! control flag, define symmetry of the impurity model (spin part)
 !!
 !! if isspn == 1:
 !!     let spin up and spin down states evolve independently
@@ -99,8 +99,8 @@
 !!
 !! @var isbin
 !!
-!! control flag, define how to accumulate the imaginary-time impurity
-!! green's function G(\tau) data
+!! control flag, define how to accumulate the data of imaginary time
+!! impurity green's function G(\tau)
 !!
 !! if isbin == 1:
 !!     without data binning mode
@@ -113,7 +113,7 @@
 !!
 !! @var iswor
 !!
-!! control flag, define which algorithm should be used to do measurement
+!! control flag, define which algorithm will be used to do the measurement
 !!
 !! if iswor == 1:
 !!     without worm algorithm, fast but unreliable
@@ -126,13 +126,13 @@
 !!
 !! @var isort
 !!
-!! control flag, define which basis should be used to do measurement
+!! control flag, define which basis will be used to do the measurement
 !!
 !! if isort == 1:
-!!     use standard representation
+!!     using standard representation
 !!
 !! if isort == 2
-!!     use legendre orthogonal polynomial representation
+!!     using legendre orthogonal polynomial representation
 !!
      integer, public, save :: isort  = 1
 
@@ -244,7 +244,7 @@
 !!     do nothing
 !!
 !! if p == 2:
-!!     calculate two-particle green's function and vertex function
+!!     calculate two-particle green's function
 !!
 !! if p == 3:
 !!     calculate particle-particle pairing susceptibility
@@ -267,7 +267,7 @@
 !!
 !! @var nspin
 !!
-!! number of spin projection
+!! number of spin projections
 !!
      integer, public, save :: nspin  = 2
 
@@ -281,7 +281,7 @@
 !!
 !! @var ncfgs
 !!
-!! number of atomic states (= 2**norbs)
+!! number of atomic eigenstates (= 2**norbs)
 !!
      integer, public, save :: ncfgs  = 4
 
@@ -299,7 +299,7 @@
 !!
 !! @var lemax
 !!
-!! maximum order for legendre polynomial
+!! maximum expansion order for legendre polynomial
 !!
      integer, public, save :: lemax  = 32
 
@@ -346,15 +346,15 @@
 !! @var nfreq
 !!
 !! number of matsubara frequencies sampled by continuous time quantum
-!! Monte Carlo quantum impurity solver. then the values for other points
-!! should be evaluated by using the Hubbard-I approximation
+!! Monte Carlo quantum impurity solver directly. the values for the other
+!! points should be evaluated by using the numerical or analytical tricks
 !!
      integer, public, save :: nfreq  = 128
 
 !!
 !! @var ntime
 !!
-!! number of imaginary time slices sampling by continuous time quantum
+!! number of imaginary time slices sampled by continuous time quantum
 !! Monte Carlo quantum impurity solver
 !!
      integer, public, save :: ntime  = 1024
@@ -386,14 +386,14 @@
 !!
 !! @var ntherm
 !!
-!! maximum number of thermalization steps
+!! number of thermalization steps
 !!
      integer, public, save :: ntherm = 200000
 
 !!
 !! @var nsweep
 !!
-!! maximum number of quantum Monte Carlo sampling steps
+!! number of Monte Carlo sweeping steps
 !!
      integer, public, save :: nsweep = 20000000
 
@@ -439,21 +439,21 @@
 !!
 !! @var Uc
 !!
-!! intraorbital Coulomb interaction
+!! intra-orbital Coulomb interaction
 !!
      real(dp), public, save :: Uc    = 4.00_dp
 
 !!
 !! @var Uv
 !!
-!! interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
+!! inter-orbital Coulomb interaction
 !!
      real(dp), public, save :: Uv    = 4.00_dp
 
 !!
 !! @var Jz
 !!
-!! Hund's exchange interaction in z axis (Jz = Js = Jp = J)
+!! Hund's exchange interaction in z axis
 !!
      real(dp), public, save :: Jz    = 0.00_dp
 
