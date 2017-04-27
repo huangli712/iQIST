@@ -30,7 +30,7 @@
      use parser, only : p_get
      use parser, only : p_destroy
      use mmpi, only : mp_bcast
-     use mmpi, onlt : mp_barrier
+     use mmpi, only : mp_barrier
 
      use control ! ALL
 
@@ -44,13 +44,14 @@
 !!>>> setup general control flags                                      <<<
 !!========================================================================
      isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
-     issun  = 2            ! without symmetry    (1) or with symmetry   mode (2)
+     isscr  = 1            ! normal (1) or holstein-hubbard (2) or plasmon pole (3) or ohmic model (4)
+     isbnd  = 2            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
+
      isbin  = 2            ! without binning     (1) or with binning    mode (2)
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      issus  = 1            ! without suscept.    (1) or with susceptibility  (2)
      isvrt  = 1            ! without vertex      (1) or with vertex function (2)
-     isscr  = 1            ! normal (1) or holstein-hubbard (2) or plasmon pole (3) or ohmic model (4)
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================

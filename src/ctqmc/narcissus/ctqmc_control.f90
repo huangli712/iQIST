@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           04/25/2017 by li huang (last modified)
+!!!           04/27/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -97,19 +97,6 @@
      integer, public, save :: isspn  = 1
 
 !!
-!! @var iswor
-!!
-!! control flag, define which algorithm should be used to do measurement
-!!
-!! if iswor == 1:
-!!     without worm algorithm, fast but unreliable
-!!
-!! if iswor == 2
-!!     with worm algorithm, slow but reliable
-!!
-     integer, public, save :: iswor  = 1
-
-!!
 !! @var isbin
 !!
 !! control flag, define how to accumulate the imaginary-time impurity
@@ -122,6 +109,19 @@
 !!     with data binning mode
 !!
      integer, public, save :: isbin  = 1
+
+!!
+!! @var iswor
+!!
+!! control flag, define which algorithm should be used to do measurement
+!!
+!! if iswor == 1:
+!!     without worm algorithm, fast but unreliable
+!!
+!! if iswor == 2
+!!     with worm algorithm, slow but reliable
+!!
+     integer, public, save :: iswor  = 1
 
 !!
 !! @var isort
