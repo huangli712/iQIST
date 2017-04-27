@@ -792,7 +792,8 @@
 !!
 !! @sub ctqmc_record_schi
 !!
-!! record the spin-spin correlation function in imaginary time axis
+!! record the spin-spin correlation function
+!! in imaginary time axis
 !!
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
@@ -881,7 +882,8 @@
 !!
 !! @sub ctqmc_record_sfom
 !!
-!! record the spin-spin correlation function in matsubara frequency axis
+!! record the spin-spin correlation function
+!! in matsubara frequency axis
 !!
   subroutine ctqmc_record_sfom()
      use constants, only : dp, zero, one, two, pi, czi
@@ -998,7 +1000,8 @@
 !!
 !! @sub ctqmc_record_ochi
 !!
-!! record the orbital-orbital correlation function imaginary-time version
+!! record the orbital-orbital correlation function
+!! in imaginary time axis
 !!
   subroutine ctqmc_record_ochi()
      use constants, only : dp, zero
@@ -1069,7 +1072,8 @@
 !!
 !! @sub ctqmc_record_ofom
 !!
-!! record the orbital-orbital correlation function matsubara frequency version
+!! record the orbital-orbital correlation function 
+!! in matsubara frequency axis
 !!
   subroutine ctqmc_record_ofom()
      use constants, only : dp, zero, two, pi, czi
@@ -1078,7 +1082,8 @@
      use control, only : norbs
      use control, only : nbfrq
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e,
+     use context, only : time_s, time_e
      use context, only : oofom
      use context, only : rank
 
