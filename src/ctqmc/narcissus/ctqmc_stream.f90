@@ -616,6 +616,9 @@
      integer  :: i
      integer  :: k
 
+! used to check whether the input file (solver.eimp.in) exists
+     logical  :: exists
+
 ! setup initial symm
      symm = 1
 
