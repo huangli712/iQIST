@@ -426,10 +426,8 @@
      ps_re   = zero
      ps_im   = zero
 
-
-
-
-
+!>>> ctqmc_umat module
+!-------------------------------------------------------------------------
 
 ! init rank  array
      rank    = 0
@@ -441,16 +439,28 @@
 ! stts = 3 : full occupation case
      stts    = 0
 
-
-
-
 ! init prefactor for improved estimator
      pref    = zero
+
+! some variables have been initialized at ctqmc_setup_model()
+
+!>>> ctqmc_mmat module
+!-------------------------------------------------------------------------
 
 ! init M-matrix related array
      mmat    = zero
      lspace  = zero
      rspace  = zero
+
+! init G-matrix related array
+     gmat    = czero
+     lsaves  = czero
+     rsaves  = czero
+
+
+
+
+
 
 ! init imaginary time impurity green's function array
      gtau    = zero
@@ -462,10 +472,7 @@
 ! for complex arrays
 !-------------------------------------------------------------------------
 
-! init G-matrix related array
-     gmat    = czero
-     lsaves  = czero
-     rsaves  = czero
+
 
 ! init impurity green's function array
      grnf    = czero
