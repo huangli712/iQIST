@@ -61,17 +61,17 @@
      nband  = 1         ! number of correlated bands
      nspin  = 2         ! number of spin projection
      norbs  = 2         ! number of correlated orbitals (= nband * nspin)
-     ncfgs  = 4         ! number of atomic states
-     niter  = 20        ! maximum number of DMFT + CTQMC self-consistent iterations
+     ncfgs  = 4         ! number of atomic eigenstates
+     niter  = 20        ! maximum number of self-consistent iterations
 !-------------------------------------------------------------------------
-     U      = 4.00_dp   ! U : average Coulomb interaction
-     Uc     = 4.00_dp   ! Uc: intraorbital Coulomb interaction
-     Uv     = 4.00_dp   ! Uv: interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
-     Jz     = 0.00_dp   ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
-     Js     = 0.00_dp   ! Js: spin-flip term
-     Jp     = 0.00_dp   ! Jp: pair-hopping term
-     lc     = 1.00_dp   ! lc: screening strength
-     wc     = 1.00_dp   ! wc: screening frequency
+     U      = 4.00_dp   ! average Coulomb interaction
+     Uc     = 4.00_dp   ! intraorbital Coulomb interaction
+     Uv     = 4.00_dp   ! interorbital Coulomb interaction
+     Jz     = 0.00_dp   ! Hund's exchange interaction in z axis
+     Js     = 0.00_dp   ! spin-flip term
+     Jp     = 0.00_dp   ! pair-hopping term
+     lc     = 1.00_dp   ! screening strength
+     wc     = 1.00_dp   ! screening frequency
 !-------------------------------------------------------------------------
      mune   = 2.00_dp   ! chemical potential or fermi level
      beta   = 8.00_dp   ! inversion of temperature
@@ -88,17 +88,17 @@
      mkink  = 1024      ! maximum perturbation expansions order
      mfreq  = 8193      ! maximum number of matsubara frequency
 !-------------------------------------------------------------------------
-     nffrq  = 32        ! number of matsubara frequency for the two-particle green's function
-     nbfrq  = 8         ! number of bosonic frequncy for the two-particle green's function
-     nfreq  = 128       ! maximum number of matsubara frequency sampling by quantum impurity solver
+     nffrq  = 32        ! number of fermionic frequency
+     nbfrq  = 8         ! number of bosonic frequncy
+     nfreq  = 128       ! number of sampled matsubara frequency
      ntime  = 1024      ! number of time slice
      nflip  = 20000     ! flip period for spin up and spin down states
      ntherm = 200000    ! maximum number of thermalization steps
      nsweep = 20000000  ! maximum number of quantum Monte Carlo sampling steps
      nwrite = 2000000   ! output period
      nclean = 100000    ! clean update period
-     nmonte = 10        ! how often to sampling the gmat and nmat
-     ncarlo = 10        ! how often to sampling the gtau and prob
+     nmonte = 10        ! how often to sample the observables
+     ncarlo = 10        ! how often to sample the observables
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! read in input file if possible, only master node can do it

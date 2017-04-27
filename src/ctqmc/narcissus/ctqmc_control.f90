@@ -345,7 +345,7 @@
 !!
 !! @var nfreq
 !!
-!! number of matsubara frequencies sampling by continuous time quantum
+!! number of matsubara frequencies sampled by continuous time quantum
 !! Monte Carlo quantum impurity solver. then the values for other points
 !! should be evaluated by using the Hubbard-I approximation
 !!
@@ -414,14 +414,14 @@
 !!
 !! @var nmonte
 !!
-!! how often to sampling the physical observables
+!! how often to sample the physical observables
 !!
      integer, public, save :: nmonte = 10
 
 !!
 !! @var ncarlo
 !!
-!! how often to sampling the physical observables
+!! how often to sample the physical observables
 !!
      integer, public, save :: ncarlo = 10
 
