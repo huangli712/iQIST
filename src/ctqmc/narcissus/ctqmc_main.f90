@@ -61,7 +61,7 @@
 
 ! allocate memory spaces for continuous time quantum Monte Carlo quantum
 ! impurity solver and dynamical mean field theory self-consistent engine
-     call ctqmc_setup_array()
+     call ctqmc_alloc_array()
 
 ! setup the Hamiltonian for continuous time quantum Monte Carlo quantum
 ! impurity solver and dynamical mean field theory self-consistent engine

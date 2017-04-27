@@ -2,7 +2,7 @@
 !!! project : narcissus
 !!! program : ctqmc_setup_param
 !!!           ctqmc_setup_model
-!!!           ctqmc_setup_array
+!!!           ctqmc_alloc_array
 !!!           ctqmc_reset_array
 !!!           ctqmc_final_array <<<---
 !!!           ctqmc_input_mesh_
@@ -274,11 +274,11 @@
   end subroutine ctqmc_setup_model
 
 !!
-!! @sub ctqmc_setup_array
+!! @sub ctqmc_alloc_array
 !!
 !! allocate memory for global variables and then initialize them
 !!
-  subroutine ctqmc_setup_array()
+  subroutine ctqmc_alloc_array()
      use context ! ALL
 
      implicit none
@@ -296,7 +296,7 @@
      call ctqmc_allocate_memory_smat()
 
      return
-  end subroutine ctqmc_setup_array
+  end subroutine ctqmc_alloc_array
 
 !!
 !! @sub ctqmc_solver_init
