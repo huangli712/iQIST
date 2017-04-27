@@ -254,7 +254,9 @@
   subroutine ctqmc_setup_model()
      use constants, only : zero, one, two, pi
 
+     use control, only : lemax, legrd
      use control, only : mfreq
+     use control, only : ntime
      use control, only : beta
      use context, only : tmesh, rmesh, lmesh, rep_l
 
