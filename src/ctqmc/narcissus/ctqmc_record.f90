@@ -1674,6 +1674,10 @@
      return
   end subroutine ctqmc_reduce_nmat
 
+!!========================================================================
+!!>>> reduce physical observables 2                                    <<<
+!!========================================================================
+
 !!
 !! @sub ctqmc_reduce_gtau
 !!
@@ -1807,7 +1811,7 @@
 !!
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp, zero, czero, czi
-     use mmpi, only : mp_allreduce,
+     use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
      use control, only : norbs
@@ -1884,6 +1888,10 @@
 
      return
   end subroutine ctqmc_reduce_grnf
+
+!!========================================================================
+!!>>> reduce physical observables 3                                    <<<
+!!========================================================================
 
 !!
 !! @sub ctqmc_reduce_kmat
@@ -2103,6 +2111,10 @@
 
      return
   end subroutine ctqmc_reduce_szpw
+
+!!========================================================================
+!!>>> reduce physical observables 4                                    <<<
+!!========================================================================
 
 !!
 !! @sub ctqmc_reduce_schi
@@ -2375,6 +2387,10 @@
 
      return
   end subroutine ctqmc_reduce_ofom
+
+!!========================================================================
+!!>>> reduce physical observables 5                                    <<<
+!!========================================================================
 
 !!
 !! @sub ctqmc_reduce_twop
