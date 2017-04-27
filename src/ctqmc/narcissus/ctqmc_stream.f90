@@ -665,6 +665,9 @@
      integer  :: k
      integer  :: l
 
+! used to check whether the input file (solver.umat.in) exists
+     logical  :: exists
+
 ! dummy real variables
      real(dp) :: rtmp
 
