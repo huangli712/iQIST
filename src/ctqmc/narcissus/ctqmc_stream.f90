@@ -416,6 +416,15 @@
      oochi   = zero
      oofom   = zero
 
+! init two-particle green's function
+     g2_re   = zero
+     g2_im   = zero
+     h2_re   = zero
+     h2_im   = zero
+
+! init particle-particle pair susceptibility
+     ps_re   = zero
+     ps_im   = zero
 
 
 
@@ -434,27 +443,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-! init two-particle green's function
-     g2_re   = zero
-     g2_im   = zero
-     h2_re   = zero
-     h2_im   = zero
-
-! init particle-particle pair susceptibility
-     ps_re   = zero
-     ps_im   = zero
 
 ! init prefactor for improved estimator
      pref    = zero
