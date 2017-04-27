@@ -560,6 +560,9 @@
      integer  :: j
      integer  :: k
 
+! used to check whether the input file (solver.hyb.in) exists
+     logical  :: exists
+
 ! dummy real variables
      real(dp) :: rtmp
      real(dp) :: r1, r2
