@@ -3,13 +3,13 @@
 !!! program : ctqmc_setup_param
 !!!           ctqmc_setup_array
 !!!           ctqmc_setup_model
-!!!           ctqmc_solver_init
+!!!           ctqmc_reset_array
 !!!           ctqmc_final_array
 !!! source  : ctqmc_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/20/2017 by li huang (last modified)
+!!!           04/27/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
