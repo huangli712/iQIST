@@ -603,9 +603,18 @@
   end subroutine ctqmc_input_hybf_
 
   subroutine ctqmc_input_eimp_()
-     use constants, only : zero
+     use constants, only : zero, mytmp
+
+     use control, only : norbs
+     use control, only : myid, master
+     use context, only : symm, eimp
 
      implicit none
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: k
 
 ! setup initial symm
      symm = 1
