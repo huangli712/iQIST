@@ -702,6 +702,10 @@
 
      implicit none
 
+! local variables
+! dummy real variables
+     real(dp) :: rtmp
+
 ! setup initial ktau
      ktau = zero
 
