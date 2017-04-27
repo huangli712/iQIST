@@ -394,6 +394,28 @@
      nmat    = zero
      nnmat   = zero
 
+! init < k^2 > - < k >^2 array
+     kmat    = zero
+     kkmat   = zero
+
+! init fidelity susceptibility array
+     lmat    = zero
+     rmat    = zero
+     lrmat   = zero
+
+! init powers of local magnetization array
+     szpow   = zero
+
+! init spin-spin correlation function
+     schi    = zero
+     sschi   = zero
+     ssfom   = zero
+
+! init orbital-orbital correlation function
+     ochi    = zero
+     oochi   = zero
+     oofom   = zero
+
 
 
 
@@ -419,27 +441,10 @@
 
 
 
-! init < k^2 > - < k >^2 array
-     kmat    = zero
-     kkmat   = zero
 
-! init fidelity susceptibility array
-     lmat    = zero
-     rmat    = zero
-     lrmat   = zero
 
-! init powers of local magnetization array
-     szpow   = zero
 
-! init spin-spin correlation function
-     schi    = zero
-     sschi   = zero
-     ssfom   = zero
 
-! init orbital-orbital correlation function
-     ochi    = zero
-     oochi   = zero
-     oofom   = zero
 
 ! init two-particle green's function
      g2_re   = zero
