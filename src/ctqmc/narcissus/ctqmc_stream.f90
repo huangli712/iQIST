@@ -603,6 +603,8 @@
   end subroutine ctqmc_input_hybf_
 
   subroutine ctqmc_input_eimp_()
+     use constants, only : zero
+
      implicit none
 
 ! setup initial symm
