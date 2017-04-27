@@ -25,8 +25,12 @@
 !! impurity solver and dynamical mean field theory kernel
 !!
   subroutine ctqmc_setup_param()
-     use parser, only : p_create, p_parse, p_get, p_destroy
-     use mmpi, only : mp_bcast, mp_barrier
+     use parser, only : p_create
+     use parser, only : p_parse
+     use parser, only : p_get
+     use parser, only : p_destroy
+     use mmpi, only : mp_bcast
+     use mmpi, onlt : mp_barrier
 
      use control ! ALL
 
