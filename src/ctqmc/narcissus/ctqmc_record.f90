@@ -2474,7 +2474,7 @@
      h2_im_mpi = h2_im_mpi / real(nprocs)
 
      return
-  end subroutine ctqmc_reduce_vrtx
+  end subroutine ctqmc_reduce_twop
 
 !!
 !! @sub ctqmc_reduce_pair
