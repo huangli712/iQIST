@@ -2,14 +2,14 @@
 !!! project : narcissus
 !!! program : ctqmc_setup_param
 !!!           ctqmc_setup_model <<<---
-!!!           ctqmc_alloc_array
-!!!           ctqmc_reset_array
-!!!           ctqmc_final_array <<<---
 !!!           ctqmc_input_mesh_
 !!!           ctqmc_input_hybf_
 !!!           ctqmc_input_eimp_
 !!!           ctqmc_input_umat_
 !!!           ctqmc_input_ktau_ <<<---
+!!!           ctqmc_alloc_array
+!!!           ctqmc_reset_array
+!!!           ctqmc_final_array <<<---
 !!! source  : ctqmc_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
@@ -274,284 +274,7 @@
   end subroutine ctqmc_setup_model
 
 !!========================================================================
-!!>>> manage memory for quantum impurity solver                        <<<
-!!========================================================================
-
-!!
-!! @sub ctqmc_alloc_array
-!!
-!! allocate memory for global variables and then initialize them
-!!
-  subroutine ctqmc_alloc_array()
-     use context ! ALL
-
-     implicit none
-
-! allocate memory for context module
-     call ctqmc_allocate_memory_clur()
-
-     call ctqmc_allocate_memory_mesh()
-     call ctqmc_allocate_memory_meat()
-     call ctqmc_allocate_memory_umat()
-     call ctqmc_allocate_memory_mmat()
-
-     call ctqmc_allocate_memory_gmat()
-     call ctqmc_allocate_memory_wmat()
-     call ctqmc_allocate_memory_smat()
-
-     return
-  end subroutine ctqmc_alloc_array
-
-!!
-!! @sub ctqmc_reset_array
-!!
-!! initialize the key variables for continuous time quantum Monte Carlo
-!! quantum impurity solver
-!!
-  subroutine ctqmc_reset_array()
-     use constants, only : zero, czero
-
-     use spring, only : spring_sfmt_init
-     use stack, only : istack_clean
-     use stack, only : istack_push
-
-     use control ! ALL
-     use context ! ALL
-
-     implicit none
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! system time since 1970, Jan 1, used to generate the random number seed
-     integer :: system_time
-
-! random number seed for twist generator
-     integer :: stream_seed
-
-! init random number generator
-     call system_clock(system_time)
-     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
-     call spring_sfmt_init(stream_seed)
-
-!>>> ctqmc_core module
-!-------------------------------------------------------------------------
-! init global variables
-     ckink = 0
-     cstat = 0
-
-! init statistics variables
-     ins_t = zero; ins_a = zero; ins_r = zero
-     rmv_t = zero; rmv_a = zero; rmv_r = zero
-     lsh_t = zero; lsh_a = zero; lsh_r = zero
-     rsh_t = zero; rsh_a = zero; rsh_r = zero
-     rfl_t = zero; rfl_a = zero; rfl_r = zero
-
-!>>> ctqmc_clur module
-!-------------------------------------------------------------------------
-! init index
-     index_s = 0
-     index_e = 0
-
-! init time
-     time_s  = zero
-     time_e  = zero
-
-! init exponent
-     exp_s   = czero
-     exp_e   = czero
-
-! init stack
-     do i=1,norbs
-         call istack_clean( empty_s(i) )
-         call istack_clean( empty_e(i) )
-     enddo ! over i={1,norbs} loop
-
-     do i=1,norbs
-         do j=mkink,1,-1
-             call istack_push( empty_s(i), j )
-             call istack_push( empty_e(i), j )
-         enddo ! over j={mkink,1} loop
-     enddo ! over i={1,norbs} loop
-
-!>>> ctqmc_mesh module
-!-------------------------------------------------------------------------
-! the variables have been initialized at ctqmc_setup_model()
-
-!>>> ctqmc_meat module
-!-------------------------------------------------------------------------
-! init histogram
-     hist  = zero
-
-! init probability for atomic eigenstates
-     prob  = zero
-
-! init auxiliary physical observables
-     paux  = zero
-
-! init occupation number
-     nmat  = zero
-     nnmat = zero
-
-! init kinetic energy fluctuation
-     kmat  = zero
-     kkmat = zero
-
-! init fidelity susceptibility
-     lmat  = zero
-     rmat  = zero
-     lrmat = zero
-
-! init powers of local magnetization
-     szpow = zero
-
-! init spin-spin correlation function
-     schi  = zero
-     sschi = zero
-     ssfom = zero
-
-! init orbital-orbital correlation function
-     ochi  = zero
-     oochi = zero
-     oofom = zero
-
-! init two-particle green's function
-     g2_re = zero
-     g2_im = zero
-     h2_re = zero
-     h2_im = zero
-
-! init particle-particle pairing susceptibility
-     ps_re = zero
-     ps_im = zero
-
-!>>> ctqmc_umat module
-!-------------------------------------------------------------------------
-! some variables have been initialized at ctqmc_setup_model()
-
-! init rank array
-     rank = 0
-
-! init stts array
-     stts = 0
-
-! init prefactor for improved estimator
-     pref = zero
-
-!>>> ctqmc_mmat module
-!-------------------------------------------------------------------------
-! init M-matrix related array
-     mmat   = zero
-     lspace = zero
-     rspace = zero
-
-! init G-matrix related array
-     gmat   = czero
-     lsaves = czero
-     rsaves = czero
-
-!>>> ctqmc_gmat module
-!-------------------------------------------------------------------------
-! init imaginary time impurity green's function
-     gtau = zero
-     ftau = zero
-
-! init matsubara impurity green's function
-     grnf = czero
-     frnf = czero
-
-!>>> ctqmc_wmat module
-!-------------------------------------------------------------------------
-! some variables have been initialized at ctqmc_setup_model()
-
-! init imaginary time bath weiss's function
-     wtau = zero
-
-! init matsubara bath weiss's function
-     wssf = czero
-
-!>>> ctqmc_smat module
-!-------------------------------------------------------------------------
-! note: sig1 should not be reinitialized here, since it is used to keep
-! the persistency of self-energy function
-!<     sig1 = czero
-
-! init self-energy function
-     sig2 = czero
-
-!>>> postprocess some variables/arrays
-!-------------------------------------------------------------------------
-! fourier hybridization function from matsubara frequency space to
-! imaginary time space
-     call ctqmc_four_hybf(hybf, htau)
-
-! symmetrize the hybridization function on imaginary time axis if needed
-     call ctqmc_symm_gtau(symm, htau)
-
-! calculate the 2nd-derivates of htau, which is used in spline subroutines
-     call ctqmc_eval_hsed(htau, hsed)
-
-! calculate the 2nd-derivates of ktau, which is used in spline subroutines
-     call ctqmc_eval_ksed(ktau, ksed)
-
-! calculate the 2nd-derivates of ptau, which is used in spline subroutines
-     call ctqmc_eval_ksed(ptau, psed)
-
-!>>> dump the necessary files
-!-------------------------------------------------------------------------
-! write out the hybridization function in matsubara frequency axis
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hybf(hybf)
-     endif ! back if ( myid == master ) block
-
-! write out the hybridization function on imaginary time axis
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_htau(htau)
-     endif ! back if ( myid == master ) block
-
-! write out the screening function and its derivates
-     if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_ktau(ktau, ptau, ksed, psed)
-     endif ! back if ( myid == master ) block
-
-! write out the seed for random number stream, it is useful to reproduce
-! the calculation process once fatal error occurs.
-     if ( myid == master ) then ! only master node can do it
-         write(mystd,'(4X,a,i11)') 'seed:', stream_seed
-     endif ! back if ( myid == master ) block
-
-     return
-  end subroutine ctqmc_reset_array
-
-!!
-!! @sub ctqmc_final_array
-!!
-!! garbage collection for this code, please refer to ctqmc_alloc_array
-!!
-  subroutine ctqmc_final_array()
-     use context ! ALL
-
-     implicit none
-
-! deallocate memory for context module
-     call ctqmc_deallocate_memory_clur()
-
-     call ctqmc_deallocate_memory_mesh()
-     call ctqmc_deallocate_memory_meat()
-     call ctqmc_deallocate_memory_umat()
-     call ctqmc_deallocate_memory_mmat()
-
-     call ctqmc_deallocate_memory_gmat()
-     call ctqmc_deallocate_memory_wmat()
-     call ctqmc_deallocate_memory_smat()
-
-     return
-  end subroutine ctqmc_final_array
-
-!!========================================================================
-!!>>> init quantum impurity model                                      <<<
+!!>>> config quantum impurity model                                    <<<
 !!========================================================================
 
   subroutine ctqmc_input_mesh_()
@@ -857,3 +580,280 @@
 
      return
   end subroutine ctqmc_input_ktau_
+
+!!========================================================================
+!!>>> manage memory for quantum impurity solver                        <<<
+!!========================================================================
+
+!!
+!! @sub ctqmc_alloc_array
+!!
+!! allocate memory for global variables and then initialize them
+!!
+  subroutine ctqmc_alloc_array()
+     use context ! ALL
+
+     implicit none
+
+! allocate memory for context module
+     call ctqmc_allocate_memory_clur()
+
+     call ctqmc_allocate_memory_mesh()
+     call ctqmc_allocate_memory_meat()
+     call ctqmc_allocate_memory_umat()
+     call ctqmc_allocate_memory_mmat()
+
+     call ctqmc_allocate_memory_gmat()
+     call ctqmc_allocate_memory_wmat()
+     call ctqmc_allocate_memory_smat()
+
+     return
+  end subroutine ctqmc_alloc_array
+
+!!
+!! @sub ctqmc_reset_array
+!!
+!! initialize the key variables for continuous time quantum Monte Carlo
+!! quantum impurity solver
+!!
+  subroutine ctqmc_reset_array()
+     use constants, only : zero, czero
+
+     use spring, only : spring_sfmt_init
+     use stack, only : istack_clean
+     use stack, only : istack_push
+
+     use control ! ALL
+     use context ! ALL
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! system time since 1970, Jan 1, used to generate the random number seed
+     integer :: system_time
+
+! random number seed for twist generator
+     integer :: stream_seed
+
+! init random number generator
+     call system_clock(system_time)
+     stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
+     call spring_sfmt_init(stream_seed)
+
+!>>> ctqmc_core module
+!-------------------------------------------------------------------------
+! init global variables
+     ckink = 0
+     cstat = 0
+
+! init statistics variables
+     ins_t = zero; ins_a = zero; ins_r = zero
+     rmv_t = zero; rmv_a = zero; rmv_r = zero
+     lsh_t = zero; lsh_a = zero; lsh_r = zero
+     rsh_t = zero; rsh_a = zero; rsh_r = zero
+     rfl_t = zero; rfl_a = zero; rfl_r = zero
+
+!>>> ctqmc_clur module
+!-------------------------------------------------------------------------
+! init index
+     index_s = 0
+     index_e = 0
+
+! init time
+     time_s  = zero
+     time_e  = zero
+
+! init exponent
+     exp_s   = czero
+     exp_e   = czero
+
+! init stack
+     do i=1,norbs
+         call istack_clean( empty_s(i) )
+         call istack_clean( empty_e(i) )
+     enddo ! over i={1,norbs} loop
+
+     do i=1,norbs
+         do j=mkink,1,-1
+             call istack_push( empty_s(i), j )
+             call istack_push( empty_e(i), j )
+         enddo ! over j={mkink,1} loop
+     enddo ! over i={1,norbs} loop
+
+!>>> ctqmc_mesh module
+!-------------------------------------------------------------------------
+! the variables have been initialized at ctqmc_setup_model()
+
+!>>> ctqmc_meat module
+!-------------------------------------------------------------------------
+! init histogram
+     hist  = zero
+
+! init probability for atomic eigenstates
+     prob  = zero
+
+! init auxiliary physical observables
+     paux  = zero
+
+! init occupation number
+     nmat  = zero
+     nnmat = zero
+
+! init kinetic energy fluctuation
+     kmat  = zero
+     kkmat = zero
+
+! init fidelity susceptibility
+     lmat  = zero
+     rmat  = zero
+     lrmat = zero
+
+! init powers of local magnetization
+     szpow = zero
+
+! init spin-spin correlation function
+     schi  = zero
+     sschi = zero
+     ssfom = zero
+
+! init orbital-orbital correlation function
+     ochi  = zero
+     oochi = zero
+     oofom = zero
+
+! init two-particle green's function
+     g2_re = zero
+     g2_im = zero
+     h2_re = zero
+     h2_im = zero
+
+! init particle-particle pairing susceptibility
+     ps_re = zero
+     ps_im = zero
+
+!>>> ctqmc_umat module
+!-------------------------------------------------------------------------
+! some variables have been initialized at ctqmc_setup_model()
+
+! init rank array
+     rank = 0
+
+! init stts array
+     stts = 0
+
+! init prefactor for improved estimator
+     pref = zero
+
+!>>> ctqmc_mmat module
+!-------------------------------------------------------------------------
+! init M-matrix related array
+     mmat   = zero
+     lspace = zero
+     rspace = zero
+
+! init G-matrix related array
+     gmat   = czero
+     lsaves = czero
+     rsaves = czero
+
+!>>> ctqmc_gmat module
+!-------------------------------------------------------------------------
+! init imaginary time impurity green's function
+     gtau = zero
+     ftau = zero
+
+! init matsubara impurity green's function
+     grnf = czero
+     frnf = czero
+
+!>>> ctqmc_wmat module
+!-------------------------------------------------------------------------
+! some variables have been initialized at ctqmc_setup_model()
+
+! init imaginary time bath weiss's function
+     wtau = zero
+
+! init matsubara bath weiss's function
+     wssf = czero
+
+!>>> ctqmc_smat module
+!-------------------------------------------------------------------------
+! note: sig1 should not be reinitialized here, since it is used to keep
+! the persistency of self-energy function
+!<     sig1 = czero
+
+! init self-energy function
+     sig2 = czero
+
+!>>> postprocess some variables/arrays
+!-------------------------------------------------------------------------
+! fourier hybridization function from matsubara frequency space to
+! imaginary time space
+     call ctqmc_four_hybf(hybf, htau)
+
+! symmetrize the hybridization function on imaginary time axis if needed
+     call ctqmc_symm_gtau(symm, htau)
+
+! calculate the 2nd-derivates of htau, which is used in spline subroutines
+     call ctqmc_eval_hsed(htau, hsed)
+
+! calculate the 2nd-derivates of ktau, which is used in spline subroutines
+     call ctqmc_eval_ksed(ktau, ksed)
+
+! calculate the 2nd-derivates of ptau, which is used in spline subroutines
+     call ctqmc_eval_ksed(ptau, psed)
+
+!>>> dump the necessary files
+!-------------------------------------------------------------------------
+! write out the hybridization function in matsubara frequency axis
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_hybf(hybf)
+     endif ! back if ( myid == master ) block
+
+! write out the hybridization function on imaginary time axis
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_htau(htau)
+     endif ! back if ( myid == master ) block
+
+! write out the screening function and its derivates
+     if ( myid == master ) then ! only master node can do it
+         call ctqmc_dump_ktau(ktau, ptau, ksed, psed)
+     endif ! back if ( myid == master ) block
+
+! write out the seed for random number stream, it is useful to reproduce
+! the calculation process once fatal error occurs.
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a,i11)') 'seed:', stream_seed
+     endif ! back if ( myid == master ) block
+
+     return
+  end subroutine ctqmc_reset_array
+
+!!
+!! @sub ctqmc_final_array
+!!
+!! garbage collection for this code, please refer to ctqmc_alloc_array
+!!
+  subroutine ctqmc_final_array()
+     use context ! ALL
+
+     implicit none
+
+! deallocate memory for context module
+     call ctqmc_deallocate_memory_clur()
+
+     call ctqmc_deallocate_memory_mesh()
+     call ctqmc_deallocate_memory_meat()
+     call ctqmc_deallocate_memory_umat()
+     call ctqmc_deallocate_memory_mmat()
+
+     call ctqmc_deallocate_memory_gmat()
+     call ctqmc_deallocate_memory_wmat()
+     call ctqmc_deallocate_memory_smat()
+
+     return
+  end subroutine ctqmc_final_array
