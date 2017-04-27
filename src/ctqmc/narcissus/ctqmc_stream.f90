@@ -419,62 +419,54 @@
      h2_re = zero
      h2_im = zero
 
-! init particle-particle pair susceptibility
+! init particle-particle pairing susceptibility
      ps_re = zero
      ps_im = zero
 
 !>>> ctqmc_umat module
 !-------------------------------------------------------------------------
+! some variables have been initialized at ctqmc_setup_model()
 
-! init rank  array
-     rank    = 0
+! init rank array
+     rank = 0
 
-! init stts  array
-! stts = 0 : null occupation case
-! stts = 1 : partial occupation case, segment scheme
-! stts = 2 : partial occupation case, anti-segment scheme
-! stts = 3 : full occupation case
-     stts    = 0
+! init stts array
+     stts = 0
 
 ! init prefactor for improved estimator
-     pref    = zero
-
-! some variables have been initialized at ctqmc_setup_model()
+     pref = zero
 
 !>>> ctqmc_mmat module
 !-------------------------------------------------------------------------
-
 ! init M-matrix related array
-     mmat    = zero
-     lspace  = zero
-     rspace  = zero
+     mmat   = zero
+     lspace = zero
+     rspace = zero
 
 ! init G-matrix related array
-     gmat    = czero
-     lsaves  = czero
-     rsaves  = czero
+     gmat   = czero
+     lsaves = czero
+     rsaves = czero
 
 !>>> ctqmc_gmat module
 !-------------------------------------------------------------------------
+! init imaginary time impurity green's function
+     gtau = zero
+     ftau = zero
 
-! init imaginary time impurity green's function array
-     gtau    = zero
-     ftau    = zero
-
-! init impurity green's function array
-     grnf    = czero
-     frnf    = czero
+! init matsubara impurity green's function
+     grnf = czero
+     frnf = czero
 
 !>>> ctqmc_wmat module
 !-------------------------------------------------------------------------
-
-! init imaginary time bath weiss's function array
-     wtau    = zero
-
-! init bath weiss's function array
-     wssf    = czero
-
 ! some variables have been initialized at ctqmc_setup_model()
+
+! init imaginary time bath weiss's function
+     wtau = zero
+
+! init matsubara bath weiss's function
+     wssf = czero
 
 !>>> ctqmc_smat module
 !-------------------------------------------------------------------------
