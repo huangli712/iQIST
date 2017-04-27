@@ -398,8 +398,15 @@
      return
   end subroutine ctqmc_input_hybf_
 
+!!
+!! @sub ctqmc_input_eimp_
+!!
+!! try to build symmetry array and impurity level from solver.eimp.in
+!!
   subroutine ctqmc_input_eimp_()
      use constants, only : zero, mytmp
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : myid, master
