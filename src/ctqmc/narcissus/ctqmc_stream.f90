@@ -254,6 +254,8 @@
   subroutine ctqmc_setup_model()
      use constants, only : zero, two
 
+     use control, only : mfreq
+     use control, only : beta
      use context, only : tmesh, rmesh
 
      implicit none
