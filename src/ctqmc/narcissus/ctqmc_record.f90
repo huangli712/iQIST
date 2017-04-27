@@ -2399,11 +2399,6 @@
 !!>>> reduce physical observables 5                                    <<<
 !!========================================================================
 
-!!
-!! @sub ctqmc_reduce_twop
-!!
-!! reduce the g2_re_mpi and g2_im_mpi from all children processes
-!!
   subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce, mp_barrier
@@ -2455,13 +2450,15 @@
 !!
 !! reduce the h2_re_mpi and h2_im_mpi from all children processes
 !!
-  subroutine ctqmc_reduce_vrtx(h2_re_mpi, h2_im_mpi)
+  subroutine ctqmc_reduce_vrtx(g2_re_mpi, g2_im_mpi, h2_re_mpi, h2_im_mpi)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : nprocs
+     use context, only : g2_re, g2_im
      use context, only : h2_re, h2_im
 
      implicit none
