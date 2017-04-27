@@ -2399,52 +2399,6 @@
 !!>>> reduce physical observables 5                                    <<<
 !!========================================================================
 
-  subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi)
-     use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
-
-     use control, only : norbs
-     use control, only : nffrq, nbfrq
-     use control, only : nprocs
-     use context, only : g2_re, g2_im
-
-     implicit none
-
-! external arguments
-! two-particle green's function, real part
-     real(dp), intent(out) :: g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! two-particle green's function, imaginary part
-     real(dp), intent(out) :: g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! initialize g2_re_mpi and g2_im_mpi
-     g2_re_mpi = zero
-     g2_im_mpi = zero
-
-! build g2_re_mpi and g2_im_mpi, collect data from all children processes
-# if defined (MPI)
-
-! collect data
-     call mp_allreduce(g2_re, g2_re_mpi)
-     call mp_allreduce(g2_im, g2_im_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# else  /* MPI */
-
-     g2_re_mpi = g2_re
-     g2_im_mpi = g2_im
-
-# endif /* MPI */
-
-! calculate the average
-     g2_re_mpi = g2_re_mpi / real(nprocs)
-     g2_im_mpi = g2_im_mpi / real(nprocs)
-
-     return
-  end subroutine ctqmc_reduce_twop
-
 !!
 !! @sub ctqmc_reduce_vrtx
 !!
@@ -2465,17 +2419,35 @@
 
 ! external arguments
 ! two-particle green's function, real part
+     real(dp), intent(out) :: g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! two-particle green's function, imaginary part
+     real(dp), intent(out) :: g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! two-particle green's function, real part
      real(dp), intent(out) :: h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! two-particle green's function, imaginary part
      real(dp), intent(out) :: h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
 
+! initialize g2_re_mpi and g2_im_mpi
+     g2_re_mpi = zero
+     g2_im_mpi = zero
+
 ! initialize h2_re_mpi and h2_im_mpi
      h2_re_mpi = zero
      h2_im_mpi = zero
 
+! build g2_re_mpi and g2_im_mpi, collect data from all children processes
 ! build h2_re_mpi and h2_im_mpi, collect data from all children processes
 # if defined (MPI)
+
+! collect data
+     call mp_allreduce(g2_re, g2_re_mpi)
+     call mp_allreduce(g2_im, g2_im_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
 
 ! collect data
      call mp_allreduce(h2_re, h2_re_mpi)
@@ -2486,12 +2458,18 @@
 
 # else  /* MPI */
 
+     g2_re_mpi = g2_re
+     g2_im_mpi = g2_im
+
      h2_re_mpi = h2_re
      h2_im_mpi = h2_im
 
 # endif /* MPI */
 
 ! calculate the average
+     g2_re_mpi = g2_re_mpi / real(nprocs)
+     g2_im_mpi = g2_im_mpi / real(nprocs)
+
      h2_re_mpi = h2_re_mpi / real(nprocs)
      h2_im_mpi = h2_im_mpi / real(nprocs)
 
