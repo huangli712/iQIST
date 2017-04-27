@@ -31,7 +31,7 @@
      use control, only : isscf               ! control running scheme
      use control, only : isscr               ! control dynamic interaction
      use control, only : isbnd, isspn        ! control symmetry
-     use control, only : iswor, isbin, isort ! control measurement tricks
+     use control, only : isbin, iswor, isort ! control measurement tricks
      use control, only : isobs, issus, isvrt ! control physical observables
      use control, only : nband, norbs, ncfgs ! size of model Hamiltonian
      use control, only : mkink               ! perturbation expansion order
@@ -270,8 +270,8 @@
          write(mystd,'(4X,a,i2)') 'dynamic interaction     :', isscr
          write(mystd,'(4X,a,i2)') 'symmetry (band part)    :', isbnd
          write(mystd,'(4X,a,i2)') 'symmetry (spin part)    :', isspn
-         write(mystd,'(4X,a,i2)') 'worm algorithm          :', iswor
          write(mystd,'(4X,a,i2)') 'data binning            :', isbin
+         write(mystd,'(4X,a,i2)') 'worm algorithm          :', iswor
          write(mystd,'(4X,a,i2)') 'advanced basis          :', isort
          write(mystd,'(4X,a,i2)') 'fidelity susceptibility :', isobs
          write(mystd,'(4X,a,i2)') 'sp/ch susceptibility    :', issus
