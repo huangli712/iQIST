@@ -478,9 +478,7 @@
      call ctqmc_four_hybf(hybf, htau)
 
 ! symmetrize the hybridization function on imaginary time axis if needed
-     if ( issun == 2 .or. isspn == 1 ) then
-         call ctqmc_symm_gtau(symm, htau)
-     endif ! back if ( issun == 2 .or. isspn == 1 ) block
+     call ctqmc_symm_gtau(symm, htau)
 
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
      call ctqmc_eval_hsed(tmesh, htau, hsed)
