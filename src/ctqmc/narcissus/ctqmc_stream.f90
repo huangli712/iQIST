@@ -43,11 +43,11 @@
 !!========================================================================
 !!>>> setup general control flags                                      <<<
 !!========================================================================
-     isscf  = 2            ! non-self-consistent (1) or self-consistent mode (2)
+     isscf  = 1            ! non-self-consistent (1) or self-consistent mode (2)
      isscr  = 1            ! normal (1) or holstein-hubbard (2) or plasmon pole (3) or ohmic model (4)
-     isbnd  = 2            ! without symmetry    (1) or with symmetry   mode (2)
+     isbnd  = 1            ! without symmetry    (1) or with symmetry   mode (2)
      isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
-     isbin  = 2            ! without binning     (1) or with binning    mode (2)
+     isbin  = 1            ! without binning     (1) or with binning    mode (2)
      iswor  = 1
      isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
      isobs  = 1
@@ -60,8 +60,8 @@
 !!========================================================================
      nband  = 1            ! number of correlated bands
      nspin  = 2            ! number of spin projection
-     norbs  = nspin*nband  ! number of correlated orbitals (= nband * nspin)
-     ncfgs  = 2**norbs     ! number of atomic states
+     norbs  = 2  ! number of correlated orbitals (= nband * nspin)
+     ncfgs  = 4     ! number of atomic states
      niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp      ! U : average Coulomb interaction
@@ -84,8 +84,6 @@
 !!========================================================================
      lemax  = 32           ! maximum order for legendre polynomial
      legrd  = 20001        ! number of mesh points for legendre polynomial
-     chmax  = 32           ! maximum order for chebyshev polynomial
-     chgrd  = 20001        ! number of mesh points for chebyshev polynomial
 !-------------------------------------------------------------------------
      mkink  = 1024         ! maximum perturbation expansions order
      mfreq  = 8193         ! maximum number of matsubara frequency
