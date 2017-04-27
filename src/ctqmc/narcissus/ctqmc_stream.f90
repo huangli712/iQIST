@@ -332,11 +332,11 @@
      stream_seed = abs( system_time - ( myid * 1981 + 2008 ) * 951049 )
      call spring_sfmt_init(stream_seed)
 
-! ctqmc_core module
+!>>> ctqmc_core module
 !-------------------------------------------------------------------------
 ! init global variables
-     ckink   = 0
-     cstat   = 0
+     ckink = 0
+     cstat = 0
 
 ! init statistics variables
      ins_t = zero; ins_a = zero; ins_r = zero
@@ -345,14 +345,20 @@
      rsh_t = zero; rsh_a = zero; rsh_r = zero
      rfl_t = zero; rfl_a = zero; rfl_r = zero
 
+!>>> ctqmc_clur module
+!-------------------------------------------------------------------------
 
+! init index array
+     index_s = 0
+     index_e = 0
 
+! init time array
+     time_s  = zero
+     time_e  = zero
 
-
-
-
-
-
+! init exponent array exp_s and exp_e
+     exp_s   = czero
+     exp_e   = czero
 
 ! init empty_s and empty_e stack structure
      do i=1,norbs
@@ -367,16 +373,11 @@
          enddo ! over j={mkink,1} loop
      enddo ! over i={1,norbs} loop
 
-! for integer variables
-
-
-
-
-! for integer arrays
+!>>> ctqmc_mesh module
 !-------------------------------------------------------------------------
-! init index array
-     index_s = 0
-     index_e = 0
+
+! the variables have been initialized at ctqmc_setup_model()
+
 
 ! init rank  array
      rank    = 0
@@ -390,9 +391,7 @@
 
 ! for real arrays
 !-------------------------------------------------------------------------
-! init time  array
-     time_s  = zero
-     time_e  = zero
+
 
 ! init hist  array
      hist    = zero
@@ -456,9 +455,6 @@
 
 ! for complex arrays
 !-------------------------------------------------------------------------
-! init exponent array exp_s and exp_e
-     exp_s   = czero
-     exp_e   = czero
 
 ! init G-matrix related array
      gmat    = czero
