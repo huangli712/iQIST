@@ -543,8 +543,9 @@
   end subroutine ctqmc_final_array
 
   subroutine ctqmc_input_hybf_()
-     use constants, only : dp, two
+     use constants, only : dp, one, two
 
+     use control, only : part
      use context, only : hybf
 
      implicit none
