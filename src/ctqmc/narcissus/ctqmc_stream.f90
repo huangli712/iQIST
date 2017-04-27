@@ -355,6 +355,7 @@
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
+!-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
@@ -380,6 +381,7 @@
 
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! since the hybridization function may be updated in master node, it is
 ! important to broadcast it from root to all children processes
