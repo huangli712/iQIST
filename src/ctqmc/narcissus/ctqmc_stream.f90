@@ -457,29 +457,30 @@
      lsaves  = czero
      rsaves  = czero
 
-
-
-
-
+!>>> ctqmc_gmat module
+!-------------------------------------------------------------------------
 
 ! init imaginary time impurity green's function array
      gtau    = zero
      ftau    = zero
 
-! init imaginary time bath weiss's function array
-     wtau    = zero
-
-! for complex arrays
-!-------------------------------------------------------------------------
-
-
-
 ! init impurity green's function array
      grnf    = czero
      frnf    = czero
 
+!>>> ctqmc_wmat module
+!-------------------------------------------------------------------------
+
+! init imaginary time bath weiss's function array
+     wtau    = zero
+
 ! init bath weiss's function array
      wssf    = czero
+
+! some variables have been initialized at ctqmc_setup_model()
+
+!>>> ctqmc_smat module
+!-------------------------------------------------------------------------
 
 ! init self-energy function array
 ! note: sig1 should not be reinitialized here, since it is used to keep
