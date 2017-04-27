@@ -1157,12 +1157,12 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_record_vrtx
+!! @sub ctqmc_record_twop
 !!
-!! record the two-particle green's function improved estimator is used to
-!! improve the accuracy
+!! record the two-particle green's function. here improved estimator is
+!! used to improve the accuracy
 !!
-  subroutine ctqmc_record_vrtx()
+  subroutine ctqmc_record_twop()
      use constants, only : dp, czero
 
      use control, only : isvrt
@@ -1290,7 +1290,7 @@
      deallocate( caux2 )
 
      return
-  end subroutine ctqmc_record_vrtx
+  end subroutine ctqmc_record_twop
 
 !!
 !! @sub ctqmc_record_pair
