@@ -792,7 +792,7 @@
 !!
 !! @sub ctqmc_record_schi
 !!
-!! record the spin-spin correlation function in imaginary-time axis
+!! record the spin-spin correlation function in imaginary time axis
 !!
   subroutine ctqmc_record_schi()
      use constants, only : dp, zero
@@ -856,7 +856,7 @@
                  enddo ! over n={m+1,ntime} loop
              endif ! back if ( oaux(m,f1) > zero ) block
 
-             if ( oaux(m,f1+nband) > zero ) then ! oaux(m,f1+nband) = one
+             if ( oaux(m,f1+nband) > zero ) then
 ! n - m + ntime \in [ntime - m + 1, ntime]
                  do n=1,m
                      schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1+nband)
@@ -881,7 +881,7 @@
 !!
 !! @sub ctqmc_record_sfom
 !!
-!! record the spin-spin correlation function matsubara frequency version
+!! record the spin-spin correlation function in matsubara frequency axis
 !!
   subroutine ctqmc_record_sfom()
      use constants, only : dp, zero, one, two, pi, czi
@@ -890,7 +890,8 @@
      use control, only : nband, norbs
      use control, only : nbfrq
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : ssfom
      use context, only : rank
 
