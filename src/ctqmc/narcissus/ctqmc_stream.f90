@@ -309,8 +309,15 @@
      return
   end subroutine ctqmc_input_mesh_
 
+!!
+!! @sub ctqmc_input_hybf_
+!!
+!! try to build initial hybridization function from solver.hyb.in
+!!
   subroutine ctqmc_input_hybf_()
      use constants, only : dp, one, two, czi, czero, mytmp
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : mfreq
@@ -335,9 +342,12 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
-! using the analytical equation at non-interaction limit, and then
-! build initial hybridization function using self-consistent condition
+! build initial green's function using the analytical equation at
+! non-interaction limit:
+!     G = i * 2.0 * ( w - sqrt(w*w + 1) ),
+! and then build initial hybridization function using self-consistent
+! condition:
+!     \Delta = t^2 * G
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
          hybf(i,:,:) = hybf(i,:,:) * (part**2) * (czi*two)
@@ -345,7 +355,6 @@
      enddo ! over i={1,mfreq} loop
 
 ! read in initial hybridization function if available
-!-------------------------------------------------------------------------
      if ( myid == master ) then ! only master node can do it
          exists = .false.
 
