@@ -309,58 +309,6 @@
 
 
 
-! setup initial ktau
-     ktau = zero
-
-! setup initial ptau
-     ptau = zero
-
-! read in initial screening function and its derivates if available
-!-------------------------------------------------------------------------
-     if ( myid == master ) then ! only master node can do it
-         exists = .false.
-
-! inquire about file's existence
-         inquire (file = 'solver.ktau.in', exist = exists)
-
-! find input file: solver.ktau.in, read it
-         if ( exists .eqv. .true. ) then
-
-! read in screening function and its derivates from solver.ktau.in
-             open(mytmp, file='solver.ktau.in', form='formatted', status='unknown')
-             read(mytmp,*) ! skip one line
-             do i=1,ntime
-                 read(mytmp,*) rtmp, ktau(i), ptau(i)
-             enddo ! over i={1,ntime} loop
-             close(mytmp)
-
-         else
-             if ( isscr == 99 ) then
-                 call s_print_error('ctqmc_selfer_init','solver.ktau.in does not exist')
-             endif ! back if ( isscr == 99 ) block
-         endif ! back if ( exists .eqv. .true. ) block
-     endif ! back if ( myid == master ) block
-
-! since the screening function and its derivates may be updated in master
-! node, it is important to broadcast it from root to all children processes
-# if defined (MPI)
-
-! broadcast data
-     call mp_bcast(ktau, master)
-
-! broadcast data
-     call mp_bcast(ptau, master)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# endif  /* MPI */
-
-! FINAL STEP
-!-------------------------------------------------------------------------
-! shift the Coulomb interaction matrix and chemical potential if retarded
-! interaction or the so-called dynamical screening effect is considered
-     call ctqmc_make_shift(uumat, one)
 
      return
   end subroutine ctqmc_setup_model
@@ -768,4 +716,57 @@
   end subroutine ctqmc_input_umat_
 
   subroutine ctqmc_input_ktau_()
+! setup initial ktau
+     ktau = zero
+
+! setup initial ptau
+     ptau = zero
+
+! read in initial screening function and its derivates if available
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
+
+! inquire about file's existence
+         inquire (file = 'solver.ktau.in', exist = exists)
+
+! find input file: solver.ktau.in, read it
+         if ( exists .eqv. .true. ) then
+
+! read in screening function and its derivates from solver.ktau.in
+             open(mytmp, file='solver.ktau.in', form='formatted', status='unknown')
+             read(mytmp,*) ! skip one line
+             do i=1,ntime
+                 read(mytmp,*) rtmp, ktau(i), ptau(i)
+             enddo ! over i={1,ntime} loop
+             close(mytmp)
+
+         else
+             if ( isscr == 99 ) then
+                 call s_print_error('ctqmc_selfer_init','solver.ktau.in does not exist')
+             endif ! back if ( isscr == 99 ) block
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+
+! since the screening function and its derivates may be updated in master
+! node, it is important to broadcast it from root to all children processes
+# if defined (MPI)
+
+! broadcast data
+     call mp_bcast(ktau, master)
+
+! broadcast data
+     call mp_bcast(ptau, master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif  /* MPI */
+
+! FINAL STEP
+!-------------------------------------------------------------------------
+! shift the Coulomb interaction matrix and chemical potential if retarded
+! interaction or the so-called dynamical screening effect is considered
+     call ctqmc_make_shift(uumat, one)
+
   end subroutine ctqmc_input_ktau_
