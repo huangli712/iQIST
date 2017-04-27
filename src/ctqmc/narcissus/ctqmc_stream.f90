@@ -307,46 +307,6 @@
 
 
 
-! setup initial symm
-     symm = 1
-
-! setup initial eimp
-     eimp = zero
-
-! read in impurity level and orbital symmetry if available
-!-------------------------------------------------------------------------
-     if ( myid == master ) then ! only master node can do it
-         exists = .false.
-
-! inquire about file's existence
-         inquire (file = 'solver.eimp.in', exist = exists)
-
-! find input file: solver.eimp.in, read it
-         if ( exists .eqv. .true. ) then
-
-! read in impurity level from solver.eimp.in
-             open(mytmp, file='solver.eimp.in', form='formatted', status='unknown')
-             do i=1,norbs
-                 read(mytmp,*) k, eimp(i), symm(i)
-             enddo ! over i={1,norbs} loop
-             close(mytmp)
-
-         endif ! back if ( exists .eqv. .true. ) block
-     endif ! back if ( myid == master ) block
-
-! broadcast eimp and symm from master node to all children nodes
-# if defined (MPI)
-
-! broadcast data
-     call mp_bcast(eimp, master)
-
-! broadcast data
-     call mp_bcast(symm, master)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-# endif  /* MPI */
 
 ! calculate two-index Coulomb interaction, uumat
      call ctqmc_make_uumat(uumat)
@@ -758,3 +718,47 @@
 # endif  /* MPI */
 
   end subroutine ctqmc_input_hybf_
+
+  subroutine ctqmc_input_eimp_()
+! setup initial symm
+     symm = 1
+
+! setup initial eimp
+     eimp = zero
+
+! read in impurity level and orbital symmetry if available
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only master node can do it
+         exists = .false.
+
+! inquire about file's existence
+         inquire (file = 'solver.eimp.in', exist = exists)
+
+! find input file: solver.eimp.in, read it
+         if ( exists .eqv. .true. ) then
+
+! read in impurity level from solver.eimp.in
+             open(mytmp, file='solver.eimp.in', form='formatted', status='unknown')
+             do i=1,norbs
+                 read(mytmp,*) k, eimp(i), symm(i)
+             enddo ! over i={1,norbs} loop
+             close(mytmp)
+
+         endif ! back if ( exists .eqv. .true. ) block
+     endif ! back if ( myid == master ) block
+
+! broadcast eimp and symm from master node to all children nodes
+# if defined (MPI)
+
+! broadcast data
+     call mp_bcast(eimp, master)
+
+! broadcast data
+     call mp_bcast(symm, master)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif  /* MPI */
+
+  end subroutine ctqmc_input_eimp_
