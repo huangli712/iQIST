@@ -1974,7 +1974,8 @@
 !!
   subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nprocs
@@ -2059,7 +2060,8 @@
 !!
   subroutine ctqmc_reduce_szpw(szpow_mpi, szpow_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nprocs
