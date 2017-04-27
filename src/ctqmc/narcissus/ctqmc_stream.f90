@@ -543,9 +543,12 @@
   end subroutine ctqmc_final_array
 
   subroutine ctqmc_input_hybf_()
-     use constants, only : dp, one, two
+     use constants, only : dp, one, two, mytmp
 
+     use control, only : norbs
      use control, only : part
+     use control, only : myid, master
+     use context, only : rmesh
      use context, only : hybf
 
      implicit none
