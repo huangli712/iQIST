@@ -5,6 +5,7 @@
 !!!           ctqmc_setup_array
 !!!           ctqmc_reset_array
 !!!           ctqmc_final_array <<<---
+!!!           ctqmc_input_mesh_
 !!!           ctqmc_input_hybf_
 !!!           ctqmc_input_eimp_
 !!!           ctqmc_input_umat_
@@ -23,7 +24,7 @@
 !!!-----------------------------------------------------------------------
 
 !!========================================================================
-!!>>> start/stop quantum impurity solver                               <<<
+!!>>> construct/destroy quantum impurity solver                        <<<
 !!========================================================================
 
 !!
@@ -252,27 +253,7 @@
 !! impurity solver and dynamical mean field theory kernel
 !!
   subroutine ctqmc_setup_model()
-     use constants, only : zero, one, two, pi
 
-     use control, only : lemax, legrd
-     use control, only : mfreq
-     use control, only : ntime
-     use control, only : beta
-     use context, only : tmesh, rmesh, lmesh, rep_l
-
-     implicit none
-
-! build imaginary time tau mesh: tmesh
-     call s_linspace_d(zero, beta, ntime, tmesh)
-
-! build matsubara frequency mesh: rmesh
-     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
-
-! build mesh for legendre polynomial in [-1,1]
-     call s_linspace_d(-one, one, legrd, lmesh)
-
-! build legendre polynomial in [-1,1]
-     call s_legendre(lemax, legrd, lmesh, rep_l)
 
 ! build initial hybridization function (hybf)
      call ctqmc_input_hybf_()
@@ -550,6 +531,32 @@
 
      return
   end subroutine ctqmc_final_array
+
+  subroutine ctqmc_input_mesh_()
+     use constants, only : zero, one, two, pi
+
+     use control, only : lemax, legrd
+     use control, only : mfreq
+     use control, only : ntime
+     use control, only : beta
+     use context, only : tmesh, rmesh, lmesh, rep_l
+
+     implicit none
+
+! build imaginary time tau mesh: tmesh
+     call s_linspace_d(zero, beta, ntime, tmesh)
+
+! build matsubara frequency mesh: rmesh
+     call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
+
+! build mesh for legendre polynomial in [-1,1]
+     call s_linspace_d(-one, one, legrd, lmesh)
+
+! build legendre polynomial in [-1,1]
+     call s_legendre(lemax, legrd, lmesh, rep_l)
+
+     return
+  end subroutine ctqmc_input_mesh_
 
   subroutine ctqmc_input_hybf_()
      use constants, only : dp, one, two, czi, czero, mytmp
