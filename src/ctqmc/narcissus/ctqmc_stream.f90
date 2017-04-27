@@ -650,6 +650,10 @@
   end subroutine ctqmc_input_eimp_
 
   subroutine ctqmc_input_umat_()
+     use constants, only : dp, mytmp
+
+     use control, only : norbs
+     use control, only : myid, master
      use context, only : uumat
 
      implicit none
