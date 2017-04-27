@@ -2339,7 +2339,8 @@
 !!
   subroutine ctqmc_reduce_ofom(oofom_mpi, oofom_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nbfrq
