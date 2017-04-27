@@ -331,7 +331,7 @@
 !!
 !! @var nffrq
 !!
-!! number of matsubara frequencies for the two-particle green's function
+!! number of fermionic frequencies for the two-particle green's function
 !!
      integer, public, save :: nffrq  = 32
 
