@@ -269,9 +269,6 @@
 ! build mesh for legendre polynomial in [-1,1]
      call s_linspace_d(-one, one, legrd, pmesh)
 
-! build mesh for chebyshev polynomial in [-1,1]
-     call s_linspace_d(-one, one, chgrd, qmesh)
-
 ! build legendre polynomial in [-1,1]
      call s_legendre(lemax, legrd, pmesh, ppleg)
 
