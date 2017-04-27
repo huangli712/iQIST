@@ -1900,7 +1900,8 @@
 !!
   subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nprocs
