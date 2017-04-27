@@ -659,6 +659,12 @@
      implicit none
 
 ! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+     integer  :: k
+     integer  :: l
+
 ! dummy real variables
      real(dp) :: rtmp
 
