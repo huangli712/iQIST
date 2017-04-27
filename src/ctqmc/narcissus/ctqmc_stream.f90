@@ -262,8 +262,6 @@
 
      implicit none
 
-! local variables
-
 ! build imaginary time tau mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
 
@@ -275,6 +273,18 @@
 
 ! build legendre polynomial in [-1,1]
      call s_legendre(lemax, legrd, lmesh, rep_l)
+
+! build initial hybridization function (hybf)
+     call ctqmc_input_hybf_()
+
+! build symmetry vector and impurity level (symm and eimp)
+     call ctqmc_input_eimp_()
+
+! build Coulomb interaction matrix (uumat)
+     call ctqmc_input_umat_()
+
+! build dynamic interaction if available (ktau and ptau)
+     call ctqmc_input_ktau_()
 
      return
   end subroutine ctqmc_setup_model
