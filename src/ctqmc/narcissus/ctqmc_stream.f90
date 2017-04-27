@@ -650,7 +650,13 @@
   end subroutine ctqmc_input_eimp_
 
   subroutine ctqmc_input_umat_()
+     use context, only : uumat
+
      implicit none
+
+! local variables
+! dummy real variables
+     real(dp) :: rtmp
 
 ! calculate two-index Coulomb interaction, uumat
      call ctqmc_make_uumat(uumat)
