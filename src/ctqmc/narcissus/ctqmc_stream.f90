@@ -543,7 +543,7 @@
   end subroutine ctqmc_final_array
 
   subroutine ctqmc_input_hybf_()
-     use constants, only : dp, one, two, mytmp
+     use constants, only : dp, one, two, czi, czero, mytmp
 
      use control, only : norbs
      use control, only : mfreq
