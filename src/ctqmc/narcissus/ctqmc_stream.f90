@@ -257,7 +257,7 @@
 
      use control, only : isscr
      use control, only : norbs
-     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : lemax, legrd
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta, part
@@ -302,13 +302,6 @@
 ! build chebyshev polynomial in [-1,1]
 ! note: it is second kind chebyshev polynomial
      call s_chebyshev(chmax, chgrd, qmesh, qqche)
-
-
-
-
-
-
-
 
      return
   end subroutine ctqmc_setup_model
