@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/26/2017 by li huang (last modified)
+!!!           04/27/2017 by li huang (last modified)
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -2400,11 +2400,11 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_reduce_vrtx
+!! @sub ctqmc_reduce_twop
 !!
-!! reduce the h2_re_mpi and h2_im_mpi from all children processes
+!! reduce the g2/h2_re_mpi and g2/h2_im_mpi from all children processes
 !!
-  subroutine ctqmc_reduce_vrtx(g2_re_mpi, g2_im_mpi, h2_re_mpi, h2_im_mpi)
+  subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi, h2_re_mpi, h2_im_mpi)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
