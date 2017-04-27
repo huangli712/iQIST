@@ -289,11 +289,12 @@
      use control, only : mfreq
      use control, only : ntime
      use control, only : beta
-     use context, only : tmesh, rmesh, lmesh, rep_l
+     use context, only : tmesh, rmesh
+     use context, only : lmesh, rep_l
 
      implicit none
 
-! build imaginary time tau mesh: tmesh
+! build imaginary time mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
 
 ! build matsubara frequency mesh: rmesh
