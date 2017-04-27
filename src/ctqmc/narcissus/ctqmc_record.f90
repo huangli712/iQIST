@@ -1538,10 +1538,67 @@
      return
   end subroutine ctqmc_reduce_prob
 
+!!
+!! @sub ctqmc_reduce_paux
+!!
+!! reduce the paux from all children processes
+!!
+  subroutine ctqmc_reduce_paux(paux_mpi, paux_err)
+     use constants, only : dp, zero
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
+     use control, only : ncfgs
+     use control, only : nprocs
+     use context, only : paux
 
+     implicit none
 
+! external arguments
+! auxiliary physical observables
+     real(dp), intent(out) :: paux_mpi(  9  )
+     real(dp), intent(out) :: paux_err(  9  )
 
+! initialize paux_mpi and paux_err
+     paux_mpi = zero
+     paux_err = zero
+
+! build paux_mpi, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(paux, paux_mpi)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# else  /* MPI */
+
+     paux_mpi = paux
+
+# endif /* MPI */
+
+! calculate the average
+     paux_mpi = paux_mpi / real(nprocs)
+
+! build paux_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce((paux - paux_mpi)**2, paux_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         paux_err = sqrt( paux_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+     return
+  end subroutine ctqmc_reduce_paux
 
 !!
 !! @sub ctqmc_reduce_nmat
