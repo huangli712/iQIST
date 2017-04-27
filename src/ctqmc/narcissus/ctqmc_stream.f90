@@ -363,7 +363,7 @@
      rmv_t = zero; rmv_a = zero; rmv_r = zero
      lsh_t = zero; lsh_a = zero; lsh_r = zero
      rsh_t = zero; rsh_a = zero; rsh_r = zero
-     reflip_t = zero; reflip_a = zero; reflip_r = zero
+     rfl_t = zero; rfl_a = zero; rfl_r = zero
 
 ! for integer arrays
 !-------------------------------------------------------------------------
