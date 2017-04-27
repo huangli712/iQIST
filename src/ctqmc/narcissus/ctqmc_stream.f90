@@ -694,8 +694,9 @@
   end subroutine ctqmc_input_umat_
 
   subroutine ctqmc_input_ktau_()
-     use constants, only : zero, one, mytmp
+     use constants, only : dp, zero, one, mytmp
 
+     use control, only : isscr
      use control, only : ntime
      use control, only : myid, master
      use context, only : ktau, ptau, uumat
@@ -703,6 +704,12 @@
      implicit none
 
 ! local variables
+! loop index
+     integer  :: i
+
+! used to check whether the input file (solver.ktau.in) exists
+     logical  :: exists
+
 ! dummy real variables
      real(dp) :: rtmp
 
