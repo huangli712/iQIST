@@ -252,6 +252,10 @@
 !! impurity solver and dynamical mean field theory kernel
 !!
   subroutine ctqmc_setup_model()
+     use constants, only : zero, two
+
+     use context, only : tmesh, rmesh
+
      implicit none
 
 ! local variables
