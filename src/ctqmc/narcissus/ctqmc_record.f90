@@ -1082,7 +1082,7 @@
      use control, only : norbs
      use control, only : nbfrq
      use control, only : beta
-     use context, only : index_s, index_e,
+     use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : oofom
      use context, only : rank
