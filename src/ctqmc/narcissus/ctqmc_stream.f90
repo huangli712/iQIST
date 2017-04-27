@@ -557,6 +557,8 @@
 ! local variables
 ! loop index
      integer  :: i
+     integer  :: j
+     integer  :: k
 
 ! dummy real variables
      real(dp) :: rtmp
