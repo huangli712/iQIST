@@ -1,7 +1,7 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
 !!! program : ctqmc_setup_param
-!!!           ctqmc_setup_model
+!!!           ctqmc_setup_model <<<---
 !!!           ctqmc_alloc_array
 !!!           ctqmc_reset_array
 !!!           ctqmc_final_array <<<---
@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/27/2017 by li huang (last modified)
+!!!           04/28/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -24,7 +24,7 @@
 !!!-----------------------------------------------------------------------
 
 !!========================================================================
-!!>>> construct/destroy quantum impurity solver                        <<<
+!!>>> config quantum impurity solver                                   <<<
 !!========================================================================
 
 !!
@@ -272,6 +272,10 @@
 
      return
   end subroutine ctqmc_setup_model
+
+!!========================================================================
+!!>>> manage memory for quantum impurity solver                        <<<
+!!========================================================================
 
 !!
 !! @sub ctqmc_alloc_array
