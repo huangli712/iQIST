@@ -213,8 +213,6 @@
 
      call mp_bcast( lemax , master )
      call mp_bcast( legrd , master )
-     call mp_bcast( chmax , master )
-     call mp_bcast( chgrd , master )
      call mp_barrier()
 
      call mp_bcast( mkink , master )
