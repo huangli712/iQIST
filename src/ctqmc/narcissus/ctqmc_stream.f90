@@ -1,10 +1,14 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
 !!! program : ctqmc_setup_param
-!!!           ctqmc_setup_array
 !!!           ctqmc_setup_model
+!!!           ctqmc_setup_array
 !!!           ctqmc_reset_array
-!!!           ctqmc_final_array
+!!!           ctqmc_final_array <<<---
+!!!           ctqmc_input_hybf_
+!!!           ctqmc_input_eimp_
+!!!           ctqmc_input_ktau_
+!!!           ctqmc_input_uumat <<<---
 !!! source  : ctqmc_stream.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
