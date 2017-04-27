@@ -543,7 +543,12 @@
   end subroutine ctqmc_final_array
 
   subroutine ctqmc_input_hybf_()
+     use context, only : hybf
+
      implicit none
+
+! local variables
+     integer  :: i
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
@@ -689,6 +694,10 @@
   end subroutine ctqmc_input_umat_
 
   subroutine ctqmc_input_ktau_()
+     use constants, only : zero, one
+
+     use context, only : ptau, uumat
+
      implicit none
 
 ! setup initial ktau
