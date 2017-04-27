@@ -470,17 +470,17 @@
 
 !>>> ctqmc_smat module
 !-------------------------------------------------------------------------
-
-! init self-energy function array
 ! note: sig1 should not be reinitialized here, since it is used to keep
 ! the persistency of self-energy function
-!<     sig1    = czero
-     sig2    = czero
+!<     sig1 = czero
 
-! for the other variables/arrays
+! init self-energy function
+     sig2 = czero
+
+!>>> postprocess some variables/arrays
 !-------------------------------------------------------------------------
-! fourier transformation hybridization function from matsubara frequency
-! space to imaginary time space
+! fourier hybridization function from matsubara frequency space to
+! imaginary time space
      call ctqmc_four_hybf(hybf, htau)
 
 ! symmetrize the hybridization function on imaginary time axis if needed
@@ -495,21 +495,21 @@
 ! calculate the 2nd-derivates of ptau, which is used in spline subroutines
      call ctqmc_eval_ksed(tmesh, ptau, psed)
 
-! dump the necessary files
+!>>> dump the necessary files
 !-------------------------------------------------------------------------
 ! write out the hybridization function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_hybf(rmesh, hybf)
+         call ctqmc_dump_hybf(hybf)
      endif ! back if ( myid == master ) block
 
 ! write out the hybridization function on imaginary time axis
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_htau(tmesh, htau)
+         call ctqmc_dump_htau(htau)
      endif ! back if ( myid == master ) block
 
 ! write out the screening function and its derivates
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_ktau(tmesh, ktau, ptau, ksed, psed)
+         call ctqmc_dump_ktau(ktau, ptau, ksed, psed)
      endif ! back if ( myid == master ) block
 
 ! write out the seed for random number stream, it is useful to reproduce
@@ -524,7 +524,7 @@
 !!
 !! @sub ctqmc_final_array
 !!
-!! garbage collection for this code, please refer to ctqmc_setup_array
+!! garbage collection for this code, please refer to ctqmc_alloc_array
 !!
   subroutine ctqmc_final_array()
      use context ! ALL
@@ -545,6 +545,10 @@
 
      return
   end subroutine ctqmc_final_array
+
+!!========================================================================
+!!>>> init quantum impurity model                                      <<<
+!!========================================================================
 
   subroutine ctqmc_input_mesh_()
      use constants, only : zero, one, two, pi
