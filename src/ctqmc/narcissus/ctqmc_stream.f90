@@ -43,62 +43,62 @@
 !!========================================================================
 !!>>> setup general control flags                                      <<<
 !!========================================================================
-     isscf  = 1            ! non-self-consistent (1) or self-consistent mode (2)
-     isscr  = 1            ! normal (1) or holstein-hubbard (2) or plasmon pole (3) or ohmic model (4)
-     isbnd  = 1            ! without symmetry    (1) or with symmetry   mode (2)
-     isspn  = 1            ! spin projection, PM (1) or AFM             mode (2)
-     isbin  = 1            ! without binning     (1) or with binning    mode (2)
-     iswor  = 1
-     isort  = 1            ! normal measurement  (1) or legendre polynomial  (2) or chebyshev polynomial (3)
-     isobs  = 1
-     issus  = 1            ! without suscept.    (1) or with susceptibility  (2)
-     isvrt  = 1            ! without vertex      (1) or with vertex function (2)
+     isscf  = 1         ! self-consistent scheme
+     isscr  = 1         ! dynamic interaction
+     isbnd  = 1         ! symmetry (band part)
+     isspn  = 1         ! symmetry (spin part)
+     isbin  = 1         ! data binning
+     iswor  = 1         ! worm algorithm
+     isort  = 1         ! advanced basis
+     isobs  = 1         ! various physical observables
+     issus  = 1         ! charge susceptibility and spin susceptibility
+     isvrt  = 1         ! two-particle green's function
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
 !!>>> setup common variables for quantum impurity model                <<<
 !!========================================================================
-     nband  = 1            ! number of correlated bands
-     nspin  = 2            ! number of spin projection
-     norbs  = 2  ! number of correlated orbitals (= nband * nspin)
-     ncfgs  = 4     ! number of atomic states
-     niter  = 20           ! maximum number of DMFT + CTQMC self-consistent iterations
+     nband  = 1         ! number of correlated bands
+     nspin  = 2         ! number of spin projection
+     norbs  = 2         ! number of correlated orbitals (= nband * nspin)
+     ncfgs  = 4         ! number of atomic states
+     niter  = 20        ! maximum number of DMFT + CTQMC self-consistent iterations
 !-------------------------------------------------------------------------
-     U      = 4.00_dp      ! U : average Coulomb interaction
-     Uc     = 4.00_dp      ! Uc: intraorbital Coulomb interaction
-     Uv     = 4.00_dp      ! Uv: interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
-     Jz     = 0.00_dp      ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
-     Js     = 0.00_dp      ! Js: spin-flip term
-     Jp     = 0.00_dp      ! Jp: pair-hopping term
-     lc     = 1.00_dp      ! lc: screening strength
-     wc     = 1.00_dp      ! wc: screening frequency
+     U      = 4.00_dp   ! U : average Coulomb interaction
+     Uc     = 4.00_dp   ! Uc: intraorbital Coulomb interaction
+     Uv     = 4.00_dp   ! Uv: interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
+     Jz     = 0.00_dp   ! Jz: Hund's exchange interaction in z axis (Jz = Js = Jp = J)
+     Js     = 0.00_dp   ! Js: spin-flip term
+     Jp     = 0.00_dp   ! Jp: pair-hopping term
+     lc     = 1.00_dp   ! lc: screening strength
+     wc     = 1.00_dp   ! wc: screening frequency
 !-------------------------------------------------------------------------
-     mune   = 2.00_dp      ! chemical potential or fermi level
-     beta   = 8.00_dp      ! inversion of temperature
-     part   = 0.50_dp      ! coupling parameter t for Hubbard model
-     alpha  = 0.70_dp      ! mixing parameter for self-consistent engine
+     mune   = 2.00_dp   ! chemical potential or fermi level
+     beta   = 8.00_dp   ! inversion of temperature
+     part   = 0.50_dp   ! coupling parameter t for Hubbard model
+     alpha  = 0.70_dp   ! mixing parameter for self-consistent engine
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
 !!>>> setup common variables for quantum impurity solver               <<<
 !!========================================================================
-     lemax  = 32           ! maximum order for legendre polynomial
-     legrd  = 20001        ! number of mesh points for legendre polynomial
+     lemax  = 32        ! maximum order for legendre polynomial
+     legrd  = 20001     ! number of mesh points for legendre polynomial
 !-------------------------------------------------------------------------
-     mkink  = 1024         ! maximum perturbation expansions order
-     mfreq  = 8193         ! maximum number of matsubara frequency
+     mkink  = 1024      ! maximum perturbation expansions order
+     mfreq  = 8193      ! maximum number of matsubara frequency
 !-------------------------------------------------------------------------
-     nffrq  = 32           ! number of matsubara frequency for the two-particle green's function
-     nbfrq  = 8            ! number of bosonic frequncy for the two-particle green's function
-     nfreq  = 128          ! maximum number of matsubara frequency sampling by quantum impurity solver
-     ntime  = 1024         ! number of time slice
-     nflip  = 20000        ! flip period for spin up and spin down states
-     ntherm = 200000       ! maximum number of thermalization steps
-     nsweep = 20000000     ! maximum number of quantum Monte Carlo sampling steps
-     nwrite = 2000000      ! output period
-     nclean = 100000       ! clean update period
-     nmonte = 10           ! how often to sampling the gmat and nmat
-     ncarlo = 10           ! how often to sampling the gtau and prob
+     nffrq  = 32        ! number of matsubara frequency for the two-particle green's function
+     nbfrq  = 8         ! number of bosonic frequncy for the two-particle green's function
+     nfreq  = 128       ! maximum number of matsubara frequency sampling by quantum impurity solver
+     ntime  = 1024      ! number of time slice
+     nflip  = 20000     ! flip period for spin up and spin down states
+     ntherm = 200000    ! maximum number of thermalization steps
+     nsweep = 20000000  ! maximum number of quantum Monte Carlo sampling steps
+     nwrite = 2000000   ! output period
+     nclean = 100000    ! clean update period
+     nmonte = 10        ! how often to sampling the gmat and nmat
+     ncarlo = 10        ! how often to sampling the gtau and prob
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! read in input file if possible, only master node can do it
