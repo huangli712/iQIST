@@ -252,36 +252,9 @@
 !! impurity solver and dynamical mean field theory kernel
 !!
   subroutine ctqmc_setup_model()
-     use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
-
-     use control, only : isscr
-     use control, only : norbs
-     use control, only : lemax, legrd
-     use control, only : mfreq
-     use control, only : ntime
-     use control, only : beta, part
-     use control, only : myid, master
-     use context, only : tmesh, rmesh, pmesh, qmesh, ppleg, qqche
-     use context, only : symm, eimp, ktau, ptau, uumat
-     use context, only : hybf
-
      implicit none
 
 ! local variables
-! loop index
-     integer  :: i
-     integer  :: j
-     integer  :: k
-     integer  :: l
-
-! used to check whether the input file (solver.hyb.in or solver.eimp.in
-! or solver.umat.in or solver.ktau.in) exists
-     logical  :: exists
-
-! dummy real variables
-     real(dp) :: rtmp
-     real(dp) :: r1, r2
-     real(dp) :: i1, i2
 
 ! build imaginary time tau mesh: tmesh
      call s_linspace_d(zero, beta, ntime, tmesh)
