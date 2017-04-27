@@ -253,7 +253,6 @@
 !!
   subroutine ctqmc_setup_model()
      use constants, only : dp, zero, one, two, pi, czi, czero, mytmp
-     use mmpi, only : mp_bcast, mp_barrier
 
      use control, only : isscr
      use control, only : norbs
