@@ -22,6 +22,10 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
+!!========================================================================
+!!>>> start/stop quantum impurity solver                               <<<
+!!========================================================================
+
 !!
 !! @sub ctqmc_setup_param
 !!
@@ -240,31 +244,6 @@
 
      return
   end subroutine ctqmc_setup_param
-
-!!
-!! @sub ctqmc_setup_array
-!!
-!! allocate memory for global variables and then initialize them
-!!
-  subroutine ctqmc_setup_array()
-     use context ! ALL
-
-     implicit none
-
-! allocate memory for context module
-     call ctqmc_allocate_memory_clur()
-
-     call ctqmc_allocate_memory_mesh()
-     call ctqmc_allocate_memory_meat()
-     call ctqmc_allocate_memory_umat()
-     call ctqmc_allocate_memory_mmat()
-
-     call ctqmc_allocate_memory_gmat()
-     call ctqmc_allocate_memory_wmat()
-     call ctqmc_allocate_memory_smat()
-
-     return
-  end subroutine ctqmc_setup_array
 
 !!
 !! @sub ctqmc_setup_model
@@ -507,6 +486,31 @@
 
      return
   end subroutine ctqmc_setup_model
+
+!!
+!! @sub ctqmc_setup_array
+!!
+!! allocate memory for global variables and then initialize them
+!!
+  subroutine ctqmc_setup_array()
+     use context ! ALL
+
+     implicit none
+
+! allocate memory for context module
+     call ctqmc_allocate_memory_clur()
+
+     call ctqmc_allocate_memory_mesh()
+     call ctqmc_allocate_memory_meat()
+     call ctqmc_allocate_memory_umat()
+     call ctqmc_allocate_memory_mmat()
+
+     call ctqmc_allocate_memory_gmat()
+     call ctqmc_allocate_memory_wmat()
+     call ctqmc_allocate_memory_smat()
+
+     return
+  end subroutine ctqmc_setup_array
 
 !!
 !! @sub ctqmc_solver_init
