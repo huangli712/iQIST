@@ -578,6 +578,7 @@
   end subroutine ctqmc_final_array
 
   subroutine ctqmc_input_hybf_()
+     implicit none
 
 ! build initial green's function: i * 2.0 * ( w - sqrt(w*w + 1) )
 ! using the analytical equation at non-interaction limit, and then
@@ -628,9 +629,12 @@
 
 # endif  /* MPI */
 
+     return
   end subroutine ctqmc_input_hybf_
 
   subroutine ctqmc_input_eimp_()
+     implicit none
+
 ! setup initial symm
      symm = 1
 
@@ -672,9 +676,12 @@
 
 # endif  /* MPI */
 
+     return
   end subroutine ctqmc_input_eimp_
 
   subroutine ctqmc_input_umat_()
+     implicit none
+
 ! calculate two-index Coulomb interaction, uumat
      call ctqmc_make_uumat(uumat)
 
@@ -713,9 +720,12 @@
 
 # endif  /* MPI */
 
+     return
   end subroutine ctqmc_input_umat_
 
   subroutine ctqmc_input_ktau_()
+     implicit none
+
 ! setup initial ktau
      ktau = zero
 
@@ -769,4 +779,5 @@
 ! interaction or the so-called dynamical screening effect is considered
      call ctqmc_make_shift(uumat, one)
 
+     return
   end subroutine ctqmc_input_ktau_
