@@ -347,20 +347,19 @@
 
 !>>> ctqmc_clur module
 !-------------------------------------------------------------------------
-
-! init index array
+! init index
      index_s = 0
      index_e = 0
 
-! init time array
+! init time
      time_s  = zero
      time_e  = zero
 
-! init exponent array exp_s and exp_e
+! init exponent
      exp_s   = czero
      exp_e   = czero
 
-! init empty_s and empty_e stack structure
+! init stack
      do i=1,norbs
          call istack_clean( empty_s(i) )
          call istack_clean( empty_e(i) )
@@ -375,56 +374,54 @@
 
 !>>> ctqmc_mesh module
 !-------------------------------------------------------------------------
-
 ! the variables have been initialized at ctqmc_setup_model()
 
 !>>> ctqmc_meat module
 !-------------------------------------------------------------------------
+! init histogram
+     hist  = zero
 
-! init hist  array
-     hist    = zero
-
-! init probability for atomic states
-     prob    = zero
+! init probability for atomic eigenstates
+     prob  = zero
 
 ! init auxiliary physical observables
-     paux    = zero
+     paux  = zero
 
-! init occupation number array
-     nmat    = zero
-     nnmat   = zero
+! init occupation number
+     nmat  = zero
+     nnmat = zero
 
-! init < k^2 > - < k >^2 array
-     kmat    = zero
-     kkmat   = zero
+! init kinetic energy fluctuation
+     kmat  = zero
+     kkmat = zero
 
-! init fidelity susceptibility array
-     lmat    = zero
-     rmat    = zero
-     lrmat   = zero
+! init fidelity susceptibility
+     lmat  = zero
+     rmat  = zero
+     lrmat = zero
 
-! init powers of local magnetization array
-     szpow   = zero
+! init powers of local magnetization
+     szpow = zero
 
 ! init spin-spin correlation function
-     schi    = zero
-     sschi   = zero
-     ssfom   = zero
+     schi  = zero
+     sschi = zero
+     ssfom = zero
 
 ! init orbital-orbital correlation function
-     ochi    = zero
-     oochi   = zero
-     oofom   = zero
+     ochi  = zero
+     oochi = zero
+     oofom = zero
 
 ! init two-particle green's function
-     g2_re   = zero
-     g2_im   = zero
-     h2_re   = zero
-     h2_im   = zero
+     g2_re = zero
+     g2_im = zero
+     h2_re = zero
+     h2_im = zero
 
 ! init particle-particle pair susceptibility
-     ps_re   = zero
-     ps_im   = zero
+     ps_re = zero
+     ps_im = zero
 
 !>>> ctqmc_umat module
 !-------------------------------------------------------------------------
