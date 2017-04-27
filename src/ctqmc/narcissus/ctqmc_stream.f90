@@ -378,6 +378,27 @@
 
 ! the variables have been initialized at ctqmc_setup_model()
 
+!>>> ctqmc_meat module
+!-------------------------------------------------------------------------
+
+! init hist  array
+     hist    = zero
+
+! init probability for atomic states
+     prob    = zero
+
+! init auxiliary physical observables
+     paux    = zero
+
+! init occupation number array
+     nmat    = zero
+     nnmat   = zero
+
+
+
+
+
+
 
 ! init rank  array
      rank    = 0
@@ -389,22 +410,14 @@
 ! stts = 3 : full occupation case
      stts    = 0
 
-! for real arrays
-!-------------------------------------------------------------------------
 
 
-! init hist  array
-     hist    = zero
 
-! init auxiliary physical observables
-     paux    = zero
 
-! init probability for atomic states
-     prob    = zero
 
-! init occupation number array
-     nmat    = zero
-     nnmat   = zero
+
+
+
 
 ! init < k^2 > - < k >^2 array
      kmat    = zero
