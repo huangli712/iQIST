@@ -252,7 +252,7 @@
 !! impurity solver and dynamical mean field theory kernel
 !!
   subroutine ctqmc_setup_model()
-     use constants, only : zero, two
+     use constants, only : zero, one, two, pi
 
      use control, only : mfreq
      use control, only : beta
