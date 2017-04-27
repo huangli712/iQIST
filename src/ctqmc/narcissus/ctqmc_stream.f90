@@ -401,7 +401,7 @@
 !!
 !! @sub ctqmc_input_eimp_
 !!
-!! try to build symmetry array and impurity level from solver.eimp.in
+!! try to build orbital symmetry and impurity level from solver.eimp.in
 !!
   subroutine ctqmc_input_eimp_()
      use constants, only : zero, mytmp
@@ -417,7 +417,7 @@
 ! local variables
 ! loop index
      integer  :: i
-     integer  :: k
+     integer  :: j
 
 ! used to check whether the input file (solver.eimp.in) exists
      logical  :: exists
@@ -442,12 +442,13 @@
 ! read in impurity level from solver.eimp.in
              open(mytmp, file='solver.eimp.in', form='formatted', status='unknown')
              do i=1,norbs
-                 read(mytmp,*) k, eimp(i), symm(i)
+                 read(mytmp,*) j, eimp(i), symm(i)
              enddo ! over i={1,norbs} loop
              close(mytmp)
 
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! broadcast eimp and symm from master node to all children nodes
 # if defined (MPI)
