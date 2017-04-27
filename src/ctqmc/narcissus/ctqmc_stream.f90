@@ -29,6 +29,7 @@
      use parser, only : p_parse
      use parser, only : p_get
      use parser, only : p_destroy
+
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
 
@@ -51,7 +52,7 @@
      iswor  = 1         ! worm algorithm
      isort  = 1         ! advanced basis
      isobs  = 1         ! various physical observables
-     issus  = 1         ! charge susceptibility and spin susceptibility
+     issus  = 1         ! charge/spin susceptibility
      isvrt  = 1         ! two-particle green's function
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -59,14 +60,14 @@
 !!>>> setup common variables for quantum impurity model                <<<
 !!========================================================================
      nband  = 1         ! number of correlated bands
-     nspin  = 2         ! number of spin projection
+     nspin  = 2         ! number of spin projections
      norbs  = 2         ! number of correlated orbitals (= nband * nspin)
-     ncfgs  = 4         ! number of atomic eigenstates
+     ncfgs  = 4         ! number of atomic eigenstates (= 2**norbs)
      niter  = 20        ! maximum number of self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp   ! average Coulomb interaction
-     Uc     = 4.00_dp   ! intraorbital Coulomb interaction
-     Uv     = 4.00_dp   ! interorbital Coulomb interaction
+     Uc     = 4.00_dp   ! intra-orbital Coulomb interaction
+     Uv     = 4.00_dp   ! inter-orbital Coulomb interaction
      Jz     = 0.00_dp   ! Hund's exchange interaction in z axis
      Js     = 0.00_dp   ! spin-flip term
      Jp     = 0.00_dp   ! pair-hopping term
@@ -76,25 +77,25 @@
      mune   = 2.00_dp   ! chemical potential or fermi level
      beta   = 8.00_dp   ! inversion of temperature
      part   = 0.50_dp   ! coupling parameter t for Hubbard model
-     alpha  = 0.70_dp   ! mixing parameter for self-consistent engine
+     alpha  = 0.70_dp   ! mixing parameter for self-consistent iterations
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!========================================================================
 !!>>> setup common variables for quantum impurity solver               <<<
 !!========================================================================
-     lemax  = 32        ! maximum order for legendre polynomial
+     lemax  = 32        ! maximum expansion order for legendre polynomial
      legrd  = 20001     ! number of mesh points for legendre polynomial
 !-------------------------------------------------------------------------
-     mkink  = 1024      ! maximum perturbation expansions order
-     mfreq  = 8193      ! maximum number of matsubara frequency
+     mkink  = 1024      ! maximum perturbation expansion order
+     mfreq  = 8193      ! maximum number of matsubara frequency points
 !-------------------------------------------------------------------------
      nffrq  = 32        ! number of fermionic frequency
      nbfrq  = 8         ! number of bosonic frequncy
-     nfreq  = 128       ! number of sampled matsubara frequency
-     ntime  = 1024      ! number of time slice
+     nfreq  = 128       ! number of sampled matsubara frequency points
+     ntime  = 1024      ! number of time slices
      nflip  = 20000     ! flip period for spin up and spin down states
-     ntherm = 200000    ! maximum number of thermalization steps
-     nsweep = 20000000  ! maximum number of quantum Monte Carlo sampling steps
+     ntherm = 200000    ! number of thermalization steps
+     nsweep = 20000000  ! number of Monte Carlo sweeping steps
      nwrite = 2000000   ! output period
      nclean = 100000    ! clean update period
      nmonte = 10        ! how often to sample the observables
