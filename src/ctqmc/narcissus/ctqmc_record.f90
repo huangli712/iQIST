@@ -2483,7 +2483,8 @@
 !!
   subroutine ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nffrq, nbfrq
