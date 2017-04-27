@@ -359,11 +359,11 @@
 ! for real variables
 !-------------------------------------------------------------------------
 ! init statistics variables
-     insert_tcount = zero; insert_accept = zero; insert_reject = zero
-     remove_tcount = zero; remove_accept = zero; remove_reject = zero
-     lshift_tcount = zero; lshift_accept = zero; lshift_reject = zero
-     rshift_tcount = zero; rshift_accept = zero; rshift_reject = zero
-     reflip_tcount = zero; reflip_accept = zero; reflip_reject = zero
+     ins_t = zero; ins_a = zero; ins_r = zero
+     remove_t = zero; remove_a = zero; remove_r = zero
+     lsh_t = zero; lsh_a = zero; lsh_r = zero
+     rsh_t = zero; rsh_a = zero; rsh_r = zero
+     reflip_t = zero; reflip_a = zero; reflip_r = zero
 
 ! for integer arrays
 !-------------------------------------------------------------------------
