@@ -2126,7 +2126,8 @@
 !!
   subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : nband
      use control, only : ntime
@@ -2200,7 +2201,8 @@
 !!
   subroutine ctqmc_reduce_sfom(ssfom_mpi, ssfom_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : nband
      use control, only : nbfrq
@@ -2262,7 +2264,8 @@
 !!
   subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
      use constants, only : dp, zero
-     use mmpi, only : mp_allreduce, mp_barrier
+     use mmpi, only : mp_allreduce
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : ntime
