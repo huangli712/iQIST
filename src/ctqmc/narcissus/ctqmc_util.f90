@@ -1,32 +1,32 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
 !!! program : ctqmc_four_htau
-!!!           ctqmc_four_hybf  <<<---
+!!!           ctqmc_four_hybf <<<---
 !!!           ctqmc_eval_htau
-!!!           ctqmc_eval_hsed  <<<---
+!!!           ctqmc_eval_hsed <<<---
 !!!           ctqmc_eval_ktau
-!!!           ctqmc_eval_ksed  <<<---
+!!!           ctqmc_eval_ksed <<<---
 !!!           ctqmc_symm_nmat
 !!!           ctqmc_symm_gtau
-!!!           ctqmc_symm_grnf  <<<---
-!!!           ctqmc_smth_sigf  <<<---
-!!!           ctqmc_make_uumat <<<---
-!!!           ctqmc_make_state <<<---
-!!!           ctqmc_make_shift
-!!!           ctqmc_prep_shift <<<---
+!!!           ctqmc_symm_grnf <<<---
+!!!           ctqmc_smth_sigf <<<---
+!!!           ctqmc_make_umat <<<---
+!!!           ctqmc_make_fock <<<---
+!!!           ctqmc_make_lift
+!!!           ctqmc_prep_lift <<<---
 !!!           ctqmc_make_gtau
-!!!           ctqmc_make_ftau  <<<---
+!!!           ctqmc_make_ftau <<<---
 !!!           ctqmc_make_iret
-!!!           ctqmc_make_pref  <<<---
-!!!           ctqmc_make_prod  <<<---
+!!!           ctqmc_make_pref <<<---
+!!!           ctqmc_make_prod <<<---
 !!!           ctqmc_make_hub1
-!!!           ctqmc_make_hub2  <<<---
+!!!           ctqmc_make_hub2 <<<---
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           03/28/2017 by li huang (last modified)
-!!! purpose : to provide utility functions and subroutines for hybridization
+!!!           04/28/2017 by li huang (last modified)
+!!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
 !!! status  : unstable
