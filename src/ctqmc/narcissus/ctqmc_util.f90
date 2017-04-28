@@ -785,12 +785,16 @@
   end subroutine ctqmc_make_fock
 
 !!========================================================================
-!!>>> auxiliary subroutines for retarded interaction                   <<<
+!!>>> dynamic screening effect and retarded interaction                <<<
 !!========================================================================
 
-!!>>> ctqmc_make_shift: to shift the Coulomb interaction matrix and the
-!!>>> chemical potential if retarded interaction is considered
-  subroutine ctqmc_make_shift(uumat, ssign)
+!!
+!! @sub ctqmc_make_lift
+!!
+!! to shift the Coulomb interaction matrix and the chemical potential if
+!! retarded interaction is considered
+!!
+  subroutine ctqmc_make_lift(uumat, ssign)
      use constants, only : dp, two
 
      use control, only : norbs
@@ -831,7 +835,7 @@
      mune = mune - shift / two
 
      return
-  end subroutine ctqmc_make_shift
+  end subroutine ctqmc_make_lift
 
 !!>>> ctqmc_prep_shift: evaluate the shift for the Coulomb interaction and
 !!>>> the chemical potential. in fact, shift = 2 K'(\tau = 0)
