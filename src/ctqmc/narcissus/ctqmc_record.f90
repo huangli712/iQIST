@@ -36,7 +36,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/27/2017 by li huang (last modified)
+!!!           04/29/2017 by li huang (last modified)
 !!! purpose : measure, record, and postprocess the important observables
 !!!           produced by the hybridization expansion version continuous
 !!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
@@ -110,7 +110,7 @@
      enddo ! over flvr={1,norbs} loop
 
 ! convert atomic eigenstate array to index
-     call ctqmc_make_state(norbs, pstat, state)
+     call ctqmc_make_fock(norbs, pstat, state)
 
 ! accumulate the data
      prob(pstat) = prob(pstat) + one
