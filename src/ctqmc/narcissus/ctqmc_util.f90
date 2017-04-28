@@ -933,29 +933,31 @@
 ! using normal representation
 !-------------------------------------------------------------------------
      STD_BLOCK: if ( isort == 1 ) then
-     raux = real(ntime) / (beta * beta)
-     do i=1,norbs
-         do j=1,ntime
-             gaux(j,i,i) = gtau(j,i,i) * raux
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
+         raux = real(ntime) / (beta * beta)
+         do i=1,norbs
+             do j=1,ntime
+                 gaux(j,i,i) = gtau(j,i,i) * raux
+             enddo ! over j={1,ntime} loop
+         enddo ! over i={1,norbs} loop
      endif STD_BLOCK ! back if ( isort == 1 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
 ! using legendre polynomial representation
 !-------------------------------------------------------------------------
-     step = real(legrd - 1) / two
-     do i=1,norbs
-         do j=1,ntime
-             raux = two * tmesh(j) / beta
-             curr = nint(raux * step) + 1
-             do fleg=1,lemax
-                 raux = sqrt(two * fleg - 1) / (beta * beta)
-                 gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fleg,i,i) * rep_l(curr,fleg)
-             enddo ! over fleg={1,lemax} loop
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
+     LEG_BLOCK: if ( isort == 2 ) then
+         step = real(legrd - 1) / two
+         do i=1,norbs
+             do j=1,ntime
+                 raux = two * tmesh(j) / beta
+                 curr = nint(raux * step) + 1
+                 do fleg=1,lemax
+                     raux = sqrt(two * fleg - 1) / (beta * beta) * rep_l(curr,fleg)
+                     gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fleg,i,i)
+                 enddo ! over fleg={1,lemax} loop
+             enddo ! over j={1,ntime} loop
+         enddo ! over i={1,norbs} loop
+     endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
