@@ -653,7 +653,7 @@
 !!
 !! @sub ctqmc_reset_array
 !!
-!! initialize the key variables for continuous time quantum Monte Carlo
+!! reset the key variables for continuous time quantum Monte Carlo
 !! quantum impurity solver
 !!
   subroutine ctqmc_reset_array()
@@ -829,10 +829,9 @@
 ! init self-energy function
      sig2 = czero
 
-!>>> postprocess some variables/arrays
+!>>> postprocess hybridization function
 !-------------------------------------------------------------------------
-! fourier hybridization function from matsubara frequency space to
-! imaginary time space
+! fourier hybridization function from frequency space to time space
      call ctqmc_four_hybf(hybf, htau)
 
 ! symmetrize the hybridization function on imaginary time axis if needed
@@ -841,6 +840,8 @@
 ! calculate the 2nd-derivates of htau, which is used in spline subroutines
      call ctqmc_eval_hsed(htau, hsed)
 
+!>>> postprocess dynamic interaction
+!-------------------------------------------------------------------------
 ! calculate the 2nd-derivates of ktau, which is used in spline subroutines
      call ctqmc_eval_ksed(ktau, ksed)
 
@@ -849,13 +850,9 @@
 
 !>>> dump the necessary files
 !-------------------------------------------------------------------------
-! write out the hybridization function in matsubara frequency axis
+! write out the hybridization function
      if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_hybf(hybf)
-     endif ! back if ( myid == master ) block
-
-! write out the hybridization function on imaginary time axis
-     if ( myid == master ) then ! only master node can do it
          call ctqmc_dump_htau(htau)
      endif ! back if ( myid == master ) block
 
