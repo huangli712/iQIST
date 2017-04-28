@@ -196,10 +196,10 @@
      write(mystd,'(1(4X,a,e10.5))') '<K4> :', paux(9) / istat
 
 ! about insert action
-     if ( insert_tcount <= half ) insert_tcount = -one ! if insert is disable
+     if ( ins_t <= half ) ins_t = -one ! if insert is disable
      write(mystd,'(4X,a)')        'insert kink statistics:'
-     write(mystd,'(4X,a,3i10)')   'count:', int( insert_tcount ), int( insert_accept ), int( insert_reject )
-     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, insert_accept / insert_tcount, insert_reject / insert_tcount
+     write(mystd,'(4X,a,3i10)')   'count:', int( ins_t ), int( ins_a ), int( ins_r )
+     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, ins_a / ins_t, ins_r / ins_t
 
 ! about remove action
      if ( remove_tcount <= half ) remove_tcount = -one ! if remove is disable
