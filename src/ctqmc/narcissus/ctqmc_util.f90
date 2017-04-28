@@ -1179,17 +1179,21 @@
   end subroutine ctqmc_make_pref
 
 !!========================================================================
-!!>>> build auxiliary two-particle related variables                   <<<
+!!>>> two-particle green's function                                    <<<
 !!========================================================================
 
-!!>>> ctqmc_make_prod: try to calculate the product of matsubara
-!!>>> frequency exponents exp(i \omega_n \tau)
+!!
+!! @sub ctqmc_make_prod
+!!
+!! calculate product of matsubara frequency exponents exp(i \omega_n \tau)
+!!
   subroutine ctqmc_make_prod(flvr, nfaux, mrank, caux1, caux2)
      use constants, only : dp, two, pi, czi
 
      use control, only : nffrq
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : rank
 
      implicit none
