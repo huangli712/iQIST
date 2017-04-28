@@ -99,8 +99,11 @@
      return
   end subroutine ctqmc_four_htau
 
-!!>>> ctqmc_four_hybf: fourier hybf to htau, from matsubara frequency to
-!!>>> imaginary time
+!!
+!! @sub ctqmc_four_hybf
+!!
+!! fourier hybf to htau, from matsubara frequency to imaginary time
+!!
   subroutine ctqmc_four_hybf(hybf, htau)
      use constants, only : dp, zero, czero, eps6
 
