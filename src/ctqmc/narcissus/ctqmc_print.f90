@@ -222,8 +222,8 @@
 ! about reflip action
      if ( rfl_t <= half ) rfl_t = -one ! if reflip is disable
      write(mystd,'(4X,a)')        'global flip statistics:'
-     write(mystd,'(4X,a,3i10)')   'count:', int( reflip_tcount ), int( reflip_accept ), int( reflip_reject )
-     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, reflip_accept / reflip_tcount, reflip_reject / reflip_tcount
+     write(mystd,'(4X,a,3i10)')   'count:', int( rfl_t ), int( rfl_a ), int( rfl_r )
+     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rfl_a / rfl_t, rfl_r / rfl_t
 
      return
   end subroutine ctqmc_print_runtime
