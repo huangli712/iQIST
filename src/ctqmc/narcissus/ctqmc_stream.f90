@@ -538,6 +538,11 @@
      return
   end subroutine ctqmc_input_umat_
 
+!!
+!! @sub ctqmc_input_ktau_
+!!
+!! try to build the dynamic interaction model from solver.ktau.in
+!!
   subroutine ctqmc_input_ktau_()
      use constants, only : dp, zero, one, mytmp
 
@@ -589,6 +594,7 @@
              endif ! back if ( isscr == 99 ) block
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! since the screening function and its derivates may be updated in master
 ! node, it is important to broadcast it from root to all children processes
