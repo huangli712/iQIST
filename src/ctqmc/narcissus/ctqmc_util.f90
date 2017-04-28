@@ -1093,6 +1093,7 @@
 
      do flvr=1,norbs
          do it=1,rank(flvr)
+
 ! contribution from create operators
              dtau = time_s( index_s(it, flvr), flvr ) - time
              if ( dtau >= zero ) then
@@ -1112,6 +1113,7 @@
                  call cat_weight_kernel(2, -dtau, daux)
                  iret = iret + daux
              endif ! back if ( dtau >= zero ) block
+
          enddo ! over it={1,rank(flvr)} loop
      enddo ! over flvr={1,norbs} loop
 

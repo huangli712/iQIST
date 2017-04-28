@@ -23,7 +23,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           04/25/2017 by li huang (last modified)
+!!!           04/28/2017 by li huang (last modified)
 !!! purpose : provide basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -1968,16 +1968,14 @@
 
      DYNAMIC_MODEL: select case ( isscr )
 
-! static interaction
-         case (1)
+         case (1)  ! static interaction
              if ( typ == 2 ) then
                  cur = zero
              else
                  cur = zero
              endif ! back if ( typ == 2 ) block
 
-! dynamic interaction, plasmon pole model
-         case (2)
+         case (2)  ! dynamic interaction, plasmon pole model
              if ( typ == 2 ) then
                  cur = (lc / wc)**2 / sinh(beta * wc / two)
                  cur = cur * sinh(beta * wc / two - tau * wc) * wc
@@ -1986,8 +1984,7 @@
                  cur = cur * ( cosh(beta * wc / two) - cosh(beta * wc / two - tau * wc) )
              endif ! back if ( typ == 2 ) block
 
-! dynamic interaction, ohmic model
-         case (3)
+         case (3)  ! dynamic interaction, ohmic model
              if ( typ == 2 ) then
                  cur = lc * wc * cos(pi * tau / beta)
                  cur = cur / (one + beta * wc * sin(pi * tau / beta) / pi)
@@ -1995,8 +1992,7 @@
                  cur = lc * log(one + beta * wc * sin(pi * tau / beta) / pi)
              endif ! back if ( typ == 2 ) block
 
-! dynamic interaction, realistic materials
-         case (99)
+         case (99) ! dynamic interaction, realistic materials
              cur = ctqmc_eval_ktau(typ, tau)
 
      end select DYNAMIC_MODEL
