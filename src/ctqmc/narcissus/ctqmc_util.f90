@@ -482,8 +482,8 @@
          hist(symm(ibnd)) = hist(symm(ibnd)) + 1
      enddo ! over ibnd={1,norbs} loop
 
-! perform symmetrization for those orbitals which symm index are identity
-     if ( issun == 2 ) then
+! perform symmetrization for those orbitals with the same symmetry
+     if ( isbnd == 2 ) then
          do ibnd=1,norbs
              if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
                  raux = zero
@@ -503,7 +503,7 @@
                  enddo ! over jbnd={1,norbs} loop
              endif ! back if ( hist(ibnd) > 0 ) block
          enddo ! over ibnd={1,norbs} loop
-     endif ! back if ( issun == 2 ) block
+     endif ! back if ( isbnd == 2 ) block
 
 ! symmetrize nmat over spin
      if ( isspn == 1 ) then
