@@ -237,6 +237,7 @@
      use constants, only : mystd
 
      use control, only : cname
+     use control, only : isbin
 
      implicit none
 
@@ -244,13 +245,13 @@
 ! current iteration number
      integer, intent(in) :: iter
 
-! according to the value of iter, we can judge whether the impurity solver
-! is in the binning mode.
-     if ( iter /= 999 ) then
-         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< SELFING'
+! according to the value of isbin, we can judge whether the impurity
+! solver is in the data binning mode.
+     if ( isbin /= 2 ) then
+         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< GENERAL'
      else
          write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< BINNING'
-     endif ! back if ( iter /= 999 ) block
+     endif ! back if ( isbin /= 2 ) block
 
      return
   end subroutine ctqmc_print_it_info
