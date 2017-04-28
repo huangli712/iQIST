@@ -1011,11 +1011,10 @@
 ! initialize faux
      faux = zero
 
-!!>>> cat_make_ftau1: build auxiliary correlation function using normal
-!!>>> representation
-  subroutine cat_make_ftau1()
-     implicit none
-
+!-------------------------------------------------------------------------
+! using normal representation
+!-------------------------------------------------------------------------
+     STD_BLOCK: if ( isort == 1 ) then
      raux = real(ntime) / (beta * beta)
      do i=1,norbs
          do j=1,norbs
@@ -1024,14 +1023,7 @@
              enddo ! over k={1,ntime} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine cat_make_ftau1
-
-!!>>> cat_make_ftau2: build auxiliary correlation function using legendre
-!!>>> polynomial representation
-  subroutine cat_make_ftau2()
-     implicit none
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      step = real(legrd - 1) / two
      do i=1,norbs
@@ -1048,7 +1040,6 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine cat_make_ftau2
   end subroutine ctqmc_make_ftau
 
 !!========================================================================
