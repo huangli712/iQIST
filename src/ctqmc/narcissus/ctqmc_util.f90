@@ -198,11 +198,19 @@
 !!>>> cubic spline interpolation                                       <<<
 !!========================================================================
 
-!! To provide cubic spline subroutines and wrapper functions to interpolate
-!! the hybridization function in imaginary-time axis.
+!!
+!! note:
+!!
+!! to provide cubic spline subroutine and wrapper function to interpolate
+!! the hybridization function in imaginary-time axis
+!!
 
-!!>>> ctqmc_eval_htau: evaluate the matrix elements for mmat matrix using
-!!>>> cubic spline interpolation
+!!
+!! @fun ctqmc_eval_htau
+!!
+!! evaluate the matrix elements for mmat matrix using cubic spline
+!! interpolation method
+!!
   function ctqmc_eval_htau(flvr, dtau) result(val)
      use constants, only : dp
 
