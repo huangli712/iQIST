@@ -346,7 +346,7 @@
 ! non-interaction limit:
 !     G = i * 2.0 * ( w - sqrt(w*w + 1) ),
 ! and then build initial hybridization function using self-consistent
-! condition:
+! condition for bethe lattice:
 !     \Delta = t^2 * G
      do i=1,mfreq
          call s_identity_z( norbs, hybf(i,:,:) )
@@ -466,6 +466,7 @@
 
      return
   end subroutine ctqmc_input_eimp_
+
 
   subroutine ctqmc_input_umat_()
      use constants, only : dp, mytmp
