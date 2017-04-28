@@ -551,7 +551,8 @@
      use control, only : isscr
      use control, only : ntime
      use control, only : myid, master
-     use context, only : ktau, ptau, uumat
+     use context, only : ktau, ptau
+     use context, only : uumat
 
      implicit none
 
@@ -592,7 +593,7 @@
 
          else
              if ( isscr == 99 ) then
-                 call s_print_error('ctqmc_selfer_init','solver.ktau.in does not exist')
+                 call s_print_error('ctqmc_input_ktau_','solver.ktau.in does not exist')
              endif ! back if ( isscr == 99 ) block
          endif ! back if ( exists .eqv. .true. ) block
      endif ! back if ( myid == master ) block
@@ -613,10 +614,8 @@
 
 # endif  /* MPI */
 
-! FINAL STEP
-!-------------------------------------------------------------------------
 ! shift the Coulomb interaction matrix and chemical potential if retarded
-! interaction or the so-called dynamical screening effect is considered
+! interaction or the so-called dynamic screening effect is considered
      call ctqmc_make_shift(uumat, one)
 
      return
