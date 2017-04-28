@@ -932,12 +932,14 @@
 !-------------------------------------------------------------------------
 ! using normal representation
 !-------------------------------------------------------------------------
+     STD_BLOCK: if ( isort == 1 ) then
      raux = real(ntime) / (beta * beta)
      do i=1,norbs
          do j=1,ntime
              gaux(j,i,i) = gtau(j,i,i) * raux
          enddo ! over j={1,ntime} loop
      enddo ! over i={1,norbs} loop
+     endif STD_BLOCK ! back if ( isort == 1 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
