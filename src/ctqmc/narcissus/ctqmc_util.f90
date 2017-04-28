@@ -1015,14 +1015,15 @@
 ! using normal representation
 !-------------------------------------------------------------------------
      STD_BLOCK: if ( isort == 1 ) then
-     raux = real(ntime) / (beta * beta)
-     do i=1,norbs
-         do j=1,norbs
-             do k=1,ntime
-                 faux(k,j,i) = ftau(k,j,i) * raux
-             enddo ! over k={1,ntime} loop
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
+         raux = real(ntime) / (beta * beta)
+         do i=1,norbs
+             do j=1,norbs
+                 do k=1,ntime
+                     faux(k,j,i) = ftau(k,j,i) * raux
+                 enddo ! over k={1,ntime} loop
+             enddo ! over j={1,norbs} loop
+         enddo ! over i={1,norbs} loop
+     endif STD_BLOCK ! back if ( isort == 1 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !-------------------------------------------------------------------------
@@ -1042,6 +1043,7 @@
              enddo ! over k={1,ntime} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
+     endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
