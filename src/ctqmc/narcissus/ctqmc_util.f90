@@ -1045,33 +1045,6 @@
 
      return
   end subroutine cat_make_gtau2
-
-!!>>> cat_make_gtau3: build impurity green's function using chebyshev
-!!>>> polynomial representation
-  subroutine cat_make_gtau3()
-     implicit none
-
-! integral kernel
-     real(dp) :: ker2(chmax)
-
-! build kernel function at first
-     ker2 = one; call cat_make_kpm(chmax, ker2)
-
-! reconstruct green's function
-     step = real(chgrd - 1) / two
-     do i=1,norbs
-         do j=1,ntime
-             raux = two * tmesh(j) / beta
-             curr = nint(raux * step) + 1
-             do fche=1,chmax
-                 raux = two / (beta * beta) * ker2(fche)
-                 gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fche,i,i) * qqche(curr,fche)
-             enddo ! over fche={1,chmax} loop
-         enddo ! over j={1,ntime} loop
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine cat_make_gtau3
   end subroutine ctqmc_make_gtau
 
 !!>>> ctqmc_make_ftau: build auxiliary correlation function using
