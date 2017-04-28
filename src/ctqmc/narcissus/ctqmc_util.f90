@@ -1025,6 +1025,10 @@
      enddo ! over i={1,norbs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+!-------------------------------------------------------------------------
+! using legendre polynomial representation
+!-------------------------------------------------------------------------
+     LEG_BLOCK: if ( isort == 2 ) then
      step = real(legrd - 1) / two
      do i=1,norbs
          do j=1,norbs
@@ -1038,6 +1042,7 @@
              enddo ! over k={1,ntime} loop
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
   end subroutine ctqmc_make_ftau
