@@ -1011,24 +1011,6 @@
 ! initialize faux
      faux = zero
 
-! select calculation method
-     select case ( isort )
-
-         case (4)
-             call cat_make_ftau1()
-
-         case (5)
-             call cat_make_ftau2()
-
-         case (6)
-             call cat_make_ftau3()
-
-     end select
-
-     return
-
-  contains
-
 !!>>> cat_make_ftau1: build auxiliary correlation function using normal
 !!>>> representation
   subroutine cat_make_ftau1()
