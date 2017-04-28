@@ -163,11 +163,11 @@
 
      use control, only : cname
      use control, only : nsweep, nmonte
-     use context, only : insert_tcount, insert_accept, insert_reject
-     use context, only : remove_tcount, remove_accept, remove_reject
-     use context, only : lshift_tcount, lshift_accept, lshift_reject
-     use context, only : rshift_tcount, rshift_accept, rshift_reject
-     use context, only : reflip_tcount, reflip_accept, reflip_reject
+     use context, only : ins_t, ins_a, ins_r
+     use context, only : remove_t, remove_a, remove_r
+     use context, only : lshift_t, lshift_a, lshift_r
+     use context, only : rshift_t, rshift_a, rshift_r
+     use context, only : reflip_t, reflip_a, reflip_r
      use context, only : paux
 
      implicit none
