@@ -440,7 +440,7 @@
   end subroutine ctqmc_eval_ksed
 
 !!========================================================================
-!!>>> symmetrize physical observables                                  <<<
+!!>>> symmetry operation                                               <<<
 !!========================================================================
 
 !!
@@ -748,7 +748,7 @@
   end subroutine ctqmc_make_umat
 
 !!========================================================================
-!!>>> atomic eigenstate converter                                      <<<
+!!>>> atomic eigenstates                                               <<<
 !!========================================================================
 
 !!
@@ -785,7 +785,7 @@
   end subroutine ctqmc_make_fock
 
 !!========================================================================
-!!>>> dynamic screening effect and retarded interaction                <<<
+!!>>> retarded interaction                                             <<<
 !!========================================================================
 
 !!
@@ -879,7 +879,7 @@
   end subroutine ctqmc_prep_lift
 
 !!========================================================================
-!!>>> postprocess physical observables                                 <<<
+!!>>> unconventional representation                                    <<<
 !!========================================================================
 
 !!
@@ -1050,16 +1050,21 @@
   end subroutine ctqmc_make_ftau
 
 !!========================================================================
-!!>>> build prefactor for improved estimator                           <<<
+!!>>> improved estimator                                               <<<
 !!========================================================================
 
-!!>>> ctqmc_make_iret: to calculate the integral I(\tau_end) which is very
-!!>>> important when retarded interaction is included
+!!
+!! @sub ctqmc_make_iret
+!!
+!! to calculate the integral I(\tau_end) which is very important when the
+!! retarded interaction is included
+!!
   subroutine ctqmc_make_iret(time, iret)
      use constants, only : dp, zero, two
 
      use control, only : norbs
-     use context, only : index_s, index_e, time_s, time_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
      use context, only : rank
 
      implicit none
