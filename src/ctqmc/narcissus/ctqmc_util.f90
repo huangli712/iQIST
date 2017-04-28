@@ -1056,8 +1056,9 @@
 !!
 !! @sub ctqmc_make_iret
 !!
-!! to calculate the integral I(\tau_end) which is very important when the
-!! retarded interaction is included
+!! calculate the integral I(\tau_end) which is very important when the
+!! retarded interaction is included. here the used equation is Eq. (39)
+!! in Phys. Rev. B 89, 235128 (2014)
 !!
   subroutine ctqmc_make_iret(time, iret)
      use constants, only : dp, zero, two
@@ -1087,8 +1088,7 @@
      real(dp) :: dtau
      real(dp) :: daux
 
-! calculate integral I(\tau_end), the equation is
-! Eq. (39) in Phys. Rev. B 89, 235128 (2014)
+! init integral I(\tau_end)
      iret = zero
 
      do flvr=1,norbs
@@ -1124,14 +1124,19 @@
      return
   end subroutine ctqmc_make_iret
 
-!!>>> ctqmc_make_pref: to calculate the prefactor used by the improved
-!!>>> estimator for self-energy function and vertex function
+!!
+!! @sub ctqmc_make_pref
+!!
+!! calculate the prefactor used by the improved estimator for self-energy
+!! function and two-particle green's function
+!!
   subroutine ctqmc_make_pref()
      use constants, only : dp, zero, half
 
      use control, only : isscr
      use control, only : norbs
-     use context, only : index_e, time_e
+     use context, only : index_e
+     use context, only : time_e
      use context, only : rank, pref, uumat
 
      implicit none
@@ -1141,20 +1146,14 @@
      integer  :: it
 
 ! loop index for flavor channel
-     integer  :: flvr
-
-! loop index for colour channel
-     integer  :: clur
+     integer  :: f1
+     integer  :: f2
 
 ! occupation number at \tau_end
      real(dp) :: occu
 
 ! integral value for I(\tau_end)
      real(dp) :: iret
-
-! if it is holstein-hubbard model, the improved estimator algorithm
-! can not be used now
-     call s_assert2(isscr /= 2,'sorry, isscr = 2 is not compatible with improved estimator')
 
      do flvr=1,norbs
          do it=1,rank(flvr)
