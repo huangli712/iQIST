@@ -956,54 +956,6 @@
 
   contains
 
-!!>>> cat_make_kpm: build the integral kernel function
-  subroutine cat_make_kpm(kdim, kern)
-     implicit none
-
-! external arguments
-! dimension of integral kernel function
-     integer, intent(in)   :: kdim
-
-! integral kernel function
-     real(dp), intent(out) :: kern(kdim)
-
-! local variables
-! loop index
-     integer :: kcur
-
-     kern = zero
-     do kcur=1,kdim
-         select case ( damp )
-
-! Dirichlet mode
-             case (0)
-                 kern(kcur) = one
-
-! Jackson mode
-             case (1)
-                 i = kcur - 1
-                 curr = kdim + 1
-                 raux = pi * i / curr
-                 kern(kcur) = ( (curr-i) * cos(raux) + sin(raux) / tan(pi/curr) ) / curr
-
-! Lorentz mode
-             case (2)
-                 kern(kcur) = sinh( one - (kcur - one) / real( kdim ) ) / sinh(one)
-
-! Fejer mode
-             case (3)
-                 kern(kcur) = one - ( kcur - one ) / real( kdim )
-
-! Wang-Zunger mode
-             case (4)
-                 kern(kcur) = exp( - ( (kcur - one) / real( kdim ) )**4 )
-
-         end select
-     enddo ! over kcur={1,kdim} loop
-
-     return
-  end subroutine cat_make_kpm
-
 !!>>> cat_make_gtau1: build impurity green's function using normal
 !!>>> representation
   subroutine cat_make_gtau1()
