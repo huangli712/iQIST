@@ -882,8 +882,11 @@
 !!>>> postprocess physical observables                                 <<<
 !!========================================================================
 
-!!>>> ctqmc_make_gtau: build imaginary green's function using orthogonal
-!!>>> polynomial representation
+!!
+!! @sub ctqmc_make_gtau
+!!
+!! build imaginary time green's function using different representation
+!!
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
      use constants, only : dp, zero, one, two, pi
 
