@@ -506,13 +506,13 @@
      endif ! back if ( isbnd == 2 ) block
 
 ! symmetrize nmat over spin
-     if ( isspn == 1 ) then
+     if ( isspn == 2 ) then
          do jbnd=1,nband
              raux = ( nmat(jbnd) + nmat(jbnd+nband) ) / two
              nmat(jbnd) = raux
              nmat(jbnd+nband) = raux
          enddo ! over jbnd={1,nband} loop
-     endif ! back if ( isspn == 1 ) block
+     endif ! back if ( isspn == 2 ) block
 
      return
   end subroutine ctqmc_symm_nmat
@@ -586,7 +586,7 @@
      endif ! back if ( isbnd == 2 ) block
 
 ! symmetrize gtau over spin
-     if ( isspn == 1 ) then
+     if ( isspn == 2 ) then
          do ktau=1,ntime
              do jbnd=1,nband
                  raux = ( gtau(ktau,jbnd,jbnd) + gtau(ktau,jbnd+nband,jbnd+nband) ) / two
@@ -594,7 +594,7 @@
                  gtau(ktau,jbnd+nband,jbnd+nband) = raux
              enddo ! over jbnd={1,nband} loop
          enddo ! over ktau={1,ntime} loop
-     endif ! back if ( isspn == 1 ) block
+     endif ! back if ( isspn == 2 ) block
 
      return
   end subroutine ctqmc_symm_gtau
