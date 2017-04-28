@@ -545,6 +545,8 @@
 !!
   subroutine ctqmc_input_ktau_()
      use constants, only : dp, zero, one, mytmp
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
 
      use control, only : isscr
      use control, only : ntime
