@@ -1009,10 +1009,10 @@
 
      use control, only : isort
      use control, only : norbs
-     use control, only : lemax, legrd, chmax, chgrd
+     use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
-     use context, only : ppleg, qqche
+     use context, only : rep_l
 
      implicit none
 
