@@ -165,8 +165,8 @@
      use control, only : nsweep, nmonte
      use context, only : ins_t, ins_a, ins_r
      use context, only : remove_t, remove_a, remove_r
-     use context, only : lshift_t, lshift_a, lshift_r
-     use context, only : rshift_t, rshift_a, rshift_r
+     use context, only : lsh_t, lsh_a, lsh_r
+     use context, only : rsh_t, rsh_a, rsh_r
      use context, only : reflip_t, reflip_a, reflip_r
      use context, only : paux
 
