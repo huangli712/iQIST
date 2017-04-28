@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/28/2017 by li huang (last modified)
+!!!           04/29/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -497,7 +497,7 @@
      real(dp) :: rtmp
 
 ! calculate two-index Coulomb interaction, uumat
-     call ctqmc_make_uumat(uumat)
+     call ctqmc_make_umat(uumat)
 
 ! read in two-index Coulomb interaction if available
 !-------------------------------------------------------------------------
