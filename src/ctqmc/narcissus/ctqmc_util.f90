@@ -814,14 +814,16 @@
      integer  :: i
      integer  :: j
 
-! Coulomb interaction shift introduced by dynamical screening effect
+! Coulomb interaction shift introduced by dynamic screening effect
      real(dp) :: shift
 
 ! evaluate the shift at first
-     shift = 0.0_dp; call ctqmc_prep_shift(shift)
+     shift = 0.0_dp
+     call ctqmc_prep_lift(shift)
 
 ! multiple the shift with sign
-     call s_assert( abs(ssign) == 1.0_dp ); shift = shift * ssign
+     call s_assert( abs(ssign) == 1.0_dp )
+     shift = shift * ssign
 
 ! shift the Coulomb interaction matrix (skip the diagonal elements)
      do i=1,norbs-1
