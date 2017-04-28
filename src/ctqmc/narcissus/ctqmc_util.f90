@@ -839,9 +839,13 @@
      return
   end subroutine ctqmc_make_lift
 
-!!>>> ctqmc_prep_shift: evaluate the shift for the Coulomb interaction and
-!!>>> the chemical potential. in fact, shift = 2 K'(\tau = 0)
-  subroutine ctqmc_prep_shift(shift)
+!!
+!! @sub ctqmc_prep_lift
+!!
+!! evaluate the shift for the Coulomb interaction and the chemical
+!! potential. in fact, shift = 2 K'(\tau = 0)
+!!
+  subroutine ctqmc_prep_lift(shift)
      use constants, only : dp, zero, two
 
      use control, only : isscr
@@ -876,7 +880,7 @@
      end select
 
      return
-  end subroutine ctqmc_prep_shift
+  end subroutine ctqmc_prep_lift
 
 !!========================================================================
 !!>>> postprocess physical observables                                 <<<
