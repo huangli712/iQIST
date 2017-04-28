@@ -1427,9 +1427,8 @@
          call ctqmc_dump_hub1(rmesh, ghub, shub)
      endif ! back if ( myid == master ) block
 
-! build final impurity green's function and then transform them into
+! task 7: build final impurity green's function and then transform them into
 ! matsubara frequency axis
-! note: only for isort == 4 .or. isort == 6 cases
      if ( isort /= 5 ) then
          call ctqmc_make_gtau(tmesh, gtau, gaux)
          call ctqmc_four_htau(gaux, grnf)
@@ -1437,7 +1436,6 @@
 
 ! build final auxiliary correlation function and then transform them into
 ! matsubara frequency axis
-! note: only for isort == 4 .or. isort == 6 cases
      if ( isort /= 5 ) then
          call ctqmc_make_ftau(tmesh, ftau, faux)
          call ctqmc_four_htau(faux, frnf)
