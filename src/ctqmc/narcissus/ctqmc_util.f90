@@ -37,13 +37,20 @@
 !!>>> fast fourier transformation                                      <<<
 !!========================================================================
 
-!! Here are forward and backward fourier transformation subroutines for
-!! hybridization function. Nominally, the following subroutines are only
+!!
+!! note:
+!!
+!! here are forward and backward fourier transformation subroutines for
+!! hybridization function. nominally, the following subroutines are only
 !! suitable for the hybridization functions, but in principle, we can also
-!! apply them to the impurity green's function and bath weiss's function.
+!! apply them to the impurity green's function and bath weiss's function
+!!
 
-!!>>> ctqmc_four_htau: fourier htau to hybf, from imaginary time to
-!!>>> matsubara frequency
+!!
+!! @sub ctqmc_four_htau
+!!
+!! fourier htau to hybf, from imaginary time to matsubara frequency
+!!
   subroutine ctqmc_four_htau(htau, hybf)
      use constants, only : dp, zero, czero
 
