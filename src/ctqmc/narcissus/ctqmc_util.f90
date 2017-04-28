@@ -821,7 +821,6 @@
      call ctqmc_prep_lift(shift)
 
 ! multiple the shift with sign
-     call s_assert( abs(ssign) == 1.0_dp )
      shift = shift * ssign
 
 ! shift the Coulomb interaction matrix (skip the diagonal elements)
@@ -1266,7 +1265,7 @@
      use control, only : mune, beta
      use control, only : myid, master
      use context, only : tmesh, rmesh
-     use context, only : prob, nmat
+     use context, only : prob
      use context, only : eimp, uumat
      use context, only : gtau, ftau
      use context, only : grnf, frnf
