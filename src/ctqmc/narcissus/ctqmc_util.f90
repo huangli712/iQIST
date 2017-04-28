@@ -917,9 +917,6 @@
 ! loop index for legendre polynomial
      integer  :: fleg
 
-! loop index for chebyshev polynomial
-     integer  :: fche
-
 ! index for imaginary time \tau
      integer  :: curr
 
@@ -952,8 +949,8 @@
              raux = two * tmesh(j) / beta
              curr = nint(raux * step) + 1
              do fleg=1,lemax
-                 raux = sqrt(two * fleg - 1) / (beta * beta) * ker1(fleg)
-                 gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fleg,i,i) * ppleg(curr,fleg)
+                 raux = sqrt(two * fleg - 1) / (beta * beta)
+                 gaux(j,i,i) = gaux(j,i,i) + raux * gtau(fleg,i,i) * rep_l(curr,fleg)
              enddo ! over fleg={1,lemax} loop
          enddo ! over j={1,ntime} loop
      enddo ! over i={1,norbs} loop
