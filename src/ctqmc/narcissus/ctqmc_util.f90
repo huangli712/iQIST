@@ -1328,6 +1328,8 @@
      complex(dp) :: ghub(mfreq,norbs)
      complex(dp) :: shub(mfreq,norbs)
 
+! task 1
+!-------------------------------------------------------------------------
 ! build atomic basis set, we do not order them according to their
 ! occupation numbers
      do i=1,ncfgs
