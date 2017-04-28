@@ -932,24 +932,6 @@
 ! initialize gaux
      gaux = zero
 
-! select calculation method
-     select case ( isort )
-
-         case (1, 4)
-             call cat_make_gtau1()
-
-         case (2, 5)
-             call cat_make_gtau2()
-
-         case (3, 6)
-             call cat_make_gtau3()
-
-     end select
-
-     return
-
-  contains
-
 !!>>> cat_make_gtau1: build impurity green's function using normal
 !!>>> representation
   subroutine cat_make_gtau1()
