@@ -467,9 +467,15 @@
      return
   end subroutine ctqmc_input_eimp_
 
-
+!!
+!! @sub ctqmc_input_umat_
+!!
+!! try to build the Coulomb interaction matrix from solver.umat.in
+!!
   subroutine ctqmc_input_umat_()
      use constants, only : dp, mytmp
+     use mmpi, only : mp_bcast
+     use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : myid, master
