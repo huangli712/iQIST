@@ -1151,28 +1151,6 @@
 
      return
   end subroutine cat_make_ftau2
-
-!!>>> cat_make_ftau3: build auxiliary correlation function using chebyshev
-!!>>> polynomial representation
-  subroutine cat_make_ftau3()
-     implicit none
-
-     step = real(chgrd - 1) / two
-     do i=1,norbs
-         do j=1,norbs
-             do k=1,ntime
-                 raux = two * tmesh(k) / beta
-                 curr = nint(raux * step) + 1
-                 raux = two / (beta * beta)
-                 do fche=1,chmax
-                     faux(k,j,i) = faux(k,j,i) + raux * ftau(fche,j,i) * qqche(curr,fche)
-                 enddo ! over fche={1,chmax} loop
-             enddo ! over k={1,ntime} loop
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine cat_make_ftau3
   end subroutine ctqmc_make_ftau
 
 !!========================================================================
