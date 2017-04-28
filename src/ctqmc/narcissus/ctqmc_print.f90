@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           04/20/2017 by li huang (last modified)
+!!!           04/29/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -122,10 +122,11 @@
 
      write(mystd,'(2X,a)') cname//' >>> parameters list:'
 
-     write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isbin :', isbin
-     write(mystd,'(2(4X,a,i10))')   'issun :', issun  , 'isspn :', isspn
-     write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'issus :', issus
-     write(mystd,'(2(4X,a,i10))')   'isvrt :', isvrt  , 'isscr :', isscr
+     write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isscr :', isscr
+     write(mystd,'(2(4X,a,i10))')   'isbnd :', isbnd  , 'isspn :', isspn
+     write(mystd,'(2(4X,a,i10))')   'isbin :', isbin  , 'iswor :', iswor
+     write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'isobs :', isobs
+     write(mystd,'(2(4X,a,i10))')   'issus :', issus  , 'isvrt :', isvrt
 
      write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
      write(mystd,'(2(4X,a,i10))')   'chmax :', chmax  , 'chgrd :', chgrd
