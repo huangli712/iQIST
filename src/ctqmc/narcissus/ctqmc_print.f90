@@ -129,14 +129,12 @@
      write(mystd,'(2(4X,a,i10))')   'issus :', issus  , 'isvrt :', isvrt
 
      write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
-     write(mystd,'(2(4X,a,i10))')   'chmax :', chmax  , 'chgrd :', chgrd
      write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
      write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin :', nspin
      write(mystd,'(2(4X,a,i10))')   'norbs :', norbs  , 'ncfgs :', ncfgs
      write(mystd,'(2(4X,a,i10))')   'niter :', niter  , 'nfreq :', nfreq
      write(mystd,'(2(4X,a,i10))')   'nffrq :', nffrq  , 'nbfrq :', nbfrq
      write(mystd,'(2(4X,a,i10))')   'ntime :', ntime  , 'nflip :', nflip
-
      write(mystd,'(2(4X,a,i10))')   'ntherm:', ntherm , 'nsweep:', nsweep
      write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite
      write(mystd,'(2(4X,a,i10))')   'nmonte:', nmonte , 'ncarlo:', ncarlo
@@ -146,7 +144,8 @@
      write(mystd,'(2(4X,a,f10.5))') 'Jp    :', Jp     , 'Jz    :', Jz
      write(mystd,'(2(4X,a,f10.5))') 'lc    :', lc     , 'wc    :', wc
      write(mystd,'(2(4X,a,f10.5))') 'mune  :', mune   , 'beta  :', beta
-     write(mystd,'(2(4X,a,f10.5))') 'part  :', part   , 'temp  :', ev2k/beta
+     write(mystd,'(2(4X,a,f10.5))') 'part  :', part   , 'alpha :', alpha
+     write(mystd,'(1(4X,a,f10.5))') 'system temperature:', ev2k / beta
 
      write(mystd,*)
 
