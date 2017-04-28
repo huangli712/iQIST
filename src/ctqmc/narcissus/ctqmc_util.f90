@@ -888,7 +888,7 @@
 !! build imaginary time green's function using different representation
 !!
   subroutine ctqmc_make_gtau(tmesh, gtau, gaux)
-     use constants, only : dp, zero, one, two, pi
+     use constants, only : dp, zero, two
 
      use control, only : isort
      use control, only : norbs
