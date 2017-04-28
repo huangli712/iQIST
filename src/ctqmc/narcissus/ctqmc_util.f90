@@ -444,11 +444,15 @@
 !!>>> symmetrize physical observables                                  <<<
 !!========================================================================
 
-!!>>> ctqmc_symm_nmat: symmetrize the nmat according to symm vector
+!!
+!! @sub ctqmc_symm_nmat
+!!
+!! symmetrize the occupation number array, nmat, according to symm vector
+!!
   subroutine ctqmc_symm_nmat(symm, nmat)
      use constants, only : dp, zero, two
 
-     use control, only : issun, isspn
+     use control, only : isbnd, isspn
      use control, only : nband, norbs
 
      implicit none
