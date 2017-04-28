@@ -70,8 +70,8 @@
 !!========================================================================
      nband  = 1         ! number of correlated bands
      nspin  = 2         ! number of spin projections
-     norbs  = 2         ! number of correlated orbitals (= nband * nspin)
-     ncfgs  = 4         ! number of atomic eigenstates (= 2**norbs)
+     norbs  = 2         ! number of correlated orbitals
+     ncfgs  = 4         ! number of atomic eigenstates
      niter  = 20        ! maximum number of self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp   ! average Coulomb interaction
