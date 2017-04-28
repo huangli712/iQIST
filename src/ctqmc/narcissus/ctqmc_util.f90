@@ -18,7 +18,6 @@
 !!!           ctqmc_make_iret
 !!!           ctqmc_make_pref <<<---
 !!!           ctqmc_make_prod <<<---
-!!!           ctqmc_make_hub1
 !!!           ctqmc_make_hub2 <<<---
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
