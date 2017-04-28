@@ -1428,6 +1428,7 @@
      endif ! back if ( myid == master ) block
 
 ! task 7: build impurity green's function and auxiliary correlation function
+!-------------------------------------------------------------------------
      if ( isort == 1 ) then
          call ctqmc_make_gtau(tmesh, gtau, gaux)
          call ctqmc_four_htau(gaux, grnf)
@@ -1435,10 +1436,12 @@
          call ctqmc_four_htau(faux, frnf)
      endif ! back if ( isort == 1 ) block
 
+! task 8: build impurity green's function and auxiliary correlation function
+!-------------------------------------------------------------------------
 ! special consideration must be taken for legendre representation, we can
 ! calculate grnf and frnf directly by using legendre coefficients, instead
 ! of performing fourier transformation
-     if ( isort == 5 ) then
+     if ( isort == 2 ) then
 ! build spherical Bessel functions: jaux
          jaux = zero
          do k=1,mfreq
@@ -1470,7 +1473,7 @@
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
-     endif ! back if ( isort == 5 ) block
+     endif ! back if ( isort == 2 ) block
 
 ! build full self-energy function by using frnf and grnf
      do i=1,norbs
