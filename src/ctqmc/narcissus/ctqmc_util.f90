@@ -84,7 +84,7 @@
      do i=1,norbs
          do j=1,norbs
 
-! copy the imaginary-time data to raux
+! copy the imaginary time data to raux
              raux = htau(:,j,i)
 
 ! call the service layer
@@ -195,14 +195,14 @@
   end subroutine ctqmc_four_hybf
 
 !!========================================================================
-!!>>> cubic spline interpolation                                       <<<
+!!>>> cubic spline interpolation 1                                     <<<
 !!========================================================================
 
 !!
 !! note:
 !!
 !! to provide cubic spline subroutine and wrapper function to interpolate
-!! the hybridization function in imaginary-time axis
+!! the hybridization function in imaginary time axis
 !!
 
 !!
@@ -240,8 +240,12 @@
      return
   end function ctqmc_eval_htau
 
-!!>>> ctqmc_eval_hsed: calculate the second order derivates of hybridization
-!!>>> function on imaginary time space
+!!
+!! @sub ctqmc_eval_hsed
+!!
+!! calculate the second order derivates of hybridization function on
+!! imaginary time space
+!!
   subroutine ctqmc_eval_hsed(tmesh, htau, hsed)
      use constants, only : dp, zero
 
@@ -318,12 +322,12 @@
   end subroutine ctqmc_eval_hsed
 
 !!========================================================================
-!!>>> cubic spline interpolation                                       <<<
+!!>>> cubic spline interpolation 2                                     <<<
 !!========================================================================
 
 !! To provide cubic spline subroutines and wrapper functions to interpolate
 !! the retarded interaction integrated function (i.e., screening function)
-!! in imaginary-time axis.
+!! in imaginary time axis.
 
 !!>>> ctqmc_eval_ktau: evaluate the intermediate elements for K(\tau)
 !!>>> using cubic spline interpolation
@@ -521,7 +525,7 @@
      integer  :: ibnd
      integer  :: jbnd
 
-! loop index over imaginary-time points
+! loop index over imaginary time points
      integer  :: ktau
 
 ! dummy variables
