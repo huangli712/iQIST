@@ -1037,7 +1037,7 @@
                      raux = two * tmesh(k) / beta
                      curr = nint(raux * step) + 1
                      do fleg=1,lemax
-                         raux = sqrt(two * fleg - 1) / (beta * beta) * ppleg(curr,fleg)
+                         raux = sqrt(two * fleg - 1) / (beta * beta) * rep_l(curr,fleg)
                          faux(k,j,i) = faux(k,j,i) + raux * ftau(fleg,j,i)
                      enddo ! over fleg={1,lemax} loop
                  enddo ! over k={1,ntime} loop
