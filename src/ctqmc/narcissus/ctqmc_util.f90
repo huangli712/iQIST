@@ -1030,19 +1030,19 @@
 ! using legendre polynomial representation
 !-------------------------------------------------------------------------
      LEG_BLOCK: if ( isort == 2 ) then
-     step = real(legrd - 1) / two
-     do i=1,norbs
-         do j=1,norbs
-             do k=1,ntime
-                 raux = two * tmesh(k) / beta
-                 curr = nint(raux * step) + 1
-                 do fleg=1,lemax
-                     raux = sqrt(two * fleg - 1) / (beta * beta)
-                     faux(k,j,i) = faux(k,j,i) + raux * ftau(fleg,j,i) * ppleg(curr,fleg)
-                 enddo ! over fleg={1,lemax} loop
-             enddo ! over k={1,ntime} loop
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
+         step = real(legrd - 1) / two
+         do i=1,norbs
+             do j=1,norbs
+                 do k=1,ntime
+                     raux = two * tmesh(k) / beta
+                     curr = nint(raux * step) + 1
+                     do fleg=1,lemax
+                         raux = sqrt(two * fleg - 1) / (beta * beta) * ppleg(curr,fleg)
+                         faux(k,j,i) = faux(k,j,i) + raux * ftau(fleg,j,i)
+                     enddo ! over fleg={1,lemax} loop
+                 enddo ! over k={1,ntime} loop
+             enddo ! over j={1,norbs} loop
+         enddo ! over i={1,norbs} loop
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
