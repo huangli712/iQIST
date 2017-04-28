@@ -1427,19 +1427,13 @@
          call ctqmc_dump_hub1(rmesh, ghub, shub)
      endif ! back if ( myid == master ) block
 
-! task 7: build final impurity green's function and then transform them into
-! matsubara frequency axis
-     if ( isort /= 5 ) then
+! task 7: build impurity green's function and auxiliary correlation function
+     if ( isort == 1 ) then
          call ctqmc_make_gtau(tmesh, gtau, gaux)
          call ctqmc_four_htau(gaux, grnf)
-     endif ! back if ( isort /= 5 ) block
-
-! build final auxiliary correlation function and then transform them into
-! matsubara frequency axis
-     if ( isort /= 5 ) then
          call ctqmc_make_ftau(tmesh, ftau, faux)
          call ctqmc_four_htau(faux, frnf)
-     endif ! back if ( isort /= 5 ) block
+     endif ! back if ( isort == 1 ) block
 
 ! special consideration must be taken for legendre representation, we can
 ! calculate grnf and frnf directly by using legendre coefficients, instead
