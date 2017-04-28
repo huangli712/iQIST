@@ -208,16 +208,16 @@
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rmv_a / rmv_t, rmv_r / rmv_t
 
 ! about lshift action
-     if ( lshift_tcount <= half ) lshift_tcount = -one ! if lshift is disable
+     if ( lsh_t <= half ) lsh_t = -one ! if lshift is disable
      write(mystd,'(4X,a)')        'lshift kink statistics:'
-     write(mystd,'(4X,a,3i10)')   'count:', int( lshift_tcount ), int( lshift_accept ), int( lshift_reject )
-     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, lshift_accept / lshift_tcount, lshift_reject / lshift_tcount
+     write(mystd,'(4X,a,3i10)')   'count:', int( lsh_t ), int( lshift_accept ), int( lshift_reject )
+     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, lshift_accept / lsh_t, lshift_reject / lsh_t
 
 ! about rshift action
-     if ( rshift_tcount <= half ) rshift_tcount = -one ! if rshift is disable
+     if ( rsh_t <= half ) rsh_t = -one ! if rshift is disable
      write(mystd,'(4X,a)')        'rshift kink statistics:'
-     write(mystd,'(4X,a,3i10)')   'count:', int( rshift_tcount ), int( rshift_accept ), int( rshift_reject )
-     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rshift_accept / rshift_tcount, rshift_reject / rshift_tcount
+     write(mystd,'(4X,a,3i10)')   'count:', int( rsh_t ), int( rshift_accept ), int( rshift_reject )
+     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rshift_accept / rsh_t, rshift_reject / rsh_t
 
 ! about reflip action
      if ( reflip_tcount <= half ) reflip_tcount = -one ! if reflip is disable
