@@ -1155,26 +1155,25 @@
 ! integral value for I(\tau_end)
      real(dp) :: iret
 
-     do flvr=1,norbs
-         do it=1,rank(flvr)
+     do f1=1,norbs
+         do it=1,rank(f1)
 
 ! reset the prefactor
-             pref(it,flvr) = zero
+             pref(it,f1) = zero
 
-! calculate normal contribution
-             do clur=1,norbs
-                 call cat_occupy_status(clur, time_e( index_e(it, flvr), flvr ), occu)
-                 pref(it,flvr) = pref(it,flvr) + half * ( uumat(flvr,clur) + uumat(clur,flvr) ) * occu
-             enddo ! over clur={1,norbs} loop
+! calculate contribution from static interaction
+             do f2=1,norbs
+                 call cat_occupy_status(f2, time_e( index_e(it, f1), f1 ), occu)
+                 pref(it,f1) = pref(it,f1) + half * ( uumat(f1,f2) + uumat(f2,f1) ) * occu
+             enddo ! over f2={1,norbs} loop
 
-! if retarded interaction is considered, we have to include the
-! contribution from I(\tau_end)
+! calculate contribution from retarded (dynamic) interaction
              if ( isscr > 1 ) then
-                 call ctqmc_make_iret(time_e( index_e(it, flvr), flvr ), iret)
-                 pref(it,flvr) = pref(it,flvr) + iret
+                 call ctqmc_make_iret(time_e( index_e(it, f1), f1 ), iret)
+                 pref(it,f1) = pref(it,f1) + iret
              endif ! back if ( isscr > 1 ) block
-         enddo ! over it={1,rank(flvr)} loop
-     enddo ! over flvr={1,norbs} loop
+         enddo ! over it={1,rank(f1)} loop
+     enddo ! over f1={1,norbs} loop
 
      return
   end subroutine ctqmc_make_pref
