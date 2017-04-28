@@ -909,15 +909,6 @@
 ! calculated impurity green's function
      real(dp), intent(out) :: gaux(ntime,norbs,norbs)
 
-! local parameters
-! scheme of integral kernel used to damp the Gibbs oscillation
-! damp = 0, Dirichlet   mode
-! damp = 1, Jackson     mode, preferred
-! damp = 2, Lorentz     mode
-! damp = 3, Fejer       mode
-! damp = 4, Wang-Zunger mode
-     integer, parameter :: damp = 0
-
 ! local variables
 ! loop index
      integer  :: i
