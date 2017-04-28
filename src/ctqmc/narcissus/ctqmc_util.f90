@@ -1267,7 +1267,8 @@
      use context, only : tmesh, rmesh
      use context, only : prob, nmat
      use context, only : eimp, uumat
-     use context, only : gtau, ftau, grnf, frnf
+     use context, only : gtau, ftau
+     use context, only : grnf, frnf
      use context, only : sig2
 
      implicit none
@@ -1290,7 +1291,6 @@
 
 ! dummy real variables, used to build atomic green's function
      real(dp) :: ob
-     real(dp) :: shift
 
 ! dummy complex variables, used to build atomic green's function
      complex(dp) :: cb
@@ -1324,13 +1324,9 @@
 ! unitary transformation matrix for legendre polynomial
      complex(dp) :: taux(mfreq,lemax)
 
-! atomic green's function and self-energy function in Hubbard-I approximation
+! atomic green's function and self-energy function
      complex(dp) :: ghub(mfreq,norbs)
      complex(dp) :: shub(mfreq,norbs)
-
-! evaluate the shift for the Coulomb interaction and chemical potential
-! if the retarded interaction is used
-     call ctqmc_prep_shift(shift)
 
 ! build atomic basis set, we do not order them according to their
 ! occupation numbers
