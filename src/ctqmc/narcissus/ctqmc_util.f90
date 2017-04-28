@@ -685,8 +685,13 @@
 !!>>> smooth physical observables                                      <<<
 !!========================================================================
 
-!!>>> ctqmc_smth_sigf: smooth impurity self-energy function in low
-!!>>> frequency region
+!!
+!! @sub ctqmc_smth_sigf
+!!
+!! smooth matsubara self-energy function in low frequency region. since
+!! we adopt the improved estimator to measure the self-energy function,
+!! it seems that this subroutine is useless 
+!!
   subroutine ctqmc_smth_sigf(sigf)
      use constants, only : dp, czero
 
