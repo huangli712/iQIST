@@ -946,15 +946,6 @@
 !-------------------------------------------------------------------------
 ! using legendre polynomial representation
 !-------------------------------------------------------------------------
-!!>>> cat_make_gtau2: build impurity green's function using legendre
-!!>>> polynomial representation
-! integral kernel
-     real(dp) :: ker1(lemax)
-
-! build kernel function at first
-     ker1 = one; call cat_make_kpm(lemax, ker1)
-
-! reconstruct green's function
      step = real(legrd - 1) / two
      do i=1,norbs
          do j=1,ntime
