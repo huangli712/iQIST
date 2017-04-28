@@ -599,12 +599,16 @@
      return
   end subroutine ctqmc_symm_gtau
 
-!!>>> ctqmc_symm_grnf: symmetrize the grnf according to symm vector
-!!>>> only the diagonal elements are taken into considerations
+!!
+!! @sub ctqmc_symm_grnf
+!!
+!! symmetrize the grnf according to symm vector. only the diagonal
+!! elements are taken into considerations
+!!
   subroutine ctqmc_symm_grnf(symm, grnf)
      use constants, only : dp, two, czero
 
-     use control, only : issun, isspn
+     use control, only : isbnd, isspn
      use control, only : nband, norbs
      use control, only : mfreq
 
@@ -638,8 +642,8 @@
          hist(symm(ibnd)) = hist(symm(ibnd)) + 1
      enddo ! over ibnd={1,norbs} loop
 
-! perform symmetrization for those orbitals which symm index are identity
-     if ( issun == 2 ) then
+! perform symmetrization for those orbitals with the same symmetry
+     if ( isbnd == 2 ) then
          do kfrq=1,mfreq
              do ibnd=1,norbs
                  if ( hist(ibnd) > 0 ) then         ! need to enforce symmetry
@@ -661,10 +665,10 @@
                  endif ! back if ( hist(ibnd) > 0 ) block
              enddo ! over ibnd={1,norbs} loop
          enddo ! over kfrq={1,mfreq} loop
-     endif ! back if ( issun == 2 ) block
+     endif ! back if ( isbnd == 2 ) block
 
 ! symmetrize grnf over spin
-     if ( isspn == 1 ) then
+     if ( isspn == 2 ) then
          do kfrq=1,mfreq
              do jbnd=1,nband
                  caux = ( grnf(kfrq,jbnd,jbnd) + grnf(kfrq,jbnd+nband,jbnd+nband) ) / two
@@ -672,7 +676,7 @@
                  grnf(kfrq,jbnd+nband,jbnd+nband) = caux
              enddo ! over jbnd={1,nband} loop
          enddo ! over kfrq={1,mfreq} loop
-     endif ! back if ( isspn == 1 ) block
+     endif ! back if ( isspn == 2 ) block
 
      return
   end subroutine ctqmc_symm_grnf
