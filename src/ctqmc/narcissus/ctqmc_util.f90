@@ -1356,16 +1356,14 @@
      enddo ! over i={1,ncfgs} loop
 
 ! build F matrix < alpha | f_{n} | beta >
-! note 1: to save the memory and accelerate the computation, we only store
-! the non-zero element of F matrix
-! note 2: it is crucial to check whether the number of non-zero elements
-! exceed limit (nzero)
+! to save the memory and accelerate the computation, we only store the
+! non-zero element of F matrix. it is crucial to check whether the number
+! of non-zero elements exceed limit (nzero)
      fcounter = 0
      alpha_loop: do i=1,ncfgs
          sa = basis(i,:)
          beta_loop: do j=1,ncfgs
              sb = basis(j,:)
-
              orbital_loop: do m=1,norbs
                  sc = sb
 
@@ -1394,8 +1392,8 @@
                      fb(fcounter(m),m) = j
                      fv(fcounter(m),m) = value
                  endif ! back if ( value /= 0 ) block
-             enddo orbital_loop ! over m={1,norbs} loop
 
+             enddo orbital_loop ! over m={1,norbs} loop
          enddo beta_loop ! over j={1,ncfgs} loop
      enddo alpha_loop ! over i={1,ncfgs} loop
 
@@ -1415,7 +1413,6 @@
      do i=1,norbs
          do k=1,mfreq
              shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
-             shub(k,i) = shub(k,i) - nmat(i) * shift
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
