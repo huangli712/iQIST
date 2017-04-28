@@ -1429,27 +1429,30 @@
 
 ! task 7: build impurity green's function and auxiliary correlation function
 !-------------------------------------------------------------------------
-     if ( isort == 1 ) then
+     STD_BLOCK: if ( isort == 1 ) then
+
          call ctqmc_make_gtau(tmesh, gtau, gaux)
          call ctqmc_four_htau(gaux, grnf)
          call ctqmc_make_ftau(tmesh, ftau, faux)
          call ctqmc_four_htau(faux, frnf)
-     endif ! back if ( isort == 1 ) block
+
+     endif STD_BLOCK ! back if ( isort == 1 ) block
 
 ! task 8: build impurity green's function and auxiliary correlation function
 !-------------------------------------------------------------------------
 ! special consideration must be taken for legendre representation, we can
 ! calculate grnf and frnf directly by using legendre coefficients, instead
 ! of performing fourier transformation
-     if ( isort == 2 ) then
-! build spherical Bessel functions: jaux
+     LEG_BLOCK: if ( isort == 2 ) then
+
+! 8.1 build spherical Bessel functions: jaux
          jaux = zero
          do k=1,mfreq
              ob = (two * k - one) * pi / two
              call s_sbessel(lemax-1, ob, jaux(k,:))
          enddo ! over k={1,mfreq} loop
 
-! build unitary transformation matrix: taux
+! 8.2 build unitary transformation matrix: taux
          taux = czero
          do i=1,lemax
              do k=1,mfreq
@@ -1459,9 +1462,10 @@
              enddo ! over k={1,mfreq} loop
          enddo ! over i={1,lemax} loop
 
-! rebuild impurity green's function on matsubara frequency (grnf) using
-! orthogonal polynomial representation, G(i\omega)
-! rebuild auxiliary correlation function on matsubara frequency (frnf)
+! 8.3 rebuild impurity green's function on matsubara frequency (grnf)
+! using orthogonal polynomial representation, G(i\omega)
+!
+! 8.4 rebuild auxiliary correlation function on matsubara frequency (frnf)
 ! using orthogonal polynomial representation, F(i\omega)
          grnf = czero
          frnf = czero
@@ -1473,9 +1477,11 @@
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
-     endif ! back if ( isort == 2 ) block
 
-! build full self-energy function by using frnf and grnf
+     endif LEG_BLOCK ! back if ( isort == 2 ) block
+
+! task 9: build full self-energy function by using improved estimator
+!-------------------------------------------------------------------------
      do i=1,norbs
          do k=1,mfreq
              sig2(k,i,i) = frnf(k,i,i) / grnf(k,i,i)
