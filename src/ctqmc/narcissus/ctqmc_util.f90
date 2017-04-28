@@ -377,11 +377,14 @@
      return
   end function ctqmc_eval_ktau
 
-!!>>> ctqmc_eval_ksed: calculate the second order derivates of screening
-!!>>> function K(\tau) on imaginary time space
-!!>>> note: this subroutine can be used to calculate the second order
-!!>>> derivates of K'(\tau) as well. What you have to do is to transfer
-!!>>> ptau and psed to this subroutine
+!!
+!! @sub ctqmc_eval_ksed
+!!
+!! calculate the second order derivates of screening function K(\tau)
+!! on imaginary time space. this subroutine can be used to calculate
+!! the second order derivates of K'(\tau) as well. what you have to do
+!! is to transfer ptau and psed to this subroutine
+!!
   subroutine ctqmc_eval_ksed(tmesh, ktau, ksed)
      use constants, only : dp, zero
 
