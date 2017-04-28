@@ -210,14 +210,14 @@
 ! about lshift action
      if ( lsh_t <= half ) lsh_t = -one ! if lshift is disable
      write(mystd,'(4X,a)')        'lshift kink statistics:'
-     write(mystd,'(4X,a,3i10)')   'count:', int( lsh_t ), int( lsh_a ), int( lshift_reject )
-     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, lsh_a / lsh_t, lshift_reject / lsh_t
+     write(mystd,'(4X,a,3i10)')   'count:', int( lsh_t ), int( lsh_a ), int( lsh_r )
+     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, lsh_a / lsh_t, lsh_r / lsh_t
 
 ! about rshift action
      if ( rsh_t <= half ) rsh_t = -one ! if rshift is disable
      write(mystd,'(4X,a)')        'rshift kink statistics:'
-     write(mystd,'(4X,a,3i10)')   'count:', int( rsh_t ), int( rsh_a ), int( rshift_reject )
-     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rsh_a / rsh_t, rshift_reject / rsh_t
+     write(mystd,'(4X,a,3i10)')   'count:', int( rsh_t ), int( rsh_a ), int( rsh_r )
+     write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rsh_a / rsh_t, rsh_r / rsh_t
 
 ! about reflip action
      if ( reflip_tcount <= half ) reflip_tcount = -one ! if reflip is disable
