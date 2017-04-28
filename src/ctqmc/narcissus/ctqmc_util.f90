@@ -895,7 +895,7 @@
      use control, only : lemax, legrd
      use control, only : ntime
      use control, only : beta
-     use context, only : ppleg, qqche
+     use context, only : ppleg
 
      implicit none
 
