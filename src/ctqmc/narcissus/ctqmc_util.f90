@@ -1328,10 +1328,9 @@
      complex(dp) :: ghub(mfreq,norbs)
      complex(dp) :: shub(mfreq,norbs)
 
-! task 1
+! task 1: build atomic eigenbasis (basis)
 !-------------------------------------------------------------------------
-! build atomic basis set, we do not order them according to their
-! occupation numbers
+! we do not order them according to their occupation numbers
      do i=1,ncfgs
          do j=1,norbs
              if ( btest(i-1,j-1) .eqv. .true. ) then
@@ -1342,7 +1341,8 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
-! evaluate atomic eigenvalues directly
+! task 2: evaluate atomic eigenvalues directly (eaux)
+!-------------------------------------------------------------------------
      eaux = zero
      do i=1,ncfgs
          do j=1,norbs
@@ -1357,7 +1357,8 @@
          enddo ! over j={1,norbs-1} loop
      enddo ! over i={1,ncfgs} loop
 
-! build F matrix < alpha | f_{n} | beta >
+! task 3: build F matrix < alpha | f_{n} | beta >
+!-------------------------------------------------------------------------
 ! to save the memory and accelerate the computation, we only store the
 ! non-zero element of F matrix. it is crucial to check whether the number
 ! of non-zero elements exceed limit (nzero)
@@ -1399,7 +1400,8 @@
          enddo beta_loop ! over j={1,ncfgs} loop
      enddo alpha_loop ! over i={1,ncfgs} loop
 
-! calculate atomic green's function using Hubbard-I approximation
+! task 4: calculate atomic green's function using Hubbard-I approximation
+!-------------------------------------------------------------------------
      do i=1,norbs
          do k=1,mfreq
              ghub(k,i) = czero
@@ -1411,15 +1413,17 @@
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
-! calculate atomic self-energy function using dyson's equation
+! task 5: calculate atomic self-energy function using dyson's equation
+!-------------------------------------------------------------------------
      do i=1,norbs
          do k=1,mfreq
              shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
          enddo ! over k={1,mfreq} loop
      enddo ! over i={1,norbs} loop
 
-! dump the ghub and shub, only for reference, only the master node can do it
-     if ( myid == master ) then
+! task 6: dump the ghub and shub, only for reference
+!-------------------------------------------------------------------------
+     if ( myid == master ) then ! only the master node can do it
          call ctqmc_dump_hub1(rmesh, ghub, shub)
      endif ! back if ( myid == master ) block
 
