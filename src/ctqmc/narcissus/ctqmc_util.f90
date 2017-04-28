@@ -684,14 +684,21 @@
 !!>>> Coulomb interaction matrix                                       <<<
 !!========================================================================
 
-!! note: do not support spin-flip and pair-hopping term so far.
 !!
-!! note: only Uc and Jz are need, the other Coulomb interaction parameters
-!! are used as backup
+!! note:
+!!
+!! since the narcissus code is based on the segment representation, it
+!! does not support the spin-flip and pair-hopping terms of course. only
+!! Uc and Jz are need, the other Coulomb interaction parameters are used
+!! as backup
+!!
 
-!!>>> ctqmc_make_uumat: to build general U interaction matrix: uumat, using
-!!>>> my own style
-  subroutine ctqmc_make_uumat(uumat)
+!!
+!! @sub ctqmc_make_umat
+!!
+!! to build density-density two-fermions Coulomb interaction matrix: uumat
+!!
+  subroutine ctqmc_make_umat(uumat)
      use constants, only : dp, zero
 
      use control, only : nband, norbs
@@ -738,7 +745,7 @@
      enddo ! over i={1,norbs-1} loop
 
      return
-  end subroutine ctqmc_make_uumat
+  end subroutine ctqmc_make_umat
 
 !!========================================================================
 !!>>> atomic eigenstate converter                                      <<<
