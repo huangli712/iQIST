@@ -751,9 +751,12 @@
 !!>>> atomic eigenstate converter                                      <<<
 !!========================================================================
 
-!!>>> ctqmc_make_state: convert current atomic state array into a decimal
-!!>>> number (state index)
-  subroutine ctqmc_make_state(norbs, pstat, state)
+!!
+!! @sub ctqmc_make_fock
+!!
+!! convert current atomic state array into a decimal number (state index)
+!!
+  subroutine ctqmc_make_fock(norbs, pstat, state)
      implicit none
 
 ! external arguments
@@ -779,7 +782,7 @@
      enddo ! over i={1,norbs} loop
 
      return
-  end subroutine ctqmc_make_state
+  end subroutine ctqmc_make_fock
 
 !!========================================================================
 !!>>> auxiliary subroutines for retarded interaction                   <<<
