@@ -932,26 +932,22 @@
 ! initialize gaux
      gaux = zero
 
-!!>>> cat_make_gtau1: build impurity green's function using normal
-!!>>> representation
-  subroutine cat_make_gtau1()
-     implicit none
-
+!-------------------------------------------------------------------------
+! using normal representation
+!-------------------------------------------------------------------------
      raux = real(ntime) / (beta * beta)
      do i=1,norbs
          do j=1,ntime
              gaux(j,i,i) = gtau(j,i,i) * raux
          enddo ! over j={1,ntime} loop
      enddo ! over i={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-     return
-  end subroutine cat_make_gtau1
-
+!-------------------------------------------------------------------------
+! using legendre polynomial representation
+!-------------------------------------------------------------------------
 !!>>> cat_make_gtau2: build impurity green's function using legendre
 !!>>> polynomial representation
-  subroutine cat_make_gtau2()
-     implicit none
-
 ! integral kernel
      real(dp) :: ker1(lemax)
 
@@ -970,9 +966,9 @@
              enddo ! over fleg={1,lemax} loop
          enddo ! over j={1,ntime} loop
      enddo ! over i={1,norbs} loop
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
      return
-  end subroutine cat_make_gtau2
   end subroutine ctqmc_make_gtau
 
 !!>>> ctqmc_make_ftau: build auxiliary correlation function using
