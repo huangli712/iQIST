@@ -861,21 +861,17 @@
 ! evaluate Coulomb interaction shift
      select case ( isscr )
 
-         case (1)
-             shift = zero               ! normal model, recover azalea
+         case (1)  ! static interaction
+             shift = zero
 
-         case (2)
-             shift = two * lc * lc / wc ! holstein-hubbard model
+         case (2)  ! dynamic interaction, plasmon pole model
+             shift = two * lc * lc / wc
 
-         case (3)
-             shift = two * lc * lc / wc ! plasmon pole model
+         case (3)  ! dynamic interaction, ohmic model
+             shift = two * lc * wc
 
-         case (4)
-             shift = two * lc * wc      ! ohmic model
-
-         case (99)
-             shift = lc                 ! realistic materials
-             call s_assert( shift /= ptau(1) )
+         case (99) ! dynamic interaction, realistic materials
+             shift = two * ptau(1)
 
      end select
 
