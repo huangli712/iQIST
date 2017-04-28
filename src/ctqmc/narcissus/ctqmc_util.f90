@@ -963,8 +963,11 @@
      return
   end subroutine ctqmc_make_gtau
 
-!!>>> ctqmc_make_ftau: build auxiliary correlation function using
-!!>>> orthogonal polynomial representation, F(\tau)
+!!
+!! @sub ctqmc_make_ftau
+!!
+!! build auxiliary correlation function using different representation
+!!
   subroutine ctqmc_make_ftau(tmesh, ftau, faux)
      use constants, only : dp, zero, two
 
