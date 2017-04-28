@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           04/27/2017 by li huang (last modified)
+!!!           04/28/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -486,7 +486,7 @@
 !!     lc just means the model parameter \alpha
 !!
 !! if isscr == 99
-!!     lc just means the shift for interaction matrix
+!!     lc is ignored
 !!
      real(dp), public, save :: lc    = 1.00_dp
 
@@ -505,7 +505,7 @@
 !!     wc just means the model parameter \omega_{c}
 !!
 !! if isscr == 99:
-!!     wc just means the shift for chemical potential
+!!     wc is ignored
 !!
      real(dp), public, save :: wc    = 1.00_dp
 
