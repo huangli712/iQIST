@@ -325,19 +325,27 @@
 !!>>> cubic spline interpolation 2                                     <<<
 !!========================================================================
 
-!! To provide cubic spline subroutines and wrapper functions to interpolate
+!!
+!! note:
+!!
+!! to provide cubic spline subroutine and wrapper function to interpolate
 !! the retarded interaction integrated function (i.e., screening function)
-!! in imaginary time axis.
+!! in imaginary time axis
+!!
 
-!!>>> ctqmc_eval_ktau: evaluate the intermediate elements for K(\tau)
-!!>>> using cubic spline interpolation
-!!>>> note: this function can be used to interpolate K'(\tau) as well
+!!
+!! @fun ctqmc_eval_ktau
+!!
+!! evaluate the intermediate elements for K(\tau) using cubic spline
+!! interpolation. this function can be used to interpolate K'(\tau) too
+!!
   function ctqmc_eval_ktau(mode, dtau) result(val)
      use constants, only : dp
 
      use control, only : ntime
      use context, only : tmesh
-     use context, only : ktau, ksed, ptau, psed
+     use context, only : ktau, ksed
+     use context, only : ptau, psed
 
      implicit none
 
