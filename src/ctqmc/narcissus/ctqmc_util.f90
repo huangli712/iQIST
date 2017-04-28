@@ -1261,6 +1261,7 @@
      use control, only : norbs, ncfgs
      use control, only : lemax
      use control, only : mfreq
+     use control, only : nfreq
      use control, only : ntime
      use control, only : mune, beta
      use control, only : myid, master
@@ -1318,7 +1319,7 @@
 ! imaginary time green's function
      real(dp) :: gaux(ntime,norbs,norbs)
 
-! auxiliary correlation function on imaginary time axis
+! auxiliary correlation function
      real(dp) :: faux(ntime,norbs,norbs)
 
 ! unitary transformation matrix for legendre polynomial
@@ -1427,6 +1428,14 @@
          call ctqmc_dump_hub1(rmesh, ghub, shub)
      endif ! back if ( myid == master ) block
 
+! we have to utilize ghub to back the grnf data. the first nfreq frequency
+! points are sampled by monte carlo method directly
+     do i=1,norbs
+         do k=1,nfreq
+             ghub(k,i) = grnf(k,i,i)
+         enddo ! over k={1,nfreq} loop
+     enddo ! over i={1,norbs} loop
+
 ! task 7: build impurity green's function and auxiliary correlation function
 !-------------------------------------------------------------------------
      STD_BLOCK: if ( isort == 1 ) then
@@ -1487,6 +1496,11 @@
              sig2(k,i,i) = frnf(k,i,i) / grnf(k,i,i)
          enddo ! over k={1,nfreq} loop
      enddo ! over i={1,norbs} loop
+
+! don't forget to restore the grnf data from ghub
+     do k=1,nfreq
+         call s_diag_z(norbs, ghub(k,:), grnf(k,:,:))
+     enddo ! over k={1,nfreq} loop
 
      return
   end subroutine ctqmc_make_hub2
