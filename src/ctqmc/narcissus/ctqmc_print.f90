@@ -220,7 +220,7 @@
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rsh_a / rsh_t, rsh_r / rsh_t
 
 ! about reflip action
-     if ( reflip_tcount <= half ) reflip_tcount = -one ! if reflip is disable
+     if ( rfl_t <= half ) rfl_t = -one ! if reflip is disable
      write(mystd,'(4X,a)')        'global flip statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( reflip_tcount ), int( reflip_accept ), int( reflip_reject )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, reflip_accept / reflip_tcount, reflip_reject / reflip_tcount
