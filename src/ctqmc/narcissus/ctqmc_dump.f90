@@ -231,18 +231,16 @@
 !!
 !! write out impurity green's function in matsubara frequency space
 !!
-  subroutine ctqmc_dump_grnf(rmesh, grnf, gerr)
+  subroutine ctqmc_dump_grnf(grnf, gerr)
      use constants, only : dp, mytmp
 
      use control, only : norbs
      use control, only : mfreq
+     use context, only : rmesh
 
      implicit none
 
 ! external arguments
-! matsubara frequency mesh
-     real(dp), intent(in)    :: rmesh(mfreq)
-
 ! impurity green's function
      complex(dp), intent(in) :: grnf(mfreq,norbs,norbs)
      complex(dp), intent(in) :: gerr(mfreq,norbs,norbs)
