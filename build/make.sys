@@ -51,7 +51,7 @@ CPP    = $(FPP) $(MPI) $(OMP)
 # Machine tuning options
 #-------------------------------------------------------------------------
 GPROF  = #-p
-CHECK  = -Wall -Wunused -Wextra #-fbacktrace -fcheck=all -g
+CHECK  = -Wall -Wunused -Wextra -fbacktrace -fcheck=all -g
 CDUMP  = -fopt-info
 LEVEL  = -Ofast -faggressive-loop-optimizations -fno-tree-pre -fPIC
 MARCH  = -msse4
