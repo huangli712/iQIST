@@ -46,18 +46,16 @@
 !!
 !! write out impurity green's function in imaginary time space
 !!
-  subroutine ctqmc_dump_gtau(tmesh, gtau, gerr)
+  subroutine ctqmc_dump_gtau(gtau, gerr)
      use constants, only : dp, mytmp
 
      use control, only : norbs
      use control, only : ntime
+     use context, only : tmesh
 
      implicit none
 
 ! external arguments
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
 ! impurity green's function
      real(dp), intent(in) :: gtau(ntime,norbs,norbs)
      real(dp), intent(in) :: gerr(ntime,norbs,norbs)
