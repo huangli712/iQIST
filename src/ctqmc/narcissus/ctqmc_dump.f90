@@ -614,6 +614,13 @@
      return
   end subroutine ctqmc_dump_prob
 
+  subroutine ctqmc_dump_paux()
+     implicit none
+
+     return
+  end subroutine ctqmc_dump_paux
+
+
 !!
 !! @sub ctqmc_dump_nmat
 !!
