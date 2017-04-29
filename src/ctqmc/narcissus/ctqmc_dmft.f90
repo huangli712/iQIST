@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/24/2017 by li huang (last modified)
+!!!           04/29/2017 by li huang (last modified)
 !!! purpose : implement a self-consistent engine for dynamical mean field
 !!!           theory (DMFT) simulation. it is designed for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
@@ -31,7 +31,7 @@
      use control, only : Uc, Jz
      use control, only : mune, alpha
      use control, only : myid, master
-     use context, only : tmesh, rmesh
+     use context, only : rmesh
      use context, only : eimp
      use context, only : grnf
      use context, only : wtau, wssf, hybf
@@ -98,7 +98,7 @@
 
 ! write out the new bath weiss's function in imaginary time axis
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_wtau(tmesh, wtau)
+         call ctqmc_dump_wtau(wtau)
      endif ! back if ( myid == master ) block
 
 ! print necessary self-consistent simulation information
