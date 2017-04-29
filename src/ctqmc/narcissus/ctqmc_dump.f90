@@ -447,14 +447,13 @@
   end subroutine ctqmc_dump_hub1
 
 !!========================================================================
-!!>>> dump data of physical observables                                <<<
+!!>>> dump data of physical observables 1                              <<<
 !!========================================================================
 
 !!
 !! @sub ctqmc_dump_hist
 !!
-!! write out the Monte Carlo sampling histogram for perturbation expansion
-!! series
+!! write out the histogram for perturbation expansion series
 !!
   subroutine ctqmc_dump_hist(hist, herr)
      use constants, only : dp, mytmp
@@ -601,8 +600,26 @@
      return
   end subroutine ctqmc_dump_prob
 
-  subroutine ctqmc_dump_paux()
+!!
+!! @sub ctqmc_dump_paux
+!!
+!! write out the auxiliary physical observables
+!!
+  subroutine ctqmc_dump_paux(paux, perr)
+     use constants, only : mytmp
+
      implicit none
+
+! external arguments
+! auxiliary physical observables
+     real(dp), intent(in) :: paux(9)
+     real(dp), intent(in) :: perr(9)
+
+! open data file: solver.paux.dat
+     open(mytmp, file='solver.paux.dat', form='formatted', status='unknown')
+
+! close data file
+     close(mytmp)
 
      return
   end subroutine ctqmc_dump_paux
