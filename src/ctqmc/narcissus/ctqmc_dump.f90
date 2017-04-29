@@ -275,18 +275,16 @@
 !!
 !! write out bath weiss's function in matsubara frequency space
 !!
-  subroutine ctqmc_dump_wssf(rmesh, wssf)
+  subroutine ctqmc_dump_wssf(wssf)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
      use control, only : mfreq
+     use context, only : rmesh
 
      implicit none
 
 ! external arguments
-! matsubara frequency mesh
-     real(dp), intent(in)    :: rmesh(mfreq)
-
 ! bath weiss's function
      complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
 
