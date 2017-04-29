@@ -183,17 +183,15 @@
 !!
 !! write out screening function and its derivates in imaginary time space
 !!
-  subroutine ctqmc_dump_ktau(tmesh, ktau, ptau, ksed, psed)
+  subroutine ctqmc_dump_ktau(ktau, ptau, ksed, psed)
      use constants, only : dp, mytmp
 
      use control, only : ntime
+     use context, only : tmesh
 
      implicit none
 
 ! external arguments
-! imaginary time mesh
-     real(dp), intent(in) :: tmesh(ntime)
-
 ! screening function, K(\tau)
      real(dp), intent(in) :: ktau(ntime)
 
