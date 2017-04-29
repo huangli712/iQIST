@@ -1101,12 +1101,12 @@
   end subroutine ctqmc_dump_ofom
 
 !!
-!! @sub ctqmc_dump_vrtx
+!! @sub ctqmc_dump_twop
 !!
 !! write out the two-particle green's function and full (reducible) vertex
 !! function, the improved estimator was used to improve the accuracy
 !!
-  subroutine ctqmc_dump_vrtx(h2_re, h2_im)
+  subroutine ctqmc_dump_twop(h2_re, h2_im)
      use constants, only : dp, czero, mytmp
 
      use control, only : isvrt
@@ -1253,7 +1253,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_vrtx
+  end subroutine ctqmc_dump_twop
 
 !!
 !! @sub ctqmc_dump_pair
