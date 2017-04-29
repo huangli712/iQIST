@@ -318,18 +318,16 @@
 !!
 !! write out hybridization function in matsubara frequency space
 !!
-  subroutine ctqmc_dump_hybf(rmesh, hybf)
+  subroutine ctqmc_dump_hybf(hybf)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
      use control, only : mfreq
+     use context, only : rmesh
 
      implicit none
 
 ! external arguments
-! matsubara frequency mesh
-     real(dp), intent(in)    :: rmesh(mfreq)
-
 ! hybridization function
      complex(dp), intent(in) :: hybf(mfreq,norbs,norbs)
 
