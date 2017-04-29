@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           04/28/2017 by li huang (last modified)
+!!!           04/29/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -1424,7 +1424,7 @@
 ! task 6: dump the ghub and shub, only for reference
 !-------------------------------------------------------------------------
      if ( myid == master ) then ! only the master node can do it
-         call ctqmc_dump_hub1(rmesh, ghub, shub)
+         call ctqmc_dump_hub1(ghub, shub)
      endif ! back if ( myid == master ) block
 
 ! we have to utilize ghub to back the grnf data. the first nfreq frequency

@@ -405,18 +405,16 @@
 !! write out impurity green's function and self-energy function obtained
 !! by hubbard-I approximation in matsubara frequency space
 !!
-  subroutine ctqmc_dump_hub1(rmesh, ghub, shub)
+  subroutine ctqmc_dump_hub1(ghub, shub)
      use constants, only : dp, mytmp
 
      use control, only : norbs
      use control, only : mfreq
+     use context, only : rmesh
 
      implicit none
 
 ! external arguments
-! matsubara frequency mesh
-     real(dp), intent(in)    :: rmesh(mfreq)
-
 ! impurity green's function by hubbard-I approximation
      complex(dp), intent(in) :: ghub(mfreq,norbs)
 
