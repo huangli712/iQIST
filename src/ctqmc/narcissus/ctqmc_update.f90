@@ -281,7 +281,7 @@
 ! anti-segments ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == mkink ) then
-         call s_print_exception('ctqmc_insert_kink','can not insert any segments')
+!<         call s_print_exception('ctqmc_insert_kink','can not insert any segments')
          ins_t = ins_t + one
          ins_r = ins_r + one
          RETURN
@@ -407,7 +407,7 @@
 ! anti-segments ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-         call s_print_exception('ctqmc_remove_kink','can not remove any segments')
+!<         call s_print_exception('ctqmc_remove_kink','can not remove any segments')
          rmv_t = rmv_t + one
          rmv_r = rmv_r + one
          RETURN
@@ -518,7 +518,7 @@
 ! anti-segments ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-         call s_print_exception('ctqmc_lshift_kink','can not lshift any segments')
+!<         call s_print_exception('ctqmc_lshift_kink','can not lshift any segments')
          lsh_t = lsh_t + one
          lsh_r = lsh_r + one
          RETURN
@@ -623,7 +623,7 @@
 ! anti-segments ) for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-         call s_print_exception('ctqmc_rshift_kink','can not rshift any segments')
+!<         call s_print_exception('ctqmc_rshift_kink','can not rshift any segments')
          rsh_t = rsh_t + one
          rsh_r = rsh_r + one
          RETURN

@@ -381,18 +381,16 @@
 !! the second order derivates of K'(\tau) as well. what you have to do
 !! is to transfer ptau and psed to this subroutine
 !!
-  subroutine ctqmc_eval_ksed(tmesh, ktau, ksed)
+  subroutine ctqmc_eval_ksed(ktau, ksed)
      use constants, only : dp, zero
 
      use control, only : ntime
      use control, only : beta
+     use context, only : tmesh
 
      implicit none
 
 ! external arguments
-! imaginary time axis
-     real(dp), intent(in)  :: tmesh(ntime)
-
 ! screening function on imaginary time axis
      real(dp), intent(in)  :: ktau(ntime)
 
