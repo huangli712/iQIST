@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           04/29/2017 by li huang (last modified)
+!!!           04/30/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -244,19 +244,17 @@
 !! calculate the second order derivates of hybridization function on
 !! imaginary time space
 !!
-  subroutine ctqmc_eval_hsed(tmesh, htau, hsed)
+  subroutine ctqmc_eval_hsed(htau, hsed)
      use constants, only : dp, zero
 
      use control, only : norbs
      use control, only : ntime
      use control, only : beta
+     use context, only : tmesh
 
      implicit none
 
 ! external arguments
-! imaginary time axis
-     real(dp), intent(in)  :: tmesh(ntime)
-
 ! hybridization function on imaginary time axis
      real(dp), intent(in)  :: htau(ntime,norbs,norbs)
 
