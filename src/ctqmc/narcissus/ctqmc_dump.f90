@@ -625,9 +625,9 @@
      write(mytmp,'(a,2f12.6)') '<Sz> :',  paux(4), perr(4)
      write(mytmp,'(a,2f12.6)') '<N1> :',  paux(5), perr(5)
      write(mytmp,'(a,2f12.6)') '<N2> :',  paux(6), perr(6)
-     write(mytmp,'(a,2f12.6)') '<K2> :',  paux(7), perr(7)
-     write(mytmp,'(a,2f12.6)') '<K3> :',  paux(8), perr(8)
-     write(mytmp,'(a,2f12.6)') '<K4> :',  paux(9), perr(9)
+     write(mytmp,'(a,2e12.6)') '<K2> :',  paux(7), perr(7)
+     write(mytmp,'(a,2e12.6)') '<K3> :',  paux(8), perr(8)
+     write(mytmp,'(a,2e12.6)') '<K4> :',  paux(9), perr(9)
 
 ! close data file
      close(mytmp)
