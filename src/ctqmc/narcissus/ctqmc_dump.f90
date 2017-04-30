@@ -606,7 +606,7 @@
 !! write out the auxiliary physical observables
 !!
   subroutine ctqmc_dump_paux(paux, perr)
-     use constants, only : mytmp
+     use constants, only : dp, mytmp
 
      implicit none
 
