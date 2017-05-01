@@ -37,24 +37,24 @@
 
 # Fortran compiler, linker, and archiver
 #-------------------------------------------------------------------------
-F90    = mpifort
+F90    = mpif90
 LINKER = $(F90)
 ARCHIVER = ar -ruv
 
 # Fortran preprocessor options
 #-------------------------------------------------------------------------
 MPI    = -DMPI
-OMP    = #-fopenmp
-FPP    = -cpp
+OMP    = #-openmp
+FPP    = -fpp
 CPP    = $(FPP) $(MPI) $(OMP)
 
 # Machine tuning options
 #-------------------------------------------------------------------------
-GPROF  = #-p
-CHECK  = -Wall -Wunused -Wextra #-fbacktrace -fcheck=all -g
-CDUMP  = -fopt-info
-LEVEL  = -Ofast -faggressive-loop-optimizations -fno-tree-pre -fPIC
-MARCH  = -msse4
+GPROF  = #-pg
+CHECK  = -warn all #-check all -traceback -g
+CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
+LEVEL  = -O3 -xHost -unroll-aggressive -align all -fPIC
+MARCH  = -march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2
 
 # Flags for fortran compiler and linker
 #-------------------------------------------------------------------------
@@ -63,4 +63,4 @@ LFLAGS = $(OMP) $(GPROF)
 
 # External linear algebra library
 #-------------------------------------------------------------------------
-LIBS   = -framework Accelerate
+LIBS   = -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
