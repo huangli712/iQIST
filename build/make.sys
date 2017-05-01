@@ -31,7 +31,7 @@
 ## =======
 ##
 ## 05/11/2015 by li huang (created)
-## 04/21/2017 by li huang (last modified)
+## 05/01/2017 by li huang (last modified)
 ##
 ##
 
@@ -44,21 +44,18 @@ ARCHIVER = ar -ruv
 # Fortran preprocessor options
 #-------------------------------------------------------------------------
 MPI    = -DMPI
-OMP    = #-openmp
+OMP    = #-qopenmp
 FPP    = -fpp
 CPP    = $(FPP) $(MPI) $(OMP)
 
 # Machine tuning options
 #-------------------------------------------------------------------------
-GPROF  = #-pg
-CHECK  = -warn all #-check all -traceback -g
-CDUMP  = -vec-report2 -openmp-report2 -nogen-interfaces
-LEVEL  = -O3 -xHost -unroll-aggressive -align all -fPIC
-MARCH  = -march=corei7-avx # core2 corei7 corei7-avx core-avx-i core-avx2
+CHECK  = -warn all #-check all -traceback -g -p
+SPEED  = -nogen-interfaces -O3 -xHost
 
 # Flags for fortran compiler and linker
 #-------------------------------------------------------------------------
-FFLAGS = -c $(CPP) $(CHECK) $(CDUMP) $(LEVEL) $(MARCH) $(GPROF)
+FFLAGS = -c $(CPP) $(CHECK) $(SPEED)
 LFLAGS = $(OMP) $(GPROF)
 
 # External linear algebra library
