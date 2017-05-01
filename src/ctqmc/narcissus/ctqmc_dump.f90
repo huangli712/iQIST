@@ -635,7 +635,6 @@
      return
   end subroutine ctqmc_dump_paux
 
-
 !!
 !! @sub ctqmc_dump_nmat
 !!

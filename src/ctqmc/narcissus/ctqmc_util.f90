@@ -9,8 +9,8 @@
 !!!           ctqmc_symm_nmat
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf <<<---
-!!!           ctqmc_make_umat <<<---
 !!!           ctqmc_make_fock <<<---
+!!!           ctqmc_make_umat <<<---
 !!!           ctqmc_make_lift
 !!!           ctqmc_prep_lift <<<---
 !!!           ctqmc_make_gtau
