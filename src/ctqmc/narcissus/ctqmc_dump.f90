@@ -179,6 +179,61 @@
   end subroutine ctqmc_dump_htau
 
 !!
+!! @sub ctqmc_dump_gtau
+!!
+!! write out impurity green's function in imaginary time space
+!!
+  subroutine ctqmc_dump_gtau(gtau, gerr)
+     use constants, only : dp, mytmp
+
+     use control, only : isbin
+     use control, only : norbs
+     use control, only : ntime
+     use context, only : tmesh
+
+     implicit none
+
+! external arguments
+! impurity green's function
+     real(dp), intent(in) :: gtau(ntime,norbs,norbs)
+     real(dp), intent(in) :: gerr(ntime,norbs,norbs)
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! scaled impurity green's function
+     real(dp) :: gaux(ntime,norbs,norbs)
+     real(dp) :: gtmp(ntime,norbs,norbs)
+
+! evaluate gaux and gtmp at first
+     call ctqmc_make_gtau(tmesh, gtau, gaux)
+     call ctqmc_make_gtau(tmesh, gerr, gtmp)
+
+! open data file: solver.green.dat
+     if ( isbin == 1 ) then
+         open(mytmp, file='solver.green.dat', form='formatted', status='unknown')
+     else
+         open(mytmp, file='solver.green.dat', form='formatted', status='unknown', access='append')
+     endif ! back if ( isbin == 1 ) block
+
+! write it
+     do i=1,norbs
+         do j=1,ntime
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gtmp(j,i,i)
+         enddo ! over j={1,ntime} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_gtau
+
+!!
 !! @sub ctqmc_dump_ktau
 !!
 !! write out screening function and its derivates in imaginary time space
