@@ -739,6 +739,10 @@
      return
   end subroutine ctqmc_dump_nmat
 
+!!========================================================================
+!!>>> dump data of physical observables 3                              <<<
+!!========================================================================
+
 !!
 !! @sub ctqmc_dump_kmat
 !!
@@ -873,7 +877,7 @@
   end subroutine ctqmc_dump_lmat
 
 !!
-!! @sub ctqmc_dump_schi
+!! @sub ctqmc_dump_szpw
 !!
 !! write out the powers of local magnetization
 !!
@@ -923,6 +927,10 @@
 
      return
   end subroutine ctqmc_dump_szpw
+
+!!========================================================================
+!!>>> dump data of physical observables 4                              <<<
+!!========================================================================
 
 !!
 !! @sub ctqmc_dump_schi
@@ -1173,6 +1181,10 @@
 
      return
   end subroutine ctqmc_dump_ofom
+
+!!========================================================================
+!!>>> dump data of physical observables 5                              <<<
+!!========================================================================
 
 !!
 !! @sub ctqmc_dump_twop
