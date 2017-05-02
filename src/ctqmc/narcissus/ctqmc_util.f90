@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           04/30/2017 by li huang (last modified)
+!!!           05/02/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -676,6 +676,43 @@
   end subroutine ctqmc_symm_grnf
 
 !!========================================================================
+!!>>> atomic eigenstates                                               <<<
+!!========================================================================
+
+!!
+!! @sub ctqmc_make_fock
+!!
+!! convert current atomic state array into a decimal number (state index)
+!!
+  subroutine ctqmc_make_fock(norbs, pstat, state)
+     implicit none
+
+! external arguments
+! index of atomic state
+     integer, intent(out) :: pstat
+
+! number of orbitals
+     integer, intent(in)  :: norbs
+
+! atomic state array
+     integer, intent(in)  :: state(norbs)
+
+! local variables
+! loop index
+     integer :: i
+
+! init pstat
+     pstat = 1
+
+! evaluate pstat, for example, 0101 = 0*2^0 + 1*2^1 + 0*2^2 + 1*2^3 = 10
+     do i=1,norbs
+         if ( state(i) > 0 ) pstat = pstat + ishft(1, i-1)
+     enddo ! over i={1,norbs} loop
+
+     return
+  end subroutine ctqmc_make_fock
+
+!!========================================================================
 !!>>> Coulomb interaction matrix                                       <<<
 !!========================================================================
 
@@ -741,43 +778,6 @@
 
      return
   end subroutine ctqmc_make_umat
-
-!!========================================================================
-!!>>> atomic eigenstates                                               <<<
-!!========================================================================
-
-!!
-!! @sub ctqmc_make_fock
-!!
-!! convert current atomic state array into a decimal number (state index)
-!!
-  subroutine ctqmc_make_fock(norbs, pstat, state)
-     implicit none
-
-! external arguments
-! index of atomic state
-     integer, intent(out) :: pstat
-
-! number of orbitals
-     integer, intent(in)  :: norbs
-
-! atomic state array
-     integer, intent(in)  :: state(norbs)
-
-! local variables
-! loop index
-     integer :: i
-
-! init pstat
-     pstat = 1
-
-! evaluate pstat, for example, 0101 = 0*2^0 + 1*2^1 + 0*2^2 + 1*2^3 = 10
-     do i=1,norbs
-         if ( state(i) > 0 ) pstat = pstat + ishft(1, i-1)
-     enddo ! over i={1,norbs} loop
-
-     return
-  end subroutine ctqmc_make_fock
 
 !!========================================================================
 !!>>> retarded interaction                                             <<<
