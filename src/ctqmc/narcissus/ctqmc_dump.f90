@@ -179,11 +179,11 @@
   end subroutine ctqmc_dump_htau
 
 !!
-!! @sub ctqmc_dump_gtau
+!! @sub ctqmc_dump_ftau
 !!
 !! write out impurity green's function in imaginary time space
 !!
-  subroutine ctqmc_dump_gtau(gtau, gerr)
+  subroutine ctqmc_dump_ftau(gtau, gerr)
      use constants, only : dp, mytmp
 
      use control, only : isbin
@@ -231,7 +231,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_gtau
+  end subroutine ctqmc_dump_ftau
 
 !!
 !! @sub ctqmc_dump_ktau
