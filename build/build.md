@@ -77,7 +77,7 @@ Possible options:
 
 * -qopenmp
 
-If you are using old version Intel fortran compiler, this option should be '-openmp'.
+If you are using old version Intel fortran compiler, this option may be '-openmp'.
 
 ### FPP
 
@@ -124,7 +124,7 @@ Possible options:
 * -O3
 * -xHost
 
-If you are using the Intel fortran compiler, the '-O3' option means the highest optimization. The '-xHost' option enables the compiler to try to generate the most suitable code for the current computer architecture. The '-unroll-aggressive' option means using aggressive method to unroll the loop structures. The '-align all' option means to align the arrays, structures, etc. The '-fPIC' option means to generate position independent code for the purpose of dynamic link. It should be enabled to compile the python API. But if you want to debug the code, it has to be commented out. Please modify them only if you are an expert of the Intel fortran compiler and you know what you are doing.
+The '-O3' option means the highest optimization. The '-xHost' option enables the compiler to try to generate the most suitable code for the current computer architecture.
 
 ### FFLAGS
 
