@@ -130,51 +130,6 @@ Possible options:
 
 If you are using the Intel fortran compiler, the '-O3' option means the highest optimization. The '-xHost' option enables the compiler to try to generate the most suitable code for the current computer architecture. The '-unroll-aggressive' option means using aggressive method to unroll the loop structures. The '-align all' option means to align the arrays, structures, etc. The '-fPIC' option means to generate position independent code for the purpose of dynamic link. It should be enabled to compile the python API. But if you want to debug the code, it has to be commented out. Please modify them only if you are an expert of the Intel fortran compiler and you know what you are doing.
 
-### MARCH
-
-Used to specify the instruction sets that the current system supports.
-
-Possible options:
-
-* -march=core2
-* -march=corei7
-* -march=corei7-avx
-* -march=core-avx-i
-* -march=core-avx2
-* -mavx
-* -mavx2
-* -msse2
-* -msse3
-* -msse4
-
-If you are using the Intel fortran compiler, the 'core2' option is the safest choice and it works always. But it may be not the best. Please modify it only when you understand what you are doing.
-
-The 'core2' option will generate code for the Intel Core 2 processor family.
-
-The 'corei7' option generates code for processors that support Intel SSE4 efficient accelerated string and text processing instructions. It may also generate code for Intel SSE4 vectorizing compiler and media accelerator, Intel SSE3, SSE2, SSE, and SSSE3 instructions.
-
-The 'corei7-avx' option generates code for processors that support Intel advanced vector extensions (Intel AVX), Intel SSE4.2, SSE4.1, SSE3, SSE2, SSE, and SSSE3 instructions.
-
-The 'core-avx-i' option generates code for processors that support the RDRND instruction, Intel advanced vector extensions (Intel AVX), Intel SSE4.2, SSE4.1, SSE3, SSE2, SSE, and SSSE3 instructions.
-
-The 'core-avx2' option generates code for processors that support Intel advanced vector extensions 2 (Intel AVX2), Intel AVX, SSE4.2, SSE4.1, SSE3, SSE2, SSE, and SSSE3 instructions.
-
-If you are using the GNU gfortran compiler, you can not use the above options to specify the instruction sets. The possible options are listed as follows:
-
-The '-mavx' option supports the Intel MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2 and AVX built-in functions and code generation.
-
-The '-mavx2' option supports the Intel MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2, AVX and AVX2 built-in functions and code generation.
-
-The '-msse2' option supports the Intel MMX, SSE and SSE2 built-in functions and code generation.
-
-The '-msse3' option supports the Intel MMX, SSE, SSE2 and SSE3 built -in functions and code generation.
-
-The '-msse4' option supports the Intel MMX, SSE, SSE2, SSE3, SSSE3, SSE4.1 and SSE4.2 built-in functions and code generation.
-
-> NOTE:
->
-> You could simply cat a file (/proc/cpuinfo) on Linux and then glean a lot of information about the CPU. On Mac OS X, you can look at "About This Mac", or do a "sysctl -a hw" and try to look at relevant information in the output.
-
 ### FFLAGS
 
 Collection of Fortran compiler options. Do not modify them for ever.
