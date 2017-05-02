@@ -124,7 +124,7 @@ Possible options:
 * -O3
 * -xHost
 
-The '-O3' option means the highest optimization. The '-xHost' option enables the compiler to try to generate the most suitable code for the current computer architecture.
+The '-mdynamic-no-pic' option generates code that is not position-independent but has position-independent external references. The '-no-prec-div' enables optimizations that give slightly less precise results than full IEEE division. The '-fp-model fast=2' option tells the compiler to use more aggressive optimizations when implementing floating-point calculations. These optimizations increase speed, but may affect the accuracy or reproducibility of floating-point computations. The '-O3' option means the highest optimization. The '-xHost' option enables the compiler to try to generate the most suitable code for the current computer architecture.
 
 ### FFLAGS
 
@@ -146,7 +146,7 @@ Possible options:
 * $(OMP)
 * -Wl,-no_pie
 
-The '-Wl,-no_pie' option is useful when you are using the macOS system and want to traceback the code (the -traceback opinion is applied). If you are using the Linux system, you can skip it.
+The '-Wl,-no_pie' option is useful when you are using the macOS system and want to traceback the code (the -traceback option is applied). If you are using the Linux system, you can skip it.
 
 ### LIBS
 
