@@ -780,7 +780,7 @@
 
 ! check if we need to dump the < k > and < k^2 > data
 ! to solver.kmat.dat
-     if ( .not. btest(issus, 5) ) RETURN
+     if ( .not. btest(isobs, 1) ) RETURN
 
 ! open data file: solver.kmat.dat
      open(mytmp, file='solver.kmat.dat', form='formatted', status='unknown')
@@ -815,7 +815,7 @@
   subroutine ctqmc_dump_lmat(lmat, rmat, lrmat, lerr, rerr, lrerr)
      use constants, only : dp, mytmp
 
-     use control, only : issus
+     use control, only : isobs
      use control, only : norbs
 
      implicit none
@@ -848,7 +848,7 @@
 
 ! check if we need to dump the fidelity susceptibility data
 ! to solver.lmat.dat
-     if ( .not. btest(issus, 6) ) RETURN
+     if ( .not. btest(isobs, 2) ) RETURN
 
 ! open data file: solver.lmat.dat
      open(mytmp, file='solver.lmat.dat', form='formatted', status='unknown')
@@ -879,12 +879,13 @@
 !!
 !! @sub ctqmc_dump_szpw
 !!
-!! write out the powers of local magnetization
+!! write out the powers of local magnetization, which can be used to
+!! calculate the binder cumulant
 !!
   subroutine ctqmc_dump_szpw(szpow, szerr)
      use constants, only : dp, mytmp
 
-     use control, only : issus
+     use control, only : isobs
      use control, only : nband, norbs
 
      implicit none
@@ -901,7 +902,7 @@
 
 ! check if we need to dump the powers of local magnetization data
 ! to solver.szpw.dat
-     if ( .not. btest(issus, 7) ) RETURN
+     if ( .not. btest(isobs, 3) ) RETURN
 
 ! open data file: solver.szpw.dat
      open(mytmp, file='solver.szpw.dat', form='formatted', status='unknown')
