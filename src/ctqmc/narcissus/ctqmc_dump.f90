@@ -207,8 +207,8 @@
      real(dp) :: ftmp(ntime,norbs,norbs)
 
 ! evaluate faux and ftmp at first
-     call ctqmc_make_gtau(tmesh, gtau, gaux)
-     call ctqmc_make_gtau(tmesh, gerr, gtmp)
+     call ctqmc_make_ftau(tmesh, ftau, faux)
+     call ctqmc_make_ftau(tmesh, ferr, ftmp)
 
 ! open data file: solver.green.dat
      if ( isbin == 1 ) then
