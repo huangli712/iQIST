@@ -105,33 +105,13 @@ Please make sure that the '$(FPP)' option is present.
 Used to specify what types of check should be done.
 
 Possible options:
-
+* -nogen-interfaces
 * -warn all
 * -check all
 * -traceback
 * -g
-* -Wall -Wunused -Wextra
-* -fcheck=all
-* -fbacktrace
 
-If you are using the Intel fortran compiler, the '-warn all' option means the check is done in compiling. The '-check all' option means the check will be done in running. The '-traceback' option enables us to track the exact position (line number and file name) where the error occurs. The '-g' option enables the compiler to generate debug information and embed them into the final program. **Note that all of the '-check all', '-traceback', and '-g' options will decrease the efficiency greatly**.
-
-If you are using the GNU gfortran compiler, the '-Wall' option will enable most warning messages. The '-Wunused' option will enable all -Wunused- warnings, such as the '-Wunused-parameter' option, etc. The '-Wextra' option will print some extra warnings (sometimes they are unwanted). The '-fcheck=all' option will specify that all of the runtime checks are to be performed. The '-fbacktrace' option will produce a backtrace when a runtime error is encountered. Finally, the '-g' option will enable the compiler to generate debug information and embed them into the final program.
-
-### CDUMP
-
-Specify whether the fortran compiler will output useful optimization information during the compiling process.
-
-Possible options:
-
-* -vec-report2
-* -openmp-report2
-* -nogen-interfaces
-* -fopt-info
-
-If you are using the Intel fortran compiler, the '-vec-report2' option tells the vectorizer to report on vectorized and non-vectorized loops. The '-openmp-report2' option controls the openmp parallelizer's level of diagnostic messages. Here number 2 is the level of openmp diagnostic messages to display. The '-nogen-interfaces' option ask the compiler to do not generate an interface block for each routine defined in the source file.
-
-If you are using the GNU gfortran compiler, the '-fopt-info' option enables all optimization info dumps on stderr.
+The '-nogen-interfaces' option ask the compiler to do not generate an interface block for each routine defined in the source file. The '-warn all' option means the check is done in compiling. The '-check all' option means the check will be done in running. The '-traceback' option enables us to track the exact position (line number and file name) where the error occurs. The '-g' option enables the compiler to generate debug information and embed them into the final program. **Note that all of the '-check all', '-traceback', and '-g' options will decrease the efficiency greatly**.
 
 ### LEVEL
 
@@ -149,8 +129,6 @@ Possible options:
 * -fno-tree-pre
 
 If you are using the Intel fortran compiler, the '-O3' option means the highest optimization. The '-xHost' option enables the compiler to try to generate the most suitable code for the current computer architecture. The '-unroll-aggressive' option means using aggressive method to unroll the loop structures. The '-align all' option means to align the arrays, structures, etc. The '-fPIC' option means to generate position independent code for the purpose of dynamic link. It should be enabled to compile the python API. But if you want to debug the code, it has to be commented out. Please modify them only if you are an expert of the Intel fortran compiler and you know what you are doing.
-
-If you are using the GNU gfortran compiler, the '-Ofast' option means to optimize the code for speed disregarding exact standards compliance. The '-faggressive-loop-optimizations' option aggressively optimizes loops using language constraints. The '-fno-tree-pre' option will disable the SSA-PRE optimization on trees. In general, if the '-O2', '-O3', or '-Ofast' options are actived, the '-ftree-pre' option will be included automatically. However, based on some benchmark results, we found that the SSA-PRE optimization on trees would lead to strange runtime behaviors (we used the GNU gfortran 5.1.0). So, we decide to close the SSA-PRE optimization on trees explicitly, that is the reason why we need the '-fno-tree-pre' option. The '-fPIC' option means to generate position independent code for the purpose of dynamic link. It should be enabled to compile the python API. However, if you want to debug the code, it has to be commented out. Please modify them only if you are an expert of the GNU gfortran compiler and you know what you are doing.
 
 ### MARCH
 
