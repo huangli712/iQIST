@@ -34,7 +34,7 @@ Though it is not mandatory, we still strongly recommend to update the above soft
 
 ### F90
 
-The Fortran compiler. Both the parallel and sequential fortran compilers are supported. Note that only the Intel fortran compiler was tested. And we recommend to use the very latest version of Intel fortran compiler (i.e, Intel Parallel Studio 2017).
+The Fortran compiler. Both the parallel and sequential fortran compilers are supported. Note that only the Intel fortran compiler was extensively tested. And we recommend to use the very latest version of Intel fortran compiler (i.e, Intel Parallel Studio 2017).
 
 Possible options:
 
@@ -42,8 +42,6 @@ Possible options:
 * mpifort
 * mpiifort
 * ifort
-
-The internal compiler used by mpif90, mpifort, or mpiifort must be ifort.
 
 ### LINKER
 
@@ -97,13 +95,14 @@ Possible options:
 * $(MPI)
 * $(OMP)
 
-Please make sure that the '$(FPP)' option is present.
+Please make sure that the '$(FPP)' option is always present.
 
 ### CHECK
 
 Used to specify what types of check should be done.
 
 Possible options:
+
 * -nogen-interfaces
 * -warn all
 * -check all
@@ -147,7 +146,7 @@ The '-Wl,-no_pie' option is useful when you are using the macOS system and want 
 
 ### LIBS
 
-Specify the external libraries. Now the iQIST software package depends on LAPACK and BLAS heavily. To achieve good performance, the highly optimized LAPACK and BLAS implementations are essential. Here we want to recommend the OpenBLAS and Intel MKL.
+Specify the external libraries. Now the iQIST software package depends on LAPACK and BLAS heavily. To achieve good performance, the highly optimized LAPACK and BLAS implementations are essential.
 
 Possible options:
 
