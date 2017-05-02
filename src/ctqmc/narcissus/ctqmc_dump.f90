@@ -1193,7 +1193,7 @@
 !! write out the two-particle green's function and full (reducible) vertex
 !! function, the improved estimator was used to improve the accuracy
 !!
-  subroutine ctqmc_dump_twop(h2_re, h2_im)
+  subroutine ctqmc_dump_twop(g2_re, g2_im, h2_re, h2_im)
      use constants, only : dp, czero, mytmp
 
      use control, only : isvrt
@@ -1201,17 +1201,17 @@
      use control, only : mfreq
      use control, only : nffrq, nbfrq
      use control, only : beta
-     use context, only : g2_re, g2_im
      use context, only : grnf, frnf
-     use context, only : sig2
 
      implicit none
 
 ! external arguments
-! used to calculate vertex function, real part
+! used to calculate two-particle green's and vertex functions, real part
+     real(dp), intent(in) :: g2_re(nffrq,nffrq,nbfrq,norbs,norbs)
      real(dp), intent(in) :: h2_re(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! used to calculate vertex function, imaginary part
+! used to calculate two-particle green's and vertex functions, imaginary part
+     real(dp), intent(in) :: g2_im(nffrq,nffrq,nbfrq,norbs,norbs)
      real(dp), intent(in) :: h2_im(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
@@ -1248,19 +1248,11 @@
      complex(dp) :: chii
 
 ! check if we need to dump the two-particle green's function and vertex
-! function data to solver.vrtx.dat
-     if ( .not. btest(isvrt, 2) ) RETURN
+! function data to solver.twop.dat
+     if ( .not. btest(isvrt, 1) ) RETURN
 
-! build frnf at first: F = G \Sigma
-! in principle, F should be measured during the Monte Carlo procedure
-     do m=1,norbs
-         do k=1,mfreq
-             frnf(k,m,m) = grnf(k,m,m) * sig2(k,m,m)
-         enddo ! over k={1,mfreq} loop
-     enddo ! over m={1,norbs} loop
-
-! open data file: solver.vrtx.dat
-     open(mytmp, file='solver.vrtx.dat', form='formatted', status='unknown')
+! open data file: solver.twop.dat
+     open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
 
 ! write it
      do m=1,norbs
@@ -1317,7 +1309,7 @@
                          if ( k == 1 ) chi0 = chi0 + beta * g1 * g3
                          if ( i == j .and. m == n ) chi0 = chi0 - beta * g1 * g3
 
-! evaluate chii, more accurate than that in ctqmc_dump_twop() subroutine
+! evaluate chii
                          chii = g1 * chih - fw * chit
 
 ! jt: \omega, unit is \pi/\beta
@@ -1345,7 +1337,7 @@
 !!
 !! @sub ctqmc_dump_pair
 !!
-!! write out the particle-particle pair susceptibility
+!! write out the particle-particle pairing susceptibility
 !!
   subroutine ctqmc_dump_pair(ps_re, ps_im)
      use constants, only : dp, mytmp
@@ -1357,10 +1349,10 @@
      implicit none
 
 ! external arguments
-! particle-particle pair susceptibility, real part
+! particle-particle pairing susceptibility, real part
      real(dp), intent(in) :: ps_re(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! particle-particle pair susceptibility, imaginary part
+! particle-particle pairing susceptibility, imaginary part
      real(dp), intent(in) :: ps_im(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
@@ -1379,7 +1371,7 @@
 
 ! check if we need to dump the particle-particle pair susceptibility
 ! to solver.pair.dat
-     if ( .not. btest(isvrt, 3) ) RETURN
+     if ( .not. btest(isvrt, 2) ) RETURN
 
 ! open data file: solver.pair.dat
      open(mytmp, file='solver.pair.dat', form='formatted', status='unknown')
