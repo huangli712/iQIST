@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/27/2017 by li huang (last modified)
+!!!           05/03/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are the most important subroutines
@@ -28,11 +28,13 @@
      use constants, only : dp, zero, one, mystd
 
      use control, only : cname               ! code name
+                                             !
      use control, only : isscf               ! control running scheme
      use control, only : isscr               ! control dynamic interaction
      use control, only : isbnd, isspn        ! control symmetry
      use control, only : isbin, iswor, isort ! control measurement tricks
      use control, only : isobs, issus, isvrt ! control physical observables
+                                             !
      use control, only : nband, norbs, ncfgs ! size of model Hamiltonian
      use control, only : mkink               ! perturbation expansion order
      use control, only : mfreq               ! matsubara frequency
@@ -41,23 +43,27 @@
      use control, only : nsweep, nwrite      ! monte carlo sampling
      use control, only : nmonte, ncarlo      ! interval for monte carlo sampling
      use control, only : myid, master        ! mpi environment
-
+                                             !
      use context, only : hist                ! histogram
      use context, only : prob                ! atomic eigenstate probability
      use context, only : paux                ! auxiliary physical observables
      use context, only : nmat, nnmat         ! occupation and double occupation
+                                             !
      use context, only : kmat, kkmat         ! kinetic energy fluctuation
      use context, only : lmat, rmat, lrmat   ! fidelity susceptibility
      use context, only : szpow               ! binder cumulant
+                                             !
      use context, only : schi, sschi, ssfom  ! spin susceptibility
      use context, only : ochi, oochi, oofom  ! charge susceptibility
+                                             !
      use context, only : g2_re, g2_im        ! two-particle green's function
      use context, only : h2_re, h2_im        ! two-particle green's function
      use context, only : ps_re, ps_im        ! pairing susceptibility
+                                             !
      use context, only : symm                ! symmetry
      use context, only : gtau, ftau          ! imaginary time green's function
-     use context, only : grnf                ! matsubara green's function
-     use context, only : sig2                ! self-energy function
+     use context, only : grnf, frnf          ! matsubara green's function
+     use context, only : sig2                ! matsubara self-energy function
 
      implicit none
 
@@ -659,10 +665,12 @@
 ! symmetrize the impurity green's function over spin or over bands
      call ctqmc_symm_gtau(symm, gtau)
      call ctqmc_symm_gtau(symm, gtau_err)
-
-! symmetrize the impurity green's function over spin or over bands
      call ctqmc_symm_grnf(symm, grnf)
-     call ctqmc_symm_grnf(symm, grnf_err)
+
+! symmetrize the auxiliary correlation function over spin or over bands
+     call ctqmc_symm_gtau(symm, ftau)
+     call ctqmc_symm_gtau(symm, ftau_err)
+     call ctqmc_symm_grnf(symm, frnf)
 
 ! symmetrize the self-energy function over spin or over bands
      call ctqmc_symm_grnf(symm, sig2)
@@ -680,6 +688,7 @@
 
          call ctqmc_dump_gtau(gtau, gtau_err)
          call ctqmc_dump_grnf(grnf, grnf_err)
+         call ctqmc_dump_ftau(ftau, ftau_err)
          call ctqmc_dump_sigf(sig2)
 
          call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
