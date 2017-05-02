@@ -181,12 +181,11 @@
 !!
 !! @sub ctqmc_dump_ftau
 !!
-!! write out impurity green's function in imaginary time space
+!! write out auxiliary correlation function in imaginary time space
 !!
-  subroutine ctqmc_dump_ftau(gtau, gerr)
+  subroutine ctqmc_dump_ftau(ftau, ferr)
      use constants, only : dp, mytmp
 
-     use control, only : isbin
      use control, only : norbs
      use control, only : ntime
      use context, only : tmesh
@@ -194,20 +193,20 @@
      implicit none
 
 ! external arguments
-! impurity green's function
-     real(dp), intent(in) :: gtau(ntime,norbs,norbs)
-     real(dp), intent(in) :: gerr(ntime,norbs,norbs)
+! auxiliary correlation function
+     real(dp), intent(in) :: ftau(ntime,norbs,norbs)
+     real(dp), intent(in) :: ferr(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
      integer  :: i
      integer  :: j
 
-! scaled impurity green's function
-     real(dp) :: gaux(ntime,norbs,norbs)
-     real(dp) :: gtmp(ntime,norbs,norbs)
+! scaled auxiliary correlation function
+     real(dp) :: faux(ntime,norbs,norbs)
+     real(dp) :: ftmp(ntime,norbs,norbs)
 
-! evaluate gaux and gtmp at first
+! evaluate faux and ftmp at first
      call ctqmc_make_gtau(tmesh, gtau, gaux)
      call ctqmc_make_gtau(tmesh, gerr, gtmp)
 
