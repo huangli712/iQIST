@@ -98,22 +98,7 @@ Possible options:
 * $(MPI)
 * $(OMP)
 
-> NOTE:
->
-> The '$(FPP)' option is necessary.
-
-### GPROF
-
-Specify whether the code profiling should be done. If it is enabled, then after the code is finished, a gmon.out file will be generated. Then you can use the gprof tool to analyze the runtime information and figure out the hotspot of the code. It is not a good idea to enable it to build a production code, because it will decrease the efficiency greatly.
-
-Possible options:
-
-* -p
-* -pg
-
-> NOTE:
->
-> The '-p' option is useful for the GNU gfortran compiler, while the '-pg' option is useful for the Intel fortran compiler.
+Please make sure that the '$(FPP)' option is present.
 
 ### CHECK
 
