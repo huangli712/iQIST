@@ -8,16 +8,15 @@ The make.sys file is the key component of the building system. You have to modif
 
 ### Operation system
 * Linux
-* Mac OS X
+* macOS
 
 ### Fortran compiler
 * Intel Fortran Compiler
-* GNU gfortran
 
 ### Linear algebra library
+* Reference implementations for BLAS and LAPACK at Netlib
 * OpenBLAS
 * Intel Math Kernel Library
-* Reference implementations for BLAS and LAPACK at Netlib
 * Apple Accelerate framework
 
 ### MPI environment
@@ -30,17 +29,13 @@ The make.sys file is the key component of the building system. You have to modif
 ### Python environment
 * (Optional) numpy, scipy, matplotlib
 
-> NOTE:
->
-> 1. Though it is not mandatory, we still strongly recommend to update the above software components on your systems to the latest versions.
->
-> 2. The OpenMP and Python environments are optional.
+Though it is not mandatory, we still strongly recommend to update the above software components on your systems to the latest versions. The OpenMP and Python environments are optional.
 
 ## Explanations
 
 ### F90
 
-The Fortran compiler. Both the parallel and sequential fortran compilers are supported. Note that only the Intel fortran compiler and the GNU gfortran compiler were tested. And we recommend to use the very latest version of Intel fortran compiler (i.e, Intel Fortran Composer XE 2013 or Intel Parallel Studio 2015).
+The Fortran compiler. Both the parallel and sequential fortran compilers are supported. Note that only the Intel fortran compiler was tested. And we recommend to use the very latest version of Intel fortran compiler (i.e, Intel Parallel Studio 2017).
 
 Possible options:
 
@@ -48,11 +43,8 @@ Possible options:
 * mpifort
 * mpiifort
 * ifort
-* gfortran
 
-> NOTE:
->
-> The internal compiler used by mpif90, mpifort, or mpiifort must be ifort or gfortran.
+The internal compiler used by mpif90, mpifort, or mpiifort must be ifort.
 
 ### LINKER
 
@@ -72,7 +64,7 @@ Possible options:
 
 ### MPI
 
-Specify whether MPI is enable. If you want to compile a sequential code, please comment it out with '#' symbol and then setup F90 to 'ifort' or 'gfortran'. We strongly suggest to compile the MPI parallelized codes.
+Specify whether MPI is enable. If you want to compile a sequential code, please comment it out with '#' symbol and then setup F90 to 'ifort'. We strongly suggest to compile the MPI parallelized codes.
 
 Possible options:
 
