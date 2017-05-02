@@ -76,12 +76,9 @@ Specify whether OpenMP is enable. If you want to disable it, please comment it o
 
 Possible options:
 
-* -openmp
-* -fopenmp
+* -qopenmp
 
-> NOTE:
->
-> If you are using the Intel fortran compiler, this option should be '-openmp'. On the other hand, if the GNU gfortran compiler is used, this option should be '-fopenmp'.
+If you are using old version Intel fortran compiler, this option should be '-openmp'.
 
 ### FPP
 
@@ -90,11 +87,6 @@ Specify whether the fortran preprocessor (FPP) is used. It has to be enabled or 
 Possible options:
 
 * -fpp
-* -cpp
-
-> NOTE:
->
-> If you are using the Intel fortran compiler, this option should be '-fpp'. On the other hand, if the GNU gfortran compiler is used, this option should be '-cpp'.
 
 ### CPP
 
