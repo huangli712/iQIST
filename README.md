@@ -83,8 +83,6 @@ $ make component
 
 Here 'iqist' is the directory where the iQIST software package is uncompressed, 'editor' could be any ascii text editor which you prefer, 'component' could be narcissus, manjushaka, etc. Please type 'make help-more' in the terminal for more details. Sometimes the latest commit will not be compiled correctly. So, please download the released version of the iQIST software package which should have an unique version tag.
 
-If you want to know more about the building system implemented in the iQIST software package, please read the online [reference manual](https://www.gitbook.com/book/huangli712/iqist/) carefully.
-
 ## Documentation
 
 We provide a comprehensive online [reference manual](https://www.gitbook.com/book/huangli712/iqist/) for the iQIST software package via the Gitbook.
