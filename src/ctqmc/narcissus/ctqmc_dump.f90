@@ -217,7 +217,7 @@
      do i=1,norbs
          do j=1,norbs
              do k=1,ntime
-                 write(mytmp,'(2i6,3f12.6)') i, j, k, tmesh(k), faux(k,j,i), ftmp(k,j,i)
+                 write(mytmp,'(3i6,3f12.6)') i, j, k, tmesh(k), faux(k,j,i), ftmp(k,j,i)
              enddo ! over k={1,ntime} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
