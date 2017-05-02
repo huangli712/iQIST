@@ -31,7 +31,7 @@
 ## =======
 ##
 ## 05/11/2015 by li huang (created)
-## 05/01/2017 by li huang (last modified)
+## 05/02/2017 by li huang (last modified)
 ##
 ##
 
@@ -50,13 +50,13 @@ CPP    = $(FPP) $(MPI) $(OMP)
 
 # Machine tuning options
 #-------------------------------------------------------------------------
-CHECK  = -warn all #-check all -traceback -g -p
-SPEED  = -nogen-interfaces -O3 -xHost
+CHECK  = -nogen-interfaces -warn all #-check all -traceback -g
+MTUNE  = -mdynamic-no-pic -no-prec-div -fp-model fast=2 -O3 -xHost
 
 # Flags for fortran compiler and linker
 #-------------------------------------------------------------------------
-FFLAGS = -c $(CPP) $(CHECK) $(SPEED)
-LFLAGS = $(OMP) $(GPROF)
+FFLAGS = -c $(CPP) $(CHECK) $(MTUNE)
+LFLAGS = $(OMP)
 
 # External linear algebra library
 #-------------------------------------------------------------------------
