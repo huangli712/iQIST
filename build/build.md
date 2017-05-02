@@ -118,13 +118,10 @@ Collection of optimization options.
 
 Possible options:
 
-* -mdynamic-no-pic
-* -no-prec-div
-* -fp-model fast=2
 * -O3
 * -xHost
 
-The '-mdynamic-no-pic' option generates code that is not position-independent but has position-independent external references. The '-no-prec-div' enables optimizations that give slightly less precise results than full IEEE division. The '-fp-model fast=2' option tells the compiler to use more aggressive optimizations when implementing floating-point calculations. These optimizations increase speed, but may affect the accuracy or reproducibility of floating-point computations. The '-O3' option means the highest optimization. The '-xHost' option enables the compiler to try to generate the most suitable code for the current computer architecture.
+The '-O3' option means the highest optimization. The '-xHost' option enables the compiler to try to generate the most suitable code for the current computer architecture.
 
 ### FFLAGS
 
