@@ -14,10 +14,9 @@ The make.sys file is the key component of the building system. You have to modif
 * Intel Fortran Compiler
 
 ### Linear algebra library
-* Reference implementations for BLAS and LAPACK at Netlib
-* OpenBLAS
-* Intel Math Kernel Library
 * Apple Accelerate framework
+* Reference implementations for BLAS and LAPACK at Netlib
+* Intel Math Kernel Library
 
 ### MPI environment
 * MPICH
@@ -113,20 +112,17 @@ Possible options:
 
 The '-nogen-interfaces' option ask the compiler to do not generate an interface block for each routine defined in the source file. The '-warn all' option means the check is done in compiling. The '-check all' option means the check will be done in running. The '-traceback' option enables us to track the exact position (line number and file name) where the error occurs. The '-g' option enables the compiler to generate debug information and embed them into the final program. **Note that all of the '-check all', '-traceback', and '-g' options will decrease the efficiency greatly**.
 
-### LEVEL
+### MTUNE
 
 Collection of optimization options.
 
 Possible options:
 
+* -mdynamic-no-pic
+* -no-prec-div
+* -fp-model fast=2
 * -O3
 * -xHost
-* -unroll-aggressive
-* -align all
-* -fPIC
-* -Ofast
-* -faggressive-loop-optimizations
-* -fno-tree-pre
 
 If you are using the Intel fortran compiler, the '-O3' option means the highest optimization. The '-xHost' option enables the compiler to try to generate the most suitable code for the current computer architecture. The '-unroll-aggressive' option means using aggressive method to unroll the loop structures. The '-align all' option means to align the arrays, structures, etc. The '-fPIC' option means to generate position independent code for the purpose of dynamic link. It should be enabled to compile the python API. But if you want to debug the code, it has to be commented out. Please modify them only if you are an expert of the Intel fortran compiler and you know what you are doing.
 
@@ -139,10 +135,7 @@ Possible options:
 * -c
 * $(CPP)
 * $(CHECK)
-* $(CDUMP)
-* $(LEVEL)
-* $(MARCH)
-* $(GPROF)
+* $(MTUNE)
 
 ### LFLAGS
 
@@ -151,10 +144,9 @@ Collection of linker options. Do not modify them unless you know what you are do
 Possible options:
 
 * $(OMP)
-* $(GPROF)
 * -Wl,-no_pie
 
-The '-Wl,-no_pie' option is useful when you are using the Mac Os X system and want to traceback the code (-fbacktrace or -traceback is applied). If you are using the Linux system, you can skip it.
+The '-Wl,-no_pie' option is useful when you are using the macOS system and want to traceback the code (the -traceback opinion is applied). If you are using the Linux system, you can skip it.
 
 ### LIBS
 
@@ -166,4 +158,4 @@ Possible options:
 * -L/home/lihuang/lapack -llapack -lblas
 * -L/opt/intel/mkl/lib -lmkl_core -lmkl_sequential -lmkl_rt
 
-Here we provide three typical choices. (1) In the Mac OS X system, we can use the Apple Accelerate framework. (2) We use the home-built BLAS and LAPACK libraries. Please pay attention to the path. You have to modify it to meet your software environment. (3) We link the iQIST code with the Intel MKL. Please pay attention to the path and the library's name. You have to modify them to meet your software environment. Please see the documentation about Intel MKL for more details.
+Here we provide three typical choices. (1) In the macOS system, we can use the Apple Accelerate framework. (2) We use the home-built BLAS and LAPACK libraries. Please pay attention to the path. You have to modify it to meet your software environment. (3) We link the iQIST code with the Intel MKL. Please pay attention to the path and the library's name. You have to modify them to meet your software environment. Please see the documentation about Intel MKL for more details.
