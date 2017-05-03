@@ -46,8 +46,9 @@
 !!
 !! if isscf == 2:
 !!     self-consistent scheme, used in the dynamical mean field theory
-!!     case. the code implements a dynamical mean field self-consistent
-!!     loop for solving the hubbard model in the bethe lattice
+!!     case. the code implements a typical dynamical mean field theory
+!!     self-consistent loop for solving the hubbard model in the bethe
+!!     lattice (semicircular density of state)
 !!
      integer, public, save :: isscf  = 1
 
@@ -62,10 +63,10 @@
 !! if isscr == 2:
 !!     dynamic interaction, for plasmon pole model
 !!
-!! if isscr == 3
+!! if isscr == 3:
 !!     dynamic interaction, for ohmic model
 !!
-!! if isscr ==99
+!! if isscr ==99:
 !!     dynamic interaction, for realistic materials
 !!
      integer, public, save :: isscr  = 1
@@ -99,7 +100,7 @@
 !!
 !! @var isbin
 !!
-!! control flag, define how to accumulate the data of imaginary time
+!! control flag, define how to accumulate data for imaginary time
 !! impurity green's function G(\tau)
 !!
 !! if isbin == 1:
@@ -118,8 +119,9 @@
 !! if iswor == 1:
 !!     without worm algorithm, fast but unreliable
 !!
-!! if iswor == 2
-!!     with worm algorithm, slow but reliable
+!! if iswor == 2:
+!!     with worm algorithm, slow but reliable. note that only selected
+!!     physical observables support this algorithm
 !!
      integer, public, save :: iswor  = 1
 
@@ -131,7 +133,7 @@
 !! if isort == 1:
 !!     using standard representation
 !!
-!! if isort == 2
+!! if isort == 2:
 !!     using legendre orthogonal polynomial representation
 !!
      integer, public, save :: isort  = 1
@@ -288,9 +290,9 @@
 !!
 !! @var niter
 !!
-!! maximum number of self-consistent iterations for the continuous time
-!! quantum Monte Carlo quantum impurity solver plus dynamical mean field
-!! theory calculation
+!! number of self-consistent iterations for the continuous time quantum
+!! Monte Carlo quantum impurity solver plus dynamical mean field theory
+!! simulation
 !!
      integer, public, save :: niter  = 20
 
