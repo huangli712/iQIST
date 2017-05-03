@@ -5,15 +5,15 @@
 !!!           ctqmc_dump_paux
 !!!           ctqmc_dump_nmat <<<---
 !!!           ctqmc_dump_gtau
-!!!           ctqmc_dump_wtau
-!!!           ctqmc_dump_htau
 !!!           ctqmc_dump_ftau
+!!!           ctqmc_dump_htau
+!!!           ctqmc_dump_wtau
 !!!           ctqmc_dump_ktau <<<---
 !!!           ctqmc_dump_grnf
-!!!           ctqmc_dump_wssf
+!!!           ctqmc_dump_frnf
 !!!           ctqmc_dump_hybf
-!!!           ctqmc_dump_sigf
-!!!           ctqmc_dump_hub1 <<<---
+!!!           ctqmc_dump_wssf
+!!!           ctqmc_dump_sigf <<<---
 !!!           ctqmc_dump_kmat
 !!!           ctqmc_dump_lmat
 !!!           ctqmc_dump_szpw <<<---
@@ -28,11 +28,11 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/03/2017 by li huang (last modified)
+!!!           05/04/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
-!!!           -consistent engine to disk files
+!!!           -consistent engine to external files
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
