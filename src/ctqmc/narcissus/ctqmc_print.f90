@@ -193,6 +193,13 @@
      enddo
      str_sus = adjustl(str_sus)
 
+     do i=2,size(vrt)
+         if ( btest(isvrt, i-1) ) then
+             str_vrt = ( trim( str_vrt ) // ' ' // trim( vrt(i) ) )
+         endif
+     enddo
+     str_vrt = adjustl(str_vrt)
+
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
      write(mystd,'(4X,a,i4,2X,a)') 'self-consistent scheme  :', isscf, scf(isscf)
      write(mystd,'(4X,a,i4,2X,a)') 'dynamic interaction     :', isscr, scr(isscr)
@@ -203,7 +210,7 @@
      write(mystd,'(4X,a,i4,2X,a)') 'advanced basis          :', isort, ort(isort)
      write(mystd,'(4X,a,i4,2X,a)') 'fidelity susceptibility :', isobs, trim(str_obs)
      write(mystd,'(4X,a,i4,2X,a)') 'sp/ch susceptibility    :', issus, trim(str_sus)
-     write(mystd,'(4X,a,i4)') 'two-particle quantities :', isvrt
+     write(mystd,'(4X,a,i4,2X,a)') 'two-particle quantities :', isvrt, trim(str_vrt)
 
      write(mystd,*)
      STOP
