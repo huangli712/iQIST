@@ -174,6 +174,9 @@
      character (len = 4) :: vrt(3) = ['no', 'twop', 'pair']
 
      character (len = 99) :: str_obs = ''
+     character (len = 99) :: str_sus = ''
+     character (len = 99) :: str_vrt = ''
+
      integer :: i
 
      do i=2,size(obs)
