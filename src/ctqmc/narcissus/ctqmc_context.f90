@@ -299,14 +299,14 @@
 !!
 !! @var lmesh
 !!
-!! interval [-1,1] on which legendre polynomial is defined
+!! interval [-1,1] on which legendre orthogonal polynomial is defined
 !!
      real(dp), public, save, allocatable :: lmesh(:)
 
 !!
 !! @var rep_l
 !!
-!! legendre polynomial defined on [-1,1]
+!! legendre orthogonal polynomial defined on [-1,1]
 !!
      real(dp), public, save, allocatable :: rep_l(:,:)
 
