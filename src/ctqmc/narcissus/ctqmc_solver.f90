@@ -271,6 +271,7 @@
 ! print the header of continuous time quantum Monte Carlo quantum impurity
 ! solver. it contains important information about the control parameters
      if ( myid == master ) then ! only master node can do it
+         call ctqmc_print_control()
      endif ! back if ( myid == master ) block
 
 !!========================================================================
