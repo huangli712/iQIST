@@ -186,11 +186,12 @@
      character (len = 4) :: vrt(3) = ['none', 'twop', 'pair']
 
 ! predefined strings for control parameters
-     character (len = 99) :: str_obs = ''
-     character (len = 99) :: str_sus = ''
-     character (len = 99) :: str_vrt = ''
+     character (len = 99) :: str_obs
+     character (len = 99) :: str_sus
+     character (len = 99) :: str_vrt
 
 ! build str_obs according to isobs
+     str_obs = ''
      do i=1,size(obs)
          if ( btest(isobs, i-1) ) then
              str_obs = ( trim( str_obs ) // ' ' // trim( obs(i) ) )
@@ -199,6 +200,7 @@
      str_obs = adjustl(str_obs)
 
 ! build str_sus according to issus
+     str_sus = ''
      do i=1,size(sus)
          if ( btest(issus, i-1) ) then
              str_sus = ( trim( str_sus ) // ' ' // trim( sus(i) ) )
@@ -207,6 +209,7 @@
      str_sus = adjustl(str_sus)
 
 ! build str_vrt according to isvrt
+     str_vrt = ''
      do i=1,size(vrt)
          if ( btest(isvrt, i-1) ) then
              str_vrt = ( trim( str_vrt ) // ' ' // trim( vrt(i) ) )
