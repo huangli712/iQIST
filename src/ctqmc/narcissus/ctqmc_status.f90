@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           04/27/2017 by li huang (last modified)
+!!!           05/04/2017 by li huang (last modified)
 !!! purpose : save or retrieve the data structures of the perturbation
 !!!           expansion series to or from the well-formatted status file
 !!!           for hybridization expansion version continuous time quantum
@@ -91,6 +91,7 @@
 !!
   subroutine ctqmc_retrieve_status()
      use constants, only : dp, zero, mytmp
+
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
 
@@ -116,7 +117,7 @@
      logical  :: exists
 
 ! dummy character variables
-     character(14) :: chr
+     character (len = 14) :: chr
 
 ! determinant ratio for insert segments
      real(dp) :: deter_ratio
