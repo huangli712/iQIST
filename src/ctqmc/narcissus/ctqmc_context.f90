@@ -11,10 +11,10 @@
 !!!           ctqmc_smat module
 !!!           context    module
 !!! source  : ctqmc_context.f90
-!!! type    : module
+!!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/26/2017 by li huang (last modified)
+!!!           05/03/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
