@@ -94,7 +94,7 @@
 !!
 !! @sub ctqmc_dump_prob
 !!
-!! write out the probability of eigenstates of local hamiltonian matrix
+!! write out the probability of atomic eigenstates of local hamiltonian
 !!
   subroutine ctqmc_dump_prob(prob, perr)
      use constants, only : dp, zero, one, half, mytmp
@@ -128,8 +128,8 @@
 ! probability of net spin distribution
      real(dp) :: sprob(-nband:nband)
 
-! build atomic basis set, we do not order them according to their
-! occupation numbers
+! build atomic basis set (or equivalently atomic eigenstates), we do not
+! order them according to their occupation numbers
      do i=1,ncfgs
          do j=1,norbs
              if ( btest(i-1,j-1) .eqv. .true. ) then
@@ -140,12 +140,12 @@
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,ncfgs} loop
 
-! build occupation numbers for atomic basis set
+! build occupation numbers for atomic eigenstates
      do i=1,ncfgs
          noccs(i) = sum( basis(i,:) )
      enddo ! over i={1,ncfgs} loop
 
-! build net spin for eigenstates
+! build net spin for atomic eigenstates
      do i=1,ncfgs
          soccs(i) = sum( basis(i,1:nband) ) - sum( basis(i,nband+1:norbs) )
      enddo ! over i={1,ncfgs} loop
