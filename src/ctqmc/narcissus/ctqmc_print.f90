@@ -161,6 +161,7 @@
 
      implicit none
 
+! local variables
      character (len = 4) :: scf(2) = ['scf', 'nscf']
      character (len = 7) :: scr(4) = ['static', 'dyn_ppm', 'dyn_om', 'dyn_rm']
      character (len = 3) :: bnd(2) = ['no', 'yes']
@@ -168,6 +169,18 @@
      character (len = 3) :: bin(2) = ['no', 'yes']
      character (len = 3) :: wor(2) = ['no', 'yes']
      character (len = 3) :: ort(3) = ['std', 'leg', 'svd']
+     character (len = 8) :: obs(4) = ['no', 'kinetic', 'fidelity', 'binder']
+     character (len = 4) :: sus(5) = ['no', 'sp_t', 'ch_t', 'sp_w', 'ch_w'] 
+     character (len = 4) :: vrt(3) = ['no', 'twop', 'pair']
+
+     character (len = 99) :: str_obs = ''
+     integer :: i
+
+     do i=2,size(obs)
+         if ( btest(isobs, i-1) ) then
+             str_obs = ( trim( str_obs ) // ' ' // trim( obs(i) ) )
+         endif
+     enddo
 
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
      write(mystd,'(4X,a,i4,2X,a)') 'self-consistent scheme  :', isscf, scf(isscf)
@@ -177,7 +190,7 @@
      write(mystd,'(4X,a,i4,2X,a)') 'data binning            :', isbin, bin(isbin)
      write(mystd,'(4X,a,i4,2X,a)') 'worm algorithm          :', iswor, wor(iswor)
      write(mystd,'(4X,a,i4,2X,a)') 'advanced basis          :', isort, ort(isort)
-     write(mystd,'(4X,a,i4)') 'fidelity susceptibility :', isobs
+     write(mystd,'(4X,a,i4,2X,a)') 'fidelity susceptibility :', isobs, trim(str_obs)
      write(mystd,'(4X,a,i4)') 'sp/ch susceptibility    :', issus
      write(mystd,'(4X,a,i4)') 'two-particle quantities :', isvrt
 
