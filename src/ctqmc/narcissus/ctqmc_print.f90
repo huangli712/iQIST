@@ -9,7 +9,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           04/29/2017 by li huang (last modified)
+!!!           05/03/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -22,8 +22,7 @@
 !! @sub ctqmc_print_header
 !!
 !! print the startup information for continuous time quantum Monte Carlo
-!! quantum impurity solver plus dynamical mean field theory
-!! self-consistent engine
+!! quantum impurity solver plus dynamical mean field theory engine
 !!
   subroutine ctqmc_print_header()
      use constants, only : mystd
@@ -48,13 +47,11 @@
      write(mystd,'(2X,a)') cname
      write(mystd,'(2X,a)') '>>> A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
-
      write(mystd,'(2X,a)') 'Version: '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: '//AUTH_VER
      write(mystd,'(2X,a)') 'Support: '//MAIL_VER
      write(mystd,'(2X,a)') 'License: '//GPL3_VER
      write(mystd,*)
-
      write(mystd,'(2X,a)') cname//' >>> start running at '//date_time_string
 
 # if defined (MPI)
@@ -76,8 +73,7 @@
 !! @sub ctqmc_print_footer
 !!
 !! print the ending information for continuous time quantum Monte Carlo
-!! quantum impurity solver plus dynamical mean field theory
-!! self-consistent engine
+!! quantum impurity solver plus dynamical mean field theory engine
 !!
   subroutine ctqmc_print_footer()
      use constants, only : dp, mystd
@@ -101,7 +97,6 @@
 
      write(mystd,'(2X,a,f10.2,a)') cname//' >>> total time spent:', tot_time, 's'
      write(mystd,*)
-
      write(mystd,'(2X,a)') cname//' >>> I am tired and want to go to bed. Bye!'
      write(mystd,'(2X,a)') cname//' >>> happy ending at '//date_time_string
 
