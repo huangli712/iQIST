@@ -279,31 +279,31 @@
 
 ! about insert action
      if ( ins_t <= half ) ins_t = -one ! if insert is disable
-     write(mystd,'(4X,a)')        'insert kink statistics:'
+     write(mystd,'(4X,a)')        'C_Z SPACE / insert kink statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( ins_t ), int( ins_a ), int( ins_r )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, ins_a / ins_t, ins_r / ins_t
 
 ! about remove action
      if ( rmv_t <= half ) rmv_t = -one ! if remove is disable
-     write(mystd,'(4X,a)')        'remove kink statistics:'
+     write(mystd,'(4X,a)')        'C_Z SPACE / remove kink statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( rmv_t ), int( rmv_a ), int( rmv_r )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rmv_a / rmv_t, rmv_r / rmv_t
 
 ! about lshift action
      if ( lsh_t <= half ) lsh_t = -one ! if lshift is disable
-     write(mystd,'(4X,a)')        'lshift kink statistics:'
+     write(mystd,'(4X,a)')        'C_Z SPACE / lshift kink statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( lsh_t ), int( lsh_a ), int( lsh_r )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, lsh_a / lsh_t, lsh_r / lsh_t
 
 ! about rshift action
      if ( rsh_t <= half ) rsh_t = -one ! if rshift is disable
-     write(mystd,'(4X,a)')        'rshift kink statistics:'
+     write(mystd,'(4X,a)')        'C_Z SPACE / rshift kink statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( rsh_t ), int( rsh_a ), int( rsh_r )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rsh_a / rsh_t, rsh_r / rsh_t
 
 ! about reflip action
      if ( rfl_t <= half ) rfl_t = -one ! if reflip is disable
-     write(mystd,'(4X,a)')        'global flip statistics:'
+     write(mystd,'(4X,a)')        'C_Z SPACE / global flip statistics:'
      write(mystd,'(4X,a,3i10)')   'count:', int( rfl_t ), int( rfl_a ), int( rfl_r )
      write(mystd,'(4X,a,3f10.5)') 'ratio:', one, rfl_a / rfl_t, rfl_r / rfl_t
 
