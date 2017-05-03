@@ -186,6 +186,13 @@
      enddo
      str_obs = adjustl(str_obs)
 
+     do i=2,size(sus)
+         if ( btest(issus, i-1) ) then
+             str_sus = ( trim( str_sus ) // ' ' // trim( sus(i) ) )
+         endif
+     enddo
+     str_sus = adjustl(str_sus)
+
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
      write(mystd,'(4X,a,i4,2X,a)') 'self-consistent scheme  :', isscf, scf(isscf)
      write(mystd,'(4X,a,i4,2X,a)') 'dynamic interaction     :', isscr, scr(isscr)
@@ -195,7 +202,7 @@
      write(mystd,'(4X,a,i4,2X,a)') 'worm algorithm          :', iswor, wor(iswor)
      write(mystd,'(4X,a,i4,2X,a)') 'advanced basis          :', isort, ort(isort)
      write(mystd,'(4X,a,i4,2X,a)') 'fidelity susceptibility :', isobs, trim(str_obs)
-     write(mystd,'(4X,a,i4)') 'sp/ch susceptibility    :', issus
+     write(mystd,'(4X,a,i4,2X,a)') 'sp/ch susceptibility    :', issus, trim(str_sus)
      write(mystd,'(4X,a,i4)') 'two-particle quantities :', isvrt
 
      write(mystd,*)
