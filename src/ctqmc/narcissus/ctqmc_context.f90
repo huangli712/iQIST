@@ -808,8 +808,10 @@
 !! global variables and arrays
 !!
   module context
-     use constants, only : dp
-     use control, only : nband
+     use constants, only : dp, czero
+
+     use control, only : nband, norbs, ncfgs
+     use control, only : ntime
 
      use ctqmc_core
      use ctqmc_clur
