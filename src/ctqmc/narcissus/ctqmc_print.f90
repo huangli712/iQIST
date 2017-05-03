@@ -148,6 +148,11 @@
      return
   end subroutine ctqmc_print_summary
 
+!!
+!! @sub ctqmc_print_control
+!!
+!! print the control parameters, only for reference
+!!
   subroutine ctqmc_print_control()
      use constants, only : mystd
 
@@ -162,6 +167,10 @@
      implicit none
 
 ! local variables
+! loop index
+     integer :: i
+
+! predefined strings for control parameters
      character (len = 4) :: scf(2) = ['scf', 'nscf']
      character (len = 7) :: scr(4) = ['static', 'dyn_ppm', 'dyn_om', 'dyn_rm']
      character (len = 3) :: bnd(2) = ['no', 'yes']
@@ -173,12 +182,12 @@
      character (len = 4) :: sus(5) = ['no', 'sp_t', 'ch_t', 'sp_w', 'ch_w'] 
      character (len = 4) :: vrt(3) = ['no', 'twop', 'pair']
 
+! predefined strings for control parameters
      character (len = 99) :: str_obs = ''
      character (len = 99) :: str_sus = ''
      character (len = 99) :: str_vrt = ''
 
-     integer :: i
-
+! build str_obs according to isobs
      do i=2,size(obs)
          if ( btest(isobs, i-1) ) then
              str_obs = ( trim( str_obs ) // ' ' // trim( obs(i) ) )
@@ -186,6 +195,7 @@
      enddo
      str_obs = adjustl(str_obs)
 
+! build str_sus according to issus
      do i=2,size(sus)
          if ( btest(issus, i-1) ) then
              str_sus = ( trim( str_sus ) // ' ' // trim( sus(i) ) )
@@ -193,6 +203,7 @@
      enddo
      str_sus = adjustl(str_sus)
 
+! build str_vrt according to isvrt
      do i=2,size(vrt)
          if ( btest(isvrt, i-1) ) then
              str_vrt = ( trim( str_vrt ) // ' ' // trim( vrt(i) ) )
@@ -201,16 +212,16 @@
      str_vrt = adjustl(str_vrt)
 
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
-     write(mystd,'(4X,a,i4,2X,a)') 'self-consistent scheme  :', isscf, scf(isscf)
-     write(mystd,'(4X,a,i4,2X,a)') 'dynamic interaction     :', isscr, scr(isscr)
-     write(mystd,'(4X,a,i4,2X,a)') 'symmetry (band part)    :', isbnd, bnd(isbnd)
-     write(mystd,'(4X,a,i4,2X,a)') 'symmetry (spin part)    :', isspn, spn(isspn)
-     write(mystd,'(4X,a,i4,2X,a)') 'data binning            :', isbin, bin(isbin)
-     write(mystd,'(4X,a,i4,2X,a)') 'worm algorithm          :', iswor, wor(iswor)
-     write(mystd,'(4X,a,i4,2X,a)') 'advanced basis          :', isort, ort(isort)
-     write(mystd,'(4X,a,i4,2X,a)') 'fidelity susceptibility :', isobs, trim(str_obs)
-     write(mystd,'(4X,a,i4,2X,a)') 'sp/ch susceptibility    :', issus, trim(str_sus)
-     write(mystd,'(4X,a,i4,2X,a)') 'two-particle quantities :', isvrt, trim(str_vrt)
+     write(mystd,'(4X,a,i4,X,2a)') 'self-consistent scheme  :', isscf, '/ ', scf(isscf)
+     write(mystd,'(4X,a,i4,X,2a)') 'dynamic interaction     :', isscr, '/ ', scr(isscr)
+     write(mystd,'(4X,a,i4,X,2a)') 'symmetry (band part)    :', isbnd, '/ ', bnd(isbnd)
+     write(mystd,'(4X,a,i4,X,2a)') 'symmetry (spin part)    :', isspn, '/ ', spn(isspn)
+     write(mystd,'(4X,a,i4,X,2a)') 'data binning            :', isbin, '/ ', bin(isbin)
+     write(mystd,'(4X,a,i4,X,2a)') 'worm algorithm          :', iswor, '/ ', wor(iswor)
+     write(mystd,'(4X,a,i4,X,2a)') 'advanced basis          :', isort, '/ ', ort(isort)
+     write(mystd,'(4X,a,i4,X,2a)') 'fidelity susceptibility :', isobs, '/ ', trim(str_obs)
+     write(mystd,'(4X,a,i4,X,2a)') 'sp/ch susceptibility    :', issus, '/ ', trim(str_sus)
+     write(mystd,'(4X,a,i4,X,2a)') 'two-particle quantities :', isvrt, '/ ', trim(str_vrt)
 
      write(mystd,*)
      STOP
