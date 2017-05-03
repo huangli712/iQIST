@@ -191,27 +191,29 @@
      do i=2,size(obs)
          if ( btest(isobs, i-1) ) then
              str_obs = ( trim( str_obs ) // ' ' // trim( obs(i) ) )
-         endif
-     enddo
+         endif ! back if ( btest(isobs, i-1) ) block
+     enddo ! over i={2,size(obs)} loop
      str_obs = adjustl(str_obs)
 
 ! build str_sus according to issus
      do i=2,size(sus)
          if ( btest(issus, i-1) ) then
              str_sus = ( trim( str_sus ) // ' ' // trim( sus(i) ) )
-         endif
-     enddo
+         endif ! back if ( btest(issus, i-1) ) block
+     enddo ! over i={2,size(sus)} loop
      str_sus = adjustl(str_sus)
 
 ! build str_vrt according to isvrt
      do i=2,size(vrt)
          if ( btest(isvrt, i-1) ) then
              str_vrt = ( trim( str_vrt ) // ' ' // trim( vrt(i) ) )
-         endif
-     enddo
+         endif ! back if ( btest(isvrt, i-1) ) block
+     enddo ! over i={2,size(vrt)} loop
      str_vrt = adjustl(str_vrt)
 
+! write control parameters
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
+
      write(mystd,'(4X,a,i4,X,2a)') 'self-consistent scheme  :', isscf, '/ ', scf(isscf)
      write(mystd,'(4X,a,i4,X,2a)') 'dynamic interaction     :', isscr, '/ ', scr(isscr)
      write(mystd,'(4X,a,i4,X,2a)') 'symmetry (band part)    :', isbnd, '/ ', bnd(isbnd)
@@ -219,12 +221,12 @@
      write(mystd,'(4X,a,i4,X,2a)') 'data binning            :', isbin, '/ ', bin(isbin)
      write(mystd,'(4X,a,i4,X,2a)') 'worm algorithm          :', iswor, '/ ', wor(iswor)
      write(mystd,'(4X,a,i4,X,2a)') 'advanced basis          :', isort, '/ ', ort(isort)
+
      write(mystd,'(4X,a,i4,X,2a)') 'fidelity susceptibility :', isobs, '/ ', trim(str_obs)
      write(mystd,'(4X,a,i4,X,2a)') 'sp/ch susceptibility    :', issus, '/ ', trim(str_sus)
      write(mystd,'(4X,a,i4,X,2a)') 'two-particle quantities :', isvrt, '/ ', trim(str_vrt)
 
      write(mystd,*)
-     STOP
 
      return
   end subroutine ctqmc_print_control
