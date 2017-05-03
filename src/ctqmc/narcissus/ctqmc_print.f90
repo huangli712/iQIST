@@ -149,20 +149,34 @@
   end subroutine ctqmc_print_summary
 
   subroutine ctqmc_print_control()
-         write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
-         write(mystd,'(4X,a,i2)') 'self-consistent scheme  :', isscf
-         write(mystd,'(4X,a,i2)') 'dynamic interaction     :', isscr
-         write(mystd,'(4X,a,i2)') 'symmetry (band part)    :', isbnd
-         write(mystd,'(4X,a,i2)') 'symmetry (spin part)    :', isspn
-         write(mystd,'(4X,a,i2)') 'data binning            :', isbin
-         write(mystd,'(4X,a,i2)') 'worm algorithm          :', iswor
-         write(mystd,'(4X,a,i2)') 'advanced basis          :', isort
-         write(mystd,'(4X,a,i2)') 'fidelity susceptibility :', isobs
-         write(mystd,'(4X,a,i2)') 'sp/ch susceptibility    :', issus
-         write(mystd,'(4X,a,i2)') 'two-particle quantities :', isvrt
-         write(mystd,*)
-  end subroutine ctqmc_print_control
+     use constants, only : mystd
 
+     use control, only : cname               ! code name
+                                             !
+     use control, only : isscf               ! control running scheme
+     use control, only : isscr               ! control dynamic interaction
+     use control, only : isbnd, isspn        ! control symmetry
+     use control, only : isbin, iswor, isort ! control measurement tricks
+     use control, only : isobs, issus, isvrt ! control physical observables
+
+     implicit none
+
+     write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
+     write(mystd,'(4X,a,i2)') 'self-consistent scheme  :', isscf
+     write(mystd,'(4X,a,i2)') 'dynamic interaction     :', isscr
+     write(mystd,'(4X,a,i2)') 'symmetry (band part)    :', isbnd
+     write(mystd,'(4X,a,i2)') 'symmetry (spin part)    :', isspn
+     write(mystd,'(4X,a,i2)') 'data binning            :', isbin
+     write(mystd,'(4X,a,i2)') 'worm algorithm          :', iswor
+     write(mystd,'(4X,a,i2)') 'advanced basis          :', isort
+     write(mystd,'(4X,a,i2)') 'fidelity susceptibility :', isobs
+     write(mystd,'(4X,a,i2)') 'sp/ch susceptibility    :', issus
+     write(mystd,'(4X,a,i2)') 'two-particle quantities :', isvrt
+
+     write(mystd,*)
+
+     return
+  end subroutine ctqmc_print_control
 
 !!
 !! @sub ctqmc_print_runtime
