@@ -7,11 +7,12 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/29/2017 by li huang (last modified)
-!!! purpose : implement a self-consistent engine for dynamical mean field
-!!!           theory (DMFT) simulation. it is designed for hybridization
+!!!           05/03/2017 by li huang (last modified)
+!!! purpose : try to implement a self-consistent engine for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
-!!!           quantum impurity solver and Hubbard model on bethe lattice
+!!!           quantum impurity solver plus dynamical mean field theory
+!!!           (DMFT) simulation. it is designed for a Hubbard model on a
+!!!           Bethe lattice
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -19,7 +20,7 @@
 !!
 !! @sub ctqmc_dmft_selfer
 !!
-!! the self-consistent engine for continuous time quantum Monte Carlo
+!! mini self-consistent engine for continuous time quantum Monte Carlo
 !! quantum impurity solver plus dynamical mean field theory simulation
 !!
   subroutine ctqmc_dmft_selfer()
@@ -31,10 +32,12 @@
      use control, only : Uc, Jz
      use control, only : mune, alpha
      use control, only : myid, master
+
      use context, only : rmesh
      use context, only : eimp
      use context, only : grnf
-     use context, only : wtau, wssf, hybf
+     use context, only : wtau, wssf
+     use context, only : hybf
 
      implicit none
 
@@ -93,7 +96,7 @@
 
 ! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_wssf(rmesh, wssf)
+         call ctqmc_dump_wssf(wssf)
      endif ! back if ( myid == master ) block
 
 ! write out the new bath weiss's function in imaginary time axis
