@@ -129,6 +129,7 @@
      use control, only : mfreq
      use control, only : alpha
      use control, only : myid, master
+
      use context, only : sig1, sig2
 
      implicit none
@@ -190,7 +191,7 @@
 !!
 !! @sub ctqmc_dmft_bethe
 !!
-!! implement dmft self-consistent conditions: bethe lattice, semicircular
+!! implement self-consistent conditions: bethe lattice, semicircular
 !! density of states, force a paramagnetic order, equal band width
 !!
   subroutine ctqmc_dmft_bethe(hybf, grnf)
