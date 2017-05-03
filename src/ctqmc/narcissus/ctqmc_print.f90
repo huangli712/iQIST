@@ -182,7 +182,7 @@
      character (len = 3) :: wor(2) = ['no', 'yes']
      character (len = 3) :: ort(3) = ['std', 'leg', 'svd']
      character (len = 8) :: obs(4) = ['none', 'kinetic', 'fidelity', 'binder']
-     character (len = 4) :: sus(5) = ['none', 'sp_t', 'ch_t', 'sp_w', 'ch_w'] 
+     character (len = 4) :: sus(5) = ['none', 'sp_t', 'ch_t', 'sp_w', 'ch_w']
      character (len = 4) :: vrt(3) = ['none', 'twop', 'pair']
 
 ! predefined strings for control parameters
@@ -328,7 +328,7 @@
      integer, intent(in) :: iter
 
 ! according to the value of isbin, we can judge whether the impurity
-! solver is in the data binning mode.
+! solver is in the data binning mode
      if ( isbin /= 2 ) then
          write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< GENERAL'
      else
