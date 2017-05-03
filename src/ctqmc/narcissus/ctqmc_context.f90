@@ -337,7 +337,7 @@
 !!
 !! @var prob
 !!
-!! probability of eigenstates of local hamiltonian matrix
+!! probability of atomic eigenstates of local hamiltonian matrix
 !!
      real(dp), public, save, allocatable :: prob(:)
 
@@ -356,7 +356,7 @@
 !! paux(08) : high order of K, < K^3 > = < K3 >
 !! paux(09) : high order of K, < K^4 > = < K4 >
 !!
-!! note: K = current perturbation expansion order X 2. The < K2 >, < K3 >,
+!! note: K = current perturbation expansion order * 2. The < K2 >, < K3 >,
 !! and < K4 > can be used to calculate the skewness and kurtosis of the
 !! perturbation expansion order. Of course, < K1 > is essential. It can be
 !! calculated from Ekin.
@@ -415,15 +415,15 @@
 !!
 !! @var szpow
 !!
-!! powers of the local magnetization < S^n_z>, used to calculate the
-!! Binder cumulant
+!! powers of the local magnetization < S^n_z>, which is used to calculate
+!! the Binder cumulant
 !!
      real(dp), public, save, allocatable :: szpow(:,:)
 
 !!
 !! @var schi
 !!
-!! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc},
+!! spin-spin correlation function: < Sz(0) Sz(\tau) >,
 !! totally-averaged
 !!
      real(dp), public, save, allocatable :: schi(:)
@@ -431,7 +431,7 @@
 !!
 !! @var sschi
 !!
-!! spin-spin correlation function: < Sz(0) Sz(\tau) >, \chi_{loc},
+!! spin-spin correlation function: < Sz(0) Sz(\tau) >,
 !! orbital-resolved
 !!
      real(dp), public, save, allocatable :: sschi(:,:)
@@ -499,14 +499,14 @@
 !!
 !! @var ps_re
 !!
-!! particle-particle pair susceptibility, real part
+!! particle-particle pairing susceptibility, real part
 !!
      real(dp), public, save, allocatable :: ps_re(:,:,:,:,:)
 
 !!
 !! @var ps_im
 !!
-!! particle-particle pair susceptibility, imaginary part
+!! particle-particle pairing susceptibility, imaginary part
 !!
      real(dp), public, save, allocatable :: ps_im(:,:,:,:,:)
 
@@ -804,11 +804,12 @@
 !!
 !! @mod context
 !!
-!! containing memory management subroutines and init all global variables
+!! containing memory management subroutines and initialize all of the
+!! global variables and arrays
 !!
   module context
-     use constants
-     use control
+     use constants, only : dp
+     use control, only : nband
 
      use ctqmc_core
      use ctqmc_clur
