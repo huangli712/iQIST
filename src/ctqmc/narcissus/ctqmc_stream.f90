@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/29/2017 by li huang (last modified)
+!!!           05/04/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -657,7 +657,7 @@
 !! quantum impurity solver
 !!
   subroutine ctqmc_reset_array()
-     use constants, only : zero, czero
+     use constants, only : zero, czero, mystd
 
      use spring, only : spring_sfmt_init
      use stack, only : istack_clean
