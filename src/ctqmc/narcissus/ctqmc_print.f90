@@ -3,6 +3,7 @@
 !!! program : ctqmc_print_header
 !!!           ctqmc_print_footer
 !!!           ctqmc_print_summary
+!!!           ctqmc_print_control
 !!!           ctqmc_print_runtime
 !!!           ctqmc_print_it_info
 !!! source  : ctqmc_print.f90
@@ -140,12 +141,28 @@
      write(mystd,'(2(4X,a,f10.5))') 'lc    :', lc     , 'wc    :', wc
      write(mystd,'(2(4X,a,f10.5))') 'mune  :', mune   , 'beta  :', beta
      write(mystd,'(2(4X,a,f10.5))') 'part  :', part   , 'alpha :', alpha
-     write(mystd,'(1(4X,a,f10.5))') 'system temperature:', ev2k / beta
+     write(mystd,'(1(4X,a,f10.5))') 'system temperature (K): ', ev2k / beta
 
      write(mystd,*)
 
      return
   end subroutine ctqmc_print_summary
+
+  subroutine ctqmc_print_control()
+         write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
+         write(mystd,'(4X,a,i2)') 'self-consistent scheme  :', isscf
+         write(mystd,'(4X,a,i2)') 'dynamic interaction     :', isscr
+         write(mystd,'(4X,a,i2)') 'symmetry (band part)    :', isbnd
+         write(mystd,'(4X,a,i2)') 'symmetry (spin part)    :', isspn
+         write(mystd,'(4X,a,i2)') 'data binning            :', isbin
+         write(mystd,'(4X,a,i2)') 'worm algorithm          :', iswor
+         write(mystd,'(4X,a,i2)') 'advanced basis          :', isort
+         write(mystd,'(4X,a,i2)') 'fidelity susceptibility :', isobs
+         write(mystd,'(4X,a,i2)') 'sp/ch susceptibility    :', issus
+         write(mystd,'(4X,a,i2)') 'two-particle quantities :', isvrt
+         write(mystd,*)
+  end subroutine ctqmc_print_control
+
 
 !!
 !! @sub ctqmc_print_runtime
