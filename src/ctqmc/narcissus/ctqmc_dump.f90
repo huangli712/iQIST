@@ -563,11 +563,11 @@
   end subroutine ctqmc_dump_grnf
 
 !!
-!! @sub ctqmc_dump_wssf
+!! @sub ctqmc_dump_frnf
 !!
-!! write out bath weiss's function in matsubara frequency space
+!! write out auxiliary correlation function in matsubara frequency space
 !!
-  subroutine ctqmc_dump_wssf(wssf)
+  subroutine ctqmc_dump_frnf(frnf)
      use constants, only : dp, zero, mytmp
 
      use control, only : norbs
@@ -577,22 +577,23 @@
      implicit none
 
 ! external arguments
-! bath weiss's function
-     complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
+! auxiliary correlation function
+     complex(dp), intent(in) :: frnf(mfreq,norbs,norbs)
 
 ! local variables
 ! loop index
      integer :: i
      integer :: j
+     integer :: k
 
-! open data file: solver.wss.dat
-     open(mytmp, file='solver.wss.dat', form='formatted', status='unknown')
+! open data file: solver.hyb.dat
+     open(mytmp, file='solver.hyb.dat', form='formatted', status='unknown')
 
 ! write it
      do i=1,norbs
          do j=1,mfreq
              write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-              real(wssf(j,i,i)), aimag(wssf(j,i,i)), &
+              real(hybf(j,i,i)), aimag(hybf(j,i,i)), &
                                          zero, zero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
@@ -603,7 +604,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_wssf
+  end subroutine ctqmc_dump_hybf
 
 !!
 !! @sub ctqmc_dump_hybf
@@ -647,6 +648,49 @@
 
      return
   end subroutine ctqmc_dump_hybf
+
+!!
+!! @sub ctqmc_dump_wssf
+!!
+!! write out bath weiss's function in matsubara frequency space
+!!
+  subroutine ctqmc_dump_wssf(wssf)
+     use constants, only : dp, zero, mytmp
+
+     use control, only : norbs
+     use control, only : mfreq
+     use context, only : rmesh
+
+     implicit none
+
+! external arguments
+! bath weiss's function
+     complex(dp), intent(in) :: wssf(mfreq,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.wss.dat
+     open(mytmp, file='solver.wss.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,mfreq
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
+              real(wssf(j,i,i)), aimag(wssf(j,i,i)), &
+                                         zero, zero
+         enddo ! over j={1,mfreq} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_wssf
 
 !!
 !! @sub ctqmc_dump_sigf
