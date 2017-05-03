@@ -337,88 +337,6 @@
   end subroutine ctqmc_dump_gtau
 
 !!
-!! @sub ctqmc_dump_wtau
-!!
-!! write out bath weiss's function in imaginary time space
-!!
-  subroutine ctqmc_dump_wtau(wtau)
-     use constants, only : dp, zero, mytmp
-
-     use control, only : norbs
-     use control, only : ntime
-     use context, only : tmesh
-
-     implicit none
-
-! external arguments
-! bath weiss's function
-     real(dp), intent(in) :: wtau(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.weiss.dat
-     open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
-
-! write it
-     do i=1,norbs
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), zero
-         enddo ! over j={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_wtau
-
-!!
-!! @sub ctqmc_dump_htau
-!!
-!! write out hybridization function in imaginary time space
-!!
-  subroutine ctqmc_dump_htau(htau)
-     use constants, only : dp, zero, mytmp
-
-     use control, only : norbs
-     use control, only : ntime
-     use context, only : tmesh
-
-     implicit none
-
-! external arguments
-! hybridization function
-     real(dp), intent(in) :: htau(ntime,norbs,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.hybri.dat
-     open(mytmp, file='solver.hybri.dat', form='formatted', status='unknown')
-
-! write it
-     do i=1,norbs
-         do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), zero
-         enddo ! over j={1,ntime} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_htau
-
-!!
 !! @sub ctqmc_dump_ftau
 !!
 !! write out auxiliary correlation function in imaginary time space
@@ -470,6 +388,88 @@
 
      return
   end subroutine ctqmc_dump_ftau
+
+!!
+!! @sub ctqmc_dump_htau
+!!
+!! write out hybridization function in imaginary time space
+!!
+  subroutine ctqmc_dump_htau(htau)
+     use constants, only : dp, zero, mytmp
+
+     use control, only : norbs
+     use control, only : ntime
+     use context, only : tmesh
+
+     implicit none
+
+! external arguments
+! hybridization function
+     real(dp), intent(in) :: htau(ntime,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.hybri.dat
+     open(mytmp, file='solver.hybri.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,ntime
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), htau(j,i,i), zero
+         enddo ! over j={1,ntime} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_htau
+
+!!
+!! @sub ctqmc_dump_wtau
+!!
+!! write out bath weiss's function in imaginary time space
+!!
+  subroutine ctqmc_dump_wtau(wtau)
+     use constants, only : dp, zero, mytmp
+
+     use control, only : norbs
+     use control, only : ntime
+     use context, only : tmesh
+
+     implicit none
+
+! external arguments
+! bath weiss's function
+     real(dp), intent(in) :: wtau(ntime,norbs,norbs)
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! open data file: solver.weiss.dat
+     open(mytmp, file='solver.weiss.dat', form='formatted', status='unknown')
+
+! write it
+     do i=1,norbs
+         do j=1,ntime
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), wtau(j,i,i), zero
+         enddo ! over j={1,ntime} loop
+         write(mytmp,*) ! write empty lines
+         write(mytmp,*)
+     enddo ! over i={1,norbs} loop
+
+! close data file
+     close(mytmp)
+
+     return
+  end subroutine ctqmc_dump_wtau
 
 !!
 !! @sub ctqmc_dump_ktau
