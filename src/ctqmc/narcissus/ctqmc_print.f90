@@ -161,19 +161,23 @@
 
      implicit none
 
+     character (len = 4) :: scf(2) = ['scf', 'nscf']
+     character (len = 6) :: scr(4) = ['static', 'ppm', 'om', 'rm']
+
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
-     write(mystd,'(4X,a,i2)') 'self-consistent scheme  :', isscf
-     write(mystd,'(4X,a,i2)') 'dynamic interaction     :', isscr
-     write(mystd,'(4X,a,i2)') 'symmetry (band part)    :', isbnd
-     write(mystd,'(4X,a,i2)') 'symmetry (spin part)    :', isspn
-     write(mystd,'(4X,a,i2)') 'data binning            :', isbin
-     write(mystd,'(4X,a,i2)') 'worm algorithm          :', iswor
-     write(mystd,'(4X,a,i2)') 'advanced basis          :', isort
-     write(mystd,'(4X,a,i2)') 'fidelity susceptibility :', isobs
-     write(mystd,'(4X,a,i2)') 'sp/ch susceptibility    :', issus
-     write(mystd,'(4X,a,i2)') 'two-particle quantities :', isvrt
+     write(mystd,'(4X,a,i4,2X,a)') 'self-consistent scheme  :', isscf, scf(isscf)
+     write(mystd,'(4X,a,i4,2X,a)') 'dynamic interaction     :', isscr, scr(isscr)
+     write(mystd,'(4X,a,i4)') 'symmetry (band part)    :', isbnd
+     write(mystd,'(4X,a,i4)') 'symmetry (spin part)    :', isspn
+     write(mystd,'(4X,a,i4)') 'data binning            :', isbin
+     write(mystd,'(4X,a,i4)') 'worm algorithm          :', iswor
+     write(mystd,'(4X,a,i4)') 'advanced basis          :', isort
+     write(mystd,'(4X,a,i4)') 'fidelity susceptibility :', isobs
+     write(mystd,'(4X,a,i4)') 'sp/ch susceptibility    :', issus
+     write(mystd,'(4X,a,i4)') 'two-particle quantities :', isvrt
 
      write(mystd,*)
+     STOP
 
      return
   end subroutine ctqmc_print_control
