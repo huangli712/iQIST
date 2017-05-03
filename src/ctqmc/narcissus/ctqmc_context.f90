@@ -808,9 +808,13 @@
 !! global variables and arrays
 !!
   module context
-     use constants, only : dp, czero
+     use constants, only : dp, zero, czero
 
      use control, only : nband, norbs, ncfgs
+     use control, only : lemax, legrd
+     use control, only : mkink, mfreq
+     use control, only : nffrq, nbfrq
+     use control, only : nfreq
      use control, only : ntime
 
      use ctqmc_core
