@@ -47,7 +47,7 @@
 !! if isscf == 2:
 !!     self-consistent scheme, used in the dynamical mean field theory
 !!     case. the code implements a typical dynamical mean field theory
-!!     self-consistent loop for solving the hubbard model in the bethe
+!!     self-consistent loop for solving the Hubbard model in the bethe
 !!     lattice (semicircular density of state)
 !!
      integer, public, save :: isscf  = 1
@@ -57,16 +57,16 @@
 !!
 !! control flag, define whether the Coulomb interaction U is dynamic
 !!
-!! if isscr == 1:
+!! if isscr ==  1:
 !!     static interaction
 !!
-!! if isscr == 2:
+!! if isscr ==  2:
 !!     dynamic interaction, for plasmon pole model
 !!
-!! if isscr == 3:
+!! if isscr ==  3:
 !!     dynamic interaction, for ohmic model
 !!
-!! if isscr ==99:
+!! if isscr == 99:
 !!     dynamic interaction, for realistic materials
 !!
      integer, public, save :: isscr  = 1
@@ -301,14 +301,14 @@
 !!
 !! @var lemax
 !!
-!! maximum expansion order for legendre polynomial
+!! maximum expansion order for legendre orthogonal polynomial
 !!
      integer, public, save :: lemax  = 32
 
 !!
 !! @var legrd
 !!
-!! number of mesh points for legendre polynomial in [-1,1] range
+!! number of mesh points for legendre orthogonal polynomial in [-1,1] range
 !!
      integer, public, save :: legrd  = 20001
 
@@ -423,7 +423,8 @@
 !!
 !! @var ncarlo
 !!
-!! how often to sample the physical observables
+!! how often to sample the physical observables. it is reserved for the
+!! worm algorithm
 !!
      integer, public, save :: ncarlo = 10
 
@@ -434,7 +435,7 @@
 !!
 !! @var U
 !!
-!! average Coulomb interaction
+!! averaged Coulomb interaction
 !!
      real(dp), public, save :: U     = 4.00_dp
 
@@ -478,13 +479,13 @@
 !!
 !! strength of dynamical screening effect. its meaning depends on isscr
 !!
-!! if isscr == 01:
+!! if isscr ==  1:
 !!     lc is ignored
 !!
-!! if isscr == 02:
+!! if isscr ==  2:
 !!     lc just means the model parameter \lambda
 !!
-!! if isscr == 03:
+!! if isscr ==  3:
 !!     lc just means the model parameter \alpha
 !!
 !! if isscr == 99
@@ -497,13 +498,13 @@
 !!
 !! screening frequency. its meaning depends on isscr
 !!
-!! if isscr == 01:
+!! if isscr ==  1:
 !!     wc is ignored
 !!
-!! if isscr == 02:
+!! if isscr ==  2:
 !!     wc just means the model parameter \omega^{'}
 !!
-!! if isscr == 03
+!! if isscr ==  3
 !!     wc just means the model parameter \omega_{c}
 !!
 !! if isscr == 99:
