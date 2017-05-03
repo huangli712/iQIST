@@ -29,11 +29,9 @@
 
      use control, only : cname               ! code name
                                              !
-     use control, only : isscf               ! control running scheme
-     use control, only : isscr               ! control dynamic interaction
-     use control, only : isbnd, isspn        ! control symmetry
-     use control, only : isbin, iswor, isort ! control measurement tricks
-     use control, only : isobs, issus, isvrt ! control physical observables
+     use control, only : isobs               ! control physical observables
+     use control, only : issus               ! control sp/ch susceptibility
+     use control, only : isvrt               ! control two-particle quantities
                                              !
      use control, only : nband, norbs, ncfgs ! size of model Hamiltonian
      use control, only : mkink               ! perturbation expansion order
