@@ -181,6 +181,7 @@
              str_obs = ( trim( str_obs ) // ' ' // trim( obs(i) ) )
          endif
      enddo
+     str_obs = adjustl(str_obs)
 
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
      write(mystd,'(4X,a,i4,2X,a)') 'self-consistent scheme  :', isscf, scf(isscf)
