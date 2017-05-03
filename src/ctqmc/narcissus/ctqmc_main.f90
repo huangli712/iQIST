@@ -5,7 +5,7 @@
 !!! engine plus hybridization expansion version continuous time quantum  !
 !!! Monte Carlo (CTQMC) quantum impurity solver                          !
 !!! author  : Li Huang (at IOP/CAS & SPCLab/CAEP & UNIFR)                !
-!!! status  : WARNING: IN TESTING STAGE, USE IT IN YOUR RISK             !
+!!! status  : (WARNING) IN TESTING STAGE, USE IT IN YOUR RISK            !
 !!! comment : this impurity solver is based on segment picture formalism !
 !!!           the dynamical screening effect is included                 !
 !!!           any question, please contact with lihuang.dmft@gmail.com   !
@@ -50,24 +50,21 @@
 
 # endif  /* MPI */
 
-! print the welcome message, only for check 
+! print the welcome messages
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
      endif ! back if ( myid == master ) block
 
-! setup the parameters for continuous time quantum Monte Carlo quantum
-! impurity solver and dynamical mean field theory self-consistent engine
+! setup the parameters
      call ctqmc_setup_param()
 
-! allocate memory spaces for continuous time quantum Monte Carlo quantum
-! impurity solver and dynamical mean field theory self-consistent engine
+! allocate memory spaces
      call ctqmc_alloc_array()
 
-! setup the Hamiltonian for continuous time quantum Monte Carlo quantum
-! impurity solver and dynamical mean field theory self-consistent engine
+! setup the impurity model
      call ctqmc_setup_model()
 
-! print the runtime parameters, only for check
+! print the runtime parameters
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
      endif ! back if ( myid == master ) block
@@ -76,16 +73,14 @@
 !!>>> DMFT ITERATION BEGIN                                             <<<
 !!========================================================================
 
-     DMFT_SC_CYCLE: &
-     do iter=1,niter
+     DMFT_SC_CYCLE: do iter=1,niter
 
 ! write the iter to screen, only for check
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
-! call the continuous time quantum Monte Carlo quantum impurity solver, to
-! build the impurity green's function and self-energy function
+! call the quantum impurity solver
          call ctqmc_impurity_solver(iter)
 
 ! check the self-consistent mode
@@ -93,14 +88,13 @@
              EXIT DMFT_SC_CYCLE ! jump out the iteration
          endif ! back if ( isscf == 1 ) block
 
-! call the self-consistent engine for dynamical mean field theory, to build
-! the bath weiss's function and new hybridization function
+! call the built-in self-consistent engine
          call ctqmc_dmft_selfer()
 
-! check convergence for dynamical mean field theory iteration
+! check whether the convergence is reached
          call ctqmc_dmft_conver(iter, conv)
 
-! now convergence is achieved
+! now the convergence is achieved
          if ( conv .eqv. .true. ) then
              EXIT DMFT_SC_CYCLE ! jump out the iteration
          endif ! back if ( conv .eqv. .true. ) block
@@ -111,11 +105,10 @@
 !!>>> DMFT ITERATION END                                               <<<
 !!========================================================================
 
-! deallocate memory spaces for continuous time quantum Monte Carlo quantum
-! impurity solver and dynamical mean field theory self-consistent engine
+! deallocate memory spaces
      call ctqmc_final_array()
 
-! print the ending message, only for check
+! print the ending messages
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_footer()
      endif ! back if ( myid == master ) block
