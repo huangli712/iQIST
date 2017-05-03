@@ -48,11 +48,13 @@
      write(mystd,'(2X,a)') cname
      write(mystd,'(2X,a)') '>>> A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
+
      write(mystd,'(2X,a)') 'Version: '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
      write(mystd,'(2X,a)') 'Develop: '//AUTH_VER
      write(mystd,'(2X,a)') 'Support: '//MAIL_VER
      write(mystd,'(2X,a)') 'License: '//GPL3_VER
      write(mystd,*)
+
      write(mystd,'(2X,a)') cname//' >>> start running at '//date_time_string
 
 # if defined (MPI)
@@ -98,6 +100,7 @@
 
      write(mystd,'(2X,a,f10.2,a)') cname//' >>> total time spent:', tot_time, 's'
      write(mystd,*)
+
      write(mystd,'(2X,a)') cname//' >>> I am tired and want to go to bed. Bye!'
      write(mystd,'(2X,a)') cname//' >>> happy ending at '//date_time_string
 
@@ -178,9 +181,9 @@
      character (len = 3) :: bin(2) = ['no', 'yes']
      character (len = 3) :: wor(2) = ['no', 'yes']
      character (len = 3) :: ort(3) = ['std', 'leg', 'svd']
-     character (len = 8) :: obs(4) = ['no', 'kinetic', 'fidelity', 'binder']
-     character (len = 4) :: sus(5) = ['no', 'sp_t', 'ch_t', 'sp_w', 'ch_w'] 
-     character (len = 4) :: vrt(3) = ['no', 'twop', 'pair']
+     character (len = 8) :: obs(4) = ['none', 'kinetic', 'fidelity', 'binder']
+     character (len = 4) :: sus(5) = ['none', 'sp_t', 'ch_t', 'sp_w', 'ch_w'] 
+     character (len = 4) :: vrt(3) = ['none', 'twop', 'pair']
 
 ! predefined strings for control parameters
      character (len = 99) :: str_obs = ''
@@ -188,43 +191,43 @@
      character (len = 99) :: str_vrt = ''
 
 ! build str_obs according to isobs
-     do i=2,size(obs)
+     do i=1,size(obs)
          if ( btest(isobs, i-1) ) then
              str_obs = ( trim( str_obs ) // ' ' // trim( obs(i) ) )
          endif ! back if ( btest(isobs, i-1) ) block
-     enddo ! over i={2,size(obs)} loop
+     enddo ! over i={1,size(obs)} loop
      str_obs = adjustl(str_obs)
 
 ! build str_sus according to issus
-     do i=2,size(sus)
+     do i=1,size(sus)
          if ( btest(issus, i-1) ) then
              str_sus = ( trim( str_sus ) // ' ' // trim( sus(i) ) )
          endif ! back if ( btest(issus, i-1) ) block
-     enddo ! over i={2,size(sus)} loop
+     enddo ! over i={1,size(sus)} loop
      str_sus = adjustl(str_sus)
 
 ! build str_vrt according to isvrt
-     do i=2,size(vrt)
+     do i=1,size(vrt)
          if ( btest(isvrt, i-1) ) then
              str_vrt = ( trim( str_vrt ) // ' ' // trim( vrt(i) ) )
          endif ! back if ( btest(isvrt, i-1) ) block
-     enddo ! over i={2,size(vrt)} loop
+     enddo ! over i={1,size(vrt)} loop
      str_vrt = adjustl(str_vrt)
 
 ! write control parameters
      write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver running'
 
-     write(mystd,'(4X,a,i4,X,2a)') 'self-consistent scheme  :', isscf, '/ ', scf(isscf)
-     write(mystd,'(4X,a,i4,X,2a)') 'dynamic interaction     :', isscr, '/ ', scr(isscr)
-     write(mystd,'(4X,a,i4,X,2a)') 'symmetry (band part)    :', isbnd, '/ ', bnd(isbnd)
-     write(mystd,'(4X,a,i4,X,2a)') 'symmetry (spin part)    :', isspn, '/ ', spn(isspn)
-     write(mystd,'(4X,a,i4,X,2a)') 'data binning            :', isbin, '/ ', bin(isbin)
-     write(mystd,'(4X,a,i4,X,2a)') 'worm algorithm          :', iswor, '/ ', wor(iswor)
-     write(mystd,'(4X,a,i4,X,2a)') 'advanced basis          :', isort, '/ ', ort(isort)
+     write(mystd,'(4X,a,i4,X,2a)') 'self-consistent scheme  /', isscf, '/ ', scf(isscf)
+     write(mystd,'(4X,a,i4,X,2a)') 'dynamic interaction     /', isscr, '/ ', scr(isscr)
+     write(mystd,'(4X,a,i4,X,2a)') 'symmetry (band part)    /', isbnd, '/ ', bnd(isbnd)
+     write(mystd,'(4X,a,i4,X,2a)') 'symmetry (spin part)    /', isspn, '/ ', spn(isspn)
+     write(mystd,'(4X,a,i4,X,2a)') 'data binning            /', isbin, '/ ', bin(isbin)
+     write(mystd,'(4X,a,i4,X,2a)') 'worm algorithm          /', iswor, '/ ', wor(iswor)
+     write(mystd,'(4X,a,i4,X,2a)') 'advanced basis          /', isort, '/ ', ort(isort)
 
-     write(mystd,'(4X,a,i4,X,2a)') 'fidelity susceptibility :', isobs, '/ ', trim(str_obs)
-     write(mystd,'(4X,a,i4,X,2a)') 'sp/ch susceptibility    :', issus, '/ ', trim(str_sus)
-     write(mystd,'(4X,a,i4,X,2a)') 'two-particle quantities :', isvrt, '/ ', trim(str_vrt)
+     write(mystd,'(4X,a,i4,X,2a)') 'fidelity susceptibility /', isobs, '/ ', trim(str_obs)
+     write(mystd,'(4X,a,i4,X,2a)') 'sp/ch susceptibility    /', issus, '/ ', trim(str_sus)
+     write(mystd,'(4X,a,i4,X,2a)') 'two-particle quantities /', isvrt, '/ ', trim(str_vrt)
 
      write(mystd,*)
 
