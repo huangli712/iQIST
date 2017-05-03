@@ -474,7 +474,8 @@
 !!
 !! @sub ctqmc_dump_ktau
 !!
-!! write out screening function and its derivates in imaginary time space
+!! write out dynamic screening function and its derivates in imaginary
+!! time space
 !!
   subroutine ctqmc_dump_ktau(ktau, ptau, ksed, psed)
      use constants, only : dp, mytmp
@@ -549,9 +550,7 @@
 ! write it
      do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-              real(grnf(j,i,i)), aimag(grnf(j,i,i)), &
-              real(gerr(j,i,i)), aimag(gerr(j,i,i))
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), grnf(j,i,i), gerr(j,i,i)
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
