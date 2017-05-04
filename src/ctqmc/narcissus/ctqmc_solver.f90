@@ -596,8 +596,8 @@
      sp_t = sp_t_mpi * real(nmonte) / real(nsweep)
      sp_w = sp_w_mpi * real(nmonte) / real(nsweep)
      cchi = cchi_mpi * real(nmonte) / real(nsweep)
-     oochi = oochi_mpi * real(nmonte) / real(nsweep)
-     oofom = oofom_mpi * real(nmonte) / real(nsweep)
+     ch_t = ch_t_mpi * real(nmonte) / real(nsweep)
+     ch_w = ch_w_mpi * real(nmonte) / real(nsweep)
 
      g2_re = g2_re_mpi * real(nmonte) / real(nsweep)
      g2_im = g2_im_mpi * real(nmonte) / real(nsweep)
