@@ -48,7 +48,7 @@
      use context, only : nimp, nmat          ! occupation and double occupation
                                              !
      use context, only : knop, kmat          ! kinetic energy fluctuation
-     use context, only : lmat, rmat, lrmat   ! fidelity susceptibility
+     use context, only : lnop, rnop, lrmm    ! fidelity susceptibility
      use context, only : szpow               ! binder cumulant
                                              !
      use context, only : schi, sschi, ssfom  ! spin susceptibility
