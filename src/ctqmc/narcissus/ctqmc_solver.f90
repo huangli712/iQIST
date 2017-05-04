@@ -567,8 +567,8 @@
 
      call ctqmc_reduce_schi(schi_mpi, sp_t_mpi, schi_err, sp_t_err)
      call ctqmc_reduce_sfom(sp_w_mpi, sp_w_err)
-     call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
-     call ctqmc_reduce_ofom(oofom_mpi, oofom_err)
+     call ctqmc_reduce_ochi(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
+     call ctqmc_reduce_ofom(ch_w_mpi, ch_w_err)
 
      call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi, h2_re_mpi, h2_im_mpi)
      call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
