@@ -179,12 +179,12 @@
      complex(dp), allocatable :: p2pw_err(:,:,:,:,:)
 
 ! impurity green's function in imaginary time axis
-     real(dp), allocatable :: gtau_mpi(:,:,:)
-     real(dp), allocatable :: gtau_err(:,:,:)
+     real(dp), allocatable    :: gtau_mpi(:,:,:)
+     real(dp), allocatable    :: gtau_err(:,:,:)
 
 ! auxiliary correlation function in imaginary time axis
-     real(dp), allocatable :: ftau_mpi(:,:,:)
-     real(dp), allocatable :: ftau_err(:,:,:)
+     real(dp), allocatable    :: ftau_mpi(:,:,:)
+     real(dp), allocatable    :: ftau_err(:,:,:)
 
 ! impurity green's function in matsubara frequency axis
      complex(dp), allocatable :: grnf_mpi(:,:,:)
