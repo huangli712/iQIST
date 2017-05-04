@@ -992,19 +992,19 @@
      implicit none
 
 ! allocate memory
-     allocate(rank(norbs),        stat=istat)
-     allocate(stts(norbs),        stat=istat)
+     allocate(rank(norbs),       stat=istat)
+     allocate(stts(norbs),       stat=istat)
 
-     allocate(pref(mkink,norbs),  stat=istat)
+     allocate(pref(mkink,norbs), stat=istat)
 
-     allocate(symm(norbs),        stat=istat)
+     allocate(symm(norbs),       stat=istat)
 
-     allocate(eimp(norbs),        stat=istat)
-     allocate(ktau(ntime),        stat=istat)
-     allocate(ksed(ntime),        stat=istat)
-     allocate(ptau(ntime),        stat=istat)
-     allocate(psed(ntime),        stat=istat)
-     allocate(uumat(norbs,norbs), stat=istat)
+     allocate(eimp(norbs),       stat=istat)
+     allocate(ktau(ntime),       stat=istat)
+     allocate(ksed(ntime),       stat=istat)
+     allocate(ptau(ntime),       stat=istat)
+     allocate(psed(ntime),       stat=istat)
+     allocate(umat(norbs,norbs), stat=istat)
 
 ! check the status
      if ( istat /= 0 ) then
@@ -1012,19 +1012,19 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     rank  = 0
-     stts  = 0
+     rank = 0
+     stts = 0
 
-     pref  = zero
+     pref = zero
 
-     symm  = 0
+     symm = 0
 
-     eimp  = zero
-     ktau  = zero
-     ksed  = zero
-     ptau  = zero
-     psed  = zero
-     uumat = zero
+     eimp = zero
+     ktau = zero
+     ksed = zero
+     ptau = zero
+     psed = zero
+     umat = zero
 
      return
   end subroutine ctqmc_allocate_memory_umat
