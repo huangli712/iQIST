@@ -885,7 +885,7 @@
 ! start point of the new segment
      real(dp), intent(out) :: tau_start
 
-! end   point of the new segment
+! end point of the new segment
      real(dp), intent(out) :: tau_end
 
 ! possible maximum length of the new segment
@@ -1257,7 +1257,7 @@
 ! start point of the selected segment
      real(dp), intent(out) :: tau_start
 
-! end   point of the selected segment
+! end point of the selected segment
      real(dp), intent(out) :: tau_end
 
 ! possible maximum length of the old segment
@@ -1460,7 +1460,7 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to left  shift old segment or anti-segment
+! index address to left shift old segment or anti-segment
 ! iso and isn are for old and new indices, respectively
      integer, intent(out)  :: iso, isn
 
@@ -1474,7 +1474,7 @@
      real(dp), intent(out) :: tau_start2
 
 ! local variables
-! dummy variables, end   points in imaginary time
+! dummy variables, end points in imaginary time
      real(dp) :: tau_end1
      real(dp) :: tau_end2
 
@@ -1514,7 +1514,8 @@
 
 ! case 1B: there are more than one segments
          else
-! not the first segment, tau_end2 < tau_start1 (tau_start2) < tau_end1, keep segment configuration
+! not the first segment, tau_end2 < tau_start1 (tau_start2) < tau_end1,
+! keep segment configuration
              if ( iso > 1 ) then
                  isn = iso
                  cstat = 1
@@ -1529,12 +1530,14 @@
                  tau_end2 = time_e(index_e(ckink, flvr), flvr)
                  tau_start1 = time_s(index_s(1, flvr), flvr)
                  tau_start2 = tau_end1 - spring_sfmt_stream() * ( tau_end1 - zero + beta - tau_end2 )
-! zero < tau_start1 (tau_start2) < tau_end1 < ... < tau_end2 < beta, keep segment configuration
+! zero < tau_start1 (tau_start2) < tau_end1 < ... < tau_end2 < beta,
+! keep segment configuration
                  if ( tau_start2 > zero ) then
                      isn = 1
                      cstat = 1
                      ring = .false.
-! zero < tau_start1 < tau_end1 < ... < tau_end2 < tau_start2 < beta, turn to anti-segment configuration
+! zero < tau_start1 < tau_end1 < ... < tau_end2 < tau_start2 < beta,
+! turn to anti-segment configuration
                  else
                      isn = ckink
                      cstat = 2
@@ -1557,11 +1560,13 @@
              isn = 1
              tau_start1 = time_s(index_s(1, flvr), flvr)
              tau_start2 = time_e(index_e(1, flvr), flvr) - spring_sfmt_stream() * beta
-! zero < tau_start2 < tau_end < tau_start1 < beta, turn to segment configuration
+! zero < tau_start2 < tau_end < tau_start1 < beta,
+! turn to segment configuration
              if ( tau_start2 > zero ) then
                  cstat = 1
                  ring = .true.
-! zero < tau_end < tau_start1 (tau_start2) < beta, keep anti-segment configuration
+! zero < tau_end < tau_start1 (tau_start2) < beta,
+! keep anti-segment configuration
              else
                  cstat = 2
                  ring = .false.
@@ -1570,7 +1575,8 @@
 
 ! case 2B: there are more than one segment or anti-segment
          else
-! not the last segment, tau_end1 < tau_start1 (tau_start2) < tau_end2, keep anti-segment configuration
+! not the last segment, tau_end1 < tau_start1 (tau_start2) < tau_end2,
+! keep anti-segment configuration
              if ( iso < ckink ) then
                  isn = iso
                  cstat = 2
@@ -1585,12 +1591,14 @@
                  tau_end2 = time_e(index_e(1, flvr), flvr)
                  tau_start1 = time_s(index_s(ckink, flvr), flvr)
                  tau_start2 = tau_end2 - spring_sfmt_stream() * ( beta - tau_end1 + tau_end2 - zero )
-! zero < tau_start2 < tau_end2 < ... < tau_end1 < tau_start1 < beta, turn to segment configuration
+! zero < tau_start2 < tau_end2 < ... < tau_end1 < tau_start1 < beta,
+! turn to segment configuration
                  if ( tau_start2 > zero ) then
                      isn = 1
                      cstat = 1
                      ring = .true.
-! zero < tau_end2 < ... < tau_end1 < tau_start1 (tau_start2) < beta, keep anti-segment configuration
+! zero < tau_end2 < ... < tau_end1 < tau_start1 (tau_start2) < beta,
+! keep anti-segment configuration
                  else
                      isn = ckink
                      cstat = 2
