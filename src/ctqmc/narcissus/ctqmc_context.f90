@@ -956,11 +956,11 @@
      endif ! back if ( istat /= 0 ) block
 
 ! initialize them
-     hist  = zero
-     prob  = zero
-     paux  = zero
-     nmat  = zero
-     nnmat = zero
+     hist = zero
+     prob = zero
+     paux = zero
+     nimp = zero
+     nmat = zero
 
      kmat  = zero
      kkmat = zero
