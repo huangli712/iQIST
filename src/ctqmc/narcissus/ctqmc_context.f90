@@ -966,8 +966,8 @@
      kmat = zero
      lnop = zero
      rnop = zero
-     lrmat = zero
-     szpow = zero
+     lrmm = zero
+     szpw = zero
 
      schi  = zero
      sschi = zero
