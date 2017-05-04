@@ -589,8 +589,8 @@
      kmat = kmat_mpi * real(nmonte) / real(nsweep)
      lnop = lnop_mpi * real(nmonte) / real(nsweep)
      rnop = rnop_mpi * real(nmonte) / real(nsweep)
-     lrmat = lrmat_mpi * real(nmonte) / real(nsweep)
-     szpow = szpow_mpi * real(nmonte) / real(nsweep)
+     lrmm = lrmm_mpi * real(nmonte) / real(nsweep)
+     szpw = szpw_mpi * real(nmonte) / real(nsweep)
 
      schi  = schi_mpi  * real(nmonte) / real(nsweep)
      sschi = sschi_mpi * real(nmonte) / real(nsweep)
