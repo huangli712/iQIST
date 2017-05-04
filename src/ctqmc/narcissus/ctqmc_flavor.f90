@@ -1901,7 +1901,7 @@
 ! current imaginary time point
      real(dp), intent(in)  :: tau
 
-! exponential factor introduced by dynamical screening effect
+! exponential factor introduced by dynamic interaction
      real(dp), intent(out) :: scr
 
 ! local variables
@@ -2027,7 +2027,7 @@
 !!
 !! @sub cat_ovlp_segment_
 !!
-!! compare two segments, and calculate their overlap
+!! compare two given segments, and calculate their overlap
 !!
   subroutine cat_ovlp_segment_(ts0, te0, ts1, te1, cover)
      use constants, only : dp, zero
@@ -2102,7 +2102,7 @@
 ! imaginary time \tau_s for start point
      real(dp), intent(in)  :: tau_start
 
-! imaginary time \tau_e for end   point
+! imaginary time \tau_e for end point
      real(dp), intent(in)  :: tau_end
 
 ! segment overlap between different flavors
