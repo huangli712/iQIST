@@ -1226,9 +1226,9 @@
      if ( allocated(lrmm) )    deallocate(lrmm)
      if ( allocated(szpw) )    deallocate(szpw)
 
-     if ( allocated(schi)  )   deallocate(schi )
-     if ( allocated(sschi) )   deallocate(sschi)
-     if ( allocated(ssfom) )   deallocate(ssfom)
+     if ( allocated(schi) )    deallocate(schi)
+     if ( allocated(sp_t) )    deallocate(sp_t)
+     if ( allocated(sp_w) )    deallocate(sp_w)
      if ( allocated(ochi)  )   deallocate(ochi )
      if ( allocated(oochi) )   deallocate(oochi)
      if ( allocated(oofom) )   deallocate(oofom)
