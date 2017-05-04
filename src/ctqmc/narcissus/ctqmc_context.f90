@@ -1229,9 +1229,9 @@
      if ( allocated(schi) )    deallocate(schi)
      if ( allocated(sp_t) )    deallocate(sp_t)
      if ( allocated(sp_w) )    deallocate(sp_w)
-     if ( allocated(cchi)  )   deallocate(cchi)
-     if ( allocated(oochi) )   deallocate(oochi)
-     if ( allocated(oofom) )   deallocate(oofom)
+     if ( allocated(cchi) )    deallocate(cchi)
+     if ( allocated(ch_t) )    deallocate(ch_t)
+     if ( allocated(ch_w) )    deallocate(ch_w)
 
      if ( allocated(g2_re) )   deallocate(g2_re)
      if ( allocated(g2_im) )   deallocate(g2_im)
