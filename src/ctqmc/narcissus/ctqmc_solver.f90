@@ -680,8 +680,8 @@
 
          call ctqmc_dump_sp_t(schi, sp_t, schi_err, sp_t_err)
          call ctqmc_dump_sp_w(sp_w, sp_w_err)
-         call ctqmc_dump_ch_t(ochi, oochi, ochi_err, oochi_err)
-         call ctqmc_dump_ch_w(oofom, oofom_err)
+         call ctqmc_dump_ch_t(cchi, ch_t, cchi_err, ch_t_err)
+         call ctqmc_dump_ch_w(ch_w, ch_w_err)
 
          call ctqmc_dump_twop(g2_re, g2_im, h2_re, h2_im)
          call ctqmc_dump_pair(ps_re, ps_im)
