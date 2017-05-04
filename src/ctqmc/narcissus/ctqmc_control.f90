@@ -374,13 +374,13 @@
 !!
 !! in this code, nowadays the following flip schemes are supported:
 !!
-!! if nflip = 0:
+!! if nflip == 0:
 !!     means infinite long period to do flip
 !!
-!! if nflip > 0:
+!! if nflip >  0:
 !!     flip intra-orbital spins one by one (90%) and globally (10%)
 !!
-!! if nflip < 0:
+!! if nflip <  0:
 !!     flip intra-orbital spins globally (90%) and one by one (10%)
 !!
      integer, public, save :: nflip  = 20000
@@ -423,8 +423,8 @@
 !!
 !! @var ncarlo
 !!
-!! how often to sample the physical observables. it is reserved for the
-!! worm algorithm
+!! how often to sample the physical observables
+!! it is reserved for the worm algorithm
 !!
      integer, public, save :: ncarlo = 10
 
@@ -538,7 +538,7 @@
 !!
 !! @var alpha
 !!
-!! mixing parameter for dynamical mean field theory self-consistent engine
+!! mixing parameter for dynamical mean field theory engine
 !!
      real(dp), public, save :: alpha = 0.70_dp
 
