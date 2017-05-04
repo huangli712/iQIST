@@ -666,7 +666,7 @@
          call ctqmc_dump_hist(hist, hist_err)
          call ctqmc_dump_prob(prob, prob_err)
          call ctqmc_dump_paux(paux, paux_err)
-         call ctqmc_dump_nmat(nmat, nnmat, nmat_err, nnmat_err)
+         call ctqmc_dump_nimp(nimp, nmat, nimp_err, nmat_err)
 
          call ctqmc_dump_gtau(gtau, gtau_err)
          call ctqmc_dump_grnf(grnf, grnf_err)
