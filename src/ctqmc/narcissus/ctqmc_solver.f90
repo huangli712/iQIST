@@ -629,6 +629,10 @@
      ch_t_err = ch_t_err * real(nmonte) / real(nsweep)
      ch_w_err = ch_w_err * real(nmonte) / real(nsweep)
 
+     g2pw_err = g2pw_err * real(nmonte) / real(nsweep)
+     h2pw_err = h2pw_err * real(nmonte) / real(nsweep)
+     p2pw_err = p2pw_err * real(nmonte) / real(nsweep)
+
 ! try to evaluate the impurity green's function and self-energy function
      call ctqmc_make_hub2()
 
