@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/03/2017 by li huang (last modified)
+!!!           05/05/2017 by li huang (last modified)
 !!! purpose : try to implement a self-consistent engine for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver plus dynamical mean field theory
@@ -125,7 +125,8 @@
      use constants, only : dp, zero, one, two, eps8, mystd
 
      use control, only : cname
-     use control, only : norbs, niter
+     use control, only : norbs
+     use control, only : niter
      use control, only : mfreq
      use control, only : alpha
      use control, only : myid, master
