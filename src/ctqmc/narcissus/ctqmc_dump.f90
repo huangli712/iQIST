@@ -729,53 +729,6 @@
      return
   end subroutine ctqmc_dump_sigf
 
-!!
-!! @sub ctqmc_dump_hub1
-!!
-!! write out impurity green's function and self-energy function obtained
-!! by hubbard-I approximation in matsubara frequency space
-!!
-  subroutine ctqmc_dump_hub1(ghub, shub)
-     use constants, only : dp, mytmp
-
-     use control, only : norbs
-     use control, only : mfreq
-     use context, only : rmesh
-
-     implicit none
-
-! external arguments
-! impurity green's function by hubbard-I approximation
-     complex(dp), intent(in) :: ghub(mfreq,norbs)
-
-! self-energy function by hubbard-I approximation
-     complex(dp), intent(in) :: shub(mfreq,norbs)
-
-! local variables
-! loop index
-     integer :: i
-     integer :: j
-
-! open data file: solver.hub.dat
-     open(mytmp, file='solver.hub.dat', form='formatted', status='unknown')
-
-! write it
-     do i=1,norbs
-         do j=1,mfreq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-                  real(ghub(j,i)), aimag(ghub(j,i)), &
-                  real(shub(j,i)), aimag(shub(j,i))
-         enddo ! over j={1,mfreq} loop
-         write(mytmp,*) ! write empty lines
-         write(mytmp,*)
-     enddo ! over i={1,norbs} loop
-
-! close data file
-     close(mytmp)
-
-     return
-  end subroutine ctqmc_dump_hub1
-
 !!========================================================================
 !!>>> dump data of physical observables 3                              <<<
 !!========================================================================
