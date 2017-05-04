@@ -620,7 +620,7 @@
      lnop_err = lnop_err * real(nmonte) / real(nsweep)
      rnop_err = rnop_err * real(nmonte) / real(nsweep)
      lrmm_err = lrmm_err * real(nmonte) / real(nsweep)
-     szpow_err = szpow_err * real(nmonte) / real(nsweep)
+     szpw_err = szpw_err * real(nmonte) / real(nsweep)
 
      schi_err  = schi_err  * real(nmonte) / real(nsweep)
      sschi_err = sschi_err * real(nmonte) / real(nsweep)
