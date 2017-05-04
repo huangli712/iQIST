@@ -344,7 +344,7 @@
 ! length for segment or anti-segment
      real(dp) :: dtau
 
-! extra weight factor introduced by dynamical screening effect
+! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
 ! weight factor contributed by new create operator
@@ -353,7 +353,7 @@
 ! weight factor contributed by new destroy operator
      real(dp) :: te_scr
 
-! weight factor contributed by new create and destroy operator
+! weight factor contributed by new operators
      real(dp) :: cd_scr
 
 ! segment overlap between flvr and other else flavors
@@ -459,7 +459,7 @@
 ! imaginary time \tau_s for start point
      real(dp), intent(in)  :: tau_start
 
-! imaginary time \tau_e for end   point
+! imaginary time \tau_e for end point
      real(dp), intent(in)  :: tau_end
 
 ! the desired ztrace ratio
@@ -475,7 +475,7 @@
 ! length for segment or anti-segment
      real(dp) :: dtau
 
-! extra weight factor introduced by dynamical screening effect
+! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
 ! weight factor contributed by old create operator
@@ -484,7 +484,7 @@
 ! weight factor contributed by old destroy operator
      real(dp) :: te_scr
 
-! weight factor contributed by old create and destroy operator
+! weight factor contributed by old operators
      real(dp) :: cd_scr
 
 ! segment overlap between flvr and other else flavors
@@ -543,7 +543,7 @@
          trace_ratio = exp(+raux)
      endif ! back if ( anti .eqv. .false. ) block
 
-! quickly return if we don't need to consider the dynamical screening effect
+! quickly return if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by old create operator
@@ -552,7 +552,7 @@
 ! calculate the extra weight factor contributed by old destroy operator
      call cat_weight_factor(tau_end,   te_scr)
 
-! calculate the extra weight factor contributed by old create and destroy operator
+! calculate the extra weight factor contributed by old operators
      call cat_weight_kernel(1, dtau,   cd_scr)
 
 ! evaluate total weight factor (screening part)
@@ -606,7 +606,7 @@
 ! length for segment or anti-segment
      real(dp) :: dtau
 
-! extra weight factor introduced by dynamical screening effect
+! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
 ! weight factor contributed by old create operator
@@ -615,7 +615,7 @@
 ! weight factor contributed by new create operator
      real(dp) :: ts2_scr
 
-! weight factor contributed by old and new create operator
+! weight factor contributed by the create operators
      real(dp) :: ts12_scr
 
 ! segment overlap between flvr and other else flavors
