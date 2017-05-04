@@ -942,7 +942,7 @@
      allocate(schi(ntime),       stat=istat)
      allocate(sp_t(ntime,nband), stat=istat)
      allocate(sp_w(nbfrq,nband), stat=istat)
-     allocate(ochi(ntime),        stat=istat)
+     allocate(cchi(ntime),       stat=istat)
      allocate(oochi(ntime,norbs,norbs), stat=istat)
      allocate(oofom(nbfrq,norbs,norbs), stat=istat)
 
