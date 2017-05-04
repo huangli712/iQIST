@@ -392,18 +392,18 @@
      real(dp), public, save, allocatable :: kmat(:,:)
 
 !!
-!! @var lmat
+!! @var lnop
 !!
 !! number of operators at left half axis, < k_l >
 !!
-     real(dp), public, save, allocatable :: lmat(:)
+     real(dp), public, save, allocatable :: lnop(:)
 
 !!
-!! @var rmat
+!! @var rnop
 !!
 !! number of operators at right half axis, < k_r >
 !!
-     real(dp), public, save, allocatable :: rmat(:)
+     real(dp), public, save, allocatable :: rnop(:)
 
 !!
 !! @var lrmat
