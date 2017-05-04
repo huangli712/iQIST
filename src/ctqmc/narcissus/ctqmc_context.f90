@@ -972,7 +972,7 @@
      schi = zero
      sp_t = zero
      sp_w = zero
-     ochi  = zero
+     cchi = zero
      oochi = zero
      oofom = zero
 
