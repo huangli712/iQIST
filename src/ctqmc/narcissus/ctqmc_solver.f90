@@ -563,10 +563,10 @@
 
      call ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
      call ctqmc_reduce_lmat(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
-     call ctqmc_reduce_szpw(szpow_mpi, szpow_err)
+     call ctqmc_reduce_szpw(szpw_mpi, szpw_err)
 
-     call ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
-     call ctqmc_reduce_sfom(ssfom_mpi, ssfom_err)
+     call ctqmc_reduce_schi(schi_mpi, sp_t_mpi, schi_err, sp_t_err)
+     call ctqmc_reduce_sfom(sp_w_mpi, sp_w_err)
      call ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
      call ctqmc_reduce_ofom(oofom_mpi, oofom_err)
 
