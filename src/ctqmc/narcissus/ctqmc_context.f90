@@ -413,12 +413,12 @@
      real(dp), public, save, allocatable :: lrmm(:,:)
 
 !!
-!! @var szpow
+!! @var szpw
 !!
 !! powers of the local magnetization < S^n_z>, which is used to calculate
 !! the Binder cumulant
 !!
-     real(dp), public, save, allocatable :: szpow(:,:)
+     real(dp), public, save, allocatable :: szpw(:,:)
 
 !!
 !! @var schi
