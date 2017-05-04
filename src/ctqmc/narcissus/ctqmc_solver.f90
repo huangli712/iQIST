@@ -139,8 +139,8 @@
      real(dp), allocatable :: lrmm_err(:,:)
 
 ! powers of local magnetization
-     real(dp), allocatable :: szpow_mpi(:,:)
-     real(dp), allocatable :: szpow_err(:,:)
+     real(dp), allocatable :: szpw_mpi(:,:)
+     real(dp), allocatable :: szpw_err(:,:)
 
 ! totally-averaged spin-spin correlation function
      real(dp), allocatable :: schi_mpi(:)
