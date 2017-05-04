@@ -111,12 +111,12 @@
      real(dp), allocatable :: paux_err(:)
 
 ! impurity occupation number matrix
-     real(dp), allocatable :: nmat_mpi(:)
-     real(dp), allocatable :: nmat_err(:)
+     real(dp), allocatable :: nimp_mpi(:)
+     real(dp), allocatable :: nimp_err(:)
 
 ! impurity double occupation number matrix
-     real(dp), allocatable :: nnmat_mpi(:,:)
-     real(dp), allocatable :: nnmat_err(:,:)
+     real(dp), allocatable :: nmat_mpi(:,:)
+     real(dp), allocatable :: nmat_err(:,:)
 
 ! number of operators < k >
      real(dp), allocatable :: kmat_mpi(:)
