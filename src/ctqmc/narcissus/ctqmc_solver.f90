@@ -674,7 +674,7 @@
          call ctqmc_dump_frnf(frnf)
          call ctqmc_dump_sigf(sig2)
 
-         call ctqmc_dump_kmat(kmat, kkmat, kmat_err, kkmat_err)
+         call ctqmc_dump_kmat(knop, kmat, knop_err, kmat_err)
          call ctqmc_dump_lmat(lmat, rmat, lrmat, lmat_err, rmat_err, lrmat_err)
          call ctqmc_dump_szpw(szpow, szpow_err)
 
