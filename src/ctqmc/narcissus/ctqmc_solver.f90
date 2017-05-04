@@ -159,30 +159,21 @@
      real(dp), allocatable :: cchi_err(:)
 
 ! orbital-resolved orbital-orbital correlation function
-     real(dp), allocatable :: oochi_mpi(:,:,:)
-     real(dp), allocatable :: oochi_err(:,:,:)
+     real(dp), allocatable :: ch_t_mpi(:,:,:)
+     real(dp), allocatable :: ch_t_err(:,:,:)
 
 ! orbital-resolved orbital-orbital correlation function
-     real(dp), allocatable :: oofom_mpi(:,:,:)
-     real(dp), allocatable :: oofom_err(:,:,:)
+     real(dp), allocatable :: ch_w_mpi(:,:,:)
+     real(dp), allocatable :: ch_w_err(:,:,:)
 
 ! used to measure two-particle green's function, real part
      real(dp), allocatable :: g2_re_mpi(:,:,:,:,:)
 
-! used to measure two-particle green's function, imaginary part
-     real(dp), allocatable :: g2_im_mpi(:,:,:,:,:)
-
 ! used to measure two-particle green's function, real part
      real(dp), allocatable :: h2_re_mpi(:,:,:,:,:)
 
-! used to measure two-particle green's function, imaginary part
-     real(dp), allocatable :: h2_im_mpi(:,:,:,:,:)
-
 ! used to measure p-p pairing susceptibility, real part
      real(dp), allocatable :: ps_re_mpi(:,:,:,:,:)
-
-! used to measure p-p pairing susceptibility, imaginary part
-     real(dp), allocatable :: ps_im_mpi(:,:,:,:,:)
 
 ! impurity green's function in imaginary time axis
      real(dp), allocatable :: gtau_mpi(:,:,:)
