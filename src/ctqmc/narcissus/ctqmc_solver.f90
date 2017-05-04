@@ -625,9 +625,9 @@
      schi_err = schi_err * real(nmonte) / real(nsweep)
      sp_t_err = sp_t_err * real(nmonte) / real(nsweep)
      sp_w_err = sp_w_err * real(nmonte) / real(nsweep)
-     ochi_err  = ochi_err  * real(nmonte) / real(nsweep)
-     oochi_err = oochi_err * real(nmonte) / real(nsweep)
-     oofom_err = oofom_err * real(nmonte) / real(nsweep)
+     cchi_err = cchi_err * real(nmonte) / real(nsweep)
+     ch_t_err = ch_t_err * real(nmonte) / real(nsweep)
+     ch_w_err = ch_w_err * real(nmonte) / real(nsweep)
 
 ! try to evaluate the impurity green's function and self-energy function
      call ctqmc_make_hub2()
