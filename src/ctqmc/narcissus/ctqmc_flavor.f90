@@ -747,7 +747,7 @@
 ! length for segment or anti-segment
      real(dp) :: dtau
 
-! extra weight factor introduced by dynamical screening effect
+! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
 ! weight factor contributed by old destroy operator
@@ -756,7 +756,7 @@
 ! weight factor contributed by new destroy operator
      real(dp) :: te2_scr
 
-! weight factor contributed by old and new destroy operator
+! weight factor contributed by the destroy operators
      real(dp) :: te12_scr
 
 ! segment overlap between flvr and other else flavors
@@ -825,7 +825,7 @@
          endif ! back if ( tau_end1 > tau_end2 ) block
      endif ! back if ( ring .eqv. .false. ) block
 
-! quickly return if we don't need to consider the dynamical screening effect
+! quickly return if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by old destroy operator
@@ -834,7 +834,7 @@
 ! calculate the extra weight factor contributed by new destroy operator
      call cat_weight_factor(tau_end2, te2_scr)
 
-! calculate the extra weight factor contributed by old and new destroy operator
+! calculate the extra weight factor contributed by the destroy operators
      call cat_weight_kernel(1, dtau, te12_scr)
 
 ! evaluate total weight factor (screening part)
