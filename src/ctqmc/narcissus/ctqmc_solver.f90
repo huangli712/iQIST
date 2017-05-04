@@ -123,8 +123,8 @@
      real(dp), allocatable :: knop_err(:)
 
 ! square of number of operators < k^2 >
-     real(dp), allocatable :: kkmat_mpi(:,:)
-     real(dp), allocatable :: kkmat_err(:,:)
+     real(dp), allocatable :: kmat_mpi(:,:)
+     real(dp), allocatable :: kmat_err(:,:)
 
 ! number of operators at left half axis < k_l >
      real(dp), allocatable :: lmat_mpi(:)
