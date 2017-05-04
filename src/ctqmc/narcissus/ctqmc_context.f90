@@ -378,18 +378,18 @@
      real(dp), public, save, allocatable :: nmat(:,:)
 
 !!
-!! @var kmat
+!! @var knop
 !!
 !! number of operators, < k >
 !!
-     real(dp), public, save, allocatable :: kmat(:)
+     real(dp), public, save, allocatable :: knop(:)
 
 !!
-!! @var kkmat
+!! @var kmat
 !!
 !! square of number of operators, < k^2 >
 !!
-     real(dp), public, save, allocatable :: kkmat(:,:)
+     real(dp), public, save, allocatable :: kmat(:,:)
 
 !!
 !! @var lmat
