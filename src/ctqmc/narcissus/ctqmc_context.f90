@@ -777,7 +777,7 @@
 !!
 !! @mod context
 !!
-!! containing memory management subroutines and initialize all of the
+!! containing memory management subroutines, which initialize all of the
 !! global variables and arrays
 !!
   module context
