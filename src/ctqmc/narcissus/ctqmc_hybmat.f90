@@ -54,7 +54,7 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for inserting new segment or anti-segment
+! index address to insert new segment or anti-segment
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
@@ -189,7 +189,7 @@
 ! current flavor channel
      integer, intent(in) :: flvr
 
-! index address for removing old segment or anti-segment
+! index address to remove old segment or anti-segment
      integer, intent(in) :: is
      integer, intent(in) :: ie
 
@@ -889,7 +889,7 @@
 ! imaginary time \tau_s for start point
      real(dp), intent(in)  :: tau_start
 
-! imaginary time \tau_e for end   point
+! imaginary time \tau_e for end point
      real(dp), intent(in)  :: tau_end
 
 ! the desired determinant ratio
@@ -1011,7 +1011,7 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address for left  shift old segment or anti-segment (old index = iso)
+! index address to left shift old segment or anti-segment (old index = iso)
      integer, intent(in)   :: addr
 
 ! imaginary time \tau_s for start point (the old one)
@@ -1090,13 +1090,13 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address for right shift old segment or anti-segment (old index = ieo)
+! index address to right shift old segment or anti-segment (old index = ieo)
      integer, intent(in)   :: addr
 
-! imaginary time \tau_e for end   point (the old one)
+! imaginary time \tau_e for end point (the old one)
      real(dp), intent(in)  :: tau_end1
 
-! imaginary time \tau_e for end   point (the new one)
+! imaginary time \tau_e for end point (the new one)
      real(dp), intent(in)  :: tau_end2
 
 ! the desired determinant ratio
@@ -1245,7 +1245,7 @@
 !!
 !! @sub cat_reload_detrat
 !!
-!! to do nothing, it is an null subroutine
+!! to do nothing, it is an empty subroutine
 !!
   subroutine cat_reload_detrat()
      implicit none
