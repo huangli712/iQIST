@@ -684,7 +684,7 @@
          endif ! back if ( tau_start1 > tau_start2 ) block
      endif ! back if ( ring .eqv. .false. ) block
 
-! quickly return if we don't need to consider the dynamical screening effect
+! quickly return if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by old create operator
@@ -693,7 +693,7 @@
 ! calculate the extra weight factor contributed by new create operator
      call cat_weight_factor(tau_start2, ts2_scr)
 
-! calculate the extra weight factor contributed by old and new create operator
+! calculate the extra weight factor contributed by the create operators
      call cat_weight_kernel(1, dtau,   ts12_scr)
 
 ! evaluate total weight factor (screening part)
@@ -728,10 +728,10 @@
 ! whether the update operation winds around the circle
      logical, intent(in)   :: ring
 
-! imaginary time \tau_e for end   point (the old one)
+! imaginary time \tau_e for end point (the old one)
      real(dp), intent(in)  :: tau_end1
 
-! imaginary time \tau_e for end   point (the new one)
+! imaginary time \tau_e for end point (the new one)
      real(dp), intent(in)  :: tau_end2
 
 ! the desired ztrace ratio
