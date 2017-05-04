@@ -453,20 +453,20 @@
      real(dp), public, save, allocatable :: cchi(:)
 
 !!
-!! @var oochi
+!! @var ch_t
 !!
-!! orbital-orbital correlation function: < N(0) N(\tau) >,
+!! charge-charge correlation function: < N(0) N(\tau) >,
 !! orbital-resolved
 !!
-     real(dp), public, save, allocatable :: oochi(:,:,:)
+     real(dp), public, save, allocatable :: ch_t(:,:,:)
 
 !!
-!! @var oofom
+!! @var ch_w
 !!
-!! orbital-orbital correlation function: \chi^{c}_{ij} (i\omega),
+!! charge-charge correlation function: \chi^{c}_{ij} (i\omega),
 !! orbital-resolved
 !!
-     real(dp), public, save, allocatable :: oofom(:,:,:)
+     real(dp), public, save, allocatable :: ch_w(:,:,:)
 
 !!
 !! @var g2pw
