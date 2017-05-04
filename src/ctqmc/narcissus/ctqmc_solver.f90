@@ -622,9 +622,9 @@
      lrmm_err = lrmm_err * real(nmonte) / real(nsweep)
      szpw_err = szpw_err * real(nmonte) / real(nsweep)
 
-     schi_err  = schi_err  * real(nmonte) / real(nsweep)
-     sschi_err = sschi_err * real(nmonte) / real(nsweep)
-     ssfom_err = ssfom_err * real(nmonte) / real(nsweep)
+     schi_err = schi_err * real(nmonte) / real(nsweep)
+     sp_t_err = sp_t_err * real(nmonte) / real(nsweep)
+     sp_w_err = sp_w_err * real(nmonte) / real(nsweep)
      ochi_err  = ochi_err  * real(nmonte) / real(nsweep)
      oochi_err = oochi_err * real(nmonte) / real(nsweep)
      oofom_err = oofom_err * real(nmonte) / real(nsweep)
