@@ -708,16 +708,16 @@
      endif ! back if ( myid == master ) block
 
 ! deallocate memory
-     deallocate(hist_mpi )
-     deallocate(hist_err )
-     deallocate(prob_mpi )
-     deallocate(prob_err )
-     deallocate(paux_mpi )
-     deallocate(paux_err )
-     deallocate(nmat_mpi )
-     deallocate(nmat_err )
-     deallocate(nnmat_mpi)
-     deallocate(nnmat_err)
+     deallocate(hist_mpi)
+     deallocate(hist_err)
+     deallocate(prob_mpi)
+     deallocate(prob_err)
+     deallocate(paux_mpi)
+     deallocate(paux_err)
+     deallocate(nimp_mpi)
+     deallocate(nimp_err)
+     deallocate(nmat_mpi)
+     deallocate(nmat_err)
 
      deallocate(gtau_mpi )
      deallocate(gtau_err )
