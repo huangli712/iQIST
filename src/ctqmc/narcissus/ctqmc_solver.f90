@@ -683,8 +683,8 @@
          call ctqmc_dump_ch_t(cchi, ch_t, cchi_err, ch_t_err)
          call ctqmc_dump_ch_w(ch_w, ch_w_err)
 
-         call ctqmc_dump_twop(g2_re, g2_im, h2_re, h2_im)
-         call ctqmc_dump_pair(ps_re, ps_im)
+         call ctqmc_dump_twop(g2pw, h2pw, g2pw_err, h2pw_err)
+         call ctqmc_dump_pair(p2pw, p2pw_err)
      endif ! back if ( myid == master ) block
 
 !!========================================================================
