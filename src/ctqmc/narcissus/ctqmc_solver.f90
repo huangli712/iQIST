@@ -118,6 +118,14 @@
      real(dp), allocatable :: nmat_mpi(:,:)
      real(dp), allocatable :: nmat_err(:,:)
 
+! impurity green's function in imaginary time axis
+     real(dp), allocatable :: gtau_mpi(:,:,:)
+     real(dp), allocatable :: gtau_err(:,:,:)
+
+! auxiliary correlation function in imaginary time axis
+     real(dp), allocatable :: ftau_mpi(:,:,:)
+     real(dp), allocatable :: ftau_err(:,:,:)
+
 ! number of operators < k >
      real(dp), allocatable :: knop_mpi(:)
      real(dp), allocatable :: knop_err(:)
@@ -177,14 +185,6 @@
 ! particle-particle pairing susceptibility
      complex(dp), allocatable :: p2pw_mpi(:,:,:,:,:)
      complex(dp), allocatable :: p2pw_err(:,:,:,:,:)
-
-! impurity green's function in imaginary time axis
-     real(dp), allocatable :: gtau_mpi(:,:,:)
-     real(dp), allocatable :: gtau_err(:,:,:)
-
-! auxiliary correlation function in imaginary time axis
-     real(dp), allocatable :: ftau_mpi(:,:,:)
-     real(dp), allocatable :: ftau_err(:,:,:)
 
 ! impurity green's function in matsubara frequency axis
      complex(dp), allocatable :: grnf_mpi(:,:,:)
