@@ -939,9 +939,9 @@
      allocate(lrmm(norbs,norbs), stat=istat)
      allocate(szpw(  4  ,norbs), stat=istat)
 
-     allocate(schi(ntime),        stat=istat)
-     allocate(sschi(ntime,nband), stat=istat)
-     allocate(ssfom(nbfrq,nband), stat=istat)
+     allocate(schi(ntime),       stat=istat)
+     allocate(sp_t(ntime,nband), stat=istat)
+     allocate(sp_w(nbfrq,nband), stat=istat)
      allocate(ochi(ntime),        stat=istat)
      allocate(oochi(ntime,norbs,norbs), stat=istat)
      allocate(oofom(nbfrq,norbs,norbs), stat=istat)
