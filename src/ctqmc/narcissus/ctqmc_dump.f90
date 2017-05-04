@@ -927,6 +927,7 @@
 !! @sub ctqmc_dump_schi
 !!
 !! write out the spin-spin correlation function
+!! in imaginary time space
 !!
   subroutine ctqmc_dump_schi(schi, sschi, serr, sserr)
      use constants, only : dp, mytmp
@@ -993,6 +994,7 @@
 !! @sub ctqmc_dump_sfom
 !!
 !! write out the spin-spin correlation function
+!! in matsubara frequency space
 !!
   subroutine ctqmc_dump_sfom(ssfom, sserr)
      use constants, only : dp, two, pi, mytmp
@@ -1049,6 +1051,7 @@
 !! @sub ctqmc_dump_ochi
 !!
 !! write out the orbital-orbital correlation function
+!! in imaginary time space
 !!
   subroutine ctqmc_dump_ochi(ochi, oochi, oerr, ooerr)
      use constants, only : dp, mytmp
@@ -1118,6 +1121,7 @@
 !! @sub ctqmc_dump_ofom
 !!
 !! write out the orbital-orbital correlation function
+!! in matsubara frequency space
 !!
   subroutine ctqmc_dump_ofom(oofom, ooerr)
      use constants, only : dp, two, pi, mytmp
