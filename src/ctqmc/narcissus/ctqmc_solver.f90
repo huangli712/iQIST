@@ -641,8 +641,8 @@
 !!========================================================================
 
 ! symmetrize the occupation number matrix over spin or over bands
-     call ctqmc_symm_nmat(symm, nmat)
-     call ctqmc_symm_nmat(symm, nmat_err)
+     call ctqmc_symm_nimp(symm, nimp)
+     call ctqmc_symm_nimp(symm, nimp_err)
 
 ! symmetrize the impurity green's function over spin or over bands
      call ctqmc_symm_gtau(symm, gtau)
