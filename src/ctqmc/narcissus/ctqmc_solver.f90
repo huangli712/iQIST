@@ -585,10 +585,10 @@
      ftau = ftau_mpi * real(nmonte) / real(nsweep)
      grnf = grnf_mpi * real(nmonte) / real(nsweep)
 
-     kmat  = kmat_mpi  * real(nmonte) / real(nsweep)
-     kkmat = kkmat_mpi * real(nmonte) / real(nsweep)
-     lmat  = lmat_mpi  * real(nmonte) / real(nsweep)
-     rmat  = rmat_mpi  * real(nmonte) / real(nsweep)
+     knop = knop_mpi * real(nmonte) / real(nsweep)
+     kmat = kmat_mpi * real(nmonte) / real(nsweep)
+     lnop = lnop_mpi * real(nmonte) / real(nsweep)
+     rnop = rnop_mpi * real(nmonte) / real(nsweep)
      lrmat = lrmat_mpi * real(nmonte) / real(nsweep)
      szpow = szpow_mpi * real(nmonte) / real(nsweep)
 
