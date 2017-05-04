@@ -119,8 +119,8 @@
      real(dp), allocatable :: nmat_err(:,:)
 
 ! number of operators < k >
-     real(dp), allocatable :: kmat_mpi(:)
-     real(dp), allocatable :: kmat_err(:)
+     real(dp), allocatable :: knop_mpi(:)
+     real(dp), allocatable :: knop_err(:)
 
 ! square of number of operators < k^2 >
      real(dp), allocatable :: kkmat_mpi(:,:)
