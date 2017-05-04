@@ -962,8 +962,8 @@
      nimp = zero
      nmat = zero
 
-     kmat  = zero
-     kkmat = zero
+     knop = zero
+     kmat = zero
      lmat  = zero
      rmat  = zero
      lrmat = zero
