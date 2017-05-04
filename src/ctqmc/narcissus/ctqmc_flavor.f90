@@ -412,7 +412,7 @@
          trace_ratio = exp(-raux)
      endif ! back if ( anti .eqv. .false. ) block
 
-! quickly return if we don't need to consider the dynamical screening effect
+! quickly return if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
 ! calculate the extra weight factor contributed by new create operator
@@ -421,7 +421,7 @@
 ! calculate the extra weight factor contributed by new destroy operator
      call cat_weight_factor(tau_end,   te_scr)
 
-! calculate the extra weight factor contributed by new create and destroy operator
+! calculate the extra weight factor contributed by new operators
      call cat_weight_kernel(1, dtau,   cd_scr)
 
 ! evaluate total weight factor (screening part)
