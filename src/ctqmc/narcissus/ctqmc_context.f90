@@ -203,6 +203,7 @@
 !!
   module ctqmc_clur
      use constants, only : dp
+
      use stack, only : istack
      use stack, only : istack_create
      use stack, only : istack_destroy
@@ -214,28 +215,28 @@
 !!
 !! memory address index for the imaginary time \tau_s
 !!
-     integer, public, save, allocatable     :: index_s(:,:)
+     integer, public, save, allocatable :: index_s(:,:)
 
 !!
 !! @var index_e
 !!
 !! memory address index for the imaginary time \tau_e
 !!
-     integer, public, save, allocatable     :: index_e(:,:)
+     integer, public, save, allocatable :: index_e(:,:)
 
 !!
 !! @var time_s
 !!
 !! imaginary time \tau_s of create operators
 !!
-     real(dp), public, save, allocatable    :: time_s(:,:)
+     real(dp), public, save, allocatable :: time_s(:,:)
 
 !!
 !! @var time_e
 !!
 !! imaginary time \tau_e of destroy operators
 !!
-     real(dp), public, save, allocatable    :: time_e(:,:)
+     real(dp), public, save, allocatable :: time_e(:,:)
 
 !!
 !! @var exp_s
@@ -415,50 +416,49 @@
 !!
 !! @var szpw
 !!
-!! powers of the local magnetization < S^n_z>, which is used to calculate
-!! the Binder cumulant
+!! powers of the local magnetization, < S^n_z>
 !!
      real(dp), public, save, allocatable :: szpw(:,:)
 
 !!
 !! @var schi
 !!
-!! spin-spin correlation function: < Sz(0) Sz(\tau) >, totally-averaged
+!! spin-spin correlation function, < Sz(0) Sz(\tau) >, totally-averaged
 !!
      real(dp), public, save, allocatable :: schi(:)
 
 !!
 !! @var sp_t
 !!
-!! spin-spin correlation function: < Sz(0) Sz(\tau) >, orbital-resolved
+!! spin-spin correlation function, < Sz(0) Sz(\tau) >, orbital-resolved
 !!
      real(dp), public, save, allocatable :: sp_t(:,:)
 
 !!
 !! @var sp_w
 !!
-!! spin-spin correlation function: \chi_{sp} (i\omega), orbital-resolved
+!! spin-spin correlation function, \chi_{sp} (i\omega), orbital-resolved
 !!
      real(dp), public, save, allocatable :: sp_w(:,:)
 
 !!
 !! @var cchi
 !!
-!! charge-charge correlation function: < N(0) N(\tau) >, totally-averaged
+!! charge-charge correlation function, < N(0) N(\tau) >, totally-averaged
 !!
      real(dp), public, save, allocatable :: cchi(:)
 
 !!
 !! @var ch_t
 !!
-!! charge-charge correlation function: < N(0) N(\tau) >, orbital-resolved
+!! charge-charge correlation function, < N(0) N(\tau) >, orbital-resolved
 !!
      real(dp), public, save, allocatable :: ch_t(:,:,:)
 
 !!
 !! @var ch_w
 !!
-!! charge-charge correlation function: \chi_{ch} (i\omega), orbital-resolved
+!! charge-charge correlation function, \chi_{ch} (i\omega), orbital-resolved
 !!
      real(dp), public, save, allocatable :: ch_w(:,:,:)
 
@@ -472,7 +472,7 @@
 !!
 !! @var h2pw
 !!
-!! used to calculate two-particle irreducible vertex function
+!! used to calculate irreducible vertex function
 !!
      complex(dp), public, save, allocatable :: h2pw(:,:,:,:,:)
 
