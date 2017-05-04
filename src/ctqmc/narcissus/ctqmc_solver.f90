@@ -154,15 +154,15 @@
      real(dp), allocatable :: sp_w_mpi(:,:)
      real(dp), allocatable :: sp_w_err(:,:)
 
-! totally-averaged orbital-orbital correlation function
+! totally-averaged charge-charge correlation function
      real(dp), allocatable :: cchi_mpi(:)
      real(dp), allocatable :: cchi_err(:)
 
-! orbital-resolved orbital-orbital correlation function
+! orbital-resolved charge-charge correlation function
      real(dp), allocatable :: ch_t_mpi(:,:,:)
      real(dp), allocatable :: ch_t_err(:,:,:)
 
-! orbital-resolved orbital-orbital correlation function
+! orbital-resolved charge-charge correlation function
      real(dp), allocatable :: ch_w_mpi(:,:,:)
      real(dp), allocatable :: ch_w_err(:,:,:)
 
@@ -422,7 +422,7 @@
                  call ctqmc_record_schi()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) block
 
-! record the orbital-orbital correlation function
+! record the charge-charge correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) then
                  call ctqmc_record_cchi()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) block
@@ -432,7 +432,7 @@
                  call ctqmc_record_sp_w()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) block
 
-! record the orbital-orbital correlation function
+! record the charge-charge correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) then
                  call ctqmc_record_ch_w()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) block
