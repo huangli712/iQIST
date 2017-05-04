@@ -424,7 +424,7 @@
 
 ! record the orbital-orbital correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) then
-                 call ctqmc_record_ochi()
+                 call ctqmc_record_cchi()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 2) ) block
 
 ! record the spin-spin correlation function
