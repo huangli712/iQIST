@@ -127,16 +127,16 @@
      real(dp), allocatable :: kmat_err(:,:)
 
 ! number of operators at left half axis < k_l >
-     real(dp), allocatable :: lmat_mpi(:)
-     real(dp), allocatable :: lmat_err(:)
+     real(dp), allocatable :: lnop_mpi(:)
+     real(dp), allocatable :: lnop_err(:)
 
 ! number of operators at right half axis < k_r >
-     real(dp), allocatable :: rmat_mpi(:)
-     real(dp), allocatable :: rmat_err(:)
+     real(dp), allocatable :: rnop_mpi(:)
+     real(dp), allocatable :: rnop_err(:)
 
 ! used to evaluate fidelity susceptibility < k_l k_r >
-     real(dp), allocatable :: lrmat_mpi(:,:)
-     real(dp), allocatable :: lrmat_err(:,:)
+     real(dp), allocatable :: lrmm_mpi(:,:)
+     real(dp), allocatable :: lrmm_err(:,:)
 
 ! powers of local magnetization
      real(dp), allocatable :: szpow_mpi(:,:)
