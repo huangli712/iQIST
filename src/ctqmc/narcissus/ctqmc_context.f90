@@ -1221,8 +1221,8 @@
 
      if ( allocated(knop) )    deallocate(knop)
      if ( allocated(kmat) )    deallocate(kmat)
-     if ( allocated(lmat)  )   deallocate(lmat )
-     if ( allocated(rmat)  )   deallocate(rmat )
+     if ( allocated(lnop) )    deallocate(lnop)
+     if ( allocated(rnop) )    deallocate(rnop)
      if ( allocated(lrmat) )   deallocate(lrmat)
      if ( allocated(szpow) )   deallocate(szpow)
 
