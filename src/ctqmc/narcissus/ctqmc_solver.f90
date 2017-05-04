@@ -615,8 +615,8 @@
      ftau_err = ftau_err * real(nmonte) / real(nsweep)
      grnf_err = grnf_err * real(nmonte) / real(nsweep)
 
-     kmat_err  = kmat_err  * real(nmonte) / real(nsweep)
-     kkmat_err = kkmat_err * real(nmonte) / real(nsweep)
+     knop_err = knop_err * real(nmonte) / real(nsweep)
+     kmat_err = kmat_err * real(nmonte) / real(nsweep)
      lmat_err  = lmat_err  * real(nmonte) / real(nsweep)
      rmat_err  = rmat_err  * real(nmonte) / real(nsweep)
      lrmat_err = lrmat_err * real(nmonte) / real(nsweep)
