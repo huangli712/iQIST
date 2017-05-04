@@ -210,8 +210,8 @@
      allocate(lnop_err(norbs),             stat=istat)
      allocate(rnop_mpi(norbs),             stat=istat)
      allocate(rnop_err(norbs),             stat=istat)
-     allocate(lrmat_mpi(norbs,norbs),      stat=istat)
-     allocate(lrmat_err(norbs,norbs),      stat=istat)
+     allocate(lrmm_mpi(norbs,norbs),      stat=istat)
+     allocate(lrmm_err(norbs,norbs),      stat=istat)
      allocate(szpow_mpi(  4  ,norbs),      stat=istat)
      allocate(szpow_err(  4  ,norbs),      stat=istat)
 
