@@ -155,8 +155,8 @@
      real(dp), allocatable :: sp_w_err(:,:)
 
 ! totally-averaged orbital-orbital correlation function
-     real(dp), allocatable :: ochi_mpi(:)
-     real(dp), allocatable :: ochi_err(:)
+     real(dp), allocatable :: cchi_mpi(:)
+     real(dp), allocatable :: cchi_err(:)
 
 ! orbital-resolved orbital-orbital correlation function
      real(dp), allocatable :: oochi_mpi(:,:,:)
