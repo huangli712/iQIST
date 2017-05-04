@@ -134,7 +134,7 @@
 ! current flavor channel
      integer, intent(in) :: flvr
 
-! index address for remove old segment or anti-segment
+! index address for removing old segment or anti-segment
      integer, intent(in) :: is
      integer, intent(in) :: ie
 
@@ -190,7 +190,7 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for lshift old segment or anti-segment
+! index address for left shifting old segment or anti-segment
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
 
@@ -255,18 +255,18 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for rshift old segment or anti-segment
+! index address for right shifting old segment or anti-segment
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
-! imaginary time \tau_e for end   point (the new one)
+! imaginary time \tau_e for end point (the new one)
      real(dp), intent(in) :: tau_end
 
 ! local variables
 ! loop index over segments and frequencies
      integer  :: i
 
-! memory address for new end   point
+! memory address for new end point
      integer  :: ae
 
 ! dummy variables, \tau_e * \omega
@@ -328,7 +328,7 @@
 ! imaginary time \tau_s for start point
      real(dp), intent(in)  :: tau_start
 
-! imaginary time \tau_e for end   point
+! imaginary time \tau_e for end point
      real(dp), intent(in)  :: tau_end
 
 ! the desired ztrace ratio
