@@ -752,12 +752,12 @@
      deallocate(ch_w_mpi)
      deallocate(ch_w_err)
 
-     deallocate(g2_re_mpi)
-     deallocate(g2_im_mpi)
-     deallocate(h2_re_mpi)
-     deallocate(h2_im_mpi)
-     deallocate(ps_re_mpi)
-     deallocate(ps_im_mpi)
+     deallocate(g2pw_mpi)
+     deallocate(g2pw_err)
+     deallocate(h2pw_mpi)
+     deallocate(h2pw_err)
+     deallocate(p2pw_mpi)
+     deallocate(p2pw_err)
 
      return
   end subroutine ctqmc_impurity_solver
