@@ -1259,7 +1259,7 @@
      use control, only : nfreq
      use control, only : ntime
      use control, only : mune, beta
-     use control, only : myid, master
+     !use control, only : myid, master
      use context, only : tmesh, rmesh
      use context, only : prob
      use context, only : eimp, uumat
