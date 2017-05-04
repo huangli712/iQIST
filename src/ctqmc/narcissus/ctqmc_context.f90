@@ -709,13 +709,6 @@
      real(dp), public, save, allocatable :: wtau(:,:,:)
 
 !!
-!! @var wssf
-!!
-!! bath weiss's function in matsubara frequency axis
-!!
-     complex(dp), public, save, allocatable :: wssf(:,:,:)
-
-!!
 !! @var htau
 !!
 !! hybridization function in imaginary time axis
@@ -723,19 +716,25 @@
      real(dp), public, save, allocatable :: htau(:,:,:)
 
 !!
+!! @var hsed
+!!
+!! second order derivates for hybridization function
+!!
+     real(dp), public, save, allocatable :: hsed(:,:,:)
+
+!!
+!! @var wssf
+!!
+!! bath weiss's function in matsubara frequency axis
+!!
+     complex(dp), public, save, allocatable :: wssf(:,:,:)
+
+!!
 !! @var hybf
 !!
 !! hybridization function in matsubara frequency axis
 !!
      complex(dp), public, save, allocatable :: hybf(:,:,:)
-
-!!
-!! @var hsed
-!!
-!! second order derivates for hybridization function, it should be used
-!! to interpolate htau
-!!
-     real(dp), public, save, allocatable :: hsed(:,:,:)
 
   end module ctqmc_wmat
 
