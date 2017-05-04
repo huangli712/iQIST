@@ -526,7 +526,7 @@
 ! reset timer
          time_begin = time_end
 
-! print out the result
+! print out the timing result
          if ( myid == master ) then ! only master node can do it
              call s_time_analyzer(time_cur, time_sum)
              write(mystd,*)
@@ -555,7 +555,7 @@
      call ctqmc_reduce_hist(hist_mpi, hist_err)
      call ctqmc_reduce_prob(prob_mpi, prob_err)
      call ctqmc_reduce_paux(paux_mpi, paux_err)
-     call ctqmc_reduce_nmat(nmat_mpi, nnmat_mpi, nmat_err, nnmat_err)
+     call ctqmc_reduce_nmat(nimp_mpi, nmat_mpi, nimp_err, nmat_err)
 
      call ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      call ctqmc_reduce_ftau(ftau_mpi, ftau_err)
