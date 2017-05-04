@@ -429,12 +429,12 @@
 
 ! record the spin-spin correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) then
-                 call ctqmc_record_sfom()
+                 call ctqmc_record_sp_w()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 3) ) block
 
 ! record the orbital-orbital correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) then
-                 call ctqmc_record_ofom()
+                 call ctqmc_record_ch_w()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(issus, 4) ) block
 
 !!========================================================================
