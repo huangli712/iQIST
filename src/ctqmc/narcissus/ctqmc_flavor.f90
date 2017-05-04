@@ -1501,11 +1501,13 @@
              isn = 1
              tau_start1 = time_s(index_s(1, flvr), flvr)
              tau_start2 = time_e(index_e(1, flvr), flvr) - spring_sfmt_stream() * beta
-! zero < tau_start2 < tau_end, keep segment configuration
+! zero < tau_start2 < tau_end
+! keep segment configuration
              if ( tau_start2 > zero ) then
                  cstat = 1
                  ring = .false.
-! tau_end < tau_start2 < beta, turn to anti-segment configuration
+! tau_end < tau_start2 < beta
+! turn to anti-segment configuration
              else
                  cstat = 2
                  ring = .true.
@@ -1514,7 +1516,7 @@
 
 ! case 1B: there are more than one segments
          else
-! not the first segment, tau_end2 < tau_start1 (tau_start2) < tau_end1,
+! not the first segment, tau_end2 < tau_start1 (tau_start2) < tau_end1
 ! keep segment configuration
              if ( iso > 1 ) then
                  isn = iso
@@ -1530,13 +1532,13 @@
                  tau_end2 = time_e(index_e(ckink, flvr), flvr)
                  tau_start1 = time_s(index_s(1, flvr), flvr)
                  tau_start2 = tau_end1 - spring_sfmt_stream() * ( tau_end1 - zero + beta - tau_end2 )
-! zero < tau_start1 (tau_start2) < tau_end1 < ... < tau_end2 < beta,
+! zero < tau_start1 (tau_start2) < tau_end1 < ... < tau_end2 < beta
 ! keep segment configuration
                  if ( tau_start2 > zero ) then
                      isn = 1
                      cstat = 1
                      ring = .false.
-! zero < tau_start1 < tau_end1 < ... < tau_end2 < tau_start2 < beta,
+! zero < tau_start1 < tau_end1 < ... < tau_end2 < tau_start2 < beta
 ! turn to anti-segment configuration
                  else
                      isn = ckink
@@ -1560,12 +1562,12 @@
              isn = 1
              tau_start1 = time_s(index_s(1, flvr), flvr)
              tau_start2 = time_e(index_e(1, flvr), flvr) - spring_sfmt_stream() * beta
-! zero < tau_start2 < tau_end < tau_start1 < beta,
+! zero < tau_start2 < tau_end < tau_start1 < beta
 ! turn to segment configuration
              if ( tau_start2 > zero ) then
                  cstat = 1
                  ring = .true.
-! zero < tau_end < tau_start1 (tau_start2) < beta,
+! zero < tau_end < tau_start1 (tau_start2) < beta
 ! keep anti-segment configuration
              else
                  cstat = 2
@@ -1575,7 +1577,7 @@
 
 ! case 2B: there are more than one segment or anti-segment
          else
-! not the last segment, tau_end1 < tau_start1 (tau_start2) < tau_end2,
+! not the last segment, tau_end1 < tau_start1 (tau_start2) < tau_end2
 ! keep anti-segment configuration
              if ( iso < ckink ) then
                  isn = iso
@@ -1591,13 +1593,13 @@
                  tau_end2 = time_e(index_e(1, flvr), flvr)
                  tau_start1 = time_s(index_s(ckink, flvr), flvr)
                  tau_start2 = tau_end2 - spring_sfmt_stream() * ( beta - tau_end1 + tau_end2 - zero )
-! zero < tau_start2 < tau_end2 < ... < tau_end1 < tau_start1 < beta,
+! zero < tau_start2 < tau_end2 < ... < tau_end1 < tau_start1 < beta
 ! turn to segment configuration
                  if ( tau_start2 > zero ) then
                      isn = 1
                      cstat = 1
                      ring = .true.
-! zero < tau_end2 < ... < tau_end1 < tau_start1 (tau_start2) < beta,
+! zero < tau_end2 < ... < tau_end1 < tau_start1 (tau_start2) < beta
 ! keep anti-segment configuration
                  else
                      isn = ckink
@@ -1643,10 +1645,10 @@
 ! whether the update operation winds around the circle
      logical, intent(out)  :: ring
 
-! end   point of the selected segment (the old one)
+! end point of the selected segment (the old one)
      real(dp), intent(out) :: tau_end1
 
-! end   point of the selected segment (the new one)
+! end point of the selected segment (the new one)
      real(dp), intent(out) :: tau_end2
 
 ! local variables
@@ -1661,7 +1663,7 @@
      ieo = 1
      ien = 1
 
-! randomly select end   index address, which is used to access the segment
+! randomly select end index address, which is used to access the segment
      ieo = ceiling( spring_sfmt_stream() * ckink )
 
 ! initialize tau_end1 and tau_end2
@@ -1677,11 +1679,13 @@
              ien = 1
              tau_end1 = time_e(index_e(1, flvr), flvr)
              tau_end2 = time_s(index_s(1, flvr), flvr) + spring_sfmt_stream() * beta
-! tau_start < tau_end2 < beta, keep segment configuration
+! tau_start < tau_end2 < beta
+! keep segment configuration
              if ( tau_end2 < beta ) then
                  cstat = 1
                  ring = .false.
-! tau_end2 < tau_start < beta, turn to anti-segment configuration
+! tau_end2 < tau_start < beta
+! turn to anti-segment configuration
              else
                  cstat = 2
                  ring = .true.
@@ -1690,7 +1694,8 @@
 
 ! case 1B: there are more than one segments
          else
-! not the last segment, tau_start1 < tau_end1 (tau_end2) < tau_start2, keep segment configuration
+! not the last segment, tau_start1 < tau_end1 (tau_end2) < tau_start2
+! keep segment configuration
              if ( ieo < ckink ) then
                  ien = ieo
                  cstat = 1
@@ -1705,12 +1710,14 @@
                  tau_start2 = time_s(index_s(1, flvr), flvr)
                  tau_end1 = time_e(index_e(ckink, flvr), flvr)
                  tau_end2 = tau_start1 + spring_sfmt_stream() * ( beta - tau_start1 + tau_start2 - zero )
-! zero < tau_start2 < ... < tau_start1 < tau_end1 (tau_end2) < beta, keep segment configuration
+! zero < tau_start2 < ... < tau_start1 < tau_end1 (tau_end2) < beta
+! keep segment configuration
                  if ( tau_end2 < beta ) then
                      ien = ckink
                      cstat = 1
                      ring = .false.
-! zero < tau_end2 < tau_start2 < ... < tau_start1 < tau_end1 < beta, turn to anti-segment configuration
+! zero < tau_end2 < tau_start2 < ... < tau_start1 < tau_end1 < beta
+! turn to anti-segment configuration
                  else
                      ien = 1
                      cstat = 2
@@ -1733,11 +1740,13 @@
              ien = 1
              tau_end1 = time_e(index_e(1, flvr), flvr)
              tau_end2 = time_s(index_s(1, flvr), flvr) + spring_sfmt_stream() * beta
-! zero < tau_end1 < tau_start < tau_end2 < beta, turn to segment configuration
+! zero < tau_end1 < tau_start < tau_end2 < beta
+! turn to segment configuration
              if ( tau_end2 < beta ) then
                  cstat = 1
                  ring = .true.
-! zero < tau_end1 (tau_end2) < tau_start < beta, keep anti-segment configuration
+! zero < tau_end1 (tau_end2) < tau_start < beta
+! keep anti-segment configuration
              else
                  cstat = 2
                  ring = .false.
@@ -1746,7 +1755,8 @@
 
 ! case 2B: there are more than one segment or anti-segment
          else
-! not the first segment, tau_start1 < tau_end1 (tau_end2) < tau_start2, keep anti-segment configuration
+! not the first segment, tau_start1 < tau_end1 (tau_end2) < tau_start2
+! keep anti-segment configuration
              if ( ieo > 1 ) then
                  ien = ieo
                  cstat = 2
@@ -1761,12 +1771,14 @@
                  tau_start2 = time_s(index_s(1, flvr), flvr)
                  tau_end1 = time_e(index_e(1, flvr), flvr)
                  tau_end2 = tau_start1 + spring_sfmt_stream() * ( beta - tau_start1 + tau_start2 - zero )
-! zero < tau_end1 < tau_start2 < ... < tau_start1 < tau_end2 < beta, turn to segment configuration
+! zero < tau_end1 < tau_start2 < ... < tau_start1 < tau_end2 < beta
+! turn to segment configuration
                  if ( tau_end2 < beta ) then
                      ien = ckink
                      cstat = 1
                      ring = .true.
-! zero < tau_end1 (tau_end2) < tau_start2 < ... < tau_start1 < beta, keep anti-segment configuration
+! zero < tau_end1 (tau_end2) < tau_start2 < ... < tau_start1 < beta
+! keep anti-segment configuration
                  else
                      ien = 1
                      cstat = 2
