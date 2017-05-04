@@ -23,8 +23,8 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           04/28/2017 by li huang (last modified)
-!!! purpose : provide basic infrastructure (elementary updating subroutines)
+!!!           05/04/2017 by li huang (last modified)
+!!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
 !!!           subroutines deal with the operators traces only.
@@ -60,14 +60,14 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address for insert new segment or anti-segment
+! index address for inserting new segment or anti-segment
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
 ! imaginary time \tau_s for start point
      real(dp), intent(in) :: tau_start
 
-! imaginary time \tau_e for end   point
+! imaginary time \tau_e for end point
      real(dp), intent(in) :: tau_end
 
 ! local variables
