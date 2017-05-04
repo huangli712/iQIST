@@ -429,20 +429,20 @@
      real(dp), public, save, allocatable :: schi(:)
 
 !!
-!! @var sschi
+!! @var sp_t
 !!
 !! spin-spin correlation function: < Sz(0) Sz(\tau) >,
 !! orbital-resolved
 !!
-     real(dp), public, save, allocatable :: sschi(:,:)
+     real(dp), public, save, allocatable :: sp_t(:,:)
 
 !!
-!! @var ssfom
+!! @var sp_w
 !!
 !! spin-spin correlation function: \chi^{s}_{i} (i\omega),
 !! orbital-resolved
 !!
-     real(dp), public, save, allocatable :: ssfom(:,:)
+     real(dp), public, save, allocatable :: sp_w(:,:)
 
 !!
 !! @var ochi
