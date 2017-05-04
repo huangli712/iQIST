@@ -599,12 +599,9 @@
      ch_t = ch_t_mpi * real(nmonte) / real(nsweep)
      ch_w = ch_w_mpi * real(nmonte) / real(nsweep)
 
-     g2_re = g2_re_mpi * real(nmonte) / real(nsweep)
-     g2_im = g2_im_mpi * real(nmonte) / real(nsweep)
-     h2_re = h2_re_mpi * real(nmonte) / real(nsweep)
-     h2_im = h2_im_mpi * real(nmonte) / real(nsweep)
-     ps_re = ps_re_mpi * real(nmonte) / real(nsweep)
-     ps_im = ps_im_mpi * real(nmonte) / real(nsweep)
+     g2pw = g2pw_mpi * real(nmonte) / real(nsweep)
+     h2pw = h2pw_mpi * real(nmonte) / real(nsweep)
+     p2pw = p2pw_mpi * real(nmonte) / real(nsweep)
 
 ! update original data and calculate the averages simultaneously
 ! error bar section
