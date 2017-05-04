@@ -760,7 +760,7 @@
      sschi = zero
      ssfom = zero
 
-! init orbital-orbital correlation function
+! init charge-charge correlation function
      ochi  = zero
      oochi = zero
      oofom = zero

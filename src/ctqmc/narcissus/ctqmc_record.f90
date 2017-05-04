@@ -1000,7 +1000,7 @@
 !!
 !! @sub ctqmc_record_ochi
 !!
-!! record the orbital-orbital correlation function
+!! record the charge-charge correlation function
 !! in imaginary time axis
 !!
   subroutine ctqmc_record_ochi()
@@ -1072,7 +1072,7 @@
 !!
 !! @sub ctqmc_record_ofom
 !!
-!! record the orbital-orbital correlation function
+!! record the charge-charge correlation function
 !! in matsubara frequency axis
 !!
   subroutine ctqmc_record_ofom()
@@ -2274,11 +2274,11 @@
      implicit none
 
 ! external arguments
-! orbital-orbital correlation function, totally-averaged
+! charge-charge correlation function, totally-averaged
      real(dp), intent(out) :: ochi_mpi(ntime)
      real(dp), intent(out) :: ochi_err(ntime)
 
-! orbital-orbital correlation function, orbital-resolved
+! charge-charge correlation function, orbital-resolved
      real(dp), intent(out) :: oochi_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: oochi_err(ntime,norbs,norbs)
 
@@ -2349,7 +2349,7 @@
      implicit none
 
 ! external arguments
-! orbital-orbital correlation function, orbital-resolved
+! charge-charge correlation function, orbital-resolved
      real(dp), intent(out) :: oofom_mpi(nbfrq,norbs,norbs)
      real(dp), intent(out) :: oofom_err(nbfrq,norbs,norbs)
 

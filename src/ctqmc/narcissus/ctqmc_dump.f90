@@ -1050,7 +1050,7 @@
 !!
 !! @sub ctqmc_dump_ochi
 !!
-!! write out the orbital-orbital correlation function
+!! write out the charge-charge correlation function
 !! in imaginary time space
 !!
   subroutine ctqmc_dump_ochi(ochi, oochi, oerr, ooerr)
@@ -1064,11 +1064,11 @@
      implicit none
 
 ! external arguments
-! orbital-orbital correlation function data, < N(0) N(\tau) >, totally-averaged
+! charge-charge correlation function data, < N(0) N(\tau) >, totally-averaged
      real(dp), intent(in) :: ochi(ntime)
      real(dp), intent(in) :: oerr(ntime)
 
-! orbital-orbital correlation function data, < N(0) N(\tau) >, orbital-resolved
+! charge-charge correlation function data, < N(0) N(\tau) >, orbital-resolved
      real(dp), intent(in) :: oochi(ntime,norbs,norbs)
      real(dp), intent(in) :: ooerr(ntime,norbs,norbs)
 
@@ -1078,7 +1078,7 @@
      integer :: j
      integer :: k
 
-! check if we need to dump the orbital-orbital correlation function data
+! check if we need to dump the charge-charge correlation function data
 ! to solver.ochi.dat
      if ( .not. btest(issus, 2) ) RETURN
 
@@ -1120,7 +1120,7 @@
 !!
 !! @sub ctqmc_dump_ofom
 !!
-!! write out the orbital-orbital correlation function
+!! write out the charge-charge correlation function
 !! in matsubara frequency space
 !!
   subroutine ctqmc_dump_ofom(oofom, ooerr)
@@ -1134,7 +1134,7 @@
      implicit none
 
 ! external arguments
-! orbital-orbital correlation function: \chi^{c}_{ij} (i\omega), orbital-resolved
+! charge-charge correlation function: \chi^{c}_{ij} (i\omega), orbital-resolved
      real(dp), intent(in) :: oofom(nbfrq,norbs,norbs)
      real(dp), intent(in) :: ooerr(nbfrq,norbs,norbs)
 
@@ -1152,7 +1152,7 @@
          bmesh(i) = two * pi * float( i - 1 ) / beta
      enddo ! over i={1,nbfrq} loop
 
-! check if we need to dump the orbital-orbital correlation function data
+! check if we need to dump the charge-charge correlation function data
 ! to solver.ofom.dat
      if ( .not. btest(issus, 4) ) RETURN
 
