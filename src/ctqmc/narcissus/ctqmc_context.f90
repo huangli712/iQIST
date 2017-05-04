@@ -215,14 +215,14 @@
 !!
 !! memory address index for the imaginary time \tau_s
 !!
-     integer, public, save, allocatable :: index_s(:,:)
+     integer, public, save, allocatable  :: index_s(:,:)
 
 !!
 !! @var index_e
 !!
 !! memory address index for the imaginary time \tau_e
 !!
-     integer, public, save, allocatable :: index_e(:,:)
+     integer, public, save, allocatable  :: index_e(:,:)
 
 !!
 !! @var time_s
@@ -509,14 +509,14 @@
 !!
 !! current perturbation expansion order for different flavor channel
 !!
-     integer,  public, save, allocatable :: rank(:)
+     integer, public, save, allocatable  :: rank(:)
 
 !!
 !! @var stts
 !!
 !! current occupation status for different flavor channel
 !!
-     integer,  public, save, allocatable :: stts(:)
+     integer, public, save, allocatable  :: stts(:)
 
 !!
 !! @var pref
@@ -534,7 +534,7 @@
 !!
 !! symmetry properties for correlated orbitals
 !!
-     integer,  public, save, allocatable :: symm(:)
+     integer, public, save, allocatable  :: symm(:)
 
 !!
 !! @var eimp
@@ -600,21 +600,21 @@
 !!
 !! helper matrix for evaluating M & G matrices
 !!
-     real(dp), public, save, allocatable    :: lspace(:,:)
+     real(dp), public, save, allocatable :: lspace(:,:)
 
 !!
 !! @var rspace
 !!
 !! helper matrix for evaluating M & G matrices
 !!
-     real(dp), public, save, allocatable    :: rspace(:,:)
+     real(dp), public, save, allocatable :: rspace(:,:)
 
 !!
 !! @var mmat
 !!
 !! M matrix, $ \mathscr{M} $
 !!
-     real(dp), public, save, allocatable    :: mmat(:,:,:)
+     real(dp), public, save, allocatable :: mmat(:,:,:)
 
 !!
 !! @var lsaves
@@ -659,7 +659,7 @@
 !!
 !! impurity green's function in imaginary time axis
 !!
-     real(dp), public, save, allocatable    :: gtau(:,:,:)
+     real(dp), public, save, allocatable :: gtau(:,:,:)
 
 !!
 !! @var ftau
@@ -667,7 +667,7 @@
 !! auxiliary correlation function in imaginary time axis, used to measure
 !! self-energy function, F(\tau)
 !!
-     real(dp), public, save, allocatable    :: ftau(:,:,:)
+     real(dp), public, save, allocatable :: ftau(:,:,:)
 
 !!
 !! @var grnf
@@ -706,7 +706,7 @@
 !!
 !! bath weiss's function in imaginary time axis
 !!
-     real(dp), public, save, allocatable    :: wtau(:,:,:)
+     real(dp), public, save, allocatable :: wtau(:,:,:)
 
 !!
 !! @var wssf
@@ -720,7 +720,7 @@
 !!
 !! hybridization function in imaginary time axis
 !!
-     real(dp), public, save, allocatable    :: htau(:,:,:)
+     real(dp), public, save, allocatable :: htau(:,:,:)
 
 !!
 !! @var hybf
@@ -735,7 +735,7 @@
 !! second order derivates for hybridization function, it should be used
 !! to interpolate htau
 !!
-     real(dp), public, save, allocatable    :: hsed(:,:,:)
+     real(dp), public, save, allocatable :: hsed(:,:,:)
 
   end module ctqmc_wmat
 
