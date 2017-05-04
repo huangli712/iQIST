@@ -123,7 +123,7 @@
 !!
 !! record some auxiliary physical observables. the occupation matrix and
 !! double occupation matrix are measured at the same time in order to
-!! improve the computational efficiency
+!! save the computational time
 !!
   subroutine ctqmc_record_paux()
      use constants, only : dp, zero, two
@@ -290,7 +290,7 @@
 !! @sub ctqmc_record_nmat
 !!
 !! record the occupation matrix, double occupation matrix. note that it is
-!! a empty subroutine. all features are implemented in ctqmc_record_paux()
+!! an empty subroutine. this feature is implemented in ctqmc_record_paux()
 !!
   subroutine ctqmc_record_nmat()
      implicit none
@@ -377,7 +377,7 @@
                  endif ! back if ( dtau < zero ) block
 
 !-------------------------------------------------------------------------
-! using normal representation
+! using standard representation
 !-------------------------------------------------------------------------
                  STD_BLOCK: if ( isort == 1 ) then
 
@@ -426,8 +426,8 @@
 !!
 !! @sub ctqmc_record_ftau
 !!
-!! record the auxiliary correlation function in imaginary time axis,
-!! F(\tau). latter, we will use it to compute the self-energy function
+!! record the auxiliary correlation function in imaginary time axis.
+!! latter, we will use it to compute the self-energy function
 !!
   subroutine ctqmc_record_ftau()
      use constants, only : dp, zero, one, two
@@ -503,7 +503,7 @@
                  endif ! back if ( dtau < zero ) block
 
 !-------------------------------------------------------------------------
-! using normal representation
+! using standard representation
 !-------------------------------------------------------------------------
                  STD_BLOCK: if ( isort == 1 ) then
 
