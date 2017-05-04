@@ -423,48 +423,42 @@
 !!
 !! @var schi
 !!
-!! spin-spin correlation function: < Sz(0) Sz(\tau) >,
-!! totally-averaged
+!! spin-spin correlation function: < Sz(0) Sz(\tau) >, totally-averaged
 !!
      real(dp), public, save, allocatable :: schi(:)
 
 !!
 !! @var sp_t
 !!
-!! spin-spin correlation function: < Sz(0) Sz(\tau) >,
-!! orbital-resolved
+!! spin-spin correlation function: < Sz(0) Sz(\tau) >, orbital-resolved
 !!
      real(dp), public, save, allocatable :: sp_t(:,:)
 
 !!
 !! @var sp_w
 !!
-!! spin-spin correlation function: \chi^{s}_{i} (i\omega),
-!! orbital-resolved
+!! spin-spin correlation function: \chi_{sp} (i\omega), orbital-resolved
 !!
      real(dp), public, save, allocatable :: sp_w(:,:)
 
 !!
 !! @var cchi
 !!
-!! charge-charge correlation function: < N(0) N(\tau) >,
-!! totally-averaged
+!! charge-charge correlation function: < N(0) N(\tau) >, totally-averaged
 !!
      real(dp), public, save, allocatable :: cchi(:)
 
 !!
 !! @var ch_t
 !!
-!! charge-charge correlation function: < N(0) N(\tau) >,
-!! orbital-resolved
+!! charge-charge correlation function: < N(0) N(\tau) >, orbital-resolved
 !!
      real(dp), public, save, allocatable :: ch_t(:,:,:)
 
 !!
 !! @var ch_w
 !!
-!! charge-charge correlation function: \chi^{c}_{ij} (i\omega),
-!! orbital-resolved
+!! charge-charge correlation function: \chi_{ch} (i\omega), orbital-resolved
 !!
      real(dp), public, save, allocatable :: ch_w(:,:,:)
 
@@ -578,11 +572,11 @@
      real(dp), public, save, allocatable :: psed(:)
 
 !!
-!! @var uumat
+!! @var umat
 !!
 !! reduced Coulomb interaction matrix, two-index version
 !!
-     real(dp), public, save, allocatable :: uumat(:,:)
+     real(dp), public, save, allocatable :: umat(:,:)
 
   end module ctqmc_umat
 
