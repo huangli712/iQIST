@@ -1219,8 +1219,8 @@
      if ( allocated(nimp) )    deallocate(nimp)
      if ( allocated(nmat) )    deallocate(nmat)
 
-     if ( allocated(kmat)  )   deallocate(kmat )
-     if ( allocated(kkmat) )   deallocate(kkmat)
+     if ( allocated(knop) )    deallocate(knop)
+     if ( allocated(kmat) )    deallocate(kmat)
      if ( allocated(lmat)  )   deallocate(lmat )
      if ( allocated(rmat)  )   deallocate(rmat )
      if ( allocated(lrmat) )   deallocate(lrmat)
