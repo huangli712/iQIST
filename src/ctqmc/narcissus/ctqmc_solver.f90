@@ -605,15 +605,15 @@
 
 ! update original data and calculate the averages simultaneously
 ! error bar section
-     hist_err  = hist_err  * one
-     prob_err  = prob_err  * real(nmonte) / real(nsweep)
-     paux_err  = paux_err  * real(nmonte) / real(nsweep)
-     nmat_err  = nmat_err  * real(nmonte) / real(nsweep)
-     nnmat_err = nnmat_err * real(nmonte) / real(nsweep)
+     hist_err = hist_err * one
+     prob_err = prob_err * real(nmonte) / real(nsweep)
+     paux_err = paux_err * real(nmonte) / real(nsweep)
+     nimp_err = nimp_err * real(nmonte) / real(nsweep)
+     nmat_err = nmat_err * real(nmonte) / real(nsweep)
 
-     gtau_err  = gtau_err  * real(nmonte) / real(nsweep)
-     ftau_err  = ftau_err  * real(nmonte) / real(nsweep)
-     grnf_err  = grnf_err  * real(nmonte) / real(nsweep)
+     gtau_err = gtau_err * real(nmonte) / real(nsweep)
+     ftau_err = ftau_err * real(nmonte) / real(nsweep)
+     grnf_err = grnf_err * real(nmonte) / real(nsweep)
 
      kmat_err  = kmat_err  * real(nmonte) / real(nsweep)
      kkmat_err = kkmat_err * real(nmonte) / real(nsweep)
