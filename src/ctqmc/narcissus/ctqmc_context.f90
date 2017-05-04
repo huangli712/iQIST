@@ -322,7 +322,7 @@
 !! containing physical observables related arrays used by continuous time
 !! quantum Monte Carlo quantum impurity solver
 !!
-  module ctqmc_meat !!>>> To tell you a truth, meat means MEAsuremenT
+  module ctqmc_meat ! to tell you a truth, meat means MEAsuremenT
      use constants, only : dp
 
      implicit none
@@ -356,26 +356,26 @@
 !! paux(08) : high order of K, < K^3 > = < K3 >
 !! paux(09) : high order of K, < K^4 > = < K4 >
 !!
-!! note: K = current perturbation expansion order * 2. The < K2 >, < K3 >,
+!! note: K = current perturbation expansion order * 2. the < K2 >, < K3 >,
 !! and < K4 > can be used to calculate the skewness and kurtosis of the
-!! perturbation expansion order. Of course, < K1 > is essential. It can be
+!! perturbation expansion order. of course, < K1 > is essential. It can be
 !! calculated from Ekin.
 !!
      real(dp), public, save, allocatable :: paux(:)
 
 !!
-!! @var nmat
+!! @var nimp
 !!
 !! impurity occupation number, < n_i >
 !!
-     real(dp), public, save, allocatable :: nmat(:)
+     real(dp), public, save, allocatable :: nimp(:)
 
 !!
-!! @var nnmat
+!! @var nmat
 !!
 !! impurity double occupation number matrix, < n_i n_j >
 !!
-     real(dp), public, save, allocatable :: nnmat(:,:)
+     real(dp), public, save, allocatable :: nmat(:,:)
 
 !!
 !! @var kmat
