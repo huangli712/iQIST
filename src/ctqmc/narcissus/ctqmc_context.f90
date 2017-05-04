@@ -976,12 +976,9 @@
      ch_t = zero
      ch_w = zero
 
-     g2_re = zero
-     g2_im = zero
-     h2_re = zero
-     h2_im = zero
-     ps_re = zero
-     ps_im = zero
+     g2pw = czero
+     h2pw = czero
+     p2pw = czero
 
      return
   end subroutine ctqmc_allocate_memory_meat
