@@ -214,28 +214,28 @@
 !!
 !! memory address index for the imaginary time \tau_s
 !!
-     integer, public, save, allocatable :: index_s(:,:)
+     integer, public, save, allocatable     :: index_s(:,:)
 
 !!
 !! @var index_e
 !!
 !! memory address index for the imaginary time \tau_e
 !!
-     integer, public, save, allocatable :: index_e(:,:)
+     integer, public, save, allocatable     :: index_e(:,:)
 
 !!
 !! @var time_s
 !!
 !! imaginary time \tau_s of create operators
 !!
-     real(dp), public, save, allocatable :: time_s(:,:)
+     real(dp), public, save, allocatable    :: time_s(:,:)
 
 !!
 !! @var time_e
 !!
 !! imaginary time \tau_e of destroy operators
 !!
-     real(dp), public, save, allocatable :: time_e(:,:)
+     real(dp), public, save, allocatable    :: time_e(:,:)
 
 !!
 !! @var exp_s
