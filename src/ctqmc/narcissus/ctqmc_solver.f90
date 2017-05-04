@@ -51,8 +51,8 @@
      use context, only : lnop, rnop, lrmm    ! fidelity susceptibility
      use context, only : szpw                ! binder cumulant
                                              !
-     use context, only : schi, sschi, ssfom  ! spin susceptibility
-     use context, only : ochi, oochi, oofom  ! charge susceptibility
+     use context, only : schi, sp_t, sp_w    ! spin susceptibility
+     use context, only : cchi, ch_t, ch_w    ! charge susceptibility
                                              !
      use context, only : g2_re, g2_im        ! two-particle green's function
      use context, only : h2_re, h2_im        ! two-particle green's function
