@@ -47,7 +47,7 @@
      use context, only : paux                ! auxiliary physical observables
      use context, only : nimp, nmat          ! occupation and double occupation
                                              !
-     use context, only : kmat, kkmat         ! kinetic energy fluctuation
+     use context, only : knop, kmat          ! kinetic energy fluctuation
      use context, only : lmat, rmat, lrmat   ! fidelity susceptibility
      use context, only : szpow               ! binder cumulant
                                              !
