@@ -405,7 +405,7 @@
 
 ! record the fidelity susceptibility
              if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 2) ) then
-                 call ctqmc_record_lmat()
+                 call ctqmc_record_lrmm()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 2) ) block
 
 ! record the powers of local magnetization
