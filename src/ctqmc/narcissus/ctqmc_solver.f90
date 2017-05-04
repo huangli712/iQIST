@@ -617,9 +617,9 @@
 
      knop_err = knop_err * real(nmonte) / real(nsweep)
      kmat_err = kmat_err * real(nmonte) / real(nsweep)
-     lmat_err  = lmat_err  * real(nmonte) / real(nsweep)
-     rmat_err  = rmat_err  * real(nmonte) / real(nsweep)
-     lrmat_err = lrmat_err * real(nmonte) / real(nsweep)
+     lnop_err = lnop_err * real(nmonte) / real(nsweep)
+     rnop_err = rnop_err * real(nmonte) / real(nsweep)
+     lrmm_err = lrmm_err * real(nmonte) / real(nsweep)
      szpow_err = szpow_err * real(nmonte) / real(nsweep)
 
      schi_err  = schi_err  * real(nmonte) / real(nsweep)
