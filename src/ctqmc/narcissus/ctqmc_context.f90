@@ -969,9 +969,9 @@
      lrmm = zero
      szpw = zero
 
-     schi  = zero
-     sschi = zero
-     ssfom = zero
+     schi = zero
+     sp_t = zero
+     sp_w = zero
      ochi  = zero
      oochi = zero
      oofom = zero
