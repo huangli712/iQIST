@@ -973,8 +973,8 @@
      sp_t = zero
      sp_w = zero
      cchi = zero
-     oochi = zero
-     oofom = zero
+     ch_t = zero
+     ch_w = zero
 
      g2_re = zero
      g2_im = zero
