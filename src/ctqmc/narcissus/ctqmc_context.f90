@@ -445,12 +445,12 @@
      real(dp), public, save, allocatable :: sp_w(:,:)
 
 !!
-!! @var ochi
+!! @var cchi
 !!
-!! orbital-orbital correlation function: < N(0) N(\tau) >,
+!! charge-charge correlation function: < N(0) N(\tau) >,
 !! totally-averaged
 !!
-     real(dp), public, save, allocatable :: ochi(:)
+     real(dp), public, save, allocatable :: cchi(:)
 
 !!
 !! @var oochi

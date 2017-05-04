@@ -206,13 +206,13 @@
 !!     calculate spin-spin correlation function (time space)
 !!
 !! if p == 3:
-!!     calculate orbital-orbital correlation function (time space)
+!!     calculate charge-charge correlation function (time space)
 !!
 !! if p == 4:
 !!     calculate spin-spin correlation function (frequency space)
 !!
 !! if p == 5:
-!!     calculate orbital-orbital correlation function (frequency space)
+!!     calculate charge-charge correlation function (frequency space)
 !!
 !! example:
 !!   ( 1 1 1 0 1 0 1 0 1)_2
