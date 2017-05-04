@@ -1419,9 +1419,9 @@
 
 ! task 6: dump the ghub and shub, only for reference
 !-------------------------------------------------------------------------
-     if ( myid == master ) then ! only the master node can do it
-         call ctqmc_dump_hub1(ghub, shub)
-     endif ! back if ( myid == master ) block
+!     if ( myid == master ) then ! only the master node can do it
+!         call ctqmc_dump_hub1(ghub, shub)
+!     endif ! back if ( myid == master ) block
 
 ! we have to utilize ghub to back the grnf data. the first nfreq frequency
 ! points are sampled by monte carlo method directly
