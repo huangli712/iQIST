@@ -1248,19 +1248,19 @@
   subroutine ctqmc_deallocate_memory_umat()
      implicit none
 
-     if ( allocated(rank)  )   deallocate(rank )
-     if ( allocated(stts)  )   deallocate(stts )
+     if ( allocated(rank) )    deallocate(rank)
+     if ( allocated(stts) )    deallocate(stts)
 
-     if ( allocated(pref)  )   deallocate(pref )
+     if ( allocated(pref) )    deallocate(pref)
 
-     if ( allocated(symm)  )   deallocate(symm )
+     if ( allocated(symm) )    deallocate(symm)
 
-     if ( allocated(eimp)  )   deallocate(eimp )
-     if ( allocated(ktau)  )   deallocate(ktau )
-     if ( allocated(ksed)  )   deallocate(ksed )
-     if ( allocated(ptau)  )   deallocate(ptau )
-     if ( allocated(psed)  )   deallocate(psed )
-     if ( allocated(uumat) )   deallocate(uumat)
+     if ( allocated(eimp) )    deallocate(eimp)
+     if ( allocated(ktau) )    deallocate(ktau)
+     if ( allocated(ksed) )    deallocate(ksed)
+     if ( allocated(ptau) )    deallocate(ptau)
+     if ( allocated(psed) )    deallocate(psed)
+     if ( allocated(umat) )    deallocate(umat)
 
      return
   end subroutine ctqmc_deallocate_memory_umat
