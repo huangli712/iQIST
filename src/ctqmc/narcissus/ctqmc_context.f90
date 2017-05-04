@@ -937,7 +937,7 @@
      allocate(lnop(norbs),       stat=istat)
      allocate(rnop(norbs),       stat=istat)
      allocate(lrmm(norbs,norbs), stat=istat)
-     allocate(szpow(  4  ,norbs), stat=istat)
+     allocate(szpw(  4  ,norbs), stat=istat)
 
      allocate(schi(ntime),        stat=istat)
      allocate(sschi(ntime,nband), stat=istat)
