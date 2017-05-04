@@ -1362,7 +1362,7 @@
      integer :: it
      integer :: jt
 
-! check if we need to dump the particle-particle pair susceptibility
+! check if we need to dump the particle-particle pairing susceptibility
 ! to solver.pair.dat
      if ( .not. btest(isvrt, 2) ) RETURN
 
@@ -1397,7 +1397,7 @@
   end subroutine ctqmc_dump_pair
 
 !!========================================================================
-!!>>> dump data of auxiliary information                               <<<
+!!>>> dump data of diagrammatic configuration                          <<<
 !!========================================================================
 
 !!
