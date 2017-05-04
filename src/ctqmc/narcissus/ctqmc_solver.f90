@@ -166,15 +166,15 @@
      real(dp), allocatable :: ch_w_mpi(:,:,:)
      real(dp), allocatable :: ch_w_err(:,:,:)
 
-! used to measure two-particle green's function
+! two-particle green's function
      complex(dp), allocatable :: g2pw_mpi(:,:,:,:,:)
      complex(dp), allocatable :: g2pw_err(:,:,:,:,:)
 
-! used to measure two-particle green's function
+! irreducible vertex function
      complex(dp), allocatable :: h2pw_mpi(:,:,:,:,:)
      complex(dp), allocatable :: h2pw_err(:,:,:,:,:)
 
-! used to measure p-p pairing susceptibility
+! particle-particle pairing susceptibility
      complex(dp), allocatable :: p2pw_mpi(:,:,:,:,:)
      complex(dp), allocatable :: p2pw_err(:,:,:,:,:)
 
