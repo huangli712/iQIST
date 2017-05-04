@@ -570,8 +570,8 @@
      call ctqmc_reduce_ch_t(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
      call ctqmc_reduce_ch_w(ch_w_mpi, ch_w_err)
 
-     call ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi, h2_re_mpi, h2_im_mpi)
-     call ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
+     call ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
+     call ctqmc_reduce_pair(p2pw_mpi, p2pw_err)
 
 ! update original data and calculate the averages simultaneously
 ! average value section
