@@ -540,8 +540,9 @@
      rexp = czero
      do k=1,nfreq
          xe = tau_end2 * rmesh(k)
-         rexp(k) = - ( dcmplx( cos(xe), sin(xe) ) - exp_e(k, index_e(ieo, flvr), flvr) ) / beta
+         rexp(k) = exp_e(k, index_e(ieo, flvr), flvr) - dcmplx( cos(xe), sin(xe) )
      enddo ! over k={1,nfreq} loop
+     rexp = rexp / beta
 
 ! evaluate gsum
      gsum = czero
