@@ -1493,7 +1493,7 @@
      implicit none
 
 ! external arguments
-! probability of atomic states
+! probability of atomic eigenstates
      real(dp), intent(out) :: prob_mpi(ncfgs)
      real(dp), intent(out) :: prob_err(ncfgs)
 

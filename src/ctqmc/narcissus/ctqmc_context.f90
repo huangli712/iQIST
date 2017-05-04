@@ -14,7 +14,7 @@
 !!! type    : modules
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/03/2017 by li huang (last modified)
+!!!           05/04/2017 by li huang (last modified)
 !!! purpose : define the key data structure and global arrays/variables
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver and dynamical
@@ -469,46 +469,25 @@
      real(dp), public, save, allocatable :: oofom(:,:,:)
 
 !!
-!! @var g2_re
+!! @var g2pw
 !!
-!! used to calculate two-particle green's function, real part
+!! two-particle green's function
 !!
-     real(dp), public, save, allocatable :: g2_re(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: g2pw(:,:,:,:,:)
 
 !!
-!! @var g2_im
+!! @var h2pw
 !!
-!! used to calculate two-particle green's function, imaginary part
+!! used to calculate two-particle irreducible vertex function
 !!
-     real(dp), public, save, allocatable :: g2_im(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: h2pw(:,:,:,:,:)
 
 !!
-!! @var h2_re
+!! @var p2pw
 !!
-!! used to calculate two-particle green's function, real part
+!! particle-particle pairing susceptibility
 !!
-     real(dp), public, save, allocatable :: h2_re(:,:,:,:,:)
-
-!!
-!! @var h2_im
-!!
-!! used to calculate two-particle green's function, imaginary part
-!!
-     real(dp), public, save, allocatable :: h2_im(:,:,:,:,:)
-
-!!
-!! @var ps_re
-!!
-!! particle-particle pairing susceptibility, real part
-!!
-     real(dp), public, save, allocatable :: ps_re(:,:,:,:,:)
-
-!!
-!! @var ps_im
-!!
-!! particle-particle pairing susceptibility, imaginary part
-!!
-     real(dp), public, save, allocatable :: ps_im(:,:,:,:,:)
+     complex(dp), public, save, allocatable :: p2pw(:,:,:,:,:)
 
   end module ctqmc_meat
 
