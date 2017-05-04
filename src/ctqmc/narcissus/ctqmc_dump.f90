@@ -676,9 +676,7 @@
 ! write it
      do i=1,norbs
          do j=1,mfreq
-             write(mytmp,'(i6,5f16.8)') i, rmesh(j), &
-              real(wssf(j,i,i)), aimag(wssf(j,i,i)), &
-                                         zero, zero
+             write(mytmp,'(i6,5f16.8)') i, rmesh(j), wssf(j,i,i), zero, zero
          enddo ! over j={1,mfreq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
