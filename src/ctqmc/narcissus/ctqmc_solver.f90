@@ -592,10 +592,10 @@
      lrmm = lrmm_mpi * real(nmonte) / real(nsweep)
      szpw = szpw_mpi * real(nmonte) / real(nsweep)
 
-     schi  = schi_mpi  * real(nmonte) / real(nsweep)
-     sschi = sschi_mpi * real(nmonte) / real(nsweep)
-     ssfom = ssfom_mpi * real(nmonte) / real(nsweep)
-     ochi  = ochi_mpi  * real(nmonte) / real(nsweep)
+     schi = schi_mpi * real(nmonte) / real(nsweep)
+     sp_t = sp_t_mpi * real(nmonte) / real(nsweep)
+     sp_w = sp_w_mpi * real(nmonte) / real(nsweep)
+     cchi = cchi_mpi * real(nmonte) / real(nsweep)
      oochi = oochi_mpi * real(nmonte) / real(nsweep)
      oofom = oofom_mpi * real(nmonte) / real(nsweep)
 
