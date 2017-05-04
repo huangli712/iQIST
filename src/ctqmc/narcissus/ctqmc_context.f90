@@ -964,8 +964,8 @@
 
      knop = zero
      kmat = zero
-     lmat  = zero
-     rmat  = zero
+     lnop = zero
+     rnop = zero
      lrmat = zero
      szpow = zero
 
