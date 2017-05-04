@@ -926,11 +926,11 @@
      implicit none
 
 ! allocate memory
-     allocate(hist(mkink),        stat=istat)
-     allocate(prob(ncfgs),        stat=istat)
-     allocate(paux(  9  ),        stat=istat)
-     allocate(nmat(norbs),        stat=istat)
-     allocate(nnmat(norbs,norbs), stat=istat)
+     allocate(hist(mkink),       stat=istat)
+     allocate(prob(ncfgs),       stat=istat)
+     allocate(paux(  9  ),       stat=istat)
+     allocate(nimp(norbs),       stat=istat)
+     allocate(nmat(norbs,norbs), stat=istat)
 
      allocate(kmat(norbs),        stat=istat)
      allocate(kkmat(norbs,norbs), stat=istat)
