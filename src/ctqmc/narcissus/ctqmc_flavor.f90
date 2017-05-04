@@ -1832,7 +1832,7 @@
      real(dp) :: ts
      real(dp) :: te
 
-     FLAVOR_SWITCHER: select case ( stts(flvr) )
+     STATUS_BLOCK: select case ( stts(flvr) )
 
 ! case 1: there is no segments, null configuration
          case (0)
@@ -1872,7 +1872,7 @@
          case (3)
              occu = one
 
-     end select FLAVOR_SWITCHER
+     end select STATUS_BLOCK
 
      return
   end subroutine cat_occupy_status
