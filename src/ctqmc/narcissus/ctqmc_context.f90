@@ -1223,8 +1223,8 @@
      if ( allocated(kmat) )    deallocate(kmat)
      if ( allocated(lnop) )    deallocate(lnop)
      if ( allocated(rnop) )    deallocate(rnop)
-     if ( allocated(lrmat) )   deallocate(lrmat)
-     if ( allocated(szpow) )   deallocate(szpow)
+     if ( allocated(lrmm) )    deallocate(lrmm)
+     if ( allocated(szpw) )    deallocate(szpw)
 
      if ( allocated(schi)  )   deallocate(schi )
      if ( allocated(sschi) )   deallocate(sschi)
