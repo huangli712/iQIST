@@ -406,11 +406,11 @@
      real(dp), public, save, allocatable :: rnop(:)
 
 !!
-!! @var lrmat
+!! @var lrmm
 !!
 !! used to evaluate fidelity susceptibility, < k_l k_r >
 !!
-     real(dp), public, save, allocatable :: lrmat(:,:)
+     real(dp), public, save, allocatable :: lrmm(:,:)
 
 !!
 !! @var szpow
