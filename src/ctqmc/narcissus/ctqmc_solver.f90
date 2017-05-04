@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/03/2017 by li huang (last modified)
+!!!           05/05/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are the most important subroutines
@@ -45,7 +45,7 @@
      use context, only : hist                ! histogram
      use context, only : prob                ! atomic eigenstate probability
      use context, only : paux                ! auxiliary physical observables
-     use context, only : nmat, nnmat         ! occupation and double occupation
+     use context, only : nimp, nmat          ! occupation and double occupation
                                              !
      use context, only : kmat, kkmat         ! kinetic energy fluctuation
      use context, only : lmat, rmat, lrmat   ! fidelity susceptibility
