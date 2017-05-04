@@ -934,8 +934,8 @@
 
      allocate(knop(norbs),       stat=istat)
      allocate(kmat(norbs,norbs), stat=istat)
-     allocate(lmat(norbs),        stat=istat)
-     allocate(rmat(norbs),        stat=istat)
+     allocate(lnop(norbs),       stat=istat)
+     allocate(rnop(norbs),       stat=istat)
      allocate(lrmat(norbs,norbs), stat=istat)
      allocate(szpow(  4  ,norbs), stat=istat)
 
