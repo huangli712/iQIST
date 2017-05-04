@@ -678,10 +678,10 @@
          call ctqmc_dump_lrmm(lnop, rnop, lrmm, lnop_err, rnop_err, lrmm_err)
          call ctqmc_dump_szpw(szpw, szpw_err)
 
-         call ctqmc_dump_schi(schi, sschi, schi_err, sschi_err)
-         call ctqmc_dump_sfom(ssfom, ssfom_err)
-         call ctqmc_dump_ochi(ochi, oochi, ochi_err, oochi_err)
-         call ctqmc_dump_ofom(oofom, oofom_err)
+         call ctqmc_dump_sp_t(schi, sp_t, schi_err, sp_t_err)
+         call ctqmc_dump_sp_w(sp_w, sp_w_err)
+         call ctqmc_dump_ch_t(ochi, oochi, ochi_err, oochi_err)
+         call ctqmc_dump_ch_w(oofom, oofom_err)
 
          call ctqmc_dump_twop(g2_re, g2_im, h2_re, h2_im)
          call ctqmc_dump_pair(ps_re, ps_im)
