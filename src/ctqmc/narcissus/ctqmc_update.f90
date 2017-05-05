@@ -531,10 +531,10 @@
 ! calculate the transition ratio for the determinant part
      call cat_lshift_detrat(flvr, iso, tau_start1, tau_start2, deter_ratio)
 
-! calculate the transition probability for left shift old segment or anti-segment
+! calculate the transition probability
      p = deter_ratio * trace_ratio
 
-! determine pass, using important sampling algorithm (metropolis algorithm)
+! determine pass using metropolis algorithm
      pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
 ! if update action is accepted
