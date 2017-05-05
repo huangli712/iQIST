@@ -6,7 +6,7 @@
 !!!           ctqmc_eval_hsed <<<---
 !!!           ctqmc_eval_ktau
 !!!           ctqmc_eval_ksed <<<---
-!!!           ctqmc_symm_nmat
+!!!           ctqmc_symm_nimp
 !!!           ctqmc_symm_gtau
 !!!           ctqmc_symm_grnf <<<---
 !!!           ctqmc_make_fock <<<---
@@ -439,11 +439,11 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_symm_nmat
+!! @sub ctqmc_symm_nimp
 !!
 !! symmetrize the occupation number array, nmat, according to symm vector
 !!
-  subroutine ctqmc_symm_nmat(symm, nmat)
+  subroutine ctqmc_symm_nimp(symm, nmat)
      use constants, only : dp, zero, two
 
      use control, only : isbnd, isspn
@@ -509,7 +509,7 @@
      endif ! back if ( isspn == 2 ) block
 
      return
-  end subroutine ctqmc_symm_nmat
+  end subroutine ctqmc_symm_nimp
 
 !!
 !! @sub ctqmc_symm_gtau
