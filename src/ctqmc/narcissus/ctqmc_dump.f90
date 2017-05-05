@@ -19,7 +19,7 @@
 !!!           ctqmc_dump_szpw <<<---
 !!!           ctqmc_dump_sp_t
 !!!           ctqmc_dump_sp_w
-!!!           ctqmc_dump_ochi
+!!!           ctqmc_dump_ch_t
 !!!           ctqmc_dump_ofom <<<---
 !!!           ctqmc_dump_twop
 !!!           ctqmc_dump_pair <<<---
@@ -1048,12 +1048,12 @@
   end subroutine ctqmc_dump_sp_w
 
 !!
-!! @sub ctqmc_dump_ochi
+!! @sub ctqmc_dump_ch_t
 !!
 !! write out the charge-charge correlation function
 !! in imaginary time space
 !!
-  subroutine ctqmc_dump_ochi(ochi, oochi, oerr, ooerr)
+  subroutine ctqmc_dump_ch_t(ochi, oochi, oerr, ooerr)
      use constants, only : dp, mytmp
 
      use control, only : issus
@@ -1115,7 +1115,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_ochi
+  end subroutine ctqmc_dump_ch_t
 
 !!
 !! @sub ctqmc_dump_ofom
