@@ -1922,20 +1922,20 @@
      knop_err = zero
      kmat_err = zero
 
-! build kmat_mpi and kkmat_mpi, collect data from all children processes
+! build knop_mpi and kmat_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
+     call mp_allreduce(knop, knop_mpi)
      call mp_allreduce(kmat, kmat_mpi)
-     call mp_allreduce(kkmat, kkmat_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
+     knop_mpi = knop
      kmat_mpi = kmat
-     kkmat_mpi = kkmat
 
 # endif /* MPI */
 
