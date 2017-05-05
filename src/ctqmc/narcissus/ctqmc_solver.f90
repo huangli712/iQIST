@@ -318,7 +318,7 @@
      endif ! back if ( myid == master ) block
 
      call cpu_time(time_begin) ! record starting time
-     call ctqmc_warming()
+     call ctqmc_try_warming()
      call cpu_time(time_end)   ! record ending   time
 
 ! print the time information
@@ -352,7 +352,7 @@
              cstep = cstep + 1
 
 ! sampling the perturbation expansion feynman diagrams randomly
-             call ctqmc_walking(cstep)
+             call ctqmc_try_walking(cstep)
 
 !!========================================================================
 !!>>> sampling the physical observables 1 (always)                     <<<
@@ -516,7 +516,7 @@
 !!========================================================================
 
 ! check the status at first
-         call ctqmc_warning(cflag)
+         call ctqmc_try_warning(cflag)
 
 !!========================================================================
 !!>>> timing quantum impurity solver                                   <<<
