@@ -634,7 +634,7 @@
      use control, only : beta
      use context, only : index_s, index_e
      use context, only : time_s, time_e
-     use context, only : lmat, rmat, lrmat
+     use context, only : lmat, rmat, lrmm
      use context, only : rank
 
      implicit none
@@ -689,7 +689,7 @@
 ! add contribution to < k_l k_r >
      do flvr=1,norbs
          do i=1,norbs
-             lrmat(i,flvr) = lrmat(i,flvr) + kl(i) * kr(flvr)
+             lrmm(i,flvr) = lrmm(i,flvr) + kl(i) * kr(flvr)
          enddo ! over i={1,norbs} loop
      enddo ! over flvr={1,norbs} loop
 
@@ -1969,16 +1969,16 @@
 !!
 !! @sub ctqmc_reduce_lmat
 !!
-!! reduce the lmat, rmat, and lrmat from all children processes
+!! reduce the lmat, rmat, and lrmm from all children processes
 !!
-  subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmat_mpi, lmat_err, rmat_err, lrmat_err)
+  subroutine ctqmc_reduce_lmat(lmat_mpi, rmat_mpi, lrmm_mpi, lmat_err, rmat_err, lrmm_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nprocs
-     use context, only : lmat, rmat, lrmat
+     use context, only : lmat, rmat, lrmm
 
      implicit none
 
@@ -1992,26 +1992,26 @@
      real(dp), intent(out) :: rmat_err(norbs)
 
 ! used to evaluate fidelity susceptibility
-     real(dp), intent(out) :: lrmat_mpi(norbs,norbs)
-     real(dp), intent(out) :: lrmat_err(norbs,norbs)
+     real(dp), intent(out) :: lrmm_mpi(norbs,norbs)
+     real(dp), intent(out) :: lrmm_err(norbs,norbs)
 
-! initialize lmat_mpi, rmat_mpi, and lrmat_mpi
-! initialize lmat_err, rmat_err, and lrmat_err
+! initialize lmat_mpi, rmat_mpi, and lrmm_mpi
+! initialize lmat_err, rmat_err, and lrmm_err
      lmat_mpi = zero
      rmat_mpi = zero
-     lrmat_mpi = zero
+     lrmm_mpi = zero
 
      lmat_err = zero
      rmat_err = zero
-     lrmat_err = zero
+     lrmm_err = zero
 
-! build lmat_mpi, rmat_mpi, and lrmat_mpi, collect data from all children processes
+! build lmat_mpi, rmat_mpi, and lrmm_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
      call mp_allreduce(lmat, lmat_mpi)
      call mp_allreduce(rmat, rmat_mpi)
-     call mp_allreduce(lrmat, lrmat_mpi)
+     call mp_allreduce(lrmm, lrmm_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2020,22 +2020,22 @@
 
      lmat_mpi = lmat
      rmat_mpi = rmat
-     lrmat_mpi = lrmat
+     lrmm_mpi = lrmm
 
 # endif /* MPI */
 
 ! calculate the average
      lmat_mpi = lmat_mpi / real(nprocs)
      rmat_mpi = rmat_mpi / real(nprocs)
-     lrmat_mpi = lrmat_mpi / real(nprocs)
+     lrmm_mpi = lrmm_mpi / real(nprocs)
 
-! build lmat_err, rmat_err, and lrmat_err, collect data from all children processes
+! build lmat_err, rmat_err, and lrmm_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
      call mp_allreduce((lmat - lmat_mpi)**2, lmat_err)
      call mp_allreduce((rmat - rmat_mpi)**2, rmat_err)
-     call mp_allreduce((lrmat - lrmat_mpi)**2, lrmat_err)
+     call mp_allreduce((lrmm - lrmm_mpi)**2, lrmm_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2046,7 +2046,7 @@
      if ( nprocs > 1 ) then
          lmat_err = sqrt( lmat_err / real( nprocs * ( nprocs - 1 ) ) )
          rmat_err = sqrt( rmat_err / real( nprocs * ( nprocs - 1 ) ) )
-         lrmat_err = sqrt( lrmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         lrmm_err = sqrt( lrmm_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
