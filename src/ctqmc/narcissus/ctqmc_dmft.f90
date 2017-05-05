@@ -8,11 +8,10 @@
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
 !!!           05/05/2017 by li huang (last modified)
-!!! purpose : try to implement a self-consistent engine for hybridization
-!!!           expansion version continuous time quantum Monte Carlo (CTQMC)
-!!!           quantum impurity solver plus dynamical mean field theory
-!!!           (DMFT) simulation. it is designed for a Hubbard model on a
-!!!           Bethe lattice
+!!! purpose : implement a hybridization expansion version continuous time
+!!!           quantum Monte Carlo (CTQMC) quantum impurity solver plus
+!!!           dynamical mean field theory (DMFT) self-consistent engine.
+!!!           it is designed for the Hubbard model on a Bethe lattice
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -119,7 +118,7 @@
 !!
 !! @sub ctqmc_dmft_conver
 !!
-!! check the convergence of self-energy function
+!! check the convergence of matsubara self-energy function
 !!
   subroutine ctqmc_dmft_conver(iter, conv)
      use constants, only : dp, zero, one, two, eps8, mystd
@@ -180,9 +179,9 @@
 
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(3(2X,a,i3))') cname//' >>> cur_iter:', iter, 'min_iter:', minit, 'max_iter:', niter
-         write(mystd,'(2(2X,a,E12.4))') cname//' >>> sig_curr:', seps, 'eps_curr:', eps8
-         write(mystd,'( (2X,a,L1))') cname//' >>> self-consistent iteration convergence is ', conv
+         write(mystd,'(2X,a,i3,a,e12.4)') cname//' >>> cur_iter:', iter , ' sig_curr:', seps
+         write(mystd,'(2X,a,i3,a,e12.4)') cname//' >>> max_iter:', niter, ' eps_curr:', eps8
+         write(mystd,'(2X,a,l1)') cname//' >>> self-consistent iteration convergence is ', conv
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
@@ -192,7 +191,7 @@
 !!
 !! @sub ctqmc_dmft_bethe
 !!
-!! implement self-consistent conditions: bethe lattice, semicircular
+!! implement self-consistent condition: bethe lattice, semicircular
 !! density of states, force a paramagnetic order, equal band width
 !!
   subroutine ctqmc_dmft_bethe(hybf, grnf)
