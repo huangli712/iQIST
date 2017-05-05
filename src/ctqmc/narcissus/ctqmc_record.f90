@@ -2255,11 +2255,11 @@
   end subroutine ctqmc_reduce_sp_w
 
 !!
-!! @sub ctqmc_reduce_cchi
+!! @sub ctqmc_reduce_ch_t
 !!
 !! reduce the cchi and ch_t from all children processes
 !!
-  subroutine ctqmc_reduce_cchi(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
+  subroutine ctqmc_reduce_ch_t(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2327,7 +2327,7 @@
      endif ! back if ( nprocs > 1 ) block
 
      return
-  end subroutine ctqmc_reduce_cchi
+  end subroutine ctqmc_reduce_ch_t
 
 !!
 !! @sub ctqmc_reduce_ofom
