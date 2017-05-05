@@ -761,9 +761,9 @@
      sp_w = zero
 
 ! init charge-charge correlation function
-     ochi  = zero
-     oochi = zero
-     oofom = zero
+     cchi = zero
+     ch_t = zero
+     ch_w = zero
 
 ! init two-particle green's function
      g2_re = zero
