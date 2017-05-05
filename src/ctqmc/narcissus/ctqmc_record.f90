@@ -2416,11 +2416,9 @@
      implicit none
 
 ! external arguments
-! two-particle green's function, real part
-     real(dp), intent(out) :: g2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! two-particle green's function, imaginary part
-     real(dp), intent(out) :: g2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+! two-particle green's function
+     complex(dp), intent(out) :: g2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(out) :: g2pw_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! two-particle green's function, real part
      real(dp), intent(out) :: h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
