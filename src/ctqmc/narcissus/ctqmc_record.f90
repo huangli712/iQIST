@@ -1011,7 +1011,7 @@
      use control, only : norbs
      use control, only : ntime
      use context, only : tmesh
-     use context, only : ochi, oochi
+     use context, only : ochi, ch_t
 
      implicit none
 
@@ -1045,7 +1045,7 @@
      enddo TIME_LOOP ! over i={1,ntime} loop
      oaux = oaux / real(num_try)
 
-! calculate ochi and oochi
+! calculate ochi and ch_t
      do f1=1,norbs
          do f2=1,norbs
              do i=1,num_try
@@ -1054,12 +1054,12 @@
 ! n - m + ntime \in [ntime - m + 1, ntime]
                      do n=1,m
                          ochi(n-m+ntime) = ochi(n-m+ntime) + oaux(n,f1)
-                         oochi(n-m+ntime,f2,f1) = oochi(n-m+ntime,f2,f1) + oaux(n,f1)
+                         ch_t(n-m+ntime,f2,f1) = ch_t(n-m+ntime,f2,f1) + oaux(n,f1)
                      enddo ! over n={1,m} loop
 ! n - m \in [1, ntime - m]
                      do n=m+1,ntime
                          ochi(n-m) = ochi(n-m) + oaux(n,f1)
-                         oochi(n-m,f2,f1) = oochi(n-m,f2,f1) + oaux(n,f1)
+                         ch_t(n-m,f2,f1) = ch_t(n-m,f2,f1) + oaux(n,f1)
                      enddo ! over n={m+1,ntime} loop
                  endif ! back if ( oaux(m,f2) > zero ) block
              enddo ! over i={1,num_try} loop
@@ -2259,9 +2259,9 @@
 !!
 !! @sub ctqmc_reduce_ochi
 !!
-!! reduce the ochi and oochi from all children processes
+!! reduce the ochi and ch_t from all children processes
 !!
-  subroutine ctqmc_reduce_ochi(ochi_mpi, oochi_mpi, ochi_err, oochi_err)
+  subroutine ctqmc_reduce_ochi(ochi_mpi, ch_t_mpi, ochi_err, ch_t_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2269,7 +2269,7 @@
      use control, only : norbs
      use control, only : ntime
      use control, only : nprocs
-     use context, only : ochi, oochi
+     use context, only : ochi, ch_t
 
      implicit none
 
@@ -2279,22 +2279,22 @@
      real(dp), intent(out) :: ochi_err(ntime)
 
 ! charge-charge correlation function, orbital-resolved
-     real(dp), intent(out) :: oochi_mpi(ntime,norbs,norbs)
-     real(dp), intent(out) :: oochi_err(ntime,norbs,norbs)
+     real(dp), intent(out) :: ch_t_mpi(ntime,norbs,norbs)
+     real(dp), intent(out) :: ch_t_err(ntime,norbs,norbs)
 
-! initialize ochi_mpi and oochi_mpi, ochi_err and oochi_err
+! initialize ochi_mpi and ch_t_mpi, ochi_err and ch_t_err
      ochi_mpi = zero
-     oochi_mpi = zero
+     ch_t_mpi = zero
 
      ochi_err = zero
-     oochi_err = zero
+     ch_t_err = zero
 
-! build ochi_mpi and oochi_mpi, collect data from all children processes
+! build ochi_mpi and ch_t_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
      call mp_allreduce(ochi, ochi_mpi)
-     call mp_allreduce(oochi, oochi_mpi)
+     call mp_allreduce(ch_t, ch_t_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2302,20 +2302,20 @@
 # else  /* MPI */
 
      ochi_mpi = ochi
-     oochi_mpi = oochi
+     ch_t_mpi = ch_t
 
 # endif /* MPI */
 
 ! calculate the average
      ochi_mpi = ochi_mpi / real(nprocs)
-     oochi_mpi = oochi_mpi / real(nprocs)
+     ch_t_mpi = ch_t_mpi / real(nprocs)
 
-! build ochi_err and oochi_err, collect data from all children processes
+! build ochi_err and ch_t_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
      call mp_allreduce((ochi - ochi_mpi)**2, ochi_err)
-     call mp_allreduce((oochi - oochi_mpi)**2, oochi_err)
+     call mp_allreduce((ch_t - ch_t_mpi)**2, ch_t_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2325,7 +2325,7 @@
 ! calculate standard deviation
      if ( nprocs > 1 ) then
          ochi_err = sqrt( ochi_err / real( nprocs * ( nprocs - 1 ) ) )
-         oochi_err = sqrt( oochi_err / real( nprocs * ( nprocs - 1 ) ) )
+         ch_t_err = sqrt( ch_t_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
