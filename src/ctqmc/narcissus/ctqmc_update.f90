@@ -294,16 +294,14 @@
 ! (4) if tau_start is not valid, set ladd to .false.
      call cat_insert_flavor(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
 
-! calculate the transition ratio between old and new configurations
-! for the local trace part
+! calculate the transition ratio for the local trace part
      if ( ladd .eqv. .true. ) then
          call cat_insert_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
      else
          trace_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
 
-! calculate the transition ratio between old and new configurations
-! for the determinant part
+! calculate the transition ratio for the determinant part
      if ( ladd .eqv. .true. ) then
          call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      else
@@ -313,7 +311,7 @@
 ! calculate the transition probability
      p = deter_ratio * trace_ratio * ( beta * tau_max / real( ckink + 1 ) )
 
-! determine pass, using metropolis algorithm
+! determine pass using metropolis algorithm
      pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
 ! if the update action is accepted
@@ -334,7 +332,7 @@
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! update the monte carlo statistics
+! update monte carlo statistics
      ins_t = ins_t + one
      if ( pass .eqv. .true. ) then
          ins_a = ins_a + one
@@ -364,30 +362,30 @@
 
 ! local variables
 ! whether it is an anti-segment
-! anti = .true., anti-segment
-! anti = .false., segment
+! if anti = .true., anti-segment
+! if anti = .false., segment
      logical  :: anti
 
 ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel for both band and spin
+! current flavor channel
      integer  :: flvr
 
 ! index address to remove old segment or anti-segment
 ! is and ie are for start and end points, respectively
      integer  :: is, ie
 
-! transition probability for remove old segment or anti-segment
+! transition probability
      real(dp) :: p
 
 ! \tau_s, start point of the old segment
      real(dp) :: tau_start
 
-! \tau_e, end   point of the old segment
+! \tau_e, end point of the old segment
      real(dp) :: tau_end
 
-! the possible maximum length of the old segment
+! possible maximum length of the old segment
      real(dp) :: tau_max
 
 ! ratio between old and new configurations, the local trace part
@@ -403,44 +401,41 @@
 ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order ( number of existing segments or
-! anti-segments ) for current flavor channel
+! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call s_print_exception('ctqmc_remove_kink','can not remove any segments')
          rmv_t = rmv_t + one
          rmv_r = rmv_r + one
          RETURN
      endif ! back if ( ckink == 0 ) block
 
-! at first determine anti and is randomly, then tau_start is obtained by
-! is. and then ie, tau_end, and tau_max are evaluated carefully according
-! to is and ie
+! try to generate new configuration
+! (1) determine anti and is randomly
+! (2) tau_start is obtained by is
+! (3) determine ie
+! (4) tau_end and tau_max are evaluated carefully according to is and ie
      call cat_remove_flavor(flvr, is, ie, anti, tau_start, tau_end, tau_max)
 
-! calculate the transition ratio between old and new configurations,
-! for the local trace part
+! calculate the transition ratio for the local trace part
      call cat_remove_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part
+! calculate the transition ratio for the determinant part
      call cat_remove_detrat(flvr, is, ie, deter_ratio)
 
-! calculate the transition probability for remove old segment or anti-segment
+! calculate the transition probability
      p = deter_ratio * trace_ratio * real( ckink ) / ( beta * tau_max )
 
-! determine pass, using important sampling algorithm (metropolis algorithm)
+! determine pass using metropolis algorithm
      pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
 ! if update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the mmat matrix and gmat matrix, respectively,
-! cat_remove_action() subroutine is invoked internally to update the
-! perturbation expansion series
+! update the mmat matrix and gmat matrix, respectively
+! the perturbation expansion series are updated as well
          call cat_remove_matrix(flvr, is, ie)
 
-! decrease ckink for current flavor channel
+! update ckink for current flavor channel
          ckink = ckink - 1
 
 ! update stts for current flavor channel
@@ -451,7 +446,7 @@
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! update the remove statistics
+! update monte carlo statistics
      rmv_t = rmv_t + one
      if ( pass .eqv. .true. ) then
          rmv_a = rmv_a + one
