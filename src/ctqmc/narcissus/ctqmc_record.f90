@@ -26,10 +26,10 @@
 !!!           ctqmc_reduce_kmat
 !!!           ctqmc_reduce_lrmm
 !!!           ctqmc_reduce_szpw <<<---
-!!!           ctqmc_reduce_schi
-!!!           ctqmc_reduce_sfom
-!!!           ctqmc_reduce_cchi
-!!!           ctqmc_reduce_ofom <<<---
+!!!           ctqmc_reduce_sp_t
+!!!           ctqmc_reduce_sp_w
+!!!           ctqmc_reduce_ch_t
+!!!           ctqmc_reduce_ch_w <<<---
 !!!           ctqmc_reduce_twop
 !!!           ctqmc_reduce_pair <<<---
 !!! source  : ctqmc_record.f90
@@ -2117,11 +2117,11 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_reduce_schi
+!! @sub ctqmc_reduce_sp_t
 !!
 !! reduce the schi and sp_t from all children processes
 !!
-  subroutine ctqmc_reduce_schi(schi_mpi, sp_t_mpi, schi_err, sp_t_err)
+  subroutine ctqmc_reduce_sp_t(schi_mpi, sp_t_mpi, schi_err, sp_t_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2189,7 +2189,7 @@
      endif ! back if ( nprocs > 1 ) block
 
      return
-  end subroutine ctqmc_reduce_schi
+  end subroutine ctqmc_reduce_sp_t
 
 !!
 !! @sub ctqmc_reduce_sfom
