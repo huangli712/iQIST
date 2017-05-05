@@ -2462,7 +2462,7 @@
 !! reduce the p2pw from all children processes
 !!
   subroutine ctqmc_reduce_pair(p2pw_mpi, p2pw_err)
-     use constants, only : dp, zero
+     use constants, only : dp, czero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2479,9 +2479,9 @@
      complex(dp), intent(out) :: p2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: p2pw_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! initialize ps_re_mpi and ps_im_mpi
-     ps_re_mpi = zero
-     ps_im_mpi = zero
+! initialize p2pw_mpi and p2pw_err
+     p2pw_mpi = czero
+     p2pw_err = czero
 
 ! build ps_re_mpi and ps_im_mpi, collect data from all children processes
 # if defined (MPI)
