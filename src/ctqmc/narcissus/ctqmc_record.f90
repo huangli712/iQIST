@@ -10,10 +10,10 @@
 !!!           ctqmc_record_kmat
 !!!           ctqmc_record_lrmm
 !!!           ctqmc_record_szpw <<<---
-!!!           ctqmc_record_schi
-!!!           ctqmc_record_sfom
-!!!           ctqmc_record_cchi
-!!!           ctqmc_record_ofom <<<---
+!!!           ctqmc_record_sp_t
+!!!           ctqmc_record_sp_w
+!!!           ctqmc_record_ch_t
+!!!           ctqmc_record_ch_w <<<---
 !!!           ctqmc_record_twop
 !!!           ctqmc_record_pair <<<---
 !!!           ctqmc_reduce_hist
@@ -790,12 +790,12 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_record_schi
+!! @sub ctqmc_record_sp_t
 !!
 !! record the spin-spin correlation function
 !! in imaginary time axis
 !!
-  subroutine ctqmc_record_schi()
+  subroutine ctqmc_record_sp_t()
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
 
@@ -877,7 +877,7 @@
      enddo ! over f1={1,nband} loop
 
      return
-  end subroutine ctqmc_record_schi
+  end subroutine ctqmc_record_sp_t
 
 !!
 !! @sub ctqmc_record_sfom
