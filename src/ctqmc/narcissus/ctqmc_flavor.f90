@@ -23,7 +23,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/23/2009 by li huang (created)
-!!!           05/04/2017 by li huang (last modified)
+!!!           05/05/2017 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -314,7 +314,7 @@
      use control, only : isscr
      use control, only : norbs
      use control, only : mune, beta
-     use context, only : eimp, uumat
+     use context, only : eimp, umat
 
      implicit none
 
@@ -402,7 +402,7 @@
 ! -\tilde{\tau} \mu + U * \tau_{overlap} for anti-segment
      raux = dtau * ( mune - eimp(flvr) )
      do i=1,norbs
-         raux = raux - uumat(flvr, i) * ovlp(i)
+         raux = raux - umat(flvr, i) * ovlp(i)
      enddo ! over i={1,norbs} loop
 
 ! evaluate the final ztrace ratio
@@ -445,7 +445,7 @@
      use control, only : isscr
      use control, only : norbs
      use control, only : mune, beta
-     use context, only : eimp, uumat
+     use context, only : eimp, umat
 
      implicit none
 
@@ -533,7 +533,7 @@
 ! +\tilde{\tau} \mu - U * \tau_{overlap} for anti-segment
      raux = dtau * ( mune - eimp(flvr) )
      do i=1,norbs
-         raux = raux - uumat(flvr, i) * ovlp(i)
+         raux = raux - umat(flvr, i) * ovlp(i)
      enddo ! over i={1,norbs} loop
 
 ! evaluate the final ztrace ratio
@@ -576,7 +576,7 @@
      use control, only : isscr
      use control, only : norbs
      use control, only : mune, beta
-     use context, only : eimp, uumat
+     use context, only : eimp, umat
 
      implicit none
 
@@ -666,7 +666,7 @@
 ! -\tilde{\tau} \mu + U * \tau_{overlap} for shrink
      raux = dtau * ( mune - eimp(flvr) )
      do i=1,norbs
-         raux = raux - uumat(flvr, i) * ovlp(i)
+         raux = raux - umat(flvr, i) * ovlp(i)
      enddo ! over i={1,norbs} loop
 
 ! evaluate the final ztrace ratio
@@ -717,7 +717,7 @@
      use control, only : isscr
      use control, only : norbs
      use control, only : mune, beta
-     use context, only : eimp, uumat
+     use context, only : eimp, umat
 
      implicit none
 
@@ -807,7 +807,7 @@
 ! -\tilde{\tau} \mu + U * \tau_{overlap} for shrink
      raux = dtau * ( mune - eimp(flvr) )
      do i=1,norbs
-         raux = raux - uumat(flvr, i) * ovlp(i)
+         raux = raux - umat(flvr, i) * ovlp(i)
      enddo ! over i={1,norbs} loop
 
 ! evaluate the final ztrace ratio
