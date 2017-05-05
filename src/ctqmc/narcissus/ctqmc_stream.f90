@@ -731,21 +731,21 @@
 !>>> ctqmc_meat module
 !-------------------------------------------------------------------------
 ! init histogram
-     hist  = zero
+     hist = zero
 
 ! init probability for atomic eigenstates
-     prob  = zero
+     prob = zero
 
 ! init auxiliary physical observables
-     paux  = zero
+     paux = zero
 
 ! init occupation number
-     nmat  = zero
-     nnmat = zero
+     nimp = zero
+     nmat = zero
 
 ! init kinetic energy fluctuation
-     kmat  = zero
-     kkmat = zero
+     knop = zero
+     kmat = zero
 
 ! init fidelity susceptibility
      lmat  = zero
