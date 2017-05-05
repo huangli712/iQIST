@@ -134,7 +134,7 @@
      use context, only : index_s, index_e
      use context, only : time_s, time_e
      use context, only : paux, nimp, nmat
-     use context, only : rank, stts, uumat
+     use context, only : rank, stts, umat
 
      implicit none
 
@@ -266,7 +266,7 @@
 ! evaluate potential energy: epot
      do flvr=1,norbs
          do i=1,flvr
-             paux(2) = paux(2) + uumat(flvr,i) * ovlp(flvr,i) / beta
+             paux(2) = paux(2) + umat(flvr,i) * ovlp(flvr,i) / beta
          enddo ! over i={1,flvr} loop
      enddo ! over flvr={1,norbs} loop
 
