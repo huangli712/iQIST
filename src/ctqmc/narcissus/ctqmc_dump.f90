@@ -18,7 +18,7 @@
 !!!           ctqmc_dump_lrmm
 !!!           ctqmc_dump_szpw <<<---
 !!!           ctqmc_dump_sp_t
-!!!           ctqmc_dump_sfom
+!!!           ctqmc_dump_sp_w
 !!!           ctqmc_dump_ochi
 !!!           ctqmc_dump_ofom <<<---
 !!!           ctqmc_dump_twop
@@ -991,12 +991,12 @@
   end subroutine ctqmc_dump_sp_t
 
 !!
-!! @sub ctqmc_dump_sfom
+!! @sub ctqmc_dump_sp_w
 !!
 !! write out the spin-spin correlation function
 !! in matsubara frequency space
 !!
-  subroutine ctqmc_dump_sfom(ssfom, sserr)
+  subroutine ctqmc_dump_sp_w(ssfom, sserr)
      use constants, only : dp, two, pi, mytmp
 
      use control, only : issus
@@ -1045,7 +1045,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_sfom
+  end subroutine ctqmc_dump_sp_w
 
 !!
 !! @sub ctqmc_dump_ochi
