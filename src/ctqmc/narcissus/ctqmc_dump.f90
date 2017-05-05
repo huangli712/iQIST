@@ -20,7 +20,7 @@
 !!!           ctqmc_dump_sp_t
 !!!           ctqmc_dump_sp_w
 !!!           ctqmc_dump_ch_t
-!!!           ctqmc_dump_ofom <<<---
+!!!           ctqmc_dump_ch_w <<<---
 !!!           ctqmc_dump_twop
 !!!           ctqmc_dump_pair <<<---
 !!!           ctqmc_dump_diag <<<---
@@ -1118,12 +1118,12 @@
   end subroutine ctqmc_dump_ch_t
 
 !!
-!! @sub ctqmc_dump_ofom
+!! @sub ctqmc_dump_ch_w
 !!
 !! write out the charge-charge correlation function
 !! in matsubara frequency space
 !!
-  subroutine ctqmc_dump_ofom(oofom, ooerr)
+  subroutine ctqmc_dump_ch_w(oofom, ooerr)
      use constants, only : dp, two, pi, mytmp
 
      use control, only : issus
@@ -1175,7 +1175,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_ofom
+  end subroutine ctqmc_dump_ch_w
 
 !!========================================================================
 !!>>> dump data of physical observables 5                              <<<
