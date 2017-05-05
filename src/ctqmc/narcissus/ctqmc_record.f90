@@ -2192,11 +2192,11 @@
   end subroutine ctqmc_reduce_sp_t
 
 !!
-!! @sub ctqmc_reduce_sfom
+!! @sub ctqmc_reduce_sp_w
 !!
 !! reduce the sp_w from all children processes
 !!
-  subroutine ctqmc_reduce_sfom(sp_w_mpi, sp_w_err)
+  subroutine ctqmc_reduce_sp_w(sp_w_mpi, sp_w_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2252,7 +2252,7 @@
      endif ! back if ( nprocs > 1 ) block
 
      return
-  end subroutine ctqmc_reduce_sfom
+  end subroutine ctqmc_reduce_sp_w
 
 !!
 !! @sub ctqmc_reduce_cchi
