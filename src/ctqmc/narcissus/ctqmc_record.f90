@@ -1070,12 +1070,12 @@
   end subroutine ctqmc_record_ch_t
 
 !!
-!! @sub ctqmc_record_ofom
+!! @sub ctqmc_record_ch_w
 !!
 !! record the charge-charge correlation function
 !! in matsubara frequency axis
 !!
-  subroutine ctqmc_record_ofom()
+  subroutine ctqmc_record_ch_w()
      use constants, only : dp, zero, two, pi, czi
 
      use control, only : issus
@@ -1150,7 +1150,7 @@
      enddo ! over f1={1,norbs} loop
 
      return
-  end subroutine ctqmc_record_ofom
+  end subroutine ctqmc_record_ch_w
 
 !!========================================================================
 !!>>> measure physical observables 5                                   <<<
