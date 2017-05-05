@@ -24,7 +24,7 @@
 !!!           ctqmc_reduce_ftau
 !!!           ctqmc_reduce_grnf <<<---
 !!!           ctqmc_reduce_kmat
-!!!           ctqmc_reduce_lmat
+!!!           ctqmc_reduce_lrmm
 !!!           ctqmc_reduce_szpw <<<---
 !!!           ctqmc_reduce_schi
 !!!           ctqmc_reduce_sfom
@@ -1967,11 +1967,11 @@
   end subroutine ctqmc_reduce_kmat
 
 !!
-!! @sub ctqmc_reduce_lmat
+!! @sub ctqmc_reduce_lrmm
 !!
 !! reduce the lmat, rnop, and lrmm from all children processes
 !!
-  subroutine ctqmc_reduce_lmat(lmat_mpi, rnop_mpi, lrmm_mpi, lmat_err, rnop_err, lrmm_err)
+  subroutine ctqmc_reduce_lrmm(lmat_mpi, rnop_mpi, lrmm_mpi, lmat_err, rnop_err, lrmm_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2050,7 +2050,7 @@
      endif ! back if ( nprocs > 1 ) block
 
      return
-  end subroutine ctqmc_reduce_lmat
+  end subroutine ctqmc_reduce_lrmm
 
 !!
 !! @sub ctqmc_reduce_szpw
