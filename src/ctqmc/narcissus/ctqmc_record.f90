@@ -710,7 +710,7 @@
      use control, only : ntime
      use control, only : beta
      use context, only : tmesh
-     use context, only : szpow
+     use context, only : szpw
 
      implicit none
 
@@ -777,10 +777,10 @@
      enddo ! over i={1,ntime-1} loop
      sint = sint / beta
 ! record the data
-     szpow(1,nband+1) = szpow(1,nband+1) + sint**1.0
-     szpow(2,nband+1) = szpow(2,nband+1) + sint**2.0
-     szpow(3,nband+1) = szpow(3,nband+1) + sint**3.0
-     szpow(4,nband+1) = szpow(4,nband+1) + sint**4.0
+     szpw(1,nband+1) = szpw(1,nband+1) + sint**1.0
+     szpw(2,nband+1) = szpw(2,nband+1) + sint**2.0
+     szpw(3,nband+1) = szpw(3,nband+1) + sint**3.0
+     szpw(4,nband+1) = szpw(4,nband+1) + sint**4.0
 
      return
   end subroutine ctqmc_record_szpw
