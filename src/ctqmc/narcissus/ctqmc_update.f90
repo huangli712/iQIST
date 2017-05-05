@@ -681,7 +681,7 @@
 
 ! external arguments
 ! control flag
-! if cflip = 1, flip intra-orbital spins one by one;
+! if cflip = 1, flip intra-orbital spins one by one
 ! if cflip = 2, flip intra-orbital spins globally
      integer, intent(in) :: cflip
 
@@ -699,7 +699,7 @@
 ! maximum rank order
      integer  :: kmax
 
-! transition probability for global spin flip
+! transition probability
      real(dp) :: p
 
 ! global flip determinant ratio
@@ -720,18 +720,16 @@
 ! get fup and fdn
              fup = flvr; fdn = flvr + nband
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part, spin up case
+! calculate the transition ratio for the determinant part, spin up case
              call cat_reflip_detrat(fup, fdn, ratup)
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part, spin dn case
+! calculate the transition ratio for the determinant part, spin dn case
              call cat_reflip_detrat(fdn, fup, ratdn)
 
-! calculate the transition probability for global spin flip
+! calculate the transition probability
              p = ratup * ratdn
 
-! determine pass, using important sampling algorithm (metropolis algorithm)
+! determine pass using metropolis algorithm
              pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
 ! if update action is accepted
@@ -740,12 +738,12 @@
 ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-! swap global variables between spin up and spin down states
+! exchange global variables between spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
              endif ! back if ( pass .eqv. .true. ) block
 
-! update the reflip statistics
+! update monte carlo statistics
              rfl_t = rfl_t + one
              if ( pass .eqv. .true. ) then
                  rfl_a = rfl_a + one
@@ -763,20 +761,18 @@
 ! get fup and fdn
              fup = flvr; fdn = flvr + nband
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part, spin up case
+! calculate the transition ratio for the determinant part, spin up case
              call cat_reflip_detrat(fup, fdn, ratup)
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part, spin dn case
+! calculate the transition ratio for the determinant part, spin dn case
              call cat_reflip_detrat(fdn, fup, ratdn)
 
-! calculate the transition probability for global spin flip
+! calculate the transition probability
              p = p * ( ratup * ratdn )
 
          enddo ! over flvr={1,nband} loop
 
-! determine pass, using important sampling algorithm (metropolis algorithm)
+! determine pass using metropolis algorithm
          pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
 ! if update action is accepted
@@ -790,14 +786,14 @@
 ! get maximum rank order in spin up and spin down states
                  kmax = max( rank(fup), rank(fdn) )
 
-! swap global variables between spin up and spin down states
+! exchange global variables between spin up and spin down states
                  call cat_reflip_matrix(fup, fdn, kmax)
 
              enddo ! over flvr={1,nband} loop
 
          endif ! back if ( pass .eqv. .true. ) block
 
-! update the reflip statistics
+! update monte carlo statistics
          rfl_t = rfl_t + one
          if ( pass .eqv. .true. ) then
              rfl_a = rfl_a + one
