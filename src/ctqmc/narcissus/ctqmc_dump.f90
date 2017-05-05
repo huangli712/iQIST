@@ -15,7 +15,7 @@
 !!!           ctqmc_dump_wssf
 !!!           ctqmc_dump_sigf <<<---
 !!!           ctqmc_dump_kmat
-!!!           ctqmc_dump_lmat
+!!!           ctqmc_dump_lrmm
 !!!           ctqmc_dump_szpw <<<---
 !!!           ctqmc_dump_schi
 !!!           ctqmc_dump_sfom
@@ -798,11 +798,11 @@
   end subroutine ctqmc_dump_kmat
 
 !!
-!! @sub ctqmc_dump_lmat
+!! @sub ctqmc_dump_lrmm
 !!
 !! write out the fidelity susceptibility
 !!
-  subroutine ctqmc_dump_lmat(lmat, rmat, lrmat, lerr, rerr, lrerr)
+  subroutine ctqmc_dump_lrmm(lmat, rmat, lrmat, lerr, rerr, lrerr)
      use constants, only : dp, mytmp
 
      use control, only : isobs
@@ -864,7 +864,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_lmat
+  end subroutine ctqmc_dump_lrmm
 
 !!
 !! @sub ctqmc_dump_szpw
