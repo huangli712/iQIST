@@ -2450,11 +2450,8 @@
 # endif /* MPI */
 
 ! calculate the average
-     g2_re_mpi = g2_re_mpi / real(nprocs)
-     g2_im_mpi = g2_im_mpi / real(nprocs)
-
-     h2_re_mpi = h2_re_mpi / real(nprocs)
-     h2_im_mpi = h2_im_mpi / real(nprocs)
+     g2pw_mpi = g2pw_mpi / real(nprocs)
+     h2pw_mpi = h2pw_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_twop
