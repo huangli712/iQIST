@@ -803,7 +803,7 @@
      use control, only : nband, norbs
      use control, only : ntime
      use context, only : tmesh
-     use context, only : schi, sschi
+     use context, only : schi, sp_t
 
      implicit none
 
@@ -836,7 +836,7 @@
      enddo TIME_LOOP ! over i={1,ntime} loop
      oaux = oaux / real(num_try)
 
-! calculate schi and sschi
+! calculate schi and sp_t
      do f1=1,nband
          do i=1,num_try
              m = ceiling( spring_sfmt_stream() * ntime )
@@ -845,15 +845,15 @@
                  do n=1,m
                      schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1)
                      schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1+nband)
-                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1)
-                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1+nband)
+                     sp_t(n-m+ntime,f1) = sp_t(n-m+ntime,f1) + oaux(n,f1)
+                     sp_t(n-m+ntime,f1) = sp_t(n-m+ntime,f1) - oaux(n,f1+nband)
                  enddo ! over n={1,m} loop
 ! n - m \in [1, ntime - m]
                  do n=m+1,ntime
                      schi(n-m) = schi(n-m) + oaux(n,f1)
                      schi(n-m) = schi(n-m) - oaux(n,f1+nband)
-                     sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1)
-                     sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1+nband)
+                     sp_t(n-m,f1) = sp_t(n-m,f1) + oaux(n,f1)
+                     sp_t(n-m,f1) = sp_t(n-m,f1) - oaux(n,f1+nband)
                  enddo ! over n={m+1,ntime} loop
              endif ! back if ( oaux(m,f1) > zero ) block
 
@@ -862,15 +862,15 @@
                  do n=1,m
                      schi(n-m+ntime) = schi(n-m+ntime) + oaux(n,f1+nband)
                      schi(n-m+ntime) = schi(n-m+ntime) - oaux(n,f1)
-                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) + oaux(n,f1+nband)
-                     sschi(n-m+ntime,f1) = sschi(n-m+ntime,f1) - oaux(n,f1)
+                     sp_t(n-m+ntime,f1) = sp_t(n-m+ntime,f1) + oaux(n,f1+nband)
+                     sp_t(n-m+ntime,f1) = sp_t(n-m+ntime,f1) - oaux(n,f1)
                  enddo ! over n={1,m} loop
 ! n - m \in [1, ntime - m]
                  do n=m+1,ntime
                      schi(n-m) = schi(n-m) + oaux(n,f1+nband)
                      schi(n-m) = schi(n-m) - oaux(n,f1)
-                     sschi(n-m,f1) = sschi(n-m,f1) + oaux(n,f1+nband)
-                     sschi(n-m,f1) = sschi(n-m,f1) - oaux(n,f1)
+                     sp_t(n-m,f1) = sp_t(n-m,f1) + oaux(n,f1+nband)
+                     sp_t(n-m,f1) = sp_t(n-m,f1) - oaux(n,f1)
                  enddo ! over n={m+1,ntime} loop
              endif ! back if ( oaux(m,f1+nband) > zero ) block
          enddo ! over i={1,num_try} loop
@@ -2121,9 +2121,9 @@
 !!
 !! @sub ctqmc_reduce_schi
 !!
-!! reduce the schi and sschi from all children processes
+!! reduce the schi and sp_t from all children processes
 !!
-  subroutine ctqmc_reduce_schi(schi_mpi, sschi_mpi, schi_err, sschi_err)
+  subroutine ctqmc_reduce_schi(schi_mpi, sp_t_mpi, schi_err, sp_t_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2131,7 +2131,7 @@
      use control, only : nband
      use control, only : ntime
      use control, only : nprocs
-     use context, only : schi, sschi
+     use context, only : schi, sp_t
 
      implicit none
 
@@ -2141,22 +2141,22 @@
      real(dp), intent(out) :: schi_err(ntime)
 
 ! spin-spin correlation function, orbital-resolved
-     real(dp), intent(out) :: sschi_mpi(ntime,nband)
-     real(dp), intent(out) :: sschi_err(ntime,nband)
+     real(dp), intent(out) :: sp_t_mpi(ntime,nband)
+     real(dp), intent(out) :: sp_t_err(ntime,nband)
 
-! initialize schi_mpi and sschi_mpi, schi_err and sschi_err
+! initialize schi_mpi and sp_t_mpi, schi_err and sp_t_err
      schi_mpi = zero
-     sschi_mpi = zero
+     sp_t_mpi = zero
 
      schi_err = zero
-     sschi_err = zero
+     sp_t_err = zero
 
-! build schi_mpi and sschi_mpi, collect data from all children processes
+! build schi_mpi and sp_t_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
      call mp_allreduce(schi, schi_mpi)
-     call mp_allreduce(sschi, sschi_mpi)
+     call mp_allreduce(sp_t, sp_t_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2164,20 +2164,20 @@
 # else  /* MPI */
 
      schi_mpi = schi
-     sschi_mpi = sschi
+     sp_t_mpi = sp_t
 
 # endif /* MPI */
 
 ! calculate the average
      schi_mpi = schi_mpi / real(nprocs)
-     sschi_mpi = sschi_mpi / real(nprocs)
+     sp_t_mpi = sp_t_mpi / real(nprocs)
 
-! build schi_err and sschi_err, collect data from all children processes
+! build schi_err and sp_t_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
      call mp_allreduce((schi - schi_mpi)**2, schi_err)
-     call mp_allreduce((sschi - sschi_mpi)**2, sschi_err)
+     call mp_allreduce((sp_t - sp_t_mpi)**2, sp_t_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2187,7 +2187,7 @@
 ! calculate standard deviation
      if ( nprocs > 1 ) then
          schi_err = sqrt( schi_err / real( nprocs * ( nprocs - 1 ) ) )
-         sschi_err = sqrt( sschi_err / real( nprocs * ( nprocs - 1 ) ) )
+         sp_t_err = sqrt( sp_t_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
