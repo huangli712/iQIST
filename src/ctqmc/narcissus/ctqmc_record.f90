@@ -2432,20 +2432,12 @@
      h2pw_mpi = czero
      h2pw_err = czero
 
-! build g2_re_mpi and g2_im_mpi, collect data from all children processes
-! build h2_re_mpi and h2_im_mpi, collect data from all children processes
+! build g2pw_mpi and h2pw_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(g2_re, g2_re_mpi)
-     call mp_allreduce(g2_im, g2_im_mpi)
-
-! block until all processes have reached here
-     call mp_barrier()
-
-! collect data
-     call mp_allreduce(h2_re, h2_re_mpi)
-     call mp_allreduce(h2_im, h2_im_mpi)
+     call mp_allreduce(g2pw, g2pw_mpi)
+     call mp_allreduce(h2pw, h2pw_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
