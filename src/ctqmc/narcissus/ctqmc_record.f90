@@ -1169,8 +1169,8 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
-     use context, only : g2_re, g2_im
-     use context, only : h2_re, h2_im
+     use context, only : g2pw
+     use context, only : h2pw
      use context, only : rank, pref
      use context, only : mmat
 
