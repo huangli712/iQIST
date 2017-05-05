@@ -2403,14 +2403,15 @@
 !!
   subroutine ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : nprocs
-     use context, only : g2_re, g2_im
-     use context, only : h2_re, h2_im
+     use context, only : g2pw
+     use context, only : h2pw
 
      implicit none
 
