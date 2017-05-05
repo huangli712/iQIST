@@ -63,15 +63,16 @@
   end subroutine ctqmc_try_warming
 
 !!
-!! @sub ctqmc_walking
+!! @sub ctqmc_try_walking
 !!
 !! visit the perturbation expansion diagrams randomly
 !!
-  subroutine ctqmc_walking(cstep)
+  subroutine ctqmc_try_walking(cstep)
      use constants, only : dp
      use spring, only : spring_sfmt_stream
 
-     use control, only : nflip, nclean
+     use control, only : nflip
+     use control, only : nclean
 
      implicit none
 
@@ -118,7 +119,7 @@
      endif ! back if ( nclean > 0 .and. mod(cstep, nclean) == 0 ) block
 
      return
-  end subroutine ctqmc_walking
+  end subroutine ctqmc_try_walking
 
 !!
 !! @sub ctqmc_warning
