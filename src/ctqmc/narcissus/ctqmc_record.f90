@@ -2399,9 +2399,9 @@
 !!
 !! @sub ctqmc_reduce_twop
 !!
-!! reduce the g2/h2_re_mpi and g2/h2_im_mpi from all children processes
+!! reduce the g2pw and h2pw from all children processes
 !!
-  subroutine ctqmc_reduce_twop(g2_re_mpi, g2_im_mpi, h2_re_mpi, h2_im_mpi)
+  subroutine ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
