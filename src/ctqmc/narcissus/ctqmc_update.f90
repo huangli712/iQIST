@@ -1,8 +1,8 @@
 !!!-----------------------------------------------------------------------
 !!! project : narcissus
-!!! program : ctqmc_warming
-!!!           ctqmc_walking
-!!!           ctqmc_warning     <<<---
+!!! program : ctqmc_try_warming
+!!!           ctqmc_try_walking
+!!!           ctqmc_try_warning <<<---
 !!!           ctqmc_insert_kink
 !!!           ctqmc_remove_kink
 !!!           ctqmc_lshift_kink
@@ -13,7 +13,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           04/26/2017 by li huang (last modified)
+!!!           05/05/2017 by li huang (last modified)
 !!! purpose : basic update actions for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they are called by ctqmc_impurity_solver()
@@ -26,12 +26,12 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_warming
+!! @sub ctqmc_try_warming
 !!
 !! perform thermalization or warmup on the perturbation expansion series
 !! to achieve thermodynamics stable equilibrium state
 !!
-  subroutine ctqmc_warming()
+  subroutine ctqmc_try_warming()
      use constants, only : zero
 
      use control, only : ntherm
@@ -49,10 +49,10 @@
 
 ! warm up the diagram series
      do i=1,ntherm
-         call ctqmc_walking(i)
+         call ctqmc_try_walking(i)
      enddo ! over i={1,ntherm} loop
 
-! reinit statistics variables
+! reset statistics variables
      ins_t = zero; ins_a = zero; ins_r = zero
      rmv_t = zero; rmv_a = zero; rmv_r = zero
      lsh_t = zero; lsh_a = zero; lsh_r = zero
@@ -60,7 +60,7 @@
      rfl_t = zero; rfl_a = zero; rfl_r = zero
 
      return
-  end subroutine ctqmc_warming
+  end subroutine ctqmc_try_warming
 
 !!
 !! @sub ctqmc_walking
