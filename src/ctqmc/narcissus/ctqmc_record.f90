@@ -880,12 +880,12 @@
   end subroutine ctqmc_record_sp_t
 
 !!
-!! @sub ctqmc_record_sfom
+!! @sub ctqmc_record_sp_w
 !!
 !! record the spin-spin correlation function
 !! in matsubara frequency axis
 !!
-  subroutine ctqmc_record_sfom()
+  subroutine ctqmc_record_sp_w()
      use constants, only : dp, zero, one, two, pi, czi
 
      use control, only : issus
@@ -995,7 +995,7 @@
      enddo ! over f1={1,nband} loop
 
      return
-  end subroutine ctqmc_record_sfom
+  end subroutine ctqmc_record_sp_w
 
 !!
 !! @sub ctqmc_record_cchi
