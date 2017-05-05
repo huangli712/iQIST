@@ -17,7 +17,7 @@
 !!!           ctqmc_dump_kmat
 !!!           ctqmc_dump_lrmm
 !!!           ctqmc_dump_szpw <<<---
-!!!           ctqmc_dump_schi
+!!!           ctqmc_dump_sp_t
 !!!           ctqmc_dump_sfom
 !!!           ctqmc_dump_ochi
 !!!           ctqmc_dump_ofom <<<---
@@ -924,12 +924,12 @@
 !!========================================================================
 
 !!
-!! @sub ctqmc_dump_schi
+!! @sub ctqmc_dump_sp_t
 !!
 !! write out the spin-spin correlation function
 !! in imaginary time space
 !!
-  subroutine ctqmc_dump_schi(schi, sschi, serr, sserr)
+  subroutine ctqmc_dump_sp_t(schi, sschi, serr, sserr)
      use constants, only : dp, mytmp
 
      use control, only : issus
@@ -988,7 +988,7 @@
      close(mytmp)
 
      return
-  end subroutine ctqmc_dump_schi
+  end subroutine ctqmc_dump_sp_t
 
 !!
 !! @sub ctqmc_dump_sfom
