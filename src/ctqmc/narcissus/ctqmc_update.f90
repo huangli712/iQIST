@@ -517,17 +517,18 @@
          RETURN
      endif ! back if ( ckink == 0 ) block
 
-! at first, we select iso randomly, and then obtain tau_start1. according
-! to the existing segments, we determine tau_start2 and related index isn,
-! finally ring is evaluated.
+! try to generate new configuration
+! (1) at first, we select iso randomly
+! (2) obtain tau_start1 according to iso
+! (3) based on the existing segments, we determine tau_start2 and related
+!     index isn
+! (4) finally ring is evaluated.
      call cat_lshift_flavor(flvr, iso, isn, ring, tau_start1, tau_start2)
 
-! calculate the transition ratio between old and new configurations,
-! for the local trace part
+! calculate the transition ratio for the local trace part
      call cat_lshift_ztrace(flvr, ring, tau_start1, tau_start2, trace_ratio)
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part
+! calculate the transition ratio for the determinant part
      call cat_lshift_detrat(flvr, iso, tau_start1, tau_start2, deter_ratio)
 
 ! calculate the transition probability for left shift old segment or anti-segment
