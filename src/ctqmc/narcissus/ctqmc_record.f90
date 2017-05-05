@@ -2402,7 +2402,7 @@
 !! reduce the g2pw and h2pw from all children processes
 !!
   subroutine ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
-     use constants, only : dp, zero
+     use constants, only : dp, czero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2420,11 +2420,9 @@
      complex(dp), intent(out) :: g2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: g2pw_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! two-particle green's function, real part
-     real(dp), intent(out) :: h2_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! two-particle green's function, imaginary part
-     real(dp), intent(out) :: h2_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+! irreducible vertex function
+     complex(dp), intent(out) :: h2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(out) :: h2pw_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! initialize g2_re_mpi and g2_im_mpi
      g2_re_mpi = zero
