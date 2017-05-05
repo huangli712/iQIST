@@ -1908,12 +1908,12 @@
 
 ! external arguments
 ! number of operators
-     real(dp), intent(out) :: kmat_mpi(norbs)
-     real(dp), intent(out) :: kmat_err(norbs)
+     real(dp), intent(out) :: knop_mpi(norbs)
+     real(dp), intent(out) :: knop_err(norbs)
 
 ! square of number of operators
-     real(dp), intent(out) :: kkmat_mpi(norbs,norbs)
-     real(dp), intent(out) :: kkmat_err(norbs,norbs)
+     real(dp), intent(out) :: kmat_mpi(norbs,norbs)
+     real(dp), intent(out) :: kmat_err(norbs,norbs)
 
 ! initialize kmat_mpi and kkmat_mpi, kmat_err and kkmat_err
      kmat_mpi = zero
