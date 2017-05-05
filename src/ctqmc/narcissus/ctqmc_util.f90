@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/02/2017 by li huang (last modified)
+!!!           05/05/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -728,9 +728,9 @@
 !!
 !! @sub ctqmc_make_umat
 !!
-!! to build density-density two-fermions Coulomb interaction matrix: uumat
+!! to build density-density two-fermions Coulomb interaction matrix: umat
 !!
-  subroutine ctqmc_make_umat(uumat)
+  subroutine ctqmc_make_umat(umat)
      use constants, only : dp, zero
 
      use control, only : nband, norbs
@@ -740,7 +740,7 @@
 
 ! external arguments
 ! Coulomb interaction matrix
-     real(dp), intent(out) :: uumat(norbs,norbs)
+     real(dp), intent(out) :: umat(norbs,norbs)
 
 ! local variables
 ! loop index
@@ -753,7 +753,7 @@
      real(dp) :: ut(nband*(norbs-1))
 
 ! initialize it
-     uumat = zero
+     umat = zero
 
 ! calculate it
      k = 0
@@ -771,8 +771,8 @@
                  ut(k) = Uc - 3.0_dp * Jz
              endif ! back if ( i <= nband .and. j > nband ) block
 
-             uumat(i,j) = ut(k)
-             uumat(j,i) = ut(k)
+             umat(i,j) = ut(k)
+             umat(j,i) = ut(k)
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
 
@@ -789,7 +789,7 @@
 !! to shift the Coulomb interaction matrix and the chemical potential if
 !! retarded interaction is considered
 !!
-  subroutine ctqmc_make_lift(uumat, ssign)
+  subroutine ctqmc_make_lift(umat, ssign)
      use constants, only : dp, two
 
      use control, only : norbs
@@ -799,7 +799,7 @@
 
 ! external arguments
 ! Coulomb interaction matrix
-     real(dp), intent(inout) :: uumat(norbs,norbs)
+     real(dp), intent(inout) :: umat(norbs,norbs)
 
 ! sign for the shift, it should be 1.0_dp or -1.0_dp
      real(dp), intent(in)    :: ssign
@@ -822,8 +822,8 @@
 ! shift the Coulomb interaction matrix (skip the diagonal elements)
      do i=1,norbs-1
          do j=i+1,norbs
-             uumat(i,j) = uumat(i,j) - shift
-             uumat(j,i) = uumat(j,i) - shift
+             umat(i,j) = umat(i,j) - shift
+             umat(j,i) = umat(j,i) - shift
          enddo ! over j={i+1,norbs} loop
      enddo ! over i={1,norbs-1} loop
 
@@ -1131,7 +1131,7 @@
      use control, only : norbs
      use context, only : index_e
      use context, only : time_e
-     use context, only : rank, pref, uumat
+     use context, only : rank, pref, umat
 
      implicit none
 
@@ -1158,7 +1158,7 @@
 ! calculate contribution from static interaction
              do f2=1,norbs
                  call cat_occupy_status(f2, time_e( index_e(it, f1), f1 ), occu)
-                 pref(it,f1) = pref(it,f1) + half * ( uumat(f1,f2) + uumat(f2,f1) ) * occu
+                 pref(it,f1) = pref(it,f1) + half * ( umat(f1,f2) + umat(f2,f1) ) * occu
              enddo ! over f2={1,norbs} loop
 
 ! calculate contribution from retarded (dynamic) interaction
@@ -1262,7 +1262,7 @@
      !use control, only : myid, master
      use context, only : tmesh, rmesh
      use context, only : prob
-     use context, only : eimp, uumat
+     use context, only : eimp, umat
      use context, only : gtau, ftau
      use context, only : grnf, frnf
      use context, only : sig2
@@ -1347,7 +1347,7 @@
          do j=1,norbs-1
              do k=j+1,norbs
                  if ( basis(i,j) == 1 .and. basis(i,k) == 1 ) then
-                     eaux(i) = eaux(i) + uumat(j,k)
+                     eaux(i) = eaux(i) + umat(j,k)
                  endif ! back if ( basis(i,j) == 1 .and. basis(i,k) == 1 ) block
              enddo ! over k={j+1,norbs} loop
          enddo ! over j={1,norbs-1} loop
