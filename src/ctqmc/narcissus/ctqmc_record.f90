@@ -2428,9 +2428,9 @@
      g2pw_mpi = czero
      g2pw_err = czero
 
-! initialize h2_re_mpi and h2_im_mpi
-     h2_re_mpi = zero
-     h2_im_mpi = zero
+! initialize h2pw_mpi and h2pw_err
+     h2pw_mpi = czero
+     h2pw_err = czero
 
 ! build g2_re_mpi and g2_im_mpi, collect data from all children processes
 ! build h2_re_mpi and h2_im_mpi, collect data from all children processes
