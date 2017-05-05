@@ -522,7 +522,7 @@
 ! (2) obtain tau_start1 according to iso
 ! (3) based on the existing segments, we determine tau_start2 and related
 !     index isn
-! (4) finally ring is evaluated.
+! (4) finally ring is evaluated
      call cat_lshift_flavor(flvr, iso, isn, ring, tau_start1, tau_start2)
 
 ! calculate the transition ratio for the local trace part
@@ -620,9 +620,12 @@
          RETURN
      endif ! back if ( ckink == 0 ) block
 
-! at first, we select ieo randomly, and then obtain tau_end1. according
-! to the existing segments, we determine tau_end2 and related index ien,
-! finally ring is evaluated.
+! try to generate new configuration
+! (1) at first, we select ieo randomly
+! (2) obtain tau_end1 according to ieo
+! (3) based on the existing segments, we determine tau_end2 and related
+!     index ien
+! (4) finally ring is evaluated
      call cat_rshift_flavor(flvr, ieo, ien, ring, tau_end1, tau_end2)
 
 ! calculate the transition ratio between old and new configurations,
