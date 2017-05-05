@@ -8,7 +8,7 @@
 !!!           ctqmc_record_ftau
 !!!           ctqmc_record_grnf <<<---
 !!!           ctqmc_record_kmat
-!!!           ctqmc_record_lmat
+!!!           ctqmc_record_lrmm
 !!!           ctqmc_record_szpw <<<---
 !!!           ctqmc_record_schi
 !!!           ctqmc_record_sfom
@@ -622,11 +622,11 @@
   end subroutine ctqmc_record_kmat
 
 !!
-!! @sub ctqmc_record_lmat
+!! @sub ctqmc_record_lrmm
 !!
 !! record the fidelity susceptibility
 !!
-  subroutine ctqmc_record_lmat()
+  subroutine ctqmc_record_lrmm()
      use constants, only : dp, zero, one, two
 
      use control, only : isobs
@@ -694,7 +694,7 @@
      enddo ! over flvr={1,norbs} loop
 
      return
-  end subroutine ctqmc_record_lmat
+  end subroutine ctqmc_record_lrmm
 
 !!
 !! @sub ctqmc_record_szpw
