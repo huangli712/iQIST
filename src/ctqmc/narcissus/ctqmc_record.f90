@@ -1902,7 +1902,7 @@
 
      use control, only : norbs
      use control, only : nprocs
-     use context, only : kmat, kkmat
+     use context, only : knop, kmat
 
      implicit none
 
