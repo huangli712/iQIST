@@ -756,9 +756,9 @@
      szpw = zero
 
 ! init spin-spin correlation function
-     schi  = zero
-     sschi = zero
-     ssfom = zero
+     schi = zero
+     sp_t = zero
+     sp_w = zero
 
 ! init charge-charge correlation function
      ochi  = zero
