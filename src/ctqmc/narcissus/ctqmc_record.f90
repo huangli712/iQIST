@@ -1943,12 +1943,12 @@
      knop_mpi = knop_mpi / real(nprocs)
      kmat_mpi = kmat_mpi / real(nprocs)
 
-! build kmat_err and kkmat_err, collect data from all children processes
+! build knop_err and kmat_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
+     call mp_allreduce((knop - knop_mpi)**2, knop_err)
      call mp_allreduce((kmat - kmat_mpi)**2, kmat_err)
-     call mp_allreduce((kkmat - kkmat_mpi)**2, kkmat_err)
 
 ! block until all processes have reached here
      call mp_barrier()
