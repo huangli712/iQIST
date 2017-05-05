@@ -111,35 +111,35 @@
      real(dp), allocatable :: paux_mpi(:)
      real(dp), allocatable :: paux_err(:)
 
-! impurity occupation number
+! impurity occupation number, < n_i >
      real(dp), allocatable :: nimp_mpi(:)
      real(dp), allocatable :: nimp_err(:)
 
-! impurity double occupation number matrix
+! impurity double occupation number matrix, < n_i n_j >
      real(dp), allocatable :: nmat_mpi(:,:)
      real(dp), allocatable :: nmat_err(:,:)
 
-! number of operators < k >
+! number of operators, < k >
      real(dp), allocatable :: knop_mpi(:)
      real(dp), allocatable :: knop_err(:)
 
-! square of number of operators < k^2 >
+! crossing product of k_i and k_j, < k_i k_j >
      real(dp), allocatable :: kmat_mpi(:,:)
      real(dp), allocatable :: kmat_err(:,:)
 
-! number of operators at left half axis < k_l >
+! number of operators at left half axis, < k_l >
      real(dp), allocatable :: lnop_mpi(:)
      real(dp), allocatable :: lnop_err(:)
 
-! number of operators at right half axis < k_r >
+! number of operators at right half axis, < k_r >
      real(dp), allocatable :: rnop_mpi(:)
      real(dp), allocatable :: rnop_err(:)
 
-! used to evaluate fidelity susceptibility < k_l k_r >
+! crossing product of k_l and k_r, < k_l k_r >
      real(dp), allocatable :: lrmm_mpi(:,:)
      real(dp), allocatable :: lrmm_err(:,:)
 
-! powers of local magnetization
+! powers of local magnetization, < S^n_z>
      real(dp), allocatable :: szpw_mpi(:,:)
      real(dp), allocatable :: szpw_err(:,:)
 
@@ -271,8 +271,8 @@
 !!>>> initializing quantum impurity solver                             <<<
 !!========================================================================
 
-! init the continuous time quantum Monte Carlo quantum impurity solver,
-! the key variables and arrays should be prepared here
+! init or reset the continuous time quantum Monte Carlo quantum impurity
+! solver, the key variables and arrays should be prepared here
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver initializing'
      endif ! back if ( myid == master ) block
