@@ -998,12 +998,12 @@
   end subroutine ctqmc_record_sp_w
 
 !!
-!! @sub ctqmc_record_cchi
+!! @sub ctqmc_record_ch_t
 !!
 !! record the charge-charge correlation function
 !! in imaginary time axis
 !!
-  subroutine ctqmc_record_cchi()
+  subroutine ctqmc_record_ch_t()
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
 
@@ -1067,7 +1067,7 @@
      enddo ! over f1={1,norbs} loop
 
      return
-  end subroutine ctqmc_record_cchi
+  end subroutine ctqmc_record_ch_t
 
 !!
 !! @sub ctqmc_record_ofom
