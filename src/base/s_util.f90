@@ -17,7 +17,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 07/10/2014 by li huang (created)
-!!!           04/19/2017 by li huang (last modified)
+!!!           05/05/2017 by li huang (last modified)
 !!! purpose : these subroutines are used to provide some useful facilities
 !!!           including string manipulation, date time information, etc.
 !!! status  : unstable
@@ -653,7 +653,7 @@
      if ( msec > 0 ) then
          write(mystd,'(f5.2, " s ")', advance = 'no') msec
      endif ! back if ( msec > 0 ) block
-     write(mystd,'("in current iteration.")')
+     write(mystd,'("in current iteration")')
 
 ! run time for total iteration
      nday = int( time_niter / 86400 )
@@ -679,7 +679,7 @@
      if ( nsec > 0 ) then
          write(mystd,'(f5.2, " s ")', advance = 'no') nsec
      endif ! back if ( nsec > 0 ) block
-     write(mystd,'("in total iteration.")')
+     write(mystd,'("in total iteration")')
 
      return
   end subroutine s_time_analyzer
