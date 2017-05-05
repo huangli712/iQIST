@@ -9,7 +9,8 @@
 !!!           05/05/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
-!!!           solver. they are the most important subroutines
+!!!           solver. they implement the initialization, thermalization,
+!!!           random walk, measurement, and finalization algorithms
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -30,16 +31,16 @@
      use control, only : cname               ! code name
                                              !
      use control, only : isobs               ! control physical observables
-     use control, only : issus               ! control sp/ch susceptibility
+     use control, only : issus               ! control spin and charge suscept.
      use control, only : isvrt               ! control two-particle quantities
                                              !
-     use control, only : nband, norbs, ncfgs ! size of model Hamiltonian
+     use control, only : nband, norbs, ncfgs ! size of model hamiltonian
      use control, only : mkink               ! perturbation expansion order
      use control, only : mfreq               ! matsubara frequency
      use control, only : nffrq, nbfrq        ! fermionic and bosonic frequencies
-     use control, only : ntime               ! imaginary time
+     use control, only : ntime               ! imaginary time slice
      use control, only : nsweep, nwrite      ! monte carlo sampling
-     use control, only : nmonte, ncarlo      ! interval for monte carlo sampling
+     use control, only : nmonte, ncarlo      ! interval for measurement
      use control, only : myid, master        ! mpi environment
                                              !
      use context, only : hist                ! histogram
@@ -58,7 +59,7 @@
      use context, only : h2pw                ! irreducible vertex function
      use context, only : p2pw                ! pairing susceptibility
                                              !
-     use context, only : symm                ! symmetry
+     use context, only : symm                ! symmetry vector
      use context, only : gtau, ftau          ! imaginary time green's function
      use context, only : grnf, frnf          ! matsubara green's function
      use context, only : sig2                ! matsubara self-energy function
@@ -110,7 +111,7 @@
      real(dp), allocatable :: paux_mpi(:)
      real(dp), allocatable :: paux_err(:)
 
-! impurity occupation number matrix
+! impurity occupation number
      real(dp), allocatable :: nimp_mpi(:)
      real(dp), allocatable :: nimp_err(:)
 
