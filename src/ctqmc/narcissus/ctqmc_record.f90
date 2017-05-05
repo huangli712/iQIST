@@ -2424,9 +2424,9 @@
      complex(dp), intent(out) :: h2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: h2pw_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! initialize g2_re_mpi and g2_im_mpi
-     g2_re_mpi = zero
-     g2_im_mpi = zero
+! initialize g2pw_mpi and g2pw_err
+     g2pw_mpi = czero
+     g2pw_err = czero
 
 ! initialize h2_re_mpi and h2_im_mpi
      h2_re_mpi = zero
