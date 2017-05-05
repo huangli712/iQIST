@@ -275,12 +275,12 @@
 
 ! evaluate occupation matrix: < n_i >
      do flvr=1,norbs
-         nmat(flvr) = nmat(flvr) + sgmt(flvr) / beta
+         nimp(flvr) = nimp(flvr) + sgmt(flvr) / beta
      enddo ! over flvr={1,norbs} loop
 
 ! evaluate double occupation matrix: < n_i n_j >
      do flvr=1,norbs
-         nnmat(flvr,:) = nnmat(flvr,:) + ovlp(flvr,:) / beta
+         nmat(flvr,:) = nmat(flvr,:) + ovlp(flvr,:) / beta
      enddo ! over flvr={1,norbs} loop
 
      return
