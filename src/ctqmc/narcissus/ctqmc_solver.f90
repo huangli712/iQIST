@@ -292,7 +292,7 @@
 !!========================================================================
 
 ! init the continuous time quantum Monte Carlo quantum impurity solver
-! further, retrieving the time series information produced by previous run
+! further, retrieving the diagrammatic series produced by previous run
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver retrieving'
      endif ! back if ( myid == master ) block
@@ -342,7 +342,7 @@
 ! record start time
          call cpu_time(time_begin)
 
-         MC_BLOCK: do j=1,nwrite
+         MC_WRITE: do j=1,nwrite
 
 !!========================================================================
 !!>>> visiting perturbation expansion series                           <<<
@@ -358,10 +358,11 @@
 !!>>> sampling the physical observables 1 (always)                     <<<
 !!========================================================================
 
+! the following physical observables are always measured
 ! record the histogram for perturbation expansion series
              call ctqmc_record_hist()
 
-! record the probability of eigenstates
+! record the probability of atomic eigenstates
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_prob()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
@@ -371,7 +372,7 @@
                  call ctqmc_record_paux()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
 
-! record the impurity (double) occupation number matrix
+! record the impurity (double) occupation number (matrix)
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_nmat()
              endif ! back if ( mod(cstep, nmonte) == 0 ) block
@@ -452,7 +453,7 @@
                  call ctqmc_record_pair()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 2) ) block
 
-         enddo MC_BLOCK ! over j={1,nwrite} loop
+         enddo MC_WRITE ! over j={1,nwrite} loop
 
 !!========================================================================
 !!>>> reporting quantum impurity solver                                <<<
