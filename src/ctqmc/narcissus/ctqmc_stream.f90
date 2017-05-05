@@ -748,12 +748,12 @@
      kmat = zero
 
 ! init fidelity susceptibility
-     lmat  = zero
-     rmat  = zero
-     lrmat = zero
+     lnop = zero
+     rnop = zero
+     lrmm = zero
 
 ! init powers of local magnetization
-     szpow = zero
+     szpw = zero
 
 ! init spin-spin correlation function
      schi  = zero
