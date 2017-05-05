@@ -42,7 +42,7 @@
 !! if isscf == 1:
 !!     one-shot non-self-consistent scheme, usually used in the density
 !!     functional theory plus dynamical mean field theory case or used
-!!     to solve the quantum impurity model
+!!     to solve the quantum impurity model once
 !!
 !! if isscf == 2:
 !!     self-consistent scheme, used in the dynamical mean field theory
@@ -120,8 +120,8 @@
 !!     without worm algorithm, fast but unreliable
 !!
 !! if iswor == 2:
-!!     with worm algorithm, slow but reliable. note that only selected
-!!     physical observables support this algorithm
+!!     with worm algorithm, slow but more reliable. note that only some
+!!     selected physical observables support this algorithm
 !!
      integer, public, save :: iswor  = 1
 
@@ -166,10 +166,10 @@
 !!     calculate kinetic energy fluctuation < k^2 > - < k >^2
 !!
 !! if p == 3:
-!!     calculate fidelity susceptibility
+!!     calculate fidelity susceptibility < k_l k_r > - < k_l > < k_r >
 !!
 !! if p == 4:
-!!     calculate < S^n_z >, powers of local magnetization
+!!     calculate powers of local magnetization < S^n_z >
 !!
 !! example:
 !!   ( 1 1 1 0 1 0 1 0 1)_2
@@ -349,7 +349,7 @@
 !!
 !! number of matsubara frequencies sampled by continuous time quantum
 !! Monte Carlo quantum impurity solver directly. the values for the other
-!! points should be evaluated by using the numerical or analytical tricks
+!! points should be evaluated by using the other tricks
 !!
      integer, public, save :: nfreq  = 128
 
@@ -375,7 +375,7 @@
 !! in this code, nowadays the following flip schemes are supported:
 !!
 !! if nflip == 0:
-!!     means infinite long period to do flip
+!!     means infinite long period to do flip. do not do the spin flip
 !!
 !! if nflip >  0:
 !!     flip intra-orbital spins one by one (90%) and globally (10%)
@@ -424,7 +424,7 @@
 !! @var ncarlo
 !!
 !! how often to sample the physical observables
-!! it is reserved for the worm algorithm
+!! it is reserved for the future
 !!
      integer, public, save :: ncarlo = 10
 
@@ -531,14 +531,14 @@
 !!
 !! @var part
 !!
-!! coupling parameter t for Hubbard model
+!! hopping parameter t for Hubbard model
 !!
      real(dp), public, save :: part  = 0.50_dp
 
 !!
 !! @var alpha
 !!
-!! mixing parameter for dynamical mean field theory engine
+!! mixing factor for dynamical mean field theory self-consistent engine
 !!
      real(dp), public, save :: alpha = 0.70_dp
 
