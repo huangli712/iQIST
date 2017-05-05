@@ -540,9 +540,8 @@
 ! if update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the mmat matrix and gmat matrix, respectively,
-! cat_lshift_action() subroutine is invoked internally to update the
-! perturbation expansion series
+! update the mmat matrix and gmat matrix, respectively
+! the perturbation expansion series are updated as well
          call cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
 
 ! update stts for current flavor channel
@@ -550,7 +549,7 @@
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! update the lshift statistics
+! update monte carlo statistics
      lsh_t = lsh_t + one
      if ( pass .eqv. .true. ) then
          lsh_a = lsh_a + one
