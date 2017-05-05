@@ -1330,7 +1330,7 @@
 ! used to store the element of mmat matrix
      real(dp) :: maux
 
-! dummy complex(dp) variables, used to calculate the ps_re and ps_im
+! dummy complex(dp) variables, used to calculate the p2pw
      complex(dp) :: cmeas
 
 ! dummy complex(dp) arrays, used to store the intermediate results
@@ -1373,7 +1373,7 @@
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 !$OMP END DO
 
-! calculate ps_re and ps_im
+! calculate p2pw
 !$OMP DO PRIVATE (f1, f2, cmeas, wbn, w4n, w3n, w2n, w1n)
      CTQMC_ORBIT1_LOOP: do f1=1,norbs
          CTQMC_ORBIT2_LOOP: do f2=1,f1
@@ -1388,8 +1388,7 @@
                          if ( f1 /= f2 ) then
                              cmeas = cmeas + g2aux(w1n,w4n,f1) * g2aux(nffrq-w2n+1,nffrq-w3n+1,f2)
                          endif ! back if ( f1 == f2 ) block
-                         ps_re(w3n,w2n,wbn,f2,f1) = ps_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
-                         ps_im(w3n,w2n,wbn,f2,f1) = ps_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                         p2pw(w3n,w2n,wbn,f2,f1) = p2pw(w3n,w2n,wbn,f2,f1) + cmeas / beta
                      enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
                  enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
