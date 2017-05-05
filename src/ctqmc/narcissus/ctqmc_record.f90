@@ -2461,15 +2461,16 @@
 !!
 !! reduce the p2pw from all children processes
 !!
-  subroutine ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
+  subroutine ctqmc_reduce_pair(p2pw_mpi, p2pw_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : nprocs
-     use context, only : ps_re, ps_im
+     use context, only : p2pw
 
      implicit none
 
