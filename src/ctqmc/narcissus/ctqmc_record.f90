@@ -1911,16 +1911,16 @@
      real(dp), intent(out) :: knop_mpi(norbs)
      real(dp), intent(out) :: knop_err(norbs)
 
-! square of number of operators
+! crossing product of k_i and k_j
      real(dp), intent(out) :: kmat_mpi(norbs,norbs)
      real(dp), intent(out) :: kmat_err(norbs,norbs)
 
-! initialize kmat_mpi and kkmat_mpi, kmat_err and kkmat_err
+! initialize knop_mpi and kmat_mpi, knop_err and kmat_err
+     knop_mpi = zero
      kmat_mpi = zero
-     kkmat_mpi = zero
 
+     knop_err = zero
      kmat_err = zero
-     kkmat_err = zero
 
 ! build kmat_mpi and kkmat_mpi, collect data from all children processes
 # if defined (MPI)
