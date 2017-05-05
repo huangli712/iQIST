@@ -446,6 +446,7 @@
 !!>>> sampling the physical observables 5 (optional)                   <<<
 !!========================================================================
 
+! the following physical observables are measured optionally (by isvrt)
 ! record the two-particle green's function
              if ( mod(cstep, nmonte) == 0 .and. btest(isvrt, 1) ) then
                  call ctqmc_record_twop()
@@ -465,6 +466,11 @@
 ! it is time to write out the statistics results
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_runtime(iter, cstep)
+         endif ! back if ( myid == master ) block
+
+! write out the snapshot for the current configuration if necessary
+         if ( myid == master ) then ! only master node can do it
+             call ctqmc_dump_diag(iter, cstep)
          endif ! back if ( myid == master ) block
 
 !!========================================================================
@@ -511,11 +517,6 @@
 
 ! check the status at first
          call ctqmc_warning(cflag)
-
-! write out the snapshot for the current diagram configuration
-         if ( myid == master ) then
-             call ctqmc_dump_diag(iter, cstep)
-         endif ! back if ( myid == master ) block
 
 !!========================================================================
 !!>>> timing quantum impurity solver                                   <<<
@@ -639,6 +640,7 @@
      p2pw_err = p2pw_err * real(nmonte) / real(nsweep)
 
 ! try to evaluate the impurity green's function and self-energy function
+! grnf, frnf, and sig2 would be updated there
      call ctqmc_make_hub2()
 
 !!========================================================================
@@ -653,6 +655,7 @@
      call ctqmc_symm_gtau(symm, gtau)
      call ctqmc_symm_gtau(symm, gtau_err)
      call ctqmc_symm_grnf(symm, grnf)
+     call ctqmc_symm_grnf(symm, grnf_err)
 
 ! symmetrize the auxiliary correlation function over spin or over bands
      call ctqmc_symm_gtau(symm, ftau)
