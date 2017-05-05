@@ -1940,8 +1940,8 @@
 # endif /* MPI */
 
 ! calculate the average
+     knop_mpi = knop_mpi / real(nprocs)
      kmat_mpi = kmat_mpi / real(nprocs)
-     kkmat_mpi = kkmat_mpi / real(nprocs)
 
 ! build kmat_err and kkmat_err, collect data from all children processes
 # if defined (MPI)
