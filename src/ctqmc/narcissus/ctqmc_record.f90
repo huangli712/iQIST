@@ -609,7 +609,7 @@
 ! since rank means the number of operator pairs,
 ! so we have to multiply it with two
      do i=1,norbs
-         kmat(i) = kmat(i) + rank(i) * 2.0_dp
+         knop(i) = knop(i) + rank(i) * 2.0_dp
      enddo ! over i={1,norbs} loop
 
      do i=1,norbs
