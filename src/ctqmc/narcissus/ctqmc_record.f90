@@ -2444,11 +2444,8 @@
 
 # else  /* MPI */
 
-     g2_re_mpi = g2_re
-     g2_im_mpi = g2_im
-
-     h2_re_mpi = h2_re
-     h2_im_mpi = h2_im
+     g2pw_mpi = g2pw
+     h2pw_mpi = h2pw
 
 # endif /* MPI */
 
