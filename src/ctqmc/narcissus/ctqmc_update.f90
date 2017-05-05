@@ -628,26 +628,23 @@
 ! (4) finally ring is evaluated
      call cat_rshift_flavor(flvr, ieo, ien, ring, tau_end1, tau_end2)
 
-! calculate the transition ratio between old and new configurations,
-! for the local trace part
+! calculate the transition ratio for the local trace part
      call cat_rshift_ztrace(flvr, ring, tau_end1, tau_end2, trace_ratio)
 
-! calculate the transition ratio between old and new configurations,
-! for the determinant part
+! calculate the transition ratio for the determinant part
      call cat_rshift_detrat(flvr, ieo, tau_end1, tau_end2, deter_ratio)
 
-! calculate the transition probability for right shift old segment or anti-segment
+! calculate the transition probability
      p = deter_ratio * trace_ratio
 
-! determine pass, using important sampling algorithm (metropolis algorithm)
+! determine pass using metropolis algorithm
      pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
 ! if update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the mmat matrix and gmat matrix, respectively,
-! cat_rshift_action() subroutine is invoked internally to update the
-! perturbation expansion series
+! update the mmat matrix and gmat matrix, respectively
+! the perturbation expansion series are updated as well
          call cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
 
 ! update stts for current flavor channel
@@ -655,7 +652,7 @@
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! update the rshift statistics
+! update monte carlo statistics
      rsh_t = rsh_t + one
      if ( pass .eqv. .true. ) then
          rsh_a = rsh_a + one
