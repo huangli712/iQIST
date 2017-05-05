@@ -1084,7 +1084,7 @@
      use control, only : beta
      use context, only : index_s, index_e
      use context, only : time_s, time_e
-     use context, only : oofom
+     use context, only : ch_w
      use context, only : rank
 
      implicit none
@@ -1129,7 +1129,7 @@
          call cat_occupy_status(f1, zero, oaux(f1))
      enddo ! over i={1,norbs} loop
 
-! calculate oofom, it must be real
+! calculate ch_w, it must be real
      do f1=1,norbs
          do f2=1,f1
              if ( oaux(f2) > zero ) then
@@ -1140,11 +1140,11 @@
                      expe = exp( dw * taue )
                      call s_cumprod_z(nbfrq, exps, exps)
                      call s_cumprod_z(nbfrq, expe, expe)
-                     oofom(:,f2,f1) = oofom(:,f2,f1) + real( ( expe - exps ) / mesh )
+                     ch_w(:,f2,f1) = ch_w(:,f2,f1) + real( ( expe - exps ) / mesh )
                  enddo ! over do it={1,rank(f1)} loop
              endif ! back if ( oaux(f2) > zero ) block
              if ( f1 /= f2 ) then ! consider the symmetry
-                 oofom(:,f1,f2) = oofom(:,f2,f1)
+                 ch_w(:,f1,f2) = ch_w(:,f2,f1)
              endif ! back if ( f1 /= f2 ) block
          enddo ! over f2={1,f1} loop
      enddo ! over f1={1,norbs} loop
@@ -2334,9 +2334,9 @@
 !!
 !! @sub ctqmc_reduce_ofom
 !!
-!! reduce the oofom from all children processes
+!! reduce the ch_w from all children processes
 !!
-  subroutine ctqmc_reduce_ofom(oofom_mpi, oofom_err)
+  subroutine ctqmc_reduce_ofom(ch_w_mpi, ch_w_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2344,42 +2344,42 @@
      use control, only : norbs
      use control, only : nbfrq
      use control, only : nprocs
-     use context, only : oofom
+     use context, only : ch_w
 
      implicit none
 
 ! external arguments
 ! charge-charge correlation function, orbital-resolved
-     real(dp), intent(out) :: oofom_mpi(nbfrq,norbs,norbs)
-     real(dp), intent(out) :: oofom_err(nbfrq,norbs,norbs)
+     real(dp), intent(out) :: ch_w_mpi(nbfrq,norbs,norbs)
+     real(dp), intent(out) :: ch_w_err(nbfrq,norbs,norbs)
 
-! initialize oofom_mpi and oofom_err
-     oofom_mpi = zero
-     oofom_err = zero
+! initialize ch_w_mpi and ch_w_err
+     ch_w_mpi = zero
+     ch_w_err = zero
 
-! build oofom_mpi, collect data from all children processes
+! build ch_w_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(oofom, oofom_mpi)
+     call mp_allreduce(ch_w, ch_w_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     oofom_mpi = oofom
+     ch_w_mpi = ch_w
 
 # endif /* MPI */
 
 ! calculate the average
-     oofom_mpi = oofom_mpi / real(nprocs)
+     ch_w_mpi = ch_w_mpi / real(nprocs)
 
-! build oofom_err, collect data from all children processes
+! build ch_w_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((oofom - oofom_mpi)**2, oofom_err)
+     call mp_allreduce((ch_w - ch_w_mpi)**2, ch_w_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2388,7 +2388,7 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         oofom_err = sqrt( oofom_err / real( nprocs * ( nprocs - 1 ) ) )
+         ch_w_err = sqrt( ch_w_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
