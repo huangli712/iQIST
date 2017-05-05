@@ -40,7 +40,7 @@
      use control, only : nffrq, nbfrq        ! fermionic and bosonic frequencies
      use control, only : ntime               ! imaginary time slice
      use control, only : nsweep, nwrite      ! monte carlo sampling
-     use control, only : nmonte, ncarlo      ! interval for measurement
+     use control, only : nmonte              ! interval for measurement
      use control, only : myid, master        ! mpi environment
                                              !
      use context, only : hist                ! histogram
