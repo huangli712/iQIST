@@ -2475,11 +2475,9 @@
      implicit none
 
 ! external arguments
-! particle-particle pair susceptibility, real part
-     real(dp), intent(out) :: ps_re_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! particle-particle pair susceptibility, imaginary part
-     real(dp), intent(out) :: ps_im_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+! particle-particle pair susceptibility
+     complex(dp), intent(out) :: p2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(out) :: p2pw_err(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! initialize ps_re_mpi and ps_im_mpi
      ps_re_mpi = zero
