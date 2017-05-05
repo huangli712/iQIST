@@ -752,7 +752,7 @@
          enddo ! over f2={1,nband} loop
      enddo TIME_LOOP ! over i={1,ntime} loop
 
-! accumulate szpow(1:4,1:nband)
+! accumulate szpw(1:4,1:nband)
 ! calculate \delta \tau
      step = ( tmesh(2) - tmesh(1) ) / 2.0
      BAND_LOOP: do f2=1,nband
@@ -769,7 +769,7 @@
          szpw(4,f2) = szpw(4,f2) + sint**4.0
      enddo BAND_LOOP ! over f2={1,nband} loop
 
-! accumulate szpow(1:4,nband+1)
+! accumulate szpw(1:4,nband+1)
 ! here we consider the contribution from all flavors
      sint = zero
      do i=1,ntime-1
@@ -2056,51 +2056,51 @@
 !!
 !! @sub ctqmc_reduce_szpw
 !!
-!! reduce the szpow from all children processes
+!! reduce the szpw from all children processes
 !!
-  subroutine ctqmc_reduce_szpw(szpow_mpi, szpow_err)
+  subroutine ctqmc_reduce_szpw(szpw_mpi, szpw_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nprocs
-     use context, only : szpow
+     use context, only : szpw
 
      implicit none
 
 ! external arguments
 ! powers of local magnetization, orbital-resolved
-     real(dp), intent(out) :: szpow_mpi(4,norbs)
-     real(dp), intent(out) :: szpow_err(4,norbs)
+     real(dp), intent(out) :: szpw_mpi(4,norbs)
+     real(dp), intent(out) :: szpw_err(4,norbs)
 
-! initialize szpow_mpi and szpow_err
-     szpow_mpi = zero
-     szpow_err = zero
+! initialize szpw_mpi and szpw_err
+     szpw_mpi = zero
+     szpw_err = zero
 
-! build szpow_mpi, collect data from all children processes
+! build szpw_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(szpow, szpow_mpi)
+     call mp_allreduce(szpw, szpw_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     szpow_mpi = szpow
+     szpw_mpi = szpw
 
 # endif /* MPI */
 
 ! calculate the average
-     szpow_mpi = szpow_mpi / real(nprocs)
+     szpw_mpi = szpw_mpi / real(nprocs)
 
-! build szpow_err, collect data from all children processes
+! build szpw_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((szpow - szpow_mpi)**2, szpow_err)
+     call mp_allreduce((szpw - szpw_mpi)**2, szpw_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2109,7 +2109,7 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         szpow_err = sqrt( szpow_err / real( nprocs * ( nprocs - 1 ) ) )
+         szpw_err = sqrt( szpw_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
