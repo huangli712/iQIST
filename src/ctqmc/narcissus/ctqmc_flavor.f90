@@ -1878,7 +1878,7 @@
   end subroutine cat_occupy_status
 
 !!========================================================================
-!!>>> service layer: calculate extra weight facot for screening effect <<<
+!!>>> service layer: calculate weight factor for dynamic interaction   <<<
 !!========================================================================
 
 !!
@@ -1957,7 +1957,7 @@
 !!
 !! @sub cat_weight_kernel
 !!
-!! used to calculate K(\tau), i.e., the screening function for extra
+!! used to calculate K(\tau), i.e. the screening function, for extra
 !! weight factor. this subroutine can be used to calculate K'(\tau)
 !! as well. you should use the 'typ' parameter to control it
 !!
