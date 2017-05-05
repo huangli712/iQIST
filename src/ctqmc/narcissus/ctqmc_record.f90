@@ -2459,7 +2459,7 @@
 !!
 !! @sub ctqmc_reduce_pair
 !!
-!! reduce the ps_re_mpi and ps_im_mpi from all children processes
+!! reduce the p2pw from all children processes
 !!
   subroutine ctqmc_reduce_pair(ps_re_mpi, ps_im_mpi)
      use constants, only : dp, zero
