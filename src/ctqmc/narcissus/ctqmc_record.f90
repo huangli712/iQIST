@@ -763,10 +763,10 @@
          enddo ! over i={1,ntime-1} loop
          sint = sint / beta
 ! record the data
-         szpow(1,f2) = szpow(1,f2) + sint**1.0
-         szpow(2,f2) = szpow(2,f2) + sint**2.0
-         szpow(3,f2) = szpow(3,f2) + sint**3.0
-         szpow(4,f2) = szpow(4,f2) + sint**4.0
+         szpw(1,f2) = szpw(1,f2) + sint**1.0
+         szpw(2,f2) = szpw(2,f2) + sint**2.0
+         szpw(3,f2) = szpw(3,f2) + sint**3.0
+         szpw(4,f2) = szpw(4,f2) + sint**4.0
      enddo BAND_LOOP ! over f2={1,nband} loop
 
 ! accumulate szpow(1:4,nband+1)
