@@ -381,6 +381,7 @@
 !!>>> sampling the physical observables 2 (always)                     <<<
 !!========================================================================
 
+! the following physical observables are always measured
 ! record the impurity green's function in imaginary time space
              if ( mod(cstep, nmonte) == 0 ) then
                  call ctqmc_record_gtau()
@@ -400,7 +401,8 @@
 !!>>> sampling the physical observables 3 (optional)                   <<<
 !!========================================================================
 
-! record the < k^2 > - < k >^2
+! the following physical observables are measured optionally (by isobs)
+! record the kinetic energy fluctuation
              if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) then
                  call ctqmc_record_kmat()
              endif ! back if ( mod(cstep, nmonte) == 0 .and. btest(isobs, 1) ) block
@@ -419,6 +421,7 @@
 !!>>> sampling the physical observables 4 (optional)                   <<<
 !!========================================================================
 
+! the following physical observables are measured optionally (by issus)
 ! record the spin-spin correlation function
              if ( mod(cstep, nmonte) == 0 .and. btest(issus, 1) ) then
                  call ctqmc_record_sp_t()
