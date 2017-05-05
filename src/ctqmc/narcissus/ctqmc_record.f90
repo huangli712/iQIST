@@ -2499,8 +2499,7 @@
 # endif /* MPI */
 
 ! calculate the average
-     ps_re_mpi = ps_re_mpi / real(nprocs)
-     ps_im_mpi = ps_im_mpi / real(nprocs)
+     p2pw_mpi = p2pw_mpi / real(nprocs)
 
      return
   end subroutine ctqmc_reduce_pair
