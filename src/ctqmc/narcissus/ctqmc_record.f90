@@ -614,7 +614,7 @@
 
      do i=1,norbs
          do j=1,norbs
-             kkmat(i,j) = kkmat(i,j) + rank(i) * rank(j) * 4.0_dp
+             kmat(i,j) = kmat(i,j) + rank(i) * rank(j) * 4.0_dp
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
 
