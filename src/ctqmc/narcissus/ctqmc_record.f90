@@ -1198,7 +1198,7 @@
      real(dp) :: maux
      real(dp) :: naux
 
-! dummy complex(dp) variables, used to calculate the h2_re and h2_im
+! dummy complex(dp) variables, used to calculate the g2pw and h2pw
      complex(dp) :: cmeas
 
 ! dummy complex(dp) arrays, used to store the intermediate results
@@ -1250,7 +1250,7 @@
      enddo CTQMC_FLAVOR_LOOP ! over flvr={1,norbs} loop
 !$OMP END DO
 
-! calculate g2_re and g2_im, h2_re and h2_im
+! calculate g2pw and h2pw
 !$OMP DO PRIVATE (f1, f2, cmeas, wbn, w4n, w3n, w2n, w1n)
      CTQMC_ORBIT1_LOOP: do f1=1,norbs
          CTQMC_ORBIT2_LOOP: do f2=1,f1
@@ -1265,8 +1265,7 @@
                          if ( f1 == f2 ) then
                              cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2_re(w3n,w2n,wbn,f2,f1) = g2_re(w3n,w2n,wbn,f2,f1) +  real(cmeas) / beta
-                         g2_im(w3n,w2n,wbn,f2,f1) = g2_im(w3n,w2n,wbn,f2,f1) + aimag(cmeas) / beta
+                         g2pw(w3n,w2n,wbn,f2,f1) = g2pw(w3n,w2n,wbn,f2,f1) +  cmeas / beta
 
                          cmeas = h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
