@@ -593,7 +593,7 @@
 
      use control, only : isobs
      use control, only : norbs
-     use context, only : kmat, kkmat
+     use context, only : knop, kmat
      use context, only : rank
 
      implicit none
