@@ -12,7 +12,7 @@
 !!!           ctqmc_record_szpw <<<---
 !!!           ctqmc_record_schi
 !!!           ctqmc_record_sfom
-!!!           ctqmc_record_ochi
+!!!           ctqmc_record_cchi
 !!!           ctqmc_record_ofom <<<---
 !!!           ctqmc_record_twop
 !!!           ctqmc_record_pair <<<---
@@ -28,7 +28,7 @@
 !!!           ctqmc_reduce_szpw <<<---
 !!!           ctqmc_reduce_schi
 !!!           ctqmc_reduce_sfom
-!!!           ctqmc_reduce_ochi
+!!!           ctqmc_reduce_cchi
 !!!           ctqmc_reduce_ofom <<<---
 !!!           ctqmc_reduce_twop
 !!!           ctqmc_reduce_pair <<<---
@@ -998,12 +998,12 @@
   end subroutine ctqmc_record_sfom
 
 !!
-!! @sub ctqmc_record_ochi
+!! @sub ctqmc_record_cchi
 !!
 !! record the charge-charge correlation function
 !! in imaginary time axis
 !!
-  subroutine ctqmc_record_ochi()
+  subroutine ctqmc_record_cchi()
      use constants, only : dp, zero
      use spring, only : spring_sfmt_stream
 
@@ -1011,7 +1011,7 @@
      use control, only : norbs
      use control, only : ntime
      use context, only : tmesh
-     use context, only : ochi, ch_t
+     use context, only : cchi, ch_t
 
      implicit none
 
@@ -1045,7 +1045,7 @@
      enddo TIME_LOOP ! over i={1,ntime} loop
      oaux = oaux / real(num_try)
 
-! calculate ochi and ch_t
+! calculate cchi and ch_t
      do f1=1,norbs
          do f2=1,norbs
              do i=1,num_try
@@ -1053,12 +1053,12 @@
                  if ( oaux(m,f2) > zero ) then
 ! n - m + ntime \in [ntime - m + 1, ntime]
                      do n=1,m
-                         ochi(n-m+ntime) = ochi(n-m+ntime) + oaux(n,f1)
+                         cchi(n-m+ntime) = cchi(n-m+ntime) + oaux(n,f1)
                          ch_t(n-m+ntime,f2,f1) = ch_t(n-m+ntime,f2,f1) + oaux(n,f1)
                      enddo ! over n={1,m} loop
 ! n - m \in [1, ntime - m]
                      do n=m+1,ntime
-                         ochi(n-m) = ochi(n-m) + oaux(n,f1)
+                         cchi(n-m) = cchi(n-m) + oaux(n,f1)
                          ch_t(n-m,f2,f1) = ch_t(n-m,f2,f1) + oaux(n,f1)
                      enddo ! over n={m+1,ntime} loop
                  endif ! back if ( oaux(m,f2) > zero ) block
@@ -1067,7 +1067,7 @@
      enddo ! over f1={1,norbs} loop
 
      return
-  end subroutine ctqmc_record_ochi
+  end subroutine ctqmc_record_cchi
 
 !!
 !! @sub ctqmc_record_ofom
@@ -2258,11 +2258,11 @@
   end subroutine ctqmc_reduce_sfom
 
 !!
-!! @sub ctqmc_reduce_ochi
+!! @sub ctqmc_reduce_cchi
 !!
-!! reduce the ochi and ch_t from all children processes
+!! reduce the cchi and ch_t from all children processes
 !!
-  subroutine ctqmc_reduce_ochi(ochi_mpi, ch_t_mpi, ochi_err, ch_t_err)
+  subroutine ctqmc_reduce_cchi(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2270,31 +2270,31 @@
      use control, only : norbs
      use control, only : ntime
      use control, only : nprocs
-     use context, only : ochi, ch_t
+     use context, only : cchi, ch_t
 
      implicit none
 
 ! external arguments
 ! charge-charge correlation function, totally-averaged
-     real(dp), intent(out) :: ochi_mpi(ntime)
-     real(dp), intent(out) :: ochi_err(ntime)
+     real(dp), intent(out) :: cchi_mpi(ntime)
+     real(dp), intent(out) :: cchi_err(ntime)
 
 ! charge-charge correlation function, orbital-resolved
      real(dp), intent(out) :: ch_t_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: ch_t_err(ntime,norbs,norbs)
 
-! initialize ochi_mpi and ch_t_mpi, ochi_err and ch_t_err
-     ochi_mpi = zero
+! initialize cchi_mpi and ch_t_mpi, cchi_err and ch_t_err
+     cchi_mpi = zero
      ch_t_mpi = zero
 
-     ochi_err = zero
+     cchi_err = zero
      ch_t_err = zero
 
-! build ochi_mpi and ch_t_mpi, collect data from all children processes
+! build cchi_mpi and ch_t_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(ochi, ochi_mpi)
+     call mp_allreduce(cchi, cchi_mpi)
      call mp_allreduce(ch_t, ch_t_mpi)
 
 ! block until all processes have reached here
@@ -2302,20 +2302,20 @@
 
 # else  /* MPI */
 
-     ochi_mpi = ochi
+     cchi_mpi = cchi
      ch_t_mpi = ch_t
 
 # endif /* MPI */
 
 ! calculate the average
-     ochi_mpi = ochi_mpi / real(nprocs)
+     cchi_mpi = cchi_mpi / real(nprocs)
      ch_t_mpi = ch_t_mpi / real(nprocs)
 
-! build ochi_err and ch_t_err, collect data from all children processes
+! build cchi_err and ch_t_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((ochi - ochi_mpi)**2, ochi_err)
+     call mp_allreduce((cchi - cchi_mpi)**2, cchi_err)
      call mp_allreduce((ch_t - ch_t_mpi)**2, ch_t_err)
 
 ! block until all processes have reached here
@@ -2325,12 +2325,12 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         ochi_err = sqrt( ochi_err / real( nprocs * ( nprocs - 1 ) ) )
+         cchi_err = sqrt( cchi_err / real( nprocs * ( nprocs - 1 ) ) )
          ch_t_err = sqrt( ch_t_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
-  end subroutine ctqmc_reduce_ochi
+  end subroutine ctqmc_reduce_cchi
 
 !!
 !! @sub ctqmc_reduce_ofom
