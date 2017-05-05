@@ -809,8 +809,8 @@
 !!
 !! @sub ctqmc_reload_kink
 !!
-!! global update all segments or anti-segments in the perturbation
-!! expansion series
+!! reload all segments or anti-segments in the perturbation expansion
+!! series, then rebuild all related global matrices from scratch
 !!
   subroutine ctqmc_reload_kink()
      use control, only : norbs
@@ -824,8 +824,7 @@
 
      do flvr=1,norbs
 
-! check the perturbation expansion order ( number of existing segments or
-! anti-segments ) for current flavor channel
+! check the perturbation expansion order for current flavor channel
          if ( rank(flvr) == 0 ) CYCLE
 
 ! regenerate the mmat matrix and gmat matrix from scratch
