@@ -634,7 +634,7 @@
      use control, only : beta
      use context, only : index_s, index_e
      use context, only : time_s, time_e
-     use context, only : lmat, rnop, lrmm
+     use context, only : lnop, rnop, lrmm
      use context, only : rank
 
      implicit none
@@ -683,7 +683,7 @@
      enddo ! over flvr={1,norbs} loop
 
 ! add contribution to < k_l > and < k_r >
-     lmat = lmat + kl
+     lnop = lnop + kl
      rnop = rnop + kr
 
 ! add contribution to < k_l k_r >
@@ -1969,23 +1969,23 @@
 !!
 !! @sub ctqmc_reduce_lrmm
 !!
-!! reduce the lmat, rnop, and lrmm from all children processes
+!! reduce the lnop, rnop, and lrmm from all children processes
 !!
-  subroutine ctqmc_reduce_lrmm(lmat_mpi, rnop_mpi, lrmm_mpi, lmat_err, rnop_err, lrmm_err)
+  subroutine ctqmc_reduce_lrmm(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
      use control, only : norbs
      use control, only : nprocs
-     use context, only : lmat, rnop, lrmm
+     use context, only : lnop, rnop, lrmm
 
      implicit none
 
 ! external arguments
 ! number of operators at left half axis
-     real(dp), intent(out) :: lmat_mpi(norbs)
-     real(dp), intent(out) :: lmat_err(norbs)
+     real(dp), intent(out) :: lnop_mpi(norbs)
+     real(dp), intent(out) :: lnop_err(norbs)
 
 ! number of operators at right half axis
      real(dp), intent(out) :: rnop_mpi(norbs)
@@ -1995,21 +1995,21 @@
      real(dp), intent(out) :: lrmm_mpi(norbs,norbs)
      real(dp), intent(out) :: lrmm_err(norbs,norbs)
 
-! initialize lmat_mpi, rnop_mpi, and lrmm_mpi
-! initialize lmat_err, rnop_err, and lrmm_err
-     lmat_mpi = zero
+! initialize lnop_mpi, rnop_mpi, and lrmm_mpi
+! initialize lnop_err, rnop_err, and lrmm_err
+     lnop_mpi = zero
      rnop_mpi = zero
      lrmm_mpi = zero
 
-     lmat_err = zero
+     lnop_err = zero
      rnop_err = zero
      lrmm_err = zero
 
-! build lmat_mpi, rnop_mpi, and lrmm_mpi, collect data from all children processes
+! build lnop_mpi, rnop_mpi, and lrmm_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(lmat, lmat_mpi)
+     call mp_allreduce(lnop, lnop_mpi)
      call mp_allreduce(rnop, rnop_mpi)
      call mp_allreduce(lrmm, lrmm_mpi)
 
@@ -2018,22 +2018,22 @@
 
 # else  /* MPI */
 
-     lmat_mpi = lmat
+     lnop_mpi = lnop
      rnop_mpi = rnop
      lrmm_mpi = lrmm
 
 # endif /* MPI */
 
 ! calculate the average
-     lmat_mpi = lmat_mpi / real(nprocs)
+     lnop_mpi = lnop_mpi / real(nprocs)
      rnop_mpi = rnop_mpi / real(nprocs)
      lrmm_mpi = lrmm_mpi / real(nprocs)
 
-! build lmat_err, rnop_err, and lrmm_err, collect data from all children processes
+! build lnop_err, rnop_err, and lrmm_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((lmat - lmat_mpi)**2, lmat_err)
+     call mp_allreduce((lnop - lnop_mpi)**2, lnop_err)
      call mp_allreduce((rnop - rnop_mpi)**2, rnop_err)
      call mp_allreduce((lrmm - lrmm_mpi)**2, lrmm_err)
 
@@ -2044,7 +2044,7 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         lmat_err = sqrt( lmat_err / real( nprocs * ( nprocs - 1 ) ) )
+         lnop_err = sqrt( lnop_err / real( nprocs * ( nprocs - 1 ) ) )
          rnop_err = sqrt( rnop_err / real( nprocs * ( nprocs - 1 ) ) )
          lrmm_err = sqrt( lrmm_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
