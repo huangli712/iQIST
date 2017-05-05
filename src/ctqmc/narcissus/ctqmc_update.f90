@@ -200,9 +200,9 @@
                  write(mystd,'(4X,a)') '>>> quantum impurity solver status: fatel error'
                  write(mystd,'(4X,a)') '>>> please check the status file: solver.status.dat'
                  call ctqmc_save_status()
-                 call s_print_error('ctqmc_warning','unknown fatal error occur')
+                 call s_print_error('ctqmc_try_warning','unknown fatal error occur')
              else
-                 write(mystd,'(4X,a)') '>>> quantum impurity solver status: normal'
+                 write(mystd,'(4X,a)') '>>> quantum impurity solver status: healthy'
              endif ! back if ( cflag == 99 ) block
          endif ! back if ( myid == master ) block
 
