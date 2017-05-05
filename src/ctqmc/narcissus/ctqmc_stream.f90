@@ -766,14 +766,11 @@
      ch_w = zero
 
 ! init two-particle green's function
-     g2_re = zero
-     g2_im = zero
-     h2_re = zero
-     h2_im = zero
+     g2pw = czero
+     h2pw = czero
 
 ! init particle-particle pairing susceptibility
-     ps_re = zero
-     ps_im = zero
+     p2pw = czero
 
 !>>> ctqmc_umat module
 !-------------------------------------------------------------------------
