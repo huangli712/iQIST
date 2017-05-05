@@ -961,7 +961,7 @@
              enddo ! over i={1,ckink} loop
 
 ! now we know we can insert tau_start, and then tau_end and tau_max should
-! be determined carefully.
+! be determined carefully
 ! case 2A: tau_start is in front of all segments
 ! zero < tau_start < tau_end < ... < beta, keep segment configuration
              if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) then
@@ -990,7 +990,7 @@
                  endif ! back if ( tau_end < beta ) block
 
 ! case 2C: tau_start is in the middle of two segments
-! zero < ... < tau_start < tau_end < ... < end, keep segment configuration
+! zero < ... < tau_start < tau_end < ... < beta, keep segment configuration
              else
                  do i=1,ckink-1
                      ts = time_s(index_s(i+1, flvr), flvr)
@@ -1042,7 +1042,7 @@
              endif ! back if      ( tau_start < time_e(index_e(1    , flvr), flvr) ) block
 
 ! now we know we can insert tau_start, and then tau_end and tau_max should
-! be determined carefully.
+! be determined carefully
 ! zero < ... < tau_start < tau_end < ... < beta, keep anti-segment configuration
              do i=1,ckink
                  ts = time_s(index_s(i, flvr), flvr) ! get \tau_s at start point
@@ -1113,7 +1113,7 @@
              endif ! back if      ( tau_start < time_s(index_s(1    , flvr), flvr) ) block
 
 ! now we know we can insert tau_start, and then tau_end and tau_max should
-! be determined carefully.
+! be determined carefully
 ! zero < ... < tau_start < tau_end < ... < beta, keep segment configuration
              do i=1,ckink
                  ts = time_s(index_s(i, flvr), flvr) ! get \tau_s at start point
@@ -1149,7 +1149,7 @@
              enddo ! over i={1,ckink} loop
 
 ! now we know we can insert tau_start, and then tau_end and tau_max should
-! be determined carefully.
+! be determined carefully
 ! case 3A: tau_start is in the first segment [0, tau_e(1)]
              if      ( tau_start < time_e(index_e(1    , flvr), flvr) ) then
                  is = 1
@@ -1501,12 +1501,12 @@
              isn = 1
              tau_start1 = time_s(index_s(1, flvr), flvr)
              tau_start2 = time_e(index_e(1, flvr), flvr) - spring_sfmt_stream() * beta
-! zero < tau_start2 < tau_end
+! zero < tau_start2 < tau_end < beta
 ! keep segment configuration
              if ( tau_start2 > zero ) then
                  cstat = 1
                  ring = .false.
-! tau_end < tau_start2 < beta
+! zero < tau_end < tau_start2 < beta
 ! turn to anti-segment configuration
              else
                  cstat = 2
@@ -1679,12 +1679,12 @@
              ien = 1
              tau_end1 = time_e(index_e(1, flvr), flvr)
              tau_end2 = time_s(index_s(1, flvr), flvr) + spring_sfmt_stream() * beta
-! tau_start < tau_end2 < beta
+! zero < tau_start < tau_end2 < beta
 ! keep segment configuration
              if ( tau_end2 < beta ) then
                  cstat = 1
                  ring = .false.
-! tau_end2 < tau_start < beta
+! zero < tau_end2 < tau_start < beta
 ! turn to anti-segment configuration
              else
                  cstat = 2
