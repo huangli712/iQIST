@@ -1893,9 +1893,9 @@
 !!
 !! @sub ctqmc_reduce_kmat
 !!
-!! reduce the kmat and kkmat from all children processes
+!! reduce the knop and kmat from all children processes
 !!
-  subroutine ctqmc_reduce_kmat(kmat_mpi, kkmat_mpi, kmat_err, kkmat_err)
+  subroutine ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -1989,7 +1989,7 @@
      real(dp), intent(out) :: rnop_mpi(norbs)
      real(dp), intent(out) :: rnop_err(norbs)
 
-! used to evaluate fidelity susceptibility
+! crossing product of k_l and k_r
      real(dp), intent(out) :: lrmm_mpi(norbs,norbs)
      real(dp), intent(out) :: lrmm_err(norbs,norbs)
 
