@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/04/2017 by li huang (last modified)
+!!!           05/05/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -264,7 +264,7 @@
 ! build symmetry vector and impurity level (symm and eimp)
      call ctqmc_input_eimp_()
 
-! build Coulomb interaction matrix (uumat)
+! build Coulomb interaction matrix (umat)
      call ctqmc_input_umat_()
 
 ! build dynamic interaction if available (ktau and ptau)
@@ -479,7 +479,7 @@
 
      use control, only : norbs
      use control, only : myid, master
-     use context, only : uumat
+     use context, only : umat
 
      implicit none
 
@@ -496,8 +496,8 @@
 ! dummy real variables
      real(dp) :: rtmp
 
-! calculate two-index Coulomb interaction, uumat
-     call ctqmc_make_umat(uumat)
+! calculate two-index Coulomb interaction, umat
+     call ctqmc_make_umat(umat)
 
 ! read in two-index Coulomb interaction if available
 !-------------------------------------------------------------------------
@@ -515,7 +515,7 @@
              do i=1,norbs
                  do j=1,norbs
                      read(mytmp,*) k, l, rtmp
-                     uumat(k,l) = rtmp
+                     umat(k,l) = rtmp
                  enddo ! over j={1,norbs} loop
              enddo ! over i={1,norbs} loop
              close(mytmp)
@@ -524,11 +524,11 @@
      endif ! back if ( myid == master ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! broadcast uumat from master node to all children nodes
+! broadcast umat from master node to all children nodes
 # if defined (MPI)
 
 ! broadcast data
-     call mp_bcast(uumat, master)
+     call mp_bcast(umat, master)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -552,7 +552,7 @@
      use control, only : ntime
      use control, only : myid, master
      use context, only : ktau, ptau
-     use context, only : uumat
+     use context, only : umat
 
      implicit none
 
@@ -616,7 +616,7 @@
 
 ! shift the Coulomb interaction matrix and chemical potential if retarded
 ! interaction or the so-called dynamic screening effect is considered
-     call ctqmc_make_lift(uumat, one)
+     call ctqmc_make_lift(umat, one)
 
      return
   end subroutine ctqmc_input_ktau_
