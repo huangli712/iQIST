@@ -583,20 +583,20 @@
 ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel for both band and spin
+! current flavor channel
      integer  :: flvr
 
 ! index address to right shift old segment or anti-segment
-! ieo and ien are for old and new indices, respectively
+! ieo and ien are for old and new points, respectively
      integer  :: ieo, ien
 
-! transition probability for right shift old segment or anti-segment
+! transition probability
      real(dp) :: p
 
-! \tau_e, end   point of the old segment (old point)
+! \tau_e, end point of the old segment (old point)
      real(dp) :: tau_end1
 
-! \tau_e, end   point of the old segment (new point)
+! \tau_e, end point of the old segment (new point)
      real(dp) :: tau_end2
 
 ! ratio between old and new configurations, the local trace part
@@ -612,11 +612,9 @@
 ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order ( number of existing segments or
-! anti-segments ) for current flavor channel
+! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == 0 ) then
-!<         call s_print_exception('ctqmc_rshift_kink','can not rshift any segments')
          rsh_t = rsh_t + one
          rsh_r = rsh_r + one
          RETURN
