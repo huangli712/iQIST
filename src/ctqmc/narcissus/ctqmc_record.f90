@@ -2330,11 +2330,11 @@
   end subroutine ctqmc_reduce_ch_t
 
 !!
-!! @sub ctqmc_reduce_ofom
+!! @sub ctqmc_reduce_ch_w
 !!
 !! reduce the ch_w from all children processes
 !!
-  subroutine ctqmc_reduce_ofom(ch_w_mpi, ch_w_err)
+  subroutine ctqmc_reduce_ch_w(ch_w_mpi, ch_w_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2390,7 +2390,7 @@
      endif ! back if ( nprocs > 1 ) block
 
      return
-  end subroutine ctqmc_reduce_ofom
+  end subroutine ctqmc_reduce_ch_w
 
 !!========================================================================
 !!>>> reduce physical observables 5                                    <<<
