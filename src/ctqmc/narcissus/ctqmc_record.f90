@@ -2494,8 +2494,7 @@
 
 # else  /* MPI */
 
-     ps_re_mpi = ps_re
-     ps_im_mpi = ps_im
+     p2pw_mpi = p2pw
 
 # endif /* MPI */
 
