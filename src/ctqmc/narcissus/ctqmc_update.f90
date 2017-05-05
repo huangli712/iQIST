@@ -234,34 +234,34 @@
      implicit none
 
 ! local variables
-! whether the new segment or anti-segment can be inserted diagrammatically
+! whether the new segment or anti-segment can be inserted
      logical  :: ladd
 
 ! whether it is an anti-segment
-! anti = .true., anti-segment
-! anti = .false., segment
+! if anti = .true., anti-segment
+! if anti = .false., segment
      logical  :: anti
 
 ! whether the update operation is accepted
      logical  :: pass
 
-! current flavor channel for both band and spin
+! current flavor channel
      integer  :: flvr
 
 ! index address to insert new segment or anti-segment
 ! is and ie are for start and end points, respectively
      integer  :: is, ie
 
-! transition probability for insert new segment or anti-segment
+! transition probability
      real(dp) :: p
 
 ! \tau_s, start point of the new segment
      real(dp) :: tau_start
 
-! \tau_e, end   point of the new segment
+! \tau_e, end point of the new segment
      real(dp) :: tau_end
 
-! the possible maximum length of the new segment
+! possible maximum length of the new segment
      real(dp) :: tau_max
 
 ! ratio between old and new configurations, the local trace part
@@ -278,23 +278,23 @@
 ! select the flavor channel randomly among 1 ~ norbs
      flvr = ceiling( spring_sfmt_stream() * norbs )
 
-! get the perturbation expansion order ( number of existing segments or
-! anti-segments ) for current flavor channel
+! get the perturbation expansion order for current flavor channel
      ckink = rank(flvr)
      if ( ckink == mkink ) then
-!<         call s_print_exception('ctqmc_insert_kink','can not insert any segments')
          ins_t = ins_t + one
          ins_r = ins_r + one
          RETURN
      endif ! back if ( ckink == mkink ) block
 
-! randomly choose anti and tau_start, and then check whether tau_start is
-! valid, if tau_start is valid, then determine tau_end, tau_max, is, and
-! ie consistently, and set ladd to .true., if tau_start is not valid, then
-! set ladd to .false.
+! try to generate new configuration
+! (1) randomly choose anti and tau_start
+! (2) check whether tau_start is valid
+! (3) if tau_start is valid, determine tau_end, tau_max, is, and ie
+!     consistently, and set ladd to .true.
+! (4) if tau_start is not valid, set ladd to .false.
      call cat_insert_flavor(flvr, is, ie, anti, ladd, tau_start, tau_end, tau_max)
 
-! calculate the transition ratio between old and new configurations,
+! calculate the transition ratio between old and new configurations
 ! for the local trace part
      if ( ladd .eqv. .true. ) then
          call cat_insert_ztrace(flvr, anti, tau_start, tau_end, trace_ratio)
@@ -302,7 +302,7 @@
          trace_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
 
-! calculate the transition ratio between old and new configurations,
+! calculate the transition ratio between old and new configurations
 ! for the determinant part
      if ( ladd .eqv. .true. ) then
          call cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
@@ -310,18 +310,17 @@
          deter_ratio = zero
      endif ! back if ( ladd .eqv. .true. ) block
 
-! calculate the transition probability for insert new segment or anti-segment
+! calculate the transition probability
      p = deter_ratio * trace_ratio * ( beta * tau_max / real( ckink + 1 ) )
 
-! determine pass, using important sampling algorithm (metropolis algorithm)
+! determine pass, using metropolis algorithm
      pass = ( min( one, abs(p) ) > spring_sfmt_stream() )
 
 ! if the update action is accepted
      if ( pass .eqv. .true. ) then
 
-! update the mmat matrix and gmat matrix, respectively,
-! cat_insert_action() subroutine is invoked internally to update the
-! perturbation expansion series
+! update the mmat matrix and gmat matrix, respectively
+! the perturbation expansion series are updated as well
          call cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
 
 ! update ckink for current flavor channel
@@ -335,7 +334,7 @@
 
      endif ! back if ( pass .eqv. .true. ) block
 
-! update the insert statistics
+! update the monte carlo statistics
      ins_t = ins_t + one
      if ( pass .eqv. .true. ) then
          ins_a = ins_a + one
