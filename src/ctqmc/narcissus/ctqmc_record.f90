@@ -894,7 +894,7 @@
      use control, only : beta
      use context, only : index_s, index_e
      use context, only : time_s, time_e
-     use context, only : ssfom
+     use context, only : sp_w
      use context, only : rank
 
      implicit none
@@ -939,7 +939,7 @@
          call cat_occupy_status(f1, zero, oaux(f1))
      enddo ! over i={1,norbs} loop
 
-! calculate ssfom, it must be real
+! calculate sp_w, it must be real
 ! < Sz(t)Sz(0) > = < ( nu(t) - nd(t) ) * ( nu(0) - nd(0) ) >
      do f1=1,nband
          f2 = f1 + nband
@@ -955,7 +955,7 @@
                  expe = exp( dw * taue )
                  call s_cumprod_z(nbfrq, exps, exps)
                  call s_cumprod_z(nbfrq, expe, expe)
-                 ssfom(:,f1) = ssfom(:,f1) + real( ( expe - exps ) / mesh )
+                 sp_w(:,f1) = sp_w(:,f1) + real( ( expe - exps ) / mesh )
              enddo ! over do it={1,rank(f1)} loop
 ! - nd(t)nu(0) term
              do it=1,rank(f2)
@@ -965,7 +965,7 @@
                  expe = exp( dw * taue )
                  call s_cumprod_z(nbfrq, exps, exps)
                  call s_cumprod_z(nbfrq, expe, expe)
-                 ssfom(:,f1) = ssfom(:,f1) - real( ( expe - exps ) / mesh )
+                 sp_w(:,f1) = sp_w(:,f1) - real( ( expe - exps ) / mesh )
              enddo ! over do it={1,rank(f2)} loop
          endif ! back if ( oaux(f1) > zero .and. oaux(f2) < one ) block
 
@@ -979,7 +979,7 @@
                  expe = exp( dw * taue )
                  call s_cumprod_z(nbfrq, exps, exps)
                  call s_cumprod_z(nbfrq, expe, expe)
-                 ssfom(:,f1) = ssfom(:,f1) - real( ( expe - exps ) / mesh )
+                 sp_w(:,f1) = sp_w(:,f1) - real( ( expe - exps ) / mesh )
              enddo ! over do it={1,rank(f1)} loop
 ! + nd(t)nd(0) term
              do it=1,rank(f2)
@@ -989,7 +989,7 @@
                  expe = exp( dw * taue )
                  call s_cumprod_z(nbfrq, exps, exps)
                  call s_cumprod_z(nbfrq, expe, expe)
-                 ssfom(:,f1) = ssfom(:,f1) + real( ( expe - exps ) / mesh )
+                 sp_w(:,f1) = sp_w(:,f1) + real( ( expe - exps ) / mesh )
              enddo ! over do it={1,rank(f2)} loop
          endif ! back if ( oaux(f2) > zero .and. oaux(f1) < one ) block
      enddo ! over f1={1,nband} loop
@@ -2196,9 +2196,9 @@
 !!
 !! @sub ctqmc_reduce_sfom
 !!
-!! reduce the ssfom from all children processes
+!! reduce the sp_w from all children processes
 !!
-  subroutine ctqmc_reduce_sfom(ssfom_mpi, ssfom_err)
+  subroutine ctqmc_reduce_sfom(sp_w_mpi, sp_w_err)
      use constants, only : dp, zero
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2206,42 +2206,42 @@
      use control, only : nband
      use control, only : nbfrq
      use control, only : nprocs
-     use context, only : ssfom
+     use context, only : sp_w
 
      implicit none
 
 ! external arguments
 ! spin-spin correlation function, orbital-resolved
-     real(dp), intent(out) :: ssfom_mpi(nbfrq,nband)
-     real(dp), intent(out) :: ssfom_err(nbfrq,nband)
+     real(dp), intent(out) :: sp_w_mpi(nbfrq,nband)
+     real(dp), intent(out) :: sp_w_err(nbfrq,nband)
 
-! initialize ssfom_mpi and ssfom_err
-     ssfom_mpi = zero
-     ssfom_err = zero
+! initialize sp_w_mpi and sp_w_err
+     sp_w_mpi = zero
+     sp_w_err = zero
 
-! build ssfom_mpi, collect data from all children processes
+! build sp_w_mpi, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(ssfom, ssfom_mpi)
+     call mp_allreduce(sp_w, sp_w_mpi)
 
 ! block until all processes have reached here
      call mp_barrier()
 
 # else  /* MPI */
 
-     ssfom_mpi = ssfom
+     sp_w_mpi = sp_w
 
 # endif /* MPI */
 
 ! calculate the average
-     ssfom_mpi = ssfom_mpi / real(nprocs)
+     sp_w_mpi = sp_w_mpi / real(nprocs)
 
-! build ssfom_err, collect data from all children processes
+! build sp_w_err, collect data from all children processes
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce((ssfom - ssfom_mpi)**2, ssfom_err)
+     call mp_allreduce((sp_w - sp_w_mpi)**2, sp_w_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -2250,7 +2250,7 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         ssfom_err = sqrt( ssfom_err / real( nprocs * ( nprocs - 1 ) ) )
+         sp_w_err = sqrt( sp_w_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
      return
