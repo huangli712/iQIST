@@ -1303,7 +1303,7 @@
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : beta
-     use context, only : ps_re, ps_im
+     use context, only : p2pw
      use context, only : rank
      use context, only : mmat
 
