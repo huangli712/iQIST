@@ -2139,9 +2139,11 @@
 !!
   subroutine ctqmc_reduce_sp_t(schi_mpi, sp_t_mpi, schi_err, sp_t_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
+     use control, only : issus
      use control, only : nband
      use control, only : ntime
      use control, only : nprocs
@@ -2157,6 +2159,9 @@
 ! spin-spin correlation function, orbital-resolved
      real(dp), intent(out) :: sp_t_mpi(ntime,nband)
      real(dp), intent(out) :: sp_t_err(ntime,nband)
+
+! check whether this observable has been measured
+     if ( .not. btest(issus, 1) ) RETURN
 
 ! initialize schi_mpi and sp_t_mpi, schi_err and sp_t_err
      schi_mpi = zero
