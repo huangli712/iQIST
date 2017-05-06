@@ -1826,16 +1826,16 @@
 
 ! local variables
 ! used to store the real and imaginary parts of impurity green's function
-     real(dp), allocatable :: re_err(:,:,:)
-     real(dp), allocatable :: im_err(:,:,:)
+     real(dp), allocatable :: g_re_err(:,:,:)
+     real(dp), allocatable :: g_im_err(:,:,:)
 
 ! allocate memory
-     allocate(re_err(mfreq,norbs,norbs))
-     allocate(im_err(mfreq,norbs,norbs))
+     allocate(g_re_err(mfreq,norbs,norbs))
+     allocate(g_im_err(mfreq,norbs,norbs))
 
-! initialize re_err and im_err
-     re_err = zero
-     im_err = zero
+! initialize g_re_err and g_im_err
+     g_re_err = zero
+     g_im_err = zero
 
 ! initialize grnf_mpi and grnf_err
      grnf_mpi = czero
@@ -1863,8 +1863,8 @@
 # if defined (MPI)
 
 ! collect data
-     call mp_allreduce(( real(grnf - grnf_mpi))**2, re_err)
-     call mp_allreduce((aimag(grnf - grnf_mpi))**2, im_err)
+     call mp_allreduce(( real(grnf - grnf_mpi))**2, g_re_err)
+     call mp_allreduce((aimag(grnf - grnf_mpi))**2, g_im_err)
 
 ! block until all processes have reached here
      call mp_barrier()
@@ -1873,16 +1873,16 @@
 
 ! calculate standard deviation
      if ( nprocs > 1 ) then
-         re_err = sqrt( re_err / real( nprocs * ( nprocs - 1 ) ) )
-         im_err = sqrt( im_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
      endif ! back if ( nprocs > 1 ) block
 
 ! construct the final grnf_err
-     grnf_err = re_err + im_err * czi
+     grnf_err = g_re_err + g_im_err * czi
 
 ! deallocate memory
-     deallocate( re_err )
-     deallocate( im_err )
+     deallocate( g_re_err )
+     deallocate( g_im_err )
 
      return
   end subroutine ctqmc_reduce_grnf
@@ -2557,11 +2557,12 @@
 !! reduce the p2pw from all children processes
 !!
   subroutine ctqmc_reduce_pair(p2pw_mpi, p2pw_err)
-     use constants, only : dp, czero
+     use constants, only : dp, zero, czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
+     use control, only : isvrt
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : nprocs
@@ -2570,9 +2571,25 @@
      implicit none
 
 ! external arguments
-! particle-particle pair susceptibility
+! particle-particle pairing susceptibility
      complex(dp), intent(out) :: p2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: p2pw_err(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! local variables
+! used to store the real and imaginary parts of pairing susceptibility
+     real(dp), allocatable :: p_re_err(:,:,:,:,:)
+     real(dp), allocatable :: p_im_err(:,:,:,:,:)
+
+! check whether this observable has been measured
+     if ( .not. btest(isvrt, 2) ) RETURN
+
+! allocate memory
+     allocate(p_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
+     allocate(p_im_err(nffrq,nffrq,nbfrq,norbs,norbs))
+
+! initialize p_re_err and p_im_err
+     p_re_err = zero
+     p_im_err = zero
 
 ! initialize p2pw_mpi and p2pw_err
      p2pw_mpi = czero
@@ -2595,6 +2612,31 @@
 
 ! calculate the average
      p2pw_mpi = p2pw_mpi / real(nprocs)
+
+! build p2pw_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(( real(p2pw - p2pw_mpi))**2, p_re_err)
+     call mp_allreduce((aimag(p2pw - p2pw_mpi))**2, p_im_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         p_re_err = sqrt( p_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         p_im_err = sqrt( p_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+! construct the final p2pw_err
+     p2pw_err = p_re_err + p_im_err * czi
+
+! deallocate memory
+     deallocate(p_re_err)
+     deallocate(p_im_err)
 
      return
   end subroutine ctqmc_reduce_pair
