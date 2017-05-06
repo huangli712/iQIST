@@ -121,9 +121,9 @@
 !!
 !! @sub ctqmc_record_paux
 !!
-!! record some auxiliary physical observables. the occupation matrix and
-!! double occupation matrix are measured at the same time in order to
-!! save the computational time
+!! record some auxiliary physical observables. the occupation number
+!! and double occupation matrix are measured at the same time in order
+!! to save the computational time
 !!
   subroutine ctqmc_record_paux()
      use constants, only : dp, zero, two
@@ -133,8 +133,10 @@
      use context, only : ckink
      use context, only : index_s, index_e
      use context, only : time_s, time_e
-     use context, only : paux, nimp, nmat
-     use context, only : rank, stts, umat
+     use context, only : paux
+     use context, only : nimp, nmat
+     use context, only : rank, stts
+     use context, only : umat
 
      implicit none
 
@@ -240,19 +242,19 @@
      enddo OVLP_BLOCK ! over flvr={1,norbs} loop
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! evaluate <K^4>
+! evaluate < K^4 >
      paux(9) = paux(9) + ( ckink * two )**4
 
-! evaluate <K^3>
+! evaluate < K^3 >
      paux(8) = paux(8) + ( ckink * two )**3
 
-! evaluate <K^2>
+! evaluate < K^2 >
      paux(7) = paux(7) + ( ckink * two )**2
 
-! evaluate <N^2>
+! evaluate < N^2 >
      paux(6) = paux(6) + ( sum(sgmt) / beta )**2
 
-! evaluate <N^1>
+! evaluate < N^1 >
      paux(5) = paux(5) + sum(sgmt) / beta
 
 ! evaluate spin magnetization: < Sz >
