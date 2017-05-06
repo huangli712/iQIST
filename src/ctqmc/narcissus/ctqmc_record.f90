@@ -1977,9 +1977,11 @@
 !!
   subroutine ctqmc_reduce_lrmm(lnop_mpi, rnop_mpi, lrmm_mpi, lnop_err, rnop_err, lrmm_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
+     use control, only : isobs
      use control, only : norbs
      use control, only : nprocs
      use context, only : lnop, rnop, lrmm
@@ -1998,6 +2000,9 @@
 ! crossing product of k_l and k_r
      real(dp), intent(out) :: lrmm_mpi(norbs,norbs)
      real(dp), intent(out) :: lrmm_err(norbs,norbs)
+
+! check whether this observable has been measured
+     if ( .not. btest(isobs, 2) ) RETURN
 
 ! initialize lnop_mpi, rnop_mpi, and lrmm_mpi
 ! initialize lnop_err, rnop_err, and lrmm_err
