@@ -791,8 +791,7 @@
 !!
 !! @sub ctqmc_record_sp_t
 !!
-!! record the spin-spin correlation function
-!! in imaginary time axis
+!! record the spin-spin correlation function in imaginary time axis
 !!
   subroutine ctqmc_record_sp_t()
      use constants, only : dp, zero
@@ -881,8 +880,7 @@
 !!
 !! @sub ctqmc_record_sp_w
 !!
-!! record the spin-spin correlation function
-!! in matsubara frequency axis
+!! record the spin-spin correlation function in matsubara frequency axis
 !!
   subroutine ctqmc_record_sp_w()
      use constants, only : dp, zero, one, two, pi, czi
@@ -999,8 +997,7 @@
 !!
 !! @sub ctqmc_record_ch_t
 !!
-!! record the charge-charge correlation function
-!! in imaginary time axis
+!! record the charge-charge correlation function in imaginary time axis
 !!
   subroutine ctqmc_record_ch_t()
      use constants, only : dp, zero
@@ -1071,8 +1068,7 @@
 !!
 !! @sub ctqmc_record_ch_w
 !!
-!! record the charge-charge correlation function
-!! in matsubara frequency axis
+!! record the charge-charge correlation function in matsubara frequency axis
 !!
   subroutine ctqmc_record_ch_w()
      use constants, only : dp, zero, two, pi, czi
