@@ -276,14 +276,10 @@
      paux(1) = paux(2) + paux(3)
 
 ! evaluate occupation matrix: < n_i >
-     do flvr=1,norbs
-         nimp(flvr) = nimp(flvr) + sgmt(flvr) / beta
-     enddo ! over flvr={1,norbs} loop
+     nimp = nimp + sgmt / beta
 
 ! evaluate double occupation matrix: < n_i n_j >
-     do flvr=1,norbs
-         nmat(flvr,:) = nmat(flvr,:) + ovlp(flvr,:) / beta
-     enddo ! over flvr={1,norbs} loop
+     nmat = nmat + ovlp / beta
 
      return
   end subroutine ctqmc_record_paux
