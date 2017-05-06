@@ -1260,13 +1260,13 @@
                          if ( f1 == f2 ) then
                              cmeas = cmeas - g2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         g2pw(w3n,w2n,wbn,f2,f1) = g2pw(w3n,w2n,wbn,f2,f1) +  cmeas / beta
+                         g2pw(w3n,w2n,wbn,f2,f1) = g2pw(w3n,w2n,wbn,f2,f1) + cmeas / beta
 
                          cmeas = h2aux(w1n,w2n,f1) * g2aux(w3n,w4n,f2)
                          if ( f1 == f2 ) then
                              cmeas = cmeas - h2aux(w1n,w4n,f1) * g2aux(w3n,w2n,f1)
                          endif ! back if ( f1 == f2 ) block
-                         h2pw(w3n,w2n,wbn,f2,f1) = h2pw(w3n,w2n,wbn,f2,f1) +  cmeas / beta
+                         h2pw(w3n,w2n,wbn,f2,f1) = h2pw(w3n,w2n,wbn,f2,f1) + cmeas / beta
                      enddo CTQMC_FERMI2_LOOP ! over w3n={1,nffrq} loop
                  enddo CTQMC_FERMI1_LOOP ! over w2n={1,nffrq} loop
 
@@ -1413,6 +1413,7 @@
 !!
   subroutine ctqmc_reduce_hist(hist_mpi, hist_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
@@ -1475,6 +1476,7 @@
 !!
   subroutine ctqmc_reduce_prob(prob_mpi, prob_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
@@ -1537,6 +1539,7 @@
 !!
   subroutine ctqmc_reduce_paux(paux_mpi, paux_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
@@ -1677,6 +1680,7 @@
 !!
   subroutine ctqmc_reduce_gtau(gtau_mpi, gtau_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
@@ -1740,6 +1744,7 @@
 !!
   subroutine ctqmc_reduce_ftau(ftau_mpi, ftau_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
@@ -1803,6 +1808,7 @@
 !!
   subroutine ctqmc_reduce_grnf(grnf_mpi, grnf_err)
      use constants, only : dp, zero, czero, czi
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
@@ -1892,9 +1898,11 @@
 !!
   subroutine ctqmc_reduce_kmat(knop_mpi, kmat_mpi, knop_err, kmat_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
+     use control, only : isobs
      use control, only : norbs
      use control, only : nprocs
      use context, only : knop, kmat
@@ -1909,6 +1917,9 @@
 ! crossing product of k_i and k_j
      real(dp), intent(out) :: kmat_mpi(norbs,norbs)
      real(dp), intent(out) :: kmat_err(norbs,norbs)
+
+! check whether this observable has been measured
+     if ( .not. btest(isobs, 1) ) RETURN
 
 ! initialize knop_mpi and kmat_mpi, knop_err and kmat_err
      knop_mpi = zero
