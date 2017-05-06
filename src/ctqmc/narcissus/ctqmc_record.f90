@@ -344,7 +344,7 @@
      real(dp) :: taus
      real(dp) :: taue
 
-! length betweem taus and taue
+! distance betweem taus and taue
      real(dp) :: dtau
      real(dp) :: daux
 
@@ -406,10 +406,10 @@
                      curr = nint( daux * step ) + 1
 
 ! record gtau, we normalize gtau in ctqmc_make_gtau() subroutine
-                     CTQMC_FLALEG_LOOP: do fleg=1,lemax
+                     LEG_LOOP: do fleg=1,lemax
                          dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                          gtau(fleg, flvr, flvr) = gtau(fleg, flvr, flvr) - maux * dtau
-                     enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
+                     enddo LEG_LOOP ! over fleg={1,lemax} loop
 
                  endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -466,19 +466,19 @@
      real(dp) :: taus
      real(dp) :: taue
 
-! length betweem taus and taue
+! distance betweem taus and taue
      real(dp) :: dtau
      real(dp) :: daux
 
 ! interval for imaginary time slice
      real(dp) :: step
 
-! calculate prefactor: pref
-     call ctqmc_make_pref()
-
 ! evaluate step at first
      if ( isort == 1 ) step = real(ntime - 1) / beta
      if ( isort == 2 ) step = real(legrd - 1) / two
+
+! calculate prefactor: pref
+     call ctqmc_make_pref()
 
      CTQMC_FLAVOR_LOOP: do flvr=1,norbs
 
@@ -532,10 +532,10 @@
                      curr = nint( daux * step ) + 1
 
 ! record ftau, we normalize ftau in ctqmc_make_ftau() subroutine
-                     CTQMC_FLALEG_LOOP: do fleg=1,lemax
+                     LEG_LOOP: do fleg=1,lemax
                          dtau = sqrt(two * fleg - 1) * rep_l(curr,fleg)
                          ftau(fleg, flvr, flvr) = ftau(fleg, flvr, flvr) - maux * dtau
-                     enddo CTQMC_FLALEG_LOOP ! over fleg={1,lemax} loop
+                     enddo LEG_LOOP ! over fleg={1,lemax} loop
 
                  endif LEG_BLOCK ! back if ( isort == 2 ) block
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
