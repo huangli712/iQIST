@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/05/2017 by li huang (last modified)
+!!!           05/06/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -31,7 +31,7 @@
      use control, only : cname               ! code name
                                              !
      use control, only : isobs               ! control physical observables
-     use control, only : issus               ! control spin and charge suscept.
+     use control, only : issus               ! control spin and charge susceptibility
      use control, only : isvrt               ! control two-particle quantities
                                              !
      use control, only : nband, norbs, ncfgs ! size of model hamiltonian
@@ -279,7 +279,7 @@
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_reset_array()
-     call cpu_time(time_end)   ! record ending   time
+     call cpu_time(time_end) ! record ending time
 
 ! print the time information
      if ( myid == master ) then ! only master node can do it
@@ -299,7 +299,7 @@
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_retrieve_status()
-     call cpu_time(time_end)   ! record ending   time
+     call cpu_time(time_end) ! record ending time
 
 ! print the time information
      if ( myid == master ) then ! only master node can do it
@@ -319,7 +319,7 @@
 
      call cpu_time(time_begin) ! record starting time
      call ctqmc_try_warming()
-     call cpu_time(time_end)   ! record ending   time
+     call cpu_time(time_end) ! record ending time
 
 ! print the time information
      if ( myid == master ) then ! only master node can do it
@@ -557,6 +557,13 @@
 !!>>> reducing final results                                           <<<
 !!========================================================================
 
+! start to collect data
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a)') 'quantum impurity solver reducing'
+     endif ! back if ( myid == master ) block
+
+     call cpu_time(time_begin) ! record starting time
+
 ! collect data from all children processes
      call ctqmc_reduce_hist(hist_mpi, hist_err)
      call ctqmc_reduce_prob(prob_mpi, prob_err)
@@ -643,9 +650,24 @@
 ! grnf, frnf, and sig2 would be updated there
      call ctqmc_make_hub2()
 
+     call cpu_time(time_end) ! record ending time
+
+! print the time information
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
 !!========================================================================
 !!>>> symmetrizing final results                                       <<<
 !!========================================================================
+
+! start to symmetrize data
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a)') 'quantum impurity solver symmetrizing'
+     endif ! back if ( myid == master ) block
+
+     call cpu_time(time_begin) ! record starting time
 
 ! symmetrize the occupation number matrix over spin or over bands
      call ctqmc_symm_nimp(symm, nimp)
@@ -665,9 +687,24 @@
 ! symmetrize the self-energy function over spin or over bands
      call ctqmc_symm_grnf(symm, sig2)
 
+     call cpu_time(time_end) ! record ending time
+
+! print the time information
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
 !!========================================================================
 !!>>> writing final results                                            <<<
 !!========================================================================
+
+! start to write data
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a)') 'quantum impurity solver writing'
+     endif ! back if ( myid == master ) block
+
+     call cpu_time(time_begin) ! record starting time
 
 ! write out the final data to external files
      if ( myid == master ) then ! only master node can do it
@@ -695,13 +732,36 @@
          call ctqmc_dump_pair(p2pw, p2pw_err)
      endif ! back if ( myid == master ) block
 
+     call cpu_time(time_end) ! record ending time
+
+! print the time information
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
+
 !!========================================================================
 !!>>> saving quantum impurity solver                                   <<<
 !!========================================================================
 
+! start to save the diagrammatic information
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a)') 'quantum impurity solver saving'
+     endif ! back if ( myid == master ) block
+
+     call cpu_time(time_begin) ! record starting time
+
 ! save the perturbation expansion series information to the disk file
      if ( myid == master ) then ! only master node can do it
          call ctqmc_save_status()
+     endif ! back if ( myid == master ) block
+
+     call cpu_time(time_end) ! record ending time
+
+! print the time information
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a,f10.3,a)') 'time:', time_end - time_begin, 's'
+         write(mystd,*)
      endif ! back if ( myid == master ) block
 
 !!========================================================================
@@ -709,7 +769,7 @@
 !!========================================================================
 
 ! print the footer of continuous time quantum Monte Carlo quantum impurity
-! solver. to tell the user it is done
+! solver. to tell the user it is over
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> CTQMC quantum impurity solver shutdown'
          write(mystd,*)
