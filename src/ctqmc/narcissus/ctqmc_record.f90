@@ -698,7 +698,7 @@
 !!
 !! @sub ctqmc_record_szpw
 !!
-!! record the powers of local magnetization which will be used to compute
+!! record the powers of local magnetization, which will be used to compute
 !! the binder cumulant
 !!
   subroutine ctqmc_record_szpw()
@@ -725,7 +725,7 @@
      real(dp) :: step
 
 ! integral of Sz(\tau), in order words:
-!     sint = 1/\beta \int^{\beta}_0 Sz(\tau) d\tau
+!     sint = 1/\beta \int^{\beta}_{0} Sz(\tau) d\tau
      real(dp) :: sint
 
 ! used to record occupations for current flavor channel and time
