@@ -2438,7 +2438,7 @@
 !! reduce the g2pw and h2pw from all children processes
 !!
   subroutine ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
-     use constants, only : dp, zero, czero
+     use constants, only : dp, zero, czero, czi
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
@@ -2515,6 +2515,32 @@
 ! calculate the average
      g2pw_mpi = g2pw_mpi / real(nprocs)
      h2pw_mpi = h2pw_mpi / real(nprocs)
+
+! build g2pw_err and h2pw_err, collect data from all children processes
+# if defined (MPI)
+
+! collect data
+     call mp_allreduce(( real(g2pw - g2pw_mpi))**2, g_re_err)
+     call mp_allreduce((aimag(g2pw - g2pw_mpi))**2, g_im_err)
+     call mp_allreduce(( real(h2pw - h2pw_mpi))**2, h_re_err)
+     call mp_allreduce((aimag(h2pw - h2pw_mpi))**2, h_im_err)
+
+! block until all processes have reached here
+     call mp_barrier()
+
+# endif /* MPI */
+
+! calculate standard deviation
+     if ( nprocs > 1 ) then
+         g_re_err = sqrt( g_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         g_im_err = sqrt( g_im_err / real( nprocs * ( nprocs - 1 ) ) )
+         h_re_err = sqrt( h_re_err / real( nprocs * ( nprocs - 1 ) ) )
+         h_im_err = sqrt( h_im_err / real( nprocs * ( nprocs - 1 ) ) )
+     endif ! back if ( nprocs > 1 ) block
+
+! construct the final g2pw_err and h2pw_err
+     g2pw_err = g_re_err + g_im_err * czi
+     h2pw_err = h_re_err + h_im_err * czi
 
 ! deallocate memory
      deallocate(g_re_err)
