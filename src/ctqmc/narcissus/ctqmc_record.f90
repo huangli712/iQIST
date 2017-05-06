@@ -1881,8 +1881,8 @@
      grnf_err = re_err + im_err * czi
 
 ! deallocate memory
-     deallocate(re_err)
-     deallocate(im_err)
+     deallocate( re_err )
+     deallocate( im_err )
 
      return
   end subroutine ctqmc_reduce_grnf
@@ -2287,9 +2287,11 @@
 !!
   subroutine ctqmc_reduce_ch_t(cchi_mpi, ch_t_mpi, cchi_err, ch_t_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
+     use control, only : issus
      use control, only : norbs
      use control, only : ntime
      use control, only : nprocs
@@ -2305,6 +2307,9 @@
 ! charge-charge correlation function, orbital-resolved
      real(dp), intent(out) :: ch_t_mpi(ntime,norbs,norbs)
      real(dp), intent(out) :: ch_t_err(ntime,norbs,norbs)
+
+! check whether this observable has been measured
+     if ( .not. btest(issus, 2) ) RETURN
 
 ! initialize cchi_mpi and ch_t_mpi, cchi_err and ch_t_err
      cchi_mpi = zero
