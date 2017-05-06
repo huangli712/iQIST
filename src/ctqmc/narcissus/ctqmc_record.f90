@@ -36,10 +36,10 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/05/2017 by li huang (last modified)
-!!! purpose : measure and mpi reduce the important physical observables
-!!!           produced by the hybridization expansion version continuous
-!!!           time quantum Monte Carlo (CTQMC) quantum impurity solver
+!!!           05/06/2017 by li huang (last modified)
+!!! purpose : measure and collect physical observables produced by the
+!!!           hybridization expansion version continuous time quantum
+!!!           Monte Carlo (CTQMC) quantum impurity solver
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
