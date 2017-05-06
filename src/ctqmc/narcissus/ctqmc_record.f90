@@ -2438,11 +2438,12 @@
 !! reduce the g2pw and h2pw from all children processes
 !!
   subroutine ctqmc_reduce_twop(g2pw_mpi, h2pw_mpi, g2pw_err, h2pw_err)
-     use constants, only : dp, czero
+     use constants, only : dp, zero, czero
 
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
+     use control, only : isvrt
      use control, only : norbs
      use control, only : nffrq, nbfrq
      use control, only : nprocs
@@ -2459,6 +2460,32 @@
 ! irreducible vertex function
      complex(dp), intent(out) :: h2pw_mpi(nffrq,nffrq,nbfrq,norbs,norbs)
      complex(dp), intent(out) :: h2pw_err(nffrq,nffrq,nbfrq,norbs,norbs)
+
+! local variables
+! used to store the real and imaginary parts of green's function
+     real(dp), allocatable :: g_re_err(:,:,:,:,:)
+     real(dp), allocatable :: g_im_err(:,:,:,:,:)
+
+! used to store the real and imaginary parts of vertex function
+     real(dp), allocatable :: h_re_err(:,:,:,:,:)
+     real(dp), allocatable :: h_im_err(:,:,:,:,:)
+
+! check whether this observable has been measured
+     if ( .not. btest(isvrt, 1) ) RETURN
+
+! allocate memory
+     allocate(g_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
+     allocate(g_im_err(nffrq,nffrq,nbfrq,norbs,norbs))
+     allocate(h_re_err(nffrq,nffrq,nbfrq,norbs,norbs))
+     allocate(h_im_err(nffrq,nffrq,nbfrq,norbs,norbs))
+
+! initialize g_re_err and g_im_err
+     g_re_err = zero
+     g_im_err = zero
+
+! initialize h_re_err and h_im_err
+     h_re_err = zero
+     h_im_err = zero
 
 ! initialize g2pw_mpi and g2pw_err
      g2pw_mpi = czero
@@ -2488,6 +2515,12 @@
 ! calculate the average
      g2pw_mpi = g2pw_mpi / real(nprocs)
      h2pw_mpi = h2pw_mpi / real(nprocs)
+
+! deallocate memory
+     deallocate(g_re_err)
+     deallocate(g_im_err)
+     deallocate(h_re_err)
+     deallocate(h_im_err)
 
      return
   end subroutine ctqmc_reduce_twop
