@@ -2068,9 +2068,11 @@
 !!
   subroutine ctqmc_reduce_szpw(szpw_mpi, szpw_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
+     use control, only : isobs
      use control, only : norbs
      use control, only : nprocs
      use context, only : szpw
@@ -2081,6 +2083,9 @@
 ! powers of local magnetization, orbital-resolved
      real(dp), intent(out) :: szpw_mpi(4,norbs)
      real(dp), intent(out) :: szpw_err(4,norbs)
+
+! check whether this observable has been measured
+     if ( .not. btest(isobs, 3) ) RETURN
 
 ! initialize szpw_mpi and szpw_err
      szpw_mpi = zero
