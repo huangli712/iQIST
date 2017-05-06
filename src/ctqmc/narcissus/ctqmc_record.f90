@@ -568,7 +568,7 @@
 ! loop index for flavor channel
      integer :: flvr
 
-! note: only the first nfreq points of grnf are modified
+! only the first nfreq points of grnf are modified
      do flvr=1,norbs
          do ifrq=1,nfreq
              grnf(ifrq, flvr, flvr) = grnf(ifrq, flvr, flvr) + gmat(ifrq, flvr, flvr)
@@ -605,17 +605,17 @@
 ! check whether there is conflict
      call s_assert( btest(isobs, 1) )
 
-! since rank means the number of operator pairs,
-! so we have to multiply it with two
+! since rank means the number of operator pairs, so we have to multiply
+! it with two
      do i=1,norbs
          knop(i) = knop(i) + rank(i) * 2.0_dp
      enddo ! over i={1,norbs} loop
 
-     do i=1,norbs
-         do j=1,norbs
+     do j=1,norbs
+         do i=1,norbs
              kmat(i,j) = kmat(i,j) + rank(i) * rank(j) * 4.0_dp
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,norbs} loop
+         enddo ! over i={1,norbs} loop
+     enddo ! over j={1,norbs} loop
 
      return
   end subroutine ctqmc_record_kmat
