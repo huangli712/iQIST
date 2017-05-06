@@ -2367,9 +2367,11 @@
 !!
   subroutine ctqmc_reduce_ch_w(ch_w_mpi, ch_w_err)
      use constants, only : dp, zero
+
      use mmpi, only : mp_allreduce
      use mmpi, only : mp_barrier
 
+     use control, only : issus
      use control, only : norbs
      use control, only : nbfrq
      use control, only : nprocs
@@ -2381,6 +2383,9 @@
 ! charge-charge correlation function, orbital-resolved
      real(dp), intent(out) :: ch_w_mpi(nbfrq,norbs,norbs)
      real(dp), intent(out) :: ch_w_err(nbfrq,norbs,norbs)
+
+! check whether this observable has been measured
+     if ( .not. btest(issus, 4) ) RETURN
 
 ! initialize ch_w_mpi and ch_w_err
      ch_w_mpi = zero
