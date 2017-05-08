@@ -1140,7 +1140,7 @@
      implicit none
 
 ! external arguments
-! charge-charge correlation function: \chi^{c}_{ij} (i\omega), orbital-resolved
+! orbital-resolved charge-charge correlation function
      real(dp), intent(in) :: ch_w(nbfrq,norbs,norbs)
      real(dp), intent(in) :: cerr(nbfrq,norbs,norbs)
 
@@ -1159,11 +1159,11 @@
      enddo ! over i={1,nbfrq} loop
 
 ! check if we need to dump the charge-charge correlation function data
-! to solver.ofom.dat
+! to solver.ch_w.dat
      if ( .not. btest(issus, 4) ) RETURN
 
-! open data file: solver.ofom.dat
-     open(mytmp, file='solver.ofom.dat', form='formatted', status='unknown')
+! open data file: solver.ch_w.dat
+     open(mytmp, file='solver.ch_w.dat', form='formatted', status='unknown')
 
 ! write it
      do k=1,norbs
