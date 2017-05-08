@@ -1270,19 +1270,19 @@
 
 ! local parameters
 ! maximum allowable number of non-zero elements in F matrix
-     integer, parameter :: nzero = 1024
+!     integer, parameter :: nzero = 1024
 
 ! local variables
 ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
-     integer  :: m
-     integer  :: n
+!     integer  :: m
+!     integer  :: n
 
 ! dummy integer variables, used to build F matrix
-     integer  :: value
-     integer  :: permute
+!     integer  :: value
+!     integer  :: permute
 
 ! dummy real variables, used to build atomic green's function
      real(dp) :: ob
@@ -1291,21 +1291,21 @@
      complex(dp) :: cb
 
 ! dummy atomic states: alpha, beta, gamma
-     integer  :: sa(norbs)
-     integer  :: sb(norbs)
-     integer  :: sc(norbs)
+!     integer  :: sa(norbs)
+!     integer  :: sb(norbs)
+!     integer  :: sc(norbs)
 
 ! atomic basis sets
-     integer  :: basis(ncfgs,norbs)
+!     integer  :: basis(ncfgs,norbs)
 
 ! F matrix, < alpha | f_{n} | beta >
-     integer  :: fcounter(norbs)
-     integer  :: fa(nzero,norbs)
-     integer  :: fb(nzero,norbs)
-     integer  :: fv(nzero,norbs)
+!     integer  :: fcounter(norbs)
+!     integer  :: fa(nzero,norbs)
+!     integer  :: fb(nzero,norbs)
+!     integer  :: fv(nzero,norbs)
 
 ! eigenvalues for local hmailtonian
-     real(dp) :: eaux(ncfgs)
+!     real(dp) :: eaux(ncfgs)
 
 ! spherical Bessel functions
      real(dp) :: jaux(mfreq,lemax)
@@ -1321,7 +1321,7 @@
 
 ! atomic green's function and self-energy function
      complex(dp) :: ghub(mfreq,norbs)
-     complex(dp) :: shub(mfreq,norbs)
+!     complex(dp) :: shub(mfreq,norbs)
 
 ! task 1: build atomic eigenbasis (basis)
 !-------------------------------------------------------------------------
