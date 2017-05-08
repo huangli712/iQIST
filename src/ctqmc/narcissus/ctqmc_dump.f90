@@ -1279,11 +1279,11 @@
      close(mytmp)
 
 
-! task 1: dump two-particle green's function
+! task 2: dump irreducible vertex function
 !-------------------------------------------------------------------------
 
-! open data file: solver.g2pw.dat
-     open(mytmp, file='solver.g2pw.dat', form='formatted', status='unknown')
+! open data file: solver.h2pw.dat
+     open(mytmp, file='solver.h2pw.dat', form='formatted', status='unknown')
 
 ! write it
      do m=1,norbs
@@ -1295,7 +1295,7 @@
                  do j=1,nffrq
                      do i=1,nffrq
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,4f16.8)') jt, it, g2pw(i,j,k,n,m), gerr(i,j,k,n,m)
+                         write(mytmp,'(2i6,4f16.8)') jt, it, h2pw(i,j,k,n,m), herr(i,j,k,n,m)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
