@@ -878,7 +878,7 @@
 !! write out the powers of local magnetization, which can be used to
 !! calculate the binder cumulant
 !!
-  subroutine ctqmc_dump_szpw(szpow, szerr)
+  subroutine ctqmc_dump_szpw(szpw, serr)
      use constants, only : dp, mytmp
 
      use control, only : isobs
@@ -888,8 +888,8 @@
 
 ! external arguments
 ! powers of local magnetization
-     real(dp), intent(in) :: szpow(4,norbs)
-     real(dp), intent(in) :: szerr(4,norbs)
+     real(dp), intent(in) :: szpw(4,norbs)
+     real(dp), intent(in) :: serr(4,norbs)
 
 ! local variables
 ! loop index
@@ -907,14 +907,14 @@
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,4
-             write(mytmp,'(i4,2f12.6)') i, szpow(i,j), szerr(i,j)
+             write(mytmp,'(i4,2f12.6)') i, szpw(i,j), serr(i,j)
          enddo ! over i={1,4} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
      enddo ! over j={1,nband} loop
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,4
-         write(mytmp,'(i4,2f12.6)') i, szpow(i,nband+1), szerr(i,nband+1)
+         write(mytmp,'(i4,2f12.6)') i, szpw(i,nband+1), serr(i,nband+1)
      enddo ! over i={1,4} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
