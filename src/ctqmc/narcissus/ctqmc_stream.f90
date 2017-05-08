@@ -18,7 +18,7 @@
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
-!!!           engine
+!!!           computational engine
 !!! status  : unstable
 !!! comment :
 !!!-----------------------------------------------------------------------
@@ -50,9 +50,8 @@
 ! used to check whether the input file (solver.ctqmc.in) exists
      logical :: exists
 
-!!========================================================================
-!!>>> setup general control flags                                      <<<
-!!========================================================================
+! setup general control flags
+!-------------------------------------------------------------------------
      isscf  = 1         ! self-consistent scheme
      isscr  = 1         ! dynamic interaction
      isbnd  = 1         ! symmetry (band part)
@@ -65,14 +64,19 @@
      isvrt  = 1         ! two-particle green's function
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!!========================================================================
-!!>>> setup common variables for quantum impurity model                <<<
-!!========================================================================
+! setup common variables for dynamical mean field theory
+!-------------------------------------------------------------------------
+     niter  = 20        ! maximum number of self-consistent iterations
+!-------------------------------------------------------------------------
+     alpha  = 0.70_dp   ! mixing parameter for self-consistent iterations
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+! setup common variables for quantum impurity model
+!-------------------------------------------------------------------------
      nband  = 1         ! number of correlated bands
      nspin  = 2         ! number of spin projections
      norbs  = 2         ! number of correlated orbitals
      ncfgs  = 4         ! number of atomic eigenstates
-     niter  = 20        ! maximum number of self-consistent iterations
 !-------------------------------------------------------------------------
      U      = 4.00_dp   ! average Coulomb interaction
      Uc     = 4.00_dp   ! intra-orbital Coulomb interaction
@@ -86,12 +90,10 @@
      mune   = 2.00_dp   ! chemical potential or fermi level
      beta   = 8.00_dp   ! inversion of temperature
      part   = 0.50_dp   ! coupling parameter t for Hubbard model
-     alpha  = 0.70_dp   ! mixing parameter for self-consistent iterations
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-!!========================================================================
-!!>>> setup common variables for quantum impurity solver               <<<
-!!========================================================================
+! setup common variables for quantum impurity solver
+!-------------------------------------------------------------------------
      lemax  = 32        ! maximum expansion order for legendre polynomial
      legrd  = 20001     ! number of mesh points for legendre polynomial
 !-------------------------------------------------------------------------
