@@ -1227,20 +1227,22 @@
 ! dummy integer variables
 ! jt: \omega, unit is \pi/\beta
 ! it: \omega', unit is \pi/\beta
-! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
      integer :: it
      integer :: jt
 
-! dummy complex(dp) variables, used to store the correct green's function
+! dummy complex(dp) variables
+! they are used to store the impurity green's function
      complex(dp) :: fw
      complex(dp) :: g1
      complex(dp) :: g2
      complex(dp) :: g3
      complex(dp) :: g4
 
-! two-particle green's function, connected part
+! two-particle green's function, connected part, \chi_{irr}
      complex(dp) :: chic
+
+! full vertex function, \gamma
+     complex(dp) :: chig
 
 ! check whether we need to dump the two-particle green's function and
 ! irreducible vertex function data to solver.g2pw.dat and solver.h2pw.dat
@@ -1273,7 +1275,6 @@
 
 ! close data file
      close(mytmp)
-
 
 ! task 2: dump irreducible vertex function
 !-------------------------------------------------------------------------
