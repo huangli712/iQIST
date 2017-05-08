@@ -1253,6 +1253,18 @@
 ! open data file: solver.twop.dat
      open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
 
+
+
+
+
+
+
+
+
+
+
+
+
 ! write it
      do m=1,norbs
          do n=1,m
