@@ -1059,7 +1059,7 @@
 !! write out the charge-charge correlation function
 !! in imaginary time space
 !!
-  subroutine ctqmc_dump_ch_t(ochi, oochi, oerr, ooerr)
+  subroutine ctqmc_dump_ch_t(cchi, ch_t, cerr, cbar)
      use constants, only : dp, mytmp
 
      use control, only : issus
@@ -1071,12 +1071,12 @@
 
 ! external arguments
 ! charge-charge correlation function data, < N(0) N(\tau) >, totally-averaged
-     real(dp), intent(in) :: ochi(ntime)
-     real(dp), intent(in) :: oerr(ntime)
+     real(dp), intent(in) :: cchi(ntime)
+     real(dp), intent(in) :: cerr(ntime)
 
 ! charge-charge correlation function data, < N(0) N(\tau) >, orbital-resolved
-     real(dp), intent(in) :: oochi(ntime,norbs,norbs)
-     real(dp), intent(in) :: ooerr(ntime,norbs,norbs)
+     real(dp), intent(in) :: ch_t(ntime,norbs,norbs)
+     real(dp), intent(in) :: cbar(ntime,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -1085,18 +1085,18 @@
      integer :: k
 
 ! check if we need to dump the charge-charge correlation function data
-! to solver.ochi.dat
+! to solver.ch_t.dat
      if ( .not. btest(issus, 2) ) RETURN
 
-! open data file: solver.ochi.dat
-     open(mytmp, file='solver.ochi.dat', form='formatted', status='unknown')
+! open data file: solver.ch_t.dat
+     open(mytmp, file='solver.ch_t.dat', form='formatted', status='unknown')
 
 ! write it
      do k=1,norbs
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
              do i=1,ntime
-                 write(mytmp,'(3f12.6)') tmesh(i), oochi(i,j,k), ooerr(i,j,k)
+                 write(mytmp,'(3f12.6)') tmesh(i), ch_t(i,j,k), cbar(i,j,k)
              enddo ! over i={1,ntime} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
@@ -1105,14 +1105,14 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 8888
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), ochi(i), oerr(i)
+         write(mytmp,'(3f12.6)') tmesh(i), cchi(i), cerr(i)
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), sum( oochi(i,:,:) ), sum( ooerr(i,:,:) )
+         write(mytmp,'(3f12.6)') tmesh(i), sum( ch_t(i,:,:) ), sum( cbar(i,:,:) )
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
