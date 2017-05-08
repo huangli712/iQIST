@@ -808,7 +808,7 @@
 !!
 !! write out the fidelity susceptibility
 !!
-  subroutine ctqmc_dump_lrmm(lnop, rmat, lrmm, lerr, rerr, lrerr)
+  subroutine ctqmc_dump_lrmm(lnop, rnop, lrmm, lerr, rerr, lree)
      use constants, only : dp, mytmp
 
      use control, only : isobs
@@ -822,12 +822,12 @@
      real(dp), intent(in) :: lerr(norbs)
 
 ! number of operators at right half axis, < k_r >
-     real(dp), intent(in) :: rmat(norbs)
+     real(dp), intent(in) :: rnop(norbs)
      real(dp), intent(in) :: rerr(norbs)
 
-! used to evaluate fidelity susceptibility, < k_l k_r >
+! crossing product of k_l and k_r, < k_l k_r >
      real(dp), intent(in) :: lrmm(norbs,norbs)
-     real(dp), intent(in) :: lrerr(norbs,norbs)
+     real(dp), intent(in) :: lree(norbs,norbs)
 
 ! local variables
 ! loop index
@@ -839,8 +839,8 @@
      real(dp) :: f_err
 
 ! calculate f_val and f_err
-     f_val = sum( lrmm ) - sum( lnop ) * sum( rmat )
-     f_err = sum( lrerr ) - sum( rmat ) * sum( lerr ) - sum( lnop ) * sum( rerr )
+     f_val = sum( lrmm ) - sum( lnop ) * sum( rnop )
+     f_err = sum( lree ) - sum( rnop ) * sum( lerr ) - sum( lnop ) * sum( rerr )
 
 ! check if we need to dump the fidelity susceptibility data
 ! to solver.lrmm.dat
@@ -852,18 +852,18 @@
 ! write it
      write(mytmp,'(a)') '# < k_l > < k_r > data:'
      do i=1,norbs
-         write(mytmp,'(i6,4f12.6)') i, lnop(i), rmat(i), lerr(i), rerr(i)
+         write(mytmp,'(i6,4f12.6)') i, lnop(i), rnop(i), lerr(i), rerr(i)
      enddo ! over i={1,norbs} loop
      write(mytmp,'(a6,2f12.6)') 'l_sum', sum( lnop ), sum( lerr )
-     write(mytmp,'(a6,2f12.6)') 'r_sum', sum( rmat ), sum( rerr )
+     write(mytmp,'(a6,2f12.6)') 'r_sum', sum( rnop ), sum( rerr )
 
      write(mytmp,'(a)') '# < k_l k_r > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,2f12.6)') i, j, lrmm(i,j), lrerr(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, lrmm(i,j), lree(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,2f12.6)') 'lrsum', sum( lrmm ), sum( lrerr )
+     write(mytmp,'(a6,2f12.6)') 'lrsum', sum( lrmm ), sum( lree )
      write(mytmp,'(a6,2f12.6)') 'fidel', f_val, f_err
 
 ! close data file
