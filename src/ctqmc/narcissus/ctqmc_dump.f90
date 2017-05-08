@@ -808,7 +808,7 @@
 !!
 !! write out the fidelity susceptibility
 !!
-  subroutine ctqmc_dump_lrmm(lmat, rmat, lrmat, lerr, rerr, lrerr)
+  subroutine ctqmc_dump_lrmm(lnop, rmat, lrmm, lerr, rerr, lrerr)
      use constants, only : dp, mytmp
 
      use control, only : isobs
@@ -818,7 +818,7 @@
 
 ! external arguments
 ! number of operators at left half axis, < k_l >
-     real(dp), intent(in) :: lmat(norbs)
+     real(dp), intent(in) :: lnop(norbs)
      real(dp), intent(in) :: lerr(norbs)
 
 ! number of operators at right half axis, < k_r >
@@ -826,7 +826,7 @@
      real(dp), intent(in) :: rerr(norbs)
 
 ! used to evaluate fidelity susceptibility, < k_l k_r >
-     real(dp), intent(in) :: lrmat(norbs,norbs)
+     real(dp), intent(in) :: lrmm(norbs,norbs)
      real(dp), intent(in) :: lrerr(norbs,norbs)
 
 ! local variables
@@ -839,31 +839,31 @@
      real(dp) :: f_err
 
 ! calculate f_val and f_err
-     f_val = sum( lrmat ) - sum( lmat ) * sum( rmat )
-     f_err = sum( lrerr ) - sum( rmat ) * sum( lerr ) - sum( lmat ) * sum( rerr )
+     f_val = sum( lrmm ) - sum( lnop ) * sum( rmat )
+     f_err = sum( lrerr ) - sum( rmat ) * sum( lerr ) - sum( lnop ) * sum( rerr )
 
 ! check if we need to dump the fidelity susceptibility data
-! to solver.lmat.dat
+! to solver.lrmm.dat
      if ( .not. btest(isobs, 2) ) RETURN
 
-! open data file: solver.lmat.dat
-     open(mytmp, file='solver.lmat.dat', form='formatted', status='unknown')
+! open data file: solver.lrmm.dat
+     open(mytmp, file='solver.lrmm.dat', form='formatted', status='unknown')
 
 ! write it
      write(mytmp,'(a)') '# < k_l > < k_r > data:'
      do i=1,norbs
-         write(mytmp,'(i6,4f12.6)') i, lmat(i), rmat(i), lerr(i), rerr(i)
+         write(mytmp,'(i6,4f12.6)') i, lnop(i), rmat(i), lerr(i), rerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,2f12.6)') 'l_sum', sum( lmat ), sum( lerr )
+     write(mytmp,'(a6,2f12.6)') 'l_sum', sum( lnop ), sum( lerr )
      write(mytmp,'(a6,2f12.6)') 'r_sum', sum( rmat ), sum( rerr )
 
      write(mytmp,'(a)') '# < k_l k_r > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,2f12.6)') i, j, lrmat(i,j), lrerr(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, lrmm(i,j), lrerr(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,2f12.6)') 'lrsum', sum( lrmat ), sum( lrerr )
+     write(mytmp,'(a6,2f12.6)') 'lrsum', sum( lrmm ), sum( lrerr )
      write(mytmp,'(a6,2f12.6)') 'fidel', f_val, f_err
 
 ! close data file
