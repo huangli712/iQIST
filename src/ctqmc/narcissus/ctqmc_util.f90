@@ -1252,16 +1252,13 @@
      use constants, only : dp, zero, one, two, pi, czi, czero
 
      use control, only : isort
-     use control, only : norbs !, ncfgs
+     use control, only : norbs
      use control, only : lemax
      use control, only : mfreq
      use control, only : nfreq
      use control, only : ntime
      use control, only : beta
-     !use control, only : myid, master
-     use context, only : tmesh!, rmesh
-     !use context, only : prob
-     !use context, only : eimp, umat
+     use context, only : tmesh
      use context, only : gtau, ftau
      use context, only : grnf, frnf
      use context, only : sig2
