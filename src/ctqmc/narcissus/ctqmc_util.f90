@@ -1357,43 +1357,43 @@
 ! to save the memory and accelerate the computation, we only store the
 ! non-zero element of F matrix. it is crucial to check whether the number
 ! of non-zero elements exceed limit (nzero)
-     fcounter = 0
-     alpha_loop: do i=1,ncfgs
-         sa = basis(i,:)
-         beta_loop: do j=1,ncfgs
-             sb = basis(j,:)
-             orbital_loop: do m=1,norbs
-                 sc = sb
-
-                 if ( sc(m) == 1 ) then
-                     permute = 1
-                     do n=1,m-1
-                         if ( sc(n) == 1 ) permute = -permute
-                     enddo ! over n={1,m-1} loop
-                     sc(m) = 0
-
-                     value = 1
-                     do n=1,norbs
-                         if ( sa(n) /= sc(n) ) value = 0
-                     enddo ! over n={1,norbs} loop
-                     value = value * permute
-                 else
-                     value = 0
-                 endif ! back if ( sc(m) == 1 ) block
-
-                 if ( value /= 0 ) then
-                     fcounter(m) = fcounter(m) + 1
-                     if ( fcounter(m) > nzero ) then
-                         call s_print_error('ctqmc_make_hub2','non-zero elements exceed limit')
-                     endif ! back if ( fcounter(m) > nzero ) block
-                     fa(fcounter(m),m) = i
-                     fb(fcounter(m),m) = j
-                     fv(fcounter(m),m) = value
-                 endif ! back if ( value /= 0 ) block
-
-             enddo orbital_loop ! over m={1,norbs} loop
-         enddo beta_loop ! over j={1,ncfgs} loop
-     enddo alpha_loop ! over i={1,ncfgs} loop
+!     fcounter = 0
+!     alpha_loop: do i=1,ncfgs
+!         sa = basis(i,:)
+!         beta_loop: do j=1,ncfgs
+!             sb = basis(j,:)
+!             orbital_loop: do m=1,norbs
+!                 sc = sb
+!
+!                 if ( sc(m) == 1 ) then
+!                     permute = 1
+!                     do n=1,m-1
+!                         if ( sc(n) == 1 ) permute = -permute
+!                     enddo ! over n={1,m-1} loop
+!                     sc(m) = 0
+!
+!                     value = 1
+!                     do n=1,norbs
+!                         if ( sa(n) /= sc(n) ) value = 0
+!                     enddo ! over n={1,norbs} loop
+!                     value = value * permute
+!                 else
+!                     value = 0
+!                 endif ! back if ( sc(m) == 1 ) block
+!
+!                 if ( value /= 0 ) then
+!                     fcounter(m) = fcounter(m) + 1
+!                     if ( fcounter(m) > nzero ) then
+!                         call s_print_error('ctqmc_make_hub2','non-zero elements exceed limit')
+!                     endif ! back if ( fcounter(m) > nzero ) block
+!                     fa(fcounter(m),m) = i
+!                     fb(fcounter(m),m) = j
+!                     fv(fcounter(m),m) = value
+!                 endif ! back if ( value /= 0 ) block
+!
+!             enddo orbital_loop ! over m={1,norbs} loop
+!         enddo beta_loop ! over j={1,ncfgs} loop
+!     enddo alpha_loop ! over i={1,ncfgs} loop
 
 ! task 4: calculate atomic green's function using Hubbard-I approximation
 !-------------------------------------------------------------------------
