@@ -1397,24 +1397,24 @@
 
 ! task 4: calculate atomic green's function using Hubbard-I approximation
 !-------------------------------------------------------------------------
-     do i=1,norbs
-         do k=1,mfreq
-             ghub(k,i) = czero
-             do m=1,fcounter(i)
-                 ob = fv(m,i) * fv(m,i) * ( prob(fa(m,i)) + prob(fb(m,i)) )
-                 cb = czi * rmesh(k) + eaux(fa(m,i)) - eaux(fb(m,i))
-                 ghub(k,i) = ghub(k,i) + ob / cb
-             enddo ! over m={1,fcounter(i)} loop
-         enddo ! over k={1,mfreq} loop
-     enddo ! over i={1,norbs} loop
+!     do i=1,norbs
+!         do k=1,mfreq
+!             ghub(k,i) = czero
+!             do m=1,fcounter(i)
+!                 ob = fv(m,i) * fv(m,i) * ( prob(fa(m,i)) + prob(fb(m,i)) )
+!                 cb = czi * rmesh(k) + eaux(fa(m,i)) - eaux(fb(m,i))
+!                 ghub(k,i) = ghub(k,i) + ob / cb
+!             enddo ! over m={1,fcounter(i)} loop
+!         enddo ! over k={1,mfreq} loop
+!     enddo ! over i={1,norbs} loop
 
 ! task 5: calculate atomic self-energy function using dyson's equation
 !-------------------------------------------------------------------------
-     do i=1,norbs
-         do k=1,mfreq
-             shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
-         enddo ! over k={1,mfreq} loop
-     enddo ! over i={1,norbs} loop
+!     do i=1,norbs
+!         do k=1,mfreq
+!             shub(k,i) = czi * rmesh(k) + mune - eimp(i) - one / ghub(k,i)
+!         enddo ! over k={1,mfreq} loop
+!     enddo ! over i={1,norbs} loop
 
 ! task 6: dump the ghub and shub, only for reference
 !-------------------------------------------------------------------------
