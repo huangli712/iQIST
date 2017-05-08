@@ -140,11 +140,14 @@
              call p_get('issus' , issus )
              call p_get('isvrt' , isvrt )
 
+             call p_get('niter' , niter )
+
+             call p_get('alpha' , alpha )
+
              call p_get('nband' , nband )
              call p_get('nspin' , nspin )
              call p_get('norbs' , norbs )
              call p_get('ncfgs' , ncfgs )
-             call p_get('niter' , niter )
 
              call p_get('U'     , U     )
              call p_get('Uc'    , Uc    )
@@ -158,7 +161,6 @@
              call p_get('mune'  , mune  )
              call p_get('beta'  , beta  )
              call p_get('part'  , part  )
-             call p_get('alpha' , alpha )
 
              call p_get('lemax' , lemax )
              call p_get('legrd' , legrd )
@@ -199,11 +201,16 @@
      call mp_bcast( isvrt , master )
      call mp_barrier()
 
+     call mp_bcast( niter , master )
+     call mp_barrier()
+
+     call mp_bcast( alpha , master )
+     call mp_barrier()
+
      call mp_bcast( nband , master )
      call mp_bcast( nspin , master )
      call mp_bcast( norbs , master )
      call mp_bcast( ncfgs , master )
-     call mp_bcast( niter , master )
      call mp_barrier()
 
      call mp_bcast( U     , master )
@@ -219,7 +226,6 @@
      call mp_bcast( mune  , master )
      call mp_bcast( beta  , master )
      call mp_bcast( part  , master )
-     call mp_bcast( alpha , master )
      call mp_barrier()
 
      call mp_bcast( lemax , master )
