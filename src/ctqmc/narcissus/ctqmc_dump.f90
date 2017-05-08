@@ -1308,13 +1308,11 @@
      close(mytmp)
 
 
+! task 3: dump irreducible vertex function
+!-------------------------------------------------------------------------
 
-
-
-
-
-
-
+! open data file: solver.twop.dat
+     open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
 
 ! write it
      do m=1,norbs
@@ -1325,34 +1323,33 @@
                  write(mytmp,'(a,i6)') '# nbfrq:', k
                  do j=1,nffrq
 
-! evaluate g2 and g1
+! evaluate g2
                      if ( j <= nffrq/2 ) then
                          g2 = dconjg( grnf(nffrq/2-j+1,m,m) )
                      else
                          g2 = grnf(j-nffrq/2,m,m)
                      endif ! back if ( j <= nffrq/2 ) block
+
+! evaluate g1 and fw
                      p = j + k - 1
                      if ( p <= nffrq/2 ) then
                          g1 = dconjg( grnf(nffrq/2-p+1,m,m) )
-                     else
-                         g1 = grnf(p-nffrq/2,m,m)
-                     endif ! back if ( p <= nffrq/2 ) block
-
-! evaluate fw
-                     if ( p <= nffrq/2 ) then
                          fw = dconjg( frnf(nffrq/2-p+1,m,m) )
                      else
+                         g1 = grnf(p-nffrq/2,m,m)
                          fw = frnf(p-nffrq/2,m,m)
                      endif ! back if ( p <= nffrq/2 ) block
 
                      do i=1,nffrq
 
-! evaluate g3 and g4
+! evaluate g3
                          if ( i <= nffrq/2 ) then
                              g3 = dconjg( grnf(nffrq/2-i+1,n,n) )
                          else
                              g3 = grnf(i-nffrq/2,n,n)
                          endif ! back if ( i <= nffrq/2 ) block
+
+! evaluate g4
                          q = i + k - 1
                          if ( q <= nffrq/2 ) then
                              g4 = dconjg( grnf(nffrq/2-q+1,n,n))
@@ -1360,28 +1357,15 @@
                              g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
-! evaluate chih
-                         chih = dcmplx( h2_re(i,j,k,n,m), h2_im(i,j,k,n,m) )
-
-! evaluate chit
-                         chit = dcmplx( g2_re(i,j,k,n,m), g2_im(i,j,k,n,m) )
-
-! evaluate chi0
-                         chi0 = czero
-                         if ( k == 1 ) chi0 = chi0 + beta * g1 * g3
-                         if ( i == j .and. m == n ) chi0 = chi0 - beta * g1 * g3
-
 ! evaluate chii
-                         chii = g1 * chih - fw * chit
+                         chii = g1 * h2pw(i,j,k,n,m) - fw * g2pw(i,j,k,n,m)
 
 ! jt: \omega, unit is \pi/\beta
 ! it: \omega', unit is \pi/\beta
-! chit: \chi_{tot}(\omega, \omega', \nu), two-particle green's function
-! chi0: \chi_{0}(\omega, \omega', \nu), bubble function
 ! chii: \chi_{irr}(\omega, \omega', \nu)
 ! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
+                         write(mytmp,'(2i6,8f16.8)') jt, it, chii, chii/(g1*g2*g3*g4)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
