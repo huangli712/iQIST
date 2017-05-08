@@ -26,7 +26,7 @@
   subroutine ctqmc_save_status()
      use constants, only : mytmp
 
-     use m_version, only : MAIL_VER
+     use version, only : MAIL_VER
 
      use control, only : cname
      use control, only : norbs

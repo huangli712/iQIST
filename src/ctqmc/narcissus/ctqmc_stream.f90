@@ -665,8 +665,8 @@
 !!
 !! @sub ctqmc_reset_array
 !!
-!! reset the key variables for continuous time quantum Monte Carlo
-!! quantum impurity solver
+!! reset the key variables for continuous time quantum Monte Carlo quantum
+!! impurity solver
 !!
   subroutine ctqmc_reset_array()
      use constants, only : zero, czero, mystd
