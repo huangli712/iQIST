@@ -556,6 +556,7 @@
 !!
   subroutine ctqmc_input_ktau_()
      use constants, only : dp, zero, one, mytmp
+
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
 
@@ -611,7 +612,7 @@
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! since the screening function and its derivates may be updated in master
-! node, it is important to broadcast it from root to all children processes
+! node, it is important to broadcast them from root to all children processes
 # if defined (MPI)
 
 ! broadcast data
