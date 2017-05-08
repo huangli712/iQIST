@@ -1205,13 +1205,13 @@
      implicit none
 
 ! external arguments
-! used to calculate two-particle green's and vertex functions, real part
-     real(dp), intent(in) :: g2_re(nffrq,nffrq,nbfrq,norbs,norbs)
-     real(dp), intent(in) :: h2_re(nffrq,nffrq,nbfrq,norbs,norbs)
+! two-particle green's functions
+     complex(dp), intent(in) :: g2pw(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: gerr(nffrq,nffrq,nbfrq,norbs,norbs)
 
-! used to calculate two-particle green's and vertex functions, imaginary part
-     real(dp), intent(in) :: g2_im(nffrq,nffrq,nbfrq,norbs,norbs)
-     real(dp), intent(in) :: h2_im(nffrq,nffrq,nbfrq,norbs,norbs)
+! irreducible vertex functions
+     complex(dp), intent(in) :: h2pw(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: herr(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index for frequencies
