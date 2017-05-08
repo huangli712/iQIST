@@ -1252,9 +1252,12 @@
 
 ! task 1: dump two-particle green's function
 !-------------------------------------------------------------------------
+
 ! open data file: solver.g2pw.dat
      open(mytmp, file='solver.g2pw.dat', form='formatted', status='unknown')
 
+! close data file
+     close(mytmp)
 
 
 
