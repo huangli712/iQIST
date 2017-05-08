@@ -414,6 +414,7 @@
 !!
   subroutine ctqmc_input_eimp_()
      use constants, only : zero, mytmp
+
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
 
@@ -483,6 +484,7 @@
 !!
   subroutine ctqmc_input_umat_()
      use constants, only : dp, mytmp
+
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
 
