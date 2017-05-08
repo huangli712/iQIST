@@ -257,8 +257,8 @@
 !!
 !! @sub ctqmc_setup_model
 !!
-!! setup impurity model for continuous time quantum Monte Carlo quantum
-!! impurity solver and dynamical mean field theory kernel
+!! setup quantum impurity model for continuous time quantum Monte Carlo
+!! quantum impurity solver and dynamical mean field theory kernel
 !!
   subroutine ctqmc_setup_model()
      implicit none
@@ -308,10 +308,10 @@
 ! build matsubara frequency mesh: rmesh
      call s_linspace_d(pi / beta, (two * mfreq - one) * (pi / beta), mfreq, rmesh)
 
-! build mesh for legendre polynomial in [-1,1]
+! build mesh for legendre orthogonal polynomial in [-1,1]
      call s_linspace_d(-one, one, legrd, lmesh)
 
-! build legendre polynomial in [-1,1]
+! build legendre orthogonal polynomial in [-1,1]
      call s_legendre(lemax, legrd, lmesh, rep_l)
 
      return
@@ -324,6 +324,7 @@
 !!
   subroutine ctqmc_input_hybf_()
      use constants, only : dp, one, two, czi, czero, mytmp
+
      use mmpi, only : mp_bcast
      use mmpi, only : mp_barrier
 
@@ -350,7 +351,7 @@
      real(dp) :: r1, r2
      real(dp) :: i1, i2
 
-! build initial green's function using the analytical equation at
+! build initial green's function using the analytical expression at
 ! non-interaction limit:
 !     G = i * 2.0 * ( w - sqrt(w*w + 1) ),
 ! and then build initial hybridization function using self-consistent
