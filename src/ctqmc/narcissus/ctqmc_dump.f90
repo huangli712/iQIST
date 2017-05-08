@@ -742,9 +742,9 @@
 !!
 !! @sub ctqmc_dump_kmat
 !!
-!! write out the < k > and < k^2 >
+!! write out the kinetic energy fluctuation
 !!
-  subroutine ctqmc_dump_kmat(kmat, kkmat, kerr, kkerr)
+  subroutine ctqmc_dump_kmat(knop, knop, kerr, kbar)
      use constants, only : dp, one, two, mytmp
 
      use control, only : isobs
@@ -754,12 +754,12 @@
 
 ! external arguments
 ! number of operators, < k >
-     real(dp), intent(in) :: kmat(norbs)
+     real(dp), intent(in) :: knop(norbs)
      real(dp), intent(in) :: kerr(norbs)
 
 ! square of number of operators, < k^2 >
-     real(dp), intent(in) :: kkmat(norbs,norbs)
-     real(dp), intent(in) :: kkerr(norbs,norbs)
+     real(dp), intent(in) :: kmat(norbs,norbs)
+     real(dp), intent(in) :: kbar(norbs,norbs)
 
 ! local variables
 ! loop index
@@ -771,11 +771,11 @@
      real(dp) :: f_err
 
 ! calculate f_val and f_err
-     f_val = sum( kkmat ) - sum( kmat ) * ( one * sum( kmat ) + one )
-     f_err = sum( kkerr ) - sum( kerr ) * ( two * sum( kmat ) + one )
+     f_val = sum( kmat ) - sum( knop ) * ( one * sum( knop ) + one )
+     f_err = sum( kbar ) - sum( kerr ) * ( two * sum( knop ) + one )
 
 ! check if we need to dump the < k > and < k^2 > data
-! to solver.kmat.dat
+! to solver.knop.dat
      if ( .not. btest(isobs, 1) ) RETURN
 
 ! open data file: solver.kmat.dat
@@ -784,17 +784,17 @@
 ! write it
      write(mytmp,'(a)') '# <  k  > data:'
      do i=1,norbs
-         write(mytmp,'(i6,2f12.6)') i, kmat(i), kerr(i)
+         write(mytmp,'(i6,2f12.6)') i, knop(i), kerr(i)
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,2f12.6)') 'k_sum', sum( kmat ), sum( kerr )
+     write(mytmp,'(a6,2f12.6)') 'k_sum', sum( knop ), sum( kerr )
 
      write(mytmp,'(a)') '# < k^2 > data:'
      do i=1,norbs
          do j=1,norbs
-             write(mytmp,'(2i6,2f12.6)') i, j, kkmat(i,j), kkerr(i,j)
+             write(mytmp,'(2i6,2f12.6)') i, j, kmat(i,j), kbar(i,j)
          enddo ! over j={1,norbs} loop
      enddo ! over i={1,norbs} loop
-     write(mytmp,'(a6,2f12.6)') 'kksum', sum( kkmat ), sum( kkerr )
+     write(mytmp,'(a6,2f12.6)') 'kksum', sum( kmat ), sum( kbar )
      write(mytmp,'(a6,2f12.6)') 'final', f_val, f_err
 
 ! close data file
