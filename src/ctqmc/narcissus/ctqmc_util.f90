@@ -1243,11 +1243,10 @@
 !!
 !! @sub ctqmc_make_hub2
 !!
-!! build atomic green's function and self-energy function using improved
-!! Hubbard-I approximation. and then build impurity green's function and
-!! auxiliary correlation function via fast fourier transformation (isort
-!! = 1) or analytical formula (isort = 2). at last, the final self-energy
-!! function is obtained by improved estimator trick
+!! first of all, build impurity green's function and auxiliary correlation
+!! function via fast fourier transformation (if isort == 1) or analytical
+!! formula (if isort = 2). and then, the self-energy function is obtained
+!! by using improved estimator trick
 !!
   subroutine ctqmc_make_hub2()
      use constants, only : dp, zero, one, two, pi, czi, czero
