@@ -1266,7 +1266,7 @@
                  do j=1,nffrq
                      do i=1,nffrq
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,8f16.8)') jt, it, chit, chi0, chii, chii/(g1*g2*g3*g4)
+                         write(mytmp,'(2i6,4f16.8)') jt, it, g2pw(i,j,k,n,m), gerr(i,j,k,n,m)
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
@@ -1279,6 +1279,33 @@
      close(mytmp)
 
 
+! task 1: dump two-particle green's function
+!-------------------------------------------------------------------------
+
+! open data file: solver.g2pw.dat
+     open(mytmp, file='solver.g2pw.dat', form='formatted', status='unknown')
+
+! write it
+     do m=1,norbs
+         do n=1,m
+             do k=1,nbfrq
+                 write(mytmp,'(a,i6)') '# flvr1:', m
+                 write(mytmp,'(a,i6)') '# flvr2:', n
+                 write(mytmp,'(a,i6)') '# nbfrq:', k
+                 do j=1,nffrq
+                     do i=1,nffrq
+                         it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
+                         write(mytmp,'(2i6,4f16.8)') jt, it, g2pw(i,j,k,n,m), gerr(i,j,k,n,m)
+                     enddo ! over i={1,nffrq} loop
+                 enddo ! over j={1,nffrq} loop
+                 write(mytmp,*) ! write empty lines
+                 write(mytmp,*)
+             enddo ! over k={1,nbfrq} loop
+         enddo ! over n={1,m} loop
+     enddo ! over m={1,norbs} loop
+
+! close data file
+     close(mytmp)
 
 
 
