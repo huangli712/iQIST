@@ -237,7 +237,7 @@
 !!
 !! write out the occupation number and double occupation matrix
 !!
-  subroutine ctqmc_dump_nmat(nmat, nnmat, nerr, nnerr)
+  subroutine ctqmc_dump_nmat(nimp, nmat, nerr, nbar)
      use constants, only : dp, mytmp
 
      use control, only : nband, norbs
@@ -245,13 +245,13 @@
      implicit none
 
 ! external arguments
-! occupation matrix data
-     real(dp), intent(in) :: nmat(norbs)
+! occupation number data
+     real(dp), intent(in) :: nimp(norbs)
      real(dp), intent(in) :: nerr(norbs)
 
 ! double occupation matrix data
-     real(dp), intent(in) :: nnmat(norbs,norbs)
-     real(dp), intent(in) :: nnerr(norbs,norbs)
+     real(dp), intent(in) :: nmat(norbs,norbs)
+     real(dp), intent(in) :: nbar(norbs,norbs)
 
 ! local variables
 ! loop index
