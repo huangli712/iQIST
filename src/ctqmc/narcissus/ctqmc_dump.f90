@@ -1193,7 +1193,7 @@
 !! write out the two-particle green's function and full (reducible) vertex
 !! function, the improved estimator was used to improve the accuracy
 !!
-  subroutine ctqmc_dump_twop(g2_re, g2_im, h2_re, h2_im)
+  subroutine ctqmc_dump_twop(g2pw, h2pw, gerr, herr)
      use constants, only : dp, czero, mytmp
 
      use control, only : isvrt
