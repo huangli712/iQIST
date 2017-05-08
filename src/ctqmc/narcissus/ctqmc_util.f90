@@ -23,7 +23,7 @@
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 10/01/2008 by li huang (created)
-!!!           05/05/2017 by li huang (last modified)
+!!!           05/08/2017 by li huang (last modified)
 !!! purpose : provide utility functions and subroutines for hybridization
 !!!           expansion version continuous time quantum Monte Carlo (CTQMC)
 !!!           quantum impurity solver
@@ -441,9 +441,9 @@
 !!
 !! @sub ctqmc_symm_nimp
 !!
-!! symmetrize the occupation number array, nmat, according to symm vector
+!! symmetrize the occupation number array, nimp, according to symm vector
 !!
-  subroutine ctqmc_symm_nimp(symm, nmat)
+  subroutine ctqmc_symm_nimp(symm, nimp)
      use constants, only : dp, zero, two
 
      use control, only : isbnd, isspn
@@ -456,7 +456,7 @@
      integer, intent(in) :: symm(norbs)
 
 ! occupation number
-     real(dp), intent(inout) :: nmat(norbs)
+     real(dp), intent(inout) :: nimp(norbs)
 
 ! local variables
 ! loop index over bands
@@ -484,7 +484,7 @@
 
                  do jbnd=1,norbs                ! gather the data
                      if ( symm(jbnd) == ibnd ) then
-                         raux = raux + nmat(jbnd)
+                         raux = raux + nimp(jbnd)
                      endif ! back if ( symm(jbnd) == ibnd ) block
                  enddo ! over jbnd={1,norbs} loop
 
@@ -492,19 +492,19 @@
 
                  do jbnd=1,norbs                ! setup it
                      if ( symm(jbnd) == ibnd ) then
-                         nmat(jbnd) = raux
+                         nimp(jbnd) = raux
                      endif ! back if ( symm(jbnd) == ibnd ) block
                  enddo ! over jbnd={1,norbs} loop
              endif ! back if ( hist(ibnd) > 0 ) block
          enddo ! over ibnd={1,norbs} loop
      endif ! back if ( isbnd == 2 ) block
 
-! symmetrize nmat over spin
+! symmetrize nimp over spin
      if ( isspn == 2 ) then
          do jbnd=1,nband
-             raux = ( nmat(jbnd) + nmat(jbnd+nband) ) / two
-             nmat(jbnd) = raux
-             nmat(jbnd+nband) = raux
+             raux = ( nimp(jbnd) + nimp(jbnd+nband) ) / two
+             nimp(jbnd) = raux
+             nimp(jbnd+nband) = raux
          enddo ! over jbnd={1,nband} loop
      endif ! back if ( isspn == 2 ) block
 
