@@ -28,7 +28,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/04/2017 by li huang (last modified)
+!!!           05/08/2017 by li huang (last modified)
 !!! purpose : dump key observables produced by the hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -124,9 +124,11 @@
 
 ! probability of occupation number distribution
      real(dp) :: oprob(0:norbs)
+     real(dp) :: operr(0:norbs) ! error bar
 
 ! probability of net spin distribution
      real(dp) :: sprob(-nband:nband)
+     real(dp) :: sperr(-nband:nband) ! error bar
 
 ! build atomic basis set (or equivalently atomic eigenstates), we do not
 ! order them according to their occupation numbers
@@ -152,16 +154,20 @@
 
 ! evaluate oprob
      oprob = zero
+     operr = zero
      do i=1,ncfgs
          j = int( noccs(i) )
          oprob(j) = oprob(j) + prob(i)
+         operr(j) = operr(j) + perr(i)
      enddo ! over i={1,ncfgs} loop
 
 ! evaluate sprob
      sprob = zero
+     sperr = zero
      do i=1,ncfgs
          j = int( soccs(i) )
          sprob(j) = sprob(j) + prob(i)
+         sperr(j) = sperr(j) + perr(i)
      enddo ! over i={1,ncfgs} loop
 
 ! open data file: solver.prob.dat
