@@ -12,7 +12,7 @@
 !!!           ctqmc_make_fock <<<---
 !!!           ctqmc_make_umat <<<---
 !!!           ctqmc_make_lift
-!!!           ctqmc_prep_lift <<<---
+!!!           ctqmc_eval_lift <<<---
 !!!           ctqmc_make_gtau
 !!!           ctqmc_make_ftau <<<---
 !!!           ctqmc_make_iret
@@ -682,7 +682,7 @@
 !!
 !! @sub ctqmc_make_fock
 !!
-!! convert current atomic state array into a decimal number (state index)
+!! convert current atomic eigenstate into a decimal number (state index)
 !!
   subroutine ctqmc_make_fock(norbs, pstat, state)
      implicit none
@@ -722,7 +722,7 @@
 !! since the narcissus code is based on the segment representation, it
 !! does not support the spin-flip and pair-hopping terms of course. only
 !! Uc and Jz are need, the other Coulomb interaction parameters are used
-!! as backup
+!! as backup and reference
 !!
 
 !!
@@ -814,7 +814,7 @@
 
 ! evaluate the shift at first
      shift = 0.0_dp
-     call ctqmc_prep_lift(shift)
+     call ctqmc_eval_lift(shift)
 
 ! multiple the shift with sign
      shift = shift * ssign
@@ -834,12 +834,12 @@
   end subroutine ctqmc_make_lift
 
 !!
-!! @sub ctqmc_prep_lift
+!! @sub ctqmc_eval_lift
 !!
 !! evaluate the shift for the Coulomb interaction and the chemical
 !! potential. in fact, shift = 2 K'(\tau = 0)
 !!
-  subroutine ctqmc_prep_lift(shift)
+  subroutine ctqmc_eval_lift(shift)
      use constants, only : dp, zero, two
 
      use control, only : isscr
@@ -849,7 +849,7 @@
      implicit none
 
 ! external arguments
-! the shift value for U and mune
+! the shift value for Uc and mune
      real(dp), intent(out) :: shift
 
 ! evaluate Coulomb interaction shift
@@ -870,10 +870,10 @@
      end select
 
      return
-  end subroutine ctqmc_prep_lift
+  end subroutine ctqmc_eval_lift
 
 !!========================================================================
-!!>>> unconventional representation                                    <<<
+!!>>> advanced representation                                          <<<
 !!========================================================================
 
 !!
