@@ -1294,7 +1294,6 @@
 
 ! atomic green's function and self-energy function
      complex(dp) :: ghub(mfreq,norbs)
-!     complex(dp) :: shub(mfreq,norbs)
 
 ! task 1: build atomic eigenbasis (basis)
 !-------------------------------------------------------------------------
