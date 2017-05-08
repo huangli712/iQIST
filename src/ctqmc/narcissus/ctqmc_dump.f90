@@ -181,13 +181,13 @@
 
      write(mytmp,'(a)') '# orbital probability: index | occupy | prob'
      do i=0,norbs
-         write(mytmp,'(i6,2f12.6)') i + 1, real(i), oprob(i)
+         write(mytmp,'(i6,3f12.6)') i + 1, real(i), oprob(i), operr(i)
      enddo ! over i={0,norbs} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(oprob)
 
      write(mytmp,'(a)') '# spin probability: index | spin | prob'
      do i=-nband,nband
-         write(mytmp,'(i6,2f12.6)') i + nband + 1, i * half, sprob(i)
+         write(mytmp,'(i6,3f12.6)') i + nband + 1, i * half, sprob(i), sperr(i)
      enddo ! over i={-nband,nband} loop
      write(mytmp,'(a6,12X,f12.6)') 'sum', sum(sprob)
 
