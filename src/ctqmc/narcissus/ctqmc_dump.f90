@@ -369,11 +369,11 @@
 
 ! scaled auxiliary correlation function
      real(dp) :: faux(ntime,norbs,norbs)
-     real(dp) :: ftmp(ntime,norbs,norbs)
+     real(dp) :: fbar(ntime,norbs,norbs)
 
-! evaluate faux and ftmp at first
+! evaluate faux and fbar at first
      call ctqmc_make_ftau(tmesh, ftau, faux)
-     call ctqmc_make_ftau(tmesh, ferr, ftmp)
+     call ctqmc_make_ftau(tmesh, ferr, fbar)
 
 ! open data file: solver.fcorr.dat
      open(mytmp, file='solver.fcorr.dat', form='formatted', status='unknown')
@@ -382,7 +382,7 @@
      do i=1,norbs
          do j=1,norbs
              do k=1,ntime
-                 write(mytmp,'(3i6,3f12.6)') i, j, k, tmesh(k), faux(k,j,i), ftmp(k,j,i)
+                 write(mytmp,'(3i6,3f12.6)') i, j, k, tmesh(k), faux(k,j,i), fbar(k,j,i)
              enddo ! over k={1,ntime} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
