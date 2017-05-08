@@ -314,11 +314,11 @@
 
 ! scaled impurity green's function
      real(dp) :: gaux(ntime,norbs,norbs)
-     real(dp) :: gtmp(ntime,norbs,norbs)
+     real(dp) :: gbar(ntime,norbs,norbs)
 
-! evaluate gaux and gtmp at first
+! evaluate gaux and gbar at first
      call ctqmc_make_gtau(tmesh, gtau, gaux)
-     call ctqmc_make_gtau(tmesh, gerr, gtmp)
+     call ctqmc_make_gtau(tmesh, gerr, gbar)
 
 ! open data file: solver.green.dat
      if ( isbin == 1 ) then
@@ -330,7 +330,7 @@
 ! write it
      do i=1,norbs
          do j=1,ntime
-             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gtmp(j,i,i)
+             write(mytmp,'(2i6,3f12.6)') i, j, tmesh(j), gaux(j,i,i), gbar(j,i,i)
          enddo ! over j={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
