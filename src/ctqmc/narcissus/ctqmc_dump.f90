@@ -1246,12 +1246,14 @@
 ! two-particle green's function, connected part
      complex(dp) :: chii
 
-! check if we need to dump the two-particle green's function and vertex
-! function data to solver.twop.dat
+! check whether we need to dump the two-particle green's function and
+! irreducible vertex function data to solver.g2pw.dat and solver.h2pw.dat
      if ( .not. btest(isvrt, 1) ) RETURN
 
-! open data file: solver.twop.dat
-     open(mytmp, file='solver.twop.dat', form='formatted', status='unknown')
+! task 1: dump two-particle green's function
+!-------------------------------------------------------------------------
+! open data file: solver.g2pw.dat
+     open(mytmp, file='solver.g2pw.dat', form='formatted', status='unknown')
 
 
 
