@@ -1002,7 +1002,7 @@
 !! write out the spin-spin correlation function
 !! in matsubara frequency space
 !!
-  subroutine ctqmc_dump_sp_w(ssfom, sserr)
+  subroutine ctqmc_dump_sp_w(sp_w, serr)
      use constants, only : dp, two, pi, mytmp
 
      use control, only : issus
@@ -1013,9 +1013,9 @@
      implicit none
 
 ! external arguments
-! spin-spin correlation function: \chi^{s}_{i} (i\omega), orbital-resolved
-     real(dp), intent(in) :: ssfom(nbfrq,nband)
-     real(dp), intent(in) :: sserr(nbfrq,nband)
+! orbital-resolved spin-spin correlation function 
+     real(dp), intent(in) :: sp_w(nbfrq,nband)
+     real(dp), intent(in) :: serr(nbfrq,nband)
 
 ! local variables
 ! loop index
@@ -1031,17 +1031,17 @@
      enddo ! over i={1,nbfrq} loop
 
 ! check if we need to dump the spin-spin correlation function data
-! to solver.sfom.dat
+! to solver.sp_w.dat
      if ( .not. btest(issus, 3) ) RETURN
 
-! open data file: solver.sfom.dat
-     open(mytmp, file='solver.sfom.dat', form='formatted', status='unknown')
+! open data file: solver.sp_w.dat
+     open(mytmp, file='solver.sp_w.dat', form='formatted', status='unknown')
 
 ! write it
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,nbfrq
-             write(mytmp,'(3f12.6)') bmesh(i), ssfom(i,j), sserr(i,j)
+             write(mytmp,'(3f12.6)') bmesh(i), sp_w(i,j), serr(i,j)
          enddo ! over i={1,nbfrq} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
