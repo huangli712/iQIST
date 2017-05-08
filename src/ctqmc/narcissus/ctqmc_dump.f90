@@ -1304,7 +1304,6 @@
 ! close data file
      close(mytmp)
 
-
 ! task 3: dump irreducible vertex function
 !-------------------------------------------------------------------------
 
@@ -1381,7 +1380,7 @@
 !!
 !! write out the particle-particle pairing susceptibility
 !!
-  subroutine ctqmc_dump_pair(ps_re, ps_im)
+  subroutine ctqmc_dump_pair(p2pw, perr)
      use constants, only : dp, mytmp
 
      use control, only : isvrt
@@ -1392,10 +1391,8 @@
 
 ! external arguments
 ! particle-particle pairing susceptibility, real part
-     real(dp), intent(in) :: ps_re(nffrq,nffrq,nbfrq,norbs,norbs)
-
-! particle-particle pairing susceptibility, imaginary part
-     real(dp), intent(in) :: ps_im(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: ps_re(nffrq,nffrq,nbfrq,norbs,norbs)
+     complex(dp), intent(in) :: ps_im(nffrq,nffrq,nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index for frequencies
