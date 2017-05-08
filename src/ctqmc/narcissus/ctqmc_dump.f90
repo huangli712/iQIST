@@ -1129,7 +1129,7 @@
 !! write out the charge-charge correlation function
 !! in matsubara frequency space
 !!
-  subroutine ctqmc_dump_ch_w(oofom, ooerr)
+  subroutine ctqmc_dump_ch_w(ch_w, cerr)
      use constants, only : dp, two, pi, mytmp
 
      use control, only : issus
@@ -1141,8 +1141,8 @@
 
 ! external arguments
 ! charge-charge correlation function: \chi^{c}_{ij} (i\omega), orbital-resolved
-     real(dp), intent(in) :: oofom(nbfrq,norbs,norbs)
-     real(dp), intent(in) :: ooerr(nbfrq,norbs,norbs)
+     real(dp), intent(in) :: ch_w(nbfrq,norbs,norbs)
+     real(dp), intent(in) :: cerr(nbfrq,norbs,norbs)
 
 ! local variables
 ! loop index
@@ -1170,7 +1170,7 @@
          do j=1,norbs
              write(mytmp,'(2(a,i6))') '# flvr:', j, '  flvr:', k
              do i=1,nbfrq
-                 write(mytmp,'(3f12.6)') bmesh(i), oofom(i,j,k), ooerr(i,j,k)
+                 write(mytmp,'(3f12.6)') bmesh(i), ch_w(i,j,k), cerr(i,j,k)
              enddo ! over i={1,nbfrq} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
