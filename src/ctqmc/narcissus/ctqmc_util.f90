@@ -1326,31 +1326,31 @@
 ! task 1: build atomic eigenbasis (basis)
 !-------------------------------------------------------------------------
 ! we do not order them according to their occupation numbers
-     do i=1,ncfgs
-         do j=1,norbs
-             if ( btest(i-1,j-1) .eqv. .true. ) then
-                 basis(i,j) = 1
-             else
-                 basis(i,j) = 0
-             endif ! back if ( btest(i-1,j-1) .eqv. .true. ) block
-         enddo ! over j={1,norbs} loop
-     enddo ! over i={1,ncfgs} loop
+!     do i=1,ncfgs
+!         do j=1,norbs
+!             if ( btest(i-1,j-1) .eqv. .true. ) then
+!                 basis(i,j) = 1
+!             else
+!                 basis(i,j) = 0
+!             endif ! back if ( btest(i-1,j-1) .eqv. .true. ) block
+!         enddo ! over j={1,norbs} loop
+!     enddo ! over i={1,ncfgs} loop
 
 ! task 2: evaluate atomic eigenvalues directly (eaux)
 !-------------------------------------------------------------------------
-     eaux = zero
-     do i=1,ncfgs
-         do j=1,norbs
-             eaux(i) = eaux(i) + ( eimp(j) - mune ) * basis(i,j)
-         enddo ! over j={1,norbs} loop
-         do j=1,norbs-1
-             do k=j+1,norbs
-                 if ( basis(i,j) == 1 .and. basis(i,k) == 1 ) then
-                     eaux(i) = eaux(i) + umat(j,k)
-                 endif ! back if ( basis(i,j) == 1 .and. basis(i,k) == 1 ) block
-             enddo ! over k={j+1,norbs} loop
-         enddo ! over j={1,norbs-1} loop
-     enddo ! over i={1,ncfgs} loop
+!     eaux = zero
+!     do i=1,ncfgs
+!         do j=1,norbs
+!             eaux(i) = eaux(i) + ( eimp(j) - mune ) * basis(i,j)
+!         enddo ! over j={1,norbs} loop
+!         do j=1,norbs-1
+!             do k=j+1,norbs
+!                 if ( basis(i,j) == 1 .and. basis(i,k) == 1 ) then
+!                     eaux(i) = eaux(i) + umat(j,k)
+!                 endif ! back if ( basis(i,j) == 1 .and. basis(i,k) == 1 ) block
+!             enddo ! over k={j+1,norbs} loop
+!         enddo ! over j={1,norbs-1} loop
+!     enddo ! over i={1,ncfgs} loop
 
 ! task 3: build F matrix < alpha | f_{n} | beta >
 !-------------------------------------------------------------------------
