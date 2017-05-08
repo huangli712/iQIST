@@ -744,7 +744,7 @@
 !!
 !! write out the kinetic energy fluctuation
 !!
-  subroutine ctqmc_dump_kmat(knop, knop, kerr, kbar)
+  subroutine ctqmc_dump_kmat(knop, kmat, kerr, kbar)
      use constants, only : dp, one, two, mytmp
 
      use control, only : isobs
@@ -757,7 +757,7 @@
      real(dp), intent(in) :: knop(norbs)
      real(dp), intent(in) :: kerr(norbs)
 
-! square of number of operators, < k^2 >
+! crossing product of k_i and k_j, < k_i k_j >
      real(dp), intent(in) :: kmat(norbs,norbs)
      real(dp), intent(in) :: kbar(norbs,norbs)
 
@@ -775,7 +775,7 @@
      f_err = sum( kbar ) - sum( kerr ) * ( two * sum( knop ) + one )
 
 ! check if we need to dump the < k > and < k^2 > data
-! to solver.knop.dat
+! to solver.kmat.dat
      if ( .not. btest(isobs, 1) ) RETURN
 
 ! open data file: solver.kmat.dat
