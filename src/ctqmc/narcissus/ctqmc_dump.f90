@@ -235,7 +235,7 @@
 !!
 !! @sub ctqmc_dump_nmat
 !!
-!! write out the occupation matrix and double occupation matrix
+!! write out the occupation number and double occupation matrix
 !!
   subroutine ctqmc_dump_nmat(nmat, nnmat, nerr, nnerr)
      use constants, only : dp, mytmp
