@@ -574,7 +574,7 @@
 !! write out auxiliary correlation function in matsubara frequency space
 !!
   subroutine ctqmc_dump_frnf(frnf)
-     use constants, only : dp, zero, mytmp
+     use constants, only : dp, czero, mytmp
 
      use control, only : norbs
      use control, only : mfreq
@@ -599,7 +599,7 @@
      do i=1,norbs
          do j=1,norbs
              do k=1,mfreq
-                 write(mytmp,'(2i6,5f16.8)') i, j, rmesh(k), frnf(k,j,i), zero, zero
+                 write(mytmp,'(2i6,5f16.8)') i, j, rmesh(k), frnf(k,j,i), czero
              enddo ! over k={1,mfreq} loop
              write(mytmp,*) ! write empty lines
              write(mytmp,*)
