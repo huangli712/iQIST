@@ -1245,8 +1245,8 @@
 !!
 !! first of all, build impurity green's function and auxiliary correlation
 !! function via fast fourier transformation (if isort == 1) or analytical
-!! formula (if isort = 2). and then, the self-energy function is obtained
-!! by using improved estimator trick
+!! formula (if isort == 2). and then, the self-energy function is obtained
+!! by using the improved estimator trick
 !!
   subroutine ctqmc_make_hub2()
      use constants, only : dp, zero, one, two, pi, czi, czero
@@ -1258,6 +1258,7 @@
      use control, only : nfreq
      use control, only : ntime
      use control, only : beta
+
      use context, only : tmesh
      use context, only : gtau, ftau
      use context, only : grnf, frnf
@@ -1271,11 +1272,8 @@
      integer  :: j
      integer  :: k
 
-! dummy real variables, used to build atomic green's function
+! dummy real variables
      real(dp) :: ob
-
-! dummy complex variables, used to build atomic green's function
-     complex(dp) :: cb
 
 ! spherical Bessel functions
      real(dp) :: jaux(mfreq,lemax)
@@ -1283,25 +1281,22 @@
 ! imaginary time green's function
      real(dp) :: gaux(ntime,norbs,norbs)
 
-! auxiliary correlation function
+! imaginary time auxiliary correlation function
      real(dp) :: faux(ntime,norbs,norbs)
 
-! unitary transformation matrix for legendre polynomial
+! unitary transformation matrix for legendre orthogonal polynomial
      complex(dp) :: taux(mfreq,lemax)
 
-! atomic green's function and self-energy function
-     complex(dp) :: ghub(mfreq,norbs)
+! used to backup the sampled impurity green's function
+     complex(dp) :: gtmp(nfreq,norbs,norbs)
 
-! we have to utilize ghub to back the grnf data. the first nfreq frequency
-! points are sampled by monte carlo method directly
-     do i=1,norbs
-         do k=1,nfreq
-             ghub(k,i) = grnf(k,i,i)
-         enddo ! over k={1,nfreq} loop
-     enddo ! over i={1,norbs} loop
-
-! task 7: build impurity green's function and auxiliary correlation function
+! task 1: backup the sampled impurity green's function
 !-------------------------------------------------------------------------
+     gtmp = grnf(1:nfreq,:,:)
+
+! task 2: build impurity green's function and auxiliary correlation function
+!-------------------------------------------------------------------------
+! using fast fourier transformation
      STD_BLOCK: if ( isort == 1 ) then
 
          call ctqmc_make_gtau(tmesh, gtau, gaux)
@@ -1311,49 +1306,49 @@
 
      endif STD_BLOCK ! back if ( isort == 1 ) block
 
-! task 8: build impurity green's function and auxiliary correlation function
+! task 3: build impurity green's function and auxiliary correlation function
 !-------------------------------------------------------------------------
 ! special consideration must be taken for legendre representation, we can
 ! calculate grnf and frnf directly by using legendre coefficients, instead
 ! of performing fourier transformation
      LEG_BLOCK: if ( isort == 2 ) then
 
-! 8.1 build spherical Bessel functions: jaux
+! 3.1 build spherical Bessel functions: jaux
          jaux = zero
          do k=1,mfreq
              ob = (two * k - one) * pi / two
              call s_sbessel(lemax-1, ob, jaux(k,:))
          enddo ! over k={1,mfreq} loop
 
-! 8.2 build unitary transformation matrix: taux
+! 3.2 build unitary transformation matrix: taux
          taux = czero
          do i=1,lemax
              do k=1,mfreq
                  ob = (-one)**(k - 1) * sqrt(two * i - one)
-                 cb = czi**i
-                 taux(k,i) = jaux(k,i) * ob * cb
+                 taux(k,i) = jaux(k,i) * ob * ( czi**i )
              enddo ! over k={1,mfreq} loop
          enddo ! over i={1,lemax} loop
+         taux = taux / beta
 
-! 8.3 rebuild impurity green's function on matsubara frequency (grnf)
-! using orthogonal polynomial representation, G(i\omega)
+! 3.3 rebuild impurity green's function on matsubara frequency
+!     using orthogonal polynomial representation, G(i\omega)
 !
-! 8.4 rebuild auxiliary correlation function on matsubara frequency (frnf)
-! using orthogonal polynomial representation, F(i\omega)
+! 3.4 rebuild auxiliary correlation function on matsubara frequency
+!     using orthogonal polynomial representation, F(i\omega)
          grnf = czero
          frnf = czero
          do i=1,norbs
              do j=1,lemax
                  do k=1,mfreq
-                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gtau(j,i,i) / beta
-                     frnf(k,i,i) = frnf(k,i,i) + taux(k,j) * ftau(j,i,i) / beta
+                     grnf(k,i,i) = grnf(k,i,i) + taux(k,j) * gtau(j,i,i)
+                     frnf(k,i,i) = frnf(k,i,i) + taux(k,j) * ftau(j,i,i)
                  enddo ! over k={1,mfreq} loop
              enddo ! over j={1,lemax} loop
          enddo ! over i={1,norbs} loop
 
      endif LEG_BLOCK ! back if ( isort == 2 ) block
 
-! task 9: build full self-energy function by using improved estimator
+! task 4: build final self-energy function by using improved estimator
 !-------------------------------------------------------------------------
      do i=1,norbs
          do k=1,mfreq
@@ -1361,10 +1356,9 @@
          enddo ! over k={1,nfreq} loop
      enddo ! over i={1,norbs} loop
 
-! don't forget to restore the grnf data from ghub
-     do k=1,nfreq
-         call s_diag_z(norbs, ghub(k,:), grnf(k,:,:))
-     enddo ! over k={1,nfreq} loop
+! task 5: restore the sampled impurity green's function
+!-------------------------------------------------------------------------
+     grnf(1:nfreq,:,:) = gtmp(1:nfreq,:,:)
 
      return
   end subroutine ctqmc_make_hub2
