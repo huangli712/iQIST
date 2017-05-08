@@ -1280,23 +1280,6 @@
 ! dummy complex variables, used to build atomic green's function
      complex(dp) :: cb
 
-! dummy atomic states: alpha, beta, gamma
-!     integer  :: sa(norbs)
-!     integer  :: sb(norbs)
-!     integer  :: sc(norbs)
-
-! atomic basis sets
-!     integer  :: basis(ncfgs,norbs)
-
-! F matrix, < alpha | f_{n} | beta >
-!     integer  :: fcounter(norbs)
-!     integer  :: fa(nzero,norbs)
-!     integer  :: fb(nzero,norbs)
-!     integer  :: fv(nzero,norbs)
-
-! eigenvalues for local hmailtonian
-!     real(dp) :: eaux(ncfgs)
-
 ! spherical Bessel functions
      real(dp) :: jaux(mfreq,lemax)
 
