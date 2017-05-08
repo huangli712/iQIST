@@ -1268,21 +1268,11 @@
 
      implicit none
 
-! local parameters
-! maximum allowable number of non-zero elements in F matrix
-!     integer, parameter :: nzero = 1024
-
 ! local variables
 ! loop index
      integer  :: i
      integer  :: j
      integer  :: k
-!     integer  :: m
-!     integer  :: n
-
-! dummy integer variables, used to build F matrix
-!     integer  :: value
-!     integer  :: permute
 
 ! dummy real variables, used to build atomic green's function
      real(dp) :: ob
