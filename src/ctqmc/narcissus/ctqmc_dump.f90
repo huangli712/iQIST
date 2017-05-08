@@ -1070,11 +1070,11 @@
      implicit none
 
 ! external arguments
-! charge-charge correlation function data, < N(0) N(\tau) >, totally-averaged
+! totally-averaged charge-charge correlation function data 
      real(dp), intent(in) :: cchi(ntime)
      real(dp), intent(in) :: cerr(ntime)
 
-! charge-charge correlation function data, < N(0) N(\tau) >, orbital-resolved
+! orbital-resolved charge-charge correlation function data
      real(dp), intent(in) :: ch_t(ntime,norbs,norbs)
      real(dp), intent(in) :: cbar(ntime,norbs,norbs)
 
