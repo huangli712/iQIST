@@ -935,7 +935,7 @@
 !! write out the spin-spin correlation function
 !! in imaginary time space
 !!
-  subroutine ctqmc_dump_sp_t(schi, sschi, serr, sserr)
+  subroutine ctqmc_dump_sp_t(schi, sp_t, serr, sbar)
      use constants, only : dp, mytmp
 
      use control, only : issus
@@ -946,13 +946,13 @@
      implicit none
 
 ! external arguments
-! spin-spin correlation function data, < Sz(0) Sz(\tau) >, totally-averaged
+! totally-averaged spin-spin correlation function data 
      real(dp), intent(in) :: schi(ntime)
      real(dp), intent(in) :: serr(ntime)
 
-! spin-spin correlation function data, < Sz(0) Sz(\tau) >, orbital-resolved
-     real(dp), intent(in) :: sschi(ntime,nband)
-     real(dp), intent(in) :: sserr(ntime,nband)
+! orbital-resolved spin-spin correlation function data
+     real(dp), intent(in) :: sp_t(ntime,nband)
+     real(dp), intent(in) :: sbar(ntime,nband)
 
 ! local variables
 ! loop index
@@ -960,17 +960,17 @@
      integer :: j
 
 ! check if we need to dump the spin-spin correlation function data
-! to solver.schi.dat
+! to solver.sp_t.dat
      if ( .not. btest(issus, 1) ) RETURN
 
-! open data file: solver.schi.dat
-     open(mytmp, file='solver.schi.dat', form='formatted', status='unknown')
+! open data file: solver.sp_t.dat
+     open(mytmp, file='solver.sp_t.dat', form='formatted', status='unknown')
 
 ! write it
      do j=1,nband
          write(mytmp,'(a,i6)') '# flvr:', j
          do i=1,ntime
-             write(mytmp,'(3f12.6)') tmesh(i), sschi(i,j), sserr(i,j)
+             write(mytmp,'(3f12.6)') tmesh(i), sp_t(i,j), sbar(i,j)
          enddo ! over i={1,ntime} loop
          write(mytmp,*) ! write empty lines
          write(mytmp,*)
@@ -985,7 +985,7 @@
 
      write(mytmp,'(a,i6)') '# flvr:', 9999
      do i=1,ntime
-         write(mytmp,'(3f12.6)') tmesh(i), sum( sschi(i,:) ), sum( sserr(i,:) )
+         write(mytmp,'(3f12.6)') tmesh(i), sum( sp_t(i,:) ), sum( sbar(i,:) )
      enddo ! over i={1,ntime} loop
      write(mytmp,*) ! write empty lines
      write(mytmp,*)
