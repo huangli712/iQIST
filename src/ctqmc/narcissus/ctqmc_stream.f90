@@ -675,7 +675,7 @@
      use stack, only : istack_clean
      use stack, only : istack_push
 
-     use control ! ALL
+     use control, only : myid, master
      use context ! ALL
 
      implicit none
@@ -831,11 +831,11 @@
 
 !>>> ctqmc_smat module
 !-------------------------------------------------------------------------
-! note: sig1 should not be reinitialized here, since it is used to keep
-! the persistency of self-energy function
-!<     sig1 = czero
+! sig1 should not be reinitialized here, since it is used to keep the
+! persistency of self-energy function
 
 ! init self-energy function
+!<     sig1 = czero
      sig2 = czero
 
 !>>> postprocess hybridization function
