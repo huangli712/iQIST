@@ -1226,6 +1226,10 @@
      integer :: n
 
 ! dummy integer variables
+! jt: \omega, unit is \pi/\beta
+! it: \omega', unit is \pi/\beta
+! chii: \chi_{irr}(\omega, \omega', \nu)
+! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
      integer :: it
      integer :: jt
 
@@ -1236,15 +1240,8 @@
      complex(dp) :: g3
      complex(dp) :: g4
 
-! two-particle green's function, full record
-     complex(dp) :: chit
-     complex(dp) :: chih
-
-! two-particle green's function, disconnected part
-     complex(dp) :: chi0
-
 ! two-particle green's function, connected part
-     complex(dp) :: chii
+     complex(dp) :: chic
 
 ! check whether we need to dump the two-particle green's function and
 ! irreducible vertex function data to solver.g2pw.dat and solver.h2pw.dat
@@ -1357,15 +1354,14 @@
                              g4 = grnf(q-nffrq/2,n,n)
                          endif ! back if ( q <= nffrq/2 ) block
 
-! evaluate chii
-                         chii = g1 * h2pw(i,j,k,n,m) - fw * g2pw(i,j,k,n,m)
+! evaluate chic
+                         chic = g1 * h2pw(i,j,k,n,m) - fw * g2pw(i,j,k,n,m)
 
-! jt: \omega, unit is \pi/\beta
-! it: \omega', unit is \pi/\beta
-! chii: \chi_{irr}(\omega, \omega', \nu)
-! chii/(g1*g2*g3*g4) : \gamma(\omega, \omega', \nu), full vertex function
+! evaluate chig
+                         chig = chic / (g1 * g2 * g3 * g4)
+
                          it = 2*i - nffrq - 1; jt = 2*j - nffrq - 1
-                         write(mytmp,'(2i6,8f16.8)') jt, it, chii, chii/(g1*g2*g3*g4)
+                         write(mytmp,'(2i6,4f16.8)') jt, it, chic, chig
                      enddo ! over i={1,nffrq} loop
                  enddo ! over j={1,nffrq} loop
                  write(mytmp,*) ! write empty lines
