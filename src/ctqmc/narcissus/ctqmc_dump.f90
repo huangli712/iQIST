@@ -1199,7 +1199,6 @@
      use control, only : isvrt
      use control, only : norbs
      use control, only : nffrq, nbfrq
-     use control, only : beta
      use context, only : grnf, frnf
 
      implicit none
