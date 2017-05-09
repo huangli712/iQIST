@@ -128,7 +128,7 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') '>>> common parameters for global control'
+     write(mystd,'(2X,a)') '>>> config parameters for global control'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'isscf  /', isscf , '/', 'integer'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'isscr  /', isscr , '/', 'integer'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'isbnd  /', isbnd , '/', 'integer'
@@ -140,11 +140,11 @@
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'issus  /', issus , '/', 'integer'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'isvrt  /', isvrt , '/', 'integer'
 
-     write(mystd,'(2X,a)') '>>> common parameters for dynamical mean field theory'
+     write(mystd,'(2X,a)') '>>> config parameters for dynamical mean field theory'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'niter  /', niter , '/', 'integer'
      write(mystd,'(4X,a,f10.5,2X,a2,a10)') 'alpha  /', alpha , '/', ' double'
 
-     write(mystd,'(2X,a)') '>>> common parameters for quantum impurity model'
+     write(mystd,'(2X,a)') '>>> config parameters for quantum impurity model'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'nband  /', nband , '/', 'integer'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'nspin  /', nspin , '/', 'integer'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'norbs  /', norbs , '/', 'integer'
@@ -157,7 +157,7 @@
      write(mystd,'(4X,a,f10.5,2X,a2,a10)') 'beta   /', beta  , '/', ' double'
      write(mystd,'(4X,a,f10.5,2X,a2,a10)') 'part   /', part  , '/', ' double'
 
-     write(mystd,'(2X,a)') '>>> common parameters for quantum impurity solver'
+     write(mystd,'(2X,a)') '>>> config parameters for quantum impurity solver'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'lemax  /', lemax , '/', 'integer'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'legrd  /', legrd , '/', 'integer'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'mkink  /', mkink , '/', 'integer'
