@@ -451,20 +451,6 @@
      real(dp), public, save :: Jz    = 0.00_dp
 
 !!
-!! @var Js
-!!
-!! spin-flip term
-!!
-     real(dp), public, save :: Js    = 0.00_dp
-
-!!
-!! @var Jp
-!!
-!! pair-hopping term
-!!
-     real(dp), public, save :: Jp    = 0.00_dp
-
-!!
 !! @var lc
 !!
 !! strength of dynamical screening effect. its meaning depends on isscr
