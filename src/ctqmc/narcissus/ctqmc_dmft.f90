@@ -137,7 +137,6 @@
 ! deallocate memory
      deallocate(htmp)
 
-     STOP
      return
   end subroutine ctqmc_dmft_selfer
 
@@ -180,6 +179,11 @@
      real(dp) :: norm
      real(dp) :: seps
 
+! write convergence information to screen
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker running'
+     endif ! back if ( myid == master ) block
+
 ! try to calculate diff and norm
 ! why not using the whole matrix? since sometimes the off-diagonal
 ! elementes may be NaN!
@@ -208,8 +212,10 @@
          write(mystd,'(2X,a,i3,a,e12.4)') cname//' >>> cur_iter:', iter , ' sig_curr:', seps
          write(mystd,'(2X,a,i3,a,e12.4)') cname//' >>> max_iter:', niter, ' eps_curr:', eps8
          write(mystd,'(2X,a,l1)') cname//' >>> self-consistent iteration convergence is ', conv
+         write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
+     STOP
 
      return
   end subroutine ctqmc_dmft_conver
