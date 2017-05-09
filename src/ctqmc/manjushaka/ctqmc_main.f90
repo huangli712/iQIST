@@ -80,13 +80,12 @@
              call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
 
-! call the continuous time quantum Monte Carlo quantum impurity solver, to
-! build the impurity green's function and self-energy function
+! call the quantum impurity solver
          call ctqmc_impurity_solver(iter)
 
-! check the running mode
+! check the self-consistent mode
          if ( isscf == 1 ) then
-             EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
+             EXIT DMFT_CYCLE ! jump out the iteration
          endif ! back if ( isscf == 1 ) block
 
 ! call the self-consistent engine for dynamical mean field theory, to build
