@@ -173,7 +173,6 @@
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'ncarlo /', ncarlo, '/', 'integer'
      
      write(mystd,*)
-     STOP
 
      return
   end subroutine ctqmc_print_summary
