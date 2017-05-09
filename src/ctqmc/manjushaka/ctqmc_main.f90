@@ -50,16 +50,13 @@
 
 # endif  /* MPI */
 
-! print the running header for continuous time quantum Monte Carlo quantum
-! impurity solver and dynamical mean field theory self-consistent engine
+! print the welcome messages
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_header()
      endif ! back if ( myid == master ) block
 
-! setup the important parameters for continuous time quantum Monte Carlo
-! quantum impurity solver and dynamical mean field theory self-consistent
-! engine
-     call ctqmc_config()
+! setup the parameters
+     call ctqmc_setup_param()
 
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
