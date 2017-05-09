@@ -167,11 +167,13 @@
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'nfreq /', nfreq, '/', 'integer'
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'ntime /', ntime, '/', 'integer'
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'nflip /', nflip, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'ntherm/', ntherm, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nsweep/', nsweep, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nclean/', nclean, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nwrite/', nwrite, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nmonte/', nmonte, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'ncarlo/', ncarlo, '/', 'integer'
      
-     write(mystd,'(2(4X,a,i10))')   'ntherm:', ntherm , 'nsweep:', nsweep
-     write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite
-     write(mystd,'(2(4X,a,i10))')   'nmonte:', nmonte , 'ncarlo:', ncarlo
-
      write(mystd,'(1(4X,a,f10.5))') 'system temperature (K): ', ev2k / beta
 
      write(mystd,*)
