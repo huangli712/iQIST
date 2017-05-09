@@ -68,11 +68,11 @@
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') '>>> parallelism: Yes >>> processors:', nprocs
+     write(mystd,'(2X,a,i4)') '>>> currently using cpu cores :', nprocs
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') '>>> parallelism: No  >>> processors:', 1
+     write(mystd,'(2X,a,i4)') '>>> currently using cpu cores :', 1
 
 # endif  /* MPI */
 
