@@ -363,7 +363,6 @@
      else
          write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< LOOPING'
      endif ! back if ( isscf /= 2 ) block
-     STOP
 
      return
   end subroutine ctqmc_print_it_info
