@@ -61,7 +61,7 @@
 ! allocate memory spaces
      call ctqmc_alloc_array()
 
-! setup the impurity model
+! setup the quantum impurity model
      call ctqmc_setup_model()
 
 ! print the runtime parameters
@@ -73,7 +73,7 @@
 !!>>> DMFT ITERATION BEGIN                                             <<<
 !!========================================================================
 
-     DMFT_SC_CYCLE: do iter=1,niter
+     DMFT_CYCLE: do iter=1,niter
 
 ! write the iter to screen, only for check
          if ( myid == master ) then ! only master node can do it
@@ -85,7 +85,7 @@
 
 ! check the self-consistent mode
          if ( isscf == 1 ) then
-             EXIT DMFT_SC_CYCLE ! jump out the iteration
+             EXIT DMFT_CYCLE ! jump out the iteration
          endif ! back if ( isscf == 1 ) block
 
 ! call the built-in self-consistent engine
@@ -96,10 +96,10 @@
 
 ! now the convergence is achieved
          if ( conv .eqv. .true. ) then
-             EXIT DMFT_SC_CYCLE ! jump out the iteration
+             EXIT DMFT_CYCLE ! jump out the iteration
          endif ! back if ( conv .eqv. .true. ) block
 
-     enddo DMFT_SC_CYCLE ! over iter={1,niter} loop
+     enddo DMFT_CYCLE ! over iter={1,niter} loop
 
 !!========================================================================
 !!>>> DMFT ITERATION END                                               <<<
