@@ -45,8 +45,8 @@
 ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a)') cname //' '//FULL_VER
-     write(mystd,'(2X,a)') '>>> A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
+     write(mystd,'(2X,a)') cname//' @ iQIST'
+     write(mystd,'(2X,a)') 'A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
      write(mystd,'(2X,a)') 'Version: '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
@@ -55,11 +55,11 @@
      write(mystd,'(2X,a)') 'License: '//GPL3_VER
      write(mystd,*)
 
-     write(mystd,'(2X,a)') cname//' >>> start running at '//date_time_string
+     write(mystd,'(2X,a)') '>>> start running at '//date_time_string
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: Yes >>> processors:', nprocs
+     write(mystd,'(2X,a,i4)') '>>> parallelism: Yes >>> processors:', nprocs
 
 # else   /* MPI */
 
