@@ -73,13 +73,7 @@
 !!>>> DMFT ITERATION BEGIN                                             <<<
 !!========================================================================
 
-     DMFT_CTQMC_ITERATION: &
-     do iter=1,niter
-
-! check the running mode
-         if ( isscf == 1 ) then
-             EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif ! back if ( isscf == 1 ) block
+     DMFT_CYCLE: do iter=1,niter
 
 ! write the iter to screen
          if ( myid == master ) then ! only master node can do it
@@ -89,6 +83,11 @@
 ! call the continuous time quantum Monte Carlo quantum impurity solver, to
 ! build the impurity green's function and self-energy function
          call ctqmc_impurity_solver(iter)
+
+! check the running mode
+         if ( isscf == 1 ) then
+             EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
+         endif ! back if ( isscf == 1 ) block
 
 ! call the self-consistent engine for dynamical mean field theory, to build
 ! the bath weiss's function and hybridization function
