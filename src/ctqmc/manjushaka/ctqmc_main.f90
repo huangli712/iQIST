@@ -58,13 +58,13 @@
 ! setup the parameters
      call ctqmc_setup_param()
 
+! allocate memory spaces
+     call ctqmc_alloc_array()
+
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
      endif ! back if ( myid == master ) block
-
-! allocate memory and initialize
-     call ctqmc_setup_array()
 
 ! prepare initial hybridization function, init self-consistent iteration
      call ctqmc_selfer_init()
