@@ -182,6 +182,7 @@
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker running'
+         write(mystd,'(4X,a,i3)') 'maximum iteration /', niter
      endif ! back if ( myid == master ) block
 
 ! try to calculate diff and norm
