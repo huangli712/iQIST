@@ -14,13 +14,18 @@
 !!========================================================================
   PROGRAM CTQMC_MAIN !                                                 <<<
 !!========================================================================
-     use mmpi, only : mp_init, mp_finalize
-     use mmpi, only : mp_comm_rank, mp_comm_size
+
+     use mmpi, only : mp_init
+     use mmpi, only : mp_finalize
+     use mmpi, only : mp_comm_rank
+     use mmpi, only : mp_comm_size
      use mmpi, only : mp_barrier
 
-     use control, only : isscf, isbin
+     use control, only : isscf
      use control, only : niter
-     use control, only : nprocs, myid, master
+     use control, only : nprocs
+     use control, only : myid
+     use control, only : master
 
      implicit none
 
