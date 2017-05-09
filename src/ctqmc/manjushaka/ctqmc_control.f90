@@ -71,10 +71,19 @@
 !!
      integer, public, save :: isspn  = 1
 
-! control flag: impurity green's function binning mode
-! if isbin == 1, without binning mode
-! if isbin == 2, with binning mode
-     integer, public, save :: isbin  = 2
+!!
+!! @var isbin
+!!
+!! control flag, define how to accumulate data for imaginary time
+!! impurity green's function G(\tau)
+!!
+!! if isbin == 1:
+!!     without data binning mode
+!!
+!! if isbin == 2:
+!!     with data binning mode
+!!
+     integer, public, save :: isbin  = 1
 
 ! control flag: apply orthogonal polynomial representation to perform measurement
 ! if isort == 1, use normal representation to measure G(\tau)
