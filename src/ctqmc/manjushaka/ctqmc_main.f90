@@ -88,13 +88,11 @@
              EXIT DMFT_CYCLE ! jump out the iteration
          endif ! back if ( isscf == 1 ) block
 
-! call the self-consistent engine for dynamical mean field theory, to build
-! the bath weiss's function and hybridization function
+! call the built-in self-consistent engine
          call ctqmc_dmft_selfer()
 
-! check convergence for dynamical mean field theory iteration
-         convergence = .false.
-         call ctqmc_dmft_conver(iter, convergence)
+! check whether the convergence is reached
+         call ctqmc_dmft_conver(iter, conv)
 
 ! now convergence is achieved
          if ( convergence .eqv. .true. ) then
