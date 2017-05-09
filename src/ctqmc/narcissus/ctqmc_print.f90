@@ -162,9 +162,11 @@
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'legrd /', legrd, '/', 'integer'
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'mkink /', mkink, '/', 'integer'
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'mfreq /', mfreq, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nffrq /', nffrq, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nbfrq /', nbfrq, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nfreq /', nfreq, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'ntime /', ntime, '/', 'integer'
      
-     write(mystd,'(2(4X,a,i10))')   'niter :', niter  , 'nfreq :', nfreq
-     write(mystd,'(2(4X,a,i10))')   'nffrq :', nffrq  , 'nbfrq :', nbfrq
      write(mystd,'(2(4X,a,i10))')   'ntime :', ntime  , 'nflip :', nflip
      write(mystd,'(2(4X,a,i10))')   'ntherm:', ntherm , 'nsweep:', nsweep
      write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite
