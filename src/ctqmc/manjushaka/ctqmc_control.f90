@@ -293,10 +293,18 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! maximum order for legendre polynomial
+!!
+!! @var lemax
+!!
+!! maximum expansion order for legendre orthogonal polynomial
+!!
      integer, public, save :: lemax  = 32
 
-! number of mesh points for legendre polynomial in [-1,1] range
+!!
+!! @var legrd
+!!
+!! number of mesh points for legendre orthogonal polynomial in [-1,1] range
+!!
      integer, public, save :: legrd  = 20001
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
