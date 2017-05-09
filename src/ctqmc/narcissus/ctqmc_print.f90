@@ -166,8 +166,8 @@
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'nbfrq /', nbfrq, '/', 'integer'
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'nfreq /', nfreq, '/', 'integer'
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'ntime /', ntime, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nflip /', nflip, '/', 'integer'
      
-     write(mystd,'(2(4X,a,i10))')   'ntime :', ntime  , 'nflip :', nflip
      write(mystd,'(2(4X,a,i10))')   'ntherm:', ntherm , 'nsweep:', nsweep
      write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite
      write(mystd,'(2(4X,a,i10))')   'nmonte:', nmonte , 'ncarlo:', ncarlo
