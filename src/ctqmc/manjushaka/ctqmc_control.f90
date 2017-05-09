@@ -252,7 +252,11 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-! number of correlated bands
+!!
+!! @var nband
+!!
+!! number of correlated bands
+!!
      integer, public, save :: nband  = 1
 
 ! number of spin projection
