@@ -6,7 +6,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/06/2017 by li huang (last modified)
+!!!           05/09/2017 by li huang (last modified)
 !!! purpose : the main subroutines for the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver. they implement the initialization, thermalization,
@@ -334,8 +334,13 @@
 ! start simulation
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver sampling'
+         write(mystd,'(4X,a)') 'RANDOM WALKING BEGINS'
          write(mystd,*)
      endif ! back if ( myid == master ) block
+
+!!========================================================================
+!!>>> visiting perturbation expansion series                           <<<
+!!========================================================================
 
      MC_SWEEP: do i=1,nsweep,nwrite
 
@@ -343,10 +348,6 @@
          call cpu_time(time_begin)
 
          MC_WRITE: do j=1,nwrite
-
-!!========================================================================
-!!>>> visiting perturbation expansion series                           <<<
-!!========================================================================
 
 ! increase cstep by 1
              cstep = cstep + 1
@@ -552,6 +553,12 @@
 !!========================================================================
 !!>>> ending main iteration                                            <<<
 !!========================================================================
+
+! start simulation
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,a)') 'RANDOM WALKING STOPS'
+         write(mystd,*)
+     endif ! back if ( myid == master ) block
 
 !!========================================================================
 !!>>> reducing final results                                           <<<
