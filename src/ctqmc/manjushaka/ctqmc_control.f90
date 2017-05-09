@@ -202,44 +202,41 @@
 !!
      integer, public, save :: issus  = 1
 
-! control flag: whether we measure the high order correlation function
-! we just use the following algorithm to judge which correlation function
-! should be calculated:
-! (a) isvrt is converted to a binary representation at first. for example,
-! 10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc.
-!
-! (b) then we examine the bits. if it is 1, then we do the calculation.
-! if it is 0, then we ignore the calculation. for example, we just use the
-! second bit (from right side to left side) to represent the calculation
-! of two-particle green's function. so, if isvrt is 10_10 (1010_2), we
-! will calculate the two-particle green's function. if isvrt is 13_10
-! (1101_2), we will not calculate it since the second bit is 0.
-!
-! the following are the definitions of bit representation:
-! if p == 1, do nothing
-! if p == 2, calculate two-particle green's function and vertex function
-! if p == 3, calculate two-particle green's function and vertex function
-! if p == 4, calculate particle-particle pair susceptibility
-! if p == 5, reserved
-! if p == 6, reserved
-! if p == 7, reserved
-! if p == 8, reserved
-! if p == 9, reserved
-!
-! example:
-!   ( 1 1 1 0 1 0 1 0 1)_2
-! p = 9 8 7 6 5 4 3 2 1
-!
-! note: if p == 2 or p == 3, both the two-particle green's and vertex
-! functions are computed, but using two different algorithms. you can not
-! set them to 1 at the same time. in order words, if you set the bit at
-! p == 2 to 1, then the bit at p == 3 must be 0, and vice versa.
-!
-! note: if p == 2, the traditional algorithm is used. if p == 3, the
-! improved estimator for two-particle green's function is used.
-!
-! note: for the manjushaka code, the bit at p == 3 must be 0, i.e., this
-! feature is not implemented so far.
+!!
+!! @var isvrt
+!!
+!! control flag, it is used to tell the code whether we should measure
+!! the two-particle green's functions. we just use the following rules
+!! to judge:
+!!
+!! rule 1:
+!!     isvrt is firstly converted to a binary representation. for example,
+!!     10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc
+!!
+!! rule 2:
+!!     then we examine the bits one by one. if it is 1, then we try to do
+!!     the calculation. if it is 0, then we ignore the calculation. for
+!!     example, we just use the second bit (from right side to left side)
+!!     to represent the calculation of two-particle green's function. so,
+!!     if isvrt is 10_10 (1010_2), we will try to compute the two-particle
+!!     green's function. if isvrt is 13_10 (1101_2), we will not calculate
+!!     it since the second bit is 0
+!!
+!! the following are the definitions of bit representation:
+!!
+!! if p == 1:
+!!     do nothing
+!!
+!! if p == 2:
+!!     calculate two-particle green's function
+!!
+!! if p == 3:
+!!     calculate particle-particle pairing susceptibility
+!!
+!! example:
+!!   ( 1 1 1 0 1 0 1 0 1)_2
+!! p = 9 8 7 6 5 4 3 2 1
+!!
      integer, public, save :: isvrt  = 1
 
 ! control flag: the efficient algorithm for calculate the trace
