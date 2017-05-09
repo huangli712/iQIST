@@ -10,7 +10,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/03/2017 by li huang (last modified)
+!!!           05/09/2017 by li huang (last modified)
 !!! purpose : provide printing infrastructure for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self
@@ -139,9 +139,7 @@
      write(mystd,'(2(4X,a,i10))')   'nclean:', nclean , 'nwrite:', nwrite
      write(mystd,'(2(4X,a,i10))')   'nmonte:', nmonte , 'ncarlo:', ncarlo
 
-     write(mystd,'(2(4X,a,f10.5))') 'U     :', U      , 'Uc    :', Uc
-     write(mystd,'(2(4X,a,f10.5))') 'Js    :', Js     , 'Uv    :', Uv
-     write(mystd,'(2(4X,a,f10.5))') 'Jp    :', Jp     , 'Jz    :', Jz
+     write(mystd,'(2(4X,a,f10.5))') 'Uc    :', Uc     , 'Jz    :', Jz
      write(mystd,'(2(4X,a,f10.5))') 'lc    :', lc     , 'wc    :', wc
      write(mystd,'(2(4X,a,f10.5))') 'mune  :', mune   , 'beta  :', beta
      write(mystd,'(2(4X,a,f10.5))') 'part  :', part   , 'alpha :', alpha
