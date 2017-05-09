@@ -57,7 +57,7 @@ csml:
 	cp ../../base/version.mod .
 
 exe: cssl csml $(objects)
-	$(LINKER) $(exe_obj) -o ctqmc $(LFLAGS) $(LIBS)
+	$(LINKER) $(objects) -o ctqmc $(LFLAGS) $(LIBS)
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
@@ -65,9 +65,7 @@ exe: cssl csml $(objects)
 clean:
 	rm -f *.mod
 	rm -f *.o
-	rm -f *.so
 	rm -f ctqmc
-	rm -f libctqmc.a
 	rm -f libMM.a
 
 clean-dat:
