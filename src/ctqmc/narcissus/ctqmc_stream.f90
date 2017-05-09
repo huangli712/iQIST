@@ -85,7 +85,7 @@
 !-------------------------------------------------------------------------
      mune   = 2.00_dp   ! chemical potential or fermi level
      beta   = 8.00_dp   ! inversion of temperature
-     part   = 0.50_dp   ! coupling parameter t for Hubbard model
+     part   = 0.50_dp   ! hopping parameter t for Hubbard model
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ! setup common variables for quantum impurity solver
@@ -100,6 +100,7 @@
      nbfrq  = 8         ! number of bosonic frequncy
      nfreq  = 128       ! number of sampled matsubara frequency points
      ntime  = 1024      ! number of time slices
+!-------------------------------------------------------------------------
      nflip  = 20000     ! flip period for spin up and spin down states
      ntherm = 200000    ! number of thermalization steps
      nsweep = 20000000  ! number of Monte Carlo sweeping steps
@@ -145,12 +146,8 @@
              call p_get('norbs' , norbs )
              call p_get('ncfgs' , ncfgs )
 
-             call p_get('U'     , U     )
              call p_get('Uc'    , Uc    )
-             call p_get('Uv'    , Uv    )
              call p_get('Jz'    , Jz    )
-             call p_get('Js'    , Js    )
-             call p_get('Jp'    , Jp    )
              call p_get('lc'    , lc    )
              call p_get('wc'    , wc    )
 
