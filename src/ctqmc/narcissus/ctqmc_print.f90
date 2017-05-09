@@ -359,9 +359,9 @@
 ! according to the value of isscf, we can judge the self-consistent scheme
 ! of the current code
      if ( isscf /= 2 ) then
-         write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< LOOPING'
+         write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< ONESHOT'
      else
-         write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< ONE SHOT'
+         write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< LOOPING'
      endif ! back if ( isscf /= 2 ) block
      STOP
 
