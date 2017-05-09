@@ -35,12 +35,23 @@
 !!>>> integer variables                                                <<<
 !!========================================================================
 
-! control flag: running mode
-! if isscf == 1, one-shot non-self-consistent scheme, used in local density
-! approximation plus dynamical mean field theory case
-! if isscf == 2, self-consistent scheme, used in normal model hamiltonian
-! plus dynamical mean field theory case
-     integer, public, save :: isscf  = 2
+!!
+!! @var isscf
+!!
+!! control flag, define the running scheme of the code
+!!
+!! if isscf == 1:
+!!     one-shot non-self-consistent scheme, usually used in the density
+!!     functional theory plus dynamical mean field theory case or used
+!!     to solve the quantum impurity model once
+!!
+!! if isscf == 2:
+!!     self-consistent scheme, used in the dynamical mean field theory
+!!     case. the code implements a typical dynamical mean field theory
+!!     self-consistent loop for solving the Hubbard model in the bethe
+!!     lattice (semicircular density of state)
+!!
+     integer, public, save :: isscf  = 1
 
 ! control flag: symmetry of bands
 ! if issun == 1, the bands are not symmetrized
