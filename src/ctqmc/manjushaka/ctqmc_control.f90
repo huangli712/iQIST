@@ -280,8 +280,15 @@
 !!
      integer, public, save :: ncfgs  = 4
 
-! maximum number of continuous time quantum Monte Carlo quantum impurity
-! solver plus dynamical mean field theory self-consistent iterations
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!!
+!! @var niter
+!!
+!! number of self-consistent iterations for the continuous time quantum
+!! Monte Carlo quantum impurity solver plus dynamical mean field theory
+!! simulation
+!!
      integer, public, save :: niter  = 20
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
