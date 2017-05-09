@@ -18,13 +18,6 @@
 !!!           ctqmc_reduce_lmat
 !!!           ctqmc_reduce_twop
 !!!           ctqmc_reduce_pair <<<---
-!!!           ctqmc_symm_nmat
-!!!           ctqmc_symm_gtau
-!!!           ctqmc_symm_grnf
-!!!           ctqmc_smth_sigf   <<<---
-!!!           ctqmc_make_gtau   <<<---
-!!!           ctqmc_make_prod   <<<---
-!!!           ctqmc_make_hub1   <<<---
 !!! source  : ctqmc_record.f90
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)

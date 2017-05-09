@@ -4,6 +4,13 @@
 !!!           ctqmc_make_hsed
 !!!           ctqmc_four_htau
 !!!           ctqmc_four_hybf
+!!!           ctqmc_symm_nmat
+!!!           ctqmc_symm_gtau
+!!!           ctqmc_symm_grnf
+!!!           ctqmc_smth_sigf   <<<---
+!!!           ctqmc_make_gtau   <<<---
+!!!           ctqmc_make_prod   <<<---
+!!!           ctqmc_make_hub1   <<<---
 !!! source  : ctqmc_util.f90
 !!! type    : functions & subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
