@@ -272,7 +272,6 @@
   subroutine ctqmc_print_runtime(iter, cstep)
      use constants, only : one, half, mystd
 
-     use control, only : cname
      use control, only : nsweep, nmonte
      use context, only : ins_t, ins_a, ins_r
      use context, only : rmv_t, rmv_a, rmv_r
@@ -295,7 +294,7 @@
      integer :: istat
 
 ! about iteration number
-     write(mystd,'(2X,a,i3,2(a,i10))') cname//' >>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
+     write(mystd,'(4X,a,i3,2(a,i10))') '>>> iter:', iter, ' sweep:', cstep, ' of ', nsweep
 
 ! about auxiliary physical observables
      istat = cstep / nmonte
