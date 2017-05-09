@@ -75,7 +75,7 @@
 
      DMFT_CYCLE: do iter=1,niter
 
-! write the iter to screen, only for check
+! write the iter to screen
          if ( myid == master ) then ! only master node can do it
              call ctqmc_print_it_info(iter)
          endif ! back if ( myid == master ) block
