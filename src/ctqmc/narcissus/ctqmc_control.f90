@@ -5,7 +5,7 @@
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/15/2009 by li huang (created)
-!!!           05/05/2017 by li huang (last modified)
+!!!           05/09/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
 !!!           version continuous time quantum Monte Carlo (CTQMC) quantum
 !!!           impurity solver and dynamical mean field theory (DMFT) self-
@@ -287,6 +287,8 @@
 !!
      integer, public, save :: ncfgs  = 4
 
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 !!
 !! @var niter
 !!
@@ -361,6 +363,8 @@
 !!
      integer, public, save :: ntime  = 1024
 
+!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 !!
 !! @var nflip
 !!
@@ -431,13 +435,6 @@
 !!========================================================================
 !!>>> real variables                                                   <<<
 !!========================================================================
-
-!!
-!! @var U
-!!
-!! averaged Coulomb interaction
-!!
-     real(dp), public, save :: U     = 4.00_dp
 
 !!
 !! @var Uc
