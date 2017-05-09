@@ -58,21 +58,21 @@
      write(mystd,'(2X,a)') 'A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version : '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop : '//AUTH_VER
-     write(mystd,'(2X,a)') 'Support : '//MAIL_VER
-     write(mystd,'(2X,a)') 'License : '//GPL3_VER
+     write(mystd,'(2X,a)') 'Version: '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop: '//AUTH_VER
+     write(mystd,'(2X,a)') 'Support: '//MAIL_VER
+     write(mystd,'(2X,a)') 'License: '//GPL3_VER
      write(mystd,*)
 
      write(mystd,'(2X,a)') '>>> start running at '//date_time_string
 
 # if defined (MPI)
 
-     write(mystd,'(2X,a,i4)') '>>> currently using cpu cores :', nprocs
+     write(mystd,'(2X,a,i4)') '>>> currently using cpu cores:', nprocs
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') '>>> currently using cpu cores :', 1
+     write(mystd,'(2X,a,i4)') '>>> currently using cpu cores:', 1
 
 # endif  /* MPI */
 
@@ -348,7 +348,7 @@
      use constants, only : mystd
 
      use control, only : cname
-     use control, only : isbin
+     use control, only : isscf
 
      implicit none
 
@@ -356,13 +356,14 @@
 ! current iteration number
      integer, intent(in) :: iter
 
-! according to the value of isbin, we can judge whether the impurity
-! solver is in the data binning mode
-     if ( isbin /= 2 ) then
-         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< GENERAL'
+! according to the value of isscf, we can judge the self-consistent scheme
+! of the current code
+     if ( isscf /= 2 ) then
+         write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< LOOPING'
      else
-         write(mystd,'(2X,a,i3,a)') cname//' >>> DMFT iter:', iter, ' <<< BINNING'
-     endif ! back if ( isbin /= 2 ) block
+         write(mystd,'(2X,a,i3,a)') cname//' >>> SCF CYCLE:', iter, ' <<< ONE SHOT'
+     endif ! back if ( isscf /= 2 ) block
+     STOP
 
      return
   end subroutine ctqmc_print_it_info
