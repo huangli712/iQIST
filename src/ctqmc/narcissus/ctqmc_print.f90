@@ -128,7 +128,9 @@
 
      implicit none
 
-     write(mystd,'(2X,a)') cname//' >>> parameters list:'
+     write(mystd,'(2X,a)') '>>> common control parameters'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'isscf /', isscf, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'isscr /', isscr, '/', 'integer'
 
      write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isscr :', isscr
      write(mystd,'(2(4X,a,i10))')   'isbnd :', isbnd  , 'isspn :', isspn
