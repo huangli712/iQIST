@@ -157,8 +157,12 @@
      write(mystd,'(4X,a,f10.5,2X,a2,a10)') 'beta  /', beta, '/', 'double'
      write(mystd,'(4X,a,f10.5,2X,a2,a10)') 'part  /', part, '/', 'double'
 
-     write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
-     write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
+     write(mystd,'(2X,a)') '>>> common variables for quantum impurity solver'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'lemax /', lemax, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'legrd /', legrd, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'mkink /', mkink, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'mfreq /', mfreq, '/', 'integer'
+     
      write(mystd,'(2(4X,a,i10))')   'niter :', niter  , 'nfreq :', nfreq
      write(mystd,'(2(4X,a,i10))')   'nffrq :', nffrq  , 'nbfrq :', nbfrq
      write(mystd,'(2(4X,a,i10))')   'ntime :', ntime  , 'nflip :', nflip
