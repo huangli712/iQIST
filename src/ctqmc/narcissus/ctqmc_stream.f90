@@ -14,7 +14,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/05/2017 by li huang (last modified)
+!!!           05/09/2017 by li huang (last modified)
 !!! purpose : initialize and finalize the hybridization expansion version
 !!!           continuous time quantum Monte Carlo (CTQMC) quantum impurity
 !!!           solver and dynamical mean field theory (DMFT) self-consistent
@@ -78,12 +78,8 @@
      norbs  = 2         ! number of correlated orbitals
      ncfgs  = 4         ! number of atomic eigenstates
 !-------------------------------------------------------------------------
-     U      = 4.00_dp   ! average Coulomb interaction
      Uc     = 4.00_dp   ! intra-orbital Coulomb interaction
-     Uv     = 4.00_dp   ! inter-orbital Coulomb interaction
      Jz     = 0.00_dp   ! Hund's exchange interaction in z axis
-     Js     = 0.00_dp   ! spin-flip term
-     Jp     = 0.00_dp   ! pair-hopping term
      lc     = 1.00_dp   ! screening strength
      wc     = 1.00_dp   ! screening frequency
 !-------------------------------------------------------------------------
