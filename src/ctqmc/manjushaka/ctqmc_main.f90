@@ -94,12 +94,12 @@
 ! check whether the convergence is reached
          call ctqmc_dmft_conver(iter, conv)
 
-! now convergence is achieved
-         if ( convergence .eqv. .true. ) then
-             EXIT DMFT_CTQMC_ITERATION ! jump out the iteration
-         endif ! back if ( convergence .eqv. .true. ) block
+! now the convergence is achieved
+         if ( conv .eqv. .true. ) then
+             EXIT DMFT_CYCLE ! jump out the iteration
+         endif ! back if ( conv .eqv. .true. ) block
 
-     enddo DMFT_CTQMC_ITERATION ! over iter={1,niter} loop
+     enddo DMFT_CYCLE ! over iter={1,niter} loop
 
 !!========================================================================
 !!>>> DMFT ITERATION END                                               <<<
