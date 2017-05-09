@@ -71,8 +71,6 @@
          write(mystd,'(2X,a)') cname//' >>> DMFT self-consistent engine running'
          write(mystd,'(4X,2a)') 'general lattice model      / ', 'Hubbard model'
          write(mystd,'(4X,2a)') 'density of states          / ', 'semicircular'
-         write(mystd,'(4X,2a)') 'new hybridization function / ', 'calculated'
-         write(mystd,'(4X,2a)') 'new bath weiss'//"'s"//' function  / ', 'calculated'
      endif ! back if ( myid == master ) block
 
 ! task 1: calculate new hybridization function
@@ -130,6 +128,8 @@
 
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
+         write(mystd,'(4X,2a)') 'new hybridization function / ', 'calculated'
+         write(mystd,'(4X,2a)') 'new bath weiss'//"'s"//' function  / ', 'calculated'
          write(mystd,'(2X,a)') cname//' >>> DMFT self-consistent engine shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
