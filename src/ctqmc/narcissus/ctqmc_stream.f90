@@ -165,6 +165,7 @@
              call p_get('nbfrq' , nbfrq )
              call p_get('nfreq' , nfreq )
              call p_get('ntime' , ntime )
+
              call p_get('nflip' , nflip )
              call p_get('ntherm', ntherm)
              call p_get('nsweep', nsweep)
@@ -206,12 +207,8 @@
      call mp_bcast( ncfgs , master )
      call mp_barrier()
 
-     call mp_bcast( U     , master )
      call mp_bcast( Uc    , master )
-     call mp_bcast( Uv    , master )
      call mp_bcast( Jz    , master )
-     call mp_bcast( Js    , master )
-     call mp_bcast( Jp    , master )
      call mp_bcast( lc    , master )
      call mp_bcast( wc    , master )
      call mp_barrier()
@@ -233,6 +230,8 @@
      call mp_bcast( nbfrq , master )
      call mp_bcast( nfreq , master )
      call mp_bcast( ntime , master )
+     call mp_barrier()
+
      call mp_bcast( nflip , master )
      call mp_bcast( ntherm, master )
      call mp_bcast( nsweep, master )
