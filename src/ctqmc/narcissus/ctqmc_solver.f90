@@ -30,6 +30,7 @@
 
      use control, only : cname               ! code name
                                              !
+     use control, only : iswor               ! worm algorithm
      use control, only : isobs               ! control physical observables
      use control, only : issus               ! control spin and charge susceptibility
      use control, only : isvrt               ! control two-particle quantities
@@ -334,7 +335,16 @@
 ! start simulation
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a)') 'quantum impurity solver sampling'
-         write(mystd,'(4X,a)') 'RANDOM WALKING BEGINS'
+         write(mystd,'(4X,a)',advance='no') 'RANDOM WALKING BEGINS'
+         select case (iswor)
+
+             case (1)
+                 write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z)'
+
+             case (2)
+                 write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z U C_G)'
+
+         end select
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
@@ -556,7 +566,16 @@
 
 ! start simulation
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(4X,a)') 'RANDOM WALKING STOPS'
+         write(mystd,'(4X,a)',advance='no') 'RANDOM WALKING STOPS'
+         select case (iswor)
+
+             case (1)
+                 write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z)'
+
+             case (2)
+                 write(mystd,'(1X,a)') '(CONFIGURATION SPACE: C_Z U C_G)'
+
+         end select
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
