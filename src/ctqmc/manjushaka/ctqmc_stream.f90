@@ -231,7 +231,7 @@
 
 !!>>> ctqmc_setup_array: allocate memory for global variables and then
 !!>>> initialize them
-  subroutine ctqmc_setup_array()
+  subroutine ctqmc_alloc_array()
      use context ! ALL
 
      implicit none
@@ -250,7 +250,7 @@
      call ctqmc_allocate_memory_smat()
 
      return
-  end subroutine ctqmc_setup_array
+  end subroutine ctqmc_alloc_array
 
 !!>>> ctqmc_selfer_init: initialize the continuous time quantum Monte
 !!>>> Carlo quantum impurity solver plus dynamical mean field theory
