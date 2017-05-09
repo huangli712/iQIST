@@ -120,6 +120,45 @@
 !!
      integer, public, save :: isort  = 1
 
+!!
+!! @var isobs
+!!
+!! control flag, it is used to tell the code which physical observables
+!! should be measured. we just use the following rules to judge:
+!!
+!! rule 1:
+!!     isobs is firstly converted to a binary representation. for example,
+!!     10_10 is converted to 1010_2, 15_10 is converted to 1111_2, etc
+!!
+!! rule 2:
+!!     then we examine the bits one by one. if it is 1, then we try to do
+!!     the calculation. if it is 0, then we ignore the calculation. for
+!!     example, we just use the second bit (from right side to left side)
+!!     to represent the calculation of kinetic energy fluctuation. so, if
+!!     isobs is 10_10 (1010_2), we will try to compute the kinetic energy
+!!     fluctuation. if isobs is 13_10 (1101_2), we will not calculate it
+!!     since the second bit is 0
+!!
+!! the following are the definitions of bit representation:
+!!
+!! if p == 1:
+!!     do nothing
+!!
+!! if p == 2:
+!!     calculate kinetic energy fluctuation < k^2 > - < k >^2
+!!
+!! if p == 3:
+!!     calculate fidelity susceptibility < k_l k_r > - < k_l > < k_r >
+!!
+!! if p == 4:
+!!     calculate powers of local magnetization < S^n_z >
+!!
+!! example:
+!!   ( 1 1 1 0 1 0 1 0 1)_2
+!! p = 9 8 7 6 5 4 3 2 1
+!!
+     integer, public, save :: isobs  = 1
+
 ! control flag: whether we measure the charge or spin susceptibility
 ! we just use the following algorithm to judge which susceptibility should
 ! be calculated:
