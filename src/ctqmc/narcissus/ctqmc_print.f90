@@ -145,10 +145,10 @@
      write(mystd,'(4X,a,f10.5,2X,a2,a10)') 'alpha /', alpha, '/', 'real(dp)'
 
      write(mystd,'(2X,a)') '>>> common variables for quantum impurity model'
-     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nband /', niter, '/', 'integer'
-     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nspin /', niter, '/', 'integer'
-     write(mystd,'(4X,a,i10,2X,a2,a10)') 'norbs /', niter, '/', 'integer'
-     write(mystd,'(4X,a,i10,2X,a2,a10)') 'ncfgs /', niter, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nband /', nband, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'nspin /', nspin, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'norbs /', norbs, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'ncfgs /', ncfgs, '/', 'integer'
 
      write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
      write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
