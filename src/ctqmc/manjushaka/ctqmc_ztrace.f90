@@ -969,3 +969,379 @@
   end subroutine cat_make_trace
 
   end module m_part
+
+!!========================================================================
+!!>>> service layer: utility subroutines to calculate trace            <<<
+!!========================================================================
+
+!!>>> ctqmc_lazy_ztrace: core subroutine of manjushaka
+!!>>> (1) use good quantum numbers (GQNs) algorithm, split the total
+!!>>>     Hibert space to small subspace, the dimension of F-matrix will
+!!>>>     be smaller.
+!!>>> (2) use divide and conqure algorithm, split the imaginary time axis
+!!>>>     into several parts, save the matrices products of each part,
+!!>>>     which may be used by next Monte Carlo move.
+!!>>> (3) use lazy trace algorithm to reject some proposed moves immediately.
+!!>>> (4) truncate the Hilbert space according to the total occupancy and
+!!>>>     the probability of atomic eigenstates.
+!!>>> note: you should carefully choose npart in order to obtain the
+!!>>> best speedup.
+  subroutine ctqmc_lazy_ztrace(cmode, csize, ratio, tau_s, tau_e, r, p, pass)
+     use constants, only : dp, zero, one
+
+     use control, only : ncfgs
+     use control, only : mkink
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : index_t, index_v, expt_t, expt_v
+     use context, only : diag
+
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+     use m_sect, only : cat_make_string
+     use m_part, only : cat_make_npart
+     use m_part, only : cat_make_trace
+
+     implicit none
+
+! external arguments
+! different type of Monte Carlo moves
+! if cmode = 1, partly-trial calculation, useful for ctqmc_insert_ztrace() etc
+! if cmode = 2, partly-normal calculation, not used by now
+! if cmode = 3, fully-trial calculation, useful for ctqmc_reflip_kink()
+! if cmode = 4, fully-normal calculation, useful for ctqmc_retrieve_status()
+     integer,  intent(in)  :: cmode
+
+! total number of operators for current diagram
+     integer,  intent(in)  :: csize
+
+! the calculated determinant ratio and prefactor
+     real(dp), intent(in)  :: ratio
+
+! imaginary time value of operator A, only needed in cmode = 1 or 2
+     real(dp), intent(in)  :: tau_s
+
+! imaginary time value of operator B, only needed in cmode = 1 or 2
+     real(dp), intent(in)  :: tau_e
+
+! random number
+     real(dp), intent(in)  :: r
+
+! the final transition probability
+     real(dp), intent(out) :: p
+
+! whether accept this move
+     logical, intent(out)  :: pass
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! start index of a sector
+     integer  :: indx
+
+! number of alive sectors
+     integer  :: nlive
+
+! maximum and minimum bounds of acceptance ratio
+     real(dp) :: pmax
+     real(dp) :: pmin
+
+! sum of btrace (trace boundary)
+     real(dp) :: sbound
+
+! sum of absolute value of trace
+     real(dp) :: cumsum
+
+! index of the living sector
+     integer  :: living(nsect)
+
+! minimum dimension of the sectors in valid strings
+     integer  :: mindim(nsect)
+
+! sector index of a string
+     integer  :: string(csize+1,nsect)
+
+! local version of index_t
+     integer  :: index_loc(mkink)
+
+! local version of expt_t
+     real(dp) :: expt_loc(ncfgs)
+
+! trace boundary for sectors
+     real(dp) :: btrace(nsect)
+
+! trace for each sector
+     real(dp) :: strace(nsect)
+
+! copy data from index_t or index_v to index_loc
+! copy data from expt_t to expt_loc
+     select case (cmode)
+
+         case (1)
+             index_loc = index_t
+             expt_loc = expt_t(:,1)
+
+         case (2)
+             index_loc = index_v
+             expt_loc = expt_t(:,2)
+
+         case (3)
+             index_loc = index_t
+             expt_loc = expt_t(:,2)
+
+         case (4)
+             index_loc = index_v
+             expt_loc = expt_t(:,2)
+
+     end select
+
+! build all possible strings for all the sectors. if one string may be
+! invalid, then all of its elements must be -1
+     call cat_make_string(csize, index_loc, string)
+
+! determine which part should be recalculated (global variables renew
+! and is_cp will be updated in this subroutine)
+     call cat_make_npart(cmode, csize, index_loc, tau_s, tau_e)
+
+! we can verify string here to see whether this diagram can survive?
+! if not, return immediately.
+     pass = .true.
+     if ( all( string == -1 ) ) then
+         pass = .false.; p = zero; RETURN
+     endif ! back if ( all( string == -1 ) ) block
+
+! calculate the trace bounds for each sector and determine the
+! number of sectors which actually contribute to the total trace
+     nlive  = 0
+     living = -1
+     mindim = 0
+     btrace = zero
+     do i=1,nsect
+! if the string is invalid, we just skip it
+         if ( string(1,i) == -1 ) then
+             CYCLE
+! find valid string which may contribute to the total trace
+         else
+! increase the counter
+             nlive = nlive + 1
+
+! record its index
+             living(nlive) = i
+
+! calculate its trace bound and determine the minimal dimension for
+! each alive string
+             mindim(i) = sectors(i)%ndim
+             btrace(nlive) = one
+             do j=1,csize
+                 if ( mindim(i) > sectors( string(j,i) )%ndim ) then
+                     mindim(i) = sectors( string(j,i) )%ndim
+                 endif ! back if ( mindim(i) > sectors( string(j,i) )%ndim ) block
+                 indx = sectors(string(j,i))%istart
+                 btrace(nlive) = btrace(nlive) * expt_v(indx, index_loc(j))
+             enddo ! over j={1,csize} loop
+
+! special treatment for the last time evolution operator
+             indx = sectors(string(1,i))%istart
+             btrace(nlive) = btrace(nlive) * expt_loc(indx) * mindim(i)
+         endif ! back if ( string(1,i) == -1 ) block
+     enddo ! over i={1,nsect} loop
+
+! calculate the summmation of trace bounds and the maximum bound of the
+! acceptance ratio, and then we check whether pmax < r. if it is true,
+! reject this move immediately
+     sbound = sum( btrace(1:nlive) )
+     pmax = abs(ratio) * abs(sbound / matrix_ptrace)
+     if ( pmax < r ) then
+         pass = .false.; p = zero; RETURN
+     endif ! back if ( pmax < r ) block
+
+! sort the btrace to speed up the refining process. here, we use simple
+! bubble sort algorithm, because nalive_sect is usually small
+     call s_sorter2( nlive, btrace(1:nlive), living(1:nlive) )
+
+! begin to refine the trace bounds
+     pass = .false.
+     cumsum = zero
+     strace = zero
+     do i=1,nlive
+! calculate the trace for one sector, this call will consume a lot of
+! time if the dimension of fmat and expansion order is large, so we
+! should carefully optimize it.
+         call cat_make_trace(csize, string(:,living(i)), index_loc, expt_loc, strace(i))
+! if this move is not accepted, refine the trace bound to see whether
+! we can reject it before calculating the trace of all of the sectors
+         if ( .not. pass ) then
+             cumsum = cumsum + abs( strace(i) )
+             sbound = sbound - btrace(i)
+! calculate pmax and pmin
+             pmax = abs(ratio) * abs( (cumsum + sbound) / matrix_ptrace )
+             pmin = abs(ratio) * abs( (cumsum - sbound) / matrix_ptrace )
+! check whether pmax < r
+             if ( pmax < r ) then
+                 pass = .false.; p = zero; RETURN
+             endif ! back if ( pmax < r ) block
+! this move is accepted, stop refining process, calculate the trace of
+! remaining sectors to get the final result of trace.
+             if ( pmin > r ) then
+                 pass = .true.
+             endif ! back if ( pmin > r ) block
+         endif ! back if ( .not. pass ) block
+     enddo ! over i={1,nlive} loop
+
+! if we arrive here, two cases
+! case 1: pass == .false., we haven't determined the pass
+! case 2: pass == .true. we have determined the pass
+! anyway, we have to calculate the final transition probability (p), and
+! update matrix_ntrace and pass.
+     matrix_ntrace = sum(strace(1:nlive))
+     p = ratio * (matrix_ntrace / matrix_ptrace)
+     pass = ( min(one, abs(p)) > r )
+
+! store the diagonal elements of final product in diag(:,1)
+     diag(:,1) = zero
+     do i=1,nlive
+         indx = sectors( living(i) )%istart
+         do j=1,sectors( living(i) )%ndim
+             diag(indx+j-1,1) = sectors( living(i) )%prod(j)
+         enddo ! over j={1,sectors( living(i) )%ndim} loop
+     enddo ! over i={1,nlive} loop
+
+     return
+  end subroutine ctqmc_lazy_ztrace
+
+!!>>> ctqmc_retrieve_ztrace: calculate the trace for retrieve status
+  subroutine ctqmc_retrieve_ztrace(csize, trace)
+     use constants, only : dp, zero
+
+     use control, only : ncfgs
+     use control, only : mkink
+     use context, only : index_v, expt_t
+     use context, only : diag
+
+     use m_sect, only : nsect
+     use m_sect, only : sectors
+     use m_sect, only : cat_make_string
+     use m_part, only : cat_make_npart
+     use m_part, only : cat_make_trace
+
+     implicit none
+
+! external arguments
+! total number of operators for current diagram
+     integer,  intent(in)  :: csize
+
+! the calculated trace
+     real(dp), intent(out) :: trace
+
+! local variables
+! loop index
+     integer  :: i
+     integer  :: j
+
+! start index of a sector
+     integer  :: indx
+
+! sector index of a string
+     integer  :: string(csize+1,nsect)
+
+! local version of index_v
+     integer  :: index_loc(mkink)
+
+! local version of expt_t
+     real(dp) :: expt_loc(ncfgs)
+
+! trace for each sector
+     real(dp) :: strace(nsect)
+
+! copy data from index_v to index_loc
+! copy data from expt_t to expt_loc
+     index_loc = index_v
+     expt_loc = expt_t(:,2)
+
+! build all possible strings for all the sectors. if one string may be
+! invalid, then all of its elements must be -1
+     call cat_make_string(csize, index_loc, string)
+
+! determine which part should be recalculated (global variables renew
+! and is_cp will be updated in this subroutine)
+     call cat_make_npart(4, csize, index_loc, zero, zero)
+
+! calculate the trace of each sector one by one
+     strace = zero
+     do i=1,nsect
+! invalid string, its contribution is neglected
+! note: here we only check the first element of this string. it is enough
+         if ( string(1,i) == -1 ) then
+             strace(i) = zero
+             sectors(i)%prod = zero
+! valid string, we have to calculate its contribution to trace
+         else
+             call cat_make_trace(csize, string(:,i), index_loc, expt_loc, strace(i))
+         endif ! back if ( string(1,i) == -1 ) block
+     enddo ! over i={1,nsect} loop
+     trace = sum(strace)
+
+! store the diagonal elements of final product in diag(:,1), which can be
+! used to calculate the atomic probability
+     do i=1,nsect
+         indx = sectors(i)%istart
+         do j=1,sectors(i)%ndim
+             diag(indx+j-1,1) = sectors(i)%prod(j)
+         enddo ! over j={1,sectors(i)%ndim} loop
+     enddo ! over i={1,nsect} loop
+
+     return
+  end subroutine ctqmc_retrieve_ztrace
+
+!!>>> ctqmc_make_evolve: used to update the operator traces of the
+!!>>> modified part
+  subroutine ctqmc_make_evolve()
+     use control, only : npart
+     use context, only : matrix_ptrace, matrix_ntrace
+     use context, only : diag
+
+     use m_sect, only : nsect
+     use m_part, only : renew, async, is_cp, nc_cp, saved_p, saved_n
+
+     implicit none
+
+! local variables
+! loop index
+     integer :: i
+     integer :: j
+
+! update the operator traces
+     matrix_ptrace = matrix_ntrace
+
+! update diag for the calculation of atomic state probability
+     diag(:,2) = diag(:,1)
+
+! even if renew(j) is 1, not all of the sectors in this part (the j-th
+! part) will be renewed. there are many reasons. one of them is the
+! broken string. anyway, at this time, we have to remind the solver that
+! the matrix products for these sectors in j-th part is unsafe. so it is
+! necessary to update async here
+     do i=1,nsect
+         do j=1,npart
+             if ( renew(j) == 1 .and. is_cp(j,i) == 0 ) then
+                 async(j,i) = 1
+             endif ! back if ( renew(j) == 1 .and. is_cp(j,i) == 0 ) block
+         enddo ! over j={1,npart} loop
+     enddo ! over i={1,nsect} loop
+
+! if we used the divide-and-conquer algorithm, then we had to save the
+! change matrices products when proposed moves were accepted. and sine
+! the matrices products are updated, we also update the corresponding
+! async variable to tell the impurity solver that these saved_p is OK
+     do i=1,nsect
+         do j=1,npart
+             if ( is_cp(j,i) == 1 ) then
+                 saved_p(:,1:nc_cp(j,i),j,i) = saved_n(:,1:nc_cp(j,i),j,i)
+                 async(j,i) = 0
+             endif ! back if ( is_cp(j,i) == 1 ) block
+         enddo ! over j={1,npart} loop
+     enddo ! over i={1,nsect} loop
+
+     return
+  end subroutine ctqmc_make_evolve
