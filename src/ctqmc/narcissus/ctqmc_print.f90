@@ -140,6 +140,12 @@
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'issus /', issus, '/', 'integer'
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'isvrt /', isvrt, '/', 'integer'
 
+     write(mystd,'(2X,a)') '>>> common variables for dynamical mean field theory'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'niter /', niter, '/', 'integer'
+     write(mystd,'(4X,a,f10.5,2X,a2,a10)') 'alpha /', alpha, '/', 'real(dp)'
+
+     write(mystd,'(2X,a)') '>>> common variables for quantum impurity model'
+
      write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
      write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
      write(mystd,'(2(4X,a,i10))')   'nband :', nband  , 'nspin :', nspin
