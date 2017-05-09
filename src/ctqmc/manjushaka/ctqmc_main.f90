@@ -61,13 +61,14 @@
 ! allocate memory spaces
      call ctqmc_alloc_array()
 
+! setup the quantum impurity model
+     call ctqmc_setup_model()
+
 ! print out runtime parameters in summary, only for check
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
      endif ! back if ( myid == master ) block
 
-! prepare initial hybridization function, init self-consistent iteration
-     call ctqmc_selfer_init()
 
 !!========================================================================
 !!>>> DMFT ITERATION BEGIN                                             <<<
