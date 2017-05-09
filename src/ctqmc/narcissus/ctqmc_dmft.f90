@@ -213,7 +213,7 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i3)')    'current iteration /', iter
          write(mystd,'(4X,a,e12.4)') 'current epsilon   /', seps
-         write(mystd,'(2X,a,l1)') cname//' >>> self-consistent iteration convergence is ', conv
+         write(mystd,'(4X,a,l3)')    'is it convergence /', conv
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
