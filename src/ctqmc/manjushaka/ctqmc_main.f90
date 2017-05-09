@@ -105,11 +105,10 @@
 !!>>> DMFT ITERATION END                                               <<<
 !!========================================================================
 
-! deallocate memory and finalize
+! deallocate memory spaces
      call ctqmc_final_array()
 
-! print the footer for continuous time quantum Monte Carlo quantum impurity
-! solver and dynamical mean field theory self-consistent engine
+! print the ending messages
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_footer()
      endif ! back if ( myid == master ) block
@@ -125,4 +124,6 @@
 
 # endif  /* MPI */
 
-  end program ctqmc_main
+!!========================================================================
+  END PROGRAM CTQMC_MAIN !                                             <<<
+!!========================================================================
