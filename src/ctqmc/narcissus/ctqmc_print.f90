@@ -174,7 +174,7 @@
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'nmonte/', nmonte, '/', 'integer'
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'ncarlo/', ncarlo, '/', 'integer'
      
-     write(mystd,'((4X,a,f10.5)') 'system temperature (K): ', ev2k / beta
+     write(mystd,'(4X,a,f10.5)') 'system temperature (K): ', ev2k / beta
 
      write(mystd,*)
      STOP
