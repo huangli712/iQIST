@@ -273,7 +273,11 @@
 !!
      integer, public, save :: norbs  = 2
 
-! number of atomic states (= 2**norbs)
+!!
+!! @var ncfgs
+!!
+!! number of atomic eigenstates (= 2**norbs)
+!!
      integer, public, save :: ncfgs  = 4
 
 ! maximum number of continuous time quantum Monte Carlo quantum impurity
