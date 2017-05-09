@@ -15,11 +15,11 @@
   PROGRAM CTQMC_MAIN !                                                 <<<
 !!========================================================================
 
-     use mmpi, only : mp_init
-     use mmpi, only : mp_finalize
-     use mmpi, only : mp_comm_rank
-     use mmpi, only : mp_comm_size
-     use mmpi, only : mp_barrier
+     use mmpi, only : mp_init      ! init mpi environment
+     use mmpi, only : mp_finalize  ! finalize mpi environment
+     use mmpi, only : mp_barrier   ! barrier to synchronize the data
+     use mmpi, only : mp_comm_rank ! get index of current process
+     use mmpi, only : mp_comm_size ! get number of processes
 
      use control, only : isscf
      use control, only : niter
