@@ -259,10 +259,18 @@
 !!
      integer, public, save :: nband  = 1
 
-! number of spin projection
+!!
+!! @var nspin
+!!
+!! number of spin projections
+!!
      integer, public, save :: nspin  = 2
 
-! number of correlated orbitals (= nband * nspin)
+!!
+!! @var norbs
+!!
+!! number of correlated orbitals (= nband * nspin)
+!!
      integer, public, save :: norbs  = 2
 
 ! number of atomic states (= 2**norbs)
