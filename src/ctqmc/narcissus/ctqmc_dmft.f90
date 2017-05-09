@@ -182,8 +182,8 @@
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker running'
-         write(mystd,'(4X,a,i3)')    'maximum iteration /', niter
-         write(mystd,'(4X,a,e12.4)') 'maximum epsilon   /', eps8
+         write(mystd,'(4X,a,i3)')    'maximum iteration / ', niter
+         write(mystd,'(4X,a,e10.3)') 'maximum epsilon   / ', eps8
      endif ! back if ( myid == master ) block
 
 ! try to calculate diff and norm
@@ -211,9 +211,9 @@
 
 ! write convergence information to screen
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(4X,a,i3)')    'current iteration /', iter
-         write(mystd,'(4X,a,e12.4)') 'current epsilon   /', seps
-         write(mystd,'(4X,a,l3)')    'is it convergence /', conv
+         write(mystd,'(4X,a,i3)')    'current iteration / ', iter
+         write(mystd,'(4X,a,e10.3)') 'current epsilon   / ', seps
+         write(mystd,'(4X,a,l2)')    'is it convergence / ', conv
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
