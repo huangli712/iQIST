@@ -8,12 +8,12 @@
 ## Usage
 ## =====
 ##
-## 'make', 'make lib', 'make clean', 'make clean-dat' or 'make clean-all'
+## 'make', 'make clean', 'make clean-dat' or 'make clean-all'
 ##
 ## Author
 ## ======
 ##
-## This building system is designed, created, implemented, and maintained by
+## This building system is designed, created, and maintained by
 ##
 ## Li Huang // email: lihuang.dmft@gmail.com
 ##
@@ -21,7 +21,7 @@
 ## =======
 ##
 ## 02/28/2015 by li huang (created)
-## 03/24/2017 by li huang (last modified)
+## 05/09/2017 by li huang (last modified)
 ##
 ##
 
@@ -32,26 +32,17 @@ include ../../../build/make.sys
 modc = ctqmc_control.o ctqmc_context.o
 dmft = ctqmc_dmft.o
 core = ctqmc_solver.o
-lev1 = ctqmc_flavor.o ctqmc_update.o
+lev1 = ctqmc_flavor.o ctqmc_hybmat.o ctqmc_update.o
 lev2 = ctqmc_record.o ctqmc_status.o ctqmc_stream.o ctqmc_util.o
 lev3 = ctqmc_dump.o ctqmc_print.o
 main = ctqmc_main.o
-open = ctqmc_open.o
+mlib = libMM.a
 
-CAPI = i_ctqmc.o
-CLIB = libMM.a
-
-objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3)
-exe_obj = $(objects) $(main) $(CLIB)
-lib_obj = $(objects) $(open) $(CAPI)
+objects = $(modc) $(dmft) $(core) $(lev1) $(lev2) $(lev3) $(main) $(mlib)
 
 default: all
 
 all: exe
-
-api:
-	cp ../../capi/capi.mod .
-	cp ../../capi/i_ctqmc.o .
 
 cssl:
 	cp ../../base/libMM.a .
