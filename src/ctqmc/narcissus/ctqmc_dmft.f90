@@ -213,11 +213,11 @@
      if ( myid == master ) then ! only master node can do it
          write(mystd,'(4X,a,i03.2)') 'current iteration / ', iter
          write(mystd,'(4X,a,e10.3)') 'current epsilon   / ', seps
+         write(mystd,'(4X,a,X,a11)') 'selected watchdog / ', 'self-energy'
          write(mystd,'(4X,a,l2)')    'is it convergence / ', conv
          write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
-     STOP
 
      return
   end subroutine ctqmc_dmft_conver
