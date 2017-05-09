@@ -85,6 +85,20 @@
 !!
      integer, public, save :: isbin  = 1
 
+!!
+!! @var iswor
+!!
+!! control flag, define which algorithm will be used to do the measurement
+!!
+!! if iswor == 1:
+!!     without worm algorithm, fast but unreliable
+!!
+!! if iswor == 2:
+!!     with worm algorithm, slow but more reliable. note that only some
+!!     selected physical observables support this algorithm
+!!
+     integer, public, save :: iswor  = 1
+
 ! control flag: apply orthogonal polynomial representation to perform measurement
 ! if isort == 1, use normal representation to measure G(\tau)
 ! if isort == 2, use legendre polynomial to measure G(\tau)
