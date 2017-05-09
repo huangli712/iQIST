@@ -99,23 +99,17 @@
 !!
      integer, public, save :: iswor  = 1
 
-! control flag: apply orthogonal polynomial representation to perform measurement
-! if isort == 1, use normal representation to measure G(\tau)
-! if isort == 2, use legendre polynomial to measure G(\tau)
-! if isort == 3, use chebyshev polynomial (the second kind) to measure G(\tau)
-! if isort == 4, use normal representation to measure G(\tau) and F(\tau)
-! if isort == 5, use legendre polynomial to measure G(\tau) and F(\tau)
-! if isort == 6, use chebyshev polynomial (the second kind) to measure G(\tau) and F(\tau)
-!
-! note: if isort \in [1,3], we use ctqmc_make_hub1() to calculate the self
-! energy function, or else we use ctqmc_make_hub2().
-!
-! note: as for the kernel polynomial representation, the default dirichlet
-! kernel is applied automatically. if you want to choose the other kernel,
-! please check the ctqmc_make_gtau() subroutine in ctqmc_record.f90.
-!
-! note: in the manjushaka code, isort == 4, 5, and 6 are not implemeted so
-! far, i.e., F(\tau) will not be measured.
+!!
+!! @var isort
+!!
+!! control flag, define which basis will be used to do the measurement
+!!
+!! if isort == 1:
+!!     using standard representation
+!!
+!! if isort == 2:
+!!     using legendre orthogonal polynomial representation
+!!
      integer, public, save :: isort  = 1
 
 ! control flag: whether we measure the charge or spin susceptibility
