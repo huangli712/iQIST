@@ -76,8 +76,6 @@
 
 # endif  /* MPI */
 
-     write(mystd,*)
-
      return
   end subroutine ctqmc_print_header
 
@@ -140,7 +138,7 @@
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'issus  /', issus , '/', 'integer'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'isvrt  /', isvrt , '/', 'integer'
 
-     write(mystd,'(2X,a)') '>>> config parameters for dynamical mean field theory'
+     write(mystd,'(2X,a)') '>>> config parameters for self-consistent engine'
      write(mystd,'(4X,a,i10,  2X,a2,a10)') 'niter  /', niter , '/', 'integer'
      write(mystd,'(4X,a,f10.5,2X,a2,a10)') 'alpha  /', alpha , '/', ' double'
 
