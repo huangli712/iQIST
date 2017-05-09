@@ -7,7 +7,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/05/2017 by li huang (last modified)
+!!!           05/09/2017 by li huang (last modified)
 !!! purpose : implement a hybridization expansion version continuous time
 !!!           quantum Monte Carlo (CTQMC) quantum impurity solver plus
 !!!           dynamical mean field theory (DMFT) self-consistent engine.
@@ -62,6 +62,12 @@
          call s_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+
+     if ( myid == master ) then
+         write(mystd,'(2X,a)') cname//' >>> DMFT self-consistent engine running'
+         write(mystd,*)
+     endif
+
 ! initialize htmp
      htmp = hybf
 
@@ -112,6 +118,7 @@
 ! deallocate memory
      deallocate(htmp)
 
+     STOP
      return
   end subroutine ctqmc_dmft_selfer
 
