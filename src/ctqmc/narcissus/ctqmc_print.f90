@@ -45,14 +45,23 @@
 ! obtain current date and time
      call s_time_builder(date_time_string)
 
-     write(mystd,'(2X,a)') cname//' @ iQIST'
+# if defined (MPI)
+
+     write(mystd,'(2X,a)') cname//'_p'
+
+# else   /* MPI */
+
+     write(mystd,'(2X,a)') cname//'_s'
+
+# endif  /* MPI */
+
      write(mystd,'(2X,a)') 'A Modern Continuous Time Quantum Monte Carlo Impurity Solver'
      write(mystd,*)
 
-     write(mystd,'(2X,a)') 'Version: '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
-     write(mystd,'(2X,a)') 'Develop: '//AUTH_VER
-     write(mystd,'(2X,a)') 'Support: '//MAIL_VER
-     write(mystd,'(2X,a)') 'License: '//GPL3_VER
+     write(mystd,'(2X,a)') 'Version : '//FULL_VER//' (built at '//__TIME__//" "//__DATE__//')'
+     write(mystd,'(2X,a)') 'Develop : '//AUTH_VER
+     write(mystd,'(2X,a)') 'Support : '//MAIL_VER
+     write(mystd,'(2X,a)') 'License : '//GPL3_VER
      write(mystd,*)
 
      write(mystd,'(2X,a)') '>>> start running at '//date_time_string
@@ -63,7 +72,7 @@
 
 # else   /* MPI */
 
-     write(mystd,'(2X,a,i4)') cname//' >>> parallelism: No  >>> processors:', 1
+     write(mystd,'(2X,a,i4)') '>>> parallelism: No  >>> processors:', 1
 
 # endif  /* MPI */
 
