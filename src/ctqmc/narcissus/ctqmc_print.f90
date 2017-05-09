@@ -68,7 +68,6 @@
 # endif  /* MPI */
 
      write(mystd,*)
-     STOP
 
      return
   end subroutine ctqmc_print_header
@@ -146,6 +145,7 @@
      write(mystd,'(1(4X,a,f10.5))') 'system temperature (K): ', ev2k / beta
 
      write(mystd,*)
+     STOP
 
      return
   end subroutine ctqmc_print_summary
