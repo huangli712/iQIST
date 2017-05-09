@@ -64,11 +64,10 @@
 ! setup the quantum impurity model
      call ctqmc_setup_model()
 
-! print out runtime parameters in summary, only for check
+! print the runtime parameters
      if ( myid == master ) then ! only master node can do it
          call ctqmc_print_summary()
      endif ! back if ( myid == master ) block
-
 
 !!========================================================================
 !!>>> DMFT ITERATION BEGIN                                             <<<
