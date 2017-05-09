@@ -62,10 +62,11 @@
          call s_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
-     if ( myid == master ) then
+! print necessary self-consistent simulation information
+     if ( myid == master ) then ! only master node can do it
          write(mystd,'(2X,a)') cname//' >>> DMFT self-consistent engine running'
          write(mystd,*)
-     endif
+     endif ! back if ( myid == master ) block
 
 ! task 1: calculate new hybridization function
 !-------------------------------------------------------------------------
