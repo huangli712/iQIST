@@ -56,18 +56,8 @@ csml:
 	cp ../../base/linkedlist.mod .
 	cp ../../base/version.mod .
 
-exe: api cssl csml ctqmc-exe
-ctqmc-exe: $(exe_obj)
+exe: cssl csml $(objects)
 	$(LINKER) $(exe_obj) -o ctqmc $(LFLAGS) $(LIBS)
-
-lib: api cssl csml ctqmc-lib
-ctqmc-lib: $(lib_obj)
-	$(ARCHIVER) libctqmc.a $(lib_obj)
-
-pylib: lib
-	cpp -E -DPYAPI ctqmc_open.f90 > ctqmc_open_py.f90
-	$(F2PY) -c --f90exec=$(F2PYC) -m pyiqist -L. -lctqmc -lMM $(F2PYL) ctqmc_open_py.f90
-	rm -fr *.dSYM ctqmc_open_py.f90
 
 .f90.o:
 	$(F90) $(FFLAGS) $*.f90
