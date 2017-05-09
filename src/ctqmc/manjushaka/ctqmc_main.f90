@@ -21,11 +21,11 @@
      use mmpi, only : mp_comm_rank ! get index of current process
      use mmpi, only : mp_comm_size ! get number of processes
 
-     use control, only : isscf
-     use control, only : niter
-     use control, only : nprocs
-     use control, only : myid
-     use control, only : master
+     use control, only : isscf     ! self-consistent calculation mode
+     use control, only : niter     ! number of self-consistent iteration
+     use control, only : nprocs    ! number of processes
+     use control, only : myid      ! index of current process
+     use control, only : master    ! index of master process
 
      implicit none
 
