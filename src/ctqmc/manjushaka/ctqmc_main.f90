@@ -31,10 +31,10 @@
 
 ! local variables
 ! loop index
-     integer :: iter
+     integer :: iter = 1
 
 ! convergence flag
-     logical :: convergence
+     logical :: conv = .false.
 
 ! initialize mpi envirnoment
 # if defined (MPI)
