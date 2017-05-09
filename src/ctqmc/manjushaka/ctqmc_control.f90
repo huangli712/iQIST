@@ -53,10 +53,18 @@
 !!
      integer, public, save :: isscf  = 1
 
-! control flag: symmetry of bands
-! if issun == 1, the bands are not symmetrized
-! if issun == 2, the bands are symmetrized according to symmetry matrix
-     integer, public, save :: issun  = 2
+!!
+!! @var isbnd
+!!
+!! control flag, define symmetry of the impurity model (band part)
+!!
+!! if isbnd == 1:
+!!     the bands are not symmetrized
+!!
+!! if isbnd == 2:
+!!     the bands are symmetrized according to symmetry matrix
+!!
+     integer, public, save :: isbnd  = 1
 
 !!
 !! @var isspn
