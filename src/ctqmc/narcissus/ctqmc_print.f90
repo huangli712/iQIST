@@ -131,12 +131,14 @@
      write(mystd,'(2X,a)') '>>> common control parameters'
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'isscf /', isscf, '/', 'integer'
      write(mystd,'(4X,a,i10,2X,a2,a10)') 'isscr /', isscr, '/', 'integer'
-
-     write(mystd,'(2(4X,a,i10))')   'isscf :', isscf  , 'isscr :', isscr
-     write(mystd,'(2(4X,a,i10))')   'isbnd :', isbnd  , 'isspn :', isspn
-     write(mystd,'(2(4X,a,i10))')   'isbin :', isbin  , 'iswor :', iswor
-     write(mystd,'(2(4X,a,i10))')   'isort :', isort  , 'isobs :', isobs
-     write(mystd,'(2(4X,a,i10))')   'issus :', issus  , 'isvrt :', isvrt
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'isbnd /', isbnd, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'isspn /', isspn, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'isbin /', isbin, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'iswor /', iswor, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'isort /', isort, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'isobs /', isobs, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'issus /', issus, '/', 'integer'
+     write(mystd,'(4X,a,i10,2X,a2,a10)') 'isvrt /', isvrt, '/', 'integer'
 
      write(mystd,'(2(4X,a,i10))')   'lemax :', lemax  , 'legrd :', legrd
      write(mystd,'(2(4X,a,i10))')   'mkink :', mkink  , 'mfreq :', mfreq
