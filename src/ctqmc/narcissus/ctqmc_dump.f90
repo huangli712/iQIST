@@ -946,7 +946,7 @@
      implicit none
 
 ! external arguments
-! totally-averaged spin-spin correlation function data 
+! totally-averaged spin-spin correlation function data
      real(dp), intent(in) :: schi(ntime)
      real(dp), intent(in) :: serr(ntime)
 
@@ -1013,7 +1013,7 @@
      implicit none
 
 ! external arguments
-! orbital-resolved spin-spin correlation function 
+! orbital-resolved spin-spin correlation function
      real(dp), intent(in) :: sp_w(nbfrq,nband)
      real(dp), intent(in) :: serr(nbfrq,nband)
 
@@ -1070,7 +1070,7 @@
      implicit none
 
 ! external arguments
-! totally-averaged charge-charge correlation function data 
+! totally-averaged charge-charge correlation function data
      real(dp), intent(in) :: cchi(ntime)
      real(dp), intent(in) :: cerr(ntime)
 
