@@ -24,7 +24,11 @@
 !!>>> character variables                                              <<<
 !!========================================================================
 
-! the code name of the current ctqmc impurity solver
+!!
+!! @var cname
+!!
+!! code name of the current quantum impurity solver
+!!
      character(len = 10), public, save :: cname = 'MANJUSHAKA'
 
 !!========================================================================
