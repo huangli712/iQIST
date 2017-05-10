@@ -16,7 +16,7 @@
 !!! type    : subroutines
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
 !!! history : 09/16/2009 by li huang (created)
-!!!           05/04/2017 by li huang (last modified)
+!!!           05/10/2017 by li huang (last modified)
 !!! purpose : offer basic infrastructure (elementary updating subroutines)
 !!!           for hybridization expansion version continuous time quantum
 !!!           Monte Carlo (CTQMC) quantum impurity solver. the following
@@ -33,8 +33,8 @@
 !!
 !! @sub cat_insert_matrix
 !!
-!! update the mmat matrix and gmat matrix for inserting new segment
-!! or anti-segment
+!! update the mmat matrix and gmat matrix for inserting new creation and
+!! annihilation operators
 !!
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero, one, czero
