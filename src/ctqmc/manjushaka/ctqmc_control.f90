@@ -427,6 +427,11 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+!!
+!! @var alpha
+!!
+!! mixing factor for dynamical mean field theory self-consistent engine
+!!
      real(dp), public, save :: alpha = 0.70_dp
 
 !!========================================================================
