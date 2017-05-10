@@ -54,7 +54,7 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to insert new segment or anti-segment
+! index address to insert new creation and annihilation operators
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
