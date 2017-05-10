@@ -75,14 +75,26 @@
 !::: core variables: real, insert action counter                       :::
 !-------------------------------------------------------------------------
 
-! insert kink (operators pair) statistics: total insert count
-     real(dp), public, save :: insert_tcount = zero
+!!
+!! @var ins_t
+!!
+!! insert kink (operators pair) statistics: total insert count
+!!
+     real(dp), public, save :: ins_t = zero
 
-! insert kink (operators pair) statistics: total accepted insert count
-     real(dp), public, save :: insert_accept = zero
+!!
+!! @var ins_a
+!!
+!! insert kink (operators pair) statistics: total accepted insert count
+!!
+     real(dp), public, save :: ins_a = zero
 
-! insert kink (operators pair) statistics: total rejected insert count
-     real(dp), public, save :: insert_reject = zero
+!!
+!! @var ins_r
+!!
+!! insert kink (operators pair) statistics: total rejected insert count
+!!
+     real(dp), public, save :: ins_r = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, remove action counter                       :::
