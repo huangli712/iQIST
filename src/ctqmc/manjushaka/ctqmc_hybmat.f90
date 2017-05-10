@@ -269,8 +269,7 @@
 !!
 !! @sub cat_lshift_matrix
 !!
-!! update the mmat matrix and gmat matrix for left shifting old creation
-!! and annihilation operators
+!! update the mmat matrix and gmat matrix for shifting creation operator
 !!
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, zero, czero
@@ -279,9 +278,13 @@
      use control, only : nfreq
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, index_e, time_e, exp_s, exp_e
+     use context, only : index_s, index_e
+     use context, only : time_e
+     use context, only : exp_s, exp_e
      use context, only : rmesh
-     use context, only : lspace, rspace, lsaves, rsaves, mmat, gmat
+     use context, only : lspace, rspace
+     use context, only : lsaves, rsaves
+     use context, only : mmat, gmat
 
      implicit none
 
@@ -289,7 +292,7 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift old create operators
+! index address to left shift old creation operator
 ! iso and isn are for old and new indices, respectively
      integer, intent(in)  :: iso
      integer, intent(in)  :: isn
