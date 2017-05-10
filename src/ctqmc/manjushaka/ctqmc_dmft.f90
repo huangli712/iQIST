@@ -122,9 +122,15 @@
          call ctqmc_dump_wtau(wtau)
      endif ! back if ( myid == master ) block
 
+!!========================================================================
+!!>>> finishing self-consistent engine                                 <<<
+!!========================================================================
+
 ! print necessary self-consistent simulation information
      if ( myid == master ) then ! only master node can do it
-         write(mystd,'(2X,a)') cname//' >>> DMFT hybridization function is updated'
+         write(mystd,'(4X,2a)') 'new hybridization function / ', 'calculated'
+         write(mystd,'(4X,2a)') 'new bath weiss'//"'s"//' function  / ', 'calculated'
+         write(mystd,'(2X,a)') cname//' >>> DMFT self-consistent engine shutdown'
          write(mystd,*)
      endif ! back if ( myid == master ) block
 
