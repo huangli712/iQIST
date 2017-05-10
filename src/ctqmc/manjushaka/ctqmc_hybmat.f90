@@ -338,8 +338,9 @@
      lexp = czero
      do k=1,nfreq
          xs = tau_start2 * rmesh(k)
-         lexp(k) = - ( dcmplx( cos(xs), -sin(xs) ) - dconjg( exp_s(k, index_s(iso, flvr), flvr) ) ) / beta
+         lexp(k) = dconjg( exp_s(k, index_s(iso, flvr), flvr) ) - dcmplx( cos(xs), -sin(xs) )
      enddo ! over k={1,nfreq} loop
+     lexp = lexp / beta
 
 ! evaluate gsum
      gsum = czero
@@ -432,7 +433,7 @@
          endif ! back if ( isn < iso ) block
      endif ! back if ( isn /= iso ) block
 
-! update the colour part of perturbation expansion series
+! update the perturbation expansion series
      call cat_lshift_colour(flvr, iso, isn, tau_start2)
 
 ! update gmat matrix
