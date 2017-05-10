@@ -960,8 +960,8 @@
 !!
 !! @sub cat_remove_detrat
 !!
-!! calculate the determinant ratio for removing old segment
-!! or anti-segment
+!! calculate the determinant ratio for removing old creation and
+!! annihilation operators
 !!
   subroutine cat_remove_detrat(flvr, is, ie, deter_ratio)
      use constants, only : dp
@@ -974,8 +974,8 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to remove old segment or anti-segment
-! is and ie are for start and end points, respectively
+! index address to remove old creation and annihilation operators
+! is and ie are for creation and annihilation operators, respectively
      integer, intent(in)   :: is
      integer, intent(in)   :: ie
 
