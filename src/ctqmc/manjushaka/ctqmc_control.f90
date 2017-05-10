@@ -419,10 +419,25 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+!!
+!! @var mune
+!!
+!! chemical potential or fermi level
+!!
      real(dp), public, save :: mune  = 2.00_dp
 
+!!
+!! @var beta
+!!
+!! inversion of temperature
+!!
      real(dp), public, save :: beta  = 8.00_dp
 
+!!
+!! @var part
+!!
+!! hopping parameter t for Hubbard model
+!!
      real(dp), public, save :: part  = 0.50_dp
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
