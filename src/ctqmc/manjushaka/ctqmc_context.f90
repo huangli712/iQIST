@@ -1029,7 +1029,11 @@
 !!>>> deallocate memory subroutines                                    <<<
 !!========================================================================
 
-!!>>> ctqmc_deallocate_memory_clur: deallocate memory for clur-related variables
+!!
+!! @sub ctqmc_deallocate_memory_clur
+!!
+!! deallocate memory for clur-related variables
+!!
   subroutine ctqmc_deallocate_memory_clur()
      implicit none
 
