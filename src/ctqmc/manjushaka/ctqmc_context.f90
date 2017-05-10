@@ -28,14 +28,22 @@
 !!>>> module ctqmc_core                                                <<<
 !!========================================================================
 
-!!>>> containing core (internal) variables used by continuous time quantum
-!!>>> Monte Carlo quantum impurity solver
+!!
+!! @mod ctqmc_core
+!!
+!! containing core (internal) variables used by continuous time quantum
+!! Monte Carlo quantum impurity solver
+!!
   module ctqmc_core
      use constants, only : dp, zero
 
      implicit none
 
-! current perturbation expansion order
+!!
+!! @var ckink
+!!
+!! current perturbation expansion order
+!!
      integer, public, save  :: ckink = 0
 
 ! sign change related with current diagram update operation
