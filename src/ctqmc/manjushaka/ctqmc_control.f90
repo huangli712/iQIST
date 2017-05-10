@@ -4,7 +4,6 @@
 !!! source  : ctqmc_control.f90
 !!! type    : module
 !!! author  : li huang (email:lihuang.dmft@gmail.com)
-!!!           yilin wang (email:qhwyl2006@126.com)
 !!! history : 09/15/2009 by li huang (created)
 !!!           05/10/2017 by li huang (last modified)
 !!! purpose : define global control parameters for hybridization expansion
