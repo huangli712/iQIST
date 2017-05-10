@@ -1077,7 +1077,11 @@
      return
   end subroutine ctqmc_deallocate_memory_flvr
 
-!!>>> ctqmc_deallocate_memory_mesh: deallocate memory for mesh-related variables
+!!
+!! @sub ctqmc_deallocate_memory_mesh
+!!
+!! deallocate memory for mesh-related variables
+!!
   subroutine ctqmc_deallocate_memory_mesh()
      implicit none
 
@@ -1093,7 +1097,11 @@
      return
   end subroutine ctqmc_deallocate_memory_mesh
 
-!!>>> ctqmc_deallocate_memory_meat: deallocate memory for meat-related variables
+!!
+!! @sub ctqmc_deallocate_memory_meat
+!!
+!! deallocate memory for meat-related variables
+!!
   subroutine ctqmc_deallocate_memory_meat()
      implicit none
 
