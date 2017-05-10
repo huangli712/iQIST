@@ -62,6 +62,17 @@
          call s_print_error('ctqmc_dmft_selfer','can not allocate enough memory')
      endif ! back if ( istat /= 0 ) block
 
+!!========================================================================
+!!>>> starting self-consistent engine                                  <<<
+!!========================================================================
+
+! print necessary self-consistent simulation information
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(2X,a)') cname//' >>> DMFT self-consistent engine running'
+         write(mystd,'(4X,2a)') 'general lattice model      / ', 'Hubbard model'
+         write(mystd,'(4X,2a)') 'density of states          / ', 'semicircular'
+     endif ! back if ( myid == master ) block
+
 ! initialize htmp
      htmp = hybf
 
