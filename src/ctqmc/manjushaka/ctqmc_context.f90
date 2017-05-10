@@ -174,28 +174,28 @@
 !!
 !! @var time_s
 !!
-!! imaginary time \tau_s of create operators
+!! imaginary time \tau_s of creation operators
 !!
      real(dp), public, save, allocatable :: time_s(:,:)
 
 !!
 !! @var time_e
 !!
-!! imaginary time \tau_e of destroy operators
+!! imaginary time \tau_e of annihilation operators
 !!
      real(dp), public, save, allocatable :: time_e(:,:)
 
 !!
 !! @var exp_s
 !!
-!! exp(i\omega t), s means create operators
+!! exp(i\omega t), s means creation operators
 !!
      complex(dp), public, save, allocatable :: exp_s(:,:,:)
 
 !!
 !! @var exp_e
 !!
-!! exp(i\omega t), e means destroy operators
+!! exp(i\omega t), e means annihilation operators
 !!
      complex(dp), public, save, allocatable :: exp_e(:,:,:)
 
