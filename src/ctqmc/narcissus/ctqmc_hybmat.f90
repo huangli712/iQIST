@@ -1008,13 +1008,13 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address to left shift old segment or anti-segment (old index = iso)
+! index address to shift creation operator (old index = iso)
      integer, intent(in)   :: addr
 
-! imaginary time \tau_s for start point (the old one)
+! imaginary time \tau_s for creation operator (the old one)
      real(dp), intent(in)  :: tau_start1
 
-! imaginary time \tau_s for start point (the new one)
+! imaginary time \tau_s for creation operator (the new one)
      real(dp), intent(in)  :: tau_start2
 
 ! the desired determinant ratio
@@ -1025,7 +1025,7 @@
      procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
-! loop index over segments
+! loop index over operators
      integer  :: i
      integer  :: j
 
