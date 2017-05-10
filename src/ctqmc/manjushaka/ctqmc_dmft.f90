@@ -110,14 +110,16 @@
 ! space to imaginary time space
      call ctqmc_four_hybf(wssf, wtau)
 
+! task 4: dump the calculated results
+!-------------------------------------------------------------------------
 ! write out the new bath weiss's function in matsubara frequency axis
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_wssf(rmesh, wssf)
+         call ctqmc_dump_wssf(wssf)
      endif ! back if ( myid == master ) block
 
 ! write out the new bath weiss's function in imaginary time axis
      if ( myid == master ) then ! only master node can do it
-         call ctqmc_dump_wtau(tmesh, wtau)
+         call ctqmc_dump_wtau(wtau)
      endif ! back if ( myid == master ) block
 
 ! print necessary self-consistent simulation information
