@@ -1155,7 +1155,11 @@
      return
   end subroutine ctqmc_deallocate_memory_mmat
 
-!!>>> ctqmc_deallocate_memory_gmat: deallocate memory for gmat-related variables
+!!
+!! @sub ctqmc_deallocate_memory_gmat
+!!
+!! deallocate memory for gmat-related variables
+!!
   subroutine ctqmc_deallocate_memory_gmat()
      implicit none
 
@@ -1166,7 +1170,11 @@
      return
   end subroutine ctqmc_deallocate_memory_gmat
 
-!!>>> ctqmc_deallocate_memory_wmat: deallocate memory for wmat-related variables
+!!
+!! @sub ctqmc_deallocate_memory_wmat
+!!
+!! deallocate memory for wmat-related variables
+!!
   subroutine ctqmc_deallocate_memory_wmat()
      implicit none
 
