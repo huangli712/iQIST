@@ -405,9 +405,6 @@
 ! intraorbital Coulomb interaction
      real(dp), public, save :: Uc    = 4.00_dp
 
-! interorbital Coulomb interaction, Uv = Uc - 2 * Jz for t2g system
-     real(dp), public, save :: Uv    = 4.00_dp
-
 ! Hund's exchange interaction in z axis (Jz = Js = Jp = J)
      real(dp), public, save :: Jz    = 0.00_dp
 
