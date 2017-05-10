@@ -472,28 +472,51 @@
 !!>>> module ctqmc_wmat                                                <<<
 !!========================================================================
 
-!!>>> containing weiss's function and hybridization function matrix related
-!!>>> arrays used by continuous time quantum Monte Carlo quantum impurity
-!!>>> solver
+!!
+!! @mod ctqmc_wmat
+!!
+!! containing weiss's function and hybridization function related arrays
+!! used by continuous time quantum Monte Carlo quantum impurity solver
+!!
   module ctqmc_wmat
      use constants, only : dp
 
      implicit none
 
-! bath weiss's function, in imaginary time axis, matrix form
+!!
+!! @var wtau
+!!
+!! bath weiss's function in imaginary time axis
+!!
      real(dp), public, save, allocatable    :: wtau(:,:,:)
 
-! bath weiss's function, in matsubara frequency axis, matrix form
-     complex(dp), public, save, allocatable :: wssf(:,:,:)
-
-! hybridization function, in imaginary time axis, matrix form
+!!
+!! @var htau
+!!
+!! hybridization function in imaginary time axis
+!!
      real(dp), public, save, allocatable    :: htau(:,:,:)
 
-! hybridization function, in matsubara frequency axis, matrix form
-     complex(dp), public, save, allocatable :: hybf(:,:,:)
-
-! second order derivates for hybridization function, used to interpolate htau
+!!
+!! @var hsed
+!!
+!! second order derivates for hybridization function
+!!
      real(dp), public, save, allocatable    :: hsed(:,:,:)
+
+!!
+!! @var wssf
+!!
+!! bath weiss's function in matsubara frequency axis
+!!
+     complex(dp), public, save, allocatable :: wssf(:,:,:)
+
+!!
+!! @var hybf
+!!
+!! hybridization function in matsubara frequency axis
+!!
+     complex(dp), public, save, allocatable :: hybf(:,:,:)
 
   end module ctqmc_wmat
 
