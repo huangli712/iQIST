@@ -30,8 +30,12 @@
 !!>>> service layer: update M and G matrices                           <<<
 !!========================================================================
 
-!!>>> cat_insert_matrix: update the mmat matrix and gmat matrix for insert
-!!>>> new create and destroy operators
+!!
+!! @sub cat_insert_matrix
+!!
+!! update the mmat matrix and gmat matrix for inserting new creation and
+!! annihilation operators
+!!
   subroutine cat_insert_matrix(flvr, is, ie, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero, one, czero
 
