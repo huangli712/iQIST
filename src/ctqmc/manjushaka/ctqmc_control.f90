@@ -411,9 +411,6 @@
 ! Hund's exchange interaction in z axis (Jz = Js = Jp = J)
      real(dp), public, save :: Jz    = 0.00_dp
 
-! spin-flip term
-     real(dp), public, save :: Js    = 0.00_dp
-
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 !!
