@@ -282,10 +282,13 @@
 !!
      real(dp), public, save, allocatable :: rmesh(:)
 
-! interval [-1,1] on which legendre polynomial is defined
-     real(dp), public, save, allocatable :: pmesh(:)
+!!
+!! @var lmesh
+!!
+!! uniform mesh on interval [-1,1] for legendre orthogonal polynomial
+!!
+     real(dp), public, save, allocatable :: lmesh(:)
 
-! legendre polynomial defined on [-1,1]
      real(dp), public, save, allocatable :: ppleg(:,:)
 
   end module ctqmc_mesh
