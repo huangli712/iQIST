@@ -344,29 +344,28 @@
 ! for npart to achieve maximum performance.
      integer, public, save :: npart  = 4
 
-! flip period for spin up and spin down states
-!
-! note: care must be taken to prevent the system from being trapped in a
-! state which breaks a symmetry of local hamiltonian when it should not
-! be. to avoid unphysical trapping, we introduce "flip" moves, which
-! exchange the operators corresponding, for example, to up and down spins
-! in a given orbital.
-!
-! note: in this code, nowadays the following flip schemes are supported
-!     if cflip = 1, flip inter-orbital spins randomly;
-!     if cflip = 2, flip intra-orbital spins one by one;
-!     if cflip = 3, flip intra-orbital spins globally.
-! here cflip is an internal variable.
-!
-! note: we use the sign of nflip to control flip schemes
-!     if nflip = 0, means infinite long period to do flip
-!     if nflip > 0, combine cflip = 2 (80%) and cflip = 3 (20%)
-!     if nflip < 0, combine cflip = 1 (80%) and cflip = 3 (20%)
-!
-! note: if nflip /= 0, the absolute value of nflip is the flip period
-!
-! note: when cflip = 1, the symmetry of all orbitals must be taken into
-! consideration, otherwise the code may be trapped by a deadlock.
+!!
+!! @var nflip
+!!
+!! flip period for spin up and spin down states. some care must be taken
+!! to prevent the system from being trapped in a state which breaks a
+!! symmetry of local hamiltonian when it should not be. to avoid this
+!! unphysical trapping, we introduce "flip" moves, which exchange the
+!! operators corresponding, for example, to up and down spins in a given
+!! orbital. note that nflip could be negative. if nflip /= 0, then the
+!! absolute value of nflip is the flip period
+!!
+!! in this code, nowadays the following flip schemes are supported:
+!!
+!! if nflip == 0:
+!!     means infinite long period to do flip. do not do the spin flip
+!!
+!! if nflip >  0:
+!!     flip intra-orbital spins one by one (90%) and globally (10%)
+!!
+!! if nflip <  0:
+!!     flip intra-orbital spins globally (90%) and one by one (10%)
+!!
      integer, public, save :: nflip  = 20000
 
 ! maximum number of thermalization steps
