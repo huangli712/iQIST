@@ -149,10 +149,12 @@
      use constants, only : dp, zero, one, two, eps8, mystd
 
      use control, only : cname
-     use control, only : norbs, niter
+     use control, only : norbs
+     use control, only : niter
      use control, only : mfreq
      use control, only : alpha
      use control, only : myid, master
+
      use context, only : sig1, sig2
 
      implicit none
@@ -162,7 +164,7 @@
      integer, intent(in)    :: iter
 
 ! convergence flag
-     logical, intent(inout) :: convergence
+     logical, intent(inout) :: conv
 
 ! local parameters
 ! required minimum iteration number to achieive convergence
@@ -176,6 +178,13 @@
      real(dp) :: diff
      real(dp) :: norm
      real(dp) :: seps
+
+! write convergence information to screen
+     if ( myid == master ) then ! only master node can do it
+         write(mystd,'(2X,a)') cname//' >>> self-consistent iteration checker running'
+         write(mystd,'(4X,a,i03.2)') 'maximum iteration / ', niter
+         write(mystd,'(4X,a,e10.3)') 'maximum epsilon   / ', eps8
+     endif ! back if ( myid == master ) block
 
 ! calculate diff and norm
 ! why not using the whole matrix? since the off-diagonal elementes may be NaN!
