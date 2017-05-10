@@ -186,8 +186,9 @@
          write(mystd,'(4X,a,e10.3)') 'maximum epsilon   / ', eps8
      endif ! back if ( myid == master ) block
 
-! calculate diff and norm
-! why not using the whole matrix? since the off-diagonal elementes may be NaN!
+! try to calculate diff and norm
+! why not using the whole matrix? since sometimes the off-diagonal
+! elementes may be NaN!
      diff = zero
      do i=1,norbs
          diff = diff + abs( sum( sig2(:,i,i) - sig1(:,i,i) ) )
@@ -203,18 +204,11 @@
      seps = (diff / norm) / real(mfreq * norbs)
 
 ! judge convergence status
-     convergence = ( ( seps <= eps8 ) .and. ( iter >= minit ) )
+     conv = ( ( seps <= eps8 ) .and. ( iter >= minit ) )
 
 ! update sig1
      call s_mix_z(size(sig1), sig2, sig1, one - alpha)
 
-! write convergence information to screen
-     if ( myid == master ) then ! only master node can do it
-         write(mystd,'(3(2X,a,i3))') cname//' >>> cur_iter:', iter, 'min_iter:', minit, 'max_iter:', niter
-         write(mystd,'(2(2X,a,E12.4))') cname//' >>> sig_curr:', seps, 'eps_curr:', eps8
-         write(mystd,'( (2X,a,L1))') cname//' >>> self-consistent iteration convergence is ', convergence
-         write(mystd,*)
-     endif ! back if ( myid == master ) block
 
      return
   end subroutine ctqmc_dmft_conver
