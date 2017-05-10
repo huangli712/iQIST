@@ -796,7 +796,7 @@
      procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
-! loop index over segments
+! loop index over operators
      integer  :: i
      integer  :: j
 
@@ -809,7 +809,7 @@
 ! used to store matrix element of mmat
      real(dp) :: maux
 
-! imaginary time for start and end points
+! imaginary time for creation and annihilation operators
      real(dp) :: tau_start
      real(dp) :: tau_end
 
