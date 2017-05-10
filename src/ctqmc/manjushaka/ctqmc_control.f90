@@ -399,9 +399,6 @@
 ! note: U, Uc, Uv, Jz, Js, and Jp are not used by this quantum impurity
 ! solver actually. we keep them here is just for reference.
 
-! average Coulomb interaction
-     real(dp), public, save :: U     = 4.00_dp
-
 ! intraorbital Coulomb interaction
      real(dp), public, save :: Uc    = 4.00_dp
 
