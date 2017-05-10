@@ -150,7 +150,10 @@
 !!
   module ctqmc_clur
      use constants, only : dp
-     use stack, only : istack, istack_create, istack_destroy
+
+     use stack, only : istack
+     use stack, only : istack_create
+     use stack, only : istack_destroy
 
      implicit none
 
