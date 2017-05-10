@@ -855,16 +855,22 @@
 !!>>> service layer: evaluate the determinant ratio                    <<<
 !!========================================================================
 
-!!>>> cat_insert_detrat: calculate the determinant ratio for insert new
-!!>>> create and destroy operators
+!!
+!! @sub cat_insert_detrat
+!!
+!! calculate the determinant ratio for inserting new creation and
+!! annihilation operators
+!!
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero
 
      use control, only : mkink
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, index_e, time_s, time_e
-     use context, only : lspace, rspace, mmat
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : lspace, rspace
+     use context, only : mmat
 
      implicit none
 
