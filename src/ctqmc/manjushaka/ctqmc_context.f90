@@ -422,29 +422,57 @@
 !!>>> module ctqmc_mmat                                                <<<
 !!========================================================================
 
-!!>>> containing M-matrix and G-matrix related arrays used by continuous
-!!>>> time quantum Monte Carlo quantum impurity solver
+!!
+!! @mod ctqmc_mmat
+!!
+!! containing M-matrix and G-matrix related arrays used by continuous
+!! time quantum Monte Carlo quantum impurity solver
+!!
   module ctqmc_mmat
      use constants, only : dp
 
      implicit none
 
-! helper matrix for evaluating M & G matrices
-     real(dp), public, save, allocatable    :: lspace(:,:)
+!!
+!! @var lspace
+!!
+!! helper matrix for evaluating M & G matrices
+!!
+     real(dp), public, save, allocatable :: lspace(:,:)
 
-! helper matrix for evaluating M & G matrices
-     real(dp), public, save, allocatable    :: rspace(:,:)
+!!
+!! @var rspace
+!!
+!! helper matrix for evaluating M & G matrices
+!!
+     real(dp), public, save, allocatable :: rspace(:,:)
 
-! M matrix, $ \mathscr{M} $
-     real(dp), public, save, allocatable    :: mmat(:,:,:)
+!!
+!! @var mmat
+!!
+!! M matrix, $ \mathscr{M} $
+!!
+     real(dp), public, save, allocatable :: mmat(:,:,:)
 
-! helper matrix for evaluating G matrix
+!!
+!! @var lsaves
+!!
+!! helper matrix for evaluating G matrix
+!!
      complex(dp), public, save, allocatable :: lsaves(:,:)
 
-! helper matrix for evaluating G matrix
+!!
+!! @var rsaves
+!!
+!! helper matrix for evaluating G matrix
+!!
      complex(dp), public, save, allocatable :: rsaves(:,:)
 
-! G matrix, $ \mathscr{G} $
+!!
+!! @var gmat
+!!
+!! G matrix, $ \mathscr{G} $
+!!
      complex(dp), public, save, allocatable :: gmat(:,:,:)
 
   end module ctqmc_mmat
