@@ -175,14 +175,26 @@
 !::: core variables: real, reflip action counter                       :::
 !-------------------------------------------------------------------------
 
-! reflip kink (operators pair) statistics: total reflip count
-     real(dp), public, save :: reflip_t = zero
+!!
+!! @var rfl_t
+!!
+!! reflip kink (operators pair) statistics: total reflip count
+!!
+     real(dp), public, save :: rfl_t = zero
 
-! reflip kink (operators pair) statistics: total accepted reflip count
-     real(dp), public, save :: reflip_a = zero
+!!
+!! @var rfl_a
+!!
+!! reflip kink (operators pair) statistics: total accepted reflip count
+!!
+     real(dp), public, save :: rfl_a = zero
 
-! reflip kink (operators pair) statistics: total rejected reflip count
-     real(dp), public, save :: reflip_r = zero
+!!
+!! @var rfl_r
+!!
+!! reflip kink (operators pair) statistics: total rejected reflip count
+!!
+     real(dp), public, save :: rfl_r = zero
 
   end module ctqmc_core
 
