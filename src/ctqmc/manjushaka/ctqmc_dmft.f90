@@ -16,9 +16,12 @@
 !!! comment :
 !!!-----------------------------------------------------------------------
 
-!!>>> ctqmc_dmft_selfer: the self-consistent engine for continuous time
-!!>>> quantum Monte Carlo quantum impurity solver plus dynamical mean field
-!!>>> theory simulation
+!!
+!! @sub ctqmc_dmft_selfer
+!!
+!! mini self-consistent engine for continuous time quantum Monte Carlo
+!! quantum impurity solver plus dynamical mean field theory simulation
+!!
   subroutine ctqmc_dmft_selfer()
      use constants, only : dp, one, half, czi, mystd
 
@@ -28,7 +31,8 @@
      use control, only : Uc, Jz
      use control, only : mune, alpha
      use control, only : myid, master
-     use context, only : tmesh, rmesh
+
+     use context, only : rmesh
      use context, only : eimp
      use context, only : grnf
      use context, only : wtau, wssf, hybf
