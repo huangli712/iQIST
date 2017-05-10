@@ -1059,15 +1059,19 @@
      return
   end subroutine cat_lshift_detrat
 
-!!>>> cat_rshift_detrat: calculate the determinant ratio for shift old
-!!>>> destroy operators
+!!
+!! @sub cat_rshift_detrat
+!!
+!! calculate the determinant ratio for shifting annihilation operator
+!!
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp, one
 
      use control, only : mkink
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, time_s
+     use context, only : index_s
+     use context, only : time_s
      use context, only : mmat
 
      implicit none
