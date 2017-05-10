@@ -884,10 +884,10 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! imaginary time \tau_s for start point
+! imaginary time \tau_s for new creation operator
      real(dp), intent(in)  :: tau_start
 
-! imaginary time \tau_e for end point
+! imaginary time \tau_e for new annihilation operator
      real(dp), intent(in)  :: tau_end
 
 ! the desired determinant ratio
@@ -898,7 +898,7 @@
      procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
-! loop index over segments
+! loop index over operators
      integer  :: i
      integer  :: j
 
