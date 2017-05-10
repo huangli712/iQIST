@@ -58,10 +58,10 @@
      integer, intent(in)  :: is
      integer, intent(in)  :: ie
 
-! imaginary time \tau_s for new create operator
+! imaginary time \tau_s for new creation operator
      real(dp), intent(in) :: tau_start
 
-! imaginary time \tau_e for new destroy operator
+! imaginary time \tau_e for new annihilation operator
      real(dp), intent(in) :: tau_end
 
 ! previous calculated determinant ratio
