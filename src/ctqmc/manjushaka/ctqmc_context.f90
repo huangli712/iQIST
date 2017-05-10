@@ -921,7 +921,11 @@
      return
   end subroutine ctqmc_allocate_memory_umat
 
-!!>>> ctqmc_allocate_memory_mmat: allocate memory for mmat-related variables
+!!
+!! @sub ctqmc_allocate_memory_mmat
+!!
+!! allocate memory for mmat-related variables
+!!
   subroutine ctqmc_allocate_memory_mmat()
      implicit none
 
@@ -955,7 +959,11 @@
      return
   end subroutine ctqmc_allocate_memory_mmat
 
-!!>>> ctqmc_allocate_memory_gmat: allocate memory for gmat-related variables
+!!
+!! @sub ctqmc_allocate_memory_gmat
+!!
+!! allocate memory for gmat-related variables
+!!
   subroutine ctqmc_allocate_memory_gmat()
      implicit none
 
@@ -977,7 +985,11 @@
      return
   end subroutine ctqmc_allocate_memory_gmat
 
-!!>>> ctqmc_allocate_memory_wmat: allocate memory for wmat-related variables
+!!
+!! @sub ctqmc_allocate_memory_wmat
+!!
+!! allocate memory for wmat-related variables
+!!
   subroutine ctqmc_allocate_memory_wmat()
      implicit none
 
