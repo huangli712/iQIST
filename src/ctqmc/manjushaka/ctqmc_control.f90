@@ -368,10 +368,18 @@
 !!
      integer, public, save :: nflip  = 20000
 
-! maximum number of thermalization steps
+!!
+!! @var ntherm
+!!
+!! number of thermalization steps
+!!
      integer, public, save :: ntherm = 200000
 
-! maximum number of quantum Monte Carlo sampling steps
+!!
+!! @var nsweep
+!!
+!! number of Monte Carlo sweeping steps
+!!
      integer, public, save :: nsweep = 20000000
 
 !!
