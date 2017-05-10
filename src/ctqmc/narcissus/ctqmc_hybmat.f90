@@ -864,8 +864,8 @@
 !!
 !! @sub cat_insert_detrat
 !!
-!! calculate the determinant ratio for inserting new segment
-!! or anti-segment
+!! calculate the determinant ratio for inserting new creation and
+!! annihilation operators
 !!
   subroutine cat_insert_detrat(flvr, tau_start, tau_end, deter_ratio)
      use constants, only : dp, zero
