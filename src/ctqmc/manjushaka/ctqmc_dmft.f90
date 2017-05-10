@@ -140,8 +140,12 @@
      return
   end subroutine ctqmc_dmft_selfer
 
-!!>>> ctqmc_dmft_conver: check the convergence of self-energy function
-  subroutine ctqmc_dmft_conver(iter, convergence)
+!!
+!! @sub ctqmc_dmft_conver
+!!
+!! check the convergence of matsubara self-energy function
+!!
+  subroutine ctqmc_dmft_conver(iter, conv)
      use constants, only : dp, zero, one, two, eps8, mystd
 
      use control, only : cname
