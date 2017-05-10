@@ -763,14 +763,19 @@
      return
   end subroutine cat_reflip_matrix
 
-!!>>> cat_reload_matrix: global update the mmat matrix and gmat matrix
-!!>>> from scratch
+!!
+!! @sub cat_reload_matrix
+!!
+!! global update the mmat matrix and gmat matrix from scratch
+!!
   subroutine cat_reload_matrix(flvr)
      use constants, only : dp, zero, czero
 
      use control, only : nfreq
      use control, only : beta
-     use context, only : index_s, index_e, time_s, time_e, exp_s, exp_e
+     use context, only : index_s, index_e
+     use context, only : time_s, time_e
+     use context, only : exp_s, exp_e
      use context, only : rank
      use context, only : mmat, gmat
 
@@ -798,7 +803,7 @@
 ! used to store matrix element of mmat
      real(dp) :: maux
 
-! imaginary time for create and destroy operators
+! imaginary time for creation and annihilation operators
      real(dp) :: tau_start
      real(dp) :: tau_end
 
