@@ -100,11 +100,26 @@
 !::: core variables: real, remove action counter                       :::
 !-------------------------------------------------------------------------
 
-     real(dp), public, save :: remove_t = zero
+!!
+!! @var rmv_t
+!!
+!! remove kink (operators pair) statistics: total remove count
+!!
+     real(dp), public, save :: rmv_t = zero
 
-     real(dp), public, save :: remove_a = zero
+!!
+!! @var rmv_a
+!!
+!! remove kink (operators pair) statistics: total accepted remove count
+!!
+     real(dp), public, save :: rmv_a = zero
 
-     real(dp), public, save :: remove_r = zero
+!!
+!! @var rmv_r
+!!
+!! remove kink (operators pair) statistics: total rejected remove count
+!!
+     real(dp), public, save :: rmv_r = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, lshift action counter                       :::
