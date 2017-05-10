@@ -488,21 +488,21 @@
 !!
 !! bath weiss's function in imaginary time axis
 !!
-     real(dp), public, save, allocatable    :: wtau(:,:,:)
+     real(dp), public, save, allocatable :: wtau(:,:,:)
 
 !!
 !! @var htau
 !!
 !! hybridization function in imaginary time axis
 !!
-     real(dp), public, save, allocatable    :: htau(:,:,:)
+     real(dp), public, save, allocatable :: htau(:,:,:)
 
 !!
 !! @var hsed
 !!
 !! second order derivates for hybridization function
 !!
-     real(dp), public, save, allocatable    :: hsed(:,:,:)
+     real(dp), public, save, allocatable :: hsed(:,:,:)
 
 !!
 !! @var wssf
