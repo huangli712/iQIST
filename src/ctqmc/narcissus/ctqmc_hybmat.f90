@@ -1068,8 +1068,7 @@
 !!
 !! @sub cat_rshift_detrat
 !!
-!! calculate the determinant ratio for right shifting old segment
-!! or anti-segment
+!! calculate the determinant ratio for shifting annihilation operator
 !!
   subroutine cat_rshift_detrat(flvr, addr, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp, one
