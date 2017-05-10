@@ -309,8 +309,18 @@
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+!!
+!! @var mkink
+!!
+!! maximum perturbation expansion order
+!!
      integer, public, save :: mkink  = 1024
 
+!!
+!! @var mfreq
+!!
+!! maximum number of matsubara frequency points
+!!
      integer, public, save :: mfreq  = 8193
 
 !^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
