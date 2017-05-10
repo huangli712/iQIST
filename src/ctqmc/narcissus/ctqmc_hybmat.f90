@@ -169,8 +169,8 @@
 !!
 !! @sub cat_remove_matrix
 !!
-!! update the mmat matrix and gmat matrix for removing old segment
-!! or anti-segment
+!! update the mmat matrix and gmat matrix for removing old creation and
+!! annihilation operators
 !!
   subroutine cat_remove_matrix(flvr, is, ie)
      use constants, only : dp, one, czero
