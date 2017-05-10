@@ -538,8 +538,9 @@
      rexp = czero
      do k=1,nfreq
          xe = tau_end2 * rmesh(k)
-         rexp(k) = - ( dcmplx( cos(xe), sin(xe) ) - exp_e(k, index_e(ieo, flvr), flvr) ) / beta
+         rexp(k) = exp_e(k, index_e(ieo, flvr), flvr) - dcmplx( cos(xe), sin(xe) )
      enddo ! over k={1,nfreq} loop
+     rexp = rexp / beta
 
 ! evaluate gsum
      gsum = czero
@@ -632,7 +633,7 @@
          endif ! back if ( ien < ieo ) block
      endif ! back if ( ien /= ieo ) block
 
-! update the colour part of perturbation expansion series
+! update the perturbation expansion series
      call cat_rshift_colour(flvr, ieo, ien, tau_end2)
 
 ! update gmat matrix
