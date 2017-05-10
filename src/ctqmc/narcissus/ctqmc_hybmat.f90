@@ -311,7 +311,7 @@
      procedure( real(dp) ) :: ctqmc_eval_htau
 
 ! local variables
-! loop index over segments
+! loop index over operators
      integer  :: i
      integer  :: j
 
