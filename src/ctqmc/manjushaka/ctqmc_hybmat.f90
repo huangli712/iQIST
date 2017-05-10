@@ -178,8 +178,10 @@
      use control, only : nfreq
      use control, only : beta
      use context, only : ckink
-     use context, only : index_s, index_e, exp_s, exp_e
-     use context, only : lsaves, rsaves, mmat, gmat
+     use context, only : index_s, index_e
+     use context, only : exp_s, exp_e
+     use context, only : lsaves, rsaves
+     use context, only : mmat, gmat
 
      implicit none
 
