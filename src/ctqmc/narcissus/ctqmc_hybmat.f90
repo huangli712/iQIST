@@ -189,12 +189,12 @@
 ! current flavor channel
      integer, intent(in) :: flvr
 
-! index address to remove old segment or anti-segment
+! index address to remove old creation and annihilation operators
      integer, intent(in) :: is
      integer, intent(in) :: ie
 
 ! local variables
-! loop index over segments
+! loop index over operators
      integer  :: i
      integer  :: j
 
