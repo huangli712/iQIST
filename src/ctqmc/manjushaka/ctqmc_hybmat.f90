@@ -878,10 +878,10 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! imaginary time \tau_s for new create operator
+! imaginary time \tau_s for new creation operator
      real(dp), intent(in)  :: tau_start
 
-! imaginary time \tau_e for new destroy operator
+! imaginary time \tau_e for new annihilation operator
      real(dp), intent(in)  :: tau_end
 
 ! the desired determinant ratio
