@@ -1080,13 +1080,13 @@
 ! current flavor channel
      integer, intent(in)   :: flvr
 
-! index address for shift old destroy operator (old index = ieo)
+! index address to shift annihilation operator (old index = ieo)
      integer, intent(in)   :: addr
 
-! imaginary time \tau_e for destroy operator (the old one)
+! imaginary time \tau_e for annihilation operator (the old one)
      real(dp), intent(in)  :: tau_end1
 
-! imaginary time \tau_e for destroy operator (the new one)
+! imaginary time \tau_e for annihilation operator (the new one)
      real(dp), intent(in)  :: tau_end2
 
 ! the desired determinant ratio
