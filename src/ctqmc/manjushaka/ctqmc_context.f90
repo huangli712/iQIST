@@ -1119,7 +1119,11 @@
      return
   end subroutine ctqmc_deallocate_memory_meat
 
-!!>>> ctqmc_deallocate_memory_umat: deallocate memory for umat-related variables
+!!
+!! @sub ctqmc_deallocate_memory_umat
+!!
+!! deallocate memory for umat-related variables
+!!
   subroutine ctqmc_deallocate_memory_umat()
      implicit none
 
@@ -1137,8 +1141,11 @@
      return
   end subroutine ctqmc_deallocate_memory_umat
 
-
-!!>>> ctqmc_deallocate_memory_mmat: deallocate memory for mmat-related variables
+!!
+!! @sub ctqmc_deallocate_memory_mmat
+!!
+!! deallocate memory for mmat-related variables
+!!
   subroutine ctqmc_deallocate_memory_mmat()
      implicit none
 
