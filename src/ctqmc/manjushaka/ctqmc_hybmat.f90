@@ -1192,8 +1192,7 @@
 ! check the status of kaux, if there does not exist any operators in up
 ! state ( kaux == 0 ), we need to return immediately and the ratio is one
      if ( kaux == 0 ) then
-         ratio = one
-         RETURN
+         ratio = one; RETURN
      endif ! back if ( kaux == 0 ) block
 
 ! allocate memory
@@ -1232,3 +1231,14 @@
 
      return
   end subroutine cat_reflip_detrat
+
+!!
+!! @sub cat_reload_detrat
+!!
+!! to do nothing, it is an empty subroutine
+!!
+  subroutine cat_reload_detrat()
+     implicit none
+
+     return
+  end subroutine cat_reload_detrat
