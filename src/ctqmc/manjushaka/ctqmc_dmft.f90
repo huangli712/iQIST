@@ -35,7 +35,8 @@
      use context, only : rmesh
      use context, only : eimp
      use context, only : grnf
-     use context, only : wtau, wssf, hybf
+     use context, only : wtau, wssf
+     use context, only : hybf
 
      implicit none
 
@@ -52,7 +53,7 @@
 ! effective chemical potential
      real(dp) :: qmune
 
-! dummy hybridization function, in matsubara frequency axis, matrix form
+! dummy hybridization function in matsubara frequency axis
      complex(dp), allocatable :: htmp(:,:,:)
 
 ! allocate memory
