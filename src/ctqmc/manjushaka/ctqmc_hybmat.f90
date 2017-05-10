@@ -132,7 +132,7 @@
          enddo ! over i={1,ckink+1} loop
      enddo ! over j={1,ckink+1} loop
 
-! update the colour part of perturbation expansion series
+! update the perturbation expansion series
      call cat_insert_colour(flvr, is, ie, tau_start, tau_end)
 
 ! update gmat matrix
@@ -166,8 +166,12 @@
      return
   end subroutine cat_insert_matrix
 
-!!>>> cat_remove_matrix: update the mmat matrix and gmat matrix for remove
-!!>>> old create and destroy operators
+!!
+!! @sub cat_remove_matrix
+!!
+!! update the mmat matrix and gmat matrix for removing old creation and
+!! annihilation operators
+!!
   subroutine cat_remove_matrix(flvr, is, ie)
      use constants, only : dp, one, czero
 
