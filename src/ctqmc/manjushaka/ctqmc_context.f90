@@ -100,53 +100,50 @@
 !::: core variables: real, remove action counter                       :::
 !-------------------------------------------------------------------------
 
-! remove kink (operators pair) statistics: total remove count
-     real(dp), public, save :: remove_tcount = zero
+     real(dp), public, save :: remove_t = zero
 
-! remove kink (operators pair) statistics: total accepted remove count
-     real(dp), public, save :: remove_accept = zero
+     real(dp), public, save :: remove_a = zero
 
-! remove kink (operators pair) statistics: total rejected remove count
-     real(dp), public, save :: remove_reject = zero
+     real(dp), public, save :: remove_r = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, lshift action counter                       :::
 !-------------------------------------------------------------------------
 
 ! lshift kink (operators pair) statistics: total lshift count
-     real(dp), public, save :: lshift_tcount = zero
+     real(dp), public, save :: lshift_t = zero
 
 ! lshift kink (operators pair) statistics: total accepted lshift count
-     real(dp), public, save :: lshift_accept = zero
+     real(dp), public, save :: lshift_a = zero
 
 ! lshift kink (operators pair) statistics: total rejected lshift count
-     real(dp), public, save :: lshift_reject = zero
+     real(dp), public, save :: lshift_r = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, rshift action counter                       :::
 !-------------------------------------------------------------------------
 
 ! rshift kink (operators pair) statistics: total rshift count
-     real(dp), public, save :: rshift_tcount = zero
+     real(dp), public, save :: rshift_t = zero
 
 ! rshift kink (operators pair) statistics: total accepted rshift count
-     real(dp), public, save :: rshift_accept = zero
+     real(dp), public, save :: rshift_a = zero
 
 ! rshift kink (operators pair) statistics: total rejected rshift count
-     real(dp), public, save :: rshift_reject = zero
+     real(dp), public, save :: rshift_r = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, reflip action counter                       :::
 !-------------------------------------------------------------------------
 
 ! reflip kink (operators pair) statistics: total reflip count
-     real(dp), public, save :: reflip_tcount = zero
+     real(dp), public, save :: reflip_t = zero
 
 ! reflip kink (operators pair) statistics: total accepted reflip count
-     real(dp), public, save :: reflip_accept = zero
+     real(dp), public, save :: reflip_a = zero
 
 ! reflip kink (operators pair) statistics: total rejected reflip count
-     real(dp), public, save :: reflip_reject = zero
+     real(dp), public, save :: reflip_r = zero
 
   end module ctqmc_core
 
