@@ -453,17 +453,29 @@
 !!>>> module ctqmc_gmat                                                <<<
 !!========================================================================
 
-!!>>> containing green's function matrix related arrays used by continuous
-!!>>> time quantum Monte Carlo quantum impurity solver
+!!
+!! @mod ctqmc_gmat
+!!
+!! containing green's function matrix related arrays used by continuous
+!! time quantum Monte Carlo quantum impurity solver
+!!
   module ctqmc_gmat
      use constants, only : dp
 
      implicit none
 
-! impurity green's function, in imaginary time axis, matrix form
-     real(dp), public, save, allocatable    :: gtau(:,:,:)
+!!
+!! @var gtau
+!!
+!! impurity green's function in imaginary time axis
+!!
+     real(dp), public, save, allocatable :: gtau(:,:,:)
 
-! impurity green's function, in matsubara frequency axis, matrix form
+!!
+!! @var grnf
+!!
+!! impurity green's function in matsubara frequency axis
+!!
      complex(dp), public, save, allocatable :: grnf(:,:,:)
 
   end module ctqmc_gmat
