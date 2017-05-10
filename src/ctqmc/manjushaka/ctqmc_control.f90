@@ -381,15 +381,19 @@
 ! clean update period for quantum impurity solver
      integer, public, save :: nclean = 100000
 
-! how often to sampling the gmat and paux (nmat and nnmat)
-!
-! note: the measure periods for schi, sschi, ochi, oochi, g2_re, g2_im,
-! h2_re, h2_im, ps_re, and ps_im are also controlled by nmonte parameter.
+!!
+!! @var nmonte
+!!
+!! how often to sample the physical observables
+!!
      integer, public, save :: nmonte = 10
 
-! how often to sampling the gtau and prob
-!
-! note: the measure period for ftau is also controlled by ncarlo parameter.
+!!
+!! @var ncarlo
+!!
+!! how often to sample the physical observables
+!! it is reserved for the future
+!!
      integer, public, save :: ncarlo = 10
 
 !!========================================================================
