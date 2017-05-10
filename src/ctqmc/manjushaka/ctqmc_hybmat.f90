@@ -1178,7 +1178,7 @@
 ! status flag
      integer  :: istat
 
-! imaginary time for create and destroy operators
+! imaginary time for creation and annihilation operators
      real(dp) :: tau_start
      real(dp) :: tau_end
 
