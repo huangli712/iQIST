@@ -466,8 +466,11 @@
      return
   end subroutine cat_lshift_matrix
 
-!!>>> cat_rshift_matrix: update the mmat matrix and gmat matrix for shift
-!!>>> old destroy operators
+!!
+!! @sub cat_rshift_matrix
+!!
+!! update the mmat matrix and gmat matrix for shifting annihilation operator
+!!
   subroutine cat_rshift_matrix(flvr, ieo, ien, tau_end1, tau_end2, deter_ratio)
      use constants, only : dp, zero, czero
 
@@ -489,15 +492,15 @@
 ! current flavor channel
      integer, intent(in)  :: flvr
 
-! index address to shift old destroy operators
+! index address to shift annihilation operator
 ! ieo and ien are for old and new indices, respectively
      integer, intent(in)  :: ieo
      integer, intent(in)  :: ien
 
-! imaginary time \tau_e for destroy operator (the old one)
+! imaginary time \tau_e for annihilation operator (the old one)
      real(dp), intent(in) :: tau_end1
 
-! imaginary time \tau_e for destroy operator (the new one)
+! imaginary time \tau_e for annihilation operator (the new one)
      real(dp), intent(in) :: tau_end2
 
 ! previous calculated determinant ratio
