@@ -289,7 +289,12 @@
 !!
      real(dp), public, save, allocatable :: lmesh(:)
 
-     real(dp), public, save, allocatable :: ppleg(:,:)
+!!
+!! @var rep_l
+!!
+!! legendre orthogonal polynomial defined on [-1,1]
+!!
+     real(dp), public, save, allocatable :: rep_l(:,:)
 
   end module ctqmc_mesh
 
