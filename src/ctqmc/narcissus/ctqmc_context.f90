@@ -234,7 +234,7 @@
 !!
 !! @var time_e
 !!
-!! imaginary time \tau_e of destroy operators
+!! imaginary time \tau_e of annihilation operators
 !!
      real(dp), public, save, allocatable :: time_e(:,:)
 
@@ -248,7 +248,7 @@
 !!
 !! @var exp_e
 !!
-!! exp(i\omega t), e means destroy operators
+!! exp(i\omega t), e means annihilation operators
 !!
      complex(dp), public, save, allocatable :: exp_e(:,:,:)
 

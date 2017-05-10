@@ -350,7 +350,7 @@
 ! weight factor contributed by new creation operator
      real(dp) :: ts_scr
 
-! weight factor contributed by new destroy operator
+! weight factor contributed by new annihilation operator
      real(dp) :: te_scr
 
 ! weight factor contributed by new operators
@@ -418,7 +418,7 @@
 ! calculate the extra weight factor contributed by new creation operator
      call cat_weight_factor(tau_start, ts_scr)
 
-! calculate the extra weight factor contributed by new destroy operator
+! calculate the extra weight factor contributed by new annihilation operator
      call cat_weight_factor(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by new operators
@@ -481,7 +481,7 @@
 ! weight factor contributed by old creation operator
      real(dp) :: ts_scr
 
-! weight factor contributed by old destroy operator
+! weight factor contributed by old annihilation operator
      real(dp) :: te_scr
 
 ! weight factor contributed by old operators
@@ -549,7 +549,7 @@
 ! calculate the extra weight factor contributed by old creation operator
      call cat_weight_factor(tau_start, ts_scr)
 
-! calculate the extra weight factor contributed by old destroy operator
+! calculate the extra weight factor contributed by old annihilation operator
      call cat_weight_factor(tau_end,   te_scr)
 
 ! calculate the extra weight factor contributed by old operators
@@ -750,13 +750,13 @@
 ! extra weight factor introduced by dynamic interaction
      real(dp) :: scr
 
-! weight factor contributed by old destroy operator
+! weight factor contributed by old annihilation operator
      real(dp) :: te1_scr
 
-! weight factor contributed by new destroy operator
+! weight factor contributed by new annihilation operator
      real(dp) :: te2_scr
 
-! weight factor contributed by the destroy operators
+! weight factor contributed by the annihilation operators
      real(dp) :: te12_scr
 
 ! segment overlap between flvr and other else flavors
@@ -828,13 +828,13 @@
 ! quickly return if we don't need to consider the dynamic interaction
      if ( isscr == 1 ) RETURN
 
-! calculate the extra weight factor contributed by old destroy operator
+! calculate the extra weight factor contributed by old annihilation operator
      call cat_weight_factor(tau_end1, te1_scr)
 
-! calculate the extra weight factor contributed by new destroy operator
+! calculate the extra weight factor contributed by new annihilation operator
      call cat_weight_factor(tau_end2, te2_scr)
 
-! calculate the extra weight factor contributed by the destroy operators
+! calculate the extra weight factor contributed by the annihilation operators
      call cat_weight_kernel(1, dtau, te12_scr)
 
 ! evaluate total weight factor (screening part)
@@ -1936,7 +1936,7 @@
          enddo ! over j={1,rank(i)} loop
      enddo ! over i={1,norbs} loop
 
-! loop over destroy operator
+! loop over annihilation operator
      do i=1,norbs
          do j=1,rank(i)
              te = time_e(index_e(j, i), i)

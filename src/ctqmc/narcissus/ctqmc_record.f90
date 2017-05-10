@@ -920,7 +920,7 @@
 ! matsubara frequency exponents for creation operators
      complex(dp) :: exps(nbfrq)
 
-! matsubara frequency exponents for destroy operators
+! matsubara frequency exponents for annihilation operators
      complex(dp) :: expe(nbfrq)
 
 ! check whether there is conflict
@@ -1108,7 +1108,7 @@
 ! matsubara frequency exponents for creation operators
      complex(dp) :: exps(nbfrq)
 
-! matsubara frequency exponents for destroy operators
+! matsubara frequency exponents for annihilation operators
      complex(dp) :: expe(nbfrq)
 
 ! check whether there is conflict

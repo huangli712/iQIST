@@ -1098,7 +1098,7 @@
                  iret = iret - daux
              endif ! back if ( dtau >= zero ) block
 
-! contribution from destroy operators
+! contribution from annihilation operators
              dtau = time_e( index_e(it, flvr), flvr ) - time
              if ( dtau >= zero ) then
                  call cat_weight_kernel(2, +dtau, daux)
@@ -1205,7 +1205,7 @@
 ! matsubara frequency exponents for creation operators
      complex(dp), intent(out) :: caux1(nfaux,mrank)
 
-! matsubara frequency exponents for destroy operators
+! matsubara frequency exponents for annihilation operators
      complex(dp), intent(out) :: caux2(nfaux,mrank)
 
 ! local variables
@@ -1225,7 +1225,7 @@
          caux1(:,is) = caux1(:,is) * exp(+(nffrq + 1) * czi * pi * taus / beta)
      enddo ! over is={1,rank(flvr)} loop
 
-! for destroy operators
+! for annihilation operators
      do ie=1,rank(flvr)
          taue = time_e( index_e(ie, flvr), flvr )
          caux2(:,ie) = exp(+two * czi * pi * taue / beta)
