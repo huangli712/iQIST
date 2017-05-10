@@ -150,11 +150,26 @@
 !::: core variables: real, rshift action counter                       :::
 !-------------------------------------------------------------------------
 
-     real(dp), public, save :: rshift_t = zero
+!!
+!! @var rsh_t
+!!
+!! rshift kink (operators pair) statistics: total rshift count
+!!
+     real(dp), public, save :: rsh_t = zero
 
-     real(dp), public, save :: rshift_a = zero
+!!
+!! @var rsh_a
+!!
+!! rshift kink (operators pair) statistics: total accepted rshift count
+!!
+     real(dp), public, save :: rsh_a = zero
 
-     real(dp), public, save :: rshift_r = zero
+!!
+!! @var rsh_r
+!!
+!! rshift kink (operators pair) statistics: total rejected rshift count
+!!
+     real(dp), public, save :: rsh_r = zero
 
 !-------------------------------------------------------------------------
 !::: core variables: real, reflip action counter                       :::
