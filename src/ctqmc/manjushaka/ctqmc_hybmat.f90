@@ -981,15 +981,19 @@
      return
   end subroutine cat_remove_detrat
 
-!!>>> cat_lshift_detrat: calculate the determinant ratio for shift old
-!!>>> create operators
+!!
+!! @sub cat_lshift_detrat
+!!
+!! calculate the determinant ratio for shifting creation operator
+!!
   subroutine cat_lshift_detrat(flvr, addr, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, one
 
      use control, only : mkink
      use control, only : beta
      use context, only : ckink
-     use context, only : index_e, time_e
+     use context, only : index_e
+     use context, only : time_e
      use context, only : mmat
 
      implicit none
