@@ -52,11 +52,14 @@
 !!
      integer, public, save :: isscf  = 1
 
+!!
+!! @var isopt
+!!
 ! control flag: the efficient algorithm for calculate the trace
 ! if ifast == 1, use divide-and-conquer algorithm (see npart as well)
 ! if ifast == 2, use classic time evolution algorithm, not implemented
 ! if ifast == 3, use skip listing algorithm, not implemented
-     integer, public, save :: ifast  = 1
+     integer, public, save :: isopt  = 1
 
 ! control flag: the mode how to truncate the Hilbert space
 ! if itrun == 1, don't truncate it
