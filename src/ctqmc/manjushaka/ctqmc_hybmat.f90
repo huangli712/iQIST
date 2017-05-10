@@ -248,7 +248,7 @@
          enddo ! over i={ie,ckink-1} loop
      enddo ! over j={1,is-1} loop
 
-! update the colour part of perturbation expansion series
+! update the perturbation expansion series
      call cat_remove_colour(flvr, is, ie)
 
 ! only for debug
@@ -266,8 +266,12 @@
      return
   end subroutine cat_remove_matrix
 
-!!>>> cat_lshift_matrix: update the mmat matrix and gmat matrix for shift
-!!>>> old create operators
+!!
+!! @sub cat_lshift_matrix
+!!
+!! update the mmat matrix and gmat matrix for left shifting old creation
+!! and annihilation operators
+!!
   subroutine cat_lshift_matrix(flvr, iso, isn, tau_start1, tau_start2, deter_ratio)
      use constants, only : dp, zero, czero
 
